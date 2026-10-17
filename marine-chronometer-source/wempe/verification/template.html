@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wempe model: verification</title>
+<meta name="description" content="Every check on the Wempe Einheits-Chronometer model, its method and its results: the geometry against the works drawings, the escapement in time, the mainspring and fusee, the energy budget, the train, the parts' strength, the hairspring, temperature, the gimbals, the 6MX's trial and a voyage, and the swing of a running 6MX on video.">
+<style>
+:root{color-scheme:light;--surface:#fcfcfb;--panel:#f3f2ef;--ink:#0b0b0b;--ink2:#52514e;--muted:#8a8984;--grid:#e4e3df;--rule:#d6d5d0;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--band:rgba(42,120,214,.13);--manual:rgba(27,175,122,.12);--warmb:rgba(235,104,52,.10);--good:#008300;--warn:#b36b00;--bad:#c02f2f}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;--surface:#1a1a19;--panel:#232321;--ink:#f0efec;--ink2:#c3c2b7;--muted:#8f8e86;
+  --grid:#33332f;--rule:#3d3d39;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--band:rgba(57,135,229,.18);--manual:rgba(25,158,112,.16);--warmb:rgba(217,89,38,.14);--good:#4cb84c;--warn:#e0a030;--bad:#e66767}}
+:root[data-theme="dark"]{color-scheme:dark;--surface:#1a1a19;--panel:#232321;--ink:#f0efec;--ink2:#c3c2b7;--muted:#8f8e86;--grid:#33332f;--rule:#3d3d39;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--band:rgba(57,135,229,.18);--manual:rgba(25,158,112,.16);--warmb:rgba(217,89,38,.14);--good:#4cb84c;--warn:#e0a030;--bad:#e66767}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1060px;margin:0 auto;padding:28px 16px 80px}
+h1{font-size:30px;line-height:1.25;margin:8px 0 6px}h2{font-size:23px;margin:46px 0 8px;padding-top:12px;border-top:1px solid var(--rule)}h3{font-size:18px;margin:28px 0 6px}
+p,li{color:var(--ink)}.sub{color:var(--ink2);margin:0 0 18px}.small{font-size:13.5px;color:var(--ink2)}
+a{color:var(--s1)}code{font:13.5px ui-monospace,Consolas,monospace;background:var(--panel);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+pre{font:12.5px/1.5 ui-monospace,Consolas,monospace;background:var(--panel);padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+nav.toc{background:var(--panel);border-radius:10px;padding:12px 18px;font-size:14.5px;margin:18px 0}nav.toc a{margin-right:14px;white-space:nowrap;display:inline-block}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--panel);border-radius:10px;padding:14px 16px}.tile .k{font-size:13px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+.tile .v{font-size:24px;font-weight:650;margin:4px 0 2px}.tile .n{font-size:13.5px;color:var(--ink2)}
+.ok{color:var(--good)}.mid{color:var(--warn)}.no{color:var(--bad)}
+.tw{overflow-x:auto}.tw table{min-width:560px}table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{color:var(--ink2);font-weight:600}td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+figure{margin:16px 0 22px}figcaption{font-size:13.5px;color:var(--ink2);margin-top:6px}
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:10px 8px 4px;position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}.chart text{fill:var(--ink2);font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink2);padding:2px 10px 6px}.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px}.legend i.dot{width:9px;height:9px;border-radius:50%}.legend i.box{width:14px;height:10px;border-radius:2px}
+.tip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:7px 10px;font-size:12.5px;line-height:1.45;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);display:none;max-width:280px;z-index:3}
+details{margin:6px 0 14px}summary{cursor:pointer;color:var(--ink2);font-size:13.5px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.callout{border-left:3px solid var(--s1);background:var(--panel);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.gap{border-left:3px solid var(--warn)}.themebtn{float:right;font-size:13px;background:var(--panel);color:var(--ink2);border:1px solid var(--rule);border-radius:8px;padding:4px 10px;cursor:pointer}
+ol.src li{margin-bottom:6px;font-size:14.5px}
+.run{border:1px solid var(--rule);border-radius:10px;padding:10px 14px;margin:14px 0}.runh{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.pill{font-size:12.5px;font-weight:600;border-radius:999px;padding:1px 9px;background:var(--panel)}
+ul.chk{list-style:none;padding:0;margin:8px 0}ul.chk li{display:grid;grid-template-columns:2.6em 1fr;gap:6px;font-size:14px;line-height:1.5;padding:3px 0;border-bottom:1px dashed var(--grid)}
+ul.chk li.h{display:block;border:0;font-size:13px;color:var(--ink2);padding:8px 0 2px;font-weight:600}
+.st{font:600 12.5px ui-monospace,Consolas,monospace;border-radius:4px;padding:0 4px;text-align:center;height:fit-content}.st.ok{background:rgba(0,131,0,.1)}.st.mid{background:rgba(179,107,0,.12)}.st.no{background:rgba(192,47,47,.12)}
+ul.open li{margin-bottom:8px;font-size:14.5px}#est details ul,#corr ul{font-size:14.5px}#est details li,#corr li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<main>
+<button class="themebtn" id="theme" type="button">Light / dark</button>
+<p class="small"><a href="../index.html">The Wempe Einheits-Chronometer model</a> · verification · <!--MADE--> · the Hamilton's: <a href="../../chronometer-working-model/verification/build-verification/index.html">would a chronometer made to it run?</a>, <a href="../../chronometer-working-model/verification/real-chronometers/index.html">the model against real Model 21s</a></p>
+<h1>The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?</h1>
+<p class="sub">The model of the German standard marine chronometer of the 1940s is built from Wempe's works drawings, each sheet as last revised. Two questions follow
+from that. Does the model hold to its drawings: is every part a closed solid where its sheets put it, clear of its neighbours, counted against the drawing list, every
+figure read and every guess said to be one? And would a chronometer made to those drawings keep time: does the escapement run, does the fusee even the spring, does
+the energy budget close, do the teeth and springs hold, does it stay in rate from cold to hot and at sea, and does it pass the trial its Soviet copy, the 6MX, was
+made to pass? Every figure below comes from a script in the repository, run on the model's own numbers, and is shown as the script prints it: <span class="st ok">ok</span>
+a check that holds, <span class="st mid">~~</span> one the script reports but doesn't fail on (an open question, or the strong end of a range only), <span class="st no">!!</span> a failure.</p>
+
+<div class="tiles" id="tiles"></div>
+
+<nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
+<a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#open">16. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+
+<h2 id="approach">Approach</h2>
+<p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
+Wempe's detent carries a gold passing spring on its own horn, its fusee's force was measured by its makers on the drawing itself, its balance is a cut bimetallic one
+with movable masses, and its hairspring is a helix with drawn terminal curves. The tools run on the same files the page draws from (<code>js/escapement.js</code>,
+<code>js/escphys.js</code>, the shared <code>makeEsc</code>), so what they check is what the page shows.</p>
+<div class="tw"><table>
+<tr><th>#</th><th>Question</th><th>Method</th><th>Script</th></tr>
+<tr><td>1</td><td>Is every part a sound solid, clear of its neighbours, and on the drawing list?</td><td>Closed-mesh tests, a 0.05 mm voxel interference check through the escapement's phases and the wind, a screw and loose-end audit, the Spread view's clearance, every part against <code>bom.json</code></td><td><code>solids.py</code>, <code>fine.py</code>, <code>audit.py</code>, <code>exploded.py</code>, <code>bom.py</code></td></tr>
+<tr><td>2</td><td>What do the drawings say, and what had to be guessed?</td><td>The sheets transcribed figure by figure with how sure each reading is; the readings corrected on the sheets; the estimates listed</td><td><code>References/wempe/</code>, the model's README</td></tr>
+<tr><td>3</td><td>Does the escapement run, and does it run in time as the averaged model says?</td><td>makeEsc solved from the layout drawing; the escapement integrated beat by beat; the detent as a frame of beam elements</td><td><code>wempe_escapement.js</code>, <code>dynamics.js</code>, <code>tripping.js</code></td></tr>
+<tr><td>4</td><td>Does the drawn fusee even the mainspring as its makers measured?</td><td>The spring solved for its shape at every quarter turn, fitted in length and set to 05 06_20's force</td><td><code>wempe_mainspring.py</code></td></tr>
+<tr><td>5</td><td>Is there energy enough, from spring to balance?</td><td>Every loss from the parts, the balance's damping from its parts; the swing the drive can hold</td><td><code>wempe_physics.js</code></td></tr>
+<tr><td>6</td><td>Do the gears mesh, and how exactly must the holes be placed?</td><td>Tooth-by-tooth contact on the page's own outlines; the train in time; each mesh's depthing window</td><td><code>gearing.js</code></td></tr>
+<tr><td>7</td><td>Will the loaded parts hold, fully wound?</td><td>Each part's stress against its material's published range</td><td><code>wempe_strength.js</code></td></tr>
+<tr><td>8</td><td>Does the drawn hairspring keep the balance free of side forces, and isochronous?</td><td>Phillips' conditions on 05 03_7's curve; the spring at large swings as an elastica and as beam elements</td><td><code>wempe_hairspring.js</code></td></tr>
+<tr><td>9</td><td>Does the bimetallic balance compensate, and where must the masses sit?</td><td>The rim's quarters as bimetal cantilevers, every part weighed; the secondary error</td><td><code>wempe_thermal.js</code></td></tr>
+<tr><td>10</td><td>Does the case hang level and stay so at sea?</td><td>The case and ring weighed on the model, levelled as 05 01 says, run in a seaway</td><td><code>massprops.py</code>, <code>gimbals.js</code></td></tr>
+<tr><td>11</td><td>Would it pass the 6MX's trial, and what would a navigator carry?</td><td>The TU's 35-day trial and a 60-day voyage, Monte Carlo over the rate's parts</td><td><code>wempe_errorbudget.js</code></td></tr>
+<tr><td>12</td><td>Would a Wempe made to its drawings work, and how is it tested?</td><td>The unsized parts' tolerances from the escapement's swing over the wind; the bench's tests with their pass figures; 2,000 movements made to tolerances, as made and after the bench</td><td><code>wempe_tolerances.js</code>, <code>wempe_bench.js</code>, <code>wempe_montecarlo.js</code></td></tr>
+<tr><td>13</td><td>How does the escapement compare with a period text's rules?</td><td>Each proportion against <i>Watch and Clock Escapements</i> (1904), Ch. III; reported, never judged</td><td><code>keystone.js</code></td></tr>
+<tr><td>14</td><td>Is the balance's damping right?</td><td>A running 6MX's swing read frame by frame off a video, fitted with the Wempe's balance equation</td><td><code>wempe_swing.py</code>, <code>wempe_startup.js</code></td></tr>
+</table></div>
+<p class="small">Units: millimetres and micrometres (µm), newtons, seconds a day (s/d, + gaining). The swing is the balance's amplitude, each way. The model runs its balance
+at the train's half second; the drawn hairspring with the weighed balance gives a little less (section 8), which a maker times out. A rate of 4 s of time is a mile of
+longitude at the equator. Each tool's whole output is under its checks ("its whole output"), as it printed it when this page was built.</p>
+
+<h2 id="geo">1. Geometry: does the model hold to its drawings?</h2>
+<p>The model is a set of closed solids, as a CAD model is, so it can be checked as one. Five browser checks open the Wempe's page itself and measure the parts as built.
+<b>Solids</b>: every mesh closed (no open edge), consistently wound and with a positive volume, as loaded and in a section with Moving parts only. <b>Fine
+interference</b>: every part voxelized at 0.05 mm in <span id="geoStates"></span> states (the escapement through its unlocking, impulse and return; the train at many
+phases; the fusee from full wind through winding to run down), every pair of parts that overlaps reported; only the contacts listed below, each with its reason and a
+size it may not exceed, may overlap. <b>The screw audit</b>: screws overlapping, screws with nothing under their heads, arbor and pin ends sitting in nothing, faces
+lying on each other, parts touching nothing, in the movement and in the case and box, against the leftovers expected. <b>Exploded</b>: the Spread view lifts each
+part on its own path; no two may pass through each other. <b>The parts list</b>: every line of <code>bom.json</code>, transcribed from the drawing list, counted on the model's
+pieces, and its relations measured on the built meshes.</p>
+<div id="tGeo" class="tw"></div>
+<h3>The contacts that are meant</h3>
+<p>Every overlap <code>fine.py</code> finds is one of these, each a joint the drawings make that a turned or extruded solid can't show cut: a screw in a thread not cut across
+a turned body, a pressed fit drawn at its fit's middle, the chain in its groove. The measured column is the largest overlap over all the states, against the size it may reach.</p>
+<div id="tExp" class="tw"></div>
+<h3>The audit's expected leftovers</h3>
+<div id="tLoose" class="tw"></div>
+<h3>The parts list</h3>
+<p id="pBom"></p>
+<div id="kGeo"></div>
+
+<h2 id="src">2. The sources: what the drawings say, and what was guessed</h2>
+<p>The model's evidence is, in order: the works drawings (sheets of Wempe's, as published by the Deutsche Gesellschaft für Chronometrie, each read as last revised);
+the coloured section of the whole movement; photographs of real German movements (Wempe 3955 above all); and, for what only the Soviet copy shows, the 6MX's own
+documents. None of them is reproduced here: they are other people's work, cited and linked from the model's page. The model's README says for every figure which
+sheet it is from and how sure the reading is; below is that record in numbers.</p>
+<h3>The sheets</h3>
+<figure><div class="chart" id="cSheets"></div><figcaption>Figure 1. Each group's sheets by date: when each was drawn (dot) and, where the list gives one, last revised (ring). The model
+builds every sheet as last revised; 05 03_3.2, a later production staff of 1965 (not built), lies off the scale at the right; the lever chronometer's sheets, used only to cross-check, are left out. From <code>References/wempe/README.md</code>'s catalogue
+(<code>wempe_essaydata.js</code>).</figcaption></figure>
+<div id="tSheets" class="tw"></div>
+<h3>The transcription</h3>
+<p>Each group's sheets were transcribed into a table of every figure, with its tolerance or fit and how sure the reading is (sure: legible, likely: legible with one reading
+taken over another, unsure: faint or partly hidden). Where a number mattered, the sheet itself was cropped and enlarged, and the readings were corrected there (below).</p>
+<figure><div class="chart" id="cTrans"></div><figcaption>Figure 2. The figures read in each transcription's tables of dimensions, by how sure the reading is.
+<code>References/wempe/transcriptions/</code>.</figcaption></figure>
+<div id="tTrans" class="tw"></div>
+<h3>Readings corrected against the sheets</h3>
+<p>Checked on the sheets while building, where the transcription read a figure or a feature wrongly (<span id="nCorr"></span> readings; the transcriptions are left as written):</p>
+<details id="corr"><summary>The readings corrected</summary><!--CORRECTED--></details>
+<h3>The estimates</h3>
+<p>What no sheet gives is estimated, and every estimate is listed in the model's README with the reading it rests on (<span id="nEst"></span> in all). Grouped by
+the phase that built it:</p>
+<div id="est"><!--ESTIMATED--></div>
+
+<h2 id="esc">3. The escapement</h2>
+<p>The Wempe's spring detent escapement is laid out on one sheet, 05 04_1 (<i>Hemmung für Feder-Chronometer</i>, 10:1): the escape wheel 10.00 mm from the balance,
+the locking stone 36.5° on from the line of centres, the impulse 21° either side of it. Its parts come from their own sheets: the escape wheel's tooth (05 04_23), the
+detent and its gold passing spring (1436, 05 04 01-2), the rollers and the balance.</p>
+<h3>3.1 Solved from the layout (makeEsc)</h3>
+<p><b>Method.</b> The shared escapement solver, <code>makeEsc</code>, takes the layout's points put in its frame, the parts' shapes and bodies (the balance weighed on the
+model's solids, the train behind the escape wheel, the detent about its flexure), and solves the escapement as the Hamilton's is solved: the wheel released from rest
+chasing the impulse stone, the strike's loss, the unlocking's work, the detent's fall and ride on the tooth it has just let go; then the swing at which the escapement's
+work each oscillation balances the balance's damping, at the drive 05 06_20's measured force gives through the train. The rate is Airy's sum of the escapement's
+disturbances with the drawn hairspring's own isochronism (section 8).</p>
+<figure><div class="chart" id="cWind"></div><figcaption>Figure 3. The swing over the 56-hour wind, at the drive 05 06_20 measured at each fusee turn (the escapement's
+equation, <code>ampAt</code>). The green band is the sources' 225-270° (the 1954 instruction for chronometers in general); the model's swing lies under it (section 15).
+<code>wempe_escapement.js</code>.</figcaption></figure>
+<figure><div class="chart" id="cRate"></div><figcaption>Figure 4. The rate over the wind against 12 h from full wind: the escapement alone, and with the drawn hairspring's own
+isochronism, which partly cancels it. Wound daily, the chronometer runs in the first day's span. <code>wempe_escapement.js</code> (<code>rateAt</code>).</figcaption></figure>
+<div id="kEsc"></div>
+<h3>3.2 In time (dynamics.js)</h3>
+<p><b>Method.</b> The balance, the escape wheel with the whole train behind it, and the detent move as bodies through every contact, beat by beat, on contact geometry
+worked out apart from makeEsc's: the bevelled discharge stone on the gold spring's square end by separating axes, the stone on the tooth it let go from the tooth's
+drawn arcs. The result is held against makeEsc's: the swing, where the tooth lands, the detent's fall and its home, the rate and its isochronism. Then the detent's
+estimates are varied, the chronometer is started by a twist, starved of drive, knocked, and taken to sea.</p>
+<div id="tDyn" class="tw"></div>
+<div id="kDyn"></div>
+<h3>3.3 The detent as a frame (tripping.js)</h3>
+<p><b>Method.</b> The detent becomes a plane frame: beam elements with stretching, bending and their consistent mass for the spring (0.07 × 1.9 mm, clamped at its foot),
+the blade's two sections, the horn and the gold spring along its drawn path; the square with the gold spring's head and the pipe with the stone rigid. Its modes carry it
+in time with the balance and the wheel through elastic contacts: the discharge stone on the gold spring, the gold spring on the horn, the pipe on its banking (the
+block's cross screw), the tooth on the stone and on the impulse stone. Validated rigid against dynamics.js, it is then run as drawn, with its estimates varied, pushed to
+larger swings, and knocked.</p>
+<div class="cols"><div id="tModes" class="tw"></div><div id="tValid" class="tw"></div></div>
+<div id="tRun" class="tw"></div>
+<figure><div class="chart" id="cPush"></div><figcaption>Figure 5. The swing pushed by raising the drive: the stone's largest lift while a tooth is held, as a share of the depth of
+lock; a dot on the top line is a run where a tooth got past. The dashed line is makeEsc's TRIP. <code>tripping.js --model wempe</code>, section 3.</figcaption></figure>
+<div id="tSweep" class="tw"></div>
+<div id="tKnock" class="tw"></div>
+<div id="kTrip"></div>
+
+<h2 id="ms">4. The mainspring and the fusee</h2>
+<p>The drawing set has a sheet no other chronometer's drawings are known to have: 05 06_20 (Herb. Müller, 24.7.41), the fusee's curve and its measured force, the pull
+in grams on a lever 262 mm long over the whole wind. It gives the strip (15 × 0.37) but not its length or free shape.</p>
+<p><b>Method.</b> The Hamilton's <code>mainspring.py</code> solves the strip in the drawn barrel (Ø 38.5 on the arbor's Ø 13.3 core) for its shape of least bending energy at
+every quarter turn, coils pressing on each other, its torque the energy's slope. Its free curve is the Hamilton's measured one scaled to the length, its turns scaled by a
+set. Set up ¾ turn (the sheet's "3/4 Umgang gespannt") and wound through the drawn fusee and chain, its torque on the fusee arbor at each of the sheet's readings is set
+against the measured force, each scaled to its mean. Twelve lengths and sets were solved; the best fit is the model's spring.</p>
+<figure><div class="chart" id="cFusee"></div><figcaption>Figure 6. 05 06_20's measured force on its 262 mm lever (dots) against the solved spring's torque through the drawn fusee, scaled to the
+same mean (line), over the fusee's turns from run down. <code>wempe_mainspring.py</code>, <code>wempe_mainspring.json</code>.</figcaption></figure>
+<figure><div class="chart" id="cTries"></div><figcaption>Figure 7. Each length and set tried: the shape's misfit (rms) against the set (the free curve's turns scaled), one line a length.
+The sheet's own reading is good to about 0.5 %. <code>wempe_mainspring.py</code>.</figcaption></figure>
+<div id="tTries" class="tw"></div>
+<div class="callout gap"><p><b>The level is the drawing's open figure.</b> <span id="msLevel"></span></p></div>
+<div id="tFric" class="tw"></div>
+<div id="kMs"></div><div id="kFric"></div>
+
+<h2 id="energy">5. The energy budget</h2>
+<p><b>Method.</b> Where the drive goes, from the mainspring through the fusee and chain, the train and the escapement to the balance's damping, each loss from the Wempe's
+own parts: the coils' friction (section 4), the barrel on its journals, the chain's links on their rivets, the fusee arbor's pivots; each mesh tooth by tooth (section 6)
+and each pivot on its tooth loads; the escapement's strike and unlocking (makeEsc). The balance's damping, which no Wempe source gives, is built from its parts: the
+air's drag on its masses, timing weights, screws and arm (a pressure drag at the masses' Reynolds number), the endstone's friction under the balance's weight, the
+spring's own. Then: does some balance within its parts' damping swing the sources' band on the measured drive?</p>
+<figure><div class="chart" id="cQ"></div><figcaption>Figure 8. The balance's quality factor Q: what its parts give against what the measured drive, through the train as built, needs to
+swing the sources' 225-270°; the model's middle estimate marked. <code>wempe_physics.js</code>.</figcaption></figure>
+<div id="tPower" class="tw"></div>
+<div id="kPhys"></div>
+
+<h2 id="train">6. The going train, tooth by tooth</h2>
+<p><b>Method.</b> The train is four meshes: the fusee wheel (90) on the centre pinion (14), centre wheel 90 on the intermediate pinion 12, intermediate 80 on the seconds
+pinion 10, seconds 80 on the escape pinion 10; every count, module, tip and root from the wheels' tables, the two pinions no sheet gives fixed by the drawn centres.
+<code>gearing.js</code> takes the page's own outlines, places each pair at its drawn holes, and for 120 steps through a pitch turns the pinion back against its load until
+the outlines touch, giving the torque it receives with the teeth's friction (µ 0.10-0.20, steel leaves on brass). The four ratios as their wheels turn drive the balance
+through the escapement's equation over six hours. Then each mesh's centres are moved until it jams or its friction takes the swing out of the model's band: the window
+the holes must hold.</p>
+<figure><div class="chart" id="cMesh"></div><figcaption>Figure 9. The torque each pinion receives over one pitch of its wheel against the nominal ratio, µ = 0.20. <code>gearing.js --model wempe</code>.</figcaption></figure>
+<div id="tMesh" class="tw"></div>
+<figure><div class="chart" id="cDay"></div><figcaption>Figure 10. The balance's swing over six hours of the train, the teeth's ripple included, at the two friction coefficients.
+<code>gearing.js</code>, <code>day()</code>.</figcaption></figure>
+<figure><div class="chart" id="cWin"></div><figcaption>Figure 11. Each mesh's depthing window about its drawn centres (light bar), and within it the most the centres may close with each
+hole off by the tolerance it sets in any direction and the pivots shaking (dark bar: twice the hole tolerance and the shake, either way); the tightest mesh sets the
+holes' tolerance for the whole train. <code>gearing_wempe.json</code>.</figcaption></figure>
+<div id="kGear"></div>
+
+<h2 id="strength">7. The parts' strength</h2>
+<p><b>Method.</b> Fully wound, at the measured level of the drive, every stage lossless (the largest forces): the mainspring's bending stress; the chain's plates,
+rivets and hooks under its pull; the band; each mesh's teeth by Lewis' formula (Y 0.2, clock teeth); the pivots as cantilevers carrying their arbor's whole load; the
+maintaining spring, ratchet and click wheel; a strong hand on the key against the stop. Each against its material's published range: the margin at its weak and its
+strong end (<span class="st mid">~~</span> where only the strong end holds).</p>
+<figure><div class="chart" id="cStr"></div><figcaption>Figure 12. Each part's margin, its stress against the weak and the strong end of its material's range (logarithmic). Under 1 at the weak end
+(left of the dashed line) the part holds only if made of the stronger material. <code>wempe_strength.js</code>.</figcaption></figure>
+<div id="tStr" class="tw"></div>
+<div id="kStr"></div>
+
+<h2 id="hair">8. The hairspring and Phillips' curves</h2>
+<p>The hairspring is a helix (05 03_6: 0.285 × 0.52, Ø 12.8, left-hand), its ends bent to a curve drawn on 05 03_7 as a table of radii every 10°, and cut, before the curves
+are bent, "auf 13 Umgänge −3,5 mm": to 13 turns less 3.5 mm.</p>
+<p><b>Method.</b> The length is read four ways and each gives the balance a period. The curve's table is fitted as two compass arcs and tested against Phillips'
+conditions (1861): its centroid on the perpendicular to the junction's radius, at R²/l from the staff, so that the spring pulls the balance with a pure couple. The force
+it leaves on the pivots under a couple follows (HSPR.lateral), with the helix's turns varied. At large swings the drawn spring is solved as an inextensible elastica by
+shooting and again as co-rotational beam elements; the two must agree on the couple's shape, the force and the rate.</p>
+<figure><div class="chart" id="cHsRate"></div><figcaption>Figure 13. The rate the drawn spring alone gives against small swings, by the elastica: it stiffens a little as it winds,
+and loses as the swing grows about the model's swing. <code>HSPR.large</code> on the drawn spring (<code>wempe_hairspring.js</code>, section 4).</figcaption></figure>
+<figure><div class="chart" id="cHsLat"></div><figcaption>Figure 14. The force the drawn curves leave on the pivots under a couple (× R / couple) with the helix's turns between them varied; the
+drawn spring marked. The two curves' errors cancel at a whole number of turns. <code>wempe_hairspring.js</code>, section 3.</figcaption></figure>
+<div id="kHs"></div>
+
+<h2 id="heat">9. Temperature: the cut bimetallic balance</h2>
+<p>A steel hairspring weakens as it warms, so the balance must open to compensate: the rim, steel inside and brass outside, cut beside the arm, curls in as it warms and
+carries its four masses toward the staff. How much depends on where the masses sit on the free arc.</p>
+<p><b>Method.</b> Each quarter of the rim is a bimetal cantilever from the arm's edge to the cut, curling by Timoshenko's bimetal (1925), each element's radius moving
+by the layers' mean growth, the masses clamping the rim over their slot. Every part is weighed on the model's solids. The spring's own loss is its thermoelastic
+coefficient's (−240 to −270 × 10⁻⁶) with its expansion. The rim's "Nickelstahl Sonderlegierung" is read as Guillaume's 42-44 % nickel steel (estimated); a plain nickel
+steel is tried beside it. The secondary error (Dent's) is taken as the integral balance's of the Neuchâtel trials.</p>
+<figure><div class="chart" id="cHeat"></div><figcaption>Figure 15. The rate gained a day a °C against the masses' place on the free arc (degrees from the cuts' line), with Guillaume's
+nickel steel at the constants' middle (line) and over their 32 corners (band), and with a plain nickel steel. The green band is the TU's ±0.10 s a day a °C; the
+drawn place (Wempe 3955's and the 6MX's) and the place that compensates are marked. <code>wempe_thermal.js</code>.</figcaption></figure>
+<div id="kHeat"></div>
+
+<h2 id="gim">10. The case and gimbals</h2>
+<p><b>Method.</b> The bowl with the movement in it and the gimbal ring are weighed on the model, every closed solid at its material's density (<code>massprops.py --model
+wempe</code>): mass, centre of gravity and inertia about the gimbal centre. 05 01 says to move the case brackets "bis Gleichgewicht erreicht ist", until it hangs level, and
+the tool does so. The two bodies then run on their pivots under the Hamilton's seaway (<code>gimbals.js</code>: narrow-band random roll, pitch, yaw and heave; NORDFORSK's
+0.12 g limit), and what reaches the balance's staff is run through the Wempe's escapement.</p>
+<div class="cols"><div id="tMass" class="tw"></div><div id="tAlt" class="tw"></div></div>
+<figure><div class="chart" id="cRes"></div><figcaption>Figure 16. The case's lean for each degree of a regular roll about the box itself, from the apparent vertical (gravity less the box's
+acceleration, which is what the balance's pivots feel) and from the true, against the roll's period; the gimbals' own periods and the balance's beat marked, merchant
+ships' roll periods shaded. <code>gimbals.js --model wempe</code>, section 2.</figcaption></figure>
+<div id="tSeas" class="tw"></div>
+<div id="kGim"></div>
+
+<h2 id="trial">11. The 6MX's trial and a voyage</h2>
+<p>The Soviet copy of the Einheits-Chronometer, the 6MX, was made to a published specification (TU 25-07.1533-84) with a trial: 35 days at 36, 20, 4, 20 and 36 °C, the
+first two days of each period not counted, wound daily, its figures worked as E (the mean variation of the daily rate), R, D, C (the temperature coefficient), S (the
+secondary error), each period's mean, and N = 42E + 4.5R + 60C + 2.4S. No Wempe test card is to hand, so the trial is the 6MX's.</p>
+<p><b>Method.</b> Each day's rate is summed from its parts: the temperature curve (section 9, with the masses set by the adjuster at their compensating place to ±0.25°),
+the air's density, the swing over the daily wind, the day-to-day scatter and drift (the Hamilton's, calibrated on its No. 3390's card), the barometer and the oil; the
+trial is drawn 2,000 times. Then a 60-day voyage from a winter port into the tropics, rated over ten days in port, gives the error a navigator would carry.</p>
+<figure><div class="chart" id="cTrial"></div><figcaption>Figure 17. One trial drawn: each day's rate (the balance's linear temperature term taken out, as the essay draws it), the periods'
+temperatures shaded. <code>wempe_errorbudget.js</code>.</figcaption></figure>
+<div id="tTU" class="tw"></div>
+<div id="tVoy" class="tw"></div>
+<div id="kEb"></div>
+
+<h2 id="build">12. Building it: tolerances, the bench, the Monte Carlo</h2>
+<p>The checks above take the Wempe as drawn. A chronometer made to the drawings is made to tolerances, some the sheets give and some they don't, and is then tested and
+adjusted on the bench as its makers did. Three tools follow it there, as the Hamilton's <code>tolerances.js</code>, <code>bench.js</code> and <code>montecarlo.js</code> do.
+They are guidance for anyone who would make one, proved by their own runs: the model was never made.</p>
+<h3>12.1 How closely the unsized parts must be made</h3>
+<p><b>Method.</b> From the escapement as the page runs it (makeEsc with the Wempe's settings, driven by 05 06_20's force through the train), the swing and rate are
+solved with the escape wheel's torque and the detent's and gold spring's stiffness each scaled (a strip's stiffness as its thickness cubed). Each part's range is the
+one that keeps the swing in the model's guard band, 193-270°, over the whole 56-hour wind; the sources' 225-270° is reported beside it. The parts: the mainspring's strip
+(05 06_20's "15 × 0,37", no tolerance), the detent's spring (1436's faint "0,07") and its preload, the gold spring, the depth of lock (05 04_1's 0.175, set by the
+banking), and the hairspring against the period, which the timing weights must take up.</p>
+<div id="tTol" class="tw"></div>
+<div id="tPre" class="tw"></div>
+<div id="kTol"></div>
+<h3>12.2 The tests on the bench</h3>
+<p><b>Method.</b> Each test turns the model's figures into what a made part or movement must read, and how to measure it with a maker's means: the mainspring's pull
+against 05 06_20, the fusee's evenness, the depths, the endshake from the sheets' fits, the balance vibrated, its free run-down, the detent's ring, the escapement's
+figures and the banking's preload, the swing, the maintaining spring, and the 6MX TU's 35-day trial as the acceptance test (the Wempe's sheets give no trial of their own).</p>
+<div id="tBench" class="tw"></div>
+<div id="kBench"></div>
+<h3>12.3 The whole movement made to tolerances</h3>
+<p><b>Method.</b> 2,000 movements, each drawing every tolerance at once (uniform within the sheets' limits where they give them, normal where estimated): the arbors'
+holes, every term of each arbor's endshake stack from its sheet, the mainspring's strip, the teeth's friction, the detent's and gold spring's strips, the wheel's tips
+and the banking (the depth of lock), the preload, the hairspring's strip, coil, cut length and modulus. Each is judged as made (the train turns, every arbor free, the
+escapement unlocks and locks in its window, the swing in the guard band over the wind, it times within the weights' reach), then after the bench's tests as a maker
+applies them (bench_wempe.json's figures): a close mesh re-bushed, endshake set again, a detent spring out of its band replaced, the banking and preload set, another
+strip, the set-up turned, the hairspring matched to the balance.</p>
+<div class="cols"><div id="tMC" class="tw"></div><div id="tMCb" class="tw"></div></div>
+<figure><div class="chart" id="cMC"></div><figcaption>Figure 18. The lowest swing over the wind of the movements made to tolerances whose escapement unlocks, as made: how many in each 2.5°
+band. The green band is the guard band's floor and above. <code>wempe_montecarlo.js</code>, <code>montecarlo_wempe.json</code>.</figcaption></figure>
+<div id="tMCa" class="tw"></div>
+<div id="kMC"></div>
+
+<h2 id="trans">13. The whole transmission in time</h2>
+<p>Sections 3 to 7 take the movement a mechanism at a time, each with the others held still or rigid. Here every part that moves is one system: the barrel on its
+solved mainspring, the chain, the fusee with its two clicks, the maintaining ratchet, spring and detent, the fusee wheel and the going train to the escape wheel, the
+motion work and hands, the up-and-down work, the key and the stop: each a body with its inertia weighed on the model's solids (or estimated, said where), joined by the
+elements a real movement has, none of them linearised.</p>
+<p><b>Method.</b> <code>wempe_transmission.js</code>. The elements: the mainspring's torque as solved (section 4) with its coils' friction as a stick-slip element,
+so winding takes more than running gives; the chain in tension only, so it can go slack, its lever on the fusee where it lies and rising and falling as each 2.05 mm
+link comes onto a drum; each pawl (the clicks, the maintaining detent) a body on its pivot under its spring, riding the teeth's backs and catching a face only if it is
+down; the maintaining spring's drawn ring, stiffening as it closes, with its bank; every mesh tooth by tooth on the page's own outlines (section 6's), the driven gear's
+place under load through each pitch, the backlash to its back flank and the teeth's friction, contact on either flank or neither; the cannon pinion's friction fit,
+which slips past its torque; the key's one-way coil spring (it grips whenever the hand holds the key against the fusee, and slips only if the key is turned the wrong
+way); the stop bar on its pin. The escapement is <code>dynamics.js</code>'s own (section 3.2), its escape wheel driven each step by the train through the escape pinion's
+mesh. It is stepped in time at a microsecond. The stiffnesses no sheet gives (the teeth's give, the chain's, the clicks' faces, the bank) are estimated from the parts,
+and those the results rest on are varied.</p>
+<p><a href="assets/transmission/index.html"><b>Watch the run</b></a>: the movement in plan, every part coloured by the load it carries against its running load and its deviations from rigid motion magnified, as a finite-element post-processor shows a deformed shape; a beat, the key let go outright and eased back, and the stop, played in slow motion with their time histories (<code>wempe_transmission_trace.js</code>).</p>
+<div id="tTrW" class="tw"></div>
+<div id="tTrB" class="tw"></div>
+<figure><div class="chart" id="cTrL"></div><figcaption>Figure 19. The key let go at the end of a stroke: the force with which the click catches the click wheel's tooth against how far
+short of its face the nearer click was. Let go outright, the fusee and barrel run free to the click; eased back, the hand lets them forward under its hold. The dashed
+lines are the force at which the tooth's brass reaches its yield (300-450 MPa) and the running load. <code>wempe_transmission.js</code>.</figcaption></figure>
+<div id="tTrV" class="tw"></div>
+<div class="callout"><p id="trMeaning"></p></div>
+<div id="kTr"></div>
+
+<h2 id="keystone">14. Against a period text</h2>
+<p>The drawings decide the Wempe; a period text says how a detent escapement was usually proportioned, and so where the Wempe's makers chose otherwise.
+<code>keystone.js --model wempe</code> measures the escapement against <i>Watch and Clock Escapements</i> (The Keystone, 1904), Ch. III: the wheel and roller, the
+balance planted where the rims cross over a pitch, the impulse and unlocking arcs, the locking stone, the tooth's face and back, the detent and its spring, the balance.
+The text is generic, so the tool reports and never judges; where the two differ, the drawing and its sheet are named.</p>
+<div id="tKey" class="tw"></div>
+<div id="kKey"></div>
+
+<h2 id="video">15. The swing measured on video</h2>
+<p>No Wempe source gives the balance's damping, the figure the swing rests on most. A running 6MX, whose balance is of the same kind (a cut bimetallic rim, four
+masses, two nuts on the arm), is filmed from above at 30 frames a second in <a href="https://youtu.be/moMvyx8eXfo?t=1073">moMvyx8eXfo, 17:53-19:50</a> (another person's
+video: linked at the moment used, no frame copied here).</p>
+<p><b>Method.</b> <code>wempe_swing.py</code> reads the balance's arm in every frame as a drop in saturation along the rim's ellipse, folded every 180°, and fits each
+4-second window with a sine: the swing, its alias settled by the frames between the turning points. The movement is set down at 17:52 and the swing rises; it is
+turned in the hands at 18:46 (the 6MX's start) and the swing falls back. <code>wempe_startup.js</code> fits all the stretches together with the Wempe's averaged balance
+equation, d(A²)/dt = 2 Wn(s, A)/T − 2A²·damping/TF, the escapement's work Wn from makeEsc with the Wempe's settings, the drive and each stretch's start free: rising
+and falling toward one swing, they fix TF, the free run-down.</p>
+<figure><div class="chart" id="cSwing"></div><figcaption>Figure 20. The 6MX's swing read off the video (dots, each a 4-second window), with the fit through all the stretches: the
+Wempe's escapement work and the damping split as its parts give it (line), and the plain A² law (dashed). The time is the video's, in seconds. <code>wempe_swing.json</code>,
+<code>wempe_startup.json</code>.</figcaption></figure>
+<div id="tFits" class="tw"></div>
+<div class="callout"><p id="vidMeaning"></p></div>
+<p class="small">The clicks of two more running chronometers were read with this escapement in time: a Lange VEB (<a href="https://youtu.be/gnIP3NqNbEU?t=3">gnIP3NqNbEU,
+0:03-1:03</a>) and a Kirova under a dome (<a href="https://youtu.be/KxInG08LWXg">KxInG08LWXg, 0:00-0:34</a>). Their pairings leave the swing between readings 80-120° apart,
+since which click is which isn't settled, so no swing is read from them (<code>References/wempe/VIDEOS.md</code>, "Measured").</p>
+<div id="kStart"></div>
+
+<h2 id="open">16. What stays open</h2>
+<p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
+<!--UNRESOLVED-->
+<h3>What the tools flag</h3>
+<p>Every <span class="st mid">~~</span> the checks above print, together: what they report without failing on.</p>
+<ul class="chk" id="flags"></ul>
+
+<h2 id="reproduce">Reproduce</h2>
+<p>From <code>marine-chronometer-source/wempe/verification/</code>:</p>
+<pre>node reportdata.js        # every Wempe check run (the full runs, at once), and the figures: assets/data.json (about 9 minutes)
+python geometry.py        # the browser checks on the Wempe's page, one after another: assets/geometry.json (about 11 minutes)
+python build_report.py    # this page, index.html (a second)</pre>
+<p>Each tool can be run on its own from <code>marine-chronometer-source/chronometer-working-model/tools/</code> (the commands are beside each tool's checks above). The
+model's <code>ci.py</code> runs the quick forms of all of them on every change, and the full runs with <code>--full</code>, but three: the readings off the videos
+(<code>wempe_swing.py</code>, <code>acoustic.py --model wempe</code>), which need the videos, and the start-up fit made on them (<code>wempe_startup.js</code>), whose result
+<code>wempe_escapement.js</code> checks the model's damping against. This page is rebuilt when their results change.</p>
+
+<h2 id="scripts">Scripts</h2>
+<div class="tw"><table>
+<tr><th>Script</th><th>What it does</th></tr>
+<tr><td><a href="../../chronometer-working-model/tools/solids.py"><code>solids.py</code></a>, <a href="../../chronometer-working-model/tools/fine.py"><code>fine.py</code></a>, <a href="../../chronometer-working-model/tools/audit.py"><code>audit.py</code></a>, <a href="../../chronometer-working-model/tools/exploded.py"><code>exploded.py</code></a>, <a href="../../chronometer-working-model/tools/bom.py"><code>bom.py</code></a></td><td>The geometry checks, the Wempe's tables in <code>wempe/checks.py</code>, <code>bom.json</code> and <code>audit-expected.json</code> (section 1)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_escapement.js"><code>wempe_escapement.js</code></a></td><td>The escapement as makeEsc solves it, the drive, the damping, the swing and rate over the wind (3.1)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/dynamics.js"><code>dynamics.js</code></a></td><td>The escapement in time (3.2)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/tripping.js"><code>tripping.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_tripping.js"><code>wempe_tripping.js</code></a></td><td>The detent as a frame of beams (3.3)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_mainspring.py"><code>wempe_mainspring.py</code></a></td><td>The mainspring solved and fitted to 05 06_20; its coil friction (4)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_physics.js"><code>wempe_physics.js</code></a></td><td>The energy budget (5)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/gearing.js"><code>gearing.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_train.js"><code>wempe_train.js</code></a></td><td>The meshes tooth by tooth (6)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_strength.js"><code>wempe_strength.js</code></a></td><td>The parts' strength (7)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_hairspring.js"><code>wempe_hairspring.js</code></a></td><td>The hairspring (8)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_thermal.js"><code>wempe_thermal.js</code></a></td><td>Temperature (9)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/massprops.py"><code>massprops.py</code></a>, <a href="../../chronometer-working-model/tools/gimbals.js"><code>gimbals.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_gimbals.js"><code>wempe_gimbals.js</code></a></td><td>The case and gimbals (10)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_errorbudget.js"><code>wempe_errorbudget.js</code></a></td><td>The TU's trial and the voyage (11)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_tolerances.js"><code>wempe_tolerances.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_bench.js"><code>wempe_bench.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_montecarlo.js"><code>wempe_montecarlo.js</code></a></td><td>The tolerances, the bench's tests, the movement made to tolerances (12)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_transmission.js"><code>wempe_transmission.js</code></a></td><td>The whole transmission in time, every part that moves (13)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/keystone.js"><code>keystone.js</code></a></td><td>The escapement against the 1904 text (14)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_swing.py"><code>wempe_swing.py</code></a>, <a href="../../chronometer-working-model/tools/wempe_startup.js"><code>wempe_startup.js</code></a></td><td>The swing read off a video and fitted (15)</td></tr>
+<tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="geometry.py"><code>geometry.py</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This page's data and the page</td></tr>
+</table></div>
+
+<h2 id="sources">Sources</h2>
+<p>The model's sources, as its README gives them:</p>
+<!--SOURCES-->
+<p>And for the methods:</p>
+<ol class="src">
+<li><i>Хронометры морские 6МХ. Технические условия</i>, TU 25-07.1533-84 (1st Moscow Watch Factory): the trial and its limits; Instruction 246-54 for checking standard chronometers (1954): the swing for chronometers in general, the banking, the start.</li>
+<li>V. A. Shpolyanskii and A. M. Kuritskii, <i>Spuskovye regulyatory priborov vremeni</i> (Moscow 1963): marine chronometers' balances, the 6MX's integral balance and banking screw.</li>
+<li>E. Phillips, "Mémoire sur le spiral réglant des chronomètres et des montres", <i>Annales des Mines</i> (1861): the terminal curves' conditions.</li>
+<li>S. Timoshenko, "Analysis of bi-metal thermostats", <i>Journal of the Optical Society of America</i> 11 (1925): the bimetal's curl.</li>
+<li>C.-E. Guillaume, Nobel lecture (1920), and VintageWatchstraps, "Temperature Compensation by Nickel Steels": the nickel steels and the integral balance's secondary error at the Neuchâtel trials.</li>
+<li>M. A. Crisfield, <i>Non-linear Finite Element Analysis of Solids and Structures</i>, vol. 1 (1991), ch. 7: the co-rotational beam element; J. S. Przemieniecki, <i>Theory of Matrix Structural Analysis</i> (1968): the frame element and its consistent mass; P. Wriggers, <i>Computational Contact Mechanics</i> (2006): penalty contact.</li>
+<li>NORDFORSK, <i>Assessment of Ship Performance in a Seaway</i> (1987): the operability limit; MARIN (IMDC 2024) and Jachowski et al., KONES (2012): merchant ships' roll periods.</li>
+<li>Mainspring friction and losses: ICMFF9 (gruppofrattura.it), "the torque during unwinding is 10 to 20 per cent less than that during winding"; lubricated steel on steel, the CRC Handbook as cited in US 3,939,081.</li>
+<li>The Hamilton's reports, whose tools these are: <a href="../../chronometer-working-model/verification/build-verification/index.html">Would a chronometer made to the model run and keep time?</a> and <a href="../../chronometer-working-model/verification/real-chronometers/index.html">Does the model behave like a real Hamilton Model 21?</a></li>
+</ol>
+<p class="small">The scripts' outputs that feed this page are embedded in it, so it opens from the file. Built by <code>build_report.py</code>; do not edit <code>index.html</code> by hand.</p>
+<div class="tip" id="tip"></div>
+</main>
+<script>
+const DATA=/*DATA*/null;
+const NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),tip=$('tip');
+const el=(n,a={},p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const ticks=(a,b,n)=>{const s=Math.pow(10,Math.floor(Math.log10((b-a)/n))),m=[1,2,5,10].find(k=>(b-a)/(s*k)<=n)*s,o=[];for(let v=Math.ceil(a/m)*m;v<=b+1e-9;v+=m)o.push(+v.toFixed(6));return o;};
+const f=(x,n=2)=>x==null||!Number.isFinite(+x)?'–':(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const th=n=>Math.round(n).toLocaleString('en-US');
+function showTip(chart,html,x,y){tip.innerHTML=html;tip.style.display='block';const r=chart.getBoundingClientRect(),o=tip.offsetParent.getBoundingClientRect();let L=r.left-o.left+x+14,T=r.top-o.top+y-10;
+  tip.style.left=L+'px';tip.style.top=T+'px';const w=tip.offsetWidth;if(r.left+x+14+w>document.documentElement.clientWidth-8)tip.style.left=(L-w-28)+'px';}
+const hide=()=>{tip.style.display='none';};
+const legend=(host,items)=>{const lg=document.createElement('div');lg.className='legend';lg.innerHTML=items.map(([c,t,k])=>`<span><i class="${k||''}" style="background:var(${c})"></i>${t}</span>`).join('');host.appendChild(lg);};
+/* a line chart: x/y domains, series of lines, dashed lines, areas (data [x, lo, hi]) and dots; horizontal and vertical bands and references; hover finds the nearest point */
+function chart(id,o){const host=$(id);if(!host)return;host.innerHTML='';const W=980,H=o.h||380,m={l:62,r:o.r||130,t:16,b:46};const sx=v=>m.l+(v-o.x[0])/(o.x[1]-o.x[0])*(W-m.l-m.r),sy=v=>H-m.b-(v-o.y[0])/(o.y[1]-o.y[0])*(H-m.t-m.b);
+  const named=o.series.filter(s=>s.name);if(named.length>1||o.legend)legend(host,named.map(s=>[s.c,s.name,s.type==='dots'||s.type==='rings'?'dot':s.type==='area'?'box':'']));
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.label},host);
+  for(const b of o.hbands||[])el('rect',{x:m.l,width:W-m.l-m.r,y:sy(Math.min(b.y1,o.y[1])),height:Math.max(0,sy(Math.max(b.y0,o.y[0]))-sy(Math.min(b.y1,o.y[1]))),fill:`var(${b.c})`},svg);
+  for(const b of o.vbands||[]){el('rect',{x:sx(b.x0),width:sx(b.x1)-sx(b.x0),y:m.t,height:H-m.b-m.t,fill:`var(${b.c})`},svg);if(b.t)el('text',{x:(sx(b.x0)+sx(b.x1))/2,y:m.t+12,'text-anchor':'middle'},svg).textContent=b.t;}
+  for(const v of o.yt||ticks(o.y[0],o.y[1],6)){el('line',{x1:m.l,x2:W-m.r,y1:sy(v),y2:sy(v),stroke:'var(--grid)'},svg);el('text',{x:m.l-8,y:sy(v)+4,'text-anchor':'end'},svg).textContent=o.yf?o.yf(v):v;}
+  for(const v of o.xt||ticks(o.x[0],o.x[1],9)){el('text',{x:sx(v),y:H-m.b+18,'text-anchor':'middle'},svg).textContent=o.xf?o.xf(v):v;}
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,stroke:'var(--muted)'},svg);
+  el('text',{x:(m.l+W-m.r)/2,y:H-6,'text-anchor':'middle'},svg).textContent=o.xl;const yl=el('text',{x:14,y:(m.t+H-m.b)/2,'text-anchor':'middle',transform:`rotate(-90 14 ${(m.t+H-m.b)/2})`},svg);yl.textContent=o.yl;
+  for(const r of o.hrefs||[]){el('line',{x1:m.l,x2:W-m.r,y1:sy(r.y),y2:sy(r.y),stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);el('text',{x:W-m.r+6,y:sy(r.y)+4},svg).textContent=r.t;}
+  for(const r of o.vrefs||[]){el('line',{x1:sx(r.x),x2:sx(r.x),y1:m.t,y2:H-m.b,stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);if(r.t)el('text',{x:sx(r.x)+5,y:m.t+12+(r.dy||0),style:'fill:var(--ink2);font-size:12px'},svg).textContent=r.t;}
+  const pts=[];
+  for(const s of o.series){
+    if(s.type==='area'){const up=s.data.map(p=>`${sx(p[0])},${sy(p[2])}`),dn=s.data.slice().reverse().map(p=>`${sx(p[0])},${sy(p[1])}`);el('polygon',{points:[...up,...dn].join(' '),fill:`var(${s.c})`,opacity:0.22,stroke:'none'},svg);continue;}
+    if(s.type==='line'){for(const seg of s.segs||[s.data])el('polyline',{points:seg.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' '),fill:'none',stroke:`var(${s.c})`,'stroke-width':s.w||2,'stroke-dasharray':s.dash||'','stroke-linejoin':'round'},svg);
+      const all=s.segs?s.segs.flat():s.data,q=all[all.length-1];if(s.label)el('text',{x:sx(q[0])+6,y:sy(q[1])+(s.dy||4),style:'fill:var(--ink2);font-size:12px'},svg).textContent=s.label;
+      const step=Math.max(1,Math.floor(all.length/400));if(s.tip)for(let i=0;i<all.length;i+=step){const p=all[i];pts.push({x:p[0],y:p[1],tip:s.tip(p)});}}
+    if(s.type==='dots'||s.type==='rings')for(const p of s.data){el('circle',{cx:sx(p[0]),cy:sy(p[1]),r:s.r||5,fill:s.type==='rings'?'var(--surface)':`var(${s.c})`,stroke:s.type==='rings'?`var(${s.c})`:'var(--surface)','stroke-width':2},svg);if(s.tip)pts.push({x:p[0],y:p[1],tip:s.tip(p)});}}
+  const hov=el('circle',{r:7,fill:'none',stroke:'var(--ink)','stroke-width':1.5,visibility:'hidden'},svg);
+  svg.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width,X=(ev.clientX-r.left)*k,Y=(ev.clientY-r.top)*k;let b=null,bd=1e9;
+    for(const p of pts){const d=Math.hypot(sx(p.x)-X,sy(p.y)-Y);if(d<bd){bd=d;b=p;}}
+    if(b&&bd<40){hov.setAttribute('cx',sx(b.x));hov.setAttribute('cy',sy(b.y));hov.setAttribute('visibility','visible');showTip(host,b.tip,sx(b.x)/k,sy(b.y)/k);}else{hov.setAttribute('visibility','hidden');hide();}});
+  svg.addEventListener('mouseleave',()=>{hov.setAttribute('visibility','hidden');hide();});}
+/* rows of ranges: each row bars [lo, hi, colour, height] and dots [x, colour, dy, ring]; hover per row */
+function ranges(id,o){const host=$(id);if(!host)return;host.innerHTML='';const W=980,rh=o.rh||40,H=o.rows.length*rh+64,l=o.l||250,r=40,sx=v=>l+(Math.max(o.x[0],Math.min(o.x[1],v))-o.x[0])/(o.x[1]-o.x[0])*(W-l-r);
+  if(o.legend)legend(host,o.legend);const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.label},host);
+  for(const v of o.xt||ticks(o.x[0],o.x[1],9)){el('line',{x1:sx(v),x2:sx(v),y1:4,y2:H-46,stroke:'var(--grid)'},svg);el('text',{x:sx(v),y:H-28,'text-anchor':'middle'},svg).textContent=o.xf?o.xf(v):v;}
+  for(const z of [].concat(o.zero??[]))el('line',{x1:sx(z),x2:sx(z),y1:4,y2:H-46,stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);
+  el('text',{x:(l+W-r)/2,y:H-8,'text-anchor':'middle'},svg).textContent=o.xl;
+  o.rows.forEach((R,i)=>{const y=14+i*rh+rh/2;el('text',{x:l-10,y:y+4,'text-anchor':'end',style:'fill:var(--ink);font-size:13px'},svg).textContent=R.name.length>40?R.name.slice(0,39)+'…':R.name;
+    for(const b of R.bars){el('rect',{x:sx(b[0]),width:Math.max(2,sx(b[1])-sx(b[0])),y:y-(b[3]||8)/2,height:b[3]||8,rx:3,fill:`var(${b[2]})`},svg);}
+    for(const d of R.dots||[])el('circle',{cx:sx(d[0]),cy:y+(d[2]||0),r:5,fill:d[3]?'var(--surface)':`var(${d[1]})`,stroke:d[3]?`var(${d[1]})`:'var(--surface)','stroke-width':2},svg);
+    const hit=el('rect',{x:0,width:W,y:y-rh/2,height:rh,fill:'transparent'},svg);hit.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width;showTip(host,R.tip,(ev.clientX-r.left),y/k);});hit.addEventListener('mouseleave',hide);});}
+const table=(id,head,rows,txt)=>{const h=$(id);if(!h)return;h.innerHTML='<table><tr>'+head.map(x=>`<th>${x}</th>`).join('')+'</tr>'+rows.map(r=>'<tr>'+r.map((c,i)=>`<td${i&&!txt?' class="num"':''}>${c}</td>`).join('')+'</tr>').join('')+'</table>';};
+const C=['--s1','--s2','--s3','--s4'];
+const D=DATA.data,RUN=D.runs,GEO=DATA.geo||{},CK=DATA.checks;
+/* a tool's output as it printed it: its check lines (ok, ~~, !!) under the section headings they fall in, and the whole output */
+const ST={ok:'ok','~~':'mid','!!':'no'};
+function parse(out){const L=[];let h='';for(const ln of String(out||'').split('\n')){if(/^\S/.test(ln)&&!/^(ok|~~|!!)\s/.test(ln)||/^\s{1,2}\d+\.\s/.test(ln))h=ln.trim();const m=/^\s*(ok|~~|!!)\s+(.*)$/.exec(ln);if(m)L.push({s:m[1],t:m[2],h});}return L;}
+const lines=k=>RUN[k]?parse(RUN[k].out):[];
+const find=(k,re)=>{const m=re.exec(RUN[k]?RUN[k].out:'');return m;};
+function checks(id,k){const host=$(id),run=RUN[k];if(!host)return;if(!run){host.innerHTML='<p class="small">Not run.</p>';return;}const L=parse(run.out),n={ok:0,'~~':0,'!!':0};L.forEach(l=>n[l.s]++);let h=null,li='';
+  for(const l of L){if(l.h!==h){h=l.h;if(h)li+=`<li class="h">${esc(h)}</li>`;}li+=`<li><span class="st ${ST[l.s]}">${l.s}</span><span>${esc(l.t)}</span></li>`;}
+  host.innerHTML=`<div class="run"><div class="runh"><b>The checks as <code>${esc(run.cmd)}</code> prints them</b><span class="pill ${run.rc?'no':'ok'}">${run.rc?'fails (exit '+run.rc+')':'passes (exit 0)'}</span><span class="small">${n.ok} ok · ${n['~~']} ~~ · ${n['!!']} !! · ${run.secs} s</span></div>
+    <p class="small" style="margin:4px 0">${esc(run.what)}</p>${L.length?`<ul class="chk">${li}</ul>`:'<p class="small">It reports and never fails: its findings are in its output.</p>'}<details><summary>its whole output</summary><pre>${esc(run.out)}</pre></details></div>`;}
+function draw(){
+  /* ---------- tiles ---------- */
+  const all=Object.keys(RUN).flatMap(k=>lines(k)),cnt=s=>all.filter(l=>l.s===s).length,geoK=Object.keys(GEO).filter(k=>!k.startsWith('_')),geoOk=geoK.filter(k=>GEO[k].rc===0).length;
+  const W_=D.wind.rows,aLo=Math.min(...W_.map(r=>r[2])),aHi=Math.max(...W_.map(r=>r[2])),rLo=Math.min(...W_.map(r=>r[3])),rHi=Math.max(...W_.map(r=>r[3]));
+  const tu=find('errorbudget',/it passes ([\d.]+) % of (\d+) trials/),v30=find('errorbudget',/as adjusted, the card's scatter\s+10 days: [^;]+; 30 days: ([\d.]+) s \(([\d.]+) mi\)/),su=D.swing.startup.split;
+  const failing=Object.keys(RUN).filter(k=>RUN[k].rc);
+  $('tiles').innerHTML=[['Geometry',`${geoOk} of ${geoK.length} pass`,'Solids, fine interference, the screw audit (movement and box), exploded, the parts list.',geoOk===geoK.length?'ok':'no'],
+    ['The checks',`${cnt('ok')} ok · ${cnt('~~')} ~~ · ${cnt('!!')} !!`,`${Object.keys(RUN).length} tools run${failing.length?', failing: '+failing.join(', '):', every one exits 0'}.`,failing.length?'no':'ok'],
+    ['Swing at 12 h',`${f(D.wind.A12,1)}°`,`${f(aLo,1)}-${f(aHi,1)}° over the wind; the sources' band 225-270° (open).`,'mid'],
+    ['Rate over the wind',`${sg(rLo)} to ${sg(rHi)} s/d`,'The escapement and the drawn hairspring, against 12 h from full wind.','ok'],
+    ['The fusee',`${f(100*D.ms.final.rms,2)} % rms`,`The solved ${th(D.ms.final.L)} mm spring against 05 06_20's measured force; the level open.`,'ok'],
+    ['The TU\'s trial',tu?`${tu[1]} % pass`:'–',`Of ${tu?th(+tu[2]):'–'} trials as adjusted; at the masses' drawn place none.`,tu&&+tu[1]>=95?'ok':'no'],
+    ['A month at sea',v30?`${v30[1]} s`:'–',v30?`The median error carried, ${v30[2]} miles of longitude.`:'','ok'],
+    ['Damping on video',`TF ${f(su.TF,0)} s`,`A running 6MX, ${su.span[0]}-${su.span[1]} s; the model's ${D.wind.TF} s inside it.`,su.span[0]<=D.wind.TF&&D.wind.TF<=su.span[1]?'ok':'mid']]
+    .map(([k,v,n,c])=>`<div class="tile"><div class="k">${k}</div><div class="v ${c}">${v}</div><div class="n">${n}</div></div>`).join('');
+
+  /* ---------- 1. geometry ---------- */
+  const gkey={solids:o=>(o.match(/^.*not solid.*$/gm)||[]).join('; '),fine:o=>[(/^\d+ states, \d+ pairs, \d+ new or grown$/m.exec(o)||[''])[0],(/^\d+ barrel problems$/m.exec(o)||[''])[0],((/^dial face[^\n]*?: (least height[^\n]*)$/m.exec(o)||[,''])[1])].filter(Boolean).join('; '),
+    audit:o=>[...o.matchAll(/^== (\w+) \((\d+)\)$/gm)].map(m=>`${m[1]} ${m[2]}`).join(', ')+'; '+((/^(OK: [^\n]*|NEW[^\n]*)$/m.exec(o)||[''])[0]),exploded:o=>(/^\d+ bodies[^\n]*$/m.exec(o)||[''])[0],bom:o=>o.split('\n').filter(l=>/\d+ (lines|of \d+|pieces|units|relations|jewels)|failed|^OK|^ok\b|all /i.test(l)).slice(-4).join('; ')};
+  gkey['audit-box']=gkey.audit;
+  const st=$('geoStates');if(st){const m=GEO.fine&&/^(\d+) states/m.exec(GEO.fine.out);st.textContent=m?m[1]:CK.states;}
+  table('tGeo',['Check','What it checks','Result','Exit','Time'],geoK.map(k=>{const g=GEO[k];return[`<code>${esc(g.cmd)}</code>`,esc(g.what),esc((gkey[k]||(()=>''))(g.out)),`<span class="${g.rc?'no':'ok'}">${g.rc}</span>`,g.secs+' s'];}),true);
+  {const fo=GEO.fine?GEO.fine.out:'',meas={};for(const m of fo.matchAll(/^(\S+)\s+([\d.]+) mm3 depth\s+([\d.]+)\s+(\S+)\s+x (\S+)/gm))meas[m[4]+'|'+m[5]]=[m[1],+m[2],+m[3]];
+    table('tExp',['Parts','Why they overlap','Measured (mm³, depth mm)','Allowed'],CK.expected.map(([a,b,why,vol,dep])=>{const q=meas[a+'|'+b]||meas[b+'|'+a];return[`<code>${esc(a)}</code> × <code>${esc(b)}</code>`,esc(why),q?`<span class="${q[0]==='ok'?'ok':'no'}">${f(q[1],3)}, ${f(q[2],2)}</span>`:/band:/.test(a+b)?'not checked: the band is a variant, the chain drawn by default':'not met in these states',`${vol}, ${dep}`];}),true);}
+  table('tLoose',['Where','What the audit finds, and why it is meant'],[...CK.loose.map(([p,r])=>[`<code>${esc(p)}</code>`,'A loose end: '+esc(r)]),...CK.float.map(([p,r])=>[`<code>${esc(p)}</code>`,'A screw head on its edge: '+esc(r)]),...CK.floatBox.map(([p,r])=>[`<code>${esc(p)}</code>`,'The box: '+esc(r)])],true);
+  {const B=DATA.bom;$('pBom').innerHTML=`<code>bom.json</code> holds ${B.lines} lines (${Object.entries(B.kinds).map(([k,v])=>`${v} ${k}`).join(', ')}), ${B.units} units in all, with ${B.relations} relations to measure (a pivot in its hole, a screw in its thread, a wheel in mesh, a part resting on another), and ${CK.jewels} jewels to find seated. ${B.devs.length?`${B.devs.length} lines record a known deviation with its reason (printed ~~).`:''} Every line is a sheet's drawing number or a Wempe standard part (WN).`;}
+  $('kGeo').innerHTML=geoK.map(k=>`<details><summary><code>${esc(GEO[k].cmd)}</code>: its whole output (${GEO[k].secs} s, exit ${GEO[k].rc})</summary><pre>${esc(GEO[k].out)}</pre></details>`).join('');
+
+  /* ---------- 2. sources ---------- */
+  {const S=DATA.data.essay.sheets.filter(s=>!s[6]),yr=d=>{if(!d)return null;const[y,m,dd]=d.split('-').map(Number);return y+(m-1)/12+(dd-1)/365;},G={};for(const s of S)(G[s[0]]=G[s[0]]||[]).push(s);
+    const NAMES={'001':'001 the movement in plan','05 01':'05 01 the case','05 02':'05 02 dial and motion work','05 03':'05 03 the balance','05 04':'05 04 the escapement','05 05':'05 05 the going train','05 06':'05 06 the fusee','05 07':'05 07 the barrel','05 08':'05 08 the frame','05 33':'05 33 hand setting','05 36':'05 36 balance holding','05 38':'05 38 seconds contact','51 00':'51 00 the box'};
+    const keys=Object.keys(G).sort(),rows=keys.map(k=>{const d=G[k].map(s=>yr(s[4])).filter(x=>x),rv=G[k].map(s=>yr(s[5])).filter(x=>x);return{name:NAMES[k]||k,bars:[[Math.min(...d),Math.max(...d,...rv),'--grid',4]],dots:[...d.map(x=>[x,'--s1',0]),...rv.map(x=>[x,'--s2',0,1])],
+      tip:`<b>${esc(NAMES[k]||k)}</b><br>${G[k].length} sheets; drawn ${G[k].map(s=>s[4]).filter(Boolean).sort()[0]||'–'} to ${G[k].map(s=>s[4]).filter(Boolean).sort().pop()||'–'}${rv.length?`; ${rv.length} revised, the last ${G[k].map(s=>s[5]).filter(Boolean).sort().pop()}`:''}`};});
+    ranges('cSheets',{label:'The sheets by date',x:[1940,1949],xl:'year drawn (dot) or last revised (ring)',rows,rh:30,legend:[['--s1','drawn','dot'],['--s2','last revised','dot']]});
+    table('tSheets',['Group','Sheets','Drawn','Revised'],keys.map(k=>[esc(NAMES[k]||k),G[k].length,`${(G[k].map(s=>s[4]).filter(Boolean).sort()[0]||'–').slice(0,7)} to ${(G[k].map(s=>s[4]).filter(Boolean).sort().pop()||'–').slice(0,7)}`,G[k].filter(s=>s[5]).length||'–']));}
+  const TN={'05-01-51-00-case-box-overview.md':'05 01, 51 00: case, box, overviews','05-03-05-04-balance-escapement.md':'05 03, 05 04: balance, escapement','05-05-05-02-train-motionwork.md':'05 05, 05 02: train, motion work, dial','05-06-05-07-fusee-barrel.md':'05 06, 05 07: fusee, barrel','05-08-frame.md':'05 08: the frame'};
+  {const T=D.transcriptions;ranges('cTrans',{label:'The transcription by sureness',x:[0,100],xl:'share of the figures read (%)',l:300,rh:36,legend:[['--s1','sure','box'],['--s4','likely','box'],['--s2','unsure','box'],['--muted','other','box']],
+      rows:T.map(t=>{const n=t.figures||1,a=100*t.sure/n,b=a+100*t.likely/n,c=b+100*t.unsure/n;return{name:TN[t.file]||t.file,bars:[[0,a,'--s1',14],[a,b,'--s4',14],[b,c,'--s2',14],[c,100,'--muted',14]],tip:`<b>${esc(t.file)}</b><br>${t.figures} figures: ${t.sure} sure, ${t.likely} likely, ${t.unsure} unsure, ${t.other} other`};})});
+    table('tTrans',['Transcription','Sheets','Figures','Sure','Likely','Unsure','Other'],T.map(t=>[`<code>${esc(t.file)}</code>`,t.sheets,t.figures,t.sure,t.likely,t.unsure,t.other]).concat([['In all',T.reduce((a,t)=>a+t.sheets,0),T.reduce((a,t)=>a+t.figures,0),T.reduce((a,t)=>a+t.sure,0),T.reduce((a,t)=>a+t.likely,0),T.reduce((a,t)=>a+t.unsure,0),T.reduce((a,t)=>a+t.other,0)]]));}
+  $('nCorr').textContent=DATA.counts.corrected;$('nEst').textContent=DATA.counts.estimates;$('nUnres').textContent=DATA.counts.unresolved;
+
+  /* ---------- 3. the escapement ---------- */
+  {const R=D.wind.rows;chart('cWind',{label:'The swing over the wind',x:[0,56],y:[180,280],xl:'hours since full wind',yl:'the swing (°)',hbands:[{y0:225,y1:270,c:'--manual'}],hrefs:[{y:225,t:'225° (1954)'}],r:120,
+      series:[{type:'line',name:'the swing',c:'--s1',data:R.map(q=>[q[0],q[2]]),tip:p=>`${p[0]} h: ${f(p[1],1)}°`}]});
+    chart('cRate',{label:'The rate over the wind',x:[0,56],y:[-0.4,0.4],xl:'hours since full wind',yl:'rate against 12 h (s/d)',hrefs:[{y:0,t:'12 h'}],r:120,
+      series:[{type:'line',name:'the escapement alone',c:'--s2',dash:'5 4',data:R.map(q=>[q[0],q[4]]),tip:p=>`${p[0]} h: ${sg(p[1],3)} s/d, the escapement alone`},{type:'line',name:'with the drawn hairspring',c:'--s1',data:R.map(q=>[q[0],q[3]]),tip:p=>`${p[0]} h: ${sg(p[1],3)} s/d`}]});}
+  checks('kEsc','escapement');
+  {const V=[];for(const m of (RUN.dynamics?RUN.dynamics.out:'').matchAll(/^\s{4}(\S.*?)\s{2,}(\d+)°, trips (\d+), back ([\d.]+) ms before the tooth, ([\d.]+) % lifted/gm))V.push([esc(m[1]),m[2]+'°',m[3],m[4]+' ms',m[5]+' %']);
+    if(V.length)table('tDyn',['The detent varied','Swing','Teeth past','Home before the next tooth','Lifted as it arrives'],V);}
+  checks('kDyn','dynamics');
+  {const T=D.trip;if(T){const fr=T.frame;table('tModes',['Mode','Frequency','Where the strain is'],fr.modes.map((m,i)=>[i+1,th(m.f)+' Hz',Object.entries(m.share).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>0.05).map(([k,v])=>`${k} ${f(100*v,0)} %`).join(', ')]));
+      const v=T.valid;table('tValid',['Rigid at the flexure','dynamics.js','The frame'],[['the swing',f(v.dyn.A,2)+'°',f(v.frame.A,2)+'°'],['the rate',sg(v.dyn.rate,3)+' s/d',sg(v.frame.rate,3)+' s/d'],['release',f(v.dyn.rel,2)+'°',f(v.frame.rel,2)+'°'],['off the stone',f(v.dyn.offF,2)+'°',f(v.frame.offF,2)+'°'],['home',f(v.dyn.home,2)+'°',f(v.frame.home,2)+'°'],['beats',v.dyn.beats,v.frame.beats]]);
+      if(T.running)table('tRun',['Running','Swing','Rate (s/d)','Teeth past','A held tooth\'s stone lifted (of the lock)'],Object.entries(T.running).map(([k,r])=>[esc(k),f(r.A,1)+'°',sg(r.rate,2),r.trips,`${f(100*r.maxL,1)} % at ${f(r.maxTh,0)}°${r.maxRet?', the return swing':''}`]));
+      if(T.sweep)table('tSweep',['An estimate varied','Teeth past','The stone at most (of the lock)','Swing'],T.sweep.map(r=>[esc(r.name),r.trips,f(100*r.maxL,1)+' %',f(r.A,1)+'°']));
+      if(T.knocks)table('tKnock',['Preload','Knock','The frame as drawn','The rigid detent'],T.knocks.rows.map(k=>[esc(k.preload),esc(k.name),`${k.frame} ${k.unit}`,`${k.rigid} ${k.unit}`]),true);
+      if(T.push){const P=T.push.rows.map(q=>[q.frame.A,q.frame.trips?100:Math.min(100,100*q.frame.maxL),q]);chart('cPush',{label:'The swing pushed',x:[220,380],y:[0,105],xl:'the swing (°)',yl:'the stone lifted, % of the lock',vrefs:[{x:T.push.TRIP,t:'TRIP'}],hrefs:[{y:50,t:'half'}],hbands:[],
+        series:[{type:'dots',name:'no tooth past',c:'--s1',data:P.filter(p=>!p[2].frame.trips).map(p=>[p[0],p[1]]),tip:p=>`${f(p[0],0)}°: the stone at most ${f(p[1],1)} %`},{type:'dots',name:'a tooth got past',c:'--s2',data:P.filter(p=>p[2].frame.trips).map(p=>[p[0],p[1]]),tip:p=>`${f(p[0],0)}°: a tooth past`}]});}}}
+  checks('kTrip','tripping');
+
+  /* ---------- 4. mainspring and fusee ---------- */
+  {const F=D.ms.final;chart('cFusee',{label:'05 06_20 against the solved spring',x:[0,9],y:[120,145],xl:'fusee turns from run down',yl:'g on the 262 mm lever',r:120,
+      series:[{type:'dots',name:'05 06_20, measured',c:'--s2',r:4,data:F.fit.map(q=>[q[0],q[1]]),tip:p=>`turn ${p[0]}: ${p[1]} g measured`},{type:'line',name:'the solved spring, scaled',c:'--s1',data:F.fit.map(q=>[q[0],q[2]]),tip:p=>`turn ${p[0]}: ${f(p[1],2)} g solved`}]});
+    const T=D.ms.tries,Ls=[...new Set(T.map(t=>t.L))].sort((a,b)=>a-b);
+    chart('cTries',{label:'The fit over the lengths and sets',x:[0.4,1.7],y:[0,25],xl:'the free curve\'s turns, × the Hamilton\'s (the set)',yl:'misfit, % rms',r:120,
+      series:Ls.map((L,i)=>{const q=T.filter(t=>t.L===L).sort((a,b)=>a.set-b.set).map(t=>[t.set,100*t.rms]);return{type:q.length>1?'line':'dots',name:th(L)+' mm',c:[...C,'--ink2'][i%5],data:q,label:q.length>1?th(L):'',tip:p=>`${th(L)} mm, set ×${p[0]}: ${f(p[1],2)} % rms`};})});
+    table('tTries',['Length','Set','Shape misfit (rms, worst)','Measured over solved'],T.slice().sort((a,b)=>a.rms-b.rms).map(t=>[th(t.L)+' mm','×'+t.set,`${f(100*t.rms,2)} %, ${f(100*t.max,1)} %`,f(t.eta,3)]));
+    const P=D.phys;$('msLevel').innerHTML=`The measured force is ${f(F.eta,3)} of the solved spring's frictionless torque at 0.37 mm and 207 GPa: over the modulus's and the thickness's ranges that leaves ${f(100*(1-P.LV.imp[1]),1)}-${f(100*(1-P.LV.imp[0]),1)} % for the losses on the way, against the ${f(100*(1-P.LS.hi),1)}-${f(100*(1-P.LS.lo),1)} % worked out from the parts (section 5): it closes only at the top of the spring's own losses, or with a strip about ${f(P.LV.tMid,3)} mm thick at their middle. The sheet's "0,37" was read again at 8-20× and is not overwritten, so the strip is taken as 0.37, and the budget takes the solved spring's shape at the measured level (×${f(P.LV.Kl,3)}).`;
+    const M=D.friction;table('tFric',['Coil friction µ','Running loss','Winding against running','Fully wound, running','Run down, running'],Object.keys(M.loss).map(k=>[k,f(100*M.loss[k],1)+' %',f(100*M.hyst[k],1)+' %',f(100*M.top[k],1)+' %',f(100*M.down[k],1)+' %']));}
+  checks('kMs','mainspring');checks('kFric','friction');
+
+  /* ---------- 5. energy ---------- */
+  {const P=D.phys,need=find('physics',/needs Q (\d+)-(\d+)/),q=find('physics',/model's TF (\d+) s \(Q (\d+)\)/)||find('physics',/at the model's Q (\d+)/);
+    const rows=[{name:'the balance\'s parts give',bars:[[P.DQ.lo,P.DQ.hi,'--s1',14]],tip:`Q ${th(P.DQ.lo)}-${th(P.DQ.hi)}: air, the endstone and the spring`}];
+    if(need)rows.push({name:'225-270° on the measured drive needs',bars:[[+need[1],+need[2],'--s3',14]],tip:`Q ${need[1]}-${need[2]}`});
+    const qm=find('physics',/at the model's Q (\d+) \(TF (\d+) s\)/);if(qm)rows.push({name:`the model (TF ${qm[2]} s)`,bars:[],dots:[[+qm[1],'--s2']],tip:`the model's middle estimate, Q ${qm[1]}`});
+    ranges('cQ',{label:'The damping the parts give against what the band needs',x:[0,2500],xl:'the balance\'s Q',rows,rh:44,legend:[['--s1','from the parts','box'],['--s3','needed for 225-270°','box'],['--s2','the model','dot']]});
+    const pw=find('physics',/the fusee arbor gives ([\d.]+) µW \(measured\), the escape wheel ([\d.]+) µW at ([\d.]+)[^,]*, the balance loses ([\d.]+) µW: ([\d.]+) %/);
+    if(pw)table('tPower',['At 12 h from full wind','Power','Share'],[['the fusee arbor (05 06_20, measured)',pw[1]+' µW','100 %'],[`the escape wheel (through the train, ${pw[3]})`,pw[2]+' µW',f(100*pw[2]/pw[1],0)+' %'],['lost in the balance',pw[4]+' µW',pw[5]+' %']]);}
+  checks('kPhys','physics');
+
+  /* ---------- 6. the train ---------- */
+  {const G=D.gear;chart('cMesh',{label:'Torque ratio over a pitch',x:[0,1],y:[0.55,1.1],xl:'position through one pitch of the wheel',yl:'torque ratio / nominal',r:170,
+      series:G.meshes.map((s,i)=>({type:'line',name:s.name,c:C[i],data:s.curve.map(p=>[p[0],p[3]]),tip:p=>`${esc(s.name)}<br>${f(p[1],3)} of the nominal at µ 0.20`}))});
+    table('tMesh',['Mesh','µ 0 / 0.10 / 0.20 (mean)','Before the line of centres','Drop','Backlash','Tip clearance'],G.meshes.map(s=>[esc(s.name)+` (${s.zA}:${s.zB}, m ${s.m})`,s.stats.map(q=>f(q.mean,3)).join(' / '),f(100*s.approach,0)+' %',f(100*s.drop,1)+' %',s.backlash+' µm',s.tip+' µm']));
+    const dmin=Math.min(...G.days.flatMap(d=>d.trace.map(p=>p[1]))),dmax=Math.max(...G.days.flatMap(d=>d.trace.map(p=>p[1])));
+    chart('cDay',{label:'The swing over six hours',x:[0,6],y:[Math.floor(dmin-2),Math.ceil(dmax+2)],xl:'hours',yl:'the swing (°)',r:120,
+      series:G.days.map((d,i)=>({type:'line',name:`µ ${d.mu}`,c:C[i],w:1.4,data:d.trace.map(p=>[p[0],p[1]]),tip:p=>`${f(p[0],2)} h: ${f(p[1],1)}° (µ ${d.mu})`}))});
+    const Wn=G.windows.stages;ranges('cWin',{label:'Depthing windows',x:[-300,500],xl:'centres moved from the drawn (µm; negative closer)',l:280,zero:0,legend:[['--band','the window','box'],['--s1','the holes\' tolerance, doubled, and the shake','box']],
+      rows:Wn.map(w=>({name:w.stage,bars:[[w.lo*1000,w.hi*1000,'--band',16],[-(2*w.tp+w.sh)*1000,(2*w.tp+w.sh)*1000,'--s1',6]],tip:`<b>${esc(w.stage)}</b><br>window ${f(w.lo*1000,0)} to +${f(w.hi*1000,0)} µm${w.hi*1000>=Math.round(w.hi*1000)?' (the search\'s end at one module)':''}; the holes ±${f(w.tp*1000,0)} µm; pressure angle ${w.phi}°`}))});}
+  checks('kGear','gearing');
+
+  /* ---------- 7. strength ---------- */
+  {const S=[];for(const m of (RUN.strength?RUN.strength.out:'').split('\n').map(l=>/^ *(ok|~~|!!) +(.+?) +((?:[\d.]+ (?:N|mN·m)(?:, )?)+) +(\d+ MPa) +(.+?) ([\d.]+-[\d.]+): margin ([\d.]+)-([\d.]+) *$/.exec(l)).filter(Boolean))S.push({s:m[1],name:m[2].trim(),load:m[3].trim(),stress:m[4],lim:m[5].trim()+' '+m[6]+' MPa',lo:+m[7],hi:+m[8]});
+    const lg=Math.log10;if(S.length){ranges('cStr',{label:'Margins',x:[lg(0.5),lg(200)],xt:[0.5,1,2,5,10,20,50,100,200].map(lg),xf:v=>String(+Math.pow(10,v).toPrecision(2)),xl:'margin (stress against the material\'s range; logarithmic)',l:330,rh:26,zero:0,
+      rows:S.map(q=>({name:q.name,bars:[[lg(q.lo),lg(q.hi),q.s==='ok'?'--s3':q.s==='~~'?'--s4':'--s2',10]],tip:`<b>${esc(q.name)}</b><br>${esc(q.load)}, ${q.stress}<br>${esc(q.lim)}: margin ${q.lo}-${q.hi}`}))});
+      table('tStr',['','Part','Load','Stress','Against','Margin'],S.map(q=>[`<span class="st ${ST[q.s]}">${q.s}</span>`,esc(q.name),esc(q.load),q.stress,esc(q.lim),`${q.lo}-${q.hi}`]),true);}}
+  checks('kStr','strength');
+
+  /* ---------- 8. hairspring ---------- */
+  {const H=D.hair;chart('cHsRate',{label:'The spring\'s rate against the swing',x:[100,300],y:[-4,8],xl:'the swing (°)',yl:'rate against small swings (s/d)',hbands:[{y0:-4,y1:8,c:'--grid'}].slice(0,0),vbands:[{x0:225,x1:270,c:'--manual',t:'225-270°'}],vrefs:[{x:H.A12,t:`the model's ${f(H.A12,1)}°`,dy:16}],hrefs:[{y:0,t:'0'}],r:110,
+      series:[{type:'line',name:'the drawn spring, elastica',c:'--s1',data:H.rate,tip:p=>`${p[0]}°: ${sg(p[1],3)} s/d`}]});
+    const T=D.essay.hs;chart('cHsLat',{label:'Force on the pivots against the helix\'s turns',x:[10.75,12.75],y:[0,0.035],xl:'turns of helix between the curves',yl:'force × R / couple',r:110,vrefs:[{x:T.drawn[0],t:'drawn'}],
+      series:[{type:'line',name:'05 03_7\'s curves at both ends',c:'--s2',data:T.turns,tip:p=>`${f(p[0],3)} turns: ${f(p[1],4)}`},{type:'dots',name:'the drawn spring',c:'--s1',data:[T.drawn],tip:p=>`drawn: ${f(p[0],3)} turns, ${f(p[1],4)}`}]});}
+  checks('kHs','hairspring');
+
+  /* ---------- 9. temperature ---------- */
+  {const Hh=D.essay.heat,R=Hh.rows,ymin=Math.floor(Math.min(...R.map(q=>Math.min(q[2],q[4])))),ymax=Math.ceil(Math.max(...R.map(q=>q[3])));
+    chart('cHeat',{label:'Rate a °C against the masses\' place',x:[Hh.arc[0],Hh.arc[1]],y:[ymin,ymax],xl:'the masses\' place, degrees from the cuts\' line',yl:'rate gained a day a °C (s/d/°C)',hbands:[{y0:-0.1,y1:0.1,c:'--manual'}],
+      vrefs:[{x:Hh.drawn,t:`drawn, ${Hh.drawn}°`},{x:Hh.zero,t:`compensates, ${f(Hh.zero,1)}°`,dy:16}],r:120,
+      series:[{type:'area',name:'Guillaume\'s nickel steel, the constants\' corners',c:'--s1',data:R.map(q=>[q[0],q[2],q[3]])},{type:'line',name:'Guillaume\'s nickel steel, their middle',c:'--s1',data:R.map(q=>[q[0],q[1]]),tip:p=>`${p[0]}°: ${sg(p[1],2)} s/d/°C`},
+        {type:'line',name:'a plain nickel steel',c:'--s2',dash:'5 4',data:R.map(q=>[q[0],q[4]]),tip:p=>`${p[0]}°: ${sg(p[1],2)} s/d/°C (plain)`}]});}
+  checks('kHeat','thermal');
+
+  /* ---------- 10. gimbals ---------- */
+  {const M=D.mass,bp=M.bowl.byPart,mv=M.bowl.m-['bowl','bezel','closingPlate'].reduce((a,k)=>a+(bp[k]||0),0);
+    table('tMass',['Weighed on the model','g'],[['the bowl (cast brass, R-05 01 00-1)',f(bp.bowl,1)],['the bezel and glass',f(bp.bezel,1)],['the closing plate',f(bp.closingPlate,1)],['the movement, its ring and dial',f(mv,1)],['<b>the case in all</b>',`<b>${f(M.bowl.m,1)}</b>`],['the gimbal ring, its bracket, pivots and nuts',f(M.ring.m,1)]]);
+    table('tAlt',['The bowl in','Case (g)','Its centre of gravity','Hangs?'],((D.gim&&D.gim.alt)||Object.entries(M.alt).map(([k,v])=>({k,...v}))).map(a=>[esc(a.k),th(a.m),`${f(Math.abs(a.cg[1]),2)} mm ${a.cg[1]>0?'over':'under'} the pivots`,a.T?`yes, ${f(a.T,2)} s`:'no: it turns over']),true);
+    const G=D.gim;if(G&&G.res){const B=G.bodies;chart('cRes',{label:'Resonance',x:[Math.log10(0.25),Math.log10(20)],y:[Math.log10(0.002),Math.log10(2)],xl:'roll period (s; logarithmic)',yl:'lean per degree of roll (log)',
+        xt:[0.25,0.5,1,2,5,10,20].map(Math.log10),xf:v=>String(+Math.pow(10,v).toPrecision(2)),yt:[0.002,0.01,0.1,1].map(Math.log10),yf:v=>String(+Math.pow(10,v).toPrecision(1)),
+        vbands:[{x0:Math.log10(10),x1:Math.log10(20),c:'--band',t:'ships\' roll'}],vrefs:[{x:Math.log10(B.Tz),t:`case ${f(B.Tz,2)} s`},{x:Math.log10(B.Tx),t:`ring ${f(B.Tx,2)} s`,dy:16},{x:Math.log10(0.5),t:'beat'}],r:60,
+        series:[{type:'line',name:'from the apparent vertical',c:'--s1',data:G.res.map(q=>[Math.log10(q[0]),Math.log10(Math.max(q[1],2e-3))]),tip:p=>`${f(Math.pow(10,p[0]),2)} s: ${f(Math.pow(10,p[1]),3)}`},{type:'line',name:'from the true vertical',c:'--s2',dash:'5 4',data:G.res.map(q=>[Math.log10(q[0]),Math.log10(Math.max(q[2],2e-3))]),tip:p=>`${f(Math.pow(10,p[0]),2)} s: ${f(Math.pow(10,p[1]),3)}`}]});
+        }
+      if(G&&G.seas&&G.seas.length)table('tSeas',['Installation','Sea','Within NORDFORSK’s limit?','Lean from the true vertical (rms, max)','From the apparent (rms, max)','Turned in its ring (max each way)','Across the staff (max)','Rate (s/d)'],
+        G.seas.map(s=>[s.inst==='fore-aft'?'the case’s pivots fore and aft':'turned a quarter',esc(s.name),s.kind==='within'?'within':'beyond',`${f(s.tilt,1)}°, ${f(s.tiltMax,1)}°`,`${f(s.app,2)}°, ${f(s.appMax,2)}°`,`${f(s.bMax[0],1)}°, ${f(s.bMax[1],1)}°`,`${f(s.fplMax*1000,1)} mg`,sg(s.rate,3)]),true);}
+  checks('kGim','gimbals');
+
+  /* ---------- 11. the trial and a voyage ---------- */
+  {const T=D.essay.trial,P=T.TU,days=T.days.map((q,i)=>[i+1,q[1]]),vb=P.map((t,i)=>({x0:i*7+0.5,x1:i*7+7.5,c:i%2?'--band':'--warmb',t:t+' °C'}));
+    const y0=Math.floor(Math.min(...days.map(q=>q[1]))*2)/2,y1=Math.ceil(Math.max(...days.map(q=>q[1]))*2)/2;
+    chart('cTrial',{label:'One trial',x:[0.5,35.5],y:[Math.min(y0,-1),Math.max(y1,1)],xl:'day of the trial',yl:'daily rate (s/d)',vbands:vb,r:60,
+      series:[{type:'dots',name:'a day\'s rate',c:'--s1',r:4,data:days,tip:p=>`day ${p[0]}: ${sg(p[1],3)} s/d`}]});
+    const ad=find('errorbudget',/as adjusted \(the masses at their compensating place\): \(median, and 95 % of \|x\|\) (.*?); it passes/),dr=find('errorbudget',/the masses at their drawn place: \(median, and 95 % of \|x\|\) (.*?); it passes/);
+    const sp=s=>{const o={};if(!s)return o;for(const m of s[1].matchAll(/(the largest period mean|[ERDCSN]) ([−+]?[\d.]+) \(([\d.]+)\)/g))o[m[1]]=[m[2],m[3]];return o;},A=sp(ad),B=sp(dr),L=T.LIM;
+    const rows=[['E, the daily rate\'s mean variation','E','±'+L.E],['R','R','±'+L.R],['D','D','±'+L.D],['C, the temperature coefficient (s/d/°C)','C','±'+L.C],['S, the secondary error','S','±'+L.S],['each period\'s mean','the largest period mean','±'+L.w],['N = 42E + 4.5R + 60C + 2.4S','N','≤ '+L.N]];
+    table('tTU',['The TU\'s figure','Limit','As adjusted (median; 95 %)','The masses where drawn'],rows.map(([n,k,l])=>[esc(n),l,A[k]?`${A[k][0]} (${A[k][1]})`:'–',B[k]?`${B[k][0]} (${B[k][1]})`:'–']));
+    const V=[];for(const m of (RUN.errorbudget?RUN.errorbudget.out:'').matchAll(/^\s{2}(as adjusted, the card's scatter|borderline \(the scatter ×[\d.]+\)|the masses at their drawn place)\s+10 days: ([\d.]+) s \(([\d.]+) mi\), 95 % ([\d.]+) s[^;]*; 30 days: ([\d.]+) s \(([\d.]+) mi\), 95 % ([\d.]+) s[^;]*; 60 days: ([\d.]+) s \(([\d.]+) mi\), 95 % ([\d.]+) s/gm))
+      V.push([esc(m[1]),`${m[2]} s (${m[3]} mi)`,`${m[5]} s (${m[6]} mi)`,`${m[8]} s (${m[9]} mi)`,`${m[4]} / ${m[7]} / ${m[10]} s`]);
+    if(V.length)table('tVoy',['A 60-day voyage','After 10 days','After 30 days','After 60 days','95 % of voyages (10 / 30 / 60 days)'],V);}
+  checks('kEb','errorbudget');
+
+  /* ---------- 12. building it ---------- */
+  {const B=D.build;if(B){const T=B.tol,ms=T.mainspring,dt=T.detent,go=T.gold,lk=T.lock,hs=T.hairspring,rg=(a,n=3,u='')=>`${f(a[0],n)}-${f(a[1],n)}${u}`;
+    table('tTol',['Part','Drawn','The range that keeps the swing in the guard band','What sets it'],[
+      ['the mainspring\'s strip (05 06_20)',`${f(ms.t,3)} mm`,`${rg(ms.t_mm)} mm (the drive ×${rg(ms.s)}); ${rg(ms.tMeasured_mm)} mm on the solved spring at the measured level`,`the strip's stress, ${f(ms.stressGPa,2)} GPa at the measured level, against a mainspring's limit sets the top; the swing alone would allow ×${f(ms.sSwing[1],2)}. On 05 06_20's lever: mean ${f(ms.g262.mean,1)} g within ${rg(ms.g262.band,1,' g')}. The sources' band wants ×${f(ms.sources.s,3)}, a strip ${f(ms.sources.t_mm,3)} mm`],
+      ['the detent\'s spring (1436, "0,07")',`${f(dt.t,3)} mm`,`up to ${f(dt.t_mm[1],3)} mm (${f(dt.k[1],1)}× as stiff); the detent home in time over ${rg(dt.inTime)} mm (dynamics.js)`,`1436's other figure, 0.09 (${f(dt.t09.k,2)}× as stiff), swings ${rg(dt.t09.A,1,'°')} over the wind`],
+      ['the detent\'s preload (the banking)',`${f(dt.preload.g,2)} g at the stone (estimated)`,`${f(dt.preload.min,2)}-${f(dt.preload.max,2)} g`,'the floor the frame\'s margin against tripping (tripping.js); the top the swing at the wind\'s lowest'],
+      ['the gold spring (05 04 01-2)',`${f(go.t,2)} mm, ${go.E} GPa (estimated)`,`up to ${f(go.k[1],2)}× as stiff: ${f(go.t_mm,3)} mm, or the alloy's modulus up to ${f(go.E_max,0)} GPa`,`with none it swings ${f(go.A0,1)}° at 12 h; softer is free for the swing but not for the lock (tripping.js)`],
+      ['the depth of lock (05 04_1)',`${f(lk.d,3)} mm`,`${f(lk.shallow,4)}-${f(lk.deep,3)} mm`,`deepest that unlocks (the stone lifted at most ${f(lk.liftMax,3)} mm); shallowest with a held tooth's stone ringing under half the depth. A wheel at the top of its Ø 14 +0.03 locks ${f(lk.tip,3)} deep with the banking left: the banking is set to the wheel as made`],
+      ['the hairspring (05 03_6, 05 03_7)',`0.285 mm; the period ${f(hs.T,4)} s`,`0.5 s wants the strip ${f(hs.hNeed,4)} mm (${rg(hs.hNeedE,4)} over the modulus's range)`,`each µm of the strip ${f(hs.perUm,0)} s a day, each 0.01 mm of the coil's Ø ${f(hs.perCoil001,0)}; the timing weights reach ${f(hs.weights.gain,0)} s a day, gaining only: the spring is matched to the balance, not made to it`]],true);
+    table('tPre',['Preload at the stone','The swing over the wind (lowest to highest)','At 12 h'],dt.preload.rows.map(q=>[f(q.w,2)+' g',`${f(q.A[0],1)}-${f(q.A[1],1)}°`,f(q.A[2],1)+'°']));
+    const BT=B.bench.tests;table('tBench',['Test','Sheets','When','What it must read','How'],BT.map(t=>[`<b>${esc(t.title)}</b>`,esc(t.sheet||''),esc(t.when||''),esc(t.pass||''),`<details><summary>how</summary>${esc(t.how||'')}</details>`]),true);
+    const M=B.mc,a=M.asMade,af=M.after,pc=x=>x==null?'–':f(100*x,1)+' %';
+    table('tMC',[`${th(M.N)} movements`,'As made','After the bench'],[['the train turns',pc(a.turns),pc(af.turns)],['every arbor free (endshake ≥ 0.01 mm)',pc(a.free),pc(af.free)],['the escapement unlocks',pc(a.unlocks),'–'],['the lock in its window',pc(a.lock),pc(af.lock)],['the swing in the guard band over the wind',pc(a.band),pc(af.band)],['in the sources\' 225-270°',pc(a.sources),pc(af.sources)],['it times (within the weights\' reach)',pc(a.times),'matched on the bench'],['<b>works</b>',`<b>${pc(a.works)}</b>`,`<b>${pc(af.works)}</b>`]]);
+    const bn=M.bench,BN={depths:'the depths: close meshes re-bushed',endshake:'endshake set again',ring:'the detent\'s ring: springs replaced',lock:'the escapement: banking and preload set',spring:'the mainspring\'s pull: another strip',setup:'the swing: the set-up turned',swing:'the swing still out',vibrated:'the balance vibrated: spring matched'};
+    table('tMCb',['The bench\'s test','Movements it catches'],Object.entries(bn).map(([k,v])=>[esc(BN[k]||k),th(v.caught)+(v.wouldFail!=null?` (${th(v.wouldFail)} would have failed)`:'')+(v.bind!=null?` (${th(v.bind)} binding)`:'')]));
+    chart('cMC',{label:'The lowest swing as made',x:[188,218],y:[0,Math.ceil(Math.max(...M.swing.hist.map(h=>h[1]))/50)*50],xl:'the lowest swing over the wind (°)',yl:'movements',hbands:[],vbands:[{x0:193,x1:218,c:'--manual'}],r:40,
+      series:[{type:'line',name:'',c:'--s1',data:M.swing.hist.flatMap(h=>[[h[0],h[1]],[h[0]+2.5,h[1]]]),tip:p=>`${f(p[0],1)}°: ${p[1]} movements`}]});
+    table('tMCa',['Each tolerance alone','Works as made','After the bench','In the guard band as made'],Object.entries(M.alone).map(([k,v])=>[esc(k),pc(v.asMade),pc(v.works),pc(v.band)]));
+    table('tKey',['Measure','The book','The model','The model\'s source','Reading'],B.key.rows.map(r=>[esc(r.measure),esc(r.book),esc(r.model),esc(r.source),esc(r.reading)]),true);}}
+  checks('kTol','tolerances');checks('kBench','bench');checks('kMC','montecarlo');checks('kKey','keystone');
+  {const T=D.tr;if(T){const g=(x,n=1)=>Number.isFinite(+x)?(+x).toFixed(n):'–';
+    table('tTrW',['Turns from full wind','Hours','The chain\'s lever','Its pull','The click\'s face','The maintaining spring\'s lead','Fusee wheel teeth','Escape wheel','Swing'],T.qs.map(r=>[g(r.n,2),g(r.h),g(r.rho,2)+' mm',g(r.pull)+' N',g(r.click)+' N',g(r.lead*180/Math.PI,2)+'° ('+g((T.MSB-r.lead)*180/Math.PI,2)+'° short)',g(r.F[0])+' N',g(r.esc*1e6)+' µN·m',g(r.A)+'°']));
+    const B=T.beat;if(B)table('tTrB',['Mesh, in a beat at 12 h','Peak force','Times its running','Lets go','Strength (fully wound)'],B.meshes.map(m=>[esc(m.nm),g(m.Fmax,m.Fmax<1?4:2)+' N',Number.isFinite(m.fac)?g(m.fac,2):'–',/(cannon|change|up-and-down)/.test(m.nm)?(m.back?'on its back flank':'rests in its backlash between steps, never on its back flank'):m.free>0?g(100*m.free,2)+' % of the time':'never',m.str?`<span class="st ${ST[m.str.v]}">${m.str.v}</span> margin ${g(m.str.mL,2)}-${g(m.str.mH,2)}`:'–']));
+    const L=T.letgo,yl=T.letgoSum;if(L){const fy=[300,450].map(s=>51.4*s/105),run=L.snap[0].Fc&&T.runClick;
+      chart('cTrL',{label:'The click\'s catch',x:[0,5.5],y:[0,Math.max(450,...L.snap.map(q=>q.Fc))*1.05],xl:'free travel to the nearer click\'s face (°)',yl:'the catch on the click wheel\'s tooth (N)',r:150,
+        hrefs:[{y:fy[0],t:'brass yields (300 MPa)'},{y:fy[1],t:'(450 MPa)'},{y:T.runClick,t:'running'}],
+        series:[{type:'line',name:'let go outright',c:'--s2',data:L.snap.map(q=>[q.free*180/Math.PI,q.Fc]),tip:p=>`${g(p[0],2)}° free: ${g(p[1],0)} N`},{type:'dots',c:'--s2',r:4,data:L.snap.map(q=>[q.free*180/Math.PI,q.Fc])},
+          {type:'line',name:'eased back',c:'--s1',data:L.eased.map(q=>[q.free*180/Math.PI,q.Fc]),tip:p=>`${g(p[0],2)}° free: ${g(p[1],0)} N`},{type:'dots',c:'--s1',r:4,data:L.eased.map(q=>[q.free*180/Math.PI,q.Fc])}]});
+      if(yl&&yl.vary)table('tTrV',['The worst outright let-go, an estimate varied','The click\'s catch','The fusee wheel\'s teeth','The locking stone','The maintaining spring to'],yl.vary.map(v=>[esc(v.lab),g(v.Fc,0)+' N',g(v.fw)+' N',g(v.stone,3)+' N',g(v.sp*180/Math.PI,2)+'°']));
+      $('trMeaning').innerHTML=`<b>What it means.</b> Running, the train's give and backlash change little: the impulse's work moves ${g(100*(B.W1/B.W0-1),2)} % from a rigid train's (${g(B.dA,2)}° of swing,
+        ${g(B.dR,3)} s a day), no mesh of the going train lets go but the escape pinion's, for a millisecond as the escape wheel lands, and the seconds hand overshoots its step by ${g(B.sec*180/Math.PI*3600,0)}″. The lowest mode of the
+        whole transmission, the barrel and fusee on the maintaining spring, is ${g(T.modes.filter(m=>m.f>0.01)[0].f)} Hz, far from the beat's 2 Hz. The blows come from the key: the Wempe's key is
+        one-way, but it grips whenever the hand holds it, so how the hand lets go at the end of a stroke decides them. Eased back, the click catches with ${g(yl.eased.F,0)} N at most, ${g(yl.eased.click.s,0)} MPa in the
+        click wheel's tooth. Let go outright, the fusee and barrel run up to half a click tooth free and strike it with ${g(yl.snap.F,0)} N (${g(yl.snap.click.s,0)} MPa): at or past brass's yield over
+        every estimate the blow rests on; the maintaining spring is thrown onto its bank and the chain goes slack and snatches. A key is let back, not let go.`;}}
+    checks('kTr','transmission');}
+
+  /* ---------- 14. the swing on video ---------- */
+  {const S=D.swing,U=S.startup,pts=S.pts;chart('cSwing',{label:'The 6MX\'s swing',x:[1070,1192],y:[100,195],xl:'the video\'s time (s; 1073 is 17:53)',yl:'the swing (°)',r:60,
+      xf:v=>`${Math.floor(v/60)}:${String(Math.round(v%60)).padStart(2,'0')}`,
+      series:[{type:'dots',name:'read off the video',c:'--s2',r:4,data:pts,tip:p=>`${Math.floor(p[0]/60)}:${f(p[0]%60,1).padStart(4,'0')}: ${f(p[1],1)}°`},
+        {type:'line',name:`the Wempe's escapement work, TF ${f(U.split.TF,0)} s`,c:'--s1',segs:S.split,tip:p=>`fit: ${f(p[1],1)}°`},{type:'line',name:`the plain A² law, TF ${f(U.flat.TF,0)} s`,c:'--s3',dash:'5 4',segs:S.flat}]});
+    table('tFits',['The fit','TF','Within the scatter','The stretches\' scale ±3 %','It keeps','rms'],[['the Wempe\'s escapement work, the damping split (TF at the model\'s swing)',f(U.split.TF,1)+' s',`${U.split.range[0]}-${U.split.range[1]} s`,`${U.split.span[0]}-${U.split.span[1]} s`,f(U.split.Ainf,1)+'°',f(U.split.rms,2)+'°'],
+      ['the same, the damping viscous (TF at the 6MX\'s swing)',f(U.model.TF,1)+' s',`${U.model.range[0]}-${U.model.range[1]} s`,`${U.model.span[0]}-${U.model.span[1]} s`,f(U.model.Ainf,1)+'°',f(U.model.rms,2)+'°'],
+      ['the work held flat (the plain A² law)',f(U.flat.TF,1)+' s',`${U.flat.range[0]}-${U.flat.range[1]} s`,'–',f(U.flat.Ainf,1)+'°',f(U.flat.rms,2)+'°'],
+      ...Object.keys(U).filter(k=>k.startsWith('alone: ')).map(k=>[esc(k.replace('alone: ','one stretch alone: ')),f(U[k].TF,1)+' s',`${U[k].range[0]}-${U[k].range[1]} s`,'–',f(U[k].Ainf,1)+'°','–'])]);
+    $('vidMeaning').innerHTML=`<b>What it means for the Wempe.</b> The model's TF, ${D.wind.TF} s, estimated from the Wempe's parts, lies inside the measured ${U.split.span[0]}-${U.split.span[1]} s, so it stays, and <code>wempe_escapement.js</code> checks it against <code>wempe_startup.json</code>. The 6MX's balance is of the same kind but its own design, run out of its bowl, dial down, part wound: it settles at ${f(U.split.Ainf,0)}° on ${f(100*U.split.drive,0)} % of the model's drive, which at the model's drive would want TF ${f(U.tf_at_model_drive.TF,0)} s, outside every reading. So the video bounds the damping, not the drive: it says nothing of a wound Wempe's swing (section 15). The readings (${S.json.windows} windows, ${S.json.A_range[0]}-${S.json.A_range[1]}°): ${esc(S.json.sure)}.`;
+    const K=S.committed;if(K&&(K.split.drive!==U.split.drive||K.split.span.join()!==U.split.span.join()||K.tf_at_model_drive.TF!==U.tf_at_model_drive.TF))$('vidMeaning').innerHTML+=` <b>The committed <code>wempe_startup.json</code> is not what the tool finds today</b> (<code>node wempe_startup.js --json wempe_startup.json</code> rewrites it): it holds TF ${f(K.split.TF,1)} s, ${K.split.span[0]}-${K.split.span[1]} s, on ${f(100*K.split.drive,1)} % of the drive (TF ${f(K.tf_at_model_drive.TF,1)} s at the model's), where today's run gives ${f(U.split.TF,1)} s, ${U.split.span[0]}-${U.split.span[1]} s, on ${f(100*U.split.drive,1)} % (${f(U.tf_at_model_drive.TF,1)} s). This page shows today's; <code>wempe_escapement.js</code>, the README and the essay quote the file's.`;}
+  checks('kStart','startup');
+
+  /* ---------- 15. the flags ---------- */
+  $('flags').innerHTML=Object.keys(RUN).flatMap(k=>lines(k).filter(l=>l.s==='~~').map(l=>`<li><span class="st mid">~~</span><span><code>${esc(RUN[k].cmd.split(' ').slice(1,2)[0])}</code>: ${esc(l.t)}</span></li>`)).join('')||'<li>none</li>';}
+draw();
+const thb=$('theme');thb.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';});
+</script>
+</body>
+</html>

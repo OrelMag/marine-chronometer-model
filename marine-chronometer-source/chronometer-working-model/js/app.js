@@ -16,7 +16,7 @@ const PARTS={
   lid:{t:'Upper lid',g:0,src:'est',sn:'Size and shape estimated',figs:'1',c:'#8a5a44',d:'Protects the instrument. Kept closed except when reading, winding or comparing.',sp:'Part of No. 42201, the mounting box complete (the parts list has no line of its own for it)'},
   lidGlass:{t:'Glass-top cover',g:0,src:'est',sn:'Size and shape estimated',figs:'1',c:'#c49a7a',d:'The second cover. Usually kept closed; the dial is read through its glass.',sp:'Part of No. 42201, the mounting box complete (the parts list has no line of its own for it)'},
   ring:{t:'Gimbal ring',g:0,src:'est',sn:'The arrangement of ring, pivots, lock nuts and straps is the manual’s; its size from the top-view photographs, the rest estimated',figs:'1, 94, 106',c:'#9aa1a8',pri:5,d:'Flat brass ring hung on two pivot screws that come in through the sides of the mounting box, with washers and lock nuts. The case pivots in it on front and rear pivot screws 90° away, each with a knurled lock nut, so the movement tends to stay level whatever the box does. Slotted support straps at 3 and 6 set the level.',sp:'Ring 42106 · straps 42107, 42108, their screws 42116 · pivot screws 42120, 42118, 42119, bushings 42214 · washers 42122 · lock nuts 42121'},
-  latch:{t:'Gimbal latch',g:0,src:'est',sn:'Its parts and the slot in the ring are the manual’s; the lever’s pivot, swing and the keeper are estimated',figs:'1, 106',c:'#7d9a4a',d:'Locks the gimbals so the case cannot swing, when the box is carried or the lid must be closed with the instrument out of its box, and before the hands are set. The lever turns on a pin in its bracket, in through a slot in the gimbal ring to the keeper on the case, so ring and case are held at once. Tick Gimbals latched under Display, with Ship motion, to see the case tilt with the box.',sp:'Lever 42111 · handle 42112 · support bracket 42109, its screws 42115 and washers 42123 · clamping bracket 42110 and screw 42114 · take-up spring 42277, its screws 42276'},
+  latch:{t:'Gimbal latch',g:0,src:'est',sn:'Its parts and the slot in the ring are the manual’s; the lever’s pivot, swing and the keeper are estimated',figs:'1, 106',c:'#7d9a4a',d:'Locks the gimbals so the case cannot swing, when the box is carried or the lid must be closed with the instrument out of its box, and before the hands are set. The lever turns on a pin in its bracket, in through a slot in the gimbal ring to the keeper on the case, so ring and case are held at once. Tick Gimbals latched under Display, with Ship motion, to see the case held to the box.',sp:'Lever 42111 · handle 42112 · support bracket 42109, its screws 42115 and washers 42123 · clamping bracket 42110 and screw 42114 · take-up spring 42277, its screws 42276'},
   bowl:{t:'Chronometer case',g:0,src:'est',sn:'How it holds the movement is the manual’s (Sec. III), its width from the top-view photographs; the shield plate’s parts, their arrangement (Fig. 107) and its action from the manual; shapes and the other sizes estimated',c:'#c4b27a',pri:5,d:'Brass bowl and bezel with crystal. The movement’s mounting ring sits in a recess round its top edge, on the shoulder at its foot, and the ring’s alignment pin enters a slot in its edge; the bezel screws on outside the rim. The winding-hole shield plate on its bottom is turned clockwise to admit the key and springs back when the key is removed.',sp:'Case No. 42101, bezel 42102, crystal 42103 · case support brackets 42105, their screws 42117 and pivot bushings 42214 · latch keeper 42113, its screw 42116 and separating washer 42128 · shield plate 42104, shoulder screw 42124, stop screw 42125, return spring 42126'},
   key:{t:'Winding key',g:0,src:'est',sn:'The square is 2.4 mm, as the fusee arbor’s, since one key fits both; the rest estimated',figs:'7, 8',c:'#6d7a8a',pri:4,d:'Wind to the left (counterclockwise). The manual has seven half turns restore 24 hours of running; the model’s train asks about 7½ (the fusee turns once in 6.43 h). 17½ half turns wind a run-down chronometer fully.',sp:'No. 42044'},
   pillar:{t:'Pillar plate',g:1,src:'photo',sn:'87.57 mm across and 3.86 mm thick, from a new-old-stock plate; the engraving traced on a photograph',figs:'29, 67, 110',c:'#9fb4c8',plate:1,d:'Foundation of the movement. The barrel and train bridges stand off it on four pillars, each screwed on from the dial side. A large hole under the dial reaches one of the balance lower bridge’s screws. On its dial side are the lower train bridge, the escape wheel’s lower endstone cap and the posts the minute and wind indicator wheels turn on. It is laid on the mounting ring, a deep lacquered brass ring that carries the dial and holds the movement in its case; seen from the dial side, the plate lies sunk in it.',sp:'No. 42060 · 87.57 mm diameter, 3.86 mm thick · pillar screws 42055 · mounting ring 42057 with its alignment pin, screws 42055 · centre, barrel and fusee lower bushings 42165, 42164 · escape lower setting 42162, endstone cap 42159, screws 20762 · posts 42084, 42085, screws 35779'},
@@ -37,7 +37,7 @@ const PARTS={
   post:{t:'Dust seal',g:2,src:'est',sn:'The seal and three packing rings are the manual’s; their sizes are estimated',figs:'24',c:'#8c6b4a',dh:1,d:'Nickel dust seal on the barrel bridge where the fusee arbor rises through it, capped by three packing rings over a seal ring and helical spring. The key reaches the squared arbor through it.',sp:'Seal 42051, screws 42056 · packing rings 42054 · seal ring 42052 · helical seal spring 42053'},
   gw:{t:'Fusee wheel',g:2,src:'photo',sn:'90 teeth, counted on a restoration video of a 1941 Model 21; the centre pinion’s 14 leaves inferred: the manual’s 17½ half turns of the key then hold its 56 hours',figs:'12, 28',c:'#d9453b',pri:6.4,d:'The first wheel of the train, free on the fusee arbor; it drives the centre wheel pinion. The sustaining spring in its recess drives it: loaded by the sustaining ratchet wheel in running, on its own while the key winds. So it keeps turning forward with the train, once in 6.4 hours, while the fusee under it turns back.',sp:`No. 42015 · ${TRAIN.fu} teeth here`},
   sratchet:{t:'Sustaining ratchet wheel',g:2,src:'est',sn:'Its pawls, springs and screws are the manual’s (Sec. IV, parts list); gilt, its springs’ screws from its underside, as on a restoration video; sizes estimated',figs:'69–74',c:'#2f8fb0',pri:4.6,d:'Free on the fusee arbor. Its two winding pawls, each held in by a flat spring, catch the winding ratchet screwed to the fusee, so in running the mainspring’s pull passes through this wheel and the sustaining spring to the fusee wheel. While the key turns the fusee back the winding ratchet slips under the pawls, and the sustaining pawl holds this wheel.',sp:'No. 42009 · winding pawl springs 42007, screws 42012 · winding ratchet 42013'},
-  sspring:{t:'Sustaining spring',g:2,src:'est',sn:'Its band, ends and place measured on a restoration video of a real Model 21; the gap and its travel estimated',figs:'28, 69–74',c:'#6a3fa0',d:'A flat blued band round the fusee wheel’s recess, nearly a full ring: one end pinned to the wheel, the other, across a small gap, pinned to the sustaining ratchet wheel, which pushes it toward the first and closes the ring. Always under load: while the key turns the fusee back it alone drives the train, for 5 to 10 minutes, and the mainspring loads it again when the key lets go.',sp:'No. 42016'},
+  sspring:{t:'Sustaining spring',g:2,src:'est',sn:'Its band, ends, place and gap measured on a restoration video of a real Model 21; its height and its banking a design (a split ring weaker than the drive, as the period’s chronometers had it)',figs:'28, 69–74',c:'#6a3fa0',d:'A flat blued band round the fusee wheel’s recess, nearly a full ring: one end pinned to the wheel, the other, across a small gap, pinned to the sustaining ratchet wheel, which pushes it toward the first and closes the ring. Always under load: while the key turns the fusee back it alone drives the train, for 5 to 10 minutes, and the mainspring loads it again when the key lets go.',sp:'No. 42016'},
   spawl:{t:'Sustaining pawl',g:2,src:'photo',sn:'Its place, hub, curved blade and upright spring wire measured on a restoration video; the back of the blade’s root estimated',figs:'12, 28',c:'#1fa05a',pri:4.5,d:'Holds the sustaining ratchet wheel from turning back while the fusee is wound, so the sustaining spring can only release its power forward into the train, enough to run the chronometer 5 to 10 minutes.',sp:'No. 42096'},
   cw:{t:'Centre wheel',g:3,src:'solved',sn:'Its place in the stack (above the third wheel, its pinion above it), its pinion’s side and its five spokes from Figs. 13, 29 and 110; 90 teeth and a third pinion of 12, counted on a restoration video; module from its centre distance',figs:'13, 29, 110',c:'#f2c230',pri:7,d:'Second wheel of the train. Its long arbor passes through the pillar plate and dial and carries the cannon pinion and hour wheel.',sp:'No. 42068 · 1 turn an hour'},
   tw:{t:'Third wheel',g:3,src:'solved',sn:'Lowest in the stack, its pinion above it and five spokes, from Figs. 13, 29 and 110; position solved so every arbor clears every wheel; 80 teeth, counted on a restoration video; module from its centre distance',figs:'13, 29, 110',c:'#7cc242',pri:6.5,d:'Lowest wheel of the train, next to the pillar plate. Its pinion, above it, is driven by the centre wheel; the wheel drives the fourth wheel’s pinion.',sp:'No. 42071'},
@@ -268,8 +268,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if((st.drive||dvOn)&&m.userData.driveHide)vis=false;if(m.userData.devPlate&&(!dvOn||st.drive))vis=false;
       const gh=ghOf(m,foc);
       if(m.userData.noShadow&&gh)vis=false;
-      m.visible=vis&&!opHide(m);const lc=!gh&&lpCol(m);m.material=gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
-    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
+      m.visible=vis&&!opHide(m)&&!OVH.hides(m);const lc=!gh&&lpCol(m);m.material=gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
+    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!OVH.boxOff()&&!((ks||OVH.bezelOff())&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
     /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
        The floor's shadow (sh) is a texture, always there. Turned off, the map (2048 px, 1024 on phones) is freed (three makes it again when it is next needed) */
@@ -277,7 +277,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
-    cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
+    cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:OVH.on()?OVH.label():VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
     $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;$('#merge').checked=st.merge;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
   }
 
@@ -285,7 +285,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      While winding and for 2 s after (lpPh), or kept open (cuPin: its pin, or Open the close-up), the fusee wheel's maintaining work drawn again into the box #cu, on the stage's own canvas (the page keeps to two WebGL contexts):
      only its parts (layer 1: the fusee wheel, the sustaining spring, ratchet and pawl, the fusee's winding ratchet), seen from the train bridge's side in the movement's own frame,
      so it holds whatever the view, the sustaining ratchet see-through so the spring under it shows, tinted as the load path. Under it, how long the spring can still drive the
-     train: R.ssD of R.SMAX, the model's 10 minutes (movement.js); kept open in running, how hard it pushes.
+     train: R.ssD of R.SMAX, its travel from banked to free (movement.js), at the fusee wheel's turn (ssLeft); kept open in running, how hard it would push.
      Its tools (cuBind): the wheel, a pinch or + and - zoom (about the pointer), a drag moves, a double-click resets (cuV: zoom z, pan p in the movement frame, f a part followed:
      the spring's working end and gap, the sustaining pawl, a winding pawl); enlarge (.big); slow motion (CUSL, while it shows: the key, model time and the spring's easing, on mClk);
      keep open; and how the spring takes the load (#cuh, cuHelpSet: the phase now picked out, its figures live) */
@@ -321,11 +321,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       <ol><li data-ph="run"><b>Running: the mainspring loads it.</b><span class="tx"> <span class="path">Barrel → chain → fusee → its winding ratchet → the two ${go('wp','winding pawls')} on the sustaining ratchet → the spring → the fusee wheel → the centre pinion.</span> The ratchet closes the gap until the spring pushes as hard as the fusee drives; then the two turn together, once in 6.4 hours. <span class="num" data-v="run"></span></span></li>
       <li data-ph="w"><b>Winding: the spring drives alone.</b><span class="tx"> The key turns the fusee back, so it no longer pushes. The spring pushes the sustaining ratchet back with it until the ${go('spawl','sustaining pawl')}, pivoted in the frame, drops into a tooth and holds it; from then the fusee’s winding ratchet slips back under the winding pawls. Its working end held still, the spring pushes the fusee wheel on by its fixed end, and the train keeps going. It relaxes as it turns the wheel: the gap opens and its push falls. <span class="num" data-v="w"></span></span></li>
       <li data-ph="r"><b>Key let go: the mainspring takes the load back.</b><span class="tx"> The fusee turns forward until its winding ratchet meets the winding pawls, then carries the sustaining ratchet forward off its pawl, closing the gap until the spring again pushes as hard as the fusee drives. That turn of the fusee draws chain off the barrel: running time taken from the mainspring. <span class="num" data-v="r"></span></span></li></ol>
-      <p><small>The spring pushes in proportion to how far it is closed from free: spent once the fusee wheel has turned ${(R.SMAX/D2R).toFixed(1)}° on it, 10 minutes of running (the manual: 5 to 10). Its gap, travel and strength are estimated. Rose drives, teal holds. <i>Exaggerate the spring’s motion</i>, under Winding, draws it opening 20 times as far.</small></p>`;
+      <p><small>A split ring weaker than the drive: running, the fusee’s pull holds it closed, its ends nearly meeting, and banked it would push ${Math.round(R.SPU*100)}% of the 12-hour drive, less as it opens. It keeps the balance over a turn about 8 minutes (the manual: “enough power to drive the chronometer for five to ten minutes”) and is spent once the fusee wheel has turned ${(R.SMAX/D2R).toFixed(1)}° on it, ${Math.round(R.SMAX/(FUSEE_PER_HOUR*TAU/60))} minutes. Its gap is measured, its section worked out for that push, its lobes estimated. Rose drives, teal holds. <i>Exaggerate the spring’s motion</i>, under Winding, draws it opening 20 times as far.</small></p>`;
     cuH.querySelectorAll('button.go').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();cuGo(/** @type {HTMLElement} */(b).dataset.f);}));
     cuH.querySelectorAll('li').forEach(li=>li.addEventListener('click',()=>{if(!li.classList.contains('now'))li.classList.toggle('open');}));}   /* the phase now is open; the others open on a click */
   function cuHelpSet(){if(!cuHelp||!cuOn)return;const ph=lpPh==='w'?'w':lpPh==='r'?'r':'run',pu=Math.round(R.ssF()*100),fd=Math.round((hrs<RUN_H?drvF(hrs):0)*100),gap=((R.SSG-R.SMAX+R.ssD)/D2R).toFixed(1),A=Math.round(H.amp/D2R);
-    const left=10*clamp(1-R.ssD/R.SMAX,0,1),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),rl=ph==='w'?R.release():0,cs=rl/FUSEE_PER_HOUR*60;
+    const left=ssLeft(),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),rl=ph==='w'?R.release():0,cs=rl/FUSEE_PER_HOUR*60;
     const v={run:ph!=='run'?'':hrs>=RUN_H?'Now: run down, the fusee drives nothing.':`Now: the fusee drives ${fd}% of its 12-hour drive; the spring pushes ${pu}%, its gap ${gap}°.`,
       w:ph!=='w'?'':`Now: the spring pushes ${pu}% of the 12-hour drive, its gap ${gap}°, the balance swinging ${A}°; ${R.ssD>=R.SMAX?'spent: the train stops':`${mn} min ${String(sc).padStart(2,'0')} s of drive left`}. Let go now, the fusee would turn ${(rl*360).toFixed(1)}° forward to load it again: ${cs<1?Math.round(cs*60)+' s':cs.toFixed(1)+' min'} of the mainspring’s running.`,
       r:ph!=='r'?'':`Now: the spring pushes ${pu}%, its gap ${gap}°.`};
@@ -338,11 +338,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const au=r.shadowMap.autoUpdate,ca=r.getClearAlpha();r.getClearColor(cuCC);r.shadowMap.autoUpdate=false;cuBg.set(getComputedStyle(stage).getPropertyValue('--card').trim()||'#ffffff');
     r.setScissorTest(true);r.setViewport(b.x0+1,Hh-b.y1+1+gH,w,h);r.setScissor(b.x0+1,Hh-b.y1+1,w,h+gH+tH);r.setClearColor(cuBg,1);r.clear();r.render(scene,cam2);
     r.setClearColor(cuCC,ca);r.setScissorTest(false);r.setViewport(0,0,W,Hh);r.shadowMap.autoUpdate=au;CU.forEach((m,i)=>m.material=keep[i]);
-    const left=10*clamp(1-R.ssD/R.SMAX,0,1),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),run=lpPh!=='w',pu=Math.round(R.ssF()*100);
+    const left=ssLeft(),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),run=lpPh!=='w',pu=Math.round(R.ssF()*100);
     const t=lpPh==='r'?'Key let go: the mainspring drives the train again, through the fusee, and loads the sustaining spring<br><em class="d">the mainspring’s drive</em>':
-      run?`Running: the spring carries the whole drive, pushing <b>${pu}%</b> of the 12-hour drive<br><em class="d">the mainspring’s drive</em>`:
-      `<b>${mn} min ${String(sc).padStart(2,'0')} s</b> of drive left <small>(manual: 5 to 10 min)</small><br><em class="d">spring drives</em> <em class="h">ratchet and pawl hold</em>`;
-    const k=t+run;if(k!==cuS){cuS=k;cuG.classList.toggle('run',run);cuG.querySelector('b').style.width=clamp(lpPh?left*10:pu,0,100).toFixed(1)+'%';cuG.querySelector('span').innerHTML=t;}cuHelpSet();}
+      run?`Running: the spring carries the whole drive closed on its banking; let go it would push <b>${pu}%</b> of the 12-hour drive<br><em class="d">the mainspring’s drive</em>`:
+      `<b>${mn} min ${String(sc).padStart(2,'0')} s</b> of drive left <small>(over a turn about 8; manual: 5 to 10 min)</small><br><em class="d">spring drives</em> <em class="h">ratchet and pawl hold</em>`;
+    const k=t+run;if(k!==cuS){cuS=k;cuG.classList.toggle('run',run);cuG.querySelector('b').style.width=clamp(lpPh?100*left/ssLeft(0):pu,0,100).toFixed(1)+'%';cuG.querySelector('span').innerHTML=t;}cuHelpSet();}
   /* the close-up's own pointer: one finger or the mouse moves it, two pinch, the wheel zooms about the pointer, a double-click resets; and its buttons */
   function cuBind(){const pts=new Map();
     cuEl.addEventListener('pointerdown',e=>{if(/** @type {Element} */(e.target).closest('button'))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cuEl.setPointerCapture(e.pointerId);}catch(_){}cuEl.classList.add('grab');e.preventDefault();});
@@ -500,7 +500,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN)));
     const snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
   spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
-  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();jump(()=>setView(b.dataset.v));}));
+  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();OVH.end();jump(()=>setView(b.dataset.v));}));
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
   /* about: sources and method in a dialog */
@@ -563,7 +563,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      shank, forward only. The minute hand goes on its marker half a minute behind the master (as the master's second hand passes 30), then to the next marker as the master's
      passes 60. The second hand is never touched, so the dial can still be up to 30 s out, and it goes into the record. ks.ph: 1 turning forward, 2 waiting for the master's 60, 3 done */
   const setOut=$('#setOut'),ksBtn=$('#ksBtn'),minT=()=>handT()+slip;
-  function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();
+  function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();closeInfo();
     sw=null;ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;jump(()=>setView('dial'));look();
     ksBtn.textContent='Stop setting';ksBtn.setAttribute('aria-pressed','true');setOut.classList.remove('hidden');}
   function ksEnd(){if(!ks)return;st.latch=ks.latch0;$('#latch').checked=st.latch;ks=null;look();ksBtn.textContent='With the key';ksBtn.setAttribute('aria-pressed','false');}
@@ -621,7 +621,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     for(const r of PROWS){r.row.classList.toggle('hidden',!r.on);if(r.on)hit.add(r.gh);if(r.kids)r.sub.classList.toggle('found',!!v&&r.kids.some(x=>x.on));}for(const r of PROWS)r.gh.classList.toggle('hidden',!hit.has(r.gh));
     $('#pNone').classList.toggle('hidden',hit.size>0);});
   $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
-  /* rate: the timing and vernier weight pairs turned in or out in eighth turns, the timing weights up to 2 turns either way and the verniers 3 (R.timing, movement.js, sets the pitch from the
+  /* rate: the timing and vernier weight pairs turned in or out in eighth turns, the timing weights and the verniers up to 3 turns either way (R.timing, movement.js, sets the pitch from the
      manual's rate for a turn). The period goes as √I, so the model clock runs √(I0/I) as fast as a perfect one, and the temperature (below) adds what the moved screws
      and the balance's own curvature make of it: rateW. rateK is that times escK, the escapement's share at the balance's swing now and the escape wheel's torque (ESC.rateAt,
      set each frame: 1 at the model's settings and swing); rErr is what the hands have gained since the weights, screws or escapement were changed or the hands set */
@@ -705,7 +705,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const balStr=()=>{const o=[],t=twR.valueAsNumber,v=vwR.valueAsNumber,p=SP.map(q=>q?`${q.n}_${q.h}_${q.w||0}`:'x').join('-');if(t)o.push('tw:'+t);if(v)o.push('vw:'+v);if(degF()!==T0)o.push('T:'+degF());
     if(p!==STD.map(q=>`${q.n}_${q.h}_${q.w||0}`).join('-'))o.push('p:'+p);return o.join(',');};
   const balApply=s=>{if(s===balStr())return;const q={tw:0,vw:0,T:T0,p:null};for(const kv of s.split(',')){const i=kv.indexOf(':'),k=kv.slice(0,i),v=kv.slice(i+1);if(k==='p')q.p=v;else if(k in q&&Number.isFinite(+v))q[k]=+v;}
-    twR.value=clamp(Math.round(q.tw),-16,16);vwR.value=clamp(Math.round(q.vw),-24,24);tmpR.value=clamp(Math.round(q.T*2)/2,40,100);
+    twR.value=clamp(Math.round(q.tw),-24,24);vwR.value=clamp(Math.round(q.vw),-24,24);tmpR.value=clamp(Math.round(q.T*2)/2,40,100);
     const sp=q.p==null?STD.map(p=>({...p})):q.p.split('-').slice(0,R.HOLES.length).map(e=>{const[n,h,w]=e.split('_');return R.HOLES.includes(+n)&&Object.prototype.hasOwnProperty.call(R.BSZ,h)?{n:+n,h,w:w&&Object.prototype.hasOwnProperty.call(R.BWA,w)?w:0}:null;});
     const seen=new Set();SP=sp.map(p=>p&&!seen.has(p.n)?(seen.add(p.n),p):null);spI=0;R.screws(SP);spShow();rateSet();};
   /* ---------- the navigator's rate book (Sec. IX, Recording the Rate; Table I): the dial error against the master, to the nearest half second as the hands step, compared at
@@ -734,7 +734,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     else t+='<span>With two comparisons a day apart and no break between, the book gives a rate to correct it with.</span>';
     bookLon.innerHTML=t;}
   $('#bookNow').addEventListener('click',()=>bookAdd());$('#bookSun').addEventListener('click',()=>bookAdd('sun'));$('#bookMoon').addEventListener('click',()=>bookAdd('moon'));$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
-  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('balance'));showPart('bal');});
+  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();jump(()=>setView('balance'));showPart('bal');});
   /* ---------- stopping and starting (Sec. III): a detent chronometer is not self-starting. The balance swings at amplitude H.amp; below ESC.AMIN a swing no longer
      carries the discharge jewel past the trip spring, unlocks the wheel and sees the impulse through, so the train stops at a locked beat and the balance runs down freely
      (TAU_FREE, estimated). The locking arm (Fig. 9) brakes it within a swing or two; the train-blocking screw's dog point stops the fourth wheel at a spoke; at run down
@@ -745,11 +745,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* the drive: the escape wheel's torque as a share of the one the escapement is calibrated at (ESC.ampAt, ESC.rateAt). Running, the mainspring through the fusee (R.fs.torque:
      the solved spring's pull on the chain's lever, level to about 2 %, then falling to nothing over the last 1.2 h as the chain's end pin swings round to run down), 1 at 12 h
      from full wind, the middle of a day's running. The sustaining spring carries it to the fusee wheel (update() in movement.js), so it pushes with all the drive it was
-     carrying when the fusee stops driving (SUS: 1, of the 12-hour drive, at the load the drawing calls 0; 0.8 estimated, the drive dropping at once, until 11 October 2026),
-     and less as it relaxes over its 10 minutes (R.ssF: 1 - R.ssD / R.SMAX): while the key turns, or when the fusee's drive has fallen faster than the train relaxes it.
+     banked when the fusee stops driving (SUS: R.SPU, 0.88 of the 12-hour drive, the split ring weaker than the drive; 1, carrying the whole drive unbanked, until 14 October
+     2026; 0.8 estimated, until 11 October 2026), and less as it relaxes over its travel (R.ssF: SPU (1 - R.ssD / R.SMAX)): while the key turns, or when the fusee's drive
+     has fallen faster than the train relaxes it. ssLeft(d): the minutes of drive left in it, relaxed d, at the fusee wheel's turn
      drvB(h): what a going barrel with the same spring would give, its pull falling evenly with time, geared to give the same at 28 h (Swing and isochronism) */
   /* MSET: the mainspring's set (Op. 13, "check condition and set of mainspring"): a spring that has taken a set pulls that much less all through, which the fusee can't make up */
-  let MSET=0;const SUS=1,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12*(1-MSET),drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
+  function ssLeft(d=R.ssD){return Math.max(0,R.SMAX-d)/(FUSEE_PER_HOUR*TAU/60);}
+  let MSET=0;const SUS=R.SPU,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12*(1-MSET),drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
   R.drvN=n=>drvF(n/FUSEE_PER_HOUR);   /* the fusee's drive for the maintaining work (update()), the set included */
   const driveNow=()=>winding?R.ssF():Math.max(hrs<RUN_H?drvF(hrs):0,R.ssF());   /* running, the spring pushes what the fusee gives it, or more while its pawl holds it */
   const canDrive=()=>driveNow()>1e-6,spentNow=()=>hrs<RUN_H&&!winding&&RUN_H-hrs<2&&!(ESC.ampAt(driveNow())>=ESC.AMIN);   /* spentNow: in the run down's last taper, the drive too weak to keep the balance unlocking the wheel (the train stops a few minutes before RUN_H) */   /* whether anything can drive the train: the train holds when it can't, and a twist only starts it when it can */
@@ -811,7 +813,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';const was=ESC.run.rate;Object.assign(ESC,E2);{const d=plOf()-PL;PL+=d;H.bOff-=d;}mv.userData.escSet();if(ESC.run.rate!==was){rErr=0;pend.add('escapement adjusted');rateShow();}}benchShow();wake();}
   const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
   $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
-  $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('escapement'));});
+  $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();jump(()=>setView('escapement'));});
   function benchDraw(s,E){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
     if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s,E,dark());}
   $('#benchDet').addEventListener('toggle',()=>{if($('#benchDet').open)benchShow();});
@@ -875,7 +877,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
         series:(B?[{pts:C.B.map(q=>[q[0],q[1]]),col:fz,w:1.6,dash:[5,4]}]:[]).concat([{pts:C.F.map(q=>[q[0],q[1]]),col:blue,w:2.2}]),
         marks:[{x:hrs,y:ESC.ampAt(drvF(hrs))/D2R,col:blue}].concat(B?[{x:hrs,y:ESC.ampAt(drvB(hrs))/D2R,col:fz,r:3}]:[]),texts:[{x:1,y:318,t:B?'swing: the fusee; dashed, a going barrel':'swing with the fusee'}]});}
     const now2=H.held?'':`<span>Now ${Math.round(A)}° each way, the escape wheel driven at ${Math.round(drv*100)}% of its torque${winding?' by the sustaining spring':''}; the escapement${ESC.settings.HS?' and hairspring':''} ${86400*(escK-1)>=0?'gain':'lose'}${ESC.settings.HS?'':'s'} ${Math.abs(86400*(escK-1)).toFixed(2)} s a day at this swing.</span>`;
-    swOut.innerHTML=`<b>Isochronism check ${sg(C.isoF)} s</b>${now2}<span>With the fusee the rate stays within ${sg(C.spF[0])} to ${sg(C.spF[1])} s a day from full wind to run down; a going barrel with the same spring would range ${sg(C.spB[0])} to ${sg(C.spB[1])}, and its isochronism check would read ${sg(C.isoB)} s. While the key turns the sustaining spring alone drives the train: it starts at the full drive, the balance swinging ${Math.round(C.sus)}°, and relaxes as it gives the train its travel, ${Math.round(C.sus3)}° after 3 minutes.${MSET?` The mainspring’s set takes ${Math.round(MSET*100)}% off its pull, so the balance swings ${Math.round(ESC.ampAt(drvF(12))/D2R)}° at 12 h, not ${Math.round(ESC.A/D2R)}°.`:''}</span>`;}
+    swOut.innerHTML=`<b>Isochronism check ${sg(C.isoF)} s</b>${now2}<span>With the fusee the rate stays within ${sg(C.spF[0])} to ${sg(C.spF[1])} s a day from full wind to run down; a going barrel with the same spring would range ${sg(C.spB[0])} to ${sg(C.spB[1])}, and its isochronism check would read ${sg(C.isoB)} s. While the key turns the sustaining spring alone drives the train: it starts at ${Math.round(SUS*100)}% of the drive, the balance swinging ${Math.round(C.sus)}°, and relaxes as it gives the train its travel, ${Math.round(C.sus3)}° after 3 minutes.${MSET?` The mainspring’s set takes ${Math.round(MSET*100)}% off its pull, so the balance swings ${Math.round(ESC.ampAt(drvF(12))/D2R)}° at 12 h, not ${Math.round(ESC.A/D2R)}°.`:''}</span>`;}
   /* the mainspring's set: a slider in Swing and isochronism, kept in the link as mset=15 (per cent) */
   const msR=$('#msetR'),msShow=()=>{msR.nextElementSibling.textContent=MSET?Math.round(MSET*100)+'% weaker':'as new';};
   const msSet=v=>{v=clamp(Math.round(v),0,30)/100;if(v===MSET)return;MSET=v;msR.value=Math.round(v*100);msShow();rErr=0;pend.add('mainspring changed');swLast=0;wake();writeHash();};
@@ -904,13 +906,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       L.map(([k,n,t,w])=>`<tr><td title="${w}">${n}</td><td class="n${R2[k]>t?' bad':''}">${R2[k].toFixed(2)}</td><td class="n">${C3390[k].toFixed(2)}</td><td class="n">${t.toFixed(2)}</td></tr>`).join('')+'</tbody></table>';}
   tsDet.addEventListener('toggle',()=>{tsKey='';tsLast=0;testShow(performance.now());});
   if(/[?&]qa\b/.test(location.search))window.__test=testCalc;   /* for invariants.py: the test's figures as the card has them */
-  $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('movement'));st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
+  $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();jump(()=>setView('movement'));st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
   /* wind with the key, on the wall clock so slow frames don't slow it (mClk: slowed only by the close-up's slow motion): half turns of 0.7 s with a 0.3 s pause to change grip, until the chain pushes the stop-bar in the fusee top out against
      the winding stop. Plates see-through, the winding stop kept solid (look), the parts that take part in winding picked out */
   const HT=0.5/FUSEE_PER_HOUR,kwBtn=$('#kwBtn'),kwOut=$('#kwOut'),KWF=['fusee','chain','sq','barrel','mainspring','gw','sratchet','sspring','spawl'];
   const KWV=()=>{const f=1+3.6/Math.hypot(...L.Fu);return{yaw:0.53,pitch:0.32,dist:120,target:mvL(L.Fu[0]*f,-36,L.Fu[1]*f)};};   /* key and fusee, from the winding stop's side */
   const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
-  function kwStart(){if(kw){kwStop();return;}if(ldq)ldStop();if(st.tour>=0)tourEnd();closeInfo();
+  function kwStart(){if(kw){kwStop();return;}if(ldq)ldStop();if(st.tour>=0)tourEnd();OVH.end();closeInfo();
     if($('#kwFull').checked)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
     else if(hrs<HT/10){kwOut.innerHTML='<b>Already fully wound:</b> the stop-bar in the fusee top is against the winding stop, and the key turns no further. Tick <i>From run down</i> to watch a whole winding.';kwOut.classList.remove('hidden');return;}   /* less than a tenth of a half turn to wind (until 11 October 2026 it was let down to run down at once, under 0.2 h) */
     kw={t0:mClk,t:0,h0:hrs,end:0};winding=true;st.drive=false;jump(()=>setView('movement'));st.see=true;st.focus=new Set(KWF);look();
@@ -929,7 +931,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      spring's inner end; the chronometer is left run down */
   const ldBtn=$('#ldBtn'),ldOut=$('#ldOut'),LDv={ld:0,clk:0};let ldq=null;
   const LDV=()=>({yaw:0.9,pitch:0.85,dist:62,target:mvL(L.Ba[0],-28,L.Ba[1])});   /* the set-up ratchet and click from above the barrel bridge */
-  function ldStart(){if(ldq){ldStop();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();hrs=RUN_H;showH();
+  function ldStart(){if(ldq){ldStop();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();closeInfo();hrs=RUN_H;showH();
     ldq={t0:performance.now(),S:R.fs.MS.setup,op0:st.op['ratchet.cover']};st.op['ratchet.cover']=0.2;jump(()=>setView('movement'));st.see=true;st.focus=new Set(['ratchet','mainspring']);look();goCam(LDV());   /* the cover faded over the ratchet and click, the barrel see-through round the spring */
     ldBtn.textContent='Stop';ldBtn.setAttribute('aria-pressed','true');ldOut.classList.remove('hidden');}
   function ldStop(){if(ldq.op0===undefined)delete st.op['ratchet.cover'];else st.op['ratchet.cover']=ldq.op0;ldq=null;LDv.ld=0;LDv.clk=0;st.focus=null;look();ldBtn.textContent='Let down and set up';ldBtn.setAttribute('aria-pressed','false');}
@@ -1005,7 +1007,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       drive:false,v:{lidM:1,lidT:1,lift:0,flip:0,explode:0,yaw:0.85,pitch:0.45,dist:600,target:fixed(0,-24,0)},rock:true,speed:1,focus:null},
     {t:'Stored energy: the mainspring',x:'<p>A long, powerful mainspring is coiled in the barrel. The barrel arbor never turns in use: the setup ratchet and pawl on the barrel bridge hold it. The spring’s outer end turns the barrel clockwise, and the barrel draws the chain off the fusee; the chain’s end hooks into a hole in the barrel’s wall, named as the barrel brings it round.</p><p>Wound, the coils draw in round the arbor, leaving a gap at the wall; as it runs down they spread out toward the wall. At 3600× one hour passes each second.</p>',
       drive:true,v:{lift:1,flip:1,explode:0,yaw:-1.58,pitch:0.62,dist:140,target:mvL(L.Ba[0],-15,L.Ba[1])},speed:3600,focus:['barrel','mainspring','chain','ratchet','fusee'],inset:'power'},
-    {t:'Constant force: the fusee',x:`<p>A mainspring exerts more force fully wound than partly run down, so the fusee is shaped to keep the moment on the fusee wheel about the same throughout. The chain pulls on the small end while the spring is strongest and on the large end once it has weakened.</p><p>The balance’s arc, and so its rate, stays practically equal all the time. The profile is the one photographed: the radius grows from ${R.fs.rf(0).toFixed(1)} to ${R.fs.rf(FUSEE_TURNS).toFixed(1)} mm over 8¾ turns, the shape that evens out a pull falling in step with the barrel’s turns. A real spring departs a little from that, so the torque keeps a small residual (the spring drawn is illustrative); the dashed line is what a going barrel with the same spring would deliver.</p>`,
+    {t:'Constant force: the fusee',x:`<p>A mainspring exerts more force fully wound than partly run down, so the fusee is shaped to keep the moment on the fusee wheel about the same throughout. The chain pulls on the small end while the spring is strongest and on the large end once it has weakened.</p><p>The balance’s arc, and so its rate, stays practically equal all the time. The profile is the one photographed: the radius grows from ${R.fs.rf(0).toFixed(1)} to ${R.fs.rf(FUSEE_TURNS).toFixed(1)} mm over 8¾ turns, the shape that evens out a pull falling in step with the barrel’s turns. The spring drawn is solved from a real one’s measured shape, and its pull departs a little from that, so the torque keeps a small residual, about 2 % either way; the dashed line is what a going barrel with the same spring would deliver.</p>`,
       drive:true,v:{lift:1,flip:1,explode:0,yaw:-0.35,pitch:0.35,dist:150,target:mvL((L.Fu[0]+L.Ba[0])/2,-14,(L.Fu[1]+L.Ba[1])/2)},speed:3600,focus:['fusee','chain','barrel','mainspring','gw'],inset:'fusee'},
     {t:'Winding without stopping',x:'<p>The key turns the fusee arbor counterclockwise. That would cut the power to the train, but the sustaining spring, pinned between the sustaining ratchet wheel and the fusee wheel and always under load, keeps driving the fusee wheel, so the wheel and the train run on while the fusee turns back. The sustaining pawl stops the ratchet wheel from turning back, so the spring can only release forward. It will drive the chronometer for five to ten minutes.</p><p>At full wind the chain presses one end of the winding stop-bar in the fusee top; the other end moves out and catches the winding stop under the barrel bridge. Seven half turns restore a day’s running.</p>',
       drive:true,v:{lift:1,flip:1,explode:0,yaw:0.53,pitch:0.55,dist:125,target:mvL(L.Fu[0],-13,L.Fu[1])},speed:60,focus:['gw','sratchet','sspring','spawl','fusee','sq','chain','cw'],inset:'wind'},
@@ -1020,7 +1022,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
   /* the viewer's own settings, kept when the walkthrough starts and given back when it ends */
   let preTour=null;
-  function tourGo(i){panelOn(true);if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+  function tourGo(i){OVH.end();panelOn(true);if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -1038,6 +1040,22 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView(u.view,true);}
   $('#tStart').addEventListener('click',()=>tourGo(0));$('#tPrev').addEventListener('click',()=>tourGo(Math.max(0,st.tour-1)));
   $('#tNext').addEventListener('click',()=>st.tour<TOUR.length-1?tourGo(st.tour+1):tourEnd());$('#tExit').addEventListener('click',tourEnd);
+  /* the overhaul (overhaul.js): the manual's operations, Sec. V to take the movement down and Sec. VIII to put it back, one part at a time. The viewer's settings
+     are kept when it starts and given back when it ends; the model stands still meanwhile (speed 0), every part shown, nothing exploded */
+  let preOvh=null;
+  OVH.bind({mv,PARTS,changed:wake,
+    begin:()=>{if(st.tour>=0)tourEnd();if(ks)ksEnd();if(kw)kwStop();closeInfo();showHelp(false);hintOff();panelOn(true);
+      if(!preOvh){const sv=document.querySelector('#stopV button[aria-pressed="true"]');preOvh={view:st.view,see:st.see,speed:st.speed,drive:st.drive,mwOn:st.mwOn,rock:st.rock,stop:sv&&sv.dataset.v,blk:H.blkT,hrs};}   /* the train-blocking screw and the wind as found: the operations move the one and wind the other */
+      const arm=document.querySelector('#stopV button[data-v="arm"]');if(arm&&arm.getAttribute('aria-pressed')!=='true')arm.click();   /* the manual's locking arm (Fig. 9): the Navy's Y-arm isn't in its operations */
+      st.drive=false;st.mwOn=false;st.see=false;st.rock=false;for(const k of['driveOn','mwOn','rock'])$('#'+k).checked=false;setSpeed(0);
+      Object.assign(tgt,{explode:0,dev:0,fov:FOV0});cur.explode=0;cur.dev=0;document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');},
+    finish:()=>{const u=preOvh||{view:'dial',see:false,speed:1,drive:false,mwOn:false,rock:false};preOvh=null;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;st.rock=u.rock;st.see=u.see;
+      for(const k of['driveOn','mwOn','rock'])$('#'+k).checked=st[k==='driveOn'?'drive':k];setSpeed(u.speed);setView(u.view,true);
+      const sv=u.stop&&document.querySelector(`#stopV button[data-v="${u.stop}"]`);if(sv&&sv.getAttribute('aria-pressed')!=='true')sv.click();
+      if(u.blk!=null&&H.blkT!==u.blk)blkSet(u.blk);if(u.hrs!=null){hrs=u.hrs;showH();}},
+    focus:pk=>{st.focus=pk&&pk.size?pk:null;look();},
+    cam:v=>{Object.assign(tgt,{lift:v.lift,flip:v.flip,explode:0,dev:0,lidM:1,lidT:1});goCam({yaw:v.yaw,pitch:v.pitch,dist:v.dist,target:v.target||(v.lift?mvL(0,-19,2):fixed(0,v.dist>400?-22:-15,0))});look();},
+    blk:v=>{if(H.blkT!==v)blkSet(v);},wind:()=>{if(winding)windEnd();hrs=0;showH();}});
 
   function drawInset(E,s,n){
     if(!insetKind)return;const dk=dark();
@@ -1049,7 +1067,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
         ctx.font='11px "Instrument Sans",sans-serif';ctx.strokeStyle=dk?'#2a323a':'#dde1e4';ctx.fillStyle=dk?'#9aa4ad':'#5b656e';ctx.lineWidth=1;
         for(const x of[0,14,28,42,56]){ctx.beginPath();ctx.moveTo(X(x),T0);ctx.lineTo(X(x),T0+ph);ctx.stroke();ctx.textAlign='center';ctx.fillText(x+' h',X(x),h-12);}
         for(const y of[0,0.5,1,1.5]){ctx.beginPath();ctx.moveTo(L0,Y(y));ctx.lineTo(L0+pw,Y(y));ctx.stroke();ctx.textAlign='right';ctx.fillText(Math.round(y*100)+'%',L0-4,Y(y)+4);}
-        const F=R.fs,nn=q=>q*FUSEE_PER_HOUR,f=[[drvB,dk?'#5b656e':'#9aa3ab','a going barrel',[5,4]],[q=>F.pull(nn(q)),'#c0392b','spring pull'],[q=>F.lever(nn(q))/F.rc(F.ME),'#2e6bd8','the chain’s lever on the fusee'],[drvF,dk?'#e0b44f':'#8a5d10','torque (pull × radius), 1 at 12 h']];   /* the spring illustrative (makeFusee) */
+        const F=R.fs,nn=q=>q*FUSEE_PER_HOUR,f=[[drvB,dk?'#5b656e':'#9aa3ab','a going barrel',[5,4]],[q=>F.pull(nn(q)),'#c0392b','spring pull'],[q=>F.lever(nn(q))/F.rc(F.ME),'#2e6bd8','the chain’s lever on the fusee'],[drvF,dk?'#e0b44f':'#8a5d10','torque (pull × radius), 1 at 12 h']];   /* the solved spring's pull (makeFusee; tools/mainspring.py) */
         f.forEach(([fn,col,nm,ds])=>{ctx.strokeStyle=col;ctx.lineWidth=ds?1.6:2.2;ctx.setLineDash(ds||[]);ctx.beginPath();for(let i=0;i<=100;i++){const q=RUN_H*i/100,yy=fn(q);i?ctx.lineTo(X(q),Y(yy)):ctx.moveTo(X(q),Y(yy));}ctx.stroke();ctx.setLineDash([]);
           ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(hrs),Y(fn(hrs)),ds?3:4,0,TAU);ctx.fill();});
       }
@@ -1101,6 +1119,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState, so the back button isn't filled with views */
   function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
+    else if(OVH.on())h.set('ovh',OVH.hash());
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));if(typeof MAKER!=='undefined'&&MAKER.orig().length)h.set('orig',MAKER.orig().join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
@@ -1121,7 +1140,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
     const tr=parseInt(g('tour'));
     if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
-    else{if(st.tour>=0)tourEnd();
+    else if(OVH.go(g('ovh'))){}   /* ovh=d12: the overhaul at an operation (overhaul.js) */
+    else{if(st.tour>=0)tourEnd();OVH.end();
       st.drive=g('drive')==='1';$('#driveOn').checked=st.drive;
       const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
       const sc=/^([xyz]):(-?[\d.]+)(:f)?$/.exec(g('sec')||'');
@@ -1197,7 +1217,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,ld:LDv.ld,clk:LDv.clk,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt:dtM,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
-    mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
+    mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));const ovS=OVH.frame(dt,SNAP||RM.matches);   /* the overhaul's parts, where its operations have them (overhaul.js) */if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
     if((cur.dev>0.02)!==devShown){devShown=cur.dev>0.02;look();}
     const L1=smooth(cur.lift/0.55),L2=smooth((cur.lift-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(cur.flip),L2)*Math.PI;
     const wR=TAU/(+$('#rollP').value||7);rockW+=((st.rock?1:0)-rockW)*k;if(!st.rock&&rockW<1e-4)rockW=0;if(rockW>0)rockT+=dt*wR;const sea=rockW>0?GIM.sea(rockT,wR,rockW):null;roll=sea?sea.r[0]:0;pitch=sea?sea.p[0]:0;   /* the ship's motion (GIM.sea), eased in and out; its rates and accelerations move the gimbals' pivots */
@@ -1206,7 +1226,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     latchK=SNAP||RM.matches?+st.latch:clamp(latchK+(st.latch?1:-1)*dt*1.2,0,1);const fr=1-smooth(Math.min(1,latchK*2));
     const tw=H.twT<0||RM.matches?0:tM-H.twT;if(tw>TWIST.T)H.twT=-1;   /* the twist that starts it: the box turned sharply and back (TWIST) */
     if(SNAP||RM.matches){GM.p=[0,0];GM.r=[0,0];GM.lp=pitch;GM.lr=roll+jk;}else gimStep(GM,dt,pitch,roll+jk,sea,fr);
-    BX.root.rotation.set(pitch,tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,roll+jk,'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
+    /* drawn as the ship's people see it (16 October 2026): the box stands still on its table, the camera riding with the ship, and the ring and case swing against it as the
+       gimbals take the roll and pitch (GM, in the world's frame, less the ship's); until then the box rolled in a fixed world and the case leaned with it toward the apparent
+       vertical, so both seemed to move. The twist and the jolt are the box moved by hand, so they turn it still */
+    BX.root.rotation.set(0,tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,jk,'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
     BX.root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow()).add(panO);
     if(st.spin&&!ptrs.size){G.yaw+=dt*0.2;if(camFree)C.yaw+=dt*0.2;}
@@ -1215,7 +1238,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
     const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk,ovS];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(!ESSAY.on()&&onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
@@ -1227,7 +1250,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
-    if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
+    if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!OVH.on()&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
   ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});

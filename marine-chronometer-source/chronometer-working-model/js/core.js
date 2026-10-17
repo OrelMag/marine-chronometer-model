@@ -371,6 +371,63 @@ function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,
   if(f)g.computeVertexNormals();return g;}
 /* closeGeo(g): g made a closed solid: each loop of open edges (a tube's ends, a part-turned lathe's or torus's ends, all flat) filled with a flat cap, wound to
    face out. Returns an indexed copy with g's type and parameters (or g, if already closed); its userData.capOf gives, for each cap vertex, the vertex of g it copies (for reclose) */
+/* blind holes: holes polyGeo (or discGeo) has cut through a closed solid whose faces are level (local y its thickness), closed at the far end so each stops depth
+   into the metal from face ('top', its highest y, or 'bottom'): only each hole's own triangles change (within its radius + 0.35 in plan: its wall and the
+   bevel's rings round it, bev as polyGeo's), the far bevel ring dropped, the wall cut short at the floor, the far face's opening and the floor each filled
+   with a fan. An extrusion's holes all go through: a tapped hole that stops in the metal (a stud's, a screw's from one side) can't be cut by it */
+/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} holes @param {number} depth @param {number} [bev] @returns {any} */
+function blindHoles(g0,face,holes,depth,bev=0){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count;
+  let y0=1e9,y1=-1e9;for(let i=0;i<n;i++){const y=P.getY(i);if(y<y0)y0=y;if(y>y1)y1=y;}
+  const yf=face==='top'?y1:y0,ye=face==='top'?y0:y1,s=face==='top'?-1:1,yb=yf+s*depth,e=1e-5;
+  /** @type {number[]} */const pos=[],nor=[],uv=[];const own=holes.map(()=>/** @type {number[]} */([]));
+  for(let t=0;t<n;t+=3){let h=-1;holes.forEach(([x,z,r],k)=>{if(h<0&&[0,1,2].every(q=>Math.hypot(P.getX(t+q)-x,P.getZ(t+q)-z)<r+0.35))h=k;});
+    if(h>=0){own[h].push(t);continue;}for(let q=0;q<3;q++){pos.push(P.getX(t+q),P.getY(t+q),P.getZ(t+q));nor.push(N.getX(t+q),N.getY(t+q),N.getZ(t+q));uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
+  /* each triangle wound so its normal points out of the metal (want: the outward normal) */
+  const tri=(/** @type {number[][]} */q,/** @type {number[]} */want)=>{const[a,b,c]=q,u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],m=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+    const o=m[0]*want[0]+m[1]*want[1]+m[2]*want[2]<0?[a,c,b]:[a,b,c];for(const p of o){pos.push(...p);nor.push(...want);uv.push(p[0],-p[2]);}};   /* the new faces mapped as the extrusion maps its caps (the shape's x, -z) */
+  const fan=(/** @type {number[][]} */R,/** @type {number} */x,/** @type {number} */y,/** @type {number} */z,/** @type {number[]} */want)=>{const S=[...new Map(R.map(p=>[p[0].toFixed(5)+','+p[2].toFixed(5),p])).values()].sort((a,b)=>Math.atan2(a[2]-z,a[0]-x)-Math.atan2(b[2]-z,b[0]-x));
+    for(let i=0;i<S.length;i++)tri([[x,y,z],S[i],S[(i+1)%S.length]],want);};
+  holes.forEach(([x,z],k)=>{const far=/** @type {number[][]} */([]),floor=/** @type {number[][]} */([]);
+    for(const t of own[k]){const V=[0,1,2].map(q=>[P.getX(t+q),P.getY(t+q),P.getZ(t+q)]),Q=[0,1,2].map(q=>[N.getX(t+q),N.getY(t+q),N.getZ(t+q)]);
+      for(const v of V)if(Math.abs(v[1]-ye)<e)far.push(v);   /* the far face's opening: its rim */
+      if(V.every(v=>Math.abs(v[1]-ye)<=bev+e))continue;   /* the far bevel ring: dropped */
+      const W=V.map(v=>Math.abs(v[1]-ye)<=bev+e?(floor.push([v[0],yb,v[2]]),[v[0],yb,v[2]]):v);   /* the wall, cut short at the floor */
+      for(let q=0;q<3;q++){pos.push(...W[q]);nor.push(...Q[q]);uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
+    fan(far,x,ye,z,[0,-s,0].map(v=>-v));fan(floor,x,yb,z,[0,-s,0]);});   /* the far face closed, and the floor facing the opening */
+  const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+  o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
+/* a pocket cut depth into a face of a closed solid whose faces are level (local y its thickness, as polyGeo builds it), open where it runs past the outline (a pry
+   slot at a bridge's rim): poly, convex, in plan (x, z), reaching beyond the outline where the pocket opens. Every triangle one of the pocket's planes (its sides,
+   standing, and its floor) crosses is split along it, each edge cut at the same point from both its triangles, so the pieces still meet edge to edge; the pieces
+   inside the pocket are dropped, and its floor and sides are the solid's own sections on those planes within the pocket, facing into it. Bevels elsewhere stay */
+/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} poly @param {number} depth @returns {any} */
+function facePocket(g0,face,poly,depth){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count,e=1e-7;
+  let y0=1e9,y1=-1e9;for(let i=0;i<n;i++){const y=P.getY(i);if(y<y0)y0=y;if(y>y1)y1=y;}
+  const s=face==='top'?-1:1,yb=(face==='top'?y1:y0)+s*depth,cx=poly.reduce((a,p)=>a+p[0],0)/poly.length,cz=poly.reduce((a,p)=>a+p[1],0)/poly.length;
+  /** @type {{n:number[],c:number}[]} */const PL=[{n:[0,s,0],c:s*yb}];   /* inside the pocket where n·p < c: the floor's, then each side's */
+  poly.forEach((a,k)=>{const b=poly[(k+1)%poly.length];let m=[a[1]-b[1],0,b[0]-a[0]];if(m[0]*(cx-a[0])+m[2]*(cz-a[1])>0)m=m.map(v=>-v);const l=Math.hypot(m[0],m[2]);m=m.map(v=>v/l);PL.push({n:m,c:m[0]*a[0]+m[2]*a[1]});});
+  const dist=(/** @type {{n:number[],c:number}} */pl,/** @type {number[]} */v)=>{const d=pl.n[0]*v[0]+pl.n[1]*v[1]+pl.n[2]*v[2]-pl.c;return Math.abs(d)<e?0:d;};
+  const cut=(/** @type {number[]} */a,/** @type {number[]} */b,/** @type {number} */da,/** @type {number} */db)=>{if(a[0]>b[0]||a[0]===b[0]&&(a[1]>b[1]||a[1]===b[1]&&a[2]>b[2])){[a,b]=[b,a];[da,db]=[db,da];}
+    const t=da/(da-db);return a.map((x,i)=>x+(b[i]-x)*t);};   /* the edge's endpoints in one order, so its two triangles get the same point */
+  /** @type {number[][][]} */let T=[];for(let t=0;t<n;t+=3)T.push([0,1,2].map(q=>[P.getX(t+q),P.getY(t+q),P.getZ(t+q),U?U.getX(t+q):0,U?U.getY(t+q):0,N.getX(t+q),N.getY(t+q),N.getZ(t+q)]));
+  for(const pl of PL){/** @type {number[][][]} */const o=[];for(const tr of T){const D=tr.map(v=>dist(pl,v));if(D.every(x=>x>=0)||D.every(x=>x<=0)){o.push(tr);continue;}
+      /** @type {number[][]} */const A=[],B=[];for(let i=0;i<3;i++){const p=tr[i],q=tr[(i+1)%3],dp=D[i],dq=D[(i+1)%3];if(dp>=0)A.push(p);if(dp<=0)B.push(p);if(dp*dq<0){const m=cut(p,q,dp,dq);A.push(m);B.push(m);}}
+      for(const Q of[A,B])for(let i=1;i+1<Q.length;i++)o.push([Q[0],Q[i],Q[i+1]]);}
+    T=o;}
+  /** @type {number[]} */const pos=[],nor=[],uv=[];const key=(/** @type {number[]} */v)=>v.slice(0,3).map(x=>x.toFixed(6)).join(',');
+  for(const tr of T){const c=[0,1,2].map(i=>(tr[0][i]+tr[1][i]+tr[2][i])/3);if(PL.every(pl=>dist(pl,c)<0))continue;for(const v of tr){pos.push(v[0],v[1],v[2]);uv.push(v[3],v[4]);nor.push(v[5],v[6],v[7]);}}   /* inside the pocket: dropped */
+  PL.forEach((pl,i)=>{const nx=new Map(),pt=new Map();   /* the section on this plane: the edges lying in it, each from its triangle outside the pocket, in that triangle's order (so its outer loops run clockwise about w, the face that closes it) */
+    for(const tr of T){const D=tr.map(v=>dist(pl,v));if(!D.some(x=>x>0))continue;for(let k=0;k<3;k++){const a=tr[k],b=tr[(k+1)%3];if(D[k]===0&&D[(k+1)%3]===0){nx.set(key(a),key(b));pt.set(key(a),a);pt.set(key(b),b);}}}
+    const w=pl.n.map(v=>-v),u=Math.abs(w[1])>0.5?[1,0,0]:[0,1,0],v=[w[1]*u[2]-w[2]*u[1],w[2]*u[0]-w[0]*u[2],w[0]*u[1]-w[1]*u[0]],to2=(/** @type {number[]} */p)=>new THREE.Vector2(p[0]*u[0]+p[1]*u[1]+p[2]*u[2],p[0]*v[0]+p[1]*v[1]+p[2]*v[2]);
+    /** @type {number[][][]} */const loops=[];const seen=new Set();for(const k0 of nx.keys()){if(seen.has(k0))continue;/** @type {number[][]} */let L=[];let k=k0;while(k!==undefined&&!seen.has(k)){seen.add(k);L.push(/** @type {number[]} */(pt.get(k)));k=nx.get(k);}
+      for(const q of PL)if(q!==pl&&L.length>2){/** @type {number[][]} */const o=[];for(let j=0;j<L.length;j++){const a=L[j],b=L[(j+1)%L.length],da=dist(q,a),db=dist(q,b);if(da<=0)o.push(a);if(da*db<0)o.push(cut(a,b,da,db));}L=o;}   /* within the pocket's other planes */
+      if(L.length>2&&Math.abs(THREE.ShapeUtils.area(L.map(to2)))>1e-9)loops.push(L);}
+    const out=loops.filter(L=>THREE.ShapeUtils.area(L.map(to2))<0),holes=loops.filter(L=>THREE.ShapeUtils.area(L.map(to2))>0),inL=(/** @type {number[][]} */L,/** @type {number[]} */p)=>{const q=to2(p),V=L.map(to2);let r=false;for(let a=0,b=V.length-1;a<V.length;b=a++)if((V[a].y>q.y)!==(V[b].y>q.y)&&q.x<(V[b].x-V[a].x)*(q.y-V[a].y)/(V[b].y-V[a].y)+V[a].x)r=!r;return r;};
+    for(const L of out){const H=holes.filter(h=>inL(L,h[0])),all=[...L,...H.flat()];
+      for(const[a,b,c]of THREE.ShapeUtils.triangulateShape(L.map(to2),H.map(h=>h.map(to2)))){let f=[all[a],all[b],all[c]];const p=f[0],q=f[1],r=f[2],m=[(q[1]-p[1])*(r[2]-p[2])-(q[2]-p[2])*(r[1]-p[1]),(q[2]-p[2])*(r[0]-p[0])-(q[0]-p[0])*(r[2]-p[2]),(q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0])];
+        if(m[0]*w[0]+m[1]*w[1]+m[2]*w[2]<0)f=[p,r,q];for(const x of f){pos.push(x[0],x[1],x[2]);nor.push(...w);uv.push(x[0],-x[2]);}}}});   /* facing into the pocket, mapped as the caps are */
+  const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+  o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
 function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[],S=[];
   for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));S.push(i);}V.push(id.get(k));}
   const E=new Set(),nx=new Map();for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u+'_'+v);}
@@ -439,10 +496,12 @@ function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.f
    userData: ro (tip radius), ri (root), hub (the spokes' hub radius). o.prop [hub, rim, spoke]: a spoked wheel's hub radius, its rim's inner radius and its spokes' width,
    as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions; pl, its outline (gearOutline) */
 /** @param {number} n @param {number} m @param {any} [o] @returns {{xy:number[][],ro:number,ri:number}} the outline in the shape's plane (x, y), its tip and root radii */
+/** the angle a locking face undercut by uc against the radius at its tip (r ro) reaches back by at its root (r ri) */
+function ucRoot(ro,ri,uc){const s=ro*Math.cos(uc)-Math.sqrt(ri*ri-(ro*Math.sin(uc))**2);return Math.atan2(s*Math.sin(uc),ro-s*Math.cos(uc));}
 function gearOutline(n,m,o={}){
   const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95;let ri=rp-1.3*m,ro=roS;
   const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
-  if(o.ratchet){ro=roS;const r0=ro-(o.rd||2.25*m),f=o.ratchet==='radial'?0.97:0.9;ri=r0;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch */
+  if(o.ratchet){ro=roS;const r0=ro-(o.rd||2.25*m),f=o.ratchet==='radial'?0.97:0.9;ri=r0;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97-(o.uc?ucRoot(ro,r0,o.uc):0)]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch; uc: the face undercut by that angle against the radius, its root behind its tip (the setup ratchet's) */
   else if(n<=20){const b=0.525*m/rp,rt=0.525*m;ro=rp+rt;
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b],[rp,c-b]);
       for(let k=1;k<12;k++){const t=Math.PI*k/12,u=rp+rt*Math.sin(t),v=-rt*Math.cos(t);pts.push([Math.hypot(u,v),c+Math.atan2(v,u)]);}   /* the round tip, a semicircle on the pitch circle */

@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wempe Einheits-Chronometer</title>
+<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built part by part from its works drawings: the frame, the going train, the spring detent escapement, the fusee and chain, the dial with its hands and motion work, and the gimballed case and box, running, with an essay on what the drawings tell us.">
+<meta name="author" content="Orel Magidish">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wempe Einheits-Chronometer">
+<meta property="og:description" content="The German standard marine chronometer, built part by part from Wempe's works drawings.">
+<meta name="theme-color" content="#dfe2e3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1115" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f4f4f1' stroke='%23b58325' stroke-width='3'/%3E%3Cpath d='M16 7v9l6 4' stroke='%2326479c' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../vendor/fonts/fonts.css">
+<link rel="stylesheet" href="../chronometer-working-model/css/style.css">
+<link rel="stylesheet" href="../chronometer-working-model/css/essay.css">
+<link rel="stylesheet" href="css/wempe.css">
+</head>
+<body>
+<header>
+  <h1>Wempe Einheits-Chronometer</h1>
+  <div class="hd">
+    <nav class="models" aria-label="The models"><a href="../chronometer-working-model/index.html">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars, every part from its sheet, from the frame and the escapement to the gimballed case and its box. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
+  </div>
+</header>
+<div class="wrap">
+  <div class="stage" id="stage">
+    <canvas tabindex="0" aria-label="3D model of the Wempe Einheits-Chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
+    <div class="labels"></div>
+    <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Einheits-Chronometer: an essay on what its drawings tell us, with figures drawn from this model">Essay</button></div>
+    <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
+    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><div class="of"></div><p></p><div class="spec"></div><div class="src"></div><button class="rp-l" id="infoSTL" title="This part (or piece) as built, as an STL in millimetres">Download it as STL</button><button class="rp-l" data-report="inacc">Something wrong with this part? Report it</button></div>
+    <div class="hint" id="hint"><span class="m-only">Click a part to see what it is; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it is; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
+    <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
+    <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
+    <div class="srckey hidden" id="srcKey" aria-label="Colour by source: what each colour means"></div>
+    <div class="hud" id="hud"></div>
+    <div class="info help" id="help" role="dialog" aria-labelledby="helpT"><button class="x" aria-label="Close">×</button><h3 id="helpT">How to use it</h3>
+      <div class="hcols">
+        <section class="hc mouse"><h4>With a mouse</h4><dl>
+          <dt>Drag</dt><dd>Turn the view</dd><dt>Shift-drag or middle-drag</dt><dd>Pan</dd><dt>Scroll</dt><dd>Zoom</dd>
+          <dt>Click a part</dt><dd>What it is, and its drawing number</dd><dt>Double-click a part</dt><dd>Zoom in on it; the view then turns about it</dd><dt>Double-click empty space</dt><dd>Back to the whole view</dd><dt>Right-click a part</dt><dd>Fade, hide or isolate it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
+          <dt>1 to 9</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>Backspace, Shift-Backspace</dt><dd>Back and forward through the places the view has been</dd><dt>?</dt><dd>Open or close this card</dd><dt>P</dt><dd>Hide or show the panel, where it sits beside the model</dd></dl></section>
+        <section class="hc touch"><h4>On a phone or tablet</h4><dl>
+          <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
+          <dt>Tap a part</dt><dd>What it is, and its drawing number</dd><dt>Double-tap a part</dt><dd>Zoom in on it; the view then turns about it</dd><dt>Double-tap empty space</dt><dd>Back to the whole view</dd><dt>Long-press a part</dt><dd>Fade, hide or isolate it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
+          <dt>Tap empty space</dt><dd>Close a card</dd></dl></section></div>
+      <p class="note">Reset brings the camera back to the chosen view; ↶ and ↷ go back and forward through the places it has been. Every part is listed under Parts.</p></div>
+    <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="link" title="Copy a link to this view: the view, part and settings">Link</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
+    <div class="loading" id="loading">Assembling the movement…</div>
+  </div>
+  <div class="panel" id="panel">
+    <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
+    <div class="card tour" id="tourCard">
+      <div id="tourIntro">
+        <h2>How it works</h2>
+        <p class="note" style="margin:0 0 10px">Eight steps from the case to the dial, tied to the running model.</p>
+        <button class="primary" id="tStart">Start the walkthrough</button>
+      </div>
+      <div id="tourBody" class="hidden">
+        <div class="tnav"><button id="tPrev">Back</button><span id="tStep"></span><button id="tNext">Next</button></div>
+        <div class="dots" id="tDots"></div>
+        <h3 id="tTitle"></h3>
+        <div class="txt" id="tText" aria-live="polite"></div>
+        <div class="inset" id="tInset"></div>
+        <div class="seg" style="margin-top:10px"><button id="tExit">End walkthrough</button></div>
+      </div>
+    </div>
+    <div class="card ctl">
+      <details class="grp more" id="viewDet" open>
+        <summary>View</summary>
+        <div class="seg grid3" id="views">
+          <button data-v="movement" aria-pressed="true" title="The movement, train side up">Movement</button><button data-v="plan" title="The top plate from straight above">Plan</button><button data-v="side" title="The frame from the side">Side</button>
+          <button data-v="dial" title="The dial in its case, from above, the lid open">Dial</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button><button data-v="escapement" title="The escapement under the top plate, seen through it">Escapement</button>
+          <button data-v="train" title="The going train, plates see-through">Train</button><button data-v="fusee" title="The barrel, the chain and the fusee, plates see-through">Fusee</button><button data-v="balance" title="Close up on the balance, its masses, timing weights and hairspring">Balance</button>
+          <button data-v="box" title="The chronometer in its wooden box, the lid shut">Box</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button><button data-v="transport" title="The wooden box in its padded outer box for transport">Transport box</button></div>
+        <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
+        <label class="ck sw" title="Hide the plates, cocks, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
+        <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
+      </details>
+      <details class="grp more" id="timeDet">
+        <summary>Time</summary>
+        <div class="seg" id="speeds">
+          <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
+        <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
+        <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
+        <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as a ship’s chronometers are kept for navigation">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
+        <div class="row"><span class="lab">Sound</span><label class="ck" title="A click at each beat, at up to real time"><input type="checkbox" id="snd"> Tick sound</label></div>
+        <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat; the hands show the time here. Above 4×, the balance is drawn at rest. Setting the hands turns the hour and minute hands on the cannon pinion, to the minute; the balance is then stopped and the train held until the time comes round to the dial, and a twist starts it, so the seconds hand agrees too.</p>
+      </details>
+      <details class="grp more" id="windDet" open>
+        <summary>Winding</summary>
+        <div class="row pow"><label class="sl"><span class="lab">Since winding</span><input type="range" id="hrs" min="0" max="55.9" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully: the key on the fusee's square turns it back about 8¾ turns, until the stop bar meets its pin, while the maintaining spring drives the train">Wind</button><button id="twist" title="Turn the chronometer sharply about its hands and back, which sets a stopped balance swinging: how a run-down chronometer is started once wound">Twist</button></div>
+        <p class="note" style="margin:6px 0 0">The fusee goes 56 hours on a wind, 8¾ of its turns; the barrel turns about 5 times. While the key turns the fusee back, its clicks ride over the click wheel and the maintaining detent holds the ratchet, so the maintaining spring keeps the train going for about a minute. Run down, the train stops and the balance swings down to rest: a detent escapement doesn't start itself, so once wound it needs a twist to set the balance swinging again. The swing comes from the fusee's pull, measured on the drawings, through the train; the rate shown is the escapement's, against its own at 12 hours from full wind.</p>
+      </details>
+      <details class="grp more" id="swingDet">
+        <summary>Swing and isochronism</summary>
+        <p class="note" style="margin:0 0 6px">How far the balance swings is set by the train’s torque: each swing the impulse gives it what unlocking, the detent’s springs and its own damping take, and it settles where they balance. The fusee keeps the torque, and so the swing and the rate, nearly the same from full wind to run down. No balance is quite isochronous: the escapement, pushing it on either side of its dead point, makes a smaller swing lose (Airy), and the drawn hairspring, stiffening a little as it winds, makes a larger one lose; here the two partly cancel. While the key turns, the maintaining spring drives the train with what it carried, falling to nothing in about a minute.</p>
+        <div class="seg" id="swK" role="group" aria-label="What the chart shows"><button data-v="t" aria-pressed="true" title="The balance's swing over the last minute">Last minute</button><button data-v="a" aria-pressed="false" title="The rate at each swing, the drive steady">Rate against swing</button><button data-v="w" aria-pressed="false" title="The swing from full wind to run down">Over a wind</button></div>
+        <canvas id="swCv" class="mini" aria-label="The balance's swing: over the last minute, the rate against it, or over a wind"></canvas>
+        <label class="sl rw" style="margin-top:6px" title="A mainspring that has taken a set pulls that much less all through its run: the fusee evens out the pull over a wind, but can't make up a weaker spring"><span>Mainspring set</span><input type="range" id="msetR" min="0" max="30" step="1" value="0" aria-label="Mainspring set, per cent weaker"><output></output></label>
+        <div class="rate" id="swOut" aria-live="polite"></div>
+        <p class="note" style="margin:8px 0 0">The shaded band is 225° to 270° each way, the 1954 instruction’s for chronometers in general (the Hamilton manual’s 1⅜ to 1½ turns, 248° to 270°): no Wempe source gives the Einheits-Chronometer’s own. The model swings under it, because its damping, the balance’s free run-down in 108 s, is the one a running 6MX on video gives back (its parts allow 81 to 208 s, and 149 s would reach 225°); the dashed line is the floor of the tools’ guard band, 185°. The drive is 05 06_20’s measured force through the train. The swing and the rate are makeEsc’s, solved with the Wempe’s settings in Node (<code>tools/wempe_essaydata.js</code>, as <code>tools/wempe_escapement.js</code> checks them) and read here between the drives solved; the maintaining spring’s minute is 05 06_9’s 0.27 mm (likely).</p>
+      </details>
+      <details class="grp more" id="rateDet">
+        <summary>Rate and timing weights</summary>
+        <p class="note" style="margin:0 0 4px">There is no regulator. The rate is set with the two timing weights at the arm’s ends, each a split brass weight on a screw across the rim: turned in, toward the staff, a weight lowers the balance’s moment of inertia and the chronometer gains. Both are turned alike, so the balance stays in poise. A turn of both is 44.2 s a day; as drawn they stand against their screws’ heads, so they can only go in, about 1.9 turns. The temperature error is set by the four masses on the cut bimetallic rim: moved along it toward the cuts, they make the rim’s curl in heat carry them further in, and the balance gains more as it warms.</p>
+        <label class="sl rw"><span>Timing weights</span><input type="range" id="twR" min="0" max="15" step="1" value="0" aria-label="Timing weights, eighth turns in"><output></output></label>
+        <label class="sl rw"><span>Masses</span><input type="range" id="plR" min="14.5" max="72.5" step="0.5" value="30" aria-label="The masses' place, degrees from the cuts' line"><output></output></label>
+        <div class="seg" id="plSeg" style="margin-top:4px"><button data-v="drawn" aria-pressed="true" title="Where the sheets and Wempe 3955 have them: 30° from the cuts' line">As drawn</button><button data-v="adj" aria-pressed="false" title="Where they null the temperature coefficient with the air's, as an adjuster sets them on trial">Compensated</button></div>
+        <label class="sl rw" style="margin-top:6px"><span>Temperature</span><input type="range" id="tmpR" min="0" max="40" step="0.5" value="20" aria-label="Temperature, degrees Celsius"><output></output></label>
+        <canvas id="tempCv" class="mini" aria-label="Rate against temperature, 0 to 40 degrees Celsius, with the masses where they are set, at their drawn place dashed"></canvas>
+        <p class="note" id="tempOut" style="margin:4px 0 0"></p>
+        <div class="rate" id="rateOut" aria-live="polite"></div>
+        <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
+        <p class="note" style="margin:8px 0 0">The weights’ figure is the model’s (the README’s Building it: 0.432 g at r 18.5 on their 0.16 pitch, their size estimated); the hairspring as drawn would run the weighed balance 8 minutes a day fast, more than their reach, so the spring is matched to its balance, as a maker of the 1940s did, and the model runs it at the train’s 0.5 s. The temperature curve is the cut bimetallic rim’s (<code>tools/wempe_thermal.js</code>: the brass on Guillaume’s nickel steel curling by Timoshenko’s bimetal, the steel spring’s thermoelastic coefficient), the secondary error of an integral balance (estimated) and the air’s density, which takes most of the balance’s damping (<code>tools/wempe_errorbudget.js</code>). At their drawn place the masses leave the balance losing as it warms, by the figure under the chart; moved along the rim toward the cuts (Compensated) they null it, which the adjuster finds on trial (the 6MX’s book: the masses are moved along the rim for compensation). The model’s clock runs at the rate shown; try 3600×. The weights are drawn moving; the masses are not (the rim isn’t drilled for them elsewhere).</p>
+      </details>
+      <details class="grp more" id="testDet">
+        <summary>35-day trial</summary>
+        <p class="note" style="margin:0 0 6px">The trial of the 6MX’s technical conditions (TU 25-07.1533-84; the 6MX was made from the same drawings by the First Moscow Watch Factory): thirty-five days in five periods of seven, at 36, 20, 4, 20 and 36 °C, the first two days of each not counted, wound daily, the rates read to 0.01 s (losing +), judged on E, the mean deviation of the daily rate; R, the recovery, period V’s mean less period I’s; D, the largest difference between consecutive daily rates; C, the temperature coefficient; S, the secondary error; each period’s mean rate; and N = 42E + 4.5R + 60C + 2.4S. Here it is run on the model as it stands (the masses’ place, the timing weights), on one trial’s days as <code>tools/wempe_errorbudget.js</code> draws them: the scatter and drift of the Hamilton’s No. 3390 card (no Wempe card is to hand), the air, the swing over the daily wind, the barometer and the oil. Beside it, the medians of 2,000 such trials with the masses compensated and 500 at their drawn place.</p>
+        <div id="testOut" aria-live="polite"></div>
+      </details>
+      <details class="grp more" id="benchDet">
+        <summary>Escapement in plan</summary>
+        <p class="note" style="margin:0 0 6px">The spring detent escapement as 05 04_1 lays it out, seen from above through the top plate (the sheet’s O to the right, N up), drawn from the model’s own pieces flattened onto the plan and moving with the model: the escape wheel, the impulse and discharge rollers, the detent with its gold spring, and its block. Under it, its figures as <code>tools/wempe_escapement.js</code> measures them (makeEsc’s measure(), at the model’s settings), beside 05 04_1’s where the sheet gives them.</p>
+        <canvas id="benchCv" aria-label="Plan of the escapement, seen from above through the top plate as 05 04_1 draws it, moving with the model"></canvas>
+        <p class="note" id="benchCap" aria-live="polite" style="margin:4px 0 0"></p>
+        <div id="benchT"></div>
+        <div class="seg" style="margin-top:8px"><button id="benchLook">Show the escapement</button></div>
+        <p class="note" style="margin:8px 0 0">The Hamilton’s page has its adjuster’s bench here: sliders for the escapement’s settings, which rebuild its detent, jewels and roller and measure them again. The Wempe’s parts are built from 05 04_1’s layout and the parts’ sheets (<code>js/escapement.js</code>), and makeEsc’s settings are taken from them (<code>WESC.SET</code>), not the other way round: a setting moved here would leave the drawn parts where the sheets put them, so the bench isn’t ported.</p>
+      </details>
+      <details class="grp more" id="varDet">
+        <summary>Variants</summary>
+        <h3 class="sub-h">Between the barrel and the fusee</h3>
+        <div class="seg" id="conn"><button data-v="chain" aria-pressed="true" title="The chain, 05 07 04 (1941): 374 links at a 2.05 pitch, 0.82 thick, as on Wempe 3955 and Lange 5177">Chain (05 07 04)</button><button data-v="band" aria-pressed="false" title="The steel band, 05 07 03 (1943): 0.22 thick, 730 long, with its two brazed hooks, as on Greenwich's wartime Wempe">Band (05 07 03)</button></div>
+        <h3 class="sub-h">Dial</h3>
+        <div class="seg" id="dialSt"><button data-v="wempe" aria-pressed="true" title="Wempe's printing, traced on a photograph of Wempe No. 3955's dial: CHRONOMETERWERKE WEMPE HAMBURG and the anchor">Wempe, Hamburg (as No. 3955)</button><button data-v="lange" aria-pressed="false" title="Lange's printing, traced on a photograph of A. Lange &amp; Söhne No. 5177's dial (its rust left out): A. LANGE &amp; SÖHNE GLASHÜTTE B/DRESDEN, Auf and Ab over the up-and-down dial">A. Lange &amp; Söhne, Glashütte (as No. 5177)</button></div>
+        <h3 class="sub-h">The drawings</h3>
+        <div class="seg" id="rev"><button data-v="last" aria-pressed="true" title="Each sheet as last revised, about 1946-48: the escape wheel and rollers 1.8 mm under the top plate, the detent block with its upright (05 04 01-4, 1943)">As last revised</button><button data-v="first" aria-pressed="false" title="The parts the later revisions replaced, as first drawn in 1940-41, as Wempe 3955 is made: the escape wheel just under the top plate on its 1941 arbor (05 04_7.1), the 1941 staff with its brass collar (05 04_5), the detent block with its long arm and cone (05 04_1)">As first drawn</button></div>
+        <p class="note" style="margin:6px 0 0">Where a sheet was revised, the model is built as last revised; As first drawn shows the parts as the earlier sheets drew them. Figures that changed only a tolerance are on the parts' cards.</p>
+      </details>
+      <details class="grp more" id="dlDet">
+        <summary>Download</summary>
+        <p class="note" style="margin:0 0 6px">The model to take away. Each part's card has its solid as STL; here the whole movement as shown, or the whole instrument for Blender, in the Variants chosen above.</p>
+        <div class="seg"><button id="xSTL" title="Every part of the movement shown, as one STL in millimetres">Movement (.stl)</button><button id="xGLB" title="The whole instrument for Blender (glTF 2.0): every part a named object in its own hierarchy, in its materials, with every motion the model has as an action">Blender (.glb)</button><button id="xRig" title="A script for Blender's Text Editor, run after importing the .glb: one set of controls (time, explode, lift, lid) drives every part at the model's own ratios">Blender rig (.py)</button></div>
+        <div class="rate" id="xRead" aria-live="polite"></div>
+      </details>
+      <details class="grp more disp" id="dispDet" open>
+        <summary>Display</summary>
+        <div class="dgrid">
+          <span class="lab">Show</span><label class="ck"><input type="checkbox" id="lbls"> Labels</label><label class="ck" title="Outline every part with the drawing's lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
+          <label class="ck c2"><input type="checkbox" id="colr"> Colour by part</label><label class="ck" title="Colour each part by where its shape and size come from: the drawings, or estimated"><input type="checkbox" id="colrSrc"> Colour by source</label>
+          <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
+          <label class="ck c2" title="See-through plates, pillars, cocks, bridges and movement ring"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
+          <label class="ck c2" title="Draw the parts that don't move against each other as one: fewer draw calls, the same picture (on by default; turn it off if something looks wrong)"><input type="checkbox" id="merge"> Performance mode</label>
+          <span class="lab g">Motion</span><label class="ck g" title="The ship rolls and pitches: seen from on board, the box stands still and the case swings in its gimbals, keeping level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Turn the transit lock in, as when the box is carried: the gimbals are held, and the case goes with the box"><input type="checkbox" id="latch"> Transit lock</label>
+          <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case’s own swing (about 1 s, from its weighed bowl and ring) they can’t, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
+          <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
+          <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+          <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, units and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
+          <div class="seg c2 span"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div></div>
+      </details>
+      <details class="grp more" id="partsDet">
+        <summary>Parts</summary>
+        <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
+        <input type="search" id="pSearch" placeholder="Find: a name or drawing number" aria-label="Find a part by name or drawing number">
+        <p class="note hidden" id="pNone" style="margin:6px 0 0">Nothing matches.</p>
+        <div id="plist"></div>
+        <div class="row" style="margin-top:8px"><span class="lab">Sizes in</span><div class="seg" id="units" role="group" aria-label="Units for the sizes on the part cards"><button data-v="mm" aria-pressed="true">mm</button><button data-v="in" aria-pressed="false">inches</button></div></div>
+        <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
+      </details>
+      <details class="grp more" id="secDet">
+        <summary>Cross-section</summary>
+        <div class="seg" id="secs">
+          <button data-v="off" aria-pressed="true">Off</button><button data-v="x">12–6 plane</button><button data-v="z">3–9 plane</button><button data-v="y">Across the pillars</button></div>
+        <div id="secOpts" class="hidden" style="margin-top:8px"><label class="sl"><span>Position</span><input type="range" id="secOff" min="-44" max="44" step="0.25" value="0"><output></output></label>
+          <label class="ck" style="margin-top:6px"><input type="checkbox" id="secFlip"> Show the other half</label>
+          <p class="note" style="margin:6px 0 0">Cut faces are hatched. The plane moves with the movement, so it works in every view.</p></div>
+      </details>
+    </div>
+    <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
+    <button class="about-btn" id="reportBtn" data-report title="Something broken, or something that differs from Wempe’s drawings or a real Einheits-Chronometer: written into an email to the author, with the details that help fix it">Report a bug or inaccuracy</button>
+    <div class="card ctl">
+      <details class="grp more" id="changesDet">
+        <summary><span>Version <span data-ver>dev</span> · what’s new</span></summary>
+        <div class="changes-box"><!--changelog--><p class="note">The built page lists each version’s changes here, from CHANGELOG.md.</p><!--/changelog--></div>
+      </details>
+    </div>
+  </div>
+</div>
+<article id="essay" role="tabpanel" aria-labelledby="tabEssay" tabindex="-1" hidden>
+<div class="e-bar"><a class="e-t" href="#essay">The Einheits-Chronometer <span>· an essay on the working model</span></a><div class="e-prog"></div></div>
+<div class="e-art">
+<header class="e-hero">
+  <div class="e-dial" id="eHeroSt"><canvas id="eHero" aria-label="The Wempe's dial, showing the time the model on the other tab keeps"></canvas></div>
+  <p class="e-dialcap" id="eHeroCap" aria-live="off">The model’s dial</p>
+  <h1>The Einheits-Chronometer</h1>
+  <p class="e-by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
+  <p class="e-deck">A chronometer built from its drawings. Wempe’s works drawings for the German standard marine chronometer give each hole’s place to a thousandth of a millimetre, and beside them a measurement its makers took. This essay reads them, and shows where the model on the other tab finds them agreeing, and where it doesn’t.</p>
+  <p class="e-after">A companion to <a href="../chronometer-working-model/index.html#essay">The Marine Chronometer</a>, the essay on the Hamilton Model 21, which explains how a chronometer keeps time: this one links to it where an idea is the same. The drawings themselves are on the <a href="https://www.dg-chrono.de/uhrenwissen/russische-uhren/schiffe-und-uhren/1945-2000/wempe-einheitschronometer/">Deutsche Gesellschaft für Chronometrie’s site</a>; every figure here is drawn from the model’s own numbers.</p>
+  <nav class="e-toc" aria-label="Contents"><b>Contents</b><ol>
+    <li><a href="#essay=standard">One standard chronometer</a></li><li><a href="#essay=drawing">Reading a works drawing</a></li><li><a href="#essay=fusee">The fusee, measured by its makers</a></li>
+    <li><a href="#essay=hairspring">The helical spring and Phillips’ curves</a></li><li><a href="#essay=heat">The bimetallic balance and the adjuster</a></li>
+    <li><a href="#essay=detent">The escapement in time</a></li><li><a href="#essay=gimbals">Brass that hangs</a></li><li><a href="#essay=copy">The reparation drawings and the 6MX</a></li>
+    <li><a href="#essay=sources">What the drawings leave open</a></li></ol></nav>
+</header>
+
+<h2 id="standard"><a class="e-h" href="#essay=standard">One standard chronometer</a></h2>
+<p>The <i>Deutsches Einheits-Chronometer</i>, the German standard chronometer, was designed by Gerhard D. Wempe’s chronometer works in Hamburg in the early 1940s. It was made by Wempe and by A. Lange &amp; Söhne during the war, and by Wempe after it. It is a marine chronometer of the classic kind: a fusee and chain, a spring detent escapement, a cut bimetallic balance with a helical spring, in a brass bowl hung in gimbals in a wooden box.</p>
+<p>The Deutsche Gesellschaft für Chronometrie’s page that publishes its drawings names Ernst William Meier and Friedrich Leutert as its <i>geistige Väter</i>, its intellectual fathers, and John Schwarzer and Herbert Müller as its chief designers, whose names are in the drawings’ title blocks. Several hundred drawings were made, and the wartime ones were revised from what series production taught, the balance staff and the escape wheel among them. The published set comes from Wempe, from private sources and from the Deutsches Uhrenmuseum Glashütte, which holds copies stamped “KOPIE” of the drawings Wempe supplied to Lange.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eSheets"><canvas aria-label="The dates of the published drawings, by drawing group"></canvas></div>
+  <div class="e-ctl"><label class="e-ck"><input type="checkbox" checked> The lever chronometer’s sheets</label></div>
+  <div class="e-ro"></div>
+  <figcaption>Every published sheet with a date, <span class="e-live" data-live="shN">121</span> of them, by drawing group: the date it was drawn (filled) and of its revision (open), as the page lists them. <span class="e-live" data-live="sh41">79</span> were drawn in 1940 and 1941; the revisions run to 1948, and one balance staff sheet is dated 1965. The lever chronometer’s sheets (grey) are drawn to the same plates and the same holes’ coordinates.</figcaption>
+</figure>
+<p>One date doesn’t fit. The escapement’s layout, “Hemmung für Feder-Chronometer, Kaliber 020” (sheet 05 04_1), is dated 03.02.40, which the page reads as 1941, since Wempe had no spring chronometer in 1940. The lever chronometer’s escapement sheet, 05 04_20, is dated 03.02.41.</p>
+<p>Knirim and Schmiedchen (watch-wiki) list changes made at Glashütte: the bowl and gimbal ring in Bakelite, with a heavy weight in the bottom, from No. 5100; the balance lowered to 3.8 mm from No. 5111; the maintaining spring (<i>Gegenfeder</i>) redesigned at Lange from No. 5201. Lange No. 5177, of 1944, is photographed on dg-chrono.de with its papers.</p>
+<p>The model on the other tab is the spring-detent version, the <i>Feder-Chronometer</i>, Kaliber 05, as its drawings draw it, each sheet as last revised. Where a sheet gives a figure, the model uses it; where it doesn’t, the size is measured on the drawing at its scale or on photographs of real ones, and marked as estimated. Each part’s card says which.</p>
+<p class="e-see"><a href="../chronometer-working-model/index.html#essay=time">Why a ship carried a chronometer at all, in the Hamilton’s essay</a></p>
+
+<h2 id="drawing"><a class="e-h" href="#essay=drawing">Reading a works drawing</a></h2>
+<p>A works drawing is a sheet for the shop: one part, drawn to a scale, with every size it must be made to and how closely, its material, and who drew and checked it. Take the pillar, 05 08 00-1, one of the three that hold the plates apart. Herbert Müller drew it on 2 June 1940, at five times full size, in <i>Rundmessing 8,5 Din 1758 Ms 58</i>, round brass bar 8.5 mm across. Its body is Ø&nbsp;<span class="e-live" data-live="pilD">8.1</span> −0.2. It stands <span class="e-live" data-live="pilL">19.6</span> ±<span class="e-live" data-live="pilLT">0.01</span> between its shoulders, and at each end a spigot Ø&nbsp;<span class="e-live" data-live="pilS">4.5</span> f7, <span class="e-live" data-live="pilSL">2.8</span> long, goes into a plate. The sheet also gives the overall length, 25.3 −0.2, which the parts check: <span class="e-live" data-live="pilL">19.6</span> + 2 × <span class="e-live" data-live="pilSL">2.8</span> = <span class="e-live" data-live="pilTot">25.2</span>. The pillar is tapped M2.6 right through for the pillar screws, “Gewinde von beiden Seiten einschneiden”: cut the thread from both ends.</p>
+<p>“f7” is a tolerance from the standard system of fits: for a shaft 4.5 across it means between 0.010 and 0.022 mm under size, <span class="e-live" data-live="sLo">4.478</span> to <span class="e-live" data-live="sHi">4.490</span>. The plates’ holes for the spigots are reamed “4,5 +0,012”, <span class="e-live" data-live="hLo">4.500</span> to <span class="e-live" data-live="hHi">4.512</span>. So a spigot always slides in, with <span class="e-live" data-live="fitMin">0.010 mm</span> to <span class="e-live" data-live="fitMax">0.034 mm</span> to spare across its hole: the pillars set where the top plate lies over the pillar plate, and so where each arbor’s upper pivot hole stands over its lower one.</p>
+<p>The shoulders don’t sit on the plates’ faces but in seats, Ø&nbsp;<span class="e-live" data-live="seatD">8.6</span> and <span class="e-live" data-live="seatH">0.3</span> +<span class="e-live" data-live="seatT">0.03</span> deep, turned into each plate’s inner face. So the plates stand <span class="e-live" data-live="pilL">19.6</span> − 2 × <span class="e-live" data-live="seatH">0.3</span> = <span class="e-live" data-live="inner">19.0</span> mm apart, the “innerer Plattenabstand 19 mm” of the overall plan (sheet 001), and <span class="e-live" data-live="innerLo">18.93</span> to <span class="e-live" data-live="innerHi">19.01</span> at the limits.</p>
+<p>The plates come with tables. The top plate’s sheet, 05 09 01, lists every hole by its number, with its place as two coordinates from hole 1, the centre wheel’s arbor, at the plate’s centre: N or S, and O (<i>Ost</i>, east) or W. Then how each is made: centre-punched (<i>Körner</i>) or punched to a size, drilled, then reamed or tapped. The pillars are holes 11, 39 and 49; hole 11 is “S 3,225 O 36,858”, punched 4.3 and reamed 4.5 +0.012. Worked out, the three lie on one circle <span class="e-live" data-live="pilR">37.0</span> mm about the centre, at <span class="e-live" data-live="pilBr">95°, 210° and 350°</span> from N toward O: <span class="e-live" data-live="pilGap">115°, 140° and 105°</span> apart, not evenly spaced. A hole has the same number and the same coordinates on every sheet it appears on, the plates, the cocks and the bridges; read across them all, they agree to the last figure.</p>
+<figure>
+  <div class="e-st flat" id="eSheet"><canvas aria-label="The top plate in plan, every hole of its table numbered"></canvas></div>
+  <div class="e-ro"></div>
+  <div class="e-book e-holes"><table><thead><tr><th>No.</th><th>Benennung</th><th>N/S</th><th>O/W</th><th>Punched</th><th>Drilled</th><th>Reamed</th></tr></thead><tbody></tbody></table></div>
+  <figcaption>The top plate as its table lays it out, seen from its outer face with N up and O to the right, as the sheets draw it: every hole of 05 09 01 at its finished size and at the place the model takes from it, the pillars’ seats in the inner face dashed. Choose a row, or a hole, for its coordinates from hole 1. The plate is a crescent, cut away 42.5 across round the barrel (hole 45); the balance’s opening and pocket are drawn as the plain hole. Drawn from the model’s numbers; the sheet itself is on dg-chrono.de.</figcaption>
+</figure>
+<figure>
+  <div class="e-st flat" id="ePil"><canvas aria-label="The pillar between the plates, in section, with the fit of its spigot"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Spigot Ø</span><input type="range" min="4.478" max="4.49" step="0.001" value="4.484"><output></output></label>
+    <label class="e-sl"><span>Hole Ø</span><input type="range" min="4.5" max="4.512" step="0.001" value="4.506"><output></output></label>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The pillar between the plates in section, the top plate above: its shoulders in the plates’ seats, its spigots in their reamed holes, the thread for the pillar screws dashed. Move the spigot and the hole within their limits; in the circle, the gap is drawn fifty times wider.</figcaption>
+</figure>
+<p class="e-see"><a href="#view=side&amp;sec=x:-6.425">The frame cut through pillar 49 in the working model</a></p>
+<p class="e-see"><a href="#view=plan">The top plate from above in the working model</a></p>
+
+<h2 id="fusee"><a class="e-h" href="#essay=fusee">The fusee, measured by its makers</a></h2>
+<p>A mainspring pulls harder fully wound than run down, and the fusee, a grooved cone the chain winds onto, gives the train an even pull from it. Wempe’s drawings include a record of how even. Sheet 05 06_20, “Schneckenkurve / Kraftverlauf” (the fusee’s curve, the course of the force), signed by Herbert Müller on 24 July 1941, plots the force over the fusee’s turns: “Mittel aus 2 Messungen”, the mean of two measurements, with a lever 262 mm long (“Hebellänge 262 m/m”), running down (“Ablauf”). Over the whole wind it reads between <span class="e-live" data-live="kvMin">126.5</span> and <span class="e-live" data-live="kvMax">138.4</span> g; the sheet’s own mean is 131.5 g.</p>
+<p>Where was the lever? The sheet works out its own sum, 131.5 × 262 / 19.6 = 1.758 kg at the fusee wheel’s pitch circle (d = 39.202), which takes no account of the fusee’s radius; and a pull as even as this over the barrel’s five turns is what a fusee hands its arbor, not what a barrel gives. So the model reads it as measured on the fusee arbor, with the spring’s, the chain’s and the fusee’s losses already in it. Through the going train, <span class="e-live" data-live="ratio">3,085.7</span> to 1 from the fusee wheel to the escape pinion, at an efficiency the model estimates at <span class="e-live" data-live="eta">0.749</span> (<span class="e-live" data-live="etaRange">0.661–0.848</span> from its pivots and teeth), that is <span class="e-live" data-live="escRange">78.9–86.3</span> µN·m at the escape wheel over the wind.</p>
+<p>No sheet gives the mainspring’s length, only its strip, 15 × <span data-wphys="msT">0.37 mm</span>, on the same sheet. The model solves the spring as the Hamilton’s is solved: an elastic strip coiled in the drawn barrel, its shape the one of least bending energy at each quarter turn of the wind, its coils pressing on each other, set up three quarters of a turn (“3/4 Umgang gespannt”) and wound through the drawn fusee. A strip <span data-wphys="msL">1,240 mm</span> long gives the measured force’s shape to <span data-wphys="msRms">1.07 %</span> rms: the hump a turn from run down, the dip in the middle, the rise to full wind.</p>
+<p>The level is another matter. At <span data-wphys="msT">0.37 mm</span> the solved strip pulls <span data-wphys="msMore">25 %</span> harder than the sheet measured: the measured force is <span data-wphys="msEta">0.802</span> of its pull without friction. The losses between the spring and the fusee arbor, worked out from the parts (the coils rubbing, the barrel on its arbor, the chain’s links on their rivets, the fusee’s pivots), come to <span data-wphys="lossEst">3.5–14.6 %</span>; the measurement asks for <span data-wphys="lossImp">13.6–24.1 %</span>. It closes only with the losses at the top of their range, or with a strip about <span data-wphys="tMid">0.355 mm</span> thick. And solved at <span data-wphys="msT">0.37 mm</span> the strip would be stressed <span data-wphys="sSolved">2.73 GPa</span> fully wound, past a steel mainspring’s limit. The sheet’s “0,37” is its own stencilled figure, not a 7 written over another, so the gap isn’t a misread thickness: the level stays open.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eFus"><canvas aria-label="05 06_20's measured force against the solved mainspring, over the fusee's turns"></canvas></div>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="What to compare"><button aria-pressed="true" data-v="shape">The shape</button><button aria-pressed="false" data-v="level">The level</button></div>
+    <label class="e-sl"><span>Fusee turns</span><input type="range" min="0" max="8.75" step="0.05" value="4.5"><output></output></label>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>05 06_20’s readings (brass), scaled off its curve to ±0.7 g, against the mainspring the model solves (blue): <span data-wphys="msL">1,240 mm</span> of 15 × <span data-wphys="msT">0.37 mm</span> strip, wound through the drawn fusee. The shape: scaled to the sheet’s mean. The level: as solved, and less the losses worked out from the parts (the band, its middle dashed).</figcaption>
+</figure>
+<p class="e-see"><a href="../chronometer-working-model/index.html#essay=force">How a fusee evens out a mainspring, in the Hamilton’s essay</a></p>
+<p class="e-see"><a href="#part=fusee">The fusee in the working model</a></p>
+
+<h2 id="hairspring"><a class="e-h" href="#essay=hairspring">The helical spring and Phillips’ curves</a></h2>
+<p>The balance swings against its hairspring, and the two together keep the time. A marine chronometer’s hairspring is a helix: a strip coiled into a cylinder, with a curve at each end that brings it in to the collet on the staff and out to the stud on the cock. Wempe’s sheets draw it. The strip (05 03_6, <i>Spiralfaden</i>) is <span class="e-live" data-live="hsT">0.285</span> mm thick and <span class="e-live" data-live="hsB">0.52</span> mm high, steel hardened and tempered dark blue (“dunkelblau anlassen”), coiled <span class="e-live" data-live="hsD">12.8</span> mm across with its turns <span class="e-live" data-live="hsP">0.73</span> mm apart. Its terminal curve (05 03_7, <i>Spiralkurve</i>) is drawn at ten times full size, with a table of its radius every 10°. These sheets carry the lever chronometer’s numbers, but the spring they draw, with its collet and stud, is this one’s, and the model takes it as shared by the two.</p>
+<p>How long is it? 05 03_7 says “vorm biegen der Kurve auf 13 Umgänge −3,5 mm kürzen”: before bending the curve, shorten to 13 turns less 3.5 mm. Read as the words read, the whole strip is cut to thirteen turns of the coil as wound, less 3.5 mm, and both curves are bent from its ends. That leaves <span class="e-live" data-live="hsTurns">11.80</span> turns of helix between them, <span class="e-live" data-live="hsL">505.4</span> mm from pin to pin, and puts the two pinning points nearly in line, <span class="e-live" data-live="hsPins">7°</span> apart, where 05 03_1 draws them 5° apart. The drawn coils lean a turn longer: 05 03_5 draws about 12.4 turns between the curves.</p>
+<p>The curves matter because a plain coil pinned at its ends doesn’t open and close about its centre. As it winds and unwinds it pushes the staff sideways in its pivots, and the rate comes to depend on the swing. Phillips showed in 1861 what a terminal curve must do to keep the coil centred: the curve’s centroid, from where it leaves the coil to its pin, must lie on the perpendicular to the radius at that junction, and at R²/l from the centre, R being the coil’s radius and l the curve’s length.</p>
+<p>05 03_7’s curve is drawn with a compass. Its first quarter, 0–90°, lies on a circle of radius <span class="e-live" data-live="a1r">5.94</span> about a point <span class="e-live" data-live="a1o">0.33</span> mm off the coil’s centre, and its run from 110° to the pin at 220° on a circle of radius <span class="e-live" data-live="a2r">4.35</span> about a point <span class="e-live" data-live="a2o">1.26</span> mm toward 90°, both within <span class="e-live" data-live="aRes">22</span> µm of the table; the sheet marks small circles at those two points. Against Phillips, the drawn curve’s centroid lies on the perpendicular, <span class="e-live" data-live="gOff">1.7°</span> off it, so the first condition holds. But it lies <span class="e-live" data-live="gOG">3.01</span> mm from the staff, where the second asks for <span class="e-live" data-live="gPh">1.91</span>: the curve’s first moment is <span class="e-live" data-live="gK">1.58</span> times what it should be. The curves that would meet both conditions, to the same pins and leaving in the same direction, are <span data-wphys="dsgI">28.4 mm</span> and <span data-wphys="dsgO">28.4 mm</span> long, against the drawn <span class="e-live" data-live="gL">20.5</span>.</p>
+<figure>
+  <div class="e-st flat" id="eHsC"><canvas aria-label="05 03_7's terminal curve, its compass arcs, and its centroid against the point Phillips' conditions ask for"></canvas></div>
+  <div class="e-ctl"><label class="e-ck"><input type="checkbox" checked> The compass arcs</label></div>
+  <div class="e-ro"></div>
+  <figcaption>05 03_7’s inner curve as the model draws it, from where it leaves the coil (0°) to its pin in the collet (220°): the table’s radii (brass dots, to the strip’s inside), the strip’s middle (blue), the coil dashed. Red: the two compass arcs that fit the table, and their centres. The curve’s centroid G, and Phillips’ point on the same line, R²/l from the centre. Drawn from the model’s numbers in the sheet’s view, the junction at the bottom.</figcaption>
+</figure>
+<p>What the second condition is for is the force on the pivots. Under a couple, the drawn spring presses the staff sideways with <span data-wphys="latD">0.018</span> of the couple divided by the coil’s radius; ends that meet Phillips’ conditions leave none, and plain ends about 1. Each curve’s error lies along the tangent at its junction, so the errors of the two cancel when the helix between them is a whole number of turns (<span data-wphys="lat11">0.0025</span> at 11, <span data-wphys="lat12">0.0023</span> at 12) and add at a half (<span data-wphys="latHalf">0.030</span>). The pins’ place sets the helix at <span class="e-live" data-live="hsTurns">11.80</span> turns, and so the force.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eHsF"><canvas aria-label="The side force on the balance's pivots against the turns of helix between the two drawn curves"></canvas></div>
+  <div class="e-ctl"><label class="e-sl"><span>Turns of helix</span><input type="range" min="10.75" max="12.75" step="0.01" value="11.8"><output></output></label></div>
+  <div class="e-ro"></div>
+  <figcaption>The force on the balance’s pivots under a couple, times the coil’s radius over the couple, as the helix between the two drawn curves is made longer or shorter: worked out for the model on the drawn spring, pin to pin. The marked point is the spring as the sheet’s length makes it.</figcaption>
+</figure>
+<p>The spring also stiffens a little as it winds, so against small swings the balance runs a few seconds a day fast; about the model’s swing that gain shrinks as the swing grows, and the drawn spring loses <span class="e-live" data-live="hs10">0.66</span> s a day for each 10° more. Over the wind that works against the escapement’s own change of rate with the swing: with both, the model’s rate stays within <span data-wphys="isoAll">−0.15 to +0.12 s</span> a day over the 56 hours, where the escapement alone would move it <span data-wphys="isoEsc">−0.40 to +0.35 s</span>.</p>
+<p>The length also sets the period. The strip’s stiffness, with spring steel’s modulus, is <span class="e-live" data-live="hsK">409</span> µN·m a radian; with the balance as the model weighs it, <span class="e-live" data-live="hsI">2,501</span> g·mm² with its rollers, collet and a third of its spring, that is a period of <span class="e-live" data-live="hsTp">0.491 s</span>, <span class="e-live" data-live="hsShort">1.7 %</span> short of the 0.5 s the train counts (its seconds wheel turns once a minute, in 120 teeth of the escape wheel). Most of a larger gap closed when the masses’ height was read: 05 03_2’s near pair and Wempe 3955’s balance seen side on put them 6.46 mm high from the rim’s lower face, where the model had built them 5.4 from the far pair’s outline, and the period was then 0.468 s. What is left is small: 0.5 s wants a balance of <span class="e-live" data-live="hsIw">2,589</span> g·mm², <span class="e-live" data-live="hsIwp">4 %</span> more, or a strip <span class="e-live" data-live="hsThin">1.1 %</span> thinner, inside what the strip and the steel’s modulus allow. Read as fourteen turns less 3.5 mm the spring would give <span class="e-live" data-live="hsT14">0.510 s</span>, as fifteen <span class="e-live" data-live="hsT15">0.528 s</span>. The model runs its balance at 0.5 s, as a maker would time it.</p>
+<p class="e-see"><a href="../chronometer-working-model/index.html#essay=spring">The hairspring and why it breathes, in the Hamilton’s essay</a></p>
+<p class="e-see"><a href="#part=hairspring">The hairspring in the working model</a></p>
+
+<h2 id="heat"><a class="e-h" href="#essay=heat">The bimetallic balance and the adjuster</a></h2>
+<p>Warmth weakens a steel spring. Its modulus falls as it warms, so a steel hairspring on a balance that didn’t change would lose about <span data-wphys="cSpring">9.5</span> seconds a day for every degree Celsius warmer. Carried from a cold port into warm water, it would be minutes out within days.</p>
+<p>The answer is the balance itself. Its rim (05 03 01-1) is two metals, “Nickelstahl Sonderlegierung u. Messing”: nickel steel inside, brass outside, 32.32 mm across, cut through at 90° from the arm. Each quarter is a cantilever from the arm’s end. Brass grows more with heat than nickel steel, so as it warms each quarter curls inward, and carries the masses on it toward the staff. The balance’s moment of inertia falls, it swings faster, and that offsets the spring’s loss. How much depends on where the masses sit: near the cut they move most.</p>
+<figure>
+  <div class="e-st" id="eBal"><canvas aria-label="The model's balance, its four masses moving along the rim"></canvas><div class="e-labels"></div></div>
+  <div class="e-ctl"><label class="e-sl"><span>The masses at</span><input type="range" min="15" max="72" step="0.5" value="32"><output></output></label></div>
+  <figcaption>The model’s balance from the top plate’s side, with its rim of brass on nickel steel cut at 3 and 9, its four masses, and the timing weights at the arm’s ends. The masses’ place is measured from the line through the cuts; drag to turn the balance.</figcaption>
+</figure>
+<p>The masses stand <span data-wphys="cAt">30°</span> from the cuts’ line on Wempe 3955 and in the 6MX’s book; 05 03_2, a poor copy, scales 32°. The model works out the curl by Timoshenko’s formula for a bimetal strip (1925), each quarter a cantilever, every part of the balance weighed on the model’s solids. The sheet names the rim’s steel only as a “special alloy”; the model reads it as Guillaume’s nickel steel of 42–44 % nickel (an estimate). With that, at the drawn place the balance gives back <span data-wphys="cBack">7.0</span> s a day of the spring’s <span data-wphys="cSpring">9.5</span>, and the chronometer still loses <span data-wphys="cDrawn">2.5</span> s a day for each degree warmer, where the 6MX’s technical conditions allow ±0.10. The masses would cancel it at <span data-wphys="cZero">19°</span> from the cuts’ line. Each degree along the rim moves the figure by <span data-wphys="cPerDeg">0.23</span>, so the 6MX’s ±0.10 is <span data-wphys="cTuDeg">±0.4°</span> of the masses’ place. Over the published ranges of the metals’ constants, the drawn place loses between <span data-wphys="cRange">0.7 and 4.4</span> s a day a degree, and the place that cancels it lies between <span data-wphys="cZeros">15° and 27°</span>. With a plain nickel steel no place on the rim would do: the masses as near the cuts as they fit would still lose <span data-wphys="cPlainEnd">3.0</span>.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eHeatC"><canvas aria-label="The rate's change for each degree warmer against the masses' place on the rim"></canvas></div>
+  <div class="e-ctl"><label class="e-sl"><span>The masses at</span><input type="range" min="15" max="72" step="0.5" value="32"><output></output></label></div>
+  <div class="e-ro"></div>
+  <figcaption>The seconds a day the model’s balance and spring gain for each °C warmer, against where the masses sit, measured from the cuts’ line: with the rim’s steel read as Guillaume’s nickel steel (blue, its band over the metals’ published constants) and as a plain nickel steel (grey, dashed). The red band is the 6MX’s limit, ±0.10. Marked: the masses’ drawn place, and the place that cancels the change.</figcaption>
+</figure>
+<p>So by the model’s middle constants the masses would have to move <span data-wphys="cMove">11°</span> toward the cuts, about <span data-wphys="cDiv">1.8</span> divisions of the rim’s graduation: 05 03 01-1 has “8 Körner in 60 Teilung”, which the model reads as eight punch marks of a sixty-part division, 6° apart. Setting them is the adjuster’s work: the chronometer is run hot and cold, and the masses moved along the rim until the rate holds, as the 6MX’s book describes for its balance. Wempe 3955’s masses, on a chronometer adjusted in its day, stand at 30°, so with its own metals the balance compensated there. What is open is not the masses’ place but the constants: the rim’s steel and the spring’s change of stiffness with heat, which the drawings don’t give.</p>
+<p>A second error stays. A steel spring’s modulus falls faster as it warms, so a balance set right at two temperatures gains between them: Dent’s error, a few seconds a day at 15 °C for one right at 0 and 30 °C (Guillaume’s Nobel lecture, 1920), about 2.5 seconds in the middle of a 30 °C range (VintageWatchstraps’ account of the Neuchâtel trials). The model takes 2 to 3 seconds (an estimate). Over the 6MX’s trial at 4, 20 and 36 °C that alone gives a middle-temperature error S of <span data-wphys="sSpring">+2.3 to +3.4 s</span>, and a rim of brass on plain nickel steel leaves it at <span data-wphys="sPlain">+2.2 to +3.4 s</span>, outside the 6MX’s ±1.20. Guillaume’s integral balance cancels it with a nickel steel whose expansion curves the other way, and the 6MX’s book calls its balance integral. The curve of that steel isn’t to hand, so the model takes S as Guillaume’s balances made it at the Neuchâtel trials of 1902, a fifth of ordinary balances’: <span data-wphys="sInt">+0.5 to +0.7 s</span> (an estimate).</p>
+<p>Then the trial. The 6MX’s technical conditions put each chronometer through five weeks at 36, 20, 4, 20 and 36 °C, and count the last five days of each (the limits are in the table <a href="#essay=copy">below</a>). The model runs it day by day: the balance’s and the spring’s change with temperature; the air, which takes over half the balance’s damping and is denser in the cold; the swing over each day’s wind, wound daily to “8” on the up-and-down dial; a scatter and drift from day to day, taken from the Hamilton’s Navy test card since no Wempe card is to hand; the barometer and the oil (the Hamilton’s estimates); and a rate regulated at 20 °C to within half a second a day (an estimate). Move the masses and the trial follows.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eTrial"><canvas aria-label="The 35 daily rates of the 6MX's trial for the masses' place chosen"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>The masses at</span><input type="range" min="15" max="72" step="0.5" value="32"><output></output></label>
+    <div class="seg" role="group" aria-label="Where the masses sit"><button aria-pressed="true" data-v="drawn">As drawn</button><button aria-pressed="false" data-v="adj">As adjusted</button></div>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>One run of the trial, drawn from the model’s seeded trials (tools/wempe_errorbudget.js): each day’s rate as the 6MX’s conditions read it, losing positive, the two days that start each period hollow, uncounted. The figures below it are the trial’s own, with the limits. As adjusted: the masses where the balance, the spring and the air together don’t change the rate with temperature.</figcaption>
+</figure>
+<p>As adjusted, the model passes; with the masses at their drawn place and the model’s middle constants it fails by its temperature coefficient alone, and moving them along the rim is all it takes. The adjuster’s hand is the one estimate the trial turns on: the model takes the masses set within <span data-wphys="cSet">±0.25°</span> of their place (an estimate), which keeps the coefficient within <span data-wphys="cRes">±0.057</span> s a day a degree.</p>
+<p class="e-see"><a href="../chronometer-working-model/index.html#essay=heat">How a cut bimetallic balance answers the spring’s loss, in the Hamilton’s essay</a></p>
+<p class="e-see"><a href="#part=balance">The balance in the working model</a></p>
+
+<h2 id="detent"><a class="e-h" href="#essay=detent">The escapement in time</a></h2>
+<p>The spring detent escapement locks the escape wheel on a stone set in the detent, a light arm on a spring. Once each oscillation, the discharge stone on the balance’s roller lifts the detent by its gold spring and lets a tooth go; the wheel turns, drives the balance through the impulse stone on the other roller, and the next tooth locks. On the swing back the discharge stone only bends the gold spring aside.</p>
+<figure>
+  <div class="e-st flat" id="eEsc"><canvas aria-label="The escapement in plan, as the model draws it, through one oscillation"></canvas></div>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="Which swing"><button aria-pressed="true" data-v="1">Unlocking swing</button><button aria-pressed="false" data-v="0">Return swing</button></div>
+    <label class="e-sl"><span>Balance at</span><input type="range" min="-30" max="50" step="0.1" value="-4"><output></output></label>
+    <button class="play">Play</button>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The escapement in plan as 05 04_1 draws it, from above through the top plate, the escape wheel turning clockwise: drawn from the model’s own parts (the detent with its spring, gold spring and horn, the detent block of 1943, the rollers and their stones, the wheel of 05 04_23) as the model moves them, which is the escapement solver’s motion at the model’s swing: the wheel let go from rest, the detent falling back onto the tooth it has just let go. The balance itself, above them, is left out.</figcaption>
+</figure>
+<p>Wempe’s layout, 05 04_1, draws the escapement in angles. At rest the impulse stone’s face stands <span class="e-live" data-live="phi0">28°10′</span> before the line of centres, the line through the balance’s and the wheel’s arbors: the sheet gives it as 6° on from where the impulse begins, <span class="e-live" data-live="layC">22°10′</span> before that line. Its other angles are the wheel’s: a tooth’s pitch of 24°, a drop of 1° onto the stone, 21° of impulse, 10.5° either side of the line of centres, and 2° on to the lock, which puts the locked tooth 36.5° round the wheel from the line. The layout draws the tooth meeting the stone where the impulse begins, as if the wheel were there the moment it was let go.</p>
+<p>A wheel let go from rest can’t do that. Solved from the parts’ shapes and masses (the escapement solver the Hamilton’s model uses, with the Wempe’s settings), the gold spring frees the tooth with the balance at <span class="e-live" data-live="rel">−2.4°</span> (the lock is <span class="e-live" data-live="lock">9.9°</span> of swing, the let-off <span class="e-live" data-live="letoff">1.9°</span>), and the impulse stone comes into the teeth’s path <span class="e-live" data-live="stoneIn">4.6°</span> later. The wheel starts from rest, with the seconds arbor behind it, on only <span class="e-live" data-live="TQ">82.8</span> µN·m, and gathers speed slowly. It strikes the stone <span class="e-live" data-live="chase">16.1°</span> of swing after it was let go, the stone’s face <span class="e-live" data-live="landF">10.3°</span> before the line of centres, and drives it to <span class="e-live" data-live="endF">21.8°</span> past. The strike costs <span class="e-live" data-live="strike">20 %</span> of the impulse, and the unlocking takes <span class="e-live" data-live="unlock">17 %</span> of its work. Integrated in time, beat by beat, with the balance, the wheel and the train behind it and the detent moving as bodies through every contact, the tooth lands where the solver puts it, within the 1.5° that check allows.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eDet"><canvas aria-label="The escape wheel's turn after release against the impulse stone's place, over the balance's swing"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Since winding</span><input type="range" min="0" max="55.9" step="0.1" value="12"><output></output></label>
+    <label class="e-sl"><span>Balance at</span><input type="range" min="-6" max="50" step="0.1" value="10"><output></output></label>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The escape wheel’s turn after it is let go (blue), against where its tooth would meet the impulse stone (brass), as the balance swings through the impulse; from the model’s escapement solver, at the drive the measured fusee gives after that many hours. Where the blue meets the brass the tooth strikes the stone, then drives it to the end of the impulse. Dashed red: the layout’s tooth, on the stone at once. The model on the other tab moves its escapement as the solver does, not as the layout draws it: the wheel chasing the stone from rest, the detent flung off and riding the tooth it let go.</figcaption>
+</figure>
+<p>Taken in time, two more things show that a layout can’t. The detent leaves the discharge stone at <span class="e-live" data-live="detOff">−1.8°</span>, flung up off its square corner rather than riding down its bevelled end, and the energy it carries there is lost. And the wheel, let go from rest, has hardly moved by then, so the detent falls back onto the tooth it has just let go, at <span data-wphys="detOn">5.6°</span>, and rides it, and down its back, until it is home at <span data-wphys="detHome">13.1°</span>, its friction on the tooth holding back the wheel’s chase. Both cost swing, and the model’s escapement takes both in.</p>
+<p>The model’s balance swings <span class="e-live" data-live="A">207°</span> twelve hours after winding. No Wempe source gives how quickly the balance loses its swing, so its free run-down time, <span class="e-live" data-live="TF">125 s</span>, is worked out from its parts (the air on its masses and screws, the endstone’s friction, the spring’s own losses); a running 6MX’s balance, read frame by frame off a video, runs down in <span data-wphys="tfVid">108 s</span> (<span data-wphys="tfSpan">96–121 s</span>), which bears it out. Over the wind the model swings <span data-wphys="swRange">191.9–202.0°</span>. The 1954 Soviet instruction for checking chronometers gives 225–270° for chronometers in general: the model swings under it, and with the damping measured, the drive’s level, the fusee section’s open figure, is the likelier cause.</p>
+<p class="e-see"><a href="../chronometer-working-model/index.html#essay=detent">The spring detent, step by step, in the Hamilton’s essay</a></p>
+<p class="e-see"><a href="#view=escapement">The escapement in the working model, seen through the top plate</a></p>
+
+<h2 id="gimbals"><a class="e-h" href="#essay=gimbals">Brass that hangs</a></h2>
+<p>A chronometer is adjusted to run dial up, so its case hangs in gimbals and stays level while the ship rolls: a ring pivoted in the box’s walls, and the case pivoted in the ring on the axis across (05 01, “Gehäuse Kardan”). Hung low, the case is a pendulum, and stays level as long as the ship rolls far more slowly than it swings.</p>
+<p>The bowl’s sheet, R-05 01 00-1 of 6 March 1942, names its metal, “Ms-Sandguß”, a brass sand casting, and its weight: “Gewicht 350 gr.” The two don’t agree. The bowl’s drawn solid is <span data-wphys="gV">158.9 cm³</span>, which in brass weighs <span data-wphys="gBrass">1,343 g</span>; 350 g would be <span data-wphys="gRho">2.20 g/cm³</span>, which is no brass. In aluminium the bowl would weigh <span data-wphys="gAlu">429 g</span>, in Bakelite <span data-wphys="gBak">218 g</span>, in hard Buna rubber <span data-wphys="gBuna">187 g</span>. Weighed on the model’s solids, the case with the movement in it is <span data-wphys="gBowl">2,931 g</span> and the gimbal ring <span data-wphys="gRing">334 g</span>: <span data-wphys="gTot">3.27 kg</span> in the gimbals. The 6MX’s conditions allow their whole chronometer 2.2 kg.</p>
+<p>The drawn pivots decide it. 05 01 puts them about 11.5 mm under the bowl’s top, and the movement and the heavy brass bezel lie over them, so a light bowl wouldn’t hang: with a Bakelite bowl the case would weigh <span data-wphys="gBakM">1,806 g</span> and its centre of gravity would come <span data-wphys="gBakCg">1.75 mm</span> above the pivots, and it would turn over. The brass casting the sheet names is what hangs the case as drawn. What the 350 g means is open; Knirim and Schmiedchen list a Bakelite bowl with a heavy weight in its bottom among the changes made at Glashütte from No. 5100.</p>
+<p>The sheet also says how to level it: “Kloben verstellen bis Gleichgewicht erreicht ist”, move the brackets until it balances. As drawn, the case’s centre of gravity lies <span data-wphys="gDy">7.10 mm</span> under the gimbal centre and <span data-wphys="gDx">0.73 mm</span> to one side of the pivots’ line, so it would hang <span data-wphys="gLean">5.9°</span> out of level until the brackets were moved in their slots. Levelled, the case swings on its pivots with a period of <span data-wphys="gTz">0.95 s</span>, and the ring, carrying it, on its own <span data-wphys="gTx">1.05 s</span>: far quicker than a ship rolls, ten to thirty seconds for a merchant ship, and clear of the balance’s half second. The Hamilton’s case swings in <span data-wphys="hTz">0.72 s</span> and <span data-wphys="hTx">0.68 s</span>: the Wempe’s centre of gravity sits nearer its pivots, <span data-wphys="gH">7.1 mm</span> under them against <span data-wphys="hH">11.1 mm</span>.</p>
+<figure>
+  <div class="e-st" id="eGim"><canvas aria-label="The Wempe's box rolling while its gimballed case stays level"></canvas><div class="e-labels"></div></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Sea state</span><input type="range" min="0" max="30" step="1" value="18"><output></output></label>
+    <label class="e-ck"><input type="checkbox" class="lock"> Lock the gimbals</label>
+    <button class="play">Pause</button>
+  </div>
+  <figcaption>The model’s own box, gimbal ring and brass case, drawn from 05 01 and 51 00, with its dial keeping the model’s time. Locked, as the transit lock holds it when the box is carried, the case tilts with the box.</figcaption>
+</figure>
+<p class="e-see"><a href="../chronometer-working-model/index.html#essay=gimbals">Gimbals, and why a case kept level keeps time, in the Hamilton’s essay</a></p>
+<p class="e-see"><a href="#view=case">The case in its gimbals in the working model</a></p>
+
+<h2 id="copy"><a class="e-h" href="#essay=copy">The reparation drawings and the 6MX</a></h2>
+<p>The drawings held at A. Lange &amp; Söhne became the basis of the post-war Russian marine chronometers. Johannes Altmeppen, quoting Kurt Herkner, writes that two specialists from Moscow and an interpreter came to Glashütte in 1946/47, and the drawings were translated into Cyrillic. The 1st Moscow Watch Factory made the chronometer from them as the 6MX. Its movement has three pillars because the reparation drawings were of that type; the factory made about twenty changes, of which there are no drawings.</p>
+<p>Altmeppen compares a Wempe with a 6MX and marks the differences. In the 6MX pillar 39 is in another place; the seconds and intermediate wheels run in jewels in settings, not in brass bearings; the barrel’s cap is underneath; the detent’s block is new, with an adjusting slide; the lower balance cock has another shape; the upper cock has no window, and the three small windows by the pillar screws are gone; the bowl and bezel are brass, not Buna; the dial’s feet are at 19, 39 and 59 minutes, not 20, 40 and 59; and there is no hand-setting from outside.</p>
+<p>The 6MX’s technical conditions, TU 25-07.1533-84, give its movement as 85.0 mm across and 39.8 mm high, with a balance of 0.5 s, 56 hours on the wind indicator and 15 jewels, the whole at most 2.2 kg. They set the trial each chronometer had to pass: five periods of seven days, at 36, 20, 4, 20 and 36 °C, the last five days of each counted. That is the class II trial of the Soviet standard GOST 8916-58, with limits of the TU’s own between the standard’s two classes, and two more figures: the middle-temperature error S, and a figure of merit N.</p>
+<figure>
+  <div class="e-book"><table class="e-tbl e-tu">
+    <thead><tr><th></th><th>6MX (TU)</th><th>GOST 8916-58, class I</th><th>class II</th></tr></thead>
+    <tbody>
+      <tr><td>E: the daily rates’ mean departure from their period’s mean, s</td><td>±0.35</td><td>±0.20</td><td>±0.40</td></tr>
+      <tr><td>R: the rate’s recovery, the last 36 °C period’s less the first’s, s</td><td>±2.00</td><td>±1.50</td><td>±2.00</td></tr>
+      <tr><td>D: the largest change between two days’ rates, s</td><td>±2.30</td><td>±2.00</td><td>±2.50</td></tr>
+      <tr><td>C: the temperature coefficient, s a day per °C</td><td>±0.10</td><td>±0.10</td><td>±0.10</td></tr>
+      <tr><td>S: the middle-temperature error, s</td><td>±1.20</td><td>—</td><td>—</td></tr>
+      <tr><td>The mean daily rate in any period, s</td><td>±3.50</td><td>±3.00</td><td>±4.00</td></tr>
+      <tr><td>N = 42E + 4.5R + 60C + 2.4S</td><td>≤ 30</td><td>—</td><td>—</td></tr>
+      <tr><td>The trial, periods of 7 days</td><td>36, 20, 4, 20, 36 °C</td><td>36, 28, 20, 12, 4, 12, 20, 28, 36 °C</td><td>36, 20, 4, 20, 36 °C</td></tr>
+    </tbody></table></div>
+  <figcaption>The 6MX’s limits (TU 25-07.1533-84, Table 2 and §3.1) against GOST 8916-58’s, as V. A. Shpolyanskii and A. M. Kuritskii quote it (<i>Spuskovye regulyatory priborov vremeni</i>, Moscow 1963, p. 169). The model goes through this trial in the section on <a href="#essay=heat">heat</a>, above.</figcaption>
+</figure>
+<p>The copies are evidence, not the source. Where a 6MX or a post-war Wempe differs from the drawings, the model follows the drawings.</p>
+<div class="e-go">
+  <p>See it on the other tab: every part can be picked out and named, with the sheet it comes from.</p>
+  <div class="seg"><a class="primary" href="#view=movement">The movement</a><a href="#view=exploded">Exploded</a><a href="#view=escapement&amp;speed=0.05">The escapement, slowly</a><a href="#view=case">In its case</a></div>
+</div>
+
+<h2 id="sources"><a class="e-h" href="#essay=sources">What the drawings leave open</a></h2>
+<p>A set of works drawings records what was meant, and here and there what was measured. Where its figures disagree with each other, or with what a model built from them does, the model says so rather than choosing quietly. These are the questions the drawings leave open, as the model’s README lists them, with the reading the model takes for each.</p>
+<ul class="e-open">
+  <li><b>The drive’s level.</b> 05 06_20 gives the mainspring as 15 × <span data-wphys="msT">0.37 mm</span>, the sheet’s own figure, and the strip solved at that thickness pulls <span data-wphys="msMore">25 %</span> harder than the same sheet measured. <i>The model’s reading:</i> the measured force drives it, at the strip’s solved shape; the losses between, or the spring’s length and set, are where the difference lies, and none is measured. <a href="#essay=fusee">The fusee</a></li>
+  <li><b>The swing.</b> No source gives the Einheits-Chronometer’s. <i>The model’s reading:</i> <span data-wphys="swRange">191.9–202.0°</span> over the wind, under the 225–270° the 1954 instruction gives for chronometers in general; with the damping borne out by a running 6MX, the drive’s level is the likelier cause. <a href="#essay=detent">The escapement</a></li>
+  <li><b>The period.</b> Read as 05 03_7’s words read, the hairspring gives the weighed balance <span class="e-live" data-live="hsTp">0.491 s</span>, not the train’s 0.5 s; the drawn coils lean a turn longer, and the detent chronometer’s own curve sheet isn’t in the set. <i>The model’s reading:</i> the whole strip, 13 turns less 3.5 mm, the balance timed to 0.5 s as a maker would. <a href="#essay=hairspring">The hairspring</a></li>
+  <li><b>The metals’ constants.</b> The rim’s nickel steel is named only as a special alloy, and the spring’s change of stiffness with heat isn’t given. <i>The model’s reading:</i> Guillaume’s steel and a published range for the spring; by them compensation lies near <span data-wphys="cZero">19°</span>, where Wempe 3955’s adjusted masses stand at <span data-wphys="cAt">30°</span>. <a href="#essay=heat">Heat</a></li>
+  <li><b>The detent’s preload.</b> The banking is the block’s cross screw, its domed head bearing on the pipe at the stone (read on a 6MX’s block of the same form: likely); how hard the detent presses on it isn’t shown. <i>The model’s reading:</i> the Hamilton’s preload, <span class="e-live" data-live="w78">0.63 g</span> at the stone, an estimate; the 1954 instruction sets the lock by a banking.</li>
+  <li><b>The gold spring’s return pass.</b> Whether the gold spring’s release on the return swing throws the detent turns on its alloy and its free shape round the pipe. <i>The model’s reading:</i> 333 gold, its tip square; the horn 4.4 mm, 1436’s figure, which Wempe 3955’s detent bears out.</li>
+  <li><b>Chain or band.</b> 05 07 04 sizes the chain completely, and the German movements photographed run with chains; 05 07 03 draws a band in 1943, without its width, and a band came with Wempe 3955. <i>The model’s reading:</i> both, the chain by default (the band under Variants on the other tab), the chain run across between the drums. No photograph shows the crossing itself, hidden behind a pillar, but a fully wound Soviet copy seen from above has its chain’s last hook on the barrel where only a crossed chain leaves it. <a href="#part=chain">The chain in the working model</a></li>
+  <li><b>The bowl’s 350 g.</b> The brass casting the sheet names weighs <span data-wphys="gBrass">1,343 g</span>. <i>The model’s reading:</i> brass, the only bowl that hangs the drawn case. <a href="#essay=gimbals">The gimbals</a></li>
+</ul>
+<p>Settled since the first readings, from the sheets and photographs of real ones: the masses’ height and place, the horn’s length, the banking, and the mainspring’s 0.37.</p>
+<p>The model’s README lists every estimate with the reading it rests on, and each part’s card on the other tab says whether its sizes are the sheet’s, scaled from it, or estimated.</p>
+<p>Every check behind the figures in this essay, its method and its results, from the geometry against the drawing list to the escapement in time, the fusee, the trial and the swing of a running 6MX, is in the model’s report: <a href="verification/index.html">The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?</a></p>
+<p class="e-report">Found a mistake, in the essay or in the model, or something that differs from Wempe’s drawings or a real Einheits-Chronometer? <button class="rp-l" data-report="inacc">Report it</button>: it opens as an email to me, with the section you are reading filled in.</p>
+
+<hr>
+<p class="e-refs"><strong>Sources.</strong> Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (<a href="https://www.dg-chrono.de/uhrenwissen/russische-uhren/schiffe-und-uhren/1945-2000/wempe-einheitschronometer/">dg-chrono.de</a>), © Johannes Altmeppen, by courtesy of Gerhard D. Wempe KG, 2017, with Altmeppen’s photographs of Wempe 3955 and Lange 5177 and his comparisons with the 6MX. <i>Das Deutsche Einheits-Chronometer</i> (Heel Verlag), with Johannes Altmeppen and Herbert Dittrich among its authors. Knirim and Schmiedchen on watch-wiki. <i>Хронометры морские 6МХ. Технические условия</i>, TU 25-07.1533-84, from the 1st Moscow Watch Factory; Instruction 246-54 for checking standard chronometers (1954); V. A. Shpolyanskii and A. M. Kuritskii, <i>Spuskovye regulyatory priborov vremeni</i> (Moscow 1963). For the physics: E. Phillips, on the balance spring’s terminal curves (1861); S. Timoshenko, “Analysis of bi-metal thermostats” (1925); C.-E. Guillaume, Nobel lecture (1920); VintageWatchstraps, “Temperature Compensation by Nickel Steels”. The working model’s sources are listed under “About this model” on the other tab.</p>
+</div>
+</article>
+<dialog id="about" aria-labelledby="aboutT">
+  <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
+  <h2 id="aboutT">About this model</h2>
+  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span> · version <span data-ver>dev</span></p>
+  <p>A 3D model of the <i>Deutsches Einheits-Chronometer</i>: the standard marine chronometer designed by Gerhard D. Wempe’s chronometer works in Hamburg in the early 1940s, made by Wempe and A. Lange &amp; Söhne in the war, by Wempe after it, and from the same drawings by the 1st Moscow Watch Factory as the 6MX. It is the spring-detent version, with a fusee and chain and three pillars, as its works drawings draw it.</p>
+  <h3>Sources</h3>
+  <ol>
+    <li>Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (dg-chrono.de), “© Johannes Altmeppen (by courtesy of Gerhard D. Wempe KG) 2017”, each sheet as last revised. Each dimension in the model names its sheet.</li>
+    <li>Johannes Altmeppen’s photographs of Wempe 3955 and Lange 5177 (dg-chrono.de, © 2017), for what the sheets leave open: the standard screws’ heads, finishes, which way a part turns.</li>
+  </ol>
+  <h3>How it was made</h3>
+  <ul>
+    <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
+    <li><b>What it shows.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them, and every hole of the plates’ tables but those the sheets strike through. The balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band. The dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee. The case and box (groups 05 01 and 51 00): the cast brass bowl, its bezel and glass and its closing plate, hung in the gimbal ring in a mahogany box 185 mm square, the transit lock, and the one-way winding key of 1943. And it runs: the balance and escapement as solved in time, the train and hands keeping Greenwich or local time, the fusee wound through its key, and the case swinging in its gimbals as the box rolls.</li>
+  </ul>
+  <h3>How it is checked</h3>
+  <p>Every check on the model, with its method and its results, is in <a href="verification/index.html">The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?</a>: the parts as solids against the drawing list, the sheets’ transcription and every estimate, the escapement solved and in time, the mainspring against the fusee’s measured force, the energy budget, the train tooth by tooth, the parts’ strength, the hairspring, temperature, the case in its gimbals, the 6MX’s trial and a voyage, and the swing of a running 6MX on video.</p>
+  <p><a href="../chronometer-working-model/index.html">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
+</dialog>
+<dialog id="report" aria-labelledby="rpT">
+  <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
+  <h2 id="rpT">Report a bug or inaccuracy</h2>
+  <p class="by">To Orel Magidish, at <a id="rpTo" href="mailto:orelmag@gmail.com">orelmag@gmail.com</a>. Nothing is sent from this page: the report opens in your own email, where you can read and change all of it before you send it.</p>
+  <div class="seg" id="rpKind"><button data-v="bug" aria-pressed="true">Something’s broken</button><button data-v="inacc" aria-pressed="false">Something’s inaccurate</button><button data-v="other" aria-pressed="false">Something else</button></div>
+  <p class="note" id="rpHint"></p>
+  <label class="rp-f"><span>Where</span><input id="rpWhere" autocomplete="off" placeholder="A part, a view, a control or a section of the essay"></label>
+  <label class="rp-f"><span>What’s wrong</span><textarea id="rpWhat" rows="5"></textarea></label>
+  <label class="rp-f hidden" id="rpSrcF"><span>What shows it (if you know)</span><input id="rpSrc" autocomplete="off" placeholder="A drawing’s number and the figure on it, or a photograph or video (and the time in it)"></label>
+  <label class="ck rp-ck"><input type="checkbox" id="rpTech" checked> Include technical details: the version, the model’s settings, the browser, screen and graphics, and the page’s last errors</label>
+  <details id="rpPrev"><summary>What will be sent</summary><pre></pre></details>
+  <div class="seg rp-go"><a class="rp-b primary" id="rpMail" href="mailto:orelmag@gmail.com">Write it in my email</a><a class="rp-b" id="rpGmail" href="https://mail.google.com/" target="_blank" rel="noopener">In Gmail</a><button id="rpCopy">Copy it</button></div>
+  <p class="note" id="rpOut" aria-live="polite"></p>
+</dialog>
+<script src="../chronometer-working-model/js/report.js"></script>
+<script src="../../vendor/three.min.js"></script>
+<script src="../chronometer-working-model/js/core.js"></script>
+<script src="../shared/kit.js"></script>
+<script src="../shared/viewer.js"></script>
+<script src="js/dims.js"></script>
+<script src="js/frame.js"></script>
+<script src="js/train.js"></script>
+<script src="js/escapement.js"></script>
+<script src="../shared/escapement.js"></script>
+<script src="js/escphys.js"></script>
+<script src="js/fusee.js"></script>
+<script src="js/dialface.js"></script>
+<script src="js/dialface_lange.js"></script>
+<script src="js/dial.js"></script>
+<script src="js/case.js"></script>
+<script src="js/movement.js"></script>
+<script src="js/essaydata.js"></script>
+<script src="../shared/essaykit.js"></script>
+<script src="js/essay.js"></script>
+<script src="../chronometer-working-model/js/gltf.js"></script>
+<script src="../chronometer-working-model/js/rigpy.js"></script>
+<script src="js/blender.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

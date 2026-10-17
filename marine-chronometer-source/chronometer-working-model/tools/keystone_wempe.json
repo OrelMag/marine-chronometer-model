@@ -1,0 +1,180 @@
+{
+ "note": "tools/keystone.js --model wempe: the Wempe's escapement against The Keystone's Watch and Clock Escapements (1904), Ch. III: each measure, the book's rule, the model's figure, its source and the reading; reports, never judges",
+ "rows": [
+  {
+   "measure": "Escape wheel: teeth",
+   "book": "15 (Experience)",
+   "model": "15",
+   "source": "05 04_07-1 (\"z = 15\"), 05 04_1 scaled",
+   "reading": "agrees"
+  },
+  {
+   "measure": "Escape wheel: diameter",
+   "book": "0.55 in, 13.97 mm (Details)",
+   "model": "14.00 mm",
+   "source": "05 04_1 (\"Gangrad∅ 14,00\"), 05 04_23 (14 +0.03)",
+   "reading": "agrees"
+  },
+  {
+   "measure": "Teeth: face along the arbor",
+   "book": "1/20 in, 1.27 mm (Details)",
+   "model": "1.40 mm",
+   "source": "05 04_1, 05 04_7.1 (the rim 1.4)",
+   "reading": "thicker"
+  },
+  {
+   "measure": "Impulse roller / wheel diameter",
+   "book": "about 1/2 (p. 136; Experience)",
+   "model": "0.484",
+   "source": "05 04_1 (\"Heberolle∅ 6,78\")",
+   "reading": "agrees"
+  },
+  {
+   "measure": "Balance from the escape arbor, by the book's construction",
+   "book": "rims crossing over a pitch (Fig. 139)",
+   "model": "9.91 mm by the rule; the model 10.00 mm",
+   "source": "05 04_1 (\"Gangrad-Unruh 10,00\")",
+   "reading": "agrees to 0.09 mm"
+  },
+  {
+   "measure": "Rims' crossing, on the wheel",
+   "book": "a pitch, 24° for 15 teeth (Fig. 139)",
+   "model": "21.7° (pitch 24.0°)",
+   "source": "follows from the above",
+   "reading": "90% of a pitch"
+  },
+  {
+   "measure": "Rims' crossing, on the roller (balance arc)",
+   "book": "about 48° (Fig. 139; 49.1° by its own figures)",
+   "model": "45.7°",
+   "source": "follows from the above",
+   "reading": "agrees"
+  },
+  {
+   "measure": "Impulse arc (balance)",
+   "book": "43° of the 48° (Fig. 141)",
+   "model": "35.1° (tooth lands 14.9°, ends 49.9°)",
+   "source": "solved (05 04_1: 21° of the wheel, 10.5° either side of the line of centres)",
+   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 12.3° after the release (dynamics.js --model wempe)"
+  },
+  {
+   "measure": "Jewel inside the wheel before release",
+   "book": "5° (Fig. 141)",
+   "model": "-3.8°",
+   "source": "solved (05 04_1)",
+   "reading": "the other way: the stone comes into the teeth's path 3.8° after the release, the wheel running free to it"
+  },
+  {
+   "measure": "Unlocking: balance arc",
+   "book": "about 5° (p. 146)",
+   "model": "9.9°",
+   "source": "solved (05 04_1: the gold spring met at −12°)",
+   "reading": "more: the lock 0.175 deep on a 7 mm wheel (05 04_1)"
+  },
+  {
+   "measure": "Unlocking: the detent's turn",
+   "book": "about 2° (p. 150, Drop and draw)",
+   "model": "0.87°",
+   "source": "solved",
+   "reading": "less; the book's 2° is ambiguous (the Hamilton's README)"
+  },
+  {
+   "measure": "Locking stone: draw",
+   "book": "about 12° (p. 150, Drop and draw)",
+   "model": "-3.7°",
+   "source": "05 04_1 (the flat on the wheel's radius)",
+   "reading": "none: the preload holds the tooth, not the draw (tripping.js --model wempe)"
+  },
+  {
+   "measure": "Locking stone: diameter",
+   "book": "1/3 of a tooth space, 0.97 mm (p. 144, Fig. 143)",
+   "model": "0.75 mm",
+   "source": "05 04_1 (\"Ruhestein∅ 0,75\")",
+   "reading": "smaller"
+  },
+  {
+   "measure": "Locking stone: cut away",
+   "book": "4/10 of the cylinder (p. 144, Fig. 143)",
+   "model": "0.50 of its diameter",
+   "source": "05 04_1 (half round)",
+   "reading": "more: half round"
+  },
+  {
+   "measure": "Tooth's locking face to the radial",
+   "book": "28° (Fig. 141; Saunier 27°, Britten 20°)",
+   "model": "25.0°",
+   "source": "05 04_23 (the face leans 25°)",
+   "reading": "less undercut: 05 04_23 decides"
+  },
+  {
+   "measure": "Tooth's back: radius",
+   "book": "the impulse roller's, 3.39 mm (Details)",
+   "model": "3.00 mm (circle fitted to the back)",
+   "source": "05 04_23 (the ∅ 6 cutter's arc)",
+   "reading": "agrees roughly"
+  },
+  {
+   "measure": "Impulse jewel proud of the roller",
+   "book": "at most 0.002 in, 0.05 mm (p. 150, Drop and draw)",
+   "model": "-0.040 mm",
+   "source": "05 04_1 (the stone's face to r 3.35, the roller r 3.39)",
+   "reading": "agrees: inside the roller's edge"
+  },
+  {
+   "measure": "Detent: flexure to locking jewel",
+   "book": "the wheel's diameter, 14.00 mm (p. 138)",
+   "model": "12.87 mm",
+   "source": "05 04_1 (the spring's middle to the stone)",
+   "reading": "agrees roughly"
+  },
+  {
+   "measure": "Detent spring: length",
+   "book": "2/7 of that, 3.68 mm (p. 138)",
+   "model": "5.00 mm (0.389 of it)",
+   "source": "1436 (5, scaled)",
+   "reading": "longer"
+  },
+  {
+   "measure": "Detent spring: thickness",
+   "book": "0.002 in, 0.051 mm (p. 138)",
+   "model": "0.070 mm",
+   "source": "1436 (\"0,07\", faint)",
+   "reading": "thicker; steel, as the book's"
+  },
+  {
+   "measure": "Detent spring: width",
+   "book": "0.080 in, 2.03 mm (p. 138)",
+   "model": "1.90 mm, one strip",
+   "source": "1436 (\"2 (1,9)\")",
+   "reading": "agrees roughly"
+  },
+  {
+   "measure": "Detent spring: stiffness (E w t³/L³)",
+   "book": "steel, the book's sizes, L 2/7 of 0.55 in",
+   "model": "1.28 of the book's",
+   "source": "1436 (steel, 205 GPa)",
+   "reading": "stiffer by 28%"
+  },
+  {
+   "measure": "Balance: vibrations an hour",
+   "book": "14,400 (Experience; p. 148)",
+   "model": "14400",
+   "source": "the train (the seconds arbor once in 120 teeth)",
+   "reading": "agrees"
+  },
+  {
+   "measure": "Balance: diameter",
+   "book": "about 1.2 in, 30.5 mm (p. 148, Details)",
+   "model": "32.3 mm",
+   "source": "05 03 01-1 (32.32 −0.04)",
+   "reading": "larger"
+  },
+  {
+   "measure": "Balance: swing",
+   "book": "about 225° (p. 142)",
+   "model": "197°",
+   "source": "solved (makeEsc on 05 06_20's drive)",
+   "reading": "smaller: under the book's, as under the 1954 instruction's 225-270° (open: the Wempe README, Unresolved)"
+  }
+ ]
+}

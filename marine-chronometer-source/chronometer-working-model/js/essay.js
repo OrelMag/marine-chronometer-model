@@ -285,9 +285,9 @@ const ESSAY=(()=>{
 
   /* ---------- maintaining power: the fusee wheel's maintaining work, the model's own parts (bind's R), driven as the model's update() drives them ----------
      The sustaining ratchet stands where the sustaining pawl holds it against a steep face (phaseAgainst, as holdBack leaves it). Running, the fusee's winding ratchet bears on
-     the winding pawls and the spring is loaded (d 0); with the key turning for t minutes the fusee and its ratchet turn back under the pawls (half a turn a minute, for the
-     figure) and the spring relaxes d = SMAX t/10, turning the fusee wheel on by d while the ratchet stays. Rose: what carries the drive; teal: what holds */
-  fig('eMaint',f=>{const st=f.el,P=figOf(st),R=model.R,mv=model.mv,M0=model.M,Fu=L.Fu,SMAX=R.SMAX;
+     the winding pawls and the spring is closed on its banking (d 0); with the key turning for t minutes the fusee and its ratchet turn back under the pawls (half a turn a
+     minute, for the figure) and the spring relaxes at the fusee wheel's turn, d = t SR to SMAX (about 21 minutes), turning the fusee wheel on by d while the ratchet stays. Rose: what carries the drive; teal: what holds */
+  fig('eMaint',f=>{const st=f.el,P=figOf(st),R=model.R,mv=model.mv,M0=model.M,Fu=L.Fu,SMAX=R.SMAX,SR=FUSEE_PER_HOUR*TAU/60,TM=SMAX/SR;   /* SR: the spring's relaxing a minute; TM: its minutes */
     const V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:0.35,pitch:1.05,dist:78,target:[0,8.6,0],minPitch:0.2});
     const root=new THREE.Group();root.rotation.x=Math.PI;root.position.set(-Fu[0],0,Fu[1]);V.scene.add(root);   /* the movement's frame turned over (the train bridge's side up), the fusee's axis at the origin */
     const cl=o=>{const c=o.isMesh?new THREE.Mesh(o.geometry,o.userData.mat0||o.material):new THREE.Group();c.position.copy(o.position);c.quaternion.copy(o.quaternion);c.scale.copy(o.scale);c.visible=o.visible;c.userData.src=o;
@@ -305,14 +305,14 @@ const ESSAY=(()=>{
     const q0=[R.spawl.position.x-Fu[0],R.spawl.position.z-Fu[1]],su=R.spawl.userData,srA=phaseAgainst(R.SRP,su.pts,q0,su.base,-1).psi;
     sr.rotation.y=srA;sp.rotation.y=seatPawl(su.pts,toWheel(q0,[0,0],srA),su.base-srA,R.SRP)+srA;
     let t=0,lastD=-1,kw=null,key=0;const ro=q('.e-ro',P),inp=q('input[type=range]',P),out=inp.parentElement.querySelector('output'),btn=q('.wind',P);
-    function set(tm,mode){t=tm;const d=SMAX*clamp(tm/10,0,1),wind=mode==='turn'||(!mode&&tm>0);   /* mode: 'turn' the key turning, 'run' let go, or by the slider */gw.rotation.y=ss.rotation.y=srA+d;
+    function set(tm,mode){t=tm;const d=Math.min(SMAX,tm*SR),wind=mode==='turn'||(!mode&&tm>0);   /* mode: 'turn' the key turning, 'run' let go, or by the slider */gw.rotation.y=ss.rotation.y=srA+d;
       if(Math.abs(d-lastD)>1e-4){lastD=d;spr.geometry.dispose();spr.geometry=R.sspGeo(d);}
       if(wind)key=tm*Math.PI;const fz=srA+R.WPH-(wind?key:Math.floor(key/R.FPR.p)*R.FPR.p);   /* let go, the fusee turns on until its ratchet catches the pawls (update()'s catch): whole teeth from where the key left it */wrg.rotation.y=fz;for(const w of wp){const u=w.userData.src.userData,psi=fz-srA;w.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,R.FPR)+psi;}
       paint(gw,wind?null:ROSE);paint(ss,ROSE);paint(sr,o=>wind?(onM(o)?null:TEAL):ROSE,true);for(const w of wp)paint(w,wind?null:ROSE);paint(sp,wind?TEAL:null);paint(wrg,wind?null:ROSE);
-      const left=10*(1-d/SMAX);ro.innerHTML=wind?`<b>Key turning</b>: the sustaining spring alone drives the fusee wheel, pushing off its ratchet, which the sustaining pawl holds. Relaxed <b>${(d/D2R).toFixed(1)}°</b> of its ${(SMAX/D2R).toFixed(1)}°, <b>${left.toFixed(1)} min</b> of drive left.`:
-        '<b>Running</b>: the mainspring, through the fusee, its winding ratchet and pawls, turns the sustaining ratchet, which drives the fusee wheel through the spring at full load.';
+      const left=TM-d/SR;ro.innerHTML=wind?`<b>Key turning</b>: the sustaining spring alone drives the fusee wheel, pushing off its ratchet, which the sustaining pawl holds. Relaxed <b>${(d/D2R).toFixed(1)}°</b> of its ${(SMAX/D2R).toFixed(1)}°, <b>${left.toFixed(1)} min</b> of drive left.`:
+        '<b>Running</b>: the mainspring, through the fusee, its winding ratchet and pawls, turns the sustaining ratchet, which drives the fusee wheel through the spring, held closed on its banking.';
       out.textContent=tm.toFixed(1)+' min';f.dirty=true;}
-    range(inp,v=>{if(kw)return;set(v);return v.toFixed(1)+' min';});
+    inp.max=TM.toFixed(1);range(inp,v=>{if(kw)return;set(v);return v.toFixed(1)+' min';});
     btn.addEventListener('click',()=>{if(!kw)kw={t:0};});
     V.label('Sustaining spring','drives while the key turns',at(ss,15.6*Math.cos(Math.PI*0.9),-8.75,15.6*Math.sin(Math.PI*0.9)));V.label('Sustaining ratchet','',at(sr,14.6*Math.cos(-2.2),-9.45,14.6*Math.sin(-2.2)));
     V.label('Sustaining pawl','holds the ratchet',at(sp,0,0,0));V.label('Fusee wheel','to the train',at(gw,18.8*Math.cos(2.4),-6.5,18.8*Math.sin(2.4)));V.label('Winding ratchet','on the fusee',at(wrg,0,wrg.children[0].position.y,0));
@@ -522,7 +522,7 @@ const ESSAY=(()=>{
   /* ---------- numbers in the text, from the model's code (the escapement's figures follow the adjuster's bench) ---------- */
   function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
-      gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
+      gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(model?model.R.SMAX/D2R:19.5).toFixed(1)+'°',ssMin:Math.round((model?model.R.SMAX/D2R:19.5)/(FUSEE_PER_HOUR*6)),ssPu:Math.round((model?model.R.SPU:0.88)*100)+'%',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
       I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.lever(0)):'7.5',rmax:model?f1(model.fs.rc(model.fs.ME)):'14.7'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
     { const d=model&&model.R&&model.R.hsDesign;Object.assign(V,d?{hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1)}:{hsB:'0.23 mm',hsT:'0.221 mm',hsL:'409 mm',hsOut:'14.8 mm',hsIn:'21.8 mm',hsInR:'3.2 mm',hsLat:'2.5e-5'}); }   /* the hairspring as designed (movement.js, R.hsDesign) */

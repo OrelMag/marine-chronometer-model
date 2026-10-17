@@ -2,29 +2,33 @@
 /* escapement.js: the Hamilton Model 21 spring detent escapement, solved in a unit 2D frame. Shared by the working model (js/movement.js), the essay's
    detent figure (src/p4.js) and the check against the manual (chronometer-working-model/tools/escapement.js, Node.js).
    makeEsc(settings) builds it; any setting below can be given, angles in degrees. Nothing is declared at the top level but makeEsc, since the pages
-   declare their own TAU and D2R.
+   declare their own TAU and D2R. makeEsc(settings, base) builds another chronometer's escapement: base is its own settings (the wheel's teeth and radius, the lock's
+   place, the detent, the tooth form, the drive), in place of the Hamilton's as the defaults and as the reference the rate is counted from (below, CAL).
 
-   Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (13.16/2 mm). Layout after the manual's Fig. 90 plan view. The detent's
+   Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (ES: 13.16/2 mm, the Hamilton's). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
-/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number}} EscSettings
+/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number,NT?:number,ES?:number,LK?:number,LO?:number,DA?:number,BL?:number,PSL?:number,PSO?:number,fI?:number,rJ?:number,eJ?:number,TBR?:number,TBP?:number,SPL?:number,SN0?:number,SN1?:number,OP78?:number,TQ?:number,BEV?:number,TSQ?:number,TH1?:number,DEP?:number,RW?:number}} EscSettings
     any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
 /** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean}} EscState
     state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1; a
     little under 0 while the unlocking draws the locked tooth back), the wheel running free (drop: from the release to the impulse jewel; run: from the jewel on to the locking stone) */
-/** @param {EscSettings} [o] */
-function makeEsc(o={}){
-  const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
+/** @param {EscSettings} [o] @param {EscSettings} [base] another chronometer's settings: its defaults and its reference */
+function makeEsc(o={},base){
+  const TAU=Math.PI*2,D2R=Math.PI/180;let ES=13.16/2;   /* the Hamilton's wheel's radius for DEF's unit-frame lengths; c.ES below */
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
      TF: the balance's free run-down (s), set so the escape wheel's torque the model is calibrated at is what the train gives (tools/physics.js A6: the fusee through the
      measured pivots and teeth, less the mainspring's own losses) and inside the decay the balance's parts allow (the same, 65-113 s with the endstone's friction measured
-     on BunnSpecial's Jd2c3x8VKsE, 12 October 2026). 68 since 12 October 2026, when the mainspring became the videos' 0.394 mm strip (its torque 0.83 of the parts list's
+     on BunnSpecial's Jd2c3x8VKsE, 12 October 2026). 67 since 14 October 2026, when Op. 78's preload lost the spring's bend over 0.005 in (W78, G78: less work unlocking, so
+     68 s left the calibrated torque 61.8 µN·m, 1.3 % under the spring's, and Q 427 over the budget's 423): 67 brings it back to 62.4 µN·m (Q 421). 68 from 12 October 2026, when the mainspring became the videos' 0.394 mm strip (its torque 0.83 of the parts list's
      0.419): the calibrated torque, 62.6 µN·m, is within 0.4 % of what that spring gives the escape
      wheel through the same train and losses as 52 s took for the old one (62.4 µN·m against 75.0: 0.611 of the fusee's torque reaching the escape wheel); 52 until then, and 34 until 11 October 2026, when the escapement's work still left out the wheel's chase and the detent's whole lift
      (tools/dynamics.js). MU: steel on sapphire. EX: the centre distance (9.40 mm; the model passes the one in its L).
      The bodies and springs, physical rather than fitted (since 11 October 2026; fD and fP, their shares of the work, were fitted before): I, the balance (g·mm², Table II);
-     JW, the escape wheel and arbor (4.80 g·mm², its drawn solid: tools/physics.js) with the fourth wheel's inertia reflected through its pinion (about 1.1, estimated: tools/dynamics.js; 6.2 with 1.4 until 12 October 2026, the fourth larger at the escape arbor's old place);
-     W78, Op. 78's weight (g): hung on the locking jewel it just parts the detent spring from its stop button, so that is the spring's preload; hD, the detent spring's two
+     JW, the train's inertia at the escape wheel: since 14 October 2026 every arbor weighed on its drawn solids (tools/mechanisms.json, summed by tools/dynamics.js and traindyn.js: the escape wheel, pinion and arbor 5.22 g·mm², the fourth wheel and seconds hand reflected 0.81, the rest 0.02); 5.9 before, the wheel's 4.80 and the fourth's 1.1 estimated (6.2 with 1.4 until 12 October 2026);
+     W78, Op. 78's weight (g), hung on the locking jewel, and G78 (mm) what it should part the detent spring from its stop button by ("approximately 0.005 in", p. 61; Fig. 88's
+     "(.005 in. clearance)"): the weight's moment is the spring's preload and its stiffness over that bend, so the preload is the weight's less the bend's (0.63 g at the jewel
+     with the drawn spring; until 14 October 2026 the whole 0.770 g, p. 61's clause missed), and a stiffer spring is set up with less preload; hD, the detent spring's two
      strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm,
      estimated) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
      works it out from movement.js and checks this), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
@@ -41,24 +45,43 @@ function makeEsc(o={}){
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:68,MU:0.15,
-    I:578.5,JW:5.9,W78:0.770,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
-  for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
-  const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
+  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:67,MU:0.15,
+    I:578.5,JW:6.05,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
+  /* the settings a second chronometer needs (makeEsc(o, base)), each the Hamilton's as the code had it until 15 October 2026. NT: the wheel's teeth; ES: its radius (mm), the
+     unit; LK: the locked tooth that many pitches before the pair straddling the line of centres, and LO (deg) the wheel's teeth turned so far from straddling it (the locking
+     stone's place, lockA, and the teeth's at rest, t0); DA: the detent's angle to the line of centres (deg) and BL its length from Ft to the locking face; PSL: the passing
+     spring's length and PSO its line's offset (along nB) from the balance staff; fI: the impulse jewel's driven face off the radius through the jewel's centre line in half its
+     width wI (1: a side of the slab, the Hamilton's; 0: a radial face); rJ, eJ: the locking stone's radius and its flat's offset from its centre; TBR: the tooth's back an
+     arc of that radius (mm: a cutter's, its centre in the gap) from the land to the root circle at B, or 0 for the Hamilton's power curve, its depth 1-(1-f)^TBP;
+     SPL: the detent spring's length to the cross-piece, SN0, SN1 its faces across (n); OP78: 1 sets the preload by Op. 78 (W78 parting it from its button by G78), 0 takes
+     W78 as the preload itself (g at the locking jewel), the spring unbent at its stop; TQ: the escape wheel's torque (µN·m) the reference is driven at, its swing solved,
+     or 0 for the Hamilton's way, the torque fitted to the swing A; BEV: the discharge jewel's end bevelled straight back from its square acting corner, its back corner BEV
+     short of it (the Wempe's, 05 04_1), in place of rB's radius, or 0 for the Hamilton's end; TSQ: 1 takes the passing spring's tip as its strip's square end, rT to
+     the end's middle and the strip tsT thick running back PSL along the detent (the Wempe's gold spring), 0 as a disc tsT round (the Hamilton's); TH1: the balance angle (deg)
+     the contact tables run to from -70, past the impulse's end (the Hamilton's ends at 20.7); DEP: 1 counts the detent's work only as far as it rides the discharge jewel,
+     to where it leaves it (depart: flung off a square corner it never rides the jewel's end down, so its preload's and spring's energy then is lost as it falls), with its
+     kinetic energy (the plastic blow as the jewel meets the passing spring, and what it carries off), 0 the Hamilton's (the jewel's whole table, as a massless detent rides
+     it); RW: 1 runs the wheel's chase from the release with the locking stone riding the tooth it has let go (the detent's preload and spring pressing it on the land and
+     the back: the friction MU against the wheel's turn, the back's slope pushing it on), 0 the Hamilton's free chase. DEP and RW since 15 October 2026, for the Wempe,
+     whose detent tools/dynamics.js --model wempe found flung off its stone's corner and its stone dragging on the escaping tooth. Unit-frame lengths in units of ES */
+  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.72,PSL:1.2,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.58,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30,DEP:0,RW:0});
+  for(const k in {...base,...o})if(!(k in DEF))throw Error('makeEsc: no setting '+k);
+  const c={...DEF,...base,...o};ES=c.ES;let A0=c.A*D2R;   /* A0: the reference's swing (with TQ, solved) */
+  const NT=c.NT,P=TAU/NT,EX=c.EX,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2+c.LO*D2R,lockA=t0-c.LK*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
   /* detent (Fig. 90): straight, 68 deg to the line of centres, the locking face 11.3 mm from the point of flexure Ft. The passing spring runs parallel to it
      on the line through the balance staff, 7.9 mm long, its tip at rT; the horn meets it behind the tip, 0.25 mm outside the discharge jewel's path (Op. 88) */
-  const dirB={x:Math.cos(68*D2R),y:Math.sin(68*D2R)},nB={x:dirB.y,y:-dirB.x},BL=1.72,Ft={x:S.x-BL*dirB.x,y:S.y-BL*dirB.y};   /* nB: direction the locking jewel moves (away from the wheel); the passing spring bends along -nB */
-  const Pt={x:-rT*dirB.x,y:-rT*dirB.y},Ps0={x:Pt.x-1.2*dirB.x,y:Pt.y-1.2*dirB.y};
+  const dirB={x:Math.cos(c.DA*D2R),y:Math.sin(c.DA*D2R)},nB={x:dirB.y,y:-dirB.x},BL=c.BL,Ft={x:S.x-BL*dirB.x,y:S.y-BL*dirB.y};   /* nB: direction the locking jewel moves (away from the wheel); the passing spring bends along -nB */
+  const Pt={x:-rT*dirB.x+c.PSO*nB.x,y:-rT*dirB.y+c.PSO*nB.y},Ps0={x:Pt.x-c.PSL*dirB.x,y:Pt.y-c.PSL*dirB.y};
   const LEN=Math.hypot(Pt.x-Ft.x,Pt.y-Ft.y),nH={x:(Pt.y-Ft.y)/LEN,y:-(Pt.x-Ft.x)/LEN};   /* nH: direction the spring tip moves as the detent unlocks; lift = that travel */
-  const aIc=aI+Math.asin(wI/2/rp);   /* impulse jewel centre line: its driven face runs through the pallet tip at aI */
+  const hIm=c.fI*wI/2,aIc=aI+Math.asin(hIm/rp);   /* impulse jewel centre line: its driven face (hIm off the radius) runs through the pallet tip at aI */
   const rot=(q,l)=>{const d=-l/LEN,c=Math.cos(d),s=Math.sin(d);return{x:Ft.x+(q.x-Ft.x)*c-(q.y-Ft.y)*s,y:Ft.y+(q.x-Ft.x)*s+(q.y-Ft.y)*c};};
   const off=(p,a,b)=>({x:p.x+dirB.x*a+nB.x*b,y:p.y+dirB.y*a+nB.y*b}),D=(t,n)=>off(Ft,t,n);
   /* locking jewel: round, 0.6 mm, with a large flat (Figs. 57-59) set at 10 deg of draw (8-12 deg, chronometerbook post 30), so the tooth's pressure
      holds the detent against its stop button. The tooth tip rests on the flat at S, whose inner end is dL inside the tip circle */
   const cD=Math.cos(DRAW),sD=Math.sin(DRAW),nF={x:dirB.x*cD+nB.x*sD,y:dirB.y*cD+nB.y*sD},fF={x:dirB.x*sD-nB.x*cD,y:dirB.y*sD-nB.y*cD};   /* nF: the flat's normal, fF: along it into the wheel */
-  const rJ=0.046,eJ=0.012,hJ=Math.sqrt(rJ*rJ-eJ*eJ),Jc=off(S,0,0),stone=[];Jc.x+=(dL-hJ)*fF.x-eJ*nF.x;Jc.y+=(dL-hJ)*fF.y-eJ*nF.y;
+  const rJ=c.rJ,eJ=c.eJ,hJ=Math.sqrt(rJ*rJ-eJ*eJ),Jc=off(S,0,0),stone=[];Jc.x+=(dL-hJ)*fF.x-eJ*nF.x;Jc.y+=(dL-hJ)*fF.y-eJ*nF.y;
   { const al=Math.atan2(eJ,hJ);for(let k=0;k<=14;k++){const a=al-(Math.PI+2*al)*k/14;stone.push({x:Jc.x+rJ*(Math.cos(a)*fF.x+Math.sin(a)*nF.x),y:Jc.y+rJ*(Math.cos(a)*fF.y+Math.sin(a)*nF.y)});} }
   /* lift at which the whole stone clears the tooth tips' path (with 0.02 mm to spare) */
   const clear=l=>Math.min(...stone.map(q=>{const r=rot(q,l);return Math.hypot(r.x-EX,r.y);}))>1+0.003;
@@ -69,13 +92,22 @@ function makeEsc(o={}){
      the tip, and with it the detent, the tip sliding along the face and round the jewel's end until it comes clear; the detent then falls back to its stop. Return swing
      (th falling): the jewel bends the trip spring the same way, the detent staying on its stop, until the tip comes clear. Until 11 October 2026 the end was square and the
      detent was let fall over 1.5° once the tip slid off the face, through the jewel's end, and until 12 October 2026 a half round; tools/dynamics.js checks these tables beat by beat */
-  const TH0=-70*D2R,DT=0.02*D2R,NTB=5001,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho,wJ=wD/2+rho,cA=rho,cB=Math.min(c.rB+rho,wJ);
-  /* the run (s1, s2) of the line Pt + s dir inside the jewel at balance angle th, or null */
+  const TH0=-70*D2R,DT=0.02*D2R,NTB=Math.round((c.TH1+70)/0.02)+1,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho,wJ=wD/2+rho,cA=rho,cB=Math.min(c.rB+rho,wJ);
+  const hull=P=>{P.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]),L=[],U2=[];for(const p of P){while(L.length>1&&cr(L[L.length-2],L[L.length-1],p)<=0)L.pop();L.push(p);}
+    for(let i=P.length-1;i>=0;i--){const p=P[i];while(U2.length>1&&cr(U2[U2.length-2],U2[U2.length-1],p)<=0)U2.pop();U2.push(p);}return L.slice(0,-1).concat(U2.slice(0,-1));};   /* a convex hull, anticlockwise (monotone chain) */
+  /* the run (s1, s2) of the line Pt + s dir inside the jewel at balance angle th, or null
+     (BEV or TSQ: the jewel a polygon, the tip a square-ended strip or a disc, the run the line's inside their Minkowski sum) */
   const span=(th,dir)=>{const u={x:Math.cos(aD+th),y:Math.sin(aD+th)},m={x:-u.y,y:u.x},pm=Pt.x*m.x+Pt.y*m.y,dm=dir.x*m.x+dir.y*m.y,pu=Pt.x*u.x+Pt.y*u.y,du=dir.x*u.x+dir.y*u.y;
     /** @type {number[]|null} */let r=null;const add=(a,b)=>{if(a<b)r=r?[Math.min(r[0],a),Math.max(r[1],b)]:[a,b];};
     const box=(m0,m1,u1)=>{let lo=-Infinity,hi=Infinity;const cut=(p,d,a,b)=>{if(Math.abs(d)<1e-12){if(p<=a||p>=b){lo=1;hi=0;}return;}let x=(a-p)/d,y=(b-p)/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);};
       if(m0<m1){cut(pm,dm,m0,m1);cut(pu,du,0,u1);add(lo,hi);}};
     const disc=(cu,cm,R)=>{const cx=Pt.x-cu*u.x-cm*m.x,cy=Pt.y-cu*u.y-cm*m.y,b=cx*dir.x+cy*dir.y,q=b*b-(cx*cx+cy*cy-R*R);if(q>0)add(-b-Math.sqrt(q),-b+Math.sqrt(q));};
+    if(c.BEV>0||c.TSQ){const w=wD/2,ra=rd-0.5*rho,J=[[0,-w],[ra-c.BEV,-w],[ra,w],[0,w]].map(([a,b])=>[a*u.x+b*m.x,a*u.y+b*m.y]);   /* the jewel's own outline: its acting corner (+m) square at its reach (rd less the half tip the Hamilton's grows it by), the back BEV short of it */
+      const es={x:-dirB.x,y:-dirB.y},T0=c.TSQ?[[0,-rho],[0,rho],[c.PSL,rho],[c.PSL,-rho]].map(([a,b])=>[a*es.x+b*nB.x,a*es.y+b*nB.y]):Array.from({length:24},(_,k)=>[rho*Math.cos(TAU*k/24),rho*Math.sin(TAU*k/24)]);   /* the tip: its strip's square end, the strip running back along the detent, or a disc */
+      const K=hull(J.flatMap(q=>T0.map(t=>[q[0]-t[0],q[1]-t[1]])));let lo=-Infinity,hi=Infinity;   /* where the tip's reference point may not go: the jewel grown by the tip's outline turned about (convex, anticlockwise) */
+      for(let k=0;k<K.length;k++){const a=K[k],b=K[(k+1)%K.length],ex=b[0]-a[0],ey=b[1]-a[1],f0=ex*(Pt.y-a[1])-ey*(Pt.x-a[0]),f1=ex*dir.y-ey*dir.x;   /* inside: left of every edge, f0 + s f1 >= 0 */
+        if(Math.abs(f1)<1e-15){if(f0<0)return null;}else if(f1>0)lo=Math.max(lo,-f0/f1);else hi=Math.min(hi,-f0/f1);}
+      return lo<hi?[lo,hi]:null;}
     box(-wJ+cB,wJ-cA,reach);box(-wJ,-wJ+cB,reach-cB);box(wJ-cA,wJ,reach-cA);disc(reach-cB,-wJ+cB,cB);disc(reach-cA,wJ-cA,cA);   /* the grown outline as boxes and its corners' discs: convex, so the run is their runs' hull */
     return r;};
   /* the tip held at the run's far end while the jewel is round it, from where the run first takes in the tip's rest to where the jewel has passed it; T: the travel */
@@ -88,13 +120,19 @@ function makeEsc(o={}){
   let thRel=0,released=false;for(let i=0;i<NTB;i++)if(LI[i]>=lRel){thRel=TH0+i*DT;released=true;break;}
   /* wheel angle (tooth tip, from the line of centres) at which a tooth meets the impulse jewel at balance angle th: its locking face on the jewel's
      tip, or its tip on the jewel's driven face, whichever holds it back more; -1e9 while the jewel is outside the teeth's path */
-  const bite=th=>{const c=aIc+th,u={x:Math.cos(c),y:Math.sin(c)},h=wI/2,sT=Math.sqrt(rp*rp-h*h),ox=h*u.y,oy=-h*u.x;let a=-1e9;   /* driven face: s*u+(ox,oy) */
+  const bite=th=>{const c=aIc+th,u={x:Math.cos(c),y:Math.sin(c)},h=hIm,sT=Math.sqrt(rp*rp-h*h),ox=h*u.y,oy=-h*u.x;let a=-1e9;   /* driven face: s*u+(ox,oy) */
     const qx=sT*u.x+ox,qy=sT*u.y+oy,rq=Math.hypot(qx-EX,qy);if(qx<0&&rq<1)a=Math.atan2(qy,qx-EX)-U*P*Math.min(1,(1-rq)/(1-r0));   /* the undercut face reaches the jewel's tip that much after the tooth's tip */
     const cx=ox-EX,b=u.x*cx+u.y*oy,dc=b*b-(cx*cx+oy*oy-1);if(dc>0){const s=-b-Math.sqrt(dc);if(s>0&&s<=sT){const px=s*u.x+ox;if(px<0)a=Math.max(a,Math.atan2(s*u.y+oy,px-EX));}}
     return a;};
   /* one tooth's outline (unit frame, polar [r, angle]) with its tip at angle a, the back trailing (+angle, the wheel turning to -angle): front root, tip, land, hollow back,
-     root circle to the next tooth's front root. Drawn by the model's wheel (core.js escapeWheel) and the 2D inset */
-  const toothPts=a=>{const q=[[r0,a+U*P],[1,a],[1,a+c.land*P]];for(let k=1;k<=16;k++){const f=k/16;q.push([1-(1-r0)*(1-Math.pow(1-f,1.6)),a+P*(c.land+(c.B-c.land)*f)]);}q.push([r0,a+P*(c.B+1+U)/2]);return q;};
+     root circle to the next tooth's front root. Drawn by the model's wheel (core.js escapeWheel) and the 2D inset. TBR: the back an arc of that radius, its centre in the gap */
+  const toothPts=a=>{const q=[[r0,a+U*P],[1,a],[1,a+c.land*P]];
+    if(c.TBR>0){const g1=c.land*P,g2=c.B*P,x1=Math.cos(g1),y1=Math.sin(g1),x2=r0*Math.cos(g2),y2=r0*Math.sin(g2),h=Math.hypot(x2-x1,y2-y1)/2,R=Math.max(c.TBR/ES,h),s=Math.sqrt(R*R-h*h),
+        nx=-(y2-y1)/(2*h),ny=(x2-x1)/(2*h),mx=(x1+x2)/2,my=(y1+y2)/2,C=[[mx+s*nx,my+s*ny],[mx-s*nx,my-s*ny]].sort((u,v)=>Math.hypot(v[0],v[1])-Math.hypot(u[0],u[1]))[0],
+        f1=Math.atan2(y1-C[1],x1-C[0]);let df=Math.atan2(y2-C[1],x2-C[0])-f1;df-=TAU*Math.round(df/TAU);   /* the shorter way round, from the land to the root */
+      for(let k=1;k<=16;k++){const f=f1+df*k/16,x=C[0]+R*Math.cos(f),y=C[1]+R*Math.sin(f);q.push([Math.hypot(x,y),a+Math.atan2(y,x)]);}}
+    else for(let k=1;k<=16;k++){const f=k/16;q.push([1-(1-r0)*(1-Math.pow(1-f,c.TBP)),a+P*(c.land+(c.B-c.land)*f)]);}
+    q.push([r0,a+P*(c.B+1+U)/2]);return q;};
   /* the unlocking's recoil: the locked tooth's tip rests on the stone's flat, set at DRAW, so drawing the stone out pushes the tooth back along the flat (the wheel recoils,
      which the work counts as cdr below) until the flat's inner end has passed the tip, which then rides round the stone's edge until the stone is clear (lRel). toothBack(l):
      the tooth tip's angle with the stone lifted l, from the shapes: the most forward place where no point of the stone is inside the tooth (its tip at r 1, its undercut face
@@ -133,7 +171,7 @@ function makeEsc(o={}){
           phi=phE+gE*wE*t-0.5*s*accW*t*t;prog=phi<=-P?1:-phi/P;run=phi>-P;}   /* off the jewel (it landed before thE): on at the jewel's speed, gathering more, to the stone */
       else{const a=bite(th),pa=a>-1e8?a-t0:-1e9,phi=Math.max(pf,pa);prog=phi<=-P?1:-phi/P;drop=pf>pa&&phi>-P;}}
     else prog=ccw&&pass&&lift>0?-recoil(lift)/P:ccw?0:1;
-    if(prog>0&&prog<1){const f=depart(amp);if(f&&q>f.p)lift=Math.max(lift,ride(prog));}   /* fallen back before the escaping tooth has passed: on its back */
+    if(prog>0&&prog<1)lift=Math.max(lift,ride(prog));   /* fallen back before the escaping tooth has passed: on its back (and, since 15 October 2026, the same while the jewel still carries it down: the Wempe's square-ended gold spring rides down its stone's corner before the detent leaves it, onto a tooth a slow wheel hasn't yet carried away; the Hamilton's never lies under its tooth there, every result the same) */
     return{th,ccw,lift,psDef,prog,drop,run};
   }
   /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
@@ -142,14 +180,14 @@ function makeEsc(o={}){
   /* plan outlines in detent coordinates (t along the detent from Ft, n toward nB), after Fig. 90 and the detent photograph in chronometerbook post 4.
      Moving (rotate about Ft by -lift/LEN): two-strip detent spring, cross-piece, blade, jewel block, arm, horn, Z bracket. Fixed: foot, support block (shortened to clear the train pillar behind it) and stop button */
   const rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],tR=(Ps0.x-Ft.x)*dirB.x+(Ps0.y-Ft.y)*dirB.y,nR=(Ps0.x-Ft.x)*nB.x+(Ps0.y-Ft.y)*nB.y;
-  const tH=tR+1.2-(rd+0.038-rT);   /* horn's inner face: 0.25 mm outside the discharge jewel's reach */
+  const tH=tR+c.PSL-(rd+0.038-rT);   /* horn's inner face: 0.25 mm outside the discharge jewel's reach */
   const brO=nR+0.015+0.36/ES;   /* the angle bracket's upright leg, 0.36 mm thick (estimated), to take the trip spring's screw: its outer face */
   const thick=(pts,w)=>{const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);L2.push({x:p.x-dy/l*w,y:p.y+dx/l*w});R2.push({x:p.x+dy/l*w,y:p.y-dx/l*w});});return L2.concat(R2.reverse());};
-  const SPL=0.58,SPN=[-0.058,-0.046];   /* the detent spring: its length to the cross-piece and its thickness across (unit frame), which set its stiffness below */
+  const SPL=c.SPL,SPN=[c.SN0,c.SN1],dS=SPL-0.58;   /* the detent spring: its length to the cross-piece and its thickness across (unit frame), which set its stiffness below */
   const pieces={
-    spring:rect(0,SPL,SPN[0],SPN[1]),cross:rect(0.58,0.68,-0.075,0.083),blade:rect(0.66,BL-0.07,-0.06,-0.03),block:rect(BL-0.08,BL+0.08,-0.08,0.08),
+    spring:rect(0,SPL,SPN[0],SPN[1]),cross:rect(SPL,0.68+dS,-0.075,0.083),blade:rect(0.66+dS,BL-0.07,-0.06,-0.03),block:rect(BL-0.08,BL+0.08,-0.08,0.08),
     arm:thick([D(BL+0.06,0),D(BL+0.2,0),D(tH-0.025,nR+rho-0.03),D(tH-0.025,nR+rho),D(tH-0.025,nR+rho+0.05)],0.025),horn:rect(tH-0.05,tH,nR+rho,nR+rho+0.05),   /* the arm ends square over the horn, their outlines one */
-    bracket:[D(0.58,0.083),D(0.68,0.083),D(0.68,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,brO),D(0.58,brO)],   /* its leg continues the cross-piece (same t); its upright leg 0.36 mm thick, to take the trip spring's screw (brO: its outer face) */
+    bracket:[D(SPL,0.083),D(0.68+dS,0.083),D(0.68+dS,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,brO),D(SPL,brO)],   /* its leg continues the cross-piece (same t); its upright leg 0.36 mm thick, to take the trip spring's screw (brO: its outer face) */
     stone
   };
   /* the detent-adjusting screw (Fig. 90; Ops. 84, 93): threaded into the block's end, its head (r 0.9 mm, 0.45 thick, 0.3 mm off the block) standing 0.3 mm deep in a slot
@@ -174,50 +212,46 @@ function makeEsc(o={}){
      beat by beat; until 11 October 2026 the wheel moved as a kinematic gear (G 3.5 times the balance's angle from release, landing 0.6° after it) and the springs' work was fitted */
   let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=TH0+i*DT;break;}                                // unlocking swing: discharge jewel meets the trip spring
   const T=0.5,W0=TAU/T,Q=Math.PI*c.TF/T,kB=c.I*1e-9*W0*W0,JR=c.JW/c.I/(W0*W0),esm=ES/1000;   /* kB: the hairspring (N·m a radian); JR: the wheel's inertia over k (s²), so its energy J v²/2 is JR v²/2 in units of k */
-  const MP=c.W78*1e-3*9.80665*Math.hypot(Jc.x-Ft.x,Jc.y-Ft.y)*esm/kB,KD=c.EB*1e9*c.hD*1e-3*((SPN[1]-SPN[0])*esm)**3/12/(SPL*esm)/kB;   /* the detent's preload and stiffness about its flexure, over k */
+  const MW=c.W78*1e-3*9.80665*Math.hypot(Jc.x-Ft.x,Jc.y-Ft.y)*esm/kB,KD=c.EB*1e9*c.hD*1e-3*((SPN[1]-SPN[0])*esm)**3/12/(SPL*esm)/kB;   /* Op. 78's weight's moment and the detent spring's stiffness about its flexure, over k */
+  const th78=c.OP78?c.G78/((BL-0.15)*ES):0,MP=MW-KD*th78;   /* Op. 78's bend: G78 at the stop button's middle, BL-0.15 along the detent from Ft (the blade's face on the button's turns away from it); the preload what the weight leaves */
   const KP=3*c.ET*1e9*(c.tsH*1e-3*(c.tsT*1e-3)**3/12)/(Math.hypot(Pt.x-Ps0.x,Pt.y-Ps0.y)*esm)**3*esm*esm/kB;   /* the trip spring at its tip, a cantilever, over k (its tip's travel in units) */
-  const CAL=['EX','A','TF','MU','I','JW','W78','hD','EB','ET','tsH'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join();
+  /* CAL: the settings a reference is calibrated at; an instance changing others is solved with its reference's torque, the reference being base's settings (the Hamilton's
+     without) at this instance's CAL (until 15 October 2026 always the Hamilton's: another chronometer's would have been counted from the Hamilton's escapement) */
+  const CAL=['EX','A','TF','MU','I','JW','W78','G78','hD','EB','ET','tsH','OP78','TQ'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-(base&&k in base?base[k]:DEF[k]))<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join()+(base?'|'+JSON.stringify(base):'');
   const PA=new Float64Array(NTB);for(let i=0;i<NTB;i++){const b=bite(TH0+i*DT);PA[i]=b>-1e8?b-t0:NaN;}   /* the wheel's angle the impulse jewel holds it at */
   const gP=i=>{const a=PA[i-1],b=PA[i+1],m=PA[i];return!isNaN(a)&&!isNaN(b)?(b-a)/(2*DT):!isNaN(b)&&!isNaN(m)?(b-m)/DT:!isNaN(a)&&!isNaN(m)?(m-a)/DT:0;};
   const iRel=Math.round((thRel-TH0)/DT);
   /* the wheel's angle from its locked place (0 to -P), running free from the release at balance angle th, amplitude amp, drive s */
-  let accW=0;const chase=(th,amp,s)=>{const t=(Math.acos(Math.max(-1,Math.min(1,-th/amp)))-Math.acos(Math.max(-1,Math.min(1,-thRel/amp))))/W0;return-0.5*s*accW*t*t;};
+  let accW=0;const chase=(th,amp,s)=>{if(c.RW){const T_=chaseRW(amp,s*accW);if(T_)return chaseAt(T_,th);}const t=(Math.acos(Math.max(-1,Math.min(1,-th/amp)))-Math.acos(Math.max(-1,Math.min(1,-thRel/amp))))/W0;return-0.5*s*accW*t*t;};
+  /* RW: the wheel let go from rest at thRel under the drive acc (rad/s² of the wheel), the detent off the jewel at depart(a) and falling (fallD), onto the tooth it let go
+     where its fall meets the ride (the stone's least lift over that tooth, the ride table read linearly), then held there, quasi-static: its preload and spring λ = MP + KD r
+     (units of k) press the stone on the tooth, which pushes the wheel on by λ r' (r' = dr/dφ, the back's slope; 0 on the land) and drags it back by MU λ / BL (the stone
+     at BL from the flexure, the tooth's tip at the wheel's radius), until the tooth has passed (r 0). Stepped on the table's θ (four steps each), from rest; {i0, ph, v}:
+     the wheel's angle and speed at each θ from the release on. Remembered by amplitude and drive. tools/dynamics.js --model wempe integrates the same in time */
+  const rwM=new Map(),rideR=pr=>{const f=Math.min(1,Math.max(0,pr))*NQ,j=Math.min(NQ-1,Math.floor(f));return(SR[j]+(SR[j+1]-SR[j])*(f-j))/LEN;},
+    chaseAt=(T_,th)=>{const f=(th-TH0)/DT-T_.i0,i=Math.floor(f);if(f<=0)return 0;if(i>=T_.ph.length-1)return T_.ph[T_.ph.length-1];return T_.ph[i]+(T_.ph[i+1]-T_.ph[i])*(f-i);};
+  const chaseRW=(a,acc)=>{if(!(a>thRel)||!(acc>0))return null;const key=Math.round(a*1e6)+','+Math.round(acc*1e3);let T_=rwM.get(key);if(T_)return T_;
+    const f=depart(a),aR=Math.acos(Math.max(-1,-thRel/a)),tOf=th=>(Math.acos(Math.max(-1,Math.min(1,-th/a)))-aR)/W0,ph=[0],vs=[0];let phi=0,v=0,on=false,acW=-acc,fr=f?{t:tOf(f.th),d:f.d0,v:f.v0}:null;
+    const rr=u=>rideR(u/P),e_=2e-4;   /* the ride at the wheel's turn u = -phi; its slopes in u by differences */
+    for(let i=iRel;i<NTB-1;i++){const th0=TH0+i*DT,th1=th0+DT;if(th1>=a)break;const t0=tOf(th0),t1=tOf(th1),h=(t1-t0)/4;
+      for(let k=0;k<4;k++){const t=t0+k*h,u=-phi,r=rr(u);
+        if(!on&&fr&&r>0&&t>fr.t&&fallD(fr.d,fr.v,t-fr.t)<=r)on=true;if(on&&!(r>0)){on=false;fr=null;}
+        let F=acc;if(on){const r1=(rr(u+e_)-rr(u-e_))/(2*e_),r2=(rr(u+e_)-2*r+rr(u-e_))/(e_*e_),ud=-v,udd=-acW,lam=MP+KD*r+IDk*(r2*ud*ud+r1*udd);   /* the detent's angle r(u): its acceleration r'' u'² + r' u'', which the preload and spring must give it */
+          if(lam<0){on=false;fr={t,d:r,v:r1*ud};}else F+=(lam*-r1-c.MU*lam/BL*Math.tanh(-v/0.05))/JR;}   /* off the back where they can't: it falls from there (fallD, closed form) and lands again on the tooth */
+        acW=-F;v-=F*h;phi+=v*h;}
+      ph.push(phi);vs.push(v);if(phi<=-P)break;}
+    T_={i0:iRel,ph,v:vs};if(rwM.size>4000)rwM.clear();rwM.set(key,T_);return T_;};
   /* one impulse at amplitude a, drive s and torque w: the landing, the strike and the drive as pushes [θ, energy/k]; null if the tooth never lands or the swing turns first */
   const impulse=(s,a,w)=>{if(thRel>=a||!(w>0))return null;const acc=s*w/JR,aR=Math.acos(Math.max(-1,-thRel/a)),sp=th=>W0*Math.sqrt(Math.max(0,a*a-th*th));
-    let land=null,pp=NaN,pf0=0;for(let i=iRel;i<NTB-1;i++){const th=TH0+i*DT;if(th>=a)return null;const t=(Math.acos(-th/a)-aR)/W0,pf=-0.5*acc*t*t,pa=PA[i];
-      if(!isNaN(pa)&&pf<=pa){const f=isNaN(pp)?1:(pf0-pp)/((pf0-pp)-(pf-pa)),tl=th-DT*(1-f);land={i,th:tl,vw:acc*(Math.acos(-tl/a)-aR)/W0};break;}
+    const RT=c.RW?chaseRW(a,acc):null;   /* RW: the chase with the stone riding the tooth it let go */
+    let land=null,pp=NaN,pf0=0;for(let i=iRel;i<NTB-1;i++){const th=TH0+i*DT;if(th>=a)return null;const t=(Math.acos(-th/a)-aR)/W0,pf=RT?(RT.ph[i-iRel]??NaN):-0.5*acc*t*t,pa=PA[i];
+      if(!isNaN(pa)&&pf<=pa){const f=isNaN(pp)?1:(pf0-pp)/((pf0-pp)-(pf-pa)),tl=th-DT*(1-f);land={i,th:tl,vw:RT?-(RT.v[Math.max(0,i-1-iRel)]+(RT.v[i-iRel]-RT.v[Math.max(0,i-1-iRel)])*f):acc*(Math.acos(-tl/a)-aR)/W0};break;}
       if(pf<=-P)return null;pp=pa;pf0=pf;}
     if(!land)return null;
     const vj=i=>Math.abs(gP(i))*sp(TH0+i*DT),v0=vj(land.i),Es=land.vw>v0?JR*v0*(land.vw-v0):0,I=[[land.th,Es]];let E=Es,turn=0,end=null,vPrev=v0;
     for(let j=land.i;j<NTB-1;j++){const t2=TH0+(j+1)*DT;if(t2>=a)break;const p1=PA[j],p2=PA[j+1];if(isNaN(p1)||isNaN(p2)){end=TH0+j*DT;break;}   /* the tooth leaves the jewel: it runs on free to the locking stone */
       const d=p1-Math.max(p2,-P),v2=vj(j+1),e=s*w*d-JR*(v2*v2-vPrev*vPrev)/2;I.push([t2-DT/2,e]);E+=e;turn+=d;vPrev=v2;if(p2<=-P){end=t2;break;}}
     return{I,E,land:land.th,end,strike:Es,turn,vw:land.vw,vj:v0};};
-  /* the unlocking and the springs, the same at every amplitude */
-  const R=[],Dp=[],Dk=[],Tp=[],cdr=dL*(Math.tan(DRAW)+c.MU)/(1-c.MU*Math.tan(DRAW));let rs=0;
-  if(a0!==null&&released&&thOff!==null&&thPass!==null)for(let i=0;i<NTB-1;i++){const th=TH0+i*DT,m=th+DT/2;
-    if(th>=a0&&th+DT<=thRel){const d=Math.min(LI[i+1],lRel)-Math.min(LI[i],lRel);if(d>0){R.push([m,d]);rs+=d;}}
-    if(th>=a0&&i+1<iOff){const d1=LI[i]/LEN,d2=LI[i+1]/LEN;if(d2!==d1){Dp.push([m,MP*(d2-d1)]);Dk.push([m,KD*(d2*d2-d1*d1)/2]);}}   /* the detent's preload and stiffness, as far as the jewel carries it */
-    if(i>iPass){const p1=PS[i],p2=PS[i+1];if(p1!==p2)Tp.push([m,KP*(p1*p1-p2*p2)/2]);}}   /* the trip spring bent on the return (θ falling) */
-  if(rs>0)for(const r of R)r[1]*=cdr/rs;
-  const sum=g=>g.reduce((s,r)=>s+r[1],0),ER=sum(R),EDp=sum(Dp),EDk=sum(Dk),ETp=sum(Tp),ok=R.length>0&&thPass!==null;
-  const wnK=(s,a,w,kd=1,kp=1)=>{const im=ok?impulse(s,a,w):null;return im?im.E-s*w*ER-EDp-kd*EDk-kp*ETp:-Infinity;};
-  /* phase gained an oscillation (rad) at amplitude a: the impulse pushes with the swing (+θ), the unlocking against it (-θ), the trip spring against the return (+θ) */
-  const airy=(g,s,a)=>{let q=0;for(const[th,e]of g)if(Math.abs(th)<a)q+=s*e*th/Math.sqrt(a*a-th*th);return-q/(a*a);};
-  const parts=(a,s,w,kd=1,kp=1)=>{const im=impulse(s,a,w);return im?{imp:airy(im.I,1,a),draw:s*w*airy(R,-1,a),detent:airy(Dp,-1,a)+kd*airy(Dk,-1,a),trip:kp*airy(Tp,1,a)}:null;},sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
-  const aLo=Math.max(-thRel,-(thPass??TH0))+0.01*D2R;
-  /* the swing the drive s keeps up: πa²/Q = Wn(a), the root above where the escapement can work; 0 if there is none */
-  const solveA=(s,w,kd=1,kp=1)=>{const g=a=>wnK(s,a,w,kd,kp)-Math.PI*a*a/Q;if(!(g(aLo)>0))return 0;let lo=aLo,hi=TAU*1.5;if(g(hi)>0)return hi;for(let i=0;i<44;i++){const m=(lo+hi)/2;g(m)>0?lo=m:hi=m;}return(lo+hi)/2;};
-  let run,CL=null,PH0=0;
-  if(isRef){let cl=null,ph=0,br=null;if(ok){const g=w=>wnK(1,A0,w)-Math.PI*A0*A0/Q;let lo=Math.log(1e-3),hi=Math.log(1e3);if(g(Math.exp(lo))<0&&g(Math.exp(hi))>0){for(let i=0;i<60;i++){const m=(lo+hi)/2;g(Math.exp(m))>0?hi=m:lo=m;}
-      cl={w:Math.exp((lo+hi)/2)};br=parts(A0,1,cl.w);ph=br?sumP(br):0;}}
-    RF[rk]={cl,ph};CL=cl;PH0=ph;run={A:A0,rate:0,own:day(ph),parts:br,cl};}
-  else{const R0=RF[rk]||(/** @type {any} */(makeEsc)(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl;CL=cl;PH0=R0.ph;
-    const a=cl?solveA(1,cl.w):0,br=a>0?parts(a,1,cl.w):null;run={A:a,rate:br?day(sumP(br)-R0.ph)+c.HS*(a-A0)/D2R/10:NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
-  if(CL)accW=CL.w/JR;
-  /* the tooth leaves the impulse jewel at thE (where the jewel's tip passes out of the teeth's path, or the tooth reaches the stone on it), at phE, moving with the jewel
-     (gE: the wheel's turn a radian of the balance there, over the last 0.1 deg); state runs it on from there to the stone (until 11 October 2026 it reached the stone at once) */
-  let iE=null;for(let i=iRel+1;i<NTB-1;i++)if(!isNaN(PA[i])&&PA[i]>-P&&(isNaN(PA[i+1])||PA[i+1]<=-P)){iE=i;break;}
-  const thE=iE===null?Infinity:TH0+iE*DT,phE=iE===null?0:PA[iE],gE=iE===null||isNaN(PA[iE-5])?0:(PA[iE]-PA[iE-5])/(5*DT);
   /* the detent's fall back to its stop button (since 11 October 2026: it went home in one step of the table where the passing spring's tip leaves the jewel, the stone
      standing in the escaping tooth's way for about 0.6 ms). Carried by the jewel, it leaves it where the jewel's end runs away faster than the detent can follow (its
      preload MP and stiffness KD against its inertia ID: the jewel's surface accelerating as LI's curvature times the balance's speed squared, plus its slope times the
@@ -230,7 +264,7 @@ function makeEsc(o={}){
   const depart=amp=>{const k=Math.round(amp*1e5);let r=depM.get(k);if(r!==undefined)return r;r=null;
     if(iOff!==null&&amp>-thOff)for(let i=Math.max(1,iPk);i<iOff;i++){const th=TH0+i*DT,w=W0*Math.sqrt(Math.max(0,amp*amp-th*th)),last=i+1>=iOff,
       l1=last?(LI[i]-LI[i-1])/DT:(LI[i+1]-LI[i-1])/(2*DT),l2=last?-Infinity:(LI[i+1]-2*LI[i]+LI[i-1])/(DT*DT);
-      if((l2*w*w-l1*W0*W0*th)/LEN<-(MP+KD*LI[i]/LEN)/IDk){const p=Math.acos(-th/amp)/TAU,d0=LI[i]/LEN,v0=l1*w/LEN,a0=Math.acos(-th/amp);
+      if((l2*w*w-l1*W0*W0*th)/LEN<-(MP+KD*LI[i]/LEN)/IDk){const p=Math.acos(-th/amp)/TAU,d0=LI[i]/LEN,v0=(c.TSQ?(LI[i]-LI[i-1])/DT:l1)*w/LEN,a0=Math.acos(-th/amp);   /* TSQ: the square end leaves the stone's square corner where the lift turns sharply, still moving with the stone's face, the slope it came up (a central difference across the corner takes half the fall's): tools/dynamics.js --model wempe, 15 October 2026 */
         let j=i+1;for(;j<iOff;j++){const t=(Math.acos(Math.max(-1,Math.min(1,-(TH0+j*DT)/amp)))-a0)/W0;if(t<fall1(d0,v0)&&fallD(d0,v0,t)*LEN<LI[j])break;}   /* off the acting corner, it falls back onto the jewel's end: carried on from there */
         if(j<iOff){i=j-1;continue;}r={p,d0,v0,th,land:-amp*Math.cos(TAU*(p+fall1(d0,v0)/T))};break;}}
     if(depM.size>4000)depM.clear();depM.set(k,r);return r;};
@@ -241,6 +275,39 @@ function makeEsc(o={}){
     t-=t1;let v=c.eS*wDt*Math.sqrt(Math.max(0,R0*R0-eD*eD));
     while(v>0&&(Math.hypot(eD,v/wDt)-eD)*LEN>1e-3/ES){const tau=2*Math.atan(v/(wDt*eD))/wDt;if(t<tau)return eD*(Math.cos(wDt*t)-1)+v/wDt*Math.sin(wDt*t);t-=tau;v*=c.eS;}
     return 0;};
+  /* the unlocking and the springs, the same at every amplitude */
+  const R=[],Dp=[],Dk=[],Tp=[],cdr=dL*(Math.tan(DRAW)+c.MU)/(1-c.MU*Math.tan(DRAW));let rs=0;
+  if(a0!==null&&released&&thOff!==null&&thPass!==null)for(let i=0;i<NTB-1;i++){const th=TH0+i*DT,m=th+DT/2;
+    if(th>=a0&&th+DT<=thRel){const d=Math.min(LI[i+1],lRel)-Math.min(LI[i],lRel);if(d>0){R.push([m,d]);rs+=d;}}
+    if(th>=a0&&i+1<iOff){const d1=LI[i]/LEN,d2=LI[i+1]/LEN;if(d2!==d1){Dp.push([m,MW*(d2-d1)]);Dk.push([m,KD*((d2*d2-d1*d1)/2-th78*(d2-d1))]);}}   /* the detent's preload and stiffness, as far as the jewel carries it: the weight's moment, and the spring's stiffness counted from Op. 78's bend, so a spring scaled (kd) is set up by the test */
+    if(i>iPass){const p1=PS[i],p2=PS[i+1];if(p1!==p2)Tp.push([m,KP*(p1*p1-p2*p2)/2]);}}   /* the trip spring bent on the return (θ falling) */
+  if(rs>0)for(const r of R)r[1]*=cdr/rs;
+  const sum=g=>g.reduce((s,r)=>s+r[1],0),ER=sum(R),EDp=sum(Dp),EDk=sum(Dk),ETp=sum(Tp),ok=R.length>0&&thPass!==null;
+  /* DEP: the detent's work at swing a as pushes [θ, energy/k]: the preload's and spring's (kd times) up to where it leaves the jewel, the blow as the jewel meets it (IDk
+     v_c², half lost, half its speed) at a0 and what its speed then takes up to the departure (IDk (v0² - v_c²)/2), its speed then lost; the whole table's as before if it
+     never leaves it */
+  const iA0=a0===null?0:Math.round((a0-TH0)/DT),detG=(a,kd=1)=>{const f=depart(a);if(!f)return Dp.concat(Dk.map(([m,e])=>[m,kd*e]));const vc=(LI[iA0+1]-LI[iA0])/DT*W0*Math.sqrt(Math.max(0,a*a-a0*a0))/LEN;
+    return Dp.filter(([m])=>m<f.th).concat(Dk.filter(([m])=>m<f.th).map(([m,e])=>[m,kd*e]),[[a0,IDk*vc*vc],[f.th,IDk*(f.v0*f.v0-vc*vc)/2]]);};
+  const wnK=(s,a,w,kd=1,kp=1)=>{const im=ok?impulse(s,a,w):null;return im?(c.DEP?im.E-s*w*ER-sum(detG(a,kd))-kp*ETp:im.E-s*w*ER-EDp-kd*EDk-kp*ETp):-Infinity;};
+  /* phase gained an oscillation (rad) at amplitude a: the impulse pushes with the swing (+θ), the unlocking against it (-θ), the trip spring against the return (+θ) */
+  const airy=(g,s,a)=>{let q=0;for(const[th,e]of g)if(Math.abs(th)<a)q+=s*e*th/Math.sqrt(a*a-th*th);return-q/(a*a);};
+  const parts=(a,s,w,kd=1,kp=1)=>{const im=impulse(s,a,w);return im?{imp:airy(im.I,1,a),draw:s*w*airy(R,-1,a),detent:c.DEP?airy(detG(a,kd),-1,a):airy(Dp,-1,a)+kd*airy(Dk,-1,a),trip:kp*airy(Tp,1,a)}:null;},sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
+  const aLo=Math.max(-thRel,-(thPass??TH0))+0.01*D2R;
+  /* the swing the drive s keeps up: πa²/Q = Wn(a), the root above where the escapement can work (the swing that releases, passes the trip spring and sees an impulse through); 0 if there is none */
+  const solveA=(s,w,kd=1,kp=1)=>{const g=a=>wnK(s,a,w,kd,kp)-Math.PI*a*a/Q;let lo=aLo;if(g(lo)===-Infinity){let h=lo;while(h<Math.PI&&g(h)===-Infinity)h+=2*D2R;for(let i=0;i<6;i++){const m=(lo+h)/2;g(m)===-Infinity?lo=m:h=m;}lo=h;while(!(g(lo)>0)&&lo<Math.PI)lo+=D2R;}   /* an impulse that ends past where the swing first releases and passes (the Wempe's): from the least swing that sees it through */
+    if(!(g(lo)>0))return 0;let hi=TAU*1.5;if(g(hi)>0)return hi;for(let i=0;i<44;i++){const m=(lo+hi)/2;g(m)>0?lo=m:hi=m;}return(lo+hi)/2;};
+  let run,CL=null,PH0=0;
+  if(isRef){let cl=null,ph=0,br=null;if(ok&&c.TQ>0){cl={w:c.TQ*1e-6/kB};A0=solveA(1,cl.w);br=A0>0?parts(A0,1,cl.w):null;ph=br?sumP(br):0;}   /* driven at TQ: the swing it keeps is the reference's */
+    else if(ok){const g=w=>wnK(1,A0,w)-Math.PI*A0*A0/Q;let lo=Math.log(1e-3),hi=Math.log(1e3);if(g(Math.exp(lo))<0&&g(Math.exp(hi))>0){for(let i=0;i<60;i++){const m=(lo+hi)/2;g(Math.exp(m))>0?hi=m:lo=m;}
+      cl={w:Math.exp((lo+hi)/2)};br=parts(A0,1,cl.w);ph=br?sumP(br):0;}}
+    RF[rk]={cl,ph,A0};CL=cl;PH0=ph;run={A:A0,rate:0,own:day(ph),parts:br,cl};}
+  else{const R0=RF[rk]||(/** @type {any} */(makeEsc)(Object.fromEntries(CAL.map(k=>[k,c[k]])),base),RF[rk]),cl=R0.cl;CL=cl;PH0=R0.ph;A0=R0.A0;
+    const a=cl?solveA(1,cl.w):0,br=a>0?parts(a,1,cl.w):null;run={A:a,rate:br?day(sumP(br)-R0.ph)+c.HS*(a-A0)/D2R/10:NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
+  if(CL)accW=CL.w/JR;
+  /* the tooth leaves the impulse jewel at thE (where the jewel's tip passes out of the teeth's path, or the tooth reaches the stone on it), at phE, moving with the jewel
+     (gE: the wheel's turn a radian of the balance there, over the last 0.1 deg); state runs it on from there to the stone (until 11 October 2026 it reached the stone at once) */
+  let iE=null;for(let i=iRel+1;i<NTB-1;i++)if(!isNaN(PA[i])&&PA[i]>-P&&(isNaN(PA[i+1])||PA[i+1]<=-P)){iE=i;break;}
+  const thE=iE===null?Infinity:TH0+iE*DT,phE=iE===null?0:PA[iE],gE=iE===null||isNaN(PA[iE-5])?0:(PA[iE]-PA[iE-5])/(5*DT);
   /* the lift shown at phase q of the active swing: the jewel's (the table) until the detent leaves it, then the higher of the jewel's and the detent's fall */
   const detLift=(q,th,amp)=>{const l=tab(LI,th),f=depart(amp);if(!f||q<=f.p)return l;return Math.max(th<thOff?l:0,fallD(f.d0,f.v0,(q-f.p)*T)*LEN);};
   /* the detent home: the balance's angle where it lands on its stop for good at swing amp (for tools/escapement.js and dynamics.js) */
@@ -265,7 +332,7 @@ function makeEsc(o={}){
       if(st<tx){u=Math.max(h,(u+cc)*Math.exp(-2*st/c.TF)-cc);dt-=st;}else{dt-=tx;u=h;}}
     return dt>0?Math.sqrt(u*Math.exp(-2*dt/c.TF)):Math.sqrt(u);};
   if(run.A>0&&run.A<AMIN){run.rate=NaN;run.own=NaN;}
-  if(CL&&run.A>0){const im=impulse(1,run.A,CL.w);if(im)Object.assign(run,{Q,Wi:im.E,fu:(CL.w*ER+EDp+EDk+ETp)/im.E,land:im.land,end:im.end,drive:im.turn,strike:im.strike/im.E,detent:(EDp+EDk)/im.E,vw:im.vw,vj:im.vj});}
+  if(CL&&run.A>0){const im=impulse(1,run.A,CL.w),ED=c.DEP?sum(detG(run.A)):0;if(im)Object.assign(run,{Q,Wi:im.E,fu:(c.DEP?CL.w*ER+ED+ETp:CL.w*ER+EDp+EDk+ETp)/im.E,land:im.land,end:im.end,drive:im.turn,strike:im.strike/im.E,detent:(c.DEP?ED:EDp+EDk)/im.E,vw:im.vw,vj:im.vj});}
   const A=run.A;
   /* the balance's equation of motion, averaged over a swing (the model's clock keeps the phase; this gives the amplitude and the rate). The escape wheel's torque is s times
      the model's (1: the mainspring through the fusee, as calibrated): the impulse's work, the wheel's chase and the locking jewel's draw go with it, the detent and trip
@@ -303,8 +370,10 @@ function makeEsc(o={}){
     r.A=deg(A);r.AMIN=deg(AMIN);r.rate=run.rate;r.fu=run.fu;
     if(A<AMIN)no(A>0?`the balance would swing only ${Math.round(A/D2R)}°, less than the ${Math.round(AMIN/D2R)}° it needs to unlock the wheel and see the impulse through`:'unlocking would take more from the balance than the impulse gives it');
     return meas=r;}
-  /* each figure against the manual's: k, name, the value as text, what the manual wants, ok */
-  function checks(){const r=measure(),f=(x,n=1)=>x.toFixed(n);
+  /* each figure against the manual's: k, name, the value as text, what the manual wants, ok. fig: another chronometer's figures, by k: {name, want, ok(r)} replacing
+     the Hamilton's (null leaves the figure out) */
+  /** @param {Object<string,{name?:string,want?:string,ok?:(r:any)=>boolean}|null>} [fig] */
+  function checks(fig={}){const r=measure(),f=(x,n=1)=>x.toFixed(n);
     return[{k:'D',name:'centre distance',v:f(r.D,2)+' mm',want:'',ok:true},
       {k:'shake',name:'roller shake (Op. 84)',v:f(r.shake,3)+' mm',want:'about 0.002 in (0.051 mm)',ok:r.shake>0.03&&r.shake<0.08},
       {k:'dip',name:"teeth dip into the roller's crescent (Op. 76)",v:f(r.dip,2)+' mm',want:'> 0',ok:r.dip>0},
@@ -313,8 +382,12 @@ function makeEsc(o={}){
       {k:'overall',name:'overall (Op. 87)',v:f(r.overall)+'°',want:'26-30°',ok:r.overall>=26&&r.overall<=30},
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
-      {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
+      {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}].filter(x=>fig[x.k]!==null).map(x=>fig[x.k]?{...x,...fig[x.k],ok:fig[x.k].ok?fig[x.k].ok(r):x.ok}:x);}
   const wn=(s,a)=>CL?wnK(s,a,CL.w):-Infinity;   /* the work an oscillation nets the balance at drive s and swing a (units of k): tools/physics.js's budget */
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
+  /* pushes(a, s): that work as the pushes on the balance, [θ, energy/k], at swing a and drive s: gain, the impulse's (the strike and the drive) on the active swing; loss,
+     the unlocking's on it (the locking stone's draw, the detent's springs and blows: DEP's, or the whole table's); ret, the gold or trip spring's on the return swing
+     (θ falling). Null where the tooth never lands. For a page drawing the balance's angle through the beat with them (the Wempe's, js/escapement.js) */
+  const pushes=(a,s=1)=>{const im=CL&&ok?impulse(s,a,CL.w):null;return im?{gain:im.I,loss:R.map(([m,d])=>[m,s*CL.w*d]).concat(c.DEP?detG(a):Dp.concat(Dk)),ret:Tp}:null;};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,pushes,ride,T,measure,checks,kB,MP,MW,th78,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

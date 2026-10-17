@@ -2,24 +2,18 @@
  "frame": "f_KLUwI2UUCMQ_23-30.png",
  "view": "above",
  "holes": "holes_trainBridge.json",
- "note": "KLUwI2UUCMQ 23:30: the upper train bridge lying flat, face up, with the balance lower bridge on its underside; other parts lie over the horn's end and along the notch's mouth. Rim and barrel cut traced on the bridge's contour against the mat (segmented as rimfit.py does). Unmapped: the notch round the fusee (n), the horn's notch side (hn) and barrel side (hb) up to where a part lying on it hides its end, and the notch's mouth from its corner to the rim (m), for train_bridge.py",
+ "note": "KLUwI2UUCMQ 23:30: the upper train bridge lying flat, face up, with the balance lower bridge on its underside; other parts lie over the horn's end and along the notch's mouth. Rim and barrel cut traced on the bridge's contour against the mat (segmented as rimfit.py does). Unmapped: the notch round the fusee (n), the horn's notch side (hn) and barrel side (hb) up to where a part lying on it hides its end, and the notch's mouth from its corner to the rim (m), for train_bridge.py 15 October 2026: holes regenerated, the cut round the barrel at TB_CUT (r 21.0), anchored on the centre bushing alone (a T pair turns it: the third's bushing reads 1.2 mm from L.T); started from KLUwI2UUCMQ_23-30_init.json (the similarity on the centre and third bushings' picks, (2329, 767) and (2569, 811)).",
  "use": [
-  "C",
-  "T"
+  "h1"
  ],
  "picks": {
   "gC": [
    2329,
    767
-  ],
-  "gT": [
-   2569,
-   811
   ]
  },
  "pairs": {
-  "C": "gC",
-  "T": "gT"
+  "h1": "gC"
  },
  "circles": {
   "rim": {
@@ -213,10 +207,10 @@
   },
   "bcut": {
    "c": [
-    -22.56,
-    0.23
+    -24.123,
+    -5.754
    ],
-   "r": 19.2,
+   "r": 21.0,
    "pts": [
     [
      2729,
@@ -301,206 +295,5 @@
    ]
   }
  },
- "unmap": {
-  "n0": [
-   2266,
-   736
-  ],
-  "n1": [
-   2268,
-   756
-  ],
-  "n2": [
-   2270,
-   776
-  ],
-  "n3": [
-   2268,
-   796
-  ],
-  "n4": [
-   2266,
-   816
-  ],
-  "n5": [
-   2260,
-   836
-  ],
-  "n6": [
-   2252,
-   853
-  ],
-  "n7": [
-   2244,
-   870
-  ],
-  "n8": [
-   2238,
-   888
-  ],
-  "n9": [
-   2232,
-   902
-  ],
-  "n10": [
-   2223,
-   918
-  ],
-  "n11": [
-   2212,
-   931
-  ],
-  "n12": [
-   2198,
-   944
-  ],
-  "n13": [
-   2184,
-   956
-  ],
-  "n14": [
-   2170,
-   967
-  ],
-  "n15": [
-   2154,
-   976
-  ],
-  "n16": [
-   2139,
-   986
-  ],
-  "n17": [
-   2122,
-   994
-  ],
-  "n18": [
-   2105,
-   1000
-  ],
-  "n19": [
-   2087,
-   1005
-  ],
-  "n20": [
-   2067,
-   1008
-  ],
-  "n21": [
-   2048,
-   1012
-  ],
-  "n22": [
-   2028,
-   1012
-  ],
-  "n23": [
-   2008,
-   1012
-  ],
-  "n24": [
-   1989,
-   1009
-  ],
-  "n25": [
-   1970,
-   1006
-  ],
-  "n26": [
-   1951,
-   1001
-  ],
-  "n27": [
-   1934,
-   996
-  ],
-  "n28": [
-   1917,
-   988
-  ],
-  "n29": [
-   1901,
-   980
-  ],
-  "n30": [
-   1885,
-   971
-  ],
-  "n31": [
-   1873,
-   963
-  ],
-  "hn0": [
-   2250,
-   685
-  ],
-  "hn1": [
-   2242,
-   660
-  ],
-  "hn2": [
-   2234,
-   635
-  ],
-  "hn3": [
-   2226,
-   610
-  ],
-  "hb0": [
-   2312,
-   685
-  ],
-  "hb1": [
-   2297,
-   667
-  ],
-  "hb2": [
-   2282,
-   650
-  ],
-  "hb3": [
-   2265,
-   625
-  ],
-  "hb4": [
-   2250,
-   607
-  ],
-  "m0": [
-   1863,
-   979
-  ],
-  "m1": [
-   1857,
-   998
-  ],
-  "m2": [
-   1852,
-   1015
-  ],
-  "m3": [
-   1846,
-   1032
-  ],
-  "m4": [
-   1840,
-   1049
-  ],
-  "m5": [
-   1836,
-   1067
-  ],
-  "m6": [
-   1840,
-   1086
-  ],
-  "m7": [
-   1844,
-   1106
-  ],
-  "m8": [
-   1841,
-   1126
-  ]
- }
+ "init": "KLUwI2UUCMQ_23-30_init.json"
 }

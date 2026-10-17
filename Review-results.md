@@ -363,15 +363,15 @@ Found by the analyses of the build-verification report's section 11 (`tools/ratc
 a reading or an estimate to settle:
 
 - **The sustaining pawl's end, as traced** (KLUwI2UUCMQ 36:15, to about 0.1 mm), leans off its tooth's face: a tooth's tip corner meets the pawl's side first, and
-  so loaded it would be pushed out; fitted to bear along the face, as a pawl's end is stoned, it draws in at 32.8°. A frame with the pawl's end side-on, or the
-  end retraced, would show whether the tracing or the fitting is short.
-- **The setup click** bears on its face near the root, drawn in at 4.5°, under the friction angle: friction and its spring hold it. Its ratchet's faces, measured
-  undercut 3-6° (OPEN-QUESTIONS.md, "The set-up ratchet's locking faces"), are drawn radial; drawn undercut, the click would draw in past the friction angle.
-- **The sustaining spring's section** (OPEN-QUESTIONS.md, "The sustaining spring's section and gap"): the drawn band would close solid under the drive; the
-  model's maintaining work runs on the manual's five to ten minutes, which a band in the drawn recess can't give at the measured width.
+  so loaded it would be pushed out. *Done (14 October 2026, RESOLVED.md):* drawn fitted, cut along the face with 4° of relief; it bears on the face 0.38 mm in and
+  is drawn in at 36°.
+- **The setup click** bears on its face near the root, drawn in at 4.5°, under the friction angle: friction and its spring hold it. *Done (14 October 2026,
+  RESOLVED.md):* the ratchet's faces drawn undercut 4.5° as measured, the click drawn in at 8.7°, past the friction angle; and the ratchet on the arbor's square.
+- **The sustaining spring's section**: the drawn band would close solid under the drive. *Done (14 October 2026, RESOLVED.md; OPEN-QUESTIONS.md, "Closed by
+  design"):* a split ring weaker than the drive, banked in running, as the period's chronometers had it; its gap measured, its band designed for its push.
 - **The train's inertia at the escape wheel** off the solids is 6.05 g·mm², 2.9 % over dynamics.js's 5.88 (the fourth wheel's 1.08 was an estimate; the escape
-  arbor's pinion and arbor 0.42 were left out). Not adopted: it moves the escapement's rate 0.08 s a day and the swing 0.9°, which the timing takes up, and the
-  escapement's calibration (JW, the 255° swing) runs through most checks. Adopting it is a recalibration for its own branch.
+  arbor's pinion and arbor 0.42 were left out). *Done (14 October 2026):* makeEsc's JW 6.05 and dynamics.js sum the arbors' solids (mechanisms.json); the
+  calibrated torque 62.8 µN·m, the budget still closes at TF 67 s; tolerances, gearing, tripping and bench re-written.
 
 ## The hairspring's inner end (settled as an estimate, 4 October 2026)
 
@@ -2100,8 +2100,20 @@ rendered one by one (isolated, by Hamilton number). Four places looked different
 
 Open, found on the way:
 
-- **The flange's holes** (9:03, 40:05; `References/VIDEOS.md`). *Worked through
-  (4 October 2026), not settled.* The dial screws go in from the train side
+- **The flange's holes** (9:03, 40:05; `References/VIDEOS.md`). *Angles settled
+  (14 October 2026): read through fitted cameras on 9:03, 40:08 and 34:30 (both
+  sides), the dial screws moved to the video's four plain holes (2.6°, 132.9°,
+  226.0°, 318.9°; the 2.5° hole is the fourth dial foot's, one size with the
+  others) and the ring screws to its three (91.5°, 214°, 336.5°: the heads on
+  the plate's rim at 215° and 335° from the train side, the ends in threaded
+  holes at 91°, 214° and 337° from the dial side, the top-view photograph's head
+  at 215°). *Closed the same day: the radius read camera-free (radial strips
+  through each hole, its place between the bore and the flange's rim) 41.8-42.2,
+  the screws now at 42.0 and tapped through the flange, their ends 2.0 below its
+  face; the fourth dial foot at 178.7°, a filled hole of the feet's size; the
+  2.3° hole, which the strips put among the ring screws, drawn, what it holds
+  unknown.*
+  *Worked through (4 October 2026), not settled.* The dial screws go in from the train side
   outside the plate's rim (8:36-8:42), so the three small holes near the rim
   (130.4°, 224.4°, 319.4°) are theirs; the three large threaded ones (88.5°,
   212.3°, 337.8°, r ≈ 41.5) the mounting ring's screws, tapped through. The
@@ -2129,7 +2141,10 @@ What this pass on Figs. 21, 22, 28 and 29 leaves, most worth doing first. The
 measurements behind each are in `References/VIDEOS.md` (the rows for the fusee's
 top, the fusee arbor, the take-off slot and the flange's holes).
 
-1. **The fusee arbor's shaft and winding square.** Above the collar the real
+1. *Fixed (15 October 2026): with the bushings, as "The overhaul's order against the model" 1 below: the shaft r 1.82 from the collar through the
+   barrel bridge's bushing (42164, all four r 3.4 bored 1.85) to a step at y -31.5, then the 2.4 square to its end; the dust seal's chamber opened under it,
+   its ring and spring measured (12:33.0-12:39.0). The shaft measured against something matt as asked: 12:39.0, against the bridge, r 1.84.*
+   **The fusee arbor's shaft and winding square.** Above the collar the real
    arbor reads 0.66 of the collar's width (20:00, 19:59; r ≈ 1.75 against the
    model's r 1), and the parts list gives the fusee's bushings the barrel's
    number (42164, bored r 1.42 in the model). The square starts at a step about
@@ -2140,7 +2155,7 @@ top, the fusee arbor, the take-off slot and the flange's holes).
    Needs first: the shaft's radius from a frame where it stands against
    something matt (a polished silhouette on the blue mat reads narrow), or a
    ratio to the barrel arbor's pivot in one frame.
-2. **The dial screws and the mounting ring's screws.** The video's ring
+2. *Closed (14 October 2026): see "The flange's holes" above.* **The dial screws and the mounting ring's screws.** The video's ring
    (2E8489, 9:03 unrolled): dial screws at 130.4°, 224.4° and 319.4° (r ≈ 46),
    none at r 46 elsewhere, a small hole at 2.5° (r ≈ 43, under the plate's rim:
    a dial steady pin?); the ring's screws tapped through at 88.5°, 212.3° and
@@ -2270,3 +2285,242 @@ Findings:
 **Redrawn from the video (12 October 2026).** Both parts were estimates; measured on KLUwI2UUCMQ, both were wrong (RESOLVED.md, Winding and maintaining work): the stud 2.3 across and 5.5 long, 11.6 mm from the fusee about 108 deg round from where it was drawn; the bar 15.0 x 1.8 with slanted ends and two thicknesses, on the arbor's other side, pushed by its own thicker end, no nose. The two findings above belong to the old parts: finding 1's nose is gone (the stud's end now stands 1.6 mm past the fusee's top, and nothing passes under it), and finding 2's corner contact is now the stop end's leading corner on the stud's side, 0.47 mm into its path, the corner that stands out on the real bar. Swept again: full wind 0.000 mm, let go 0.42, every other pass 0.62 mm or more clear; `fine.py` nothing new; the walkthrough's close-up still shows the catch. Compared side by side (isolate.py): from above with 20:01.23 and 25:40 (the parallelogram's lean, the spring's C and where it meets the bar), side-on with 26:05 and 26:16.25 (released, the stop end inside the plate's edge; pushed, about 1.6 mm out against the video's 1.8-2.2), the stud with 13:00.45-13:04.0. Left open: the released place (the side views put the bar about 1 mm further toward its chain end than the plan) and how deep the chain end reaches into the groove (OPEN-QUESTIONS.md).
 
 **The gaps settled (12 October 2026, after release 2.27.00).** Read again on KLUwI2UUCMQ: the released place is centred (26:23.4-26:24.5 side-on, within 0.2 of 20:01.23); the chain pushes the bar 1.9-2.5 (13:16, 13:26), the tweezers to a hard stop at 2.44; the spring's end goes into a hole in the bar's side face, its fixed end into a tapped hole in the recess floor; the step is on the underside; the stud's grooves run along the line to the fusee; the chain end sits level with the band under the plate and with the chain's top on the top turn (37:22-37:26). Redrawn so (RESOLVED.md). Compared side by side: from above with 20:01.23 and 25:40 (the spring's C between the two holes and into the bar near its chain end), obliquely at full wind with 37:26.578 (the band as deep as the bar, the chain just under it). Checks: maintaining, solids, fine (nothing new), invariants. Left open: 37:22.323's released stand-out against 20:01.23 and 26:23, the hard stop's cause, the chain's catch on the end under the mainspring's pull (OPEN-QUESTIONS.md).
+
+## The overhaul's order against the model (15 October 2026)
+
+The manual's two sequences (Sec. V, Ops. 1-58; Sec. VIII, Ops. 1-105) run on the model, each part lifted off or put on along its arbor in its turn
+(`js/overhaul.js`; model README, "The overhaul"), and checked by `tools/overhaul.py`: no part may pass through another on its way. The order is sound
+on the model, but three readings the model drew kept parts from coming off as the real movement's do. All three fixed (15 October 2026), their entries
+gone from the check's `EXPECTED`; most certain first:
+
+1. *Fixed (15 October 2026): the four bushings are one part, r 3.4 bored r 1.85 (`BU_O`, `BU_I`), the pivots in them r 1.82 (`BU_P`): KLUwI2UUCMQ 13:04.4
+   (the barrel bridge underside up, nearly face-on: the two upper bushings alike, bore/outside 0.53-0.54; scaled by the arbors' 37.59 mm, outside r
+   3.4-3.6, bore r 1.80-1.90), 12:39.0 (the seal, its ring and spring off: the fusee bushing's gilt r 3.2-3.5, the arbor's shaft r 1.84, scaled by the
+   seal's screw holes), 37:59 and 40:05 (the upper pair and the lower pair alike), Fig. 75 (the barrel arbor's pivots 0.38-0.40 of its core). The fusee
+   arbor above the bridge is that shaft to a step at y -31.5, then the 2.4 square to its end (20:00; 12:39.0: the shaft about 4.0 over the bridge, the
+   square 0.75 of the shaft seen near its flat); below the collar a shoulder r 2.2 on the plate's bushing (18:24.5, r 2.4 +-0.2 at the taper pin's hole),
+   the end plate bored 2.25 (23:30: its bore 0.39 of its outside). The barrel arbor is Fig. 75's: pivots, then bearings r 2.35 in the barrel's end holes
+   r 2.38 (16:16.5 reads the hole r 2.3). The squares, 1.70 and 1.56 across their half diagonals, now pass every hole they go through (Ops. 29, 31, 36;
+   the reassembly's 38, 44, 52), and the 12 leaves of the wind indicator pinion (tips r 1.76) the lower bushing as the fusee lifts out.*
+   **The arbors are wider than the holes they pass.** Over the barrel bridge's fusee bushing (42164.fu, `movement.js` 711: bore r 1.02, outer 1.6)
+   the fusee arbor goes on at r 1.2 (`part('sq')`, 1430) to its square, 2.4 across the flats (3.4 across the corners, half-diagonal 1.70); over the
+   barrel bushing (42164.bu: bore r 1.42) the barrel arbor's square (`ASQ` 2.2, 1369; half-diagonal 1.56). So in the model the barrel bridge can't
+   come off over either arbor (Op. 31) or go back on (the reassembly's Op. 44), the dust seal (bore r 1.3, 1421) can't come off over the fusee's square
+   (Op. 29), and the barrel arbor's square can't pass the barrel's end hole (Op. 36). On the real movement the bridge comes off over both (KLUwI2UUCMQ
+   12:58-13:04). Sure of the fault (the geometry). The parts list gives the two upper bushings one number, 42164 (so one bore, where the model has two);
+   the square's 2.2 is read at 2.0-2.3 (KLUwI2UUCMQ 38:25), and a 2.0 square (half-diagonal 1.41) would pass the barrel's 1.42. What is too big is the
+   measurement "Still open after the collar's height" 1 asks for: the fusee arbor above the collar, the bushing, the dust seal and its ring together.
+2. *Fixed (15 October 2026): the step was the reading at fault. The sustaining ratchet rides the fusee wheel's hub, not a step on the arbor: the manual
+   greases "the outside of the hub" (Op. 20, Fig. 71's arrow 2) and assembles the two before the wheel goes on the fusee (Fig. 71, Op. 25). The hub is
+   drawn as a pipe r 2.87 up through the ratchet's bore (2.92), the collar straight at r 2.38, and the winding ratchet's bore stays 2.43, which 23:30
+   confirms (flat on the mat, no hub, the bore 0.335 of its tips: r 2.31). It now comes off the collar's lower end, past the pinion, its two screws ahead
+   of it (`UP` in overhaul.js).* **The winding ratchet wheel can't come off the fusee** (Op. 43; the reassembly's Op. 17): its bore is r 2.43 (`bore:2.75*k`, k = FK 0.882;
+   1692), and the arbor beside it steps out to r 2.87 (the sustaining ratchet's seat, 1684: "stepped to r 2.87 under the sustaining ratchet"), the way
+   it has to come off; the collar it sits on is r 2.38 (2.7 k). The video reads the collar about r 2.7 (KLUwI2UUCMQ 28:08-28:17, rough: oblique, +-1
+   mm). Sure of the fault; which is wrong, the ratchet's bore or the step, is to measure (the large end face-on, the end plate off: 18:24.5, 4K).
+3. *Fixed (15 October 2026): KLUwI2UUCMQ 12:33.0-12:39.0 shows it, the seal lifted off (12:34.0) leaving the ring on the spring round the arbor, the
+   ring taken off (12:35-12:36.5), then the spring (12:37-12:38.5). The seal's chamber now opens underneath (r 4.85, its roof 0.8 thick, bored 1.9 to
+   pass the square); the ring a flat steel washer r 4.7 bored 1.87 on the shaft, 0.8 thick, pressed against the roof by the spring, five turns of 0.24 wire
+   r 4.07 outside, standing on the bridge round the bushing (the ring 538 px across and its hole 199 against the shaft's 205, r 1.82, at 12:34.0; 12:36.5
+   face-on, hole/outside 0.40; the spring 458 px). The overhaul's host for both is the barrel bridge, so they stay as the seal lifts.*
+   **The seal ring and its helical spring are drawn shut inside the dust seal's body**: in a groove round its bore (r 1.3-3.0, y -31.8 to -27.9, in the
+   seal's -32.56 to -27.18; 1421-1425), so they can't come out of it (Op. 30) or go in (the reassembly's Op. 52); Figs. 24 and 80 draw them under the
+   seal, on the barrel bridge, and Ops. 29-30 take the seal off first, then them. Fairly sure (two figures); their place and sizes are to read on a frame
+   of the dust seal coming off (KLUwI2UUCMQ: between the setup work, 11:46-12:22, and the barrel bridge lifted off, 12:58).
+
+*Fixed (15 October 2026): the hole cut blind, 2.0 up from the underside (`blindHoles()` in core.js), and `tools/holecheck.py` added: every hole in
+the movement holds something or is expected empty with its reason (542 over both balance stops; 12 expected).* *Found while comparing (15 October 2026):* the winding stop's tapped hole (r 0.82, 11.6 mm from the fusee) is drawn through the barrel bridge,
+so it shows on the bridge's top beside the dust seal; the stud screws only 2 mm into the 3.4 mm bridge, and the real bridge's top is plain there
+(KLUwI2UUCMQ 12:39.0). A blind hole needs the bridge's solid cut from its underside only (one extrusion now, its holes all through); `bom.py`'s
+`in 42061 tap` measures the thread in it.
+
+*Hole survey, the upper train bridge (15 October 2026), open:* KLUwI2UUCMQ 13:49.5 (underside) and 23:30 (face up, independent) put on the plan by
+`video.py anchor` on the rim (r 40.5; 15 and 45 traced points, 0.17 and 0.34 mm rms), the cut round the barrel (TB_CUT, r 21.0; 0.13 and 0.06 mm) and the
+centre bushing, then `tools/holemap.py`. The pillar screws' holes and the third's counterbore, the barrel bridge's far screw and the lower bridge's screws land
+within about 0.5 mm. Found: the third's upper bushing sits 1.2-1.3 mm from L.T in both frames (with T paired instead, every rim hole reads 2.5-5 mm off: the
+pair's rotation); real holes the model lacks at about (-22.8, 20.4) (added, d33651a: the two frames agree within 1 mm, a countersunk hole on 13:49.5) and, unconfirmed (the frames disagree by 3 mm there), (-8.7, 22.1), (29.7, 1.1) and (-1.8, 33.1); and
+on the right, the barrel bridge's near screw, the cock's screw and two pins read 3-4 mm inside their model places, which the soft 23:30 and the slant of
+13:49.5 may account for (13:04.4 put the barrel bridge's hole for that same screw within 1 mm). Not changed: the readings there are not good enough to move
+holes measured to 0.3 mm on 6:49.0; a sharper face-on frame of the bridge's right side would settle them.
+
+*Followed up on 6:47 (15 October 2026):* 6:47 is 6:49.0's camera, and that camera can't place the right side: fitted on the model's train-bridge holes, each
+left out lands 0.6-5.4 mm off (the third pillar screw's counterbore 3 mm). The frames that see the bridges face-on settle most of it. Done: the barrel
+bridge's near screw moved 2.4 mm to (32.90, 6.60) (23:30 and 13:04.4 within 0.9 mm); its two steady pins added (13:04.4), into (29.4, 1.35), the
+candidate (29.7, 1.1), and the hole at (-23.3, 20.4); the candidate (-8.7, 22.1) added as a hole of unknown use (23:30, 6:49.0 within 1 mm); the
+candidate (-1.8, 33.1) dropped (it is the detent's far pin's hole, the same 1.5 mm off as its neighbours on 23:30); the cock's steady pins placed from
+the cock screw's hole (6:47, 23:30 within 0.4 mm), their holes r 1.07. **Still open: the cock screw's hole.** 23:30 reads it at (21.62, 23.58), 2.8 mm from
+S.cock; measured from the third pillar screw's counterbore, 6:49.0 gives (22.21, 22.69) and 23:30 (21.39, 23.58), within 1.2 mm; from the lower bridge's
+screw both frames turn it 7.5 deg from the model's direction (72.6-72.8 against 65.2). But at about 24 mm from the staff the cock's counterbore (7.4
+across) would break through its wall (22.6 about the staff), and 6:29 reads the cap's centre 25.9 mm from the screw: moving it means moving the cock,
+and likely the balance's place (L.B), with it.
+*Measured further (15 October 2026):* in both face-on frames against the same nearby holes (the third pillar screw's, the sustaining pawl's two;
+a similarity, 0.03-0.43 mm on them), the cock screw's hole reads (21.81, 24.96) on 23:30 and (21.95, 25.66) on 13:49.5 (re-anchored on the rim, TB_CUT
+and the centre bushing: `tools/anchors/KLUwI2UUCMQ_13-49.5.json`), within 0.7 mm: 2.4 mm from S.cock. 25.25 mm from the staff there, against the 25.9
+(25.7-26.0) the cock's top gives at 6:29 and the model's 26.78: so not the cock and balance moved together. Nor the cock turned about the staff: the
+barrel bridge's horn edge, which ends against the cock's straight edge, lies within 0.5-0.75 mm of the model's along its length on 13:04.4 (a 4 deg
+turn would move it 1.5-2.4). What's left is the screw's place on the cock: the frames put it about 1.6 mm further from the straight edge than the model
+draws it. The cock's top (CK_TR) was traced on 41:58 with the counterbore among its anchors, so it can't test this; at 25.25 from the staff the
+counterbore (7.4 across) reaches 1 mm inside the body's wall as drawn (CK_RP 22.6, an arc about the staff whose form at the screw is estimated).
+Would settle it: a face-on frame of the cock's top or underside (the counterbore, the pins and the straight edge in one view), or the cock in place
+from above through a camera fitted on the train bridge's holes at their heights. Searched for one, none good enough (OPEN-QUESTIONS.md, "The cock screw's place on the cock"); REQUESTS.md 11 asks an owner. The lower jewel can't be read on 23:30: it lies under the bridge,
+the frame's homography doesn't decompose into a pinhole camera, and the keyhole's wall shows the view steep there. The third's upper bushing: 6:47 can't read it apart from the camera's error (C itself reads 0.8-2.7
+mm off there).
+
+*Withdrawn (15 October 2026): a fourth finding, that the Exploded view drives the barrel cap's screws (37023) into the barrel, was a misreading. They go
+from y -6.26 to -53.11 as the barrel goes from 0 to -50: 3.15 mm toward the dial side relative to it, out of the cap, as they should (the winding
+ratchet's screws, 42014, the same way). `exploded.py` was right to pass them.*
+
+Consistent with the sources, not faults: the detent can't come straight up past the upper train bridge, and on the video it is drawn out sideways
+from under it (10:51-11:06); the fusee can't come straight up past the bridge either (its wheel's teeth reach under it to the centre pinion), and on
+the video it comes out with the bridge still on (13:06-13:33; the bridge off at 13:36-13:48), so tilted. Both are in the check's `EXPECTED`, and the
+overhaul still shows them lifted straight.
+
+## The Wempe's parts against their works drawings (15 October 2026)
+
+A survey after the stud was found wrong (fixed, `480bb6f`): four read-only passes compared every part the Wempe's scripts build with its
+sheet, enlarged, and with Wempe 3955's photographs. These are their readings, not yet checked a second time; each says how sure it is.
+Fix each from its sheet, and record it in RESOLVED.md when fixed.
+
+**Status (15 October 2026, branch `claude/wempe-stud`):** every finding below was checked again on its sheet and fixed, with these
+exceptions, which stay open:
+- The discharge roller's outline: 05 04_1's dashes at the stone's end can't be read as square, and a square end there would reach the gold
+  spring's tip (its material is now brass, as on Wempe 3955).
+- The detent block's orientation: the sheet is first-angle, which would put the detent 1.3-3.3 under the plate, out of reach of the 1946
+  rollers (README, Unresolved); its base's step and the Ø 1.3 hole's face are fixed.
+- The fusee wheel's hub-edge slope; the stop bar's 3.2 travel and the drum's "0,8" (README, Unresolved; the slot's two depths were
+  settled on main's stop-work rework); the long motion-work stud's 0.4 short of the plate (2 px at 2:1); the top plate's bushes' oil cups
+  (no figure on the sheet: the photograph's stands).
+- Found on the way, not fixed: the maintaining detent's arbor measures about Ø 1.5 on three north-side photographs (the model's estimated
+  2.25), and the detent shows bright steel where the model draws it blued (its sheet: light blue at 310°); Wempe 3955's closing plate shows
+  two Ø 1 holes at r 11 where 05 01 00-2 draws one Ø 1.2 (README, Unresolved); the click wheel's teeth, met over the clicks' true 1.30,
+  hold their fatigue limit only at brass's strong end (margin 1.1-1.6, `wempe_strength.js`).
+- Added with the batch: the stud as drawn and the hairspring's outer curve the table's (`480bb6f`, `760e11f`), the dial's pin Ø 1.1, the
+  maintaining detent's wire spring (05 05 06-1) at hole 5, and `wempe-inertia.js` weighing one revision (the balance 2,561 g·mm²); TF 108 s
+  from the 6MX video at the model's own swing (199.4° at 12 h).
+
+**Balance and escapement (js/escapement.js)**
+1. Escape wheel's teeth (05 04_23, circles fitted at 82.7 px/mm): the gap's floor on Ø 11.7, the locking face running down to it (Ø 12.1 is the
+   top of the 0.2 step at the back's foot), the face leaning 25° from the radius (the sheet's "25°"), the tooth 14.9° from tip to foot. The
+   code: floor 12.1, step to 12.4, lean 15°, tooth 11.9°. Likely (05 04_1 scales 19-23°; its 15°/50° chain not decoded).
+2. Balance arm (05 03 01-1): the r 20 arcs centred outside the arm (a small circle 7.2 off the axis, 21.8 below it), so its flanks are concave,
+   meeting in a point 6.5 wide at the centre; 4 wide where the arcs start, 7.0 out, 3.2 at the rim. The code: straight 3.2, then a convex arc
+   to 6.17. Sure (Wempe 3955, 9_Wempe_3955_Hemmung.jpg, shows the concave flanks).
+3. Detent block (05 04 01-4): the base 6.5 deep only for the 6.5 next to its left end, 3 deep beyond (the code 6.5 over all 14.6); its Ø 1.3
+   hole drawn visible in the front view, so it opens on the face the code puts on the plate. Sure. The side view's visible M1 hole suggests
+   first-angle projection (the README's Unresolved item on which face lies on the plate): likely.
+4. Impulse stone's end (02 04 02): bevelled 45°, the face side 1.8 (to r 3.35), the back about 1.3 (r 2.85); the code's back corner 3.2. Sure.
+5. Escape wheel's collet as last revised (05 04_7.2): two stepped cylinders, Ø 2.8 × 1.6 then Ø 1.75 to 4.7, chamfered tops; the code a cone
+   Ø 2.6 to 1.5. Likely.
+6. Escape wheel's place (05 04_7.2): "2" from the arbor's shoulder, so the wheel's far face 2.4 from the top-plate end; the code 2.0. Likely.
+7. Hairspring collet (05 03 02-2): the slit stops 0.1 short of the bore (the code runs it in); both ends arcs about the bore, r about 4.55 (the
+   code straight). Sure. The bore at mid-length (4.55/4.55; the code 4.25/4.85): likely.
+8. Timing screws (05 03_2, poor copy): the slotted head inside the rim, the split weight outside; the photograph shows no head outside.
+   The code: a head outside the weight. Likely; the weight's size (sheet Ø 4.1 × 3.2, photograph about Ø 3 × 4) unsure.
+9. Compensation masses' screws: the head flush in the mass's outer face, nothing inside (photograph); the code a head 0.55 proud and a nut
+   inside. Likely.
+10. Discharge roller (05 04_1, photograph): square at the stone's end, a brass block on Wempe 3955; the code a steel stadium. Likely.
+
+**Going train and motion work (js/train.js, js/dial.js)**
+1. Hands (05 02 00-2 and the others): the blade's underside flush with the flange's, its top 0.3 under the flange's top; the code puts the
+   tops flush (dial.js, the blade at y1-0.5). Sure; the hands' heights would need restacking over the seconds post.
+2. Seconds setting at 35 and the bridge (05 08 04 section): the setting's walls the bridge's full 3.8, bore about Ø 3.7 open down to the jewel
+   1.7 in, a Ø 3.7 × 0.7 recess under it, no Ø 6.2 counterbore; hole 38's sink a cone (about Ø 5.7 at the face to the bush 0.7 in), the code a
+   cylinder Ø 6.2 × 0.7. Likely.
+3. Motion-work studs and the pipes' bores: about Ø 1.5 (05 02 02 scales 1.53, 05 02 04 1.56, Wempe 3955's stud ends 1.39-1.44 chamfered);
+   the code 1.3 and bores 1.32. Likely.
+4. Centre arbor's journal C: "Kegel 1:30" on 05 05 03 and 05 05 03-2; the code a cylinder. Likely.
+5. Riveting collar Ø 3.0 at C's root: widest at its top with an undercut under it; the code a cylinder chamfered on top. Likely, small.
+6. Smaller: the hour wheel's seat and the minute hand's square marked Kegel 1:70 (built straight); WN-302's dial-side sink a cup (the code a
+   90° cone); the studs' ends domed (05 02 01); the minute hand's flange rounded on top; a groove and crowned end on the cannon's shank; the
+   top plate's bushes' oil cups (05 08 01 scales Ø 2.9 × 0.7, the code Ø 4.0 × 1.2 from the photograph). Unsure.
+
+**Fusee, barrel and maintaining work (js/fusee.js)**
+1. Set-up ratchet (05 07_3): "12,5" a diameter: the teeth's backs arcs r 6.25 centred on the "6,4" circle; the code r 12.5. Sure.
+2. Click wheel (05 06_16): faces undercut 8°; the code's lean the other way. Code sure, sheet likely.
+3. Maintaining detent (05 05_12, _11): its tip's end 2.6 tall, leaning about 5° back toward the hole; the code 1.98, leaning out 7°. Likely.
+4. Maintaining ratchet (05 06_12): the plate inside the cup 1.3 −0.1 (the code 1.02; the clicks 0.28 higher); revision a's 0.3 × 45° on the
+   cup's outer top edge (the code the inner). Likely.
+5. Fusee wheel (05 06_7): the underside recess's mouth Ø 17 +0.2, chamfered 60° to Ø 14 about 1.1 deep; the code 14.6 to 14, 0.3. Sure.
+6. Cover plate's screw (05 06_2.2 C-D, 05 06_4 C-D): on the r 6 circle about 10° from the stop bar's length toward its stop-pin end, away from
+   the slot (the photograph agrees); the code 90° from the bar. Likely.
+7. Cover plate (05 06_8): "0,4 −0,1" is the bore's land under a 60° chamfer; no annular step (the code a 0.35 recess to r 4.7). Likely.
+8. Maintaining clicks (05 06_14): the nose 2 high, its face at 85° leaning back; the code 1.84, leaning out. Likely.
+9. Vorreiber (05 06_6): the 0.3 × 45° on the flange's hub-side face; the code on face a. Likely.
+10. Barrel arbor's hook (05 07_8): its top a ramp from flush to 0.5 over its 2 width, ending in a radial face at 15°; the code flat 0.5. Likely.
+11. Chain hooks (05 07_14): the top hook 5 from the first rivet to its crown, 3.5 wide, nose turned back (the code 3.95 × 2.8); the bottom
+    hook's barb 3.5 from the last rivet, its tip hooking back toward it (the code's points the other way). Likely.
+12. Maintaining spring (05 06_10): about 4 wide from the square end's hole on (the code 3.4). Minor.
+- Unsure: the stop-bar slot's depths 1.1 and 1.5 at its two ends (the code 1.45 flat); 05 06_4's 3.2 travel (the code 3.6); the drum's
+  "0,8 +0,05", an opening through its bottom at 9 o'clock (the code a 0.2 break on the outer edge).
+
+**Frame and case (js/frame.js, js/case.js)**
+1. Movement ring's radial pin (WN-202) and the bezel's notch: at 12 o'clock (05 08 00-3's plan, a dashed hole "1,6" across the ring;
+   Wempe 3955's dial side shows a fitting on the ring's cone at 12 and a notch in the case's rim above it); the code at 6. Sure for the place;
+   the diameters (the dial hole 1.1, the radial 1.6, the reverse of the code's) unsure.
+2. Top plate's pocket N-O (05 08_1b): its edges the common tangents of the opening's r 5 and the r 4 end at 51, 10 wide narrowing to 8
+   (photograph 13: 9.4 to 7.5); the code a constant 8. Sure.
+3. Fusee bush (05 08 01-2): the fits swapped: the spigot below the flange g6 (located in the plate's 8.0 +0.015, held by its screws), the
+   taper above it T6 (where the dust bush seats); the code the other way. Sure.
+4. Barrel bridge (05 08 05-1): the "5" is hole 48 from the short edge (the code 4.5, the photograph 4.9), the "7,7" hole 42's distance from
+   the chord (the code reads it along the chord: 8.29); a chord turned 1.33° fits 24, 7 and 7.7 to 0.001. Misreading sure, the chord unsure
+   (the photograph leans to the code's).
+5. Intermediate bridge (05 08 04): the bush's hole a 45° mouth (about Ø 5.7 to the bush 0.7 in), the setting's hole plain (1.7 the jewel's
+   depth); the code Ø 6.2 sinks at both. Likely (with the train's 2 above).
+6. Closing plate (05 01 00-2): the Ø 1.2 hole blind from the groove's floor, and a round about r 1 between the rim's underside and the boss;
+   the code through and sharp. Likely, minor.
+- Not examined (no sheets): case and locking brackets, the gimbal ring and its bracket, the box, lid, hinges, keeper, latch, transit lock, keys.
+
+## The Wempe as released in 3.00.00: an audit (16 October 2026)
+
+Five read-only passes on the release (`cf1c60c`): the page and the tools against the Hamilton's, the frame, train and dial against their
+sheets, the balance, escapement, fusee and case against theirs, and the movement and the box against photographs of real Wempes (3955,
+the wartime one at Greenwich, 5377, 6161). The chain and the fusee's pitch were checked a second time on their sheets. Fixed on branch
+`claude/wempe-audit`; each item says what became of it.
+
+**Status (16 October 2026, `claude/wempe-audit`):** 1, 2 fixed (`b9dc7f9`: the hooks 0.80, the pitch 1.2 and lands 0.87, the flange
+0.76/0.87/0.37; the chain no longer touches the fusee). 3, 4 and four of 5 settled from the figures, the model unchanged (README, Readings
+corrected: the block stays on hole 13, 14.03 is the blank's, the 7ʳ arc the wheel's tips, the tables the jig's pilot holes); 05 03_2's "39"
+open. 6 in but the rim's graduation (`7a4bd48`). 7 corrected (`0d4598e`, `f6323e8`). 8: one piano hinge, the lid stay, the knurled nuts,
+discs, bezel band and knob (`c3b0ab7`); the handles and the latch kept as their sheets draw them, the photographs' recorded under
+Unresolved. 9: the escape endstones and the cock's (`4e06f34`), holes 14-18 and the window, the pin holes through, hole 4's sink, the dial
+screws' holes, the engraving and RGG (`7a4bd48`), the lower cock's screw brass; the ring's screw holes through its cone left (solidGeo) and
+hole 40, absent on 3955, recorded. 10, 11: in progress on `claude/wempe-parity` (the page) and `claude/wempe-checks` (the tools); the
+smoke test, ci.py steps, isolate.py and the hook are done (`f6323e8`, `6cde307`).
+
+**Against the drawings**
+1. Chain's hooks (05 07 04): both side views draw each hook one solid bar the chain's full 0.82, from the 10 × 0.9 strip of the material
+   block; the code a middle layer 0.26. Sure.
+2. Fusee's pitch (05 06 04-2, the issue built): "1,2 ±0,01" inked from the flange's last rib to the far face of the first groove rib, a
+   pitch; the code 1.15 (02-1's pencil) with lands 0.82, the chain's own nominal width. "0,87 +0,01" is across the flange's slot, not a
+   land. Likely (the 1,2 could be the first turn's alone).
+3. 05 04_1's "25,68 von Unruhmitte" and "23,8 v. Gangradmitte" (the 1941 detent block's screw) unused: they put it 1.2 from hole 13, where
+   the first-drawn block stands. Sure of the reading.
+4. Balance staff 05 04 02's 14.03 −0.06 from the flange to the lower cone's apex; the code 12.83 (the README reads 14.03 a blank). Unsure.
+5. Unused readings: 05 03_2's "39" on an arc through the masses' outer edges (the model's Ø 37.7); the "7ʳ" dashed arc about hole 26 at the
+   top plate's tongue; the upper cock's hole table 4.59 against section A-B's 5.2 with a 0.5 step; hole 26's table 2.5 against P-Q's seat.
+6. Small features left out: the barrel bridge's steady-pin holes' 90° × 0.3 sinks, the upper cock's 0.2 × 90°, the dust bush's 5° × 0.5
+   chamfer, the rim's graduation (8 Körner in 60 Teilung).
+7. Stale text: README's period 0.491 s / 25 minutes a day (lines 170, 276, 540; it is 0.497 s, about 8 minutes); line 559 (the seconds
+   numerals and "Made in Germany"); hole 30's WN-302 (448 against 476); the seconds setting's floor (Estimated); the escape wheel's header
+   comment; keystone.js's "the face leans 15°" (it reports 25°); frame.js:70's "built with the hand-setting".
+
+**Against real Wempes**
+8. Box (Greenwich's, 5377, 6161, Lange 1947): a lid stay (three of four), one long hinge across the back (the code two short ones; the
+   README says the photographs show two), wooden handles (the code aluminium, the sheet's material blank), a hasp (a slotted plate on the
+   lid over a knob on the box; the code a hanging tongue), knurled brass nuts at the gimbal pivots (the code hex steel), knobs at the outer
+   pivots, a knurled band on the bezel, the key's shelf hollowed to the ring, the lid's glass held by a bead.
+9. Movement (3955): the escape wheel's endstones round settings with the stone showing, held by two screws' heads, the upper pair from the
+   outer face (the code a brass cap and a closed disc, the upper screws from inside); the cock's endstone showing its stone; the detent
+   block's steady-pin holes through the plate and sunk on its face (the code blind); hole 4's oil sink; the ring's screw holes through to
+   the cone and the dial screws' holes through the flange (the code blind); "Gerhard D. WEMPE Hamburg" on the top plate and "RGG" on the
+   balance arm; holes 14-18 and the square cut for the hand setting (on 3955 and Greenwich's, empty).
+
+**Against the Hamilton's page and tools**
+10. The page lacks: the Train, Fusee, Laid out and Balance views; Moving parts only; the rate (timing weights, temperature), the trial, the
+    rate book, the swing; the adjuster's bench and the escapement's plan; the walkthrough; the overhaul; Making it and the export to Blender;
+    the tick; winding by half turns, the load path and the let-down. Only With the key, Stop to set, Jolt and the holding device are
+    documented as left out.
+11. Tools the Hamilton has and the Wempe doesn't: holecheck, maintaining, mechanisms (and its Node tools), fea, estimates, invariants, book,
+    overhaul, views, gltf_check, blender_check. ci.py leaves out `audit.py box --model wempe`, `dialtrace.py` and `wempe_inertia.py`; the
+    Wempe's smoke test clicks none of 3.00.00's controls (and `checks.py` still says it has no Report); the report says ci.py runs all its
+    checks. `isolate.py` fails on Windows with many parts (the file name too long); the isolate-and-compare hook ignores `wempe/js/`.

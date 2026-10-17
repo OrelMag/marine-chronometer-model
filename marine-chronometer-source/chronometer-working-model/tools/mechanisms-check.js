@@ -28,8 +28,9 @@
     const p=pen(hit),on=D.filter((_,i)=>p[i]>p0[i]+0.001),C=[on.reduce((q,v)=>q+v[0],0)/on.length,on.reduce((q,v)=>q+v[1],0)/on.length],rC=Math.hypot(...C);
     let n,kind=undefined;if(rC>pr.ro-0.03){kind='tip corner on the pawl';let bi=0,bd=1e9;D.forEach(([x,z],i)=>{const e=Math.hypot(x-C[0],z-C[1]);if(e<bd){bd=e;bi=i;}});const a=D[(bi+D.length-3)%D.length],b=D[(bi+3)%D.length],t=[b[0]-a[0],b[1]-a[1]],l=Math.hypot(...t);
       n=[-t[1]/l,t[0]/l];if(!inPoly(W,C[0]+0.02*n[0],C[1]+0.02*n[1]))n=[-n[0],-n[1]];}
-    /* the face's own normal at C: the faces are radial (ratchetProf), so the tangent, away from the side the tooth stands on */
-    const ang=Math.atan2(C[1],C[0]),aT=ang+dir*hit,e=0.02*pr.p,u=[-Math.sin(ang),Math.cos(ang)],nF=pr.r(aT+e)>pr.r(aT-e)?[-u[0],-u[1]]:u;
+    /* the face's own normal at C: the faces are radial (ratchetProf), so the tangent, away from the side the tooth stands on; a face undercut by pr.uc (the setup
+       ratchet's) turns it in toward the centre by as much, its root behind its tip, so the load draws the pawl in */
+    const ang=Math.atan2(C[1],C[0]),aT=ang+dir*hit,e=0.02*pr.p,u=[-Math.sin(ang),Math.cos(ang)],nR=pr.r(aT+e)>pr.r(aT-e)?[-u[0],-u[1]]:u,uc=pr.uc||0,nF=[nR[0]*Math.cos(uc)-Math.cos(ang)*Math.sin(uc),nR[1]*Math.cos(uc)-Math.sin(ang)*Math.sin(uc)];
     if(kind===undefined){kind='on the face';n=nF;}
     const win=D.filter(([,,,a])=>Math.abs(((a-ang+3*Math.PI)%TAU)-Math.PI)<pr.p),depth=pr.ro-Math.min(...win.map(v=>v[2])),rF=pr.ro-depth/2;
     /* fit: the pawl's end cut to bear on the face over its depth in the teeth, as a fitted pawl does: the load at the face's middle there, along its normal */
@@ -44,7 +45,7 @@
       mass:r4(mass),I:r4(I),cg:P2(tr([[G.cx,G.cz]],Q,th)[0]),outline:W.filter((_,i)=>i%Math.max(1,Math.floor(W.length/90))===0).map(P2),teeth:teeth(pr,c.b),spring};};
   const out={pawls:[]};
   { const su=R.su,psi=su.base,Qr=toWheel(su.q,[0,0],psi),thR=su.seat-psi;   /* the click's pivot and turn in the setup ratchet's frame */
-    out.pawls.push(pawl('setup click',su.pr,42,su.pr.ro/(42/2+0.95),su.pr.ro-su.pr.ri,0.8,1.0,su.pts,Qr,thR,-1,{kind:'band',w:0.3,h:0.85,len:r4(1.273*7.05/1.039*174*Math.PI/180),note:'blued band on edge, half a turn round the ratchet at r 9 to the click\'s back'})); }
+    out.pawls.push(pawl('setup click',su.pr,42,su.pr.ro/(42/2+0.95),su.pr.ro-su.pr.ri,0.8,1.0,su.pts,Qr,thR,-1,{kind:'band',w:0.3,h:0.85,len:r4(1.273*7.05/1.039*174*Math.PI/180),note:'steel band on edge, half a turn round the ratchet at r 9 to the click\'s back'})); }
   for(let k=0;k<2;k++){const u=R.wp[k].userData,Q=toWheel(u.q,[0,0],R.WPH),th=seatPawl(u.pts,Q,u.th0-R.WPH,R.FPR);let len=0;for(let i=1;i<u.arc.length;i++)len+=Math.hypot(u.arc[i][0]-u.arc[i-1][0],u.arc[i][1]-u.arc[i-1][1]);
     const bk=pawlBack(u.pts,0.96,Q,th,[0,0]);out.pawls.push(pawl('winding pawl '+(k+1),R.FPR,36,R.FPR.ro/(36/2+0.95),R.FPR.ro-R.FPR.ri,0.5,0.5,u.pts,Q,th,1,{kind:'band',w:0.3,h:0.5,len:r4(len),bear:P2(bk.p),bearN:P2(bk.n),arm:0.96,note:'a long arc in its bed round the sustaining ratchet, its end on the pawl\'s arm'}));}
   { const sp=R.spawl,pts=sp.userData.pts,SPv=[sp.position.x,sp.position.z],Fu=[R.ssg.position.x,R.ssg.position.z],q=[SPv[0]-Fu[0],SPv[1]-Fu[1]],psi=((R.holdBack(0)%R.SRP.p)+R.SRP.p)%R.SRP.p,

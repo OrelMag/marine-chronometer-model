@@ -92,7 +92,7 @@ automated checks on GitHub. See [8.1](#81-continuous-integration).
 
 ## At a glance
 
-The fifteen ideas with the best return, roughly in order. Status as of 4 October 2026: all done but #15 (`claude/physics` merged in `b1293e9`).
+The fifteen ideas with the best return, roughly in order. Status as of 15 October 2026: all done (#15 last, `claude/overhaul`).
 
 | # | Idea | Area | Effort | Why | Status |
 |---|---|---|---|---|---|
@@ -110,7 +110,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 4 October
 | 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard | Done `c2af700` |
 | 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash | Done: hash `cf07772`; remembered settings `8a84df5` |
 | 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do | Done (`claude/physics`) |
-| 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) | Open |
+| 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) | Done: the oiling chart (maker.js, Oil); the overhaul, both sequences, checked (`claude/overhaul`, 15 October 2026) |
 
 ---
 
@@ -472,6 +472,8 @@ A results table beside them shows lock, let-off, overall, drop, roller shake and
 **Watch out.** The daily noise model is **illustrative**. Keep it modest, so that a well-adjusted balance passes comfortably, as the manual says these instruments did.
 
 ### 3.5 Overhaul walkthrough and oiling chart
+> **Done** (15 October 2026, `claude/overhaul`). The oiling chart was done before (Making it, Oil: every oiled part coloured by its oil; the essay's "Oil, and where it goes"). The overhaul: the Overhaul card's **Take it down** (Sec. V, Ops. 1-58) and **Put it back** (Sec. VIII, Ops. 1-105), each operation with the manual's text, its tools by Sec. XIII's numbers, figures, oil and the parts it moves by their parts-list lines, the parts lifting off along the arbors to the Exploded view's places (`js/overhaul.js`; `#ovh=d12`); the build book's "Putting it together" chapter prints the reassembly; `tools/overhaul.py` checks every operation clears and found three readings still open in the model (Review-results.md, "The overhaul's order against the model"). Not done: the detent drawn out sideways and the fusee tilted out as the video shows them (the overhaul lifts them, listed as expected in the check), and the tools themselves drawn.
+
 **Overhaul.** A second walkthrough that follows the manual's own sequences to take the movement down (Sec. V, Disassembly) and put it back together (Sec. VIII, Reassembly):
 - Each step names the operation number, the part (with its Hamilton number) and the tool (the manual numbers its tools, e.g. "Tool No. 96").
 - Each step animates the part lifting away along its arbor.
@@ -867,10 +869,10 @@ A suggested order, so that each stage makes the next easier.
 - Adjuster's bench (3.3). *Done: `630aa0f`.*
 - Provenance overlay (3.6). *Done: `d42027c`, `ce76d8a`.*
 
-**Stage 3: depth (open-ended)**. *Mostly done (4 October 2026); open: 3.5 and the rendering.*
+**Stage 3: depth (open-ended)**. *Mostly done (15 October 2026); open: the rendering.*
 - Temperature and the two balances (2.3), isochronism (2.4), then the 30-day test (3.4). *Done (`b1293e9`).*
 - The fusee comparison (2.2). Gimbals with inertia (2.5). *Done (`b1293e9`).*
-- Overhaul walkthrough and oiling chart (3.5). *Open.*
+- Overhaul walkthrough and oiling chart (3.5). *Done (15 October 2026).*
 - Fidelity: re-fit (1.1), outlines (1.3), cycloidal teeth (1.8), chain links (1.9). *Done; 1.12's follow-ups open.*
 - Rendering: jewels and crystal (4.1), baked AO (4.2). Then decide on the three.js upgrade (4.3). *Open.*
 

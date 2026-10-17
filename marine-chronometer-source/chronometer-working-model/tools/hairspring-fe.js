@@ -6,10 +6,13 @@
 // shooting's is not, so the two agree only as far as the physics does. Needs only Node.js:
 //   node hairspring-fe.js     (about 20 s, hairspring.js's design included; exits with 1 if the couple, the force on the pivots or the rate they give part from
 //                             the elastica's by more than a test's tolerance: a few in 10⁵ of the couple, the rate to 0.01 s a day)
-const {HSPR}=require('../../shared/hairspring.js'),H=require('./hairspring.js');
-const D=Math.PI/180,f=(x,n=3)=>(+x).toFixed(n),rows=[];let fail=0;
+// The solver is fe(H, t, o) below, for any spring: H as hairspring.js exports it ({P: {pts, L}, big, R, rates}), t the strip's thickness (mm); o.name names it,
+// o.step and o.max the turn's steps and reach (deg), o.tolRate the rate's tolerance. tools/wempe_hairspring.js runs it on the Wempe's drawn spring.
+const {HSPR}=require('../../shared/hairspring.js');
+const D=Math.PI/180,f=(x,n=3)=>(+x).toFixed(n);
+function fe(H,t,o={}){const rows=[];let fail=0;const STEP=o.step||2.5,MAX=o.max||300,TOLR=o.tolRate||0.01,NAME=o.name||'the designed spring',AMP=o.amps||[247.5,255,270],COIL=o.coil||'r 3-5',BAND=o.band||"the manual's band";
 const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);};
-const t=0.221,EI=1,EA=12/(t*t);   /* EI taken 1, as HSPR.large; EA / EI = 12 / t² for a rectangular strip (mm⁻²) */
+const EI=1,EA=12/(t*t);   /* EI taken 1, as HSPR.large; EA / EI = 12 / t² for a rectangular strip (mm⁻²) */
 
 /* the nodes: every other point of the designed path (about 0.3 mm apart) */
 const P=H.P.pts.filter((_,i,a)=>i%2===0||i===a.length-1).map(p=>[p[0],p[1]]),N=P.length,L0=[],B0=[];
@@ -47,20 +50,24 @@ function equilibrium(th){const c=Math.cos(th),s=Math.sin(th);U[0]=[c*P[0][0]-s*P
     for(let i=1;i<N-1;i++)for(let p=0;p<3;p++)U[i][p]+=du[i-1][p];}
   return{R:null,it,res};}
 /* the couple that holds the collet's end at θ, about the staff, and the force on it: the reaction at node 0 */
-const out=[];for(const sg of[1,-1]){U=P.map(p=>[p[0],p[1],0]);thNow=0;for(let a=0;a<=300;a+=2.5){const th=sg*a*D,q=stepTo(th);if(!q.R){chk(false,`no equilibrium at ${sg*a}° (residual ${q.res.toExponential(1)})`);break;}
+const out=[];for(const sg of[1,-1]){U=P.map(p=>[p[0],p[1],0]);thNow=0;for(let a=0;a<=MAX;a+=STEP){const th=sg*a*D,q=stepTo(th);if(!q.R){chk(false,`no equilibrium at ${sg*a}° (residual ${q.res.toExponential(1)})`);break;}
     const[fx,fy,m]=q.R[0],[x0,y0]=U[0];if(a%5===0&&!(sg<0&&a===0))out.push({th,T:m+x0*fy-y0*fx,F:Math.hypot(fx,fy),it:q.it});}}
 out.sort((a,b)=>a.th-b.th);if(fail){console.log(rows.join('\n'));process.exit(1);}
 const sh=H.big,at=(A,a)=>A.find(q=>Math.abs(q.th-a*D)<1e-9),k0=1/Ltot;
-say(`the designed spring (${H.P.L.toFixed(1)} mm) as ${N-1} co-rotational beam elements (${(Ltot/(N-1)).toFixed(2)} mm each), the strip ${t} mm thick (EA/EI ${EA.toFixed(0)} mm⁻²); Newton took ${Math.max(...out.map(q=>q.it))} iterations at most a step`);
+say(`${NAME} (${H.P.L.toFixed(1)} mm) as ${N-1} co-rotational beam elements (${(Ltot/(N-1)).toFixed(2)} mm each), the strip ${t} mm thick (EA/EI ${EA.toFixed(0)} mm⁻²); Newton took ${Math.max(...out.map(q=>q.it))} iterations at most a step`);
 const own=(A,a)=>at(A,a).T/a/(at(A,5).T/5),dT=Math.max(...[90,180,270,-270].map(a=>Math.abs(own(out,a)/own(sh,a)-1))),off=at(out,90).T/at(sh,90).T-1;   /* each against its own stiffness at 5°: the curve's shape */
 say(`the couple over θ EI / L, the elements: ${[90,180,270,-270].map(a=>`${a}° ${f(at(out,a).T/(a*D*k0),6)}`).join(', ')}; the elastica: ${[90,180,270,-270].map(a=>`${f(at(sh,a).T/(a*D*k0),6)}`).join(', ')}`);
-chk(dT<2e-5,`the couple's departure from linear, each against its own stiffness at 5°: the two agree to ${dT.toExponential(1)}; their stiffnesses differ by ${off.toExponential(1)}, the chords' ${f(Ltot,1)} mm against the curve's ${f(H.P.L,1)} (0.3 mm chords on a coil of r 3-5)`);
+chk(dT<2e-5,`the couple's departure from linear, each against its own stiffness at 5°: the two agree to ${dT.toExponential(1)}; their stiffnesses differ by ${off.toExponential(1)}, the chords' ${f(Ltot,1)} mm against the curve's ${f(H.P.L,1)} (0.3 mm chords on a coil of ${COIL})`);
 const fr=a=>at(out,a).F*H.R/Math.abs(at(out,a).T),fs=a=>at(sh,a).F*H.R/Math.abs(at(sh,a).T);
 say(`the force on the pivots, × R / couple, the elements: ${[90,180,270].map(a=>`${a}° ${fr(a).toExponential(1)}`).join(', ')}; the elastica: ${[90,180,270].map(a=>fs(a).toExponential(1)).join(', ')}`);
-chk(Math.abs(fr(270)-fs(270))<1e-3&&fr(270)<5e-3,`at 270° the spring leaves ${fr(270).toExponential(1)} of couple / R on the pivots (the elastica ${fs(270).toExponential(1)}): its pull on the balance is all but a pure couple, as Phillips' curves mean it to be`);
-const th=out.map(q=>q.th),Ts=out.map(q=>q.T),rate=a=>86400*(1/HSPR.period(th,Ts,a*D).ratio-1),r=[247.5,255,270].map(rate),rs=[H.rates.r1,H.rates.r0,H.rates.r2],dr=Math.max(...r.map((x,i)=>Math.abs(x-rs[i])));
-chk(dr<0.01,`the rate against small swings: 247.5° ${f(r[0])}, 255° ${f(r[1])}, 270° ${f(r[2])} s a day (the elastica ${rs.map(x=>f(x)).join(', ')}): the spring's own isochronism, ${f(r[2]-r[0],2)} s a day over the manual's band, agrees to ${dr.toExponential(1)}`);
+if(o.drawn)chk(Math.abs(fr(270)-fs(270))<Math.max(1e-3,0.01*fs(270)),`at 270° the spring leaves ${fr(270).toExponential(1)} of couple / R on the pivots (the elastica ${fs(270).toExponential(1)}): the two agree on the force the drawn curves leave`);
+else chk(Math.abs(fr(270)-fs(270))<1e-3&&fr(270)<5e-3,`at 270° the spring leaves ${fr(270).toExponential(1)} of couple / R on the pivots (the elastica ${fs(270).toExponential(1)}): its pull on the balance is all but a pure couple, as Phillips' curves mean it to be`);
+const th=out.map(q=>q.th),Ts=out.map(q=>q.T),rate=a=>86400*(1/HSPR.period(th,Ts,a*D).ratio-1),r=AMP.map(rate),rs=[H.rates.r1,H.rates.r0,H.rates.r2],dr=Math.max(...r.map((x,i)=>Math.abs(x-rs[i])));
+chk(dr<TOLR,`the rate against small swings: ${AMP.map((a,i)=>`${a}° ${f(r[i])}`).join(', ')} s a day (the elastica ${rs.map(x=>f(x)).join(', ')}): the spring's own isochronism, ${f(r[2]-r[0],2)} s a day over ${BAND}, agrees to ${dr.toExponential(1)}`);
 say('what neither method holds: the strip\'s own mass (about a hundredth of the balance\'s inertia, which the timing takes up), its coils touching (they stand apart in the helix), and the elastic coefficient\'s change with temperature, which is measured');
 /* for the report (verification/build-verification): both methods' couples against linear and their forces on the pivots, each angle */
-module.exports={rows,fail,N,Ltot,L:H.P.L,curves:out.map(q=>{const s=at(sh,q.th/D);return{deg:Math.round(q.th/D),fe:q.T/(q.th*k0||1),el:s?s.T/(q.th*k0||1):null,feF:q.F*H.R/Math.abs(q.T||1),elF:s?s.F*H.R/Math.abs(s.T||1):null};}).filter(q=>q.deg!==0),rates:{fe:r,el:rs}};
-if(require.main===module){console.log(rows.join('\n'));process.exit(fail);}
+return{rows,fail,N,Ltot,L:H.P.L,out,curves:out.map(q=>{const s=at(sh,q.th/D);return{deg:Math.round(q.th/D),fe:q.T/(q.th*k0||1),el:s?s.T/(q.th*k0||1):null,feF:q.F*H.R/Math.abs(q.T||1),elF:s?s.F*H.R/Math.abs(s.T||1):null};}).filter(q=>q.deg!==0),rates:{fe:r,el:rs}};}
+/* the Model 21's designed spring (hairspring.js), the Elinvar strip's section 0.221 mm (hairspring.js): run when this file is run or its fields are read */
+let ham=null;const HAM=()=>ham||(ham=fe(require('./hairspring.js'),0.221));
+module.exports={fe};for(const k of['rows','fail','N','Ltot','L','curves','rates'])Object.defineProperty(module.exports,k,{enumerable:true,get:()=>HAM()[k]});
+if(require.main===module){const q=HAM();console.log(q.rows.join('\n'));process.exit(q.fail);}

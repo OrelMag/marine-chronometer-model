@@ -3,22 +3,27 @@ and read back here, with no Blender. About 2 minutes (most of it the headless br
 
     python gltf_check.py              # export, then check the file
     python gltf_check.py --file F     # check a .glb already written (no browser)
+    python gltf_check.py --model wempe   # the Wempe's export (wempe/js/blender.js) to r_wempe.glb, its clips and parts from wempe/checks.py (GLTF)
 
 Checks: the GLB's header and chunks; every accessor inside its buffer view and every view inside the buffer, with the counts its type needs; POSITION accessors'
 min and max; indices in range; normals of unit length; every node, mesh, material, texture and channel reference valid; the node tree a tree (each node one parent,
 the scene's roots none); node names unique; every animation's times rising, its rotations unit quaternions, its weights as many per key as the mesh has targets;
-the clips the page names all there, each with channels; the parts the movement is built of all named among the nodes. Exit code 1 on a failure."""
-import asyncio,base64,json,math,pathlib,struct,sys
+the clips the page names all there, each with channels; the parts the movement is built of all named among the nodes. Where the page has the STL export too (?qa's __stl:
+the Wempe's), the movement's STL and the model's chosen parts' (GLTF['stl']): the header's count against the file's length, unit normals, the size it spans (mm), and each
+solid closed (every edge, its ends welded at 1 µm, in an even number of triangles). Exit code 1 on a failure."""
+import asyncio,base64,browser,json,math,model,pathlib,struct,sys
 import numpy as np
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?qa'   # not ?snap: the page then idles while the export runs, instead of drawing every frame
+PAGE=(model.DIR/'index.html').as_uri()+'?qa'+('' if model.HAMILTON else '&start=movement')   # not ?snap: the page then idles while the export runs, instead of drawing every frame
 CT={5126:('f4',4),5125:('u4',4),5123:('u2',2),5121:('u1',1)};NC={'SCALAR':1,'VEC2':2,'VEC3':3,'VEC4':4}
 CLIPS=['Running','Beat (slow motion)','Run down','Winding','Setting the hands','Stop and start','Exploded','Laid out','Lift out','Lids','Latch','At sea',
        'Rig · beat','Rig · explode','Rig · laid out','Rig · lift','Rig · lids','Rig · latch']
+PARTS=['escW','fw','tw','cw','bal','det','spr','fs','gw','hands','motion','pillar','trainBridge','barrelBridge','cock','lockArm','dial']   # the parts' keys, each a node named "... (key)"
+G=model.cfg('GLTF',{});CLIPS=G.get('clips',CLIPS);PARTS=G.get('parts',PARTS);GLB=G.get('glb','r_model21.glb')
 async def export(out):
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         pg.on("console",lambda m:errs.append(m.text) if m.type in('error','warning') and 'GPU stall' not in m.text and 'swiftshader' not in m.text.lower() else None)
@@ -26,10 +31,28 @@ async def export(out):
         async with pg.expect_download(timeout=1800000) as d:st=await pg.evaluate("__glb()")
         await (await d.value).save_as(out)
         print('exported',out.name,'%.1f MB'%(out.stat().st_size/1048576),st)
+        if await pg.evaluate("typeof __stl==='function'"):
+            for k in[None]+G.get('stl',[]):
+                s64=await pg.evaluate('__stl(%s)'%('' if k is None else json.dumps(k)));STL.append((k or 'movement',base64.b64decode(s64) if s64 else b''))
         await b.close()
     return errs
+STL=[]   # (name, bytes): the STLs the page gave
+def stl_check(name,B,fail):
+    """a binary STL: its count against its length, unit normals, the span (mm), and closed: every edge (its ends welded at 1 µm) in an even number of triangles"""
+    if len(B)<84:fail('STL %s: empty'%name);return
+    n=struct.unpack_from('<I',B,80)[0]
+    if len(B)!=84+50*n:fail('STL %s: %d triangles in the header, %d bytes'%(name,n,len(B)));return
+    T=np.frombuffer(B,dtype=np.dtype([('n','<f4',3),('v','<f4',(3,3)),('a','<u2')]),count=n,offset=84);V=T['v'].astype(np.float64)
+    ln=np.linalg.norm(T['n'],axis=1);deg=np.linalg.norm(np.cross(V[:,1]-V[:,0],V[:,2]-V[:,0]),axis=1)<1e-10
+    if (np.abs(ln[~deg]-1)>1e-3).any():fail('STL %s: normals not unit'%name)
+    K=np.round(V.reshape(-1,3)*1000).astype(np.int64);_,ids=np.unique(K,axis=0,return_inverse=True);ids=ids.reshape(-1,3)
+    E=np.sort(np.concatenate([ids[:,[0,1]],ids[:,[1,2]],ids[:,[2,0]]]),axis=1);E=E[E[:,0]!=E[:,1]];_,cnt=np.unique(E,axis=0,return_counts=True);odd=int((cnt%2).sum())
+    if odd:fail('STL %s: %d edges in an odd number of triangles (open)'%(name,odd))
+    lo,hi=V.reshape(-1,3).min(0),V.reshape(-1,3).max(0)
+    print('  STL %-12s %8d triangles, %6.1f x %6.1f x %6.1f mm, %d open edges'%(name,n,*(hi-lo),odd))
 def check(path):
     bad=[];B=path.read_bytes();fail=lambda m:bad.append(m)
+    for nm,b in STL:stl_check(nm,b,fail)
     mg,ver,ln=struct.unpack_from('<III',B,0)
     if mg!=0x46546C67 or ver!=2 or ln!=len(B):fail('header: magic %x version %d length %d of %d'%(mg,ver,ln,len(B)))
     jl,jt=struct.unpack_from('<II',B,12);J=json.loads(B[20:20+jl]);o=20+jl;bl,bt=struct.unpack_from('<II',B,o);BIN=B[o+8:o+8+bl]
@@ -93,14 +116,14 @@ def check(path):
                 k=len(M[N[node]['mesh']]['primitives'][0].get('targets',[]))
                 if v.size!=len(t)*k:fail('%s: weights %d for %d keys of %d targets'%(a['name'],v.size,len(t),k))
             elif len(v)!=len(t):fail('%s: %d values for %d times'%(a['name'],len(v),len(t)))
-    for k in['escW','fw','tw','cw','bal','det','spr','fs','gw','hands','motion','pillar','trainBridge','barrelBridge','cock','lockArm','dial']:
+    for k in PARTS:
         if not any(n.get('name','').endswith('(%s)'%k) for n in N):fail('no node for the part '+k)
     nch=sum(len(a['channels']) for a in J.get('animations',[]))
     print('%s: %.1f MB, %d nodes, %d meshes, %d triangles, %d materials, %d textures, %d animations (%d channels), extensions %s'%(path.name,len(B)/1048576,len(N),len(M),tris,len(J['materials']),len(J.get('textures',[])),len(have),nch,J.get('extensionsUsed',[])))
     for a in J.get('animations',[]):print('  %-20s %5d channels'%(a['name'],len(a['channels'])))
     return bad
 def main():
-    a=sys.argv[1:];out=pathlib.Path('r_model21.glb');errs=[]
+    a=sys.argv[1:];out=pathlib.Path(GLB);errs=[]
     if '--file' in a:out=pathlib.Path(a[a.index('--file')+1])
     else:errs=asyncio.run(export(out))
     bad=check(out)+['page: '+e for e in errs]

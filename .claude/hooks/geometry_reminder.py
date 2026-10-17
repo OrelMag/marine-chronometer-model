@@ -1,11 +1,12 @@
 """PostToolUse hook (Edit|Write|MultiEdit|Bash|PowerShell): after a change to the model's geometry, remind Claude to isolate the
 changed part and compare it with its reference (a real Model 21's photograph or video frame, or the manual's figure) before
-going on. Geometry files: the model's js/movement.js, core.js, box.js and shared/escapement.js, escplan.js, changed by an edit
+going on. Geometry files: the model's js/movement.js, core.js, box.js, the Wempe's js/movement.js, frame.js, train.js, escapement.js,
+fusee.js, case.js, dial.js and shared/escapement.js, escplan.js, kit.js, changed by an edit
 or by a shell command that writes them (writes() below). It also records, per session, when geometry last
 changed and when tools/isolate.py last ran, for the Stop gate (geometry_gate.py). Reads the hook's JSON on stdin."""
 import json, os, re, sys, tempfile, time
-GEO = r'(chronometer-working-model/js/(movement|core|box)|shared/(escapement|escplan))\.js'
-NAME = r'\b(movement|core|box|escapement|escplan)\.js\b'
+GEO = r'(chronometer-working-model/js/(movement|core|box)|wempe/js/(movement|frame|train|escapement|fusee|case|dial)|shared/(escapement|escplan|kit))\.js'
+NAME = r'\b(movement|core|box|escapement|escplan|frame|train|fusee|case|dial|kit)\.js\b'
 # A shell command writes a geometry file only where the file is the write's target: a redirect into it; a writing command
 # (sed -i, tee, Set-Content, cp...) naming it later in the same pipeline stage; or inline code that writes a file and holds its
 # path in the call or in a bare path string (p='js/movement.js'). A name in prose (a commit message) or in a read is no write.
@@ -43,7 +44,7 @@ if not hit:
 st = load(sid); st['edit'] = time.time(); st['file'] = hit; save(sid, st)
 msg = ("Geometry may have changed in " + hit + ". Before going on, isolate the part you changed and compare it with its reference: "
        "render it alone with tools/isolate.py PART [--look yaw pitch dist x y z] [--ref IMAGE] (several views; the part's partName is in part('...') "
-       "in movement.js), put it beside a real Model 21 (References/ photographs, a video frame from References/VIDEOS.md via tools/video.py frame, "
+       "in movement.js; the Wempe's: --model wempe, and its sheets in References/wempe/drawings), put it beside a real Model 21 (References/ photographs, a video frame from References/VIDEOS.md via tools/video.py frame, "
        "or the manual's figure), and say what matches, what differs and how sure each reading is. Where they disagree the model is wrong "
        "(CLAUDE.md, Source of truth). Every line you drew must be measured on such a source, not drawn by eye or for clearance: "
        "trace its edges and side profile as points on the image (sheet the video for a side-on frame), never a stock form in their place, "

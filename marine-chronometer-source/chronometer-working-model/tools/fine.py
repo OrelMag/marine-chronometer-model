@@ -15,15 +15,15 @@ brass disc the voxels test) is checked exactly: the least height over it of any 
 encloses, and barrel-clearance.js then measures, at each wind state, how close every other part comes to the solid the whole barrel sweeps as
 it turns (wall, caps, cap screws, hook), and where the mainspring lies inside it. A part closer than BARREL_MIN, not listed in BARREL, fails too. The train positions are whole teeth apart: the escape wheel only
 ever rests on a whole tooth plus the escapement's progress, and a fractional offset would put it out of step with the balance."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
 PH=[0.0,0.232,0.234,0.235,0.238,0.242,0.2425,0.243,0.2435,0.244,0.2445,0.246,0.25,0.255,0.26,0.2632,0.2636,0.264,0.28,0.4,0.5,0.6,0.74,0.758,0.764,0.77,0.9]   # unlocking 0.232-0.244 (the locked tooth recoiling 0.233-0.236), impulse 0.237-0.263, the detent falling back 0.242-0.246 (home 0.2441, its hops to 0.2459), the tooth's run on to the stone 0.2630-0.2639, the balance at its far turn (the hairspring opened) 0.5, passing 0.756-0.773
 WIND=[(2.5,False),(8.7,False),(0.05,False),(4,True),(1,False),(6,True),(8.7,True),(0.3,False),(3.3,False),(5.5,False),(7.1,True),(2,False),(0,False),(0,True),(0.02,True)]   # fusee turns from full wind, winding
-STATES=[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,(n,w) in enumerate(WIND,1)]
+STATES=model.cfg('STATES',[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,(n,w) in enumerate(WIND,1)])
 # (part:geometry, part:geometry) sorted: (reason, largest volume mm3, largest depth along y mm) seen when recorded
-EXPECTED={
+EXPECTED=model.cfg('EXPECTED',{
  ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot, and the shanks of the clamp, detent-adjusting and lock-adjusting screws in the foot and support block (horizontal screws in vertically extruded pieces, which can't be holed across)",1.15,0.95),
  ('det:Buffer','det:Extrude'):("the trip spring's screw through the hole in the spring's foot into the angle bracket's upright leg (Figs. 14, 54), and the bracket's screw along its leg into the cross-piece (horizontal screws in vertically extruded pieces, which can't be holed across)",0.02,0.2),
  ('chain:Cylinder','fusee:Lathe'):("the chain's pin in the fusee's large end",0.12,0.45),
@@ -36,12 +36,13 @@ EXPECTED={
  ('bal:Buffer','spr:Buffer'):("the hairspring's inner end held in the collet's clamp (its straight lead along the collet's end face, HS_LEAD, under the clamp's jaw)",0.005,0.3),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('barrel:Buffer(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end (the core r 4.84 and 15 tall, 1,057 mm3, since 12 October 2026: the videos' core; 142 on r 1.74)",1200,16.5),
+ ('barrel:Buffer(drum)','ratchet:Lathe'):("the barrel arbor's two bearings (r 2.35) and its pivots, on the barrel's axis through the barrel's end holes (Fig. 75; since 15 October 2026, a plain r 1.4 rod before)",300,16.5),
  ('barrel:Buffer(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75); the wall is tested as the drum it encloses, so the nose counts as inside it; since 5 October 2026 to the middle of the measured 1.95 wall",0.25,0.6),
  ('barrel:Buffer(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
  ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
- ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor, under the end plate (their own group, which the Exploded view takes off the arbor's end)",0.25,0.45),
-}
+ ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor's shoulder under the end plate, its hole not drawn (their own group, which the Exploded view takes off the arbor's end; the shoulder r 2.2 since 15 October 2026, r 1 and 0.25 mm3 before)",0.6,0.45),
+})
 CORE=4.84   # mm: the barrel arbor's core (MSPRING.ra - 0.06, movement.js; 1.74 until 12 October 2026)
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
 DIAL_MIN=0.02   # mm: least height of any part over the dial's printed face (it lies 0.02 over the brass disc, which the voxels test)
@@ -54,6 +55,7 @@ DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{if(o.
    for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);if(v.y<fy-0.05||v.y>fy+3||Math.hypot(v.x,v.z)>R||holes.some(([x,z,h])=>Math.hypot(v.x-x,v.z-z)<h))continue;
      const d=v.y-fy;if(!best||d<best.d)best={d:+d.toFixed(3),part:pn(o),type:o.geometry.type.replace('Geometry',''),at:[v.x,v.y,v.z].map(q=>+q.toFixed(2))};}});
  return JSON.stringify({face:+fy.toFixed(3),best});})()'''
+DIALJS=model.cfg('DIALJS',DIALJS)   # another model's dial check (its checks.py), where its face's holes aren't the Hamilton's L
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
  'chain':('chain wound on the drum: its links should touch the wall, not enter it',0,0.1)}   # part: (reason, least, most) clearance allowed; None = any
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
@@ -62,7 +64,7 @@ FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.use
 async def main():
     states=STATES+([(i/100,0,2.5,False) for i in range(101)] if '--dense' in sys.argv else [])
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});pg.on("pageerror",lambda e:print("ERR",e))
         await pg.goto(PAGE);await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
@@ -78,7 +80,7 @@ async def main():
         # a physical wind, as a visitor does it: the page's own loop (update() put back), running 20 minutes short of run down, then Wind (the fusee turned back under
         # the key while the sustaining spring drives the train, until full, and let go: app.js windEnd), checked at moments along it (a check holds the page for some
         # seconds, which the loop takes as one capped frame, 0.05 s); the wind states above jump the fusee straight to a state instead (until 11 October 2026, only so)
-        if '--hold' not in sys.argv:
+        if '--hold' not in sys.argv and model.cfg('WIND_SEQ',True):   # the Hamilton's wind (another model's checks.py can leave it out)
             await pg.evaluate("document.querySelector('#views button[data-v=\"movement\"]').click()");await pg.wait_for_timeout(3000)   # out of its case, where the hairspring is seen and so rebuilt each frame (update()'s springOn): in the case it keeps the shape it had
             await pg.evaluate("(()=>{const u=window.__mv.userData;if(u._u){u.update=u._u;delete u._u;}const i=document.querySelector('#hrs');i.value=55.9;i.dispatchEvent(new Event('input'));document.querySelector('#speeds button[data-v=\"1\"]').click();})()")
             async def at(label,cond,ms):
@@ -97,14 +99,14 @@ async def main():
             await at('running again, a second on','true',1000)
             await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         bc=open(HERE/'barrel-clearance.js').read();near={};spring=None
-        for n,w in WIND:
+        for n,w in (WIND if model.cfg('BARREL',True) else []):   # the barrel's swept solid (barrel-clearance.js): the Hamilton's
             await pg.evaluate(FREEZE.format(ph=0.4,dE=0,n=n,w=str(w).lower(),hold=str('--hold' in sys.argv).lower()).replace('msOn:false','msOn:true'))
             r=json.loads(await pg.evaluate(bc))
             for o in r['parts']:
                 if o['part'] not in near or o['d']<near[o['part']]['d']:near[o['part']]={**o,'state':f"{n} turns{' winding' if w else ''}"}
             sp=r['spring']
             if sp:spring=sp if not spring else {**spring,'rMin':min(spring['rMin'],sp['rMin']),'rMax':max(spring['rMax'],sp['rMax']),'yTop':min(spring['yTop'],sp['yTop']),'yBottom':max(spring['yBottom'],sp['yBottom'])}
-        dial=json.loads(await pg.evaluate(DIALJS))
+        dial=json.loads(await pg.evaluate(DIALJS)) if model.cfg('DIAL',True) else {'face':None,'best':None}   # the dial's printed face: the Hamilton's
         await b.close()
     bad=0
     for k,o in sorted(seen.items(),key=lambda kv:-kv[1]['vol']):

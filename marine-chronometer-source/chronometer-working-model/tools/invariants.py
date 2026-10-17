@@ -11,11 +11,19 @@
   changing the rate by the manual's 40 s and 2.8 s a day (p. 70); Table IV (p. 74) rebuilt from its fitted seven-to-n figures; a pair of screws moved along the rim
   leaving the moment of inertia as it was.
 - Escapement: the running amplitude 255° and the escapement's rate 0 s a day at the model's settings exactly, and Airy's signs for the impulse jewel's angle and the depth of lock.
-The movement's update() is driven directly, as views.py does; the page's own loop is stopped first."""
-import asyncio,json,math,pathlib,sys
+The movement's update() is driven directly, as views.py does; the page's own loop is stopped first.
+
+    python invariants.py --model wempe     # the Wempe's (invariants-wempe.js; about 30 s)
+
+--model wempe (tools/model.py) checks the Wempe's arithmetic: every pair of wheels and pinions drawn in mesh turning in the ratio of their teeth through the movement's own
+update, their centres the sheets' (seven: the train's four, the motion work's two, the up-and-down work's); the hands' tips against the time (a beat each half second) and
+setting them; the up-and-down hand at the dial's printed 0 fully wound and its 56 after 8.75 fusee turns, turning with its wheel, and what it reads after 56 h of the train
+and at run down; the fusee's turn in 90/14 h, its working turns and the model's wind against the dial's 56 h; WESC.SET's balance and escape arbor against
+wempe_inertia.json, the period the drawn hairspring gives; 05 04_1's 10.00. --eval JS runs code after loading (a planted fault)."""
+import asyncio,browser,json,math,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model;PAGE=model.PAGE   # the model's page (tools/model.py: --model wempe checks the Wempe's, invariants-wempe.js)
 JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const u=(E,n,w)=>mv.userData._u({E,th:0,lift:0,psDef:0,n,winding:w,springOn:false,msOn:false});
@@ -83,8 +91,8 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   /* temperature (core.js MTE): the Model 21's curvature against the test card of No. 3390 (90 F -0.02, 72.5 +0.06, 55 0.00 s a day: 72.5 above the ends' mean by 0.07) */
   chk('temperature: Model 21 balance, 72.5 F above the mean of 55 and 90 F',-(MTE.uncut(55)+MTE.uncut(90))/2,0.07,0.002,'s/day');
   chk('temperature: split balance, 0 at 72.5 F',MTE.split(72.5),0,1e-12,'s/day');
-  /* the hairspring set against the escapement (HS, the adjuster's bench): -0.20 s a day per 10 deg all but cancels the escapement's loss at a smaller swing */
-  { const h=es({HS:-0.20}),a=h.ampAt(0.9);chk('hairspring at -0.20 (cancels the escapement’s): rate at 90% of the torque, nearly isochronous',h.rateAt(a,0.9),0,0.03,'s/day'); }
+  /* the hairspring set against the escapement (HS, the adjuster's bench): -0.16 s a day per 10 deg all but cancels the escapement's loss at a smaller swing (-0.20 until 14 October 2026, when Op. 78's preload lost its bend and the escapement lost less) */
+  { const h=es({HS:-0.16}),a=h.ampAt(0.9);chk('hairspring at -0.16 (cancels the escapement’s): rate at 90% of the torque, nearly isochronous',h.rateAt(a,0.9),0,0.03,'s/day'); }
   /* the 30-day performance test (Sec. IX) on the model as loaded: within every Bureau of Ships limit, its temperature figures the card of No. 3390's (0.08, 0.06, 0.02) */
   { const t=window.__test();chk('performance test: regulation (limit 1.55)',t.reg,0,0.2,'s/day');chk('performance test: 90 against 72.5 F (card 0.08, limit 0.75)',t.t1,0.07,0.015,'s/day');
     chk('performance test: 72.5 against 55 F (card 0.06, limit 0.75)',t.t2,0.07,0.015,'s/day');chk('performance test: 90 against 55 F (card 0.02, limit 1.20)',t.t3,0,0.03,'s/day');chk('performance test: isochronism (card 0.00, limit 0.50)',t.iso,0,0.05,'s'); }
@@ -95,13 +103,14 @@ JS=JS.replace('%MF%','{tup:%s,tdn:%s,fu:%s}'%(_tu.group(1),_tu.group(2),_fu))   
 JS=JS.replace('%PJ%',_re.search(r'const J=([\d.e-]+)',(HERE/'physics.js').read_text(encoding='utf-8')).group(1))   # the escape wheel's inertia as tools/physics.js takes it: the check holds the two together
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
-        await pg.goto(PAGE);await pg.wait_for_function("window.__mv&&window.__test",timeout=60000);await pg.wait_for_timeout(1000)
+        await pg.goto(PAGE);await pg.wait_for_function("window.__mv&&window.__test" if model.HAMILTON else "window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
-        out=await pg.evaluate(JS);await b.close()
+        if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1])
+        out=await pg.evaluate(JS) if model.HAMILTON else await pg.evaluate((HERE/'invariants-wempe.js').read_text(encoding='utf-8'),{'inertia':json.loads((HERE/'wempe_inertia.json').read_text(encoding='utf-8'))});await b.close()
     bad=[r for r in out if not r['ok']]
-    for r in out:print(f"{'ok' if r['ok'] else '!!':3s} {r['name']:58s} {r['got']:12.6g}  want {r['want']:g} ± {r['tol']:g} {r['unit']}")
+    for r in out:print(f"{'~~' if r.get('rep') else 'ok' if r['ok'] else '!!':3s} {r['name']:58s} {r['got']:12.6g}  want {r['want']:g} ± {r['tol']:g} {r['unit']}")
     for e in errs:print('page error:',e)
     print('ok' if not bad and not errs else f'{len(bad)} failures');sys.exit(1 if bad or errs else 0)
 asyncio.run(main())

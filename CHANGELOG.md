@@ -4,6 +4,204 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.04.02 · 2026-10-17
+- The Wempe's case: the spring under its closing plate, which turns it back over the winding hole when the key comes out, is now drawn (no drawing or photograph shows it, so it is estimated from the plate's own drawing).
+
+## 3.04.01 · 2026-10-17
+- Watch the Wempe's transmission run: its verification report now links to a viewer that plays the movement in slow motion, every part coloured by the load it carries.
+
+## 3.04.00 · 2026-10-17
+- The Wempe's whole transmission run in time: every moving part, from the mainspring and chain through the clicks, maintaining work and train to the hands, as one system (its verification report's new section 13).
+- Found: let go of the Wempe's key outright at the end of a stroke and the fusee strikes its click hard enough to dent its brass; eased back, it's harmless.
+
+## 3.03.00 · 2026-10-16
+- The Wempe's escapement as its layout sheet draws it: the impulse stone 28°10' before the line of centres (the sheet's 24° is the escape wheel's pitch), the release placed so each tooth lands on the stone's face
+- The Wempe's mainspring held by its arbor's hook the right way round; its maintaining detent, set-up click and centre wheel to their sheets' figures
+- The Wempe's winding key stands higher in its box, as on Greenwich's wartime Wempe, clear of the gimbals
+- About twenty of the Wempe's open questions settled from its drawings and photographs of real Wempes and their Soviet copies, the fusee chain's crossed run among them
+- For anyone making a Wempe: the least preload its detent needs, 0.49 g
+
+## 3.02.00 · 2026-10-16
+- The Wempe: download any part, or the whole movement, as STL (each part's card, and the new Download section)
+- The Wempe in Blender: the whole instrument with its motions (running, run down, winding in its case, exploded, at sea), and the rig that runs it
+- Blender rig: no longer slightly off its own animations when exported between round hours
+
+## 3.01.00 · 2026-10-16
+- The Wempe's fusee groove and chain hooks as their drawings give them: a 1.2 mm pitch with lands the chain runs in, and hooks the chain's full width
+- The Wempe's movement as Wempe No. 3955 shows it: its escape wheel's endstones and the cock's with their stones showing, the maker's engraving on the top plate and RGG on the balance arm, the plates' countersinks and oil sinks
+- The Wempe's box as the real ones: one long hinge, a slotted brass lid stay, and knurled brass gimbal nuts, bearing discs, bezel and transit-lock knob
+- The Wempe gets Moving parts only, the Train, Fusee and Balance views, the tick, the Swing, Rate and 35-day trial panels, the escapement in plan and a walkthrough
+- Winding the Wempe no longer stops it
+
+## 3.00.04 · 2026-10-16
+- The Wempe's pillar plate now has the window and holes for the optional hand-setting, as on Wempe 3955, with the bush in the setting pinion's hole
+- The Hamilton's mainspring now pulls with the torque its solved shape gives (0.96 N·m), not a straight strip's
+- Ship motion is drawn as seen on board on both pages: the box stays still and the case swings in its gimbals
+
+## 3.00.03 · 2026-10-16
+- The Wempe page opens as the Hamilton's does: the box shut, then the lid opening onto the dial, seen from the same angle
+- The Wempe's dial turns see-through with the plates (in the Escapement view)
+- The Wempe's balance keeps swinging at 60× and 3600× (shown slowed), no longer standing still
+- The Wempe's transit lock rebuilt from photographs: the lever at the box's rim, the knob on its hub standing clear above it
+- No more flicker on the Wempe box's handles and transit lock
+
+## 3.00.02 · 2026-10-16
+- The Wempe's report: the stop work's spring checked for strength, and a bench test for the stop work
+
+## 3.00.01 · 2026-10-16
+- The Wempe's fusee stop pin now has the length and domed end its overall section draws (1.6 mm under the plate), no longer an estimate
+
+## 3.00.00 · 2026-10-16
+- The Wempe Einheits-Chronometer is complete: every part from its works drawings, running, with its essay and its report
+- Set the Wempe's hands, keep Greenwich or local time, and watch its case ride the gimbals on a rolling ship
+- The Wempe's parts drawn closer still to their sheets, among them the spring that holds the fusee's maintaining detent
+- The Wempe's winding key stands in its holder in the box's corner, as real boxes keep it
+- Report a bug or inaccuracy from the Wempe's page, and a link preview of its own
+
+## 2.42.05 · 2026-10-16
+- The balance cock's screw now sits where the restoration videos show its hole, 2 mm nearer the bridge's middle, its steady pins with it
+
+## 2.42.04 · 2026-10-16
+- The Wempe: a choice of dial under Variants, Wempe of Hamburg (as No. 3955) or A. Lange & Söhne of Glashütte (as No. 5177), each traced from its photograph
+- The Wempe: the cork ring on the dust bush, which keeps dust from the winding hole out of the movement, and the raised seat round the hole inside the bowl that it meets
+- The Wempe: the winding square ends in the turned point its drawing gives
+- The Wempe's essay: the gimbals figure shows the box, ring and case again; the transport box had hidden them
+
+## 2.42.03 · 2026-10-15
+- The fusee's dust cap no longer hangs over the opening round the balance: its flange now ends at the barrel bridge's edge
+- The small hole at 3 o'clock in the barrel bridge is now the shallow slot in its underside that the real bridge has, for levering it off
+- The timing weights now turn 3 turns either way in the rate panel, enough for the 2 minutes a day the manual has them take out
+
+## 2.42.02 · 2026-10-15
+- The Wempe's box in mahogany, as Wempe No. 6161's, around its brass bowl
+
+## 2.42.01 · 2026-10-15
+- The Wempe's stop bar lies along its drawn line, so the fusee is fully wound where the stop holds it: 55.9 hours to run down, the groove's last tenth of a turn left empty
+- The stop bar's spring as thin as its bending allows
+
+## 2.42.00 · 2026-10-15
+- The Wempe's hairspring breathes as it swings: its coils open and close as the balance turns, as a real spring's do
+- The Wempe's padded outer box for carrying it, with a Transport box view: the wooden box shut inside, the outer lid open, as Wempe's arrangement drawing shows them
+
+## 2.41.03 · 2026-10-15
+- The Wempe's hands no longer show a broken line down their middle
+
+## 2.41.02 · 2026-10-15
+- The Wempe's stop work as drawn: the slot across the fusee's small end, the stop bar's spring and its pin
+- No more flicker on the fusee's end when its cover plate is hidden
+- The stop bar slides as the chain presses it in, and at full wind meets the stop pin with the side its drawing shows
+
+## 2.41.01 · 2026-10-15
+- The barrel bridge's cut round the balance is now one smooth circle, as measured on the restoration video (the step in it is gone)
+- The steady pins of the balance cock and barrel bridge, and the bridge screw beside them, placed as measured
+
+## 2.41.00 · 2026-10-15
+- The Wempe's escapement now moves as it really works: the escape wheel chases the impulse stone from rest and strikes it, the detent is flung off and rides the tooth home
+- A report on every check of the Wempe: does the model hold to its drawings, and would it keep time? Linked from its About and its essay
+- For a maker: how closely each part must be made, the bench tests, and 2,000 Wempes made to the drawings' tolerances
+
+## 2.40.00 · 2026-10-15
+- The Wempe as first drawn: under Variants, The drawings, the parts the later sheets replaced, as Wempe 3955 is made
+- The 1941 escapement: the escape wheel just under the top plate, the balance staff with its brass collar, the detent block with its long arm and brass cone
+- The 1941 barrel in three pieces with its lid on the dial side, the 1941 maintaining spring, and the 1940 winding key with its pear-shaped handle
+- Each part's card gives the figures the later revisions changed
+
+## 2.39.01 · 2026-10-15
+- The fusee's and barrel's bushings and arbors drawn as measured, so the barrel bridge comes off over them in the overhaul
+- The dust seal's ring and spring under it, standing on the barrel bridge, and the winding square's domed end
+- The sustaining ratchet rides the fusee wheel's hub, so the winding ratchet comes off the fusee
+- Holes the real plates have, surveyed from the restoration video, and every hole checked for what it holds
+
+## 2.39.00 · 2026-10-15
+- The Wempe's essay goes on: its helical hairspring and Phillips' curves, its bimetallic balance and how an adjuster set its masses, its gimbals
+- Try the Soviet trial yourself: move the Wempe's balance masses and watch 35 days of rates pass or fail
+- And what Wempe's drawings still leave open
+
+## 2.38.02 · 2026-10-15
+- The Wempe's winding in its case plays at its proper speed on slower devices
+
+## 2.38.01 · 2026-10-15
+- The Wempe is wound in its case as its instructions say: the bowl turned over in its gimbals, the key hole opened, the key put in
+
+## 2.38.00 · 2026-10-15
+- The Wempe's balance masses re-measured on their drawing and photographs: taller, so the balance is heavier and its period nearer the half second
+- The Wempe's detent finished from its sheets and a wartime Wempe's photographs: its horn and banking
+
+## 2.37.00 · 2026-10-15
+- The Wempe now has an Essay tab: the German standard chronometer told through its own works drawings
+- Read a 1940s drawing hole by hole, see the fusee's pull Wempe measured against the model's mainspring, and watch the escape wheel chase the impulse stone
+- The Wempe's balance damping now measured off a running Soviet copy on video
+
+## 2.36.01 · 2026-10-15
+- The Wempe's winding key as its drawings show it, and on the fusee's square while winding
+- The Wempe's Box view shows the dial through the lid's glass
+
+## 2.36.00 · 2026-10-15
+- The Wempe's escapement worked through in time, beat by beat: its balance now swings 208 to 219 degrees over the two days
+- The Wempe's case and gimbals weighed from its drawings and checked in a rough sea
+
+## 2.35.00 · 2026-10-15
+- The Wempe's mainspring is now drawn at the length that reproduces Wempe's own measured fusee pull
+- Its balance runs with the hairspring's drawn terminal curves, gaining or losing a little as its swing falls over the two days
+
+## 2.34.02 · 2026-10-15
+- The winding pawls and their springs as the restoration video shows them: steel springs, grey pawls, the holes beside the pawls, both springs' feet alike
+
+## 2.34.01 · 2026-10-15
+- The Hamilton's page links to the Wempe once, from the header's switch between the models (the second link beside the tabs is gone)
+
+## 2.34.00 · 2026-10-15
+- The Wempe's balance now swings as its fusee drives it: about 220 degrees, falling away when it runs down
+- A stopped Wempe needs a twist to start, as a detent chronometer does; its rate and swing show beside the time
+
+## 2.33.00 · 2026-10-15
+- A second model: the Wempe Einheits-Chronometer, the German standard marine chronometer of the 1940s, built from Wempe's own works drawings down to every screw
+- Open it from the Wempe model button beside Essay, or from either page's header
+- Its dial traced from a wartime Wempe's, its fusee pulling a chain or, under Variants, a steel band
+
+## 2.32.00 · 2026-10-15
+- Overhaul: the manual's 58 operations to take the movement down and 105 to put it back, each part coming off or going on in its turn, with its tools, oil and checks
+- Build book: Putting it together, the reassembly in the manual's order
+
+## 2.31.08 · 2026-10-15
+- The balance cock is drawn as a restored Model 21 shows it: the open space under its arm runs about 5 mm further before the solid body begins
+
+## 2.31.07 · 2026-10-15
+- The winding stop-bar on the fusee's top is now one piece of steel with only a small step on its underside, as on a real Model 21; the chain still pushes it out against the winding stop at full wind
+
+## 2.31.06 · 2026-10-15
+- The mounting ring's three screws now pass through its flange, where a restored Model 21 shows their ends from the dial side, and the dial's fourth foot sits where that movement's fourth foot hole is
+
+## 2.31.05 · 2026-10-14
+- A new check sweeps every design value no source settles over its whole range, with the bench's corrections applied, and finds the chronometer works across all of them (the build report's section 12)
+- The detent spring's ring test is mapped finely: any spring ringing at 120-222 Hz (0.072-0.110 mm thick) is safe, and the maker aims where it rings least
+
+## 2.31.04 · 2026-10-14
+- The report on real chronometers re-reads the recordings on the model as it is now: the sound of a real start follows its video within a few degrees, and a running Model 21 is heard swinging about 300-320°
+- Checked against another reading of the clicks (the detent landing on its stop instead of the escape tooth striking the impulse jewel), which the balance's return swing rules out
+
+## 2.31.03 · 2026-10-14
+- The mounting ring's three screws and the dial's four screws moved to where a restored Model 21 has them, measured on both sides of its plate
+
+## 2.31.02 · 2026-10-14
+- The report on real chronometers is updated: a real Model 21's start, heard through its clicks, shows its escape wheel reaching the impulse jewel sooner than the model's at a running swing, but the slow start is its balance losing less
+- The tools' start figures follow the train's measured inertia
+
+## 2.31.01 · 2026-10-14
+- The sustaining pawl's end is drawn filed to bear on its tooth's face, as a maker fits it, so the spring's load pulls it into the teeth
+- The escapement's timing uses the train's inertia weighed from the model's own parts (6.05 g·mm², was an estimate of 5.9)
+- The maker's notes explain why the build's mainspring is Nivaflex: no carbon-steel spring on the arbor its life asks for fits the barrel's turns
+
+## 2.31.00 · 2026-10-14
+- The maintaining spring is now the split ring of the period's chronometers, held closed while it runs: while you wind it keeps the balance swinging over a turn for about 8 minutes, as the manual's five to ten
+- The set-up ratchet sits on its arbor's square, its teeth undercut as measured on the restoration video
+- The hairspring's stud is where the restoration video measures it, the spring's upper curve designed to match
+- A new bench test for anyone making it: filming the balance's free run-down chooses the mainspring's thickness
+
+## 2.30.02 · 2026-10-14
+- The detent spring is set up as the manual's Op. 78 says in full: the 0.770 g test weight parts it about 0.005 in from its stop, so its preload is a little lighter (0.63 g at the locking jewel)
+- The balance's free swing dies away in 67 s (was 68), which keeps the running swing at 255°; the maker's sheets and the bench tests give the detent spring's limits from the same test (no thicker than 0.137 mm)
+
 ## 2.30.01 · 2026-10-13
 - The winding stop-bar on the fusee is now pushed in by the chain itself as it winds onto the top turn: its end reaches down into the links, and it moves only while they press on it.
 

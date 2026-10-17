@@ -4,6 +4,7 @@ About 3 minutes (most of it the import). Needs Blender 5.x: MC_BLENDER, else the
     python blender_check.py [GLB]       # default r_model21.glb in the current directory; renders r_blender_*.png there
     python blender_check.py [GLB] --looks   # and close-ups of the textures (the damascening, the engravings, the dial, the box) from the page and from
                                         # Blender (Cycles) by the same cameras: r_tex_NAME_page.png beside r_tex_NAME_blender.png (about 5 minutes more)
+    python blender_check.py --model wempe   # the Wempe's (r_wempe.glb, gltf_check.py --model wempe): its parts, controls and wind table from wempe/checks.py (BLENDER)
 
 Checks: every clip came in as an action; the parts are objects in their hierarchy, the jewels and crystal transmitting; the rig made its controls and drivers;
 at a series of moments the rig (the timeline at t) puts every part the Running clip moves (the balance, detent, escape wheel, train, hands, fusee) where that clip
@@ -11,7 +12,7 @@ has it at t, to 0.02 mm and 0.1 degree in the world; the explode, laid out, lift
 Winding clip's wind every 0.5 s (its hours, which the export writes with it) leaves the parts that follow the wind (fusee, barrel, chain, up-down indicator)
 within stated bounds of the clip: the rig has no fusee catch, up-down backlash or maintaining work, so those differ, and the rest goes by the clip alone.
 Exit code 1 on a failure."""
-import os,pathlib,subprocess,sys
+import json,os,pathlib,subprocess,sys
 try:
     import bpy
 except ImportError:
@@ -30,7 +31,8 @@ def page_looks():
          ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
     async def go():
         async with async_playwright() as p:
-            b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+            import browser   # here, not at the top: Blender runs this file too, without tools/ on its path
+            b=await p.chromium.launch(args=browser.ARGS)
             w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
             pg=await b.new_page(viewport={"width":W,"height":H},device_scale_factor=1,color_scheme='light')
             await pg.goto(page);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
@@ -46,10 +48,12 @@ if bpy is None:   # outside Blender: find it and run this file in it
     if not exe:
         for p in sorted(pathlib.Path(r'C:\Program Files\Blender Foundation').glob('Blender */blender.exe'),reverse=True):exe=str(p);break
     if not exe or not pathlib.Path(exe).exists():print('Blender not found (set MC_BLENDER): skipped');sys.exit(0)
-    pos=[x for x in sys.argv[1:] if not x.startswith('--')];looks='--looks' in sys.argv
-    glb=pathlib.Path(pos[0] if pos else 'r_model21.glb').resolve()
+    import model   # here: Blender runs this file too, without tools/ on its path; the model's tables go to it as JSON
+    CF=model.cfg('BLENDER',{});CF.setdefault('glb',model.cfg('GLTF',{}).get('glb','r_model21.glb'))
+    pos=[x for x in sys.argv[1:] if not x.startswith('--')];looks='--looks' in sys.argv and model.HAMILTON   # the close-ups are the Hamilton's
+    glb=pathlib.Path(pos[0] if pos else CF['glb']).resolve()
     if looks:page_looks()
-    r=subprocess.run([exe,'-b','--factory-startup','--python',str(pathlib.Path(__file__).resolve()),'--',str(glb),str(RIG),str(pathlib.Path.cwd())]+(['looks'] if looks else []),capture_output=True,text=True,encoding='utf-8',errors='replace')
+    r=subprocess.run([exe,'-b','--factory-startup','--python',str(pathlib.Path(__file__).resolve()),'--',str(glb),str(RIG),str(pathlib.Path.cwd()),json.dumps(CF)]+(['looks'] if looks else []),capture_output=True,text=True,encoding='utf-8',errors='replace')
     out=[l for l in r.stdout.splitlines() if l.startswith(('MC ','FAIL','Traceback','  File','Error'))or 'Error' in l]
     print('\n'.join(out));ok=any(l.startswith('MC passed') for l in out)
     if not ok:print(r.stderr[-3000:])
@@ -57,7 +61,8 @@ if bpy is None:   # outside Blender: find it and run this file in it
 # ---- inside Blender ----
 import math,json
 from mathutils import Matrix
-argv=sys.argv[sys.argv.index('--')+1:];GLB,RIGP,OUT=argv[0],argv[1],pathlib.Path(argv[2])
+argv=sys.argv[sys.argv.index('--')+1:];GLB,RIGP,OUT=argv[0],argv[1],pathlib.Path(argv[2]);CF=json.loads(argv[3]) if len(argv)>3 else {}
+PRE=CF.get('prefix','r_blender_')   # the renders' names
 bad=[];fail=lambda m:(bad.append(m),print('FAIL',m))
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=GLB)
@@ -68,7 +73,7 @@ clips=[c.to_dict() for c in root['clips']]
 print('MC imported: %d objects, %d actions, %d materials'%(len(bpy.data.objects),len(bpy.data.actions),len(bpy.data.materials)))
 for c in clips:
     if c['name'] not in bpy.data.actions:fail('clip %r not an action'%c['name'])
-for k in['escW','bal','det','fs','cw','hands','trainBridge']:
+for k in CF.get('parts',['escW','bal','det','fs','cw','hands','trainBridge']):
     if not any(o.name.endswith('(%s)'%k) for o in bpy.data.objects):fail('no object for part '+k)
 tm=[m for m in bpy.data.materials if m.node_tree and any(n.type=='BSDF_PRINCIPLED' and n.inputs['Transmission Weight'].default_value>0.5 for n in m.node_tree.nodes)]
 if not tm:fail('no transmitting material (the jewels, the crystal)')
@@ -92,8 +97,15 @@ def play(name):
         i=owner(s)
         if i:ad=i.animation_data_create();ad.action=a;ad.action_slot=s
     return a
-def pose(objs):
-    bpy.context.view_layer.update();return {o.name:o.matrix_world.copy() for o in objs}
+def pose(objs,rel=False):
+    """each object's world matrix; rel: in the movement's frame (the Wempe winds in its case turned over, which the rig doesn't do)"""
+    bpy.context.view_layer.update();m=next(o for o in bpy.data.objects if o.get('role')=='movement').matrix_world.inverted() if rel else Matrix();P={}
+    for o in objs:
+        q=m@o.matrix_world
+        if rel:q.translation=q.translation*0.001   # the movement's frame is in mm: in m, as diff() takes the world's
+        P[o.name]=q
+    return P
+REL=bool(CF.get('windRel'))
 def diff(A,B):
     w=(0,'',0)
     for k in A:
@@ -112,13 +124,14 @@ TS=[0.0,0.13,0.25,0.31,0.5,1.07,3.33,7.71,12.5,29.98]
 ref={}
 play('Running')
 for t in TS:sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));ref[t]=pose(moved)
-for c in['Rig · explode','Rig · laid out','Rig · lift','Rig · lids']:
+RIGS=CF.get('rigs',[('Rig · explode','explode'),('Rig · laid out','laid_out'),('Rig · lift','lift'),('Rig · lids','lids')])   # each control at 1 against its clip's end
+for c,_ in RIGS:
     a=play(c);sc.frame_set(int(a.frame_range[1]));ref[c]=pose(a and [owner(s) for s in a.slots if isinstance(owner(s),bpy.types.Object)])
 # the Winding clip's poses every 0.5 s, and the wind it had then (the export's hours), for the rig to be set to the same wind below
 win=next((c for c in clips if c['name']=='Winding'),None);refW={};HW=[]
 if win and 'hours' in win:
     aw=play('Winding');movW=[o for o in {owner(x) for x in aw.slots} if isinstance(o,bpy.types.Object)];HW=[tuple(x) for x in win['hours']][::2]
-    for t,h in HW:sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));refW[t]=pose(movW)
+    for t,h in HW:sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));refW[t]=pose(movW,REL)
 clear()
 ns={'__name__':'__main__','__file__':RIGP};exec(compile(open(RIGP,encoding='utf-8').read(),RIGP,'exec'),ns)
 ctl=bpy.data.objects.get('Chronometer controls')
@@ -135,7 +148,7 @@ print('MC rig against Running: worst %.5f mm, %.4f deg (%s) over %d moments'%(wo
 if refW:
     per={};h0=ctl['hours']
     for t,h in HW:
-        ctl['hours']=h-t/3600;ctl.update_tag();sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));P=pose(movW)
+        ctl['hours']=h-t/3600;ctl.update_tag();sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));P=pose(movW,REL)
         for k in refW[t]:
             w=diff({k:refW[t][k]},{k:P[k]})
             if k not in per or w[0]+w[2]*0.2>per[k][0]+per[k][2]*0.2:per[k]=(w[0],t,w[2])
@@ -143,9 +156,13 @@ if refW:
     # the rig turns the wind's parts by its hours alone (the Run down action): it has no catch, so the fusee stands by the winding ratchet's offset, nor the
     # up-down wheel's backlash (UD_LASH) or the maintaining work's state (the sustaining ratchet held while the spring drives the train): those go by the
     # clip only, as do the train, hands and balance, whose beat the clip starts elsewhere than the rig's frame 0. Checked: the parts that follow the wind,
-    # each within what the rig was found to leave on 11 October 2026 (a growth fails; a fix shows here as a smaller number)
-    WIND={'the fusee and its arbor, square, end plate, stop-bar':(('Fusee - Complete','fp','sq','Stop-bar'),0.05,7.0),'the barrel':(('Barrel - Mainspring',),0.05,5.5),
-          'the chain':(('Fusee chain','chain link'),13.0,8.0),'the up-down indicator':(('ud','udW'),0.05,1.0)}
+    # each within what the rig was found to leave (a growth fails; a fix shows here as a smaller number). 11 October 2026: fusee 7°, barrel 5.5°, chain 13 mm and 8°,
+    # up-down 1°. 14 October 2026: the sustaining spring a banked split ring (movement.js SPU), its travel 19.5° where it was 9.3°, and the fusee's offset from the
+    # rig's goes with the spring's relaxation (it opens as the drive tapers to run down, where the clip starts): found 16.4°, 11.8°, 1.9 mm and 1.6°, so the bounds
+    # rise by about the travel's ratio; a link's turn means nothing once the chain stands over half a link off the rig's (180°: its place in mm is checked)
+    WIND={'the fusee and its arbor, square, end plate, stop-bar':(('Fusee - Complete','fp','sq','Stop-bar'),0.05,17.0),'the barrel':(('Barrel - Mainspring',),0.05,12.5),
+          'the chain':(('Fusee chain','chain link'),13.0,180.0),'the up-down indicator':(('ud','udW'),0.05,2.0)}
+    if 'wind' in CF:WIND={g:(tuple(v[0]),v[1],v[2]) for g,v in CF['wind'].items()}
     print('MC rig against Winding (%d moments): what follows the wind (the rest goes by the clip only: the maintaining work, the train, hands and balance):'%len(HW))
     for g,(pats,mm,deg) in WIND.items():
         hit=[(k,v) for k,v in per.items() if any((k==p or k.startswith(p+' ')) if len(p)<=4 else p in k for p in pats)]   # a part's code exactly, a catalogue name anywhere
@@ -155,7 +172,7 @@ if refW:
         if d>mm or ang>deg:fail('rig off the Winding clip: %s %.4f mm, %.3f deg (%s at %.1f s; allowed %g mm, %g deg)'%(g,d,ang,k,t,mm,deg))
     print('MC   not rigged for winding, the worst: %s'%', '.join('%s %.0f deg'%(k[:16],v[2]) for k,v in sorted(per.items(),key=lambda kv:-kv[1][2])[:4]))
 sc.frame_set(0)
-for c,k in[('Rig · explode','explode'),('Rig · laid out','laid_out'),('Rig · lift','lift'),('Rig · lids','lids')]:
+for c,k in RIGS:
     ctl[k]=1.0;ctl.update_tag();sc.frame_set(0);P=pose([bpy.data.objects[n] for n in ref[c]]);w=diff(ref[c],P);ctl[k]=0.0;ctl.update_tag()
     if w[0]>0.02 or w[2]>0.1:fail('%s = 1 off its clip\'s end: %.4f mm, %.3f deg (%s)'%(k,w[0],w[2],w[1]))
     else:print('MC %s: matches its clip (%.5f mm)'%(k,w[0]))
@@ -167,11 +184,11 @@ try:
     for tag,k,dist in(('movement','lift',0.22),('exploded','explode',0.5)):
         ctl['lift']=1.0;ctl[k]=1.0;ctl.update_tag();sc.frame_set(0);mv=next(o for o in bpy.data.objects if o.get('role')=='movement');c=mv.matrix_world.translation
         cam.location=c+Vector((dist*0.55,-dist*0.75,dist*0.55));cam.rotation_euler=(c-cam.location).to_track_quat('-Z','Y').to_euler()
-        sc.render.filepath=str(OUT/('r_blender_%s.png'%tag));bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath)
+        sc.render.filepath=str(OUT/(PRE+'%s.png'%tag));bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath)
         ctl[k]=0.0;ctl['lift']=0.0
 except Exception as e:fail('render: %s'%e)
 # the close-ups (--looks), by the page's cameras: three's world in mm, y up, is Blender's in m, z up (x, -z, y), the root's 0.001 and the importer's turn
-if len(argv)>3 and argv[3]=='looks':
+if 'looks' in argv[4:]:
     try:
         sc.render.engine='CYCLES';sc.cycles.samples=48;sc.cycles.use_denoising=True;sc.render.resolution_x=W;sc.render.resolution_y=H
         cam.data.sensor_fit='VERTICAL';cam.data.angle_y=math.radians(FOV);cam.data.clip_start=0.0005

@@ -19,13 +19,13 @@ const T=PH.TRAIN,day={fusee:24*T.cp/T.fu,centre:24,third:24*T.cw/T.tp,fourth:24*
 /* each mesh's room: its close side less the hole tolerance and the shake (gearing.json) */
 const room=i=>{const s=GJ.stages[i];return -s.lo-s.tp-GJ.SH;},R=[0,1,2,3].map(room);
 /* the lock's room: tripping.json's rows give the lock against the depth of lock (dL, mm); a tooth's tip worn by h takes h off the depth, so its room is the model's
-   dL less the dL where the lock reaches the floor (5°); the escape arbor's pivot worn toward the balance closes the centre distance, which takes 1.40 µm off the
+   dL less the dL where the lock reaches the floor (tripping.json's); the escape arbor's pivot worn toward the balance closes the centre distance, which takes 1.40 µm off the
    depth for 1.48 µm (thermal.js) */
 const LR=TJ.lock.rows.slice().sort((a,b)=>a.dL-b.dL),dL0=ESC.settings.dL,dLat=lk=>{for(let i=1;i<LR.length;i++)if(LR[i].lock>=lk){const a=LR[i-1],b=LR[i];return a.dL+(b.dL-a.dL)*(lk-a.lock)/(b.lock-a.lock);}return LR[LR.length-1].dL;};
 const lockRoom=dL0-dLat(TJ.lock.min),pivRoom=lockRoom*1.48/1.40;
 const C=(name,F,s,Hs,A,tol,what,src)=>{const o={name,F,s,A,tol,what,src,h:{},yrs:{}};for(const k in K){o.h[k]=K[k]*F*s/Hs/(A*1e-6)*1e3;o.yrs[k]=tol/o.h[k];}out.contacts.push(o);return o;};   /* h mm a year (V m³ over A mm²) */
 const pivot=(name,F,r,L,turns,Hs,tol,what)=>C(name,F,2*Math.PI*r*1e-3*turns*365.25,Hs,2*r*L,tol,what,'strength.js\'s load, the pivot projected');
-pivot('fusee arbor\'s pivot in its brass bushing (r 1.02)',Ff,1.02,3.4,day.fusee,H.brass,R[0],'the fusee wheel\'s depth on the centre pinion');
+pivot('fusee arbor\'s pivot in its brass bushing (r 1.82)',Ff,1.82,3.4,day.fusee,H.brass,R[0],'the fusee wheel\'s depth on the centre pinion');
 pivot('centre arbor\'s pivot in brass (r 0.5)',Fc,0.5,1.0,day.centre,H.brass,Math.min(R[0],R[1]),'the centre\'s meshes\' depths');
 pivot('third arbor\'s pivot in its jewel (r 0.3)',Ft,0.3,0.6,day.third,H.steel,Math.min(R[1],R[2]),'the third\'s meshes\' depths');
 pivot('fourth arbor\'s pivot in its jewel (r 0.25)',F4,0.25,0.5,day.fourth,H.steel,Math.min(R[2],R[3]),'the fourth\'s meshes\' depths');
@@ -37,7 +37,7 @@ pivot('escape arbor\'s pivot in its jewel (r 0.089)',Fe,0.089,0.4,day.escape,H.s
 /* the escape teeth's tips: each unlocks the locking stone once in 16 oscillations, sliding off it by the depth of lock, and drives the impulse jewel, sliding along
    its face about half a millimetre (estimated); the force the escape wheel's torque at the tooth; worn over the tip's land (0.02 mm, estimated) */
 {const Fw=62.6e-6/(ESC.ES*1e-3),per=2*YR/16,s=per*(0.11+0.5)*1e-3;
-  C('an escape tooth\'s tip on the stone and the jewel',Fw,s,H.steel,1.3*0.02,lockRoom,'the depth of lock, to its 5° floor (tripping.json)','the escape wheel\'s torque at its tip (dynamics.js: 62.6 µN·m)');}
+  C('an escape tooth\'s tip on the stone and the jewel',Fw,s,H.steel,1.3*0.02,lockRoom,`the depth of lock, to its ${TJ.lock.min.toFixed(1)}° floor (tripping.json)`,'the escape wheel\'s torque at its tip (dynamics.js: 62.6 µN·m)');}
 /* the chain's rivets: each link articulates four times a day (onto and off the fusee and the barrel, winding and running) through the pitch over the drum's radius,
    loaded by the mainspring's pull; worn in both its holes, the chain grows; 1 % of its pitch, estimated, before it rides the fusee's groove wrong */
 {const pull=PH.Mup*1000/PH.rB,a=1.7/8,s=4*365.25*0.17e-3*a;C('a chain link\'s rivet in its plates',pull,s,H.steel,2*0.17*0.54,0.017/2,'the chain\'s pitch, 1 % of it (estimated)','the mainspring\'s pull fully wound');}

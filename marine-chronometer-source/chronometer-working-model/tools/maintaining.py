@@ -7,7 +7,8 @@ a run down and a sudden one, with the train and the fusee advancing together as 
 hour), and when the key lets go adds the catch's hours (R.release) as app.js does. Checks after every frame:
   - the sustaining ratchet never turns back, except as winding starts (locked to the fusee, its winding pawls on their faces, until its pawl holds it) and when the
     spring pushes it back to its pawl (a sudden drop of the fusee's drive), each time by less than one of its teeth;
-  - the spring: running, where it balances the fusee's drive (d = SMAX (1 - D)) unless its pawl holds the ratchet; while held or winding it only relaxes, up to SMAX;
+  - the spring: running, where it balances the fusee's drive (d = SMAX (1 - D / SPU), banked at 0 while the drive is over its push SPU) unless its pawl holds the
+    ratchet; while held or winding it only relaxes, up to SMAX;
   - the winding pawls: running, on the steep faces of the fusee's winding ratchet (R.WPH) and at least half its teeth's depth into them (0.4 mm of 0.82 until the teeth were measured 0.55 deep, 11 October 2026); as winding starts, still on the faces
     and as deep while the ratchet goes back with the fusee (they ride over the teeth only once the sustaining pawl holds it);
   - the catch when the key lets go: the fusee (and the arbor, square and wind-indicator pinion with it) turns forward by the gap to the pawls plus the spring's
@@ -17,13 +18,25 @@ hour), and when the key lets go adds the catch's hours (R.release) as app.js doe
   - the winding and sustaining pawls rest on their teeth, not in them (the gap measured with the teeth's tips against the pawls' edges);
   - winding to the stop, the stop-bar meets the winding stop at full wind and is clear of it half a turn earlier.
   - the fusee swept from full wind to run down, the stop-bar (bar, nose, tab) passes the winding stop more than the manual's widest endshake clear (0.1 mm).
-Exit code 1 on any failure."""
-import asyncio,json,pathlib,sys
+Exit code 1 on any failure.
+
+    python maintaining.py --model wempe [--eval JS]     # the Wempe's Harrison maintaining work (about a minute and a half)
+
+--model wempe (tools/model.py) checks the Wempe's (wempe/js/fusee.js: the click wheel and its two clicks, the maintaining ratchet and spring, the maintaining detent and
+its wire spring, the stop work) in three parts. First, maintaining-wempe.js drives the movement's own update (frozen) through running, winds and lettings go, and checks on
+the solids that the ratchet never turns back, the fusee turns with it running and back winding, catching forward under a tooth when the key lets go, the clicks and the
+detent seated on their teeth (never in them, never off), the bearing click and the detent into the teeth, the wire spring bent by the detent and bearing on it. Second,
+the page's own loop (app.js's tick) is recorded frame by frame through two winds with the Wind button: one from 20 h, the train going, and one from run down: the
+maintaining spring carries the running drive into the wind (its drive at the key's first frame the last running frame's, WPHYS.drv), drives the train while the key
+turns and keeps most of it to full wind (SUS, 70 s, against a wind of seconds), the train held throughout the wind from run down (it carried nothing); running, the
+drive is WPHYS.drv(n); the ratchet turns back only as the escape wheel is drawn back (the escapement's own motion while held), by the train's ratio. Third, the stop work
+at full wind: tools/wempe_stopwork.py, run here with --step 0.05 (its own checks, which ci.py runs in full). --eval JS runs code after loading (a planted fault)."""
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model;PAGE=model.PAGE   # the model's page (tools/model.py: --model wempe checks the Wempe's, below)
 JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
- const D=180/Math.PI,FPR=R.FPR,WD=(FPR.ro-FPR.ri)/2,SRP=R.SRP,SMAX=R.SMAX,TAU=2*Math.PI,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);},info={};
+ const D=180/Math.PI,SPU=R.SPU,ssQ=Dv=>R.SMAX*Math.max(0,Math.min(1,1-Dv/SPU)),FPR=R.FPR,WD=(FPR.ro-FPR.ri)/2,SRP=R.SRP,SMAX=R.SMAX,TAU=2*Math.PI,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);},info={};
  const TPH=7200,NPH=FUSEE_PER_HOUR,st={E:1000,n:3,spent:false,reset:false};let prev=null,k=0,ws=null;
  /* how far a pawl is from its ratchet's teeth (negative: inside): its outline every 0.1 mm against the profile (as seatPawl tests it), and the teeth's tips against
     its edges (a tip can touch an edge between the points): the nearest tip's distance outside the outline, negative inside */
@@ -46,7 +59,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  let catches=[],epsR=[1e9,-1e9];
  function frame(w,tag){const s=ESC.state(0.4);mv.userData._u({E:st.E+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:st.n,winding:w,spent:st.spent,reset:st.reset,springOn:false,msOn:false});k++;st.reset=false;
    const sr=R.sr.rotation.y,gA=R.gw.rotation.y,fz=R.fs.g.rotation.y+R.fs.fz.rotation.y,cur={sr,gA,fz,eps:R.eps,n:st.n,w,held:R.held,tag},at=`frame ${k} (${tag}, n ${st.n.toFixed(3)})`,d=gA-sr,psi=fz-sr;
-   const dq=SMAX*Math.max(-0.25,Math.min(1,1-(st.spent?0:R.drvN(st.n))));
+   const dq=ssQ(st.spent?0:R.drvN(st.n));
    if(Math.abs((R.sq.rotation.y+R.fs.g.rotation.y)-fz)>1e-6)fail('arbor',`${at}: square and fusee differ by ${((R.sq.rotation.y+R.fs.g.rotation.y-fz)*D).toFixed(2)} deg`);
    if(prev){const dsr=sr-prev.sr,jump=/slider|set|start/.test(tag);
      if(w&&!prev.w)ws={sr0:prev.sr,psi0:prev.fz-prev.sr,rel:[]};
@@ -58,7 +71,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      if(prev.w&&!w&&!jump){const sh=prev.sr,fc=sh+R.WPH+FPR.p*Math.ceil((prev.fz-sh-R.WPH)/FPR.p-1e-9),want=fc+Math.max(0,gA-dq-sh)-prev.fz,got=fz-prev.fz;   /* the catch: gap to the pawls, then the reload */
        catches.push(got);if(got<-1e-9)fail('catch',`${at}: fusee turned back ${(-got*D).toFixed(2)} deg when the key let go`);
        if(Math.abs(got-want)>2e-4)fail('catch',`${at}: the catch turned the fusee ${(got*D).toFixed(3)} deg, the gap and reload ${(want*D).toFixed(3)}`);
-       const nR=prev.n+prev.rel,qR=SMAX*Math.max(-0.25,Math.min(1,1-(nR>=FUSEE_TURNS?0:R.drvN(nR)))),rl=g=>Math.max(0,g-qR-sh),fore=prev.rel*TAU+rl(gA)-rl(prev.gA);   /* the frame's own running turns the fusee too, by what it adds to the reload at the drive R.release took (where the catch leaves the fusee): none while the spring is still held, part of it as the reload starts (the train's whole turn added, until 12 October 2026, failed a catch the reload began in) */
+       const nR=prev.n+prev.rel,qR=ssQ(nR>=FUSEE_TURNS?0:R.drvN(nR)),rl=g=>Math.max(0,g-qR-sh),fore=prev.rel*TAU+rl(gA)-rl(prev.gA);   /* the frame's own running turns the fusee too, by what it adds to the reload at the drive R.release took (where the catch leaves the fusee): none while the spring is still held, part of it as the reload starts (the train's whole turn added, until 12 October 2026, failed a catch the reload began in) */
        if(Math.abs(got-fore)>2e-4)fail('catch',`${at}: R.release foretold ${(prev.rel*360).toFixed(3)} deg and the frame's running reloaded ${((rl(gA)-rl(prev.gA))*D).toFixed(3)}, the catch took ${(got*D).toFixed(3)}`);}
    }
    if(!w&&!cur.held&&Math.abs(d-dq)>1e-6)fail('load',`${at}: spring relaxed ${(d*D).toFixed(3)} deg in running, where the drive puts it ${(dq*D).toFixed(3)}`);
@@ -101,7 +114,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  /* run down at once (the slider): the spring drives the train alone, its pawl holding the ratchet, the fusee standing */
  { st.n=3;frame(false,'slider');run(10,7);st.n=FUSEE_TURNS;st.spent=true;frame(false,'slider');const fz0=R.fs.g.rotation.y+R.fs.fz.rotation.y,f0=R.ssF();run(30,30);
    const f1=R.ssF(),fz1=R.fs.g.rotation.y+R.fs.fz.rotation.y;info.sudden={push0:f0,push1:f1,held:R.held};
-   if(!R.held||f0<1-SRP.p/SMAX-0.05||!(f1<f0)||Math.abs(fz1-fz0)>1e-9)fail('sudden',`run down at once: held ${R.held}, the spring's push ${f0.toFixed(3)} then ${f1.toFixed(3)}, the fusee moved ${((fz1-fz0)*D).toFixed(3)} deg`);
+   if(!R.held||f0<SPU*(1-SRP.p/SMAX)-0.05||!(f1<f0)||Math.abs(fz1-fz0)>1e-9)fail('sudden',`run down at once: held ${R.held}, the spring's push ${f0.toFixed(3)} then ${f1.toFixed(3)}, the fusee moved ${((fz1-fz0)*D).toFixed(3)} deg`);
    st.spent=false;wind(FUSEE_TURNS-0.5,0.03);letGo();run(5,10); }
  const gOK=[bar[0][1]>=-0.02&&bar[0][1]<=0.02,bar[1][1]>0.02,bar[2][1]>=-0.02&&bar[2][1]<=0.02,bar[3][1]>=-0.02];
  bar.forEach(([t,g],i)=>{if(!gOK[i])fail('stop',`${t}: stop-bar ${g.toFixed(3)} mm from the winding stop`);});
@@ -114,7 +127,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  info.catches=catches.length;return JSON.stringify({frames:k,fails,cnt,bar,SMAX:SMAX*D,info});})()"""
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
@@ -132,4 +145,95 @@ async def main():
     for t,c in r['cnt'].items():print(f"{c:5d} frames failed '{t}'")
     if errs:print('page errors:',errs)
     print('ok' if not r['fails'] and not errs else f"{sum(r['cnt'].values())} failures");sys.exit(1 if r['fails'] or errs else 0)
-asyncio.run(main())
+# ---------------- the Wempe (--model wempe) ----------------
+REC=r"""(()=>{const mv=window.__mv,u=mv.userData._u||mv.userData.update;mv.userData._u=u;let RAT=null,CW=null;
+ mv.traverse(m=>{if(m.isMesh&&m.userData.hn==='050602-1'&&!m.userData.sub)RAT=m;if(m.isMesh&&m.userData.hn==='050604-3')CW=m;});
+ const inv=new THREE.Matrix4(),ang=o=>{mv.updateMatrixWorld(true);inv.copy(mv.matrixWorld).invert();const e=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld).elements;return Math.atan2(e[8],e[0]);};
+ window.__rec=[];mv.userData.update=s=>{u(s);const W=__W();__rec.push({E:s.E,n:s.n,w:!!s.winding,RG:ang(RAT),Rf:ang(CW),hrs:W.hrs,drive:W.drive,held:W.held,amp:W.amp,drv:WPHYS.drv(s.n)});};})()"""
+SETH="(v=>{const h=document.getElementById('hrs');h.value=String(v);h.dispatchEvent(new Event('input'));})(%s)"
+def wempe_live(rec,marks):
+    """The page's loop, frame by frame (rec), through the wind from 20 h (from marks[0]) and the wind from run down (from marks[1])"""
+    import math
+    bad=[];out=[];D=180/math.pi
+    def winds(rs):
+        w=[];cur=None
+        for i,r in enumerate(rs):
+            if r['w'] and cur is None:cur=[i]
+            if not r['w'] and cur is not None:cur.append(i);w.append(cur);cur=None
+        if cur is not None:cur.append(len(rs));w.append(cur)
+        return w
+    da=lambda x,y:math.atan2(math.sin(y-x),math.cos(y-x))
+    dE=[(b['E']-a['E'],da(a['RG'],b['RG'])) for a,b in zip(rec,rec[1:])]
+    ks=sorted(g/e for e,g in dE if e>0.2 and abs(g)<0.1);k=ks[len(ks)//2] if ks else None
+    back=[(i,e,g) for i,(e,g) in enumerate(dE) if g<-1e-9]
+    drawn=[x for x in back if x[1]<0 and k and abs(x[2]-k*x[1])<1e-6]
+    out.append(f"the page's loop: {len(rec)} frames; the ratchet turns {k*D*7200:.4f} deg an hour of the train (the fusee wheel's 14/90 of the centre's turn: {360*14/90:.4f})" if k else "the page's loop: the ratchet never moved")
+    out.append(f"  the ratchet turned back in {len(back)} frames, {len(drawn)} of them with the escape wheel drawn back (the escapement while held), by the train's ratio")
+    for i,e,g in back:
+        if (i,e,g) not in drawn:bad.append(f"page: frame {i+1}, the ratchet turned back {-g*D:.5f} deg with the escape wheel "+('going on' if e>=0 else f'back {-e:.4f} teeth, not by the train'))
+    run_=[r for r in rec if not r['w'] and not r['held'] and r['hrs']<55.9-1e-6]
+    off=max((abs(r['drive']-r['drv']) for r in run_),default=0)
+    out.append(f"  running ({len(run_)} frames): the drive is WPHYS.drv(n) within {off:.2e}")
+    if off>1e-9:bad.append(f"page: running, the drive departs from WPHYS.drv(n) by {off:.3g}")
+    for j,(a,b) in enumerate(zip(marks,marks[1:]+[len(rec)])):
+        rs=rec[a:b];W=winds(rs)
+        if not W:bad.append(f"page: wind {j+1}: the key never turned");continue
+        i0,i1=W[0];w=rs[i0:i1];pre=rs[i0-1] if i0>0 else w[0];post=rs[i1:]
+        dr=[r['drive'] for r in w];Es=[r['E'] for r in w]
+        nIn=sum(1 for x,y in zip(dr,dr[1:]) if y>x+1e-12)
+        full=min((r['hrs'] for r in post),default=None)
+        if j==0:
+            out.append(f"  wind 1, from {pre['hrs']:.2f} h, going: {len(w)} frames; the drive {pre['drive']:.4f} running, {dr[0]:.4f} as the key goes on, {dr[-1]:.4f} at its last frame ({(dr[-1]/dr[0]*100 if dr[0] else 0):.2f} %); the escape wheel on {Es[-1]-Es[0]:.2f} teeth; then {full} h")
+            if abs(dr[0]-pre['drive'])>0.02*pre['drive']:bad.append(f"page: wind 1, the maintaining spring's drive {dr[0]:.4f} as the key goes on, the train's {pre['drive']:.4f} before: it doesn't carry the running torque")
+            if min(dr)<=0:bad.append("page: wind 1, the drive fell to nothing while the key turned")
+            if nIn:bad.append(f"page: wind 1, the maintaining spring's drive rose in {nIn} frames (it only relaxes)")
+            if dr[0]>0 and dr[-1]<0.9*dr[0]:bad.append(f"page: wind 1, the drive fell to {dr[-1]/dr[0]*100:.0f} % over the wind (SUS too short)")
+            if not Es[-1]>Es[0]:bad.append("page: wind 1, the train stood while the key turned")
+            if any(r['held'] for r in w):bad.append("page: wind 1, the train held while the key turned")
+        else:
+            out.append(f"  wind {j+1}, from {pre['hrs']:.2f} h, run down and held: {len(w)} frames; the drive at most {max(dr):.4f}, the escape wheel moved {max(Es)-min(Es):.4f} teeth, held {sum(r['held'] for r in w)} of {len(w)}; then {full} h")
+            if max(dr)>0:bad.append(f"page: wind {j+1} from run down, the maintaining spring drove {max(dr):.4f} (it carried nothing)")
+            if max(Es)-min(Es)>0.1 or not all(r['held'] for r in w):bad.append(f"page: wind {j+1} from run down, the train went while the key turned")
+        if full is None or full>1e-3:bad.append(f"page: wind {j+1} didn't reach full wind (the least {full})")
+        dF=[da(x['Rf'],y['Rf']) for x,y in zip(w,w[1:])]
+        if any(d>=0 for d in dF):bad.append(f"page: wind {j+1}, the fusee didn't turn back in {sum(d>=0 for d in dF)} of {len(dF)} frames")
+    return out,bad
+async def wempe():
+    async with async_playwright() as p:
+        b=await p.chromium.launch(args=browser.ARGS)
+        w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # see smoke.py
+        pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
+        await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
+        await pg.evaluate("location.hash='view=movement'");await pg.wait_for_timeout(1500)   # a movement view: Wind puts the key on the square at once (in the case it turns the bowl over first)
+        if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1])
+        await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
+        r=json.loads(await pg.evaluate(open(HERE/'maintaining-wempe.js',encoding='utf-8').read()))
+        await pg.evaluate("document.querySelector('#speeds button[data-v=\"1\"]').click()");await pg.evaluate(SETH%20);await pg.wait_for_timeout(800)
+        SPD="__V.st.speed=%s"   # the viewer's speed (its presets stop at 60x)
+        await pg.evaluate(REC);await pg.evaluate(SPD%100);await pg.wait_for_timeout(2500);await pg.evaluate(SPD%1);await pg.wait_for_timeout(500);marks=[]   # running at 100x: the ratchet turns a few hundredths of a degree a frame
+        for h in (None,"location.hash='view=movement&wind='+__W().HRUN"):   # run down through the link (the Winding slider's 0.1 steps stop short of HRUN)
+            if h:await pg.evaluate(h);await pg.wait_for_function("__W().held",timeout=30000);await pg.wait_for_timeout(500)
+            marks.append(await pg.evaluate("__rec.length"));await pg.evaluate("document.getElementById('wind').click()")
+            await pg.wait_for_function("__W().winding",timeout=30000);await pg.wait_for_function("!__W().winding&&__W().hrs<0.01",timeout=180000);await pg.wait_for_timeout(1000)
+            if not h:await pg.evaluate(SPD%100);await pg.wait_for_timeout(2500);await pg.evaluate(SPD%1);await pg.wait_for_timeout(300)
+        rec=await pg.evaluate("__rec");await b.close()
+    if '--dump' in sys.argv:json.dump({'rec':rec,'marks':marks},open(sys.argv[sys.argv.index('--dump')+1],'w'))
+    i=r.get('info',{})
+    if i:
+        print(f"the movement's update: {i['frames']} frames, {i['wound']} winding; running, the fusee turned with the ratchet in {i['runWith']} steps")
+        print(f"  the clicks on the click wheel (its tips r {i['CW']['tip']:.3f}, roots {i['CW']['root']:.3f}): gap {i['ck'][0]:.4f} to {i['ck'][1]:.4f}; the bearing click {i['bear'][0]*100:.0f}-{i['bear'][1]*100:.0f} % into its teeth running")
+        print(f"  the detent on the ratchet (its tips r {i['RT']['tip']:.3f}, roots {i['RT']['root']:.3f}): gap {i['det'][0]:.4f} to {i['det'][1]:.4f}, {i['detIn'][0]*100:.0f}-{i['detIn'][1]*100:.0f} % into its gaps; its wire spring {i['wire'][0]:.4f} to {i['wire'][1]:.4f} from it")
+        print(f"  the catches when the key let go: "+', '.join(f'{c:.2f}' for c in i['catches'])+f" deg (a click wheel's tooth {i['P35']:.2f})")
+    out,bad=wempe_live(rec,marks)
+    for x in out:print(x)
+    print("the stop work at full wind (wempe_stopwork.py --step 0.05):",flush=True)
+    import subprocess
+    sw=subprocess.run([sys.executable,str(HERE/'wempe_stopwork.py'),'--step','0.05']+(['--eval',sys.argv[sys.argv.index('--eval')+1]] if '--eval' in sys.argv else []),capture_output=True,text=True,timeout=600)
+    for l in sw.stdout.splitlines():print('  '+l)
+    if sw.returncode:bad.append('the stop work (wempe_stopwork.py) failed')
+    for f in r['fails']:print('FAIL',f)
+    for t,c in r['cnt'].items():print(f"{c:5d} frames failed '{t}'")
+    for f in bad:print('FAIL',f)
+    if errs:print('page errors:',errs)
+    ok=not r['fails'] and not bad and not errs;print('maintaining (wempe):','ok' if ok else 'FAIL');sys.exit(0 if ok else 1)
+asyncio.run(main() if model.HAMILTON else wempe())

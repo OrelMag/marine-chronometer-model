@@ -4,6 +4,7 @@
 //   node tripping.js            (about 4 minutes; exits with 1 if, at the model's settings, a tooth gets past the stone, or the frame taken rigid on a hinge
 //                                disagrees with dynamics.js beyond the stated bounds)
 //   node tripping.js --quick    (the frame, its modes and the validation only, about 30 s)
+//   node tripping.js --section 2,4  (only those of the report's sections 0-5 below; --quick is --section 0,1. ci.py runs 2, 3, 4 and 5 as steps of their own, side by side)
 //   node tripping.js --json OUT (also writes the figures for the report, verification/build-verification)
 // The detent as a plane frame (beam elements with stretching, bending and their consistent mass; Przemieniecki 1968, ch. 5 and 11) from the pieces movement.js draws
 // (ESC.pieces): the two-strip spring, the blade, the arm to the horn and the trip spring as elements, the cross-piece with the bracket and the jewel block with the stone as
@@ -11,7 +12,7 @@
 // every contact elastic, a spring with a dashpot set for its restitution (penalty contacts, Wriggers 2006, ch. 2): the discharge jewel on the trip spring's tip (the jewel's
 // own outline, dynamics.js's distance field), the trip spring on the horn, the blade on its stop button, the tooth on the locking stone (the stone's outline, makeEsc's
 // recoil: the flat's draw pushing the tooth back as the stone lifts, its edge after) and on the impulse jewel (makeEsc's bite). The preload is Op. 78's: the spring
-// bent so a 0.770 g weight on the locking jewel just parts the blade from its button.
+// bent so a 0.770 g weight on the locking jewel parts the blade from its button by about 0.005 in (p. 61).
 // What it answers:
 //   0. The frame: its mass and inertia against dynamics.js's, its stiffness at the stone against the hinge dynamics.js takes, its modes.
 //   1. Validated: the frame made rigid and hinged at its root as dynamics.js has it runs as dynamics.js does (swing, rate, release, the detent's fall).
@@ -124,10 +125,11 @@ const dot=(a,b)=>{let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s;};
 function detent(o={}){
   const F=frame(o),Am=assemble(F),nr=Am.nr;
   const Jc=tn(ESC.Jc),rS=rows(F,Am,F.K),rJ=rows(F,Am,F.K,Jc.t,Jc.n),rb=F.nb.map(i=>rows(F,Am,i)),rbm={rv:rb[0].rv.map((x,j)=>(x+rb[1].rv[j])/2)};
-  /* Op. 78: a weight W78 on the locking jewel just parts the blade from its button. The spring's unstressed shape is the drawn one bent by a moment at its end (its
-     curvature uniform, the rest following rigidly): f_pre, the constant force that bend leaves, is that moment, alpha, set so the weight leaves the button's middle at rest */
+  /* Op. 78: a weight W78 on the locking jewel parts the blade from its button by G78 (about 0.005 in, p. 61; until 14 October 2026 it just parted it). The spring's
+     unstressed shape is the drawn one bent by a moment at its end (its curvature uniform, the rest following rigidly): f_pre, the constant force that bend leaves, is
+     that moment, alpha, set so the weight lifts the button's middle G78 off it */
   const fm=new Float64Array(nr);{const c=Am.T[3*F.F1+2];for(let j=0;j<nr;j++)fm[j]=c[j];}
-  const um=gsolve(Am.Kr,fm),fW=rJ.rv.map(x=>x*S.W78*1e-3*G0),uW=gsolve(Am.Kr,fW),alpha=-dot(rbm.rv,uW)/dot(rbm.rv,um),fpre=fm.map(x=>x*alpha);   /* -K(q - alpha um) = -K q + alpha fm */
+  const um=gsolve(Am.Kr,fm),fW=rJ.rv.map(x=>x*S.W78*1e-3*G0),uW=gsolve(Am.Kr,fW),alpha=(S.G78*1e-3-dot(rbm.rv,uW))/dot(rbm.rv,um),fpre=fm.map(x=>x*alpha);   /* -K(q - alpha um) = -K q + alpha fm */
   /* the stiffness at the stone: a force lifting the locking face's middle, the frame free of its button */
   const fS=rS.rv,uS=gsolve(Am.Kr,fS),kS=1/dot(rS.rv,uS);
   /* mass and inertia about Ft: the reduced mass matrix on a rigid translation and a rigid turn about the root */
@@ -283,14 +285,15 @@ function run(M,o={}){
     ring:st.ring/lPk,maxL:st.maxL/lPk,maxTh:st.maxTh,maxRet:st.maxOm<0,arrive:Math.max(0,...tail(st.arrive)),steps:st.steps,frozen:st.frozen,amps:st.amps,ampT:st.ampT};
 }
 
-module.exports={frame,assemble,modes,detent,modal,rows,dot,gsolve,tn,xy,X,model,run};
+module.exports={frame,assemble,modes,detent,modal,rows,dot,gsolve,tn,xy,X,model,run,chol,jacobi,rec,recD,lPk,lFr,kU,cT,LV,VF,zetaOf,zeros,hOf,EBC,ETS};
 if(require.main!==module)return;
+if(DY.WEMPE){require('./wempe_tripping.js').main();return;}   /* --model wempe: the Wempe's detent as its own frame (wempe_tripping.js), on this file's beams, modes and contacts */
 
 /* ---------- the bench's figures (tools/tripping.json, read by bench.js): how shallow a lock and how thin or thick a detent spring still never trip ----------
    Each setting runs in a process of its own (MC_ESC: makeEsc's settings through dynamics.js; MC_TRIP: the frame's), many at once. For each: the frame as drawn and
    with every contact 4× stiffer (the worst of section 2's estimates) running 10 s (20 beats), a held tooth's stone's highest lift; for the depths of lock also the 3 ms blow
    across the plate that lets a tooth go (as section 4); for the springs the detent's first mode, its foot clamped and its blade free: the pitch it rings at */
-const FIG=path.join(__dirname,'tripping.json'),DEPTHS=[0.017,0.0152,0.013,0.011,0.009,0.007,0.005],THICK=[0.05,0.06,0.07,0.079,0.10,0.12,0.15];
+const FIG=path.join(__dirname,'tripping.json'),DEPTHS=[0.017,0.0152,0.013,0.011,0.009,0.007,0.005],THICK=[0.05,0.06,0.07,0.072,0.075,0.079,0.085,0.09,0.095,0.10,0.105,0.11,0.12,0.15];   /* every 0.005 mm round the band since 14 October 2026 (estimates.js): its edges are sharp */
 const blowAt=(M,dur)=>{const A0=255,ang=Math.atan2(DY.DM.my,DY.DM.mx)+Math.PI/2,ux=Math.cos(ang),uy=Math.sin(ang),B={};
   const base=p=>B[p]??=run(M,{A:A0,T:0.3+p*T0+0.55,from:0.2});
   const mk=(g,p)=>{const t1=0.3+p*T0,a=g*G0;return run(M,{A:A0,T:t1+0.55,from:0.2,ext:tt=>{const u=(tt-t1)/dur,x=u>0&&u<1?Math.sin(Math.PI*u):0;return{al:0,ax:a*x*ux,ay:a*x*uy};},extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});};
@@ -305,7 +308,7 @@ if(process.argv.includes('--child')){
 const benchFigs=async()=>{const{spawn}=require('child_process'),jobs=[...DEPTHS.map(dL=>[{dL},{blow:true}]),...THICK.map(t=>[{},{tS:t/((X.spring.n1-X.spring.n0)*1000)}])],out=new Array(jobs.length);
   const kid=([esc,trip])=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_ESC:JSON.stringify(esc),MC_TRIP:JSON.stringify(trip)}});let s='';
     p.stdout.on('data',d=>s+=d);p.stderr.on('data',d=>process.stderr.write(d));p.on('close',code=>code?rej(Error('tripping.js --child '+JSON.stringify([esc,trip])+' exited '+code)):res(JSON.parse(s.trim().split('\n').pop())));});
-  let next=0;const N=Math.max(1,Math.min(jobs.length,require('os').cpus().length-2));
+  let next=0;const N=Math.max(1,Math.min(jobs.length,+process.env.MC_PROCS||require('os').cpus().length-2));   /* MC_PROCS: at most so many (ci.py, running other steps beside it) */
   await Promise.all([...Array(N)].map(async()=>{while(next<jobs.length){const i=next++;out[i]=await kid(jobs[i]);}}));
   const L=out.slice(0,DEPTHS.length),T=out.slice(DEPTHS.length),ok=r=>r.trips===0&&r.lift<0.5&&(r.blow==null||r.blow>=20);
   /* the shallowest lock with every deeper one safe too; the thinnest and thickest springs with every one between them and the drawn safe (the thickest no more than
@@ -319,13 +322,14 @@ const figTxt=j=>JSON.stringify(j,null,1)+'\n';
 if(process.argv.includes('--write')){benchFigs().then(j=>{fs.writeFileSync(FIG,figTxt(j));console.log(`wrote tools/tripping.json: a lock of ${j.lock.min}° at least (a depth of ${j.lock.depth} µm); the detent rings at ${j.ring.f0} Hz, ${j.ring.band[0]}-${j.ring.band[1]} Hz for a spring ${j.ring.t[0]}-${j.ring.t[1]} mm thick`);}).catch(e=>{console.error(e);process.exitCode=1;});return;}
 
 /* ---------- the report ---------- */
-const quick=process.argv.includes('--quick'),ji=process.argv.indexOf('--json'),JOUT=ji>0?process.argv[ji+1]:null,RW=[],J={made:new Date().toISOString().slice(0,10)};let fail=0;
+const si=process.argv.indexOf('--section'),SEC=si>0?new Set(process.argv[si+1].split(',').map(Number)):process.argv.includes('--quick')?new Set([0,1]):null,on=n=>!SEC||SEC.has(n);
+const quick=!!SEC&&![2,3,4,5].some(on),ji=process.argv.indexOf('--json'),JOUT=ji>0?process.argv[ji+1]:null,RW=[],J={made:new Date().toISOString().slice(0,10)};let fail=0;
 const say=s=>RW.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;RW.push(`${ok?'  ok ':'  !! '} ${s}`);};
 const f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),pc=x=>f(100*x,x<0.1?2:1)+' %',t0=Date.now(),flush=()=>{console.log(RW.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,0)} s)`);};
 const LR=lPk*ESC.ES*BLu/LEN,LF=lFr*ESC.ES*BLu/LEN,LRel=lRel*ESC.ES*BLu/LEN;   /* at the stone (mm): the depth of lock (the flat's inner end), where the tip is free, makeEsc's release */
 const pick=r=>({A:+f(r.A,2),rate:+f(r.rate,3),rel:+f(r.rel,2),offF:+f(r.offF,2),home:+f(r.home,2),beats:r.beats,trips:r.trips,maxL:+f(r.maxL,5),maxTh:+f(r.maxTh??NaN,1),maxRet:!!r.maxRet,arrive:+f(r.arrive,5)});
 
-say('0. The detent as a frame (the pieces movement.js draws)');
+if(on(0)){say('0. The detent as a frame (the pieces movement.js draws)');
 const V={drawn:{},stiff:{stiff:true},hinge:{hinge:true,stiff:true}},DT={},MD={};
 for(const[k,o]of Object.entries(V)){DT[k]=detent(o);MD[k]=modal(DT[k],30000);}
 {const d=DT.drawn,F=d.F;say(`${F.E.length} beam elements on ${F.N.length} nodes (${d.nr} free coordinates): the spring's two strips ${f(1000*(X.spring.n1-X.spring.n0),3)} × ${f(1000*hOf('spring'),2)} mm, ${f(1000*X.spring.t1,2)} long; the blade ${f(1000*(X.blade.n1-X.blade.n0),3)} × ${f(1000*hOf('blade'),2)} mm; the arm ${f(2*0.025*ESC.ES,2)} × ${f(1000*hOf('arm'),2)}; the trip spring ${S.tsT} × ${S.tsH}, ${f(1000*(tn(ESC.Pt).t-tn(ESC.Ps0).t),1)} long; the cross-piece with the bracket, the block with the stone, the horn rigid`);
@@ -336,9 +340,10 @@ for(const[k,o]of Object.entries(V)){DT[k]=detent(o);MD[k]=modal(DT[k],30000);}
   for(const m of MD.drawn)say(`  ${f(m.f,0).padStart(6)} Hz  ${Object.entries(m.share).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>0.05).map(([k,v])=>`${k} ${f(100*v,0)} %`).join(', ')}`);
   J.frame={nodes:F.N.length,elements:F.E.length,mass:d.mass,Ift:d.Ift,dm:DY.DM.m,did:DY.ID,kS:d.kS,kSh:h.kS,alpha:d.alpha,mpre:DY.MPRE,f1h:MD.hinge[0].f,
     modes:MD.drawn.map(m=>({f:+f(m.f,1),share:Object.fromEntries(Object.entries(m.share).map(([k,v])=>[k,+f(v,3)]))})),modesStiff:MD.stiff.map(m=>+f(m.f,1)),modesHinge:MD.hinge.map(m=>+f(m.f,1))};}
-flush();
+flush();}
 
-say('1. Validated: the frame made rigid and hinged at Ft, the draw as dynamics.js takes it, against dynamics.js');
+const FJ=fs.existsSync(FIG)?JSON.parse(fs.readFileSync(FIG,'utf8')):null;J.bench=FJ;
+if(on(1)){say('1. Validated: the frame made rigid and hinged at Ft, the draw as dynamics.js takes it, against dynamics.js');
 const dyn=DY.sim({mode:'phys',T:20,from:10}),Mq=model({hinge:true,stiff:true,qsDraw:true,eL:0}),rq=run(Mq,{T:20,from:10}),rq2=run(Mq,{T:20,from:10,hf:Mq.hf/2,hc:5e-5});
 say(`dynamics.js: the swing ${f(dyn.A,2)}°, rate ${sg(dyn.rate,3)} s a day, release ${f(dyn.rel,2)}°, off the jewel for the last time ${f(dyn.offF,2)}°, home ${f(dyn.home,2)}°, ${dyn.beats} beats`);
 say(`the frame:   the swing ${f(rq.A,2)}°, rate ${sg(rq.rate,3)} s a day, release ${f(rq.rel,2)}°, off the jewel for the last time ${f(rq.offF,2)}°, home ${f(rq.home,2)}°, ${rq.beats} beats (at half the step: ${f(rq2.A,2)}°, ${sg(rq2.rate,3)})`);
@@ -351,13 +356,12 @@ say(`the tooth let go where its tip is free (${f(100*lFr/lRel,0)} % of makeEsc's
 J.valid={dyn:pick(dyn),frame:pick(rq),half:pick(rq2),wheel:pick(rd),free:pick(rf),lPk:lPk/lRel,lFr:lFr/lRel};
 flush();
 /* the bench's figures (tripping.json, bench.js): its pitches are the frame's modes, quick to check; the rest are runs, checked in full below */
-const FJ=fs.existsSync(FIG)?JSON.parse(fs.readFileSync(FIG,'utf8')):null;J.bench=FJ;
 {const dk=(X.spring.n1-X.spring.n0)*1000,bad=FJ?FJ.ring.rows.filter(r=>Math.abs(modal(detent({tS:r.t/dk}),30000)[0].f-r.f1)>0.06):[1];
   chk(!!FJ&&bad.length===0,FJ?`tools/tripping.json's pitches are the frame's (${FJ.ring.rows.length} springs, ${f(FJ.ring.rows[0].f1,0)}-${f(FJ.ring.rows[FJ.ring.rows.length-1].f1,0)} Hz)`:'tools/tripping.json is missing: node tripping.js --write');}
-flush();
+flush();}
 if(quick){if(fail)process.exitCode=1;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));return;}
 
-say('2. Running: the detent as drawn, the wheel free to recoil, every contact elastic');
+if(on(2)){say('2. Running: the detent as drawn, the wheel free to recoil, every contact elastic');
 say(`at the stone the depth of lock is ${f(LR*1000,0)} µm (makeEsc's recoil peaks: the flat's inner end); past it the tooth's pressure on the stone's rounded edge pushes the stone out, and the tip is free at ${f(LF*1000,0)} µm (makeEsc keeps ${f(LRel*1000,0)}, room to spare). The margin is the lift a held tooth's stone reaches against the depth of lock`);
 const run20=(o,ro={})=>{const M=model(o),rec={t0:5.0,t1:5.5,dt:2e-5,next:0,out:[]};return{r:run(M,{T:10,from:5,rec,...ro}),rec:rec.out,M};};
 const R2={};for(const[k,o]of[['hinge',{hinge:true,stiff:true}],['stiff',{stiff:true}],['drawn',{}]])R2[k]=run20(o);
@@ -377,9 +381,9 @@ const SW=[['the modes\' damping Q 30',{Q:30}],['Q 1000 (hardened beryllium coppe
 const sw=[];for(const[nm,o]of SW){const r=run(model(o),{T:5,from:2.5});sw.push({name:nm,...pick(r)});say(`  ${nm.padEnd(48)} ${r.trips} trips, the stone at most ${pc(r.maxL).padStart(8)} (${r.maxRet?'return':'lock'}), the swing ${f(r.A,1)}°`);}
 chk(sw.every(r=>r.trips===0&&r.maxL<0.5),`over all of these no tooth gets past and a held tooth's stone uses under half the depth of lock: at most ${pc(Math.max(...sw.map(r=>r.maxL)))}`);
 J.sweep=sw;
-flush();
+flush();}
 
-say('3. Pushed: the swing raised by the drive until a tooth gets past');
+if(on(3)){say('3. Pushed: the swing raised by the drive until a tooth gets past');
 {const sFor=A=>{let lo=0.5,hi=6;for(let i=0;i<40;i++){const m=(lo+hi)/2;ESC.ampAt(m)<A*D?lo=m:hi=m;}return(lo+hi)/2;};
   const Md2=model({}),out=[];let lastOk=null,firstBad=null;
   for(const A of[270,290,310,320,330,333,335,337,338,339,340,345,350]){const s=sFor(A);if(!(ESC.ampAt(s)>0))continue;const r=run(Md2,{s,A,T:3,from:1.5}),q=DY.sim({mode:'phys',s,A,T:3,from:1.5}),qT=q.trips;   /* dynamics.js counts a second unlocking in a swing as a trip too (since 12 October 2026) */
@@ -389,9 +393,9 @@ say('3. Pushed: the swing raised by the drive until a tooth gets past');
   say(`the largest swing that never trips: about ${f(lastOk,0)}°, the first that does ${firstBad==null?"(none)":f(firstBad,0)+"°"}: makeEsc's TRIP (${f(ESC.TRIP/D,0)}°) is where the discharge jewel comes round to the trip spring again; it lets the tooth go some 5° on, as at -21°. The manual's band ends at 270°`);
   chk(lastOk!=null&&lastOk>300,`the frame trips only past 300° of swing, far above the 270° the manual allows`);
   J.push={rows:out,lastOk,firstBad,TRIP:ESC.TRIP/D};}
-flush();
+flush();}
 
-say('4. Knocks: the smallest that lets a tooth go or loses a beat, the frame as drawn against the rigid detent (the same runs in dynamics.js)');
+if(on(4)){say('4. Knocks: the smallest that lets a tooth go or loses a beat, the frame as drawn against the rigid detent (the same runs in dynamics.js)');
 {const M4=model({}),A0=255;
   const pulse=(t1,dur,fn)=>tt=>{const u=(tt-t1)/dur;return u>0&&u<1?fn(Math.sin(Math.PI*u)):{al:0,ax:0,ay:0};};
   const ang=Math.atan2(DY.DM.my,DY.DM.mx)+Math.PI/2,ux=Math.cos(ang),uy=Math.sin(ang);
@@ -408,10 +412,12 @@ say('4. Knocks: the smallest that lets a tooth go or loses a beat, the frame as 
   say(`a steady push lifts the rigid detent off its stop at ${f(gS,0)} g; the knocks a chronometer meets in its box at sea are a few g (the gimbals and the box's padding take the rest)`);
   chk(K4.every(k=>k.unit!=='g'||k.frame>20),`as drawn it takes a blow over 20 g across the plate to let a tooth go`);
   J.knocks={rows:K4,gS};}
-flush();
+flush();}
+const end=()=>{J.time=(Date.now()-t0)/1000;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));if(fail)process.exitCode=1;};
+if(!on(5)){end();return;}
 say('5. The bench\'s figures (tools/tripping.json, read by bench.js), run again');
 benchFigs().then(j=>{const same=FJ&&figTxt(j)===figTxt(FJ);
   say(`the lock: at least ${j.lock.min}° (a depth of ${j.lock.depth} µm at the stone); the drop gone at ${j.lock.dropZero}°, a tooth past at ${j.lock.trips}°; the 3 ms blow that trips it ${j.lock.rows.filter(r=>r.drop>0).map(r=>f(r.blow,0)).join(', ')} g, deepest first`);
   say(`the detent's ring: ${j.ring.f0} Hz as drawn, ${j.ring.band[0]}-${j.ring.band[1]} Hz for a spring ${j.ring.t[0]}-${j.ring.t[1]} mm thick (the trip spring's ${j.ring.trip} Hz)`);
   chk(same,same?'tools/tripping.json is what this finds':'tools/tripping.json is not what this finds: node tripping.js --write, then node bench.js --write and python makers.py');
-  flush();J.time=(Date.now()-t0)/1000;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));if(fail)process.exitCode=1;}).catch(e=>{console.error(e);process.exitCode=1;});
+  flush();end();}).catch(e=>{console.error(e);process.exitCode=1;});

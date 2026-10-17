@@ -1,5 +1,5 @@
 (()=>{
- const MV=window.__mv,mv=MV.parent.parent.parent;mv.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();
+ const MV=window.__mv,mv=window.__BX?window.__BX.root:MV.parent.parent.parent;   /* the box's root: the page's __BX (?qa), else the movement's bowl, ring and box */mv.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();
  const partOf=o=>{while(o){if(o.userData&&o.userData.partName)return o.userData.partName;o=o.parent;}return '?';};
  const vis=o=>{while(o){if(o===MV)return false;if(!o.visible)return false;if(o===mv)return true;o=o.parent;}return true;};
  const meshes=[];mv.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh&&vis(o)&&o.geometry.attributes.position&&o.geometry.attributes.position.count>2)meshes.push(o);});

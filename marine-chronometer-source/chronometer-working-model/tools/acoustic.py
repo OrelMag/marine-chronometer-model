@@ -9,6 +9,8 @@ imageio-ffmpeg (its ffmpeg reads the audio), yt-dlp for --fetch. The recordings 
         [--boot 200]                      bootstrap resamples over beats (the onsets' spread, and the swing's over the first 100)
         [--plots DIR]                     where the plots go (default $MC_VIDEO/acoustic): ac_ID.png, the beat with its onsets and both models' best fits
         [--every S]                       stretch by stretch, S s each (a swing that changes: a start), the active swing's clicks alone
+        [--model wempe]                   the Wempe's escapement in time (dynamics.js --model wempe), for an Einheits-Chronometer or a 6MX; the old model
+                                          left out; with --write the result goes to tools/acoustic_wempe.json (References/wempe/VIDEOS.md, "Measured")
         [--write]                         write tools/acoustic.json (per recording, merged: beats used, onsets, each model's fits and residuals, single intervals)
   python acoustic.py s7VW3RiJ97E We1dLNXiBj0 xDKFZaY88cM XJQCgMV_GA8 FpolZSipVmQ --write   (the five of VIDEOS.md with running sound, about 4 min)
   python acoustic.py We1dLNXiBj0 --every 6 --from 0:56 --write   (the balance started by hand at 0:55, swing.py's build-up: acoustic_stretches.json, 30 s)
@@ -25,8 +27,9 @@ before, on a rise that goes on to DHI (2 dB) over it: a click's ringing never ri
 of up to 2 ms is measured whole. Their spread over --boot resamples of the beats (with replacement) is each onset's uncertainty, and how often it is
 found its weight: an onset rising STRONG (3 dB) in 80 % of them must be explained, a weaker one may be. 7. The model: dynamics.js's time-domain
 escapement at 15 drives (about 140-350 deg) and 7 beat errors (bE -12 to +12 deg), each beat's events relative to the strike: 4 the discharge jewel meets
-the passing spring (unlocking), 2 the wheel released (the tooth leaves the stone), 3 the detent lands on its stop, 0 the tooth strikes the impulse
-jewel, 1 the next tooth locks on the stone, and on the return swing 8 the jewel meets the trip spring and 9 the spring comes clear; the old model (before
+the passing spring (unlocking), 2 the wheel released (the tooth leaves the stone), 3 the detent lands on its stop (first), 7 it is home on it (its last
+landing, the bounces dying away: since 14 October 2026; We1dLNXiBj0's loud click is this one, the video's swing shows, not the strike), 0 the tooth strikes
+the impulse jewel, 1 the next tooth locks on the stone, and on the return swing 8 the jewel meets the trip spring and 9 the spring comes clear; the old model (before
 11 October 2026, 39d6919) from its kinematic angles, t(theta) = acos((bE - theta)/A)/(4 pi) from the far turning point (the return swing T - t). 8. The
 fit: every order-keeping one-to-one pairing of events with onsets (which click the beats were aligned on is free: the strike in one recording, the lock
 in another); for each, the shift by weighted least squares at every swing, the cost the pairs' chi^2 (sigma: the onset's spread and SM, 0.3 ms, the
@@ -45,8 +48,9 @@ W0, W1, R0, R1 = -30, 40, 215, 295   # the windows read, ms from the aligned cli
 DLO, DHI, STRONG, SM = 1.5, 2.0, 3.0, 0.3   # onset thresholds (dB; an onset rising STRONG or more must be explained, a weaker one may be), and the timing sigma (ms) every onset carries besides its spread: the onset's definition, Opus's smearing of transients
 FL = (300, 440)   # the quiet floor, ms after the aligned click: after the return swing's clicks, before the next beat (a click rings for 100 ms in xDKFZaY88cM)
 GB = (4, 2)   # the baseline: the highest level 4 to 2 ms before (a rise of up to 2 ms is measured whole; ringing, every 1.1 ms, stays under its earlier peaks)
-NAMES = {4: 'jewel meets passing spring', 2: 'wheel released', 3: 'detent lands', 0: 'strike', 1: 'lock', 8: 'jewel meets trip spring', 9: 'trip spring clear'}
-FIT = [4, 2, 3, 0, 1, 8, 9]; CORE = [0, 1, 8, 9]; ACT = [4, 2, 3, 0, 1]
+NAMES = {4: 'jewel meets passing spring', 2: 'wheel released', 3: 'detent lands', 7: 'detent home', 0: 'strike', 1: 'lock', 8: 'jewel meets trip spring', 9: 'trip spring clear'}
+FIT = [4, 2, 3, 7, 0, 1, 8, 9]; CORE = [0, 1, 8, 9]; ACT = [4, 2, 3, 7, 0, 1]
+WEMPE = False   # --model wempe: the Wempe's escapement in time (set in the main block)
 UE, UO = 4.0, 9.0   # the fit's price for a model event left unheard (2 sigma squared: some contacts are quiet) and for a clear onset no event explains (3 sigma squared)
 def opt(a, k, n, d):
     if k in a: i = a.index(k); v = a[i + 1:i + 1 + n]; del a[i:i + 1 + n]; return v if n > 1 else v[0]
@@ -57,7 +61,7 @@ def ffmpeg():
 def find(i):   # the copy of recording i that has a sound track (run_ID.mkv, fetched with --fetch; video.py's fetch takes the picture alone)
     if os.path.isfile(i): return i   # a recording of your own (a phone's, of the movement you made): any file ffmpeg reads
     for f in sorted(glob.glob(os.path.join(HOME, f'*{i}*')), key=lambda f: not os.path.basename(f).startswith('run_')):
-        if f.split('.')[-1] in ('mkv', 'webm', 'mp4') and 'Audio:' in subprocess.run([ffmpeg(), '-hide_banner', '-i', f], capture_output=True, text=True).stderr: return f
+        if f.split('.')[-1] in ('mkv', 'webm', 'mp4', 'm4a') and 'Audio:' in subprocess.run([ffmpeg(), '-hide_banner', '-i', f], capture_output=True, text=True).stderr: return f
     sys.exit(f'{i}: no copy with sound in {HOME}; python acoustic.py {i} --fetch')
 def fetch(i):
     subprocess.run([sys.executable, '-m', 'yt_dlp', '-f', 'bv*[height<=1080]+ba/b', '--merge-output-format', 'mkv', '--no-progress', '--ffmpeg-location', ffmpeg(),
@@ -119,17 +123,18 @@ def match(on, bs):   # each onset's spread over the resamples (nearest within 1 
 # ---------- the models ----------
 JS = r"""const {sim,ESC}=require(process.argv[1]+'/dynamics.js'),D=Math.PI/180,out=[];
 for(const bE of [-12,-8,-4,0,4,8,12])for(const s of [0.35,0.4,0.45,0.5,0.6,0.7,0.8,0.9,1,1.1,1.25,1.4,1.6,1.8,2]){const tr=[],r=sim({mode:'phys',T:4,from:3,trace:tr,s,bE,A:ESC.ampAt(s)/D}),ev=tr.map(x=>[+x[0],x[1]]);
-  const q=ev.filter(e=>e[1]===0&&e[0]>2.9&&e[0]<3.4);if(!q.length)continue;const st=q[0][0],E={};for(const[t,k]of ev){const d=(t-st)*1e3;if(d<-20||d>300)continue;if(E[k]===undefined)E[k]=d;}
-  if([4,2,3,0,1,8,9].every(k=>E[k]!==undefined))out.push({s,bE,A:r.A,E});}   /* far out of beat at the strongest drive it trips: no clean beat, left out */
+  const q=ev.filter(e=>e[1]===0&&e[0]>2.9&&e[0]<3.4);if(!q.length)continue;const st=q[0][0],E={},L3=[];for(const[t,k]of ev){const d=(t-st)*1e3;if(d<-20||d>300)continue;if(k===3)L3.push(d);if(E[k]===undefined)E[k]=d;}
+  const h=L3.filter(d=>d<E[1]);if(h.length)E[7]=h[h.length-1];   /* 7: the detent home on its stop, its last landing before the lock */
+  if([4,2,3,7,0,1,8,9].every(k=>E[k]!==undefined))out.push({s,bE,A:r.A,E});}   /* far out of beat at the strongest drive it trips: no clean beat, left out */
 console.log(JSON.stringify(out));"""
 DB = [-12, -8, -4, 0, 4, 8, 12]   # out of beat (deg) the model is run at: the hairspring's rest that far from the escapement's zero (dynamics.js bE)
 def corrected():   # {bE: (swings, {event: times})} over the drives
-    r = subprocess.run(['node', '-e', JS, os.path.join(TOOLS)], capture_output=True, text=True, check=True); T = json.loads(r.stdout)
+    r = subprocess.run(['node', '-e', JS, '--', os.path.join(TOOLS)] + (['--model', 'wempe'] if WEMPE else []), capture_output=True, text=True, check=True); T = json.loads(r.stdout)
     return {d: (np.array([x['A'] for x in T if x['bE'] == d]), {k: np.array([x['E'][str(k)] for x in T if x['bE'] == d]) for k in FIT}) for d in DB}
 # the old model (39d6919's makeEsc, kinematic, no time-domain version): angles from its measure() at the model's settings: the jewel meets the passing spring at
 # contact -27.32 deg, the wheel is released (rel) -21.28, the tooth lands on the impulse jewel (run.land) -20.65, the detent falls back (off) -10.96, impulse ends at the lock (impEnd) +20.75; on the
 # return swing the jewel meets the trip spring at -15.88 (its PS table's first contact) and the spring comes clear (poff) -39.12
-OLD = {4: -27.32, 2: -21.28, 0: -20.65, 3: -10.96, 1: 20.75, 8: -15.88, 9: -39.12}
+OLD = {4: -27.32, 2: -21.28, 0: -20.65, 3: -10.96, 7: -10.96, 1: 20.75, 8: -15.88, 9: -39.12}   # 7: the old model's detent falls back in one step (3)
 def old_at(A, d=0.0):   # the balance at d - A cos(wt): out of beat by d, the oscillation's centre d from the escapement's zero
     t = lambda th: np.arccos(np.clip((d - th) / A, -1, 1)) / (4 * np.pi) * 1000; s = t(OLD[0])
     return {k: (500 - t(v) - s if k in (8, 9) else t(v) - s) for k, v in OLD.items()}
@@ -164,14 +169,14 @@ if __name__ == '__main__':
     a = sys.argv[1:]
     if not a: sys.exit(__doc__)
     t0s, t1s = opt(a, '--from', 1, None), opt(a, '--to', 1, None); B = int(opt(a, '--boot', 1, '200')); NB = min(B, 100); pd = opt(a, '--plots', 1, os.path.join(HOME, 'acoustic'))
-    every = float(opt(a, '--every', 1, '0')); write = '--write' in a; get = '--fetch' in a; ids = [x for x in a if not x.startswith('--')]
+    every = float(opt(a, '--every', 1, '0')); write = '--write' in a; WEMPE = opt(a, '--model', 1, 'hamilton') == 'wempe'; MODELS = ('corrected',) if WEMPE else ('corrected', 'old'); get = '--fetch' in a; ids = [x for x in a if not x.startswith('--')]
     os.makedirs(pd, exist_ok=True); rng = np.random.default_rng(1)
-    C = corrected(); lo_, hi_ = max(max(140, np.ceil(C[d][0].min())) for d in DB), min(min(360, np.floor(C[d][0].max())) for d in DB)
+    C = corrected(); lo_, hi_ = max(max(110 if WEMPE else 140, np.ceil(C[d][0].min())) for d in DB), min(min(360, np.floor(C[d][0].max())) for d in DB)
     Ag = np.arange(lo_, hi_ + 0.01, 0.5); Z = np.zeros(len(Ag)); MC, MO = table('new', Ag, Z, C), table('old', Ag, Z)
     A2, D2 = [g.ravel() for g in np.meshgrid(np.arange(lo_, hi_ + 0.01, 1.0), np.arange(-12, 12.01, 1.0))]; MC2, MO2 = table('new', A2, D2, C), table('old', A2, D2)
     i255 = np.argmin(abs(Ag - 255))
     print(f'  corrected model (dynamics.js), at {lo_:.0f}-{hi_:.0f} deg; at 255 deg: ' + ', '.join(f'{NAMES[k]} {MC[k][i255]:+.2f}' for k in FIT) + ' ms from the strike')
-    print(f'  old model (39d6919, kinematic), at 255 deg: ' + ', '.join(f'{NAMES[k]} {MO[k][i255]:+.2f}' for k in FIT))
+    if not WEMPE: print(f'  old model (39d6919, kinematic), at 255 deg: ' + ', '.join(f'{NAMES[k]} {MO[k][i255]:+.2f}' for k in FIT))
     res = {}
     for i in ids:
         if get: fetch(i)
@@ -186,12 +191,14 @@ if __name__ == '__main__':
                 on = [o for o in match(onsets(tt, L), boot(sg, ck, 40, rng)) if o['t'] < W1 + 1]
                 if st['kept'] < 6 or not on: continue
                 row = dict(t=round(T0 + (k + 0.5) * every, 1), beats=st['kept'], onsets=[(o['t'], o['rise']) for o in on])
-                for nm, M in (('corrected', MC), ('old', MO)):
+                for nm, M in (('corrected', MC), ('old', MO))[:len(MODELS)]:
                     F = fit(on, Ag, M, ACT); ev = {q: on[o]['t'] for q, o in F['pairs']}
                     sl = invert(Ag, M[1] - M[0], ev[1] - ev[0]) if 0 in ev and 1 in ev else np.nan
-                    row[nm] = dict(A=F['A'], cost=round(F['cost'], 1), pairs={NAMES[q]: v for q, v in ev.items()}, strike_lock=round(ev[1] - ev[0], 2) if 0 in ev and 1 in ev else None, A_strike_lock=sl)
-                out.append(row); g = row['corrected']; h = row['old']
-                print(f'  {int(row["t"] // 60)}:{row["t"] % 60:04.1f} {st["kept"]:3d} beats: corrected {g["A"]:.0f} deg (cost {g["cost"]:.1f}' + (f', strike to lock {g["strike_lock"]:.2f} ms: {g["A_strike_lock"]:.0f} deg' if g['strike_lock'] else '')
+                    uh = invert(Ag, M[7] - M[4], ev[7] - ev[4]) if 4 in ev and 7 in ev else np.nan   # the unlocking to the detent home: since 14 October 2026
+                    row[nm] = dict(A=F['A'], cost=round(F['cost'], 1), pairs={NAMES[q]: v for q, v in ev.items()}, strike_lock=round(ev[1] - ev[0], 2) if 0 in ev and 1 in ev else None, A_strike_lock=sl,
+                                   unlock_home=round(ev[7] - ev[4], 2) if 4 in ev and 7 in ev else None, A_unlock_home=uh)
+                out.append(row); g = row['corrected']; h = row.get('old', dict(A=np.nan, cost=np.nan))
+                print(f'  {int(row["t"] // 60)}:{row["t"] % 60:04.1f} {st["kept"]:3d} beats: corrected {g["A"]:.0f} deg (cost {g["cost"]:.1f}' + (f', strike to lock {g["strike_lock"]:.2f} ms: {g["A_strike_lock"]:.0f} deg' if g['strike_lock'] else '') + (f', unlocking to the detent home {g["unlock_home"]:.2f} ms: {g["A_unlock_home"]:.0f} deg' if g['unlock_home'] else '')
                       + f'), old {h["A"]:.0f} deg (cost {h["cost"]:.1f}): ' + ', '.join(f'{q} {v:+.2f}' for q, v in g['pairs'].items()))
             res[i] = dict(file=os.path.basename(f), every=every, stretches=out); continue
         c, ok, P, st = beats(e[TB]); ck = c[ok]
@@ -201,7 +208,7 @@ if __name__ == '__main__':
         print('  onsets, ms from the aligned click (4-12 kHz, over ' + f'{B} resamples): ' + '  '.join(f'{o["t"]:+.2f}±{o["sd"]:.2f} ({o["rise"]:.0f} dB, {o["p"]:.0%})' for o in on))
         R = dict(file=os.path.basename(f), stretch=[t0s or '0:00', t1s or 'end'], beats=st['n'], kept=st['kept'], onsets=on, fits={})
         bt = {}
-        for nm, M in (('corrected', MC), ('old', MO)):
+        for nm, M in (('corrected', MC), ('old', MO))[:len(MODELS)]:
             for evn, evs in (('all', FIT), ('core', CORE)):
                 F = fit(on, Ag, M, evs)
                 # the swing's uncertainty: the same fit on each resample's onsets (the full set's spreads)
@@ -219,7 +226,7 @@ if __name__ == '__main__':
                     G = F['alt']; R['fits'][f'{nm}/{evn}']['alt'] = dict(A=G['A'], cost=round(G['cost'], 2), pairs={NAMES[k]: on[o]['t'] for k, o in G['pairs']})
                     print(f'       runner-up: swing {G["A"]:.0f} deg, cost {G["cost"]:.1f}: ' + ', '.join(f'{NAMES[k]} at {on[o]["t"]:+.2f}' for k, o in G['pairs']))
         # and with the beat error free too (a second parameter, the chronometer's own state like its swing): the range where the cost stays within 1 of its least
-        for nm, M in (('corrected', MC2), ('old', MO2)):
+        for nm, M in (('corrected', MC2), ('old', MO2))[:len(MODELS)]:
             F = fit(on, A2, M, FIT, D2); pr = F['prof']; okA = pr <= F['cost'] + 1; aR, dR = (A2[okA].min(), A2[okA].max()), (D2[okA].min(), D2[okA].max())
             R['fits'][f'{nm}/beat'] = dict(A=F['A'], bE=F['bE'], A_range=[float(v) for v in aR], bE_range=[float(v) for v in dR], t0=round(F['t0'], 2), cost=round(F['cost'], 2), chi2=round(F['chi2'], 2),
                                            paired=len(F['pairs']), res=residuals(on, M, F)); bt[(nm, 'beat')] = F
@@ -227,7 +234,7 @@ if __name__ == '__main__':
                   + ', '.join(f'{k} {v["res"]:+.2f}' for k, v in R['fits'][f'{nm}/beat']['res'].items()))
         # single intervals read on the corrected model, between the onsets its fit paired with two events
         F = bt[('corrected', 'all')]; ev = {k: on[o] for k, o in F['pairs']}; one = {}
-        for a_, b_ in ((0, 1), (4, 0), (8, 9), (8, 4), (9, 4), (8, 0), (9, 0)):
+        for a_, b_ in ((0, 1), (4, 0), (4, 7), (7, 1), (8, 9), (8, 4), (9, 4), (8, 0), (9, 0)):
             if a_ in ev and b_ in ev:
                 wr = (a_ in (8, 9)) != (b_ in (8, 9)); g = (ev[b_]['t'] - ev[a_]['t']) % 500 if wr else ev[b_]['t'] - ev[a_]['t']; s = float(np.hypot(ev[a_]['sd'], ev[b_]['sd']))
                 y = (MC[b_] - MC[a_]) % 500 if wr else MC[b_] - MC[a_]; yo = (MO[b_] - MO[a_]) % 500 if wr else MO[b_] - MO[a_]
@@ -245,18 +252,18 @@ if __name__ == '__main__':
         for o in on:
             k_ = int(o['t'] > W1 + 1); ax[k_].axvline(o['t'], color='k', lw=0.8 if o['p'] >= 0.8 and o['rise'] >= STRONG else 0.4, ls='-' if o['p'] >= 0.8 and o['rise'] >= STRONG else ':')
             ax[k_].errorbar(o['t'], -3, xerr=o['sd'], fmt='k|', ms=8)
-        for (nm, col, ls) in (('corrected', 'g', '-'), ('old', 'r', '--')):
+        for (nm, col, ls) in (('corrected', 'g', '-'), ('old', 'r', '--'))[:len(MODELS)]:
             F = bt[(nm, 'all')]; A = F['A']; M = MC if nm == 'corrected' else MO
             for k in FIT:
                 x = M[k][F['i']] + F['t0']; k_ = int(x > W1 + 1); ax[k_].axvline(x, color=col, ls=ls, lw=1.2, alpha=0.7); ax[k_].text(x, ax[k_].get_ylim()[1] if False else 38 - 4 * (nm == 'old'), f'{k}', color=col, fontsize=8, ha='center')
             ax[1].plot([], [], color=col, ls=ls, label=f'{nm} model at {A:.0f} deg')
         ax[0].set_xlim(W0, W1); ax[1].set_xlim(R0, R1)
         for k_ in (0, 1): ax[k_].grid(alpha=0.3); ax[k_].set_xlabel('ms from the aligned click'); ax[k_].set_ylim(-6, max(42, L.max() + 3))
-        ax[0].set_ylabel('dB over each beat\'s quiet floor'); ax[0].set_title(f'{i}: the active swing (4 unlock, 3 detent lands, 0 strike, 1 lock)', fontsize=9)
+        ax[0].set_ylabel('dB over each beat\'s quiet floor'); ax[0].set_title(f'{i}: the active swing (4 unlock, 3 detent lands, 7 home, 0 strike, 1 lock)', fontsize=9)
         ax[1].set_title('half a period on: the return swing (8 the jewel meets the trip spring, 9 it comes clear)', fontsize=9); ax[0].legend(fontsize=7, loc='upper left'); ax[1].legend(fontsize=7, loc='upper right')
-        plt.tight_layout(); p = os.path.join(pd, f'ac_{i}.png'); plt.savefig(p, dpi=80); plt.close(); print('  plot', p)
+        plt.tight_layout(); p = os.path.join(pd, f'ac_{os.path.basename(i).split(".")[0]}.png'); plt.savefig(p, dpi=80); plt.close(); print('  plot', p)
     if write:
         out = dict(note='acoustic.py: onsets in ms from each recording\'s aligned click; fits: swing A (deg) with the 16-84 % of resamples, shift t0, cost, residual per event (onset - model, ms)', recordings=res)
-        fn = os.path.join(TOOLS, 'acoustic_stretches.json' if every else 'acoustic.json')   # merged: a recording run again replaces its own entry only
+        fn = os.path.join(TOOLS, ('acoustic_wempe' if WEMPE else 'acoustic_stretches' if every else 'acoustic') + '.json')   # merged: a recording run again replaces its own entry only
         if os.path.exists(fn): out['recordings'] = {**json.load(open(fn, encoding='utf-8')).get('recordings', {}), **res}
-        json.dump(out, open(fn, 'w', encoding='utf-8', newline=''), indent=1, ensure_ascii=False); print('\nwrote', os.path.join(TOOLS, 'acoustic_stretches.json' if every else 'acoustic.json'))
+        json.dump(out, open(fn, 'w', encoding='utf-8', newline=''), indent=1, ensure_ascii=False); print('\nwrote', fn)

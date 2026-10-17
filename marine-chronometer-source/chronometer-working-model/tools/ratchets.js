@@ -19,13 +19,13 @@ const line=(q,name,load,sig,rg,what)=>{const mL=rg[0]*MPa/sig,mH=rg[1]*MPa/sig,v
 const cr=(a,b)=>a[0]*b[1]-a[1]*b[0],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1],len=a=>Math.hypot(a[0],a[1]);
 const A=MJ.arbors,T0=PH.Tf,Fpull=PH.Mup*1000/PH.rB;
 /* what each holds, N·m, and what it is made of (movement.js): the setup ratchet and its click steel; the winding ratchet dark (tempered) steel, its pawls steel;
-   the sustaining ratchet gilt brass, its pawl steel. The pivots: the click's screw (shank r 0.3, sR of its 0.6 head), the winding pawls' studs (r 0.22), the
+   the sustaining ratchet gilt brass, its pawl steel. The pivots: the click's screw (shank r 0.3, sR of its 0.6 head), the winding pawls' studs (r 0.385), the
    sustaining pawl's arbor (r 0.5); the pawls' narrowest width by the pivot (the click 1.3, pawlGeo; the winding pawls' arm 1.25, WPO; the sustaining pawl's
    blade 2.5, SPN/SPE) */
-const SPEC={'setup click':{T:PH.Mup,n:1,rat:'steel',ratY:STEEL_Y,pv:0.3,w:1.3,under:'its faces, measured undercut 3-6° (KLUwI2UUCMQ 38:26: ratchetface.py) but drawn radial, would add as much draw',holds:`the mainspring fully wound (${f(PH.Mup,3)} N·m on the barrel arbor, physics.js)`},
-  'winding pawl 1':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.22,w:1.25,holds:`the fusee's drive (${f(T0,3)} N·m), shared by the two pawls`},
-  'winding pawl 2':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.22,w:1.25,holds:`the fusee's drive, shared`},
-  'sustaining pawl':{T:T0,n:1,rat:'brass',ratY:BRASS_Y,pv:0.5,w:2.5,src:'its outline traced at KLUwI2UUCMQ 36:15, to about 0.1 mm',holds:`the sustaining spring loaded to the drive (${f(T0,3)} N·m) while the key winds`}};
+const SPEC={'setup click':{T:PH.Mup,n:1,rat:'steel',ratY:STEEL_Y,pv:0.3,w:1.3,under:'its faces undercut 4.5°, the middle of the 3-6° measured (KLUwI2UUCMQ 38:26: ratchetface.py)',holds:`the mainspring fully wound (${f(PH.Mup,3)} N·m on the barrel arbor, physics.js)`},
+  'winding pawl 1':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.385,w:1.25,holds:`the fusee's drive (${f(T0,3)} N·m), shared by the two pawls`},
+  'winding pawl 2':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.385,w:1.25,holds:`the fusee's drive, shared`},
+  'sustaining pawl':{T:T0,n:1,rat:'brass',ratY:BRASS_Y,pv:0.5,w:2.5,src:'its outline traced at KLUwI2UUCMQ 36:15, to about 0.1 mm',fitted:'its end drawn fitted along the face, as a maker stones it (movement.js fitEnd, 14 October 2026; as traced it leaned 43° off and the load pushed it out)',holds:`the sustaining spring loaded to the drive (${f(T0,3)} N·m) while the key winds`}};
 const MU=[0.10,0.20];
 const judge=(q,s,C,n)=>{const Q=q.pivot,t=[-n[1],n[0]],arm=Math.abs(cr(C,n)),F=s.T*1000/arm/s.n,QC=sub(C,Q),lt=len(QC),v=[-QC[1],QC[0]],sin=Math.sign(dot(v,[-C[0],-C[1]])),an=sin*cr(QC,n),at=Math.abs(cr(QC,t));
   return{F,arm,an,at,lt,draw:Math.atan2(an,at)*180/Math.PI,muc:an/at};};
@@ -34,13 +34,12 @@ const engage=(g,lab)=>{const fa=MU.map(m=>Math.atan(m)*180/Math.PI);
   if(g.an>=0)return{v:'ok ',txt:`${lab}the load draws it in: its line ${f(g.an,2)} mm inside the pivot, a draw angle of ${f(g.draw,1)}° against the friction angle's ${f(fa[0],1)}-${f(fa[1],1)}° (μ ${MU.join('-')})${g.muc>MU[1]?': it seats itself however the oil is':g.muc>MU[0]?': it seats itself with good oil; dry, friction holds it where it stands':': friction holds it where it stands, its spring seats it'}`};
   const need=-g.muc;return{v:need<=MU[0]?'ok ':need<=MU[1]?'~~ ':'!! ',txt:`${lab}the load pushes it out: its line ${f(-g.an,2)} mm outside the pivot (${f(-g.draw,1)}°), held by friction ${need<=MU[0]?`at μ ${f(need,2)}, under oiled steel's ${MU[0]}`:`only above μ ${f(need,2)}, more than oiled steel's ${MU[0]}`} and its spring`};};
 for(const q of MJ.pawls){const s=SPEC[q.name],o={name:q.name,holds:s.holds,lines:[]};out.pawls.push(o);
-  const g=judge(q,s,q.face.C,q.face.n),gF=judge(q,s,q.face.fit.C,q.face.fit.n),tip=q.face.kind!=='on the face';
+  const g=judge(q,s,q.face.C,q.face.n),gF=judge(q,s,q.face.fit.C,q.face.fit.n),lean=Math.acos(Math.min(1,Math.abs(dot(q.face.n,q.face.fit.n))))*180/Math.PI,tip=q.face.kind!=='on the face'&&lean>5;   /* a contact within 5° of the face's own normal is a fitted end, bearing on the face */
   say('');say(`${q.name} (${q.z} teeth, m ${f(q.m,3)}, ${f(q.ro-q.ri,2)} deep; holds ${s.holds})`);
   say(`seated ${f(q.face.depth,2)} mm into the teeth (${f(100*q.face.depth/(q.ro-q.ri))} % of their depth), as drawn bearing ${q.face.kind} at r ${f(q.face.r[0],2)}-${f(q.face.r[1],2)}; the force ${f(g.F,1)} N${s.n>1?' (each of two)':''}, ${f(g.lt,2)} from the pivot`);
   const eD=engage(g,tip?'as drawn, ':''),eF=engage(gF,tip?'its end fitted to the face: ':'');
-  const lean=Math.acos(Math.min(1,Math.abs(dot(q.face.n,q.face.fit.n))))*180/Math.PI;
   if(tip){rows.push(`  ~~  ${eD.txt}: as drawn its end leans ${f(lean,0)}° off the face, so a tooth's tip corner meets its side first${s.src?` (${s.src})`:''}. A pawl's end is stoned to bear along the face, its last fitting`);rows.push(`  ${eF.v} ${eF.txt}`);}
-  else rows.push(`  ${eD.v} ${eD.txt}${s.under?`; ${s.under}`:''}`);
+  else rows.push(`  ${eD.v} ${eD.txt}${s.under?`; ${s.under}`:''}${s.fitted?`; ${s.fitted} (its end ${f(lean,0)}° off the face)`:''}`);
   const gU=tip?gF:g;if(engage(gU,'').v==='!! ')fail=1;
   Object.assign(o,{F:gU.F,arm:gU.arm,an:gU.an,at:gU.at,draw:gU.draw,muc:gU.muc,lt:gU.lt,depth:q.face.depth,kind:q.face.kind,drawn:{an:g.an,draw:g.draw,muc:g.muc,F:g.F},fitted:tip});
   /* the tooth at its root: a triangle on 0.97 of the pitch at the root circle, loaded at the face's middle (the fitted contact) */

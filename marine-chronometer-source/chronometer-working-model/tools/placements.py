@@ -8,7 +8,7 @@ The states are escapement phases (locked, impulse, passing) and train and wind p
 so moving parts are compared where they are, not where the clock left them. For each mesh (numbered in order within its part) it records the
 geometry type, its position and its bounding box in the movement's frame; --diff lists, per part, what differs by more than 0.005 mm (position)
 or 0.02 mm (box). A part that was rebuilt shows here; every other part should not."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 STATES=[(0.0,0,2.5,False),(0.25,0,2.5,False),(0.764,0,2.5,False),(0.4,97,8.7,False),(0.4,194,0.05,False),(0.4,291,4,True),(0.4,388,0,True)]   # (phase, teeth, fusee turns from full wind, winding)
@@ -22,7 +22,7 @@ DUMP="""(()=>{const mv=window.__mv;let root=mv;while(root.parent)root=root.paren
 def arg(k,d=None):return sys.argv[sys.argv.index(k)+1] if k in sys.argv else d
 async def dump(tag,page):
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # see smoke.py
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(page);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)

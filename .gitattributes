@@ -6,4 +6,5 @@
 *.webp binary
 *.woff2 binary
 *.pdf binary
+*.djvu binary
 *.npy binary

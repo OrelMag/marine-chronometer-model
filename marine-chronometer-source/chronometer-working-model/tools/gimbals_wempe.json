@@ -1,0 +1,246 @@
+{
+ "model": "wempe",
+ "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
+ "bowl": {
+  "m": 2931.024,
+  "cg": [
+   0.733,
+   -7.1,
+   -0.526
+  ],
+  "I": [
+   [
+    4819536.7,
+    18786.6,
+    -37642.6
+   ],
+   [
+    18786.6,
+    5893367.0,
+    -12737.6
+   ],
+   [
+    -37642.6,
+    -12737.6,
+    4702117.2
+   ]
+  ],
+  "byMat": {
+   "brass": 2031.44,
+   "gilt": 468.98,
+   "plateSolid": 173.31,
+   "?": 92.12,
+   "glass": 56.64,
+   "mspring": 52.38,
+   "steel": 39.71,
+   "chain": 5.69,
+   "blued": 4.35,
+   "brass2": 3.08,
+   "chain2": 2.47,
+   "copper": 0.39,
+   "steelD": 0.38,
+   "ruby": 0.09
+  },
+  "byPart": {
+   "bowl": 1342.67,
+   "bezel": 596.76,
+   "ring": 176.01,
+   "pillarPlate": 142.59,
+   "topPlate": 113.72,
+   "dial": 92.1,
+   "closingPlate": 77.92,
+   "barrel": 56.4,
+   "mainspring": 51.79,
+   "fusee": 43.88,
+   "barrelBridge": 39.13,
+   "upperCock": 24.35,
+   "pillars": 24.04,
+   "fuseeWheel": 17.27,
+   "lowerCock": 15.24,
+   "maintaining": 13.78,
+   "intermediateBridge": 13.56,
+   "barrelArbor": 13.1,
+   "dustBush": 12.5,
+   "balance": 11.56,
+   "chain": 8.08,
+   "detentBlock": 5.64,
+   "centreWheel": 5.19,
+   "udWheel": 3.94,
+   "changeWheel": 3.46
+  },
+  "missing": {}
+ },
+ "ring": {
+  "m": 334.043,
+  "cg": [
+   6.133,
+   -0.087,
+   -0.0
+  ],
+  "I": [
+   [
+    840011.6,
+    -0.0,
+    0.0
+   ],
+   [
+    -0.0,
+    1723965.1,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    911860.9
+   ]
+  ],
+  "byMat": {
+   "brass": 333.11,
+   "steel": 0.87,
+   "steelD": 0.06
+  },
+  "byPart": {
+   "gimbalRing": 334.04
+  },
+  "missing": {}
+ },
+ "mv": [
+  1.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  1.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  1.0,
+  0.0,
+  0.0,
+  5.15,
+  0.0,
+  1.0
+ ],
+ "stops": {
+  "ring": [
+   {
+    "deg": null
+   },
+   {
+    "deg": null
+   }
+  ],
+  "bowl": [
+   {
+    "deg": null
+   },
+   {
+    "deg": null
+   }
+  ]
+ },
+ "ringY": -5.15,
+ "RO": null,
+ "CR": null,
+ "PB": [
+  -9.1,
+  -17.6,
+  12.11
+ ],
+ "reach": {
+  "bowl": 69.89,
+  "ringIn": 70,
+  "aboutX": 76.17,
+  "ring": [
+   70,
+   73.3,
+   -11.7,
+   11.5
+  ],
+  "bowlInRing": [
+   null,
+   null
+  ]
+ },
+ "alt": {
+  "bakelite": {
+   "rho": 1.37,
+   "m": 1806.07,
+   "cg": [
+    0.799,
+    1.748,
+    -1.181
+   ],
+   "I": [
+    [
+     2463251.7,
+     13939.6,
+     -9577.7
+    ],
+    [
+     13939.6,
+     3341173.5,
+     -16760.8
+    ],
+    [
+     -9577.7,
+     -16760.8,
+     2496200.1
+    ]
+   ]
+  },
+  "buna": {
+   "rho": 1.18,
+   "m": 1775.876,
+   "cg": [
+    0.801,
+    2.139,
+    -1.211
+   ],
+   "I": [
+    [
+     2399687.0,
+     13812.2,
+     -8594.2
+    ],
+    [
+     13812.2,
+     3272664.6,
+     -16871.5
+    ],
+    [
+     -8594.2,
+     -16871.5,
+     2437312.1
+    ]
+   ]
+  },
+  "aluminium": {
+   "rho": 2.7,
+   "m": 2017.428,
+   "cg": [
+    0.781,
+    -0.667,
+    -1.003
+   ],
+   "I": [
+    [
+     2905780.2,
+     14855.5,
+     -15034.1
+    ],
+    [
+     14855.5,
+     3820707.6,
+     -16003.0
+    ],
+    [
+     -15034.1,
+     -16003.0,
+     2910812.1
+    ]
+   ]
+  }
+ }
+}

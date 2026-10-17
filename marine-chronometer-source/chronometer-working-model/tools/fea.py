@@ -33,6 +33,7 @@ What it leaves out: the arbors' own bending (steel, 2 to 4 times as stiff as bra
 settings (pressed in, taken as the brass round them), friction at the fixings (taken as bonded) and the case.
 """
 import asyncio, json, math, os, subprocess, sys, time
+import browser
 import numpy as np, scipy.sparse as sp, pyamg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +55,7 @@ __mv.traverse(o=>{if(!o.userData.sc)return;o.updateWorldMatrix(true,false);const
 async def fetch():
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
-        b = await p.chromium.launch(args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"])
+        b = await p.chromium.launch(args=browser.ARGS)
         w = await b.new_page(); await w.set_content('<canvas></canvas>'); await w.evaluate("document.querySelector('canvas').getContext('webgl')"); await w.wait_for_timeout(3000); await w.close()   # see smoke.py
         pg = await b.new_page(); await pg.goto(PAGE); await pg.wait_for_function("!document.querySelector('#loading')", timeout=120000); await pg.wait_for_timeout(1500)
         r = await pg.evaluate(JS, PARTS); await b.close(); return r
@@ -172,8 +173,9 @@ class Part:
     def solid_at(s, x, z):
         G = s.G; i, k = int((x - G['x0']) // G['h']), int((z - G['z0']) // G['h'])
         return 0 <= i < G['nx'] and 0 <= k < G['nz'] and G['solid'][i, :, k].any()
-    def ring(s, x, z, R=3.5):
-        """the hole about (x, z): its wall's nodes, its radius, and whether the part closes round it (a bearing, not a clearance cut)"""
+    def ring(s, x, z, R=5.0):
+        """the hole about (x, z): its wall's nodes, its radius, and whether the part closes round it (a bearing, not a clearance cut); R reaches past the
+        widest, the fusee's and barrel's bushings' holes, r 3.4 (3.5 until 15 October 2026, when they were r 1.4-1.95)"""
         r = np.hypot(s.ec[:, 0] - x, s.ec[:, 2] - z); near = r < R
         if not near.any(): return None
         rh = r[near].min() - s.h / 2; th = np.arctan2(s.ec[near, 2] - z, s.ec[near, 0] - x); full = len(np.unique(np.floor((th[r[near] < rh + s.h / 2 + 1.2] + math.pi) / (2 * math.pi) * 16))) >= 12   # brass round most of it within 1.2 mm (a bridge's arm may be narrower than the hole's ring)
