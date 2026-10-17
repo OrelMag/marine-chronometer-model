@@ -151,6 +151,21 @@ Each label is a part name over its number (drawing number "05 xx yy-n" or Wempe 
 | 133 | (1890, 555) | Stellstift 3 | WN-202 | sure | steady pin 3 (ring) |
 | 134 | (1890, 575) | Schraube | WN-10 | likely ("10" or "18") | dial screw, from the ring into the dial (bottom right, x≈1905, y≈620–640) |
 
+Read again on 17 October 2026, each leader followed on enlarged crops against the model cut at the section's scale. Where it differs from the table above:
+
+- #5 WN-203 ends on the barrel bridge's steady pin, not on the barrel arbor.
+- #6 Steg ends on a thin steel strip standing inside the drum's wall, about 0.5 thick.
+- #20 Stift 05 06 04-4 is the Ø 0.5 pin in the fusee body's small-end recess: 05 06 04's parts list has it as piece 5.
+- #22 WN-27 is the maintaining detent's wire spring's stud.
+- #50 WN-55 is the upper cock's foot screw.
+- #62 WN-205 ends on the detent foot's small steady pins.
+- #64 "Stellstift 2" WN-201 ends on the block's pins, drawn dashed up through the top plate.
+- #79 WN-15 is the block's fixing screw.
+- #80 WN-13 is the detent foot's clamping screw.
+- #88 reads WN-52: the intermediate bridge's screw.
+- #92 WN-16 ends on the banking screw's slotted head on the block's arm.
+- A label missing from the table: "Schraube WN-10" (the last digit 0 or 8) at px 1503-1525 × 488-506, its leader to the balance's lower setting screws.
+
 Order of the arbors in the section (inferred from the blue steel parts; x of the axis in px): barrel arbor x≈373; up-and-down arbor x≈620 (with the up-and-down hand under the dial); fusee arbor x≈792; centre (minute) arbor x≈1005 (hour and minute hands on it under the dial, hands drawn black at y≈660–690); third arbor x≈1121; fourth (seconds) arbor x≈1290 (seconds hand at y≈648–654, x 1108–1381); escape arbor x≈1400; balance staff x≈1493; pillar x≈1730–1800.
 
 ### Heights (px, scaled, not dimensioned)
