@@ -4307,7 +4307,7 @@ const WFUSEE=(()=>{
   function capFix(g,yF){const P=g.attributes.position,keep=[];for(let t=0;t<P.count;t+=3){let f=yF!=null;for(let q=0;q<3&&f;q++)if(Math.abs(P.getY(t+q)-yF)>1e-5)f=false;if(!f)keep.push(t);}
     const o=new THREE.BufferGeometry();for(const k of['position','normal','uv']){const a=g.attributes[k];if(!a)continue;const w=a.itemSize,arr=new Float32Array(keep.length*3*w);
       keep.forEach((t,j)=>arr.set(a.array.subarray(t*w,(t+3)*w),j*3*w));o.setAttribute(k,new THREE.BufferAttribute(arr,w));}
-    g.dispose();return closeGeo(tjFix(o));}
+    g.dispose();const t=tjFix(o);t.setIndex([...Array(t.attributes.position.count).keys()]);return closeGeo(t);}   /* indexed: closeGeo copies an unindexed one through toNonIndexed, which warns */
   /* the same ribbon with an eye through it: samples i0 to i1 open between lo and hi (heights off each point's y), closed by the eye's floor, roof and two ends (core.js
      mainspringGeo's faces: the sides in three bands, the middle one open over the eye) */
   function eyeRibbonGeo(P,w,h,i0,i1,lo,hi){const N=P.length-1,up=new THREE.Vector3(0,1,0),t=new THREE.Vector3(),q=new THREE.Vector3(),C=[];
