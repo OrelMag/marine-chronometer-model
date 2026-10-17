@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.06.01 · 2026-10-18
+- The Wempe's chain links as its drawing shows them: plates with smoothly curved sides, a rivet hole in every lobe, and the rivets shown
+
 ## 3.06.00 · 2026-10-18
 - The Wempe page's fourth version, the escapement of 1943 as photographed (Kirow DEC 422 and 479, Lange No. 5177).
 - Its banking screw, which sets the depth of lock, drawn whole: its domed slotted head, its hole and the upright's slit, measured on those photographs.
