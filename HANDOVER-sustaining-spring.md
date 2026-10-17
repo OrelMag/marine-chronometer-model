@@ -97,7 +97,8 @@ One is TWQsSVWuikk 42:55; the other has no known source. Neither adds anything f
    `site/`.
 5. Docs: model README (the sustaining spring's line under "Estimated"; "Mechanisms" if `sustaining.js`'s figures change),
    `OPEN-QUESTIONS.md` (close or update the entry), `References/VIDEOS.md`, and `RESOLVED.md` if this counts as a fix (an entry with
-   its hash). Rebuild the build-verification report if `sustaining.js`'s results feed it (check `mechdata.js`).
+   its hash). `verification/build-verification/mechdata.js` reads `sustaining.js`, so after a change run it (about 45 s), then
+   that folder's `build_report.py` (about 45 s).
 
 ## Status when handed over
 
