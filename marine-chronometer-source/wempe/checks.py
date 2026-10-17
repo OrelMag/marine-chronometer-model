@@ -8,6 +8,7 @@ LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
 FLOAT=[('ring:Lathe',(15.22,0,-41.82),3.1,_RS),('ring:Lathe',(-43.82,0,7.73),3.1,_RS),('ring:Lathe',(28.6,0,34.09),3.1,_RS),
+  *[('ring:Lathe',q,3.1,_RS+"; the Soviet 6MX's at Kirov No. 247's 342.2, 102.2 and 246.4 (frame.js)") for q in((13.6,0,-42.37),(-43.5,0,9.4),(40.78,0,17.82))],
   *[('balance:Lathe',q,0.9,"a hub screw (WN-10): its countersunk head lies in the arm's countersink (the coloured section), with no flat face under it") for q in((-8.49,0,14.16),(-9.71,0,10.06))]]
 # audit.py box (P1f, case.js): the box's screws whose heads bear outside the audit's probes (at 0.6 of the head's radius, which fall in the hole they pass through), in the box's frame (the
 # movement's at rest), the lid shut as the movement's views have it
@@ -25,7 +26,8 @@ PH=[0.0,0.2406,0.243,0.246,0.2475,0.2482,0.2485,0.2487,0.249,0.2495,0.25,0.2507,
   0.261,0.262,0.265,0.27,0.275,0.28,0.284,0.2856,0.2865,0.2875,0.2883,0.29,0.3,0.4,0.5,0.6,0.75,0.7546,0.756,0.758,0.76,0.762,0.7637,0.765,0.9]
 STATES=[(ph,0,2.5,False) for ph in PH]+[(0.0,97*k,n,w) for k,(n,w) in enumerate([(2.5,False),(0,False),(0,True),(0.05,False),(0.12,False),(0.17,True),(0.3,False),(1.2,True),(3.1,False),(4.4,True),
   (5.7,False),(7.0,False),(8.2,False),(8.7,False),(8.78,False),(6.3,True),(2.0,False)])]
-EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) and its two steady pins, across into the block's end (05 04 01-4, 1436): a block of vertical walls drawn without holes across",1.9,1.1),
+EXPECTED={('detentBlock:Buffer','detentBlock:Lathe'):("the Soviet 6MX's (Kirov No. 247's) screws across its block, drawn without holes across: the foot's stop screw's M1.4 in the base's free side and the banking screw's thread through the upright, which has no slit (escapement.js, blk6)",4.0,1.5),
+  ('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) and its two steady pins, across into the block's end (05 04 01-4, 1436): a block of vertical walls drawn without holes across",1.9,1.1),
   ('hairspring:Buffer','hairspring:Buffer'):("the hairspring's inner end in the hole across the collet's end (05 03 02-2), drawn without the hole (a collet of vertical walls)",0.45,0.55),
 ('dustBush:Lathe','fuseeBush:Lathe'):("the dust bush pressed on the fusee bush's taper above its flange (05 08 01-2: Ø 8 T6, +0.019/+0.028, 1:70; 05 08 01-3: bore 8 H7 +0.015, 1:70; drawn at the fits' middles, 0.008 interference on the radius over the taper's 2.9). Until 15 October 2026 the T6 was read on the spigot, pressed into the top plate's hole 10, now a g6 slide in it",0.8,2.9),
  # the fusee and barrel (P1c): joints in holes a turned or extruded part can't have cut across it, and the parts that touch by design

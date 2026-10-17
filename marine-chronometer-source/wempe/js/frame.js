@@ -56,14 +56,14 @@ const WFRAME=(()=>{
       for(const k of[1,35,38])F.push(T(H[k],rJ,y0,y1));                                  /* 4.4 punched, 4.59 +0.012 reamed: the centre, seconds and intermediate wheels' settings (WN-301, WN-300: 05 08 01) */
       for(const k of[3,12,40])F.push(T(H[k],rH35,y0,y1));                                /* Hilfslöcher, 3.50 +0.012 */
       F.push({p:C(H[4],2.15,60),q:C(H[4],1.2,60),a:y0,b:y0+0.55},{p:C(H[4],1.2,60),q:C(H[4],0.45,60),a:y0+0.55,b:y0+0.95},{p:C(H[4],0.45,60),a:y0+0.95,b:y1});   /* hole 4's oil sink on the outer face, Ø 4.3 (Wempe 3955, 2_Wempe_3955_A.jpg: spherical, the pivot bright in it; its depth estimated, as the bushes' sinks; two cones for the sphere) */
-      F.push(T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1));if(DR)F.push(T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */   /* 53 not in the 6MX (Kirov No. 247's plate is bare there, in plain view: likely) */
+      F.push(T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1));if(DR)F.push(T(H[13],1.8/2,y0,y1),T(H[53],1.5045/2,y0,y1));else F.push(T(WESC.HOLES.block6.stud,rH35,y0,y1));   /* the 6MX: no 13, the detent block's stud in a Ø 3.5 2.2 S of it (Kirov No. 247: WESC.HOLES.block6) */   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */   /* 53 not in the 6MX (Kirov No. 247's plate is bare there, in plain view: likely) */
       for(const k of[8,42,48])F.push(T(H[k],rM26,y0,y1));                                /* the upper cock's and the barrel bridge's screws, M2.6 */
       for(const k of[6,9,41,47,50])F.push(T(H[k],rPinP,y0,y1),B(H[k],2.5/2,y1,1.6));   /* steady pins from above, the holes opened from below (A-B) */
       for(const k of[22,37])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));           /* steady pins from below (C-D) */
       F.push(T(H[36],2.8/2,y0,y1),A(H[36],6.012/2,y0,1.8));                              /* the lower cock's screw, its head sunk (G-H) */
       for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),B(q,WD.PIL_SEAT[0],y1,WD.PIL_SEAT[1]));
       F.push(T(H[26],4.506/2,y0,y1),{p:C(H[26],5.206/2),a:y0+0.5,b:y1});                 /* P-Q */
-      for(const q of WESC.HOLES.blockPins)F.push({p:C(q,0.7,40),q:C(q,0.4625,40),a:y0,b:y0+0.24},{p:C(q,0.4625,40),a:y0+0.24,b:y1});   /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly through the plate and countersunk Ø 1.4 on its outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, 8.81 px/mm: 10.7 apart, the model's 10.8; likely); blind from the inside until 16 October 2026 */
+      for(const q of DR?WESC.HOLES.blockPins:WESC.HOLES.block6.pins)F.push({p:C(q,0.7,40),q:C(q,0.4625,40),a:y0,b:y0+0.24},{p:C(q,0.4625,40),a:y0+0.24,b:y1});   /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly through the plate and countersunk Ø 1.4 on its outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, 8.81 px/mm: 10.7 apart, the model's 10.8; likely); blind from the inside until 16 October 2026 */
       for(const s of[-1,1])F.push(T(add(H[26],[1,0],3.5*s),rM12,y0,y1));
       {const n=176;F.push(T(H[10],8.0075/2,y0,y1),{p:C(H[10],11,n),q:C(H[10],11.7,n),a:y1-0.7,b:y1});   /* the fusee bush's hole 8.0 +0.015; J-K's recess Ø 22 at its floor, its wall opening at 45° to the face (P1c: the fusee's cover plate, Ø 21.1, lies in it; read until then as Ø 22 at the face, its floor Ø 20.6, which the plate can't enter) */
         for(const b of[0,120,240])F.push(T(add(H[10],brg(b),5.2),rM14,y0,y1));}
@@ -163,9 +163,12 @@ const WFRAME=(()=>{
        to the case (P1f, below) */
     const rg=part('ring',12);
     {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
-      const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
-        ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
-      tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
+      /* the screws' places: the drawings' 340, 100, 220; the Soviet 6MX's 342.2, 102.2, 246.4 ±0.5 (Kirov No. 247: 2_Kirow_247_A.jpg and 3_Kirow_247_uZ.jpg, holemap.py
+         --model wempe on each at 8.89 and 8.57 px/mm, the two faces agreeing; Kirov 009 and Poljot 20027 the same: sure), so 120°, 144° and 96° apart; the band built per version */
+      const RSV=/** @type {[string,number[]][]} */([['last first',[340,100,220]],['6mx',[342.2,102.2,246.4]]]),RS={};for(const[V,b]of RSV)RS[V]=b;
+      for(const[V,BS]of RSV){const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
+        ...BS.map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
+      tag(mesh(rv(rg,V),solidGeo([band]),M.plateSolid),'050800-3');}
       const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
       for(const[V,AS]of/** @type {[string,number[]][]} */([['last first',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
@@ -173,7 +176,10 @@ const WFRAME=(()=>{
       const gF=rv(rg,V);FLG.push(gF);tag(mesh(gF,solidGeo([fl]),M.plateSolid),'050800-3',1);}
       /* its three screws (WN number not read): heads Ø 6.2 × 3.05, brass, the shank 6.3, on the coloured section (Wempe_Einheitschronometer.jpg px 1819-1878 × 510-538.5, its
          shank 1837-1862: Ø 6.28 (6.2 kept, within the reading) × 3.07, M2.6, at 9.37 px/mm by the pillar's 178 px for 19; sure on the section, 2.25 high until 17 October 2026); head on the plate's inner face */
-      for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,3.05,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
+      for(const b of RS['last first']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'last first'),q[0],q[1],0,3.1,3.05,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
+      /* the 6MX's: steel, slotted, their heads Ø 6.1 ±0.2 × 2.0 ±0.2 (6_Kiro_247_S.jpg, 7_Kirow_247_W.jpg, scaled by pillar 39: likely), M2.6; drawn Ø 6.2, inside the
+         reading, as the drawings' (their heads reach over the plate's rim by 1.1, which the photographs show them doing, bearing on it) */
+      for(const b of RS['6mx']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'6mx'),q[0],q[1],0,3.1,2.0,6.3,1.3,M.steel),'WN-rs'),'ring','pillarPlate');}
       tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
       /* its radial pin to the case (Stellstift 3, WN-202 in the coloured section; P1f): in the radial hole at 12 o'clock, Ø 1.6 at 2.8 from the dial's face (05 08 00-3: the plan,
          drawn from the dial side under the section (first angle), draws it at 12 as a dashed pair across the ring figured "1,6"; the section draws it end on, ⊙ 2.8 under the
@@ -314,7 +320,14 @@ const WFRAME=(()=>{
       const L1=L(0,4),L2=L(-10,4),semi=[...Array(41).keys()].map(i=>{const t=Math.PI*i/40;return L(-5+5*Math.cos(t),8.2+5*Math.sin(t));});
       const bar={loop:[L(-10,-4),L(10,-4),L(10,4),L1,L2],y0:TI,y1:TI+10,F:[T(o,rM26,TI,TI+10),A(H[22],rPinQ,TI,2.5),A(H[37],rPinQ,TI,2.5)]};
       const ly0=TI+10-3.22,ly1=TI+10,lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],5.206/2,ly1,3.22-0.5),T(add(H[23],nv,3.5),rM12,ly0,ly1),T(add(H[23],nv,-3.5),rM12,ly0,ly1)]};
-      tag(mesh(lc,solidGeo([bar,lug]),M.gilt),'050800-2');}
+      tag(mesh(rv(lc,'last first'),solidGeo([bar,lug]),M.gilt),'050800-2');
+      /* the Soviet 6MX's: the bar full depth only over the lug, the rest toward the screw and pins cut back from the pillar plate's side to 3.5 under the top plate (every 6MX
+         side view of the detent, 8_Kirow_247_F.jpg and the gallery's 13 Feder photographs, a stamped number on the deep part; on 247's, the full depth taken as the drawn 10:
+         the cut-back part 3.3 deep (3.0-3.9), the step about at the lug's edge: likely; Wempe 3955 and Kirov 422, German-made, the plain bar). Built 3.3. Its lug 3.22 thick as drawn (247's reads 2.7,
+         by that same scale: not taken). Its plan (Kirov 14100's loose cock, chasy-ru: the setting's screws 6.9 apart, its round end r 6.6 off the setting's centre) too
+         rough to take: the drawn plan kept (README, The Soviet 6MX). The step 1.5 past the lug's edge, so the lug and the screw's hole stand on the full depth (estimated) */
+      const st=1.5,b6a={loop:[L(-10,-4),L(st,-4),L(st,4),L1,L2],y0:TI,y1:TI+10,F:[T(o,rM26,TI,TI+10),A(H[22],rPinQ,TI,2.5)]},b6b={loop:[L(st,-4),L(10,-4),L(10,4),L(st,4)],y0:TI,y1:TI+3.3,F:[A(H[37],rPinQ,TI,2.5)]};
+      tag(mesh(rv(lc,'6mx'),solidGeo([b6a,b6b,lug]),M.gilt),'050800-2');}
     /* its screw (WN-53 in the coloured section): head Ø 5.8 × 1.7 in the plate's Ø 6 × 1.8 sink, M2.6 × 5.0, 3.45 into the cock: the coloured section, scaled (estimated) */
     headOn(tag(screw(lc,H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3,M.brass),'WN-53'),'lowerCock','topPlate');   /* brass, as Wempe 3955's (2_Wempe_3955_A.jpg; steel until 16 October 2026) */
     for(const k of[22,37])tag(cylBetween(lc,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');

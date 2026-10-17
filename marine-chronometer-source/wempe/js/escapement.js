@@ -113,7 +113,13 @@ const WESC=(()=>{
     return{th,ccw,lift,psDef,prog,drop,run,p:q};}
   /* holes in the frame's parts for this group's screws and pins (frame.js cuts them): the detent block's two steady pins in the top plate's inner face (not in its table:
      drilled at assembly), the stud's screw in the upper cock (not on its sheet) */
-  const VO=brg(75),AX=brg(345),STUD=(u,v)=>add(add(B,AX,u),VO,v),BLK_NE=-0.30,HOLES={blockPins:[D(ROW-2,BLK_NE-2.3),D(ROW+2,BLK_NE-12.3)],studScrew:STUD(4.1,4.35)};
+  const VO=brg(75),AX=brg(345),STUD=(u,v)=>add(add(B,AX,u),VO,v),BLK_NE=-0.30,HOLES={blockPins:[D(ROW-2,BLK_NE-2.3),D(ROW+2,BLK_NE-12.3)],studScrew:STUD(4.1,4.35),
+    /* the Soviet 6MX's (Kirov No. 247): its block fixed not through hole 13 but by a slotted stud Ø 3.4 flush in the top plate's outer face 2.2 S of it, between two steady
+       pins 10.0 apart, measured on 2_Kirow_247_A.jpg (holemap.py --model wempe, six seeds, 8.993 px/mm, every residual under 0.57) and 2_Kirow_009_A.jpg (by hand), each
+       corrected by hole 12's offset (0.4): the two agree to 0.3 (sure to ±0.4). In the block's frame the pins stand 1.9 nearer its end than 05 04 01-4 draws them and the
+       stud 2.1 nearer and 0.8 across from hole 13; a loose 6MX block (8_Gangfeder_mit_Kloben_Rus_einfach.jpg) has the drawn pattern, so 247's block is drilled otherwise
+       or the loose one is another issue (README, Unresolved). The block itself stands where the escapement has it */
+    block6:{stud:[-34.3,18.5],pins:[[-30.0,21.55],[-36.7,14.15]]}};
   /** @type {any} */
   const ESC={A:A0,AMIN,state,PHI0,PHI_REL,PHI_C,PHI_E,PROG_C,PROG_E,RD,BETA:()=>BETA,TP,LOCK:DEPTH,layout:{A:A0,AMIN,state},at:null,beat:null,E:null};
   /* the hairspring's strip and coil (05 03_6, 05 03_7: below, where it is built): the terminal curves' radii to the strip's inside every 10 deg from where each leaves the coil,
@@ -539,7 +545,11 @@ const WESC=(()=>{
     {const g=ew.children.find(c=>c.userData.rev==='first 6mx'),pv=0.12,yP1=Y1.pf,yP0=yP1-3,ar=[[0,Y1.etU],[pv,Y1.etU],[pv,Y1.etU+0.5],[0.525,Y1.etU+2.0],[0.525,Y1.ewWeb-0.002],[0.6,Y1.ewWeb-0.002],[0.6,Y1.etL-0.9],[pv,Y1.etL-0.5],[pv,Y1.etL],[0,Y1.etL]];
       tag(mesh(g,lathe(ar,24),M.steel),'050405-2');
       const pn=tag(mesh(g,WTRAIN.gear(WTRAIN.teeth(10,0.263,2.97,1.6),3),M.steel,0,(yP0+yP1)/2,0),'050405-2',1);pn.userData.gear={z:10,m:0.263};R.pinion1=pn;
-      tag(mesh(g,lathe([[0.6+0.0015,Y1.ewWeb],[0.9,Y1.ewWeb],[0.9,Y1.ew1],[1.5,Y1.ew1],[1.1,Y1.ew1+1.8],[0.9,Y1.ew1+1.8],[0.9,Y1.ew1+5],[0.6+0.0015,Y1.ew1+5]],40),M.brass),'050405-3');}
+      tag(mesh(rv(g,'first'),lathe([[0.6+0.0015,Y1.ewWeb],[0.9,Y1.ewWeb],[0.9,Y1.ew1],[1.5,Y1.ew1],[1.1,Y1.ew1+1.8],[0.9,Y1.ew1+1.8],[0.9,Y1.ew1+5],[0.6+0.0015,Y1.ew1+5]],40),M.brass),'050405-3');
+      /* the Soviet 6MX's collet: one straight cone from the wheel to a square shoulder on the arbor, no pipe (8_Kirow_247_F.jpg, 18.3 px/mm by the wheel's Ø 14 tips and the
+         pinion's Ø 2.97 on the same arbor: Ø 2.77 at the wheel, 1.70 at its end, 5.08 long; 9_KirPol_24020_Feder2.jpg, 26.4 px/mm by its pinion: 3.14, 1.58, 5.23; both
+         edges traced every few rows, no flange over 0.1 at the wheel: likely). Kirov 247's taken; its spigot through the wheel's bore as the first-drawn collet's (estimated) */
+      tag(mesh(rv(g,'6mx'),lathe([[0.6+0.0015,Y1.ewWeb],[0.9,Y1.ewWeb],[0.9,Y1.ew1],[2.77/2,Y1.ew1],[1.70/2,Y1.ew1+5.08],[0.6+0.0015,Y1.ew1+5.08]],40),M.brass),'050405-3');}
 
     /* ================= the detent (Gangfeder 05 04 01-1 = 1436, Ruhestein -3, Goldfeder -2) ================= */
     /* 1436 (Rud. Grießbach, 17.2.43, "Stahl"), its figures each followed by a second in brackets: 0,25 (0,22), 0,33 (0,28), 0,55 (0,50), 0,65 (0,60), 0,8 (0,75), 2 (1,9), 1 (0,9),
@@ -649,17 +659,42 @@ const WESC=(()=>{
          the loose one, 8_Gangfeder_..., 26 px/mm by the upright's 3.0, which would stand 0.13 in the gold spring's path as it bends aside: the mounted reading taken, likely),
          1.4 deep (8_Gangfeder_...), its thread standing out 0.6 behind the upright. The adjusting slide Altmeppen names (a gilt piece in a notch across the base's plate face under a slotted
          cylinder, 8_Gangfeder_...) isn't built: how it fits the plate's hole 13 isn't seen (README, Unresolved) */
-      {const ya=yP+3.5,yb=yP+6.5,yS=yP+5.0,fr2=[];for(let i=1;i<12;i++){const a=Math.PI/2*i/12;fr2.push(L(tT-2+2*Math.sin(a),nUr-2+2*Math.cos(a)));}
-        const up6={loop:ccw([L(tT,nUl),L(tU+7,nUl),L(tU,nUl),L(tU,sl0),L(tU+7,sl0),L(tU+7,sl1),L(tU,sl1),L(tU,nUr),L(tT-2,nUr),...fr2,L(tT,nE-6.4)]),y0:ya,y1:yb};
-        const base6={loop:base.loop,y0:base.y0,y1:base.y1,F:[base.F[0],{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
-        tag(mesh(blk6,solidGeo([base6,thin,up6]),M.brass),'050401-4');
+      /* the upright's far side meets the base in a short taper, not a cove: on the loose block (8_Gangfeder_..., 30.3 px/mm) it widens 0.46 over its last 0.9 before the
+         base, about 27° (estimate: it shows on that photograph only, the mounted ones hide it behind the base's end; until 18 October 2026 drawn r 2, estimated) */
+      {const ya=yP+3.5,yb=yP+6.5,yS=yP+5.0;
+        /* and its upright has no slit: the loose block's upright (8_Gangfeder_..., its face toward the plate, 30 px/mm) is plain to its end, the banking screw's thread coming
+           straight through it, where 05 04 01-4 slits it 0.3 for 7 (a 9 px dark line there: likely) */
+        const up6={loop:ccw([L(tT,nUl),L(tU,nUl),L(tU,nUr),L(tT-0.9,nUr),L(tT,nUr-0.46)]),y0:ya,y1:yb};
+        /* its holes where Kirov 247's plate has them (HOLES.block6): the near steady pin's through, the far pin's in the thin part. The adjusting slide (the loose block,
+           8_Gangfeder_mit_Kloben_Rus_einfach.jpg and 10_Vergleich_..., 30.3 px/mm across the block, 24.5 along the detent, the view tilted 30-36°: likely in kind): a gilt key
+           3.2 wide, centred on the stud, flush in a notch across the corner of the base's plate face and its free side face, from the stud to the edge and 2.5 down the side;
+           the stud through it, screwed M1.7 3.0 into the block under it (estimated). The notch is the base's cells cut 2.5 short of the plate face (nS: its sides) */
+        const B6=HOLES.block6,[,nS6]=toD(B6.stud),nS0=nS6-1.6,nS1=nS6+1.6,tS6=toD(B6.stud)[0]-1.6,yN=yP+2.5;
+        const base6={loop:ccw([L(tT,nE),L(tT,nUl),L(tT,nUr-0.46),L(tT,nE-6.4),L(tS6,nE-6.4),L(tS6,nS1),L(tF,nS1),L(tF,nE)]),y0:yP,y1:yP+6.5,
+          F:[{p:C(B6.pins[0],0.45,32),a:yP,b:yP+1.2},{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
+        const nb6={loop:ccw([L(tS6,nE-6.4),L(tF,nE-6.4),L(tF,nS1),L(tS6,nS1)]),y0:yN,y1:yP+6.5,F:[{p:C(B6.stud,0.87,48),a:yN,b:yN+3.0}]};
+        const thin6={loop:ccw([L(tT,nE-6.4),L(tT,nUr-3),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nS0),L(tS6,nS0),L(tS6,nE-6.4)]),y0:yP,y1:yP+3,F:[{p:C(B6.pins[1],0.45,32),a:yP,b:yP+3}]};
+        const nt6={loop:ccw([L(tS6,nS0),L(tF,nS0),L(tF,nE-6.4),L(tS6,nE-6.4)]),y0:yN,y1:yP+3};
+        tag(mesh(blk6,solidGeo([base6,nb6,thin6,nt6,up6]),M.brass),'050401-4');
+        tag(mesh(blk6,solidGeo([{loop:ccw([L(tS6,nS0),L(tF,nS0),L(tF,nS1),L(tS6,nS1)]),y0:yP,y1:yN,F:[{p:C(B6.stud,0.87,48),a:yP,b:yN}]}]),M.gilt),'6MX.gks');
+        /* the large slotted screw in the base's free side face beside the detent's foot (the loose block: 0.9 from the end face, 3.3 from the plate face, the head Ø 4.0-4.4,
+           over the end face by about 1.2; every 6MX Feder photograph shows it, Kirov 247's and 24020's in place: likely), its head's height and the thread M1.4 2.5 into the
+           base estimated. It stands beside the foot's tail, which Kirov 14100's slotted foot lets slide along the block: a stop for the detent's place along it (README) */
+        {const gE=new THREE.Group(),q=L(tF,nE-0.9);gE.position.set(q[0],yP+3.3,q[1]);gE.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(-TD.t[0],0,-TD.t[1]));blk6.add(gE);
+          tag(screw(gE,0,0,0,2.1,1.2,2.5,0.7),'6MX.gke').userData.lift=0;}   /* seated on the side face, its shank along -t into the base (the kit's fillister head, slotted) */
         const nB=nUr-0.6,nH=0.575+0.005,lS=nH-nB,rH=1.6,hH=1.4,R3=(rH*rH+hH*hH)/(2*hH),a0=Math.asin(rH/R3),dome=[];   /* the head a spherical cap rH across its face, hH high */
         for(let i=0;i<=10;i++){const a=a0*(1-i/10);dome.push([R3*Math.sin(a),lS+hH-R3+R3*Math.cos(a)]);}
         tag(across(blk6,lathe([[0,0],[0.6,0],[0.6,lS],[rH,lS],...dome],24),M.brass,L(ROW-18.8,nB),TD.n,yS),'WN-gkA');}
       /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 × 1.2 (Wempe 3955's, 11_), M1.7, 3.0 into the block (estimated) */
-      {const fx=K.headOn(tag(screw(blk,H[13][0],H[13][1],TT,1.5,1.2,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(v=>{const f=v!=='last';fx.userData.lift=l0+(f?-0.3:0);});}   /* its lift through the plate follows the block's (above) */
+      {const fx=K.headOn(tag(screw(rv(blk,'last first'),H[13][0],H[13][1],TT,1.5,1.2,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(v=>{const f=v!=='last';fx.userData.lift=l0+(f?-0.3:0);});}
+      /* the 6MX's: a slotted steel stud Ø 3.4 seated on the block's plate face and standing through the plate's Ø 3.5 to flush with its outer face (2_Kirow_247_A.jpg: dark,
+         flush, slotted, Ø 3.3-3.5 at 8.99 px/mm; 2_Kirow_009_A.jpg bright; the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg at 30.3 px/mm across: Ø 3.55, standing
+         about 2 proud of the face, 3.3 if the view is tilted only 20°: likely), screwed into the block M1.7 3.0 (estimated). What clamps the block to the plate isn't seen: the
+         stud may be an eccentric, the adjusting slide beside it its key (README, Unresolved). It leaves the plate with the block */
+      tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,1.7,3.35,5.5,0.85),'WN-gk');   /* through the slide (2.5) and 3.0 into the block */   /* its lift through the plate follows the block's (above) */
       /* its steady pins Ø 0.9 through the block, 1.3 into the plate: as last revised the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
-      for(const[g,e2]of[[blkL,3],[blkF,6.5],[blk6,3]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');
+      for(const[g,e2]of[[blkL,3],[blkF,6.5]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');
+      for(const[q,e]of[[HOLES.block6.pins[0],1.2],[HOLES.block6.pins[1],3]])tag(cylBetween(blk6,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');   /* the 6MX's at Kirov 247's (HOLES.block6); the near one 0.55 inside the end face, so 1.2 into the block, clear above the detent foot's pins (estimated: through, as drawn, it would cross them) */
       R.blkPins=[L(ROW-2,nE-2.3),L(ROW+2,nE-12.3)];
       /* As first drawn: 05 04_1's block (no sheet of its own; the plan at 10:1, 24.4 px/mm), as on Wempe 3955 (11_Wempe_3955_Gangfeder_plus.jpg, 10_Vergleich_CWW-6MX). The
          same base, its fixing screw, steady pins and the detent's foot under its edge (the plan's holes fall on 05 04 01-4's: sure), the foot's face 0.025 further out for

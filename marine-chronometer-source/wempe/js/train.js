@@ -154,6 +154,9 @@ const WTRAIN=(()=>{
        (a close running fit, "Lagerstellen: Enger Laufsitz", 05 05_1): WN-301 Ø 1.21 for the centre's 1.19, WN-300 Ø 0.86 for the intermediate's 0.825 and the seconds' 0.81
        (one standard bush for both, opened to the larger: estimated). The WN sheets aren't in the set: their sizes beyond the hole are estimated */
     const rJ=4.596/2,sk={f:-1,rs:2.0,ds:1.2},rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};   /* rv: a group of one version's pieces (movement.js's setRev) */
+    /* the Soviet 6MX's seconds wheel: a gilt collet on the arbor from the wheel toward the top plate, a plain cylinder Ø 2.5 × 5.4 (6_Kiro_247_S.jpg, scaled by pillar 39's
+       Ø 8.1 and its screw's head: Ø 2.0-2.5 by 4-5.8, its far end under the plate's edge; estimated in length), where the drawings' arbor runs plain Ø 1.5 to the wheel */
+    tag(mesh(rv(R.sw,'6mx'),ringT([[1.5/2+0.001,13.65-5.4],[2.5/2,13.65-5.4],[2.5/2,13.65],[1.5/2+0.001,13.65]]),M.gilt),'050501-1',1);
     tag(mesh(P.topPlate,bushGeo(rJ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
     {const g=rv(P.topPlate,'last first');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}
     /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen's list: the seconds and intermediate wheels in jewels in chatons, not brass bearings; the TU's 15

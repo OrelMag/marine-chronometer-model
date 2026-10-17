@@ -1796,7 +1796,7 @@
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "From the top plate's outer face through hole 13 into the block.",
+   "fn": "From the top plate's outer face through hole 13 into the block. The Soviet 6MX's: a slotted stud flush in the plate's outer face, 2.2 from hole 13 (Kirov No. 247), through the adjusting slide into the block.",
    "rel": [
     [
      "in",
@@ -1881,6 +1881,47 @@
     ]
    ],
    "figs": "05 04_3"
+  },
+  {
+   "id": "6MX.gks",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Adjusting slide (6MX), the detent block's",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "A gilt key flush in a notch across the corner of the block's plate face and free side, the fixing stud through it. No sheet: the Soviet 6MX's (a loose 6MX block photographed by Altmeppen, Kirov No. 247's in place), its sizes measured on the loose block, how it works not seen.",
+   "rel": [
+    [
+     "on",
+     "050401-4"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.gke",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Detent foot's stop screw (6MX), in the block's side",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "A large slotted screw in the block's free side beside the detent's foot, its head over the end face: a stop for the foot along the block. No sheet: the Soviet 6MX's (every 6MX detent photograph), its thread estimated.",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "embed"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
   },
   {
    "id": "050408-2.bu",
