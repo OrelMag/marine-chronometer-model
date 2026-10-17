@@ -95,7 +95,10 @@ def wempe_report(url,keep):
         to=site.get(p) or GITHUB+p.relative_to(ROOT).as_posix()
         return f'{m.group(1)}="{to}{"#"+frag if frag else ""}"'
     html=re.sub(r'(href|src)="([^"]+)"',link,html);check(page,html)
-    for f in sorted(set(re.findall(r'src="(assets/[^"]+)"',html))):(dst.parent/f).parent.mkdir(parents=True,exist_ok=True);shutil.copy(src/f,dst.parent/f)
+    got=set(re.findall(r'src="(assets/[^"]+)"',html))
+    for f in set(re.findall(r'href="(assets/[^"#]+\.html)"',html)):   # a page of its own in assets/ (the transmission's viewer), and what it loads beside it
+        sub=(src/f).read_text(encoding='utf-8');check(f'wempe/verification/{f}',sub);got.add(f);got|={(pathlib.PurePosixPath(f).parent/s).as_posix() for s in re.findall(r'src="([^":#]+)"',sub)}
+    for f in sorted(got):(dst.parent/f).parent.mkdir(parents=True,exist_ok=True);shutil.copy(src/f,dst.parent/f)
     dst.parent.mkdir(parents=True,exist_ok=True);write(dst,meta(html,url,page,keep=keep));return page
 
 def main():

@@ -20,9 +20,11 @@ const STG=[['fusee wheel → centre pinion',90,14,FW.m,90/14*3600,FW,A.cw.pin,[H
 /* the outlines by teeth and the stage's module (a wheel's z@m, its pinion's z@m: each pair is one): the tables' own tips, roots and tooth thicknesses */
 const OUT={};for(const[,zA,zB,m,,w,p]of STG){OUT[`${zA}@${m}`]=WTRAIN.teeth(w.z,w.m,w.D,w.dg,w.mate,w.l);OUT[`${zB}@${m}`]=WTRAIN.teeth(p.z,p.m,p.D,p.dg);}
 const outline=(z,m)=>{const o=OUT[`${z}@${m}`];if(!o)throw Error(`no Wempe gear ${z}@${m}`);return o;};
+/* another gear for the tools that mesh more than the train (wempe_transmission.js: the motion work and the up-and-down work, from dial.js's tables): its outline by teeth and module */
+const addOutline=(z,m,o)=>{OUT[`${z}@${m}`]=o;};
 /* each mesh's drawn centres (the holes) against m (zA + zB) / 2 on the wheel's module */
 const D0=STG.map(([,zA,zB,m,,,,h])=>dist(h[0],h[1])-m*(zA+zB)/2);
 /* the pivots' shake in their holes, each mesh the looser of its two arbors' (diametral, as drawn: WN-301's 1.21 on the centre's 1.19, WN-300's 0.86 on the intermediate's
    0.825 and the seconds' 0.81; the WN sheets aren't in the set, so estimated) */
 const SH=[0.02,0.035,0.05,0.05];
-module.exports={W,STG,outline,D0,SH,ESC:WPHYS.ESC,FW,EP,dist};
+module.exports={W,STG,outline,addOutline,D0,SH,ESC:WPHYS.ESC,FW,EP,dist};
