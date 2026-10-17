@@ -186,18 +186,19 @@ const WFUSEE=(()=>{
        In the bar's frame (u along it, lower end to upper, from the foot of the axis's perpendicular; v across, as the shape's y) it lies at v -4 to -6 (02-2: the slot 2 H8,
        its near edge 4 from the axis), its ends at u -11.52 and 10.98 retracted. Its lower end is cut obliquely: the point on
        the near side, rounded r 0.39, the far side 0.94 shorter; its upper end is square on the far side, its near side rounded r 2.47 from u 8.56; across it at u -6.0 the
-       hole the spring's end goes into (the dashed hole on C-D). Its travel 3.6, between C-D's two positions */
-    const SB={d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05};
+       hole the spring's end goes into (the dashed hole on C-D). Its travel 3.6, between C-D's two positions. Its width is a sliding fit in the slot's 2 H8 (2.000-2.014): 1.98,
+       v 4.01 to 5.99 (no sheet sizes it: a g6-class bar, estimated; drawn 2.00, its sides in the slot's walls, until 18 October 2026) */
+    const SBN=4.01,SBF=5.99,SB={d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05};
     /* the slot is 1.5 deep along the bar's lower part and "1,1+0,05 tief" toward its upper end (02-2's two depths, inside its lines at either end), from where 02-2's hidden arc
        r 9.45 crosses it, u 8.0 (us): there the rib between the top turn and the next isn't cut, and the bar's upper end, standing out over the groove, passes under it, clear
        of the chain on the turn below. So the bar is thinner toward its upper end: 1.05 (tt; the coloured section draws its end standing out 9.5 px thick against its middle's
        13.5, 0.70 (±0.07), flush on the cover plate's side; 1.05/1.45 is 0.72), from u 3.4 (ub, estimated: slid its whole 3.6, its full thickness stays inside the top land's floor, r 9.3, at its far side, so off the
        chain on the turn below, and short of the shallow part) */
-    const SBO=(()=>{const o=[],c=[SB.lo+SB.rt,4+SB.rt],e=Math.asin(0.47/SB.rr);
+    const SBO=(()=>{const o=[],c=[SB.lo+SB.rt,SBN+SB.rt],e=Math.asin((SBN+SB.rr-SBF)/SB.rr);
       for(let i=0;i<=8;i++){const a=Math.PI*(150+120*i/8)/180;o.push([c[0]+SB.rt*Math.cos(a),c[1]+SB.rt*Math.sin(a)]);}   /* the point's round, from the oblique edge to the near side */
-      for(let i=0;i<=16;i++){const a=-Math.PI/2+(Math.PI/2-e)*i/16;o.push([SB.ru+SB.rr*Math.cos(a),6.47+SB.rr*Math.sin(a)]);}   /* the upper end's round, from the near side to the far */
-      o.push([SB.lf,6]);return o.map(([u,v])=>[u,-v]).reverse();})();   /* the far side back to the oblique edge; mirrored */
-    const SPA=angOf(SPX[0]-fx,SPX[1]-fz),SPR=Math.hypot(SPX[0]-fx,SPX[1]-fz),SBtipA=Math.atan2(-4-SB.rt,SB.lo);   /* the stop pin's place about the fusee's axis; the lower end's point, in the bar's frame */
+      for(let i=0;i<=16;i++){const a=-Math.PI/2+(Math.PI/2-e)*i/16;o.push([SB.ru+SB.rr*Math.cos(a),SBN+SB.rr+SB.rr*Math.sin(a)]);}   /* the upper end's round, from the near side to the far */
+      o.push([SB.lf,SBF]);return o.map(([u,v])=>[u,-v]).reverse();})();   /* the far side back to the oblique edge; mirrored */
+    const SPA=angOf(SPX[0]-fx,SPX[1]-fz),SPR=Math.hypot(SPX[0]-fx,SPX[1]-fz),SBtipA=Math.atan2(-SBN-SB.rt,SB.lo);   /* the stop pin's place about the fusee's axis; the lower end's point, in the bar's frame */
     /* the chain's and the band's runs (connGeo), and from them the drum's turns: the end's angle in the drum set so the drum stands at 0 fully wound (BLK0), and its turn at run down */
     /* full wind is where the stop holds the fusee. The slot runs along the line from the axis to the chain's pin A, its upper end toward A (02-2 dimensions it from that
        line: "4", "2 H8", no angle), so the bar's turn on the fusee is A's; the stop pin (Ø 1.6, hole 7, 14.0 from the axis) then bears on the bar's far side near its upper
@@ -205,8 +206,8 @@ const WFUSEE=(()=>{
        side comes round onto the pin; the face reaches past the pin once the bar has slid 2.1 of its 3.6). It falls 0.112 turn short of the chain lying to the groove's end N
        (M_FULL, the full wind assumed until 15 October 2026): 8.638 turns of chain on the fusee, 8.70 turns and 55.9 h from run down (05 06_20's test: 8.75 working turns;
        the up-and-down dial: 56 h); the groove's last turn-tenth stays empty, as a fusee's should (02-2 draws N a further 0.07 on) */
-    const barRot=PINA,SPu=Math.sqrt(SPR*SPR-(6+0.8+0.02)**2);
-    const CG={},RF0N=connGeo(CONN.chain).RF0,RFS=(()=>{const r=SPA-barRot-Math.atan2(-6.82,SPu);return r+TAU*Math.round((RF0N-r)/TAU);})();   /* the stop's turn, in the turn nearest the groove's end's */
+    const barRot=PINA,SPu=Math.sqrt(SPR*SPR-(SBF+0.8+0.02)**2);
+    const CG={},RF0N=connGeo(CONN.chain).RF0,RFS=(()=>{const r=SPA-barRot-Math.atan2(-(SBF+0.82),SPu);return r+TAU*Math.round((RF0N-r)/TAU);})();   /* the stop's turn, in the turn nearest the groove's end's */
     CG.chain=connGeo(CONN.chain,RFS);CG.band=connGeo(CONN.band,RFS);
     /* on the barrel the chain runs on from its tangent point the way the barrel turns back (rotation.y falling) to its hook: the drum stands at 0 fully wound */
     const BLK0={},BETA_RUN={};for(const k of['chain','band']){const cg=CG[k],mf=cg.m0Of(cg.RF0),run=cg.runOf(mf),sT=cg.lf(mf)+run.S;BLK0[k]=run.psi+Math.PI-(CONN[k].len-sT)/cg.rbp;
@@ -505,7 +506,7 @@ const WFUSEE=(()=>{
     const SPA0=152.1*D2R,SPA1=95*D2R,SPE=-Math.asin(3.9/SPW);   /* where each leaves the wall (from the bar's upper end); the fixed end, 0.1 short of the slot */
     const spFree=(P,h,a)=>{const Q=[h,...toBar(P),[SPW*Math.cos(a),SPW*Math.sin(a)]],L=[0];for(let i=1;i<Q.length;i++)L.push(L[i-1]+Math.hypot(Q[i][0]-Q[i-1][0],Q[i][1]-Q[i-1][1]));
       return x=>{const t=x*L[L.length-1];let i=1;while(i<L.length-1&&L[i]<t)i++;const f=(t-L[i-1])/(L[i]-L[i-1]||1);return[Q[i-1][0]+(Q[i][0]-Q[i-1][0])*f,Q[i-1][1]+(Q[i][1]-Q[i-1][1])*f];};};
-    const SF0=spFree(SPU,[SB.sp,-4],SPA0),SF1=spFree(SPD,[SB.sp+SB.tr,-4],SPA1);
+    const SF0=spFree(SPU,[SB.sp,-SBN],SPA0),SF1=spFree(SPD,[SB.sp+SB.tr,-SBN],SPA1);
     const spPath=t=>{const f=t/SB.tr,o=[[SB.sp+t,-5.0],[SB.sp+t,-4.5]];   /* its end 1 into the bar's hole */
       for(let k=0;k<=40;k++){const a=SF0(k/40),b=SF1(k/40);o.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]);}
       const aD=SPA0+(SPA1-SPA0)*f,n=Math.ceil((aD-SPE)/(3*D2R));o[o.length-1]=[SPW*Math.cos(aD),SPW*Math.sin(aD)];
@@ -521,7 +522,7 @@ const WFUSEE=(()=>{
     /* the bar's slide: its spring holds it out until the connector on the top turn, or coming down onto it, reaches its lower end; it then slides as far as keeps that end clear
        of the connector's inner side by 0.02 (the chain's plates 1.0 from its pitch line, 0.80 across; the band 0.11, 0.78 high), never past its 3.6. The connector's path (pitch line)
        from the update: on the fusee to its leaving point (index kf), then the run to the barrel */
-    const LOW=[[SB.lf,-6],[-6.5,-6],[-6.5,-4],...SBO.filter(([u])=>u<-11)];   /* the lower end's outline in the bar's frame (the far side, across at u -6.5, the near side, the point's round; the oblique edge closes it) */
+    const LOW=[[SB.lf,-SBF],[-6.5,-SBF],[-6.5,-SBN],...SBO.filter(([u])=>u<-11)];   /* the lower end's outline in the bar's frame (the far side, across at u -6.5, the near side, the point's round; the oblique edge closes it) */
     const sd=(p,a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy||1,t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);};
     const crs=(a,b,c,d)=>{const o=(p,q,r)=>(q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]);return o(a,b,c)*o(a,b,d)<0&&o(c,d,a)*o(c,d,b)<0;};
     const inP=(p,P)=>{let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++)if((P[i][1]>p[1])!==(P[j][1]>p[1])&&p[0]<(P[j][0]-P[i][0])*(p[1]-P[i][1])/(P[j][1]-P[i][1])+P[i][0])c=!c;return c;};

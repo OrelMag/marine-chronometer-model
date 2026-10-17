@@ -2459,6 +2459,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   the small end's last 1.5 built ray by ray in the pieces the slot leaves) and the bar lies on
   the cover plate in it. Keep: a part lying in a cut has the cut drawn round it; never a part
   sharing the face of a solid it lies in.
+  The bar was drawn 2.00 wide in the slot's 2.00, its sides in the slot's walls, so where its upper end stands out
+  of the slot the two flickered through each other (18 October 2026, seen beside the fusee's end made solid past N).
+  Now 1.98, a sliding fit in the 2 H8 (estimated), the stop's 0.02 to the pin kept. Keep: a part sliding in a slot is
+  drawn narrower than it, never its walls' width. Fixed, not yet committed.
   Keep (Winding and maintaining work, the same change): the Wempe's 05 06_4 is seen from the
   fusee's large end, its C-D as its A-B, mirrored in the model; unmirrored, the stop bar met the
   stop pin with its near side, where C-D draws the pin against its far side. And the slot is 1.1
