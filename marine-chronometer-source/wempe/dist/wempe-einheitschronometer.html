@@ -2660,8 +2660,10 @@ const WFRAME=(()=>{
       const g=tag(mesh(fb,new THREE.LatheGeometry(lw,64),M.brass,F10[0],0,F10[1]),'050801-2');tag(mesh(fb,new THREE.LatheGeometry(up,64),M.brass,F10[0],0,F10[1]),'050801-2',1);
       const y0=TT-1.5,y1=TT,F=[T(F10,r,y0,y1)];for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);F.push(T(q,1.55/2,y0,y1),A(q,2.207/2,y0,0.5));}
       tag(mesh(fb,solidGeo([{loop:C(F10,6.6,240),y0,y1,F}]),M.brass),'050801-2',1);}
-    /* its screws: heads Ø 2.1 × 0.45, just under the flange's face in the sinks (the dust bush stands on the flange), M1.4 × 3.6 through the flange and the plate to the recess: the coloured section, scaled (estimated) */
-    for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);tag(screw(fb,q[0],q[1],TT-1.0,1.05,0.45,3.6,0.7),'WN-34');}
+    /* its screws: heads Ø 2.1 × 0.45, just under the flange's face in the sinks (the dust bush stands on the flange), M1.4 × 3.2 through the flange into the plate, ending 0.4
+       short of the recess's floor, as the coloured section draws them (Wempe_Einheitschronometer.jpg x 741-752: the head's top at y 313.3, the shank's end at 348.3, 2.7-4.5 px
+       short of the recess's floor at 351, at 9.37 px/mm: 3.15-3.3 from the seat; likely; 3.6, to the recess, until 17 October 2026) */
+    for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);tag(screw(fb,q[0],q[1],TT-1.0,1.05,0.45,3.2,0.7),'WN-34');}
     /* Staubfutter: Rundmessing 15 Ms 58, 18.1 -0.2 long on the bush's flange, pressed on its top (bore Ø 8 H7 on the bush's 8 T6, both tapering 1:70: 0.008 interference on
        the radius at the fits' middles; until 15 October 2026 a slide over the bush's g6 as then read; its top Ø 7.62 under a 20° mouth
        1.8 +0.2 deep); body Ø 13.1 -0.2 for 15.1, then a neck Ø 9.7 -0.2 (for 05 08 01-4, not in the set); at the body's top a collar 3.1 -0.2 high, Ø 15.1 -0.2 with a flat 14.1
@@ -2686,8 +2688,15 @@ const WFRAME=(()=>{
     /* Profilmessing Ms 58, cranked: a foot 3.2 thick on the top plate's outer face, a web, and an arm 15 -0.1 over the foot's underside to the balance's upper setting at 23.
        Its axis runs from 23 toward 15° W of N; in plan it tapers from 17 wide at the foot's end, 49 from the end of its arm, to the r 6 round the setting; the foot 16.5 long, the
        web's outer face 26.5 from 23 and its inner face an arc r 22 ±0.1 about 23 (so 4.5 on the axis, about 5.5 at its sides: "≈5,5"); the arm 3.2 thick, relieved 0.8 under
-       it within r 12 of the setting, the step at 45° (05 08 03-1's "0,8", "45°", "12ʳ"; 127-556.04 U30 draws the arm 2.4 there: the relief; 05 08 03-1's "3,2 ±0,02" at the arm's
-       end conflicts and is noted in the README). The setting's seat Ø 5.2 H7 through, sunk Ø 6 × 0.5 underneath for its flange (U30), two M1.2 3.5 +0.05 either side along the axis (drawn at their tap drill, Ø 0.95, at 3.525: at the thread's size they would break 0.12 into the Ø 6 sink);
+       it within r 12 of the setting, the step at 45° (05 08 03-1's "0,8", "45°", "12ʳ"; 127-556.04 U30 draws the arm 2.4 there: the relief). Round the setting, a boss under the arm, its face Ø 6 0.8 below the
+       relieved underside, so 3.2 thick there (05 08 03-1's "3,2 ±0,02", its Schnitt A-B to the boss's face, and its "6 Ø"), its flanks 45° to Ø 7.6 (U30, 12.5 px/mm: the face
+       9-10 px under the relief, its base Ø 7.2 traced; the coloured section, 9.37 px/mm: the face Ø 6.35 at y 217, x 1465.5-1525, its base Ø 7.8, the cock's top at 187, so
+       3.2; sure: three dimensioned views draw it as the cock's metal, the section leaving it unhatched only where the setting screws' holes run down through it): built
+       with its face Ø 5.8 and its base Ø 7.5 (within the sources' 5.6-6.35 and 7.2-7.8), so the stud's slot, milled through it to 2.93 from the axis, clears the face. The setting's
+       seat Ø 5.2 H7 2.7 deep from the top, leaving a floor 0.5 thick bored Ø 4.59 (U30: 0.1 + 1.4 + 1.4 + 0.5 = 3.3 from the settings' top, 0.1 proud; the floor's hole the table's
+       "Körner 4,4, kalibr. 4,59" for 23): both settings go in from the top, a piloted counterbore (until 17 October 2026 the hole jewel's setting came from below with a flange
+       Ø 6 in a sink 0.5 deep, and the arm was flat 2.4 there). Two M1.2 3.5 +0.05 either side along the axis (drawn at their tap drill, Ø 0.95, at 3.525), through the boss and
+       out of its flanks;
        the auxiliary hole 20 Ø 2.8 at 10 from 23; a slot 1.8 H7 wide, its middle on the setting's line across the arm, from the O side's edge to 3.4 from the axis (C-D; Wempe 3955's
        index lies in it). Foot: the screw's hole 8 clear 2.8, steady pins 6 and 50 5 either side of the axis at 40, pin 9 at 24.5 under the web, 1.585 -0.005 × 2.5 deep (sure).
        C-D's 82°: the slot's inner wall leans 8° toward the axis going down, 3.4 from it on the top and 3.06 under the thin end, as the stud's upright does (05 03 02-3's 98°,
@@ -2708,13 +2717,29 @@ const WFRAME=(()=>{
         {L:[...rev(K22),Ku[0],Ku[1]],y0:TT-15,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-3.2,y1:TT},
         {L:[[0.9,SW],[-0.9,SW],[-0.9,3.4],[0.9,3.4]],y0:TT-15,y1:q=>TT-15+Math.max(0,3.4-((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))/TN}];   /* the wall's overhang, its underside the 82° face */
       const L=(u,v)=>add(add(c,ax,u),vo,v),[thin,,,web,foot]=cells;
-      const thF=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),
+      /* the boss under the thin end: Ø 7.6 at the arm's underside, its face Ø 6 0.8 below; the setting screws' holes bite its flanks and the stud's slot crosses it (local u, v) */
+      const bo=(()=>{const R=3.75,R0=2.9,d=3.525,SN=SW-0.8*TN-0.02,rh=0.475,xi=(R*R-rh*rh+d*d)/(2*d),yi=Math.sqrt(R*R-xi*xi),aI=Math.atan2(yi,xi),aN=Math.atan2(Math.sqrt(R*R-0.81),0.9);   /* SN: the stud's slot milled through the boss, its wall where the upright's 82° lean reaches at the boss's face */
+        const bI=Math.atan2(yi,xi-d);   /* where the outer circle meets a bite, seen from the bite's centre (about 58°) */
+        const add=(o,p)=>{const l=o[o.length-1];if(!l||Math.hypot(l[0]-p[0],l[1]-p[1])>1e-9)o.push(p);};   /* no point twice in a row */
+        const arcAt=(cx,r,a0,a1,o)=>{const n=Math.max(2,Math.ceil(Math.abs(a1-a0)*r/0.08));for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;add(o,[cx+r*Math.cos(a),r*Math.sin(a)]);}return o;};
+        const fix=o=>{let a=0;for(let i=0;i<o.length;i++){const p=o[i],q=o[(i+1)%o.length];a+=p[0]*q[1]-q[0]*p[1];}return a<0?o.reverse():o;};
+        const N=240,C3=[];for(let k=0;k<N;k++)C3.push([R0*Math.cos(TAU*k/N),R0*Math.sin(TAU*k/N)]);   /* the face's edge: the same points for the disc and both halves */
+        const Pp=[d-rh,0],Pm=[rh-d,0];
+        const top=[Pp];arcAt(d,rh,Math.PI,bI,top);arcAt(0,R,aI,aN,top);top.push([0.9,SN],[-0.9,SN]);arcAt(0,R,Math.PI-aN,Math.PI-aI,top);arcAt(-d,rh,Math.PI-bI,0,top);top.pop();top.push(Pm);
+        for(let k=N/2;k>=0;k--)top.push(C3[k%N]);
+        const bot=[Pm];arcAt(-d,rh,0,bI-Math.PI,bot);arcAt(0,R,Math.PI+aI,TAU-aI,bot);arcAt(d,rh,TAU-bI,Math.PI,bot);bot.pop();bot.push(Pp);
+        for(let k=N;k>=N/2;k--)bot.push(C3[k%N]);
+        return[fix(top),fix(bot),fix(C3.slice())];})();   /* the flank's two halves (the setting screws' bites and the slot cut from them) and the face's disc: one solid of its own on the arm's underside (solidGeo's cells lie side by side, not one under another) */
+      const ySl=q=>TT-11.8-clamp((Math.hypot(q[0]-c[0],q[1]-c[1])-2.9)*0.8/0.85,0,0.8);
+      const boss=[{L:bo[0],y0:TT-12.6,y1:ySl},{L:bo[1],y0:TT-12.6,y1:ySl},{L:bo[2],y0:TT-12.6,y1:TT-11.8,F:[{p:C(c,5.206/2),a:TT-12.6,b:TT-12.3},{p:C(c,4.59/2),a:TT-12.3,b:TT-11.8}]}];
+      const thF=[T(c,5.206/2,thin.y0,thin.y1),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),
         T(WESC.HOLES.studScrew,rM14,thin.y0,thin.y1)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
       const sk=(k,y)=>[{p:C(H[k],rPinQ,40),a:y-2.5,b:y-0.2},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.2,40),a:y-0.2,b:y}];   /* the pins' holes, 2.5 deep, their 0.2 × 90° sinks (05 08_05) */
       foot.F=[T(H[8],rCl26,foot.y0,foot.y1),...sk(6,foot.y1),...sk(50,foot.y1)];web.F=[...sk(9,web.y1)];
       /* the auxiliary hole 20 (Ø 2.8) in the drawings' versions only: the 6MX's cock has none (Altmeppen's list: no window in the upper cock; his comparison's arrow on the
          Wempe's hole there; Kirov No. 247's cock is plain where the overlay puts 20: sure) */
-      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),DR?M.gilt:G6T),'050803-1');});}
+      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),DR?M.gilt:G6T),'050803-1');
+        tag(mesh(UCG[i],solidGeo(boss.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),DR?M.gilt:G6T),'050803-1',1);});}
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
     for(const g of UCG)tag(screw(g,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
     /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
@@ -3300,7 +3325,7 @@ const WESC=(()=>{
         const g=new THREE.PlaneGeometry(S,S);g.rotateX(Math.PI/2);const e=mesh(bal,g,m,0,ya-0.01,11);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050301-1',1);}
       for(const c of[90,270])tag(mesh(bal,solidGeo([{loop:brass(c),y0,y1}]),M.brass),'050301-1',1);}
     /* the compensation masses (Masse 05 03 01-4; 05 03_2, a poor copy): round brass, Ø 6.3 (scaled; 05 03_1's Anker balance Ø 6.35 boxed), across the rim, their centres on its
-       middle, each held by a screw WN-12 with its nut WN-12a across the rim (05 03_2's side view and plan, the screw dashed radially), a slot from below for the rim.
+       middle, each held by a screw WN-12 radially through its outer jaw, its tip on the rim (05 03_2's side view and plan, the screw dashed radially; the 6MX's book, Fig. 5.62, cuts a mass so), a slot from below for the rim.
        Their place, MASS_A deg from the 3-9 (the cuts') line: 30, Wempe 3955's (9_Wempe_3955_Hemmung.jpg, its rim rectified on its two cuts and the arm's ends: the four
        masses at 28.2, 30.0, 32.0 and 29.6 deg, ±1-2; the 6MX's book, Fig. 5.62, 30 deg), where 05 03_2 scales 32.5 (likely). Their height, MASS_H0 to MASS_H1 over the rim's
        lower face: 05 03_2's side view (12.18 px/mm by the rim's 3.8) draws the near pair from that face to 6.40 (its end chamfered about 0.4, not drawn) and the far pair from
@@ -3318,17 +3343,24 @@ const WESC=(()=>{
         const aI=arcR(ri,L[inE].p,L[inS].p),aO=arcR(ro,L[ouE].p,L[ouS].p);   /* the arcs closing the inner and outer cells */
         return[[...run(inS,inE),...aI],[...run(ouS,ouE),...aO],[...run(inE,ouS),...aO.slice().reverse(),...run(ouE,inS),...aI.slice().reverse()]];};
       for(const a of[MASS_A,180-MASS_A,180+MASS_A,360-MASS_A]){const c=pol([0,0],rc,a),[cI,cO,cS]=cells(c);
-        tag(mesh(bal,solidGeo([{loop:ccw(cI),y0,y1},{loop:ccw(cO),y0,y1},{loop:ccw(cS),y0,y1:ys}]),M.brass),'050301-4');
-        /* its screw across, its slotted head sunk flush in the mass's outer face, its nut in the inner (WN-12, WN-12a): Wempe 3955's masses (9_Wempe_3955_Hemmung.jpg, the two
+        /* in its top, on its centre, a tapped hole M1.2 2.0 deep, countersunk 90° to Ø 1.85, its end 0.64 over the rim (WN-12a's: 05 03_2's plan, its leader to a double circle
+           at the mass's centre, Ø 1.1-1.35; the coloured section's thread 1.17 wide, 1.9-2.0 deep, a cheese head on one mass only: the drawings, sure). Wempe's related balances
+           have it: Wempe 2965, the lever version (muser96-249_3, 17.3 px/mm), all four tops countersunk Ø 1.7-1.9, threaded and empty, and Wempe 2493, before the Einheits design
+           (muser95-375_4), the same; but the Einheits examples photographed, Wempe 3955 (5_O, 6_S) and Langes 5373, 5499, 5829, show plain tops (the drawings build it; Review-results).
+           It clamps nothing (it stops short of the rim): a poising screw fitted where needed, likely; left empty. So the mass is drawn as a cap over the rim, with
+           the hole, on its two jaws, the slot between them (one solid would have the hole cross its cells). Until 18 October 2026 WN-12a was a nut sunk in its inner face */
+        tag(mesh(bal,solidGeo([{loop:ccw(C(c,mr,120)),y0,y1:ys,F:[{p:C(c,0.5,32),a:y0,b:y0+2.0},{p:C(c,0.925,32),q:C(c,0.5,32),a:y0,b:y0+0.425}]}]),M.brass),'050301-4');
+        tag(mesh(bal,solidGeo([{loop:ccw(cI),y0:ys,y1},{loop:ccw(cO),y0:ys,y1}]),M.brass),'050301-4',1);
+        /* its screw (WN-12), its slotted head sunk flush in the mass's outer face, threaded through the outer jaw to the rim's outer face: Wempe 3955's masses (9_Wempe_3955_Hemmung.jpg, the two
            nearest seen side-on at 15 px/mm: sure) show the head flush in the outer face, Ø 1.56 against the mass's 6.3, its slot across, and nothing standing out of the
-           inner face; the nut WN-12a (05 03_2's label) is drawn sunk the same way (estimated: no photograph shows it). The faces are the mass's round side, which can't be counterbored here (a solid of
-           vertical walls): head and nut 0.02 under its outermost line, 0.08 out of it at their sides. Drawn without a hole across the rim (a turned part cut by a radial hole isn't drawn). Until 15 October 2026 the
+           inner face. The faces are the mass's round side, which can't be counterbored here (a solid of
+           vertical walls): the head 0.02 under its outermost line, 0.08 out of it at its sides. Drawn without its hole in the jaw (a turned part cut by a radial hole isn't drawn). Until 15 October 2026 the
            head Ø 1.7 stood 0.55 proud of the outer face and the nut as much of the inner */
         const u=unit(c),yS=FY-2.45,rIn=rc-mr,rOut=rc+mr;   /* 2.45 over the rim's lower face: 05 03_2's slotted head 2.83, Wempe 3955's 2.55 and Lange 5829's 2.0 (5_Wempe_3955_O.jpg, stahl_113510_lange_4.jpg; likely) */
-        tag(across(bal,lathe([[0,rIn+0.02],[0.42,rIn+0.02],[0.42,rOut-0.57],[0,rOut-0.57]],16),M.steel,[0,0],u,yS),'WN-12');
+        tag(across(bal,lathe([[0,ro+0.01],[0.42,ro+0.01],[0.42,rOut-0.57],[0,rOut-0.57]],16),M.steel,[0,0],u,yS),'WN-12');   /* its tip 0.01 off the rim's outer face */
         tag(across(bal,lathe([[0,rOut-0.57],[0.8,rOut-0.57],[0.8,rOut-0.02],[0,rOut-0.02]],24),M.steel,[0,0],u,yS),'WN-12',1);   /* its head, sunk in the mass's outer side */
         tag(across(bal,new THREE.BoxGeometry(1.62,0.25,0.25).translate(0,rOut-0.02-0.125+0.02,0),M.steelD,[0,0],u,yS),'WN-12',1);   /* its slot, 0.02 out of the head's face as screw() draws them */
-        tag(across(bal,lathe([[0,rIn+0.02],[0.8,rIn+0.02],[0.8,rIn+0.57],[0,rIn+0.57]],24),M.steel,[0,0],u,yS),'WN-12a');}}
+      }}
     /* the timing screws (Zeitschraube 05 03 01-2) and their weights (Zeitmasse 05 03 01-3, by the coloured section's labels), at the arm's ends: the screw across the rim in its
        tapped hole Ø 0.9, 0.16 pitch, 2.15 over the rim's lower face (05 03 01-1: sure), its slotted head inside the rim on the rim's inner face, the weight on it outside
        the rim, its tip 42.1 over both screws' ends (05 03_2's plan, both screws: the head inside drawn with its slot, Ø 1.65 × 1.3 scaled at 12.07 px/mm, the weight
@@ -3569,8 +3601,10 @@ const WESC=(()=>{
         tag(mesh(sM,solidGeo([{loop:Q([[GB[0],n0],[h0,n0],[h0,n1],[GB[0],n1]]),y0:y0b,y1:y1b},{loop:Q([[h0,n0],[head,n0],[head,n1],[h0,n1]]),y0:y0F,y1:y1b}]),M.gilt),'050401-2');}
       const gf=new THREE.Group(),bp=D(GB[0],GB[1]);gf.position.set(bp[0],0,bp[1]);sM.add(gf);const gfi=new THREE.Group();gfi.position.set(-bp[0],0,-bp[1]);gf.add(gfi);R.golds.push(gf);
       tag(mesh(gfi,solidGeo([{loop:offs(free,GW).map(([t,n])=>D(t,n)),y0:y0b,y1:y1b}]),M.gilt),'050401-2',1);
-      /* its screw (WN-14), across into the square: head Ø 1.2 × 0.4, M0.7 (estimated) */
-      tag(across(sM,lathe([[0,0],[0.6,0],[0.6,0.4],[0.33,0.4],[0.33,0.4+0.55],[0,0.95]],20),M.blued,D(head-1.2,g1+GW/2+0.4),TD.n.map(v=>-v),yd(o.d0+1)),'WN-14');
+      /* its screw (WN-14), across into the square: head Ø 1.4 × 0.4, M0.7 (estimated). The head on photographs, each scaled by a size in the same picture: Wempe 3955 in place
+         (10_Wempe_3955_Feder_plus.jpg, against the square's 2.0) 1.33-1.58, 10_Vergleich_CWW-6MX (against the gold spring's head, 2.4) 1.28-1.54, 11_ 1.19-1.41, Lange 5177
+         (8_Lange_5177_Feder.jpg, against the square) 1.53-1.67: about 1.43 (likely, ±0.15); the coloured section's Ø 1.97 is the strip's 2 drawn whole (Ø 1.2 until 17 October 2026) */
+      tag(across(sM,lathe([[0,0],[0.7,0],[0.7,0.4],[0.33,0.4],[0.33,0.4+0.55],[0,0.95]],20),M.blued,D(head-1.2,g1+GW/2+0.4),TD.n.map(v=>-v),yd(o.d0+1)),'WN-14');
       /* the foot's screw M1 along it into the block (number not read) and its two steady pins (Stellstift 2, WN-201 in the coloured section), drawn without holes across */
       tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
@@ -3647,26 +3681,39 @@ const WESC=(()=>{
          1436's thicker foot; in place of the upright a long arm toward the stone, 2.8 thick on the base's free side, 3.7 to 6.5 under the plate ("2,8", "6,5", sure), 3.56 wide
          and flush with the base's edge, as both photographs have it (11_, 10_Vergleich_CWW-6MX: 3.6 wide at 22.3 px/mm by the base's 14.6); 05 04_1 sets it back 1.06 and
          draws it 2.5 wide, its far edge 3.56 behind the base's edge as the photographs' (scaled, 24.4 px/mm). Its end 2.9 past the stone (scaled 21.84 from the block's screw),
-         joined to the base by a cove r 1.82 and a ledge 0.78 to the base's face (scaled; the photographs show the cove). Through the arm, on the stone's line, the banking screw that ends in a brass cone standing out past the
-         arm (05 04_1's "pointed piece", its slotted end seen in the elevation 5.1 under the plate, "1,4" over the arm's face: sure): Ø 0.85, the cone 2.5 long (on Wempe 3955's
-         photograph, 30 px/mm: the sheet scales Ø 1.2-1.3 and 3.3; the photograph wins), its near end in the arm's face (no head in the plan). The arm's end is slit along the screw
+         joined to the base by a cove r 1.82 and a ledge 0.78 to the base's face (scaled; the photographs show the cove). Through the arm, on the stone's line, the banking screw (WN-16 by the coloured section's label, its leader to
+         the slotted head at px 1437, 419: sure), 5.1 under the plate (the elevation's "1,4" over the arm's face at "6,5"; the section's head centred at y 408 against the plate at
+         360: 5.12; sure): M1.2 (05 04_1's plan, 24.4 px/mm: its thread lines 1.25 and 0.98 apart), its tail a cone 12° (written; 10.8° scaled) from Ø 1.25 to a point over
+         3.32, starting 0.85 inside the arm's far face so it stands 2.47 out, Ø 0.93 there (Wempe 3955, 11_Wempe_3955_Gangfeder_plus.jpg: Ø 0.84 and 2.4-2.5 out; likely); and on
+         the wheel's side of the pipe, the pipe banking on its flat face, a gilt domed head Ø 3.3 (05 04_1's plan, a circle fitted to its arcs: 3.29; the coloured section
+         31-31.5 px: 3.31-3.36; Wempe 3955's 11_ and 10_Vergleich_CWW-6MX 3.0-3.45; likely, ±0.2): its edge 0.42 then a dome R 1.8 rising 1.08, 1.5 in all (the dome's R from
+         the plan and the photographs, 1.7-2.0; the height from the photographs' side views, 1.4-1.7: likely), a slot 0.3 across its top (the section, the photograph; the slot
+         estimated). The detent's spring presses the pipe toward the wheel onto the head: turning the screw sets the depth of lock, 0.25 a turn. Until 17 October 2026 only the tail
+         was built, the head taken for a "gilt dish" on no sheet. The arm's end is slit along the screw
          to clamp it (05 04_1's elevation, the photograph): not cut, a slit inside the arm's depth. The hole Ø 1.3 to the foot's screw, 2.8 from the edge (05 04 01-4), is
          drilled from the plate's side, 3 deep to meet the screw 2.3 under the plate: Wempe 3955's base shows it on that face, 2.4-2.5 from the edge (scaled, 28.4 px/mm).
          The photograph puts the fixing screw 9.1 from the edge, the plate's hole 13 and 05 04_1 7.6: drawn at 13. The gilt dish both photographs show at the detent's tip is
-         on no sheet: not built (README) */
+         the banking screw's head (above) */
       {const nF=-0.325,tE=-2.9,nA0=nF,nA1=nF-3.56,rc=1.82,nC=nA1-rc,tC=tT-2.6,arc=[];
         for(let i=1;i<16;i++){const a=Math.PI/2*i/16;arc.push(L(tC+rc*Math.cos(a),nC+rc*Math.sin(a)));}
         const plate={loop:ccw([L(tT,nF),L(tT,nC),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nF)]),y0:yP,y1:yP+6.5,
           F:[{p:C(H[13],0.87,48),a:yP,b:yP+6.5},{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
         const arm={loop:ccw([L(tE,nA0),L(tT,nA0),L(tT,nC),L(tC+rc,nC),...arc,L(tC,nA1),L(tE,nA1)]),y0:yP+3.7,y1:yP+6.5};   /* its near face on the base's edge, sharing its corner */
         tag(mesh(blkF,solidGeo([plate,arm]),M.brass),'050401-4');
-        const u1=nA0-nA1;tag(across(blkF,lathe([[0,0],[0.425,0],[0.425,u1],[0,u1+2.5]],20),M.brass,D(0,nA0),TD.n.map(v=>-v),yP+5.1),'cone41');}}
+        const u1=nA0-nA1,hF=nA0-0.575,c0=hF-1.5+1.8,dome=[];   /* along the axis from the arm's near face (toward its far face): the head's face at the pipe's wheel-side edge (n 0.575) */
+        for(let i=0;i<=12;i++){const a=Math.asin(1.65/1.8)*i/12;dome.push([1.8*Math.sin(a),c0-1.8*Math.cos(a)]);}   /* the dome from its apex to the edge, centre c0 */
+        const bk=[...dome,[1.65,hF-0.42],[1.65,hF],[0.6,hF],[0.6,u1-0.85],[0,u1-0.85+3.32]];
+        tag(across(blkF,lathe(bk,28),M.gilt,D(0,nA0),TD.n.map(v=>-v),yP+5.1),'cone41');
+        tag(across(blkF,new THREE.BoxGeometry(1.2,0.3,0.3).translate(0,c0-1.8+0.13,0),M.steelD,D(0,nA0),TD.n.map(v=>-v),yP+5.1),'cone41',1);}}   /* its slot, 0.02 out of the apex */
 
     /* ================= jewels: the balance's (05 04 06, 05 04 07, 05 04 08 by the coloured section's labels) ================= */
     /* Each bearing a hole jewel in its setting (Lagerstein in its Fassung) and an endstone in its own (Deckstein, Fassung 05 04 08-2), as the coloured section draws them; no
        sheet of them is in the set: Ø 5.2 to the seats (05 08 03-1, 05 08 00-2: H7), the stones Ø 2.0 × 0.35 and their holes 0.02 over the pivots, 0.03 between hole jewel and
-       endstone (estimated). Upper: in the cock, the endstone's setting from its top face held by two screws (WN-55 by the coloured section's label, M1.2, at the cock's two tapped
-       holes) over its edge, the hole jewel's from below with its flange Ø 6 in the cock's sink (05 08 03-1, U30). Lower: in the lug, both from below, held by two screws (WN-10 by the
+       endstone (estimated). Upper: in the cock's seat Ø 5.2, 2.7 deep from its top to a floor bored Ø 4.59, both settings from the top, Ø 5.2, the hole jewel's on the floor and the endstone's
+       over it standing 0.1 proud of the cock, held by two screws (WN-55 by the coloured section's label, M1.2, at the cock's two tapped holes) over its edge (127-556.04 U30:
+       0.1 + 1.4 + 1.4 + 0.5; sure). U30 draws the two settings 1.4 each, their joint 1.3 under the cock's top; the staff (05 03_3.2's 13.0) puts the pivot's end 1.52 under it,
+       so the joint is drawn at the endstone's face, the endstone's setting 1.6 and the hole jewel's 1.2 (estimated). Until 17 October 2026 the hole jewel's setting came from
+       below with a flange Ø 6 in a sink in the cock. Lower: in the lug, both from below, held by two screws (WN-10 by the
        coloured section's label at px 1503-1525, 500-506, its last digit 0 or 8: likely 10; WN-16, which the model gave them until 17 October 2026, is the banking screw's label). The screws' heads Ø 2.5: the
        coloured section draws both pairs Ø 2.5, the upper 1.3 high, the lower 1.4 (px 1453-1476 and 1518-1542 × 175-188; 1450-1474 and 1515-1539 × 455-469; at 9.4 px/mm Ø 2.45-2.53, their shanks 1.2), and Wempe 3955's cock
        (2_Wempe_3955_A.jpg) gives the upper ones Ø 2.5 (sure); their heights the section's alone (likely).
@@ -3674,12 +3721,12 @@ const WESC=(()=>{
        a diamond endstone: Bonhams), the setting gilt and its screws brass: the setting open over the stone (Ø 1.6), the stone drawn bright (likely). Until 16 October 2026 the
        setting closed over a ruby and its screws steel */
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
-    {const ck=TT-15,eY=Y.tipU-0.02,hY=eY+0.03;
-      tag(mesh(bju,lathe([[0.8,ck],[2.6,ck],[2.6,eY],[1.003,eY],[1.003,eY-0.35],[0.8,eY-0.35]],48),M.gilt),'050408-2.bu');
+    {const ck=TT-15,cT=ck-0.1,eY=Y.tipU-0.02,hY=eY+0.03;
+      tag(mesh(bju,lathe([[0.8,cT],[2.6,cT],[2.6,eY],[1.003,eY],[1.003,eY-0.35],[0.8,eY-0.35]],48),M.gilt),'050408-2.bu');
       tag(mesh(bju,lathe([[0,eY-0.5],[0.5,eY-0.46],[0.79,eY-0.35],[1.0,eY-0.35],[1.0,eY],[0,eY]],32),M.steel),'050408-1.bu');   /* domed on its outside, under the setting's opening; drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
-      tag(mesh(bju,lathe([[0.45,hY+0.35],[1.003,hY+0.35],[1.003,hY],[2.6,hY],[2.6,ck+2.4-0.5],[2.998,ck+2.4-0.5],[2.998,ck+2.4],[0.45,ck+2.4]],48),M.brass),'050406-2.bu');
+      tag(mesh(bju,lathe([[0.45,hY+0.35],[1.003,hY+0.35],[1.003,hY],[2.6,hY],[2.6,ck+2.7],[0.45,ck+2.7]],48),M.brass),'050406-2.bu');
       tag(mesh(bju,stoneGeo(1.0,0.125,0.35,'olive'),M.ruby,0,hY+0.175,0),'050407-1.bu');
-      for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(bju,q[0],q[1],ck,1.25,1.3,2.0,0.46,M.brass),'WN-55.ck');}}
+      for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(bju,q[0],q[1],cT,1.25,1.3,2.1,0.46,M.brass),'WN-55.ck');}}
     {const lf=TI+10,eY=Y.tipL+0.02,hY=eY-0.03,o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
       tag(mesh(bjl,lathe([[0.45,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,eY],[1.003,eY],[1.003,hY-0.35],[0.45,hY-0.35]],48),M.brass),'050406-2.bl');
       tag(mesh(bjl,stoneGeo(1.0,0.125,0.35,'olive'),M.ruby,0,hY-0.175,0),'050407-1.bl');
@@ -4360,7 +4407,7 @@ const WFUSEE=(()=>{
        In the bar's frame (u along it, lower end to upper, from the foot of the axis's perpendicular; v across, as the shape's y) it lies at v -4 to -6 (02-2: the slot 2 H8,
        its near edge 4 from the axis), its ends at u -11.52 and 10.98 retracted. Its lower end is cut obliquely: the point on
        the near side, rounded r 0.39, the far side 0.94 shorter; its upper end is square on the far side, its near side rounded r 2.47 from u 8.56; across it at u -6.0 the
-       hole the spring's end goes into (the dashed hole on C-D). Its travel 3.6, between C-D's two positions */
+       hole for its pin 05 06 03-2 (the dashed hole on C-D), on which the spring's end bears. Its travel 3.6, between C-D's two positions */
     const SB={d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05};
     /* the slot is 1.5 deep along the bar's lower part and "1,1+0,05 tief" toward its upper end (02-2's two depths, inside its lines at either end), from where 02-2's hidden arc
        r 9.45 crosses it, u 8.0 (us): there the rib between the top turn and the next isn't cut, and the bar's upper end, standing out over the groove, passes under it, clear
@@ -4679,13 +4726,17 @@ const WFUSEE=(()=>{
     const SPA0=152.1*D2R,SPA1=95*D2R,SPE=-Math.asin(3.9/SPW);   /* where each leaves the wall (from the bar's upper end); the fixed end, 0.1 short of the slot */
     const spFree=(P,h,a)=>{const Q=[h,...toBar(P),[SPW*Math.cos(a),SPW*Math.sin(a)]],L=[0];for(let i=1;i<Q.length;i++)L.push(L[i-1]+Math.hypot(Q[i][0]-Q[i-1][0],Q[i][1]-Q[i-1][1]));
       return x=>{const t=x*L[L.length-1];let i=1;while(i<L.length-1&&L[i]<t)i++;const f=(t-L[i-1])/(L[i]-L[i-1]||1);return[Q[i-1][0]+(Q[i][0]-Q[i-1][0])*f,Q[i-1][1]+(Q[i][1]-Q[i-1][1])*f];};};
-    const SF0=spFree(SPU,[SB.sp,-4],SPA0),SF1=spFree(SPD,[SB.sp+SB.tr,-4],SPA1);
-    const spPath=t=>{const f=t/SB.tr,o=[[SB.sp+t,-5.0],[SB.sp+t,-4.5]];   /* its end 1 into the bar's hole */
+    const SPE0=[SB.sp+0.31,-3.25],SF0=spFree(SPU,SPE0,SPA0),SF1=spFree(SPD,[SPE0[0]+SB.tr,SPE0[1]],SPA1);   /* its end on the pin's side toward the bar's upper end, where the pin stands out of the bar */
+    const spPath=t=>{const f=t/SB.tr,o=[];   /* its end bears on the bar's pin (below) */
       for(let k=0;k<=40;k++){const a=SF0(k/40),b=SF1(k/40);o.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]);}
       const aD=SPA0+(SPA1-SPA0)*f,n=Math.ceil((aD-SPE)/(3*D2R));o[o.length-1]=[SPW*Math.cos(aD),SPW*Math.sin(aD)];
       for(let k=1;k<=n;k++){const a=aD+(SPE-aD)*k/n;o.push([SPW*Math.cos(a),SPW*Math.sin(a)]);}   /* along the wall to its fixed end */
       return o.map(([u,v])=>new THREE.Vector3(u,S+0.5,-v));};
     let spT=0;const spM=tag(mesh(gBar,ribbonGeo(spPath(0),0.10,1.0),M.blued),'050603-3');
+    /* the bar's pin (Stift 05 06 03-2: the coloured section's label; 05 06_4's C-D draws it in both positions, the spring's line ending on it, at 12.2 px/mm): Ø 0.5 (6 px)
+       pressed across the bar's 2 at u -6.0 in its hole (dashed inside the bar), standing 0.9 (11 px) out of its near side, toward the arbor, where the spring's end bears on it;
+       at the spring's mid-height (likely, ±0.1). Built 17 October 2026: until then the spring's end went 1 into the hole */
+    {const g=new THREE.CylinderGeometry(0.25,0.25,2.9,12);g.translate(0,-(6-1.45),0);g.rotateX(-Math.PI/2);tag(mesh(gBar.children[0],g,M.steel,SB.sp,S+0.5,0),'050603-2');}
     /* the spring's pin (Stift 05 06 04-4: the coloured section's label, its leader to this pin, and 05 06 04's parts list, piece 5, a 0.5 pin: likely; numbered 05 06 03-2 until
        17 October 2026; the hole "0,5 H7" in 05 06 04-2, not cut in it): along the slot, 1.5 from the line through the axis on the bar's side (02-2's "15"),
        from the recess, where it stands in to 6.4 from the axis through the spring (C-D), out through the hub flush with the top turn; at the spring's mid-height (estimated) */
@@ -7167,6 +7218,7 @@ const PIECES={
     {k:'pin',t:'Chain pin (Kettenstift)',h:'050600-6',d:'The pin across the flange’s slot that the chain’s (or band’s) top hook takes.',sp:'05 06 00-6 (coloured section) · Ø 0.55 in the ribs’ 0.55 +0.01',src:'drawing',sn:'Its hole from the body’s sheet; its place near the ribs’ tops estimated',figs:'05 06_2.2'}],
   stopWork:[{k:'bar',t:'Stop bar (Stellungssteg)',h:'050603-1',d:'The steel bar in the slot across the fusee’s small end: its lower end, cut obliquely, stands into the top turn’s groove until the chain presses it in; its upper end, thinner and rounded on the axis’s side, then stands out to meet the stop pin.',sp:'Coloured section’s 05 06 03-1 · 22.5 × 2 × 1.45, the upper part 1.05 · travel 3.6 · its ends traced on 05 06_4’s C-D'},
     {k:'spring',t:'Stop bar spring (Stegfeder)',h:'050603-3',d:'A steel strip lying round the wall of the small end’s recess, pinned near the slot, its free end in a hole across the bar near its lower end: it holds the bar out toward that end.',sp:'Coloured section’s 05 06 03-3 (no sheet) · drawn on 05 06_4’s C-D in both positions · 0.15 × 1.0 (estimated)',src:'scaled'},
+    {k:'barpin',t:'Stop bar’s pin (Stift)',h:'050603-2',d:'The pin pressed across the stop bar near its lower end; the bar’s spring bears on the end standing out toward the arbor.',sp:'05 06 03-2 (the coloured section’s label) · Ø 0.5 × 2.9, 0.9 out of the bar',src:'scaled',sn:'Drawn on 05 06_4’s C-D in both positions, the spring ending on it; its sizes scaled there',figs:'05 06_4'},
     {k:'pin',t:'Stop bar spring’s pin (Stift)',h:'050604-4',d:'The pin along the slot in the body’s small end that holds the stop bar’s spring.',sp:'05 06 04-4 (the coloured section’s label and 05 06 04’s parts list: likely) · Ø 0.5 in the body’s hole 0.5 H7, 1.5 from the slot’s line through the axis'}],
   coverPlate:[{k:'plate',t:'Cover plate',h:'050600-4',d:PARTS.coverPlate.d,sp:PARTS.coverPlate.sp},
     {k:'screw',t:'Cover plate screw (WN-20)',h:'WN-20',d:'The countersunk screw holding the cover plate to the fusee’s small end.',sp:'WN-20 · M1.7, head Ø 3.1',src:'est',sn:'Its head from the plate’s countersink; its length estimated',figs:'05 06_8'}],
@@ -7233,7 +7285,7 @@ const PIECES={
   secondsWheel:[{k:'arbor',t:'Seconds pinion and arbor (Sekundentrieb)',h:'050501-2',d:'The seconds arbor’s steel pinion and arbor, one piece: its 10 leaves driven by the intermediate wheel, the seat its wheel is riveted on, and its lower pivot, which runs on as the post for the seconds hand.',sp:'Drawing 05 05 01-2 (revised 24.3.48) · Präz. Rundstahl 3.5 · z 10, tip Ø 3.4, 7 long · 24.1 between its shoulders · pivots Ø 0.82 and 0.76, the post to Ø 0.65',src:'scaled',sn:'Its lengths and diameters from its sheet; its leaf count from the centre distance; the tip scaled on its sheet and the root estimated'},
     {k:'wheel',t:'Seconds wheel (Sekundenrad)',h:'050501-1',d:'The seconds wheel, five-spoked, riveted on the pinion’s seat; it drives the escape pinion. Its hub stands 0.2 proud toward the pinion.',sp:'Drawing 05 05 01-1 · z 80, m 0.263, tip Ø 21.9, root Ø 20.23 · rim 1.0, hub Ø 6.5, spokes 1.3'}],
   balance:[{k:'rim',t:'Balance rim and arm',h:'050301-1',d:PARTS.balance.d,sp:'Drawing 05 03 01-1 · Nickelstahl Sonderlegierung u. Messing · Ø 32.32 −0.04, joint Ø 31.29, inside Ø 30.48 · 3.8 high · cut 1.5 at 90° from the arm'},
-    {k:'masses',t:'Compensation masses',h:'050301-4 WN-12 WN-12a',d:'Four round brass masses across the rim, each held by a screw and nut through it (WN-12, WN-12a).',sp:'05 03 01-4 · Ø 6.3 × 6.46, from the rim’s lower face · 30° from the cuts’ line',src:'scaled',sn:'Scaled on 05 03_2 (a poor copy) and measured on Wempe 3955’s photographs: their height against their width, their place on the rim rectified on its cuts and arm',figs:'05 03_2'},
+    {k:'masses',t:'Compensation masses',h:'050301-4 WN-12',d:'Four round brass masses across the rim, each held by a screw (WN-12) through its outer jaw onto the rim; in each top a countersunk M1.2 hole for WN-12a, as the drawings have it, left empty (photographed Einheits chronometers show plain tops).',sp:'05 03 01-4 · Ø 6.3 × 6.46, from the rim’s lower face · 30° from the cuts’ line',src:'scaled',sn:'Scaled on 05 03_2 (a poor copy) and measured on Wempe 3955’s photographs: their height against their width, their place on the rim rectified on its cuts and arm',figs:'05 03_2'},
     {k:'timing',t:'Timing screws and weights',h:'050301-2 050301-3',d:'A timing screw across the rim at each end of the arm, in a tapped hole Ø 0.9 × 0.16, carrying a brass weight: turned in or out, they set the rate.',sp:'05 03 01-2, 05 03 01-3 · 42.1 over both',src:'scaled',sn:'The hole from the rim’s sheet; the weights scaled on 05 03_2 and Wempe 3955',figs:'05 03_2, 05 03_4'},
     {k:'staff',t:'Balance staff',h:'050402-1',d:'The hardened steel staff: its pivots run in the jewels in the two cocks; it carries the collet, the arm on the hub, and the rollers.',sp:'Drawing 05 04 02-1 (in 05 04 02, 29.5.46) · hardened and tempered · seats Ø 1.65 s6, Ø 2 h6, Ø 1.2 r6 · pivots Ø 0.21',src:'drawing',sn:'Its diameters and the lengths from the hub’s flange from 05 04 02; its pivots from 05 03_3.2; its ends fitted to the endstones',figs:'05 04_4, 05 03_3-2'},
     {k:'hub',t:'Balance hub (Unruhbutzen)',h:'050402-2',d:'The brass hub pressed on the staff, its flange carrying the arm.',sp:'05 04 02-2 · Ms · flange Ø 6.3 × 1.8, neck Ø 2.63, 4.1 long, 2 × M1',src:'drawing',sn:'Every size from 05 04 02',figs:'05 04_4'},
@@ -7248,11 +7300,11 @@ const PIECES={
     {k:'pinion',t:'Escape pinion and arbor',h:'050405-2',d:'The steel arbor with its pinion of 10 leaves, which the seconds wheel drives.',sp:'05 04 05-2 · Präz. Rundstahl · z 10, m 0.263, tips Ø 2.97 · pivots Ø 0.24',src:'drawing',sn:'From its sheets',figs:'05 04_8, 05 04_7.2'},
     {k:'collet',t:'Escape wheel collet (Gangradbutzen)',h:'050405-3',d:'The brass collet the wheel is pressed on.',sp:'05 04 05-3 (05 04 10) · 4.7 long',src:'drawing',sn:'Its length from 05 04_7.2; its taper scaled',figs:'05 04_7.2'}],
   detent:[{k:'detent',t:'Detent with its locking stone',h:'050401-1 050401-3',d:PARTS.detent.d,sp:'1436 (05 04 01-1) · foot 0.60 × 1.9 × 6.6, spring 0.07, blade 0.50/0.28, pipe Ø 1.15 · stone Ø 0.75'},
-    {k:'gold',t:'Gold spring (Goldfeder)',h:'050401-2 WN-14',d:'The gold passing spring, screwed to the detent, resting on its horn.',sp:'05 04 01-2 · 8-carat gold (Goldblech, federhart) · 0.15 thick, 15.4 long',src:'drawing',sn:'From its sheet; its path round the pipe after the layout',figs:'05 04_2, 05 04_1'},
+    {k:'gold',t:'Gold spring (Goldfeder)',h:'050401-2 WN-14',d:'The gold passing spring, screwed to the detent, resting on its horn.',sp:'05 04 01-2 · 8-carat gold (Goldblech, federhart) · 0.15 thick, 15.4 long · its screw WN-14, head Ø 1.4 (measured on photographs)',src:'drawing',sn:'From its sheet; its path round the pipe after the layout',figs:'05 04_2, 05 04_1'},
     {k:'foot',t:'Detent foot screw and pins',h:'WN-gf WN-205.d',d:'The screw and two steady pins that hold the detent’s foot to the block.',sp:'Screw WN-13, M1 · pins WN-205, Ø 0.45 (the coloured section’s labels: likely)',src:'est',sn:'The screw from the block’s sheet; the pins scaled on 1436',figs:'05 04_3, 05 04_10.1'}],
   detentBlock:[{k:'block',t:'Detent block',h:'050401-4',d:PARTS.detentBlock.d,sp:PARTS.detentBlock.sp},
     {k:'screws',t:'Block screws and pins',h:'WN-gk WN-gkA WN-201.gk',d:'The fixing screw from the top plate’s outer face, the screw across the upright’s slit end, and the two steady pins.',sp:'WN-15 (the coloured section’s label: likely), M1.7; M1.2 · pins WN-201 (“Stellstift 2”), Ø 0.9',src:'est',sn:'Their threads and places from the block’s sheet; heads estimated',figs:'05 04_3'},
-    {k:'cone',t:'Banking screw with its cone, 1941 (as first drawn)',h:'cone41',d:'The screw through the 1941 block’s arm on the locking stone’s line, held by the arm’s slit end, its brass cone standing out past the arm: Wempe 3955’s block has it. 05 04_1 draws its slotted end at the detent’s side, 5.1 under the plate; what it banks against isn’t drawn there.',sp:'05 04_1 (no number) · Ø 0.85, the cone 2.5 long, 5.1 under the plate',src:'scaled',sn:'Its place from 05 04_1 (the “1,4” over the arm’s face: sure); its size measured on Wempe 3955’s photograph (11_), the sheet scaling Ø 1.2 × 3.3',figs:'05 04_1'}],
+    {k:'cone',t:'Banking screw, 1941 (as first drawn)',h:'cone41',d:'The banking screw through the 1941 block’s slit arm on the locking stone’s line: its gilt domed head lies on the wheel’s side of the detent’s pipe, which the detent’s spring presses onto its flat face; its pointed tail stands out past the arm. Turning it sets the depth of lock.',sp:'WN-16 (the coloured section’s label) · M1.2 · head Ø 3.3 × 1.5, domed and slotted · tail cone 12°, 2.47 out · 5.1 under the plate',src:'scaled',sn:'Its place from 05 04_1 (the “1,4” over the arm’s face: sure); its head fitted on 05 04_1’s plan and measured on the coloured section and Wempe 3955’s photographs (11_, 10_); the head’s edge and slot estimated',figs:'05 04_1'}],
   balanceJewelsUp:[{k:'jewel',t:'Upper hole jewel',h:'050406-2.bu 050407-1.bu',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Upper endstone',h:'050408-2.bu 050408-1.bu',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-55.ck',d:'Two screws holding the endstone’s setting.',sp:'WN-55 (the coloured section’s label) · M1.2 · heads Ø 2.5 × 1.3'}],
   balanceJewelsLow:[{k:'jewel',t:'Lower hole jewel',h:'050406-2.bl 050407-1.bl',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Lower endstone',h:'050408-2.bl 050408-1.bl',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-10.bl',d:'Two screws holding the settings in the lug.',sp:'WN-10 (the coloured section’s label, its last digit 0 or 8) · M1.2 · heads Ø 2.5 × 1.4'}],
   escEndstoneUp:[{k:'setting',t:'Endstone and setting',h:'050408-2.eu 050408-1.eu',d:PARTS.escEndstoneUp.d,sp:PARTS.escEndstoneUp.sp},{k:'screws',t:'Setting screws',h:'WN-es',d:'Two brass screws put in from outside, their heads at the setting’s edge.',sp:'M1.2 · heads Ø 2.6, 0.3 high'}],

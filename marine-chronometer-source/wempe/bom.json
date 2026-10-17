@@ -1212,16 +1212,11 @@
    "parent": "050301-4",
    "kind": "part",
    "part": "balance",
-   "fn": "Holds a mass on the rim, across it.",
+   "fn": "Holds a mass on the rim: radially through its outer jaw, its tip on the rim's outer face (the 6MX's book, Fig. 5.62).",
    "rel": [
     [
      "in",
      "050301-4",
-     "embed"
-    ],
-    [
-     "in",
-     "050301-1",
      "embed"
     ]
    ],
@@ -1232,12 +1227,15 @@
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Mutter (WN-12a), the mass screw's nut",
-   "qty": 4,
+   "name": "Schraube (WN-12a), for the tapped hole in a mass's top (not fitted)",
+   "qty": [
+    0,
+    4
+   ],
    "parent": "050301-4",
    "kind": "part",
    "part": "balance",
-   "fn": "On the mass screw inside the rim, sunk flush in the mass's inner face (as the screw's head in its outer face on Wempe 3955).",
+   "fn": "In the M1.2 hole, countersunk, in the middle of a mass's top: the coloured section draws one on one mass; Wempe's lever 2965 and the earlier 2493 show such holes empty; the Einheits examples photographed (Wempe 3955, the Langes) have plain tops (a poising screw fitted where needed, likely).",
    "rel": [
     [
      "in",
@@ -1838,8 +1836,8 @@
    "id": "cone41",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Anschlagschraube mit Kegel 1941 (the 1941 block's banking screw with its cone; no number on 05 04_1)",
+   "dwg": "WN-16",
+   "name": "Anschlagschraube 1941 (the 1941 block's banking screw, domed head and pointed tail; WN-16 by the coloured section's label)",
    "qty": [
     0,
     1
@@ -1847,7 +1845,7 @@
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "Through the 1941 block's arm on the stone's line, held by its slit end (the page's Variants, As first drawn).",
+   "fn": "Through the 1941 block's arm on the stone's line, held by its slit end; the detent's pipe banks on its head's face, and turning it sets the depth of lock (the page's Variants, As first drawn).",
    "rel": [
     [
      "in",
@@ -2860,6 +2858,26 @@
     [
      "in",
      "050604-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_4, 05 06_2.2"
+  },
+  {
+   "id": "050603-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 03-2",
+   "name": "Stift (05 06 03-2, the coloured section's label), the stop bar's pin, on which its spring's end bears",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "stopWork",
+   "fn": "Pressed across the bar near its lower end, standing 0.9 out of its near side, where the bar's spring bears (05 06_4's C-D).",
+   "rel": [
+    [
+     "in",
+     "050603-1",
      "embed"
     ]
    ],

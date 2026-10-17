@@ -3015,4 +3015,11 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+- **The coloured section's open readings** (Plates, bridges, screws and arbors; 18 October 2026), each settled on the dimensioned sheets and photographs:
+  - **The 1941 banking.** It was built as a headless cone. It is a whole screw (WN-16): a gilt domed head Ø 3.3 on the wheel's side of the pipe, which banks on it, and the pointed tail past the arm (05 04_1's plan, the section, Wempe 3955).
+  - **The upper cock.** It was flat 2.4 round its setting, with the hole jewel's setting coming from below. Its boss is now built: face 3.2 from the top, seat 2.7 deep to a floor bored 4.59, both settings in from the top (U30, 05 08 03-1, the section).
+  - **WN-12a.** It was a nut on the mass's inner face. It is the countersunk tapped hole in each mass's top (05 03_2), and WN-12 now threads through the outer jaw to the rim.
+  - **Smaller corrections.** The stop bar's pin 05 06 03-2 is built, with its spring bearing on it. The gold spring's screw head is Ø 1.4 (was 1.2), and WN-34 is 3.2 long (was 3.6).
+  - **Keep:** a part the coloured section draws, checked against the works drawing that dimensions it. Where the works drawings and the photographed examples disagree (WN-12a), build the drawings and record the photographs.
+
 - **holecheck.py failing now and then on the fusee's hole 42021** (Build, tools and docs): the hole turns with the fusee, which stood where the page's clock put it as it loaded, so between runs it wandered 0.6 mm round (x 16.95-17.45), past its EXPECTED entry's 0.4: a run failed or passed by when it loaded (seen on 3.03.00's main, 16 October 2026). Frozen as audit.py freezes the model (placements.py's first state), it still stood in one of two places 0.74 mm apart: the fusee's catch on its ratchet is state `update()` keeps from call to call. Fixed: holecheck.py freezes the model first, and the entry gives the hole by its distance from the fusee's axis (`L.Fu`, 4.264 mm) and its height, at any angle; such an entry must be found empty (its twin at the same radius, the first tapped hole, holds the stop-bar spring's end). Keep: an EXPECTED entry on a part that turns says where it is about its axis, not in the movement's frame.
