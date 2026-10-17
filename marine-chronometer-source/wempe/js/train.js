@@ -155,7 +155,7 @@ const WTRAIN=(()=>{
        (one standard bush for both, opened to the larger: estimated). The WN sheets aren't in the set: their sizes beyond the hole are estimated */
     const rJ=4.596/2,sk={f:-1,rs:2.0,ds:1.2},rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};   /* rv: a group of one version's pieces (movement.js's setRev) */
     tag(mesh(P.topPlate,bushGeo(rJ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
-    {const g=rv(P.topPlate,'last first');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}
+    {const g=rv(P.topPlate,'last first 1943');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}
     /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen's list: the seconds and intermediate wheels in jewels in chatons, not brass bearings; the TU's 15
        jewels are the drawings' 12 and these three. Kirov No. 247's top plate (2_Kirow_247_A.jpg, 8.97 px/mm) shows at 35 and 38 a flush gilt setting about Ø 4.1 (±0.3), the
        pivot in its middle, no screws; its dial side (3_Kirow_247_uZ.jpg) the same at 38 in the intermediate bridge (the seconds arbor's lower jewel there as drawn). Each chaton
@@ -175,7 +175,7 @@ const WTRAIN=(()=>{
     /* the intermediate bridge's bush WN-300 at 38 (05 08 04): in its Ø 4.3 hole, its face 0.71 (0.7 +0.02) in from the plate side under the 0.7 sink (frame.js), through to the
        dial face, a cup there (the section draws it; Wempe 3955's dial side, 3_Wempe_3955_uZ.jpg, shows it Ø 3.7 across, 17.4 px/mm by the bridge's screws 34.13 apart:
        drawn Ø 3.7, 0.9 deep, estimated); bore Ø 0.86 as the top plate's */
-    tag(mesh(rv(P.intermediateBridge,'last first'),bushGeo(4.3/2,0.86/2,PPT+0.71,ZB,{f:1,rs:1.85,ds:0.9}),M.brass2,H[38][0],0,H[38][1]),'WN-300.zb');
+    tag(mesh(rv(P.intermediateBridge,'last first 1943'),bushGeo(4.3/2,0.86/2,PPT+0.71,ZB,{f:1,rs:1.85,ds:0.9}),M.brass2,H[38][0],0,H[38][1]),'WN-300.zb');
     /* the 6MX's chaton there (above): the stone flush with the bush's plate-side face (PPT+0.71), the sink toward the dial face */
     {const g=rv(P.intermediateBridge,'6mx'),y0=PPT+0.71,rw=1.1,hj=0.6;tag(mesh(g,ringT([[rw,y0],[4.3/2,y0],[4.3/2,ZB],[1.7,ZB],[0.6,y0+hj],[rw,y0+hj]]),M.gilt,H[38][0],0,H[38][1]),'6MX.ch38l');
       tag(mesh(g,stoneGeo(rw,(0.825+0.025)/2,hj,'olive'),M.ruby,H[38][0],y0+hj/2,H[38][1]),'6MX.jw38l');}
@@ -205,7 +205,7 @@ const WTRAIN=(()=>{
     /* the hand-setting pinion's bush in 18 (Zeigerstelltrieb, reamed 3.50 +0.012, as 2 and 19): 05 08 02 draws a bush there (a ring and its bore, unnamed); Wempe 3955 has it,
        the only part of the hand-setting work fitted (3_Wempe_3955_uZ.jpg, 8.52 px/mm by the plate's holes: its rim Ø 3.46 flush with the dial face, its bore 1.29 with a bright
        sink to 1.64; flush with the inner face on 6_Wempe_3955_S.jpg): bore and sink as measured, a 90° cone (likely); empty, as on Wempe 3955 */
-    tag(mesh(rv(P.pillarPlate,'last first'),bushGeo(3.506/2,1.3/2,0,PPT,{f:1,rs:1.64/2,cone:true}),M.brass2,H[18][0],0,H[18][1]),'WN-hs');   /* not in the 6MX (no hand-setting cut: frame.js) */
+    tag(mesh(rv(P.pillarPlate,'last first 1943'),bushGeo(3.506/2,1.3/2,0,PPT,{f:1,rs:1.64/2,cone:true}),M.brass2,H[18][0],0,H[18][1]),'WN-hs');   /* not in the 6MX (no hand-setting cut: frame.js) */
 
     /* update(s): the escape wheel's place s.E (teeth) turns the train. The escape wheel (15 teeth) and its pinion (10 leaves) drive the seconds wheel (80): the seconds arbor
        turns once in 15 × 8 = 120 teeth, a minute; the seconds pinion (10) is driven by the intermediate wheel (80): 1/8 of the seconds'; the intermediate pinion (12) by the

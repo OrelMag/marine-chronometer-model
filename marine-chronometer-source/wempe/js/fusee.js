@@ -210,7 +210,7 @@ const WFUSEE=(()=>{
   /* ================================================================= the build ================================================================= */
   function build(mv,M,K,FRP,TR){const{part,loose}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),fx=FX[0],fz=FX[1];
     const grp=(par,x,z)=>{const g=new THREE.Group();g.position.set(x,0,z);par.add(g);return g;};
-    /* the versions (movement.js's setRev): rv(par, 'last', 'first', 'last 6mx' or 'first 6mx') a group of the pieces only those versions have (the 6MX keeps the revised maintaining spring and the first drawn barrel); onRev(g) runs g(version) when it changes */
+    /* the versions (movement.js's setRev): rv(par, 'last 1943', 'first', 'last 6mx 1943' or 'first 6mx') a group of the pieces only those versions have (the 6MX keeps the revised maintaining spring and the first drawn barrel; the escapement of 1943 the revised barrel and maintaining spring); onRev(g) runs g(version) when it changes */
     const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},onRev=f=>mv.userData.onRev.push(f);
 
     /* the stop bar 05 06 03-1 (Stellungssteg; no sheet in the set: the coloured section's) as 05 06_4's Schnitt C-D draws it, traced at 12.2 px/mm (its Ø 21 hub, Ø 15 recess
@@ -430,7 +430,7 @@ const WFUSEE=(()=>{
     {const aE=bk(0,0),aSq=bk(336,0),eye=sh(14.2,aE+0.8/14.2),hs=sh(14.2,PINS);
       const tab=T=>d=>{for(let i=1;i<T.length;i++)if(d<=T[i][0]){const[a0,w0]=T[i-1],[a1,w1]=T[i];return w0+(w1-w0)*(d-a0)/(a1-a0);}return 4;};
       const w41=tab([[0,1.8],[40,1.8],[100,1.9],[150,2],[195,2],[240,2.5],[270,3.5],[336,4]]),w48=tab([[0,2],[272,2],[276,2.12],[280,2.29],[284,2.5],[287,2.85],[290,3.1],[292,3.44],[293,3.6],[295,3.65],[300,3.68],[310,3.76],[320,3.82],[330,3.87],[336,4]]);
-      for(const v of['last 6mx','first']){const g=rv(gMW,v);
+      for(const v of['last 6mx 1943','first']){const g=rv(gMW,v);
         const band=(x,y)=>{const r=Math.hypot(x,y),a=angOf(x,-y),u=fr((aE-a)/TAU);   /* u: the way round from the eye, clockwise here */
           if(u>336/360)return 1;const w=(v==='first'?w41:w48)(u*360);return Math.max((16.125-w)-r,r-16.125);};
         const f=(x,y)=>Math.min(band(x,y),Math.hypot(x-eye[0],y-eye[1])-1.8);
@@ -588,7 +588,7 @@ const WFUSEE=(()=>{
        across the joint, the drum's wall cut through to the lid's notch (for prising the sprung-in lid out, likely). How far down the wall it runs isn't drawn: to the lid's
        underside, through the lid's 1.3 as its notch goes (estimated). Read from the lid's side (the plan, first-angle, below the section) the M2.6 hole stands 45° clockwise of
        it, so the slot is 45° back from the hook block (rotation.y falling) */
-    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last'),gBF=rv(gB,'first 6mx');
+    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last 1943'),gBF=rv(gB,'first 6mx');
     const BLK=1.2;   /* the hook block's angle in the drum */
     const LS=BLK-Math.PI/4,slot=(a,r0,w)=>{const u=[Math.cos(a),-Math.sin(a)],v=[Math.sin(a),Math.cos(a)];return[[r0,w/2],[23,w/2],[23,-w/2],[r0,-w/2]].map(([r,t])=>[u[0]*r+v[0]*t,u[1]*r+v[1]*t]);};   /* a slot's outline in plan along the angle a, from r0 out past the drum */
     tag(mesh(gBL,capFix(facePocket(ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.2],[19.6,BR+1.2]],240),'bottom',slot(LS,19.275-1.025,2.025),BLU-BR),BLU),M.gilt),'050701-1');
@@ -624,7 +624,7 @@ const WFUSEE=(()=>{
        0.5 proud. Präz. Rundstahl 14, hardened, tempered at 270 */
     const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]);
     {const bal=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;bal.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}
-      const gAL=rv(gBA,'last'),gAF=rv(gBA,'first 6mx');
+      const gAL=rv(gBA,'last 1943'),gAF=rv(gBA,'first 6mx');
       tag(mesh(gAL,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,BC1],[4.5,BC1],[6.65,BC1+2.15],[6.65,BC0-2.15],[4.5,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
@@ -671,7 +671,7 @@ const WFUSEE=(()=>{
     const msShape=T=>{let lo=0,hi=T-1;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(msLen(m,T-1-m)>MSL)lo=m;else hi=m;}return lo;};   /* the core's pack's turns at T */
     const msT=(()=>{let lo=2,hi=40;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(msLen(0,m-1)>MSL)hi=m;else lo=m;}return lo;})();   /* all on the wall */
     const pMS=part('mainspring',-33),gMS=grp(pMS,BX[0],BX[1]),msM=tag(mesh(gMS,new THREE.BufferGeometry(),M.mspring),'050700-6');
-    onRev(v=>{const f=v!=='last';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
+    onRev(v=>{const f=v==='first'||v==='6mx';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
     /* the eye the arbor's hook holds it by: no sheet draws the strip's ends, so the Hamilton's (MSPRING.ey: 2.2 to 9.4 along the strip from its end, 5.2 high, KLUwI2UUCMQ
        15:54), as tools/mainspring.py holds the Wempe's inner end on the core through it (MC_MS_EYE 9.4): estimated. Its end toward the tip stands 0.05 off the hook's face at
        the strip's inner edge (the face 1.0 off the pin's centre line: r 6.65, so asin(1.05/6.65)); the eye 7.2 long past it takes the Ø 2 pin and lets the strip lie over
