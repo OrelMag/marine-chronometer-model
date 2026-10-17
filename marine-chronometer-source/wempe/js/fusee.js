@@ -173,7 +173,7 @@ const WFUSEE=(()=>{
   /* ================================================================= the build ================================================================= */
   function build(mv,M,K,FRP,TR){const{part,loose}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),fx=FX[0],fz=FX[1];
     const grp=(par,x,z)=>{const g=new THREE.Group();g.position.set(x,0,z);par.add(g);return g;};
-    /* the versions (movement.js's setRev): rv(par, 'last', 'first', 'last 6mx' or 'first 6mx') a group of the pieces only those versions have (the 6MX keeps the revised maintaining spring and the first drawn barrel); onRev(g) runs g(version) when it changes */
+    /* the versions (movement.js's setRev): rv(par, 'last 1943', 'first', 'last 6mx 1943' or 'first 6mx') a group of the pieces only those versions have (the 6MX keeps the revised maintaining spring and the first drawn barrel; the escapement of 1943 the revised barrel and maintaining spring); onRev(g) runs g(version) when it changes */
     const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},onRev=f=>mv.userData.onRev.push(f);
 
     /* the stop bar 05 06 03-1 (Stellungssteg; no sheet in the set: the coloured section's) as 05 06_4's Schnitt C-D draws it, traced at 12.2 px/mm (its Ø 21 hub, Ø 15 recess
@@ -393,7 +393,7 @@ const WFUSEE=(()=>{
     {const aE=bk(0,0),aSq=bk(336,0),eye=sh(14.2,aE+0.8/14.2),hs=sh(14.2,PINS);
       const tab=T=>d=>{for(let i=1;i<T.length;i++)if(d<=T[i][0]){const[a0,w0]=T[i-1],[a1,w1]=T[i];return w0+(w1-w0)*(d-a0)/(a1-a0);}return 4;};
       const w41=tab([[0,1.8],[40,1.8],[100,1.9],[150,2],[195,2],[240,2.5],[270,3.5],[336,4]]),w48=tab([[0,2],[272,2],[276,2.12],[280,2.29],[284,2.5],[287,2.85],[290,3.1],[292,3.44],[293,3.6],[295,3.65],[300,3.68],[310,3.76],[320,3.82],[330,3.87],[336,4]]);
-      for(const v of['last 6mx','first']){const g=rv(gMW,v);
+      for(const v of['last 6mx 1943','first']){const g=rv(gMW,v);
         const band=(x,y)=>{const r=Math.hypot(x,y),a=angOf(x,-y),u=fr((aE-a)/TAU);   /* u: the way round from the eye, clockwise here */
           if(u>336/360)return 1;const w=(v==='first'?w41:w48)(u*360);return Math.max((16.125-w)-r,r-16.125);};
         const f=(x,y)=>Math.min(band(x,y),Math.hypot(x-eye[0],y-eye[1])-1.8);
@@ -545,7 +545,7 @@ const WFUSEE=(()=>{
        lid; so does the coloured section). The mainspring's hook block 05 07 01-3 (3.05 -0.1 high, 3 wide) riveted inside the wall at the M2.6 hole 9.05 ±0.05 from the
        bottom's face, 45° from 9 o'clock; its radial depth 0.35 (estimated: as much as clears the spring's next coil). The slot for the chain's hook, cut at the fusee's assembly (0207: 2.5 wide), and the spring's slot
        in the wall (2 × 0.95) aren't cut in the turned drum. Gilt, as Wempe 3955's (7_Wempe_3955_W.jpg) */
-    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last'),gBF=rv(gB,'first 6mx');
+    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last 1943'),gBF=rv(gB,'first 6mx');
     tag(mesh(gBL,ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.2],[19.6,BR+1.2]],240),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face 0.6 -0.1 under the rim; 1.3 -0.1 thick (in the seat Ø 39.2
        r6, under it 0.05 clear of the wall: the sheet draws it 39.39 over all, the blank's); its boss 3.3 -0.1 from its face, the face Ø 8, a 45° cone to Ø 12; bore 4.55; its two
@@ -578,7 +578,7 @@ const WFUSEE=(()=>{
        0.5 proud. Präz. Rundstahl 14, hardened, tempered at 270 */
     const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]);
     {const bal=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;bal.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}
-      const gAL=rv(gBA,'last'),gAF=rv(gBA,'first 6mx');
+      const gAL=rv(gBA,'last 1943'),gAF=rv(gBA,'first 6mx');
       tag(mesh(gAL,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,BC1],[4.5,BC1],[6.65,BC1+2.15],[6.65,BC0-2.15],[4.5,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
@@ -625,7 +625,7 @@ const WFUSEE=(()=>{
     const msShape=T=>{let lo=0,hi=T-1;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(msLen(m,T-1-m)>MSL)lo=m;else hi=m;}return lo;};   /* the core's pack's turns at T */
     const msT=(()=>{let lo=2,hi=40;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(msLen(0,m-1)>MSL)hi=m;else lo=m;}return lo;})();   /* all on the wall */
     const pMS=part('mainspring',-33),gMS=grp(pMS,BX[0],BX[1]),msM=tag(mesh(gMS,new THREE.BufferGeometry(),M.mspring),'050700-6');
-    onRev(v=>{const f=v!=='last';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
+    onRev(v=>{const f=v==='first'||v==='6mx';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
     /* its turns T: from its inner end, its tip 0.18 behind the arbor's hook (HKA), the hook in its eye (until 16 October 2026 the tip 0.18 past the hook, abutting its face from
        the side the pull leaves it on), winding outward the way the drum runs (rotation.y rising), to its outer end 0.08 short of the drum's
        block; set up 0.75 turn past lying all on the wall at run down (with the chain: the band turns the drum a little less, so its set-up there is a little more), which sets
@@ -637,13 +637,25 @@ const WFUSEE=(()=>{
       return ribbonGeo(P,0.36,Math.abs(MS1-MS0));}
 
     /* =============== the chain 05 07 04 (Kette) and the band 05 07 03 (Schneckenband) =============== */
-    /* the chain: hardened, tempered at 310°, lightly polished: the plates' figure of eight (two lobes r 1 round the rivets, waisted to 1.2 between them: scaled on 05 07 04),
-       an outer link two plates and its two rivets Ø 0.55 (the rivet stock 0.6), an inner link one plate; instanced, laid along the pitch line every update */
+    /* the chain: hardened, tempered at 310°, lightly polished: the plates' figure of eight, two lobes r 1 round the rivets (the framed 2 across) joined by concave sides,
+       an arc each tangent to both lobes. Traced on 05 07 04's two plan views (stroke centres, across scaled by the lobes' framed 2, along by the 2.05 pitch): the waist 1.41
+       (1.38-1.44 over its 13 waists, the inner plates' seen between the outer pairs among them), the side 0.74 from the line at 0.28 from the waist and 0.81 at 0.46, the lobe's
+       circle from about 0.5 on: the arc r 0.93 that the waist and tangency give (0.75 and 0.83 there). Until 17 October 2026 the waist was 1.2, the sides straight and meeting
+       the lobes in a notch. An outer link two plates, an inner link one plate, each lobe with its hole for the rivet (05 07 04's "0,55" across a pin's centre, the plan
+       view's circle in every lobe: drawn Ø 0.56 round the rivet's 0.55, the rivet stock 0.6), the rivets, a pair to each outer link, through all three plates, their ends
+       flush with the outer plates (the edge view draws nothing standing out of the framed 0.82) and polished bright, as Wempe 3955's chain shows them, each end a round
+       lighter than its plate (14_Wempe_3955_Band_Kette.jpg). Until 17 October 2026 the plates had no holes and the rivets were the plates' own steel, so none showed.
+       Instanced, laid along the pitch line every update */
     const pC=part('chain',-33),gC=new THREE.Group();pC.add(gC);
-    const plate=y=>{const s=new THREE.Shape(),r=1.0,tw=Math.asin(0.6/r);s.absarc(1.025,0,r,tw-Math.PI,Math.PI-tw,false);s.absarc(-1.025,0,r,tw,TAU-tw,false);s.closePath();
-      const g=extrude(s,{depth:0.26,bevelEnabled:false,curveSegments:12});g.rotateX(-Math.PI/2);g.translate(0,y-0.13,0);return g;};
-    const I4=new THREE.Matrix4(),geoA=mergeGeo([[plate(0.27),I4],[plate(-0.27),I4],...[1.025,-1.025].map(x=>[cylY(0.275,0.80,10),new THREE.Matrix4().makeTranslation(x,0,0)])]),geoB=plate(0);
-    const MAXL=200,imA=new THREE.InstancedMesh(geoA,M.chain,MAXL),imB=new THREE.InstancedMesh(geoB,M.chain2,MAXL);gC.add(imA,imB);imA.frustumCulled=imB.frustumCulled=false;tag(imA,'050704');tag(imB,'050704',1);
+    /* the outline as points, about 20° a segment on the lobes and the sides alike (absarc's divisions are per arc, which cut the short sides five times as fine), the holes
+       12-gons in the rivets' phase (cylY's vertices at the shape's multiples of 30°), 0.005 clear all round: 375 links drawn in software must stay cheap (smoke.py's wind) */
+    const RVH=0.28,PLO=(()=>{const r=1.0,c=1.025,w=0.705,R=(c*c+w*w-r*r)/(2*(r-w)),ta=Math.atan2(w+R,-c),tf=Math.atan2(-(w+R),c),o=[];   /* R: the side's arc; ta, tf: the tangent points' angles about the right lobe and the top side's centre */
+      const arc=(x,y,q,a0,a1,n)=>{for(let i=0;i<n;i++){const a=a0+(a1-a0)*i/n;o.push([x+q*Math.cos(a),y+q*Math.sin(a)]);}};
+      arc(c,0,r,-ta,ta,12);arc(0,w+R,R,tf,-Math.PI-tf,3);arc(-c,0,r,Math.PI-ta,Math.PI+ta,12);arc(0,-w-R,R,Math.PI+tf,-tf,3);return o;})();
+    const plate=y=>{const g=slab(PLO,[1.025,-1.025].map(x=>Array.from({length:12},(_,k)=>[x+RVH*Math.cos(-k*Math.PI/6),RVH*Math.sin(-k*Math.PI/6)])),-0.13,0.13);g.translate(0,y,0);return g;};   /* with the rivets' holes */
+    const I4=new THREE.Matrix4(),geoA=mergeGeo([[plate(0.27),I4],[plate(-0.27),I4]]),geoB=plate(0),geoR=mergeGeo([1.025,-1.025].map(x=>[cylY(0.275,0.80,12),new THREE.Matrix4().makeTranslation(x,0,0)]));
+    const MAXL=200,imA=new THREE.InstancedMesh(geoA,M.chain,MAXL),imB=new THREE.InstancedMesh(geoB,M.chain2,MAXL),imR=new THREE.InstancedMesh(geoR,M.steel,MAXL);gC.add(imA,imB,imR);
+    imA.frustumCulled=imB.frustumCulled=imR.frustumCulled=false;tag(imA,'050704');tag(imB,'050704',1);tag(imR,'050704',1);   /* imR: an outer link's rivets, laid as imA */
     /* its hooks (from the strip 10 × 0.9): both side views of 05 07 04 draw each one solid bar the chain's full width (the framed 0.82 ±0.02), the links' three layers
        starting at its rivet: drawn 0.80 thick, the chain's outer links' width; each end link is an outer pair (the chain's first and last, 375 links), so the hook's eye is
        thinned to the inner links' 0.26 where it lies between that pair's plates, out to r 1.1 about its rivet (the plates' lobes r 1.0: where the step falls isn't drawn,
@@ -683,7 +695,7 @@ const WFUSEE=(()=>{
           const am=a0+da/2;if(!inPoly([r*Math.cos(am),r*Math.sin(am)]))da-=Math.sign(da)*TAU;
           const N=Math.max(4,Math.ceil(Math.abs(da)/(8*D2R)));for(let j=0;j<=N;j++){const a=a0+da*j/N;out.push([r*Math.cos(a),r*Math.sin(a)]);}}}
       return out;};
-    const hkMesh=(o,id,mat)=>{const g=new THREE.Group();gC.add(g);tag(mesh(g,slab(o,[],-0.13,0.13),mat),id,1);
+    const hkMesh=(o,id,mat)=>{const g=new THREE.Group();gC.add(g);tag(mesh(g,slab(o,[{c:[0,0],r:RVH}],-0.13,0.13),mat),id,1);   /* the eye's hole, its end link's rivet through it */
       const b=offEye(o,1.1);tag(mesh(g,slab(b,[],0.13,0.40),mat),id,1);tag(mesh(g,slab(b,[],-0.40,-0.13),mat),id,1);return g;};   /* the eye 0.26; the body 0.80 */
     const cHT=hkMesh(HKT,'050704',M.chain),cHB=hkMesh(HKB,'050704',M.chain);
     /* the band: its strip a ribbon along its pitch line; its hooks (Bandstahl 10 × 0.8, brazed to it): the round hook 05 07 03-2 (its back r 6, the crown r 1.5, the nose 1.7
@@ -737,8 +749,8 @@ const WFUSEE=(()=>{
         for(let i=1;i<pts.length&&J.length<=NJ;i++){const seg=pts[i].distanceTo(pts[i-1]);while(acc+seg>=next&&J.length<=NJ){J.push(new THREE.Vector3().lerpVectors(pts[i-1],pts[i],(next-acc)/seg));next+=PC;}acc+=seg;}
         const mtx=new THREE.Matrix4(),t=new THREE.Vector3(),up=new THREE.Vector3(),nn=new THREE.Vector3(),pos=new THREE.Vector3();let ia=0,ib=0;
         for(let k=0;k+1<J.length;k++){pos.addVectors(J[k],J[k+1]).multiplyScalar(0.5);t.subVectors(J[k+1],J[k]).normalize();up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);
-          mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0)imA.setMatrixAt(ia++,mtx);else imB.setMatrixAt(ib++,mtx);}
-        imA.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
+          mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0){imR.setMatrixAt(ia,mtx);imA.setMatrixAt(ia++,mtx);}else imB.setMatrixAt(ib++,mtx);}
+        imA.count=imR.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=imR.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
         /* the hooks: the top one from the first rivet back to the pin, the bottom one on from the last rivet along the drum */
         const nJ=J.length-1;place(cHT,J[0],PINA,Rf,'top',Math.atan2(HKSEAT[1],HKSEAT[0]),J[1].clone().sub(J[0]).normalize());place(cHB,J[nJ],null,beta,'bot',0,J[nJ].clone().sub(J[nJ-1]).normalize());}
       else{bdM.geometry.dispose();bdM.geometry=ribbonGeo(pts,0.22,0.78);place(bHT,pts[0],PINA,Rf,'top');place(bHB,pts[pts.length-1],null,beta,'bot');}

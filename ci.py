@@ -140,6 +140,9 @@ STEPS=[('build',build,'quick'),
  ('wempe-inertia-6mx',lambda log:run([PY,'wempe_inertia.py','--rev','6mx'],TOOLS,log),'browser'),   # the 6MX's escapement bodies weighed (tools/wempe_inertia_6mx.json, which wempe_6mx.js reads)
  ('wempe-audit-6mx',lambda log:run([PY,'audit.py','--model','wempe','--rev','6mx'],TOOLS,log),'browser'),   # the Soviet 6MX (the Variants' third version, Kirov No. 247), its coplanar faces under movement.6mx
  ('wempe-exploded-6mx',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('6mx')"],TOOLS,log),'browser'),
+ ('wempe-audit-box-1943',lambda log:run([PY,'audit.py','box','--model','wempe','--rev','1943'],TOOLS,log),'browser'),   # the escapement of 1943's case and box: the drawings' (box.1943)
+ ('wempe-audit-1943',lambda log:run([PY,'audit.py','--model','wempe','--rev','1943'],TOOLS,log),'browser'),   # the escapement of 1943 as photographed (the Variants' fourth version: the 1943 block, its banking screw), its coplanar faces under movement.1943
+ ('wempe-exploded-1943',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('1943')"],TOOLS,log),'browser'),
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
  ('wempe-invariants',lambda log:run([PY,'invariants.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's arithmetic: its seven meshes turning as their teeth, the hands against the time, the up-and-down hand on the dial's scale, the fusee's hours, the balance as weighed (about 10 s)
  ('wempe-mechanisms',lambda log:run([PY,'mechanisms.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's pawls off the built model (the clicks, the maintaining detent, the set-up click), against mechanisms_wempe.json (about 15 s)
@@ -171,6 +174,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-bom-first',lambda log:run([PY,'bom.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'full'),
  ('wempe-fine-6mx',lambda log:run([PY,'fine.py','--model','wempe','--eval',"__mv.userData.setRev('6mx')"],TOOLS,log),'full'),   # the Soviet 6MX (its case and boxes too)
  ('wempe-bom-6mx',lambda log:run([PY,'bom.py','--model','wempe','--eval',"__mv.userData.setRev('6mx')"],TOOLS,log),'full'),   # its lines with "rev", its 15 jewels
+ ('wempe-fine-1943',lambda log:run([PY,'fine.py','--model','wempe','--eval',"__mv.userData.setRev('1943')"],TOOLS,log),'full'),   # the escapement of 1943
+ ('wempe-bom-1943',lambda log:run([PY,'bom.py','--model','wempe','--eval',"__mv.userData.setRev('1943')"],TOOLS,log),'full'),
  ('gltf',lambda log:run([PY,'gltf_check.py'],TOOLS,log,sw=True),'full'),   # the export to Blender, written and read back (about 2 minutes; in SwiftShader always: exported from a page drawn on the GPU, the Running clip starts the escape wheel 0.105° off, over blender's 0.1°)
  ('blender',lambda log:run([PY,'blender_check.py'],TOOLS,log,sw=True),'full'),   # that file in Blender, with the rig, against its own clips (about 3 minutes; skipped where there is no Blender)
  ('wempe-gltf',lambda log:run([PY,'gltf_check.py','--model','wempe'],TOOLS,log,sw=True),'full'),   # the Wempe's export to Blender (r_wempe.glb) and its STLs, written and read back (about 3½ minutes)
@@ -180,15 +185,15 @@ STEPS=[('build',build,'quick'),
 # BROWSER below) on up to BROWSERS. SOLO steps measure the page's own time (the train run on frame time): no other browser step runs with them. Steps in one EXCL
 # group write the same file or folder and never run together; AFTER: a step waits for the one it reads. build runs first, alone (every step reads what it builds),
 # views last. The longest steps start first (their last times in ci-logs/times.json, else EST). --jobs 1 runs every step one after another, as before 16 October 2026.
-BROWSER={'fea','fine','maintaining','wempe-maintaining','bom','wempe-fine','wempe-bom','wempe-fine-first','wempe-bom-first','wempe-fine-6mx','wempe-bom-6mx','gltf','blender','wempe-gltf','wempe-blender'}   # the full tier's steps that open a page
+BROWSER={'fea','fine','maintaining','wempe-maintaining','bom','wempe-fine','wempe-bom','wempe-fine-first','wempe-bom-first','wempe-fine-6mx','wempe-bom-6mx','wempe-fine-1943','wempe-bom-1943','gltf','blender','wempe-gltf','wempe-blender'}   # the full tier's steps that open a page
 SOLO={'smoke','wempe-smoke'}
-EXCL={'wempe-dialtrace':'r_dial','wempe-dialtrace-lange':'r_dial','bom':'r_bom.json','wempe-bom':'r_bom.json','wempe-bom-first':'r_bom.json','wempe-bom-6mx':'r_bom.json','types':'npx','wempe-types':'npx',   # bom.py writes tools/r_bom.json for either model; two npx -y at once race in npm's cache
+EXCL={'wempe-dialtrace':'r_dial','wempe-dialtrace-lange':'r_dial','bom':'r_bom.json','wempe-bom':'r_bom.json','wempe-bom-first':'r_bom.json','wempe-bom-6mx':'r_bom.json','wempe-bom-1943':'r_bom.json','types':'npx','wempe-types':'npx',   # bom.py writes tools/r_bom.json for either model; two npx -y at once race in npm's cache
       }
 AFTER={'blender':'gltf','wempe-blender':'wempe-gltf'}   # blender_check.py imports the r_model21.glb (r_wempe.glb) gltf_check.py writes
 POOL=6   # the steps that run on processes of their own (tripping.js's bench figures, the Wempe's tripping.js, mainspring.py's sweeps) run on POOL of them (MC_PROCS,
 POOLED={'tripping-bench','wempe-tripping-full','mainspring-friction','wempe-mainspring-friction'}|{s[0] for s in STEPS if s[0].startswith('mainspring-') and s[0]!='mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
 EST={'wempe-transmission':200,'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
-     'wempe-fine':190,'wempe-fine-first':190,'wempe-fine-6mx':190,'wempe-bom-first':330,'wempe-bom-6mx':330,'estimates':190,'wempe-tripping-full':180,'gimbals-full':180,'wempe-gimbals-full':170,'fine':150,'gearing-full':145,'tripping-run':130,'wempe-smoke':115,'gltf':110,'wempe-gltf':200,'wempe-blender':150}   # seconds: the medians of the worktrees' logs, 16 October 2026
+     'wempe-fine':190,'wempe-fine-first':190,'wempe-fine-6mx':190,'wempe-fine-1943':190,'wempe-bom-first':330,'wempe-bom-6mx':330,'wempe-bom-1943':330,'estimates':190,'wempe-tripping-full':180,'gimbals-full':180,'wempe-gimbals-full':170,'fine':150,'gearing-full':145,'tripping-run':130,'wempe-smoke':115,'gltf':110,'wempe-gltf':200,'wempe-blender':150}   # seconds: the medians of the worktrees' logs, 16 October 2026
 def lane(name,tier):return 'browser' if tier=='browser' or name in BROWSER else 'cpu'
 def go(name,fn):
     t0=time.time()
