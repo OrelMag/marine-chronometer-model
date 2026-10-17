@@ -2191,7 +2191,7 @@ Contents:
   surface, the faces where they meet dropped: kept as separate meshes, those faces met the
   surface's edge at its own depth and drew a dashed line round the body. Keep: the joints' outlines
   the same points on both sides (the solid under the jaws takes the jaws' column points), and no
-  sloped face with an edge in a joint's plane (the drill point's foot 0.12 above the lower joint).
+  sloped face with an edge in a joint's plane (the drill point's foot 0.12 above the lower joint). `4d54002`
 
 ## Accuracy to the manual
 
