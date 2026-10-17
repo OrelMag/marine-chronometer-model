@@ -2524,3 +2524,23 @@ smoke test, ci.py steps, isolate.py and the hook are done (`f6323e8`, `6cde307`)
     overhaul, views, gltf_check, blender_check. ci.py leaves out `audit.py box --model wempe`, `dialtrace.py` and `wempe_inertia.py`; the
     Wempe's smoke test clicks none of 3.00.00's controls (and `checks.py` still says it has no Report); the report says ci.py runs all its
     checks. `isolate.py` fails on Windows with many parts (the file name too long); the isolate-and-compare hook ignores `wempe/js/`.
+
+## The Wempe against its coloured section: what is left open (17 October 2026)
+
+The Wempe model was cut through each pair of arbors and compared with Wempe's coloured full section (`References/wempe/drawings/Wempe_Einheitschronometer.jpg`) at its own scale, 9.37 px/mm. The fixes are in RESOLVED.md ("The Wempe against its coloured section"). Still open:
+
+- **The barrel's Steg (05 07 00-1) is not built.** Its leader ends on a thin steel strip, about 0.5 thick, standing just inside the drum's wall for the drum's whole height (drawing x 210-215, y 334-499). That lines up with the 2 × 0.5 slot that 05 07 01-1's revision (a) cuts through the drum's bottom at 9 o'clock. The branch `claude/wempe-spring-eye` (not merged when this was written) cuts that slot and reads it as a prising slot for the lid. Add the Steg after that branch lands, or settle there what the slot holds. What the strip does is unsure: a stop or a brace for the mainspring's outer coil, likely.
+- **The stop bar's pin 05 06 03-2.** Its leader ends on a small foot, about 0.6 × 0.7, under the bar's end (drawing px 886-892 × 372-379). Unsure; not built.
+- **The 1941 banking screw (WN-16).** The section draws a slotted head about Ø 3.3 on the block's arm, 5.25 under the plate. The model's as-first-drawn banking piece is a headless cone Ø 0.85 taken from Wempe 3955's photograph. The two disagree; the photograph may show a later form.
+- **Smaller differences, each a reading of the section alone:**
+  - the barrel bridge's steady pins (about 2.0 in the bridge and 0.6 proud on the section; the model has 1.7 and 1.3, the proud length from the bridge's sheet);
+  - the gold spring's screw head (Ø about 1.8 against 1.2);
+  - the fusee bush's screw WN-34 (shank about 2.9 against 3.6).
+- **Uncertain readings:**
+  - a boss about 0.8 deep round the upper cock's jewel (the README's Unresolved settles the thickness there at 2.4);
+  - WN-12a drawn as a slotted screw standing on a mass's top (05 03_2 and Wempe 3955 show plain tops);
+  - a section 2.3 high at the maintaining spring's eye pin (the spring is 1.35 thick);
+  - the height of the band's hook in the drum, drawn near the lid;
+  - a dashed slot about 1.1 × 2.4 in the drum wall's top on the left.
+- **The hairspring collet.** In the cut it looks wider than the section's Ø 2.67 between the hub screws. Not checked against its sheet (05 03_5).
+
