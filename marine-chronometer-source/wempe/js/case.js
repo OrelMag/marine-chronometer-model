@@ -231,7 +231,7 @@ const WCASE=(()=>{
          the rim with its paddle above, moMvyx8eXfo 3:06, Kirova 422), Wempe 5377 (later case, its paddle under the rim) (bonhams_26816_327: the shelf and the key in it), Lange VEB 2285 (drouot_33246921_*_3, from above:
          the shelf's front edge, the key near it), Lange 5510 and the 6MX Kirova 422 (12_Kirow_DEC_422_Kasten_1.jpg). Its legs 55 along the back and right walls (Lange 2285
          from above: about a third of the box's inside), the hole Ø 11 16.5 from each wall (21 read on the same photograph, as the key stood until 16 October 2026: raised to the ring's height its body then met the gimbal ring after 9.5° of swing; 16.5 stands it clear), 10 thick, its top 65 over the floor (the key's paddle then
-         22.3 over the box's top, between the two readings of the wartime Wempe's; 40 and 2.7 under until 16 October 2026): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 89.8 from the gimbals' centre and its body's near side 82.6, beyond the case's
+         20.7 over the box's top, between the two readings of the wartime Wempe's (22.3 until 17 October 2026, the paddle then 1.6 higher on the key); 40 and 2.7 under until 16 October 2026): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 89.8 from the gimbals' centre and its body's near side 82.6, beyond the case's
          and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 105 against its 103.7) */
       tag(mesh(bx,polyGeo([[BW-WT,-(BW-WT)],[BW-WT-55,-(BW-WT)],[BW-WT,-(BW-WT)+55]],10,[[KX,KZ,5.5]]),MC.mah,0,KH-10,0),'Schluesselhalter');}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
@@ -355,28 +355,43 @@ const WCASE=(()=>{
        chamfer at the top, the 15° cone from 15.1 down, 25.1 −0.2 long; the bore Ø 8 +0.1 22 deep with its 120° point, Ø 6 +0.1 through the bottom; the cross hole Ø 2.5 for the
        grooved pin (51 00 11-6, K.S. 1); the slot 3 wide; the hole Ø 0.9 at 5° for the spring's end); the tube (Schlüsselrohr 05 01 02-3, Ms 58, every figure: its head Ø 8 −0.05 ×
        2.6 in the bore, Ø 5.95 −0.05 through the bottom, 50.1 −0.2 long, the square 3.1 +0.05, 19 +2 deep, drilled 23 deep, a 60° sink 1 deep, the end relieved over 2.5); the coil
-       spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The paddle's centre 10.95 over the body's top: the slot's floor is the Ø 35 arc 6.3
-       +0.1 deep (05 01 02-2's side view, sure), on which the Ø 34.5 paddle's rim stands (17.25 − 6.3; 10.6 scaled on 51 00 11, which put its rim 0.35 into the floor). The
-       grooved pin across the slot, through the paddle's thickness (05 01 02-2: the cross hole runs across the 3 slot in the section and shows end-on in the side view, as the hole
-       through the paddle's face does on 51 00 11's outside view), 4 −0.05 under the top. The square 3.1 +0.05 across, 19 deep, its corners on the key's x and z as the fusee
-       arbor's square has them (its 60° sink 1 deep left out). The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length then 31.8, scaled 30),
-       the spring's wire 0.9, the end's relief to Ø 4.6, the slot and cross hole not cut: estimated. Built in the key's own frame (its axis +y, the tube's mouth at 0) in its
-       part's group, which stands in its holder in the box or, while it winds, sits on the fusee's square (keyAt) */
-    /* at rest the key stands in its holder (above), its axis up, its tube's mouth under the shelf where its body's cone is Ø 11, the hole's: 35.27 over the mouth (the cone
-       Ø 9.14 to 14.5 over 10, from 31.8); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
+       spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The paddle's centre 9.37 over the body's top: the slot's floor is the Ø 35 arc, 6.3
+       +0.1 under the top where it meets the body's outside (05 01 02-2's side view, sure: the extension line leaves the arc at the outer wall), so 7.40 under it at the bore's edge
+       (centre 9.63 over the top), and the Ø 34.5 paddle rests on it there (17.25 sinks 16.77 at r 4.05: 9.37; 51 00 11's outside view scales 9.37 from the top face, its dashed
+       rim 7.9 under it; until 17 October 2026 10.95, the 6.3 taken at the axis). The grooved pin across the slot, through the paddle's thickness (05 01 02-2: the cross hole runs
+       across the 3 slot in the section and shows end-on in the side view, as the hole through the paddle's face does on 51 00 11's outside view; The Mariner's Chronometer,
+       Fig. 2.35, a 1943 key taken apart, its handle with the hole in the face the slot covered), 4 −0.05 under the top (both views of 51 00 11 scale its centre 3.9-4.1), Ø 2.5
+       and 15.3 long, its rounded ends 0.4 proud of the body (51 00 11's section: 15.8 against the body's 14.95 there). The square 3.1 +0.05 across, 19 deep, its corners on the
+       key's x and z as the fusee arbor's square has them (its 60° sink 1 deep left out). The tube's head 8.0 under the body's top, just under the paddle's rim (51 00 11's
+       section, ±0.15; 6.8 until 17 October 2026), so its free length 33.0 (the sheet draws the tube 48.1 against its own 50.1, so scales 30-31). The spring as 51 00 11's
+       section draws it: about 12 open coils (pitch 0.95, from the coils' profile both sides) of wire about 0.6 (the coils 0.6-0.7 across between the tube and the bore's wall)
+       wound on the tube, from its head down to the bore's floor, where the end turns down (drawn solid on the right) into the body's Ø 0.9 hole and runs along it to the bottom
+       face (the end view's small square, 3.6 out); the hole's angular place is free (05 01 02-2: "Lochstellung beliebig"), the end drawn at +z. Followed up from its end its coils turn +x to +z,
+       clockwise seen from the paddle (counterclockwise is winding, "Linksaufzug"; the body drags the end that way, adding turns, which closes the coils on the tube; turned back they open:
+       inferred). Scaled, not figured: the wire, the pitch, the head's depth; estimated: the end's relief to Ø 4.6. The slot, the seat, the cross hole and the spring's hole not cut
+       (the paddle, pin and spring's end lie in the body's metal). Built in the key's own frame (its axis +y, the tube's mouth at 0) in its part's group, which stands in its
+       holder in the box or, while it winds, sits on the fusee's square (keyAt) */
+    /* at rest the key stands in its holder (above), its axis up, its tube's mouth under the shelf where its body's cone is Ø 11, the hole's: 36.47 over the mouth (the cone
+       Ø 9.14 to 14.5 over 10, from 33.0); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
        middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
-    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:35.27),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
+    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:36.47),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
     {const g=new THREE.Group();g.userData.rev='last';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
-      const T=50.1,B0=31.8,BT=B0+25.1,sq=3.15/Math.SQRT2;
+      const T=50.1,B0=T+8-25.1,BT=B0+25.1,sq=3.15/Math.SQRT2;
       tag(mesh(g,smoothRev(solidGeo(cells([2.3,2.975],[[0,19],[p=>(rr(p)-2.3)*2.5/0.675,19]],[[{p:[[sq,0],[0,sq],[-sq,0],[0,-sq]],a:0,b:19}]]))),M.brass),'050102-3');   /* the socket end: the square, the relief */
       tag(mesh(g,lathe([[1.45,19],[2.975,19],[2.975,T-2.9],[3.275,T-2.6],[4,T-2.6],[4,T],[0,T],[0,23],[1.45,22.2]]),M.brass),'050102-3',1);   /* on: the drilled hole's end, the head */
       tag(mesh(g,lathe([[3.05,B0],[4.57,B0],[7.25,B0+10],[7.25,BT-1.5],[5.75,BT],[4.05,BT],[4.05,BT-22],[3.05,BT-22-0.58]]),MC.black),'050102-2');
-      const pd=tag(mesh(g,cylY(17.25,3,72),MC.black,0,BT+10.95,0),'510011-1');pd.rotation.x=Math.PI/2;
-      const pn=tag(mesh(g,cylY(1.25,13,16),M.steel,0,BT-4,0),'510011-6');pn.rotation.x=Math.PI/2;
-      /* the spring: 0.9 wire on Ø 7.0 mean, close wound from the bore's floor to the tube's head */
-      const y0=BT-22+0.45,y1=T-2.6-0.45,nT=(y1-y0)/0.92,cv=new THREE.Curve();cv.getPoint=t=>new THREE.Vector3(3.51*Math.cos(t*nT*TAU),y0+(y1-y0)*t,3.51*Math.sin(t*nT*TAU));
-      tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,Math.ceil(nT*24),0.44,6,false)),M.steel),'510011-4');}
+      const pd=tag(mesh(g,cylY(17.25,3,72),MC.black,0,BT+9.37,0),'510011-1');pd.rotation.x=Math.PI/2;
+      const pe=[...Array(4).keys()].map(k=>[0.8+0.45*Math.sin(k*Math.PI/6),7.65-0.45*(1-Math.cos(k*Math.PI/6))]);   /* the pin's rounded end, r 0.45 */
+      const pn=tag(mesh(g,lathe([[0,-7.65],...pe.map(([r,y])=>[r,-y]),...pe.slice().reverse(),[0,7.65]],16),M.steel,0,BT-4,0),'510011-6');pn.rotation.x=Math.PI/2;
+      /* the spring: 0.6 wire on the tube (its coils' centres r 3.285), pitch 0.95, from the bore's floor (its lowest coil 0.02 over the drill point) to 0.01 under the tube's head;
+         its end from there out and down to the Ø 0.9 hole's axis where the hole leaves the drill point (r 3.554, 2.812 over the bottom face) and along it, 5° off the axis, to
+         0.05 inside the bottom face (r 3.8 there). Sampled at its own parameter (the end's corners at samples) */
+      const rs=2.975+0.31,y0=BT-21.95,y1=T-2.6-0.31,nT=(y1-y0)/0.95,nH=Math.ceil(nT*24),N=nH+4,V3=(x,y,z)=>new THREE.Vector3(x,y,z),
+        Pc=V3(0,B0+0.05,3.8-0.05*Math.tan(5*D2R)),Pb=V3(0,B0+2.812,3.554),Pa=V3(0,y0,rs),cv=new THREE.Curve();
+      cv.getPoint=s=>{if(s<=2/N)return Pc.clone().lerp(Pb,s*N/2);if(s<=4/N)return Pb.clone().lerp(Pa,(s-2/N)*N/2);const t=(s-4/N)/(1-4/N),a=Math.PI/2+t*nT*TAU;return V3(rs*Math.cos(a),y0+(y1-y0)*t,rs*Math.sin(a));};
+      cv.getPointAt=cv.getPoint;cv.getTangentAt=cv.getTangent;
+      tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,N,0.3,6,false)),M.steel),'510011-4');}
     /* As first drawn (the page's Variants), the key of 1940 (Aufzugschlüssel 127-556.02 U 01 = 51 00 11, 12.12.40, 2:1), which the one-way key of 1943 replaced under the same
        number: 84 overall and the stem 32 out of the body (sure); the rest traced on the sheet at 6.79 px/mm (by its 84): the handle a flat pear-shaped plate (the tang, part 1:
        the side view draws it 3.2 thick and no bulb), widest Ø 34.8 about 9 from its top, its neck Ø 16.5; a collar Ø 20.5 × 2.9; the body (2) a cone Ø 17.9 to 10.3 over 19.3;

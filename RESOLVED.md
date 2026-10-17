@@ -3010,4 +3010,14 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The Wempe's 1943 key: its paddle 1.6 too high, its spring loose round the tube.** 05 01 02-2's
+  6.3 +0.1 for the slot's Ø 35 floor was taken as its depth at the axis; its extension line leaves
+  the arc where it meets the body's outside, so the floor is 7.40 under the top at the bore's edge,
+  where the paddle rests, and its centre 9.37 over the top (10.95 before; 51 00 11 scales 9.37).
+  The tube's head stood 6.8 under the top (estimated) and would have cut the lowered paddle: 51 00
+  11's section draws it 8.0 under. The coil spring was a 0.9 wire standing 0.08 clear of the tube,
+  its end not drawn, so nothing could grip: now as the section draws it, about 12 coils of 0.6 wire
+  on the tube, its end turned down into the body's Ø 0.9 hole, and the grooved pin 15.3 long, its
+  ends showing (13, hidden, before). Keep: the paddle rests on the seat's edge at the bore, the
+  tube's head under it, the spring on the tube with its end in the body (*The Mariner's
+  Chronometer*, Fig. 2.35, shows a 1943 key taken apart so).
