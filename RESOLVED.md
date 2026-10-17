@@ -677,6 +677,18 @@ Contents:
   band, sized to push 0.88 of the linear strip's drive, pushed 0.71 of the solved one: drawn 1.45 mm high (1.25), as high as clears the sustaining ratchet, it pushes 0.82.
   Keep: the spring's torque, wherever a tool needs it, comes from the solved table, never E b t³/12 L; anything sized
   against the drive (the sustaining spring, the bench's bands) is sized against that. `d190fa1`
+- **The Wempe's chain links were dumbbells with no rivets to be seen** (17 October 2026, at the user's word). Each
+  plate's sides ran straight between its lobes, 1.2 apart, meeting them in a notch; 05 07 04's plan views draw
+  concave sides tangent to the lobes, the waist 1.41 (1.38-1.44 over its 13 waists, traced). The plates had no
+  holes and the rivets were the plates' own steel, flush, so nothing showed where the sheet draws a hole in every
+  lobe and Wempe 3955's chain shows each rivet's end bright. Now each plate and each hook's eye has its hole
+  (Ø 0.56 round the drawn 0.55) and the rivets, a pair to each outer link, are their own instanced mesh in polished
+  steel, 12-sided in 12-sided holes in their phase, the outline laid out about 20° a segment (absarc's per-arc divisions
+  cut the short sides five times as fine and, with the holes, made the page's frames a fifth slower in software, which
+  failed smoke.py's wind from run down). holecheck.js read an instanced mesh as one copy at its origin, so the rivets
+  in the hooks' eyes weren't seen: it now also tests each instance where it is drawn for what fills a hole. Keep: the
+  plates' outline from the sheet's traced sides; a link's rivets through holes in all its plates; the chain's pieces
+  cheap to draw (375 links, frames timed against main's in software before and after). Found against 05 07_14 and 14_Wempe_3955_Band_Kette.jpg, with 4_Wempe_3955_N.jpg's barrel for the look in place. `57aab13`
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
@@ -2437,6 +2449,22 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's minute hand's flange showed a zigzag band, the tube's crown facets like a pyramid, and every
+  hand's root flickered** (17 October 2026, the user's screenshot). `sectors()` in `wempe/js/dial.js` cut each
+  annulus of a rounded or crowned top into four quarter cells, and earcut triangulated each quarter whole:
+  slivers from one side of a quarter to the other, flat-shaded (solidGeo gives each sloped triangle its own
+  normal), which zigzagged round the flange's r 0.4 round and faceted the cannon tube's crown over its square.
+  `sectors()` now cuts each annulus into a cell per step of one set of angles (every loop's points, each loop met
+  there by the ray from the centre), and the minute hand's round is a turned ring (smooth normals) round the
+  flat part's 72 points. And each blade's root lay inside its boss with its underside in the boss's underside's
+  plane (the up-and-down and seconds hands' tops in the boss's top's too), so the two solids flickered through
+  each other there; `blade()` takes the boss's radius and draws the blade 0.02 in from those faces inside it.
+  Keep: a sloped top is cut into narrow cells (never a quarter triangulated whole); a turned surface is a lathe
+  where nothing in it isn't round; two solids that overlap never share a face's plane in the overlap. `0b68274`
+- **The Wempe's detent block's cross screw flickered on the upright's far face** (17 October 2026, the user's
+  screenshot). The screw (`WN-gkA`, drawn without its hole) ran 3.0 into the 3.0-wide upright, so its end lay in
+  the face's plane; it ends 0.02 inside now. Keep: a screw drawn without its hole ends short of the far face or
+  through it, never on it. `0b68274`
 - **The Wempe's hands showed a broken line down their middle.** Each blade (`blade()` in `wempe/js/dial.js`)
   was one solidGeo cell whose top follows the thickness along the hand, and earcut triangulated it whole: long
   slivers from a point on one edge to a point far along the other, tilted to either side (|nx| up to 0.70 on the

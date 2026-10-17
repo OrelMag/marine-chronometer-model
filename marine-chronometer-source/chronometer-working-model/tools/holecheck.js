@@ -11,6 +11,12 @@
   /* each mesh in the movement's frame: its triangles, and a box */
   const W=new Map();for(const o of ms){const M=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld),g=o.geometry,p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,T=new Float64Array(n*3),bb=new THREE.Box3(),v=new THREE.Vector3();
     for(let i=0;i<n;i++){v.fromBufferAttribute(p,ix?ix[i]:i).applyMatrix4(M);T[3*i]=v.x;T[3*i+1]=v.y;T[3*i+2]=v.z;bb.expandByPoint(v);}W.set(o,{T,bb});}
+  /* what can fill a hole: every mesh, and each instance of an instanced one where it is drawn (a chain's rivets in its hooks' eyes: the Wempe's, 17 October 2026);
+     an instanced mesh's own holes are still read off its one copy at its origin, as before */
+  const fill=[...ms];for(const o of ms)if(o.isInstancedMesh){const g=o.geometry,p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,IM=new THREE.Matrix4();
+    for(let k=0;k<o.count;k++){o.getMatrixAt(k,IM);const M=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld).multiply(IM),T=new Float64Array(n*3),bb=new THREE.Box3(),v=new THREE.Vector3();
+      for(let i=0;i<n;i++){v.fromBufferAttribute(p,ix?ix[i]:i).applyMatrix4(M);T[3*i]=v.x;T[3*i+1]=v.y;T[3*i+2]=v.z;bb.expandByPoint(v);}
+      const q={geometry:g,userData:{},parent:o};W.set(q,{T,bb});fill.push(q);}}
   /* a point inside a mesh: crossings of a ray from it (a slanted direction, so it misses edges), counted odd */
   const hits=(o,q,D)=>{const{T}=W.get(o),out=[];
     for(let i=0;i<T.length;i+=9){const ax=T[i],ay=T[i+1],az=T[i+2],e1=[T[i+3]-ax,T[i+4]-ay,T[i+5]-az],e2=[T[i+6]-ax,T[i+7]-ay,T[i+8]-az];
@@ -71,9 +77,9 @@
            pivot may fill only the hole's last part) */
         const e1=new THREE.Vector3(1,0,0);if(Math.abs(ax.x)>0.9)e1.set(0,1,0);e1.sub(ax.clone().multiplyScalar(e1.dot(ax))).normalize();const e2=ax.clone().cross(e1),nd=Math.min(40,Math.ceil(dep/0.05)),qs=[];
         for(let i=0;i<nd;i++){const c0=cen.clone().addScaledVector(ax,dep*(i+0.5)/nd);qs.push(c0);for(const f of[0.6,0.9])for(let k=0;k<4;k++){const t=k*Math.PI/2+f;qs.push(c0.clone().addScaledVector(e1,f*r*Math.cos(t)).addScaledVector(e2,f*r*Math.sin(t)));}}
-        const box=new THREE.Box3().setFromPoints(qs),cand=ms.filter(m=>m!==o&&W.get(m).bb.intersectsBox(box)),who=new Set();   /* its own metal on the axis: a turned part's step (a shoulder round its narrower part), not a hole */
+        const box=new THREE.Box3().setFromPoints(qs),cand=fill.filter(m=>m!==o&&m.parent!==o&&W.get(m).bb.intersectsBox(box)),who=new Set();   /* its own metal on the axis: a turned part's step (a shoulder round its narrower part), not a hole */
         for(const m of cand){if(qs.some(q=>inside(m,q)))who.add(pn(m)+':'+(hnOf(m)||m.geometry.type.replace('Geometry','')));}
-        let near=[];if(!who.size){const seenN=new Map();for(let d=-2;d<=dep+2.001;d+=0.1){if(d>0&&d<dep)continue;const q=cen.clone().addScaledVector(ax,d);for(const m of ms){if(m===o)continue;const k=pn(m)+':'+(hnOf(m)||m.geometry.type.replace('Geometry',''));if(!seenN.has(k)&&inside(m,q))seenN.set(k,+(d<0?d:d-dep).toFixed(1));}}near=[...seenN].map(([k,d])=>k+' '+(d<0?d+' before':'+'+d+' past'));}   /* empty: what is on its axis just beyond it */
+        let near=[];if(!who.size){const seenN=new Map();for(let d=-2;d<=dep+2.001;d+=0.1){if(d>0&&d<dep)continue;const q=cen.clone().addScaledVector(ax,d);for(const m of fill){if(m===o||m.parent===o)continue;const k=pn(m)+':'+(hnOf(m)||m.geometry.type.replace('Geometry',''));if(!seenN.has(k)&&inside(m,q))seenN.set(k,+(d<0?d:d-dep).toFixed(1));}}near=[...seenN].map(([k,d])=>k+' '+(d<0?d+' before':'+'+d+' past'));}   /* empty: what is on its axis just beyond it */
         out.push({near,part:pn(o),hn:hnOf(o),geo:o.geometry.type.replace('Geometry',''),c:[cen.x,cen.y,cen.z].map(x=>+x.toFixed(2)),ax:[ax.x,ax.y,ax.z].map(x=>+x.toFixed(2)),r:+r.toFixed(3),depth:+dep.toFixed(2),in:[...who]});}}}
   /* a hole met from both faces of a through piece is one hole: keep it once (the same centre line, the first face's) */
   const key=h=>h.part+'|'+h.hn+'|'+h.r.toFixed(2)+'|'+[0,1,2].map(i=>Math.round((h.c[i]-(h.c[0]*h.ax[0]+h.c[1]*h.ax[1]+h.c[2]*h.ax[2])*h.ax[i])*20)).join(',');
