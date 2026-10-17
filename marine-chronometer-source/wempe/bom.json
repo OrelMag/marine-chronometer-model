@@ -413,8 +413,8 @@
    "id": "WN-ucs",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Upper balance cock screw (hole 8; WN number not read)",
+   "dwg": "WN-55",
+   "name": "Upper balance cock screw (hole 8; WN-55 by the coloured section's label)",
    "qty": 1,
    "parent": "050803-1",
    "kind": "part",
@@ -689,16 +689,16 @@
    "parent": "050502",
    "kind": "part",
    "part": "intermediateWheel",
-   "fn": "Driven by the centre wheel; runs in the top plate's bush WN-300 and the intermediate bridge's.",
+   "fn": "Driven by the centre wheel; runs in the top plate's bush WN-300 and the intermediate bridge's. In the Soviet 6MX (the page's Variants) it runs in jewels in chatons at both ends.",
    "rel": [
     [
      "in",
-     "WN-300.t38",
+     "WN-300.t38|6MX.jw38u",
      "run"
     ],
     [
      "in",
-     "WN-300.zb",
+     "WN-300.zb|6MX.jw38l",
      "run"
     ],
     [
@@ -757,11 +757,11 @@
    "parent": "050501",
    "kind": "part",
    "part": "secondsWheel",
-   "fn": "Driven by the intermediate wheel; turns once a minute; runs in the top plate's bush WN-300 and the jewel 05 05 04-1 in the intermediate bridge; its lower pivot goes on as the seconds hand's post.",
+   "fn": "Driven by the intermediate wheel; turns once a minute; runs in the top plate's bush WN-300 and the jewel 05 05 04-1 in the intermediate bridge; its lower pivot goes on as the seconds hand's post. In the Soviet 6MX its upper pivot runs in a jewel in a chaton.",
    "rel": [
     [
      "in",
-     "WN-300.t35",
+     "WN-300.t35|6MX.jw35u",
      "run"
     ],
     [
@@ -835,7 +835,8 @@
      "press"
     ]
    ],
-   "figs": "05 08_2"
+   "figs": "05 08_2",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-300.t35",
@@ -855,7 +856,8 @@
      "press"
     ]
    ],
-   "figs": "05 08_2"
+   "figs": "05 08_2",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-302",
@@ -895,7 +897,134 @@
      "press"
     ]
    ],
-   "figs": "05 08_10"
+   "figs": "05 08_10",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "6MX.ch38u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Chaton (6MX), intermediate arbor's upper jewel",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "Holds the intermediate arbor's upper jewel in the top plate's hole 38, where the drawings press the bush WN-300. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.jw38u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), intermediate arbor, upper",
+   "qty": 1,
+   "parent": "6MX.ch38u",
+   "kind": "jewel",
+   "part": "topPlate",
+   "fn": "The intermediate arbor's upper pivot runs in it; its face takes the arbor's shoulder. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ch38u",
+    "arbor": "050502-2",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ch35u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Chaton (6MX), seconds arbor's upper jewel",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "Holds the seconds arbor's upper jewel in the top plate's hole 35, where the drawings press the bush WN-300. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.jw35u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), seconds arbor, upper",
+   "qty": 1,
+   "parent": "6MX.ch35u",
+   "kind": "jewel",
+   "part": "topPlate",
+   "fn": "The seconds arbor's upper pivot runs in it; its face takes the arbor's shoulder. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ch35u",
+    "arbor": "050501-2",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ch38l",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Chaton (6MX), intermediate arbor's lower jewel",
+   "qty": 1,
+   "parent": "050804-1",
+   "kind": "part",
+   "part": "intermediateBridge",
+   "fn": "Holds the intermediate arbor's lower jewel in the intermediate bridge, where the drawings press the bush WN-300. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [
+    [
+     "in",
+     "050804-1",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.jw38l",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), intermediate arbor, lower",
+   "qty": 1,
+   "parent": "6MX.ch38l",
+   "kind": "jewel",
+   "part": "intermediateBridge",
+   "fn": "The intermediate arbor's lower pivot runs in it; its face takes the arbor's shoulder. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ch38l",
+    "arbor": "050502-2",
+    "end": "lower"
+   }
   },
   {
    "id": "050504-2",
@@ -974,7 +1103,8 @@
      "press"
     ]
    ],
-   "figs": "05 08_3a, 05 08_32.2"
+   "figs": "05 08_3a, 05 08_32.2",
+   "rev": "last first 1943"
   },
   {
    "id": "050200-6",
@@ -1049,7 +1179,7 @@
       0
      ],
      "why": "as first drawn (the page's Variants) the arm is riveted on the 1941 collar's neck (05 04_5), which stands between its hole and the staff: the 1946 staff's seat Ø 2 h6 isn't there",
-     "rev": "first"
+     "rev": "first 6mx 1943"
     }
    ]
   },
@@ -1325,7 +1455,20 @@
      "050302-3"
     ]
    ],
-   "figs": "05 03_9"
+   "figs": "05 03_9",
+   "dev": [
+    {
+     "rel": [
+      "on",
+      "050302-3"
+     ],
+     "inst": [
+      0
+     ],
+     "why": "as first drawn (and in the Soviet 6MX, at those heights) the spring's top curve rides 0.3 higher in the stud's slot and its pin with it, 0.05 off the stud: the 1941 stud's seat for the pin isn't drawn (found 16 October 2026, already so on main at 3.00.01)",
+     "rev": "first 6mx 1943"
+    }
+   ]
   },
   {
    "id": "WN-11",
@@ -1578,8 +1721,8 @@
    "id": "WN-gf",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Detent foot screw, M1 (its WN number not read)",
+   "dwg": "WN-13",
+   "name": "Detent foot screw, M1 (WN-13 by the coloured section's label, likely)",
    "qty": 1,
    "parent": "050401-1",
    "kind": "part",
@@ -1600,11 +1743,11 @@
    "figs": "05 04_3"
   },
   {
-   "id": "WN-201.d",
+   "id": "WN-205.d",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Stellstift (WN-201, \"Stellstift 2\"), the detent's foot pins",
+   "dwg": "WN-205",
+   "name": "Stellstift (WN-205 by the coloured section's label), the detent's foot pins",
    "qty": 2,
    "parent": "050401-1",
    "kind": "part",
@@ -1647,8 +1790,8 @@
    "id": "WN-gk",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Detent block screw, M1.7 (its WN number not read)",
+   "dwg": "WN-15",
+   "name": "Detent block screw, M1.7 (WN-15 by the coloured section's label, likely)",
    "qty": 1,
    "parent": "050401-4",
    "kind": "part",
@@ -1692,6 +1835,27 @@
    "figs": "05 04_3"
   },
   {
+   "id": "WN-gkA43",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Banking screw M1.2 along the 1943 block's slit upright, its domed slotted head (the escapement of 1943; its WN number not read)",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "Along the upright's slit end, the slit gripping its thread; its head's underside bears on the detent's pipe and sets the depth of lock. The thread from the block's sheet (M1.2), its head measured on Kirow DEC 422's, DEC 479's and Lange No. 5177's photographs, its length the 6MX's loose block's.",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "tap"
+    ]
+   ],
+   "figs": "05 04_3",
+   "rev": "1943"
+  },
+  {
    "id": "cone41",
    "idx": null,
    "no": "",
@@ -1715,11 +1879,11 @@
    "figs": "05 04_1"
   },
   {
-   "id": "WN-gkP",
+   "id": "WN-201.gk",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Steady pins Ø 0.9, detent block",
+   "dwg": "WN-201",
+   "name": "Stellstift (WN-201, \"Stellstift 2\" by the coloured section's label), the detent block's steady pins Ø 0.9",
    "qty": 2,
    "parent": "050401-4",
    "kind": "part",
@@ -1924,11 +2088,11 @@
    }
   },
   {
-   "id": "WN-16",
+   "id": "WN-10.bl",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Schraube (WN-16), the lower settings' screws, M1.2",
+   "dwg": "WN-10",
+   "name": "Schraube (WN-10 by the coloured section's label, its last digit 0 or 8: likely 10), the lower settings' screws, M1.2",
    "qty": 2,
    "parent": "050408-2.bl",
    "kind": "part",
@@ -2644,8 +2808,8 @@
    "id": "wireStud",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Stift (the maintaining detent's wire spring's stud; no number)",
+   "dwg": "WN-27",
+   "name": "Schraube (WN-27 by the coloured section's label, likely: the maintaining detent's wire spring's stud)",
    "qty": 1,
    "parent": "050901",
    "kind": "part",
@@ -2703,11 +2867,11 @@
    "figs": "05 06_4, 05 06_2.2"
   },
   {
-   "id": "050603-2",
+   "id": "050604-4",
    "idx": null,
    "no": "",
-   "dwg": "05 06 03-2",
-   "name": "Stift (the stop bar's spring's pin)",
+   "dwg": "05 06 04-4",
+   "name": "Stift (05 06 04-4: the coloured section's label and 05 06 04's parts list, likely), the stop bar's spring's pin",
    "qty": 1,
    "parent": "0506",
    "kind": "part",
@@ -3706,7 +3870,8 @@
    "part": "box",
    "fn": "185 x 185 x 180 outside: the gimbals hang in it (no sheet in the set).",
    "rel": [],
-   "figs": "05 01_1, 51 00_1"
+   "figs": "05 01_1, 51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-80",
@@ -3736,7 +3901,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten"
+     "Holzkasten|Kasten6"
     ]
    ],
    "figs": "05 01_1"
@@ -3758,7 +3923,8 @@
      "Holzkasten"
     ]
    ],
-   "figs": "51 00_2"
+   "figs": "51 00_2",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-hg",
@@ -3772,7 +3938,8 @@
    "part": "box",
    "fn": "Through the handles' ends into the side walls.",
    "rel": [],
-   "figs": "51 00_2"
+   "figs": "51 00_2",
+   "rev": "last first 1943"
   },
   {
    "id": "Scharnier",
@@ -3786,7 +3953,8 @@
    "part": "box",
    "fn": "Join the lid to the box at the back: one hinge 148 long, its leaves let into the parting faces (as every photographed box).",
    "rel": [],
-   "figs": "51 00_1"
+   "figs": "51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "Deckelstuetze",
@@ -3800,7 +3968,8 @@
    "part": "box",
    "fn": "Holds the lid open: a slotted brass bar pivoted on the lid's left wall, riding on a pin in the box's (Wempe 6161).",
    "rel": [],
-   "figs": "photographs"
+   "figs": "photographs",
+   "rev": "last first 1943"
   },
   {
    "id": "Schluesselhalter",
@@ -3816,7 +3985,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten"
+     "Holzkasten|Kasten6"
     ]
    ],
    "figs": "51 00_1"
@@ -3838,7 +4007,8 @@
      "Holzkasten"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "Holzkasten.D",
@@ -3852,7 +4022,8 @@
    "part": "lid",
    "fn": "The glazed lid, hinged at the back.",
    "rel": [],
-   "figs": "51 00_1, 51 00_2"
+   "figs": "51 00_1, 51 00_2",
+   "rev": "last first 1943"
   },
   {
    "id": "Deckelglas",
@@ -3868,7 +4039,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten.D"
+     "Holzkasten.D|Kasten6.D"
     ]
    ],
    "figs": "51 00_1"
@@ -3890,7 +4061,8 @@
      "Holzkasten.D"
     ]
    ],
-   "figs": "51 00_3"
+   "figs": "51 00_3",
+   "rev": "last first 1943"
   },
   {
    "id": "P510002-2",
@@ -3909,7 +4081,8 @@
      "Holzkasten.D"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-zg",
@@ -3923,7 +4096,8 @@
    "part": "lid",
    "fn": "The screw the tongue turns on.",
    "rel": [],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-zk",
@@ -3942,7 +4116,8 @@
      "P510002-2"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "Ueberkasten",
@@ -3956,7 +4131,8 @@
    "part": "overBox",
    "fn": "Carries the wooden box for transport, cushioned all round.",
    "rel": [],
-   "figs": "51 00_5, 51 00_1"
+   "figs": "51 00_5, 51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "Randleiste",
@@ -3970,7 +4146,8 @@
    "part": "overBox",
    "fn": "Inside the rim, 4 over the walls: the lid closes over it.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.S",
@@ -3984,7 +4161,8 @@
    "part": "overBox",
    "fn": "Against the wooden box's front and back.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.E",
@@ -3998,7 +4176,8 @@
    "part": "overBox",
    "fn": "Against the wooden box's handles.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.B",
@@ -4012,7 +4191,8 @@
    "part": "overBox",
    "fn": "The wooden box stands on it.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Riemen",
@@ -4054,7 +4234,8 @@
    "part": "overBox",
    "fn": "On each end of the base plate.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-ro",
@@ -4068,7 +4249,8 @@
    "part": "overBox",
    "fn": "The eyes' screws.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Scharnier.U",
@@ -4110,7 +4292,8 @@
    "part": "overLid",
    "fn": "Hinged at the back, cushioned inside.",
    "rel": [],
-   "figs": "51 00_5, 51 00_1"
+   "figs": "51 00_5, 51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.D",
@@ -4124,7 +4307,8 @@
    "part": "overLid",
    "fn": "Bears on the wooden box's lid.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Haken",
@@ -4139,6 +4323,181 @@
    "fn": "On the lid's front, caught in the eye.",
    "rel": [],
    "figs": "51 00_5"
+  },
+  {
+   "id": "Kasten6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Ящик (the 6MX’s box, Kirov No. 247’s): its body",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "box",
+   "fn": "190 x 190 x 190 outside (the TU's): the gimbals hang in it. No sheet: Kirov 247's photographs, its tiers on Kirov 22823's.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Scharnier6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hinges (6MX, estimated)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Join the glazed lid to the box at the back, and the top lid to it (not seen on Kirov 247's photographs).",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "Griff6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Ring handle (6MX)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "One on each side, under the lower parting line.",
+   "rel": [
+    [
+     "on",
+     "Kasten6"
+    ]
+   ],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Beschlag6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Corner strips (6MX)",
+   "qty": 1,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Brass strips round the box's corners (the lids' with them).",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberfall6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hasp leaf (6MX)",
+   "qty": 4,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Two hasps across the parting lines, a knurled screw on each lower leaf.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Nummernschild",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Number plate 247 (6MX)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "On the box's front and the outer box's lid.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Kasten6.D",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Glazed lid and top lid (6MX)",
+   "qty": 1,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "lid",
+   "fn": "Hinged at the back, opened together here.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Firmenschild6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Factory badge, 1 МЧЗ им. Кирова (6MX)",
+   "qty": 1,
+   "parent": "Kasten6.D",
+   "kind": "part",
+   "part": "lid",
+   "fn": "On the glazed lid's front.",
+   "rel": [
+    [
+     "on",
+     "Kasten6.D"
+    ]
+   ],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberkasten6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Outer box (6MX): its body",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "overBox",
+   "fn": "Carries the box for transport, felt-lined; its sizes estimated.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Polster6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Felt (6MX)",
+   "qty": 6,
+   "parent": "Ueberkasten6",
+   "kind": "part",
+   "part": "overBox",
+   "fn": "Under, round and over the box.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberkasten6.D",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Outer box lid (6MX)",
+   "qty": 1,
+   "parent": "Ueberkasten6",
+   "kind": "part",
+   "part": "overLid",
+   "fn": "Hinged at the back, its tab closing into the notch.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
   },
   {
    "id": "050101.F",

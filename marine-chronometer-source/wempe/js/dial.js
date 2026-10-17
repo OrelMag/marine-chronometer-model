@@ -133,22 +133,30 @@ const WDIAL=(()=>{
   /* a blade from r0 to its tip along -z (the hand's 12 o'clock), its half-widths hw and thickness t over r, its underside at y0: solidGeo cells with a sloped top, one strip
      across the blade between each two stations, so its top's triangles each span one station's step (one cell, triangulated whole, joined points far apart along the two edges:
      long slivers tilted to either side, which shaded as a broken line down the hand and Edges inked). Its root a concave arc of radius r0 about the arbor, joining the boss
-     (in the hand's group, so the overlap with the boss is the hand's own), in the first strip */
-  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip)).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b).filter((r,i,A)=>!i||r-A[i-1]>0.01);   /* every 0.25 and at each of the table's radii */
+     (in the hand's group, so the overlap with the boss is the hand's own), in the first strip. rb: the boss's radius, a station; inside it the blade's underside is drawn
+     0.02 up (and with tp its top 0.02 down, where the blade's top is the boss's), so the two solids' faces in the overlap aren't one plane (until 17 October 2026 they were:
+     the boss's face and the blade's root flickered through each other) */
+  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25,rb=0,tp=false){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip),rb>r1&&rb<tip?[rb]:[]).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b).filter((r,i,A)=>!i||r-A[i-1]>0.01);   /* every 0.25 and at each of the table's radii */
     if(tip-R[R.length-1]<0.01)R.pop();R.push(tip);
     const w=r=>hwAt(hw,r),P=(s,r)=>[s*w(r),dir*r],a0=Math.asin(Math.min(0.99,w(r0)/r0)),arc=[];
     for(let k=1;k<8;k++){const a=-a0+2*a0*k/8;arc.push([r0*Math.sin(a),dir*r0*Math.cos(a)]);}
-    const tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1])),cells=[];
-    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?[]:arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0,y1:tf});}
+    const inB=p=>Math.hypot(p[0],p[1])<rb-1e-6,yb=p=>y0+(inB(p)?0.02:0),tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1]))-(tp&&inB(p)?0.02:0),cells=[];
+    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?[]:arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf});}
     return solidGeo(cells);}
   /* the minute hand's square hole and the tube's square: 2.6 across flats, the corners on a circle r (the tube's 1.6) */
   const sqLoop=(h,r,n=96)=>{let L=C([0,0],r,n);for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])L=clipPoly(L,p=>h-(p[0]*a+p[1]*b));return L;};
-  /* a crowned or rounded top over a hole: solidGeo's cells for the annuli between closed loops Ls (counterclockwise, the innermost round the hole first), each cut in four at
-     45 deg + k × 90 deg (every loop has a point there), y0 their flat underside and y1(p) their top; a cell with a feature has flat faces, so the annuli carry none */
-  const sectors=(Ls,y0,y1)=>{const A=[1,3,5,7].map(k=>k*Math.PI/4),ix=L=>A.map(a=>L.findIndex(p=>Math.abs(Math.atan2(Math.sin(Math.atan2(p[1],p[0])-a),Math.cos(Math.atan2(p[1],p[0])-a)))<1e-6));
-    const arc=(L,i,j)=>{const o=[];for(let k=i;;k=(k+1)%L.length){o.push(L[k]);if(k===j)break;}return o;},cells=[];
-    Ls=Ls.map(L=>area(L)<0?L.slice().reverse():L);for(let j=1;j<Ls.length;j++){const I=ix(Ls[j-1]),O=ix(Ls[j]);
-      for(let k=0;k<4;k++)cells.push({loop:[...arc(Ls[j],O[k],O[(k+1)%4]),...arc(Ls[j-1],I[k],I[(k+1)%4]).reverse()],y0,y1});}return cells;};
+  /* a crowned or rounded top over a hole: solidGeo's cells for the annuli between closed loops Ls (round the centre, the innermost round the hole first), y0 their flat
+     underside and y1(p) their top; a cell with a feature has flat faces, so the annuli carry none. Each annulus is cut into a cell per step of one set of angles (every
+     loop's points' angles, each loop met there by the ray from the centre, its own point where it has one), so the top's triangles are short and follow the round. Until
+     17 October 2026 each annulus was cut in four: a quarter triangulated whole joined points far apart round it, slivers that shaded as a zigzag band round the minute
+     hand's flange and as facets on the tube's crown */
+  const sectors=(Ls,y0,y1)=>{Ls=Ls.map(L=>area(L)<0?L.slice().reverse():L);const ak=p=>(Math.atan2(p[1],p[0])+TAU)%TAU;
+    let A=[...new Set(Ls.flat().map(p=>+ak(p).toFixed(9)))].sort((a,b)=>a-b).filter((a,i,X)=>!i||a-X[i-1]>1e-7);if(TAU-A[A.length-1]+A[0]<1e-7)A.pop();
+    const hit=(L,a)=>{const c=Math.cos(a),s=Math.sin(a);let b=Infinity;for(let i=0;i<L.length;i++){const p=L[i],q=L[(i+1)%L.length],ex=q[0]-p[0],ez=q[1]-p[1],d=c*ez-s*ex;
+      if(Math.abs(d)<1e-12)continue;const t=(p[0]*ez-p[1]*ex)/d,u=(p[0]*s-p[1]*c)/d;if(u>-1e-9&&u<1+1e-9&&t>0&&t<b)b=t;}return[b*c,b*s];};
+    const R=Ls.map(L=>{const own=new Map(L.map(p=>[+ak(p).toFixed(9),p]));return A.map(a=>own.get(a)||hit(L,a));}),cells=[];
+    for(let j=1;j<R.length;j++)for(let k=0;k<A.length;k++){const m=(k+1)%A.length,c=[R[j][k],R[j][m],R[j-1][m],R[j-1][k]];cells.push({loop:area(c)>0?c:c.slice().reverse(),y0,y1});}
+    return cells;};
 
   /* ================= the balance holding device (Unruhhaltevorrichtung 127-556.06 / 36 00, 26.2.42, 5:1; Zangenteil 127-556.06-06 / 36 00 01-1, 29.8.41): not built =================
      Read and measured, kept for the record (README, Unresolved). Two tongs (Messingblech 1,2 Ms 58) on one pivot at hole 51, in the top plate's pocket (05 09 01's N-O,
@@ -199,9 +207,23 @@ const WDIAL=(()=>{
     FB:{r0:7.465,r1:9.088,b0:7.690,b1:8.897,wd:0.25,we:0.21,rc:0.172,ro:0,re:5.71}};   /* its band: lines 7.465-7.690 and 8.897-9.088 (Ø 15.16, 18.0); the divisions at 8 ... 48 h
        0.25 (0.23-0.28), the end strokes at 0 and 56 0.21 (0.21, 0.22), running on inward to r 5.71 (5.700, 5.714); the boxes' corners r 0.172; the outer corners at the ends sharp
        (as they show at 167 px/mm: not measured) */
-  /* face(K, d): the dial's printing on a canvas, K times as fine; d the dial: 'wempe' (Wempe 3955's, dialface.js) or 'lange' (Lange 5177's, dialface_lange.js) */
+  /* The Soviet 6MX's, Kirov No. 247's (dg-chrono-6mx/1_Kirow_247_Z.jpg, Altmeppen's square-on view; dialtrace.py --dial kirov --geo: its six circles' rms 10-25 µm, the
+     drawings' diameters, 89.96, 84.91, 26.18, 37.13, 33.01, 22.79; blur sigma 0.031): the German layout to 0.1 mm, printed thin as Lange's, its up-and-down sub-dial laid out as
+     Lange's (the circle open at the top, here for СПУСК and ЗАВОД; the band's end strokes running inward), the Russian words and the factory's mark traced, the serial written
+     in red ink (#ff617f: the photo's red, 165, 59, 79 over its paper's 149, 146, 145, scaled to the model's paper) */
+  const KIROV={TC:[-0.063,0.031],   /* the minute track's centre, 0.07 off the arbors' midpoint */
+    FT:{r0:42.319,r1:45.128,b0:42.585,b1:44.835,wm:0.290,wh:1.423,rc:0.184},   /* the minute track: lines 42.319-42.585 and 44.835-45.128 (centres Ø 84.90, 89.96); the minute
+       divisions 0.290 (0.24-0.37), the hour blocks 1.423 (1.37-1.56); corners r 0.184 */
+    FS:{r0:16.357,r1:18.740,b0:16.641,b1:18.405,wm:0.333,wh:0.529,rc:0.156},   /* the seconds track: lines 16.357-16.641, 18.405-18.740 (Ø 33.00, 37.15); a division each second
+       0.333 (0.24-0.41), each five 0.529 (0.45-0.61); corners r 0.156 */
+    F23:[11.272,11.513],FRL:0.495,   /* the seconds sub-dial's inner circle (Ø 22.79) and its lines at 5, 15 ... 55 s, 0.495 wide (0.43-0.59) */
+    FU:[12.988,13.189],gap:[22.58,338.32],   /* the up-and-down circle (Ø 26.18), open at the top from 338.32 to 22.58 deg */
+    FB:{r0:7.477,r1:9.215,b0:7.723,b1:8.996,wd:0.306,we:0.265,rc:0.140,ro:0,re:5.33}};   /* its band: lines 7.477-7.723 and 8.996-9.215 (Ø 15.20, 18.21); the divisions at 8 ... 48 h
+       0.306 (0.29-0.34), the end strokes at 0 and 56 0.265 (0.235, 0.294), running on inward to r 5.33 (5.345, 5.321); the boxes' corners r 0.140 */
+  /* face(K, d): the dial's printing on a canvas, K times as fine; d the dial: 'wempe' (Wempe 3955's, dialface.js), 'lange' (Lange 5177's, dialface_lange.js) or 'kirov'
+     (Kirov 247's, dialface_kirov.js) */
   function face(K=1,d='wempe'){const S=2048,cv=document.createElement('canvas');cv.width=cv.height=S*K;const x=cv.getContext('2d');x.scale(K,K);
-    const L=d==='lange',{TC,FT,FS,F23,FRL,FU,FB}=L?LANGE:{TC:TC0,FT:FT0,FS:FS0,F23:F230,FRL:FRL0,FU:FU0,FB:FB0},GF=L?WDIALFACE_LANGE:WDIALFACE;
+    const KV=d==='kirov',L=d==='lange'||KV,Q=KV?KIROV:LANGE,{TC,FT,FS,F23,FRL,FU,FB}=L?Q:{TC:TC0,FT:FT0,FS:FS0,F23:F230,FRL:FRL0,FU:FU0,FB:FB0},GF=KV?WDIALFACE_KIROV:L?WDIALFACE_LANGE:WDIALFACE;
     const k=S/(2*DR),c=S/2,P=(mx,mz)=>[c+mx*k,c+mz*k];   /* mm on the dial (x right, z down: 12 at the top) to canvas px */
     x.fillStyle='#f2f0ea';x.fillRect(0,0,S,S);
     const ink='#141416',paper='#f2f0ea';x.lineJoin='round';
@@ -217,14 +239,14 @@ const WDIAL=(()=>{
     /* the minute track */
     rail(TC,FT,GF.divm,i=>i%5?FT.wm:FT.wh);
     /* the up-and-down sub-dial: its circle, the band open at the top (its ends at 0 and 56 h, 22.5 deg either side of 12), a box for each 8 hours */
-    const U=[0,-23],ua=h=>22.5+h/8*45;if(L)box(U,FU[0],FU[1],LANGE.gap[0],0,LANGE.gap[1],0,0,ink);else ring(U,FU[0],FU[1]);
+    const U=[0,-23],ua=h=>22.5+h/8*45;if(L)box(U,FU[0],FU[1],Q.gap[0],0,Q.gap[1],0,0,ink);else ring(U,FU[0],FU[1]);
     box(U,FB.r0,FB.r1,ua(0),-FB.we/2,ua(56),FB.we/2,FB.ro,ink);
-    if(L)for(const h of[0,56])box(U,LANGE.FB.re,FB.r0+0.05,ua(h),-FB.we/2,ua(h),FB.we/2,0,ink);   /* Lange's end strokes, on inward past the inner line */
+    if(L)for(const h of[0,56])box(U,Q.FB.re,FB.r0+0.05,ua(h),-FB.we/2,ua(h),FB.we/2,0,ink);   /* Lange's and Kirov's end strokes, on inward past the inner line */
     for(let h=0;h<56;h+=8)box(U,FB.b0,FB.b1,ua(h),(h?FB.wd:FB.we)/2,ua(h+8),-(h+8<56?FB.wd:FB.we)/2,FB.rc,paper);
     /* the seconds sub-dial's inner circle and lines */
     const Sd=[0,23];ring(Sd,F23[0],F23[1]);for(let q=0;q<6;q++){const A=30+60*q;box(Sd,(F23[0]+F23[1])/2,(FS.r0+FS.b0)/2,A,-FRL/2,A,FRL/2,0,ink);}
     /* the traced glyphs (dialface.js): each item's contours filled even-odd */
-    x.fillStyle=ink;for(const[n,s]of Object.entries(GF)){if(n.startsWith('div'))continue;const p=new Path2D();for(const cs of s.split('|')){const v=cs.split(' ').map(Number);let mx=v[0],mz=v[1],[u,w]=P(mx/100,mz/100);p.moveTo(u,w);
+    for(const[n,s]of Object.entries(GF)){if(n.startsWith('div'))continue;x.fillStyle=KV&&n==='serial'?'#ff617f':ink;const p=new Path2D();for(const cs of s.split('|')){const v=cs.split(' ').map(Number);let mx=v[0],mz=v[1],[u,w]=P(mx/100,mz/100);p.moveTo(u,w);
       for(let i=2;i<v.length;i+=2){mx+=v[i];mz+=v[i+1];[u,w]=P(mx/100,mz/100);p.lineTo(u,w);}p.closePath();}x.fill(p,'evenodd');}
     /* the seconds track, printed over the 7 and the 5 (its white boxes cut into them) */
     rail(Sd,FS,GF.divs,i=>i%5?FS.wm:FS.wh);
@@ -276,27 +298,29 @@ const WDIAL=(()=>{
     const mh=grp(hdP,H[1]);R.mh=mh;
     {const y0=YM0,yf=y0+0.8,y1=y0+2.0,h0=CN.sq+0.01,sq=sqLoop(h0,CN.sqR+0.01),hole=y=>sq.map(p=>p.map(v=>v*(1+(y1-y)/140/h0)));   /* the square hole, widening 1:70 down from its top */
       tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1');
-      /* the flange: flat inside Ø 5.2, its edge rounded r 0.4 (annuli out to the rim, so the round is sampled across it) */
-      const r1=MIN.rf-0.4,rr=[0,1,2,3,4,5].map(k=>r1+0.4*Math.sin(k*Math.PI/10)),rnd=p=>y1-(0.4-Math.sqrt(Math.max(0,0.16-(Math.hypot(p[0],p[1])-r1)**2)));
-      tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]},...sectors(rr.map(r=>C([0,0],r,72)),yf,rnd)]),goldin),'050200-1',1);
-      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L),goldin),'050200-1',1);}
+      /* the flange: flat inside Ø 5.2 round the square hole, and outside it a turned ring, its edge rounded r 0.4 (smooth: until 17 October 2026 annuli of solidGeo's
+         cells, whose flat-shaded facets showed on the round and the rim); the ring's 72 sides fall on the flat part's 72 points */
+      const r1=MIN.rf-0.4,rnd=[...Array(11).keys()].map(k=>{const a=(10-k)/10*Math.PI/2;return[r1+0.4*Math.sin(a),y1-0.4+0.4*Math.cos(a)];});
+      tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1);
+      tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1);
+      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1);}
     /* the hour hand, on the hour wheel's pipe */
     const hh=grp(hdP,H[1]);R.hh=hh;
     {const y1=YH1,y0=y1-3.1,yf=y1-0.8,rb=y=>HRW.rh+(HRW.yt-y)/140+0.01;   /* its hole on the seat's 1:70, 0.01 clear */
       tag(mesh(hh,lathe([[rb(y0),y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[rb(y1),y1]],72),goldin),'050200-2');
-      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L),goldin),'050200-2',1);}
+      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L,-1,0.25,HOUR.rf),goldin),'050200-2',1);}
     /* the up-and-down hand, on its wheel's pipe */
     const uh=grp(hdP,H[2]);R.uh=uh;
     {const y1=YU1,yf=y1-0.5,y0=y1-1.4;
       tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3');
-      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2),M.blued),'050200-3',1);}
+      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1);}
     /* the seconds hand on its collet (Zeigerfutter 05 02 01-2, brass, no sheet), pressed on the seconds post's 1:90 taper: Ø 1.5 (the coloured section's, 1.6 scaled,
        inside the dial's Ø 1.7 hole) and 4.6 long (scaled there, pictorial), its end Ø 1.2 through the hand (the hand's hole), flush with its top; bored on the post, 0.005 clear */
     const sh=grp(hdP,H[35]);R.sh=sh;
     {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-0.1*(y-SW.ys-24.05)/9.1)/2+0.005;
       tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1');
-      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1),M.blued),'050201-1',1);
-      tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1),M.blued),'050201-1',1);
+      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1);
+      tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1);
       const yc=y0-4.0;tag(mesh(sh,lathe([[post(yc),yc],[0.75,yc],[0.75,y0],[SEC.rh,y0],[SEC.rh,y1],[post(y1),y1]],32),M.brass),'050201-2');}
 
     /* ---------- the dial (05 02 00-4) ---------- */
@@ -304,27 +328,31 @@ const WDIAL=(()=>{
     /* its holes: the centre 6.0, the up-and-down 3.2, the seconds 1.7 (sure); on Ø 101 (scaled 50.5-50.7) five more: three for its screws at 354 deg (the sheet's 6°), 120 and
        240 (scaled 120.6 and 240.2; Altmeppen: German dials are screwed at the 20, 40 and 59 minute marks), each Ø 1.1 under a Ø 1.8 H7 sink 1.0 deep ("Senkung 1,0 tief"); the
        pin's Ø 1 at 6 deg (the sheet's 6°, where the ring's Ø 1.6 pin hole is, 05 08 00-3); a Ø 1 at 185.7 deg (scaled; nothing under it in the ring) */
-    const RH=50.5,SCR=[354,120,240].map(a=>at(a,RH)),PINa=at(6,RH),SMa=at(185.7,RH);
+    /* The Soviet 6MX (the Variants' third version) screws it at the 19, 39 and 59 minute marks (Altmeppen's list); Kirov No. 247's dial has its screws at 112.5, 233.6 and
+       353.1 deg (1_Kirow_247_Z.jpg, ±1 for the view's tilt): 114, 234 and 354 deg. The disc, its printed face and its screws are built for each (rv) */
+    const RH=50.5,PINa=at(6,RH),SMa=at(185.7,RH),rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},FMS=[],TX={};
+    for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',[354,120,240]],['6mx',[354,114,234]]])){const gV=rv(dlP,V),SCR=AS.map(a=>at(a,RH));
     const holes=[[0,0,3.0],[H[2][0],H[2][1],1.6],[H[35][0],H[35][1],0.85],...SCR.map(p=>[p[0],p[1],0.9]),[PINa[0],PINa[1],0.5],[SMa[0],SMa[1],0.5]];
     {const F=[{p:C([0,0],3.0,72),a:DY0,b:DY1},{p:C(H[2],1.6,40),a:DY0,b:DY1},{p:C(H[35],0.85,32),a:DY0,b:DY1},{p:C(PINa,0.5,20),a:DY0,b:DY1},{p:C(SMa,0.5,20),a:DY0,b:DY1}];
       for(const p of SCR)F.push({p:C(p,0.55,20),a:DY0,b:DY1},{p:C(p,0.9,28),a:DY1-1.0,b:DY1});
-      tag(mesh(dlP,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
+      tag(mesh(gV,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
     /* the printed face: a surface 0.02 over the disc, holed as it is, its texture the canvas (face()) */
     {const s=new THREE.Shape();s.absarc(0,0,DR,0,TAU,false);for(const[hx,hz,hr]of holes){const p=new THREE.Path();p.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(p);}
       const g=new THREE.ShapeGeometry(s,64),uv=g.attributes.uv,pos=g.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,(pos.getX(i)+DR)/(2*DR),(pos.getY(i)+DR)/(2*DR));g.rotateX(-Math.PI/2);
-      const TX={},texOf=(/** @type {string} */d)=>{if(!TX[d]){const t=TX[d]=new THREE.CanvasTexture(face(1,d));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>face(k,d);}return TX[d];};
-      const fm=mesh(dlP,g,new THREE.MeshStandardMaterial({map:texOf('wempe'),metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
-      Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=fm;
-      /* R.setDial(d): the printing shown, 'wempe' or 'lange' (app.js's Variants), each texture drawn when first asked for: on the face's own material (the viewer may be
+      const texOf=(/** @type {string} */d)=>{if(!TX[d]){const t=TX[d]=new THREE.CanvasTexture(face(1,d));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>face(k,d);}return TX[d];};
+      const fm=mesh(gV,g,new THREE.MeshStandardMaterial({map:texOf('wempe'),metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
+      Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=R.face||fm;FMS.push(fm);
+      /* R.setDial(d): the printing shown, 'wempe', 'lange' or 'kirov' (app.js's Variants), each texture drawn when first asked for: on the face's own material (the viewer may be
          showing a faded or coloured copy of it, which follows on its next look()) and on the copy shown, if another */
-      R.setDial=(/** @type {string} */d)=>{const t=texOf(d==='lange'?'lange':'wempe'),m=fm.userData.mat0||fm.material;for(const q of new Set([m,fm.material]))if(q.map!==undefined&&q.map!==null){q.map=t;q.needsUpdate=true;}R.dial=d==='lange'?'lange':'wempe';};R.dial='wempe';
+      R.setDial=(/** @type {string} */d)=>{const dd=d==='lange'||d==='kirov'?d:'wempe',t=texOf(dd);for(const f of FMS){const m=f.userData.mat0||f.material;for(const q of new Set([m,f.material]))if(q.map!==undefined&&q.map!==null){q.map=t;q.needsUpdate=true;}}R.dial=dd;};R.dial='wempe';
 }
     /* its three screws (WN-10 by the coloured section's label, "10" or "18": likely): M1 through its Ø 1.1 holes into the ring's flange (tapped 2.5 deep there: frame.js), the
        heads Ø 1.7 × 0.8 in the sinks, 0.1 under the face (estimated); from the dial side, so in a frame turned over */
-    {const rg=new THREE.Group();rg.rotation.x=Math.PI;dlP.add(rg);for(const p of SCR)tag(screw(rg,p[0],-p[1],-(DY1-1.0),0.85,0.8,2.3,0.5,M.steel),'WN-10.d');}
-    /* its pin at 6 deg: Ø 1.1 in the ring's hole (05 08 00-3's "1,1 Ø"; Ø 1.6 until 15 October 2026, the ring's radial hole's figure) 2.0 deep, stepped to the dial's Ø 1.0,
-       0.1 under its face (the depth and the step estimated) */
-    tag(mesh(dlP,lathe([[0,DY0-2.0],[0.545,DY0-2.0],[0.545,DY0],[0.49,DY0],[0.49,DY1-0.1],[0,DY1-0.1]],20),M.steel,PINa[0],0,PINa[1]),'dialPin');
+    {const rg=new THREE.Group();rg.rotation.x=Math.PI;gV.add(rg);for(const p of SCR)tag(screw(rg,p[0],-p[1],-(DY1-1.0),0.85,0.8,2.3,0.5,M.steel),'WN-10.d');}}
+    /* its pin at 6 deg: Ø 1.1 in the ring's hole (05 08 00-3's "1,1 Ø"; Ø 1.6 until 15 October 2026, the ring's radial hole's figure) 3.7 deep, its top 0.3 under the
+       flange's top, as the coloured section draws it (Wempe_Einheitschronometer.jpg px 86-97 × 594.7-639.3 at 9.37 px/mm: 3.69 in the ring, its top 0.26 under the
+       flange's 592.3, through the dial to 0.26 short of its face; likely; 2.0 deep until 17 October 2026), stepped to the dial's Ø 1.0, 0.1 under its face (the step estimated) */
+    tag(mesh(dlP,lathe([[0,DY0-3.7],[0.545,DY0-3.7],[0.545,DY0],[0.49,DY0],[0.49,DY1-0.1],[0,DY1-0.1]],20),M.steel,PINa[0],0,PINa[1]),'dialPin');
 
     /* update(s, ang): the motion work from the centre arbor's angle (ang.c): the change wheel turns back at 14/56 of it, the hour wheel on at 56/14 × 54/18 = 12 times
        slower; the seconds hand with the seconds arbor (ang.s); the up-and-down work from the fusee's turn f (ang.f, the fusee group's, rising as it runs down from full

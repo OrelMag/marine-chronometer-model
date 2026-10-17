@@ -679,6 +679,18 @@ Contents:
   band, sized to push 0.88 of the linear strip's drive, pushed 0.71 of the solved one: drawn 1.45 mm high (1.25), as high as clears the sustaining ratchet, it pushes 0.82.
   Keep: the spring's torque, wherever a tool needs it, comes from the solved table, never E b t³/12 L; anything sized
   against the drive (the sustaining spring, the bench's bands) is sized against that. `d190fa1`
+- **The Wempe's chain links were dumbbells with no rivets to be seen** (17 October 2026, at the user's word). Each
+  plate's sides ran straight between its lobes, 1.2 apart, meeting them in a notch; 05 07 04's plan views draw
+  concave sides tangent to the lobes, the waist 1.41 (1.38-1.44 over its 13 waists, traced). The plates had no
+  holes and the rivets were the plates' own steel, flush, so nothing showed where the sheet draws a hole in every
+  lobe and Wempe 3955's chain shows each rivet's end bright. Now each plate and each hook's eye has its hole
+  (Ø 0.56 round the drawn 0.55) and the rivets, a pair to each outer link, are their own instanced mesh in polished
+  steel, 12-sided in 12-sided holes in their phase, the outline laid out about 20° a segment (absarc's per-arc divisions
+  cut the short sides five times as fine and, with the holes, made the page's frames a fifth slower in software, which
+  failed smoke.py's wind from run down). holecheck.js read an instanced mesh as one copy at its origin, so the rivets
+  in the hooks' eyes weren't seen: it now also tests each instance where it is drawn for what fills a hole. Keep: the
+  plates' outline from the sheet's traced sides; a link's rivets through holes in all its plates; the chain's pieces
+  cheap to draw (375 links, frames timed against main's in software before and after). Found against 05 07_14 and 14_Wempe_3955_Band_Kette.jpg, with 4_Wempe_3955_N.jpg's barrel for the look in place. `57aab13`
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
@@ -1983,6 +1995,7 @@ Contents:
 - **The fusee's dust seal's flange hung 1.3 mm over the barrel bridge's cut round the balance** (seen by the user on the page, 15 October 2026). The flange, a disc r 8.6, was drawn before the cut was measured as one circle (`1ec6538`), which brought the cut to 7.33 mm from the fusee: the disc ran 1.27 mm past the edge across 7.7 mm, over the opening with nothing under it. The photographs of 2E12055 and 2E11795 (top view) show the flange's edge ending at the cut's. Now the flange is trimmed along `BB_CUT`. Keep anything sitting on the barrel bridge inside its outline when the cut or the outline moves `fea724b`
 - **The barrel bridge had a round hole at 3 o'clock that is really a pry slot** (the 15 October hole survey read it as "a second hole beside the opening"). 13:04.4 shows a rectangular slot in the underside, 2.1 mm wide from r 35.2 out through the rim; 6:47 and 6:49.0 show the face whole above it, so it is blind (1.0 mm deep, estimated). Now cut by `facePocket` (`S.bbN`), the r 0.9 hole and its holecheck entry gone. Keep a mark at a part's edge checked from both faces and the rim before it is drawn as a hole. `98224e7`
 - **The balance cock's screw was 2.2 mm toward 3 o'clock from where three frames put it** (handed over as open, 15 October 2026). It stood where the top-view photograph's similarity placed it; its tapped hole in the train bridge reads (21.81, 24.96) on 23:30, (21.95, 25.66) on 13:49.5 and (22.26, 24.00) on Jd2c3x8VKsE 26:00 (another movement, through a camera fitted on nine named points). Now `S.cock` the mean, the pins with it (measured from the hole), the stud's frame left on the old place (`CK_Q0`), and the body's estimated wall moved the least that keeps 0.48 mm round the counterbore. Keep the screw where the train bridge's hole is measured, and the stud's frame apart from it. `5a3411b`
+- **The Wempe against its coloured section** (17 October 2026, 1b75b90f): the model cut through each pair of arbors and set beside `Wempe_Einheitschronometer.jpg` at its scale (9.37 px/mm: its arbor spacings agree with the plan to 0.1 mm) found these wrong. The balance's hub screws (WN-10) went in from under the flange; the section draws them countersunk flush in the arm's top, down into the flange's M1 (05 03 01-1's "0,4", the countersink). The dust plate's recess faced the plates (estimated); the section has it toward the key, as the sheet's tapered hole does. The balance's setting screws' heads were Ø 2.0 × 0.6 (Ø 2.5 × 1.3 and 1.4 on the section, Ø 2.5 on Wempe 3955), the movement ring screws' 2.25 high (3.05), the stud's screw blind in the cock with a 0.8 head (through it, 1.6), the dial's pin 2.0 deep in the ring (3.7). The numbers: the lower setting screws carried WN-16, the banking screw's label (theirs reads WN-10); the detent foot's and block's steady pins had WN-201 and WN-205 the wrong way round; the stop bar spring's pin was 05 06 03-2 (05 06 04-4); WN-13, WN-15, WN-27 and the upper cock's WN-55 were unrecorded. Keep: a reading taken off the coloured section measured on it in drawing pixels and said where; the dimensioned sheets still decide where they give a figure.
 
 ## Setup, case and gimbals
 
@@ -2181,6 +2194,24 @@ Contents:
   rolls and the six loop, and the clip lets the case settle over whole repeats (30 s and more)
   before it starts: the seam is under 1e-5°. Keep: a looping clip's motions in whole cycles of it,
   started from their steady state. `b8ba747`
+- **The Wempe's 1943 key: its paddle 1.6 too high, its spring loose round the tube.** 05 01 02-2's
+  6.3 +0.1 for the slot's Ø 35 floor was taken as its depth at the axis; its extension line leaves
+  the arc where it meets the body's outside, so the floor is 7.40 under the top at the bore's edge,
+  where the paddle rests, and its centre 9.37 over the top (10.95 before; 51 00 11 scales 9.37).
+  The tube's head stood 6.8 under the top (estimated) and would have cut the lowered paddle: 51 00
+  11's section draws it 8.0 under. The coil spring was a 0.9 wire standing 0.08 clear of the tube,
+  its end not drawn, so nothing could grip: now as the section draws it, about 12 coils of 0.6 wire
+  on the tube, its end turned down into the body's Ø 0.9 hole, and the grooved pin 15.3 long, its
+  ends showing (13, hidden, before). Keep: the paddle rests on the seat's edge at the bore, the
+  tube's head under it, the spring on the tube with its end in the body (*The Mariner's
+  Chronometer*, Fig. 2.35, shows a 1943 key taken apart so). `d125c5a`
+- **The Wempe key's body was a plain turned solid, the paddle, pin and spring's end in its metal.**
+  Now cut as 05 01 02-2 draws it: the slot and its Ø 35 floor, the cross hole through both jaws
+  and the paddle, the spring's slanted Ø 0.9 hole. Built as four solids joined into one closed
+  surface, the faces where they meet dropped: kept as separate meshes, those faces met the
+  surface's edge at its own depth and drew a dashed line round the body. Keep: the joints' outlines
+  the same points on both sides (the solid under the jaws takes the jaws' column points), and no
+  sloped face with an edge in a joint's plane (the drill point's foot 0.12 above the lower joint). `4d54002`
 
 ## Accuracy to the manual
 
@@ -2420,6 +2451,22 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's minute hand's flange showed a zigzag band, the tube's crown facets like a pyramid, and every
+  hand's root flickered** (17 October 2026, the user's screenshot). `sectors()` in `wempe/js/dial.js` cut each
+  annulus of a rounded or crowned top into four quarter cells, and earcut triangulated each quarter whole:
+  slivers from one side of a quarter to the other, flat-shaded (solidGeo gives each sloped triangle its own
+  normal), which zigzagged round the flange's r 0.4 round and faceted the cannon tube's crown over its square.
+  `sectors()` now cuts each annulus into a cell per step of one set of angles (every loop's points, each loop met
+  there by the ray from the centre), and the minute hand's round is a turned ring (smooth normals) round the
+  flat part's 72 points. And each blade's root lay inside its boss with its underside in the boss's underside's
+  plane (the up-and-down and seconds hands' tops in the boss's top's too), so the two solids flickered through
+  each other there; `blade()` takes the boss's radius and draws the blade 0.02 in from those faces inside it.
+  Keep: a sloped top is cut into narrow cells (never a quarter triangulated whole); a turned surface is a lathe
+  where nothing in it isn't round; two solids that overlap never share a face's plane in the overlap. `0b68274`
+- **The Wempe's detent block's cross screw flickered on the upright's far face** (17 October 2026, the user's
+  screenshot). The screw (`WN-gkA`, drawn without its hole) ran 3.0 into the 3.0-wide upright, so its end lay in
+  the face's plane; it ends 0.02 inside now. Keep: a screw drawn without its hole ends short of the far face or
+  through it, never on it. `0b68274`
 - **The Wempe's hands showed a broken line down their middle.** Each blade (`blade()` in `wempe/js/dial.js`)
   was one solidGeo cell whose top follows the thickness along the hand, and earcut triangulated it whole: long
   slivers from a point on one edge to a point far along the other, tilted to either side (|nx| up to 0.70 on the
@@ -2793,6 +2840,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   runs, past the check's 0.01 mm, with no geometry changed (48e82e1 had rewritten `gimbals.json` for one such drift).
   Keep: the check loads the page at one instant (`CLOCK` in `massprops.py`, 13 October 2026 06:50 GMT); a measurement off
   the model that compares with a committed file pins the page's clock the same way. `a5ca864`
+- **The Wempe's gimbal stops met another version's lid.** `massprops-check.js` skipped another version's hidden
+  pieces when weighing but not when finding the stops: with the 6MX's box built (its lids and bowl hidden as last
+  revised), the case and ring "met the lid" at 35.5° where nothing stops them. Keep: every list the check builds (the
+  weighed parts, the obstacles, the moving meshes) leaves out the hidden version groups (`offRev`). `ad31c17`
 
 - **The real-chronometers report ran off a phone's screen.** Its three wide tables and its contents' last link pushed
   the page to 471 px on a 390 px screen, so the whole report scrolled sideways (found when the reports went on the site).
