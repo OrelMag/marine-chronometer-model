@@ -638,6 +638,13 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The sustaining spring wasn't the video's.** A uniform band 1.85 mm wide and 1.45 high (a design for the push), its gap 20° (read at the wall,
+  where the tips' round ends stand widest), its lobes estimated, in a recess 1.3 deep: on KLUwI2UUCMQ 27:26 the band tapers, 1.4-1.9 wide, the
+  working lobe is a teardrop and the fixed lobe bulges round each hole, the tips come within 12.5°, and 28:42.5-28:43.0 put the band 0.96 high, flush
+  with the rim, the recess 1.0 deep. Its section pushes 0.22 of the drive, not 0.82, so Sec. IV's five to ten minutes is now the time it keeps the
+  chronometer running (6.2), not over a turn. Keep: the outline from the frame (`SSI`, `SFT`, `SWT`), the height measured, `SPU` what
+  `sustaining.js` finds; trace edges on b* (yellowness), not on brightness or saturation, which read the brass's shadows as steel. `4b25def1`
+
 - **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
   the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
   so from the square's end, puts the face on the side the arbor turns from, the spring's eye over the pin. The maintaining detent's step
