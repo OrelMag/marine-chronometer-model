@@ -6,7 +6,7 @@ solid integrated at its material's density. tools/wempe_escapement.js reads them
     python wempe_inertia.py --write   # writes tools/wempe_inertia.json
 
 Masses in g, moments of inertia in g·mm² about each body's own axis; cg the centre of mass in the body's frame (mm: x, y along the axis, z), which should lie on the axis."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parents[1]/'wempe'/'index.html').as_uri()+'?snap&qa'
@@ -14,7 +14,7 @@ JS=(HERE/'wempe-inertia.js').read_text(encoding='utf-8')
 OUT=HERE/'wempe_inertia.json'
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # a fresh headless Chromium loses its first WebGL context
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("window.__mv&&window.__mv.userData.R",timeout=120000);await pg.wait_for_timeout(1500)

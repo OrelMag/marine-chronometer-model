@@ -147,7 +147,7 @@ const BLENDER=(()=>{
     clip.run((t,s)=>{emit(t,s);k++;},clip);
     await sleep();return{tr,dur,teeth,samples:k};}
   /* ---------- the export ---------- */
-  async function build(onStep,only){const t0=performance.now(),C=copy(),h0=A.hrs();
+  async function build(onStep,only){const t0=performance.now(),C=copy(),h0=Math.fround(A.hrs());   /* h0 in single precision: Blender's driver variables are, so the rig's hours (its control's, read by a driver) are h0 exactly (else 1e-6 h off: 0.3 degree of the escape wheel at 30 h) */
     /* the rest pose: the page's state of wind, the escape wheel locked at the start of a beat (Running's first moment), the lids open, the movement in its case */
     const rest=Object.assign(REST(),{n:h0*FUSEE_PER_HOUR});{const z=ESC.state(0,ESC.ampAt(A.drvF(h0)));rest.th=z.th;rest.lift=z.lift;rest.psDef=z.psDef;rest.E=0;}   /* the beat's start: Running's first moment */
     let nMax=0;for(let i=0;i<=40;i++){C.R.fs.setWind(FUSEE_TURNS*i/40,0);C.R.fs.g.traverse(o=>{if(o.isInstancedMesh)nMax=Math.max(nMax,o.count);});}nMax+=1;   /* the most links either instanced mesh draws, over a wind */

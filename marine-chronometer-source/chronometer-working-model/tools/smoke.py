@@ -15,11 +15,11 @@ With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay ta
 section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
 the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero), the 35-day trial's tables, and Escapement in plan (drawn, its figures, Show the escapement), and the walkthrough (every step and its inset, tour=N both ways, Finish and End)."""
-import asyncio,pathlib,sys
+import asyncio,browser,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model as mdl;PAGE=mdl.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py); a bare --model is this tool's own (the Hamilton's model without the essay)
-ARGS=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"]
+ARGS=browser.ARGS
 NOISE=('GL Driver Message','GPU stall')
 STEPS=[]
 def watch(pg,errs,tag):   # each problem names the page and the last step done before it
@@ -471,6 +471,14 @@ async def wempe(b,errs,steps):
     await click('#benchLook','show the escapement',600)
     if await pv()!='escapement':errs.append('Show the escapement did not give the Escapement view')
     await ev("document.querySelector('#benchDet').open=false")
+    # Download: the movement's STL and the rig's script saved, a part's STL from its card (the export to Blender itself, a minute and more, is gltf_check.py's)
+    await ev("document.querySelector('#dlDet').open=true");await click('#xSTL','the movement as STL',2500)
+    if 'triangles' not in await ev("document.querySelector('#xRead').textContent"):errs.append('Download, Movement (.stl): nothing written')
+    await click('#xRig','Blender rig')
+    if not await ev("!!document.querySelector('#xGLB')&&typeof BLENDER==='object'&&typeof GLTF==='object'&&RIG_PY.length>1000"):errs.append('the export to Blender is not in the page')
+    await ev("location.hash='#part=fusee'");await pg.wait_for_timeout(500);await click('#infoSTL','the fusee STL from its card',1500)
+    if 'fusee.stl' not in await ev("document.querySelector('#xRead').textContent"):errs.append('the part card STL: nothing written')
+    await ev("document.querySelector('#dlDet').open=false")
     # ship motion, the transit lock, the roll period (near the case's own swing and off it)
     for v in(1.0,8.0):
         await ev("v=>{const r=document.querySelector('#rollP');r.value=v;r.dispatchEvent(new Event('input'))}",v);await click('#rock',f'ship motion, roll period {v} s',1500);await click('#rock','ship motion off')

@@ -3,6 +3,11 @@
 Source material for the working model. The model's README ("Sources" and "How
 the layout was measured") says what was taken from each file.
 
+Two folders have their own README: `wempe/` (the second model, the Wempe
+Einheits-Chronometer, and the Soviet 6MX) and `third-model/` (Swiss and Japanese
+marine chronometers surveyed on 16 October 2026 for a possible third model;
+nothing is built on it).
+
 | File | What it is | Used for | Original filename |
 |---|---|---|---|
 | `navships-250-624-overhaul-manual-1948.pdf` | *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948 (Google Books scan) | Structure, escapement layout (Fig. 90) and adjustment figures (Sec. VIII), parts list, dial (Fig. 107); its Fig. 2 photograph is the first camera of the photo fit | `Manual_for_Overhaul_Repair_and_Handling Marine Chronometer.pdf` |

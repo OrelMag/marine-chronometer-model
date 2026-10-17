@@ -342,7 +342,7 @@ flush();
 
 say('2. The detent as a body: its inertia, bouncing on its stop');
 const ph=sim(MP2),ownP=ph.rate-ref.rate;
-say(`the swing ${f(ph.A,1)}°, the escapement's own rate ${sg(ownP)} s a day; the tooth lands ${f(ph.land-ph.rel,1)}° after the release${WEMPE?`, the balance at ${f(ph.land,2)}°: the impulse stone's face ${f(ph.land+PHI0,1)}° from the line of centres (makeEsc's ${f(RU.land/D+PHI0,1)}°; 05 04_1's layout draws the tooth falling on it at −21°, as if the wheel were there at once)`:''}`);
+say(`the swing ${f(ph.A,1)}°, the escapement's own rate ${sg(ownP)} s a day; the tooth lands ${f(ph.land-ph.rel,1)}° after the release${WEMPE?`, the balance at ${f(ph.land,2)}°: the impulse stone's face ${f(ph.land+PHI0,1)}° from the line of centres (makeEsc's ${f(RU.land/D+PHI0,1)}°; 05 04_1's layout draws the tooth falling on it at ${f(WL.WESC.ESC.PHI_C,1)}°, where the impulse begins, as if the wheel were there at once)`:''}`);
 chk(Math.abs(ph.A-ESC.A/D)<3&&Math.abs(ownP-RU.own)<0.3,`the detent's own inertia and bounce change little: the swing ${sg(ph.A-ESC.A/D,1)}°, the rate ${sg(ownP-RU.own)} s a day against the model`);
 /* the detent's fall as makeEsc shows it (ESC.state: off the jewel where its end runs away faster than the detent can follow, then a preloaded spring and mass in closed
    form, hopping on its stop; caught again by the jewel's end if it falls onto it): where it leaves the jewel for the last time and first lands, against the integration's,

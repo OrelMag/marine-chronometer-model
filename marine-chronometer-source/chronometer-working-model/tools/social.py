@@ -8,7 +8,7 @@ The presets set the model on a dark background, to the right of a title column i
 VIEW is a view button (box, dial, movement, train, escapement, exploded); --drive shows the moving parts only;
 --cam overrides the view's camera (radians, millimetres, degrees). Find camera numbers by orbiting in index.html?qa
 and running __camInfo() in the console."""
-import argparse,asyncio,html,pathlib
+import argparse,asyncio,browser,html,pathlib
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
@@ -70,7 +70,7 @@ async def main():
     a=ap.parse_args()
     jobs=[dict(out=a.out,view=a.view,drive=a.drive,cam=a.cam)] if a.out else [PRESETS[a.preset]] if a.preset else list(PRESETS.values())
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         for j in jobs:await shot(b,**j)
         await b.close()
 asyncio.run(main())
