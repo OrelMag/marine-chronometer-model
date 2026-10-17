@@ -2424,11 +2424,11 @@ An arbor needs pivots and shoulders; a stone its seat.
   plane (the up-and-down and seconds hands' tops in the boss's top's too), so the two solids flickered through
   each other there; `blade()` takes the boss's radius and draws the blade 0.02 in from those faces inside it.
   Keep: a sloped top is cut into narrow cells (never a quarter triangulated whole); a turned surface is a lathe
-  where nothing in it isn't round; two solids that overlap never share a face's plane in the overlap.
+  where nothing in it isn't round; two solids that overlap never share a face's plane in the overlap. `0b68274`
 - **The Wempe's detent block's cross screw flickered on the upright's far face** (17 October 2026, the user's
   screenshot). The screw (`WN-gkA`, drawn without its hole) ran 3.0 into the 3.0-wide upright, so its end lay in
   the face's plane; it ends 0.02 inside now. Keep: a screw drawn without its hole ends short of the far face or
-  through it, never on it.
+  through it, never on it. `0b68274`
 - **The Wempe's hands showed a broken line down their middle.** Each blade (`blade()` in `wempe/js/dial.js`)
   was one solidGeo cell whose top follows the thickness along the hand, and earcut triangulated it whole: long
   slivers from a point on one edge to a point far along the other, tilted to either side (|nx| up to 0.70 on the
