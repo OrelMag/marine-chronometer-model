@@ -163,6 +163,18 @@
           <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, units and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
           <div class="seg c2 span"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div></div>
       </details>
+      <details class="grp more" id="ctDet">
+        <summary>Contacts</summary>
+        <p class="note" style="margin:0 0 6px">A debug view: where the parts touch, come close or pass into each other, found on the model's solids, shown through the parts made faint. Pick a part for its contacts alone; hide parts to leave their contacts out.</p>
+        <label class="ck"><input type="checkbox" id="ctOn"> Show contacts</label>
+        <div id="ctOpts" class="hidden">
+          <div class="seg" id="ctMode" style="margin-top:6px"><button data-v="now" aria-pressed="true" title="The model as it stands: the clock stops, and the contacts are found again once it stands still after it moves">This moment</button><button data-v="sweep" aria-pressed="false" title="The model posed through a beat of the escapement and across the wind, as the interference check poses it: every contact any of those states makes, each pair with the states it meets in">Over a beat and the wind</button></div>
+          <label class="sl" style="margin-top:6px" title="How wide a gap still counts as close (a running clearance: a pivot in its hole, teeth out of action)"><span>Close within</span><select id="ctEps" aria-label="Close within, mm"><option value="0.01">0.01 mm</option><option value="0.03" selected>0.03 mm</option><option value="0.1">0.1 mm</option><option value="0.3">0.3 mm</option><option value="1">1 mm</option></select></label>
+          <label class="ck" title="With a part picked, the contacts between its own pieces too (a wheel on its arbor, the part's screws)"><input type="checkbox" id="ctIn" disabled> Inside the picked part too</label>
+          <p class="note" style="margin:6px 0 0"><span id="ctCount"></span>. A pair shows the worst it does: its overlap, else touching, else its least gap. Click a pair to show it alone; › picks the other part.</p>
+          <div id="ctList"></div>
+        </div>
+      </details>
       <details class="grp more" id="partsDet">
         <summary>Parts</summary>
         <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
@@ -450,6 +462,7 @@
 <script src="../chronometer-working-model/js/core.js"></script>
 <script src="../shared/kit.js"></script>
 <script src="../shared/viewer.js"></script>
+<script src="../shared/contacts.js"></script>
 <script src="js/dims.js"></script>
 <script src="js/frame.js"></script>
 <script src="js/train.js"></script>
@@ -463,6 +476,7 @@
 <script src="js/dial.js"></script>
 <script src="js/case.js"></script>
 <script src="js/movement.js"></script>
+<script src="js/contactdata.js"></script>
 <script src="js/essaydata.js"></script>
 <script src="../shared/essaykit.js"></script>
 <script src="js/essay.js"></script>

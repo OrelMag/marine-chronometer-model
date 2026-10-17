@@ -390,6 +390,26 @@ async def wempe(b,errs,steps):
     bad=await ev("['lbls','colr','colrSrc','draw','drawInk','spin','shadows'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges']).concat(document.querySelector('#merge').checked?[]:['merge'])")
     if bad:errs.append(f'Reset display left {bad}')
     for t in['dark','light','auto']:await click(f'#theme button[data-v="{t}"]',f'theme {t}')
+    # Contacts (../../shared/contacts.js): this moment found and in the link; a part picked shows its contacts alone, with its own pieces' too; a part hidden takes its contacts with
+    # it; a pair alone; the sweep started and turned off half way: every part's own material back, and the model's update and explode given back
+    await click('#views button[data-v="movement"]','view movement',400);await click('#ctOn','contacts on',300)
+    await pg.wait_for_function("window.__ct&&!__ct.busy()",timeout=180000,polling=300)
+    c=await ev("[__ct.pairs().length,__ct.points(),location.hash.includes('contacts=1')]")
+    if not all(c):errs.append(f'Contacts: pairs, points, contacts=1 in the link: {c}')
+    await ev("location.hash=location.hash+'&part=fusee'");await pg.wait_for_timeout(500);await click('#ctIn','contacts inside the fusee',300)
+    await pg.wait_for_function("!__ct.busy()",timeout=120000,polling=300)
+    c=await ev("[__ct.pairs().some(p=>p.inside),__ct.pairs().every(p=>p.a.split('.')[0]==='fusee'||p.b.split('.')[0]==='fusee')]")
+    if not all(c):errs.append(f'Contacts with the fusee picked: its own pieces, only its pairs: {c}')
+    await click('#ctIn');await click('#info .x','card closed',300)
+    row="k=>[...document.querySelectorAll('#plist .prow')].find(r=>r.querySelector('.pn').textContent===window.__parts[k].t).firstChild.click()"
+    await ev(row,'topPlate');await pg.wait_for_timeout(400);steps.append('top plate hidden, with its contacts')
+    if await ev("__ct.pairs().some(p=>p.a.split('.')[0]==='topPlate'||p.b.split('.')[0]==='topPlate')"):errs.append('Contacts: the top plate hidden kept its contacts')
+    await ev(row,'topPlate');await pg.wait_for_timeout(400)
+    if not await ev("__ct.pairs().some(p=>p.a.split('.')[0]==='topPlate'||p.b.split('.')[0]==='topPlate')"):errs.append('Contacts: the top plate shown again lost its contacts')
+    await click('#ctList .ct-p','a pair alone');await click('#ctList .ct-p','all pairs again')
+    await click('#ctMode button[data-v="sweep"]','contacts over a beat and the wind',1500);await click('#ctOn','contacts off during the sweep',600)
+    c=await ev("(()=>{let bad=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.mat0&&o.material!==o.userData.mat0)bad++;});const u=window.__mv.userData;return[bad,u.update.toString().length>20,u.explode.toString().length>20,location.hash.includes('contacts')];})()")
+    if c!=[0,True,True,False]:errs.append(f'Contacts off: parts not in their own materials, update or explode held, or still in the link: {c}')
     # Back and Forward, and a view key
     await click('#views button[data-v="side"]','view side',400);await click('#views button[data-v="plan"]','view plan',400)
     await click('#hBack','back',400);b1=await pv();await click('#hFwd','forward',400);b2=await pv()

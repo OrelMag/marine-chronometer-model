@@ -42,6 +42,8 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
  ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
  ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8)}
 WIND_SEQ=False
+# contacts.py: the Contacts view's data (its expected overlaps, EXPECTED's, and its sweep's states, STATES), written beside index.html as the global named (--write)
+CONTACTDATA=('js/contactdata.js','WCONTACT')
 BARREL=False
 REGISTRY=False   # bom.py's registry matches the Hamilton's catalogue numbers on its cards; the Wempe's lines are drawing numbers (their 'no' empty), so a card's figures (120 teeth, 310 °C) aren't part numbers
 DIAL=True
