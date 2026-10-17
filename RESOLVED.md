@@ -644,6 +644,11 @@ Contents:
   (05 05 05-1) is a dashed straight edge from 8.6 at the back to the hollow, not an arc at 8.6 about the hole (which ran into the fusee
   wheel's tips and was cut back to 7.55). Keep: the hook in the spring's eye, its tip behind the pin; the step the sheet's line, 0.52-0.61
   clear of the tips. `215bed8`
+- **The Wempe's mainspring had no eye: the arbor's hook ran through the solid strip.** The strip was
+  a plain ribbon, its tip 0.18 rad behind the hook's centre, and fine.py carried the hook through it as an expected overlap (0.8 mm³).
+  The eye is now cut (the Hamilton's, MSPRING.ey: 2.2-9.4 mm from the tip, 5.2 high, as mainspring.py holds the Wempe's inner end)
+  and the hook turned into it, its face 0.05 off the eye's end toward the tip; the drawn spring is where it was. Keep: the hook in
+  the eye, not in the steel; what fine.py still expects is the ramp's 0.1 into the next coil (0.032 mm³). `5feeec9`
 - **Every wind stopped the Wempe's train.** app.js's `wind0()` set `winding` before reading `drvNow()`,
   which while winding returns the maintaining spring's own last drive (nothing on the first wind), so the
   spring carried no drive and the balance held. Found by `maintaining.py --model wempe`. Keep: read the
