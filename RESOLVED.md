@@ -648,7 +648,7 @@ Contents:
   a plain ribbon, its tip 0.18 rad behind the hook's centre, and fine.py carried the hook through it as an expected overlap (0.8 mm³).
   The eye is now cut (the Hamilton's, MSPRING.ey: 2.2-9.4 mm from the tip, 5.2 high, as mainspring.py holds the Wempe's inner end)
   and the hook turned into it, its face 0.05 off the eye's end toward the tip; the drawn spring is where it was. Keep: the hook in
-  the eye, not in the steel; what fine.py still expects is the ramp's 0.1 into the next coil (0.032 mm³). `HASH`
+  the eye, not in the steel; what fine.py still expects is the ramp's 0.1 into the next coil (0.032 mm³). `5feeec9`
 - **Every wind stopped the Wempe's train.** app.js's `wind0()` set `winding` before reading `drvNow()`,
   which while winding returns the maintaining spring's own last drive (nothing on the first wind), so the
   spring carried no drive and the balance held. Found by `maintaining.py --model wempe`. Keep: read the
