@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#open">16. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#open">17. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -357,7 +357,24 @@ Wempe's escapement work and the damping split as its parts give it (line), and t
 since which click is which isn't settled, so no swing is read from them (<code>References/wempe/VIDEOS.md</code>, "Measured").</p>
 <div id="kStart"></div>
 
-<h2 id="open">16. What stays open</h2>
+<h2 id="soviet">16. The Soviet 6MX</h2>
+<p>The page's third version (Variants, Version) is the 6MX the 1st Moscow Watch Factory made from these drawings, built as one photographed chronometer is made:
+Kirov No. 247 of February 1952, from Johannes Altmeppen's photographs, with videos of other 6MXs where his don't show a part. Each difference from the drawings is
+measured on a photograph, fitted on the sheets' hole table, or marked estimated; the drawings' two versions are left as they were (every view the same to the pixel).
+The section below is the model's README as it stands: how each difference was read, and how sure. The page keeps the drawings' swing and rate in every version; what
+the 6MX's differences would change is worked out apart (<code>wempe_6mx.js</code>, below).</p>
+<details id="sov"><summary>How each difference was read (the README's "The Soviet 6MX")</summary><!--SOVIET--></details>
+<h3>The geometry checks in the 6MX</h3>
+<p>The browser checks of section 1, run with the page set to the 6MX: its own parts, its case and boxes, against the same expected contacts and leftovers.</p>
+<div id="t6Geo" class="tw"></div>
+<h3>Its physics against the drawings</h3>
+<p>Its jewels in chatons change the holes' tolerance, not the train's efficiency (oiled steel in ruby and in brass has the same friction in the model's sources); its
+escapement at the first-drawn heights, with the first-drawn balance staff and collar, changes the bodies only, weighed on the page's solids in that version.</p>
+<div id="t6Wind" class="tw"></div>
+<div id="t6Train" class="tw"></div>
+<div id="k6"></div>
+
+<h2 id="open">17. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -461,7 +478,7 @@ function ranges(id,o){const host=$(id);if(!host)return;host.innerHTML='';const W
     const hit=el('rect',{x:0,width:W,y:y-rh/2,height:rh,fill:'transparent'},svg);hit.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width;showTip(host,R.tip,(ev.clientX-r.left),y/k);});hit.addEventListener('mouseleave',hide);});}
 const table=(id,head,rows,txt)=>{const h=$(id);if(!h)return;h.innerHTML='<table><tr>'+head.map(x=>`<th>${x}</th>`).join('')+'</tr>'+rows.map(r=>'<tr>'+r.map((c,i)=>`<td${i&&!txt?' class="num"':''}>${c}</td>`).join('')+'</tr>').join('')+'</table>';};
 const C=['--s1','--s2','--s3','--s4'];
-const D=DATA.data,RUN=D.runs,GEO=DATA.geo||{},CK=DATA.checks;
+const D=DATA.data,RUN=D.runs,GEO=DATA.geo||{},CK=DATA.checks,SOV=k=>k.endsWith('-6mx');   /* SOV: the 6MX's geometry checks (section 15), kept out of section 1 */
 /* a tool's output as it printed it: its check lines (ok, ~~, !!) under the section headings they fall in, and the whole output */
 const ST={ok:'ok','~~':'mid','!!':'no'};
 function parse(out){const L=[];let h='';for(const ln of String(out||'').split('\n')){if(/^\S/.test(ln)&&!/^(ok|~~|!!)\s/.test(ln)||/^\s{1,2}\d+\.\s/.test(ln))h=ln.trim();const m=/^\s*(ok|~~|!!)\s+(.*)$/.exec(ln);if(m)L.push({s:m[1],t:m[2],h});}return L;}
@@ -473,7 +490,7 @@ function checks(id,k){const host=$(id),run=RUN[k];if(!host)return;if(!run){host.
     <p class="small" style="margin:4px 0">${esc(run.what)}</p>${L.length?`<ul class="chk">${li}</ul>`:'<p class="small">It reports and never fails: its findings are in its output.</p>'}<details><summary>its whole output</summary><pre>${esc(run.out)}</pre></details></div>`;}
 function draw(){
   /* ---------- tiles ---------- */
-  const all=Object.keys(RUN).flatMap(k=>lines(k)),cnt=s=>all.filter(l=>l.s===s).length,geoK=Object.keys(GEO).filter(k=>!k.startsWith('_')),geoOk=geoK.filter(k=>GEO[k].rc===0).length;
+  const all=Object.keys(RUN).flatMap(k=>lines(k)),cnt=s=>all.filter(l=>l.s===s).length,geoK=Object.keys(GEO).filter(k=>!k.startsWith('_')&&!SOV(k)),geoOk=geoK.filter(k=>GEO[k].rc===0).length;
   const W_=D.wind.rows,aLo=Math.min(...W_.map(r=>r[2])),aHi=Math.max(...W_.map(r=>r[2])),rLo=Math.min(...W_.map(r=>r[3])),rHi=Math.max(...W_.map(r=>r[3]));
   const tu=find('errorbudget',/it passes ([\d.]+) % of (\d+) trials/),v30=find('errorbudget',/as adjusted, the card's scatter\s+10 days: [^;]+; 30 days: ([\d.]+) s \(([\d.]+) mi\)/),su=D.swing.startup.split;
   const failing=Object.keys(RUN).filter(k=>RUN[k].rc);
@@ -490,7 +507,12 @@ function draw(){
   /* ---------- 1. geometry ---------- */
   const gkey={solids:o=>(o.match(/^.*not solid.*$/gm)||[]).join('; '),fine:o=>[(/^\d+ states, \d+ pairs, \d+ new or grown$/m.exec(o)||[''])[0],(/^\d+ barrel problems$/m.exec(o)||[''])[0],((/^dial face[^\n]*?: (least height[^\n]*)$/m.exec(o)||[,''])[1])].filter(Boolean).join('; '),
     audit:o=>[...o.matchAll(/^== (\w+) \((\d+)\)$/gm)].map(m=>`${m[1]} ${m[2]}`).join(', ')+'; '+((/^(OK: [^\n]*|NEW[^\n]*)$/m.exec(o)||[''])[0]),exploded:o=>(/^\d+ bodies[^\n]*$/m.exec(o)||[''])[0],bom:o=>o.split('\n').filter(l=>/\d+ (lines|of \d+|pieces|units|relations|jewels)|failed|^OK|^ok\b|all /i.test(l)).slice(-4).join('; ')};
-  gkey['audit-box']=gkey.audit;
+  gkey['audit-box']=gkey.audit;for(const k of['fine','bom','audit','exploded'])gkey[k+'-6mx']=gkey[k];gkey['audit-box-6mx']=gkey.audit;
+  {const k6=Object.keys(GEO).filter(SOV);table('t6Geo',['Check','What it checks','Result','Exit','Time'],k6.map(k=>{const g=GEO[k];return[`<code>${esc(g.cmd)}</code>`,esc(g.what),esc((gkey[k]||(()=>''))(g.out)),`<span class="${g.rc?'no':'ok'}">${g.rc}</span>`,g.secs+' s'];}),true);}
+  if(D.soviet){const S6=D.soviet;
+    table('t6Wind',['Hours from full wind','Swing, as last revised (°)','Swing, the 6MX (°)','Rate against 12 h, as last revised (s/d)','The 6MX (s/d)'],S6.wind.map(w=>[w.h,f(w.a,1),f(w.a6,1),sg(w.r),sg(w.r6)]),true);
+    table('t6Train',['Mesh','Pivots\' shake, drawn → 6MX (µm)','Holes within, drawn → 6MX (µm)'],S6.train.map(t=>[esc(t.stage),`${Math.round(t.sh*1000)} → ${Math.round(t.sh6*1000)}`,`±${Math.round(t.tp*1000)} → ±${Math.round(t.tp6*1000)}`]),true);
+    checks('k6','soviet');}
   const st=$('geoStates');if(st){const m=GEO.fine&&/^(\d+) states/m.exec(GEO.fine.out);st.textContent=m?m[1]:CK.states;}
   table('tGeo',['Check','What it checks','Result','Exit','Time'],geoK.map(k=>{const g=GEO[k];return[`<code>${esc(g.cmd)}</code>`,esc(g.what),esc((gkey[k]||(()=>''))(g.out)),`<span class="${g.rc?'no':'ok'}">${g.rc}</span>`,g.secs+' s'];}),true);
   {const fo=GEO.fine?GEO.fine.out:'',meas={};for(const m of fo.matchAll(/^(\S+)\s+([\d.]+) mm3 depth\s+([\d.]+)\s+(\S+)\s+x (\S+)/gm))meas[m[4]+'|'+m[5]]=[m[1],+m[2],+m[3]];
