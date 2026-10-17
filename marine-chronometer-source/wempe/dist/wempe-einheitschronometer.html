@@ -3556,8 +3556,9 @@ const WESC=(()=>{
          block of this form (8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg) has a screw through its upright with a domed brass head
          on the detent's far side, the pipe resting on its face, the slit gripping its thread; Wempe 3955's earlier block the same at its stone; the 1954 instruction's п. 11
          and the 6MX's book: a banking screw sets the depth of lock. Its head and its length to it aren't drawn: where it passes the detent depends on which face of the block
-         the upright is flush with (README, Unresolved) */
-      tag(across(blkL,lathe([[0,0],[0.9,0],[0.9,0.5],[0.6,0.5],[0.6,0.5+3.0],[0,3.5]],20),M.steel,L(ROW-18.8,nUr-0.5),TD.n,yP+1.5),'WN-gkA');
+         the upright is flush with (README, Unresolved). Its end 0.02 inside the upright's far face (until 17 October 2026 on it: the two faces in one plane flickered through
+         each other) */
+      tag(across(blkL,lathe([[0,0],[0.9,0],[0.9,0.5],[0.6,0.5],[0.6,0.5+2.98],[0,3.48]],20),M.steel,L(ROW-18.8,nUr-0.5),TD.n,yP+1.5),'WN-gkA');
       /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 × 1.2 (Wempe 3955's, 11_), M1.7, 3.0 into the block (estimated) */
       {const fx=K.headOn(tag(screw(blk,H[13][0],H[13][1],TT,1.5,1.2,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(f=>{fx.userData.lift=l0+(f?-0.3:0);});}   /* its lift through the plate follows the block's (above) */
       /* its steady pins Ø 0.9 through the block, 1.3 into the plate: as last revised the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
@@ -5079,22 +5080,30 @@ const WDIAL=(()=>{
   /* a blade from r0 to its tip along -z (the hand's 12 o'clock), its half-widths hw and thickness t over r, its underside at y0: solidGeo cells with a sloped top, one strip
      across the blade between each two stations, so its top's triangles each span one station's step (one cell, triangulated whole, joined points far apart along the two edges:
      long slivers tilted to either side, which shaded as a broken line down the hand and Edges inked). Its root a concave arc of radius r0 about the arbor, joining the boss
-     (in the hand's group, so the overlap with the boss is the hand's own), in the first strip */
-  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip)).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b).filter((r,i,A)=>!i||r-A[i-1]>0.01);   /* every 0.25 and at each of the table's radii */
+     (in the hand's group, so the overlap with the boss is the hand's own), in the first strip. rb: the boss's radius, a station; inside it the blade's underside is drawn
+     0.02 up (and with tp its top 0.02 down, where the blade's top is the boss's), so the two solids' faces in the overlap aren't one plane (until 17 October 2026 they were:
+     the boss's face and the blade's root flickered through each other) */
+  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25,rb=0,tp=false){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip),rb>r1&&rb<tip?[rb]:[]).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b).filter((r,i,A)=>!i||r-A[i-1]>0.01);   /* every 0.25 and at each of the table's radii */
     if(tip-R[R.length-1]<0.01)R.pop();R.push(tip);
     const w=r=>hwAt(hw,r),P=(s,r)=>[s*w(r),dir*r],a0=Math.asin(Math.min(0.99,w(r0)/r0)),arc=[];
     for(let k=1;k<8;k++){const a=-a0+2*a0*k/8;arc.push([r0*Math.sin(a),dir*r0*Math.cos(a)]);}
-    const tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1])),cells=[];
-    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?[]:arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0,y1:tf});}
+    const inB=p=>Math.hypot(p[0],p[1])<rb-1e-6,yb=p=>y0+(inB(p)?0.02:0),tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1]))-(tp&&inB(p)?0.02:0),cells=[];
+    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?[]:arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf});}
     return solidGeo(cells);}
   /* the minute hand's square hole and the tube's square: 2.6 across flats, the corners on a circle r (the tube's 1.6) */
   const sqLoop=(h,r,n=96)=>{let L=C([0,0],r,n);for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])L=clipPoly(L,p=>h-(p[0]*a+p[1]*b));return L;};
-  /* a crowned or rounded top over a hole: solidGeo's cells for the annuli between closed loops Ls (counterclockwise, the innermost round the hole first), each cut in four at
-     45 deg + k × 90 deg (every loop has a point there), y0 their flat underside and y1(p) their top; a cell with a feature has flat faces, so the annuli carry none */
-  const sectors=(Ls,y0,y1)=>{const A=[1,3,5,7].map(k=>k*Math.PI/4),ix=L=>A.map(a=>L.findIndex(p=>Math.abs(Math.atan2(Math.sin(Math.atan2(p[1],p[0])-a),Math.cos(Math.atan2(p[1],p[0])-a)))<1e-6));
-    const arc=(L,i,j)=>{const o=[];for(let k=i;;k=(k+1)%L.length){o.push(L[k]);if(k===j)break;}return o;},cells=[];
-    Ls=Ls.map(L=>area(L)<0?L.slice().reverse():L);for(let j=1;j<Ls.length;j++){const I=ix(Ls[j-1]),O=ix(Ls[j]);
-      for(let k=0;k<4;k++)cells.push({loop:[...arc(Ls[j],O[k],O[(k+1)%4]),...arc(Ls[j-1],I[k],I[(k+1)%4]).reverse()],y0,y1});}return cells;};
+  /* a crowned or rounded top over a hole: solidGeo's cells for the annuli between closed loops Ls (round the centre, the innermost round the hole first), y0 their flat
+     underside and y1(p) their top; a cell with a feature has flat faces, so the annuli carry none. Each annulus is cut into a cell per step of one set of angles (every
+     loop's points' angles, each loop met there by the ray from the centre, its own point where it has one), so the top's triangles are short and follow the round. Until
+     17 October 2026 each annulus was cut in four: a quarter triangulated whole joined points far apart round it, slivers that shaded as a zigzag band round the minute
+     hand's flange and as facets on the tube's crown */
+  const sectors=(Ls,y0,y1)=>{Ls=Ls.map(L=>area(L)<0?L.slice().reverse():L);const ak=p=>(Math.atan2(p[1],p[0])+TAU)%TAU;
+    let A=[...new Set(Ls.flat().map(p=>+ak(p).toFixed(9)))].sort((a,b)=>a-b).filter((a,i,X)=>!i||a-X[i-1]>1e-7);if(TAU-A[A.length-1]+A[0]<1e-7)A.pop();
+    const hit=(L,a)=>{const c=Math.cos(a),s=Math.sin(a);let b=Infinity;for(let i=0;i<L.length;i++){const p=L[i],q=L[(i+1)%L.length],ex=q[0]-p[0],ez=q[1]-p[1],d=c*ez-s*ex;
+      if(Math.abs(d)<1e-12)continue;const t=(p[0]*ez-p[1]*ex)/d,u=(p[0]*s-p[1]*c)/d;if(u>-1e-9&&u<1+1e-9&&t>0&&t<b)b=t;}return[b*c,b*s];};
+    const R=Ls.map(L=>{const own=new Map(L.map(p=>[+ak(p).toFixed(9),p]));return A.map(a=>own.get(a)||hit(L,a));}),cells=[];
+    for(let j=1;j<R.length;j++)for(let k=0;k<A.length;k++){const m=(k+1)%A.length,c=[R[j][k],R[j][m],R[j-1][m],R[j-1][k]];cells.push({loop:area(c)>0?c:c.slice().reverse(),y0,y1});}
+    return cells;};
 
   /* ================= the balance holding device (Unruhhaltevorrichtung 127-556.06 / 36 00, 26.2.42, 5:1; Zangenteil 127-556.06-06 / 36 00 01-1, 29.8.41): not built =================
      Read and measured, kept for the record (README, Unresolved). Two tongs (Messingblech 1,2 Ms 58) on one pivot at hole 51, in the top plate's pocket (05 09 01's N-O,
@@ -5222,27 +5231,29 @@ const WDIAL=(()=>{
     const mh=grp(hdP,H[1]);R.mh=mh;
     {const y0=YM0,yf=y0+0.8,y1=y0+2.0,h0=CN.sq+0.01,sq=sqLoop(h0,CN.sqR+0.01),hole=y=>sq.map(p=>p.map(v=>v*(1+(y1-y)/140/h0)));   /* the square hole, widening 1:70 down from its top */
       tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1');
-      /* the flange: flat inside Ø 5.2, its edge rounded r 0.4 (annuli out to the rim, so the round is sampled across it) */
-      const r1=MIN.rf-0.4,rr=[0,1,2,3,4,5].map(k=>r1+0.4*Math.sin(k*Math.PI/10)),rnd=p=>y1-(0.4-Math.sqrt(Math.max(0,0.16-(Math.hypot(p[0],p[1])-r1)**2)));
-      tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]},...sectors(rr.map(r=>C([0,0],r,72)),yf,rnd)]),goldin),'050200-1',1);
-      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L),goldin),'050200-1',1);}
+      /* the flange: flat inside Ø 5.2 round the square hole, and outside it a turned ring, its edge rounded r 0.4 (smooth: until 17 October 2026 annuli of solidGeo's
+         cells, whose flat-shaded facets showed on the round and the rim); the ring's 72 sides fall on the flat part's 72 points */
+      const r1=MIN.rf-0.4,rnd=[...Array(11).keys()].map(k=>{const a=(10-k)/10*Math.PI/2;return[r1+0.4*Math.sin(a),y1-0.4+0.4*Math.cos(a)];});
+      tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1);
+      tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1);
+      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1);}
     /* the hour hand, on the hour wheel's pipe */
     const hh=grp(hdP,H[1]);R.hh=hh;
     {const y1=YH1,y0=y1-3.1,yf=y1-0.8,rb=y=>HRW.rh+(HRW.yt-y)/140+0.01;   /* its hole on the seat's 1:70, 0.01 clear */
       tag(mesh(hh,lathe([[rb(y0),y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[rb(y1),y1]],72),goldin),'050200-2');
-      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L),goldin),'050200-2',1);}
+      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L,-1,0.25,HOUR.rf),goldin),'050200-2',1);}
     /* the up-and-down hand, on its wheel's pipe */
     const uh=grp(hdP,H[2]);R.uh=uh;
     {const y1=YU1,yf=y1-0.5,y0=y1-1.4;
       tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3');
-      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2),M.blued),'050200-3',1);}
+      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1);}
     /* the seconds hand on its collet (Zeigerfutter 05 02 01-2, brass, no sheet), pressed on the seconds post's 1:90 taper: Ø 1.5 (the coloured section's, 1.6 scaled,
        inside the dial's Ø 1.7 hole) and 4.6 long (scaled there, pictorial), its end Ø 1.2 through the hand (the hand's hole), flush with its top; bored on the post, 0.005 clear */
     const sh=grp(hdP,H[35]);R.sh=sh;
     {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-0.1*(y-SW.ys-24.05)/9.1)/2+0.005;
       tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1');
-      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1),M.blued),'050201-1',1);
-      tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1),M.blued),'050201-1',1);
+      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1);
+      tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1);
       const yc=y0-4.0;tag(mesh(sh,lathe([[post(yc),yc],[0.75,yc],[0.75,y0],[SEC.rh,y0],[SEC.rh,y1],[post(y1),y1]],32),M.brass),'050201-2');}
 
     /* ---------- the dial (05 02 00-4) ---------- */

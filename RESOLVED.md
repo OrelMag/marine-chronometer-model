@@ -2413,6 +2413,22 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's minute hand's flange showed a zigzag band, the tube's crown facets like a pyramid, and every
+  hand's root flickered** (17 October 2026, the user's screenshot). `sectors()` in `wempe/js/dial.js` cut each
+  annulus of a rounded or crowned top into four quarter cells, and earcut triangulated each quarter whole:
+  slivers from one side of a quarter to the other, flat-shaded (solidGeo gives each sloped triangle its own
+  normal), which zigzagged round the flange's r 0.4 round and faceted the cannon tube's crown over its square.
+  `sectors()` now cuts each annulus into a cell per step of one set of angles (every loop's points, each loop met
+  there by the ray from the centre), and the minute hand's round is a turned ring (smooth normals) round the
+  flat part's 72 points. And each blade's root lay inside its boss with its underside in the boss's underside's
+  plane (the up-and-down and seconds hands' tops in the boss's top's too), so the two solids flickered through
+  each other there; `blade()` takes the boss's radius and draws the blade 0.02 in from those faces inside it.
+  Keep: a sloped top is cut into narrow cells (never a quarter triangulated whole); a turned surface is a lathe
+  where nothing in it isn't round; two solids that overlap never share a face's plane in the overlap.
+- **The Wempe's detent block's cross screw flickered on the upright's far face** (17 October 2026, the user's
+  screenshot). The screw (`WN-gkA`, drawn without its hole) ran 3.0 into the 3.0-wide upright, so its end lay in
+  the face's plane; it ends 0.02 inside now. Keep: a screw drawn without its hole ends short of the far face or
+  through it, never on it.
 - **The Wempe's hands showed a broken line down their middle.** Each blade (`blade()` in `wempe/js/dial.js`)
   was one solidGeo cell whose top follows the thickness along the hand, and earcut triangulated it whole: long
   slivers from a point on one edge to a point far along the other, tilted to either side (|nx| up to 0.70 on the
