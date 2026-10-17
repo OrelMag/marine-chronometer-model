@@ -21,11 +21,12 @@ function buildWempe(M){
   {const sw=TR.sw.userData.wheel,[a,b]=gearLash(sw,WD.H[35],EB.R.pinion,WD.H[26],-1);sw.rotation.y=a;EB.R.pinion.rotation.y=b;EB.R.pinion1.rotation.y=gearLash(sw,WD.H[35],EB.R.pinion1,WD.H[26],-1)[1];}
   const FU=WFUSEE.build(mv,M,K,FR,TR);   /* the fusee and its wheel, the maintaining work and detent, the stop work, the barrel, its arbor and set-up ratchet, the mainspring, the chain and the band */
   K.done();
-  /* setRev(v): the sheets as last revised ('last', about 1946-48, the page's default) or as first drawn ('first', 1940-44: app.js's Variants). Each part keeps its key; the
-     pieces only one state has are in groups tagged userData.rev, the other state's hidden as the band is (the tools skip what isn't shown), and each builder's onRev moves
-     what both share but stands elsewhere */
-  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});
-  mv.userData.setRev=(/** @type {string} */v)=>{const f=v==='first';mv.userData.rev=f?'first':'last';for(const o of RV)o.visible=o.userData.rev===mv.userData.rev;for(const g of mv.userData.onRev)g(f);};
+  /* setRev(v): the version shown (app.js's Variants): the sheets as last revised ('last', about 1946-48, the page's default), as first drawn ('first', 1940-44), or the Soviet
+     copy made from them ('6mx', Kirov No. 247 of 1952). Each part keeps its key; the pieces not every version has are in groups whose userData.rev lists the versions they show
+     in ('last 6mx': the revised sheets' pieces the 6MX kept), the others hidden as the band is (the tools skip what isn't shown), and each builder's onRev(v) moves what they
+     share but stands elsewhere */
+  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});mv.userData.revs=['last','first','6mx'];
+  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=o.userData.rev.split(' ').includes(s);for(const g of mv.userData.onRev)g(s);};
   mv.userData.setRev('last');
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's
