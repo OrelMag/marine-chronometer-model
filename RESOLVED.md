@@ -670,7 +670,7 @@ Contents:
   end 0.62 thick there, the land under it to 1.49) and, 1.1 deep at its upper end past N, leaving 0.3 of metal over the
   turn below (why the drawing makes it shallower there). The spring's pin, which ended flush with the old top land, now
   ends with its outer corner 0.02 inside the Ø 21. Keep: a fusee's groove ends where its sheet puts N, and the end past it
-  is the uncut blank. Fixed, not yet committed.
+  is the uncut blank. `d33de400`
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
