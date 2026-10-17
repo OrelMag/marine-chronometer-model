@@ -19,10 +19,10 @@ const WFRAME=(()=>{
   const PL={};   /* places for the later groups */
 
   function build(mv,M,K){const{part,screw,loose,headOn}=K,V2=(a,b)=>new THREE.Vector2(a,b),tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
-    /* the versions (movement.js's setRev): rv(par, 'last first' or '6mx') a group of the pieces only those versions have. The drawings' two versions share the frame; the
+    /* the versions (movement.js's setRev): rv(par, 'last first 1943' or '6mx') a group of the pieces only those versions have. The drawings' two versions share the frame; the
        Soviet 6MX (Kirov No. 247) moves pillar 39 to 190° (WD.P39_6MX), leaves out the top plate's hole 53 and the upper cock's hole 20: each plate and that cock built once for
        each, the pillar and its screws at 39 in each version's group */
-    const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},VER=[['last first',H[39],1],['6mx',WD.P39_6MX,0]];   /* [versions, pillar 39, the drawings' holes 20 and 53] */
+    const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},VER=[['last first 1943',H[39],1],['6mx',WD.P39_6MX,0]];   /* [versions, pillar 39, the drawings' holes 20 and 53] */
     /* The 6MX's finish: Geneva stripes (Kirov No. 247's plates, bridges and cocks; the Wempe's are hammered, drawn plain gilt), straight, 3.95 mm apart (FFT on plain
        patches of its top plate, 2_Kirow_247_A.jpg at 8.98 px/mm: 3.73-4.28, and its dial side, 3_Kirow_247_uZ.jpg at 8.63: 3.71-4.35; median), running at 50 deg in each
        face's own photograph (49.8-50.3 and 48.5-52.1): in plan along (-0.643, 0.766) on the top plate's side, as one sweep over the plate, the cocks and the barrel bridge
@@ -93,7 +93,7 @@ const WFRAME=(()=>{
       const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
       const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
       const g=new THREE.PlaneGeometry(W,Hh);g.rotateX(Math.PI/2);g.rotateY(Math.PI);   /* facing out of the plate (−y); its text along −x (O), up toward −z (N) */
-      const e=mesh(rv(tp,'last first'),g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;   /* Wempe's, so the drawings' versions only (not the Soviet 6MX's plate) */e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
+      const e=mesh(rv(tp,'last first 1943'),g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;   /* Wempe's, so the drawings' versions only (not the Soviet 6MX's plate) */e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
 
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
     /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 56, 57
@@ -167,7 +167,7 @@ const WFRAME=(()=>{
         ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
       tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
       const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
-      for(const[V,AS]of/** @type {[string,number[]][]} */([['last first',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
+      for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
         ...AS.map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:6.35,b:11.05}))]};   /* the dial screws' M1 through the flange: they show on its underside in Wempe 3955's top plate photograph (2_Wempe_3955_A.jpg: likely; 2.5 deep until 16 October 2026) */   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
       const gF=rv(rg,V);FLG.push(gF);tag(mesh(gF,solidGeo([fl]),M.plateSolid),'050800-3',1);}
