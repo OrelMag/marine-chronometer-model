@@ -120,8 +120,9 @@ const WCASE=(()=>{
     const bowl=prt(bowlG,'bowl',-YP);
     /* in two solids: the bottom inside the recess's wall (r 34.1), cut by its two holes, and the rest turned from its profile (the foot, the cone, the body, band and flange, the
        bore and the round inside), which nothing crosses. Until 15 October 2026 the whole was plan cells of rings, whose narrow sloped rings under the round left cracks along
-       the cone, seen through once the bowl is turned over to wind */
-    {const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53}];
+       the cone, seen through once the bowl is turned over to wind. CSI: the closing spring's inner end, in a hole Ø 1.2, 1.5 deep, in the recess's floor (the closing plate, below) */
+    const CSI=[6.5,Math.atan2(H[10][1],H[10][0])-Math.PI/2-25*D2R];   /* [r, angle]: its outer end's place in the plate shut (the plate's 25°, CPS below) */
+    {const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],0.6,24),a:YB-59.5,b:YB-58}];
       tag(mesh(bowl,solidGeo([{loop:circ(34.1),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
       /* the winding hole's seat inside: a raised ring round the hole on the bottom, which the cork ring on the dust bush (05 08 01-4, frame.js) meets. Not on the casting's
          sheet (it draws no hole and nothing machined); the 6MX's bowls have it: moMvyx8eXfo 3:35 (1080p, the bowl empty) a flat-topped ring standing on the bottom round
@@ -195,7 +196,7 @@ const WCASE=(()=>{
        not drawn (README, Unresolved). It lies in the bowl's foot, its inner face on the recess's floor and
        its boss 0.5 inside the foot, turning on its screw (7: WN-71, unsure) in the bottom: turned by the knob in its M2.6 (WN-72, brass on Wempe 3955,
        16_Wempe_3955_Gehäusetopf_Kardan.jpg), its Ø 8 comes over the winding hole for the key and away from it to close it; the closing spring (Verschlußfeder 05 01 00-7, 14 on 05 01)
-       that holds it, likely in the groove with its end in the Ø 1.2, has no sheet: not drawn. Its turn: built open, the Ø 8 over hole 10; at rest the spring holds it shut, turned
+       that holds it, in the groove with its end in the Ø 1.2, has no sheet: estimated (below). Its turn: built open, the Ø 8 over hole 10; at rest the spring holds it shut, turned
        CPS (25°: no sheet, photograph or video gives it; its Ø 8.1 clears the Ø 8.2 hole from 20.8° on, so 1.7 of metal over the hole's edge: estimated), and winding in the case
        opens it (shutter, app.js), as the 6MX's shutter is opened for the key (Uy8A88_j-cA 5:21-5:25; the 6MX's own is a pin in a slot) */
     const cp=prt(bowlG,'closingPlate',-YP),CPS=25*D2R;cp.rotation.y=CPS;
@@ -206,7 +207,22 @@ const WCASE=(()=>{
         [{p:C(P(22.6,t8),8.1/2,72),a:yr,b:y1},{p:C(P(25,tk),1.32,32),a:yr,b:y1}]];
       tag(mesh(cp,smoothRev(solidGeo(cells(rs,ys,F,s0))),M.brass),'050100-2');
       tag(screw(cp,0,0,y0+3,3.6,2.5,7.5,1.5,M.steel),'WN-71');   /* its screw: head Ø 7.2 × 2.5 in the counterbore, M3 through the plate into the bottom (estimated) */
-      const kq=P(25,tk);tag(screw(cp,kq[0],kq[1],yr,2.6,2.4,2.2,1.3,M.brass),'WN-72');}   /* the knob: a brass head Ø 5.2 × 2.4 (Wempe 3955's), M2.6 (estimated) */
+      const kq=P(25,tk);tag(screw(cp,kq[0],kq[1],yr,2.6,2.4,2.2,1.3,M.brass),'WN-72');   /* the knob: a brass head Ø 5.2 × 2.4 (Wempe 3955's), M2.6 (estimated) */
+      /* the closing spring (Verschlußfeder 05 01 00-7, 14 on 05 01): no sheet, and under the plate on every bowl photographed or filmed (Wempe 3955's; moMvyx8eXfo 7:10-7:45;
+         the 6MX's shutter is another, a pin in a slot: Uy8A88_j-cA 5:21-5:25), so estimated from what the plate's sheet gives it: its seat, the groove Ø 10 to Ø 26, 1.5 deep, in
+         the face on the bowl's bottom (a closed chamber between them), and the Ø 1.2 drilled blind from the groove's floor at 12.4, against its outer wall, for one end. A round
+         steel wire Ø 1.0 (the Ø 1.2's), a flat spiral of two turns across the chamber from r 12.35 to 6.5, at its mid depth (0.25 clear of the groove's floor and of the bowl),
+         its outer end turned down 2 into the plate's hole and its inner end up 1.2 into a hole Ø 1.2, 1.5 deep, in the bowl's bottom (CSI, above: not on the casting's sheet,
+         which draws nothing machined); each turn on a bend r 0.8. Unloaded with the plate shut, so nothing need stop it there; opened 25° it winds up (README, the case). It is
+         built in the plate's frame for the plate's turn and rebuilt in place (reclose) as it turns (cp.userData.turn, from shutter), the inner end staying in the bowl's hole */
+      const NT=2,RI=CSI[0],RO=12.35,ym=y1-0.75,rb=0.8,WR=0.5,V=(r,a,y)=>new THREE.Vector3(r*Math.cos(a),y,r*Math.sin(a));
+      const spGeo=(rot,old)=>{const ai=CSI[1]+rot-NT*TAU,a0=ai+rb/RI,a1=tk-rb/RO,Q=[V(RI,ai,YB-58.3)];   /* the inner end's angle in the plate's frame (the bowl's turned back by the plate's turn) */
+        for(let j=0;j<=6;j++){const t=j/6*Math.PI/2;Q.push(V(RI,ai+(rb-rb*Math.cos(t))/RI,ym+rb-rb*Math.sin(t)));}   /* the turn from the bowl's hole into the spiral */
+        const n=Math.ceil((a1-a0)/0.05);for(let i=1;i<n;i++){const u=i/n;Q.push(V(RI+(RO-RI)*u,a0+(a1-a0)*u,ym));}
+        for(let j=6;j>=0;j--){const t=j/6*Math.PI/2;Q.push(V(RO,tk-(rb-rb*Math.cos(t))/RO,ym-rb+rb*Math.sin(t)));}   /* and out of it, down into the plate's hole */
+        Q.push(V(RO,tk,YB-63));return reclose(old,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(Q,false,'centripetal'),Q.length*3,WR,8,false));};
+      const sp=tag(mesh(cp,spGeo(CPS,null),M.steel),'050100-7');let last=CPS;
+      cp.userData.turn=()=>{const r=cp.rotation.y;if(Math.abs(r-last)>1e-4){last=r;sp.geometry=spGeo(r,sp.geometry);}};}
 
     /* ================= the bezel (Glasrand R-05 01 01-2, 6.3.42) and its glass (05 01 01-1) ================= */
     /* Ms, Kokillenguß, 1:1, every figure (sure): Ø 125 for its top 8.2, a 30° chamfer to Ø 116 at its underside, 16 high; the sight bore Ø 92 (it shows the dial's minute
@@ -541,7 +557,7 @@ const WCASE=(()=>{
        across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back in its holder */
     const keyAt=(s,d=0)=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05-d,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};   /* d: how far out along the square it still is (coming on or going off) */
     stayAt();
-    const out={stay:stayAt,root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
+    const out={stay:stayAt,root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);cp.userData.turn();},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
     /* rev(v): the lids the page turns are the version's (app.js's onRev) */
     out.rev=v=>{const s=v==='6mx';out.lid=s?lid6G:lidG;out.tongue=s?tg6:tgG;out.overLid=s?ol6G:olG;};
     return out;}

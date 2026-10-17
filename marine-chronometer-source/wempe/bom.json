@@ -3706,6 +3706,20 @@
    "figs": "05 01_1, 05 01_3"
   },
   {
+   "id": "050100-7",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 00-7",
+   "name": "Verschlußfeder (closing spring)",
+   "qty": 1,
+   "parent": "050100-2",
+   "kind": "part",
+   "part": "closingPlate",
+   "fn": "Holds the closing plate shut over the winding hole and turns it back when the key is out: a wire spiral in the plate's groove, one end in the plate's Ø 1.2, the other in the bowl's bottom (no sheet: estimated from the plate's; its ends sit free in their holes, so no relation is measured).",
+   "rel": [],
+   "figs": "05 01_1, 05 01_3"
+  },
+  {
    "id": "050101-2",
    "idx": null,
    "no": "",

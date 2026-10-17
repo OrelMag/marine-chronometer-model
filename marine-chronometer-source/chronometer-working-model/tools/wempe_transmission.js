@@ -290,7 +290,8 @@ function stopRun(TB){const X=build(TB,0.12,{key:true,Tmax:1.06});const{mc,b,hd,s
   return{Fhit:Fhit/14e-3,Fp:sw.maxL/14e-3,chain:[ch.minT,ch.maxT],slack:ch.slack*1e-6,hand:hd.maxT};}
 
 module.exports={build,settle,MESH,JI,rho,fusT,Mrun,msT,msPh,MSB,CK,DT,meshTab,beat,windRun,stopRun,rippleRun};
-if(!isMainThread){const{job,TB,o,par}=workerData;Object.assign(PAR,par||{});parentPort.postMessage(job==='beat'?beat(TB,o.rigid):job==='wind'?windRun(TB,o):job==='ripple'?rippleRun(TB):stopRun(TB));return;}
+if(!isMainThread&&['beat','wind','ripple','stop'].includes(workerData.job)){const{job,TB,o,par}=workerData;   /* its own jobs only: a thread of another tool may load this module (wempe_transmission_trace.js) */
+  Object.assign(PAR,par||{});parentPort.postMessage(job==='beat'?beat(TB,o.rigid):job==='wind'?windRun(TB,o):job==='ripple'?rippleRun(TB):stopRun(TB));return;}
 
 if(require.main===module)(async()=>{
 const strP=new Promise(ok=>require('child_process').execFile(process.execPath,[path.join(__dirname,'wempe_strength.js')],{cwd:__dirname,maxBuffer:1<<26},(e,o)=>ok(o||'')));
