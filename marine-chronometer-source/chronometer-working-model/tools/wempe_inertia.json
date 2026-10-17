@@ -1,11 +1,11 @@
 {
  "note": "tools/wempe_inertia.py: the Wempe's escapement's moving bodies weighed on the model's solids (wempe-inertia.js): g and g·mm² about each body's own axis; read by wempe_escapement.js",
  "balance": {
-  "m": 11.5582,
-  "I": 2544.94,
+  "m": 11.5486,
+  "I": 2544.9,
   "cg": [
    -0.0,
-   -25.177,
+   -25.181,
    0.0
   ],
   "byHn": {
@@ -14,8 +14,8 @@
     "I": 1522.55
    },
    "050301-1": {
-    "m": 3.8422,
-    "I": 749.73
+    "m": 3.8371,
+    "I": 749.7
    },
    "050301-3": {
     "m": 0.5747,
@@ -38,8 +38,8 @@
     "I": 2.19
    },
    "WN-10": {
-    "m": 0.0414,
-    "I": 0.2
+    "m": 0.0369,
+    "I": 0.17
    },
    "050402-1": {
     "m": 0.3563,
@@ -255,7 +255,7 @@
   "cg": [
    -0.0,
    5.372,
-   0.0
+   -0.0
   ],
   "byHn": {
    "050202-1": {
@@ -278,7 +278,7 @@
   "cg": [
    0.0,
    7.906,
-   -0.0
+   0.0
   ],
   "byHn": {
    "050203-1": {
