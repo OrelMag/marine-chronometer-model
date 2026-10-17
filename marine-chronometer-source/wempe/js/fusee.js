@@ -60,7 +60,11 @@ const WFUSEE=(()=>{
   const ac=m=>{if(m>=0.15)return A0+PAX*m;const t=Math.max(0,m)/0.15,d=A0+PAX*0.15-FSC;return FSC+d*(3*t*t-2*t*t*t)+PAX*0.15*(t*t*t-t*t);};
   const yc=m=>F-ac(m);
   /* the fusee's radius field: the flange (Ø 35.6, its two ribs and the slot between them, 0.87 wide, floor r 17.25), the slot deepened under the chain's pin (a cutter Ø 13.5,
-     2.9 deep), the groove, and the small end's hub (Ø 21) for the last 0.3 */
+     2.9 deep), the groove, and the small end's hub (Ø 21). The groove is cut only to its end N ("Gangende Punkt N", 0.3 from the small end: MN, the turn whose land's
+     small-end edge is there); past N the end stays uncut at the hub's Ø 21, and so does the last turn's rib, so the hub's inner face follows the helix: 05 06 04-2's
+     Schnitt A-B draws the end so, the last land against a block at Ø 21 0.3 thick at D (N's side) and about 1.3 at C (scaled at 12.1 px/mm: likely), with no rib
+     between them. Until 17 October 2026 the hub was 0.3 all round with the groove cut on under it past N, which left the stop bar's slot cutting a loose flange and ribs */
+  const MN=(LB-0.3-WLD/2-A0)/PAX;   /* 8.817: 0.067 turn past the full wind's 8.75, as 02-2's view C-D draws N past the groove's end at 8.75 */
   /* the chain's pin (A on the sheet's view C-D) at PHI0-0.17, just behind the groove's start, 1 under the ribs' tops (the view's "1"), in the middle of the cutter's arc (the view
      centres the arc on A): section A-B, through the pin, draws both ribs whole to their tops with the pin's hole across them and the slot between them about 2.8 deep (scaled),
      so the cutter is a slitting cutter in the slot, deepening it where the hook wraps the pin, not a flat across the ribs */
@@ -71,7 +75,8 @@ const WFUSEE=(()=>{
     let r=a<FR1?17.8:a<FS1?17.25:17.8;
     if(a>=FR1){const mt=fr((th-PHI0)/TAU);let j=Math.floor((a-(ac(mt)-WLD/2))/PAX),m=mt+j;
       while(m+1>=0.15&&a>=ac(m+1)-WLD/2)m+=1;while(m>=0&&a<ac(m)-WLD/2)m-=1;   /* the turn whose land (or rib) holds a */
-      if(m>=0){const d=a-(ac(m)-WLD/2);if(d<WLD)r=Math.min(r,rf(m));else if(a>=FS1||m>0.3)r=Math.min(r,rf(m)+RIBH);}}
+      if(m>=0){const d=a-(ac(m)-WLD/2);if(m>MN||(d>=WLD&&m+1>MN))return 10.5;   /* past N, or the last land's rib: the uncut end */
+        if(d<WLD)r=Math.min(r,rf(m));else if(a>=FS1||m>0.3)r=Math.min(r,rf(m)+RIBH);}}
     if(a>=FR1&&a<FS1)r=Math.min(r,rCut(th));   /* in the slot only */
     return r;}
 
@@ -509,8 +514,9 @@ const WFUSEE=(()=>{
     let spT=0;const spM=tag(mesh(gBar,ribbonGeo(spPath(0),0.10,1.0),M.blued),'050603-3');
     /* the spring's pin (Stift 05 06 04-4: the coloured section's label, its leader to this pin, and 05 06 04's parts list, piece 5, a 0.5 pin: likely; numbered 05 06 03-2 until
        17 October 2026; the hole "0,5 H7" in 05 06 04-2, not cut in it): along the slot, 1.5 from the line through the axis on the bar's side (02-2's "15"),
-       from the recess, where it stands in to 6.4 from the axis through the spring (C-D), out through the hub flush with the top turn; at the spring's mid-height (estimated) */
-    {let uo=9;for(let i=0;i<4;i++){const R=rBody(barRot+Math.atan2(-1.5,uo),LB-0.5);uo=Math.sqrt(R*R-2.25)-0.02;}const ui=Math.sqrt(6.4*6.4-2.25),g=new THREE.CylinderGeometry(0.25,0.25,uo-ui,12);
+       from the recess, where it stands in to 6.4 from the axis through the spring (C-D), out through the end, which is uncut there (past N), its end's outer corner 0.02 inside
+       the hub's Ø 21 (flush with it until 17 October 2026, its middle, when the groove's last land lay under it, so the corner stood through); at the spring's mid-height (estimated) */
+    {let uo=9;for(let i=0;i<4;i++){const R=rBody(barRot+Math.atan2(-1.75,uo),LB-0.5);uo=Math.sqrt((R-0.02)**2-1.75*1.75);}const ui=Math.sqrt(6.4*6.4-2.25),g=new THREE.CylinderGeometry(0.25,0.25,uo-ui,12);
       g.rotateZ(Math.PI/2);g.translate((ui+uo)/2,S+0.5,1.5);tag(mesh(gBar,g,M.steel),'050604-4');}
     /* the bar's slide: its spring holds it out until the connector on the top turn, or coming down onto it, reaches its lower end; it then slides as far as keeps that end clear
        of the connector's inner side by 0.02 (the chain's plates 1.0 from its pitch line, 0.80 across; the band 0.11, 0.78 high), never past its 3.6. The connector's path (pitch line)

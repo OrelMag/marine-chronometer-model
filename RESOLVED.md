@@ -660,6 +660,17 @@ Contents:
   level in it (tilted with its end link it reached into the first rib). Keep: the groove's pitch and
   lands are 02-2's, the flange's three widths sum to its 2; the chain doesn't touch the fusee in fine.py
   (no allowance for it). `b9dc7f9`
+- **The Wempe's fusee groove ran on past its end N, under a hub 0.3 thick all round** (17 October 2026, the user's
+  screenshot: the stop bar's slot "looks weird and unrealistic"). `rBody` cut the top turn's land and rib at every angle,
+  past "Gangende Punkt N", the hub (Ø 21) only the last 0.3; the slot, 1.5 deep, then sliced a thin loose flange and the
+  ribs under it, leaving knife edges and slivers. 05 06 04-2's Schnitt A-B draws the end uncut past N: the last land
+  against a block at Ø 21, 0.3 thick at D (N's side) and about 1.3 at C, no rib between. Now the groove ends at N (`MN`,
+  the turn whose land's edge is 0.3 from the small end, 8.817) and the end beyond it and the last land's rib are the hub's
+  Ø 21: the slot is a plain channel through solid metal, opening into the top turn's groove at the bar's lower end (the
+  end 0.62 thick there, the land under it to 1.49) and, 1.1 deep at its upper end past N, leaving 0.3 of metal over the
+  turn below (why the drawing makes it shallower there). The spring's pin, which ended flush with the old top land, now
+  ends with its outer corner 0.02 inside the Ø 21. Keep: a fusee's groove ends where its sheet puts N, and the end past it
+  is the uncut blank. Fixed, not yet committed.
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
