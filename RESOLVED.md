@@ -2185,6 +2185,13 @@ Contents:
   ends showing (13, hidden, before). Keep: the paddle rests on the seat's edge at the bore, the
   tube's head under it, the spring on the tube with its end in the body (*The Mariner's
   Chronometer*, Fig. 2.35, shows a 1943 key taken apart so). `d125c5a`
+- **The Wempe key's body was a plain turned solid, the paddle, pin and spring's end in its metal.**
+  Now cut as 05 01 02-2 draws it: the slot and its Ø 35 floor, the cross hole through both jaws
+  and the paddle, the spring's slanted Ø 0.9 hole. Built as four solids joined into one closed
+  surface, the faces where they meet dropped: kept as separate meshes, those faces met the
+  surface's edge at its own depth and drew a dashed line round the body. Keep: the joints' outlines
+  the same points on both sides (the solid under the jaws takes the jaws' column points), and no
+  sloped face with an edge in a joint's plane (the drill point's foot 0.12 above the lower joint).
 
 ## Accuracy to the manual
 
