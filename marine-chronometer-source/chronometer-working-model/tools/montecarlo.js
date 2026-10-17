@@ -31,8 +31,9 @@ const ss=SU.spring,kNeed=SU.spring.kt,WP=RA.pawls.filter(p=>/winding/.test(p.nam
 const BC=require('./bench.json').criteria,BAND=[247.5,270],inB=(A,b=BAND)=>A>=b[0]&&A<=b[1],T5=300;   /* the manual's 1⅜-1½ turns (Sec. II, IX) and five minutes (Sec. IV) */
 const TF=ESC.settings.TF,FPH=PH.TRAIN.cp/PH.TRAIN.fu*2*Math.PI/3600;
 /* the sustaining spring, banked (or, were it made stronger than the drive, closed only as far as the drive takes it), pushes k c0 and less as the train opens it; the
-   swing follows with TF: the time it keeps the balance over a turn (sustaining.js's reading of the manual's five to ten minutes), for a stiffness */
-const runFor=k=>{let A=ESC.ampAt(1),t=0;const T0=PH.Tf,c0=Math.min(T0/k,ss.SMAX);while(t<3600){const Dd=Math.max(0,k*(c0-FPH*t)/T0),Ae=Dd>0?ESC.ampAt(Dd):0;A=Math.sqrt(Ae*Ae+(A*A-Ae*Ae)*Math.exp(-2*2/TF));if(A<Math.PI)return t;t+=2;}return 3600;};
+   swing follows with TF: the time it keeps the chronometer running (sustaining.js's reading of the manual's five to ten minutes since 17 October 2026; the time
+   over a turn until then), for a stiffness */
+const runFor=k=>{let A=ESC.ampAt(1),t=0;const T0=PH.Tf,c0=Math.min(T0/k,ss.SMAX);while(t<3600){const Dd=Math.max(0,k*(c0-FPH*t)/T0),Ae=Dd>0?ESC.ampAt(Dd):0;A=Math.sqrt(Ae*Ae+(A*A-Ae*Ae)*Math.exp(-2*2/TF));if(A<ESC.AMIN)return t;t+=2;}return 3600;};
 const RUN={};const runK=k=>{const q=Math.round(Math.log(k)*100);return RUN[q]??(RUN[q]=runFor(Math.exp(q/100)));};   /* by 1 % of stiffness */
 const one=(only)=>{const use=k=>!only||only===k,o={};
   /* the meshes' centres: each arbor's holes off by e; a mesh jams outside its depthing window */
