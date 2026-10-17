@@ -103,3 +103,35 @@ One is TWQsSVWuikk 42:55; the other has no known source. Neither adds anything f
 ## Status when handed over
 
 No code was changed. This file is the only addition on the branch.
+
+## Second session (17 October 2026): what was found without the videos
+
+YouTube was still refused (`www.youtube.com`, `i.ytimg.com`, `*.googlevideo.com`: 403 from the proxy). The user chose to add those domains to the
+environment's allowed domains and have the frames measured, so no code was changed. What the manual and the model gave meanwhile:
+
+- **The manual draws the spring** (not yet in the README or VIDEOS.md): **Fig. 69** (PDF page 61) loose, oblique, beside the fusee; **Fig. 70**
+  (page 62, the exploded fusee) in the fusee wheel's recess. Render them with `pdftoppm -r 600 -f 61 -l 62`. Read by eye on the rendered pages
+  (line drawings, not to scale: low confidence):
+  - Fig. 70, in the wheel: the fixed end a long lighter lobe with **two holes, no pin standing in either**, its inner edge leaving the band
+    about 85° (by eye, through the drawing's ellipse) from its tip (model `SFL` 62°); the working end a short hooked lobe about 30° long
+    (model `SWL` 35°) with an upright pin to the ratchet; **the gap between the tips about 20°** (the video's 27:26 reading; model `SSG` 17°).
+  - Fig. 69, loose: the gap about **33°** (its ellipse b/a about 0.76), the fixed lobe about 55-60°. If real, the band is sprung open beyond
+    the recess and preloaded against its wall when in; the drawing can't tell that apart from the artist's freehand.
+  - The band's height in Fig. 70: the working lobe's side face against the band's width at 3 o'clock, the view's elevation from the rim's
+    ellipse (b/a about 0.6): **height/width about 0.8-0.95**, so 1.5-1.75 mm on the measured 1.85 mm width. On the drawing's own scale (the
+    rim's ellipse) the height is about 1.15 mm, but that scale also makes the band 1.2-1.4 wide, so the ratio is the better reading.
+- **The recess is 1.3 mm deep in the model, not 1.8.** The rim (`ring(19.2*FK,18.0*FK,1.8)` at y −8.0) runs −8.9 to −7.1, but the floor
+  (`discGeo(18.0*FK,0.5)` at −7.6) fills −7.6 to −7.1, so the band (−8.75 to −7.62) has 1.3 under the rim's lip. Both heights are estimates
+  (Op. 26's "elevations"). `sustaining.js` reads the 1.8 as the recess's depth (its last `num` regex) and OPEN-QUESTIONS.md calls 1.8
+  "known": both need correcting.
+- **What the stiffness can reach with the measured lines kept** (a scratch Castigliano for a clamped fixed end against `sustaining.js`'s
+  pinned one, same band): clamping the fixed end by both holes gives only +15 % (0.81 against 0.70 N·m a radian at 1.13 high); the lobes
+  barely matter (85° and 45° lobes: +7 %); the height is linear (1.75 high and clamped: about 1.25). Run on the train as `sustaining.js`
+  runs it, the stop comes at about the drive's deflection over 0.933° a minute: k 0.81 stops at 20.9 min, 1.0 at 17.1, 1.29 at 13.4, 1.5 at
+  11.7, 1.78 at 10.0; the swing leaves the manual's band in 1-2 minutes in every case. `sustaining.js`'s check passes from 5 to 15 minutes
+  without closing solid, so about k 1.13 and a gap above 16° pass it; the manual's 5-10 needs 1.78. The width is the strongest lever (its
+  cube): the video's ±0.3 mm on 2.1 spans (1.8/2.1)³-(2.4/2.1)³, 0.63-1.49 times.
+- **Literature:** a web search found no torque or section for 42016; REQUESTS.md still has no item for it.
+
+So the frames to read first are an edge-on or oblique view of the band (its height against the wheel's thickness or the rim), and a
+face-on frame of it out of the recess (the gap loose, against Fig. 69's 33°), then the width again on the sharpest face-on frame.
