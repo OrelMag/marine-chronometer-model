@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#keystone">13. Against a period text</a><a href="#video">14. The swing on video</a><a href="#soviet">15. The Soviet 6MX</a><a href="#open">16. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#open">17. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -306,7 +306,30 @@ band. The green band is the guard band's floor and above. <code>wempe_montecarlo
 <div id="tMCa" class="tw"></div>
 <div id="kMC"></div>
 
-<h2 id="keystone">13. Against a period text</h2>
+<h2 id="trans">13. The whole transmission in time</h2>
+<p>Sections 3 to 7 take the movement a mechanism at a time, each with the others held still or rigid. Here every part that moves is one system: the barrel on its
+solved mainspring, the chain, the fusee with its two clicks, the maintaining ratchet, spring and detent, the fusee wheel and the going train to the escape wheel, the
+motion work and hands, the up-and-down work, the key and the stop: each a body with its inertia weighed on the model's solids (or estimated, said where), joined by the
+elements a real movement has, none of them linearised.</p>
+<p><b>Method.</b> <code>wempe_transmission.js</code>. The elements: the mainspring's torque as solved (section 4) with its coils' friction as a stick-slip element,
+so winding takes more than running gives; the chain in tension only, so it can go slack, its lever on the fusee where it lies and rising and falling as each 2.05 mm
+link comes onto a drum; each pawl (the clicks, the maintaining detent) a body on its pivot under its spring, riding the teeth's backs and catching a face only if it is
+down; the maintaining spring's drawn ring, stiffening as it closes, with its bank; every mesh tooth by tooth on the page's own outlines (section 6's), the driven gear's
+place under load through each pitch, the backlash to its back flank and the teeth's friction, contact on either flank or neither; the cannon pinion's friction fit,
+which slips past its torque; the key's one-way coil spring (it grips whenever the hand holds the key against the fusee, and slips only if the key is turned the wrong
+way); the stop bar on its pin. The escapement is <code>dynamics.js</code>'s own (section 3.2), its escape wheel driven each step by the train through the escape pinion's
+mesh. It is stepped in time at a microsecond. The stiffnesses no sheet gives (the teeth's give, the chain's, the clicks' faces, the bank) are estimated from the parts,
+and those the results rest on are varied.</p>
+<div id="tTrW" class="tw"></div>
+<div id="tTrB" class="tw"></div>
+<figure><div class="chart" id="cTrL"></div><figcaption>Figure 19. The key let go at the end of a stroke: the force with which the click catches the click wheel's tooth against how far
+short of its face the nearer click was. Let go outright, the fusee and barrel run free to the click; eased back, the hand lets them forward under its hold. The dashed
+lines are the force at which the tooth's brass reaches its yield (300-450 MPa) and the running load. <code>wempe_transmission.js</code>.</figcaption></figure>
+<div id="tTrV" class="tw"></div>
+<div class="callout"><p id="trMeaning"></p></div>
+<div id="kTr"></div>
+
+<h2 id="keystone">14. Against a period text</h2>
 <p>The drawings decide the Wempe; a period text says how a detent escapement was usually proportioned, and so where the Wempe's makers chose otherwise.
 <code>keystone.js --model wempe</code> measures the escapement against <i>Watch and Clock Escapements</i> (The Keystone, 1904), Ch. III: the wheel and roller, the
 balance planted where the rims cross over a pitch, the impulse and unlocking arcs, the locking stone, the tooth's face and back, the detent and its spring, the balance.
@@ -314,7 +337,7 @@ The text is generic, so the tool reports and never judges; where the two differ,
 <div id="tKey" class="tw"></div>
 <div id="kKey"></div>
 
-<h2 id="video">14. The swing measured on video</h2>
+<h2 id="video">15. The swing measured on video</h2>
 <p>No Wempe source gives the balance's damping, the figure the swing rests on most. A running 6MX, whose balance is of the same kind (a cut bimetallic rim, four
 masses, two nuts on the arm), is filmed from above at 30 frames a second in <a href="https://youtu.be/moMvyx8eXfo?t=1073">moMvyx8eXfo, 17:53-19:50</a> (another person's
 video: linked at the moment used, no frame copied here).</p>
@@ -323,7 +346,7 @@ video: linked at the moment used, no frame copied here).</p>
 turned in the hands at 18:46 (the 6MX's start) and the swing falls back. <code>wempe_startup.js</code> fits all the stretches together with the Wempe's averaged balance
 equation, d(A²)/dt = 2 Wn(s, A)/T − 2A²·damping/TF, the escapement's work Wn from makeEsc with the Wempe's settings, the drive and each stretch's start free: rising
 and falling toward one swing, they fix TF, the free run-down.</p>
-<figure><div class="chart" id="cSwing"></div><figcaption>Figure 19. The 6MX's swing read off the video (dots, each a 4-second window), with the fit through all the stretches: the
+<figure><div class="chart" id="cSwing"></div><figcaption>Figure 20. The 6MX's swing read off the video (dots, each a 4-second window), with the fit through all the stretches: the
 Wempe's escapement work and the damping split as its parts give it (line), and the plain A² law (dashed). The time is the video's, in seconds. <code>wempe_swing.json</code>,
 <code>wempe_startup.json</code>.</figcaption></figure>
 <div id="tFits" class="tw"></div>
@@ -333,7 +356,7 @@ Wempe's escapement work and the damping split as its parts give it (line), and t
 since which click is which isn't settled, so no swing is read from them (<code>References/wempe/VIDEOS.md</code>, "Measured").</p>
 <div id="kStart"></div>
 
-<h2 id="soviet">15. The Soviet 6MX</h2>
+<h2 id="soviet">16. The Soviet 6MX</h2>
 <p>The page's third version (Variants, Version) is the 6MX the 1st Moscow Watch Factory made from these drawings, built as one photographed chronometer is made:
 Kirov No. 247 of February 1952, from Johannes Altmeppen's photographs, with videos of other 6MXs where his don't show a part. Each difference from the drawings is
 measured on a photograph, fitted on the sheets' hole table, or marked estimated; the drawings' two versions are left as they were (every view the same to the pixel).
@@ -350,7 +373,7 @@ escapement at the first-drawn heights, with the first-drawn balance staff and co
 <div id="t6Train" class="tw"></div>
 <div id="k6"></div>
 
-<h2 id="open">16. What stays open</h2>
+<h2 id="open">17. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -383,8 +406,9 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <tr><td><a href="../../chronometer-working-model/tools/massprops.py"><code>massprops.py</code></a>, <a href="../../chronometer-working-model/tools/gimbals.js"><code>gimbals.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_gimbals.js"><code>wempe_gimbals.js</code></a></td><td>The case and gimbals (10)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_errorbudget.js"><code>wempe_errorbudget.js</code></a></td><td>The TU's trial and the voyage (11)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_tolerances.js"><code>wempe_tolerances.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_bench.js"><code>wempe_bench.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_montecarlo.js"><code>wempe_montecarlo.js</code></a></td><td>The tolerances, the bench's tests, the movement made to tolerances (12)</td></tr>
-<tr><td><a href="../../chronometer-working-model/tools/keystone.js"><code>keystone.js</code></a></td><td>The escapement against the 1904 text (13)</td></tr>
-<tr><td><a href="../../chronometer-working-model/tools/wempe_swing.py"><code>wempe_swing.py</code></a>, <a href="../../chronometer-working-model/tools/wempe_startup.js"><code>wempe_startup.js</code></a></td><td>The swing read off a video and fitted (14)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_transmission.js"><code>wempe_transmission.js</code></a></td><td>The whole transmission in time, every part that moves (13)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/keystone.js"><code>keystone.js</code></a></td><td>The escapement against the 1904 text (14)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_swing.py"><code>wempe_swing.py</code></a>, <a href="../../chronometer-working-model/tools/wempe_startup.js"><code>wempe_startup.js</code></a></td><td>The swing read off a video and fitted (15)</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="geometry.py"><code>geometry.py</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This page's data and the page</td></tr>
 </table></div>
 
@@ -628,6 +652,22 @@ function draw(){
     table('tMCa',['Each tolerance alone','Works as made','After the bench','In the guard band as made'],Object.entries(M.alone).map(([k,v])=>[esc(k),pc(v.asMade),pc(v.works),pc(v.band)]));
     table('tKey',['Measure','The book','The model','The model\'s source','Reading'],B.key.rows.map(r=>[esc(r.measure),esc(r.book),esc(r.model),esc(r.source),esc(r.reading)]),true);}}
   checks('kTol','tolerances');checks('kBench','bench');checks('kMC','montecarlo');checks('kKey','keystone');
+  {const T=D.tr;if(T){const g=(x,n=1)=>Number.isFinite(+x)?(+x).toFixed(n):'–';
+    table('tTrW',['Turns from full wind','Hours','The chain\'s lever','Its pull','The click\'s face','The maintaining spring\'s lead','Fusee wheel teeth','Escape wheel','Swing'],T.qs.map(r=>[g(r.n,2),g(r.h),g(r.rho,2)+' mm',g(r.pull)+' N',g(r.click)+' N',g(r.lead*180/Math.PI,2)+'° ('+g((T.MSB-r.lead)*180/Math.PI,2)+'° short)',g(r.F[0])+' N',g(r.esc*1e6)+' µN·m',g(r.A)+'°']));
+    const B=T.beat;if(B)table('tTrB',['Mesh, in a beat at 12 h','Peak force','Times its running','Lets go','Strength (fully wound)'],B.meshes.map(m=>[esc(m.nm),g(m.Fmax,m.Fmax<1?4:2)+' N',Number.isFinite(m.fac)?g(m.fac,2):'–',/(cannon|change|up-and-down)/.test(m.nm)?(m.back?'on its back flank':'rests in its backlash between steps, never on its back flank'):m.free>0?g(100*m.free,2)+' % of the time':'never',m.str?`<span class="st ${ST[m.str.v]}">${m.str.v}</span> margin ${g(m.str.mL,2)}-${g(m.str.mH,2)}`:'–']));
+    const L=T.letgo,yl=T.letgoSum;if(L){const fy=[300,450].map(s=>51.4*s/105),run=L.snap[0].Fc&&T.runClick;
+      chart('cTrL',{label:'The click\'s catch',x:[0,5.5],y:[0,Math.max(450,...L.snap.map(q=>q.Fc))*1.05],xl:'free travel to the nearer click\'s face (°)',yl:'the catch on the click wheel\'s tooth (N)',r:150,
+        hrefs:[{y:fy[0],t:'brass yields (300 MPa)'},{y:fy[1],t:'(450 MPa)'},{y:T.runClick,t:'running'}],
+        series:[{type:'line',name:'let go outright',c:'--s2',data:L.snap.map(q=>[q.free*180/Math.PI,q.Fc]),tip:p=>`${g(p[0],2)}° free: ${g(p[1],0)} N`},{type:'dots',c:'--s2',r:4,data:L.snap.map(q=>[q.free*180/Math.PI,q.Fc])},
+          {type:'line',name:'eased back',c:'--s1',data:L.eased.map(q=>[q.free*180/Math.PI,q.Fc]),tip:p=>`${g(p[0],2)}° free: ${g(p[1],0)} N`},{type:'dots',c:'--s1',r:4,data:L.eased.map(q=>[q.free*180/Math.PI,q.Fc])}]});
+      if(yl&&yl.vary)table('tTrV',['The worst outright let-go, an estimate varied','The click\'s catch','The fusee wheel\'s teeth','The locking stone','The maintaining spring to'],yl.vary.map(v=>[esc(v.lab),g(v.Fc,0)+' N',g(v.fw)+' N',g(v.stone,3)+' N',g(v.sp*180/Math.PI,2)+'°']));
+      $('trMeaning').innerHTML=`<b>What it means.</b> Running, the train's give and backlash change little: the impulse's work moves ${g(100*(B.W1/B.W0-1),2)} % from a rigid train's (${g(B.dA,2)}° of swing,
+        ${g(B.dR,3)} s a day), no mesh of the going train lets go but the escape pinion's, for a millisecond as the escape wheel lands, and the seconds hand overshoots its step by ${g(B.sec*180/Math.PI*3600,0)}″. The lowest mode of the
+        whole transmission, the barrel and fusee on the maintaining spring, is ${g(T.modes.filter(m=>m.f>0.01)[0].f)} Hz, far from the beat's 2 Hz. The blows come from the key: the Wempe's key is
+        one-way, but it grips whenever the hand holds it, so how the hand lets go at the end of a stroke decides them. Eased back, the click catches with ${g(yl.eased.F,0)} N at most, ${g(yl.eased.click.s,0)} MPa in the
+        click wheel's tooth. Let go outright, the fusee and barrel run up to half a click tooth free and strike it with ${g(yl.snap.F,0)} N (${g(yl.snap.click.s,0)} MPa): at or past brass's yield over
+        every estimate the blow rests on; the maintaining spring is thrown onto its bank and the chain goes slack and snatches. A key is let back, not let go.`;}}
+    checks('kTr','transmission');}
 
   /* ---------- 14. the swing on video ---------- */
   {const S=D.swing,U=S.startup,pts=S.pts;chart('cSwing',{label:'The 6MX\'s swing',x:[1070,1192],y:[100,195],xl:'the video\'s time (s; 1073 is 17:53)',yl:'the swing (°)',r:60,

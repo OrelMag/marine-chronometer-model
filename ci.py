@@ -84,6 +84,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-bench',lambda log:run(['node',TOOLS/'wempe_bench.js'],ROOT,log),'quick'),   # the Wempe's tests on the bench from its figures, against bench_wempe.json (about 45 s)
  ('wempe-montecarlo',lambda log:run(['node',TOOLS/'wempe_montecarlo.js'],ROOT,log),'quick'),   # the whole Wempe to a maker's tolerances, as made and after the bench, against montecarlo_wempe.json (about 30 s)
  ('wempe-ratchets',lambda log:run(['node',TOOLS/'wempe_ratchets.js'],ROOT,log),'quick'),   # the Wempe's pawls on their ratchets: the load's draw against friction, the teeth, faces and pivots, the clicks' springs at let-go, the maintaining detent's catch against the spring's travel (about 2 s)
+ ('wempe-transmission',lambda log:run(['node',TOOLS/'wempe_transmission.js'],ROOT,log),'quick'),   # the Wempe's whole transmission in time, every part that moves, nonlinear: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 2 minutes)
  ('wempe-essaydata',lambda log:run(['node',TOOLS/'wempe_essaydata.js'],ROOT,log),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
  ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
  ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
@@ -186,7 +187,7 @@ EXCL={'wempe-dialtrace':'r_dial','wempe-dialtrace-lange':'r_dial','bom':'r_bom.j
 AFTER={'blender':'gltf','wempe-blender':'wempe-gltf'}   # blender_check.py imports the r_model21.glb (r_wempe.glb) gltf_check.py writes
 POOL=6   # the steps that run on processes of their own (tripping.js's bench figures, the Wempe's tripping.js, mainspring.py's sweeps) run on POOL of them (MC_PROCS,
 POOLED={'tripping-bench','wempe-tripping-full','mainspring-friction','wempe-mainspring-friction'}|{s[0] for s in STEPS if s[0].startswith('mainspring-') and s[0]!='mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
-EST={'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
+EST={'wempe-transmission':200,'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
      'wempe-fine':190,'wempe-fine-first':190,'wempe-fine-6mx':190,'wempe-bom-first':330,'wempe-bom-6mx':330,'estimates':190,'wempe-tripping-full':180,'gimbals-full':180,'wempe-gimbals-full':170,'fine':150,'gearing-full':145,'tripping-run':130,'wempe-smoke':115,'gltf':110,'wempe-gltf':200,'wempe-blender':150}   # seconds: the medians of the worktrees' logs, 16 October 2026
 def lane(name,tier):return 'browser' if tier=='browser' or name in BROWSER else 'cpu'
 def go(name,fn):
