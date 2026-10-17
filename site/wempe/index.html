@@ -4868,13 +4868,25 @@ const WFUSEE=(()=>{
       return ribbonGeo(P,0.36,Math.abs(MS1-MS0));}
 
     /* =============== the chain 05 07 04 (Kette) and the band 05 07 03 (Schneckenband) =============== */
-    /* the chain: hardened, tempered at 310°, lightly polished: the plates' figure of eight (two lobes r 1 round the rivets, waisted to 1.2 between them: scaled on 05 07 04),
-       an outer link two plates and its two rivets Ø 0.55 (the rivet stock 0.6), an inner link one plate; instanced, laid along the pitch line every update */
+    /* the chain: hardened, tempered at 310°, lightly polished: the plates' figure of eight, two lobes r 1 round the rivets (the framed 2 across) joined by concave sides,
+       an arc each tangent to both lobes. Traced on 05 07 04's two plan views (stroke centres, across scaled by the lobes' framed 2, along by the 2.05 pitch): the waist 1.41
+       (1.38-1.44 over its 13 waists, the inner plates' seen between the outer pairs among them), the side 0.74 from the line at 0.28 from the waist and 0.81 at 0.46, the lobe's
+       circle from about 0.5 on: the arc r 0.93 that the waist and tangency give (0.75 and 0.83 there). Until 17 October 2026 the waist was 1.2, the sides straight and meeting
+       the lobes in a notch. An outer link two plates, an inner link one plate, each lobe with its hole for the rivet (05 07 04's "0,55" across a pin's centre, the plan
+       view's circle in every lobe: drawn Ø 0.56 round the rivet's 0.55, the rivet stock 0.6), the rivets, a pair to each outer link, through all three plates, their ends
+       flush with the outer plates (the edge view draws nothing standing out of the framed 0.82) and polished bright, as Wempe 3955's chain shows them, each end a round
+       lighter than its plate (14_Wempe_3955_Band_Kette.jpg). Until 17 October 2026 the plates had no holes and the rivets were the plates' own steel, so none showed.
+       Instanced, laid along the pitch line every update */
     const pC=part('chain',-33),gC=new THREE.Group();pC.add(gC);
-    const plate=y=>{const s=new THREE.Shape(),r=1.0,tw=Math.asin(0.6/r);s.absarc(1.025,0,r,tw-Math.PI,Math.PI-tw,false);s.absarc(-1.025,0,r,tw,TAU-tw,false);s.closePath();
-      const g=extrude(s,{depth:0.26,bevelEnabled:false,curveSegments:12});g.rotateX(-Math.PI/2);g.translate(0,y-0.13,0);return g;};
-    const I4=new THREE.Matrix4(),geoA=mergeGeo([[plate(0.27),I4],[plate(-0.27),I4],...[1.025,-1.025].map(x=>[cylY(0.275,0.80,10),new THREE.Matrix4().makeTranslation(x,0,0)])]),geoB=plate(0);
-    const MAXL=200,imA=new THREE.InstancedMesh(geoA,M.chain,MAXL),imB=new THREE.InstancedMesh(geoB,M.chain2,MAXL);gC.add(imA,imB);imA.frustumCulled=imB.frustumCulled=false;tag(imA,'050704');tag(imB,'050704',1);
+    /* the outline as points, about 20° a segment on the lobes and the sides alike (absarc's divisions are per arc, which cut the short sides five times as fine), the holes
+       12-gons in the rivets' phase (cylY's vertices at the shape's multiples of 30°), 0.005 clear all round: 375 links drawn in software must stay cheap (smoke.py's wind) */
+    const RVH=0.28,PLO=(()=>{const r=1.0,c=1.025,w=0.705,R=(c*c+w*w-r*r)/(2*(r-w)),ta=Math.atan2(w+R,-c),tf=Math.atan2(-(w+R),c),o=[];   /* R: the side's arc; ta, tf: the tangent points' angles about the right lobe and the top side's centre */
+      const arc=(x,y,q,a0,a1,n)=>{for(let i=0;i<n;i++){const a=a0+(a1-a0)*i/n;o.push([x+q*Math.cos(a),y+q*Math.sin(a)]);}};
+      arc(c,0,r,-ta,ta,12);arc(0,w+R,R,tf,-Math.PI-tf,3);arc(-c,0,r,Math.PI-ta,Math.PI+ta,12);arc(0,-w-R,R,Math.PI+tf,-tf,3);return o;})();
+    const plate=y=>{const g=slab(PLO,[1.025,-1.025].map(x=>Array.from({length:12},(_,k)=>[x+RVH*Math.cos(-k*Math.PI/6),RVH*Math.sin(-k*Math.PI/6)])),-0.13,0.13);g.translate(0,y,0);return g;};   /* with the rivets' holes */
+    const I4=new THREE.Matrix4(),geoA=mergeGeo([[plate(0.27),I4],[plate(-0.27),I4]]),geoB=plate(0),geoR=mergeGeo([1.025,-1.025].map(x=>[cylY(0.275,0.80,12),new THREE.Matrix4().makeTranslation(x,0,0)]));
+    const MAXL=200,imA=new THREE.InstancedMesh(geoA,M.chain,MAXL),imB=new THREE.InstancedMesh(geoB,M.chain2,MAXL),imR=new THREE.InstancedMesh(geoR,M.steel,MAXL);gC.add(imA,imB,imR);
+    imA.frustumCulled=imB.frustumCulled=imR.frustumCulled=false;tag(imA,'050704');tag(imB,'050704',1);tag(imR,'050704',1);   /* imR: an outer link's rivets, laid as imA */
     /* its hooks (from the strip 10 × 0.9): both side views of 05 07 04 draw each one solid bar the chain's full width (the framed 0.82 ±0.02), the links' three layers
        starting at its rivet: drawn 0.80 thick, the chain's outer links' width; each end link is an outer pair (the chain's first and last, 375 links), so the hook's eye is
        thinned to the inner links' 0.26 where it lies between that pair's plates, out to r 1.1 about its rivet (the plates' lobes r 1.0: where the step falls isn't drawn,
@@ -4914,7 +4926,7 @@ const WFUSEE=(()=>{
           const am=a0+da/2;if(!inPoly([r*Math.cos(am),r*Math.sin(am)]))da-=Math.sign(da)*TAU;
           const N=Math.max(4,Math.ceil(Math.abs(da)/(8*D2R)));for(let j=0;j<=N;j++){const a=a0+da*j/N;out.push([r*Math.cos(a),r*Math.sin(a)]);}}}
       return out;};
-    const hkMesh=(o,id,mat)=>{const g=new THREE.Group();gC.add(g);tag(mesh(g,slab(o,[],-0.13,0.13),mat),id,1);
+    const hkMesh=(o,id,mat)=>{const g=new THREE.Group();gC.add(g);tag(mesh(g,slab(o,[{c:[0,0],r:RVH}],-0.13,0.13),mat),id,1);   /* the eye's hole, its end link's rivet through it */
       const b=offEye(o,1.1);tag(mesh(g,slab(b,[],0.13,0.40),mat),id,1);tag(mesh(g,slab(b,[],-0.40,-0.13),mat),id,1);return g;};   /* the eye 0.26; the body 0.80 */
     const cHT=hkMesh(HKT,'050704',M.chain),cHB=hkMesh(HKB,'050704',M.chain);
     /* the band: its strip a ribbon along its pitch line; its hooks (Bandstahl 10 × 0.8, brazed to it): the round hook 05 07 03-2 (its back r 6, the crown r 1.5, the nose 1.7
@@ -4968,8 +4980,8 @@ const WFUSEE=(()=>{
         for(let i=1;i<pts.length&&J.length<=NJ;i++){const seg=pts[i].distanceTo(pts[i-1]);while(acc+seg>=next&&J.length<=NJ){J.push(new THREE.Vector3().lerpVectors(pts[i-1],pts[i],(next-acc)/seg));next+=PC;}acc+=seg;}
         const mtx=new THREE.Matrix4(),t=new THREE.Vector3(),up=new THREE.Vector3(),nn=new THREE.Vector3(),pos=new THREE.Vector3();let ia=0,ib=0;
         for(let k=0;k+1<J.length;k++){pos.addVectors(J[k],J[k+1]).multiplyScalar(0.5);t.subVectors(J[k+1],J[k]).normalize();up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);
-          mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0)imA.setMatrixAt(ia++,mtx);else imB.setMatrixAt(ib++,mtx);}
-        imA.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
+          mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0){imR.setMatrixAt(ia,mtx);imA.setMatrixAt(ia++,mtx);}else imB.setMatrixAt(ib++,mtx);}
+        imA.count=imR.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=imR.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
         /* the hooks: the top one from the first rivet back to the pin, the bottom one on from the last rivet along the drum */
         const nJ=J.length-1;place(cHT,J[0],PINA,Rf,'top',Math.atan2(HKSEAT[1],HKSEAT[0]),J[1].clone().sub(J[0]).normalize());place(cHB,J[nJ],null,beta,'bot',0,J[nJ].clone().sub(J[nJ-1]).normalize());}
       else{bdM.geometry.dispose();bdM.geometry=ribbonGeo(pts,0.22,0.78);place(bHT,pts[0],PINA,Rf,'top');place(bHB,pts[pts.length-1],null,beta,'bot');}
@@ -7038,7 +7050,7 @@ const BLENDER=(()=>{
       const n=/** @type {any} */({name:nm,t:[v[0],v[1],v[2]],r:[v[3],v[4],v[5],v[6]],s:[v[7],v[8],v[9]],children:r.kids.filter(k=>idx.has(k)).map(k=>idx.get(k))}),x={};
       const ro=o&&ROLE.get(o);if(ro)x.role=ro;if(o&&o.userData.part)x.part=o.userData.part;if(moves.has(r))x.rest=Array.from(v,q=>+q.toFixed(7));if(o&&o.userData.hn)x.hn=o.userData.hn;const L=lin.get(r);if(L)x.rig=L;
       const d=defs.get(r);
-      if(r.im){const g=r.im.geometry;n.mesh=meshOf(g,r.im.material,snap(g),'chain link '+(r.im.material===M.chain2?'B':'A'),true);}
+      if(r.im){const g=r.im.geometry;n.mesh=meshOf(g,r.im.material,snap(g),r.im.material===M.steel?'chain rivets':'chain link '+(r.im.material===M.chain2?'B':'A'),true);}
       else if(r.rest){if(!d)n.mesh=meshOf(o.geometry,o.material,r.rest,nm,true);
         else if(d.mode==='morph'){const K=d.keys,base=K[0],mi=meshOf(o.geometry,o.material,base,nm,false),pm=meshes[mi].prims[0];
           if(K.length>1){pm.targets=K.slice(1).map(q=>{const p=new Float32Array(base.pos.length);for(let j=0;j<p.length;j++)p[j]=q.pos[j]-base.pos[j];return{pos:p};});
@@ -7219,8 +7231,8 @@ const PARTS={
   mainspring:{t:'Mainspring (Zugfeder)',g:2,src:'est',sn:'Its section from 05 06_20 (15 × 0.37); its length, not drawn anywhere, estimated by the usual rule; its shape drawn as two packs',figs:'05 06_20, 05 07_1',c:'#3c4a70',pri:1,
     d:'The steel spring that drives the chronometer, 15 mm high and 0.37 thick, coiled in the barrel: wound, its coils draw in round the arbor; run down, they lie out against the wall. Its length isn’t on any sheet: 1.39 m, half the room in the barrel, lets it work the barrel’s five turns with the ¾ turn of set-up and room to spare.',
     sp:'05 06_20: “Zugfeder 15 × 0,37” · about 1.24 m long (fitted to 05 06_20’s force) · 12.7 turns run down, 17.8 fully wound'},
-  chain:{t:'Fusee chain (Kette)',g:2,src:'drawing',sn:'Its pitch, plates, thickness, length and hooks from its sheet; the plates’ waist and the hooks’ outlines approximated on their figures',figs:'05 07_14',c:'#8c9199',pri:2,
-    d:'The steel chain between the barrel and the fusee: 374 links of figure-of-eight plates three deep, riveted to move. Its top hook takes the pin in the fusee’s flange, its bottom hook a slot in the barrel’s wall. Fully wound it lies in the fusee’s groove up to the top turn, with a quarter turn left on the barrel; run down it is all on the barrel. Wempe 3955 and Lange 5177 run with a chain.',
+  chain:{t:'Fusee chain (Kette)',g:2,src:'drawing',sn:'Its pitch, plates, rivets, thickness, length and hooks from its sheet; the plates’ waist traced on it (no figure), the hooks’ outlines approximated on their figures',figs:'05 07_14',c:'#8c9199',pri:2,
+    d:'The steel chain between the barrel and the fusee: 374 links of figure-of-eight plates three deep, riveted to move: an outer link two plates, an inner link one between them, each joint one steel rivet through all three. Its top hook takes the pin in the fusee’s flange, its bottom hook a slot in the barrel’s wall. Fully wound it lies in the fusee’s groove up to the top turn, with a quarter turn left on the barrel; run down it is all on the barrel. Wempe 3955 and Lange 5177 run with a chain.',
     sp:'Drawing 05 07 04 · Bandstahl 5 × 0.3, hardened and tempered (to blue, 310 °C) · pitch 2.05, plates 4.05 × 2, 0.82 thick · hooks from strip 10 × 0.9, the chain’s full width · 780 +3 long over its hooks'},
   band:{t:'Fusee band (Schneckenband)',g:2,src:'scaled',sn:'Its thickness and length from its sheet, its hooks from theirs; its width, not given, taken as its hooks’ 0.8 (estimated)',figs:'05 07_11, 05 07_12, 05 07_13',c:'#cfd4da',pri:2,
     d:'The steel band drawn in 1943 in place of the chain: a strip 0.22 thick with a round hook brazed to one end, for the fusee’s pin, and a barbed hook to the other, for the barrel. Greenwich’s wartime Wempe has one; Wempe 3955 came with both. Chosen under Variants.',
