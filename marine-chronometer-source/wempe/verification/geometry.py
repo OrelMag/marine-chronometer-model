@@ -4,9 +4,11 @@ output as it prints it go to assets/geometry.json, which build_report.py reads. 
 
   python geometry.py              solids, fine, the screw audit (movement and box), exploded and the parts list (about 11 minutes: fine.py 3, bom.py 6)
   python geometry.py solids,fine  those again, the rest kept from assets/geometry.json
+  The 6MX's (fine-6mx, audit-6mx, audit-box-6mx, exploded-6mx, bom-6mx) run the same with the page set to it: section 15 (about 11 minutes more)
 """
 import json, os, pathlib, subprocess, sys, time
 HERE = pathlib.Path(__file__).resolve().parent; TOOLS = HERE.parents[1] / 'chronometer-working-model' / 'tools'; OUT = HERE / 'assets' / 'geometry.json'
+SIX = ['--eval', "__mv.userData.setRev('6mx')"]   # the page set to the Soviet 6MX (section 15)
 STEPS = [   # name, the tool's arguments, what it checks
     ('solids', ['solids.py'], 'Every mesh a closed solid: no open edge, consistently wound, a positive volume; as loaded, and with Moving parts only and a section on.'),
     ('fine', ['fine.py'], 'A 0.05 mm voxel interference check over the escapement\'s phases, the train\'s positions and the wind (fully wound, winding, run down): every pair that overlaps must be an expected contact, within its size; the barrel\'s swept solid; the dial\'s printed face.'),
@@ -14,6 +16,12 @@ STEPS = [   # name, the tool's arguments, what it checks
     ('audit-box', ['audit.py', 'box'], 'The same for the case, the gimbals and the box.'),
     ('exploded', ['exploded.py'], 'The Spread view\'s clearance: no two parts meet at full spread or pass through each other on the slider\'s way there.'),
     ('bom', ['bom.py'], 'Every part against the drawing list (bom.json): each line\'s units counted on the model\'s pieces, and its relations measured on the built meshes (threads, pivots and settings in their holes, bores round their shafts, parts resting on each other, meshes, endshake, the jewels seated).')]
+STEPS += [
+    ('fine-6mx', ['fine.py', *SIX], 'Fine interference with the page set to the 6MX: its own parts, its bowl, bezel and boxes, against the same expected contacts.'),
+    ('audit-6mx', ['audit.py', '--rev', '6mx'], 'The screw audit in the 6MX, its coplanar faces against its own expected keys (movement.6mx).'),
+    ('audit-box-6mx', ['audit.py', 'box', '--rev', '6mx'], 'The same for its case and boxes (box.6mx).'),
+    ('exploded-6mx', ['exploded.py', *SIX], 'The Spread view\'s clearance in the 6MX.'),
+    ('bom-6mx', ['bom.py', *SIX], 'The parts list in the 6MX: its lines with "rev" (its jewels in chatons, its boxes), its 15 jewels.')]
 def main():
     want = sys.argv[1].split(',') if len(sys.argv) > 1 else [s[0] for s in STEPS]
     bad = [w for w in want if w not in [s[0] for s in STEPS]]

@@ -46,7 +46,7 @@ EXPECTED=model.cfg('EXPECTED',{
 CORE=4.84   # mm: the barrel arbor's core (MSPRING.ra - 0.06, movement.js; 1.74 until 12 October 2026)
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
 DIAL_MIN=0.02   # mm: least height of any part over the dial's printed face (it lies 0.02 over the brass disc, which the voxels test)
-DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{if(o.isMesh&&o.userData.surface)face=o;});mv.updateMatrixWorld(true);
+DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{let v=true;for(let q=o;q;q=q.parent)if(!q.visible)v=false;if(o.isMesh&&o.userData.surface&&v)face=o;});mv.updateMatrixWorld(true);
  const inv=new T.Matrix4().copy(mv.matrixWorld).invert(),fy=new T.Vector3().setFromMatrixPosition(face.matrixWorld).applyMatrix4(inv).y,R=face.geometry.parameters.outerRadius,Ri=face.geometry.parameters.innerRadius;
  const holes=[[L.F[0],L.F[1],1.2],[L.Ud[0],L.Ud[1],1.2],[L.C[0],L.C[1],Ri]],pn=o=>{for(let p=o;p;p=p.parent)if(p.userData.partName)return p.userData.partName;return '?';};
  let best=null;const v=new T.Vector3(),m=new T.Matrix4();

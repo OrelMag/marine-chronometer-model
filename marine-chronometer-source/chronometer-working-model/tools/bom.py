@@ -22,7 +22,8 @@ Checks named in a line's 'check' (escapement.js, invariants.py, maintaining.py, 
 bom-fn.js's function checks, run last through the page's own controls at 1× (about 30 s; --no-fn skips them): the locking arm stops the balance at a timing
 weight and it doesn't restart by itself, the twist starts it, the train-blocking screw holds the train and lets it go, the shield plate covers the key hole
 and opens onto it, the gimbal latch holds the case to the box. A named one not written yet is reported (~~), not failed.
-A line's 'dev' lists known deviations from the manual, each with its reason: printed with ~~, not failed; one with 'rev' holds only in that state of the drawings (the Wempe's As first drawn)."""
+A line's 'dev' lists known deviations from the manual, each with its reason: printed with ~~, not failed; one with 'rev' holds only in the versions it lists (the Wempe's As first drawn, Soviet 6MX). A line's own 'rev' ("6mx", "last first") puts it in those versions
+only: elsewhere it must count none, and a jewel line counts toward the version's JEWELS (a number, or one per version)."""
 import asyncio,browser,json,pathlib,re,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -63,19 +64,20 @@ async def run(evl):
 def judge(res,sp):
     L={l['id']:l for l in BOM['lines']};F=[];ok=lambda c,m:None if c else F.append(m)
     # counts
+    cur=res.get('rev') or 'last';inv=lambda l:l.get('rev') is None or cur in l['rev'].split()   # a line with 'rev' is in those versions only (the Wempe's setRev: its 6MX's jewels), elsewhere none
     for l in BOM['lines']:
-        n=res['counts'].get(l['id'],0)
-        if l['kind'] in('part','jewel'):ok(qty_ok(l['qty'],n),f"count {l['id']} ({l['name']}): model {n}, manual {l['qty']}")
+        n=res['counts'].get(l['id'],0);q=l['qty'] if inv(l) else 0
+        if l['kind'] in('part','jewel'):ok(qty_ok(q,n),f"count {l['id']} ({l['name']}): model {n}, manual {q}")
         else:ok(n==0,f"count {l['id']}: a {l['kind']} line is tagged {n} times")
     for k in res['counts']:ok(k in L,f"tag {k} has no line in bom.json")
     for k in set(res['doubled']):ok(False,f"{k} tagged inside a piece of the same line")
     for k,n in res['untagged'].items():ok(False,f"{n} mesh(es) of '{k}' belong to no line")
-    jw=[l for l in BOM['lines'] if l['kind']=='jewel'];NJ=model.cfg('JEWELS',14);ok(len(jw)==NJ and sum(res['counts'].get(l['id'],0) for l in jw)==NJ,f"jewels: {sum(res['counts'].get(l['id'],0) for l in jw)} in the model, the manual's {NJ}")
+    jw=[l for l in BOM['lines'] if l['kind']=='jewel' and inv(l)];NJ=model.cfg('JEWELS',14);NJ=NJ[cur] if isinstance(NJ,dict) else NJ;ok(len(jw)==NJ and sum(res['counts'].get(l['id'],0) for l in jw)==NJ,f"jewels: {sum(res['counts'].get(l['id'],0) for l in jw)} in the model, the manual's {NJ}")
     # relations
     D.clear()
     for r in res['rel']:
         tag=f"{r['kind']} {r['id']}#{r['i']} -> {r['tgt']}"+(f" ({r['how']})" if r.get('how') else '')
-        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst'] and d.get('rev',res.get('rev'))==res.get('rev')]   # a 'rev' entry only in that state of the drawings (the Wempe's setRev)
+        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst'] and (d.get('rev') is None or res.get('rev') in d['rev'].split())]   # a 'rev' entry only in the versions it lists (the Wempe's setRev: 'first', '6mx', 'last 6mx')
         if dv:D.append(f"{tag}: {dv[0]['why']}");continue   # a known deviation, reported with its reason
         if r.get('err'):F.append(f"{tag}: {r['err']}");continue
         if r['kind'] in('in','round'):

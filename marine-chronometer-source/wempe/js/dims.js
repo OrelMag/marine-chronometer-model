@@ -42,6 +42,13 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       Ltot:25.3},   // overall 25.3 -0.2 (19.6 + 2 × 2.8 = 25.2): sure; tapped M2.6 through from both ends ("Gewinde von beiden Seiten einschneiden")
     PIL_HOLE:mid(PHF)/2,PIL_HF:PHF,   // the plates' pillar holes, reamed 4.50 +0.012 (PHF; 05 09 01 nos. 11, 39, 49; 05 08 02-1 the same), drawn at the middle of the fit, 4.506: sure
     PILLARS:[H[11],H[39],H[49]],   // nos. 11 S 3,225 O 36,858; 39 S 32,043 W 18,50; 49 N 36,437 W 6,425, each 37.00 from the centre at 95°, 210°, 350° from N toward O: sure
+    /* the Soviet 6MX's pillar 39 (the Variants' third version; Altmeppen's list: pillar 39 in another place): Kirov No. 247's top plate (2_Kirow_247_A.jpg, a similarity on the
+       fusee, barrel, balance and escape arbors and pillars 11 and 49, 8.98 px/mm, residuals under 0.55 mm; the screws' centres by circles fitted to their edges) has no pillar at
+       210° and its screw at 190.0°, r 36.45, where 11 and 49 read 94.9° and 350.1°, r 36.9 and 36.7; its dial side (3_Kirow_247_uZ.jpg, seven holes, 8.63 px/mm, under 0.42)
+       189.6°, r 37.47, 11 and 49 94.8° and 349.9°, r 36.9 and 37.4. So 190° (sure to ±0.5°: 49's 350° mirrored across the O-W line) and r 36.6-37.3 (each reading corrected by
+       11's and 49's in its fit). On r 37 the drawn pillar (Ø 8.1) would stand 0.11 into the drawn seconds wheel's tips (Ø 21.9 at hole 35); clear of them from r 37.2: taken at
+       r 37.3, 0.2 clear, within the dial side's reading (likely; the 6MX's seconds wheel isn't seen) */
+    P39_6MX:[37.3*Math.sin(10*D2R),37.3*Math.cos(10*D2R)],   // plan [x = W, z = S]: 190° from N toward O on r 37.3, S 36.733 W 6.477
     PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
       h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set

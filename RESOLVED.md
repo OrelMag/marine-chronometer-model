@@ -2787,6 +2787,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   runs, past the check's 0.01 mm, with no geometry changed (48e82e1 had rewritten `gimbals.json` for one such drift).
   Keep: the check loads the page at one instant (`CLOCK` in `massprops.py`, 13 October 2026 06:50 GMT); a measurement off
   the model that compares with a committed file pins the page's clock the same way. `a5ca864`
+- **The Wempe's gimbal stops met another version's lid.** `massprops-check.js` skipped another version's hidden
+  pieces when weighing but not when finding the stops: with the 6MX's box built (its lids and bowl hidden as last
+  revised), the case and ring "met the lid" at 35.5° where nothing stops them. Keep: every list the check builds (the
+  weighed parts, the obstacles, the moving meshes) leaves out the hidden version groups (`offRev`). `ad31c17`
 
 - **The real-chronometers report ran off a phone's screen.** Its three wide tables and its contents' last link pushed
   the page to 471 px on a 390 px screen, so the whole report scrolled sideways (found when the reports went on the site).

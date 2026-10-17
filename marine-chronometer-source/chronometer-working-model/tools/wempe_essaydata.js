@@ -14,7 +14,7 @@
 //     error's range (Sint, S in s) and the TU's figures over 2,000 trials as adjusted and 500 at the masses' drawn place (sum: median and 95 % of |x|, and how many pass);
 //   swing: the swing and the escapement's rate against the drive (makeEsc's ampAt and rateAt, the drive 0.2 to 1.8 times the reference's), which the page's Swing and
 //     isochronism panel (js/app.js) interpolates in, since a solve takes about 0.3 s: the swing over the wind (WPHYS.drv, times the mainspring's set) and the rate against it;
-//   phys: the numbers the text quotes from these (data-wphys spans), formatted as the text prints them.
+//   phys: the numbers the text quotes from these (data-wphys spans), formatted as the text prints them; the 6MX's from wempe_6mx.json (wempe_6mx.js --write).
 // The numbers the page itself can work out (WPHYS, WESC, WD: the drive, the train, the escapement's figures, the pillars' fits) are set live by js/essay.js's fillLive.
 const fs=require('fs'),path=require('path');
 const WE=path.join(__dirname,'..','..','wempe'),OUT=path.join(WE,'js','essaydata.js'),IDX=path.join(WE,'index.html'),REF=path.join(__dirname,'..','..','..','References','wempe','README.md');
@@ -65,6 +65,7 @@ const hs={turns:[...Array(49).keys()].map(k=>{const n=10.75+k/24*1;return[r(n,4)
 
 /* ---------- the gimbals: the bodies weighed (gimbals_wempe.json, massprops.py) and levelled (gimbals.js's bodies), the Hamilton's beside them ---------- */
 const gim=k=>JSON.parse(require('child_process').execFileSync(process.execPath,['-e',"const g=require('./gimbals.js'),B=g.bodies(),D=g.bodies({asDrawn:true}).drawn;console.log(JSON.stringify({Tz:2*Math.PI/B.wz,Tx:2*Math.PI/B.wx,h:-B.bw.c[1]*1000,drawn:D}))",'--',...(k?['--model','wempe']:[])],{cwd:__dirname,encoding:'utf8'}));
+const X6=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_6mx.json'),'utf8'));   /* the Soviet 6MX's physics against the drawings' (wempe_6mx.js --write) */
 const GW=gim(1),GH=gim(0),GJ=JSON.parse(fs.readFileSync(path.join(__dirname,'gimbals_wempe.json'),'utf8')),bp=GJ.bowl.byPart,Vb=bp.bowl/8.45,bak=GJ.alt.bakelite;
 
 /* ---------- the numbers the text quotes ---------- */
@@ -84,7 +85,9 @@ const phys={msL:th(FN.L)+' mm',msT:fx(MSJ.strip.t,2)+' mm',msRms:pc(FN.rms,2),ms
   gBowl:th(Math.round(GJ.bowl.m))+' g',gBrass:th(Math.round(bp.bowl))+' g',gV:fx(Vb,1)+' cm³',gRho:fx(350/Vb,2)+' g/cm³',gAlu:th(Math.round(Vb*2.7))+' g',gBak:th(Math.round(Vb*1.37))+' g',gBuna:th(Math.round(Vb*1.18))+' g',
   gRing:th(Math.round(GJ.ring.m))+' g',gTot:fx((GJ.bowl.m+GJ.ring.m)/1000,2)+' kg',gBakM:th(Math.round(bak.m))+' g',gBakCg:fx(bak.cg[1],2)+' mm',
   gDy:fx(-GW.drawn.bowl[1],2)+' mm',gDx:fx(Math.abs(GW.drawn.bowl[0]),2)+' mm',gLean:fx(Math.atan2(Math.abs(GW.drawn.bowl[0]),-GW.drawn.bowl[1])/D,1)+'°',
-  gTz:fx(GW.Tz,2)+' s',gTx:fx(GW.Tx,2)+' s',hTz:fx(GH.Tz,2)+' s',hTx:fx(GH.Tx,2)+' s',gH:fx(GW.h,1)+' mm',hH:fx(GH.h,1)+' mm'};
+  gTz:fx(GW.Tz,2)+' s',gTx:fx(GW.Tx,2)+' s',hTz:fx(GH.Tz,2)+' s',hTx:fx(GH.Tx,2)+' s',gH:fx(GW.h,1)+' mm',hH:fx(GH.h,1)+' mm',
+  /* the Soviet 6MX against the drawings (wempe_6mx.js) */
+  x6Tol0:'±'+Math.round(X6.train[3].tp*1000)+' µm',x6Tol:'±'+Math.round(X6.train[3].tp6*1000)+' µm',x6Swing:fx(X6.swing6[0],0)+'–'+fx(X6.swing6[1],0)+'°',x6Rate:fx(X6.rateBeforeTiming,1)+' s'};
 
 const js=`/* essaydata.js: the Wempe essay's figures and numbers that only Node works out, written by marine-chronometer-source/chronometer-working-model/tools/wempe_essaydata.js
    --write: generated, don't edit (rerun the tool; without --write it checks this file). Part of the Wempe model; declares only WEDATA (the tool's header says what each is). */
