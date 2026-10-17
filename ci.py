@@ -140,6 +140,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-inertia-6mx',lambda log:run([PY,'wempe_inertia.py','--rev','6mx'],TOOLS,log),'browser'),   # the 6MX's escapement bodies weighed (tools/wempe_inertia_6mx.json, which wempe_6mx.js reads)
  ('wempe-audit-6mx',lambda log:run([PY,'audit.py','--model','wempe','--rev','6mx'],TOOLS,log),'browser'),   # the Soviet 6MX (the Variants' third version, Kirov No. 247), its coplanar faces under movement.6mx
  ('wempe-exploded-6mx',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('6mx')"],TOOLS,log),'browser'),
+ ('wempe-audit-box-1943',lambda log:run([PY,'audit.py','box','--model','wempe','--rev','1943'],TOOLS,log),'browser'),   # the escapement of 1943's case and box: the drawings' (box.1943)
  ('wempe-audit-1943',lambda log:run([PY,'audit.py','--model','wempe','--rev','1943'],TOOLS,log),'browser'),   # the escapement of 1943 as photographed (the Variants' fourth version: the 1943 block, its banking screw), its coplanar faces under movement.1943
  ('wempe-exploded-1943',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('1943')"],TOOLS,log),'browser'),
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)

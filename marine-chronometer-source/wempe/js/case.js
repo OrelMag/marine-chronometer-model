@@ -311,7 +311,7 @@ const WCASE=(()=>{
          the rim with its paddle above, moMvyx8eXfo 3:06, Kirova 422), Wempe 5377 (later case, its paddle under the rim) (bonhams_26816_327: the shelf and the key in it), Lange VEB 2285 (drouot_33246921_*_3, from above:
          the shelf's front edge, the key near it), Lange 5510 and the 6MX Kirova 422 (12_Kirow_DEC_422_Kasten_1.jpg). Its legs 55 along the back and right walls (Lange 2285
          from above: about a third of the box's inside), the hole Ø 11 16.5 from each wall (21 read on the same photograph, as the key stood until 16 October 2026: raised to the ring's height its body then met the gimbal ring after 9.5° of swing; 16.5 stands it clear), 10 thick, its top 65 over the floor (the key's paddle then
-         22.3 over the box's top, between the two readings of the wartime Wempe's; 40 and 2.7 under until 16 October 2026): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 89.8 from the gimbals' centre and its body's near side 82.6, beyond the case's
+         20.7 over the box's top, between the two readings of the wartime Wempe's (22.3 until 17 October 2026, the paddle then 1.6 higher on the key); 40 and 2.7 under until 16 October 2026): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 89.8 from the gimbals' centre and its body's near side 82.6, beyond the case's
          and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 105 against its 103.7) */
       tag(mesh(bxW,polyGeo([[BW-WT,-(BW-WT)],[BW-WT-55,-(BW-WT)],[BW-WT,-(BW-WT)+55]],10,[[KX,KZ,5.5]]),MC.mah,0,KH-10,0),'Schluesselhalter');}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
@@ -516,28 +516,94 @@ const WCASE=(()=>{
        chamfer at the top, the 15° cone from 15.1 down, 25.1 −0.2 long; the bore Ø 8 +0.1 22 deep with its 120° point, Ø 6 +0.1 through the bottom; the cross hole Ø 2.5 for the
        grooved pin (51 00 11-6, K.S. 1); the slot 3 wide; the hole Ø 0.9 at 5° for the spring's end); the tube (Schlüsselrohr 05 01 02-3, Ms 58, every figure: its head Ø 8 −0.05 ×
        2.6 in the bore, Ø 5.95 −0.05 through the bottom, 50.1 −0.2 long, the square 3.1 +0.05, 19 +2 deep, drilled 23 deep, a 60° sink 1 deep, the end relieved over 2.5); the coil
-       spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The paddle's centre 10.95 over the body's top: the slot's floor is the Ø 35 arc 6.3
-       +0.1 deep (05 01 02-2's side view, sure), on which the Ø 34.5 paddle's rim stands (17.25 − 6.3; 10.6 scaled on 51 00 11, which put its rim 0.35 into the floor). The
-       grooved pin across the slot, through the paddle's thickness (05 01 02-2: the cross hole runs across the 3 slot in the section and shows end-on in the side view, as the hole
-       through the paddle's face does on 51 00 11's outside view), 4 −0.05 under the top. The square 3.1 +0.05 across, 19 deep, its corners on the key's x and z as the fusee
-       arbor's square has them (its 60° sink 1 deep left out). The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length then 31.8, scaled 30),
-       the spring's wire 0.9, the end's relief to Ø 4.6, the slot and cross hole not cut: estimated. Built in the key's own frame (its axis +y, the tube's mouth at 0) in its
-       part's group, which stands in its holder in the box or, while it winds, sits on the fusee's square (keyAt) */
-    /* at rest the key stands in its holder (above), its axis up, its tube's mouth under the shelf where its body's cone is Ø 11, the hole's: 35.27 over the mouth (the cone
-       Ø 9.14 to 14.5 over 10, from 31.8); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
+       spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The paddle's centre 9.37 over the body's top: the slot's floor is the Ø 35 arc, 6.3
+       +0.1 under the top where it meets the body's outside (05 01 02-2's side view, sure: the extension line leaves the arc at the outer wall), so 7.40 under it at the bore's edge
+       (centre 9.63 over the top), and the Ø 34.5 paddle rests on it there (17.25 sinks 16.77 at r 4.05: 9.37; 51 00 11's outside view scales 9.37 from the top face, its dashed
+       rim 7.9 under it; until 17 October 2026 10.95, the 6.3 taken at the axis). The grooved pin across the slot, through the paddle's thickness (05 01 02-2: the cross hole runs
+       across the 3 slot in the section and shows end-on in the side view, as the hole through the paddle's face does on 51 00 11's outside view; The Mariner's Chronometer,
+       Fig. 2.35, a 1943 key taken apart, its handle with the hole in the face the slot covered), 4 −0.05 under the top (both views of 51 00 11 scale its centre 3.9-4.1), Ø 2.5
+       and 15.3 long, its rounded ends 0.4 proud of the body (51 00 11's section: 15.8 against the body's 14.95 there). The square 3.1 +0.05 across, 19 deep, its corners on the
+       key's x and z as the fusee arbor's square has them (its 60° sink 1 deep left out). The tube's head 8.0 under the body's top, just under the paddle's rim (51 00 11's
+       section, ±0.15; 6.8 until 17 October 2026), so its free length 33.0 (the sheet draws the tube 48.1 against its own 50.1, so scales 30-31). The spring as 51 00 11's
+       section draws it: about 12 open coils (pitch 0.95, from the coils' profile both sides) of wire about 0.6 (the coils 0.6-0.7 across between the tube and the bore's wall)
+       wound on the tube, from its head down to the bore's floor, where the end turns down (drawn solid on the right) into the body's Ø 0.9 hole and runs along it to the bottom
+       face (the end view's small square, 3.6 out); the hole's angular place is free (05 01 02-2: "Lochstellung beliebig"), the end drawn at +z. Followed up from its end its coils turn +x to +z,
+       clockwise seen from the paddle (counterclockwise is winding, "Linksaufzug"; the body drags the end that way, adding turns, which closes the coils on the tube; turned back they open:
+       inferred). Scaled, not figured: the wire, the pitch, the head's depth; estimated: the end's relief to Ø 4.6. The body cut as its sheet draws it (below), the pin through its cross hole
+       and the paddle's, the spring's end down its Ø 0.9 hole. Built in the key's own frame (its axis +y, the tube's mouth at 0) in its part's group, which stands in its
+       holder in the box or, while it winds, sits on the fusee's square (keyAt) */
+    /* at rest the key stands in its holder (above), its axis up, its tube's mouth under the shelf where its body's cone is Ø 11, the hole's: 36.47 over the mouth (the cone
+       Ø 9.14 to 14.5 over 10, from 33.0); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
        middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
-    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:35.27),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
+    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:36.47),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
     {const g=new THREE.Group();g.userData.rev='last 6mx 1943';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
-      const T=50.1,B0=31.8,BT=B0+25.1,sq=3.15/Math.SQRT2;
+      const T=50.1,B0=T+8-25.1,BT=B0+25.1,sq=3.15/Math.SQRT2;
       tag(mesh(g,smoothRev(solidGeo(cells([2.3,2.975],[[0,19],[p=>(rr(p)-2.3)*2.5/0.675,19]],[[{p:[[sq,0],[0,sq],[-sq,0],[0,-sq]],a:0,b:19}]]))),M.brass),'050102-3');   /* the socket end: the square, the relief */
       tag(mesh(g,lathe([[1.45,19],[2.975,19],[2.975,T-2.9],[3.275,T-2.6],[4,T-2.6],[4,T],[0,T],[0,23],[1.45,22.2]]),M.brass),'050102-3',1);   /* on: the drilled hole's end, the head */
-      tag(mesh(g,lathe([[3.05,B0],[4.57,B0],[7.25,B0+10],[7.25,BT-1.5],[5.75,BT],[4.05,BT],[4.05,BT-22],[3.05,BT-22-0.58]]),MC.black),'050102-2');
-      const pd=tag(mesh(g,cylY(17.25,3,72),MC.black,0,BT+10.95,0),'510011-1');pd.rotation.x=Math.PI/2;
-      const pn=tag(mesh(g,cylY(1.25,13,16),M.steel,0,BT-4,0),'510011-6');pn.rotation.x=Math.PI/2;
-      /* the spring: 0.9 wire on Ø 7.0 mean, close wound from the bore's floor to the tube's head */
-      const y0=BT-22+0.45,y1=T-2.6-0.45,nT=(y1-y0)/0.92,cv=new THREE.Curve();cv.getPoint=t=>new THREE.Vector3(3.51*Math.cos(t*nT*TAU),y0+(y1-y0)*t,3.51*Math.sin(t*nT*TAU));
-      tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,Math.ceil(nT*24),0.44,6,false)),M.steel),'510011-4');}
+      /* the body (05 01 02-2) cut as its sheet draws it, from four closed solids meeting face to face (the cell builder cuts upright holes in flat faces only), joined into one below: below the drill
+         point's foot (YA) the spring's Ø 0.9 hole, 3.8 out at the bottom face and 5° in toward the axis going up, cut through as a slanted hole; from YA to YS (under the slot)
+         the drill point's 120° cone, the spring's hole carried up through it (upright, where it leaves the hole below) to come out in the cone, the bore's wall and the cone
+         outside; above YS the two jaws either side of the slot, built along the pin's axis (z), so that the cross hole (Ø 2.5 +0.05, 4 −0.05 under the top) is an upright hole
+         through each jaw from the bore to the outside, and the slot's walls (3 H11 apart) and its Ø 35 floor (6.3 +0.1 under the top at the outside) are faces: each plan
+         point (x, y) of a jaw holds z from the bore's wall (or the slot's, or the plane z 0 below the floor, where the jaws meet) to the turned outside. Fits: the bore Ø 8.1,
+         the hole Ø 6.1, the slot 3.03 and the cross hole 2.525 (the middles of their tolerances) */
+      const YD=BT-22.58,YA=YD-0.12,YS=BT-7.6,SW=1.515,RB=4.05,RO=7.25,RH=1.2625,YH=BT-4,YC=BT-6.3+Math.sqrt(17.5**2-RO**2),ZC=3.8-(YA-B0)*Math.tan(5*D2R),
+        cone=p=>B0+(rr(p)-4.57)*10/2.68,dp=p=>YD+(rr(p)-3.05)*0.58,hc=(c,r,n=24)=>[...Array(n).keys()].map(k=>{const t=k/n*TAU;return[c[0]+r*Math.cos(t),c[1]+r*Math.sin(t)];});
+      const BG=[solidGeo(cells([3.05,4.57],[[0,0],[B0,YA]],[[],[{p:hc([0,3.8],0.45),q:hc([0,ZC],0.45),a:B0,b:YA}]]).slice(1))];
+      const bore=x=>Math.sqrt(Math.max(0,RB*RB-x*x)),zo=p=>Math.sqrt(Math.max(0,(p[1]<BT-1.5?RO:BT+5.75-p[1])**2-p[0]**2)),fl=x=>YC-Math.sqrt(17.5**2-x*x),
+        ych=x=>BT+5.75-Math.hypot(x,SW),xl=y=>Math.sqrt((BT+5.75-y)**2-SW*SW),XS=bore(SW),XO=Math.sqrt(RO*RO-SW*SW),XT=xl(BT),YL=[1,2,3].map(k=>BT-1.5+k*0.375);
+      /* the jaws' columns in x: the outside and the bore every 3° (their 6° the sectors below), the cross hole by angle (each sheds its curve evenly), where the slot's wall meets
+         the bore and the outside, where the chamfer's levels meet its edge; none wider than 0.3. The solid under the jaws takes its outline's points from these columns, so the
+         two meet point for point (a polygon of their own left slivers 2 µm wide, which drew as a dashed line) */
+      const SP=[0,XS,XO,XT,...YL.map(xl),RH,RB,RO,...[...Array(61).keys()].flatMap(k=>[RO,RB].map(r=>r*Math.cos(k*Math.PI/60)))].flatMap(v=>[v,-v]).sort((u,v)=>u-v).filter((v,i,A)=>!i||v-A[i-1]>1e-9);
+      let X=[];for(let k=1;k<24;k++)X.push(RH*Math.cos(k*Math.PI/24));
+      X=[...SP,...X.filter(v=>SP.every(s=>Math.abs(v-s)>0.004))].sort((u,v)=>u-v);
+      for(let i=X.length-2;i>=0;i--){const n=Math.ceil((X[i+1]-X[i])/0.3);if(n>1)X.splice(i+1,0,...[...Array(n-1).keys()].map(k=>X[i]+(X[i+1]-X[i])*(k+1)/n));}
+      {const an=(A,r)=>A.filter(x=>Math.abs(x)<=r+1e-12).flatMap(x=>{const t=Math.acos(clamp(x/r,-1,1));return[t,TAU-t];}).sort((u,v)=>u-v).filter((v,i,B)=>!i||v-B[i-1]>1e-12),
+          AO=an(X,RO),AB=an(X,RB),G=[...Array(241).keys()].map(k=>k*TAU/240),T6=[...Array(61).keys()].map(k=>k*TAU/60),
+          pts=(r,A,ta,tb)=>A.filter(t=>t>ta-1e-9&&t<tb+1e-9).map(t=>[r*Math.cos(t),r*Math.sin(t)]),
+          ringC=(r0,A0,r1,A1,bd,y0,y1)=>bd.slice(0,-1).map((ta,i)=>({loop:[...pts(r1,A1,ta,bd[i+1]),...pts(r0,A0,ta,bd[i+1]).reverse()],y0,y1,F:[]}));
+        /* rings: the drill point (in 6° sectors, its sectors from 78° to 102° as two cells either side of the spring's hole, which they leave open; from YA, 0.12 under the
+           cone's foot, so no sloped face has an edge in the joint's plane), the flat ring to the cone's foot, the cone's ring; arcs at the bore and the outside the jaws'
+           points, at 3.05 and 4.57 the bottom ring's (cells' 1.5°) */
+        const H=hc([0,ZC],0.45),c=[...ringC(3.05,G,RB,AB,T6,YA,dp),...ringC(RB,AB,4.57,G,[0,Math.PI,TAU],YA,YS),...ringC(4.57,G,RO,AO,T6,cone,YS)],t=T6;
+        c.splice(13,4,{loop:[...pts(RB,AB,t[13],t[15]),...[6,5,4,3,2,1,0,23,22,21,20,19,18].map(k=>H[k]),...pts(3.05,G,t[13],t[15]).reverse()],y0:YA,y1:dp,F:[]},
+          {loop:[...pts(RB,AB,t[15],t[17]),...pts(3.05,G,t[15],t[17]).reverse(),...[18,17,16,15,14,13,12,11,10,9,8,7,6].map(k=>H[k])],y0:YA,y1:dp,F:[]});
+        BG.push(solidGeo(c));}
+      {/* each column's levels (low to high): the jaws' foot YS, the slot's floor (outside the bore's shadow), the cross hole's lower and upper edge, the chamfer's foot and three
+           levels up it, and the top (the chamfer's edge, where the slot's wall leaves it, toward the outside) */
+        const lev=(xa,xb)=>{const m=Math.abs((xa+xb)/2),L=/** @type {{f:(x:number)=>number,fl?:number,lo?:number}[]} */([{f:()=>YS}]);if(m>XS)L.push({f:fl,fl:1});if(m<RH)L.push({f:x=>YH-Math.sqrt(Math.max(0,RH*RH-x*x)),lo:1},{f:x=>YH+Math.sqrt(Math.max(0,RH*RH-x*x))});
+          if(m<XO){L.push({f:()=>BT-1.5});for(const y of YL)if(m<xl(y))L.push({f:()=>y});L.push({f:m<XT?()=>BT:ych});}return L;};
+        const C=X.slice(0,-1).map((xa,i)=>{const xb=X[i+1];return{xa,xb,L:lev(xa,xb).map(l=>({...l,a:l.f(xa),b:l.f(xb)})).sort((u,v)=>u.a+u.b-v.a-v.b)};}),out=[],e=1e-7;
+        C.forEach((c,i)=>{const lt=i?C[i-1].L.map(l=>l.b):[],rt=i<C.length-1?C[i+1].L.map(l=>l.a):[],u=A=>A.filter((v,k)=>!k||Math.abs(v-A[k-1])>e);
+          for(let j=0;j<c.L.length-1;j++){const l0=c.L[j],l1=c.L[j+1];if(l0.lo)continue;   /* between the cross hole's edges: the hole */
+            const R=u(rt.filter(y=>y>l0.b+e&&y<l1.b-e).sort((p,q)=>p-q)),Lf=u(lt.filter(y=>y>l0.a+e&&y<l1.a-e).sort((p,q)=>q-p));
+            let lp=[[c.xa,l0.a],[c.xb,l0.b],...R.map(y=>[c.xb,y]),[c.xb,l1.b],[c.xa,l1.a],...Lf.map(y=>[c.xa,y])];lp=lp.filter((q,k)=>{const n=lp[(k+1)%lp.length];return Math.abs(q[0]-n[0])>e||Math.abs(q[1]-n[1])>e;});
+            out.push({loop:lp,y0:c.L.slice(0,j+1).some(l=>l.fl)?SW:p=>bore(p[0]),y1:zo,F:[]});}});
+        const gz=solidGeo(out);gz.rotateX(-Math.PI/2);const gp=gz.clone();gp.rotateY(Math.PI);   /* the plan's (x, y) and depth z to the key's frame: the jaw at −z, turned about the axis to +z */
+        BG.push(gz,gp);}
+      /* the four as one: the faces where they meet (y YA and the wall r 4.57 under it, y YS, and z 0 below the slot's floor, where the jaws meet) dropped, both sides; their outlines are the same points,
+         so what is left is one closed surface (kept apart, the faces met the surface's edge at its own depth and flickered through as a line) */
+      {const P=[],Nn=[],U=[],on=(a,i,k,v)=>Math.abs(a[i+k]-v)<1e-6&&Math.abs(a[i+3+k]-v)<1e-6&&Math.abs(a[i+6+k]-v)<1e-6,
+          wl=(a,i)=>[0,3,6].every(k=>Math.abs(Math.hypot(a[i+k],a[i+k+2])-4.57)<1e-5&&a[i+k+1]<YA+1e-6)&&!on(a,i,1,a[i+1]);   /* the joint's wall at r 4.57 (a horizontal face's sliver on that arc kept) */
+        for(const q of BG){const a=q.attributes.position.array,n=q.attributes.normal.array,u=q.attributes.uv.array;
+          for(let i=0;i<a.length;i+=9){if(on(a,i,1,YA)||on(a,i,1,YS)||on(a,i,2,0)||wl(a,i))continue;P.push(...a.slice(i,i+9));Nn.push(...n.slice(i,i+9));U.push(...u.slice(i/3*2,i/3*2+6));}}
+        const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(P,3));bg.setAttribute('normal',new THREE.Float32BufferAttribute(Nn,3));bg.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));
+        tag(mesh(g,smoothRev(bg),MC.black),'050102-2');}
+      /* the paddle with the pin's hole (Ø 2.525), its centre on the slot's floor at the bore's edge */
+      const PY=BT+0.002+Math.sqrt(17.25**2-RB*RB)-(Math.sqrt(17.5**2-RB*RB)-(YC-BT)),ds=new THREE.Shape();ds.absarc(0,0,17.25,0,TAU,false);{const h=new THREE.Path();h.absarc(0,YH-PY,RH,0,TAU,true);ds.holes.push(h);}
+      const dg=extrude(ds,{depth:3,bevelEnabled:false,curveSegments:72});dg.translate(0,PY,-1.5);tag(mesh(g,dg,MC.black),'510011-1');
+      const pe=[...Array(4).keys()].map(k=>[0.8+0.45*Math.sin(k*Math.PI/6),7.65-0.45*(1-Math.cos(k*Math.PI/6))]);   /* the pin's rounded end, r 0.45 */
+      const pn=tag(mesh(g,lathe([[0,-7.65],...pe.map(([r,y])=>[r,-y]),...pe.slice().reverse(),[0,7.65]],16),M.steel,0,BT-4,0),'510011-6');pn.rotation.x=Math.PI/2;
+      /* the spring: 0.6 wire on the tube (its coils' centres r 3.285), pitch 0.95, from the bore's floor (its lowest coil 0.02 over the drill point) to 0.01 under the tube's head;
+         its end from there out and down to the Ø 0.9 hole's axis where the hole leaves the drill point (r 3.554, 2.812 over the bottom face) and along it, 5° off the axis, to
+         0.05 inside the bottom face (r 3.8 there). Sampled at its own parameter (the end's corners at samples) */
+      const rs=2.975+0.31,y0=BT-21.95,y1=T-2.6-0.31,nT=(y1-y0)/0.95,nH=Math.ceil(nT*24),N=nH+4,V3=(x,y,z)=>new THREE.Vector3(x,y,z),
+        Pc=V3(0,B0+0.05,3.8-0.05*Math.tan(5*D2R)),Pb=V3(0,B0+2.812,3.554),Pa=V3(0,y0,rs),cv=new THREE.Curve();
+      cv.getPoint=s=>{if(s<=2/N)return Pc.clone().lerp(Pb,s*N/2);if(s<=4/N)return Pb.clone().lerp(Pa,(s-2/N)*N/2);const t=(s-4/N)/(1-4/N),a=Math.PI/2+t*nT*TAU;return V3(rs*Math.cos(a),y0+(y1-y0)*t,rs*Math.sin(a));};
+      cv.getPointAt=cv.getPoint;cv.getTangentAt=cv.getTangent;
+      tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,N,0.3,6,false)),M.steel),'510011-4');}
     /* As first drawn (the page's Variants), the key of 1940 (Aufzugschlüssel 127-556.02 U 01 = 51 00 11, 12.12.40, 2:1), which the one-way key of 1943 replaced under the same
        number: 84 overall and the stem 32 out of the body (sure); the rest traced on the sheet at 6.79 px/mm (by its 84): the handle a flat pear-shaped plate (the tang, part 1:
        the side view draws it 3.2 thick and no bulb), widest Ø 34.8 about 9 from its top, its neck Ø 16.5; a collar Ø 20.5 × 2.9; the body (2) a cone Ø 17.9 to 10.3 over 19.3;
