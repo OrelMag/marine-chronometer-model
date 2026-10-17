@@ -878,6 +878,14 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>setDial(b.dataset.v)));
   /* the essay, once the model is built: its time (seconds of local time) and wind (hours since winding, run down at run()), the swing, and changed() (wake and write the hash) */
   if(V){VV=V;setDial(dial);}
+  /* the downloads (js/blender.js): the movement or a part as STL, the whole instrument for Blender. copy(M) builds the case and movement again as build() does, set as the
+     page shows them (the sheets' state, the connector, the dial, the timing weights), for the export to play its clips through; gim() the gimbals' pendulum (gwSea, gwStep) */
+  if(V&&typeof BLENDER!=='undefined')BLENDER.bind({M:V.M,INFO:V.INFO,PIECES,PH,HPT,HRUN,drvF:h=>PH.drv(h/HPT)*(1-MSET),hrs:()=>hrs,rollP:()=>+document.getElementById('rollP').value||7,
+    mv:()=>mv,root:()=>CS.root,pick:()=>V.st.pick,state:()=>({rev,conn,dial,tw:RW.tw,mset:MSET}),
+    gim:()=>{const G={p:[0,0],r:[0,0],lp:0,lr:0};return{M:G,sea:gwSea,step:(dt,ph,rl,sea)=>gwStep(G,dt,ph,rl,sea,1)};},
+    copy:M=>{const C2=WCASE.build(M),m2=buildWempe(M);m2.userData.R.dl.setDial(dial);m2.userData.onRev.push(v=>{C2.root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev.split(' ').includes(v);});C2.rev(v);C2.parts.key.userData.first=v==='first';C2.keyRest();});
+      m2.userData.setRev(rev);m2.userData.R.fu.setConn(conn);C2.bowl.add(m2);m2.position.y=-C2.YP;C2.over.visible=false;   /* the outer box only in its view */
+      m2.traverse(o=>{if(o.isMesh&&o.userData.hn==='050301-3')o.position.addScaledVector(new THREE.Vector3(0,1,0).applyQuaternion(o.quaternion),-RW.tw/8*TWP);});return{CS:C2,mv:m2};}});
   if(ES&&V)ES.bind({time:dialRead,tz:()=>tz,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
   /* Report a bug or inaccuracy (the Hamilton's report.js): where the visitor is, and the model's state, in the report's details */
   if(V&&typeof REPORT!=='undefined')REPORT.bind({r:V.r,name:'Wempe Einheits-Chronometer',inacc:'Where the model or the essay differs from Wempe’s works drawings or a real Einheits-Chronometer, and what shows it. The drawings, then photographs and videos of real ones, decide what the model looks like and does, so a sheet’s number settles it fastest.',

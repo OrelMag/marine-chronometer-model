@@ -59,6 +59,15 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's impulse face stood 24° before the line of centres at rest, where 05 04_1 draws it 28°10'.** The sheet's "24°" is the
+  escape wheel's pitch (its arc lies about the wheel's centre), and its 1°, 21° and 2° the wheel's too; the face's angle is the "6°" on from
+  the "22°10'" where the impulse begins, both about the balance. Built so, the stone comes into the teeth's path at +6.1°, and a discharge
+  stone leaving the gold spring at rest (the model's assumption) let the wheel go so early that the tooth got to the path first: makeEsc
+  and dynamics.js snapped it onto the stone's corner, and the detent frame (wempe_tripping.js), which had no such strike, threw the balance
+  to 247°. The discharge stone is now 5° later on the staff (`DSB`, estimated: from 4° the tooth lands on the face, from 8° it doesn't run),
+  and the frame strikes as dynamics.js does where the impulse table begins. Keep: PHI0 −28°10' and PHI_C −22°10' from 05 04_1; the tooth
+  landing on the face after the stone has come in (`wempe_escapement.js`'s chase, dynamics.js's landing); TF where the 6MX video's fit at the
+  model's own swing gives it back (108 s). `c088b73`
 - **The Wempe's page moved its escapement as the layout draws it, not as it is solved.** Its 3D escapement was kinematic, timed from
   05 04_1: the tooth on the impulse stone the moment it was let go (21° before the line of centres), the detent let fall as the gold
   spring slipped off; makeEsc, solving the same parts in time, has the wheel chase the stone from rest and strike it 16° of swing later
@@ -629,6 +638,12 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
+  the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
+  so from the square's end, puts the face on the side the arbor turns from, the spring's eye over the pin. The maintaining detent's step
+  (05 05 05-1) is a dashed straight edge from 8.6 at the back to the hollow, not an arc at 8.6 about the hole (which ran into the fusee
+  wheel's tips and was cut back to 7.55). Keep: the hook in the spring's eye, its tip behind the pin; the step the sheet's line, 0.52-0.61
+  clear of the tips. `215bed8`
 - **Every wind stopped the Wempe's train.** app.js's `wind0()` set `winding` before reading `drvNow()`,
   which while winding returns the maintaining spring's own last drive (nothing on the first wind), so the
   spring carried no drive and the balance held. Found by `maintaining.py --model wempe`. Keep: read the
@@ -1308,6 +1323,10 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The Wempe's set-up click and centre arbor read two figures wrongly.** The click's "5,7" is the thin circle about its hole, tangent
+  to the base (the base 2.85 under the hole, not 2.81 scaled), and its "85" the beak's end face at 85° (82.4° built); the centre arbor's
+  "1,6 −0,1" (05 05 03-2) is the wheel's seat alone, not seat and riveting collar, so the seat is 1.55 and the collar 0.255 (1.45 and 0.355).
+  Keep: the click from 05 08 05-2's figures (the hollow meets the base 9.69 from the hole, the "9,7"); the seat inside 1.5-1.6. `9b187fc`, `5d4f671`
 - **The Wempe's escape endstones and plates differed from Wempe 3955's** (16 October 2026, the audit of
   3.00.00). The upper escape endstone's setting was closed under the plate's lip with its screws in from
   inside, and the lower was a stadium cap screwed over the stone; 3955 shows round gilt settings with the
@@ -2941,6 +2960,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   teeth, undercut faces), with the winding-pawl springs' section inside the
   conflict. Kept main's set-up ratchet and the springs' section. Keep: after a
   merge, `git grep -n '^<<<<<<<\|^>>>>>>>'` finds nothing before committing. `52fd85c`
+- **The rig off its clips for an export made between round hours** (4104d411; the export to Blender): `blender.js` wrote the start hours as the page had them (20.000166 h, the page having run 0.6 s), but the rig reads its hours control through a driver variable, which Blender holds in single precision: 7e-7 h short, so the train and hands stood 0.005 teeth back, the escape wheel 0.12° off its clips (2e-6 h and 0.3° at 30 h). `ci.py`'s export passed only because its page exported near 20 h exactly; it ran the export in SwiftShader always because the GPU page, running faster, put the escape wheel 0.105° off. Fixed by taking the start hours in single precision (`Math.fround`) in both models' exports. Keep: any number the rig reads through a driver variable written so Blender's float holds it exactly.
 
 ## Essay
 

@@ -4,6 +4,18 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.03.00 · 2026-10-16
+- The Wempe's escapement as its layout sheet draws it: the impulse stone 28°10' before the line of centres (the sheet's 24° is the escape wheel's pitch), the release placed so each tooth lands on the stone's face
+- The Wempe's mainspring held by its arbor's hook the right way round; its maintaining detent, set-up click and centre wheel to their sheets' figures
+- The Wempe's winding key stands higher in its box, as on Greenwich's wartime Wempe, clear of the gimbals
+- About twenty of the Wempe's open questions settled from its drawings and photographs of real Wempes and their Soviet copies, the fusee chain's crossed run among them
+- For anyone making a Wempe: the least preload its detent needs, 0.49 g
+
+## 3.02.00 · 2026-10-16
+- The Wempe: download any part, or the whole movement, as STL (each part's card, and the new Download section)
+- The Wempe in Blender: the whole instrument with its motions (running, run down, winding in its case, exploded, at sea), and the rig that runs it
+- Blender rig: no longer slightly off its own animations when exported between round hours
+
 ## 3.01.00 · 2026-10-16
 - The Wempe's fusee groove and chain hooks as their drawings give them: a 1.2 mm pitch with lands the chain runs in, and hooks the chain's full width
 - The Wempe's movement as Wempe No. 3955 shows it: its escape wheel's endstones and the cock's with their stones showing, the maker's engraving on the top plate and RGG on the balance arm, the plates' countersinks and oil sinks
