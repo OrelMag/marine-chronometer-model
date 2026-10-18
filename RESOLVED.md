@@ -645,6 +645,9 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Hamilton's dust seal packing rings (42054) were brown** (`M.fibre` 0x5e3818), where every photograph of a Model 21 shows them dark: black on
+  2E11795's top view, slate blue-grey on 2E12055, stained olive on the oblique photograph (`photocompare.py`'s pilot on the Hamilton, 18 October 2026;
+  Review-results.md). Keep: `M.fibre` dark slate and matt (0x2a2e34, roughness 0.85); it is the packing's alone. `8f44e50b`
 - **The Wempe's maintaining detent and maintaining spring were deep blue** where their sheets say "310° hell-blau anlassen" (light blue) and both
   specimens photograph pale grey (18 October 2026). Keep: `M.blue310` for parts tempered at 310°, `M.blued` (deep blue, 295°) for the fusee's clicks. `8302b5e5`
 - **The sustaining spring wasn't the video's.** A uniform band 1.85 mm wide and 1.45 high (a design for the push), its gap 20° (read at the wall,
@@ -1367,6 +1370,19 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The upper train bridge's and barrel bridge's holes were their size only at the faces** (18 October 2026, found
+  with the Contacts view: their screws' threads stood 0.08-0.09 mm off the train bridge where every other
+  tapped hole leaves 0.02). `polyGeo`'s bevel (0.22 and 0.25 mm on those two plates, the only bevelled ones)
+  narrows every hole by 0.8 bev at both faces, and a screw hole (`hC`, `hT`, their 4th element) was cut that
+  much larger so the faces came out at its size: through the plate's body it was 0.176-0.2 mm too large, a
+  lip at each face. The screws' threads, the bushings and the pins bore only on the 0.22-0.25 mm lips (five
+  pins' ends hung in the wide middle, touching nothing, and stood in `audit.py`'s `LOOSE` as "drawn through"),
+  and the STL and Blender exports carried it; the unflagged holes (the traced keyhole, the barrel bridge's
+  3.15 head holes) were 0.18-0.2 mm under their drawn size at the faces. No check failed: it overlaps nothing,
+  and `holecheck.py` samples inside the radius. Fixed: `polyGeo` cuts every hole at its size and puts the
+  bevel's face rings back on the hole's outline, so each runs straight through (measured: r 1.405 tapped,
+  1.561 clear, 3.15, the whole depth). Keep: a bevel rounds a plate's outer edges only; a hole in it is its
+  drawn size from face to face. `24df5b9`
 - **The 6MX's screws, ring and arbor square were the drawings', not Kirov 247's** (18 October 2026, photocompare.py on its A, N, O, S, W and uZ
   views). Its top plate and barrel bridge screws were flat gilt cheese heads (Kirov 247's: polished steel, domed), its cock, cap jewel, pillar and
   gold spring screws brass or blued (steel), its intermediate bridge's brass (blued), its change pinion brass (steel), its movement ring nickel
