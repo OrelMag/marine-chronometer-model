@@ -30,10 +30,10 @@ const WFRAME=(()=>{
        brightness, folded on its pitch and averaged over two patches (each to its brightest): from 1 down to 0.61 and back, a slow fall and a quick rise (G6: the gilt with that
        profile as its map; solidGeo's UVs are plan mm, (x, -z), the map's u the plan point along the stripes' normal over the pitch). The faces the photographs don't show
        (the plates' inner faces) take the same */
-    const G6=(th)=>{const PR=[1.000,0.992,0.956,0.918,0.862,0.812,0.761,0.713,0.685,0.657,0.630,0.622,0.628,0.617,0.607,0.605,0.614,0.623,0.635,0.663,0.725,0.839,0.937,0.984],cv=document.createElement('canvas');cv.width=96;cv.height=4;
+    const G6=(th)=>{const G=M.gilt6=M.gilt6||{};if(G[th])return G[th];const PR=[1.000,0.992,0.956,0.918,0.862,0.812,0.761,0.713,0.685,0.657,0.630,0.622,0.628,0.617,0.607,0.605,0.614,0.623,0.635,0.663,0.725,0.839,0.937,0.984],cv=document.createElement('canvas');cv.width=96;cv.height=4;
       const x=cv.getContext('2d');for(let i=0;i<96;i++){const f=i/4,k=Math.floor(f),t=f-k,g=Math.round(255*(PR[k]*(1-t)+PR[(k+1)%24]*t));x.fillStyle=`rgb(${g},${g},${g})`;x.fillRect(i,0,1,4);}
       const tx=new THREE.CanvasTexture(cv);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(1/3.95,1/3.95);tx.rotation=th;tx.anisotropy=8;tx.encoding=THREE.sRGBEncoding;
-      const m=M.gilt.clone();m.map=tx;m.needsUpdate=true;return m;};
+      const m=M.gilt.clone();m.map=tx;m.needsUpdate=true;return G[th]=m;};   /* M.gilt6: built once (the export's copy shares them), their colour following the gilt's (movement.js's setFinish) */
     const G6T=G6(-40*D2R),G6D=G6(40*D2R);
     /* the finishes are on the faces: a wall (a plate's edge, a cock's side, a hole's bore) takes one point of the tile, plain as the photographs' turned and filed edges */
     const faceUV=g=>{const N=g.attributes.normal.array,U=g.attributes.uv.array;for(let v=0,w=0;w<U.length;v+=3,w+=2)if(Math.abs(N[v+1])<0.7){U[w]=0;U[w+1]=0;}g.attributes.uv.needsUpdate=true;return g;};   /* the stripes' normal in UV (x, -z): (0.766, -0.643) on the top side, (0.766, 0.643) on the dial side */
@@ -42,8 +42,8 @@ const WFRAME=(()=>{
        spectrum's mean wavelength 1.84 and 1.76 mm, weakly oriented (anisotropy 0.25, 0.20): wavy bands across the plan's z (along x) on plate and bridge alike. Its gilt
        more saturated than the wheels' (hue 0.10-0.11, saturation 0.60 against the render's 0.44 at the same patch, the photograph's exposure aside). Synthesised, not copied
        (the photographs aren't ours to put on the page): a 24 mm periodic tile of 96 waves of 1.3-2.4 mm within 15° of z, their phase warped by six slow waves (0.3 mm) so the
-       bands wander, and a frosting of 64 faint waves of 0.3-0.55 mm any way, sd 7 % (the photograph's 9-14 % holds tarnish too), as the map's brightness and, through its slope, the normal map's relief; the specks and tarnish left out (as made). Until 18 October 2026 plain gilt */
-    const GH=(()=>{const N=256,L=24;let sd=3955;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647,W=[],D=[];
+       bands wander, and a frosting of 64 faint waves of 0.3-0.55 mm any way, sd 7 % (the photograph's 9-14 % holds tarnish too), as the map's brightness and, through its slope, the normal map's relief; the specks and tarnish left out (as made). Until 18 October 2026 plain gilt, kept as Variants' Plain brass (movement.js's setFinish) */
+    const GH=M.giltH||(()=>{const N=256,L=24;let sd=3955;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647,W=[],D=[];
       for(let i=0;i<96;i++){const k=L/(1.3+1.1*rnd()),a=(rnd()*30-15)*D2R;W.push([Math.round(k*Math.sin(a)),Math.round(k*Math.cos(a)),rnd()*TAU,0.5+rnd()]);}   /* the bands */
       for(let i=0;i<64;i++){const k=L/(0.3+0.25*rnd()),a=rnd()*TAU;W.push([Math.round(k*Math.sin(a)),Math.round(k*Math.cos(a)),rnd()*TAU,0.22*rnd()]);}   /* the frosting's grain, 0.3-0.55 mm, any way */
       for(let i=0;i<6;i++)D.push([1+Math.floor(rnd()*3),1+Math.floor(rnd()*3),rnd()*TAU]);
@@ -56,7 +56,7 @@ const WFRAME=(()=>{
         im.data[o]=im.data[o+1]=im.data[o+2]=g;im.data[o+3]=255;nm.data[o]=Math.round(255*(0.5-0.5*k*gx/l));nm.data[o+1]=Math.round(255*(0.5-0.5*k*gz/l));nm.data[o+2]=Math.round(255*(0.5+0.5/l));nm.data[o+3]=255;}
       xm.putImageData(im,0,0);xn.putImageData(nm,0,0);
       const tx=c=>{const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/L,1/L);t.anisotropy=8;return t;},mp=tx(cm);mp.encoding=THREE.sRGBEncoding;
-      const m=M.gilt.clone();m.color=sc(0xc68c34);m.userData.faceOnly=1;m.roughness=0.42;m.map=mp;m.normalMap=tx(cn);m.normalScale=new THREE.Vector2(0.3,0.3);m.needsUpdate=true;M.giltH=m;return m;})();   /* M.giltH: named, so the tools' density tables (massprops, mechanisms, inertia) and the export know it */
+      const m=M.gilt.clone();m.color=sc(0xc68c34);m.userData.faceOnly=1;m.roughness=0.42;m.map=mp;m.normalMap=tx(cn);m.normalScale=new THREE.Vector2(0.3,0.3);m.needsUpdate=true;m.userData.fin={map:mp,normalMap:m.normalMap,color:m.color.clone(),rough:m.roughness};M.giltH=m;return m;})();   /* M.giltH: built once (the export's copy shares it), named, so the tools' density tables (massprops, mechanisms, inertia) and the export know it */
 
     /* ================= the top plate (Oberplatte, 05 09 01; its assembly 05 08 01) ================= */
     /* Messingblech 4, Sonder Ms α-β (05 09 01's title block: rolled brass, from a 4 × 90 disc turned to 3.5 × 90): drawn gilt, as Wempe 3955's (2_Wempe_3955_A.jpg). 85 h6 × 3.35;
