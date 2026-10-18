@@ -2072,6 +2072,12 @@ Contents:
   - **WN-12a.** It was a nut on the mass's inner face. It is the countersunk tapped hole in each mass's top (05 03_2), and WN-12 now threads through the outer jaw to the rim.
   - **Smaller corrections.** The stop bar's pin 05 06 03-2 is built, with its spring bearing on it. The gold spring's screw head is Ø 1.4 (was 1.2), and WN-34 is 3.2 long (was 3.6).
   - **Keep:** a part the coloured section draws, checked against the works drawing that dimensions it. Where the works drawings and the photographed examples disagree (WN-12a), build the drawings and record the photographs.
+- **Pillar 1 stood 1.1 deg too far from the cock** (Review-results.md, Elsewhere 24: "the cock's 4 deg"). It was at 170.3 deg, set by clearance
+  against the cock rather than measured, after the dial side's 166.3 (40:08) put its top screw's head at the cock's foot. Measured on the train side
+  against the cock's three holes in the train bridge (23:30 face up, 6:49.0 in place, 23:45; No. 2182 on Jd2c3x8VKsE 26:00): 169.2 +- 0.5 deg, now
+  `PILLARS.train[1]` (6.47, 33.91), the head 1.55 mm clear of the cock's foot. Keep: the pillar where the train side puts it against the cock;
+  the dial side's angle there is 1.5-2 deg low; the lower train bridge's 9.2 past the fourth (the video's 10.3 would meet the screw's head by 0.1 mm).
+  `b08df62`
 
 ## Setup, case and gimbals
 
