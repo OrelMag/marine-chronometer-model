@@ -771,33 +771,45 @@ const WESC=(()=>{
        coloured section's label at px 1503-1525, 500-506, its last digit 0 or 8: likely 10; WN-16, which the model gave them until 17 October 2026, is the banking screw's label). The screws' heads Ø 2.5: the
        coloured section draws both pairs Ø 2.5, the upper 1.3 high, the lower 1.4 (px 1453-1476 and 1518-1542 × 175-188; 1450-1474 and 1515-1539 × 455-469; at 9.4 px/mm Ø 2.45-2.53, their shanks 1.2), and Wempe 3955's cock
        (2_Wempe_3955_A.jpg) gives the upper ones Ø 2.5 (sure); their heights the section's alone (likely).
-       Wempe 3955's cock (2_Wempe_3955_A.jpg, 8.81 px/mm by the top plate's 85) shows the upper endstone through its setting, a clear domed stone (a Wempe's is described as
-       a diamond endstone: Bonhams), the setting gilt and its screws brass: the setting open over the stone (Ø 1.6), the stone drawn bright (likely). Until 16 October 2026 the
-       setting closed over a ruby and its screws steel */
+       Wempe 3955's cock (2_Wempe_3955_A.jpg, 8.81 px/mm by the top plate's 85) shows the upper endstone in its setting, a clear domed stone (a Wempe's is described as
+       a diamond endstone: Bonhams), the setting gilt and its screws brass: the stone Ø 2.95 seen whole in a dark bevel Ø 4.4 inside the setting's flat rim (enlarged 10×,
+       ±0.1), drawn bright (likely). Until 16 October 2026 the setting closed over a ruby and its screws steel; until 18 October 2026 it was open Ø 1.6 over a stone Ø 2.0.
+       The stones' form and size are the coloured section's (traced 18 October 2026 on its red, row by row, at 9.4 px/mm, which gives the cock's and the lug's seats
+       Ø 5.25 for their 5.2 H7, so the section is to scale there; ±1 px, 0.11): every hole jewel Ø 2.9 (27-28 px at all four ends), 0.8 thick (0.8-1.06), its face to the
+       endstone domed 0.3 (the crown nearest it) and an oil sink opening into its face toward the arbor, a cone from the hole to Ø 1.6 (15-17 px) 0.55 deep, which leaves the
+       hole 0.25 long at the crown; every endstone Ø 2.9, flat to the pivot, its edge 0.5 high and domed 0.4 on its outside (0.85-1.06 in all, 0.35-0.45 of it the dome);
+       the endstone's setting's mouth a cone from the stone's edge (upper; Ø 4.4 at the cock's face, the photograph) or a bore of the stone's size (lower, Ø 3.0), each holding
+       its stone by a lip over its edge; the hole jewel's a lip under its rim (Ø 2.4), so its sink is open to the arbor. The pivot ends stay where the staff's sheets put them,
+       0.02 off the endstones, the hole jewels 0.03 off them (likely: the section draws each pair a thin white line apart) */
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
-    {const ck=TT-15,eY=Y.tipU-0.02,hY=eY+0.03;
-      tag(mesh(bju,lathe([[0.8,ck],[2.6,ck],[2.6,eY],[1.003,eY],[1.003,eY-0.35],[0.8,eY-0.35]],48),M.gilt),'050408-2.bu');
-      tag(mesh(bju,lathe([[0,eY-0.5],[0.5,eY-0.46],[0.79,eY-0.35],[1.0,eY-0.35],[1.0,eY],[0,eY]],32),M.steel),'050408-1.bu');   /* domed on its outside, under the setting's opening; drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
-      tag(mesh(bju,lathe([[0.45,hY+0.35],[1.003,hY+0.35],[1.003,hY],[2.6,hY],[2.6,ck+2.4-0.5],[2.998,ck+2.4-0.5],[2.998,ck+2.4],[0.45,ck+2.4]],48),M.brass),'050406-2.bu');
-      tag(mesh(bju,stoneGeo(1.0,0.125,0.35,'olive'),M.ruby,0,hY+0.175,0),'050407-1.bu');
+    const JR=1.45,JT=0.8,JD=0.3,JC=0.8,JH=0.55,ER=1.45,EE=0.5,EH=0.4,eLip=(y,s)=>[1.42,y+s*(EE+KIT.domeAt(ER,EH,1.42)+0.003)];   /* the stones (above); eLip: the endstone's setting's lip over its edge, the face at y, s the way to the dome */
+    {const ck=TT-15,eY=Y.tipU-0.02,hY=eY+0.03,lp=eLip(eY,-1);
+      tag(mesh(bju,lathe([[2.2,ck],[2.6,ck],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),M.gilt),'050408-2.bu');   /* the mouth a cone from the lip to Ø 4.4 at the cock's face */
+      tag(mesh(bju,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.steel),'050408-1.bu');   /* drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
+      tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,hY],[2.6,hY],[2.6,ck+2.4-0.5],[2.998,ck+2.4-0.5],[2.998,ck+2.4],[1.2,ck+2.4]],48),M.brass),'050406-2.bu');
+      tag(mesh(bju,lathe(KIT.jewelPr(JR,JT,0.125,JD,JC,JH,hY,1),32),M.ruby),'050407-1.bu');
       for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(bju,q[0],q[1],ck,1.25,1.3,2.0,0.46,M.brass),'WN-55.ck');}}
-    {const lf=TI+10,eY=Y.tipL+0.02,hY=eY-0.03,o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
-      tag(mesh(bjl,lathe([[0.45,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,eY],[1.003,eY],[1.003,hY-0.35],[0.45,hY-0.35]],48),M.brass),'050406-2.bl');
-      tag(mesh(bjl,stoneGeo(1.0,0.125,0.35,'olive'),M.ruby,0,hY-0.175,0),'050407-1.bl');
-      tag(mesh(bjl,lathe([[0,lf],[2.6,lf],[2.6,eY],[1.003,eY],[1.003,eY+0.35],[0,eY+0.35]],48),M.brass),'050408-2.bl');
-      tag(mesh(bjl,lathe([[0,eY],[1.0,eY],[1.0,eY+0.35],[0,eY+0.35]],32),M.ruby),'050408-1.bl');
+    {const lf=TI+10,eY=Y.tipL+0.02,hY=eY-0.03,lp=eLip(eY,1),o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
+      tag(mesh(bjl,lathe([[1.5,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,eY],[JR+0.003,eY],[JR+0.003,hY-JT],[1.2,hY-JT],[1.2,hY-JT-0.07],[1.5,hY-JT-0.37]],48),M.brass),'050406-2.bl');   /* over the stone, open Ø 3.0 round the staff (the section) */
+      tag(mesh(bjl,lathe(KIT.jewelPr(JR,JT,0.125,JD,JC,JH,hY,-1),32),M.ruby),'050407-1.bl');
+      tag(mesh(bjl,lathe([[1.5,lf],[2.6,lf],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY+EE],lp,[1.5,lp[1]+0.08]],48),M.brass),'050408-2.bl');
+      tag(mesh(bjl,lathe(KIT.endPr(ER,EE,EH,eY,1),32),M.ruby),'050408-1.bl');
       const f=flip(bjl);for(const s of[-1,1]){const q=BL(add(B,nv,3.5*s));tag(screw(f,q[0],-q[1],-lf,1.25,1.4,2.0,0.6),'WN-10.bl');}}
     /* ================= jewels: the escape wheel's ================= */
     /* Upper, in the top plate's seat 26 (05 09 01 P-Q: Ø 5.2 H7 from the inner face to 0.5 under the outer, Ø 4.5 H7 through that): the endstone's setting from the inside,
        its spigot Ø 4.5 through the lip (the H7 is its fit) flush with the outer face, held by two screws M1.2 from the outside (the plate's two at ±3.5 on the O-W line), their
        heads Ø 2.6 over the spigot's edge; the hole jewel's setting under it flush with the inner face. Wempe 3955 (2_Wempe_3955_A.jpg, 8.81 px/mm by the plate's 85): a gilt
        setting Ø 4.5 flush in the plate showing a domed ruby, the two slotted brass screws' heads 2.5 across and 6.94 apart at its edge; its inner face (13_) shows their ends:
-       sure. The stone Ø 2.5 seen through Ø 2.2 (estimated). Until 16 October 2026 the setting stood under the lip, closed over the stone, the screws in from the inside.
+       sure. The stones the balance's (the coloured section draws them Ø 2.9, 27 px, and in the balance's form); the photograph, enlarged 10×, shows the endstone Ø 2.95-3.2
+       whole in a dark bevel Ø 3.7: the setting's mouth a cone from the stone's lip to Ø 3.7 (likely). Until 18 October 2026 the stone Ø 2.5, seen through Ø 2.2 (estimated).
+       Until 16 October 2026 the setting stood under the lip, closed over the stone, the screws in from the inside.
        Lower, in the pillar plate's 26 (reamed 2.50, 05 08 02-1): the hole jewel in a bush pressed in; the endstone in a round setting Ø 4.6 flush in a seat 0.25 deep in the
        dial face, a boss Ø 2.6 in its middle standing 0.36 over the face round the stone (Ø 2.2, seen through Ø 1.9) (the pivot's end is at the face), held by the plate's two M1.2 (05 08 02-1, on the
        line 37 deg below O toward S) whose heads Ø 2.6 lap its rim: Wempe 3955's dial side (3_Wempe_3955_uZ.jpg, 8.33 px/mm by the plate's 85): the setting Ø 4.6 in its seat
-       (5.1 outside), the ruby showing, the screws' heads 2.6 lapping it 7.7 apart (the sheet's 7.0 kept): likely. Until 16 October 2026 a stadium cap 7 × 3 over both
-       screws. Their sizes otherwise as the balance's (estimated) */
+       (5.1 outside), the ruby showing (Ø 2.3-2.6 across its dark disc, blurred), the screws' heads 2.6 lapping it 7.7 apart (the sheet's 7.0 kept): likely. Until 16 October 2026 a stadium cap 7 × 3 over both
+       screws. Their sizes otherwise as the balance's (estimated). The 2.50 bore leaves the hole jewel Ø 1.6 (the section draws this end as the upper, Ø 2.9 in a setting
+       Ø 5.1, which the sheet's hole can't take): the section's form scaled to it (0.55: 0.45 thick, domed 0.17, its sink Ø 0.9 0.3 deep), its crown 0.03 off the endstone as
+       at the other ends (until 18 October 2026 0.2 off, the bush's floor between them as first drawn, where the section draws the two stones together) */
     const eeu=part('escEndstoneUp',-37,[W[0],W[1],0]),eju=part('escJewelUp',-34,[W[0],W[1],0]),ejl=part('escJewelLow',-4,[W[0],W[1],0]),eel=part('escEndstoneLow',6,[W[0],W[1],0]);
     /* each state's at its arbor's ends (Y, Y1). As first drawn (05 04_7.1) the top-plate end lies 2.0 into the plate: the hole jewel's setting fills the seat down to it, its
        bore opened to 0.6 for the arbor's cone; the dial end 1.96 into the pillar plate: the bush shortened to it and the endstone in a plug set from the dial face under the
@@ -805,21 +817,26 @@ const WESC=(()=>{
     /* the Soviet 6MX's endstone setting at the first-drawn height, of steel, its two screws steel: Kirov No. 247's reads silvery and its screws dark (2_Kirow_247_A.jpg,
        enlarged at the escape arbor, 18 px/mm: the setting Ø 4.6, the heads about Ø 2.5, 7.0 apart, as drawn within the photograph's ±0.5; the balance's cap setting beside it
        silvery too): likely */
-    for(const[Q,v,ms]of/** @type {[any,string,any][]} */([[Y,'last',M.gilt],[Y1,'first 1943',M.gilt],[Y1,'6mx',M.steel]])){const eY=Q.etU-0.02,hY=eY+0.06,ge=rv(eeu,v),gj=rv(eju,v),bo=v!=='last'?0.6:0.45;
-      tag(mesh(ge,lathe([[1.1,TT],[2.25,TT],[2.25,TT+0.5],[2.6,TT+0.5],[2.6,eY],[1.253,eY],[1.253,eY-0.35],[1.1,eY-0.35]],48),ms),'050408-2.eu');
-      tag(mesh(ge,lathe([[0,eY-0.5],[0.7,eY-0.45],[1.09,eY-0.35],[1.25,eY-0.35],[1.25,eY],[0,eY]],32),M.ruby),'050408-1.eu');
-      tag(mesh(gj,lathe([[bo,TI],[2.6,TI],[2.6,hY],[0.903,hY],[0.903,hY+0.35],[bo,hY+0.35]],48),M.brass),'050406-2.eu');
-      tag(mesh(gj,stoneGeo(0.9,0.135,0.35,'olive'),M.ruby,0,hY+0.175,0),'050406-1.eu');}
+    /* the hole jewel's height: as first drawn the arbor's end lies 2.0 into the plate and the section's 0.8 fits; as last revised it lies 0.49 in, and the stone, flush with
+       the inner face behind its setting's lip, is 0.4 (the section's form scaled to it, its sink as wide; estimated) */
+    for(const[Q,v,ms]of/** @type {[any,string,any][]} */([[Y,'last',M.gilt],[Y1,'first 1943',M.gilt],[Y1,'6mx',M.steel]])){const eY=Q.etU-0.02,hY=eY+0.06,ge=rv(eeu,v),gj=rv(eju,v),lp=eLip(eY,-1),
+        tq=Math.min(JT,TI-hY-0.05),k=tq/JT,yq=hY+tq,yb=Math.max(TT,lp[1]-0.45);
+      tag(mesh(ge,lathe([[1.85,TT],[2.25,TT],[2.25,TT+0.5],[2.6,TT+0.5],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp,[1.85,yb]],48),ms),'050408-2.eu');   /* the mouth a cone from the lip to Ø 3.7, then straight to the face */
+      tag(mesh(ge,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.ruby),'050408-1.eu');
+      tag(mesh(gj,lathe([[2.6,TI],[2.6,hY],[JR+0.003,hY],[JR+0.003,yq],...(TI-yq<0.2?[[1.2,yq],[1.2,TI]]:[[0.85,yq],[0.6,yq+0.2],[0.6,TI]])],48),M.brass),'050406-2.eu');   /* a lip under the stone's rim; as first drawn the seat filled down to the inner face, bored 0.6 for the arbor's cone */
+      tag(mesh(gj,lathe(KIT.jewelPr(JR,tq,0.135,JD*k,JC,JH*k,hY,1),32),M.ruby),'050406-1.eu');}
     for(const[v,ms]of/** @type {[string,any][]} */([['last first 1943',M.brass],['6mx',M.steel]])){const g=rv(eeu,v);for(const s of[-1,1])K.headOn(tag(screw(g,3.5*s,0,TT,1.3,0.3,3.4,0.6,ms),'WN-es'),'escEndstoneUp','topPlate');}   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
-      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.02,hY=eY-0.20,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last';
-        tag(mesh(gj,lathe([[0.7,hY-0.5],[1.25,hY-0.5],[1.25,f1?eY:PPT-0.25],[0.4,f1?eY:PPT-0.25],[0.4,hY],[0.803,hY],[0.803,hY-0.35],[0.7,hY-0.35]],48),M.brass),'050406-2.el');
-        tag(mesh(gj,stoneGeo(0.8,0.135,0.35,'olive'),M.ruby,0,hY-0.175,0),'050406-1.el');
+      const lk=0.8/JR,lT=0.45,lD=JD*lk,lE=0.2,lH=0.15;   /* the lower hole jewel (above); as first drawn its endstone in the plug Ø 1.6 too, the balance's form scaled (estimated) */
+      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.02,hY=eY-0.03,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last',yq=hY-lT;
+        tag(mesh(gj,lathe([[0.7,yq-0.15],[1.25,yq-0.15],[1.25,f1?eY:PPT-0.25],[0.803,f1?eY:PPT-0.25],[0.803,yq],[0.7,yq]],48),M.brass),'050406-2.el');   /* its lip over the stone's rim */
+        tag(mesh(gj,lathe(KIT.jewelPr(0.8,lT,0.135,lD,JC*lk*1.03,JH*lk,hY,-1),32),M.ruby),'050406-1.el');
         if(f1){tag(mesh(ge,lathe([[0,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0,PPT]],48),M.gilt),'050408-2.el');   /* as first drawn: the setting plain over the plug (its stone deep in the plate) */
-          tag(mesh(ge,lathe([[0,eY+0.35],[0.803,eY+0.35],[0.803,eY],[1.25,eY],[1.25,PPT-0.25],[0,PPT-0.25]],48),M.brass),'050408-2.el',1);}   /* the plug, the stone in its end */
+          const pk=[...Array(9).keys()].map(i=>{const r=0.803*i/8;return[r,eY+lE+KIT.domeAt(0.8,lH,Math.min(r,0.8))+0.003];});
+          tag(mesh(ge,lathe([...pk,[0.803,eY],[1.25,eY],[1.25,PPT-0.25],[0,PPT-0.25]],48),M.brass),'050408-2.el',1);}   /* the plug, the stone in its end, its pocket the stone's dome */
         else{tag(mesh(ge,lathe([[0.95,eY+0.35],[1.103,eY+0.35],[1.103,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[1.3,PPT],[1.3,eY+0.4],[0.95,eY+0.4]],48),M.gilt),'050408-2.el');
           tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.94,eY+0.35],[0.6,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}
-        if(f1)tag(mesh(ge,lathe([[0,eY],[0.8,eY],[0.8,eY+0.35],[0,eY+0.35]],32),M.ruby),'050408-1.el');}
+        if(f1)tag(mesh(ge,lathe(KIT.endPr(0.8,lE,lH,eY,1),32),M.ruby),'050408-1.el');}
       const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.5*s);tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* the last state's; as first drawn they hold the cap, through it */
 
     /* ================= motion ================= */

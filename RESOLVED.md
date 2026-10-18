@@ -3088,4 +3088,11 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+- **The Wempe's jewels were plain discs, too small, and the escape wheel's lower hole jewel stood 0.2 off its endstone** (Escapement). Every hole jewel and endstone was a
+  flat disc Ø 2.0 × 0.35 (the escape wheel's Ø 1.8 and 1.6), an estimate, where the coloured section draws each Ø 2.9, the hole jewel domed toward its endstone with an
+  oil sink to the arbor and the endstone domed outside; Wempe 3955's top plate shows both upper endstones whole, Ø 2.95-3.2, in a conical bevel (read as an opening
+  Ø 1.6 and a stone Ø 2.5 seen through Ø 2.2); the escape wheel's lower hole jewel stood 0.2 from its endstone, with its bush's floor between them as first drawn,
+  where the section draws the stones together; the seconds jewel had no oil sink. Keep: the stones' form and size as the section's red traces them (KIT.jewelPr,
+  KIT.endPr), scaled only where the sheets leave less room; each hole jewel's crown 0.03 off its endstone (0.06 at the escape wheel's upper); the endstones' settings
+  open over the whole stone.
 - **holecheck.py failing now and then on the fusee's hole 42021** (Build, tools and docs): the hole turns with the fusee, which stood where the page's clock put it as it loaded, so between runs it wandered 0.6 mm round (x 16.95-17.45), past its EXPECTED entry's 0.4: a run failed or passed by when it loaded (seen on 3.03.00's main, 16 October 2026). Frozen as audit.py freezes the model (placements.py's first state), it still stood in one of two places 0.74 mm apart: the fusee's catch on its ratchet is state `update()` keeps from call to call. Fixed: holecheck.py freezes the model first, and the entry gives the hole by its distance from the fusee's axis (`L.Fu`, 4.264 mm) and its height, at any angle; such an entry must be found empty (its twin at the same radius, the first tapped hole, holds the stop-bar spring's end). Keep: an EXPECTED entry on a part that turns says where it is about its axis, not in the movement's frame.
