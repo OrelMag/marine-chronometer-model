@@ -835,11 +835,11 @@ function buildMovement(M){
      16.0 px a turn; the three frames agree to a row), from the wheel's face toward the plate, GW_B, the model's (on the frame 2.2 mm over the plate's, the model's 2.04):
      the wheel toothed over its whole thickness, 2.22 (36 rows at the tips, r 18.0; a plain rim r 19.2 FK, 1.8 tall, over 1.2 of teeth until 18 October 2026), the
      sustaining ratchet over it, 1.18 (19 rows at r 16.5), 0.05 off it; the fusee's rim 0.45 (r 16.0) and the large end's band (r 15.5) 0.98 over that (makeFusee's LE).
-     Its parts: GW_W the wheel's own layer under the floor (the arbor's wheel), GW_R the recess, as deep as the sustaining spring's band is tall (its top flush with the
+     Its parts: GW_R the recess, as deep as the sustaining spring's band is tall (its top flush with the
      rim: 28:42.5), GW_F the recess's floor; SR_B, SR_T the sustaining ratchet's faces toward the wheel and toward the fusee. Until 18 October 2026 the wheel's top was -8.9,
      the ratchet -9.1 to -9.8 and the fusee's rim -9.9 to -10.3: the ratchet 0.2 over the wheel and the rim 0.1 over the ratchet, the spring and recess seen past the ratchet */
-  const GW_B=-5.9,GW_T=2.22,GW_W=0.42,GW_R=1.0,GW_F=GW_B-(GW_T-GW_R),SR_B=GW_B-GW_T-0.05,SR_T=SR_B-1.18;
-  R.gw=hn(arbor(gw,M,...L.Fu,{wheel:{n:TRAIN.fu,m:MOD.fusee,y:GW_B-GW_W/2,th:GW_W,spokes:0,mat:M.copper,collet:0,bore:2.75*FK,mate:TRAIN.cp}}),'42015');
+  const GW_B=-5.9,GW_T=2.22,GW_R=1.0,GW_F=GW_B-(GW_T-GW_R),SR_B=GW_B-GW_T-0.05,SR_T=SR_B-1.18;
+  R.gw=hn(arbor(gw,M,...L.Fu,{wheel:{n:TRAIN.fu,m:MOD.fusee,y:-7.01,th:2.22,spokes:0,mat:M.copper,collet:0,bore:18.0*FK/Math.cos(Math.PI/48),mate:TRAIN.cp}}),'42015');   /* GW_B - GW_T/2 and GW_T (the tools read th here); the toothed ring round the recess, its bore's 48 flats on the wall's r 18.0 FK; the floor and the wheel's own layer under it, a disc inside it */
   /* its recess (restoration video 27:26, References/VIDEOS.md): the wall at r 18.0 FK inside a rim over the teeth's roots, the floor with a raised disc to r 9.3 FK and a hub round the bore,
      the manual's "both elevations in the recess" (Op. 26; their heights estimated). The floor 1.0 below the rim's top, the spring's band's height (KLUwI2UUCMQ 28:42.5 and
      28:43.0, the wheel tilted 55-58 deg: the band's top flush with the rim, its top face and inner face 82-98 px between the wall and the floor, at 24.0-24.5 px/mm radially
@@ -848,7 +848,7 @@ function buildMovement(M){
      wall's centre and scaled to the wall's 17.97: r 16.14 and 16.51, 52.1 and 12.0 deg back from the tip; the first's centre steel grey, the pin's end, the second's the floor's
      brass seen through: likely; until 17 October 2026 both r 15.9, 48 and 8 deg, which had the pin estimated) */
   const SSF=0.488,SSH=[[16.14*FK,SSF-52.1*D2R],[16.51*FK,SSF-12.0*D2R]].map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);
-  mesh(R.gw,gearGeo(TRAIN.fu,MOD.fusee,GW_T-GW_W,{mate:TRAIN.cp,bore:18.0*FK}),M.copper,0,GW_B-GW_W-(GW_T-GW_W)/2,0);mesh(R.gw,discGeo(18.0*FK,GW_T-GW_W-GW_R,[[0,0,2.75*FK],[...SSH[0],0.4]]),M.copper,0,GW_F,0);   /* the rim and the floor, with the hole the spring's pin is pressed into */
+  mesh(R.gw,discGeo(18.0*FK,GW_T-GW_R,[[0,0,2.75*FK],[...SSH[0],0.4]]),M.copper,0,GW_F,0);   /* the rim and the floor, with the hole the spring's pin is pressed into */
   mesh(R.gw,discGeo(9.3*FK,0.3,[[0,0,2.75*FK]]),M.copper,0,GW_F-0.3,0);mesh(R.gw,ringGeo(4.0*FK,2.75*FK,0.3),M.copper,0,GW_F-0.45,0);   /* the raised disc and the hub; the bore (r 2.75 FK, video 27:26) free on the arbor's collar */
   mesh(R.gw,ringGeo(2.87,2.75*FK,GW_F-0.6-(SR_T+0.05)),M.copper,0,(GW_F-0.6+SR_T+0.05)/2,0);   /* the hub's pipe, r 2.87, up through the sustaining ratchet's bore (r 2.92, 19:12) to 0.05 short of the
      winding ratchet: the sustaining ratchet rides it, "a small amount of grease on the outside of the hub" (Op. 20, Fig. 71's arrow 2), the two assembled together before
