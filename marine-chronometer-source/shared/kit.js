@@ -252,7 +252,6 @@ const KIT=(()=>{
        one group, which the Exploded view lifts out of its holes along the screw's axis (SCREWS) */
     const SCREWS=[],loose=(g,lift)=>{g.userData.y0=g.position.y;g.userData.lift=lift;SCREWS.push(g);return g;};   /* loose: g moves on its own in the Exploded view, lift mm toward its frame's -y past its part */
     const headOn=(g,p,q)=>{g.userData.lift+=P[p].userData.off-P[q].userData.off;return g;};   /* a screw of part p put in through part q: it leaves with q, then lifts out of it */
-    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any,dome?:number)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius, the material (steel by default) and the head's dome (its rise, 0 flat) */
     /* the head with its slot cut, one closed solid (solidGeo): two flat-topped halves inside the chamfer, the chamfer's ring (45°, c wide) round each, and between them
        the slot's strip, its floor s under the top, w wide, open at both ends. Every photograph shows slots as dark grooves; until 18 October 2026 a grey box stood 0.02 proud
        across the head (photocompare.py, Wempe 3955's N view). Cached by size */
@@ -275,6 +274,7 @@ const KIT=(()=>{
         if(!cone&&!rim&&!cap)continue;for(let v=t;v<t+9;v+=3){const px=P[v],pz=P[v+2],pr=Math.hypot(px,pz)||1;
           if(cap){const yy=-Math.sqrt(Math.max(0,RD*RD-px*px-pz*pz));N[v]=px/RD;N[v+1]=yy/RD;N[v+2]=pz/RD;}else if(cone){const l=Math.SQRT2;N[v]=px/pr/l;N[v+1]=-1/l;N[v+2]=pz/pr/l;}else{N[v]=px/pr;N[v+1]=0;N[v+2]=pz/pr;}}}
       G.attributes.normal.needsUpdate=true;return HG[k]=G;};
+    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any,dome?:number)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius, the material (steel by default) and the head's dome (its rise, 0 flat) */
     const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0)=>{
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
       const hd=mesh(g,headGeo(r,h,dome),mt||M.steel);hd.userData.screw=r;hd.rotation.y=(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before */

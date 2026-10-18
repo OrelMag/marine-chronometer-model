@@ -294,7 +294,7 @@ const WFRAME=(()=>{
          (2.7.42) draws the body straight */
       /* Kirov No. 247's (the 6MX), the same in kind (4_Kirow_247_N.jpg, photocompare.py's fit, 10.3 px/mm): the body 4.8 high, a flare, the waist Ø 9.8 ±0.3, the collar
          about 1.2 thick; traced as Wempe 3955's (below) */
-      const WB=[['3955',-29.0,-29.0,4.5,-37.1],['6mx',Yb-4.8,Yb-6.45,4.9,-37.75]];   /* [version, the body's shoulder, the waist's foot (a cone between), its radius, the collar's underside] */
+      const WB=/** @type {[string,number,number,number,number][]} */([['3955',-29.0,-29.0,4.5,-37.1],['6mx',Yb-4.8,Yb-6.45,4.9,-37.75]]);   /* [version, the body's shoulder, the waist's foot (a cone between), its radius, the collar's underside] */
       for(const[V,yS,yW,rW,yC]of WB){const w=[V2(rr(yC),yC),V2(rW,yC),V2(rW,yW),V2(6.55,yS),V2(6.55,Yb-0.5),V2(6.55-0.5*Math.tan(5*D2R),Yb),V2(rr(Yb),Yb),V2(rr(yC),yC)].filter((q,i,a)=>!i||q.x!==a[i-1].x||q.y!==a[i-1].y);
         tag(mesh(rv(db,V),new THREE.LatheGeometry(w,72),M.brass,F10[0],0,F10[1]),'050801-3');}tag(mesh(db,new THREE.LatheGeometry(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
       const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
@@ -313,7 +313,7 @@ const WFRAME=(()=>{
        exposure 0.78 of the render's on the steel square; until 18 October 2026 0xc8a070, a cream). The 6MX's 2.4 thick (its top 1.6 under a 3.86 one's on the same photograph,
        the agent's reading 2.5: likely); the drawings' versions keep the section's 3.86 */
     {const cm=new THREE.MeshStandardMaterial({color:sc(0xa06838),metalness:0,roughness:0.92});
-      for(const[V,th]of[['last first 1943 -3955',3.86],['6mx',2.4]]){const yb=TT-1.5-15.1,yt=yb-th;tag(mesh(rv(ck,V),new THREE.LatheGeometry([V2(4.86,yt),V2(8.05,yt),V2(8.05,yb),V2(4.86,yb),V2(4.86,yt)],72),cm,F10[0],0,F10[1]),'050801-4');}}
+      for(const[V,th]of/** @type {[string,number][]} */([['last first 1943 -3955',3.86],['6mx',2.4]])){const yb=TT-1.5-15.1,yt=yb-th;tag(mesh(rv(ck,V),new THREE.LatheGeometry([V2(4.86,yt),V2(8.05,yt),V2(8.05,yb),V2(4.86,yb),V2(4.86,yt)],72),cm,F10[0],0,F10[1]),'050801-4');}}
 
     /* ================= the upper balance cock (Unruhkloben oben, 05 08 03-1; kompl. 127-556.04 U30) ================= */
     /* Profilmessing Ms 58, cranked: a foot 3.2 thick on the top plate's outer face, a web, and an arm 15 -0.1 over the foot's underside to the balance's upper setting at 23.
@@ -371,10 +371,10 @@ const WFRAME=(()=>{
          rough to take: the drawn plan kept (README, The Soviet 6MX). The step 1.5 past the lug's edge, so the lug and the screw's hole stand on the full depth (estimated) */
       const st=1.5,b6a={loop:[L(-10,-4),L(st,-4),L(st,4),L1,L2],y0:TI,y1:TI+10,F:[T(o,rM26,TI,TI+10),A(H[22],rPinQ,TI,2.5)]},b6b={loop:[L(st,-4),L(10,-4),L(10,4),L(st,4)],y0:TI,y1:TI+3.3,F:[A(H[37],rPinQ,TI,2.5)]};
       tag(mesh(rv(lc,'6mx'),solidGeo([b6a,b6b,lug]),M.gilt),'050800-2');}
+    for(const g of lc.children.filter(c=>c.userData.rev))for(const k of[22,37])tag(cylBetween(g,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');   /* in each version's group with its cock (fine.py takes pieces fixed together by their shared group) */   /* before the screws' groups (below), which aren't the cock's */
     /* its screw (WN-53 in the coloured section): head Ø 5.8 × 1.7 in the plate's Ø 6 × 1.8 sink, M2.6 × 5.0, 3.45 into the cock: the coloured section, scaled (estimated) */
     headOn(tag(screw(rv(lc,'last first 1943'),H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3,M.brass),'WN-53'),'lowerCock','topPlate');   /* brass, as Wempe 3955's (2_Wempe_3955_A.jpg; steel until 16 October 2026) */
     headOn(tag(screw(rv(lc,'6mx'),H[36][0],H[36][1],TT+1.8,2.7,1.7,5.0,1.3,M.steel),'WN-53'),'lowerCock','topPlate');   /* the 6MX's steel, its head Ø 5.4 (2_Kirow_247_A.jpg, photocompare.py's fit: likely) */
-    for(const g of lc.children.filter(c=>c.userData.rev))for(const k of[22,37])tag(cylBetween(g,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');   /* in each version's group with its cock (fine.py takes pieces fixed together by their shared group) */
 
     /* ================= the intermediate bridge (Zwischenbrücke kompl., 05 08 04) ================= */
     /* On the pillar plate's dial face, across the opening 38: the intermediate wheel's brass bush (WN-300: 05 08 04's leader goes to it) pressed in at 38 (its face 0.7 +0.02
