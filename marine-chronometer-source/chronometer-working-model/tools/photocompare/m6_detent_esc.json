@@ -1,0 +1,225 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx-gallery/leben-des-6mx/8_Kirow_247_F.jpg",
+ "rev": "6mx",
+ "hash": "dial=kirov&wind=55.9",
+ "look": [
+  3.48,
+  -0.03,
+  420,
+  -12,
+  -10,
+  21,
+  5.4
+ ],
+ "points": {
+  "escape collet, at the wheel (arbor axis)": {
+   "xyz": [
+    -11.783,
+    -17.1,
+    21.743
+   ],
+   "uv": [
+    452,
+    277
+   ]
+  },
+  "escape collet, its end on the arbor": {
+   "xyz": [
+    -11.783,
+    -12.02,
+    21.743
+   ],
+   "uv": [
+    452,
+    369
+   ]
+  },
+  "seconds arbor at the top plate's inner face": {
+   "xyz": [
+    0,
+    -19.0,
+    23
+   ],
+   "uv": [
+    246,
+    257
+   ]
+  },
+  "detent block stop screw, head centre (6MX.gke)": {
+   "xyz": [
+    -36.243,
+    -15.7,
+    24.147
+   ],
+   "uv": [
+    832,
+    291
+   ]
+  },
+  "pillar 11 at the top plate's inner face (axis)": {
+   "xyz": [
+    -36.858,
+    -19.0,
+    3.225
+   ],
+   "uv": [
+    967,
+    238
+   ]
+  },
+  "pillar 11 at the pillar plate's train face (axis)": {
+   "xyz": [
+    -36.858,
+    0.0,
+    3.225
+   ],
+   "uv": [
+    967,
+    590
+   ]
+  }
+ },
+ "circles": {
+  "escape wheel tips (band middle)": {
+   "c": [
+    -11.783,
+    -17.8,
+    21.743
+   ],
+   "r": 7.0,
+   "n": [
+    0,
+    1,
+    0
+   ],
+   "uv": [
+    [
+     323,
+     262
+    ],
+    [
+     578,
+     262
+    ]
+   ]
+  },
+  "pillar plate train-face rim (front, traced)": {
+   "c": [
+    0,
+    0,
+    0
+   ],
+   "r": 42.494,
+   "n": [
+    0,
+    1,
+    0
+   ],
+   "uv": [
+    [
+     250,
+     600
+    ],
+    [
+     600,
+     595
+    ],
+    [
+     800,
+     597
+    ],
+    [
+     930,
+     597
+    ],
+    [
+     1000,
+     594
+    ]
+   ]
+  },
+  "top plate inner-face rim (front, traced)": {
+   "c": [
+    0,
+    -19.0,
+    0
+   ],
+   "r": 42.494,
+   "n": [
+    0,
+    1,
+    0
+   ],
+   "uv": [
+    [
+     30,
+     232
+    ],
+    [
+     200,
+     220
+    ],
+    [
+     400,
+     210
+    ],
+    [
+     620,
+     211
+    ],
+    [
+     800,
+     218
+    ],
+    [
+     990,
+     233
+    ]
+   ]
+  }
+ },
+ "hide": [
+  "balance",
+  "balanceJewelsLow",
+  "balanceJewelsUp",
+  "band",
+  "barrel",
+  "barrelArbor",
+  "barrelBridge",
+  "cannon",
+  "chain",
+  "changeWheel",
+  "corkRing",
+  "coverPlate",
+  "dial",
+  "dustBush",
+  "dustPlate",
+  "escEndstoneUp",
+  "escJewelUp",
+  "fusee",
+  "fuseeBush",
+  "fuseeWheel",
+  "hairspring",
+  "hands",
+  "hourWheel",
+  "intermediateBridge",
+  "mainspring",
+  "maintDetent",
+  "maintaining",
+  "pillarPlate",
+  "pillars",
+  "ring",
+  "rollers",
+  "setupRatchet",
+  "stopWork",
+  "stud",
+  "topPlate",
+  "udPinion",
+  "udWheel",
+  "upperCock",
+  "vorreiber",
+  "centreWheel",
+  "intermediateWheel",
+  "key"
+ ]
+}
