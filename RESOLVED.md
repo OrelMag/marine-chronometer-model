@@ -1365,6 +1365,19 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The upper train bridge's and barrel bridge's holes were their size only at the faces** (18 October 2026, found
+  with the Contacts view: their screws' threads stood 0.08-0.09 mm off the train bridge where every other
+  tapped hole leaves 0.02). `polyGeo`'s bevel (0.22 and 0.25 mm on those two plates, the only bevelled ones)
+  narrows every hole by 0.8 bev at both faces, and a screw hole (`hC`, `hT`, their 4th element) was cut that
+  much larger so the faces came out at its size: through the plate's body it was 0.176-0.2 mm too large, a
+  lip at each face. The screws' threads, the bushings and the pins bore only on the 0.22-0.25 mm lips (five
+  pins' ends hung in the wide middle, touching nothing, and stood in `audit.py`'s `LOOSE` as "drawn through"),
+  and the STL and Blender exports carried it; the unflagged holes (the traced keyhole, the barrel bridge's
+  3.15 head holes) were 0.18-0.2 mm under their drawn size at the faces. No check failed: it overlaps nothing,
+  and `holecheck.py` samples inside the radius. Fixed: `polyGeo` cuts every hole at its size and puts the
+  bevel's face rings back on the hole's outline, so each runs straight through (measured: r 1.405 tapped,
+  1.561 clear, 3.15, the whole depth). Keep: a bevel rounds a plate's outer edges only; a hole in it is its
+  drawn size from face to face. HASH
 - **The Wempe's set-up click and centre arbor read two figures wrongly.** The click's "5,7" is the thin circle about its hole, tangent
   to the base (the base 2.85 under the hole, not 2.81 scaled), and its "85" the beak's end face at 85° (82.4° built); the centre arbor's
   "1,6 −0,1" (05 05 03-2) is the wheel's seat alone, not seat and riveting collar, so the seat is 1.55 and the collar 0.255 (1.45 and 0.355).
