@@ -32,7 +32,36 @@
  /* rays hit faces either side, so a ray from inside a part's metal is seen as such */
  const sides=new Map();for(const x of MS)for(const mt of[].concat(x.m.material))if(mt&&!sides.has(mt)){sides.set(mt,mt.side);mt.side=T.DoubleSide;}
  const RC=new T.Raycaster(),nrm=new T.Vector3(),M3=new T.Matrix3();RC.layers.enableAll();   // the pieces drawn merged are on layer 2 (drawMerge)
- const cast=(o,d,list,far)=>{RC.set(o,d);RC.near=0;RC.far=far;const h=[];for(const x of list){const k=h.length;x.m.raycast(RC,h);for(let i=k;i<h.length;i++)h[i].x=x;}
+ /* a mesh's ray hits as three.js's Mesh.raycast (r128) finds them, faster: its triangles in a bounding-volume tree (built once per geometry and kept while its
+    positions are unchanged), a ray testing only those whose boxes it passes, by the same culls (sphere, box), the same intersectTriangle, side and near/far,
+    in the same order (group by group, triangle by triangle); an instanced, skinned or morphed mesh, or one whose ranges aren't whole triangles, by raycast itself */
+ const BV=new WeakMap(),_s=new T.Sphere(),_im=new T.Matrix4(),_r=new T.Ray(),_a=new T.Vector3(),_b=new T.Vector3(),_c=new T.Vector3(),_p=new T.Vector3(),_w=new T.Vector3();
+ const triv=(P,I,t)=>{const a=I?I.getX(3*t):3*t,b=I?I.getX(3*t+1):3*t+1,c=I?I.getX(3*t+2):3*t+2;_a.fromBufferAttribute(P,a);_b.fromBufferAttribute(P,b);_c.fromBufferAttribute(P,c);return[a,b,c];};
+ const bvh=g=>{const P=g.attributes.position,I=g.index,key=P.version+'/'+(I?I.version:-1)+'/'+P.count+'/'+(I?I.count:-1);let e=BV.get(g);if(e&&e.key===key)return e;
+   const n=Math.floor((I?I.count:P.count)/3),TB=new Float64Array(6*n),ord=new Int32Array(n),NB=[],NL=[],NR=[],NS=[],NC=[];
+   for(let t=0;t<n;t++){ord[t]=t;triv(P,I,t);for(let k=0;k<3;k++){const q=k?k>1?'z':'y':'x',lo=Math.min(_a[q],_b[q],_c[q]),hi=Math.max(_a[q],_b[q],_c[q]),ep=1e-7*(Math.abs(lo)+Math.abs(hi))+1e-9;TB[6*t+k]=lo-ep;TB[6*t+3+k]=hi+ep;}}
+   const build=(s,c)=>{const i=NL.length;NL.push(-1);NR.push(-1);NS.push(s);NC.push(c);const b=[1e300,1e300,1e300,-1e300,-1e300,-1e300];
+     for(let j=s;j<s+c;j++){const t=ord[j];for(let k=0;k<3;k++){if(TB[6*t+k]<b[k])b[k]=TB[6*t+k];if(TB[6*t+3+k]>b[3+k])b[3+k]=TB[6*t+3+k];}}NB.push(...b);
+     if(c<=8)return i;let ax=0,ex=-1;for(let k=0;k<3;k++)if(b[3+k]-b[k]>ex){ex=b[3+k]-b[k];ax=k;}
+     ord.set(Array.from(ord.subarray(s,s+c)).sort((p,q)=>(TB[6*p+ax]+TB[6*p+3+ax])-(TB[6*q+ax]+TB[6*q+3+ax])),s);const h=c>>1;NL[i]=build(s,h);NR[i]=build(s+h,c-h);return i;};
+   if(n)build(0,n);e={key,ord,NB,NL,NR,NS,NC};BV.set(g,e);return e;};
+ const cands=(e,o,d)=>{const out=[];if(!e.NL.length)return out;const st=[0],NB=e.NB;
+   while(st.length){const i=st.pop(),k=6*i;let t0=0,t1=Infinity,ok=true;
+     for(let a=0;a<3&&ok;a++){const O=a?a>1?o.z:o.y:o.x,D=a?a>1?d.z:d.y:d.x,lo=NB[k+a],hi=NB[k+3+a];
+       if(D===0){if(O<lo||O>hi)ok=false;continue;}let u=(lo-O)/D,v=(hi-O)/D;if(u>v){const w=u;u=v;v=w;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)ok=false;}
+     if(!ok)continue;if(e.NL[i]<0){for(let j=e.NS[i];j<e.NS[i]+e.NC[i];j++)out.push(e.ord[j]);}else st.push(e.NL[i],e.NR[i]);}
+   return out.sort((a,b)=>a-b);};
+ const rc=(m,R,h)=>{const g=m.geometry,mat=m.material;
+   if(mat===undefined||m.isInstancedMesh||m.isSkinnedMesh||!g.isBufferGeometry||(g.morphAttributes.position&&m.morphTargetInfluences)||g.drawRange.start%3||g.groups.some(q=>q.start%3))return m.raycast(R,h);
+   if(g.boundingSphere===null)g.computeBoundingSphere();_s.copy(g.boundingSphere).applyMatrix4(m.matrixWorld);if(R.ray.intersectsSphere(_s)===false)return;
+   _im.copy(m.matrixWorld).invert();_r.copy(R.ray).applyMatrix4(_im);if(g.boundingBox!==null&&_r.intersectsBox(g.boundingBox)===false)return;
+   const P=g.attributes.position,I=g.index,dr=g.drawRange,cs=cands(bvh(g),_r.origin,_r.direction),N=I?I.count:P.count;
+   const test=(t,M,mi)=>{const[a,b,c]=triv(P,I,t),x=M.side===T.BackSide?_r.intersectTriangle(_c,_b,_a,true,_p):_r.intersectTriangle(_a,_b,_c,M.side!==T.DoubleSide,_p);if(x===null)return;
+     _w.copy(_p).applyMatrix4(m.matrixWorld);const dist=R.ray.origin.distanceTo(_w);if(dist<R.near||dist>R.far)return;
+     const face={a,b,c,normal:new T.Vector3(),materialIndex:mi};T.Triangle.getNormal(_a,_b,_c,face.normal);h.push({distance:dist,point:_w.clone(),object:m,face,faceIndex:t});};
+   if(Array.isArray(mat)){for(const q of g.groups){const lo=Math.max(q.start,dr.start)/3,hi=Math.min(q.start+q.count,dr.start+dr.count)/3;for(const t of cs)if(t>=lo&&t<hi)test(t,mat[q.materialIndex],q.materialIndex);}}
+   else{const lo=Math.max(0,dr.start)/3,hi=Math.min(N,dr.start+dr.count)/3;for(const t of cs)if(t>=lo&&t<hi)test(t,mat,0);}};
+ const cast=(o,d,list,far)=>{RC.set(o,d);RC.near=0;RC.far=far;const h=[];for(const x of list){const k=h.length;rc(x.m,RC,h);for(let i=k;i<h.length;i++)h[i].x=x;}
    for(const q of h){if(q.face){M3.getNormalMatrix(q.object.matrixWorld);nrm.copy(q.face.normal).applyMatrix3(M3).normalize();q.back=nrm.dot(d)>0;}else q.back=false;}return h.sort((a,b)=>a.distance-b.distance);};
  /* a part's axis: its own +y (a screw from sHead: its shank's), through its origin; the extent of its meshes along it */
  const axisOf=A=>{const k=A.userData.axis||(A.userData.sc&&A.children.length===3&&A.children[2].geometry&&A.children[2].geometry.type==='CylinderGeometry'?A.children[2]:null);   /* userData.axis: the mesh a part turns about, where its group's origin is off it */
@@ -62,13 +91,16 @@
      const gaps=rays.filter(r=>r.id===sid).map(r=>r.gap).sort((a,b)=>a-b);out.push({t,oR:Math.min(...rays.map(r=>r.oR)),id:sc>=need?sid:null,inst:null,gmin:gaps.length?gaps[0]:null,gmed:gaps.length?gaps[gaps.length>>1]:null,gmax:gaps.length?gaps[gaps.length-1]:null});}
    return{ax,samples:out,step:(b-a)/(n+1)};}
  /* on: least distance between the surfaces of two sets of meshes (vertices of each against the triangles of the other, bucketed in 0.25 mm cells) */
+ const TRI=new Map();   /* each mesh's triangles in the world, kept while its matrix and positions are as they were */
  const tris=xs=>{const out=[];for(const x of xs){const g=x.m.geometry,p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,mw=x.m.matrixWorld;
-   const V=[];for(let i=0;i<p.count;i++)V.push(new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(mw));for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];out.push(new T.Triangle(a,b,c));}}return out;};
+   const k=g.uuid+'/'+p.version+'/'+(g.index?g.index.version:-1)+'/'+mw.elements.join();let e=TRI.get(x.m);
+   if(!e||e.k!==k){const V=[],tr=[];for(let i=0;i<p.count;i++)V.push(new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(mw));for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];tr.push(new T.Triangle(a,b,c));}e={k,tr};TRI.set(x.m,e);}
+   for(const t of e.tr)out.push(t);}return out;};
  const verts=(xs,max)=>{const out=[];for(const x of xs){const p=x.m.geometry.attributes.position,mw=x.m.matrixWorld;for(let i=0;i<p.count;i++)out.push(new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(mw));}
    if(out.length<=max)return out;const k=out.length/max,o=[];for(let i=0;i<max;i++)o.push(out[Math.floor(i*k)]);return o;};
  function minDist(As,Bs,lim=0.5){const ba=boxOf(As).expandByScalar(lim),bb=boxOf(Bs).expandByScalar(lim);if(!ba.intersectsBox(bb))return 99;const reg=ba.clone().intersect(bb);
    let best=99;const cp=new T.Vector3();
-   for(const[X,Y]of[[As,Bs],[Bs,As]]){const G=new Map(),C=0.25,key=(i,j,k)=>i+','+j+','+k,tb=new T.Box3();
+   for(const[X,Y]of[[As,Bs],[Bs,As]]){const G=new Map(),C=0.25,key=(i,j,k)=>((i+32768)*65536+(j+32768))*65536+(k+32768),tb=new T.Box3();   /* a cell's number (cells of 0.25 mm within ±8 m) */
      for(const tr of tris(Y)){tb.setFromPoints([tr.a,tr.b,tr.c]);if(!tb.intersectsBox(reg))continue;tb.expandByScalar(lim);
        for(let i=Math.floor(tb.min.x/C);i<=Math.floor(tb.max.x/C);i++)for(let j=Math.floor(tb.min.y/C);j<=Math.floor(tb.max.y/C);j++)for(let k=Math.floor(tb.min.z/C);k<=Math.floor(tb.max.z/C);k++){const q=key(i,j,k);if(!G.has(q))G.set(q,[]);G.get(q).push(tr);}}
      const pts=[],clip=(u,w)=>{let t0=0,t1=1;for(const k of['x','y','z']){const d=w[k]-u[k];if(Math.abs(d)<1e-12){if(u[k]<reg.min[k]||u[k]>reg.max[k])return null;continue;}let a=(reg.min[k]-u[k])/d,b=(reg.max[k]-u[k])/d;if(a>b)[a,b]=[b,a];t0=Math.max(t0,a);t1=Math.min(t1,b);if(t0>t1)return null;}return[t0,t1];};
