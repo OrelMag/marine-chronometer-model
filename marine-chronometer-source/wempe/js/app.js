@@ -637,8 +637,8 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   const GW={W0P:TAU/1.046,W0R:TAU/0.958,Z:0.05,LIM:60*D2R,RD:5,G:9.80665,PR:2/3,rock:false,latch:false,rockW:0,rockT:0,latchK:0,roll:0,pitch:0,M:{p:[0,0],r:[0,0],lp:0,lr:0}};
   const gwSea=(u,w,k)=>{const a=14*D2R*k,b=0.55*a,f=GW.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GW.RD*clamp((TAU/w-2)/2,0,1)};};
   function gwStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}const n=Math.ceil(dt/0.002),h=dt/n,rd=sea?sea.rd:0;
-    for(const[q,f,f0,m,W0]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P],[G.r,rl,G.lr,sea&&sea.r,GW.W0R]]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;
-      const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GW.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GW.G:1;
+    for(const[q,f,f0,m,W0,k]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P,'ap'],[G.r,rl,G.lr,sea&&sea.r,GW.W0R,'ar']]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;
+      const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GW.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GW.G:1;G[k]=Math.atan2(ah,av);   /* the apparent vertical (gimStep's G.ap, G.ar) */
       if(fr<1e-3){q[0]=f;q[1]=v;continue;}
       for(let i=0;i<n;i++){q[1]+=h*(-W2*(av*Math.sin(q[0])-ah*Math.cos(q[0]))-ZW*(q[1]-v));q[0]+=h*q[1];}
       if(Math.abs(q[0]-f)>GW.LIM){q[0]=f+Math.sign(q[0]-f)*GW.LIM;q[1]=v;}}
@@ -734,10 +734,11 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
       {const fix=SNAPC||RMC.matches,wR=TAU/(+document.getElementById('rollP').value||7),kr=fix?1:1-Math.exp(-dw*1.5);GW.rockW+=((GW.rock&&!fix?1:0)-GW.rockW)*kr;if(!GW.rock&&GW.rockW<1e-4)GW.rockW=0;
         if(GW.rockW>0)GW.rockT+=dw*wR;const sea=GW.rockW>0?gwSea(GW.rockT,wR,GW.rockW):null;GW.roll=sea?sea.r[0]:0;GW.pitch=sea?sea.p[0]:0;
         const lk=GW.latch||cw.u>0;GW.latchK=fix?+lk:clamp(GW.latchK+(lk?1:-1)*dw*1.2,0,1);const fr=1-smooth(Math.min(1,GW.latchK*2)),G=GW.M;
-        if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
-        /* drawn as the ship's people see it (16 October 2026; the Hamilton's the same): the box stands still, the camera riding with the ship, and the ring and bowl swing against
-           it as the gimbals take the roll and pitch; until then the box rolled in a fixed world and the bowl leaned with it toward the apparent vertical, so both seemed to move */
-        CS.root.rotation.set(0,0,0);CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
+        if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;G.ap=G.ar=0;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
+        /* drawn with the apparent vertical up (18 October 2026; the Hamilton's the same), as a plumb line hung beside the box would show down: the bowl, hanging along it, stays
+           put and the box rolls and pitches round it, the ring and bowl against the box as the gimbals take it; locked, the bowl goes with the box. Until 16 October the box rolled
+           in the true vertical's frame and the bowl leaned in it toward the apparent vertical, so both seemed to move; then until 18 October the box stood still and the bowl swung */
+        CS.root.rotation.set(GW.pitch-(G.ap||0),0,GW.roll-(G.ar||0),'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
          square; else standing in its holder in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}
