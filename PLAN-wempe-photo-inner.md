@@ -173,6 +173,30 @@ Numbers are `Review-results.md`'s, section "Photographs against the model". Sett
 
 The whole-movement items 3-8, 10-11, 13-14 and 20 belong to the first session or a later one. Don't take them unless the user asks.
 
+## Next steps (state at the end of 18 October 2026)
+
+Every item below is open; take them in this order and tick each off here (strike it through with what settled it) as it is done. What was already settled on this branch is in `Review-results.md`, "Settled on `claude/wempe-photo-inner`", and the Wempe README.
+
+**1. The checks.** `ci.py --full` was started on `1111138c`. Read its log (`ci-logs/`); fix what fails, each fix its own commit, and rerun the failing steps with `--only`. Then `--views` (anything drawn changed). Say what it printed.
+
+**2. The 6MX, still open:**
+- **12, the lower balance cock's step and lug.** Measure Kirova 14100's loose cock in plan (`photos/chasy-ru-9985-kirova-14100/`, say it is the later 6MX) and Kirov 247's side view (`8_Kirow_247_F.jpg`); rebuild the 6MX's cock (`frame.js`, `const lc=part('lowerCock'`), the step at u about −4.2 and the lug's plan with it. Note that `m6_detent`'s camera stands the ring's edge about 1.2 mm off near the escape arbor: measure along parts, not through the camera there.
+- **15, the electrical contact** (`10_Kirow_247_E-Kontakt_1.jpg`, specs `m6_contact`, `m6_contact_parts`): the large L-shaped gilt cock (its arm just under the top plate, cap plate with two screws and a jewel, leg behind the disc) and the copper spiral about Ø 7.4 under the arm; the lever a gilt block with a 45° chamfer carrying a threaded brass screw with a lock nut; the contact wheel's collet about Ø 2.0, 3.0 above the wheel; the disc with a recessed centre, a slotted steel screw and square knurl teeth. Sizes ±15 %. Ask the user before starting: it is a rebuild of several parts and its physics (`train.js` `R.c6`).
+- **21** (the later 6MX's slotted detent foot, its striped-less intermediate bridge): for the README only, not the model.
+
+**3. Wempe 3955, open or uncertain:**
+- **The balance's rest position:** every whole-movement view (A, N, O, S, W) has the arm about 3-9, 10° off; 05 03_1 sets it 6-12. Decide with the user whether Wempe 3955's version should rest so (a photograph of a stopped balance may not show its rest).
+- **The bowl's shoulder (27):** only the bottom was built; the drum's rounded shoulder can't be read closer than about 2 mm on `16_`. Look for another photograph of a Wempe Bakelite bowl side on before changing the profile.
+- **Not built, seen once:** a screw end in one of the lower cock's lug holes (`9_`); a dark dot about 0.26 below the escape setting (`12_`); a thin pin on the fusee cover's screw (`8_`); the bush in 18 reading about 1.7 open on the train face against its 1.3 bore (`8_`, 3 px); C-D's bore Ø 2 across the pillar plate to the rim's notch (`solidGeo` can't cut across the plate).
+- **Specs:** `w3955_feder` has no fit (refit it, a pillar pick was 9 mm off); `w3955_train`'s three ring-screw picks miss by 0.6-1.0 mm in different directions (mispicks: re-pick on `--zoom`); `m6_block_loose` is weak; `w3955_chain`, `_band`, `_bowl`, `m6_box_front` are by eye only.
+- **Earlier list, not taken here** (the first session's or a later one's unless the user says so): items 3-8, 10-11, 13-14, 20, 24 (the set-up ratchet's teeth, the engraving and maker's mark, the ring's dial side, the dial's pin, the dial-side jewels, the dial screws' heads, the 6MX's ring notch and stamps, the box's hasps).
+
+**4. Not photographs, noted:** the 6MX's 35-day trial failing at the masses' drawn place (main's 3.11.01 explains it in the essay with a button to compensate): nothing to do here unless the user asks.
+
+**5. Merging and release.** `claude/wempe-photo-compare` lands on `main` first. Then merge `main` into this branch (rebuild the built copies, regenerate the measured tables: `wempe_inertia.py --write` and `--rev 6mx --write`, `massprops.py --model wempe --write`, `mechanisms.py --model wempe --write`, `wempe_6mx.js --write`, `wempe_essaydata.js --write`, `contacts.py --model wempe --write`), run `ci.py --full`, and merge with `--no-ff` only when the user asks. Suggested release then: a patch, lines like "Wempe 3955 as photographed: the hand-setting groove in its ring, the escape collet's cone, the steel impulse roller, the poising holes, the brass wire stud, the bowl's bottom", "The 6MX: its escape pinion, banking screw, cap jewel setting and up-and-down wheel as Kirov 247's". The user decides.
+
+**6. After this branch:** the user's decision 3, the 1943 version against ALS 5177 and Kirow DEC 422 and 479, comes next, and isn't this branch's unless the user says so.
+
 ## Checks and finishing
 
 **Per change:** `solids.py --model wempe`, `audit.py --model wempe --rev REV` (all five revs: `last first 3955 6mx 1943`; `--update` only after reading what is new), `exploded.py`, `holecheck.py --model wempe`, and `fine.py --model wempe --eval "__mv.userData.setRev('REV')"`.
