@@ -733,7 +733,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
     for(const m of o.marks||[])if(Number.isFinite(m.y)){x.fillStyle=m.col;x.beginPath();x.arc(X(m.x),Y(m.y),m.r||4,0,TAU);x.fill();}x.restore();
     for(const t of o.texts||[]){x.fillStyle=t.col||txt;x.textAlign=t.al||'left';x.fillText(t.t,X(t.x),Y(t.y));}}
   function segSet(sel,v){document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
-  const swT=()=>(IS6?WEDATA.rev6:WEDATA).swing.cv,swAt=s=>{const SWT=swT(),n=SWT.length;if(!(s>SWT[0][0]))return[SWT[0][1],SWT[0][2]];if(s>=SWT[n-1][0])return[SWT[n-1][1],SWT[n-1][2]];let i=1;while(SWT[i][0]<s)i++;
+  const swT=()=>(IS6&&WEDATA.rev6?WEDATA.rev6:WEDATA).swing.cv,swAt=s=>{const SWT=swT(),n=SWT.length;if(!(s>SWT[0][0]))return[SWT[0][1],SWT[0][2]];if(s>=SWT[n-1][0])return[SWT[n-1][1],SWT[n-1][2]];let i=1;while(SWT[i][0]<s)i++;
     const[a,p,u]=SWT[i-1],[b,q,v]=SWT[i],f=(s-a)/(b-a);return[p+(q-p)*f,u==null||v==null?NaN:u+(v-u)*f];};   /* [the swing (deg), the rate (s a day)] at the drive s, between the drives solved */
   const swCv=$('#swCv'),swOut=$('#swOut'),swDet=$('#swingDet'),swTr=[];let swKind='t',swLast=0,swKey='',swC=null;
   function swRec(now){if(swTr.length&&now-swTr[swTr.length-1][0]<100)return;swTr.push([now,H.amp/D2R]);while(swTr.length&&now-swTr[0][0]>61000)swTr.shift();}
@@ -762,7 +762,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
      without its scatter: the cut bimetallic balance's coefficient at the masses' place (WEDATA.heat: wempe_thermal.js), the integral balance's secondary error (the middle of
      its range, Sint: estimated, S losing at the extremes, c2 = -S/256 as the tool's) and the air's density against 20 °C (airK). The model's clock runs at the escapement's rate
      and these. The masses aren't moved on the model: the rim is drilled for them at the drawn place only ---------- */
-  const TWT=44.2,TWN=15,TWP=0.16,trl=()=>IS6?WEDATA.rev6.trial:WEDATA.trial,HR=WEDATA.heat.rows;   /* trl: the version's trial (WEDATA.trial, the 6MX's WEDATA.rev6.trial) */
+  const TWT=44.2,TWN=15,TWP=0.16,trl=()=>IS6&&WEDATA.rev6?WEDATA.rev6.trial:WEDATA.trial,HR=WEDATA.heat.rows;   /* trl: the version's trial (WEDATA.trial, the 6MX's WEDATA.rev6.trial) */
   function hAt(x){const n=HR.length;if(x<=HR[0][0])return HR[0][1];if(x>=HR[n-1][0])return HR[n-1][1];let i=1;while(HR[i][0]<x)i++;const[a,p]=HR[i-1],[b,q]=HR[i];return p+(q-p)*(x-a)/(b-a);}   /* the balance's coefficient, s a day gained a °C, the masses x° from the cuts' line */
   function plAdj(){let a=HR[0][0],b=HR[HR.length-1][0];for(let i=0;i<50;i++){const m=(a+b)/2;hAt(m)>trl().airLin?a=m:b=m;}return Math.round((a+b))/2;}   /* where the masses null the coefficient with the air's linear part (the tool's "adjusted"), to the slider's half degree */
   function rT(T,pl){const c2=-(trl().Sint[0]+trl().Sint[1])/2/256;return hAt(pl)*(T-20)+c2*(T-20)**2+trl().airK*(293.15/(273.15+T)-1);}   /* s a day gained at T °C against 20 */
