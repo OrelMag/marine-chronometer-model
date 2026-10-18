@@ -85,12 +85,12 @@
    "barrel": 0.507
   },
   "unlocks": 0.669,
-  "lock": 0.3435,
+  "lock": 0.358,
   "runs": 0.057,
   "band": 0.6605,
   "sources": 0,
   "times": 0.078,
-  "works": 0.0285
+  "works": 0.03
  },
  "after": {
   "turns": 1,
@@ -115,14 +115,14 @@
   },
   "after": {
    "lo": [
-    186.3492,
-    190.8224,
-    196.3414
+    186.4214,
+    190.9112,
+    196.4276
    ],
    "hi": [
-    196.3927,
-    201.0464,
-    206.6708
+    196.4582,
+    201.1317,
+    206.7548
    ]
   },
   "hist": [
@@ -188,15 +188,15 @@
    "caught": 0
   },
   "lock": {
-   "caught": 1806,
-   "wouldFail": 1313
+   "caught": 1782,
+   "wouldFail": 1284
   },
   "spring": {
    "caught": 1
   },
   "setup": {
-   "caught": 56,
-   "mended": 56
+   "caught": 54,
+   "mended": 54
   },
   "swing": {
    "caught": 0
@@ -252,13 +252,13 @@
    "times": 0
   },
   "banking": {
-   "asMade": 0.9,
+   "asMade": 0.89,
    "works": 1,
    "band": 0.9,
    "times": 0
   },
   "preload": {
-   "asMade": 0.528,
+   "asMade": 0.552,
    "works": 1,
    "band": 1,
    "times": 0
