@@ -293,7 +293,9 @@ const WFRAME=(()=>{
        the bush's own figures scale to 0.1 on it). Lange No. 5829's (stahl_113510_lange_4.jpg, side-on) has it 1.23 times the bush's body across, as the section's 16.1/13.1,
        and a quarter as high as wide (sure). Its bore drawn 0.01 clear of the neck. Natural cork, its colour off that photograph */
     const ck=part('corkRing',-68);
-    {const yb=TT-1.5-15.1,yt=yb-3.86;tag(mesh(ck,new THREE.LatheGeometry([V2(4.86,yt),V2(8.05,yt),V2(8.05,yb),V2(4.86,yb),V2(4.86,yt)],72),new THREE.MeshStandardMaterial({color:sc(0xc8a070),metalness:0,roughness:0.92}),F10[0],0,F10[1]),'050801-4');}
+    /* Wempe 3955 (the version as photographed) has none: its N, O and A photographs show the neck bare to its mouth (photocompare.py; its movement was photographed out of the
+       bowl, so the cork may have perished or stayed in the case's seat); the sheets' versions keep it */
+    {const yb=TT-1.5-15.1,yt=yb-3.86;tag(mesh(rv(ck,'last first 6mx 1943 -3955'),new THREE.LatheGeometry([V2(4.86,yt),V2(8.05,yt),V2(8.05,yb),V2(4.86,yb),V2(4.86,yt)],72),new THREE.MeshStandardMaterial({color:sc(0xc8a070),metalness:0,roughness:0.92}),F10[0],0,F10[1]),'050801-4');}
 
     /* ================= the upper balance cock (Unruhkloben oben, 05 08 03-1; kompl. 127-556.04 U30) ================= */
     /* Profilmessing Ms 58, cranked: a foot 3.2 thick on the top plate's outer face, a web, and an arm 15 -0.1 over the foot's underside to the balance's upper setting at 23.
