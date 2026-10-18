@@ -1,6 +1,7 @@
 """The balance lower bridge (42065), laid out after a restoration video of a 1941 Model 21 and the manual's Figs. 29, 30 and 110. No browser.
 
     python lower_bridge.py     # prints LB_UP, LB_WALL, LB_LO and LB_LO2 for movement.js, the screw, pin and train-blocking screw positions and the clearances,
+                               # (since 18 October 2026 movement.js's LB_LO and LB_LO2 are the owner's hand trace, not this tool's: its LB_LO/LB_LO2 lines are not to be pasted)
                                # and writes r_lower_bridge.png (the plan, with the measured bridge beside it); about 2.5 minutes
 
 What the sources give:
@@ -139,7 +140,7 @@ def main():
     r2=lambda P:[[round(float(x),2),round(float(z),2)] for x,z in P]
     print('const LB_UP=['+json.dumps(r2(O['upR']))+','+json.dumps(r2(O['upT']))+','+json.dumps(r2(O['upL']))+'];')
     print('const LB_WALL=['+json.dumps(r2(O['wallR']))+','+json.dumps(r2(O['wallT']))+','+json.dumps(r2(O['wallL']))+'];')
-    print('const LB_LO='+json.dumps(r2(O['lo']))+';')
+    print('// superseded: movement.js has the hand-traced slab since 18 October 2026'); print('const LB_LO='+json.dumps(r2(O['lo']))+';')
     print('const LB_LO2='+json.dumps(r2(O['lo2']))+';')
     print('S.tBlock',r2([TBLOCK]),'S.lb',r2([S1,S2]),'S.lbp',r2([P1,P2]))
     try:   # the plan beside the video's outline
