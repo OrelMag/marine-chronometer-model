@@ -3207,7 +3207,7 @@ const WTRAIN=(()=>{
   /* a wheel or pinion as one closed solid (core.js's extrude): the outline extruded th along y and centred on y 0, as gearGeo; spokes [n, width, hub radius, rim's inner
      radius], straight spokes of constant width as gearGeo cuts them; bore its hole. Outline and radii in userData as gearGeo's, for gearLash */
   function gear(T,th,o={}){const s=new THREE.Shape();s.moveTo(T.xy[0][0],T.xy[0][1]);for(let i=1;i<T.xy.length;i++)s.lineTo(T.xy[i][0],T.xy[i][1]);s.closePath();
-    if(o.spokes){const[n,sw,R0,R1]=o.spokes,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0);
+    if(o.spokes){const[n,sw,R0,R1,sw1]=o.spokes,d1=Math.asin((sw1||sw)/2/R1),d0=Math.asin(sw/2/R0);   /* sw at the hub, sw1 (if given) at the rim: straight edges between, a taper */
       for(let j=0;j<n;j++){const a0=j/n*TAU,a1=(j+1)/n*TAU,h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
     if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
     const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:o.spokes?40:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro:T.ro,ri:T.ri,pl:T.xy});return g;}
@@ -4051,6 +4051,11 @@ const WESC=(()=>{
     {const g=ew.children.find(c=>c.userData.rev==='first 6mx 1943'),pv=0.12,yP1=Y1.pf,yP0=yP1-3,ar=[[0,Y1.etU],[pv,Y1.etU],[pv,Y1.etU+0.5],[0.525,Y1.etU+2.0],[0.525,Y1.ewWeb-0.002],[0.6,Y1.ewWeb-0.002],[0.6,Y1.etL-0.9],[pv,Y1.etL-0.5],[pv,Y1.etL],[0,Y1.etL]];
       tag(mesh(g,lathe(ar,24),M.steel),'050405-2');
       const pn=tag(mesh(g,WTRAIN.gear(WTRAIN.teeth(10,0.263,2.97,1.6),3),M.steel,0,(yP0+yP1)/2,0),'050405-2',1);pn.userData.gear={z:10,m:0.263};R.pinion1=pn;
+      /* the Soviet 6MX's (Kirov No. 247's) pinion longer and lower: 3.9 long, from 11.7 to 15.6 under the escape wheel's underside, so its foot 1.5 over the pillar plate
+         (8_Kirow_247_F.jpg, scaled by the wheel's tips, Ø 14 over 247 px, 17.65 px/mm, the camera all but level: the pinion's rows 480.5-549.5 and its leaves' Ø 2.97 over 53 px,
+         17.85, agreeing; heights taken along the arbor from the wheel, not through the photograph's camera, which stands the ring's edge 1.2 off here: likely ±0.2); the drawn
+         3 from 2.0 to 5.0 over its far face 15.2 from the wheel's plate face (05 04_7.1) in the German versions */
+      onRev(v=>{const six=v==='6mx',y0=six?Y1.ew1+11.67:yP0,y1=six?Y1.ew1+15.57:yP1;pn.scale.y=(y1-y0)/3;pn.position.y=(y0+y1)/2;});
       tag(mesh(rv(g,'first 1943 -3955'),lathe([[0.6+0.0015,Y1.ewWeb],[0.9,Y1.ewWeb],[0.9,Y1.ew1],[1.5,Y1.ew1],[1.1,Y1.ew1+1.8],[0.9,Y1.ew1+1.8],[0.9,Y1.ew1+5],[0.6+0.0015,Y1.ew1+5]],40),M.brass),'050405-3');
       /* Wempe 3955's collet (the version as photographed): one straight cone, no step and no pipe, as the 6MX's: Ø 2.95 at the wheel to Ø 1.50 at its end 4.9 below it
          (9_Wempe_3955_Hemmung.jpg, photocompare.py's w3955_hem_1 camera: 12.98 px/mm along the arbor, 14.1 across; both edges at the brass's saturation's mid-level on 47
@@ -4204,7 +4209,13 @@ const WESC=(()=>{
           tag(screw(gE,0,0,0,2.1,1.2,2.5,0.7),'6MX.gke').userData.lift=0;}   /* seated on the side face, its shank along -t into the base (the kit's fillister head, slotted) */
         const nB=nUr-0.6,nH=0.575+0.005,lS=nH-nB,rH=1.6,hH=1.4,R3=(rH*rH+hH*hH)/(2*hH),a0=Math.asin(rH/R3),dome=[];   /* the head a spherical cap rH across its face, hH high */
         for(let i=0;i<=10;i++){const a=a0*(1-i/10);dome.push([R3*Math.sin(a),lS+hH-R3+R3*Math.cos(a)]);}
-        tag(across(blk6,lathe([[0,0],[0.6,0],[0.6,lS],[rH,lS],...dome],24),M.brass,L(ROW-18.8,nB),TD.n,yS),'WN-gkA');}
+        /* its thread, cut as the 1943 screw's (pitch 0.25, M1.2's), and the dome slotted: Kirov 247's (8_Kirow_247_F.jpg, photocompare.py's m6_detent camera: the thread showing
+           past the upright where the pipe rests on the head, a slot across the dome; likely); until 18 October 2026 a plain shank and dome */
+        const rs=0.6,pt=0.25,dt=pt*0.3,pf=[[0,0],[rs-dt,0],[rs,dt]];for(let y=dt;y+pt<=lS;y+=pt)pf.push([rs-dt,y+pt/2],[rs,y+pt]);
+        tag(across(blk6,lathe([...pf,[rs,lS],[rH,lS],...dome],24),M.brass,L(ROW-18.8,nB),TD.n,yS),'WN-gkA');
+        {const zt=(/** @type {number} */r)=>lS+hH-R3+Math.sqrt(R3*R3-r*r),xs=[];for(let k=0;k<=24;k++)xs.push(-rH+2*rH*k/24);
+          const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,zt(Math.abs(x))+0.01]),...xs.slice().reverse().map(x=>[x,zt(Math.abs(x))-0.45])]),y0:-0.17,y1:0.17}]);
+          sg.rotateX(-Math.PI/2);sg.rotateY(Math.atan2(TD.n[0],TD.n[1])+0.6);tag(across(blk6,sg,M.steelD,L(ROW-18.8,nB),TD.n,yS),'WN-gkA',1);}}
       /* The escapement of 1943's block ('1943'): the 6MX's (05 04 01-4 read in first angle: its base, holes and fillet r 2, the upright 3.5-6.5 under the plate), its upright's
          end and banking screw as the German movements with this block show them (dg-chrono-dec/8_Kirow_DEC_479_Feder.jpg, 8_Lange_5177_Feder.jpg, 8_Kirow_DEC_422_Feder.jpg,
          17 October 2026; scaled by the upright's 3 beside the head: 19, 16.5 and 17.7 px/mm, DEC 479's by the detent's blade 0.9 too). Each reading is a ratio on the upright's
@@ -4314,11 +4325,14 @@ const WESC=(()=>{
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
     const JR=1.45,JT=0.8,JD=0.3,JC=0.8,JH=0.55,ER=1.45,EE=0.5,EH=0.4,eLip=(y,s)=>[1.42,y+s*(EE+KIT.domeAt(ER,EH,1.42)+0.003)];   /* the stones (above); eLip: the endstone's setting's lip over its edge, the face at y, s the way to the dome */
     {const ck=TT-15,cT=ck-0.1,eY=Y.tipU-0.02,hY=eY+0.03,lp=eLip(eY,-1);
-      tag(mesh(bju,lathe([[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),M.gilt),'050408-2.bu');   /* the mouth a cone from the lip to Ø 4.4 at its top, 0.1 proud of the cock */
-      tag(mesh(bju,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.steel),'050408-1.bu');   /* drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
       tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,hY],[2.6,hY],[2.6,ck+2.7],[1.2,ck+2.7]],48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim */
       tag(mesh(bju,lathe(KIT.jewelPr(JR,JT,0.125,JD,JC,JH,hY,1),32),M.ruby),'050407-1.bu');
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.steel]]){const g=new THREE.Group();g.userData.rev=V;bju.add(g);   /* the 6MX's steel (2_Kirow_247_A.jpg, photocompare.py: likely) */
+        /* the endstone's setting, its mouth a cone from the lip to Ø 4.4 at its top, 0.1 proud of the cock: gilt as drawn; the 6MX's polished steel (2_Kirow_247_A.jpg, photocompare.py's
+           k247_A camera: its outline on the model's, the ring bright and neutral as the screws: likely). The stone drawn bright and opaque, as Wempe 3955's white one (a clear
+           one would show the ruby under it); the 6MX's a ruby (red through the setting, 2_Kirow_247_A.jpg: likely) */
+        tag(mesh(g,lathe([[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),V==='6mx'?M.steel:M.gilt),'050408-2.bu');
+        tag(mesh(g,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),V==='6mx'?M.ruby:M.steel),'050408-1.bu');
         for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(g,q[0],q[1],cT,1.25,1.3,2.1,0.46,mt),'WN-55.ck');}}}
     {const lf=TI+10,eY=Y.tipL+0.02,hY=eY-0.03,lp=eLip(eY,1),o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
       tag(mesh(bjl,lathe([[1.5,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,eY],[JR+0.003,eY],[JR+0.003,hY-JT],[1.2,hY-JT],[1.2,hY-JT-0.07],[1.5,hY-JT-0.37]],48),M.brass),'050406-2.bl');   /* over the stone, open Ø 3.0 round the staff (the section) */
@@ -5337,8 +5351,10 @@ const WFUSEE=(()=>{
     const gWS=tag(K.headOn(loose(grp(gD,H[5][0]-DX[0],H[5][1]-DX[1]),0),'maintDetent','topPlate'),'wireStud');   /* in the Exploded view it stays in the top plate */
     {const r=1.5,hb=TT-1.2,w=0.225,v=[Math.sin(10*D2R),-Math.cos(10*D2R)],u=[-v[1],v[0]],t0=Math.acos(w/r),pt=t=>[r*Math.cos(t)*u[0]+r*Math.sin(t)*v[0],r*Math.cos(t)*u[1]+r*Math.sin(t)*v[1]];   /* plan: v along the slot (10° off N toward 3 o'clock, +x), u across it */
       const arc=(a,b,n)=>Array.from({length:n+1},(_,i)=>pt(a+(b-a)*i/n)),A=arc(-t0,t0,14),B=arc(Math.PI-t0,Math.PI+t0,14),C=[...arc(t0,Math.PI-t0,2),...arc(Math.PI+t0,TAU-t0,2)];   /* the slot's ends: the circle's short arcs, through the halves' chord ends */
-      mesh(gWS,solidGeo([{loop:A,y0:TT-1.9,y1:TT},{loop:B,y0:TT-1.9,y1:TT},{loop:C,y0:hb,y1:TT}]),M.steel);   /* the head: its two halves, the slot's floor between them */
-      mesh(gWS,turned([[0,TT-0.3],[0.85,TT-0.3],[0.85,WR-0.25],...[1,2,3,4,5].map(i=>{const a=i/6*Math.PI/2;return[0.6+0.25*Math.cos(a),WR-0.25+0.25*Math.sin(a)];}),[0.6,WR],[WRW,WR],[WRW,WR-WH],[0,WR-WH]],24),M.steel);}   /* the shank, from inside the head */
+      /* steel, as drawn; Wempe 3955's (the version as photographed) brass, head and all (2_Wempe_3955_A.jpg from above and 5_Wempe_3955_O.jpg from the side: brass coloured,
+         slotted, beside the steel pivot in hole 4's sink; photocompare.py: likely), in its own group (a version that differs only in metal gets its own copy) */
+      const hd=solidGeo([{loop:A,y0:TT-1.9,y1:TT},{loop:B,y0:TT-1.9,y1:TT},{loop:C,y0:hb,y1:TT}]),sk=turned([[0,TT-0.3],[0.85,TT-0.3],[0.85,WR-0.25],...[1,2,3,4,5].map(i=>{const a=i/6*Math.PI/2;return[0.6+0.25*Math.cos(a),WR-0.25+0.25*Math.sin(a)];}),[0.6,WR],[WRW,WR],[WRW,WR-WH],[0,WR-WH]],24);
+      for(const[V,mt]of/** @type {[string,any][]} */([['last first 6mx 1943 -3955',M.steel],['3955',M.brass]])){const g=rv(gWS,V);mesh(g,hd,mt);mesh(g,sk,mt);}}   /* the head (its two halves, the slot's floor between them) and the shank, from inside the head */
     /* the wire's deflection: the least that puts its section (WRW) clear of the detent's outline at the arm's upper face, its click turned g; along the outline's normal there */
     const wireDef=g=>{const c=Math.cos(g),s=Math.sin(g),Q=DTX.map(([x,y])=>[x*c-y*s,x*s+y*c]),pt=[WP[0],WP[1]];let dx=0,dy=0;
       for(let it=0;it<4;it++){let best=9,q=null;for(let i=0;i<Q.length;i++){const a=Q[i],b=Q[(i+1)%Q.length],ex=b[0]-a[0],ey=b[1]-a[1],t=Math.max(0,Math.min(1,((pt[0]-a[0])*ex+(pt[1]-a[1])*ey)/(ex*ex+ey*ey))),X=[a[0]+ex*t,a[1]+ey*t],d=Math.hypot(pt[0]-X[0],pt[1]-X[1]);if(d<best){best=d;q=X;}}
@@ -6118,15 +6134,18 @@ const WDIAL=(()=>{
 
     /* ---------- the up-and-down wheel on the long stud at 2, and its pinion on the fusee arbor at 10 ---------- */
     const udP=part('udWheel',30),ud=grp(udP,H[2]);R.ud=ud;
-    {const c=UDW;tag(mesh(ud,lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rf,c.yw1],[c.rf,c.yf],[c.rst,c.yf],[c.rst,c.ys],[c.rh,c.ys],[c.rh,c.yt],[c.rb,c.yt]],48),M.brass),'050204-2');
-      const wm=tag(mesh(ud,gear(c.wheel,1.0,{spokes:[5,1.6,10.4/2,28.3/2],bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};R.udW=wm;}
+    {const c=UDW,hub=lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rf,c.yw1],[c.rf,c.yf],[c.rst,c.yf],[c.rst,c.ys],[c.rh,c.ys],[c.rh,c.yt],[c.rb,c.yt]],48);
+      /* the Soviet 6MX's spokes taper, 1.82 at the hub to 1.18 at the rim (3_3_Auf-_und_Ab_rus.jpg, the wheel loose, rectified by its rim's inside fitted as an ellipse, Ø 28.2:
+         the five spokes' widths read on circles r 8 to 13.6, their mean 1.62 to 1.22, a line through them; 3_Kirow_247_uZ.jpg in place the same: likely); the drawings' 1.6 straight */
+      for(const[V,sp]of/** @type {[string,number[]][]} */([['last first 1943',[5,1.6,10.4/2,28.3/2]],['6mx',[5,1.82,10.4/2,28.3/2,1.18]]])){const gv=new THREE.Group();gv.userData.rev=V;ud.add(gv);tag(mesh(gv,hub,M.brass),'050204-2');   /* the hub in each version's group with its wheel (fine.py takes pieces fixed to each other by their shared group) */
+        const wm=tag(mesh(gv,gear(c.wheel,1.0,{spokes:sp,bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};if(V==='6mx')R.udW6=wm;else R.udW=wm;}}
     const upP=part('udPinion',20),up=grp(upP,H[10]);R.up=up;
     {const pm=tag(mesh(up,gear(UDP.pin,UDP.y1-UDP.y0,{bore:UDP.rb}),M.steel,0,(UDP.y0+UDP.y1)/2,0),'050200-5');pm.userData.gear={z:12,m:M_UD};R.upP=pm;}
 
     /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
        change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
     const ph=(A,pa,B,pb,s)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b;};
-    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);
+    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
 
     /* ---------- the hands ---------- */
     const hdP=part('hands',56);

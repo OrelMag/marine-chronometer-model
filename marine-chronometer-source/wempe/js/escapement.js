@@ -567,6 +567,11 @@ const WESC=(()=>{
     {const g=ew.children.find(c=>c.userData.rev==='first 6mx 1943'),pv=0.12,yP1=Y1.pf,yP0=yP1-3,ar=[[0,Y1.etU],[pv,Y1.etU],[pv,Y1.etU+0.5],[0.525,Y1.etU+2.0],[0.525,Y1.ewWeb-0.002],[0.6,Y1.ewWeb-0.002],[0.6,Y1.etL-0.9],[pv,Y1.etL-0.5],[pv,Y1.etL],[0,Y1.etL]];
       tag(mesh(g,lathe(ar,24),M.steel),'050405-2');
       const pn=tag(mesh(g,WTRAIN.gear(WTRAIN.teeth(10,0.263,2.97,1.6),3),M.steel,0,(yP0+yP1)/2,0),'050405-2',1);pn.userData.gear={z:10,m:0.263};R.pinion1=pn;
+      /* the Soviet 6MX's (Kirov No. 247's) pinion longer and lower: 3.9 long, from 11.7 to 15.6 under the escape wheel's underside, so its foot 1.5 over the pillar plate
+         (8_Kirow_247_F.jpg, scaled by the wheel's tips, Ø 14 over 247 px, 17.65 px/mm, the camera all but level: the pinion's rows 480.5-549.5 and its leaves' Ø 2.97 over 53 px,
+         17.85, agreeing; heights taken along the arbor from the wheel, not through the photograph's camera, which stands the ring's edge 1.2 off here: likely ±0.2); the drawn
+         3 from 2.0 to 5.0 over its far face 15.2 from the wheel's plate face (05 04_7.1) in the German versions */
+      onRev(v=>{const six=v==='6mx',y0=six?Y1.ew1+11.67:yP0,y1=six?Y1.ew1+15.57:yP1;pn.scale.y=(y1-y0)/3;pn.position.y=(y0+y1)/2;});
       tag(mesh(rv(g,'first 1943 -3955'),lathe([[0.6+0.0015,Y1.ewWeb],[0.9,Y1.ewWeb],[0.9,Y1.ew1],[1.5,Y1.ew1],[1.1,Y1.ew1+1.8],[0.9,Y1.ew1+1.8],[0.9,Y1.ew1+5],[0.6+0.0015,Y1.ew1+5]],40),M.brass),'050405-3');
       /* Wempe 3955's collet (the version as photographed): one straight cone, no step and no pipe, as the 6MX's: Ø 2.95 at the wheel to Ø 1.50 at its end 4.9 below it
          (9_Wempe_3955_Hemmung.jpg, photocompare.py's w3955_hem_1 camera: 12.98 px/mm along the arbor, 14.1 across; both edges at the brass's saturation's mid-level on 47
@@ -726,7 +731,13 @@ const WESC=(()=>{
           tag(screw(gE,0,0,0,2.1,1.2,2.5,0.7),'6MX.gke').userData.lift=0;}   /* seated on the side face, its shank along -t into the base (the kit's fillister head, slotted) */
         const nB=nUr-0.6,nH=0.575+0.005,lS=nH-nB,rH=1.6,hH=1.4,R3=(rH*rH+hH*hH)/(2*hH),a0=Math.asin(rH/R3),dome=[];   /* the head a spherical cap rH across its face, hH high */
         for(let i=0;i<=10;i++){const a=a0*(1-i/10);dome.push([R3*Math.sin(a),lS+hH-R3+R3*Math.cos(a)]);}
-        tag(across(blk6,lathe([[0,0],[0.6,0],[0.6,lS],[rH,lS],...dome],24),M.brass,L(ROW-18.8,nB),TD.n,yS),'WN-gkA');}
+        /* its thread, cut as the 1943 screw's (pitch 0.25, M1.2's), and the dome slotted: Kirov 247's (8_Kirow_247_F.jpg, photocompare.py's m6_detent camera: the thread showing
+           past the upright where the pipe rests on the head, a slot across the dome; likely); until 18 October 2026 a plain shank and dome */
+        const rs=0.6,pt=0.25,dt=pt*0.3,pf=[[0,0],[rs-dt,0],[rs,dt]];for(let y=dt;y+pt<=lS;y+=pt)pf.push([rs-dt,y+pt/2],[rs,y+pt]);
+        tag(across(blk6,lathe([...pf,[rs,lS],[rH,lS],...dome],24),M.brass,L(ROW-18.8,nB),TD.n,yS),'WN-gkA');
+        {const zt=(/** @type {number} */r)=>lS+hH-R3+Math.sqrt(R3*R3-r*r),xs=[];for(let k=0;k<=24;k++)xs.push(-rH+2*rH*k/24);
+          const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,zt(Math.abs(x))+0.01]),...xs.slice().reverse().map(x=>[x,zt(Math.abs(x))-0.45])]),y0:-0.17,y1:0.17}]);
+          sg.rotateX(-Math.PI/2);sg.rotateY(Math.atan2(TD.n[0],TD.n[1])+0.6);tag(across(blk6,sg,M.steelD,L(ROW-18.8,nB),TD.n,yS),'WN-gkA',1);}}
       /* The escapement of 1943's block ('1943'): the 6MX's (05 04 01-4 read in first angle: its base, holes and fillet r 2, the upright 3.5-6.5 under the plate), its upright's
          end and banking screw as the German movements with this block show them (dg-chrono-dec/8_Kirow_DEC_479_Feder.jpg, 8_Lange_5177_Feder.jpg, 8_Kirow_DEC_422_Feder.jpg,
          17 October 2026; scaled by the upright's 3 beside the head: 19, 16.5 and 17.7 px/mm, DEC 479's by the detent's blade 0.9 too). Each reading is a ratio on the upright's
@@ -871,11 +882,14 @@ const WESC=(()=>{
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
     const JR=1.45,JT=0.8,JD=0.3,JC=0.8,JH=0.55,ER=1.45,EE=0.5,EH=0.4,eLip=(y,s)=>[1.42,y+s*(EE+KIT.domeAt(ER,EH,1.42)+0.003)];   /* the stones (above); eLip: the endstone's setting's lip over its edge, the face at y, s the way to the dome */
     {const ck=TT-15,cT=ck-0.1,eY=Y.tipU-0.02,hY=eY+0.03,lp=eLip(eY,-1);
-      tag(mesh(bju,lathe([[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),M.gilt),'050408-2.bu');   /* the mouth a cone from the lip to Ø 4.4 at its top, 0.1 proud of the cock */
-      tag(mesh(bju,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.steel),'050408-1.bu');   /* drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
       tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,hY],[2.6,hY],[2.6,ck+2.7],[1.2,ck+2.7]],48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim */
       tag(mesh(bju,lathe(KIT.jewelPr(JR,JT,0.125,JD,JC,JH,hY,1),32),M.ruby),'050407-1.bu');
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.steel]]){const g=new THREE.Group();g.userData.rev=V;bju.add(g);   /* the 6MX's steel (2_Kirow_247_A.jpg, photocompare.py: likely) */
+        /* the endstone's setting, its mouth a cone from the lip to Ø 4.4 at its top, 0.1 proud of the cock: gilt as drawn; the 6MX's polished steel (2_Kirow_247_A.jpg, photocompare.py's
+           k247_A camera: its outline on the model's, the ring bright and neutral as the screws: likely). The stone drawn bright and opaque, as Wempe 3955's white one (a clear
+           one would show the ruby under it); the 6MX's a ruby (red through the setting, 2_Kirow_247_A.jpg: likely) */
+        tag(mesh(g,lathe([[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),V==='6mx'?M.steel:M.gilt),'050408-2.bu');
+        tag(mesh(g,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),V==='6mx'?M.ruby:M.steel),'050408-1.bu');
         for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(g,q[0],q[1],cT,1.25,1.3,2.1,0.46,mt),'WN-55.ck');}}}
     {const lf=TI+10,eY=Y.tipL+0.02,hY=eY-0.03,lp=eLip(eY,1),o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
       tag(mesh(bjl,lathe([[1.5,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,eY],[JR+0.003,eY],[JR+0.003,hY-JT],[1.2,hY-JT],[1.2,hY-JT-0.07],[1.5,hY-JT-0.37]],48),M.brass),'050406-2.bl');   /* over the stone, open Ø 3.0 round the staff (the section) */
