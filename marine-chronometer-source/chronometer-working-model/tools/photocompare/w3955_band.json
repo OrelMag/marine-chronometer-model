@@ -1,0 +1,17 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/14_Wempe_3955_Band_Kette.jpg",
+ "rev": "3955",
+ "hash": "wind=56&conn=band",
+ "only": [
+  "band"
+ ],
+ "look": [
+  3.14159,
+  1.5707,
+  300,
+  0,
+  -18,
+  0,
+  15
+ ]
+}

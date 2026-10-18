@@ -252,16 +252,52 @@ const KIT=(()=>{
        one group, which the Exploded view lifts out of its holes along the screw's axis (SCREWS) */
     const SCREWS=[],loose=(g,lift)=>{g.userData.y0=g.position.y;g.userData.lift=lift;SCREWS.push(g);return g;};   /* loose: g moves on its own in the Exploded view, lift mm toward its frame's -y past its part */
     const headOn=(g,p,q)=>{g.userData.lift+=P[p].userData.off-P[q].userData.off;return g;};   /* a screw of part p put in through part q: it leaves with q, then lifts out of it */
-    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius and the material (steel by default) */
-    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null)=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
-      if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt));pr.push(V2(rs,0),V2(rs,len-n*pt-d));   /* rings of thread (drawn as turned grooves, not a helix), a chamfered tip */
-        for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));}
-      else pr.push(V2(0,0));
+    /* the head with its slot cut, one closed solid (solidGeo): two flat-topped halves inside the chamfer, the chamfer's ring (45°, c wide) round each, and between them
+       the slot's strip, its floor s under the top, w wide, open at both ends. Every photograph shows slots as dark grooves; until 18 October 2026 a grey box stood 0.02 proud
+       across the head (photocompare.py, Wempe 3955's N view). Cached by size */
+    const HG={};
+    /* domed (dome > 0, its rise over the rim): the top a spherical cap from the rim (no chamfer), built of rings so the cap is a surface, not a fan; the slot cut under it */
+    const headGeo=(r,h,dome=0)=>{const k=r+'_'+h+'_'+dome;if(HG[k])return HG[k];const c=dome>0?0:Math.min(0.35,r*0.14),w=Math.max(0.35,r*0.2),s=Math.max(Math.min(0.55,h*0.45),c+0.05,dome>0?dome+0.3:0),hw=w/2,n=24;
+      const RD=dome>0?(r*r+dome*dome)/(2*dome):0,yD=q=>-h+RD-Math.sqrt(Math.max(0,RD*RD-q[0]*q[0]-q[1]*q[1]));   /* the cap: -h at the middle, -h+dome at the rim */
+      const arc=(rr,sg,a0,a1)=>[...Array(n+1).keys()].map(i=>{const t=a0+(a1-a0)*i/n;return[rr*Math.cos(t),sg*rr*Math.sin(t)];});
+      const ccw=L=>area(L)<0?L.slice().reverse():L,cells=[];
+      const A=dome>0?[0.35,0.55,0.72,0.87,1].map(f=>Math.max(f*r,hw+0.08)).filter((v,i,a)=>i===0||v>a[i-1]+0.05):[r-c,r];   /* the rings' radii: the cap's, or the flat top's and the chamfer's */
+      const top=dome>0?yD:q=>-h+Math.max(0,Math.hypot(q[0],q[1])-(r-c));
+      for(const sg of[1,-1]){const ARC=A.map(a=>arc(a,sg,Math.asin(hw/a),Math.PI-Math.asin(hw/a)));   /* the half on the z sg side: each arc's ends on the slot's edge */
+        cells.push({loop:ccw(ARC[0]),y0:dome>0?yD:-h,y1:0});   /* the middle: the first arc closed by the slot's edge */
+        for(let i=1;i<A.length;i++)cells.push({loop:ccw([...ARC[i],...ARC[i-1].slice().reverse()]),y0:top,y1:0});}   /* the rings, open at the slot */
+      const X=A.map(a=>Math.sqrt(a*a-hw*hw));
+      cells.push({loop:ccw([...X.slice().reverse().map(x=>[x,-hw]).reverse(),...X.slice().reverse().map(x=>[x,hw]),...X.map(x=>[-x,hw]),...X.slice().reverse().map(x=>[-x,-hw])]),y0:-h+s,y1:0});   /* the slot's strip, its ends on the rim */
+      const G=solidGeo(cells),P=G.attributes.position.array,N=G.attributes.normal.array;   /* the cap's, the chamfer's and the rim's triangles shaded round (their own normals), not faceted */
+      for(let t=0;t<P.length;t+=9){const nx=N[t],ny=N[t+1],nz=N[t+2],cx=(P[t]+P[t+3]+P[t+6])/3,cz=(P[t+2]+P[t+5]+P[t+8])/3,cr=Math.hypot(cx,cz)||1,rim=Math.abs(ny)<0.05&&(nx*cx+nz*cz)/cr>0.9;
+        const cap=dome>0&&ny<0&&[0,3,6].every(o=>Math.abs(P[t+o+1]-yD([P[t+o],P[t+o+2]]))<1e-4),cone=!dome&&Math.abs(ny)>0.05&&Math.abs(ny)<0.95;
+        if(!cone&&!rim&&!cap)continue;for(let v=t;v<t+9;v+=3){const px=P[v],pz=P[v+2],pr=Math.hypot(px,pz)||1;
+          if(cap){const yy=-Math.sqrt(Math.max(0,RD*RD-px*px-pz*pz));N[v]=px/RD;N[v+1]=yy/RD;N[v+2]=pz/RD;}else if(cone){const l=Math.SQRT2;N[v]=px/pr/l;N[v+1]=-1/l;N[v+2]=pz/pr/l;}else{N[v]=px/pr;N[v+1]=0;N[v+2]=pz/pr;}}}
+      G.attributes.normal.needsUpdate=true;return HG[k]=G;};
+    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any,dome?:number)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius, the material (steel by default) and the head's dome (its rise, 0 flat) */
+    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0)=>{
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
-      const hd=mesh(g,new THREE.LatheGeometry(pr,28),mt||M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
+      const hd=mesh(g,headGeo(r,h,dome),mt||M.steel);hd.userData.screw=r;hd.rotation.y=(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before */
+      if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt)),pr=[V2(0,-0.1),V2(rs,-0.1),V2(rs,len-n*pt-d)];   /* the shank from 0.1 inside the head: rings of thread (turned grooves, not a helix), a chamfered tip */
+        for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));mesh(g,new THREE.LatheGeometry(pr,28),mt||M.steel);}
+      return g;};
     /* the API the page and the tools read: the parts, the screws and loose pieces (exploded.py), explode(e) (0 as built, 1 spread) */
     const done=()=>{mv.userData.parts=P;mv.userData.lifted=SCREWS;
       mv.userData.explode=e=>{for(const k in P)P[k].position.y=P[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};mv.userData.explode(0);};
     return{part,screw,loose,headOn,SCREWS,parts:P,done};};
-  return{parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  /* the jewels as the Wempe's coloured section draws them (Wempe_Einheitschronometer.jpg, its stones red): profiles [r, y] for a lathe, y0 the stone's face toward
+     the endstone, s (+1 or -1) the way it runs from there. jewelPr: a hole jewel, that face domed (the crown at y0, d lower at the edge R), the edge straight to the
+     face toward the arbor (T from the crown), an oil sink opening into that face as a cone from the hole to rc, hc deep, and the hole between, rb at its middle and
+     0.03 wider at its two ends (olive). endPr: an endstone, flat on the pivot's side (y0), its edge e high, then domed h to its crown; domeAt its dome's height over
+     the edge at r */
+  /** @type {(R:number,h:number,r:number)=>number} */
+  const domeAt=(R,h,r)=>{const Rs=(R*R+h*h)/(2*h);return Math.sqrt(Rs*Rs-r*r)-(Rs-h);};
+  /** @type {(R:number,T:number,rb:number,d:number,rc:number,hc:number,y0:number,s:number)=>number[][]} */
+  const jewelPr=(R,T,rb,d,rc,hc,y0,s)=>{const h0=rb+0.03,hl=T-hc,pr=[];
+    for(let i=0;i<=8;i++){const r=h0+(R-h0)*i/8;pr.push([r,d-domeAt(R,d,r)]);}
+    pr.push([R,T],[rc,T],[h0,hl]);for(let i=1;i<6;i++){const t=i/6;pr.push([rb+0.03*(1-2*t)**2,hl*(1-t)]);}
+    return pr.map(([r,y])=>[r,y0+s*y]);};
+  /** @type {(R:number,e:number,h:number,y0:number,s:number)=>number[][]} */
+  const endPr=(R,e,h,y0,s)=>{const pr=[[0,0],[R,0],[R,e]];for(let i=1;i<=8;i++){const r=R*(1-i/8);pr.push([r,e+domeAt(R,h,r)]);}return pr.map(([r,y])=>[r,y0+s*y]);};
+  return{domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();

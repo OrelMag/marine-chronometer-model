@@ -33,7 +33,7 @@
       const t=(a[0]*d[1]-a[1]*d[0])/den,s2=(a[0]*u[1]-a[1]*u[0])/den;if(t>r&&s2>=0&&s2<1)w=!w;}return w;};
   const denseS=(S,h)=>{const d=[];for(const e of S){const k=Math.max(1,Math.ceil(Math.hypot(e.b[0]-e.a[0],e.b[1]-e.a[1])/h));for(let j=0;j<k;j++)d.push([e.a[0]+(e.b[0]-e.a[0])*j/k,e.a[1]+(e.b[1]-e.a[1])*j/k]);}return d;};
   /* the masses: each closed solid at its material's density, about an axis through c (plan), tetrahedra from the axis (massprops-check.js's way) */
-  const RHO=k=>/steel|blued|chain|mspring/i.test(k)?7.85:/brass|gilt|plate|copper/i.test(k)?8.45:null;
+  const RHO=k=>/steel|blue|chain|mspring/i.test(k)?7.85:/brass|gilt|plate|copper/i.test(k)?8.45:null;
   const weigh=(ms,c)=>{let m=0,I=0;const A=new T.Vector3(),B=new T.Vector3(),C=new T.Vector3(),miss={};for(const o of ms){const rho=RHO(KEY.get(o.material)||'');if(rho==null){const k=KEY.get(o.material)||'?';miss[k]=(miss[k]||0)+1;continue;}
       const M4=loc(o),P=o.geometry.attributes.position,X=o.geometry.index,n=X?X.count:P.count;
       for(let k=0;k+2<n;k+=3){A.fromBufferAttribute(P,X?X.getX(k):k).applyMatrix4(M4);B.fromBufferAttribute(P,X?X.getX(k+1):k+1).applyMatrix4(M4);C.fromBufferAttribute(P,X?X.getX(k+2):k+2).applyMatrix4(M4);

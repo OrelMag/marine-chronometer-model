@@ -48,6 +48,12 @@ const WPHYS=(()=>{
   const HS={k:kOf(WESC.HSL.L),kNeed:SET.I*1e-9*(TAU/0.5)**2,T:Tof(SET.I,kOf(WESC.HSL.L)),kOf,Tof,
     alt:Object.fromEntries(['n14','n15','h13'].map(n=>[n,{L:WESC.HSL[n].L,T:Tof(SET.I,kOf(WESC.HSL[n].L))}]))};
   /* the swing stepped as the Hamilton's ampStep: driven at drv, A² relaxes to ampAt(drv)² as exp(-2t/TF), exactly whatever the step; free (the train held), freeStep */
-  const ampStep=(a,dt,drive)=>{if(drive>0){const u=ESC.ampAt(drive)**2;return Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/SET.TF));}const b=ESC.freeStep(a,dt);return b<0.2*D2R?0:b;};
-  return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,MSK,MSK2,MSB,MBK,WFW,SUS,susDrv,susPhi,runPhi,msDrv,HS,ampStep};
+  const stepOf=(E,S)=>(a,dt,drive)=>{if(drive>0){const u=E.ampAt(drive)**2;return Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/S.TF));}const b=E.freeStep(a,dt);return b<0.2*D2R?0:b;};
+  const ampStep=stepOf(ESC,SET);
+  /* each version's escapement (the page's Variants, Version; the user's choice, 17 October 2026): the drawings' as last revised and as first drawn share this one; the Soviet 6MX's
+     (Kirov No. 247) has its own bodies, weighed on its solids (WESC.SET6: the first-drawn staff and collar, its detent), the layout, drive and hairspring the drawings'. Built
+     when first asked for (a makeEsc solve), its rate against its own reference, as the timing weights would set it: what it runs before timing is tools/wempe_6mx.js's */
+  const REV={last:{ESC,SET,HS,ampStep}};
+  const rev=v=>{const k=v==='6mx'?'6mx':'last';if(!REV[k]){const S={...SET,...WESC.SET6},E=makeEsc(S,S),T=Tof(S.I,kOf(WESC.HSL.L));REV[k]={ESC:E,SET:S,HS:{...HS,kNeed:S.I*1e-9*(TAU/0.5)**2,T},ampStep:stepOf(E,S)};}return REV[k];};
+  return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,MSK,MSK2,MSB,MBK,WFW,SUS,susDrv,susPhi,runPhi,msDrv,HS,ampStep,rev};
 })();

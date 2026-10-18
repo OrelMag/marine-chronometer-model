@@ -1,0 +1,90 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx/7_Kirow_247_W.jpg",
+ "rev": "6mx",
+ "hash": "dial=kirov&wind=55.9",
+ "look": [
+  -1.5708,
+  0.6,
+  230,
+  0,
+  -14,
+  0,
+  28
+ ],
+ "points": {
+  "top plate screw at 9 (WN-57)": {
+   "xyz": [
+    -36.858,
+    -25.35,
+    3.225
+   ],
+   "uv": [
+    481,
+    261
+   ]
+  },
+  "barrel bridge screw, 12 o'clock side (WN-55)": {
+   "xyz": [
+    17.37,
+    -28.67,
+    -32.668
+   ],
+   "uv": [
+    802,
+    151
+   ]
+  },
+  "top plate screw at 12 (WN-57)": {
+   "xyz": [
+    6.425,
+    -25.35,
+    -36.437
+   ],
+   "uv": [
+    850,
+    190
+   ]
+  },
+  "top plate screw at 6 (WN-57, 6MX)": {
+   "xyz": [
+    6.477,
+    -25.35,
+    36.733
+   ],
+   "uv": [
+    182,
+    194
+   ]
+  },
+  "ring screw by 9 (WN-rs, 6MX)": {
+   "xyz": [
+    -43.495,
+    -2,
+    9.404
+   ],
+   "uv": [
+    413,
+    509
+   ]
+  }
+ },
+ "circles": {
+  "top plate, upper rim (front)": {
+   "c": [
+    0,
+    -22.35,
+    0
+   ],
+   "r": 42.494,
+   "snap": {
+    "arcs": [
+     [
+      125,
+      235
+     ]
+    ],
+    "win": 10
+   }
+  }
+ }
+}

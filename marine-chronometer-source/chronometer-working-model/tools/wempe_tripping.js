@@ -198,6 +198,10 @@ function run(M,o={}){
     if(thO>0&&th<=0&&om<0)st.cross.push(t-h+h*thO/(thO-th));
     if((wO>0&&om<=0)||(wO<0&&om>=0)){st.amps.push(Math.abs(th));st.ampT.push(t);if(wO<0)st.swRel=0;}
     if(frozen)continue;
+    /* the impulse stone coming into the teeth's path with a tooth already at its corner (the table G begins there): dynamics.js's strike, inelastic, the wheel put on the
+       stone, not a penalty spring loaded with the tooth's whole depth at once (16 October 2026: with 05 04_1's face at 28°10' the tooth lands 0.3° after the table begins,
+       and a step that found it already past threw the balance on to 247°) */
+    {const gI=held?NaN:at(Gt,th);if(!isNaN(gI)&&isNaN(st.gPrev)&&om>0&&Y[2]<gI){const g1=at(G1t,th)||0,c=Y[3]-g1*om,L=-c/(1/JT+g1*g1/I);Y[3]+=L/JT;Y[1]-=L*g1/I;Y[2]=gI;}st.gPrev=gI;}
     der(t,Y,k1,true);const l=dg.l,jewOn=dg.jew>0;
     if(jewOn&&om>0)st.jt=t;
     if(st.jewOn&&!jewOn&&om>0&&!held){if(!(st.offT>st.lastRel))st.off.push(th/D);st.offT=t;st.offL=th/D;}
@@ -253,7 +257,7 @@ if(quick){if(fail)process.exitCode=1;if(JOUT)fs.writeFileSync(JOUT,JSON.stringif
    about 5 s of computing a second run) */
 const SW=[['the modes\' damping Q 30',{Q:30}],['Q 1000',{Q:1000}],['the banking dead (restitution 0)',{eB:0}],['the banking lively (0.6)',{eB:0.6}],
   ['the tooth on the stone lively (0.6)',{eL:0.6}],['every contact 4× stiffer',{kB:4e6,kT:4e6,kJ:8e5,kH:8e4,kR:2e3}],['every contact 4× softer',{kB:2.5e5,kT:2.5e5,kJ:5e4,kH:5e3,kR:125}],['the stone on the gold spring, returning, 4× stiffer (kR 2,000)',{kR:2000}],['and 4× softer (kR 125)',{kR:125}],
-  ['the gold spring half as stiff (its alloy)',{tsK:0.5}],['the spring 0.09 thick (1436\'s first figure)',{tS:0.09/0.07}],['no preload (the banking where drawn)',{pre:0}],['the stone on the tooth: μ 0.10',{MU:0.10}],['μ 0.20',{MU:0.20}],['the preload 1.5×',{pre:1.5}],['the preload 2×',{pre:2}],['the preload 3×',{pre:3}]];
+  ['the gold spring half as stiff (its alloy)',{tsK:0.5}],['the spring 0.09 thick (1436\'s first figure)',{tS:0.09/0.07}],['no preload (the banking where drawn)',{pre:0}],['the stone on the tooth: μ 0.10',{MU:0.10}],['μ 0.20',{MU:0.20}],['the preload 0.1× (under the estimate)',{pre:0.1}],['the preload 0.2× (under the estimate)',{pre:0.2}],['the preload 0.5× (under the estimate)',{pre:0.5}],['the preload 0.8× (under the estimate)',{pre:0.8}],['the preload 1.5×',{pre:1.5}],['the preload 2×',{pre:2}],['the preload 3×',{pre:3}]];
 const R2K=[['hinged at Ft, rigid (dynamics.js\'s)',{hinge:true,stiff:true}],['the spring as drawn, the rest rigid',{stiff:true}],['as drawn',{}],['as drawn, no preload',{pre:0}]];
 const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[['preloaded (0.63 g, estimated)',1],['as drawn (no preload)',0]],KK=[['a blow across the plate, 0.5 ms','b05',2,400,'g'],['a blow across the plate, 3 ms','b3',1,400,'g'],['a twist about the staff, 2 ms','tw',1,80,'rad/s']];
 const jobs=[...R2K.map(([,o])=>({k:'run',mo:o,ro:{T:6,from:3}})),...SW.map(([,o])=>({k:'run',mo:o,ro:{T:3,from:1.5}})),...PUSH.map(A=>({k:'push',A})),
@@ -274,11 +278,15 @@ pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;
   J.running=Object.fromEntries(R2K.map(([nm],i)=>[nm,R2[i]]));J.LR=LR;J.LF=LF;J.LRel=LRel;
   const sw=take(SW.length).map((r,i)=>({name:SW[i][0],...r}));for(const r of sw)say(`  ${r.name.padEnd(46)} ${r.trips} trips, the stone at most ${pc(r.maxL).padStart(8)} (${r.maxRet?'return':'lock'}), the swing ${f(r.A,1)}°`);
   /* hard: the estimates at the contacts' own stiffness (tripping.js's) and the preload as estimated or more; reported: the contacts' stiffness, on which the return pass turns */
-  const swH=sw.filter(r=>!/no preload|4× st|4× so|kR/.test(r.name)),swK=sw.filter(r=>/4× st|4× so|kR/.test(r.name));
+  const swH=sw.filter(r=>!/no preload|under the estimate|4× st|4× so|kR/.test(r.name)),swK=sw.filter(r=>/4× st|4× so|kR/.test(r.name));
   chk(swH.every(r=>r.trips===0),`preloaded, over the other estimates no tooth gets past; a held tooth's stone uses at most ${pc(Math.max(...swH.map(r=>r.maxL)))} of the depth of lock`);
   note(swK.every(r=>r.trips===0),`the contacts' stiffness (penalties, tripping.js's): ${swK.map(r=>`${r.name}, ${r.trips} teeth past, the stone at most ${pc(r.maxL)}`).join('; ')}. The one that matters is the discharge stone on the gold spring on the return (kR, 500 N/m): stiffer, the stone, meeting the spring's square end with its bevel, pushes it partly lengthwise, the loop round the pipe gives, and the tip is carried on past makeEsc's pass (−17.6°) to about −25° before it slips off, storing several times the energy, whose release throws the detent. The tip is taken square and unturning, the gold spring's alloy and its path's free shape are estimates, the horn's length 4.4 (1436's figure, Wempe 3955's photograph: likely): open (README, Unresolved)`);
-  {const pr=[[1,dr.maxL],...[1.5,2,3].map(m=>[m,sw.find(r=>r.name==='the preload '+m+'×').maxL])],i=pr.findIndex(([,x])=>x<0.5);
-    say(`unpreloaded (the banking where the detent is drawn) ${sw.find(r=>/no preload/.test(r.name)).trips} teeth get past in 3 s: the gold spring's blow throws the stone off. Under half the depth of lock wants the preload ${i<0?'past 3×':i===0?'as estimated':`about ${f(pr[i-1][0]+(pr[i][0]-pr[i-1][0])*(pr[i-1][1]-0.5)/(pr[i-1][1]-pr[i][1]),1)}× the estimate (${f((pr[i-1][0]+(pr[i][0]-pr[i-1][0])*(pr[i-1][1]-0.5)/(pr[i-1][1]-pr[i][1]))*S.W78,2)} g at the stone)`}: ${pr.map(([m,x])=>`${m}× ${pc(x)}`).join(', ')}`);}
+  /* the preload's floor (16 October 2026): the least that lets no tooth past, and the least whose held tooth's stone rings under half the depth of lock (the margin), from the sweep
+     under and over the estimate; the bench takes the margin's as its least (wempe_tolerances.js's wTrip) */
+  {const pr=[[0,sw.find(r=>/no preload/.test(r.name))],...[0.1,0.2,0.5,0.8].map(m=>[m,sw.find(r=>r.name==='the preload '+m+'× (under the estimate)')]),[1,dr],...[1.5,2,3].map(m=>[m,sw.find(r=>r.name==='the preload '+m+'×')])].map(([m,r])=>[m,r.maxL,r.trips]),
+      held=pr.find(([,,t])=>t===0),i=pr.findIndex(([,x,t])=>t===0&&x<0.5),half=i<0?null:i===0?pr[0][0]:pr[i-1][0]+(pr[i][0]-pr[i-1][0])*(pr[i-1][1]-0.5)/(pr[i-1][1]-pr[i][1]);
+    say(`the preload (× the estimate, ${S.W78} g at the stone): ${pr.map(([m,x,t])=>`${m}× ${t?t+' teeth past':pc(x)}`).join(', ')}. Unpreloaded the gold spring's blow throws the stone off; no tooth gets past from ${held[0]}× (${f(held[0]*S.W78,2)} g), a held tooth's stone rings under half the depth of lock from ${half==null?'past 3×':`about ${f(half,2)}× (${f(half*S.W78,2)} g)`}: the margin's floor, the bench's least`);
+    J.floor={held:held[0]*S.W78,half:half==null?null:half*S.W78,rows:pr};}
   J.sweep=sw;flush();
   say('3. Pushed: the swing raised by the drive until a tooth gets past');
   {const P_=take(PUSH.length);let lastOk=null,firstBad=null;

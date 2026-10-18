@@ -3,6 +3,11 @@
 Source material for the working model. The model's README ("Sources" and "How
 the layout was measured") says what was taken from each file.
 
+Two folders have their own README: `wempe/` (the second model, the Wempe
+Einheits-Chronometer, and the Soviet 6MX) and `third-model/` (Swiss and Japanese
+marine chronometers surveyed on 16 October 2026 for a possible third model;
+nothing is built on it).
+
 | File | What it is | Used for | Original filename |
 |---|---|---|---|
 | `navships-250-624-overhaul-manual-1948.pdf` | *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948 (Google Books scan) | Structure, escapement layout (Fig. 90) and adjustment figures (Sec. VIII), parts list, dial (Fig. 107); its Fig. 2 photograph is the first camera of the photo fit | `Manual_for_Overhaul_Repair_and_Handling Marine Chronometer.pdf` |
@@ -11,6 +16,7 @@ the layout was measured") says what was taken from each file.
 | `photo-side-view.jpg` | Side photograph of an unmounted movement (Nikon D500, 2023) | Heights above the pillar plate, scaled by its 3.86 mm edge; the mounting ring under the plate (a band as wide as the plate, then a flange 95.9 mm across, its slot) and the dial on it (about 95 mm) | `sideview.jpeg` |
 | `photo-oblique-balance-side.jpg` | Oblique photograph of an unmounted movement from the balance side, showing the fusee chain, barrel, pillars and bridges | Visual reference | `H0096-L305589483_original.JPG` |
 | `photo-dial-ulysse-nardin-noaa.jpg` | Ulysse Nardin marine chronometer used by the U.S. Coast and Geodetic Survey in the 1940s, dial in its box (NOAA Heritage, "Friday Find", July 2024: https://www.noaa.gov/heritage/stories/friday-find-1940s-timepiece-was-original-gps-for-ships) | The Variants panel's Swiss dial (`dialCanvas('swiss')`) and its hands; the maker's name and number are left off | `FF-20240706_FFMarineChronometer-1009770_OnBlack.jpg` |
+| `ulysse-nardin-7400/` (14 photographs, `un7400-01-box-open-top.jpg` … `un7400-14-observatory-extract.jpg`, 2400 × 2400 px) | Ulysse Nardin marine chronometer No. 7400, c. 1955 (delivered 16 March 1956 to the Nobiskrug shipyard, Rendsburg; third prize, Neuchâtel Observatory's chronometer competition, 1955), photographed for its sale by Uhren-Hidding (https://uhren-hidding.de/en/startseite/390-ulysse-nardin-marine-chronometer.html; watermarked, all rights reserved; fetched 18 October 2026): the box closed and open, the dial in its gimbals, the bowl's inside, the movement from above, the balance and pillars close, the fusee's chain, the observatory's certificate | The Variants panel's Ulysse Nardin finish (`UN_FIT` in `core.js`): the plates' frosted gilt (01-08: 08), the bowl's and gimbal ring's gilt (06, 08), the box's mahogany (03), each fitted on the page against these photographs; shown with the Swiss dial | `uhren-hidding.de/3374-xxlarge/` … `3387-xxlarge/ulysse-nardin-marine-chronometer.jpg` |
 | `photo-dial-hamilton-maritime-commission.jpg` | Dial of a Hamilton Model 21 of the U.S. Maritime Commission contract, serial 2E10861, in its gimbals | The Hamilton dial (`dialCanvas()`): layout, inscriptions and hands; its proportions (sub-dials about 0.54 of the minute track's radius out) agree with a 95 mm dial | a pasted image (`2.png`) |
 | `photo-movement-2E12055.jpg` | Bridge side of a Model 21 movement, serial 2E12055, in its gimbals | The plate engraving's text, sizes and layout (`M.engraveB`, `M.engraveT` in `core.js`) and the model's serial | a pasted image (`3.png`) |
 | `photo-dial-soviet-kirov.png` | Dial of a First Moscow Watch Factory (МЧЗ имени Кирова) deck chronometer, serial 14024 | The Variants panel's Soviet dial (`dialCanvas('soviet')`) and its hands; the maker's name and number are left off | a pasted image (`1.png`) |

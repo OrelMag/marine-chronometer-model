@@ -157,9 +157,9 @@ function sim(o={}){
      and arm a drag in the square of the speed (its loss a swing in A³), the staff's flat end on its endstone a constant friction (in A), the rest (the spring's material,
      its side friction) viscous (in A²); together they lose at 255 deg what TF's viscous damping does, so the running swing and rate hold, and the start and run-down change */
   const sp=o.split,dE=2*Math.PI*(0.5*I*W0*W0*(255*D)**2)/(Math.PI*(o.TF??TF)/T0),Ca=sp?3*sp[0]*dE/(8*W0*W0*(255*D)**3):0,Tc=sp?sp[1]*dE/(4*255*D):0;
-  const s=o.s??1,C=sp?sp[2]*dE/(Math.PI*W0*(255*D)**2):2*I/(o.TF??TF),phys=(o.mode??'phys')==='phys',tauE=TAUE*s,J=JT*(o.J??1),eB=o.eB??(phys?0.3:0),eW=o.eW??0,ext=o.ext,T=o.T??80,from=o.from??40,ideal=!!o.ideal,bE=(o.bE??0)*D;
+  const s=o.s??1,C=sp?sp[2]*dE/(Math.PI*W0*(255*D)**2):2*I/(o.TF??TF),phys=(o.mode??'phys')==='phys',J=JT*(o.J??1),eB=o.eB??(phys?0.3:0),eW=o.eW??0,ext=o.ext,T=o.T??80,from=o.from??40,ideal=!!o.ideal,bE=(o.bE??0)*D;
   const id=phys?ID*(o.dI??1):ID*1e-4,kr=KD*(o.kD??1),pre=(MW78-kr*ESC.th78)*(o.pre??1),kp=KTIP*ES*ES*(o.kP??1);
-  const cd=2*Math.sqrt(kr*id)/(2*(o.Qd??100)),mDraw=tauE*CDR/DREL;   /* the detent's own damping (Q 100, estimated); the draw's resistance spread over the lift to release */
+  const cd=2*Math.sqrt(kr*id)/(2*(o.Qd??100)),tq=o.tq;let tauE=TAUE*s;   /* o.tq(t): the escape wheel's torque (N·m) at t, in place of the steady TAUE s (wempe_transmission.js: the train behind it as bodies on their meshes); the draw's resistance with it. The detent's own damping (Q 100, estimated); the draw's resistance spread over the lift to release */
   const hf=o.hf??4e-6,hc=o.hc??1e-4,kW=o.rideW??(phys?1:0),muR=o.muR??(phys?ESC.settings.MU:0),NEV=RIDE?12:8;
   let t=0,th=-(o.A??ESC.A/D)*D,w=0,d=0,dv=0,ph=0,pv=0,wm=0,dm=0,pc=false,pp=0,passed=true;   /* wm: wheel locked 0, free 1, on the jewel 2; dm: detent on its stop 0, free 1, pushed 2, on the escaping tooth 3 (the Wempe's) */
   if(o.phase!=null){th=(o.A??ESC.A/D)*D*Math.cos(TAU*o.phase);w=-(o.A??ESC.A/D)*D*W0*Math.sin(TAU*o.phase);}
@@ -172,7 +172,7 @@ function sim(o={}){
      from the flexure and the tooth's tip at the wheel's radius) */
   const acc=(tt,th,w,d,dv,ph,pv)=>{
     if(ext){const e=ext(tt);X.al=e.al||0;X.ax=e.ax||0;X.ay=e.ay||0;}
-    const Ml=lift(),draw=wm===0&&d>0?mDraw:0;
+    const Ml=lift(),draw=wm===0&&d>0?tauE*CDR/DREL:0;
     let M=I,F=-K*(th-bE)-C*w-Ca*w*Math.abs(w)-Tc*Math.tanh(w/0.05)-I*X.al,h1=0,h2=0,g1=0,g2=0,R1=0,R2=0,Fd=0,cR=0;
     if(pc){const p=at(Q2,th),q=at(Q21,th);if(!isNaN(p)&&!isNaN(q))F-=kp*p*q;}   /* the trip spring bent on the return, quasi-static */
     if(dm===3){R1=rd1(ph);R2=rd2(ph);Fd=Ml-pre-kr*d-cd*dv;cR=muR*Math.tanh(-pv/0.05)/ESC.BL;}
@@ -214,7 +214,7 @@ function sim(o={}){
   const t1=T;let guard=0;
   while(t<t1){
     const tw=wrap(th),near=(tw>-0.8&&tw<0.55)||wm!==0||dm!==0||pc||(ext&&o.extFine&&o.extFine(t));
-    let h=Math.min(near?hf:hc,t1-t);
+    let h=Math.min(near?hf:hc,t1-t);if(tq)tauE=tq(t);
     if(KN.length&&dm===2&&w>0){for(const k of KN)if(k>th&&k<th+w*h){h=Math.max(1e-9,(k+HT/2-th)/w);break;}}   /* the Wempe's: end the step in a corner's cell (KN) */
     /* states an event can't catch because its threshold is already passed as the step begins (a blow that lifts the detent off its stop in one step) */
     if(!ideal){acc(t,th,w,d,dv,ph,pv);if(dm===0&&lift()>pre+(wm===0?0:0))dm=1;if(wm===0&&d>=DREL){wm=1;pv=0;st.rel.push(th/D);if(st.swRel++>0){st.trips++;st.twice++;}}
@@ -342,7 +342,7 @@ flush();
 
 say('2. The detent as a body: its inertia, bouncing on its stop');
 const ph=sim(MP2),ownP=ph.rate-ref.rate;
-say(`the swing ${f(ph.A,1)}°, the escapement's own rate ${sg(ownP)} s a day; the tooth lands ${f(ph.land-ph.rel,1)}° after the release${WEMPE?`, the balance at ${f(ph.land,2)}°: the impulse stone's face ${f(ph.land+PHI0,1)}° from the line of centres (makeEsc's ${f(RU.land/D+PHI0,1)}°; 05 04_1's layout draws the tooth falling on it at −21°, as if the wheel were there at once)`:''}`);
+say(`the swing ${f(ph.A,1)}°, the escapement's own rate ${sg(ownP)} s a day; the tooth lands ${f(ph.land-ph.rel,1)}° after the release${WEMPE?`, the balance at ${f(ph.land,2)}°: the impulse stone's face ${f(ph.land+PHI0,1)}° from the line of centres (makeEsc's ${f(RU.land/D+PHI0,1)}°; 05 04_1's layout draws the tooth falling on it at ${f(WL.WESC.ESC.PHI_C,1)}°, where the impulse begins, as if the wheel were there at once)`:''}`);
 chk(Math.abs(ph.A-ESC.A/D)<3&&Math.abs(ownP-RU.own)<0.3,`the detent's own inertia and bounce change little: the swing ${sg(ph.A-ESC.A/D,1)}°, the rate ${sg(ownP-RU.own)} s a day against the model`);
 /* the detent's fall as makeEsc shows it (ESC.state: off the jewel where its end runs away faster than the detent can follow, then a preloaded spring and mass in closed
    form, hopping on its stop; caught again by the jewel's end if it falls onto it): where it leaves the jewel for the last time and first lands, against the integration's,

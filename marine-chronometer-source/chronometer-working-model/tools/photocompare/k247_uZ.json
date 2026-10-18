@@ -1,0 +1,23 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx/3_Kirow_247_uZ.jpg",
+ "rev": "6mx",
+ "hash": "dial=kirov",
+ "hide": ["dial", "hands"],
+ "look": [0, -1.5707, 280, 0, 3.35, 0, 24],
+ "points": {
+  "cannon tube's square (centre arbor)": {"xyz": [0, 18.25, 0], "uv": [499, 521]},
+  "up-and-down wheel's arbor (long stud)": {"xyz": [0, 12.35, -23], "uv": [500.2, 314.8]},
+  "change wheel's pipe": {"xyz": [-10.912, 10.25, 6.3], "uv": [402, 575]},
+  "up-and-down pinion (fusee arbor)": {"xyz": [-16.708, 10.05, -15.292], "uv": [351, 386]},
+  "intermediate bridge screw, right (WN-52)": {"xyz": [22.464, 7.05, 5.251], "uv": [691, 568]},
+  "intermediate bridge screw, left (WN-52)": {"xyz": [-4.315, 7.05, 26.41], "uv": [463.3, 748.6]},
+  "seconds arbor's jewel on the intermediate bridge": {"xyz": [0, 7.0, 23], "uv": [499.5, 720]},
+  "intermediate arbor's jewel on the bridge": {"xyz": [9.91, 7.0, 15.17], "uv": [586.5, 652.6]},
+  "escape arbor's lower jewel (red)": {"xyz": [-11.783, 4.35, 21.743], "uv": [399.4, 709.3]},
+  "pillar screw at 9 (WN-56)": {"xyz": [-36.858, 6.35, 3.225], "uv": [181.7, 549.2]},
+  "pillar screw by 6 (WN-56)": {"xyz": [6.477, 6.35, 36.733], "uv": [558.7, 831.3]}
+ },
+ "circles": {
+  "pillar plate rim, dial face": {"c": [0, 3.35, 0], "r": 42.494, "snap": {"arcs": [[0, 360]], "win": 10}}
+ }
+}

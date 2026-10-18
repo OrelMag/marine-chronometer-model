@@ -27,7 +27,9 @@ const RUNS=[
   ['tolerances','node',['wempe_tolerances.js'],'How closely the parts the drawings don’t size must be made: each range keeping the swing in the guard band over the whole wind; checks tolerances_wempe.json is up to date.'],
   ['bench','node',['wempe_bench.js'],'The tests on the bench for a Wempe made to the model, each with how and what it must read; checks bench_wempe.json is up to date.'],
   ['montecarlo','node',['wempe_montecarlo.js'],'The whole Wempe made to a maker’s tolerances at once, judged as made and after the bench’s tests; checks montecarlo_wempe.json is up to date.'],
+  ['transmission','node',['wempe_transmission.js','--json',path.join(TMP,'_tr.json')],'The whole transmission in time, every part that moves: the mainspring, chain, fusee, clicks, maintaining work, the train on its meshes tooth by tooth driving dynamics.js\'s escapement, the motion work and up-and-down work, the key and the stop; nonlinear, stepped at a microsecond.'],
   ['keystone','node',['keystone.js','--model','wempe'],'The escapement against the rules of a period text, Watch and Clock Escapements (1904), Ch. III: reports, never judges; checks keystone_wempe.json is up to date.'],
+  ['soviet','node',['wempe_6mx.js'],'The Soviet 6MX against the drawings: its jewels\' shake and the holes\' tolerance, its escapement\'s bodies at the first-drawn heights through makeEsc (the swing and rate over the wind); checks wempe_6mx.json is up to date.'],
   ['startup','node',['wempe_startup.js','--json',path.join(TMP,'_su.json')],'A running 6MX\'s swing read off video (wempe_swing.py, wempe_swing.json) fitted with the Wempe\'s balance equation for its free run-down TF.']];
 const only=(i=>i>0?process.argv[i+1].split(','):null)(process.argv.indexOf('--only'));
 if(only)for(const k of only)if(!RUNS.some(q=>q[0]===k)){console.error(`no run ${k}; runs: ${RUNS.map(q=>q[0]).join(', ')}`);process.exit(2);}
@@ -82,14 +84,14 @@ function transcriptions(){const out=[];for(const f of fs.readdirSync(path.join(R
   const suNow=path.join(TMP,'_su.json'),SUN=fs.existsSync(suNow)?JSON.parse(fs.readFileSync(suNow,'utf8')):(prev&&prev.swing&&prev.swing.startup)||J('wempe_startup.json');
   const FS=only&&!only.includes('startup')?null:await node(FIG.swing,{MC_SU:fs.existsSync(suNow)?suNow:path.join(T,'wempe_startup.json')});if(fs.existsSync(suNow))fs.unlinkSync(suNow);
   const rd=f=>{const p=path.join(TMP,f);if(!fs.existsSync(p))return null;const j=JSON.parse(fs.readFileSync(p,'utf8'));fs.unlinkSync(p);return j;};
-  const trip=rd('_trip.json')||(prev&&prev.trip),gim=rd('_gim.json')||(prev&&prev.gim);
+  const trip=rd('_trip.json')||(prev&&prev.trip),gim=rd('_gim.json')||(prev&&prev.gim),tr=rd('_tr.json')||(prev&&prev.tr);
   const WED=(()=>{const s=fs.readFileSync(path.join(WE,'js','essaydata.js'),'utf8');return Function(s+';return WEDATA;')();})();
   const MS=J('wempe_mainspring.json'),MF=J('mainspring_friction_wempe.json'),GI=J('gimbals_wempe.json'),IN=J('wempe_inertia.json'),GW=J('gearing_wempe.json'),SU=J('wempe_startup.json'),SW=J('wempe_swing.json').moMvyx8eXfo;
   const build={tol:J('tolerances_wempe.json'),bench:J('bench_wempe.json'),mc:J('montecarlo_wempe.json'),key:J('keystone_wempe.json')};
-  const data=prev&&only?{...prev,runs,trip,gim,build,...(FS?{swing:{...prev.swing,...FS,startup:SUN,committed:J('wempe_startup.json')}}:{}),made:new Date().toISOString().slice(0,10)}:{made:new Date().toISOString().slice(0,10),runs,trip,gim,build,
+  const data=prev&&only?{...prev,runs,trip,gim,tr,build,soviet:J('wempe_6mx.json'),...(FS?{swing:{...prev.swing,...FS,startup:SUN,committed:J('wempe_startup.json')}}:{}),made:new Date().toISOString().slice(0,10)}:{made:new Date().toISOString().slice(0,10),runs,trip,gim,tr,build,
     wind:{A12:F[0].A12,TF:F[0].TF,HS:F[0].HS,rows:[...F[0].rows,...F[1].rows]},gear:{...F[2],windows:GW},hair:F[3],swing:{...FS,json:{A_range:SW.A_range_deg,windows:SW.windows,f:SW.f_Hz,stretches:SW.stretches,sure:SW.sure},startup:SUN,committed:SU},phys:F[4],
     ms:{strip:MS.strip,setup:MS.setup,barrelTurns:MS.barrelTurns,marks:MS.marks,tries:MS.tries,Lfit:MS.Lfit,setFit:MS.setFit,rmsFit:MS.rmsFit,final:{...MS.final,fit:MS.final.fit,tq:MS.final.tq}},
     friction:MF.summary,mass:{bowl:{m:GI.bowl.m,cg:GI.bowl.cg,byPart:GI.bowl.byPart},ring:{m:GI.ring.m},alt:GI.alt},inertia:Object.fromEntries(Object.entries(IN).filter(([k])=>k!=='note').map(([k,v])=>[k,{m:v.m,I:v.I}])),
-    essay:{fusee:WED.fusee,heat:WED.heat,trial:WED.trial,hs:WED.hs,sheets:WED.sheets,phys:WED.phys},transcriptions:transcriptions()};
+    soviet:J('wempe_6mx.json'),essay:{fusee:WED.fusee,heat:WED.heat,trial:WED.trial,hs:WED.hs,sheets:WED.sheets,phys:WED.phys},transcriptions:transcriptions()};
   fs.writeFileSync(OUT,JSON.stringify(data));
   console.log(`wrote assets/data.json (${(fs.statSync(OUT).size/1024).toFixed(0)} KB): ${Object.keys(runs).length} runs, ${Object.values(runs).filter(q=>q.rc).length} failing, in ${((Date.now()-t0)/1000).toFixed(0)} s`);})().catch(e=>{console.error(e);process.exit(1);});

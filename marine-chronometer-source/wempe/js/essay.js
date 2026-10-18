@@ -7,7 +7,7 @@
    (WEDATA.phys, checked by wempe_essaydata.js). */
 "use strict";
 const ESSAY=(()=>{
-  const D=Math.PI/180,f1=(v,n=1)=>v.toFixed(n),sgn=(v,n=1)=>(v<0?'−':'')+Math.abs(v).toFixed(n),th=v=>v.toLocaleString('en-US',{maximumFractionDigits:1});
+  const D=Math.PI/180,f1=(v,n=1)=>v.toFixed(n),sgn=(v,n=1)=>(v<0?'−':'')+Math.abs(v).toFixed(n),th=v=>v.toLocaleString('en-US',{maximumFractionDigits:1}),dms=v=>{const d=Math.floor(v+1e-6),m=Math.round((v-d)*60);return m?d+'°'+m+'′':d+'°';};
   /* ---------- 05 03_7's curve (WESC.HSP), worked as tools/wempe_hairspring.js works it: in the sheet's frame (x right, y up, the junction at the bottom, 0°, the angles
      rising clockwise), the table's two compass arcs (a circle by least squares through its radii, to the strip's inside, 0-90° and 110-220°), and the inner curve's length
      and centroid (the strip's middle, the junction to its pin at 220°) against Phillips' second condition, R²/l on the perpendicular to the junction's radius ---------- */
@@ -32,7 +32,7 @@ const ESSAY=(()=>{
       TQ:f1(P.TQ,1),escRange:f1(eLo,1)+'–'+f1(eHi,1),
       A:Math.round(E.A/D)+'°',AMIN:f1(E.AMIN/D,1)+'°',TF:Math.round(P.SET.TF)+' s',lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',overall:f1(m.overall)+'°',
       rel:sgn(E.thRel/D)+'°',stoneIn:f1((stoneIn-E.thRel)/D)+'°',chase:f1((u.land-E.thRel)/D)+'°',landF:f1(-(u.land/D+K.PHI0))+'°',endF:f1(E.thE/D+K.PHI0)+'°',
-      strike:Math.round(100*u.strike)+' %',shN:String(WEDATA.sheets.length),sh41:String(WEDATA.sheets.filter(q=>q[4]&&q[4]<'1942').length),unlock:Math.round(100*u.fu)+' %',layC:f1(-K.PHI_C,0)+'°',phi0:f1(-K.PHI0,0)+'°',detOff:sgn(dp?dp.th/D:NaN)+'°',
+      strike:Math.round(100*u.strike)+' %',shN:String(WEDATA.sheets.length),sh41:String(WEDATA.sheets.filter(q=>q[4]&&q[4]<'1942').length),unlock:Math.round(100*u.fu)+' %',layC:dms(-K.PHI_C),phi0:dms(-K.PHI0),detOff:sgn(dp?dp.th/D:NaN)+'°',
       hsT:f1(HL.HT,3),hsB:f1(HL.HB,2),hsD:f1(2*HL.RC+HL.HT,1),hsP:f1(HL.PITCH,2),hsTurns:f1(HL.turns,2),hsL:f1(HL.L,1),hsPins:Math.round(Math.abs(HL.pins))+'°',
       a1r:f1(hc.A1.r,2),a1o:f1(Math.hypot(...hc.A1.c),2),a2r:f1(hc.A2.r,2),a2o:f1(Math.hypot(...hc.A2.c),2),aRes:String(Math.round(1000*Math.max(hc.A1.res,hc.A2.res))),
       gOff:f1(Math.abs(hc.off),1)+'°',gOG:f1(hc.OG,2),gPh:f1(hc.ph,2),gK:f1(hc.l*hc.OG/(hc.R*hc.R),2),gL:f1(hc.l,1),
@@ -208,7 +208,7 @@ const ESSAY=(()=>{
       {const{x}=C,{X,Y}=G;x.strokeStyle=PAL.muted;x.lineWidth=1;x.setLineDash([1,3]);x.beginPath();x.moveTo(X(tC),Y(24));x.lineTo(X(tC),Y(-4));x.stroke();
         css(x,`11.5px ${SANS}`,PAL.muted,'left','top');halo(x,'the line of centres',X(tC)+5,Y(24)+3,PAL.muted);
         x.strokeStyle=PAL.red;x.lineWidth=1.5;x.setLineDash([5,4]);x.beginPath();x.moveTo(X(tL),Y(0));x.lineTo(X(tL),Y(stone(tL)));x.stroke();x.setLineDash([]);
-        css(x,`12px ${SANS}`,PAL.red,'left','middle');halo(x,`the layout: on the stone at once, ${f1(-KE.PHI_C,0)}° before the line`,X(tL)+6,Y(-2),PAL.red);
+        css(x,`12px ${SANS}`,PAL.red,'left','middle');halo(x,`the layout: on the stone at once, ${dms(-KE.PHI_C)} before the line`,X(tL)+6,Y(-2),PAL.red);
         css(x,`11.5px ${SANS}`,PAL.blue,'left','top');halo(x,'strikes',X(tS)+7,Y(stone(tS))+3,PAL.blue);x.textAlign='center';x.textBaseline='bottom';halo(x,'let go',X(t0),Y(0)-7,PAL.blue);}
       const wc=wheel(cur),sc=stone(cur);
       ro.innerHTML=`${f1(hrs,1)} h since winding: the drive ${f1(100*s,0)} % of the reference, the balance swinging <b>${Math.round(a/D)}°</b>. Let go at ${sgn(t0,1)}°, the wheel strikes the stone at <b>${f1(tS,1)}°</b>, `+
@@ -374,7 +374,7 @@ const ESSAY=(()=>{
   /* ---------- the gimbals: the model's own box, ring and case (WCASE.build, case.js), its dial keeping the model's time ---------- */
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.75,pitch:0.78,dist:560,target:[0,0,0],near:20,far:5000}),M=gl().M,S=V.scene;
     const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.stay();CS.tongue.rotation.z=-Math.PI/2;CS.over.visible=false;   /* the outer transport box (case.js builds it with the box) left out, as the page's views but Transport box leave it */
-    CS.root.traverse(o=>{if(o.userData.rev==='first')o.visible=false;});   /* as last revised: the 1943 key, not the 1940 one beside it */
+    CS.root.traverse(o=>{if(o.userData.rev&&!o.userData.rev.split(' ').includes('last'))o.visible=false;});   /* as last revised: the 1943 key, not the 1940 one beside it (nor any other version's pieces) */
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
     const yD=WDIAL.DY1-CS.YP;mesh(CS.bowl,cylY(WDIAL.DR,WDIAL.DY1-WDIAL.DY0,96),M.brass2,0,yD-(WDIAL.DY1-WDIAL.DY0)/2,0);
     mesh(CS.bowl,new THREE.CircleGeometry(WDIAL.DR,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.3,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,yD+0.05,0);
