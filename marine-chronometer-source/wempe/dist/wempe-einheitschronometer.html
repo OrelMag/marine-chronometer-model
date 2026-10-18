@@ -4204,7 +4204,13 @@ const WESC=(()=>{
           tag(screw(gE,0,0,0,2.1,1.2,2.5,0.7),'6MX.gke').userData.lift=0;}   /* seated on the side face, its shank along -t into the base (the kit's fillister head, slotted) */
         const nB=nUr-0.6,nH=0.575+0.005,lS=nH-nB,rH=1.6,hH=1.4,R3=(rH*rH+hH*hH)/(2*hH),a0=Math.asin(rH/R3),dome=[];   /* the head a spherical cap rH across its face, hH high */
         for(let i=0;i<=10;i++){const a=a0*(1-i/10);dome.push([R3*Math.sin(a),lS+hH-R3+R3*Math.cos(a)]);}
-        tag(across(blk6,lathe([[0,0],[0.6,0],[0.6,lS],[rH,lS],...dome],24),M.brass,L(ROW-18.8,nB),TD.n,yS),'WN-gkA');}
+        /* its thread, cut as the 1943 screw's (pitch 0.25, M1.2's), and the dome slotted: Kirov 247's (8_Kirow_247_F.jpg, photocompare.py's m6_detent camera: the thread showing
+           past the upright where the pipe rests on the head, a slot across the dome; likely); until 18 October 2026 a plain shank and dome */
+        const rs=0.6,pt=0.25,dt=pt*0.3,pf=[[0,0],[rs-dt,0],[rs,dt]];for(let y=dt;y+pt<=lS;y+=pt)pf.push([rs-dt,y+pt/2],[rs,y+pt]);
+        tag(across(blk6,lathe([...pf,[rs,lS],[rH,lS],...dome],24),M.brass,L(ROW-18.8,nB),TD.n,yS),'WN-gkA');
+        {const zt=(/** @type {number} */r)=>lS+hH-R3+Math.sqrt(R3*R3-r*r),xs=[];for(let k=0;k<=24;k++)xs.push(-rH+2*rH*k/24);
+          const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,zt(Math.abs(x))+0.01]),...xs.slice().reverse().map(x=>[x,zt(Math.abs(x))-0.45])]),y0:-0.17,y1:0.17}]);
+          sg.rotateX(-Math.PI/2);sg.rotateY(Math.atan2(TD.n[0],TD.n[1])+0.6);tag(across(blk6,sg,M.steelD,L(ROW-18.8,nB),TD.n,yS),'WN-gkA',1);}}
       /* The escapement of 1943's block ('1943'): the 6MX's (05 04 01-4 read in first angle: its base, holes and fillet r 2, the upright 3.5-6.5 under the plate), its upright's
          end and banking screw as the German movements with this block show them (dg-chrono-dec/8_Kirow_DEC_479_Feder.jpg, 8_Lange_5177_Feder.jpg, 8_Kirow_DEC_422_Feder.jpg,
          17 October 2026; scaled by the upright's 3 beside the head: 19, 16.5 and 17.7 px/mm, DEC 479's by the detent's blade 0.9 too). Each reading is a ratio on the upright's
