@@ -32,7 +32,7 @@ EXPECTED = model.cfg('HOLE_EXPECTED', [
     ('fusee', '42021', {'about': [14.306, -14.519], 'r': 4.264, 'y': -19.45}, None, "(on the fusee, which turns: 4.264 from its axis, L.Fu, at any angle) the second of the two tapped holes in the recess under the fusee's top plate, symmetric about the arbor (25:08.26, their threads seen); the stop-bar spring's end takes the first"),
     ('ltb', '42063', [-8.52, 3.6, 14.19], None, "the counterbore round the third's lower setting at the lower train bridge's face (40:05: each setting in a round recess)"),
     ('pillar', '42057', [1.88, 2.14, -41.36], None, "the mounting ring's small hole at 2.5 deg, seen empty with the dial off (KLUwI2UUCMQ 9:03); what it takes, if anything, unknown (Review-results.md, 'Still open after the collar's height' 2)"),
-    ('pillar', '42060', [18.34, -3.86, 12.02], None, "the plate's access hole to the balance lower bridge's screw, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial"),
+    ('pillar', '42060', [18.30, -3.86, 9.66], None, "the plate's access hole to the balance lower bridge's screw, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial; under the screw where the owner's 36:01 trace puts it since 18 October 2026"),
     ('sspring', '42016', None, None, "the second hole in the sustaining spring's fixed end, the pin in the first (video 27:26; which one has the pin estimated)"),
     ('trainBridge', '42062', [2.08, -23.76, 30.56], 'navy', "the manual's locking arm's stop pin hole: the arm is off with the Navy's Y-arm fitted"),
     ('trainBridge', '42062', [3.74, -23.76, 30.16], 'navy', "the manual's locking arm's screw hole: the arm is off with the Navy's Y-arm fitted"),
