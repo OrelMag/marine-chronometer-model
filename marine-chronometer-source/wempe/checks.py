@@ -3,7 +3,7 @@ table the default where a name isn't here). P1a (14 October 2026): the frame; no
 Its parts list is bom.json beside this file, its expected coplanar faces audit-expected.json (audit.py --model wempe --update writes it)."""
 # audit.py: loose ends expected (part:geometry, place, radius, why); the Hamilton's Navy brake isn't fitted. The fusee's stop pin (05 08 01-5), standing out under the
 # top plate into the stop bar's path, its end free, is turned (its domed end) and so isn't among them: wempe_stopwork.py checks it
-LOOSE=[('pillarPlate:Cylinder',(20.49,-6.7,40.55),0.6,"the Soviet 6MX's contact screw (54, train.js): its point bears on the contact disc's face, the contact itself, and leaves it when the contact wheel lifts the lever"),('ring:Cylinder',(0,8.25,-55.25),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 2.0 out of the flange into the notch in the bezel's recess (case.js): out of the case its end is free")]
+LOOSE=[('ring:Cylinder',(0,8.25,-55.25),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 2.0 out of the flange into the notch in the bezel's recess (case.js): out of the case its end is free")]
 LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
