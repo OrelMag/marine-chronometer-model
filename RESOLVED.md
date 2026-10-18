@@ -397,6 +397,17 @@ Contents:
   bounded at 0.137 mm, where no preload is left) follow it; `TF` 67 s (Q 421) so the calibrated torque is the spring's again.
   Keep: the preload is `W78`'s moment less `KD`·`th78`, never the weight alone; a spring's stiffness and its preload move
   together. `9b55881`
+- **The Wempe's upper balance jewel's two settings stood 0.03 apart.** The hole jewel's setting ended at its stone's face, 0.03 under
+  the endstone's setting, so the stack in the cock's seat was 2.77 against U30's 2.8 and the endstone's setting hung from its two screws
+  (the Contacts view, Inside the part, 18 October 2026: the pieces close, never touching). The setting now runs up to the endstone's,
+  its stone 0.03 under its face, as the lower jewel's always was and the coloured section draws both. Keep: the settings meet; only the
+  stones stand 0.03 apart. `6aeb4f46`
+- **The Wempe's hairspring cut 0.033 into its stud's slot wall as first drawn.** In the versions whose balance stands 0.3 higher (first
+  drawn, 1943, Wempe 3955, the 6MX) the spring's outer end met the stud's slot 0.3 higher, where the upright's 8° lean brings the
+  slot's inner wall 0.042 further out; the end stayed where the last state puts it (the Contacts view: hairspring and stud overlapping,
+  not expected, in four of five versions; fine.py, run on each, drops an overlap under 0.0005 mm³). The drawn outer curve is now formed out by 0.3 tan 8°
+  over its last stretch in those versions, the stud's pin with it. Keep: the spring's end and pin follow the slot's lean wherever the
+  balance's height moves them; the physics' curve (HSP) is 05 03_7's in every version. `2c758a49`
 
 ## Going train and heights
 
@@ -1367,6 +1378,9 @@ Contents:
   the fusee wheel's hub, a pipe r 2.87 (Op. 20 greases "the outside of the hub"; Fig. 71 assembles them together), and the winding ratchet's bore,
   confirmed at 23:30 (r 2.31, no hub), comes off the straight collar's lower end, its screws ahead of it (`UP` in overhaul.js). Keep: nothing on the
   arbor below the winding ratchet wider than its bore. `79cfc2f`
+- **The Wempe's cover plate screw (WN-20) held nothing.** Its 90° head, Ø 3.1, was drawn flush in the plate's sink, which 05 06 00-4 cuts
+  to Ø 3.1 +0.1 (drawn 3.15): the head stood 0.025 off the sink all round (the Contacts view, Inside the part, 18 October 2026: the
+  plate and its screw close, never touching). Seated, 0.025 under the face. Keep: a countersunk head bears on its sink. `6aeb4f46`
 
 ## Plates, bridges, screws and arbors
 
@@ -2060,6 +2074,17 @@ Contents:
   - **Keep:** a part the coloured section draws, checked against the works drawing that dimensions it. Where the works drawings and the photographed examples disagree (WN-12a), build the drawings and record the photographs.
 
 ## Setup, case and gimbals
+
+- **Ship motion swung the movement** (18 October 2026, both pages). Since 16 October (2b58338a)
+  the camera rode with the ship, so the box stood still and the ring and case swung in it about 20°
+  each way at the 7 s roll; before that the box rolled in the true vertical's frame and the case
+  leaned in it 5.4° toward the apparent vertical, so both seemed to move. Now both pages draw it
+  with the apparent vertical up (`gimStep`'s `ap`, `ar`, and the Wempe's `gwStep`, which now keeps
+  them too), as a plumb line hung beside the box would show down: released, the case stays within
+  0.2° (the Hamilton's) and 0.3° (the Wempe's) of upright and the box rolls about 21° round it;
+  latched, the case goes with the box. Both exports' At sea clips are drawn the same way, and
+  bom-fn.js's gimbal latch test checks the case upright. Keep: with the gimbals free, Ship motion
+  moves the box, never the movement; the relative motion is the gimbals' equations unchanged. `3b6bbe73`
 
 - **The gimbals were weighed with the Laid out view's schematic plates in the case** (18 October 2026,
   found when the Wempe's Laid out view added its own). `massprops-check.js` weighed every closed solid
@@ -3149,6 +3174,7 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+<<<<<<< HEAD
 - **The Hamilton's fusee stack had gaps and a hidden spring showing, and its chain ended on a pin** (Winding and maintaining work): seen side-on, the
   sustaining ratchet (tips r 14.53, a module chosen with no source) sat 0.2 mm over a plain copper rim standing over 1.2 mm of the fusee wheel's teeth,
   the fusee's rim 0.1 over it, and the sustaining spring and the wheel's recess showed round the ratchet; a real Model 21 (SNLqsS9wrrM 4:20-4:28,
@@ -3158,4 +3184,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   the ratchet's tips from SRT and the sustaining pawl's tip from them (SPq); the chain's end pin is the hook's nose, down into the slot cut after ME.
   The model's cone is right to the frames that read it on both edges (a right-edge reading on SNLqsS9wrrM made it 1-1.5 mm slim: an axis error).
 
+=======
+- **`wempe-bom-3955` could run beside another `bom.py` step, and `wempe-fine-3955` ran outside the browser lane** (Build, tools and docs): `ci.py`'s `BROWSER` and `EXCL` were hand-written lists, and the two steps added for Wempe 3955 weren't in them, so `wempe-bom-3955` could write `tools/r_bom.json` while another `bom.py` step wrote it too, and both 3955 steps counted against `--jobs` instead of `--browsers`. Now both sets are worked out from the steps' commands (every `bom.py` step in `EXCL`'s `r_bom.json`; every `fine.py`, `bom.py`, `maintaining.py`, `gltf_check.py`, `blender_check.py` step of the full tier, and `fea`, in `BROWSER`). Keep: a new version's steps need no entry in those sets.
+>>>>>>> origin/main
 - **holecheck.py failing now and then on the fusee's hole 42021** (Build, tools and docs): the hole turns with the fusee, which stood where the page's clock put it as it loaded, so between runs it wandered 0.6 mm round (x 16.95-17.45), past its EXPECTED entry's 0.4: a run failed or passed by when it loaded (seen on 3.03.00's main, 16 October 2026). Frozen as audit.py freezes the model (placements.py's first state), it still stood in one of two places 0.74 mm apart: the fusee's catch on its ratchet is state `update()` keeps from call to call. Fixed: holecheck.py freezes the model first, and the entry gives the hole by its distance from the fusee's axis (`L.Fu`, 4.264 mm) and its height, at any angle; such an entry must be found empty (its twin at the same radius, the first tapped hole, holds the stop-bar spring's end). Keep: an EXPECTED entry on a part that turns says where it is about its axis, not in the movement's frame.
