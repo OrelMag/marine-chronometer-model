@@ -495,6 +495,56 @@ const REVP={
     collet:{t:'Escape wheel collet (1941)',d:'The brass collet of 1941: a cone Ø 3.0 on the wheel, then a pipe Ø 1.8 to 5 over it.',sp:'05 04 10 (05 04_7.1) · Ø 3.0 × 1.8, Ø 1.8 to 5',src:'drawing',sn:'From 05 04_7.1; the cone’s top Ø 2.2 scaled',figs:'05 04_7.1'}}};
 
 const REVP6={barrel:REVP.barrel,balance:REVP.balance,escapeWheel:REVP.escapeWheel,topPlate:{bushes:{t:'Centre arbor’s bush (Messinglager WN-301)',d:'The brass bush pressed into the top plate in which the centre arbor’s upper pivot runs, an oil sink in its outer face; the 6MX keeps it, its intermediate and seconds arbors running in jewels instead.',sp:'In the plate’s hole Ø 4.59 · bore Ø 1.21'}}};
+/* the Soviet 6MX against the drawings (the panel's sheet, #x6Det): each difference the 6MX version builds (the Wempe README's "The Soviet 6MX", its readings and how sure each is;
+   REV6's cards), what the drawings have and what the 6MX has, and where to look: f the parts or pieces singled out (both versions' pieces, so either shows as the sheet flips),
+   o the viewer's focusOn options (a view to stand in; at, r a place in the movement's frame, mm, from WD and DIMS; yaw, pitch where the view's own doesn't show it) */
+const X6=(()=>{const H=WD.H,TY=-WD.INNER-WD.TOP_T/2,PY=WD.PP_T/2,mid=(...p)=>[0,1].map(i=>p.reduce((s,q)=>s+q[i],0)/p.length),at=(p,y)=>[p[0],y,p[1]];
+  const p39=mid(H[39],WD.P39_6MX),hs=mid(H[14],H[15],H[16],H[17],H[18]),ch=mid(H[38],H[35]);
+  return[
+  {g:'Frame',t:'Pillar 39 moved',s:'sure',w:'The third pillar at 210° on r 37 (05 09 01, 05 08 02-1).',x:'At 190° on r 37.3, both plates’ holes and seats and its screws with it: Kirov No. 247’s screws read 190.0° on the top plate and 189.6° on the dial side (±0.5°); its radius 37.3 to clear the seconds wheel.',
+    f:['pillars','topPlate.screws','pillarPlate.screws'],o:{view:'plan',at:at(p39,-9.5),r:16,pitch:0.95,k:1.7}},
+  {g:'Frame',t:'Jewels for the intermediate and seconds arbors',s:'likely',w:'Brass bushes pressed into the top plate for both arbors’ upper pivots (WN-300).',x:'Jewels in flush gilt chatons, Ø 4.1 on Kirov No. 247’s plate, the pivot in the middle, no screws: with the drawings’ twelve, the technical conditions’ fifteen. The stones’ size is estimated.',
+    f:['topPlate.chatons','topPlate.bushes'],o:{view:'plan',at:at(ch,TY),r:11,pitch:1.1}},
+  {g:'Frame',t:'A jewel under the intermediate wheel',s:'likely',w:'The intermediate bridge on the dial side carries the wheel’s lower pivot in a brass bush.',x:'A jewel in a chaton in the bridge, as on Kirov No. 247’s dial side.',
+    f:['intermediateBridge'],o:{view:'movement',pitch:-1.1}},
+  {g:'Frame',t:'No hand-setting',s:'likely',w:'A window and holes 14-18 in the pillar plate for setting the hands from outside (as Wempe 3955’s plate is drilled).',x:'None: Kirov No. 247’s dial side is plain there, and Altmeppen lists no hand-setting from outside.',
+    f:['pillarPlate.plate','pillarPlate.hsBush'],o:{view:'movement',at:at(hs,PY),r:19,pitch:-1.1}},
+  {g:'Frame',t:'No hole 53 in the top plate',s:'likely',w:'Hole 53, for the balance holding work’s spring pin (Stift f. Wendelfeder).',x:'No hole: Kirov No. 247’s plate is bare there, in plain view. Holes 51 and 52 lie under its balance, unseen, and are kept.',
+    f:['topPlate.plate'],o:{view:'plan',at:at(H[53],TY),r:9,pitch:1.2}},
+  {g:'Frame',t:'No window in the upper cock',s:'sure',w:'The upper balance cock has an auxiliary hole, 20.',x:'Plain where the hole would be, on Kirov No. 247’s photographs (Altmeppen’s comparison points at the Wempe’s hole).',
+    f:['upperCock.cock'],o:{view:'plan',pitch:1.0}},
+  {g:'Frame',t:'Lower balance cock cut back',s:'likely',w:'The lower cock’s bar 10 deep all along.',x:'Full depth only under its lug; the rest cut back to 3.3 deep (every 6MX side view of the detent; 3.0-3.9 on Kirov No. 247’s). Where the step stands is estimated.',
+    f:['lowerCock.cock'],o:{view:'balance',k:1.4}},
+  {g:'Escapement',t:'Escape wheel at the first-drawn height',s:'likely',w:'As last revised, the escape wheel and rollers 1.8 under the top plate, on the later arbor.',x:'Just under the plate, where the sheets first drew it (Kirov No. 247’s and Kirov-Poljot 24020’s detent views), on one straight cone collet, Ø 2.77 to 1.70 over 5.1.',
+    f:['escapeWheel','rollers'],o:{view:'escapement'}},
+  {g:'Escapement',t:'Its own detent block',s:'likely',w:'The block of 05 04 01-4, screwed up from the top plate’s outer face through hole 13 and placed by two steady pins.',x:'The same L form held by a slotted stud flush in the plate, 2.2 from hole 13, through a gilt adjusting slide in a notch at its corner; a large stop screw over the detent’s foot; the banking screw straight through a plain upright. How the slide adjusts isn’t seen (unresolved).',
+    f:['detentBlock','detent'],o:{view:'escapement'}},
+  {g:'Escapement',t:'The balance staff',s:'estimated',w:'As last revised, the 1946 staff with its hub and the hub’s screws.',x:'The 1941 staff with its brass collar, the one the sheets draw at the first-drawn heights; no 6MX photograph shows the staff. Without the hub’s screws it runs 4.2 s a day fast until its timing weights are set.',
+    f:['balance.staff','balance.hub','balance.screws','hairspring.collet'],o:{view:'balance'}},
+  {g:'Barrel',t:'Barrel cap underneath',s:'likely',w:'As last revised, the barrel’s cap on the barrel bridge’s side.',x:'The cap on the pillar plate’s side (Altmeppen’s list), as the drawings’ three-piece barrel of 1941 has it; its arbor and the mainspring 0.44 lower with it.',
+    f:['barrel','barrelArbor'],o:{view:'fusee'}},
+  {g:'Electrical contact',t:'The seconds contact',s:'likely',w:'None (the sheets leave holes 56 and 57 for one “if needed”).',x:'A contact on the pillar plate by pillar 39: a lever on a jewelled staff rides a 60-tooth contact wheel on the seconds arbor, opening every other half-second and closed at the minute (Kirov No. 247’s; Romanov 1975, Figs. 100-101). The lever, its staff and cock, seen on no photograph, follow Romanov’s figure (estimated).',
+    f:['pillarPlate.contact','pillarPlate.contactLever','secondsWheel.contactWheel'],o:{view:'movement'}},
+  {g:'Electrical contact',t:'Its springs and terminals in the bowl',s:'likely',w:'None.',x:'Two flat brass springs inside the bowl bearing on the contact’s blocks, and outside two terminals, + and −, on black fibre washers (Kirov No. 247’s bowl). Their sizes are estimated (±15 %).',
+    f:['bowl.contact'],o:{view:'case',k:1.6}},
+  {g:'Ring and dial',t:'Movement ring screws',s:'sure',w:'Brass screws, heads Ø 6.2 × 3.05, at 340°, 100° and 220°.',x:'Steel screws with low slotted heads, Ø 6.1 × 2.0, at 342°, 102° and 246° (both of Kirov No. 247’s faces, ±0.5°; Kirov 009’s and Poljot 20027’s the same).',
+    f:['ring.screws'],o:{view:'movement',at:[34.7,0,26],r:15,pitch:1.0}},
+  {g:'Ring and dial',t:'Dial screws',s:'sure',w:'The dial’s feet at the 20, 40 and 59 minute marks (120°, 240°, 354°).',x:'At the 19, 39 and 59 minute marks, 114°, 234° and 354° (Kirov No. 247’s dial: 112.5, 233.6, 353.1), the ring’s tapped holes moved with them.',
+    f:['dial.screws'],o:{view:'dial',at:[44.9,10,22.9],r:7,pitch:1.25}},
+  {g:'Ring and dial',t:'The dial’s printing',s:'sure',w:'Wempe’s printing (as No. 3955): CHRONOMETERWERKE WEMPE HAMBURG and the anchor.',x:'The 1st Moscow Watch Factory’s, traced on Kirov No. 247’s dial: 1МЧЗ ИМЕНИ КИРОВА, СПУСК and ЗАВОД over the up-and-down dial, the serial 247 in red. The layout is the drawings’ to 10-25 µm.',
+    f:['dial.dial'],o:{view:'dial',pitch:1.3}},
+  {g:'Ring and dial',t:'Geneva stripes',s:'likely',w:'The plates, cocks and bridges hammered (drawn plain gilt).',x:'Straight Geneva stripes 3.95 apart at 50°, one sweep across the top plate, cocks and barrel bridge, and over the dial side’s face (Kirov No. 247’s, 1952).',
+    f:['topPlate.plate','barrelBridge.bridge','upperCock.cock','lowerCock.cock'],o:{view:'plan',k:0.9}},
+  {g:'Case and boxes',t:'The bowl',s:'likely',w:'A cast brass cup (R-05 01 00-1), a flange Ø 118 at its top, on its drawn brackets.',x:'Brass, turned to its own profile: a threaded rim Ø 110.5 round the ring’s flange, a collar, the body and a shallow cone to the foot; high brackets, so it hangs 13 mm lower in the gimbals (Kirov No. 247’s and 2973’s bowls). Its inside is estimated.',
+    f:['bowl.bowl','bowl.brackets','bowl.lockBracket'],o:{view:'case',pitch:0.35}},
+  {g:'Case and boxes',t:'The bezel',s:'likely',w:'A cast bezel held by nothing drawn.',x:'A knurled brass ring screwed onto the bowl’s rim, its shoulder holding the ring’s flange down, a thick bevelled glass standing proud (Kirow 422’s bowl turned over).',
+    f:['bezel'],o:{view:'case',pitch:0.5}},
+  {g:'Case and boxes',t:'The closing plate',s:'likely',w:'A closing plate with a raised boss in the bowl’s foot (05 01 00-2).',x:'A flat disc, no boss, its domed knob at r 19 (Kirov 14917’s foot, rAw2zmulpk8 0:11.75, and Kirow 422’s). Its spring is the drawings’ (estimated).',
+    f:['closingPlate'],o:{view:'case',pitch:-0.75,k:1.8}},
+  {g:'Case and boxes',t:'The box',s:'likely',w:'The drawings’ wooden box (05 01_1, 51 00_1) with one glazed lid on a piano hinge.',x:'Orange lacquered wood, 190 each way (the TU’s), in three tiers: the body, a glazed lid and a top lid, two hasps with knurled screws, the factory’s diamond badge and the number plate 247 (Kirov No. 247’s and 22823’s). Its walls are estimated.',
+    f:['box','lid'],o:{view:'box',pitch:0.45}},
+  {g:'Case and boxes',t:'The outer box',s:'estimated',w:'The drawings’ padded outer box (51 00_5).',x:'Of the same wood, felt-lined, about 233 wide: a notch in its front closed by the lid’s tab, a brass catch, a leather strap each side (Kirov No. 247’s and Poljot 08479’s photographs; its depth and height estimated).',
+    f:['overBox','overLid'],o:{view:'transport'}}];})();
 /* the escapement of 1943 as photographed (the Variants' "Escapement of 1943"): the sheets as last revised but for the escapement, which stands at the heights the sheets first drew,
    with the 1943 block, as the German movements photographed with that block are made (Kirow DEC 422 and 479, Lange rough movements finished in Moscow, and A. Lange & Söhne
    No. 5177): the first-drawn balance, rollers, escape wheel and their jewels, the 6MX's detent, and the block with its banking screw drawn whole */
@@ -656,7 +706,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
        solved state at the swing H.amp and the drive drv, as the Hamilton's): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn slowed
        (below, REAL_X) and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
-    tick:(dt,now,st)=>{if(!mv)return[];
+    tick:(dt,now,st)=>{if(!mv)return[];if(x6i>=0&&!V.focused()){x6i=-1;x6Sync();}   /* the 6MX sheet's change ended by a view chosen, Reset or Back */
       /* dw: the wall clock's step (s), up to 0.25: the lid and winding in the case are shown in real time, where dt, the viewer's step, is held to 0.05 a frame, so on a
          renderer drawing a few frames a second they took several times as long (until 15 October 2026) */
       const dw=cw.t===null?0:clamp((now-cw.t)/1000,0,0.25);cw.t=now;
@@ -909,6 +959,19 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
     if(REVC[rev]){const[P,Q]=REVC[rev];for(const k in P){const c=PARTS[k];if(c)Object.assign(c,P[k]);}for(const k in Q)for(const q in Q[k]){const c=pc(k,q);if(c)Object.assign(c,Q[k][q]);}}
     document.querySelectorAll('#rev button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));}
   document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>{setRev(b.dataset.v);setDial(rev==='6mx'?'kirov':dial==='kirov'?'wempe':dial);}));   /* the 6MX brings its own dial (Kirov 247's), and takes it away; the dial switch still changes it */
+  /* the sheet, the Soviet 6MX against the drawings (#x6Det, X6): a change chosen turns the model to the 6MX and closes in on it, the rest see-through (VIEWER's focusOn);
+     Drawings and Soviet 6MX flip the version where the camera stands, as the Version buttons do (the 6MX's dial with it); a view chosen, Reset or Whole model ends it */
+  let x6i=-1;const x6L=document.getElementById('x6List');
+  function x6Sync(){if(!x6L)return;document.querySelectorAll('#x6Show button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));x6L.querySelectorAll('.x6-r').forEach(r=>r.classList.toggle('on',+r.dataset.i===x6i));
+    const w=document.getElementById('x6Whole');if(w)w.disabled=x6i<0;}
+  function x6Rev(v){if(rev!==v){const b=document.querySelector(`#rev button[data-v="${v}"]`);if(b)b.click();}x6Sync();}
+  function x6Go(i){if(!V)return;const c=X6[i];x6Rev('6mx');V.focusOn(c.f,c.o);x6i=i;x6Sync();}
+  if(x6L){let g='';x6L.innerHTML=X6.map((c,i)=>{const h=c.g!==g?`<h3 class="sub-h">${g=c.g}</h3>`:'';return h+`<div class="x6-r" data-i="${i}"><button class="x6-go" title="Zoom in on it, the rest see-through"><b>${c.t}</b> <em class="x6-s x6-${c.s}">${c.s}</em><span><i>Drawings</i> ${c.w}</span><span><i>6MX</i> ${c.x}</span></button></div>`;}).join('');
+    x6L.addEventListener('click',e=>{const r=e.target.closest('.x6-r');if(r)x6Go(+r.dataset.i);});
+    document.querySelectorAll('#x6Show button').forEach(b=>b.addEventListener('click',()=>x6Rev(b.dataset.v)));
+    const w=document.getElementById('x6Whole');if(w)w.addEventListener('click',()=>{if(V)V.setView(V.st.view);});
+    document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',x6Sync));x6Sync();}
+  {const o=document.getElementById('x6Open'),d=document.getElementById('x6Det');if(o&&d)o.addEventListener('click',e=>{e.preventDefault();d.open=true;d.scrollIntoView({block:'start',behavior:RMC.matches?'auto':'smooth'});});}   /* the Version note's link: the sheet opened, the link's state kept */
   function setDial(v){dial=v==='lange'||v==='kirov'?v:'wempe';if(mv)mv.userData.R.dl.setDial(dial);const c=PARTS.dial,q=(PIECES.dial||[]).find(e=>e.k==='dial');DIALC.wempe=DIALC.wempe||{d:c.d,sn:c.sn};
     const o=DIALC[dial];c.d=o.d;c.sn=o.sn;if(q)q.d=o.d;if(VV){const I=VV.INFO;if(I.dial)I.dial[1]=o.d;if(I['dial.dial'])I['dial.dial'][1]=o.d;VV.look();}
     document.querySelectorAll('#dialSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===dial?'true':'false'));}
