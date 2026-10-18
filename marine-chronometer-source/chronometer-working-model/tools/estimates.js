@@ -45,8 +45,8 @@ for(const r of T3)say(`back radius ${r.rb} mm: as drawn ${r.made?r.made.ok?'ever
 chk(T3.every(r=>r.adj),'at every radius the adjusting screws and the trip spring\'s tip bring the escapement to the manual\'s figures');
 out.rb=T3;
 /* ---------- 4. the sustaining spring ---------- */
-say('');say(`4. The sustaining spring over its readings’ uncertainty (KLUwI2UUCMQ 27:26 and 28:42.5-28:43.0): its band’s height (0.96 read, 0.78-1.14), its width (±0.1 mm) and its gap (17.8° read, ±1°: the rectification and the trace; 12.5° until 18 October 2026, the shadow and an end face read as steel)`);
-const F=SU.fn,T4=[],S0=SU.spring;for(const h of[0.78,S0.H,1.14])for(const kw of[1-0.1/S0.SSW,1,1+0.1/S0.SSW])for(const g of[16.8,17.8,18.8]){const sb=0.5*D,G=g*D,smax=G-sb,k=F.stiffOf({h,kw,sb}).k,P=k*smax/F.T0,q=F.sim(k,Math.min(F.T0/k,smax),3600);T4.push({h,kw,g,k,P,tTurn:q.tTurn,tStop:q.tStop});}
+say('');say(`4. The sustaining spring over its readings’ uncertainty (KLUwI2UUCMQ 27:26 and 28:42.5-28:43.0): its band’s height (0.96 read, 0.78-1.14), its width (±0.1 mm) and its gap (17.4° read by hand, ±1°: the rectification and the trace; 17.8 by b* and 12.5° first read, 18 October 2026)`);
+const F=SU.fn,T4=[],S0=SU.spring;for(const h of[0.78,S0.H,1.14])for(const kw of[1-0.1/S0.SSW,1,1+0.1/S0.SSW])for(const g of[16.4,17.4,18.4]){const sb=0.5*D,G=g*D,smax=G-sb,k=F.stiffOf({h,kw,sb}).k,P=k*smax/F.T0,q=F.sim(k,Math.min(F.T0/k,smax),3600);T4.push({h,kw,g,k,P,tTurn:q.tTurn,tStop:q.tStop});}
 const P4=T4.map(r=>r.P),ts=T4.map(r=>(r.tStop??3600)/60);
 say(`over the ${T4.length} combinations its push banked ${f(100*Math.min(...P4))}-${f(100*Math.max(...P4))} % of the drive, the chronometer running ${f(Math.min(...ts),1)}-${f(Math.max(...ts),1)} minutes with the key held, the swing under a turn within ${f(Math.max(...T4.map(r=>r.tTurn/60)),1)}`);
 const weak=T4.filter(r=>(r.tStop??3600)<300),strong=T4.filter(r=>r.P>=0.95);
