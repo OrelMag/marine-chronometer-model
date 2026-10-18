@@ -110,6 +110,29 @@ async def model(b,errs,steps):
     await pg.evaluate("document.querySelector('#report').close()")
     await click('#units button[data-v="mm"]','sizes in mm')
     for sel in['#colr','#colrSrc','#ghost','#edges','#shadows','#merge','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
+    # Contacts (../../shared/contacts.js), as the Wempe's below: found and in the link; the fusee picked, alone and with its own pieces; a part hidden takes its contacts with it;
+    # a pair alone; the sweep turned off half way: every part's own material back, the model's update, explode and laid-out train given back
+    ev=lambda js,*a:pg.evaluate(js,*a)
+    await click('#views button[data-v="movement"]','view movement',400);await click('#ctOn','contacts on',300)
+    await pg.wait_for_function("window.__ct&&!__ct.busy()",timeout=180000,polling=300)
+    c=await ev("[__ct.pairs().length,__ct.points(),location.hash.includes('contacts=1')]")
+    if not all(c):errs.append(f'Contacts: pairs, points, contacts=1 in the link: {c}')
+    await ev("location.hash=location.hash+'&part=fusee'");await pg.wait_for_timeout(500);await click('#ctIn','contacts inside the fusee',300)
+    await pg.wait_for_function("!__ct.busy()",timeout=120000,polling=300)
+    c=await ev("[__ct.pairs().some(p=>p.inside),__ct.pairs().every(p=>p.a.split('.')[0]==='fusee'||p.b.split('.')[0]==='fusee')]")
+    if not all(c):errs.append(f'Contacts with the fusee picked: its own pieces, only its pairs: {c}')
+    await click('#ctIn');await click('#info .x','card closed',300)
+    row="k=>[...document.querySelectorAll('#plist .prow')].find(r=>r.querySelector('.pn').textContent===window.__parts[k].t).firstChild.click()"
+    has="__ct.pairs().some(p=>p.a.split('.')[0]==='trainBridge'||p.b.split('.')[0]==='trainBridge')"
+    if not await ev(has):errs.append('Contacts: the upper train bridge has none')
+    await ev(row,'trainBridge');await pg.wait_for_timeout(400);steps.append('upper train bridge hidden, with its contacts')
+    if await ev(has):errs.append('Contacts: the upper train bridge hidden kept its contacts')
+    await ev(row,'trainBridge');await pg.wait_for_timeout(400)
+    if not await ev(has):errs.append('Contacts: the upper train bridge shown again lost its contacts')
+    await click('#ctList .ct-p','a pair alone');await click('#ctList .ct-p','all pairs again')
+    await click('#ctMode button[data-v="sweep"]','contacts over a beat and the wind',1500);await click('#ctOn','contacts off during the sweep',600)
+    c=await ev("(()=>{const u=window.__mv.userData;return[u.update.toString().length>20,u.explode.toString().length>20,u.develop.toString().length>20,location.hash.includes('contacts'),!!document.querySelector('.ct-leg.hidden')];})()")
+    if c!=[True,True,True,False,True]:errs.append(f'Contacts off: update, explode or develop held, still in the link, or the legend shown: {c}')
     # the tinted and ink drawings (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
     for sel,nm in(('#draw','tinted drawing'),('#drawInk','ink drawing')):
         await click(sel,f'{nm} on',600)
@@ -326,7 +349,7 @@ async def wempe(b,errs,steps):
     if dv['top'][1] or not dv['fusee'][1] or dv['hands'][1] or not dv['dial'] or 'drive=1' not in dv['hash']:errs.append(f'Moving parts only: {dv}')
     await click('#mwOn','motion work and hands included',400)
     if not await ev("(()=>{let on=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part==='hands'&&o.visible)on++;});return on;})()"):errs.append('Include motion work did not show the hands')
-    await click('#mwOn');await click('#driveOn','Moving parts off',500)
+    await click('#mwOn');await click('#views button[data-v="movement"]','view movement (moving parts)',400);await click('#driveOn','Moving parts off',500)   # in a view with the frame (Laid out, the last button, hides it)
     if not await ev("(()=>{let on=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part==='topPlate'&&o.visible)on++;});return on;})()"):errs.append('Moving parts off left the top plate hidden')
     # the Spread slider: shown in the exploded view only, the parts lifted with it
     await click('#views button[data-v="exploded"]','view exploded',600)

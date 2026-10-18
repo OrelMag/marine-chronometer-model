@@ -59,6 +59,13 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's jewels were plain discs, too small, and the escape wheel's lower hole jewel stood 0.2 off its endstone** Every hole jewel and endstone was a
+  flat disc Ø 2.0 × 0.35 (the escape wheel's Ø 1.8 and 1.6), an estimate, where the coloured section draws each Ø 2.9, the hole jewel domed toward its endstone with an
+  oil sink to the arbor and the endstone domed outside; Wempe 3955's top plate shows both upper endstones whole, Ø 2.95-3.2, in a conical bevel (read as an opening
+  Ø 1.6 and a stone Ø 2.5 seen through Ø 2.2); the escape wheel's lower hole jewel stood 0.2 from its endstone, with its bush's floor between them as first drawn,
+  where the section draws the stones together; the seconds jewel had no oil sink. Keep: the stones' form and size as the section's red traces them (KIT.jewelPr,
+  KIT.endPr), scaled only where the sheets leave less room; each hole jewel's crown 0.03 off its endstone (0.06 at the escape wheel's upper); the endstones' settings
+  open over the whole stone. `bd0986e`
 - **The Wempe's impulse face stood 24° before the line of centres at rest, where 05 04_1 draws it 28°10'.** The sheet's "24°" is the
   escape wheel's pitch (its arc lies about the wheel's centre), and its 1°, 21° and 2° the wheel's too; the face's angle is the "6°" on from
   the "22°10'" where the impulse begins, both about the balance. Built so, the stone comes into the teeth's path at +6.1°, and a discharge
@@ -2029,8 +2036,23 @@ Contents:
 - **The barrel bridge had a round hole at 3 o'clock that is really a pry slot** (the 15 October hole survey read it as "a second hole beside the opening"). 13:04.4 shows a rectangular slot in the underside, 2.1 mm wide from r 35.2 out through the rim; 6:47 and 6:49.0 show the face whole above it, so it is blind (1.0 mm deep, estimated). Now cut by `facePocket` (`S.bbN`), the r 0.9 hole and its holecheck entry gone. Keep a mark at a part's edge checked from both faces and the rim before it is drawn as a hole. `98224e7`
 - **The balance cock's screw was 2.2 mm toward 3 o'clock from where three frames put it** (handed over as open, 15 October 2026). It stood where the top-view photograph's similarity placed it; its tapped hole in the train bridge reads (21.81, 24.96) on 23:30, (21.95, 25.66) on 13:49.5 and (22.26, 24.00) on Jd2c3x8VKsE 26:00 (another movement, through a camera fitted on nine named points). Now `S.cock` the mean, the pins with it (measured from the hole), the stud's frame left on the old place (`CK_Q0`), and the body's estimated wall moved the least that keeps 0.48 mm round the counterbore. Keep the screw where the train bridge's hole is measured, and the stud's frame apart from it. `5a3411b`
 - **The Wempe against its coloured section** (17 October 2026, 1b75b90f): the model cut through each pair of arbors and set beside `Wempe_Einheitschronometer.jpg` at its scale (9.37 px/mm: its arbor spacings agree with the plan to 0.1 mm) found these wrong. The balance's hub screws (WN-10) went in from under the flange; the section draws them countersunk flush in the arm's top, down into the flange's M1 (05 03 01-1's "0,4", the countersink). The dust plate's recess faced the plates (estimated); the section has it toward the key, as the sheet's tapered hole does. The balance's setting screws' heads were Ø 2.0 × 0.6 (Ø 2.5 × 1.3 and 1.4 on the section, Ø 2.5 on Wempe 3955), the movement ring screws' 2.25 high (3.05), the stud's screw blind in the cock with a 0.8 head (through it, 1.6), the dial's pin 2.0 deep in the ring (3.7). The numbers: the lower setting screws carried WN-16, the banking screw's label (theirs reads WN-10); the detent foot's and block's steady pins had WN-201 and WN-205 the wrong way round; the stop bar spring's pin was 05 06 03-2 (05 06 04-4); WN-13, WN-15, WN-27 and the upper cock's WN-55 were unrecorded. Keep: a reading taken off the coloured section measured on it in drawing pixels and said where; the dimensioned sheets still decide where they give a figure.
+- **The coloured section's open readings** (18 October 2026, 686b0952), each settled on the dimensioned sheets and photographs:
+  - **The 1941 banking.** It was built as a headless cone. It is a whole screw (WN-16): a gilt domed head Ø 3.3 on the wheel's side of the pipe, which banks on it, and the pointed tail past the arm (05 04_1's plan, the section, Wempe 3955).
+  - **The upper cock.** It was flat 2.4 round its setting, with the hole jewel's setting coming from below. Its boss is now built: face 3.2 from the top, seat 2.7 deep to a floor bored 4.59, both settings in from the top (U30, 05 08 03-1, the section).
+  - **WN-12a.** It was a nut on the mass's inner face. It is the countersunk tapped hole in each mass's top (05 03_2), and WN-12 now threads through the outer jaw to the rim.
+  - **Smaller corrections.** The stop bar's pin 05 06 03-2 is built, with its spring bearing on it. The gold spring's screw head is Ø 1.4 (was 1.2), and WN-34 is 3.2 long (was 3.6).
+  - **Keep:** a part the coloured section draws, checked against the works drawing that dimensions it. Where the works drawings and the photographed examples disagree (WN-12a), build the drawings and record the photographs.
 
 ## Setup, case and gimbals
+
+- **The gimbals were weighed with the Laid out view's schematic plates in the case** (18 October 2026,
+  found when the Wempe's Laid out view added its own). `massprops-check.js` weighed every closed solid
+  in the bowl, hidden or not, so the Hamilton's see-through stand-in plates (`devPlate`, `movement.js`)
+  went into `gimbals.json`: the case 1,662 g, its centre of gravity 7.8 mm off its pivots' line (35° out
+  of level as drawn), periods 0.72 and 0.68 s. Without them: 1,250 g, 0.1 mm off (1°), 0.66 and 0.74 s,
+  every `gimbals.js` criterion still passing. Keep true: a mesh flagged `devPlate` is a drawing aid, not
+  the movement's; the tools that weigh, count or export the movement leave it out (`massprops-check.js`'s
+  `offRev`, the Wempe's `blender.js` `solid`). `d740848`
 
 - **The Wempe's box had two short hinges, no lid stay, and hex steel nuts on its gimbals** (16 October
   2026, the audit of 3.00.00). Every photographed box (Greenwich's wartime Wempe, Wempe 5377 and 6161,

@@ -2525,24 +2525,15 @@ smoke test, ci.py steps, isolate.py and the hook are done (`f6323e8`, `6cde307`)
     Wempe's smoke test clicks none of 3.00.00's controls (and `checks.py` still says it has no Report); the report says ci.py runs all its
     checks. `isolate.py` fails on Windows with many parts (the file name too long); the isolate-and-compare hook ignores `wempe/js/`.
 
-## The Wempe against its coloured section: what is left open (17 October 2026)
+## The Wempe against its coloured section: what is left open (17 October 2026; updated 18 October 2026)
 
-The Wempe model was cut through each pair of arbors and compared with Wempe's coloured full section (`References/wempe/drawings/Wempe_Einheitschronometer.jpg`) at its own scale, 9.37 px/mm. The fixes are in RESOLVED.md ("The Wempe against its coloured section"). Still open:
+The Wempe model was cut through each pair of arbors and compared with Wempe's coloured full section (`References/wempe/drawings/Wempe_Einheitschronometer.jpg`) at its own scale, 9.37 px/mm. The fixes are in RESOLVED.md ("The Wempe against its coloured section" and "The coloured section's open readings"). On 18 October 2026 these were settled and built: the 1941 banking screw, the upper cock's boss, WN-12a, the stop bar's pin, the gold spring's screw and WN-34; the collet, the band's hook, the eye pin and the drum's dashed "slot" were found right as built. Still open:
 
-- **The barrel's Steg (05 07 00-1) is not built.** Its leader ends on a thin steel strip, about 0.5 thick, standing just inside the drum's wall for the drum's whole height (drawing x 210-215, y 334-499). That lines up with the 2 × 0.5 slot that 05 07 01-1's revision (a) cuts through the drum's bottom at 9 o'clock. The branch `claude/wempe-spring-eye` (not merged when this was written) cuts that slot and reads it as a prising slot for the lid. Add the Steg after that branch lands, or settle there what the slot holds. What the strip does is unsure: a stop or a brace for the mainspring's outer coil, likely.
-- **The stop bar's pin 05 06 03-2.** Its leader ends on a small foot, about 0.6 × 0.7, under the bar's end (drawing px 886-892 × 372-379). Unsure; not built.
-- **The 1941 banking screw (WN-16).** The section draws a slotted head about Ø 3.3 on the block's arm, 5.25 under the plate. The model's as-first-drawn banking piece is a headless cone Ø 0.85 taken from Wempe 3955's photograph. The two disagree; the photograph may show a later form.
-- **Smaller differences, each a reading of the section alone:**
-  - the barrel bridge's steady pins (about 2.0 in the bridge and 0.6 proud on the section; the model has 1.7 and 1.3, the proud length from the bridge's sheet);
-  - the gold spring's screw head (Ø about 1.8 against 1.2);
-  - the fusee bush's screw WN-34 (shank about 2.9 against 3.6).
-- **Uncertain readings:**
-  - a boss about 0.8 deep round the upper cock's jewel (the README's Unresolved settles the thickness there at 2.4);
-  - WN-12a drawn as a slotted screw standing on a mass's top (05 03_2 and Wempe 3955 show plain tops);
-  - a section 2.3 high at the maintaining spring's eye pin (the spring is 1.35 thick);
-  - the height of the band's hook in the drum, drawn near the lid;
-  - a dashed slot about 1.1 × 2.4 in the drum wall's top on the left.
-- **The hairspring collet.** In the cut it looks wider than the section's Ø 2.67 between the hub screws. Not checked against its sheet (05 03_5).
+- **The barrel's Steg (05 07 00-1) is not built.** It is a fixed brace for the mainspring's outer coil: a steel strip 0.5 thick standing inside the drum's wall, its inner face at r 18.3. Four sources put it there:
+  - the lid's 9 o'clock notch, 2 +0.05 wide, its bottom at 18.3 ±0.02 (a bearing face);
+  - the drum's revision (a), 0.95 +0.15 from the bore to the slot;
+  - 0207's part 106, drawn 0.46 thick;
+  - the coloured section, which puts it at r 18.20-18.73.
 
 
 ## Photographs against the model, in the same view (18 October 2026)
@@ -2587,3 +2578,10 @@ The Wempe model was cut through each pair of arbors and compared with Wempe's co
 31. *The lower cock's plate-side face* (likely; `9_`): the jewel in a gilt chaton (the model's an oil sink); the lug's upper small hole holding a brass screw or pin end (the model's empty).
 32. Uncertain: the detent block's steady pins brass (lighting?); the block's arm 1-1.4 wider along its length (camera tilt?); the banking cone 0.7 further toward the arm's end; the escape wheel bright gilt, the model's now orange; the chain's J-hook shank longer, its curl deeper (about 1.3 against 1 link pitch).
 Matching: the top plate's every hole, sink and seat on both faces, its crescent cut, balance opening and tongue, the holding device's pocket, the fusee hole's recess; the train's pillars, wheels' places and sizes, arbor heights (0.2-0.4); the escape arbor's length (0.4) and wheel Ø 14; the balance's four masses at ±30° and ±150°, the two split timing weights, the rim's cuts, bimetal rim and steel arm; the detent block's base, holes and stamped "5", the foot clamp, blade, gold spring and red stone; the lower cock's L outline, its screw between the pins; the chain's and band's links and hooks.
+  Its tabs, 2 wide, go through the drum's bottom and the lid. The drum's slot runs through the bottom, not the wall: 2 +0.05 tangentially, r 18.30-19.10. The lid's 9 o'clock notch is its seat, not a prising notch; the 3 o'clock notch is the likelier prising notch.
+
+  The unmerged branch `claude/wempe-spring-eye` cuts that slot as a pocket from the rim and reads the notch as a prising slot. Build the Steg after that branch lands, replacing its drum pocket with the through-bottom slot, and keep the mainspring's last 45° (from the Steg to the hook block) on the wall.
+- **The barrel bridge's steady pins.** The section draws them about 2.0 in the bridge, which would make them 3.3 long (the model has 1.7 and 3.0). The 1.3 proud comes from the bridge's sheet and stays. Unsure.
+- **The 1941 banking: the pipe on the head.** The model's pipe ends 3.65 under the plate and the head's top edge is at 3.45, so they overlap by only 0.2. On 05 04_1 the arm stands 0.7 behind the pipe, which would let the pipe run down to 4.35 and overlap by 0.9.
+- **The upper settings' split.** U30 draws them 1.4 + 1.4, with their joint 1.3 under the cock's top. The staff puts the pivot's end 1.52 under it. The model draws the endstone's setting 1.6 and the hole jewel's 1.2, so the joint falls at the endstone's face (estimated).
+- **WN-12a's holes against the photographs.** 05 03_2 and the coloured section put a countersunk hole in each mass's top, and the model builds it. Wempe's lever 2965 and the earlier 2493 have such holes, but the Einheits chronometers photographed (Wempe 3955, Langes 5373, 5499, 5829) show plain tops: perhaps a later change. 9_Hemmung also shows a dot about Ø 0.5 on two masses' lower faces, not read.

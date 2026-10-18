@@ -137,6 +137,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - The walkthrough sets its own view, speed, Moving parts only, ship motion and gimbal latch for each step. Ending it (Finish, Exit, or anything that leaves it) gives back the viewer's own: the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work, as they were when it started.
 - Shadows (Display; off by default; `shadows=1` in the hash when on): the key light casts shadows through a shadow map (`PCFSoftShadowMap`, 2048 px, 1024 on phones). With it off, the light casts none: no shadow pass, simpler shaders to compile (two programs fewer at start), and the map is freed. The floor's soft shadow under the box is a texture (`shadowTex`) and is always drawn. The tinted and ink drawings follow the switch. Cost with it on, measured with `tools/perf.py`: about 230–380 more draw calls and every caster's triangles again; 0.4–1.1 ms a frame on a desktop GPU, 22 % (Edges on) to 47 % (Edges off) on the Dial view with the CPU throttled 4×, 14–22 % in the software renderer. `social.py`, `topview.py` and `p3fit.py` turn it on, as their images were made.
 - Performance mode (Display; on by default; `merge=0` in the hash when off): the parts that don't move against each other are drawn merged, about 40% fewer draw calls with the same picture ("Static pieces drawn merged", under Modifying the model). Off, every piece draws itself, as before the merge: the way out if a display mode ever shows something wrong with it on. Reset display turns it back on.
+- **Contacts** (its own section; `contacts=1` or `contacts=sweep` in the link, `ceps=` the band, `ctin=1`; 18 October 2026, the Wempe's view from `../shared/contacts.js`, which `app.js` binds as the Wempe's viewer does): a debug view of where the parts touch (within 0.006 mm), come close (a gap up to the band, 0.03 mm unless chosen) or pass into each other, found on the built solids as `fine.py` finds overlaps but along all three axes and with the gap too (the barrel's wall tested as the drum it encloses, as `fine.py` tests it); an overlap `fine.py`'s `EXPECTED` lists is expected (its reason in the list; `js/contactdata.js`, written from `fine.py` by `tools/contacts.py --write`), any other not. Drawn on both solids in each one's frame over every part (and the box) as a faint ghost, plainly (no merged copies, Edges or ink); a scan holds the explode and the laid-out train at 0, so Exploded and Laid out carry the assembled contacts out with their parts. This moment stops the clock and scans the model as it stands (under 2 s), again where something moved once it stands still; Over a beat and the wind poses it in `fine.py`'s 42 states through its update. A part picked shows its contacts alone and lists its pairs, with its own pieces' (Inside the picked part too); a part hidden, faded away, isolated out, hidden by Moving parts only or taken off by the overhaul takes its contacts with it on both sides (`userData.ctOff`, set in `look()`). `tools/contacts.py` renders and lists it; `smoke.py` works it. What it showed first (18 October 2026, the sweep in 35 s): 64 pairs, no overlap `fine.py` doesn't expect; the trip spring on the unlocking jewel in 1 of the 42 states and the escape wheel at the impulse jewel (0.014 mm) in 3; the locked tooth never within 0.03 mm of the locking stone (the lock drawn with more room), so the lock shows only with a wider band.
 - Screen readers: the model's `aria-label` says what the stage shows, the view (`VIEW_DESC` in `app.js`) or the walkthrough step, and Moving parts only, and is updated with it.
 - Keyboard and reduced motion: Space stops and restarts, 1 to 9 pick the views (the key for a view that is off, Box or Dial with Moving parts only, flashes its button and says why in the HUD); with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
 - Report a bug or inaccuracy (`js/report.js`): the panel's button under About, a link on every part's card (about that part, as an inaccuracy), one in About's byline and one at the essay's end (about the section being read). The dialog asks what kind (broken, inaccurate, something else), where, what's wrong and, for an inaccuracy, what shows it (a photograph, a video's time, the manual's page or figure). Ticked by default, technical details go with it: the version, the page's address (the model's state is its hash; a local copy gives the file's name, never its folders), the tab, the balance's swing, whether the train is held or winding, the hours since winding, the speed, the frames drawn, the browser, screen and pointer, the WebGL renderer, and the page's last 30 errors and warnings (`console.error`, `console.warn`, uncaught errors and rejections, failed loads, the WebGL context lost or restored, each at its second since load, URLs cut to their file). Nothing is sent from the page (no `fetch`: `tools/selfcontained.py`): "Write it in my email" is a `mailto:` link to the author with the report filled in, "In Gmail" Gmail's compose page, and "Copy it" the clipboard (or, without one, the report selected under "What will be sent", which shows every word that goes). A `mailto:` longer than 1,900 characters, which some mail programs cut short, is shortened from its end, the log first, and the whole report put on the clipboard as it opens. `smoke.py` reads the links it writes without following them.
@@ -1227,22 +1228,25 @@ on what would stop the chronometer.
   "The detent rings", benchcheck.py `--ring`. dynamics.js now counts a second
   unlocking in one swing as a trip (it was booked as a beat).
 - **`tools/gimbals.js` and `tools/massprops.py`, the box and gimbals in a
-  seaway.** The case with the movement weighs 1,669 g on the model (every solid
+  seaway.** The case with the movement weighs 1,250 g on the model (every solid
   at its material's density) and the gimbal ring 140 g; as drawn the case's
-  centre of gravity lies 11.2 mm under its pivots and 7.8 mm to one side, so
-  the drawn pivots aren't levelled (it would hang 35° out of level), and the
+  centre of gravity lies 10.3 mm under its pivots and 0.1 mm to one side, so
+  the drawn pivots are nearly level (it would hang 1° out of level), and the
   manual levels a chronometer by its case brackets and straps (p. 13), as the
-  analysis does. Levelled, the case swings in 0.72 s on its pivots and 0.68 s
+  analysis does. Levelled, the case swings in 0.66 s on its pivots and 0.74 s
   with the ring (the page's estimate, 0.7 s, holds), far from a ship's roll
-  (10-30 s) and 35 % clear of the balance's 0.5 s beat, which can't set it
+  (10-30 s) and 32 % clear of the balance's 0.5 s beat, which can't set it
   swinging (a balance 2 µm out of poise moves it a fraction of a second of
   arc). In a merchant ship's seas, up to NORDFORSK's operability limit (0.12 g
   athwartships), the case leans up to 10° from the true vertical but stays
-  within 0.3° of the apparent, never reaches its stops (29.5° as drawn), and
-  the rate moves 0.005 s a day. Beyond it (a small vessel's quick roll, a
+  within 0.4° of the apparent, never reaches its stops (29.5° as drawn), and
+  the rate moves 0.006 s a day. Beyond it (a small vessel's quick roll, a
   storm) the case swings onto its stops; each blow nudges the balance's phase
-  by about 0.15 ms, a few tenths of a second a day while it lasts, and passes
-  on under 1 g to the escapement, against the 50 g that trips it.
+  by 0.04-0.16 ms, a few tenths of a second a day while it lasts, and passes
+  on under 2 g to the escapement, against the 50 g that trips it. Until 18
+  October 2026 the case was weighed with the Laid out view's schematic plates
+  in it (1,662 g, its centre of gravity 7.8 mm off the pivots' line: 0.72 and
+  0.68 s, 35° out of level as drawn); `massprops-check.js` leaves them out.
 - **`tools/mainspring_friction.py`, the mainspring's coil friction.** On the
   solved spring, the coils' slip followed from state to state and the packed
   coils' pressure by the ring equations of a packed spiral: over the fusee's

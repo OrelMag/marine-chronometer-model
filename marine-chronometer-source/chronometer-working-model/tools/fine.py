@@ -128,4 +128,4 @@ async def main():
     d=dial['best'];dok=d is None or d['d']>=DIAL_MIN
     print(f"\ndial face (y {dial['face']}): least height of a part over it, outside its arbor holes: "+('nothing over it' if d is None else f"{d['d']:.3f} mm, {d['part']} {d['type']} @ {','.join(map(str,d['at']))}")+f"  {'ok' if dok else 'HIT'} (want {DIAL_MIN} or more)")
     sys.exit(1 if bad or nb or not dok else 0)
-asyncio.run(main())
+if __name__=='__main__':asyncio.run(main())   # contacts.py imports its tables
