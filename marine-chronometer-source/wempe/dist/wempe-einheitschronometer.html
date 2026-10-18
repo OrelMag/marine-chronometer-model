@@ -2813,8 +2813,8 @@ const WFRAME=(()=>{
          to the other's, hollow (the arcs traced on C-D at 9.74 px/mm bow 2-3 px into the metal; their sagitta 0.35); 05 08_3a's "9,3-0,1" is the inner face's end to the dial
          face's far edge (6.05 + 3.25). Wempe 3955's dial face measures the window 6.4 × 6.5 at 27.7-33.9 from the centre, its edges at 30.2° (the photograph fitted on the
          plate's holes 1, 12, 26, 30, 40, 0.3 mm rms): sure. Not cut: the bore Ø 2 at mid-thickness (C-D's circle, 1.68 from the dial face, and E-F's) from the window's outer
-         wall to the rim (dashed on 05 08_3a), which solidGeo can't cut across the plate (the ring's seat hides its mouth on the rim); the notch in the rim where it leaves,
-         4.5 long and 0.9 deep on Wempe 3955 (3_), on no sheet */
+         wall to the rim (dashed on 05 08_3a), which solidGeo can't cut across the plate (its mouth shows on the rim's notch on 8_Wempe_3955_Räderwerk_plus.jpg); the notch in
+         the rim where it leaves and the groove in the ring under it are Wempe 3955's (below and the movement ring's band), on no sheet */
       if(V!=='6mx'){   /* the 6MX's plate has none of it: Kirov 247's dial side (3_Kirow_247_uZ.jpg) is plain there, and Altmeppen lists no external hand-setting */
       for(const k of[14,15])F.push(T(H[k],1.45/2,y0,y1));
       for(const k of[16,17])F.push(T(H[k],2.8/2,y0,y1));
@@ -2824,7 +2824,14 @@ const WFRAME=(()=>{
         const tw=y=>Ct+Math.sqrt(rc*rc-(y-Cy)*(y-Cy)),K=6,Rk=[...Array(K+1).keys()].map(k=>{const t=tw(PPT*k/K);return[P(ui,-t),P(uo,-t),P(uo,t),P(ui,t)];});
         for(let k=0;k<K;k++)F.push({p:Rk[k],q:Rk[k+1],a:y0,b:k<K-1?PPT*(k+1)/K:y1});}   /* six cones nested from the inner face, the last through: the arcs in six chords */
       }
-      tag(mesh(rv(pp,V),faceUV(solidGeo([{loop:out,y0,y1,F}])),DR?GH:G6D),'050802-1');}
+      if(/** @type {string} */(V).includes('first')){tag(mesh(rv(pp,V+' -3955'),faceUV(solidGeo([{loop:out,y0,y1,F}])),DR?GH:G6D),'050802-1');
+        /* Wempe 3955's (the version as photographed) rim notched where the hand-setting cut's bore leaves it, on 18's line: a flat 0.33 deep (its middle at r 42.16) between
+           ends 8.3 apart (8_Wempe_3955_Räderwerk_plus.jpg through photocompare.py's w3955_train camera, 0.07-0.27 mm on the plate's holes: the notch's top corners at r 42.25,
+           8.3 apart, the bore's mouth in its face at r 42.16 on its middle line; 3_Wempe_3955_uZ.jpg, 8.42 px/mm, the plate's edge seen at r 42.17 where the ring's channel
+           opens the lip, below; ±0.3: likely). On no sheet. The bore itself, across the plate, isn't cut (above) */
+        const eu=unit(H[18]),et=[-eu[1],eu[0]],P=(u,w)=>add(eu.map(q=>q*u),et,w),nt=bool(out,[P(42.16,-4.15),P(44,-4.15),P(44,4.15),P(42.16,4.15)]).dAB[0];
+        tag(mesh(rv(pp,'3955'),faceUV(solidGeo([{loop:nt,y0,y1,F}])),DR?GH:G6D),'050802-1');}
+      else tag(mesh(rv(pp,V),faceUV(solidGeo([{loop:out,y0,y1,F}])),DR?GH:G6D),'050802-1');}
     /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);   /* the 6MX's polished steel (3_Kirow_247_uZ.jpg, photocompare.py: sure) */
       for(const[V,P39]of VER)for(const q of[H[11],H[49],P39]){const g=rv(rg,V);tag(screw(g,q[0],-q[1],-PPT,S.r,S.h,S.len,S.rs,V==='6mx'?M.steel:M.brass),'WN-56');}}
@@ -2857,7 +2864,33 @@ const WFRAME=(()=>{
       const RSV=/** @type {[string,number[]][]} */([['last first 1943',[340,100,220]],['6mx',[342.2,102.2,246.4]]]),RS={};for(const[V,b]of RSV)RS[V]=b;
       for(const[V,BS]of RSV){const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
         ...BS.map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
-      tag(mesh(rv(rg,V),solidGeo([band]),V==='6mx'?M.gilt:M.plateSolid),'050800-3');}   /* the 6MX's gilt brass (Kirov No. 247's A, N and W photographs, photocompare.py: sure; nickel until 18 October 2026) */
+      tag(mesh(rv(rg,V==='6mx'?V:V+' -3955'),solidGeo([band]),V==='6mx'?M.gilt:M.plateSolid),'050800-3');}
+      /* Wempe 3955's (the version as photographed) band: a groove across it on the hand-setting cut's line (through 18), under the plate's notch (above), from the lip out
+         through the band's outside, for the hand-setting's shaft: straight sides, a round floor, closed in the band (the user's reading of 8_, 18 October 2026), which passes
+         under the lip's drawn cone near its inner edge and so opens the lip there. 8_Wempe_3955_Räderwerk_plus.jpg through photocompare.py's w3955_train camera: its top edges
+         9.0-9.1 apart (unprojected on the band's top face); its sides straight down to 2.05-2.63 under the plate's inner face (unprojected on their planes); its profile on the
+         band's outside (unprojected on r 48) straight to 2.4, then round to its bottom at 6.07-6.11; 3_Wempe_3955_uZ.jpg, the dial side: the lip opened over 4.4 at its inner
+         edge, the plate's rim showing to r 42.17 there (8.42 px/mm): likely. A circle through the sides' foot and the bottom: r 4.565 about an axis 1.54 under the face (the
+         bore's, 05 08_3a, is 1.67), the floor 0.25 above the band's underside; the lip opened to r 42.25, 5.0 wide. On no sheet (05 08 00-3). The band in cells: outside the
+         seat (its screws' holes), the lip under the plate (its drawn cone a sloped underside), the pin's notch, and the groove's floor in strips across it, each in the band
+         and under the lip */
+      {const eu=unit(H[18]),et=[-eu[1],eu[0]],P=(u,w)=>add(eu.map(q=>q*u),et,w),Wo=(/** @type {number[]} */p)=>p[0]*et[0]+p[1]*et[1],Uo=(/** @type {number[]} */p)=>p[0]*eu[0]+p[1]*eu[1];
+        const ya=1.54,Rc=4.565,wm=4.5,yf=(/** @type {number} */w)=>ya+Math.sqrt(Rc*Rc-w*w),cc=(/** @type {number[][]} */L)=>area(L)>0?L:L.slice().reverse();
+        const we=Math.sqrt(Rc*Rc-(5.30-ya)**2),ri=(/** @type {number} */w)=>41.5+yf(w)-5.35+0.05;   /* under the lip the floor meets its cone at r 41.5 + (yf - 5.35): the opening, its edge 0.05 thick */
+        const rect=[P(40,-wm),P(48.6,-wm),P(48.6,wm),P(40,wm)],C48=C([0,0],96/2,nS),C41=c41,SP=bb.dAB[0];
+        const main=bool(C48,bool(bb.uni[0],rect).uni[0]).dAB[0],lip=bool(bb.dAB[0],bool(C41,rect).uni[0]).dAB[0];
+        const yc=(/** @type {number[]} */p)=>Math.min(6.35,5.35+(Math.hypot(p[0],p[1])-41.5));   /* the drawn cone under the lip: Ø 83 at 5.35 to Ø 85 at 6.35 */
+        const cells=/** @type {any[]} */([{loop:cc(main),y0:0.35,y1:6.35,F:RS['last first 1943'].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))},{loop:cc(lip),y0:3.35,y1:yc},{loop:cc(bb.B2),y0:5.35,y1:yc}]);
+        const on=(/** @type {number[][]} */L,/** @type {number} */w)=>L.filter(p=>Math.abs(Wo(p)-w)<1e-7&&Uo(p)>0).sort((a,b)=>Uo(a)-Uo(b));
+        const cross=(/** @type {number[][]} */L,/** @type {number} */w)=>{for(let i=0;i<L.length;i++){const p=L[i],q=L[(i+1)%L.length],a=Wo(p)-w,b=Wo(q)-w;if(a*b<0&&Uo(p)>0){const t=a/(a-b);return[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];}}return[0,0];};
+        const among=(/** @type {number[][]} */L,/** @type {number} */w0,/** @type {number} */w1)=>L.filter(p=>Uo(p)>0&&Wo(p)>Math.min(w0,w1)&&Wo(p)<Math.max(w0,w1)).sort((a,b)=>(Wo(a)-Wo(b))*(w1>w0?1:-1));
+        /* each strip edge's points: [the lip's inner edge (or the opening's), the seat, the band's outside]; at the groove's sides the bool loops' own points, shared with the lip's and band's cells */
+        const E=(/** @type {number} */w)=>Math.abs(w)===wm?[on(lip,w)[0],on(main,w)[0],on(main,w)[1]]:[Math.abs(w)<we?P(Math.sqrt(ri(w)**2-w*w),w):cross(C41,w),cross(SP,w),cross(C48,w)];
+        const WS=[0,0.5,1.0,1.5,1.9,we,2.7,3.1,3.5,3.85,4.2,wm],y0=(/** @type {number[]} */p)=>yf(Math.min(wm,Math.abs(Wo(p))));
+        for(const s of[-1,1])for(let k=0;k<WS.length-1;k++){const w0=s*WS[k],w1=s*WS[k+1],A=E(w0),B=E(w1),inner=Math.abs(w1)<=we+1e-9?[]:among(C41,w0,w1);
+          cells.push({loop:cc([A[1],...among(SP,w0,w1),B[1],B[2],...among(C48,w1,w0),A[2]]),y0,y1:6.35});   /* in the band */
+          cells.push({loop:cc([A[0],...inner,B[0],B[1],...among(SP,w1,w0),A[1]]),y0:(/** @type {number[]} */p)=>Math.max(3.35,y0(p)),y1:yc});}   /* under the lip, from the plate's seat down */
+        tag(mesh(rv(rg,'3955'),solidGeo(cells),M.plateSolid),'050800-3');}   /* the 6MX's gilt brass (Kirov No. 247's A, N and W photographs, photocompare.py: sure; nickel until 18 October 2026) */
       const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
       for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
