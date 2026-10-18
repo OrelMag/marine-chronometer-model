@@ -1,5 +1,7 @@
 # Shape pass: every part against a real Model 21
 
+**Superseded as a ledger by `PROVENANCE.md` (18 October 2026)**, which re-reads every row against the code after two weeks of measurement on video and adds the frame each reading went through and its certainty. This file stays as the record of the 4 October pass and its work order.
+
 Review-results.md, "BOM comparison", open item 2: each line of the parts list (`BOM.md`, Figs. 106-110) checked for where its outline, sizes and place come from, and compared with a photograph, a video frame or the manual's figure. Every change made in this pass follows CLAUDE.md, "Build from measured lines": the line is measured on its source first, the source and numbers go in the code comment, and the part is isolated beside the reference afterwards (`tools/isolate.py`).
 
 Started 4 October 2026 on `claude/shape-pass`, from release 2.00.01. The ledgers below are a read-only triage of the code, its comments, the model README's "Estimated" section and the records (RESOLVED.md, Review-results.md, References/VIDEOS.md, PLAN-fidelity.md); each row's provenance is what those say, to be confirmed when the part is measured.
