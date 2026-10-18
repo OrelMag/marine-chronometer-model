@@ -66,7 +66,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      if(dsr<-1e-9&&!/slider|set/.test(tag)){
        if(w&&ws&&!prev.held&&(Math.abs(psi-ws.psi0)<1e-9||cur.held)){if(ws.sr0-sr>=SRP.p)fail('ratchet back',`${at}: went back ${((ws.sr0-sr)*D).toFixed(2)} deg with the fusee as winding started, a tooth or more (${(SRP.p*D).toFixed(1)})`);}   /* locked to the fusee until its pawl holds it */
        else if(!w&&!prev.held&&-dsr<SRP.p){}   /* pushed back toward its pawl or onto it, under a tooth: the fusee's drive fell faster than the spring relaxes (at run down, the chain's last turn,
-          since 17 October 2026 the spring pushing 0.22 of the drive: until then only onto the pawl) */
+          since 17 October 2026 the spring pushing 0.22 of the drive, 0.33 since 18 October: until then only onto the pawl) */
        else fail('ratchet back',`${at}: sustaining ratchet turned back ${(-dsr*D).toFixed(2)} deg${prev.w&&!w?' as winding stopped':''}`);}
      if(w&&ws&&!cur.held){const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);if(mod(psi-R.WPH,FPR.p)>1e-4||dp<WD)fail('lift',`${at}: winding pawls ${dp.toFixed(3)} mm into the teeth, ${(mod(psi-R.WPH,FPR.p)*D).toFixed(2)} deg off their faces, while the ratchet goes back with the fusee`);}
      if(prev.w&&!w&&!jump){const sh=prev.sr,fc=sh+R.WPH+FPR.p*Math.ceil((prev.fz-sh-R.WPH)/FPR.p-1e-9),want=fc+Math.max(0,gA-dq-sh)-prev.fz,got=fz-prev.fz;   /* the catch: gap to the pawls, then the reload */

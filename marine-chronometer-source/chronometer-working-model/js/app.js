@@ -749,7 +749,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* the drive: the escape wheel's torque as a share of the one the escapement is calibrated at (ESC.ampAt, ESC.rateAt). Running, the mainspring through the fusee (R.fs.torque:
      the solved spring's pull on the chain's lever, level to about 2 %, then falling to nothing over the last 1.2 h as the chain's end pin swings round to run down), 1 at 12 h
      from full wind, the middle of a day's running. The sustaining spring carries it to the fusee wheel (update() in movement.js), so it pushes with all the drive it was
-     banked when the fusee stops driving (SUS: R.SPU, 0.22 of the 12-hour drive, the split ring weaker than the drive, its section traced on the video (0.88 designed until 17 October 2026, 0.82 until then); 1, carrying the whole drive unbanked, until 14 October
+     banked when the fusee stops driving (SUS: R.SPU, 0.28 of the 12-hour drive, its outline traced by hand (0.33 from the automated trace and 0.22 with the 12.5° gap, 18 October 2026), the split ring weaker than the drive, its section traced on the video (0.88 designed until 17 October 2026, 0.82 until then); 1, carrying the whole drive unbanked, until 14 October
      2026; 0.8 estimated, until 11 October 2026), and less as it relaxes over its travel (R.ssF: SPU (1 - R.ssD / R.SMAX)): while the key turns, or when the fusee's drive
      has fallen faster than the train relaxes it. ssLeft(d): the minutes of drive left in it, relaxed d, at the fusee wheel's turn
      drvB(h): what a going barrel with the same spring would give, its pull falling evenly with time, geared to give the same at 28 h (Swing and isochronism) */
