@@ -3155,8 +3155,10 @@ const WFRAME=(()=>{
       /* the Soviet 6MX's: the bar full depth only over the lug, the rest toward the screw and pins cut back from the pillar plate's side to 3.5 under the top plate (every 6MX
          side view of the detent, 8_Kirow_247_F.jpg and the gallery's 13 Feder photographs, a stamped number on the deep part; on 247's, the full depth taken as the drawn 10:
          the cut-back part 3.3 deep (3.0-3.9), the step about at the lug's edge: likely; Wempe 3955 and Kirov 422, German-made, the plain bar). Built 3.3. Its lug 3.22 thick as drawn (247's reads 2.7,
-         by that same scale: not taken). Its plan (Kirov 14100's loose cock, chasy-ru: the setting's screws 6.9 apart, its round end r 6.6 off the setting's centre) too
-         rough to take: the drawn plan kept (README, The Soviet 6MX). The step 1.5 past the lug's edge, so the lug and the screw's hole stand on the full depth (estimated) */
+         by that same scale: not taken). Its plan: no photograph shows it (Kirova 14100's loose
+         cranked piece on chasy-ru, F20D7D36…, taken for it until 18 October 2026, is the upper cock: 55-65 long by the pillars' Ø 8.1 beside it, the endstone's setting and its two
+         screws on the arm). 247's side view looks along the cock's plane, so its deep part's edge fixes only a line across the plan (a full-width step at u about -6, or one
+         at the lug's edge that doesn't span the bar): the drawn plan kept (README, The Soviet 6MX). The step 1.5 past the lug's edge, so the lug and the screw's hole stand on the full depth (estimated) */
       const st=1.5,b6a={loop:[L(-10,-4),L(st,-4),L(st,4),L1,L2],y0:TI,y1:TI+10,F:[T(o,rM26,TI,TI+10),A(H[22],rPinQ,TI,2.5)]},b6b={loop:[L(st,-4),L(10,-4),L(10,4),L(st,4)],y0:TI,y1:TI+3.3,F:[A(H[37],rPinQ,TI,2.5)]};
       tag(mesh(rv(lc,'6mx'),solidGeo([b6a,b6b,lug]),M.gilt),'050800-2');}
     for(const g of lc.children.filter(c=>c.userData.rev))for(const k of[22,37])tag(cylBetween(g,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');   /* in each version's group with its cock (fine.py takes pieces fixed together by their shared group) */   /* before the screws' groups (below), which aren't the cock's */
