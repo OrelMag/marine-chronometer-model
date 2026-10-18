@@ -1233,14 +1233,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const L1=smooth(cur.lift/0.55),L2=smooth((cur.lift-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(cur.flip),L2)*Math.PI;
     const wR=TAU/(+$('#rollP').value||7);rockW+=((st.rock?1:0)-rockW)*k;if(!st.rock&&rockW<1e-4)rockW=0;if(rockW>0)rockT+=dt*wR;const sea=rockW>0?GIM.sea(rockT,wR,rockW):null;roll=sea?sea.r[0]:0;pitch=sea?sea.p[0]:0;   /* the ship's motion (GIM.sea), eased in and out; its rates and accelerations move the gimbals' pivots */
     const jt=H.jT>0?(now-H.jT)/1000:1;const jk=jt<0.25&&!RM.matches?H.jS*2.5*D2R*Math.sin(Math.PI*jt/0.25)*(1-jt/0.25):0;if(jt>=1)H.jT=0;   /* a jolt knocks the box over and back in a quarter second */
-    /* latching: the ring and case are brought level with the box, then the lever swings in; released, the reverse. Latched, they tilt with the box */
-    latchK=SNAP||RM.matches?+st.latch:clamp(latchK+(st.latch?1:-1)*dt*1.2,0,1);const fr=1-smooth(Math.min(1,latchK*2));
+    /* latching: the ring and case are brought level with the box, then the lever swings in; released, the reverse. Latched, they tilt with the box */    latchK=SNAP||RM.matches?+st.latch:clamp(latchK+(st.latch?1:-1)*dt*1.2,0,1);const fr=1-smooth(Math.min(1,latchK*2));
     const tw=H.twT<0||RM.matches?0:tM-H.twT;if(tw>TWIST.T)H.twT=-1;   /* the twist that starts it: the box turned sharply and back (TWIST) */
-    if(SNAP||RM.matches){GM.p=[0,0];GM.r=[0,0];GM.lp=pitch;GM.lr=roll+jk;}else gimStep(GM,dt,pitch,roll+jk,sea,fr);
-    /* drawn as the ship's people see it (16 October 2026): the box stands still on its table, the camera riding with the ship, and the ring and case swing against it as the
-       gimbals take the roll and pitch (GM, in the world's frame, less the ship's); until then the box rolled in a fixed world and the case leaned with it toward the apparent
-       vertical, so both seemed to move. The twist and the jolt are the box moved by hand, so they turn it still */
-    BX.root.rotation.set(0,tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,jk,'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
+    if(SNAP||RM.matches){GM.p=[0,0];GM.r=[0,0];GM.lp=pitch;GM.lr=roll+jk;GM.ap=GM.ar=0;}else gimStep(GM,dt,pitch,roll+jk,sea,fr);
+    /* drawn with the apparent vertical up (18 October 2026), as a plumb line hung beside the box would show down (GM.ap, GM.ar: gimStep's): the case, hanging along it, stays put
+       and the box rolls and pitches round it, the ring and case against the box as the gimbals take it (GM, in the world's frame, less the box's); latched, the case goes with
+       the box. Until 16 October the box rolled in the true vertical's frame and the case leaned in it toward the apparent vertical (5.4° at 7 s), so both seemed to move; then
+       until 18 October the camera rode with the ship, the box still and the movement swinging in it about 20°. The twist and the jolt are the box moved by hand */
+    BX.root.rotation.set(pitch-(GM.ap||0),tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,roll+jk-(GM.ar||0),'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
     BX.root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow()).add(panO);
     if(st.spin&&!ptrs.size){G.yaw+=dt*0.2;if(camFree)C.yaw+=dt*0.2;}
