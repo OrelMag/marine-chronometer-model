@@ -2028,6 +2028,15 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The gimbals were weighed with the Laid out view's schematic plates in the case** (18 October 2026,
+  found when the Wempe's Laid out view added its own). `massprops-check.js` weighed every closed solid
+  in the bowl, hidden or not, so the Hamilton's see-through stand-in plates (`devPlate`, `movement.js`)
+  went into `gimbals.json`: the case 1,662 g, its centre of gravity 7.8 mm off its pivots' line (35° out
+  of level as drawn), periods 0.72 and 0.68 s. Without them: 1,250 g, 0.1 mm off (1°), 0.66 and 0.74 s,
+  every `gimbals.js` criterion still passing. Keep true: a mesh flagged `devPlate` is a drawing aid, not
+  the movement's; the tools that weigh, count or export the movement leave it out (`massprops-check.js`'s
+  `offRev`, the Wempe's `blender.js` `solid`). `d740848`
+
 - **The Wempe's box had two short hinges, no lid stay, and hex steel nuts on its gimbals** (16 October
   2026, the audit of 3.00.00). Every photographed box (Greenwich's wartime Wempe, Wempe 5377 and 6161,
   Lange 1947) has one piano hinge across the back (148 long on Lange 1947's) and a lid stay (6161's a

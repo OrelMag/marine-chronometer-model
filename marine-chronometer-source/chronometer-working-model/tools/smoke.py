@@ -349,7 +349,7 @@ async def wempe(b,errs,steps):
     if dv['top'][1] or not dv['fusee'][1] or dv['hands'][1] or not dv['dial'] or 'drive=1' not in dv['hash']:errs.append(f'Moving parts only: {dv}')
     await click('#mwOn','motion work and hands included',400)
     if not await ev("(()=>{let on=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part==='hands'&&o.visible)on++;});return on;})()"):errs.append('Include motion work did not show the hands')
-    await click('#mwOn');await click('#driveOn','Moving parts off',500)
+    await click('#mwOn');await click('#views button[data-v="movement"]','view movement (moving parts)',400);await click('#driveOn','Moving parts off',500)   # in a view with the frame (Laid out, the last button, hides it)
     if not await ev("(()=>{let on=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part==='topPlate'&&o.visible)on++;});return on;})()"):errs.append('Moving parts off left the top plate hidden')
     # the Spread slider: shown in the exploded view only, the parts lifted with it
     await click('#views button[data-v="exploded"]','view exploded',600)
