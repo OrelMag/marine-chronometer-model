@@ -4,6 +4,26 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.16.00 · 2026-10-18
+- The Wempe: many small parts now as its works drawings and photographs show them (the pinions, oil sinks, collars and flanges, the balance opening's tongue), and the dial's two holes hidden under its printed face
+- The Wempe's key now stands in a round cup over the corner shelf of its box, as the box's plan draws it
+- The Wempe's 35-day trial now uses the day-to-day scatter of eight Soviet test cards: as adjusted it passes about 95 trials in 100
+
+## 3.15.04 · 2026-10-18
+- The Hamilton's sustaining spring now follows an outline traced by hand on the restoration video: a slightly narrower band, so while the key winds it drives the chronometer about ten and a half minutes
+
+## 3.15.03 · 2026-10-18
+- The Hamilton's sustaining spring, inside the fusee wheel: its two ends are now round, as photographed
+- Its gap is now as measured on a restoration video, so while the key winds it drives the chronometer about twelve minutes
+- The Wempe's maintaining spring as its works drawing shows it, giving 10-14 minutes of power while it is wound
+
+## 3.15.02 · 2026-10-18
+- The balance cock's endstone drawn as a diamond, as Hamilton made it (the other thirteen jewels are rubies)
+
+## 3.15.01 · 2026-10-18
+- The fusee's lower end as real Model 21s show it side-on: the fusee wheel toothed over its whole thickness, the sustaining ratchet full size and seated straight on it, no gaps
+- The chain's end hooks into a slot in the fusee's large end
+
 ## 3.15.00 · 2026-10-18
 - Wempe No. 3955 as photographed: its escape collet, steel impulse roller, poising holes in two masses, the banking screw's domed head, the brass wire stud, the notch for the hand-setting in its plate and ring, and its closing plate and Bakelite bowl bottom
 - The 1941 detent block's slit and banking screw, and the gold spring's single bow

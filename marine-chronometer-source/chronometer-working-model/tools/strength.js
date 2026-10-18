@@ -19,12 +19,13 @@ const P=a=>a.map(x=>x*MPa);
 /* ---------- the going train: tooth forces at full wind (every stage taken as lossless, the worst case), Lewis σ = F / (b m Y) ---------- */
 /* Y 0.20-0.35: cycloidal clock teeth have thinner roots than involute gears (Y 0.3-0.45); the low end is taken */
 say('The going train, fully wound (each stage lossless: the largest forces)');
-const Y=0.2,arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arbor\\((.*?)\\),'`).exec(mv);if(!m)throw Error('not found: arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s);return{w:w&&+w[1],p:p&&+p[1]};};
+const Y=0.2,arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arbor\\((.*?)\\),'`).exec(mv);if(!m)throw Error('not found: arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
+const fc=(W,P)=>W.wy!=null&&P.py!=null?Math.max(0,Math.min(W.wy+W.w/2,P.py+P.p/2)-Math.max(W.wy-W.w/2,P.py-P.p/2)):Math.min(W.w,P.p);   /* a mesh's face: where the wheel's and the pinion's heights overlap (the fusee wheel's 2.22 on the centre pinion's 1.54 bear over 1.40; min(th) until 18 October 2026) */
 const A={gw:arb('gw'),cw:arb('cw'),tw:arb('tw'),fw:arb('fw'),esc:arb('esc')},M=PH.MODS;
 /* rev a day of each wheel: the centre once an hour */
 const day={gw:24*TR.cp/TR.fu,cw:24,tw:24*TR.cw/TR.tp,fw:24*TR.cw/TR.tp*TR.tw/TR.fp},yrs=30;
-const MESH=[['fusee wheel → centre pinion','gw',TR.fu,M.fusee,A.gw.w,A.cw.p,TR.cp],['centre wheel → third pinion','cw',TR.cw,M.centre,A.cw.w,A.tw.p,TR.tp],
-  ['third wheel → fourth pinion','tw',TR.tw,M.third,A.tw.w,A.fw.p,TR.fp],['fourth wheel → escape pinion','fw',TR.fw,M.fourth,A.fw.w,A.esc.p,TR.ep]];
+const MESH=[['fusee wheel → centre pinion','gw',TR.fu,M.fusee,fc(A.gw,A.cw),fc(A.gw,A.cw),TR.cp],['centre wheel → third pinion','cw',TR.cw,M.centre,fc(A.cw,A.tw),fc(A.cw,A.tw),TR.tp],
+  ['third wheel → fourth pinion','tw',TR.tw,M.third,fc(A.tw,A.fw),fc(A.tw,A.fw),TR.fp],['fourth wheel → escape pinion','fw',TR.fw,M.fourth,fc(A.fw,A.esc),fc(A.fw,A.esc),TR.ep]];
 let T=PH.Tf;const F={};
 for(const[nm,k,z,m,bw,bp,zp]of MESH){const r=m*z/2/1000,Ft=T/r,b=Math.min(bw,bp)/1000,sig=Ft/(b*m/1000*Y),cyc=day[k]*365*yrs,fat=cyc>1e6;
   F[k]=Ft;line(`${nm} (${z}:${zp}, m ${m})`,`${f(Ft,Ft<1?3:1)} N, ${f(T*1000,T<0.01?2:1)} mN·m`,sig,P(fat?BRASS_E:BRASS_Y),fat?`brass's endurance (${(cyc/1e6).toFixed(1)}M cycles in ${yrs} y)`:`brass's yield (${f(cyc/1e3,0)}k cycles in ${yrs} y)`);

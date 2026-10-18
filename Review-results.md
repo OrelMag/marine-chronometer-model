@@ -373,6 +373,24 @@ a reading or an estimate to settle:
   arbor's pinion and arbor 0.42 were left out). *Done (14 October 2026):* makeEsc's JW 6.05 and dynamics.js sum the arbors' solids (mechanisms.json); the
   calibrated torque 62.8 µN·m, the budget still closes at TF 67 s; tolerances, gearing, tripping and bench re-written.
 
+### 11. The rate from one turn to one and a half, and the hairspring's two terminals (Bennett, 18 October 2026)
+
+Found reading William O. Bennett's "The Hamilton Marine Chronometer" (*NAWCC Bulletin* 356, 2005; References/NAWCC-ARTICLES.md), the
+designer's own account. Neither stops the model working; both are where the model's design values meet a source that outranks them.
+
+- **Rate against swing.** Bennett: placing the impulse rightly made "the same rate from one turn motion to one-and-a-half turns motion,
+  within a fraction of a second per day", swings of 180° to 270°. The model's escapement (`ESC.rateAt` with the drive that gives each swing,
+  18 October 2026): −1.83 s a day at 180°, −1.15 at 200°, −0.64 at 220°, −0.25 at 240°, 0.00 at 255°, +0.21 at 270°: 2.0 s a day over his
+  range (0.35 over the manual's 1⅜-1½ turns, which the model's checks hold it to). The impulse's place on the roller and the hairspring's
+  isochronism term (`HS`) set that curve; neither is measured. To do: find what places the impulse so the rate is flat to a fraction of a
+  second from 180° to 270°, whether the manual's figures (Ops. 84-88, 97) still hold there, and what it does to the swing, `escgolden.js`
+  and the checks downstream (the model README's "Estimated").
+- **The terminals.** Bennett: "two identical terminals", designed with Hamilton's own theory (the spring under a pure torque tangent to its
+  ends), not Phillips'. The model's are solved to Phillips' conditions (`hairspring.js`) and differ: the outer 14.6 mm into the stud's clamp,
+  the inner 21.8 mm to the collet's end. No source shows their paths (the model README: "the curve's path is a design"), so this source
+  should decide what form they take. To do: whether identical curves can meet the stud's clamp and the collet's end as measured (4.34 and
+  3.2 mm from the staff), and leave the force on the pivots as small as `HSPR.lateral` finds the present pair's.
+
 ## The hairspring's inner end (settled as an estimate, 4 October 2026)
 
 `tools/hairspring.js` designs the spring's terminal curves to Phillips' conditions from the model's coil and ends. The outer one, into the stud's clamp
@@ -1155,6 +1173,21 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
      and nothing measured says where.
    *To settle:* a photograph of a movement with the arm fitted (none found on the web, 5 October 2026). Until then any new place is a fit for
    room, which `claude/lock-arm-shape` was faulted for; the model keeps its arm, with the swing's fault recorded.
+   *Read again (18 October 2026, triaging `claude/lock-arm-shape`), Fig. 9 at 900 dpi and Fig. 108 at 1,000-1,400 dpi:*
+   - **No boss round the screw** (fairly sure). Fig. 9 draws the screw's head, a turned collar under it and a washer with a milled edge
+     (42251, Fig. 108's item 33) straight on the flat strip; Fig. 108's item 31 is a strip whose screw end is plain and rounded. The round
+     raised piece read above as a boss at its screw (and drawn on `claude/lock-arm-shape`, `22b1290`) is the arm's other end.
+   - **The end is an eye, not a finger** (fairly sure). Fig. 108's item 31 ends in a round eye with a hole, standing out of the strip's plane
+     (its ellipse turned against those of the plate's holes); Fig. 9 draws the same thing locked: the strip, lying low, bends up at its end
+     into an upright round eye, and the timing weight (a slotted cylinder, its screw's threaded end out beyond it) stands in its hole. That
+     is Sec. X's "place the locking arm over the timing weight": the eye holds the balance both ways, and comes off the weight as the arm turns
+     out. The model's 2.4 mm finger beside the weight is drawn by neither figure. Fig. 108 draws the eye about twice the strip's width across
+     (not to scale; not sure).
+   - **Not ported.** `claude/lock-arm-shape` built such an eye (`02afce8`), but bent down from an arm moved onto the barrel bridge's top at the
+     other weight and turning 2°: Fig. 9 has the arm low, beside the barrel bridge's raised horn, bending up into the eye, and swinging well
+     out (its hatched arrow), so that place is a fit for room. At the model's place the eye has no room to come off the weight: there the
+     cock's foot stands 0.30 mm outside the balance's sweep (that branch's search over the built model, 4 October 2026). Drawing the eye means choosing the arm's place, which still waits on
+     a photograph of an arm fitted.
 
 ## Open questions, to settle from video (1 October 2026)
 

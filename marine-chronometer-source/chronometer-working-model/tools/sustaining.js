@@ -11,7 +11,8 @@
 // it keeps it going; until 17 October 2026 the time it kept the balance over a turn, which the designed band, 1.45 high and 2.1 wide, gave and the traced one can't),
 // how long the swing stays over a turn, and the seconds a wind costs. Needs only Node.js:
 //   node sustaining.js [--json OUT]    (about 15 s; exits 1 if the section doesn't give SPU, the spring isn't weaker than the drive, it keeps the chronometer
-//   running outside five to ten minutes, it is stressed past its steel or its band doesn't fit the recess)
+//   running under five minutes (over ten is reported, ~~: the manual's figure read as the least it must give, the owner's reading, 18 October 2026), it is stressed past
+//   its steel or its band doesn't fit the recess)
 const fs=require('fs'),path=require('path'),PH=require('./physics.js'),{build}=require('./escapement.js');
 const ESC=build().ESC,mv=fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8');
 const num=(re,what)=>{const m=re.exec(mv);if(!m)throw Error('not found in movement.js: '+what);return m.slice(1).map(Number);};
@@ -55,11 +56,14 @@ const sim=(k,c0,tEnd,dt=0.25)=>{const TF=ESC.settings.TF,A0=ESC.ampAt(1),r0=ESC.
   return{tBand,tTurn,tStop,lost,trace:tr};};
 const c0=k=>Math.min(T0/k,SMAX),drawn=sim(kt,c0(kt),3600),model=sim(SPU*T0/SMAX,SMAX,3600);
 say(`the key held, as drawn: the swing leaves the manual's band after ${mm(drawn.tBand)}, falls under a turn after ${mm(drawn.tTurn)}, and the chronometer stops after ${mm(drawn.tStop)}; as the model runs it (SPU): ${mm(model.tBand)}, ${mm(model.tTurn)}, ${mm(model.tStop)}`);
-chk(drawn.tStop!=null&&drawn.tStop>=300&&drawn.tStop<=600,`it keeps the chronometer running ${mm(drawn.tStop)}: the manual's five to ten minutes`);
+chk(drawn.tStop!=null&&drawn.tStop>=300,`it keeps the chronometer running ${mm(drawn.tStop)}: at least the manual's five to ten minutes`);
+/* over ten: the measured outline (the gap 17.4 deg) and height (0.96) give more than the manual's figure, read as the least it must give (the owner's reading, 18 October 2026); the time
+   rests on estimates too (the steel's modulus, the band loaded at its pins alone, its rest against the wall left out) */
+if(drawn.tStop!=null&&drawn.tStop>600)chk(false,`over the manual's ten minutes by ${f((drawn.tStop-600)/60,1)}: its measured gap and height, and the estimates the time rests on (the steel's modulus, the band loaded at its two pins alone)`,true);
 /* the stiffness for five and ten minutes' running at the drawn gap, and the band's height for each (the stiffness goes as the height) */
 const kFor=tm=>{let lo=0.05,hi=T0/SMAX*0.999;for(let i=0;i<40;i++){const md=Math.sqrt(lo*hi),q=sim(md,c0(md),1.3*tm,1);(q.tStop==null||q.tStop>tm)?hi=md:lo=md;}return Math.sqrt(lo*hi);};
 const k10=kFor(600),k5=kFor(300);
-const [rimY,rimH]=num(/mesh\(R\.gw,ring\(19\.2\*FK,18\.0\*FK,([\d.]+)\),M\.copper,0,-([\d.]+)/,'the rim').reverse(),[floorY]=num(/mesh\(R\.gw,discGeo\(18\.0\*FK,[\d.]+,\[\[0,0,2\.75\*FK\],\[\.\.\.SSH\[0\],0\.4\]\]\),M\.copper,0,-([\d.]+)/,'the floor'),recess=+(rimY+rimH/2-floorY).toFixed(3);
+const [recess]=num(/const GW_B=[-\d.]+,GW_T=[\d.]+,GW_R=([\d.]+)/,'the recess');   /* the fusee wheel's recess, as deep as movement.js draws it (GW_R; the rim's top less the floor until 18 October 2026) */
 say(`running five to ten minutes asks ${f(k5,2)}-${f(k10,2)} N·m a radian at the drawn gap: a band ${f(H*k5/kt,2)}-${f(H*k10/kt,2)} high at the traced width (pushing ${f(100*k5*SMAX/T0)}-${f(100*k10*SMAX/T0)} % banked); the fusee wheel's recess is ${f(recess,1)} deep`);
 const fits=H<=recess-0.02;
 chk(fits,`the band ${H} high fits the ${f(recess,1)} mm recess, 0.02 under the rim's top`);

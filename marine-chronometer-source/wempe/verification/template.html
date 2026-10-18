@@ -224,6 +224,12 @@ strong end (<span class="st mid">~~</span> where only the strong end holds).</p>
 (left of the dashed line) the part holds only if made of the stronger material. <code>wempe_strength.js</code>.</figcaption></figure>
 <div id="tStr" class="tw"></div>
 <div id="kStr"></div>
+<p><b>The maintaining spring.</b> Its eye's pin goes up into the ratchet and its other pin down into the fusee wheel (05 06_4's Schnitt A-B: the eye's pin drawn whole,
+"Stift nach oben", the other hidden), so the drive closes the open ring until its ends nearly meet, its outer edge leaving the wheel's recess; the end at the wheel's
+pin, its short wide tail against the recess's wall, is held as clamped. Its stiffness from its drawn section (the width traced round it on 05 06 01-1), by Castigliano at
+small turns and as an elastica as it closes; how far the fusee's drive (05 06_20) closes it and where its ends would meet; its stress; and, the key held, the train run on it, the
+swing following, with the maintaining detent catching the ratchet up to a tooth late. <code>wempe_sustaining.js</code>.</p>
+<div id="kSus"></div>
 
 <h2 id="hair">8. The hairspring and Phillips' curves</h2>
 <p>The hairspring is a helix (05 03_6: 0.285 × 0.52, Ø 12.8, left-hand), its ends bent to a curve drawn on 05 03_7 as a table of radii every 10°, and cut, before the curves
@@ -244,7 +250,7 @@ carries its four masses toward the staff. How much depends on where the masses s
 <p><b>Method.</b> Each quarter of the rim is a bimetal cantilever from the arm's edge to the cut, curling by Timoshenko's bimetal (1925), each element's radius moving
 by the layers' mean growth, the masses clamping the rim over their slot. Every part is weighed on the model's solids. The spring's own loss is its thermoelastic
 coefficient's (−240 to −270 × 10⁻⁶) with its expansion. The rim's "Nickelstahl Sonderlegierung" is read as Guillaume's 42-44 % nickel steel (estimated); a plain nickel
-steel is tried beside it. The secondary error (Dent's) is taken as the integral balance's of the Neuchâtel trials.</p>
+steel is tried beside it. The secondary error (Dent's, 2 s) against Guillaume's nickel steel as NBS Circular 58 tabulates it, checked against the 6MX passports' S.</p>
 <figure><div class="chart" id="cHeat"></div><figcaption>Figure 15. The rate gained a day a °C against the masses' place on the free arc (degrees from the cuts' line), with Guillaume's
 nickel steel at the constants' middle (line) and over their 32 corners (band), and with a plain nickel steel. The green band is the TU's ±0.10 s a day a °C; the
 drawn place (Wempe 3955's and the 6MX's) and the place that compensates are marked. <code>wempe_thermal.js</code>.</figcaption></figure>
@@ -267,7 +273,7 @@ ships' roll periods shaded. <code>gimbals.js --model wempe</code>, section 2.</f
 first two days of each period not counted, wound daily, its figures worked as E (the mean variation of the daily rate), R, D, C (the temperature coefficient), S (the
 secondary error), each period's mean, and N = 42E + 4.5R + 60C + 2.4S. No Wempe test card is to hand, so the trial is the 6MX's.</p>
 <p><b>Method.</b> Each day's rate is summed from its parts: the temperature curve (section 9, with the masses set by the adjuster at their compensating place to ±0.25°),
-the air's density, the swing over the daily wind, the day-to-day scatter and drift (the Hamilton's, calibrated on its No. 3390's card), the barometer and the oil; the
+the air's density, the swing over the daily wind, the day-to-day scatter and drift (calibrated on eight 6MX test cards' E and R), the barometer and the oil; the
 trial is drawn 2,000 times. Then a 60-day voyage from a winter port into the tropics, rated over ten days in port, gives the error a navigator would carry.</p>
 <figure><div class="chart" id="cTrial"></div><figcaption>Figure 17. One trial drawn: each day's rate (the balance's linear temperature term taken out, as the essay draws it), the periods'
 temperatures shaded. <code>wempe_errorbudget.js</code>.</figcaption></figure>
@@ -423,6 +429,7 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <li>V. A. Shpolyanskii and A. M. Kuritskii, <i>Spuskovye regulyatory priborov vremeni</i> (Moscow 1963): marine chronometers' balances, the 6MX's integral balance and banking screw.</li>
 <li>E. Phillips, "Mémoire sur le spiral réglant des chronomètres et des montres", <i>Annales des Mines</i> (1861): the terminal curves' conditions.</li>
 <li>S. Timoshenko, "Analysis of bi-metal thermostats", <i>Journal of the Optical Society of America</i> 11 (1925): the bimetal's curl.</li>
+<li>National Bureau of Standards, Circular 58, <i>Invar and related nickel steels</i> (2nd ed., 1923), Tables 5 and 13: the nickel steels' expansion by their nickel, the secondary error's quadratic.</li>
 <li>C.-E. Guillaume, Nobel lecture (1920), and VintageWatchstraps, "Temperature Compensation by Nickel Steels": the nickel steels and the integral balance's secondary error at the Neuchâtel trials.</li>
 <li>M. A. Crisfield, <i>Non-linear Finite Element Analysis of Solids and Structures</i>, vol. 1 (1991), ch. 7: the co-rotational beam element; J. S. Przemieniecki, <i>Theory of Matrix Structural Analysis</i> (1968): the frame element and its consistent mass; P. Wriggers, <i>Computational Contact Mechanics</i> (2006): penalty contact.</li>
 <li>NORDFORSK, <i>Assessment of Ship Performance in a Seaway</i> (1987): the operability limit; MARIN (IMDC 2024) and Jachowski et al., KONES (2012): merchant ships' roll periods.</li>
@@ -591,7 +598,7 @@ function draw(){
     const lg=Math.log10;if(S.length){ranges('cStr',{label:'Margins',x:[lg(0.5),lg(200)],xt:[0.5,1,2,5,10,20,50,100,200].map(lg),xf:v=>String(+Math.pow(10,v).toPrecision(2)),xl:'margin (stress against the material\'s range; logarithmic)',l:330,rh:26,zero:0,
       rows:S.map(q=>({name:q.name,bars:[[lg(q.lo),lg(q.hi),q.s==='ok'?'--s3':q.s==='~~'?'--s4':'--s2',10]],tip:`<b>${esc(q.name)}</b><br>${esc(q.load)}, ${q.stress}<br>${esc(q.lim)}: margin ${q.lo}-${q.hi}`}))});
       table('tStr',['','Part','Load','Stress','Against','Margin'],S.map(q=>[`<span class="st ${ST[q.s]}">${q.s}</span>`,esc(q.name),esc(q.load),q.stress,esc(q.lim),`${q.lo}-${q.hi}`]),true);}}
-  checks('kStr','strength');
+  checks('kStr','strength');checks('kSus','sustaining');
 
   /* ---------- 8. hairspring ---------- */
   {const H=D.hair;chart('cHsRate',{label:'The spring\'s rate against the swing',x:[100,300],y:[-4,8],xl:'the swing (°)',yl:'rate against small swings (s/d)',hbands:[{y0:-4,y1:8,c:'--grid'}].slice(0,0),vbands:[{x0:225,x1:270,c:'--manual',t:'225-270°'}],vrefs:[{x:H.A12,t:`the model's ${f(H.A12,1)}°`,dy:16}],hrefs:[{y:0,t:'0'}],r:110,

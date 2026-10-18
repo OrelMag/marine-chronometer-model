@@ -47,15 +47,15 @@ say(`its stiffness E b t³/12 L (steel, 1.9 wide, 5 long) goes as its thickness 
 say(`  1436's other figure, 0.09 (${f(k09,2)} times as stiff): ${f(A09[0],1)}-${f(A09[1],1)}° over the wind; the spring's lower limit is the detent's return in time, which dynamics.js --model wempe checks from half to twice the drawn stiffness (${f(td/Math.cbrt(2),3)}-${f(td*Math.cbrt(2),3)} mm): home before the next tooth over all of it`);
 /* the preload: makeEsc rebuilt with W78 (OP78 0: the preload itself, g at the stone). wempe_tripping.js's sweep (18 October 2026, the horn curved and the gold spring's bow closing
    onto it near its end, as escapement.js draws them) has a held tooth's stone ring 44 % of the depth of lock at the estimate, under its margin of half from about 0.81 times it
-   (0.51 g; 0.5× 74 %, 0.8× 50.3 %), and teeth get past at 0.2× and under (0.2×, 0.1× and none): the margin's floor is the least (0.49 g, 0.78×, with the straight horn and the
+   (0.51 g; 0.5× 73 %, 0.8× 50.4 %), and teeth get past at 0.2× and under (0.2×, 0.1× and none): the margin's floor is the least (0.49 g, 0.78×, with the straight horn and the
    gold spring lying along it, until 18 October 2026; its 0.72 g, 1.1 times, was for the banking under the blade, before; the estimate itself until 16 October 2026, the sweep
-   not run under it). The knock's floor (18 October 2026, the user's choice): wempe_tripping.js's 3 ms blow across the plate lets a tooth go at 17.8 g at 0.8× the estimate,
-   20.2 g at it and 22.7 g at 1.2× (17.6, 20.0, 22.5 before the horn was traced), so a preload that takes the 20 g its check asks wants about 0.98 times the estimate (0.62 g),
+   not run under it). The knock's floor (18 October 2026, the user's choice): wempe_tripping.js's 3 ms blow across the plate lets a tooth go at 17.9 g at 0.8× the estimate,
+   20.4 g at it and 22.6 g at 1.2× (17.6, 20.0, 22.5 before the horn was traced), so a preload that takes the 20 g its check asks wants about 0.97 times the estimate (0.61 g),
    the margin a hair at the estimate. The floor is the higher of the two.
    The swing falls as the preload grows (the stone pressed on the tooth it has let go, RW) */
-const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.51,wKnock=0.62,wLo=Math.max(wTrip,wKnock);
+const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.51,wKnock=0.61,wLo=Math.max(wTrip,wKnock);
 const wHi=cross(w=>preA(w)[0],GUARD[0],S.W78,4,14),PRE=[0.3,S.W78,1.0,1.5].map(w=>({w:r4(w),A:preA(w).map(r4)}));
-say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wLo,2)} g, the higher of the margin's floor, ${f(wTrip,2)} g (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 44 % at the estimate ${S.W78} g; at 0.2 times the estimate and under teeth get past), and the knock's, ${f(wKnock,2)} g (a 3 ms blow of 20 g across the plate lets no tooth go from there: the estimate's own margin is a hair, 20.2 g), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
+say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wLo,2)} g, the higher of the margin's floor, ${f(wTrip,2)} g (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 44 % at the estimate ${S.W78} g; at 0.2 times the estimate and under teeth get past), and the knock's, ${f(wKnock,2)} g (a 3 ms blow of 20 g across the plate lets no tooth go from there: the estimate's own margin is a hair, 20.4 g), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
 
 /* ---------- the gold spring ---------- */
 head('The gold spring (05 04 01-2: 0.15 thick, sure; 333 gold, its modulus 90 GPa estimated)');

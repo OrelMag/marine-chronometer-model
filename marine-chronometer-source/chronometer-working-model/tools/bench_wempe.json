@@ -23,7 +23,7 @@
    "sheet": "05 09 01, 05 08 02-1 (the hole tables)",
    "when": "the plates bored and reamed, before the bushes and jewels go in",
    "how": "Gauge pins in each pair of holes and a micrometer, or a measuring machine, on both plates; then each mesh tried in turn with the arbors in, the escape wheel held: feel the shake at the pinion and watch the teeth through a loupe.",
-   "pass": "Centres 22.650, 18.120, 12.630, 11.850 mm (fusee-centre, centre-intermediate, intermediate-seconds, seconds-escape: the hole tables' coordinates), each within ±25 µm (gearing.js --model wempe: the seconds mesh's window less its pivots' shake; the tables give the places to 0.001 and no tolerance). A hole that errs should err wide: each mesh takes far more wide than close (-240/+436, -190/+355, -145/+281, -100/+263 µm). Closer than its window less the pivots' shake (220, 155, 95, 50 µm close): re-bush the hole, bored on the drawn centre."
+   "pass": "Centres 22.650, 18.120, 12.630, 11.850 mm (fusee-centre, centre-intermediate, intermediate-seconds, seconds-escape: the hole tables' coordinates), each within ±25 µm (gearing.js --model wempe: the seconds mesh's window less its pivots' shake; the tables give the places to 0.001 and no tolerance). A hole that errs should err wide: each mesh takes far more wide than close (-240/+436, -136/+355, -112/+281, -100/+263 µm). Closer than its window less the pivots' shake (220, 101, 62, 50 µm close): re-bush the hole, bored on the drawn centre."
   },
   {
    "id": "endshake",
@@ -63,7 +63,7 @@
    "sheet": "05 04_1, 05 04 01-4",
    "when": "the detent, its gold spring and the balance in; the train's power let down",
    "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
-   "pass": "05 04_1's layout and the model: the impulse stone 24° before the line of centres at rest, the lock 36.5° on; the gold spring met at -7.3° of the balance (05 04_1's −12°), the wheel released at 2.6° (lock 9.9°), the gold spring off the stone at 4.5° (let-off 1.9°), the return swing past it at -12.6° (overall 17.1°); roller shake 0.046 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.175 mm deep at the stone: never shallower than 0.154 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.188 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.190 deep where the drawn wheel locks 0.175: set the banking to the wheel as made. The preload at the stone: a 0.62 g rider must leave the detent on its banking and a 1.55 g one part it; aim near 0.85 g (the model's 0.63 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.51 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.62 g, the floor taken here, the higher; each gram more costs about 8.6° of swing)."
+   "pass": "05 04_1's layout and the model: the impulse stone 24° before the line of centres at rest, the lock 36.5° on; the gold spring met at -7.3° of the balance (05 04_1's −12°), the wheel released at 2.6° (lock 9.9°), the gold spring off the stone at 4.5° (let-off 1.9°), the return swing past it at -12.6° (overall 17.1°); roller shake 0.046 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.175 mm deep at the stone: never shallower than 0.154 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.188 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.190 deep where the drawn wheel locks 0.175: set the banking to the wheel as made. The preload at the stone: a 0.61 g rider must leave the detent on its banking and a 1.55 g one part it; aim near 0.84 g (the model's 0.63 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.51 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.61 g, the floor taken here, the higher; each gram more costs about 8.6° of swing)."
   },
   {
    "id": "swing",
@@ -76,10 +76,10 @@
   {
    "id": "maintaining",
    "title": "The maintaining spring drives the train",
-   "sheet": "05 06 01-1, 05 06_9",
+   "sheet": "05 06 01-1, 05 06_4 (A-B)",
    "when": "the movement running, part wound",
-   "how": "Turn the key back a little (winding) and hold it still, the fusee off the train: time how long the balance keeps going.",
-   "pass": "About 70 s of drive falling to nothing (05 06_9's \"x = 0,27 mm\" at its pins on r 14.2, likely; the 1954 instruction gives 1-2 minutes for chronometers in general); a wind takes about 6 s. Under 30 s (estimated), the spring is weak or its deflection small."
+   "how": "First, assembling: the spring's eye pin up into the ratchet (05 06_4 A-B: \"Stift nach oben\"), its other pin down into the fusee wheel; the ring lies free in the wheel's recess, its eye a gap short of its square end. Running, the ratchet stands ahead of the wheel as the drive closes the ring: see its ends nearly meet, not touch. Then turn the key back a little (winding) and hold it still, the fusee off the train: time how long the balance keeps going.",
+   "pass": "Running, the ring closed 14.4-15.6° by the drive, its ends 0.27-0.58 mm apart at the eye (they would meet after 16.7°; wempe_sustaining.js); the key held, the balance keeps going 10.7-13.9 minutes (the detent catching a whole tooth late or at once), its swing falling; the 1954 instruction gives 1-2 minutes for chronometers in general; a wind takes 10-30 s. Under 5 minutes (estimated): the ring is open (the pins the wrong way round: it bears on the recess's wall and barely gives), weak, or has taken a set; its ends touching in running: weak or set."
   },
   {
    "id": "stopwork",
@@ -183,11 +183,11 @@
      0.4356
     ],
     [
-     -0.1899,
+     -0.136,
      0.3553
     ],
     [
-     -0.1447,
+     -0.1123,
      0.2807
     ],
     [
@@ -652,10 +652,10 @@
    "preload": {
     "model": 0.63,
     "window": [
-     0.62,
+     0.61,
      1.5473
     ],
-    "aim": 0.85
+    "aim": 0.84
    }
   },
   "swing": {
@@ -673,8 +673,16 @@
    ]
   },
   "maintaining": {
-   "s": 70.0346,
-   "min": 30
+   "bank": 16.7176,
+   "gap": [
+    0.2669,
+    0.5781
+   ],
+   "s": [
+    644,
+    837
+   ],
+   "min": 300
   },
   "stopwork": {
    "height": [
