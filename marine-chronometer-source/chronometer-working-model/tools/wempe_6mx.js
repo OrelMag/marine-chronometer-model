@@ -1,5 +1,6 @@
-// The Soviet 6MX's physics against the drawings' (the Wempe page's third version, Kirov No. 247: wempe/README.md, "The Soviet 6MX"). The page keeps the drawings'
-// swing and rate in every version (the user's choice, 16 October 2026); this works out what the 6MX's differences would change, for the README and the report:
+// The Soviet 6MX's physics against the drawings' (the Wempe page's third version, Kirov No. 247: wempe/README.md, "The Soviet 6MX"). The page runs the 6MX's own
+// escapement when that version is shown (escphys.js WPHYS.rev('6mx'), its bodies WESC.SET6; the user's choice, 17 October 2026: the drawings' until then); this works out
+// what the 6MX's differences change, for the README, the essay and the report, and checks the page's bodies against the weighed ones:
 //  - its intermediate and seconds arbors' pivots in jewels in chatons, where the drawings press brass bushes: the friction the model's sources give oiled steel in ruby
 //    and in brass is the same range (physics.js: mu_p 0.10-0.15), so the train's efficiency doesn't change; the shake does (a jewel hole the pivot's and 0.025, the
 //    drawn bushes 0.035 and 0.05 loose; the escape arbor's jewels Ø 0.27 on its Ø 0.24 pivots), and with it the hole tolerance a CNC must hold (gearing.js's tp: half
@@ -7,7 +8,7 @@
 //  - its escapement at the heights the sheets first drew, with the first-drawn balance staff and collar (no hub screws): the escapement's plan is the same, so only its
 //    bodies change, weighed on the page's solids in that version (wempe_inertia.py --rev 6mx, tools/wempe_inertia_6mx.json, against wempe_inertia.json): the balance's
 //    moment of inertia (its period and the rate before timing), the escape wheel's with the train behind it and the detent's, run through makeEsc as the page's
-//    escapement is (escphys.js WPHYS), scaled from WESC.SET by the weighed ratios: its swing and rate over the wind.
+//    escapement is (escphys.js WPHYS.rev('6mx'): WESC.SET with WESC.SET6's bodies): its swing and rate over the wind.
 //   node wempe_6mx.js            prints them; exit 1 if tools/wempe_6mx.json is stale, the 6MX's swing leaves wempe_escapement.js's guard (185-270°) or a hole's
 //                                tolerance falls under 5 µm
 //   node wempe_6mx.js --write    writes tools/wempe_6mx.json (the report's figures)
@@ -18,7 +19,8 @@ let bad=0;const chk=(c,s)=>{say((c?'  ok  ':'  !!  ')+s);if(!c)bad++;};
 const L=J('wempe_inertia.json'),X=J('wempe_inertia_6mx.json'),G=J('gearing_wempe.json');
 /* the bodies as wempe_escapement.js reads them: the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand behind it (8:1) */
 const body=j=>({I:j.balance.I+j.rollers.I+j.collet.I+j.spring.I/3,JW:j.escape.I+(j.seconds.I+j.secondsHand.I)/64,ID:j.detent.I}),b0=body(L),b6=body(X);
-const s6={...S,I:S.I*b6.I/b0.I,JW:S.JW*b6.JW/b0.JW,ID:S.ID*b6.ID/b0.ID},E0=P.ESC,E6=W.makeEsc(s6,s6);
+const E0=P.ESC,E6=P.rev('6mx').ESC,near=(a,b)=>Math.abs(a/b-1)<0.002;   /* the page's own 6MX escapement (escphys.js WPHYS.rev: WESC.SET6's bodies) */
+chk(near(W.WESC.SET6.I,b6.I)&&near(W.WESC.SET6.JW,b6.JW)&&near(W.WESC.SET6.ID,b6.ID),`WESC.SET6 (js/escapement.js), the page's 6MX bodies, are the weighed ones to 0.2 %: ${W.WESC.SET6.I}, ${W.WESC.SET6.JW}, ${W.WESC.SET6.ID}`);
 say('the bodies, weighed in each version (g·mm²): as last revised, the 6MX');
 const rel=(a,b)=>`${f(100*(b/a-1),2)} %`;
 say(`  the balance ${f(b0.I,1)}, ${f(b6.I,1)} (${rel(b0.I,b6.I)}; the 1941 collar without the hub's screws)`);

@@ -21,6 +21,7 @@ I'm building a working 3D model of the Hamilton Model 21 from the 1948 overhaul 
 9. **The discharge jewel** on the balance staff's unlocking roller, looking along the staff: the shape of its tip (the British Museum's catalogue: "a radius to the back of the acting part").
 10. **The fusee's sustaining ratchet with the two winding-pawl springs on**, face-on.
 11. **The balance cock off the movement**, its top and its underside each square to the camera with a ruler beside it: where the screw's counterbore and the two steady pins stand against the straight edge and the balance's setting.
+12. **The sustaining spring out of its wheel** (the steel split ring in the fusee wheel's recess): one photograph of it lying flat beside a ruler, and one of its edge with a caliper's reading of its height and of its band's width where it is narrowest and widest. Better still, its stiffness: the fusee wheel held, the force at the working end's pin that closes its gap by a degree.
 
 Doug Sinclair's NAWCC article on the Model 21 (No. 365, p. 707), William O. Bennett's "The Hamilton Marine Chronometer" (No. 356, p. 325), and the Bulletin's pages behind the members' login (Smith, No. 395, pp. 60-63), may answer 1 and 2; if you can read them, a note of the figures they give would help too. If you have Hamilton's drawings of the Model 21 (the NAWCC Library holds them in the Hamilton Records Collection, MG-335: "Chronometer Parts" 1943-1951, Box 14, Folder 6; the mainspring drawings, Box 7, Folders 7-8), the mainspring's, the barrel's and the detent's sheets would settle 1 and 2 outright.
 
@@ -102,27 +103,29 @@ The Wempe page's third version, the Soviet 6MX, is built from Johannes Altmeppen
 
 **Fotos zum 6MX (Kirow Nr. 247), für das offene Arbeitsmodell**
 
-Auf https://www.marinechronometermodel.com/wempe/ ist der 6MX jetzt eine dritte Fassung des Einheits-Chronometers, nach Ihren Fotos von Kirow Nr. 247 gebaut. Einige Unterschiede aus Ihrer Liste konnte ich nur von der Seite sehen. Falls Sie das Werk noch einmal offen haben, würden diese Aufnahmen sie klären:
+Auf https://www.marinechronometermodel.com/wempe/ ist der 6MX jetzt eine dritte Fassung des Einheits-Chronometers, nach Ihren Fotos von Kirow Nr. 247 gebaut. Inzwischen ist das meiste aus Ihrer Liste nach Ihren Fotos dieses und der anderen 6MX der Galerie gebaut, auch der Sekundenkontakt; einige Teile sind nur von der Seite zu sehen. Falls Sie das Werk noch einmal offen haben, würden diese Aufnahmen sie klären:
 
-1. **Die Oberplatte abgenommen, von unten:** der untere Unruhkloben (seine Form, Ihre "andere Form"), der Gangfederkloben mit dem Justierschlitten und das Sekundenrad.
-2. **Der Gangfederkloben mit Feder, abgenommen, von beiden Seiten und von der Stirnseite:** wie der Schlitten unter der Befestigungsschraube sitzt und wohin die große Schraube in der Stirnseite ihn schiebt.
-3. **Das Gangrad mit Trieb, abgenommen, von der Seite:** die lange Kegelbüchse unter dem Rad.
-4. **Der Topf mit aufgeschraubtem Glasrand, genau von der Seite, mit Maßstab:** seine Höhe und wo die Kardankloben sitzen.
+1. **Die Oberplatte abgenommen, von unten:** der untere Unruhkloben in der Draufsicht (seine "andere Form": der abgesetzte Steg ist nach Ihren Seitenaufnahmen gebaut, der Grundriss noch nicht), der Gangfederkloben mit dem Justierschlitten und das Sekundenrad neben Pfeiler 39.
+2. **Der Gangfederkloben mit Feder, abgenommen, von beiden Seiten und von der Plattenseite:** wie der geschlitzte Zapfen durch den Schlitten in den Kloben geht und ob er exzentrisch ist; die große Schraube in der Seite steht über dem Fuß der Gangfeder.
+3. **Der Kontakt, von oben bei abgenommener Oberplatte:** der Hebel mit seinem Stein am Kontaktrad, seine Welle mit Lagersteinen und der Kloben darüber; und wie das Kabel aus dem Kasten geführt wird.
+4. **Der Topf, leer, von unten und im Schnitt oder von innen:** die Höhe des Fußes, die Innenform unter dem Werk, und die Verschlussfeder unter der Verschlussplatte.
 5. **Die Unruh von der Seite oder die Welle allein:** Messingbuchse wie 05 04_5 oder Nabe mit Schrauben wie 05 04 02.
 6. **Das Federhaus, herausgenommen:** dreiteilig (Ring mit zwei Deckeln) oder eine Trommel mit Deckel unten.
+7. **Ihre Liste im Wortlaut:** was mit den "drei kleinen Fenstern an den Pfeilerschrauben" gemeint ist, die dem 6MX fehlen (Kirow 247 hat die Hilfslöcher 3, 12 und 40).
 
 Vielen Dank!
 
 ---
 
-*The same in English:* **Photographs of the 6MX (Kirov No. 247), for the open working model.** The 6MX is now a third version of the Einheits-Chronometer on the page, built from your photographs of Kirov No. 247. Some differences on your list I could only see from the side. If you have the movement open again, these would settle them:
+*The same in English:* **Photographs of the 6MX (Kirov No. 247), for the open working model.** The 6MX is now a third version of the Einheits-Chronometer on the page, built from your photographs of Kirov No. 247. Since 18 October 2026 most of your list is built from your photographs of it and of the gallery's other 6MXs, its electrical contact too; a few parts are still seen only from the side. If you have the movement open again, these would settle them:
 
-1. **The top plate off, seen from below:** the lower balance cock (its "other shape"), the detent block with its adjusting slide, and the seconds wheel.
-2. **The detent block with its detent, off the plate, from both sides and the end:** how the slide sits under the fixing screw, and which way the large screw in the end face moves it.
-3. **The escape wheel and pinion, off, from the side:** the long cone collet under the wheel.
-4. **The bowl with its bezel on, square-on from the side, with a scale:** its height and where its gimbal brackets sit.
+1. **The top plate off, seen from below:** the lower balance cock from above (its "other shape": its stepped bar is built from your side views, its plan not yet), the detent block with its adjusting slide, and the seconds wheel by pillar 39.
+2. **The detent block with its detent, off the plate, from both sides and from its plate face:** how the slotted stud passes through the slide into the block, and whether it is an eccentric; the large screw in its side stands over the detent's foot.
+3. **The contact, from above with the top plate off:** the lever with its stone on the contact wheel, its staff and jewels and the cock over them; and how the lead leaves the box.
+4. **The bowl, empty, from below and from inside:** the foot's height, the inside under the movement, and the closing spring under the closing plate.
 5. **The balance from the side, or its staff alone:** a brass collar as 05 04_5, or a hub with screws as 05 04 02.
 6. **The barrel, out:** three pieces (a ring with two lids) or a drum with its lid underneath.
+7. **Your list's own words:** what the "three small windows by the pillar screws" that the 6MX lacks are (Kirov 247 has the auxiliary holes 3, 12 and 40).
 
 Thank you!
 

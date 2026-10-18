@@ -7,7 +7,7 @@
    "sheet": "05 06_20, 05 07 03-2",
    "when": "before it goes into the barrel, and again in its barrel",
    "how": "In its barrel, the arbor held by a lever (a 3D-printed arm 50 mm long and a hanging weight do: 1 kg at 50 mm is 0.49 N·m) or a torque gauge: wind it from slack and read the torque each half turn, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, wind it on until its coils lie tight on the arbor and count the turns from slack.",
-   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 457 to 826 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.930-1.251 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 1.18 past full wind). Unwinding reads less than winding: the coils' friction gives 4-9 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
+   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 457 to 826 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.939-1.251 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 1.18 past full wind). Unwinding reads less than winding: the coils' friction gives 4-9 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
   },
   {
    "id": "fusee",
@@ -15,7 +15,7 @@
    "sheet": "05 06_20",
    "when": "the chain on, the barrel set up ¾ turn, before the train goes in",
    "how": "As Herb. Müller did in 1941 (05 06_20: \"Hebellänge 262 m/m\", the mean of two runs): a lever 262 mm long on the fusee arbor, and the weight (g) that holds it level read at each half turn running down from full wind (8.75 turns of the fusee, the curve's 0.05 to 8.74), twice; or a torque gauge (1 g on 262 mm is 2.57 mN·m).",
-   "pass": "Each reading within ×0.930-1.251 of the sheet's at the same turn (its readings' mean 132.7 g: 123.5-166.1 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.07 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 174.0 g mean (×1.311): open (README, Unresolved)."
+   "pass": "Each reading within ×0.939-1.251 of the sheet's at the same turn (its readings' mean 132.7 g: 124.6-166.1 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.07 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 175.6 g mean (×1.323): open (README, Unresolved)."
   },
   {
    "id": "depths",
@@ -39,7 +39,7 @@
    "sheet": "05 03_6, 05 03_7, 05 03 01-1",
    "when": "the spring pinned to its collet and stud, its curves bent to 05 03_7, before it goes in",
    "how": "Vibrate the balance on its spring in a vibrating tool (or the cock on a holder) against a master or a phone's timer: count the oscillations over two minutes, the weights against their screws' heads as drawn.",
-   "pass": "2 oscillations a second (7,200 an hour), or slow by up to 293 s a day: the timing weights stand against their screws' heads as drawn and can only be screwed in, 5.0 turns of 58.7 s a day each (wempe_tolerances.js; their size estimated). The drawn spring on the weighed balance (2,501 g·mm²) is 18 min a day fast (0.4939 s): the strip wants 0.2827 mm, not 0.285 (0.2809-0.2855 over the steel's 200-210 GPa). No section tolerance holds the period (a µm of the strip is 455 s a day, the coil's ±0.05 ±173): fast, grind the strip thinner or choose a weaker spring; slow past the weights' reach, a stronger one."
+   "pass": "2 oscillations a second (7,200 an hour), or slow by up to 289 s a day: the timing weights stand against their screws' heads as drawn and can only be screwed in, 5.0 turns of 57.9 s a day each (wempe_tolerances.js; their size estimated). The drawn spring on the weighed balance (2,501 g·mm²) is 8 min a day fast (0.4972 s): the strip wants 0.2839 mm, not 0.285 (0.2821-0.2868 over the steel's 200-210 GPa). No section tolerance holds the period (a µm of the strip is 455 s a day, the coil's ±0.05 ±173): fast, grind the strip thinner or choose a weaker spring; slow past the weights' reach, a stronger one."
   },
   {
    "id": "rundown",
@@ -47,7 +47,7 @@
    "sheet": "05 03, 05 04",
    "when": "the balance, hairspring and detent in, the train held still at a lock; before the mainspring is chosen",
    "how": "Give the balance a full swing (a twist of the movement) and let it run down, the train held. Film it from above at 30 frames a second, a card marked every 30° under it, and read the swing every few seconds (python wempe_swing.py reads a video so); time how long it takes to halve from about 207°.",
-   "pass": "The model's balance halves its swing in 55 s (its TF 108 s; a running 6MX on video, moMvyx8eXfo, has TF 96-121 s at it: wempe_startup.js, which the model's TF is set from). Halving in 44, 52, 55, 61, 72, 83 s (TF 80, 100, 108, 125, 160, 200): 05 06_20's drive swings it 176, 192, 198, 210, 230, 249° at 12 h; the guard's 185° at the wind's lowest wants ×1.148, 0.980, 0.930, 0.845, 0.727, 0.642 of it, the sources' 225° ×1.632, 1.384, 1.311, 1.185, 1.010, 0.883 (the strip as the drive's cube root). Shorter than 44 s, look for a pivot, the endstone or the detent's springs dragging."
+   "pass": "The model's balance halves its swing in 55 s (its TF 108 s; a running 6MX on video, moMvyx8eXfo, has TF 96-121 s at it: wempe_startup.js, which the model's TF is set from). Halving in 44, 52, 55, 61, 72, 83 s (TF 80, 100, 108, 125, 160, 200): 05 06_20's drive swings it 175, 191, 197, 209, 229, 247° at 12 h; the guard's 185° at the wind's lowest wants ×1.159, 0.989, 0.939, 0.853, 0.733, 0.647 of it, the sources' 225° ×1.649, 1.398, 1.323, 1.196, 1.019, 0.890 (the strip as the drive's cube root). Shorter than 44 s, look for a pivot, the endstone or the detent's springs dragging."
   },
   {
    "id": "detent",
@@ -55,7 +55,7 @@
    "sheet": "1436, 05 04 01-2",
    "when": "the detent made with its gold spring on, before it goes in",
    "how": "Clamp its foot as the block holds it (a printed jig with the foot's screw and two steady pins), the stone and the horn free, and flick the blade's end lightly with a hair. Record the ring with a phone a few millimetres off and read its lowest strong pitch with a spectrum app, or python benchcheck.py --ring FILE.",
-   "pass": "80 Hz with the spring as drawn (0.070 mm, 1436's \"0,07\"); 57-113 Hz for a spring 0.056-0.088 mm thick, half to twice the drawn stiffness, over which the detent is home before the next tooth (dynamics.js --model wempe). The pitch goes nearly as the thickness to the 1.5 (0.050 mm 48 Hz, 0.056 mm 57 Hz, 0.060 mm 64 Hz, 0.070 mm 80 Hz, 0.080 mm 98 Hz, 0.088 mm 113 Hz, 0.090 mm 116 Hz: wempe_tripping.js's frame clamped at the foot), so it measures the spring's section, which no figure on 1436 settles (its \"0,09\" would ring 116 Hz). The gold spring rings near 620 Hz: the detent's own is the lower."
+   "pass": "80 Hz with the spring as drawn (0.070 mm, 1436's \"0,07\"); 57-113 Hz for a spring 0.056-0.088 mm thick, half to twice the drawn stiffness, over which the detent is home before the next tooth (dynamics.js --model wempe). The pitch goes nearly as the thickness to the 1.5 (0.050 mm 49 Hz, 0.056 mm 57 Hz, 0.060 mm 64 Hz, 0.070 mm 80 Hz, 0.080 mm 98 Hz, 0.088 mm 113 Hz, 0.090 mm 116 Hz: wempe_tripping.js's frame clamped at the foot), so it measures the spring's section, which no figure on 1436 settles (its \"0,09\" would ring 116 Hz). The gold spring rings near 620 Hz: the detent's own is the lower."
   },
   {
    "id": "escapement",
@@ -63,7 +63,7 @@
    "sheet": "05 04_1, 05 04 01-4",
    "when": "the detent, its gold spring and the balance in; the train's power let down",
    "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
-   "pass": "05 04_1's layout and the model: the impulse stone 24° before the line of centres at rest, the lock 36.5° on; the gold spring met at -7.3° of the balance (05 04_1's −12°), the wheel released at 2.6° (lock 9.9°), the gold spring off the stone at 4.5° (let-off 1.9°), the return swing past it at -12.6° (overall 17.1°); roller shake 0.046 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.175 mm deep at the stone: never shallower than 0.143 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.188 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.190 deep where the drawn wheel locks 0.175: set the banking to the wheel as made. The preload at the stone: a 0.49 g rider must leave the detent on its banking and a 1.54 g one part it; aim near 0.75 g (the model's 0.63 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 41 % of the depth of lock there, under half from 0.49 g, teeth getting past under a fifth of it; each gram more costs about 8.7° of swing)."
+   "pass": "05 04_1's layout and the model: the impulse stone 24° before the line of centres at rest, the lock 36.5° on; the gold spring met at -7.3° of the balance (05 04_1's −12°), the wheel released at 2.6° (lock 9.9°), the gold spring off the stone at 4.5° (let-off 1.9°), the return swing past it at -12.6° (overall 17.1°); roller shake 0.046 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.175 mm deep at the stone: never shallower than 0.143 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.188 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.190 deep where the drawn wheel locks 0.175: set the banking to the wheel as made. The preload at the stone: a 0.49 g rider must leave the detent on its banking and a 1.43 g one part it; aim near 0.73 g (the model's 0.63 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 41 % of the depth of lock there, under half from 0.49 g, teeth getting past under a fifth of it; each gram more costs about 8.6° of swing)."
   },
   {
    "id": "swing",
@@ -71,7 +71,7 @@
    "sheet": "—",
    "when": "the movement running, fully wound, at 24 h and near run-down",
    "how": "Read the balance's swing against marks under it, from a phone's slow-motion video (python wempe_swing.py reads the arm's sweep), or from a recording of the beat (python acoustic.py --model wempe FILE fits its clicks to the escapement in time).",
-   "pass": "In the guard band, 185-270° each way, over the whole wind (the model 192.9-203.0°, 198.2° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
+   "pass": "In the guard band, 185-270° each way, over the whole wind (the model 191.9-202.0°, 197.2° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
   },
   {
    "id": "maintaining",
@@ -95,13 +95,13 @@
    "sheet": "6MX TU 25-07-1533-84 (6MX-figures.md)",
    "when": "cased, in its gimbals, rated",
    "how": "Each day at the same hour compare it with a time signal to a tenth of a second and log the error (python rating.py works the daily rates). The trial: 35 days in five periods of seven at 36, 20, 4, 20, 36 °C (a wine cooler, a room, a box with a lamp and a thermostat), the first two days of each not counted, wound daily after the comparison to \"8\" on the up-and-down dial, to \"0\" at each period's end.",
-   "pass": "The TU's figures (losing positive): E, the mean of |each counted rate − its period's mean|, within ±0.35; R = ω_V − ω_I ±2.00; D, the largest change between consecutive rates in a period, ±2.30; C = (ω36 − ω4)/32 ±0.10 s a day a °C; S = (ω36 + ω4)/2 − ω20 ±1.20; every period's mean ±3.50; N = 42E + 4.5R + 60C + 2.4S ≤ 30 (wempe_errorbudget.js passes it as adjusted). Out on C: move the four masses along the rim (\"8 Körner in 60 Teilung\", 6° a division) by trial: at the drawn place (30° from the cuts' line) the balance loses 2.56 s a day a °C, they null it near 19.3° from the cuts' line, a degree along the rim 0.228 s a day a °C (wempe_thermal.js). Out on S past ±1.20: the nickel steel isn't Guillaume's integral alloy (wempe_thermal.js)."
+   "pass": "The TU's figures (losing positive): E, the mean of |each counted rate − its period's mean|, within ±0.35; R = ω_V − ω_I ±2.00; D, the largest change between consecutive rates in a period, ±2.30; C = (ω36 − ω4)/32 ±0.10 s a day a °C; S = (ω36 + ω4)/2 − ω20 ±1.20; every period's mean ±3.50; N = 42E + 4.5R + 60C + 2.4S ≤ 30 (wempe_errorbudget.js passes it as adjusted). Out on C: move the four masses along the rim (\"8 Körner in 60 Teilung\", 6° a division) by trial: at the drawn place (30° from the cuts' line) the balance loses 2.53 s a day a °C, they null it near 19.5° from the cuts' line, a degree along the rim 0.230 s a day a °C (wempe_thermal.js). Out on S past ±1.20: the nickel steel isn't Guillaume's integral alloy (wempe_thermal.js)."
   }
  ],
  "criteria": {
   "mainspring": {
    "s": [
-    0.9303,
+    0.9388,
     1.2511
    ],
    "Mdown": 0.4572,
@@ -122,7 +122,7 @@
   },
   "fusee": {
    "s": [
-    0.9303,
+    0.9388,
     1.2511
    ],
    "g262": {
@@ -130,7 +130,7 @@
     "full": 138.4,
     "low": 126.5,
     "band": [
-     123.4825,
+     124.6092,
      166.0613
     ]
    },
@@ -140,9 +140,9 @@
    ],
    "rms": 0.01074,
    "sources": {
-    "s": 1.3106,
-    "t_mm": 0.4049,
-    "g262": 173.9604
+    "s": 1.3227,
+    "t_mm": 0.4062,
+    "g262": 175.574
    }
   },
   "depths": {
@@ -523,16 +523,16 @@
   },
   "balance": {
    "hz": 2,
-   "T": 0.4939,
-   "fast": 1073.5588,
-   "hNeed": 0.2827,
+   "T": 0.4972,
+   "fast": 482.3002,
+   "hNeed": 0.2839,
    "weights": {
     "m": 0.5747,
     "r": 18.6503,
-    "secTurn": 58.6534,
+    "secTurn": 57.8631,
     "reach": 0.8,
     "turnsIn": 5,
-    "gain": 293.2669
+    "gain": 289.3157
    }
   },
   "rundown": {
@@ -546,52 +546,52 @@
     [
      80,
      43.5,
-     175.6643,
-     1.1476,
-     1.6325
+     174.69,
+     1.1586,
+     1.6491
     ],
     [
      100,
      51.5,
-     192.2885,
-     0.9801,
-     1.3842
+     191.2519,
+     0.9891,
+     1.3976
     ],
     [
      108,
      54.5,
-     198.2107,
-     0.9303,
-     1.3106
+     197.1535,
+     0.9386,
+     1.3227
     ],
     [
      125,
      60.5,
-     209.7639,
-     0.8454,
-     1.1849
+     208.6709,
+     0.8526,
+     1.1959
     ],
     [
      160,
-     71.5,
-     229.8524,
-     0.7273,
-     1.0101
+     71.75,
+     228.742,
+     0.7328,
+     1.0188
     ],
     [
      200,
      82.5,
-     248.6773,
-     0.642,
-     0.8834
+     247.4897,
+     0.6468,
+     0.8903
     ]
    ]
   },
   "detent": {
-   "f0": 80,
+   "f0": 80.1,
    "band": [
-    56.7,
-    112.7
+    56.8,
+    112.8
    ],
    "t": [
     0.0556,
@@ -601,11 +601,11 @@
    "rows": [
     [
      0.05,
-     48.4
+     48.5
     ],
     [
      0.0556,
-     56.7
+     56.8
     ],
     [
      0.06,
@@ -613,19 +613,19 @@
     ],
     [
      0.07,
-     80
+     80.1
     ],
     [
      0.08,
-     97.6
+     97.7
     ],
     [
      0.0882,
-     112.7
+     112.8
     ],
     [
      0.09,
-     116.1
+     116.3
     ]
    ]
   },
@@ -653,9 +653,9 @@
     "model": 0.63,
     "window": [
      0.49,
-     1.5444
+     1.4319
     ],
-    "aim": 0.75
+    "aim": 0.73
    }
   },
   "swing": {
@@ -668,8 +668,8 @@
     270
    ],
    "model": [
-    192.9208,
-    203.0291
+    191.9215,
+    201.9722
    ]
   },
   "maintaining": {
@@ -711,9 +711,9 @@
     "N": 30
    },
    "masses": {
-    "drawn": -2.5592,
-    "zero": 19.2683,
-    "perDeg": 0.2279
+    "drawn": -2.5292,
+    "zero": 19.4676,
+    "perDeg": 0.2296
    }
   }
  }
