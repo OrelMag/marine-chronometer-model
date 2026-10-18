@@ -1377,7 +1377,7 @@ Contents:
   and `holecheck.py` samples inside the radius. Fixed: `polyGeo` cuts every hole at its size and puts the
   bevel's face rings back on the hole's outline, so each runs straight through (measured: r 1.405 tapped,
   1.561 clear, 3.15, the whole depth). Keep: a bevel rounds a plate's outer edges only; a hole in it is its
-  drawn size from face to face. HASH
+  drawn size from face to face. `24df5b9`
 - **The Wempe's set-up click and centre arbor read two figures wrongly.** The click's "5,7" is the thin circle about its hole, tangent
   to the base (the base 2.85 under the hole, not 2.81 scaled), and its "85" the beak's end face at 85° (82.4° built); the centre arbor's
   "1,6 −0,1" (05 05 03-2) is the wheel's seat alone, not seat and riveting collar, so the seat is 1.55 and the collar 0.255 (1.45 and 0.355).
