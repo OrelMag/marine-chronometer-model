@@ -8,7 +8,7 @@
   },
   "6mx": {
    "I": 2525.997,
-   "JW": 10.904,
+   "JW": 10.903,
    "ID": 8.21
   }
  },
@@ -73,15 +73,15 @@
    "stage": "centre wheel → intermediate pinion",
    "sh": 0.035,
    "sh6": 0.025,
-   "tp": 0.0774,
-   "tp6": 0.0824
+   "tp": 0.0505,
+   "tp6": 0.0555
   },
   {
    "stage": "intermediate wheel → seconds pinion",
    "sh": 0.05,
    "sh6": 0.025,
-   "tp": 0.0474,
-   "tp6": 0.0599
+   "tp": 0.0311,
+   "tp6": 0.0436
   },
   {
    "stage": "seconds wheel → escape pinion",

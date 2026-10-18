@@ -23,7 +23,7 @@
    "sheet": "05 09 01, 05 08 02-1 (the hole tables)",
    "when": "the plates bored and reamed, before the bushes and jewels go in",
    "how": "Gauge pins in each pair of holes and a micrometer, or a measuring machine, on both plates; then each mesh tried in turn with the arbors in, the escape wheel held: feel the shake at the pinion and watch the teeth through a loupe.",
-   "pass": "Centres 22.650, 18.120, 12.630, 11.850 mm (fusee-centre, centre-intermediate, intermediate-seconds, seconds-escape: the hole tables' coordinates), each within ±25 µm (gearing.js --model wempe: the seconds mesh's window less its pivots' shake; the tables give the places to 0.001 and no tolerance). A hole that errs should err wide: each mesh takes far more wide than close (-240/+436, -190/+355, -145/+281, -100/+263 µm). Closer than its window less the pivots' shake (220, 155, 95, 50 µm close): re-bush the hole, bored on the drawn centre."
+   "pass": "Centres 22.650, 18.120, 12.630, 11.850 mm (fusee-centre, centre-intermediate, intermediate-seconds, seconds-escape: the hole tables' coordinates), each within ±25 µm (gearing.js --model wempe: the seconds mesh's window less its pivots' shake; the tables give the places to 0.001 and no tolerance). A hole that errs should err wide: each mesh takes far more wide than close (-240/+436, -136/+355, -112/+281, -100/+263 µm). Closer than its window less the pivots' shake (220, 101, 62, 50 µm close): re-bush the hole, bored on the drawn centre."
   },
   {
    "id": "endshake",
@@ -183,11 +183,11 @@
      0.4356
     ],
     [
-     -0.1899,
+     -0.136,
      0.3553
     ],
     [
-     -0.1447,
+     -0.1123,
      0.2807
     ],
     [
