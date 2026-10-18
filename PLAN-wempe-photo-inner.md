@@ -33,6 +33,8 @@ The user can't measure anything (no chronometer: `CLAUDE.md`). The photographs, 
 
 ## How to start, and how not to collide
 
+**Update, later on 18 October 2026:** `claude/wempe-photo-compare` has since merged `origin/main` (3.11.01) and fixed what `ci.py --full` found (`d48a9856` and the commits before it). The fixes cover the box audit's float screws, the gimbal hook skipping hidden versions' pieces, the new materials' densities (`M.giltH`, `M.blue310`, `M.bakelite` in the weighing tools) and `bom.py` reading versions as the page does. Merge `origin/claude/wempe-photo-compare` into your branch now, rebuild rather than hand-merge the built copies, and regenerate the measured tables (`wempe_inertia.py --write` and `--rev 6mx --write`, `massprops.py --model wempe --write`, `mechanisms.py --model wempe --write`, `wempe_essaydata.js --write`) after any geometry change of yours.
+
 - **Branch.** Create `claude/wempe-photo-inner` in your own worktree from `origin/claude/wempe-photo-compare`, not from `main`. That branch is about 40 commits ahead of `main` and isn't merged yet: it is waiting for its full `ci.py` run and the user's go-ahead.
   - It holds everything you need: the tool, the `3955` version and the specs.
   - Push your branch as soon as it has a commit (`git push -u`), and after every commit.

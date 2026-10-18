@@ -24,8 +24,8 @@ const BLENDER=(()=>{
     const e1=new THREE.Vector3(),e2=new THREE.Vector3();
     for(const o of ms)tris(o,fr,(a,b,c)=>{e1.subVectors(b,a);e2.subVectors(c,a);e1.cross(e2).normalize();for(const v of[e1,a,b,c]){dv.setFloat32(off,v.x,true);dv.setFloat32(off+4,v.y,true);dv.setFloat32(off+8,v.z,true);off+=12;}off+=2;});
     return{blob:new Blob([buf],{type:'model/stl'}),n};}
-  /* the solids: no engraving or printed face (surfaces, not solids), with a position */
-  const solid=o=>o.isMesh&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&o.geometry.attributes.position.count>0;
+  /* the solids: no engraving or printed face (surfaces, not solids) nor the Laid out view's schematic plates (devPlate, not parts), with a position */
+  const solid=o=>o.isMesh&&!o.userData.decal&&!o.userData.surface&&!o.userData.devPlate&&o.geometry&&o.geometry.attributes.position&&o.geometry.attributes.position.count>0;
   const shown=o=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;};
   const inMv=o=>{for(let q=o;q;q=q.parent)if(q===A.mv())return true;return false;};
   /* a part (key) or a piece (part.k) as STL, its meshes as built and shown in the sheets' state and connector the page shows (the band's or the first-drawn pieces only
