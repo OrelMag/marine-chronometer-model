@@ -1155,6 +1155,21 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
      and nothing measured says where.
    *To settle:* a photograph of a movement with the arm fitted (none found on the web, 5 October 2026). Until then any new place is a fit for
    room, which `claude/lock-arm-shape` was faulted for; the model keeps its arm, with the swing's fault recorded.
+   *Read again (18 October 2026, triaging `claude/lock-arm-shape`), Fig. 9 at 900 dpi and Fig. 108 at 1,000-1,400 dpi:*
+   - **No boss round the screw** (fairly sure). Fig. 9 draws the screw's head, a turned collar under it and a washer with a milled edge
+     (42251, Fig. 108's item 33) straight on the flat strip; Fig. 108's item 31 is a strip whose screw end is plain and rounded. The round
+     raised piece read above as a boss at its screw (and drawn on `claude/lock-arm-shape`, `22b1290`) is the arm's other end.
+   - **The end is an eye, not a finger** (fairly sure). Fig. 108's item 31 ends in a round eye with a hole, standing out of the strip's plane
+     (its ellipse turned against those of the plate's holes); Fig. 9 draws the same thing locked: the strip, lying low, bends up at its end
+     into an upright round eye, and the timing weight (a slotted cylinder, its screw's threaded end out beyond it) stands in its hole. That
+     is Sec. X's "place the locking arm over the timing weight": the eye holds the balance both ways, and comes off the weight as the arm turns
+     out. The model's 2.4 mm finger beside the weight is drawn by neither figure. Fig. 108 draws the eye about twice the strip's width across
+     (not to scale; not sure).
+   - **Not ported.** `claude/lock-arm-shape` built such an eye (`02afce8`), but bent down from an arm moved onto the barrel bridge's top at the
+     other weight and turning 2°: Fig. 9 has the arm low, beside the barrel bridge's raised horn, bending up into the eye, and swinging well
+     out (its hatched arrow), so that place is a fit for room. At the model's place the eye has no room to come off the weight: there the
+     cock's foot stands 0.30 mm outside the balance's sweep (that branch's search over the built model, 4 October 2026). Drawing the eye means choosing the arm's place, which still waits on
+     a photograph of an arm fitted.
 
 ## Open questions, to settle from video (1 October 2026)
 
