@@ -14,6 +14,7 @@
 //     error's range (Sint, S in s) and the TU's figures over 2,000 trials as adjusted and 500 at the masses' drawn place (sum: median and 95 % of |x|, and how many pass);
 //   swing: the swing and the escapement's rate against the drive (makeEsc's ampAt and rateAt, the drive 0.2 to 1.8 times the reference's), which the page's Swing and
 //     isochronism panel (js/app.js) interpolates in, since a solve takes about 0.3 s: the swing over the wind (WPHYS.drv, times the mainspring's set) and the rate against it;
+//   rev6: the Soviet 6MX's own swing and trial, as swing and trial (the children run as the 6MX: wempe_load.js's MC_WREV), which the page reads when its Version is the 6MX;
 //   phys: the numbers the text quotes from these (data-wphys spans), formatted as the text prints them; the 6MX's from wempe_6mx.json (wempe_6mx.js --write).
 // The numbers the page itself can work out (WPHYS, WESC, WD: the drive, the train, the escapement's figures, the pillars' fits) are set live by js/essay.js's fillLive.
 const fs=require('fs'),path=require('path');
@@ -44,19 +45,23 @@ const detent=(()=>{const dp=E.depart(E.A),tab=t=>{const g=(t-E.TH0)/E.DT,i=Math.
 const TH=require('./wempe_thermal.js'),TS=TH.sweep(),TM=TH.mid.an,TP=TH.mid.ns,SEC=TH.secondary,LIN=TH.linear;
 const heat={arc:TS.arc.map(x=>r(x,2)),rows:TS.rows.map(q=>q.map((x,i)=>r(x,i?3:1))),drawn:TM.at,zero:r(90-TM.zero,2),perDeg:r(TM.perDeg,4)};
 /* the slow parts, each in a process of its own, at once: the error budget's trial (its daily wind's rates, about 25 s) and the rate over the wind (below, in two halves) */
-const kid=code=>new Promise((ok,no)=>require('child_process').execFile(process.execPath,['-e',code],{cwd:__dirname,encoding:'utf8',maxBuffer:1<<26},(e,o)=>e?no(e):ok(JSON.parse(o))));
+const kid=(code,rev)=>new Promise((ok,no)=>require('child_process').execFile(process.execPath,['-e',code],{cwd:__dirname,encoding:'utf8',maxBuffer:1<<26,env:{...process.env,MC_WREV:rev||'last'}},(e,o)=>e?no(e):ok(JSON.parse(o))));   /* rev '6mx': the child runs as the Soviet 6MX (wempe_load.js) */
 /* the rate over the wind (0-56 h, every 2 h, as wempe_hairspring.js's): the escapement with the drawn spring's isochronism (makeEsc's rate, SET.HS), and without it */
 const ISO=(h0,h1)=>`const W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,D=Math.PI/180,A12=E.A/D,HS=P.SET.HS||0,o=[];for(let h=${h0};h<${h1};h+=2){const s=P.drv(h/P.HPT),a=E.ampAt(s),re=E.rateAt(a,s);o.push([re,re-HS*(a/D-A12)/10,a/D]);}console.log(JSON.stringify(o))`;
 /* the swing and the rate against the drive s (0.2 to 1.8 by 0.02, 81 solves in five processes), for the page's Swing and isochronism panel: [s, the swing (deg), the rate (s a day; null under AMIN)] */
 const SWG=(a,b)=>`const W=require('./wempe_load.js')(),E=W.WPHYS.ESC,D=Math.PI/180,o=[];for(let i=${a};i<${b};i++){const s=0.2+0.02*i,am=E.ampAt(s);o.push([+s.toFixed(2),am/D,am>=E.AMIN?E.rateAt(am,s):null]);}console.log(JSON.stringify(o))`;
-Promise.all([kid("const B=require('./wempe_errorbudget.js');console.log(JSON.stringify({...B.essay(),sum:B.summary()}))"),kid(ISO(0,29)),kid(ISO(30,56.3)),kid(SWG(0,16)),kid(SWG(16,32)),kid(SWG(32,48)),kid(SWG(48,64)),kid(SWG(64,81))]).then(([EB,i0,i1,...sw])=>{
-const swing={cv:sw.flat().map(q=>[q[0],r(q[1],2),q[2]==null?null:r(q[2],4)]),AMIN:r(E.AMIN/D,2),A:r(E.A/D,2)};
+/* and the Soviet 6MX's own (the page's Version; the user's choice, 17 October 2026): its trial and its swing against the drive, run as the 6MX (WPHYS.rev('6mx')) */
+const EBK="const B=require('./wempe_errorbudget.js');console.log(JSON.stringify({...B.essay(),sum:B.summary()}))",SWK=rev=>[[0,16],[16,32],[32,48],[48,64],[64,81]].map(([a,b])=>kid(SWG(a,b),rev));
+Promise.all([kid(EBK),kid(ISO(0,29)),kid(ISO(30,56.3)),...SWK(),kid(EBK,'6mx'),...SWK('6mx')]).then(([EB,i0,i1,...rest])=>{
+const sw=rest.slice(0,5),EB6=rest[5],sw6=rest.slice(6),E6=P.rev('6mx').ESC;
+const swOf=(sw,E)=>({cv:sw.flat().map(q=>[q[0],r(q[1],2),q[2]==null?null:r(q[2],4)]),AMIN:r(E.AMIN/D,2),A:r(E.A/D,2)}),swing=swOf(sw,E);
 const IS=[...i0,...i1],iso={all:[Math.min(...IS.map(q=>q[0])),Math.max(...IS.map(q=>q[0]))],esc:[Math.min(...IS.map(q=>q[1])),Math.max(...IS.map(q=>q[1]))],sw:[Math.min(...IS.map(q=>q[2])),Math.max(...IS.map(q=>q[2]))]};
 /* the balance's damping measured on a running 6MX (wempe_startup.js on wempe_swing.py's reading: References/wempe/VIDEOS.md, "Measured") */
 const SU=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_startup.json'),'utf8')).split;
 /* how often a trial drawn so passes, as adjusted and at the drawn place (the trial's own test; wempe_errorbudget.js prints its own runs) */
-const trial={days:EB.days.map(([T,v])=>[T,r(v,4)]),airLin:r(EB.airLin,5),perDeg:r(EB.perDeg,4),SET0:EB.SET0,LIM:EB.LIM,TU:EB.TU,Sv:r(EB.Sv,3),
-  airK:r(EB.airK,5),Sint:EB.Sint.map(x=>r(x,3)),sum:Object.fromEntries(Object.entries(EB.sum).map(([k,o])=>[k,Object.fromEntries(Object.entries(o).map(([q,v])=>[q,Array.isArray(v)?v.map(x=>r(x,4)):typeof v==='number'?r(v,4):v]))]))};   /* airK, Sint, sum: the page's Rate and 35-day trial panels */
+const trialOf=EB=>({days:EB.days.map(([T,v])=>[T,r(v,4)]),airLin:r(EB.airLin,5),perDeg:r(EB.perDeg,4),SET0:EB.SET0,LIM:EB.LIM,TU:EB.TU,Sv:r(EB.Sv,3),
+  airK:r(EB.airK,5),Sint:EB.Sint.map(x=>r(x,3)),sum:Object.fromEntries(Object.entries(EB.sum).map(([k,o])=>[k,Object.fromEntries(Object.entries(o).map(([q,v])=>[q,Array.isArray(v)?v.map(x=>r(x,4)):typeof v==='number'?r(v,4):v]))]))}),trial=trialOf(EB);
+const rev6={swing:swOf(sw6,E6),trial:trialOf(EB6)};   /* the 6MX's: the page's Swing and isochronism and Rate and trial panels read them when it is shown */   /* airK, Sint, sum: the page's Rate and 35-day trial panels */
 
 /* ---------- the hairspring: the force on the pivots with the helix's turns varied (wempe_hairspring.js's spring, HSPR.lateral) ---------- */
 const HS=(()=>{const l=console.log;console.log=()=>{};try{return require('./wempe_hairspring.js');}finally{console.log=l;}})(),{HSPR}=require('../../shared/hairspring.js');
@@ -91,7 +96,7 @@ const phys={msL:th(FN.L)+' mm',msT:fx(MSJ.strip.t,2)+' mm',msRms:pc(FN.rms,2),ms
 
 const js=`/* essaydata.js: the Wempe essay's figures and numbers that only Node works out, written by marine-chronometer-source/chronometer-working-model/tools/wempe_essaydata.js
    --write: generated, don't edit (rerun the tool; without --write it checks this file). Part of the Wempe model; declares only WEDATA (the tool's header says what each is). */
-const WEDATA=${JSON.stringify({sheets,fusee,detent,heat,trial,hs,swing,phys})};
+const WEDATA=${JSON.stringify({sheets,fusee,detent,heat,trial,hs,swing,phys,rev6})};
 `;
 /* the spans in index.html: each data-wphys key the text uses, with its text */
 const SPAN=/(<span\b[^>]*\bdata-wphys="(\w+)"[^>]*>)([^<]*)(<\/span>)/g;
