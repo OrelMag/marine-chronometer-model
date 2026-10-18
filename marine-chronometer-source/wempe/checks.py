@@ -7,8 +7,8 @@ LOOSE=[('pillarPlate:Cylinder',(20.49,-6.7,40.55),0.6,"the Soviet 6MX's contact 
 LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
-FLOAT=[('ring:Lathe',(15.22,0,-41.82),3.1,_RS),('ring:Lathe',(-43.82,0,7.73),3.1,_RS),('ring:Lathe',(28.6,0,34.09),3.1,_RS),
-  *[('ring:Lathe',q,3.1,_RS+"; the Soviet 6MX's at Kirov No. 247's 342.2, 102.2 and 246.4 (frame.js)") for q in((13.6,0,-42.37),(-43.5,0,9.4),(40.78,0,17.82))],
+FLOAT=[('ring:Buffer',(15.22,0,-41.82),3.1,_RS),('ring:Buffer',(-43.82,0,7.73),3.1,_RS),('ring:Buffer',(28.6,0,34.09),3.1,_RS),
+  *[('ring:Buffer',q,3.1,_RS+"; the Soviet 6MX's at Kirov No. 247's 342.2, 102.2 and 246.4 (frame.js)") for q in((13.6,0,-42.37),(-43.5,0,9.4),(40.78,0,17.82))],
   *[('balance:Lathe',q,0.9,"a hub screw (WN-10): its countersunk head lies in the arm's countersink (the coloured section), with no flat face under it") for q in((-8.49,0,14.16),(-9.71,0,10.06))]]
 # audit.py box (P1f, case.js): the box's screws whose heads bear outside the audit's probes (at 0.6 of the head's radius, which fall in the hole they pass through), in the box's frame (the
 # movement's at rest), the lid shut as the movement's views have it
@@ -68,7 +68,7 @@ DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{let v
 ARM='__BX.showOver(1)'
 FN=False
 REGISTRY=False   # bom.py's registry matches the Hamilton's catalogue numbers on its cards; the Wempe's lines are drawing numbers (their 'no' empty), so a card's figures (120 teeth, 310 °C) aren't part numbers
-JEWELS={'last':12,'first':12,'6mx':20,'1943':12}   # the 6MX (the TU: 15 jewels, 20 with the contact) adds the intermediate arbor's two and the seconds arbor's upper, in chatons, and its electrical contact's five, the lever staff's hole and end jewels at each end and the lever's stone (bom.json's lines with 'rev'). The drawings': the balance's and escape wheel's hole jewels and endstones (8), the impulse, discharge and locking stones, and the seconds arbor's lower jewel (05 05 04-1)
+JEWELS={'last':12,'first':12,'3955':12,'6mx':20,'1943':12}   # the 6MX (the TU: 15 jewels, 20 with the contact) adds the intermediate arbor's two and the seconds arbor's upper, in chatons, and its electrical contact's five, the lever staff's hole and end jewels at each end and the lever's stone (bom.json's lines with 'rev'). The drawings': the balance's and escape wheel's hole jewels and endstones (8), the impulse, discharge and locking stones, and the seconds arbor's lower jewel (05 05 04-1)
 # massprops.py --model wempe (phase 2d): the bowl and the gimbal ring weighed with the movement in the bowl (the Case view: lift 0), at the Wempe's own densities (as
 # tools/wempe-inertia.js: brass Ms 58 8.45, steel 7.85, the rim's nickel steel 8.1, the impulse roller's beryllium copper 8.25, the gold spring 11.0 estimated; the dial
 # Messingblech Ms 58 (05 02 00-4) and the hands' Goldin brass, whose materials the page keeps apart from __M; the cork ring 0.24, natural cork's, estimated); the stops exact (a point in an obstacle's bounding box counts
@@ -98,7 +98,7 @@ ESSAY={'link':'#view=escapement','got':"[ESSAY.on(),document.querySelector('#vie
 # HOLE_WALL: a hole is as deep as the metal round its edge (holecheck.js's opt.wall), since the upper cock is one solid 15 deep and its auxiliary hole 20 goes through the arm's 2.4
 # over the balance (with the part's whole depth the balance passing under it read as its pin)
 HOLE_WALL=True
-HOLE_STATES=[('last',"__mv.userData.setRev('last')"),('first',"__mv.userData.setRev('first')"),('6mx',"__mv.userData.setRev('6mx')"),('1943',"__mv.userData.setRev('1943')")]   # and the Soviet 6MX (the Variants' third version)
+HOLE_STATES=[('last',"__mv.userData.setRev('last')"),('first',"__mv.userData.setRev('first')"),('3955',"__mv.userData.setRev('3955')"),('6mx',"__mv.userData.setRev('6mx')"),('1943',"__mv.userData.setRev('1943')")]   # and the Soviet 6MX (the Variants' third version)
 _HS="a hole of the hand setting (Zeigerstellung 05 33), struck through on 05 08 02-1 with \"nur wenn Zeigerstellung eingebaut wird\": drilled, the work not fitted, as Wempe 3955's plate (3_Wempe_3955_uZ.jpg, 6_Wempe_3955_S.jpg) and Greenwich's wartime Wempe's (rmg_L5393_wempe_wartime_002.jpg) have them empty (README, Superseded)"
 _AUX="an auxiliary hole (Hilfsloch, reamed 3.50 +0.012 in both plates' tables, 05 09 01 and 05 08 02-1): nothing goes in it; the three small windows beside the pillars Altmeppen lists among the German features (README, How each frame part was measured); Wempe 3955's dial side shows 12 where the table puts it, 40 not (README, Unresolved)"
 _HD="the balance holding device's (Unruhhaltevorrichtung 05 36: 51 Zangenschraube M2, 52 Winkelhebelschr. M2, 53 Stift f. Wendelfeder 1.5 H7, 05 09 01's table): the device isn't built, as it doesn't fit the balance and detent as last revised; the 1943 plate keeps its pocket and holes, so one was fitted, its later form not in the set (README, Unresolved)"

@@ -133,6 +133,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-exploded',lambda log:run([PY,'exploded.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-audit-first',lambda log:run([PY,'audit.py','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the same as first drawn (the page's Variants: the sheets of 1940-41), its coplanar faces under movement.first
  ('wempe-exploded-first',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'browser'),
+ ('wempe-audit-3955',lambda log:run([PY,'audit.py','--model','wempe','--rev','3955'],TOOLS,log),'browser'),   # Wempe 3955 as photographed (the first-drawn pieces but where its photographs differ: photocompare.py), its coplanar faces under movement.3955
+ ('wempe-exploded-3955',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('3955')"],TOOLS,log),'browser'),
  ('wempe-audit-box',lambda log:run([PY,'audit.py','box','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case, gimbals and box, against its expected leftovers (about 10 s)
  ('wempe-audit-box-first',lambda log:run([PY,'audit.py','box','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the box as first drawn (the 1940 key) (about 10 s)
  ('wempe-inertia',lambda log:run([PY,'wempe_inertia.py'],TOOLS,log),'browser'),   # the Wempe's escapement's bodies weighed on its solids, against wempe_inertia.json (about 30 s)
@@ -172,6 +174,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-bom',lambda log:run([PY,'bom.py','--model','wempe'],TOOLS,log),'full'),   # every Wempe part against its drawing list (wempe/bom.json) and its relations (about 4 minutes)
  ('wempe-fine-first',lambda log:run([PY,'fine.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'full'),   # as first drawn (the first-drawn stud pin stood 0.05 off the stud unseen on main for want of it)
  ('wempe-bom-first',lambda log:run([PY,'bom.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'full'),
+ ('wempe-fine-3955',lambda log:run([PY,'fine.py','--model','wempe','--eval',"__mv.userData.setRev('3955')"],TOOLS,log),'full'),   # Wempe 3955 as photographed
+ ('wempe-bom-3955',lambda log:run([PY,'bom.py','--model','wempe','--eval',"__mv.userData.setRev('3955')"],TOOLS,log),'full'),
  ('wempe-fine-6mx',lambda log:run([PY,'fine.py','--model','wempe','--eval',"__mv.userData.setRev('6mx')"],TOOLS,log),'full'),   # the Soviet 6MX (its case and boxes too)
  ('wempe-bom-6mx',lambda log:run([PY,'bom.py','--model','wempe','--eval',"__mv.userData.setRev('6mx')"],TOOLS,log),'full'),   # its lines with "rev", its 15 jewels
  ('wempe-fine-1943',lambda log:run([PY,'fine.py','--model','wempe','--eval',"__mv.userData.setRev('1943')"],TOOLS,log),'full'),   # the escapement of 1943
