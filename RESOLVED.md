@@ -59,6 +59,13 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's 1941 detent block: the arm not slit, the banking screw's slot a bar standing off its dome, the gold spring cranked along the horn** (339783a6).
+  05 04_1's elevation draws the arm slit along the screw (open at the end, 6.1 long, 0.2 wide), which a solid of plan cells can't cut across, so it was left
+  out; the slot was a box on the apex whose ends stood out of the dome; the gold spring lay 3 along the horn and was cranked out by the pipe. Wempe 3955's
+  photographs (10_Vergleich square-on, 11_, 10_) show the slit, a screw's slot across the dome and the spring one smooth bow, only its tip on the horn.
+  Keep: the arm built across its width (its elevation solidGeo's plan, the cove as sloped cells) and made one mesh with the base, no seam; the slot a
+  band following the dome (as the 6MX's); the screw in the arm 'tap' in bom.json, its hole r 0.62. A photograph taken with a fitted camera can't place
+  parts deep in the block (its picks all near the plate face): an arm that looked 1 mm off on 11_ was right on the square-on photograph.
 - **The Wempe's gold spring screw (WN-14) was drawn blued, plain and Ø 1.2** (85ca80ce). No sheet of it is in the set; Wempe 3955's
   (11_, 10_) is bright polished steel, slotted, its head rounded, Ø 1.4. Keep: drawn as a turned piece in the detent's own group with its
   slot, not with the kit's screw() in a group of its own (fine.py would then test its shank in the square and spring, drawn without holes
