@@ -59,6 +59,15 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's gold spring screw (WN-14) was drawn blued, plain and Ø 1.2** (85ca80ce). No sheet of it is in the set; Wempe 3955's
+  (11_, 10_) is bright polished steel, slotted, its head rounded, Ø 1.4. Keep: drawn as a turned piece in the detent's own group with its
+  slot, not with the kit's screw() in a group of its own (fine.py would then test its shank in the square and spring, drawn without holes
+  across). A black flat top on a polished screw in these photographs is a mirror reflecting the dark (hue warm, not blue): not a temper.
+- **The photo comparisons' Wempe 3955 balance fitted the wrong end of its arm** (248d7d3f). Its masses and timing weights are symmetric
+  under a half turn, so `w3955_hem_2`'s picks fitted either way with the same residuals; the render showed the rollers the other way round
+  and a difference that wasn't there. Keep: for a near-symmetric part, let a feature that isn't symmetric (the rollers' stone and hole)
+  decide the fit's turn.
+
 - **The Wempe's impulse face stood 24° before the line of centres at rest, where 05 04_1 draws it 28°10'.** The sheet's "24°" is the
   escape wheel's pitch (its arc lies about the wheel's centre), and its 1°, 21° and 2° the wheel's too; the face's angle is the "6°" on from
   the "22°10'" where the impulse begins, both about the balance. Built so, the stone comes into the teeth's path at +6.1°, and a discharge
