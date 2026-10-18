@@ -4,6 +4,7 @@ Branch `claude/wempe-estimates`. Started 16 October 2026.
 
 ## Status
 
+- **Built (18 October 2026):** A (most of it) and B.1-B.3, B.6 on main 3.13.01; the rest waits on decisions or other branches: see "Where each item stands" below.
 - **Done:** the survey. Six read-only passes over every item of the Wempe README's "Estimated, not from the drawings" section, against the sheets, about 330 photographs, the videos and the literature. The evidence is in the appendices below.
 - **Ready to build (16 October 2026, evening).** `main` 3.03.00 (with claude/wempe-audit and claude/wempe-open-ends) is merged into this branch.
 - **Don't wait for `claude/wempe-maintaining`.** marine-chronometer-76 stopped it before merging 3.02.00 and 3.03.00, and will reconcile with this branch when it resumes (its PLAN-wempe-maintaining.md). It is pushed (17adb95c) and clean.
