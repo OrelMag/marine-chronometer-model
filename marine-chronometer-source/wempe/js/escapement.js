@@ -952,7 +952,7 @@ const WESC=(()=>{
   /* the Soviet 6MX's bodies (the Variants' third version, Kirov No. 247): its escapement stands at the first-drawn heights with the first-drawn staff and collar and its own
      detent, so its balance, escape arbor and detent weigh differently; weighed as SET's are (tools/wempe_inertia.py --rev 6mx, tools/wempe_inertia_6mx.json, checked by
      tools/wempe_6mx.js). js/escphys.js's WPHYS.rev('6mx') runs makeEsc with them */
-  const SET6={I:2526.0,JW:10.89,ID:8.24};   /* I 2560.4 until 18 October 2026, with a nut on each mass */
+  const SET6={I:2526.0,JW:10.89,ID:8.21};   /* I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
   return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0),DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (2 wide less 0.05 at each edge), in both states: tools/dynamics.js */
 })();
