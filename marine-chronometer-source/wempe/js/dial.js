@@ -273,7 +273,8 @@ const WDIAL=(()=>{
     const chP=part('changeWheel',20),ch=grp(chP,H[19]);R.ch=ch;
     {const c=CHW;tag(mesh(ch,lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rc,c.yw1],[c.rc,c.yc],[c.r,c.yc],[c.r,c.yt],[c.rb,c.yt]],48),M.brass),'050202-2');
       const wm=tag(mesh(ch,gear(c.wheel,1.0,{bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050202-1');wm.userData.gear={z:56,m:M_CH};R.chW=wm;
-      const pm=tag(mesh(ch,gear(c.pin,c.yp1-c.yc,{bore:c.r}),M.brass,0,(c.yc+c.yp1)/2,0),'050202-3');pm.userData.gear={z:18,m:M_HR};R.chP=pm;}
+      for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.steel]]){const gv=new THREE.Group();gv.userData.rev=V;ch.add(gv);   /* the 6MX's steel (3_Kirow_247_uZ.jpg and Kirova 14100's, photocompare.py: sure) */
+        const pm=tag(mesh(gv,gear(c.pin,c.yp1-c.yc,{bore:c.r}),mt,0,(c.yc+c.yp1)/2,0),'050202-3');pm.userData.gear={z:18,m:M_HR};if(V!=='6mx')R.chP=pm;else R.chP6=pm;}}
 
     /* ---------- the hour wheel on the cannon tube (turns a twelfth of it) ---------- */
     const hwP=part('hourWheel',26),hw=grp(hwP,H[1]);R.hw=hw;
@@ -290,7 +291,7 @@ const WDIAL=(()=>{
     /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
        change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
     const ph=(A,pa,B,pb,s)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b;};
-    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);
+    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);
 
     /* ---------- the hands ---------- */
     const hdP=part('hands',56);

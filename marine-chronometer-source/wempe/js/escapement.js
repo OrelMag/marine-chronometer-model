@@ -602,7 +602,7 @@ const WESC=(()=>{
       const gf=new THREE.Group(),bp=D(GB[0],GB[1]);gf.position.set(bp[0],0,bp[1]);sM.add(gf);const gfi=new THREE.Group();gfi.position.set(-bp[0],0,-bp[1]);gf.add(gfi);R.golds.push(gf);
       tag(mesh(gfi,solidGeo([{loop:offs(free,GW).map(([t,n])=>D(t,n)),y0:y0b,y1:y1b}]),M.gilt),'050401-2',1);
       /* its screw (WN-14), across into the square: head Ø 1.2 × 0.4, M0.7 (estimated) */
-      tag(across(sM,lathe([[0,0],[0.6,0],[0.6,0.4],[0.33,0.4],[0.33,0.4+0.55],[0,0.95]],20),M.blued,D(head-1.2,g1+GW/2+0.4),TD.n.map(v=>-v),yd(o.d0+1)),'WN-14');
+      tag(across(sM,lathe([[0,0],[0.6,0],[0.6,0.4],[0.33,0.4],[0.33,0.4+0.55],[0,0.95]],20),o.scrM||M.blued,D(head-1.2,g1+GW/2+0.4),TD.n.map(v=>-v),yd(o.d0+1)),'WN-14');   /* the 6MX's polished steel (8_Kirow_247_F.jpg and Kirova 14100's, photocompare.py: likely) */
       /* the foot's screw M1 along it into the block (number not read) and its two steady pins (Stellstift 2, WN-201 in the coloured section), drawn without holes across */
       tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
@@ -614,7 +614,7 @@ const WESC=(()=>{
        8_Gangfeder_mit_Kloben_Rus_einfach.jpg against 1436's 8.4, isn't taken: README, The Soviet 6MX). The escapement of 1943's the same: the 1943 block (05 04 01-4,
        8.7.43) clamps the foot's face 0.30 off the stone's line, the bracketed foot's half (0.60), where the unbracketed 0.65 would stand 0.025 into it, so the bracketed
        sizes came with the block (likely) */
-    dv(rv(detS,'6mx 1943'),rv(dm,'6mx 1943'),{d0:1.3,pp:1.95,pl:1.7,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y1.ew0});
+    for(const V of['6mx','1943'])dv(rv(detS,V),rv(dm,V),{d0:1.3,pp:1.95,pl:1.7,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y1.ew0,scrM:V==='6mx'?M.steel:null});   /* one each: the 6MX's gold spring screw its own (WN-14) */
     R.gold=R.golds[0];
 
     /* ================= the detent block (Gangfederkloben 05 04 01-4, 8.7.43) ================= */
