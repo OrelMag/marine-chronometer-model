@@ -49,7 +49,7 @@ const BLENDER=(()=>{
     CS.lid.rotation.x=-s.lid*1.75;CS.stay();CS.tongue.rotation.z=-Math.min(1,s.lid*4)*Math.PI/2;
     CS.bowl.rotation.z=-Math.PI*smooth(clamp(s.cw,0,1));CS.shutter(smooth(clamp(s.cw-1,0,1)));
     const kc=s.cw>2,kd=kc?(1-smooth(clamp(s.cw-2,0,1)))*60:0,ko=s.keyOn||kc;if(ko||C.key){CS.keyAt(ko?C.R.fu.keySeat:null,kd);C.key=ko;}   /* the key on the fusee's square (the keySeat's group), or back in its holder */
-    CS.root.rotation.set(s.pitch,0,s.roll,'ZYX');CS.ring.rotation.x=s.gp-s.pitch;CS.bowl.rotation.z+=s.gr-s.roll;}   /* the box rolling in the world, the ring and bowl in their gimbals (the page draws it from on board: the box still) */
+    CS.root.rotation.set(s.pitch,0,s.roll,'ZYX');CS.ring.rotation.x=s.gp-s.pitch;CS.bowl.rotation.z+=s.gr-s.roll;}   /* the box rolled and pitched, the ring and bowl in their gimbals (At sea: drawn with the apparent vertical up, as the page draws it) */
   /* ---------- the train and balance through time: app.js's tick (drive, swing, stopping at a locked beat and going again), at speed 1, without its twist ---------- */
   function sim(C,hrs){const PH=A.PH,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:1,Eh:0,tSim:0,hrs,winding:false,w0:0,wT:0};   /* eOff 1: at 0 s the escape wheel at E 0, ESC.state(0)'s, the rest pose */
     H.drv=()=>H.winding?H.w0*Math.max(0,1-H.wT/PH.SUS):H.hrs<A.HRUN-1e-6?A.drvF(H.hrs):0;H.amp=PE.ampAt(H.drv());
@@ -93,9 +93,9 @@ const BLENDER=(()=>{
       {name:'Exploded',len:11,d:'lifted out of its case, turned over, the parts and screws apart along their arbors, and back',run:emit=>uni(11,t=>st({up:out(t,0,2.5,8.5,11),ex:out(t,2.5,5,6,8.5)}),emit)},
       {name:'Lift out',len:7,d:'the movement lifted out of its bowl and turned over, and back',run:emit=>uni(7,t=>st({up:out(t,0,3,4,7)}),emit)},
       {name:'Lid',len:7,d:'the box\'s lid closed and opened again',run:emit=>uni(7,t=>st({lid:1-out(t,0,3,4,7)}),emit)},
-      {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to hang along the apparent vertical; it loops',run:emit=>{const wR=TAU/per,G2=A.gim(),T0=3*per*Math.ceil(30/(3*per)),n0=Math.round(T0*FPS);   /* the pitch at 2/3 the roll's rate, so the motion repeats every three rolls and the clip's six loop; the case's swing settled first over whole repeats */
+      {name:'At sea',len:6*per,d:'the ship rolling 14 degrees and pitching, drawn with the apparent vertical up: the case hangs still in its gimbals and the box rolls and pitches round it; it loops',run:emit=>{const wR=TAU/per,G2=A.gim(),T0=3*per*Math.ceil(30/(3*per)),n0=Math.round(T0*FPS);   /* the pitch at 2/3 the roll's rate, so the motion repeats every three rolls and the clip's six loop; the case's swing settled first over whole repeats */
         {const s0=G2.sea(-T0*wR,wR,1);G2.M.lp=s0.p[0];G2.M.lr=s0.r[0];for(let j=1;j<=n0;j++){const s=G2.sea((-T0+T0*j/n0)*wR,wR,1);G2.step(T0/n0,s.p[0],s.r[0],s);}}
-        uni(6*per,(t,dt)=>{const sea=G2.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)G2.step(dt,pitch,roll,sea);else{G2.M.lp=pitch;G2.M.lr=roll;}return st({roll,pitch,gp:G2.M.p[0],gr:G2.M.r[0]});},emit);}},
+        uni(6*per,(t,dt)=>{const sea=G2.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)G2.step(dt,pitch,roll,sea);else{G2.M.lp=pitch;G2.M.lr=roll;}return st({roll:roll-G2.M.ar,pitch:pitch-G2.M.ap,gp:G2.M.p[0]-G2.M.ap,gr:G2.M.r[0]-G2.M.ar});},emit);}},
       /* the rig's (rig.py): one parameter each, from a to b over the clip */
       {name:'Rig · beat',len:0.5,skip:RD,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
       /* the maintaining detent riding its ratchet's teeth as the fusee wheel turns, a tooth in PR beats (3.2 minutes); in Run down it would be a blur, sampled every 450 beats:
