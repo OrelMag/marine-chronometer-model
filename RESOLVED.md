@@ -1209,7 +1209,7 @@ Contents:
   13:49.5), is r 21.0-22.0, centred about 2 mm further out than the barrel.
   Now the barrel 16.5 mm tall from 2.4 mm over the plate (0.28 over the
   centre wheel), the cut r 21.0 centred 24.8 mm out (its low end, where the
-  bridge keeps 0.7 mm round pillar 0's screw). Keep: `BB_LO`, `TB_CUT`,
+  bridge keeps 0.7 mm round pillar 0's screw; superseded 18 October 2026: concentric r 20.0, under Plates, bridges, screws and arbors). Keep: `BB_LO`, `TB_CUT`,
   `TB_CR`; fine.py's barrel-arbor entry sized for the taller barrel. `919cc84`
 - **Barrel a third too small** (Review-results.md, Elsewhere 23). It was r 13.5;
   on C Spinner's video its top lip fits r 18.3 (23:30; 17.4-19.6 over the
@@ -2171,6 +2171,13 @@ Contents:
   `PILLARS.train[1]` (6.47, 33.91), the head 1.55 mm clear of the cock's foot. Keep: the pillar where the train side puts it against the cock;
   the dial side's angle there is 1.5-2 deg low; the lower train bridge's 9.2 past the fourth (the video's 10.3 would meet the screw's head by 0.1 mm).
   `b08df62`
+- **The train bridge's cut round the barrel 2 mm off the barrel** (supersedes the 2 October entry's r 21.0 centred 24.8 out, under Going train
+  and heights): it had been fitted on 23:30 and 13:49.5 through `video.py anchor` specs that hold the bridge's rim at r 40.5 about the centre
+  (`BR_R`, the top-view photograph's), which stretch those frames by 2-3.6 mm on the barrel's side. Anchored instead on the holes the bare plate
+  places (the centre and third bushings, the pillars' screw holes: `anchors/KLUwI2UUCMQ_23-30_plate.json`, `13-49.5_plate.json`, the circles'
+  centre and radius fitted), the cut comes out r 20.26 and 19.69, their centres' mean 0.04 mm from the barrel's arbor. Now `TB_CUT` is `L.Ba`,
+  `TB_CR` 20.0. Keep: a reading in the train bridge's frame near its rim through a plate-anchored spec, not a rim-held one (PROVENANCE.md, Step 3).
+  `1183ab4`
 
 ## Setup, case and gimbals
 
