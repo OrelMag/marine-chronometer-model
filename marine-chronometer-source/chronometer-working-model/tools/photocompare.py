@@ -21,7 +21,8 @@ Picks can be snapped (--snaps N rounds, default 3; --save writes the snapped pic
 its xyz, slid to the photograph's edge; a circle with "snap": {"arcs": [[deg0, deg1]], "win": px} has its visible arcs found on the photograph (no "uv" needed).
 
 SPEC (JSON): {"photo": path (from the repository's root), "rev": the model's version ("last", "first", "6mx", "1943"), "hash": more of the page's hash
-("dial=kirov&conn=band"), "case": true to keep the case, box and gimbals (else only the movement), "hide": [parts], "eval": JS run after loading,
+("dial=kirov&conn=band"), "case": true to keep the case, box and gimbals (else only the movement), "hide": [parts], "only": [parts] (those alone: a part photographed off the
+movement, the camera then fitted to it in its assembled place), "eval": JS run after loading,
 "look": [yaw, pitch, dist, x, y, z, fov] a rough camera (the page's __look and fov, target in the movement frame) for --labels and as the fit's start,
 "points": {"what it is": {"xyz": [x, y, z] (movement frame, mm: dial side +y, 12 o'clock -z, 3 o'clock +x), "uv": [u, v] (the photograph's pixels)}},
 "circles": {"what": {"c": [x, y, z], "r": mm, "n": [0, 1, 0] its axis, "uv": [[u, v], ...] points traced on its edge}}, "fix_f": a focal length in pixels
@@ -165,8 +166,9 @@ window.__pc={
   inside:o=>{for(let p=o;p;p=p.parent)if(p===__mv)return true;return false;},
   part:o=>{for(let p=o;p;p=p.parent)if(p.userData&&p.userData.partName)return p.userData.partName;return null;},
   hn:o=>{for(let p=o;p&&p!==__mv;p=p.parent)if(p.userData&&p.userData.hn)return p.userData.hn;return '';},
-  show:(caseToo,hide)=>{const sc=__pc.sc();sc.traverse(o=>{if(!o.isMesh&&!o.isLine&&!o.isLineSegments)return;if(o.userData._pcv===undefined)o.userData._pcv=o.visible;
-    let v=o.userData._pcv;if(!caseToo&&!__pc.inside(o))v=false;if(hide.includes(__pc.part(o)))v=false;o.visible=v;});},
+  show:(caseToo,hide,only)=>{const sc=__pc.sc();sc.traverse(o=>{if(!o.isMesh&&!o.isLine&&!o.isLineSegments)return;if(o.userData._pcv===undefined)o.userData._pcv=o.visible;
+    let v=o.userData._pcv;if(!caseToo&&!__pc.inside(o)&&!(only&&only.includes(__pc.part(o))))v=false;if(hide.includes(__pc.part(o)))v=false;if(only&&!only.includes(__pc.part(o)))v=false;
+    if(v)for(let p=o.parent;p;p=p.parent)if(!p.visible&&only)p.visible=true;o.visible=v;});},   /* only: those parts alone (a part photographed off the movement), its groups shown */
   /* a camera from OpenCV's R (row-major 3x3, movement frame to camera), t (mm) and f (px) */
   camCV:(R,t,f,W,H,dx=0,dy=0)=>{const mv=__mv;mv.updateMatrixWorld(true);const c=new THREE.PerspectiveCamera(2*Math.atan(H/2/f)*180/Math.PI,W/H,0.5,20000);
     const Rt=[[R[0],R[3],R[6]],[R[1],R[4],R[7]],[R[2],R[5],R[8]]];   /* R^T: camera axes in the movement frame (columns) */
@@ -213,7 +215,7 @@ async def page_run(job):
         await pg.goto(PAGE+'#'+h);await pg.wait_for_function("!document.querySelector('#loading')",timeout=180000);await pg.wait_for_timeout(2500)
         await pg.evaluate("(()=>{const b=document.querySelector('#speeds button[data-v=\"0\"]');if(b)b.click();})()");await pg.wait_for_timeout(500)
         if S.get('eval'):await pg.evaluate(S['eval']);await pg.wait_for_timeout(500)
-        await pg.evaluate(PAGEJS);await pg.evaluate("([c,h])=>__pc.show(c,h)",[bool(S.get('case')),S.get('hide',[])])
+        await pg.evaluate(PAGEJS);await pg.evaluate("([c,h,o])=>__pc.show(c,h,o)",[bool(S.get('case')),S.get('hide',[]),S.get('only')])
         out=await job(pg);await b.close()
     if errs:print('page errors:',errs)
     return out
