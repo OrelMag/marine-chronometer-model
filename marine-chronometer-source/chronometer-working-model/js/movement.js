@@ -834,7 +834,9 @@ function buildMovement(M){
      (CIELAB b*) crosses halfway to the background's, about the fusee's axis, at 16.25 px/mm both ways: the wheel's tips, r 18.03, 292 px, and the groove's pitch, 0.985 mm,
      16.0 px a turn; the three frames agree to a row), from the wheel's face toward the plate, GW_B, the model's (on the frame 2.2 mm over the plate's, the model's 2.04):
      the wheel toothed over its whole thickness, 2.22 (36 rows at the tips, r 18.0; a plain rim r 19.2 FK, 1.8 tall, over 1.2 of teeth until 18 October 2026), the
-     sustaining ratchet over it, 1.18 (19 rows at r 16.5), 0.05 off it; the fusee's rim 0.45 (r 16.0) and the large end's band (r 15.5) 0.98 over that (makeFusee's LE).
+     sustaining ratchet over it, 1.18 (19 rows at r 16.5, read on both edges), 0.05 off it; the fusee's rim 0.45 and the large end's plain band 0.98 over that (makeFusee's LE, bandR, rimR): the band r 16.0 over three movements (KLUwI2UUCMQ 17:49, 4K
+     against the wheel's tips, 16.15-16.4, an upper bound; R-DrJz1DYOY 2:22, 16.1 +-0.3; this frame's right-hand edge, 15.6-15.8), the rim 0.3 proud of it (this frame, 15.9-16.1 on
+     the band's 15.5-15.8; KLUwI2UUCMQ 17:49 shows a line there), the ratchet's teeth past both; the band's rim the cone's last flange's (rf(N) + HF, 16.07) and the rim r 14.8 until then.
      Its parts: GW_R the recess, as deep as the sustaining spring's band is tall (its top flush with the
      rim: 28:42.5), GW_F the recess's floor; SR_B, SR_T the sustaining ratchet's faces toward the wheel and toward the fusee. Until 18 October 2026 the wheel's top was -8.9,
      the ratchet -9.1 to -9.8 and the fusee's rim -9.9 to -10.3: the ratchet 0.2 over the wheel and the rim 0.1 over the ratchet, the spring and recess seen past the ratchet */
@@ -931,7 +933,7 @@ function buildMovement(M){
      springs' beds are cut BD into its face toward the fusee: the wheel in two layers, the face's with the beds through it (WPB above) */
   hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(SRT.z,SRT.m,SR_B-SR_T-BD,{ratchet:'radial',flip:true,bore:2.92,holes:[...WPS.flat().map(q=>hC(...q,0.4)),...WTH]}),M.gilt,0,(SR_B+SR_T+BD)/2,0),'42009',{sub:1,gear:{z:SRT.z,m:SRT.m,ratchet:1}});
   hn(mesh(R.sr,gearGeo(SRT.z,SRT.m,BD,{ratchet:'radial',flip:true,bore:2.92,holes:WTH,cuts:[0,1].map(wpBed)}),M.gilt,0,SR_T+BD/2,0),'42009',{sub:1});   /* steep faces lead against the running direction, so the sustaining pawl holds it */
-  R.ssPin=mesh(R.sr,cylY(0.4,GW_F-0.02-SR_B,10),M.steel,SSR*Math.cos(SSP),(GW_F-0.02+SR_B)/2,SSR*Math.sin(SSP));   /* the pin from the sustaining spring's working end, in the ratchet (the manual pins the spring to both wheels), down to 0.02 over the floor */
+  R.ssPin=mesh(R.sr,cylY(0.4,GW_F-0.04-SR_B,10),M.steel,SSR*Math.cos(SSP),(GW_F-0.04+SR_B)/2,SSR*Math.sin(SSP));   /* the pin from the sustaining spring's working end, in the ratchet (the manual pins the spring to both wheels), down to 0.02 over the floor */
   /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4 FK): pushed by its steep faces when running, slipping over them when winding.
      Each is held in by a winding-pawl spring (42007), a long thin arc round the wheel at about the pivots' radius, from its foot about 150 deg round (toward the side its pawl's
      tip points) back to the arm's outer side near the pivot, which it bears on (Figs. 28, 69; C Spinner 19:12, 18:40, 19:15: the two springs nearly round the wheel's middle,
@@ -1442,7 +1444,7 @@ function buildMovement(M){
   /* yS (and cT, the chain's top on the barrel, level with it): the top turn's height, 0.34 lower than drawn until 12 October 2026 (0.05 clear of the band at full wind), so it begins under the top's
      slotted band, as deep as the stop-bar's chain end (KLUwI2UUCMQ 37:22.323, 37:25.243, 37:26.578: the chain end's lower face level with the band's and 0.0-0.3 over
      the top of the chain's links on the top turn); cap so the top plate stays where the collar's 2.8 over the band puts it (20:00) */
-  const fs=makeFusee(M,{yS:-19.52,yB:-10.9,LE:SR_T-0.05-0.45-(-10.9+0.6),bandR:15.5,rimR:16.0,rimH:0.45,collarT:TB_T+0.05,bh:2.38,pv:BU_P,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:RB_O,bT:TB_T+1.0,bB:BB_LO,cT:-19.52,cB:-10.9,aT:BB_T,d:fd,cap:0.98,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
+  const fs=makeFusee(M,{yS:-19.52,yB:-10.9,LE:SR_T-0.05-0.45-(-10.9+0.6),bandR:16.0,rimR:16.3,rimH:0.45,collarT:TB_T+0.05,bh:2.38,pv:BU_P,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:RB_O,bT:TB_T+1.0,bB:BB_LO,cT:-19.52,cB:-10.9,aT:BB_T,d:fd,cap:0.98,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
     stopDir:Math.atan2(WSP[1]-L.Fu[1],WSP[0]-L.Fu[0])+Math.atan2(-dz,dx),stopR:Math.hypot(WSP[0]-L.Fu[0],WSP[1]-L.Fu[1]),stopRs:WSR});   /* the winding stop's place, measured (below) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* winding stop (42099): a plain steel stud screwed into the barrel bridge's underside (left-hand thread, Ops. 32, 42), square to it, no collar or head, its free end cut
@@ -1984,6 +1986,15 @@ function makeFusee(M,c){
     S=Math.hypot(B0[0]-F0[0],B0[1]-F0[1]),ux=(B0[0]-F0[0])/S,uz=(B0[1]-F0[1])/S;return{m0:me,F0,B0,bt,S,lever:-((F0[0]-fx)*uz-F0[1]*ux)};};
   const rotT=me=>TAU*me+dl(MG)-dl(me),deadRot=me=>{let a=rotT(me),b=a+Math.PI;for(let i=0;i<50;i++){const m=(a+b)/2;if(pinGeo(me,m).lever>0)a=m;else b=m;}return a;};
   const ME=(()=>{let a=N-0.5,b=N;for(let i=0;i<50;i++){const m=(a+b)/2;if(deadRot(m)<N*TAU)a=m;else b=m;}return a;})(),RT=rotT(ME);
+  /* the chain's end on the fusee (VIDEOS.md, "The chain's fusee end": an S-shaped hook into a hole in the lowest turn, KLUwI2UUCMQ 17:39-17:46): where it goes in, a slot
+     shows in the large end's band side-on, SNLqsS9wrrM 4:24 (57 px long, 3.5 mm, 13 deg of the band; 8 rows tall, 0.49 mm, its top at the band's, just under the chain's last
+     link, which lies along the band toward the barrel; the frame's mm as the stack's, 16.25 px/mm) and KLUwI2UUCMQ 17:49 (4K: a long dark slot on the band's front). Cut
+     from the end link's place (m = ME; the angle against the groove's end isn't measured: the end is placed by the run-down, as before) on round the way the groove runs
+     on, down under the last turn's floor to the hook's nose (the end pin, fPin), 0.3 inside its pitch line. The lathe's columns 1.7 deg apart, so the slot's ends slope over
+     one, so it starts 4 deg before the end link; its top just under the chain's plates (three deep, TK each); its depth, where the nose ends, estimated. Until 18 October 2026 the pin went into the fusee under the last turn, in no slot */
+  const SLA=13*D2R,SL0=-4*D2R,aE=phi0+TAU*ME,ys0=yf(ME)+TK*1.5,ys1=ys0+0.49,rS=rc(ME)-0.3,lq=lg.attributes.position;
+  for(let i=0;i<lq.count;i++){const x=lq.getX(i),z=lq.getZ(i),y=lq.getY(i),r=Math.hypot(x,z);if(y<ys0||y>ys1||r<=rS)continue;const da=(((Math.atan2(z,x)-aE-SL0)%TAU)+TAU)%TAU;if(da>SLA)continue;lq.setX(i,x*rS/r);lq.setZ(i,z*rS/r);}
+  lg.computeVertexNormals();fPin.geometry.dispose();fPin.geometry=cylY(0.17,ys1-0.05-(yf(ME)-0.2),10);
   const geo=rot=>{if(rot>RT)return pinGeo(ME,rot);const m0=md0(rot),d=dl(m0),r0=rc(m0);return{m0,F0:[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0:[bx+rB*Math.sin(d),-rB*Math.cos(d)],bt:-Math.PI/2+d,S:Tg(m0),lever:r0};},md=rot=>geo(rot).m0;
   const wrapB=q=>TAU*I(q.m0)+(Tg(m00)-q.S)/rB;   /* the chain's turn round the barrel, tangent point to hook: what has come off the fusee, less the straight run's gain */
   const IB0=I(m00)-dl(m00)/TAU,Ib=(n,eps=0)=>{const q=geo(n*TAU+eps);return(-Math.PI/2-q.bt+wrapB(q))/TAU-IB0;};
@@ -2022,7 +2033,7 @@ function makeFusee(M,c){
     for(let k=0;k+1<J.length&&ia<MAX&&ib<MAX;k++){q0.copy(J[k]);q1.copy(J[k+1]);pos.addVectors(q0,q1).multiplyScalar(0.5);t.subVectors(q1,q0).normalize();
       up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0)imA.setMatrixAt(ia++,mtx);else imB.setMatrixAt(ib++,mtx);}
     imA.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
-    { fPin.position.copy(J[0]).addScaledVector(Y,0.05);   /* through the first outer link's rivet hole, down into the fusee under the last turn */
+    { fPin.position.copy(J[0]).addScaledVector(Y,(ys1-0.05-(yf(ME)-0.2))/2-0.2);   /* the hook's nose: through the first outer link's rivet hole, down into its slot under the last turn */
       /* the hook at the chain's end on the barrel (HKA in the barrel's frame, turned with it), its plate from the last joint to it (the same length all through the wind:
          the chain keeps its length, wrapB), its nose through the wall to mid-thickness */
       const ha=HKN-bz.rotation.y,pe=new THREE.Vector3(bx+rB*Math.cos(ha),HKY,rB*Math.sin(ha)),pb=J[J.length-1],ub=rad(0,bx,pe),tb=new THREE.Vector3().subVectors(pe,pb),tl=tb.length();tb.normalize();

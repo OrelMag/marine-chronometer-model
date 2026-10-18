@@ -157,7 +157,7 @@ def loads(Lp, GJ):
             if (rr[1] * f[0] - rr[0] * f[1]) * W['Fu'] > 0: break
         A['Fu'].append((Tc * f, y)); A['Ba'].append((-Tc * f, y))
         tq = P['Tf']
-        for (a, b, za, zb, m, yw), g in zip((('Fu', 'C', T['fu'], T['cp'], M['fusee'], -6.5), ('C', 'T', T['cw'], T['tp'], M['centre'], -5.36), ('T', 'F', T['tw'], T['fp'], M['third'], -4.535), ('F', 'E', T['fw'], T['ep'], M['fourth'], -7.46)), GJ['stages']):
+        for (a, b, za, zb, m, yw), g in zip((('Fu', 'C', T['fu'], T['cp'], M['fusee'], -6.6), ('C', 'T', T['cw'], T['tp'], M['centre'], -5.36), ('T', 'F', T['tw'], T['fp'], M['third'], -4.535), ('F', 'E', T['fw'], T['ep'], M['fourth'], -7.46)), GJ['stages']):
             pa, pb = np.array(Lp[a], float), np.array(Lp[b], float); u = (pb - pa) / np.hypot(*(pb - pa)); rA = m * za / 2; P_ = pa + rA * u
             v = P_ - pb; t = np.array([W[b] * v[1], -W[b] * v[0]]); t /= np.hypot(*t); Ft = tq / (rA / 1000); FB = Ft * t + Ft * math.tan(math.radians(g['phi'])) * u
             A[b].append((FB, yw)); A[a].append((-FB, yw)); tq = tq * zb / za
@@ -299,7 +299,8 @@ def main():
     for scale in (1.4, 1.0):
         runs[scale] = movement(geo, scale, GJ, cases, say)
     fine, coarse = runs[1.0], runs[1.4]
-    stg = [('Fu', 'C', -6.5), ('C', 'T', -5.36), ('T', 'F', -4.535), ('F', 'E', -7.46)]
+    stg = [('Fu', 'C', -6.6),   # the fusee wheel's teeth (-5.9 to -8.12) on the centre pinion's leaves (-5.76 to -7.30): -6.5, the wheel's middle, until 18 October 2026
+            ('C', 'T', -5.36), ('T', 'F', -4.535), ('F', 'E', -7.46)]
     def depth(r, a, b, y):
         def at(c):
             (d1, y1), (d2, y2) = r['pos'][c]; k = (y - y1) / (y2 - y1); return d1 + k * (d2 - d1)

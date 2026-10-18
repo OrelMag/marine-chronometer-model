@@ -3149,4 +3149,13 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+- **The Hamilton's fusee stack had gaps and a hidden spring showing, and its chain ended on a pin** (Winding and maintaining work): seen side-on, the
+  sustaining ratchet (tips r 14.53, a module chosen with no source) sat 0.2 mm over a plain copper rim standing over 1.2 mm of the fusee wheel's teeth,
+  the fusee's rim 0.1 over it, and the sustaining spring and the wheel's recess showed round the ratchet; a real Model 21 (SNLqsS9wrrM 4:20-4:28,
+  KLUwI2UUCMQ 28:46, 17:39, 17:49) has the wheel toothed over its whole 2.22, the ratchet (tips r 16.55, 1.18 thick) straight on it, its teeth past the
+  fusee's large end, then the fusee's rim and a plain band (r 16.0) with a slot for the chain's hook. Keep: the stack's heights from GW_B, GW_T, GW_R,
+  SR_B, SR_T and makeFusee's LE, bandR, rimR, rimH (movement.js); the wheel's arbor wheel is the full-height toothed ring (the tools read its th);
+  the ratchet's tips from SRT and the sustaining pawl's tip from them (SPq); the chain's end pin is the hook's nose, down into the slot cut after ME.
+  The model's cone is right to the frames that read it on both edges (a right-edge reading on SNLqsS9wrrM made it 1-1.5 mm slim: an axis error).
+
 - **holecheck.py failing now and then on the fusee's hole 42021** (Build, tools and docs): the hole turns with the fusee, which stood where the page's clock put it as it loaded, so between runs it wandered 0.6 mm round (x 16.95-17.45), past its EXPECTED entry's 0.4: a run failed or passed by when it loaded (seen on 3.03.00's main, 16 October 2026). Frozen as audit.py freezes the model (placements.py's first state), it still stood in one of two places 0.74 mm apart: the fusee's catch on its ratchet is state `update()` keeps from call to call. Fixed: holecheck.py freezes the model first, and the entry gives the hole by its distance from the fusee's axis (`L.Fu`, 4.264 mm) and its height, at any angle; such an entry must be found empty (its twin at the same radius, the first tapped hole, holds the stop-bar spring's end). Keep: an EXPECTED entry on a part that turns says where it is about its axis, not in the movement's frame.
