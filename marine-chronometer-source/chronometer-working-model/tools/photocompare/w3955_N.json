@@ -11,62 +11,73 @@
   28
  ],
  "points": {
-  "top plate screw, left (slot's middle)": {
+  "top plate screw at 9 (WN-57)": {
    "xyz": [
     -36.858,
     -25.35,
     3.225
    ],
    "uv": [
-    152,
-    196
+    148,
+    199
    ]
   },
-  "top plate screw, front": {
+  "top plate screw at 12 (WN-57)": {
    "xyz": [
     6.425,
     -25.35,
     -36.437
    ],
    "uv": [
-    576,
-    398
+    582,
+    400
    ]
   },
-  "top plate screw, back": {
+  "top plate screw by 5 (WN-57)": {
    "xyz": [
     18.5,
     -25.35,
     32.043
    ],
    "uv": [
-    677,
+    676,
     82
    ]
   },
-  "barrel bridge screw, back": {
+  "barrel bridge screw, 6 o'clock side (WN-55)": {
    "xyz": [
     32.043,
     -28.67,
     18.5
    ],
    "uv": [
-    812,
-    101
+    813,
+    104
    ]
   },
-  "click screw (steel)": {
+  "set-up click screw (WN-22, steel)": {
    "xyz": [
     29.474,
     -30.42,
     -17.046
    ],
    "uv": [
-    828,
-    250
+    835,
+    248
    ]
   },
-  "ring screw, front": {
+  "ring screw by 9 (WN-rs)": {
+   "xyz": [
+    -43.824,
+    -3.05,
+    7.727
+   ],
+   "uv": [
+    96,
+    366
+   ]
+  },
+  "ring screw by 12 (WN-rs)": {
    "xyz": [
     15.22,
     -3.05,
@@ -74,94 +85,38 @@
    ],
    "uv": [
     697,
-    632
+    637
+   ]
+  },
+  "barrel bridge screw, 12 o'clock side (WN-55)": {
+   "xyz": [
+    17.37,
+    -28.67,
+    -32.668
+   ],
+   "uv": [
+    718,
+    350
    ]
   }
  },
  "circles": {
-  "top plate, upper rim (back)": {
+  "top plate, upper rim (back left)": {
    "c": [
     0,
     -22.35,
     0
    ],
    "r": 42.494,
-   "uv": [
-    [
-     82,
-     190
+   "snap": {
+    "arcs": [
+     [
+      95,
+      175
+     ]
     ],
-    [
-     97,
-     165
-    ],
-    [
-     125,
-     140
-    ],
-    [
-     175,
-     115
-    ],
-    [
-     225,
-     102
-    ],
-    [
-     275,
-     95
-    ],
-    [
-     570,
-     64
-    ]
-   ]
-  },
-  "pillar plate, train face rim (front)": {
-   "c": [
-    0,
-    -3.35,
-    0
-   ],
-   "r": 42.494,
-   "uv": [
-    [
-     150,
-     615
-    ],
-    [
-     200,
-     635
-    ],
-    [
-     300,
-     650
-    ],
-    [
-     400,
-     657
-    ],
-    [
-     500,
-     660
-    ],
-    [
-     600,
-     652
-    ],
-    [
-     700,
-     635
-    ],
-    [
-     800,
-     600
-    ],
-    [
-     860,
-     557
-    ]
-   ]
+    "win": 10
+   }
   }
  }
 }

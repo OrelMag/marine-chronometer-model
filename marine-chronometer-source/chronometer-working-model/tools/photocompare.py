@@ -8,6 +8,14 @@ own flat colour, drawn over the photograph), so what differs shows where it is a
     python photocompare.py SPEC.json --crop x0 y0 x1 y1       the sheet cropped to that part of the photograph (pixels), enlarged
     python photocompare.py SPEC.json --bbox part,part        each part's box in the movement frame (to place circles: a plate's rim)
     python photocompare.py SPEC.json --grid x0 y0 x1 y1 [--step 10]   the photograph's patch enlarged with a pixel grid, to read picks off: r_pc_NAME_grid.png
+    python photocompare.py SPEC.json --zoom x,y[,half] ...    gridded close-ups round points (a screw's head, a corner), six to a sheet: r_pc_NAME_zoom.png
+    python photocompare.py SPEC.json --regions x0,y0,x1,y1 ...   after a comparison, each box as photograph | outlines | render, enlarged: r_pc_NAME_regions.png
+
+How a view was fitted (Wempe 3955's, 18 October 2026): a rough "look" by eye, --labels to name what is seen (the square-on plan view, A, first: its screws are
+identified one to one, then found again in the obliques); each pick read off --zoom (a screw head's centre from its circle or, seen obliquely, the middle of
+its top face's ellipse, which the slot crosses); a plate's rim snapped on arcs that stand against the background; the plain pinhole ("pp" and "k1" only when the
+residuals call for them and they come out plausible: a k1 that fits a bad pick is no lens). Points then fit to 0.2-0.6 mm; one far off is a mispick or a place the
+model differs, which the outlines show. Never anchor on a part whose shape is in question (Wempe 3955's dust bush).
 
 Picks can be snapped (--snaps N rounds, default 3; --save writes the snapped picks back into the spec): a point with "snap": r is a round edge of radius r mm about
 its xyz, slid to the photograph's edge; a circle with "snap": {"arcs": [[deg0, deg1]], "win": px} has its visible arcs found on the photograph (no "uv" needed).
@@ -42,6 +50,27 @@ SP=pathlib.Path(a[0]);S=json.loads(SP.read_text(encoding='utf-8'));NAME=SP.stem
 PH=(ROOT/S['photo']) if not pathlib.Path(S['photo']).is_absolute() else pathlib.Path(S['photo'])
 photo=cv2.imdecode(np.fromfile(str(PH),np.uint8),cv2.IMREAD_COLOR);H,W=photo.shape[:2]
 
+if '--zoom' in a:   # gridded close-ups round points, to read picks off by eye: --zoom x,y[,half] ... (a line every 5 px, labelled every 10), 3 a row
+    tiles=[]
+    for t in a[a.index('--zoom')+1:]:
+        if t.startswith('--'):break
+        v=[int(x) for x in t.split(',')];cx,cy=v[0],v[1];hw=v[2] if len(v)>2 else 30;k=max(1,420//(2*hw));x0,y0=cx-hw,cy-hw
+        p=np.zeros((2*hw,2*hw,3),np.uint8);ys,xs=slice(max(0,y0),min(H,y0+2*hw)),slice(max(0,x0),min(W,x0+2*hw));p[ys.start-y0:ys.stop-y0,xs.start-x0:xs.stop-x0]=photo[ys,xs]
+        p=cv2.resize(p,None,fx=k,fy=k,interpolation=cv2.INTER_CUBIC)
+        for x in range(x0-x0%5+5,x0+2*hw,5):cv2.line(p,((x-x0)*k,0),((x-x0)*k,p.shape[0]),(0,255,255) if x%10==0 else (0,120,120),1);x%10==0 and cv2.putText(p,str(x),((x-x0)*k+2,11),0,0.35,(0,255,255),1)
+        for y in range(y0-y0%5+5,y0+2*hw,5):cv2.line(p,(0,(y-y0)*k),(p.shape[1],(y-y0)*k),(0,255,255) if y%10==0 else (0,120,120),1);y%10==0 and cv2.putText(p,str(y),(2,(y-y0)*k-2),0,0.35,(0,255,255),1)
+        p=cv2.resize(p,(420,420));cv2.rectangle(p,(0,0),(419,419),(255,255,255),2);tiles.append(p)
+    while len(tiles)%3:tiles.append(np.zeros_like(tiles[0]))
+    o=f'r_pc_{NAME}_zoom.png';cv2.imwrite(o,np.vstack([np.hstack(tiles[i:i+3]) for i in range(0,len(tiles),3)]));print('wrote',o);sys.exit(0)
+if '--regions' in a:   # after a comparison: each box (x0,y0,x1,y1 in the photograph's pixels) as photograph | outlines | render, 400 px high, a row each; no page loaded
+    ol=cv2.imread(f'r_pc_{NAME}_outline.png');rd=cv2.imread(f'r_pc_{NAME}_render.png');pu=cv2.imread(f'r_pc_{NAME}_photo.png');pu=photo if pu is None else pu;rows=[]
+    for b in a[a.index('--regions')+1:]:
+        if b.startswith('--'):break
+        x0,y0,x1,y1=map(int,b.split(','));k=400/(y1-y0);row=[]
+        for im in (pu,ol,rd):c=cv2.resize(im[y0:y1,x0:x1],None,fx=k,fy=k,interpolation=cv2.INTER_CUBIC);row+=[c,np.full((c.shape[0],6,3),255,np.uint8)]
+        r=np.hstack(row[:-1]);cv2.putText(r,b,(4,14),0,0.45,(255,255,255),1);rows.append(r)
+    w=max(r.shape[1] for r in rows);o=f'r_pc_{NAME}_regions.png'
+    cv2.imwrite(o,np.vstack([np.pad(r,((0,6),(0,w-r.shape[1]),(0,0)),constant_values=255) for r in rows]));print('wrote',o);sys.exit(0)
 if '--grid' in a:   # the photograph's patch enlarged, a line every --step px, labelled: to read picks off by eye
     x0,y0,x1,y1=map(int,opt('--grid',4));st=int(opt('--step',1,10));k=max(2,min(12,1400//max(x1-x0,y1-y0)))
     p=cv2.resize(photo[y0:y1,x0:x1],None,fx=k,fy=k,interpolation=cv2.INTER_NEAREST)
@@ -50,8 +79,12 @@ if '--grid' in a:   # the photograph's patch enlarged, a line every --step px, l
     o=f'r_pc_{NAME}_grid.png';cv2.imwrite(o,p);print('wrote',o);sys.exit(0)
 
 # ---------- the camera: x_cam = R x_mv + t, pixels = f x_cam/z + (W/2, H/2) (OpenCV's: x right, y down, z forward) ----------
-def K(f):return np.array([[f,0,W/2],[0,f,H/2],[0,0,1]],float)
-def proj(P,q):return cv2.projectPoints(np.ascontiguousarray(np.asarray(P,float).reshape(-1,3)),q[:3],q[3:6],K(np.exp(q[6])),None)[0].reshape(-1,2)
+# q: [rotation (3), translation (3), log f, principal point's offset from the centre (2, px), k1 (radial distortion)]; the last three free only if the spec asks
+# ("pp": true, a cropped photograph; "k1": true, a lens's barrel or pincushion), else 0
+FREE=list(range(7))+([7,8] if S.get('pp') else [])+([9] if S.get('k1') else [])
+def K(f,dx=0.0,dy=0.0):return np.array([[f,0,W/2+dx],[0,f,H/2+dy],[0,0,1]],float)
+def full(q):q=np.asarray(q,float);return q if len(q)==10 else np.r_[q,np.zeros(10-len(q))]
+def proj(P,q):q=full(q);return cv2.projectPoints(np.ascontiguousarray(np.asarray(P,float).reshape(-1,3)),q[:3],q[3:6],K(np.exp(q[6]),q[7],q[8]),np.array([q[9]*0.01,0,0,0]))[0].reshape(-1,2)   # k1: OpenCV's (normalised coordinates) x 100
 def circ3(c):
     n=np.array(c.get('n',[0,1,0]),float);n/=np.linalg.norm(n);u=np.cross(n,[1,0,0] if abs(n[0])<0.9 else [0,0,1]);u/=np.linalg.norm(u);v=np.cross(n,u)
     t=np.linspace(0,2*np.pi,int(c.get('ns',360)),endpoint=False);return np.array(c['c'],float)+c['r']*(np.outer(np.cos(t),u)+np.outer(np.sin(t),v))
@@ -97,7 +130,8 @@ def snap(q,win=None):
     return out
 FIXF=S.get('fix_f')
 def res(q):
-    if FIXF:q=np.r_[q[:6],np.log(FIXF)]
+    q=full(q)
+    if FIXF:q=np.r_[q[:6],np.log(FIXF),q[7:]]
     ok=~np.isnan(P2[:,0]);r=[(proj(P3[ok],q)-P2[ok]).ravel()] if ok.any() else []
     for k in C3:e=proj(C3[k],q);r.append(np.sqrt(((C2[k][:,None,:]-e[None])**2).sum(-1)).min(1))
     return np.concatenate(r) if r else np.zeros(0)
@@ -109,14 +143,18 @@ def fit(q0):
         for f in np.geomspace(800,20000,14):
             try:ok,rv,tv=cv2.solvePnP(P3[okp],P2[okp],K(f),None,flags=cv2.SOLVEPNP_SQPNP)
             except cv2.error:continue
-            if ok:starts.append(np.r_[rv.ravel(),tv.ravel(),np.log(f)])
-    best=None
-    for s in starts:   # a short run from each start, then the best polished
-        try:r=least_squares(res,s,loss='soft_l1',f_scale=3.0,max_nfev=60)
+            if ok:starts.append(full(np.r_[rv.ravel(),tv.ravel(),np.log(f)]))
+    best=None;I=np.array(FREE)
+    def rs(x,base,ix):b=base.copy();b[ix]=x;return res(b)
+    for s in starts:   # a short run from each start (pose and focal length only), then the best polished with every free unknown
+        s=full(s)
+        try:r=least_squares(rs,s[:7],args=(s,np.arange(7)),loss='soft_l1',f_scale=3.0,max_nfev=60)
         except Exception:continue
-        if best is None or r.cost<best.cost:best=r
-    best=least_squares(res,best.x,loss='soft_l1',f_scale=3.0,max_nfev=2000);q=best.x
-    if FIXF:q=np.r_[q[:6],np.log(FIXF)]
+        if best is None or r.cost<best[0].cost:best=(r,s)
+    b0=best[1].copy();b0[:7]=best[0].x
+    rs_=rs;rs=lambda x,base:rs_(x,base,I)
+    r=least_squares(lambda x:rs(x,b0),b0[I],loss='soft_l1',f_scale=3.0,max_nfev=4000);q=b0.copy();q[I]=r.x
+    if FIXF:q[6]=np.log(FIXF)
     return q
 
 # ---------- the page: load, pose, render through a camera at the photograph's size ----------
@@ -130,13 +168,14 @@ window.__pc={
   show:(caseToo,hide)=>{const sc=__pc.sc();sc.traverse(o=>{if(!o.isMesh&&!o.isLine&&!o.isLineSegments)return;if(o.userData._pcv===undefined)o.userData._pcv=o.visible;
     let v=o.userData._pcv;if(!caseToo&&!__pc.inside(o))v=false;if(hide.includes(__pc.part(o)))v=false;o.visible=v;});},
   /* a camera from OpenCV's R (row-major 3x3, movement frame to camera), t (mm) and f (px) */
-  camCV:(R,t,f,W,H)=>{const mv=__mv;mv.updateMatrixWorld(true);const c=new THREE.PerspectiveCamera(2*Math.atan(H/2/f)*180/Math.PI,W/H,0.5,20000);
+  camCV:(R,t,f,W,H,dx=0,dy=0)=>{const mv=__mv;mv.updateMatrixWorld(true);const c=new THREE.PerspectiveCamera(2*Math.atan(H/2/f)*180/Math.PI,W/H,0.5,20000);
     const Rt=[[R[0],R[3],R[6]],[R[1],R[4],R[7]],[R[2],R[5],R[8]]];   /* R^T: camera axes in the movement frame (columns) */
     const C=[-(Rt[0][0]*t[0]+Rt[0][1]*t[1]+Rt[0][2]*t[2]),-(Rt[1][0]*t[0]+Rt[1][1]*t[1]+Rt[1][2]*t[2]),-(Rt[2][0]*t[0]+Rt[2][1]*t[1]+Rt[2][2]*t[2])];
     const ax=i=>new THREE.Vector3(Rt[0][i],Rt[1][i],Rt[2][i]);const xm=ax(0),ym=ax(1).negate(),zm=ax(2).negate();   /* three's camera: y up, looking down -z */
     const q=new THREE.Quaternion(),s=new THREE.Vector3(),p=new THREE.Vector3();mv.matrixWorld.decompose(p,q,s);
     const m=new THREE.Matrix4().makeBasis(xm,ym,zm);const qc=new THREE.Quaternion().setFromRotationMatrix(m).premultiply(q);
-    c.position.copy(mv.localToWorld(new THREE.Vector3(...C)));c.quaternion.copy(qc);c.updateMatrixWorld(true);c.updateProjectionMatrix();return c;},
+    c.position.copy(mv.localToWorld(new THREE.Vector3(...C)));c.quaternion.copy(qc);c.updateMatrixWorld(true);c.updateProjectionMatrix();
+    c.projectionMatrix.elements[8]=-2*dx/W;c.projectionMatrix.elements[9]=2*dy/H;c.projectionMatrixInverse.copy(c.projectionMatrix).invert();return c;},   /* the principal point (W/2+dx, H/2+dy) */
   /* the page's look (yaw, pitch, dist about a target in the movement frame, fov) as OpenCV's R, t, f */
   look2cv:(yaw,pitch,dist,x,y,z,fov,W,H)=>{const mv=__mv;mv.updateMatrixWorld(true);const t=mv.localToWorld(new THREE.Vector3(x,y,z)),cp=Math.cos(pitch);
     const c=new THREE.PerspectiveCamera(fov,W/H,1,20000);c.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c.lookAt(t);c.updateMatrixWorld(true);
@@ -179,8 +218,8 @@ async def page_run(job):
     if errs:print('page errors:',errs)
     return out
 
-def q_of(R,t,f):return np.r_[cv2.Rodrigues(np.array(R,float).reshape(3,3))[0].ravel(),np.array(t,float),np.log(f)]
-def cv_of(q):return cv2.Rodrigues(q[:3])[0].ravel().tolist(),q[3:6].tolist(),float(np.exp(q[6]))
+def q_of(R,t,f):return full(np.r_[cv2.Rodrigues(np.array(R,float).reshape(3,3))[0].ravel(),np.array(t,float),np.log(f)])
+def cv_of(q):q=full(q);return cv2.Rodrigues(q[:3])[0].ravel().tolist(),q[3:6].tolist(),float(np.exp(q[6]))
 async def job(pg):
     q0=None
     if '--bbox' in a:return ('bbox',await pg.evaluate("n=>__pc.bbox(n)",opt('--bbox').split(',')),None,None)
@@ -188,7 +227,7 @@ async def job(pg):
     if '--labels' in a or not (len(P3)+len(C3)):
         q=fit(q0) if (~np.isnan(P2[:,0])).sum()+sum(len(v) for v in C2.values())>=7 else q0
         if q is None:sys.exit('no "look" and too few points to fit: give the spec a rough "look"')
-        R,t,f=cv_of(q);cam=await pg.evaluate("([R,t,f,W,H])=>{window.__pcC=__pc.camCV(R,t,f,W,H);return 1;}",[R,t,f,W,H])
+        R,t,f=cv_of(q);cam=await pg.evaluate("([R,t,f,W,H,dx,dy])=>{window.__pcC=__pc.camCV(R,t,f,W,H,dx,dy);return 1;}",[R,t,f,W,H,float(full(q)[7]),float(full(q)[8])])
         lit=png((await pg.evaluate("([W,H])=>__pc.render(__pcC,W,H,'lit')",[W,H]))['url']);pts=await pg.evaluate("__pc.points()")
         return ('labels',q,lit,pts)
     havep=(~np.isnan(P2[:,0])).sum()+sum(len(v) for v in C2.values())
@@ -213,9 +252,9 @@ async def job(pg):
                 if 'snap' in v:v['uv']=[round(float(P2[i,0]),2),round(float(P2[i,1]),2)]
             for k,v in CIR.items():
                 if 'snap' in v:v['uv']=[[round(float(x),1),round(float(y),1)] for x,y in C2[k]]
-            SP.write_text(json.dumps(S,indent=1,ensure_ascii=False),encoding='utf-8');print('saved the snapped picks in',SP)
+            SP.write_text(json.dumps(S,indent=1,ensure_ascii=False)+chr(10),encoding='utf-8',newline=chr(10));print('saved the snapped picks in',SP)
     R,t,f=cv_of(q)
-    await pg.evaluate("([R,t,f,W,H])=>{window.__pcC=__pc.camCV(R,t,f,W,H);return 1;}",[R,t,f,W,H])
+    await pg.evaluate("([R,t,f,W,H,dx,dy])=>{window.__pcC=__pc.camCV(R,t,f,W,H,dx,dy);return 1;}",[R,t,f,W,H,float(full(q)[7]),float(full(q)[8])])
     lit=png((await pg.evaluate("([W,H])=>__pc.render(__pcC,W,H,'lit')",[W,H]))['url']);idr=await pg.evaluate("([W,H])=>__pc.render(__pcC,W,H,'id')",[W,H])
     return ('cmp',q,lit,(png(idr['url']),idr['ids']))
 kind,q,lit,extra=asyncio.run(page_run(job))
@@ -255,6 +294,13 @@ for j,(k,v) in enumerate(PTS.items()):
 for k in C3:m=len(C2[k]);z=(R@C3[k].mean(0)+q[3:6])[2];e=np.sqrt(np.mean(r[i:i+m]**2));print(f'  {k:40s} {e:6.1f} px rms over {m} ({e*z/f:.2f} mm)');i+=m
 mmpx=float(np.median([(R@p+q[3:6])[2] for p in (P3 if len(P3) else [c.mean(0) for c in C3.values()])]))/f
 print(f'  rms {np.sqrt(np.mean(r**2)):.1f} px; about {mmpx:.3f} mm a pixel at the movement')
+q=full(q);QF=q.copy()
+if q[7] or q[8]:print(f'  principal point {W/2+q[7]:.0f}, {H/2+q[8]:.0f} (the centre {W/2:.0f}, {H/2:.0f})')
+if q[9]:   # the lens's distortion fitted: the photograph undistorted to the pinhole the model is rendered through, its picks with it
+    Kc=K(f,q[7],q[8]);dc=np.array([q[9]*0.01,0,0,0]);photo=cv2.undistort(photo,Kc,dc)
+    ud=lambda U:cv2.undistortPoints(np.asarray(U,float).reshape(-1,1,2),Kc,dc,P=Kc).reshape(-1,2)
+    P2=np.where(np.isnan(P2),np.nan,ud(np.nan_to_num(P2)));C2={k:ud(v) if len(v) else v for k,v in C2.items()};q=q.copy();q[9]=0
+    print(f'  k1 {QF[9]*0.01:+.4f} (OpenCV’s, normalised): the photograph is compared undistorted')
 # the id pass: each pixel's part (exact colours only: antialiased edges between parts match none)
 codes=(idimg[...,0].astype(np.int64)<<16)|(idimg[...,1].astype(np.int64)<<8)|idimg[...,2]
 tab={}
@@ -282,7 +328,7 @@ for k in C3:cv2.polylines(pr,[proj(C3[k],q).astype(np.int32)],True,(0,0,255),1);
 rend=comp(lit,np.full_like(photo,235));bl=comp(np.dstack([lit[...,:3],(lit[...,3]*0.5).astype(np.uint8)]),photo)
 sheet=np.vstack([side([cropz(pr),cropz(rend)],['photograph (green: picks, red: the model\'s points through the fitted camera)','model, same camera']),
                  side([cropz(ov),cropz(bl)],['the model\'s part outlines on the photograph','blend 50 %'])])
-o=f'r_pc_{NAME}.png';cv2.imwrite(o,sheet);cv2.imwrite(f'r_pc_{NAME}_outline.png',ov);cv2.imwrite(f'r_pc_{NAME}_render.png',rend);print('wrote',o,f'(and r_pc_{NAME}_outline.png, _render.png)')
+o=f'r_pc_{NAME}.png';cv2.imwrite(o,sheet);cv2.imwrite(f'r_pc_{NAME}_photo.png',photo);cv2.imwrite(f'r_pc_{NAME}_outline.png',ov);cv2.imwrite(f'r_pc_{NAME}_render.png',rend);print('wrote',o,f'(and r_pc_{NAME}_outline.png, _render.png)')
 # triage: each part's outline against the photograph's edges
 g=cv2.GaussianBlur(cv2.cvtColor(photo,cv2.COLOR_BGR2GRAY),(5,5),1.2);ed=cv2.Canny(g,40,110);dt=cv2.distanceTransform((ed==0).astype(np.uint8),cv2.DIST_L2,3)
 sc=[]
@@ -292,4 +338,4 @@ for p in parts:
     sc.append((float((dt[e]>3).mean()),int(e.sum()),p))
 print('outline pixels with no photographed edge within 3 px (triage, worst first):')
 for s,n,p in sorted(sc,reverse=True)[:25]:print(f'  {p:28s} {s*100:5.1f} %  of {n}')
-json.dump({'photo':S['photo'],'q':q.tolist(),'f':float(f),'W':W,'H':H,'score':{p:s for s,n,p in sc}},open(f'r_pc_{NAME}.json','w'),indent=1)
+json.dump({'photo':S['photo'],'q':QF.tolist(),'f':float(f),'W':W,'H':H,'score':{p:s for s,n,p in sc}},open(f'r_pc_{NAME}.json','w'),indent=1)
