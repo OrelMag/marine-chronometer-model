@@ -617,7 +617,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
           <label class="ck c2" title="See-through plates, pillars, cocks, bridges and movement ring"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
           <label class="ck c2" title="Draw the parts that don't move against each other as one: fewer draw calls, the same picture (on by default; turn it off if something looks wrong)"><input type="checkbox" id="merge"> Performance mode</label>
-          <span class="lab g">Motion</span><label class="ck g" title="The ship rolls and pitches: seen from on board, the box stands still and the case swings in its gimbals, keeping level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Turn the transit lock in, as when the box is carried: the gimbals are held, and the case goes with the box"><input type="checkbox" id="latch"> Transit lock</label>
+          <span class="lab g">Motion</span><label class="ck g" title="The ship rolls and pitches: the box rolls and pitches with it, and the case, hanging in its gimbals, stays put"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Turn the transit lock in, as when the box is carried: the gimbals are held, and the case goes with the box"><input type="checkbox" id="latch"> Transit lock</label>
           <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case’s own swing (about 1 s, from its weighed bowl and ring) they can’t, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
@@ -7663,7 +7663,7 @@ const BLENDER=(()=>{
     CS.lid.rotation.x=-s.lid*1.75;CS.stay();CS.tongue.rotation.z=-Math.min(1,s.lid*4)*Math.PI/2;
     CS.bowl.rotation.z=-Math.PI*smooth(clamp(s.cw,0,1));CS.shutter(smooth(clamp(s.cw-1,0,1)));
     const kc=s.cw>2,kd=kc?(1-smooth(clamp(s.cw-2,0,1)))*60:0,ko=s.keyOn||kc;if(ko||C.key){CS.keyAt(ko?C.R.fu.keySeat:null,kd);C.key=ko;}   /* the key on the fusee's square (the keySeat's group), or back in its holder */
-    CS.root.rotation.set(s.pitch,0,s.roll,'ZYX');CS.ring.rotation.x=s.gp-s.pitch;CS.bowl.rotation.z+=s.gr-s.roll;}   /* the box rolling in the world, the ring and bowl in their gimbals (the page draws it from on board: the box still) */
+    CS.root.rotation.set(s.pitch,0,s.roll,'ZYX');CS.ring.rotation.x=s.gp-s.pitch;CS.bowl.rotation.z+=s.gr-s.roll;}   /* the box rolled and pitched, the ring and bowl in their gimbals (At sea: drawn with the apparent vertical up, as the page draws it) */
   /* ---------- the train and balance through time: app.js's tick (drive, swing, stopping at a locked beat and going again), at speed 1, without its twist ---------- */
   function sim(C,hrs){const PH=A.PH,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:1,Eh:0,tSim:0,hrs,winding:false,w0:0,wT:0};   /* eOff 1: at 0 s the escape wheel at E 0, ESC.state(0)'s, the rest pose */
     H.drv=()=>H.winding?H.w0*Math.max(0,1-H.wT/PH.SUS):H.hrs<A.HRUN-1e-6?A.drvF(H.hrs):0;H.amp=PE.ampAt(H.drv());
@@ -7707,9 +7707,9 @@ const BLENDER=(()=>{
       {name:'Exploded',len:11,d:'lifted out of its case, turned over, the parts and screws apart along their arbors, and back',run:emit=>uni(11,t=>st({up:out(t,0,2.5,8.5,11),ex:out(t,2.5,5,6,8.5)}),emit)},
       {name:'Lift out',len:7,d:'the movement lifted out of its bowl and turned over, and back',run:emit=>uni(7,t=>st({up:out(t,0,3,4,7)}),emit)},
       {name:'Lid',len:7,d:'the box\'s lid closed and opened again',run:emit=>uni(7,t=>st({lid:1-out(t,0,3,4,7)}),emit)},
-      {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to hang along the apparent vertical; it loops',run:emit=>{const wR=TAU/per,G2=A.gim(),T0=3*per*Math.ceil(30/(3*per)),n0=Math.round(T0*FPS);   /* the pitch at 2/3 the roll's rate, so the motion repeats every three rolls and the clip's six loop; the case's swing settled first over whole repeats */
+      {name:'At sea',len:6*per,d:'the ship rolling 14 degrees and pitching, drawn with the apparent vertical up: the case hangs still in its gimbals and the box rolls and pitches round it; it loops',run:emit=>{const wR=TAU/per,G2=A.gim(),T0=3*per*Math.ceil(30/(3*per)),n0=Math.round(T0*FPS);   /* the pitch at 2/3 the roll's rate, so the motion repeats every three rolls and the clip's six loop; the case's swing settled first over whole repeats */
         {const s0=G2.sea(-T0*wR,wR,1);G2.M.lp=s0.p[0];G2.M.lr=s0.r[0];for(let j=1;j<=n0;j++){const s=G2.sea((-T0+T0*j/n0)*wR,wR,1);G2.step(T0/n0,s.p[0],s.r[0],s);}}
-        uni(6*per,(t,dt)=>{const sea=G2.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)G2.step(dt,pitch,roll,sea);else{G2.M.lp=pitch;G2.M.lr=roll;}return st({roll,pitch,gp:G2.M.p[0],gr:G2.M.r[0]});},emit);}},
+        uni(6*per,(t,dt)=>{const sea=G2.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)G2.step(dt,pitch,roll,sea);else{G2.M.lp=pitch;G2.M.lr=roll;}return st({roll:roll-G2.M.ar,pitch:pitch-G2.M.ap,gp:G2.M.p[0]-G2.M.ap,gr:G2.M.r[0]-G2.M.ar});},emit);}},
       /* the rig's (rig.py): one parameter each, from a to b over the clip */
       {name:'Rig · beat',len:0.5,skip:RD,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
       /* the maintaining detent riding its ratchet's teeth as the fusee wheel turns, a tooth in PR beats (3.2 minutes); in Run down it would be a blur, sampled every 450 beats:
@@ -8537,8 +8537,8 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   const GW={W0P:TAU/1.046,W0R:TAU/0.958,Z:0.05,LIM:60*D2R,RD:5,G:9.80665,PR:2/3,rock:false,latch:false,rockW:0,rockT:0,latchK:0,roll:0,pitch:0,M:{p:[0,0],r:[0,0],lp:0,lr:0}};
   const gwSea=(u,w,k)=>{const a=14*D2R*k,b=0.55*a,f=GW.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GW.RD*clamp((TAU/w-2)/2,0,1)};};
   function gwStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}const n=Math.ceil(dt/0.002),h=dt/n,rd=sea?sea.rd:0;
-    for(const[q,f,f0,m,W0]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P],[G.r,rl,G.lr,sea&&sea.r,GW.W0R]]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;
-      const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GW.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GW.G:1;
+    for(const[q,f,f0,m,W0,k]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P,'ap'],[G.r,rl,G.lr,sea&&sea.r,GW.W0R,'ar']]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;
+      const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GW.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GW.G:1;G[k]=Math.atan2(ah,av);   /* the apparent vertical (gimStep's G.ap, G.ar) */
       if(fr<1e-3){q[0]=f;q[1]=v;continue;}
       for(let i=0;i<n;i++){q[1]+=h*(-W2*(av*Math.sin(q[0])-ah*Math.cos(q[0]))-ZW*(q[1]-v));q[0]+=h*q[1];}
       if(Math.abs(q[0]-f)>GW.LIM){q[0]=f+Math.sign(q[0]-f)*GW.LIM;q[1]=v;}}
@@ -8632,10 +8632,11 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
       {const fix=SNAPC||RMC.matches,wR=TAU/(+document.getElementById('rollP').value||7),kr=fix?1:1-Math.exp(-dw*1.5);GW.rockW+=((GW.rock&&!fix?1:0)-GW.rockW)*kr;if(!GW.rock&&GW.rockW<1e-4)GW.rockW=0;
         if(GW.rockW>0)GW.rockT+=dw*wR;const sea=GW.rockW>0?gwSea(GW.rockT,wR,GW.rockW):null;GW.roll=sea?sea.r[0]:0;GW.pitch=sea?sea.p[0]:0;
         const lk=GW.latch||cw.u>0;GW.latchK=fix?+lk:clamp(GW.latchK+(lk?1:-1)*dw*1.2,0,1);const fr=1-smooth(Math.min(1,GW.latchK*2)),G=GW.M;
-        if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
-        /* drawn as the ship's people see it (16 October 2026; the Hamilton's the same): the box stands still, the camera riding with the ship, and the ring and bowl swing against
-           it as the gimbals take the roll and pitch; until then the box rolled in a fixed world and the bowl leaned with it toward the apparent vertical, so both seemed to move */
-        CS.root.rotation.set(0,0,0);CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
+        if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;G.ap=G.ar=0;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
+        /* drawn with the apparent vertical up (18 October 2026; the Hamilton's the same), as a plumb line hung beside the box would show down: the bowl, hanging along it, stays
+           put and the box rolls and pitches round it, the ring and bowl against the box as the gimbals take it; locked, the bowl goes with the box. Until 16 October the box rolled
+           in the true vertical's frame and the bowl leaned in it toward the apparent vertical, so both seemed to move; then until 18 October the box stood still and the bowl swung */
+        CS.root.rotation.set(GW.pitch-(G.ap||0),0,GW.roll-(G.ar||0),'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
          square; else standing in its holder in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}

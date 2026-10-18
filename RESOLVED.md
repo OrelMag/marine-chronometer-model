@@ -2075,6 +2075,17 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **Ship motion swung the movement** (18 October 2026, both pages). Since 16 October (2b58338a)
+  the camera rode with the ship, so the box stood still and the ring and case swung in it about 20°
+  each way at the 7 s roll; before that the box rolled in the true vertical's frame and the case
+  leaned in it 5.4° toward the apparent vertical, so both seemed to move. Now both pages draw it
+  with the apparent vertical up (`gimStep`'s `ap`, `ar`, and the Wempe's `gwStep`, which now keeps
+  them too), as a plumb line hung beside the box would show down: released, the case stays within
+  0.2° (the Hamilton's) and 0.3° (the Wempe's) of upright and the box rolls about 21° round it;
+  latched, the case goes with the box. Both exports' At sea clips are drawn the same way, and
+  bom-fn.js's gimbal latch test checks the case upright. Keep: with the gimbals free, Ship motion
+  moves the box, never the movement; the relative motion is the gimbals' equations unchanged. `3b6bbe73`
+
 - **The gimbals were weighed with the Laid out view's schematic plates in the case** (18 October 2026,
   found when the Wempe's Laid out view added its own). `massprops-check.js` weighed every closed solid
   in the bowl, hidden or not, so the Hamilton's see-through stand-in plates (`devPlate`, `movement.js`)
