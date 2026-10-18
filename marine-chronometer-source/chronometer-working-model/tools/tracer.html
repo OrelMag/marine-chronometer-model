@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Edge Tracer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+  Edge Tracer: trace edges, holes and named points on a photograph or a video frame, by hand, and
+  put them in millimetres. Open this file in a browser (Chrome/Edge); nothing leaves the page.
+  Points placed on an edge make a curve through every one of them (centripetal Catmull-Rom; a point
+  marked as a corner (K) breaks it). Holes are ellipses fitted to points on their edge. Each trace
+  belongs to a plane (a flat face, its own calibration to mm from named points and holes of known
+  place: holes.py's JSON, or typed) and a level on it (h, mm toward the camera off the face; the
+  parallax is taken through the camera the plane's homography gives, as framecam.py does).
+  Saves a .trace.json (the traces, and their px and mm), and exports a spec for video.py anchor,
+  picks for framecam.py and the frame with the traces drawn on it. Help: press ?.
+-->
+<style>
+:root{--bg:#141619;--pn:#1c1f25;--pn2:#23272e;--ln:#30353f;--tx:#dce0e6;--mu:#8b94a3;--ac:#4aa3ff;--wa:#ffb347;--er:#ff6b6b;--ok:#62d26f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:12px/1.4 system-ui,"Segoe UI",sans-serif;overflow:hidden}
+#app{display:grid;grid-template-rows:auto 1fr auto;height:100%}
+#top{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:4px 6px;background:var(--pn);border-bottom:1px solid var(--ln)}
+#top .sep{width:1px;height:20px;background:var(--ln);margin:0 3px}
+#top label{display:flex;align-items:center;gap:3px;color:var(--mu)}
+button,select,input,textarea{font:inherit;color:var(--tx);background:var(--pn2);border:1px solid var(--ln);border-radius:4px;padding:2px 6px}
+button{cursor:pointer;white-space:nowrap}
+button:hover{border-color:var(--ac)}
+button.on{background:var(--ac);color:#000;border-color:var(--ac)}
+button kbd{opacity:.6;font-size:10px;margin-left:3px}
+input[type=number]{width:72px}
+input[type=color]{padding:0;width:34px;height:22px}
+textarea{width:100%;resize:vertical}
+#main{display:grid;grid-template-columns:240px 1fr 310px;min-height:0}
+#left,#right{background:var(--pn);overflow:auto;min-height:0}
+#left{border-right:1px solid var(--ln)}
+#right{border-left:1px solid var(--ln)}
+#stage{position:relative;overflow:hidden;min-width:0;background:#0b0c0e}
+#cv{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;outline:none}
+#loupe{position:absolute;width:210px;height:210px;bottom:10px;left:10px;border:1px solid #ffffff55;border-radius:4px;pointer-events:none;background:#000}
+#hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mu);pointer-events:none;font-size:14px;line-height:1.8}
+#hint b{color:var(--tx)}
+#vbar{position:absolute;left:0;right:0;top:0;display:none;gap:4px;align-items:center;padding:4px 6px;background:#1c1f25e8;border-bottom:1px solid var(--ln)}
+#vbar input[type=range]{flex:1}
+#status{display:flex;gap:14px;padding:3px 8px;background:var(--pn);border-top:1px solid var(--ln);color:var(--mu);white-space:nowrap;overflow:hidden}
+#status b{color:var(--tx);font-weight:500}
+#msg{color:var(--wa)}
+section{border-bottom:1px solid var(--ln);padding:6px 8px}
+section h3{margin:0 0 5px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);display:flex;justify-content:space-between;align-items:center}
+.r{display:grid;grid-template-columns:92px 1fr;gap:4px;align-items:center;margin:3px 0}
+.r>span{color:var(--mu)}
+.r input:not([type=checkbox]):not([type=color]),.r select{width:100%}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.stats{font:11px/1.45 ui-monospace,Consolas,monospace;color:#c6ccd6;white-space:pre-wrap;margin-top:6px;background:#15181c;padding:5px;border-radius:4px}
+.tree .pl{padding:4px 6px;margin-top:4px;background:var(--pn2);border-radius:4px;cursor:pointer;display:flex;gap:6px;align-items:center}
+.tree .pl.act{outline:1px solid var(--ac)}
+.tree .pl small{color:var(--mu);margin-left:auto}
+.tree .lv{padding:2px 6px 2px 14px;color:var(--mu);cursor:pointer;display:flex;gap:6px;align-items:center}
+.tree .ob{padding:2px 6px 2px 24px;cursor:pointer;display:flex;gap:6px;align-items:center;border-radius:3px}
+.tree .ob:hover,.tree .lv:hover{background:#ffffff0d}
+.tree .ob.act{background:#4aa3ff30}
+.tree .ob small{color:var(--mu);margin-left:auto}
+.tree .ob.hid{opacity:.45}
+.sw{width:10px;height:10px;border-radius:2px;flex:none}
+.eye{cursor:pointer;width:12px;text-align:center;color:var(--mu)}
+.eye:hover{color:var(--tx)}
+table{border-collapse:collapse;width:100%;font:11px ui-monospace,Consolas,monospace}
+td,th{padding:1px 3px;text-align:right;border-bottom:1px solid #2a2f37}
+td:first-child,th:first-child{text-align:left}
+.ok{color:var(--ok)}.wa{color:var(--wa)}.er{color:var(--er)}.mu{color:var(--mu)}
+#plan{width:100%;aspect-ratio:1;background:#000;border-radius:4px;display:block}
+#modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9}
+#modal .box{background:var(--pn);border:1px solid var(--ln);border-radius:6px;padding:12px;max-width:min(96vw,1000px);max-height:94vh;overflow:auto}
+#bigplan{width:min(88vh,92vw);height:min(88vh,92vw);display:block;background:#000}
+.help td{text-align:left;font:12px system-ui;padding:2px 10px 2px 0;border:none;vertical-align:top}
+.help td:first-child{white-space:nowrap;color:var(--ac);font-family:ui-monospace,Consolas,monospace}
+.help h4{margin:10px 0 4px}
+</style></head>
+<body><div id="app">
+<div id="top">
+  <button id="bImg" title="Open a photograph or frame (or drop it on the page, or paste it)">Open image</button>
+  <button id="bVid" title="Open a video and pick a frame">Open video</button>
+  <button id="bOpen" title="Open a .trace.json, or import an anchor / framecam / rimfit spec (Ctrl+O)">Open traces</button>
+  <button id="bSave" title="Save the traces (Ctrl+S)">Save</button>
+  <button id="bSaveAs">Save as…</button>
+  <select id="exp" title="Export">
+    <option value="">Export…</option>
+    <option value="png">Frame with traces (PNG)</option>
+    <option value="mm">Traces in mm (JSON)</option>
+    <option value="anchor">video.py anchor spec</option>
+    <option value="framecam">framecam.py picks</option>
+  </select>
+  <span class="sep"></span>
+  <button data-k="curve" title="New edge curve (N)">Curve<kbd>N</kbd></button>
+  <button data-k="ellipse" title="New hole / circle: points on its edge, an ellipse fitted (H)">Hole<kbd>H</kbd></button>
+  <button data-k="point" title="New named point (P)">Point<kbd>P</kbd></button>
+  <button data-k="scale" title="New scale bar: two points a known length apart (B)">Scale<kbd>B</kbd></button>
+  <button id="bMeas" title="Measure: drag between two points (M)">Measure<kbd>M</kbd></button>
+  <span class="sep"></span>
+  <button id="bSnap" title="Snap points to the strongest edge nearby (E); Shift while clicking does the opposite">Snap<kbd>E</kbd></button>
+  <select id="chan" title="Which channel the snap and edge view look at">
+    <option value="luma">luma</option><option value="r">red</option><option value="g">green</option><option value="b">blue</option>
+    <option value="mat">against blue mat</option><option value="sat">saturation</option>
+  </select>
+  <button id="bEdge" title="Show the edges (gradient) of that channel (G)">Edges<kbd>G</kbd></button>
+  <span class="sep"></span>
+  <label title="Level of new traces: mm toward the camera off the plane's face">Level h <input id="lvl" type="number" step="0.05" value="0"> mm</label>
+  <span class="sep"></span>
+  <button id="bUndo" title="Undo (Ctrl+Z)">↶</button><button id="bRedo" title="Redo (Ctrl+Y)">↷</button>
+  <button id="bFit" title="Fit the image (F)">Fit</button>
+  <button id="bHelp" title="Keys and how-to (?)">?</button>
+</div>
+<div id="main">
+  <aside id="left">
+    <section><h3>Planes, levels, traces <span><button id="bPlane" title="Add a plane">+ Plane</button></span></h3>
+      <div id="tree" class="tree"></div></section>
+  </aside>
+  <div id="stage">
+    <canvas id="cv" tabindex="0"></canvas>
+    <canvas id="loupe" width="210" height="210"></canvas>
+    <div id="hint"><div><b>Open an image</b> (button, drop it here, or paste)<br>or a video to pick a frame from.<br>Then click along an edge. Press <b>?</b> for help.</div></div>
+    <div id="vbar">
+      <button id="vPrev1" title="1 s back">−1s</button><button id="vPrev" title="One frame back">◀</button>
+      <input id="vRange" type="range" min="0" max="1" step="0.001" value="0">
+      <button id="vNext" title="One frame on">▶</button><button id="vNext1" title="1 s on">+1s</button>
+      <input id="vTime" style="width:80px" title="mm:ss.s">
+      <label>fps <input id="vFps" type="number" value="30" style="width:50px"></label>
+      <button id="vSave" title="Save this frame as a PNG (as video.py frame names it)">Save frame</button>
+      <button id="vClose">Close video</button>
+    </div>
+  </div>
+  <aside id="right">
+    <section id="secImg"></section>
+    <section id="props"></section>
+    <section id="calib"></section>
+    <section><h3>Plan in mm (face level) <span><button id="bBig">Enlarge</button></span></h3>
+      <canvas id="plan" width="600" height="600"></canvas>
+      <div class="mu" style="margin-top:3px">The image put flat through the active plane's calibration; the traces in mm at their levels; model holes dashed. +x right, +z down (12 o'clock up when x, z are the movement frame's).</div></section>
+    <section id="secView"></section>
+  </aside>
+</div>
+<div id="status"><span id="stPx">—</span><span id="stMm"></span><span id="stZoom"></span><span id="stAct"></span><span id="msg"></span></div>
+</div>
+<div id="modal"><div class="box" id="mbox"></div></div>
+<input type="file" id="fImg" accept="image/*" hidden>
+<input type="file" id="fVid" accept="video/*" hidden>
+<input type="file" id="fJson" accept=".json,application/json" hidden>
+<input type="file" id="fHoles" accept=".json,application/json" hidden>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d'),lp=$('loupe'),lctx=lp.getContext('2d');
+const PALETTE=['#ffd400','#ff4040','#38e070','#36c5ff','#ff5ce6','#ff9a1f','#b08cff','#f0f0f0','#9cff3a','#ff7b9c'];
+const KINDS={curve:'Curve',ellipse:'Hole / circle',point:'Point',scale:'Scale bar'};
+const PFX={curve:'edge',ellipse:'hole',point:'pt',scale:'scale'};
+const ICON={curve:'〰',ellipse:'◯',point:'✕',scale:'↔'};
+let IMG=null,IMGNAME='',IW=0,IH=0,PIX=null,CHN=null,EDGE=null;
+let P=blank(),nextId=1,actObj=null,actPlane=null,sel=-1,kind='curve',tool='trace',level=0;
+let V={s:1,tx:0,ty:0},dpr=1,CW=1,CHh=1;
+const O={snap:false,snapR:8,chan:'luma',edges:false,loupe:true,mag:4,labels:true,idx:false,holes:true,grid:false,pixels:true,bri:100,con:100,sat:100,inv:false,lw:1.5,onlyPlane:false,resMag:1};
+try{Object.assign(O,JSON.parse(localStorage.getItem('tracer:opts')||'{}'))}catch(e){}
+O.edges=false;
+let CAL={},FH=null;
+let mouse={sx:0,sy:0,in:false},drag=null,pan=null,MS=null,spaceDown=false,shiftDown=false;
+function blank(){return {tool:'tracer',version:1,image:{name:'',w:0,h:0},source:'',note:'',planes:[],objs:[]}}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fx=(v,d=2)=>v==null||!isFinite(v)?'—':(+v).toFixed(d);
+const r2=v=>Math.round(v*100)/100, r3=v=>Math.round(v*1000)/1000;
+let msgT=0;function msg(s,cls){const m=$('msg');m.textContent=s||'';m.className=cls||'';clearTimeout(msgT);if(s)msgT=setTimeout(()=>m.textContent='',6000)}
+
+// ---------- small linear algebra ----------
+function solve(A,b){const n=b.length,M=A.map((r,i)=>[...r,b[i]]);for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;if(Math.abs(M[p][c])<1e-300)return null;[M[c],M[p]]=[M[p],M[c]];for(let r=0;r<n;r++){if(r===c)continue;const f=M[r][c]/M[c][c];if(f)for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k]}}return M.map((r,i)=>r[n]/r[i])}
+function lsq(rows,rhs){const n=rows[0].length,A=Array.from({length:n},()=>new Array(n).fill(0)),b=new Array(n).fill(0);rows.forEach((r,k)=>{for(let i=0;i<n;i++){b[i]+=r[i]*rhs[k];for(let j=0;j<n;j++)A[i][j]+=r[i]*r[j]}});return solve(A,b)}
+const mul3=(A,B)=>A.map((r,i)=>[0,1,2].map(j=>r[0]*B[0][j]+r[1]*B[1][j]+r[2]*B[2][j]));
+function inv3(m){const[a,b,c]=m[0],[d,e,f]=m[1],[g,h,i]=m[2];const A=e*i-f*h,B=-(d*i-f*g),C=d*h-e*g,det=a*A+b*B+c*C;if(!det||!isFinite(det))return null;return[[A/det,-(b*i-c*h)/det,(b*f-c*e)/det],[B/det,(a*i-c*g)/det,-(a*f-c*d)/det],[C/det,-(a*h-b*g)/det,(a*e-b*d)/det]]}
+const ap=(H,p)=>{const w=H[2][0]*p[0]+H[2][1]*p[1]+H[2][2];return[(H[0][0]*p[0]+H[0][1]*p[1]+H[0][2])/w,(H[1][0]*p[0]+H[1][1]*p[1]+H[1][2])/w]};
+const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+const nrm=a=>{const l=Math.hypot(...a)||1;return a.map(v=>v/l)};
+function normT(pts){let mx=0,my=0;pts.forEach(p=>{mx+=p[0];my+=p[1]});mx/=pts.length;my/=pts.length;let d=0;pts.forEach(p=>d+=Math.hypot(p[0]-mx,p[1]-my));d=d/pts.length||1;const s=Math.SQRT2/d;return[[s,0,-s*mx],[0,s,-s*my],[0,0,1]]}
+function cubicRoots(a,b,c){// x^3+ax^2+bx+c
+  const p=b-a*a/3,q=2*a*a*a/27-a*b/3+c,D=q*q/4+p*p*p/27,sh=-a/3;
+  if(Math.abs(p)<1e-14)return[Math.cbrt(-q)+sh];
+  if(D>1e-14){const s=Math.sqrt(D);return[Math.cbrt(-q/2+s)+Math.cbrt(-q/2-s)+sh]}
+  const r=Math.sqrt(-p/3),ph=Math.acos(Math.max(-1,Math.min(1,-q/(2*r*r*r))));
+  return[0,1,2].map(k=>2*r*Math.cos((ph+2*Math.PI*k)/3)+sh)}
+
+// ---------- fits ----------
+function circFit(P){if(P.length<3)return null;let mx=0,my=0;P.forEach(p=>{mx+=p[0];my+=p[1]});mx/=P.length;my/=P.length;
+  const s=lsq(P.map(p=>[p[0]-mx,p[1]-my,1]),P.map(p=>-((p[0]-mx)**2+(p[1]-my)**2)));if(!s)return null;
+  let cx=-s[0]/2,cy=-s[1]/2,r=Math.sqrt(Math.max(0,cx*cx+cy*cy-s[2]));
+  for(let it=0;it<20;it++){const rows=[],rh=[];for(const p of P){const dx=p[0]-mx-cx,dy=p[1]-my-cy,d=Math.hypot(dx,dy)||1e-9;rows.push([-dx/d,-dy/d,-1]);rh.push(-(d-r))}const d=lsq(rows,rh);if(!d)break;cx+=d[0];cy+=d[1];r+=d[2];if(Math.hypot(...d)<1e-10*(1+r))break}
+  let ss=0;P.forEach(p=>ss+=(Math.hypot(p[0]-mx-cx,p[1]-my-cy)-r)**2);
+  return{cx:cx+mx,cy:cy+my,a:Math.abs(r),b:Math.abs(r),r:Math.abs(r),ang:0,rms:Math.sqrt(ss/P.length),type:'circle'}}
+function ellFit(P){// Halir & Flusser's direct least squares, on normalised points
+  const n=P.length;if(n<5)return null;let mx=0,my=0;P.forEach(p=>{mx+=p[0];my+=p[1]});mx/=n;my/=n;let sc=0;P.forEach(p=>sc+=Math.hypot(p[0]-mx,p[1]-my));sc=sc/n||1;
+  const z=()=>[[0,0,0],[0,0,0],[0,0,0]],S1=z(),S2=z(),S3=z();
+  for(const p of P){const x=(p[0]-mx)/sc,y=(p[1]-my)/sc,d1=[x*x,x*y,y*y],d2=[x,y,1];for(let i=0;i<3;i++)for(let j=0;j<3;j++){S1[i][j]+=d1[i]*d1[j];S2[i][j]+=d1[i]*d2[j];S3[i][j]+=d2[i]*d2[j]}}
+  const S3i=inv3(S3);if(!S3i)return null;const S2t=[0,1,2].map(i=>[0,1,2].map(j=>S2[j][i]));
+  const T=mul3(S3i,S2t).map(r=>r.map(v=>-v)),S2T=mul3(S2,T),M=S1.map((r,i)=>r.map((v,j)=>v+S2T[i][j]));
+  const Mp=[M[2].map(v=>v/2),M[1].map(v=>-v),M[0].map(v=>v/2)];
+  const tr=Mp[0][0]+Mp[1][1]+Mp[2][2],c2=Mp[0][0]*Mp[1][1]-Mp[0][1]*Mp[1][0]+Mp[0][0]*Mp[2][2]-Mp[0][2]*Mp[2][0]+Mp[1][1]*Mp[2][2]-Mp[1][2]*Mp[2][1];
+  const det=Mp[0][0]*(Mp[1][1]*Mp[2][2]-Mp[1][2]*Mp[2][1])-Mp[0][1]*(Mp[1][0]*Mp[2][2]-Mp[1][2]*Mp[2][0])+Mp[0][2]*(Mp[1][0]*Mp[2][1]-Mp[1][1]*Mp[2][0]);
+  let best=null;
+  for(const l of cubicRoots(-tr,c2,-det)){const A=Mp.map((r,i)=>r.map((v,j)=>v-(i===j?l:0)));const cs=[cross(A[0],A[1]),cross(A[0],A[2]),cross(A[1],A[2])].sort((a,b)=>Math.hypot(...b)-Math.hypot(...a));const v=cs[0];const cond=4*v[0]*v[2]-v[1]*v[1];if(cond>0&&(!best||cond/dot(v,v)>best.c))best={v,c:cond/dot(v,v)}}
+  if(!best)return null;const a1=best.v,a2=[0,1,2].map(i=>T[i][0]*a1[0]+T[i][1]*a1[1]+T[i][2]*a1[2]);
+  const[A,B,C]=a1,[D,E,F]=a2,den=B*B-4*A*C;if(den>=0)return null;
+  const xc=(2*C*D-B*E)/den,yc=(2*A*E-B*D)/den,Fp=A*xc*xc+B*xc*yc+C*yc*yc+D*xc+E*yc+F;
+  const t2=(A+C)/2,s=Math.sqrt(Math.max(0,((A-C)/2)**2+B*B/4)),l1=t2+s,l2=t2-s;
+  if(-Fp/l1<=0||-Fp/l2<=0)return null;
+  const ax1=Math.sqrt(-Fp/l1),ax2=Math.sqrt(-Fp/l2);// ax2 >= ax1: the major along l2's vector
+  let vx,vy;if(Math.abs(B)>1e-12){vx=B/2;vy=l2-A}else{if(A<=C){vx=1;vy=0}else{vx=0;vy=1}}
+  let ss=0;for(const p of P){const x=(p[0]-mx)/sc,y=(p[1]-my)/sc,q=A*x*x+B*x*y+C*y*y+D*x+E*y+F,gx=2*A*x+B*y+D,gy=B*x+2*C*y+E;ss+=(q/(Math.hypot(gx,gy)||1e-12))**2}
+  return{cx:mx+sc*xc,cy:my+sc*yc,a:sc*ax2,b:sc*ax1,ang:Math.atan2(vy,vx),rms:sc*Math.sqrt(ss/n),type:'ellipse'}}
+const FC=new WeakMap();
+function fitOf(o){if(o.kind!=='ellipse'||o.pts.length<3)return null;const k=o.pts.length+':'+o.pts.map(p=>p[0]+','+p[1]).join(';');const c=FC.get(o);if(c&&c.k===k)return c.f;
+  const P2=o.pts.map(p=>[p[0],p[1]]);let f=null;if(P2.length>=5&&!o.circle)f=ellFit(P2);if(!f)f=circFit(P2);FC.set(o,{k,f});return f}
+
+// ---------- homographies and the camera ----------
+function dlt(X,x){const Tm=normT(X),Tp=normT(x),rows=[],rh=[];
+  X.forEach((m,i)=>{const a=ap(Tm,m),b=ap(Tp,x[i]);rows.push([a[0],a[1],1,0,0,0,-b[0]*a[0],-b[0]*a[1]]);rh.push(b[0]);rows.push([0,0,0,a[0],a[1],1,-b[1]*a[0],-b[1]*a[1]]);rh.push(b[1])});
+  const h=lsq(rows,rh);if(!h)return null;const Tpi=inv3(Tp);return norm33(mul3(mul3(Tpi,[[h[0],h[1],h[2]],[h[3],h[4],h[5]],[h[6],h[7],1]]),Tm))}
+function norm33(H){const s=H[2][2];return Math.abs(s)>1e-300?H.map(r=>r.map(v=>v/s)):H}
+function affine(X,x){const rows=X.map(m=>[m[0],m[1],1]);const a=lsq(rows,x.map(p=>p[0])),b=lsq(rows,x.map(p=>p[1]));return a&&b?[a,b,[0,0,1]]:null}
+function simil(X,x,mir){const rows=[],rh=[];X.forEach((m,i)=>{const y=mir?-m[1]:m[1];rows.push([m[0],-y,1,0]);rh.push(x[i][0]);rows.push([y,m[0],0,1]);rh.push(x[i][1])});const s=lsq(rows,rh);if(!s)return null;const[a,b,c,d]=s,f=mir?-1:1;return[[a,-b*f,c],[b,a*f,d],[0,0,1]]}
+function lm(f,q0,it=100){let q=q0.slice(),r=f(q),c=ss(r),lam=1e-3;const n=q.length;
+  for(let k=0;k<it;k++){const J=[];for(let j=0;j<n;j++){const d=q.slice(),h=1e-7*Math.max(1,Math.abs(q[j]));d[j]+=h;const rj=f(d);J.push(rj.map((v,i)=>(v-r[i])/h))}
+    const A=J.map(a=>J.map(b=>{let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s})),g=J.map(a=>{let s=0;for(let i=0;i<a.length;i++)s+=a[i]*r[i];return s});
+    let ok=false;for(let t=0;t<12;t++){const Ad=A.map((row,i)=>row.map((v,j)=>i===j?v*(1+lam)+1e-12:v)),dq=solve(Ad,g.map(v=>-v));if(!dq)break;const qn=q.map((v,i)=>v+dq[i]),rn=f(qn),cn=ss(rn);if(isFinite(cn)&&cn<c){const dc=c-cn;q=qn;r=rn;c=cn;lam=Math.max(1e-12,lam/3);ok=dc>1e-13*(c+1e-30);break}lam*=4}
+    if(!ok)break}
+  return{q,c,n:r.length}}
+function ss(r){let s=0;for(const v of r)s+=v*v;return s}
+function pxPerMm(H,m){const p=ap(H,m);return(dist(ap(H,[m[0]+1,m[1]]),p)+dist(ap(H,[m[0],m[1]+1]),p))/2}
+function refineH(H0,C){const Xs=[],xs=[];C.forEach(c=>{Xs.push([c.k.x,c.k.z]);xs.push(c.px);if(c.pts)c.pts.forEach(p=>xs.push(p))});
+  const Tm=normT(Xs),Tp=normT(xs),Tpi=inv3(Tp),Tmi=inv3(Tm);const Hn=norm33(mul3(mul3(Tp,H0),Tmi));
+  const toH=q=>norm33(mul3(mul3(Tpi,[[q[0],q[1],q[2]],[q[3],q[4],q[5]],[q[6],q[7],1]]),Tm));
+  const res=q=>{const H=toH(q),Hi=inv3(H),r=[];if(!Hi)return C.map(()=>1e9);for(const c of C){const P0=ap(H,[c.k.x,c.k.z]);
+    if(c.type==='pt'){r.push(P0[0]-c.px[0],P0[1]-c.px[1]);continue}
+    const m=c.pts.map(p=>ap(Hi,p));
+    if(c.useR){const k=pxPerMm(H,[c.k.x,c.k.z]);for(const q of m)r.push((Math.hypot(q[0]-c.k.x,q[1]-c.k.z)-c.k.r)*k);continue}
+    const cf=circFit(m);if(!cf){r.push(P0[0]-c.px[0],P0[1]-c.px[1]);continue}const P1=ap(H,[cf.cx,cf.cy]);r.push(P0[0]-P1[0],P0[1]-P1[1])}return r};
+  const q0=[Hn[0][0],Hn[0][1],Hn[0][2],Hn[1][0],Hn[1][1],Hn[1][2],Hn[2][0],Hn[2][1]];const s=lm(res,q0);
+  return{H:toH(s.q),rms:Math.sqrt(s.c/Math.max(1,s.n))}}
+function camFrom(H,pl,method){// the camera a homography (mm on the face -> px) gives, the principal point at the image's centre
+  const cx=(IW-1)/2,cy=(IH-1)/2,A=mul3([[1,0,-cx],[0,1,-cy],[0,0,1]],H);
+  const h1=[A[0][0],A[1][0],A[2][0]],h2=[A[0][1],A[1][1],A[2][1]],h3=[A[0][2],A[1][2],A[2][2]];
+  let fa=null;if(method==='homography'){const d1=h1[2]*h2[2];if(Math.abs(d1)>0){const f2=-(h1[0]*h2[0]+h1[1]*h2[1])/d1;if(f2>0)fa=Math.sqrt(f2)}
+    if(!(fa>0.2*IW&&fa<40*IW)){fa=null;const d2=h2[2]*h2[2]-h1[2]*h1[2];if(Math.abs(d2)>0){const f2=(h1[0]**2+h1[1]**2-h2[0]**2-h2[1]**2)/d2;if(f2>0&&Math.sqrt(f2)>0.2*IW&&Math.sqrt(f2)<40*IW)fa=Math.sqrt(f2)}}}
+  const fu=parseFloat(pl.f);let f,src;if(fu>0){f=fu;src='set'}else if(fa){f=fa;src='from the homography'}else{f=IW*6000/3840;src='default (6000 px at 3840 wide)'}
+  const c1=[h1[0]/f,h1[1]/f,h1[2]],c2=[h2[0]/f,h2[1]/f,h2[2]],c3=[h3[0]/f,h3[1]/f,h3[2]];
+  let lam=2/(Math.hypot(...c1)+Math.hypot(...c2));if(c3[2]*lam<0)lam=-lam;
+  let r1=c1.map(v=>v*lam),r2=c2.map(v=>v*lam);const t=c3.map(v=>v*lam);
+  const u=nrm(r1),v=nrm(r2),m=nrm(u.map((a,i)=>a+v[i])),n=nrm(u.map((a,i)=>a-v[i]));r1=m.map((a,i)=>(a+n[i])/Math.SQRT2);r2=m.map((a,i)=>(a-n[i])/Math.SQRT2);
+  const r3=cross(r1,r2),C=[-dot(r1,t),-dot(r2,t),-dot(r3,t)],sg=C[2]>=0?1:-1;
+  const tilt=Math.acos(Math.min(1,Math.abs(r3[2])))*180/Math.PI;
+  return{f,src,cx,cy,r1,r2,r3,t,C,sg,tilt,dist:Math.hypot(...t)}}
+function camP2M(c,p,h){const d=[(p[0]-c.cx)/c.f,(p[1]-c.cy)/c.f,1],dp=[dot(c.r1,d),dot(c.r2,d),dot(c.r3,d)];const mu=(c.sg*h-c.C[2])/dp[2];return[c.C[0]+mu*dp[0],c.C[1]+mu*dp[1]]}
+function camM2P(c,m,h){const w=c.sg*h,X=[0,1,2].map(i=>m[0]*c.r1[i]+m[1]*c.r2[i]+w*c.r3[i]+c.t[i]);return[c.cx+c.f*X[0]/X[2],c.cy+c.f*X[1]/X[2]]}
+function mmAt(pl,p,h){const c=CAL[pl.id];if(!c||!c.H)return null;let m=ap(c.Hi,p);if(h&&c.cam){const a=camP2M(c.cam,p,h),b=camP2M(c.cam,p,0);m=[m[0]+a[0]-b[0],m[1]+a[1]-b[1]]}return m}
+function pxAt(pl,m,h){const c=CAL[pl.id];if(!c||!c.H)return null;let p=ap(c.H,m);if(h&&c.cam){const a=camM2P(c.cam,m,h),b=camM2P(c.cam,m,0);p=[p[0]+a[0]-b[0],p[1]+a[1]-b[1]]}return p}
+
+// ---------- calibration of a plane ----------
+function knownOf(o,pl){if(o.hole&&pl.holes&&pl.holes[o.hole]){const h=pl.holes[o.hole];return{x:+h[0],z:+h[1],r:h[2]!=null?+h[2]:null,hole:o.hole}}
+  const k=o.known;if(k&&isFinite(parseFloat(k.x))&&isFinite(parseFloat(k.z)))return{x:+k.x,z:+k.z,r:isFinite(parseFloat(k.r))?+k.r:null};return null}
+function controlsOf(pl){const out=[];for(const o of P.objs){if(o.plane!==pl.id||!(o.kind==='point'||o.kind==='ellipse'))continue;const k=knownOf(o,pl);if(!k)continue;
+  if(o.kind==='point'){if(!o.pts.length)continue;out.push({o,k,type:'pt',px:[o.pts[0][0],o.pts[0][1]]})}
+  else{const f=fitOf(o);if(!f)continue;out.push({o,k,type:'el',px:[f.cx,f.cy],pts:o.pts.map(p=>[p[0],p[1]]),useR:!!(o.useR&&k.r>0)})}}return out}
+function calibrate(pl){const all=controlsOf(pl),C=all.filter(c=>!c.o.h&&c.o.ctl!==false);
+  const SB=P.objs.filter(o=>o.plane===pl.id&&o.kind==='scale'&&o.pts.length===2&&o.len>0);
+  const R={method:'none',H:null,Hi:null,cam:null,rms:null,all,C,SB,note:''};
+  const X=C.map(c=>[c.k.x,c.k.z]),x=C.map(c=>c.px),nR=C.filter(c=>c.useR&&c.pts.length>=5).length;
+  const fm=pl.fixed;
+  try{
+  if(fm&&fm.k>0){const k=+fm.k;R.H=[[k,0,-(+fm.x0||0)*k-.5],[0,k,-(+fm.z0||0)*k-.5],[0,0,1]];R.method='fixed map';R.C=[]}
+  else if(C.length>=4){const H=dlt(X,x);if(H){R.H=H;R.method='homography';if(C.some(c=>c.type==='el')){const r=refineH(H,C);if(r&&inv3(r.H))R.H=r.H}}}
+  else if(C.length>=2){R.H=C.length===3?affine(X,x):simil(X,x,pl.mirror==='yes');R.method=C.length===3?'affine':'similarity';
+    if(C.length===2&&pl.mirror==='auto'){const H2=simil(X,x,true);/* two points fit either way: kept unmirrored */void H2}
+    if(nR&&R.H){const r=refineH(R.H,C);if(r&&inv3(r.H)){R.H=r.H;R.method='homography (circle-constrained)'}}}
+  else if(SB.length){const k=SB.reduce((s,o)=>s+dist(o.pts[0],o.pts[1])/o.len,0)/SB.length;
+    if(C.length===1){const c=C[0];R.H=[[k,0,c.px[0]-k*c.k.x],[0,k,c.px[1]-k*c.k.z],[0,0,1]]}else R.H=[[k,0,0],[0,k,0],[0,0,1]];R.method='scale'}
+  else if(C.length===1&&C[0].useR&&C[0].pts.length>=3){const c=C[0],f=fitOf(c.o),k=(f.a+f.b)/2/c.k.r;R.H=[[k,0,c.px[0]-k*c.k.x],[0,k,c.px[1]-k*c.k.z],[0,0,1]];R.method='scale (one circle)'}
+  }catch(e){R.note='fit failed: '+e.message}
+  if(R.H){R.Hi=inv3(R.H);if(!R.Hi){R.H=null;R.method='none';R.note='singular fit'}}
+  if(R.H){R.cam=R.method==='fixed map'?null:camFrom(R.H,pl,R.method.startsWith('homography')?'homography':'');CAL[pl.id]=R;let s=0,n=0;
+    for(const c of all){c.used=R.C.includes(c);const pred=pxAt(pl,[c.k.x,c.k.z],c.o.h||0);
+      let obs=c.px;if(c.type==='el'){const m=c.pts.map(p=>mmAt(pl,p,c.o.h||0)),cf=circFit(m);if(cf){c.mmc=cf;obs=pxAt(pl,[cf.cx,cf.cy],c.o.h||0)}}
+      c.pred=pred;c.obs=obs;c.res=dist(pred,obs);if(c.useR&&c.mmc)c.rres=(c.mmc.r-c.k.r);if(c.used){s+=c.res*c.res;n++}}
+    R.rms=n?Math.sqrt(s/n):null;R.k=pxPerMm(R.H,ap(R.Hi,[(IW-1)/2,(IH-1)/2]))}
+  else CAL[pl.id]=R;return R}
+function calibrateAll(){CAL={};P.planes.forEach(calibrate)}
+
+// ---------- curves ----------
+function crPt(P0,P1,P2,P3,u){const tj=(a,b)=>Math.max(1e-6,Math.sqrt(Math.hypot(b[0]-a[0],b[1]-a[1])));
+  const t0=0,t1=tj(P0,P1),t2=t1+tj(P1,P2),t3=t2+tj(P2,P3),t=t1+(t2-t1)*u;
+  const L=(A,B,ta,tb)=>{const w=(t-ta)/(tb-ta);return[A[0]+(B[0]-A[0])*w,A[1]+(B[1]-A[1])*w]};
+  const A1=L(P0,P1,t0,t1),A2=L(P1,P2,t1,t2),A3=L(P2,P3,t2,t3),B1=L(A1,A2,t0,t2),B2=L(A2,A3,t1,t3);return L(B1,B2,t1,t2)}
+function curveDense(o,step=1.5){const p=o.pts,n=p.length;if(n<2)return p.map(q=>[q[0],q[1]]);const closed=o.closed&&n>2;
+  if(o.mode==='straight'){const r=p.map(q=>[q[0],q[1]]);if(closed)r.push([p[0][0],p[0][1]]);return r}
+  const out=[],segs=closed?n:n-1;
+  for(let i=0;i<segs;i++){const i1=(i+1)%n,P1=p[i],P2=p[i1];
+    const a=(p[i][2]||(!closed&&i===0))?null:p[(i-1+n)%n],d=(p[i1][2]||(!closed&&i1===n-1))?null:p[(i1+1)%n];
+    const A=a||[2*P1[0]-P2[0],2*P1[1]-P2[1]],D=d||[2*P2[0]-P1[0],2*P2[1]-P1[1]];
+    const m=Math.max(2,Math.min(200,Math.ceil(dist(P1,P2)/step)));for(let j=i===0?0:1;j<=m;j++)out.push(crPt(A,P1,P2,D,j/m))}
+  return out}
+function polyLen(a){let s=0;for(let i=1;i<a.length;i++)s+=dist(a[i-1],a[i]);return s}
+function polyArea(a){let s=0;for(let i=0;i<a.length;i++){const p=a[i],q=a[(i+1)%a.length];s+=p[0]*q[1]-q[0]*p[1]}return s/2}
+function ellPts(f,n=72){const out=[],c=Math.cos(f.ang),s=Math.sin(f.ang);for(let i=0;i<=n;i++){const t=i/n*2*Math.PI,x=f.a*Math.cos(t),y=f.b*Math.sin(t);out.push([f.cx+x*c-y*s,f.cy+x*s+y*c])}return out}
+
+// ---------- the image's pixels: channel, gradient, snap ----------
+function getPix(){if(PIX||!IMG)return PIX;const c=document.createElement('canvas');c.width=IW;c.height=IH;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(IMG,0,0);try{PIX=g.getImageData(0,0,IW,IH).data}catch(e){msg('cannot read this image\'s pixels (open it with the button, not by URL)','er');PIX=null}return PIX}
+function chanArr(){if(CHN&&CHN.c===O.chan)return CHN.a;const d=getPix();if(!d)return null;const n=IW*IH,a=new Float32Array(n),ch=O.chan;
+  for(let i=0,j=0;i<n;i++,j+=4){const r=d[j],g=d[j+1],b=d[j+2];a[i]=ch==='r'?r:ch==='g'?g:ch==='b'?b:ch==='mat'?b-(r+g)/2:ch==='sat'?Math.max(r,g,b)-Math.min(r,g,b):.299*r+.587*g+.114*b}
+  CHN={c:ch,a};return a}
+function gradI(a,x,y){x=Math.max(1,Math.min(IW-2,x));y=Math.max(1,Math.min(IH-2,y));const i=y*IW+x,W=IW;
+  const gx=(a[i-W+1]+2*a[i+1]+a[i+W+1])-(a[i-W-1]+2*a[i-1]+a[i+W-1]),gy=(a[i+W-1]+2*a[i+W]+a[i+W+1])-(a[i-W-1]+2*a[i-W]+a[i-W+1]);return[gx,gy]}
+function gmag(a,x,y){const x0=Math.floor(x),y0=Math.floor(y),fx=x-x0,fy=y-y0,m=(i,j)=>Math.hypot(...gradI(a,i,j));
+  return m(x0,y0)*(1-fx)*(1-fy)+m(x0+1,y0)*fx*(1-fy)+m(x0,y0+1)*(1-fx)*fy+m(x0+1,y0+1)*fx*fy}
+function snapPt(p,dir){const a=chanArr();if(!a)return p;const R=Math.max(1.5,Math.min(60,O.snapR/V.s));
+  const along=(q,n,R2,st)=>{let best=-1,bs=0;for(let s=-R2;s<=R2+1e-9;s+=st){const v=gmag(a,q[0]+s*n[0],q[1]+s*n[1]);if(v>best){best=v;bs=s}}
+    const f=s=>gmag(a,q[0]+s*n[0],q[1]+s*n[1]),y0=f(bs-st),y1=best,y2=f(bs+st),den=y0-2*y1+y2;const off=den<0?Math.max(-1,Math.min(1,.5*(y0-y2)/den))*st:0;return{p:[q[0]+(bs+off)*n[0],q[1]+(bs+off)*n[1]],v:best}};
+  if(dir){const l=Math.hypot(dir[0],dir[1]);if(l>1e-6){const n=[-dir[1]/l,dir[0]/l];return along(p,n,R,.2).p}}
+  let bx=Math.round(p[0]),by=Math.round(p[1]),bv=-1;const Ri=Math.ceil(R);
+  for(let j=-Ri;j<=Ri;j++)for(let i=-Ri;i<=Ri;i++){if(i*i+j*j>R*R)continue;const x=Math.round(p[0])+i,y=Math.round(p[1])+j;if(x<1||y<1||x>IW-2||y>IH-2)continue;const v=Math.hypot(...gradI(a,x,y));if(v>bv){bv=v;bx=x;by=y}}
+  const g=gradI(a,bx,by),gl=Math.hypot(...g);if(gl<1e-9)return[bx,by];return along([bx,by],[g[0]/gl,g[1]/gl],1.5,.1).p}
+function snapDir(o,i,p){// the tangent a point's snap searches across
+  if(o.kind==='ellipse'){const f=fitOf(o);if(f&&o.pts.length>=4){const r=[p[0]-f.cx,p[1]-f.cy];return[-r[1],r[0]]}return null}
+  if(o.kind!=='curve')return null;const n=o.pts.length,cl=o.closed&&n>2;
+  const pr=i>0?o.pts[i-1]:cl?o.pts[n-1]:null,nx=i<n-1?o.pts[i+1]:cl?o.pts[0]:null;
+  if(pr&&nx&&dist(pr,nx)>1)return[nx[0]-pr[0],nx[1]-pr[1]];const q=pr||nx;if(q&&dist(q,p)>1)return[p[0]-q[0],p[1]-q[1]];return null}
+function buildEdge(){const a=chanArr();if(!a)return null;const n=IW*IH,m=new Float32Array(n);for(let y=1;y<IH-1;y++)for(let x=1;x<IW-1;x++){const g=gradI(a,x,y);m[y*IW+x]=Math.hypot(g[0],g[1])}
+  const smp=[];for(let k=0;k<20000;k++)smp.push(m[(Math.random()*n)|0]);smp.sort((a,b)=>a-b);const hi=smp[Math.floor(smp.length*.995)]||1;
+  const c=document.createElement('canvas');c.width=IW;c.height=IH;const g=c.getContext('2d'),id=g.createImageData(IW,IH),d=id.data;
+  for(let i=0,j=0;i<n;i++,j+=4){const v=Math.min(255,255*Math.sqrt(m[i]/hi));d[j]=d[j+1]=d[j+2]=v;d[j+3]=255}g.putImageData(id,0,0);return c}
+
+// ---------- objects ----------
+function newPlane(name){const pl={id:nextId++,name:name||('Plane '+(P.planes.length+1)),face_y:null,view:'',mirror:'auto',f:'',holes:{},holesFile:'',note:'',visible:true};P.planes.push(pl);actPlane=pl;return pl}
+const planeById=id=>P.planes.find(p=>p.id===id);
+function ensurePlane(){if(!P.planes.length)newPlane('Face');if(!actPlane||!P.planes.includes(actPlane))actPlane=P.planes[0];return actPlane}
+function newObj(k){const pl=ensurePlane();let i=P.objs.filter(o=>o.kind===k).length+1,nm=PFX[k]+i;while(P.objs.some(o=>o.name===nm))nm=PFX[k]+(++i);
+  const o={id:nextId++,name:nm,kind:k,plane:pl.id,h:level,closed:false,mode:'smooth',pts:[],hole:'',known:null,useR:false,circle:false,ctl:true,len:null,color:PALETTE[P.objs.length%PALETTE.length],visible:true,locked:false,note:''};
+  P.objs.push(o);actObj=o;sel=-1;return o}
+const vis=o=>{const pl=planeById(o.plane);return o.visible!==false&&(!pl||pl.visible!==false)&&(!O.onlyPlane||o.plane===(actPlane&&actPlane.id))};
+
+// ---------- undo ----------
+const UND=[],RED=[];
+const snapS=()=>JSON.stringify({p:P,a:actObj&&actObj.id,ap:actPlane&&actPlane.id,n:nextId,s:sel});
+function push(){UND.push(snapS());if(UND.length>400)UND.shift();RED.length=0}
+function restoreS(s){const d=JSON.parse(s);P=d.p;nextId=d.n;actObj=P.objs.find(o=>o.id===d.a)||null;actPlane=P.planes.find(p=>p.id===d.ap)||P.planes[0]||null;sel=actObj?Math.min(d.s,actObj.pts.length-1):-1;changed()}
+function undo(){if(!UND.length)return msg('nothing to undo');RED.push(snapS());restoreS(UND.pop())}
+function redo(){if(!RED.length)return msg('nothing to redo');UND.push(snapS());restoreS(RED.pop())}
+
+// ---------- view ----------
+function resize(){const r=cv.getBoundingClientRect();dpr=window.devicePixelRatio||1;CW=Math.max(1,r.width);CHh=Math.max(1,r.height);cv.width=Math.round(CW*dpr);cv.height=Math.round(CHh*dpr);req()}
+function fit(){if(!IMG)return;const s=Math.min(CW/IW,CHh/IH)*.97;V={s,tx:CW/2-s*(IW-1)/2,ty:CHh/2-s*(IH-1)/2};req()}
+function zoomAt(f,sx,sy){const s=Math.max(.01,Math.min(128,V.s*f)),k=s/V.s;V.tx=sx-(sx-V.tx)*k;V.ty=sy-(sy-V.ty)*k;V.s=s;req()}
+const toImg=(sx,sy)=>[(sx-V.tx)/V.s,(sy-V.ty)/V.s];
+let rq=0;function req(){if(!rq)rq=requestAnimationFrame(()=>{rq=0;draw()})}
+function filt(){return`brightness(${O.bri}%) contrast(${O.con}%) saturate(${O.sat}%)${O.inv?' invert(1)':''}`}
+function drawImg(g,T,scale){const src=O.edges&&EDGE?EDGE:IMG;if(!src)return;g.save();g.setTransform(scale*T.s,0,0,scale*T.s,scale*T.tx,scale*T.ty);g.imageSmoothingEnabled=!(O.pixels&&T.s>=3);g.filter=filt();g.drawImage(src,-.5,-.5);g.restore()}
+function draw(){ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#0b0c0e';ctx.fillRect(0,0,cv.width,cv.height);
+  if(IMG)drawImg(ctx,V,dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(IMG)drawOverlays(ctx,V,1,CW,CHh);
+  $('hint').style.display=IMG?'none':'flex';drawLoupe();status()}
+function drawLoupe(){const show=O.loupe&&IMG&&mouse.in;lp.style.display=show?'block':'none';if(!show)return;
+  const near=mouse.sx<260&&mouse.sy>CHh-260;lp.style.left=near?'auto':'10px';lp.style.right=near?'10px':'auto';
+  const m=toImg(mouse.sx,mouse.sy),s=Math.max(2,Math.min(160,V.s*O.mag)),W=lp.width,T={s,tx:W/2-m[0]*s,ty:W/2-m[1]*s};
+  lctx.setTransform(1,0,0,1,0,0);lctx.fillStyle='#000';lctx.fillRect(0,0,W,W);drawImg(lctx,T,1);lctx.setTransform(1,0,0,1,0,0);drawOverlays(lctx,T,1,W,W);
+  lctx.strokeStyle='#fff';lctx.lineWidth=1;lctx.globalCompositeOperation='difference';lctx.beginPath();lctx.moveTo(W/2,0);lctx.lineTo(W/2,W/2-6);lctx.moveTo(W/2,W/2+6);lctx.lineTo(W/2,W);lctx.moveTo(0,W/2);lctx.lineTo(W/2-6,W/2);lctx.moveTo(W/2+6,W/2);lctx.lineTo(W,W/2);lctx.stroke();lctx.globalCompositeOperation='source-over';
+  lctx.fillStyle='#fffc';lctx.font='10px system-ui';lctx.fillText('×'+(s).toFixed(s<10?1:0),4,W-5)}
+function label(g,t,x,y,col,k){g.font=`${11*k}px system-ui`;g.lineWidth=3*k;g.strokeStyle='#000c';g.strokeText(t,x,y);g.fillStyle=col;g.fillText(t,x,y)}
+function path(g,pts,T,close){g.beginPath();pts.forEach((p,i)=>{const x=p[0]*T.s+T.tx,y=p[1]*T.s+T.ty;i?g.lineTo(x,y):g.moveTo(x,y)});if(close)g.closePath()}
+function drawOverlays(g,T,k,W,H){const S=p=>[p[0]*T.s+T.tx,p[1]*T.s+T.ty];g.lineJoin='round';g.lineCap='round';
+  // model holes and the mm grid of the active plane
+  const pl=actPlane,cal=pl&&CAL[pl.id];
+  if(pl&&cal&&cal.H&&pl.visible!==false){
+    if(O.grid)drawGrid(g,T,k,W,H,pl,cal);
+    if(O.holes&&pl.holes){g.setLineDash([4*k,3*k]);for(const[nm,h]of Object.entries(pl.holes)){const r=+h[2]||.3,pts=[];for(let i=0;i<=40;i++){const t=i/40*2*Math.PI;pts.push(pxAt(pl,[+h[0]+r*Math.cos(t),+h[1]+r*Math.sin(t)],0))}
+        const linked=actObj&&actObj.hole===nm;g.strokeStyle=linked?'#ffffff':'#2fe0ffc0';g.lineWidth=(linked?2:1.2)*k;path(g,pts,T,true);g.stroke();if(O.labels&&T.s*r>3){const c=S(pxAt(pl,[+h[0],+h[1]],0));label(g,nm,c[0]+T.s*r*0.75+2,c[1]-T.s*r*0.75,'#7feeff',k*.9)}}g.setLineDash([])}
+    for(const c of cal.all){if(!vis(c.o))continue;const a=S(c.obs),b=S(c.pred),M=O.resMag;g.strokeStyle=c.used?'#2fe0ff':'#ff9d2f';g.lineWidth=1.5*k;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(a[0]+(b[0]-a[0])*M,a[1]+(b[1]-a[1])*M);g.stroke();const e=[a[0]+(b[0]-a[0])*M,a[1]+(b[1]-a[1])*M];g.beginPath();g.moveTo(e[0]-4*k,e[1]);g.lineTo(e[0],e[1]-4*k);g.lineTo(e[0]+4*k,e[1]);g.lineTo(e[0],e[1]+4*k);g.closePath();g.stroke()}}
+  for(const o of P.objs){if(!vis(o))continue;const act=o===actObj,col=o.color,lw=(act?1.6:1)*O.lw*k,opl=planeById(o.plane);
+    g.strokeStyle=col;g.fillStyle=col;g.lineWidth=lw;
+    if(o.kind==='curve'&&o.pts.length>1){path(g,curveDense(o),T,false);g.stroke()}
+    if(o.kind==='ellipse'){const f=fitOf(o);if(f){g.beginPath();const c=S([f.cx,f.cy]);g.ellipse(c[0],c[1],Math.max(.1,f.a*T.s),Math.max(.1,f.b*T.s),f.ang,0,2*Math.PI);g.stroke();
+        const d=5*k;g.lineWidth=1.2*k;g.beginPath();g.moveTo(c[0]-d,c[1]-d);g.lineTo(c[0]+d,c[1]+d);g.moveTo(c[0]-d,c[1]+d);g.lineTo(c[0]+d,c[1]-d);g.stroke();
+        if(opl&&CAL[opl.id]&&CAL[opl.id].H&&o.pts.length>=3){const m=circFit(o.pts.map(p=>mmAt(opl,p,o.h||0)));if(m){const q=S(pxAt(opl,[m.cx,m.cy],o.h||0));g.strokeStyle='#fff';g.beginPath();g.moveTo(q[0]-d*1.4,q[1]);g.lineTo(q[0]+d*1.4,q[1]);g.moveTo(q[0],q[1]-d*1.4);g.lineTo(q[0],q[1]+d*1.4);g.stroke()}}}}
+    if(o.kind==='point'&&o.pts.length){const c=S(o.pts[0]),d=7*k;g.lineWidth=1.6*k*(act?1.4:1);g.beginPath();g.moveTo(c[0]-d,c[1]-d);g.lineTo(c[0]+d,c[1]+d);g.moveTo(c[0]-d,c[1]+d);g.lineTo(c[0]+d,c[1]-d);g.stroke()}
+    if(o.kind==='scale'&&o.pts.length){if(o.pts.length===2){const a=S(o.pts[0]),b=S(o.pts[1]);g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke();const L=dist(a,b)||1,nx=-(b[1]-a[1])/L*6*k,ny=(b[0]-a[0])/L*6*k;g.beginPath();[a,b].forEach(p=>{g.moveTo(p[0]-nx,p[1]-ny);g.lineTo(p[0]+nx,p[1]+ny)});g.stroke()}}
+    // points
+    if(o.kind!=='point'||act){o.pts.forEach((p,i)=>{const c=S(p),r=(act?3.2:2.4)*k;g.beginPath();if(p[2])g.rect(c[0]-r,c[1]-r,2*r,2*r);else g.arc(c[0],c[1],r,0,2*Math.PI);
+      if(act&&i===sel){g.fillStyle='#fff';g.fill();g.strokeStyle='#000';g.lineWidth=1*k;g.stroke()}else{g.fillStyle=col;g.fill();if(i===0&&o.kind==='curve'){g.strokeStyle='#fff';g.lineWidth=1*k;g.beginPath();g.arc(c[0],c[1],r+2.5*k,0,2*Math.PI);g.stroke()}}
+      if(O.idx&&(act||T.s>2))label(g,String(i),c[0]+4*k,c[1]-4*k,'#fff',k*.85)})}
+    if(O.labels&&o.pts.length){let at=o.pts[0];if(o.kind==='ellipse'){const f=fitOf(o);if(f)at=[f.cx+f.a*.72,f.cy-f.a*.72]}const c=S(at);
+      let t=o.name;if(o.kind==='scale'&&o.len)t+=` ${o.len} mm`;if(o.h)t+=` (h ${o.h})`;label(g,t,c[0]+6*k,c[1]-6*k,col,k)}}
+  if(MS&&MS.b){const a=S(MS.a),b=S(MS.b);g.strokeStyle='#fff';g.lineWidth=1.5*k;g.setLineDash([5*k,4*k]);g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke();g.setLineDash([]);label(g,measText(),b[0]+8*k,b[1]+14*k,'#fff',k)}}
+function drawGrid(g,T,k,W,H,pl,cal){const cs=[[0,0],[W,0],[W,H],[0,H]].map(p=>ap(cal.Hi,[(p[0]-T.tx)/T.s,(p[1]-T.ty)/T.s]));if(cs.some(p=>!isFinite(p[0])))return;
+  const xs=cs.map(p=>p[0]),zs=cs.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),z0=Math.min(...zs),z1=Math.max(...zs);
+  const k0=pxPerMm(cal.H,[(x0+x1)/2,(z0+z1)/2])*T.s;let st=[.1,.2,.5,1,2,5,10,20,50,100].find(s=>s*k0>=40)||100;if((x1-x0)/st>300||(z1-z0)/st>300)return;
+  g.lineWidth=k;for(let x=Math.ceil(x0/st)*st;x<=x1;x+=st){const pts=[];for(let i=0;i<=24;i++)pts.push(ap(cal.H,[x,z0+(z1-z0)*i/24]));g.strokeStyle=Math.abs(x)<1e-9?'#ff6b6bb0':'#ffffff30';path(g,pts,T);g.stroke()}
+  for(let z=Math.ceil(z0/st)*st;z<=z1;z+=st){const pts=[];for(let i=0;i<=24;i++)pts.push(ap(cal.H,[x0+(x1-x0)*i/24,z]));g.strokeStyle=Math.abs(z)<1e-9?'#6bff8bb0':'#ffffff30';path(g,pts,T);g.stroke()}
+  label(g,`grid ${st} mm`,8,16*k,'#ffffffb0',k)}
+function measText(){if(!MS||!MS.b)return'';const d=dist(MS.a,MS.b),an=Math.atan2(-(MS.b[1]-MS.a[1]),MS.b[0]-MS.a[0])*180/Math.PI;let t=`${d.toFixed(2)} px  ${an.toFixed(1)}°`;
+  const pl=actPlane;if(pl&&CAL[pl.id]&&CAL[pl.id].H){const a=mmAt(pl,MS.a,level),b=mmAt(pl,MS.b,level);t+=`  ${dist(a,b).toFixed(3)} mm at h ${level}`}return t}
+function status(){if(!IMG){$('stPx').textContent='no image';$('stMm').textContent='';$('stZoom').textContent='';$('stAct').textContent='';return}
+  const m=toImg(mouse.sx,mouse.sy);let t=`x ${m[0].toFixed(1)}  y ${m[1].toFixed(1)} px`;const d=PIX;if(d&&m[0]>=-.5&&m[1]>=-.5&&m[0]<IW-.5&&m[1]<IH-.5){const j=(Math.round(m[1])*IW+Math.round(m[0]))*4;t+=`  rgb ${d[j]},${d[j+1]},${d[j+2]}`}
+  $('stPx').textContent=t;const pl=actPlane;let u='';if(pl&&CAL[pl.id]&&CAL[pl.id].H){const q=mmAt(pl,m,level);u=`${esc(pl.name)}: x ${q[0].toFixed(3)}  z ${q[1].toFixed(3)} mm (h ${level})`}$('stMm').textContent=u;
+  $('stZoom').textContent=`zoom ${(V.s*100).toFixed(V.s<1?0:0)}%`+(O.snap?'  · snap':'')+(tool==='measure'?'  · measure':'');
+  $('stAct').textContent=actObj?`${actObj.name}: ${actObj.pts.length} pts${sel>=0?' · pt '+sel:''}`:`next click: new ${KINDS[kind].toLowerCase()}`}
+
+// ---------- hit tests ----------
+function hitPoint(sx,sy){let best=null,bd=9;const tryO=(o,bias)=>{if(!vis(o))return;o.pts.forEach((p,i)=>{const d=Math.hypot(p[0]*V.s+V.tx-sx,p[1]*V.s+V.ty-sy)-bias;if(d<bd){bd=d;best={o,i}}})};
+  if(actObj)tryO(actObj,2);for(const o of P.objs)if(o!==actObj)tryO(o,0);return best}
+function hitObj(sx,sy){let best=null,bd=6;for(const o of P.objs){if(!vis(o))continue;let pts=null;if(o.kind==='curve')pts=curveDense(o);else if(o.kind==='ellipse'){const f=fitOf(o);if(f)pts=ellPts(f)}else if(o.kind==='scale')pts=o.pts;
+    if(!pts||pts.length<2)continue;for(let i=1;i<pts.length;i++){const d=segD([sx,sy],[pts[i-1][0]*V.s+V.tx,pts[i-1][1]*V.s+V.ty],[pts[i][0]*V.s+V.tx,pts[i][1]*V.s+V.ty]);if(d<bd){bd=d;best=o}}}return best}
+function segD(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy;let t=l?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l:0;t=Math.max(0,Math.min(1,t));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy)}
+function nearestSeg(o,p){const n=o.pts.length,cl=o.closed&&n>2;let bi=n-1,bd=Infinity;for(let i=0;i<(cl?n:n-1);i++){const d=segD(p,o.pts[i],o.pts[(i+1)%n]);if(d<bd){bd=d;bi=i}}return bi}
+
+// ---------- mouse ----------
+const snapOn=ev=>O.snap!==!!ev.shiftKey;
+cv.addEventListener('contextmenu',e=>e.preventDefault());
+cv.addEventListener('mousedown',e=>{cv.focus();const r=cv.getBoundingClientRect(),sx=e.clientX-r.left,sy=e.clientY-r.top;if(!IMG)return;
+  if(e.button===1||e.button===2||(e.button===0&&spaceDown)){pan={sx,sy,tx:V.tx,ty:V.ty,moved:false,btn:e.button};e.preventDefault();return}
+  if(e.button!==0)return;const m=toImg(sx,sy);
+  if(tool==='measure'){MS={a:m,b:m};req();return}
+  const h=hitPoint(sx,sy);
+  if(h){if(e.altKey){delPoint(h.o,h.i);return}actObj=h.o;sel=h.i;actPlane=planeById(h.o.plane)||actPlane;if(!h.o.locked){push();drag={o:h.o,i:h.i,moved:false,off:[h.o.pts[h.i][0]-m[0],h.o.pts[h.i][1]-m[1]]}}refreshUI();return}
+  if(!e.ctrlKey&&!actObj){const o=hitObj(sx,sy);if(o){actObj=o;sel=-1;actPlane=planeById(o.plane)||actPlane;refreshUI();return}}
+  if(actObj&&actObj!==null&&!e.ctrlKey){const o=hitObj(sx,sy);if(o&&o!==actObj&&!(actObj.kind==='curve'||actObj.kind==='ellipse')){actObj=o;sel=-1;refreshUI();return}}
+  addPoint(m,e)});
+window.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect(),sx=e.clientX-r.left,sy=e.clientY-r.top;mouse.sx=sx;mouse.sy=sy;mouse.in=sx>=0&&sy>=0&&sx<r.width&&sy<r.height&&e.target===cv;
+  if(pan){if(Math.hypot(sx-pan.sx,sy-pan.sy)>3)pan.moved=true;V.tx=pan.tx+sx-pan.sx;V.ty=pan.ty+sy-pan.sy}
+  else if(drag){const m=toImg(sx,sy);const p=drag.o.pts[drag.i];p[0]=m[0]+drag.off[0];p[1]=m[1]+drag.off[1];drag.moved=true}
+  else if(MS&&tool==='measure'&&e.buttons&1){MS.b=toImg(sx,sy)}
+  if(IMG&&!PIX&&mouse.in)getPix();req()});
+window.addEventListener('mouseup',e=>{if(pan){const p=pan;pan=null;if(p.btn===2&&!p.moved){const h=hitPoint(p.sx,p.sy);if(h)delPoint(h.o,h.i)}return}
+  if(drag){const d=drag;drag=null;if(d.moved){if(snapOn(e)){const p=d.o.pts[d.i];const q=snapPt([p[0],p[1]],snapDir(d.o,d.i,p));p[0]=q[0];p[1]=q[1]}changed()}else{UND.pop()}return}
+  if(MS&&tool==='measure'){req()}});
+cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoomAt(Math.pow(1.0018,-e.deltaY*(e.deltaMode?30:1)),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+cv.addEventListener('mouseleave',()=>{mouse.in=false;req()});
+function addPoint(m,e){let o=actObj;if(o&&o.locked){msg(o.name+' is locked');return}
+  if(o&&((o.kind==='point'&&o.pts.length>=1)||(o.kind==='scale'&&o.pts.length>=2))){o=null;kind=actObj.kind}
+  push();if(!o)o=newObj(kind);let p=[m[0],m[1]];
+  if(e.ctrlKey&&o.kind==='curve'&&o.pts.length>=2){const i=nearestSeg(o,p);if(snapOn(e)){const a=o.pts[i],b=o.pts[(i+1)%o.pts.length];p=snapPt(p,[b[0]-a[0],b[1]-a[1]])}o.pts.splice(i+1,0,p);sel=i+1}
+  else{if(snapOn(e)){o.pts.push(p);p=snapPt(p,snapDir(o,o.pts.length-1,p));o.pts.pop()}o.pts.push(p);sel=o.pts.length-1}
+  if(o.kind==='scale'&&o.pts.length===2&&!(o.len>0)){changed();setTimeout(()=>{const i=document.querySelector('[data-f=len]');if(i){i.focus();i.select()}},30);msg('type the scale bar\'s length in mm');return}
+  changed()}
+function delPoint(o,i){if(o.locked)return msg(o.name+' is locked');push();o.pts.splice(i,1);if(o===actObj)sel=Math.min(i,o.pts.length-1);changed()}
+
+// ---------- keys ----------
+function typing(){const a=document.activeElement;return a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT')&&a.type!=='checkbox'&&a.type!=='range'}
+window.addEventListener('keyup',e=>{if(e.key===' ')spaceDown=false;if(e.key==='Shift')shiftDown=false});
+window.addEventListener('keydown',e=>{const k=e.key,c=e.ctrlKey||e.metaKey;
+  if(c&&(k==='s'||k==='S')){e.preventDefault();e.shiftKey?saveAs():save();return}
+  if(c&&(k==='o'||k==='O')){e.preventDefault();openJson();return}
+  if($('modal').style.display==='flex'){if(k==='Escape')closeModal();return}
+  if(typing()){if(k==='Escape'||k==='Enter'&&document.activeElement.tagName==='INPUT')document.activeElement.blur();return}
+  if(c&&(k==='z'||k==='Z')){e.preventDefault();e.shiftKey?redo():undo();return}
+  if(c&&(k==='y'||k==='Y')){e.preventDefault();redo();return}
+  if(c&&(k==='d'||k==='D')){e.preventDefault();dupObj();return}
+  if(c)return;
+  const o=actObj;
+  switch(k){
+    case' ':spaceDown=true;e.preventDefault();break;
+    case'Shift':shiftDown=true;break;
+    case'n':case'N':setKind('curve');break;
+    case'h':case'H':setKind('ellipse');break;
+    case'p':case'P':setKind('point');break;
+    case'b':case'B':setKind('scale');break;
+    case'm':case'M':setTool(tool==='measure'?'trace':'measure');break;
+    case'Escape':case'Enter':if(tool==='measure'&&MS){MS=null}else{actObj=null;sel=-1}refreshUI();break;
+    case'c':case'C':if(o&&o.kind==='curve'){push();o.closed=!o.closed;changed()}break;
+    case'k':case'K':if(o&&sel>=0&&o.kind==='curve'){push();const p=o.pts[sel];if(p[2])p.length=2;else p[2]=1;changed()}break;
+    case'Delete':case'Backspace':e.preventDefault();if(!o)break;if(e.shiftKey||sel<0){push();P.objs.splice(P.objs.indexOf(o),1);actObj=null;sel=-1;changed();msg(`deleted ${o.name} (Ctrl+Z brings it back)`)}else delPoint(o,sel);break;
+    case'ArrowLeft':case'ArrowRight':case'ArrowUp':case'ArrowDown':if(o&&sel>=0&&!o.locked){e.preventDefault();const st=e.shiftKey?1:.1,p=o.pts[sel];push();if(k==='ArrowLeft')p[0]-=st;if(k==='ArrowRight')p[0]+=st;if(k==='ArrowUp')p[1]-=st;if(k==='ArrowDown')p[1]+=st;changed()}else if(IMG){e.preventDefault();const d=60;if(k==='ArrowLeft')V.tx+=d;if(k==='ArrowRight')V.tx-=d;if(k==='ArrowUp')V.ty+=d;if(k==='ArrowDown')V.ty-=d;req()}break;
+    case'[':if(o&&o.pts.length){sel=(sel<=0?o.pts.length:sel)-1;centreOn(o.pts[sel]);refreshUI()}break;
+    case']':if(o&&o.pts.length){sel=(sel+1)%o.pts.length;centreOn(o.pts[sel]);refreshUI()}break;
+    case'Tab':{e.preventDefault();const L=P.objs.filter(vis);if(!L.length)break;let i=L.indexOf(o);i=(i+(e.shiftKey?-1:1)+L.length)%L.length;actObj=L[i];sel=-1;actPlane=planeById(actObj.plane)||actPlane;refreshUI();break}
+    case'e':case'E':O.snap=!O.snap;saveOpts();refreshUI();break;
+    case'g':case'G':toggleEdges();break;
+    case'l':case'L':O.loupe=!O.loupe;saveOpts();refreshUI();break;
+    case'f':case'F':fit();break;
+    case'1':zoomAt(1/V.s,mouse.in?mouse.sx:CW/2,mouse.in?mouse.sy:CHh/2);break;
+    case'2':zoomAt(4/V.s,mouse.in?mouse.sx:CW/2,mouse.in?mouse.sy:CHh/2);break;
+    case'3':zoomAt(16/V.s,mouse.in?mouse.sx:CW/2,mouse.in?mouse.sy:CHh/2);break;
+    case'+':case'=':zoomAt(1.4,mouse.in?mouse.sx:CW/2,mouse.in?mouse.sy:CHh/2);break;
+    case'-':case'_':zoomAt(1/1.4,mouse.in?mouse.sx:CW/2,mouse.in?mouse.sy:CHh/2);break;
+    case'i':case'I':O.idx=!O.idx;saveOpts();refreshUI();break;
+    case't':case'T':O.labels=!O.labels;saveOpts();refreshUI();break;
+    case'o':case'O':O.holes=!O.holes;saveOpts();refreshUI();break;
+    case'r':case'R':O.grid=!O.grid;saveOpts();refreshUI();break;
+    case'v':case'V':if(o){push();o.visible=!o.visible;changed()}break;
+    case'?':case'/':showHelp();break;
+    case'PageUp':case'PageDown':{e.preventDefault();level=r3(level+(k==='PageUp'?1:-1)*(e.shiftKey?1:.1));$('lvl').value=level;if(o&&e.altKey){push();o.h=level;changed()}refreshUI();break}
+  }});
+function centreOn(p){V.tx=CW/2-p[0]*V.s;V.ty=CHh/2-p[1]*V.s;req()}
+function setKind(k){kind=k;tool='trace';MS=null;actObj=null;sel=-1;refreshUI();msg(`click to start a new ${KINDS[k].toLowerCase()}`)}
+function setTool(t){tool=t;MS=null;refreshUI()}
+function toggleEdges(){O.edges=!O.edges;if(O.edges&&!EDGE){msg('working out the edges…');setTimeout(()=>{EDGE=buildEdge();refreshUI()},10)}refreshUI()}
+function dupObj(){const o=actObj;if(!o)return;push();const c=JSON.parse(JSON.stringify(o));c.id=nextId++;c.name=o.name+'_copy';P.objs.push(c);actObj=c;changed()}
+
+// ---------- UI: tree, properties, calibration, view ----------
+function refreshUI(){renderTree();renderProps();renderCalib();renderView();renderImgSec();
+  document.querySelectorAll('#top [data-k]').forEach(b=>b.classList.toggle('on',tool==='trace'&&b.dataset.k===kind));
+  $('bMeas').classList.toggle('on',tool==='measure');$('bSnap').classList.toggle('on',O.snap);$('bEdge').classList.toggle('on',O.edges);$('chan').value=O.chan;
+  req();planSoon()}
+let saveT=0;function changed(){calibrateAll();refreshUI();clearTimeout(saveT);saveT=setTimeout(autosave,700)}
+function renderTree(){const t=$('tree');if(!P.planes.length){t.innerHTML='<div class="mu" style="padding:4px">No traces yet. A plane is made with the first trace.</div>';return}
+  let h='';for(const pl of P.planes){const c=CAL[pl.id]||{},on=pl.visible!==false;
+    h+=`<div class="pl ${pl===actPlane&&!actObj?'act':''}" data-pl="${pl.id}"><span class="eye" data-ple="${pl.id}">${on?'●':'○'}</span><b>${esc(pl.name)}</b><small>${c.H?esc(c.method.split(' ')[0])+(c.rms!=null?' '+c.rms.toFixed(2)+' px':''):'not calibrated'}</small></div>`;
+    const objs=P.objs.filter(o=>o.plane===pl.id),lv=[...new Set(objs.map(o=>+o.h||0))].sort((a,b)=>a-b);
+    for(const L of lv){const os=objs.filter(o=>(+o.h||0)===L),allv=os.every(o=>o.visible!==false);
+      h+=`<div class="lv" data-pl="${pl.id}" data-h="${L}"><span class="eye" data-lve="${pl.id}:${L}">${allv?'●':'○'}</span>level h ${L} mm<small style="margin-left:auto">${os.length}</small></div>`;
+      for(const o of os)h+=`<div class="ob ${o===actObj?'act':''} ${o.visible===false?'hid':''}" data-ob="${o.id}"><span class="eye" data-obe="${o.id}">${o.visible===false?'○':'●'}</span><span class="sw" style="background:${o.color}"></span>${ICON[o.kind]} ${esc(o.name)}${o.locked?' 🔒':''}<small>${o.hole?esc(o.hole)+' · ':''}${o.pts.length}</small></div>`}}
+  t.innerHTML=h}
+$('tree').addEventListener('click',e=>{const t=e.target;
+  if(t.dataset.ple){push();const pl=planeById(+t.dataset.ple);pl.visible=pl.visible===false;changed();return}
+  if(t.dataset.lve){push();const[pid,L]=t.dataset.lve.split(':');const os=P.objs.filter(o=>o.plane===+pid&&(+o.h||0)===+L),v=!os.every(o=>o.visible!==false);os.forEach(o=>o.visible=v);changed();return}
+  if(t.dataset.obe){push();const o=P.objs.find(o=>o.id===+t.dataset.obe);o.visible=o.visible===false;changed();return}
+  const ob=t.closest('[data-ob]');if(ob){actObj=P.objs.find(o=>o.id===+ob.dataset.ob);sel=-1;actPlane=planeById(actObj.plane)||actPlane;level=+actObj.h||0;$('lvl').value=level;refreshUI();return}
+  const lv=t.closest('.lv');if(lv){actPlane=planeById(+lv.dataset.pl);level=+lv.dataset.h;$('lvl').value=level;actObj=null;sel=-1;refreshUI();return}
+  const pl=t.closest('[data-pl]');if(pl){actPlane=planeById(+pl.dataset.pl);actObj=null;sel=-1;refreshUI()}});
+$('tree').addEventListener('dblclick',e=>{const ob=e.target.closest('[data-ob]');if(!ob)return;const o=P.objs.find(o=>o.id===+ob.dataset.ob);if(!o||!o.pts.length)return;
+  const xs=o.pts.map(p=>p[0]),ys=o.pts.map(p=>p[1]),w=Math.max(20,Math.max(...xs)-Math.min(...xs)),hh=Math.max(20,Math.max(...ys)-Math.min(...ys));V.s=Math.min(64,Math.min(CW/w,CHh/hh)*.6);centreOn([(Math.max(...xs)+Math.min(...xs))/2,(Math.max(...ys)+Math.min(...ys))/2])});
+const row=(l,c,t)=>`<div class="r" ${t?`title="${esc(t)}"`:''}><span>${l}</span><div>${c}</div></div>`;
+function renderProps(){const el=$('props'),o=actObj;
+  if(o){const pl=planeById(o.plane)||ensurePlane(),holes=Object.keys(pl.holes||{}),k=knownOf(o,pl);
+    let h=`<h3>${KINDS[o.kind]} <span class="mu">${o.pts.length} point${o.pts.length===1?'':'s'}</span></h3>`;
+    h+=row('Name',`<input data-f="name" value="${esc(o.name)}">`);
+    h+=row('Plane',`<select data-f="plane">${P.planes.map(p=>`<option value="${p.id}" ${p.id===o.plane?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`);
+    h+=row('Level h, mm',`<input type="number" step="0.05" data-f="h" value="${o.h||0}">`,'mm toward the camera off the plane\'s face (a step, a boss, a part lying on it)');
+    if(o.kind==='curve'){h+=row('Closed',`<input type="checkbox" data-f="closed" ${o.closed?'checked':''}> <span class="mu">C</span>`);h+=row('Line',`<select data-f="mode"><option value="smooth" ${o.mode!=='straight'?'selected':''}>smooth through the points</option><option value="straight" ${o.mode==='straight'?'selected':''}>straight between them</option></select>`)}
+    if(o.kind==='ellipse')h+=row('Fit',`<select data-f="circle"><option value="0" ${!o.circle?'selected':''}>ellipse (a circle seen at an angle)</option><option value="1" ${o.circle?'selected':''}>circle (seen face-on)</option></select>`);
+    if(o.kind==='point'||o.kind==='ellipse'){
+      h+=row('Model hole',`<select data-f="hole"><option value="">—</option>${holes.map(n=>`<option ${n===o.hole?'selected':''}>${esc(n)}</option>`).join('')}</select>`,holes.length?'':'Load the plane\'s holes (holes.py JSON) to pick from them');
+      const kn=o.known||{},hk=o.hole&&k;h+=row('Known x z r',`<div class="r3"><input type="number" step="0.01" data-f="kx" placeholder="x" value="${hk?k.x:kn.x!=null?kn.x:''}" ${hk?'disabled':''}><input type="number" step="0.01" data-f="kz" placeholder="z" value="${hk?k.z:kn.z!=null?kn.z:''}" ${hk?'disabled':''}><input type="number" step="0.01" data-f="kr" placeholder="r" value="${hk?(k.r??''):kn.r!=null?kn.r:''}" ${hk?'disabled':''}></div>`,'Where it is, mm in the plane\'s frame: a control for the calibration');
+      if(k)h+=row('Calibrate on it',`<input type="checkbox" data-f="ctl" ${o.ctl!==false?'checked':''}> <span class="mu">${o.h?'level ≠ 0: a check only':'off = kept as a check'}</span>`);
+      if(o.kind==='ellipse'&&k)h+=row('Edge is r',`<input type="checkbox" data-f="useR" ${o.useR?'checked':''}> <span class="mu">the traced edge is the circle of radius r</span>`)}
+    if(o.kind==='scale')h+=row('Length, mm',`<input type="number" step="0.01" data-f="len" value="${o.len||''}">`);
+    h+=row('Colour',`<input type="color" data-f="color" value="${o.color}"> &nbsp;<label><input type="checkbox" data-f="locked" ${o.locked?'checked':''}> locked</label>`);
+    h+=row('Note',`<textarea rows="2" data-f="note" placeholder="what the edge is, how sure">${esc(o.note)}</textarea>`);
+    h+=`<div class="stats">${esc(statsOf(o))}</div>`;
+    h+=`<div class="btns"><button data-a="reverse">Reverse</button><button data-a="dup">Duplicate</button><button data-a="clear">Clear points</button><button data-a="del">Delete</button><button data-a="done">Done (Esc)</button></div>`;
+    el.innerHTML=h;return}
+  const pl=actPlane;if(!pl){el.innerHTML='<h3>Selection</h3><div class="mu">Nothing selected.</div>';return}
+  let h=`<h3>Plane <span class="mu">${P.objs.filter(o=>o.plane===pl.id).length} traces</span></h3>`;
+  h+=row('Name',`<input data-pf="name" value="${esc(pl.name)}">`);
+  h+=row('Face y, mm',`<input type="number" step="0.01" data-pf="face_y" value="${pl.face_y??''}">`,'the face\'s height in the movement frame (holes.py gives it); for framecam.py');
+  h+=row('View',`<select data-pf="view"><option value="" ${!pl.view?'selected':''}>—</option><option ${pl.view==='above'?'selected':''}>above</option><option ${pl.view==='below'?'selected':''}>below</option></select>`,'for video.py anchor: the face seen from above or below');
+  h+=row('Mirror',`<select data-pf="mirror"><option value="auto" ${pl.mirror!=='yes'&&pl.mirror!=='no'?'selected':''}>no (auto)</option><option value="yes" ${pl.mirror==='yes'?'selected':''}>yes</option></select>`,'Only for two controls: whether the face is seen mirrored (from its back). Three or more decide it themselves.');
+  h+=row('Focal length',`<input data-pf="f" placeholder="auto (px)" value="${esc(pl.f||'')}">`,'px; blank: from the homography when it has perspective, else 6000 px at 3840 wide (framecam.py\'s default). Used for levels off the face.');
+  const fm=pl.fixed||{};h+=row('Fixed map',`<div class="r3"><input type="number" step="any" data-pf="fk" placeholder="px/mm" value="${fm.k??''}"><input type="number" step="any" data-pf="fx0" placeholder="x0" value="${fm.x0??''}"><input type="number" step="any" data-pf="fz0" placeholder="z0" value="${fm.z0??''}"></div>`,'An image already flat and to scale (a rectified plan): column i -> x = x0 + (i+0.5)/k, row j -> z = z0 + (j+0.5)/k. Set, it replaces the fit from controls (they become checks). Opening its mapping JSON fills it.');
+  h+=row('Holes',`${Object.keys(pl.holes||{}).length} <span class="mu">${esc(pl.holesFile||'')}</span>`);
+  h+=row('Note',`<textarea rows="2" data-pf="note">${esc(pl.note||'')}</textarea>`);
+  h+=`<div class="btns"><button data-a="holes">Load holes JSON…</button><button data-a="clrholes">Clear holes</button><button data-a="delplane">Delete plane</button></div>`;
+  el.innerHTML=h}
+function statsOf(o){const pl=planeById(o.plane),cal=pl&&CAL[pl.id],ok=cal&&cal.H,L=[];const mm=p=>mmAt(pl,p,o.h||0);
+  if(o.kind==='curve'&&o.pts.length>1){const d=curveDense(o);L.push(`length ${polyLen(d).toFixed(1)} px`);if(ok){const m=d.map(mm);L.push(`length ${polyLen(m).toFixed(3)} mm`);if(o.closed)L.push(`area ${Math.abs(polyArea(m)).toFixed(3)} mm²`)}
+    if(sel>=0&&o.pts[sel]){const p=o.pts[sel];L.push(`pt ${sel}: ${p[0].toFixed(2)}, ${p[1].toFixed(2)} px${p[2]?' (corner)':''}`);if(ok){const q=mm(p);L.push(`      ${q[0].toFixed(3)}, ${q[1].toFixed(3)} mm`)}}}
+  if(o.kind==='ellipse'){const f=fitOf(o);if(f){L.push(`${f.type} centre ${f.cx.toFixed(2)}, ${f.cy.toFixed(2)} px`);L.push(`axes ${(2*f.a).toFixed(2)} × ${(2*f.b).toFixed(2)} px, ${(f.ang*180/Math.PI).toFixed(1)}°`);L.push(`fit rms ${f.rms.toFixed(2)} px over ${o.pts.length} pts`)}else L.push('3 points for a circle, 5 for an ellipse');
+    if(ok&&o.pts.length>=3){const c=circFit(o.pts.map(mm));if(c){L.push(`circle in mm: x ${c.cx.toFixed(3)} z ${c.cy.toFixed(3)}`);L.push(`  r ${c.r.toFixed(3)} (Ø ${(2*c.r).toFixed(3)}), rms ${c.rms.toFixed(3)} mm`)}}}
+  if(o.kind==='point'&&o.pts.length){const p=o.pts[0];L.push(`${p[0].toFixed(2)}, ${p[1].toFixed(2)} px`);if(ok){const q=mm(p);L.push(`x ${q[0].toFixed(3)}  z ${q[1].toFixed(3)} mm`)}}
+  if(o.kind==='scale'&&o.pts.length===2){const d=dist(o.pts[0],o.pts[1]);L.push(`${d.toFixed(2)} px`);if(o.len>0)L.push(`${(d/o.len).toFixed(3)} px/mm`);if(ok)L.push(`measured ${dist(mm(o.pts[0]),mm(o.pts[1])).toFixed(3)} mm`)}
+  if(cal&&cal.all){const c=cal.all.find(c=>c.o===o);if(c)L.push(`${c.used?'control':'check'}: off by ${c.res.toFixed(2)} px (${(c.res/(cal.k||1)).toFixed(3)} mm)`+(c.rres!=null?`, r ${c.rres>=0?'+':''}${c.rres.toFixed(3)} mm`:''))}
+  if(!ok)L.push('no mm: calibrate the plane (see Calibration)');return L.join('\n')}
+$('props').addEventListener('change',e=>{const t=e.target,o=actObj;
+  if(t.dataset.f&&o){push();const f=t.dataset.f,v=t.type==='checkbox'?t.checked:t.value;
+    switch(f){case'plane':o.plane=+v;actPlane=planeById(o.plane);break;case'h':o.h=parseFloat(v)||0;level=o.h;$('lvl').value=level;break;case'len':o.len=parseFloat(v)||null;break;
+      case'kx':case'kz':case'kr':{o.known=o.known||{};const n=parseFloat(v);o.known[f[1]]=isFinite(n)?n:null;if(['x','z','r'].every(a=>o.known[a]==null))o.known=null;break}
+      case'circle':o.circle=v==='1';break;case'name':{const n=String(v).trim();if(n)o.name=n;break}
+      default:o[f]=v}
+    changed();return}
+  if(t.dataset.pf&&actPlane){push();const pl=actPlane,f=t.dataset.pf;let v=t.value;
+    if(f==='fk'||f==='fx0'||f==='fz0'){pl.fixed=pl.fixed||{};const n=parseFloat(v);pl.fixed[f.slice(1)]=isFinite(n)?n:null;if(!(pl.fixed.k>0))pl.fixed=null;changed();return}
+    if(f==='face_y')v=v===''?null:parseFloat(v);pl[f]=v;changed()}});
+$('props').addEventListener('click',e=>{const a=e.target.dataset.a;if(!a)return;const o=actObj;
+  if(a==='reverse'&&o){push();o.pts.reverse();changed()}
+  if(a==='dup')dupObj();
+  if(a==='clear'&&o){push();o.pts=[];sel=-1;changed()}
+  if(a==='del'&&o){push();P.objs.splice(P.objs.indexOf(o),1);actObj=null;sel=-1;changed()}
+  if(a==='done'){actObj=null;sel=-1;refreshUI()}
+  if(a==='holes')$('fHoles').click();
+  if(a==='clrholes'&&actPlane){push();actPlane.holes={};actPlane.holesFile='';changed()}
+  if(a==='delplane'&&actPlane){const n=P.objs.filter(o=>o.plane===actPlane.id).length;if(n&&!confirm(`Delete plane ${actPlane.name} and its ${n} traces?`))return;push();P.objs=P.objs.filter(o=>o.plane!==actPlane.id);P.planes.splice(P.planes.indexOf(actPlane),1);actPlane=P.planes[0]||null;actObj=null;changed()}});
+function renderCalib(){const el=$('calib'),pl=actPlane;if(!pl){el.innerHTML='<h3>Calibration</h3><div class="mu">No plane.</div>';return}const c=CAL[pl.id]||{};
+  let h=`<h3>Calibration: ${esc(pl.name)}</h3>`;
+  if(!c.H){h+=`<div class="mu">Not yet in mm. Give it controls: points or holes of known place (pick a model hole once the plane's holes JSON is loaded, or type x z). 4 or more give a homography (perspective), 3 an affine map, 2 a similarity; or a scale bar alone. A hole's edge traced as the circle of radius r (<i>Edge is r</i>) helps the fit.</div>`;
+    if(c.note)h+=`<div class="er">${esc(c.note)}</div>`;el.innerHTML=h;return}
+  const cam=c.cam;h+=`<div>${esc(c.method)} · ${c.C.length} controls · rms <b class="${c.rms<1?'ok':c.rms<3?'wa':'er'}">${c.rms!=null?c.rms.toFixed(2):'—'} px</b> · ${fx(c.k,1)} px/mm</div>`;
+  if(cam)h+=`<div class="mu">camera: f ${cam.f.toFixed(0)} px (${esc(cam.src)}), face tilted ${cam.tilt.toFixed(1)}° from square-on, ${cam.dist.toFixed(0)} mm away${c.method.startsWith('homography')?'':' — no perspective in this fit: levels move only by the default camera'}</div>`;
+  if(c.all.length){h+=`<table><tr><th>control</th><th>hole</th><th>off px</th><th>mm</th><th>r err</th></tr>`;
+    for(const x of c.all)h+=`<tr class="${x.used?'':'mu'}"><td>${esc(x.o.name)}${x.used?'':' (check)'}</td><td>${esc(x.k.hole||'')}</td><td class="${x.res<1?'ok':x.res<3?'wa':'er'}">${x.res.toFixed(2)}</td><td>${(x.res/(c.k||1)).toFixed(3)}</td><td>${x.rres!=null?x.rres.toFixed(3):''}</td></tr>`;h+='</table>'}
+  for(const o of c.SB){const m=dist(mmAt(pl,o.pts[0],o.h||0),mmAt(pl,o.pts[1],o.h||0));h+=`<div class="mu">${esc(o.name)}: ${o.len} mm given, ${m.toFixed(3)} measured</div>`}
+  h+=`<div class="r" style="margin-top:4px"><span>Residuals ×</span><div><select id="resMag">${[1,5,10,20,50].map(v=>`<option ${v===O.resMag?'selected':''}>${v}</option>`).join('')}</select></div></div>`;
+  el.innerHTML=h;$('resMag').onchange=e=>{O.resMag=+e.target.value;saveOpts();req()}}
+function renderView(){const el=$('secView');const cb=(k,l,key)=>`<label style="display:inline-flex;gap:3px;margin-right:8px"><input type="checkbox" data-o="${k}" ${O[k]?'checked':''}>${l}${key?` <span class="mu">${key}</span>`:''}</label>`;
+  const sl=(k,l,a,b)=>row(l,`<input type="range" min="${a}" max="${b}" data-o="${k}" value="${O[k]}" style="width:100%">`);
+  el.innerHTML=`<h3>View</h3>${sl('bri','Brightness',20,300)}${sl('con','Contrast',20,400)}${sl('sat','Saturation',0,300)}
+  <div>${cb('inv','invert')}${cb('pixels','pixels when close')}${cb('loupe','loupe','L')}${cb('labels','labels','T')}${cb('idx','indices','I')}${cb('holes','model holes','O')}${cb('grid','mm grid','R')}${cb('onlyPlane','active plane only')}</div>
+  ${row('Loupe ×',`<select data-o="mag">${[2,4,8,16].map(v=>`<option ${v===O.mag?'selected':''}>${v}</option>`).join('')}</select>`)}
+  ${row('Snap radius',`<input type="number" min="2" max="60" data-o="snapR" value="${O.snapR}"> <span class="mu">screen px</span>`)}
+  ${row('Line width',`<input type="number" min="0.5" max="6" step="0.5" data-o="lw" value="${O.lw}">`)}
+  <div class="btns"><button data-a="resetv">Reset view</button></div>`}
+$('secView').addEventListener('input',e=>{const k=e.target.dataset.o;if(!k)return;const t=e.target;O[k]=t.type==='checkbox'?t.checked:(t.tagName==='SELECT'||t.type==='number'||t.type==='range')?+t.value:t.value;saveOpts();req()});
+$('secView').addEventListener('click',e=>{if(e.target.dataset.a==='resetv'){Object.assign(O,{bri:100,con:100,sat:100,inv:false});saveOpts();refreshUI()}});
+function renderImgSec(){$('secImg').innerHTML=`<h3>Image</h3>${IMG?`<div><b>${esc(IMGNAME)}</b> <span class="mu">${IW} × ${IH}</span></div>`:'<div class="mu">none</div>'}
+  ${row('Source',`<input data-im="source" placeholder="video ID mm:ss, photo, figure" value="${esc(P.source||'')}">`)}${row('Note',`<textarea rows="2" data-im="note" placeholder="what it shows; how sure the picks are">${esc(P.note||'')}</textarea>`)}`}
+$('secImg').addEventListener('change',e=>{const k=e.target.dataset.im;if(!k)return;push();P[k]=e.target.value;changed()});
+function saveOpts(){try{localStorage.setItem('tracer:opts',JSON.stringify(O))}catch(e){}}
+
+// ---------- the plan ----------
+let planT=0;function planSoon(){clearTimeout(planT);planT=setTimeout(()=>drawPlan($('plan')),150)}
+function drawPlan(c){const g=c.getContext('2d'),W=c.width,H=c.height;g.setTransform(1,0,0,1,0,0);g.fillStyle='#000';g.fillRect(0,0,W,H);const pl=actPlane,cal=pl&&CAL[pl.id];
+  if(!pl||!cal||!cal.H||!IMG){g.fillStyle='#8b94a3';g.font='14px system-ui';g.fillText(IMG?'the active plane is not calibrated':'no image',16,28);return}
+  const pts=[];Object.values(pl.holes||{}).forEach(h=>{const r=+h[2]||0;pts.push([+h[0]-r,+h[1]-r],[+h[0]+r,+h[1]+r])});
+  const objs=P.objs.filter(o=>o.plane===pl.id&&vis(o)),shapes=objs.map(o=>{let d=o.kind==='curve'?curveDense(o,3):o.kind==='ellipse'?(fitOf(o)?ellPts(fitOf(o),60):[]):o.pts;d=d.map(p=>mmAt(pl,p,o.h||0)).filter(p=>p&&isFinite(p[0]));d.forEach(p=>pts.push(p));return{o,d}});
+  if(pts.length<2){[[0,0],[IW-1,0],[IW-1,IH-1],[0,IH-1]].forEach(p=>pts.push(ap(cal.Hi,p)))}
+  let x0=Math.min(...pts.map(p=>p[0])),x1=Math.max(...pts.map(p=>p[0])),z0=Math.min(...pts.map(p=>p[1])),z1=Math.max(...pts.map(p=>p[1]));const pad=.08*Math.max(x1-x0,z1-z0,1);x0-=pad;x1+=pad;z0-=pad;z1+=pad;
+  const sc=Math.min(W/(x1-x0),H/(z1-z0)),ox=(W-sc*(x1-x0))/2,oz=(H-sc*(z1-z0))/2,M=p=>[ox+(p[0]-x0)*sc,oz+(p[1]-z0)*sc];
+  const d=getPix();if(d){const id=g.createImageData(W,H),o=id.data,Hm=cal.H;for(let j=0;j<H;j++){const z=z0+(j+.5-oz)/sc;for(let i=0;i<W;i++){const x=x0+(i+.5-ox)/sc,w=Hm[2][0]*x+Hm[2][1]*z+Hm[2][2],u=Math.round((Hm[0][0]*x+Hm[0][1]*z+Hm[0][2])/w),v=Math.round((Hm[1][0]*x+Hm[1][1]*z+Hm[1][2])/w),k=(j*W+i)*4;
+      if(w>0&&u>=0&&v>=0&&u<IW&&v<IH){const s=(v*IW+u)*4;o[k]=d[s]*.75;o[k+1]=d[s+1]*.75;o[k+2]=d[s+2]*.75}o[k+3]=255}}g.putImageData(id,0,0)}
+  g.lineJoin='round';const k=W/600;
+  g.setLineDash([4*k,3*k]);g.lineWidth=1.2*k;for(const[nm,h]of Object.entries(pl.holes||{})){const c=M([+h[0],+h[1]]);g.strokeStyle=actObj&&actObj.hole===nm?'#fff':'#2fe0ffc0';g.beginPath();g.arc(c[0],c[1],Math.max(1,(+h[2]||.3)*sc),0,2*Math.PI);g.stroke()}g.setLineDash([]);
+  for(const{o,d}of shapes){if(!d.length)continue;g.strokeStyle=o.color;g.fillStyle=o.color;g.lineWidth=(o===actObj?2.2:1.4)*k;
+    if(o.kind==='point'){const c=M(d[0]);g.beginPath();g.moveTo(c[0]-5*k,c[1]-5*k);g.lineTo(c[0]+5*k,c[1]+5*k);g.moveTo(c[0]-5*k,c[1]+5*k);g.lineTo(c[0]+5*k,c[1]-5*k);g.stroke()}
+    else{g.beginPath();d.forEach((p,i)=>{const c=M(p);i?g.lineTo(c[0],c[1]):g.moveTo(c[0],c[1])});g.stroke()}
+    if(O.labels){const c=M(d[0]);label(g,o.name+(o.h?` h${o.h}`:''),c[0]+4*k,c[1]-4*k,o.color,k)}}
+  const L=[.1,.2,.5,1,2,5,10,20,50].find(s=>s*sc>=W*.12)||50;g.strokeStyle='#fff';g.lineWidth=2*k;g.beginPath();g.moveTo(12*k,H-14*k);g.lineTo(12*k+L*sc,H-14*k);g.stroke();label(g,L+' mm',12*k,H-20*k,'#fff',k)}
+$('bBig').onclick=()=>{$('mbox').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><b>Plan in mm: ${esc(actPlane?actPlane.name:'')}</b><button id="mClose">Close (Esc)</button></div><canvas id="bigplan" width="1200" height="1200"></canvas>`;$('modal').style.display='flex';$('mClose').onclick=closeModal;drawPlan($('bigplan'))};
+function closeModal(){$('modal').style.display='none'}
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+
+// ---------- files ----------
+function base(){return(IMGNAME||'trace').replace(/\.[a-z0-9]+$/i,'')}
+function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+function setImage(src,name,keep){IMG=src;IMGNAME=name;IW=src.naturalWidth||src.videoWidth||src.width;IH=src.naturalHeight||src.videoHeight||src.height;PIX=null;CHN=null;EDGE=null;O.edges=false;
+  P.image={name,w:IW,h:IH};if(!keep){fit();tryRestore(name)}calibrateAll();refreshUI()}
+function loadImageFile(f){const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{closeVideo();setImage(im,f.name)};im.onerror=()=>msg('cannot open '+f.name,'er');im.src=url}
+function tryRestore(name){try{const s=localStorage.getItem('tracer:'+name);if(!s)return;const d=JSON.parse(s);if(!d.objs||!d.objs.length)return;
+  if(P.objs.length&&P.image&&P.image.name!==name)return;if(P.objs.length)return;if(confirm(`Restore the ${d.objs.length} traces autosaved for ${name}?`)){push();loadProject(d,true)}}catch(e){}}
+function autosave(){if(!IMGNAME||!P.objs.length)return;try{localStorage.setItem('tracer:'+IMGNAME,JSON.stringify(P))}catch(e){}}
+$('bImg').onclick=()=>$('fImg').click();$('fImg').onchange=e=>{const f=e.target.files[0];if(f)loadImageFile(f);e.target.value=''};
+document.addEventListener('paste',e=>{const it=[...(e.clipboardData||{}).items||[]].find(i=>i.type.startsWith('image/'));if(it){const f=it.getAsFile();loadImageFile(new File([f],'pasted.png',{type:f.type}))}});
+document.addEventListener('dragover',e=>e.preventDefault());
+document.addEventListener('drop',e=>{e.preventDefault();for(const f of e.dataTransfer.files){if(f.type.startsWith('image/'))loadImageFile(f);else if(f.type.startsWith('video/'))openVideo(f);else if(/\.json$/i.test(f.name))f.text().then(t=>importJson(t,f.name))}});
+function openJson(){if(window.showOpenFilePicker){showOpenFilePicker({types:[{description:'Traces or specs',accept:{'application/json':['.json']}}]}).then(async([h])=>{const f=await h.getFile(),t=await f.text();if(importJson(t,f.name)==='trace')FH=h}).catch(()=>{})}else $('fJson').click()}
+$('bOpen').onclick=openJson;$('fJson').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>importJson(t,f.name));e.target.value=''};
+function importJson(t,name){let d;try{d=JSON.parse(t)}catch(e){msg('not JSON: '+name,'er');return}
+  if(d.tool==='tracer'){push();loadProject(d);msg(`opened ${name}`+(d.image&&d.image.name&&d.image.name!==IMGNAME?` — now open its image, ${d.image.name}`:''));return'trace'}
+  if(d.holes&&!d.picks&&!d.circles&&typeof d.holes==='object'){loadHoles(d,name);return'holes'}
+  if(d.px_per_mm>0&&'x0' in d&&'z0' in d){push();let pl=actPlane||ensurePlane();if(pl.fixed||Object.keys(pl.holes||{}).length||P.objs.some(o=>o.plane===pl.id&&knownOf(o,pl)))pl=newPlane(name.replace(/\.json$/i,''));pl.fixed={k:+d.px_per_mm,x0:+d.x0,z0:+d.z0};if(d.note&&!pl.note)pl.note=d.note;if(/^Plane \d+$|^Face$/.test(pl.name))pl.name=name.replace(/\.json$/i,'');
+    changed();msg(`${pl.name}: fixed map ${d.px_per_mm} px/mm from ${name}`+(d.image&&d.image!==IMGNAME?` (it maps ${d.image}; open that image)`:''));return'map'}
+  push();importSpec(d,name);return'spec'}
+function loadProject(d,quiet){const keepImg=P.image;P=Object.assign(blank(),d);delete P.derived;P.planes=P.planes||[];P.objs=(P.objs||[]).map(o=>{delete o.derived;return o});P.planes.forEach(p=>delete p.derived);
+  nextId=1+Math.max(0,...P.planes.map(p=>p.id),...P.objs.map(o=>o.id));actPlane=P.planes[0]||null;actObj=null;sel=-1;if(IMG)P.image={name:IMGNAME,w:IW,h:IH};else if(!d.image)P.image=keepImg;changed()}
+function importSpec(d,name){// video.py anchor / framecam.py / rimfit.py specs: their picks as traces on a new plane
+  const pl=newPlane(name.replace(/\.json$/i,''));if(d.face_y!=null)pl.face_y=d.face_y;if(d.view)pl.view=d.view;if(d.holes&&typeof d.holes==='object')pl.holes=d.holes;else if(typeof d.holes==='string'){pl.holesFile=d.holes;msg(`load ${d.holes} (Load holes JSON) for its holes`)}
+  let n=0;const mk=(k,nm,pts,h,extra)=>{const o=newObj(k);o.name=nm;o.pts=pts.map(p=>[+p[0],+p[1]]);o.h=+h||0;Object.assign(o,extra||{});n++;return o};
+  const pairs=d.pairs||{},rev={};Object.entries(pairs).forEach(([h,p])=>rev[p]=h);
+  for(const[nm,v]of Object.entries(d.picks||{})){if(Array.isArray(v)&&typeof v[0]==='number')mk('point',nm,[v],0,{hole:rev[nm]||''});else if(v&&v.px)mk(v.px.length>1?'curve':'point',nm,v.px,v.h)}
+  for(const[nm,v]of Object.entries(d.circles||{}))mk('ellipse',nm,v.pts||[],0,{known:{x:v.c[0],z:v.c[1],r:v.r},useR:true});
+  for(const[nm,v]of Object.entries(d.outline||{}))mk('curve',nm,v,(d.outline_h||{})[nm]||0,{closed:true,mode:'straight'});
+  for(const[nm,v]of Object.entries(d.points||{}))mk('point',nm,[v],v[2]||0,{known:(d.anchors||{})[nm]?{x:d.anchors[nm][0],z:d.anchors[nm][1],r:null}:null});
+  (d.rings||[]).forEach((r,i)=>{const[cx,cy,a,b,ang,h]=r,t=(ang||0)*Math.PI/180,pts=[];for(let k=0;k<12;k++){const u=k/12*2*Math.PI,x=a*Math.cos(u),y=b*Math.sin(u);pts.push([cx+x*Math.cos(t)-y*Math.sin(t),cy+x*Math.sin(t)+y*Math.cos(t)])}mk('ellipse','ring'+(i+1),pts,h)});
+  if(d.frame&&!IMGNAME)msg(`imported ${n} traces; now open ${d.frame}`);else msg(`imported ${n} traces from ${name}`);actObj=null;changed()}
+function loadHoles(d,name){const pl=actPlane||ensurePlane();push();pl.holes=d.holes;pl.holesFile=name;if(d.face_y!=null)pl.face_y=d.face_y;if(d.part&&/^Plane \d+$|^Face$/.test(pl.name))pl.name=d.part;changed();msg(`${Object.keys(d.holes).length} holes on ${pl.name}`)}
+$('fHoles').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>{try{const d=JSON.parse(t);if(!d.holes)throw 0;loadHoles(d,f.name)}catch(x){msg('not a holes JSON (holes.py)','er')}});e.target.value=''};
+function derived(){calibrateAll();const out=JSON.parse(JSON.stringify(P));out.saved=new Date().toISOString();out.image={name:IMGNAME||P.image.name,w:IW||P.image.w,h:IH||P.image.h};
+  out.conventions='px: pixel centres at integers (as OpenCV). mm: the plane\'s frame (x, z), its holes\' frame. h: mm toward the camera off the plane\'s face. curve_px: the smooth curve through the points (centripetal Catmull-Rom; corners flagged in pts[i][2]).';
+  out.planes.forEach(p=>{const c=CAL[p.id];if(!c||!c.H){p.derived={method:'none'};return}p.derived={method:c.method,rms_px:c.rms!=null?r3(c.rms):null,px_per_mm:r3(c.k),H_mm_to_px:c.H.map(r=>r.map(v=>+v.toPrecision(10))),
+    camera:c.cam?{f:Math.round(c.cam.f),f_source:c.cam.src,tilt_deg:r2(c.cam.tilt),distance_mm:Math.round(c.cam.dist)}:null,
+    controls:c.all.map(x=>({name:x.o.name,hole:x.k.hole||null,known:[x.k.x,x.k.z,x.k.r],used:x.used,off_px:r3(x.res),off_mm:r3(x.res/(c.k||1)),r_err_mm:x.rres!=null?r3(x.rres):null}))}});
+  out.objs.forEach((o,i)=>{const so=P.objs[i],pl=planeById(so.plane),cal=pl&&CAL[pl.id],ok=cal&&cal.H,mm=p=>mmAt(pl,p,so.h||0).map(r3),d={};
+    if(so.kind==='curve'&&so.pts.length>1){const c=curveDense(so,1);d.curve_px=c.map(p=>[r2(p[0]),r2(p[1])]);d.length_px=r2(polyLen(c));if(ok){const m=c.map(mm);d.curve_mm=m;d.length_mm=r3(polyLen(m));if(so.closed)d.area_mm2=r3(Math.abs(polyArea(m)))}}
+    if(so.kind==='ellipse'){const f=fitOf(so);if(f)d.ellipse_px={cx:r2(f.cx),cy:r2(f.cy),a:r2(f.a),b:r2(f.b),angle_deg:r2(f.ang*180/Math.PI),rms_px:r3(f.rms),type:f.type};if(ok&&so.pts.length>=3){const c=circFit(so.pts.map(p=>mmAt(pl,p,so.h||0)));if(c){d.circle_mm={x:r3(c.cx),z:r3(c.cy),r:r3(c.r),rms_mm:r3(c.rms)};const q=pxAt(pl,[c.cx,c.cy],so.h||0);d.centre_px=[r2(q[0]),r2(q[1])]}}}
+    if(ok)d.mm=so.pts.map(mm);
+    if(so.kind==='scale'&&so.pts.length===2)d.length_px=r2(dist(so.pts[0],so.pts[1]));
+    o.derived=d});return out}
+async function writeHandle(h,text){const w=await h.createWritable();await w.write(text);await w.close()}
+async function save(){if(!P.objs.length&&!P.planes.length)return msg('nothing to save');const text=JSON.stringify(derived(),null,1);
+  if(FH){try{await writeHandle(FH,text);msg('saved '+FH.name,'ok');return}catch(e){FH=null}}return saveAs(text)}
+async function saveAs(text){text=typeof text==='string'?text:JSON.stringify(derived(),null,1);const nm=base()+'.trace.json';
+  if(window.showSaveFilePicker){try{FH=await showSaveFilePicker({suggestedName:nm,types:[{description:'Traces',accept:{'application/json':['.json']}}]});await writeHandle(FH,text);msg('saved '+FH.name,'ok');return}catch(e){if(e.name==='AbortError')return}}
+  download(new Blob([text],{type:'application/json'}),nm);msg('downloaded '+nm,'ok')}
+$('bSave').onclick=save;$('bSaveAs').onclick=()=>saveAs();
+$('exp').onchange=e=>{const v=e.target.value;e.target.value='';if(!v)return;if(!IMG&&v==='png')return msg('no image');
+  if(v==='png'){const c=document.createElement('canvas');c.width=IW;c.height=IH;const g=c.getContext('2d');g.filter=filt();g.drawImage(O.edges&&EDGE?EDGE:IMG,0,0);g.filter='none';drawOverlays(g,{s:1,tx:.5,ty:.5},Math.max(1,IW/1400),IW,IH);c.toBlob(b=>download(b,base()+'_traced.png'));return}
+  const D=derived();
+  if(v==='mm'){const out={image:D.image.name,source:D.source,note:D.note,planes:{}};D.planes.forEach(p=>{out.planes[p.name]={face_y:p.face_y,calibration:p.derived,traces:{}}});
+    D.objs.forEach(o=>{const p=D.planes.find(q=>q.id===o.plane),d=o.derived,t={kind:o.kind,h:o.h||0,closed:!!o.closed,note:o.note||undefined};if(d.mm)t.points_mm=d.mm;if(d.curve_mm)t.curve_mm=d.curve_mm;if(d.circle_mm)t.circle_mm=d.circle_mm;if(d.length_mm!=null)t.length_mm=d.length_mm;if(d.area_mm2!=null)t.area_mm2=d.area_mm2;t.points_px=o.pts.map(q=>[r2(q[0]),r2(q[1])]);out.planes[p.name].traces[o.name]=t});
+    download(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}),base()+'.mm.json');return}
+  const pl=actPlane;if(!pl)return msg('no plane');const objs=P.objs.filter(o=>o.plane===pl.id);
+  if(v==='anchor'){const out={frame:IMGNAME,view:pl.view||'above',holes:pl.holes&&Object.keys(pl.holes).length?pl.holes:(pl.holesFile||{}),note:P.note||'',picks:{},pairs:{},circles:{}};
+    for(const o of objs){if(o.h)continue;const k=knownOf(o,pl);
+      if(o.kind==='ellipse'&&o.useR&&k&&k.r){out.circles[o.name]={c:[k.x,k.z],r:k.r,pts:o.pts.map(p=>[r2(p[0]),r2(p[1])])};continue}
+      let px=null;if(o.kind==='point'&&o.pts.length)px=o.pts[0];if(o.kind==='ellipse'){const dd=D.objs.find(q=>q.id===o.id).derived;px=dd.centre_px||(dd.ellipse_px?[dd.ellipse_px.cx,dd.ellipse_px.cy]:null)}
+      if(!px)continue;out.picks[o.name]=[r2(px[0]),r2(px[1])];if(o.hole)out.pairs[o.hole]=o.name}
+    out.use=Object.keys(out.pairs);if(!out.use.length)delete out.use;if(!Object.keys(out.circles).length)delete out.circles;
+    download(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}),base().replace(/^f_/,'')+'.json');msg('wrote the anchor spec: save it in tools/anchors/ and run video.py anchor on it');return}
+  if(v==='framecam'){const out={anchor:base().replace(/^f_/,'')+'.json',frame:IMGNAME,face_y:pl.face_y,note:P.note||'',picks:{}};
+    for(const o of objs){if(!o.pts.length)continue;let px=o.pts.map(p=>[r2(p[0]),r2(p[1])]);if(o.kind==='curve'&&o.mode!=='straight'){px=curveDense(o,6).map(p=>[r2(p[0]),r2(p[1])])}out.picks[o.name]={h:o.h||0,px}}
+    download(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}),base().replace(/^f_/,'')+'_picks.json');msg('wrote framecam picks (the curves sampled every 6 px)')}};
+
+// ---------- video ----------
+let VID=null,vidId='',seekBusy=false,seekNext=null;const fcan=document.createElement('canvas');
+$('bVid').onclick=()=>$('fVid').click();$('fVid').onchange=e=>{const f=e.target.files[0];if(f)openVideo(f);e.target.value=''};
+function openVideo(f){closeVideo();VID=document.createElement('video');VID.muted=true;VID.preload='auto';VID.src=URL.createObjectURL(f);vidId=f.name.replace(/\.[a-z0-9]+$/i,'').replace(/_hd$/,'');
+  VID.onloadedmetadata=()=>{$('vbar').style.display='flex';$('vRange').max=VID.duration;P.source=P.source||vidId;seek(0)};VID.onerror=()=>msg('the browser cannot play '+f.name,'er');
+  VID.addEventListener('seeked',()=>{fcan.width=VID.videoWidth;fcan.height=VID.videoHeight;fcan.getContext('2d').drawImage(VID,0,0);const t=VID.currentTime;$('vTime').value=tfmt(t);$('vRange').value=t;
+    const first=!IMG||IW!==VID.videoWidth;setImage(fcan,`f_${vidId}_${tfmt(t).replace(':','-')}.png`,!first);if(first)fit();P.source=`${vidId} ${tfmt(t)}`;renderImgSec();seekBusy=false;if(seekNext!=null){const n=seekNext;seekNext=null;seek(n)}})}
+function tfmt(t){const m=Math.floor(t/60),s=t-60*m;let ss=s.toFixed(1);if(ss.endsWith('.0'))ss=ss.slice(0,-2);if(parseFloat(ss)<10)ss='0'+ss;return m+':'+ss}
+function tparse(s){const a=String(s).split(':').map(parseFloat);return a.length>1?a[0]*60+a[1]:a[0]}
+function seek(t){if(!VID)return;t=Math.max(0,Math.min(VID.duration||0,t));if(seekBusy){seekNext=t;return}seekBusy=true;VID.currentTime=t}
+function closeVideo(){if(VID){URL.revokeObjectURL(VID.src);VID=null}$('vbar').style.display='none'}
+const fps=()=>Math.max(1,+$('vFps').value||30);
+$('vRange').oninput=e=>seek(+e.target.value);$('vTime').onchange=e=>seek(tparse(e.target.value));
+$('vPrev').onclick=()=>seek(VID.currentTime-1/fps());$('vNext').onclick=()=>seek(VID.currentTime+1/fps());$('vPrev1').onclick=()=>seek(VID.currentTime-1);$('vNext1').onclick=()=>seek(VID.currentTime+1);
+$('vSave').onclick=()=>fcan.toBlob(b=>download(b,IMGNAME));$('vClose').onclick=closeVideo;
+
+// ---------- top bar ----------
+document.querySelectorAll('#top [data-k]').forEach(b=>b.onclick=()=>setKind(b.dataset.k));
+$('bMeas').onclick=()=>setTool(tool==='measure'?'trace':'measure');$('bSnap').onclick=()=>{O.snap=!O.snap;saveOpts();refreshUI()};
+$('chan').onchange=e=>{O.chan=e.target.value;CHN=null;EDGE=null;if(O.edges){EDGE=buildEdge()}saveOpts();refreshUI()};$('bEdge').onclick=toggleEdges;
+$('lvl').onchange=e=>{level=parseFloat(e.target.value)||0;refreshUI()};
+$('bUndo').onclick=undo;$('bRedo').onclick=redo;$('bFit').onclick=fit;$('bPlane').onclick=()=>{push();newPlane();actObj=null;changed();msg('new plane: traces made now go on it')};
+function showHelp(){$('mbox').innerHTML=`<div style="display:flex;justify-content:space-between"><b>Edge Tracer</b><button id="mClose">Close (Esc)</button></div><div class="help">
+<h4>Tracing</h4><table>
+<tr><td>click</td><td>add a point to the active trace (none active: start a new one of the chosen kind)</td></tr>
+<tr><td>Ctrl+click</td><td>insert a point into the active curve, between the nearest two</td></tr>
+<tr><td>drag a point</td><td>move it (arrows nudge 0.1 px, Shift+arrows 1 px)</td></tr>
+<tr><td>Alt+click, right-click</td><td>delete that point · Delete: the selected point · Shift+Delete: the whole trace</td></tr>
+<tr><td>N  H  P  B</td><td>new curve · hole (ellipse fitted to edge points) · named point · scale bar</td></tr>
+<tr><td>Esc / Enter</td><td>finish the trace (the next click starts another)</td></tr>
+<tr><td>C · K</td><td>close the curve · make the selected point a corner (the curve breaks there)</td></tr>
+<tr><td>[  ]  Tab</td><td>previous / next point (and centre on it) · next trace</td></tr>
+<tr><td>E · Shift+click</td><td>snap to the strongest edge nearby, searching across the curve (holes: along the radius) · Shift inverts it for one click</td></tr>
+<tr><td>G</td><td>show the edges of the snap's channel (try “against blue mat” for parts on the mat)</td></tr>
+<tr><td>M</td><td>measure: drag; px, angle and mm at the current level</td></tr>
+<tr><td>PageUp/Down</td><td>level of new traces ±0.1 mm (Shift ±1; Alt also moves the active trace)</td></tr>
+<tr><td>Ctrl+Z / Ctrl+Y · Ctrl+D</td><td>undo / redo · duplicate the trace</td></tr></table>
+<h4>View</h4><table>
+<tr><td>wheel · + −</td><td>zoom at the cursor · 1 = 100 %, 2 = 400 %, 3 = 1600 %, F = fit</td></tr>
+<tr><td>right/middle drag, Space+drag, arrows</td><td>pan</td></tr>
+<tr><td>L · T · I · O · R · V</td><td>loupe · labels · point numbers · model holes · mm grid · hide the trace</td></tr></table>
+<h4>Planes, levels, mm</h4>
+<p>A <b>plane</b> is a flat face in the picture with its own map to mm. Load its holes (a <code>holes.py PART</code> JSON) and link points or traced holes to model holes, or type their x z: with 4 or more the map is a homography (perspective), refined on the holes' edges; 3 give an affine map, 2 a similarity, a scale bar alone a scale. The calibration panel lists each control's miss; uncheck “Calibrate on it” to keep one as a check. Dashed cyan: the model's holes put back on the picture; the arrows run from what you traced to where the map puts it.</p>
+<p>A <b>level</b> is a height on a plane, mm toward the camera off its face (a step, a boss, a part lying on it). A trace at a level is put in mm through the camera the homography gives (its focal length found from the perspective, or set on the plane), as framecam.py does; with no perspective in the fit, through the default camera.</p>
+<p><b>Save</b> writes a .trace.json: the points, the curve through them, and their mm (keep traces in tools/traces/; the frames themselves stay in E:\\mc-video). <b>Export</b>: the frame with the traces drawn, the traces in mm, a spec for <code>video.py anchor</code> or picks for <code>framecam.py</code>. Open traces also imports existing anchor, framecam and rimfit specs. Autosaved in the browser per image.</p></div>`;
+  $('modal').style.display='flex';$('mClose').onclick=closeModal}
+$('bHelp').onclick=showHelp;
+window.addEventListener('resize',resize);
+window.addEventListener('beforeunload',e=>{autosave()});
+resize();refreshUI();
+window.TR={get P(){return P},set P(v){P=v},CAL:()=>CAL,ellFit,circFit,dlt,refineH,camFrom,camP2M,camM2P,mmAt,pxAt,calibrateAll,curveDense,setImage,changed,newObj,newPlane,snapPt,getPix,importJson,derived,setLevel:v=>{level=v},get V(){return V}};
+})();
+</script></body></html>

@@ -45,8 +45,8 @@
     -41.816
    ],
    "uv": [
-    500,
-    123
+    501,
+    121
    ]
   },
   "ring screw by 9 (WN-rs), head's top": {
@@ -56,8 +56,8 @@
     7.727
    ],
    "uv": [
-    836,
-    518
+    838,
+    522
    ]
   },
   "ring screw by 5 (WN-rs), head's top": {
@@ -67,8 +67,8 @@
     34.089
    ],
    "uv": [
-    155,
-    519
+    159,
+    520
    ]
   },
   "centre arbor's upper pivot": {
@@ -137,10 +137,10 @@
     81
    ]
   },
-  "top-plate screw (WN-57) in pillar at 12, head's top": {
+  "top-plate screw (WN-57) in pillar at 12, head's top (on the spigot, no plate)": {
    "xyz": [
     6.425,
-    -25.1,
+    -24.85,
     -36.437
    ],
    "uv": [
@@ -148,10 +148,10 @@
     28
    ]
   },
-  "top-plate screw (WN-57) in pillar at 9, head's top": {
+  "top-plate screw (WN-57) in pillar at 9, head's top (on the spigot, no plate)": {
    "xyz": [
     -36.858,
-    -25.1,
+    -24.85,
     3.225
    ],
    "uv": [
@@ -159,15 +159,125 @@
     347
    ]
   },
-  "top-plate screw (WN-57) in pillar by 5, head's top": {
+  "top-plate screw (WN-57) in pillar by 5, head's top (on the spigot, no plate)": {
    "xyz": [
     18.5,
-    -25.1,
+    -24.85,
     32.043
    ],
    "uv": [
     229,
     391
+   ]
+  },
+  "pillar plate hole 12, train face": {
+   "xyz": [
+    -35.739,
+    0,
+    9.576
+   ],
+   "uv": [
+    756,
+    529
+   ]
+  },
+  "pillar plate hole 17, train face": {
+   "xyz": [
+    -33.989,
+    0,
+    15.929
+   ],
+   "uv": [
+    725.5,
+    565
+   ]
+  },
+  "pillar plate hole 14, train face": {
+   "xyz": [
+    -36.411,
+    0,
+    17.229
+   ],
+   "uv": [
+    740,
+    579
+   ]
+  },
+  "pillar plate hole 16, train face": {
+   "xyz": [
+    -30.789,
+    0,
+    21.471
+   ],
+   "uv": [
+    681,
+    593
+   ]
+  },
+  "pillar plate hole 15, train face": {
+   "xyz": [
+    -33.211,
+    0,
+    22.871
+   ],
+   "uv": [
+    700,
+    608
+   ]
+  },
+  "pillar plate hole 18, train face": {
+   "xyz": [
+    -22.136,
+    0,
+    12.78
+   ],
+   "uv": [
+    636,
+    518
+   ]
+  },
+  "pillar plate hole 29, train face": {
+   "xyz": [
+    -7.062,
+    0,
+    28.58
+   ],
+   "uv": [
+    463,
+    579
+   ]
+  },
+  "pillar plate hole 30, train face": {
+   "xyz": [
+    -5.028,
+    0,
+    33.73
+   ],
+   "uv": [
+    431,
+    608
+   ]
+  },
+  "pillar plate hole 44, train face": {
+   "xyz": [
+    25.21,
+    0,
+    3.081
+   ],
+   "uv": [
+    294,
+    352
+   ]
+  },
+  "pillar plate hole 43, train face": {
+   "xyz": [
+    22.464,
+    0,
+    5.251
+   ],
+   "uv": [
+    308,
+    370
    ]
   }
  },
@@ -175,7 +285,7 @@
   "pillar plate rim, train face (front)": {
    "c": [
     0,
-    -3.35,
+    0,
     0
    ],
    "r": 42.494,

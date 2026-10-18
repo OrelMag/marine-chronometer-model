@@ -260,8 +260,11 @@ const SW=[['the modes\' damping Q 30',{Q:30}],['Q 1000',{Q:1000}],['the banking 
   ['the gold spring half as stiff (its alloy)',{tsK:0.5}],['the spring 0.09 thick (1436\'s first figure)',{tS:0.09/0.07}],['no preload (the banking where drawn)',{pre:0}],['the stone on the tooth: μ 0.10',{MU:0.10}],['μ 0.20',{MU:0.20}],['the preload 0.1× (under the estimate)',{pre:0.1}],['the preload 0.2× (under the estimate)',{pre:0.2}],['the preload 0.5× (under the estimate)',{pre:0.5}],['the preload 0.8× (under the estimate)',{pre:0.8}],['the preload 1.5×',{pre:1.5}],['the preload 2×',{pre:2}],['the preload 3×',{pre:3}]];
 const R2K=[['hinged at Ft, rigid (dynamics.js\'s)',{hinge:true,stiff:true}],['the spring as drawn, the rest rigid',{stiff:true}],['as drawn',{}],['as drawn, no preload',{pre:0}]];
 const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[['preloaded (0.63 g, estimated)',1],['as drawn (no preload)',0]],KK=[['a blow across the plate, 0.5 ms','b05',2,400,'g'],['a blow across the plate, 3 ms','b3',1,400,'g'],['a twist about the staff, 2 ms','tw',1,80,'rad/s']];
+/* the knock's floor (18 October 2026): the 3 ms blow on the frame at preloads either side of the estimate, for the least preload that takes 20 g (the bench's other floor).
+   Not 1.5×: there alone the run's first drop from rest is slow (268 ms against 20, the stone riding the tooth it let go), and the search's first blows, in it, stall the wheel at 2.4 g */
+const KF=[0.8,1.2];
 const jobs=[...R2K.map(([,o])=>({k:'run',mo:o,ro:{T:6,from:3}})),...SW.map(([,o])=>({k:'run',mo:o,ro:{T:3,from:1.5}})),...PUSH.map(A=>({k:'push',A})),
-  ...KN.flatMap(([,pre])=>KK.slice(0,pre?3:2).flatMap(([,kind,lo,hi])=>[false,true].map(rigid=>({k:'knock',pre,kind,lo,hi,rigid}))))];
+  ...KN.flatMap(([,pre])=>KK.slice(0,pre?3:2).flatMap(([,kind,lo,hi])=>[false,true].map(rigid=>({k:'knock',pre,kind,lo,hi,rigid})))),...KF.map(pre=>({k:'knock',pre,kind:'b3',lo:1,hi:400,rigid:false}))];
 const pool=async()=>{const{spawn}=require('child_process'),out=new Array(jobs.length),N=Math.max(1,Math.min(jobs.length,+process.env.MC_PROCS||require('os').cpus().length-4));let next=0;
   const kid=spec=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_WJOB:JSON.stringify(spec)}});let s='';
     p.stdout.on('data',d=>s+=d);p.stderr.on('data',d=>process.stderr.write(d));p.on('close',code=>code?rej(Error('wempe_tripping.js --child '+JSON.stringify(spec)+' exited '+code)):res(JSON.parse(s.trim().split('\n').pop())));});
@@ -298,11 +301,15 @@ pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;
   flush();
   say('4. Knocks: the smallest that lets a tooth go or loses a beat, the frame as drawn against the rigid detent (dynamics.js)');
   {const K4=[];for(const[pn,pre]of KN)for(const[nm,kind,,,unit]of KK.slice(0,pre?3:2)){const[gF,gD]=take(2);K4.push({preload:pn,name:nm,unit,frame:+f(gF,1),rigid:+f(gD,1)});
-      say(`  ${pn.padEnd(30)} ${nm.padEnd(34)} the frame as drawn: about ${f(gF,1)} ${unit}; the rigid detent: ${f(gD,1)} ${unit} (${sg(100*(gF/gD-1),0)} %)`);}
+      say(`  ${pn.padEnd(30)} ${nm.padEnd(34)} the frame as drawn: about ${f(gF,unit==='g'?0:1)} ${unit}; the rigid detent: ${f(gD,unit==='g'?0:1)} ${unit} (${sg(100*(gF/gD-1),0)} %)`);}
     const gS=DY.MPRE/(DY.DM.m*DY.rCM*G0);
     say(`a steady push lifts the rigid detent off its banking at ${f(gS,0)} g (its preload's; none as drawn); the knocks a chronometer meets in its box at sea are a few g (the gimbals and the box take the rest)`);
-    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>15),`preloaded, it takes a blow over 15 g across the plate to let a tooth go`);   /* 15 g, not the Hamilton's 20 (the owner's decision, 18 October 2026): the preloaded 3 ms blow reads 20.0 g on the finer search, on the old line by a hair as the train's weights move; a boxed chronometer meets a few g at sea (the gimbals and box take the rest), so 15 g is still several times it */
-    J.knocks={rows:K4,gS};}
+    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>=20),`preloaded, it takes a blow of 20 g or more across the plate to let a tooth go`);   /* the 3 ms blow's least is 20.0-20.1 g (18 October 2026, the finer search; the coarse one read 22): the margin is nil at the estimated 0.63 g preload, so the bench takes the knock's floor below as a second least (the user's choice, 18 October 2026) */
+    /* the knock's floor: the 3 ms blow's least on the frame against the preload, the preload where it reaches 20 g (straight between the runs either side); wempe_tolerances.js's wKnock */
+    const kr=[[KF[0],take(1)[0]],[1,K4.find(k=>k.preload===KN[0][0]&&k.name===KK[1][0]).frame],...KF.slice(1).map(m=>[m,take(1)[0]])].map(([m,g])=>[m,+f(g,1)]),
+      ik=kr.findIndex(([,g])=>g>=20),mK=ik<0?null:ik===0?kr[0][0]:kr[ik-1][0]+(kr[ik][0]-kr[ik-1][0])*(20-kr[ik-1][1])/(kr[ik][1]-kr[ik-1][1]);
+    say(`the 3 ms blow's least on the frame against the preload (× the estimate, ${S.W78} g): ${kr.map(([m,g])=>`${m}× ${f(g,1)} g`).join(', ')}; it takes 20 g from ${mK==null?`past ${KF[KF.length-1]}×`:`${ik===0?'under ':'about '}${f(mK,2)}× (${f(mK*S.W78,2)} g)`}: the knock's floor, the bench's other least`);
+    J.knocks={rows:K4,gS,floor:{rows:kr,m:mK,g:mK==null?null:mK*S.W78}};}
   flush();
   J.time=(Date.now()-t0)/1000;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));if(fail)process.exitCode=1;}).catch(e=>{console.error(e);process.exitCode=1;});
 }
@@ -318,6 +325,6 @@ function child(){const spec=JSON.parse(process.env.MC_WJOB),f=(x,n=2)=>+(+x).toF
     const mk=(g,p)=>{const t1=0.3+p*T0,o={A:A0,T:t1+0.55,from:0.2};if(kind==='tw'){const dur=0.002;return go({...o,ext:pulse(t1,dur,x=>({al:g*Math.PI/(2*dur)*x,ax:0,ay:0})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});}
       const dur=kind==='b05'?0.0005:0.003,a=g*G0;return go({...o,ext:pulse(t1,dur,x=>({al:0,ax:a*x*ux,ay:a*x*uy})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});};
     const bad=g=>{for(const p of[0.1,0.35,0.6,0.85])for(const sgn of[1,-1]){const r=mk(g*sgn,p);if(r.trips>0||r.beats!==base(p).beats)return true;}return false;};
-    let lo=lo0,hi=hi0;for(let i=0;i<10;i++){const m=Math.sqrt(lo*hi);bad(m)?hi=m:lo=m;}out=hi;}   /* ten halvings of the ratio: the 1-400 g range to 0.6 % (six left about 10 %, and the preloaded 3 ms blow, near 20 g, read 20 or 22 as the train's weights moved by a hair: 18 October 2026) */
+    let lo=lo0,hi=hi0;for(let i=0;i<10;i++){const m=Math.sqrt(lo*hi);bad(m)?hi=m:lo=m;}out=hi;}   /* ten halvings of the log range: 0.6 % of 1-400 g (six, 10 %, until 18 October 2026: a 0.2 mg screw moved the 3 ms blow a whole step, 22 to 20 g, across the check's 20) */
   process.stdout.write(JSON.stringify(out)+'\n');}
 if(require.main===module){if(process.argv.includes('--child'))child();else main();}

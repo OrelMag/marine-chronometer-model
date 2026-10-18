@@ -59,6 +59,22 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's 1941 detent block: the arm not slit, the banking screw's slot a bar standing off its dome, the gold spring cranked along the horn** (339783a6).
+  05 04_1's elevation draws the arm slit along the screw (open at the end, 6.1 long, 0.2 wide), which a solid of plan cells can't cut across, so it was left
+  out; the slot was a box on the apex whose ends stood out of the dome; the gold spring lay 3 along the horn and was cranked out by the pipe. Wempe 3955's
+  photographs (10_Vergleich square-on, 11_, 10_) show the slit, a screw's slot across the dome and the spring one smooth bow, only its tip on the horn.
+  Keep: the arm built across its width (its elevation solidGeo's plan, the cove as sloped cells) and made one mesh with the base, no seam; the slot a
+  band following the dome (as the 6MX's); the screw in the arm 'tap' in bom.json, its hole r 0.62. A photograph taken with a fitted camera can't place
+  parts deep in the block (its picks all near the plate face): an arm that looked 1 mm off on 11_ was right on the square-on photograph.
+- **The Wempe's gold spring screw (WN-14) was drawn blued, plain and Ø 1.2** (85ca80ce). No sheet of it is in the set; Wempe 3955's
+  (11_, 10_) is bright polished steel, slotted, its head rounded, Ø 1.4. Keep: drawn as a turned piece in the detent's own group with its
+  slot, not with the kit's screw() in a group of its own (fine.py would then test its shank in the square and spring, drawn without holes
+  across). A black flat top on a polished screw in these photographs is a mirror reflecting the dark (hue warm, not blue): not a temper.
+- **The photo comparisons' Wempe 3955 balance fitted the wrong end of its arm** (248d7d3f). Its masses and timing weights are symmetric
+  under a half turn, so `w3955_hem_2`'s picks fitted either way with the same residuals; the render showed the rollers the other way round
+  and a difference that wasn't there. Keep: for a near-symmetric part, let a feature that isn't symmetric (the rollers' stone and hole)
+  decide the fit's turn.
+
 - **The Wempe's jewels were plain discs, too small, and the escape wheel's lower hole jewel stood 0.2 off its endstone** Every hole jewel and endstone was a
   flat disc Ø 2.0 × 0.35 (the escape wheel's Ø 1.8 and 1.6), an estimate, where the coloured section draws each Ø 2.9, the hole jewel domed toward its endstone with an
   oil sink to the arbor and the endstone domed outside; Wempe 3955's top plate shows both upper endstones whole, Ø 2.95-3.2, in a conical bevel (read as an opening
@@ -408,6 +424,7 @@ Contents:
   not expected, in four of five versions; fine.py, run on each, drops an overlap under 0.0005 mm³). The drawn outer curve is now formed out by 0.3 tan 8°
   over its last stretch in those versions, the stud's pin with it. Keep: the spring's end and pin follow the slot's lean wherever the
   balance's height moves them; the physics' curve (HSP) is 05 03_7's in every version. `2c758a49`
+- **The Wempe's detent inertia left behind its reweighing**: `d6539a2f` reweighed the detent after the gold spring's bow (`wempe_inertia.json` 8.47 to 8.43 g·mm²) and moved the 6MX's `SET6` ID with it, but not the plain Wempe's `WESC.SET.ID` (8.46), so `dynamics.js --model wempe` failed its bodies check (to 0.01). Now 8.43; the essay data, the 6MX's, keystone's, tolerances', bench's and Monte Carlo's tables rewritten (hundredths). Keep: a reweighing (`wempe_inertia.py --write`) moves every `SET`'s I, JW and ID that rests on it, the plain Wempe's and the 6MX's alike, then the tables written from them. `d7f69762`
 
 ## Going train and heights
 
@@ -2607,6 +2624,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's upper balance endstone was drawn as opaque steel** (18 October 2026): a white-grey ball on the cock, where Wempe 3955's
+  (`2_Wempe_3955_A.jpg`) is a colourless domed stone, the pivot's hole dark through it, and Kirov 247's a faceted colourless one. Keep:
+  `050408-1.bu` in `M.clear`, the ruby hole jewel under it showing through. `822dc97b`
 - **The 6MX's stripes ran down the plates' and bridges' walls, and the Wempe's hands showed brown** (18 October 2026, photocompare.py). solidGeo's
   plan UVs put the stripes on every wall; the polished Goldin hands (roughness 0.18) mirrored the page's dark sky square-on. Keep: `faceUV` on
   textured frame parts (walls take one texel); the hands 0.35 rough. `045daca3`, `f2bb2efc`
