@@ -455,6 +455,13 @@ html.essay-on,html.essay-on body{overflow:hidden}
 #essay .e-open{padding-left:1.2em;margin:0 0 1em}#essay .e-open li{margin:0 0 .75em}#essay .e-open i{font-style:normal;color:var(--muted)}
 /* the trial's figures under its chart: a figure outside its limit in red */
 #essay .e-ro .e-bad{color:var(--red);font-weight:600}#essay .e-ro small{font-size:.85em;color:var(--muted)}#essay .e-ro .e-bad small{color:inherit}
+/* the panel's sheet, the Soviet 6MX against the drawings (#x6Det, js/app.js's X6): each change a row to zoom in on, the one zoomed outlined; how sure each reading is */
+#x6Det .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 6px}#x6Whole{margin-left:auto}
+#x6List{max-height:460px;overflow:auto;overscroll-behavior:contain;margin:0 -4px;padding:0 4px}#x6List .sub-h{margin:8px 0 3px}
+.x6-go{display:block;width:100%;text-align:left;font:13px/1.38 "Instrument Sans",system-ui,sans-serif;padding:5px 7px;margin:0 0 3px;border:1px solid transparent;border-radius:6px;background:none;color:var(--ink);cursor:zoom-in}
+.x6-go:hover{background:color-mix(in srgb,var(--blue) 7%,transparent)}.x6-r.on .x6-go{border-color:var(--brass);background:color-mix(in srgb,var(--brass) 9%,transparent)}
+.x6-go span{display:block;margin-top:2px;font-size:12px;color:var(--muted)}.x6-go span i{font-style:normal;font-weight:600;color:var(--ink);margin-right:3px}
+.x6-s{font-style:normal;font-size:11px;padding:0 5px;border-radius:4px;border:1px solid currentColor;vertical-align:1px;color:var(--muted)}.x6-sure{color:#2f8a4a}.x6-likely{color:var(--blue)}.x6-estimated{color:var(--brass)}
 </style>
 <link rel="canonical" href="https://www.marinechronometermodel.com/wempe/">
 <meta property="og:url" content="https://www.marinechronometermodel.com/wempe/">
@@ -586,7 +593,14 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <div class="seg" id="dialSt"><button data-v="wempe" aria-pressed="true" title="Wempe's printing, traced on a photograph of Wempe No. 3955's dial: CHRONOMETERWERKE WEMPE HAMBURG and the anchor">Wempe, Hamburg (as No. 3955)</button><button data-v="lange" aria-pressed="false" title="Lange's printing, traced on a photograph of A. Lange &amp; Söhne No. 5177's dial (its rust left out): A. LANGE &amp; SÖHNE GLASHÜTTE B/DRESDEN, Auf and Ab over the up-and-down dial">A. Lange &amp; Söhne, Glashütte (as No. 5177)</button><button data-v="kirov" aria-pressed="false" title="The Soviet 6MX's printing, traced on a photograph of Kirov No. 247's dial (1952): 1МЧЗ ИМЕНИ КИРОВА, СПУСК and ЗАВОД over the up-and-down dial, its number in red">1st Moscow Watch Factory (as Kirov No. 247)</button></div>
         <h3 class="sub-h">Version</h3>
         <div class="seg" id="rev"><button data-v="last" aria-pressed="true" title="Each sheet as last revised, about 1946-48: the escape wheel and rollers 1.8 mm under the top plate, the detent block with its upright (05 04 01-4, 1943)">As last revised</button><button data-v="first" aria-pressed="false" title="The parts the later revisions replaced, as first drawn in 1940-41, as Wempe 3955 is made: the escape wheel just under the top plate on its 1941 arbor (05 04_7.1), the 1941 staff with its brass collar (05 04_5), the detent block with its long arm and cone (05 04_1)">As first drawn</button><button data-v="1943" aria-pressed="false" title="The sheets as last revised but for the escapement, as the movements photographed with the 1943 detent block are made (Kirow DEC 422 and 479, Lange No. 5177): the escape wheel and rollers just under the top plate, the detent block of 1943 (05 04 01-4) with its banking screw drawn whole">Escapement of 1943 (as photographed)</button><button data-v="6mx" aria-pressed="false" title="The Soviet copy made from the drawings by the 1st Moscow Watch Factory, as Kirov No. 247 (1952) is made">Soviet 6MX (Kirov No. 247, 1952)</button></div>
-        <p class="note" style="margin:6px 0 0">Where a sheet was revised, the model is built as last revised; As first drawn shows the parts as the earlier sheets drew them. Escapement of 1943 shows the escapement as the movements photographed with the 1943 detent block have it: at the heights the sheets first drew, the banking screw that sets the depth of lock drawn whole. Figures that changed only a tolerance are on the parts' cards. Soviet 6MX shows the copy the 1st Moscow Watch Factory made from the drawings, as Kirov No. 247 of 1952 is made. Its movement, dial, finish, electrical seconds contact, case and boxes are built from photographs of it and other 6MXs of the 1950s, what no photograph shows estimated (on the cards); its swing, rate and trial are its own escapement’s: its swing about 2° under the drawings’ (the contact wheel adds to the train its escape wheel starts at each beat), its rate theirs to 0.01 s a day.</p>
+        <p class="note" style="margin:6px 0 0">Where a sheet was revised, the model is built as last revised; As first drawn shows the parts as the earlier sheets drew them. Escapement of 1943 shows the escapement as the movements photographed with the 1943 detent block have it: at the heights the sheets first drew, the banking screw that sets the depth of lock drawn whole. Figures that changed only a tolerance are on the parts' cards. Soviet 6MX shows the copy the 1st Moscow Watch Factory made from the drawings, as Kirov No. 247 of 1952 is made (each difference, to zoom in on, under <a href="#" id="x6Open">Soviet 6MX against the drawings</a>). Its movement, dial, finish, electrical seconds contact, case and boxes are built from photographs of it and other 6MXs of the 1950s, what no photograph shows estimated (on the cards); its swing, rate and trial are its own escapement’s: its swing about 2° under the drawings’ (the contact wheel adds to the train its escape wheel starts at each beat), its rate theirs to 0.01 s a day.</p>
+      </details>
+      <details class="grp more" id="x6Det">
+        <summary>Soviet 6MX against the drawings</summary>
+        <p class="note" style="margin:0 0 6px">What the 6MX the 1st Moscow Watch Factory made from these drawings changes, as Kirov No. 247 of 1952 is made: each difference read off photographs of it and of other 6MXs of the 1950s, how sure each reading is, and what the drawings have instead. Choose one to zoom in on it: the model turns to the 6MX and closes in, the rest see-through. Drawings and Soviet 6MX flip between the two where the camera stands.</p>
+        <div class="row"><span class="lab">Show</span><div class="seg" id="x6Show" role="group" aria-label="Version shown"><button data-v="last" aria-pressed="true" title="The sheets as last revised">Drawings</button><button data-v="6mx" aria-pressed="false" title="Kirov No. 247, 1952">Soviet 6MX</button></div><button id="x6Whole" disabled title="The whole model again, in the view it stands in">Whole model</button></div>
+        <div id="x6List"></div>
+        <p class="note" style="margin:8px 0 0">Not found on the photographs: Altmeppen’s “three small windows by the pillar screws” (Kirov No. 247 has the drawings’ auxiliary holes 3, 12 and 40), and how the detent block’s slide adjusts it. The 6MX’s escapement runs its own figures in Swing and isochronism and in Rate and timing weights: its swing about 2° under the drawings’, since the contact wheel adds to the train its escape wheel starts at each beat.</p>
       </details>
       <details class="grp more" id="dlDet">
         <summary>Download</summary>
@@ -2044,7 +2058,7 @@ const KIT=(()=>{
      contacts: the Contacts debug view (../shared/contacts.js, loaded before the page's app.js), if the page has it: {expected {'part:Type|part:Type': why} (its fine.py's EXPECTED),
      states (its fine.py's), pose(state, update): the model posed in a state through its own update, label(state, i)}; while it shows, every part is a ghost, drawn plainly
      (no merged copies, Edges or ink), and the hash keeps contacts=1|sweep, ctin=1, ceps.
-   Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO}. */
+   Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO, tourEnd, focusOn, unfocus, focused}. */
 const VIEWER={start(cfg){
   const stage=$('#stage'),cv=stage.querySelector('canvas'),QA=/[?&]qa\b/.test(location.search),SNAP=/[?&]snap\b/.test(location.search);
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return null;}
@@ -2138,18 +2152,18 @@ const VIEWER={start(cfg){
   const mvL=(x,y,z)=>{const v=new THREE.Vector3(x,y,z);return()=>mv.localToWorld(v.clone());};
   const aspectK=()=>clamp(1.25/(W/Hh),1,2.2);   /* the same horizontal coverage on narrow screens */
   function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK();G.follow=mvL(...v.target);panO.set(0,0,0);camFree=false;}
-  let camFree=false;const panO=new THREE.Vector3(),pv=new THREE.Vector3();
+  let camFree=false,zf=false;const panO=new THREE.Vector3(),pv=new THREE.Vector3();
   function panBy(dx,dy){const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
   const expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
-  function setView(k,keepSee){if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode);
+  function setView(k,keepSee){if(zf){zf=false;st.focus=null;}if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode);
     if(!keepSee)st.see=!!vv.see;look();if(hashReady)keep('view',k);document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward; jump(f) moves the camera with f and keeps the place it left, unless f didn't move it */
   const HB=[],HF=[],histEl=$('#hist'),hB=$('#hBack'),hF=$('#hFwd');
-  const pose=g=>({view:st.view,see:st.see,yaw:g?G.yaw:C.yaw,pitch:g?G.pitch:C.pitch,dist:g?G.dist:C.dist,follow:G.follow,tgt:G.target.clone(),pan:panO.clone()});
+  const pose=g=>({view:st.view,see:st.see,foc:zf?st.focus:null,yaw:g?G.yaw:C.yaw,pitch:g?G.pitch:C.pitch,dist:g?G.dist:C.dist,follow:G.follow,tgt:G.target.clone(),pan:panO.clone()});
   const same=(a,b)=>!!a&&!!b&&a.view===b.view&&a.follow===b.follow&&Math.abs(a.yaw-b.yaw)<0.02&&Math.abs(a.pitch-b.pitch)<0.02&&Math.abs(a.dist/b.dist-1)<0.02&&a.pan.distanceTo(b.pan)<0.5&&(!!a.follow||a.tgt.distanceTo(b.tgt)<0.5);
   function histSync(){hB.disabled=!HB.length;hF.disabled=!HF.length;const on=HB.length||HF.length;if(on&&histEl.classList.contains('hidden'))hintOff();histEl.classList.toggle('hidden',!on);}
   function jump(f){const p=pose();f();if(st.tour>=0||!hashReady||same(p,pose(true)))return;if(!same(p,HB[HB.length-1])){HB.push(p);if(HB.length>30)HB.shift();}HF.length=0;histSync();}
-  function histGo(from,to){if(!from.length)return;to.push(pose());const p=from.pop();st.see=p.see;if(p.view!==st.view)setView(p.view,true);else look();
+  function histGo(from,to){if(!from.length)return;to.push(pose());const p=from.pop();st.see=p.see;if(p.view!==st.view)setView(p.view,true);if(st.tour<0){zf=!!p.foc;st.focus=p.foc;}look();
     G.yaw=C.yaw+((((p.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=p.pitch;G.dist=p.dist;G.follow=p.follow;if(!p.follow)G.target.copy(p.tgt);panO.copy(p.pan);camFree=false;histSync();}
   hB.addEventListener('click',()=>histGo(HB,HF));hF.addEventListener('click',()=>histGo(HF,HB));
   /* double-click (double-tap) a part: the camera closes in to fit it and turns about it; 0 or Reset gives back the view */
@@ -2157,6 +2171,20 @@ const VIEWER={start(cfg){
   function focusPart(p,o){fb.makeEmpty();root.updateMatrixWorld();root.traverse(m=>{if(m.isMesh&&m.userData.part===p&&shown(m)&&m.geometry.attributes.position){if(!m.geometry.boundingBox)m.geometry.computeBoundingBox();fbb.copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld);fb.union(fbb);}});
     if(fb.isEmpty())return;const c=fb.getCenter(new THREE.Vector3()),rr=Math.max(fb.getSize(new THREE.Vector3()).length()/2,1),lc=o.worldToLocal(c.clone()),v=cam.fov*Math.PI/360,hv=Math.atan(Math.tan(v)*cam.aspect);
     jump(()=>{G.follow=()=>o.localToWorld(lc.clone());panO.set(0,0,0);G.yaw=C.yaw;G.pitch=C.pitch;G.dist=clamp(Math.min(rr/Math.tan(Math.min(v,hv))*1.05,C.dist),30,1500);camFree=false;});}
+  /* focusOn(keys, o): the camera closes in on parts or pieces (keys), the rest see-through until a view is chosen, Reset or unfocus(); o.view a view to stand in first (its case,
+     its explode), o.at [x, y, z] and o.r a place in mv's frame to fit instead of the parts' box, o.yaw, o.pitch the camera's (else it keeps its own), o.k the margin (the
+     page's lists of changes: the Wempe's 6MX against the drawings). The point is kept in the frame of what it is on (mv, or the first part's group), so it follows as the view
+     lifts the movement out of its case */
+  function focusOn(keys,o){o=o||{};if(st.tour>=0)tourEnd();closeInfo();closeOpm();hintOff();jump(()=>{if(o.view&&o.view!==st.view)setView(o.view);if(Math.abs(cur.explode-tgt.explode)>1e-6){cur.explode=tgt.explode;mv.userData.explode(smooth(cur.explode));}st.drive=!!o.drive&&!!DV;st.focus=new Set(keys);zf=true;look();
+    root.updateMatrixWorld(true);let an=null;fb.makeEmpty();const inv=new THREE.Matrix4();
+    root.traverse(m=>{if(!m.isMesh||!shown(m)||!m.geometry.attributes.position||!(keys.includes(m.userData.part)||keys.includes(m.userData.pk)))return;
+      if(!an){let q=m;while(q&&q!==mv)q=q.parent;an=q||m.parent;while(an!==mv&&an.parent&&!an.userData.partName)an=an.parent;inv.copy(an.matrixWorld).invert();}
+      if(!o.at){if(!m.geometry.boundingBox)m.geometry.computeBoundingBox();fbb.copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld).applyMatrix4(inv);fb.union(fbb);}});
+    if(o.at){an=mv;fb.setFromCenterAndSize(new THREE.Vector3(...o.at),new THREE.Vector3(1,1,1).multiplyScalar(2*(o.r||10)/Math.sqrt(3)));}
+    if(!an||fb.isEmpty())return;const lc=fb.getCenter(new THREE.Vector3()),rr=Math.max(fb.getSize(new THREE.Vector3()).length()/2,1),v=cam.fov*Math.PI/360,hv=Math.atan(Math.tan(v)*cam.aspect),A=an;
+    G.follow=()=>A.localToWorld(lc.clone());panO.set(0,0,0);if(o.yaw!=null)G.yaw=C.yaw+((((o.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);if(o.pitch!=null)G.pitch=o.pitch;
+    G.dist=clamp(rr/Math.tan(Math.min(v,hv))*(o.k||1.15),30,1500);camFree=false;});}
+  function unfocus(){if(!zf)return;zf=false;st.focus=null;look();}
   const hintOff=()=>{const h=$('#hint');if(h)h.style.opacity=0;};for(const ev of['pointerdown','wheel','keydown'])cv.addEventListener(ev,hintOff,{once:true,passive:true});
   /* pointer: orbit, pinch, tap to pick; on touch, a long press (500 ms, barely moving) opens the fade/hide menu, since iOS fires no contextmenu */
   const ptrs=new Map();let pinch=0,down=null,rMoved=0,lpT=0,lpAt=-1e9,lastTap=null;const lpStop=()=>{clearTimeout(lpT);lpT=0;};
@@ -2391,7 +2419,7 @@ const VIEWER={start(cfg){
     requestAnimationFrame(frame);}
   look();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===startView?'true':'false'));
   requestAnimationFrame(frame);
-  return{st,look,wake,setView,cam,scene,r,mv,M,INFO,tourEnd};}};
+  return{st,look,wake,setView,cam,scene,r,mv,M,INFO,tourEnd,focusOn,unfocus,focused:()=>zf};}};
 
 </script>
 <script>
@@ -8197,6 +8225,56 @@ const REVP={
     collet:{t:'Escape wheel collet (1941)',d:'The brass collet of 1941: a cone Ø 3.0 on the wheel, then a pipe Ø 1.8 to 5 over it.',sp:'05 04 10 (05 04_7.1) · Ø 3.0 × 1.8, Ø 1.8 to 5',src:'drawing',sn:'From 05 04_7.1; the cone’s top Ø 2.2 scaled',figs:'05 04_7.1'}}};
 
 const REVP6={barrel:REVP.barrel,balance:REVP.balance,escapeWheel:REVP.escapeWheel,topPlate:{bushes:{t:'Centre arbor’s bush (Messinglager WN-301)',d:'The brass bush pressed into the top plate in which the centre arbor’s upper pivot runs, an oil sink in its outer face; the 6MX keeps it, its intermediate and seconds arbors running in jewels instead.',sp:'In the plate’s hole Ø 4.59 · bore Ø 1.21'}}};
+/* the Soviet 6MX against the drawings (the panel's sheet, #x6Det): each difference the 6MX version builds (the Wempe README's "The Soviet 6MX", its readings and how sure each is;
+   REV6's cards), what the drawings have and what the 6MX has, and where to look: f the parts or pieces singled out (both versions' pieces, so either shows as the sheet flips),
+   o the viewer's focusOn options (a view to stand in; at, r a place in the movement's frame, mm, from WD and DIMS; yaw, pitch where the view's own doesn't show it) */
+const X6=(()=>{const H=WD.H,TY=-WD.INNER-WD.TOP_T/2,PY=WD.PP_T/2,mid=(...p)=>[0,1].map(i=>p.reduce((s,q)=>s+q[i],0)/p.length),at=(p,y)=>[p[0],y,p[1]];
+  const p39=mid(H[39],WD.P39_6MX),hs=mid(H[14],H[15],H[16],H[17],H[18]),ch=mid(H[38],H[35]);
+  return[
+  {g:'Frame',t:'Pillar 39 moved',s:'sure',w:'The third pillar at 210° on r 37 (05 09 01, 05 08 02-1).',x:'At 190° on r 37.3, both plates’ holes and seats and its screws with it: Kirov No. 247’s screws read 190.0° on the top plate and 189.6° on the dial side (±0.5°); its radius 37.3 to clear the seconds wheel.',
+    f:['pillars','topPlate.screws','pillarPlate.screws'],o:{view:'plan',at:at(p39,-9.5),r:16,pitch:0.95,k:1.7}},
+  {g:'Frame',t:'Jewels for the intermediate and seconds arbors',s:'likely',w:'Brass bushes pressed into the top plate for both arbors’ upper pivots (WN-300).',x:'Jewels in flush gilt chatons, Ø 4.1 on Kirov No. 247’s plate, the pivot in the middle, no screws: with the drawings’ twelve, the technical conditions’ fifteen. The stones’ size is estimated.',
+    f:['topPlate.chatons','topPlate.bushes'],o:{view:'plan',at:at(ch,TY),r:11,pitch:1.1}},
+  {g:'Frame',t:'A jewel under the intermediate wheel',s:'likely',w:'The intermediate bridge on the dial side carries the wheel’s lower pivot in a brass bush.',x:'A jewel in a chaton in the bridge, as on Kirov No. 247’s dial side.',
+    f:['intermediateBridge'],o:{view:'movement',pitch:-1.1}},
+  {g:'Frame',t:'No hand-setting',s:'likely',w:'A window and holes 14-18 in the pillar plate for setting the hands from outside (as Wempe 3955’s plate is drilled).',x:'None: Kirov No. 247’s dial side is plain there, and Altmeppen lists no hand-setting from outside.',
+    f:['pillarPlate.plate','pillarPlate.hsBush'],o:{view:'movement',at:at(hs,PY),r:19,pitch:-1.1}},
+  {g:'Frame',t:'No hole 53 in the top plate',s:'likely',w:'Hole 53, for the balance holding work’s spring pin (Stift f. Wendelfeder).',x:'No hole: Kirov No. 247’s plate is bare there, in plain view. Holes 51 and 52 lie under its balance, unseen, and are kept.',
+    f:['topPlate.plate'],o:{view:'plan',at:at(H[53],TY),r:9,pitch:1.2}},
+  {g:'Frame',t:'No window in the upper cock',s:'sure',w:'The upper balance cock has an auxiliary hole, 20.',x:'Plain where the hole would be, on Kirov No. 247’s photographs (Altmeppen’s comparison points at the Wempe’s hole).',
+    f:['upperCock.cock'],o:{view:'plan',pitch:1.0}},
+  {g:'Frame',t:'Lower balance cock cut back',s:'likely',w:'The lower cock’s bar 10 deep all along.',x:'Full depth only under its lug; the rest cut back to 3.3 deep (every 6MX side view of the detent; 3.0-3.9 on Kirov No. 247’s). Where the step stands is estimated.',
+    f:['lowerCock.cock'],o:{view:'balance',k:1.4}},
+  {g:'Escapement',t:'Escape wheel at the first-drawn height',s:'likely',w:'As last revised, the escape wheel and rollers 1.8 under the top plate, on the later arbor.',x:'Just under the plate, where the sheets first drew it (Kirov No. 247’s and Kirov-Poljot 24020’s detent views), on one straight cone collet, Ø 2.77 to 1.70 over 5.1.',
+    f:['escapeWheel','rollers'],o:{view:'escapement'}},
+  {g:'Escapement',t:'Its own detent block',s:'likely',w:'The block of 05 04 01-4, screwed up from the top plate’s outer face through hole 13 and placed by two steady pins.',x:'The same L form held by a slotted stud flush in the plate, 2.2 from hole 13, through a gilt adjusting slide in a notch at its corner; a large stop screw over the detent’s foot; the banking screw straight through a plain upright. How the slide adjusts isn’t seen (unresolved).',
+    f:['detentBlock','detent'],o:{view:'escapement'}},
+  {g:'Escapement',t:'The balance staff',s:'estimated',w:'As last revised, the 1946 staff with its hub and the hub’s screws.',x:'The 1941 staff with its brass collar, the one the sheets draw at the first-drawn heights; no 6MX photograph shows the staff. Without the hub’s screws it runs 4.2 s a day fast until its timing weights are set.',
+    f:['balance.staff','balance.hub','balance.screws','hairspring.collet'],o:{view:'balance'}},
+  {g:'Barrel',t:'Barrel cap underneath',s:'likely',w:'As last revised, the barrel’s cap on the barrel bridge’s side.',x:'The cap on the pillar plate’s side (Altmeppen’s list), as the drawings’ three-piece barrel of 1941 has it; its arbor and the mainspring 0.44 lower with it.',
+    f:['barrel','barrelArbor'],o:{view:'fusee'}},
+  {g:'Electrical contact',t:'The seconds contact',s:'likely',w:'None (the sheets leave holes 56 and 57 for one “if needed”).',x:'A contact on the pillar plate by pillar 39: a lever on a jewelled staff rides a 60-tooth contact wheel on the seconds arbor, opening every other half-second and closed at the minute (Kirov No. 247’s; Romanov 1975, Figs. 100-101). The lever, its staff and cock, seen on no photograph, follow Romanov’s figure (estimated).',
+    f:['pillarPlate.contact','pillarPlate.contactLever','secondsWheel.contactWheel'],o:{view:'movement'}},
+  {g:'Electrical contact',t:'Its springs and terminals in the bowl',s:'likely',w:'None.',x:'Two flat brass springs inside the bowl bearing on the contact’s blocks, and outside two terminals, + and −, on black fibre washers (Kirov No. 247’s bowl). Their sizes are estimated (±15 %).',
+    f:['bowl.contact'],o:{view:'case',k:1.6}},
+  {g:'Ring and dial',t:'Movement ring screws',s:'sure',w:'Brass screws, heads Ø 6.2 × 3.05, at 340°, 100° and 220°.',x:'Steel screws with low slotted heads, Ø 6.1 × 2.0, at 342°, 102° and 246° (both of Kirov No. 247’s faces, ±0.5°; Kirov 009’s and Poljot 20027’s the same).',
+    f:['ring.screws'],o:{view:'movement',at:[34.7,0,26],r:15,pitch:1.0}},
+  {g:'Ring and dial',t:'Dial screws',s:'sure',w:'The dial’s feet at the 20, 40 and 59 minute marks (120°, 240°, 354°).',x:'At the 19, 39 and 59 minute marks, 114°, 234° and 354° (Kirov No. 247’s dial: 112.5, 233.6, 353.1), the ring’s tapped holes moved with them.',
+    f:['dial.screws'],o:{view:'dial',at:[44.9,10,22.9],r:7,pitch:1.25}},
+  {g:'Ring and dial',t:'The dial’s printing',s:'sure',w:'Wempe’s printing (as No. 3955): CHRONOMETERWERKE WEMPE HAMBURG and the anchor.',x:'The 1st Moscow Watch Factory’s, traced on Kirov No. 247’s dial: 1МЧЗ ИМЕНИ КИРОВА, СПУСК and ЗАВОД over the up-and-down dial, the serial 247 in red. The layout is the drawings’ to 10-25 µm.',
+    f:['dial.dial'],o:{view:'dial',pitch:1.3}},
+  {g:'Ring and dial',t:'Geneva stripes',s:'likely',w:'The plates, cocks and bridges hammered (drawn plain gilt).',x:'Straight Geneva stripes 3.95 apart at 50°, one sweep across the top plate, cocks and barrel bridge, and over the dial side’s face (Kirov No. 247’s, 1952).',
+    f:['topPlate.plate','barrelBridge.bridge','upperCock.cock','lowerCock.cock'],o:{view:'plan',k:0.9}},
+  {g:'Case and boxes',t:'The bowl',s:'likely',w:'A cast brass cup (R-05 01 00-1), a flange Ø 118 at its top, on its drawn brackets.',x:'Brass, turned to its own profile: a threaded rim Ø 110.5 round the ring’s flange, a collar, the body and a shallow cone to the foot; high brackets, so it hangs 13 mm lower in the gimbals (Kirov No. 247’s and 2973’s bowls). Its inside is estimated.',
+    f:['bowl.bowl','bowl.brackets','bowl.lockBracket'],o:{view:'case',pitch:0.35}},
+  {g:'Case and boxes',t:'The bezel',s:'likely',w:'A cast bezel held by nothing drawn.',x:'A knurled brass ring screwed onto the bowl’s rim, its shoulder holding the ring’s flange down, a thick bevelled glass standing proud (Kirow 422’s bowl turned over).',
+    f:['bezel'],o:{view:'case',pitch:0.5}},
+  {g:'Case and boxes',t:'The closing plate',s:'likely',w:'A closing plate with a raised boss in the bowl’s foot (05 01 00-2).',x:'A flat disc, no boss, its domed knob at r 19 (Kirov 14917’s foot, rAw2zmulpk8 0:11.75, and Kirow 422’s). Its spring is the drawings’ (estimated).',
+    f:['closingPlate'],o:{view:'case',pitch:-0.75,k:1.8}},
+  {g:'Case and boxes',t:'The box',s:'likely',w:'The drawings’ wooden box (05 01_1, 51 00_1) with one glazed lid on a piano hinge.',x:'Orange lacquered wood, 190 each way (the TU’s), in three tiers: the body, a glazed lid and a top lid, two hasps with knurled screws, the factory’s diamond badge and the number plate 247 (Kirov No. 247’s and 22823’s). Its walls are estimated.',
+    f:['box','lid'],o:{view:'box',pitch:0.45}},
+  {g:'Case and boxes',t:'The outer box',s:'estimated',w:'The drawings’ padded outer box (51 00_5).',x:'Of the same wood, felt-lined, about 233 wide: a notch in its front closed by the lid’s tab, a brass catch, a leather strap each side (Kirov No. 247’s and Poljot 08479’s photographs; its depth and height estimated).',
+    f:['overBox','overLid'],o:{view:'transport'}}];})();
 /* the escapement of 1943 as photographed (the Variants' "Escapement of 1943"): the sheets as last revised but for the escapement, which stands at the heights the sheets first drew,
    with the 1943 block, as the German movements photographed with that block are made (Kirow DEC 422 and 479, Lange rough movements finished in Moscow, and A. Lange & Söhne
    No. 5177): the first-drawn balance, rollers, escape wheel and their jewels, the 6MX's detent, and the block with its banking screw drawn whole */
@@ -8355,7 +8433,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
        solved state at the swing H.amp and the drive drv, as the Hamilton's): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn slowed
        (below, REAL_X) and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
-    tick:(dt,now,st)=>{if(!mv)return[];
+    tick:(dt,now,st)=>{if(!mv)return[];if(x6i>=0&&!V.focused()){x6i=-1;x6Sync();}   /* the 6MX sheet's change ended by a view chosen, Reset or Back */
       /* dw: the wall clock's step (s), up to 0.25: the lid and winding in the case are shown in real time, where dt, the viewer's step, is held to 0.05 a frame, so on a
          renderer drawing a few frames a second they took several times as long (until 15 October 2026) */
       const dw=cw.t===null?0:clamp((now-cw.t)/1000,0,0.25);cw.t=now;
@@ -8608,6 +8686,19 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
     if(REVC[rev]){const[P,Q]=REVC[rev];for(const k in P){const c=PARTS[k];if(c)Object.assign(c,P[k]);}for(const k in Q)for(const q in Q[k]){const c=pc(k,q);if(c)Object.assign(c,Q[k][q]);}}
     document.querySelectorAll('#rev button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));}
   document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>{setRev(b.dataset.v);setDial(rev==='6mx'?'kirov':dial==='kirov'?'wempe':dial);}));   /* the 6MX brings its own dial (Kirov 247's), and takes it away; the dial switch still changes it */
+  /* the sheet, the Soviet 6MX against the drawings (#x6Det, X6): a change chosen turns the model to the 6MX and closes in on it, the rest see-through (VIEWER's focusOn);
+     Drawings and Soviet 6MX flip the version where the camera stands, as the Version buttons do (the 6MX's dial with it); a view chosen, Reset or Whole model ends it */
+  let x6i=-1;const x6L=document.getElementById('x6List');
+  function x6Sync(){if(!x6L)return;document.querySelectorAll('#x6Show button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));x6L.querySelectorAll('.x6-r').forEach(r=>r.classList.toggle('on',+r.dataset.i===x6i));
+    const w=document.getElementById('x6Whole');if(w)w.disabled=x6i<0;}
+  function x6Rev(v){if(rev!==v){const b=document.querySelector(`#rev button[data-v="${v}"]`);if(b)b.click();}x6Sync();}
+  function x6Go(i){if(!V)return;const c=X6[i];x6Rev('6mx');V.focusOn(c.f,c.o);x6i=i;x6Sync();}
+  if(x6L){let g='';x6L.innerHTML=X6.map((c,i)=>{const h=c.g!==g?`<h3 class="sub-h">${g=c.g}</h3>`:'';return h+`<div class="x6-r" data-i="${i}"><button class="x6-go" title="Zoom in on it, the rest see-through"><b>${c.t}</b> <em class="x6-s x6-${c.s}">${c.s}</em><span><i>Drawings</i> ${c.w}</span><span><i>6MX</i> ${c.x}</span></button></div>`;}).join('');
+    x6L.addEventListener('click',e=>{const r=e.target.closest('.x6-r');if(r)x6Go(+r.dataset.i);});
+    document.querySelectorAll('#x6Show button').forEach(b=>b.addEventListener('click',()=>x6Rev(b.dataset.v)));
+    const w=document.getElementById('x6Whole');if(w)w.addEventListener('click',()=>{if(V)V.setView(V.st.view);});
+    document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',x6Sync));x6Sync();}
+  {const o=document.getElementById('x6Open'),d=document.getElementById('x6Det');if(o&&d)o.addEventListener('click',e=>{e.preventDefault();d.open=true;d.scrollIntoView({block:'start',behavior:RMC.matches?'auto':'smooth'});});}   /* the Version note's link: the sheet opened, the link's state kept */
   function setDial(v){dial=v==='lange'||v==='kirov'?v:'wempe';if(mv)mv.userData.R.dl.setDial(dial);const c=PARTS.dial,q=(PIECES.dial||[]).find(e=>e.k==='dial');DIALC.wempe=DIALC.wempe||{d:c.d,sn:c.sn};
     const o=DIALC[dial];c.d=o.d;c.sn=o.sn;if(q)q.d=o.d;if(VV){const I=VV.INFO;if(I.dial)I.dial[1]=o.d;if(I['dial.dial'])I['dial.dial'][1]=o.d;VV.look();}
     document.querySelectorAll('#dialSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===dial?'true':'false'));}
