@@ -41,12 +41,43 @@ What it says:
 
 Not a rebuild from nothing and not a wholesale re-datum (the backbone's estimate: 6-8 sessions for one frame for everything, against 3-5 for this order, which moves only what is out):
 
-1. **Regenerate the specs** to the current `L` and `PT` (`tools/anchors`, the rimfit specs, `video.py`'s table, `lower_bridge.py`), then tabulate every plate-face feature on one frame against the model. One session.
+1. *Done 18 October 2026: "Step 1: the plate against the frames", below.* **Regenerate the specs** to the current `L` and `PT` (`tools/anchors`, the rimfit specs, `video.py`'s table, `lower_bridge.py`), then tabulate every plate-face feature on one frame against the model. One session.
 2. **The rulers and the photographed group.** The train bridge's rim against the plate's 87.57 (wcYqdgpyggQ 19:30-20:40, 36:15); the flange's 95.9 through the rimfit cameras on 9:03 and 40:08; the fusee and barrel fitted on the bare-plate frames (34:30, 36:15, 14:45, 40:08) instead of through `PT`; pillar 1 (170.3° against the video's 166.3°) and the third's bushing (1.2-1.3 mm off `L.T` on the bridge frames); then `PT` re-fitted on what is left. One to two sessions; every check table ripples (the backbone's list).
 3. **The stale and mislabelled fits.** The cock's top and the stud's holes re-fitted at `CK_Q` (41:58); `TB_KEY`'s escape passage and the seats (23:30, 13:44); the fourth's upper setting (13:49.5 through framecam).
 4. **What only the top-view or side photograph gives**: the set-up cover, the click's pivot (8.95 on both photographs, 9.4 on 11:58), the barrel bridge's far horn (13:04.4), the endstone cap's direction, the fusee cone and heights side-on (R-DrJz1DYOY 1:12-2:48, SNLqsS9wrrM 4:16), the case rim and bezel (48:30, 49:00), the dial feet's radius (45.9; the ray readings imply 46.6-47.0).
 5. **The box and gimbals** from the Jones-Horan photographs (lot 63662) and 0:20-1:28.
 6. Then the visible small parts each section ranks: the bezel's knurl, the hands' side profile, the hairspring's height, the trip-spring bracket's height, the dust seal, the train wheels' thicknesses.
+
+## Step 1: the plate against the frames (18 October 2026)
+
+The specs brought to the current model, and every feature on the pillar plate's face read on each plate frame against it, the camera anchored on as few model points as fix it (`rimfit.py`'s new `check`: model places printed against the frame, not fitted).
+
+Regenerated: `rimfit_34-30.json`, `rimfit_36-01.json`, `rimfit_36-15.json` (anchors on the current `L`; checks), `rimfit_40-08.json` (the ring's bore r 39.0, `MR_RI`, where it had 40.2), `anchors/KLUwI2UUCMQ_13-44.json` (the barrel cut r 21.0 about `TB_CUT`, the map's B, E and F, and its holes renamed h1 and h20 after `holes_trainBridge.json`'s regeneration: it had stopped running), `anchors/KLUwI2UUCMQ_6-29.json` (each point at the model's place for its feature: it fits to 13.8 px rms where it gave 38), `video.py`'s point table and `plate`'s F, `lower_bridge.py`'s pillar and far barrel-bridge screw.
+
+**34:30** (the bare plate, train side; rim 0.14 mm rms over 38 points), anchored on the centre bushing and the escape lower setting alone, over f 5000-7000:
+
+| Feature | Model | Frame | Off (mm) |
+|---|---|---|---|
+| T (the third's setting on the bar, 3.86 below) | (−8.52, 14.19) | (−8.31…−8.24, 14.14…14.19) | 0.21-0.28 |
+| F (the fourth's) | (0, 21.6) | (0.11…0.16, 21.67…21.53) | 0.13-0.18 |
+| Fusee bushing | (14.31, −14.52) | (14.63, −14.41…−14.27) | 0.34-0.40 |
+| Barrel bushing | (−22.14, −5.35) | (−22.61…−22.90, −5.1) | 0.51-0.80 |
+| Minute wheel's stud | (11.30, 0) | (11.3, 0.24…0.31) | 0.24-0.31 |
+| Indicator stud's end | (0, −22.9) | (0.68…0.74, −22.95) | 0.68-0.75 |
+| Pillar 1 (`PILLARS.train[1]`), its foot | (5.82, 34.03), 170.3° | (5.6, 33.2…33.6), 170.4° | 0.47-0.83 |
+| Barrel pillar, its foot | (−11.35, −32.79) | (−10.7…−10.8, −32.6…−33.0) | 0.59-0.68 |
+| Pillar 0, its foot | (−27.83, 19.70) | (−29.5…−29.9, 19.6…20.0) | 1.7-2.0 (a rough pick; its top 0.5-1.0) |
+
+The feet are picked as the middle of each foot's collar where it stands on the face (about ±15 px, ±0.7 mm). The spec's pillar tops, 16.8 mm up, land 5 mm out round the rim, in opposite directions: this oblique camera's error carried up their height, not the pillars. The fourth pillar's foot, read by eye at the frame's top edge, is 4 mm out radially and not a reading.
+
+**The other frames**: 36:01 (the train bridge upturned, rim 0.03 mm rms) holds C, T and F to 0.1-0.3 mm; its cap, 9.3 mm off the face, 1.45 mm. 40:08 (the dial side, the ring's bore as the rim) puts the indicator stud 23.6-23.7 mm from the centre against the model's and 34:30's 22.9, and scatters 1-2 mm and ±4°: its scale or focal length is off. 36:15, tilted 45°, puts the centre 1.1 mm off its own anchor and fusee to barrel at 40.2 mm (the model 37.59, 34:30 38.5).
+
+What it settles:
+
+1. **The best plate frame agrees with the model to 0.2-0.8 mm everywhere on the face**, the photographed group (fusee, barrel) as well as the train. A re-datum on these frames has nothing to move by more than its own error, so step 2 narrows to the barrel bushing's 0.5-0.8 (radially out, as 34:30 and the backbone's 38.1-38.7 fusee-barrel both say) and what only the photographs give.
+2. **Pillar 1 is where the model has it** (seam 1): its foot at 170.4° on 34:30 against the model's 170.3°; 40:08's 166.3° is that frame's ±4°.
+3. **The "recurring 4-5° rotation" (seam 2) is the weaker frames' scatter**, not a turn of the layout: on 34:30 the features' angles about the centre scatter both ways, −1.1° to +1.9° (the larger near the centre, where 0.3 mm is 1.5°), with no common turn.
+4. The 6:29 fit, with every point at its current place, leaves the setup cover's two screws (still `PB()` from the top-view photograph) 31 and 43 px out, about 1.2-1.7 mm, where the four video-placed points are 5-30 px. On that camera (±3 mm near the rim) it is a lead for step 4, not a reading.
 
 ## On putting photographs and video first
 
@@ -114,11 +145,11 @@ Audited 18 October 2026 on `claude/hamilton-provenance` at `eda059c8` (read only
 
 ### Known seams
 
-1. **The pillar 1 conflict (4°).** The video's pillar 1 is at 166.3° (40:08). The model draws 170.3°, 2.41 mm away. The reason given is the cock's foot, but the cock's rim end (`COCK_POLY`, top-view photograph through `PTr`) ends at 165.6°.
+1. **The pillar 1 conflict (4°).** *Settled 18 October 2026 for the model: its foot on 34:30 is at 170.4° ("Step 1", above).* The video's pillar 1 is at 166.3° (40:08). The model draws 170.3°, 2.41 mm away. The reason given is the cock's foot, but the cock's rim end (`COCK_POLY`, top-view photograph through `PTr`) ends at 165.6°.
    - *Inferred:* the conflict is between the top-view group's cock tip and the dial-side frame. It is not between two video readings.
    - The cock screw has since moved 2.19 mm toward 9 o'clock (15 Oct). Pillar 1's place has not been re-tested since 5 Oct.
    - The lower train bridge is held 9.2 mm past the fourth (the video's 10.3) to clear pillar 1's screw. That follows the same decision.
-2. **A recurring 4–5° rotation disagreement (inferred pattern).** The third bushing on the train bridge frames is 1.2–1.3 mm (≈4.3°) off `L.T`. The fusee's angle is 49–50° on 34:30 against 43–45° on 40:08. Pillar 1 is 4° off. The fourth is at 176° from the indicator stud on 40:08's first fit. The signs are not consistent, so this may be per-frame error rather than one wrong transform. A single re-fit of the plate frames against the current `L` would tell.
+2. **A recurring 4–5° rotation disagreement (inferred pattern).** *18 October 2026: not on 34:30, the best plate frame, which scatters −1.1° to +1.9° with no common turn ("Step 1", above); the weaker frames' error.* The third bushing on the train bridge frames is 1.2–1.3 mm (≈4.3°) off `L.T`. The fusee's angle is 49–50° on 34:30 against 43–45° on 40:08. Pillar 1 is 4° off. The fourth is at 176° from the indicator stud on 40:08's first fit. The signs are not consistent, so this may be per-frame error rather than one wrong transform. A single re-fit of the plate frames against the current `L` would tell.
 3. **The notch centre and the fusee.** The README still says 2.3 mm; it is now 1.09 mm (the notch r 20.89 at 47.3°, the fusee r 20.38 at 44.6°) *(computed)*.
    - The notch is a circle measured to about 0.12 mm rms on two frames, so the 1.1 mm is real at about the 0.5 mm level.
    - Its centre lies at the angle 34:30 gives the fusee (47–50°), not the angle 40:08 gives.
@@ -131,7 +162,7 @@ Audited 18 October 2026 on `claude/hamilton-provenance` at `eda059c8` (read only
    - It moved the barrel bridge's near screw 2.4 mm the wrong way (12 Oct; fixed 15 Oct, `2ffb801`).
    - Still resting on it: the far barrel-bridge screw (left side, where 23:30 agrees to about 0.5), the endstone cap's 6.66 spacing, the counterbore 7.4, `CK_SP`, the stud holes `SPHa-c`, and the 9 points behind the dust cap that are no longer drawn (BB_CUT replaced them).
    - Use: relative and short-baseline readings only.
-8. **Stale specs and tables, which fail by their age, not by model error:**
+8. **Stale specs and tables, which fail by their age, not by model error** (*regenerated 18 October 2026 but `solve.py`'s docstring and constant: "Step 1", above*):
    - `tools/anchors/KLUwI2UUCMQ_6-29.json`: photo-frame coordinates from before the turn, such as (29.24, −12.28) and (32.11, −4.1)
    - `KLUwI2UUCMQ_13-44.json`: barrel cut r 19.2 at (−22.56, 0.23)
    - `rimfit_34-30.json` and `rimfit_36-01.json`: anchors on the old T (−6.18, 14.75), F (0, 23.9) and E (8.504, 17.598)
