@@ -672,6 +672,17 @@ Contents:
   level in it (tilted with its end link it reached into the first rib). Keep: the groove's pitch and
   lands are 02-2's, the flange's three widths sum to its 2; the chain doesn't touch the fusee in fine.py
   (no allowance for it). `b9dc7f9`
+- **The Wempe's fusee groove ran on past its end N, under a hub 0.3 thick all round** (17 October 2026, the user's
+  screenshot: the stop bar's slot "looks weird and unrealistic"). `rBody` cut the top turn's land and rib at every angle,
+  past "Gangende Punkt N", the hub (Ø 21) only the last 0.3; the slot, 1.5 deep, then sliced a thin loose flange and the
+  ribs under it, leaving knife edges and slivers. 05 06 04-2's Schnitt A-B draws the end uncut past N: the last land
+  against a block at Ø 21, 0.3 thick at D (N's side) and about 1.3 at C, no rib between. Now the groove ends at N (`MN`,
+  the turn whose land's edge is 0.3 from the small end, 8.817) and the end beyond it and the last land's rib are the hub's
+  Ø 21: the slot is a plain channel through solid metal, opening into the top turn's groove at the bar's lower end (the
+  end 0.62 thick there, the land under it to 1.49) and, 1.1 deep at its upper end past N, leaving 0.3 of metal over the
+  turn below (why the drawing makes it shallower there). The spring's pin, which ended flush with the old top land, now
+  ends with its outer corner 0.02 inside the Ø 21. Keep: a fusee's groove ends where its sheet puts N, and the end past it
+  is the uncut blank. `d33de400`
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
@@ -2488,6 +2499,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   the small end's last 1.5 built ray by ray in the pieces the slot leaves) and the bar lies on
   the cover plate in it. Keep: a part lying in a cut has the cut drawn round it; never a part
   sharing the face of a solid it lies in.
+  The bar was drawn 2.00 wide in the slot's 2.00, its sides in the slot's walls, so where its upper end stands out
+  of the slot the two flickered through each other (18 October 2026, seen beside the fusee's end made solid past N).
+  Now 1.98, a sliding fit in the 2 H8 (estimated), the stop's 0.02 to the pin kept. Keep: a part sliding in a slot is
+  drawn narrower than it, never its walls' width. `3ff7da0f`
   Keep (Winding and maintaining work, the same change): the Wempe's 05 06_4 is seen from the
   fusee's large end, its C-D as its A-B, mirrored in the model; unmirrored, the stop bar met the
   stop pin with its near side, where C-D draws the pin against its far side. And the slot is 1.1

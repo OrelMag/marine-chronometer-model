@@ -6,6 +6,8 @@
 // With {train:true} it also loads js/train.js (WTRAIN: the arbors' tables, teeth(), the sheets' tooth forms) and the Hamilton's core.js gearOutline it draws its pinions
 // with (cut out of core.js, as tools/gearing.js does); xf(file, source) may rewrite a file's source first (gearing.js samples the outlines finer).
 //   const W=require('./wempe_load.js')({train:true});   W.WTRAIN
+// With {rev:'6mx'} (or the environment's MC_WREV=6mx, which a tool's child processes inherit) WPHYS is the Soviet 6MX's: WESC.SET takes its bodies, WESC.SET6, before
+// js/escphys.js builds the escapement, so any Wempe tool runs as the page runs the 6MX (WPHYS.rev('6mx')): wempe_essaydata.js's 6MX tables, wempe_6mx.js.
 const fs=require('fs'),path=require('path'),vm=require('vm');
 const WE=path.join(__dirname,'..','..','wempe'),SH=path.join(__dirname,'..','..','shared');
 const FILES=[path.join(WE,'js','dims.js'),path.join(WE,'js','escapement.js'),path.join(SH,'escapement.js'),path.join(WE,'js','escphys.js')];
@@ -13,7 +15,8 @@ function load(o={}){
   const ctx=vm.createContext({Math,console,Object,Array,Number,Float32Array,Float64Array,Map,Set,JSON,Error,Infinity,NaN,isNaN,isFinite,
     THREE:{},KIT:{},TAU:Math.PI*2,D2R:Math.PI/180,clamp:(x,a,b)=>Math.max(a,Math.min(b,x)),smooth:t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);}});
   const xf=o.xf||((f,s)=>s),run=f=>vm.runInContext(xf(f,fs.readFileSync(f,'utf8')),ctx,{filename:f});
-  for(const f of FILES)run(f);
+  const rev=o.rev||process.env.MC_WREV||'last';
+  for(const f of FILES){if(f===FILES[3]&&rev==='6mx')vm.runInContext('WESC.SET={...WESC.SET,...WESC.SET6};',ctx);run(f);}
   if(o.train){const core=path.join(__dirname,'..','js','core.js'),src=/function gearOutline\(n,m,o=\{\}\)\{[\s\S]*?\n  return\{xy,ro,ri\};\}/.exec(fs.readFileSync(core,'utf8'));
     if(!src)throw Error('gearOutline not found in core.js');vm.runInContext(xf(core,src[0]),ctx,{filename:core});run(path.join(WE,'js','train.js'));}
   return vm.runInContext('({WD,WESC,makeEsc,WPHYS'+(o.train?',WTRAIN,gearOutline':'')+'})',ctx);}   /* top-level const and function declarations of classic scripts share the context's scope */

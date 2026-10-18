@@ -2,6 +2,10 @@
 
 For the session that builds the Soviet 6MX (6МХ) on the Wempe page. Written 16 October 2026, after 3.00.00 (the Wempe complete) and 2.42.04 (the cork ring, the bowl's seat, the Lange dial).
 
+## Status: complete (18 October 2026, X5)
+
+Released as 3.05.00 "in progress" (17 October 2026); completed on `claude/wempe-6mx-complete` (X5, the Wempe README's "X5, completing it"): the gallery's photographs read for the model, Kirov 14100's parts and Romanov 1975 too; the collet, the detent block's stud, pins, slide and stop screw, the stepped lower cock, the ring's screws, the bowl re-measured with its high brackets (it hangs 13.2 lower), the flat closing plate and the outer box; its electrical seconds contact built and running with the seconds; the page running the 6MX's own escapement (`WPHYS.rev('6mx')`, `WEDATA.rev6`); "in progress" taken off. What stays open is in the README's "Unresolved" (the slide's working, the lower cock's plan, the gimbals' periods, the mainspring, the three windows, hole 40's plug) and REQUESTS.md's asks. Nothing below is still to do.
+
 ## Handover: start here (for the session that continues the 6MX, from X3)
 
 Written 16 October 2026 for the next session. The first session built X0-X2 and stops here at the user's decision; read "Status" below, then the Wempe README's "The Soviet 6MX" (each reading, its numbers and how sure) and its "Estimated", "Superseded, left out or for later" and "Unresolved" entries for the 6MX.
