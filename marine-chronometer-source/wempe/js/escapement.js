@@ -350,18 +350,19 @@ const WESC=(()=>{
          masses' face: 1.45 in from the mass's centre and 1.1 across it at 210, 1.15 in and 0.2 across at 150, across measured a quarter turn on from the mass's own angle, ±0.4: likely); their depth unseen, 1.0 (estimated) */
       const PH={150:[-1.15,0.2],210:[-1.45,1.1]};
       for(const a of[MASS_A,180-MASS_A,180+MASS_A,360-MASS_A]){const c=pol([0,0],rc,a),[cI,cO,cS]=cells(c),mg=(/** @type {any[]} */F)=>solidGeo([{loop:ccw(cI),y0,y1,F},{loop:ccw(cO),y0,y1},{loop:ccw(cS),y0,y1:ys}]),ph=PH[a];
-        if(!ph)tag(mesh(bal,mg([]),M.brass),'050301-4');
-        else{const u0=unit(c),h=add(add(c,u0,ph[0]),[-u0[1],u0[0]],ph[1]);tag(mesh(rv(bal,'last first 6mx 1943 -3955'),mg([]),M.brass),'050301-4');tag(mesh(rv(bal,'3955'),mg([{p:C(h,0.3,32),a:y1-1.0,b:y1}]),M.brass),'050301-4');}
+        /* a drilled mass and its screw and nut in each version's group (fine.py takes pieces fixed to each other by their shared group) */
+        const u0=unit(c),GS=/** @type {[any,any[]][]} */(ph?[[rv(bal,'last first 6mx 1943 -3955'),[]],[rv(bal,'3955'),[{p:C(add(add(c,u0,ph[0]),[-u0[1],u0[0]],ph[1]),0.3,32),a:y1-1.0,b:y1}]]]:[[bal,[]]]);
+        for(const[gm,F]of GS){tag(mesh(gm,mg(F),M.brass),'050301-4');
         /* its screw across, its slotted head sunk flush in the mass's outer face, its nut in the inner (WN-12, WN-12a): Wempe 3955's masses (9_Wempe_3955_Hemmung.jpg, the two
            nearest seen side-on at 15 px/mm: sure) show the head flush in the outer face, Ø 1.56 against the mass's 6.3, its slot across, and nothing standing out of the
            inner face; the nut WN-12a (05 03_2's label) is drawn sunk the same way (estimated: no photograph shows it). The faces are the mass's round side, which can't be counterbored here (a solid of
            vertical walls): head and nut 0.02 under its outermost line, 0.08 out of it at their sides. Drawn without a hole across the rim (a turned part cut by a radial hole isn't drawn). Until 15 October 2026 the
            head Ø 1.7 stood 0.55 proud of the outer face and the nut as much of the inner */
         const u=unit(c),yS=FY-2.45,rIn=rc-mr,rOut=rc+mr;   /* 2.45 over the rim's lower face: 05 03_2's slotted head 2.83, Wempe 3955's 2.55 and Lange 5829's 2.0 (5_Wempe_3955_O.jpg, stahl_113510_lange_4.jpg; likely) */
-        tag(across(bal,lathe([[0,rIn+0.02],[0.42,rIn+0.02],[0.42,rOut-0.57],[0,rOut-0.57]],16),M.steel,[0,0],u,yS),'WN-12');
-        tag(across(bal,lathe([[0,rOut-0.57],[0.8,rOut-0.57],[0.8,rOut-0.02],[0,rOut-0.02]],24),M.steel,[0,0],u,yS),'WN-12',1);   /* its head, sunk in the mass's outer side */
-        tag(across(bal,new THREE.BoxGeometry(1.62,0.25,0.25).translate(0,rOut-0.02-0.125+0.02,0),M.steelD,[0,0],u,yS),'WN-12',1);   /* its slot, 0.02 out of the head's face as screw() draws them */
-        tag(across(bal,lathe([[0,rIn+0.02],[0.8,rIn+0.02],[0.8,rIn+0.57],[0,rIn+0.57]],24),M.steel,[0,0],u,yS),'WN-12a');}}
+        tag(across(gm,lathe([[0,rIn+0.02],[0.42,rIn+0.02],[0.42,rOut-0.57],[0,rOut-0.57]],16),M.steel,[0,0],u,yS),'WN-12');
+        tag(across(gm,lathe([[0,rOut-0.57],[0.8,rOut-0.57],[0.8,rOut-0.02],[0,rOut-0.02]],24),M.steel,[0,0],u,yS),'WN-12',1);   /* its head, sunk in the mass's outer side */
+        tag(across(gm,new THREE.BoxGeometry(1.62,0.25,0.25).translate(0,rOut-0.02-0.125+0.02,0),M.steelD,[0,0],u,yS),'WN-12',1);   /* its slot, 0.02 out of the head's face as screw() draws them */
+        tag(across(gm,lathe([[0,rIn+0.02],[0.8,rIn+0.02],[0.8,rIn+0.57],[0,rIn+0.57]],24),M.steel,[0,0],u,yS),'WN-12a');}}}
     /* the timing screws (Zeitschraube 05 03 01-2) and their weights (Zeitmasse 05 03 01-3, by the coloured section's labels), at the arm's ends: the screw across the rim in its
        tapped hole Ø 0.9, 0.16 pitch, 2.15 over the rim's lower face (05 03 01-1: sure), its slotted head inside the rim on the rim's inner face, the weight on it outside
        the rim, its tip 42.1 over both screws' ends (05 03_2's plan, both screws: the head inside drawn with its slot, Ø 1.65 × 1.3 scaled at 12.07 px/mm, the weight
@@ -777,7 +778,17 @@ const WESC=(()=>{
           F:[{p:C(H[13],0.87,48),a:yP,b:yP+6.5},{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
         const arm={loop:ccw([L(tE,nA0),L(tT,nA0),L(tT,nC),L(tC+rc,nC),...arc,L(tC,nA1),L(tE,nA1)]),y0:yP+3.7,y1:yP+6.5};   /* its near face on the base's edge, sharing its corner */
         tag(mesh(blkF,solidGeo([plate,arm]),M.brass),'050401-4');
-        const u1=nA0-nA1;tag(across(blkF,lathe([[0,0],[0.425,0],[0.425,u1],[0,u1+2.5]],20),M.brass,D(0,nA0),TD.n.map(v=>-v),yP+5.1),'cone41');}}
+        const u1=nA0-nA1;tag(across(blkF,lathe([[0,0],[0.425,0],[0.425,u1],[0,u1+2.5]],20),M.brass,D(0,nA0),TD.n.map(v=>-v),yP+5.1),'cone41');
+        /* Wempe 3955's (the version as photographed) banking screw runs on out of the arm's near face past the detent to a domed, slotted brass head, its flat underside toward
+           the arm, the blade and the stone's pipe between: 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, the block square-on (23.9 px/mm by the arm's 3.56; 22 by the base's
+           14.6): the head Ø 3.2 and 1.45 high, nearly a hemisphere, its underside 1.4 from the arm's face, the cone 2.4-2.55 as drawn; 11_Wempe_3955_Gangfeder_plus.jpg
+           through photocompare.py's w3955_detentBlock camera, the screw lying across the view: Ø 3.2, 1.4 high; 10_Wempe_3955_Feder_plus.jpg face-on beside the escape collet,
+           its slot across, Ø 2.8 by the escape wheel's 14. Ø 3.0 ±0.2 taken (likely); the dome's rise against its short cylinder estimated, the slot as the 1943 screw's */
+        {const g=rv(blkF,'3955'),gp=1.4,rH=1.5,hc=0.2,hd=1.25,R4=(rH*rH+hd*hd)/(2*hd),zt=(/** @type {number} */r)=>gp+hc+Math.sqrt(R4*R4-r*r)-(R4-hd),pf=[[0,0],[0.425,0],[0.425,gp],[rH,gp],[rH,gp+hc]];
+          for(let i=1;i<=10;i++){const r=rH*(1-i/10);pf.push([r,zt(r)]);}
+          const at=D(0,nA0);tag(across(g,lathe(pf,28),M.brass,at,TD.n,yP+5.1),'cone41',1);
+          const xs=[];for(let k=0;k<=24;k++)xs.push(-rH+2*rH*k/24);const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,zt(Math.abs(x))+0.01]),...xs.slice().reverse().map(x=>[x,zt(Math.abs(x))-0.5])]),y0:-0.2,y1:0.2}]);
+          sg.rotateX(-Math.PI/2);sg.rotateY(Math.atan2(TD.n[0],TD.n[1]));tag(across(g,sg,M.steelD,at,TD.n,yP+5.1),'cone41',1);}}}
 
     /* ================= jewels: the balance's (05 04 06, 05 04 07, 05 04 08 by the coloured section's labels) ================= */
     /* Each bearing a hole jewel in its setting (Lagerstein in its Fassung) and an endstone in its own (Deckstein, Fassung 05 04 08-2), as the coloured section draws them; no
