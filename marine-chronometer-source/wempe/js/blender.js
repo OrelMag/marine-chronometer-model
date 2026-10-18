@@ -52,8 +52,8 @@ const BLENDER=(()=>{
     CS.root.rotation.set(s.pitch,0,s.roll,'ZYX');CS.ring.rotation.x=s.gp-s.pitch;CS.bowl.rotation.z+=s.gr-s.roll;}   /* the box rolled and pitched, the ring and bowl in their gimbals (At sea: drawn with the apparent vertical up, as the page draws it) */
   /* ---------- the train and balance through time: app.js's tick (drive, swing, stopping at a locked beat and going again), at speed 1, without its twist ---------- */
   function sim(C,hrs){const PH=A.PH,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:1,Eh:0,tSim:0,hrs,winding:false,w0:0,wT:0};   /* eOff 1: at 0 s the escape wheel at E 0, ESC.state(0)'s, the rest pose */
-    H.drv=()=>H.winding?H.w0*Math.max(0,1-H.wT/PH.SUS):H.hrs<A.HRUN-1e-6?A.drvF(H.hrs):0;H.amp=PE.ampAt(H.drv());
-    H.wind=on=>{if(on&&!H.winding){H.w0=H.held?0:H.drv();H.wT=0;}H.winding=on;};   /* app.js's wind0: the maintaining spring carries what drove the train as the key goes on */
+    H.drv=()=>H.winding?(H.w0>0?PH.susDrv(H.m0,H.wT):0):H.hrs<A.HRUN-1e-6?A.drvF(H.hrs):0;H.amp=PE.ampAt(H.drv());
+    H.wind=on=>{if(on&&!H.winding){H.w0=H.held?0:H.drv();H.m0=PH.runPhi(H.w0);H.wT=0;}H.winding=on;};   /* app.js's wind0: the maintaining spring, closed by what drove the train as the key goes on (m0, its lead), drives it on as it opens (WPHYS.susDrv; the ratchet's fall to its detent the mean half tooth, MBK) */
     const at=()=>{const y=H.tSim/0.5+H.bOff,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,H.drv());return{y,p,z,E:k-1+(p>0?z.prog:0)+H.eOff};},lockd=q=>!(q.p>0&&q.z.prog>0&&q.z.prog<1);
     H.step=dt=>{const drv=H.drv();H.amp=PH.ampStep(H.amp,dt,H.held?0:drv);let q=at(),E,s;
       if(!H.held){if((!(drv>0)||H.amp<PE.AMIN)&&lockd(q)){H.held=true;H.bph=q.y;H.Eh=Math.round(q.E);}

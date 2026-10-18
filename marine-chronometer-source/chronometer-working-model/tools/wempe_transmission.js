@@ -9,7 +9,7 @@
 //   the clicks (05 06 02-3, two, half a tooth apart) on the click wheel (05 06 04-3, 35 teeth) and the maintaining detent (05 05 05-1) on the maintaining ratchet (05 06 02-1,
 //     120 teeth): each a body on its pivot under its spring (wempe_ratchets.js's), riding the teeth's backs, falling into the gaps and catching a face only if it is down;
 //   the maintaining spring (05 06 01-1): its drawn ring's push, stiffening as it closes, and its bank where its eye meets its square end (WPHYS's MSK, MSK2, MSB, which
-//     wempe_sustaining.js works out from the ring; on main until claude/wempe-maintaining merges, the same numbers below);
+//     wempe_sustaining.js works out from the ring and checks against escphys.js);
 //   every mesh (the train's four, the motion work's two, the up-and-down work's): tooth by tooth on the page's own outlines (gearing.js's mesh on wempe_train.js's tables), the
 //     driven gear's angle under load for each angle of the driver (its ratio varying through a pitch), the backlash to the back flank, the torque ratio with the teeth's
 //     friction, the teeth's give as cantilevers; contact on either flank or none (the gears rattle in their backlash);
@@ -83,9 +83,9 @@ const HY0=MF.summary.hyst['0.1'],Mrun=n=>fusT(n)*RB/rho(n),Mfl=n=>Mrun(n)*(1+(HY
 const A_=MJ.arbors,MCH=375*2.9*7.85e-3,JI={barrel:A_.barrel.I+MCH*RB*RB,fusee:A_.fusee.I+50,ratchet:WJ.maintaining.I,fw:WJ.fuseeWheel.I,centre:WJ.centre.I,cannon:WJ.cannon.I+WJ.minuteHand.I,
   change:WJ.changeWheel.I,hour:WJ.hourWheel.I+WJ.hourHand.I,inter:WJ.intermediate.I,sec:WJ.seconds.I+WJ.secondsHand.I,esc:WJ.escape.I,ud:560,key:2200,
   click:MJ.pawls.find(p=>p.name==='click 1').I,det:MJ.pawls.find(p=>p.name==='maintaining detent').I};
-/* the maintaining spring: its push for a lead ψ of the ratchet over the wheel, MSK ψ + MSK2 ψ², banking at MSB (WPHYS once claude/wempe-maintaining is on main; until then the
-   numbers wempe_sustaining.js works out from the drawn ring, 1da4a8b); MBK: how far, on average, the ratchet falls back to its detent when the key goes on (half a tooth of 120) */
-const MSK=P.MSK??1.2204,MSK2=P.MSK2??0.2956,MSB=P.MSB??16.72*D,msT=ph=>ph>0?MSK*ph+MSK2*ph*ph:MSK*ph,msPh=T=>(-MSK+Math.sqrt(MSK*MSK+4*MSK2*Math.max(0,T)))/(2*MSK2);
+/* the maintaining spring: its push for a lead ψ of the ratchet over the wheel, MSK ψ + MSK2 ψ², banking at MSB (WPHYS's, which
+   wempe_sustaining.js works out from the drawn ring and checks); MBK: how far, on average, the ratchet falls back to its detent when the key goes on (half a tooth of 120) */
+const MSK=P.MSK,MSK2=P.MSK2,MSB=P.MSB,msT=ph=>ph>0?MSK*ph+MSK2*ph*ph:MSK*ph,msPh=T=>(-MSK+Math.sqrt(MSK*MSK+4*MSK2*Math.max(0,T)))/(2*MSK2);
 /* the elements' stiffnesses (estimated, each from its parts; their ranges tried below where a result rests on them):
    a mesh: the teeth as cantilevers, E b s³ / 4 h³ (the brass wheel's 1.57 m root on a 2.25 m tooth, the steel pinion leaf's 1.05 m), in series and halved for the contact
    (traindyn.js's), b the narrower face: 1,620 N/mm a millimetre of face at the pitch circle;

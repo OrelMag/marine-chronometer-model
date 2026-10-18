@@ -26,6 +26,11 @@
      motion work and hands on the centre arbor (cannon tube and pinion, change wheel, hour wheel, minute and hour hands), the fusee wheel (its turning group in the part) and the
      maintaining work that turns with it running (ratchet, clicks, maintaining spring) */
   const pg=n=>{const p=mv.children.find(o=>o.userData.partName===n);return p&&p.children.find(c=>c.isGroup&&!c.isMesh);};
+  /* the maintaining part's groups weighed together (both about the fusee's axis): since the spring is drawn bent between them (16 October 2026), the ratchet, clicks and the eye's pin turn in one
+     and the spring with its other pin in the other, with the wheel; weighed alone the first left the spring out of every body */
+  const wAll=n=>{const p=mv.children.find(o=>o.userData.partName===n),W=p.children.filter(c=>c.isGroup&&!c.isMesh).map(g=>weigh(g)),o={m:0,cg:[0,0,0],I:0,byHn:{},missing:{}};
+    for(const w of W){o.m+=w.m;o.I+=w.I;for(let i=0;i<3;i++)o.cg[i]+=w.cg[i]*w.m;for(const[k,e]of Object.entries(w.byHn)){const t=o.byHn[k]||(o.byHn[k]={m:0,I:0});t.m+=e.m;t.I+=e.I;}Object.assign(o.missing,w.missing);}
+    o.cg=o.cg.map(x=>x/o.m);return o;};
   return JSON.stringify({balance:weigh(E.bal),rollers:weigh(E.rol),collet:weigh(E.hsRot),spring:weigh(sp.parent,o=>o===sp),detent:weigh(E.det),escape:weigh(E.ew),
     seconds:weigh(R.tr.sw),secondsHand:weigh(R.dl.sh),intermediate:weigh(R.tr.tw),centre:weigh(R.tr.cw),cannon:weigh(R.dl.cn),changeWheel:weigh(R.dl.ch),hourWheel:weigh(R.dl.hw),
-    minuteHand:weigh(R.dl.mh),hourHand:weigh(R.dl.hh),fuseeWheel:weigh(pg('fuseeWheel')),maintaining:weigh(pg('maintaining'))});})()
+    minuteHand:weigh(R.dl.mh),hourHand:weigh(R.dl.hh),fuseeWheel:weigh(pg('fuseeWheel')),maintaining:wAll('maintaining')});})()

@@ -76,10 +76,10 @@
   {
    "id": "maintaining",
    "title": "The maintaining spring drives the train",
-   "sheet": "05 06 01-1, 05 06_9",
+   "sheet": "05 06 01-1, 05 06_4 (A-B)",
    "when": "the movement running, part wound",
-   "how": "Turn the key back a little (winding) and hold it still, the fusee off the train: time how long the balance keeps going.",
-   "pass": "About 70 s of drive falling to nothing (05 06_9's \"x = 0,27 mm\" at its pins on r 14.2, likely; the 1954 instruction gives 1-2 minutes for chronometers in general); a wind takes about 6 s. Under 30 s (estimated), the spring is weak or its deflection small."
+   "how": "First, assembling: the spring's eye pin up into the ratchet (05 06_4 A-B: \"Stift nach oben\"), its other pin down into the fusee wheel; the ring lies free in the wheel's recess, its eye a gap short of its square end. Running, the ratchet stands ahead of the wheel as the drive closes the ring: see its ends nearly meet, not touch. Then turn the key back a little (winding) and hold it still, the fusee off the train: time how long the balance keeps going.",
+   "pass": "Running, the ring closed 14.4-15.6° by the drive, its ends 0.27-0.58 mm apart at the eye (they would meet after 16.7°; wempe_sustaining.js); the key held, the balance keeps going 10.7-13.9 minutes (the detent catching a whole tooth late or at once), its swing falling; the 1954 instruction gives 1-2 minutes for chronometers in general; a wind takes 10-30 s. Under 5 minutes (estimated): the ring is open (the pins the wrong way round: it bears on the recess's wall and barely gives), weak, or has taken a set; its ends touching in running: weak or set."
   },
   {
    "id": "stopwork",
@@ -673,8 +673,16 @@
    ]
   },
   "maintaining": {
-   "s": 70.0346,
-   "min": 30
+   "bank": 16.7176,
+   "gap": [
+    0.2669,
+    0.5781
+   ],
+   "s": [
+    644,
+    837
+   ],
+   "min": 300
   },
   "stopwork": {
    "height": [
