@@ -344,7 +344,7 @@
    ],
    "vmat": "brass, as the Model 21's key, with a steel ratchet wheel on the socket and a click in the pipe, sprung",
    "vtreat": "the socket turns the fusee counterclockwise (seen from the key) and slips the other way; the Model 21's plain key kept to set the hands",
-   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.11 N·m bends the fusee wheel's teeth (overwind.js), about a third of what an average hand gives the key's paddle (0.63 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A ratchet in the key's pipe slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 1.5 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
+   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.20 N·m bends the fusee wheel's teeth (overwind.js), about a third of what an average hand gives the key's paddle (0.63 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A ratchet in the key's pipe slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 1.5 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
    "sources": [
     "overwind.js (the key forced, both ways)",
     "S. N. Imrhan and M. J. Munoz-Vasa, \"Finger Pinch Loosening and Tightening Torques on Small Cylindrical Handles Among Industrial Workers\", Industrial and Systems Engineering Review 1(2), 2013 (and Swain et al. 1970 there)",
@@ -352,7 +352,7 @@
     "Breguet's \"tipsy\" key (clé de sûreté), about 1790: a ratchet in the key that slips when turned the wrong way"
    ],
    "numbers": {
-    "Ty": 0.11301919262734411,
+    "Ty": 0.1959977526273447,
     "mean": 0.6281434555263158,
     "TH": 1.0592325,
     "TyF": 1.6026267105226204
