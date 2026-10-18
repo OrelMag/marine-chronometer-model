@@ -1931,6 +1931,23 @@ changes it only round its own arbors (1 below).
     tried at the video's 166.3 deg (its dial-side screw just clear of the bar's end on 40:08): its top screw's head
     then stands in the cock's foot, which C Spinner's video shows clear of any screw (6:29 on, 6:47 off), so it
     stays at 170.8 and the 4 deg between the dial side's angles and the cock's place stays open. Of the items left open this is the only one worth pursuing (PLAN-fidelity.md, "How much each open item matters"): one frame with the cock and pillar 1's screw together would settle which source is off.*
+    *Settled (18 October 2026, `claude/cock-angle`): the train side measured against the cock's own holes. On KLUwI2UUCMQ 23:30 (the upper train bridge face up, its holes'
+    rims fitted as ellipses, put on the face through `tools/anchors/KLUwI2UUCMQ_23-30.json`'s homography) a similarity on the cock's three holes in the train bridge (its screw's
+    tapped hole and its two steady pins', residuals 0.13-0.27 mm) puts pillar 1's hole at **169.1-169.5 deg**; on 6:49.0 (the screw in place, its head's top picked and put
+    back 2 mm up through a camera fitted on seven of the bridge's holes and the cock screw's axis, 6:29's top over 6:49.0's hole) at 168.9-169.3 deg at the fitted f 5,300
+    (168.3-170.8 over f 1,500-11,000); on 23:45 (oblique, glare) 168.2-170.0; on another movement, No. 2182 (Jd2c3x8VKsE 26:00, 720p, ±1 mm), 168.2-170.0 against its
+    cock's holes (`tools/anchors/Jd2c3x8VKsE_26-00_fit.json`, fitted with and without the screw itself). So the screw stands **169.2 +- 0.5 deg** against the cock, 1.1 deg (0.65 mm) nearer it than
+    the model's 170.3 and 2.9 deg (1.7 mm) further than the dial side's 166.3 would put it: there its head would reach the cock's foot (2.2 mm clear of it in plan at
+    170.3, and 4 deg is 2.4 mm there); at 169.2 it clears the foot by 1.55 mm, as 6:29 shows it beside the cock. **Moved there** (r 34.52 kept; `PILLARS.train[1]` (6.47, 33.91)). About the centre, 23:30's
+    holes away from the cock (the centre bushing, the barrel bridge's screw and pin holes, the lower bridge's screw, pillar 2 at 3 o'clock, which comes out within
+    0.1-0.6 deg of the dial side's 84.3) put the screw at 167.6-168.0 deg and 6:49.0's camera at 168.2-168.9: so the dial side's 166.3 is about 1.5-2 deg low (just
+    past its stated 1.5), and the cock's three holes come out 1.3-2.3 deg (0.7-1.3 mm) short of the model's about the centre too. That is one good frame (23:30, some of
+    whose anchoring holes were placed from it) and an oblique one, so the cock's place stays as measured on 6:47 and 23:30 (its holes, RESOLVED.md) and is left open
+    below as a lead, not a finding. The lower train bridge keeps its 9.2 past the fourth: at 169.2 the video's 10.3 would meet the dial-side screw's head by 0.1 mm
+    (clear by 0.26 at 168.2), within the readings' scatter.*
+    *Open, low (18 October 2026): the cock's place about the centre. 23:30 (face up, homography on the rim, the cut round the barrel and the centre bushing) puts the
+    cock's screw hole and its two steady pins 1.3-2.3 deg short of the model's about the centre, pillar 1 with them; a second face-on frame of the train bridge with
+    the centre and the cock's holes (13:44, 36:16-36:35) would say whether the cock (and the balance under it, which it must stay over) is turned by that much.*
     *Settled (3 October 2026): the photographed dial, face-on and scaled by its seconds' centre (on the fourth, 21.6
     out), has its minute track at r 40.4-42.2, the seconds track r 17.9 meeting it at 6, and shows to r 45.9 inside the
     bezel, the model's bezel opening exactly: the 95 mm dial stands, and its print, at r 43.0-45.4, was 9 % too large.
