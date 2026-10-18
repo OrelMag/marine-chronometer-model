@@ -397,6 +397,17 @@ Contents:
   bounded at 0.137 mm, where no preload is left) follow it; `TF` 67 s (Q 421) so the calibrated torque is the spring's again.
   Keep: the preload is `W78`'s moment less `KD`·`th78`, never the weight alone; a spring's stiffness and its preload move
   together. `9b55881`
+- **The Wempe's upper balance jewel's two settings stood 0.03 apart.** The hole jewel's setting ended at its stone's face, 0.03 under
+  the endstone's setting, so the stack in the cock's seat was 2.77 against U30's 2.8 and the endstone's setting hung from its two screws
+  (the Contacts view, Inside the part, 18 October 2026: the pieces close, never touching). The setting now runs up to the endstone's,
+  its stone 0.03 under its face, as the lower jewel's always was and the coloured section draws both. Keep: the settings meet; only the
+  stones stand 0.03 apart. `6aeb4f46`
+- **The Wempe's hairspring cut 0.033 into its stud's slot wall as first drawn.** In the versions whose balance stands 0.3 higher (first
+  drawn, 1943, Wempe 3955, the 6MX) the spring's outer end met the stud's slot 0.3 higher, where the upright's 8° lean brings the
+  slot's inner wall 0.042 further out; the end stayed where the last state puts it (the Contacts view: hairspring and stud overlapping,
+  not expected, in four of five versions; fine.py, run on each, drops an overlap under 0.0005 mm³). The drawn outer curve is now formed out by 0.3 tan 8°
+  over its last stretch in those versions, the stud's pin with it. Keep: the spring's end and pin follow the slot's lean wherever the
+  balance's height moves them; the physics' curve (HSP) is 05 03_7's in every version. `2c758a49`
 
 ## Going train and heights
 
@@ -1367,6 +1378,9 @@ Contents:
   the fusee wheel's hub, a pipe r 2.87 (Op. 20 greases "the outside of the hub"; Fig. 71 assembles them together), and the winding ratchet's bore,
   confirmed at 23:30 (r 2.31, no hub), comes off the straight collar's lower end, its screws ahead of it (`UP` in overhaul.js). Keep: nothing on the
   arbor below the winding ratchet wider than its bore. `79cfc2f`
+- **The Wempe's cover plate screw (WN-20) held nothing.** Its 90° head, Ø 3.1, was drawn flush in the plate's sink, which 05 06 00-4 cuts
+  to Ø 3.1 +0.1 (drawn 3.15): the head stood 0.025 off the sink all round (the Contacts view, Inside the part, 18 October 2026: the
+  plate and its screw close, never touching). Seated, 0.025 under the face. Keep: a countersunk head bears on its sink. `6aeb4f46`
 
 ## Plates, bridges, screws and arbors
 
