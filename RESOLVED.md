@@ -402,6 +402,12 @@ Contents:
   (the Contacts view, Inside the part, 18 October 2026: the pieces close, never touching). The setting now runs up to the endstone's,
   its stone 0.03 under its face, as the lower jewel's always was and the coloured section draws both. Keep: the settings meet; only the
   stones stand 0.03 apart. `6aeb4f46`
+- **The Wempe's hairspring cut 0.033 into its stud's slot wall as first drawn.** In the versions whose balance stands 0.3 higher (first
+  drawn, 1943, Wempe 3955, the 6MX) the spring's outer end met the stud's slot 0.3 higher, where the upright's 8° lean brings the
+  slot's inner wall 0.042 further out; the end stayed where the last state puts it (the Contacts view: hairspring and stud overlapping,
+  not expected, in four of five versions; fine.py, run on each, drops an overlap under 0.0005 mm³). The drawn outer curve is now formed out by 0.3 tan 8°
+  over its last stretch in those versions, the stud's pin with it. Keep: the spring's end and pin follow the slot's lean wherever the
+  balance's height moves them; the physics' curve (HSP) is 05 03_7's in every version.
 
 ## Going train and heights
 
