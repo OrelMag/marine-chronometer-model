@@ -3059,6 +3059,29 @@
    "figs": "05 07_4"
   },
   {
+   "id": "050700-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 00-1",
+   "name": "Steg (spring brace)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Stands inside the drum's wall from its bottom to its lid, its ends through the bottom's slot and the lid's notch: the mainspring's outer coil threaded between it and the wall.",
+   "rel": [
+    [
+     "on",
+     "050701-2"
+    ],
+    [
+     "on",
+     "050701-1"
+    ]
+   ],
+   "figs": "05 07_6, 05 07_7, 05 07_1"
+  },
+  {
    "id": "050702",
    "idx": null,
    "no": "",

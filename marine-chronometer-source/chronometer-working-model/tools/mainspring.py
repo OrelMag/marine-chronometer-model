@@ -54,6 +54,19 @@ t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.0);p=t+gap;ra=ENV('MC_MS_RA',4.9);R
 B_MM=os.environ.get('MC_MS_B');SET=ENV('MC_MS_SET',1.0)
 EYE=ENV('MC_MS_EYE',9.4)   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
 HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
+# a variant's outer end (the Wempe's: tools/wempe_mainspring.py), each unset for the Hamilton, whose outer end lies along its brace: MC_MS_BLOCK="d,l", the strip's last l mm
+# lying on a hook block d deep off the wall (its end held there, as on the brace); MC_MS_STEG="phi,w,ri,ro", a bar standing off the wall phi rad back from the strip's end
+# (round the drum), w mm either side of its middle, its faces at r ri and ro: the outer coil passes between it and the wall, every coil inside it within ri
+BLOCK=[float(x) for x in os.environ['MC_MS_BLOCK'].split(',')] if os.environ.get('MC_MS_BLOCK') else None
+STEG=[float(x) for x in os.environ['MC_MS_STEG'].split(',')] if os.environ.get('MC_MS_STEG') else None
+def bounds(N,T,lo):
+    """each sample's least and most radius, and the samples at the outer end held on the brace or the block (from the outer end, the last two or those on the block)"""
+    hi=torch.full((N+1,),R0);low=torch.full((N+1,),float(lo));end=2;ph=2*math.pi*T*(1-torch.arange(N+1,dtype=torch.float64)/N)   # rad back from the outer end
+    if BLOCK:Rb=R0-BLOCK[0];hi[ph*Rb<=BLOCK[1]+1e-9]=Rb;end=int((ph*Rb<=BLOCK[1]+1e-9).sum())
+    if STEG:   # the samples within the bar's width and the one beyond it either side (the chord between two held samples stays held: at the outer coil's r 19 it bows in 0.04)
+        f,w,ri,ro=STEG;win=lambda a:torch.abs(a-f)<=w/ri+2*math.pi/M;o=ph<2*math.pi
+        low[o&win(ph)]=ro+t/2+0.005;hi[~o&win(torch.remainder(ph,2*math.pi))]=ri-t/2-0.005
+    return low,hi,end
 # MC_MS_PROC: the processes a sweep runs on (14; the Wempe's fit ran three sweeps at once on 9 each)
 M=48;STEP=0.25;TLO=ENV('MC_MS_TLO',12.75);THI=ENV('MC_MS_THI',19.5)   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
 SJ='mainspring.json' if not VAR else f'mainspring_{VAR}.json'   # the solved states (current directory, not committed)
@@ -79,14 +92,14 @@ def energy(r,T):
     l,k,w,s=geom(r,T);return ((k-k0(s[1:-1]))**2*w).sum(),l,k,s
 def solve(T,init=None,free_inner=False,rounds=6):
     """the least-energy shape at T turns (free_inner: the arbor out, T free); returns r at N+1 = 48 T + 1 even angles, T, its energy"""
-    N=int(round(T*M));lo=0.6 if free_inner else a0
+    N=int(round(T*M));lo=0.6 if free_inner else a0;low,hi,end=bounds(N,T,lo)
     r0=np.interp(np.linspace(0,1,N+1),np.linspace(0,1,len(init)),init) if init is not None else np.linspace(a0,R0,N+1)
-    u=torch.logit(torch.tensor((r0-lo)/(R0-lo)).clamp(1e-6,1-1e-6)).requires_grad_(True);Tv=torch.tensor(float(T),requires_grad=free_inner)
+    u=torch.logit(((torch.tensor(r0)-low)/(hi-low)).clamp(1e-6,1-1e-6)).requires_grad_(True);Tv=torch.tensor(float(T),requires_grad=free_inner)
     nh=int(HOLD/(2*math.pi*T/N))+1
     def R(u):
-        r=(lo+(R0-lo)*torch.sigmoid(u)).clone()
+        r=(low+(hi-low)*torch.sigmoid(u)).clone()
         if not free_inner:r[:nh]=a0
-        r[-2:]=R0;return r
+        r[-end:]=hi[-end:];return r
     lamL=torch.tensor(0.);lamN=torch.zeros(N+1);muL=10.;muN=1e3;ps=[u]+([Tv] if free_inner else [])
     for _ in range(rounds):
         opt=torch.optim.LBFGS(ps,lr=1,max_iter=3000,tolerance_grad=1e-10,tolerance_change=1e-14,history_size=50,line_search_fn='strong_wolfe')
@@ -116,10 +129,11 @@ def sweep():
     Ts=[round(TLO+STEP*i,4) for i in range(int(round((THI-TLO)/STEP))+1)]
     with Pool(int(os.environ.get('MC_MS_PROC',14))) as P:
         best={x['T']:x for x in P.map(job,[(T,None) for T in Ts])}
-        for _ in range(2):
-            js=[(T,best[Ts[i+d]]['r']) for i,T in enumerate(Ts) for d in (-1,1) if 0<=i+d<len(Ts)]
+        for _ in range(int(os.environ.get('MC_MS_PASSES',2))):   # a variant may ask more passes (each ends early once none improves): a state's better shape carried on along the wind
+            js=[(T,best[Ts[i+d]]['r']) for i,T in enumerate(Ts) for d in (-1,1) if 0<=i+d<len(Ts)];imp=0
             for x in P.map(job,js):
-                if x['E']<best[x['T']]['E']-1e-6:best[x['T']]=x
+                if x['E']<best[x['T']]['E']-1e-6:best[x['T']]=x;imp+=1
+            if not imp:break
     for T in Ts:x=best[T];print(f"T {T:6.2f}  E {x['E']:.5f}  overlap {max(x['viol'],0):.4f} mm  length {x['dL']:+.5f} mm")
     T0=min(Ts,key=lambda T:best[T]['E']);print('T0',T0,'turns: the held spring is slack there')
     out=dict(T0=T0,M=M,step=STEP,states=[best[T] for T in Ts]);json.dump(out,open(SJ,'w'));return out

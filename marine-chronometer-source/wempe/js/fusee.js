@@ -637,13 +637,25 @@ const WFUSEE=(()=>{
        underside, through the lid's 1.3 as its notch goes (estimated). Read from the lid's side (the plan, first-angle, below the section) the M2.6 hole stands 45° clockwise of
        it, so the slot is 45° back from the hook block (rotation.y falling) */
     const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last 1943'),gBF=rv(gB,'first 6mx');
-    const BLK=1.2;   /* the hook block's angle in the drum */
-    const LS=BLK-Math.PI/4,slot=(a,r0,w)=>{const u=[Math.cos(a),-Math.sin(a)],v=[Math.sin(a),Math.cos(a)];return[[r0,w/2],[23,w/2],[23,-w/2],[r0,-w/2]].map(([r,t])=>[u[0]*r+v[0]*t,u[1]*r+v[1]*t]);};   /* a slot's outline in plan along the angle a, from r0 out past the drum */
-    tag(mesh(gBL,capFix(facePocket(ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.2],[19.6,BR+1.2]],240),'bottom',slot(LS,19.275-1.025,2.025),BLU-BR),BLU),M.gilt),'050701-1');
+    const BLK=1.2;   /* the hook block's rivet hole's angle in the drum */
+    /* The Steg 05 07 00-1 (the coloured section's #6, "Steg", a thin steel strip standing inside the drum's wall; 0207's part 106, 127-556.04-097): a bar across the drum
+       from its bottom to its lid, 45° back from the rivet hole (rotation.y falling), its tabs through the bottom's slot and the lid's 9 o'clock notch. 0207's plan (lid off,
+       12.0 px/mm) draws its section 2 wide and "0,5" thick, "0,4" off the bore (r 18.35-18.85), its section through 12 o'clock the strip from the lid's outer face to the
+       bottom's, through both; 05 07 01-1 (revision a, 11.3.48) the bottom's slot 2 +0.05 wide, "0,95 +0,15" from the bore to its inner end (r 18.3, the struck 18.3 +0.02)
+       and, since revision b (20.4.48), "0,8 +0,05" across (r 18.3-19.1: the section draws it through the bottom just inside the bore, the plan its outline there); the lid's
+       notch 2 +0.05 wide to 18.3 ±0.02 from the centre (05 07 01-2), the Steg's inner face bearing on its bottom; the coloured section puts it at r 18.20-18.73 (9.37 px/mm).
+       Built 2 × 0.5, r 18.3-18.8 (as first drawn 18.35-18.85, in slots 2.025 × 0.55 through the 1941 lid and bottom: estimated, 0207 draws them closed round it), its ends
+       flush with the bottom's and the lid's outer faces (0207's section: likely). Steel. The mainspring's outer coil is threaded between it and the wall, so the strip's
+       last 45° lies on the wall to the hook block (tools/wempe_mainspring.py's STEG). Until 18 October 2026 it wasn't built, and the 9 o'clock slot (read as one through
+       the wall from the rim, for prising the lid out) was cut through the drum's wall */
+    const LS=BLK-Math.PI/4,SG0=18.3,SG1=18.8,SGW=1.0,rect=(a,r0,r1,w)=>{const u=[Math.cos(a),-Math.sin(a)],v=[Math.sin(a),Math.cos(a)];return[[r0,w/2],[r1,w/2],[r1,-w/2],[r0,-w/2]].map(([r,t])=>[u[0]*r+v[0]*t,u[1]*r+v[1]*t]);},
+      slot=(a,r0,w)=>rect(a,r0,23,w);   /* a slot's outline in plan along the angle a, from r0 to r1 (slot: out past the drum) */
+    tag(mesh(gBL,capFix(facePocket(ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.2],[19.6,BR+1.2]],240),'top',rect(LS,18.3,19.1,2.025),1.6),null),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face 0.6 -0.1 under the rim; 1.3 -0.1 thick (in the seat Ø 39.2
        r6, under it 0.05 clear of the wall: the sheet draws it 39.39 over all, the blank's); its boss 3.3 -0.1 from its face, the face Ø 8, a 45° cone to Ø 12; bore 4.55; its two
        notches through it: at 9 o'clock, on the drum's slot, 2 +0.05 wide to 18.3 ±0.02 from the centre (drawn 2.025, 18.3), and opposite, at 3 o'clock, 2.7 +0.1 wide, 2 +0.2 deep
-       from its 39.39 (drawn 2.75 wide to r 19.695 - 2.1); the 3 o'clock notch's use isn't drawn (sure on both, unrevised since 7.4.41) */
+       from its 39.39 (drawn 2.75 wide to r 19.695 - 2.1); the 9 o'clock notch is the Steg's seat (above), the 3 o'clock notch's use isn't drawn (for prising the lid out:
+       likely) (sure on both, unrevised since 7.4.41) */
     tag(mesh(gBL,capFix(facePocket(facePocket(ringT([[2.275,BLT],[19.6,BLT],[19.6,BR+1.2],[19.2,BR+1.2],[19.2,BLU],[6.0,BLU],[4.0,BLF],[2.275,BLF]],240),'bottom',slot(LS,18.3,2.025),BLU-BLT+0.1),
       'bottom',slot(LS+Math.PI,19.695-2.1,2.75),BLU-BLT+0.1),null),M.gilt),'050701-2');
     /* As first drawn, the barrel of 1941 (0207 Federhaus, 127-556.04 U24, 15.4.41, 5:1, scaled 12.0 px/mm by its 22.3; the drum 020701, U22; its ring 020701-3), in three pieces:
@@ -655,12 +667,22 @@ const WFUSEE=(()=>{
        the slots are the later drum's. The Soviet 6MX (the Variants' third version) has it too: its barrel cap is underneath, on the pillar plate's side (Altmeppen's
        list; Knirim's against Lange's Kal. 100), as this drum of the drawings' has it; Kirov No. 247's side views (4_, 6_Kirow_247_N, S) show a drum about Ø 41.5 × 18
        under the chain, too fine to tell this ring from the later drum turned over: likely */
-    {const R1=20.75,Ri=19.25,Rs=19.6,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275;
+    const S41=[18.35,18.85];   /* the Steg as first drawn (0207) */
+    {const R1=20.75,Ri=19.25,Rs=19.6,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275,sl=rect(LS,S41[0],S41[1]+0.05,2.025);
       tag(mesh(gBF,ringT([[Rs,yB+1.0],[Rs,yB],[R1,yB],[R1,yL],[Rs,yL],[Rs,yL-1.2],[Ri,yL-1.2],[Ri,yB+1.0]],240),M.gilt),'050701-1');   /* the ring, its seats at both ends */
-      tag(mesh(gBF,ringT([[bo,yL],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[Rs,yLi],[Rs,yL]],240),M.gilt),'050701-2');   /* the lid on the plate's side, its boss inward */
-      tag(mesh(gBF,ringT([[bo,yB],[Rs,yB],[Rs,yBi],[6.0,yBi],[6.0,yB+2.9-0.62],[4.5,yB+2.9],[bo,yB+2.9]],240),M.gilt),'050701-1',1);}   /* the bottom on the bridge's side */
-    for(const g of[gBL,gBF]){const yb=BB-9.05,bg=new THREE.BoxGeometry(0.35,3.05,3.0);bg.translate(19.25-0.175,yb,0);bg.rotateY(BLK);tag(mesh(g,bg,M.steel),'050701-3');   /* in each state's drum (fixed to it) */
-      const rg=new THREE.CylinderGeometry(1.3,1.3,1.5,20);rg.rotateZ(Math.PI/2);rg.translate(20.0,yb,0);rg.rotateY(BLK);tag(mesh(g,rg,M.steel),'050701-3',1);}
+      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yL],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[Rs,yLi],[Rs,yL]],240),'top',sl,1.5),null),M.gilt),'050701-2');   /* the lid on the plate's side, its boss inward */
+      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yB],[Rs,yB],[Rs,yBi],[6.0,yBi],[6.0,yB+2.9-0.62],[4.5,yB+2.9],[bo,yB+2.9]],240),'bottom',sl,1.3),null),M.gilt),'050701-1',1);   /* the bottom on the bridge's side */
+      const sg=new THREE.BoxGeometry(S41[1]-S41[0],yL-yB,2*SGW);sg.translate((S41[0]+S41[1])/2,(yL+yB)/2,0);sg.rotateY(LS);tag(mesh(gBF,sg,M.steel),'050700-1');}
+    {const sg=new THREE.BoxGeometry(SG1-SG0,BB-BLT,2*SGW);sg.translate((SG0+SG1)/2,(BB+BLT)/2,0);sg.rotateY(LS);tag(mesh(gBL,sg,M.steel),'050700-1');}   /* the Steg as last revised, bottom to lid */
+    /* the hook block 05 07 01-3: 0.5 deep off the bore (above), 6 long round it (0207's flat "6", dimensioned: the later sheets scale it 5-7), 3.05 high at the rivet hole's
+       9.05 from the bottom's face, its face an arc concentric with the bore; the rivet hole (M2.6 on 05 07 01-1, "vernieten" on 05 07 01) 1.4 from its far end (0207's plan:
+       the hole's sides 3.3-5.9 along the flat from its end toward the Steg: likely ±0.5), so it runs 4.6 back toward the Steg. Until 18 October 2026 0.35 × 3 centred on the
+       hole, as much as cleared the spring drawn without it; the spring is now solved and drawn over it (tools/wempe_mainspring.py's BLOCK, msGeo below). The rivet through
+       the wall and the block, its head flush with the drum's outside (estimated) */
+    const HB0=4.6,HB1=1.4,BLD=0.5;
+    for(const g of[gBL,gBF]){const yb=BB-9.05,a0=BLK-HB0/19.25,a1=BLK+HB1/19.25,ar=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;ar.push([Math.cos(a),Math.sin(a)]);}
+      tag(mesh(g,slab([...ar.map(([c,s])=>[19.25*c,19.25*s]),...ar.reverse().map(([c,s])=>[(19.25-BLD)*c,(19.25-BLD)*s])],[],yb-1.525,yb+1.525),M.steel),'050701-3');   /* in each state's drum (fixed to it) */
+      const rg=new THREE.CylinderGeometry(1.3,1.3,20.75-(19.25-BLD),20);rg.rotateZ(Math.PI/2);rg.translate((20.75+19.25-BLD)/2,yb,0);rg.rotateY(BLK);tag(mesh(g,rg,M.steel),'050701-3',1);}
     /* the arbor 05 07 02 (Federkern kompl.): its pivot in the pillar plate (the 1941 arbor 020704-1's Ø 3, drawn 2.88 in the plate's 2.90 reamed: the arbor as last revised,
        05 07 02-1, isn't in the set), its end a ball, polished, 5 from the shoulder; the journals the drum's bosses run on (4.48 in their 4.55: 020704-1's 5 don't pass them),
        22.2 +0.1 between their outer shoulders (framed); the core Ø 13.3 between them, its ends chamfered 45° (05 07 01) to 0.05 off the bosses (10.98: the 1941 core's 12 can't
@@ -740,13 +762,27 @@ const WFUSEE=(()=>{
     const [EY0,EY1,EYH]=MSPRING.ey,tAt=s=>(Math.sqrt(MSa*MSa+MST*s/Math.PI)-MSa)/MST;   /* the turns from the tip to s mm along the core's coil (r MSa + MST tau) */
     const TIP=Math.asin(1.05/(MSa-MST/2))+TAU*tAt(EY0);   /* rad from the tip to the hook's centre line */
     /* its turns T: from its inner end, its tip TIP behind the arbor's hook (HKA), the hook in its eye, winding outward the way the drum runs (rotation.y rising), to its outer
-       end 0.08 rad short of the drum's block; set up 0.75 turn past lying all on the wall at run down (with the chain: the band turns the drum a little less, so its set-up
-       there is a little more), which sets the hook's angle */
-    const MST0=msT+0.75,HKA=wrap(BLK+BETA_RUN.chain+TIP-0.08-MST0*TAU);hookSet(HKA);const msK=Math.round(MST0-(BLK+BETA_RUN.chain+TIP-0.08-HKA)/TAU),msTurns=beta=>(BLK+beta+TIP-0.08-HKA)/TAU+msK;
+       end lying on the hook block, 0.3 short of its far end (MSE past the rivet hole, estimated: the hook's form isn't drawn); set up 0.75 turn past lying all on the wall
+       at run down (with the chain: the band turns the drum a little less, so its set-up there is a little more), which sets the hook's angle. Until 18 October 2026 the end
+       stood 0.08 rad short of the hole, against the old 3-long block */
+    const MSE=(HB1-0.3)/19.25,MST0=msT+0.75,HKA=wrap(BLK+BETA_RUN.chain+TIP+MSE-MST0*TAU);hookSet(HKA);const msK=Math.round(MST0-(BLK+BETA_RUN.chain+TIP+MSE-HKA)/TAU),msTurns=beta=>(BLK+beta+TIP+MSE-HKA)/TAU+msK;
+    /* the outer end as the solve holds it (tools/wempe_mainspring.py): reckoned back from the end, psi round the drum, each turn's radius held under what is outside it.
+       The end's last 5.7 on the block (r 19.25 - 0.5 less half the strip), then rising to the wall over 0.25 rad; the outer coil passes the Steg near the wall (between it
+       and the wall, about 0.03 clear of its outer face); every coil inside it bends under the Steg (0.005 clear of its inner face, over 0.3 rad either side) and under the strip's
+       end on the block, each lying on the one outside it at the strip's pitch where they're packed; the outer coil, coming round to the end, dips under the block's far end
+       over 0.4 rad. The bends' lengths are estimated (the solve's states show the same steps); the strip's length is kept as drawn without them */
+    const PSB=(HB0+HB1-0.3)/19.25,PSF=0.3/19.25,PSS=Math.PI/4+MSE,RBK=19.25-BLD-MST/2,RSI=SG0-MST/2-0.005,ss=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
+    const msCap=(u,ps)=>{let c=1e9;   /* u turns back from the outer end, ps its angle round the drum from the end */
+      if(u<1){c=ps<=PSB?RBK:RBK+(MSR+0.05-RBK)*ss((ps-PSB)/0.25);c=Math.min(c,RBK-MST+(MSR+0.05-RBK+MST)*ss((TAU-PSF-ps)/0.4));}   /* on the block and up off it; under the block's far end */
+      else{const d=Math.abs(ps-PSS)-SGW/SG0;c=d<=0?RSI:RSI+(MSR+0.05-RSI)*ss(d/0.3);}   /* under the Steg */
+      return c;};
     function msGeo(T){const ni=msShape(T),no=T-1-ni,r1=MSa+MST*ni,r2=MSR-MST*no,P=[],n=Math.ceil(T*64),ym=(MS0+MS1)/2;
-      const e0=tAt(EY0),e1=tAt(EY1),ts=[...new Set([...Array.from({length:n+1},(_,i)=>T*i/n),e0,e1])].sort((x,z)=>x-z);
-      for(const tau of ts){let r;if(tau<=ni)r=MSa+MST*tau;else if(tau<=ni+1){const f=tau-ni;r=r1+(r2-r1)*(f*f*(3-2*f));}else r=r2+MST*(tau-ni-1);
-        const a=HKA-TIP+TAU*tau;P.push(new THREE.Vector3(r*Math.cos(a),ym,-r*Math.sin(a)));}
+      const e0=tAt(EY0),e1=tAt(EY1),ts=[...new Set([...Array.from({length:n+1},(_,i)=>T*i/n),...Array.from({length:3*288+1},(_,i)=>T-i/288).filter(x=>x>0),T-PSB/TAU,e0,e1])].sort((x,z)=>x-z);   /* finer over the outer three turns */
+      const R=ts.map(tau=>{if(tau<=ni)return MSa+MST*tau;if(tau<=ni+1){const f=tau-ni;return r1+(r2-r1)*(f*f*(3-2*f));}return r2+MST*(tau-ni-1);});
+      for(let i=ts.length-1,j=ts.length-1;i>=0;i--){const u=T-ts[i],ps=TAU*(u-Math.floor(u));let r=Math.min(R[i],msCap(u,ps));   /* outward first: each held under the turn outside it */
+        if(u>=1){const t1=ts[i]+1;while(j>0&&ts[j-1]>=t1)j--;const k=Math.max(1,j),o=R[k-1]+(R[k]-R[k-1])*(t1-ts[k-1])/(ts[k]-ts[k-1]);r=Math.min(r,o-MST);}
+        R[i]=r;}
+      ts.forEach((tau,i)=>{const a=HKA-TIP+TAU*tau;P.push(new THREE.Vector3(R[i]*Math.cos(a),ym,-R[i]*Math.sin(a)));});
       return eyeRibbonGeo(P,0.36,Math.abs(MS1-MS0),ts.indexOf(e0),ts.indexOf(e1),-EYH/2,EYH/2);}
 
     /* =============== the chain 05 07 04 (Kette) and the band 05 07 03 (Schneckenband) =============== */
