@@ -1,0 +1,20 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx-gallery/leben-des-6mx/14_Kirow_247_Kasten_2.jpg",
+ "rev": "6mx",
+ "hash": "dial=kirov&wind=55.9",
+ "case": true,
+ "hide": [
+  "overBox"
+ ],
+ "look": [
+  0,
+  0.0,
+  700,
+  0,
+  560,
+  0,
+  22
+ ],
+ "points": {},
+ "circles": {}
+}

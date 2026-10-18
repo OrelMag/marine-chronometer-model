@@ -26,7 +26,8 @@ const RI=30.48/2,RJ=31.29/2,RO=32.32/2,HR=3.8,t1=RJ-RI,t2=RO-RJ,R=(RI+RO)/2,PHI0
 const RM=(30.5/2+32.3/2)/2,PHIM=60,BETA=3.15/RM/D;
 /* the weighed parts (g·mm², wempe_inertia.json): the masses with their screws and nuts; the timing weights and their screws at the arm's ends (their centre r, from
    the weights' own m and I); the rim and arm (050301-1: the rim's two layers worked out here, the arm the rest); the hub, staff, rollers, collet, a third of the spring */
-const B=J.balance.byHn,Im=B['050301-4'].I+B['WN-12'].I+B['WN-12a'].I,mm=B['050301-4'].m+B['WN-12'].m+B['WN-12a'].m,Iw=B['050301-3'].I+B['050301-2'].I,rW=Math.sqrt(B['050301-3'].I/B['050301-3'].m);
+const B=J.balance.byHn,N0={I:0,m:0},Im=B['050301-4'].I+B['WN-12'].I+(B['WN-12a']||N0).I,mm=B['050301-4'].m+B['WN-12'].m+(B['WN-12a']||N0).m,   /* WN-12a: a screw in the mass's top where fitted (none in the model since 18 October 2026) */
+  Iw=B['050301-3'].I+B['050301-2'].I,rW=Math.sqrt(B['050301-3'].I/B['050301-3'].m);
 const ring=(r0,r1,rho)=>rho*1e-3*2*Math.PI*HR*(r1**4-r0**4)/4*(1-4*1.5/(2*Math.PI*R)),Ins=ring(RI,RJ,8.1),Ibr=ring(RJ,RO,8.45),Irim=Ins+Ibr,Iarm=B['050301-1'].I-Irim;   /* the four cuts taken out */
 const Irest={hub:B['050402-2'].I+B['WN-10'].I,staff:B['050402-1'].I,rollers:J.rollers.I,collet:J.collet.I,spring:J.spring.I/3},Itot=Im+Iw+Irim+Iarm+Object.values(Irest).reduce((a,b)=>a+b,0);
 /* published constants, a °C (and GPa): */

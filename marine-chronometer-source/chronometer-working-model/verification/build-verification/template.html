@@ -374,12 +374,14 @@ each needs, and the bench's test sets it. The setup ratchet's faces, measured un
 
 <h3>11.3 The sustaining spring</h3>
 <p><b>Method.</b> The spring's stiffness from its section: a band bent in its plane between the pins that hold its two lobes (each pinned once, so the band is loaded by a
-pair of equal forces along the line through the pins), by Castigliano, (F / E I) ∫ h² ds over the free band, h a point's distance from the pins' line. Then, the key
+pair of equal forces along the line through the pins), by Castigliano, F ∫ h² / (E I) ds along the band from pin to pin, h a point's distance from the pins' line and I its section's there (the band traced on
+KLUwI2UUCMQ 27:26 tapers, 1.3-1.9 mm wide, its height read on 28:42.5 and 28:43.0). Then, the key
 held, the train runs on it, the fusee wheel turning at its rate and the spring opening, the balance's swing following its equation (A² towards ampAt(drive)², the free
 balance's TF) and the escapement's rate at that swing. Since 14 October 2026 the spring is a split ring weaker than the drive, as the period's chronometers had it
 (Gould, 1923; Glasgow, 1885): the fusee's pull holds it closed on its banking in running, and when the key takes the fusee it pushes what its section gives at its
-measured 20° gap, falling as it opens (the model's <code>SPU</code>, which this checks against the section). The manual's "enough power to drive the chronometer for
-five to ten minutes" (Sec. IV) is read as the time it keeps the balance over a turn. <code>sustaining.js</code>.</p>
+measured 12.5° gap, falling as it opens (the model's <code>SPU</code>, which this checks against the section). The manual's "enough power to drive the chronometer for
+five to ten minutes" (Sec. IV) is read as the time it keeps the chronometer running (since 17 October 2026, when the spring was traced on the video; the time it
+kept the balance over a turn until then, which the designed band gave and the traced one can't). <code>sustaining.js</code>.</p>
 <figure><div class="chart" id="c20"></div><figcaption>Figure 20. The balance's swing while the key is held, on the spring as drawn (its section's push) and as the model runs it (<code>SPU</code>); the two lie
 together. The band is the manual's, 247.5-270°; 180° is a turn; under 41° the escapement can't unlock and the train stops. <code>sustaining.js</code>.</figcaption></figure>
 <p><span id="suRes"></span></p>
@@ -431,7 +433,7 @@ springs, and the springs' set. What only a made chronometer settles is on the be
 
 <h2 id="est">12. The estimates swept</h2>
 <p><b>Method.</b> Five design values rest on estimates no source settles: the balance's free run-down, the detent's springs' thicknesses, the discharge
-jewel's back radius, the sustaining spring's band and lobes, and the hairspring's upper terminal curve. Each is swept over the range its sources allow, and
+jewel's back radius, the sustaining spring's band (traced on the video since 17 October 2026: swept over its readings' uncertainty), and the hairspring's upper terminal curve. Each is swept over the range its sources allow, and
 where the bench has a correction for it (the run-down test choosing the strip, the set-up, the ring test, the adjusting screws and the trip spring's tip, the
 maintaining test) it is applied as a maker would, to show that a chronometer made to the model works whichever value the real part has. <code>estimates.js</code>.</p>
 <figure><div class="chart" id="c30"></div><figcaption>Figure 30. The balance's swing at each free run-down, with the drawn strip unadjusted and with the strip the run-down test chooses.
@@ -828,8 +830,8 @@ function drawMech(){const X=DATA.mech;if(!X)return;const ow=X.ow,ra=X.ra,su=X.su
     chart('c20',{label:'Swing while the key is held',x:[0,mx],y:[0,280],xl:'minutes the key is held',yl:'the balance\'s swing (°)',hbands:[{y0:247.5,y1:270,c:'--band'}],hrefs:[{y:41,t:'stops'},{y:180,t:'a turn'}],r:80,
       series:[{type:'line',name:'as the model runs it',c:'--s1',data:S.model.map(r=>[r[0]/60,r[1]]),tip:p=>`model: ${f(p[0],1)} min, ${f(p[1],0)}°`},{type:'line',name:'the spring as drawn',c:'--s2',dash:'5 4',data:S.drawn.map(r=>[r[0]/60,r[1]]),tip:p=>`as drawn: ${f(p[0],1)} min, ${f(p[1],0)}°`}]});
     const sg=su.spring,nd=su.need;
-    $('suRes').textContent=`By Castigliano the drawn band (${f(sg.SSW,2)} wide, ${sg.H} high, free over ${f(sg.arc,0)}° between its lobes) is ${f(sg.kt,2)} N·m a radian: closed ${f(sg.SMAX*180/Math.PI,1)}° on its banking it pushes ${f(100*sg.P,0)} % of the drive (the model's SPU ${f(100*sg.SPU,0)} %), weaker than the drive, so the fusee's pull holds it banked in running; its steel at ${f(sg.sig,0)} MPa. Held, it keeps the balance over a turn ${f(S.tTurn.drawn/60,1)} minutes (the manual's five to ten), the swing leaving the band after ${f((S.tBand.drawn||0)/60,1)}, and runs the train ${f(S.tStop.drawn/60,1)}. A wind costs ${f(Math.abs(S.w10)*1e6,1)} µs held 10 s and ${f(Math.abs(S.w30)*1e6,1)} µs held 30 s: nothing a navigator could read.`;
-    $('suOpen').textContent=`The gap (20°, KLUwI2UUCMQ 27:26) and the band's width are measured; its height, ${sg.H} mm, is designed for the push (five to ten minutes over a turn ask ${f(nd.H[0],2)}-${f(nd.H[1],2)} mm, within the ${nd.recess} mm recess); its lobes' sizes and which hole has the pin are estimated. The bench's maintaining test checks the made spring: its ends nearly meet in running, and held it keeps the balance over a turn five to ten minutes`;}
+    $('suRes').textContent=`By Castigliano the band as traced (${f(sg.wlo,2)}-${f(sg.whi,2)} wide, ${sg.H} high, free over ${f(sg.arc,0)}° between its lobes) is ${f(sg.kt,2)} N·m a radian: closed ${f(sg.SMAX*180/Math.PI,1)}° on its banking it pushes ${f(100*sg.P,0)} % of the drive (the model's SPU ${f(100*sg.SPU,0)} %), weaker than the drive, so the fusee's pull holds it banked in running; its steel at ${f(sg.sig,0)} MPa. Held, it keeps the chronometer running ${f(S.tStop.drawn/60,1)} minutes (the manual's five to ten), the swing leaving the band at once and falling under a turn after ${f(S.tTurn.drawn/60,1)}. A wind costs ${f(Math.abs(S.w10)*1e6,1)} µs held 10 s and ${f(Math.abs(S.w30)*1e6,1)} µs held 30 s: nothing a navigator could read.`;
+    $('suOpen').textContent=`Its outline (the band's taper, both lobes, the tips' round ends, the pins and holes) and the gap, ${f(sg.SSG*180/Math.PI,1)}°, are traced on KLUwI2UUCMQ 27:26, its height, ${sg.H} mm, on 28:42.5 and 28:43.0 (1.1 ±0.2 before FK; five to ten minutes' running ask ${f(nd.H[0],2)}-${f(nd.H[1],2)} mm, within the ${f(nd.recess,1)} mm recess). The bench's maintaining test checks the made spring: its ends nearly meet in running, and held it keeps the chronometer running five to ten minutes`;}
   /* 11.4 the motion work */
   table('t20',['Mesh','Teeth','Module','Tip clearance','Backlash','Before the line of centres','Torque passed (μ 0.10)'],mw.meshes.map(q=>[q.nm,`${q.za}:${q.zb}`,f(q.m,4),`${f(q.tip*1000,0)} µm`,`${f(q.blmm*1000,0)} µm (${f(q.bl*180/Math.PI,2)}°)`,`${f(100*q.approach,0)} %`,`${f(q.al[0],3)}-${f(q.al[1],3)}`]),true);
   {const c=mw.cannon,mm=x=>x*1000;

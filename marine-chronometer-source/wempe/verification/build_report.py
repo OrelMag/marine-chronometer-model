@@ -1,7 +1,7 @@
 """The report "The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?": index.html here, built from template.html with
 assets/data.json (node reportdata.js: every Wempe check run, its exit code and output, and the figures the page charts), assets/geometry.json (python geometry.py: the
 browser checks on the Wempe's page), the tools' expected tables (../checks.py, ../bom.json) and the model's README (its sections "Sources", "Estimated, not from the
-drawings", "Readings corrected against the sheets" and "Unresolved", rendered as they stand). The data are embedded, so the page opens from the file without a server.
+drawings", "Readings corrected against the sheets", "Unresolved" and "The Soviet 6MX", rendered as they stand). The data are embedded, so the page opens from the file without a server.
 No drawing scan or photograph is shown: every chart is drawn from the model's numbers, and the videos are linked at the moments used.
 
   node reportdata.js        assets/data.json (about 9 minutes)
@@ -80,12 +80,15 @@ def main():
     corr = [i for i in items(section(md, 'Readings corrected against the sheets')) if 't' in i]
     unres = [i for i in items(section(md, 'Unresolved')) if 't' in i]
     src = items(section(md, 'Sources'))
+    sov = re.search(r'^## The Soviet 6MX[^\n]*$(.*?)(?=^## |\Z)', md, re.S | re.M)
+    if not sov: raise SystemExit('the README has no section "The Soviet 6MX"')
+    sov = ''.join(f'<p>{i["p"]}</p>' if 'p' in i else ul([i]) for i in items(sov.group(1).strip('\n').split('\n')))
     DATA = dict(data=A('data.json'), geo=A('geometry.json') if os.path.exists(os.path.join(HERE, 'assets', 'geometry.json')) else None, checks=checks_py(), bom=bom(),
                 counts=dict(estimates=nest, corrected=len(corr), unresolved=len(unres)))
     t = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
     made = datetime.date.today().strftime('%#d %B %Y' if os.name == 'nt' else '%-d %B %Y')
     for k, v in {'/*DATA*/null': json.dumps(DATA, separators=(',', ':'), ensure_ascii=False).replace('</', '<\\/'), '<!--MADE-->': made,
-                 '<!--ESTIMATED-->': est, '<!--CORRECTED-->': ul(corr), '<!--UNRESOLVED-->': ul(unres, ' class="open"'), '<!--SOURCES-->': ul(src)}.items():
+                 '<!--ESTIMATED-->': est, '<!--CORRECTED-->': ul(corr), '<!--UNRESOLVED-->': ul(unres, ' class="open"'), '<!--SOURCES-->': ul(src), '<!--SOVIET-->': sov}.items():
         if k not in t: raise SystemExit(f'template.html has no {k}')
         t = t.replace(k, v)
     open(os.path.join(HERE, 'index.html'), 'w', encoding='utf-8', newline='\n').write(t)

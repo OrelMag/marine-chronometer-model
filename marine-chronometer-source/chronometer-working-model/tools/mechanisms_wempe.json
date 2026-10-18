@@ -126,8 +126,8 @@
     ]
    },
    "height": 1.02,
-   "mass": 0.596,
-   "I": 14.3654,
+   "mass": 0.5928,
+   "I": 14.3104,
    "note": "the maintaining detent (05 05 05-1, hole 4) on the maintaining ratchet 05 06 02-1: winding, it holds the ratchet against the maintaining spring"
   },
   {
@@ -143,46 +143,46 @@
    "load": 1,
    "face": {
     "kind": "on the face",
-    "along": 0.9799,
+    "along": 0.9794,
     "C": [
-     5.8121,
-     -1.5639
+     5.7619,
+     -1.4276
     ],
     "n": [
-     -0.4471,
-     -0.8945
+     -0.4318,
+     -0.902
     ],
-    "gap": 0.1718,
+    "gap": 0.1884,
     "r": [
-     6.0188,
-     6.0188
+     5.9361,
+     5.9361
     ],
-    "depth": 1.0007,
+    "depth": 1.0761,
     "np": 1
    },
    "back": {
-    "gap": 0.622,
-    "along": 0.496,
+    "gap": 0.471,
+    "along": 0.4761,
     "r": [
-     5.9993,
-     5.9993
+     5.9239,
+     5.9239
     ]
    },
    "height": 2.55,
-   "mass": 1.3604,
-   "I": 32.2311,
+   "mass": 1.4128,
+   "I": 34.4648,
    "note": "the set-up click (05 08 05-2, hole 46) on the set-up ratchet 05 07 00-3: it holds the mainspring's set-up and its wind on the barrel arbor"
   }
  ],
  "arbors": {
   "fusee": {
-   "m": 48.4166,
-   "I": 4053.1425,
+   "m": 48.6648,
+   "I": 4078.1085,
    "missing": {}
   },
   "barrel": {
-   "m": 108.1881,
-   "I": 27523.102,
+   "m": 107.9618,
+   "I": 27473.728,
    "missing": {}
   }
  }

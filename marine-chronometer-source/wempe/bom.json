@@ -368,6 +368,7 @@
   },
   {
    "id": "050801-4",
+   "rev": "last first 6mx 1943 -3955",
    "idx": null,
    "no": "",
    "dwg": "05 08 01-4",
@@ -413,8 +414,8 @@
    "id": "WN-ucs",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Upper balance cock screw (hole 8; WN number not read)",
+   "dwg": "WN-55",
+   "name": "Upper balance cock screw (hole 8; WN-55 by the coloured section's label)",
    "qty": 1,
    "parent": "050803-1",
    "kind": "part",
@@ -689,16 +690,16 @@
    "parent": "050502",
    "kind": "part",
    "part": "intermediateWheel",
-   "fn": "Driven by the centre wheel; runs in the top plate's bush WN-300 and the intermediate bridge's.",
+   "fn": "Driven by the centre wheel; runs in the top plate's bush WN-300 and the intermediate bridge's. In the Soviet 6MX (the page's Variants) it runs in jewels in chatons at both ends.",
    "rel": [
     [
      "in",
-     "WN-300.t38",
+     "WN-300.t38|6MX.jw38u",
      "run"
     ],
     [
      "in",
-     "WN-300.zb",
+     "WN-300.zb|6MX.jw38l",
      "run"
     ],
     [
@@ -757,11 +758,11 @@
    "parent": "050501",
    "kind": "part",
    "part": "secondsWheel",
-   "fn": "Driven by the intermediate wheel; turns once a minute; runs in the top plate's bush WN-300 and the jewel 05 05 04-1 in the intermediate bridge; its lower pivot goes on as the seconds hand's post.",
+   "fn": "Driven by the intermediate wheel; turns once a minute; runs in the top plate's bush WN-300 and the jewel 05 05 04-1 in the intermediate bridge; its lower pivot goes on as the seconds hand's post. In the Soviet 6MX its upper pivot runs in a jewel in a chaton.",
    "rel": [
     [
      "in",
-     "WN-300.t35",
+     "WN-300.t35|6MX.jw35u",
      "run"
     ],
     [
@@ -835,7 +836,8 @@
      "press"
     ]
    ],
-   "figs": "05 08_2"
+   "figs": "05 08_2",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-300.t35",
@@ -855,7 +857,8 @@
      "press"
     ]
    ],
-   "figs": "05 08_2"
+   "figs": "05 08_2",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-302",
@@ -895,7 +898,134 @@
      "press"
     ]
    ],
-   "figs": "05 08_10"
+   "figs": "05 08_10",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "6MX.ch38u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Chaton (6MX), intermediate arbor's upper jewel",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "Holds the intermediate arbor's upper jewel in the top plate's hole 38, where the drawings press the bush WN-300. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.jw38u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), intermediate arbor, upper",
+   "qty": 1,
+   "parent": "6MX.ch38u",
+   "kind": "jewel",
+   "part": "topPlate",
+   "fn": "The intermediate arbor's upper pivot runs in it; its face takes the arbor's shoulder. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ch38u",
+    "arbor": "050502-2",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ch35u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Chaton (6MX), seconds arbor's upper jewel",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "Holds the seconds arbor's upper jewel in the top plate's hole 35, where the drawings press the bush WN-300. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.jw35u",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), seconds arbor, upper",
+   "qty": 1,
+   "parent": "6MX.ch35u",
+   "kind": "jewel",
+   "part": "topPlate",
+   "fn": "The seconds arbor's upper pivot runs in it; its face takes the arbor's shoulder. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ch35u",
+    "arbor": "050501-2",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ch38l",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Chaton (6MX), intermediate arbor's lower jewel",
+   "qty": 1,
+   "parent": "050804-1",
+   "kind": "part",
+   "part": "intermediateBridge",
+   "fn": "Holds the intermediate arbor's lower jewel in the intermediate bridge, where the drawings press the bush WN-300. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [
+    [
+     "in",
+     "050804-1",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.jw38l",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), intermediate arbor, lower",
+   "qty": 1,
+   "parent": "6MX.ch38l",
+   "kind": "jewel",
+   "part": "intermediateBridge",
+   "fn": "The intermediate arbor's lower pivot runs in it; its face takes the arbor's shoulder. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ch38l",
+    "arbor": "050502-2",
+    "end": "lower"
+   }
   },
   {
    "id": "050504-2",
@@ -974,7 +1104,8 @@
      "press"
     ]
    ],
-   "figs": "05 08_3a, 05 08_32.2"
+   "figs": "05 08_3a, 05 08_32.2",
+   "rev": "last first 1943"
   },
   {
    "id": "050200-6",
@@ -1049,7 +1180,7 @@
       0
      ],
      "why": "as first drawn (the page's Variants) the arm is riveted on the 1941 collar's neck (05 04_5), which stands between its hole and the staff: the 1946 staff's seat Ø 2 h6 isn't there",
-     "rev": "first"
+     "rev": "first 6mx 1943"
     }
    ]
   },
@@ -1082,16 +1213,11 @@
    "parent": "050301-4",
    "kind": "part",
    "part": "balance",
-   "fn": "Holds a mass on the rim, across it.",
+   "fn": "Holds a mass on the rim: radially through its outer jaw, its tip on the rim's outer face (the 6MX's book, Fig. 5.62).",
    "rel": [
     [
      "in",
      "050301-4",
-     "embed"
-    ],
-    [
-     "in",
-     "050301-1",
      "embed"
     ]
    ],
@@ -1102,12 +1228,15 @@
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Mutter (WN-12a), the mass screw's nut",
-   "qty": 4,
+   "name": "Schraube (WN-12a), for the tapped hole in a mass's top (not fitted)",
+   "qty": [
+    0,
+    4
+   ],
    "parent": "050301-4",
    "kind": "part",
    "part": "balance",
-   "fn": "On the mass screw inside the rim, sunk flush in the mass's inner face (as the screw's head in its outer face on Wempe 3955).",
+   "fn": "In the M1.2 hole, countersunk, in the middle of a mass's top: the coloured section draws one on one mass; Wempe's lever 2965 and the earlier 2493 show such holes empty; the Einheits examples photographed (Wempe 3955, the Langes) have plain tops (a poising screw fitted where needed, likely).",
    "rel": [
     [
      "in",
@@ -1325,7 +1454,20 @@
      "050302-3"
     ]
    ],
-   "figs": "05 03_9"
+   "figs": "05 03_9",
+   "dev": [
+    {
+     "rel": [
+      "on",
+      "050302-3"
+     ],
+     "inst": [
+      0
+     ],
+     "why": "as first drawn (and in the Soviet 6MX, at those heights) the spring's top curve rides 0.3 higher in the stud's slot and its pin with it, 0.05 off the stud: the 1941 stud's seat for the pin isn't drawn (found 16 October 2026, already so on main at 3.00.01)",
+     "rev": "first 6mx 1943"
+    }
+   ]
   },
   {
    "id": "WN-11",
@@ -1578,8 +1720,8 @@
    "id": "WN-gf",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Detent foot screw, M1 (its WN number not read)",
+   "dwg": "WN-13",
+   "name": "Detent foot screw, M1 (WN-13 by the coloured section's label, likely)",
    "qty": 1,
    "parent": "050401-1",
    "kind": "part",
@@ -1600,11 +1742,11 @@
    "figs": "05 04_3"
   },
   {
-   "id": "WN-201.d",
+   "id": "WN-205.d",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Stellstift (WN-201, \"Stellstift 2\"), the detent's foot pins",
+   "dwg": "WN-205",
+   "name": "Stellstift (WN-205 by the coloured section's label), the detent's foot pins",
    "qty": 2,
    "parent": "050401-1",
    "kind": "part",
@@ -1647,13 +1789,13 @@
    "id": "WN-gk",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Detent block screw, M1.7 (its WN number not read)",
+   "dwg": "WN-15",
+   "name": "Detent block screw, M1.7 (WN-15 by the coloured section's label, likely)",
    "qty": 1,
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "From the top plate's outer face through hole 13 into the block.",
+   "fn": "From the top plate's outer face through hole 13 into the block. The Soviet 6MX's: a slotted stud flush in the plate's outer face, 2.2 from hole 13 (Kirov No. 247), through the adjusting slide into the block.",
    "rel": [
     [
      "in",
@@ -1692,11 +1834,32 @@
    "figs": "05 04_3"
   },
   {
-   "id": "cone41",
+   "id": "WN-gkA43",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Anschlagschraube mit Kegel 1941 (the 1941 block's banking screw with its cone; no number on 05 04_1)",
+   "name": "Banking screw M1.2 along the 1943 block's slit upright, its domed slotted head (the escapement of 1943; its WN number not read)",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "Along the upright's slit end, the slit gripping its thread; its head's underside bears on the detent's pipe and sets the depth of lock. The thread from the block's sheet (M1.2), its head measured on Kirow DEC 422's, DEC 479's and Lange No. 5177's photographs, its length the 6MX's loose block's.",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "tap"
+    ]
+   ],
+   "figs": "05 04_3",
+   "rev": "1943"
+  },
+  {
+   "id": "cone41",
+   "idx": null,
+   "no": "",
+   "dwg": "WN-16",
+   "name": "Anschlagschraube 1941 (the 1941 block's banking screw, domed head and pointed tail; WN-16 by the coloured section's label)",
    "qty": [
     0,
     1
@@ -1704,7 +1867,7 @@
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "Through the 1941 block's arm on the stone's line, held by its slit end (the page's Variants, As first drawn).",
+   "fn": "Through the 1941 block's arm on the stone's line, held by its slit end; the detent's pipe banks on its head's face, and turning it sets the depth of lock (the page's Variants, As first drawn).",
    "rel": [
     [
      "in",
@@ -1715,11 +1878,11 @@
    "figs": "05 04_1"
   },
   {
-   "id": "WN-gkP",
+   "id": "WN-201.gk",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Steady pins Ø 0.9, detent block",
+   "dwg": "WN-201",
+   "name": "Stellstift (WN-201, \"Stellstift 2\" by the coloured section's label), the detent block's steady pins Ø 0.9",
    "qty": 2,
    "parent": "050401-4",
    "kind": "part",
@@ -1738,6 +1901,47 @@
     ]
    ],
    "figs": "05 04_3"
+  },
+  {
+   "id": "6MX.gks",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Adjusting slide (6MX), the detent block's",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "A gilt key flush in a notch across the corner of the block's plate face and free side, the fixing stud through it. No sheet: the Soviet 6MX's (a loose 6MX block photographed by Altmeppen, Kirov No. 247's in place), its sizes measured on the loose block, how it works not seen.",
+   "rel": [
+    [
+     "on",
+     "050401-4"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.gke",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Detent foot's stop screw (6MX), in the block's side",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "A large slotted screw in the block's free side beside the detent's foot, its head over the end face: a stop for the foot along the block. No sheet: the Soviet 6MX's (every 6MX detent photograph), its thread estimated.",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "embed"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
   },
   {
    "id": "050408-2.bu",
@@ -1924,11 +2128,11 @@
    }
   },
   {
-   "id": "WN-16",
+   "id": "WN-10.bl",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Schraube (WN-16), the lower settings' screws, M1.2",
+   "dwg": "WN-10",
+   "name": "Schraube (WN-10 by the coloured section's label, its last digit 0 or 8: likely 10), the lower settings' screws, M1.2",
    "qty": 2,
    "parent": "050408-2.bl",
    "kind": "part",
@@ -2644,8 +2848,8 @@
    "id": "wireStud",
    "idx": null,
    "no": "",
-   "dwg": "",
-   "name": "Stift (the maintaining detent's wire spring's stud; no number)",
+   "dwg": "WN-27",
+   "name": "Schraube (WN-27 by the coloured section's label, likely: the maintaining detent's wire spring's stud)",
    "qty": 1,
    "parent": "050901",
    "kind": "part",
@@ -2703,11 +2907,11 @@
    "figs": "05 06_4, 05 06_2.2"
   },
   {
-   "id": "050603-2",
+   "id": "050604-4",
    "idx": null,
    "no": "",
-   "dwg": "05 06 03-2",
-   "name": "Stift (the stop bar's spring's pin)",
+   "dwg": "05 06 04-4",
+   "name": "Stift (05 06 04-4: the coloured section's label and 05 06 04's parts list, likely), the stop bar's spring's pin",
    "qty": 1,
    "parent": "0506",
    "kind": "part",
@@ -2717,6 +2921,26 @@
     [
      "in",
      "050604-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_4, 05 06_2.2"
+  },
+  {
+   "id": "050603-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 03-2",
+   "name": "Stift (05 06 03-2, the coloured section's label), the stop bar's pin, on which its spring's end bears",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "stopWork",
+   "fn": "Pressed across the bar near its lower end, standing 0.9 out of its near side, where the bar's spring bears (05 06_4's C-D).",
+   "rel": [
+    [
+     "in",
+     "050603-1",
      "embed"
     ]
    ],
@@ -3501,7 +3725,23 @@
    "part": "bowl",
    "fn": "Hold the case brackets and the locking bracket to the bowl (their holes across the turned bowl not cut).",
    "rel": [],
-   "figs": "05 01_1"
+   "figs": "05 01_1",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "6MX.bks",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Bracket screws (6MX)",
+   "qty": 6,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Hold the Soviet 6MX's high case brackets (two each, in slots) and its locking bracket (two, in its vertical slot) to the bowl, their holes across the turned bowl not cut. No sheet: Kirov No. 247's bowl (12_Kirow_247_E-Kontakt_3.jpg).",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
   },
   {
    "id": "050100-2",
@@ -3560,6 +3800,20 @@
      "tap"
     ]
    ],
+   "figs": "05 01_1, 05 01_3"
+  },
+  {
+   "id": "050100-7",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 00-7",
+   "name": "Verschlußfeder (closing spring)",
+   "qty": 1,
+   "parent": "050100-2",
+   "kind": "part",
+   "part": "closingPlate",
+   "fn": "Holds the closing plate shut over the winding hole and turns it back when the key is out: a wire spiral in the plate's groove, one end in the plate's Ø 1.2, the other in the bowl's bottom (no sheet: estimated from the plate's; its ends sit free in their holes, so no relation is measured).",
+   "rel": [],
    "figs": "05 01_1, 05 01_3"
   },
   {
@@ -3692,7 +3946,8 @@
    "part": "box",
    "fn": "185 x 185 x 180 outside: the gimbals hang in it (no sheet in the set).",
    "rel": [],
-   "figs": "05 01_1, 51 00_1"
+   "figs": "05 01_1, 51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-80",
@@ -3722,7 +3977,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten"
+     "Holzkasten|Kasten6"
     ]
    ],
    "figs": "05 01_1"
@@ -3744,7 +3999,8 @@
      "Holzkasten"
     ]
    ],
-   "figs": "51 00_2"
+   "figs": "51 00_2",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-hg",
@@ -3758,7 +4014,8 @@
    "part": "box",
    "fn": "Through the handles' ends into the side walls.",
    "rel": [],
-   "figs": "51 00_2"
+   "figs": "51 00_2",
+   "rev": "last first 1943"
   },
   {
    "id": "Scharnier",
@@ -3772,7 +4029,8 @@
    "part": "box",
    "fn": "Join the lid to the box at the back: one hinge 148 long, its leaves let into the parting faces (as every photographed box).",
    "rel": [],
-   "figs": "51 00_1"
+   "figs": "51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "Deckelstuetze",
@@ -3786,7 +4044,8 @@
    "part": "box",
    "fn": "Holds the lid open: a slotted brass bar pivoted on the lid's left wall, riding on a pin in the box's (Wempe 6161).",
    "rel": [],
-   "figs": "photographs"
+   "figs": "photographs",
+   "rev": "last first 1943"
   },
   {
    "id": "Schluesselhalter",
@@ -3802,7 +4061,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten"
+     "Holzkasten|Kasten6"
     ]
    ],
    "figs": "51 00_1"
@@ -3824,7 +4083,8 @@
      "Holzkasten"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "Holzkasten.D",
@@ -3838,7 +4098,8 @@
    "part": "lid",
    "fn": "The glazed lid, hinged at the back.",
    "rel": [],
-   "figs": "51 00_1, 51 00_2"
+   "figs": "51 00_1, 51 00_2",
+   "rev": "last first 1943"
   },
   {
    "id": "Deckelglas",
@@ -3854,7 +4115,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten.D"
+     "Holzkasten.D|Kasten6.D"
     ]
    ],
    "figs": "51 00_1"
@@ -3876,7 +4137,8 @@
      "Holzkasten.D"
     ]
    ],
-   "figs": "51 00_3"
+   "figs": "51 00_3",
+   "rev": "last first 1943"
   },
   {
    "id": "P510002-2",
@@ -3895,7 +4157,8 @@
      "Holzkasten.D"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-zg",
@@ -3909,7 +4172,8 @@
    "part": "lid",
    "fn": "The screw the tongue turns on.",
    "rel": [],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-zk",
@@ -3928,7 +4192,8 @@
      "P510002-2"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first 1943"
   },
   {
    "id": "Ueberkasten",
@@ -3942,7 +4207,8 @@
    "part": "overBox",
    "fn": "Carries the wooden box for transport, cushioned all round.",
    "rel": [],
-   "figs": "51 00_5, 51 00_1"
+   "figs": "51 00_5, 51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "Randleiste",
@@ -3956,7 +4222,8 @@
    "part": "overBox",
    "fn": "Inside the rim, 4 over the walls: the lid closes over it.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.S",
@@ -3970,7 +4237,8 @@
    "part": "overBox",
    "fn": "Against the wooden box's front and back.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.E",
@@ -3984,7 +4252,8 @@
    "part": "overBox",
    "fn": "Against the wooden box's handles.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.B",
@@ -3998,7 +4267,8 @@
    "part": "overBox",
    "fn": "The wooden box stands on it.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Riemen",
@@ -4040,7 +4310,8 @@
    "part": "overBox",
    "fn": "On each end of the base plate.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "WN-ro",
@@ -4054,7 +4325,8 @@
    "part": "overBox",
    "fn": "The eyes' screws.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Scharnier.U",
@@ -4096,7 +4368,8 @@
    "part": "overLid",
    "fn": "Hinged at the back, cushioned inside.",
    "rel": [],
-   "figs": "51 00_5, 51 00_1"
+   "figs": "51 00_5, 51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.D",
@@ -4110,7 +4383,8 @@
    "part": "overLid",
    "fn": "Bears on the wooden box's lid.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
   },
   {
    "id": "Haken",
@@ -4125,6 +4399,181 @@
    "fn": "On the lid's front, caught in the eye.",
    "rel": [],
    "figs": "51 00_5"
+  },
+  {
+   "id": "Kasten6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Ящик (the 6MX’s box, Kirov No. 247’s): its body",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "box",
+   "fn": "190 x 190 x 190 outside (the TU's): the gimbals hang in it. No sheet: Kirov 247's photographs, its tiers on Kirov 22823's.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Scharnier6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hinges (6MX, estimated)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Join the glazed lid to the box at the back, and the top lid to it (not seen on Kirov 247's photographs).",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "Griff6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Ring handle (6MX)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "One on each side, under the lower parting line.",
+   "rel": [
+    [
+     "on",
+     "Kasten6"
+    ]
+   ],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Beschlag6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Corner strips (6MX)",
+   "qty": 1,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Brass strips round the box's corners (the lids' with them).",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberfall6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hasp leaf (6MX)",
+   "qty": 4,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Two hasps across the parting lines, a knurled screw on each lower leaf.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Nummernschild",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Number plate 247 (6MX)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "On the box's front and the outer box's lid.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Kasten6.D",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Glazed lid and top lid (6MX)",
+   "qty": 1,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "lid",
+   "fn": "Hinged at the back, opened together here.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Firmenschild6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Factory badge, 1 МЧЗ им. Кирова (6MX)",
+   "qty": 1,
+   "parent": "Kasten6.D",
+   "kind": "part",
+   "part": "lid",
+   "fn": "On the glazed lid's front.",
+   "rel": [
+    [
+     "on",
+     "Kasten6.D"
+    ]
+   ],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberkasten6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Outer box (6MX): its body",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "overBox",
+   "fn": "Carries the box for transport, felt-lined; its sizes estimated.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Polster6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Felt (6MX)",
+   "qty": 6,
+   "parent": "Ueberkasten6",
+   "kind": "part",
+   "part": "overBox",
+   "fn": "Under, round and over the box.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberkasten6.D",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Outer box lid (6MX)",
+   "qty": 1,
+   "parent": "Ueberkasten6",
+   "kind": "part",
+   "part": "overLid",
+   "fn": "Hinged at the back, its tab closing into the notch.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
   },
   {
    "id": "050101.F",
@@ -4304,6 +4753,595 @@
    "fn": "On the collar beside the tang (its click spring 127-556.02-04 not drawn).",
    "rel": [],
    "figs": "05 01_6"
+  },
+  {
+   "id": "6MX.ct",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact base (6MX, Romanov's 58)",
+   "qty": 1,
+   "parent": "050802-1",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The gilt base of the seconds contact on the pillar plate's inner face, along its rim by pillar 39; carries the blocks, the lever's lower jewels and the cock. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "050802-1"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctm",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact base screw (6MX, 56)",
+   "qty": 2,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Hold the contact's base to the pillar plate, their ends flush on the dial side; reached through the top plate's two access holes. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "tap"
+    ],
+    [
+     "in",
+     "6MX.ct",
+     "clear"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctf",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Insulation (6MX, 68)",
+   "qty": 2,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Black fibre under each contact block, insulating it from the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ct"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctbp",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact block + (6MX, 52)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The positive block: the spiral's stud on it, the bowl's spring A bears on its outer end. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctf"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctbm",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact block − (6MX, 57)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The negative block: the contact disc on it, the bowl's spring B bears on its outer end. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctf"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctu",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Insulating bush (6MX, 67)",
+   "qty": 4,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Insulates each block screw from its block, its black flange under the head. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cts",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact block screw (6MX)",
+   "qty": 4,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Hold the blocks and their insulation to the base: steel cheese heads Ø 3.1. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ct",
+     "tap"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctd",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact disc (6MX, 55)",
+   "qty": 1,
+   "parent": "6MX.ctbm",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The knurled gilt disc the contact screw meets, upright on its bracket on block 57; it may be turned to renew a burnt contact (the 6MX's instruction). No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctst",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact lever staff (6MX, 69)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The lever's staff, jewelled at both ends; the spiral's collet on it. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctjs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact staff's upper jewel setting (6MX)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the staff's upper hole jewel and end jewel in the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ct",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctju",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), contact staff, upper",
+   "qty": 1,
+   "parent": "6MX.ctjs",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's upper pivot runs in it. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ctjs",
+    "arbor": "6MX.ctst",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ctjeu",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "End jewel (6MX), contact staff, upper",
+   "qty": 1,
+   "parent": "6MX.ctjs",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's upper end stone. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "end",
+    "holder": "6MX.ctjs",
+    "arbor": "6MX.ctst",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ctc",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock (6MX)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The L-shaped gilt cock over the spiral, holding the staff's lower jewels. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ct"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctcs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock screw (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the cock's foot to the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ct",
+     "tap"
+    ],
+    [
+     "in",
+     "6MX.ctc",
+     "clear"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctcp",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock steady pin (6MX)",
+   "qty": 2,
+   "parent": "6MX.ctc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Place the cock's foot on the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctjl",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), contact staff, lower",
+   "qty": 1,
+   "parent": "6MX.ctc",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's lower pivot runs in it, in the cock's arm. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ctc",
+    "arbor": "6MX.ctst",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "6MX.ctcc",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock's cap plate (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the staff's lower end jewel on the cock's arm. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctc"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctjel",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "End jewel (6MX), contact staff, lower",
+   "qty": 1,
+   "parent": "6MX.ctcc",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's lower end stone, under the cap plate. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "end",
+    "holder": "6MX.ctcc",
+    "arbor": "6MX.ctst",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "6MX.ctccs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Cap plate screw (6MX)",
+   "qty": 2,
+   "parent": "6MX.ctcc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Hold the cap plate to the cock's arm. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ctc",
+     "tap"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctl",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact lever (6MX, 60)",
+   "qty": 1,
+   "parent": "6MX.ctst",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Pressed on its staff: the stone at one end rides the contact wheel, the contact screw at the other meets the disc. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctp",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact lever's stone (6MX, 61)",
+   "qty": 1,
+   "parent": "6MX.ctl",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "A corundum pallet with a bevelled end, lifted by the contact wheel's teeth. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "pallet",
+    "holder": "6MX.ctl"
+   }
+  },
+  {
+   "id": "6MX.ctk",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact screw (6MX, 54)",
+   "qty": 1,
+   "parent": "6MX.ctl",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Threaded through the lever's end, its point on the disc: the contact itself. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctn",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact screw's lock nut (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctk",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Locks the contact screw in the lever. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cth",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spiral (6MX, 59)",
+   "qty": 1,
+   "parent": "6MX.ctst",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "A flat copper-coloured spiral from the staff's collet to the stud: the lead from block 52 to the lever, and its return spring. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctq",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Spiral stud (6MX, 53)",
+   "qty": 1,
+   "parent": "6MX.ctbp",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the spiral's outer end on block 52. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctbp"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctqs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Spiral stud's clamp screw (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctq",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Clamps the spiral's end in the stud. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ctq",
+     "tap"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cw",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact wheel (6MX, 62)",
+   "qty": 1,
+   "parent": "050501-2",
+   "kind": "part",
+   "part": "secondsWheel",
+   "fn": "Fixed on the seconds arbor under its wheel, on a gilt collet: 60 ratchet teeth less one, which lift the contact lever's stone every other beat and leave it closed at the minute. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cf",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spring in the bowl (6MX, 66)",
+   "qty": 2,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "A flat brass spring screwed inside the bowl, its three tines bearing on a contact block's outer end: the circuit from the terminal into the movement. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfi",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spring's insulation (6MX, 64)",
+   "qty": 2,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "A black insulating strip between each spring's foot and the bowl's bore. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spring screw (6MX, 65)",
+   "qty": 4,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Hold the springs' feet through the bowl's wall, slotted brass heads outside (their holes across the turned bowl not cut). No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfk",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact terminal (6MX)",
+   "qty": 2,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "A brass socket outside the bowl for each lead, marked + and − on the bowl. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfw",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Terminal washer (6MX, 63)",
+   "qty": 6,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Black fibre washers under the springs' screws and the terminals outside the bowl. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
   }
  ]
 }

@@ -140,6 +140,18 @@
           <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, dial, plate finish, balance, units, rate settings and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
           <div class="seg c2 span"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div></div>
       </details>
+      <details class="grp more" id="ctDet">
+        <summary>Contacts</summary>
+        <p class="note" style="margin:0 0 6px">A debug view: where the parts touch, come close or pass into each other, found on the model's solids, shown through the parts made faint (the box and case too). Pick a part for its contacts alone; hide parts to leave their contacts out.</p>
+        <label class="ck"><input type="checkbox" id="ctOn"> Show contacts</label>
+        <div id="ctOpts" class="hidden">
+          <div class="seg" id="ctMode" style="margin-top:6px"><button data-v="now" aria-pressed="true" title="The model as it stands: the clock stops, and the contacts are found again once it stands still after it moves">This moment</button><button data-v="sweep" aria-pressed="false" title="The model posed through a beat of the escapement and across the wind, as the interference check poses it: every contact any of those states makes, each pair with the states it meets in">Over a beat and the wind</button></div>
+          <label class="sl" style="margin-top:6px" title="How wide a gap still counts as close (a running clearance: a pivot in its hole, teeth out of action)"><span>Close within</span><select id="ctEps" aria-label="Close within, mm"><option value="0.01">0.01 mm</option><option value="0.03" selected>0.03 mm</option><option value="0.1">0.1 mm</option><option value="0.3">0.3 mm</option><option value="1">1 mm</option></select></label>
+          <label class="ck" title="With a part picked, the contacts between its own pieces too (a wheel on its arbor, the part's screws)"><input type="checkbox" id="ctIn" disabled> Inside the picked part too</label>
+          <p class="note" style="margin:6px 0 0"><span id="ctCount"></span>. A pair shows the worst it does: its overlap, else touching, else its least gap. Click a pair to show it alone; › picks the other part.</p>
+          <div id="ctList"></div>
+        </div>
+      </details>
       <details class="grp more" id="partsDet">
         <summary>Parts</summary>
         <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
@@ -230,7 +242,7 @@
       <details class="grp more" id="varDet">
         <summary>Variants</summary>
         <h3 class="sub-h">Plate finish</h3>
-        <div class="seg" id="finish"><button data-v="nickel" aria-pressed="true">Nickel (Hamilton)</button><button data-v="gilt">Gilt</button></div>
+        <div class="seg" id="finish"><button data-v="nickel" aria-pressed="true">Nickel (Hamilton)</button><button data-v="gilt">Gilt</button><button data-v="un" title="The colours of a Ulysse Nardin deck chronometer, No. 7400 (c. 1955), as photographed: frosted gilt plates and bridges, a gilt bowl and gimbal ring, a redder mahogany box. With it, the Roman, Swiss style dial">Ulysse Nardin (as No. 7400)</button></div>
         <h3 class="sub-h">Dial</h3>
         <div class="seg" id="dialSt"><button data-v="hamilton" aria-pressed="true">Arabic (Hamilton)</button><button data-v="usn" title="The Hamilton dial as made for the U.S. Navy: the dial's Navy number and the year in the seconds sub-dial, as photographed on serial 2E7832">Arabic, U.S. Navy (as 2E7832)</button><button data-v="roman">Roman, German style</button><button data-v="swiss">Roman, Swiss style</button><button data-v="soviet">Arabic, Soviet style</button></div>
         <h3 class="sub-h">Balance</h3>
@@ -367,7 +379,7 @@
     <button class="wind">Turn the key</button>
   </div>
   <div class="e-ro"></div>
-  <figcaption>The maintaining work inside the fusee wheel, as the model draws it, seen from the train bridge’s side with the sustaining ratchet see-through. Rose carries the drive; teal holds. Running, the fusee’s winding ratchet pushes the sustaining ratchet round through two pawls, and the ratchet drives the wheel through the spring, a split ring weaker than the drive, held closed with its ends nearly meeting. While the key turns, the sustaining pawl holds the ratchet and the spring, pushing off it, drives the wheel on alone: <span class="e-live" data-live="ssPu">88%</span> of the drive at first, less as it opens. It keeps the balance over a turn about eight minutes, the manual’s “five to ten”, and is spent once it has opened <span class="e-live" data-live="ssDeg">19.5°</span>, after <span class="e-live" data-live="ssMin">21</span> minutes. Its gap is measured; its section is worked out for that push.</figcaption>
+  <figcaption>The maintaining work inside the fusee wheel, as the model draws it, seen from the train bridge’s side with the sustaining ratchet see-through. Rose carries the drive; teal holds. Running, the fusee’s winding ratchet pushes the sustaining ratchet round through two pawls, and the ratchet drives the wheel through the spring, a split ring weaker than the drive, held closed with its ends nearly meeting. While the key turns, the sustaining pawl holds the ratchet and the spring, pushing off it, drives the wheel on alone: <span class="e-live" data-live="ssPu">22%</span> of the drive at first, less as it opens. It keeps the chronometer running about six minutes, the manual’s “five to ten”, the balance’s swing falling at once, and is spent once it has opened <span class="e-live" data-live="ssDeg">12.0°</span>, after <span class="e-live" data-live="ssMin">13</span> minutes. Its outline, gap and height are measured on a restoration video; its push is worked out from its section.</figcaption>
 </figure>
 <p>The routine was the same every day, at the same hour. Turn the chronometer gently face down in its gimbals; turn the shield plate on the bottom of the case clockwise to uncover the keyhole; wind to the left. Seven half turns restore the 24 hours since the last winding (the manual’s figure; the model’s train asks about 7½). The last half turn goes slowly, so that the chain meets the winding stop gently: at full wind it pushes a stop-bar in the top of the fusee out against a stop under the barrel bridge, and the key can turn no further.</p>
 <figure>
@@ -687,7 +699,9 @@
 <script src="../shared/escplan.js"></script>
 <script src="../shared/almanac.js"></script>
 <script src="../shared/hairspring.js"></script>
+<script src="../shared/contacts.js"></script>
 <script src="js/movement.js"></script>
+<script src="js/contactdata.js"></script>
 <script src="js/box.js"></script>
 <script src="js/essay.js"></script>
 <script src="js/makers.js"></script>

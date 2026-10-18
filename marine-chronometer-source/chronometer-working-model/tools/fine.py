@@ -34,7 +34,6 @@ EXPECTED=model.cfg('EXPECTED',{
  ('bal:Buffer','bal:Extrude'):("the rim's empty holes, marks set 0.05 into its face (one merged mesh in a group of its own, rebuilt by R.screws)",0.25,0.6),
  ('spr:Box','spr:Buffer'):("the hairspring's upper end in the stud's clamp: the designed strip (0.23 x 0.221) runs from the clamp's step along the bar toward its end, lying in its slot (until 4 October 2026 a round wire entering it 35 deg off the bar, 0.071 mm3)",0.07,0.3),
  ('bal:Buffer','spr:Buffer'):("the hairspring's inner end held in the collet's clamp (its straight lead along the collet's end face, HS_LEAD, under the clamp's jaw)",0.005,0.3),
- # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('barrel:Buffer(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end (the core r 4.84 and 15 tall, 1,057 mm3, since 12 October 2026: the videos' core; 142 on r 1.74)",1200,16.5),
  ('barrel:Buffer(drum)','ratchet:Lathe'):("the barrel arbor's two bearings (r 2.35) and its pivots, on the barrel's axis through the barrel's end holes (Fig. 75; since 15 October 2026, a plain r 1.4 rod before)",300,16.5),
  ('barrel:Buffer(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75); the wall is tested as the drum it encloses, so the nose counts as inside it; since 5 October 2026 to the middle of the measured 1.95 wall",0.25,0.6),
@@ -46,7 +45,7 @@ EXPECTED=model.cfg('EXPECTED',{
 CORE=4.84   # mm: the barrel arbor's core (MSPRING.ra - 0.06, movement.js; 1.74 until 12 October 2026)
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
 DIAL_MIN=0.02   # mm: least height of any part over the dial's printed face (it lies 0.02 over the brass disc, which the voxels test)
-DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{if(o.isMesh&&o.userData.surface)face=o;});mv.updateMatrixWorld(true);
+DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{let v=true;for(let q=o;q;q=q.parent)if(!q.visible)v=false;if(o.isMesh&&o.userData.surface&&v)face=o;});mv.updateMatrixWorld(true);
  const inv=new T.Matrix4().copy(mv.matrixWorld).invert(),fy=new T.Vector3().setFromMatrixPosition(face.matrixWorld).applyMatrix4(inv).y,R=face.geometry.parameters.outerRadius,Ri=face.geometry.parameters.innerRadius;
  const holes=[[L.F[0],L.F[1],1.2],[L.Ud[0],L.Ud[1],1.2],[L.C[0],L.C[1],Ri]],pn=o=>{for(let p=o;p;p=p.parent)if(p.userData.partName)return p.userData.partName;return '?';};
  let best=null;const v=new T.Vector3(),m=new T.Matrix4();
@@ -128,4 +127,4 @@ async def main():
     d=dial['best'];dok=d is None or d['d']>=DIAL_MIN
     print(f"\ndial face (y {dial['face']}): least height of a part over it, outside its arbor holes: "+('nothing over it' if d is None else f"{d['d']:.3f} mm, {d['part']} {d['type']} @ {','.join(map(str,d['at']))}")+f"  {'ok' if dok else 'HIT'} (want {DIAL_MIN} or more)")
     sys.exit(1 if bad or nb or not dok else 0)
-asyncio.run(main())
+if __name__=='__main__':asyncio.run(main())   # contacts.py imports its tables
