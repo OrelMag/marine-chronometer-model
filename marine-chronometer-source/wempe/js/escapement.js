@@ -732,13 +732,16 @@ const WESC=(()=>{
         /* its slot, a dark bar across the head along the detent, 0.5 deep under the dome, its top 0.01 over it (the kit's screws' slot is a bar standing 0.02 over a flat head) */
         {const xs=[];for(let k=0;k<=24;k++)xs.push(-rH+2*rH*k/24);const g=solidGeo([{loop:ccw([...xs.map(x=>[x,zt(Math.abs(x))+0.01]),...xs.slice().reverse().map(x=>[x,zt(Math.abs(x))-0.5])]),y0:-0.2,y1:0.2}]);
           g.rotateX(-Math.PI/2);g.rotateY(Math.atan2(TD.n[0],TD.n[1]));tag(across(blk43,g,M.steelD,at,TD.n,yS),'WN-gkA43',1);}}
-      /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 × 1.2 (Wempe 3955's, 11_), M1.7, 3.0 into the block (estimated) */
-      {const fx=K.headOn(tag(screw(rv(blk,'last first 1943'),H[13][0],H[13][1],TT,1.5,1.2,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(v=>{const f=v!=='last';fx.userData.lift=l0+(f?-0.3:0);});}
+      /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 (Wempe 3955's, 11_) × 2.4, a tall cheese head (6_Wempe_3955_S.jpg, photocompare.py's
+         fit: its foot and width on the model's, its top 8.8 px higher at 7.5 px a mm of height; 5_ and 7_ the same, 2.5-3; 1.2 read on 11_ until 18 October 2026), M1.7, 3.0
+         into the block (estimated) */
+      {const fx=K.headOn(tag(screw(rv(blk,'last first 1943'),H[13][0],H[13][1],TT,1.5,2.4,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(v=>{const f=v!=='last';fx.userData.lift=l0+(f?-0.3:0);});}
       /* the 6MX's: a slotted steel stud Ø 3.4 seated on the block's plate face and standing through the plate's Ø 3.5 to flush with its outer face (2_Kirow_247_A.jpg: dark,
          flush, slotted, Ø 3.3-3.5 at 8.99 px/mm; 2_Kirow_009_A.jpg bright; the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg at 30.3 px/mm across: Ø 3.55, standing
          about 2 proud of the face, 3.3 if the view is tilted only 20°: likely), screwed into the block M1.7 3.0 (estimated). What clamps the block to the plate isn't seen: the
          stud may be an eccentric, the adjusting slide beside it its key (README, Unresolved). It leaves the plate with the block */
-      tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,1.7,3.35,5.5,0.85),'WN-gk');   /* through the slide (2.5) and 3.0 into the block */   /* its lift through the plate follows the block's (above) */
+      tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,1.7,3.35+2.5,5.5,0.85),'WN-gk');   /* through the slide (2.5) and 3.0 into the block; its head standing 2.5 (±0.7) proud of the
+         plate's outer face, polished steel (6_Kirow_247_S.jpg, photocompare.py's fit; 7_ the same); flush until 18 October 2026 */   /* its lift through the plate follows the block's (above) */
       /* its steady pins Ø 0.9 through the block, 1.3 into the plate: as last revised the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
       for(const[g,e2]of[[blkL,3],[blkF,6.5],[blk43,3]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');
       for(const[q,e]of/** @type {[number[],number][]} */([[HOLES.block6.pins[0],1.2],[HOLES.block6.pins[1],3]]))tag(cylBetween(blk6,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');   /* the 6MX's at Kirov 247's (HOLES.block6); the near one 0.55 inside the end face, so 1.2 into the block, clear above the detent foot's pins (estimated: through, as drawn, it would cross them) */
