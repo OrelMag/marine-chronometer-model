@@ -1,0 +1,87 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/9_Wempe_3955_Hemmung.jpg",
+ "rev": "3955",
+ "hash": "wind=56",
+ "only": [
+  "lowerCock",
+  "balanceJewelsLow"
+ ],
+ "look": [
+  0.6,
+  1.2,
+  190,
+  -1,
+  -15,
+  12,
+  15
+ ],
+ "points": {
+  "lower balance jewel's hole (centre), on the cock's plate-side face": {
+   "xyz": [
+    -9.1,
+    -19.0,
+    12.11
+   ],
+   "uv": [
+    299,
+    555
+   ]
+  },
+  "small hole on the lug, toward its end (plate-side face)": {
+   "xyz": [
+    -12.052,
+    -19.0,
+    13.99
+   ],
+   "uv": [
+    295,
+    506
+   ]
+  },
+  "small hole on the lug, toward the foot (plate-side face)": {
+   "xyz": [
+    -6.148,
+    -19.0,
+    10.23
+   ],
+   "uv": [
+    298,
+    608
+   ]
+  },
+  "steady pin's top, left (WN-203.lc)": {
+   "xyz": [
+    -3.259,
+    -20.3,
+    6.018
+   ],
+   "uv": [
+    266,
+    700
+   ]
+  },
+  "steady pin's top, right (WN-203.lc)": {
+   "xyz": [
+    4.263,
+    -20.3,
+    17.826
+   ],
+   "uv": [
+    476,
+    696
+   ]
+  },
+  "cock screw's head top centre (WN-53)": {
+   "xyz": [
+    0.502,
+    -22.25,
+    11.922
+   ],
+   "uv": [
+    370,
+    700
+   ]
+  }
+ },
+ "fix_f": 2700
+}

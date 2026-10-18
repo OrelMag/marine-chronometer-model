@@ -56,26 +56,15 @@
     354
    ]
   },
-  "contact cock cap screw (6MX.ctccs, inner)": {
+  "pillar 39 at the top plate's inner face (axis; silhouette 667-860)": {
    "xyz": [
-    14.35,
-    -14.5,
-    25.73
+    6.477,
+    -19.0,
+    36.733
    ],
    "uv": [
-    503,
-    222
-   ]
-  },
-  "contact cock cap screw (6MX.ctccs, outer)": {
-   "xyz": [
-    14.13,
-    -14.5,
-    29.97
-   ],
-   "uv": [
-    600,
-    238
+    763,
+    148
    ]
   }
  },
