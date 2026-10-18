@@ -254,7 +254,8 @@ const WDIAL=(()=>{
 
   function build(mv,M,K){const{part,screw,loose}=K,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),R={};
     const S=(c,m,r,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},o));
-    const goldin=S(0xd9b25e,1,0.18);   /* Goldin, a gold-coloured brass, polished (the minute and hour hands' title blocks; Wempe 3955's, 1_Wempe_3955_Z.jpg) */
+    const goldin=S(0xd9b25e,1,0.35);   /* Goldin, a gold-coloured brass, polished (the minute and hour hands' title blocks; Wempe 3955's, 1_Wempe_3955_Z.jpg); 0.35 rough so their flat blades,
+       square to the viewer, show bright as the photographs' (photocompare.py; at 0.18 until 18 October 2026 they mirrored the page's dark sky and showed brown) */
     const paint=S(0xf2f0ea,0.3,0.4);   /* the dial's white ground (Wempe 3955's), glossy as its lacquer: metalness as the Hamilton's dial face, so it takes the room's light seen from the dial side */
     const grp=(par,p,ef)=>{const g=new THREE.Group();g.position.set(p[0],0,p[1]);par.add(g);return g;};
 
