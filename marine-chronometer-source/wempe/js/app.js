@@ -621,6 +621,11 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
       'bowl','closingPlate','bezel','gimbalRing','box','lid','overBox','overLid','caseLock','key'],ghost:['barrel'],mw:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands'],off:['dial','box','case','transport'],to:'movement'},
     TOUR:WTOUR,tourInset:(k,el)=>tourInset(k,el),tourStep:s=>tourStep(s),
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
+    /* the Contacts view (../shared/contacts.js): fine.py's expected overlaps and states (js/contactdata.js, from checks.py: contacts.py --write); a state posed as fine.py's FREEZE poses
+       it, through the movement's own update (the escapement's motion at its reference swing, ESC.state's default), the train from the tooth it stands on, the hands' slip kept */
+    contacts:{expected:WCONTACT.expected,states:WCONTACT.states,
+      pose:([ph,dE,n,w],u)=>{const s=ESC.state(ph),E0=Math.floor(lastE??0);u({E:E0+dE+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,slip});},
+      label:([ph,dE,n,w])=>dE?`${n} turns from full wind${w?', winding':''}, the train ${dE} teeth on`:`the balance at ${(ESC.state(ph).th/D2R).toFixed(1)}°, phase ${ph}`},
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
       add('Pillar plate','Unterplatte, 05 08 02-1','pillarPlate',pw(P.pillarPlate,-30,WD.PP_T,26));
