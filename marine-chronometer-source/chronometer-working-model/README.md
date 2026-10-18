@@ -1486,6 +1486,7 @@ carries the repository's copy at `/verification/real-chronometers/`.
 
 ## Estimated, not from the manual
 
+- The Ulysse Nardin finish's roughness (Variants): frosted plates and lacquered bowl at 0.45, read off the photographs' soft highlights, not measured; its colours are fitted (`UN_FIT` in `core.js`).
 - The mechanisms' analyses (13 October 2026): the hand's torque on this key (finger torque on handles of like size, Imrhan and Munoz-Vasa 2013, Swain 1970); the stop-bar's and stud's temper (hardened is the build's); the pawls' springs' set when free (the least each needs is found), the springs taken as straight cantilevers; the click's and the sustaining pawl's ends taken as fitted to their faces; the teeth's stiffness (cantilevers, halved for the contact) and the meshes' and contacts' damping (3 %); the wear coefficients (Rabinowicz's orders of magnitude) and the sliding at the escape teeth (0.5 mm on the jewel), the chain and the wheel teeth; a chain's allowed stretch (1 % of its pitch) and a tooth's wear (20 µm); the tolerances a maker holds on the strips (±0.005 mm), the sustaining spring's band (±0.02) and the springs' set.
 - The build's deviations (tools/deviations.js): Nivarox's expansion (7-10 × 10⁻⁶/°C) and modulus (165-195 GPa, as Elinvar-type alloys'), and with them the spring's thermoelastic coefficient for the Model 21's balance (+0.1 to +13.0 × 10⁻⁶ a °C); that balance's expansion read from Table IV as a thin ring's bending (inextensible, on a rigid arm; the 0.120 in head's mass extrapolated, I_REST's 8 % anywhere between Invar and the rim, Invar 1.0-1.6 × 10⁻⁶/°C); a bought spring's coefficient held to ±10 × 10⁻⁶ (EP3502288A1, an alloy's target, not a grade's published tolerance); Nivaflex's 3000 N/mm² is its maker's achievable strength, aged. The gear-mesh and FEA checks' inputs: tooth friction 0.10-0.20, the pivots' shake 10 µm, brass E 97-110 GPa and the expansions of brass and steel (published ranges), the chain's height on the fusee (makeFusee's yS, yB).
 
@@ -1873,7 +1874,15 @@ style's texture on first use.
 
 **Change materials and colours.** `mats()` in `core.js` defines every material
 (`M.plate`, `M.gilt`, `M.steel`, `M.blued`, `M.ruby`, …). Colours are sRGB hex
-values. The Nickel/Gilt plate finishes are in `PLATE_FINISH`.
+values. The Nickel/Gilt plate finishes are in `PLATE_FINISH`. The third, Ulysse Nardin
+(as No. 7400, c. 1955; `References/ulysse-nardin-7400/`), is the colours of that chronometer
+on this movement: its frosted gilt plates and bridges (no damascening), its gilt bowl and
+gimbal ring and the movement's other brass (matte), and its redder mahogany (the same grain
+on its own ground), in `UN_FIT`, applied by `M.setPlateFinish('un')`; chosen by hand it puts
+on the Swiss dial too. Each colour is fitted on the page: the surface rendered in the
+Movement, Dial and Box views, its pixels' brightness bands and G/R, B/R against the
+photographs' over the same kind of surface (the numbers are in `core.js`). The shapes stay
+the Hamilton's (its box keeps its brass corners; 7400's box has none, and nickel fittings).
 
 **Edit the walkthrough.** Each step is one entry in `TOUR` in `app.js`:
 

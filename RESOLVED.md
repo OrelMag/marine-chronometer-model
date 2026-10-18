@@ -656,6 +656,9 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Hamilton's dust seal packing rings (42054) were brown** (`M.fibre` 0x5e3818), where every photograph of a Model 21 shows them dark: black on
+  2E11795's top view, slate blue-grey on 2E12055, stained olive on the oblique photograph (`photocompare.py`'s pilot on the Hamilton, 18 October 2026;
+  Review-results.md). Keep: `M.fibre` dark slate and matt (0x2a2e34, roughness 0.85); it is the packing's alone. `8f44e50b`
 - **The Wempe's maintaining detent and maintaining spring were deep blue** where their sheets say "310° hell-blau anlassen" (light blue) and both
   specimens photograph pale grey (18 October 2026). Keep: `M.blue310` for parts tempered at 310°, `M.blued` (deep blue, 295°) for the fusee's clicks. `8302b5e5`
 - **The sustaining spring wasn't the video's.** A uniform band 1.85 mm wide and 1.45 high (a design for the push), its gap 20° (read at the wall,
