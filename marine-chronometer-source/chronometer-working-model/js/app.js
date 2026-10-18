@@ -194,8 +194,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      itself, as before the merge): a merged piece is on layer 2, which the raycasters see too. The world matrices are brought up to date once, before
      the copies are put in place, and not again for each of the frame's passes */
   const DM=drawMerge(scene,INKM);if(/[?&]qa\b/.test(location.search))window.__dm=DM;
-  const paint=()=>{scene.updateMatrixWorld();DM.sync(st.merge);const au=scene.autoUpdate;scene.autoUpdate=false;
-    if(st.draw)(ink||(ink=makeInk(r))).render(scene,cam,DM.all);else if(st.edges)(ink||(ink=makeInk(r))).lines(scene,cam,DM.all,INKH);else r.render(scene,cam);scene.autoUpdate=au;};
+  let CT=null;   /* the Contacts view (../shared/contacts.js), bound below */
+  const paint=()=>{const ct=!!CT&&CT.on();scene.updateMatrixWorld();DM.sync(st.merge&&!ct);const au=scene.autoUpdate;scene.autoUpdate=false;
+    if(ct)r.render(scene,cam);else if(st.draw)(ink||(ink=makeInk(r))).render(scene,cam,DM.all);else if(st.edges)(ink||(ink=makeInk(r))).lines(scene,cam,DM.all,INKH);else r.render(scene,cam);scene.autoUpdate=au;};
   /* ---------- cross-sections ---------- */
   r.localClippingEnabled=true;
   for(const o of[...MVM,...BOXM]){const m=o.userData.mat0;if(m&&m.isMeshStandardMaterial)patchSection(m,m.side!==THREE.DoubleSide&&!m.transparent&&!o.userData.noCap);}
@@ -260,7 +261,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}t.color.copy(m0.color).lerp(LPC[c],0.8);if(t.emissive){t.emissive.copy(LPC[c]);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}   /* less metal, so the colour shows rather than the room it reflects */
   /* a movement mesh drawn see-through (a ghost): plates with See-through, the laid-out view's schematic plates, the barrel's wall in drive mode, and whatever is outside the focus foc */
   const ghOf=(m,foc)=>{const p=m.userData.part;return !(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||m.userData.devPlate||(st.drive&&m.userData.driveGhost)||(foc&&!inK(foc,m)&&!(p==='mainspring'&&anyOf(foc,'barrel'))));};
-  function look(){wake();INK.ink.value=st.draw==='ink'?1:0;
+  function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const ct=!!CT&&CT.on();
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
       if(((st.drive||dvOn)&&DRIVE_HIDE.has(p))||(st.drive&&!st.mwOn&&(p==='motion'||p==='hands')))vis=false;
@@ -268,8 +269,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if((st.drive||dvOn)&&m.userData.driveHide)vis=false;if(m.userData.devPlate&&(!dvOn||st.drive))vis=false;
       const gh=ghOf(m,foc);
       if(m.userData.noShadow&&gh)vis=false;
-      m.visible=vis&&!opHide(m)&&!OVH.hides(m);const lc=!gh&&lpCol(m);m.material=gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
-    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!OVH.boxOff()&&!((ks||OVH.bezelOff())&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
+      m.visible=vis&&!opHide(m)&&!OVH.hides(m);m.userData.ctOff=!m.visible&&!(m.userData.onlyDrive&&!msShown())&&!(m.userData.devPlate&&(!dvOn||st.drive))&&!(m.userData.noShadow&&gh);   /* ctOff: hidden by the visitor, Moving parts only or the overhaul, so Contacts leaves its contacts out */
+      const lc=!gh&&lpCol(m);m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
+    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!OVH.boxOff()&&!((ks||OVH.bezelOff())&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
     /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
        The floor's shadow (sh) is a texture, always there. Turned off, the map (2048 px, 1024 on phones) is freed (three makes it again when it is next needed) */
@@ -279,6 +281,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     $('#driveOn').checked=st.drive;
     cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:OVH.on()?OVH.label():VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
     $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;$('#merge').checked=st.merge;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
+    if(CT)CT.look();
   }
 
   /* ---------- the sustaining spring close up (Close-up, Winding) ----------
@@ -1121,7 +1124,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(st.tour>=0)h.set('tour',st.tour+1);
     else if(OVH.on())h.set('ovh',OVH.hash());
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));if(typeof MAKER!=='undefined'&&MAKER.orig().length)h.set('orig',MAKER.orig().join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));if(typeof MAKER!=='undefined'&&MAKER.orig().length)h.set('orig',MAKER.orig().join(','));if(CT)CT.hashWrite(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
@@ -1148,10 +1151,17 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       document.querySelector(`#secs button[data-v="${sc?sc[1]:'off'}"]`).click();
       if(sc){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
       if(!first)setView(v);}
+    if(CT)CT.hashRead(g);
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
     const od=DET.find(d=>d.id===g('open'));if(od){panelOn(true);od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}   /* open=bookDet: a link from the essay to a panel section */
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
+  /* the Contacts view (../shared/contacts.js, as the Wempe's viewer binds it): fine.py's expected overlaps and states (js/contactdata.js: tools/contacts.py --write); a state posed as
+     fine.py's FREEZE poses it, through the movement's own update, the train from the tooth it stands on; the explode and the laid-out view held at 0 while it scans */
+  if(typeof CONTACTS!=='undefined'&&typeof HCONTACT!=='undefined')CT=CONTACTS.bind({mv,r,stage,st,look,wake,QA:/[?&]qa\b/.test(location.search),name:k=>INFO[k]?INFO[k][0]:k,pick:k=>{if(Object.prototype.hasOwnProperty.call(INFO,k))showPart(k);},stop:()=>setSpeed(0),
+    exploded:()=>cur.explode>1e-6||cur.dev>1e-6,hid:m=>!!m.userData.ctOff,cfg:{expected:HCONTACT.expected,states:HCONTACT.states,
+      pose:([ph,dE,n,w],u)=>{const s=ESC.state(ph),E0=Math.floor(lastE??0);u({E:E0+dE+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:msShown(),slip,arm:0,blk:0});},
+      label:([ph,dE,n,w])=>dE?`${n} turns from full wind${w?', winding':''}, the train ${dE} teeth on`:`the balance at ${(ESC.state(ph).th/D2R).toFixed(1)}°, phase ${ph}`}});
   for(const k of['finish','dial','bal','stop']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k==='stop'?'stopV':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
   {const s=location.hash.slice(1)?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
@@ -1238,7 +1248,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
     const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk,ovS];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
+    if(CT)CT.frame(now);
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk,ovS,...(CT?CT.sig():[])];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(!ESSAY.on()&&onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
