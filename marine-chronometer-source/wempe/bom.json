@@ -4057,7 +4057,7 @@
    "parent": "Holzkasten",
    "kind": "part",
    "part": "box",
-   "fn": "A shelf across the box's back right corner: the winding key stands in its hole (every photographed box; the box's own sheet isn't in the set).",
+   "fn": "A shelf across the box's back right corner (51-00_1: a triangle there), the winding key standing in a round fitting over its front edge.",
    "rel": [
     [
      "on",
@@ -4065,6 +4065,41 @@
     ]
    ],
    "figs": "51 00_1"
+  },
+  {
+   "id": "Schluesselhalter.F",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Fassung (the key holder's round fitting, estimated)",
+   "qty": 1,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "A round black cup over the shelf's front edge (51-00_1's circle on the triangle's long edge; Lange VEB 2285's): the key's cone seats on its bore.",
+   "rel": [
+    [
+     "on",
+     "Schluesselhalter"
+    ]
+   ],
+   "figs": "51 00_1",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "WN-kh",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (the key holder's fitting's screws, estimated)",
+   "qty": 2,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Through the fitting: the inner into the shelf, the outer beyond its edge (51-00_1's two dots).",
+   "rel": [],
+   "figs": "51 00_1",
+   "rev": "last first 1943"
   },
   {
    "id": "Schliessblech",

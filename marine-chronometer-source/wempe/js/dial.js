@@ -49,10 +49,11 @@ const WDIAL=(()=>{
   /* the cannon tube (Minutenrohr 05 05 03-3, steel: blue in the coloured section): its pinion, a block 2.4 high on the C shoulder (05 05 03: 25.4 − 23), drawn
      Ø 5.86 at 5:1 (16.9 px/mm), 14 leaves m 0.36; the tube Ø 3.6 (scaled 3.65) to 10.8 −0.1 over C, a groove r 0.4 round it at 6.3 for the centre punch that holds it
      on the shank ("Körner", into the shank's groove there: train.js), then the square 2.6 □ r6 for the minute hand to 14.3, flush with the shank's end: every height from
-     05 05 03 (sure); the square's corners turned to Ø 3.2 (estimated: a 2.6 square's corners, Ø 3.68, would stand out of the Ø 3.6 tube). Its top crowned with the shank's
+     05 05 03 (sure); the square's corners turned to Ø 3.45 (a 2.6 square's corners, Ø 3.68, would stand out of the Ø 3.6 tube): Wempe 3955's dial side (1_Wempe_3955_Z.jpg, 9.14 px/mm by its minute track: the sides 2.60-2.67, the half-diagonals 1.72-1.77; 3_Wempe_3955_uZ.jpg the same, 0.652 of the side), ±0.1, likely (Ø 3.2 until 18 October 2026, estimated). Its top crowned with the shank's
      end on one sphere (05 05 03 draws one arc across both, rising 0.35 over the 2.86 it shows: r 3.1, train.js's A.cw.crown; likely; until 15 October 2026 flat), 14.3 at
-     the crown. Bored on the shank's 1:80 taper, drawn 0.01 clear of it (the crown's last 0.5 bored straight, 0.0016 more) */
-  const CN={y0:yC,y1:yC+2.4,yb:yC+10.8,yt:yC+14.3,yg:yC+6.3,r:3.6/2,sq:2.6/2,sqR:1.6,pin:PIN(14,M_CH,5.86),cr:CW.crown,yk:yC+14.3-0.5};
+     the crown. Bored on the shank's 1:80 taper, drawn 0.01 clear of it (the crown's last 0.6 bored straight, 0.002 more: the sphere
+     reaches the square's corners 0.55 under the top, so the crown's cells start 0.6 under it; 0.5 until 18 October 2026, with the corners at Ø 3.2) */
+  const CN={y0:yC,y1:yC+2.4,yb:yC+10.8,yt:yC+14.3,yg:yC+6.3,r:3.6/2,sq:2.6/2,sqR:3.45/2,pin:PIN(14,M_CH,5.86),cr:CW.crown,yk:yC+14.3-0.6};
   /* the change wheel (Wechselrad kompl. 05 02 02): the pipe (Wechselbutzen 05 02 02-2) 7 −0.1 overall, drawn 6.9, its foot on the stud bush's face (05 08 02-2, flush
      with the plate's dial face), so its top lies 0.1 under the dial (05 02_1 draws "0,2 Luft" there, with the plates then 3.9): Ø 3.05 −0.04, its foot 0.9 +0.2 (drawn
      1.0) under the wheel; the wheel (05 02 02-1, Messingblech 1,2 Ms 58 federhart, finished 1.0) on a seat Ø 4.2 (its hole), riveted, a collar Ø 5.5 × 0.6 over it
@@ -66,20 +67,20 @@ const WDIAL=(()=>{
     wheel:teeth(56,M_CH,21.05,19.03,14,0.555),pin:teeth(18,M_HR,6.9,5.4,54,0.55)};
   /* the hour wheel (Stundenrad kompl. 05 02 03): the pipe (Stundenbutzen 05 02 03-2, brass) 8.2 −0.1 overall from the wheel's lower face, flush with it, the hand's seat
      Ø 4.4 r6 at 1:70 at its top; the wheel (05 02 03-1, Messingblech 1,2 Ms 58 federhart; 1 −0.1 on 05 02 03, "1,05 −0,03 gedreht" in pencil on 05 02 03-1: drawn 1.0) riveted
-     on its foot, which runs on the cannon tube (bore scaled Ø 3.5 at 5:1: drawn 0.01 over the tube's 3.6), the wheel down on the cannon pinion's top. Its collar Ø 7.9 (scaled
-     at 5:1, 17.1 px/mm) runs up to 0.3 under the dial (05 02_1's "0,3") with the wheel down: 3.585 over the wheel's lower face, where 05 02 03 gives 5.2 −0.1. The sheet's 5.2 would put
+     on its foot, which runs on the cannon tube (bore scaled Ø 3.5 at 5:1: drawn 0.01 over the tube's 3.6), the wheel down on the cannon pinion's top. Its collar Ø 8.0 (scaled
+     at 5:1, 17.1 px/mm, 7.9; on 05 02 03, 1940, 7.95-8.2; Wempe 3955's dial side, 3_Wempe_3955_uZ.jpg at 8.45 px/mm, 8.01, rms 0.03: likely; 7.9 until 18 October 2026) runs up to 0.3 under the dial (05 02_1's "0,3") with the wheel down: 3.585 over the wheel's lower face, where 05 02 03 gives 5.2 −0.1. The sheet's 5.2 would put
      the collar 1.4 into the dial, whose hole is Ø 6.0 (05 02 00-4, 05 02_1, Lange's 1453/A): with the cannon pinion on 05 05 03's tube (1943) there is no room for it.
      The coloured section draws the collar to the dial's underside, 3.75 over the wheel's (pictorial). So the collar is fitted, the overall 8.2 kept: the pipe ends 0.2
      under the tube's square, as it must (README, Estimated). The wheel: z 54, m 0.35, tip 19.7 (pencil; "20,0" struck), root 17.89, tooth 0.5, a plain disc */
-  const HRW={y0:CN.y1+0.15,r:3.62/2,rs:6.0/2,rc:7.9/2,rh:4.4/2,wheel:teeth(54,M_HR,19.7,17.89,18,0.5)};
+  const HRW={y0:CN.y1+0.15,r:3.62/2,rs:6.0/2,rc:8.0/2,rh:4.4/2,wheel:teeth(54,M_HR,19.7,17.89,18,0.5)};
   HRW.yw1=HRW.y0+1.0;HRW.yc=HRW.y0+(DY0-0.3-CN.y1);HRW.yt=HRW.y0+8.2;   /* drawn in the middle of its 0.3 of play between the cannon pinion and the dial (as the train's arbors in their endshake) */
   /* the up-and-down wheel (Auf u. Abrad kompl. 05 02 04): the pipe (05 02 04-2, brass) on the long stud (05 02 00-6, train.js), its foot on the stud bush's face: Ø 3.4
-     (scaled) to 5.2 under the wheel, the wheel's seat Ø 5.2 (its hole, H7), a riveted flange Ø 7.4 (scaled) × 0.7 over it, a step Ø 2.8 (scaled) to 2.8 over the wheel and
+     (scaled) to 5.2 under the wheel, the wheel's seat Ø 5.2 (its hole, H7), a riveted flange Ø 7.7 × 0.7 over it (scaled 7.4 on 05 02 04; Wempe 3955's, 3_Wempe_3955_uZ.jpg at 8.45 px/mm, 7.71, ±0.15: likely; 7.4 until 18 October 2026), a step Ø 2.8 (scaled) to 2.8 over the wheel and
      the hand's seat Ø 2.2 r6, 1.4 long, on top (05 02 04: every height, sure); its top then lies 0.05 over the stud's end, as 05 08 02's 12.3 puts it (sure), and the wheel 0.8
      under the dial (05 02_1's "0,8": likely). The wheel (05 02 04-1, Messingblech 1,2 Ms 58 federhart, Radstärke 1.0): z 120, m 0.2788 (d 33.454), tip 34.33, root 32.57,
      tooth 0.40, five spokes 1.7 −0.2 wide, hub 10.5 −0.2, rim's inside 28.2 +0.2, hole 5.2 H7. The pipe bored Ø 1.52 to run on the stud's 1.5 (05 02 04 scales its bore
      1.53-1.56 against the pipe's figured 3.4: until 15 October 2026 1.32) */
-  const UDW={y0:PPT,yw0:PPT+5.2,yw1:PPT+6.2,yf:PPT+6.9,ys:PPT+7.6,yt:PPT+9.0,r:3.4/2,rs:5.2/2,rf:7.4/2,rst:2.8/2,rh:2.2/2,rb:1.52/2,wheel:teeth(120,M_UD,34.33,32.57,12,0.40)};
+  const UDW={y0:PPT,yw0:PPT+5.2,yw1:PPT+6.2,yf:PPT+6.9,ys:PPT+7.6,yt:PPT+9.0,r:3.4/2,rs:5.2/2,rf:7.7/2,rst:2.8/2,rh:2.2/2,rb:1.52/2,wheel:teeth(120,M_UD,34.33,32.57,12,0.40)};
   /* its pinion (Auf u. Abtrieb 05 02 00-5 in the coloured section; no sheet): on the fusee arbor's end stub Ø 1.6 at hole 10 ("1,6 Festsitz", 05 02_1; 05 06 04-1's
      stub 1.6), 3 long, its top 0.3 under the dial (05 02_1: "3", "0,3", likely); 12 leaves of the wheel's module, steel, long and narrow, tip Ø 4.2 and root Ø 2.6 on Wempe
      3955 (the coloured section colours it yellow; the photograph shows steel), drawn tip 4.0 and root 2.4: the wheel's roots and tips (Ø 32.57, 34.33 at 18.4) leave
@@ -332,12 +333,15 @@ const WDIAL=(()=>{
     const dlP=part('dial',40);
     /* its holes: the centre 6.0, the up-and-down 3.2, the seconds 1.7 (sure); on Ø 101 (scaled 50.5-50.7) five more: three for its screws at 354 deg (the sheet's 6°), 120 and
        240 (scaled 120.6 and 240.2; Altmeppen: German dials are screwed at the 20, 40 and 59 minute marks), each Ø 1.1 under a Ø 1.8 H7 sink 1.0 deep ("Senkung 1,0 tief"); the
-       pin's Ø 1 at 6 deg (the sheet's 6°, where the ring's Ø 1.6 pin hole is, 05 08 00-3); a Ø 1 at 185.7 deg (scaled; nothing under it in the ring) */
+       pin's Ø 1 at 6 deg (the sheet's 6°, where the ring's Ø 1.6 pin hole is, 05 08 00-3); a Ø 1 at 185.7 deg (scaled; nothing under it in the ring).
+       The printing covers both small holes: neither Wempe 3955's dial (1_Wempe_3955_Z.jpg, 9.14 px/mm by its minute track: the three screws' sinks, about 16 px, resolved,
+       nothing at 6 or 185.7 deg, where a Ø 1 would be 9 px) nor Lange 5177's (1_Lange_5177_Z.jpg) nor Kirov No. 247's (1_Kirow_247_Z.jpg) shows a hole there (sure): the
+       disc is drilled as drawn, the pin's end and the empty hole under the paint (the face whole over them since 18 October 2026) */
     /* The Soviet 6MX (the Variants' third version) screws it at the 19, 39 and 59 minute marks (Altmeppen's list); Kirov No. 247's dial has its screws at 112.5, 233.6 and
        353.1 deg (1_Kirow_247_Z.jpg, ±1 for the view's tilt): 114, 234 and 354 deg. The disc, its printed face and its screws are built for each (rv) */
     const RH=50.5,PINa=at(6,RH),SMa=at(185.7,RH),rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},FMS=[],TX={};
     for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',[354,120,240]],['6mx',[354,114,234]]])){const gV=rv(dlP,V),SCR=AS.map(a=>at(a,V==='6mx'?49.9:RH));   /* the 6MX's on r 49.9: all three of Kirov No. 247's 0.6 nearer the centre (1_Kirow_247_Z.jpg, photocompare.py's fit: likely) */
-    const holes=[[0,0,3.0],[H[2][0],H[2][1],1.6],[H[35][0],H[35][1],0.85],...SCR.map(p=>[p[0],p[1],0.9]),[PINa[0],PINa[1],0.5],[SMa[0],SMa[1],0.5]];
+    const holes=[[0,0,3.0],[H[2][0],H[2][1],1.6],[H[35][0],H[35][1],0.85],...SCR.map(p=>[p[0],p[1],0.9])];   /* the printed face's: the two small holes under its paint (above) */
     {const F=[{p:C([0,0],3.0,72),a:DY0,b:DY1},{p:C(H[2],1.6,40),a:DY0,b:DY1},{p:C(H[35],0.85,32),a:DY0,b:DY1},{p:C(PINa,0.5,20),a:DY0,b:DY1},{p:C(SMa,0.5,20),a:DY0,b:DY1}];
       for(const p of SCR)F.push({p:C(p,0.55,20),a:DY0,b:DY1},{p:C(p,0.9,28),a:DY1-1.0,b:DY1});
       tag(mesh(gV,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
