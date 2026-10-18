@@ -57,7 +57,7 @@ const sim=(k,c0,tEnd,dt=0.25)=>{const TF=ESC.settings.TF,A0=ESC.ampAt(1),r0=ESC.
 const c0=k=>Math.min(T0/k,SMAX),drawn=sim(kt,c0(kt),3600),model=sim(SPU*T0/SMAX,SMAX,3600);
 say(`the key held, as drawn: the swing leaves the manual's band after ${mm(drawn.tBand)}, falls under a turn after ${mm(drawn.tTurn)}, and the chronometer stops after ${mm(drawn.tStop)}; as the model runs it (SPU): ${mm(model.tBand)}, ${mm(model.tTurn)}, ${mm(model.tStop)}`);
 chk(drawn.tStop!=null&&drawn.tStop>=300,`it keeps the chronometer running ${mm(drawn.tStop)}: at least the manual's five to ten minutes`);
-/* over ten: the measured gap (17.8 deg) and height (0.96) give more than the manual's figure, read as the least it must give (the owner's reading, 18 October 2026); the time
+/* over ten: the measured outline (the gap 17.4 deg) and height (0.96) give more than the manual's figure, read as the least it must give (the owner's reading, 18 October 2026); the time
    rests on estimates too (the steel's modulus, the band loaded at its pins alone, its rest against the wall left out) */
 if(drawn.tStop!=null&&drawn.tStop>600)chk(false,`over the manual's ten minutes by ${f((drawn.tStop-600)/60,1)}: its measured gap and height, and the estimates the time rests on (the steel's modulus, the band loaded at its two pins alone)`,true);
 /* the stiffness for five and ten minutes' running at the drawn gap, and the band's height for each (the stiffness goes as the height) */

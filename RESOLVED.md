@@ -754,9 +754,13 @@ Contents:
 - **The sustaining spring's gap was 12.5°, read short** (18 October 2026): the first trace took the fixed tip's cast shadow and the working tip's end
   face as steel; traced again on the same frame the tips stand 17.8° apart where they come nearest, as the loose spring's 16-18° (18:58.0). Its
   push banked is 0.33 of the drive, not 0.22, and held it runs the chronometer 12.1 minutes, over Sec. IV's five to ten, read as the least it gives
-  (the owner's reading). Keep: `SSG` 17.8, the holes, pin and `SSI` anchored on the tips as traced on one rectification (moving a tip moves
+  (the owner's reading). Keep: the measured gap (17.8 then; 17.4 traced by hand below), the holes, pin and `SSI` anchored on the tips as traced on one rectification (moving a tip moves
   `SPW`, `SSH`'s angles, `SWL`, `SFL` and `SSI`'s index with it), `SPU` what `sustaining.js` finds. `edbd49d1`
 
+- **The sustaining spring's outline is the owner's hand trace** (18 October 2026, `tools/tracer.html` on KLUwI2UUCMQ 27:26 rectified): the gap 17.4°,
+  not the b* trace's 17.8°, the band's inner edge 0.1-0.35 mm further out (the free band 1.71 wide, not 1.81), so it pushes 0.28 of the drive and runs
+  the chronometer 10.5 minutes held. Keep: a trace by hand is the visible silhouette, so the faces the frame's tilt shows come off it (its own inner edge
+  shows the 0.29 mm step), but never the band's outer edge, which lies against the wall; the holes and pin anchored on the traced tips.
 - **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
   the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
   so from the square's end, puts the face on the side the arbor turns from, the spring's eye over the pin. The maintaining detent's step
