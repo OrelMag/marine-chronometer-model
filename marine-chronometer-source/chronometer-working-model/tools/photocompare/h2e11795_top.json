@@ -1,0 +1,114 @@
+{
+ "photo": "References/photo-top-view.jpg",
+ "hash": "view=movement",
+ "look": [
+  3.14159,
+  1.25,
+  640,
+  0,
+  -20,
+  0,
+  10
+ ],
+ "points": {
+  "cock screw (42192)": {
+   "xyz": [
+    22.01,
+    -36.76,
+    24.87
+   ],
+   "uv": [
+    619,
+    1171
+   ]
+  },
+  "barrel bridge screw, 5 o'clock side (42055.bb)": {
+   "xyz": [
+    -24.85,
+    -29.16,
+    26.27
+   ],
+   "uv": [
+    1454,
+    1329
+   ]
+  },
+  "train bridge screw by the barrel bridge (42055.tb)": {
+   "xyz": [
+    -27.83,
+    -25.76,
+    19.7
+   ],
+   "uv": [
+    1572,
+    1232
+   ]
+  },
+  "train bridge screw, 6 o'clock side (42055.tb)": {
+   "xyz": [
+    5.82,
+    -25.76,
+    34.03
+   ],
+   "uv": [
+    894,
+    1425
+   ]
+  },
+  "ratchet bridge screw, outer (42056.cv)": {
+   "xyz": [
+    -28.991,
+    -30.66,
+    3.933
+   ],
+   "uv": [
+    1615,
+    985
+   ]
+  },
+  "ratchet bridge screw, inner (42056.cv)": {
+   "xyz": [
+    -14.82,
+    -30.66,
+    -14.919
+   ],
+   "uv": [
+    1405,
+    610
+   ]
+  },
+  "mounting ring screw, 7 o'clock (35756)": {
+   "xyz": [
+    33.624,
+    1.64,
+    31.245
+   ],
+   "uv": [
+    536,
+    1543
+   ]
+  },
+  "mounting ring screw, 5 o'clock (35756)": {
+   "xyz": [
+    -33.018,
+    1.64,
+    31.885
+   ],
+   "uv": [
+    1647,
+    1622
+   ]
+  },
+  "pillar screw under the 6 o'clock train bridge screw (42055.pil)": {
+   "xyz": [
+    5.82,
+    -7.06,
+    34.03
+   ],
+   "uv": [
+    905,
+    1562
+   ]
+  }
+ }
+}
