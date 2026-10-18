@@ -57,8 +57,6 @@
   "topPlate:Buffer | topPlate:Plane | --22.36": 1,
   "topPlate:Lathe | barrelBridge:Buffer | +-22.36": 1,
   "udWheel:Lathe | hands:Lathe | +12.36": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | +-34.96": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1,
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box": {
@@ -122,8 +120,6 @@
   "topPlate:Buffer | topPlate:Plane | --22.36": 1,
   "topPlate:Lathe | barrelBridge:Buffer | +-22.36": 1,
   "udWheel:Lathe | hands:Lathe | +12.36": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | +-34.96": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1,
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box.first": {
@@ -204,8 +200,6 @@
   "topPlate:Buffer | topPlate:Lathe | --22.36": 4,
   "topPlate:Lathe | topPlate:Lathe | +-19.00": 2,
   "udWheel:Lathe | hands:Lathe | +12.36": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | +-34.96": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1,
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box.6mx": {
@@ -271,8 +265,6 @@
   "topPlate:Buffer | topPlate:Plane | --22.36": 1,
   "topPlate:Lathe | barrelBridge:Buffer | +-22.36": 1,
   "udWheel:Lathe | hands:Lathe | +12.36": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | +-34.96": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1,
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box.1943": {

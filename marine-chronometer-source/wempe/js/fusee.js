@@ -223,7 +223,7 @@ const WFUSEE=(()=>{
        In the bar's frame (u along it, lower end to upper, from the foot of the axis's perpendicular; v across, as the shape's y) it lies at v -4 to -6 (02-2: the slot 2 H8,
        its near edge 4 from the axis), its ends at u -11.52 and 10.98 retracted. Its lower end is cut obliquely: the point on
        the near side, rounded r 0.39, the far side 0.94 shorter; its upper end is square on the far side, its near side rounded r 2.47 from u 8.56; across it at u -6.0 the
-       hole the spring's end goes into (the dashed hole on C-D). Its travel 3.6, between C-D's two positions. Its width is a sliding fit in the slot's 2 H8 (2.000-2.014): 1.98,
+       hole for its pin 05 06 03-2 (the dashed hole on C-D), on which the spring's end bears. Its travel 3.6, between C-D's two positions. Its width is a sliding fit in the slot's 2 H8 (2.000-2.014): 1.98,
        v 4.01 to 5.99 (no sheet sizes it: a g6-class bar, estimated; drawn 2.00, its sides in the slot's walls, until 18 October 2026) */
     const SBN=4.01,SBF=5.99,SB={d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05};
     /* the slot is 1.5 deep along the bar's lower part and "1,1+0,05 tief" toward its upper end (02-2's two depths, inside its lines at either end), from where 02-2's hidden arc
@@ -543,13 +543,17 @@ const WFUSEE=(()=>{
     const SPA0=152.1*D2R,SPA1=95*D2R,SPE=-Math.asin(3.9/SPW);   /* where each leaves the wall (from the bar's upper end); the fixed end, 0.1 short of the slot */
     const spFree=(P,h,a)=>{const Q=[h,...toBar(P),[SPW*Math.cos(a),SPW*Math.sin(a)]],L=[0];for(let i=1;i<Q.length;i++)L.push(L[i-1]+Math.hypot(Q[i][0]-Q[i-1][0],Q[i][1]-Q[i-1][1]));
       return x=>{const t=x*L[L.length-1];let i=1;while(i<L.length-1&&L[i]<t)i++;const f=(t-L[i-1])/(L[i]-L[i-1]||1);return[Q[i-1][0]+(Q[i][0]-Q[i-1][0])*f,Q[i-1][1]+(Q[i][1]-Q[i-1][1])*f];};};
-    const SF0=spFree(SPU,[SB.sp,-SBN],SPA0),SF1=spFree(SPD,[SB.sp+SB.tr,-SBN],SPA1);
-    const spPath=t=>{const f=t/SB.tr,o=[[SB.sp+t,-5.0],[SB.sp+t,-4.5]];   /* its end 1 into the bar's hole */
+    const SPE0=[SB.sp+0.31,-3.25],SF0=spFree(SPU,SPE0,SPA0),SF1=spFree(SPD,[SPE0[0]+SB.tr,SPE0[1]],SPA1);   /* its end on the pin's side toward the bar's upper end, where the pin stands out of the bar */
+    const spPath=t=>{const f=t/SB.tr,o=[];   /* its end bears on the bar's pin (below) */
       for(let k=0;k<=40;k++){const a=SF0(k/40),b=SF1(k/40);o.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]);}
       const aD=SPA0+(SPA1-SPA0)*f,n=Math.ceil((aD-SPE)/(3*D2R));o[o.length-1]=[SPW*Math.cos(aD),SPW*Math.sin(aD)];
       for(let k=1;k<=n;k++){const a=aD+(SPE-aD)*k/n;o.push([SPW*Math.cos(a),SPW*Math.sin(a)]);}   /* along the wall to its fixed end */
       return o.map(([u,v])=>new THREE.Vector3(u,S+0.5,-v));};
     let spT=0;const spM=tag(mesh(gBar,ribbonGeo(spPath(0),0.10,1.0),M.blued),'050603-3');
+    /* the bar's pin (Stift 05 06 03-2: the coloured section's label; 05 06_4's C-D draws it in both positions, the spring's line ending on it, at 12.2 px/mm): Ø 0.5 (6 px)
+       pressed across the bar's 2 at u -6.0 in its hole (dashed inside the bar), standing 0.9 (11 px) out of its near side, toward the arbor, where the spring's end bears on it;
+       at the spring's mid-height (likely, ±0.1). Built 17 October 2026: until then the spring's end went 1 into the hole */
+    {const g=new THREE.CylinderGeometry(0.25,0.25,2.9,12);g.translate(0,-(6-1.45),0);g.rotateX(-Math.PI/2);tag(mesh(gBar.children[0],g,M.steel,SB.sp,S+0.5,0),'050603-2');}
     /* the spring's pin (Stift 05 06 04-4: the coloured section's label, its leader to this pin, and 05 06 04's parts list, piece 5, a 0.5 pin: likely; numbered 05 06 03-2 until
        17 October 2026; the hole "0,5 H7" in 05 06 04-2, not cut in it): along the slot, 1.5 from the line through the axis on the bar's side (02-2's "15"),
        from the recess, where it stands in to 6.4 from the axis through the spring (C-D), out through the end, which is uncut there (past N), its end's outer corner 0.02 inside
