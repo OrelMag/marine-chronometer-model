@@ -17,7 +17,8 @@ they are other people's work, cited, not copied.
 
 anchor: SPEC is {"frame", "view": "above" (seen from the train side) or "below" (the dial side, or a part turned over), "holes": the
 part's holes (holes.py's JSON, or {name: [x, z]}), "use": [the holes to pair], "picks": {name: [u, v]} (holes found on the frame),
-"pairs": {model hole: pick} (named, always kept), "circles": {name: {"c": [x, z], "r": mm, "pts": [[u, v], ...]}} (edges traced on the
+"pairs": {model hole: pick} (named, always kept), "circles": {name: {"c": [x, z], "r": mm, "pts": [[u, v], ...]}} ("c" or "r" null: fitted, so the
+circle measures rather than constrains, as when the frame is anchored on holes the bare plate places; edges traced on the
 frame: the train bridge's rim, r 40.5 about the centre, and its cut round the barrel, r 21.0 about (-24.123, -5.754), movement.js's TB_CUT), "init": an earlier
 H.json to start from, "map": {name: [x, z]} (drawn), "unmap": {name: [u, v]} (put on the face)}. With circles, the homography is fitted
 on them and the named pairs only, and every other hole that pairs within --tol mm is an independent check; without, it is fitted on
@@ -188,7 +189,7 @@ elif cmd in ('fit', 'unproj'):
     LEV = {'TBtop': -23.76, 'TBbot': -20.66, 'PPtop': -3.86}   # movement.js: TB_T, TB_U, the pillar plate's train face (-PP_T)
     PT = {'C': (0, 0), 'T': (-8.524, 14.186), 'F': (0, 21.6), 'B': (1.609, 10.277), 'E': (8.926, 16.178), 'Fu': (14.306, -14.519), 'Ba': (-22.144, -5.347),
           'tb0': (-27.83, 19.7), 'tb1': (5.82, 34.03), 'tb2': (34.13, -3.41)}   # movement.js L and PILLARS.train (tb: the train bridge's pillar screws), as on 18 October 2026
-    CI = {'tbrim': (0, 0, 40.5), 'bcut': (-24.123, -5.754, 21.0), 'plate': (0, 0, 87.57 / 2)}   # BR_R; the train bridge's cut round the barrel (TB_CUT, TB_CR); the plate
+    CI = {'tbrim': (0, 0, 40.5), 'bcut': (-22.144, -5.347, 20.0), 'plate': (0, 0, 87.57 / 2)}   # BR_R; the train bridge's cut round the barrel (TB_CUT, TB_CR: concentric with the barrel since 18 October 2026); the plate
     def at(n):   # NAME@LEVEL -> (name, y); a name may be x,z and a level a number
         k, l = n.split('@'); return k, LEV[l] if l in LEV else float(l)
     def xyz(k, y): x, z = PT[k] if k in PT else map(float, k.split(',')); return np.array([x, y, z], float)
@@ -263,19 +264,31 @@ elif cmd == 'anchor':
         D = np.linalg.norm(P[:, None] - Fp[None], axis=2)
         for i, j in kp: D[i, :] = 1e9; D[:, j] = 1e9; D[i, j] = 0
         r_, c_ = linear_sum_assignment(D); return [(i, j) for i, j in zip(r_, c_) if D[i, j] < tol * sc]
-    CI = {k: (np.array(v['c'], float), float(v['r']), np.array(v['pts'], float)) for k, v in S.get('circles', {}).items()}
+    CI = {k: (None if v.get('c') is None else np.array(v['c'], float), None if v.get('r') is None else float(v['r']), np.array(v['pts'], float)) for k, v in S.get('circles', {}).items()}   # "c" or "r" null: fitted (a measurement, not a constraint)
+    FREE = [(k, w) for k, (c, R, _) in CI.items() for w, v in (('c', c), ('r', R)) if v is None]
     toMH = lambda H, u: cv2.perspectiveTransform(np.array(u, np.float64).reshape(-1, 1, 2), np.linalg.inv(H))[:, 0]
     if CI:   # fitted on the named pairs and the circles (edges traced on the frame: a circle of radius r about c on the face); every other hole is a check
         from scipy.optimize import least_squares
         if 'init' in S: H0 = np.array(json.load(open(os.path.join(here, S['init'])))['H']); H0 /= H0[2, 2]   # a start: an earlier anchor's H.json
         elif len(kp) >= 2: H0 = np.array([[mir * s.real, -s.imag, t.real], [mir * s.imag, s.real, t.imag], [0, 0, 1]])
         else: sys.exit('circles need a start: two or more named "pairs", or "init"')
-        Hq = lambda q: np.r_[q, 1].reshape(3, 3)
+        Hq = lambda q: np.r_[q[:8], 1].reshape(3, 3)
+        def circs(q):   # each circle's centre and radius, given or fitted (q[8:], in FREE's order)
+            o = {k: [c, R] for k, (c, R, _) in CI.items()}; i = 8
+            for k, w in FREE:
+                if w == 'c': o[k][0] = q[i:i + 2]; i += 2
+                else: o[k][1] = q[i]; i += 1
+            return o
         def rr(q):
-            H = Hq(q); r = [(toMH(H, [Fp[j] for _, j in kp]) - Mh[[i for i, _ in kp]]).ravel()]
-            for c, R, U in CI.values(): r.append(np.linalg.norm(toMH(H, U) - c, axis=1) - R)
+            H = Hq(q); r = [(toMH(H, [Fp[j] for _, j in kp]) - Mh[[i for i, _ in kp]]).ravel()]; o = circs(q)
+            for k, (_, _, U) in CI.items(): r.append(np.linalg.norm(toMH(H, U) - o[k][0], axis=1) - o[k][1])
             return np.concatenate(r)
-        Hm = Hq(least_squares(rr, H0.ravel()[:8], x_scale='jac', max_nfev=20000).x)
+        q0 = list(H0.ravel()[:8])
+        for k, w in FREE:   # a start for each fitted centre or radius: a circle through the points as the start's homography puts them
+            Q = toMH(H0, CI[k][2]); A_ = np.c_[2 * Q, np.ones(len(Q))]; x_ = np.linalg.lstsq(A_, (Q ** 2).sum(1), rcond=None)[0]; c_ = x_[:2] if CI[k][0] is None else CI[k][0]
+            q0 += list(c_) if w == 'c' else [float(np.linalg.norm(Q - c_, axis=1).mean())]
+        qf = least_squares(rr, q0, x_scale='jac', max_nfev=20000).x; Hm = Hq(qf); o = circs(qf)
+        CI = {k: (np.array(o[k][0], float), float(o[k][1]), U) for k, (_, _, U) in CI.items()}
         J = np.array([[Hm[0, 0] - Hm[2, 0] * Hm[0, 2], Hm[0, 1] - Hm[2, 1] * Hm[0, 2]], [Hm[1, 0] - Hm[2, 0] * Hm[1, 2], Hm[1, 1] - Hm[2, 1] * Hm[1, 2]]]); sc = np.sqrt(abs(np.linalg.det(J)))   # px per mm at the origin
         pr = pairup(cv2.perspectiveTransform(Mh[:, None], Hm)[:, 0]); src = np.array([Mh[i] for i, _ in pr]); dst = np.array([Fp[j] for _, j in pr])
     else:
@@ -286,7 +299,7 @@ elif cmd == 'anchor':
     toM = lambda u: toMH(Hm, u)
     res = np.linalg.norm(toM(dst) - src, axis=1) if len(pr) else np.zeros(0)
     print(f'{os.path.basename(fr)} ({S["view"]}): {len(pr)} of {len(mk)} model holes paired with {len(pk)} picks within {tol} mm' + (f'; fitted on {len(kp)} named pairs and {len(CI)} circles' if CI else ''))
-    for k, (c, R, U) in CI.items(): e = np.linalg.norm(toM(U) - c, axis=1) - R; print(f'  circle {k}: {len(U)} points, rms {np.sqrt(np.mean(e ** 2)):.2f} mm (r {R} about ({c[0]}, {c[1]}))')
+    for k, (c, R, U) in CI.items(): e = np.linalg.norm(toM(U) - c, axis=1) - R; print(f'  circle {k}: {len(U)} points, rms {np.sqrt(np.mean(e ** 2)):.2f} mm (r {R:.2f}{" fitted" if (k, "r") in FREE else ""} about ({c[0]:.2f}, {c[1]:.2f}){" fitted" if (k, "c") in FREE else ""})')
     def loo(k):   # that pair's error with the homography fitted on the others: a homography passes near any five points, so this is the test
         if CI or len(pr) < 6: return float('nan')
         o_ = [n for n in range(len(pr)) if n != k]; h = cv2.findHomography(src[o_], dst[o_], 0)[0]
