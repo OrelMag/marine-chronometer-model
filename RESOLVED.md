@@ -653,6 +653,11 @@ Contents:
   with the rim, the recess 1.0 deep. Its section pushes 0.22 of the drive, not 0.82, so Sec. IV's five to ten minutes is now the time it keeps the
   chronometer running (6.2), not over a turn. Keep: the outline from the frame (`SSI`, `SFT`, `SWT`), the height measured, `SPU` what
   `sustaining.js` finds; trace edges on b* (yellowness), not on brightness or saturation, which read the brass's shadows as steel. `4b25def1`
+- **The sustaining spring's tips met the inner edge at a corner and the wall at a point** (18 October 2026, seen on the page): `SFT` and `SWT`
+  were a quartic in r fitted to the gap at each radius, which can't leave the inner edge or meet the wall tangentially; on KLUwI2UUCMQ 27:26
+  both noses are round, the fixed one a D. Keep: each tip's outline traced as points round the nose (rays from inside it), in contour order
+  from the inner edge to the wall, the first 1 mm eased onto `SSI`; at the fixed tip the edge is where L* falls from the top edge's highlight
+  to the black shadow beyond (there b* reads the shadow as steel: its chroma is gone), elsewhere b*. `a10c5331`
 
 - **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
   the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
