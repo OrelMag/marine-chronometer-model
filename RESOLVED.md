@@ -401,7 +401,7 @@ Contents:
   the endstone's setting, so the stack in the cock's seat was 2.77 against U30's 2.8 and the endstone's setting hung from its two screws
   (the Contacts view, Inside the part, 18 October 2026: the pieces close, never touching). The setting now runs up to the endstone's,
   its stone 0.03 under its face, as the lower jewel's always was and the coloured section draws both. Keep: the settings meet; only the
-  stones stand 0.03 apart.
+  stones stand 0.03 apart. `6aeb4f46`
 
 ## Going train and heights
 
@@ -1371,7 +1371,7 @@ Contents:
   arbor below the winding ratchet wider than its bore. `79cfc2f`
 - **The Wempe's cover plate screw (WN-20) held nothing.** Its 90° head, Ø 3.1, was drawn flush in the plate's sink, which 05 06 00-4 cuts
   to Ø 3.1 +0.1 (drawn 3.15): the head stood 0.025 off the sink all round (the Contacts view, Inside the part, 18 October 2026: the
-  plate and its screw close, never touching). Seated, 0.025 under the face. Keep: a countersunk head bears on its sink.
+  plate and its screw close, never touching). Seated, 0.025 under the face. Keep: a countersunk head bears on its sink. `6aeb4f46`
 
 ## Plates, bridges, screws and arbors
 
