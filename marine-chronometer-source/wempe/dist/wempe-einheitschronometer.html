@@ -1050,14 +1050,14 @@ function stripeTex(K=1){
   out.map.redraw=k=>at(k).map.image;out.normal.redraw=k=>at(k).normal.image;return out;
 }
 const STRIPE_ANGLE=(-82.3-19.42)*Math.PI/180;   /* ridge direction, in plate (shape) coordinates, from the photograph, turned with the photographed group (movement.js, PHOTO_TURN 19.42 deg) */
-function woodTex(K=1){   /* K: drawn K times as fine (redraw, for the export to Blender) */
+function woodTex(K=1,base='#5a2413'){   /* K: drawn K times as fine (redraw, for the export to Blender); base: the wood's ground (the Ulysse Nardin's, UN_FIT.woodBase) */
   const c=document.createElement('canvas');c.width=512*K;c.height=1024*K;const x=c.getContext('2d');x.scale(K,K);
-  x.fillStyle='#5a2413';x.fillRect(0,0,512,1024);
+  x.fillStyle=base;x.fillRect(0,0,512,1024);
   let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
   for(let i=0;i<260;i++){const xx=rnd()*512,w=0.6+rnd()*2.6,a=0.05+rnd()*0.14,ph=rnd()*6,amp=2+rnd()*9;
     x.strokeStyle=rnd()<0.5?`rgba(20,6,2,${a})`:`rgba(150,70,35,${a*0.8})`;x.lineWidth=w;x.beginPath();
     for(let y=0;y<=1024;y+=16){const px=xx+Math.sin(y/140+ph)*amp+Math.sin(y/37+ph*2)*amp*0.25;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
-  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k).image;return t;
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k,base).image;return t;
 }
 /* Engraving textures are mapped to the movement: canvas centre = movement centre, 96 mm across,
    canvas up = 6 o'clock (+z), so text reads upright when the movement is viewed from the bridge side. */
@@ -1095,12 +1095,19 @@ function escapeWheel(parent,M,rt,y,E){
   const cl=new THREE.Mesh(ringGeo(0.20*rt,0.67,1.9),M.brass);cl.position.y=y+0.55+0.95;parent.add(cl);   /* the collet's pipe, on the web's face toward the pinion */
   return teeth;
 }
-const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74};
+const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
+/* Variants' Ulysse Nardin (as No. 7400, c. 1955; References/ulysse-nardin-7400/, Uhren-Hidding's photographs): its plates and bridges frosted gilt, not damascened; its bowl
+   and gimbal ring gilt brass, the bowl matte lacquered; its box a redder mahogany (its own ground under the same grain). Fitted on the page, not by eye: each surface rendered
+   (GPU, the Movement, Dial and Box views) and the colour or ground set until its pixels' brightness bands (the median of the 65-85th percentile, and G/R, B/R, which hold
+   under another light) match the photographs' over the same kind of surface: plates #e1bb72 (08, four lit patches) drawn #e6be77; bowl #c9aa56 (06) and ring #caa553
+   (08) drawn #cead5d; box front #52322e, G/R 0.613, B/R 0.561 (03) drawn #51312c, 0.605, 0.543. The roughness (frosted, lacquered) is read off the photographs' soft
+   highlights, not measured. The movement's other brass, frosted gilt on 7400, follows the bowl's; the Hamilton's box fittings stay as drawn (7400's are nickel) */
+const UN_FIT={plate:[0xebaf5f,0.45],brass:[0xd4af63,0.45],brass2:[0xb8963f,0.5],wood:0x9c7466,woodBase:'#7c6662'};
 const SERIAL='2E12055';   /* the photographed movement's serial: engraved on the plates, printed on the Hamilton dial */
 const NAVY={no:'7832',yr:'1941'};   /* the Navy dial's number and year, as photographed on 2E7832's (dialCanvas('usn')) */
 function mats(){
   const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
-  const stx=stripeTex(),st=stx.map,wt=woodTex();
+  const stx=stripeTex(),st=stx.map,wt=woodTex();let wtU=null;   /* wtU: the Ulysse Nardin's wood, drawn when first chosen */
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
     steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),steelK:S(0x4a5058,1,0.32),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),clear:S(0xdfe5ea,0.1,0.08,{transparent:true,opacity:0.6}),
@@ -1111,7 +1118,14 @@ function mats(){
      map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
   M.plateCrest=(()=>{st.updateMatrix();const v=new THREE.Vector3(0.5/1024,1-30.1/1024,1).applyMatrix3(st.matrix.clone().invert());return[v.x,v.y];})();
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
-  M.setPlateFinish=k=>{const c=sc(PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid])m.color.copy(c);};   /* see-through and faded copies follow on the next look() (syncMat) */
+  /* the finish: the plates' colour, and for the Ulysse Nardin the frosting (no damascening, rougher), the bowl's and ring's brass and the box's wood (UN_FIT); see-through and
+     faded copies follow on the next look() (syncMat) */
+  const F0=[M.plate.roughness,M.plateSolid.roughness,M.brass.color.clone(),M.brass.roughness,M.brass2.color.clone(),M.brass2.roughness,M.wood.color.clone()];
+  M.setPlateFinish=k=>{const u=k==='un',c=sc(u?UN_FIT.plate[0]:PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid])m.color.copy(c);
+    if((M.plate.map===null)!==u){M.plate.map=u?null:st;M.plate.normalMap=u?null:stx.normal;M.plate.needsUpdate=true;}
+    M.plate.roughness=u?UN_FIT.plate[1]:F0[0];M.plateSolid.roughness=u?UN_FIT.plate[1]:F0[1];
+    M.brass.color.copy(u?sc(UN_FIT.brass[0]):F0[2]);M.brass.roughness=u?UN_FIT.brass[1]:F0[3];M.brass2.color.copy(u?sc(UN_FIT.brass2[0]):F0[4]);M.brass2.roughness=u?UN_FIT.brass2[1]:F0[5];
+    M.wood.color.copy(u?sc(UN_FIT.wood):F0[6]);const w=u?(wtU=wtU||woodTex(1,UN_FIT.woodBase)):wt;if(M.wood.map!==w){w.repeat.copy(wt.repeat);w.offset.copy(wt.offset);w.rotation=wt.rotation;M.wood.map=w;M.wood.needsUpdate=true;}};
   const eng=t=>{const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;return m;};   /* inkDecal: the ink drawing inks it under its alpha */
   /* engraving as on a photographed movement (serial 2E12055): text runs along -x, lines stack toward +z. Lengths, sizes and offsets measured on that photograph
      against the top-view tracing (tools/engr.json); the three-line block sits 2.5 mm nearer the rim than traced, so its full-length lines clear the dust-seal flange and the barrel pillar screw */
@@ -1142,7 +1156,8 @@ function patchSection(m,cap){
 function setSection(on,plane){SEC.on.value=on?1:0;SEC.plane=plane;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
 const GHOST=new Map();
 /* a derived copy (see-through, faded) takes its source's current texture and colour, so a dial style or plate finish chosen while it is shown carries over */
-function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);return d;}
+function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);
+  if(d.isMeshStandardMaterial&&s.isMeshStandardMaterial){if(d.normalMap!==s.normalMap){d.normalMap=s.normalMap;d.needsUpdate=true;}d.roughness=s.roughness;}return d;}   /* the finish's frosting (setPlateFinish) */
 function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,m.opacity??1);g.depthWrite=false;g.userData={};patchSection(g,false);
   if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
 /* ---------- drawing: the model drawn live as a pen-and-wash drawing, tinted or in ink ----------
