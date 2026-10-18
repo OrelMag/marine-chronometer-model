@@ -9,6 +9,7 @@ own flat colour, drawn over the photograph), so what differs shows where it is a
     python photocompare.py SPEC.json --bbox part,part        each part's box in the movement frame (to place circles: a plate's rim)
     python photocompare.py SPEC.json --grid x0 y0 x1 y1 [--step 10]   the photograph's patch enlarged with a pixel grid, to read picks off: r_pc_NAME_grid.png
     python photocompare.py SPEC.json --zoom x,y[,half] ...    gridded close-ups round points (a screw's head, a corner), six to a sheet: r_pc_NAME_zoom.png
+    python photocompare.py SPEC.json --what x,y ...           after a comparison, the part (part|parts-list line) the model draws at those pixels
     python photocompare.py SPEC.json --regions x0,y0,x1,y1 ...   after a comparison, each box as photograph | outlines | render, enlarged: r_pc_NAME_regions.png
 
 How a view was fitted (Wempe 3955's, 18 October 2026): a rough "look" by eye, --labels to name what is seen (the square-on plan view, A, first: its screws are
@@ -72,6 +73,13 @@ if '--regions' in a:   # after a comparison: each box (x0,y0,x1,y1 in the photog
         r=np.hstack(row[:-1]);cv2.putText(r,b,(4,14),0,0.45,(255,255,255),1);rows.append(r)
     w=max(r.shape[1] for r in rows);o=f'r_pc_{NAME}_regions.png'
     cv2.imwrite(o,np.vstack([np.pad(r,((0,6),(0,w-r.shape[1]),(0,0)),constant_values=255) for r in rows]));print('wrote',o);sys.exit(0)
+if '--what' in a:   # after a comparison: the part (and its parts-list line) the model draws at each pixel x,y, and round it
+    lab=cv2.imread(f'r_pc_{NAME}_ids.png',cv2.IMREAD_UNCHANGED);ids=json.load(open(f'r_pc_{NAME}_ids.json'))
+    for t in a[a.index('--what')+1:]:
+        if t.startswith('--'):break
+        x,y=map(int,t.split(','));w=lab[max(0,y-6):y+7,max(0,x-6):x+7];n=lab[y,x];u,c=np.unique(w[w>0],return_counts=True)
+        print(f'  ({x}, {y}): {ids[n-1] if n else "nothing"}; within 6 px: '+', '.join(f'{ids[k-1]} ({v})' for k,v in sorted(zip(u,c),key=lambda e:-e[1])))
+    sys.exit(0)
 if '--grid' in a:   # the photograph's patch enlarged, a line every --step px, labelled: to read picks off by eye
     x0,y0,x1,y1=map(int,opt('--grid',4));st=int(opt('--step',1,10));k=max(2,min(12,1400//max(x1-x0,y1-y0)))
     p=cv2.resize(photo[y0:y1,x0:x1],None,fx=k,fy=k,interpolation=cv2.INTER_NEAREST)
@@ -167,8 +175,7 @@ window.__pc={
   part:o=>{for(let p=o;p;p=p.parent)if(p.userData&&p.userData.partName)return p.userData.partName;return null;},
   hn:o=>{for(let p=o;p&&p!==__mv;p=p.parent)if(p.userData&&p.userData.hn)return p.userData.hn;return '';},
   show:(caseToo,hide,only)=>{const sc=__pc.sc();sc.traverse(o=>{if(!o.isMesh&&!o.isLine&&!o.isLineSegments)return;if(o.userData._pcv===undefined)o.userData._pcv=o.visible;
-    let v=o.userData._pcv;if(!caseToo&&!__pc.inside(o)&&!(only&&only.includes(__pc.part(o))))v=false;if(hide.includes(__pc.part(o)))v=false;if(only&&!only.includes(__pc.part(o)))v=false;
-    if(v)for(let p=o.parent;p;p=p.parent)if(!p.visible&&only)p.visible=true;o.visible=v;});},   /* only: those parts alone (a part photographed off the movement), its groups shown */
+    let v=o.userData._pcv;if(!caseToo&&!__pc.inside(o)&&!(only&&only.includes(__pc.part(o))))v=false;if(hide.includes(__pc.part(o)))v=false;if(only&&!only.includes(__pc.part(o)))v=false;o.visible=v;});},   /* only: those parts alone (a part photographed off the movement); groups untouched, so a version's hidden pieces stay hidden */
   /* a camera from OpenCV's R (row-major 3x3, movement frame to camera), t (mm) and f (px) */
   camCV:(R,t,f,W,H,dx=0,dy=0)=>{const mv=__mv;mv.updateMatrixWorld(true);const c=new THREE.PerspectiveCamera(2*Math.atan(H/2/f)*180/Math.PI,W/H,0.5,20000);
     const Rt=[[R[0],R[3],R[6]],[R[1],R[4],R[7]],[R[2],R[5],R[8]]];   /* R^T: camera axes in the movement frame (columns) */
@@ -315,6 +322,7 @@ mask=(lab==0)&(idimg[...,3]>0)
 if mask.any():
     d,ix=cv2.distanceTransformWithLabels((lab==0).astype(np.uint8),cv2.DIST_L2,3,labelType=cv2.DIST_LABEL_PIXEL)
     yy,xx=np.nonzero(lab);lut=np.zeros(ix.max()+1,np.int32);src=ix[yy,xx];lut[src]=lab[yy,xx];lab[mask]=lut[ix[mask]]
+cv2.imwrite(f'r_pc_{NAME}_ids.png',lab.astype(np.uint16));json.dump(ids,open(f'r_pc_{NAME}_ids.json','w'))   # for --what
 edge=np.zeros(lab.shape,bool);edge[:,1:]|=lab[:,1:]!=lab[:,:-1];edge[1:,:]|=lab[1:,:]!=lab[:-1,:]
 partof=lambda n:ids[n-1].split('|')[0] if n else None
 parts=sorted({partof(n) for n in range(1,len(ids)+1)});rng=np.random.default_rng(3);pc={p:tuple(int(v) for v in rng.integers(40,255,3)) for p in parts}

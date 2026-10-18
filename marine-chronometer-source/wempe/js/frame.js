@@ -283,9 +283,17 @@ const WFRAME=(()=>{
     const db=part('dustBush',-66);
     {const Yb=TT-1.5,Yt=Yb-18.1,rr=y=>8.0075/2-(Yb-y)/140,rT=rr(Yt+1.8)+1.8*Math.tan(20*D2R),nf=brg(255);
       const lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),V2(6.55,Yb-0.5),V2(6.55-0.5*Math.tan(5*D2R),Yb),V2(rr(Yb),Yb),V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
-      const g=tag(mesh(db,new THREE.LatheGeometry(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');tag(mesh(db,new THREE.LatheGeometry(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
+      const g=tag(mesh(rv(db,'last first 6mx 1943 -3955'),new THREE.LatheGeometry(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');
+      /* Wempe 3955's (the version as photographed): the body turned down to a waist under the collar (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on the bush,
+         its silhouette traced on a 5 px grid): the Ø 13.1 body to a flat shoulder at y -29.0 (±0.3), then Ø 9.0 (±0.4: 93-95 px across) up to the collar; the collar 1.85 thick (±0.2: its lower
+         edge, traced at full size on both silhouettes beside the model's outline, 16.5 px above a 3.1 collar's and 3-6 px below a 1.4 one's; its top the sheet's), the waist running up to it, its plan (14.2 across toward the
+         cock, the sheet's 15.1 with its 14.1 flat) and the neck (Ø 9.3, its bore 7.6) the sheet's. Kirov No. 247's has a waist too (Ø 9.8). 05 08 01-3
+         (2.7.42) draws the body straight */
+      const YC3=-37.1,w3=[V2(rr(YC3),YC3),V2(4.5,YC3),V2(4.5,-29.0),V2(6.55,-29.0),V2(6.55,Yb-0.5),V2(6.55-0.5*Math.tan(5*D2R),Yb),V2(rr(Yb),Yb),V2(rr(YC3),YC3)];
+      tag(mesh(rv(db,'3955'),new THREE.LatheGeometry(w3,72),M.brass,F10[0],0,F10[1]),'050801-3');tag(mesh(db,new THREE.LatheGeometry(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
       const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
-      tag(mesh(db,solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);}
+      tag(mesh(rv(db,'last first 6mx 1943 -3955'),solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);
+      tag(mesh(rv(db,'3955'),solidGeo([{loop:lug,y0,y1:YC3,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(YC3),180),a:y0,b:YC3}]}]),M.brass),'050801-3',1);}   /* Wempe 3955's collar, 1.85 thick (above) */
     /* Korkring 05 08 01-4 (no sheet; 05 08 01 names it on the dust bush, the coloured section "Korkring 05 08 01-4", its "05 06 01-4" in the transcription's list a misreading):
        a cork ring of square-cut section on the dust bush's neck, sitting on the collar's top, under the bowl's winding hole. In the bowl (its bore 53 deep, R-05 01 00-1,
        the movement on its flange) its top is 3.84 over the bottom, where the bowl's raised seat round the hole meets it (case.js: the 6MX's, estimated). Scaled on the coloured section (Wempe_Einheitschronometer.jpg) at 9.32 px/mm, by the bush's own drawn Ø 13.1 (122 px) and neck Ø 9.7
