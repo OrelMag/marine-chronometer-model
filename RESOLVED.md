@@ -2057,7 +2057,7 @@ Contents:
   0.2° (the Hamilton's) and 0.3° (the Wempe's) of upright and the box rolls about 21° round it;
   latched, the case goes with the box. Both exports' At sea clips are drawn the same way, and
   bom-fn.js's gimbal latch test checks the case upright. Keep: with the gimbals free, Ship motion
-  moves the box, never the movement; the relative motion is the gimbals' equations unchanged.
+  moves the box, never the movement; the relative motion is the gimbals' equations unchanged. `3b6bbe73`
 
 - **The gimbals were weighed with the Laid out view's schematic plates in the case** (18 October 2026,
   found when the Wempe's Laid out view added its own). `massprops-check.js` weighed every closed solid
