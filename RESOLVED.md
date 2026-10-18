@@ -59,6 +59,13 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's jewels were plain discs, too small, and the escape wheel's lower hole jewel stood 0.2 off its endstone** Every hole jewel and endstone was a
+  flat disc Ø 2.0 × 0.35 (the escape wheel's Ø 1.8 and 1.6), an estimate, where the coloured section draws each Ø 2.9, the hole jewel domed toward its endstone with an
+  oil sink to the arbor and the endstone domed outside; Wempe 3955's top plate shows both upper endstones whole, Ø 2.95-3.2, in a conical bevel (read as an opening
+  Ø 1.6 and a stone Ø 2.5 seen through Ø 2.2); the escape wheel's lower hole jewel stood 0.2 from its endstone, with its bush's floor between them as first drawn,
+  where the section draws the stones together; the seconds jewel had no oil sink. Keep: the stones' form and size as the section's red traces them (KIT.jewelPr,
+  KIT.endPr), scaled only where the sheets leave less room; each hole jewel's crown 0.03 off its endstone (0.06 at the escape wheel's upper); the endstones' settings
+  open over the whole stone. `bd0986e`
 - **The Wempe's impulse face stood 24° before the line of centres at rest, where 05 04_1 draws it 28°10'.** The sheet's "24°" is the
   escape wheel's pitch (its arc lies about the wheel's centre), and its 1°, 21° and 2° the wheel's too; the face's angle is the "6°" on from
   the "22°10'" where the impulse begins, both about the balance. Built so, the stone comes into the teeth's path at +6.1°, and a discharge

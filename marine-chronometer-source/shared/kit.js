@@ -263,5 +263,19 @@ const KIT=(()=>{
     const done=()=>{mv.userData.parts=P;mv.userData.lifted=SCREWS;
       mv.userData.explode=e=>{for(const k in P)P[k].position.y=P[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};mv.userData.explode(0);};
     return{part,screw,loose,headOn,SCREWS,parts:P,done};};
-  return{parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  /* the jewels as the Wempe's coloured section draws them (Wempe_Einheitschronometer.jpg, its stones red): profiles [r, y] for a lathe, y0 the stone's face toward
+     the endstone, s (+1 or -1) the way it runs from there. jewelPr: a hole jewel, that face domed (the crown at y0, d lower at the edge R), the edge straight to the
+     face toward the arbor (T from the crown), an oil sink opening into that face as a cone from the hole to rc, hc deep, and the hole between, rb at its middle and
+     0.03 wider at its two ends (olive). endPr: an endstone, flat on the pivot's side (y0), its edge e high, then domed h to its crown; domeAt its dome's height over
+     the edge at r */
+  /** @type {(R:number,h:number,r:number)=>number} */
+  const domeAt=(R,h,r)=>{const Rs=(R*R+h*h)/(2*h);return Math.sqrt(Rs*Rs-r*r)-(Rs-h);};
+  /** @type {(R:number,T:number,rb:number,d:number,rc:number,hc:number,y0:number,s:number)=>number[][]} */
+  const jewelPr=(R,T,rb,d,rc,hc,y0,s)=>{const h0=rb+0.03,hl=T-hc,pr=[];
+    for(let i=0;i<=8;i++){const r=h0+(R-h0)*i/8;pr.push([r,d-domeAt(R,d,r)]);}
+    pr.push([R,T],[rc,T],[h0,hl]);for(let i=1;i<6;i++){const t=i/6;pr.push([rb+0.03*(1-2*t)**2,hl*(1-t)]);}
+    return pr.map(([r,y])=>[r,y0+s*y]);};
+  /** @type {(R:number,e:number,h:number,y0:number,s:number)=>number[][]} */
+  const endPr=(R,e,h,y0,s)=>{const pr=[[0,0],[R,0],[R,e]];for(let i=1;i<=8;i++){const r=R*(1-i/8);pr.push([r,e+domeAt(R,h,r)]);}return pr.map(([r,y])=>[r,y0+s*y]);};
+  return{domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();

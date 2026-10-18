@@ -273,10 +273,12 @@ const WTRAIN=(()=>{
        Wempe 3955's dial side shows a dark mouth Ø 3.8 in a thin brass ring Ø 4.8 there (3_Wempe_3955_uZ.jpg, 8.4 px/mm by the plate's 85), the jewel deep in it. Until 15 October
        2026 the setting began at the floor of a Ø 6.2 × 1.7 sink in the bridge and closed under the jewel to the post's Ø 1.1, opening in a cone to Ø 3.8 at the dial face
        (estimated: the section draws neither). The jewel Ø 3.6 × 1.1, scaled on the coloured section (9.4 px/mm; a pictorial section, so estimated; 05 08 04 draws it about 1.15),
-       its hole Ø 0.78 olive for the pivot's 0.75 at the jewel; the setting's sheets aren't in the set */
+       its hole Ø 0.78 olive for the pivot's 0.75 at the jewel; the setting's sheets aren't in the set. Its form the section's (traced on its red, 18 October 2026, ±0.1): flat
+       on the arbor's side, where the shoulder runs, an oil sink in its dial face, a cone from the hole to Ø 1.7 0.6 deep (until 18 October 2026 a plain disc) */
     {const y0=PPT+0.2,yj=PPT+1.75,hj=1.1,rjw=3.6/2;
       tag(mesh(P.intermediateBridge,ringT([[3.7/2,y0],[5.2/2,y0],[5.2/2,ZB],[3.7/2,ZB],[3.7/2,yj+hj],[rjw,yj+hj],[rjw,yj],[3.7/2,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
-      tag(mesh(P.intermediateBridge,stoneGeo(rjw,0.78/2,hj,'olive'),M.ruby,H[35][0],yj+hj/2,H[35][1]),'050504-1');}
+      let q=KIT.jewelPr(rjw,hj,0.78/2,0.001,0.85,0.6,yj,1);if(KIT.area([...q,q[0]])<0)q=q.slice().reverse();   /* flat (domed 0.001) toward the arbor */
+      tag(mesh(P.intermediateBridge,ringT(q,32),M.ruby,H[35][0],0,H[35][1]),'050504-1');}
     /* the pillar plate's bushes for the motion work's studs (05 08 02 Schnitt A-B): 05 08 02-2 pressed into hole 2 (3.50 +0.012) from the inner face ("Futter an dieser Seite
        eindrücken"), through the plate, and the stud (Anrichtstift lg, 05 02 00-6, in the coloured section) pressed in it, 12.3 long from the plate's inner face; the short stud
        (Anrichtstift kurz, 05 02 00-7) at hole 19 (3.50 +0.012), standing 6.8 out of the dial face, in a bush drawn dashed beside it, taken as a second 05 08 02-2 (estimated).
