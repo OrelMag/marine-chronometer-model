@@ -1,0 +1,119 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx-gallery/leben-des-6mx/14_E-Kontakt1.jpg",
+ "rev": "6mx",
+ "hash": "dial=kirov&wind=55.9",
+ "look": [
+  2.41,
+  0.15,
+  120,
+  16,
+  -8,
+  32,
+  18
+ ],
+ "points": {
+  "block 57 screw at 226.0 (6MX.cts), head top": {
+   "xyz": [
+    30.86,
+    -8.8,
+    29.8
+   ],
+   "uv": [
+    120,
+    330
+   ]
+  },
+  "block 57 screw at 214.6 (6MX.cts), head top": {
+   "xyz": [
+    24.36,
+    -8.8,
+    35.31
+   ],
+   "uv": [
+    332,
+    343
+   ]
+  },
+  "block 52 screw at 193.3 (6MX.cts), head top": {
+   "xyz": [
+    10.03,
+    -8.8,
+    42.12
+   ],
+   "uv": [
+    696,
+    343
+   ]
+  },
+  "block 52 screw at 182.9 (6MX.cts), head top": {
+   "xyz": [
+    2.17,
+    -8.8,
+    42.85
+   ],
+   "uv": [
+    904,
+    314
+   ]
+  },
+  "cock foot screw (6MX.ctcs), head top": {
+   "xyz": [
+    25.952,
+    -4.5,
+    23.335
+   ],
+   "uv": [
+    268,
+    293
+   ]
+  },
+  "pillar 39 at the top plate's inner face (axis)": {
+   "xyz": [
+    6.477,
+    -19.0,
+    36.733
+   ],
+   "uv": [
+    737,
+    79
+   ]
+  }
+ },
+ "circles": {
+  "top plate inner-face rim (front, traced)": {
+   "c": [
+    0,
+    -19.0,
+    0
+   ],
+   "r": 42.494,
+   "n": [
+    0,
+    1,
+    0
+   ],
+   "uv": [
+    [
+     100,
+     69
+    ],
+    [
+     200,
+     76
+    ],
+    [
+     300,
+     80
+    ],
+    [
+     450,
+     82
+    ],
+    [
+     600,
+     87
+    ]
+   ]
+  }
+ }
+}

@@ -48,10 +48,12 @@ say(`  1436's other figure, 0.09 (${f(k09,2)} times as stiff): ${f(A09[0],1)}-${
 /* the preload: makeEsc rebuilt with W78 (OP78 0: the preload itself, g at the stone). wempe_tripping.js's sweep (16 October 2026, the banking on the pipe) has a held tooth's stone
    ring 41 % of the depth of lock at the estimate, under its margin of half from about 0.78 times it (0.49 g; 0.5× 69 %, 0.8× 49 %), and teeth get past under 0.2× (0.1× and none):
    the margin's floor is the least (its 0.72 g, 1.1 times, was for the banking under the blade, before; the estimate itself until 16 October 2026, the sweep not run under it).
+   The knock's floor (18 October 2026, the user's choice): wempe_tripping.js's 3 ms blow across the plate lets a tooth go at 17.6 g at 0.8× the estimate, 20.0 g at it and 22.5 g at
+   1.2×, so a preload that takes the 20 g its check asks wants the estimate itself (0.63 g), the margin nil there. The floor is the higher of the two.
    The swing falls as the preload grows (the stone pressed on the tooth it has let go, RW) */
-const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.49;
+const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.49,wKnock=0.63,wLo=Math.max(wTrip,wKnock);
 const wHi=cross(w=>preA(w)[0],GUARD[0],S.W78,4,14),PRE=[0.3,S.W78,1.0,1.5].map(w=>({w:r4(w),A:preA(w).map(r4)}));
-say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wTrip,2)} g, the margin's floor (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 41 % at the estimate ${S.W78} g; under 0.2 times the estimate teeth get past), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
+say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wLo,2)} g, the higher of the margin's floor, ${f(wTrip,2)} g (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 41 % at the estimate ${S.W78} g; under 0.2 times the estimate teeth get past), and the knock's, ${f(wKnock,2)} g (a 3 ms blow of 20 g across the plate lets no tooth go from there: the estimate's own margin is nil), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
 
 /* ---------- the gold spring ---------- */
 head('The gold spring (05 04 01-2: 0.15 thick, sure; 333 gold, its modulus 90 GPa estimated)');
@@ -89,7 +91,7 @@ say(`so the period is matched, not made: 0.5 s wants the strip ${f(hNeed,4)} mm 
 const J={note:'tools/wempe_tolerances.js: how closely the Wempe\'s parts the drawings don\'t size must be made, each range keeping the swing in the guard band over the whole wind (and the sources\' band, reported); read by wempe_bench.js, wempe_montecarlo.js and the Wempe\'s verification report',
   band:{guard:GUARD,sources:SRC,wind:{dmin:r4(dmin),hMin,dmax:r4(dmax),hMax,A:A0.map(r4),A12:r4(E.A*D)}},
   mainspring:{t:t0,tMeasured:r4(tm),s:[r4(sLo),r4(sTop)],sSwing:[r4(sLo),r4(sHi)],t_mm:[r4(t0*Math.cbrt(sLo)),r4(t0*Math.cbrt(sTop))],tMeasured_mm:[r4(tm*Math.cbrt(sLo)),r4(tm*Math.cbrt(sTop))],g262:{mean:r4(gMean),full:gFull,low:gLow,band:[r4(gMean*sLo),r4(gMean*sTop)]},rate:[r4(rLo),r4(rHi)],stressGPa:r4(sM/1e9),sStress:r4(sStress),sources:{s:r4(sLoS),t_mm:r4(t0*Math.cbrt(sLoS)),g262:r4(gMean*sLoS)}},
-  detent:{t:r4(td),k:[0,r4(kdHi)],t_mm:[0,r4(tdHi)],inTime:[r4(td/Math.cbrt(2)),r4(td*Math.cbrt(2))],t09:{k:r4(k09),A:A09.map(r4)},A0:r4(Ak0),preload:{g:S.W78,min:r4(wTrip),max:r4(wHi),rows:PRE}},
+  detent:{t:r4(td),k:[0,r4(kdHi)],t_mm:[0,r4(tdHi)],inTime:[r4(td/Math.cbrt(2)),r4(td*Math.cbrt(2))],t09:{k:r4(k09),A:A09.map(r4)},A0:r4(Ak0),preload:{g:S.W78,min:r4(wLo),max:r4(wHi),margin:r4(wTrip),knock:r4(wKnock),rows:PRE}},
   gold:{t:0.15,E:90,k:[0,r4(kpHi)],t_mm:r4(0.15*Math.cbrt(kpHi)),E_max:r4(90*kpHi),A0:r4(Ap0),half:Ap5.map(r4)},
   lock:{d:r4(d0),deep:r4(dDeep),shallow:r4(dShal),ring:r4(RING),tip:r4(dTip),liftMax:r4(liftMax),at:{drawn:{lock:r4(L0.lock),letoff:r4(L0.letoff),A:r4(L0.A),Amin:r4(L0.Amin)},deep:{lock:r4(LD.lock),letoff:r4(LD.letoff),Amin:r4(LD.Amin)},shallow:{lock:r4(LS.lock),A:r4(LS.A),Amin:r4(LS.Amin)}}},
   hairspring:{T:r4(T),fast:r4(fast),perUm:r4(perH),perCoil001:r4(perC),perMm:r4(perL),perGPa:r4(perE),hNeed:r4(hNeed),hNeedE:hE.map(r4).reverse(),weights:{m:TW.m,r:r4(rTW),secTurn:r4(secTurn),reach:r4(reach),turnsIn:r4(turnsIn),gain:r4(gain)}}};
