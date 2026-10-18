@@ -261,6 +261,14 @@ Before committing a change to the model:
    check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py`, `overhaul.py`, `book.py` and `audit.py`.
    `--full` adds `fine.py`, `maintaining.py`, `bom.py`, `gltf_check.py` and `blender_check.py`; `--views` renders every view before
    and after the branch and prints the changed pixels; `--quick` is the first seven only.
+   A step that passed is skipped (`cached`) while every file it read is as it was then,
+   in this worktree or any other (`citrace/`: each step's reads are traced, its pass kept
+   in `.git/ci-cache/`), so a run after a small change reruns only the steps that read
+   what changed. `--plan` lists what would run and the input that changed for each;
+   `--no-cache` runs everything; `--changed` runs only the steps that read a file the
+   branch changed since `main`; `--fail-fast` stops at the first failure. Runs in
+   several worktrees share the machine's cores through `.git/ci-slots/` (`MC_CI_CPU`,
+   `MC_CI_BROWSERS`): a second run queues instead of slowing the first.
    Nothing runs on GitHub: merge a branch only when `ci.py` passes on it.
 7. **Record fixes.** If the change fixes a bug, add it to
    [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.
