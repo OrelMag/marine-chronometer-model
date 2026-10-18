@@ -1358,6 +1358,13 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The Wempe's and 6MX's screw slots stood on the heads** (18 October 2026, photocompare.py on Wempe 3955's N view). kit.js's screw drew the
+  slot as a grey box 0.02 proud across the head, so every slot showed as a raised light bar where the photographs show a dark groove.
+  Keep: the head one closed solid with its slot cut (two flat halves, the chamfer's ring with its cone's normals, the slot's strip), the shank its
+  own lathe from 0.1 inside the head; the head mesh carrying userData.screw at the group's origin (the audit's seat probe). `8097face`
+- **The Wempe's barrel arbor as first drawn had the 1943 arbor's square** (18 October 2026, photocompare.py on 4_Wempe_3955_N.jpg). Every
+  version took 05 07 02's square, 10 with a 0.5 point; 020704-1 (1941) runs its square end 15 past the upper journal's shoulder, to the turning
+  centre's cone, and Wempe 3955's tip stands at -37.6 ±0.3 (the sheet's -37.32). Keep: 'first' (and 3955) the 1941 end, the others the 1943 one. `92d5118d`
 - **The Wempe's set-up click and centre arbor read two figures wrongly.** The click's "5,7" is the thin circle about its hole, tangent
   to the base (the base 2.85 under the hole, not 2.81 scaled), and its "85" the beak's end face at 85° (82.4° built); the centre arbor's
   "1,6 −0,1" (05 05 03-2) is the wheel's seat alone, not seat and riveting collar, so the seat is 1.55 and the collar 0.255 (1.45 and 0.355).
