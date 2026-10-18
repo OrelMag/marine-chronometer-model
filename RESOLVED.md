@@ -3174,6 +3174,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+- **The Hamilton's export drove the sustaining pawl twice in Blender** (Build, tools and docs): blender_check.py failed, the rig 0.40-0.44 deg off Running at 29.98 s
+  once the sustaining ratchet was drawn its measured size. The pawl rode Run down's clip, 1,050 teeth in 720 frames, and the export's test for parts linear in
+  the escape wheel's place (a few beats from rest) took its steady ride up a tooth for a linear turn, so the rig turned it by a driver as well. Keep: the
+  pawl's own clip, Rig · ratchet (a tooth of the ratchet, played on a loop in E: the Wempe's export's), Run down and Rig · beat skipping it, the export's
+  node records carrying their part (skip and only read it: without it skip did nothing and only dropped every channel), and the pawl kept out of the linear set.
+
 - **The Hamilton's fusee stack had gaps and a hidden spring showing, and its chain ended on a pin** (Winding and maintaining work): seen side-on, the
   sustaining ratchet (tips r 14.53, a module chosen with no source) sat 0.2 mm over a plain copper rim standing over 1.2 mm of the fusee wheel's teeth,
   the fusee's rim 0.1 over it, and the sustaining spring and the wheel's recess showed round the ratchet; a real Model 21 (SNLqsS9wrrM 4:20-4:28,
