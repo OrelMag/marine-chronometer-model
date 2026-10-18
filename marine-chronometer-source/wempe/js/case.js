@@ -26,7 +26,7 @@ const WCASE=(()=>{
      ring's top (YB − 11.5): likely. Kirov-Poljot 24020, later, has them about 10.8 under: the 1950s bowls' are the higher */
   const DY6=YB+1.7-YP;
   const HGL=148,HGT=0.6,STA=5,STB=40,STC=20,STD=45,STL=91,SS0=23.5,SS1=86.5;   /* the hinge's length and leaf, the lid stay's pivot (over the parting line, from the back's outside), its pin (under it, from the back) and the bar, its slot from the pivot */
-  const KX=BW-WT-16.5,KZ=-(BW-WT-16.5),KH=YF+WT+65;   /* the key's holder: its hole's centre (back right, 16.5 from each wall) and its shelf's top (the box, below) */
+  const KX=BW-WT-14,KZ=-(BW-WT-14),KH=YF+WT+65;   /* the key's holder: its fitting's centre (back right, 14 from each wall: 51-00_1, the box, below) and the fitting's top, where the key's cone seats */
   const N=240,CC=new Map(),circ=(r,s0=0)=>{const k=r+'|'+s0;if(!CC.has(k)){const o=[];for(let i=0;i<N;i++){const t=s0+i/N*TAU;o.push([r*Math.cos(t),r*Math.sin(t)]);}CC.set(k,o);}return CC.get(k);};
   /* turned solids as plan cells of rings: rs the radii, ys[i] the depths [y0, y1] of the disc (i 0) and of each ring (each a constant or a function of the plan point), F[i] its
      features; each ring in two halves (a ring isn't a simple outline), split at s0 so no feature crosses the split, a sloped one in N/4 sectors. Every circle is the same N points, so neighbouring cells share them */
@@ -374,11 +374,30 @@ const WCASE=(()=>{
          1943 key, its paddle's top 18 px over the back rim's line behind it, the key 21 in front of the back wall, the camera looking down about 35° (the box's 210 deep spans
          305 px at about 2.5 px/mm): the paddle's top 24 ±6 over the box's top, 20 ±8 read apart (16 October 2026; until then read as level with it); the 6MX's shelf 15-30 under
          the rim with its paddle above, moMvyx8eXfo 3:06, Kirova 422), Wempe 5377 (later case, its paddle under the rim) (bonhams_26816_327: the shelf and the key in it), Lange VEB 2285 (drouot_33246921_*_3, from above:
-         the shelf's front edge, the key near it), Lange 5510 and the 6MX Kirova 422 (12_Kirow_DEC_422_Kasten_1.jpg). Its legs 55 along the back and right walls (Lange 2285
-         from above: about a third of the box's inside), the hole Ø 11 16.5 from each wall (21 read on the same photograph, as the key stood until 16 October 2026: raised to the ring's height its body then met the gimbal ring after 9.5° of swing; 16.5 stands it clear), 10 thick, its top 65 over the floor (the key's paddle then
-         20.7 over the box's top, between the two readings of the wartime Wempe's (22.3 until 17 October 2026, the paddle then 1.6 higher on the key); 40 and 2.7 under until 16 October 2026): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 89.8 from the gimbals' centre and its body's near side 82.6, beyond the case's
-         and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 105 against its 103.7) */
-      tag(mesh(bxW,polyGeo([[BW-WT,-(BW-WT)],[BW-WT-55,-(BW-WT)],[BW-WT,-(BW-WT)+55]],10,[[KX,KZ,5.5]]),MC.mah,0,KH-10,0),'Schluesselhalter');}
+         the shelf's front edge, the key near it), Lange 5510 and the 6MX Kirova 422 (12_Kirow_DEC_422_Kasten_1.jpg). The box's plan (127-556. A-1, 51-00_1, 1:2; scaled 1.24-1.25 px/mm by the box's 185 and the gimbal ring's Ø 146.6) draws it: a triangle in the corner, its legs 22.3
+         along the two lines it is drawn against (2-4 mm inside the box's inner faces as the box's centre places them: taken as the walls), and on its long edge a round
+         fitting, the circle fitted on its rim (8 points, 0.4 px rms): Ø 19.5 (±1), its centre 10.35 from each of those lines (13.4-14.5 from the inner faces by the box's centre)
+         and 1.1 inside the long edge, with two screws' heads on the box's diagonal 11.9 apart, one 6.4 inside the edge and one 5.2 outside it. Lange VEB 2285's box
+         (drouot_33246921_langeVEB2285_3, from above) shows the same: a wooden shelf in the corner and the key's black body in a round black cup standing over its front edge.
+         Built so: the key's axis 14 from each wall (±1; 13.5 would leave the 1943 key's paddle, 3 thick, 0.24 from the walls at its widest), the shelf's long edge 1.1 beyond it (its legs 29.6 from the walls), notched round the key's body (r 6), 10
+         thick, its top 5 under the cup's; the cup Ø 19.5, 5 high (Lange 2285's, scaled on its Ø: estimated), black (Lange 2285's: the drawing gives no material), bored
+         Ø 11 for the key's cone, which seats on its top edge 65 over the floor (the key's paddle 20.7 over the box's top, as before); its two screws 14 apart, heads Ø 2.2 on Ø 1.2 shanks
+         (the dots read 11.9 apart and about Ø 2.4, ±1 each: so near the centre, heads that size would lie over the key's Ø 11 bore, so they are built as far out as the
+         reading allows), the inner into the shelf, the outer, beyond the shelf's edge, ending in the cup (what it holds there isn't drawn: estimated). The paddle (Ø 34.5 × 3, its top
+         20.7 over the rim, facing the box's middle) clears the walls (and the closed lid's, flush with them) by 0.74 at its widest, the 1940 key's pear by 0.57 (measured on the page). Until 18 October
+         2026 a shelf with legs 55 and the key in a hole 16.5 from each wall (estimated). The paddle faces the box's middle, its plane 94.8 from the gimbals' centre and its
+         body's near side 87.6, beyond the case's and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 130 against its 103.7) */
+      {const c=[BW-WT,-(BW-WT)],d=[-Math.SQRT1_2,Math.SQRT1_2],h=[Math.SQRT1_2,Math.SQRT1_2],K=[KX,KZ],eK=14*Math.SQRT2+1.1,L=eK*Math.SQRT2,rn=6,
+          F=[K[0]+1.1*d[0],K[1]+1.1*d[1]],w=Math.sqrt(rn*rn-1.1*1.1),P1=[F[0]-w*h[0],F[1]-w*h[1]],P2=[F[0]+w*h[0],F[1]+w*h[1]],
+          a1=Math.atan2(P1[1]-K[1],P1[0]-K[0]),a2=Math.atan2(P2[1]-K[1],P2[0]-K[0]),ad=Math.atan2(-d[1],-d[0]),arc=[];
+        let da=a2-a1;while(da<=0)da+=TAU;const mid=a1+da/2,flip=Math.cos(mid-ad)<0;if(flip)da-=TAU;   /* round the side toward the corner */
+        for(let i=1;i<24;i++){const a=a1+da*i/24;arc.push([K[0]+rn*Math.cos(a),K[1]+rn*Math.sin(a)]);}
+        const sIn=[K[0]-7*d[0],K[1]-7*d[1]],sOut=[K[0]+7*d[0],K[1]+7*d[1]];
+        tag(mesh(bxW,polyGeo([c,[c[0]-L,c[1]],P1,...arc,P2,[c[0],c[1]+L]],10,[[sIn[0],sIn[1],0.6]]),MC.mah,0,KH-15,0),'Schluesselhalter');
+        const cup=[];for(let i=0;i<96;i++){const a=i/96*TAU;cup.push([KX+9.75*Math.cos(a),KZ+9.75*Math.sin(a)]);}
+        tag(mesh(bxW,polyGeo(cup,5,[[KX,KZ,5.5],[sIn[0],sIn[1],0.6],[sOut[0],sOut[1],0.6]]),MC.black,0,KH-5,0),'Schluesselhalter.F');
+        const rg=new THREE.Group();rg.rotation.x=Math.PI;bxW.add(rg);
+        tag(screw(rg,sIn[0],-sIn[1],-KH,1.1,1.0,10,0.6,M.steel),'WN-kh');tag(screw(rg,sOut[0],-sOut[1],-KH,1.1,1.0,4.5,0.6,M.steel),'WN-kh');}}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
     /* the lid's stay (below, in the lid): the bar on its pivot, turned each frame to lie on its pin in the box's wall (stayAt); the pin a brass stud Ø 2 out of the wall */
     const stayP=new THREE.Group(),stayPin=[YL-STC,-BW+STD];
