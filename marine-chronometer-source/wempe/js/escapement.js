@@ -57,6 +57,25 @@ const WESC=(()=>{
   const GT=tB+1.54,GN=nB+0.005,GW=0.15,GNF=GN+GW/2,GNB=GN-GW/2;
   const RD=Math.hypot(1.54,(DEPTH+0.07)*(TP-GT)/TP-(GNF-nB)),DSW=0.4;   /* the discharge stone's end; its width across 0.4 (scaled) */
   const GB=[6.7,0.325];   /* the gold spring's bending point (05 04_1 "Biegungspunkt der Goldfeder", 6.7 from the stone, scaled) */
+  /* the horn's length from the stone, HORN_L: 1436's figure, 4.4 to the pipe's centre (its drawing scales 5.2: not to scale there); Wempe 3955's detent seen along its
+     pipe (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, 21.7 px/mm by the pipe's Ø 1.15) measures 4.4-4.55, the gold spring's tip just past it, as on the 6MX's
+     (8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Its end then lies 1.598 from the staff, 0.038 outside the discharge stone's reach (RD 1.560), and the gold spring's tip
+     (1.54) 0.056 past it (likely; 3.5 until 15 October 2026, an estimate kept 1 short of the tip). An unbracketed figure, so the first drawn detent's too */
+  const HORN_L=4.4;
+  /* its line in plan: on the blade's line at the pipe, bending steadily toward the block to its end, as Wempe 3955's (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, flattened
+     into the detent's frame at 80 px/mm: 20.5 px/mm across by the pipe's Ø 1.15, 23.9 along; E:\mc-video\wempe-detent\detent10_flat.png) traced twice, 18 October 2026: by
+     hand in tools/tracer.html (its centre line, tools/traces/wempe_detent10.mm.json) and by its edges (the steel against the gap beside the gold spring, CIELAB L*),
+     each from the blade's line beside it (the two agree on that line to 0.008; their horn lines 0.05-0.1 apart). Off that line, z along it from the pipe's centre: 0.01
+     at 2.0, 0.08 at 2.5, 0.22 at 3.1, 0.41 at 3.7; fitted together as HQ(u) = 0.0371 u² + 0.0024 u³, u = |z| − 0.6 (rms 0.05 and 0.02), z scaled to t by the gold
+     spring's tip (the photograph's z 4.08 to GT, ×1.091), the offset to put the horn's end where the gold spring's tip rests on it (×1.03 on the photograph's 0.534: 0.55).
+     1436's left view draws the same bend later, mostly over the last quarter (0.06 at 4.0 of its 5.2 drawn, 0.45-0.5 at the top; its length not to scale there: README).
+     Until 18 October 2026 a step at the pipe and a straight bar 0.54 off the blade's line (its end's place) (likely) */
+  const HKT=GT/-4.08,HQ=t=>{const u=Math.max(0,-t/HKT-0.6);return u*u*(0.0371+0.0024*u);},HQd=t=>{const u=Math.max(0,-t/HKT-0.6);return -(2*0.0371*u+3*0.0024*u*u)/HKT;};
+  const hornLine=th=>{const nw=GNB-0.005,e=HQ(-HORN_L);let A=nw-th/2;for(let i=0;i<3;i++)A=nw-th/2*Math.hypot(1,A*HQd(-HORN_L)/e);const k=A/e;
+    return{c:t=>k*HQ(t),w:t=>k*HQ(t)+th/2*Math.hypot(1,k*HQd(t)),b:t=>k*HQ(t)-th/2*Math.hypot(1,k*HQd(t))};};   /* its centre, its face toward the wheel (on which the gold spring's tip rests: GNB-0.005 at its end, as before) and its back */
+  /* the gold spring's free part, its bending point to its tip (dv draws a Catmull-Rom through these; GBZ and how it is pinned: the gold spring below) */
+  const GBZ=[[6.4,0.779],[5.6,0.811],[4.8,0.849],[4.0,0.904],[3.2,0.967],[2.4,1.033],[1.6,1.092],[0.8,1.125],[0.0,1.102],[-0.8,0.996],[-1.6,0.787],[-2.2,0.577],[-2.8,0.34],[-3.3,0.135],[-3.7,-0.026],[-4.08,-0.173]];
+  const goldPath=(/** @type {number} */g1)=>{const kS=SQ0/8.32,zT=(/** @type {number} */z)=>z<0?z*HKT:z*kS,gbAt=(/** @type {number} */z)=>{for(let i=0;i<GBZ.length-1;i++){const[a,p]=GBZ[i],[b,q]=GBZ[i+1];if(z<=a&&z>=b)return p+(q-p)*(z-a)/(b-a);}return GBZ[0][1];};const cA=gbAt(GB[0]/kS)-g1,cE=GBZ[GBZ.length-1][1]-GN,cor=(/** @type {number} */t)=>cA+(cE-cA)*(GB[0]-t)/(GB[0]-GT);   /* the line taken off, pinning the bow at its bending point and its tip */return[[GB[0],g1],...GBZ.slice(0,-1).map(([z,n])=>[zT(z),n-cor(zT(z))]),[GT,GN]];};
   /* the impulse: the tooth's tip on the impulse stone's face, a line from the staff (05 04_6: its face on the roller's centre line), s from the staff */
   const s_=f=>{const c=Math.cos(f*D2R),dd=hyp(sub(W,B));return dd*c-Math.sqrt(Math.max(0,dd*dd*c*c-(dd*dd-RT*RT)));};
   const psiOf=f=>wrap(al(sub(pol(B,s_(f),aBW-f),W))-aB);   /* the impulsing tooth's tip angle from the line of centres (deg, in the wheel's turn) with the stone's face at f */
@@ -186,7 +205,7 @@ const WESC=(()=>{
       OP78:0,W78:0.63,   /* no Op. 78 here: W78 the preload itself, g at the stone. No Wempe source gives it (a banking screw sets the lock, the 1954 instruction's п. 11): the Hamilton's after Op. 78, 0.63 g (estimated) */
       MU:0.15,eS:0.3,   /* the brass tooth on the sapphire stone; the detent's restitution on its banking (estimated, as the Hamilton's) */
       HS:-0.491,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing) */
-      I:2526.2,JW:9.96,ID:8.43,   /* (2560.7 until 18 October 2026, with a nut on each mass; ID 8.46 until then too, before the gold spring's bow) the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
+      I:2526.2,JW:9.96,ID:8.35,   /* (2560.7 until 18 October 2026, with a nut on each mass; ID 8.46 until then too, before the gold spring's bow, and 8.43 before the horn was traced) the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
       DEP:1,RW:1,   /* checked in time (tools/dynamics.js --model wempe, 15 October 2026): the detent, flung off the discharge stone's square corner, never rides its bevel back
                        down, so its preload's and spring's work up to there is lost (DEP); and the locking stone falls back onto the tooth it has just let go, the wheel slow to get
                        it out from under, and drags on its land and is pushed on by its back (RW). Together 4.6° of swing at 12 h (README, Physics: in time) */
@@ -604,11 +623,6 @@ const WESC=(()=>{
        1.95 to 3.65 under the plate, between the wheel's teeth and the block's arm (05 04_1's elevation draws pipe and stone over the wheel's arbor and can't be read apart: estimated), the stone
        out of it to the teeth; its lengths and plan the same (05 04_1's plan: 8.4 pipe to square, the square 2, the spring 5, the foot 6.6 under the block's edge, 18.8 from the
        stone to the block's screw). The gold spring lies on the thicker square 0.025 further out */
-    /* the horn's length from the stone, HORN_L: 1436's figure, 4.4 to the pipe's centre (its drawing scales 5.2: not to scale there); Wempe 3955's detent seen along its
-       pipe (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, 21.7 px/mm by the pipe's Ø 1.15) measures 4.4-4.55, the gold spring's tip just past it, as on the 6MX's
-       (8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Its end then lies 1.598 from the staff, 0.038 outside the discharge stone's reach (RD 1.560), and the gold spring's tip
-       (1.54) 0.056 past it (likely; 3.5 until 15 October 2026, an estimate kept 1 short of the tip). An unbracketed figure, so the first drawn detent's too */
-    const HORN_L=4.4;
     const dv=(sS,sM,o)=>{const yd=d=>TI+d,y0F=yd(o.d0),y1F=yd(o.d0+2),y0b=yd(o.d0+1),y1b=yd(o.d0+2),rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],fh=o.tf/2;
       tag(mesh(sS,solidGeo([{loop:rect(FOOT0,FOOT0+6.6,-fh,fh),y0:y0F,y1:y1F}]),M.steel),'050401-1');
       const sp0=rect(TP,FOOT0,-0.035,0.035),sp1=rect(SPR0,TP,-0.035,0.035);
@@ -618,7 +632,8 @@ const WESC=(()=>{
       tag(mesh(sM,solidGeo([{loop:rect(SQ0-2.9,SQ0,-o.tq/2,o.tq/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1);   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
       tag(mesh(sM,solidGeo([{loop:rect(0.4,SQ0-2.9,-o.tb/2,o.tb/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1);   /* the blade, into the pipe's wall */
       tag(mesh(sM,solidGeo([{loop:C(P,1.15/2,96),y0:yd(o.pp),y1:yd(o.pp+o.pl),F:[{p:C(P,RS+0.002,64),a:yd(o.pp),b:yd(o.pp+o.pl)}]}]),M.steel),'050401-1',1);   /* the pipe */
-      tag(mesh(sM,solidGeo([{loop:[D(-0.2,-0.40),D(-0.45,-0.25),D(-0.7,GNB-0.005),D(-HORN_L,GNB-0.005),D(-HORN_L,GNB-0.005-o.th),D(-0.5,GNB-0.005-o.th),D(-0.15,-0.52)],y0:yd(o.d0+1.1),y1:yd(o.d0+1.9)}]),M.steel),'050401-1',1);   /* the horn */
+      const HL=hornLine(o.th),hts=[];for(let i=0;i<=32;i++)hts.push(-0.45-(HORN_L-0.45)*i/32);   /* from inside the pipe's wall (r 0.46 at its corners, the bore 0.377) */
+      tag(mesh(sM,solidGeo([{loop:ccw([...hts.map(t=>D(t,HL.w(t))),...hts.slice().reverse().map(t=>D(t,HL.b(t)))]),y0:yd(o.d0+1.1),y1:yd(o.d0+1.9)}]),M.steel),'050401-1',1);   /* the horn */
       /* the locking stone (Ruhestein 05 04 01-3): Ø 0.75 in the pipe, ground half away below it to its flat, which faces the oncoming tooth along the line from the wheel's
          centre (05 04_1's plan: the hatched half); it stands out of the pipe to 0.1 over the teeth (estimated) */
       const hd=[];for(let i=0;i<=24;i++)hd.push(add([0,0],dir(P_A+180*i/24),RS));   /* the round half lies on the side the wheel turns toward, its flat on the line from the wheel's centre */
@@ -627,13 +642,20 @@ const WESC=(()=>{
       /* the gold spring (Goldfeder 05 04 01-2, 16.9.42: Goldblech 333 federhart): 0.15 thick, its head 2 wide and 2.4 long with a hole Ø 0.7 1.2 from its end, the arm 1 wide
          flush with one edge, 15.4 overall (sure); screwed to the square's face toward the wheel (Schrb. WN-14), round the pipe to rest on the horn, its tip where 05 04_1 puts it.
          Past its bending point it bends away from the horn as the discharge stone passes on the return swing. Its free part one smooth bow round the pipe to the tip, which
-         alone rests on the horn's: traced on Wempe 3955's detent seen square-on along its pipe (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, the strip's middle every 20 px
-         down the photograph, 22.1 px/mm across by the block's pins, 23.9 along by the pins and the base's 7.5; from the pipe's centre, t along the blade, n toward the wheel:
-         2.80 0.61, 1.97 0.70, 1.13 0.77, 0.29 0.79, -0.54 0.72, -1.38 0.59, -2.22 0.29, -3.05 -0.14, the tip -3.97 -0.43; ±0.1 (likely)), the t scaled to put the tip at GT; the
-         6MX's the same (its photograph beside it, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Until 18 October 2026 a polyline lying 3 along the horn, cranked out by the pipe */
-      const g1=GB[1]+o.gs,head=SQ0+2.2,kT=GT/-3.97,cr=(/** @type {number[][]} */Q)=>{const o2=[Q[0]];for(let i=0;i<Q.length-1;i++){const p0=Q[Math.max(0,i-1)],p1=Q[i],p2=Q[i+1],p3=Q[Math.min(Q.length-1,i+2)];
+         alone rests on the horn's, closing onto it with the gap between them narrowing to the tip: Wempe 3955's detent seen along its pipe (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg,
+         flattened into the detent's frame as the horn above), the strip's middle between its two edges traced twice, 18 October 2026 (by hand in tools/tracer.html,
+         tools/traces/wempe_detent10.mm.json, from the tip to 3.5 past the pipe; by its edges on CIELAB b*, the yellow, Gaussian 1.5 px, from the tip to the square), the
+         two 0.02-0.04 apart; off the blade's line beside it, z along it from the pipe's centre: 8.0 0.70, 6.0 0.81, 4.0 0.90, 2.0 1.06, 0 1.09, -1.0 0.97, -2.0 0.63, -3.0
+         0.27, -4.0 -0.16 (smoothed, rms 0.012). Distances across that photograph run large where the parts stand off the steel (the strip shows 0.4-0.55 wide for its 0.15:
+         the photograph looks a little across it, and its arm reads 0.4 off the square's face it is screwed to), so the bow is pinned at both ends, its bending point (GB) and
+         its tip (GT, GN: 05 04_1), by taking off a line (about 0.31 at the bending point, 0.18 at the tip); z to t ×1.008 on the square's side (the square's start, SQ0, at
+         8.32 on the photograph) and ×1.091 on the tip's (the tip at 4.08: HKT). GBZ: z, n off the blade's line, the smoothed traces; ±0.05 in shape (likely). The 6MX's the same (its photograph beside it, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Until 18 October
+         2026 the bow traced once on the same photograph (the strip's middle every 20 px from a pipe centre about 0.3 off the blade's line, the tip read at -0.43 and scaled to
+         GT), the same round the pipe to 0.03 but crossing -0.14 at t -3.42 instead of -3.7, which would meet the traced horn before its tip; before that a polyline lying 3
+         along the horn, cranked out by the pipe */
+      const g1=GB[1]+o.gs,head=SQ0+2.2,cr=(/** @type {number[][]} */Q)=>{const o2=[Q[0]];for(let i=0;i<Q.length-1;i++){const p0=Q[Math.max(0,i-1)],p1=Q[i],p2=Q[i+1],p3=Q[Math.min(Q.length-1,i+2)];
           for(let s=1;s<=6;s++){const u=s/6,u2=u*u,u3=u2*u;o2.push([0,1].map(j=>0.5*(2*p1[j]+(-p0[j]+p2[j])*u+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*u2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*u3)));}}return o2;};   /* Catmull-Rom through the points */
-      const path=[[head,g1],...cr([[GB[0],g1],...[[2.80,0.61],[1.97,0.70],[1.13,0.77],[0.29,0.79],[-0.54,0.72],[-1.38,0.59],[-2.22,0.29],[-3.05,-0.14]].map(([t,n])=>[t*kT,n]),[GT,GN]])];
+      const path=[[head,g1],...cr(goldPath(g1))];
       const offs=(pts,w)=>{const L=[],Rr=[];for(let i=0;i<pts.length;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],u=unit(sub(b,a)),nn=[-u[1],u[0]];L.push(add(pts[i],nn,w/2));Rr.push(add(pts[i],nn,-w/2));}return[...L,...Rr.reverse()];};
       const free=path.slice(1);
       {const n0=g1-GW/2,n1=g1+GW/2,h0=head-2.4,Q=pts=>ccw(pts.map(([t,n])=>D(t,n)));   /* the head 2 wide, the arm 1 */
@@ -957,7 +979,7 @@ const WESC=(()=>{
   /* the Soviet 6MX's bodies (the Variants' third version, Kirov No. 247): its escapement stands at the first-drawn heights with the first-drawn staff and collar and its own
      detent, so its balance, escape arbor and detent weigh differently; weighed as SET's are (tools/wempe_inertia.py --rev 6mx, tools/wempe_inertia_6mx.json, checked by
      tools/wempe_6mx.js). js/escphys.js's WPHYS.rev('6mx') runs makeEsc with them */
-  const SET6={I:2526.0,JW:10.89,ID:8.21};   /* I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow */
+  const SET6={I:2526.0,JW:10.89,ID:8.13};   /* I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0),DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (2 wide less 0.05 at each edge), in both states: tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (2 wide less 0.05 at each edge), in both states: tools/dynamics.js */
 })();
