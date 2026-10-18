@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.12.01 · 2026-10-18
+- The dust seal's packing rings on the fusee's winding tube are now dark, as photographs of real Model 21s show them
+
 ## 3.12.00 · 2026-10-18
 - A fifth version of the Wempe, Wempe 3955 as photographed: its dust bush, fusee square, set-up ratchet and black Bakelite bowl and gimbal ring as its photographs show them
 - The Wempe and 6MX checked against photographs in the same view: screws with cut slots, the plates' hammered gilt, the maintaining work's light blue temper, the 1941 barrel arbor
