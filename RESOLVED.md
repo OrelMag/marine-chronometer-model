@@ -407,7 +407,7 @@ Contents:
   slot's inner wall 0.042 further out; the end stayed where the last state puts it (the Contacts view: hairspring and stud overlapping,
   not expected, in four of five versions; fine.py, run on each, drops an overlap under 0.0005 mm³). The drawn outer curve is now formed out by 0.3 tan 8°
   over its last stretch in those versions, the stud's pin with it. Keep: the spring's end and pin follow the slot's lean wherever the
-  balance's height moves them; the physics' curve (HSP) is 05 03_7's in every version.
+  balance's height moves them; the physics' curve (HSP) is 05 03_7's in every version. `2c758a49`
 
 ## Going train and heights
 
