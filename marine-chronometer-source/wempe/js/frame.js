@@ -56,7 +56,7 @@ const WFRAME=(()=>{
       for(const k of[1,35,38])F.push(T(H[k],rJ,y0,y1));                                  /* 4.4 punched, 4.59 +0.012 reamed: the centre, seconds and intermediate wheels' settings (WN-301, WN-300: 05 08 01) */
       for(const k of[3,12,40])F.push(T(H[k],rH35,y0,y1));                                /* Hilfslöcher, 3.50 +0.012 */
       F.push({p:C(H[4],2.15,60),q:C(H[4],1.2,60),a:y0,b:y0+0.55},{p:C(H[4],1.2,60),q:C(H[4],0.45,60),a:y0+0.55,b:y0+0.95},{p:C(H[4],0.45,60),a:y0+0.95,b:y1});   /* hole 4's oil sink on the outer face, Ø 4.3 (Wempe 3955, 2_Wempe_3955_A.jpg: spherical, the pivot bright in it; its depth estimated, as the bushes' sinks; two cones for the sphere) */
-      F.push(T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1));if(DR)F.push(T(H[13],1.8/2,y0,y1),T(H[53],1.5045/2,y0,y1));else F.push(T(WESC.HOLES.block6.stud,rH35,y0,y1));   /* the 6MX: no 13, the detent block's stud in a Ø 3.5 2.2 S of it (Kirov No. 247: WESC.HOLES.block6) */   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */   /* 53 not in the 6MX (Kirov No. 247's plate is bare there, in plain view: likely) */
+      F.push(T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1));if(DR)F.push(T(H[13],1.8/2,y0,y1),T(H[53],1.5045/2,y0,y1));else F.push(T(WESC.HOLES.block6.stud,rH35,y0,y1),...WD.CONTACT6.access.map(q=>T(q,rH35,y0,y1)));   /* the 6MX: no 13, the detent block's stud in a Ø 3.5 2.2 S of it (Kirov No. 247: WESC.HOLES.block6); the Ø 3.5 access holes over its contact's base screws (2_Kirow_247_A.jpg: the screws' heads seen 19 down through them; Kirov 1564's, without the contact, open to the plate: likely) */   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */   /* 53 not in the 6MX (Kirov No. 247's plate is bare there, in plain view: likely) */
       for(const k of[8,42,48])F.push(T(H[k],rM26,y0,y1));                                /* the upper cock's and the barrel bridge's screws, M2.6 */
       for(const k of[6,9,41,47,50])F.push(T(H[k],rPinP,y0,y1),B(H[k],2.5/2,y1,1.6));   /* steady pins from above, the holes opened from below (A-B) */
       for(const k of[22,37])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));           /* steady pins from below (C-D) */
@@ -115,6 +115,7 @@ const WFRAME=(()=>{
       for(const k of[29,44])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
       for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),A(q,WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
+      if(V==='6mx')for(const q of WD.CONTACT6.screws56)F.push(T(q,rM17,y0,y1));   /* the 6MX's electrical contact's base screws, M1.7 through (train.js; WD.CONTACT6) */
       F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
       /* the hand-setting work's cut and holes (Zeigerstellung, 05 33): the table's 14-18 are struck through, "nur wenn Zeigerstellung eingebaut wird", but Wempe 3955's plate
          is cut and drilled for it, every hole and the cut open, nothing fitted but a bush in 18 (3_Wempe_3955_uZ.jpg, 6_Wempe_3955_S.jpg, 8_Wempe_3955_Räderwerk_plus.jpg), and

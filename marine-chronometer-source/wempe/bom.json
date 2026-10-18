@@ -3685,7 +3685,23 @@
    "part": "bowl",
    "fn": "Hold the case brackets and the locking bracket to the bowl (their holes across the turned bowl not cut).",
    "rel": [],
-   "figs": "05 01_1"
+   "figs": "05 01_1",
+   "rev": "last first"
+  },
+  {
+   "id": "6MX.bks",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Bracket screws (6MX)",
+   "qty": 6,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Hold the Soviet 6MX's high case brackets (two each, in slots) and its locking bracket (two, in its vertical slot) to the bowl, their holes across the turned bowl not cut. No sheet: Kirov No. 247's bowl (12_Kirow_247_E-Kontakt_3.jpg).",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
   },
   {
    "id": "050100-2",
@@ -4697,6 +4713,595 @@
    "fn": "On the collar beside the tang (its click spring 127-556.02-04 not drawn).",
    "rel": [],
    "figs": "05 01_6"
+  },
+  {
+   "id": "6MX.ct",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact base (6MX, Romanov's 58)",
+   "qty": 1,
+   "parent": "050802-1",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The gilt base of the seconds contact on the pillar plate's inner face, along its rim by pillar 39; carries the blocks, the lever's lower jewels and the cock. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "050802-1"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctm",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact base screw (6MX, 56)",
+   "qty": 2,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Hold the contact's base to the pillar plate, their ends flush on the dial side; reached through the top plate's two access holes. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "tap"
+    ],
+    [
+     "in",
+     "6MX.ct",
+     "clear"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctf",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Insulation (6MX, 68)",
+   "qty": 2,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Black fibre under each contact block, insulating it from the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ct"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctbp",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact block + (6MX, 52)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The positive block: the spiral's stud on it, the bowl's spring A bears on its outer end. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctf"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctbm",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact block − (6MX, 57)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The negative block: the contact disc on it, the bowl's spring B bears on its outer end. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctf"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctu",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Insulating bush (6MX, 67)",
+   "qty": 4,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Insulates each block screw from its block, its black flange under the head. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cts",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact block screw (6MX)",
+   "qty": 4,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Hold the blocks and their insulation to the base: steel cheese heads Ø 3.1. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ct",
+     "tap"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctd",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact disc (6MX, 55)",
+   "qty": 1,
+   "parent": "6MX.ctbm",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The knurled gilt disc the contact screw meets, upright on its bracket on block 57; it may be turned to renew a burnt contact (the 6MX's instruction). No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctst",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact lever staff (6MX, 69)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The lever's staff, jewelled at both ends; the spiral's collet on it. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctjs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact staff's upper jewel setting (6MX)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the staff's upper hole jewel and end jewel in the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ct",
+     "press"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctju",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), contact staff, upper",
+   "qty": 1,
+   "parent": "6MX.ctjs",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's upper pivot runs in it. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ctjs",
+    "arbor": "6MX.ctst",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ctjeu",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "End jewel (6MX), contact staff, upper",
+   "qty": 1,
+   "parent": "6MX.ctjs",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's upper end stone. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "end",
+    "holder": "6MX.ctjs",
+    "arbor": "6MX.ctst",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "6MX.ctc",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock (6MX)",
+   "qty": 1,
+   "parent": "6MX.ct",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The L-shaped gilt cock over the spiral, holding the staff's lower jewels. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ct"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctcs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock screw (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the cock's foot to the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ct",
+     "tap"
+    ],
+    [
+     "in",
+     "6MX.ctc",
+     "clear"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctcp",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock steady pin (6MX)",
+   "qty": 2,
+   "parent": "6MX.ctc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Place the cock's foot on the base. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctjl",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hole jewel (6MX), contact staff, lower",
+   "qty": 1,
+   "parent": "6MX.ctc",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's lower pivot runs in it, in the cock's arm. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "hole",
+    "holder": "6MX.ctc",
+    "arbor": "6MX.ctst",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "6MX.ctcc",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact cock's cap plate (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the staff's lower end jewel on the cock's arm. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctc"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctjel",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "End jewel (6MX), contact staff, lower",
+   "qty": 1,
+   "parent": "6MX.ctcc",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "The staff's lower end stone, under the cap plate. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "end",
+    "holder": "6MX.ctcc",
+    "arbor": "6MX.ctst",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "6MX.ctccs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Cap plate screw (6MX)",
+   "qty": 2,
+   "parent": "6MX.ctcc",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Hold the cap plate to the cock's arm. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ctc",
+     "tap"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctl",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact lever (6MX, 60)",
+   "qty": 1,
+   "parent": "6MX.ctst",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Pressed on its staff: the stone at one end rides the contact wheel, the contact screw at the other meets the disc. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctp",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact lever's stone (6MX, 61)",
+   "qty": 1,
+   "parent": "6MX.ctl",
+   "kind": "jewel",
+   "part": "pillarPlate",
+   "fn": "A corundum pallet with a bevelled end, lifted by the contact wheel's teeth. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx",
+   "jewel": {
+    "type": "pallet",
+    "holder": "6MX.ctl"
+   }
+  },
+  {
+   "id": "6MX.ctk",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact screw (6MX, 54)",
+   "qty": 1,
+   "parent": "6MX.ctl",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Threaded through the lever's end, its point on the disc: the contact itself. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctn",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact screw's lock nut (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctk",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Locks the contact screw in the lever. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cth",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spiral (6MX, 59)",
+   "qty": 1,
+   "parent": "6MX.ctst",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "A flat copper-coloured spiral from the staff's collet to the stud: the lead from block 52 to the lever, and its return spring. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctq",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Spiral stud (6MX, 53)",
+   "qty": 1,
+   "parent": "6MX.ctbp",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Holds the spiral's outer end on block 52. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "on",
+     "6MX.ctbp"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.ctqs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Spiral stud's clamp screw (6MX)",
+   "qty": 1,
+   "parent": "6MX.ctq",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Clamps the spiral's end in the stud. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [
+    [
+     "in",
+     "6MX.ctq",
+     "tap"
+    ]
+   ],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cw",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact wheel (6MX, 62)",
+   "qty": 1,
+   "parent": "050501-2",
+   "kind": "part",
+   "part": "secondsWheel",
+   "fn": "Fixed on the seconds arbor under its wheel, on a gilt collet: 60 ratchet teeth less one, which lift the contact lever's stone every other beat and leave it closed at the minute. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cf",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spring in the bowl (6MX, 66)",
+   "qty": 2,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "A flat brass spring screwed inside the bowl, its three tines bearing on a contact block's outer end: the circuit from the terminal into the movement. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfi",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spring's insulation (6MX, 64)",
+   "qty": 2,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "A black insulating strip between each spring's foot and the bowl's bore. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact spring screw (6MX, 65)",
+   "qty": 4,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Hold the springs' feet through the bowl's wall, slotted brass heads outside (their holes across the turned bowl not cut). No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfk",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Contact terminal (6MX)",
+   "qty": 2,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "A brass socket outside the bowl for each lead, marked + and − on the bowl. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
+  },
+  {
+   "id": "6MX.cfw",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Terminal washer (6MX, 63)",
+   "qty": 6,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Black fibre washers under the springs' screws and the terminals outside the bowl. No sheet: the Soviet 6MX's electrical contact (Kirov No. 247's photographs by Johannes Altmeppen; Romanov 1975, Figs. 100-101 and p. 105's parts list), its sizes estimated where the photographs don't give them.",
+   "rel": [],
+   "figs": "",
+   "rev": "6mx"
   }
  ]
 }
