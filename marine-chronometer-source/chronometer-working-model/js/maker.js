@@ -12,7 +12,7 @@ const MAKER=(()=>{
   const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const mm=v=>A&&A.units()==='in'?(v/25.4).toFixed(3)+' in':v.toFixed(2)+' mm';
   /* densities (g/cm³) by the model's material: steel 7.85, brass 8.5, Invar 8.1, stainless 7.9, corundum 4.0, glass 2.5, mahogany 0.6, gold 17, silver 10.5 */
-  const DENS={steel:7.85,steelD:7.85,blued:7.85,brass:8.5,gilt:8.5,brassD:8.5,invar:8.1,ruby:4.0,glass:2.5,wood:0.6,woodEdge:0.6,felt:0.3,fibre:1.3,packing:1.2,delrin:1.4,gold:17,silver:10.5,nickel:8.9,chain:7.85,chain2:7.85};
+  const DENS={steel:7.85,steelD:7.85,blued:7.85,brass:8.5,gilt:8.5,brassD:8.5,invar:8.1,ruby:4.0,clear:3.5,glass:2.5,wood:0.6,woodEdge:0.6,felt:0.3,fibre:1.3,packing:1.2,delrin:1.4,gold:17,silver:10.5,nickel:8.9,chain:7.85,chain2:7.85};
   let matName=null;
   const nameOf=m=>{if(!matName){matName=new Map();for(const[k,v]of Object.entries(A.M))if(v&&v.isMaterial)matName.set(v,k);}return matName.get(m)||'';};
   /* the part's meshes as built (the merged copies are drawing only: the pieces are still under the movement), visible or not, without the engravings */

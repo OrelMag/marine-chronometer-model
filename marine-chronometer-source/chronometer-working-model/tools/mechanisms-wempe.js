@@ -47,7 +47,10 @@
     const W=PW.map(o=>shift(o.S,centre)),near=W.flatMap(w=>denseS(w,0.005)).filter(p=>Math.hypot(p[0],p[1])<ro+0.2);
     const da=(p,a)=>Math.abs(Math.atan2(Math.sin(Math.atan2(p[1],p[0])-a),Math.cos(Math.atan2(p[1],p[0])-a)));
     const ang0=Math.atan2(near.reduce((q,p)=>q+p[1],0),near.reduce((q,p)=>q+p[0],0)),Rw=Rl.filter(e=>(da(e.a,ang0)<2.5*pitch||da(e.b,ang0)<2.5*pitch)&&Math.max(Math.hypot(...e.a),Math.hypot(...e.b))>0.6*ro),win=denseS(Rw,0.005).filter(p=>da(p,ang0)<2*pitch);
-    const root=Math.min(...denseS(Rw,0.005).filter(p=>da(p,ang0)<pitch).map(p=>Math.hypot(p[0],p[1])));
+    /* the root found from the outline's outer envelope (the farthest point at each angle, in bins of a hundredth of a pitch), so a hole inside the teeth (the click wheel's three M2
+       holes on r 5.75, under a click as A-B places the clicks) doesn't read as one: until 16 October 2026 the least radius of any edge within a pitch */
+    const env=new Map();for(const p of denseS(Rw,0.005)){const d=Math.atan2(Math.sin(Math.atan2(p[1],p[0])-ang0),Math.cos(Math.atan2(p[1],p[0])-ang0));if(Math.abs(d)>=pitch)continue;const k=Math.round(d/pitch*100),r=Math.hypot(p[0],p[1]);if(!(env.get(k)>=r))env.set(k,r);}
+    const eR=Math.min(...env.values()),root=Math.min(...denseS(Rw,0.005).filter(p=>da(p,ang0)<pitch).map(p=>Math.hypot(p[0],p[1])).filter(r=>r>=eR-0.5*(ro-eR)));   /* then the least radius within half the envelope's depth below its root: under an undercut face's overhang, short of any hole */
     const hit=(d,dir)=>{const Rr=turnS(Rw,dir*d);return{a:near.map(p=>da(p,ang0)<2*pitch&&inR(Rr,p[0],p[1])),b:win.map(p=>rot(p,dir*d)).map(p=>W.some(w=>inS(w,p[0],p[1])))};};
     const run=dir=>{const h0=hit(0,dir),grow=h=>h.a.some((x,i)=>x&&!h0.a[i])||h.b.some((x,i)=>x&&!h0.b[i]);let lo=0,hi=null;
       for(let d=2e-4;d<0.3;d+=2e-4){if(grow(hit(d,dir))){hi=d;break;}lo=d;}if(hi===null)return null;

@@ -10,7 +10,7 @@
 //   3. the springs: the clicks' bronze springs (05 06 02-2: 1.5 × 0.4, 27 stretched; their free span and E estimated) and what they must do when the key lets go (follow
 //      the click wheel's backs down as the fusee runs forward, ratchets.js's winding pawls' test, the fusee's and barrel's inertia off the solids); the detent's wire
 //      (05 05 06-1: steel Ø 0.25, loaded 12.3 from its stud: README) and its preload, and how far back the ratchet falls before the detent holds it against the
-//      maintaining spring's own travel (05 06_9's x = 0.27 mm at r 14.2, WPHYS.SUS: README, Physics).
+//      maintaining spring's lead over the wheel in running (WPHYS.runPhi, its drawn ring: wempe_sustaining.js; README, Physics).
 // Needs only Node.js:   node wempe_ratchets.js [--json OUT]   (under a second; exits 1 if a load pushes a pawl out past what friction holds at μ 0.10 with its end fitted,
 // or a part fails at the strong end of its material's range).
 const fs=require('fs'),W=require('./wempe_load.js')(),MJ=require(process.env.MC_MECH_WEMPE||'./mechanisms_wempe.json');   /* MC_MECH_WEMPE: another file of the same form (a planted fault) */
@@ -63,10 +63,10 @@ for(const q of MJ.pawls){const s=SPEC[q.name],o={name:q.name,holds:s.holds,lines
   say(`  the two clicks stand half a tooth apart (click 1 ${f(q.face.gap,3)} mm from its face, click 2 ${f(q2.face.gap,3)}, a pitch ${f(2*Math.PI*Math.hypot(...q.face.C)/q.z,2)} at the contact): when the key lets go the fusee turns at most half a pitch before one bears`);}
 /* the maintaining detent's wire (05 05 06-1: steel Ø 0.25, its stud's end to the detent's corner 12.3: README) and how far back the ratchet falls before the detent holds it */
 {const o=out.pawls.find(o=>o.name==='maintaining detent'),q=MJ.pawls.find(p=>p.name==='maintaining detent'),I=Math.PI*0.125**4/4,k=3*E.steel*I/12.3**3,arm=4.73;   /* hole 5 from hole 4 (05 08_1a) */
-  const pitchDeg=360/q.z,fallDeg=q.face.gap/Math.hypot(...q.face.C)*180/Math.PI,trav=0.27/14.2*180/Math.PI,keep=Math.min(1,trav/pitchDeg),mean=keep*(trav>=pitchDeg?1-pitchDeg/(2*trav):0.5);
+  const pitchDeg=360/q.z,fallDeg=q.face.gap/Math.hypot(...q.face.C)*180/Math.PI,trav=P.runPhi(1)*180/Math.PI,keep=Math.min(1,trav/pitchDeg),mean=keep*(trav>=pitchDeg?1-pitchDeg/(2*trav):0.5);
   say('');say(`the maintaining detent's wire: steel Ø 0.25, loaded 12.3 from its stud: ${f(k*1000,1)} mN/mm at the detent, ${arm} from its pivot (holes 4 and 5)`);
   const v=trav>=pitchDeg?'ok ':'~~ ';
-  rows.push(`  ${v} the key put on: the ratchet falls back to the detent: here ${f(fallDeg,2)}°, anywhere from 0 to a tooth's ${f(pitchDeg,2)}° as it creeps on running, against the maintaining spring's ${f(trav,2)}° of travel (05 06_9's x = 0.27 mm at r 14.2: README, Physics; WPHYS.SUS ${f(P.SUS)} s): ${trav>=pitchDeg?'it always holds some of the drive':`a wind started with the detent more than ${f(trav,2)}° from a face finds the spring let down: ${f(100*keep)} % of winds keep any drive, on average ${f(100*mean)} % of it (the page's maintaining spring takes its full drive into every wind)`}`);
+  rows.push(`  ${v} the key put on: the ratchet falls back to the detent: here ${f(fallDeg,2)}°, anywhere from 0 to a tooth's ${f(pitchDeg,2)}° as it creeps on running, against the maintaining spring's ${f(trav,2)}° of lead over the wheel at 12 h (its drawn ring closed by the drive: wempe_sustaining.js; README, Physics): ${trav>=pitchDeg?`it always keeps most of it, ${f(100*(1-pitchDeg/trav))}-100 % of its travel (the page takes the detent half a tooth back, WPHYS.MBK)`:`a wind started with the detent more than ${f(trav,2)}° from a face finds the spring let down: ${f(100*keep)} % of winds keep any drive, on average ${f(100*mean)} % of it (the page's maintaining spring takes its full drive into every wind)`}`);
   Object.assign(o,{k,arm,fallDeg,pitchDeg,trav,keep,mean});}
 /* the set-up click: brass, its own spring (05 08 05-2: "Messingblech 3 Ms 58 federhart"; no separate spring drawn) */
 {const q=MJ.pawls.find(p=>p.name==='set-up click');say('');say(`the set-up click: brass, its own spring (no spring drawn); ${f(q.face.gap,3)} mm short of the face (${f(q.face.gap/Math.hypot(...q.face.C)*180/Math.PI,2)}° of the barrel arbor) as drawn`);}

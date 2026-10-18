@@ -66,7 +66,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      if(dsr<-1e-9&&!/slider|set/.test(tag)){
        if(w&&ws&&!prev.held&&(Math.abs(psi-ws.psi0)<1e-9||cur.held)){if(ws.sr0-sr>=SRP.p)fail('ratchet back',`${at}: went back ${((ws.sr0-sr)*D).toFixed(2)} deg with the fusee as winding started, a tooth or more (${(SRP.p*D).toFixed(1)})`);}   /* locked to the fusee until its pawl holds it */
        else if(!w&&!prev.held&&-dsr<SRP.p){}   /* pushed back toward its pawl or onto it, under a tooth: the fusee's drive fell faster than the spring relaxes (at run down, the chain's last turn,
-          since 17 October 2026 the spring pushing 0.22 of the drive: until then only onto the pawl) */
+          since 17 October 2026 the spring pushing 0.22 of the drive, 0.33 since 18 October: until then only onto the pawl) */
        else fail('ratchet back',`${at}: sustaining ratchet turned back ${(-dsr*D).toFixed(2)} deg${prev.w&&!w?' as winding stopped':''}`);}
      if(w&&ws&&!cur.held){const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);if(mod(psi-R.WPH,FPR.p)>1e-4||dp<WD)fail('lift',`${at}: winding pawls ${dp.toFixed(3)} mm into the teeth, ${(mod(psi-R.WPH,FPR.p)*D).toFixed(2)} deg off their faces, while the ratchet goes back with the fusee`);}
      if(prev.w&&!w&&!jump){const sh=prev.sr,fc=sh+R.WPH+FPR.p*Math.ceil((prev.fz-sh-R.WPH)/FPR.p-1e-9),want=fc+Math.max(0,gA-dq-sh)-prev.fz,got=fz-prev.fz;   /* the catch: gap to the pawls, then the reload */
@@ -150,7 +150,7 @@ async def main():
 REC=r"""(()=>{const mv=window.__mv,u=mv.userData._u||mv.userData.update;mv.userData._u=u;let RAT=null,CW=null;
  mv.traverse(m=>{if(m.isMesh&&m.userData.hn==='050602-1'&&!m.userData.sub)RAT=m;if(m.isMesh&&m.userData.hn==='050604-3')CW=m;});
  const inv=new THREE.Matrix4(),ang=o=>{mv.updateMatrixWorld(true);inv.copy(mv.matrixWorld).invert();const e=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld).elements;return Math.atan2(e[8],e[0]);};
- window.__rec=[];mv.userData.update=s=>{u(s);const W=__W();__rec.push({E:s.E,n:s.n,w:!!s.winding,RG:ang(RAT),Rf:ang(CW),hrs:W.hrs,drive:W.drive,held:W.held,amp:W.amp,drv:WPHYS.drv(s.n)});};})()"""
+ window.__rec=[];mv.userData.update=s=>{u(s);const W=__W();__rec.push({E:s.E,n:s.n,w:!!s.winding,RG:ang(RAT),Rf:ang(CW),hrs:W.hrs,drive:W.drive,held:W.held,amp:W.amp,drv:WPHYS.drv(s.n),fall:W.fall,exp:s.winding&&W.m0!=null?WPHYS.susDrv(W.m0,0,W.fall):null});};})()"""
 SETH="(v=>{const h=document.getElementById('hrs');h.value=String(v);h.dispatchEvent(new Event('input'));})(%s)"
 def wempe_live(rec,marks):
     """The page's loop, frame by frame (rec), through the wind from 20 h (from marks[0]) and the wind from run down (from marks[1])"""
@@ -170,8 +170,16 @@ def wempe_live(rec,marks):
     drawn=[x for x in back if x[1]<0 and k and abs(x[2]-k*x[1])<1e-6]
     out.append(f"the page's loop: {len(rec)} frames; the ratchet turns {k*D*7200:.4f} deg an hour of the train (the fusee wheel's 14/90 of the centre's turn: {360*14/90:.4f})" if k else "the page's loop: the ratchet never moved")
     out.append(f"  the ratchet turned back in {len(back)} frames, {len(drawn)} of them with the escape wheel drawn back (the escapement while held), by the train's ratio")
+    # the key put on: the ratchet falls back to the maintaining detent's tooth, by fusee.js's fall() (0 to a tooth, 3 deg); a set of the slider (the wind jumped, the
+    # key off) is no motion: the maintaining spring is taken as the set leaves it (run down: spent)
+    falls=[];sets=[]
     for i,e,g in back:
+        a_,b_=rec[i],rec[i+1]
+        if b_['w'] and not a_['w'] and b_['fall'] is not None and -g<=b_['fall']+1e-6 and b_['fall']<=2*math.pi/120+1e-9:falls.append(-g*D);continue
+        if not a_['w'] and not b_['w'] and abs(b_['hrs']-a_['hrs'])>0.02:sets.append(-g*D);continue
         if (i,e,g) not in drawn:bad.append(f"page: frame {i+1}, the ratchet turned back {-g*D:.5f} deg with the escape wheel "+('going on' if e>=0 else f'back {-e:.4f} teeth, not by the train'))
+    if falls:out.append(f"  the key put on: the ratchet fell back to the maintaining detent {', '.join(f'{x:.2f}' for x in falls)} deg (fusee.js fall(), within a tooth's 3)")
+    if sets:out.append(f"  the slider set: the ratchet moved back {', '.join(f'{x:.2f}' for x in sets)} deg with the set (no motion)")
     run_=[r for r in rec if not r['w'] and not r['held'] and r['hrs']<55.9-1e-6]
     off=max((abs(r['drive']-r['drv']) for r in run_),default=0)
     out.append(f"  running ({len(run_)} frames): the drive is WPHYS.drv(n) within {off:.2e}")
@@ -185,7 +193,9 @@ def wempe_live(rec,marks):
         full=min((r['hrs'] for r in post),default=None)
         if j==0:
             out.append(f"  wind 1, from {pre['hrs']:.2f} h, going: {len(w)} frames; the drive {pre['drive']:.4f} running, {dr[0]:.4f} as the key goes on, {dr[-1]:.4f} at its last frame ({(dr[-1]/dr[0]*100 if dr[0] else 0):.2f} %); the escape wheel on {Es[-1]-Es[0]:.2f} teeth; then {full} h")
-            if abs(dr[0]-pre['drive'])>0.02*pre['drive']:bad.append(f"page: wind 1, the maintaining spring's drive {dr[0]:.4f} as the key goes on, the train's {pre['drive']:.4f} before: it doesn't carry the running torque")
+            ex=w[0]['exp']
+            if ex is None or abs(dr[0]-ex)>1e-3*max(ex,1e-9):bad.append(f"page: wind 1, the maintaining spring's drive {dr[0]:.4f} as the key goes on, not what its lead less the fall to the detent leaves ({ex})")
+            if dr[0]<0.75*pre['drive'] or dr[0]>pre['drive']*(1+1e-6):bad.append(f"page: wind 1, the maintaining spring's drive {dr[0]:.4f} as the key goes on against the train's {pre['drive']:.4f} before: it should carry most of it (a tooth's fall, 3 deg of its 14-16, costs about a fifth), never more")
             if min(dr)<=0:bad.append("page: wind 1, the drive fell to nothing while the key turned")
             if nIn:bad.append(f"page: wind 1, the maintaining spring's drive rose in {nIn} frames (it only relaxes)")
             if dr[0]>0 and dr[-1]<0.9*dr[0]:bad.append(f"page: wind 1, the drive fell to {dr[-1]/dr[0]*100:.0f} % over the wind (SUS too short)")
