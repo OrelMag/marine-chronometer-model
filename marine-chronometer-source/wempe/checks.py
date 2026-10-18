@@ -92,7 +92,7 @@ MASSPROPS={'out':'gimbals_wempe.json','hash':'#view=case','alt':{'bakelite':1.37
     const c=bb.getCenter(new THREE.Vector3());return JSON.stringify({PB:[c.x,c.y,c.z].map(x=>+x.toFixed(3)),reach:{bowl:+rB.toFixed(2),ringIn:+rIn.toFixed(2),aboutX:+rX.toFixed(2),ring:[r0,r1,y0,y1].map(x=>+x.toFixed(2)),bowlInRing:inRing}});})()"""}
 # smoke.py's essay steps (the Essay tab, js/essay.js): the link into the model it follows (the escapement view; Back must return to the essay where it was), what that must
 # give (the essay hidden, the view's button pressed), the section #essay=… opens, and its report button (Report a bug, since 3.00.00)
-VIEWS=['movement','plan','side','dial','escapement','box','case','transport','exploded']   # views.py: every view button, exploded last as the Hamilton's
+VIEWS=['movement','plan','side','dial','escapement','box','case','transport','laidout','exploded']   # views.py: every view button, exploded last as the Hamilton's
 ESSAY={'link':'#view=escapement','got':"[ESSAY.on(),document.querySelector('#views button[aria-pressed=\"true\"]').dataset.v]",'want':[False,'escapement'],'sec':'detent','report':True}
 # holecheck.py --model wempe: the states the movement is checked in (the sheets as last revised, the page's default, and as first drawn: movement.js's setRev), and the
 # holes expected empty: (part, line or '' for any, centre in the movement frame within 0.4 or None for any, a state (or several, space-separated) or None for all, why it is empty on the real clock too)

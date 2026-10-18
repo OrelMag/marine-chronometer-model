@@ -522,7 +522,8 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <button data-v="movement" aria-pressed="true" title="The movement, train side up">Movement</button><button data-v="plan" title="The top plate from straight above">Plan</button><button data-v="side" title="The frame from the side">Side</button>
           <button data-v="dial" title="The dial in its case, from above, the lid open">Dial</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button><button data-v="escapement" title="The escapement under the top plate, seen through it">Escapement</button>
           <button data-v="train" title="The going train, plates see-through">Train</button><button data-v="fusee" title="The barrel, the chain and the fusee, plates see-through">Fusee</button><button data-v="balance" title="Close up on the balance, its masses, timing weights and hairspring">Balance</button>
-          <button data-v="box" title="The chronometer in its wooden box, the lid shut">Box</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button><button data-v="transport" title="The wooden box in its padded outer box for transport">Transport box</button></div>
+          <button data-v="box" title="The chronometer in its wooden box, the lid shut">Box</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button><button data-v="transport" title="The wooden box in its padded outer box for transport">Transport box</button>
+          <button data-v="laidout" title="The train laid out in one line and seen from the side, as textbooks draw it: barrel, fusee, centre, intermediate, seconds and escape wheels and the balance, each still in mesh">Laid out</button></div>
         <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
         <label class="ck sw" title="Hide the plates, cocks, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
         <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
@@ -2011,10 +2012,12 @@ const KIT=(()=>{
    state in the URL hash, the loop (camera, explode, frames skipped while nothing changes, paint) and the ?qa hooks the tools read. Lifted from the Hamilton's app.js
    (chronometer-working-model/js/app.js, 14 October 2026), which keeps its own copy: its behaviour, the DOM ids and the hooks are the same. Declares only VIEWER.
    VIEWER.start(cfg), the model's page (js/app.js) giving:
-     build: M => ({root, mv}): the scene's group and the movement in it (mv's frame: mm, dial side +y, 12 o'clock -z, 3 o'clock +x; mv.userData.explode(e))
+     build: M => ({root, mv}): the scene's group and the movement in it (mv's frame: mm, dial side +y, 12 o'clock -z, 3 o'clock +x; mv.userData.explode(e), and
+     mv.userData.develop(e) if the model has a Laid out view)
      PARTS {key: {t name, d what it does, sp sizes and numbers, g group (PG), c colour, pri label priority, plate (see-through with See-through), src (SRC), sn, figs}}, PG the groups,
      PIECES {part: [{k, t, h lines (userData.hn), d, sp, src, sn, figs}]}, SRC {key: [name, colour, what]}, figLabel ('Figs.'),
-     VIEWS {key: {yaw, pitch, dist, target: [x, y, z] in mv's frame, explode, see, fov}}, VIEW_DESC, startView, SECDEF {x|y|z: {n, min, max, def}},
+     VIEWS {key: {yaw, pitch, dist, target: [x, y, z] in mv's frame, explode, dev (the train laid out: develop, the Spread slider its share; the parts cfg.drive.hide
+     hidden meanwhile and the meshes flagged userData.devPlate shown see-through in their place, as the Hamilton's app.js), see, fov}}, VIEW_DESC, startView, SECDEF {x|y|z: {n, min, max, def}},
      openCam {yaw, pitch, dist, target [x, y, z] in mv's frame as built}: where the camera stands as the page opens, before it eases to the start view (the Hamilton's: its box
      shut, from the front right); without it, turned from the start view and farther out. st.opening is true until then (a model can hold its case shut meanwhile),
      labels: (add, pw) => ...: add(text, sub, part, fn) a label at fn() (world), pw(group, x, y, z) a point in a group,
@@ -2089,7 +2092,7 @@ const VIEWER={start(cfg){
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});$('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
   /* ---------- state ---------- */
   const st={opening:true,tour:-1,drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
-  const FOV0=cam.fov,cur={explode:0,fov:FOV0},tgt={...cur};
+  const FOV0=cam.fov,cur={explode:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the frame stays hidden */
   let wakeT=0,hashReady=false,hashT=0,hashSeen='';const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any input keeps the stage drawing for 0.6 s; any change is written to the URL */
   /* colour by part (or by source, SRC); per-part opacity from the right-click menu; see-through (ghost) */
   const COLM=new Map(),FADE=new Map();
@@ -2108,11 +2111,12 @@ const VIEWER={start(cfg){
   const isoOut=(p,k)=>!!st.iso&&!st.iso.has(p)&&!(k?st.iso.has(k):anyOf(st.iso,p));
   const isoDrop=p=>{if(st.iso){st.iso.delete(p);if(!st.iso.size)st.iso=null;}};
   const opHide=m=>{const u=m.userData;return st.hid.has(u.part)||st.hid.has(u.pk)||opOf(m)===0||isoOut(u.part,u.pk);};
-  const dvOut=p=>st.drive&&!!DV&&(DV.hide.has(p)||!st.mwOn&&DV.mw.has(p));   /* hidden by Moving parts only: the frame, dial and case, and the motion work unless it is included */
-  const ghOf=(m,foc)=>{const p=m.userData.part;return (st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
+  const dvOn=()=>(st.tour<0&&!!VIEWS[st.view].dev)||devShown;   /* laid out: the frame's holes no longer meet the arbors; the model's schematic plates (devPlate) stand in */
+  const dvOut=p=>!!DV&&((st.drive||dvOn())&&DV.hide.has(p)||st.drive&&!st.mwOn&&DV.mw.has(p));   /* hidden by Moving parts only (the frame, dial and case, and the motion work unless it is included) and laid out (the frame, dial and case) */
+  const ghOf=(m,foc)=>{const p=m.userData.part;return (!!m.userData.devPlate&&dvOn())||(st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
-    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!dvOut(m.userData.part);m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
+    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!dvOut(m.userData.part)&&!(m.userData.devPlate&&(!dvOn()||st.drive));m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
     if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
     cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${st.tour>=0&&TOUR?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
@@ -2127,7 +2131,8 @@ const VIEWER={start(cfg){
   let camFree=false;const panO=new THREE.Vector3(),pv=new THREE.Vector3();
   function panBy(dx,dy){const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
   const expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
-  function setView(k,keepSee){if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode);
+  function setView(k,keepSee){if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),dev:(vv.dev||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode&&!vv.dev);
+    expR.setAttribute('aria-label',vv.dev?'How far the train is laid out in a line':'How far apart the exploded parts are');
     if(!keepSee)st.see=!!vv.see;look();if(hashReady)keep('view',k);document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward; jump(f) moves the camera with f and keeps the place it left, unless f didn't move it */
   const HB=[],HF=[],histEl=$('#hist'),hB=$('#hBack'),hF=$('#hFwd');
@@ -2233,7 +2238,7 @@ const VIEWER={start(cfg){
   if(DV){const dc=$('#driveOn'),mc=$('#mwOn');if(dc)dc.addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.view,true);});if(mc)mc.addEventListener('change',e=>{st.mwOn=e.target.checked;look();});}   /* Moving parts only: a view it can't show gives way to cfg.drive.to */
   on('edges',v=>st.edges=v);on('shadows',v=>st.shadows=v);on('merge',v=>st.merge=v);on('lbls',v=>st.labels=v);on('spin',v=>st.spin=v);
   $('#reset').addEventListener('click',()=>jump(()=>setView(st.view,true)));
-  const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(VIEWS[st.view].explode)tgt.explode=expV()*VIEWS[st.view].explode;});   /* the Spread slider: how far apart the exploded parts are */
+  const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();const vv=VIEWS[st.view];if(st.tour>=0)return;if(vv.explode)tgt.explode=expV()*vv.explode;if(vv.dev)tgt.dev=expV()*vv.dev;});   /* the Spread slider: how far apart the exploded parts are, or how far the train is laid out */
   /* theme: Auto follows the system; a choice is remembered with Remember settings */
   const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));lsSet('theme',v);};
   document.querySelectorAll('#theme button').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.v)));{const v=lsGet('theme');if(v==='light'||v==='dark')setTheme(v);}
@@ -2348,7 +2353,7 @@ const VIEWER={start(cfg){
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
   /* the Contacts view (cfg.contacts, ../shared/contacts.js): a part hidden, faded away, isolated out or hidden by Moving parts only takes its contacts with it */
-  if(cfg.contacts&&typeof CONTACTS!=='undefined')CT=CONTACTS.bind({mv,r,stage,st,look,wake,QA,cfg:cfg.contacts,name:k=>INFO[k]?INFO[k][0]:k,pick:k=>{if(Object.prototype.hasOwnProperty.call(INFO,k))showPart(k);},stop:()=>setSpeed(0),exploded:()=>cur.explode>1e-6,
+  if(cfg.contacts&&typeof CONTACTS!=='undefined')CT=CONTACTS.bind({mv,r,stage,st,look,wake,QA,cfg:cfg.contacts,name:k=>INFO[k]?INFO[k][0]:k,pick:k=>{if(Object.prototype.hasOwnProperty.call(INFO,k))showPart(k);},stop:()=>setSpeed(0),exploded:()=>cur.explode>1e-6||cur.dev>1e-6,
     hid:m=>!!m.userData.part&&(opHide(m)||dvOut(m.userData.part))});
   {const s=location.hash.slice(1)?'':lsGet('state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
@@ -2358,9 +2363,10 @@ const VIEWER={start(cfg){
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
   function frame(now){const dt=clamp((now-last)/1000,0,0.05),k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);last=now;
-    for(const q of['explode','fov'])cur[q]+=(tgt[q]-cur[q])*k;
+    for(const q of['explode','dev','fov'])cur[q]+=(tgt[q]-cur[q])*k;
     const xs=cfg.tick?cfg.tick(dt,now,st)||[]:[];
-    mv.userData.explode(smooth(cur.explode));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
+    mv.userData.explode(smooth(cur.explode));if(mv.userData.develop)mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
+    if((cur.dev>0.02)!==devShown){devShown=cur.dev>0.02;look();}
     root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow()).add(panO);
     if(st.spin&&!ptrs.size){G.yaw+=dt*0.2;if(camFree)C.yaw+=dt*0.2;}
@@ -2369,7 +2375,7 @@ const VIEWER={start(cfg){
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);}
     if(CT)CT.frame(now);
-    const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs,...(CT?CT.sig():[])];
+    const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,cur.dev,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs,...(CT?CT.sig():[])];
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(onScreen&&!still&&!esOn()){paint();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
@@ -6707,6 +6713,7 @@ const WCASE=(()=>{
    Part of the Wempe model (three.js r128). Units mm; the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (dims.js: x = the sheets' W, z = their S).
    The pillar plate's inner face at y 0, its dial face at +PP_T; the top plate's inner face at -INNER, its outer face (the train side) at -INNER-TOP_T.
    Everything is built inside buildWempe, so none of its names reach the page's globals: core.js reads the Hamilton's (L, DIAL_R, SEC_L, UDA, UD_SWEEP, MSHAPE) lazily.
+   Its API on mv.userData: update(s), explode(e), develop(e) (the Laid out view), setRev(v), parts, R, S, DEV.
    Declares only buildWempe and ESC. */
 /* parts-list lines (userData.hn, bom.json ids): the drawing's number without its spaces (as 05 09 01's title block writes it, 050901), since a piece's lines are a space-separated list */
 /* ESC: the escapement's motion (js/escapement.js): the tools set the model through ESC.state(phase) (the freeze strings of audit.py, exploded.py, fine.py,
@@ -6737,8 +6744,48 @@ function buildWempe(M){
      the barrel and the mainspring (WFUSEE), and the motion work, hands and up-and-down work follow the train's angles and the fusee's (ang.f) (WDIAL) */
   mv.userData.update=(/** @type {any} */s)=>{const ang=TR.update(s);ang.f=FU.update(s,ang.c);mv.userData.ang=ang;EB.update(s);DL.update(s,ang);};
   mv.userData.R={fr:FR,tr:TR,esc:EB.R,fu:FU,dl:DL.R};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton; R.tr the train's arbors (their wheel and pinion meshes, for the other groups' tooth phasing) */
+  /* ---------- laid out: buildWempe.DEV (below) ---------- */
+  const DEV=buildWempe.DEV;
+  /* driven pinions: when a pair's line of centres turns by D, the driver standing, the pinion turns D(1 + driver's teeth / its leaves) to stay in mesh (a coin rolled round a
+     coin); the escape pinion less the turn of its frame. Taken within half a pitch, on top of the loaded phase gearLash gave it (r0): the fusee wheel (90) drives the centre
+     pinion, the centre wheel the intermediate's, the intermediate wheel the seconds', the seconds wheel the escape pinion (both states' pinions) */
+  const PT=mv.userData.parts,dOf=(/** @type {string} */k)=>DEV.sub(DEV.P[k],DEV.A[k]),dC=dOf('C'),dE=dOf('E'),E0=DEV.A.E,gz=(/** @type {any} */m)=>m.userData.gear.z;
+  const DPH=/** @type {[any,string,string,number,number][]} */([[TR.cw.userData.pin,'Fu','C',90,0],[TR.tw.userData.pin,'C','T',gz(TR.cw.userData.wheel),0],[TR.sw.userData.pin,'T','S',gz(TR.tw.userData.wheel),0],
+    [EB.R.pinion,'S','E',gz(TR.sw.userData.wheel),DEV.g],[EB.R.pinion1,'S','E',gz(TR.sw.userData.wheel),DEV.g]]).map(([m,a,b,na,x])=>{const nb=gz(m),p=TAU/nb,c=(DEV.fi(DEV.w)-DEV.fi(DEV.sub(DEV.A[b],DEV.A[a])))*(1+na/nb)-x;
+    return{m,r0:m.rotation.y,c:(((c+p/2)%p)+p)%p-p/2};});
+  const DMV=/** @type {[any,number[]][]} */([...['centreWheel','cannon','changeWheel','hourWheel','hands'].map(k=>[PT[k],dC]),[PT.intermediateWheel,dOf('T')],[PT.secondsWheel,dOf('S')],
+    [DL.R.sh,DEV.sub(dOf('S'),dC)],[DL.R.uh,[-dC[0],-dC[1]]]]);   /* the seconds and up-and-down hands are in the hands' part, which goes with the centre arbor */
+  for(const[o]of DMV)o.userData.xz0=[o.position.x,o.position.z];
+  const EFP=['escapeWheel','detent','detentBlock','balance','rollers','hairspring','stud'].map(k=>PT[k]);
+  /* schematic plates for the laid-out view, drawn see-through (the viewer, devPlate), standing in for the frame, whose holes no longer meet the arbors: the pillar plate and
+     top plate along the line at their own heights and wide enough for the barrel (Ø 41.6) and fusee wheel, the intermediate bridge on the dial side under the intermediate and
+     seconds arbors, a bridge over the barrel's arbor, the lower cock hanging from the top plate and the upper cock over the balance on a foot, and three pillars (Ø 8.1) beside
+     the line clear of the wheels, the chain and the detent. Not parts: no partName, so they can't be picked, listed or sectioned; schematic, not the movement's */
+  {const dp=new THREE.Group();mv.add(dp);const w=DEV.w,n=[-w[1],w[0]],at=(/** @type {number} */t,s=0)=>[DEV.A.Ba[0]+w[0]*t+n[0]*s,DEV.A.Ba[1]+w[1]*t+n[1]*s],tB=DEV.t('B'),TI=-WD.INNER,TT=TI-WD.TOP_T,PPT=WD.PP_T,PW=48;
+    mesh(dp,KIT.stadium(at(0),at(tB),PW,PPT),M.gilt,0,0,0);mesh(dp,KIT.stadium(at(0),at(tB),PW,WD.TOP_T),M.gilt,0,TT,0);
+    mesh(dp,KIT.stadium(at(DEV.t('T')-5),at(DEV.t('S')+5),10,3.8),M.gilt,0,PPT,0);mesh(dp,KIT.stadium(at(-7),at(7),14,3.32),M.gilt,0,TT-3.32,0);
+    mesh(dp,KIT.stadium(at(tB),at(tB+12),8,3.22),M.gilt,0,TI+10-3.22,0);cylBetween(dp,3,TI,TI+10,M.gilt,...at(tB+12),32);
+    mesh(dp,KIT.stadium(at(tB),at(tB+18),9,2.4),M.gilt,0,TT-15,0);cylBetween(dp,3.5,TT-12.6,TT,M.gilt,...at(tB+18),32);
+    for(const[t,s]of[[22,19],[22,-19],[DEV.t('E'),19]])cylBetween(dp,WD.PIL.r,TI,0,M.brass,...at(t,s),48);
+    dp.traverse(o=>{if(o.isMesh){o.userData.devPlate=true;o.userData.noCap=true;o.visible=false;}});}
+  /* develop(e): 0 as built, 1 laid out in a line; moves only x, z and the turn about y, so it combines with the explode */
+  mv.userData.develop=(/** @type {number} */e)=>{for(const[o,d]of DMV){o.position.x=o.userData.xz0[0]+d[0]*e;o.position.z=o.userData.xz0[1]+d[1]*e;}
+    const a=DEV.g*e,c=Math.cos(a),s=Math.sin(a);for(const g of EFP){g.rotation.y=a;g.position.x=E0[0]+dE[0]*e-(E0[0]*c+E0[1]*s);g.position.z=E0[1]+dE[1]*e-(-E0[0]*s+E0[1]*c);}
+    for(const q of DPH)q.m.rotation.y=q.r0+q.c*e;};
+  mv.userData.DEV=DEV;
   return mv;
 }
+/* ---------- laid out (the Hamilton's Laid out view, its movement.js's DEV: the textbooks' developed drawing): the barrel and fusee stay, and with them all they carry; each
+     later arbor goes onto the barrel-fusee line at its real centre distance from the one before (the hole tables': 22.65, 18.12, 12.63, 11.85, the balance 10.00 from
+     the escape arbor), so every pair still meshes; the escape wheel, detent, its block, the balance, rollers, hairspring and stud turn together about the escape arbor
+     (DEV.g), so the escapement is unchanged and the balance ends the line. The motion work and hands go with the centre arbor, the seconds hand with the seconds arbor;
+     the up-and-down wheel stays on the fusee's pinion and its hand with it ---------- */
+/* buildWempe.DEV: the line (w its direction from the barrel through the fusee), each arbor as built (A) and laid out (P), t(k) how far along the line from the barrel,
+   g the escapement's turn, mid the line's middle (app.js's Laid out view aims there) */
+buildWempe.DEV=(()=>{const H=WD.H,A={Ba:H[45],Fu:H[10],C:H[1],T:H[38],S:H[35],E:WESC.W,B:WESC.B},sub=(/** @type {number[]} */a,/** @type {number[]} */b)=>[a[0]-b[0],a[1]-b[1]],fi=(/** @type {number[]} */p)=>Math.atan2(-p[1],p[0]);
+  const d=sub(A.Fu,A.Ba),l=Math.hypot(d[0],d[1]),w=[d[0]/l,d[1]/l],/** @type {{[k:string]:number[]}} */P={Ba:A.Ba,Fu:A.Fu},t=(/** @type {string} */k)=>(P[k][0]-A.Ba[0])*w[0]+(P[k][1]-A.Ba[1])*w[1];
+  for(const[a,b]of[['Fu','C'],['C','T'],['T','S'],['S','E'],['E','B']]){const r=Math.hypot(...sub(A[b],A[a]));P[b]=[P[a][0]+w[0]*r,P[a][1]+w[1]*r];}
+  return{A,w,P,t,fi,sub,g:fi(w)-fi(sub(A.B,A.E)),mid:[(A.Ba[0]+P.B[0])/2,(A.Ba[1]+P.B[1])/2]};})();
 
 </script>
 <script>
@@ -7407,8 +7454,8 @@ const BLENDER=(()=>{
     const e1=new THREE.Vector3(),e2=new THREE.Vector3();
     for(const o of ms)tris(o,fr,(a,b,c)=>{e1.subVectors(b,a);e2.subVectors(c,a);e1.cross(e2).normalize();for(const v of[e1,a,b,c]){dv.setFloat32(off,v.x,true);dv.setFloat32(off+4,v.y,true);dv.setFloat32(off+8,v.z,true);off+=12;}off+=2;});
     return{blob:new Blob([buf],{type:'model/stl'}),n};}
-  /* the solids: no engraving or printed face (surfaces, not solids), with a position */
-  const solid=o=>o.isMesh&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&o.geometry.attributes.position.count>0;
+  /* the solids: no engraving or printed face (surfaces, not solids) nor the Laid out view's schematic plates (devPlate, not parts), with a position */
+  const solid=o=>o.isMesh&&!o.userData.decal&&!o.userData.surface&&!o.userData.devPlate&&o.geometry&&o.geometry.attributes.position&&o.geometry.attributes.position.count>0;
   const shown=o=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;};
   const inMv=o=>{for(let q=o;q;q=q.parent)if(q===A.mv())return true;return false;};
   /* a part (key) or a piece (part.k) as STL, its meshes as built and shown in the sheets' state and connector the page shows (the band's or the first-drawn pieces only
@@ -8184,6 +8231,9 @@ const VIEWS={
   dial:{yaw:0.3,pitch:1.02,dist:330,target:[0,12,0],case:{lid:1,lift:0}},   /* the dial in its case, from above and in front, the lid open, 12 o'clock at the top: the Hamilton's Dial view (its yaw and pitch), where both pages open */
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
+  /* the train laid out along the barrel-fusee line (movement.js, buildWempe.DEV), seen square from the side through a narrow field, as the textbooks draw it (the Hamilton's
+     Laid out): barrel left, balance right, hands below */
+  laidout:{yaw:Math.atan2(buildWempe.DEV.w[1],buildWempe.DEV.w[0]),pitch:0.05,dist:440,target:[buildWempe.DEV.mid[0],-11,buildWempe.DEV.mid[1]],dev:1,fov:20},
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
   /* the Hamilton's Train, Fusee and Balance views, aimed at the Wempe's arbors (WD.H: the centre 1, the intermediate 38, the seconds 35, the escape wheel WESC.W, the fusee 10,
      the barrel 45; the balance WESC.B at its rim's middle, WESC.FY - 1.9). The movement stands train side up (turned about x), so the world's z is the frame's -z */
@@ -8195,7 +8245,7 @@ const VIEWS={
   case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}},   /* the box open: the bowl in its gimbals */
   transport:{yaw:0.62,pitch:0.62,dist:980,target:[0,-40,0],case:{lid:0,lift:0,over:1}}};   /* the wooden box shut in its outer box, the outer lid open, as the arrangement Boden-Chronometer (51 00_1) draws them */
 /* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0), the outer box shown with its lid open (over); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.',
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',laidout:'The train laid out in one line and seen from the side: barrel, fusee, centre, intermediate, seconds and escape wheels, and the balance.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.',
   train:'The going train from above, plates see-through: fusee wheel, centre, intermediate, seconds and escape wheels.',fusee:'The barrel, the chain and the fusee, plates see-through.',balance:'Close up on the balance under its cock, with its masses, timing weights and hairspring.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
