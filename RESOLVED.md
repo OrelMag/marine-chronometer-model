@@ -2553,6 +2553,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's upper balance endstone was drawn as opaque steel** (18 October 2026): a white-grey ball on the cock, where Wempe 3955's
+  (`2_Wempe_3955_A.jpg`) is a colourless domed stone, the pivot's hole dark through it, and Kirov 247's a faceted colourless one. Keep:
+  `050408-1.bu` in `M.clear`, the ruby hole jewel under it showing through. `822dc97b`
 - **The 6MX's stripes ran down the plates' and bridges' walls, and the Wempe's hands showed brown** (18 October 2026, photocompare.py). solidGeo's
   plan UVs put the stripes on every wall; the polished Goldin hands (roughness 0.18) mirrored the page's dark sky square-on. Keep: `faceUV` on
   textured frame parts (walls take one texel); the hands 0.35 rough. `045daca3`, `f2bb2efc`
