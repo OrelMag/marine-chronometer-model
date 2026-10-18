@@ -1,0 +1,126 @@
+{
+ "photo": "References/photo-movement-2E12055.jpg",
+ "hash": "view=movement",
+ "look": [
+  3.14159,
+  1.5707,
+  640,
+  0,
+  -20,
+  0,
+  10
+ ],
+ "eval": "__mv.userData.stop('arm')",
+ "points": {
+  "cock screw (42192)": {
+   "xyz": [
+    22.01,
+    -36.76,
+    24.87
+   ],
+   "uv": [
+    357,
+    527
+   ]
+  },
+  "barrel bridge screw, 5 o'clock side (42055.bb)": {
+   "xyz": [
+    -24.85,
+    -29.16,
+    26.27
+   ],
+   "uv": [
+    706,
+    548
+   ]
+  },
+  "train bridge screw by the barrel bridge (42055.tb)": {
+   "xyz": [
+    -27.83,
+    -25.76,
+    19.7
+   ],
+   "uv": [
+    747,
+    500
+   ]
+  },
+  "train bridge screw, 6 o'clock side (42055.tb)": {
+   "xyz": [
+    5.82,
+    -25.76,
+    34.03
+   ],
+   "uv": [
+    474,
+    600
+   ]
+  },
+  "ratchet bridge screw, outer (42056.cv)": {
+   "xyz": [
+    -28.991,
+    -30.66,
+    3.933
+   ],
+   "uv": [
+    757,
+    400
+   ]
+  },
+  "ratchet bridge screw, inner (42056.cv)": {
+   "xyz": [
+    -14.82,
+    -30.66,
+    -14.919
+   ],
+   "uv": [
+    650,
+    241
+   ]
+  },
+  "mounting ring screw, 7 o'clock (35756)": {
+   "xyz": [
+    33.624,
+    1.64,
+    31.245
+   ],
+   "uv": [
+    311,
+    609
+   ]
+  },
+  "mounting ring screw, 5 o'clock (35756)": {
+   "xyz": [
+    -33.018,
+    1.64,
+    31.885
+   ],
+   "uv": [
+    734,
+    603
+   ]
+  },
+  "barrel bridge screw over pillar, 1 o'clock (42055.bbp)": {
+   "xyz": [
+    -11.35,
+    -29.16,
+    -32.79
+   ],
+   "uv": [
+    606,
+    130
+   ]
+  },
+  "winding tube's cap, centre (post, fusee axis)": {
+   "xyz": [
+    14.306,
+    -37.76,
+    -14.519
+   ],
+   "uv": [
+    430,
+    238
+   ]
+  }
+ }
+}

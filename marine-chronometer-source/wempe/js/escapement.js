@@ -437,9 +437,14 @@ const WESC=(()=>{
        slot, 3.55 from the staff as the inner end is in the collet, the stud's leaning upright reaching in to it (05 03 02-3; above).
        Going up the helix the coils turn counterclockwise seen from the dial (left-hand). The spring's lower end turns with the balance, the coils share the turn */
     const colB=Y.armT-0.05,yL=colB-0.75,yU=yL-PITCH*TURNS;   /* the collet's underside 0.05 over the arm; the spring's lower end 0.75 over it (05 03_5) */
-    const spPath=tw=>hsBend(tw).map(([x,z,u])=>[x,yL-PITCH*TURNS*u,z]);   /* breathing (hsBend, above) */
+    /* hsOut: the outer curve's end formed out to the stud's slot, its weight HSW along the curve (none to 150 deg, all from 200 deg, before the slot). The upright leans 8 deg,
+       so its slot's inner wall stands 0.3 tan 8 deg (0.042) further out where the spring meets it 0.3 higher, as first drawn: the maker forms the curve to where the slot
+       holds it, the spring 0.009 off that wall at its top edge as in the last state. The drawn spring only: the physics (HSP) keeps 05 03_7's curve. Until 18 October 2026
+       the end stood where the last state puts it, 0.033 into the wall as first drawn (the Contacts view) */
+    let hsOut=0;const HSW=HS0.map(([,a,u])=>u===1?smooth((a-a0U-150)/50):0);
+    const spPath=tw=>hsBend(tw).map(([x,z,u],i)=>{const k=hsOut*HSW[i]/(Math.hypot(x,z)||1);return[x*(1+k),yL-PITCH*TURNS*u,z*(1+k)];});   /* breathing (hsBend, above) */
     const hs=part('hairspring',OFFB,[B[0],B[1],0]),hsRot=new THREE.Group();hs.add(hsRot);R.hsRot=hsRot;
-    onRev(v=>{const f=v!=='last';hs.position.y=f?SH1:0;});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher in the stud's slot (3.69 under its bar), the
+    onRev(v=>{const f=v!=='last';hs.position.y=f?SH1:0;hsOut=f?-SH1*Math.tan(8*D2R):0;R.spring.geometry=ribbonGeo(spPath(-(lastTw||0)),HB,HT,R.spring.geometry);});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher in the stud's slot (3.69 under its bar), the
        stud's pin with it (its hole drilled at assembly, 05 03 02-3) */
     const spring=tag(mesh(hs,ribbonGeo(spPath(0),HB,HT),M.mspring),'050302-1');R.spring=spring;R.spPath=spPath;
     /* the collet (Spiralrolle 05 03 02-2, 24.2.43: Messingblech Ms 58): a bar 9.1 −0.2 long, 3.8 −0.2 wide at its slit end and 2.7 −0.2 at the other, 3.3 high; bored 1.6 H7 at
@@ -479,7 +484,7 @@ const WESC=(()=>{
         {loop:ccw([L(-uw,s0),L(uw,s0),L(uw,s1),L(-uw,s1)]),y0:ck,y1:yE-2.0},{loop:ccw([L(-uw,s1),L(uw,s1),L(uw,v1),L(-uw,v1)]),y0:ck,y1:yE}]);
       up.applyMatrix4(new THREE.Matrix4().set(1,-VO[0]*tn,0,VO[0]*tn*ck,0,1,0,0,0,-VO[1]*tn,1,VO[1]*tn*ck,0,0,0,1));tag(mesh(st,up,M.brass),'050302-3',1);
       const sp=tag(across(st,lathe([[0,-0.4],[0.33,-0.4],[0.33,0.4],[0,0.4]],16),M.steel,L(-0.5,RSTUD+HT/2+0.335),AX,yU),'050302-4.s');   /* the pin beside the spring's end in the slot, outside it, 0.005 clear of it, past the pinning point (4.36 out with the spring at 3.87 until 15 October 2026) */
-      onRev(v=>{const f=v!=='last';sp.position.y=yU+(f?SH1:0);});
+      const sp0=[sp.position.x,sp.position.z];onRev(v=>{const f=v!=='last',o=f?-SH1*Math.tan(8*D2R):0;sp.position.set(sp0[0]+VO[0]*o,yU+(f?SH1:0),sp0[1]+VO[1]*o);});   /* out with the spring's end (hsOut), against the slot's outer wall as in the last state */
       /* its screw (WN-11): head Ø 2.3 × 1.6, M1.4 down through the bar and the cock's 2.4, its end 0.6 under the cock, as the coloured section draws it
          (Wempe_Einheitschronometer.jpg px 1408.4-1429.6 × 156-171.4, the shank's rounded end at 215.6 under the cock's underside at 210, at 9.37 px/mm: Ø 2.26 × 1.64,
          0.6 through; likely: head Ø 2.4 × 0.8 and blind 2.0 in the cock until 17 October 2026) */
@@ -882,7 +887,7 @@ const WESC=(()=>{
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
     const JR=1.45,JT=0.8,JD=0.3,JC=0.8,JH=0.55,ER=1.45,EE=0.5,EH=0.4,eLip=(y,s)=>[1.42,y+s*(EE+KIT.domeAt(ER,EH,1.42)+0.003)];   /* the stones (above); eLip: the endstone's setting's lip over its edge, the face at y, s the way to the dome */
     {const ck=TT-15,cT=ck-0.1,eY=Y.tipU-0.02,hY=eY+0.03,lp=eLip(eY,-1);
-      tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,hY],[2.6,hY],[2.6,ck+2.7],[1.2,ck+2.7]],48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim */
+      tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,eY],[2.6,eY],[2.6,ck+2.7],[1.2,ck+2.7]],48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim, up to the endstone's setting (U30's two settings filling the seat's 2.8), the stone 0.03 under its face, as the lower; until 18 October 2026 its face was the stone's, 0.03 off the endstone's setting */
       tag(mesh(bju,lathe(KIT.jewelPr(JR,JT,0.125,JD,JC,JH,hY,1),32),M.ruby),'050407-1.bu');
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.steel]]){const g=new THREE.Group();g.userData.rev=V;bju.add(g);   /* the 6MX's steel (2_Kirow_247_A.jpg, photocompare.py: likely) */
         /* the endstone's setting, its mouth a cone from the lip to Ø 4.4 at its top, 0.1 proud of the cock: gilt as drawn; the 6MX's polished steel (2_Kirow_247_A.jpg, photocompare.py's
