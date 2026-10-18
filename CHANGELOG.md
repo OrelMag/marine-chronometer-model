@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.08.00 · 2026-10-18
+- The Wempe: a Contacts view (its own section) shows where the parts touch, come close or overlap, drawn through the parts made faint; pick a part for its contacts alone, hide parts to leave theirs out, or see them over a beat and the wind.
+
 ## 3.07.00 · 2026-10-18
 - The Soviet 6MX completed: its electrical seconds contact (a contact wheel on the seconds arbor, the lever, disc and springs, opening every other half-second and closed at the minute), and its detent block's stud, slide and stop screw, its escape wheel's collet, lower balance cock, movement ring screws, bowl with its high brackets, closing plate and outer box, measured on photographs of Kirov No. 247 and other 6MXs of the 1950s.
 - The 6MX runs its own escapement: its swing, rate and 35-day trial on the page, and in the export to Blender.
