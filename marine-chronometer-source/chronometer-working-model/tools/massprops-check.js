@@ -8,7 +8,7 @@
   const KEY=new Map(Object.entries(M).map(([k,v])=>[v,k]));
   /* densities, g/cm³ = mg/mm³: brass (clock brass CuZn39Pb2-3, 8.4-8.5; the fusee wheel's "copper" colour and the gilt and nickel-plated plates are brass too), carbon steel
      7.85 (physics.js), ruby 3.98 (dynamics.js), Invar 36 8.05, soda-lime glass 2.5, and the small parts' estimated (packing 1.2, fibre 1.35, felt 0.3, mahogany 0.55) */
-  const RHO={plate:8.5,plateSolid:8.5,gilt:8.5,brass:8.5,brass2:8.5,copper:8.5,steel:7.85,steelD:7.85,steelS:7.85,blued:7.85,steelK:7.85,chain:7.85,chain2:7.85,mspring:7.85,
+  const RHO={plate:8.5,plateSolid:8.5,gilt:8.5,brass:8.5,brass2:8.5,copper:8.5,steel:7.85,steelD:7.85,steelS:7.85,blued:7.85,blue310:7.85,giltH:8.5,bakelite:1.37,steelK:7.85,chain:7.85,chain2:7.85,mspring:7.85,
     ruby:3.98,clear:3.98,delrin:1.41,invar:8.05,glass:2.5,packing:1.2,fibre:1.35,felt:0.3,wood:0.55,woodEdge:0.55};
   root.updateMatrixWorld(true);const toRing=new THREE.Matrix4().copy(ring.matrixWorld).invert(),A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3(),im=new THREE.Matrix4();
   const body=()=>({m:0,s:[0,0,0],S:[[0,0,0],[0,0,0],[0,0,0]],byMat:{},byPart:{},missing:{}});

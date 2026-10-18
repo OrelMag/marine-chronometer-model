@@ -1,0 +1,96 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/12_Wempe_3955_obere_Platte_oben.jpg",
+ "rev": "3955",
+ "hash": "wind=55.9",
+ "only": [
+  "topPlate",
+  "escEndstoneUp",
+  "escJewelUp"
+ ],
+ "look": [
+  3.14159,
+  1.5707,
+  345,
+  0,
+  -22.35,
+  0,
+  15
+ ],
+ "points": {
+  "pillar screw hole at 12 (WN-57's)": {
+   "xyz": [
+    6.425,
+    -22.35,
+    -36.437
+   ],
+   "uv": [
+    396.5,
+    93
+   ]
+  },
+  "pillar screw hole by 5 (WN-57's)": {
+   "xyz": [
+    18.5,
+    -22.35,
+    32.043
+   ],
+   "uv": [
+    327.4,
+    889.6
+   ]
+  },
+  "pillar screw hole at 9 (WN-57's)": {
+   "xyz": [
+    -36.858,
+    -22.35,
+    3.225
+   ],
+   "uv": [
+    928.8,
+    502.7
+   ]
+  },
+  "fusee bush hole": {
+   "xyz": [
+    -16.708,
+    -22.35,
+    -15.292
+   ],
+   "uv": [
+    682,
+    313.4
+   ]
+  },
+  "escape cap jewel": {
+   "xyz": [
+    -11.783,
+    -22.35,
+    21.743
+   ],
+   "uv_check": [
+    654,
+    742
+   ]
+  }
+ },
+ "circles": {
+  "top plate rim, outer face": {
+   "c": [
+    0,
+    -22.35,
+    0
+   ],
+   "r": 42.494,
+   "snap": {
+    "arcs": [
+     [
+      45,
+      315
+     ]
+    ],
+    "win": 12
+   }
+  }
+ },
+ "fix_f": 2800
+}

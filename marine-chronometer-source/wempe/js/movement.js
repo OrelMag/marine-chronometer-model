@@ -12,6 +12,12 @@
    isolate.py and bom-check.js) and pass what it returns to update(), which takes the Hamilton's MoveState and uses what it has */
 const ESC=WESC.ESC;
 function buildWempe(M){
+  /* the gilt as Wempe 3955's photographs show it (photocompare.py, its A and N views, the same patches in photograph and render): its polished wheels hue 0.10, saturation
+     0.64-0.73, its plates 0.59, against the core's gilt rendered 0.34-0.51 (the photographs' neutral steel 4 % warm at most). This page's own materials (the Hamilton's untouched) */
+  if(!M.gilt.userData.wempe){M.gilt.color=sc(0xc88a32);M.gilt.userData.wempe=1;}
+  /* steel tempered to light blue at 310° (the sheets' "310° hell-blau anlassen": the maintaining detent 050505-1, the maintaining spring 05 06 01-1), not the deep blue of 295°
+     (M.blued: the fusee's clicks); Wempe 3955's and Kirov 247's maintaining detents photograph pale grey (photocompare.py, their N views). Until 18 October 2026 M.blued */
+  if(!M.blue310){M.blue310=M.blued.clone();M.blue310.color=sc(0x8d9cb8);M.blue310.roughness=0.3;}
   const mv=new THREE.Group(),K=KIT.parts(mv,M);mv.userData.onRev=[];   /* the sheets' two states (setRev, below): each builder's moves for them */
   const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
   const TR=WTRAIN.build(mv,M,K);   /* the going train: the centre, intermediate and seconds arbors, their bushes and the seconds jewel */
@@ -27,8 +33,11 @@ function buildWempe(M){
      the sheets first drew with the 1943 detent block, as Kirow DEC 422 and 479 and Lange 5177 are made). Each part keeps its key; the pieces not every version has are in
      groups whose userData.rev lists the versions they show in ('last 6mx 1943': the revised sheets' pieces the 6MX and 1943 kept), the others hidden as the band is (the
      tools skip what isn't shown), and each builder's onRev(v) moves what they share but stands elsewhere */
-  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});mv.userData.revs=['last','first','6mx','1943'];
-  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=o.userData.rev.split(' ').includes(s);for(const g of mv.userData.onRev)g(s);};
+  /* '3955': Wempe 3955 as photographed (References/wempe/photos/dg-chrono-dec, photocompare.py): the first-drawn sheets' pieces but where its photographs show another form,
+     so 'first' stays the drawings' fallback. A group listed 'first' shows in both, '3955' in the photographed version only, 'first -3955' in the drawn one only (revShows) */
+  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});mv.userData.revs=['last','first','3955','6mx','1943'];
+  const revShows=(/** @type {string} */l,/** @type {string} */v)=>{const L=l.split(' ');return L.includes(v)||(v==='3955'&&L.includes('first')&&!L.includes('-3955'));};mv.userData.revShows=revShows;
+  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=revShows(o.userData.rev,s);for(const g of mv.userData.onRev)g(s);};
   mv.userData.setRev('last');
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's

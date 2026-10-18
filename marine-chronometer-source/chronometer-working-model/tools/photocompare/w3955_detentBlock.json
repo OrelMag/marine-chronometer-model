@@ -1,0 +1,76 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/11_Wempe_3955_Gangfeder_plus.jpg",
+ "rev": "3955",
+ "hash": "wind=55.9",
+ "only": [
+  "detentBlock",
+  "detent"
+ ],
+ "look": [
+  3.14159,
+  1.5,
+  92,
+  -24,
+  -21,
+  18,
+  15
+ ],
+ "points": {
+  "block screw (WN-gk), head's top": {
+   "xyz": [
+    -34.536,
+    -24.75,
+    16.238
+   ],
+   "uv": [
+    797.8,
+    249
+   ]
+  },
+  "block steady pin by the stone's side (WN-201.gk), top": {
+   "xyz": [
+    -30.576,
+    -20.3,
+    19.887
+   ],
+   "uv": [
+    731,
+    448
+   ]
+  },
+  "block steady pin at the far corner (WN-201.gk), top": {
+   "xyz": [
+    -38.496,
+    -20.3,
+    12.589
+   ],
+   "uv": [
+    843,
+    166
+   ]
+  },
+  "locking stone's top (050401-3)": {
+   "xyz": [
+    -14.36,
+    -18.56,
+    15.02
+   ],
+   "uv": [
+    196,
+    537
+   ]
+  },
+  "detent's screw (WN-14), head": {
+   "xyz": [
+    -22.67,
+    -17.5,
+    19.38
+   ],
+   "uv": [
+    495,
+    575
+   ]
+  }
+ },
+ "fix_f": 2700
+}

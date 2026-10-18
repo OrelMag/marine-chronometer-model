@@ -1,0 +1,123 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/6_Wempe_3955_S.jpg",
+ "rev": "first",
+ "hash": "wind=55.9",
+ "look": [
+  3.14159,
+  0.5,
+  175,
+  0,
+  -14,
+  0,
+  28
+ ],
+ "points": {
+  "set-up click screw (WN-22, steel)": {
+   "xyz": [
+    29.474,
+    -30.42,
+    -17.046
+   ],
+   "uv": [
+    235.0,
+    126.0
+   ]
+  },
+  "barrel bridge screw, 12 o'clock side (WN-55)": {
+   "xyz": [
+    17.37,
+    -28.67,
+    -32.668
+   ],
+   "uv": [
+    350.0,
+    80.0
+   ]
+  },
+  "top plate screw at 12 (WN-57)": {
+   "xyz": [
+    6.425,
+    -25.35,
+    -36.437
+   ],
+   "uv": [
+    441.0,
+    92.0
+   ]
+  },
+  "barrel bridge screw, 6 o'clock side (WN-55)": {
+   "xyz": [
+    32.043,
+    -28.67,
+    18.5
+   ],
+   "uv": [
+    180.0,
+    302.0
+   ]
+  },
+  "top plate screw by 5 (WN-57)": {
+   "xyz": [
+    18.5,
+    -25.35,
+    32.043
+   ],
+   "uv": [
+    310.0,
+    405.0
+   ]
+  },
+  "top plate screw at 9 (WN-57)": {
+   "xyz": [
+    -36.858,
+    -25.35,
+    3.225
+   ],
+   "uv": [
+    862.0,
+    252.0
+   ]
+  },
+  "ring screw by 9 (WN-rs)": {
+   "xyz": [
+    -43.824,
+    -3.05,
+    7.727
+   ],
+   "uv": [
+    933.0,
+    452.0
+   ]
+  },
+  "ring screw by 5 (WN-rs)": {
+   "xyz": [
+    28.604,
+    -3.05,
+    34.089
+   ],
+   "uv": [
+    225.0,
+    624.0
+   ]
+  }
+ },
+ "circles": {
+  "top plate, upper rim (back right)": {
+   "c": [
+    0,
+    -22.35,
+    0
+   ],
+   "r": 42.494,
+   "snap": {
+    "arcs": [
+     [
+      185,
+      235
+     ]
+    ],
+    "win": 10
+   }
+  }
+ }
+}

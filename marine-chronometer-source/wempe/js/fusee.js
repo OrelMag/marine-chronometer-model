@@ -290,11 +290,15 @@ const WFUSEE=(()=>{
        section's dome is pictorial */
     {const rS=yT+19.7;   /* = yD */
       tag(mesh(gF,turned([[0,yT-8],[2.195,yT-8],[2.25,yT],[3.05,yT],[3.05,yT+3.1],[3.52,yT+3.1],[3.52,yT+11.0],[2.25,yT+11.0],[2.19,rS],[1.4,rS],[1.3536,rS+6.5],[0.8375,rS+6.5],[0.83,9.85],[0.6,10.1],[0,10.1]],40),M.steel),'050604-1');
-      const tA=Math.tan(38.7*D2R),yP=yT-28.3,sB=3.17-(20.3-2.64)/100,cB=sB/Math.SQRT2,yB=yP+cB/tA+0.01;   /* the tip; the square 2.99 across where the cone leaves its corners, 2.64 from the tip (1:100 from 3.17 at the root) */
-      const sq=new THREE.CylinderGeometry(3.17/Math.SQRT2,cB,yT-8-yB,4,1);sq.translate(0,(yT-8+yB)/2,0);tag(mesh(gF,sq,M.steel),'050604-1',1);
-      const NP=64,dm=t=>{const r=cB/(Math.abs(Math.cos(t))+Math.abs(Math.sin(t)));return[r*Math.cos(t),r*Math.sin(t)];},cl=[];   /* the square's outline, its corners on x and z as the CylinderGeometry's */
-      for(let i=0;i<NP;i++)cl.push({loop:[[0,0],dm(i/NP*TAU),dm((i+1)/NP*TAU)],y0:p=>yP+Math.hypot(p[0],p[1])/tA,y1:yB});
-      tag(mesh(gF,solidGeo(cl),M.steel),'050604-1',1);}
+      const tA=Math.tan(38.7*D2R);
+      /* Wempe 3955's (the version as photographed) is 4.5 shorter: its pointed end shows inside the dust bush's mouth, its top at y -43.5 ±0.5 (4_Wempe_3955_N.jpg,
+         photocompare.py's fit: row 114 on the fusee's axis, 9.65 px/mm along it), not 6 proud of the bush as the sheet's 28.3 puts it (-48.0); the O, S and W views show nothing
+         above the mouth. Kirov No. 247's matches the sheet's. The same cone and taper, the square 15.8 */
+      for(const[V,LS]of/** @type {[string,number][]} */([['last first 6mx 1943 -3955',28.3],['3955',23.8]])){const g=rv(gF,V),yP=yT-LS,sB=3.17-(LS-8-2.64)/100,cB=sB/Math.SQRT2,yB=yP+cB/tA+0.01;   /* the tip; the square where the cone leaves its corners, 2.64 from the tip (1:100 from 3.17 at the root) */
+        const sq=new THREE.CylinderGeometry(3.17/Math.SQRT2,cB,yT-8-yB,4,1);sq.translate(0,(yT-8+yB)/2,0);tag(mesh(g,sq,M.steel),'050604-1',1);
+        const NP=64,dm=t=>{const r=cB/(Math.abs(Math.cos(t))+Math.abs(Math.sin(t)));return[r*Math.cos(t),r*Math.sin(t)];},cl=[];   /* the square's outline, its corners on x and z as the CylinderGeometry's */
+        for(let i=0;i<NP;i++)cl.push({loop:[[0,0],dm(i/NP*TAU),dm((i+1)/NP*TAU)],y0:p=>yP+Math.hypot(p[0],p[1])/tA,y1:yB});
+        tag(mesh(g,solidGeo(cl),M.steel),'050604-1',1);}}
     /* the click wheel 05 06 04-3 (Schneckensperrrad, 6.8.47; Ms Blech 2, Ms 58 federhart): 35 teeth, tips Ø 16.0 -0.05, roots Ø 14.5 -0.2 (drawn 15.99, 14.4), the faces undercut
        8°: the sheet's 8° line runs from a root through the face, which carried on inward passes on the tooth's own side of the centre, so each tip overhangs its gap ahead of
        its root (scaled about 10° on the plan's teeth at 17.9 px/mm: sure). Until 15 October 2026 the faces leaned back 8° (the root ahead of the tip). Driving the maintaining
@@ -441,7 +445,7 @@ const WFUSEE=(()=>{
           if(u>336/360)return 1;const w=(v==='first'?w41:w48)(u*360);return Math.max((16.125-w)-r,r-16.125);};
         const f=(x,y)=>Math.min(band(x,y),Math.hypot(x-eye[0],y-eye[1])-1.8);
         const loc=sdfOutline((x,z)=>f(x,-z),-16.3,-16.3,16.3,16.3,0.05);
-        tag(mesh(g,solidGeo([{loop:loc,y0:GS1,y1:GS0,F:[{p:ring(eye[0],-eye[1],0.6,32),a:GS1,b:GS0},{p:ring(hs[0],-hs[1],0.6,32),a:GS1,b:GS0}]}]),M.blued),'050601-1');}
+        tag(mesh(g,solidGeo([{loop:loc,y0:GS1,y1:GS0,F:[{p:ring(eye[0],-eye[1],0.6,32),a:GS1,b:GS0},{p:ring(hs[0],-hs[1],0.6,32),a:GS1,b:GS0}]}]),M.blue310),'050601-1');}
       tag(cylBetween(gMW,0.6,GS0+1.2,GS1,M.steel,eye[0],-eye[1],16),'050600-8');tag(cylBetween(gMW,0.6,GS1-1.2+0.02,GS0,M.steel,hs[0],-hs[1],16),'050600-8');}
 
     /* =============== the maintaining detent 05 05 05 (Gegensperrkegel kompl.) at hole 4 =============== */
@@ -474,7 +478,7 @@ const WFUSEE=(()=>{
       const S1=tx([8.6,1.403]),S2=tx([5.6,-9.645+Math.sqrt(81-(5.6-6.273)**2)]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
       const thick=KIT.clipPoly(DTX,p=>sg*side(p)),thin=KIT.clipPoly(DTX,p=>-sg*side(p));
       pD.userData.step=Math.min(...thick.map(([x,y])=>Math.hypot(x-fw[0],y-fw[1])))-20.285;   /* the thick part's least clearance over the tips, at rest */
-      tag(mesh(gDc,slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),M.blued),'050505-1');tag(mesh(gDc,slab(thin,[],DTU,DTT),M.blued),'050505-1',1);}
+      tag(mesh(gDc,slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),M.blue310),'050505-1');tag(mesh(gDc,slab(thin,[],DTU,DTT),M.blue310),'050505-1',1);}
     tag(mesh(gD,turned([[0,-22.075],[0.44,-22.075],[0.44,-18.975],[1.125,-18.975],[1.125,yD],[0.44,yD],[0.44,yD+3.1],[0,yD+3.1]].map(([r,y])=>[r,y]),20),M.steel),'050505-2');
     /* its wire spring (Feder 05 05 06-1: the coloured section's #24; no sheet) in its stud, at the top plate's hole 5 ("Drahtfeder", 05 08_1a: N 38.507 O 10.684, Körner 1.3,
        M 1.7, 4.73 from hole 4; 05 06_4's A-B marks the "Drahtfedermitte" beside the detent's arbor). Sizes off the photographs, each scaled by the hole table's own spacing (holes
@@ -640,8 +644,16 @@ const WFUSEE=(()=>{
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
         tag(mesh(gAF,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,c1],[4.5,c1],[6.65,c1+ch],[6.65,c0-ch],[4.5,c0],[2.24,c0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');}
-      const sq=new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1);sq.translate(0,-25.70-4.75,0);tag(mesh(gBA,sq,M.steel),'050702-1',1);
-      const pt=new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1);pt.translate(0,-35.2-0.25,0);tag(mesh(gBA,pt,M.steel),'050702-1',1);
+      const sq=new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1);sq.translate(0,-25.70-4.75,0);tag(mesh(rv(gBA,'last 1943'),sq,M.steel),'050702-1',1);
+      const pt=new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1);pt.translate(0,-35.2-0.25,0);tag(mesh(rv(gBA,'last 1943'),pt,M.steel),'050702-1',1);
+      /* as first drawn (020704-1, 1941): the square end 15 from the upper journal's shoulder (7 + 22.2 + 15 = its 44.2 overall, centres included: sure), so its tip at BA1-15,
+         and the turning centre left on it, a cone the sheet draws undimensioned (scaled about 2.5). Wempe 3955's (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on
+         the arbor): the square's sides end 13.1 from the shoulder (y -35.4 ±0.3; the model's 1943 square -35.2), the point 2.2 ±0.3 high to its tip at -37.6 ±0.3, the
+         sheet's -37.32 within its reading; four-sided, its tip about 0.4 across. Until 18 October 2026 every version had the 1943 arbor's 10 and a 0.5 point */
+      /* Kirov No. 247's (the 6MX) longer still: its sides end at y -36.6 and its point at -38.5 (±0.4: 4_Kirow_247_N.jpg, photocompare.py's fit, about 9 px a mm of height, the sides
+         1.4 and the tip 3.0 above the 1943 square's), pointed as the 1941 one */
+      for(const[V,yS,yT]of/** @type {[string,number,number][]} */([['first',-35.4,BA1-15],['6mx',-36.6,-38.5]])){const s1=2.7-(yS+25.70)*-0.01,sq1=new THREE.CylinderGeometry(2.7/Math.SQRT2,s1/Math.SQRT2,-25.70-yS,4,1);sq1.translate(0,(-25.70+yS)/2,0);tag(mesh(rv(gBA,V),sq1,M.steel),'050702-1',1);
+        const pt1=new THREE.CylinderGeometry(s1/Math.SQRT2,0.2/Math.SQRT2*2,yS-yT,4,1);pt1.translate(0,(yS+yT)/2,0);tag(mesh(rv(gBA,V),pt1,M.steel),'050702-1',1);}
       /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core */
       const HKS=[[gAL,(BC0+BC1)/2],[gAF,(-3.7-3.1-21.7+2.9)/2]].map(([g,y])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y]);
       /* the pin along +x from 6.1 into the core; its end over the core (r 6.65) by 0.475 at its face (+z, the side rotation.y falls toward) down to 0 at its back (-z).
@@ -668,7 +680,12 @@ const WFUSEE=(()=>{
       let rho=best.rho;const pen=r=>{let m=-9;for(const p of pts){const rr=Math.hypot(p[0],p[1]);if(rr>7.2)continue;m=Math.max(m,sr(Math.atan2(p[1],p[0])-r)-rr);}return m;};
       for(let i=0;i<4000&&pen(rho+0.0005)<-0.03;i++)rho+=0.0005;
       const a=2.7/Math.SQRT2+0.01,sq=[[0,a],[a,0],[0,-a],[-a,0]].map(([x,z])=>[x*Math.cos(rho)-z*Math.sin(rho),x*Math.sin(rho)+z*Math.cos(rho)]);   /* the square hole turned back by what rotateY(rho) turns it on: it stays on the arbor's square */
-      const rgg=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:sq,a:RS1,b:RS0}]}]);rgg.rotateY(rho);const pSR=part('setupRatchet',-60);tag(mesh(grp(pSR,BX[0],BX[1]),rgg,M.gilt),'050700-3');   /* a part of its own: it comes off the square before the bridge (the Exploded view) */pBA.userData.ratchetPen=pen(rho);}
+      const rgg=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:sq,a:RS1,b:RS0}]}]);rgg.rotateY(rho);const pSR=part('setupRatchet',-60),gSR=grp(pSR,BX[0],BX[1]);tag(mesh(rv(gSR,'last first 1943 -3955'),rgg,M.gilt),'050700-3');   /* a part of its own: it comes off the square before the bridge (the Exploded view) */pBA.userData.ratchetPen=pen(rho);
+      /* Wempe 3955's (the version as photographed): a turned recess round the square in its outer face, Ø 8.7 at the face to Ø 7.3 at its floor (2_Wempe_3955_A.jpg square-on,
+         0.111 mm/px: the cone's two edges, 78 and 66 px across, ±0.2), its wall seen lit on the far side in 4_Wempe_3955_N.jpg; 0.7 deep, the wall taken at 45° (estimated).
+         05 07 00-3 (revised 24.11.47) draws the face flat; the earlier issue (05 05 00-1) isn't in the set */
+      const C=(r,n=96)=>[...Array(n).keys()].map(i=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]),rg3=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:C(8.7/2),q:C(7.3/2),a:RS1,b:RS1+0.7},{p:sq,a:RS1,b:RS0}]}]);
+      rg3.rotateY(rho);tag(mesh(rv(gSR,'3955 6mx'),rg3,M.gilt),'050700-3');}   /* Kirov No. 247's has it too (4_Kirow_247_N.jpg) */
 
     /* =============== the mainspring 05 07 00-6 (Zugfeder) =============== */
     /* "Zugfeder 15 × 0,37" (05 06_20; 0207: "Zugfeder 15", its space 15.8 ±0.1 framed): drawn 14.8 high to clear the 1948 drum's 14.95 inside (its lid 1.3 under the seat)
@@ -682,7 +699,7 @@ const WFUSEE=(()=>{
     const msShape=T=>{let lo=0,hi=T-1;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(msLen(m,T-1-m)>MSL)lo=m;else hi=m;}return lo;};   /* the core's pack's turns at T */
     const msT=(()=>{let lo=2,hi=40;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(msLen(0,m-1)>MSL)hi=m;else lo=m;}return lo;})();   /* all on the wall */
     const pMS=part('mainspring',-33),gMS=grp(pMS,BX[0],BX[1]),msM=tag(mesh(gMS,new THREE.BufferGeometry(),M.mspring),'050700-6');
-    onRev(v=>{const f=v==='first'||v==='6mx';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
+    onRev(v=>{const f=v==='first'||v==='3955'||v==='6mx';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
     /* the eye the arbor's hook holds it by: no sheet draws the strip's ends, so the Hamilton's (MSPRING.ey: 2.2 to 9.4 along the strip from its end, 5.2 high, KLUwI2UUCMQ
        15:54), as tools/mainspring.py holds the Wempe's inner end on the core through it (MC_MS_EYE 9.4): estimated. Its end toward the tip stands 0.05 off the hook's face at
        the strip's inner edge (the face 1.0 off the pin's centre line: r 6.65, so asin(1.05/6.65)); the eye 7.2 long past it takes the Ø 2 pin and lets the strip lie over

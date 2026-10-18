@@ -1,0 +1,101 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/8_Gangfeder_mit_Kloben_Rus_einfach.jpg",
+ "rev": "6mx",
+ "hash": "dial=kirov&wind=55.9",
+ "hide": [
+  "balance",
+  "balanceJewelsLow",
+  "balanceJewelsUp",
+  "band",
+  "barrel",
+  "barrelArbor",
+  "barrelBridge",
+  "cannon",
+  "chain",
+  "changeWheel",
+  "corkRing",
+  "coverPlate",
+  "dial",
+  "dustBush",
+  "dustPlate",
+  "escEndstoneLow",
+  "escEndstoneUp",
+  "escJewelLow",
+  "escJewelUp",
+  "escapeWheel",
+  "fusee",
+  "fuseeBush",
+  "fuseeWheel",
+  "hairspring",
+  "hands",
+  "hourWheel",
+  "intermediateBridge",
+  "lowerCock",
+  "mainspring",
+  "maintDetent",
+  "maintaining",
+  "pillarPlate",
+  "pillars",
+  "ring",
+  "rollers",
+  "setupRatchet",
+  "stopWork",
+  "stud",
+  "topPlate",
+  "udPinion",
+  "udWheel",
+  "upperCock",
+  "vorreiber",
+  "centreWheel",
+  "intermediateWheel",
+  "secondsWheel",
+  "key"
+ ],
+ "points": {
+  "stud (WN-gk), top centre": {
+   "xyz": [
+    -34.3,
+    -22.35,
+    18.5
+   ],
+   "uv": [
+    412,
+    582
+   ]
+  },
+  "steady pin near the end (WN-201.gk), top": {
+   "xyz": [
+    -30.0,
+    -20.3,
+    21.55
+   ],
+   "uv": [
+    250,
+    543
+   ]
+  },
+  "steady pin far (WN-201.gk), top": {
+   "xyz": [
+    -36.7,
+    -20.3,
+    14.15
+   ],
+   "uv": [
+    568,
+    612
+   ]
+  },
+  "stop screw (6MX.gke), head centre": {
+   "xyz": [
+    -36.243,
+    -15.7,
+    24.147
+   ],
+   "uv": [
+    206,
+    758
+   ]
+  }
+ },
+ "fix_f": 4000
+}
