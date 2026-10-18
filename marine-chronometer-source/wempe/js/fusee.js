@@ -768,7 +768,7 @@ const WFUSEE=(()=>{
     const MSE=(HB1-0.3)/19.25,MST0=msT+0.75,HKA=wrap(BLK+BETA_RUN.chain+TIP+MSE-MST0*TAU);hookSet(HKA);const msK=Math.round(MST0-(BLK+BETA_RUN.chain+TIP+MSE-HKA)/TAU),msTurns=beta=>(BLK+beta+TIP+MSE-HKA)/TAU+msK;
     /* the outer end as the solve holds it (tools/wempe_mainspring.py): reckoned back from the end, psi round the drum, each turn's radius held under what is outside it.
        The end's last 5.7 on the block (r 19.25 - 0.5 less half the strip), then rising to the wall over 0.25 rad; the outer coil passes the Steg near the wall (between it
-       and the wall, about 0.03 clear of its outer face); every coil inside it bends under the Steg (0.005 clear of its inner face, over 0.3 rad either side) and under the strip's
+       and the wall, held on the wall there, 0.035 clear of its outer face as first drawn, 0.085 as last revised); every coil inside it bends under the Steg (0.005 clear of its inner face, over 0.3 rad either side) and under the strip's
        end on the block, each lying on the one outside it at the strip's pitch where they're packed; the outer coil, coming round to the end, dips under the block's far end
        over 0.4 rad. The bends' lengths are estimated (the solve's states show the same steps); the strip's length is kept as drawn without them */
     const PSB=(HB0+HB1-0.3)/19.25,PSF=0.3/19.25,PSS=Math.PI/4+MSE,RBK=19.25-BLD-MST/2,RSI=SG0-MST/2-0.005,ss=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
@@ -780,6 +780,7 @@ const WFUSEE=(()=>{
       const e0=tAt(EY0),e1=tAt(EY1),ts=[...new Set([...Array.from({length:n+1},(_,i)=>T*i/n),...Array.from({length:3*288+1},(_,i)=>T-i/288).filter(x=>x>0),T-PSB/TAU,e0,e1])].sort((x,z)=>x-z);   /* finer over the outer three turns */
       const R=ts.map(tau=>{if(tau<=ni)return MSa+MST*tau;if(tau<=ni+1){const f=tau-ni;return r1+(r2-r1)*(f*f*(3-2*f));}return r2+MST*(tau-ni-1);});
       for(let i=ts.length-1,j=ts.length-1;i>=0;i--){const u=T-ts[i],ps=TAU*(u-Math.floor(u));let r=Math.min(R[i],msCap(u,ps));   /* outward first: each held under the turn outside it */
+        if(u<1){const d=Math.abs(ps-PSS)-SGW/SG0;r+=(MSR-r)*(1-ss(d/0.3));}   /* the outer coil on the wall behind the Steg (the drawn spiral stands 0.05 off it there: as first drawn the Steg's outer face is 18.85) */
         if(u>=1){const t1=ts[i]+1;while(j>0&&ts[j-1]>=t1)j--;const k=Math.max(1,j),o=R[k-1]+(R[k]-R[k-1])*(t1-ts[k-1])/(ts[k]-ts[k-1]);r=Math.min(r,o-MST);}
         R[i]=r;}
       ts.forEach((tau,i)=>{const a=HKA-TIP+TAU*tau;P.push(new THREE.Vector3(R[i]*Math.cos(a),ym,-R[i]*Math.sin(a)));});

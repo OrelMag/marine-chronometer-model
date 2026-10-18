@@ -170,7 +170,9 @@ const WDIAL=(()=>{
      to the pin at hole 53; its travel 34°18'. With the balance and detent as last revised none of it fits: the 1946 hub (05 04 02) has a neck Ø 2.63 there, which the jaws
      (2.9-3.45 from the axis) never reach; their ring encircles the impulse roller's path (Ø 6.78, 1.8 under the plate), so the balance could not be lifted out past them;
      and the lever's arm runs through the detent block of 05 04 01-4 (8.7.43), screwed to the same face. The plate of 1943 keeps the pocket and holes 51-53, so a device was
-     fitted, but not as 05 36 draws it. LV: the lever as drawn (plan, mm: its pivot, round end, spring pin and keyhole end) */
+     fitted, but not as 05 36 draws it. Built as first drawn on 18 October 2026 and taken out the same day (README, Unresolved): the lever runs 0.9 deep through the 1941
+     escape wheel too; 05 36 is the lever chronometer's (BC 1010), and the tongs close on a brake ring of Preßstoff (Schnitt A-B, DE 742 143), not the brass collar. LV: the
+     lever as drawn (plan, mm: its pivot, round end, spring pin and keyhole end) */
   const LV={P:H[52],E:[-29.897,35.080],S:[-25.781,30.235],K:[-15.767,9.976]};
 
   /* ================= the dial's printing: Wempe 3955's (1_Wempe_3955_Z.jpg), measured and traced by tools/dialtrace.py ================= */
