@@ -260,8 +260,11 @@ const SW=[['the modes\' damping Q 30',{Q:30}],['Q 1000',{Q:1000}],['the banking 
   ['the gold spring half as stiff (its alloy)',{tsK:0.5}],['the spring 0.09 thick (1436\'s first figure)',{tS:0.09/0.07}],['no preload (the banking where drawn)',{pre:0}],['the stone on the tooth: μ 0.10',{MU:0.10}],['μ 0.20',{MU:0.20}],['the preload 0.1× (under the estimate)',{pre:0.1}],['the preload 0.2× (under the estimate)',{pre:0.2}],['the preload 0.5× (under the estimate)',{pre:0.5}],['the preload 0.8× (under the estimate)',{pre:0.8}],['the preload 1.5×',{pre:1.5}],['the preload 2×',{pre:2}],['the preload 3×',{pre:3}]];
 const R2K=[['hinged at Ft, rigid (dynamics.js\'s)',{hinge:true,stiff:true}],['the spring as drawn, the rest rigid',{stiff:true}],['as drawn',{}],['as drawn, no preload',{pre:0}]];
 const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[['preloaded (0.63 g, estimated)',1],['as drawn (no preload)',0]],KK=[['a blow across the plate, 0.5 ms','b05',2,400,'g'],['a blow across the plate, 3 ms','b3',1,400,'g'],['a twist about the staff, 2 ms','tw',1,80,'rad/s']];
+/* the knock's floor (18 October 2026): the 3 ms blow on the frame at preloads either side of the estimate, for the least preload that takes 20 g (the bench's other floor).
+   Not 1.5×: there alone the run's first drop from rest is slow (268 ms against 20, the stone riding the tooth it let go), and the search's first blows, in it, stall the wheel at 2.4 g */
+const KF=[0.8,1.2];
 const jobs=[...R2K.map(([,o])=>({k:'run',mo:o,ro:{T:6,from:3}})),...SW.map(([,o])=>({k:'run',mo:o,ro:{T:3,from:1.5}})),...PUSH.map(A=>({k:'push',A})),
-  ...KN.flatMap(([,pre])=>KK.slice(0,pre?3:2).flatMap(([,kind,lo,hi])=>[false,true].map(rigid=>({k:'knock',pre,kind,lo,hi,rigid}))))];
+  ...KN.flatMap(([,pre])=>KK.slice(0,pre?3:2).flatMap(([,kind,lo,hi])=>[false,true].map(rigid=>({k:'knock',pre,kind,lo,hi,rigid})))),...KF.map(pre=>({k:'knock',pre,kind:'b3',lo:1,hi:400,rigid:false}))];
 const pool=async()=>{const{spawn}=require('child_process'),out=new Array(jobs.length),N=Math.max(1,Math.min(jobs.length,+process.env.MC_PROCS||require('os').cpus().length-4));let next=0;
   const kid=spec=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_WJOB:JSON.stringify(spec)}});let s='';
     p.stdout.on('data',d=>s+=d);p.stderr.on('data',d=>process.stderr.write(d));p.on('close',code=>code?rej(Error('wempe_tripping.js --child '+JSON.stringify(spec)+' exited '+code)):res(JSON.parse(s.trim().split('\n').pop())));});
@@ -301,8 +304,12 @@ pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;
       say(`  ${pn.padEnd(30)} ${nm.padEnd(34)} the frame as drawn: about ${f(gF,unit==='g'?0:1)} ${unit}; the rigid detent: ${f(gD,unit==='g'?0:1)} ${unit} (${sg(100*(gF/gD-1),0)} %)`);}
     const gS=DY.MPRE/(DY.DM.m*DY.rCM*G0);
     say(`a steady push lifts the rigid detent off its banking at ${f(gS,0)} g (its preload's; none as drawn); the knocks a chronometer meets in its box at sea are a few g (the gimbals and the box take the rest)`);
-    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>=20),`preloaded, it takes a blow of 20 g or more across the plate to let a tooth go`);   /* the 3 ms blow's least is 20.0-20.1 g (18 October 2026, the finer search; the coarse one read 22): the margin is nil at the estimated 0.63 g preload (README, Estimated; the bench sets the preload) */
-    J.knocks={rows:K4,gS};}
+    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>=20),`preloaded, it takes a blow of 20 g or more across the plate to let a tooth go`);   /* the 3 ms blow's least is 20.0-20.1 g (18 October 2026, the finer search; the coarse one read 22): the margin is nil at the estimated 0.63 g preload, so the bench takes the knock's floor below as a second least (the user's choice, 18 October 2026) */
+    /* the knock's floor: the 3 ms blow's least on the frame against the preload, the preload where it reaches 20 g (straight between the runs either side); wempe_tolerances.js's wKnock */
+    const kr=[[KF[0],take(1)[0]],[1,K4.find(k=>k.preload===KN[0][0]&&k.name===KK[1][0]).frame],...KF.slice(1).map(m=>[m,take(1)[0]])].map(([m,g])=>[m,+f(g,1)]),
+      ik=kr.findIndex(([,g])=>g>=20),mK=ik<0?null:ik===0?kr[0][0]:kr[ik-1][0]+(kr[ik][0]-kr[ik-1][0])*(20-kr[ik-1][1])/(kr[ik][1]-kr[ik-1][1]);
+    say(`the 3 ms blow's least on the frame against the preload (× the estimate, ${S.W78} g): ${kr.map(([m,g])=>`${m}× ${f(g,1)} g`).join(', ')}; it takes 20 g from ${mK==null?`past ${KF[KF.length-1]}×`:`${ik===0?'under ':'about '}${f(mK,2)}× (${f(mK*S.W78,2)} g)`}: the knock's floor, the bench's other least`);
+    J.knocks={rows:K4,gS,floor:{rows:kr,m:mK,g:mK==null?null:mK*S.W78}};}
   flush();
   J.time=(Date.now()-t0)/1000;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));if(fail)process.exitCode=1;}).catch(e=>{console.error(e);process.exitCode=1;});
 }
