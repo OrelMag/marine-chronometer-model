@@ -673,6 +673,60 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's maintaining spring was pinned the wrong way round, and its 70 s came from a
+  note read as its deflection.** fusee.js pinned the spring's eye to the fusee wheel and its other
+  end to the ratchet (the ratchet's sheet turned 65° to meet it), where 05 06_4's Schnitt A-B draws
+  the eye's pin whole, "Stift nach oben" (into the ratchet, above it), at 6 o'clock between the
+  clicks at 9 and 3, as the ratchet's own sheet puts its hole, and the other pin hidden (into the
+  wheel). Its drive was taken as spent over 05 06_9's illegible "x = 0,27 mm" read as its
+  deflection, 1.09° and 70 s, less than one of the ratchet's 3° teeth. Now the eye's pin is the
+  ratchet's; the drive closes the ring until its ends nearly meet (0.27-0.58 mm apart, as Gould
+  describes such a spring; its eye's hole on its 0° line, as the sheet draws it to scale, not 0.8 off
+  it), its push from its drawn section (an elastica, the end at the wheel's pin held by the recess's
+  wall), so the key held keeps the balance going 10-13 minutes (tools/wempe_sustaining.js);
+  the page draws the ratchet ahead of the wheel by that lead and the ring bent to it. Keep: a part's
+  working comes from its section, never from an illegible note; which pin goes where is read on
+  the assembly's section (which pin is drawn whole, which hidden). `30d35f4`
+- **The Wempe's maintaining detent's step rode into the fusee wheel's teeth.** Its 2-thick part
+  was sized 0.05 clear of the wheel's tips with a 0.25 allowance for its ride on the ratchet; with
+  the ratchet ahead of the wheel by the spring's lead it met another phase of its ride and touched
+  them (fine.py, 0.008 mm³). Sized then against its seat over a whole tooth: 7.10 from its hole
+  (7.55); at the merge of main 3.13.01 replaced by main's straight edge from 05 05_12 (`215bed8`, below),
+  0.52-0.61 clear of the tips over the whole ride, which the ratchet's lead doesn't change (the ride is
+  the same at any phase). Keep: a clearance for a riding part is checked over its whole ride, not an
+  allowance. `30d35f4`
+- **The Wempe's clicks could rest on a tooth's tip, running.** fusee.js carried the fusee onto the
+  click wheel's phase where click 0 drops deepest (SEAT), which lies within one sample of the
+  face's edge; the click outline's polar table (0.09°) could put it a hair past the drawn face, and
+  with the ratchet's sheet turned as A-B draws it the bearing click stood 43 % into its teeth
+  (maintaining.py --model wempe), the other on a tip. Now SEAT is taken 2 % of a tooth back from the
+  face: the bearing click 83 % in. Keep: a seat found at a discontinuity is backed off it. `84d35438`
+- **The Wempe's maintaining ratchet turned back in the page.** Once its lead over the fusee wheel
+  came from the maintaining spring, the page let it fall to nothing at run down (15.6° back), by a
+  mean half tooth as the key went on, and creep back between beats as the drive eased along the
+  fusee's curve or the escapement recoiled. Now the key put on, it falls only to its detent's tooth
+  (fusee.js fall(), off the detent's own seat: 0 to 3°), then its lead falls only as the train
+  carries the wheel on, tooth by tooth; running, it never goes back faster than the wheel goes on,
+  and holds when the escape wheel recoils; run down, the detent holds it; a set of the wind (the
+  slider, the link) leaves the spring spent at run down. maintaining.py allows exactly that fall.
+  Keep: the ratchet's angle only goes back to its detent. `84d35438`
+- **mechanisms.py --model wempe read a hole as the click wheel's roots.** Its root was the least
+  radius of the outline within a pitch of the pawl, which took the click wheel's M2 holes (r 5.75)
+  for the roots once a click stood over one: 3.27 mm deep, not 0.795, failing a tooth at 547 MPa in
+  wempe_ratchets.js. Now the root is found from the outline's outer envelope, then the least radius
+  within half its depth below it (under an undercut face's overhang). Keep: a ratchet's roots are
+  read on its outer outline. `84d35438`
+- **The Wempe's fusee always came back onto the same click.** Running, update() carried the fusee
+  forward onto click 0's seat, up to a whole tooth of the 35-tooth click wheel (10.3°), though the
+  two clicks stand 180° apart, half a tooth out of step, so the nearer one bears within 5.1°. Keep:
+  the fusee rests on whichever click it meets first. `30d35f4`
+- **The Wempe ran down with its maintaining spring still closed.** Run down by running, the page
+  cut the drive to nothing at once and held the train, the spring left closed 14.4° with its push
+  unused; a wind then started from it, carrying 0.88 of the drive into a train that had stopped.
+  The spring's push goes on into the wheel at run down as it does while the key turns (the ratchet
+  held by its detent), so the train now runs on it, the swing falling as it opens, and stops about
+  12 minutes later with it spent (app.js `drvNow`, the lead's update). Keep: run down, the drive is
+  the maintaining spring's until it is spent; a set of the wind to run down leaves it spent. `a7514671`
 - **The Hamilton's fusee stack had gaps and a hidden spring showing, and its chain ended on a pin** (Winding and maintaining work): seen side-on, the
   sustaining ratchet (tips r 14.53, a module chosen with no source) sat 0.2 mm over a plain copper rim standing over 1.2 mm of the fusee wheel's teeth,
   the fusee's rim 0.1 over it, and the sustaining spring and the wheel's recess showed round the ratchet; a real Model 21 (SNLqsS9wrrM 4:20-4:28,
@@ -692,7 +746,21 @@ Contents:
   with the rim, the recess 1.0 deep. Its section pushes 0.22 of the drive, not 0.82, so Sec. IV's five to ten minutes is now the time it keeps the
   chronometer running (6.2), not over a turn. Keep: the outline from the frame (`SSI`, `SFT`, `SWT`), the height measured, `SPU` what
   `sustaining.js` finds; trace edges on b* (yellowness), not on brightness or saturation, which read the brass's shadows as steel. `4b25def1`
+- **The sustaining spring's tips met the inner edge at a corner and the wall at a point** (18 October 2026, seen on the page): `SFT` and `SWT`
+  were a quartic in r fitted to the gap at each radius, which can't leave the inner edge or meet the wall tangentially; on KLUwI2UUCMQ 27:26
+  both noses are round, the fixed one a D. Keep: each tip's outline traced as points round the nose (rays from inside it), in contour order
+  from the inner edge to the wall, the first 1 mm eased onto `SSI`; at the fixed tip the edge is where L* falls from the top edge's highlight
+  to the black shadow beyond (there b* reads the shadow as steel: its chroma is gone), elsewhere b*. `a10c5331`
+- **The sustaining spring's gap was 12.5°, read short** (18 October 2026): the first trace took the fixed tip's cast shadow and the working tip's end
+  face as steel; traced again on the same frame the tips stand 17.8° apart where they come nearest, as the loose spring's 16-18° (18:58.0). Its
+  push banked is 0.33 of the drive, not 0.22, and held it runs the chronometer 12.1 minutes, over Sec. IV's five to ten, read as the least it gives
+  (the owner's reading). Keep: the measured gap (17.8 then; 17.4 traced by hand below), the holes, pin and `SSI` anchored on the tips as traced on one rectification (moving a tip moves
+  `SPW`, `SSH`'s angles, `SWL`, `SFL` and `SSI`'s index with it), `SPU` what `sustaining.js` finds. `edbd49d1`
 
+- **The sustaining spring's outline is the owner's hand trace** (18 October 2026, `tools/tracer.html` on KLUwI2UUCMQ 27:26 rectified): the gap 17.4°,
+  not the b* trace's 17.8°, the band's inner edge 0.1-0.35 mm further out (the free band 1.71 wide, not 1.81), so it pushes 0.28 of the drive and runs
+  the chronometer 10.5 minutes held. Keep: a trace by hand is the visible silhouette, so the faces the frame's tilt shows come off it (its own inner edge
+  shows the 0.29 mm step), but never the band's outer edge, which lies against the wall; the holes and pin anchored on the traced tips.
 - **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
   the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
   so from the square's end, puts the face on the side the arbor turns from, the spring's eye over the pin. The maintaining detent's step
@@ -2349,6 +2417,9 @@ Contents:
 
 ## Accuracy to the manual
 
+- **The balance cock's endstone was drawn as a ruby** (18 October 2026): the Model 21's fourteen jewels are thirteen
+  rubies and one diamond, the cock's endstone, on which the balance runs dial up (Sinclair, *NAWCC Bulletin* 365, 2006; References/NAWCC-ARTICLES.md).
+  Keep: `J.bue` in `M.clear`, its card's material Diamond (`makers.py`), the cock's description naming it. `f29df488`
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,
   running clockwise round the bottom. `7a91d18`
 - **Balance screws.** Per the parts list: 10, in pairs, three head heights.
@@ -2969,6 +3040,10 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The Wempe's maintaining spring weighed in no body** (`wempe_inertia.py`, found by `ci.py --full` on 18 October 2026 merging `claude/wempe-maintaining`): with the spring drawn bent between the ratchet and the wheel, the
+  part `maintaining` has two turning groups (the ratchet, clicks and the eye's pin; the spring and its other pin), and `wempe-inertia.js` weighed only the first, so the spring (2.07 g) and its pin left
+  every body and the table read 11.64 g. Fixed: the part's groups are weighed together (13.76 g, 2,277 g·mm²; the spring as now bent 431 g·mm², 467 straight). Keep: a body that is several groups is
+  weighed whole; a part split into groups must not drop pieces from `wempe_inertia.json`.
 - **The Hamilton's export drove the sustaining pawl twice in Blender** (Build, tools and docs): blender_check.py failed, the rig 0.40-0.44 deg off Running at 29.98 s
   once the sustaining ratchet was drawn its measured size. The pawl rode Run down's clip, 1,050 teeth in 720 frames, and the export's test for parts linear in
   the escape wheel's place (a few beats from rest) took its steady ride up a tooth for a linear turn, so the rig turned it by a driver as well. Keep: the

@@ -373,6 +373,24 @@ a reading or an estimate to settle:
   arbor's pinion and arbor 0.42 were left out). *Done (14 October 2026):* makeEsc's JW 6.05 and dynamics.js sum the arbors' solids (mechanisms.json); the
   calibrated torque 62.8 µN·m, the budget still closes at TF 67 s; tolerances, gearing, tripping and bench re-written.
 
+### 11. The rate from one turn to one and a half, and the hairspring's two terminals (Bennett, 18 October 2026)
+
+Found reading William O. Bennett's "The Hamilton Marine Chronometer" (*NAWCC Bulletin* 356, 2005; References/NAWCC-ARTICLES.md), the
+designer's own account. Neither stops the model working; both are where the model's design values meet a source that outranks them.
+
+- **Rate against swing.** Bennett: placing the impulse rightly made "the same rate from one turn motion to one-and-a-half turns motion,
+  within a fraction of a second per day", swings of 180° to 270°. The model's escapement (`ESC.rateAt` with the drive that gives each swing,
+  18 October 2026): −1.83 s a day at 180°, −1.15 at 200°, −0.64 at 220°, −0.25 at 240°, 0.00 at 255°, +0.21 at 270°: 2.0 s a day over his
+  range (0.35 over the manual's 1⅜-1½ turns, which the model's checks hold it to). The impulse's place on the roller and the hairspring's
+  isochronism term (`HS`) set that curve; neither is measured. To do: find what places the impulse so the rate is flat to a fraction of a
+  second from 180° to 270°, whether the manual's figures (Ops. 84-88, 97) still hold there, and what it does to the swing, `escgolden.js`
+  and the checks downstream (the model README's "Estimated").
+- **The terminals.** Bennett: "two identical terminals", designed with Hamilton's own theory (the spring under a pure torque tangent to its
+  ends), not Phillips'. The model's are solved to Phillips' conditions (`hairspring.js`) and differ: the outer 14.6 mm into the stud's clamp,
+  the inner 21.8 mm to the collet's end. No source shows their paths (the model README: "the curve's path is a design"), so this source
+  should decide what form they take. To do: whether identical curves can meet the stud's clamp and the collet's end as measured (4.34 and
+  3.2 mm from the staff), and leave the force on the pivots as small as `HSPR.lateral` finds the present pair's.
+
 ## The hairspring's inner end (settled as an estimate, 4 October 2026)
 
 `tools/hairspring.js` designs the spring's terminal curves to Phillips' conditions from the model's coil and ends. The outer one, into the stud's clamp
