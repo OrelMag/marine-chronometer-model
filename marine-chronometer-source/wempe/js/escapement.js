@@ -811,7 +811,7 @@ const WESC=(()=>{
     {const ck=TT-15,cT=ck-0.1,eY=Y.tipU-0.02,hY=eY+0.03,lp=eLip(eY,-1);
       tag(mesh(bju,lathe([[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),M.gilt),'050408-2.bu');   /* the mouth a cone from the lip to Ø 4.4 at its top, 0.1 proud of the cock */
       tag(mesh(bju,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.steel),'050408-1.bu');   /* drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
-      tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,hY],[2.6,hY],[2.6,ck+2.7],[1.2,ck+2.7]],48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim */
+      tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,eY],[2.6,eY],[2.6,ck+2.7],[1.2,ck+2.7]],48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim, up to the endstone's setting (U30's two settings filling the seat's 2.8), the stone 0.03 under its face, as the lower; until 18 October 2026 its face was the stone's, 0.03 off the endstone's setting */
       tag(mesh(bju,lathe(KIT.jewelPr(JR,JT,0.125,JD,JC,JH,hY,1),32),M.ruby),'050407-1.bu');
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.steel]]){const g=new THREE.Group();g.userData.rev=V;bju.add(g);   /* the 6MX's steel (2_Kirow_247_A.jpg, photocompare.py: likely) */
         for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(g,q[0],q[1],cT,1.25,1.3,2.1,0.46,mt),'WN-55.ck');}}}
