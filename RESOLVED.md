@@ -1384,6 +1384,19 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The upper train bridge's and barrel bridge's holes were their size only at the faces** (18 October 2026, found
+  with the Contacts view: their screws' threads stood 0.08-0.09 mm off the train bridge where every other
+  tapped hole leaves 0.02). `polyGeo`'s bevel (0.22 and 0.25 mm on those two plates, the only bevelled ones)
+  narrows every hole by 0.8 bev at both faces, and a screw hole (`hC`, `hT`, their 4th element) was cut that
+  much larger so the faces came out at its size: through the plate's body it was 0.176-0.2 mm too large, a
+  lip at each face. The screws' threads, the bushings and the pins bore only on the 0.22-0.25 mm lips (five
+  pins' ends hung in the wide middle, touching nothing, and stood in `audit.py`'s `LOOSE` as "drawn through"),
+  and the STL and Blender exports carried it; the unflagged holes (the traced keyhole, the barrel bridge's
+  3.15 head holes) were 0.18-0.2 mm under their drawn size at the faces. No check failed: it overlaps nothing,
+  and `holecheck.py` samples inside the radius. Fixed: `polyGeo` cuts every hole at its size and puts the
+  bevel's face rings back on the hole's outline, so each runs straight through (measured: r 1.405 tapped,
+  1.561 clear, 3.15, the whole depth). Keep: a bevel rounds a plate's outer edges only; a hole in it is its
+  drawn size from face to face. `24df5b9`
 - **The 6MX's screws, ring and arbor square were the drawings', not Kirov 247's** (18 October 2026, photocompare.py on its A, N, O, S, W and uZ
   views). Its top plate and barrel bridge screws were flat gilt cheese heads (Kirov 247's: polished steel, domed), its cock, cap jewel, pillar and
   gold spring screws brass or blued (steel), its intermediate bridge's brass (blued), its change pinion brass (steel), its movement ring nickel
@@ -3150,4 +3163,5 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+- **`wempe-bom-3955` could run beside another `bom.py` step, and `wempe-fine-3955` ran outside the browser lane** (Build, tools and docs): `ci.py`'s `BROWSER` and `EXCL` were hand-written lists, and the two steps added for Wempe 3955 weren't in them, so `wempe-bom-3955` could write `tools/r_bom.json` while another `bom.py` step wrote it too, and both 3955 steps counted against `--jobs` instead of `--browsers`. Now both sets are worked out from the steps' commands (every `bom.py` step in `EXCL`'s `r_bom.json`; every `fine.py`, `bom.py`, `maintaining.py`, `gltf_check.py`, `blender_check.py` step of the full tier, and `fea`, in `BROWSER`). Keep: a new version's steps need no entry in those sets.
 - **holecheck.py failing now and then on the fusee's hole 42021** (Build, tools and docs): the hole turns with the fusee, which stood where the page's clock put it as it loaded, so between runs it wandered 0.6 mm round (x 16.95-17.45), past its EXPECTED entry's 0.4: a run failed or passed by when it loaded (seen on 3.03.00's main, 16 October 2026). Frozen as audit.py freezes the model (placements.py's first state), it still stood in one of two places 0.74 mm apart: the fusee's catch on its ratchet is state `update()` keeps from call to call. Fixed: holecheck.py freezes the model first, and the entry gives the hole by its distance from the fusee's axis (`L.Fu`, 4.264 mm) and its height, at any angle; such an entry must be found empty (its twin at the same radius, the first tapped hole, holds the stop-bar spring's end). Keep: an EXPECTED entry on a part that turns says where it is about its axis, not in the movement's frame.
