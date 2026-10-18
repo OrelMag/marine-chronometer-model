@@ -63,7 +63,7 @@ if(drawn.tStop!=null&&drawn.tStop>600)chk(false,`over the manual's ten minutes b
 /* the stiffness for five and ten minutes' running at the drawn gap, and the band's height for each (the stiffness goes as the height) */
 const kFor=tm=>{let lo=0.05,hi=T0/SMAX*0.999;for(let i=0;i<40;i++){const md=Math.sqrt(lo*hi),q=sim(md,c0(md),1.3*tm,1);(q.tStop==null||q.tStop>tm)?hi=md:lo=md;}return Math.sqrt(lo*hi);};
 const k10=kFor(600),k5=kFor(300);
-const [rimY,rimH]=num(/mesh\(R\.gw,ring\(19\.2\*FK,18\.0\*FK,([\d.]+)\),M\.copper,0,-([\d.]+)/,'the rim').reverse(),[floorY]=num(/mesh\(R\.gw,discGeo\(18\.0\*FK,[\d.]+,\[\[0,0,2\.75\*FK\],\[\.\.\.SSH\[0\],0\.4\]\]\),M\.copper,0,-([\d.]+)/,'the floor'),recess=+(rimY+rimH/2-floorY).toFixed(3);
+const [recess]=num(/const GW_B=[-\d.]+,GW_T=[\d.]+,GW_R=([\d.]+)/,'the recess');   /* the fusee wheel's recess, as deep as movement.js draws it (GW_R; the rim's top less the floor until 18 October 2026) */
 say(`running five to ten minutes asks ${f(k5,2)}-${f(k10,2)} N·m a radian at the drawn gap: a band ${f(H*k5/kt,2)}-${f(H*k10/kt,2)} high at the traced width (pushing ${f(100*k5*SMAX/T0)}-${f(100*k10*SMAX/T0)} % banked); the fusee wheel's recess is ${f(recess,1)} deep`);
 const fits=H<=recess-0.02;
 chk(fits,`the band ${H} high fits the ${f(recess,1)} mm recess, 0.02 under the rim's top`);
