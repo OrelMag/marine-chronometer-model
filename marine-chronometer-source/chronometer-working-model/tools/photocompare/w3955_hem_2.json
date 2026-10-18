@@ -8,7 +8,7 @@
   "rollers"
  ],
  "look": [
-  2.3,
+  5.44159,
   -0.75,
   190,
   -9.1,
@@ -32,7 +32,7 @@
    "xyz": [
     -9.1,
     -25.25,
-    32.36
+    -8.14
    ],
    "uv": [
     499,
@@ -41,9 +41,9 @@
   },
   "mass (050301-4) at the top: roller-side face's centre (its D-shaped face completed by eye)": {
    "xyz": [
-    -22.697,
+    4.497,
     -23.1,
-    19.96
+    4.26
    ],
    "uv": [
     747,
@@ -52,9 +52,9 @@
   },
   "mass (050301-4) upper right: face's centre (by eye)": {
    "xyz": [
-    -22.697,
+    4.497,
     -23.1,
-    4.26
+    19.96
    ],
    "uv": [
     912,
@@ -65,7 +65,7 @@
    "xyz": [
     -9.1,
     -25.25,
-    -8.14
+    32.36
    ],
    "uv": [
     990,
@@ -74,9 +74,9 @@
   },
   "mass (050301-4) at the bottom: face's centre (by eye)": {
    "xyz": [
-    4.497,
+    -22.697,
     -23.1,
-    4.26
+    19.96
    ],
    "uv": [
     695,
@@ -85,9 +85,9 @@
   },
   "mass (050301-4) lower left: face's centre (by eye)": {
    "xyz": [
-    4.497,
+    -22.697,
     -23.1,
-    19.96
+    4.26
    ],
    "uv": [
     505,
@@ -95,5 +95,6 @@
    ]
   }
  },
- "fix_f": 2700
+ "fix_f": 2700,
+ "note": "The balance is all but symmetric under a half turn (four masses at ±30° and ±150°, the timing weights on the arm), so its picks fit either end of the arm equally (the same residuals); the rollers decide: the impulse stone and the roller's hole stand where the photograph's are with each pick's model point turned 180° about the staff (18 October 2026, photo-inner). Until then the render showed the rollers the other way round."
 }

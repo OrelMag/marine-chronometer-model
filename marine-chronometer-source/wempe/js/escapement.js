@@ -484,7 +484,11 @@ const WESC=(()=>{
       const rec=[add(cL,unit(cL),0.8)];for(let i=0;i<=40;i++){const a=a0+da*i/40;rec.push([cc[0]+3.5*Math.cos(a),cc[1]+3.5*Math.sin(a)]);}rec.push(add(cT,unit(cT),0.8));
       const slot=[RF(1.5,-0.003),RF(3.0,-0.003),RF(3.0,0.503),RF(1.5,0.503)],notch=bool(rec,slot).uni[0],outl=bool(C([0,0],rr,360),notch).dAB[0];
       const ph=add(add([0,0],u,-1.9),vl,0.7);   /* 1.9 below the centre, 0.7 to the stone's side (02 04 02's plan, the stone at the top, its face on the right) */
-      tag(mesh(g,solidGeo([{loop:outl,y0:Q.ir0,y1:Q.ir1,F:[{p:C([0,0],0.825+0.0015,64),a:Q.ir0,b:Q.ir1},{p:C(ph,0.65,48),a:Q.ir0,b:Q.ir1}]}]),M.copper),'050403-1');
+      const rg=solidGeo([{loop:outl,y0:Q.ir0,y1:Q.ir1,F:[{p:C([0,0],0.825+0.0015,64),a:Q.ir0,b:Q.ir1},{p:C(ph,0.65,48),a:Q.ir0,b:Q.ir1}]}]);
+      if(Q===Y)tag(mesh(g,rg,M.copper),'050403-1');
+      /* Wempe 3955's (the version as photographed) bright and neutral, as its steel arm: 9_Wempe_3955_Hemmung.jpg's roller face saturation 0.00-0.02 at value 0.93-0.98,
+         the drawn beryllium copper's render 0.49-0.81 at the same patches (photocompare.py's w3955_hem_2 camera): steel or a plated roller, drawn steel (likely) */
+      else{tag(mesh(rv(g,'first 6mx 1943 -3955'),rg,M.copper),'050403-1');tag(mesh(rv(g,'3955'),rg,M.steel),'050403-1');}
       /* the stone: its end bevelled 45 deg from 3.35 at the face (1.8 from 1.55, the sheet's "1,8") to 2.85 at its back (02 04 02's plan traced at 33 px/mm: the back's
          corner 1.36 out from the stone's foot, the bevel 46.5 deg: sure); until 15 October 2026 slanted only to 3.2 at the back (scaled). makeEsc takes the face to 3.35 and
          no more of the stone (rp, wI; fI 0) */
