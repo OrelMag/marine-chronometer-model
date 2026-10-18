@@ -50,7 +50,7 @@
     const bk=pawlBack(u.pts,0.96,Q,th,[0,0]);out.pawls.push(pawl('winding pawl '+(k+1),R.FPR,36,R.FPR.ro/(36/2+0.95),R.FPR.ro-R.FPR.ri,0.5,0.5,u.pts,Q,th,1,{kind:'band',w:0.3,h:0.5,len:r4(len),bear:P2(bk.p),bearN:P2(bk.n),arm:0.96,note:'a long arc in its bed round the sustaining ratchet, its end on the pawl\'s arm'}));}
   { const sp=R.spawl,pts=sp.userData.pts,SPv=[sp.position.x,sp.position.z],Fu=[R.ssg.position.x,R.ssg.position.z],q=[SPv[0]-Fu[0],SPv[1]-Fu[1]],psi=((R.holdBack(0)%R.SRP.p)+R.SRP.p)%R.SRP.p,
       Q=toWheel(q,[0,0],psi),th=seatPawl(pts,Q,sp.userData.base-psi,R.SRP);
-    out.pawls.push(pawl('sustaining pawl',R.SRP,120,R.SRP.ro/(120/2+0.95),R.SRP.ro-R.SRP.ri,0.6,0.7,pts,Q,th,-1,{kind:'wire',r:0.12,len:r4(Math.abs(-20.66-1.0+9.75)),preTurn:0.12,foot:[-2.0,1.7],note:'a straight steel wire upright from the pawl\'s root to a hole in the train bridge, set 0.12 rad further in'})); }
+    out.pawls.push(pawl('sustaining pawl',R.SRP,120,R.SRP.ro/(120/2+0.95),R.SRP.ro-R.SRP.ri,0.6,1.18,pts,Q,th,-1,{kind:'wire',r:0.12,len:r4(Math.abs(-20.66-1.0-(sp.position.y-0.3))),preTurn:0.12,foot:[-2.0,1.7],note:'a straight steel wire upright from the pawl\'s root to a hole in the train bridge, set 0.12 rad further in'})); }
   /* ---------- arbors' moments of inertia about their own axes ---------- */
   mv.updateMatrixWorld(true);const toMv=new THREE.Matrix4().copy(mv.matrixWorld).invert(),A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3();
   const shown=o=>{for(let p=o;p&&p!==mv;p=p.parent)if(!p.visible)return false;return true;};

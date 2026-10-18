@@ -169,6 +169,7 @@ larger swings, and knocked.</p>
 lock; a dot on the top line is a run where a tooth got past. The dashed line is makeEsc's TRIP. <code>tripping.js --model wempe</code>, section 3.</figcaption></figure>
 <div id="tSweep" class="tw"></div>
 <div id="tKnock" class="tw"></div>
+<div id="tKnockF" class="tw"></div>
 <div id="kTrip"></div>
 
 <h2 id="ms">4. The mainspring and the fusee</h2>
@@ -223,6 +224,12 @@ strong end (<span class="st mid">~~</span> where only the strong end holds).</p>
 (left of the dashed line) the part holds only if made of the stronger material. <code>wempe_strength.js</code>.</figcaption></figure>
 <div id="tStr" class="tw"></div>
 <div id="kStr"></div>
+<p><b>The maintaining spring.</b> Its eye's pin goes up into the ratchet and its other pin down into the fusee wheel (05 06_4's Schnitt A-B: the eye's pin drawn whole,
+"Stift nach oben", the other hidden), so the drive closes the open ring until its ends nearly meet, its outer edge leaving the wheel's recess; the end at the wheel's
+pin, its short wide tail against the recess's wall, is held as clamped. Its stiffness from its drawn section (the width traced round it on 05 06 01-1), by Castigliano at
+small turns and as an elastica as it closes; how far the fusee's drive (05 06_20) closes it and where its ends would meet; its stress; and, the key held, the train run on it, the
+swing following, with the maintaining detent catching the ratchet up to a tooth late. <code>wempe_sustaining.js</code>.</p>
+<div id="kSus"></div>
 
 <h2 id="hair">8. The hairspring and Phillips' curves</h2>
 <p>The hairspring is a helix (05 03_6: 0.285 × 0.52, Ø 12.8, left-hand), its ends bent to a curve drawn on 05 03_7 as a table of radii every 10°, and cut, before the curves
@@ -549,6 +556,7 @@ function draw(){
       if(T.running)table('tRun',['Running','Swing','Rate (s/d)','Teeth past','A held tooth\'s stone lifted (of the lock)'],Object.entries(T.running).map(([k,r])=>[esc(k),f(r.A,1)+'°',sg(r.rate,2),r.trips,`${f(100*r.maxL,1)} % at ${f(r.maxTh,0)}°${r.maxRet?', the return swing':''}`]));
       if(T.sweep)table('tSweep',['An estimate varied','Teeth past','The stone at most (of the lock)','Swing'],T.sweep.map(r=>[esc(r.name),r.trips,f(100*r.maxL,1)+' %',f(r.A,1)+'°']));
       if(T.knocks)table('tKnock',['Preload','Knock','The frame as drawn','The rigid detent'],T.knocks.rows.map(k=>[esc(k.preload),esc(k.name),`${k.frame} ${k.unit}`,`${k.rigid} ${k.unit}`]),true);
+      if(T.knocks&&T.knocks.floor)table('tKnockF',['Preload at the stone','The 3 ms blow that lets a tooth go (the frame as drawn)'],[...T.knocks.floor.rows.map(([m,g])=>[`${f(m*0.63,2)} g (${m}× the estimate)`,f(g,1)+' g']),['the knock's floor: 20 g from',T.knocks.floor.g==null?'past the runs':f(T.knocks.floor.g,2)+' g']]);
       if(T.push){const P=T.push.rows.map(q=>[q.frame.A,q.frame.trips?100:Math.min(100,100*q.frame.maxL),q]);chart('cPush',{label:'The swing pushed',x:[220,380],y:[0,105],xl:'the swing (°)',yl:'the stone lifted, % of the lock',vrefs:[{x:T.push.TRIP,t:'TRIP'}],hrefs:[{y:50,t:'half'}],hbands:[],
         series:[{type:'dots',name:'no tooth past',c:'--s1',data:P.filter(p=>!p[2].frame.trips).map(p=>[p[0],p[1]]),tip:p=>`${f(p[0],0)}°: the stone at most ${f(p[1],1)} %`},{type:'dots',name:'a tooth got past',c:'--s2',data:P.filter(p=>p[2].frame.trips).map(p=>[p[0],p[1]]),tip:p=>`${f(p[0],0)}°: a tooth past`}]});}}}
   checks('kTrip','tripping');
@@ -590,7 +598,7 @@ function draw(){
     const lg=Math.log10;if(S.length){ranges('cStr',{label:'Margins',x:[lg(0.5),lg(200)],xt:[0.5,1,2,5,10,20,50,100,200].map(lg),xf:v=>String(+Math.pow(10,v).toPrecision(2)),xl:'margin (stress against the material\'s range; logarithmic)',l:330,rh:26,zero:0,
       rows:S.map(q=>({name:q.name,bars:[[lg(q.lo),lg(q.hi),q.s==='ok'?'--s3':q.s==='~~'?'--s4':'--s2',10]],tip:`<b>${esc(q.name)}</b><br>${esc(q.load)}, ${q.stress}<br>${esc(q.lim)}: margin ${q.lo}-${q.hi}`}))});
       table('tStr',['','Part','Load','Stress','Against','Margin'],S.map(q=>[`<span class="st ${ST[q.s]}">${q.s}</span>`,esc(q.name),esc(q.load),q.stress,esc(q.lim),`${q.lo}-${q.hi}`]),true);}}
-  checks('kStr','strength');
+  checks('kStr','strength');checks('kSus','sustaining');
 
   /* ---------- 8. hairspring ---------- */
   {const H=D.hair;chart('cHsRate',{label:'The spring\'s rate against the swing',x:[100,300],y:[-4,8],xl:'the swing (°)',yl:'rate against small swings (s/d)',hbands:[{y0:-4,y1:8,c:'--grid'}].slice(0,0),vbands:[{x0:225,x1:270,c:'--manual',t:'225-270°'}],vrefs:[{x:H.A12,t:`the model's ${f(H.A12,1)}°`,dy:16}],hrefs:[{y:0,t:'0'}],r:110,
@@ -639,7 +647,7 @@ function draw(){
     table('tTol',['Part','Drawn','The range that keeps the swing in the guard band','What sets it'],[
       ['the mainspring\'s strip (05 06_20)',`${f(ms.t,3)} mm`,`${rg(ms.t_mm)} mm (the drive ×${rg(ms.s)}); ${rg(ms.tMeasured_mm)} mm on the solved spring at the measured level`,`the strip's stress, ${f(ms.stressGPa,2)} GPa at the measured level, against a mainspring's limit sets the top; the swing alone would allow ×${f(ms.sSwing[1],2)}. On 05 06_20's lever: mean ${f(ms.g262.mean,1)} g within ${rg(ms.g262.band,1,' g')}. The sources' band wants ×${f(ms.sources.s,3)}, a strip ${f(ms.sources.t_mm,3)} mm`],
       ['the detent\'s spring (1436, "0,07")',`${f(dt.t,3)} mm`,`up to ${f(dt.t_mm[1],3)} mm (${f(dt.k[1],1)}× as stiff); the detent home in time over ${rg(dt.inTime)} mm (dynamics.js)`,`1436's other figure, 0.09 (${f(dt.t09.k,2)}× as stiff), swings ${rg(dt.t09.A,1,'°')} over the wind`],
-      ['the detent\'s preload (the banking)',`${f(dt.preload.g,2)} g at the stone (estimated)`,`${f(dt.preload.min,2)}-${f(dt.preload.max,2)} g`,'the floor the frame\'s margin against tripping (tripping.js); the top the swing at the wind\'s lowest'],
+      ['the detent\'s preload (the banking)',`${f(dt.preload.g,2)} g at the stone (estimated)`,`${f(dt.preload.min,2)}-${f(dt.preload.max,2)} g`,`the floor the higher of the frame's margin against tripping (${f(dt.preload.margin,2)} g: a held tooth's stone ringing under half the depth of lock) and the knock's (${f(dt.preload.knock,2)} g: a 3 ms blow of 20 g across the plate; tripping.js); the top the swing at the wind's lowest`],
       ['the gold spring (05 04 01-2)',`${f(go.t,2)} mm, ${go.E} GPa (estimated)`,`up to ${f(go.k[1],2)}× as stiff: ${f(go.t_mm,3)} mm, or the alloy's modulus up to ${f(go.E_max,0)} GPa`,`with none it swings ${f(go.A0,1)}° at 12 h; softer is free for the swing but not for the lock (tripping.js)`],
       ['the depth of lock (05 04_1)',`${f(lk.d,3)} mm`,`${f(lk.shallow,4)}-${f(lk.deep,3)} mm`,`deepest that unlocks (the stone lifted at most ${f(lk.liftMax,3)} mm); shallowest with a held tooth's stone ringing under half the depth. A wheel at the top of its Ø 14 +0.03 locks ${f(lk.tip,3)} deep with the banking left: the banking is set to the wheel as made`],
       ['the hairspring (05 03_6, 05 03_7)',`0.285 mm; the period ${f(hs.T,4)} s`,`0.5 s wants the strip ${f(hs.hNeed,4)} mm (${rg(hs.hNeedE,4)} over the modulus's range)`,`each µm of the strip ${f(hs.perUm,0)} s a day, each 0.01 mm of the coil's Ø ${f(hs.perCoil001,0)}; the timing weights reach ${f(hs.weights.gain,0)} s a day, gaining only: the spring is matched to the balance, not made to it`]],true);

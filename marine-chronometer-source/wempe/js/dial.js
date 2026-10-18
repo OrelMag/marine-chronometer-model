@@ -285,15 +285,18 @@ const WDIAL=(()=>{
 
     /* ---------- the up-and-down wheel on the long stud at 2, and its pinion on the fusee arbor at 10 ---------- */
     const udP=part('udWheel',30),ud=grp(udP,H[2]);R.ud=ud;
-    {const c=UDW;tag(mesh(ud,lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rf,c.yw1],[c.rf,c.yf],[c.rst,c.yf],[c.rst,c.ys],[c.rh,c.ys],[c.rh,c.yt],[c.rb,c.yt]],48),M.brass),'050204-2');
-      const wm=tag(mesh(ud,gear(c.wheel,1.0,{spokes:[5,1.6,10.4/2,28.3/2],bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};R.udW=wm;}
+    {const c=UDW,hub=lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rf,c.yw1],[c.rf,c.yf],[c.rst,c.yf],[c.rst,c.ys],[c.rh,c.ys],[c.rh,c.yt],[c.rb,c.yt]],48);
+      /* the Soviet 6MX's spokes taper, 1.82 at the hub to 1.18 at the rim (3_3_Auf-_und_Ab_rus.jpg, the wheel loose, rectified by its rim's inside fitted as an ellipse, Ø 28.2:
+         the five spokes' widths read on circles r 8 to 13.6, their mean 1.62 to 1.22, a line through them; 3_Kirow_247_uZ.jpg in place the same: likely); the drawings' 1.6 straight */
+      for(const[V,sp]of/** @type {[string,number[]][]} */([['last first 1943',[5,1.6,10.4/2,28.3/2]],['6mx',[5,1.82,10.4/2,28.3/2,1.18]]])){const gv=new THREE.Group();gv.userData.rev=V;ud.add(gv);tag(mesh(gv,hub,M.brass),'050204-2');   /* the hub in each version's group with its wheel (fine.py takes pieces fixed to each other by their shared group) */
+        const wm=tag(mesh(gv,gear(c.wheel,1.0,{spokes:sp,bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};if(V==='6mx')R.udW6=wm;else R.udW=wm;}}
     const upP=part('udPinion',20),up=grp(upP,H[10]);R.up=up;
     {const pm=tag(mesh(up,gear(UDP.pin,UDP.y1-UDP.y0,{bore:UDP.rb}),M.steel,0,(UDP.y0+UDP.y1)/2,0),'050200-5');pm.userData.gear={z:12,m:M_UD};R.upP=pm;}
 
     /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
        change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
     const ph=(A,pa,B,pb,s)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b;};
-    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);
+    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
 
     /* ---------- the hands ---------- */
     const hdP=part('hands',56);

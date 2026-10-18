@@ -373,6 +373,24 @@ a reading or an estimate to settle:
   arbor's pinion and arbor 0.42 were left out). *Done (14 October 2026):* makeEsc's JW 6.05 and dynamics.js sum the arbors' solids (mechanisms.json); the
   calibrated torque 62.8 µN·m, the budget still closes at TF 67 s; tolerances, gearing, tripping and bench re-written.
 
+### 11. The rate from one turn to one and a half, and the hairspring's two terminals (Bennett, 18 October 2026)
+
+Found reading William O. Bennett's "The Hamilton Marine Chronometer" (*NAWCC Bulletin* 356, 2005; References/NAWCC-ARTICLES.md), the
+designer's own account. Neither stops the model working; both are where the model's design values meet a source that outranks them.
+
+- **Rate against swing.** Bennett: placing the impulse rightly made "the same rate from one turn motion to one-and-a-half turns motion,
+  within a fraction of a second per day", swings of 180° to 270°. The model's escapement (`ESC.rateAt` with the drive that gives each swing,
+  18 October 2026): −1.83 s a day at 180°, −1.15 at 200°, −0.64 at 220°, −0.25 at 240°, 0.00 at 255°, +0.21 at 270°: 2.0 s a day over his
+  range (0.35 over the manual's 1⅜-1½ turns, which the model's checks hold it to). The impulse's place on the roller and the hairspring's
+  isochronism term (`HS`) set that curve; neither is measured. To do: find what places the impulse so the rate is flat to a fraction of a
+  second from 180° to 270°, whether the manual's figures (Ops. 84-88, 97) still hold there, and what it does to the swing, `escgolden.js`
+  and the checks downstream (the model README's "Estimated").
+- **The terminals.** Bennett: "two identical terminals", designed with Hamilton's own theory (the spring under a pure torque tangent to its
+  ends), not Phillips'. The model's are solved to Phillips' conditions (`hairspring.js`) and differ: the outer 14.6 mm into the stud's clamp,
+  the inner 21.8 mm to the collet's end. No source shows their paths (the model README: "the curve's path is a design"), so this source
+  should decide what form they take. To do: whether identical curves can meet the stud's clamp and the collet's end as measured (4.34 and
+  3.2 mm from the staff), and leave the force on the pivots as small as `HSPR.lateral` finds the present pair's.
+
 ## The hairspring's inner end (settled as an estimate, 4 October 2026)
 
 `tools/hairspring.js` designs the spring's terminal curves to Phillips' conditions from the model's coil and ends. The outer one, into the stud's clamp
@@ -1931,6 +1949,23 @@ changes it only round its own arbors (1 below).
     tried at the video's 166.3 deg (its dial-side screw just clear of the bar's end on 40:08): its top screw's head
     then stands in the cock's foot, which C Spinner's video shows clear of any screw (6:29 on, 6:47 off), so it
     stays at 170.8 and the 4 deg between the dial side's angles and the cock's place stays open. Of the items left open this is the only one worth pursuing (PLAN-fidelity.md, "How much each open item matters"): one frame with the cock and pillar 1's screw together would settle which source is off.*
+    *Settled (18 October 2026, `claude/cock-angle`): the train side measured against the cock's own holes. On KLUwI2UUCMQ 23:30 (the upper train bridge face up, its holes'
+    rims fitted as ellipses, put on the face through `tools/anchors/KLUwI2UUCMQ_23-30.json`'s homography) a similarity on the cock's three holes in the train bridge (its screw's
+    tapped hole and its two steady pins', residuals 0.13-0.27 mm) puts pillar 1's hole at **169.1-169.5 deg**; on 6:49.0 (the screw in place, its head's top picked and put
+    back 2 mm up through a camera fitted on seven of the bridge's holes and the cock screw's axis, 6:29's top over 6:49.0's hole) at 168.9-169.3 deg at the fitted f 5,300
+    (168.3-170.8 over f 1,500-11,000); on 23:45 (oblique, glare) 168.2-170.0; on another movement, No. 2182 (Jd2c3x8VKsE 26:00, 720p, ±1 mm), 168.2-170.0 against its
+    cock's holes (`tools/anchors/Jd2c3x8VKsE_26-00_fit.json`, fitted with and without the screw itself). So the screw stands **169.2 +- 0.5 deg** against the cock, 1.1 deg (0.65 mm) nearer it than
+    the model's 170.3 and 2.9 deg (1.7 mm) further than the dial side's 166.3 would put it: there its head would reach the cock's foot (2.2 mm clear of it in plan at
+    170.3, and 4 deg is 2.4 mm there); at 169.2 it clears the foot by 1.55 mm, as 6:29 shows it beside the cock. **Moved there** (r 34.52 kept; `PILLARS.train[1]` (6.47, 33.91)). About the centre, 23:30's
+    holes away from the cock (the centre bushing, the barrel bridge's screw and pin holes, the lower bridge's screw, pillar 2 at 3 o'clock, which comes out within
+    0.1-0.6 deg of the dial side's 84.3) put the screw at 167.6-168.0 deg and 6:49.0's camera at 168.2-168.9: so the dial side's 166.3 is about 1.5-2 deg low (just
+    past its stated 1.5), and the cock's three holes come out 1.3-2.3 deg (0.7-1.3 mm) short of the model's about the centre too. That is one good frame (23:30, some of
+    whose anchoring holes were placed from it) and an oblique one, so the cock's place stays as measured on 6:47 and 23:30 (its holes, RESOLVED.md) and is left open
+    below as a lead, not a finding. The lower train bridge keeps its 9.2 past the fourth: at 169.2 the video's 10.3 would meet the dial-side screw's head by 0.1 mm
+    (clear by 0.26 at 168.2), within the readings' scatter.*
+    *Open, low (18 October 2026): the cock's place about the centre. 23:30 (face up, homography on the rim, the cut round the barrel and the centre bushing) puts the
+    cock's screw hole and its two steady pins 1.3-2.3 deg short of the model's about the centre, pillar 1 with them; a second face-on frame of the train bridge with
+    the centre and the cock's holes (13:44, 36:16-36:35) would say whether the cock (and the balance under it, which it must stay over) is turned by that much.*
     *Settled (3 October 2026): the photographed dial, face-on and scaled by its seconds' centre (on the fourth, 21.6
     out), has its minute track at r 40.4-42.2, the seconds track r 17.9 meeting it at 6, and shows to r 45.9 inside the
     bezel, the model's bezel opening exactly: the 95 mm dial stands, and its print, at r 43.0-45.4, was 9 % too large.
@@ -2554,10 +2589,10 @@ The Wempe model was cut through each pair of arbors and compared with Wempe's co
 11. Pose: run down, the photograph still has about half a lap on the fusee's lowest groove (O 480,360,900,650): wind 50-54 h, not 55.9, poses it (the specs use 55.9).
 
 **Still open: the 6MX (Kirov No. 247)**
-12. *The lower balance cock's step* (likely; `8_Kirow_247_F.jpg` 100,230,620,480, and Kirova 14100's loose cock, its step at 0.58 of the length from the jewel end): the deep part (stamped "5") begins about 5.7 mm nearer the lug than the model's (at u about -4.2 in the cock's frame, the model's +1.5: 81 px at 14.3 px/mm along the bar), so the lug's own plan must differ too (the drawn lug runs u -10 to 0); a step there would leave the drawn lug hanging under the thin arm. Needs the loose cock (chasy-ru) measured in plan.
+12. *The lower balance cock's step* (likely; `8_Kirow_247_F.jpg` 100,230,620,480, and Kirova 14100's loose cock, its step at 0.58 of the length from the jewel end): the deep part (stamped "5") begins about 5.7 mm nearer the lug than the model's (at u about -4.2 in the cock's frame, the model's +1.5: 81 px at 14.3 px/mm along the bar), so the lug's own plan must differ too (the drawn lug runs u -10 to 0); a step there would leave the drawn lug hanging under the thin arm. Needs the loose cock (chasy-ru) measured in plan. **Looked at again (18 October 2026), not built:** the chasy-ru loose piece is the upper cock (55-65 long by the intermediate bridge and pillars beside it; the endstone's setting with its two screws on the arm), so the 0.58 was its riser; and through the `m6_detent` camera the side view fixes only a line across the cock's plan (a full-width step at u about −6, or one at the lug's edge not spanning the bar). Open in the Wempe README's Unresolved, with what would settle it.
 13. *A half-round notch in the movement ring* (sure it exists, ±1 mm; `7_Kirow_247_W.jpg` 450,480,760,620, A 870,395,915,455): about 5 wide and 4.7 deep, cut down from the top of the ring's outer band at x about -44, z about -10 (about 283°). The closed-solid builder can't cut a slot in a wall's side as a plan feature: it needs the band built in cells.
 14. *Stamped marks* (sure; A 160,480,250,650): the factory's rhombus, "№ 247" and "2-52" on the barrel bridge.
-15. *The electrical contact* (`10_Kirow_247_E-Kontakt_1.jpg`, sure in form, sizes ±15 %): a large L-shaped gilt cock, its arm just under the top plate, a cap plate with two screws and a jewel at its end, a leg down behind the disc, and a flat copper spiral about Ø 7.4 under the arm (the model's cock smaller, about 2 lower, its spiral about 3 lower); the lever a chunky gilt block with a 45° chamfer carrying a threaded brass screw with a lock nut (the model's slim steel lever and plain rod, its point about 1 higher on the disc); the contact wheel's collet about Ø 2.0, 3.0 above the wheel, finely turned (the model's 3.1 and 5.1); the disc with a recessed centre, a slotted steel screw and square knurl teeth (the model's raised hub, sawtooth).
+15. *The electrical contact* (`10_Kirow_247_E-Kontakt_1.jpg`, sure in form, sizes ±15 %): a large L-shaped gilt cock, its arm just under the top plate, a cap plate with two screws and a jewel at its end, a leg down behind the disc, and a flat copper spiral about Ø 7.4 under the arm (the model's cock smaller, about 2 lower, its spiral about 3 lower); the lever a chunky gilt block with a 45° chamfer carrying a threaded brass screw with a lock nut (the model's slim steel lever and plain rod, its point about 1 higher on the disc); the contact wheel's collet about Ø 2.0, 3.0 above the wheel, finely turned (the model's 3.1 and 5.1); the disc with a recessed centre, a slotted steel screw and square knurl teeth (the model's raised hub, sawtooth). **Rebuilt (18 October 2026)** through photocompare.py's `m6_contact` camera and a second, `m6_contact_front` on `14_E-Kontakt1.jpg`: the cock's arm and cap plate raised to the photograph's heights, the cap plate's screws in a row with the jewel, the arm's end rounded past the far screw, the spiral raised under the arm with its end bent onto the stud, the lever gilt with a block holding a threaded Ø 1.0 screw and a brass nut, the collet Ø 2.0, the disc's knurl square and its face recessed round a slotted screw. Left: the cock's leg about 2.5 off across the view (Fig. 100's place, its depth unreadable from views 14° apart: Wempe README, Unresolved); the 45° chamfer the first reading saw is the stud's V notch, where the spiral's end is clamped.
 16. *The escape pinion* (likely): about 3.7 long, ending 1.2-1.4 over the pillar plate (the model's 3.0, 3.3).
 17. *The banking screw* (likely): its domed head slotted, 2-3 mm of thread showing between it and the upright (the model's plain dome, about 0.8 of shank).
 18. *The cap jewel setting on the upper cock* (uncertain; A 530,560,650,690): a flat steel ring about Ø 4.5 round the jewel, the model's a gilt dome Ø 5.2.
@@ -2578,6 +2613,28 @@ The Wempe model was cut through each pair of arbors and compared with Wempe's co
 31. *The lower cock's plate-side face* (likely; `9_`): the jewel in a gilt chaton (the model's an oil sink); the lug's upper small hole holding a brass screw or pin end (the model's empty).
 32. Uncertain: the detent block's steady pins brass (lighting?); the block's arm 1-1.4 wider along its length (camera tilt?); the banking cone 0.7 further toward the arm's end; the escape wheel bright gilt, the model's now orange; the chain's J-hook shank longer, its curl deeper (about 1.3 against 1 link pitch).
 Matching: the top plate's every hole, sink and seat on both faces, its crescent cut, balance opening and tongue, the holding device's pocket, the fusee hole's recess; the train's pillars, wheels' places and sizes, arbor heights (0.2-0.4); the escape arbor's length (0.4) and wheel Ø 14; the balance's four masses at ±30° and ±150°, the two split timing weights, the rim's cuts, bimetal rim and steel arm; the detent block's base, holes and stamped "5", the foot clamp, blade, gold spring and red stone; the lower cock's L outline, its screw between the pins; the chain's and band's links and hooks.
+
+**Settled on `claude/wempe-photo-inner` (18 October 2026)** (photocompare.py; Wempe README, "Wempe 3955 as photographed"):
+- 10 (the step in the rim) and the train photograph's channel: the plate's rim notched 0.33 where the hand-setting's bore leaves it, and the movement ring grooved under it (straight sides to 2.3, a round floor closed in the band, the lip opened at its inner edge), built for Wempe 3955. The 4.5 × 0.9 reading on `3_` had taken the ring's lip edge for the plate's rim. `w3955_train` refitted: its rim circle had stood 3.35 off the plate's train face; ten plate holes now fit to 0.07-0.27 mm.
+- 22: the escape collet one straight cone, Ø 2.95 to 1.50 over 4.9 (traced on 47 rows, 0.04 mm rms): sure.
+- 23: settled on main (3.11.01) for every first-drawn version from 05 04_1 and the coloured section (the gilt domed head Ø 3.3 on the pipe's wheel side); this branch's photographs agree (Ø 3.0-3.2 on `10_Vergleich`, `11_`, `10_`), so main's stands.
+- 25: the impulse roller steel (neutral, saturation 0.00-0.02). The red stone on the photograph is the impulse stone in its slot, and the brass block the discharge roller, both where the model has them once the balance is turned the right way: `w3955_hem_2`'s picks had fitted the other end of the near-symmetric balance.
+- 26: the gold spring's screw (WN-14) bright, slotted, Ø 1.4 in every German version (no sheet). The block screw's black top is a mirror polish, hue 26-38°, not a temper: unchanged.
+- 29: the "pin" is the upper cock's screw put back in hole 8 without the cock (`12_` shows its Ø 6.5 head): no change.
+- 30: poising holes Ø 0.6 in the two masses at 150° and 210° only (the other two plain).
+- 9: the chain's dark faces are mirror polish (hue 32°, saturation 0.13, not blue): unchanged.
+- Uncertain, not built: a thin pin on the fusee cover's screw (8_); the bush in 18 reads about 1.7 open on the train face against its 1.3 bore (3 px).
+- 28 and 31: main's jewel rebuild (3.09.02, now merged in) draws both as the photographs show them: the escape endstone's setting opening in a cone over a domed stone (`12_`), the lower cock's jewel in its setting with its domed stone (`9_`). Not built: a screw end in one of the lug's two small holes (`9_`), and a dark dot about 0.26 below the escape setting (`12_`).
+- 1: the "posts on the brass arc" are the balance itself, its masses, timing weights and rim cut, seen turned: no part missing. Every one of Wempe 3955's whole-movement views (A, N, O, S, W) shows its arm about 3-9, 10° off, where 05 03_1 sets it 6-12 at rest: stopped there by hand or set so, the photographs can't tell (open). The whole-movement specs now render version `3955`, which shows its masses' plain tops.
+- 2: the maintaining detent's wire stud brass on Wempe 3955 (`2_`, `5_`): built in its version. Hole 4's sink beside it is concave, as built.
+- 27: the bowl's bottom built as photographed: the closing plate is the sheet's (its Ø 8 and knob 90° apart, the boss Ø 31 on `16_` scaled by its Ø 68) but matte grey, two holes through its boss, the bowl's bottom Bakelite. The drum measures r 52-54 (the sheet's 53); its shoulder can't be read closer than about 2 mm on the one oblique view, so the sheet's profile stays.
+- 6MX 16: the escape pinion 3.9 long, its foot 1.5 over the pillar plate (measured along the arbor from the escape wheel on `8_Kirow_247_F.jpg`; the photograph's camera stands the ring's edge 1.2 off there, so heights through it aren't used). Its inertia table rewritten; `SET6.JW` within 0.2 %.
+- 6MX 17: the banking screw's thread cut and its dome slotted; the head against the upright as built (the thread seen is where the pipe rests).
+- 6MX 18: the cap jewel setting polished steel round a ruby, its outline on the model's.
+- 6MX 19: the up-and-down wheel's spokes taper 1.82 to 1.18 (`3_3_Auf-_und_Ab_rus.jpg` rectified).
+- Still open for the 6MX: 12 (the lower cock's step and lug, which needs Kirova 14100's loose cock measured in plan) and 15 (the electrical contact's cock, spiral, lever, collet and disc: several parts, sizes ±15 %).
+- The 6MX's 35-day trial failing at the masses' drawn place (C +2.54 s/day/°C, the user's screenshot of 18 October 2026): main's 3.11.01 explains it in the essay and adds a button to compensate the masses.
+- WN-12a's holes (below): Wempe 3955's version draws its masses' tops plain, as its photographs show; the drawings' versions keep the hole.
   Its tabs, 2 wide, go through the drum's bottom and the lid. The drum's slot runs through the bottom, not the wall: 2 +0.05 tangentially, r 18.30-19.10. The lid's 9 o'clock notch is its seat, not a prising notch; the 3 o'clock notch is the likelier prising notch.
 
   The unmerged branch `claude/wempe-spring-eye` cuts that slot as a pocket from the rim and reads the notch as a prising slot. Build the Steg after that branch lands, replacing its drum pocket with the through-bottom slot, and keep the mainspring's last 45° (from the Steg to the hook block) on the wall.

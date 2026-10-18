@@ -314,8 +314,8 @@ const ESSAY=(()=>{
       out.textContent=tm.toFixed(1)+' min';f.dirty=true;}
     inp.max=TM.toFixed(1);range(inp,v=>{if(kw)return;set(v);return v.toFixed(1)+' min';});
     btn.addEventListener('click',()=>{if(!kw)kw={t:0};});
-    V.label('Sustaining spring','drives while the key turns',at(ss,15.6*Math.cos(Math.PI*0.9),-8.75,15.6*Math.sin(Math.PI*0.9)));V.label('Sustaining ratchet','',at(sr,14.6*Math.cos(-2.2),-9.45,14.6*Math.sin(-2.2)));
-    V.label('Sustaining pawl','holds the ratchet',at(sp,0,0,0));V.label('Fusee wheel','to the train',at(gw,18.8*Math.cos(2.4),-6.5,18.8*Math.sin(2.4)));V.label('Winding ratchet','on the fusee',at(wrg,0,wrg.children[0].position.y,0));
+    V.label('Sustaining spring','drives while the key turns',at(ss,15.6*Math.cos(Math.PI*0.9),-7.62,15.6*Math.sin(Math.PI*0.9)));V.label('Sustaining ratchet','',at(sr,16.6*Math.cos(-2.2),-8.76,16.6*Math.sin(-2.2)));
+    V.label('Sustaining pawl','holds the ratchet',at(sp,0,0,0));V.label('Fusee wheel','to the train',at(gw,18.8*Math.cos(2.4),-7.0,18.8*Math.sin(2.4)));V.label('Winding ratchet','on the fusee',at(wrg,0,wrg.children[0].position.y,0));
     set(0);
     return dt=>{if(kw){kw.t+=dt/(RM?4:1);const T1=4,T2=4.6,T3=5.2;   /* the key turns 3 minutes' worth in 4 s, rests, lets go, and the mainspring loads the spring again */
         if(kw.t<T1)set(3*smooth(kw.t/T1),'turn');else if(kw.t<T2)set(3,'turn');else if(kw.t<T3)set(3*(1-smooth((kw.t-T2)/(T3-T2))),'run');else{kw=null;set(0,'run');}inp.value=t;}

@@ -53,6 +53,7 @@ KINDS=[  # (pattern in the line's name, material, finish, heat treatment): watch
 def material(l):
     n=l.get('name',''),;nm=n[0];no=l.get('no','')
     if no in MANUAL:return MANUAL[no]+('manual',)
+    if l.get('id')=='J.bue':return ('Diamond','Sinclair, NAWCC Bulletin 365 (2006): the one jewel of the fourteen not a ruby','polished, set in its steel setting','none','literature')
     low=nm.lower()
     if 'trip' in low and 'spring' in low:return MANUAL['trip']+('manual',)
     if low.startswith('detent') and 'spring' not in low and 'block' not in low:return MANUAL['detent']+('manual',)

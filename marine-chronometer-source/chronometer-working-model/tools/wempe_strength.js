@@ -59,9 +59,10 @@ say('Pivots and bearings, fully wound (each pivot taken as carrying its arbor\'s
 /* ---------- the maintaining work and the stop ---------- */
 say('The maintaining work (05 06 01-02) and the stop work, fully wound');
 {const Tm=Tf;
-  /* the maintaining spring 05 06 01-1: a ring Ø 32.3, 2 wide radially, 1.35 thick, strip steel hardened in oil and blued; carrying the running torque between its pins on
-     r 14.2 as a ring loaded at its ends, the moment up to 2 F r = 2 T at the section opposite (the curved beam's 1 - cos φ) */
-  line('the maintaining spring (2 × 1.35 ring), carrying the drive',`${f(Tm*1000,0)} mN·m`,6*2*Tm/(1.35e-3*(2e-3)**2),P(STEEL_Y),'hardened spring steel\'s yield (it flexes once a wind)');
+  /* the maintaining spring 05 06 01-1 (wempe_sustaining.js): closed by the drive, its ends nearly meeting, so it carries the drive by its bend; its stress from its drawn
+     section at the strongest drive, the moment along the bent band from the force on the eye's pin (until 16 October 2026 taken as 2 T at the section opposite) */
+  const SU=require('./wempe_sustaining.js').spring;
+  line('the maintaining spring (Ø 32.3, 2-4 × 1.3), its most',`${f((SU.banked?SU.Tb:SU.Tmax)*1000,0)} mN·m`,SU.sig*MPa,P(STEEL_Y),'hardened spring steel\'s yield (it flexes once a wind)');
   /* while winding the maintaining detent holds the ratchet 05 06 02-1 (brass, 120 teeth Ø 37.25, 0.7 deep, the plate 1.02) against the spring: a tooth in bending */
   const Fr=Tm/((37.25/2-0.35)/1000),pit=Math.PI*37.25/120;
   line('the maintaining ratchet\'s tooth under the detent (brass)',`${f(Fr,1)} N`,6*Fr*0.7e-3/(1.02e-3*(pit*1e-3)**2),P(BRASS_Y),'brass\'s yield (once a wind)');
