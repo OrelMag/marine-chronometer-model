@@ -2407,13 +2407,17 @@ const CONTACTS=(()=>{
    mv.traverse(o=>{if(!o.isMesh||o.userData.ctDebug)return;const g=o.geometry,u=o.userData;if(!g||!g.attributes||!g.attributes.position||g.attributes.position.count<3||u.decal||u.surface)return;
      if(!anc(o)||!(o.visible||keep(o)))return;const m=u.mat0||o.material,tube=g.type==='TubeGeometry';
      if(!tube&&!o.isInstancedMesh&&(m.transparent||m.side===THREE.DoubleSide||u.noCap||u.noShadow))return;
-     const part=u.part||partOf(o),pk=u.pk||part;if(only&&part!==only)return;const name=part+':'+g.type.replace('Geometry','')+(tube?'(tube)':'');
+     const part=u.part||partOf(o),pk=u.pk||part;if(only&&part!==only)return;const name=part+':'+g.type.replace('Geometry','')+(tube?'(tube)':'')+(u.barrelWall?'(drum)':'');
+     if(u.barrelWall){out.push({o,inst:-1,part,pk,name,ver:0,geo:drum(o)});return;}   /* the Hamilton's barrel wall, an open turned wall: as fine-interference.js tests it, the solid it encloses over its height */
      if(o.isInstancedMesh)for(let i=0;i<o.count;i++)out.push({o,inst:i,part,pk,name,ver:0});else out.push({o,inst:-1,part,pk,name,ver:0});});
    return out;}
+ const DRUM=new WeakMap();
+ function drum(o){const g=o.geometry;let d=DRUM.get(g);if(d)return d;g.computeBoundingBox();const bb=g.boundingBox,R=o.userData.barrelWall;d=new THREE.CylinderGeometry(R,R,bb.max.y-bb.min.y,72);d.translate(0,(bb.max.y+bb.min.y)/2,0);DRUM.set(g,d);return d;}
  const xf=(it,inv)=>{const Mo=new THREE.Matrix4().multiplyMatrices(inv,it.o.matrixWorld),Mt=Mo.clone();if(it.inst>=0){it.o.getMatrixAt(it.inst,M4);Mt.multiply(M4);}return[Mo,Mt];};
  const pver=it=>{const g=it.o.geometry;return g.attributes.position.version*1e6+(g.index?g.index.version:0);};
  /* an item's solid in mv's frame (P, its box, its triangles' boxes); false if it hasn't moved or changed since it was last placed */
- function place(it,inv){const g=it.o.geometry,pv=pver(it),[Mo,Mt]=xf(it,inv);if(it.g===g&&it.pv===pv&&it.Mt&&it.Mt.equals(Mt))return false;
+ function place(it,inv){const g=it.geo||it.o.geometry,pv=pver(it),[Mo,Mt]=xf(it,inv);if(it.g===g&&it.pv===pv&&it.Mt&&it.Mt.equals(Mt))return false;   /* g: the solid tested (the drum for a barrel wall) */
+  
    it.g=g;it.pv=pv;it.pc=pv;it.Mt=Mt;it.Mc=Mt;it.Moi=Mo.clone().invert();it.ver++;const p=g.attributes.position,T=tris(g),nt=T.length/3,P=new Float64Array(p.count*3),bb=[1e9,1e9,1e9,-1e9,-1e9,-1e9];
    for(let i=0;i<p.count;i++){V.fromBufferAttribute(p,i).applyMatrix4(Mt);P[3*i]=V.x;P[3*i+1]=V.y;P[3*i+2]=V.z;for(let a=0;a<3;a++){const c=P[3*i+a];if(c<bb[a])bb[a]=c;if(c>bb[a+3])bb[a+3]=c;}}
    const TB=new Float64Array(nt*6);for(let t=0;t<nt;t++)for(let a=0;a<3;a++){const x=P[3*T[3*t]+a],y=P[3*T[3*t+1]+a],z=P[3*T[3*t+2]+a];TB[6*t+a]=Math.min(x,y,z);TB[6*t+a+3]=Math.max(x,y,z);}
@@ -2477,9 +2481,9 @@ const CONTACTS=(()=>{
      if(performance.now()-t0>30){status('Finding contacts inside '+E.name(p)+'…');await yieldF();if(tok!==S.tok)return;t0=performance.now();}}
    }finally{if(within==null&&tok===S.tok)holdOff();}if(!b0)S.busy='';S.prog='';}
  /* while a scan runs the model stands assembled (its explode held at 0: contacts are found on the parts as they go together, and carried out with them), and while the
-    sweep poses the model the page's own loop doesn't (its update held) */
- function holdOn(upd){const ud=E.mv.userData;if(S.hold)return;S.hold={u:ud.update,x:ud.explode};if(ud.explode){ud.explode(0);ud.explode=()=>{};}if(upd&&ud.update)ud.update=()=>{};}
- function holdOff(){if(!S.hold)return;const ud=E.mv.userData;ud.update=S.hold.u;ud.explode=S.hold.x;S.hold=null;E.wake();}
+    sweep poses the model the page's own loop doesn't (its update held); the Hamilton's laid-out view (develop) held as the explode */
+ function holdOn(upd){const ud=E.mv.userData;if(S.hold)return;S.hold={u:ud.update,x:ud.explode,d:ud.develop};for(const k of['explode','develop'])if(ud[k]){ud[k](0);ud[k]=()=>{};}if(upd&&ud.update)ud.update=()=>{};}   /* develop: the Hamilton's laid-out train */
+ function holdOff(){if(!S.hold)return;const ud=E.mv.userData;ud.update=S.hold.u;if(S.hold.x)ud.explode=S.hold.x;if(S.hold.d)ud.develop=S.hold.d;S.hold=null;E.wake();}
  const pickPart=()=>E.st.pick?E.st.pick.split('.')[0]:null;
  const isPick=it=>!!E.st.pick&&(it.pk===E.st.pick||it.part===E.st.pick);
  /* the pairs after the filters (hidden parts, the pick), grouped by the two pieces (or parts) they join */
@@ -2539,7 +2543,7 @@ const CONTACTS=(()=>{
  function frame(now){if(!S.on||S.busy||S.mode!=='now'||now-S.chk<250||E.exploded())return;S.chk=now;const mv=E.mv;mv.updateMatrixWorld(true);
    const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert(),I=collect(mv,E.hid);
    if(I.length!==S.items.length||I.some((it,i)=>it.o!==S.items[i].o||it.inst!==S.items[i].inst)){S.quiet=now;S.stale=true;S.items=[];S.chk=now+150;setTimeout(()=>{if(S.on&&!S.busy)scanNow(true);},400);build();return;}
-   let moving=false,moved=false;for(const it of S.items){const Mt=xf(it,inv)[1],pv=pver(it);if(!it.Mc.equals(Mt)||it.pc!==pv){moving=true;it.Mc=Mt;it.pc=pv;}if(!it.Mt.equals(Mt)||it.pv!==pv||it.g!==it.o.geometry)moved=true;}
+   let moving=false,moved=false;for(const it of S.items){const Mt=xf(it,inv)[1],pv=pver(it);if(!it.Mc.equals(Mt)||it.pc!==pv){moving=true;it.Mc=Mt;it.pc=pv;}if(!it.Mt.equals(Mt)||it.pv!==pv||it.g!==(it.geo||it.o.geometry))moved=true;}
    if(moving)S.quiet=now;if(moved&&!S.stale){S.stale=true;build();}if(moved&&!moving&&now-S.quiet>=400)scanNow(false);}
  function hashWrite(h){if(!S.on)return;h.set('contacts',S.mode==='sweep'?'sweep':1);if(S.inside)h.set('ctin',1);if(S.eps!==EPS0)h.set('ceps',S.eps);}
  function hashRead(g){const c=g('contacts'),e=+g('ceps');const eps=EPS.includes(e)?e:EPS0,inside=g('ctin')==='1',mode=c==='sweep'?'sweep':'now';
