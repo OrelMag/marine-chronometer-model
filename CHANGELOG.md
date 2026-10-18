@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.14.01 · 2026-10-18
+- The Wempe's upper balance endstone is now drawn as a clear stone, as photographs of real ones show
+
+## 3.14.00 · 2026-10-18
+- The Wempe: a second finish under Variants, plain brass, beside the hammered gilt of Wempe No. 3955
+- The Hamilton: one of the pillars beside the balance cock moved about a degree, to where videos of real Model 21s show it
+
 ## 3.13.02 · 2026-10-18
 - Ship motion: the chronometer now stays still in its gimbals while the box rolls and pitches round it, on both models and in the Blender exports' At sea clip
 - The Wempe: the cover plate's screw seated on its countersink, the upper balance jewel's settings meeting, and as first drawn the hairspring's outer end following the slant of its stud's slot
