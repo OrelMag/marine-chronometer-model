@@ -397,6 +397,17 @@ Contents:
   bounded at 0.137 mm, where no preload is left) follow it; `TF` 67 s (Q 421) so the calibrated torque is the spring's again.
   Keep: the preload is `W78`'s moment less `KD`·`th78`, never the weight alone; a spring's stiffness and its preload move
   together. `9b55881`
+- **The Wempe's upper balance jewel's two settings stood 0.03 apart.** The hole jewel's setting ended at its stone's face, 0.03 under
+  the endstone's setting, so the stack in the cock's seat was 2.77 against U30's 2.8 and the endstone's setting hung from its two screws
+  (the Contacts view, Inside the part, 18 October 2026: the pieces close, never touching). The setting now runs up to the endstone's,
+  its stone 0.03 under its face, as the lower jewel's always was and the coloured section draws both. Keep: the settings meet; only the
+  stones stand 0.03 apart. `6aeb4f46`
+- **The Wempe's hairspring cut 0.033 into its stud's slot wall as first drawn.** In the versions whose balance stands 0.3 higher (first
+  drawn, 1943, Wempe 3955, the 6MX) the spring's outer end met the stud's slot 0.3 higher, where the upright's 8° lean brings the
+  slot's inner wall 0.042 further out; the end stayed where the last state puts it (the Contacts view: hairspring and stud overlapping,
+  not expected, in four of five versions; fine.py, run on each, drops an overlap under 0.0005 mm³). The drawn outer curve is now formed out by 0.3 tan 8°
+  over its last stretch in those versions, the stud's pin with it. Keep: the spring's end and pin follow the slot's lean wherever the
+  balance's height moves them; the physics' curve (HSP) is 05 03_7's in every version. `2c758a49`
 
 ## Going train and heights
 
@@ -1367,6 +1378,9 @@ Contents:
   the fusee wheel's hub, a pipe r 2.87 (Op. 20 greases "the outside of the hub"; Fig. 71 assembles them together), and the winding ratchet's bore,
   confirmed at 23:30 (r 2.31, no hub), comes off the straight collar's lower end, its screws ahead of it (`UP` in overhaul.js). Keep: nothing on the
   arbor below the winding ratchet wider than its bore. `79cfc2f`
+- **The Wempe's cover plate screw (WN-20) held nothing.** Its 90° head, Ø 3.1, was drawn flush in the plate's sink, which 05 06 00-4 cuts
+  to Ø 3.1 +0.1 (drawn 3.15): the head stood 0.025 off the sink all round (the Contacts view, Inside the part, 18 October 2026: the
+  plate and its screw close, never touching). Seated, 0.025 under the face. Keep: a countersunk head bears on its sink. `6aeb4f46`
 
 ## Plates, bridges, screws and arbors
 
@@ -3155,4 +3169,5 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+- **`wempe-bom-3955` could run beside another `bom.py` step, and `wempe-fine-3955` ran outside the browser lane** (Build, tools and docs): `ci.py`'s `BROWSER` and `EXCL` were hand-written lists, and the two steps added for Wempe 3955 weren't in them, so `wempe-bom-3955` could write `tools/r_bom.json` while another `bom.py` step wrote it too, and both 3955 steps counted against `--jobs` instead of `--browsers`. Now both sets are worked out from the steps' commands (every `bom.py` step in `EXCL`'s `r_bom.json`; every `fine.py`, `bom.py`, `maintaining.py`, `gltf_check.py`, `blender_check.py` step of the full tier, and `fea`, in `BROWSER`). Keep: a new version's steps need no entry in those sets.
 - **holecheck.py failing now and then on the fusee's hole 42021** (Build, tools and docs): the hole turns with the fusee, which stood where the page's clock put it as it loaded, so between runs it wandered 0.6 mm round (x 16.95-17.45), past its EXPECTED entry's 0.4: a run failed or passed by when it loaded (seen on 3.03.00's main, 16 October 2026). Frozen as audit.py freezes the model (placements.py's first state), it still stood in one of two places 0.74 mm apart: the fusee's catch on its ratchet is state `update()` keeps from call to call. Fixed: holecheck.py freezes the model first, and the entry gives the hole by its distance from the fusee's axis (`L.Fu`, 4.264 mm) and its height, at any angle; such an entry must be found empty (its twin at the same radius, the first tapped hole, holds the stop-bar spring's end). Keep: an EXPECTED entry on a part that turns says where it is about its axis, not in the movement's frame.
