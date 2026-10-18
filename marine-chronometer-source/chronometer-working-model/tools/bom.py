@@ -35,6 +35,9 @@ IN={'tap':(0.4,-0.03,0.35),'clear':(0.1,0.0,9),'run':(0.1,0.003,0.06),'free':(0.
 # (the part is an extrusion or a turned solid that can't be holed across: the balance rim, the detent's block and foot, the fusee arbor), so inside its metal
 ENDSHAKE=(0.0254,0.0762)
 D=[]   # known deviations met (bom.json 'dev'): printed, not failed
+def revIn(lst,v):   # a version list holds v: the Wempe's movement.js revShows ('3955', Wempe 3955 as photographed, falls back to 'first' unless the list says '-3955')
+    L=lst.split();return v in L or (v=='3955' and 'first' in L and '-3955' not in L)
+
 def qty_ok(q,n):
     if isinstance(q,list):return q[0]<=n<=q[1]
     if isinstance(q,int):return n==q
@@ -64,7 +67,7 @@ async def run(evl):
 def judge(res,sp):
     L={l['id']:l for l in BOM['lines']};F=[];ok=lambda c,m:None if c else F.append(m)
     # counts
-    cur=res.get('rev') or 'last';inv=lambda l:l.get('rev') is None or cur in l['rev'].split()   # a line with 'rev' is in those versions only (the Wempe's setRev: its 6MX's jewels), elsewhere none
+    cur=res.get('rev') or 'last';inv=lambda l:l.get('rev') is None or revIn(l['rev'],cur)   # a line with 'rev' is in those versions only (the Wempe's setRev: its 6MX's jewels), elsewhere none
     for l in BOM['lines']:
         n=res['counts'].get(l['id'],0);q=l['qty'] if inv(l) else 0
         if l['kind'] in('part','jewel'):ok(qty_ok(q,n),f"count {l['id']} ({l['name']}): model {n}, manual {q}")
@@ -77,7 +80,7 @@ def judge(res,sp):
     D.clear()
     for r in res['rel']:
         tag=f"{r['kind']} {r['id']}#{r['i']} -> {r['tgt']}"+(f" ({r['how']})" if r.get('how') else '')
-        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst'] and (d.get('rev') is None or res.get('rev') in d['rev'].split())]   # a 'rev' entry only in the versions it lists (the Wempe's setRev: 'first', '6mx', 'last 6mx')
+        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst'] and (d.get('rev') is None or revIn(d['rev'],res.get('rev')))]   # a 'rev' entry only in the versions it lists (the Wempe's setRev: 'first', '6mx', 'last 6mx')
         if dv:D.append(f"{tag}: {dv[0]['why']}");continue   # a known deviation, reported with its reason
         if r.get('err'):F.append(f"{tag}: {r['err']}");continue
         if r['kind'] in('in','round'):

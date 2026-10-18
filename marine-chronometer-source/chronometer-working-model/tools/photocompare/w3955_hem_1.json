@@ -1,0 +1,70 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/9_Wempe_3955_Hemmung.jpg",
+ "rev": "3955",
+ "hash": "wind=55.9",
+ "only": [
+  "escapeWheel"
+ ],
+ "look": [
+  0.5,
+  0.38,
+  220,
+  -11.783,
+  -9,
+  21.743,
+  15
+ ],
+ "points": {
+  "escape arbor's upper pivot, tip": {
+   "xyz": [
+    -11.783,
+    -21.0,
+    21.743
+   ],
+   "uv": [
+    364.5,
+    47.5
+   ]
+  },
+  "escape arbor's lower pivot, tip": {
+   "xyz": [
+    -11.783,
+    3.29,
+    21.743
+   ],
+   "uv": [
+    362,
+    358
+   ]
+  }
+ },
+ "circles": {
+  "escape wheel's tips (Ø 14, mid-thickness), extremes traced": {
+   "c": [
+    -11.783,
+    -18.8,
+    21.743
+   ],
+   "r": 7.0,
+   "uv": [
+    [
+     264,
+     85
+    ],
+    [
+     467.5,
+     85
+    ],
+    [
+     365,
+     120
+    ],
+    [
+     365,
+     57
+    ]
+   ]
+  }
+ },
+ "fix_f": 2700
+}

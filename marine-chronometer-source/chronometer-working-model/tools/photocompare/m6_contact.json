@@ -1,0 +1,96 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx-gallery/leben-des-6mx/10_Kirow_247_E-Kontakt_1.jpg",
+ "rev": "6mx",
+ "hash": "dial=kirov&wind=55.9",
+ "look": [
+  2.75,
+  0.05,
+  120,
+  14,
+  -8,
+  34,
+  20
+ ],
+ "points": {
+  "block 52 screw at 182.9 (6MX.cts), head top": {
+   "xyz": [
+    2.17,
+    -8.8,
+    42.85
+   ],
+   "uv": [
+    906,
+    416
+   ]
+  },
+  "block 52 screw at 193.3 (6MX.cts), head top": {
+   "xyz": [
+    10.03,
+    -8.8,
+    42.12
+   ],
+   "uv": [
+    655,
+    422
+   ]
+  },
+  "block 57 screw at 214.6 (6MX.cts), head top": {
+   "xyz": [
+    24.36,
+    -8.8,
+    35.31
+   ],
+   "uv": [
+    288,
+    390
+   ]
+  },
+  "block 57 screw at 226.0 (6MX.cts), head top": {
+   "xyz": [
+    30.86,
+    -8.8,
+    29.8
+   ],
+   "uv": [
+    120,
+    354
+   ]
+  },
+  "pillar 39 at the top plate's inner face (axis; silhouette 667-860)": {
+   "xyz": [
+    6.477,
+    -19.0,
+    36.733
+   ],
+   "uv": [
+    763,
+    148
+   ]
+  }
+ },
+ "circles": {
+  "top plate inner-face rim (front, traced)": {
+   "c": [
+    0,
+    -19.0,
+    0
+   ],
+   "r": 42.494,
+   "n": [
+    0,
+    1,
+    0
+   ],
+   "uv": [
+    [
+     500,
+     143
+    ],
+    [
+     900,
+     142
+    ]
+   ]
+  }
+ }
+}

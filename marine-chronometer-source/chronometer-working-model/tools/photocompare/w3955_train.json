@@ -1,0 +1,197 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/8_Wempe_3955_Räderwerk_plus.jpg",
+ "rev": "3955",
+ "hash": "wind=55.9",
+ "hide": [
+  "topPlate",
+  "barrelBridge",
+  "barrel",
+  "barrelArbor",
+  "setupRatchet",
+  "mainspring",
+  "chain",
+  "upperCock",
+  "lowerCock",
+  "balance",
+  "hairspring",
+  "stud",
+  "rollers",
+  "detent",
+  "detentBlock",
+  "balanceJewelsUp",
+  "escEndstoneUp",
+  "escJewelUp",
+  "dustBush",
+  "fuseeBush",
+  "corkRing",
+  "balanceJewelsLow",
+  "dustPlate",
+  "maintDetent"
+ ],
+ "look": [
+  3.5015899999999998,
+  0.85,
+  330,
+  0,
+  -10,
+  0,
+  20
+ ],
+ "points": {
+  "ring screw by 12 (WN-rs), head's top": {
+   "xyz": [
+    15.22,
+    -3.05,
+    -41.816
+   ],
+   "uv": [
+    500,
+    123
+   ]
+  },
+  "ring screw by 9 (WN-rs), head's top": {
+   "xyz": [
+    -43.824,
+    -3.05,
+    7.727
+   ],
+   "uv": [
+    836,
+    518
+   ]
+  },
+  "ring screw by 5 (WN-rs), head's top": {
+   "xyz": [
+    28.604,
+    -3.05,
+    34.089
+   ],
+   "uv": [
+    155,
+    519
+   ]
+  },
+  "centre arbor's upper pivot": {
+   "xyz": [
+    0,
+    -21.965,
+    0
+   ],
+   "uv": [
+    493,
+    264
+   ]
+  },
+  "intermediate arbor's upper pivot": {
+   "xyz": [
+    9.91,
+    -21.92,
+    15.17
+   ],
+   "uv": [
+    360,
+    328
+   ]
+  },
+  "seconds arbor's upper pivot": {
+   "xyz": [
+    0,
+    -21.975,
+    23
+   ],
+   "uv": [
+    412,
+    398
+   ]
+  },
+  "escape arbor's upper pivot": {
+   "xyz": [
+    -11.783,
+    -21,
+    21.743
+   ],
+   "uv_check": [
+    508,
+    413
+   ]
+  },
+  "escape arbor's lower jewel, train face": {
+   "xyz": [
+    -11.783,
+    -3.35,
+    21.743
+   ],
+   "uv_check": [
+    519,
+    551
+   ]
+  },
+  "fusee arbor's square, top": {
+   "xyz": [
+    -16.708,
+    -48.025,
+    -15.292
+   ],
+   "uv_check": [
+    683.5,
+    81
+   ]
+  },
+  "top-plate screw (WN-57) in pillar at 12, head's top": {
+   "xyz": [
+    6.425,
+    -25.1,
+    -36.437
+   ],
+   "uv": [
+    560,
+    28
+   ]
+  },
+  "top-plate screw (WN-57) in pillar at 9, head's top": {
+   "xyz": [
+    -36.858,
+    -25.1,
+    3.225
+   ],
+   "uv": [
+    794,
+    347
+   ]
+  },
+  "top-plate screw (WN-57) in pillar by 5, head's top": {
+   "xyz": [
+    18.5,
+    -25.1,
+    32.043
+   ],
+   "uv": [
+    229,
+    391
+   ]
+  }
+ },
+ "circles": {
+  "pillar plate rim, train face (front)": {
+   "c": [
+    0,
+    -3.35,
+    0
+   ],
+   "r": 42.494,
+   "snap": {
+    "arcs": [
+     [
+      40,
+      75
+     ],
+     [
+      95,
+      140
+     ]
+    ],
+    "win": 6
+   }
+  }
+ }
+}

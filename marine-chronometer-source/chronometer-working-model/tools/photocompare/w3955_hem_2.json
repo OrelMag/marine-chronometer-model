@@ -1,0 +1,99 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/9_Wempe_3955_Hemmung.jpg",
+ "rev": "3955",
+ "hash": "wind=56",
+ "only": [
+  "balance",
+  "hairspring",
+  "rollers"
+ ],
+ "look": [
+  2.3,
+  -0.75,
+  190,
+  -9.1,
+  -24,
+  12.1,
+  15
+ ],
+ "points": {
+  "balance staff's lower pivot, tip (050402-1)": {
+   "xyz": [
+    -9.1,
+    -9.97,
+    12.11
+   ],
+   "uv": [
+    664,
+    147
+   ]
+  },
+  "timing weight (050301-3), upper left: end face's centre": {
+   "xyz": [
+    -9.1,
+    -25.25,
+    32.36
+   ],
+   "uv": [
+    499,
+    179
+   ]
+  },
+  "mass (050301-4) at the top: roller-side face's centre (its D-shaped face completed by eye)": {
+   "xyz": [
+    -22.697,
+    -23.1,
+    19.96
+   ],
+   "uv": [
+    747,
+    82
+   ]
+  },
+  "mass (050301-4) upper right: face's centre (by eye)": {
+   "xyz": [
+    -22.697,
+    -23.1,
+    4.26
+   ],
+   "uv": [
+    912,
+    155
+   ]
+  },
+  "timing weight (050301-3), right: end face's centre": {
+   "xyz": [
+    -9.1,
+    -25.25,
+    -8.14
+   ],
+   "uv": [
+    990,
+    390
+   ]
+  },
+  "mass (050301-4) at the bottom: face's centre (by eye)": {
+   "xyz": [
+    4.497,
+    -23.1,
+    4.26
+   ],
+   "uv": [
+    695,
+    460
+   ]
+  },
+  "mass (050301-4) lower left: face's centre (by eye)": {
+   "xyz": [
+    4.497,
+    -23.1,
+    19.96
+   ],
+   "uv": [
+    505,
+    375
+   ]
+  }
+ },
+ "fix_f": 2700
+}

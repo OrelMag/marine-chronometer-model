@@ -1,0 +1,19 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/16_Wempe_3955_Gehäusetopf_Kardan.jpg",
+ "rev": "3955",
+ "hash": "wind=56",
+ "case": true,
+ "only": [
+  "bowl",
+  "gimbalRing"
+ ],
+ "look": [
+  4.96238898038469,
+  -0.85,
+  800,
+  0,
+  640,
+  0,
+  15
+ ]
+}
