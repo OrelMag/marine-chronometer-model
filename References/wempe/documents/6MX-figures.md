@@ -260,3 +260,20 @@ The materials of the 6MX's hairspring and balance are not stated in any of the d
 | Contacts (1954) | п. 13–14: контактное колесо 60 зубцов … 60-й зуб срезан → интервал 1,5 с на минуте; ток ≤ 5–7 мА | A 60-tooth contact wheel on the seconds arbor; the 60th tooth is cut away, which marks the minute with a 1.5 s gap; ≤ 5–7 mA | — | 1954 pp. 7–8 | likely |
 | Maintenance (1954) | п. 19: чистка и свежее масло каждые три года | Clean and re-oil every three years | 3 years | 1954 p. 9 | likely |
 
+
+## 8. The test cards: passports and attestats of real 6MXs
+
+The TU's (or GOST 8916's) trial figures as each chronometer's passport or attestat states them (`../photos/dg-chrono-6mx-gallery/bilder-zum-6mx/`, Altmeppen's scans), in seconds a day, losing positive as the TU counts. Read on 16 October 2026 (the estimates survey, PLAN-wempe-estimates.md's Physics appendix); 09218, 20027 and 22823 read again on 18 October 2026 and agreeing. The model's scatter and drift are calibrated on their E and R, its secondary error checked against their S (`tools/wempe_errorbudget.js`, `tools/wempe_thermal.js`).
+
+| Chronometer | Date | Files | E | R | D | C | S | ω max | N | Note |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Kirov 1564 | 1955 | `13_…16_Kirow_1564_Attestat_*` | ±0.119 | −1.66 | 0.67 | −0.004 | +0.74 | | | attestat; the trial wound "from 32 to 8 hours by the up-and-down dial" (заводка … от 32 до 8 часов по счетчику завода) |
+| Kirov 308 | 1953 | `1_2`, `1_3_Kirow_308` | ±0.143 | −0.78 | 0.58 | −0.087 | +0.235 | | | under the older 32/18/4 °C trial |
+| Kirov 707 | 1973 | `2_2`, `2_3_Kirow_707` | ±0.25 | +0.02 | 0.78 | −0.065 | +1.06 | | | |
+| Poljot 09218 | 7 May 1984 | `11_`, `12_`, `13_Poljot_09218_Pasport_*` | ±0.20 | +0.24 | −0.83 | +0.01 | +0.83 | −0.81 | 12 | GOST 8916-77; period means +0.41, −0.14, +0.20, −0.81, +0.65; deviations' sum 5.29/25 |
+| Kirov 22823 | 1 November 1986 | `12_Kirow_22823_Pasport_1_Gost_8916-77`, `13_Kirow_22823_Pasport_2` | ±0.2 | −0.28 | −0.73 | +0.08 | +0.79 | +1.90 | 16 | GOST 8916-77; its own table (period means −0.82, −1.79, −2.44, −2.89, −2.46; sum 7.39/25) works out E 0.30, R −1.64, C +0.025, S +0.30: not the figures stated |
+| Poljot 20027 | 1 February 1993 | `12_`, `13_Poljot_20027_Pasport_*` | ±0.25 | +0.03 | −1.29 | +0.02 | +0.60 | +1.20 | 13 | TU 25-07.1533-84 |
+| Kirov 91 | 1970 | `7_2_Kirow_91`; passport `11_`, `12_Kirow_91_Pasport*` | ±0.26 | −1.31 | | +0.093 | −1.24 | | | S an outlier |
+| Kirov 92 | 1970 | `8_2_Kirow_92`; passport `10_`, `11_Kirow_92-Pasport*` | ±0.31 | −0.06 | | +0.009 | | | | |
+
+Medians: E 0.225, |R| 0.26, D 0.755 (six); C's spread (sd) 0.062 (eight); S +0.80 ±0.17 (the five of the TU's trial, 91's left out).

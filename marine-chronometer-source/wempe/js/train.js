@@ -106,14 +106,16 @@ const WTRAIN=(()=>{
        rounded; the arbor Ø 2 -0.1 to the pinion, a 30° chamfer at the shoulder; the pinion 4.6 -0.2 long, its end 19.25 -0.1 from the shoulder; the wheel's seat Ø 4.0 n6,
        1.3 -0.1 long; the collar Ø 2 -0.1 to the dial-side shoulder at 23.05 -0.1; the pivot as the other.
        The pinion: 12 leaves, not on its sheet: from the centre distance 18.12 (05 05_1, the plates' tables) and the centre wheel's module, (2 × 18.12 - 31.976)/0.35529 =
-       12.0 (the transcription's inference, confirmed: no other count fits); its tip Ø 5.0 (scaled on 05 05 02-2 against the arbor's Ø 2: 4.9-5.2, the bar 5.2),
-       root Ø 2.75 (the centre pinion's dedendum, 2.13 m, as the sheets give no root for it: estimated).
+       12.0 (the transcription's inference, confirmed: no other count fits); its leaves cut to tip Ø 4.72, root Ø 2.87 (likely): the Ø 5.0 scaled on 05 05 02-2 (4.9-5.2,
+       the bar 5.2) is the turned head, as on the escape pinion's sheet, which alone gives a pinion's cut figures (05 04_8: head Ø 3.13, tip D 2.97, root dg 1.6 for z 10,
+       m 0.263, so the head d + 1.89 m, the tip d + 1.28 m, the root d - 3.93 m): its head here d + 1.89 m = 4.93, against the 5.0 scaled; the tip and root by the same cutter's
+       proportions. Until 18 October 2026 the tip the head's 5.0 and the root 2.75 (the centre pinion's 2.13 m dedendum: estimated).
        The wheel (05 05 02-1): z 80, m 0.280 (d 22.453, so 0.28066), tip 23.33, root 21.57, l 0.40, 1.0 -0.1 thick at the rim, five spokes 1.3 -0.2, hub 7.5 -0.1, rim's
        inside 19.3 +0.2, hole 4 H7; its hub 1.2 (the sheet's metal) standing 0.2 proud on the dial side, turned to Ø 7 there (05 05 02: "0,2", "7∅") */
     tw:{at:H[38],ys:TI+0.03,
       prof:[...piv(0.825/2,(0.825-2.95/90)/2,2.95,-1),[1.95/2-C30,0],[1.95/2,c30],[1.95/2,19.2],[4.0/2,19.2],[4.0/2,20.45],[1.95/2,20.45],[1.95/2,23.0-c30],[1.95/2-C30,23.0],
         ...piv(0.825/2,(0.825-2.95/90)/2,2.95,1,23.0)],
-      pin:{z:12,m:4.264/12,D:5.0,dg:2.75,u0:19.2-4.5,u1:19.2},
+      pin:{z:12,m:4.264/12,D:4.264+1.28*4.264/12,dg:4.264-3.93*4.264/12,u0:19.2-4.5,u1:19.2},
       wheel:{z:80,m:22.453/80,D:23.33,dg:21.57,l:0.40,mate:10,rim:[19.2,20.15],boss:[20.15,20.35,7/2],spokes:[5,1.2,7.45/2,19.4/2],bore:4.0/2}},
     /* the seconds arbor, 05 05 01 (Sekundenrad kompl., 27.7.40): its pinion and arbor 05 05 01-2 (Sekundentrieb, Präz. Rundstahl 3,5, redrawn 6.46, revised 24.3.48) and the
        wheel 05 05 01-1 (Sekundenrad, Messingblech 1,2 Ms 58 federhart) riveted on it. From the dial-side shoulder (05 05 01-2): the pivot Ø 0.76 -0.02 at its root, 0.65 at
@@ -122,13 +124,15 @@ const WTRAIN=(()=>{
        the arbor Ø 1.55 -0.1 (a) to the train-side shoulder at 24.1 -0.1, a 30° chamfer there; the pivot Ø 0.82 -0.02, 3 long (05 05 01: the pinion sheet's 4.5 is the
        blank's), "Kegel 1:90", rounded.
        The pinion: 10 leaves, not on its sheet: from the centre distance 12.63 and the intermediate wheel's module, (2 × 12.63 - 22.453)/0.28066 = 10.0 (the
-       transcription's inference, confirmed); tip Ø 3.4 (scaled on 05 05 01-2: 3.36-3.57, the bar 3.5), root Ø 1.61 (the centre pinion's 2.13 m: estimated).
+       transcription's inference, confirmed); its leaves cut to tip Ø 3.17, root Ø 1.70 (likely): the escape pinion's proportions (05 04_8, above at the intermediate; the
+       same z 10, so its tip and root scaled by the pitch diameters), the Ø 3.4 scaled on 05 05 01-2 (3.36-3.57, the bar 3.5) being the turned head (d + 1.89 m = 3.34).
+       Until 18 October 2026 the tip the head's 3.4 and the root 1.61 (the centre pinion's 2.13 m: estimated).
        The wheel (05 05 01-1): z 80, m 0.263 (d 21.066, so 0.26333), tip 21.9, root 20.23, l 0.38, 1.0 ±0.03 thick at the rim, five spokes 1.3 -0.2, hub 6.5 -0.2, rim's
        inside 18.3 +0.2, hole 2.6 H7; its hub 1.2 (the sheet's metal) standing 0.2 proud on the pinion's side (05 05 01: "0,2" over the wheel's face under the pinion, the
        hub's "6∅"), so its rim clears the intermediate pinion's end by 0.05 (0.055 as drawn) */
     sw:{at:H[35],ys:TI+0.025,
       prof:[...piv(0.81/2,(0.81-3/90)/2,3,-1),[1.5/2-C30,0],[1.5/2,c30],[1.5/2,13.6],[2.6/2,13.6],[2.6/2,14.85],[1.5/2,14.85],[1.5/2,24.05],[0.75/2,24.05],[0.65/2,33.15],[0.65/2-0.1,33.25],[0,33.25]],
-      pin:{z:10,m:2.807/10,D:3.4,dg:1.61,u0:14.85,u1:24.05-2.2},
+      pin:{z:10,m:2.807/10,D:2.807+1.28*2.807/10,dg:2.807-3.93*2.807/10,u0:14.85,u1:24.05-2.2},
       wheel:{z:80,m:21.066/80,D:21.9,dg:20.23,l:0.38,mate:10,rim:[13.65,14.65],boss:[14.65,14.85,6/2],spokes:[5,1.2,6.4/2,18.4/2],bore:2.6/2}}};
 
   function build(mv,M,K){const{part}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
@@ -152,8 +156,10 @@ const WTRAIN=(()=>{
     /* the top plate's brass bushes (Messinglager, 05 08 01: WN-301 at 1, WN-300 at 35 and 38; the coloured section names them): pressed into its holes reamed 4.59 +0.012
        (05 09 01), flush with both faces (05 08 01's Schnitt A-B draws the one at 35 so), the oil sink in the outer face (Wempe 3955, 12_…oben). Bores: the pivots' and 0.01-0.02
        (a close running fit, "Lagerstellen: Enger Laufsitz", 05 05_1): WN-301 Ø 1.21 for the centre's 1.19, WN-300 Ø 0.86 for the intermediate's 0.825 and the seconds' 0.81
-       (one standard bush for both, opened to the larger: estimated). The WN sheets aren't in the set: their sizes beyond the hole are estimated */
-    const rJ=4.596/2,sk={f:-1,rs:2.0,ds:1.2},rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};   /* rv: a group of one version's pieces (movement.js's setRev) */
+       (one standard bush for both, opened to the larger: estimated). The WN sheets aren't in the set: their sizes beyond the hole are estimated. The oil sinks run out to the
+       bush's rim, no flat round them: Ø 4.69, 4.46 and 4.60 at 1, 38 and 35 on Wempe 3955's top plate (12_…obere_Platte_oben, 11.52 px/mm by the bushes' places), taken Ø 4.55
+       (sure that no flat shows, likely on the size; ±0.15); their depth, 1.2, estimated. Until 18 October 2026 Ø 4.0 with a 0.3 flat round it (estimated) */
+    const rJ=4.596/2,sk={f:-1,rs:4.55/2,ds:1.2},rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};   /* rv: a group of one version's pieces (movement.js's setRev) */
     /* ================= the Soviet 6MX's electrical seconds contact (WD.CONTACT6: its sources and how sure each is) =================
        Romanov 1975 (p. 105, Figs. 100-101; p. 209): on the pillar plate's inner face a gilt base 58 carries two gilt blocks 52 (+) and 57 (−) on fibre 68 and bushes 67;
        the lever 60 on its jewelled staff 69, a flat spiral 59 (the lead from block 52's stud 53, which also returns it) holding its contact screw 54 on the disc 55 on block 57;
