@@ -1367,7 +1367,6 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
-<<<<<<< HEAD
 - **The upper train bridge's and barrel bridge's holes were their size only at the faces** (18 October 2026, found
   with the Contacts view: their screws' threads stood 0.08-0.09 mm off the train bridge where every other
   tapped hole leaves 0.02). `polyGeo`'s bevel (0.22 and 0.25 mm on those two plates, the only bevelled ones)
@@ -1381,7 +1380,6 @@ Contents:
   bevel's face rings back on the hole's outline, so each runs straight through (measured: r 1.405 tapped,
   1.561 clear, 3.15, the whole depth). Keep: a bevel rounds a plate's outer edges only; a hole in it is its
   drawn size from face to face. `24df5b9`
-=======
 - **The 6MX's screws, ring and arbor square were the drawings', not Kirov 247's** (18 October 2026, photocompare.py on its A, N, O, S, W and uZ
   views). Its top plate and barrel bridge screws were flat gilt cheese heads (Kirov 247's: polished steel, domed), its cock, cap jewel, pillar and
   gold spring screws brass or blued (steel), its intermediate bridge's brass (blued), its change pinion brass (steel), its movement ring nickel
@@ -1397,7 +1395,6 @@ Contents:
 - **The Wempe's barrel arbor as first drawn had the 1943 arbor's square** (18 October 2026, photocompare.py on 4_Wempe_3955_N.jpg). Every
   version took 05 07 02's square, 10 with a 0.5 point; 020704-1 (1941) runs its square end 15 past the upper journal's shoulder, to the turning
   centre's cone, and Wempe 3955's tip stands at -37.6 ±0.3 (the sheet's -37.32). Keep: 'first' (and 3955) the 1941 end, the others the 1943 one. `92d5118d`
->>>>>>> origin/main
 - **The Wempe's set-up click and centre arbor read two figures wrongly.** The click's "5,7" is the thin circle about its hole, tangent
   to the base (the base 2.85 under the hole, not 2.81 scaled), and its "85" the beak's end face at 85° (82.4° built); the centre arbor's
   "1,6 −0,1" (05 05 03-2) is the wheel's seat alone, not seat and riveting collar, so the seat is 1.55 and the collar 0.255 (1.45 and 0.355).
