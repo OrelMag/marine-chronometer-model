@@ -113,6 +113,7 @@ const WCASE=(()=>{
     const prt=(par,name,y=0)=>{const g=new THREE.Group();g.userData.partName=name;g.position.y=y;par.add(g);return g;};
     /* the versions (movement.js's setRev; app.js shows each group whose rev lists the version): rv(par, 'last first 1943' or '6mx': the escapement of 1943 has the drawings' case) a group of the pieces only those versions have */
     const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};
+    const BAK=new THREE.MeshStandardMaterial({color:sc(0x15130f),metalness:0,roughness:0.32});   /* Bakelite, black, moulded and polished (Wempe 3955's bowl and gimbal ring) */
     const Y6=row=>YB-65+(row-56)*0.13215;   /* a row of Kirov 422's bowl photograph (11_Kirow_DEC_422_Gehäuse.jpg) put on the movement's frame: the 6MX's bowl, below */
 
     /* ================= the bowl (Gehäusetopf, R-05 01 00-1, 6.3.42) ================= */
@@ -140,7 +141,11 @@ const WCASE=(()=>{
       const fil=[...Array(13).keys()].map(i=>{const t=i/12*Math.PI/2;return[42+7*Math.sin(t),YB-46-7*Math.cos(t)];}).reverse();   /* the round r 7 about (42, YB − 46), from the bore's wall down to the floor */
       const pr=[[34.1,YB-65],[36.25,YB-65],[53,YB-50.5],[53,YB-23.5],[54,YB-23.5],[54,YB-12],[59,YB-12],[59,YB],[49,YB],...fil,[34.1,YB-53]];
       const lg=pr=>{const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();return smoothRev(g);};   /* each face its own normal, then smoothed round the axis only (smoothRev), so the profile's corners stay sharp */
-      tag(mesh(rv(bowl,'last first 1943'),lg(pr),M.brass),'050100-1',1);
+      tag(mesh(rv(bowl,'last first 1943 -3955'),lg(pr),M.brass),'050100-1',1);
+      /* Wempe 3955's (the version as photographed: 16_Wempe_3955_Gehäusetopf_Kardan.jpg, photocompare.py) black Bakelite, as the wartime Glashütte and Wempe bowls were, the
+         gimbal ring too; their pivot screws and knurled lock wheels brass (sure). Its profile (by eye: a narrower drum to the bottom, a rounded shoulder) not measured: the
+         sheet's kept */
+      tag(mesh(rv(bowl,'3955'),lg(pr),BAK),'050100-1',1);
       /* the Soviet 6MX's bowl (the Variants' Version, '6mx'): the same inside (the bore, its round, the bottom, the recess and its closing plate, the winding hole's seat: the
          movement is the drawings' and stands in it as drawn), turned outside to another profile, with a threaded rim for the knurled bezel (below). Its radii: the rim
          Ø 110.5, measured on Kirov 247's dial photograph (dg-chrono-6mx/1_Kirow_247_Z.jpg, in its bowl, the bezel off) by dialtrace.py's own fit of the dial (8.75 px/mm,
@@ -327,8 +332,8 @@ const WCASE=(()=>{
        (Wempe 3955's bowl, 16_Wempe_3955_Gehäusetopf_Kardan.jpg: the disc beside the bracket about Ø 19 at 6.0 px/mm by the closing plate's recess Ø 68.2, its knurl's teeth
        about 0.5 apart, the screw's end outside the ring brass; Lange 1947's at 12 and 6 the same: likely). Until 16 October 2026 a hex steel nut outside the ring, under the screw's head 3.2 off the ring */
     const rgP=prt(ringG,'gimbalRing',-YP);
-    {tag(mesh(rgP,smoothRev(solidGeo(cells([70,73.3],[[0,0],[YB-23.2,YB]]).slice(1))),M.brass),'050100-5');
-      const q=28.5/73.3,ss=ang(18/73.3/D2R);tag(mesh(rgP,solidGeo([{loop:sector(73.3,76.6,[-q,q],[-q,q]),y0:YP-8.35,y1:YP+8.35}]),M.brass),'050100-6');
+    {const rgG=smoothRev(solidGeo(cells([70,73.3],[[0,0],[YB-23.2,YB]]).slice(1))),q=28.5/73.3,ss=ang(18/73.3/D2R),brG=solidGeo([{loop:sector(73.3,76.6,[-q,q],[-q,q]),y0:YP-8.35,y1:YP+8.35}]);
+      for(const[V,mt]of[['last first 6mx 1943 -3955',M.brass],['3955',BAK]]){const g=rv(rgP,V);tag(mesh(g,rgG,mt),'050100-5');tag(mesh(g,brG,mt),'050100-6');}   /* Wempe 3955's black (above) */
       for(const s of[-1,1])tag(screw(along(rgP,[76.6*Math.cos(s*ss),YP,76.6*Math.sin(s*ss)],[-Math.cos(s*ss),0,-Math.sin(s*ss)]),0,0,0,2.4,1.6,6,1.25,M.steel),'WN-kr');
       for(const s of[-1,1]){const g=along(rgP,[0,YP,s*73.3],[0,0,-s]);tag(screw(g,0,0,0,3.5,2.8,9.8,2,M.brass),'WN-79');   /* its head on the ring's outside, its point where it was in the bracket's hole */
         tag(mesh(g,knurl(9.5,0.35,2.5,120,2),M.brass,0,3.95,0),'WN-400');   /* its face at r 69.35, where its rim meets the ring's curved inside (70 less the curve's 0.65 over its 9.5) */}}
