@@ -673,6 +673,7 @@ Contents:
 
 ## Winding and maintaining work
 
+<<<<<<< HEAD
 - **The Wempe's maintaining spring was pinned the wrong way round, and its 70 s came from a
   note read as its deflection.** fusee.js pinned the spring's eye to the fusee wheel and its other
   end to the ratchet (the ratchet's sheet turned 65° to meet it), where 05 06_4's Schnitt A-B draws
@@ -727,6 +728,16 @@ Contents:
   held by its detent), so the train now runs on it, the swing falling as it opens, and stops about
   12 minutes later with it spent (app.js `drvNow`, the lead's update). Keep: run down, the drive is
   the maintaining spring's until it is spent; a set of the wind to run down leaves it spent. `a7514671`
+=======
+- **The Hamilton's fusee stack had gaps and a hidden spring showing, and its chain ended on a pin** (Winding and maintaining work): seen side-on, the
+  sustaining ratchet (tips r 14.53, a module chosen with no source) sat 0.2 mm over a plain copper rim standing over 1.2 mm of the fusee wheel's teeth,
+  the fusee's rim 0.1 over it, and the sustaining spring and the wheel's recess showed round the ratchet; a real Model 21 (SNLqsS9wrrM 4:20-4:28,
+  KLUwI2UUCMQ 28:46, 17:39, 17:49) has the wheel toothed over its whole 2.22, the ratchet (tips r 16.55, 1.18 thick) straight on it, its teeth past the
+  fusee's large end, then the fusee's rim and a plain band (r 16.0) with a slot for the chain's hook. Keep: the stack's heights from GW_B, GW_T, GW_R,
+  SR_B, SR_T and makeFusee's LE, bandR, rimR, rimH (movement.js); the wheel's arbor wheel is the full-height toothed ring (the tools read its th);
+  the ratchet's tips from SRT and the sustaining pawl's tip from them (SPq); the chain's end pin is the hook's nose, down into the slot cut after ME.
+  The model's cone is right to the frames that read it on both edges (a right-edge reading on SNLqsS9wrrM made it 1-1.5 mm slim: an axis error). `65e2ece0`, `ca5d0794`
+>>>>>>> origin/main
 - **The Hamilton's dust seal packing rings (42054) were brown** (`M.fibre` 0x5e3818), where every photograph of a Model 21 shows them dark: black on
   2E11795's top view, slate blue-grey on 2E12055, stained olive on the oblique photograph (`photocompare.py`'s pilot on the Hamilton, 18 October 2026;
   Review-results.md). Keep: `M.fibre` dark slate and matt (0x2a2e34, roughness 0.85); it is the packing's alone. `8f44e50b`
@@ -3008,10 +3019,18 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+<<<<<<< HEAD
 - **The Wempe's maintaining spring weighed in no body** (`wempe_inertia.py`, found by `ci.py --full` on 18 October 2026 merging `claude/wempe-maintaining`): with the spring drawn bent between the ratchet and the wheel, the
   part `maintaining` has two turning groups (the ratchet, clicks and the eye's pin; the spring and its other pin), and `wempe-inertia.js` weighed only the first, so the spring (2.07 g) and its pin left
   every body and the table read 11.64 g. Fixed: the part's groups are weighed together (13.76 g, 2,277 g·mm²; the spring as now bent 431 g·mm², 467 straight). Keep: a body that is several groups is
   weighed whole; a part split into groups must not drop pieces from `wempe_inertia.json`.
+=======
+- **The Hamilton's export drove the sustaining pawl twice in Blender** (Build, tools and docs): blender_check.py failed, the rig 0.40-0.44 deg off Running at 29.98 s
+  once the sustaining ratchet was drawn its measured size. The pawl rode Run down's clip, 1,050 teeth in 720 frames, and the export's test for parts linear in
+  the escape wheel's place (a few beats from rest) took its steady ride up a tooth for a linear turn, so the rig turned it by a driver as well. Keep: the
+  pawl's own clip, Rig · ratchet (a tooth of the ratchet, played on a loop in E: the Wempe's export's), Run down and Rig · beat skipping it, the export's
+  node records carrying their part (skip and only read it: without it skip did nothing and only dropped every channel), and the pawl kept out of the linear set. `35c261e0`
+>>>>>>> origin/main
 - **The Wempe's bench took its preload's floor from the frame as it was before the banking moved.** `wempe_tolerances.js` first
   took 0.72 g at the stone (1.1 times the estimate) as the least preload, `wempe_tripping.js`'s figure while the banking stood
   under the blade; with the banking on the pipe the frame finds a held tooth's stone ringing 41 % of the depth of lock at the
