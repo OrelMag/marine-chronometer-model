@@ -227,9 +227,10 @@ const WTRAIN=(()=>{
       q=sp(1.6);hor(tag(mesh(C6L,new THREE.CylinderGeometry(1.1,1.1,0.8,6),M.steel,q[0],C6.screw54.y,q[1]),'6MX.ctn'),su);}
     /* its turn: the stone's lift off its rest as the wheel carries a tooth's slope under it (the stone's place on the wheel's teeth, s = a + c0 in degrees: the slope from the
        root, r 9.3, at 0 to the tip, 10.2, at 55 % of the 6° pitch, then the radial face), less the 0.4 it rests above the root while the screw is on the disc; the missing
-       tooth (59) lifts nothing. The stone moves out from the arbor at 0.945 of its arc, on its arm of 8.47; the teeth under its whole 0.3-wide end count */
+       tooth (59) lifts nothing. The stone moves out from the arbor by C6K a radian of the lever; the teeth under its whole 0.3-wide end count */
+    const C6K=(()=>{const a=[C6.stone[0]-C6.staff[0],C6.stone[1]-C6.staff[1]],l=Math.hypot(a[0],a[1]),q=[C6.stone[0],C6.stone[1]-23],r=Math.hypot(q[0],q[1]);return Math.abs((-a[1]*q[0]+a[0]*q[1])/(l*r))*l;})();   /* the stone's move out from the arbor for a radian of the lever (its arm's length times its arc's share along the radius) */
     const C6T=n=>n!==59,c6r=aD=>{const s2=((aD%360)+360)%360,n=Math.floor(s2/6),f=(s2-6*n)/6;return C6T(n)&&f<0.55?9.3+0.9*f/0.55:9.3;},
-      c6lift=aD=>{let L=0;for(let k=-30;k<=30;k++){const w=0.4*k/30,sf=9.7+2.4*Math.max(0,Math.abs(w)-0.15);L=Math.max(L,c6r(aD+w/9.7/D2R)-sf+0.08);}return L/(0.945*8.47);};   /* the teeth under the stone's whole end (0.3 wide, its chamfers rising 0.6 over 0.25 each side) kept 0.08 clear (the train's mesh play moves the wheel a little off the escape wheel's ratio) */
+      c6lift=aD=>{let L=0;for(let k=-30;k<=30;k++){const w=0.4*k/30,sf=9.7+2.4*Math.max(0,Math.abs(w)-0.15);L=Math.max(L,c6r(aD+w/9.7/D2R)-sf+0.08);}return L/C6K;};   /* the teeth under the stone's whole end (0.3 wide, its chamfers rising 0.6 over 0.25 each side) kept 0.08 clear (the train's mesh play moves the wheel a little off the escape wheel's ratio) */
     /* the contact wheel 62: in the seconds arbor's frame (u from its shoulder), riveted on its gilt collet; its teeth's slopes rise the way the stone runs along them (s up) */
     {const W6=C6.wheel,rt=W6.tip/2,rr=W6.root/2,c0=10.6,xy=[],P2=(r,d)=>[r*Math.cos(d*D2R),r*Math.sin(d*D2R)];
       for(let n=0;n<60;n++){const c=c0+6*n;if(C6T(n)){xy.push(P2(rr,c));for(let k=1;k<=6;k++)xy.push(P2(rr+(rt-rr)*k/6,c+3.3*k/6));xy.push(P2(rr,c+3.3+0.02));for(let k=1;k<4;k++)xy.push(P2(rr,c+3.3+2.7*k/4));}
@@ -239,7 +240,7 @@ const WTRAIN=(()=>{
       tag(mesh(g,ringT([[1.5/2+0.001,cu0],[W6.collet/2,cu0],[W6.collet/2,cu1],[1.5/2+0.001,cu1]]),M.gilt),'6MX.cw',1);}
     R.c6={lever:C6L,lift:c6lift};
     /* the 6MX's seconds wheel rises 30.6, not 33: its contact wheel stands 1.35 under the lower cock's deep part and lug, which rise 29.9 (exploded.py's 0.5 kept) */
-    mv.userData.onRev.push(v=>{P.secondsWheel.userData.off=v==='6mx'?-30.6:-33;});
+    mv.userData.onRev.push(v=>{P.secondsWheel.userData.off=v==='6mx'?-30.6:-33;P.intermediateWheel.userData.off=v==='6mx'?9:-6;});   /* and its intermediate wheel leaves toward the dial after its bridge (+18), as a watchmaker takes it out, since the contact's base overhangs the plate's window it would rise through */
     tag(mesh(P.topPlate,bushGeo(rJ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
     {const g=rv(P.topPlate,'last first 1943');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}
     /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen's list: the seconds and intermediate wheels in jewels in chatons, not brass bearings; the TU's 15
