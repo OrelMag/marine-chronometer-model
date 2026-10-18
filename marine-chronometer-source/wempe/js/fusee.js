@@ -290,11 +290,15 @@ const WFUSEE=(()=>{
        section's dome is pictorial */
     {const rS=yT+19.7;   /* = yD */
       tag(mesh(gF,turned([[0,yT-8],[2.195,yT-8],[2.25,yT],[3.05,yT],[3.05,yT+3.1],[3.52,yT+3.1],[3.52,yT+11.0],[2.25,yT+11.0],[2.19,rS],[1.4,rS],[1.3536,rS+6.5],[0.8375,rS+6.5],[0.83,9.85],[0.6,10.1],[0,10.1]],40),M.steel),'050604-1');
-      const tA=Math.tan(38.7*D2R),yP=yT-28.3,sB=3.17-(20.3-2.64)/100,cB=sB/Math.SQRT2,yB=yP+cB/tA+0.01;   /* the tip; the square 2.99 across where the cone leaves its corners, 2.64 from the tip (1:100 from 3.17 at the root) */
-      const sq=new THREE.CylinderGeometry(3.17/Math.SQRT2,cB,yT-8-yB,4,1);sq.translate(0,(yT-8+yB)/2,0);tag(mesh(gF,sq,M.steel),'050604-1',1);
-      const NP=64,dm=t=>{const r=cB/(Math.abs(Math.cos(t))+Math.abs(Math.sin(t)));return[r*Math.cos(t),r*Math.sin(t)];},cl=[];   /* the square's outline, its corners on x and z as the CylinderGeometry's */
-      for(let i=0;i<NP;i++)cl.push({loop:[[0,0],dm(i/NP*TAU),dm((i+1)/NP*TAU)],y0:p=>yP+Math.hypot(p[0],p[1])/tA,y1:yB});
-      tag(mesh(gF,solidGeo(cl),M.steel),'050604-1',1);}
+      const tA=Math.tan(38.7*D2R);
+      /* Wempe 3955's (the version as photographed) is 4.5 shorter: its pointed end shows inside the dust bush's mouth, its top at y -43.5 ±0.5 (4_Wempe_3955_N.jpg,
+         photocompare.py's fit: row 114 on the fusee's axis, 9.65 px/mm along it), not 6 proud of the bush as the sheet's 28.3 puts it (-48.0); the O, S and W views show nothing
+         above the mouth. Kirov No. 247's matches the sheet's. The same cone and taper, the square 15.8 */
+      for(const[V,LS]of[['last first 6mx 1943 -3955',28.3],['3955',23.8]]){const g=rv(gF,V),yP=yT-LS,sB=3.17-(LS-8-2.64)/100,cB=sB/Math.SQRT2,yB=yP+cB/tA+0.01;   /* the tip; the square where the cone leaves its corners, 2.64 from the tip (1:100 from 3.17 at the root) */
+        const sq=new THREE.CylinderGeometry(3.17/Math.SQRT2,cB,yT-8-yB,4,1);sq.translate(0,(yT-8+yB)/2,0);tag(mesh(g,sq,M.steel),'050604-1',1);
+        const NP=64,dm=t=>{const r=cB/(Math.abs(Math.cos(t))+Math.abs(Math.sin(t)));return[r*Math.cos(t),r*Math.sin(t)];},cl=[];   /* the square's outline, its corners on x and z as the CylinderGeometry's */
+        for(let i=0;i<NP;i++)cl.push({loop:[[0,0],dm(i/NP*TAU),dm((i+1)/NP*TAU)],y0:p=>yP+Math.hypot(p[0],p[1])/tA,y1:yB});
+        tag(mesh(g,solidGeo(cl),M.steel),'050604-1',1);}}
     /* the click wheel 05 06 04-3 (Schneckensperrrad, 6.8.47; Ms Blech 2, Ms 58 federhart): 35 teeth, tips Ø 16.0 -0.05, roots Ø 14.5 -0.2 (drawn 15.99, 14.4), the faces undercut
        8°: the sheet's 8° line runs from a root through the face, which carried on inward passes on the tooth's own side of the centre, so each tip overhangs its gap ahead of
        its root (scaled about 10° on the plan's teeth at 17.9 px/mm: sure). Until 15 October 2026 the faces leaned back 8° (the root ahead of the tip). Driving the maintaining
@@ -441,7 +445,7 @@ const WFUSEE=(()=>{
           if(u>336/360)return 1;const w=(v==='first'?w41:w48)(u*360);return Math.max((16.125-w)-r,r-16.125);};
         const f=(x,y)=>Math.min(band(x,y),Math.hypot(x-eye[0],y-eye[1])-1.8);
         const loc=sdfOutline((x,z)=>f(x,-z),-16.3,-16.3,16.3,16.3,0.05);
-        tag(mesh(g,solidGeo([{loop:loc,y0:GS1,y1:GS0,F:[{p:ring(eye[0],-eye[1],0.6,32),a:GS1,b:GS0},{p:ring(hs[0],-hs[1],0.6,32),a:GS1,b:GS0}]}]),M.blued),'050601-1');}
+        tag(mesh(g,solidGeo([{loop:loc,y0:GS1,y1:GS0,F:[{p:ring(eye[0],-eye[1],0.6,32),a:GS1,b:GS0},{p:ring(hs[0],-hs[1],0.6,32),a:GS1,b:GS0}]}]),M.blue310),'050601-1');}
       tag(cylBetween(gMW,0.6,GS0+1.2,GS1,M.steel,eye[0],-eye[1],16),'050600-8');tag(cylBetween(gMW,0.6,GS1-1.2+0.02,GS0,M.steel,hs[0],-hs[1],16),'050600-8');}
 
     /* =============== the maintaining detent 05 05 05 (Gegensperrkegel kompl.) at hole 4 =============== */
@@ -474,7 +478,7 @@ const WFUSEE=(()=>{
       const S1=tx([8.6,1.403]),S2=tx([5.6,-9.645+Math.sqrt(81-(5.6-6.273)**2)]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
       const thick=KIT.clipPoly(DTX,p=>sg*side(p)),thin=KIT.clipPoly(DTX,p=>-sg*side(p));
       pD.userData.step=Math.min(...thick.map(([x,y])=>Math.hypot(x-fw[0],y-fw[1])))-20.285;   /* the thick part's least clearance over the tips, at rest */
-      tag(mesh(gDc,slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),M.blued),'050505-1');tag(mesh(gDc,slab(thin,[],DTU,DTT),M.blued),'050505-1',1);}
+      tag(mesh(gDc,slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),M.blue310),'050505-1');tag(mesh(gDc,slab(thin,[],DTU,DTT),M.blue310),'050505-1',1);}
     tag(mesh(gD,turned([[0,-22.075],[0.44,-22.075],[0.44,-18.975],[1.125,-18.975],[1.125,yD],[0.44,yD],[0.44,yD+3.1],[0,yD+3.1]].map(([r,y])=>[r,y]),20),M.steel),'050505-2');
     /* its wire spring (Feder 05 05 06-1: the coloured section's #24; no sheet) in its stud, at the top plate's hole 5 ("Drahtfeder", 05 08_1a: N 38.507 O 10.684, Körner 1.3,
        M 1.7, 4.73 from hole 4; 05 06_4's A-B marks the "Drahtfedermitte" beside the detent's arbor). Sizes off the photographs, each scaled by the hole table's own spacing (holes
