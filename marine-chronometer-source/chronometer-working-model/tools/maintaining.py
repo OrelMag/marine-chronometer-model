@@ -65,7 +65,8 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      if(w&&!prev.w)ws={sr0:prev.sr,psi0:prev.fz-prev.sr,rel:[]};
      if(dsr<-1e-9&&!/slider|set/.test(tag)){
        if(w&&ws&&!prev.held&&(Math.abs(psi-ws.psi0)<1e-9||cur.held)){if(ws.sr0-sr>=SRP.p)fail('ratchet back',`${at}: went back ${((ws.sr0-sr)*D).toFixed(2)} deg with the fusee as winding started, a tooth or more (${(SRP.p*D).toFixed(1)})`);}   /* locked to the fusee until its pawl holds it */
-       else if(!w&&cur.held&&!prev.held&&-dsr<SRP.p){}   /* pushed back to its pawl: the fusee's drive fell faster than the spring relaxes */
+       else if(!w&&!prev.held&&-dsr<SRP.p){}   /* pushed back toward its pawl or onto it, under a tooth: the fusee's drive fell faster than the spring relaxes (at run down, the chain's last turn,
+          since 17 October 2026 the spring pushing 0.22 of the drive: until then only onto the pawl) */
        else fail('ratchet back',`${at}: sustaining ratchet turned back ${(-dsr*D).toFixed(2)} deg${prev.w&&!w?' as winding stopped':''}`);}
      if(w&&ws&&!cur.held){const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);if(mod(psi-R.WPH,FPR.p)>1e-4||dp<WD)fail('lift',`${at}: winding pawls ${dp.toFixed(3)} mm into the teeth, ${(mod(psi-R.WPH,FPR.p)*D).toFixed(2)} deg off their faces, while the ratchet goes back with the fusee`);}
      if(prev.w&&!w&&!jump){const sh=prev.sr,fc=sh+R.WPH+FPR.p*Math.ceil((prev.fz-sh-R.WPH)/FPR.p-1e-9),want=fc+Math.max(0,gA-dq-sh)-prev.fz,got=fz-prev.fz;   /* the catch: gap to the pawls, then the reload */
@@ -107,8 +108,8 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  { let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;epsR=[1e9,-1e9];st.n=4;frame(false,'slider');
    for(let i=0;i<40;i++){run(5+Math.floor(rnd()*30),5+rnd()*40);wind(Math.max(0,st.n-rnd()*0.8),0.01+rnd()*0.05,0.05+rnd()*2);letGo();}
    run(5,10);info.eps=epsR.map(x=>x*D);if(epsR[1]-epsR[0]>FPR.p+SMAX+1e-6||epsR[0]<-FPR.p-SMAX||epsR[1]>FPR.p+SMAX)fail('eps',`over 40 partial winds eps ranged ${(epsR[0]*D).toFixed(1)} to ${(epsR[1]*D).toFixed(1)} deg`); }
- /* run down: the drive tapers, the spring relaxing with it (none held); then winding a run-down movement */
- { st.n=FUSEE_TURNS-0.3;frame(false,'slider');run(10,5);const per=(FUSEE_TURNS-st.n)/120*TPH/NPH;let held=0;for(let i=0;i<121;i++){run(1,per);if(R.held)held++;}
+ /* run down: the drive tapers, the spring relaxing with it (held where the drive falls faster), then running the train on alone until spent; then winding a run-down movement */
+ { st.n=FUSEE_TURNS-0.3;frame(false,'slider');run(10,5);const per=(FUSEE_TURNS-st.n)/120*TPH/NPH;let held=0;for(let i=0;i<121;i++){run(1,per);if(R.held)held++;}run(20,per);   /* then the train runs on the spring alone until it is spent (the drive tapers faster than it relaxes) */
    info.runDown={spring:(R.gw.rotation.y-R.sr.rotation.y)*D,drive:R.drvN(st.n),held};if(R.gw.rotation.y-R.sr.rotation.y<SMAX-1e-3)fail('rundown',`run down, the spring still loaded (relaxed ${info.runDown.spring.toFixed(2)} of ${(SMAX*D).toFixed(1)} deg)`);
    wind(FUSEE_TURNS-1,0.03,0);letGo();run(5,10); }   /* the train stopped, as at run down */
  /* run down at once (the slider): the spring drives the train alone, its pawl holding the ratchet, the fusee standing */

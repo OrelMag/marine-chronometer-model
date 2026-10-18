@@ -638,12 +638,24 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The sustaining spring wasn't the video's.** A uniform band 1.85 mm wide and 1.45 high (a design for the push), its gap 20° (read at the wall,
+  where the tips' round ends stand widest), its lobes estimated, in a recess 1.3 deep: on KLUwI2UUCMQ 27:26 the band tapers, 1.4-1.9 wide, the
+  working lobe is a teardrop and the fixed lobe bulges round each hole, the tips come within 12.5°, and 28:42.5-28:43.0 put the band 0.96 high, flush
+  with the rim, the recess 1.0 deep. Its section pushes 0.22 of the drive, not 0.82, so Sec. IV's five to ten minutes is now the time it keeps the
+  chronometer running (6.2), not over a turn. Keep: the outline from the frame (`SSI`, `SFT`, `SWT`), the height measured, `SPU` what
+  `sustaining.js` finds; trace edges on b* (yellowness), not on brightness or saturation, which read the brass's shadows as steel. `4b25def1`
+
 - **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
   the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
   so from the square's end, puts the face on the side the arbor turns from, the spring's eye over the pin. The maintaining detent's step
   (05 05 05-1) is a dashed straight edge from 8.6 at the back to the hollow, not an arc at 8.6 about the hole (which ran into the fusee
   wheel's tips and was cut back to 7.55). Keep: the hook in the spring's eye, its tip behind the pin; the step the sheet's line, 0.52-0.61
   clear of the tips. `215bed8`
+- **The Wempe's mainspring had no eye: the arbor's hook ran through the solid strip.** The strip was
+  a plain ribbon, its tip 0.18 rad behind the hook's centre, and fine.py carried the hook through it as an expected overlap (0.8 mm³).
+  The eye is now cut (the Hamilton's, MSPRING.ey: 2.2-9.4 mm from the tip, 5.2 high, as mainspring.py holds the Wempe's inner end)
+  and the hook turned into it, its face 0.05 off the eye's end toward the tip; the drawn spring is where it was. Keep: the hook in
+  the eye, not in the steel; what fine.py still expects is the ramp's 0.1 into the next coil (0.032 mm³). `5feeec9`
 - **Every wind stopped the Wempe's train.** app.js's `wind0()` set `winding` before reading `drvNow()`,
   which while winding returns the maintaining spring's own last drive (nothing on the first wind), so the
   spring carried no drive and the balance held. Found by `maintaining.py --model wempe`. Keep: read the

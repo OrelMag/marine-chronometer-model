@@ -31,14 +31,16 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
  # the fusee and barrel (P1c): joints in holes a turned or extruded part can't have cut across it, and the parts that touch by design
  ('fusee:Lathe','udPinion:Extrude'):("the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length",0.65,3.0),
  ('fusee:Buffer','stopWork:Cylinder'):("the stop bar's spring's pin (05 06 04-4) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end",0.4,0.55),
+ ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) in the mainspring's eye: its ramp, 0.475 at its face, stands 0.1 proud of the eyed coil (0.36) into the next, which rides over it on a real spring; the drawn coils lie at the strip's pitch and don't bend round it",0.05,1.6),
  ('coverPlate:Lathe','fusee:Lathe'):("the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body",8.5,3.6),
- ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) through the mainspring's eye at its inner end, the eye not cut in the drawn strip",0.8,2.05),
  ('chain:Extrude','fusee:Cylinder'):("the chain's top hook on the fusee's pin (05 06 00-6), round it",0.1,0.3),
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),
  ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
  ('band:Extrude','barrel:Lathe'):("the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
+ ('band:Extrude','barrel:Buffer'):("as revised (the drum notched, a BufferGeometry): the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
  ('band:Buffer','fusee:Buffer'):("the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)",0.1,0.1),
  ('barrel:Lathe','chain:Extrude'):("the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum",0.4,0.3),
+ ('barrel:Buffer','chain:Extrude'):("as revised (the drum notched, a BufferGeometry): the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum",0.4,0.3),
  ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
  ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8)}
 WIND_SEQ=False

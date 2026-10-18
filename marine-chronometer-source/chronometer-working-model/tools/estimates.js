@@ -6,8 +6,8 @@
 //      bound (the trip): the swing with the set-up turned to bring it back, the isochronism, and how far a held tooth's stone rings (tripping.json);
 //   3. the discharge jewel's back radius, 0.066-0.158 mm: whether the adjusting screws (the lock's depth, the detent's place) and the trip spring's tip bent to
 //      its figure bring Ops. 85-87's figures back at each;
-//   4. the sustaining spring's band and lobes (the height ±0.02, each lobe ±15°, the gap 18-22°): its push, whether the drive still banks it, and the time it
-//      keeps the balance over a turn (the manual's five to ten minutes);
+//   4. the sustaining spring's band over its readings' uncertainty (traced on the video, 17 October 2026: the height 0.78-1.14, the width ±0.1 mm, the gap
+//      12.5-14.5°): its push, whether the drive still banks it, and the time it keeps the chronometer running (the manual's five to ten minutes);
 //   5. the hairspring's upper terminal curve formed by hand: a smooth error across the curve, ends held, against the force it leaves on the pivots.
 // Needs only Node.js (about 30 s):   node estimates.js [--json OUT]   exits 1 if any value in its range leaves the chronometer short of working after the bench.
 const fs=require('fs'),path=require('path'),{build}=require('./escapement.js'),SU=require('./sustaining.js'),TJ=require('./tripping.json');
@@ -45,13 +45,13 @@ for(const r of T3)say(`back radius ${r.rb} mm: as drawn ${r.made?r.made.ok?'ever
 chk(T3.every(r=>r.adj),'at every radius the adjusting screws and the trip spring\'s tip bring the escapement to the manual\'s figures');
 out.rb=T3;
 /* ---------- 4. the sustaining spring ---------- */
-say('');say('4. The sustaining spring: its band\'s height (1.55 designed; 1.25 until 16 October 2026), its lobes (estimated) and its gap (20° measured, rough)');
-const F=SU.fn,T4=[],S0=SU.spring;for(const h of[S0.H-0.02,S0.H,S0.H+0.02])for(const dl of[-15,0,15])for(const g of[18,20,22]){const sfl=(62+dl)*D,swl=(35+dl)*D,sb=0.5*D,G=g*D,smax=G-sb,k=F.stiffOf({h,sfl,swl,sb}),P=k*smax/F.T0,q=F.sim(k,Math.min(F.T0/k,smax),3600);T4.push({h,dl,g,k,P,tTurn:q.tTurn,tStop:q.tStop});}
-const P4=T4.map(r=>r.P),tt=T4.map(r=>r.tTurn/60);
-say(`over the ${T4.length} combinations its push banked ${f(100*Math.min(...P4))}-${f(100*Math.max(...P4))} % of the drive, over a turn ${f(Math.min(...tt),1)}-${f(Math.max(...tt),1)} minutes, the train running ${f(Math.min(...T4.map(r=>r.tStop/60)),0)}-${f(Math.max(...T4.map(r=>r.tStop/60)),0)}`);
-const weak=T4.filter(r=>r.tTurn<300),strong=T4.filter(r=>r.P>=0.95);
-say(`${weak.length} combinations keep it over a turn under five minutes and ${strong.length} push 95 % or more (the drive's low reading may not bank them): the bench's maintaining test finds both (its ends standing open in running; under five minutes held), and the band is thinned or made up`);
-chk(T4.every(r=>r.tTurn>=180)&&T4.every(r=>r.P<1.05),'none fails to carry the train through a wind (three minutes over a turn) or holds the drive off its banking by more than 5 %');
+say('');say(`4. The sustaining spring over its readings’ uncertainty (KLUwI2UUCMQ 27:26 and 28:42.5-28:43.0): its band’s height (0.96 read, 0.78-1.14), its width (±0.1 mm) and its gap (12.5° read, to 14.5°)`);
+const F=SU.fn,T4=[],S0=SU.spring;for(const h of[0.78,S0.H,1.14])for(const kw of[1-0.1/S0.SSW,1,1+0.1/S0.SSW])for(const g of[12.5,13.5,14.5]){const sb=0.5*D,G=g*D,smax=G-sb,k=F.stiffOf({h,kw,sb}).k,P=k*smax/F.T0,q=F.sim(k,Math.min(F.T0/k,smax),3600);T4.push({h,kw,g,k,P,tTurn:q.tTurn,tStop:q.tStop});}
+const P4=T4.map(r=>r.P),ts=T4.map(r=>(r.tStop??3600)/60);
+say(`over the ${T4.length} combinations its push banked ${f(100*Math.min(...P4))}-${f(100*Math.max(...P4))} % of the drive, the chronometer running ${f(Math.min(...ts),1)}-${f(Math.max(...ts),1)} minutes with the key held, the swing under a turn within ${f(Math.max(...T4.map(r=>r.tTurn/60)),1)}`);
+const weak=T4.filter(r=>(r.tStop??3600)<300),strong=T4.filter(r=>r.P>=0.95);
+say(`${weak.length} combinations run under five minutes and ${strong.length} push 95 % or more (the drive's low reading may not bank them): the bench's maintaining test times it held (under five minutes, the band is made up)`);
+chk(T4.every(r=>(r.tStop??3600)>=60)&&T4.every(r=>r.P<1.05),'none fails to carry the train through a wind (a minute: a wind from run down is 17½ half turns, about 30 s; three minutes over a turn until 17 October 2026, the page’s model time for a wind) or holds the drive off its banking by more than 5 %');
 out.sus={rows:T4};
 /* ---------- 5. the hairspring's upper curve formed by hand ---------- */
 say('');say('5. The hairspring\'s upper terminal curve (designed to Phillips\' conditions, an S: no frame shows the real one), formed with an error');
