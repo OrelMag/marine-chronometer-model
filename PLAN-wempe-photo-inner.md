@@ -43,6 +43,7 @@ The user can't measure anything (no chronometer: `CLAUDE.md`). The photographs, 
   - Files it may still touch: `wempe/js/frame.js`, `fusee.js`, `escapement.js`, `dial.js`, `case.js`, `shared/kit.js`, `wempe/checks.py`, `wempe/audit-expected.json`, `ci.py`, `Review-results.md`, `RESOLVED.md`, the Wempe README.
   - Expect small conflicts at most. Resolve built copies by rebuilding, never by hand.
 - **Merge order.** `claude/wempe-photo-compare` lands on `main` first. Then merge `main` into your branch, rebuild and run `ci.py`, and only then merge yours: after `ci.py` passes, with `git merge --no-ff`, and only when the user asks.
+  - *Merged in, 18 October 2026:* `claude/wempe-3955-banking` (another session's: the 1941 detent block's slit, the banking screw's slot cut across its dome, Wempe 3955's screw 0.55 longer turned in to bank, the gold spring one smooth bow; the detent reweighed, SET6 ID 8.21, the essay data rewritten), merged here at the user's wish so it lands on `main` with this branch. Pull (`git pull`, a merge) before your next push. After merging `main` in, rerun `wempe_inertia.py` (and `--rev 6mx`) and `wempe_essaydata.js`: if either is stale, `--write`.
 - **Shared work.** Check `ListAgents` and `git worktree list` before starting (`CLAUDE.md`, "Other sessions"). If another session is on the escapement or contact, coordinate with it.
 
 ## The tool: `marine-chronometer-source/chronometer-working-model/tools/photocompare.py`
