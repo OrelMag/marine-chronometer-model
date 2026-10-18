@@ -13,10 +13,11 @@ frame for each focal length, the rim's and the rings' residuals, and how far the
 SPEC: {"frame": "f_...png", "rim": radius mm, "thick": the part's thickness (mm, the far face's edge), "box": [x0,y0,x1,y1] (optional: only the
 rim contour inside it), "rings": [[u, v, a, b, angle deg, h], ...] (ellipses traced on the frame: centre, semi-axes, the a axis's angle, height mm),
 "points": {"NAME": [u, v, h]} (h: mm above the face, toward the camera), "anchors": {"NAME": [x, z]} (model plan positions of named points),
+"check": {"NAME": [x, z]} (model positions of other named points, printed against where the frame puts them, off in mm, radius and angle; not fitted),
 "mirror": false (the face seen is the plan mirrored), "segment": "blue" or "silver", "edges": [h, h] (the rim's two edges' heights; default
 [0, -thick]), "centre": [u, v, h] (a point the rim is centred on), "angle_from": NAME (print angles about the centre from that point), "outline": {"NAME": [[u, v], ...], ...} with "outline_h": {"NAME": h}, "rim_pts": [[u, v], ...] (the rim traced beforehand, instead of segmenting it)}.
 Examples: rimfit_36-01.json, the upper train bridge upturned with the balance lower bridge on it; rimfit_40-08.json, the pillar plate's dial side in its
-mounting ring (the ring's bore, r 40.2, about the centre arbor), the angles of the fusee, barrel and indicator about the centre (References/VIDEOS.md, Methods). About 2 s."""
+mounting ring (the ring's bore, r 39.0, about the centre arbor), the angles of the fusee, barrel and indicator about the centre (References/VIDEOS.md, Methods). About 2 s."""
 import json,os,sys,numpy as np,cv2
 from scipy.optimize import least_squares
 HOME=os.environ.get('MC_VIDEO',os.path.expanduser('~/mc-video'))
@@ -72,13 +73,13 @@ def turn(A,B,mirror):   # the turn (and reflection) and shift taking A onto B, l
 out={}
 for f in FS:
     s=fit(f);x=s.x;nr=len(rim);rr=np.sqrt(np.mean(s.fun[:nr]**2));rg=np.sqrt(np.mean(s.fun[nr+(2 if 'centre' in S else 0):]**2))/3 if RINGS else 0
-    pts={k:unproj([v[:2]],f,x,v[2])[0] for k,v in S.get('points',{}).items()};anc={k:np.array(v) for k,v in S.get('anchors',{}).items() if k in pts}
+    pts={k:unproj([v[:2]],f,x,v[2])[0] for k,v in S.get('points',{}).items()};chk={k:np.array(v) for k,v in S.get('check',{}).items()};anc={k:np.array(v) for k,v in S.get('anchors',{}).items() if k in pts}
     T=turn(np.array([pts[k] for k in anc]),np.array(list(anc.values())),S.get('mirror',False)) if len(anc)>=2 else (lambda P:np.atleast_2d(P))
     tilt=np.degrees(np.arccos(abs(Rm(x[0],x[1])[2,2])))
     print(f'f {f:.0f} px: rim rms {rr:.2f} mm over {nr} points, rings {rg:.2f} mm, tilt {tilt:.1f} deg, camera {np.linalg.norm(x[2:5]):.0f} mm')
     a0=np.degrees(np.arctan2(*T(pts[S['angle_from']])[0][::-1])) if S.get('angle_from') in pts else None
     for k,v in pts.items():
-        p=T(v)[0];print((f'   angle {((np.degrees(np.arctan2(p[1],p[0]))-a0+180)%360)-180:7.1f} from {S["angle_from"]}' if a0 is not None else '')+f'   {k:10s} ({p[0]:7.2f},{p[1]:7.2f})  r {np.hypot(*p):5.1f}'+(f'   model ({anc[k][0]:.2f},{anc[k][1]:.2f}), off {np.linalg.norm(p-anc[k]):.2f}' if k in anc else ''))
+        p=T(v)[0];print((f'   angle {((np.degrees(np.arctan2(p[1],p[0]))-a0+180)%360)-180:7.1f} from {S["angle_from"]}' if a0 is not None else '')+f'   {k:10s} ({p[0]:7.2f},{p[1]:7.2f})  r {np.hypot(*p):5.1f}'+(f'   model ({anc[k][0]:.2f},{anc[k][1]:.2f}), off {np.linalg.norm(p-anc[k]):.2f}' if k in anc else f'   check ({chk[k][0]:.2f},{chk[k][1]:.2f}), off {np.linalg.norm(p-chk[k]):.2f}: r {np.hypot(*p)-np.hypot(*chk[k]):+.2f}, {((np.degrees(np.arctan2(p[1],p[0])-np.arctan2(chk[k][1],chk[k][0]))+180)%360)-180:+.1f} deg' if k in chk else ''))
     out[f]={k:np.round(T(unproj(np.array(P,float),f,x,S.get('outline_h',{}).get(k,0))),2).tolist() for k,P in S.get('outline',{}).items()}
     for k,v in out[f].items():print(f'   outline {k}: {json.dumps(v)}')
 if '--draw' in a:

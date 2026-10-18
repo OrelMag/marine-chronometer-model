@@ -10,6 +10,27 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Read|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/trace_circles_reminder.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/trace_circles_reminder.py\"",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [

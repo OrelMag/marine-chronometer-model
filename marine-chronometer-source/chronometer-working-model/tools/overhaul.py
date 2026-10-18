@@ -21,8 +21,8 @@ DET='the detent is drawn out sideways from under the upper train bridge (KLUwI2U
 # the arbors, or the model can't yet (a reading still open); everything else must clear
 EXPECTED=[
     ('d',{26},'@det','.*',DET),('r',{80,89,92,94,95},'@det','.*',DET),
-    ('d',{38},FU,'@trainBridge','the fusee comes out tilted, its wheel\'s edge from under the upper train bridge (its teeth reach under the bridge to the centre pinion): the video lifts it out with the bridge still on (KLUwI2UUCMQ 13:06-13:33; the bridge off at 13:36-13:48), as the manual\'s order has it'),
-    ('r',{34},FU,'@trainBridge','the fusee goes in tilted, its wheel\'s edge under the upper train bridge (the disassembly\'s Op. 38, the other way)'),
+    ('d',{38},FU,'@trainBridge|@lowerBridge','the fusee comes out tilted, its wheel\'s edge from under the upper train bridge and the balance lower bridge on its underside (its teeth reach under them to the centre pinion; the lower bridge\'s slab, traced by hand on 13:49.5 and 36:01, overhangs the wheel\'s rim at its corner by the 3 o\'clock lug): the video lifts it out with the bridge still on (KLUwI2UUCMQ 13:06-13:33; the bridge off at 13:36-13:48, the lower bridge still on it at 13:49.5), as the manual\'s order has it'),
+    ('r',{34},FU,'@trainBridge|@lowerBridge','the fusee goes in tilted, its wheel\'s edge under the upper train bridge and the balance lower bridge (the disassembly\'s Op. 38, the other way)'),
     ('d',{38},FU,'@spawl','the sustaining pawl is held aside (Op. 38: "release sustaining pawl")'),('r',{34},FU,'@spawl','the sustaining pawl is held aside (Op. 34)'),
     ('d',{33},'42168|42169','42001 #[34]','the chain\'s end was unhooked from the barrel at Op. 8; the overhaul leaves it where it hung'),('r',{40},'42168|42169','42001 #[34]','the chain\'s end is hooked on at Op. 53, after the barrel is in'),
     ('d',{39},'42021','42001 #.*','the chain is unwound from the fusee\'s groove, not lifted off it'),('r',{33},'42021','42001 #.*','the chain is wound onto the fusee\'s groove, not dropped onto it'),

@@ -32,7 +32,8 @@ HN13=[(5.38,-1.37),(1.91,-3.22),(-1.14,-5.57),(-3.15,-8.00),(-4.42,-10.12),(-4.8
 N13=[(27.66,-13.90),(25.77,-8.85),(22.51,-4.54)];MC13=(28.24,-18.69)
 # the opening in the middle (23:30, picked on the frame at 3x and put on the face through the anchor's homography): two round lobes, through which the balance lower bridge
 # under it shows (its plain polished top, its setting and screws; BunnSpecial, wcYqdgpyggQ 20:20, the bridge held up with the lower bridge on), and the
-# round escape passage through both bridges (the mat shows through it; from below at 13:49.5 it is the one opening the lower bridge leaves). The face between them, round the
+# round escape passage through both bridges (the mat shows through it; from below at 13:49.5 it is the one opening the lower bridge leaves; the lobe traced as 'escape' is the
+# lower bridge's opening, seen through the train bridge's larger one: below). The face between them, round the
 # lower bridge's setting, is plain (no damascening), so they are one opening: the lobes' circles joined across the hull of their centres
 KEY23={'balance':[(5.73,5.92),(3.75,5.35),(2.06,5.9),(0.77,7.25),(-0.17,9.07),(-0.39,10.8),(0.1,12.43),(6.78,6.31)],
        'fourth':[(1.72,13.94),(1.65,16.79),(1.39,19.52),(1.2,21.76),(1.57,22.76),(3.29,23.25),(5.01,21.41)],
@@ -49,8 +50,10 @@ def circle(P):   # least squares (Kasa, then Gauss-Newton)
     for _ in range(20):
         d=np.hypot(*(P-c).T);J=np.c_[-(P-c)/d[:,None],-np.ones(len(P))];s=np.linalg.lstsq(J,-(d-r),rcond=None)[0];c=c+s[:2];r+=s[2]
     return c,r,np.sqrt(((np.hypot(*(P-c).T)-r)**2).mean())
-# the escape passage as the model has it since the layout move (2 October 2026): a circle r 6.9 about the escape arbor, so the escape wheel lifts out through it (the traced
-# lobe, from 23:30 at the wrong focal length, was r 4.7); and the escape upper bridge's seats (KLUwI2UUCMQ 10:50, 23:30: recessed and frosted, each with its screw and pin hole):
+# the escape passage as the model has it since the layout move (2 October 2026): a circle r 6.9 about the escape arbor, so the escape wheel lifts out through it (10:06-10:13,
+# the lower bridge in place). KEY23's 'escape' lobe (r 4.7) is not this opening: it is the blue disc seen through it, an opening in the balance lower bridge's slab 9 mm lower
+# (distorted by the face's homography: the bridge is on the lower bridge at 23:30, its balance setting in the lobe above). The bridge's own edge, where its frosted face ends,
+# lies r 6.5-7.2 about the escape arbor on 23:30 through the anchor (re-read 18 October 2026, PROVENANCE.md); and the escape upper bridge's seats (KLUwI2UUCMQ 10:50, 23:30: recessed and frosted, each with its screw and pin hole):
 # the bar's ends (5.2 wide, round, 8.4 out along the bar) grown 0.25 (clear of the bridge face's bevel), from the passage out. All in the bridge's frame: the model's escape arbor and the bar's direction (ebu in
 # movement.js) taken back through PR (since 12 October 2026 the arbor where the bare plate's frames put it, L in movement.js; (12.849, 12.881) and (-0.0444, 0.9990) before). movement.js sinks them SEAT_D deep: the opening cut through is TB_KEY (the seats with it), and TB_SEAT their floors
 ESC_B=np.array([12.575,13.538]);ESC_R=6.9;EBU_B=np.array([-0.1199,0.9928]);SEAT_W=2.8+0.25;SEAT_T=(5.5,8.4)
