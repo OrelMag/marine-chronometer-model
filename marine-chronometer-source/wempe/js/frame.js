@@ -103,7 +103,9 @@ const WFRAME=(()=>{
       tag(mesh(rv(tp,V),faceUV(solidGeo([{loop:out,y0,y1,F}])),DR?GH:G6T),'050901');}
     /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's (39's in each version's group) */
     const S=WD.PSCR,P3=(par,f)=>{for(const q of[H[11],H[49]])f(par,q);for(const[V,P39]of VER)f(rv(par,V),P39);};
-    P3(tp,(g,[x,z])=>tag(screw(g,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57'));
+    /* the 6MX's (Kirov No. 247's) are polished steel with domed heads (its A, N, O and W photographs, photocompare.py: sure), lower than the drawings' brass cheese heads: 2.4
+       overall, the dome rising 0.8 over the rim (4_Kirow_247_N.jpg: the side and the dome against the model's 3.0 head of the same width, ±0.3: estimated) */
+    for(const[V,P39]of VER)for(const q of[H[11],H[49],P39]){const six=V==='6mx';tag(screw(rv(tp,V),q[0],q[1],TT,S.r,six?2.4:S.h,S.len,S.rs,six?M.steel:M.brass,six?0.8:0),'WN-57');}
 
     /* the maker's engraving on the top plate's outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, square-on at 7.74 px/mm by the plate's 85, the centre found from holes 10 and 23;
        15_Wempe_3955_Logo_plus.jpg close): three lines reading along O with N up, centred at O 30.6, N 8.6: "Gerhard D." 8.7 long, its letters 1.2 high; "WEMPE" 9.85 long,
@@ -191,12 +193,12 @@ const WFRAME=(()=>{
       const RSV=/** @type {[string,number[]][]} */([['last first 1943',[340,100,220]],['6mx',[342.2,102.2,246.4]]]),RS={};for(const[V,b]of RSV)RS[V]=b;
       for(const[V,BS]of RSV){const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
         ...BS.map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
-      tag(mesh(rv(rg,V),solidGeo([band]),M.plateSolid),'050800-3');}
+      tag(mesh(rv(rg,V),solidGeo([band]),V==='6mx'?M.gilt:M.plateSolid),'050800-3');}   /* the 6MX's gilt brass (Kirov No. 247's A, N and W photographs, photocompare.py: sure; nickel until 18 October 2026) */
       const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
       for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
         ...AS.map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:6.35,b:11.05}))]};   /* the dial screws' M1 through the flange: they show on its underside in Wempe 3955's top plate photograph (2_Wempe_3955_A.jpg: likely; 2.5 deep until 16 October 2026) */   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
-      const gF=rv(rg,V);FLG.push(gF);tag(mesh(gF,solidGeo([fl]),M.plateSolid),'050800-3',1);}
+      const gF=rv(rg,V);FLG.push(gF);tag(mesh(gF,solidGeo([fl]),V==='6mx'?M.gilt:M.plateSolid),'050800-3',1);}
       /* its three screws (WN number not read): heads Ø 6.2 × 3.05, brass, the shank 6.3, on the coloured section (Wempe_Einheitschronometer.jpg px 1819-1878 × 510-538.5, its
          shank 1837-1862: Ø 6.28 (6.2 kept, within the reading) × 3.07, M2.6, at 9.37 px/mm by the pillar's 178 px for 19; sure on the section, 2.25 high until 17 October 2026); head on the plate's inner face */
       for(const b of RS['last first 1943']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'last first 1943'),q[0],q[1],0,3.1,3.05,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
@@ -234,7 +236,7 @@ const WFRAME=(()=>{
       const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),...[41,47].flatMap(k=>[{p:C(H[k],rPinQ,40),a:y1-2.5,b:y1-0.3},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.3,40),a:y1-0.3,b:y1}])];   /* the steady pins' holes' 90° countersink 0.3 (05 08_13) */
       const bg=faceUV(solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]));VER.forEach(([,,DR],i)=>tag(mesh(BBG[i],bg,DR?GH:G6T),'050805-1'));PL.bbChord=[Bp,Cp];}
     /* its screws (WN-55 in the coloured section): heads Ø 6.4 × 3.0, brass (Wempe 3955), the shank 6.2, through the bridge and 2.9 into the plate: scaled on the coloured section (estimated) */
-    for(const k of[42,48])tag(screw(bb,H[k][0],H[k][1],TT-3.32,3.2,3.0,6.2,1.3,M.brass),'WN-55');
+    VER.forEach(([V],i)=>{const six=V==='6mx';for(const k of[42,48])tag(screw(BBG[i],H[k][0],H[k][1],TT-3.32,3.2,six?2.4:3.0,6.2,1.3,six?M.steel:M.brass,six?0.8:0),'WN-55');});   /* the 6MX's steel and domed, as its top plate's (above) */
     /* its steady pins (WN-203, 05 08 05): Ø 1.6, 1.3 proud of its face (sure), 3 long (as the balance cock's on 127-556.04 U30: estimated) */
     for(const g of BBG)for(const k of[41,47])tag(cylBetween(g,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.bb');
     /* the click (Sperrkegel, 05 08 05-2, revised 25.5.48): Messingblech 3 Ms 58 federhart, so its own spring (no separate spring is drawn); 2.6 -0.03/-0.05 thick on the bridge's
