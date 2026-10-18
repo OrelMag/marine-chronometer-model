@@ -638,12 +638,24 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The sustaining spring wasn't the video's.** A uniform band 1.85 mm wide and 1.45 high (a design for the push), its gap 20° (read at the wall,
+  where the tips' round ends stand widest), its lobes estimated, in a recess 1.3 deep: on KLUwI2UUCMQ 27:26 the band tapers, 1.4-1.9 wide, the
+  working lobe is a teardrop and the fixed lobe bulges round each hole, the tips come within 12.5°, and 28:42.5-28:43.0 put the band 0.96 high, flush
+  with the rim, the recess 1.0 deep. Its section pushes 0.22 of the drive, not 0.82, so Sec. IV's five to ten minutes is now the time it keeps the
+  chronometer running (6.2), not over a turn. Keep: the outline from the frame (`SSI`, `SFT`, `SWT`), the height measured, `SPU` what
+  `sustaining.js` finds; trace edges on b* (yellowness), not on brightness or saturation, which read the brass's shadows as steel. `4b25def1`
+
 - **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
   the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
   so from the square's end, puts the face on the side the arbor turns from, the spring's eye over the pin. The maintaining detent's step
   (05 05 05-1) is a dashed straight edge from 8.6 at the back to the hollow, not an arc at 8.6 about the hole (which ran into the fusee
   wheel's tips and was cut back to 7.55). Keep: the hook in the spring's eye, its tip behind the pin; the step the sheet's line, 0.52-0.61
   clear of the tips. `215bed8`
+- **The Wempe's mainspring had no eye: the arbor's hook ran through the solid strip.** The strip was
+  a plain ribbon, its tip 0.18 rad behind the hook's centre, and fine.py carried the hook through it as an expected overlap (0.8 mm³).
+  The eye is now cut (the Hamilton's, MSPRING.ey: 2.2-9.4 mm from the tip, 5.2 high, as mainspring.py holds the Wempe's inner end)
+  and the hook turned into it, its face 0.05 off the eye's end toward the tip; the drawn spring is where it was. Keep: the hook in
+  the eye, not in the steel; what fine.py still expects is the ramp's 0.1 into the next coil (0.032 mm³). `5feeec9`
 - **Every wind stopped the Wempe's train.** app.js's `wind0()` set `winding` before reading `drvNow()`,
   which while winding returns the maintaining spring's own last drive (nothing on the first wind), so the
   spring carried no drive and the balance held. Found by `maintaining.py --model wempe`. Keep: read the
@@ -660,6 +672,17 @@ Contents:
   level in it (tilted with its end link it reached into the first rib). Keep: the groove's pitch and
   lands are 02-2's, the flange's three widths sum to its 2; the chain doesn't touch the fusee in fine.py
   (no allowance for it). `b9dc7f9`
+- **The Wempe's fusee groove ran on past its end N, under a hub 0.3 thick all round** (17 October 2026, the user's
+  screenshot: the stop bar's slot "looks weird and unrealistic"). `rBody` cut the top turn's land and rib at every angle,
+  past "Gangende Punkt N", the hub (Ø 21) only the last 0.3; the slot, 1.5 deep, then sliced a thin loose flange and the
+  ribs under it, leaving knife edges and slivers. 05 06 04-2's Schnitt A-B draws the end uncut past N: the last land
+  against a block at Ø 21, 0.3 thick at D (N's side) and about 1.3 at C, no rib between. Now the groove ends at N (`MN`,
+  the turn whose land's edge is 0.3 from the small end, 8.817) and the end beyond it and the last land's rib are the hub's
+  Ø 21: the slot is a plain channel through solid metal, opening into the top turn's groove at the bar's lower end (the
+  end 0.62 thick there, the land under it to 1.49) and, 1.1 deep at its upper end past N, leaving 0.3 of metal over the
+  turn below (why the drawing makes it shallower there). The spring's pin, which ended flush with the old top land, now
+  ends with its outer corner 0.02 inside the Ø 21. Keep: a fusee's groove ends where its sheet puts N, and the end past it
+  is the uncut blank. `d33de400`
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
@@ -672,6 +695,18 @@ Contents:
   band, sized to push 0.88 of the linear strip's drive, pushed 0.71 of the solved one: drawn 1.45 mm high (1.25), as high as clears the sustaining ratchet, it pushes 0.82.
   Keep: the spring's torque, wherever a tool needs it, comes from the solved table, never E b t³/12 L; anything sized
   against the drive (the sustaining spring, the bench's bands) is sized against that. `d190fa1`
+- **The Wempe's chain links were dumbbells with no rivets to be seen** (17 October 2026, at the user's word). Each
+  plate's sides ran straight between its lobes, 1.2 apart, meeting them in a notch; 05 07 04's plan views draw
+  concave sides tangent to the lobes, the waist 1.41 (1.38-1.44 over its 13 waists, traced). The plates had no
+  holes and the rivets were the plates' own steel, flush, so nothing showed where the sheet draws a hole in every
+  lobe and Wempe 3955's chain shows each rivet's end bright. Now each plate and each hook's eye has its hole
+  (Ø 0.56 round the drawn 0.55) and the rivets, a pair to each outer link, are their own instanced mesh in polished
+  steel, 12-sided in 12-sided holes in their phase, the outline laid out about 20° a segment (absarc's per-arc divisions
+  cut the short sides five times as fine and, with the holes, made the page's frames a fifth slower in software, which
+  failed smoke.py's wind from run down). holecheck.js read an instanced mesh as one copy at its origin, so the rivets
+  in the hooks' eyes weren't seen: it now also tests each instance where it is drawn for what fills a hole. Keep: the
+  plates' outline from the sheet's traced sides; a link's rivets through holes in all its plates; the chain's pieces
+  cheap to draw (375 links, frames timed against main's in software before and after). Found against 05 07_14 and 14_Wempe_3955_Band_Kette.jpg, with 4_Wempe_3955_N.jpg's barrel for the look in place. `57aab13`
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
@@ -2175,6 +2210,24 @@ Contents:
   rolls and the six loop, and the clip lets the case settle over whole repeats (30 s and more)
   before it starts: the seam is under 1e-5°. Keep: a looping clip's motions in whole cycles of it,
   started from their steady state. `b8ba747`
+- **The Wempe's 1943 key: its paddle 1.6 too high, its spring loose round the tube.** 05 01 02-2's
+  6.3 +0.1 for the slot's Ø 35 floor was taken as its depth at the axis; its extension line leaves
+  the arc where it meets the body's outside, so the floor is 7.40 under the top at the bore's edge,
+  where the paddle rests, and its centre 9.37 over the top (10.95 before; 51 00 11 scales 9.37).
+  The tube's head stood 6.8 under the top (estimated) and would have cut the lowered paddle: 51 00
+  11's section draws it 8.0 under. The coil spring was a 0.9 wire standing 0.08 clear of the tube,
+  its end not drawn, so nothing could grip: now as the section draws it, about 12 coils of 0.6 wire
+  on the tube, its end turned down into the body's Ø 0.9 hole, and the grooved pin 15.3 long, its
+  ends showing (13, hidden, before). Keep: the paddle rests on the seat's edge at the bore, the
+  tube's head under it, the spring on the tube with its end in the body (*The Mariner's
+  Chronometer*, Fig. 2.35, shows a 1943 key taken apart so). `d125c5a`
+- **The Wempe key's body was a plain turned solid, the paddle, pin and spring's end in its metal.**
+  Now cut as 05 01 02-2 draws it: the slot and its Ø 35 floor, the cross hole through both jaws
+  and the paddle, the spring's slanted Ø 0.9 hole. Built as four solids joined into one closed
+  surface, the faces where they meet dropped: kept as separate meshes, those faces met the
+  surface's edge at its own depth and drew a dashed line round the body. Keep: the joints' outlines
+  the same points on both sides (the solid under the jaws takes the jaws' column points), and no
+  sloped face with an edge in a joint's plane (the drill point's foot 0.12 above the lower joint). `4d54002`
 
 ## Accuracy to the manual
 
@@ -2414,6 +2467,22 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's minute hand's flange showed a zigzag band, the tube's crown facets like a pyramid, and every
+  hand's root flickered** (17 October 2026, the user's screenshot). `sectors()` in `wempe/js/dial.js` cut each
+  annulus of a rounded or crowned top into four quarter cells, and earcut triangulated each quarter whole:
+  slivers from one side of a quarter to the other, flat-shaded (solidGeo gives each sloped triangle its own
+  normal), which zigzagged round the flange's r 0.4 round and faceted the cannon tube's crown over its square.
+  `sectors()` now cuts each annulus into a cell per step of one set of angles (every loop's points, each loop met
+  there by the ray from the centre), and the minute hand's round is a turned ring (smooth normals) round the
+  flat part's 72 points. And each blade's root lay inside its boss with its underside in the boss's underside's
+  plane (the up-and-down and seconds hands' tops in the boss's top's too), so the two solids flickered through
+  each other there; `blade()` takes the boss's radius and draws the blade 0.02 in from those faces inside it.
+  Keep: a sloped top is cut into narrow cells (never a quarter triangulated whole); a turned surface is a lathe
+  where nothing in it isn't round; two solids that overlap never share a face's plane in the overlap. `0b68274`
+- **The Wempe's detent block's cross screw flickered on the upright's far face** (17 October 2026, the user's
+  screenshot). The screw (`WN-gkA`, drawn without its hole) ran 3.0 into the 3.0-wide upright, so its end lay in
+  the face's plane; it ends 0.02 inside now. Keep: a screw drawn without its hole ends short of the far face or
+  through it, never on it. `0b68274`
 - **The Wempe's hands showed a broken line down their middle.** Each blade (`blade()` in `wempe/js/dial.js`)
   was one solidGeo cell whose top follows the thickness along the hand, and earcut triangulated it whole: long
   slivers from a point on one edge to a point far along the other, tilted to either side (|nx| up to 0.70 on the
@@ -2430,6 +2499,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   the small end's last 1.5 built ray by ray in the pieces the slot leaves) and the bar lies on
   the cover plate in it. Keep: a part lying in a cut has the cut drawn round it; never a part
   sharing the face of a solid it lies in.
+  The bar was drawn 2.00 wide in the slot's 2.00, its sides in the slot's walls, so where its upper end stands out
+  of the slot the two flickered through each other (18 October 2026, seen beside the fusee's end made solid past N).
+  Now 1.98, a sliding fit in the 2 H8 (estimated), the stop's 0.02 to the pin kept. Keep: a part sliding in a slot is
+  drawn narrower than it, never its walls' width. `3ff7da0f`
   Keep (Winding and maintaining work, the same change): the Wempe's 05 06_4 is seen from the
   fusee's large end, its C-D as its A-B, mirrored in the model; unmirrored, the stop bar met the
   stop pin with its near side, where C-D draws the pin against its far side. And the slot is 1.1

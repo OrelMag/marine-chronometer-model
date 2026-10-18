@@ -836,7 +836,7 @@
     ]
    ],
    "figs": "05 08_2",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "WN-300.t35",
@@ -857,7 +857,7 @@
     ]
    ],
    "figs": "05 08_2",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "WN-302",
@@ -898,7 +898,7 @@
     ]
    ],
    "figs": "05 08_10",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "6MX.ch38u",
@@ -1104,7 +1104,7 @@
     ]
    ],
    "figs": "05 08_3a, 05 08_32.2",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "050200-6",
@@ -1179,7 +1179,7 @@
       0
      ],
      "why": "as first drawn (the page's Variants) the arm is riveted on the 1941 collar's neck (05 04_5), which stands between its hole and the staff: the 1946 staff's seat Ø 2 h6 isn't there",
-     "rev": "first 6mx"
+     "rev": "first 6mx 1943"
     }
    ]
   },
@@ -1466,7 +1466,7 @@
       0
      ],
      "why": "as first drawn (and in the Soviet 6MX, at those heights) the spring's top curve rides 0.3 higher in the stud's slot and its pin with it, 0.05 off the stud: the 1941 stud's seat for the pin isn't drawn (found 16 October 2026, already so on main at 3.00.01)",
-     "rev": "first 6mx"
+     "rev": "first 6mx 1943"
     }
    ]
   },
@@ -1833,6 +1833,27 @@
     ]
    ],
    "figs": "05 04_3"
+  },
+  {
+   "id": "WN-gkA43",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Banking screw M1.2 along the 1943 block's slit upright, its domed slotted head (the escapement of 1943; its WN number not read)",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "Along the upright's slit end, the slit gripping its thread; its head's underside bears on the detent's pipe and sets the depth of lock. The thread from the block's sheet (M1.2), its head measured on Kirow DEC 422's, DEC 479's and Lange No. 5177's photographs, its length the 6MX's loose block's.",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "tap"
+    ]
+   ],
+   "figs": "05 04_3",
+   "rev": "1943"
   },
   {
    "id": "cone41",
@@ -3907,7 +3928,7 @@
    "fn": "185 x 185 x 180 outside: the gimbals hang in it (no sheet in the set).",
    "rel": [],
    "figs": "05 01_1, 51 00_1",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "WN-80",
@@ -3960,7 +3981,7 @@
     ]
    ],
    "figs": "51 00_2",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "WN-hg",
@@ -3975,7 +3996,7 @@
    "fn": "Through the handles' ends into the side walls.",
    "rel": [],
    "figs": "51 00_2",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Scharnier",
@@ -3990,7 +4011,7 @@
    "fn": "Join the lid to the box at the back: one hinge 148 long, its leaves let into the parting faces (as every photographed box).",
    "rel": [],
    "figs": "51 00_1",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Deckelstuetze",
@@ -4005,7 +4026,7 @@
    "fn": "Holds the lid open: a slotted brass bar pivoted on the lid's left wall, riding on a pin in the box's (Wempe 6161).",
    "rel": [],
    "figs": "photographs",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Schluesselhalter",
@@ -4044,7 +4065,7 @@
     ]
    ],
    "figs": "51 00_4",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Holzkasten.D",
@@ -4059,7 +4080,7 @@
    "fn": "The glazed lid, hinged at the back.",
    "rel": [],
    "figs": "51 00_1, 51 00_2",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Deckelglas",
@@ -4098,7 +4119,7 @@
     ]
    ],
    "figs": "51 00_3",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "P510002-2",
@@ -4118,7 +4139,7 @@
     ]
    ],
    "figs": "51 00_4",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "WN-zg",
@@ -4133,7 +4154,7 @@
    "fn": "The screw the tongue turns on.",
    "rel": [],
    "figs": "51 00_4",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "WN-zk",
@@ -4153,7 +4174,7 @@
     ]
    ],
    "figs": "51 00_4",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Ueberkasten",
@@ -4168,7 +4189,7 @@
    "fn": "Carries the wooden box for transport, cushioned all round.",
    "rel": [],
    "figs": "51 00_5, 51 00_1",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Randleiste",
@@ -4183,7 +4204,7 @@
    "fn": "Inside the rim, 4 over the walls: the lid closes over it.",
    "rel": [],
    "figs": "51 00_5",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.S",
@@ -4198,7 +4219,7 @@
    "fn": "Against the wooden box's front and back.",
    "rel": [],
    "figs": "51 00_5",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.E",
@@ -4213,7 +4234,7 @@
    "fn": "Against the wooden box's handles.",
    "rel": [],
    "figs": "51 00_5",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.B",
@@ -4228,7 +4249,7 @@
    "fn": "The wooden box stands on it.",
    "rel": [],
    "figs": "51 00_5",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Riemen",
@@ -4271,7 +4292,7 @@
    "fn": "On each end of the base plate.",
    "rel": [],
    "figs": "51 00_5",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "WN-ro",
@@ -4286,7 +4307,7 @@
    "fn": "The eyes' screws.",
    "rel": [],
    "figs": "51 00_5",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Scharnier.U",
@@ -4329,7 +4350,7 @@
    "fn": "Hinged at the back, cushioned inside.",
    "rel": [],
    "figs": "51 00_5, 51 00_1",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Polster.D",
@@ -4344,7 +4365,7 @@
    "fn": "Bears on the wooden box's lid.",
    "rel": [],
    "figs": "51 00_5",
-   "rev": "last first"
+   "rev": "last first 1943"
   },
   {
    "id": "Haken",

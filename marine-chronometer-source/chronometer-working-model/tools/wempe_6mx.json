@@ -2,64 +2,64 @@
  "note": "tools/wempe_6mx.js: the Soviet 6MX against the drawings (as last revised): the bodies (g·mm²), the rate before timing (s a day), the swing (deg) and rate against 12 h (s a day) over the wind, each mesh's shake and hole tolerance (mm)",
  "bodies": {
   "last": {
-   "I": 2560.707,
+   "I": 2560.667,
    "JW": 9.964,
    "ID": 8.46
   },
   "6mx": {
    "I": 2560.417,
-   "JW": 10.888,
+   "JW": 9.954,
    "ID": 8.24
   }
  },
- "rateBeforeTiming": 4.89,
+ "rateBeforeTiming": 4.22,
  "wind": [
   {
    "h": 0,
    "a": 201.98,
-   "a6": 200.06,
+   "a6": 201.99,
    "r": 0.115,
-   "r6": 0.127
+   "r6": 0.115
   },
   {
    "h": 12,
    "a": 197.15,
-   "a6": 195.27,
+   "a6": 197.17,
    "r": 0,
    "r6": 0
   },
   {
    "h": 24,
    "a": 194.42,
-   "a6": 192.59,
+   "a6": 194.46,
    "r": -0.075,
-   "r6": -0.079
+   "r6": -0.072
   },
   {
    "h": 36,
    "a": 195.58,
-   "a6": 193.71,
+   "a6": 195.59,
    "r": -0.041,
-   "r6": -0.045
+   "r6": -0.041
   },
   {
    "h": 48,
    "a": 200.23,
-   "a6": 198.33,
+   "a6": 200.25,
    "r": 0.077,
-   "r6": 0.084
+   "r6": 0.077
   },
   {
    "h": 54,
    "a": 196.48,
-   "a6": 194.63,
+   "a6": 196.52,
    "r": -0.015,
-   "r6": -0.016
+   "r6": -0.013
   }
  ],
  "swing6": [
-  190.11,
-  200.06
+  191.94,
+  201.99
  ],
  "train": [
   {
