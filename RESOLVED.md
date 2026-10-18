@@ -638,6 +638,8 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's maintaining detent and maintaining spring were deep blue** where their sheets say "310° hell-blau anlassen" (light blue) and both
+  specimens photograph pale grey (18 October 2026). Keep: `M.blue310` for parts tempered at 310°, `M.blued` (deep blue, 295°) for the fusee's clicks. `8302b5e5`
 - **The sustaining spring wasn't the video's.** A uniform band 1.85 mm wide and 1.45 high (a design for the push), its gap 20° (read at the wall,
   where the tips' round ends stand widest), its lobes estimated, in a recess 1.3 deep: on KLUwI2UUCMQ 27:26 the band tapers, 1.4-1.9 wide, the
   working lobe is a teardrop and the fixed lobe bulges round each hole, the tips come within 12.5°, and 28:42.5-28:43.0 put the band 0.96 high, flush
@@ -1358,6 +1360,14 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The 6MX's screws, ring and arbor square were the drawings', not Kirov 247's** (18 October 2026, photocompare.py on its A, N, O, S, W and uZ
+  views). Its top plate and barrel bridge screws were flat gilt cheese heads (Kirov 247's: polished steel, domed), its cock, cap jewel, pillar and
+  gold spring screws brass or blued (steel), its intermediate bridge's brass (blued), its change pinion brass (steel), its movement ring nickel
+  (gilt), its barrel arbor square the 1943 one's (longer and pointed), its detent block stud flush (2.5 proud), its dial screws on r 50.5 (49.9:
+  0.07-0.24 mm against 0.61-0.68). Keep: each version's screws in its own group (the viewer draws each mesh in its load-time material, mat0, and
+  batches by it: never swap a material at run time). `44f08400`, `4cb61fcf`, `749fa5fd`, `f977c9f9`, `f9dfa04f`, `a14fa4df`
+- **The Wempe's detent block screw had a 1.2 head** read on a photograph of the block taken out (`11_`); the obliques (S, O, W) show a tall cheese
+  head, 2.4. Keep: the head's height from an oblique view against the model's outline, not from a part lying loose. `f9dfa04f`
 - **The Wempe's and 6MX's screw slots stood on the heads** (18 October 2026, photocompare.py on Wempe 3955's N view). kit.js's screw drew the
   slot as a grey box 0.02 proud across the head, so every slot showed as a raised light bar where the photographs show a dark groove.
   Keep: the head one closed solid with its slot cut (two flat halves, the chamfer's ring with its cone's normals, the slot's strip), the shank its
@@ -2474,6 +2484,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The 6MX's stripes ran down the plates' and bridges' walls, and the Wempe's hands showed brown** (18 October 2026, photocompare.py). solidGeo's
+  plan UVs put the stripes on every wall; the polished Goldin hands (roughness 0.18) mirrored the page's dark sky square-on. Keep: `faceUV` on
+  textured frame parts (walls take one texel); the hands 0.35 rough. `045daca3`, `f2bb2efc`
+- **The Wempe's gilt was paler than the photographs' and its cork cream** (18 October 2026): saturation 0.34-0.51 rendered against 0.59-0.73 on
+  Wempe 3955's wheels and plates at the same patches; Kirov 247's cork hue 0.08, saturation 0.6. Keep: the Wempe page's own gilt (movement.js),
+  the Hamilton's core.js untouched. `6654b09e`, `9200d465`
 - **The Wempe's minute hand's flange showed a zigzag band, the tube's crown facets like a pyramid, and every
   hand's root flickered** (17 October 2026, the user's screenshot). `sectors()` in `wempe/js/dial.js` cut each
   annulus of a rounded or crowned top into four quarter cells, and earcut triangulated each quarter whole:
