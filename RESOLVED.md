@@ -2063,7 +2063,7 @@ Contents:
   against the cock's three holes in the train bridge (23:30 face up, 6:49.0 in place, 23:45; No. 2182 on Jd2c3x8VKsE 26:00): 169.2 +- 0.5 deg, now
   `PILLARS.train[1]` (6.47, 33.91), the head 1.55 mm clear of the cock's foot. Keep: the pillar where the train side puts it against the cock;
   the dial side's angle there is 1.5-2 deg low; the lower train bridge's 9.2 past the fourth (the video's 10.3 would meet the screw's head by 0.1 mm).
-  `HASH`
+  `b08df62`
 
 ## Setup, case and gimbals
 
