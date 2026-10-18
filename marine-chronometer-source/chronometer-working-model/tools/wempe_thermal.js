@@ -92,8 +92,18 @@ head('2. The middle-temperature (secondary) error over the TU\'s trial (36, 20, 
   say(`the steel spring's own: Dent's error ${MTE.join('-')} s a day in the middle of 0-30 °C, a quadratic ${f(cs[0],4)} to ${f(cs[1],4)} s a day a °C²: over the TU's 4-36 °C it alone gives S ${sg(-256*cs[0],2)} to ${sg(-256*cs[1],2)} s`);
   say(`brass on a plain nickel steel (quadratics 5.5 and 5.2 × 10⁻⁹): S ${sg(Sp[0],2)} to ${sg(Sp[1],2)} s: outside the TU's ±1.20, the classical balance's error`);
   const per=DAY*dII(q,PHIM).curl/(q.abr-q.ans)/2,need=cs.map(c=>c/per),bns=need.map(x=>MAT.br.b-x);   /* per: minus the gain a °C² per unit Δβ */
-  say(`the integral balance cancels it with a nickel steel whose expansion's quadratic is ${f(bns[0]*1e9,1)} to ${f(bns[1]*1e9,1)} × 10⁻⁹ a °C² (brass's 5.5 less ${f(need[0]*1e9,1)} to ${f(need[1]*1e9,1)}): negative, as Guillaume's 44.4 % alloy's is (1899); its value isn't to hand, so the drawn balance's S is taken as Guillaume's balances made it at Neuchâtel (1902): 0.33 s against ordinary balances' 1.63 (VintageWatchstraps' table), a fifth: ${sg(-256*cs[0]*0.2,2)} to ${sg(-256*cs[1]*0.2,2)} s here, inside the TU's ±1.20`);
-  module.exports.secondary={Sspring:cs.map(c=>-256*c),Splain:Sp,bNeed:bns,Sintegral:cs.map(c=>-256*c*0.2)};}
+  say(`a full cancelling would need a nickel steel whose expansion's quadratic is ${f(bns[0]*1e9,1)} to ${f(bns[1]*1e9,1)} × 10⁻⁹ a °C² (brass's 5.5 less ${f(need[0]*1e9,1)} to ${f(need[1]*1e9,1)})`);
+  /* Guillaume's nickel steels as the National Bureau of Standards tabulates them (Circular 58, 2nd ed., 1923, Table 5 p. 86 and Table 13 p. 90: the expansion
+     a + 2 b t, a and b a °C and a °C², by the nickel): 39.4 % 5.18 and -4.48; 42 % (between the table's rows) 6.85 and -3.4; 43.6 % 7.88 and -2.73; 44.4 % 8.41 and -2.51
+     (× 10⁻⁶, × 10⁻⁹). The rim's "Sonderlegierung" taken as the 42-44.4 % "anibal" (MAT.an's expansion, 7.0-8.5 × 10⁻⁶, agrees): its quadratic -3.4 to -2.51 × 10⁻⁹ */
+  const BAN=[-3.4e-9,-2.51e-9],Si=BAN.map(b=>S(q,MAT.br.b-b)),SI=[Si[0][0],Si[1][0]].sort((x,y)=>x-y),SI3=[Si[0][1],Si[1][1]].sort((x,y)=>x-y);
+  /* the 6MX's test cards as their passports state them (References/wempe/photos/dg-chrono-6mx-gallery/bilder-zum-6mx/: Kirov 1564's attestat, 1955; Kirov 707's,
+     1973; Poljot 09218's passport, 1984; Kirov 22823's, 1986, whose own table of period means works out to S +0.30 against the +0.79 it states; Poljot 20027's, 1993),
+     their S under the TU's own trial (Kirov 308's of 1953 under the older 32/18/4 °C and Kirov 91's -1.24, an outlier, left out) */
+  const SC6=[0.74,1.06,0.83,0.79,0.60],sM=SC6.reduce((a,x)=>a+x,0)/SC6.length,sD=Math.sqrt(SC6.reduce((a,x)=>a+(x-sM)**2,0)/(SC6.length-1));
+  say(`Guillaume's 42-44.4 % nickel steel (NBS Circular 58, 1923: its quadratic ${f(BAN[0]*1e9,2)} to ${f(BAN[1]*1e9,2)} × 10⁻⁹ a °C², negative as his integral balance needs) cancels part of it: with Dent's error ${MTE[0]} s, S ${sg(SI[0],2)} to ${sg(SI[1],2)} s; with ${MTE[1]} s, ${sg(SI3[0],2)} to ${sg(SI3[1],2)} s, outside the TU's ±1.20`);
+  chk(SI[0]<=sM+sD&&SI[1]>=sM-sD,`the 6MX's test cards give S ${sg(sM,2)} ±${f(sD,2)} s (five passports of the TU's trial, 1955-1993): the model's ${sg(SI[0],2)} to ${sg(SI[1],2)} at Dent's ${MTE[0]} s lies within them, so Dent's error is taken at the low end of its range (${MTE[1]} s would give ${sg(SI3[0],1)} to ${sg(SI3[1],1)}); until 18 October 2026 S was a fifth of the spring's own (Guillaume's balances at Neuchâtel, 1902), ${sg(-256*cs[0]*0.2,2)} to ${sg(-256*cs[1]*0.2,2)}`);
+  module.exports.secondary={Sspring:cs.map(c=>-256*c),Splain:Sp,bNeed:bns,Sintegral:SI,bAn:BAN,Scards:[sM,sD]};}
 say('the escapement\'s share (its geometry grown in the brass frame, as thermal.js finds for the Hamilton) is a few hundredths of a second a day a °C; the oil\'s is in the trial, not here');
 module.exports.rows=rows;module.exports.fail=fail;
 if(require.main===module){console.log(rows.join('\n'));process.exit(fail);}
