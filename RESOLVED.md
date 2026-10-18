@@ -692,6 +692,13 @@ Contents:
   forward onto click 0's seat, up to a whole tooth of the 35-tooth click wheel (10.3°), though the
   two clicks stand 180° apart, half a tooth out of step, so the nearer one bears within 5.1°. Keep:
   the fusee rests on whichever click it meets first. `30d35f4`
+- **The Wempe ran down with its maintaining spring still closed.** Run down by running, the page
+  cut the drive to nothing at once and held the train, the spring left closed 14.4° with its push
+  unused; a wind then started from it, carrying 0.88 of the drive into a train that had stopped.
+  The spring's push goes on into the wheel at run down as it does while the key turns (the ratchet
+  held by its detent), so the train now runs on it, the swing falling as it opens, and stops about
+  12 minutes later with it spent (app.js `drvNow`, the lead's update). Keep: run down, the drive is
+  the maintaining spring's until it is spent; a set of the wind to run down leaves it spent. `a7514671`
 - **The Hamilton's dust seal packing rings (42054) were brown** (`M.fibre` 0x5e3818), where every photograph of a Model 21 shows them dark: black on
   2E11795's top view, slate blue-grey on 2E12055, stained olive on the oblique photograph (`photocompare.py`'s pilot on the Hamilton, 18 October 2026;
   Review-results.md). Keep: `M.fibre` dark slate and matt (0x2a2e34, roughness 0.85); it is the packing's alone. `8f44e50b`
