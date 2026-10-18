@@ -3174,7 +3174,6 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-<<<<<<< HEAD
 - **The Hamilton's fusee stack had gaps and a hidden spring showing, and its chain ended on a pin** (Winding and maintaining work): seen side-on, the
   sustaining ratchet (tips r 14.53, a module chosen with no source) sat 0.2 mm over a plain copper rim standing over 1.2 mm of the fusee wheel's teeth,
   the fusee's rim 0.1 over it, and the sustaining spring and the wheel's recess showed round the ratchet; a real Model 21 (SNLqsS9wrrM 4:20-4:28,
@@ -3184,7 +3183,5 @@ An arbor needs pivots and shoulders; a stone its seat.
   the ratchet's tips from SRT and the sustaining pawl's tip from them (SPq); the chain's end pin is the hook's nose, down into the slot cut after ME.
   The model's cone is right to the frames that read it on both edges (a right-edge reading on SNLqsS9wrrM made it 1-1.5 mm slim: an axis error).
 
-=======
 - **`wempe-bom-3955` could run beside another `bom.py` step, and `wempe-fine-3955` ran outside the browser lane** (Build, tools and docs): `ci.py`'s `BROWSER` and `EXCL` were hand-written lists, and the two steps added for Wempe 3955 weren't in them, so `wempe-bom-3955` could write `tools/r_bom.json` while another `bom.py` step wrote it too, and both 3955 steps counted against `--jobs` instead of `--browsers`. Now both sets are worked out from the steps' commands (every `bom.py` step in `EXCL`'s `r_bom.json`; every `fine.py`, `bom.py`, `maintaining.py`, `gltf_check.py`, `blender_check.py` step of the full tier, and `fea`, in `BROWSER`). Keep: a new version's steps need no entry in those sets.
->>>>>>> origin/main
 - **holecheck.py failing now and then on the fusee's hole 42021** (Build, tools and docs): the hole turns with the fusee, which stood where the page's clock put it as it loaded, so between runs it wandered 0.6 mm round (x 16.95-17.45), past its EXPECTED entry's 0.4: a run failed or passed by when it loaded (seen on 3.03.00's main, 16 October 2026). Frozen as audit.py freezes the model (placements.py's first state), it still stood in one of two places 0.74 mm apart: the fusee's catch on its ratchet is state `update()` keeps from call to call. Fixed: holecheck.py freezes the model first, and the entry gives the hole by its distance from the fusee's axis (`L.Fu`, 4.264 mm) and its height, at any angle; such an entry must be found empty (its twin at the same radius, the first tapped hole, holds the stop-bar spring's end). Keep: an EXPECTED entry on a part that turns says where it is about its axis, not in the movement's frame.
