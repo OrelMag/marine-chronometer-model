@@ -595,7 +595,10 @@ const WFUSEE=(()=>{
        core sets it), the bottom 1.25 -0.1 with its boss: the land Ø 12, a 45° cone to the face Ø 8, 3.1 -0.1 from the outside, the bore 4.5 +0.1 (drawn 4.55); the lid's seat
        Ø 39.2 s6, 1.2 deep; the bottom's outer edge broken. Its bottom on the pillar plate's side, the lid toward the barrel bridge (05 07 01 draws the arbor's square through the
        lid; so does the coloured section). The mainspring's hook block 05 07 01-3 (3.05 -0.1 high, 3 wide) riveted inside the wall at the M2.6 hole 9.05 ±0.05 from the
-       bottom's face, 45° from 9 o'clock; its radial depth 0.35 (estimated: as much as clears the spring's next coil). The slot for the chain's hook, cut at the fusee's assembly
+       bottom's face, 45° from 9 o'clock; its radial depth 0.35 (estimated: as much as clears the spring's next coil). The sheets make it 0.5 deep (05 07 01 gives the wall at
+       the hook 2.05 -0.1 against the drum's 1.55, 020701 2 against 1.5: sure) and about 6.5 long round the bore (05 07 01's section, the block seen on the far wall, its ends
+       arcs: 7.3 there, 6.3 and 5.9 on the other sheets: likely, ±1; the "3" on 020701 its height); drawn so, it stands 1.2-4.3 mm³ into the solved spring's outer coil at
+       full wind (fine.py, 18 October 2026), whose solve (tools/mainspring.py's wall) has no block: left for that spring's re-solve (PLAN-wempe-estimates.md, A.9). The slot for the chain's hook, cut at the fusee's assembly
        (0207: 2.5 wide), isn't cut in the turned drum. Gilt, as Wempe 3955's (7_Wempe_3955_W.jpg).
        The slot at 9 o'clock (05 07 01-1, revision a of 11.3.48): 2 +0.05 wide (drawn 2.025), its sides drawn on the plan across the whole wall from outside (to scale there:
        6.875 px/mm, the rim r 20.80, the seat 19.64, the bore 19.20), its end r 18.3: "0,95 +0,15" in from the bore (drawn 1.025 from the bore's 19.275), the "18,3 +0,02" the

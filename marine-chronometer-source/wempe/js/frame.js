@@ -89,15 +89,25 @@ const WFRAME=(()=>{
       for(const s of[-1,1])F.push(T(add(H[26],[1,0],3.5*s),rM12,y0,y1));
       {const n=176;F.push(T(H[10],8.0075/2,y0,y1),{p:C(H[10],11,n),q:C(H[10],11.7,n),a:y1-0.7,b:y1});   /* the fusee bush's hole 8.0 +0.015; J-K's recess Ø 22 at its floor, its wall opening at 45° to the face (P1c: the fusee's cover plate, Ø 21.1, lies in it; read until then as Ø 22 at the face, its floor Ø 20.6, which the plate can't enter) */
         for(const b of[0,120,240])F.push(T(add(H[10],brg(b),5.2),rM14,y0,y1));}
-      /* the balance's opening and the pocket, crossed (KIT.bool) so their outlines share their corners: the tongue's root on the opening's edge 50° round from the pocket's
-         line (N-O, 23 to 51), toward S ("50°" on 05 08_1b); its end 8.6 from 23's centre toward 112.5°, scaled on 05 08_1b (115°) and Wempe 3955's top face (110°): estimated */
-      const b51=bearing(sub(H[51],H[23])),tg0=add(H[23],brg(b51+50),5),tgE=add(H[23],brg(112.5),8.6-1.25),tu=unit(sub(tgE,tg0));
-      /* the pocket: the hull of 51's r 4 and the opening's r 5, the far side's tangent drawn from r 4.95 so it crosses the opening's edge cleanly, the tongue's side's from where
-         the tangent to r 5 meets the tongue's edge (X, just past the tongue's corner on the circle: the tangent passes 0.08 outside that corner, which would leave a sliver of floor) */
+      /* the balance's opening and the pocket, crossed (KIT.bool) so their outlines share their corners. The tongue, a slot 2.5 wide ("2,5" on 05 08_1b: sure) with a round
+         end: its axis toward 113.5°, passing 0.85 S of 23's centre, its end r 9.0 from it. 05 08_1b traced (the opening's circle fitted, 9.81 px/mm, the sheet's N up by
+         holes 51 and 26): its sides 115.5 and 111.8° over their length, the end's arc fitted round a centre at 119.7°, r 7.74, so its far point r 9.06 (the axis drawn puts
+         it at 119.8°, r 7.76); the sides' outer halves alone lean to 118.4-120.5° (the drawn mouth widens toward the opening); "50°" is from the pocket's dashed S edge to
+         the tongue's N side. Wempe 3955's top face (12_…obere_Platte_oben, fitted on 8 holes, 11.43 px/mm): axis about 110°, 1.1 S of the centre, 2.85 wide, its end r 9.2.
+         Likely (±4° on the axis, ±0.3 on the end). Until 18 October 2026 its root on the opening's edge 50° round from the pocket's line (23 to 51) and its end centre
+         r 7.35 toward 112.5°: the axis toward 93°, 2.4 S of the centre, its end r 8.54 (estimated) */
+      const tA=add(H[23],brg(203.5),0.85),tg0=add(tA,brg(113.5),4.0),tgE=add(tA,brg(113.5),Math.sqrt(9*9-0.85*0.85)-1.25),tu=unit(sub(tgE,tg0));
+      /* the pocket: the hull of 51's r 4 and the opening's r 5, the far side's tangent drawn from r 4.95 so it crosses the opening's edge cleanly, the tongue's side's the
+         tangent to r 5 (below) */
       const a0=add(tg0,tu,-2),key=bool(C(H[23],5,200),stadiumPts(a0,tgE,2.5)).uni[0],ua=unit(sub(H[51],H[23])),va=[-ua[1],ua[0]],dv=q=>(q[0]-H[23][0])*va[0]+(q[1]-H[23][1])*va[1],sT=Math.sign(dv(tgE));
       const D5=Math.hypot(H[51][0]-H[23][0],H[51][1]-H[23][1]),w5=add(ua.map(q=>q/D5),va,sT*Math.sqrt(1-1/D5/D5)),T5=add(H[23],w5,5),ld=[-w5[1],w5[0]],nt=[-tu[1],tu[0]];   /* w5: from 23 to the tangent's point on r 5 (u·w = (5-4)/D) */
-      const X=[-1,1].map(s=>{const p=add(a0,nt,1.25*s),r=sub(T5,p),k=(r[0]*ld[1]-r[1]*ld[0])/(tu[0]*ld[1]-tu[1]*ld[0]);return{k,x:add(p,tu,k)};}).find(o=>o.k>0&&o.k<Math.hypot(...sub(tgE,a0))).x;
-      const pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
+      /* where the tangent crosses the tongue's two edges; the pocket's edge comes from 51 to the far crossing (X, on the tongue's N side, where 05 08_1b's dashed edge meets
+         it: "50°"), and the hull is closed through the tongue to Pc, the S side's corner with the opening (0.01 inside both), so it neither leaves a sliver of floor at that
+         corner nor takes in the crescent beyond the tongue, which the sheet doesn't dash */
+      const L0=Math.hypot(...sub(tgE,a0)),XS=[-1,1].map(s=>{const p=add(a0,nt,1.25*s),r=sub(T5,p),k=(r[0]*ld[1]-r[1]*ld[0])/(tu[0]*ld[1]-tu[1]*ld[0]);return{s,p,k,x:add(p,tu,k)};}).filter(o=>o.k>0&&o.k<L0);
+      const Xo=XS.reduce((a,o)=>Math.hypot(...sub(o.x,T5))>Math.hypot(...sub(a.x,T5))?o:a),X=Xo.x,ps=add(a0,nt,-1.25*Xo.s);
+      const Pc=(()=>{const d=sub(ps,H[23]),b=d[0]*tu[0]+d[1]*tu[1],c=d[0]*d[0]+d[1]*d[1]-4.99*4.99;return add(add(ps,tu,-b+Math.sqrt(b*b-c)),nt,0.01*Xo.s);})();
+      const pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),Pc,X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
       if(pk.uni.length!==1||fl.length!==1)console.warn('topPlate: the pocket and the balance opening cross in',pk.uni.length,'and',fl.length,'loops');
       F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.35,b:y1,floorOut:fl[0]});
       tag(mesh(rv(tp,V),faceUV(solidGeo([{loop:out,y0,y1,F}])),DR?GH:G6T),'050901');}
@@ -406,14 +416,15 @@ const WFRAME=(()=>{
        in from the plate side) and the seconds wheel's jewel in its setting (05 05 04-1, -2 in the coloured section) at 35 (1.7 in) (both built with the train, train.js),
        steady pins (WN-203) 1.3 proud, a screw at each end from the dial side, sunk. Holes 43, 38, 35, 28 and the pins 44, 29 all lie on one line
        (the tables' coordinates, to 0.001: sure), 34.13 between the screws, 41.13 between the pins. Its outline (05 08 04-1, not in the set) scaled on 05 08 04 at 2:1 against
-       those spacings (7.03 px/mm): 45.5 × 10.0 with round ends, 3.8 thick; the screws' sinks Ø 4.4 × 2.0: estimated. The bush's hole Ø 4.3 with a 45° mouth from the plate side
+       those spacings (7.03 px/mm): 45.5 × 10.0 with round ends, 3.8 thick (Wempe 3955's dial side, 3_Wempe_3955_uZ.jpg at 8.6 px/mm on holes 3, 12, 40, 30, 18 and 26, its face 3.7 higher corrected: 45.7 ±0.3 × 9.75 ±0.15 with
+       semicircular ends: the form confirmed, the sheet's sizes kept); the screws' sinks Ø 4.7 (the same photograph: 4.7 ±0.1, likely; Ø 4.4 until 18 October 2026) × 2.0 (estimated). The bush's hole Ø 4.3 with a 45° mouth from the plate side
        down to the bush, about Ø 5.7 at the face (05 08 04's section, measured: 5.8 across at the face, 0.78 deep to the bush's top, its walls at 45°: likely); the setting's
        hole Ø 5.2 straight through, the setting filling it (train.js: the section's hatched walls run the bridge's full thickness, their top about 0.2 under the plate side's
        face: likely). Until 15 October 2026 both were sunk Ø 6.2 from the plate side, 0.7 and 1.7 deep (estimated; the section draws neither). Drawn gilt (Wempe 3955's,
        3_Wempe_3955_uZ.jpg) */
     const zb=part('intermediateBridge',18),ZBG=VER.map(([V])=>rv(zb,V));   /* each version's bridge (the 6MX's striped) with its pins */
     {const d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+3.8;
-      const F=[T(H[28],rCl26,y0,y1),T(H[43],rCl26,y0,y1),B(H[28],2.2,y1,2.0),B(H[43],2.2,y1,2.0),A(H[29],rPinQ,y0,2.5),A(H[44],rPinQ,y0,2.5),T(H[38],4.3/2,y0,y1),{p:C(H[38],2.85,180),q:C(H[38],2.16,180),a:y0,b:y0+0.69},T(H[35],5.2/2,y0,y1)];
+      const F=[T(H[28],rCl26,y0,y1),T(H[43],rCl26,y0,y1),B(H[28],2.35,y1,2.0),B(H[43],2.35,y1,2.0),A(H[29],rPinQ,y0,2.5),A(H[44],rPinQ,y0,2.5),T(H[38],4.3/2,y0,y1),{p:C(H[38],2.85,180),q:C(H[38],2.16,180),a:y0,b:y0+0.69},T(H[35],5.2/2,y0,y1)];
       const zg=faceUV(solidGeo([{loop:stadiumPts(add(m,d,-17.75),add(m,d,17.75),10),y0,y1,F}]));VER.forEach(([,,DR],i)=>tag(mesh(ZBG[i],zg,DR?GH:G6D),'050804-1'));
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.blued]]){const g=new THREE.Group();g.rotation.x=Math.PI;rv(zb,V).add(g);   /* the 6MX's blued (3_Kirow_247_uZ.jpg, photocompare.py: sure) */
         for(const k of[28,43])tag(screw(g,H[k][0],-H[k][1],-(PPT+1.8),2.1,1.9,4.7,1.3,mt),'WN-52');}   /* heads Ø 4.2 × 1.9 (Wempe 3955 4.4), just under the bridge's face, M2.6 × 4.7 into the plate: estimated */
