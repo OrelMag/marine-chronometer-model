@@ -56,7 +56,7 @@ const WFRAME=(()=>{
         im.data[o]=im.data[o+1]=im.data[o+2]=g;im.data[o+3]=255;nm.data[o]=Math.round(255*(0.5-0.5*k*gx/l));nm.data[o+1]=Math.round(255*(0.5-0.5*k*gz/l));nm.data[o+2]=Math.round(255*(0.5+0.5/l));nm.data[o+3]=255;}
       xm.putImageData(im,0,0);xn.putImageData(nm,0,0);
       const tx=c=>{const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/L,1/L);t.anisotropy=8;return t;},mp=tx(cm);mp.encoding=THREE.sRGBEncoding;
-      const m=M.gilt.clone();m.color=sc(0xcc9f48);m.userData.faceOnly=1;m.roughness=0.42;m.map=mp;m.normalMap=tx(cn);m.normalScale=new THREE.Vector2(0.3,0.3);m.needsUpdate=true;return m;})();
+      const m=M.gilt.clone();m.color=sc(0xc68c34);m.userData.faceOnly=1;m.roughness=0.42;m.map=mp;m.normalMap=tx(cn);m.normalScale=new THREE.Vector2(0.3,0.3);m.needsUpdate=true;return m;})();
 
     /* ================= the top plate (Oberplatte, 05 09 01; its assembly 05 08 01) ================= */
     /* Messingblech 4, Sonder Ms α-β (05 09 01's title block: rolled brass, from a 4 × 90 disc turned to 3.5 × 90): drawn gilt, as Wempe 3955's (2_Wempe_3955_A.jpg). 85 h6 × 3.35;

@@ -11,6 +11,9 @@
    isolate.py and bom-check.js) and pass what it returns to update(), which takes the Hamilton's MoveState and uses what it has */
 const ESC=WESC.ESC;
 function buildWempe(M){
+  /* the gilt as Wempe 3955's photographs show it (photocompare.py, its A and N views, the same patches in photograph and render): its polished wheels hue 0.10, saturation
+     0.64-0.73, its plates 0.59, against the core's gilt rendered 0.34-0.51 (the photographs' neutral steel 4 % warm at most). This page's own materials (the Hamilton's untouched) */
+  if(!M.gilt.userData.wempe){M.gilt.color=sc(0xc88a32);M.gilt.userData.wempe=1;}
   const mv=new THREE.Group(),K=KIT.parts(mv,M);mv.userData.onRev=[];   /* the sheets' two states (setRev, below): each builder's moves for them */
   const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
   const TR=WTRAIN.build(mv,M,K);   /* the going train: the centre, intermediate and seconds arbors, their bushes and the seconds jewel */
