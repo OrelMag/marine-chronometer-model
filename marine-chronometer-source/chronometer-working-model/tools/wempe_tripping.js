@@ -9,13 +9,13 @@
 // 0.5 × 1.9 rigid, with the gold spring's head, its fixed arm to its bending point (05 04_1's "Biegungspunkt") and its screw; the blade 0.50 × 1.0 for 2.9, then 0.28 × 1.0 to
 // the pipe, as beams; the pipe Ø 1.15 × 2 with the stone (Ø 0.75 ruby, the half below it) rigid, with the horn's root; the horn 0.22 × 0.8 to 4.4 from the stone (1436's figure, Wempe 3955's photograph) as beams; the
 // gold spring 0.15 × 1.0 from its bending point along its drawn path to its square tip as beams (333 gold, about 90 GPa and 11.0 g/cm³: estimated, as WESC.SET and
-// wempe-inertia.js), resting on the horn 5 µm off (escapement.js); steel 205 GPa (200-210), 7.85 g/cm³. The banking, the block's cross screw's domed head (escapement.js; its
+// wempe-inertia.js), closing onto the horn near its end, its tip resting 5 µm off (escapement.js: the horn's curve and the gold spring's bow, WESC.HORN and WESC.GOLD; until 18 October 2026 a straight horn and the gold spring's polyline lying along it); steel 205 GPa (200-210), 7.85 g/cm³. The banking, the block's cross screw's domed head (escapement.js; its
 // head not drawn): the pipe's side toward the wheel rests on its face at the stone (05 04 01-4's 18.8, the 6MX's block photographed: likely; until 15 October 2026 under
 // the blade 0.7-1.4 mm from the stone, where makeEsc puts the Hamilton's stop button, estimated). The preload WESC.SET's, 0.63 g at the stone (estimated), a moment at the spring's end; as
 // drawn (the spring straight at its banking) none.
 // Contacts, each a spring with a dashpot set for its restitution (tripping.js's): the discharge stone on the gold spring (its bevelled end on the strip's square end, by
 // separating axes: the depth and its gradient in the tip's place and the balance's angle; on the active swing at the horn's end carried to the tip, backed by the horn, as
-// makeEsc and dynamics.js take it, on the return at the gold spring's own tip), the gold spring on the horn at three places, the pipe on the banking, the locked tooth
+// makeEsc and dynamics.js take it, on the return at the gold spring's own tip), the gold spring on the horn at three places near its end (each at its drawn gap), the pipe on the banking, the locked tooth
 // on the stone (makeEsc's recoil), the tooth on the impulse stone (makeEsc's bite) and, the Wempe's, the stone on the tooth it has let go (dynamics.js's ride: the stone's
 // least lift over that tooth, its friction MU against the wheel's turn).
 const fs=require('fs'),path=require('path');
@@ -35,8 +35,13 @@ const Dp=(t,n)=>[X.P[0]+t*tH_.x+n*nH_.x,X.P[1]+t*tH_.y+n*nH_.y],toDp=q=>{const v
 const U=(t,n)=>X.MK(Dp(t,n)),Q=(t,n)=>tn(U(t,n));   /* makeEsc's unit frame, and its (t, n) in metres from Ft */
 /* escapement.js's numbers (05 04_1, 1436, 05 04 01-2; its comments say how each was read) */
 const TP=X.TP,FOOT0=TP+2.5,SPR0=TP-2.5,SQ0=SPR0-2,[tB,nBp]=toDp(X.B),GT=tB+1.54,GN=nBp+0.005,GW=0.15,GNB=GN-GW/2,GB=[6.7,0.325],HEAD=SQ0+2.2,H0=HEAD-2.4;
-const GPATH=[[GB[0],GB[1]],[3.0,0.62],[0.6,0.72],[0,0.72],[-0.5,0.55],[-0.85,0.15],[-1.2,-0.25],[-1.6,GN],[GT,GN]];   /* the gold spring's free part, its bending point to its tip */
-const HORN_L=4.4,HORN=[[-0.2,-0.40],[-0.45,-0.25],[-0.7,GNB-0.005],[-HORN_L,GNB-0.005],[-HORN_L,GNB-0.225],[-0.5,GNB-0.225],[-0.15,-0.52]],HN=GNB-0.115,HT0=-0.6,HT1=-HORN_L;   /* the horn (escapement.js's HORN_L), its beam's line */
+const HORN_L=X.HORN.L,HL=X.HORN.line(0.22),HT0=-0.6,HT1=-HORN_L,HC=[-3.6,-4.0,HT1];   /* the horn as escapement.js draws it (its curve toward the block: HL.c its centre, HL.w its face toward the
+   wheel), its beam along its centre from HT0; HC the places the gold spring closes onto it, near its end (the gold spring rests on the horn only there) */
+const HSTR=(a,b)=>{const ts=[];for(let i=0;i<=24;i++)ts.push(a+(b-a)*i/24);return[...ts.map(t=>[t,HL.w(t)]),...ts.slice().reverse().map(t=>[t,HL.b(t)])];},HORN=HSTR(-0.45,-HORN_L);   /* its outline, from inside the pipe's wall */
+const GPATH=(()=>{const g=X.GOLD(GB[1]),out=[];for(let k=0;k<g.length;k++){if(k){for(const t of HC)if(t<g[k-1][0]&&t>g[k][0]){const f=(t-g[k-1][0])/(g[k][0]-g[k-1][0]);out.push([t,g[k-1][1]+f*(g[k][1]-g[k-1][1])]);}}out.push(g[k]);}return out;})();
+/* the gold spring's free part, its bending point to its tip: escapement.js's points (it draws a Catmull-Rom through them; the chords here 0.02 at most inside it), with points
+   on them at HC; HGAP each place's gap to the horn's face as drawn (m) */
+const HGAP=HC.map(t=>{const p=GPATH.find(q=>Math.abs(q[0]-t)<1e-12);return Math.max(5e-6,(p[1]-GW/2-HL.w(t))*1e-3);});
 const BANK=[0,0.575];   /* where the banking screw's head meets the pipe: its side toward the wheel at the stone (escapement.js's t, n; mm) */
 const TI=-WD.INNER,yd=d=>TI+d,STONE_LO=yd(X.PIPE0)-(X.Y.ew0-0.06);   /* the stone's half below the pipe, down to 0.06 under the wheel's teeth (escapement.js's PIPE0: 3.3 until 15 October 2026) */
 const RHO={st:7850,gold:11000,ruby:3980},EST=S.EB*1e9,EGO=S.ET*1e9;
@@ -60,14 +65,15 @@ function frame(o={}){
   const bt=TR.X.button,b0=nd(Q(SQ0,0),'slave',F1),b1=nd(Q(SQ0-2.9,0)),K=nd({t:ESC.BL*ESC.ES/1000,n:0}),b2=nd(Q(0.575,0),'slave',K);   /* K: the stone's body node at the locking face's middle S */
   const bl1=line(b0,b1,6,EST,0.5e-3,1.0e-3,RHO.st,'blade'),fr=t=>(t-N[b1].t)/(N[b2].t-N[b1].t),bl2=line(b1,b2,10,EST,0.28e-3,1.0e-3,RHO.st,'blade',[fr(bt.t0),fr(bt.t1)]);
   const nb=[bl2.find(i=>Math.abs(N[i].t-bt.t0)<1e-9),bl2.find(i=>Math.abs(N[i].t-bt.t1)<1e-9)];
-  /* the horn: its root with the pipe, a beam on its line from 0.6 to 3.5 past the stone; nodes over the gold spring's straight end, where it rests */
-  const HC=[-1.6,-2.55,HT1],h0=nd(Q(HT0,HN),'slave',K),h1=nd(Q(HT1,HN)),fh=t=>(t-HT0)/(HT1-HT0),hn=line(h0,h1,8,EST,0.22e-3,0.8e-3,RHO.st,'horn',HC.slice(0,2).map(fh));
-  const nh=HC.map(t=>hn.find(i=>Math.abs(N[i].t-Q(t,HN).t)<1e-12));
+  /* the horn: its root with the pipe, beams along its centre from HT0 to its end, a node at each place in HC */
+  const hts=[...new Set([...Array(9)].map((_,i)=>HT0+(HT1-HT0)*i/8).concat(HC))].sort((a,b)=>b-a),hv=hts.map((t,i)=>i?nd(Q(t,HL.c(t))):nd(Q(t,HL.c(t)),'slave',K));
+  const hn=[hv[0]];for(let i=1;i<hv.length;i++){el(hv[i-1],hv[i],EST,0.22e-3,0.8e-3,RHO.st,'horn');hn.push(hv[i]);}
+  const nh=HC.map(t=>hv[hts.indexOf(t)]);
   /* the gold spring: its bending point rigid with the square (its head screwed to it), beams along its drawn path to its tip; the nodes over the horn */
-  const g0=nd(Q(GB[0],GB[1]),'slave',F1);let gp=g0;const gs=[g0];
-  for(let k=1;k<GPATH.length;k++){const[t,n]=GPATH[k],q=nd(Q(t,n)),L=Math.hypot(t-GPATH[k-1][0],n-GPATH[k-1][1]),last=k===GPATH.length-1;
-    const ex=last?[(-2.55-GPATH[k-1][0])/(t-GPATH[k-1][0]),(HT1-GPATH[k-1][0])/(t-GPATH[k-1][0])]:[];gs.push(...line(gp,q,Math.max(1,Math.round(L/0.4)),EGO*(o.tsK??1),GW*1e-3,1.0e-3,RHO.gold,'gold',ex).slice(1));gp=q;}
-  const tip=gp,ng=HC.map(t=>gs.find(i=>Math.abs(N[i].t-Q(t,GN).t)<1e-12));
+  const g0=nd(Q(GB[0],GB[1]),'slave',F1);let gp=g0;const gs=[g0],gv=[g0];
+  for(let k=1;k<GPATH.length;k++){const[t,n]=GPATH[k],q=nd(Q(t,n)),L=Math.hypot(t-GPATH[k-1][0],n-GPATH[k-1][1]);
+    gs.push(...line(gp,q,Math.max(1,Math.round(L/0.4)),EGO*(o.tsK??1),GW*1e-3,1.0e-3,RHO.gold,'gold').slice(1));gv.push(q);gp=q;}
+  const tip=gp,ng=HC.map(t=>gv[GPATH.findIndex(p=>Math.abs(p[0]-t)<1e-12)]);
   if(nh.some(i=>i==null)||ng.some(i=>i==null)||nb.some(i=>i==null))throw Error('wempe_tripping: a contact node not found');
   if(o.stiff){for(const i of[b1,...bl1.slice(1,-1),...bl2.slice(1,-1),K,...hn.slice(1)])N[i].k='slave',N[i].m=F1;}
   /* the rigid bodies: their pieces' mass about their node (polyM, as tripping.js) */
@@ -75,7 +81,7 @@ function frame(o={}){
     B.push({a,m,St:St-m*A.t,Sn:Sn-m*A.n,Io:I-2*(A.t*St+A.n*Sn)+m*(A.t**2+A.n**2)});};
   const n0=GB[1]-GW/2,n1=GB[1]+GW/2,scr=(()=>{const c=U(HEAD-1.2,GB[1]+GW/2+0.15),m=WJ.detent.byHn['WN-14'].m*1e-3,x=(c.x-ESC.Ft.x)*ES,y=(c.y-ESC.Ft.y)*ES;return{m,mx:m*x,my:m*y,I:m*(x*x+y*y)};})();   /* the screw WN-14: its mass weighed, at its centre */
   body(F1,[pm(rectP(SQ0,SPR0,-0.25,0.25),1.9,RHO.st),pm(rectP(H0,HEAD,n0,n1),2.0,RHO.gold),pm(rectP(GB[0],H0,n0,n1),1.0,RHO.gold),scr]);
-  const hornAll=pm(HORN.map(([t,n])=>U(t,n)),0.8,RHO.st),hornBeam=pm(rectP(HT1,HT0,GNB-0.225,GNB-0.005),0.8,RHO.st);   /* the horn's root: the whole less what its beam carries */
+  const hornAll=pm(HORN.map(([t,n])=>U(t,n)),0.8,RHO.st),hornBeam=pm(HSTR(HT0,HT1).map(([t,n])=>U(t,n)),0.8,RHO.st);   /* the horn's root: the whole less what its beam carries */
   body(K,[pm(discP([0,0],0.575),2.0,RHO.st),pm(discP([0,0],0.377),2.0,RHO.st,-1),pm(discP([0,0],0.375),2.0,RHO.ruby),pm(discP([0,0],0.375,48).slice(0,25),STONE_LO,RHO.ruby),
     pm(rectP(0.4,0.575,-0.14,0.14),1.0,RHO.st),{m:hornAll.m-hornBeam.m,mx:hornAll.mx-hornBeam.mx,my:hornAll.my-hornBeam.my,I:hornAll.I-hornBeam.I}]);
   return{N,E,B,R0,F1,K,nb,nh,ng,tip,hn,gs,o};
@@ -157,7 +163,7 @@ function run(M,o={}){
     let Fj=0,gthS=0;{const tw_=wrap(th),p0=tw_>-0.6&&tw_<0.4?pen(th,tu,tv):0;if(p0>0){const e=1e-9,et=1e-7,gu=(pen(th,tu+e,tv)-pen(th,tu-e,tv))/(2*e)*ES,gv=(pen(th,tu,tv+e)-pen(th,tu,tv-e))/(2*e)*ES,gth=(pen(th+et,tu,tv)-pen(th-et,tu,tv))/(2*et)*ES;
       const dd=gu*tud+gv*tvd+gth*om;Fj=Math.max(0,(act?kJ:kR)*p0*ES+(act?C.J:C.Jr)*dd);Mth-=Fj*gth;gthS=gth;fT_u-=Fj*gu;fT_v-=Fj*gv;}}
     let Fb=0;for(let k=0;k<2;k++){if(b[k]<0){fb[k]=Math.max(0,-kB*b[k]-C.B*bd[k]);Fb+=fb[k];}}
-    let Fh=0;for(let k=0;k<3;k++){if(h[k]>GAP){fh[k]=Math.max(0,kH*(h[k]-GAP)+C.H*hd[k]);Fh+=fh[k];}}
+    let Fh=0;for(let k=0;k<3;k++){if(h[k]>HGAP[k]){fh[k]=Math.max(0,kH*(h[k]-HGAP[k])+C.H*hd[k]);Fh+=fh[k];}}   /* each place's own gap (HGAP) */
     out[0]=om;out[1]=Mth/I;out[2]=pv;out[3]=qD&&held?0:Mph/JT;
     for(let i=0;i<N;i++){const q=y[4+i],qd=y[4+N+i];
       const f=fpre[i]+fS_v*R.S.v[i]+fS_u*R.S.u[i]+fT_u*Ru[i]+fT_v*Rv[i]+fb[0]*R.b[0][i]+fb[1]*R.b[1][i]-fh[0]*R.h[0][i]-fh[1]*R.h[1][i]-fh[2]*R.h[2][i]-(Gx[i]*ax+Gy[i]*ay+Ga[i]*al);
@@ -304,7 +310,7 @@ pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;
       say(`  ${pn.padEnd(30)} ${nm.padEnd(34)} the frame as drawn: about ${f(gF,unit==='g'?0:1)} ${unit}; the rigid detent: ${f(gD,unit==='g'?0:1)} ${unit} (${sg(100*(gF/gD-1),0)} %)`);}
     const gS=DY.MPRE/(DY.DM.m*DY.rCM*G0);
     say(`a steady push lifts the rigid detent off its banking at ${f(gS,0)} g (its preload's; none as drawn); the knocks a chronometer meets in its box at sea are a few g (the gimbals and the box take the rest)`);
-    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>=20),`preloaded, it takes a blow of 20 g or more across the plate to let a tooth go`);   /* the 3 ms blow's least is 20.0-20.1 g (18 October 2026, the finer search; the coarse one read 22): the margin is nil at the estimated 0.63 g preload, so the bench takes the knock's floor below as a second least (the user's choice, 18 October 2026) */
+    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>=20),`preloaded, it takes a blow of 20 g or more across the plate to let a tooth go`);   /* the 3 ms blow's least is 20.4 g (18 October 2026, the horn curved; 20.0-20.1 g with the straight horn, the finer search; the coarse one read 22): the margin is a hair at the estimated 0.63 g preload, so the bench takes the knock's floor below as a second least (the user's choice, 18 October 2026) */
     /* the knock's floor: the 3 ms blow's least on the frame against the preload, the preload where it reaches 20 g (straight between the runs either side); wempe_tolerances.js's wKnock */
     const kr=[[KF[0],take(1)[0]],[1,K4.find(k=>k.preload===KN[0][0]&&k.name===KK[1][0]).frame],...KF.slice(1).map(m=>[m,take(1)[0]])].map(([m,g])=>[m,+f(g,1)]),
       ik=kr.findIndex(([,g])=>g>=20),mK=ik<0?null:ik===0?kr[0][0]:kr[ik-1][0]+(kr[ik][0]-kr[ik-1][0])*(20-kr[ik-1][1])/(kr[ik][1]-kr[ik-1][1]);
