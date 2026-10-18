@@ -345,8 +345,13 @@ const WESC=(()=>{
         const[i1,i2]=X(ri),[o1,o2]=X(ro),inS=hyp(L[(i1+1)%n].p)<ri?i1:i2,inE=inS===i1?i2:i1,ouS=hyp(L[(o1+1)%n].p)>ro?o1:o2,ouE=ouS===o1?o2:o1;
         const aI=arcR(ri,L[inE].p,L[inS].p),aO=arcR(ro,L[ouE].p,L[ouS].p);   /* the arcs closing the inner and outer cells */
         return[[...run(inS,inE),...aI],[...run(ouS,ouE),...aO],[...run(inE,ouS),...aO.slice().reverse(),...run(ouE,inS),...aI.slice().reverse()]];};
-      for(const a of[MASS_A,180-MASS_A,180+MASS_A,360-MASS_A]){const c=pol([0,0],rc,a),[cI,cO,cS]=cells(c);
-        tag(mesh(bal,solidGeo([{loop:ccw(cI),y0,y1},{loop:ccw(cO),y0,y1},{loop:ccw(cS),y0,y1:ys}]),M.brass),'050301-4');
+      /* Wempe 3955's (the version as photographed) poising holes: the two masses at 150 and 210 deg, both on one side of the cuts' line, each drilled in its roller-side face
+         inside the rim, Ø 0.6 ±0.15; the other two plain where a hole would show (9_Wempe_3955_Hemmung.jpg, photocompare.py's w3955_hem_2 camera, the holes unprojected on the
+         masses' face: 1.45 in from the mass's centre and 1.1 across it at 210, 1.15 in and 0.2 across at 150, across measured a quarter turn on from the mass's own angle, ±0.4: likely); their depth unseen, 1.0 (estimated) */
+      const PH={150:[-1.15,0.2],210:[-1.45,1.1]};
+      for(const a of[MASS_A,180-MASS_A,180+MASS_A,360-MASS_A]){const c=pol([0,0],rc,a),[cI,cO,cS]=cells(c),mg=(/** @type {any[]} */F)=>solidGeo([{loop:ccw(cI),y0,y1,F},{loop:ccw(cO),y0,y1},{loop:ccw(cS),y0,y1:ys}]),ph=PH[a];
+        if(!ph)tag(mesh(bal,mg([]),M.brass),'050301-4');
+        else{const u0=unit(c),h=add(add(c,u0,ph[0]),[-u0[1],u0[0]],ph[1]);tag(mesh(rv(bal,'last first 6mx 1943 -3955'),mg([]),M.brass),'050301-4');tag(mesh(rv(bal,'3955'),mg([{p:C(h,0.3,32),a:y1-1.0,b:y1}]),M.brass),'050301-4');}
         /* its screw across, its slotted head sunk flush in the mass's outer face, its nut in the inner (WN-12, WN-12a): Wempe 3955's masses (9_Wempe_3955_Hemmung.jpg, the two
            nearest seen side-on at 15 px/mm: sure) show the head flush in the outer face, Ø 1.56 against the mass's 6.3, its slot across, and nothing standing out of the
            inner face; the nut WN-12a (05 03_2's label) is drawn sunk the same way (estimated: no photograph shows it). The faces are the mass's round side, which can't be counterbored here (a solid of
