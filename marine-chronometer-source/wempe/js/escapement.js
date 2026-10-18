@@ -615,8 +615,13 @@ const WESC=(()=>{
         tag(mesh(sM,solidGeo([{loop:Q([[GB[0],n0],[h0,n0],[h0,n1],[GB[0],n1]]),y0:y0b,y1:y1b},{loop:Q([[h0,n0],[head,n0],[head,n1],[h0,n1]]),y0:y0F,y1:y1b}]),M.gilt),'050401-2');}
       const gf=new THREE.Group(),bp=D(GB[0],GB[1]);gf.position.set(bp[0],0,bp[1]);sM.add(gf);const gfi=new THREE.Group();gfi.position.set(-bp[0],0,-bp[1]);gf.add(gfi);R.golds.push(gf);
       tag(mesh(gfi,solidGeo([{loop:offs(free,GW).map(([t,n])=>D(t,n)),y0:y0b,y1:y1b}]),M.gilt),'050401-2',1);
-      /* its screw (WN-14), across into the square: head Ø 1.2 × 0.4, M0.7 (estimated) */
-      tag(across(sM,lathe([[0,0],[0.6,0],[0.6,0.4],[0.33,0.4],[0.33,0.4+0.55],[0,0.95]],20),o.scrM||M.blued,D(head-1.2,g1+GW/2+0.4),TD.n.map(v=>-v),yd(o.d0+1)),'WN-14');   /* the 6MX's polished steel (8_Kirow_247_F.jpg and Kirova 14100's, photocompare.py: likely) */
+      /* its screw (WN-14), across into the square, M0.7 0.55 into it (estimated): bright polished steel, slotted, its head rounded, Ø 1.4 × 0.4 (Wempe 3955's: 11_Wempe_3955_Gangfeder_plus.jpg
+         through photocompare.py's w3955_detentBlock camera, Ø 1.44; 10_Wempe_3955_Feder_plus.jpg face-on, 0.7 of the square's 2; no sheet of it in the set, so the drawings'
+         versions take it too: likely); until 18 October 2026 blued, plain, Ø 1.2. The 6MX's polished steel too (8_Kirow_247_F.jpg and Kirova 14100's, photocompare.py: likely) */
+      {const at=D(head-1.2,g1+GW/2+0.4),dn=TD.n.map(v=>-v),yc=yd(o.d0+1),yt=(/** @type {number} */r)=>0.1*(r/0.7)**2;   /* in the detent's own group, as the square and spring it holds (fine.py) */
+        tag(across(sM,lathe([[0,0],[0.35,yt(0.35)],[0.6,yt(0.6)],[0.7,0.1],[0.7,0.4],[0.33,0.4],[0.33,0.95],[0,0.95]],24),o.scrM||M.steel,at,dn,yc),'WN-14');
+        const xs=[];for(let k=0;k<=16;k++)xs.push(-0.7+1.4*k/16);const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,yt(Math.abs(x))+0.15]),...xs.slice().reverse().map(x=>[x,yt(Math.abs(x))-0.01])]),y0:-0.12,y1:0.12}]);
+        sg.rotateX(-Math.PI/2);sg.rotateY(0.7);tag(across(sM,sg,M.steelD,at,dn,yc),'WN-14',1);}   /* its slot, 0.15 deep under the rounded top, its face 0.01 over it */
       /* the foot's screw M1 along it into the block (number not read) and its two steady pins (Stellstift 2, WN-201 in the coloured section), drawn without holes across */
       tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
