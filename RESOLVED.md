@@ -2988,6 +2988,10 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The Wempe's maintaining spring weighed in no body** (`wempe_inertia.py`, found by `ci.py --full` on 18 October 2026 merging `claude/wempe-maintaining`): with the spring drawn bent between the ratchet and the wheel, the
+  part `maintaining` has two turning groups (the ratchet, clicks and the eye's pin; the spring and its other pin), and `wempe-inertia.js` weighed only the first, so the spring (2.07 g) and its pin left
+  every body and the table read 11.64 g. Fixed: the part's groups are weighed together (13.76 g, 2,277 g·mm²; the spring as now bent 431 g·mm², 467 straight). Keep: a body that is several groups is
+  weighed whole; a part split into groups must not drop pieces from `wempe_inertia.json`.
 - **The Wempe's bench took its preload's floor from the frame as it was before the banking moved.** `wempe_tolerances.js` first
   took 0.72 g at the stone (1.1 times the estimate) as the least preload, `wempe_tripping.js`'s figure while the banking stood
   under the blade; with the banking on the pipe the frame finds a held tooth's stone ringing 41 % of the depth of lock at the
