@@ -661,6 +661,11 @@ Contents:
   both noses are round, the fixed one a D. Keep: each tip's outline traced as points round the nose (rays from inside it), in contour order
   from the inner edge to the wall, the first 1 mm eased onto `SSI`; at the fixed tip the edge is where L* falls from the top edge's highlight
   to the black shadow beyond (there b* reads the shadow as steel: its chroma is gone), elsewhere b*. `a10c5331`
+- **The sustaining spring's gap was 12.5°, read short** (18 October 2026): the first trace took the fixed tip's cast shadow and the working tip's end
+  face as steel; traced again on the same frame the tips stand 17.8° apart where they come nearest, as the loose spring's 16-18° (18:58.0). Its
+  push banked is 0.33 of the drive, not 0.22, and held it runs the chronometer 12.1 minutes, over Sec. IV's five to ten, read as the least it gives
+  (the owner's reading). Keep: `SSG` 17.8, the holes, pin and `SSI` anchored on the tips as traced on one rectification (moving a tip moves
+  `SPW`, `SSH`'s angles, `SWL`, `SFL` and `SSI`'s index with it), `SPU` what `sustaining.js` finds. `edbd49d1`
 
 - **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
   the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
