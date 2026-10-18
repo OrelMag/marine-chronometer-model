@@ -59,13 +59,13 @@ const BLENDER=(()=>{
     const uni=(dur,f,emit)=>{const n=Math.round(dur*FPS);for(let i=0;i<=n;i++){const t=dur*i/n;emit(t,f(t,i?dur/n:0));}};
     const beat=(emit,secs)=>{for(const p of[...G,1]){const z=ESC.state(Math.min(p,0.99999),amp0,drv0),e=p<=0?0:p<1?z.prog:1;emit(p*secs,st({E:e,th:z.th,lift:z.lift,psDef:z.psDef,teeth:e-p}));}};   /* one beat on Running's phases, so the rig's beat and Running agree where the escapement acts; at 0 the tooth not yet escaped (ESC.state's 1 there is the last beat's); teeth, for the rig's helper: the escape wheel's place less an even run, 0 at both ends of the beat, so it loops without a seam */
     const out=(t,a,b,c,d)=>ramp(t,a,b)-ramp(t,c,d);   /* up from a to b, down from c to d */
-    const HT=0.5/FUSEE_PER_HOUR,hW=RUN_H-0.25,wT=Math.ceil(hW/HT),per=A.rollP();
+    const HT=0.5/FUSEE_PER_HOUR,hW=RUN_H-0.25,wT=Math.ceil(hW/HT),per=A.rollP(),PR=7200/FUSEE_PER_HOUR/SRT.z,RD=['spawl'];   /* PR: the beats the sustaining ratchet (SRT.z teeth) takes to turn a tooth with the fusee; RD: its pawl, riding it (the Wempe's export's Rig · ratchet) */
     return[
       {name:'Running',len:60,d:'the escapement and train for a minute, the second hand once round',run:emit=>runFor(sim(C,h0),120,emit)},
       {name:'Beat (slow motion)',len:10,d:'one beat twenty times slower: unlocking, impulse, the wheel locked again a tooth on',run:emit=>beat(emit,10)},
       /* the fusee is geared to the train, so the escape wheel goes with it, 7200 beats an hour (else the maintaining work's catch takes up the turn: update()); the arbors
          turning more than half a radian a frame (escape, fourth, third, seconds) are left out of it, as a blur */
-      {name:'Run down',len:30,fast:RUN_H*7200/(30*FPS),d:'56¼ hours in 30 s: the chain off the fusee onto the barrel, the mainspring letting down, the up-down hand, the minute and hour hands',rig:{p:'n',a:0,b:FUSEE_TURNS},
+      {name:'Run down',len:30,fast:RUN_H*7200/(30*FPS),skip:RD,d:'56¼ hours in 30 s: the chain off the fusee onto the barrel, the mainspring letting down, the up-down hand, the minute and hour hands',rig:{p:'n',a:0,b:FUSEE_TURNS},
         run:emit=>uni(30,t=>{const h=RUN_H*t/30;return st({n:h*FUSEE_PER_HOUR,E:E0+(h-h0)*7200});},emit)},
       {name:'Winding',len:wT+6,d:'wound with the key from a quarter of an hour short of run down, the sustaining spring driving the train meanwhile, until the stop-bar meets the winding stop',run:(emit,clip)=>{
         const S=sim(C,hW),T0=1,HS=clip.hours=[];let tp=0,sh=C.BX.shRest,hz=-1;   /* HS: the hours since full wind every 0.25 s, written with the clip, so blender_check.py can set the rig to the same wind and see where it parts from the clip */
@@ -85,7 +85,15 @@ const BLENDER=(()=>{
         {const s0=GIM.sea(-T0*wR,wR,1);g.lp=s0.p[0];g.lr=s0.r[0];for(let j=1;j<=n0;j++){const s=GIM.sea((-T0+T0*j/n0)*wR,wR,1);g.step(T0/n0,s.p[0],s.r[0],s);}}
         uni(6*per,(t,dt)=>{const sea=GIM.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)g.step(dt,pitch,roll,sea);else{g.lp=pitch;g.lr=roll;}return st({roll:roll-g.ar,pitch:pitch-g.ap,gp:g.p[0]-g.ap,gr:g.r[0]-g.ar});},emit);}},
       /* the rig's (rig.py): one parameter each, from a to b over the clip; the strips that play them are timed by the control's properties */
-      {name:'Rig · beat',len:0.5,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
+      {name:'Rig · beat',len:0.5,skip:RD,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
+      /* the sustaining pawl riding a tooth of its ratchet as the fusee turns, a tooth in PR beats (3.2 minutes); in Run down it is a blur, 1,050 teeth in 720 frames
+         (the rig read it from there until 18 October 2026, 0.4 deg off Running once the ratchet was drawn its measured size): the rig plays this on a loop in the escape
+         wheel's place, the fusee geared to it, at two samples a beat, 120 a beat where the pawl drops off a tooth */
+      {name:'Rig · ratchet',len:PR*0.5,only:RD,d:'for the rig: the sustaining pawl riding a tooth of its ratchet, the train running',rig:{p:'E',a:0,b:PR},
+        run:emit=>{const at=e=>st({E:E0+e,n:(h0+e/7200)*FUSEE_PER_HOUR}),n=Math.ceil(PR*2),es=[];
+          const pS=C.mv.userData.parts.spawl,gs=[];pS.traverse(o=>{if(!o.isMesh)gs.push(o);});const ang=e=>{apply(C,at(e));return gs.map(o=>o.rotation.y);};
+          let a0=ang(0);for(let i=1;i<=n;i++){const e0=PR*(i-1)/n,e1=PR*i/n,a1=ang(e1);es.push(e0);if(a1.some((v,j)=>Math.abs(v-a0[j])>0.003))for(let k=1;k<120;k++)es.push(e0+(e1-e0)*k/120);a0=a1;}es.push(PR);
+          apply(C,at(0));for(const e of es)emit(e*0.5,at(e));}},
       {name:'Rig · explode',len:2,d:'for the rig: the parts apart',rig:{p:'explode',a:0,b:1},run:emit=>uni(2,t=>st({ex:t/2}),emit)},
       {name:'Rig · laid out',len:2,d:'for the rig: the train laid out',rig:{p:'laid_out',a:0,b:1},run:emit=>uni(2,t=>st({dev:t/2}),emit)},
       {name:'Rig · lift',len:3,d:'for the rig: out of the case and turned over',rig:{p:'lift',a:0,b:1},run:emit=>uni(3,t=>st({up:t/3,flip:t/3}),emit)},
@@ -96,8 +104,9 @@ const BLENDER=(()=>{
     const PN=new Map(Object.entries(C.mv.userData.parts).map(([k,g])=>[g,k])),INFO=A.INFO,MK=new Map(MAKERS.map(m=>[m.id,m]));
     const title=p=>(INFO[p]||[p])[0],label=o=>{const p=PN.get(o);if(p)return title(p)+' ('+p+')';if(o===C.BX.root)return title('box');if(o===C.mv)return 'Movement';const r=RN.get(o);if(r)return r;
       if(o.userData.hn&&!o.userData.sub){const m=MK.get(o.userData.hn);if(m)return m.no+' '+m.name;}if(o.userData.partName&&!(o.parent&&o.parent.userData.partName===o.userData.partName))return title(o.userData.partName);return '';};
-    const walk=(o,par)=>{if(o.isLight||o.isCamera)return;const r={o,par,kids:[],name:label(o)};recs.push(r);if(par)par.kids.push(r);
-      if(o.isInstancedMesh)for(let k=0;k<nMax;k++){const l={o:null,im:o,k,par:r,kids:[],name:`chain link ${String(k+1).padStart(3,'0')}`};recs.push(l);r.kids.push(l);}
+    const partOf=o=>{for(;o;o=o.parent)if(o.userData&&o.userData.partName)return o.userData.partName;return null;};   /* the part a node is in, for the clips' skip and only */
+    const walk=(o,par)=>{if(o.isLight||o.isCamera)return;const r={o,par,kids:[],name:label(o),part:partOf(o)};recs.push(r);if(par)par.kids.push(r);
+      if(o.isInstancedMesh)for(let k=0;k<nMax;k++){const l={o:null,im:o,k,par:r,part:r.part,kids:[],name:`chain link ${String(k+1).padStart(3,'0')}`};recs.push(l);r.kids.push(l);}
       for(const c of o.children)walk(c,r);};
     walk(C.BX.root,null);return recs;}
   /* ---------- reading the copy ---------- */
@@ -160,7 +169,7 @@ const BLENDER=(()=>{
     const lin=new Map();
     { const pr=[[0,0],[0.37,0],[5.13,0],[33.7,0],[0,97],[0,2711],[5.13,2711]],QS=pr.map(([E,slip])=>{apply(C,Object.assign({},rest,{E:rest.E+E,slip}));return recs.map(r=>r.o?[r.o.quaternion.clone(),r.o.position.clone()]:null);});
       apply(C,rest);apply(C,rest);const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
-      recs.forEach((r,i)=>{if(!r.o)return;const[q0,p0]=/** @type {any[]} */(QS[0][i]);let ax=null,big=0;const ang=[];
+      recs.forEach((r,i)=>{if(!r.o||r.part==='spawl')return;const[q0,p0]=/** @type {any[]} */(QS[0][i]);let ax=null,big=0;const ang=[];   /* the sustaining pawl rides its ratchet's teeth: steady up a tooth over these few beats, it would pass for linear and the rig turn it twice (Rig · ratchet has it) */
         for(let j=1;j<pr.length;j++){const[q,p]=/** @type {any[]} */(QS[j][i]);if(p.distanceTo(p0)>1e-6)return;const d=q0.clone().invert().multiply(q);if(d.w<0)d.set(-d.x,-d.y,-d.z,-d.w);
           const s=Math.hypot(d.x,d.y,d.z),a=2*Math.atan2(s,d.w);if(s>1e-7&&a>big){big=a;ax=new THREE.Vector3(d.x,d.y,d.z).divideScalar(s);}ang.push([d,a,s]);}
         if(!ax||big<1e-6)return;const sg=ang.map(([d,a,s])=>{if(s<1e-7)return 0;const c=(d.x*ax.x+d.y*ax.y+d.z*ax.z)/s;return Math.abs(Math.abs(c)-1)>1e-4?NaN:c>0?a:-a;});
@@ -218,8 +227,8 @@ const BLENDER=(()=>{
       if(Object.keys(x).length)n.extras=x;nodes[i+1]=n;});
     for(const[r,kids]of flipKids){const n=nodes[/** @type {number} */(idx.get(r))];for(const kd of kids){nodes.push(kd);kd.i=nodes.length-1;n.children.push(kd.i);}}   /* a flipbook's shapes, after the tree's nodes */
     /* the animations: per clip, each node's channels that change, and the shapes' weights (morph) or which shape shows (flip, STEP) */
-    const anims=out.map(([c,res])=>{const an={name:c.name,channels:[]},end=res.dur;
-      for(const[r,tk]of res.tr){if(!idx.has(r))continue;if(c.fast&&lin.has(r)&&Math.abs(lin.get(r).kE)*c.fast>0.5)continue;const ni=idx.get(r);if(tk.t[tk.t.length-1]<end){tk.t.push(end);tk.v.push(...tk.v.slice(-10));}
+    const anims=out.map(([c,res])=>{const an={name:c.name,channels:[]},end=res.dur,mine=r=>!(c.skip&&c.skip.includes(r.part))&&!(c.only&&!c.only.includes(r.part));   /* skip: parts the clip leaves out; only: the parts it is for */
+      for(const[r,tk]of res.tr){if(!idx.has(r)||!mine(r))continue;if(c.fast&&lin.has(r)&&Math.abs(lin.get(r).kE)*c.fast>0.5)continue;const ni=idx.get(r);if(tk.t[tk.t.length-1]<end){tk.t.push(end);tk.v.push(...tk.v.slice(-10));}
         const t=Float32Array.from(tk.t),m=t.length,V=tk.v,ch=(o,n,path,tol,q)=>{const a=new Float32Array(m*n);let moved=false;
           for(let j=0;j<m;j++)for(let k=0;k<n;k++){a[j*n+k]=V[j*10+o+k];if(Math.abs(a[j*n+k]-a[k])>1e-9)moved=true;}
           if(!moved)return;if(q)for(let j=1;j<m;j++){let dd=0;for(let k=0;k<4;k++)dd+=a[j*4+k]*a[(j-1)*4+k];if(dd<0)for(let k=0;k<4;k++)a[j*4+k]=-a[j*4+k];}   /* each quaternion on the side of the last, so the turn between them is the short way */
