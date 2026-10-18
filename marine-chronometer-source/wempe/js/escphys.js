@@ -27,10 +27,19 @@ const WPHYS=(()=>{
   const HPT=90/14,TQ=escT(12/HPT);   /* the fusee's 6.43 h a turn; the reference: 12 h from full wind, as the Hamilton's (its drive 1 there) */
   const SET={...WESC.SET,TQ},ESC=makeEsc(SET,SET);WESC.adapt(ESC);   /* the page's escapement (WESC.ESC.state) moves as this solves it, at the reference's swing by default (the tools' phases); its layout's own motion WESC.ESC.layout */
   const drv=n=>escT(n)/TQ;   /* the drive, times the reference's */
-  /* the maintaining spring (Gegenfeder 05 06 01-1) while the key turns: it carries the running torque into the fusee wheel, deflected "x = 0,27 mm" (05 06_9, likely) at its
-     pins on r 14.2, 1.09 deg of the wheel; held by the maintaining detent on the ratchet while the fusee turns back, it drives the train with what it carried, falling as the
-     wheel runs on and it relaxes: the 1.09 deg take the train SUS s (70 s; the 1954 instruction's generic 1-2 min, 6MX-figures.md) */
-  const SUS=0.27/14.2/TAU*HPT*3600;
+  /* the maintaining spring (Gegenfeder 05 06 01-1), its eye pinned to the ratchet and its other pin to the fusee wheel (05 06_4 A-B): running, the drive closes the open
+     ring, its ends nearly meeting (Gould: "a simple steel split-ring, with ends nearly meeting"): 14.4-15.6° of the ratchet against the wheel over the wind, 1.1-2.3° short
+     of MSB (16.72°), where its eye would meet its square end. Its push for a lead ψ (rad), MSK ψ + MSK2 ψ², from its drawn section: the band held at the wheel's pin by
+     the recess's wall and at its eye by its pin, bent as an elastica (1.22 N·m a radian at small turns, Castigliano's, stiffening as it closes), and MSB from its drawn
+     outline: tools/wempe_sustaining.js, which checks these against the ring. While the key turns, the clicks let go and the ratchet turns back with the spring until the
+     maintaining detent takes its next tooth (MBK, half a tooth of 120 on average), then the train runs on what the spring keeps, the wheel turning at WFW and the push
+     falling to nothing: SUS s from the key going on at 12 h (14 min); the balance stops before that, under about a quarter of the drive (wempe_sustaining.js: 10-13 min).
+     Until 16 October 2026 the push was the running drive spent over 05 06_9's "x = 0,27 mm" (likely), 1.09° and 70 s.
+     susDrv(m0, t, f): the drive (times the reference's) t s after the key went on, the ratchet's lead m0 then and its fall f to the detent; runPhi, susPhi: the ratchet's
+     lead over the wheel, which fusee.js draws the spring closed by */
+  const MSK=1.2204,MSK2=0.2956,MSB=16.72*D2R,MBK=TAU/240,WFW=TAU/(HPT*3600);
+  const msT=ph=>MSK*ph+MSK2*ph*ph,msPh=T=>(-MSK+Math.sqrt(MSK*MSK+4*MSK2*T))/(2*MSK2);   /* the spring's push (N·m) for a lead, and the lead for a push */
+  const runPhi=d=>Math.min(msPh(Math.max(0,d)*TQ*RATIO/ETA/1e6),MSB),susPhi=(m0,t,f=MBK)=>Math.max(0,m0-f-WFW*t),susDrv=(m0,t,f=MBK)=>msT(susPhi(m0,t,f))/RATIO*ETA*1e6/TQ,msDrv=ph=>msT(Math.max(0,ph))/RATIO*ETA*1e6/TQ,SUS=(runPhi(1)-MBK)/WFW;   /* the ratchet's lead over the wheel (rad) running at drive d; t s into a wind begun at lead m0, the ratchet fallen f back to the detent (the page: fusee.js's fall(); MBK, half a tooth, its mean); the drive then */
   /* the balance and hairspring: the period the drawn spring gives the weighed balance. The spring's stiffness E b h³ / 12 L (the strip bent in its plane: 0.285 thick, 0.52
      high), L its working length pin to pin (WESC.HSL: the whole strip 13 turns less 3.5 mm, 05 03_7), carbon spring steel's modulus 206 GPa (200-210, hardened and tempered
      blue: 05 03_6's "dunkelblau anlassen"); the moment of inertia I the balance's with its rollers, collet and a third of its spring (WESC.SET.I). makeEsc runs it at the
@@ -46,5 +55,5 @@ const WPHYS=(()=>{
      when first asked for (a makeEsc solve), its rate against its own reference, as the timing weights would set it: what it runs before timing is tools/wempe_6mx.js's */
   const REV={last:{ESC,SET,HS,ampStep}};
   const rev=v=>{const k=v==='6mx'?'6mx':'last';if(!REV[k]){const S={...SET,...WESC.SET6},E=makeEsc(S,S),T=Tof(S.I,kOf(WESC.HSL.L));REV[k]={ESC:E,SET:S,HS:{...HS,kNeed:S.I*1e-9*(TAU/0.5)**2,T},ampStep:stepOf(E,S)};}return REV[k];};
-  return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,SUS,HS,ampStep,rev};
+  return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,MSK,MSK2,MSB,MBK,WFW,SUS,susDrv,susPhi,runPhi,msDrv,HS,ampStep,rev};
 })();
