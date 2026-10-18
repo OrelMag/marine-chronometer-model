@@ -636,8 +636,14 @@ const WFUSEE=(()=>{
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
         tag(mesh(gAF,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,c1],[4.5,c1],[6.65,c1+ch],[6.65,c0-ch],[4.5,c0],[2.24,c0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');}
-      const sq=new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1);sq.translate(0,-25.70-4.75,0);tag(mesh(gBA,sq,M.steel),'050702-1',1);
-      const pt=new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1);pt.translate(0,-35.2-0.25,0);tag(mesh(gBA,pt,M.steel),'050702-1',1);
+      const sq=new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1);sq.translate(0,-25.70-4.75,0);tag(mesh(rv(gBA,'last 1943 6mx'),sq,M.steel),'050702-1',1);
+      const pt=new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1);pt.translate(0,-35.2-0.25,0);tag(mesh(rv(gBA,'last 1943 6mx'),pt,M.steel),'050702-1',1);
+      /* as first drawn (020704-1, 1941): the square end 15 from the upper journal's shoulder (7 + 22.2 + 15 = its 44.2 overall, centres included: sure), so its tip at BA1-15,
+         and the turning centre left on it, a cone the sheet draws undimensioned (scaled about 2.5). Wempe 3955's (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on
+         the arbor): the square's sides end 13.1 from the shoulder (y -35.4 ±0.3; the model's 1943 square -35.2), the point 2.2 ±0.3 high to its tip at -37.6 ±0.3, the
+         sheet's -37.32 within its reading; four-sided, its tip about 0.4 across. Until 18 October 2026 every version had the 1943 arbor's 10 and a 0.5 point */
+      {const yS=-35.4,yT=BA1-15,s1=2.7-(yS+25.70)*-0.01,sq1=new THREE.CylinderGeometry(2.7/Math.SQRT2,s1/Math.SQRT2,-25.70-yS,4,1);sq1.translate(0,(-25.70+yS)/2,0);tag(mesh(rv(gBA,'first'),sq1,M.steel),'050702-1',1);
+        const pt1=new THREE.CylinderGeometry(s1/Math.SQRT2,0.2/Math.SQRT2*2,yS-yT,4,1);pt1.translate(0,(yS+yT)/2,0);tag(mesh(rv(gBA,'first'),pt1,M.steel),'050702-1',1);}
       /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core */
       const HKS=[[gAL,(BC0+BC1)/2],[gAF,(-3.7-3.1-21.7+2.9)/2]].map(([g,y])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y]);
       /* the pin along +x from 6.1 into the core; its end over the core (r 6.65) by 0.475 at its face (+z, the side rotation.y falls toward) down to 0 at its back (-z).
