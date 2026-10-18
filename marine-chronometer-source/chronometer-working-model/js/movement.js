@@ -1422,7 +1422,7 @@ function buildMovement(M){
      r 1.6 until 12 October 2026), pressed in flush with both faces, has a polished conical oil sink 3.75 mm across in its top (the old 3.1 with the screws' spacing) down to the endstone, set from below flush with the cap's underside, r 0.95, 0.025 over the pivot's end */
   const ep=new THREE.Group();ep.position.set(L.B[0],CK_T,L.B[1]);ep.rotation.y=EPa;ck.add(ep);
   hn(mesh(ep,cbGeo(EPo,0.7,[[0,0,1.93],...EP.map(q=>[...hC(...q,0.85).slice(0,3),0.9,0.4])]),M.steel,0,-0.7,0),'42160');
-  hn(mesh(ep,new THREE.LatheGeometry([V2(0.95,0),V2(0.95,-0.3),V2(0.75,-0.3),V2(1.88,-0.7),V2(1.93,-0.7),V2(1.93,0),V2(0.95,0)],40),M.steel),'42155');hn(mesh(ep,cylY(0.95,0.3,32),M.ruby,0,-0.15,0),'J.bue');
+  hn(mesh(ep,new THREE.LatheGeometry([V2(0.95,0),V2(0.95,-0.3),V2(0.75,-0.3),V2(1.88,-0.7),V2(1.93,-0.7),V2(1.93,0),V2(0.95,0)],40),M.steel),'42155');hn(mesh(ep,cylY(0.95,0.3,32),M.clear,0,-0.15,0),'J.bue');   /* a diamond, clear: the Model 21's 14 jewels are 13 rubies and this one, the endstone the balance runs on dial up (Sinclair, NAWCC Bulletin 365, 2006, pp. 708, 710, 713; sure); a ruby until 18 October 2026 */
   for(const q of EP)hn(screw(ep,...q,-0.3,0.85,0.4,0.3+1.8),'20762.ep');
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, over the third wheel) ---------- */
   const fsP=part('fs',-50);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz),WSP=[4.0,-19.9],WSR=1.15;   /* the winding stop's base and radius (below) */

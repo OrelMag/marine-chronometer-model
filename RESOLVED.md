@@ -2352,6 +2352,9 @@ Contents:
 
 ## Accuracy to the manual
 
+- **The balance cock's endstone was drawn as a ruby** (18 October 2026): the Model 21's fourteen jewels are thirteen
+  rubies and one diamond, the cock's endstone, on which the balance runs dial up (Sinclair, *NAWCC Bulletin* 365, 2006; References/NAWCC-ARTICLES.md).
+  Keep: `J.bue` in `M.clear`, its card's material Diamond (`makers.py`), the cock's description naming it. `f29df488`
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,
   running clockwise round the bottom. `7a91d18`
 - **Balance screws.** Per the parts list: 10, in pairs, three head heights.
