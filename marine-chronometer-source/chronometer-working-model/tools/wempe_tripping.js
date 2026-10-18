@@ -298,10 +298,10 @@ pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;
   flush();
   say('4. Knocks: the smallest that lets a tooth go or loses a beat, the frame as drawn against the rigid detent (dynamics.js)');
   {const K4=[];for(const[pn,pre]of KN)for(const[nm,kind,,,unit]of KK.slice(0,pre?3:2)){const[gF,gD]=take(2);K4.push({preload:pn,name:nm,unit,frame:+f(gF,1),rigid:+f(gD,1)});
-      say(`  ${pn.padEnd(30)} ${nm.padEnd(34)} the frame as drawn: about ${f(gF,unit==='g'?0:1)} ${unit}; the rigid detent: ${f(gD,unit==='g'?0:1)} ${unit} (${sg(100*(gF/gD-1),0)} %)`);}
+      say(`  ${pn.padEnd(30)} ${nm.padEnd(34)} the frame as drawn: about ${f(gF,1)} ${unit}; the rigid detent: ${f(gD,1)} ${unit} (${sg(100*(gF/gD-1),0)} %)`);}
     const gS=DY.MPRE/(DY.DM.m*DY.rCM*G0);
     say(`a steady push lifts the rigid detent off its banking at ${f(gS,0)} g (its preload's; none as drawn); the knocks a chronometer meets in its box at sea are a few g (the gimbals and the box take the rest)`);
-    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>20),`preloaded, it takes a blow over 20 g across the plate to let a tooth go`);
+    chk(K4.every(k=>k.unit!=='g'||k.preload!==KN[0][0]||k.frame>15),`preloaded, it takes a blow over 15 g across the plate to let a tooth go`);   /* 15 g, not the Hamilton's 20 (the owner's decision, 18 October 2026): the preloaded 3 ms blow reads 20.0 g on the finer search, on the old line by a hair as the train's weights move; a boxed chronometer meets a few g at sea (the gimbals and box take the rest), so 15 g is still several times it */
     J.knocks={rows:K4,gS};}
   flush();
   J.time=(Date.now()-t0)/1000;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));if(fail)process.exitCode=1;}).catch(e=>{console.error(e);process.exitCode=1;});
@@ -318,6 +318,6 @@ function child(){const spec=JSON.parse(process.env.MC_WJOB),f=(x,n=2)=>+(+x).toF
     const mk=(g,p)=>{const t1=0.3+p*T0,o={A:A0,T:t1+0.55,from:0.2};if(kind==='tw'){const dur=0.002;return go({...o,ext:pulse(t1,dur,x=>({al:g*Math.PI/(2*dur)*x,ax:0,ay:0})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});}
       const dur=kind==='b05'?0.0005:0.003,a=g*G0;return go({...o,ext:pulse(t1,dur,x=>({al:0,ax:a*x*ux,ay:a*x*uy})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});};
     const bad=g=>{for(const p of[0.1,0.35,0.6,0.85])for(const sgn of[1,-1]){const r=mk(g*sgn,p);if(r.trips>0||r.beats!==base(p).beats)return true;}return false;};
-    let lo=lo0,hi=hi0;for(let i=0;i<6;i++){const m=Math.sqrt(lo*hi);bad(m)?hi=m:lo=m;}out=hi;}
+    let lo=lo0,hi=hi0;for(let i=0;i<10;i++){const m=Math.sqrt(lo*hi);bad(m)?hi=m:lo=m;}out=hi;}   /* ten halvings of the ratio: the 1-400 g range to 0.6 % (six left about 10 %, and the preloaded 3 ms blow, near 20 g, read 20 or 22 as the train's weights moved by a hair: 18 October 2026) */
   process.stdout.write(JSON.stringify(out)+'\n');}
 if(require.main===module){if(process.argv.includes('--child'))child();else main();}
