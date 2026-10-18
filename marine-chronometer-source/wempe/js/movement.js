@@ -14,12 +14,16 @@ const ESC=WESC.ESC;
 function buildWempe(M){
   /* the gilt as Wempe 3955's photographs show it (photocompare.py, its A and N views, the same patches in photograph and render): its polished wheels hue 0.10, saturation
      0.64-0.73, its plates 0.59, against the core's gilt rendered 0.34-0.51 (the photographs' neutral steel 4 % warm at most). This page's own materials (the Hamilton's untouched) */
-  if(!M.gilt.userData.wempe){M.gilt.color=sc(0xc88a32);M.gilt.userData.wempe=1;}
+  if(!M.gilt.userData.wempe){M.gilt.userData.g0=[M.gilt.color.clone(),M.gilt.roughness];M.gilt.color=sc(0xc88a32);M.gilt.userData.wempe=1;}
   /* steel tempered to light blue at 310° (the sheets' "310° hell-blau anlassen": the maintaining detent 050505-1, the maintaining spring 05 06 01-1), not the deep blue of 295°
      (M.blued: the fusee's clicks); Wempe 3955's and Kirov 247's maintaining detents photograph pale grey (photocompare.py, their N views). Until 18 October 2026 M.blued */
   if(!M.blue310){M.blue310=M.blued.clone();M.blue310.color=sc(0x8d9cb8);M.blue310.roughness=0.3;}
   const mv=new THREE.Group(),K=KIT.parts(mv,M);mv.userData.onRev=[];   /* the sheets' two states (setRev, below): each builder's moves for them */
   const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
+  /* Variants' Finish: 'hammered' (the default, as above and frame.js's M.giltH) or 'plain', the page's gilt until 18 October 2026: the core's plain gilt on every gilt part,
+     the plates and bridges without the hammering (the 6MX's stripes kept, in that colour). See-through and faded copies follow on the next look() (syncMat) */
+  M.setFinish=k=>{const p=k==='plain',g=M.gilt.userData.g0,H=M.giltH,f=H&&H.userData.fin;M.gilt.color.copy(p?g[0]:sc(0xc88a32));for(const m of Object.values(M.gilt6||{}))m.color.copy(M.gilt.color);
+    if(f){if((H.map===null)!==p){H.map=p?null:f.map;H.normalMap=p?null:f.normalMap;H.needsUpdate=true;}H.color.copy(p?g[0]:f.color);H.roughness=p?g[1]:f.rough;}};
   const TR=WTRAIN.build(mv,M,K);   /* the going train: the centre, intermediate and seconds arbors, their bushes and the seconds jewel */
   const EB=WESC.build(mv,M,K);   /* the balance, hairspring, rollers, escape wheel, detent and their jewels */
   const DL=WDIAL.build(mv,M,K);   /* the dial, motion work, hands and up-and-down work */
