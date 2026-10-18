@@ -10,7 +10,7 @@
    Returns JSON. */
 (()=>{const mv=window.__mv,R=mv.userData.R,M=window.__M,TAU=2*Math.PI;
   const KEY=new Map(Object.entries(M).map(([k,v])=>[v,k]));
-  const RHO={plate:8.5,plateSolid:8.5,gilt:8.5,brass:8.5,brass2:8.5,copper:8.5,steel:7.85,steelD:7.85,steelS:7.85,blued:7.85,steelK:7.85,chain:7.85,chain2:7.85,mspring:7.85,ruby:3.98,clear:3.98,invar:8.05};
+  const RHO={plate:8.5,plateSolid:8.5,gilt:8.5,brass:8.5,brass2:8.5,copper:8.5,steel:7.85,steelD:7.85,steelS:7.85,blued:7.85,blue310:7.85,giltH:8.5,bakelite:1.37,steelK:7.85,chain:7.85,chain2:7.85,mspring:7.85,ruby:3.98,clear:3.98,invar:8.05};
   const r4=x=>+(+x).toFixed(4),r2=x=>+(+x).toFixed(2),P2=p=>[r4(p[0]),r4(p[1])];
   /* ---------- pawls on ratchets ---------- */
   const tr=(pts,q,th)=>{const c=Math.cos(th),s=Math.sin(th);return pts.map(([x,z])=>[q[0]+x*c+z*s,q[1]-x*s+z*c]);};
