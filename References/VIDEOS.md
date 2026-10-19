@@ -145,6 +145,7 @@ searching a video again.
 | **17:20–17:28** | **The escape wheel held in the palm, its pinion visible** | Escape pinion (should be 10) |
 | 17:38–19:18 | Balance lower bridge and train-bridge screws out; the train bridge lifted at 18:56–19:18 | Which screws are pillar screws (1.2) |
 | **19:30–20:40** | **The upper train bridge off, held to the camera** | Its screw holes (1.2) |
+| **19:38.1–19:39.2** | **The upper train bridge's underside with the balance lower bridge on it, turned in the hand: both lugs with their screws, the slab's ends** | The lugs and posts (19 October 2026): the face's camera on eight bridge holes (h4, h6, h7, h9, h11, h19, h20, h21) at 1-6 px, f 1492; the 3 o'clock end one block, the slab's end wall flush along its lug; the screws 33.6 mm apart (PROVENANCE.md 110-27a) |
 | 20:50–21:10 | Two train wheels on the bare plate | |
 | **21:50–23:20** | **The pillar plate bare, train side up, with its four pillars** | Pillars' places (1.2) |
 | 23:30–24:10 | The plate's dial side | |
