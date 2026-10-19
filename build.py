@@ -75,11 +75,20 @@ def reports(url,keep):
     for r in REPORTS:
         src=MODEL/'verification'/r;page=f'verification/{r}/index.html';dst=SITE/page;html=(src/'index.html').read_text(encoding='utf-8')
         html=re.sub(r'href="\.\./\.\./(tools/[^"]+)"',lambda m:f'href="{REPO}{m.group(1)}"',html);check(page,html)
-        for f in sorted(set(re.findall(r'src="(assets/[^"]+)"',html))):(dst.parent/f).parent.mkdir(parents=True,exist_ok=True);shutil.copy(src/f,dst.parent/f)
+        for f in sorted(subpages(src,html,f'verification/{r}',set(re.findall(r'src="(assets/[^"]+)"',html)))):(dst.parent/f).parent.mkdir(parents=True,exist_ok=True);shutil.copy(src/f,dst.parent/f)
         bad=[h for h in re.findall(r'(?:href|src)="(\.[^"#]*)',html) if not (dst.parent/h).resolve().is_relative_to(SITE.resolve())]
         if bad:sys.exit(f'{page} links to {bad} outside site/: point them at the site, or at GitHub (REPO in build.py)')
         dst.parent.mkdir(parents=True,exist_ok=True);write(dst,meta(html,url,page,keep=keep));out.append(page)
     return out
+
+def subpages(src,html,name,got):
+    """A report's pages of their own in assets/ (the Wempe's transmission viewer, the 3D viewers of the moving parts) added to got, the files it copies, with what each loads
+    beside it; a page in a folder of its own under assets/ brings the whole folder (the 3D viewers fetch their data). Each checked as the pages are: nothing from the network."""
+    for f in set(re.findall(r'href="(assets/[^"#]+\.html)"',html)):
+        sub=(src/f).read_text(encoding='utf-8');check(f'{name}/{f}',sub);got.add(f);d=pathlib.PurePosixPath(f).parent
+        got|={(d/s).as_posix() for s in re.findall(r'src="([^":#]+)"',sub)}
+        if (src/f).parent!=src/'assets':got|={(d/x.name).as_posix() for x in (src/f).parent.iterdir() if x.is_file()}
+    return got
 
 def wempe_report(url,keep):
     """The Wempe's report (wempe/verification/, its build_report.py) into site/wempe/verification/, beside the Wempe's page as in the source, with the images it shows. Its links
@@ -95,9 +104,7 @@ def wempe_report(url,keep):
         to=site.get(p) or GITHUB+p.relative_to(ROOT).as_posix()
         return f'{m.group(1)}="{to}{"#"+frag if frag else ""}"'
     html=re.sub(r'(href|src)="([^"]+)"',link,html);check(page,html)
-    got=set(re.findall(r'src="(assets/[^"]+)"',html))
-    for f in set(re.findall(r'href="(assets/[^"#]+\.html)"',html)):   # a page of its own in assets/ (the transmission's viewer), and what it loads beside it
-        sub=(src/f).read_text(encoding='utf-8');check(f'wempe/verification/{f}',sub);got.add(f);got|={(pathlib.PurePosixPath(f).parent/s).as_posix() for s in re.findall(r'src="([^":#]+)"',sub)}
+    got=subpages(src,html,'wempe/verification',set(re.findall(r'src="(assets/[^"]+)"',html)))
     for f in sorted(got):(dst.parent/f).parent.mkdir(parents=True,exist_ok=True);shutil.copy(src/f,dst.parent/f)
     dst.parent.mkdir(parents=True,exist_ok=True);write(dst,meta(html,url,page,keep=keep));return page
 

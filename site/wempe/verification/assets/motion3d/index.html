@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<title>Wempe Moving Parts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* layout: a bench with the movement under a lamp at the left, the instruments at the right, the record of the runs below */
+:root{
+  --bg:#f3f1ec;--panel:#fbfaf7;--ink:#1c1d20;--muted:#5d6068;--rule:#d8d4ca;--brass:#9a6a1c;--steel:#3f5b78;--good:#2e7d4f;--warn:#b7791f;--bad:#b3261e;--stage:#e9e6df;
+  --f-display:"Spectral",Georgia,serif;--f-body:"Instrument Sans",system-ui,sans-serif;--f-data:ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--panel:#1d1f24;--ink:#e9e6df;--muted:#a3a6ad;--rule:#33363d;--brass:#d6a24a;--steel:#8fb0d1;--good:#5cbf86;--warn:#e0a84a;--bad:#ef6b62;--stage:#101114;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15161a;--panel:#1d1f24;--ink:#e9e6df;--muted:#a3a6ad;--rule:#33363d;--brass:#d6a24a;--steel:#8fb0d1;--good:#5cbf86;--warn:#e0a84a;--bad:#ef6b62;--stage:#101114;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0}
+h1{font-size:30px;letter-spacing:-.01em}h2{font-size:22px}h3{font-size:16px}
+p{margin:0;max-width:70ch}.muted{color:var(--muted)}
+.mono,.num{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:1px solid var(--rule);padding-bottom:14px}
+.lede{display:flex;flex-direction:column;gap:6px;min-width:0}
+.eyebrow{font:500 12px/1 var(--f-data);letter-spacing:.08em;text-transform:uppercase;color:var(--brass)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{font:500 13px var(--f-body);color:var(--ink);background:none;border:0;padding:7px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.bench{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px}
+@media (max-width:980px){.bench{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;background:var(--stage);border:1px solid var(--rule);border-radius:10px;overflow:hidden;min-height:420px;aspect-ratio:4/3;max-width:100%}
+.stage canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:10px;top:10px;right:10px;display:flex;flex-wrap:wrap;gap:8px;pointer-events:none}
+.hud>*{pointer-events:auto}
+.legend{position:absolute;left:10px;bottom:10px;right:10px;display:flex;align-items:center;gap:10px;font:12px var(--f-data);color:var(--ink);background:color-mix(in srgb,var(--panel) 85%,transparent);border:1px solid var(--rule);border-radius:8px;padding:6px 10px;flex-wrap:wrap}
+.ramp{height:10px;flex:1 1 140px;min-width:120px;border-radius:3px}
+.status{position:absolute;inset:0;display:grid;place-items:center;font:14px var(--f-data);color:var(--muted)}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+label{font-size:13px;color:var(--muted)}
+select,input[type=range]{accent-color:var(--brass)}
+select{font:14px var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:6px 8px;max-width:100%}
+.btn{font:500 13px var(--f-body);background:var(--ink);color:var(--bg);border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--rule)}
+.time{display:flex;align-items:center;gap:10px}.time input{flex:1}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:13px}dl.kv dt{color:var(--muted)}dl.kv dd{margin:0;font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;font:500 11px var(--f-data);padding:2px 7px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.ok{color:var(--good)}.near{color:var(--warn)}.over{color:var(--bad)}
+.chart{width:100%;height:190px;display:block}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:820px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 12px var(--f-data);letter-spacing:.04em;color:var(--muted);text-transform:uppercase;cursor:pointer;white-space:nowrap}
+td.num{text-align:right}tr:hover td{background:color-mix(in srgb,var(--brass) 7%,transparent)}tr.sel td{background:color-mix(in srgb,var(--brass) 14%,transparent)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:18px}
+.findings{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.findings li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.foot{font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+[hidden]{display:none!important}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="lede">
+    <span class="eyebrow">Wempe Einheits-Chronometer · every part designed to move</span>
+    <h1>Wempe Moving Parts</h1>
+    <p class="muted">Each moving part in 3D through four runs of the whole transmission, coloured by its stress, its stress against its material, or its speed. The loads come from the nonlinear run of every part together; the stress from finite elements on the parts’ own solids and from the springs’ large-deflection solutions.</p>
+  </div>
+  <div class="row">
+    <span class="seg" role="group" aria-label="Version"><button id="v-last" aria-pressed="true">As drawn</button><button id="v-build" aria-pressed="false">1950s build</button></span>
+  </div>
+</header>
+
+<section class="bench">
+  <div class="stage" id="stage">
+    <canvas id="gl" aria-label="The movement in 3D"></canvas>
+    <div class="hud">
+      <span class="seg" role="group" aria-label="Colour by"><button data-mode="mat" aria-pressed="false">Material</button><button data-mode="mpa" aria-pressed="false">Stress</button><button data-mode="use" aria-pressed="true">Against its limit</button><button data-mode="speed" aria-pressed="false">Speed</button></span>
+      <span class="seg" role="group" aria-label="Frame"><button id="frameBtn" aria-pressed="true">Plates shown</button></span>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="status" id="status">Loading the movement…</div>
+  </div>
+  <aside class="side">
+    <div class="card">
+      <h3>The run</h3>
+      <select id="run" aria-label="Run"></select>
+      <p class="muted" id="runNote" style="font-size:13px"></p>
+      <div class="time"><button class="btn" id="play">Play</button><input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Time in the run"><span class="mono" id="tlab" style="font-size:12px;min-width:7ch;text-align:right"></span></div>
+      <div class="row"><label for="slow">Slow motion</label><select id="slow"><option value="1">real time</option><option value="0.1">10×</option><option value="0.01" selected>100×</option><option value="0.001">1000×</option></select>
+        <label for="mag">Deviations ×</label><select id="mag"><option value="1">1</option><option value="100">100</option><option value="1000" selected>1000</option><option value="10000">10 000</option></select></div>
+    </div>
+    <div class="card" id="pickCard">
+      <h3 id="pickTitle">Click a part</h3>
+      <div id="pickBody" class="muted" style="font-size:13px">Its stress, load, margin and motion through the run show here.</div>
+    </div>
+    <div class="card">
+      <h3>Loads through the run</h3>
+      <canvas class="chart" id="chart" aria-label="Loads through the run"></canvas>
+      <div class="row" id="chartKey" style="font-size:12px"></div>
+    </div>
+  </aside>
+</section>
+
+<section class="card" style="gap:14px">
+  <h2>What the analysis finds</h2>
+  <ul class="findings" id="findings"></ul>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:10px">
+  <h2>Every moving part</h2>
+  <p class="muted" style="font-size:13px">Peak stress at the part’s worst moment in the four runs, against its material’s limit (yield for brass and steel; the strength for Nivaflex). Click a row to find the part.</p>
+  <div class="tablewrap"><table id="parts"><thead><tr><th data-k="name">Part</th><th data-k="how">How it was found</th><th data-k="load">Worst load</th><th data-k="peak" class="num">Peak MPa</th><th data-k="limit" class="num">Limit MPa</th><th data-k="margin" class="num">Margin</th><th data-k="w" class="num">Fastest rad/s</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="cols">
+  <div class="card"><h2>Kinematics</h2><p class="muted" style="font-size:13px">Each part the escape wheel turns, as the model’s own mechanism moves it, against its tooth counts; and every body’s fastest speed and acceleration in each run.</p><div id="kin"></div></div>
+  <div class="card"><h2>Assumptions</h2><ul class="plain" id="assume"></ul></div>
+</section>
+<section class="card"><h2>How it was worked out</h2><ul class="plain" id="methods"></ul><p class="foot" id="made"></p></section>
+</div>
+
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script>
+(async function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+const status=$('#status');
+let ONLY=null,META,GEOM,SAMP,VB={},ver='last',mode='use',runI=0,playing=false,tNorm=0,showFrame=true,picked=null;
+try{
+  META=await fetch('meta.json').then(r=>r.json());
+  /* the binaries come as base64 text in chunks (name.0.txt, name.1.txt...), joined into one buffer (a private page, which serves text only); or, beside a report on the site,
+     as a file of their own (META.bins[nm] its name), gzipped (unpacked here: the host sends it as it is) */
+  const bin=async nm=>{if(typeof META.bins[nm]==='string'){const r=await fetch(META.bins[nm]);if(!r.ok)throw Error(nm+' '+r.status);const a=new Uint8Array(await r.arrayBuffer());
+      if(a[0]!==0x1f||a[1]!==0x8b)return a.buffer;if(!window.DecompressionStream)throw Error('this browser can’t unpack gzip (DecompressionStream)');
+      return new Response(new Blob([a]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();}
+    const parts=await Promise.all([...Array(META.bins[nm]).keys()].map(k=>fetch(nm+'.'+k+'.txt').then(r=>{if(!r.ok)throw Error(nm+' '+r.status);return r.text();})));
+    const bytes=parts.map(t=>{const s=atob(t),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a;});const n=bytes.reduce((x,a)=>x+a.length,0),out=new Uint8Array(n);let o=0;for(const a of bytes){out.set(a,o);o+=a.length;}return out.buffer;};
+  [GEOM,SAMP]=await Promise.all([bin('geom'),bin('samp')]);
+  for(const v of Object.keys(META.versions))VB[v]=await bin('v_'+v);
+}catch(e){status.textContent='The data didn’t load: '+e.message;return;}
+const V=()=>META.versions[ver],F32=(buf,[o,n])=>new Float32Array(buf,o,n);
+/* ---------------- the scene ---------------- */
+const canvas=$('#gl'),renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(2,devicePixelRatio));
+const clear=()=>renderer.setClearColor(new THREE.Color(css('--stage')||'#e9e6df'),1);clear();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',clear);
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(30,1,1,2000);cam.position.set(80,-150,120);cam.up.set(0,-1,0);
+const ctl=new THREE.OrbitControls(cam,canvas);ctl.target.set(0,-14,0);ctl.enableDamping=true;
+scene.add(new THREE.HemisphereLight(0xffffff,0x404050,0.9));const key=new THREE.DirectionalLight(0xffffff,0.8);key.position.set(60,-120,80);scene.add(key);
+const rim=new THREE.DirectionalLight(0xffffff,0.35);rim.position.set(-80,60,-40);scene.add(rim);
+function resize(){const r=canvas.parentElement.getBoundingClientRect();renderer.setSize(r.width,r.height,false);cam.aspect=r.width/r.height;cam.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(canvas.parentElement);
+/* the meshes */
+const MESH=[],byPart={};
+for(const m of META.meshes){
+  const lo=m.box[0],hi=m.box[1],q=new Uint16Array(GEOM,m.pos[0],m.pos[1]/2),n=q.length/3,p=new Float32Array(q.length);
+  for(let i=0;i<n;i++)for(let k=0;k<3;k++)p[3*i+k]=lo[k]+q[3*i+k]*(hi[k]-lo[k])/65535;
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));
+  const ix=m.idx[2]==='2'?new Uint16Array(GEOM,m.idx[0],m.idx[1]):new Uint32Array(GEOM,m.idx[0],m.idx[1]);g.setIndex(new THREE.BufferAttribute(ix,1));g.computeVertexNormals();
+  g.setAttribute('color',new THREE.BufferAttribute(new Float32Array(n*3).fill(1),3));
+  const base=new THREE.Color('#'+(m.col||'b6bcc5'));
+  const see=m.frame||m.pk==='barrel.drum'||m.pk==='barrel.lid';   /* the frame, and the barrel's drum and lid so the mainspring shows */
+  const mat=new THREE.MeshStandardMaterial({color:base,metalness:0.35,roughness:0.5,vertexColors:false,transparent:see,opacity:m.frame?0.22:see?0.3:1,depthWrite:!see});
+  const o=new THREE.Mesh(g,mat);o.matrixAutoUpdate=false;const M0=new THREE.Matrix4().fromArray(m.mat);o.matrix.copy(M0);o.userData={m,M0,base,p0:p.slice()};scene.add(o);MESH.push(o);(byPart[m.part]=byPart[m.part]||[]).push(o);
+}
+status.hidden=true;resize();
+/* the mainspring drawn from its solved states, coloured along its length; the page's own mesh hidden */
+(byPart.mainspring||[]).forEach(o=>o.visible=false);
+const msMesh=(()=>{const bx=byPart.barrel&&byPart.barrel[0];const g=new THREE.BufferGeometry();const N=400;const pos=new Float32Array(N*2*3),col=new Float32Array(N*2*3),idx=[];
+  for(let i=0;i<N-1;i++){const a=2*i;idx.push(a,a+1,a+2,a+1,a+3,a+2);}g.setIndex(idx);g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const mm=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,metalness:0.2,roughness:0.6}));scene.add(mm);return mm;})();
+/* ---------------- colour scales ---------------- */
+const RAMP=[[0,[0.17,0.32,0.62]],[0.35,[0.16,0.62,0.55]],[0.6,[0.55,0.75,0.25]],[0.8,[0.95,0.75,0.2]],[1,[0.85,0.2,0.15]],[1.4,[0.65,0.1,0.55]]];
+function ramp(u){u=Math.max(0,u);if(u>=1.4)return RAMP[5][1];for(let i=1;i<RAMP.length;i++)if(u<=RAMP[i][0]){const[a,ca]=RAMP[i-1],[b,cb]=RAMP[i],f=(u-a)/(b-a);return ca.map((c,k)=>c+(cb[k]-c)*f);}return RAMP[5][1];}
+const logu=(x,lo,hi)=>x<=lo?0:Math.min(1.4,Math.log(x/lo)/Math.log(hi/lo));
+function legend(){const L=$('#legend');const st=`background:linear-gradient(90deg,${[0,.35,.6,.8,1,1.4].map(u=>'rgb('+ramp(u).map(c=>Math.round(c*255)).join(',')+') '+(u/1.4*100).toFixed(0)+'%').join(',')})`;
+  L.innerHTML=mode==='mat'?'<span>The parts in their materials’ colours</span>':mode==='mpa'?`<span>1 MPa</span><span class="ramp" style="${st}"></span><span>3000 MPa</span>`:mode==='use'?`<span>0</span><span class="ramp" style="${st}"></span><span>1 = its limit · past it purple</span>`:`<span>0.001 rad/s</span><span class="ramp" style="${st}"></span><span>100 rad/s</span>`;}
+/* ---------------- a run's channels at a time ---------------- */
+const RUN=()=>V().runs[runI],buf=()=>VB[ver];
+function chan(run,set,name){const e=run[set][name];if(!e)return null;return set==='bodies'?{q:F32(buf(),[e[0],e[1]]),d:F32(buf(),[e[0]+4*e[1],e[1]])}:F32(buf(),e);}
+let TT=null;function times(){const r=RUN();TT=F32(buf(),r.t);}
+function at(arr,t){let lo=0,hi=TT.length-1;if(t<=TT[0])return arr[0];if(t>=TT[hi])return arr[hi];while(hi-lo>1){const m=(lo+hi)>>1;TT[m]<=t?lo=m:hi=m;}const f=(t-TT[lo])/(TT[hi]-TT[lo]||1);return arr[lo]+(arr[hi]-arr[lo])*f;}
+function slope(arr,t){const dt=(TT[TT.length-1]-TT[0])/2000;return(at(arr,t+dt)-at(arr,t-dt))/(2*dt);}
+/* the samples: matrices and shapes by an input's value */
+function sampleMat(key,id,v){const s=META.samples[key];if(!s||!s.mats)return null;const j=s.ids.indexOf(id);if(j<0)return null;const vals=s.vals,K=s.ids.length,A=F32(SAMP,s.mats);
+  let i=0;while(i<vals.length-2&&vals[i+1]<v)i++;const f=Math.max(0,Math.min(1,(v-vals[i])/(vals[i+1]-vals[i])));const out=new Float32Array(16);for(let k=0;k<16;k++)out[k]=A[(i*K+j)*16+k]*(1-f)+A[((i+1)*K+j)*16+k]*f;return out;}
+function sampleGeo(key,id,v,dst){const s=META.samples[key];const e=s&&s.geo[String(id)];if(!e)return false;const[o,n,nn,nv]=e,vals=s.vals,A=F32(SAMP,[o,n]);let i=0;while(i<vals.length-2&&vals[i+1]<v)i++;const f=Math.max(0,Math.min(1,(v-vals[i])/(vals[i+1]-vals[i])));
+  for(let k=0;k<nv;k++)dst[k]=A[i*nv+k]*(1-f)+A[(i+1)*nv+k]*f;return true;}
+/* ---------------- the state at time t ---------------- */
+const HPT=90/14,N0={'A beat at 12 hours':12/HPT,'The key let go outright':24/HPT,'The key eased back':24/HPT,'Wound into the stop':null};
+const tmp=new THREE.Matrix4(),R=new THREE.Matrix4(),T1=new THREE.Matrix4(),T2=new THREE.Matrix4();
+function turnAbout(o,pt,s,ang,M){T1.makeTranslation(pt[0],0,pt[2]);R.makeRotationY(s*ang);T2.makeTranslation(-pt[0],0,-pt[2]);tmp.copy(T1).multiply(R).multiply(T2).multiply(M);o.matrix.copy(tmp);}
+function pose(t){
+  const r=RUN(),mag=+$('#mag').value,B={},t0=TT[0];
+  for(const nm of Object.keys(r.bodies)){const c=chan(r,'bodies',nm);B[nm]={d:at(c.q,t)-c.q[0]+mag*(at(c.d,t)-c.d[0]),w:slope(c.q,t)+slope(c.d,t)};}
+  const fq=chan(r,'bodies','fusee'),n0=N0[r.name];   /* the fusee's turns from full wind: from the run's start (12 or 24 hours), or back from the stop at full wind */
+  const n=n0==null?Math.max(0,(at(fq.q,t)-fq.q[fq.q.length-1])/(2*Math.PI)):n0+(at(fq.q,t)-fq.q[0])/(2*Math.PI);
+  const bal=chan(r,'forces','balance'),A=Math.abs(V().kin.runs['A beat at 12 hours']?.bodies?.balance?.amp||3.3),th=bal?at(bal,t):A*Math.sin(2*Math.PI*(t-t0)/0.5);
+  const lift=chan(r,'forces','detentLift'),li=lift?at(lift,t):0,lead=chan(r,'forces','lead'),ld=lead?at(lead,t):null;
+  const STATE={B,n,th,li,ld,t};
+  for(const o of MESH){const m=o.userData.m;let M0=o.userData.M0;
+    if(m.part==='barrel'||m.part==='chain'){const sm=sampleMat('n',m.id,n);if(sm){o.matrix.fromArray(sm);continue;}}
+    if(m.body==='balance'&&m.ax){turnAbout(o,m.ax.pt,m.ax.s,th,M0);}
+    else if(m.body==='detent'&&m.ax){turnAbout(o,m.ax.pt,m.ax.s,li,M0);}
+    else if(m.body&&B[m.body]&&m.ax){turnAbout(o,m.ax.pt,m.ax.s,B[m.body].d,M0);}
+    else o.matrix.copy(M0);
+    if(m.part==='hairspring'){const pa=o.geometry.attributes.position;if(sampleGeo('th',m.id,th,pa.array)){pa.needsUpdate=true;o.geometry.computeVertexNormals();}}
+    if(m.part==='maintaining'&&ld!=null){const pa=o.geometry.attributes.position;if(sampleGeo('ms',m.id,ld,pa.array)){pa.needsUpdate=true;}}
+  }
+  mainspring(n);return STATE;}
+/* the mainspring at the barrel's wind: the solved state nearest, its centre line and stress */
+const msPlace=(()=>{const b=byPart.barrel;if(!b)return null;const a=b.find(o=>o.userData.m.ax)||b[0];const ms=byPart.mainspring&&[...byPart.mainspring].sort((a,b)=>b.userData.m.nv-a.userData.m.nv)[0];const yb=ms?[ms.userData.m.box[0][1],ms.userData.m.box[1][1]]:[-21,-5];
+  const M=new THREE.Matrix4().fromArray(ms?ms.userData.m.mat:a.userData.m.mat);const c=new THREE.Vector3().setFromMatrixPosition(M);return{c,y0:Math.min(...yb)+c.y,y1:Math.max(...yb)+c.y};})();
+function mainspring(n){const S=V().springs.mainspring;if(!S||!msPlace)return;const msLim=S.limit||(S.t>0.375?3000:2550);const Tu=S.Tup,Td=S.Tdown,T=Tu-(Tu-Td)*Math.min(1,Math.max(0,n/8.64));
+  const st=S.states;let i=0;while(i<st.length-2&&st[i+1].T<T)i++;const f=Math.max(0,Math.min(1,(T-st[i].T)/(st[i+1].T-st[i].T)));const a=st[i],b=st[i+1];
+  const pos=msMesh.geometry.attributes.position.array,col=msMesh.geometry.attributes.color.array,c=msPlace.c,lim=msLim;
+  const cal=S.cal||{phi:0,mir:1},cp=Math.cos(cal.phi),sn=Math.sin(cal.phi);
+  for(let k=0;k<400;k++){const x0=a.x[k]*(1-f)+b.x[k]*f,y0=(a.y[k]*(1-f)+b.y[k]*f)*cal.mir,x=cp*x0-sn*y0,y=sn*x0+cp*y0,s=a.sig[k]*(1-f)+b.sig[k]*f;
+    for(const[j,yy]of[[0,msPlace.y0],[1,msPlace.y1]]){const q=(2*k+j)*3;pos[q]=c.x+x;pos[q+1]=yy;pos[q+2]=c.z+y;
+      const u=mode==='mpa'?logu(s,1,3000):mode==='use'?s/lim:mode==='speed'?0:0.0;const cc=mode==='mat'||mode==='speed'?[0.05,0.07,0.16]:ramp(u);col[q]=cc[0];col[q+1]=cc[1];col[q+2]=cc[2];}}
+  msMesh.geometry.attributes.position.needsUpdate=true;msMesh.geometry.attributes.color.needsUpdate=true;msMesh.geometry.computeVertexNormals();msMesh.userData.T=T;}
+/* ---------------- colours ---------------- */
+const CFG=META.cfg,PARTCH=CFG.chans;
+const PARTCH_W={fuseeWheel:'mesh:fusee wheel → centre pinion',centreWheel:'mesh:centre wheel → intermediate pinion',intermediateWheel:'mesh:intermediate wheel → seconds pinion',
+  secondsWheel:'mesh:seconds wheel → escape pinion',escapeWheel:'mesh:seconds wheel → escape pinion',fusee:'chain',barrel:'chain','maintaining.clicks':'click1','maintaining.ratchet':'detent',
+  maintDetent:'detent',barrelArbor:'spring',setupRatchet:'spring','stopWork.bar':'stop','topPlate.stopPin':'stop',rollers:'mesh:seconds wheel → escape pinion'};
+function partKey(m){const P=V().parts;if(P[m.pk])return m.pk;if(P[m.part])return m.part;const two=m.pk&&m.pk.split('.').slice(0,2).join('.');return P[two]?two:null;}
+function factor(key,S){if(key==='balance')return Math.abs(S.th)/Math.max(1e-6,Math.abs(V().kin.runs['A beat at 12 hours']?.bodies?.balance?.amp||3.3));const ch=PARTCH[key];if(!ch)return 1;const r=RUN(),a=chan(r,'forces',ch);if(!a)return 0;
+  let pk=0;for(const rr of V().runs){const b=chan(rr,'forces',ch);if(b)for(const x of b)pk=Math.max(pk,Math.abs(x));}return pk?Math.abs(at(a,S.t))/pk:0;}
+function colour(S){
+  const P=V().parts,sv=V().stress,sp=V().springs;
+  for(const o of MESH){const m=o.userData.m,mat=o.material;o.visible=(m.part!=='mainspring')&&(showFrame||!m.frame)&&(!ONLY||ONLY.includes(m.part)||ONLY.includes(m.pk));
+    if(mode==='mat'){mat.vertexColors=false;mat.color.copy(o.userData.base);mat.needsUpdate=true;continue;}
+    const c=o.geometry.attributes.color.array,n=c.length/3;mat.vertexColors=true;mat.color.set(0xffffff);mat.needsUpdate=true;
+    let fill=null;
+    if(mode==='speed'){const w=m.body==='balance'?Math.abs(S.B.balance?S.B.balance.w:0)||Math.abs(slopeTh(S.t)):m.body&&S.B[m.body]?Math.abs(S.B[m.body].w):0;fill=m.body?ramp(logu(w,0.001,100)):[0.5,0.5,0.52];}
+    else{const k=partKey(m),e=sv[String(m.id)];
+      if(e&&k){const s=new Uint16Array(buf(),e[0],e[1]),f=factor(k,S),lim=P[k].limit[0];for(let i=0;i<n;i++){const v=s[i]*f;const cc=ramp(mode==='mpa'?logu(v,1,3000):v/lim);c[3*i]=cc[0];c[3*i+1]=cc[1];c[3*i+2]=cc[2];}o.geometry.attributes.color.needsUpdate=true;continue;}
+      const spring=springStress(m,S,sp);if(spring!=null){const[v,lim]=spring;fill=ramp(mode==='mpa'?logu(v,1,3000):v/lim);}
+      else fill=m.frame?[0.55,0.56,0.6]:[0.42,0.44,0.48];}
+    for(let i=0;i<n;i++){c[3*i]=fill[0];c[3*i+1]=fill[1];c[3*i+2]=fill[2];}o.geometry.attributes.color.needsUpdate=true;}}
+function slopeTh(t){const r=RUN(),b=chan(r,'forces','balance');return b?slope(b,t):0;}
+function springStress(m,S,sp){const pk=m.pk||'';
+  /* the springs (both models' pieces): the hairspring by the balance's angle, the maintaining or sustaining spring by its lead (banked: its peak), the chain by its pull, the passing spring and detent spring by the lift */
+  if((m.part==='hairspring'&&pk.endsWith('.spring'))||pk==='spr.spring')return[sp.hairspring.MPaPerRad*Math.abs(S.th),sp.hairspring.limit||1200];
+  if(pk==='maintaining.spring')return[sp.maintaining.peak*Math.min(1,Math.abs(S.ld||0)/0.29),1200];
+  if(pk==='sspring')return[sp.maintaining.peak,1200];
+  if(m.part==='chain'){const r=RUN(),a=chan(r,'forces','chain');return[(a?Math.abs(at(a,S.t)):0)*sp.chain.plateMPaPerN,sp.chain.limit||1400];}
+  if(pk==='detent.gold'||pk==='det.trip')return[sp.goldSpring.peak*0.3,sp.goldSpring.limit||500];
+  if(pk==='detent.detent'||pk==='detent.foot'||pk==='det.detent')return[sp.detentSpring.MPaPerRad*Math.abs(S.li),sp.detentSpring.limit||1200];
+  return null;}
+/* ---------------- picking ---------------- */
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
+canvas.addEventListener('click',ev=>{const r=canvas.getBoundingClientRect();mouse.set((ev.clientX-r.left)/r.width*2-1,-(ev.clientY-r.top)/r.height*2+1);ray.setFromCamera(mouse,cam);
+  const hit=ray.intersectObjects(MESH.filter(o=>o.visible&&!o.userData.m.frame),false)[0];if(hit)pick(hit.object.userData.m);});
+function nice(k){return CFG.names[k]||k;}
+function chip(mg){if(mg==null)return'';const c=mg<1?'over':mg<1.5?'near':'ok';return `<span class="chip ${c}">${mg<1?'over its limit':mg<1.5?'near its limit':'margin '+mg.toFixed(1)}</span>`;}
+function pick(m){picked=m;const k=partKey(m),P=V().parts[k];const kb=V().kin.runs[RUN().name]?.bodies||{};const w=m.body&&kb[m.body]?Math.abs(kb[m.body].w):null;
+  $('#pickTitle').textContent=P?nice(k):(m.pk||m.part);
+  let h='';if(P){const mg=P.margin&&P.margin[0];h+=`<p style="margin-bottom:8px">${P.note}</p><dl class="kv"><dt>Worst load</dt><dd>${P.load||'—'}</dd><dt>Peak stress</dt><dd>${P.peak.toFixed(0)} MPa in ${P.mat} ${chip(mg)}</dd><dt>Limit</dt><dd>${P.limit[0]}–${P.limit[1]} MPa</dd>${P.hertz?`<dt>Contact (Hertz)</dt><dd>${P.hertz.toFixed(0)} MPa</dd>`:''}<dt>Bricks</dt><dd>${P.bricks.toLocaleString()} at ${P.h.toFixed(3)} mm${P.windows&&P.windows.length?', windows '+P.windows.map(x=>x.h.toFixed(3)).join(', ')+' mm':''}</dd>${w!=null?`<dt>Fastest here</dt><dd>${w.toPrecision(3)} rad/s</dd>`:''}</dl>`;}
+  else{const sp=V().springs;h=m.part==='mainspring'?`The mainspring, ${sp.mainspring.t} mm: ${sp.mainspring.peakFull.toFixed(0)} MPa on its inner coils fully wound, ${sp.mainspring.medianFull.toFixed(0)} along it.`:m.part==='hairspring'?`The hairspring: ${sp.hairspring.MPaPerRad.toFixed(1)} MPa for each radian of swing, even along it.`:m.part==='chain'?`The chain: ${sp.chain.plateMPaPerN.toFixed(2)} MPa in its link plates for each newton of pull.`:'A part the analysis moves but doesn’t load beyond its running force.';}
+  $('#pickBody').innerHTML=h;$('#pickBody').classList.remove('muted');$$('#parts tbody tr').forEach(tr=>tr.classList.toggle('sel',tr.dataset.k===k));}
+/* ---------------- the chart ---------------- */
+const CH=CFG.chart;
+function chart(t){const c=$('#chart'),r=c.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio);c.width=r.width*dpr;c.height=r.height*dpr;const g=c.getContext('2d');g.scale(dpr,dpr);const W=r.width,H=r.height,run=RUN();
+  g.clearRect(0,0,W,H);const pad=[34,8,14,22];const t0=TT[0],t1=TT[TT.length-1];const series=CH.map(([k,l,col])=>{const a=chan(run,'forces',k);return a?{a,l,col:css(col),k:k.startsWith('mesh')?100:1}:null;}).filter(Boolean);
+  let mx=1e-9;series.forEach(s=>{for(const x of s.a)mx=Math.max(mx,Math.abs(x)*s.k);});
+  g.strokeStyle=css('--rule');g.lineWidth=1;g.fillStyle=css('--muted');g.font='11px IBM Plex Mono, monospace';
+  for(let i=0;i<=4;i++){const y=pad[2]+(H-pad[2]-pad[3])*(1-i/4);g.beginPath();g.moveTo(pad[0],y);g.lineTo(W-pad[1],y);g.stroke();g.fillText((mx*i/4).toPrecision(2),2,y+3);}
+  const X=x=>pad[0]+(W-pad[0]-pad[1])*(x-t0)/(t1-t0),Y=y=>pad[2]+(H-pad[2]-pad[3])*(1-Math.abs(y)/mx);
+  series.forEach(s=>{g.strokeStyle=s.col;g.lineWidth=1.4;g.beginPath();for(let i=0;i<TT.length;i+=Math.max(1,TT.length/800|0)){const x=X(TT[i]),y=Y(s.a[i]*s.k);i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();});
+  g.strokeStyle=css('--ink');g.setLineDash([3,3]);g.beginPath();g.moveTo(X(t),pad[2]);g.lineTo(X(t),H-pad[3]);g.stroke();g.setLineDash([]);
+  g.fillStyle=css('--muted');g.fillText((t1-t0).toPrecision(3)+' s',W-pad[1]-40,H-6);
+  $('#chartKey').innerHTML=series.map(s=>`<span><span style="display:inline-block;width:10px;height:3px;background:${s.col};vertical-align:middle"></span> ${s.l}</span>`).join(' · ');}
+/* ---------------- the tables and text ---------------- */
+function tables(){const P=V().parts,K=V().kin.runs;const rows=Object.entries(P).map(([k,p])=>{let w=0;for(const r of Object.values(K))for(const[b,v]of Object.entries(r.bodies))if(v.w!=null&&bodyOf(k)===b)w=Math.max(w,Math.abs(v.w));
+  return{k,name:nice(k),how:'Finite elements, '+(p.windows&&p.windows.length?'fine windows at the contacts':'whole part'),load:(p.load||'').replace(/\s*\(.*$/,''),peak:p.peak,limit:p.limit[0],margin:p.margin?p.margin[0]:null,w};});
+  const sp=V().springs;const msl=sp.mainspring.limit||(sp.mainspring.t>0.375?3000:2550),HAM=META.model==='hamilton';rows.push({k:'mainspring',name:'Mainspring ('+sp.mainspring.t+' mm)',how:'Along its strip, its solved shapes',load:'fully wound',peak:sp.mainspring.peakFull,limit:msl,margin:msl/sp.mainspring.peakFull,w:Math.abs(K['The key let go outright']?.bodies?.barrel?.w||0)});
+  rows.push({k:'maintainingSpring',name:HAM?'Sustaining spring':'Maintaining spring',how:HAM?'Its section, banked (sustaining.js)':'Its elastica (wempe_sustaining.js)',load:sp.maintaining.banked?'banked, running':'at the strongest drive',peak:sp.maintaining.peak,limit:1200,margin:1200/sp.maintaining.peak,w:null});
+  rows.push({k:'hairspring',name:'Hairspring',how:'An even couple along it',load:'the swing’s end',peak:sp.hairspring.MPaPerRad*Math.abs(K['A beat at 12 hours']?.bodies?.balance?.amp||3.3),limit:sp.hairspring.limit||1200,margin:null,w:Math.abs(K['A beat at 12 hours']?.bodies?.balance?.w||0)});
+  rows.push({k:'goldSpring',name:HAM?'Trip spring':'Gold spring',how:'A cantilever bent at its tip',load:'the return pass',peak:sp.goldSpring.peak,limit:sp.goldSpring.limit||500,margin:(sp.goldSpring.limit||500)/sp.goldSpring.peak,w:null});
+  rows.forEach(r=>{if(r.margin==null&&r.limit)r.margin=r.limit/r.peak;});
+  const tb=$('#parts tbody');tb.innerHTML=rows.sort((a,b)=>(a.margin??99)-(b.margin??99)).map(r=>`<tr data-k="${r.k}"><td>${r.name}</td><td class="muted">${r.how}</td><td>${r.load}</td><td class="num">${r.peak.toFixed(0)}</td><td class="num">${r.limit}</td><td class="num">${chip(r.margin)}</td><td class="num">${r.w?r.w.toPrecision(3):'—'}</td></tr>`).join('');
+  $$('#parts tbody tr').forEach(tr=>tr.addEventListener('click',()=>{const m=META.meshes.find(x=>partKey(x)===tr.dataset.k||x.part===tr.dataset.k);if(m)pick(m);$('#stage').scrollIntoView({behavior:'smooth',block:'center'});}));
+  const R=V().kin.ratios;$('#kin').innerHTML=`<div class="tablewrap" style="border:0"><table style="min-width:0"><tr><th>Part</th><th class="num">rad per tooth, the model</th><th class="num">from the tooth counts</th><th></th></tr>${Object.entries(R).filter(([,v])=>v.teeth).map(([k,v])=>`<tr><td>${k}</td><td class="num">${v.page.toPrecision(6)}</td><td class="num">${v.teeth.toPrecision(6)}</td><td>${v.ok?'<span class="chip ok">agrees</span>':'<span class="chip over">differs</span>'}</td></tr>`).join('')}</table></div>`+
+    Object.entries(K).map(([n,r])=>`<h3 style="margin-top:12px">${n}</h3><p class="mono" style="font-size:12px">`+Object.entries(r.bodies).filter(([,v])=>v.w!=null).map(([b,v])=>`${b} ${Math.abs(v.w).toPrecision(3)} rad/s`).join(' · ')+'</p>').join('');}
+function bodyOf(k){return CFG.body[k];}
+function text(){const L=META.versions.last,B=META.versions.build;const p=(v,k)=>v&&v.parts[k]?v.parts[k].peak.toFixed(0):'—',ms=v=>v?v.springs.mainspring:null;
+  const F=[['over',`Letting the key go outright is the hardest event in both versions. The click wheel, the clicks, the maintaining ratchet and its detent take blows past their materials’ limits (the maintaining ratchet’s tooth ${p(L,'maintaining.ratchet')} MPa as drawn in brass), and the fusee wheel’s teeth reach brass’s yield (${p(L,'fuseeWheel')} MPa). Easing the key back keeps every part within its limit.`],
+    ['over',`The blow is robust to the estimates it rests on. Let go outright, the click’s blow grows with how far the fusee runs free before its click catches: 98 N at 0.3° to 295 N at 5° as drawn (115 to 401 N in the 1950s build), the click wheel’s tooth 605 MPa at the worst (821 in the build) against brass’s 300–450. The click’s face 4 times softer or twice as stiff, the contacts’ damping from 2 to 20 %, the chain’s stiffness and the maintaining spring’s bank varied: 200–549 N as drawn, 265–517 N in the build. Eased back, 47–66 N (64–73 N), every tooth within its limit.`],
+    ['near',`The mainspring’s inner coils, fully wound, are the most stressed steel in the movement: ${ms(L)?ms(L).peakFull.toFixed(0):'—'} MPa as drawn (carbon steel, 2,500–2,600) and ${ms(B)?ms(B).peakFull.toFixed(0):'—'} MPa in the 1950s build’s Nivaflex (3,000): about ${ms(B)?Math.round((ms(B).peakFull/3000-1)*100):'—'} % past it. The strip’s average stress understates this.`],
+    ['ok','In running, every wheel, pinion and arbor works far inside its limits: a beat loads the train about a fifth as hard as the key let go outright.'],
+    ['ok','The model’s mechanism turns every arbor of the train and the motion work at its tooth counts’ ratio, to 0.1 %.']];
+  const FF=V().findings||F;$('#findings').innerHTML=FF.map(([c,t])=>`<li><span class="chip ${c}">${c==='over'?'past a limit':c==='near'?'at a limit':'within'}</span><span>${t}</span></li>`).join('');
+  $('#assume').innerHTML=['The system is nonlinear and run in time: contacts that open and close, backlash, a chain in tension only, the coils’ stick-slip friction, clicks riding their teeth, the maintaining spring banking, the escapement’s impacts.',
+    'Inside each stocky part the stress is linear-elastic and small-strain, at the run’s worst forces applied as if steady: no stress waves. A heat map in a run scales with the part’s own load at that moment.',
+    'The pawls’ and clicks’ blows come from the transmission model’s contact stiffness; a stiffer or softer contact changes the peak.',
+    'Materials: brass E 100 GPa (yield 300–450 MPa), carbon steel 207 GPa (yield 1,200–1,800), Nivaflex 220 GPa (3,000), 333 gold 98 GPa, beryllium copper 130 GPa, ruby 380 GPa.',
+    'The parts as drawn: no tolerance, no wear, the page’s solids voxelised at about 120,000 bricks a part and windows of about a ninth of a module at each contact.',
+    'Tooth roots: the stress averaged over a brick each way (a voxel model’s stair corners overstate the highest); the contact’s own pressure by Hertz’s formula.',
+    'The mainspring’s stress from its solved shapes’ curvature against its free curve; the hairspring’s as an even couple; the maintaining spring’s peak its elastica’s, spread round the band as a split ring’s; the gold spring as a cantilever.'].map(x=>`<li>${x}</li>`).join('');
+  $('#methods').innerHTML=['The geometry and the kinematics are the model page’s own: every input of its update() nudged and sampled (motion3d.py).',
+    'The loads: the whole transmission in time, every part a body on its nonlinear elements (wempe_transmission.js), traced through a beat at 12 hours, the key let go outright and eased back at 24 hours, and wound into the stop.',
+    'The stress: voxel finite elements (fea.py’s trilinear bricks, solved with algebraic multigrid) on each part’s solids at its worst load, held on its pivots’ axis and where its drive comes in; fine windows round each contact driven by the coarse solution (motion3d_fe.py).',
+    'The slender parts along their length (motion3d_springs.py); every body’s speeds and the ratios (motion3d_kin.py).'].map(x=>`<li>${x}</li>`).join('');
+  $('#made').textContent='Worked out '+META.made+'. The 1950s build: Nivaflex 45/5 0.377 mm at 1.26 times the drawings’ drive, the gold spring thinned at its bend, the maintaining spring banked.';}
+/* ---------------- controls and the loop ---------------- */
+function runs(){const s=$('#run');s.innerHTML=V().runs.map((r,i)=>`<option value="${i}">${r.name}</option>`).join('');s.value=runI;}
+const NOTE={'A beat at 12 hours':'The train on its meshes drives the escapement through a beat, 12 hours after a full wind.','The key let go outright':'The key wound half a turn and let go at once: the fusee runs back onto the click, the worst place on the click wheel.','The key eased back':'The same stroke, the key eased back: how a careful winder lets go.','Wound into the stop':'The key wound into the stop at a turn a second, a strong hand then forcing it.'};
+function setRun(i){runI=+i;$('#run').value=runI;times();tNorm=0;$('#runNote').textContent=NOTE[RUN().name]||'';draw();}
+$('#run').addEventListener('change',e=>setRun(e.target.value));
+$('#scrub').addEventListener('input',e=>{tNorm=e.target.value/1000;draw();});
+$('#play').addEventListener('click',()=>{playing=!playing;$('#play').textContent=playing?'Pause':'Play';last=performance.now();});
+$$('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;$$('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',x===b));legend();draw();}));
+$('#frameBtn').addEventListener('click',()=>{showFrame=!showFrame;$('#frameBtn').setAttribute('aria-pressed',showFrame);$('#frameBtn').textContent=showFrame?'Plates shown':'Plates hidden';draw();});
+for(const v of['last','build'])$('#v-'+v).addEventListener('click',()=>{if(!META.versions[v])return;ver=v;$$('header .seg button').forEach(b=>b.setAttribute('aria-pressed',b.id==='v-'+v));runs();setRun(runI);tables();text();if(picked)pick(picked);});
+$('#mag').addEventListener('change',draw);
+let last=performance.now();
+function draw(){const t=TT[0]+(TT[TT.length-1]-TT[0])*tNorm;const S=pose(t);colour(S);chart(t);$('#tlab').textContent=(t-TT[0]).toFixed(4)+' s';$('#scrub').value=Math.round(tNorm*1000);}
+function loop(now){if(playing){const dt=(now-last)/1000*(+$('#slow').value);const span=TT[TT.length-1]-TT[0];tNorm+=dt/span;if(tNorm>1)tNorm=0;draw();}last=now;ctl.update();renderer.render(scene,cam);requestAnimationFrame(loop);}
+if(!META.versions.build)$('header .seg').hidden=true;
+runs();setRun(0);legend();tables();text();requestAnimationFrame(loop);
+/* for the screenshots: a run's worst moment by a channel, a version, a mode, the camera */
+window.__m3={ver:v=>$('#v-'+v).click(),run:i=>setRun(i),mode:m=>$(`[data-mode="${m}"]`).click(),frame:on=>{if(on!==showFrame)$('#frameBtn').click();},
+  peak:ch=>{const a=chan(RUN(),'forces',ch);let k=0;for(let i=0;i<a.length;i++)if(Math.abs(a[i])>Math.abs(a[k]))k=i;tNorm=(TT[k]-TT[0])/(TT[TT.length-1]-TT[0]);draw();return TT[k]-TT[0];},
+  t:x=>{tNorm=x;draw();},only:a=>{ONLY=a;msMesh.visible=!a||a.includes('mainspring');draw();},look:(p,t)=>{cam.position.set(...p);ctl.target.set(...t);ctl.update();renderer.render(scene,cam);},pick:k=>{const m=META.meshes.find(x=>partKey(x)===k||x.part===k);if(m)pick(m);}};
+})();
+</script>
+
+</html>

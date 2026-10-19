@@ -10,6 +10,14 @@ import datetime, html, json, os, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); TOOLS = os.path.normpath(os.path.join(HERE, '..', '..', 'tools'))
 A = lambda f: json.load(open(os.path.join(HERE, 'assets', f), encoding='utf-8'))
 DATA = dict(drive=A('drive.json'), st=A('startup.json'), data=A('data.json'), fea=A('fea.json'), rating=A('rating.json'), trip=A('trip.json'), gim=A('gimbals.json'),mech=A('mech.json'),est=A('estimates.json'), mf=json.load(open(os.path.join(TOOLS, 'mainspring_friction.json'), encoding='utf-8')), mfN=json.load(open(os.path.join(TOOLS, 'mainspring_friction_t0.386.json'), encoding='utf-8')))
+# the 3D viewer's results beside the report (assets/motion3d/, tools/motion3d_pack.py --site): each part's peak stress, material, limit, margin and load; the mainspring's inner coils
+def m3d():
+    f = os.path.join(HERE, 'assets', 'motion3d', 'meta.json')
+    if not os.path.exists(f): return None
+    M = json.load(open(f, encoding='utf-8')); nm = M['cfg']['names']; x = M['versions']['last']
+    return dict(made=M['made'], parts=[dict(k=k, name=nm.get(k, k), peak=p['peak'], mat=p['mat'], limit=p.get('limit'), margin=p.get('margin'), load=p.get('load', '')) for k, p in x['parts'].items()],
+                ms={k: x['springs']['mainspring'][k] for k in ('t', 'peakFull', 'medianFull')}, findings=x.get('findings', []))
+DATA['m3d'] = m3d()
 MFR = DATA['mf']; MFR['band'] = json.load(open(os.path.join(TOOLS, 'bench.json'), encoding='utf-8'))['criteria']['fusee']['band']; MFR['room'] = json.load(open(os.path.join(TOOLS, 'bench.json'), encoding='utf-8'))['criteria']['mainspring']['friction']['room']
 for r in MFR['rows'] + DATA['mfN']['rows']: r.pop('parts', None)
 for c, v in DATA['fea']['cases'].items(): v['fields'] = {k: f for k, f in v['fields'].items() if k == 'barrelBridge' and c == 'fully wound'}   # the page draws the barrel bridge's, fully wound

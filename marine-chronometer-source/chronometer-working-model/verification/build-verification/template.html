@@ -54,7 +54,7 @@ own geometry and numbers.</p>
 <div class="tiles" id="tiles"></div>
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
-<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#mech">11. Every mechanism</a><a href="#est">12. The estimates swept</a><a href="#drive">13. The spring and the damping</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#mech">11. Every mechanism</a><a href="#est">12. The estimates swept</a><a href="#drive">13. The spring and the damping</a><a href="#m3d">14. Every moving part in 3D</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
 <a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
@@ -479,6 +479,21 @@ model runs at 67 s. <code>startup.js</code>.</figcaption></figure>
 model's barrel, don't count); the free curve's read (about 15 %, 32:18, oblique); the slack's place, to a quarter turn's grid (the set-up to about ±0.1 turn); two movements, one hand-started
 and one recovering from handling, in unknown states of oil and adjustment; and the link between the fusee's torque and the balance's impulse (the train's efficiency, the escapement's work
 against the swing), which is the model's own.</li></ul></div>
+
+<h2 id="m3d">14. Every moving part in 3D</h2>
+<p><b>Why.</b> Section 11 takes each mechanism in turn and <code>strength.js</code> each loaded part fully wound, by formula. Here every part that moves is one system in
+time, and each part's own stress is worked out on its solid under the worst load that system gives it.</p>
+<p><b>Method.</b> <code>hamilton_transmission.js</code> runs the whole transmission as the Wempe's <code>wempe_transmission.js</code> does (the barrel on its solved
+mainspring with its coils' friction, the chain in tension only, the fusee with its winding ratchet and pawls, the sustaining ratchet, pawl and spring with its bank, the
+going train tooth by tooth on the page's outlines, the escapement <code>dynamics.js</code>'s own, the key and the stop) through four runs: a beat at 12 hours, the key let
+go outright and eased back, and wound into the stop. <code>motion3d.py</code> takes the page's solids and moves each part as the page's own <code>update()</code> moves
+it; <code>motion3d_fe.py</code> solves each part as finite elements (voxel bricks on its solid, a modulus by its material, finer windows at its contacts, the root's
+bending kept apart from the contact's pressure) at its worst load in the four runs, held where it is held; the springs (the mainspring by its solved curvature, the
+hairspring, the sustaining spring, the trip spring) from their large-deflection solutions.</p>
+<p><a href="assets/motion3d/index.html"><b>Open the 3D viewer</b></a>: every moving part in 3D through the four runs, coloured by its stress, its stress against its
+material's limit or its speed, the deviations magnified, with each part's load, margin and motion, the kinematics against the tooth counts, and the assumptions.</p>
+<div id="tM3" class="tw"></div>
+<div class="callout"><p id="m3Meaning"></p></div>
 
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
@@ -920,6 +935,17 @@ const draw2=draw;draw=()=>{draw2();drawDrive();};
 draw();
 const th=$('theme');th.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';draw();});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+{const M=DATA.m3d;if(M){const g=(x,n=0)=>Number.isFinite(+x)?(+x).toFixed(n):'–',esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const ev=s=>(/\(([^()]*(?:let go|beat|eased|stop)[^()]*)\)/i.exec(s)||[,''])[1].replace(/^.*?, /,'');
+  const P=M.parts.filter(p=>p.limit).sort((a,b)=>(a.margin?.[0]??9)-(b.margin?.[0]??9));
+  const rows=P.map(p=>{const m=p.margin?.[0];return[esc(p.name),g(p.peak)+' MPa',esc(p.mat)+' '+p.limit.join('-'),`<span class="${m<1?'no':m<1.5?'mid':''}">${g(m,2)}</span>`,esc(ev(p.load)||p.load.slice(0,90))];});
+  rows.push(['the mainspring\'s inner coils, fully wound',g(M.ms.peakFull)+' MPa','its strip 2600',`<span class="no">${g(2600/M.ms.peakFull,2)}</span>`,`its strip ${M.ms.t} mm, ${g(M.ms.medianFull)} MPa along it`]);
+  table('tM3',['Part','Peak','Material, its limit (MPa)','Margin','Its worst load'],rows,true);
+  const bad=P.filter(p=>p.margin&&p.margin[0]<1),nm=k=>(P.find(p=>p.k===k)||{}).peak;
+  $('m3Meaning').innerHTML=`<b>What it means.</b> Running, every part has a wide margin. Past their limits: ${bad.map(p=>`${esc(p.name.toLowerCase())} (${g(p.peak)} MPa, ${esc((ev(p.load)||'').toLowerCase())})`).join('; ')}, and the
+    mainspring's inner coils fully wound (${g(M.ms.peakFull)} MPa against its strip's 2600, ${g(M.ms.medianFull)} along it: the coils wound tightest round the arbor carry more than
+    the strip's average). The set-up click's peak is a local stress on its nose beside the load, where the steel yields a little and bears; <code>ratchets.js</code> gives its arm
+    539 MPa running. The blows come from the key let go outright, as on the Wempe (its report, section 13, which tries the fixes a maker could make).`;}}
 </script>
 </body>
 </html>
