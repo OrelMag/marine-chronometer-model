@@ -125,6 +125,16 @@ class Part:
         return m
 
 FIG=arg('--fig')
+# the contact study (motion3d_contact.py): --win K windows at a K-th of the module (9 by default), --patch S every load's patch S times its radius, --study OUT the results
+# into OUT and the stress files left as they are; each part's stress against its distance from the load ('prof') is kept in every run
+WK=float(arg('--win',9));PATCH=float(arg('--patch',1));STUDY=arg('--study')
+DPROF=[0.05,0.1,0.15,0.2,0.3,0.4,0.6,0.8,1.2]
+def prof(cent,vm,src,keep=None):
+    """the most stress at or beyond each distance d (mm) from the loaded nodes src: a real stress holds its value as the load's patch shrinks; the patch's own pressure
+    grows as it does"""
+    if not len(src):return []
+    dd,_=cKDTree(src).query(cent);keep=np.ones(len(cent),bool) if keep is None else keep
+    return [[d,float(vm[(dd>=d)&keep].max()) if ((dd>=d)&keep).any() else 0.0] for d in DPROF]
 def figure(name,note,P,vm,fix,F,wins,r):
     """--fig DIR: the part's solve drawn in plan (docs/motion-3d/): its bricks' centres coloured by their stress (the most along each column on top), where it is held
     (blue) and loaded (red), its windows' outlines; beside it each window's finer bricks, its cut faces (grey: their movement the coarse solve's) and the stress it reads"""
@@ -185,7 +195,7 @@ def main():
         wins=[];tree0=cKDTree(P.X)
         for wkey in ('out','in'):
             if wkey not in info:continue
-            C=np.array(info[wkey]['at']);mod=info[wkey].get('m',0.3);Rw=max(3.2*mod,0.9);hf=max(0.012,mod/9)
+            C=np.array(info[wkey]['at']);mod=info[wkey].get('m',0.3);Rw=max(3.2*mod,0.9);hf=max(0.012,mod/WK)
             Pf=Part(mm,win=(C[0]-Rw,C[0]+Rw,C[2]-Rw,C[2]+Rw),h=hf)
             if Pf.nb==0:continue
             fixf=np.zeros((len(Pf.X),3),bool);Ff=np.zeros((len(Pf.X),3));setup(Pf,fixf,Ff)
@@ -198,7 +208,7 @@ def main():
             if len(bn):dd,_=cKDTree(bn).query(Pf.cent);far&=dd>max(3*hf,0.6*mod)   # the root's bending, clear of the contact (whose own pressure is Hertz's: info['hertz'])
             cx=Pf.cent;far&=(cx[:,0]>g['x0']+2*hf)&(cx[:,0]<g['x0']+g['nx']*hf-2*hf)&(cx[:,2]>g['z0']+2*hf)&(cx[:,2]<g['z0']+g['nz']*hf-2*hf)
             rootpk=float(vmf[far].max()) if far.any() else 0.0;kk=int(np.argmax(np.where(far,vmf,-1)))
-            wins.append({'at':C.tolist(),'R':Rw,'h':hf,'bricks':Pf.nb,'peak':rootpk,'raw':float(vmr[far].max()) if far.any() else 0.0,'where':Pf.cent[kk].tolist(),'mat':Pf.mats[Pf.bm[kk]],'contact':float(vmf.max()),'resid':rrf,'P':Pf,'vm':vmf,'fx':fixf.any(1)&~bd,'ld':np.abs(Ff).sum(1)>0,'bd':bd})
+            wins.append({'at':C.tolist(),'R':Rw,'h':hf,'bricks':Pf.nb,'peak':rootpk,'raw':float(vmr[far].max()) if far.any() else 0.0,'where':Pf.cent[kk].tolist(),'mat':Pf.mats[Pf.bm[kk]],'contact':float(vmf.max()),'resid':rrf,'prof':prof(Pf.cent,vmf,Pf.X[np.abs(Ff).sum(1)>0],(cx[:,0]>g['x0']+2*hf)&(cx[:,0]<g['x0']+g['nx']*hf-2*hf)&(cx[:,2]>g['z0']+2*hf)&(cx[:,2]<g['z0']+g['nz']*hf-2*hf)),'P':Pf,'vm':vmf,'fx':fixf.any(1)&~bd,'ld':np.abs(Ff).sum(1)>0,'bd':bd})
         busy0=fix.any(1)|((np.abs(F).sum(1)>0) if not info.get('body') else False);farc=np.ones(P.nb,bool)   # a load through the body (the balance's inertia) isn't a contact's singularity
         if busy0.any():dd0,_=cKDTree(P.X[busy0]).query(P.cent);farc=dd0>max(2.5*P.h,0.3)   # 0.3 mm: a hole's wall held rigid (a pivot's screw) concentrates stress a pin bearing and sliding in it doesn't
         vmc=np.where(farc,vm,0);pk995=float(np.percentile(vmc,99.5));mx=float(vmc.max());k=int(np.argmax(vmc));mat=P.mats[P.bm[k]]
@@ -206,7 +216,7 @@ def main():
             wb=max(wins,key=lambda x:x['peak'])
             if wb['peak']>pk995:pk995,mat=wb['peak'],wb['mat'];k=None
         lo,hi=MAT[mat][2]
-        res[name]={'note':note,**info,'h':P.h,'bricks':P.nb,'peak':pk995,'max':mx,'at':(P.cent[k].tolist() if k is not None else wb['where']),'windows':[{x:y for x,y in w.items() if x not in('P','vm','fx','ld','bd')} for w in wins],'mat':mat,'limit':[lo,hi],'margin':[lo/pk995,hi/pk995] if pk995>0 else None,'resid':rr,'disp':float(np.abs(u).max())}
+        res[name]={'note':note,**info,'h':P.h,'bricks':P.nb,'peak':pk995,'max':mx,'at':(P.cent[k].tolist() if k is not None else wb['where']),'windows':[{x:y for x,y in w.items() if x not in('P','vm','fx','ld','bd')} for w in wins],'mat':mat,'limit':[lo,hi],'margin':[lo/pk995,hi/pk995] if pk995>0 else None,'resid':rr,'disp':float(np.abs(u).max()),'prof':[] if info.get('body') else prof(P.cent,vm,P.X[np.abs(F).sum(1)>0])}
         if FIG:figure(name,note,P,vm,fix,F,wins,res[name])
         tree=cKDTree(P.cent)
         for m in mm:
@@ -232,6 +242,14 @@ def main():
     WHEELS={'fw':('fuseeWheel',['fuseeWheel']),'centre':('centreWheel',['arbor','wheel']),'inter':('intermediateWheel',['arbor','wheel']),'sec':('secondsWheel',['arbor','wheel']),'esc':('escapeWheel',['collet','pinion','wheel'])} if M=='wempe' else {k:(v,None) for k,v in TP.items()}
     def wheel_y(k):
         part,_=WHEELS[k];mm=byp(part);c,_=AX[k];w=max(mm,key=lambda m:np.hypot(*(m['V']-c)[:,[0,2]].T).max());return w['V'][:,1].min(),w['V'][:,1].max()   # the face: its widest mesh's height (the wheel)
+    def face(i):
+        """mesh i's bearing face: the heights where the wheel and the pinion it drives overlap (strength.js's fc: the Hamilton's fusee wheel 2.22 thick bears on the centre
+        pinion over 1.40); the pinion's leaves the driven arbor's vertices at its pitch radius ±30 %. Until 19 October 2026 the wheel's whole thickness, which spread the
+        Hamilton's fusee wheel's tooth load 1.6 times too wide (docs/motion-3d/, the cross-checks)"""
+        q=MESH[i];kA,kB=TRAIN[i];a=wheel_y(kA);part,pcs=WHEELS[kB];c,_=AX[kB];rp=q['m']*q['zB']/2
+        V=np.vstack([m['V'] for m in byp(part,pcs)]);rr=np.hypot(*(V-c)[:,[0,2]].T);y=V[(rr>0.7*rp)&(rr<1.3*rp),1]
+        if not len(y):return a
+        lo,hi=max(a[0],y.min()),min(a[1],y.max());return (lo,hi) if hi>lo+1e-3 else a
     print(f'{M} ({VER}): {len(ms)} meshes; the loads from trace_{VER}.js (runs: {", ".join(runs)})',flush=True)
     for i,k in enumerate(['fw','centre','inter','sec','esc']):
         part,pcs=WHEELS[k];mm=byp(part,pcs);c,_=AX[k]
@@ -239,11 +257,11 @@ def main():
             info={}
             ax=P.near_axis(c,0.75*P.h);ys=P.X[:,1];fix[ax,0]=fix[ax,2]=True;yb=ys[ax].min() if ax.any() else ys.min();fix[ax&(ys<=yb+1e-9),1]=True   # the pivots: on the axis only, the lower end axially
             if k!='fw':   # the drive comes in at its pinion's leaf from the wheel before it: held there
-                Pin,FB,lam,rn=contact(i-1);yb2=wheel_y(TRAIN[i-1][0]);m=P.patch(Pin,0.6*MESH[i-1]['m'],yb2);fix[m]=True;info['in']={'at':Pin.tolist(),'mesh':MESH[i-1]['nm'],'m':MESH[i-1]['m']}
+                Pin,FB,lam,rn=contact(i-1);yb2=face(i-1);m=P.patch(Pin,0.6*MESH[i-1]['m'],yb2);fix[m]=True;info['in']={'at':Pin.tolist(),'mesh':MESH[i-1]['nm'],'m':MESH[i-1]['m']}
             else:   # the fusee wheel: its drive comes from the maintaining spring's pins and the ratchet: held at its hub
                 m=P.near_axis(c,4.5)&P.surf;fix[m]=True
             if k!='esc':
-                Po,FB,lam,rn=contact(i);m=P.patch(Po,0.6*MESH[i]['m'],wheel_y(k));F[m]+=(-FB/m.sum() if m.any() else 0);q=MESH[i];yw=wheel_y(k);info['hertz']=hertz(float(np.linalg.norm(FB)),q['m']*q['zA']/2*0.342,q['m']*q['zB']/2*0.342,yw[1]-yw[0],100e3,207e3);info.update(load=f"{abs(lam):.3g} N·m on the next pinion, {np.linalg.norm(FB):.1f} N at its pitch point ({rn})",out={'at':Po.tolist(),'F':(-FB).tolist(),'run':rn,'m':MESH[i]['m']})
+                Po,FB,lam,rn=contact(i);m=P.patch(Po,0.6*MESH[i]['m'],face(i));F[m]+=(-FB/m.sum() if m.any() else 0);q=MESH[i];yw=face(i);info['face']=[float(yw[0]),float(yw[1])];info['hertz']=hertz(float(np.linalg.norm(FB)),q['m']*q['zA']/2*0.342,q['m']*q['zB']/2*0.342,yw[1]-yw[0],100e3,207e3);info.update(load=f"{abs(lam):.3g} N·m on the next pinion, {np.linalg.norm(FB):.1f} N at its pitch point ({rn})",out={'at':Po.tolist(),'F':(-FB).tolist(),'run':rn,'m':MESH[i]['m']})
             else:   # the escape wheel: the tooth on the locking stone (the detent's stone: the ruby nearest the wheel's tips), the whole escape torque at the tip
                 rt0=max(np.hypot(*(m['V']-c)[:,[0,2]].T).max() for m in byp(TP['esc']));rub=[m for m in byp('detent' if M=='wempe' else 'det') if m['mat0']=='93020b'];cen=[m['V'].mean(0) for m in rub];j=int(np.argmin([abs(np.hypot(*(x-c)[[0,2]])-rt0) for x in cen]));S=cen[j]
                 lam,rn=pk('mesh:'+MESH[3]['nm']);r=S-c;r[1]=0;rt=r/np.linalg.norm(r)*rt0;tau=np.array([0,AX['esc'][1]*abs(lam)*1e3,0]);Ft=-np.cross(tau,rt)/(rt@rt)
@@ -273,7 +291,7 @@ def main():
             return m
         yc=lambda part,pcs:yext(byp(part,pcs))
         def push(P,F,c,f,r,yb=None):
-            m=ball(P,c,r,yb)
+            m=ball(P,c,r*PATCH,yb)
             if m.any():F[m]+=f/m.sum()
             return m
         P1=pawl('click 1','click1',cF);P2=pawl('click 2','click2',cF);PC=P1 if abs(P1[3])>=abs(P2[3]) else P2   # the click the runs load harder (the fusee holds on one at a time)
@@ -358,7 +376,7 @@ def main():
             if m.sum()<minn:d0=d[ok].min() if ok.any() else d.min();m=ok&(d<=d0+max(r,2*P.h))
             return m
         def push(P,F,c,f,r,yb=None):
-            m=ball(P,c,r,yb)
+            m=ball(P,c,r*PATCH,yb)
             if m.any():F[m]+=f/m.sum()
             return m
         yc=lambda part,pcs:yext(byp(part,pcs))
@@ -415,6 +433,8 @@ def main():
             fix[ball(P,cBa,0.3)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse jewel ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
         run('bal.impulse',byp('bal',['impulse']),s_rol,'the rollers (impulse and unlocking, with their jewels): the escape wheel’s tooth on the impulse jewel')
 
+    if STUDY:   # the contact study: this run's results only, the stress files untouched
+        pathlib.Path(STUDY).write_text(json.dumps({'model':M,'version':VER,'win':WK,'patch':PATCH,'n':NT,'parts':res},indent=1));print(f'wrote {STUDY} in {time.time()-t0:.0f} s');return
     if ONLY and (D/f'stress_{VER}.json').exists():   # a partial run: the other parts' results kept
         old=json.loads((D/f'stress_{VER}.json').read_text());ob=(D/f'stress_{VER}.bin').read_bytes();oi=json.loads((D/f'stress_{VER}.idx.json').read_text())
         res={**{k:v for k,v in old['parts'].items() if k not in res},**res}

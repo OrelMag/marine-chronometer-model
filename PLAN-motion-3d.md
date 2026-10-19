@@ -64,7 +64,7 @@ All six phases are done. Both viewers were published privately first. The user t
 - The Hamilton at the let-go blow:
   - Set-up click: 3,017 MPa. This is a local stress on its nose; `ratchets.js` gives its arm 539 MPa.
   - Winding pawls: 1,509 MPa.
-  - Fusee wheel: 369 MPa.
+  - Fusee wheel: 433 MPa (369 until its load was put on the band where it bears on its pinion, 19 October 2026).
 - The mainspring's inner coils at full wind:
 
   | Model | Inner coils | Limit |

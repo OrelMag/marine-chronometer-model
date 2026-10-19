@@ -96,7 +96,7 @@ The wheels, pinions, arbors, the click wheel, the ratchets, clicks and pawls, th
    - the maintaining ratchet at the clicks' screws;
    - the Hamilton's stud by its half nearer the bridge.
 5. **Loads.** Each load goes where the run puts it:
-   - a mesh's force at the pitch point, along the line of action;
+   - a mesh's force at the pitch point, along the line of action, over the band where the wheel and the pinion it drives overlap (the Hamilton's fusee wheel, 2.22 mm thick, bears on its pinion over 1.40 mm; until 19 October 2026 the load was spread over the wheel's whole thickness: see section 6);
    - a pawl's blow on its tooth's face, at its contact from `mechanisms.py` off the built solids;
    - the escape torque at a tooth's tip on the locking stone;
    - the balance's inertia as a body force on every brick, from its angular acceleration at the turn and its speed at the centre.
@@ -165,7 +165,7 @@ Each stress the finite elements give per newton of load, against the formula the
 |---|---|---|---|
 | Wempe: fusee wheel to centre pinion, the wheel's tooth | 5.11 (417 at 81.6 N) | 4.37, Lewis in `wempe_strength.js` (87 at 19.9 N) | agree within 17 % |
 | the same mesh, the centre pinion's leaf | 4.51 (368 at 81.6 N) | 4.37 | agree within 3 % |
-| Hamilton: fusee wheel to centre pinion, the wheel's tooth | 4.63 (369 at 79.7 N) | 9.13, `strength.js` (199 at 21.8 N) | **the formula is twice the FE**; open |
+| Hamilton: fusee wheel to centre pinion, the wheel's tooth | 5.43 (433 at 79.7 N) | 9.13, `strength.js` over the 1.40 mm bearing band (199 at 21.8 N); 5.75, Lewis over the tooth's whole 2.22 mm | agrees with Lewis over the whole tooth within 6 %; `strength.js` is the cautious figure |
 | Hamilton: set-up ratchet's tooth | 1.74 (368 at 211.5 N) | 2.16, `ratchets.js`'s tooth root (313 at 145.1 N) | agree within 20 % |
 | Wempe: set-up ratchet's tooth | 0.75 (190 at 253.7 N) | 0.40, `wempe_ratchets.js` (57 at 141.7 N) | FE 1.9× the formula |
 | Wempe: click wheel's tooth, under the click | 0.60 (178 at 298 N) | 1.16, `wempe_ratchets.js` (57 at 49.1 N); 2.05, `wempe_strength.js` (105 at 51.2 N) | **the formulas differ from each other and from the FE**; open |
@@ -175,7 +175,7 @@ Each stress the finite elements give per newton of load, against the formula the
 
 What this means:
 - **The train's teeth agree.** The finite elements and Lewis's formula agree on the Wempe's train, the best-defined case: a tooth at its pitch point, the formula's own setting.
-- **The Hamilton's `strength.js` gives twice** what both the FE and Lewis give the Wempe for a mesh of about the same size (module 0.39 against 0.44). Its inputs for the fusee wheel's teeth should be checked.
+- **The Hamilton's fusee wheel.** The FE first gave half of `strength.js`. Part of that was the FE's own error: it spread the tooth's load over the wheel's whole 2.22 mm instead of the 1.40 mm where the wheel bears on its pinion. Fixed, the tooth reads 433 MPa (it was 369). The rest is real. The tooth is 2.22 mm thick wherever it bears, so its whole root shares the bending, and Lewis's formula over the full 2.22 mm agrees with the FE within 6 %. `strength.js` takes only the bearing band, the cautious reading of the same tooth.
 - **The ratchet teeth are where the methods part.** The formulas treat a short, stubby tooth as a slender cantilever loaded at its tip; the FE resolves its real shape. So where the FE is lower (the click wheel, the winding ratchet), the formula is likely the pessimistic one.
 - **The pawls' and the maintaining ratchet's peaks lie near the load.** On the Wempe's clicks and the Hamilton's set-up click, the peak sits at the contact itself: the window's peak clear of the load is within 3 % of its peak at the load. On the Wempe's maintaining ratchet it is 0.6 of a module from the load. These parts are the ones past their limits at the let-go blow, and their peaks are the least certain figures here. A study refining the windows, with the load spread over Hertz's contact width rather than a patch of nodes, would settle them.
 - **Every margin against the running loads holds by every method.**
@@ -213,7 +213,7 @@ The Hamilton's results are in its build report's section 14:
   | Wempe fusee wheel | 417 MPa | 417 MPa | 0 % |
   | Wempe clicks | 2,357 | 2,357 | 0 % |
   | Wempe maintaining ratchet | 1,485 | 1,506 | +1.4 % |
-  | Hamilton fusee wheel | 369 | 366 | −0.9 % |
+  | Hamilton fusee wheel (before its bearing-band fix) | 369 | 366 | −0.9 % |
   | Hamilton winding pawls (no window) | 1,509 | 1,441 | −4.5 % |
   | Hamilton set-up click | 3,017 | 2,998 | −0.6 % |
 
