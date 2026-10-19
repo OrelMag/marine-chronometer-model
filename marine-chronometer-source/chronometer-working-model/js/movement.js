@@ -796,7 +796,14 @@ function buildMovement(M){
      the cock's edge is kept and the bridge follows it. A straight cut until 6 October 2026. On KLUwI2UUCMQ 6:49.0 (the cock out) through the camera fitted there, the bridge's
      top edge, traced as 13 points from its inner corner to the rim, lies within 0.6 mm of the cock's edge as traced again on 12 October 2026 (at f 5,000; +-1.5 over
      f 4,000-6,000), where it was 0.9-3.2 mm off the old trace */
-  const ckE=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]].map(([x,z])=>[x,z-0.15]);   /* past the rim on the straight edge's last slope */
+  /* the horn's end on the cock's side, since 19 October 2026 its own edge: KLUwI2UUCMQ 13:04.0, 13:04.2 and 13:04.4 (the bridge upside down, face-on), each through a camera fitted
+     to the barrel's and fusee's bushings and the bridge's screw holes (tools/edgetrace.py: those holes snapped within 0.02-0.15 mm of their places), the edge traced along the model's
+     normals: 192 points over 15.3 mm, a straight line to 0.33 mm rms (the frames 0.3 apart; a circle fits worse), through (28.51, 9.95) at 30.0 deg, from the cut round the balance
+     to the rim. Until then the cock's straight edge less 0.15 (CK_TR, ckE: the bridge made to follow the cock, its own edge unread), 0.4-1.5 mm off it, most near the rim.
+     Between x 29.5 and 36 the cock's straight edge (CK_TR, fitted with the rim held at r 40.1 and 0.8 mm off on 6:29 there) stands up to 0.31 mm over that line, inside both
+     readings' error: the bridge gives way to it there (BB_NE the lower of the two, the cock's edge less 0.05), until the cock is measured again */
+  const BB_NE=(()=>{const a=[20.72,5.44],b=[38.90,15.95],ln=x=>a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]),ck=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]],cz=x=>{for(let k=1;k<ck.length;k++)if(x<=ck[k][0])return ck[k-1][1]+(ck[k][1]-ck[k-1][1])*(x-ck[k-1][0])/(ck[k][0]-ck[k-1][0]);return ck[ck.length-1][1];},o=[];
+    for(let x=a[0];x<=b[0]+1e-9;x+=0.1)o.push([x,Math.min(ln(x),x>=ck[0][0]?cz(x)-0.05:1e9)]);return o;})();
   /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim, curved, not straight: traced on the flat bridge
      (23:45, the same homography) from the bite to 1.5 mm short of the rim, FH (movement frame, every 1.69 mm along z, a cubic through the trace to 0.03 mm rms): it
      bows 0.46 mm off its 12.8 mm chord, most two thirds of the way out, leaving the bite turned about 15 deg further round than where it meets the rim. The top-view
@@ -815,10 +822,9 @@ function buildMovement(M){
      15 October 2026 three circles, which met in a step under the fusee's dust cap: the balance's clearance r 17.7 about the staff and one fitted on the top-view photograph
      (r 17.6 about (5.24, 6.33) in its frame), both 1-1.7 mm outside this edge past the balance, and from the horn on the cock's side toward the fusee a circle through the
      top edge traced on 6:49.0 through the camera fitted there (r 16.85 about (6.84, 9.53), 21.6-22.3 mm from the staff), 1.5-1.9 mm outside it: that camera reads the
-     third pillar screw's counterbore beside it 3 mm off (the near bridge screw's comment). It meets the horn's edge (ckE) at (22.2, 8.1); 13:04.4 has that edge 0.15 mm
-     from ckE beside the corner */
+     third pillar screw's counterbore beside it 3 mm off (the near bridge screw's comment). It meets the horn's end (BB_NE) near (21.6, 6.0) */
   const BB_CUT=[2.03,9.96,20.06];
-  const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),BB_NE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
   R.barrelBridge=mesh(bb,facePocket(polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),'top',S.bbN,BB_PK),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
