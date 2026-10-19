@@ -979,7 +979,18 @@ const WESC=(()=>{
   /* the Soviet 6MX's bodies (the Variants' third version, Kirov No. 247): its escapement stands at the first-drawn heights with the first-drawn staff and collar and its own
      detent, so its balance, escape arbor and detent weigh differently; weighed as SET's are (tools/wempe_inertia.py --rev 6mx, tools/wempe_inertia_6mx.json, checked by
      tools/wempe_6mx.js). js/escphys.js's WPHYS.rev('6mx') runs makeEsc with them */
+  /* the build (a Wempe made to navigate by: the user's choices, 19 October 2026; README, "The build"): the drive k times 05 06_20's measured (1.26: the Soviet Navy's 1958
+     MX repair book's mainspring torque, 1.01-1.08 N·m fully wound against the model's 0.83), the gold spring thinned to 0.06 over its first 3 mm from its bending point
+     (Belyakov 1957, Table 3: Lange's MX 0.06 at its bend; 05 04 01-2's 0.15 taken as the blank: tools/wempe_detent_study.js, the lock's window 21 to 196 µm), which makeEsc
+     takes as the uniform strip of the same tip stiffness, 0.0702 (the cantilever's integral of (L - x)² / EI over its 11.41 mm). tools/wempe_load.js applies it (MC_WREV=build) */
+  /* its mainspring: Nivaflex 45/5 (Straumann, patented 1948) 0.377 × 15 × 1,240 mm, E 220 GPa, over 3,000 N/mm² (Jacques Allemann's data sheet JAS-014), solved by
+     tools/wempe_mainspring.py --t 0.377 (the shape doesn't depend on the modulus: its torque the table's times 220/207): 596-1,043 mN·m, 1.125 times the drawn strip's at
+     the fusee arbor, as even through the drawn fusee, 2.94 GPa fully wound; a carbon strip strong enough is past its 2.5-2.6 GPa (0.385: 2.89) */
+  const BUILD={k:1.26,bend:[3,0.06],set:{tsT:0.0702},strip:{name:'Nivaflex 45/5',t:0.377,E:220,lim:3.0e9,table:'mainspring_wempe_t0.377_L1240_s0.6.js'}};
+  /* the build in the Wempe's own decade (the user's choice, 19 October 2026: both, the maker chooses): no Nivaflex before the 1950s, and a carbon strip stronger than the
+     drawn one is past its limit (0.385: 2.89 GPa), so the drawings' drive and strip; the gold spring thinned as BUILD's (MC_WREV=build40) */
+  const BUILD40={k:1,bend:[3,0.06],set:{tsT:0.0702},strip:null};
   const SET6={I:2526.0,JW:10.89,ID:8.28};   /* ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (2 wide less 0.05 at each edge), in both states: tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (2 wide less 0.05 at each edge), in both states: tools/dynamics.js */
 })();
