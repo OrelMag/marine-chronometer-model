@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.22.01 · 2026-10-19
+- A write-up of how the 3D analysis of the moving parts was done, with its figures, on GitHub (docs/motion-3d).
+- The Wempe report's let-go table now says its click wheel column uses the most cautious of three readings.
+
 ## 3.22.00 · 2026-10-19
 - Every moving part in 3D, for both chronometers: a viewer beside each report shows the movement through a beat, a wind and the stop, each part coloured by its stress, its stress against its material, or its speed.
 - The Hamilton's report has a new section 14 on it; the Wempe's report adds it to section 13, with what a maker could change to take the blow when the winding key is let go outright (none keeps every part within its material: let the key back).
