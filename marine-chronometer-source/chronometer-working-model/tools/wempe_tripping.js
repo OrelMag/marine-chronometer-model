@@ -72,7 +72,7 @@ function frame(o={}){
   /* the gold spring: its bending point rigid with the square (its head screwed to it), beams along its drawn path to its tip; the nodes over the horn */
   /* o.tsBend [L, t]: the strip thinned to t over its first L mm from the bending point, as a passing spring is (wempe_detent_study.js; Belyakov's 0.06 "at its bend") */
   const g0=nd(Q(GB[0],GB[1]),'slave',F1);let gp=g0,sg=0;const gs=[g0],gv=[g0];
-  for(let k=1;k<GPATH.length;k++){const[t,n]=GPATH[k],q=nd(Q(t,n)),L=Math.hypot(t-GPATH[k-1][0],n-GPATH[k-1][1]),th=o.tsBend&&sg+L/2<o.tsBend[0]?o.tsBend[1]:GW;sg+=L;
+  for(let k=1;k<GPATH.length;k++){const[t,n]=GPATH[k],q=nd(Q(t,n)),L=Math.hypot(t-GPATH[k-1][0],n-GPATH[k-1][1]),tb=o.tsBend??X.GBEND,th=tb&&sg+L/2<tb[0]?tb[1]:GW;sg+=L;
     gs.push(...line(gp,q,Math.max(1,Math.round(L/0.4)),EGO*(o.tsK??1),th*1e-3,1.0e-3,RHO.gold,'gold').slice(1));gv.push(q);gp=q;}
   const tip=gp,ng=HC.map(t=>gv[GPATH.findIndex(p=>Math.abs(p[0]-t)<1e-12)]);
   if(nh.some(i=>i==null)||ng.some(i=>i==null)||nb.some(i=>i==null))throw Error('wempe_tripping: a contact node not found');
