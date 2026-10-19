@@ -7,7 +7,7 @@
     python wempe_mainspring.py [--check]             # the fit (a second): each solved table against 05 06_20; writes tools/wempe_mainspring.json (--check: exit 1 if stale)
 
 The strip and its barrel, from the sheets: 15 x 0.37 ("Zugfeder 15 x 0,37", 05 06_20; the 7 a little overwritten), in the drum's 38.5 inside (05 06_20, 05 07 01-1: r 19.25,
-its outer coil on the wall, the hook block 05 07 01-3 holding its end: no brace), on the arbor's core 13.3 (05 07 02, r 6.65), its inner end on the hook 05 07 02-2 (a pin 0.5
+its outer coil on the wall, threaded behind the Steg 05 07 00-1 and its end on the hook block 05 07 01-3: BLOCK, STEG below; until 18 October 2026 a plain wall), on the arbor's core 13.3 (05 07 02, r 6.65), its inner end on the hook 05 07 02-2 (a pin 0.5
 proud). Not on any sheet: its length (fitted here), its free curve (the Hamilton's measured spring, KLUwI2UUCMQ 32:18, scaled to the length: a spring set the usual way;
 --set scales its turns), the eye's place on the strip (the Hamilton's 9.4 mm), the modulus (carbon spring steel 207 GPa, 200-210), the film between packed coils (none).
 
@@ -22,6 +22,10 @@ import json,math,sys,os,re,base64,subprocess,tempfile,pathlib
 import numpy as np
 HERE=pathlib.Path(__file__).resolve().parent
 T_,RA,RW,B,E,EYE=0.37,6.65,19.25,15.0,207.0,9.4   # the strip, the core, the wall, its width, the modulus (GPa, estimated), the eye (estimated): above
+# the outer end (fusee.js): the hook block 05 07 01-3 0.5 deep off the wall (05 07 01's wall at it 2.05 against 1.55; 0207's step 0.5) and 6 long round it (0207's flat "6"),
+# its rivet hole 1.4 from its far end (0207's plan, scaled); the strip's last 5.7 on it, its end 0.3 short of the block's far end (estimated). The Steg 05 07 00-1 45 deg back
+# from the rivet (05 07 01-1, 0207), 2 wide, its faces at r 18.3 (05 07 01-2's notch, 05 07 01-1's slot) and 18.8 (0.5 thick: 0207): the outer coil between it and the wall
+BLOCK=(0.5,5.7);STEG=(math.pi/4+(1.4-0.3)/RW,1.0,18.3,18.8)   # with them the two neighbour passes leave states near full wind on a higher branch than their neighbours (18 October 2026): passes until none improves
 OUT=HERE/'wempe_mainspring.json'
 FINAL=(1240.0,0.6)   # the spring the model takes: the try whose shape fits 05 06_20 best (15 October 2026: 1240 mm, the free curve's turns 0.6 times the Hamilton's measured; README)
 WD=os.path.join(tempfile.gettempdir(),'mc-mainspring')   # the solved states (mainspring.py's json, not committed)
@@ -38,7 +42,7 @@ def env(L,S,tag):
         return lo
     tw=solve(lambda m:ln(0,m-1));tc=solve(lambda m:ln(m-1,0))
     return dict(os.environ,MC_MS_TAG=tag,MC_MS_T=f'{T_}',MC_MS_L=f'{L}',MC_MS_RA=f'{RA}',MC_MS_RW=f'{RW}',MC_MS_B=f'{B}',MC_MS_E=f'{E}',MC_MS_GAP='0',MC_MS_EYE=f'{EYE}',
-                MC_MS_SET=f'{S}',MC_MS_TLO=f'{math.floor((tw-0.5-2*max(0,1-S))*4)/4}',MC_MS_THI=f'{math.ceil((tc+0.6)*4)/4}')
+                MC_MS_BLOCK=','.join(f'{x:.6g}' for x in BLOCK),MC_MS_STEG=','.join(f'{x:.6g}' for x in STEG),MC_MS_PASSES='12',MC_MS_SET=f'{S}',MC_MS_TLO=f'{math.floor((tw-0.5-2*max(0,1-S))*4)/4}',MC_MS_THI=f'{math.ceil((tc+0.6)*4)/4}')
 def tag(L,S):return f'wempe_L{L:g}'+('' if S==1 else f'_s{S:g}')
 def run(L,S,name,args=()):
     os.makedirs(WD,exist_ok=True);e=env(L,S,name);print(f'{name}: the strip {T_} x {B} x {L} mm, the core r {RA}, the wall r {RW}, set x{S}; states {e["MC_MS_TLO"]} to {e["MC_MS_THI"]}',flush=True)

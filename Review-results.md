@@ -2579,7 +2579,7 @@ smoke test, ci.py steps, isolate.py and the hook are done (`f6323e8`, `6cde307`)
 
 The Wempe model was cut through each pair of arbors and compared with Wempe's coloured full section (`References/wempe/drawings/Wempe_Einheitschronometer.jpg`) at its own scale, 9.37 px/mm. The fixes are in RESOLVED.md ("The Wempe against its coloured section" and "The coloured section's open readings"). On 18 October 2026 these were settled and built: the 1941 banking screw, the upper cock's boss, WN-12a, the stop bar's pin, the gold spring's screw and WN-34; the collet, the band's hook, the eye pin and the drum's dashed "slot" were found right as built. Still open:
 
-- **The barrel's Steg (05 07 00-1) is not built.** It is a fixed brace for the mainspring's outer coil: a steel strip 0.5 thick standing inside the drum's wall, its inner face at r 18.3. Four sources put it there:
+- **The barrel's Steg (05 07 00-1): built on 18 October 2026** (claude/wempe-unbuilt; the Wempe README's barrel), with the hook block as drawn and the spring solved round both. What follows is the reading it was built from. It is a fixed brace for the mainspring's outer coil: a steel strip 0.5 thick standing inside the drum's wall, its inner face at r 18.3. Four sources put it there:
   - the lid's 9 o'clock notch, 2 +0.05 wide, its bottom at 18.3 ±0.02 (a bearing face);
   - the drum's revision (a), 0.95 +0.15 from the bore to the slot;
   - 0207's part 106, drawn 0.46 thick;

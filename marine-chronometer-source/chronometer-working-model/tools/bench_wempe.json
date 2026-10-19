@@ -7,7 +7,7 @@
    "sheet": "05 06_20, 05 07 03-2",
    "when": "before it goes into the barrel, and again in its barrel",
    "how": "In its barrel, the arbor held by a lever (a 3D-printed arm 50 mm long and a hanging weight do: 1 kg at 50 mm is 0.49 N·m) or a torque gauge: wind it from slack and read the torque each half turn, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, wind it on until its coils lie tight on the arbor and count the turns from slack.",
-   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 457 to 826 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.930-1.251 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 1.18 past full wind). Unwinding reads less than winding: the coils' friction gives 4-9 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
+   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 473 to 824 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.930-1.262 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 0.93 past full wind). Unwinding reads less than winding: the coils' friction gives 3-6 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
   },
   {
    "id": "fusee",
@@ -15,7 +15,7 @@
    "sheet": "05 06_20",
    "when": "the chain on, the barrel set up ¾ turn, before the train goes in",
    "how": "As Herb. Müller did in 1941 (05 06_20: \"Hebellänge 262 m/m\", the mean of two runs): a lever 262 mm long on the fusee arbor, and the weight (g) that holds it level read at each half turn running down from full wind (8.75 turns of the fusee, the curve's 0.05 to 8.74), twice; or a torque gauge (1 g on 262 mm is 2.57 mN·m).",
-   "pass": "Each reading within ×0.930-1.251 of the sheet's at the same turn (its readings' mean 132.7 g: 123.5-166.1 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.07 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 173.9 g mean (×1.310): open (README, Unresolved)."
+   "pass": "Each reading within ×0.930-1.262 of the sheet's at the same turn (its readings' mean 132.7 g: 123.5-167.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.05 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 173.9 g mean (×1.310): open (README, Unresolved)."
   },
   {
    "id": "depths",
@@ -102,17 +102,17 @@
   "mainspring": {
    "s": [
     0.9303,
-    1.2511
+    1.2616
    ],
-   "Mdown": 0.4572,
-   "Mfull": 0.8258,
+   "Mdown": 0.4728,
+   "Mfull": 0.8235,
    "setup": 0.75,
    "barrelTurns": 5.079,
-   "room": 1.1831,
+   "room": 0.9339,
    "friction": {
     "coils": [
-     0.0438,
-     0.0875
+     0.0312,
+     0.0624
     ],
     "measured": [
      0.1,
@@ -123,7 +123,7 @@
   "fusee": {
    "s": [
     0.9303,
-    1.2511
+    1.2616
    ],
    "g262": {
     "mean": 132.7375,
@@ -131,14 +131,14 @@
     "low": 126.5,
     "band": [
      123.4825,
-     166.0613
+     167.4646
     ]
    },
    "shape": [
     -0.047,
     0.0427
    ],
-   "rms": 0.01074,
+   "rms": 0.01053,
    "sources": {
     "s": 1.3105,
     "t_mm": 0.4049,
