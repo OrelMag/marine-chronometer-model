@@ -3252,6 +3252,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   merge, `git grep -n '^<<<<<<<\|^>>>>>>>'` finds nothing before committing. `52fd85c`
 - **The rig off its clips for an export made between round hours** (4104d411; the export to Blender): `blender.js` wrote the start hours as the page had them (20.000166 h, the page having run 0.6 s), but the rig reads its hours control through a driver variable, which Blender holds in single precision: 7e-7 h short, so the train and hands stood 0.005 teeth back, the escape wheel 0.12° off its clips (2e-6 h and 0.3° at 30 h). `ci.py`'s export passed only because its page exported near 20 h exactly; it ran the export in SwiftShader always because the GPU page, running faster, put the escape wheel 0.105° off. Fixed by taking the start hours in single precision (`Math.fround`) in both models' exports. Keep: any number the rig reads through a driver variable written so Blender's float holds it exactly.
 
+- **The Wempe report drew nothing** (`6b8ffede`): `template.html`'s knock-floor table wrote `'the knock's floor'` in a single-quoted
+  string (`cfe3ebf8`), which ended at the apostrophe, so the report's one script failed to parse and none of its tables or charts
+  drew (on the site too). A typographic apostrophe now. Keep: after editing the template, open `index.html` (or check its script with
+  `node --check`): a quote in a label breaks the whole page, not just its table.
 ## Essay
 
 - **The essay contradicted the model and itself.** Its last figure, "The whole
