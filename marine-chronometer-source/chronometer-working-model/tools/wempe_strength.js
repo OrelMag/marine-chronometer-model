@@ -17,7 +17,8 @@ const RB=41.6/2+1.02,rfE=9.30+1.02;   /* the chain's lever on the drum, and on t
 const Mup=PHY.MupM,pull=Mup/(RB/1000),Tf=pull*rfE/1000;   /* the spring fully wound at the level 05 06_20 measures (wempe_physics.js: the solved shape, the measured strength; N·m), the chain's pull (N), the fusee arbor's torque (N·m), frictionless */
 
 say(`The mainspring fully wound (mainspring_wempe.js, its length fitted to 05 06_20's shape, at its measured level): ${f(Mup*1000,0)} mN·m (as solved at 0.37 and 207 GPa ${f(FN.Mfull*1000,0)}); the chain's pull ${f(pull,1)} N; the fusee arbor's ${f(Tf*1000,0)} mN·m (05 06_20 measures 138.4 g on 262 mm there, ${f(138.4*262*G0/1e3,0)} mN·m, its losses in it)`);
-line('mainspring, fully wound (15 × 0.37)',`${f(Mup*1000,0)} mN·m`,6*Mup/(15e-3*(0.37e-3)**2),P(MS_LIM),'the top of a hardened steel mainspring\'s working range and its limit (strength.js)');
+if(PHY.BS){const B=PHY.BS.B;line(`mainspring, fully wound (15 × ${B.t} ${B.name}: the build)`,`${f(Mup*1000,0)} mN·m`,PHY.BS.s,[B.lim,B.lim],`${B.name}'s strength, over 3,000 N/mm² (JAS-014)`);}   /* the build's strip (MC_WREV=build: wempe_physics.js's BS) */
+else line('mainspring, fully wound (15 × 0.37)',`${f(Mup*1000,0)} mN·m`,6*Mup/(15e-3*(0.37e-3)**2),P(MS_LIM),'the top of a hardened steel mainspring\'s working range and its limit (strength.js)');
 say('  wound once a day, it fails by taking a set, as a mainspring is meant to work near its limit, not by fatigue');
 
 /* ---------- the chain 05 07 04 and the band 05 07 03 ---------- */

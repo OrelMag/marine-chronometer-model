@@ -3,6 +3,8 @@
     python wempe_mainspring.py --solve L [--set S]   # mainspring.py's solve of the Wempe's strip, L mm long (its free curve's turns S times the Hamilton's measured):
                                                      # tools/mainspring_wempe_L<L>[_s<S>].js; about 25 min on 14 processes, run it alone
     python wempe_mainspring.py --final               # the same into tools/mainspring_wempe.js, the spring the model takes (FINAL: the fit's length and set)
+    python wempe_mainspring.py --solve L --set S --t T   # another strip thickness T (the build's stronger spring, 19 October 2026): tools/mainspring_wempe_t<T>_L<L>_s<S>.js,
+                                                     # left out of the fit; the shape doesn't depend on the modulus, so another material's torque is this one's times E'/207
     python wempe_mainspring.py --friction [--check]  # mainspring_friction.py on mainspring_wempe.js: tools/mainspring_friction_wempe.json (about 4 min)
     python wempe_mainspring.py [--check]             # the fit (a second): each solved table against 05 06_20; writes tools/wempe_mainspring.json (--check: exit 1 if stale)
 
@@ -114,6 +116,7 @@ def fit(check=False):
     OUT.write_text(txt,encoding='utf-8',newline='\n');print('wrote tools/'+OUT.name)
 if __name__=='__main__':
     a=sys.argv[1:];S=float(a[a.index('--set')+1]) if '--set' in a else 1.0
+    if '--t' in a:T_=float(a[a.index('--t')+1]);tag=lambda L,S:f'wempe_t{T_:g}_L{L:g}_s{S:g}'
     if '--solve' in a:L=float(a[a.index('--solve')+1]);run(L,S,tag(L,S))
     if '--final' in a:run(*FINAL,'wempe')
     if '--friction' in a:sys.exit(subprocess.run([sys.executable,str(HERE/'mainspring_friction.py'),*(['--check'] if '--check' in a else [])],env=env(*FINAL,'wempe'),cwd=HERE).returncode)

@@ -17,6 +17,9 @@ const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),{WPHY
 const D=180/Math.PI,G0=9.80665,f=(x,n=2)=>Number.isFinite(+x)?(+x).toFixed(n):'-',sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),pc=x=>(x>=1?'+':'−')+f(Math.abs(x-1)*100,0)+' %',r4=x=>+(+x).toFixed(4);
 const rows=[],say=s=>rows.push('  '+s),head=s=>rows.push('\n'+s),tStart=Date.now();
 const GUARD=[180,270],SRC=[225,270];
+/* a build (MC_WREV=build40 or build: PLAN-wempe-navigation.md, README "The build"): its own file, its strip (WESC.BSEL), and the figures the drawn version takes from
+   wempe_tripping.js's runs from its own (tools/wempe_build.json: the held tooth's ring, the preload's floors) */
+const BREV=/^build/.test(process.env.MC_WREV||'')?process.env.MC_WREV:'',SUF=BREV?'_'+BREV:'',BJ=BREV?JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_build.json'),'utf8')).builds[BREV]:null,STRIP=BREV&&WESC.BSEL.strip;
 /* the drive over the wind (05 06_20 through the train, times the reference's at 12 h): its least and greatest, every quarter hour from full wind to run down */
 const HRS=P.MF*P.HPT,dr=[];for(let h=0;h<=HRS+1e-9;h+=0.25)dr.push(P.drv(h/P.HPT));const dmin=Math.min(...dr),dmax=Math.max(...dr),hMin=dr.indexOf(dmin)/4,hMax=dr.indexOf(dmax)/4;
 /* the value of x at which g(x) crosses y, g monotone between a and b */
@@ -31,9 +34,9 @@ say(`the guard band ${GUARD.join('-')}° (wempe_escapement.js's: the model's own
 /* ---------- the mainspring ---------- */
 head('The mainspring (05 06_20: "Zugfeder 15 × 0,37", no tolerance; its length on no sheet, solved 1,240 mm)');
 /* its torque goes as E b t³ (the fusee evening its shape as drawn, set up ¾ turn as the sheet says), so the drive does: s = (t / t0)³ at the drawn width and length */
-const sLo=sAt(GUARD[0])/dmin,sHi=sAt(GUARD[1])/dmax,sLoS=sAt(SRC[0])/dmin,t0=0.37,tm=PHY.LV.tMid;
+const sLo=sAt(GUARD[0])/dmin,sHi=sAt(GUARD[1])/dmax,sLoS=sAt(SRC[0])/dmin,t0=STRIP?STRIP.t:0.37,tm=PHY.LV.tMid;
 const gMean=P.KV.reduce((a,x)=>a+x[1],0)/P.KV.length,gFull=P.KV[P.KV.length-1][1],gLow=Math.min(...P.KV.map(x=>x[1]));
-const sM=6*PHY.MupM/(15e-3*(0.37e-3)**2),sLim=[2.5e9,2.6e9],sStress=(sLim[1]/sM)**3;   /* the strip's stress fully wound at the measured level (wempe_physics.js), and the drive at which a strip of the same curvature (stress as t, torque as t³) reaches a mainspring's limit */
+const sM=6*PHY.MupM/(15e-3*(t0*1e-3)**2),sLim=STRIP?[STRIP.lim,STRIP.lim]:[2.5e9,2.6e9],sStress=(sLim[1]/sM)**3;   /* the strip's stress fully wound at the measured level (wempe_physics.js), and the drive at which a strip of the same curvature (stress as t, torque as t³) reaches a mainspring's limit */
 const sTop=Math.min(sHi,sStress),rLo=E.atK(sLo).rate,rHi=E.atK(sTop).rate;
 say(`the swing stays in the guard band over the whole wind for a drive ${f(sLo,3)}-${f(sHi,3)} of 05 06_20's (${pc(sLo)} to ${pc(sHi)}); the strip's stress fully wound at the measured level is ${f(sM/1e9,2)} GPa (wempe_physics.js), which a strip of the same set reaches at a mainspring's limit, 2.6 GPa, at ${f(sStress,3)} of the drive: ${sStress<sHi?'the stress, not the swing, sets the top':'under the swing\'s top'}`);
 say(`  so ${f(sLo,3)}-${f(sTop,3)} (${pc(sLo)} to ${pc(sTop)}): the strip ${f(t0*Math.cbrt(sLo),3)}-${f(t0*Math.cbrt(sTop),3)} mm at the drawn 15 mm and solved 1,240 mm, if 0.370 gives the measured pull; at the measured level the solved spring's strip is ${f(tm,3)} (wempe_physics.js), so ${f(tm*Math.cbrt(sLo),3)}-${f(tm*Math.cbrt(sTop),3)} on it`);
@@ -55,7 +58,7 @@ say(`  1436's other figure, 0.09 (${f(k09,2)} times as stiff): ${f(A09[0],1)}-${
    20.4 g at it and 22.6 g at 1.2× (17.6, 20.0, 22.5 before the horn was traced), so a preload that takes the 20 g its check asks wants about 0.97 times the estimate (0.61 g),
    the margin a hair at the estimate. The floor is the higher of the two.
    The swing falls as the preload grows (the stone pressed on the tooth it has let go, RW) */
-const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.78,wKnock=0.64,wLo=Math.max(wTrip,wKnock);
+const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=BJ?BJ.floor.margin:0.78,wKnock=BJ?BJ.floor.knock:0.64,wLo=Math.max(wTrip,wKnock);
 const wHi=cross(w=>preA(w)[0],GUARD[0],S.W78,4,14),PRE=[0.3,S.W78,1.0,1.5].map(w=>({w:r4(w),A:preA(w).map(r4)}));
 say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wLo,2)} g, the higher of the margin's floor, ${f(wTrip,2)} g (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 49 % at the estimate ${S.W78} g; at 0.2 times the estimate and under teeth get past), and the knock's, ${f(wKnock,2)} g (a 3 ms blow of 20 g across the plate lets no tooth go from there: 25.6 g at the estimate), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
 
@@ -70,7 +73,7 @@ head(`The depth of lock (05 04_1: the tips ${f(S.dL*S.ES,3)} into the stone's fl
 /* makeEsc rebuilt with dL (the stone's place against the tips): the deepest that still unlocks (the discharge stone lifts the gold spring's tip, and the stone with it, only so far),
    and the shallowest that keeps a held tooth's stone ringing under half the depth (wempe_tripping.js as drawn, 19 October 2026: 49 % of 235 µm, 116 µm, at the 0.8 g preload, the longer discharge reach bending the gold spring 0.39 on the return: twice it; 44 % of 175 µm, 77 µm, until the lock was re-laid, and 41 % before the horn was traced) */
 const lockAt=d=>{const e=W.makeEsc({...S,dL:d/S.ES},S),m=e.measure();return m.runs?{A:e.A*D,Amin:e.ampAt(dmin)*D,lock:m.lock,letoff:m.letoff,lRel:e.lRel*e.BL/e.LEN*e.ES}:null;};
-const d0=S.dL*S.ES,dDeep=(()=>{let a=d0,b=d0+0.03;for(let i=0;i<14;i++){const m=(a+b)/2;lockAt(m)?a=m:b=m;}return a;})(),RING=0.493*0.235,dShal=2*RING,dTip=d0+0.015;
+const d0=S.dL*S.ES,dDeep=(()=>{let a=d0,b=d0+(BREV?0.08:0.03);for(let i=0;i<14;i++){const m=(a+b)/2;lockAt(m)?a=m:b=m;}return a;})(),RING=BJ?BJ.window.ring:0.493*0.235,dShal=2*RING,dTip=d0+0.015;
 const L0=lockAt(d0),LS=lockAt(dShal),LD=lockAt(dDeep-0.002),liftMax=Math.max(...E.LI)*E.BL/E.LEN*E.ES;
 say(`as drawn ${f(d0,3)} mm deep: lock ${f(L0.lock,1)}°, let-off ${f(L0.letoff,1)}°, the stone lifted ${f(L0.lRel,3)} mm at the release; ${f(L0.Amin,1)}-${f(L0.A,1)}° (the wind's lowest, 12 h)`);
 say(`deepest that unlocks: ${f(dDeep,3)} mm (the discharge stone lifts the stone at most ${f(liftMax,3)} mm); there lock ${f(LD.lock,1)}°, let-off ${f(LD.letoff,1)}°, ${f(LD.Amin,1)}° at the wind's lowest`);
@@ -99,8 +102,8 @@ const J={note:'tools/wempe_tolerances.js: how closely the Wempe\'s parts the dra
   gold:{t:0.15,E:90,k:[0,r4(kpHi)],t_mm:r4(0.15*Math.cbrt(kpHi)),E_max:r4(90*kpHi),A0:r4(Ap0),half:Ap5.map(r4)},
   lock:{d:r4(d0),deep:r4(dDeep),shallow:r4(dShal),ring:r4(RING),tip:r4(dTip),liftMax:r4(liftMax),at:{drawn:{lock:r4(L0.lock),letoff:r4(L0.letoff),A:r4(L0.A),Amin:r4(L0.Amin)},deep:{lock:r4(LD.lock),letoff:r4(LD.letoff),Amin:r4(LD.Amin)},shallow:{lock:r4(LS.lock),A:r4(LS.A),Amin:r4(LS.Amin)}}},
   hairspring:{T:r4(T),fast:r4(fast),perUm:r4(perH),perCoil001:r4(perC),perMm:r4(perL),perGPa:r4(perE),hNeed:r4(hNeed),hNeedE:hE.map(r4).reverse(),weights:{m:TW.m,r:r4(rTW),secTurn:r4(secTurn),reach:r4(reach),turnsIn:r4(turnsIn),gain:r4(gain)}}};
-const OUT=path.join(__dirname,'tolerances_wempe.json'),txt=JSON.stringify(J,null,1)+'\n';
+const OUT=path.join(__dirname,`tolerances_wempe${SUF}.json`),txt=JSON.stringify(J,null,1)+'\n';
 console.log(rows.join('\n'));
-if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log('\n  wrote tools/tolerances_wempe.json');}
-else{const ok=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8').replace(/\r/g,'')===txt;console.log(ok?'\n  ok  tools/tolerances_wempe.json is what this finds':'\n  !!  tools/tolerances_wempe.json is not what this finds: node wempe_tolerances.js --write');if(!ok)process.exitCode=1;}
+if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log(`\n  wrote tools/tolerances_wempe${SUF}.json`);}
+else{const ok=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8').replace(/\r/g,'')===txt;console.log(ok?`\n  ok  tools/tolerances_wempe${SUF}.json is what this finds`:`\n  !!  tools/tolerances_wempe${SUF}.json is not what this finds: ${BREV?'MC_WREV='+BREV+' ':''}node wempe_tolerances.js --write`);if(!ok)process.exitCode=1;}
 console.log(`  (${f((Date.now()-tStart)/1000,0)} s)`);

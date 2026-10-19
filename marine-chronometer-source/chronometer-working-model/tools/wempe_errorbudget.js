@@ -76,6 +76,8 @@ function trial(o){const use=k=>!o.only||o.only===k,c2=-o.Sv/256,dr=o.k*SC.drS*ga
   const r={E:Ev,R:m[4]-m[0],D:Dv,C:(w36-w4)/32,S:(w36+w4)/2-w20,w:Math.max(...m.map(Math.abs))};r.N=42*Math.abs(r.E)+4.5*Math.abs(r.R)+60*Math.abs(r.C)+2.4*Math.abs(r.S);
   r.pass=['E','R','D','C','S','w'].every(k=>Math.abs(r[k])<=LIM[k])&&r.N<=LIM.N;return r;}
 const adj=()=>({c1:-(air(36)-air(4))/32+(2*rnd()-1)*cRes,Sv:Sint[0]+(Sint[1]-Sint[0])*rnd(),k:1});
+/* the build's adjustment (the user's aim, 19 October 2026: about 2 miles of longitude a month): the masses set on more rounds of the trial to ±SETB of their compensating place */
+const SETB=0.1,adjB=()=>({...adj(),c1:-(air(36)-air(4))/32+(2*rnd()-1)*perDeg*SETB});
 /* the calibration: the scatter's sd until the trial's median E is the cards', the drift's until its median |R| is (each by bisection, three rounds; the trial as adjusted,
    every other term in it) */
 {const mE=(k,n=500)=>pct([...Array(n)].map(()=>trial(adj())).map(r=>Math.abs(r[k])),0.5);
@@ -127,9 +129,10 @@ function voyage(p,on={}){const use=k=>!on.only||on.only===k,days=60,port=10,rate
 const runV=(mk,on)=>{const R=[...Array(NV)].map(()=>voyage(mk(),on));return k=>R.map(r=>Math.abs(r[k]));};
 const line=(nm,mk)=>{const r=runV(mk,{});say(`${nm.padEnd(40)} ${[10,30,60].map(k=>{const a=r(k);return`${k} days: ${f(pct(a,0.5),1)} s (${f(pct(a,0.5)/4,1)} mi), 95 % ${f(pct(a,0.95),1)} s (${f(pct(a,0.95)/4,1)} mi)`;}).join('; ')}`);return r;};
 say(`the error the navigator carries (median, and 95 % of ${NV} voyages; in miles of longitude on the equator, 4 s of time a mile):`);
-const v1=line('as adjusted, the card\'s scatter',adj);line(`borderline (the scatter ×${f(kHalf,1)})`,()=>({...adj(),k:kHalf}));line('the masses at their drawn place',drawn);
-say('what each source adds at 30 days, as adjusted (median |error|, alone):');
+const v1=line('as adjusted, the card\'s scatter',adj);line(`borderline (the scatter ×${f(kHalf,1)})`,()=>({...adj(),k:kHalf}));line('the masses at their drawn place',drawn);const vB=line(`the build, the masses to ±${SETB}°`,adjB);
+say('what each source adds at 30 days, as adjusted and in the build (median |error|, alone):');
 for(const[k,nm]of[['temp','the temperature curve (12.8 → 29.4 °C)'],['scatter','day-to-day scatter'],['drift','drift'],['oil','the oil thickening'],['baro','the barometer'],['sea','heavy weather one day in five']]){
-  const a=runV(adj,{only:k})(30);say(`  ${nm.padEnd(40)} ${f(pct(a,0.5),2)} s`);}
-{const m30=pct(v1(30),0.5);chk(m30<30,`as adjusted it carries ${f(m30,1)} s (${f(m30/4,1)} miles of longitude) after a month at sea, under 30 s (7½ miles; errorbudget.js's test for the Hamilton): most of it the residual of the masses' setting (±${SET0}°, the cards' C spread: ±0.1° would leave two fifths of it)`);}
+  const a=runV(adj,{only:k})(30),b=runV(adjB,{only:k})(30);say(`  ${nm.padEnd(40)} ${f(pct(a,0.5),2)} s, the build ${f(pct(b,0.5),2)} s`);}
+{const m30=pct(v1(30),0.5);chk(m30<30,`as adjusted it carries ${f(m30,1)} s (${f(m30/4,1)} miles of longitude) after a month at sea, under 30 s (7½ miles; errorbudget.js's test for the Hamilton): most of it the residual of the masses' setting (±${SET0}°, the cards' C spread)`);
+  const b30=pct(vB(30),0.5);chk(b30<=8,`the build, its masses set to ±${SETB}° on further rounds of the trial (wempe_bench.js), carries ${f(b30,1)} s (${f(b30/4,1)} miles) after a month: within the user's aim of about 2 miles a month (8 s; 19 October 2026)`);}
 console.log(rows.join('\n'));console.log(`  (${f((Date.now()-t0)/1000,0)} s)`);if(fail)process.exitCode=1;

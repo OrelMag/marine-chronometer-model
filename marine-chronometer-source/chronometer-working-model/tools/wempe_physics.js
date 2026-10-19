@@ -57,6 +57,18 @@ const LV=(()=>{const kE=[200/EGPa*(0.365/0.37)**3,210/EGPa*(0.375/0.37)**3],kW=2
   note(sS<2.6e9,`as solved (0.37, 207 GPa) the strip's bending stress fully wound is ${f(sS/1e9,2)} GPa (6M / b t²)${sS<2.6e9?'':`: past a steel mainspring's limit, about 2.5-2.6 GPa (strength.js), so the strip as solved can't be the strip: thinner or less stiff, as the level says`}`);
   chk(sM>1.5e9&&sM<2.6e9,`at the measured level (×${f(Kl,3)}: ${f(MupM*1000,0)} mN·m fully wound, ${f(FN.Mdown*Kl*1000,0)} run down) ${f(sM/1e9,2)} GPa in the 15 × 0.37 strip (2a's planning estimate 2.2): inside a hardened, tempered steel mainspring's working range, about 1.5-2.5 GPa (physics.js)`);
   return{imp,kE,tMid,Kl,MupM};})();
+/* the build's mainspring (MC_WREV=build: WESC.BUILD.strip, the user's choice, 19 October 2026): its own solved table (wempe_mainspring.py --t), its torque the table's times
+   E/207, set up as the drawn spring (¾ turn) and wound the drawn fusee's barrel turns; it must give the build's drive (WESC.KB times the measured, the losses at their middle
+   as above) and stay under its alloy's limit */
+const BS=W.WESC.BSEL&&W.WESC.BSEL.strip?(()=>{const B=W.WESC.BSEL.strip,d=JSON.parse(/const MSHAPE=(\{.*?\});/s.exec(fs.readFileSync(path.join(__dirname,B.table),'utf8'))[1]),kE=B.E/207;
+  const ip=(T)=>{const q=d.T;let i=0;while(i<q.length-2&&q[i+1]<T)i++;const w=(T-q[i])/(q[i+1]-q[i]);return(d.pull[i]*(1-w)+d.pull[i+1]*w)*d.M1*kE;};
+  let sl=d.T0;for(let i=0;i+1<d.T.length;i++)if(d.pull[i]<=0&&d.pull[i+1]>0)sl=d.T[i]-d.pull[i]*(d.T[i+1]-d.T[i])/(d.pull[i+1]-d.pull[i]);
+  const Td=sl+0.75,Tu=Td+MSJ.barrelTurns,Md=ip(Td),Mu=ip(Tu),want=FN.Mfull*LV.Kl*W.WESC.KB,s=6*Mu/(b*(B.t/1000)**2);
+  head(`The build's mainspring: ${B.name} ${B.t} × ${MSJ.strip.b} × ${FN.L} mm (WESC.BUILD.strip)`);
+  say(`solved (${B.table}) at ${B.E} GPa: ${f(Md*1000,0)} mN·m run down to ${f(Mu*1000,0)} fully wound (${f(Mu/Md,2)}:1); fully wound at the turn ${f(Tu,2)} of a table solved to ${d.T[d.T.length-1]} (coil-bound past it)`);
+  chk(Math.abs(Mu/want-1)<0.03,`it gives the build's drive: fully wound ${f(Mu*1000,0)} mN·m against ${f(want*1000,0)} (the drawn spring's at the measured level, ${f(FN.Mfull*LV.Kl*1000,0)}, times ${W.WESC.KB}), within 3 %`);
+  chk(s<B.lim,`its bending stress fully wound ${f(s/1e9,2)} GPa (6M / b t²), under ${B.name}'s ${f(B.lim/1e9,1)} GPa: margin ${f(B.lim/s,2)}`);
+  return{B,Md,Mu,s,Kl:Mu/FN.Mfull};})():null;
 
 /* ---------- 3. the going train ---------- */
 head('3. The going train, fusee wheel to escape pinion (90/14 · 90/12 · 80/10 · 80/10)');
@@ -103,5 +115,5 @@ head('6. Does it close: the Q the drive needs to hold the swing, against the Q t
   say(`the power at 12 h: the fusee arbor gives ${f(pin*1e6,1)} µW (measured), the escape wheel ${f(escFrom(mes,P.ETA)*TAU/7.5,1)} µW at ${f(P.ETA,3)} (a turn every 7.5 s), the balance loses ${f(pw*1e6,2)} µW: ${f(100*pw/pin,1)} % of what the spring gives reaches the balance`);
   say(`the measured drive's swing over the wind (2a, through ${f(P.ETA,3)}): ${[0,24,54].map(h=>f(E.ampAt(P.drv(h/HPT))/D,1)+'° at '+h+' h').join(', ')}`);}
 
-module.exports={MSJ,FN,LS,LV,TR,DQ,MupM:LV.MupM,Kl:LV.Kl};
+module.exports={MSJ,FN,LS,LV,TR,DQ,BS,MupM:BS?BS.Mu:LV.MupM,Kl:BS?BS.Kl:LV.Kl};   /* BS: the build's spring (MC_WREV=build), which wempe_strength.js and the bench then take */
 if(require.main===module){console.log(rows.join('\n'));if(fail)process.exitCode=1;}

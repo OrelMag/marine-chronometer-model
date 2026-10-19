@@ -12,7 +12,7 @@ const WPHYS=(()=>{
   const KV=[[0.05,126.5],[0.29,133.2],[0.5,135.0],[1,135.8],[1.25,136.3],[1.5,135.5],[2,134.6],[2.5,132.4],[3,130.7],[3.5,130.7],[4,129.6],[4.5,129.3],[4.75,129.0],
     [5,129.6],[5.5,130.4],[5.75,129.0],[6,131.3],[6.5,131.8],[7,133.2],[7.5,134.4],[8,135.2],[8.25,135.8],[8.5,138.0],[8.74,138.4]],MF=8.638,LEV=262;   /* MF: the chain's turn on the groove at full wind, where the stop holds the fusee (fusee.js MW: 0.112 short of the groove's end, 8.75, taken until 15 October 2026; the page warns if they part) */
   const gAt=x=>{if(x<=KV[0][0])return KV[0][1];for(let i=1;i<KV.length;i++)if(x<=KV[i][0]){const[a,p]=KV[i-1],[b,q]=KV[i];return p+(q-p)*(x-a)/(b-a);}return KV[KV.length-1][1];};
-  const fusT=n=>gAt(MF-n)*LEV*9.80665e-6;   /* the fusee arbor's torque (N·m) n turns from full wind (the page's n: 0 fully wound, fu.NRUN run down; its curve's turn MF - n, the chain's place on the groove) */
+  const KB=/** @type {any} */(WESC).KB||1,fusT=n=>gAt(MF-n)*LEV*9.80665e-6*KB;   /* KB: the build's drive, times 05 06_20's (tools/wempe_load.js with MC_WREV=build sets WESC.KB; WESC.BUILD) */   /* the fusee arbor's torque (N·m) n turns from full wind (the page's n: 0 fully wound, fu.NRUN run down; its curve's turn MF - n, the chain's place on the groove) */
   /* the going train, fusee wheel to escape pinion: 90/14 · 90/12 · 80/10 · 80/10 (train.js, the wheels' tables; the pinions' 12 and 10 from the centres) */
   const RATIO=90/14*90/12*80/10*80/10;
   /* its efficiency, each stage from its parts as the Hamilton's (tools/physics.js A6): the driven arbor's pivots carry its pinion's and wheel's tooth loads, T (1/r_pinion +
