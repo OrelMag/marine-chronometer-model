@@ -70,9 +70,10 @@ function frame(o={}){
   const hn=[hv[0]];for(let i=1;i<hv.length;i++){el(hv[i-1],hv[i],EST,0.22e-3,0.8e-3,RHO.st,'horn');hn.push(hv[i]);}
   const nh=HC.map(t=>hv[hts.indexOf(t)]);
   /* the gold spring: its bending point rigid with the square (its head screwed to it), beams along its drawn path to its tip; the nodes over the horn */
-  const g0=nd(Q(GB[0],GB[1]),'slave',F1);let gp=g0;const gs=[g0],gv=[g0];
-  for(let k=1;k<GPATH.length;k++){const[t,n]=GPATH[k],q=nd(Q(t,n)),L=Math.hypot(t-GPATH[k-1][0],n-GPATH[k-1][1]);
-    gs.push(...line(gp,q,Math.max(1,Math.round(L/0.4)),EGO*(o.tsK??1),GW*1e-3,1.0e-3,RHO.gold,'gold').slice(1));gv.push(q);gp=q;}
+  /* o.tsBend [L, t]: the strip thinned to t over its first L mm from the bending point, as a passing spring is (wempe_detent_study.js; Belyakov's 0.06 "at its bend") */
+  const g0=nd(Q(GB[0],GB[1]),'slave',F1);let gp=g0,sg=0;const gs=[g0],gv=[g0];
+  for(let k=1;k<GPATH.length;k++){const[t,n]=GPATH[k],q=nd(Q(t,n)),L=Math.hypot(t-GPATH[k-1][0],n-GPATH[k-1][1]),th=o.tsBend&&sg+L/2<o.tsBend[0]?o.tsBend[1]:GW;sg+=L;
+    gs.push(...line(gp,q,Math.max(1,Math.round(L/0.4)),EGO*(o.tsK??1),th*1e-3,1.0e-3,RHO.gold,'gold').slice(1));gv.push(q);gp=q;}
   const tip=gp,ng=HC.map(t=>gv[GPATH.findIndex(p=>Math.abs(p[0]-t)<1e-12)]);
   if(nh.some(i=>i==null)||ng.some(i=>i==null)||nb.some(i=>i==null))throw Error('wempe_tripping: a contact node not found');
   if(o.stiff){for(const i of[b1,...bl1.slice(1,-1),...bl2.slice(1,-1),K,...hn.slice(1)])N[i].k='slave',N[i].m=F1;}
@@ -326,10 +327,10 @@ function child(){const spec=JSON.parse(process.env.MC_WJOB),f=(x,n=2)=>+(+x).toF
   if(spec.k==='run')out=pick(run(model(spec.mo),spec.ro));
   else if(spec.k==='push'){const A=spec.A,sFor=x=>{let lo=0.5,hi=6;for(let i=0;i<40;i++){const m=(lo+hi)/2;ESC.ampAt(m)<x*D?lo=m:hi=m;}return(lo+hi)/2;},s=sFor(A),r=run(model({}),{s,A,T:2.5,from:1}),q=DY.sim({mode:'phys',s,A,T:2.5,from:1});
     out={A,s:f(s,3),Am:f(ESC.ampAt(s)/D,1),frame:pick(r),dyn:{A:f(q.A,1),trips:q.trips,beats:q.beats}};}
-  else{const{pre,kind,lo:lo0,hi:hi0,rigid}=spec,A0=214,M4=rigid?null:model({pre}),B={},pulse=(t1,dur,fn)=>tt=>{const u=(tt-t1)/dur;return u>0&&u<1?fn(Math.sin(Math.PI*u)):{al:0,ax:0,ay:0};};
+  else{const{pre,kind,lo:lo0,hi:hi0,rigid}=spec,A0=spec.A0??214,M4=rigid?null:model({pre,...(spec.mo||{})}),B={},pulse=(t1,dur,fn)=>tt=>{const u=(tt-t1)/dur;return u>0&&u<1?fn(Math.sin(Math.PI*u)):{al:0,ax:0,ay:0};};
     const ang=Math.atan2(DY.DM.my,DY.DM.mx)+Math.PI/2,ux=Math.cos(ang),uy=Math.sin(ang),go=o=>rigid?DY.sim({mode:'phys',pre,...o}):run(M4,o);
-    const base=p=>B[p]??=go({A:A0,T:0.3+p*T0+0.55,from:0.2});
-    const mk=(g,p)=>{const t1=0.3+p*T0,o={A:A0,T:t1+0.55,from:0.2};if(kind==='tw'){const dur=0.002;return go({...o,ext:pulse(t1,dur,x=>({al:g*Math.PI/(2*dur)*x,ax:0,ay:0})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});}
+    const RO=spec.ro||{},base=p=>B[p]??=go({...RO,A:A0,T:0.3+p*T0+0.55,from:0.2});   /* spec.mo, spec.ro, spec.A0: another frame, drive and swing (wempe_detent_study.js) */
+    const mk=(g,p)=>{const t1=0.3+p*T0,o={...RO,A:A0,T:t1+0.55,from:0.2};if(kind==='tw'){const dur=0.002;return go({...o,ext:pulse(t1,dur,x=>({al:g*Math.PI/(2*dur)*x,ax:0,ay:0})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});}
       const dur=kind==='b05'?0.0005:0.003,a=g*G0;return go({...o,ext:pulse(t1,dur,x=>({al:0,ax:a*x*ux,ay:a*x*uy})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});};
     const bad=g=>{for(const p of[0.1,0.35,0.6,0.85])for(const sgn of[1,-1]){const r=mk(g*sgn,p);if(r.trips>0||r.beats!==base(p).beats)return true;}return false;};
     let lo=lo0,hi=hi0;for(let i=0;i<10;i++){const m=Math.sqrt(lo*hi);bad(m)?hi=m:lo=m;}out=hi;}   /* ten halvings of the log range: 0.6 % of 1-400 g (six, 10 %, until 18 October 2026: a 0.2 mg screw moved the 3 ms blow a whole step, 22 to 20 g, across the check's 20) */
