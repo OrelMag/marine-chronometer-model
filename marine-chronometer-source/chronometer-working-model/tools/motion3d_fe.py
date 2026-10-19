@@ -101,9 +101,13 @@ class Part:
         s.mats=mat;G=dict(s.g,solid=S>=0);X,conn,e=fea.mesh_of(G);s.X,s.conn=X,conn;s.bm=S[e[:,0],e[:,1],e[:,2]];s.cent=X[conn].mean(1)
         s.E=np.array([MAT[mat[i]][0] for i in s.bm],float);s.nb=len(conn)
         cnt=np.bincount(conn.ravel(),minlength=len(X));s.surf=cnt<8   # a node on the surface belongs to fewer than 8 bricks
+    def inside(s,c,m=0.3):
+        """whether c lies over this grid's columns (a window's), with a margin: holds and loads outside a window are its cut faces' business"""
+        g=s.g;return (g['x0']-m<=c[0]<=g['x0']+g['nx']*g['h']+m) and (g['z0']-m<=c[2]<=g['z0']+g['nz']*g['h']+m)
     def near_axis(s,pt,r):
         d=np.hypot(s.X[:,0]-pt[0],s.X[:,2]-pt[2]);return d<=r
     def patch(s,P,r,yband=None):
+        if s.win is not None and not s.inside(P):return np.zeros(len(s.X),bool)
         d=np.hypot(s.X[:,0]-P[0],s.X[:,2]-P[2]);m=(d<=r)&s.surf
         if yband is not None:m&=(s.X[:,1]>=yband[0]-1e-9)&(s.X[:,1]<=yband[1]+1e-9)
         if not m.any():   # the nearest surface nodes
@@ -163,7 +167,7 @@ def main():
             cx=Pf.cent;far&=(cx[:,0]>g['x0']+2*hf)&(cx[:,0]<g['x0']+g['nx']*hf-2*hf)&(cx[:,2]>g['z0']+2*hf)&(cx[:,2]<g['z0']+g['nz']*hf-2*hf)
             rootpk=float(vmf[far].max()) if far.any() else 0.0;kk=int(np.argmax(np.where(far,vmf,-1)))
             wins.append({'at':C.tolist(),'R':Rw,'h':hf,'bricks':Pf.nb,'peak':rootpk,'raw':float(vmr[far].max()) if far.any() else 0.0,'where':Pf.cent[kk].tolist(),'mat':Pf.mats[Pf.bm[kk]],'contact':float(vmf.max()),'resid':rrf,'P':Pf,'vm':vmf})
-        busy0=(np.abs(F).sum(1)>0)|fix.any(1);farc=np.ones(P.nb,bool)
+        busy0=fix.any(1)|((np.abs(F).sum(1)>0) if not info.get('body') else False);farc=np.ones(P.nb,bool)   # a load through the body (the balance's inertia) isn't a contact's singularity
         if busy0.any():dd0,_=cKDTree(P.X[busy0]).query(P.cent);farc=dd0>2.5*P.h
         vmc=np.where(farc,vm,0);pk995=float(np.percentile(vmc,99.5));mx=float(vmc.max());k=int(np.argmax(vmc));mat=P.mats[P.bm[k]]
         if wins:   # the part's peak: the highest root stress its windows find (the coarse grid's own peak where it is higher, away from the windows)
@@ -204,11 +208,11 @@ def main():
             else:   # the fusee wheel: its drive comes from the maintaining spring's pins and the ratchet: held at its hub
                 m=P.near_axis(c,4.5)&P.surf;fix[m]=True
             if k!='esc':
-                Po,FB,lam,rn=contact(i);m=P.patch(Po,0.6*MESH[i]['m'],wheel_y(k));F[m]+=-FB/m.sum();q=MESH[i];yw=wheel_y(k);info['hertz']=hertz(float(np.linalg.norm(FB)),q['m']*q['zA']/2*0.342,q['m']*q['zB']/2*0.342,yw[1]-yw[0],100e3,207e3);info.update(load=f"{abs(lam):.3g} N·m on the next pinion, {np.linalg.norm(FB):.1f} N at its pitch point ({rn})",out={'at':Po.tolist(),'F':(-FB).tolist(),'run':rn,'m':MESH[i]['m']})
+                Po,FB,lam,rn=contact(i);m=P.patch(Po,0.6*MESH[i]['m'],wheel_y(k));F[m]+=(-FB/m.sum() if m.any() else 0);q=MESH[i];yw=wheel_y(k);info['hertz']=hertz(float(np.linalg.norm(FB)),q['m']*q['zA']/2*0.342,q['m']*q['zB']/2*0.342,yw[1]-yw[0],100e3,207e3);info.update(load=f"{abs(lam):.3g} N·m on the next pinion, {np.linalg.norm(FB):.1f} N at its pitch point ({rn})",out={'at':Po.tolist(),'F':(-FB).tolist(),'run':rn,'m':MESH[i]['m']})
             else:   # the escape wheel: the tooth on the locking stone (the detent's stone: the ruby nearest the wheel's tips), the whole escape torque at the tip
                 rub=[m for m in byp('detent') if m['mat0']=='93020b'];cen=[m['V'].mean(0) for m in rub];j=int(np.argmin([abs(np.hypot(*(x-c)[[0,2]])-7.0) for x in cen]));S=cen[j]
                 lam,rn=pk('mesh:'+MESH[3]['nm']);r=S-c;r[1]=0;rt=r/np.linalg.norm(r)*7.0;tau=np.array([0,AX['esc'][1]*abs(lam)*1e3,0]);Ft=-np.cross(tau,rt)/(rt@rt)
-                m=P.patch(c+rt,0.15,wheel_y('esc'));F[m]+=Ft/m.sum();info.update(load=f"{abs(lam):.3g} N·m held at a tooth's tip on the locking stone, {np.linalg.norm(Ft):.2f} N ({rn})",out={'at':(c+rt).tolist(),'F':Ft.tolist(),'run':rn,'m':MESH[3]['m']})
+                m=P.patch(c+rt,0.15,wheel_y('esc'));F[m]+=(Ft/m.sum() if m.any() else 0);info.update(load=f"{abs(lam):.3g} N·m held at a tooth's tip on the locking stone, {np.linalg.norm(Ft):.2f} N ({rn})",out={'at':(c+rt).tolist(),'F':Ft.tolist(),'run':rn,'m':MESH[3]['m']})
             return info
         run(part,mm,setup,'a wheel on its arbor: the pinion driven by the wheel before it, its wheel driving the next pinion, held on its axis at its pivots')
     # ---- the fusee and its click wheel, the clicks, the maintaining ratchet and detent, the barrel and its arbor, the set-up ratchet, the stop, the balance, the rollers ----
@@ -225,21 +229,25 @@ def main():
         if ylow and ax.any():y=P.X[:,1];fix[ax&(y<=y[ax].min()+1e-9),1]=True
     def ball(P,c,r,yb=None,minn=24):
         """the nodes within r of c in plan (within yb); where the point is in a hole (a pivot's screw), the hole's wall: every node within r of the nearest material"""
+        if P.win is not None and not P.inside(c):return np.zeros(len(P.X),bool)
         d=np.linalg.norm((P.X-c)[:,[0,2]],axis=1);ok=np.ones(len(P.X),bool)
         if yb is not None:ok&=(P.X[:,1]>=yb[0])&(P.X[:,1]<=yb[1])
         m=ok&(d<=r)
         if m.sum()<minn:d0=d[ok].min() if ok.any() else d.min();m=ok&(d<=d0+max(r,2*P.h))
         return m
     yc=lambda part,pcs:yext(byp(part,pcs))
-    def push(P,F,c,f,r,yb=None):m=ball(P,c,r,yb);F[m]+=f/m.sum();return m
-    P1=pawl('click 1','click1',cF)
+    def push(P,F,c,f,r,yb=None):
+        m=ball(P,c,r,yb)
+        if m.any():F[m]+=f/m.sum()
+        return m
+    P1=pawl('click 1','click1',cF);P2=pawl('click 2','click2',cF);PC=P1 if abs(P1[3])>=abs(P2[3]) else P2   # the click the runs load harder (the fusee holds on one at a time)
     def s_fusee(P,fix,F):
-        on_axis(P,fix,cF);m=ball(P,P1[0],0.35,yc('fusee',['clickWheel']));fix[m]=True   # held where the click holds its wheel
+        on_axis(P,fix,cF);m=ball(P,PC[0],0.35,yc('fusee',['clickWheel']));fix[m]=True   # held where the click holds its wheel
         push(P,F,pF,Tch*dFB,0.8,(pF[1]-0.9,pF[1]+0.9))
-        return {'load':f"the chain’s pull {abs(Tch):.1f} N where it leaves the fusee ({rch}); held at the click on its click wheel",'out':{'at':P1[0].tolist(),'m':0.3},'in':{'at':pF.tolist(),'m':0.5}}
+        return {'load':f"the chain’s pull {abs(Tch):.1f} N where it leaves the fusee ({rch}); held at the click on its click wheel",'out':{'at':PC[0].tolist(),'m':0.3},'in':{'at':pF.tolist(),'m':0.5}}
     run('fusee',byp('fusee'),s_fusee,'the fusee with its click wheel: the chain pulls, the click on the click wheel holds')
     def s_clicks(P,fix,F):
-        C,n,Fm,tq,rn,pv=P1;fix[ball(P,pv,1.0)]=True;pv2=cF-(pv-cF);pv2[1]=pv[1];fix[ball(P,pv2,1.0)]=True;push(P,F,C,n*Fm,0.25)
+        C,n,Fm,tq,rn,pv=PC;fix[ball(P,pv,1.0)]=True;pv2=cF-(pv-cF);pv2[1]=pv[1];fix[ball(P,pv2,1.0)]=True;push(P,F,C,n*Fm,0.25)
         return {'load':f"{Fm:.1f} N on its nose ({abs(tq):.3g} N·m on the click wheel, {rn})",'out':{'at':C.tolist(),'m':0.3}}
     run('maintaining.clicks',byp('maintaining',['clicks']),s_clicks,'the maintaining clicks (05 06 02-3): the click wheel’s tooth on its nose, held on its screw')
     PD=pawl('maintaining detent','detent',cF)
@@ -259,7 +267,9 @@ def main():
     run('barrel',byp('barrel'),s_barrel,'the barrel (drum, lid, Steg, hook block): the chain pulls, the mainspring’s outer end holds')
     Tsp,rsp=pk('spring');hk=np.vstack([q['V'] for q in byp('barrelArbor',['hook'])]).mean(0)
     def s_arbor(P,fix,F):
-        on_axis(P,fix,cBr,False);y=P.X[:,1];fix[y<=y.min()+2.0]=True;r=hk-cBr;r[1]=0;f=np.cross([0,abs(Tsp)*1e3,0],r)/(r@r)
+        on_axis(P,fix,cBr,False);y=P.X[:,1]
+        if P.win is None:fix[y<=y.min()+2.0]=True
+        r=hk-cBr;r[1]=0;f=np.cross([0,abs(Tsp)*1e3,0],r)/(r@r)
         hv=np.vstack([q['V'] for q in byp('barrelArbor',['hook'])]);lo,hi=hv.min(0)-0.05,hv.max(0)+0.05;m=P.surf&np.all((P.X>=lo)&(P.X<=hi),axis=1)
         if m.sum()<6:m=ball(P,hk,0.6)
         F[m]+=f/m.sum()
@@ -284,13 +294,18 @@ def main():
         if m.sum()<12:ax=P.near_axis(cBa,1.2);dy=np.abs(P.X[:,1]-(col[0]+col[1])/2);m=ax&(dy<=np.sort(dy[ax])[min(60,ax.sum()-1)])
         fix[m]=True
         rho=np.array([RHO[P.mats[i]] for i in P.bm]);vol=P.h*P.h*P.g['dy'];r=P.cent-cBa;r[:,1]=0
-        f=(rho*vol)[:,None]*(alpha*np.cross([0,1,0],r)*1e-3+Wb**2*r*1e-3)   # N: the turn's tangential and the spin's radial acceleration at once (mm to m)
-        np.add.at(F,P.conn.ravel(),np.repeat(f/8,8,axis=0));return {'load':f"swinging to {np.degrees(abs(Ab)):.0f}°: {abs(alpha):.0f} rad/s² at the turn, {abs(Wb):.1f} rad/s at the centre ({rb}); held at the hairspring’s collet"}
+        f=(rho*vol)[:,None]*(alpha*np.cross([0,1,0],r)+Wb**2*r)   # N (t/mm^3 x mm^3 x mm/s^2): the turn's tangential and the spin's radial acceleration at once
+        np.add.at(F,P.conn.ravel(),np.repeat(f/8,8,axis=0));return {'body':True,'load':f"swinging to {np.degrees(abs(Ab)):.0f}°: {abs(alpha):.0f} rad/s² at the turn, {abs(Wb):.1f} rad/s at the centre ({rb}); held at the hairspring’s collet"}
     run('balance',byp('balance'),s_bal,'the balance (rim, arm, masses, timing weights, staff): its own inertia, the hairspring holding it')
     Te,re_=pk('mesh:'+MESH[3]['nm']);imp=[q for q in byp('rollers',['impulse']) if q['mat0']=='93020b'][0]['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/7.0*np.linalg.norm(ri),0],ri)/(ri@ri)
     def s_rol(P,fix,F):
         fix[P.near_axis(cBa,0.9)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse stone ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
     run('rollers',byp('rollers'),s_rol,'the rollers (impulse and discharge, with their stones): the escape wheel’s tooth on the impulse stone')
+    if ONLY and (D/f'stress_{VER}.json').exists():   # a partial run: the other parts' results kept
+        old=json.loads((D/f'stress_{VER}.json').read_text());ob=(D/f'stress_{VER}.bin').read_bytes();oi=json.loads((D/f'stress_{VER}.idx.json').read_text())
+        res={**{k:v for k,v in old['parts'].items() if k not in res},**res}
+        for i,(o_,n_) in oi.items():
+            if int(i) not in sbuf:sbuf[int(i)]=np.frombuffer(ob,'<f4',n_,o_).copy()
     out={'model':M,'version':VER,'parts':res,'h':'each part at its own brick size'}
     (D/f'stress_{VER}.json').write_text(json.dumps(out,indent=1))
     order=[m['id'] for m in ms];buf=bytearray();idx={}

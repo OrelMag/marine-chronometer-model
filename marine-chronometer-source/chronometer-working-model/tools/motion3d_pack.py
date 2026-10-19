@@ -67,8 +67,32 @@ for v in ('last','build'):
             a=dec(b)[j];o=len(buf);buf+=np.asarray(a,'<f4').tobytes();forces[nm]=[o,len(j)]
         runs.append({'name':r['name'],'kind':r['kind'],'n':len(j),'t':ch['t'],'bodies':bodies,'forces':forces})
     (P/f'v_{v}.bin').write_bytes(bytes(buf))
-    vers[v]={'stress':sv,'parts':st['parts'],'runs':runs,'springs':json.loads((D/f'springs_{v}.json').read_text()),'kin':json.loads((D/f'kin_{v}.json').read_text()),'ref':T['meta']['ref']}
+    spr=json.loads((D/f'springs_{v}.json').read_text())
+    # the mainspring's drawn line turned and mirrored onto the page's own mesh at the base state (the fusee 4 turns from full wind): the solved states are in the arbor's frame
+    msm=[m for m in J['meshes'] if m['part']=='mainspring']
+    if msm:
+        m=msm[0];G=(D/'geom.bin').read_bytes();lo,hi=np.array(m['box'][0]),np.array(m['box'][1]);q=np.frombuffer(G,'<u2',m['pos'][1]//2,m['pos'][0]).reshape(-1,3).astype(float)
+        pw=lo+q*np.where(hi-lo>0,(hi-lo)/65535,1);A=np.array(m['mat']).reshape(4,4).T;pw=pw@A[:3,:3].T+A[:3,3];c=A[:3,3]
+        bx=[mm for mm in J['meshes'] if mm['part']=='barrel' and (mm.get('drv') or {}).get('ms',{}).get('kind')=='turn'];cb=np.array(bx[0]['drv']['ms']['pt']) if bx else c
+        pts=pw[:,[0,2]]-cb[[0,2]];sm=spr['mainspring'];Tb=sm['Tup']-(sm['Tup']-sm['Tdown'])*4/8.64;Ts=[s_['T'] for s_ in sm['states']];k=int(np.argmin(np.abs(np.array(Ts)-Tb)));ss=sm['states'][k]
+        from scipy.spatial import cKDTree;tr=cKDTree(pts[::3]);best=(1e9,0,1)
+        for mir in (1,-1):
+            for ph in np.radians(np.arange(0,360,1.0)):
+                x0=np.array(ss['x']);y0=np.array(ss['y'])*mir;x=np.cos(ph)*x0-np.sin(ph)*y0;y=np.sin(ph)*x0+np.cos(ph)*y0;d,_=tr.query(np.c_[x,y]);e=float(np.mean(d))
+                if e<best[0]:best=(e,float(ph),mir)
+        sm['cal']={'phi':best[1],'mir':best[2],'miss':best[0],'c':cb.tolist()};print(f'  {v}: the mainspring turned {np.degrees(best[1]):.0f} deg, mirrored {best[2]<0}, {best[0]:.3f} mm off the page’s mesh')
+    vers[v]={'stress':sv,'parts':st['parts'],'runs':runs,'springs':spr,'kin':json.loads((D/f'kin_{v}.json').read_text()),'ref':T['meta']['ref']}
 meta={'model':M,'meshes':meshes,'samples':samp,'versions':vers,'geo':json.loads(json.dumps(T['meta']['geo'])),'made':__import__('datetime').date.today().isoformat()}
+# the binaries as base64 text in chunks under 8 MB (artifacts serve text, not raw bytes): name.0.txt, name.1.txt... the viewer joins them
+import base64 as _b64
+bins={}
+for nm in ('geom','samp','v_last','v_build'):
+    f=P/f'{nm}.bin'
+    if not f.exists():continue
+    raw=f.read_bytes();k=0
+    for o_ in range(0,len(raw),6_000_000):(P/f'{nm}.{k}.txt').write_text(_b64.b64encode(raw[o_:o_+6_000_000]).decode());k+=1
+    bins[nm]=k
+meta['bins']=bins
 (P/'meta.json').write_text(json.dumps(meta,separators=(',',':')))
 sz={f.name:f.stat().st_size for f in P.iterdir()}
 print(f'{M}: '+', '.join(f'{k} {v/1e6:.1f} MB' for k,v in sz.items())+f'; versions {list(vers)}')
