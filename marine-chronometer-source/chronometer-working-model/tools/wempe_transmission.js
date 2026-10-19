@@ -387,7 +387,10 @@ head('4. A beat: the train as bodies on its meshes driving dynamics.js\'s escape
   chk(r1.trips===0&&Math.abs(r1.beats-r0.beats)<=1,`every beat taken: ${r1.beats} beats, ${r1.trips} trips or missed (the rigid train ${r0.beats}, ${r0.trips})`);
   say(`the work an impulse gives the balance (its energy before the unlocking against after the impulse): ${f(W1*1e6,3)} µJ against ${f(W0*1e6,3)} on the rigid train at the same places of its meshes (${W1>=W0?'+':''}${f(100*(W1/W0-1),2)} %): the train behind the escape wheel gives and lags as it starts`);
   const dA=(A1-A0)/D,dR=E.rateAt(A1,sEq)-E.rateAt(A0,s0);
-  chk(Math.abs(dA)<3&&Math.abs(dR)<0.3,`as a drive ${f(sEq,4)} of the reference: the swing it keeps ${f(A0/D,2)}° → ${f(A1/D,2)}° (${dA>=0?'+':''}${f(dA,2)}°), the escapement's rate ${dR>=0?'+':''}${f(dR,3)} s a day; over the run itself the escapement's rate ${f(r0.rate,3)} → ${f(r1.rate,3)} s a day, the swing ${f(r0.A,2)}° → ${f(r1.A,2)}°`);
+  /* within 8° and 0.5 s a day (the user's choice, 19 October 2026; 3° and 0.3 until then): with the lock re-laid (0.235) and the preload 0.8 g the stone, pressed harder on the tooth it
+     let go through the chase, lets the train's meshes give back more than a rigid train would (+3.8 % of the impulse's work at TF 111 s, +4.6° as a drive; +2.1 % at 0.175, 0.63 g and TF 108 s): the rigid train makeEsc and
+     dynamics.js take reads the swing low by about that (README, Physics: the transmission) */
+  chk(Math.abs(dA)<8&&Math.abs(dR)<0.5,`as a drive ${f(sEq,4)} of the reference: the swing it keeps ${f(A0/D,2)}° → ${f(A1/D,2)}° (${dA>=0?'+':''}${f(dA,2)}°), the escapement's rate ${dR>=0?'+':''}${f(dR,3)} s a day; over the run itself the escapement's rate ${f(r0.rate,3)} → ${f(r1.rate,3)} s a day, the swing ${f(r0.A,2)}° → ${f(r1.A,2)}°`);
   say('');say('  each mesh through the beats (its force at the driven gear\'s pitch circle; whether it lets go):');
   out.beat={beats:r1.beats,trips:r1.trips,W0,W1,s0,sEq,A0:A0/D,A1:A1/D,dA,dR,rate0:r0.rate,rate1:r1.rate,meshes:[]};const Ts=r1.T-r1.from;
   r1.meshes.forEach((e,i)=>{const q=MESH[i],r=q.m*q.zB/2e3,st=i<4?r1.tq[q.B]:NaN,fr=e.free/Ts,ln=e.freeMax;out.beat.meshes.push({nm:q.nm,Fmax:e.maxL/r,Fst:st/r,fac:e.maxL/st,free:fr,freeMax:ln,back:e.back*1e-6});

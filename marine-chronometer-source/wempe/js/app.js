@@ -786,7 +786,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   /* ---------- Swing and isochronism (the Hamilton's panel): the balance's swing over the last minute (frame time), the rate against the swing at a steady drive, and the swing over a
      wind, from makeEsc's ampAt and rateAt with the Wempe's settings (WPHYS): a solve takes about 0.3 s, so tools/wempe_essaydata.js works them out in Node for drives 0.2 to 1.8
      times the reference's (WEDATA.swing) and the page reads between them (swAt). The drive over the wind is 05 06_20's measured force through the train (WPHYS.drv), less the
-     mainspring's set (MSET). The band: the 1954 instruction's 225-270° (chronometers in general: no Wempe source gives its own); the tools' guard band's floor, 185° (README,
+     mainspring's set (MSET). The band: the 1954 instruction's 225-270° (chronometers in general: no Wempe source gives its own); the tools' guard band's floor, 180° (README,
      Physics). The Hamilton's going barrel, its isochronism check (the Navy's) and its sustaining spring's figures have no Wempe counterpart and are left out ---------- */
   function dark(){return matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';}
   /* a small chart (the Hamilton's plot): o.x0..x1, y0..y1, ticks xt, yt with their formats, series [{f or pts, col, w, dash}], marks [{x, y, col}], a cursor at x, bands
@@ -813,7 +813,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   function swCalc(){const k=[MSET,HRUN,IS6].join();if(k===swKey)return swC;swKey=k;const F=[];for(let i=0;i<=112;i++){const h=HRUN*i/112,[a,r]=swAt(PH.drv(h/HPT)*(1-MSET));F.push([h,a,r]);}
     const rs=F.map(q=>q[2]).filter(Number.isFinite),as=F.map(q=>q[1]),at=h=>swAt(PH.drv(h/HPT)*(1-MSET));return swC={F,sp:[Math.min(...rs),Math.max(...rs)],sw:[Math.min(...as),Math.max(...as)],d24:at(24)[1]-at(0)[1],a12:at(12)[0]};}
   function swDraw(now,drv){if(!swCv||!swDet.open||now-swLast<(swKind==='t'?100:500))return;swLast=now;const dk=dark(),blue=dk?'#91adf2':'#26479c',red='#c0392b',brass=dk?'#e0b44f':'#8a5d10',band=dk?'rgba(145,173,242,.12)':'rgba(38,71,156,.08)',muted=dk?'#6d7883':'#8a949c';
-    const C=swCalc(),amin=PE.AMIN/D2R,A=H.amp/D2R,hh=Math.min(hrs,HRUN),sg=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n),guard=(a,b)=>({pts:[[a,185],[b,185]],col:muted,w:1,dash:[4,3]});
+    const C=swCalc(),amin=PE.AMIN/D2R,A=H.amp/D2R,hh=Math.min(hrs,HRUN),sg=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n),guard=(a,b)=>({pts:[[a,180],[b,180]],col:muted,w:1,dash:[4,3]});
     if(swKind==='t'){const pts=swTr.map(q=>[(q[0]-now)/1000,q[1]]);
       plot(swCv,{x0:-60,x1:0,y0:0,y1:300,xt:[-60,-45,-30,-15,0],yt:[0,100,200,300],xf:v=>v?v+' s':'now',yf:v=>v+'°',bands:[{x0:-60,x1:0,y0:225,y1:270,col:band}],
         series:[{pts:[[-60,amin],[0,amin]],col:red,w:1,dash:[4,3]},guard(-60,0),{pts,col:blue,w:2}],marks:[{x:0,y:A,col:blue}],texts:[{x:-59,y:amin+8,t:'least that works',col:red},{x:-59,y:276,t:'the 1954 instruction'}]});}

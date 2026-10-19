@@ -53,9 +53,9 @@
   {
    "measure": "Impulse arc (balance)",
    "book": "43° of the 48° (Fig. 141)",
-   "model": "37.4° (tooth lands 12.6°, ends 49.9°)",
+   "model": "37.0° (tooth lands 12.9°, ends 49.9°)",
    "source": "solved (05 04_1: 21° of the wheel, 10.5° either side of the line of centres)",
-   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 10.0° after the release (dynamics.js --model wempe)"
+   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 10.3° after the release (dynamics.js --model wempe)"
   },
   {
    "measure": "Jewel inside the wheel before release",
@@ -172,7 +172,7 @@
   {
    "measure": "Balance: swing",
    "book": "about 225° (p. 142)",
-   "model": "191°",
+   "model": "194°",
    "source": "solved (makeEsc on 05 06_20's drive)",
    "reading": "smaller: under the book's, as under the 1954 instruction's 225-270° (open: the Wempe README, Unresolved)"
   }

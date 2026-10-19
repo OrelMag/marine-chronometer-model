@@ -3,10 +3,10 @@
 // 05 06_20's force through the train), its atK: the swing and rate with the escape wheel's torque s times the reference's and the detent's and gold spring's stiffness
 // kd and kp times the drawn (a strip's stiffness goes as its thickness cubed, the preload left as set). Each part's range is the one that keeps the swing in a band over
 // the whole wind (the drive from 05 06_20 at every hour, 0-56 h):
-//   the guard band, 177-270° (wempe_escapement.js's: the model's own swing 185.4-196.3° is under the sources' band, so the guard is set 14° under the reference's 191.1°; 185° under 199.4° until the lock was re-laid and the preload set to 0.9 g, 19 October 2026, and 193° under 207° until 15 October 2026);
+//   the guard band, 180-270° (wempe_escapement.js's: the model's own swing is under the sources' band, so the guard is set 14° under the reference's 194.3°; 185° under 199.4° until the lock was re-laid, the preload set to 0.8 g and TF refitted to 111 s, 19 October 2026, and 193° under 207° until 15 October 2026);
 //   and the sources' band, 225-270° (the 1954 Soviet instruction for chronometers in general; the Hamilton manual's 247.5-270°), reported: the model is under it (open).
 // The parts: the mainspring's strip (05 06_20's "15 × 0,37", no tolerance) against 05 06_20's measured pull; the detent's spring (1436's "0,07", faint, its other figure
-// "0,09") and its preload (the banking, not drawn: WESC.SET.W78 0.9 g at the stone, estimated); the gold spring (05 04 01-2: 0.15, sure; its 333 gold's modulus, 98 GPa,
+// "0,09") and its preload (the banking, not drawn: WESC.SET.W78 0.8 g at the stone, estimated); the gold spring (05 04 01-2: 0.15, sure; its 333 gold's modulus, 98 GPa,
 // likely); the depth of lock (05 04_1: 0.235, set by the banking against a wheel 14 +0.03); the hairspring's strip and coil (05 03_6: 0.285, boxed, no tolerance;
 // the coil Ø 12.8 ±0.05, boxed) against the period, which the timing weights must take up. Into tools/tolerances_wempe.json for the Wempe's verification report and
 // wempe_bench.js, wempe_montecarlo.js:
@@ -16,7 +16,7 @@
 const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),{WPHYS:P,WESC}=W,E=P.ESC,S=P.SET,PHY=require('./wempe_physics.js');
 const D=180/Math.PI,G0=9.80665,f=(x,n=2)=>Number.isFinite(+x)?(+x).toFixed(n):'-',sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),pc=x=>(x>=1?'+':'−')+f(Math.abs(x-1)*100,0)+' %',r4=x=>+(+x).toFixed(4);
 const rows=[],say=s=>rows.push('  '+s),head=s=>rows.push('\n'+s),tStart=Date.now();
-const GUARD=[177,270],SRC=[225,270];
+const GUARD=[180,270],SRC=[225,270];
 /* the drive over the wind (05 06_20 through the train, times the reference's at 12 h): its least and greatest, every quarter hour from full wind to run down */
 const HRS=P.MF*P.HPT,dr=[];for(let h=0;h<=HRS+1e-9;h+=0.25)dr.push(P.drv(h/P.HPT));const dmin=Math.min(...dr),dmax=Math.max(...dr),hMin=dr.indexOf(dmin)/4,hMax=dr.indexOf(dmax)/4;
 /* the value of x at which g(x) crosses y, g monotone between a and b */
@@ -45,7 +45,9 @@ head('The detent\'s spring (1436: "0,07", faint; its other figure "0,09") and it
 const td=(S.SN1-S.SN0)*S.ES,kdHi=cross(k=>A(dmin,k,1),GUARD[0],1,60,26),tdHi=td*Math.cbrt(kdHi),k09=(0.09/td)**3,A09=over(1,k09,1),Ak0=A(1,1e-6,1);
 say(`its stiffness E b t³/12 L (steel, 1.9 wide, 5 long) goes as its thickness cubed; the preload is the banking's (makeEsc's W78, ${S.W78} g at the stone, estimated), left as set. The swing stays above ${GUARD[0]}° at the wind's lowest drive up to ${f(kdHi,1)} times the drawn stiffness (${f(tdHi,3)} mm thick); with no stiffness at all it swings ${f(Ak0,1)}° at 12 h: its work sets no lower limit`);
 say(`  1436's other figure, 0.09 (${f(k09,2)} times as stiff): ${f(A09[0],1)}-${f(A09[1],1)}° over the wind; the spring's lower limit is the detent's return in time, which dynamics.js --model wempe checks from half to twice the drawn stiffness (${f(td/Math.cbrt(2),3)}-${f(td*Math.cbrt(2),3)} mm): home before the next tooth over all of it`);
-/* the preload: makeEsc rebuilt with W78 (OP78 0: the preload itself, g at the stone). wempe_tripping.js's sweep (18 October 2026, the horn curved and the gold spring's bow closing
+/* the preload: makeEsc rebuilt with W78 (OP78 0: the preload itself, g at the stone). wempe_tripping.js's sweep with the lock re-laid at 0.235 (19 October 2026, at the 0.8 g
+   estimate) has a held tooth's stone ring 49 % of the depth of lock, under half from 0.98 times it (0.78 g: the margin's floor; 0.8× 56 %, 1.5× 35 %), and a 3 ms blow of 20 g let
+   no tooth go from under 0.8 times it (0.64 g: the knock's floor, its sweep's lowest; 22.6 g there, 25.6 g at the estimate). Before (18 October 2026, the horn curved and the gold spring's bow closing
    onto it near its end, as escapement.js draws them) has a held tooth's stone ring 44 % of the depth of lock at the estimate, under its margin of half from about 0.81 times it
    (0.51 g; 0.5× 73 %, 0.8× 50.4 %), and teeth get past at 0.2× and under (0.2×, 0.1× and none): the margin's floor is the least (0.49 g, 0.78×, with the straight horn and the
    gold spring lying along it, until 18 October 2026; its 0.72 g, 1.1 times, was for the banking under the blade, before; the estimate itself until 16 October 2026, the sweep
@@ -53,22 +55,22 @@ say(`  1436's other figure, 0.09 (${f(k09,2)} times as stiff): ${f(A09[0],1)}-${
    20.4 g at it and 22.6 g at 1.2× (17.6, 20.0, 22.5 before the horn was traced), so a preload that takes the 20 g its check asks wants about 0.97 times the estimate (0.61 g),
    the margin a hair at the estimate. The floor is the higher of the two.
    The swing falls as the preload grows (the stone pressed on the tooth it has let go, RW) */
-const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.51,wKnock=0.61,wLo=Math.max(wTrip,wKnock);
+const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.78,wKnock=0.64,wLo=Math.max(wTrip,wKnock);
 const wHi=cross(w=>preA(w)[0],GUARD[0],S.W78,4,14),PRE=[0.3,S.W78,1.0,1.5].map(w=>({w:r4(w),A:preA(w).map(r4)}));
-say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wLo,2)} g, the higher of the margin's floor, ${f(wTrip,2)} g (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 44 % at the estimate ${S.W78} g; at 0.2 times the estimate and under teeth get past), and the knock's, ${f(wKnock,2)} g (a 3 ms blow of 20 g across the plate lets no tooth go from there: the estimate's own margin is a hair, 20.4 g), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
+say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wLo,2)} g, the higher of the margin's floor, ${f(wTrip,2)} g (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 49 % at the estimate ${S.W78} g; at 0.2 times the estimate and under teeth get past), and the knock's, ${f(wKnock,2)} g (a 3 ms blow of 20 g across the plate lets no tooth go from there: 25.6 g at the estimate), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
 
 /* ---------- the gold spring ---------- */
-head('The gold spring (05 04 01-2: 0.15 thick, sure; 333 gold, its modulus 90 GPa estimated)');
+head(`The gold spring (05 04 01-2: 0.15 thick, sure; 333 gold, its modulus ${S.ET} GPa: Au/Ag/Cu 333-333, likely)`);
 const kpHi=cross(k=>A(dmin,1,k),GUARD[0],1,30,26),Ap0=A(1,1,1e-6),Ap5=over(1,1,0.5);
-say(`it bends on the return swing as the discharge stone passes and its work is lost: the swing stays above ${GUARD[0]}° at the wind's lowest drive up to ${f(kpHi,2)} times its stiffness (E t³: the strip ${f(0.15*Math.cbrt(kpHi),3)} mm at 90 GPa, or the alloy's modulus ${f(90*kpHi,0)} GPa at 0.15); with none ${f(Ap0,1)}° at 12 h; half as stiff ${f(Ap5[0],1)}-${f(Ap5[1],1)}° over the wind`);
-say(`  softer is free for the swing but not for the lock: wempe_tripping.js's sweep (18 October 2026) has a held tooth's stone ringing 64 % of the depth of lock with the gold spring half as stiff, against 44 % as drawn (51 % and 42 % with the straight horn): its alloy's modulus is the open part (README, Unresolved)`);
+say(`it bends on the return swing as the discharge stone passes and its work is lost: the swing stays above ${GUARD[0]}° at the wind's lowest drive up to ${f(kpHi,2)} times its stiffness (E t³: the strip ${f(0.15*Math.cbrt(kpHi),3)} mm at ${S.ET} GPa, or the alloy's modulus ${f(S.ET*kpHi,0)} GPa at 0.15); with none ${f(Ap0,1)}° at 12 h; half as stiff ${f(Ap5[0],1)}-${f(Ap5[1],1)}° over the wind`);
+say(`  softer is free for the swing but not for the lock: wempe_tripping.js's sweep (19 October 2026, the lock 0.235 and the preload 0.8 g) has a held tooth's stone ringing 71 % of the depth of lock with the gold spring half as stiff, against 49 % as drawn (64 % and 44 % at 0.175 and 0.63 g; 51 % and 42 % with the straight horn): its alloy's modulus is the open part (README, Unresolved)`);
 
 /* ---------- the depth of lock ---------- */
 head(`The depth of lock (05 04_1: the tips ${f(S.dL*S.ES,3)} into the stone's flat; the wheel Ø 14 +0.03, 05 04_23; the banking sets it)`);
 /* makeEsc rebuilt with dL (the stone's place against the tips): the deepest that still unlocks (the discharge stone lifts the gold spring's tip, and the stone with it, only so far),
-   and the shallowest that keeps a held tooth's stone ringing under half the depth (wempe_tripping.js as drawn, 19 October 2026: 56 % of 235 µm, 132 µm, the longer discharge reach bending the gold spring 0.39 on the return: twice it; 44 % of 175 µm, 77 µm, until the lock was re-laid, and 41 % before the horn was traced) */
+   and the shallowest that keeps a held tooth's stone ringing under half the depth (wempe_tripping.js as drawn, 19 October 2026: 49 % of 235 µm, 116 µm, at the 0.8 g preload, the longer discharge reach bending the gold spring 0.39 on the return: twice it; 44 % of 175 µm, 77 µm, until the lock was re-laid, and 41 % before the horn was traced) */
 const lockAt=d=>{const e=W.makeEsc({...S,dL:d/S.ES},S),m=e.measure();return m.runs?{A:e.A*D,Amin:e.ampAt(dmin)*D,lock:m.lock,letoff:m.letoff,lRel:e.lRel*e.BL/e.LEN*e.ES}:null;};
-const d0=S.dL*S.ES,dDeep=(()=>{let a=d0,b=d0+0.03;for(let i=0;i<14;i++){const m=(a+b)/2;lockAt(m)?a=m:b=m;}return a;})(),RING=0.561*0.235,dShal=2*RING,dTip=d0+0.015;
+const d0=S.dL*S.ES,dDeep=(()=>{let a=d0,b=d0+0.03;for(let i=0;i<14;i++){const m=(a+b)/2;lockAt(m)?a=m:b=m;}return a;})(),RING=0.493*0.235,dShal=2*RING,dTip=d0+0.015;
 const L0=lockAt(d0),LS=lockAt(dShal),LD=lockAt(dDeep-0.002),liftMax=Math.max(...E.LI)*E.BL/E.LEN*E.ES;
 say(`as drawn ${f(d0,3)} mm deep: lock ${f(L0.lock,1)}°, let-off ${f(L0.letoff,1)}°, the stone lifted ${f(L0.lRel,3)} mm at the release; ${f(L0.Amin,1)}-${f(L0.A,1)}° (the wind's lowest, 12 h)`);
 say(`deepest that unlocks: ${f(dDeep,3)} mm (the discharge stone lifts the stone at most ${f(liftMax,3)} mm); there lock ${f(LD.lock,1)}°, let-off ${f(LD.letoff,1)}°, ${f(LD.Amin,1)}° at the wind's lowest`);

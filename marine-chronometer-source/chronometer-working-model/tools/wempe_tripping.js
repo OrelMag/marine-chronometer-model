@@ -11,7 +11,7 @@
 // gold spring 0.15 × 1.0 from its bending point along its drawn path to its square tip as beams (333 gold, Au/Ag/Cu 333-333 by the 6MX's passport: about 98 GPa and 11.6
 // g/cm³, likely, as WESC.SET and wempe-inertia.js; 90 and 11.0 until 19 October 2026), closing onto the horn near its end, its tip resting 5 µm off (escapement.js: the horn's curve and the gold spring's bow, WESC.HORN and WESC.GOLD; until 18 October 2026 a straight horn and the gold spring's polyline lying along it); steel 205 GPa (200-210), 7.85 g/cm³. The banking, the block's cross screw's domed head (escapement.js; its
 // head not drawn): the pipe's side toward the wheel rests on its face at the stone (05 04 01-4's 18.8, the 6MX's block photographed: likely; until 15 October 2026 under
-// the blade 0.7-1.4 mm from the stone, where makeEsc puts the Hamilton's stop button, estimated). The preload WESC.SET's, 0.9 g at the stone (estimated), a moment at the spring's end; as
+// the blade 0.7-1.4 mm from the stone, where makeEsc puts the Hamilton's stop button, estimated). The preload WESC.SET's, 0.8 g at the stone (estimated), a moment at the spring's end; as
 // drawn (the spring straight at its banking) none.
 // Contacts, each a spring with a dashpot set for its restitution (tripping.js's): the discharge stone on the gold spring (its bevelled end on the strip's square end, by
 // separating axes: the depth and its gradient in the tip's place and the balance's angle; on the active swing at the horn's end carried to the tip, backed by the horn, as

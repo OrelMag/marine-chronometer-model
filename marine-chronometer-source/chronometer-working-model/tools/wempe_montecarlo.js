@@ -12,7 +12,7 @@
 //   the hairspring: its strip 0.285 ±0.003 (boxed, no tolerance: estimated), its coil Ø 12.8 ±0.05 (boxed, drawn), its cut length ±0.3 mm (estimated), the steel's
 //     modulus 200-210 GPa (published).
 // Judged: the train turns (each mesh in its depthing window, gearing_wempe.json; every arbor free, its endshake at least 0.01 mm at 20 °C: bench_wempe.json); the
-// escapement unlocks and holds (the lock between its window's ends, tolerances_wempe.json); the swing in the guard band, 177-270°, over the whole wind (makeEsc's atK
+// escapement unlocks and holds (the lock between its window's ends, tolerances_wempe.json); the swing in the guard band, 180-270°, over the whole wind (makeEsc's atK
 // at the drive and the springs' stiffness, the preload and the lock rebuilt; the sources' 225-270° reported); and, apart, whether it times (the period within the
 // timing weights' reach) and the temperature (the masses at their drawn place fail the TU's C in every one: the trial moves them). The bench, in its order: the depths
 // (a close mesh re-bushed on the drawn centre), endshake (out of 0.01-0.08 set again), the detent's ring (its spring out of the band replaced), the escapement (the
@@ -82,8 +82,9 @@ const one=(only)=>{const use=k=>!only||only===k,o={};
   o.worksAsMade=o.runs&&o.band&&o.lock;o.bindAt=es.map(x=>x<ESB[0]);
   /* the bench, in its order. The detent's ring: a spring out of its band (half to twice the drawn stiffness) replaced */
   o.cRing=tdt<TS[0]||tdt>TS[1];while(tdt<TS[0]||tdt>TS[1])tdt=0.07+N2(0.005);
-  /* the escapement: the banking set to the drawn depth, the preload to its aim (estimated: a feeler's and the riders' steps) */
-  o.cLock=!lockOk(dep,pre)||Math.abs(dep-EC.depth.aim)>0.01||Math.abs(pre-PRA.aim)>0.1;dep=EC.depth.aim+N2(0.005);pre=PRA.aim+N2(0.05);
+  /* the escapement: the banking set to its aim (the window's middle), the preload to its aim (estimated: a feeler's and the riders' steps), set again until both read in their
+     windows, as a maker measures after setting (since 19 October 2026: the lock's window 15 µm wide, once set it missed in 7 of 2,000) */
+  o.cLock=!lockOk(dep,pre)||Math.abs(dep-EC.depth.aim)>0.01||Math.abs(pre-PRA.aim)>0.1;for(let n=0;n<50;n++){dep=EC.depth.aim+N2(0.005);pre=PRA.aim+N2(0.05);if(lockOk(dep,pre))break;}
   /* the mainspring's pull (and the fusee's): out of its band, another strip */
   const sm0=(tms/0.37)**3;o.cSpring=sm0<MSB[0]||sm0>MSB[1];for(let n=0;n<50&&((tms/0.37)**3<MSB[0]||(tms/0.37)**3>MSB[1]);n++)tms=0.37+N2(0.005);
   /* the swing: out of the guard band, the set-up turned to bring the drive back to the model's (the springs, the preload and the lock as now set) */

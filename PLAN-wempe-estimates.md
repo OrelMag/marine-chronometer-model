@@ -4,6 +4,7 @@ Branch `claude/wempe-estimates`. Started 16 October 2026.
 
 ## Status
 
+- **The one physics pass: built (19 October 2026, branch `claude/wempe-physics-pass`).** A.9's hook block came in 3.17.00; D (the lock 7.14, 37.0°, 0.235 deep), B.5 (the train 0.780 tooth by tooth) and B.4 (the gold spring 98 GPa, 11.6 g/cm³) here, with the preload raised to 0.8 g and TF refitted to 111 s as the deeper lock needed (each the user's choice): the Wempe README's "The physics pass (19 October 2026)" has every figure and why. What stays open: A.7's hub, A.9's band hooks, A.1's closing plate (claude/wempe-photo-inner's).
 - **Built (18 October 2026):** A (most of it) and B.1-B.3, B.6 on main 3.13.01; the rest waits on decisions or other branches: see "Where each item stands" below.
 - **Done:** the survey. Six read-only passes over every item of the Wempe README's "Estimated, not from the drawings" section, against the sheets, about 330 photographs, the videos and the literature. The evidence is in the appendices below.
 - **Ready to build (16 October 2026, evening).** `main` 3.03.00 (with claude/wempe-audit and claude/wempe-open-ends) is merged into this branch.
