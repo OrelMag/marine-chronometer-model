@@ -33,7 +33,12 @@ const ARB=[
 const sum=(t,k)=>t.reduce((a,x)=>a+x[1]+(k==='lo'?x[2]:k==='hi'?x[3]:0),0);
 for(const a of ARB){a.drawn=r4(sum(a.gap)-sum(a.arbor));a.range=[r4(sum(a.gap,'lo')-sum(a.arbor,'hi')),r4(sum(a.gap,'hi')-sum(a.arbor,'lo'))];}
 /* the cold: the brass plates shrink more than the steel arbors, 10.1 × 10⁻⁶ a °C more over their span (wempe_thermal.js's materials, thermal.js's figure), to the TU's 4 °C */
-const cold=19.0*10.1e-6*(20-4),ESB=[0.01,0.08];   /* the band at 20 °C: free with the cold's and an oil film's room (estimated) to the Hamilton manual's 0.003 in (Ops. 15, 69, 74; no Wempe figure) */
+const cold=19.0*10.1e-6*(20-4);
+/* the band at 20 °C, each arbor's: the Soviet Navy's MX repair book (Эксплуатация и ремонт измерителей времени, 1958, Appendix 4, pp. 128-129: the fusee 0.08-0.12, the barrel,
+   centre, intermediate and seconds arbors 0.07-0.10, the escape pinion 0.05-0.07; the balance staff 0.04-0.06 at its endstones); the Wempe's sheets give none. Until 19 October 2026
+   one band for all, 0.01-0.08 (estimated: the Hamilton manual's 0.003 in, Ops. 15, 69, 74) */
+const ESA={centre:[0.07,0.10],intermediate:[0.07,0.10],seconds:[0.07,0.10],barrel:[0.07,0.10],escape:[0.05,0.07],fusee:[0.08,0.12]},ESB=[0.05,0.12];
+for(const a of ARB)a.band=ESA[a.id];
 
 /* the free run-down, the train held: the time the swing takes to halve from the model's at 12 h at each TF, with the drive the measured strip gives there and the drive for
    the guard's floor and the sources' 225° at the wind's lowest: a made balance's run-down chooses its strip (the drive goes as its thickness cubed) */
@@ -62,7 +67,7 @@ const tests=[
   pass:`Centres ${cd.map(x=>f(x,3)).join(', ')} mm (fusee-centre, centre-intermediate, intermediate-seconds, seconds-escape: the hole tables' coordinates), each within ±${f(HT*1000,0)} µm (gearing.js --model wempe: the seconds mesh's window less its pivots' shake; the tables give the places to 0.001 and no tolerance). A hole that errs should err wide: each mesh takes far more wide than close (${GW.stages.map(w=>`${f(w.lo*1000,0)}/+${f(w.hi*1000,0)}`).join(', ')} µm). Closer than its window less the pivots' shake (${GW.stages.map(w=>f(-(w.lo+w.sh)*1000,0)).join(', ')} µm close): re-bush the hole, bored on the drawn centre.`},
  {id:'endshake',title:'Endshake',sheet:'the sheets\' fits (below)',when:'each arbor in its bearings, the plates pinned and screwed, before the escapement goes in',
   how:'Lift each arbor by its wheel with tweezers and watch its shoulder against a dial indicator, or feel it; the fusee arbor before its face a is re-turned (05 06 00-2: "bei Schneckenmontage ... Fläche a nachdrehen").',
-  pass:`${ESB[0]}-${ESB[1]} mm at 20 °C (estimated: free with the TU's 4 °C, which takes ${f(cold*1000,0)} µm, and an oil film, to the Hamilton manual's 0.003 in; the Wempe's sheets give none). As drawn: ${ARB.map(a=>`${a.name} ${f(a.drawn,2)} (the sheets' tolerances ${f(a.range[0],2)} to ${f(a.range[1],2)})`).join(', ')}. The pillars' seats (0.3 +0.03 in each plate) take up to 0.06 from every arbor at once: a tight one, check the seats first. Out of the band: set the bush or jewel again, re-turn face a (the fusee), stone the shoulder.`},
+  pass:`At 20 °C, as the Soviet Navy's 1958 MX repair book sets them (Appendix 4; the Wempe's sheets give none; the TU's 4 °C takes ${f(cold*1000,0)} µm of it): ${ARB.map(a=>`${a.name} ${a.band[0].toFixed(2)}-${a.band[1].toFixed(2)} mm (drawn ${f(a.drawn,2)}, the sheets' tolerances ${f(a.range[0],2)} to ${f(a.range[1],2)})`).join(', ')}; the balance staff 0.04-0.06 at its endstones. The drawings' stacks come out at or just under the book's floors, so expect to free most arbors a little. The pillars' seats (0.3 +0.03 in each plate) take up to 0.06 from every arbor at once: a tight one, check the seats first. Out of the band: set the bush or jewel again, re-turn face a (the fusee), stone the shoulder.`},
  {id:'balance',title:'The balance and its hairspring vibrated',sheet:'05 03_6, 05 03_7, 05 03 01-1',when:'the spring pinned to its collet and stud, its curves bent to 05 03_7, before it goes in',
   how:'Vibrate the balance on its spring in a vibrating tool (or the cock on a holder) against a master or a phone\'s timer: count the oscillations over two minutes, the weights against their screws\' heads as drawn.',
   pass:`2 oscillations a second (7,200 an hour), or slow by up to ${f(HS.weights.gain,0)} s a day: the timing weights stand against their screws' heads as drawn and can only be screwed in, ${f(HS.weights.turnsIn,1)} turns of ${f(HS.weights.secTurn,1)} s a day each (wempe_tolerances.js; their size estimated). The drawn spring on the weighed balance (2,501 g·mm²) is ${f(HS.fast/60,0)} min a day fast (${f(HS.T,4)} s): the strip wants ${f(HS.hNeed,4)} mm, not 0.285 (${f(HS.hNeedE[0],4)}-${f(HS.hNeedE[1],4)} over the steel's 200-210 GPa). No section tolerance holds the period (a µm of the strip is ${f(HS.perUm,0)} s a day, the coil's ±0.05 ±${f(5*HS.perCoil001,0)}): fast, grind the strip thinner or choose a weaker spring; slow past the weights' reach, a stronger one.`},
@@ -92,7 +97,7 @@ const criteria={
   mainspring:{s:MS.s,Mdown:r4(FN.Mdown*Kl),Mfull:r4(FN.Mfull*Kl),setup:0.75,barrelTurns:bt,room:r4(room),friction:{coils:[MFJ.hyst['0.08'],MFJ.hyst['0.16']],measured:[0.1,0.2]}},
   fusee:{s:MS.s,g262:MS.g262,shape:shape.map(r4),rms:FN.rms,sources:MS.sources},
   depths:{names:['fusee-centre','centre-intermediate','intermediate-seconds','seconds-escape'],holes:HOLES,centres:cd.map(r4),tol:r4(HT),windows:GW.stages.map(w=>[r4(w.lo),r4(w.hi)]),shake:GW.stages.map(w=>w.sh)},
-  endshake:{band:ESB,cold:r4(cold),arbors:ARB.map(a=>({id:a.id,name:a.name,drawn:a.drawn,range:a.range,gap:a.gap,arbor:a.arbor}))},
+  endshake:{band:ESB,cold:r4(cold),arbors:ARB.map(a=>({id:a.id,name:a.name,band:a.band,drawn:a.drawn,range:a.range,gap:a.gap,arbor:a.arbor}))},
   balance:{hz:2,T:HS.T,fast:HS.fast,hNeed:HS.hNeed,weights:HS.weights},
   rundown:{model:r4(RD0.half),TF:S.TF,video:VID,rows:RD.map(r=>[r.TF,r4(r.half),r4(r.A),r4(r.s193),r4(r.s225)])},
   detent:{f0:R0.f1,band:[Rlo.f1,Rhi.f1],t:[Rlo.t,Rhi.t],gold:R0.gold,rows:RG.map(r=>[r.t,r.f1])},

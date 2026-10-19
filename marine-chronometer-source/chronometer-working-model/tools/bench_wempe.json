@@ -31,7 +31,7 @@
    "sheet": "the sheets' fits (below)",
    "when": "each arbor in its bearings, the plates pinned and screwed, before the escapement goes in",
    "how": "Lift each arbor by its wheel with tweezers and watch its shoulder against a dial indicator, or feel it; the fusee arbor before its face a is re-turned (05 06 00-2: \"bei Schneckenmontage ... Fläche a nachdrehen\").",
-   "pass": "0.01-0.08 mm at 20 °C (estimated: free with the TU's 4 °C, which takes 3 µm, and an oil film, to the Hamilton manual's 0.003 in; the Wempe's sheets give none). As drawn: the centre arbor 0.07 (the sheets' tolerances -0.02 to 0.13), the intermediate arbor 0.06 (the sheets' tolerances -0.09 to 0.15), the seconds arbor 0.05 (the sheets' tolerances -0.11 to 0.15), the escape arbor 0.04 (the sheets' tolerances 0.00 to 0.06), the fusee arbor 0.05 (the sheets' tolerances -0.09 to 0.08), the barrel arbor 0.06 (the sheets' tolerances -0.10 to 0.12). The pillars' seats (0.3 +0.03 in each plate) take up to 0.06 from every arbor at once: a tight one, check the seats first. Out of the band: set the bush or jewel again, re-turn face a (the fusee), stone the shoulder."
+   "pass": "At 20 °C, as the Soviet Navy's 1958 MX repair book sets them (Appendix 4; the Wempe's sheets give none; the TU's 4 °C takes 3 µm of it): the centre arbor 0.07-0.10 mm (drawn 0.07, the sheets' tolerances -0.02 to 0.13), the intermediate arbor 0.07-0.10 mm (drawn 0.06, the sheets' tolerances -0.09 to 0.15), the seconds arbor 0.07-0.10 mm (drawn 0.05, the sheets' tolerances -0.11 to 0.15), the escape arbor 0.05-0.07 mm (drawn 0.04, the sheets' tolerances 0.00 to 0.06), the fusee arbor 0.08-0.12 mm (drawn 0.05, the sheets' tolerances -0.09 to 0.08), the barrel arbor 0.07-0.10 mm (drawn 0.06, the sheets' tolerances -0.10 to 0.12); the balance staff 0.04-0.06 at its endstones. The drawings' stacks come out at or just under the book's floors, so expect to free most arbors a little. The pillars' seats (0.3 +0.03 in each plate) take up to 0.06 from every arbor at once: a tight one, check the seats first. Out of the band: set the bush or jewel again, re-turn face a (the fusee), stone the shoulder."
   },
   {
    "id": "balance",
@@ -204,14 +204,18 @@
   },
   "endshake": {
    "band": [
-    0.01,
-    0.08
+    0.05,
+    0.12
    ],
    "cold": 0.0031,
    "arbors": [
     {
      "id": "centre",
      "name": "the centre arbor",
+     "band": [
+      0.07,
+      0.1
+     ],
      "drawn": 0.07,
      "range": [
       -0.02,
@@ -265,6 +269,10 @@
     {
      "id": "intermediate",
      "name": "the intermediate arbor",
+     "band": [
+      0.07,
+      0.1
+     ],
      "drawn": 0.06,
      "range": [
       -0.09,
@@ -326,6 +334,10 @@
     {
      "id": "seconds",
      "name": "the seconds arbor",
+     "band": [
+      0.07,
+      0.1
+     ],
      "drawn": 0.05,
      "range": [
       -0.11,
@@ -387,6 +399,10 @@
     {
      "id": "escape",
      "name": "the escape arbor",
+     "band": [
+      0.05,
+      0.07
+     ],
      "drawn": 0.04,
      "range": [
       0,
@@ -416,6 +432,10 @@
     {
      "id": "fusee",
      "name": "the fusee arbor",
+     "band": [
+      0.08,
+      0.12
+     ],
      "drawn": 0.05,
      "range": [
       -0.09,
@@ -469,6 +489,10 @@
     {
      "id": "barrel",
      "name": "the barrel arbor",
+     "band": [
+      0.07,
+      0.1
+     ],
      "drawn": 0.06,
      "range": [
       -0.1,
