@@ -366,3 +366,28 @@ Together the two figures give the period: 2π √(2744 g·mm² / 0.43289 N·mm) 
 | Chain | pitch 2.25, 2 × 0.85, plates 0.25 | plates 0.26, three in its 0.82 |
 
 The later design has a heavier balance (8.6 % more inertia; the rim 0.31 mm thicker radially and 0.4 higher) and drives it with a stronger spring (0.42 against 0.37). These are the proportions over which the drawings' 0.37 strip and the 1958 Navy repair book's torques disagree (the Wempe README's note on the 6MX's mainspring: the first-generation MX's 1.01–1.08 N·m fully wound).
+
+### The model's mainspring solver on Tarasov's spring (19 October 2026)
+
+`mainspring.py`, the solver both models' springs come from, was run on Tarasov's strip as a variant: 0.42 × 14.8 × 1400, the barrel's inside r 18.9, the arbor r 6.3, E 210 GPa (Tarasov's 2.10·10⁵ N/mm²), the free curve the solver's usual shape (the Hamilton's measured) with its turns scaled to Tarasov's 6.5 free (`MC_MS_SET` 0.8024), the outer end on a plain wall, frictionless. The table is `tools/mainspring_tarasov1976.js`, made by:
+
+    MC_MS_TAG=tarasov1976 MC_MS_T=0.42 MC_MS_L=1400 MC_MS_RA=6.3 MC_MS_RW=18.9 MC_MS_B=14.8 MC_MS_E=210 MC_MS_GAP=0 MC_MS_SET=0.8024 MC_MS_PASSES=12 MC_MS_PROC=8 MC_MS_TLO=13.5 MC_MS_THI=21.25 python mainspring.py
+
+It took 2½ h on 8 processes, on a machine shared with two other solves.
+
+| | Tarasov | The solver | |
+|---|---|---|---|
+| Let down (slack) | 14 turns | 14.5 turns | |
+| Run down: set up 0.5 turn past the slack | 715 N·mm | **714 N·mm** (at 15.0) | −0.1 % |
+| Fully wound: 4.87 barrel turns later | 1143.5 N·mm | 1235 N·mm (at 19.87) | +8.0 % |
+| At Tarasov's wound count, 19.5 turns | 1143.5 N·mm | 1185 N·mm | +3.6 % |
+| The torque's rise over the wind | 1.60 : 1 | 1.73 : 1 | |
+| Coil-bound | (wound 19.5; the last 0.13 barrel turn left unwound) | past 20.75 turns (packed coils' estimate 20.45) | |
+
+Where they part:
+
+- **The formula's K = 0.95.** Formula (80) is the linear spring times K = 0.95, evidently a loss factor. The solver is frictionless. Without K, the formula gives 1206 N·mm at 19.5 turns, within 1.8 % of the solver's 1185. The solver's slope over the working turns is 2–5 % under the formula's.
+- **The low end.** The formula puts 715 N·mm at 8.13 turns past the free spring's; the solver has no torque there (14.63 turns is just past its slack). The two meet only through the set-up: the solver's slack plus Tarasov's 0.5 turn gives his 715 almost exactly.
+- **The high end.** The solver keeps 0.88 turn of room past full wind; Tarasov's count leaves 0.13 (inferred: his 19.5 is the formula's count, not the solver's coil-bound).
+
+So the solver gives a published 6MX spring's torque to within the loss factor its designer allowed. That supports the solved torques both models run on, the Hamilton's (0.96 N·m) and the Wempe's.
