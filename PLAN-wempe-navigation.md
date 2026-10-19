@@ -34,7 +34,7 @@ Branch `claude/wempe-navigation`, started 19 October 2026 from `claude/wempe-phy
 
 ## Done since (19 October 2026)
 
-- The strip: Nivaflex 45/5 0.377 for the 1950s build (5fa6ca0d); the 1940s build (`BUILD40`) at the drawings' drive, the user choosing both builds.
+- The strip: Nivaflex 45/5 0.377 for the 1950s build (5fa6ca0d); 0.393 at set ×0.8 from 19 October 2026, after the 3D analysis found the 0.377's inner coils past the alloy (PLAN-motion-3d.md); the 1940s build (`BUILD40`) at the drawings' drive, the user choosing both builds.
 - `wempe_physics.js`, `wempe_strength.js` at each build; `tools/wempe_build.js` judges both (both pass); each build's tolerances, bench and Monte Carlo (100 % work after the bench) (e70f87cd).
 - The Wempe report's section 17, the builds; its broken script fixed (6b8ffede).
 - `ci.py` steps for the builds; CLAUDE.md.
