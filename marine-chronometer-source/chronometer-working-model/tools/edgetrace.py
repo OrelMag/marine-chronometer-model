@@ -35,7 +35,7 @@ so a countersink and its bore are not mixed; a hole is accepted when most of its
 from the face round it (contrast). Proved on KLUwI2UUCMQ 23:30 (19 October 2026: the notch round the fusee traced to -0.03..+0.07 mm median of r 16.72 about
 L.Fu, the holes snapped within 0.05-0.35 mm of their places measured on two frames). Limits: a dark stripe across a small hole can pass for it (a snap
 confirms a hole, it does not prove one absent); on frames the restoration video crops or zooms (13:49.5, 36:01) a centred principal point does not fit, and
-the camera is then loose for anything off the face. About 1-3 s a run."""
+the camera is then loose for anything off the face; "pp": true frees the principal point (with "pp0", "pp_prior" px), "k1": true radial distortion, "points" add controls off the face (a setting on a part standing on it), and "probes": {name: {"uv", "y", "ref"}} read image points back at a height. A frame no single pinhole fits (a stabilised or zoomed shot) shows as controls at different heights that won't agree at any focal length: say so rather than reading through it. About 1-3 s a run."""
 import json,os,sys,pathlib
 import numpy as np,cv2
 from scipy.optimize import least_squares
@@ -52,15 +52,15 @@ def frame_path(f,base):
     return v
 
 class Cam:
-    """pinhole: params [rx, ry, rz, tx, ty, tz, f, (k1)]; principal point at the image's centre"""
-    def __init__(s,W,H,k1=False):s.W,s.H,s.k1=W,H,k1
-    def K(s,f):return np.array([[f,0,s.W/2],[0,f,s.H/2],[0,0,1.0]])
+    """pinhole: params [rx, ry, rz, tx, ty, tz, f] then [cx, cy] if pp (the principal point, for a frame cropped or zoomed: its centre otherwise) then [k1] if k1"""
+    def __init__(s,W,H,k1=False,pp=False):s.W,s.H,s.k1,s.pp=W,H,k1,pp
+    def K(s,p):
+        f=p[6];cx,cy=(p[7],p[8]) if s.pp else (s.W/2,s.H/2);return np.array([[f,0,cx],[0,f,cy],[0,0,1.0]])
+    def dist(s,p):return np.array([p[-1],0,0,0]) if s.k1 else np.zeros(4)
     def proj(s,p,X):
-        X=np.atleast_2d(np.asarray(X,float));d=np.array([p[7],0,0,0]) if s.k1 else np.zeros(4)
-        u,_=cv2.projectPoints(X.reshape(-1,1,3),np.asarray(p[:3],float),np.asarray(p[3:6],float),s.K(p[6]),d);return u.reshape(-1,2)
+        X=np.atleast_2d(np.asarray(X,float));u,_=cv2.projectPoints(X.reshape(-1,1,3),np.asarray(p[:3],float),np.asarray(p[3:6],float),s.K(p),s.dist(p));return u.reshape(-1,2)
     def ray(s,p,uv):
-        uv=np.atleast_2d(np.asarray(uv,float));d=np.array([p[7],0,0,0]) if s.k1 else np.zeros(4)
-        n=cv2.undistortPoints(uv.reshape(-1,1,2),s.K(p[6]),d).reshape(-1,2);R,_=cv2.Rodrigues(np.asarray(p[:3],float));t=np.asarray(p[3:6],float)
+        uv=np.atleast_2d(np.asarray(uv,float));n=cv2.undistortPoints(uv.reshape(-1,1,2),s.K(p),s.dist(p)).reshape(-1,2);R,_=cv2.Rodrigues(np.asarray(p[:3],float));t=np.asarray(p[3:6],float)
         C=-R.T@t;D=(R.T@np.c_[n,np.ones(len(n))].T).T;return C,D
     def onplane(s,p,uv,y):
         C,D=s.ray(p,uv);lam=(y-C[1])/D[:,1];return C+lam[:,None]*D
@@ -82,25 +82,26 @@ def robust_H(X,U,thr=4.0):
         if not len(bad) or keep.sum()<=5:return H,keep,e
         keep[bad[np.argmax(e[bad])]]=False
 
-def fit_cam(cam,X,U,p0,w=None,fix_f=None,fprior=None):
+def fit_cam(cam,X,U,p0,w=None,fix_f=None,fprior=None,ppprior=None):
+    """least squares (soft L1) of the reprojection; fprior (f0, relative sigma) and ppprior (sigma px, about the frame's centre) as soft priors"""
     w=np.ones(len(X)) if w is None else np.asarray(w)
     def res(q):
-        p=np.r_[q[:6],fix_f if fix_f else q[6],q[7:]] if fix_f else q;r=((cam.proj(p,X)-U)*w[:,None]).ravel()
-        return np.r_[r,(np.log(p[6]/fprior[0])/fprior[1])*np.sqrt(len(X))] if fprior else r   # a focal length's prior (f0, relative sigma), weighted as one point's worth a control
-    q0=np.r_[p0[:6],p0[7:]] if fix_f else p0
-    if fix_f:
-        def res2(q):p=np.r_[q[:6],fix_f,q[6:]];return ((cam.proj(p,X)-U)*w[:,None]).ravel()
-        r=least_squares(res2,q0,loss='soft_l1',f_scale=2.0);return np.r_[r.x[:6],fix_f,r.x[6:]]
-    r=least_squares(res,q0,loss='soft_l1',f_scale=2.0);return r.x
+        r=((cam.proj(q,X)-U)*w[:,None]).ravel();ex=[]
+        if fprior:ex.append((np.log(abs(q[6])/fprior[0])/fprior[1])*np.sqrt(len(X)))
+        if cam.pp and ppprior:ex+=[(q[7]-cam.W/2)/ppprior,(q[8]-cam.H/2)/ppprior]
+        return np.r_[r,ex]
+    return least_squares(res,np.asarray(p0,float),loss='soft_l1',f_scale=2.0).x
 
-def init_cam(cam,Xf,Uf,frange):
-    """from planar controls (one height): solvePnP at each focal length, the one with the least reprojection error"""
-    best=None
+def init_cam(cam,Xf,Uf,frange,pp0=None):
+    """solvePnP at each focal length (IPPE for points on one plane, SQPnP otherwise; the principal point at pp0 or the centre), the least reprojection error kept"""
+    best=None;planar=np.ptp(Xf[:,1])<1e-6
     for f in np.geomspace(frange[0],frange[1],40):
-        K=cam.K(f);ok,rv,tv=cv2.solvePnP(Xf.reshape(-1,1,3),Uf.reshape(-1,1,2),K,np.zeros(4),flags=cv2.SOLVEPNP_IPPE if len(Xf)>=4 else cv2.SOLVEPNP_ITERATIVE)
+        q=np.r_[np.zeros(6),f,list(pp0 if pp0 is not None else (cam.W/2,cam.H/2)) if cam.pp else [],[0.0] if cam.k1 else []];K=cam.K(q)
+        try:ok,rv,tv=cv2.solvePnP(Xf.reshape(-1,1,3),Uf.reshape(-1,1,2),K,np.zeros(4),flags=cv2.SOLVEPNP_IPPE if (planar and len(Xf)>=4) else cv2.SOLVEPNP_SQPNP)
+        except cv2.error:continue
         if not ok:continue
-        p=np.r_[rv.ravel(),tv.ravel(),f,[0.0] if cam.k1 else []];e=np.sqrt(np.mean(np.sum((cam.proj(p,Xf)-Uf)**2,1)))
-        if best is None or e<best[0]:best=(e,p)
+        q[:3]=rv.ravel();q[3:6]=tv.ravel();e=np.sqrt(np.mean(np.sum((cam.proj(q,Xf)-Uf)**2,1)))
+        if best is None or e<best[0]:best=(e,q)
     return best[1]
 
 def detect_ellipses(img,rmin=6,rmax=90):
@@ -217,15 +218,15 @@ def main():
     SP=pathlib.Path(a[0]).resolve();base=SP.parent;S=json.loads(SP.read_text(encoding='utf-8'));name=SP.stem
     out=pathlib.Path(a[a.index('--out')+1]) if '--out' in a else pathlib.Path.cwd()
     img=cv2.imread(str(frame_path(S['frame'],base)));assert img is not None,S['frame'];H,W=img.shape[:2];G=grad_img(img)
-    cam=Cam(W,H,S.get('k1',False));hs=S['holes'];HT=json.load(open(load(hs['file'],base)))['holes'];yF=hs['y'];use=hs.get('use',list(hs.get('uv',{})))
+    cam=Cam(W,H,S.get('k1',False),bool(S.get('pp')));hs=S['holes'];HT=json.load(open(load(hs['file'],base)))['holes'];yF=hs['y'];use=hs.get('use',list(hs.get('uv',{})))
     X3=lambda n:np.array([HT[n][0],yF,HT[n][1]])
     picks={n:np.array(v,float) for n,v in hs.get('uv',{}).items()}
     Xp=np.array([X3(n) for n in picks]);Up=np.array(list(picks.values()))
-    p=init_cam(cam,Xp,Up,S.get('f',[1500,12000]))
+    PP0=S.get('pp0');p=init_cam(cam,Xp,Up,S.get('f',[1500,12000]),PP0)
     extra=S.get('points',{});Xe=np.array([v['xyz'] for v in extra.values()]) if extra else np.zeros((0,3));Ue=np.array([v['uv'] for v in extra.values()]) if extra else np.zeros((0,2))
-    FP=tuple(S['f_prior']) if S.get('f_prior') else None
-    if FP:p[6]=FP[0]
-    p=fit_cam(cam,np.r_[Xp,Xe],np.r_[Up,Ue],p,fprior=FP)
+    FP=tuple(S['f_prior']) if S.get('f_prior') else None;PPP=S.get('pp_prior')
+    if len(Xe):p=init_cam(cam,np.r_[Xp,Xe],np.r_[Up,Ue],S.get('f',[1500,12000]),PP0)   # all the controls, at their heights
+    p=fit_cam(cam,np.r_[Xp,Xe],np.r_[Up,Ue],p,fprior=FP,ppprior=PPP)
     if S.get('face_first'):   # the face's homography first: picks, then holes snapped through it, coarse to fine; the camera is then fitted to all that snapped
         Xf=np.array([[HT[n][0],HT[n][1]] for n in picks]);Hh,kp,e=robust_H(Xf,Up);print('face homography on the picks:',dict(zip(picks,e.round(1))),'left out',[n for n,k in zip(picks,kp) if not k])
         hc=HCam(Hh);sw=S.get('snap',{}).get('win',12)
@@ -243,9 +244,8 @@ def main():
             print(f'face, window {wr} px: {len(sn_)} holes snapped, {kp.sum()} of {len(Cn)} trusted controls kept, rms {np.sqrt(np.mean(e[kp]**2)):.2f} px; left out {[n for n,k in zip(Cn,kp) if not k]}')
         picks={n:np.asarray(sn_[n]['uv'] if n in sn_ else picks[n],float) for n,k in zip(Cn,kp) if k}
         Xp=np.array([X3(n) for n in picks]);Up=np.array(list(picks.values()))
-        p=init_cam(cam,Xp,Up,S.get('f',[1500,12000]))
-        if FP:p[6]=FP[0]
-        p=fit_cam(cam,np.r_[Xp,Xe],np.r_[Up,Ue],p,fprior=FP)
+        p=init_cam(cam,np.r_[Xp,Xe] if len(Xe) else Xp,np.r_[Up,Ue] if len(Xe) else Up,S.get('f',[1500,12000]),PP0)
+        p=fit_cam(cam,np.r_[Xp,Xe],np.r_[Up,Ue],p,fprior=FP,ppprior=PPP)
         e=np.hypot(*(cam.proj(p,Xp)-Up).T);print(f'camera on the face stage controls ({len(Xp)}) controls: rms {np.sqrt(np.mean(e**2)):.2f} px, f {p[6]:.0f}')
     if S.get('detect'):   # automatic registration on the image's round edges (detect_ellipses, register), from the picks' rough camera
         D=detect_ellipses(img);print(f'{len(D)} round edges detected')
@@ -269,14 +269,17 @@ def main():
         print(f'round {rd} (window {wr} px): {sum(n in snapped for n in C)} of {len(C)} trusted holes snapped, {len(snapped)} holes in all')
         keepc=np.ones(len(Xc),bool)
         for _ in range(3):   # controls far off when the rest agree (a rough pick, a hole snapped to the wrong ring) are left out
-            p=fit_cam(cam,np.r_[Xc[keepc],Xe],np.r_[Uc[keepc],Ue],p,fprior=FP);e=np.hypot(*(cam.proj(p,Xc)-Uc).T)
+            p=fit_cam(cam,np.r_[Xc[keepc],Xe],np.r_[Uc[keepc],Ue],p,fprior=FP,ppprior=PPP);e=np.hypot(*(cam.proj(p,Xc)-Uc).T)
             bad=keepc&(e>max(4.0,3*np.median(e[keepc])))
             if not bad.any() or keepc.sum()-bad.sum()<5:break
             keepc&=~bad;print('   left out:',[C[i] for i in np.where(bad)[0]],'off',e[bad].round(1),'px')
         e=e[keepc];print(f'round {rd}: camera on {len(C)} snapped holes, rms {np.sqrt(np.mean(e**2)):.2f} px, f {p[6]:.0f}')
     mmpx=lambda X:1/np.linalg.norm(cam.proj(p,X+[0.5,0,0])-cam.proj(p,X-[0.5,0,0]))
-    R={'frame':str(S['frame']),'camera':{'rvec':p[:3].tolist(),'tvec':p[3:6].tolist(),'f':float(p[6]),'k1':float(p[7]) if cam.k1 else 0,'W':W,'H':H},'holes':{},'outlines':{},'circles':{}}
-    print(f'camera: f {p[6]:.0f} px, distance {np.linalg.norm(-cv2.Rodrigues(p[:3])[0].T@p[3:6]):.0f} mm')
+    R={'frame':str(S['frame']),'camera':{'p':[float(v) for v in p],'pp':cam.pp,'k1':cam.k1,'rvec':p[:3].tolist(),'tvec':p[3:6].tolist(),'f':float(p[6]),'W':W,'H':H},'holes':{},'outlines':{},'circles':{}}
+    print(f'camera: f {p[6]:.0f} px, distance {np.linalg.norm(-cv2.Rodrigues(p[:3])[0].T@p[3:6]):.0f} mm'+(f', principal point {p[7]-W/2:+.0f}, {p[8]-H/2:+.0f} px from the centre' if cam.pp else ''))
+    if len(Xe):
+        ee=np.hypot(*(cam.proj(p,Xe)-Ue).T)
+        for nm,v in zip(extra,ee):print(f'   point {nm}: {v:.1f} px')
     print('hole   model (x, z)        r    | snapped (x, z)         r     shift mm  edge share  rms px  contrast')
     for n in HT:
         if n not in snapped:continue
@@ -313,6 +316,12 @@ def main():
         o=snap_circle(cam,p,G,np.array(cc['c'],float),cc['r'],True,cc.get('win',15))
         if o:R['circles'][cn]={'mm':[round(o['mm'][0],3),round(o['mm'][1],3)],'r':round(o['r'],3),'share':round(o['share'],2),'rms_px':round(o['rms'],2)};print(f'circle {cn}: ({o["mm"][0]:.2f}, {o["mm"][1]:.2f}) r {o["r"]:.2f} (model {cc["c"][0]}, {cc["c"][2]} r {cc["r"]}), {o["share"]:.2f} of its edge, {o["rms"]:.2f} px')
         else:print(f'circle {cn}: no clean edge')
+    R['probes']={}
+    for pn,pv in S.get('probes',{}).items():   # image points read back at a height: {"uv": [u, v], "y": movement y}, through the final camera and, for comparison, at the focal lengths given
+        X=cam.onplane(p,np.array(pv['uv'],float),pv['y'])[0];R['probes'][pn]={'mm':[round(X[0],3),round(X[2],3)]}
+        line=f'probe {pn} (y {pv["y"]}): ({X[0]:.2f}, {X[2]:.2f})'
+        if 'ref' in pv:line+=f', {np.hypot(X[0]-pv["ref"][0],X[2]-pv["ref"][1]):.2f} from {pv["ref"]}'
+        print(line)
     cv2.imwrite(str(out/f'et_{name}.png'),cv2.resize(vis,None,fx=0.5,fy=0.5) if W>2500 else vis)
     json.dump(R,open(out/f'et_{name}.json','w'),indent=1)
 if __name__=='__main__':main()
