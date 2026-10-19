@@ -22,7 +22,8 @@
 //   node wempe_montecarlo.js [--n 2000]   (about 40 s; exits 1 if under 95 % work after the bench, one fails for a reason no bench test catches, or the json is stale)
 //   node wempe_montecarlo.js --write      writes tools/montecarlo_wempe.json
 const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),{WPHYS:P,WD}=W,E=P.ESC,S=P.SET;
-const J=f=>JSON.parse(fs.readFileSync(path.join(__dirname,f),'utf8')),BC=J('bench_wempe.json').criteria,TOL=J('tolerances_wempe.json'),GW=J('gearing_wempe.json'),TH=require('./wempe_thermal.js');
+const BREV=/^build/.test(process.env.MC_WREV||'')?process.env.MC_WREV:'',SUF=BREV?'_'+BREV:'';   /* a build's (MC_WREV=build40, build): its own files */
+const J=f=>JSON.parse(fs.readFileSync(path.join(__dirname,f),'utf8')),BC=J(`bench_wempe${SUF}.json`).criteria,TOL=J(`tolerances_wempe${SUF}.json`),GW=J('gearing_wempe.json'),TH=require('./wempe_thermal.js');
 const D=180/Math.PI,f=(x,n=1)=>(+x).toFixed(n),r4=x=>+(+x).toFixed(4),rows=[],tStart=Date.now();let fail=0;const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);};
 const arg=(k,d)=>{const i=process.argv.indexOf(k);return i>0?+process.argv[i+1]:d;},N=arg('--n',2000);
 let seed=20261015;const rnd=()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
@@ -135,7 +136,7 @@ const out={note:'tools/wempe_montecarlo.js: the whole Wempe made to a maker\'s t
   bench:B,uncaught:unc.length,why,failAfter:cnt(all,x=>!x.works),alone:Object.fromEntries(Object.entries(alone).map(([k,v])=>[k,Object.fromEntries(Object.entries(v).map(([q,x])=>[q,r4(x)]))])),worst,
   holes:Object.fromEntries(Object.entries(HSN).map(([k,v])=>[k,Object.fromEntries(Object.entries(v).map(([q,x])=>[q,r4(x)]))])),rate:{asMade:[0.05,0.5,0.95].map(p=>r4(pq(all,'rate',p))),reach:REACH.map(r4)},temperature:{drawnC:r4(-TH.linear.drawn),nZero:TH.linear.nZero}};
 console.log(rows.join('\n'));
-const OUT=path.join(__dirname,'montecarlo_wempe.json'),txt=JSON.stringify(out,null,1)+'\n';
-if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log('  wrote tools/montecarlo_wempe.json');}
-else if(N===2000){const ok=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8').replace(/\r/g,'')===txt;console.log(ok?'  ok  tools/montecarlo_wempe.json is what this finds':'  !!  tools/montecarlo_wempe.json is not what this finds: node wempe_montecarlo.js --write');if(!ok)fail=1;}
+const OUT=path.join(__dirname,`montecarlo_wempe${SUF}.json`),txt=JSON.stringify(out,null,1)+'\n';
+if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log(`  wrote tools/montecarlo_wempe${SUF}.json`);}
+else if(N===2000){const ok=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8').replace(/\r/g,'')===txt;console.log(ok?`  ok  tools/montecarlo_wempe${SUF}.json is what this finds`:`  !!  tools/montecarlo_wempe${SUF}.json is not what this finds: node wempe_montecarlo.js --write`);if(!ok)fail=1;}
 console.log(`  (${f((Date.now()-tStart)/1000,0)} s)`);process.exitCode=fail;

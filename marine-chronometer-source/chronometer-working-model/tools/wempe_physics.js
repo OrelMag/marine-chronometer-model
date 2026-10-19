@@ -60,7 +60,7 @@ const LV=(()=>{const kE=[200/EGPa*(0.365/0.37)**3,210/EGPa*(0.375/0.37)**3],kW=2
 /* the build's mainspring (MC_WREV=build: WESC.BUILD.strip, the user's choice, 19 October 2026): its own solved table (wempe_mainspring.py --t), its torque the table's times
    E/207, set up as the drawn spring (¾ turn) and wound the drawn fusee's barrel turns; it must give the build's drive (WESC.KB times the measured, the losses at their middle
    as above) and stay under its alloy's limit */
-const BS=W.WESC.KB?(()=>{const B=W.WESC.BUILD.strip,d=JSON.parse(/const MSHAPE=(\{.*?\});/s.exec(fs.readFileSync(path.join(__dirname,B.table),'utf8'))[1]),kE=B.E/207;
+const BS=W.WESC.BSEL&&W.WESC.BSEL.strip?(()=>{const B=W.WESC.BSEL.strip,d=JSON.parse(/const MSHAPE=(\{.*?\});/s.exec(fs.readFileSync(path.join(__dirname,B.table),'utf8'))[1]),kE=B.E/207;
   const ip=(T)=>{const q=d.T;let i=0;while(i<q.length-2&&q[i+1]<T)i++;const w=(T-q[i])/(q[i+1]-q[i]);return(d.pull[i]*(1-w)+d.pull[i+1]*w)*d.M1*kE;};
   let sl=d.T0;for(let i=0;i+1<d.T.length;i++)if(d.pull[i]<=0&&d.pull[i+1]>0)sl=d.T[i]-d.pull[i]*(d.T[i+1]-d.T[i])/(d.pull[i+1]-d.pull[i]);
   const Td=sl+0.75,Tu=Td+MSJ.barrelTurns,Md=ip(Td),Mu=ip(Tu),want=FN.Mfull*LV.Kl*W.WESC.KB,s=6*Mu/(b*(B.t/1000)**2);

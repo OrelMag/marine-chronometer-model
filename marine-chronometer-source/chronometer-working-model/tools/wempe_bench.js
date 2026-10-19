@@ -10,7 +10,8 @@
 //   node wempe_bench.js --write    writes it
 // About 50 s (the free run-down at five dampings: makeEsc rebuilt and its swing solved for each).
 const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),{WPHYS:P,WESC,WD}=W,E=P.ESC,S=P.SET,PHY=require('./wempe_physics.js'),TH=require('./wempe_thermal.js'),SU=require('./wempe_sustaining.js');
-const J=f=>JSON.parse(fs.readFileSync(path.join(__dirname,f),'utf8')),TOL=J('tolerances_wempe.json'),GW=J('gearing_wempe.json'),MSJ=J('wempe_mainspring.json'),MFJ=J('mainspring_friction_wempe.json').summary;
+const BREV=/^build/.test(process.env.MC_WREV||'')?process.env.MC_WREV:'',SUF=BREV?'_'+BREV:'';   /* a build's tests (MC_WREV=build40, build): its own files (wempe_tolerances.js) */
+const J=f=>JSON.parse(fs.readFileSync(path.join(__dirname,f),'utf8')),TOL=J(`tolerances_wempe${SUF}.json`),GW=J('gearing_wempe.json'),MSJ=J('wempe_mainspring.json'),MFJ=J('mainspring_friction_wempe.json').summary;
 const D=180/Math.PI,f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),r4=x=>+(+x).toFixed(4),tStart=Date.now();
 const m=E.measure(),{FN,Kl}=PHY,G=TOL.band,MS=TOL.mainspring,LK=TOL.lock,LKA=(TOL.lock.shallow+TOL.lock.deep)/2,   /* the banking's aim: the lock window's middle (since 19 October 2026: the drawn 0.235 lies 3 µm over the window's floor; the drawn depth until then) */
   PR=TOL.detent.preload,HS=TOL.hairspring;
@@ -107,8 +108,8 @@ const criteria={
   maintaining:{bank:r4(SU.spring.psiB*D),gap:SU.spring.state.gap.map(g=>r4(g*14.2)),s:[r4(SU.sim.whole.tStop),r4(SU.sim.catch0.tStop)],min:300},
   stopwork:{height:SPH,model:1.0,push:SPP,sliding:r4(SPF),MF:P.MF,grooveEnd:8.75,gapBefore:0.69},
   trial:{...TU,masses:{drawn:r4(L.drawn),zero:r4(90-L.zero),perDeg:r4(L.perDeg),build:{set:SETB,C:r4(SETB*L.perDeg),um:r4(SETB*Math.PI/180*RM*1000)}}}};
-const OUT=path.join(__dirname,'bench_wempe.json'),txt=JSON.stringify({note:'tools/wempe_bench.js: the tests on the bench for a Wempe made to the model, each with how and what it must read, and their figures as numbers (criteria: wempe_montecarlo.js, the Wempe\'s verification report)',tests,criteria},null,1)+'\n';
-if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log('wrote tools/bench_wempe.json:',tests.length,'tests');}
+const OUT=path.join(__dirname,`bench_wempe${SUF}.json`),txt=JSON.stringify({note:'tools/wempe_bench.js: the tests on the bench for a Wempe made to the model, each with how and what it must read, and their figures as numbers (criteria: wempe_montecarlo.js, the Wempe\'s verification report)',tests,criteria},null,1)+'\n';
+if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log(`wrote tools/bench_wempe${SUF}.json:`,tests.length,'tests');}
 else{for(const t of tests)console.log(`  ${t.title} (${t.sheet}; ${t.when})\n    how: ${t.how}\n    pass: ${t.pass}\n`);
-  const ok=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8').replace(/\r/g,'')===txt;console.log(ok?'  ok  tools/bench_wempe.json is up to date':'  !!  tools/bench_wempe.json is not what this finds: node wempe_bench.js --write');if(!ok)process.exitCode=1;}
+  const ok=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8').replace(/\r/g,'')===txt;console.log(ok?`  ok  tools/bench_wempe${SUF}.json is up to date`:`  !!  tools/bench_wempe${SUF}.json is not what this finds: ${BREV?'MC_WREV='+BREV+' ':''}node wempe_bench.js --write`);if(!ok)process.exitCode=1;}
 console.log(`  (${f((Date.now()-tStart)/1000,0)} s)`);

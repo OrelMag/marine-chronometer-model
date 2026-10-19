@@ -1,0 +1,190 @@
+{
+ "note": "tools/wempe_tolerances.js: how closely the Wempe's parts the drawings don't size must be made, each range keeping the swing in the guard band over the whole wind (and the sources' band, reported); read by wempe_bench.js, wempe_montecarlo.js and the Wempe's verification report",
+ "band": {
+  "guard": [
+   180,
+   270
+  ],
+  "sources": [
+   225,
+   270
+  ],
+  "wind": {
+   "dmin": 0.9543,
+   "hMin": 55.25,
+   "dmax": 1.0428,
+   "hMax": 0,
+   "A": [
+    224.8889,
+    236.081
+   ],
+   "A12": 230.7164
+  }
+ },
+ "mainspring": {
+  "t": 0.377,
+  "tMeasured": 0.3559,
+  "s": [
+   0.6743,
+   1.0669
+  ],
+  "sSwing": [
+   0.6743,
+   1.2815
+  ],
+  "t_mm": [
+   0.3306,
+   0.3852
+  ],
+  "tMeasured_mm": [
+   0.3121,
+   0.3637
+  ],
+  "g262": {
+   "mean": 132.7375,
+   "full": 138.4,
+   "low": 126.5,
+   "band": [
+    89.5013,
+    141.6133
+   ]
+  },
+  "rate": [
+   -0.9172,
+   0.0086
+  ],
+  "stressGPa": 2.936,
+  "sStress": 1.0669,
+  "sources": {
+   "s": 1.001,
+   "t_mm": 0.3771,
+   "g262": 132.8715
+  }
+ },
+ "detent": {
+  "t": 0.07,
+  "k": [
+   0,
+   21.0411
+  ],
+  "t_mm": [
+   0,
+   0.1933
+  ],
+  "inTime": [
+   0.0556,
+   0.0882
+  ],
+  "t09": {
+   "k": 2.1254,
+   "A": [
+    222.5586,
+    233.9153
+   ]
+  },
+  "A0": 232.6986,
+  "preload": {
+   "g": 0.8,
+   "min": 0.64,
+   "max": 3.9999,
+   "margin": 0.4,
+   "knock": 0.64,
+   "rows": [
+    {
+     "w": 0.3,
+     "A": [
+      229.9101,
+      240.8784,
+      235.6794
+     ]
+    },
+    {
+     "w": 0.8,
+     "A": [
+      224.8905,
+      236.0839,
+      230.7164
+     ]
+    },
+    {
+     "w": 1,
+     "A": [
+      222.8312,
+      234.1426,
+      228.7264
+     ]
+    },
+    {
+     "w": 1.5,
+     "A": [
+      217.6284,
+      229.2353,
+      223.6991
+     ]
+    }
+   ]
+  }
+ },
+ "gold": {
+  "t": 0.15,
+  "E": 90,
+  "k": [
+   0,
+   22.6994
+  ],
+  "t_mm": 0.4247,
+  "E_max": 2042.9437,
+  "A0": 232.4527,
+  "half": [
+   225.7592,
+   236.9606
+  ]
+ },
+ "lock": {
+  "d": 0.235,
+  "deep": 0.2849,
+  "shallow": 0.0895,
+  "ring": 0.0447,
+  "tip": 0.25,
+  "liftMax": 0.3066,
+  "at": {
+   "drawn": {
+    "lock": 12.84,
+    "letoff": 2.84,
+    "A": 230.7164,
+    "Amin": 224.8905
+   },
+   "deep": {
+    "lock": 15.22,
+    "letoff": 0.46,
+    "Amin": 216.2371
+   },
+   "shallow": {
+    "lock": 5.58,
+    "A": 254.2211,
+    "Amin": 247.8954
+   }
+  }
+ },
+ "hairspring": {
+  "T": 0.4939,
+  "fast": 1073.5588,
+  "perUm": 454.7368,
+  "perCoil001": 34.5186,
+  "perMm": 85.4818,
+  "perGPa": 209.7087,
+  "hNeed": 0.2827,
+  "hNeedE": [
+   0.2809,
+   0.2855
+  ],
+  "weights": {
+   "m": 0.5747,
+   "r": 18.6503,
+   "secTurn": 58.6534,
+   "reach": 0.8,
+   "turnsIn": 5,
+   "gain": 293.2669
+  }
+ }
+}
