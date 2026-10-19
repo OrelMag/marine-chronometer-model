@@ -98,7 +98,7 @@ const MSK=P.MSK,MSK2=P.MSK2,MSB=P.MSB,msT=ph=>ph>0?MSK*ph+MSK2*ph*ph:MSK*ph,msPh
    the cannon pinion's grip on the centre arbor 50 N·m a radian (its tube's 1:80 taper, a press);
    damping 3 % of critical in the meshes (oil), 5 % in the chain, the contacts and the clutch, 2 % in the springs */
 const KM=b=>1624*b,KCH=290,KDT=5e3,KST=2e3,KSTOP=6.68e3*14.0**2*1e-3,KCAN=50;   /* N/mm (KM a mm of face); KSTOP N·m a radian */
-const ZM=0.03,ZS=0.02,PAR={hy:1,kcl:1e4,kbank:40*MSK,zc:0.05,kch:KCH,tsl:3e-3};   /* PAR: the estimates section 5 varies (the click's face, the bank, the contacts' damping, the chain) */
+const ZM=0.03,ZS=0.02,PAR={hy:1,kcl:1e4,kbank:40*MSK,zc:0.05,kch:KCH,tsl:3e-3,nck:2,brk:0};   /* PAR: the estimates section 5 varies (the click's face, the bank, the contacts' damping, the chain); nck the clicks, evenly spaced over a tooth, and brk a brake's torque (N·m) between the click wheel and the maintaining ratchet: the let-go fixes wempe_letgo_fix.js tries (the drawn 2 and 0) */
 /* the pawls (mechanisms_wempe.json: the clicks' and the detent's pivots, their contacts on the faces as drawn, the teeth's depth): the nose's lever about the pivot (how far it
    rises a radian of the pawl), the lift that clears a tip; their springs (wempe_ratchets.js's: the clicks' bronze 1.5 × 0.4, 586-1667 mN/mm at their backs 3 from the pivot, the
    geometric middle; the detent's wire Ø 0.25, 64 mN/mm 4.73 from its pivot), set 0.3 and 0.5 mm there (estimated) */
@@ -164,7 +164,7 @@ const TC=process.env.MC_TR_TABS,tabs=()=>TC&&fs.existsSync(TC)?Promise.resolve(J
    fusee arbor's measured torque down the train (each mesh's mean torque ratio at MU, the pivots' friction), so the drive's level at the escape wheel is the meshes' own */
 function build(TB,n,o={}){const mc=Mach(),b={};for(const k of['barrel','fusee','ratchet','fw','centre','cannon','change','hour','inter','sec','esc','ud'])b[k]=mc.body(k,JI[k]*(k==='fusee'&&o.key?1:1));
   if(o.key){b.key=mc.body('key',JI.key);}
-  b.c1=mc.body('click 1',JI.click);b.c2=mc.body('click 2',JI.click);b.det=mc.body('maintaining detent',JI.det);
+  b.c1=mc.body('click 1',JI.click);b.c2=mc.body('click 2',JI.click);b.cx=[];for(let k=2;k<PAR.nck;k++)b.cx.push(mc.body('click '+(k+1),JI.click));b.det=mc.body('maintaining detent',JI.det);
   const B=mc.B,rh=rho(n)*1e-3,rb=RB*1e-3,S={n,rh};
   /* the torques down the line, static: the fusee arbor's; the fusee wheel's (the clicks and the maintaining spring carry it whole); each pinion's by the mesh's mean ratio, less the
      pivots' friction (mu_p r_p the pinion's load over its radius); the escape wheel's */
@@ -186,7 +186,9 @@ function build(TB,n,o={}){const mc=Mach(),b={};for(const k of['barrel','fusee','
   /* the clicks between the fusee (the click wheel) and the ratchet, click 1 bearing, click 2 half a tooth on; the maintaining detent on the ratchet, its face a quarter tooth
      behind it running (where it creeps as the ratchet runs on) */
   const kfc=PAR.kcl*1e3*CK.rc*CK.rc,kfd=KDT*1e3*DT.rc*DT.rc;
-  const c1=pawlEl(mc,b.c1,b.fusee,b.ratchet,CK,KSC,PSC,kfc,1,0),c2=pawlEl(mc,b.c2,b.fusee,b.ratchet,CK,KSC,PSC,kfc,1,CK.p/2);
+  const c1=pawlEl(mc,b.c1,b.fusee,b.ratchet,CK,KSC,PSC,kfc,1,0),c2=pawlEl(mc,b.c2,b.fusee,b.ratchet,CK,KSC,PSC,kfc,1,CK.p/PAR.nck),cx=b.cx.map((bi,i)=>pawlEl(mc,bi,b.fusee,b.ratchet,CK,KSC,PSC,kfc,1,(i+2)*CK.p/PAR.nck));
+  /* the brake (PAR.brk): Coulomb friction between the click wheel and the ratchet, nothing while the clicks hold them together running, against the key winding and the fusee running free */
+  if(PAR.brk)mc.add({f:()=>{const T=PAR.brk*Math.tanh((B[b.fusee].v-B[b.ratchet].v)/1e-3);B[b.fusee].F-=T;B[b.ratchet].F+=T;}});
   const dt_=pawlEl(mc,b.det,b.ratchet,-1,DT,KSD,PSD,kfd,-1,0);
   /* the maintaining spring, ratchet to fusee wheel, with its bank */
   const kms=MSK+2*MSK2*0.27;const sp=springEl(mc,b.ratchet,b.fw,ps=>msT(ps)+(ps>MSB?PAR.kbank*(ps-MSB):0),kms,ZS);
@@ -217,8 +219,8 @@ function build(TB,n,o={}){const mc=Mach(),b={};for(const k of['barrel','fusee','
   me.forEach((e,i)=>{const q=MESH[i],t=i<4?tq[q.B]:i===4?1e-6:i===5?1e-6:1e-6;e.set(t/e.K);});
   if(st){st.q0=B[b.esc].q-tq.esc/(KST*1e3*(7e-3)**2);}
   /* the clicks: click 1 on its face pressed by the drive, click 2 on a back; the fusee's place: q_fusee - q_ratchet = x on click 1's face */
-  B[b.fusee].q=lead+Tf/kfc;B[b.c2].q=CK.hmax/2;dt_.x0=lead-0.5*DT.p;B[b.det].q=DT.hmax/2;
-  const all={mc,b,S,ms,ch,c1,c2,dt:dt_,sp,me,cn,st,hd,ow,sw,lead};return all;}
+  B[b.fusee].q=lead+Tf/kfc;B[b.c2].q=CK.hmax/PAR.nck;b.cx.forEach((bi,i)=>B[bi].q=CK.hmax*(i+2)/PAR.nck);dt_.x0=lead-0.5*DT.p;B[b.det].q=DT.hmax/2;
+  const all={mc,b,S,ms,ch,c1,c2,cks:[c1,c2,...cx],dt:dt_,sp,me,cn,st,hd,ow,sw,lead};return all;}
 /* settle a built movement to rest: every body slowed each step (0.06 % a microsecond: about critical for the slowest mode, the barrel and fusee on the maintaining spring at 50 Hz;
    heavier would overdamp it, and it would creep to rest slower than the settle) */
 function settle(X,T=0.06){const{mc}=X,dt=1e-6,N=Math.round(T/dt);mc.fd=true;for(let i=0;i<N;i++){mc.step(dt);for(const b of mc.B)if(!b.pres)b.v*=0.9994;}for(const b of mc.B)if(!b.pres)b.v=0;mc.fd=false;X.ms.preset();}   /* the coils sliding as running while it settles, then on the running branch where the drum has come to (settling, it may turn back a little: held, the coils would keep part of the winding branch) */
@@ -270,10 +272,10 @@ function rippleRun(TB){const v=[];for(let i=0;i<=70;i++)v.push(E.ampAt(0.3+0.02*
    the wrong way), so how the hand lets go decides the blow: outright (the fingers off the paddle: the fusee, the key and the barrel run free to the nearer click), or eased (the
    torque the hand holds it with relaxed to nothing over `ease` s, the fusee let forward under it). o.par: the estimates varied */
 function windRun(TB,o){const sv={...PAR};Object.assign(PAR,o.par||{});try{
-  const X=build(TB,o.n??24/HPT,{key:true,Tmax:o.Tmax,kh:o.kh,drag:o.drag});const{mc,b,hd,c1,c2,dt,sp,ch,me,st}=X,B=mc.B;settle(X,0.06);
+  const X=build(TB,o.n??24/HPT,{key:true,Tmax:o.Tmax,kh:o.kh,drag:o.drag});const{mc,b,hd,cks,dt,sp,ch,me,st}=X,B=mc.B;settle(X,0.06);
   dt.x0=B[b.ratchet].q-(o.fd??0.5)*DT.p;dt.n=0;B[b.det].q=DT.hmax*(o.fd??0.5);B[b.key].q=B[b.fusee].q;
   const reset=()=>{for(const e of mc.El){if(e.maxL!=null)e.maxL=0;if(e.eng)e.eng=[];}ch.maxT=0;ch.minT=Infinity;ch.slack=0;sp.maxPsi=-Infinity;sp.minPsi=Infinity;hd.maxT=0;};reset();
-  const near=()=>Math.min(...[c1,c2].map(c=>{const x0=c===c1?0:CK.p/2,x=B[b.fusee].q-B[b.ratchet].q-x0-c.n*CK.p;return -x;})),tgt=(o.u??0.5)*CK.p/2;
+  const near=()=>Math.min(...cks.map(c=>{const x=B[b.fusee].q-B[b.ratchet].q-c.x0-c.n*CK.p;return -x;})),tgt=(o.u??0.5)*CK.p/PAR.nck;
   const r0=B[b.ratchet].q,q0=B[b.fusee].q,dtS=1e-6,res={lead:X.lead,tq:X.S.tq};hd.on=true;hd.th=B[b.key].q;let t=0,ph='wind',t1=0,fall=0;
   while(t<6){if(ph==='wind'){hd.w=-TAU*Math.min(1,t/0.03);if(q0-B[b.fusee].q>=(o.stroke??Math.PI)){ph='slow';t1=t;}}
     else if(ph==='slow'){hd.w=-TAU*Math.max(0,1-(t-t1)/0.05);if(t-t1>0.08){ph='creep';t1=t;}}
@@ -281,15 +283,15 @@ function windRun(TB,o){const sv={...PAR};Object.assign(PAR,o.par||{});try{
     else if(ph==='hold'){hd.w=0;if(t-t1>0.05){Object.assign(res,{fall,detL:dt.maxL,hand:hd.maxT,chain:[ch.minT,ch.maxT],free:near()});reset();ph='let';t1=t;if(!o.ease)hd.on=false;else hd.T0=Math.abs(hd.T);}}
     else{if(o.ease)hd.Tmax=hd.T0*Math.max(0,1-(t-t1)/o.ease);if(t-t1>(o.after??0.3)+(o.ease||0))break;}
     mc.step(dtS);t+=dtS;recAll(X,dtS);if(ph!=='let')fall=Math.max(fall,r0-B[b.ratchet].q);}
-  const cl=[c1,c2].filter(c=>c.eng.length);
-  return Object.assign(res,{u:o.u,catchE:cl.length?Math.min(...cl.map(c=>c.eng[0])):NaN,Fc:Math.max(c1.maxL,c2.maxL)/CK.rc,sp:sp.maxPsi,stone:st.maxL/7e-3,fw:me[0].maxL/(MESH[0].m*MESH[0].zB/2e3),esc:me[3].maxL,chainL:[ch.minT,ch.maxT],slack:ch.slack*1e-6});}finally{Object.assign(PAR,sv);}}
+  const cl=cks.filter(c=>c.eng.length);
+  return Object.assign(res,{u:o.u,catchE:cl.length?Math.min(...cl.map(c=>c.eng[0])):NaN,Fc:Math.max(...cks.map(c=>c.maxL))/CK.rc,Fd:dt.maxL/DT.rc,sp:sp.maxPsi,stone:st.maxL/7e-3,fw:me[0].maxL/(MESH[0].m*MESH[0].zB/2e3),esc:me[3].maxL,chainL:[ch.minT,ch.maxT],slack:ch.slack*1e-6});}finally{Object.assign(PAR,sv);}}
 /* the stop at full wind: the key wound into it at a turn a second from 0.12 turn short, then held there by a strong hand (1.06 N·m) */
 function stopRun(TB){const X=build(TB,0.12,{key:true,Tmax:1.06});const{mc,b,hd,sw,ch}=X,B=mc.B;settle(X,0.06);sw.on=true;sw.q0=-0.12*TAU;B[b.key].q=B[b.fusee].q;
   for(const e of mc.El)if(e.maxL!=null)e.maxL=0;ch.maxT=0;ch.minT=Infinity;ch.slack=0;hd.on=true;hd.th=B[b.key].q;let t=0,tHit=null,Fhit=0;
   while(t<1.2){hd.w=-TAU*Math.min(1,t/0.03);mc.step(1e-6);t+=1e-6;recAll(X,1e-6);if(sw.L>0&&tHit===null)tHit=t;if(tHit!==null&&t-tHit<0.02)Fhit=Math.max(Fhit,sw.L);}
   return{Fhit:Fhit/14e-3,Fp:sw.maxL/14e-3,chain:[ch.minT,ch.maxT],slack:ch.slack*1e-6,hand:hd.maxT};}
 
-module.exports={build,settle,MESH,JI,rho,fusT,Mrun,msT,msPh,MSB,CK,DT,meshTab,beat,windRun,stopRun,rippleRun};
+module.exports={tabs,PAR,build,settle,MESH,JI,rho,fusT,Mrun,msT,msPh,MSB,CK,DT,meshTab,beat,windRun,stopRun,rippleRun};
 if(!isMainThread&&['beat','wind','ripple','stop'].includes(workerData.job)){const{job,TB,o,par}=workerData;   /* its own jobs only: a thread of another tool may load this module (wempe_transmission_trace.js) */
   Object.assign(PAR,par||{});parentPort.postMessage(job==='beat'?beat(TB,o.rigid):job==='wind'?windRun(TB,o):job==='ripple'?rippleRun(TB):stopRun(TB));return;}
 

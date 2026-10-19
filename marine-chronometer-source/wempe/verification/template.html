@@ -23,7 +23,7 @@ nav.toc{background:var(--panel);border-radius:10px;padding:12px 18px;font-size:1
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
 .tile{background:var(--panel);border-radius:10px;padding:14px 16px}.tile .k{font-size:13px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
 .tile .v{font-size:24px;font-weight:650;margin:4px 0 2px}.tile .n{font-size:13.5px;color:var(--ink2)}
-.ok{color:var(--good)}.mid{color:var(--warn)}.no{color:var(--bad)}
+.ok{color:var(--good)}.mid{color:var(--warn)}.no{color:var(--bad)}.wn{color:var(--warn)}
 .tw{overflow-x:auto}.tw table{min-width:560px}table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
 th{color:var(--ink2);font-weight:600}td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 figure{margin:16px 0 22px}figcaption{font-size:13.5px;color:var(--ink2);margin-top:6px}
@@ -336,6 +336,21 @@ lines are the force at which the tooth's brass reaches its yield (300-450 MPa) a
 <div id="tTrV" class="tw"></div>
 <div class="callout"><p id="trMeaning"></p></div>
 <div id="kTr"></div>
+<h3 id="m3d">Every moving part in 3D</h3>
+<p>The runs above give the forces between the parts; here each moving part's own stress under them. <code>motion3d.py</code> takes the page's solids and moves each part as
+the page's own <code>update()</code> moves it; <code>motion3d_fe.py</code> solves each part as finite elements (voxel bricks on its solid, a modulus by its material, finer
+windows at its contacts, the root's bending kept apart from the contact's pressure) at its worst load in the four runs, held where it is held; the springs (the mainspring
+by its solved curvature, the hairspring, the maintaining spring, the gold spring) from their large-deflection solutions. Each part is read against its drawn material:
+the 1950s build beside the drawing's.</p>
+<p><a href="assets/motion3d/index.html"><b>Open the 3D viewer</b></a>: every moving part in 3D through the four runs, coloured by its stress, its stress against its
+material's limit or its speed, the deviations magnified, with each part's load, margin and motion, the kinematics against the tooth counts, and the assumptions.</p>
+<div id="tM3" class="tw"></div>
+<p>Every part past its limit but the mainspring (its inner coils, fully wound: section 17's builds and <code>wempe_build.js</code> take it up) is past it only with the key let go outright. The let-go study (<code>wempe_letgo_fix.js</code>) runs that let-go (the worst place, the nearer
+click 97 % of the way to the next; and eased back beside it) with the fixes a maker could make: more clicks, evenly spaced over a tooth, so the fusee runs a shorter way
+free; a brake, friction between the click wheel and the maintaining ratchet, which the clicks hold still running (so it costs the train nothing) but which the key works
+against winding; the click's face cushioned. The stresses are the 3D results' scaled to each case's force.</p>
+<div id="tLF" class="tw"></div>
+<div class="callout"><p id="lfMeaning"></p></div>
 
 <h2 id="keystone">14. Against a period text</h2>
 <p>The drawings decide the Wempe; a period text says how a detent escapement was usually proportioned, and so where the Wempe's makers chose otherwise.
@@ -712,6 +727,24 @@ function draw(){
         click wheel's tooth. Let go outright, the fusee and barrel run up to half a click tooth free and strike it with ${g(yl.snap.F,0)} N (${g(yl.snap.click.s,0)} MPa): at or past brass's yield over
         every estimate the blow rests on; the maintaining spring is thrown onto its bank and the chain goes slack and snatches. A key is let back, not let go.`;}}
     checks('kTr','transmission');}
+  {const M=DATA.m3d;if(M){const g=(x,n=0)=>Number.isFinite(+x)?(+x).toFixed(n):'–',L=M.v.last,B=M.v.build,bp=B?Object.fromEntries(B.parts.map(p=>[p.k,p])):{};
+    const ev=s=>(/\(([^()]*(?:let go|beat|eased|stop)[^()]*)\)/i.exec(s)||[,''])[1].replace(/^.*?, /,'');
+    const rows=L.parts.filter(p=>p.limit).sort((a,b)=>(a.margin?.[0]??9)-(b.margin?.[0]??9)).map(p=>{const q=bp[p.k],m=p.margin?.[0];return[esc(p.name),g(p.peak)+' MPa',q?g(q.peak)+' MPa':'–',esc(p.mat)+' '+p.limit.join('-'),
+      `<span class="${m<1?'no':m<1.5?'wn':''}">${g(m,2)}</span>`,esc(ev(p.load)||p.load.slice(0,90))];});
+    rows.push(['the mainspring\'s inner coils, fully wound',g(L.ms.peakFull)+' MPa',B?g(B.ms.peakFull)+' MPa':'–','its strip 2600 (the build\'s 3000)',`<span class="no">${g(2600/L.ms.peakFull,2)}</span>`,`its strip ${L.ms.t} mm (${B?B.ms.t:'–'} mm built), ${g(L.ms.medianFull)} MPa along it`]);
+    table('tM3',['Part','Peak, as drawn','Peak, the 1950s build','Material, its limit (MPa)','Margin, as drawn','Its worst load'],rows,true);
+    const F=M.lf;if(F){const K=['wheel','clicks','ratchet','detent','fw'],lim={wheel:[300,450],...Object.fromEntries(K.slice(1).map(k=>[k,F.lim[k].lim]))},cell=(s,k)=>`<span class="${s>lim[k][1]?'no':s>lim[k][0]?'wn':''}">${g(s)}</span>`;
+      table('tLF',['Let go outright (eased)','Free run','The click wheel\'s tooth (brass 300-450)',`The clicks (${F.lim.clicks.mat} ${F.lim.clicks.lim.join('-')})`,`The maintaining ratchet (${F.lim.ratchet.mat} ${F.lim.ratchet.lim.join('-')})`,
+        `The maintaining detent (${F.lim.detent.mat} ${F.lim.detent.lim.join('-')})`,`The fusee wheel's teeth (${F.lim.fw.mat} ${F.lim.fw.lim.join('-')})`,'Winding, the hand'],
+        F.cases.map(c=>[esc(c.lab),g(c.free*180/Math.PI,2)+'°',...K.map(k=>cell(c.st[k],k)+` (${g(c.stE[k])})`),g(c.hand*1e3)+' mN·m']),true);
+      const c0=F.cases[0],best=F.cases.reduce((a,c)=>Math.max(...K.map(k=>c.st[k]/lim[k][0]))<Math.max(...K.map(k=>a.st[k]/lim[k][0]))?c:a);
+      $('lfMeaning').innerHTML=`<b>What it means.</b> No fix the maker could make keeps every part within its material let go outright. More clicks shorten the free run but the blow
+        falls only as its square root (six clicks: the click wheel's tooth ${g(F.cases[3].st.wheel)} MPa against ${g(c0.st.wheel)}); a brake takes the fusee's energy as it runs but
+        the key works against it winding (three quarters of the fusee's torque: ${g(F.cases[6].hand*1e3)} mN·m in the hand against ${g(c0.hand*1e3)}); the best, ${esc(best.lab)},
+        still leaves the maintaining ratchet's brass at ${g(best.st.ratchet)} MPa, past its ${lim.ratchet[0]}-${lim.ratchet[1]}, where the maintaining detent strikes it. Eased back as drawn,
+        every part is within its limit or at its floor (the ratchet ${g(c0.stE.ratchet)} MPa). The Wempe's maintaining work is made for a key let back: the builds keep the
+        drawing's parts, and the key is let back at the end of each stroke. In hardened steel the click wheel and the
+        ratchet would take even the outright blow with four clicks and a brake (${g(F.cases[7].st.wheel)} and ${g(F.cases[7].st.ratchet)} MPa against steel's ${lim.clicks.join('-')}); the builds keep the drawn brass.`;}}}
 
   /* ---------- 14. the swing on video ---------- */
   {const S=D.swing,U=S.startup,pts=S.pts;chart('cSwing',{label:'The 6MX\'s swing',x:[1070,1192],y:[100,195],xl:'the video\'s time (s; 1073 is 17:53)',yl:'the swing (°)',r:60,

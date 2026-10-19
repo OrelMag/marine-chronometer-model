@@ -131,8 +131,12 @@ const status=$('#status');
 let ONLY=null,META,GEOM,SAMP,VB={},ver='last',mode='use',runI=0,playing=false,tNorm=0,showFrame=true,picked=null;
 try{
   META=await fetch('meta.json').then(r=>r.json());
-  /* the binaries come as base64 text in chunks (name.0.txt, name.1.txt...): joined into one buffer */
-  const bin=async nm=>{const parts=await Promise.all([...Array(META.bins[nm]).keys()].map(k=>fetch(nm+'.'+k+'.txt').then(r=>{if(!r.ok)throw Error(nm+' '+r.status);return r.text();})));
+  /* the binaries come as base64 text in chunks (name.0.txt, name.1.txt...), joined into one buffer (a private page, which serves text only); or, beside a report on the site,
+     as a file of their own (META.bins[nm] its name), gzipped (unpacked here: the host sends it as it is) */
+  const bin=async nm=>{if(typeof META.bins[nm]==='string'){const r=await fetch(META.bins[nm]);if(!r.ok)throw Error(nm+' '+r.status);const a=new Uint8Array(await r.arrayBuffer());
+      if(a[0]!==0x1f||a[1]!==0x8b)return a.buffer;if(!window.DecompressionStream)throw Error('this browser can’t unpack gzip (DecompressionStream)');
+      return new Response(new Blob([a]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();}
+    const parts=await Promise.all([...Array(META.bins[nm]).keys()].map(k=>fetch(nm+'.'+k+'.txt').then(r=>{if(!r.ok)throw Error(nm+' '+r.status);return r.text();})));
     const bytes=parts.map(t=>{const s=atob(t),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a;});const n=bytes.reduce((x,a)=>x+a.length,0),out=new Uint8Array(n);let o=0;for(const a of bytes){out.set(a,o);o+=a.length;}return out.buffer;};
   [GEOM,SAMP]=await Promise.all([bin('geom'),bin('samp')]);
   for(const v of Object.keys(META.versions))VB[v]=await bin('v_'+v);

@@ -74,6 +74,17 @@ def bom():
     for l in L: kinds[l.get('kind', '?')] = kinds.get(l.get('kind', '?'), 0) + 1
     return dict(lines=len(L), units=sum(max(q) if isinstance(q := l.get('qty') or 0, list) else q for l in L), relations=sum(len(l.get('rel') or []) for l in L), kinds=kinds, devs=[[l['dwg'], l['name'], l['dev']] for l in L if l.get('dev')])
 
+def m3d():
+    """The 3D viewer's results beside the report (assets/motion3d/, tools/motion3d_pack.py --site): each version's parts (their peak stress, material, limit, margin and the
+    load behind it), the mainspring's inner coils and the findings; and the let-go study (assets/letgo_fix.json, tools/wempe_letgo_fix.js). None if not there."""
+    f = os.path.join(HERE, 'assets', 'motion3d', 'meta.json')
+    if not os.path.exists(f): return None
+    M = json.load(open(f, encoding='utf-8')); nm = M['cfg']['names']
+    V = {v: dict(parts=[dict(k=k, name=nm.get(k, k), peak=p['peak'], mat=p['mat'], limit=p.get('limit'), margin=p.get('margin'), load=p.get('load', '')) for k, p in x['parts'].items()],
+                 ms={k: x['springs']['mainspring'][k] for k in ('t', 'peakFull', 'medianFull')}, findings=x.get('findings', [])) for v, x in M['versions'].items()}
+    lf = os.path.join(HERE, 'assets', 'letgo_fix.json')
+    return dict(v=V, made=M['made'], lf=json.load(open(lf, encoding='utf-8')) if os.path.exists(lf) else None)
+
 def main():
     md = open(os.path.join(WE, 'README.md'), encoding='utf-8').read()
     est, nest = estimates(items(section(md, 'Estimated, not from the drawings')))
@@ -84,7 +95,7 @@ def main():
     if not sov: raise SystemExit('the README has no section "The Soviet 6MX"')
     sov = ''.join(f'<p>{i["p"]}</p>' if 'p' in i else ul([i]) for i in items(sov.group(1).strip('\n').split('\n')))
     DATA = dict(data=A('data.json'), geo=A('geometry.json') if os.path.exists(os.path.join(HERE, 'assets', 'geometry.json')) else None, checks=checks_py(), bom=bom(),
-                counts=dict(estimates=nest, corrected=len(corr), unresolved=len(unres)))
+                counts=dict(estimates=nest, corrected=len(corr), unresolved=len(unres)), m3d=m3d())
     t = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
     made = datetime.date.today().strftime('%#d %B %Y' if os.name == 'nt' else '%-d %B %Y')
     for k, v in {'/*DATA*/null': json.dumps(DATA, separators=(',', ':'), ensure_ascii=False).replace('</', '<\\/'), '<!--MADE-->': made,

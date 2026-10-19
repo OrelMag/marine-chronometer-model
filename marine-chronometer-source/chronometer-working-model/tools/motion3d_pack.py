@@ -127,5 +127,23 @@ meta['bins']=bins
 v=(HERE/'motion3d_viewer.html').read_text(encoding='utf-8')
 if M=='hamilton':v=v.replace('<title>Wempe Moving Parts</title>','<title>Model 21 Moving Parts</title>').replace('Wempe Einheits-Chronometer · every part designed to move','Hamilton Model 21 · every part designed to move').replace('<h1>Wempe Moving Parts</h1>','<h1>Model 21 Moving Parts</h1>')
 (P/'index.html').write_text(v,encoding='utf-8')
+# --site DIR: the viewer beside a report on the site (the Wempe's in wempe/verification/assets/motion3d/, the Hamilton's in verification/build-verification/assets/motion3d/):
+# the binaries as files of their own, gzipped (the viewer unpacks them), three.js and its OrbitControls from vendor/ beside it (build.py copies the folder; a page there loads nothing
+# from the network)
+if arg('--site'):
+    import gzip;S_=pathlib.Path(arg('--site')).resolve();S_.mkdir(parents=True,exist_ok=True);V_=HERE.parents[2]/'vendor'
+    for f in S_.iterdir():f.unlink()
+    ms={}
+    for nm in bins:(S_/f'{nm}.bin').write_bytes(gzip.compress((P/f'{nm}.bin').read_bytes(),9,mtime=0));ms[nm]=f'{nm}.bin'
+    (S_/'meta.json').write_bytes(json.dumps({**meta,'bins':ms},separators=(',',':')).encode())
+    for f in('three.min.js','OrbitControls.js'):shutil.copyfile(V_/f,S_/f)
+    w=v.replace('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>','<script src="three.min.js"></script>').replace('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>','<script src="OrbitControls.js"></script>')
+    # the site's own faces, vendored (Spectral, Instrument Sans) in place of Google's: fonts.css and its files beside the page
+    w=re.sub(r'<link rel="(?:preconnect|stylesheet)" href="https://fonts\.g[^"]*"[^>]*>\n?','',w).replace('<style>','<link rel="stylesheet" href="fonts.css">\n<style>',1)
+    w=w.replace('--f-display:"Source Serif 4",Georgia,serif','--f-display:"Spectral",Georgia,serif').replace('--f-body:"IBM Plex Sans",system-ui,sans-serif','--f-body:"Instrument Sans",system-ui,sans-serif').replace('--f-data:"IBM Plex Mono",ui-monospace','--f-data:ui-monospace')
+    for f in(V_/'fonts').iterdir():
+        if f.suffix in('.woff2','.css','.txt'):shutil.copyfile(f,S_/f.name)
+    assert 'https://cdn' not in w and 'fonts.googleapis' not in w;(S_/'index.html').write_bytes(('<!doctype html>\n<html lang="en">\n<head>\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'+w+'\n</html>\n').encode())
+    print(f'{M} on the site: '+', '.join(f'{f.name} {f.stat().st_size/1e6:.1f} MB' for f in sorted(S_.iterdir())))
 sz={f.name:f.stat().st_size for f in P.iterdir()}
 print(f'{M}: '+', '.join(f'{k} {v/1e6:.1f} MB' for k,v in sz.items())+f'; versions {list(vers)}')
