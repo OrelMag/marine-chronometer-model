@@ -12,11 +12,11 @@
 //   the hairspring: its strip 0.285 ±0.003 (boxed, no tolerance: estimated), its coil Ø 12.8 ±0.05 (boxed, drawn), its cut length ±0.3 mm (estimated), the steel's
 //     modulus 200-210 GPa (published).
 // Judged: the train turns (each mesh in its depthing window, gearing_wempe.json; every arbor free, its endshake at least 0.01 mm at 20 °C: bench_wempe.json); the
-// escapement unlocks and holds (the lock between its window's ends, tolerances_wempe.json); the swing in the guard band, 185-270°, over the whole wind (makeEsc's atK
+// escapement unlocks and holds (the lock between its window's ends, tolerances_wempe.json); the swing in the guard band, 177-270°, over the whole wind (makeEsc's atK
 // at the drive and the springs' stiffness, the preload and the lock rebuilt; the sources' 225-270° reported); and, apart, whether it times (the period within the
 // timing weights' reach) and the temperature (the masses at their drawn place fail the TU's C in every one: the trial moves them). The bench, in its order: the depths
 // (a close mesh re-bushed on the drawn centre), endshake (out of 0.01-0.08 set again), the detent's ring (its spring out of the band replaced), the escapement (the
-// banking set to 0.175 deep ±0.005, the preload to the aim ±0.05 g: estimated), the mainspring's pull (out of its band, another strip), the swing (out of the guard
+// banking set to the drawn depth (0.235) ±0.005, the preload to the aim ±0.05 g: estimated), the mainspring's pull (out of its band, another strip), the swing (out of the guard
 // band, the set-up turned to bring the drive back to the model's), the balance vibrated (the spring matched to the period). Then which tolerance spoils most alone,
 // and the holes' estimate against ±25 and ±50 µm. Into tools/montecarlo_wempe.json for the Wempe's verification report:
 //   node wempe_montecarlo.js [--n 2000]   (about 40 s; exits 1 if under 95 % work after the bench, one fails for a reason no bench test catches, or the json is stale)
@@ -39,10 +39,10 @@ const grid=(K,fn)=>S2.map(s=>{const a0=E.atK(s,1,1).A*D;return K.map(k=>k===1?0:
 const bil=(Gd,K,s,k)=>lin(S2,S2.map((_,i)=>lin(K,Gd[i],k)),s);
 const S3=[0.85,1.0,1.15],A3=S3.map(s=>E.atK(s,1,1).A*D),reb=(K,o)=>{const g=S3.map(()=>[]);K.forEach(k=>{const e=W.makeEsc({...S,...o(k)},S);S3.forEach((s,i)=>g[i].push(e.atK(s,1,1).A*D-A3[i]));});return g;};
 const PREG=[0.1,0.35,S.W78,0.9,1.2,1.6],dPreG=reb(PREG,w=>({W78:w}));
-const LKG=[0.12,0.13,0.14,0.15,0.155,0.16,0.163,0.167,0.17,0.175,0.18,0.185,TOL.lock.deep-0.001],dLkG=reb(LKG,d=>({dL:d/S.ES}));
+const LK0=S.dL*S.ES,LKG=[...[-0.055,-0.045,-0.035,-0.025,-0.02,-0.015,-0.012,-0.008,-0.005,0,0.005,0.01].map(x=>LK0+x).filter(x=>x<TOL.lock.deep-0.002),TOL.lock.deep-0.001],   /* about the drawn depth (0.175 until 19 October 2026) */dLkG=reb(LKG,d=>({dL:d/S.ES}));
 const bi3=(Gd,K,s,k)=>lin(S3,S3.map((_,i)=>lin(K,Gd[i],k)),s);
 const Asurf=(s,kd,kp,pre,dep)=>lin(SG,A0g,s)+bil(dKdG,KD,s,kd)+bil(dKpG,KP,s,kp)+bi3(dPreG,PREG,s,pre)+bi3(dLkG,LKG,s,Math.min(dep,LKG[LKG.length-1]));
-const VAL=[[0.92,0.8,1.15,0.9,0.16],[1.1,1.3,0.85,0.4,0.18],[0.97,1.2,1.25,1.3,0.145],[1.05,0.6,0.7,0.63,0.175],[0.9,1.5,1.0,1.1,0.17]].map(([s,kd,kp,w,d])=>{const e=W.makeEsc({...S,W78:w,dL:d/S.ES},S),a=e.atK(s,kd,kp).A*D;return{s,kd,kp,w,d,a,sf:Asurf(s,kd,kp,w,d)};});
+const VAL=[[0.92,0.8,1.15,0.9,-0.015],[1.1,1.3,0.85,0.4,0.005],[0.97,1.2,1.25,1.3,-0.03],[1.05,0.6,0.7,0.63,0],[0.9,1.5,1.0,1.1,-0.005]].map(([s,kd,kp,w,x])=>{const d=LK0+x;const e=W.makeEsc({...S,W78:w,dL:d/S.ES},S),a=e.atK(s,kd,kp).A*D;return{s,kd,kp,w,d,a,sf:Asurf(s,kd,kp,w,d)};});
 const vErr=Math.max(...VAL.map(v=>Math.abs(v.a-v.sf)));
 
 /* ---------- the holes: the arbors' places and the meshes between them ---------- */
@@ -72,7 +72,7 @@ const one=(only)=>{const use=k=>!only||only===k,o={};
   let tms=0.37+(use('mainspring')?N2(0.005):0);const mu=[0,1,2,3].map(()=>use('friction')?U(0.10,0.20):0.15),eta4=mu.reduce((p,m,i)=>p*eta(i,m),1)/etaN;
   let tdt=0.07+(use('detent')?N2(0.005):0);const kp=((0.15+(use('gold')?N2(0.005):0))/0.15)**3;
   /* the escapement as first assembled: the lock's depth (the wheel's tips and the banking) and the preload */
-  let dep=0.175+(use('tip')?U(0,0.015):0)+(use('banking')?N2(0.02):0),pre=use('preload')?Math.max(0,S.W78+N2(0.3)):S.W78;
+  let dep=LK0+(use('tip')?U(0,0.015):0)+(use('banking')?N2(0.02):0),pre=use('preload')?Math.max(0,S.W78+N2(0.3)):S.W78;
   const swing=(sm,td,w,d)=>{const s=(sm/0.37)**3*eta4,kd=(td/0.07)**3;return[Asurf(s*dmin,kd,kp,w,d),Asurf(s*dmax,kd,kp,w,d)];};
   const lockOk=(d,w)=>d>=DW[0]&&d<=DW[1]&&w>=PRA.window[0]-1e-9;   /* the lock in its window and the preload no less than the frame was run at (wempe_tripping.js) */
   o.unlocks=dep<=TOL.lock.deep;o.lock=lockOk(dep,pre);

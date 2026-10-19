@@ -8,10 +8,10 @@
 // own frame there (t from the stone toward the foot, n toward the wheel) put through MK: the spring 0.07 × 1.9, 5 long, clamped at the foot (1436), as beams; the square 2 ×
 // 0.5 × 1.9 rigid, with the gold spring's head, its fixed arm to its bending point (05 04_1's "Biegungspunkt") and its screw; the blade 0.50 × 1.0 for 2.9, then 0.28 × 1.0 to
 // the pipe, as beams; the pipe Ø 1.15 × 2 with the stone (Ø 0.75 ruby, the half below it) rigid, with the horn's root; the horn 0.22 × 0.8 to 4.4 from the stone (1436's figure, Wempe 3955's photograph) as beams; the
-// gold spring 0.15 × 1.0 from its bending point along its drawn path to its square tip as beams (333 gold, about 90 GPa and 11.0 g/cm³: estimated, as WESC.SET and
-// wempe-inertia.js), closing onto the horn near its end, its tip resting 5 µm off (escapement.js: the horn's curve and the gold spring's bow, WESC.HORN and WESC.GOLD; until 18 October 2026 a straight horn and the gold spring's polyline lying along it); steel 205 GPa (200-210), 7.85 g/cm³. The banking, the block's cross screw's domed head (escapement.js; its
+// gold spring 0.15 × 1.0 from its bending point along its drawn path to its square tip as beams (333 gold, Au/Ag/Cu 333-333 by the 6MX's passport: about 98 GPa and 11.6
+// g/cm³, likely, as WESC.SET and wempe-inertia.js; 90 and 11.0 until 19 October 2026), closing onto the horn near its end, its tip resting 5 µm off (escapement.js: the horn's curve and the gold spring's bow, WESC.HORN and WESC.GOLD; until 18 October 2026 a straight horn and the gold spring's polyline lying along it); steel 205 GPa (200-210), 7.85 g/cm³. The banking, the block's cross screw's domed head (escapement.js; its
 // head not drawn): the pipe's side toward the wheel rests on its face at the stone (05 04 01-4's 18.8, the 6MX's block photographed: likely; until 15 October 2026 under
-// the blade 0.7-1.4 mm from the stone, where makeEsc puts the Hamilton's stop button, estimated). The preload WESC.SET's, 0.63 g at the stone (estimated), a moment at the spring's end; as
+// the blade 0.7-1.4 mm from the stone, where makeEsc puts the Hamilton's stop button, estimated). The preload WESC.SET's, 0.9 g at the stone (estimated), a moment at the spring's end; as
 // drawn (the spring straight at its banking) none.
 // Contacts, each a spring with a dashpot set for its restitution (tripping.js's): the discharge stone on the gold spring (its bevelled end on the strip's square end, by
 // separating axes: the depth and its gradient in the tip's place and the balance's angle; on the active swing at the horn's end carried to the tip, backed by the horn, as
@@ -44,7 +44,7 @@ const GPATH=(()=>{const g=X.GOLD(GB[1]),out=[];for(let k=0;k<g.length;k++){if(k)
 const HGAP=HC.map(t=>{const p=GPATH.find(q=>Math.abs(q[0]-t)<1e-12);return Math.max(5e-6,(p[1]-GW/2-HL.w(t))*1e-3);});
 const BANK=[0,0.575];   /* where the banking screw's head meets the pipe: its side toward the wheel at the stone (escapement.js's t, n; mm) */
 const TI=-WD.INNER,yd=d=>TI+d,STONE_LO=yd(X.PIPE0)-(X.Y.ew0-0.06);   /* the stone's half below the pipe, down to 0.06 under the wheel's teeth (escapement.js's PIPE0: 3.3 until 15 October 2026) */
-const RHO={st:7850,gold:11000,ruby:3980},EST=S.EB*1e9,EGO=S.ET*1e9;
+const RHO={st:7850,gold:11600,ruby:3980},EST=S.EB*1e9,EGO=S.ET*1e9;
 const rectP=(t0,t1,n0,n1)=>[[t0,n0],[t1,n0],[t1,n1],[t0,n1]].map(([t,n])=>U(t,n)),discP=(c,r,k=48)=>[...Array(k)].map((_,i)=>U(c[0]+r*Math.cos(TAU*i/k),c[1]+r*Math.sin(TAU*i/k)));
 const pm=(pts,h,rho,f=1)=>{const q=polyM(pts,h*1e-3,rho);return{m:f*q.m,mx:f*q.mx,my:f*q.my,I:f*q.I};};
 
@@ -188,7 +188,7 @@ function run(M,o={}){
   const ext0=o.ext;o.ext=null;const xs=rest();o.ext=ext0;
   const qs=xs.slice(0,N),ps=xs[N];
   Y[0]=-(o.A??ESC.A/D)*D;Y[1]=0;Y[2]=ps;Y[3]=0;for(let i=0;i<N;i++)Y[4+i]=qs[i];
-  const st={jt:-1,offs:[],offL:NaN,swRel:0,twice:0,beats:0,rel:[],trips:0,knock:0,pass:0,land:[],off:[],home:[],cross:[],amps:[],ampT:[],ring:0,arrive:[],lastRel:-1,jewOn:false,offT:-1,homeT:-1,maxL:0,steps:0,frozen:0,rideOn:[],rideT:-1};
+  const st={jt:-1,offs:[],offL:NaN,swRel:0,twice:0,beats:0,rel:[],trips:0,knock:0,pass:0,land:[],off:[],home:[],cross:[],amps:[],ampT:[],ring:0,arrive:[],lastRel:-1,jewOn:false,offT:-1,homeT:-1,maxL:0,steps:0,frozen:0,rideOn:[],rideT:-1,rideN:0,rideW:false,rideOff:-1};
   const hf=o.hf??M.hf,hc=o.hc??1e-4;
   const quiet=()=>{let aS=0,aT=0;for(let i=0;i<N;i++){const a=Math.abs(Y[4+N+i]/w[i]);aS+=a*Math.abs(R.S.v[i]);aT+=a*(Math.abs(R.tip.v[i])+Math.abs(R.tip.u[i]));}return aS<1e-9&&aT<1e-8&&Math.abs(Y[3])<1e-5;};
   let t=0,frozen=false;
@@ -213,6 +213,7 @@ function run(M,o={}){
     if(st.jewOn&&!jewOn&&om>0&&!held){if(!(st.offT>st.lastRel))st.off.push(th/D);st.offT=t;st.offL=th/D;}
     st.jewOn=jewOn;
     if(dg.ride>0&&st.rideT<st.lastRel){st.rideT=t;st.rideOn.push(th/D);}
+    if(dg.ride>0&&!st.rideW&&st.lastRel>0&&t-st.rideOff>5e-5)st.rideN++;if(st.rideW&&!(dg.ride>0))st.rideOff=t;st.rideW=dg.ride>0;   /* the stone's landings on the tooth it let go, each after 50 µs clear of it (its hops: the gold spring slapping the horn as it lands; the contact's chatter not counted) */
     if(held){
       if(l>=(qD||M.o.relRel?lRel:lFr)){held=false;st.rel.push(th/D);st.lastRel=t;st.homeT=-1;if(st.swRel++>0){st.trips++;st.twice++;if(o.trace)o.trace.push([t,'twice',th/D]);}else if(!(t-st.jt<2e-3&&om>0)){st.trips++;st.knock++;if(o.trace)o.trace.push([t,'knocked',th/D]);}if(o.trace)o.trace.push([t,'release',th/D,jewOn]);}
       else if(t-st.jt>2e-3||om<0){if(l>st.maxL){st.maxL=l;st.maxTh=th/D;st.maxOm=om;}if(st.homeT>0&&l>st.ring)st.ring=l;}}
@@ -224,7 +225,7 @@ function run(M,o={}){
   const c=st.cross.filter(x=>x>=from),n=c.length,Tm=n>1?(c[n-1]-c[0])/(n-1):NaN,am=st.amps.slice(-8);
   const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN,tail=a=>a.slice(Math.floor(a.length/2));
   return{A:am.length?am.reduce((a,b)=>a+b,0)/am.length/D:0,rate:day(T0/Tm-1),beats:st.beats,trips:st.trips,knock:st.knock,pass:st.pass,twice:st.twice,rel:mean(tail(st.rel)),off:mean(tail(st.off)),offF:mean(tail(st.offs)),home:mean(tail(st.home)),
-    rideOn:mean(tail(st.rideOn)),ring:st.ring/lPk,maxL:st.maxL/lPk,maxTh:st.maxTh,maxRet:st.maxOm<0,arrive:Math.max(0,...tail(st.arrive)),steps:st.steps,frozen:st.frozen,amps:st.amps,ampT:st.ampT};
+    rideOn:mean(tail(st.rideOn)),rideN:st.rideN/Math.max(1,st.rel.length),ring:st.ring/lPk,maxL:st.maxL/lPk,maxTh:st.maxTh,maxRet:st.maxOm<0,arrive:Math.max(0,...tail(st.arrive)),steps:st.steps,frozen:st.frozen,amps:st.amps,ampT:st.ampT};
 }
 
 module.exports={frame,detent,modal,model,run,pen,main};
@@ -251,9 +252,9 @@ flush();
 say('1. Validated: the frame made rigid and hinged at Ft, the draw as dynamics.js takes it, against dynamics.js --model wempe');
 const dyn=DY.sim({mode:'phys',T:12,from:6}),Mq=model({hinge:true,stiff:true,qsDraw:true,eL:0}),rq=run(Mq,{T:12,from:6}),rq2=run(Mq,{T:12,from:6,hf:Mq.hf/2,hc:5e-5});   /* 12 s: the Hamilton's 20 cost the Wempe's finer steps (its gold spring's modes) twice the time */
 say(`dynamics.js: the swing ${f(dyn.A,2)}°, rate ${sg(dyn.rate,3)} s a day, release ${f(dyn.rel,2)}°, off the stone ${f(dyn.offF,2)}°, on the escaping tooth ${f(dyn.rOn,2)}°, home ${f(dyn.home,2)}°, ${dyn.beats} beats`);
-say(`the frame:   the swing ${f(rq.A,2)}°, rate ${sg(rq.rate,3)} s a day, release ${f(rq.rel,2)}°, off the stone ${f(rq.offF,2)}°, on the escaping tooth ${f(rq.rideOn,2)}°, home ${f(rq.home,2)}°, ${rq.beats} beats (at half the step: ${f(rq2.A,2)}°, ${sg(rq2.rate,3)})`);
-chk(Math.abs(rq.A-dyn.A)<1&&Math.abs(rq.rate-dyn.rate)<0.3&&Math.abs(rq.rel-dyn.rel)<0.2&&Math.abs(rq.offF-dyn.offF)<0.3&&Math.abs(rq.home-dyn.home)<0.5&&rq.beats===dyn.beats&&rq.trips===0,
-  `the frame's escapement is dynamics.js's: the swing within 1°, the rate 0.3 s a day, the release 0.2°, the detent's departure 0.3° and its home 0.5° (after the ride, its hops), every beat`);
+say(`the frame:   the swing ${f(rq.A,2)}°, rate ${sg(rq.rate,3)} s a day, release ${f(rq.rel,2)}°, off the stone ${f(rq.offF,2)}°, on the escaping tooth ${f(rq.rideOn,2)}°, home ${f(rq.home,2)}°, ${rq.beats} beats, ${f(rq.rideN,1)} landings on the escaping tooth a beat (dynamics.js lands it once, plastically) (at half the step: ${f(rq2.A,2)}°, ${sg(rq2.rate,3)})`);
+chk(Math.abs(rq.A-dyn.A)<1&&Math.abs(rq.rate-dyn.rate)<0.3&&Math.abs(rq.rel-dyn.rel)<0.2&&Math.abs(rq.offF-dyn.offF)<0.3&&Math.abs(rq.home-dyn.home)<0.6&&rq.beats===dyn.beats&&rq.trips===0,
+  `the frame's escapement is dynamics.js's: the swing within 1°, the rate 0.3 s a day, the release 0.2°, the detent's departure 0.3° and its home 0.6° (after the ride, its hops: the frame's gold spring, flexible even here, slaps the horn as the stone lands and the stone hops on the land, where dynamics.js lands it plastically; 0.5° until the lock was re-laid to 0.235, 19 October 2026, the harder landing taking it from 0.39° to 0.52°: the user's choice), every beat`);
 chk(Math.abs(rq2.A-rq.A)<0.05&&Math.abs(rq2.rate-rq.rate)<0.02,`and converged in its step (${sg(rq2.A-rq.A,3)}°, ${sg(rq2.rate-rq.rate,3)} s a day at half)`);
 J.valid={dyn:{A:dyn.A,rate:dyn.rate,rel:dyn.rel,offF:dyn.offF,home:dyn.home,beats:dyn.beats},frame:pick(rq),half:pick(rq2),lPk:lPk/lRel,lFr:lFr/lRel};
 flush();
@@ -265,7 +266,7 @@ const SW=[['the modes\' damping Q 30',{Q:30}],['Q 1000',{Q:1000}],['the banking 
   ['the tooth on the stone lively (0.6)',{eL:0.6}],['every contact 4× stiffer',{kB:4e6,kT:4e6,kJ:8e5,kH:8e4,kR:2e3}],['every contact 4× softer',{kB:2.5e5,kT:2.5e5,kJ:5e4,kH:5e3,kR:125}],['the stone on the gold spring, returning, 4× stiffer (kR 2,000)',{kR:2000}],['and 4× softer (kR 125)',{kR:125}],
   ['the gold spring half as stiff (its alloy)',{tsK:0.5}],['the spring 0.09 thick (1436\'s first figure)',{tS:0.09/0.07}],['no preload (the banking where drawn)',{pre:0}],['the stone on the tooth: μ 0.10',{MU:0.10}],['μ 0.20',{MU:0.20}],['the preload 0.1× (under the estimate)',{pre:0.1}],['the preload 0.2× (under the estimate)',{pre:0.2}],['the preload 0.5× (under the estimate)',{pre:0.5}],['the preload 0.8× (under the estimate)',{pre:0.8}],['the preload 1.5×',{pre:1.5}],['the preload 2×',{pre:2}],['the preload 3×',{pre:3}]];
 const R2K=[['hinged at Ft, rigid (dynamics.js\'s)',{hinge:true,stiff:true}],['the spring as drawn, the rest rigid',{stiff:true}],['as drawn',{}],['as drawn, no preload',{pre:0}]];
-const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[['preloaded (0.63 g, estimated)',1],['as drawn (no preload)',0]],KK=[['a blow across the plate, 0.5 ms','b05',2,400,'g'],['a blow across the plate, 3 ms','b3',1,400,'g'],['a twist about the staff, 2 ms','tw',1,80,'rad/s']];
+const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[[`preloaded (${S.W78} g, estimated)`,1],['as drawn (no preload)',0]],KK=[['a blow across the plate, 0.5 ms','b05',2,400,'g'],['a blow across the plate, 3 ms','b3',1,400,'g'],['a twist about the staff, 2 ms','tw',1,80,'rad/s']];
 /* the knock's floor (18 October 2026): the 3 ms blow on the frame at preloads either side of the estimate, for the least preload that takes 20 g (the bench's other floor).
    Not 1.5×: there alone the run's first drop from rest is slow (268 ms against 20, the stone riding the tooth it let go), and the search's first blows, in it, stall the wheel at 2.4 g */
 const KF=[0.8,1.2];

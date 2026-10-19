@@ -4,11 +4,11 @@
    arbor, collet), the seconds arbor and the seconds hand, and the rest of the train behind them (below). Every closed solid is integrated as tetrahedra from its group's origin (volume, first and second moments; signed,
    so a hole counts out) at its material's density, in the turning group's own frame (y its axis). Densities, g/cm³ = mg/mm³: brass (Ms 58, Ms 63) 8.45; steel 7.85; the
    rim's inner layer, nickel steel ("Nickelstahl Sonderlegierung", 05 03 01-1: a 36-45 % nickel compensation steel) 8.1 (estimated); the impulse roller beryllium copper
-   ("Kupfer Beryllium", 02 04 02) 8.25; sapphire and ruby 3.98; the gold spring, 333 gold (8 ct, its alloy not given) about 11.0 (estimated: 33 % gold with silver and copper);
+   ("Kupfer Beryllium", 02 04 02) 8.25; sapphire and ruby 3.98; the gold spring, 333 gold (8 ct) 11.6 (Au/Ag/Cu 333-333, the 6MX's passport's alloy, Poljot 20027: likely; 11.0 until 19 October 2026);
    the gilt wheels brass. Returns JSON: mg, mm, mg·mm² (the caller makes g and g·mm²). */
 (()=>{const mv=window.__mv,R=mv.userData.R,E=R.esc,M=window.__M,KEY=new Map(Object.entries(M).map(([k,v])=>[v,k]));
   const RHO={brass:8.45,brass2:8.45,gilt:8.45,plate:8.45,plateSolid:8.45,copper:8.45,steel:7.85,steelD:7.85,steelS:7.85,blued:7.85,blue310:7.85,giltH:8.45,bakelite:1.37,steelK:7.85,mspring:7.85,ruby:3.98,clear:3.98};
-  const BYHN={'050301-1':{steel:8.1},'050403-1':{copper:8.25},'050401-2':{gilt:11.0},'050200-1':{'?':8.45},'050200-2':{'?':8.45}};   /* by the parts list's line where the material's colour isn't the metal: the rim's steel, the impulse roller, the gold spring; the minute and hour hands' Goldin (a gold-coloured brass, dial.js's own material) */
+  const BYHN={'050301-1':{steel:8.1},'050403-1':{copper:8.25},'050401-2':{gilt:11.6},'050200-1':{'?':8.45},'050200-2':{'?':8.45}};   /* by the parts list's line where the material's colour isn't the metal: the rim's steel, the impulse roller, the gold spring; the minute and hour hands' Goldin (a gold-coloured brass, dial.js's own material) */
   const hnOf=o=>{for(let p=o;p;p=p.parent)if(p.userData.hn)return String(p.userData.hn).split(' ')[0];return'';};
   mv.updateMatrixWorld(true);const A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3();
   /* the body of the turning group g, about its own y axis: its meshes (or only those keep(o) passes) */
