@@ -95,7 +95,7 @@
    "sheet": "6MX TU 25-07-1533-84 (6MX-figures.md)",
    "when": "cased, in its gimbals, rated",
    "how": "Each day at the same hour compare it with a time signal to a tenth of a second and log the error (python rating.py works the daily rates). The trial: 35 days in five periods of seven at 36, 20, 4, 20, 36 °C (a wine cooler, a room, a box with a lamp and a thermostat), the first two days of each not counted, wound daily after the comparison to \"8\" on the up-and-down dial, to \"0\" at each period's end.",
-   "pass": "The TU's figures (losing positive): E, the mean of |each counted rate − its period's mean|, within ±0.35; R = ω_V − ω_I ±2.00; D, the largest change between consecutive rates in a period, ±2.30; C = (ω36 − ω4)/32 ±0.10 s a day a °C; S = (ω36 + ω4)/2 − ω20 ±1.20; every period's mean ±3.50; N = 42E + 4.5R + 60C + 2.4S ≤ 30 (wempe_errorbudget.js passes it as adjusted). Out on C: move the four masses along the rim (\"8 Körner in 60 Teilung\", 6° a division) by trial: at the drawn place (30° from the cuts' line) the balance loses 2.56 s a day a °C, they null it near 19.3° from the cuts' line, a degree along the rim 0.228 s a day a °C (wempe_thermal.js). Out on S past ±1.20: the nickel steel isn't Guillaume's integral alloy (wempe_thermal.js)."
+   "pass": "The TU's figures (losing positive): E, the mean of |each counted rate − its period's mean|, within ±0.35; R = ω_V − ω_I ±2.00; D, the largest change between consecutive rates in a period, ±2.30; C = (ω36 − ω4)/32 ±0.10 s a day a °C; S = (ω36 + ω4)/2 − ω20 ±1.20; every period's mean ±3.50; N = 42E + 4.5R + 60C + 2.4S ≤ 30 (wempe_errorbudget.js passes it as adjusted). Out on C: move the four masses along the rim (\"8 Körner in 60 Teilung\", 6° a division) by trial: at the drawn place (30° from the cuts' line) the balance loses 2.56 s a day a °C, they null it near 19.3° from the cuts' line, a degree along the rim 0.228 s a day a °C (wempe_thermal.js). For a chronometer to navigate by (about 2 miles of longitude a month: wempe_errorbudget.js's voyage, 6 s at 30 days against 17 s with the 6MX passports' ±0.45°), go on past the TU's ±0.10: repeat the 4 °C and 36 °C periods (five counted days each, which measure C to about ±0.005) and move the masses by C / 0.228 degrees each round until |C| is within ±0.023 s a day a °C, the masses within ±0.1° of their place: 27 µm along the rim at r 15.7, both of a pair moved alike to keep the poise, against a scribed line under a 10× loupe; two or three rounds. Out on S past ±1.20: the nickel steel isn't Guillaume's integral alloy (wempe_thermal.js)."
   }
  ],
  "criteria": {
@@ -746,7 +746,12 @@
    "masses": {
     "drawn": -2.5592,
     "zero": 19.2683,
-    "perDeg": 0.2279
+    "perDeg": 0.2279,
+    "build": {
+     "set": 0.1,
+     "C": 0.0228,
+     "um": 27.4017
+    }
    }
   }
  }
