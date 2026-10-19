@@ -76,3 +76,17 @@ All six phases are done. Both viewers were published privately first. The user t
 **The let-go blow.** `wempe_letgo_fix.js` tried more clicks, a brake between the click wheel and the maintaining ratchet, and a cushioned click face. None keeps every part within its material. The maintaining ratchet's brass is the last to stay over: it is struck by the maintaining detent. Eased back, every part is within its limit or at its floor. The builds keep the drawn parts, and the key is let back at the end of each stroke. In hardened steel, the click wheel and ratchet would take the outright blow with four clicks and a brake. That is open for the user to decide.
 
 **The build's mainspring.** Nivaflex 0.377 mm was solved at set 0.6, 0.8 and 1.0. No set alone gives both the drive (1.12 of the drawn) and a stress inside the strip's 3,000 MPa. A strip about 0.393 mm thick at set 0.8 is being solved (`wempe_mainspring.py --solve 1240 --set 0.8 --t 0.393`). It is expected to give the drive at about 2.94 GPa.
+
+The solve finished on 19 October 2026. `wempe_build_spring.py` compares every strip:
+
+| Strip, set | Drive (wanted 1.122) | Evenness | Inner coils (limit 3,000 MPa) | Room past full wind |
+|---|---|---|---|---|
+| 0.377 mm, ×0.6 (the build now) | 1.125 | 7.6 % | 3,248 | 0.93 turn |
+| 0.377 mm, ×0.8 | 0.991 | 10.0 % | 2,819 | 0.69 turn |
+| 0.377 mm, ×1.0 | 0.840 | 26.5 % | 2,409 | 0.65 turn |
+| 0.385 mm, ×0.6 | 1.202 | 10.8 % | 3,356 | 0.93 turn |
+| **0.393 mm, ×0.8** | **1.119** | **12.2 %** | **2,963** | **0.48 turn** |
+
+The 0.393 mm strip at set 0.8 gives the drive with its inner coils within the strip's limit, but only by 1 %. Its evenness is worse than the drawn spring's, and its room to coil-bound is half. It was put to the user before being adopted.
+
+**The methodology** is written up in `docs/motion-3d/README.md`, with its figures (`motion3d_fe.py --fig`, `motion3d_shots.py`, `reportshot.py`). Its cross-checks leave one reading open: the FE's peaks on the pawls and the maintaining ratchet lie near their loads, and they are where the FE and the beam formulas part. A refinement study with the load spread over Hertz's contact width would settle them.
