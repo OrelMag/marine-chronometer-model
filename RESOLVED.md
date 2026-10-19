@@ -2422,6 +2422,7 @@ Contents:
   surface's edge at its own depth and drew a dashed line round the body. Keep: the joints' outlines
   the same points on both sides (the solid under the jaws takes the jaws' column points), and no
   sloped face with an edge in a joint's plane (the drill point's foot 0.12 above the lower joint). `4d54002`
+- **The bezel drawn plain where the real one is knurled** (Setup, case and gimbals): its case end, a band at r 54.2, carries a diamond knurl on KLUwI2UUCMQ 2:42 and 48:30, about 5.1 mm tall; the model had a plain band 3.7 tall. Now the band is the knurl's root and a closed knurl shell on it (`knurlBand` in box.js: 400 diamonds round, rows 0.8 apart, depth 0.3 estimated), split on root-to-root diagonals so each crest is a pyramid. Keep: a knurl built as faceted pyramids (flat normals), not smooth shading on shared vertices, which hides it. `a0342657`
 
 ## Accuracy to the manual
 
