@@ -17,7 +17,9 @@ Page numbers are the documents' own sheet or page numbers. For the PDFs these ar
 | **User instr.** | `6MX-user-instruction_1…5.jpg`. *Морской хронометр «6-МХ» (контактный). Инструкция для пользования* ("Marine chronometer 6-MX (contact). Instructions for use"). It is a booklet from the First Moscow Watch Factory, Moscow, Vorontsovskaya ul. 35-b. Print run 1000, order 469, undated (probably the 1950s to 1960s). The images are spreads of booklet pages 1–9. | Altmeppen, 2017 |
 | **Book 1963** | `6MX-Hemmung_1…4.jpg`. V. A. Shpolyanskii and A. M. Kuritskii (В. А. Шполянский, А. М. Курицкий), *Спусковые регуляторы приборов времени* ("Escapement regulators of timekeeping instruments"), Mashgiz, Moscow 1963: the title page and pp. 166–171. The title page reads **Курицкий** (Kuritskii), not "Kuroshkin". | Altmeppen, 2017 |
 
-**What none of the documents give.** None gives a number for the escapement's angles: lock, drop, lift, impulse or unlocking. None gives the hairspring's material or turns, the mainspring's dimensions or torque, an isochronism figure (rate at full wind against 24 h), position errors, or the gimbals' tilt. The only figure for the balance's swing is the 1954 instruction's generic 225–270°. The 6MX's own documents, the TU and the user instruction, give no swing at all.
+A fifth source, **Tarasov 1976** (`Tarasov-1976-Pribory-vremeni/`, pp. 244–251; the whole book in `books/`), describes the **later, redesigned 6MX** (a 16-tooth escape wheel and a 75/10 seconds stage, where Kirov 247 and the drawings have 15 teeth and 80/10). Its figures are in section 9, apart from the rest: they aren't this model's sizes, but they are the only source that dimensions a 6MX's mainspring, balance, hairspring and chain, and the GOST its trial follows.
+
+**What none of the documents give.** Of the four above, none gives a number for the escapement's angles: lock, drop, lift, impulse or unlocking. None gives the hairspring's material or turns, the mainspring's dimensions or torque, an isochronism figure (rate at full wind against 24 h), position errors, or the gimbals' tilt. The only figure for the balance's swing is the 1954 instruction's generic 225–270°. The 6MX's own documents, the TU and the user instruction, give no swing at all.
 
 ---
 
@@ -103,8 +105,8 @@ The book introduces the table with these words (p. 168, certain): "Отечес�
 
 Comparing the two:
 
-- **Class II.** The TU's 35-day, five-period test (36/20/4/20/36 °C) is GOST 8916-58's **class II** trial. The TU's limits fall between class I and class II: E 0.35 against 0.20/0.40, R 2.00 against 1.50/2.00, D 2.30 against 2.00/2.50, ω 3.50 against 3.00/4.00.
-- **What the TU adds.** It adds S (±1.20) and the figure of merit N ≤ 30. GOST 8916-58 as quoted has neither.
+- **Class II.** The TU's 35-day, five-period test (36/20/4/20/36 °C) is GOST 8916-58's **class II** trial. The TU's limits fall between that GOST's class I and class II: E 0.35 against 0.20/0.40, R 2.00 against 1.50/2.00, D 2.30 against 2.00/2.50, ω 3.50 against 3.00/4.00.
+- **GOST 8916-70.** The TU's limits are exactly **class 2 of GOST 8916-70** (Tarasov 1976, section 9): E ±0.35, R ±2.0, D ±2.30, C ±0.10, S ±1.20, ω ±3.50, the same trial. The revision of 1970 tightened E and ω and added S; the TU adds only the figure of merit N ≤ 30.
 
 ### The same quantities in the 1954 instruction (generic standard chronometers)
 
@@ -245,7 +247,7 @@ The 1954 instruction's Рис. 4–5 (pp. 6–7) and the book's Fig. 5.64 a are 
 | Stop works (1954) | п. 8: … используется часть кривой момента, незначительно отступающего от пропорциональности углу закручивания | The stops confine the spring to the part of its torque curve that departs little from proportionality to the angle wound | — | 1954 p. 5 | likely |
 | Mainspring (TU, user instr.) | — | No dimensions, material or torque | — | — | — |
 
-The materials of the 6MX's hairspring and balance are not stated in any of the documents. The book calls the balance bimetallic and cut, and Fig. 5.62 calls it "integral". The hairspring's number of turns is also not stated.
+The materials of the 6MX's hairspring and balance are not stated in any of the documents. The book calls the balance bimetallic and cut, and Fig. 5.62 calls it "integral". The hairspring's number of turns is also not stated for this 6MX; the later 6MX's (Tarasov 1976, section 9) is 9 turns.
 
 ## 7. Gimbals, winding, contacts (operation)
 
@@ -277,3 +279,90 @@ The TU's (or GOST 8916's) trial figures as each chronometer's passport or attest
 | Kirov 92 | 1970 | `8_2_Kirow_92`; passport `10_`, `11_Kirow_92-Pasport*` | ±0.31 | −0.06 | | +0.009 | | | | |
 
 Medians: E 0.225, |R| 0.26, D 0.755 (six); C's spread (sd) 0.062 (eight); S +0.80 ±0.17 (the five of the TU's trial, 91's left out).
+
+## 9. The later 6MX: Tarasov 1976
+
+*Приборы времени* (Tarasov, 1976), Ch. 9 "Механические приборы времени служебного назначения", §1 "Хранители точного времени", "Морской хронометр 6МХ", pp. 244–251 (`Tarasov-1976-Pribory-vremeni/p244.png`–`p251.png`). Read on 19 October 2026 off the page images at 150 dpi, Fig. 145 at 330 dpi. The print is clean: every reading is **certain** unless the table says otherwise.
+
+This is the **later, redesigned 6MX**: its escape wheel has 16 teeth and its seconds stage is 75/10 (Table 28, Fig. 145 a), where Kirov 247 and the Wempe drawings have 15 teeth and 80/10 (both give 7200 beats an hour). So none of its sizes is this model's: the drawings decide. Its figures serve as a cross-check on the model's physics, and as what a Soviet designer of the 1970s gave the same kind of chronometer.
+
+### GOST 8916-70 (pp. 244–247)
+
+| No. | Russian | English | Class 1 | Class 2 |
+|---|---|---|---|---|
+| 1 | Среднее отклонение суточного хода E | Mean deviation of the daily rate, s | **±0.17** | **±0.35** |
+| 2 | Восстановление хода R | Recovery of rate, s | **±1.50** | **±2.0** |
+| 3 | Максимальная вариация суточного хода D | Largest variation of the daily rate, s | **±2.00** | **±2.30** |
+| 4 | Температурный коэффициент C | Temperature coefficient, s/°C | **±0.07** | **±0.10** |
+| 5 | Вторичная ошибка S | Secondary error, s | **±1.00** | **±1.20** |
+| 6 | Средний суточный ход любого периода ω_ср | Mean daily rate in any period, s | **±2.00** | **±3.50** |
+| 7 | Поверка … для 1-го класса — в течение 63 сут., разделенных на девять периодов по 7 сут. … +36°; +28°; +20°; +12°; +4°; +12°; +20°; +28°; +36°; для 2-го класса — в течение 35 сут. … пять периодов … +36°; +20°; +4°; +20°; +36° (pp. 246–247) | The trial | 63 days: 9 periods of 7 at 36/28/20/12/4/12/20/28/36 °C | 35 days: 5 periods of 7 at 36/20/4/20/36 °C |
+| 8 | Вероятность безотказной работы за 6000 ч (p. 247) | Probability of running without failure for 6000 h | **0.90** | **0.85** |
+
+Class 2 is the TU's trial and limits, figure for figure (section 2). The GOST also sets the balance's period, T = 0.5 s, and the running time from a full wind, at least 56 h (p. 247).
+
+The definitions (pp. 245–246), with the periods numbered I–IX (class 1) or I–V (class 2):
+
+| Quantity | Class 1 | Class 2 | Note |
+|---|---|---|---|
+| E | Σ\|e\|/n, n = 45 | n = 25 | e: each daily rate's departure from its period's mean |
+| R | ω_IX − ω_I | ω_V − ω_I | The mean rates of the last and first periods |
+| D | ω_k − ω_k−1, the largest over the whole trial | the same | |
+| C | As printed: 1/40 (ω₃₆ − ω₄) + (ω₂₈ − ω₁₂)/2, with ω₄ = ω_V, ω₁₂ = (ω_IV + ω_VI)/2, ω₂₈ = (ω_II + ω_VIII)/2 | (ω₃₆ − ω₄)/32, with ω₄ = ω_III, ω₃₆ = (ω_I + ω_V)/2 | Class 1's must be [(ω₃₆ − ω₄) + (ω₂₈ − ω₁₂)/2]/40 (inferred: the bracket was lost in print, since 32 + 16/2 = 40). Class 1's ω₃₆ isn't printed; it is evidently (ω_I + ω_IX)/2. |
+| S | (ω₃₆ + ω₄)/2 − ω₂₀ − ½[(ω₂₈ + ω₁₂)/2 − ω₂₀], with ω₂₀ = (ω_III + ω_VII)/2 | (ω₃₆ + ω₄)/2 − ω₂₀, with ω₂₀ printed as (ω_II − ω_IV)/2 | Class 2's minus is a misprint for + (the TU has (ω_II + ω_IV)/2) |
+| ω_ср | The mean of the period's last five daily rates, sign kept: "минус означает опережение, плюс — отставание" (minus gaining, plus losing) | the same | |
+
+### The movement (pp. 247–250)
+
+| Quantity | Russian | English | Value | Page |
+|---|---|---|---|---|
+| Maker | выпускаемого серийно 1-м Московским часовым заводом | Made in series by the 1st Moscow Watch Factory | — | 247 |
+| Dial (Рис. 139) | две боковые шкалы: нижняя — для показаний секунд и верхняя — для показаний часов заводки пружины с делениями от 0 до 56 ч и свободным интервалом на 8 ч | Two subsidiary dials: seconds below; the up-and-down above, divided 0 to 56 h with a free interval of 8 h | 0–56 h + 8 h | 247 |
+| Section (Рис. 140) | барабан 1 — улитка 2 — центральное 3 — промежуточное 4 — секундное 5 — ходовое колесо 6 и баланс 7 | Through every arbor: barrel, fusee, centre, intermediate, seconds, escape wheel, balance (schematic) | — | 247 |
+| Barrel to fusee | Расстояние между их центрами 42 мм | Distance between their centres | **42 mm** | 247 |
+| Barrel | наружный диаметр 41,5 мм и внутренний 37,8 мм. Диаметр валика барабана 12,6 мм | Outside and inside diameters; the barrel arbor | **Ø 41.5, Ø 37.8; arbor Ø 12.6** | 248 |
+| Mainspring | длина L = 1400 мм; ширина b = 14,8 мм; толщина h = 0,42 мм | Length, width, thickness | **1400 × 14.8 × 0.42 mm** | 248 |
+| Its turns | в свободном состоянии n_св = 6,5; в заведенном n_зав = 19,5; в спущенном n_сп = 14; полезных оборотов барабана n_б = 19,5 − 14 = 5,5 | Free 6.5; wound 19.5; let down 14; the barrel's useful turns 5.5 | 6.5 / 19.5 / 14 / 5.5 | 248 |
+| Its torque | по формуле (80) … K = 0,95; E = 2,10·10⁵ Н/мм²; b = 14,80 мм; h = 0,42 мм; l_раб = 1300 мм; n_зав − n_св = 13 витков; n_зав − n_св − n_р = 8,13 витка; M_max = 1143,5 Н·мм; M_min = 715 Н·мм | By formula (80), with a working length of 1300 mm: wound and run down | **M_max 1143.5 N·mm, M_min 715 N·mm** | 248 |
+| Formula (80) | (not on these pages) | Its figures are K·E·b·h³·2πn/(12 l) with n = 13 and 8.13 turns: 1145 and 716 N·mm, within 0.2 % of the printed. That is the linear spring, counting the turns past the free spring's (inferred). | — | 248 |
+| Winding | Полную заводку пружины осуществляют вращением валика улитки против часовой стрелки. … число оборотов барабана составляет 4,87. Предварительно вращением валика барабана на 0,5 оборота создают постоянный натяг пружины. Для снятия натяга пружины в барабане пружину на 0,13 оборота барабана не дозаводят | Wound by the fusee arbor, anticlockwise; the barrel turns 4.87 over the wind; set up 0.5 turn by the barrel arbor; the last 0.13 barrel turn left unwound | **4.87 turns; set-up 0.5; 0.13 short** | 249 |
+| Ratchets | Как в узле барабана, так и в узле улитки имеются храповые устройства, предохраняющие пружину от произвольного роспуска и создающие дополнительный резерв хода при заводке пружины | Both the barrel and the fusee have ratchet work: it stops the spring running back, and gives maintaining power while winding | — | 249 |
+| Chain (Рис. 141) | Цепь Галля … из 324 наружных (3) и 161 внутренних (2) пластин … штифтов 1. Шаг цепи 2,25 мм; ширина 2 мм, толщина 0,85 мм, длина 728,75 мм; толщина пластин 0,25 мм; крючки 4, 5 … из высокоуглеродистой стали У10А и термически обрабатывают | Gall (fusee) chain of 324 outer and 161 inner plates on pins: pitch, width, thickness, length, plates, two hooks; U10A carbon tool steel, heat treated | **pitch 2.25, 2 × 0.85, 728.75 long, plates 0.25** | 248 |
+| Fusee (Рис. 142) | Боковая сторона корпуса 1 улитки имеет криволинейную поверхность со спиральной канавкой прямоугольной формы. … К основанию … храповое колесо 3, к которому крепят зубчатое колесо 2 с z = 90 … с центральным трибом z = 14, m = 0,44 мм | A curved body with a spiral groove of rectangular section; on its base a ratchet wheel carrying the fusee wheel, 90 teeth, meshing with the centre pinion, 14 leaves, module 0.44 | **90/14, m 0.44** | 248 |
+| Running time | При числе оборотов улитки n = 8,75 продолжительность действия хронометра от одной заводки равна 8,75·90/14 = 56,2 ч | From 8.75 fusee turns | **56.2 h** | 248 |
+| Fusee curve (Рис. 143) | y = (l₀ r₀ e / 4π)(1/x² − 1/r₀²), где l₀ — длина спиральной канавки; e — ширина канавки | The profile AB: the groove's radii vary inversely as the barrel's torque, taking its nonlinearity into account. l₀ is the groove's length, e its width, r₀ the large end's radius, r₁ the small end's. | — | 249 |
+| Train (Table 28) | Колесо центральное 90 / Триб промежуточный 12, i₁ = 7,5, m 0,35; Колесо промежуточное 80 / Триб секундный 10, i₂ = 8, m 0,29; Колесо секундное 75 / Триб ходового колеса 10, i₃ = 7,5, m 0,28 | Centre to escape pinion | **90/12 m 0.35; 80/10 m 0.29; 75/10 m 0.28**; i = 450 | 249–250 |
+| Escape wheel | Ходовое колесо имеет z = 16. Число колебаний баланса в час n = 450·16 = 7200 и T = 0,5 с | 16 teeth; 7200 an hour | **16 teeth** | 250 |
+| Motion work | i = i₄i₅ = 14·18/(56·54) = 1/12 | Two pairs | 14/56, 18/54 | 250 |
+| Up-and-down (Рис. 144) | зубчатой пары счетчика часов заводки пружины с z = 12 и z_к = 120; m = 0,28 мм. Триб посажен на ось валика улитки. Полная шкала … разделена на восемь частей … 56,2·120/(8,75·12) = 64 ч | A 12-leaf pinion on the fusee arbor and a 120-tooth wheel, module 0.28; the full scale is eight parts, 64 h a turn | **12/120 m 0.28; 64 h a turn** | 250 |
+| Fig. 144's parts | 1 — ось секундной стрелки; 2 — узел триба вексельного колеса; 3 — узел центрального триба; 4 — минутник; 5 — колесо часовое; 6 — узел колеса счетчика завода; 7 — циферблат; 8 — триб счетчика завода; 9 — валик улитки | Seconds arbor; change pinion; centre pinion; cannon pinion; hour wheel; up-and-down wheel; dial; up-and-down pinion; fusee arbor | — | 250 |
+
+### The escape wheel, balance and hairspring (p. 250, Рис. 145 on p. 251)
+
+| Quantity | Russian | English | Value | Page |
+|---|---|---|---|---|
+| Escape wheel (Рис. 145 а) | имеет зуб фасонной формы, ширина его 1,25 мм при толщине обода, спиц и втулки 0,60 мм, что уменьшает массу колеса | Shaped teeth 1.25 thick across the wheel; the rim, spokes and hub 0.60, to make it lighter | **teeth 1.25 −0.05, web 0.6 −0.03** | 250–251 |
+| | z = 16; Ø 13,20 −0,02; Ø 11,30 +0,10; 0,70; 1,97 +0,01 | 16 teeth; the tips; the rim's inside; four spokes 0.70 wide; the hub's bore | **Ø 13.20 −0.02, Ø 11.30 +0.10, 0.70, Ø 1.97 +0.01** | 251 |
+| Balance (Рис. 145 б) | Баланс … биметаллический, разрезной | Bimetallic, cut | — | 250 |
+| | Ø 32,62 −0,02; 31,19 +0,02; 30,16 +0,02; 0,70; 4,20 −0,03; 0,90 −0,03 | Outside; the metals' joint; inside; the two cuts 0.70 wide, beside the arm's ends; the rim's height; the arm's thickness | **Ø 32.62 / 31.19 / 30.16; 4.20 high; arm 0.90** | 251 |
+| Hairspring (Рис. 145 в) | цилиндрическая имеет девять витков и две концевые кривые Филиппса, закрепленные в колодке и колонке. Наружный диаметр 13,20, высота 8,10 мм, шаг 0,80 мм | Helical: nine turns and two Phillips terminal curves, pinned in the collet and the stud; outside diameter, height, pitch | **9 turns, Ø 13.20, 8.10 high, pitch 0.80** | 250–251 |
+| Balance's inertia | Момент инерции узла баланса 2744 г·мм² | The balance assembly's | **2744 g·mm²** | 250 |
+| Hairspring's moment | момент спирали 0,43289 Н·мм при φ = 1 | The spring's couple at one radian | **0.43289 N·mm a radian** | 250 |
+| Masses | масса узла баланса 12,739 г; масса спирали с колодкой и колонкой 1,290 г. Отдельно масса баланса с осью, грузом и роликом составляет 11,449 г, масса спирали 0,522 г | The balance assembly; the spring with its collet and stud; the balance with its staff, weights and roller; the spring alone | **12.739 g = 11.449 + 1.290; spring 0.522 g** | 250 |
+
+Together the two figures give the period: 2π √(2744 g·mm² / 0.43289 N·mm) = **0.5000 s**, the GOST's T (worked here).
+
+### Against the model
+
+| | Tarasov's later 6MX | The model (the drawings; Kirov 247's 6MX) |
+|---|---|---|
+| Seconds stage, escape wheel | 75/10 m 0.28; 16 teeth, Ø 13.20 | 80/10; 15 teeth, tips Ø 14 |
+| Centre and intermediate stages | 90/12 m 0.35, 80/10 m 0.29 | 90/12 m 0.355, 80/10 m 0.281 |
+| Fusee wheel | 90/14 m 0.44, 8.75 turns, 56.2 h | 90/14 m 0.436, 8.75 turns |
+| Balance | Ø 32.62/31.19/30.16, 4.20 high | Ø 32.32/31.29/30.48, 3.8 high (05 03 01-1) |
+| Balance's inertia | 2744 g·mm² (the assembly's; what is counted in it isn't said) | 2526 g·mm² with rollers, collet and a third of the spring, weighed (both versions: `tools/wempe_6mx.json`) |
+| Hairspring | 9 turns, Ø 13.20, pitch 0.80; 0.433 N·mm a radian; 0.522 g | 13 turns less 3.5 mm, Ø 12.8, pitch 0.73 (0.52 + 0.21); 0.409 N·mm a radian; 0.59 g |
+| Mainspring | 0.42 × 14.8 × 1400; barrel Ø 37.8, arbor Ø 12.6 | 0.37 × 15 × 1240 (length fitted); drum Ø 38.5, core Ø 13.3 |
+| Chain | pitch 2.25, 2 × 0.85, plates 0.25 | plates 0.26, three in its 0.82 |
+
+The later design has a heavier balance (8.6 % more inertia; the rim 0.31 mm thicker radially and 0.4 higher) and drives it with a stronger spring (0.42 against 0.37). These are the proportions over which the drawings' 0.37 strip and the 1958 Navy repair book's torques disagree (the Wempe README's note on the 6MX's mainspring: the first-generation MX's 1.01–1.08 N·m fully wound).
