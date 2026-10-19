@@ -221,11 +221,12 @@ def main():
     cam=Cam(W,H,S.get('k1',False),bool(S.get('pp')));hs=S['holes'];HT=json.load(open(load(hs['file'],base)))['holes'];yF=hs['y'];use=hs.get('use',list(hs.get('uv',{})))
     X3=lambda n:np.array([HT[n][0],yF,HT[n][1]])
     picks={n:np.array(v,float) for n,v in hs.get('uv',{}).items()}
-    Xp=np.array([X3(n) for n in picks]);Up=np.array(list(picks.values()))
-    PP0=S.get('pp0');p=init_cam(cam,Xp,Up,S.get('f',[1500,12000]),PP0)
+    Xp=np.array([X3(n) for n in picks]).reshape(-1,3);Up=np.array(list(picks.values()),float).reshape(-1,2)
+    PP0=S.get('pp0');p=init_cam(cam,Xp,Up,S.get('f',[1500,12000]),PP0) if len(Xp)>=4 else None   # with no picks on the face, the camera starts from the points alone
     extra=S.get('points',{});Xe=np.array([v['xyz'] for v in extra.values()]) if extra else np.zeros((0,3));Ue=np.array([v['uv'] for v in extra.values()]) if extra else np.zeros((0,2))
     FP=tuple(S['f_prior']) if S.get('f_prior') else None;PPP=S.get('pp_prior')
     if len(Xe):p=init_cam(cam,np.r_[Xp,Xe],np.r_[Up,Ue],S.get('f',[1500,12000]),PP0)   # all the controls, at their heights
+    assert p is not None,'no camera: give four or more picks or points'
     p=fit_cam(cam,np.r_[Xp,Xe],np.r_[Up,Ue],p,fprior=FP,ppprior=PPP)
     if S.get('face_first'):   # the face's homography first: picks, then holes snapped through it, coarse to fine; the camera is then fitted to all that snapped
         Xf=np.array([[HT[n][0],HT[n][1]] for n in picks]);Hh,kp,e=robust_H(Xf,Up);print('face homography on the picks:',dict(zip(picks,e.round(1))),'left out',[n for n,k in zip(picks,kp) if not k])
@@ -265,9 +266,10 @@ def main():
             tr=n in use;ok=o and abs(o['r']-r)<max(0.3,0.35*r) and (o['share']>=(0.5 if tr else sn.get('share',0.75)) and o['rms']<=(2.5 if tr else sn.get('rms',1.6)) and o['contrast']>=(8 if tr else sn.get('contrast',18)))
             if ok:snapped[n]=o   # a trusted hole (its place measured elsewhere) is accepted on looser terms: it is a control, not a finding
         C=[n for n in use if n in snapped or n in picks]   # a trusted hole that won't snap counts by its pick
-        Xc=np.array([X3(n) for n in C]);Uc=np.array([snapped[n]['uv'] if n in snapped else picks[n] for n in C])
+        Xc=np.array([X3(n) for n in C]).reshape(-1,3);Uc=np.array([snapped[n]['uv'] if n in snapped else picks[n] for n in C],float).reshape(-1,2)
         print(f'round {rd} (window {wr} px): {sum(n in snapped for n in C)} of {len(C)} trusted holes snapped, {len(snapped)} holes in all')
         keepc=np.ones(len(Xc),bool)
+        if not len(Xc):p=fit_cam(cam,Xe,Ue,p,fprior=FP,ppprior=PPP);continue   # no face controls: the points alone
         for _ in range(3):   # controls far off when the rest agree (a rough pick, a hole snapped to the wrong ring) are left out
             p=fit_cam(cam,np.r_[Xc[keepc],Xe],np.r_[Uc[keepc],Ue],p,fprior=FP,ppprior=PPP);e=np.hypot(*(cam.proj(p,Xc)-Uc).T)
             bad=keepc&(e>max(4.0,3*np.median(e[keepc])))
