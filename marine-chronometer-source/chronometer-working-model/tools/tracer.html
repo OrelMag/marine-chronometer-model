@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>Edge Tracer</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <!--
   Edge Tracer: trace edges, holes and named points on a photograph or a video frame, by hand, and
   put them in millimetres. Open this file in a browser (Chrome/Edge); nothing leaves the page.
@@ -11,10 +11,14 @@
   parallax is taken through the camera the plane's homography gives, as framecam.py does).
   Saves a .trace.json (the traces, and their px and mm), and exports a spec for video.py anchor,
   picks for framecam.py and the frame with the traces drawn on it. Help: press ?.
+  On a phone or tablet: tap to add a point, drag a point to move it, hold then slide to aim, one finger
+  pans, two pinch; the panels are sheets under Traces and Panel. Published as a claude.ai artifact
+  (tracer_artifact.py), it lists the frames Claude has put there and sends traces back to Claude.
 -->
 <style>
-:root{--bg:#141619;--pn:#1c1f25;--pn2:#23272e;--ln:#30353f;--tx:#dce0e6;--mu:#8b94a3;--ac:#4aa3ff;--wa:#ffb347;--er:#ff6b6b;--ok:#62d26f}
+:root{--bg:#141619;--pn:#1c1f25;--pn2:#23272e;--ln:#30353f;--tx:#dce0e6;--mu:#8b94a3;--ac:#4aa3ff;--wa:#ffb347;--er:#ff6b6b;--ok:#62d26f;color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:12px/1.4 system-ui,"Segoe UI",sans-serif;overflow:hidden}
 #app{display:grid;grid-template-rows:auto 1fr auto;height:100%}
 #top{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:4px 6px;background:var(--pn);border-bottom:1px solid var(--ln)}
@@ -73,14 +77,50 @@ td:first-child,th:first-child{text-align:left}
 .help td{text-align:left;font:12px system-ui;padding:2px 10px 2px 0;border:none;vertical-align:top}
 .help td:first-child{white-space:nowrap;color:var(--ac);font-family:ui-monospace,Consolas,monospace}
 .help h4{margin:10px 0 4px}
+/* touch and phones: the canvas takes every gesture; a bar of the actions keys give; the side panels as sheets */
+#cv{touch-action:none}
+#stage{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+button,select{touch-action:manipulation}
+#tbar{position:absolute;left:0;right:0;bottom:0;display:none;gap:4px;align-items:center;padding:5px 6px;padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px));background:#1c1f25e8;border-top:1px solid var(--ln);overflow-x:auto;scrollbar-width:none}
+#tbar>*{flex:none}
+#tbar .sep{width:1px;height:22px;background:var(--ln)}
+body.touch #tbar{display:flex}
+.clr{display:flex;gap:6px;align-items:flex-start;justify-content:space-between;padding:5px 0;border-top:1px solid #2a2f37}
+.clr>div{min-width:0;overflow-wrap:anywhere}
+.clr.act b{color:var(--ac)}
+.mob,.sheetbar{display:none!important}
+#hint button{pointer-events:auto;margin-top:8px}
+@media (pointer:coarse){
+  #tbar{display:flex}
+  button,select{min-height:34px;padding:4px 9px}
+  input,select,textarea{font-size:16px}
+  .tree .pl,.tree .lv,.tree .ob{padding-top:8px;padding-bottom:8px}
+  .eye{width:22px}}
+@media (max-width:820px){
+  #main{grid-template-columns:1fr}
+  #left,#right{position:fixed;z-index:5;left:0;right:0;bottom:0;max-height:65%;transform:translateY(105%);transition:transform .18s ease-out;border:none;border-top:1px solid var(--ln);border-radius:10px 10px 0 0;box-shadow:0 -8px 28px #000a;padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  body.showL #left,body.showR #right{transform:none}
+  .mob{display:inline-block!important}
+  .sheetbar{display:flex!important;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1;background:var(--pn);padding:6px 8px;border-bottom:1px solid var(--ln)}
+  #top{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+  #top>*{flex:none}
+  button kbd{display:none}
+  #vbar{flex-wrap:wrap}
+  #status{flex-wrap:wrap;gap:0 10px}}
+@media (prefers-reduced-motion:reduce){#left,#right{transition:none}}
 </style></head>
 <body><div id="app">
 <div id="top">
+  <button id="bL" class="mob" title="Planes, levels and traces">☰ Traces</button>
+  <button id="bR" class="mob" title="The selected trace, calibration, plan in mm, view, frames from Claude">Panel</button>
+  <span class="sep mob"></span>
   <button id="bImg" title="Open a photograph or frame (or drop it on the page, or paste it)">Open image</button>
   <button id="bVid" title="Open a video and pick a frame">Open video</button>
   <button id="bOpen" title="Open a .trace.json, or import an anchor / framecam / rimfit spec (Ctrl+O)">Open traces</button>
   <button id="bSave" title="Save the traces (Ctrl+S)">Save</button>
   <button id="bSaveAs">Save as…</button>
+  <button id="bShare" hidden title="Send the .trace.json to another app (mail, Drive, the Claude app)">Share</button>
+  <button id="bCl" hidden title="Save the traces here, where Claude reads them">Send to Claude</button>
   <select id="exp" title="Export">
     <option value="">Export…</option>
     <option value="png">Frame with traces (PNG)</option>
@@ -110,13 +150,14 @@ td:first-child,th:first-child{text-align:left}
 </div>
 <div id="main">
   <aside id="left">
+    <div class="sheetbar"><b>Traces</b><button data-close>Close</button></div>
     <section><h3>Planes, levels, traces <span><button id="bPlane" title="Add a plane">+ Plane</button></span></h3>
       <div id="tree" class="tree"></div></section>
   </aside>
   <div id="stage">
     <canvas id="cv" tabindex="0"></canvas>
     <canvas id="loupe" width="210" height="210"></canvas>
-    <div id="hint"><div><b>Open an image</b> (button, drop it here, or paste)<br>or a video to pick a frame from.<br>Then click along an edge. Press <b>?</b> for help.</div></div>
+    <div id="hint"><div><b>Open an image</b> (button, drop it here, or paste)<br>or a video to pick a frame from.<br>Then click along an edge. Press <b>?</b> for help.<div id="hintCl" hidden><button id="hClB">Frames from Claude</button></div></div></div>
     <div id="vbar">
       <button id="vPrev1" title="1 s back">−1s</button><button id="vPrev" title="One frame back">◀</button>
       <input id="vRange" type="range" min="0" max="1" step="0.001" value="0">
@@ -126,8 +167,17 @@ td:first-child,th:first-child{text-align:left}
       <button id="vSave" title="Save this frame as a PNG (as video.py frame names it)">Save frame</button>
       <button id="vClose">Close video</button>
     </div>
+    <div id="tbar">
+      <button id="tDone" title="Finish the trace (Esc)">Done</button><button id="tUndo" title="Undo">↶</button><button id="tRedo" title="Redo">↷</button><span class="sep"></span>
+      <button id="tIns" title="While on, a tap inserts a point into the active curve between the nearest two (Ctrl+click)">Insert</button>
+      <button id="tDel" title="Delete the selected point">Delete point</button><button id="tCorner" title="Make the selected point a corner (K)">Corner</button><button id="tClose" title="Close the curve (C)">Close curve</button><span class="sep"></span>
+      <button id="tPrev" title="Previous point ([)">‹ pt</button><button id="tNext" title="Next point (])">pt ›</button>
+      <button id="tFine" title="Dragging a point, or aiming, moves at a quarter of the finger's speed">Fine</button><button id="tFit" title="Fit the image (F)">Fit</button>
+    </div>
   </div>
   <aside id="right">
+    <div class="sheetbar"><b>Panel</b><button data-close>Close</button></div>
+    <section id="secCl" hidden><h3>From Claude</h3><div id="clList"></div></section>
     <section id="secImg"></section>
     <section id="props"></section>
     <section id="calib"></section>
@@ -142,7 +192,7 @@ td:first-child,th:first-child{text-align:left}
 <div id="modal"><div class="box" id="mbox"></div></div>
 <input type="file" id="fImg" accept="image/*" hidden>
 <input type="file" id="fVid" accept="video/*" hidden>
-<input type="file" id="fJson" accept=".json,application/json" hidden>
+<input type="file" id="fJson" accept=".json,application/json,.txt,text/plain" hidden>
 <input type="file" id="fHoles" accept=".json,application/json" hidden>
 <script>
 (()=>{
@@ -156,11 +206,13 @@ const ICON={curve:'〰',ellipse:'◯',point:'✕',scale:'↔'};
 let IMG=null,IMGNAME='',IW=0,IH=0,PIX=null,CHN=null,EDGE=null;
 let P=blank(),nextId=1,actObj=null,actPlane=null,sel=-1,kind='curve',tool='trace',level=0;
 let V={s:1,tx:0,ty:0},dpr=1,CW=1,CHh=1;
-const O={snap:false,snapR:8,chan:'luma',edges:false,loupe:true,mag:4,labels:true,idx:false,holes:true,grid:false,pixels:true,bri:100,con:100,sat:100,inv:false,lw:1.5,onlyPlane:false,resMag:1};
+const O={snap:false,snapR:8,chan:'luma',edges:false,loupe:true,mag:4,labels:true,idx:false,holes:true,grid:false,pixels:true,bri:100,con:100,sat:100,inv:false,lw:1.5,onlyPlane:false,resMag:1,fine:false};
 try{Object.assign(O,JSON.parse(localStorage.getItem('tracer:opts')||'{}'))}catch(e){}
 O.edges=false;
 let CAL={},FH=null;
 let mouse={sx:0,sy:0,in:false},drag=null,pan=null,MS=null,spaceDown=false,shiftDown=false;
+const TP=new Map();let TG=null,LPC=null,insMode=false,lastTouch=0,holdT=0;// touch: the fingers down, the gesture, the loupe's centre, Insert, the last touch's time
+let DL=null,CL=null,AS=null,FR=[],TRS=[],curFr='';// published on claude.ai: the viewer's downloads, db and assets; the frames and traces there
 function blank(){return {tool:'tracer',version:1,image:{name:'',w:0,h:0},source:'',note:'',planes:[],objs:[]}}
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fx=(v,d=2)=>v==null||!isFinite(v)?'—':(+v).toFixed(d);
@@ -350,7 +402,8 @@ function undo(){if(!UND.length)return msg('nothing to undo');RED.push(snapS());r
 function redo(){if(!RED.length)return msg('nothing to redo');UND.push(snapS());restoreS(RED.pop())}
 
 // ---------- view ----------
-function resize(){const r=cv.getBoundingClientRect();dpr=window.devicePixelRatio||1;CW=Math.max(1,r.width);CHh=Math.max(1,r.height);cv.width=Math.round(CW*dpr);cv.height=Math.round(CHh*dpr);req()}
+function resize(){const r=cv.getBoundingClientRect();dpr=window.devicePixelRatio||1;CW=Math.max(1,r.width);CHh=Math.max(1,r.height);cv.width=Math.round(CW*dpr);cv.height=Math.round(CHh*dpr);
+  const ls=Math.round(Math.max(120,Math.min(210,Math.min(CW,CHh)*.42)));if(lp.width!==ls){lp.width=lp.height=ls;lp.style.width=lp.style.height=ls+'px'}req()}
 function fit(){if(!IMG)return;const s=Math.min(CW/IW,CHh/IH)*.97;V={s,tx:CW/2-s*(IW-1)/2,ty:CHh/2-s*(IH-1)/2};req()}
 function zoomAt(f,sx,sy){const s=Math.max(.01,Math.min(128,V.s*f)),k=s/V.s;V.tx=sx-(sx-V.tx)*k;V.ty=sy-(sy-V.ty)*k;V.s=s;req()}
 const toImg=(sx,sy)=>[(sx-V.tx)/V.s,(sy-V.ty)/V.s];
@@ -359,10 +412,12 @@ function filt(){return`brightness(${O.bri}%) contrast(${O.con}%) saturate(${O.sa
 function drawImg(g,T,scale){const src=O.edges&&EDGE?EDGE:IMG;if(!src)return;g.save();g.setTransform(scale*T.s,0,0,scale*T.s,scale*T.tx,scale*T.ty);g.imageSmoothingEnabled=!(O.pixels&&T.s>=3);g.filter=filt();g.drawImage(src,-.5,-.5);g.restore()}
 function draw(){ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#0b0c0e';ctx.fillRect(0,0,cv.width,cv.height);
   if(IMG)drawImg(ctx,V,dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(IMG)drawOverlays(ctx,V,1,CW,CHh);
+  if(LPC&&TG&&TG.aim){const c=[LPC[0]*V.s+V.tx,LPC[1]*V.s+V.ty];[['#000',11],['#fff',9.5]].forEach(([col,r])=>{ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(c[0],c[1],r,0,2*Math.PI);ctx.stroke()})}// the aim, held
   $('hint').style.display=IMG?'none':'flex';drawLoupe();status()}
 function drawLoupe(){const show=O.loupe&&IMG&&mouse.in;lp.style.display=show?'block':'none';if(!show)return;
-  const near=mouse.sx<260&&mouse.sy>CHh-260;lp.style.left=near?'auto':'10px';lp.style.right=near?'10px':'auto';
-  const m=toImg(mouse.sx,mouse.sy),s=Math.max(2,Math.min(160,V.s*O.mag)),W=lp.width,T={s,tx:W/2-m[0]*s,ty:W/2-m[1]*s};
+  const W0=lp.width;if(TP.size){const lft=mouse.sx>CW/2;Object.assign(lp.style,{top:(($('vbar').style.display==='flex'?$('vbar').offsetHeight:0)+8)+'px',bottom:'auto',left:lft?'8px':'auto',right:lft?'auto':'8px'})}// away from the finger
+  else{const near=mouse.sx<W0+50&&mouse.sy>CHh-W0-50;Object.assign(lp.style,{top:'auto',bottom:($('tbar').offsetHeight+10)+'px',left:near?'auto':'10px',right:near?'10px':'auto'})}
+  const m=LPC||toImg(mouse.sx,mouse.sy),s=Math.max(2,Math.min(160,V.s*O.mag)),W=lp.width,T={s,tx:W/2-m[0]*s,ty:W/2-m[1]*s};
   lctx.setTransform(1,0,0,1,0,0);lctx.fillStyle='#000';lctx.fillRect(0,0,W,W);drawImg(lctx,T,1);lctx.setTransform(1,0,0,1,0,0);drawOverlays(lctx,T,1,W,W);
   lctx.strokeStyle='#fff';lctx.lineWidth=1;lctx.globalCompositeOperation='difference';lctx.beginPath();lctx.moveTo(W/2,0);lctx.lineTo(W/2,W/2-6);lctx.moveTo(W/2,W/2+6);lctx.lineTo(W/2,W);lctx.moveTo(0,W/2);lctx.lineTo(W/2-6,W/2);lctx.moveTo(W/2+6,W/2);lctx.lineTo(W,W/2);lctx.stroke();lctx.globalCompositeOperation='source-over';
   lctx.fillStyle='#fffc';lctx.font='10px system-ui';lctx.fillText('×'+(s).toFixed(s<10?1:0),4,W-5)}
@@ -406,9 +461,9 @@ function status(){if(!IMG){$('stPx').textContent='no image';$('stMm').textConten
   $('stAct').textContent=actObj?`${actObj.name}: ${actObj.pts.length} pts${sel>=0?' · pt '+sel:''}`:`next click: new ${KINDS[kind].toLowerCase()}`}
 
 // ---------- hit tests ----------
-function hitPoint(sx,sy){let best=null,bd=9;const tryO=(o,bias)=>{if(!vis(o))return;o.pts.forEach((p,i)=>{const d=Math.hypot(p[0]*V.s+V.tx-sx,p[1]*V.s+V.ty-sy)-bias;if(d<bd){bd=d;best={o,i}}})};
+function hitPoint(sx,sy,R=9){let best=null,bd=R;const tryO=(o,bias)=>{if(!vis(o))return;o.pts.forEach((p,i)=>{const d=Math.hypot(p[0]*V.s+V.tx-sx,p[1]*V.s+V.ty-sy)-bias;if(d<bd){bd=d;best={o,i}}})};
   if(actObj)tryO(actObj,2);for(const o of P.objs)if(o!==actObj)tryO(o,0);return best}
-function hitObj(sx,sy){let best=null,bd=6;for(const o of P.objs){if(!vis(o))continue;let pts=null;if(o.kind==='curve')pts=curveDense(o);else if(o.kind==='ellipse'){const f=fitOf(o);if(f)pts=ellPts(f)}else if(o.kind==='scale')pts=o.pts;
+function hitObj(sx,sy,R=6){let best=null,bd=R;for(const o of P.objs){if(!vis(o))continue;let pts=null;if(o.kind==='curve')pts=curveDense(o);else if(o.kind==='ellipse'){const f=fitOf(o);if(f)pts=ellPts(f)}else if(o.kind==='scale')pts=o.pts;
     if(!pts||pts.length<2)continue;for(let i=1;i<pts.length;i++){const d=segD([sx,sy],[pts[i-1][0]*V.s+V.tx,pts[i-1][1]*V.s+V.ty],[pts[i][0]*V.s+V.tx,pts[i][1]*V.s+V.ty]);if(d<bd){bd=d;best=o}}}return best}
 function segD(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy;let t=l?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l:0;t=Math.max(0,Math.min(1,t));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy)}
 function nearestSeg(o,p){const n=o.pts.length,cl=o.closed&&n>2;let bi=n-1,bd=Infinity;for(let i=0;i<(cl?n:n-1);i++){const d=segD(p,o.pts[i],o.pts[(i+1)%n]);if(d<bd){bd=d;bi=i}}return bi}
@@ -416,31 +471,70 @@ function nearestSeg(o,p){const n=o.pts.length,cl=o.closed&&n>2;let bi=n-1,bd=Inf
 // ---------- mouse ----------
 const snapOn=ev=>O.snap!==!!ev.shiftKey;
 cv.addEventListener('contextmenu',e=>e.preventDefault());
-cv.addEventListener('mousedown',e=>{cv.focus();const r=cv.getBoundingClientRect(),sx=e.clientX-r.left,sy=e.clientY-r.top;if(!IMG)return;
+cv.addEventListener('mousedown',e=>{if(Date.now()-lastTouch<800)return;cv.focus();const r=cv.getBoundingClientRect(),sx=e.clientX-r.left,sy=e.clientY-r.top;if(!IMG)return;
   if(e.button===1||e.button===2||(e.button===0&&spaceDown)){pan={sx,sy,tx:V.tx,ty:V.ty,moved:false,btn:e.button};e.preventDefault();return}
-  if(e.button!==0)return;const m=toImg(sx,sy);
+  if(e.button!==0)return;pressAt(sx,sy,e,1)});
+function pressAt(sx,sy,e,R){// a click, or a tap (R scales the hit radii for a finger)
+  const m=toImg(sx,sy);
   if(tool==='measure'){MS={a:m,b:m};req();return}
-  const h=hitPoint(sx,sy);
-  if(h){if(e.altKey){delPoint(h.o,h.i);return}actObj=h.o;sel=h.i;actPlane=planeById(h.o.plane)||actPlane;if(!h.o.locked){push();drag={o:h.o,i:h.i,moved:false,off:[h.o.pts[h.i][0]-m[0],h.o.pts[h.i][1]-m[1]]}}refreshUI();return}
-  if(!e.ctrlKey&&!actObj){const o=hitObj(sx,sy);if(o){actObj=o;sel=-1;actPlane=planeById(o.plane)||actPlane;refreshUI();return}}
-  if(actObj&&actObj!==null&&!e.ctrlKey){const o=hitObj(sx,sy);if(o&&o!==actObj&&!(actObj.kind==='curve'||actObj.kind==='ellipse')){actObj=o;sel=-1;refreshUI();return}}
-  addPoint(m,e)});
-window.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect(),sx=e.clientX-r.left,sy=e.clientY-r.top;mouse.sx=sx;mouse.sy=sy;mouse.in=sx>=0&&sy>=0&&sx<r.width&&sy<r.height&&e.target===cv;
+  const h=hitPoint(sx,sy,9*R);
+  if(h){if(e.altKey){delPoint(h.o,h.i);return}const d=grab(h,m);if(R===1)drag=d;else if(d)UND.pop();return}
+  if(!e.ctrlKey&&!actObj){const o=hitObj(sx,sy,6*R);if(o){actObj=o;sel=-1;actPlane=planeById(o.plane)||actPlane;refreshUI();return}}
+  if(actObj&&actObj!==null&&!e.ctrlKey){const o=hitObj(sx,sy,6*R);if(o&&o!==actObj&&!(actObj.kind==='curve'||actObj.kind==='ellipse')){actObj=o;sel=-1;refreshUI();return}}
+  addPoint(m,e)}
+function grab(h,m){// select a point; unless locked, start moving it (relative to the pointer, at a quarter of its speed with Fine)
+  actObj=h.o;sel=h.i;actPlane=planeById(h.o.plane)||actPlane;let d=null;if(!h.o.locked){push();const p=h.o.pts[h.i];d={o:h.o,i:h.i,moved:false,p0:[p[0],p[1]],m0:m}}refreshUI();return d}
+window.addEventListener('mousemove',e=>{if(Date.now()-lastTouch<800)return;const r=cv.getBoundingClientRect(),sx=e.clientX-r.left,sy=e.clientY-r.top;mouse.sx=sx;mouse.sy=sy;mouse.in=sx>=0&&sy>=0&&sx<r.width&&sy<r.height&&e.target===cv;
   if(pan){if(Math.hypot(sx-pan.sx,sy-pan.sy)>3)pan.moved=true;V.tx=pan.tx+sx-pan.sx;V.ty=pan.ty+sy-pan.sy}
-  else if(drag){const m=toImg(sx,sy);const p=drag.o.pts[drag.i];p[0]=m[0]+drag.off[0];p[1]=m[1]+drag.off[1];drag.moved=true}
+  else if(drag){const m=toImg(sx,sy),f=O.fine?.25:1,p=drag.o.pts[drag.i];p[0]=drag.p0[0]+(m[0]-drag.m0[0])*f;p[1]=drag.p0[1]+(m[1]-drag.m0[1])*f;drag.moved=true}
   else if(MS&&tool==='measure'&&e.buttons&1){MS.b=toImg(sx,sy)}
   if(IMG&&!PIX&&mouse.in)getPix();req()});
-window.addEventListener('mouseup',e=>{if(pan){const p=pan;pan=null;if(p.btn===2&&!p.moved){const h=hitPoint(p.sx,p.sy);if(h)delPoint(h.o,h.i)}return}
+window.addEventListener('mouseup',e=>{if(Date.now()-lastTouch<800)return;if(pan){const p=pan;pan=null;if(p.btn===2&&!p.moved){const h=hitPoint(p.sx,p.sy);if(h)delPoint(h.o,h.i)}return}
   if(drag){const d=drag;drag=null;if(d.moved){if(snapOn(e)){const p=d.o.pts[d.i];const q=snapPt([p[0],p[1]],snapDir(d.o,d.i,p));p[0]=q[0];p[1]=q[1]}changed()}else{UND.pop()}return}
   if(MS&&tool==='measure'){req()}});
 cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoomAt(Math.pow(1.0018,-e.deltaY*(e.deltaMode?30:1)),e.clientX-r.left,e.clientY-r.top)},{passive:false});
 cv.addEventListener('mouseleave',()=>{mouse.in=false;req()});
+// ---------- touch: a tap adds a point; a point drags (relative to the finger); hold, then slide, aims; one finger pans, two pinch ----------
+const tpos=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+const narrow=()=>matchMedia('(max-width:820px)').matches;
+function tCancel(){const g=TG;if(g&&g.drag){const d=g.drag,p=d.o.pts[d.i];p[0]=d.p0[0];p[1]=d.p0[1];UND.pop()}if(g&&g.meas)MS=null;TG=null;LPC=null;clearTimeout(holdT)}
+cv.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;e.preventDefault();lastTouch=Date.now();if(!document.body.classList.contains('touch')){document.body.classList.add('touch');resize()}if(!IMG)return;
+  try{cv.setPointerCapture(e.pointerId)}catch(x){}const q=tpos(e);TP.set(e.pointerId,q);
+  if(TP.size===2){tCancel();const[a,b]=[...TP.values()];TG={pinch:1,d0:Math.max(1,dist(a,b)),c0:[(a[0]+b[0])/2,(a[1]+b[1])/2],V0:{...V}};mouse.in=false;req();return}
+  if(TP.size>2)return;
+  [mouse.sx,mouse.sy]=q;mouse.in=true;const m=toImg(q[0],q[1]);
+  if(tool==='measure'){MS={a:m,b:m};TG={meas:1};req();return}
+  const h=hitPoint(q[0],q[1],22);
+  if(h){const d=grab(h,m);if(d){TG={drag:d};LPC=[d.p0[0],d.p0[1]]}else TG={sx:q[0],sy:q[1],V0:{...V},noTap:1};req();return}
+  const g=TG={sx:q[0],sy:q[1],V0:{...V}};
+  holdT=setTimeout(()=>{if(TG===g&&!g.pan){g.aim=1;g.m0=toImg(g.sx,g.sy);LPC=g.m0.slice();if(navigator.vibrate)try{navigator.vibrate(8)}catch(x){}req()}},350);req()},{passive:false});
+cv.addEventListener('pointermove',e=>{if(e.pointerType!=='touch'||!TP.has(e.pointerId))return;e.preventDefault();const q=tpos(e);TP.set(e.pointerId,q);const g=TG;if(!g)return;
+  if(g.pinch){if(TP.size<2)return;const[a,b]=[...TP.values()],c=[(a[0]+b[0])/2,(a[1]+b[1])/2],s=Math.max(.01,Math.min(128,g.V0.s*dist(a,b)/g.d0)),ix=(g.c0[0]-g.V0.tx)/g.V0.s,iy=(g.c0[1]-g.V0.ty)/g.V0.s;V={s,tx:c[0]-ix*s,ty:c[1]-iy*s};req();return}
+  [mouse.sx,mouse.sy]=q;const m=toImg(q[0],q[1]),f=O.fine?.25:1;
+  if(g.meas){MS.b=m;req();return}
+  if(g.drag){const d=g.drag,p=d.o.pts[d.i];p[0]=d.p0[0]+(m[0]-d.m0[0])*f;p[1]=d.p0[1]+(m[1]-d.m0[1])*f;d.moved=true;LPC=[p[0],p[1]];req();return}
+  if(!g.pan&&!g.aim&&Math.hypot(q[0]-g.sx,q[1]-g.sy)>10){g.pan=1;clearTimeout(holdT)}
+  if(g.aim)LPC=[g.m0[0]+(m[0]-g.m0[0])*f,g.m0[1]+(m[1]-g.m0[1])*f];
+  if(g.pan){V.tx=g.V0.tx+q[0]-g.sx;V.ty=g.V0.ty+q[1]-g.sy;mouse.in=false}
+  req()},{passive:false});
+function tUp(e){if(e.pointerType!=='touch'||!TP.has(e.pointerId))return;lastTouch=Date.now();TP.delete(e.pointerId);const g=TG;
+  if(g&&g.pinch){if(TP.size===1){const[q]=[...TP.values()];TG={sx:q[0],sy:q[1],V0:{...V},pan:1}}else if(!TP.size)TG=null;req();return}// a finger left after a pinch pans
+  if(TP.size)return;clearTimeout(holdT);mouse.in=false;
+  if(!g){req();return}
+  if(e.type==='pointercancel'){tCancel();req();return}
+  const L=LPC;TG=null;LPC=null;
+  if(g.meas){req();return}
+  if(g.drag){const d=g.drag;if(d.moved){if(O.snap){const p=d.o.pts[d.i],r=snapPt([p[0],p[1]],snapDir(d.o,d.i,p));p[0]=r[0];p[1]=r[1]}changed()}else UND.pop();req();return}
+  if(g.pan||g.noTap){req();return}
+  const at=g.aim&&L?L:toImg(g.sx,g.sy);pressAt(at[0]*V.s+V.tx,at[1]*V.s+V.ty,{ctrlKey:insMode},g.aim?1:2.4);req()}
+cv.addEventListener('pointerup',tUp);cv.addEventListener('pointercancel',tUp);
+document.addEventListener('gesturestart',e=>e.preventDefault());
 function addPoint(m,e){let o=actObj;if(o&&o.locked){msg(o.name+' is locked');return}
   if(o&&((o.kind==='point'&&o.pts.length>=1)||(o.kind==='scale'&&o.pts.length>=2))){o=null;kind=actObj.kind}
   push();if(!o)o=newObj(kind);let p=[m[0],m[1]];
   if(e.ctrlKey&&o.kind==='curve'&&o.pts.length>=2){const i=nearestSeg(o,p);if(snapOn(e)){const a=o.pts[i],b=o.pts[(i+1)%o.pts.length];p=snapPt(p,[b[0]-a[0],b[1]-a[1]])}o.pts.splice(i+1,0,p);sel=i+1}
   else{if(snapOn(e)){o.pts.push(p);p=snapPt(p,snapDir(o,o.pts.length-1,p));o.pts.pop()}o.pts.push(p);sel=o.pts.length-1}
-  if(o.kind==='scale'&&o.pts.length===2&&!(o.len>0)){changed();setTimeout(()=>{const i=document.querySelector('[data-f=len]');if(i){i.focus();i.select()}},30);msg('type the scale bar\'s length in mm');return}
+  if(o.kind==='scale'&&o.pts.length===2&&!(o.len>0)){changed();setTimeout(()=>{if(narrow())sheet('R');const i=document.querySelector('[data-f=len]');if(i){i.focus();i.select()}},30);msg('type the scale bar\'s length in mm');return}
   changed()}
 function delPoint(o,i){if(o.locked)return msg(o.name+' is locked');push();o.pts.splice(i,1);if(o===actObj)sel=Math.min(i,o.pts.length-1);changed()}
 
@@ -465,13 +559,13 @@ window.addEventListener('keydown',e=>{const k=e.key,c=e.ctrlKey||e.metaKey;
     case'p':case'P':setKind('point');break;
     case'b':case'B':setKind('scale');break;
     case'm':case'M':setTool(tool==='measure'?'trace':'measure');break;
-    case'Escape':case'Enter':if(tool==='measure'&&MS){MS=null}else{actObj=null;sel=-1}refreshUI();break;
-    case'c':case'C':if(o&&o.kind==='curve'){push();o.closed=!o.closed;changed()}break;
-    case'k':case'K':if(o&&sel>=0&&o.kind==='curve'){push();const p=o.pts[sel];if(p[2])p.length=2;else p[2]=1;changed()}break;
+    case'Escape':case'Enter':doneAct();break;
+    case'c':case'C':togClosed();break;
+    case'k':case'K':togCorner();break;
     case'Delete':case'Backspace':e.preventDefault();if(!o)break;if(e.shiftKey||sel<0){push();P.objs.splice(P.objs.indexOf(o),1);actObj=null;sel=-1;changed();msg(`deleted ${o.name} (Ctrl+Z brings it back)`)}else delPoint(o,sel);break;
     case'ArrowLeft':case'ArrowRight':case'ArrowUp':case'ArrowDown':if(o&&sel>=0&&!o.locked){e.preventDefault();const st=e.shiftKey?1:.1,p=o.pts[sel];push();if(k==='ArrowLeft')p[0]-=st;if(k==='ArrowRight')p[0]+=st;if(k==='ArrowUp')p[1]-=st;if(k==='ArrowDown')p[1]+=st;changed()}else if(IMG){e.preventDefault();const d=60;if(k==='ArrowLeft')V.tx+=d;if(k==='ArrowRight')V.tx-=d;if(k==='ArrowUp')V.ty+=d;if(k==='ArrowDown')V.ty-=d;req()}break;
-    case'[':if(o&&o.pts.length){sel=(sel<=0?o.pts.length:sel)-1;centreOn(o.pts[sel]);refreshUI()}break;
-    case']':if(o&&o.pts.length){sel=(sel+1)%o.pts.length;centreOn(o.pts[sel]);refreshUI()}break;
+    case'[':stepPt(-1);break;
+    case']':stepPt(1);break;
     case'Tab':{e.preventDefault();const L=P.objs.filter(vis);if(!L.length)break;let i=L.indexOf(o);i=(i+(e.shiftKey?-1:1)+L.length)%L.length;actObj=L[i];sel=-1;actPlane=planeById(actObj.plane)||actPlane;refreshUI();break}
     case'e':case'E':O.snap=!O.snap;saveOpts();refreshUI();break;
     case'g':case'G':toggleEdges();break;
@@ -490,6 +584,10 @@ window.addEventListener('keydown',e=>{const k=e.key,c=e.ctrlKey||e.metaKey;
     case'?':case'/':showHelp();break;
     case'PageUp':case'PageDown':{e.preventDefault();level=r3(level+(k==='PageUp'?1:-1)*(e.shiftKey?1:.1));$('lvl').value=level;if(o&&e.altKey){push();o.h=level;changed()}refreshUI();break}
   }});
+function doneAct(){if(tool==='measure'&&MS){MS=null}else{actObj=null;sel=-1}refreshUI()}
+function togClosed(){const o=actObj;if(o&&o.kind==='curve'){push();o.closed=!o.closed;changed()}}
+function togCorner(){const o=actObj;if(o&&sel>=0&&o.kind==='curve'){push();const p=o.pts[sel];if(p[2])p.length=2;else p[2]=1;changed()}}
+function stepPt(d){const o=actObj;if(!o||!o.pts.length)return;sel=d<0?(sel<=0?o.pts.length:sel)-1:(sel+1)%o.pts.length;centreOn(o.pts[sel]);refreshUI()}
 function centreOn(p){V.tx=CW/2-p[0]*V.s;V.ty=CHh/2-p[1]*V.s;req()}
 function setKind(k){kind=k;tool='trace';MS=null;actObj=null;sel=-1;refreshUI();msg(`click to start a new ${KINDS[k].toLowerCase()}`)}
 function setTool(t){tool=t;MS=null;refreshUI()}
@@ -499,7 +597,7 @@ function dupObj(){const o=actObj;if(!o)return;push();const c=JSON.parse(JSON.str
 // ---------- UI: tree, properties, calibration, view ----------
 function refreshUI(){renderTree();renderProps();renderCalib();renderView();renderImgSec();
   document.querySelectorAll('#top [data-k]').forEach(b=>b.classList.toggle('on',tool==='trace'&&b.dataset.k===kind));
-  $('bMeas').classList.toggle('on',tool==='measure');$('bSnap').classList.toggle('on',O.snap);$('bEdge').classList.toggle('on',O.edges);$('chan').value=O.chan;
+  $('bMeas').classList.toggle('on',tool==='measure');$('tIns').classList.toggle('on',insMode);$('tFine').classList.toggle('on',!!O.fine);$('bSnap').classList.toggle('on',O.snap);$('bEdge').classList.toggle('on',O.edges);$('chan').value=O.chan;
   req();planSoon()}
 let saveT=0;function changed(){calibrateAll();refreshUI();clearTimeout(saveT);saveT=setTimeout(autosave,700)}
 function renderTree(){const t=$('tree');if(!P.planes.length){t.innerHTML='<div class="mu" style="padding:4px">No traces yet. A plane is made with the first trace.</div>';return}
@@ -514,7 +612,7 @@ $('tree').addEventListener('click',e=>{const t=e.target;
   if(t.dataset.ple){push();const pl=planeById(+t.dataset.ple);pl.visible=pl.visible===false;changed();return}
   if(t.dataset.lve){push();const[pid,L]=t.dataset.lve.split(':');const os=P.objs.filter(o=>o.plane===+pid&&(+o.h||0)===+L),v=!os.every(o=>o.visible!==false);os.forEach(o=>o.visible=v);changed();return}
   if(t.dataset.obe){push();const o=P.objs.find(o=>o.id===+t.dataset.obe);o.visible=o.visible===false;changed();return}
-  const ob=t.closest('[data-ob]');if(ob){actObj=P.objs.find(o=>o.id===+ob.dataset.ob);sel=-1;actPlane=planeById(actObj.plane)||actPlane;level=+actObj.h||0;$('lvl').value=level;refreshUI();return}
+  const ob=t.closest('[data-ob]');if(ob){actObj=P.objs.find(o=>o.id===+ob.dataset.ob);sel=-1;actPlane=planeById(actObj.plane)||actPlane;level=+actObj.h||0;$('lvl').value=level;if(narrow())sheet();refreshUI();return}
   const lv=t.closest('.lv');if(lv){actPlane=planeById(+lv.dataset.pl);level=+lv.dataset.h;$('lvl').value=level;actObj=null;sel=-1;refreshUI();return}
   const pl=t.closest('[data-pl]');if(pl){actPlane=planeById(+pl.dataset.pl);actObj=null;sel=-1;refreshUI()}});
 $('tree').addEventListener('dblclick',e=>{const ob=e.target.closest('[data-ob]');if(!ob)return;const o=P.objs.find(o=>o.id===+ob.dataset.ob);if(!o||!o.pts.length)return;
@@ -578,7 +676,7 @@ $('props').addEventListener('click',e=>{const a=e.target.dataset.a;if(!a)return;
   if(a==='done'){actObj=null;sel=-1;refreshUI()}
   if(a==='holes')$('fHoles').click();
   if(a==='clrholes'&&actPlane){push();actPlane.holes={};actPlane.holesFile='';changed()}
-  if(a==='delplane'&&actPlane){const n=P.objs.filter(o=>o.plane===actPlane.id).length;if(n&&!confirm(`Delete plane ${actPlane.name} and its ${n} traces?`))return;push();P.objs=P.objs.filter(o=>o.plane!==actPlane.id);P.planes.splice(P.planes.indexOf(actPlane),1);actPlane=P.planes[0]||null;actObj=null;changed()}});
+  if(a==='delplane'&&actPlane){const pl=actPlane,n=P.objs.filter(o=>o.plane===pl.id).length,go=()=>{push();P.objs=P.objs.filter(o=>o.plane!==pl.id);P.planes.splice(P.planes.indexOf(pl),1);actPlane=P.planes[0]||null;actObj=null;changed()};if(n)ask(`Delete plane ${pl.name} and its ${n} traces?`,go,'Delete');else go()}});
 function renderCalib(){const el=$('calib'),pl=actPlane;if(!pl){el.innerHTML='<h3>Calibration</h3><div class="mu">No plane.</div>';return}const c=CAL[pl.id]||{};
   let h=`<h3>Calibration: ${esc(pl.name)}</h3>`;
   if(!c.H){h+=`<div class="mu">Not yet in mm. Give it controls: points or holes of known place (pick a model hole once the plane's holes JSON is loaded, or type x z). 4 or more give a homography (perspective), 3 an affine map, 2 a similarity; or a scale bar alone. A hole's edge traced as the circle of radius r (<i>Edge is r</i>) helps the fit.</div>`;
@@ -625,21 +723,25 @@ function drawPlan(c){const g=c.getContext('2d'),W=c.width,H=c.height;g.setTransf
   const L=[.1,.2,.5,1,2,5,10,20,50].find(s=>s*sc>=W*.12)||50;g.strokeStyle='#fff';g.lineWidth=2*k;g.beginPath();g.moveTo(12*k,H-14*k);g.lineTo(12*k+L*sc,H-14*k);g.stroke();label(g,L+' mm',12*k,H-20*k,'#fff',k)}
 $('bBig').onclick=()=>{$('mbox').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><b>Plan in mm: ${esc(actPlane?actPlane.name:'')}</b><button id="mClose">Close (Esc)</button></div><canvas id="bigplan" width="1200" height="1200"></canvas>`;$('modal').style.display='flex';$('mClose').onclick=closeModal;drawPlan($('bigplan'))};
 function closeModal(){$('modal').style.display='none'}
+function ask(q,ok,yes='Yes',no='Cancel'){// in the page: claude.ai's frame refuses confirm()
+  $('mbox').innerHTML=`<div style="max-width:420px"><div style="margin-bottom:12px">${esc(q)}</div><div class="btns" style="justify-content:flex-end"><button id="aNo">${esc(no)}</button><button id="aYes" class="on">${esc(yes)}</button></div></div>`;
+  $('modal').style.display='flex';$('aNo').onclick=closeModal;$('aYes').onclick=()=>{closeModal();ok()}}
 $('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
 
 // ---------- files ----------
 function base(){return(IMGNAME||'trace').replace(/\.[a-z0-9]+$/i,'')}
-function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+function download(blob,name){if(DL){DL.save({filename:name,data:blob}).then(()=>msg('saved '+name,'ok'),e=>{if(!e||e.code!=='declined')msg('could not save '+name+': '+(e&&(e.message||e.code)),'er')});return}// claude.ai: the viewer asks, then saves
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
 function setImage(src,name,keep){IMG=src;IMGNAME=name;IW=src.naturalWidth||src.videoWidth||src.width;IH=src.naturalHeight||src.videoHeight||src.height;PIX=null;CHN=null;EDGE=null;O.edges=false;
   P.image={name,w:IW,h:IH};if(!keep){fit();tryRestore(name)}calibrateAll();refreshUI()}
-function loadImageFile(f){const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{closeVideo();setImage(im,f.name)};im.onerror=()=>msg('cannot open '+f.name,'er');im.src=url}
+function loadImageFile(f,then){const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{closeVideo();setImage(im,f.name);if(then)then()};im.onerror=()=>msg('cannot open '+f.name,'er');im.src=url}
 function tryRestore(name){try{const s=localStorage.getItem('tracer:'+name);if(!s)return;const d=JSON.parse(s);if(!d.objs||!d.objs.length)return;
-  if(P.objs.length&&P.image&&P.image.name!==name)return;if(P.objs.length)return;if(confirm(`Restore the ${d.objs.length} traces autosaved for ${name}?`)){push();loadProject(d,true)}}catch(e){}}
+  if(P.objs.length&&P.image&&P.image.name!==name)return;if(P.objs.length)return;ask(`Restore the ${d.objs.length} traces autosaved for ${name}?`,()=>{push();loadProject(d,true)},'Restore','Start afresh')}catch(e){}}
 function autosave(){if(!IMGNAME||!P.objs.length)return;try{localStorage.setItem('tracer:'+IMGNAME,JSON.stringify(P))}catch(e){}}
 $('bImg').onclick=()=>$('fImg').click();$('fImg').onchange=e=>{const f=e.target.files[0];if(f)loadImageFile(f);e.target.value=''};
 document.addEventListener('paste',e=>{const it=[...(e.clipboardData||{}).items||[]].find(i=>i.type.startsWith('image/'));if(it){const f=it.getAsFile();loadImageFile(new File([f],'pasted.png',{type:f.type}))}});
 document.addEventListener('dragover',e=>e.preventDefault());
-document.addEventListener('drop',e=>{e.preventDefault();for(const f of e.dataTransfer.files){if(f.type.startsWith('image/'))loadImageFile(f);else if(f.type.startsWith('video/'))openVideo(f);else if(/\.json$/i.test(f.name))f.text().then(t=>importJson(t,f.name))}});
+document.addEventListener('drop',e=>{e.preventDefault();for(const f of e.dataTransfer.files){if(f.type.startsWith('image/'))loadImageFile(f);else if(f.type.startsWith('video/'))openVideo(f);else if(/\.json(\.txt)?$/i.test(f.name))f.text().then(t=>importJson(t,f.name))}});
 function openJson(){if(window.showOpenFilePicker){showOpenFilePicker({types:[{description:'Traces or specs',accept:{'application/json':['.json']}}]}).then(async([h])=>{const f=await h.getFile(),t=await f.text();if(importJson(t,f.name)==='trace')FH=h}).catch(()=>{})}else $('fJson').click()}
 $('bOpen').onclick=openJson;$('fJson').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>importJson(t,f.name));e.target.value=''};
 function importJson(t,name){let d;try{d=JSON.parse(t)}catch(e){msg('not JSON: '+name,'er');return}
@@ -677,9 +779,14 @@ async function writeHandle(h,text){const w=await h.createWritable();await w.writ
 async function save(){if(!P.objs.length&&!P.planes.length)return msg('nothing to save');const text=JSON.stringify(derived(),null,1);
   if(FH){try{await writeHandle(FH,text);msg('saved '+FH.name,'ok');return}catch(e){FH=null}}return saveAs(text)}
 async function saveAs(text){text=typeof text==='string'?text:JSON.stringify(derived(),null,1);const nm=base()+'.trace.json';
-  if(window.showSaveFilePicker){try{FH=await showSaveFilePicker({suggestedName:nm,types:[{description:'Traces',accept:{'application/json':['.json']}}]});await writeHandle(FH,text);msg('saved '+FH.name,'ok');return}catch(e){if(e.name==='AbortError')return}}
-  download(new Blob([text],{type:'application/json'}),nm);msg('downloaded '+nm,'ok')}
+  if(window.showSaveFilePicker&&!DL){try{FH=await showSaveFilePicker({suggestedName:nm,types:[{description:'Traces',accept:{'application/json':['.json']}}]});await writeHandle(FH,text);msg('saved '+FH.name,'ok');return}catch(e){if(e.name==='AbortError')return}}
+  download(new Blob([text],{type:'application/json'}),nm);if(!DL)msg('downloaded '+nm,'ok')}
 $('bSave').onclick=save;$('bSaveAs').onclick=()=>saveAs();
+const SHARE=(()=>{try{return!!(navigator.canShare&&navigator.canShare({files:[new File(['{}'],'t.txt',{type:'text/plain'})]}))}catch(e){return false}})();
+$('bShare').hidden=!(SHARE&&!window.claude);// a phone's share sheet (claude.ai's frame refuses it: Send to Claude there)
+$('bShare').onclick=async()=>{if(!P.objs.length)return msg('nothing to share');const t=JSON.stringify(derived(),null,1),nm=base()+'.trace.json';let f=new File([t],nm,{type:'application/json'});
+  if(!navigator.canShare({files:[f]}))f=new File([t],nm+'.txt',{type:'text/plain'});// Chrome shares no .json: Open traces reads it back all the same
+  try{await navigator.share({files:[f],title:nm});msg('shared '+f.name,'ok')}catch(e){if(e.name!=='AbortError')msg('could not share: '+e.message,'er')}};
 $('exp').onchange=e=>{const v=e.target.value;e.target.value='';if(!v)return;if(!IMG&&v==='png')return msg('no image');
   if(v==='png'){const c=document.createElement('canvas');c.width=IW;c.height=IH;const g=c.getContext('2d');g.filter=filt();g.drawImage(O.edges&&EDGE?EDGE:IMG,0,0);g.filter='none';drawOverlays(g,{s:1,tx:.5,ty:.5},Math.max(1,IW/1400),IW,IH);c.toBlob(b=>download(b,base()+'_traced.png'));return}
   const D=derived();
@@ -701,7 +808,7 @@ $('exp').onchange=e=>{const v=e.target.value;e.target.value='';if(!v)return;if(!
 // ---------- video ----------
 let VID=null,vidId='',seekBusy=false,seekNext=null;const fcan=document.createElement('canvas');
 $('bVid').onclick=()=>$('fVid').click();$('fVid').onchange=e=>{const f=e.target.files[0];if(f)openVideo(f);e.target.value=''};
-function openVideo(f){closeVideo();VID=document.createElement('video');VID.muted=true;VID.preload='auto';VID.src=URL.createObjectURL(f);vidId=f.name.replace(/\.[a-z0-9]+$/i,'').replace(/_hd$/,'');
+function openVideo(f){closeVideo();VID=document.createElement('video');VID.muted=true;VID.playsInline=true;VID.setAttribute('playsinline','');VID.preload='auto';VID.src=URL.createObjectURL(f);vidId=f.name.replace(/\.[a-z0-9]+$/i,'').replace(/_hd$/,'');
   VID.onloadedmetadata=()=>{$('vbar').style.display='flex';$('vRange').max=VID.duration;P.source=P.source||vidId;seek(0)};VID.onerror=()=>msg('the browser cannot play '+f.name,'er');
   VID.addEventListener('seeked',()=>{fcan.width=VID.videoWidth;fcan.height=VID.videoHeight;fcan.getContext('2d').drawImage(VID,0,0);const t=VID.currentTime;$('vTime').value=tfmt(t);$('vRange').value=t;
     const first=!IMG||IW!==VID.videoWidth;setImage(fcan,`f_${vidId}_${tfmt(t).replace(':','-')}.png`,!first);if(first)fit();P.source=`${vidId} ${tfmt(t)}`;renderImgSec();seekBusy=false;if(seekNext!=null){const n=seekNext;seekNext=null;seek(n)}})}
@@ -719,6 +826,12 @@ document.querySelectorAll('#top [data-k]').forEach(b=>b.onclick=()=>setKind(b.da
 $('bMeas').onclick=()=>setTool(tool==='measure'?'trace':'measure');$('bSnap').onclick=()=>{O.snap=!O.snap;saveOpts();refreshUI()};
 $('chan').onchange=e=>{O.chan=e.target.value;CHN=null;EDGE=null;if(O.edges){EDGE=buildEdge()}saveOpts();refreshUI()};$('bEdge').onclick=toggleEdges;
 $('lvl').onchange=e=>{level=parseFloat(e.target.value)||0;refreshUI()};
+function sheet(w){const b=document.body,on=w&&!b.classList.contains('show'+w);b.classList.remove('showL','showR');if(on)b.classList.add('show'+w)}
+$('bL').onclick=()=>sheet('L');$('bR').onclick=()=>sheet('R');document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>sheet());
+$('tDone').onclick=doneAct;$('tUndo').onclick=undo;$('tRedo').onclick=redo;$('tCorner').onclick=togCorner;$('tClose').onclick=togClosed;$('tPrev').onclick=()=>stepPt(-1);$('tNext').onclick=()=>stepPt(1);$('tFit').onclick=fit;
+$('tIns').onclick=()=>{insMode=!insMode;refreshUI();msg(insMode?'a tap now inserts a point into the active curve':'')};
+$('tDel').onclick=()=>{if(actObj&&sel>=0)delPoint(actObj,sel);else msg('tap a point first')};
+$('tFine').onclick=()=>{O.fine=!O.fine;saveOpts();refreshUI();msg(O.fine?'Fine: drags and aim move a quarter as far as the finger':'')};
 $('bUndo').onclick=undo;$('bRedo').onclick=redo;$('bFit').onclick=fit;$('bPlane').onclick=()=>{push();newPlane();actObj=null;changed();msg('new plane: traces made now go on it')};
 function showHelp(){$('mbox').innerHTML=`<div style="display:flex;justify-content:space-between"><b>Edge Tracer</b><button id="mClose">Close (Esc)</button></div><div class="help">
 <h4>Tracing</h4><table>
@@ -735,6 +848,14 @@ function showHelp(){$('mbox').innerHTML=`<div style="display:flex;justify-conten
 <tr><td>M</td><td>measure: drag; px, angle and mm at the current level</td></tr>
 <tr><td>PageUp/Down</td><td>level of new traces ±0.1 mm (Shift ±1; Alt also moves the active trace)</td></tr>
 <tr><td>Ctrl+Z / Ctrl+Y · Ctrl+D</td><td>undo / redo · duplicate the trace</td></tr></table>
+<h4>Touch (phone, tablet)</h4><table>
+<tr><td>tap</td><td>add a point (on a point: select it; near a trace with none active: select the trace)</td></tr>
+<tr><td>hold, then slide</td><td>aim: a ring and the loupe show where the point goes; lift to add it there</td></tr>
+<tr><td>drag a point</td><td>move it; it follows the finger's movement, not its place, so the finger never hides it; the loupe shows it</td></tr>
+<tr><td>one finger · two</td><td>pan · pinch to zoom</td></tr>
+<tr><td>bar at the bottom</td><td>Done · undo · redo · Insert (taps insert into the curve) · Delete point · Corner · Close curve · previous / next point · Fine (drags and aim at a quarter of the finger's speed) · Fit</td></tr>
+<tr><td>Traces · Panel</td><td>on a narrow screen the side panels open as sheets from the top bar</td></tr>
+<tr><td>Share · Send to Claude</td><td>Share sends the .trace.json to another app; in the claude.ai copy, Send to Claude saves it where Claude reads it, and the frames Claude put there are under Panel</td></tr></table>
 <h4>View</h4><table>
 <tr><td>wheel · + −</td><td>zoom at the cursor · 1 = 100 %, 2 = 400 %, 3 = 1600 %, F = fit</td></tr>
 <tr><td>right/middle drag, Space+drag, arrows</td><td>pan</td></tr>
@@ -745,6 +866,30 @@ function showHelp(){$('mbox').innerHTML=`<div style="display:flex;justify-conten
 <p><b>Save</b> writes a .trace.json: the points, the curve through them, and their mm (keep traces in tools/traces/; the frames themselves stay in E:\\mc-video). <b>Export</b>: the frame with the traces drawn, the traces in mm, a spec for <code>video.py anchor</code> or picks for <code>framecam.py</code>. Open traces also imports existing anchor, framecam and rimfit specs. Autosaved in the browser per image.</p></div>`;
   $('modal').style.display='flex';$('mClose').onclick=closeModal}
 $('bHelp').onclick=showHelp;
+// ---------- published on claude.ai (tracer_artifact.py): the frames Claude puts in the artifact's store, the traces sent back ----------
+// frames/ID: {name, asset (the image's asset id), source, task, map (a mapping JSON's text: px_per_mm, x0, z0), holes (a holes.py JSON's text), added};
+// traces/ID: {name, image, source, saved, traces, json (the .trace.json's text; when too large the bare traces, and the whole as the asset `asset`)}.
+const fmtT=v=>{const d=new Date(v);return isNaN(d)?'':d.toLocaleString([],{dateStyle:'short',timeStyle:'short'})};
+async function clBlob(id){const r=await fetch('/_blob/'+id);if(!r.ok)throw new Error('HTTP '+r.status);return r.blob()}
+function renderCl(){let h='<div class="mu">Frames to trace</div>'+(FR.length?FR.map(f=>`<div class="clr ${f.id===curFr?'act':''}"><div><b>${esc(f.name)}</b>${f.source?` <span class="mu">${esc(f.source)}</span>`:''}${f.task?`<div>${esc(f.task)}</div>`:''}</div><button data-fr="${esc(f.id)}">Open</button></div>`).join(''):'<div class="mu" style="padding:4px 0">None yet. Claude puts a frame here when there is something to trace.</div>');
+  h+='<div class="mu" style="margin-top:8px">Sent to Claude</div>'+(TRS.length?TRS.map(t=>`<div class="clr"><div><b>${esc(t.name)}</b> <span class="mu">${+t.traces||0} traces · ${esc(fmtT(t.saved))}</span></div><button data-tr="${esc(t.id)}">Open</button></div>`).join(''):'<div class="mu" style="padding:4px 0">Nothing yet. Send to Claude puts the open traces here.</div>');
+  $('clList').innerHTML=h;$('hintCl').hidden=!FR.length}
+async function clOpenFrame(f){msg('loading '+f.name+'…');let b;try{b=await clBlob(f.asset)}catch(e){return msg('could not load '+f.name+': '+e.message,'er')}
+  curFr=f.id;loadImageFile(new File([b],f.name,{type:b.type||'image/png'}),()=>{if(!P.source&&f.source)P.source=f.source;if(f.map)importJson(f.map,f.name.replace(/\.[a-z0-9]+$/i,''));
+    if(f.holes){try{loadHoles(JSON.parse(f.holes),f.name+' holes')}catch(e){msg('the frame\'s holes are not JSON','er')}}sheet();changed();if(f.task)msg(f.task)})}
+async function clOpenTrace(t){let txt=t.json;try{if(!txt&&t.asset)txt=await(await clBlob(t.asset)).text()}catch(e){return msg('could not open '+t.name+': '+e.message,'er')}
+  if(!txt)return msg(t.name+' is empty','er');importJson(txt,t.name);const f=FR.find(x=>x.name===t.image);if(f&&IMGNAME!==t.image)clOpenFrame(f);else sheet()}
+async function clSend(){if(!CL)return;if(!P.objs.length)return msg('nothing to send');const D=derived(),full=JSON.stringify(D),nm=base()+'.trace.json',id=nm.replace(/[^A-Za-z0-9_.~:@+-]/g,'_').slice(0,190);
+  const doc={name:nm,image:D.image.name||'',source:D.source||'',saved:D.saved,traces:D.objs.length},big=n=>new Blob([n]).size>240000;// a document holds 256 KiB
+  try{if(!big(full))doc.json=full;else{if(!AS)throw new Error(`${Math.round(new Blob([full]).size/1024)} KB is too large to send; Save it instead`);const a=await AS.upload(new Blob([full],{type:'application/json'}),{type:'application/json'});doc.asset=a.id;const raw=JSON.stringify(P);if(!big(raw))doc.json=raw}
+    await CL.doc('traces/'+id).set(doc);msg('sent '+nm+' to Claude','ok')}catch(e){msg('could not send: '+(e.message||e.code),'er')}}
+function clWatch(){const by=k=>(a,b)=>String(b[k]||'').localeCompare(String(a[k]||'')),err=w=>e=>msg(w+': '+(e.message||e.code),'er');
+  CL.collection('frames').onSnapshot(q=>{FR=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort(by('added'));renderCl()},err('frames'));
+  CL.collection('traces').onSnapshot(q=>{TRS=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort(by('saved'));renderCl()},err('traces'))}
+$('clList').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.fr){const f=FR.find(x=>x.id===b.dataset.fr);if(f)clOpenFrame(f)}if(b.dataset.tr){const t=TRS.find(x=>x.id===b.dataset.tr);if(t)clOpenTrace(t)}});
+$('hClB').onclick=()=>sheet('R');$('bCl').onclick=clSend;
+if(window.claude&&window.claude.use){window.claude.use('downloads').then(d=>{DL=d},()=>{});
+  Promise.all([window.claude.use('db'),window.claude.use('assets')]).then(([d,a])=>{AS=a;if(!d)return;CL=d;$('secCl').hidden=false;$('bCl').hidden=false;renderCl();clWatch()},()=>{})}
 window.addEventListener('resize',resize);
 window.addEventListener('beforeunload',e=>{autosave()});
 resize();refreshUI();
