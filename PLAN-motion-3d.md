@@ -64,7 +64,7 @@ All six phases are done. Both viewers were published privately first. The user t
 - The Hamilton at the let-go blow:
   - Set-up click: 3,017 MPa. This is a local stress on its nose; `ratchets.js` gives its arm 539 MPa.
   - Winding pawls: 1,509 MPa.
-  - Fusee wheel: 369 MPa.
+  - Fusee wheel: 433 MPa (369 until its load was put on the band where it bears on its pinion, 19 October 2026).
 - The mainspring's inner coils at full wind:
 
   | Model | Inner coils | Limit |
@@ -90,3 +90,17 @@ The solve finished on 19 October 2026. `wempe_build_spring.py` compares every st
 The 0.393 mm strip at set 0.8 gives the drive with its inner coils within the strip's limit, but only by 1 %. Its evenness is worse than the drawn spring's, and its room to coil-bound is half. It was put to the user before being adopted.
 
 **The methodology** is written up in `docs/motion-3d/README.md`, with its figures (`motion3d_fe.py --fig`, `motion3d_shots.py`, `reportshot.py`). Its cross-checks leave one reading open: the FE's peaks on the pawls and the maintaining ratchet lie near their loads, and they are where the FE and the beam formulas part. A refinement study with the load spread over Hertz's contact width would settle them.
+
+**The open readings, settled (19 October 2026).**
+- **The Hamilton's fusee wheel.** The FE had spread the tooth load over the wheel's whole thickness. Over its bearing band it reads 433 MPa (RESOLVED.md). Lewis over the whole tooth agrees within 6 %, and `strength.js` over the bearing band is the cautious figure.
+- **The contact study (`motion3d_contact.py`).** The let-go peaks on the clicks, the pawls and the maintaining ratchet are their contact's pressure, a dent where nose and tooth meet, not bending. By the beam formulas:
+  - the Hamilton's set-up click arm carries about 786 MPa at the blow, within steel;
+  - the Wempe's maintaining ratchet tooth about 499 MPa, past brass;
+  - the Wempe's click wheel tooth 240–280 MPa, within brass.
+- **The train's tooth roots** are not converged in voxels: refining the window raised them 28–69 %. Lewis stays the reference; a body-fitted mesh would settle them.
+
+**The 0.393 mm strip, tried as a variant (`MC_WSTRIP`).**
+- Every build check passes except `wempe_physics.js`'s level: fully wound it gives 3.5 % over the build's drive, against 3 % allowed.
+- The swing over the wind is 216–241°, against the build's 227–236°.
+- Unchanged: the 30-day error (5.8 s), the detent and knock margins, the Monte Carlo.
+- Put to the user to decide.

@@ -17,7 +17,9 @@ function load(o={}){
     THREE:{},KIT:{},TAU:Math.PI*2,D2R:Math.PI/180,clamp:(x,a,b)=>Math.max(a,Math.min(b,x)),smooth:t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);}});
   const xf=o.xf||((f,s)=>s),run=f=>vm.runInContext(xf(f,fs.readFileSync(f,'utf8')),ctx,{filename:f});
   const rev=o.rev||process.env.MC_WREV||'last';
-  for(const f of FILES){if(f===FILES[3]&&rev==='6mx')vm.runInContext('WESC.SET={...WESC.SET,...WESC.SET6};',ctx);if(f===FILES[3]&&(rev==='build'||rev==='build40')){const B=rev==='build'?'WESC.BUILD':'WESC.BUILD40';vm.runInContext(`WESC.SET={...WESC.SET,...${B}.set};WESC.KB=${B}.k;WESC.GBEND=${B}.bend;WESC.BSEL=${B};`,ctx);}run(f);}
+  for(const f of FILES){if(f===FILES[3]&&rev==='6mx')vm.runInContext('WESC.SET={...WESC.SET,...WESC.SET6};',ctx);if(f===FILES[3]&&(rev==='build'||rev==='build40')){const B=rev==='build'?'WESC.BUILD':'WESC.BUILD40';vm.runInContext(`WESC.SET={...WESC.SET,...${B}.set};WESC.KB=${B}.k;WESC.GBEND=${B}.bend;WESC.BSEL=${B};`,ctx);
+      /* MC_WSTRIP=FILE (wempe_build_spring.py --drive FILE): another solved strip tried in the 1950s build, its own drive turn by turn through the drawn fusee in place of BUILD.k's flat 1.26 (KB kept, the level wempe_physics.js checks the strip against; KBN its shape) */
+      if(rev==='build'&&process.env.MC_WSTRIP){const S=JSON.parse(fs.readFileSync(process.env.MC_WSTRIP,'utf8'));vm.runInContext(`WESC.KBN=${JSON.stringify(S.kbn)}.map(([x,f])=>[x,f/WESC.KB]);WESC.BSEL={...WESC.BSEL,strip:{...WESC.BSEL.strip,t:${S.t},table:${JSON.stringify(S.table)}}};`,ctx);}}run(f);}
   if(o.train){const core=path.join(__dirname,'..','js','core.js'),src=/function gearOutline\(n,m,o=\{\}\)\{[\s\S]*?\n  return\{xy,ro,ri\};\}/.exec(fs.readFileSync(core,'utf8'));
     if(!src)throw Error('gearOutline not found in core.js');vm.runInContext(xf(core,src[0]),ctx,{filename:core});run(path.join(WE,'js','train.js'));}
   return vm.runInContext('({WD,WESC,makeEsc,WPHYS'+(o.train?',WTRAIN,gearOutline':'')+'})',ctx);}   /* top-level const and function declarations of classic scripts share the context's scope */

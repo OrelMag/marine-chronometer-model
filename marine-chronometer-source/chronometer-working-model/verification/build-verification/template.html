@@ -945,7 +945,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
   $('m3Meaning').innerHTML=`<b>What it means.</b> Running, every part has a wide margin. Past their limits: ${bad.map(p=>`${esc(p.name.toLowerCase())} (${g(p.peak)} MPa, ${esc((ev(p.load)||'').toLowerCase())})`).join('; ')}, and the
     mainspring's inner coils fully wound (${g(M.ms.peakFull)} MPa against its strip's 2600, ${g(M.ms.medianFull)} along it: the coils wound tightest round the arbor carry more than
     the strip's average). The set-up click's peak is a local stress on its nose beside the load, where the steel yields a little and bears; <code>ratchets.js</code> gives its arm
-    539 MPa running. The blows come from the key let go outright, as on the Wempe (its report, section 13, which tries the fixes a maker could make).`;}}
+    539 MPa running. <a href="https://github.com/OrelMag/marine-chronometer-model/blob/main/docs/motion-3d/README.md#the-contact-study">The methodology's contact study</a> finds the pawls' peaks at the blow the contact's own pressure (a dent where nose and tooth meet), and by <code>ratchets.js</code> the set-up click's arm carries about 786 MPa at it, inside hardened steel. The blows come from the key let go outright, as on the Wempe (its report, section 13, which tries the fixes a maker could make).`;}}
 </script>
 </body>
 </html>

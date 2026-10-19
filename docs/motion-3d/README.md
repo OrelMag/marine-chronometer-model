@@ -42,6 +42,7 @@ The tools are in [`marine-chronometer-source/chronometer-working-model/tools/`](
 | 5. Stress, slender parts | `motion3d_springs.py` | `springs_VERSION.json` | a few seconds |
 | 6. The viewer's data | `motion3d_pack.py [--site DIR]` | `pack/` (private), or the report's `assets/motion3d/` | a few seconds |
 | 7. The let-go study (the Wempe) | `wempe_letgo_fix.js` | `wempe/verification/assets/letgo_fix.json` | about 7 min |
+| The contact study | `motion3d_contact.py [--parts a,b] [--fig DIR] [--json OUT]` | `r_motion3d/MODEL/contact/` (each solve, kept), `docs/motion-3d/contact_MODEL.json` | 40–60 min a model |
 | Pictures | `motion3d_shots.py`, `reportshot.py`, `motion3d_fe.py --fig` | the images on this page | about a minute each |
 
 `r_motion3d/` is ignored by git; it is the working data, rebuilt by steps 1 to 5. What is committed is what the site serves: the viewer's packed data beside each report.
@@ -96,7 +97,7 @@ The wheels, pinions, arbors, the click wheel, the ratchets, clicks and pawls, th
    - the maintaining ratchet at the clicks' screws;
    - the Hamilton's stud by its half nearer the bridge.
 5. **Loads.** Each load goes where the run puts it:
-   - a mesh's force at the pitch point, along the line of action;
+   - a mesh's force at the pitch point, along the line of action, over the band where the wheel and the pinion it drives overlap (the Hamilton's fusee wheel, 2.22 mm thick, bears on its pinion over 1.40 mm; until 19 October 2026 the load was spread over the wheel's whole thickness: see section 6);
    - a pawl's blow on its tooth's face, at its contact from `mechanisms.py` off the built solids;
    - the escape torque at a tooth's tip on the locking stone;
    - the balance's inertia as a body force on every brick, from its angular acceleration at the turn and its speed at the centre.
@@ -165,7 +166,7 @@ Each stress the finite elements give per newton of load, against the formula the
 |---|---|---|---|
 | Wempe: fusee wheel to centre pinion, the wheel's tooth | 5.11 (417 at 81.6 N) | 4.37, Lewis in `wempe_strength.js` (87 at 19.9 N) | agree within 17 % |
 | the same mesh, the centre pinion's leaf | 4.51 (368 at 81.6 N) | 4.37 | agree within 3 % |
-| Hamilton: fusee wheel to centre pinion, the wheel's tooth | 4.63 (369 at 79.7 N) | 9.13, `strength.js` (199 at 21.8 N) | **the formula is twice the FE**; open |
+| Hamilton: fusee wheel to centre pinion, the wheel's tooth | 5.43 (433 at 79.7 N) | 9.13, `strength.js` over the 1.40 mm bearing band (199 at 21.8 N); 5.75, Lewis over the tooth's whole 2.22 mm | agrees with Lewis over the whole tooth within 6 %; `strength.js` is the cautious figure |
 | Hamilton: set-up ratchet's tooth | 1.74 (368 at 211.5 N) | 2.16, `ratchets.js`'s tooth root (313 at 145.1 N) | agree within 20 % |
 | Wempe: set-up ratchet's tooth | 0.75 (190 at 253.7 N) | 0.40, `wempe_ratchets.js` (57 at 141.7 N) | FE 1.9× the formula |
 | Wempe: click wheel's tooth, under the click | 0.60 (178 at 298 N) | 1.16, `wempe_ratchets.js` (57 at 49.1 N); 2.05, `wempe_strength.js` (105 at 51.2 N) | **the formulas differ from each other and from the FE**; open |
@@ -175,12 +176,46 @@ Each stress the finite elements give per newton of load, against the formula the
 
 What this means:
 - **The train's teeth agree.** The finite elements and Lewis's formula agree on the Wempe's train, the best-defined case: a tooth at its pitch point, the formula's own setting.
-- **The Hamilton's `strength.js` gives twice** what both the FE and Lewis give the Wempe for a mesh of about the same size (module 0.39 against 0.44). Its inputs for the fusee wheel's teeth should be checked.
+- **The Hamilton's fusee wheel.** The FE first gave half of `strength.js`. Part of that was the FE's own error: it spread the tooth's load over the wheel's whole 2.22 mm instead of the 1.40 mm where the wheel bears on its pinion. Fixed, the tooth reads 433 MPa (it was 369). The rest is real. The tooth is 2.22 mm thick wherever it bears, so its whole root shares the bending, and Lewis's formula over the full 2.22 mm agrees with the FE within 6 %. `strength.js` takes only the bearing band, the cautious reading of the same tooth.
 - **The ratchet teeth are where the methods part.** The formulas treat a short, stubby tooth as a slender cantilever loaded at its tip; the FE resolves its real shape. So where the FE is lower (the click wheel, the winding ratchet), the formula is likely the pessimistic one.
-- **The pawls' and the maintaining ratchet's peaks lie near the load.** On the Wempe's clicks and the Hamilton's set-up click, the peak sits at the contact itself: the window's peak clear of the load is within 3 % of its peak at the load. On the Wempe's maintaining ratchet it is 0.6 of a module from the load. These parts are the ones past their limits at the let-go blow, and their peaks are the least certain figures here. A study refining the windows, with the load spread over Hertz's contact width rather than a patch of nodes, would settle them.
+- **The pawls' and the maintaining ratchet's peaks lie near the load.** On the Wempe's clicks and the Hamilton's set-up click, the peak sits at the contact itself: the window's peak clear of the load is within 3 % of its peak at the load. On the Wempe's maintaining ratchet it is 0.6 of a module from the load. These are the parts past their limits at the let-go blow. The contact study below settles what their peaks are.
 - **Every margin against the running loads holds by every method.**
 - **Easing the key back keeps every part within its limit or at its floor**, however the let-go overloads are read.
-- **The let-go study's click wheel column is the pessimistic figure.** It scales the tooth's stress by `wempe_strength.js`'s 2.05 MPa per N, the highest of the three readings; the FE's 0.60 would put the outright blow at 178 MPa, within brass.
+- **The let-go study's click wheel column is the pessimistic figure.** It scales the tooth's stress by `wempe_strength.js`'s 2.05 MPa per N, the highest of the three readings; the FE puts the outright blow at 178–280 MPa, within brass (the contact study below).
+
+### The contact study
+
+`motion3d_contact.py` solves each near-contact part again, nine parts in all. Each load's patch is set to 0.5, 1 and 2 times its radius (`motion3d_fe.py --patch`), and the windows at a ninth and a fourteenth of the module (`--win`), at the published resolution. For each solve it records the most stress at or beyond each distance from the loaded nodes.
+
+The principle: a part's own stress, such as a tooth's root or a pawl's arm in bending, doesn't depend on how widely its load is spread. The pressure under the patch does, as F over the patch's area. So where the curves for the three patches meet, the stress is the part's own; where they fan out, it is the patch's.
+
+![The Wempe's contact study: each part's most stress against its distance from the load, one line a patch (dashed the coarser window)](img/contact_wempe.png)
+
+![The Hamilton's contact study](img/contact_hamilton.png)
+
+0.3 mm from the load, at the finer window, with the patch at ×0.5 and at ×2 (MPa):
+
+| Part | Patch ×0.5 | Patch ×2 | Reading |
+|---|---|---|---|
+| Wempe clicks | 2,908 | 1,123 | the patch's pressure (2.6 times for a patch 4 times as wide) |
+| Wempe maintaining ratchet | 2,023 | 666 | the patch's pressure (3.0 times) |
+| Wempe maintaining detent | 1,225 | 905 | mostly the patch's (1.4 times) |
+| Hamilton set-up click | 3,249 | 1,950 | mostly the patch's (1.7 times) |
+| Hamilton winding pawls (no window) | 2,827 | 1,779 | mostly the patch's (1.6 times) |
+| Hamilton winding ratchet (on the fusee) | 384 | 164 | the patch's (2.3 times) |
+| Wempe click wheel (on the fusee) | 239 | 282 | nearly the tooth's own, 240–280 |
+
+What the study settles:
+- **The let-go peaks on the clicks, pawls and the maintaining ratchet are contact pressure, not the parts' bending.** No solid in the model carries the contact's real width: by Hertz it is a few tens of microns, far narrower than the patch. So the real pressure is higher still, and a real blow dents (peens) the pawl's nose and the tooth's face where they meet. It does not break the part. Bending has to come from the beam formulas:
+  - the Hamilton's set-up click arm, by `ratchets.js` scaled to the blow (3.71 MPa per newton at 211.5 N), carries about 786 MPa, within hardened steel's 1,200–1,800;
+  - the Wempe's maintaining ratchet tooth, by `wempe_ratchets.js` (2.60 MPa per newton at 192 N), carries about 499 MPa, past brass's 300–450, so its teeth would also bend;
+  - the face's average bearing pressure, by `wempe_ratchets.js` (the clicks 285 MPa, the detent on the ratchet 260), is within brass in bearing (450–675).
+- **The Wempe's click wheel tooth** is nearly independent of the patch, at 240–280 MPa at the outright blow. That is within brass's yield, so the let-go table's figure from `wempe_strength.js`'s beam (605 MPa) is the pessimistic one.
+- **The train's teeth are not converged.** A mesh's load is spread by its module, not by the patch option, so for the wheels only the window's refinement is tested, and it raises the tooth's peak:
+  - the Wempe's fusee wheel, 0.3 mm from the load: 354 to 598 MPa (+69 %);
+  - the Hamilton's: 433 to 556 MPa (+28 %).
+
+  The voxels' stepped corners at the tooth's root sharpen as they shrink, while the real root is a smooth fillet. The published tooth figures are the coarser window's and agree with Lewis's formula. Settling them needs a mesh fitted to the tooth's curved root, which this voxel method doesn't have. Until then Lewis is the reference for the teeth: `strength.js` and `wempe_strength.js`, with `strength.js` over the bearing band, the cautious side.
 
 ## 7. The let-go study (the Wempe)
 
@@ -213,11 +248,11 @@ The Hamilton's results are in its build report's section 14:
   | Wempe fusee wheel | 417 MPa | 417 MPa | 0 % |
   | Wempe clicks | 2,357 | 2,357 | 0 % |
   | Wempe maintaining ratchet | 1,485 | 1,506 | +1.4 % |
-  | Hamilton fusee wheel | 369 | 366 | −0.9 % |
+  | Hamilton fusee wheel (before its bearing-band fix) | 369 | 366 | −0.9 % |
   | Hamilton winding pawls (no window) | 1,509 | 1,441 | −4.5 % |
   | Hamilton set-up click | 3,017 | 2,998 | −0.6 % |
 
-  The coarse grid has settled. The windows were not refined further, and they are what the near-contact peaks rest on (section 6).
+  The coarse grid has settled. The windows' refinement is section 6's contact study: the teeth's roots are not converged in voxels, and the pawls' peaks are their contact's pressure.
 - **The limits** are ranges from published properties: brass Ms 58 spring-hard yield 300–450 MPa, hardened carbon steel 1,200–1,800, the strips' own. They are not measured on parts made to the model, since none are made.
 
 ## 9. Reproduce
@@ -231,6 +266,7 @@ From `marine-chronometer-source/chronometer-working-model/tools/`, for each mode
     python motion3d_springs.py --model wempe [--version build]
     python motion3d_pack.py --model wempe --site ../../wempe/verification/assets/motion3d
     node wempe_letgo_fix.js
+    python motion3d_contact.py --model wempe --fig ../../../docs/motion-3d/img --json ../../../docs/motion-3d/contact_wempe.json
     python ../../wempe/verification/build_report.py
     python motion3d_shots.py --model wempe --out ../../../docs/motion-3d/img/wempe
     python reportshot.py ../../wempe/verification/index.html m3d lfMeaning ../../../docs/motion-3d/img/wempe/report_section13.png

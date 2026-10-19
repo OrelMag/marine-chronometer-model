@@ -35,7 +35,18 @@ def one(fn,t,L,SET):
     Ts=[p[0] for p in pk]
     return dict(file=fn.name,t=t,L=L,set=SET,Mdown=M(Td),Mup=M(Tu),drive=float(fq.mean()/f0),spread=float((fq.max()-fq.min())/fq.mean()),
                 peak=float(np.interp(Tu,Ts,[p[1] for p in pk])),median=float(np.interp(Tu,Ts,[p[2] for p in pk])),room=float(tb['T'][-1]-Tu),solvedTo=float(tb['T'][-1]))
+def drive(fn,out):
+    """--drive TABLE OUT: the strip's own drive for the build's checks (MC_WSTRIP=OUT, tools/wempe_load.js): at each fusee turn from run down x, its fusee arbor torque
+    (Nivaflex) over the drawn spring's solved one at the measured level (wempe_physics.js's Kl, the level BUILD.k's 1.26 was set at: the strip's torque fully wound is
+    k Kl times the drawn's solved), the factor on 05 06_20's measured drive the escapement then takes in place of BUILD.k's flat 1.26"""
+    m=re.match(r'mainspring_wempe_t([\d.]+)_L([\d.]+)_s([\d.]+)\.js$',pathlib.Path(fn).name);tb=W.table(HERE/pathlib.Path(fn).name)
+    import subprocess;eta=float(subprocess.run(['node','-e',"const o=process.stdout.write.bind(process.stdout);process.stdout.write=()=>true;o(' '+require('./wempe_physics.js').LV.Kl+' ')"],cwd=HERE,capture_output=True,text=True).stdout.strip().split()[-1])
+    x=np.linspace(0,8.75,71);q=np.array([W.profile(tb,0.75)(v) for v in x])*K;q0=np.array([W.profile(d0,0.75)(v) for v in x])*eta;kb=q/q0
+    pathlib.Path(out).parent.mkdir(parents=True,exist_ok=True)
+    pathlib.Path(out).write_text(json.dumps(dict(table=pathlib.Path(fn).name,t=float(m[1]),set=float(m[3]),eta=eta,kbn=[[round(float(a),4),round(float(b),5)] for a,b in zip(x,kb)])),encoding='utf-8')
+    print(f'{out}: {pathlib.Path(fn).name}, the drive x{kb.min():.3f}-{kb.max():.3f} of the measured (mean {kb.mean():.3f}; the build\'s flat {1.26}), the drawn spring\'s level {eta:.3f}')
 def main():
+    if '--drive' in ARGV:i=ARGV.index('--drive');return drive(ARGV[i+1],ARGV[i+2])
     R=[]
     for fn in sorted(HERE.glob('mainspring_wempe_t*_L*_s*.js')):
         m=re.match(r'mainspring_wempe_t([\d.]+)_L([\d.]+)_s([\d.]+)\.js$',fn.name)
