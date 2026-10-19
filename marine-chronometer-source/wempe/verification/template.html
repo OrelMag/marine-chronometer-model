@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#open">17. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#open">18. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -381,7 +381,28 @@ escapement at the first-drawn heights, with the first-drawn balance staff and co
 <div id="t6Train" class="tw"></div>
 <div id="k6"></div>
 
-<h2 id="open">17. What stays open</h2>
+<h2 id="builds">17. The builds: a Wempe to navigate by</h2>
+<p>What a maker would build to navigate by: about two miles of longitude a month, 8 s after 30 days at sea. As drawn, the balance swings 191-200° over the wind,
+under the sources' 225-270°; the depth of lock has a window of 15 µm, too fine to set and keep as the stone and the teeth wear; and set as the 6MX passports show
+adjusters set the masses, it carries 17 s after a month. Two builds answer it, and the maker chooses (the model's README, "The build"; each choice the user's,
+19 October 2026):</p>
+<ul>
+<li><b>Both</b>: the gold spring thinned to 0.06 over its first 3 mm from its bending point (Belyakov 1957: Lange's MX 0.06 at its bend; 05 04 01-2's 0.15 taken as the
+blank), which opens the lock's window to about 0.2 mm; the preload 0.8 g; endshake to the Soviet Navy's 1958 MX repair book; the temperature masses set to ±0.1° on more
+rounds of the trial.</li>
+<li><b>The 1940s build</b>: the drawings' drive and their carbon-steel mainspring, 0.37. A stronger carbon strip is past steel's limit.</li>
+<li><b>The 1950s build</b>: 1.26 times the drive (the repair book's mainspring torque), from a Nivaflex 45/5 strip 0.377 × 15 × 1,240 mm (Straumann's alloy, patented 1948:
+not in the Einheits-Chronometer's own decade); the maintaining spring banked while running, as the Hamilton's is.</li>
+</ul>
+<p>The drawn versions' cross-checks between makeEsc, <code>dynamics.js</code> and the tripping frame are calibrated on the drawn detent; on the thinned gold spring three of
+them part on detail of the detent's motion (none bears on its safety), so each build is judged on what decides whether a made one works (<code>wempe_build.js</code>).</p>
+<div id="tBuilds" class="tw"></div>
+<h3>Made to the tolerances, and after the bench</h3>
+<p>Each build's tolerances, bench and Monte Carlo, run as section 12's with the build loaded (<code>MC_WREV=build40</code>, <code>build</code>): 2,000 movements each.</p>
+<div id="tBuildsMC" class="tw"></div>
+<div id="kBuilds"></div>
+
+<h2 id="open">18. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -517,6 +538,19 @@ function draw(){
     audit:o=>[...o.matchAll(/^== (\w+) \((\d+)\)$/gm)].map(m=>`${m[1]} ${m[2]}`).join(', ')+'; '+((/^(OK: [^\n]*|NEW[^\n]*)$/m.exec(o)||[''])[0]),exploded:o=>(/^\d+ bodies[^\n]*$/m.exec(o)||[''])[0],bom:o=>o.split('\n').filter(l=>/\d+ (lines|of \d+|pieces|units|relations|jewels)|failed|^OK|^ok\b|all /i.test(l)).slice(-4).join('; ')};
   gkey['audit-box']=gkey.audit;for(const k of['fine','bom','audit','exploded'])gkey[k+'-6mx']=gkey[k];gkey['audit-box-6mx']=gkey.audit;
   {const k6=Object.keys(GEO).filter(SOV);table('t6Geo',['Check','What it checks','Result','Exit','Time'],k6.map(k=>{const g=GEO[k];return[`<code>${esc(g.cmd)}</code>`,esc(g.what),esc((gkey[k]||(()=>''))(g.out)),`<span class="${g.rc?'no':'ok'}">${g.rc}</span>`,g.secs+' s'];}),true);}
+  if(D.navb){const B=D.navb,C=B.checks.builds,ks=['build40','build'],cell=(fn)=>ks.map(k=>fn(C[k],B[k]));
+    table('tBuilds',['',C.build40.name.replace(/^the /,''),C.build.name.replace(/^the /,'')],[
+      ['The swing over the wind',...cell(c=>`${f(c.swing.lo,1)}-${f(c.swing.hi,1)}° (${f(c.swing.A12,1)}° at 12 h)`)],
+      ['The depth of lock’s window',...cell(c=>`${f(c.window.floor,3)}-${f(c.window.deep,3)} mm (${Math.round((c.window.deep-c.window.floor)*1000)} µm; drawn ${f(c.window.d0,3)})`)],
+      ['A held tooth’s stone rings',...cell(c=>`${Math.round(c.window.ring*1000)} µm (${f(100*c.frame.maxL,1)} % of the lock)`)],
+      ['In time (dynamics.js)',...cell(c=>`${c.dyn.beats} beats, ${c.dyn.trips} past; home ${f(c.dyn.margin*1000,1)} ms early`)],
+      ['Pushed to 300°',...cell(c=>`${c.push.trips} teeth past`)],
+      ['A blow that lets a tooth go',...cell(c=>`${f(c.knock.b3,1)} g for 3 ms, ${Math.round(c.knock.b05)} g for 0.5 ms`)],
+      ['The preload’s floors',...cell(c=>`margin ${f(c.floor.margin,2)} g, knock ${f(c.floor.knock,2)} g (set 0.8)`)],
+      ['The maintaining spring while winding',...cell(c=>`${f(c.sustain,1)} min`)],
+      ['After 30 days at sea',...cell(c=>`${f(c.voyage30,1)} s (${f(c.voyage30/4,1)} miles)`)]],true);
+    table('tBuildsMC',['','Work as made','After the bench','Swing in the sources’ band after it'],ks.map(k=>[C[k].name.replace(/^the /,''),`${f(100*B[k].mc.asMade.works,1)} %`,`${f(100*B[k].mc.after.works,1)} %`,`${f(100*B[k].mc.after.sources,1)} %`]),true);
+    checks('kBuilds','builds');}
   if(D.soviet){const S6=D.soviet;
     table('t6Wind',['Hours from full wind','Swing, as last revised (°)','Swing, the 6MX (°)','Rate against 12 h, as last revised (s/d)','The 6MX (s/d)'],S6.wind.map(w=>[w.h,f(w.a,1),f(w.a6,1),sg(w.r),sg(w.r6)]),true);
     table('t6Train',['Mesh','Pivots\' shake, drawn → 6MX (µm)','Holes within, drawn → 6MX (µm)'],S6.train.map(t=>[esc(t.stage),`${Math.round(t.sh*1000)} → ${Math.round(t.sh6*1000)}`,`±${Math.round(t.tp*1000)} → ±${Math.round(t.tp6*1000)}`]),true);
@@ -556,7 +590,7 @@ function draw(){
       if(T.running)table('tRun',['Running','Swing','Rate (s/d)','Teeth past','A held tooth\'s stone lifted (of the lock)'],Object.entries(T.running).map(([k,r])=>[esc(k),f(r.A,1)+'°',sg(r.rate,2),r.trips,`${f(100*r.maxL,1)} % at ${f(r.maxTh,0)}°${r.maxRet?', the return swing':''}`]));
       if(T.sweep)table('tSweep',['An estimate varied','Teeth past','The stone at most (of the lock)','Swing'],T.sweep.map(r=>[esc(r.name),r.trips,f(100*r.maxL,1)+' %',f(r.A,1)+'°']));
       if(T.knocks)table('tKnock',['Preload','Knock','The frame as drawn','The rigid detent'],T.knocks.rows.map(k=>[esc(k.preload),esc(k.name),`${k.frame} ${k.unit}`,`${k.rigid} ${k.unit}`]),true);
-      if(T.knocks&&T.knocks.floor)table('tKnockF',['Preload at the stone','The 3 ms blow that lets a tooth go (the frame as drawn)'],[...T.knocks.floor.rows.map(([m,g])=>[`${f(m*0.63,2)} g (${m}× the estimate)`,f(g,1)+' g']),['the knock's floor: 20 g from',T.knocks.floor.g==null?'past the runs':f(T.knocks.floor.g,2)+' g']]);
+      if(T.knocks&&T.knocks.floor)table('tKnockF',['Preload at the stone','The 3 ms blow that lets a tooth go (the frame as drawn)'],[...T.knocks.floor.rows.map(([m,g])=>[`${f(m*0.63,2)} g (${m}× the estimate)`,f(g,1)+' g']),['the knock’s floor: 20 g from',T.knocks.floor.g==null?'past the runs':f(T.knocks.floor.g,2)+' g']]);
       if(T.push){const P=T.push.rows.map(q=>[q.frame.A,q.frame.trips?100:Math.min(100,100*q.frame.maxL),q]);chart('cPush',{label:'The swing pushed',x:[220,380],y:[0,105],xl:'the swing (°)',yl:'the stone lifted, % of the lock',vrefs:[{x:T.push.TRIP,t:'TRIP'}],hrefs:[{y:50,t:'half'}],hbands:[],
         series:[{type:'dots',name:'no tooth past',c:'--s1',data:P.filter(p=>!p[2].frame.trips).map(p=>[p[0],p[1]]),tip:p=>`${f(p[0],0)}°: the stone at most ${f(p[1],1)} %`},{type:'dots',name:'a tooth got past',c:'--s2',data:P.filter(p=>p[2].frame.trips).map(p=>[p[0],p[1]]),tip:p=>`${f(p[0],0)}°: a tooth past`}]});}}}
   checks('kTrip','tripping');
