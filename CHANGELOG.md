@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.22.02 · 2026-10-19
+- The Hamilton's 3D analysis: its fusee wheel's teeth now loaded where they bear on their pinion (433 MPa at the let-go blow, was 369).
+- Both reports and the methodology: the let-go peaks on the clicks, pawls and ratchets shown to be contact pressure (a dent where nose and tooth meet), with the bending from the beam formulas.
+
 ## 3.22.01 · 2026-10-19
 - A write-up of how the 3D analysis of the moving parts was done, with its figures, on GitHub (docs/motion-3d).
 - The Wempe report's let-go table now says its click wheel column uses the most cautious of three readings.
