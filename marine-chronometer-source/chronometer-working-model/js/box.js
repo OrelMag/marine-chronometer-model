@@ -187,7 +187,20 @@ function buildBox(M){
   shield.userData.turn(SH_REST);shield.userData.hole={p:at(KD,ah),c:fu,r:KH,rest:SH_REST};   /* for bom.py's check: the plate's hole (plate frame), the case's (case frame) */
   /* the bezel (42102), screwed onto the rim, rising to hold the crystal (42103) in a groove clear of the hands' square; its section estimated. YC, the crystal's underside, 2.4 over the
      square's measured top (14.5, the motion work in movement.js), as the deep bezel of Renaissance Antiques' side-on photograph allows (about 13 mm, against 8.3 before); MR_Y+5.6 until 5 October 2026 */
-  const YC=MR_Y+10.4,BL=DIAL_R-1.6,GR=DIAL_R+0.1,bz=hn(mesh(bowl,new THREE.LatheGeometry([V2(TR,YTB),V2(TR+1.8,YTB),V2(TR+1.8,YT+1.2),V2(DB+0.9,YC+1.4),V2(BL,YC+1.4),V2(BL,YC+0.8),V2(GR,YC+0.8),V2(GR,YC),V2(BL,YC),V2(BL,YC-0.5),V2(DB+0.1,YC-0.5),V2(DB+0.1,YT),V2(TR,YT),V2(TR,YTB)],128),M.brass),'42102');
+  /* its case end knurled (19 October 2026): KLUwI2UUCMQ 2:42 (the bezel upside down under the movement, the plate's 87.57 as the scale; PROVENANCE.md, "The bezel on 2:42 and
+     48:30") and 48:30 (the bezel alone): a diamond knurl, its pitch about 0.85 mm both ways (23 px at 26.96 px/mm, so about 400 round r 54.2, where the end's ellipse puts the band:
+     the model's TR+1.8, 54.3), the band about 5.1 mm tall (rows 1995-2128 at about 18 deg); the rows 0.8 apart (21 px); the knurl's depth 0.3 estimated. The lathe's band at the knurl's root (BZK.r0), the knurl a
+     closed shell on it (knurlBand), crests at TR+1.8. Until then a plain band 3.7 mm tall (YTB to YT+1.2) */
+  const BZK={n:400,h:5.1,d:0.3,rp:0.8,r1:TR+1.8},BZr0=BZK.r1-BZK.d;   /* rp: the rows of diamonds 0.8 mm apart along the axis (21 px on 2:42, foreshortened by about cos 18 deg), each row's offset half a pitch from the last */
+  const knurlBand=(r1,d,y0,h,n,rp)=>{const m=Math.max(2,Math.round(h/rp)),N=2*n,P=[],I=[],r0=r1-d,ri=r0-0.05,ix=(i,j)=>j*N+(i%N);
+    for(let j=0;j<=m;j++)for(let i=0;i<N;i++){const t=i/N*2*Math.PI,H=((i+j)%2)?1:0,r=r0+d*H;P.push(r*Math.cos(t),y0+h*j/m,-r*Math.sin(t));}   /* a checkerboard of crests and roots, two samples a pitch: the diamonds */
+    const B=P.length/3;for(const y of[y0,y0+h])for(let i=0;i<N;i++){const t=i/N*2*Math.PI;P.push(ri*Math.cos(t),y,-ri*Math.sin(t));}
+    const q=(a,b,c,e)=>I.push(a,b,c,a,c,e);
+    for(let j=0;j<m;j++)for(let i=0;i<N;i++){const a=ix(i,j),b=ix(i+1,j),c=ix(i+1,j+1),e=ix(i,j+1);if((i+j)%2)I.push(a,b,e,b,c,e);else q(a,b,c,e);}   /* outside: each cell split on its root-to-root diagonal, so every crest is a four-sided pyramid (a diamond) */
+    for(let i=0;i<N;i++){const a0=B+i,a1=B+(i+1)%N,b0=B+N+i,b1=B+N+(i+1)%N;q(a0,b0,b1,a1);q(ix(i,0),B+i,B+(i+1)%N,ix(i+1,0));q(ix(i+1,m),B+N+(i+1)%N,B+N+i,ix(i,m));}   /* inside, bottom, top */
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setIndex(I);const f=g.toNonIndexed();f.computeVertexNormals();return f;};   /* flat facets: each pyramid's faces lit apart, as the knurl's are */
+  const YC=MR_Y+10.4,BL=DIAL_R-1.6,GR=DIAL_R+0.1,bz=hn(mesh(bowl,new THREE.LatheGeometry([V2(TR,YTB),V2(BZr0,YTB),V2(BZr0,YTB+BZK.h),V2(BZK.r1,YTB+BZK.h),V2(DB+0.9,YC+1.4),V2(BL,YC+1.4),V2(BL,YC+0.8),V2(GR,YC+0.8),V2(GR,YC),V2(BL,YC),V2(BL,YC-0.5),V2(DB+0.1,YC-0.5),V2(DB+0.1,YT),V2(TR,YT),V2(TR,YTB)],128),M.brass),'42102');
+  hn(mesh(bz,knurlBand(BZK.r1,BZK.d,YTB,BZK.h,BZK.n,BZK.rp),M.brass),'42102',{sub:1});
   const gl=hn(mesh(bowl,new THREE.CylinderGeometry(GR,GR,0.8,96),M.glass,0,YC+0.4,0),'42103');gl.renderOrder=5;bz.userData.bezel=gl.userData.bezel=true;   /* the bezel with its crystal, taken off to set the hands with the key (app.js) */
   /* lids hinged at the back */
   /* glass lid hinged to the back of the box; the outer lid hinged to the back-top edge of the glass lid, so it opens on its own and never swings through the glass lid */
