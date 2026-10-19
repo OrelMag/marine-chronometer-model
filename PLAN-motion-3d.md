@@ -70,7 +70,7 @@ All six phases are done. Both viewers were published privately first. The user t
   | Model | Inner coils | Limit |
   |---|---|---|
   | Wempe as drawn | 2,663 MPa | 2,600 |
-  | Wempe, 1950s build | 3,248 MPa | 3,000 |
+  | Wempe, 1950s build (the 0.377 strip; the adopted 0.393 at set ×0.8: 2,879) | 3,248 MPa | 3,000 |
   | Hamilton | 3,021 MPa | 2,600 |
 
 **The let-go blow.** `wempe_letgo_fix.js` tried more clicks, a brake between the click wheel and the maintaining ratchet, and a cushioned click face. None keeps every part within its material. The maintaining ratchet's brass is the last to stay over: it is struck by the maintaining detent. Eased back, every part is within its limit or at its floor. The builds keep the drawn parts, and the key is let back at the end of each stroke. In hardened steel, the click wheel and ratchet would take the outright blow with four clicks and a brake. That is open for the user to decide.
@@ -104,3 +104,5 @@ The 0.393 mm strip at set 0.8 gives the drive with its inner coils within the st
 - The swing over the wind is 216–241°, against the build's 227–236°.
 - Unchanged: the 30-day error (5.8 s), the detent and knock margins, the Monte Carlo.
 - Put to the user to decide.
+
+**Adopted (19 October 2026, the user's choice).** The 1950s build takes the 0.393 mm strip at set ×0.8, with its drive turn by turn (`BUILD.strip.drive`), and `wempe_physics.js`'s full-wind level is widened to 4 %. The maintaining ratchet stays brass, with the key let back at each stroke (the Wempe README's "The build").

@@ -64,7 +64,7 @@ out={'model':M,'version':VER}
 strip=W['strip'];tab=strip['table'] if strip else 'mainspring_wempe.js';t=strip['t'] if strip else 0.37;E=(strip['E'] if strip else 207)*1e3;k_lvl=1.0 if strip else W['Kl']
 src=(HERE/tab).read_text(encoding='utf-8');d=json.loads(re.search(r'const MSHAPE=(\{.*?\});',src,re.S).group(1))
 u16=lambda s:np.frombuffer(base64.b64decode(s),'<u2').astype(float)
-n=d['n'];s=u16(d['s'])*0.05;RR=u16(d['r']).reshape(-1,n)*0.0005;L=W['L'];SET=W['set']
+n=d['n'];s=u16(d['s'])*0.05;RR=u16(d['r']).reshape(-1,n)*0.0005;L=W['L'];SET=(W['strip'] or {}).get('set') or W['set']   # the build's strip its own set (0.393 at ×0.8 since 19 October 2026), the drawn the fit's
 FREE_PX=np.array([97,185,250,328,405,502,632,750],float);rk=FREE_PX*L/(2*math.pi*FREE_PX.sum());sk=np.array([2*math.pi*(rk[:i].sum()+rk[i]/2) for i in range(len(rk))])
 S0=np.r_[0,sk,L];RH0=np.r_[rk[0]*0.8,rk,rk[-1]+(rk[-1]-rk[-2])*(L-sk[-1])/(sk[-1]-sk[-2])];k0=lambda x:SET/np.interp(np.clip(x,0,L),S0,RH0)
 states=[]
