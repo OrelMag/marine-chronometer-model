@@ -16,13 +16,15 @@ const WPHYS=(()=>{
   /* the going train, fusee wheel to escape pinion: 90/14 · 90/12 · 80/10 · 80/10 (train.js, the wheels' tables; the pinions' 12 and 10 from the centres) */
   const RATIO=90/14*90/12*80/10*80/10;
   /* its efficiency, each stage from its parts as the Hamilton's (tools/physics.js A6): the driven arbor's pivots carry its pinion's and wheel's tooth loads, T (1/r_pinion +
-     1/r_wheel), and lose mu_p r_pivot of it; the mesh about mu_t pi (1/z_wheel + 1/z_pinion) c. [pinion's module, driving wheel's teeth, pinion's leaves, its own wheel's radius
-     (the escape wheel's to its tips), its pivots' radii]: the centre arbor's train-side pivot Ø 1.2 and its journal Ø 2.2 in WN-302 (05 05 03), the intermediate's Ø 0.85,
-     the seconds' Ø 0.82 and 0.76, the escape arbor's Ø 0.24 (train.js, escapement.js). mu_p 0.10-0.15 and mu_t 0.10-0.20, c 0.5-1, the Hamilton's published ranges; the model
-     takes the geometric mean of the two ends (estimated) */
+     1/r_wheel), and lose mu_p r_pivot of it; the mesh its tooth-by-tooth torque ratio (MESH, tools/gearing.js --model wempe's mean at mu_t 0.10 and 0.20 over the frictionless,
+     gearing_wempe.json, the A.4 pinions; until 19 October 2026 about mu_t pi (1/z_wheel + 1/z_pinion) c, 0.749). [pinion's module, driving wheel's teeth, pinion's leaves, its
+     own wheel's radius (the escape wheel's to its tips), its pivots' radii]: the centre arbor's train-side pivot Ø 1.2 and its journal Ø 2.2 in WN-302 (05 05 03), the
+     intermediate's Ø 0.85, the seconds' Ø 0.82 and 0.76, the escape arbor's Ø 0.24 (train.js, escapement.js). mu_p 0.10-0.15, the Hamilton's published range; the model takes
+     the geometric mean of the two ends (estimated): 0.780, wempe_physics.js's train worked tooth by tooth */
   const STG=/** @type {[number,number,number,number,number[]][]} */([[0.4356,90,14,0.35529*45,[0.6,1.1]],[0.35529,90,12,0.28066*40,[0.425,0.425]],[0.28066,80,10,0.26333*40,[0.41,0.38]],[0.26333,80,10,7.0,[0.12,0.12]]]);
-  const eta=(mp,mt,c)=>STG.reduce((q,[m,zw,zp,rw,p])=>q*(1-mp*(p[0]+p[1])/2*(2/(m*zp)+1/rw))*(1-mt*Math.PI*(1/zw+1/zp)*c),1);
-  const ETA_LO=eta(0.15,0.20,1),ETA_HI=eta(0.10,0.10,0.5),ETA=Math.sqrt(ETA_LO*ETA_HI);
+  const MESH=[[0.97044,0.94225],[0.98521,0.97068],[0.98236,0.96512],[0.98129,0.96318]];   /* each mesh at mu_t 0.10, 0.20 */
+  const eta=(mp,j)=>STG.reduce((q,[m,zw,zp,rw,p],i)=>q*(1-mp*(p[0]+p[1])/2*(2/(m*zp)+1/rw))*MESH[i][j],1);
+  const ETA_LO=eta(0.15,1),ETA_HI=eta(0.10,0),ETA=Math.sqrt(ETA_LO*ETA_HI);
   const escT=n=>fusT(n)/RATIO*ETA*1e6;   /* the escape wheel's torque (µN·m) */
   const HPT=90/14,TQ=escT(12/HPT);   /* the fusee's 6.43 h a turn; the reference: 12 h from full wind, as the Hamilton's (its drive 1 there) */
   const SET={...WESC.SET,TQ},ESC=makeEsc(SET,SET);WESC.adapt(ESC);   /* the page's escapement (WESC.ESC.state) moves as this solves it, at the reference's swing by default (the tools' phases); its layout's own motion WESC.ESC.layout */

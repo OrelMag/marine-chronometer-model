@@ -333,7 +333,9 @@ chk(Math.abs(own-RU.own)<0.3,`the escapement's own rate within 0.3 s a day of Ai
   const lo=sim({...M1,s:s0,A:ESC.ampAt(s0)/D}),hi=sim({...M1,s:s1,A:ESC.ampAt(s1)/D}),pa=x=>ESC.rateAt(ESC.ampAt(x),x);
   const dT=hi.rate-lo.rate,dH=WEMPE?ESC.settings.HS*(ESC.ampAt(s1)-ESC.ampAt(s0))/D/10:0,dM=pa(s1)-pa(s0)-dH,sl=dT/(hi.A-lo.A)*10;
   say(`the drive ${f(100*s0,0)} % → ${f(100*s1,0)} %${WEMPE?' (05 06_20 over the wind)':''}: the model ${f(ESC.ampAt(s0)/D,0)}° → ${f(ESC.ampAt(s1)/D,0)}°, the rate ${sg(dM)} s a day${WEMPE?` (the escapement's; with the drawn hairspring's ${sg(dH)}, ${sg(dM+dH)})`:''}; in time ${f(lo.A,0)}° → ${f(hi.A,0)}°, ${sg(dT)} s a day (${sg(sl,3)} s a day for each 10° of swing)`);
-  chk(Math.abs(dT-dM)<0.1,`isochronism (the rate's change over the ${WEMPE?'wind\'s':'manual\'s'} range of swing) within 0.1 s a day of the model's`);
+  /* the Wempe's within 0.2 (the user's choice, 19 October 2026): since its lock was re-laid (0.235) the stone comes off the escaping tooth's back about 0.9° after the impulse begins, a
+     last degree makeEsc rides quasi-statically and the integration with its hops, where they meet shifting with the drive (0.14 s a day apart at 0.8 g, 0.01 at 0.175 and 0.63 g) */
+  const isoTol=WEMPE?0.2:0.1;chk(Math.abs(dT-dM)<isoTol,`isochronism (the rate's change over the ${WEMPE?'wind\'s':'manual\'s'} range of swing) within ${isoTol} s a day of the model's (${sg(dT-dM,2)})`);
   /* the Wempe's: the escapement with its drawn hairspring's own isochronism (HS), the chronometer as made (since 15 October 2026, when the masses' height made its balance 10 % heavier and its
      swing 7° smaller: the escapement alone +0.51 s a day for each 10°, its hairspring −0.66); the Hamilton's spring is linear, its escapement the whole */
   const slC=WEMPE?(dT+dH)/(hi.A-lo.A)*10:sl;
