@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.21.00 · 2026-10-19
+- The Wempe's verification report works again: its tables and charts had stopped drawing
+- New in the Wempe's report: two builds of the Wempe for a navigator, one in 1940s materials and one with a 1950s Nivaflex mainspring, each checked to keep time within about 1.5 miles of longitude a month
+- For anyone making a Wempe: the bench now gives each arbor's end play from the Soviet Navy's 1958 repair book, and a finer temperature adjustment for navigation
+
 ## 3.20.00 · 2026-10-19
 - The Hamilton's upper train bridge re-measured on a restoration video through the holes the bare plate places: its notch now round the fusee, its mouth a straight cut, and its holes where the video has them
 - The Hamilton's balance lower bridge now sits on its real screws, and the train-blocking screw stands in its access hole
