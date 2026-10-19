@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.19.00 · 2026-10-19
+- The Wempe's escapement re-laid as its drawing scales: the teeth lock 0.235 mm deep, and the swing is now 188-200° over the wind
+- The Wempe's train efficiency is now worked out tooth by tooth, its gold spring uses the Soviet 333 alloy, and its balance damping is refitted to the 6MX video (111 s)
+
 ## 3.18.00 · 2026-10-19
 - The Hamilton's balance lower bridge rebuilt from hand traces of a real movement: one machined part of two levels, its lugs on straight posts under the slab's ends
 - The Hamilton's bridges measured anew on a restoration video: their rim is 38.8 mm in radius, not 40.5, and the train bridge's end by the barrel is 2.4 mm shorter

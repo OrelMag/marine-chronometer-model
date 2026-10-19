@@ -85,7 +85,7 @@ const A12=E.A/D,AW=[];for(let h=0;h<=56.3;h+=2){const n=h/P.HPT,s=P.drv(n);AW.pu
 const aLo=Math.min(...AW.map(q=>q.a)),aHi=Math.max(...AW.map(q=>q.a)),r1=rate(225),r0=rate(247.5),r2=rate(270),slope=(rate(A12+10)-rate(A12-10))/2;
 say(`the rate the spring alone gives against small swings: 180° ${sg(rate(180),3)}, ${f(aLo,0)}° ${sg(rate(aLo),3)}, ${f(A12,0)}° ${sg(rate(A12),3)}, ${f(aHi,0)}° ${sg(rate(aHi),3)}, 225° ${sg(r1,3)}, 247.5° ${sg(r0,3)}, 270° ${sg(r2,3)} s a day`);
 say(`so it ${slope>=0?'gains':'loses'} ${f(Math.abs(slope),3)} s a day for each 10° about the model's swing (${f(A12,1)}° at 12 h), ${sg(r2-r1,2)} s a day over the 1954 instruction's 225-270°`);
-chk(Math.abs((S.HS||0)-slope)<0.0005,`the model runs with it: WESC.SET.HS ${f(S.HS||0,3)} s a day per 10° (makeEsc's rate adds it to the escapement's: tools/escapement.js's settings)`);
+chk(Math.abs((S.HS||0)-slope)<0.0005,`the model runs with it: WESC.SET.HS ${f(S.HS||0,3)} s a day per 10° (the drawn spring's at the model's swing ${f(slope,3)}; makeEsc's rate adds it to the escapement's: tools/escapement.js's settings)`);
 {let lo=1e9,hi=-1e9,lo0=1e9,hi0=-1e9;for(const q of AW){const re=E.rateAt(q.a*D,q.s),r0=re-(S.HS||0)*(q.a-A12)/10;lo=Math.min(lo,re);hi=Math.max(hi,re);lo0=Math.min(lo0,r0);hi0=Math.max(hi0,r0);}
   say(`over the wind (0-56 h, the swing ${f(aLo,1)}-${f(aHi,1)}°) the escapement alone ${sg(lo0)} to ${sg(hi0)} s a day, with the drawn spring's isochronism ${sg(lo)} to ${sg(hi)} (both against 12 h)`);
   module.exports.iso={slope,r225:r1,r247:r0,r270:r2,rangeEsc:[lo0,hi0],range:[lo,hi]};}

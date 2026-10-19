@@ -9,7 +9,7 @@
 //    bodies change, weighed on the page's solids in that version (wempe_inertia.py --rev 6mx, tools/wempe_inertia_6mx.json, against wempe_inertia.json): the balance's
 //    moment of inertia (its period and the rate before timing), the escape wheel's with the train behind it and the detent's, run through makeEsc as the page's
 //    escapement is (escphys.js WPHYS.rev('6mx'): WESC.SET with WESC.SET6's bodies): its swing and rate over the wind.
-//   node wempe_6mx.js            prints them; exit 1 if tools/wempe_6mx.json is stale, the 6MX's swing leaves wempe_escapement.js's guard (185-270°) or a hole's
+//   node wempe_6mx.js            prints them; exit 1 if tools/wempe_6mx.json is stale, the 6MX's swing leaves wempe_escapement.js's guard (180-270°) or a hole's
 //                                tolerance falls under 5 µm
 //   node wempe_6mx.js --write    writes tools/wempe_6mx.json (the report's figures)
 // About a second. Run it after wempe_inertia.py --write (either version), gearing.js --model wempe --write, or a change to the Wempe's escapement or the 6MX's jewels.
@@ -34,7 +34,7 @@ const R0=row(E0),R6=row(E6),r12=R=>R.find(q=>q.h===12).r;
 say('the swing and the escapement\'s rate over the wind (against 12 h), as last revised and the 6MX:');
 for(let i=0;i<H.length;i++)say(`  ${String(H[i]).padStart(2)} h  ${f(R0[i].a,1)}°  ${f(R6[i].a,1)}°   ${f(R0[i].r-r12(R0),2)}  ${f(R6[i].r-r12(R6),2)} s a day`);
 let mn=1e9,mx=-1e9;for(let h=0;h<=56.3;h+=1){const s=P.drv(h/P.HPT),a=E6.ampAt(s)/D;mn=Math.min(mn,a);mx=Math.max(mx,a);}
-chk(mn>=185&&mx<=270,`the 6MX's swing stays within 185-270° over the wind (wempe_escapement.js's guard): ${f(mn,1)}-${f(mx,1)}°`);
+chk(mn>=180&&mx<=270,`the 6MX's swing stays within 180-270° over the wind (wempe_escapement.js's guard): ${f(mn,1)}-${f(mx,1)}°`);
 /* the train: the same efficiency, the jewels' shake and the holes' tolerance */
 const SH6=[0.02,0.025,0.025,0.03];   /* fusee-centre (the centre's WN-301, kept), centre-intermediate (the intermediate's jewels), intermediate-seconds, seconds-escape (the escape jewels' 0.03) */
 say(`the train's efficiency: the same (oiled steel in ruby or brass, mu 0.10-0.15: physics.js); the meshes' depthing windows the same (their geometry is the drawings')`);

@@ -64,8 +64,9 @@ const TR=(()=>{const piv=(st,mp)=>{const[m,,zp,rw,p]=st;return 1-mp*(p[0]+p[1])/
   const names=['the centre arbor','the intermediate','the seconds','the escape arbor'];let lo=1,hi=1;
   P.STG.forEach((st,i)=>{const pl=piv(st,0.15),ph=piv(st,0.10),g=GW&&GW.stages[i].eff,ml=g?g[2]/g[0]:est(st,0.20,1),mh=g?g[1]/g[0]:est(st,0.10,0.5);lo*=pl*ml;hi*=ph*mh;
     say(`${names[i].padEnd(17)} pivots (r ${st[4].join(', ')}) ${rg(1-ph,1-pl,1,100)} %, its mesh ${rg(1-mh,1-ml,1,100)} %${g?` (tooth by tooth, gearing.js --model wempe: its mean torque ratio at mu 0.10-0.20 over the frictionless)`:' (estimated, mu pi (1/z1 + 1/z2) c)'}: the stage ${rg(pl*ml,ph*mh,3)}`);});
-  say(`the train ${rg(lo,hi,3)} (2a's estimate ${f(P.ETA_LO,3)}-${f(P.ETA_HI,3)}, the model taking ${f(P.ETA,3)}${GW?`; the meshes worked tooth by tooth put the model's at ${f(Math.sqrt(lo*hi),3)}`:''})`);
-  note(P.ETA>=lo&&P.ETA<=hi,`the model's train efficiency ${f(P.ETA,3)} (escphys.js) lies inside the range the parts give`);return{lo,hi};})();
+  say(`the train ${rg(lo,hi,3)} (escphys.js's ${f(P.ETA_LO,3)}-${f(P.ETA_HI,3)}, the model taking ${f(P.ETA,3)}${GW?`; the meshes worked tooth by tooth put the model's at ${f(Math.sqrt(lo*hi),3)}`:''})`);
+  if(GW)chk(Math.abs(P.ETA-Math.sqrt(lo*hi))<5e-4&&Math.abs(P.ETA_LO-lo)<5e-4&&Math.abs(P.ETA_HI-hi)<5e-4,`the model's train efficiency ${f(P.ETA,3)} (escphys.js's MESH) is the train worked tooth by tooth, ${f(Math.sqrt(lo*hi),3)}, its range ${rg(lo,hi,3)} (after gearing.js --model wempe --write, copy its meshes' ratios into MESH)`);
+  else note(P.ETA>=lo&&P.ETA<=hi,`the model's train efficiency ${f(P.ETA,3)} (escphys.js) lies inside the range the parts give`);return{lo,hi};})();
 const escFrom=(fus,eta)=>fus/P.RATIO*eta*1e6,hrs=Array.from({length:57},(_,i)=>i);   /* the escape wheel's torque, µN·m */
 {const n12=12/HPT,x12=P.MF-n12,mes=P.fusT(n12),sol=[tqAt(x12)*LV.kE[0]*LS.lo,tqAt(x12)*LV.kE[1]*LS.hi];
   say(`at 12 h from full wind (fusee turn ${f(x12)}): the fusee arbor measured ${f(mes*1000,1)} mN·m, the solved spring less the losses ${rg(sol[0],sol[1],1,1000)} mN·m`);

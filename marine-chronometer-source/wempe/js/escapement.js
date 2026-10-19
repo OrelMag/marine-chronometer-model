@@ -5,9 +5,9 @@
    kinematic motion ESC.layout), and WESC.build(mv, M, K), which adds the parts to the
    movement group and returns update(s) for movement.js.
    The layout is 05 04_1 (Hemmung für Feder-Chronometer, 10:1): the balance at hole 23 and the escape wheel at hole 26 of the plates' tables, 10.00 apart (the tables give
-   10.000: sure); the locking stone 7.2 from the wheel's centre (scaled), 36.5 deg on from the line of centres in the wheel's turn (scaled on the sheet, 24.4 px/mm; it is the
-   angle that leaves both teeth either side of the line clear of the impulse roller when the wheel is locked, 0.05 and 0.12 mm, and the impulse 21 deg either side of the line
-   of centres, the sheet's "21°", with drops of 1.7 and 2.7 deg of the wheel: inferred). The sheet's plan is seen from above (through the top plate), as the frame's sheets:
+   10.000: sure); the locking stone 7.14 ±0.04 from the wheel's centre, 37.0 ±0.3 deg on from the line of centres in the wheel's turn (scaled on the sheet against the wheel's
+   tips Ø 14.00, 24.47 px/mm, checked by the impulse roller's 6.77 against its written 6.78: likely), so the tips lock 0.235 deep (Belyakov's 0.22 for Lange's MX, the 1958 Navy
+   book's 0.20-0.25 on the stone); until 19 October 2026 7.2 and 36.5 (0.175 deep: 24.4 px/mm, the angle inferred from the teeth's clearance to the impulse roller). The sheet's plan is seen from above (through the top plate), as the frame's sheets:
    the wheel turns clockwise there, so counterclockwise from the dial (rotation.y rising with E), and the balance the other way during the impulse.
    Heights (y, the movement frame) from the balance staff 05 04 02 (29.5.46) and the hairspring's sheets: the balance's seat (the hub's flange top, the arm on it) FY, set so
    the spring's collet sits clear over the arm with the spring 0.75 under the cock's arm (05 03_5: 3.15 and 13.4 under the stud's bar; the cock 15 high, 05 08 03-1), which
@@ -35,9 +35,9 @@ const WESC=(()=>{
      tip's land to Ø 12.1 (the "12,1", fitted 12.05) 15° behind the tip (the sheet's "15°", fitted 14.9), where a step 0.2 falls to the floor (its foot 15.6 behind, fitted).
      RR the floor, RB0 the step's top, BK and BF its top's and foot's angles behind the tip. Until 15 October 2026 the floor was read as Ø 12.1 (the step's top), the step
      0.15 up to Ø 12.4 and the back's foot 11.9° behind the tip: the sheet's "11,7" was taken for a recess */
-  const RT=7.0,RR=5.85,RB0=6.05,BK=15.0,BF=15.6,FL=25,P_R=7.2,P_A=aB+36.5;   /* FL: the locking face's lean back from the radius through the tip (05 04_23's "25°", fitted 25.2; 15° until 15 October 2026) */
-  const P=pol(W,P_R,P_A);   /* the locking stone's centre: 7.2 from the wheel's (05 04_1 scaled, 24.4 px/mm), 36.5 deg on from the line of centres (scaled; inferred above) */
-  const RS=0.375,LOCK=P_R-RS,DEPTH=RT-LOCK;   /* the locking stone Ø 0.75 (05 04_1 "Ruhestein∅ 0,75": sure), half-round, its flat on the line from the wheel's centre: the tips lock 0.175 deep */
+  const RT=7.0,RR=5.85,RB0=6.05,BK=15.0,BF=15.6,FL=25,P_R=7.14,P_A=aB+37.0;   /* FL: the locking face's lean back from the radius through the tip (05 04_23's "25°", fitted 25.2; 15° until 15 October 2026) */
+  const P=pol(W,P_R,P_A);   /* the locking stone's centre: 7.14 from the wheel's, 37.0 deg on from the line of centres (05 04_1 scaled on the tips' Ø 14.00: above) */
+  const RS=0.375,LOCK=P_R-RS,DEPTH=RT-LOCK;   /* the locking stone Ø 0.75 (05 04_1 "Ruhestein∅ 0,75": sure), half-round, its flat on the line from the wheel's centre: the tips lock 0.235 deep */
   const D0=0.01/RT/D2R;   /* the locked tooth's tip 0.01 short of the stone's flat (a contact drawn as a gap, for the tools) */
   /* the detent's own frame (t along the blade from the stone toward the foot, n across toward the wheel): the block's screw at hole 13 (the plate's table, 05 09 01) and the
      block's sheet (05 04 01-4, 8.7.43): its screw 7.3 from the end the detent's foot is clamped to, its cross screw 18.8 ±0.03 from the screw's row along the upright, which
@@ -87,7 +87,7 @@ const WESC=(()=>{
   const PHI0=-(6+22+10/60);
   const PHI_C=-(22+10/60),SIMP=3.33;   /* the layout's tooth falls on the impulse stone where the impulse begins (05 04_1 "22°10'"); the stone's slanted end (05 04_6: 1.55 + 1.8) */
   const PHI_E=(()=>{let lo=0,hi=40;for(let i=0;i<60;i++){const m=(lo+hi)/2;s_(m)<SIMP?lo=m:hi=m;}return lo;})();   /* the tip leaves the stone */
-  const PSI0=36.5-D0-48,PROG_C=(psiOf(PHI_C)-PSI0)/24,PROG_E=(psiOf(PHI_E)-PSI0)/24,RUN=3;   /* the impulsing tooth (two behind the locked one) starts 11.58 deg before the line */
+  const PSI0=(P_A-aB)-D0-48,PROG_C=(psiOf(PHI_C)-PSI0)/24,PROG_E=(psiOf(PHI_E)-PSI0)/24,RUN=3;   /* the impulsing tooth (two behind the locked one) starts 11.08 deg before the line (11.58 with the stone at 36.5) */
   /* the escaping tooth's outline radius at g deg behind its tip (the back an arc r 3, 05 04_23's ∅6 cutter), for the stone that rides on it */
   const TOOTH=(()=>{const tip=[RT,0],A=pol([0,0],RT,-1.5),Bk=pol([0,0],RB0,-BK),M=[(A[0]+Bk[0])/2,(A[1]+Bk[1])/2],c=hyp(sub(A,Bk)),h=Math.sqrt(9-c*c/4),u=unit(sub(A,Bk)),pp=[-u[1],u[0]];
     const body=pol([0,0],6.7,-3.5),c1=add(M,pp,h),c2=add(M,pp,-h),cc=hyp(sub(c1,body))>hyp(sub(c2,body))?c1:c2;   /* the hollow back: its centre on the gap's side (9.03 from the wheel's centre, as 05 04_23 draws it) */
@@ -192,24 +192,24 @@ const WESC=(()=>{
   const ES_=RT,MK=q=>{const v=sub(q,B),f=(180+aBW-al(v))*D2R,r=hyp(v)/ES_;return{x:r*Math.cos(f),y:r*Math.sin(f)};},dt=(a,b)=>a.x*b.x+a.y*b.y,DST=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   const SET=(()=>{const S=MK(pol(W,RT,P_A)),F=MK(D(TP,0)),BL=DST(S,F),dB={x:(S.x-F.x)/BL,y:(S.y-F.y)/BL},nB={x:dB.y,y:-dB.x};   /* the locked tooth's tip on the stone's flat (the 0.01 the drawing leaves is for the tools); the detent's flexure, its spring's middle */
     const Wm=MK(W),Pc=MK(P),fl=Math.hypot(Wm.x-Pc.x,Wm.y-Pc.y),fF={x:(Wm.x-Pc.x)/fl,y:(Wm.y-Pc.y)/fl},rho=GW/2/ES_,Pt=MK(D(GT,GN)),Gb=MK(D(GB[0],GB[1]));   /* the flat along the wheel's radius; the gold spring's square end's middle (TSQ), its bending point */
-    return{NT:15,ES:ES_,EX:Wm.x,LK:2,LO:-(P_A-aB)+1.5*24,   /* 15 teeth (24 deg), the locked tooth two pitches on from the pair across the line of centres, at 36.5 deg (makeEsc's lockA = t0 - 2 P) */
+    return{NT:15,ES:ES_,EX:Wm.x,LK:2,LO:-(P_A-aB)+1.5*24,   /* 15 teeth (24 deg), the locked tooth two pitches on from the pair across the line of centres, at 37.0 deg (makeEsc's lockA = t0 - 2 P) */
       DA:Math.atan2(dB.y,dB.x)/D2R,BL,DRAW:Math.atan2(dt(fF,dB),-dt(fF,nB))/D2R,   /* the detent's line from its flexure (the spring's middle, TP) to the locked tip; the flat's draw against it */
-      dL:DEPTH/ES_,rJ:RS/ES_,eJ:0,   /* the lock 0.175 deep; the stone Ø 0.75 half round, its flat through its centre */
-      rT:-dt(Pt,dB),PSO:dt(Pt,nB),PSL:DST(Pt,Gb),TSQ:1,tsT:GW,tsH:1.0,ET:90,   /* the gold spring: its square end 1.54 from the staff, free from its bending point (6.7 from the stone); 0.15 × 1 (05 04 01-2); 333 gold's modulus about 90 GPa (estimated: its alloy isn't given) */
+      dL:DEPTH/ES_,rJ:RS/ES_,eJ:0,   /* the lock 0.235 deep; the stone Ø 0.75 half round, its flat through its centre */
+      rT:-dt(Pt,dB),PSO:dt(Pt,nB),PSL:DST(Pt,Gb),TSQ:1,tsT:GW,tsH:1.0,ET:98,   /* the gold spring: its square end 1.54 from the staff, free from its bending point (6.7 from the stone); 0.15 × 1 (05 04 01-2); 333 gold's modulus about 98 GPa (96-101: Au/Ag/Cu 333-333, the alloy Poljot 20027's passport gives the 6MX's, "Сплав Зл СрМ 333-333"; the Wempe's sheet says only "Goldblech 333": likely; 90 until 19 October 2026) */
       rd:uu/ES_+0.5*rho,wD:DSW/ES_,BEV:DS/ES_,rB:0,aD:180+aBW-BETA,   /* the discharge stone: its acting corner's reach along it (makeEsc's rd is that and half the tip), 0.4 across, its end bevelled 0.3 back to the other corner; at rest */
       rRoll:6.78/2/ES_,rp:3.35/ES_,wI:0.5/ES_,fI:0,aI:180+PHI0,rDR:1.2/ES_,   /* the impulse roller Ø 6.78, the stone's face on its radius to 3.35, 0.5 thick, 28°10' before the line of centres at rest */
       r0:RB0/ES_,U:-al(TOOTH.face0)/24,land:1.5/24,B:BK/24,TBR:3,   /* the tooth (05 04_23): the tip 1.5 deg, the back the ∅ 6 cutter's arc to Ø 12.1 15 deg behind the tip, the face leaning 25 deg (4.27 deg behind
         the tip at Ø 12.1): makeEsc's root circle the back's foot, Ø 12.1, its face run to it (the floor 0.2 under it, Ø 11.7, is out of every stone's reach: the locking stone
         comes no nearer the wheel's centre than 6.825, the impulse stone 6.65). Until 15 October 2026 the floor Ø 12.1, the face leaning 15 deg, the back to 11.9 deg */
       SPL:5/ES_,SN0:-0.035/ES_,SN1:0.035/ES_,hD:1.9,EB:205,   /* the detent's spring 0.07 × 1.9, 5 long (1436, its bracketed sizes), steel ("Stahl": 200-210 GPa) */
-      OP78:0,W78:0.63,   /* no Op. 78 here: W78 the preload itself, g at the stone. No Wempe source gives it (a banking screw sets the lock, the 1954 instruction's п. 11): the Hamilton's after Op. 78, 0.63 g (estimated) */
+      OP78:0,W78:0.8,   /* no Op. 78 here: W78 the preload itself, g at the stone. No Wempe source gives it (a banking screw sets the lock, the 1954 instruction's п. 11): estimated, 0.8 g, just over the least that keeps a held tooth's stone ringing under half the depth of lock (wempe_tripping.js: 0.78 g with the lock re-laid at 0.235) and under the 0.85 g from which the stone, falling home, catches the escaping tooth's back during the impulse in dynamics.js (its plastic landing then pushes the balance, as neither makeEsc nor the tripping frame does): the user's choice, 19 October 2026; the Hamilton's after Op. 78, 0.63 g, until then */
       MU:0.15,eS:0.3,   /* the brass tooth on the sapphire stone; the detent's restitution on its banking (estimated, as the Hamilton's) */
-      HS:-0.491,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing) */
-      I:2526.2,JW:9.96,ID:8.35,   /* (2560.7 until 18 October 2026, with a nut on each mass; ID 8.46 until then too, before the gold spring's bow, and 8.43 before the horn was traced) the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
+      HS:-0.464,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing, 194.3°; -0.491 at 199.4° until 19 October 2026's physics pass) */
+      I:2526.2,JW:9.96,ID:8.49,   /* (ID 8.35 until 19 October 2026, before the gold spring's 333-333 density and the stone at 7.14; 2560.7 until 18 October 2026, with a nut on each mass; ID 8.46 until then too, before the gold spring's bow, and 8.43 before the horn was traced) the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
       DEP:1,RW:1,   /* checked in time (tools/dynamics.js --model wempe, 15 October 2026): the detent, flung off the discharge stone's square corner, never rides its bevel back
                        down, so its preload's and spring's work up to there is lost (DEP); and the locking stone falls back onto the tooth it has just let go, the wheel slow to get
                        it out from under, and drags on its land and is pushed on by its back (RW). Together 4.6° of swing at 12 h (README, Physics: in time) */
-      TH1:60,TF:108};})();   /* the balance's free run-down (s): estimated from its parts' damping (tools/wempe_escapement.js, README Physics) */
+      TH1:60,TF:111};})();   /* the balance's free run-down (s): where a running 6MX's swing on video, fitted with this escapement's work at the model's own swing, gives it back (tools/wempe_startup.js: 111 s, 108-114, at 194.3°; README Physics); 108 s at 199.4° until the lock was re-laid and the preload set to 0.8 g, 19 October 2026 */
   /* makeEsc's lift (the gold spring tip's travel, units of ES) as this file's detent turn (rad, rotation.y about TP): makeEsc turns the detent by -lift/LEN about its flexure,
      clockwise in its frame, anticlockwise seen from the dial (tools/wempe_escapement.js checks the stone's place both ways) */
   const toKin=(l,LEN)=>l/LEN;
@@ -979,7 +979,7 @@ const WESC=(()=>{
   /* the Soviet 6MX's bodies (the Variants' third version, Kirov No. 247): its escapement stands at the first-drawn heights with the first-drawn staff and collar and its own
      detent, so its balance, escape arbor and detent weigh differently; weighed as SET's are (tools/wempe_inertia.py --rev 6mx, tools/wempe_inertia_6mx.json, checked by
      tools/wempe_6mx.js). js/escphys.js's WPHYS.rev('6mx') runs makeEsc with them */
-  const SET6={I:2526.0,JW:10.89,ID:8.13};   /* I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
+  const SET6={I:2526.0,JW:10.89,ID:8.28};   /* ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
   return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (2 wide less 0.05 at each edge), in both states: tools/dynamics.js */
 })();

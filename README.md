@@ -191,6 +191,30 @@ text that come from the model (the escapement's figures, tooth counts, the
 fusee's radii) are filled in live from `data-live` spans, so they follow the
 model. The model README's "The Essay tab" section explains the rest.
 
+### Tracing by hand
+
+Outlines the model is built from can be traced by hand on a photograph or a
+video frame, with the Edge Tracer:
+
+- **On a computer**: open
+  `marine-chronometer-source/chronometer-working-model/tools/tracer.html` in
+  Chrome or Edge. Open the image, click along an edge, and press **?** for the
+  keys. **Save** writes `NAME.trace.json`; keep it in `tools/traces/`.
+- **On a phone or tablet**: open the private copy on claude.ai,
+  <https://claude.ai/artifact/Ju3PQ8QErkH3fdRWZcSLjq> (only its owner can open
+  it). Claude puts the frames to trace there with a note on what to trace:
+  **Panel**, then **From Claude**, then **Open**. Tap to add a point. To place
+  one precisely, hold, then slide (a ring and the magnifier show where it
+  goes) and lift. Drag a point to move it, pan with one finger and pinch with
+  two. **Fine** makes drags and aiming move a quarter as far as the finger.
+  The bar at the bottom has the keyboard's actions (Done, Insert, Delete
+  point, Corner, Close curve). When done, tap **Send to Claude**: Claude reads
+  the trace from there and saves it in `tools/traces/`.
+
+The same file runs in both places. After changing `tracer.html`, Claude
+rebuilds the phone copy with `tools/tracer_artifact.py` and publishes it to the
+same link.
+
 ## Checking your changes
 
 Before committing a change to the model:
