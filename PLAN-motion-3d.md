@@ -43,3 +43,36 @@ Branch `claude/motion-3d`, started 19 October 2026. The user asked for an analys
 - Materials: brass Ms 58 E 100 GPa, nu 0.34; carbon steel 207 GPa, nu 0.29; Nivaflex 220 GPa; gold 333 98 GPa.
 - The page's solids are taken as made: their sizes as drawn, no tolerance, no wear.
 - Each moving part's motion is the page's own (`motion3d.py` measures update()); the deviations from rigid motion are the transmission run's (wempe_transmission_trace.js).
+
+## Where it stands (19 October 2026)
+
+All six phases are done. Both viewers were published privately first. The user then asked for them on the site, so they now sit beside the reports: the Wempe report's section 13 and the Hamilton's build report's section 14 (`motion3d_pack.py --site`).
+
+**Findings.**
+- Running, every part has a wide margin, and every train ratio matches its tooth counts.
+- Past their limits, on both models:
+  - the parts the key's blow reaches when it is let go outright;
+  - the mainspring's inner coils at full wind.
+- The Wempe at the let-go blow, against their materials:
+
+  | Part | Peak | Limit |
+  |---|---|---|
+  | Maintaining ratchet | 1,485 MPa | brass 300-450 |
+  | Clicks | 2,357 MPa | steel 1,200-1,800 |
+  | Fusee wheel | 417 MPa | brass 300-450 |
+
+- The Hamilton at the let-go blow:
+  - Set-up click: 3,017 MPa. This is a local stress on its nose; `ratchets.js` gives its arm 539 MPa.
+  - Winding pawls: 1,509 MPa.
+  - Fusee wheel: 369 MPa.
+- The mainspring's inner coils at full wind:
+
+  | Model | Inner coils | Limit |
+  |---|---|---|
+  | Wempe as drawn | 2,663 MPa | 2,600 |
+  | Wempe, 1950s build | 3,248 MPa | 3,000 |
+  | Hamilton | 3,021 MPa | 2,600 |
+
+**The let-go blow.** `wempe_letgo_fix.js` tried more clicks, a brake between the click wheel and the maintaining ratchet, and a cushioned click face. None keeps every part within its material. The maintaining ratchet's brass is the last to stay over: it is struck by the maintaining detent. Eased back, every part is within its limit or at its floor. The builds keep the drawn parts, and the key is let back at the end of each stroke. In hardened steel, the click wheel and ratchet would take the outright blow with four clicks and a brake. That is open for the user to decide.
+
+**The build's mainspring.** Nivaflex 0.377 mm was solved at set 0.6, 0.8 and 1.0. No set alone gives both the drive (1.12 of the drawn) and a stress inside the strip's 3,000 MPa. A strip about 0.393 mm thick at set 0.8 is being solved (`wempe_mainspring.py --solve 1240 --set 0.8 --t 0.393`). It is expected to give the drive at about 2.94 GPa.
