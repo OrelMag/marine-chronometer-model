@@ -22,6 +22,8 @@ M=model.NAME;VER=arg('--version','last');D=HERE/'r_motion3d'/M;NT=int(arg('--n',
 MAT={'brass':(100e3,0.34,(300,450)),'steel':(207e3,0.29,(1200,1800)),'ruby':(380e3,0.27,(1900,2000)),'gold':(98e3,0.40,(500,700)),'becu':(130e3,0.30,(1000,1200))}
 COL={'934008':'brass','a76517':'brass','7a470c':'brass','904208':'brass','b0711c':'brass','944315':'becu','b6bcc5':'steel','464c55':'steel','0b1129':'steel','020631':'steel',
      '43547a':'steel','262a31':'steel','424851':'steel','93020b':'ruby','ffffff':'ruby','d5dad1':'steel'}
+COL.update({'965e1a':'brass','111418':'steel','626661':'steel'})   # the Hamilton's gilt brass, blued steel, the balance's rim
+if M=='hamilton':COL['944315']='brass'   # the Hamilton's fusee wheel (the Wempe's impulse roller, beryllium copper, wears this colour too)
 
 def load_dump():
     J=json.loads((D/'meshes.json').read_text());G=(D/'geom.bin').read_bytes();out=[]
@@ -130,9 +132,9 @@ def peak(series,runs):
 # ---------------------------------------------------------------- the cases (the Wempe)
 RHO={'brass':8.45e-9,'steel':7.85e-9,'ruby':3.98e-9,'gold':11.6e-9,'becu':8.25e-9}   # t/mm^3 (N, mm, s)
 def main():
-    t0=time.time();J,ms=load_dump();runs,meta=load_trace(VER);MJ=json.loads((HERE/'mechanisms_wempe.json').read_text());PW={p['name']:p for p in MJ['pawls']}
+    t0=time.time();J,ms=load_dump();runs,meta=load_trace(VER);MJ=json.loads((HERE/('mechanisms_wempe.json' if M=='wempe' else 'mechanisms.json')).read_text());PW={p['name']:p for p in MJ['pawls']}
     import subprocess
-    MESH=json.loads(subprocess.run(['node','-e',"process.argv.push('--model','wempe');const TR=require('./wempe_transmission.js');console.log(JSON.stringify(TR.MESH.map(q=>({nm:q.nm,zA:q.zA,zB:q.zB,m:q.m}))))"],cwd=HERE,capture_output=True,text=True,encoding='utf-8').stdout.strip().split('\n')[-1])
+    MESH=json.loads(subprocess.run(['node','-e',"process.argv.push('--model','wempe');const TR=require('./wempe_transmission.js');console.log(JSON.stringify(TR.MESH.map(q=>({nm:q.nm,zA:q.zA,zB:q.zB,m:q.m}))))"],cwd=HERE,capture_output=True,text=True,encoding='utf-8').stdout.strip().split('\n')[-1]) if M=='wempe' else json.loads((D/'mesh.json').read_text())   # the Hamilton's: hamilton_transmission.js's MESH (claude/hamilton-transmission), saved beside its trace
     MK=[k for k in next(iter(runs.values())).keys() if k.startswith('mesh:')]   # the trace's mesh channels, in TR.MESH's order
     for q,k in zip(MESH,MK):q['nm']=k[5:]
     byp=lambda part,pcs=None:[m for m in ms if m['part']==part and (pcs is None or (m['pk'] or part).split('.')[-1] in pcs or (m['pk'] or '')==part and part in pcs)]
@@ -168,7 +170,7 @@ def main():
             rootpk=float(vmf[far].max()) if far.any() else 0.0;kk=int(np.argmax(np.where(far,vmf,-1)))
             wins.append({'at':C.tolist(),'R':Rw,'h':hf,'bricks':Pf.nb,'peak':rootpk,'raw':float(vmr[far].max()) if far.any() else 0.0,'where':Pf.cent[kk].tolist(),'mat':Pf.mats[Pf.bm[kk]],'contact':float(vmf.max()),'resid':rrf,'P':Pf,'vm':vmf})
         busy0=fix.any(1)|((np.abs(F).sum(1)>0) if not info.get('body') else False);farc=np.ones(P.nb,bool)   # a load through the body (the balance's inertia) isn't a contact's singularity
-        if busy0.any():dd0,_=cKDTree(P.X[busy0]).query(P.cent);farc=dd0>2.5*P.h
+        if busy0.any():dd0,_=cKDTree(P.X[busy0]).query(P.cent);farc=dd0>max(2.5*P.h,0.3)   # 0.3 mm: a hole's wall held rigid (a pivot's screw) concentrates stress a pin bearing and sliding in it doesn't
         vmc=np.where(farc,vm,0);pk995=float(np.percentile(vmc,99.5));mx=float(vmc.max());k=int(np.argmax(vmc));mat=P.mats[P.bm[k]]
         if wins:   # the part's peak: the highest root stress its windows find (the coarse grid's own peak where it is higher, away from the windows)
             wb=max(wins,key=lambda x:x['peak'])
@@ -183,7 +185,8 @@ def main():
                 if inn.any():d2,i2=cKDTree(W['P'].cent).query(m['V'][inn],k=4);w2=1/np.maximum(d2,1e-6);sv[inn]=(W['vm'][i2]*w2).sum(1)/w2.sum(1)
             sbuf[m['id']]=sv.astype('<f4')
         print(f"  {name:22s} {P.nb:7d} bricks h {P.h:.3f}, windows {[(round(w['h'],3),w['bricks'],round(w['peak'],1),round(w['contact'])) for w in wins]}: peak {pk995:8.1f} MPa in {mat}, margin {lo/max(pk995,1e-9):.1f}-{hi/max(pk995,1e-9):.1f}; {info.get('load','')}; contact {info.get('hertz',0):.0f} MPa (Hertz) ({time.time()-t1:.0f} s, resid {rr:.1e})",flush=True)
-    AX={k:axis(p) for k,p in [('fw','fuseeWheel'),('centre','centreWheel'),('inter','intermediateWheel'),('sec','secondsWheel'),('esc','escapeWheel')]}
+    TP={'fw':'fuseeWheel','centre':'centreWheel','inter':'intermediateWheel','sec':'secondsWheel','esc':'escapeWheel'} if M=='wempe' else {'fw':'gw','centre':'cw','inter':'tw','sec':'fw','esc':'escW'}   # the trace's bodies' parts on the page
+    AX={k:axis(p) for k,p in TP.items()}
     def mesh_pt(i):
         q=MESH[i];a,b=[x for x in q['nm'].split(' → ')];kA,kB=[['fw','centre','inter','sec','esc'][j] for j in range(5) if False] or (None,None)
         return q
@@ -195,8 +198,9 @@ def main():
         a,b=TRAIN[i];cA,_=AX[a];cB,sB=AX[b];u=(cB-cA)/np.linalg.norm(cB-cA);q=MESH[i];rA=q['m']*q['zA']/2;P=cA+rA*u
         lam,rn=pk('mesh:'+q['nm']);rB=P-cB;rB[1]=0;tau=np.array([0,sB*abs(lam)*1e3,0]);FB=np.cross(tau,rB)/(rB@rB)   # N·m to N·mm; the force on the driven pinion's leaf
         return P,FB,lam,rn
-    WHEELS={'fw':('fuseeWheel',['fuseeWheel']),'centre':('centreWheel',['arbor','wheel']),'inter':('intermediateWheel',['arbor','wheel']),'sec':('secondsWheel',['arbor','wheel']),'esc':('escapeWheel',['collet','pinion','wheel'])}
-    def wheel_y(k):part,_=WHEELS[k];return yext(byp(part,['wheel'] if k!='fw' else ['fuseeWheel']))
+    WHEELS={'fw':('fuseeWheel',['fuseeWheel']),'centre':('centreWheel',['arbor','wheel']),'inter':('intermediateWheel',['arbor','wheel']),'sec':('secondsWheel',['arbor','wheel']),'esc':('escapeWheel',['collet','pinion','wheel'])} if M=='wempe' else {k:(v,None) for k,v in TP.items()}
+    def wheel_y(k):
+        part,_=WHEELS[k];mm=byp(part);c,_=AX[k];w=max(mm,key=lambda m:np.hypot(*(m['V']-c)[:,[0,2]].T).max());return w['V'][:,1].min(),w['V'][:,1].max()   # the face: its widest mesh's height (the wheel)
     print(f'{M} ({VER}): {len(ms)} meshes; the loads from trace_{VER}.js (runs: {", ".join(runs)})',flush=True)
     for i,k in enumerate(['fw','centre','inter','sec','esc']):
         part,pcs=WHEELS[k];mm=byp(part,pcs);c,_=AX[k]
@@ -210,97 +214,177 @@ def main():
             if k!='esc':
                 Po,FB,lam,rn=contact(i);m=P.patch(Po,0.6*MESH[i]['m'],wheel_y(k));F[m]+=(-FB/m.sum() if m.any() else 0);q=MESH[i];yw=wheel_y(k);info['hertz']=hertz(float(np.linalg.norm(FB)),q['m']*q['zA']/2*0.342,q['m']*q['zB']/2*0.342,yw[1]-yw[0],100e3,207e3);info.update(load=f"{abs(lam):.3g} N·m on the next pinion, {np.linalg.norm(FB):.1f} N at its pitch point ({rn})",out={'at':Po.tolist(),'F':(-FB).tolist(),'run':rn,'m':MESH[i]['m']})
             else:   # the escape wheel: the tooth on the locking stone (the detent's stone: the ruby nearest the wheel's tips), the whole escape torque at the tip
-                rub=[m for m in byp('detent') if m['mat0']=='93020b'];cen=[m['V'].mean(0) for m in rub];j=int(np.argmin([abs(np.hypot(*(x-c)[[0,2]])-7.0) for x in cen]));S=cen[j]
-                lam,rn=pk('mesh:'+MESH[3]['nm']);r=S-c;r[1]=0;rt=r/np.linalg.norm(r)*7.0;tau=np.array([0,AX['esc'][1]*abs(lam)*1e3,0]);Ft=-np.cross(tau,rt)/(rt@rt)
+                rt0=max(np.hypot(*(m['V']-c)[:,[0,2]].T).max() for m in byp(TP['esc']));rub=[m for m in byp('detent' if M=='wempe' else 'det') if m['mat0']=='93020b'];cen=[m['V'].mean(0) for m in rub];j=int(np.argmin([abs(np.hypot(*(x-c)[[0,2]])-rt0) for x in cen]));S=cen[j]
+                lam,rn=pk('mesh:'+MESH[3]['nm']);r=S-c;r[1]=0;rt=r/np.linalg.norm(r)*rt0;tau=np.array([0,AX['esc'][1]*abs(lam)*1e3,0]);Ft=-np.cross(tau,rt)/(rt@rt)
                 m=P.patch(c+rt,0.15,wheel_y('esc'));F[m]+=(Ft/m.sum() if m.any() else 0);info.update(load=f"{abs(lam):.3g} N·m held at a tooth's tip on the locking stone, {np.linalg.norm(Ft):.2f} N ({rn})",out={'at':(c+rt).tolist(),'F':Ft.tolist(),'run':rn,'m':MESH[3]['m']})
             return info
         run(part,mm,setup,'a wheel on its arbor: the pinion driven by the wheel before it, its wheel driving the next pinion, held on its axis at its pivots')
-    # ---- the fusee and its click wheel, the clicks, the maintaining ratchet and detent, the barrel and its arbor, the set-up ratchet, the stop, the balance, the rollers ----
-    cF,_=axis('fuseeWheel');cBr,_=axis('barrel','ms')
-    chainV=np.vstack([m['V'] for m in byp('chain')]);uFB=(cBr-cF)[[0,2]];uFB=uFB/np.linalg.norm(uFB)
-    nF=chainV[np.hypot(*(chainV[:,[0,2]]-cF[[0,2]]).T)<18.5];pF=nF[np.argmax((nF[:,[0,2]]-cF[[0,2]])@uFB)]   # where the chain leaves the fusee for the barrel
-    nB=chainV[np.hypot(*(chainV[:,[0,2]]-cBr[[0,2]]).T)<22.8];pB=nB[np.argmax(-(nB[:,[0,2]]-cBr[[0,2]])@uFB)]   # and the barrel for the fusee
-    dFB=pB-pF;dFB[1]=0;dFB=dFB/np.linalg.norm(dFB);Tch,rch=pk('chain')
-    def pawl(name,ch,c0):
-        q=PW[name];C=np.array(q['face']['C']);n=np.array(q['face']['n']);arm=abs(C[0]*n[1]-C[1]*n[0]);tq,rn=pk(ch);Fm=abs(tq)*1e3/arm
-        return c0+np.array([C[0],0,C[1]]),np.array([n[0],0,n[1]]),Fm,tq,rn,c0+np.array([q['pivot'][0],0,q['pivot'][1]])
-    def on_axis(P,fix,c,ylow=True):
-        ax=P.near_axis(c,0.75*P.h);fix[ax,0]=fix[ax,2]=True
-        if ylow and ax.any():y=P.X[:,1];fix[ax&(y<=y[ax].min()+1e-9),1]=True
-    def ball(P,c,r,yb=None,minn=24):
-        """the nodes within r of c in plan (within yb); where the point is in a hole (a pivot's screw), the hole's wall: every node within r of the nearest material"""
-        if P.win is not None and not P.inside(c):return np.zeros(len(P.X),bool)
-        d=np.linalg.norm((P.X-c)[:,[0,2]],axis=1);ok=np.ones(len(P.X),bool)
-        if yb is not None:ok&=(P.X[:,1]>=yb[0])&(P.X[:,1]<=yb[1])
-        m=ok&(d<=r)
-        if m.sum()<minn:d0=d[ok].min() if ok.any() else d.min();m=ok&(d<=d0+max(r,2*P.h))
-        return m
-    yc=lambda part,pcs:yext(byp(part,pcs))
-    def push(P,F,c,f,r,yb=None):
-        m=ball(P,c,r,yb)
-        if m.any():F[m]+=f/m.sum()
-        return m
-    P1=pawl('click 1','click1',cF);P2=pawl('click 2','click2',cF);PC=P1 if abs(P1[3])>=abs(P2[3]) else P2   # the click the runs load harder (the fusee holds on one at a time)
-    def s_fusee(P,fix,F):
-        on_axis(P,fix,cF);m=ball(P,PC[0],0.35,yc('fusee',['clickWheel']));fix[m]=True   # held where the click holds its wheel
-        push(P,F,pF,Tch*dFB,0.8,(pF[1]-0.9,pF[1]+0.9))
-        return {'load':f"the chain’s pull {abs(Tch):.1f} N where it leaves the fusee ({rch}); held at the click on its click wheel",'out':{'at':PC[0].tolist(),'m':0.3},'in':{'at':pF.tolist(),'m':0.5}}
-    run('fusee',byp('fusee'),s_fusee,'the fusee with its click wheel: the chain pulls, the click on the click wheel holds')
-    def s_clicks(P,fix,F):
-        C,n,Fm,tq,rn,pv=PC;fix[ball(P,pv,1.0)]=True;pv2=cF-(pv-cF);pv2[1]=pv[1];fix[ball(P,pv2,1.0)]=True;push(P,F,C,n*Fm,0.25)
-        return {'load':f"{Fm:.1f} N on its nose ({abs(tq):.3g} N·m on the click wheel, {rn})",'out':{'at':C.tolist(),'m':0.3}}
-    run('maintaining.clicks',byp('maintaining',['clicks']),s_clicks,'the maintaining clicks (05 06 02-3): the click wheel’s tooth on its nose, held on its screw')
-    PD=pawl('maintaining detent','detent',cF)
-    def s_ratchet(P,fix,F):
-        C,n,Fm,tq,rn,pv=PD;on_axis(P,fix,cF,False)
-        for q in byp('maintaining',['clickScrews']):fix[ball(P,q['V'].mean(0),1.3)]=True
-        push(P,F,C,-n*Fm,0.25);return {'load':f"{Fm:.1f} N from the maintaining detent ({abs(tq):.3g} N·m, {rn}); held at the clicks’ screws",'out':{'at':C.tolist(),'m':0.2}}
-    run('maintaining.ratchet',byp('maintaining',['ratchet']),s_ratchet,'the maintaining ratchet (05 06 02-1): the detent on its tooth, the clicks carrying the drive')
-    def s_detent(P,fix,F):
-        C,n,Fm,tq,rn,pv=PD;fix[ball(P,pv,0.9)]=True;push(P,F,C,n*Fm,0.25)
-        return {'load':f"{Fm:.1f} N on its nose ({rn}); held on its arbor",'out':{'at':C.tolist(),'m':0.2}}
-    run('maintDetent',byp('maintDetent'),s_detent,'the maintaining detent (05 05 05-1): the ratchet’s tooth on its nose, held on its arbor')
-    def s_barrel(P,fix,F):
-        for q in byp('barrel',['hook']):fix[ball(P,q['V'].mean(0),1.6)]=True
-        bo=P.near_axis(cBr,2.6)&P.surf;fix[bo,0]=fix[bo,2]=True;push(P,F,pB,-Tch*dFB,0.8,(pB[1]-0.9,pB[1]+0.9))
-        return {'load':f"the chain’s pull {abs(Tch):.1f} N on the drum ({rch}); held at the spring’s hook block",'out':{'at':pB.tolist(),'m':0.5}}
-    run('barrel',byp('barrel'),s_barrel,'the barrel (drum, lid, Steg, hook block): the chain pulls, the mainspring’s outer end holds')
-    Tsp,rsp=pk('spring');hk=np.vstack([q['V'] for q in byp('barrelArbor',['hook'])]).mean(0)
-    def s_arbor(P,fix,F):
-        on_axis(P,fix,cBr,False);y=P.X[:,1]
-        if P.win is None:fix[y<=y.min()+2.0]=True
-        r=hk-cBr;r[1]=0;f=np.cross([0,abs(Tsp)*1e3,0],r)/(r@r)
-        hv=np.vstack([q['V'] for q in byp('barrelArbor',['hook'])]);lo,hi=hv.min(0)-0.05,hv.max(0)+0.05;m=P.surf&np.all((P.X>=lo)&(P.X<=hi),axis=1)
-        if m.sum()<6:m=ball(P,hk,0.6)
-        F[m]+=f/m.sum()
-        return {'load':f"the mainspring’s {abs(Tsp):.3g} N·m on its hook ({rsp}); held at its square by the set-up ratchet",'out':{'at':hk.tolist(),'m':0.3}}
-    run('barrelArbor',byp('barrelArbor'),s_arbor,'the barrel arbor: the mainspring’s inner end on its hook, the set-up ratchet holding its square')
-    PS=pawl('set-up click','spring',cBr)
-    def s_setup(P,fix,F):
-        C,n,Fm,tq,rn,pv=PS;fix[P.near_axis(cBr,2.6)]=True;push(P,F,C,-n*Fm,0.3);return {'load':f"{Fm:.1f} N from the set-up click ({abs(tq):.3g} N·m, {rn})",'out':{'at':C.tolist(),'m':0.4}}
-    run('setupRatchet',byp('setupRatchet'),s_setup,'the set-up ratchet (05 07 00-3): the set-up click on its tooth, held on the arbor’s square')
-    pin=np.vstack([q['V'] for q in byp('topPlate',['stopPin'])]).mean(0);Tst,rst=pk('stop');rp=pin-cF;rp[1]=0;fst=np.cross([0,abs(Tst)*1e3,0],rp)/(rp@rp)
-    def s_bar(P,fix,F):
-        for q in byp('stopWork',['barpin']):fix[ball(P,q['V'].mean(0),0.6)]=True
-        bar=np.vstack([q['V'] for q in byp('stopWork',['bar'])]);k=np.argmin(np.linalg.norm((bar-pin)[:,[0,2]],axis=1));push(P,F,bar[k],-fst,0.4)
-        return {'load':f"{np.linalg.norm(fst):.1f} N from the stop pin ({abs(Tst):.3g} N·m on the fusee, {rst}); held at its pin",'out':{'at':bar[k].tolist(),'m':0.4}}
-    run('stopWork.bar',byp('stopWork',['bar','barpin']),s_bar,'the stop bar (05 06 03-1): the stop pin against it at full wind')
-    def s_pin(P,fix,F):
-        y=P.X[:,1];fix[y<=-19.0]=True;m=y>=y.max()-1.2;F[m]+=fst/m.sum();return {'load':f"{np.linalg.norm(fst):.1f} N from the stop bar ({rst}); held in the top plate",'out':{'at':pin.tolist(),'m':0.4}}
-    run('topPlate.stopPin',byp('topPlate',['stopPin']),s_pin,'the stop pin (05 08 01-5): the stop bar against it, standing out of the top plate')
-    cBa,_=axis('balance','th');Ab,_=pk('balance');Wb,rb=pk('balanceW');alpha=Wb**2/max(abs(Ab),1e-6);col=yc('hairspring',['collet'])
-    def s_bal(P,fix,F):
-        m=P.near_axis(cBa,1.0)&(P.X[:,1]>=col[0]-0.5)&(P.X[:,1]<=col[1]+0.5)
-        if m.sum()<12:ax=P.near_axis(cBa,1.2);dy=np.abs(P.X[:,1]-(col[0]+col[1])/2);m=ax&(dy<=np.sort(dy[ax])[min(60,ax.sum()-1)])
-        fix[m]=True
-        rho=np.array([RHO[P.mats[i]] for i in P.bm]);vol=P.h*P.h*P.g['dy'];r=P.cent-cBa;r[:,1]=0
-        f=(rho*vol)[:,None]*(alpha*np.cross([0,1,0],r)+Wb**2*r)   # N (t/mm^3 x mm^3 x mm/s^2): the turn's tangential and the spin's radial acceleration at once
-        np.add.at(F,P.conn.ravel(),np.repeat(f/8,8,axis=0));return {'body':True,'load':f"swinging to {np.degrees(abs(Ab)):.0f}°: {abs(alpha):.0f} rad/s² at the turn, {abs(Wb):.1f} rad/s at the centre ({rb}); held at the hairspring’s collet"}
-    run('balance',byp('balance'),s_bal,'the balance (rim, arm, masses, timing weights, staff): its own inertia, the hairspring holding it')
-    Te,re_=pk('mesh:'+MESH[3]['nm']);imp=[q for q in byp('rollers',['impulse']) if q['mat0']=='93020b'][0]['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/7.0*np.linalg.norm(ri),0],ri)/(ri@ri)
-    def s_rol(P,fix,F):
-        fix[P.near_axis(cBa,0.9)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse stone ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
-    run('rollers',byp('rollers'),s_rol,'the rollers (impulse and discharge, with their stones): the escape wheel’s tooth on the impulse stone')
+    if M=='wempe':
+        # ---- the fusee and its click wheel, the clicks, the maintaining ratchet and detent, the barrel and its arbor, the set-up ratchet, the stop, the balance, the rollers ----
+        cF,_=axis('fuseeWheel');cBr,_=axis('barrel','ms')
+        chainV=np.vstack([m['V'] for m in byp('chain')]);uFB=(cBr-cF)[[0,2]];uFB=uFB/np.linalg.norm(uFB)
+        nF=chainV[np.hypot(*(chainV[:,[0,2]]-cF[[0,2]]).T)<18.5];pF=nF[np.argmax((nF[:,[0,2]]-cF[[0,2]])@uFB)]   # where the chain leaves the fusee for the barrel
+        nB=chainV[np.hypot(*(chainV[:,[0,2]]-cBr[[0,2]]).T)<22.8];pB=nB[np.argmax(-(nB[:,[0,2]]-cBr[[0,2]])@uFB)]   # and the barrel for the fusee
+        dFB=pB-pF;dFB[1]=0;dFB=dFB/np.linalg.norm(dFB);Tch,rch=pk('chain')
+        def pawl(name,ch,c0):
+            q=PW[name];C=np.array(q['face']['C']);n=np.array(q['face']['n']);arm=abs(C[0]*n[1]-C[1]*n[0]);tq,rn=pk(ch);Fm=abs(tq)*1e3/arm
+            return c0+np.array([C[0],0,C[1]]),np.array([n[0],0,n[1]]),Fm,tq,rn,c0+np.array([q['pivot'][0],0,q['pivot'][1]])
+        def on_axis(P,fix,c,ylow=True):
+            ax=P.near_axis(c,0.75*P.h);fix[ax,0]=fix[ax,2]=True
+            if ylow and ax.any():y=P.X[:,1];fix[ax&(y<=y[ax].min()+1e-9),1]=True
+        def ball(P,c,r,yb=None,minn=24):
+            """the nodes within r of c in plan (within yb); where the point is in a hole (a pivot's screw), the hole's wall: every node within r of the nearest material"""
+            if P.win is not None and not P.inside(c):return np.zeros(len(P.X),bool)
+            d=np.linalg.norm((P.X-c)[:,[0,2]],axis=1);ok=np.ones(len(P.X),bool)
+            if yb is not None:ok&=(P.X[:,1]>=yb[0])&(P.X[:,1]<=yb[1])
+            m=ok&(d<=r)
+            if m.sum()<minn:d0=d[ok].min() if ok.any() else d.min();m=ok&(d<=d0+max(r,2*P.h))
+            return m
+        yc=lambda part,pcs:yext(byp(part,pcs))
+        def push(P,F,c,f,r,yb=None):
+            m=ball(P,c,r,yb)
+            if m.any():F[m]+=f/m.sum()
+            return m
+        P1=pawl('click 1','click1',cF);P2=pawl('click 2','click2',cF);PC=P1 if abs(P1[3])>=abs(P2[3]) else P2   # the click the runs load harder (the fusee holds on one at a time)
+        def s_fusee(P,fix,F):
+            on_axis(P,fix,cF);m=ball(P,pF,0.8);fix[m]=True   # the chain holds it where it leaves the fusee
+            C,n,Fm,tq,rn,pv=PC;push(P,F,C,-n*Fm,0.3,yc('fusee',['clickWheel']))
+            return {'load':f"{Fm:.1f} N from the click on its click wheel’s tooth ({abs(tq):.3g} N·m, {rn}); held where the chain leaves the fusee (its pull {abs(Tch):.1f} N)",'out':{'at':C.tolist(),'m':0.3}}
+        run('fusee',byp('fusee'),s_fusee,'the fusee with its click wheel: the click’s blow on the click wheel’s tooth, the chain holding')
+        def s_clicks(P,fix,F):
+            C,n,Fm,tq,rn,pv=PC;fix[ball(P,pv,1.0)]=True;pv2=cF-(pv-cF);pv2[1]=pv[1];fix[ball(P,pv2,1.0)]=True;push(P,F,C,n*Fm,0.25)
+            return {'load':f"{Fm:.1f} N on its nose ({abs(tq):.3g} N·m on the click wheel, {rn})",'out':{'at':C.tolist(),'m':0.3}}
+        run('maintaining.clicks',byp('maintaining',['clicks']),s_clicks,'the maintaining clicks (05 06 02-3): the click wheel’s tooth on its nose, held on its screw')
+        PD=pawl('maintaining detent','detent',cF)
+        def s_ratchet(P,fix,F):
+            C,n,Fm,tq,rn,pv=PD;on_axis(P,fix,cF,False)
+            for q in byp('maintaining',['clickScrews']):fix[ball(P,q['V'].mean(0),1.3)]=True
+            push(P,F,C,-n*Fm,0.25);return {'load':f"{Fm:.1f} N from the maintaining detent ({abs(tq):.3g} N·m, {rn}); held at the clicks’ screws",'out':{'at':C.tolist(),'m':0.2}}
+        run('maintaining.ratchet',byp('maintaining',['ratchet']),s_ratchet,'the maintaining ratchet (05 06 02-1): the detent on its tooth, the clicks carrying the drive')
+        def s_detent(P,fix,F):
+            C,n,Fm,tq,rn,pv=PD;fix[ball(P,pv,0.9)]=True;push(P,F,C,n*Fm,0.25)
+            return {'load':f"{Fm:.1f} N on its nose ({rn}); held on its arbor",'out':{'at':C.tolist(),'m':0.2}}
+        run('maintDetent',byp('maintDetent'),s_detent,'the maintaining detent (05 05 05-1): the ratchet’s tooth on its nose, held on its arbor')
+        def s_barrel(P,fix,F):
+            for q in byp('barrel',['hook']):fix[ball(P,q['V'].mean(0),1.6)]=True
+            bo=P.near_axis(cBr,2.6)&P.surf;fix[bo,0]=fix[bo,2]=True;push(P,F,pB,-Tch*dFB,0.8,(pB[1]-0.9,pB[1]+0.9))
+            return {'load':f"the chain’s pull {abs(Tch):.1f} N on the drum ({rch}); held at the spring’s hook block",'out':{'at':pB.tolist(),'m':0.5}}
+        run('barrel',byp('barrel'),s_barrel,'the barrel (drum, lid, Steg, hook block): the chain pulls, the mainspring’s outer end holds')
+        Tsp,rsp=pk('spring');hk=np.vstack([q['V'] for q in byp('barrelArbor',['hook'])]).mean(0)
+        def s_arbor(P,fix,F):
+            on_axis(P,fix,cBr,False);y=P.X[:,1]
+            if P.win is None:fix[y<=y.min()+2.0]=True
+            r=hk-cBr;r[1]=0;f=np.cross([0,abs(Tsp)*1e3,0],r)/(r@r)
+            hv=np.vstack([q['V'] for q in byp('barrelArbor',['hook'])]);lo,hi=hv.min(0)-0.05,hv.max(0)+0.05;m=P.surf&np.all((P.X>=lo)&(P.X<=hi),axis=1)
+            if m.sum()<6:m=ball(P,hk,0.6)
+            F[m]+=f/m.sum()
+            return {'load':f"the mainspring’s {abs(Tsp):.3g} N·m on its hook ({rsp}); held at its square by the set-up ratchet",'out':{'at':hk.tolist(),'m':0.3}}
+        run('barrelArbor',byp('barrelArbor'),s_arbor,'the barrel arbor: the mainspring’s inner end on its hook, the set-up ratchet holding its square')
+        PS=pawl('set-up click','spring',cBr)
+        def s_setup(P,fix,F):
+            C,n,Fm,tq,rn,pv=PS;fix[P.near_axis(cBr,2.6)]=True;push(P,F,C,-n*Fm,0.3);return {'load':f"{Fm:.1f} N from the set-up click ({abs(tq):.3g} N·m, {rn})",'out':{'at':C.tolist(),'m':0.4}}
+        run('setupRatchet',byp('setupRatchet'),s_setup,'the set-up ratchet (05 07 00-3): the set-up click on its tooth, held on the arbor’s square')
+        pin=np.vstack([q['V'] for q in byp('topPlate',['stopPin'])]).mean(0);Tst,rst=pk('stop');rp=pin-cF;rp[1]=0;fst=np.cross([0,abs(Tst)*1e3,0],rp)/(rp@rp)
+        def s_bar(P,fix,F):
+            for q in byp('stopWork',['barpin']):fix[ball(P,q['V'].mean(0),0.6)]=True
+            bar=np.vstack([q['V'] for q in byp('stopWork',['bar'])]);k=np.argmin(np.linalg.norm((bar-pin)[:,[0,2]],axis=1));push(P,F,bar[k],-fst,0.4)
+            return {'load':f"{np.linalg.norm(fst):.1f} N from the stop pin ({abs(Tst):.3g} N·m on the fusee, {rst}); held at its pin",'out':{'at':bar[k].tolist(),'m':0.4}}
+        run('stopWork.bar',byp('stopWork',['bar','barpin']),s_bar,'the stop bar (05 06 03-1): the stop pin against it at full wind')
+        def s_pin(P,fix,F):
+            y=P.X[:,1];fix[y<=-19.0]=True;m=y>=y.max()-1.2;F[m]+=fst/m.sum();return {'load':f"{np.linalg.norm(fst):.1f} N from the stop bar ({rst}); held in the top plate",'out':{'at':pin.tolist(),'m':0.4}}
+        run('topPlate.stopPin',byp('topPlate',['stopPin']),s_pin,'the stop pin (05 08 01-5): the stop bar against it, standing out of the top plate')
+        cBa,_=axis('balance','th');Ab,_=pk('balance');Wb,rb=pk('balanceW');alpha=Wb**2/max(abs(Ab),1e-6);col=yc('hairspring',['collet'])
+        def s_bal(P,fix,F):
+            m=P.near_axis(cBa,1.0)&(P.X[:,1]>=col[0]-0.5)&(P.X[:,1]<=col[1]+0.5)
+            if m.sum()<12:ax=P.near_axis(cBa,1.2);dy=np.abs(P.X[:,1]-(col[0]+col[1])/2);m=ax&(dy<=np.sort(dy[ax])[min(60,ax.sum()-1)])
+            fix[m]=True
+            rho=np.array([RHO[P.mats[i]] for i in P.bm]);vol=P.h*P.h*P.g['dy'];r=P.cent-cBa;r[:,1]=0
+            f=(rho*vol)[:,None]*(alpha*np.cross([0,1,0],r)+Wb**2*r)   # N (t/mm^3 x mm^3 x mm/s^2): the turn's tangential and the spin's radial acceleration at once
+            np.add.at(F,P.conn.ravel(),np.repeat(f/8,8,axis=0));return {'body':True,'load':f"swinging to {np.degrees(abs(Ab)):.0f}°: {abs(alpha):.0f} rad/s² at the turn, {abs(Wb):.1f} rad/s at the centre ({rb}); held at the hairspring’s collet"}
+        run('balance',byp('balance'),s_bal,'the balance (rim, arm, masses, timing weights, staff): its own inertia, the hairspring holding it')
+        Te,re_=pk('mesh:'+MESH[3]['nm']);imp=[q for q in byp('rollers',['impulse']) if q['mat0']=='93020b'][0]['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/7.0*np.linalg.norm(ri),0],ri)/(ri@ri)
+        def s_rol(P,fix,F):
+            fix[P.near_axis(cBa,0.9)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse stone ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
+        run('rollers',byp('rollers'),s_rol,'the rollers (impulse and discharge, with their stones): the escape wheel’s tooth on the impulse stone')
+    else:   # ---- the Hamilton: the fusee and its winding ratchet, the winding pawls, the sustaining ratchet and pawl, the barrel, the set-up ratchet and click, the stop, the balance, the rollers ----
+        cF,_=AX['fw'];cBr,_=axis('barrel','n')
+        chainV=np.vstack([m['V'] for m in byp('chain')]);uFB=(cBr-cF)[[0,2]];uFB=uFB/np.linalg.norm(uFB)
+        rF=max(np.hypot(*(m['V']-cF)[:,[0,2]].T).max() for m in byp('fusee',['body']));rB=max(np.hypot(*(m['V']-cBr)[:,[0,2]].T).max() for m in byp('barrel',['drum']))
+        nF=chainV[np.hypot(*(chainV[:,[0,2]]-cF[[0,2]]).T)<rF+1.5];pF=nF[np.argmax((nF[:,[0,2]]-cF[[0,2]])@uFB)]   # where the chain leaves the fusee for the barrel
+        nB=chainV[np.hypot(*(chainV[:,[0,2]]-cBr[[0,2]]).T)<rB+1.5];pB=nB[np.argmax(-(nB[:,[0,2]]-cBr[[0,2]])@uFB)]
+        dFB=pB-pF;dFB[1]=0;dFB=dFB/np.linalg.norm(dFB);Tch,rch=pk('chain')
+        def pawl(name,ch,c0):
+            q=PW[name];C=np.array(q['face']['C']);n=np.array(q['face']['n']);arm=abs(C[0]*n[1]-C[1]*n[0]);tq,rn=pk(ch);Fm=abs(tq)*1e3/arm
+            return c0+np.array([C[0],0,C[1]]),np.array([n[0],0,n[1]]),Fm,tq,rn,c0+np.array([q['pivot'][0],0,q['pivot'][1]])
+        def on_axis(P,fix,c,ylow=True):
+            ax=P.near_axis(c,0.75*P.h);fix[ax,0]=fix[ax,2]=True
+            if ylow and ax.any():y=P.X[:,1];fix[ax&(y<=y[ax].min()+1e-9),1]=True
+        def ball(P,c,r,yb=None,minn=24):
+            if P.win is not None and not P.inside(c):return np.zeros(len(P.X),bool)
+            d=np.linalg.norm((P.X-c)[:,[0,2]],axis=1);ok=np.ones(len(P.X),bool)
+            if yb is not None:ok&=(P.X[:,1]>=yb[0])&(P.X[:,1]<=yb[1])
+            m=ok&(d<=r)
+            if m.sum()<minn:d0=d[ok].min() if ok.any() else d.min();m=ok&(d<=d0+max(r,2*P.h))
+            return m
+        def push(P,F,c,f,r,yb=None):
+            m=ball(P,c,r,yb)
+            if m.any():F[m]+=f/m.sum()
+            return m
+        yc=lambda part,pcs:yext(byp(part,pcs))
+        W1=pawl('winding pawl 1','click1',cF);W2=pawl('winding pawl 2','click2',cF);WP=W1 if abs(W1[3])>=abs(W2[3]) else W2   # the pawl the runs load harder
+        def s_fusee(P,fix,F):
+            on_axis(P,fix,cF);fix[ball(P,pF,0.8)]=True;C,n,Fm,tq,rn,pv=WP;push(P,F,C,-n*Fm,0.25,yc('fusee',['wratchet']))
+            return {'load':f"{Fm:.1f} N from a winding pawl on the winding ratchet’s tooth ({abs(tq):.3g} N·m, {rn}); held where the chain leaves the fusee",'out':{'at':C.tolist(),'m':0.36}}
+        run('fusee',byp('fusee'),s_fusee,'the fusee with its winding ratchet: a winding pawl’s blow on the ratchet’s tooth, the chain holding')
+        def s_wp(P,fix,F):
+            C,n,Fm,tq,rn,pv=WP;fix[ball(P,W1[5],0.6)]=True;fix[ball(P,W2[5],0.6)]=True;push(P,F,C,n*Fm,0.2)
+            return {'load':f"{Fm:.1f} N on its nose ({abs(tq):.3g} N·m on the winding ratchet, {rn})",'out':{'at':C.tolist(),'m':0.25}}
+        run('sratchet.pawls',byp('sratchet',['pawls']),s_wp,'the winding pawls (42010) on the sustaining ratchet wheel: the fusee’s winding ratchet on their noses, held on their pivots')
+        SP=pawl('sustaining pawl','detent',cF)
+        def s_sr(P,fix,F):
+            C,n,Fm,tq,rn,pv=SP;on_axis(P,fix,cF,False);fix[ball(P,W1[5],0.6)]=True;fix[ball(P,W2[5],0.6)]=True;push(P,F,C,-n*Fm,0.25)
+            return {'load':f"{Fm:.1f} N from the sustaining pawl ({abs(tq):.3g} N·m, {rn}); held at the winding pawls’ pivots",'out':{'at':C.tolist(),'m':0.2}}
+        run('sratchet.wheel',byp('sratchet',['wheel']),s_sr,'the sustaining ratchet wheel (42009): the sustaining pawl on its tooth, the winding pawls carrying the drive')
+        def s_sp(P,fix,F):
+            C,n,Fm,tq,rn,pv=SP;fix[ball(P,pv,0.6)]=True;push(P,F,C,n*Fm,0.25);return {'load':f"{Fm:.1f} N on its nose ({rn}); held on its pivot",'out':{'at':C.tolist(),'m':0.2}}
+        run('spawl',byp('spawl'),s_sp,'the sustaining pawl: the ratchet’s tooth on its nose, held on its pivot')
+        def s_barrel(P,fix,F):
+            for q in byp('barrel',['brace']):fix[ball(P,q['V'].mean(0),1.6)]=True
+            bo=P.near_axis(cBr,2.6)&P.surf;fix[bo,0]=fix[bo,2]=True;push(P,F,pB,-Tch*dFB,0.8)
+            return {'load':f"the chain’s pull {abs(Tch):.1f} N on the drum ({rch}); held at the mainspring’s brace",'out':{'at':pB.tolist(),'m':0.5}}
+        run('barrel',byp('barrel'),s_barrel,'the barrel (drum, cap, brace): the chain pulls, the mainspring’s outer end holds')
+        SC=pawl('setup click','spring',cBr)
+        def s_setup(P,fix,F):
+            C,n,Fm,tq,rn,pv=SC;fix[P.near_axis(cBr,2.0)]=True;push(P,F,C,-n*Fm,0.3);return {'load':f"{Fm:.1f} N from the set-up click ({abs(tq):.3g} N·m, {rn})",'out':{'at':C.tolist(),'m':0.32}}
+        run('ratchet.wheel',byp('ratchet',['wheel']),s_setup,'the set-up ratchet: the set-up click on its tooth, held on the barrel arbor')
+        def s_click(P,fix,F):
+            C,n,Fm,tq,rn,pv=SC;fix[ball(P,pv,0.6)]=True;push(P,F,C,n*Fm,0.3);return {'load':f"{Fm:.1f} N on its nose ({rn}); held on its screw",'out':{'at':C.tolist(),'m':0.32}}
+        run('ratchet.click',byp('ratchet',['click']),s_click,'the set-up click: the set-up ratchet’s tooth on its nose, held on its screw')
+        stud=np.vstack([q['V'] for q in byp('barrelBridge',['stop'])]).mean(0);Tst,rst=pk('stop');rp=stud-cF;rp[1]=0;fst=np.cross([0,abs(Tst)*1e3,0],rp)/(rp@rp)
+        def s_bar(P,fix,F):
+            bar=np.vstack([q['V'] for q in byp('fusee',['stop'])]);k=np.argmin(np.linalg.norm((bar-stud)[:,[0,2]],axis=1));kp=np.argmin(np.linalg.norm((bar-cF)[:,[0,2]],axis=1));fix[ball(P,bar[kp],0.5)]=True;push(P,F,bar[k],-fst,0.4)
+            return {'load':f"{np.linalg.norm(fst):.1f} N from the stop stud ({abs(Tst):.3g} N·m on the fusee, {rst}); held on the fusee’s arbor",'out':{'at':bar[k].tolist(),'m':0.4}}
+        run('fusee.stop',byp('fusee',['stop']),s_bar,'the stop-bar on the fusee’s small end: the winding stop against it at full wind')
+        ybr=yc('barrelBridge',['bridge'])
+        def s_stud(P,fix,F):
+            y=P.X[:,1];fix[(y>=ybr[0])&(y<=ybr[1])]=True;fr=~fix.any(1);m=fr&(np.abs(y-y[fr].mean())<=np.ptp(y[fr])/2+1e-9)
+            far=np.abs(y-ybr[0])>np.abs(y-ybr[1]);m=fr&((y<ybr[0]) if far.sum()<len(y)/2 else (y>ybr[1]));F[m]+=fst/max(1,m.sum())
+            return {'load':f"{np.linalg.norm(fst):.1f} N from the stop-bar ({rst}); held in the barrel bridge",'out':{'at':stud.tolist(),'m':0.4}}
+        run('barrelBridge.stop',byp('barrelBridge',['stop']),s_stud,'the winding stop’s stud in the barrel bridge: the stop-bar against it')
+        cBa,_=axis('bal','th');Ab,_=pk('balance');Wb,rb=pk('balanceW');alpha=Wb**2/max(abs(Ab),1e-6);col=yc('bal',['collet'])
+        def s_bal(P,fix,F):
+            m=P.near_axis(cBa,1.0)&(P.X[:,1]>=col[0]-0.5)&(P.X[:,1]<=col[1]+0.5)
+            if m.sum()<12:ax=P.near_axis(cBa,1.2);dy=np.abs(P.X[:,1]-(col[0]+col[1])/2);m=ax&(dy<=np.sort(dy[ax])[min(60,ax.sum()-1)])
+            fix[m]=True;rho=np.array([RHO[P.mats[i]] for i in P.bm]);vol=P.h*P.h*P.g['dy'];r=P.cent-cBa;r[:,1]=0
+            f=(rho*vol)[:,None]*(alpha*np.cross([0,1,0],r)+Wb**2*r);np.add.at(F,P.conn.ravel(),np.repeat(f/8,8,axis=0))
+            return {'body':True,'load':f"swinging to {np.degrees(abs(Ab)):.0f}°: {abs(alpha):.0f} rad/s² at the turn, {abs(Wb):.1f} rad/s at the centre ({rb}); held at the hairspring’s collet"}
+        run('bal',[m for m in byp('bal') if (m['pk'] or '') not in ('bal.impulse','bal.unlock')],s_bal,'the balance (rim, arm, screws, timing weights, staff): its own inertia, the hairspring holding it')
+        Te,re_=pk('mesh:'+MESH[3]['nm']);rt0=max(np.hypot(*(m['V']-AX['esc'][0])[:,[0,2]].T).max() for m in byp(TP['esc']))
+        imp=[q for q in byp('bal',['impulse']) if q['mat0']=='93020b'];imp=(imp[0] if imp else byp('bal',['impulse'])[0])['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/rt0*np.linalg.norm(ri),0],ri)/(ri@ri)
+        def s_rol(P,fix,F):
+            fix[P.near_axis(cBa,0.9)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse jewel ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
+        run('bal.impulse',byp('bal',['impulse','unlock']),s_rol,'the rollers (impulse and unlocking, with their jewels): the escape wheel’s tooth on the impulse jewel')
+
     if ONLY and (D/f'stress_{VER}.json').exists():   # a partial run: the other parts' results kept
         old=json.loads((D/f'stress_{VER}.json').read_text());ob=(D/f'stress_{VER}.bin').read_bytes();oi=json.loads((D/f'stress_{VER}.idx.json').read_text())
         res={**{k:v for k,v in old['parts'].items() if k not in res},**res}

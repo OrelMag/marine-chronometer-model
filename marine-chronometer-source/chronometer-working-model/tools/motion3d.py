@@ -20,9 +20,9 @@ M=model.NAME   # model.py strips --model NAME from the arguments
 PAGE=(model.DIR/'index.html').resolve().as_uri()+'?snap&qa#drive=1'
 OUT=pathlib.Path(arg('--out',str(HERE/'r_motion3d'/M)));OUT.mkdir(parents=True,exist_ok=True)
 # the inputs nudged, each by a small step from the base state
-NUDGE=[('E',0.02),('th',0.02),('lift',0.002),('psDef',0.002),('n',0.002),('ms',0.002)]
+NUDGE=[('E',0.02),('th',0.02),('lift',0.002),('psDef',0.002),('n',0.002),('ms',0.002),('ssX',0.01)]   # ms: the Wempe's maintaining spring's lead; ssX: the Hamilton's sustaining spring drawn relaxed (each page ignores the other's)
 # the nonlinear inputs sampled over their range (the balance swings to about 120 deg; the fusee 0 to 8.64 turns; the detent's lift and the gold spring's bend over makeEsc's)
-SAMPLE={'th':np.linspace(-2.3,2.3,47),'n':np.linspace(0,8.6,87),'lift':np.linspace(0,0.06,7),'psDef':np.linspace(0,0.25,11),'ms':np.linspace(0,0.32,9)}
+SAMPLE={'th':np.linspace(-2.3,2.3,47),'n':np.linspace(0,8.6 if model.NAME=='wempe' else 8.75,87),'lift':np.linspace(0,0.06,7),'psDef':np.linspace(0,0.25,11),'ms':np.linspace(0,0.32,9),'ssX':np.linspace(0,1,9)}
 TOLP=1e-4   # mm: a mesh moved less than this hasn't moved
 
 def fit(m0,m1):

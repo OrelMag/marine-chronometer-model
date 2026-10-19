@@ -25,6 +25,36 @@ def arg(k,d=None):return sys.argv[sys.argv.index(k)+1] if k in sys.argv else d
 M=model.NAME;VER=arg('--version','last');D=HERE/'r_motion3d'/M
 node=lambda code,env=None:json.loads(subprocess.run(['node','-e',code],cwd=HERE,capture_output=True,text=True,encoding='utf-8',env={**__import__('os').environ,**(env or {})}).stdout.strip().split('\n')[-1])
 env={'MC_WREV':'build'} if VER=='build' else {}
+def ms_states(tab,t,E,k_lvl,L,SET):
+    """the mainspring's solved states: centre line and stress along the strip, sigma = E t / 2 |kappa - kappa0| (kappa0 mainspring.py's free curve)"""
+    src=(HERE/tab).read_text(encoding='utf-8') if (HERE/tab).exists() else (HERE.parent/tab).read_text(encoding='utf-8');d=json.loads(re.search(r'const MSHAPE=(\{.*?\});',src,re.S).group(1))
+    u16=lambda s:np.frombuffer(base64.b64decode(s),'<u2').astype(float)
+    n=d['n'];s=u16(d['s'])*0.05;RR=u16(d['r']).reshape(-1,n)*0.0005
+    FREE_PX=np.array([97,185,250,328,405,502,632,750],float);rk=FREE_PX*L/(2*math.pi*FREE_PX.sum());sk=np.array([2*math.pi*(rk[:i].sum()+rk[i]/2) for i in range(len(rk))])
+    S0=np.r_[0,sk,L];RH0=np.r_[rk[0]*0.8,rk,rk[-1]+(rk[-1]-rk[-2])*(L-sk[-1])/(sk[-1]-sk[-2])];k0=lambda x:SET/np.interp(np.clip(x,0,L),S0,RH0)
+    out=[]
+    for k,T in enumerate(d['T']):
+        r=RR[k];th=np.zeros(n)
+        for i in range(1,n):ds=s[i]-s[i-1];dr=r[i]-r[i-1];th[i]=th[i-1]+math.sqrt(max(ds*ds-dr*dr,1e-12))/((r[i]+r[i-1])/2)
+        th*=2*math.pi*T/th[-1];x,y=r*np.cos(th),r*np.sin(th)
+        dx,dy=np.gradient(x,s),np.gradient(y,s);ddx,ddy=np.gradient(dx,s),np.gradient(dy,s);kap=(dx*ddy-dy*ddx)/np.maximum((dx*dx+dy*dy)**1.5,1e-12)
+        sig=E*t/2*np.abs(np.abs(kap)-k0(s))*k_lvl;sig=np.convolve(sig,np.ones(5)/5,'same')
+        j=np.linspace(0,n-1,400).astype(int);out.append({'T':T,'x':np.round(x[j],4).tolist(),'y':np.round(y[j],4).tolist(),'sig':np.round(sig[j],1).tolist(),'peak':float(np.percentile(sig[3:-3],99.5))})
+    return out
+if M=='hamilton':   # the Hamilton's (its own sources: js/mainspring.js, physics.js, strength.js, sustaining.js; each figure's source beside it)
+    P=json.loads(subprocess.run(['node','-e',"const P=require('./physics.js');console.log(JSON.stringify({Mup:P.Mup,sUp:P.sUp,MS:P.MS,b:P.b,E:P.E,k:P.k,A:P.A}))"],cwd=HERE,capture_output=True,text=True,encoding='utf-8').stdout.strip().split('\n')[-1])
+    t=P['MS']['t'];L=P['MS']['len'];E=P['E']/1e6;Tu,Td=18.7492,14.14007   # mainspring_friction.py's TUP, TDOWN: the fusee's working turns
+    st=ms_states('js/mainspring.js',t,E,1.0,L,1.0)
+    def at(Tq,key):Ts=[x['T'] for x in st];return float(np.interp(Tq,Ts,[np.median(x['sig']) if key=='median' else max(x['sig'][12:]) for x in st]))
+    out={'model':M,'version':VER,'mainspring':{'table':'js/mainspring.js','t':t,'E':E,'level':1.0,'L':L,'states':st,'Tup':Tu,'Tdown':Td,'peakFull':at(Tu,'peak'),'medianFull':at(Tu,'median'),'peakDown':at(Td,'peak'),'limit':P['sUp']/1e6*1.0,'nominal':P['sUp']/1e6},
+         'hairspring':{'k':P['k'],'b':0.23,'h':0.221,'MPaPerRad':6*P['k']/(0.23e-3*0.221e-3**2)/1e6,'limit':350,'note':'even along the strip (Phillips’ terminal curves, hairspring.js); 217 MPa at 255° (strength.js)'},
+         'maintaining':{'peak':685,'banked':True,'law':'(1 - cos phi) / 2 from its end','t':0.28,'note':'the sustaining spring, banked in running (sustaining.js)'},
+         'detentSpring':{'t':0.07,'L':5.0,'MPaPerRad':96/0.023,'peak':96,'limit':223,'note':'preloaded 69, lifted 96 MPa (strength.js)'},
+         'goldSpring':{'peak':195,'limit':350,'law':'the moment rising from the tip to the root','note':'the trip spring bent 0.50 mm at its tip (strength.js)'},
+         'chain':{'plateMPaPerN':508/51.2,'rivetMPaPerN':282/51.2,'limit':1400,'note':'strength.js’s inner link plate across its rivet hole (0.9 x 0.18) and the rivet in double shear'}}
+    (D/f'springs_{VER}.json').write_text(json.dumps(out))
+    print(f"{M} ({VER}): mainspring {out['mainspring']['peakFull']:.0f} MPa fully wound on its inner coils, {out['mainspring']['medianFull']:.0f} along it ({t} at {E/1e3:.0f} GPa; nominal {P['sUp']/1e6:.0f}); hairspring {out['hairspring']['MPaPerRad']:.1f} MPa a radian; chain {out['chain']['plateMPaPerN']:.2f} MPa a newton")
+    sys.exit(0)
 W=node("const W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,S=P.SET,B=W.WESC.BUILD;const PH=require('./wempe_physics.js');"
        "console.log(JSON.stringify({Kl:PH.Kl,k:P.HS.k,HB:W.WESC.HSL.HB,HT:W.WESC.HSL.HT,PS:Math.max(...E.PS)*E.ES,tsT:S.tsT,ET:S.ET,strip:(W.WESC.BSEL&&W.WESC.BSEL.strip)||null,bend:W.WESC.GBEND||null,L:"
        "JSON.parse(require('fs').readFileSync('wempe_mainspring.json','utf8')).final.L,set:JSON.parse(require('fs').readFileSync('wempe_mainspring.json','utf8')).final.set}))",env)

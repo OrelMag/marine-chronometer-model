@@ -18,6 +18,8 @@ J=json.loads((D/'meshes.json').read_text());s=(D/f'trace_{VER}.js').read_text(en
 # the ratios: rad per escape-wheel tooth, the page's against the tooth counts (the escape wheel 15 teeth; each mesh the driver's teeth over the driven's leaves)
 TAU=2*math.pi;e=TAU/15;want={'escapeWheel':e,'secondsWheel':e*10/80,'intermediateWheel':e*10/80*10/80,'centreWheel':e*10/80*10/80*12/90,'fuseeWheel':e*10/80*10/80*12/90*14/90,
      'fusee':e*10/80*10/80*12/90*14/90,'changeWheel':e*10/80*10/80*12/90*14/56,'hourWheel':e*10/80*10/80*12/90*14/56*18/54}
+if M=='hamilton':   # the Hamilton's (physics.js TRAIN: escape 16, fourth 75/10, third 80/10, centre 90/12, fusee wheel 90/14; the motion work 14/56, 18/54)
+    e=TAU/16;want={'escW':e,'fw':e*10/75,'tw':e*10/75*10/80,'cw':e*10/75*10/80*12/90,'gw':e*10/75*10/80*12/90*14/90,'fusee':e*10/75*10/80*12/90*14/90}
 rat={}
 for m in J['meshes']:
     f=(m.get('drv') or {}).get('E')
