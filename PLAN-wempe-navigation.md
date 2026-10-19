@@ -32,11 +32,15 @@ Branch `claude/wempe-navigation`, started 19 October 2026 from `claude/wempe-phy
   - `tripping.js --quick`: the hinged frame's first mode is 78.4 Hz against 81.8, the floppy gold spring left flexible.
 - The maintaining spring, banked: it pushes 381 mN·m while the key turns and keeps the train going 11.4 min, stressed 884 MPa (margin 1.4-2.0).
 
+## Done since (19 October 2026)
+
+- The strip: Nivaflex 45/5 0.377 for the 1950s build (5fa6ca0d); the 1940s build (`BUILD40`) at the drawings' drive, the user choosing both builds.
+- `wempe_physics.js`, `wempe_strength.js` at each build; `tools/wempe_build.js` judges both (both pass); each build's tolerances, bench and Monte Carlo (100 % work after the bench) (e70f87cd).
+- The Wempe report's section 17, the builds; its broken script fixed (6b8ffede).
+- `ci.py` steps for the builds; CLAUDE.md.
+
 ## To do
 
-1. The strip: the solves (`wempe_mainspring.py --solve 1240 --set 0.6 --t 0.385` and `--t 0.377`) give each strip's torque, stress and room to coil-bound; choose with the user.
-2. `wempe_physics.js` and `wempe_strength.js` at the build's level (`Kl` times `WESC.KB`), with the chosen strip's thickness and material limit.
-3. The build's own checks: a safety summary for the build (no tooth past, knocks, window, home in time, maintaining spring, strength) rather than the drawn detent's cross-checks.
-4. The bench, tolerances and Monte Carlo for the build (the maker's guidance).
-5. The page: a Build version under Variants (the gold spring drawn thinned, the swing at the build's drive), each deviation on its card with the original.
-6. README ("The build"), the Wempe report, CHANGELOG, `ci.py`.
+1. Merge after `ci.py`, release as a minor version (the user's choice).
+2. The page: the two builds under Variants (the gold spring drawn thinned, the swing at the build's drive, the maintaining spring banked in the 1950s build), each deviation on its card with the original: the next step.
+3. The visible differences from photographs (Review-results.md, "Photographs against the model"): a later appearance pass.

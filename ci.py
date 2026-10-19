@@ -67,6 +67,11 @@ class R:
     def __init__(s,cmd,cwd,sw=False):s.cmd=cmd;s.cwd=cwd;s.sw=sw
     def __call__(s,log,env=None):return run(s.cmd,s.cwd,log,s.sw,env)
     def key(s):return json.dumps([[rel(c) for c in s.cmd],rel(s.cwd),s.sw])
+class RE(R):
+    """A step run with environment variables of its own (a Wempe build: MC_WREV=build40, build), which its cache key carries."""
+    def __init__(s,cmd,cwd,env):super().__init__(cmd,cwd);s.env=env
+    def __call__(s,log,env=None):return run(s.cmd,s.cwd,log,s.sw,{**(env or os.environ),**s.env})
+    def key(s):return json.dumps([[rel(c) for c in s.cmd],rel(s.cwd),s.sw,s.env])
 class TSC(R):
     """The type check of a jsconfig.json (skipped where the branch has none)."""
     def __init__(s,cfg):super().__init__(['npx','-y','-p',TSC_PKG,'tsc','-p',cfg],ROOT)
@@ -119,6 +124,13 @@ STEPS=[('build',build,'quick'),
  ('wempe-keystone',R(['node',TOOLS/'keystone.js','--model','wempe'],ROOT),'quick'),   # the Wempe's escapement against the 1904 text's rules (reports), against keystone_wempe.json (about 5 s)
  ('wempe-bench',R(['node',TOOLS/'wempe_bench.js'],ROOT),'quick'),   # the Wempe's tests on the bench from its figures, against bench_wempe.json (about 45 s)
  ('wempe-montecarlo',R(['node',TOOLS/'wempe_montecarlo.js'],ROOT),'quick'),   # the whole Wempe to a maker's tolerances, as made and after the bench, against montecarlo_wempe.json (about 30 s)
+ ('wempe-build',R(['node',TOOLS/'wempe_build.js'],ROOT),'quick'),   # the Wempe's two builds for a navigator (1940s, 1950s): the swing, the lock's window, in time, pushed, knocked, the preload's floors, energy, strength, maintaining work, voyage, against wempe_build.json (about 4 min)
+ ('wempe-tolerances-build40',RE(['node',TOOLS/'wempe_tolerances.js'],ROOT,{'MC_WREV':'build40'}),'quick'),   # the build40 build's tolerances, against tolerances_wempe_build40.json
+ ('wempe-bench-build40',RE(['node',TOOLS/'wempe_bench.js'],ROOT,{'MC_WREV':'build40'}),'quick'),   # the build40 build's bench, against bench_wempe_build40.json
+ ('wempe-montecarlo-build40',RE(['node',TOOLS/'wempe_montecarlo.js'],ROOT,{'MC_WREV':'build40'}),'quick'),   # the build40 build's montecarlo, against montecarlo_wempe_build40.json
+ ('wempe-tolerances-build',RE(['node',TOOLS/'wempe_tolerances.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the build build's tolerances, against tolerances_wempe_build.json
+ ('wempe-bench-build',RE(['node',TOOLS/'wempe_bench.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the build build's bench, against bench_wempe_build.json
+ ('wempe-montecarlo-build',RE(['node',TOOLS/'wempe_montecarlo.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the build build's montecarlo, against montecarlo_wempe_build.json
  ('wempe-ratchets',R(['node',TOOLS/'wempe_ratchets.js'],ROOT),'quick'),   # the Wempe's pawls on their ratchets: the load's draw against friction, the teeth, faces and pivots, the clicks' springs at let-go, the maintaining detent's catch against the spring's travel (about 2 s)
  ('wempe-transmission',R(['node',TOOLS/'wempe_transmission.js'],ROOT),'quick'),   # the Wempe's whole transmission in time, every part that moves, nonlinear: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 2 minutes)
  ('wempe-essaydata',R(['node',TOOLS/'wempe_essaydata.js'],ROOT),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
@@ -233,8 +245,8 @@ EXCL={'wempe-dialtrace':'r_dial','wempe-dialtrace-lange':'r_dial','types':'npx',
 AFTER={'blender':'gltf','wempe-blender':'wempe-gltf'}   # blender_check.py imports the r_model21.glb (r_wempe.glb) gltf_check.py writes
 EXTRA={'blender':[MC/'blender'/'rig.py'],'wempe-blender':[MC/'blender'/'rig.py']}   # inputs the trace can't see: Blender's own Python runs the rig
 POOL=6   # the steps that run on processes of their own (tripping.js's bench figures, the Wempe's tripping.js, mainspring.py's sweeps) run on POOL of them (MC_PROCS,
-POOLED={'tripping-bench','wempe-tripping-full','mainspring-friction','wempe-mainspring-friction'}|{s[0] for s in STEPS if s[0].startswith('mainspring-') and s[0]!='mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
-EST={'wempe-transmission':200,'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
+POOLED={'tripping-bench','wempe-tripping-full','wempe-build','mainspring-friction','wempe-mainspring-friction'}|{s[0] for s in STEPS if s[0].startswith('mainspring-') and s[0]!='mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
+EST={'wempe-transmission':200,'wempe-build':230,'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
      'wempe-fine':190,'wempe-fine-first':190,'wempe-fine-6mx':190,'wempe-fine-1943':190,'wempe-bom-first':330,'wempe-bom-6mx':330,'wempe-bom-1943':330,'estimates':190,'wempe-tripping-full':180,'gimbals-full':180,'wempe-gimbals-full':170,'fine':150,'gearing-full':145,'tripping-run':130,'wempe-smoke':115,'gltf':110,'wempe-gltf':200,'wempe-blender':150}   # seconds: the medians of the worktrees' logs, 16 October 2026
 def lane(name,tier):return 'browser' if tier=='browser' or name in BROWSER else 'cpu'
 CACHE=None   # the results cache (cicache.Cache), unless --no-cache; KEYS: each step's key in it
