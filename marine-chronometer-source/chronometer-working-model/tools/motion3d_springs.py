@@ -46,7 +46,7 @@ if M=='hamilton':   # the Hamilton's (its own sources: js/mainspring.js, physics
     t=P['MS']['t'];L=P['MS']['len'];E=P['E']/1e6;Tu,Td=18.7492,14.14007   # mainspring_friction.py's TUP, TDOWN: the fusee's working turns
     st=ms_states('js/mainspring.js',t,E,1.0,L,1.0)
     def at(Tq,key):Ts=[x['T'] for x in st];return float(np.interp(Tq,Ts,[np.median(x['sig']) if key=='median' else max(x['sig'][12:]) for x in st]))
-    out={'model':M,'version':VER,'mainspring':{'table':'js/mainspring.js','t':t,'E':E,'level':1.0,'L':L,'states':st,'Tup':Tu,'Tdown':Td,'peakFull':at(Tu,'peak'),'medianFull':at(Tu,'median'),'peakDown':at(Td,'peak'),'limit':P['sUp']/1e6*1.0,'nominal':P['sUp']/1e6},
+    out={'model':M,'version':VER,'mainspring':{'table':'js/mainspring.js','t':t,'E':E,'level':1.0,'L':L,'states':st,'Tup':Tu,'Tdown':Td,'peakFull':at(Tu,'peak'),'medianFull':at(Tu,'median'),'peakDown':at(Td,'peak'),'limit':2600,'nominal':P['sUp']/1e6},
          'hairspring':{'k':P['k'],'b':0.23,'h':0.221,'MPaPerRad':6*P['k']/(0.23e-3*0.221e-3**2)/1e6,'limit':350,'note':'even along the strip (Phillips’ terminal curves, hairspring.js); 217 MPa at 255° (strength.js)'},
          'maintaining':{'peak':685,'banked':True,'law':'(1 - cos phi) / 2 from its end','t':0.28,'note':'the sustaining spring, banked in running (sustaining.js)'},
          'detentSpring':{'t':0.07,'L':5.0,'MPaPerRad':96/0.023,'peak':96,'limit':223,'note':'preloaded 69, lifted 96 MPa (strength.js)'},

@@ -206,11 +206,11 @@ function pose(t){
   }
   mainspring(n);return STATE;}
 /* the mainspring at the barrel's wind: the solved state nearest, its centre line and stress */
-const msPlace=(()=>{const b=byPart.barrel;if(!b)return null;const a=b.find(o=>o.userData.m.ax)||b[0];const ms=byPart.mainspring&&byPart.mainspring[0];const yb=ms?[ms.userData.m.box[0][1],ms.userData.m.box[1][1]]:[-21,-5];
+const msPlace=(()=>{const b=byPart.barrel;if(!b)return null;const a=b.find(o=>o.userData.m.ax)||b[0];const ms=byPart.mainspring&&[...byPart.mainspring].sort((a,b)=>b.userData.m.nv-a.userData.m.nv)[0];const yb=ms?[ms.userData.m.box[0][1],ms.userData.m.box[1][1]]:[-21,-5];
   const M=new THREE.Matrix4().fromArray(ms?ms.userData.m.mat:a.userData.m.mat);const c=new THREE.Vector3().setFromMatrixPosition(M);return{c,y0:Math.min(...yb)+c.y,y1:Math.max(...yb)+c.y};})();
-function mainspring(n){const S=V().springs.mainspring;if(!S||!msPlace)return;const Tu=S.Tup,Td=S.Tdown,T=Tu-(Tu-Td)*Math.min(1,Math.max(0,n/8.64));
+function mainspring(n){const S=V().springs.mainspring;if(!S||!msPlace)return;const msLim=S.limit||(S.t>0.375?3000:2550);const Tu=S.Tup,Td=S.Tdown,T=Tu-(Tu-Td)*Math.min(1,Math.max(0,n/8.64));
   const st=S.states;let i=0;while(i<st.length-2&&st[i+1].T<T)i++;const f=Math.max(0,Math.min(1,(T-st[i].T)/(st[i+1].T-st[i].T)));const a=st[i],b=st[i+1];
-  const pos=msMesh.geometry.attributes.position.array,col=msMesh.geometry.attributes.color.array,c=msPlace.c,lim=V().springs.mainspring.t>0.375?3000:2550;
+  const pos=msMesh.geometry.attributes.position.array,col=msMesh.geometry.attributes.color.array,c=msPlace.c,lim=msLim;
   const cal=S.cal||{phi:0,mir:1},cp=Math.cos(cal.phi),sn=Math.sin(cal.phi);
   for(let k=0;k<400;k++){const x0=a.x[k]*(1-f)+b.x[k]*f,y0=(a.y[k]*(1-f)+b.y[k]*f)*cal.mir,x=cp*x0-sn*y0,y=sn*x0+cp*y0,s=a.sig[k]*(1-f)+b.sig[k]*f;
     for(const[j,yy]of[[0,msPlace.y0],[1,msPlace.y1]]){const q=(2*k+j)*3;pos[q]=c.x+x;pos[q+1]=yy;pos[q+2]=c.z+y;
@@ -272,10 +272,10 @@ function chart(t){const c=$('#chart'),r=c.getBoundingClientRect(),dpr=Math.min(2
 /* ---------------- the tables and text ---------------- */
 function tables(){const P=V().parts,K=V().kin.runs;const rows=Object.entries(P).map(([k,p])=>{let w=0;for(const r of Object.values(K))for(const[b,v]of Object.entries(r.bodies))if(v.w!=null&&bodyOf(k)===b)w=Math.max(w,Math.abs(v.w));
   return{k,name:nice(k),how:'Finite elements, '+(p.windows&&p.windows.length?'fine windows at the contacts':'whole part'),load:(p.load||'').replace(/\s*\(.*$/,''),peak:p.peak,limit:p.limit[0],margin:p.margin?p.margin[0]:null,w};});
-  const sp=V().springs;rows.push({k:'mainspring',name:'Mainspring ('+sp.mainspring.t+' mm)',how:'Along its strip, its solved shapes',load:'fully wound',peak:sp.mainspring.peakFull,limit:sp.mainspring.t>0.375?3000:2550,margin:(sp.mainspring.t>0.375?3000:2550)/sp.mainspring.peakFull,w:Math.abs(K['The key let go outright']?.bodies?.barrel?.w||0)});
-  rows.push({k:'maintainingSpring',name:'Maintaining spring',how:'Its elastica (wempe_sustaining.js)',load:sp.maintaining.banked?'banked, running':'at the strongest drive',peak:sp.maintaining.peak,limit:1200,margin:1200/sp.maintaining.peak,w:null});
-  rows.push({k:'hairspring',name:'Hairspring',how:'An even couple along it',load:'the swing’s end',peak:sp.hairspring.MPaPerRad*Math.abs(K['A beat at 12 hours']?.bodies?.balance?.amp||3.3),limit:1200,margin:null,w:Math.abs(K['A beat at 12 hours']?.bodies?.balance?.w||0)});
-  rows.push({k:'goldSpring',name:'Gold spring',how:'A cantilever bent at its tip',load:'the return pass',peak:sp.goldSpring.peak,limit:500,margin:500/sp.goldSpring.peak,w:null});
+  const sp=V().springs;const msl=sp.mainspring.limit||(sp.mainspring.t>0.375?3000:2550),HAM=META.model==='hamilton';rows.push({k:'mainspring',name:'Mainspring ('+sp.mainspring.t+' mm)',how:'Along its strip, its solved shapes',load:'fully wound',peak:sp.mainspring.peakFull,limit:msl,margin:msl/sp.mainspring.peakFull,w:Math.abs(K['The key let go outright']?.bodies?.barrel?.w||0)});
+  rows.push({k:'maintainingSpring',name:HAM?'Sustaining spring':'Maintaining spring',how:HAM?'Its section, banked (sustaining.js)':'Its elastica (wempe_sustaining.js)',load:sp.maintaining.banked?'banked, running':'at the strongest drive',peak:sp.maintaining.peak,limit:1200,margin:1200/sp.maintaining.peak,w:null});
+  rows.push({k:'hairspring',name:'Hairspring',how:'An even couple along it',load:'the swing’s end',peak:sp.hairspring.MPaPerRad*Math.abs(K['A beat at 12 hours']?.bodies?.balance?.amp||3.3),limit:sp.hairspring.limit||1200,margin:null,w:Math.abs(K['A beat at 12 hours']?.bodies?.balance?.w||0)});
+  rows.push({k:'goldSpring',name:HAM?'Trip spring':'Gold spring',how:'A cantilever bent at its tip',load:'the return pass',peak:sp.goldSpring.peak,limit:sp.goldSpring.limit||500,margin:(sp.goldSpring.limit||500)/sp.goldSpring.peak,w:null});
   rows.forEach(r=>{if(r.margin==null&&r.limit)r.margin=r.limit/r.peak;});
   const tb=$('#parts tbody');tb.innerHTML=rows.sort((a,b)=>(a.margin??99)-(b.margin??99)).map(r=>`<tr data-k="${r.k}"><td>${r.name}</td><td class="muted">${r.how}</td><td>${r.load}</td><td class="num">${r.peak.toFixed(0)}</td><td class="num">${r.limit}</td><td class="num">${chip(r.margin)}</td><td class="num">${r.w?r.w.toPrecision(3):'—'}</td></tr>`).join('');
   $$('#parts tbody tr').forEach(tr=>tr.addEventListener('click',()=>{const m=META.meshes.find(x=>partKey(x)===tr.dataset.k||x.part===tr.dataset.k);if(m)pick(m);$('#stage').scrollIntoView({behavior:'smooth',block:'center'});}));

@@ -86,11 +86,11 @@ for v in ('last','build'):
     (P/f'v_{v}.bin').write_bytes(bytes(buf))
     spr=json.loads((D/f'springs_{v}.json').read_text())
     # the mainspring's drawn line turned and mirrored onto the page's own mesh at the base state (the fusee 4 turns from full wind): the solved states are in the arbor's frame
-    msm=[m for m in J['meshes'] if m['part']=='mainspring']
+    msm=sorted([m for m in J['meshes'] if m['part']=='mainspring'],key=lambda m:-m['nv'])   # the strip (the largest; the Hamilton has its hook's end beside it)
     if msm:
         m=msm[0];G=(D/'geom.bin').read_bytes();lo,hi=np.array(m['box'][0]),np.array(m['box'][1]);q=np.frombuffer(G,'<u2',m['pos'][1]//2,m['pos'][0]).reshape(-1,3).astype(float)
         pw=lo+q*np.where(hi-lo>0,(hi-lo)/65535,1);A=np.array(m['mat']).reshape(4,4).T;pw=pw@A[:3,:3].T+A[:3,3];c=A[:3,3]
-        bx=[mm for mm in J['meshes'] if mm['part']=='barrel' and (mm.get('drv') or {}).get('ms',{}).get('kind')=='turn'];cb=np.array(bx[0]['drv']['ms']['pt']) if bx else c
+        bx=[(mm,k_) for mm in J['meshes'] for k_ in ('ms','n') if mm['part']=='barrel' and (mm.get('drv') or {}).get(k_,{}).get('kind')=='turn'];cb=np.array(bx[0][0]['drv'][bx[0][1]]['pt']) if bx else c   # the barrel's axis (its turn by the Wempe's ms or the fusee's n)
         pts=pw[:,[0,2]]-cb[[0,2]];sm=spr['mainspring'];Tb=sm['Tup']-(sm['Tup']-sm['Tdown'])*4/8.64;Ts=[s_['T'] for s_ in sm['states']];k=int(np.argmin(np.abs(np.array(Ts)-Tb)));ss=sm['states'][k]
         from scipy.spatial import cKDTree;tr=cKDTree(pts[::3]);best=(1e9,0,1)
         for mir in (1,-1):

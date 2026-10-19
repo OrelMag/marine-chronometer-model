@@ -100,6 +100,9 @@ class Part:
             nm=COL.get(m['mat0'] or '','steel');nm='gold' if (m['pk'] or '').endswith('.gold') else nm
             if nm not in mat:mat.append(nm)
             S[vox(m['V'][m['F']],s.g)&(S<0)]=mat.index(nm)
+        import scipy.ndimage as _nd
+        lab,nl=_nd.label(S>=0)
+        if nl>1:sz=np.bincount(lab.ravel());sz[0]=0;S[(lab>0)&(sz[lab]<0.005*sz.max())]=-1   # islands under 0.5 % of the largest piece: the grid's cut-offs
         s.mats=mat;G=dict(s.g,solid=S>=0);X,conn,e=fea.mesh_of(G);s.X,s.conn=X,conn;s.bm=S[e[:,0],e[:,1],e[:,2]];s.cent=X[conn].mean(1)
         s.E=np.array([MAT[mat[i]][0] for i in s.bm],float);s.nb=len(conn)
         cnt=np.bincount(conn.ravel(),minlength=len(X));s.surf=cnt<8   # a node on the surface belongs to fewer than 8 bricks
@@ -367,8 +370,7 @@ def main():
         run('fusee.stop',byp('fusee',['stop']),s_bar,'the stop-bar on the fusee’s small end: the winding stop against it at full wind')
         ybr=yc('barrelBridge',['bridge'])
         def s_stud(P,fix,F):
-            y=P.X[:,1];fix[(y>=ybr[0])&(y<=ybr[1])]=True;fr=~fix.any(1);m=fr&(np.abs(y-y[fr].mean())<=np.ptp(y[fr])/2+1e-9)
-            far=np.abs(y-ybr[0])>np.abs(y-ybr[1]);m=fr&((y<ybr[0]) if far.sum()<len(y)/2 else (y>ybr[1]));F[m]+=fst/max(1,m.sum())
+            y=P.X[:,1];dd=np.abs(y-(ybr[0]+ybr[1])/2);fix[dd<=np.quantile(dd,0.4)]=True;m=(dd>=np.quantile(dd,0.85))&~fix.any(1);F[m]+=fst/max(1,m.sum())   # held in the bridge by its nearer part, the stop-bar on its free end
             return {'load':f"{np.linalg.norm(fst):.1f} N from the stop-bar ({rst}); held in the barrel bridge",'out':{'at':stud.tolist(),'m':0.4}}
         run('barrelBridge.stop',byp('barrelBridge',['stop']),s_stud,'the winding stop’s stud in the barrel bridge: the stop-bar against it')
         cBa,_=axis('bal','th');Ab,_=pk('balance');Wb,rb=pk('balanceW');alpha=Wb**2/max(abs(Ab),1e-6);col=yc('bal',['collet'])
@@ -382,8 +384,8 @@ def main():
         Te,re_=pk('mesh:'+MESH[3]['nm']);rt0=max(np.hypot(*(m['V']-AX['esc'][0])[:,[0,2]].T).max() for m in byp(TP['esc']))
         imp=[q for q in byp('bal',['impulse']) if q['mat0']=='93020b'];imp=(imp[0] if imp else byp('bal',['impulse'])[0])['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/rt0*np.linalg.norm(ri),0],ri)/(ri@ri)
         def s_rol(P,fix,F):
-            fix[P.near_axis(cBa,0.9)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse jewel ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
-        run('bal.impulse',byp('bal',['impulse','unlock']),s_rol,'the rollers (impulse and unlocking, with their jewels): the escape wheel’s tooth on the impulse jewel')
+            fix[ball(P,cBa,0.3)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse jewel ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
+        run('bal.impulse',byp('bal',['impulse']),s_rol,'the rollers (impulse and unlocking, with their jewels): the escape wheel’s tooth on the impulse jewel')
 
     if ONLY and (D/f'stress_{VER}.json').exists():   # a partial run: the other parts' results kept
         old=json.loads((D/f'stress_{VER}.json').read_text());ob=(D/f'stress_{VER}.bin').read_bytes();oi=json.loads((D/f'stress_{VER}.idx.json').read_text())
