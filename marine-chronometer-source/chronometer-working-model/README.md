@@ -1282,6 +1282,82 @@ on what would stop the chronometer.
   carries it at `/verification/build-verification/` (the root `build.py` copies
   it), linked from About and the essay.
 
+### The whole transmission in time
+
+`tools/hamilton_transmission.js` (19 October 2026) runs every part that moves,
+from the mainspring to the escape wheel and the hands, as one system in time:
+the Wempe's `wempe_transmission.js` (its README's "Physics: the transmission")
+on the Model 21's own parts. Each part is a body, its inertia weighed on the
+model's solids (`mechanisms.json`), joined by the element a real movement has,
+none linearised: the mainspring through the fusee (`mainspring_friction.json`'s
+fusee table: the drum's turns and the torque on the fusee arbor, frictionless
+and running, every quarter turn; the chain's lever on the fusee is the drum's
+radius times the drum's turn for the fusee's, 7.50 mm fully wound to 14.53 at
+8.5 turns), its coils' friction a stick-slip element (winding takes as much
+more as running gives less); the chain in tension only, going slack, its
+polygon on both drums; the two winding pawls and the sustaining pawl as bodies
+on their pivots under their springs (`ratchets.js`), riding the teeth and
+catching a face only when down; the sustaining spring (`sustaining.js`'s
+stiffness, 0.36 N·m a radian over 16.9°) **banked in running**, where the
+Wempe's maintaining spring runs open; every mesh tooth by tooth on the model's
+own outlines (`gearing.js`'s `mesh`: the train, the motion work and the wind
+indicator); the cannon pinion's friction fit (`motionwork.js`'s window); the
+Model 21's plain key on the fusee's square (no one-way key: that is the
+build's deviation); the stop-bar on its stud (`overwind.js`). The escapement is
+`dynamics.js`'s own, its escape wheel driven by the train's last mesh each step.
+
+The drive: makeEsc is calibrated at 255° on the page's 12-hour drive, and the
+solved spring through the train gives the escape wheel 1.62 times that
+(`physics.js`'s budget gap, kept open by the owner's choice). The runs that
+drive the escapement take the mainspring at the page's level (×0.607); the
+winds and the stop take its own torque, and a beat's peaks are judged as their
+factor over running times `strength.js`'s fully wound load.
+
+What it finds:
+
+- **Statically** the spring stays on its bank from full wind to run down (at
+  least 1.04° closed past it), and the train passes 0.80 of the fusee's torque
+  to the escape wheel (`physics.js`'s parts give 0.69-0.87). The chain's
+  polygon and the meshes' ripple move the swing over a run between 249° and
+  269° (smooth 253-265°), and the time wanders 0.2 ms within a day.
+- **The modes**: the lowest, 192 Hz, is the barrel and fusee on the chain; the
+  train's run from 2.9 to 21 kHz: nothing near the beat.
+- **A beat** at 12 h, the train on its meshes against the same escapement on a
+  rigid train: every beat taken; an impulse gives the balance 2.6 % more work
+  (the meshes give back some of the wheel's landing and start), worth +3.6° of
+  swing and +0.05 s a day: the rigid train `dynamics.js` and makeEsc take reads
+  the swing low by about that (the check holds it within 8° and 0.5 s a day,
+  the Wempe's tolerance). The escape pinion's mesh takes 27 times its running
+  load as the wheel lands on its stone (1.4 N; 2.9 N on the fully wound drive,
+  margin 2.2 on brass's endurance) and lets go 1.4 % of the time; the other
+  meshes never let go. The seconds hand overshoots 19″ of arc; the cannon
+  pinion doesn't slip; the sustaining spring never leaves its bank.
+- **Winding**: the key put on, the sustaining ratchet falls 1.5° back onto its
+  pawl; the hand needs 0.41 N·m. Eased back, the pawls catch with at most
+  73 N each (margin 4.4 on the hardened ratchet), the chain at most 59 N. **Let
+  go outright** (the fingers off the plain key, the fusee and barrel flung
+  forward up to a tooth, 10°) the blow closes the sustaining spring 5° past its
+  bank: the pawls catch with 273 N, the fusee wheel's teeth take 80 N (728 MPa:
+  past brass's yield), the chain snatches to 107 N (past its weakest part, the
+  hook's bearing on the barrel's brass wall, 76-113 N), the sustaining ratchet
+  is thrown back onto its pawl with 60 N. Judged as a misuse, as the Wempe's
+  outright let-go is: the key should be eased back to the pawls. The result
+  rests on the estimated bank stiffness (×0.25 to ×4: the fusee wheel's teeth
+  55-137 N) and the chain's (37-253 N/mm: 66-83 N).
+- **The stop**: wound into it at a turn a second and forced by a strong hand
+  (1.06 N·m), 57 N on the stud (the stop-bar's end 193 MPa), the chain 54 N.
+- **The motion work**: the hour hand's play 3.9 minutes of time; the wind
+  indicator's 0.66° (7 minutes of its 56 hours).
+
+Estimated (no source gives them): the sustaining spring's bank stiffness (40
+times its own), the chain's stiffness (from its plates' sections and rivets
+over its span and lead-in), the pawls' faces (10 and 5 kN/mm), the winding
+pawls' springs' set (0.2 mm), the cannon pinion's grip, the key's inertia and
+its square's stiffness, the wind indicator's inertia, the motion work's faces
+and bores, the contacts' damping. `hamilton_transmission_trace.js` traces the
+beat, the two let-gos and the stop in the Wempe trace's format for the
+motion-3d pipeline (`tools/r_motion3d/hamilton/trace_last.js`, ignored).
+
 ### Checked against real chronometers
 
 The tools above check the model against itself and against the manual's
