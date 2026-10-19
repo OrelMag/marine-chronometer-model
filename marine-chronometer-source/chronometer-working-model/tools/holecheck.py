@@ -34,8 +34,6 @@ EXPECTED = model.cfg('HOLE_EXPECTED', [
     ('pillar', '42057', [1.88, 2.14, -41.36], None, "the mounting ring's small hole at 2.5 deg, seen empty with the dial off (KLUwI2UUCMQ 9:03); what it takes, if anything, unknown (Review-results.md, 'Still open after the collar's height' 2)"),
     ('pillar', '42060', [18.30, -3.86, 9.66], None, "the plate's access hole to the balance lower bridge's screw, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial; under the screw where the owner's 36:01 trace puts it since 18 October 2026"),
     ('sspring', '42016', None, None, "the second hole in the sustaining spring's fixed end, the pin in the first (video 27:26; which one has the pin estimated)"),
-    ('trainBridge', '42062', [2.08, -23.76, 30.56], 'navy', "the manual's locking arm's stop pin hole: the arm is off with the Navy's Y-arm fitted"),
-    ('trainBridge', '42062', [3.74, -23.76, 30.16], 'navy', "the manual's locking arm's screw hole: the arm is off with the Navy's Y-arm fitted"),
     ('lockArm', '', [-6.96, -30.65, -19.69], 'navy', "the Navy's second dust seal's chamber, closed underneath, the lever through its slot above (illustrative: its inside not seen)"),
     ('barrelBridge', '42061', [-13.96, -27.16, -23.11], 'arm', "the Navy seal's screw hole (13:04.4): the movement drawn is fitted for the Navy's Y-arm, and the manual's arm leaves it empty"),
     ('barrelBridge', '42061', [0.05, -27.16, -16.27], 'arm', "the Navy seal's other screw hole (13:04.4), empty with the manual's arm fitted"),

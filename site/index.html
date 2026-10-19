@@ -3680,9 +3680,14 @@ function buildMovement(M){
                pillar stands in the open notch. Its keyhole opening frees the balance's staff and rollers and the escape arbor ---------- */
   const tb=part('trainBridge',-62);
   const TBpoly=clipPoly(crescent(BR_R,TB_CUT,TB_CR,TB_EDGE),p=>{const[a,b]=TB_END,c=(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);return Math.max(-c,p[0]+30);});   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110); measured on the video, 22.56 mm out, it is where the barrel stands */
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.95,1],[...L.T,1.9,1],{pts:TB_KEY},[...SPv,0.52,1],[...SPh,0.25,1],
+  /* two of its holes only when the manual's locking arm is fitted (R.tbGeo, mv.userData.stop): its screw's and its stop pin's (S.arm, S.armPin). The restoration video's
+     2E8489 carries the Navy's Y-arm, and on KLUwI2UUCMQ 23:30 and 13:44 its train bridge's face is plain there (19 October 2026); where the arm's holes are on a bridge fitted
+     for it no frame or photograph shows (Fig. 9 alone) */
+  const TBH=[[...L.C,1.95,1],[...L.T,1.9,1],{pts:TB_KEY},[...SPv,0.52,1],[...SPh,0.25,1],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),[...S.tb[2],TB_CB,1],hT(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),[...S.blk,1.4,1],...S.dpin.map(q=>[...q,0.53,1]),hT(...S.cock,CKH_R,CKH_T),...S.ckp.map(q=>[...q,1.07,1]),...S.bbp.map(q=>[...q,0.95,1]),[...S.tbx,0.75,1],
-    hT(...S.arm,ARM_S),[...S.tBlock,0.9,1],[...S.armPin,0.3,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');   /* the barrel bridge's far pin's hole (S.bbp[1]): KLUwI2UUCMQ 23:30 (face up) and 13:49.5 (underside), countersunk underneath, r 0.82-0.98; its place
+    [...S.tBlock,0.9,1]],TBG=h=>polyGeo(TBpoly,3.1,h,0.22);
+  R.tbGeo={navy:TBG(TBH),arm:TBG([...TBH,hT(...S.arm,ARM_S),[...S.armPin,0.3,1]])};
+  R.trainBridge=mesh(tb,R.tbGeo.navy,M.plate,0,TB_T,0);hn(tb,'42062');   /* the barrel bridge's far pin's hole (S.bbp[1]): KLUwI2UUCMQ 23:30 (face up) and 13:49.5 (underside), countersunk underneath, r 0.82-0.98; its place
      through the homographies on the holes the bare plate places (S.bbp's comment; until 19 October 2026 by the bridge's rims, the cut round the barrel and the centre bushing, tools/holemap.py) */
   for(const f of TB_SEAT){const ins=([x,z])=>{let c=false;for(let i=0,j=f.length-1;i<f.length;j=i++){const[a,b]=f[i],[e,d]=f[j];if((b>z)!==(d>z)&&x<(e-a)*(z-b)/(d-b)+a)c=!c;}return c;};   /* each seat's floor, with its screw's tapped hole and its pin's hole */
     mesh(tb,polyGeo(f,3.1-SEAT_D,[...S.eb.filter(ins).map(q=>hT(...q,0.9)),...S.ebp.filter(ins).map(q=>[...q,0.42,1])]),M.plate,0,TB_T+SEAT_D,0);}
@@ -4698,7 +4703,7 @@ function buildMovement(M){
     const a=DEV.g*e,c=Math.cos(a),s=Math.sin(a);for(const g of EFP){g.rotation.y=a;g.position.x=L.E[0]+dE[0]*e-(L.E[0]*c+L.E[1]*s);g.position.z=L.E[1]+dE[1]*e-(-L.E[0]*s+L.E[1]*c);}
     for(const q of DPH)q.m.rotation.y=q.r0+q.c*e;};
   mv.userData.balance=kind=>{R.balU.visible=kind!=='split';R.balS.visible=kind==='split';R.balKind=kind==='split'?'split':'uncut';};R.balKind='uncut';
-  mv.userData.stop=kind=>{R.armF9.visible=kind!=='navy';R.navy.visible=kind==='navy';R.bbScr[R.navyBB].visible=kind!=='navy';};   /* the balance stop fitted: the manual's locking arm (Fig. 9) or the Navy's Y-arm */
+  mv.userData.stop=kind=>{R.armF9.visible=kind!=='navy';R.trainBridge.geometry=R.tbGeo[kind==='navy'?'navy':'arm'];R.navy.visible=kind==='navy';R.bbScr[R.navyBB].visible=kind!=='navy';};   /* the balance stop fitted: the manual's locking arm (Fig. 9) or the Navy's Y-arm */
   /* train-blocking screw: with its dog point down between the fourth wheel's spokes, how many beats (E) the train can still turn before the next spoke meets it (blockRoom),
      and whether a spoke is under the dog point now, so it can't be screwed down (blockClear). The fourth wheel turns with its spokes' angles falling as E rises */
   { const u=R.tbs.userData,q=TAU/FW_SP,sp=E=>[...Array(FW_SP).keys()].map(j=>-(E*ESC.P)/ESC_PER.fw+FW.wheel.rotation.y+j*q-u.sig);
