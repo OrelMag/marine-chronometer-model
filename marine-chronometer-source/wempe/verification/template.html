@@ -348,7 +348,7 @@ material's limit or its speed, the deviations magnified, with each part's load, 
 <p>Every part past its limit but the mainspring (its inner coils, fully wound: section 17's builds and <code>wempe_build.js</code> take it up) is past it only with the key let go outright. The let-go study (<code>wempe_letgo_fix.js</code>) runs that let-go (the worst place, the nearer
 click 97 % of the way to the next; and eased back beside it) with the fixes a maker could make: more clicks, evenly spaced over a tooth, so the fusee runs a shorter way
 free; a brake, friction between the click wheel and the maintaining ratchet, which the clicks hold still running (so it costs the train nothing) but which the key works
-against winding; the click's face cushioned. The stresses are the 3D results' scaled to each case's force.</p>
+against winding; the click's face cushioned. The stresses are the 3D results' scaled to each case's force; the click wheel's tooth by <code>wempe_strength.js</code>'s beam, the highest of three readings (the FE on the tooth gives 0.60 MPa a newton, <code>wempe_ratchets.js</code> 1.16, the beam 2.05: <a href="https://github.com/OrelMag/marine-chronometer-model/blob/main/docs/motion-3d/README.md#6-cross-checks-and-what-they-leave-open">the methodology's cross-checks</a>).</p>
 <div id="tLF" class="tw"></div>
 <div class="callout"><p id="lfMeaning"></p></div>
 
@@ -734,7 +734,7 @@ function draw(){
     rows.push(['the mainspring\'s inner coils, fully wound',g(L.ms.peakFull)+' MPa',B?g(B.ms.peakFull)+' MPa':'–','its strip 2600 (the build\'s 3000)',`<span class="no">${g(2600/L.ms.peakFull,2)}</span>`,`its strip ${L.ms.t} mm (${B?B.ms.t:'–'} mm built), ${g(L.ms.medianFull)} MPa along it`]);
     table('tM3',['Part','Peak, as drawn','Peak, the 1950s build','Material, its limit (MPa)','Margin, as drawn','Its worst load'],rows,true);
     const F=M.lf;if(F){const K=['wheel','clicks','ratchet','detent','fw'],lim={wheel:[300,450],...Object.fromEntries(K.slice(1).map(k=>[k,F.lim[k].lim]))},cell=(s,k)=>`<span class="${s>lim[k][1]?'no':s>lim[k][0]?'wn':''}">${g(s)}</span>`;
-      table('tLF',['Let go outright (eased)','Free run','The click wheel\'s tooth (brass 300-450)',`The clicks (${F.lim.clicks.mat} ${F.lim.clicks.lim.join('-')})`,`The maintaining ratchet (${F.lim.ratchet.mat} ${F.lim.ratchet.lim.join('-')})`,
+      table('tLF',['Let go outright (eased)','Free run','The click wheel\'s tooth (brass 300-450), by <code>wempe_strength.js</code>\'s beam: the FE gives 0.3× it',`The clicks (${F.lim.clicks.mat} ${F.lim.clicks.lim.join('-')})`,`The maintaining ratchet (${F.lim.ratchet.mat} ${F.lim.ratchet.lim.join('-')})`,
         `The maintaining detent (${F.lim.detent.mat} ${F.lim.detent.lim.join('-')})`,`The fusee wheel's teeth (${F.lim.fw.mat} ${F.lim.fw.lim.join('-')})`,'Winding, the hand'],
         F.cases.map(c=>[esc(c.lab),g(c.free*180/Math.PI,2)+'°',...K.map(k=>cell(c.st[k],k)+` (${g(c.stE[k])})`),g(c.hand*1e3)+' mN·m']),true);
       const c0=F.cases[0],best=F.cases.reduce((a,c)=>Math.max(...K.map(k=>c.st[k]/lim[k][0]))<Math.max(...K.map(k=>a.st[k]/lim[k][0]))?c:a);

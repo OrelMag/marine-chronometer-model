@@ -7,8 +7,13 @@ Reads r_motion3d/<model>/: meshes.json and geom.bin (the page's solids, motion3d
 beat, the key let go outright and eased, and the stop), mechanisms_wempe.json (the pawls' contacts). For each part below: its pieces voxelised together on one grid,
 each brick its piece's material (from the page's colour: brass, steel, ruby, gold, beryllium copper), held at its pivots on its axis only (so the hold carries no torque)
 and where its drive comes in, loaded where its drive goes out with the worst load of the four runs, solved (fea.py's trilinear bricks, pyamg), each brick's von Mises
-stress. Writes stress_<version>.json (each part's case, the load and where, its peak stress (99.5th percentile of its bricks: a voxel model's stair corners overstate
-the highest few), its material's limit and margin) and stress_<version>.bin (each mesh vertex's stress in MPa, Float32, mesh after mesh in meshes.json's order).
+stress. Each part's stress is each brick's von Mises averaged with its 18 nearest (a voxel model's stair corners concentrate stress the real surface doesn't
+have); where the load comes in and goes out (a tooth, a pawl's nose) a window round it is solved again at about a ninth of the module, its cut faces moved as the coarse
+solve moves them, and its root's peak read clear of the contact itself (the contact's own pressure is Hertz's, given apart) and of the cut faces; elsewhere the coarse
+field's 99.5th percentile, read clear (0.3 mm or 2.5 bricks) of where the part is held or loaded. Islands of bricks cut off by the grid (under 0.5 % of the largest piece)
+are dropped. Poisson's ratio 0.3 for every material. Writes stress_<version>.json (each part's case, the load and where, its peak stress, its material's limit and
+margin) and stress_<version>.bin (each mesh vertex's stress in MPa, Float32, mesh after mesh in meshes.json's order). --fig DIR draws each solved part in plan
+(docs/motion-3d/'s figures: fe_<model>_<part>.png).
 Linear-elastic, small strain: the system's nonlinearity is in the runs that give the loads; the forces are applied quasi-statically (no stress waves)."""
 import json,math,pathlib,re,sys,time,base64
 import numpy as np,scipy.sparse as sp,pyamg
@@ -119,6 +124,28 @@ class Part:
             k=np.argsort(np.where(s.surf,d,1e9))[:8];m=np.zeros(len(s.X),bool);m[k]=True
         return m
 
+FIG=arg('--fig')
+def figure(name,note,P,vm,fix,F,wins,r):
+    """--fig DIR: the part's solve drawn in plan (docs/motion-3d/): its bricks' centres coloured by their stress (the most along each column on top), where it is held
+    (blue) and loaded (red), its windows' outlines; beside it each window's finer bricks, its cut faces (grey: their movement the coarse solve's) and the stress it reads"""
+    import matplotlib;matplotlib.use('Agg');import matplotlib.pyplot as plt;from matplotlib.colors import LogNorm
+    nw=len(wins);fig,ax=plt.subplots(1,1+nw,figsize=(6.2*(1+nw),6.0),squeeze=False);ax=ax[0];vmax=max(r['peak']*1.3,1);nrm=LogNorm(vmin=max(vmax/300,0.1),vmax=vmax)
+    def draw(a,X,cent,v,fx,ld,bd,title,h):
+        o=np.argsort(v);sc=a.scatter(cent[o,0],cent[o,2],c=np.clip(v[o],nrm.vmin,None),cmap='turbo',norm=nrm,s=max(1.5,(h*72*5.5/max(np.ptp(cent[:,0]),np.ptp(cent[:,2]),1e-3))**2),marker='s',linewidths=0)
+        if bd is not None and bd.any():a.scatter(X[bd,0],X[bd,2],s=2,c='#999',label='cut faces (moved as the coarse solve moves them)')
+        if fx.any():a.scatter(X[fx,0],X[fx,2],s=6,c='#1f5fd6',label='held')
+        if ld.any():a.scatter(X[ld,0],X[ld,2],s=10,c='#e0322a',marker='^',label='loaded')
+        a.set_aspect('equal');a.invert_yaxis();a.set_xlabel('x (mm)');a.set_ylabel('z (mm, 12 o\'clock up)');a.set_title(title,fontsize=10);a.legend(loc='lower left',fontsize=8,framealpha=0.85);return sc
+    sc=draw(ax[0],P.X,P.cent,vm,fix.any(1),np.abs(F).sum(1)>0,None,f"{name}: the whole part, {P.nb:,} bricks of {P.h:.3f} mm",P.h)
+    for W in wins:
+        g=W['P'].g;ax[0].add_patch(plt.Rectangle((g['x0'],g['z0']),g['nx']*g['h'],g['nz']*g['h'],fill=False,ec='k',lw=1.2,ls='--'))
+    for i,W in enumerate(wins):
+        Pf=W['P'];draw(ax[1+i],Pf.X,Pf.cent,W['vm'],W['fx'],W['ld'],W['bd'],f"its window: {Pf.nb:,} bricks of {W['h']:.3f} mm\npeak {W['peak']:.0f} MPa (+) clear of the load; at the load {W['contact']:.0f}",W['h'])
+        a=ax[1+i];a.plot(*W['where'][0:3:2],'k+',ms=14,mew=2)
+    fig.colorbar(sc,ax=ax,shrink=0.85,label='von Mises stress (MPa), each brick averaged with its 18 nearest')
+    import textwrap;fig.suptitle(textwrap.fill(note,130)+'\n'+textwrap.fill(r.get('load',''),130)+f"\npeak {r['peak']:.0f} MPa in {r['mat']} against {r['limit'][0]}-{r['limit'][1]}",fontsize=10)
+    out=pathlib.Path(FIG);out.mkdir(parents=True,exist_ok=True);fig.savefig(out/f"fe_{M}_{name.replace('.','_')}.png",dpi=110,bbox_inches='tight');plt.close(fig)
+
 def ax_of(m,inp='E'):
     f=(m.get('drv') or {}).get(inp)
     return (np.array(f['pt']),np.sign(f['ax'][1]) or 1.0) if f and f['kind']=='turn' else (None,1.0)
@@ -171,7 +198,7 @@ def main():
             if len(bn):dd,_=cKDTree(bn).query(Pf.cent);far&=dd>max(3*hf,0.6*mod)   # the root's bending, clear of the contact (whose own pressure is Hertz's: info['hertz'])
             cx=Pf.cent;far&=(cx[:,0]>g['x0']+2*hf)&(cx[:,0]<g['x0']+g['nx']*hf-2*hf)&(cx[:,2]>g['z0']+2*hf)&(cx[:,2]<g['z0']+g['nz']*hf-2*hf)
             rootpk=float(vmf[far].max()) if far.any() else 0.0;kk=int(np.argmax(np.where(far,vmf,-1)))
-            wins.append({'at':C.tolist(),'R':Rw,'h':hf,'bricks':Pf.nb,'peak':rootpk,'raw':float(vmr[far].max()) if far.any() else 0.0,'where':Pf.cent[kk].tolist(),'mat':Pf.mats[Pf.bm[kk]],'contact':float(vmf.max()),'resid':rrf,'P':Pf,'vm':vmf})
+            wins.append({'at':C.tolist(),'R':Rw,'h':hf,'bricks':Pf.nb,'peak':rootpk,'raw':float(vmr[far].max()) if far.any() else 0.0,'where':Pf.cent[kk].tolist(),'mat':Pf.mats[Pf.bm[kk]],'contact':float(vmf.max()),'resid':rrf,'P':Pf,'vm':vmf,'fx':fixf.any(1)&~bd,'ld':np.abs(Ff).sum(1)>0,'bd':bd})
         busy0=fix.any(1)|((np.abs(F).sum(1)>0) if not info.get('body') else False);farc=np.ones(P.nb,bool)   # a load through the body (the balance's inertia) isn't a contact's singularity
         if busy0.any():dd0,_=cKDTree(P.X[busy0]).query(P.cent);farc=dd0>max(2.5*P.h,0.3)   # 0.3 mm: a hole's wall held rigid (a pivot's screw) concentrates stress a pin bearing and sliding in it doesn't
         vmc=np.where(farc,vm,0);pk995=float(np.percentile(vmc,99.5));mx=float(vmc.max());k=int(np.argmax(vmc));mat=P.mats[P.bm[k]]
@@ -179,7 +206,8 @@ def main():
             wb=max(wins,key=lambda x:x['peak'])
             if wb['peak']>pk995:pk995,mat=wb['peak'],wb['mat'];k=None
         lo,hi=MAT[mat][2]
-        res[name]={'note':note,**info,'h':P.h,'bricks':P.nb,'peak':pk995,'max':mx,'at':(P.cent[k].tolist() if k is not None else wb['where']),'windows':[{x:y for x,y in w.items() if x not in('P','vm')} for w in wins],'mat':mat,'limit':[lo,hi],'margin':[lo/pk995,hi/pk995] if pk995>0 else None,'resid':rr,'disp':float(np.abs(u).max())}
+        res[name]={'note':note,**info,'h':P.h,'bricks':P.nb,'peak':pk995,'max':mx,'at':(P.cent[k].tolist() if k is not None else wb['where']),'windows':[{x:y for x,y in w.items() if x not in('P','vm','fx','ld','bd')} for w in wins],'mat':mat,'limit':[lo,hi],'margin':[lo/pk995,hi/pk995] if pk995>0 else None,'resid':rr,'disp':float(np.abs(u).max())}
+        if FIG:figure(name,note,P,vm,fix,F,wins,res[name])
         tree=cKDTree(P.cent)
         for m in mm:
             d,ix=tree.query(m['V'],k=4);w=1/np.maximum(d,1e-6);sv=(vm[ix]*w).sum(1)/w.sum(1)
