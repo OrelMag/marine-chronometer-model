@@ -110,7 +110,6 @@
   "bowl:Extrude | bowl:Cylinder | --52.20": 1,
   "bowl:Lathe | bowl:Cylinder | +-49.90": 1,
   "latch:Extrude | latch:Cylinder | +-4.60": 1,
-  "lidGlass:Box | lidGlass:Cylinder | +204.52": 2,
-  "ring:Lathe | bowl:Extrude | --14.10": 2
+  "lidGlass:Box | lidGlass:Cylinder | +204.52": 2
  }
 }
