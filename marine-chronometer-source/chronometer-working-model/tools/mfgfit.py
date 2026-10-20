@@ -609,17 +609,26 @@ def to_mm(objs, Hpx2mm):
             if H is not None and o.get('blur'):   # the blur in mm here (the map's local scale), for the curvature correction
                 J = np.array(H, float); c = np.asarray(src, float).mean(0); e = 1e-3; p0 = H_apply(J, c[None])[0]
                 sx = np.hypot(*(H_apply(J, (c + [e, 0])[None])[0] - p0))/e; sz = np.hypot(*(H_apply(J, (c + [0, e])[None])[0] - p0))/e; o['blur_mm'] = o['blur']*math.sqrt(sx*sz)
+def off_arc(Q, P, gap=100.0, margin=8.0):
+    """The samples Q of a traced circle that lie off the arc its points P cover, when they leave a gap over `gap` deg (a notch, a cut traced as a
+    circle's arc): a full circle sampled there finds the other edges round it (the train bridge's notch on 23:30 read r 16.06 that way, 16.68 on its arc).
+    None for a whole hole."""
+    c = Q.mean(0); a = np.sort(np.degrees(np.arctan2(P[:, 1] - c[1], P[:, 0] - c[0]))); g = np.diff(np.r_[a, a[0] + 360]); k = int(np.argmax(g))
+    if g[k] <= gap: return None
+    lo, hi = a[k] + margin, a[k] + g[k] - margin; aq = np.degrees(np.arctan2(Q[:, 1] - c[1], Q[:, 0] - c[0]))
+    return ((aq - lo) % 360) < (hi - lo)
 def refine(objs, img, Hpx2mm, ch, win, cskip=7):
     """Replace each object's points by the edge found on the image (in px, then mm through its map)."""
     info = {}
     for o in objs:
         if o['px'] is None or len(o['px']) < 3: continue
         if o['kind'] == 'ellipse':
-            Q, Nn = ellipse_samples(o['px']); skip = None
+            Q, Nn = ellipse_samples(o['px'])
             if Q is None: continue
+            skip = off_arc(Q, o['px']); part = skip is not None and skip.any()   # a notch or a cut traced as a circle's arc: its edge sought on that arc alone
             r0 = np.median(np.hypot(*(Q - Q.mean(0)).T)); R, sd, c, blur, keep, pol = refine_points(img, Q, Nn, max(win, 0.3*r0), ch, skip)
-            if len(R) >= 12: Q, Nn = ellipse_samples(R)   # again from the edge found: a few traced points start it several px off
-            if len(R) >= 12:
+            if len(R) >= 12 and not part: Q, Nn = ellipse_samples(R)   # again from the edge found: a few traced points start it several px off
+            if len(R) >= 12 and not part:
                 import cv2
                 E = cv2.fitEllipse(R.astype(np.float32)); q = fit_circle(R)
                 if min(E[1])/max(E[1]) > 0.97 and q is not None:   # face on (a flattened plan): the exact blurred-disc model
