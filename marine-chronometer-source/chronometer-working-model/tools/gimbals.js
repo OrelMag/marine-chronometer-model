@@ -69,9 +69,12 @@ function boxMotion(S,t,h=1e-3){const P0=pose(S,t),Pm=pose(S,t-h),Pp=pose(S,t+h);
 /* o: zeta (the pivots' damping as a share of critical, each axis; the page's 0.05, estimated), stop (deg; the drawn box's, massprops.py), stopK (N/m, the case's edge
    on the box's wood, estimated 1e6) at stopR (m, its radius, the case's 55 mm), stopE (restitution, 0.3 estimated), poise (the balance's centre of gravity off its staff, m, and
    its mass, kg: a force at its beat), T, dt, from (stats after) */
+/* each axis's stop as drawn (deg, massprops.py): the case's in the ring (none to 120°: it turns over in the ring to be wound, Sec. III, "Slowly invert the instrument", since the pivots were
+   measured at 92.9 over the box's bottom, 20 October 2026; the case's bottom on the felt at 29.5° until then) and the ring's in the box; STOP1 the nearer */
+const SD=a=>{const v=a.map(s=>s.deg).filter(x=>x!=null);return v.length?Math.min(...v):Infinity;},STOPB=SD(GJ.stops.bowl),STOPR=SD(GJ.stops.ring),STOP1=Math.min(STOPB,STOPR);
 function run(Bd,S,o={}){
   const{bw,rg}=Bd,z=o.zeta??0.05,cz=2*z*Math.sqrt(Bd.kz*Bd.Iz),cx=2*z*Math.sqrt(Bd.kx*Bd.Ix),gv=[0,-G0,0];
-  const st=(o.stop??GJ.stops.bowl[0].deg)*D,sr=(o.stopR??0.055),Ks=(o.stopK??1e6)*sr*sr,eS=o.stopE??0.3,zS=-Math.log(eS)/Math.sqrt(Math.PI**2+Math.log(eS)**2);
+  const stB=(o.stop??STOPB)*D,stR=(o.stop??STOPR)*D,sr=(o.stopR??0.055),Ks=(o.stopK??1e6)*sr*sr,eS=o.stopE??0.3,zS=-Math.log(eS)/Math.sqrt(Math.PI**2+Math.log(eS)**2);
   const csz=2*zS*Math.sqrt(Ks*Bd.Iz),csx=2*zS*Math.sqrt(Ks*Bd.Ix);
   const T=o.T??300,from=o.from??20,stats={bl:0,blMax:0,bv:0,n:0,tilt:0,tiltMax:0,app:0,appMax:0,fpl:0,fplMax:0,al:0,alMax:0,hits:0,hitW:0,hitAcc:0,fv:0,fvMax:0},rec=o.rec?[]:null;
   let al_=0,be=0,ad=0,bd=0,t=0,inS=[false,false];const lastOff=[-1e9,-1e9];   /* a blow: on a stop after a quarter second off it (its bounces are one blow) */
@@ -81,19 +84,19 @@ function run(Bd,S,o={}){
     const w0r=add(M.wd,cross(M.w,sc(a1,ad))),w0b=add(w0r,cross(wr,sc(a2,bd)));
     const gb=add(add(mv(Ib,w0b),cross(wb,mv(Ib,wb))),sc(cross(cb,e),bw.m)),gr=add(add(mv(Ir,w0r),cross(wr,mv(Ir,wr))),sc(cross(cr,e),rg.m));
     let Qb=-cz*bd,Qr=-cx*ad;   /* the pivots' damping, against the case's turn in the ring and the ring's in the box */
-    const over=(q,qd,K,C)=>Math.abs(q)>st?-Math.sign(q)*Math.max(0,K*(Math.abs(q)-st)+C*Math.sign(q)*qd):0;Qb+=over(be,bd,Ks,csz);Qr+=over(al_,ad,Ks,csx);
+    const over=(q,qd,K,C,st)=>Math.abs(q)>st?-Math.sign(q)*Math.max(0,K*(Math.abs(q)-st)+C*Math.sign(q)*qd):0;Qb+=over(be,bd,Ks,csz,stB);Qr+=over(al_,ad,Ks,csx,stR);
     /* [a1·(Ir+Ib)a1, a1·Ib a2; a2·Ib a1, a2·Ib a2] [α'', β''] = [Qr - a1·(gr+gb), Qb - a2·gb] */
     const A11=dot(a1,mv(Ir,a1))+dot(a1,mv(Ib,a1)),A12=dot(a1,mv(Ib,a2)),A21=dot(a2,mv(Ib,a1)),A22=dot(a2,mv(Ib,a2)),r1=Qr-dot(a1,add(gr,gb)),r2=Qb-dot(a2,gb),det=A11*A22-A12*A21;
     const add_=(r1*A22-A12*r2)/det,bdd=(A11*r2-A21*r1)/det;
     return{add_,bdd,Rb,wb,wdb:add(add(w0b,sc(a1,add_)),sc(a2,bdd))};};
   const motion=tt=>boxMotion(S,tt);let Mc=motion(0);
   const hc=o.dtc??2e-3;let i=0,nextRec=from;
-  while(t<T){const near=Math.abs(be)>st-2*D||Math.abs(al_)>st-2*D,h=Math.min(near?(o.dt??2e-4):hc,T-t);i++;const M0=Mc,Mh=motion(t+h/2),M1=motion(t+h);
+  while(t<T){const near=Math.abs(be)>stB-2*D||Math.abs(al_)>stR-2*D,h=Math.min(near?(o.dt??2e-4):hc,T-t);i++;const M0=Mc,Mh=motion(t+h/2),M1=motion(t+h);
     const f=(M,q)=>{const r=acc(0,q[0],q[1],q[2],q[3],M);return[q[2],q[3],r.add_,r.bdd];};
     const q0=[al_,be,ad,bd],k1=f(M0,q0),k2=f(Mh,q0.map((x,j)=>x+h/2*k1[j])),k3=f(Mh,q0.map((x,j)=>x+h/2*k2[j])),k4=f(M1,q0.map((x,j)=>x+h*k3[j]));
     [al_,be,ad,bd]=q0.map((x,j)=>x+h/6*(k1[j]+2*k2[j]+2*k3[j]+k4[j]));t+=h;Mc=M1;
     /* the stops: an entry counted with its speed */
-    for(const[k,q,qd]of[[0,al_,ad],[1,be,bd]]){const on=Math.abs(q)>st;if(on&&!inS[k]){if(t-lastOff[k]>0.25)stats.hits++;stats.hitW=Math.max(stats.hitW,Math.abs(qd));}if(!on&&inS[k])lastOff[k]=t;inS[k]=on;}
+    for(const[k,q,qd]of[[0,al_,ad],[1,be,bd]]){const on=Math.abs(q)>(k?stB:stR);if(on&&!inS[k]){if(t-lastOff[k]>0.25)stats.hits++;stats.hitW=Math.max(stats.hitW,Math.abs(qd));}if(!on&&inS[k])lastOff[k]=t;inS[k]=on;}
     if(t<from)continue;
     /* what the balance feels: its point's acceleration, the specific force (a - g) in the case's frame; the case's lean from the true and the apparent vertical; the turn about the staff */
     const r=acc(t,al_,be,ad,bd,Mc),p=mv(r.Rb,PB),aP=add(add(Mc.a,cross(r.wdb,p)),cross(r.wb,cross(r.wb,p))),fw=sub(aP,gv),fb=mv(tr(r.Rb),fw),s=col(r.Rb,1);
@@ -101,7 +104,7 @@ function run(Bd,S,o={}){
     {const fbx=mv(tr(Mc.R),sub(Mc.a,gv));stats.bl+=fbx[0]**2;stats.blMax=Math.max(stats.blMax,Math.abs(fbx[0]));stats.bv+=(fbx[1]-G0)**2;}
     stats.n++;stats.tilt+=tilt*tilt;stats.app+=app*app;stats.fpl+=fpl*fpl;stats.al+=alS*alS;stats.fv+=(fb[1]-G0)**2;
     stats.tiltMax=Math.max(stats.tiltMax,tilt);stats.appMax=Math.max(stats.appMax,app);stats.fplMax=Math.max(stats.fplMax,fpl);stats.alMax=Math.max(stats.alMax,Math.abs(alS));stats.fvMax=Math.max(stats.fvMax,Math.abs(fb[1]-G0));
-    if(Math.abs(be)>st||Math.abs(al_)>st)stats.hitAcc=Math.max(stats.hitAcc,Math.abs(r.bdd),Math.abs(r.add_));
+    if(Math.abs(be)>stB||Math.abs(al_)>stR)stats.hitAcc=Math.max(stats.hitAcc,Math.abs(r.bdd),Math.abs(r.add_));
     if(rec&&t>=nextRec){nextRec+=o.rec;const ex=toEsc(fb);rec.push([+t.toFixed(4),+(tilt/D).toFixed(3),+(app/D).toFixed(3),+ex[0].toFixed(4),+ex[1].toFixed(4),+alS.toFixed(4),+(be/D).toFixed(3),+(al_/D).toFixed(3)]);}}
   const q=k=>Math.sqrt(stats[k]/Math.max(1,stats.n));
   return{boxLat:q('bl')/G0,boxLatMax:stats.blMax/G0,boxVert:q('bv')/G0,tilt:q('tilt')/D,tiltMax:stats.tiltMax/D,app:q('app')/D,appMax:stats.appMax/D,fpl:q('fpl')/G0,fplMax:stats.fplMax/G0,fv:q('fv')/G0,fvMax:stats.fvMax/G0,al:q('al'),alMax:stats.alMax,hits:stats.hits,hitW:stats.hitW,hitAcc:stats.hitAcc,rec};
@@ -119,7 +122,7 @@ const Bd=bodies(),Bdr=bodies({asDrawn:true}),Tz=TAU/Bd.wz,Tx=TAU/Bd.wx;
 
 say('1. The swinging bodies, weighed on the model (massprops.py: every solid at its material\'s density)');
 say(`the case with the movement in it ${f(Bd.bw.m*1000,0)} g (the case ${f(GJ.bowl.byPart.bowl,0)}, the pillar plate ${f(GJ.bowl.byPart.pillar,0)}, the mainspring ${f(GJ.bowl.byPart.mainspring,1)}); the gimbal ring ${f(Bd.rg.m*1000,0)} g`);
-say(`as drawn the case's centre of gravity lies ${f(-Bdr.drawn.bowl[1],1)} mm below the gimbal centre and ${f(Bdr.drawn.bowl[0],1)} mm to one side of its pivots' line: hung so, it would lean ${f(Math.atan2(Bdr.drawn.bowl[0],-Bdr.drawn.bowl[1])/D,0)}°${Math.abs(Math.atan2(Bdr.drawn.bowl[0],-Bdr.drawn.bowl[1])/D)>GJ.stops.bowl[0].deg?`, past the ${f(GJ.stops.bowl[0].deg,1)}° it swings before it meets the box`:''}. The drawn pivots are not levelled; the manual levels them (p. 13: "by adjusting the position of the case brackets and gimbal support straps"), and so does this`);
+say(`as drawn the case's centre of gravity lies ${f(-Bdr.drawn.bowl[1],1)} mm below the gimbal centre and ${f(Bdr.drawn.bowl[0],1)} mm to one side of its pivots' line: hung so, it would lean ${f(Math.atan2(Bdr.drawn.bowl[0],-Bdr.drawn.bowl[1])/D,0)}°${Math.abs(Math.atan2(Bdr.drawn.bowl[0],-Bdr.drawn.bowl[1])/D)>STOP1?`, past the ${f(STOP1,1)}° it swings before it meets the box`:''}. The drawn pivots are not levelled; the manual levels them (p. 13: "by adjusting the position of the case brackets and gimbal support straps"), and so does this`);
 say(`levelled, the case swings on its pivots (6-12) with a period of ${f(Tz,3)} s and the ring, carrying it, on its own (3-9) ${f(Tx,3)} s (the page took 0.7 s, estimated); radius of gyration about the case's pivots ${f(Math.sqrt(Bd.Iz/Bd.bw.m)*1000,0)} mm, its centre of gravity ${f(-Bd.bw.c[1]*1000,1)} mm under them`);
 J.bodies={bowl:{m:Bd.bw.m,c:Bd.bw.c,drawn:Bdr.drawn.bowl,Iz:Bd.Iz},ring:{m:Bd.rg.m,c:Bd.rg.c,drawn:Bdr.drawn.ring},Tz,Tx,stops:GJ.stops,byPart:GJ.bowl.byPart};
 flush();
@@ -152,7 +155,7 @@ for(const[nm,sc_,kind]of SEAS){const r=run(Bd,ship(sc_,7),{T:620,from:20,rec:0.0
   /* what it passes on, run through the escapement in time (dynamics.js) for 100 s against still water: the specific force in the escapement's plane, the turn about the staff */
   const R=r.rec,idx=tt=>{const k=Math.min(R.length-2,Math.max(0,Math.floor((tt-R[0][0])/0.002)));return k;},ext=tt=>{const q=R[idx(tt+20)];return{ax:q[3],ay:q[4],al:q[5]};};
   const calm=DY.sim({mode:'phys',A:255,T:110,from:10}),sea=DY.sim({mode:'phys',A:255,T:110,from:10,ext});
-  const stp=GJ.stops.bowl[0].deg;let hw=0,was=false,off=-1e9;for(const q of R){if(q[0]<20||q[0]>130)continue;const on=Math.abs(q[6])>stp||Math.abs(q[7])>stp;if(on&&!was&&q[0]-off>0.25)hw++;if(!on&&was)off=q[0];was=on;}   /* blows inside the escapement's 100 s */
+  let hw=0,was=false,off=-1e9;for(const q of R){if(q[0]<20||q[0]>130)continue;const on=Math.abs(q[6])>STOPB||Math.abs(q[7])>STOPR;if(on&&!was&&q[0]-off>0.25)hw++;if(!on&&was)off=q[0];was=on;}   /* blows inside the escapement's 100 s */
   const row={name:nm,kind,hitsWin:hw,perHit:hw?(sea.rate-calm.rate)/86400*100/hw:0,sc:sc_,...Object.fromEntries(Object.entries(r).filter(([k])=>k!=='rec')),rate:sea.rate-calm.rate,trips:sea.trips,A:sea.A,trace:ST.length===1?R.filter((_,i)=>i%50===0&&R[i][0]<=140).map(q=>[q[0],q[1],q[2]]):null};ST.push(row);
   say(`  ${nm.padEnd(36)} the box ${f(r.boxLat,3)} g rms athwartships (${f(r.boxLatMax,2)} at most), ${f(r.boxVert,3)} g up and down; the case leans ${f(r.tilt,1)}° rms (${f(r.tiltMax,1)}° at most) from the true vertical, ${f(r.app,2)}° (${f(r.appMax,2)}°) from the apparent; ${r.hits} on its stops${r.hits?` (at ${f(r.hitW,2)} rad/s)`:''}`);
   say(`  ${''.padEnd(36)} the escapement feels ${f(r.fplMax*1000,1)} mg in its plane at most and ${f(r.alMax,3)} rad/s² about the staff; in time over 100 s the swing ${f(sea.A,1)}°, the rate ${sea.rate-calm.rate>=0?'+':'−'}${f(Math.abs(sea.rate-calm.rate),3)} s a day against still water${hw?` (${hw} blows on the stops in those 100 s: about ${f(Math.abs(row.perHit)*1e3,2)} ms each)`:''}, ${sea.trips} trips`);}
@@ -162,12 +165,12 @@ chk(lim.boxLat<0.125&&lim.boxLat>0.1,`the limiting sea is NORDFORSK's (1987): th
 chk(IN.every(s=>s.appMax<2&&s.hits===0),`in the seas a ship works in the case never reaches its stops and keeps within ${f(Math.max(...IN.map(s=>s.appMax)),2)}° of the apparent vertical (${f(Math.max(...IN.map(s=>s.tiltMax)),1)}° of the true): the balance's pivots see the load along the staff`);
 const kn=TP.lock.rows[0].blow;chk(ST.every(s=>s.fplMax<kn/2&&s.trips===0),`what reaches the escapement is far from what trips it: at most ${f(Math.max(...ST.map(s=>s.fplMax))*1000,0)} mg in its plane against ${f(kn,0)} g (tripping.js's 3 ms blow), and no trips`);
 chk(IN.every(s=>Math.abs(s.rate)<0.05),`in them the rate moves under 0.05 s a day (at most ${f(Math.max(...IN.map(s=>Math.abs(s.rate))),3)}): the gimbals do their work`);
-{const B=ST.filter(s=>s.kind!=='within'&&s.hitsWin);if(B.length)say(`beyond them the case swings onto its stops (the drawn box's ${f(GJ.stops.bowl[0].deg,1)}°, estimated), and each blow turns the case a little about the staff: the balance loses or gains ${B.map(s=>f(Math.abs(s.perHit)*1e3,2)).join('-')} ms a blow, ${B.map(s=>f(Math.abs(s.rate),2)).join('-')} s a day while it lasts. A hard passage carries that into the day's rate; the navigator's daily comparison takes it up, and wider stops (the box's inside) would keep the case off them longer`);}
+{const B=ST.filter(s=>s.kind!=='within'&&s.hitsWin);if(B.length)say(`beyond them the case swings onto its stops (the drawn box's ${f(STOP1,1)}°, estimated), and each blow turns the case a little about the staff: the balance loses or gains ${B.map(s=>f(Math.abs(s.perHit)*1e3,2)).join('-')} ms a blow, ${B.map(s=>f(Math.abs(s.rate),2)).join('-')} s a day while it lasts. A hard passage carries that into the day's rate; the navigator's daily comparison takes it up, and wider stops (the box's inside) would keep the case off them longer`);}
 flush();
 
 say('4. The stops: the case swung onto the box');
 {const hitS=storm.hits?storm:null,acc=hitS?hitS.hitAcc*Math.hypot(PB[0],PB[1],PB[2])/G0:0;
-  say(hitS?`in the storm it reaches its stops ${hitS.hits} times in 10 minutes, at up to ${f(hitS.hitW,2)} rad/s: decelerated on the box's wood (1e6 N/m at the case's 55 mm, restitution 0.3: estimated) the balance, ${f(Math.hypot(...PB)*1000,0)} mm from the pivots, sees ${f(acc,1)} g for a few ms, against the ${f(kn,0)} g that trips it`:`in none of the seas does the case reach its stops (${f(GJ.stops.bowl[0].deg,1)}°)`);
+  say(hitS?`in the storm it reaches its stops ${hitS.hits} times in 10 minutes, at up to ${f(hitS.hitW,2)} rad/s: decelerated on the box's wood (1e6 N/m at the case's 55 mm, restitution 0.3: estimated) the balance, ${f(Math.hypot(...PB)*1000,0)} mm from the pivots, sees ${f(acc,1)} g for a few ms, against the ${f(kn,0)} g that trips it`:`in none of the seas does the case reach its stops (${f(STOP1,1)}°)`);
   /* a roll big enough to reach them, regular */
   const big=[30,35,40,45].map(a=>{const r=run(Bd,ship({reg:[14,a],rd:8}),{T:14*6+20,from:14*3});return[a,r.hits,r.hitW,r.hitAcc*Math.hypot(...PB)/G0];});
   for(const[a,n,w,g]of big)say(`  a regular roll of ${a}° (14 s, 8 m above the centre): ${n?`onto its stops each way (${n} blows in 104 s), at up to ${f(w,2)} rad/s; the balance ${f(g,1)} g`:"clear of the stops"}`);

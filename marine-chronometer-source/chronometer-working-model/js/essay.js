@@ -355,11 +355,11 @@ const ESSAY=(()=>{
 
   /* ---------- level on a moving ship: the model's own box, gimbal ring, case and latch (buildBox, box.js), with its dial ---------- */
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.9,pitch:0.36,dist:840,target:[0,32,0],near:20,far:5000}),M=G.M,S=V.scene;
-    const BX=buildBox(M);S.add(BX.root);BX.mid.rotation.x=-1.6;BX.top.rotation.x=-0.32;
+    const BX=buildBox(M);S.add(BX.root);BX.mid.rotation.x=-1.6;BX.top.rotation.x=-0.32;BX.stay();
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
     mesh(BX.bowl,cylY(DIAL_R,DIAL_T,96),M.brass2,0,MR_Y+DIAL_T/2,0);mesh(BX.bowl,new THREE.CircleGeometry(DIAL_R,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,MR_Y+DIAL_T+0.3,0);   /* the dial, 0.3 over its disc, held in front of it as the model's is */
     const sh=mesh(S,new THREE.PlaneGeometry(640,640).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({map:shadowTex(),transparent:true,opacity:0.7,depthWrite:false}),0,-101,0);sh.renderOrder=-1;
-    V.label('Gimbal ring','',at(BX.ring,BX.RO,8,0));V.label('Case','hangs level',at(BX.bowl,-BX.CR*0.7,-40,BX.CR*0.7));V.label('Latch','',at(BX.root,80,-13,76));
+    V.label('Gimbal ring','',at(BX.ring,BX.RO,8,0));V.label('Case','hangs level',at(BX.bowl,-BX.CR*0.7,-40,BX.CR*0.7));V.label('Latch','',at(BX.root,80,0,76));
     let amp=18,t=0,going=!RM,lock=false,lk=0,lt=-1;
     range(q('input[type=range]',P),v=>{amp=v;f.dirty=true;return v+'°';});q('.lock',P).addEventListener('change',e=>{lock=e.target.checked;f.dirty=true;});play(q('.play',P),()=>going,v=>going=v);
     return dt=>{if(going){t+=dt;f.dirty=true;}const l0=lk;lk=RM?+lock:clamp(lk+(lock?1:-1)*dt*1.2,0,1);if(lk!==l0)f.dirty=true;

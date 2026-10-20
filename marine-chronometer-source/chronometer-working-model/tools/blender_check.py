@@ -160,7 +160,10 @@ if refW:
     # up-down 1°. 14 October 2026: the sustaining spring a banked split ring (movement.js SPU), its travel 19.5° where it was 9.3°, and the fusee's offset from the
     # rig's goes with the spring's relaxation (it opens as the drive tapers to run down, where the clip starts): found 16.4°, 11.8°, 1.9 mm and 1.6°, so the bounds
     # rise by about the travel's ratio; a link's turn means nothing once the chain stands over half a link off the rig's (180°: its place in mm is checked)
-    WIND={'the fusee and its arbor, square, end plate, stop-bar':(('Fusee - Complete','fp','sq','Stop-bar'),0.05,17.0),'the barrel':(('Barrel - Mainspring',),0.05,12.5),
+    # 20 October 2026 (the owner's choice): the fusee group's millimetres follow its allowed turn: a part off the fusee's axis moves 2 r sin(a/2) when the rig's fusee
+    # stands a degrees off the clip's (no catch in the rig), and the stop-bar's origin is r 2.8 off it (the winding ratchet's 40 teeth put the catch 8.7 deg off at 18 s:
+    # 0.4237 mm, 2.79 by that rule; 36 teeth left it 6 deg off at a part on the axis), so 0.05 + 2 x 2.8 x sin(17/2) = 0.88 mm
+    WIND={'the fusee and its arbor, square, end plate, stop-bar':(('Fusee - Complete','fp','sq','Stop-bar'),0.05+2*2.8*math.sin(math.radians(17.0/2)),17.0),'the barrel':(('Barrel - Mainspring',),0.05,12.5),
           'the chain':(('Fusee chain','chain link'),13.0,180.0),'the up-down indicator':(('ud','udW'),0.05,2.0)}
     if 'wind' in CF:WIND={g:(tuple(v[0]),v[1],v[2]) for g,v in CF['wind'].items()}
     print('MC rig against Winding (%d moments): what follows the wind (the rest goes by the clip only: the maintaining work, the train, hands and balance):'%len(HW))
