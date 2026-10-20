@@ -2140,7 +2140,12 @@ function makeFusee(M,c){
   /* barrel cap on the pillar-plate end, held by five screws (manual Figs. 26, 109) */
   /* its five screws: above, with the cap */
   /* the links: an outer link (two plates and the two rivets through its ends) and an inner link (one plate), alternating, instanced */
-  const plate=y=>{const s=new THREE.Shape(),r=H/2,tw=Math.asin(0.32/r);s.absarc(PC/2,0,r,tw-Math.PI,Math.PI-tw,false);s.absarc(-PC/2,0,r,tw,TAU-tw,false);s.closePath();
+  /* each plate's outline: two lobes r H/2 round its rivets joined by concave sides, an arc each tangent to both lobes (as the Wempe's 05 07 04 draws its own), the waist
+     0.727 of the lobes' diameter (1.42): measured with the measure-trace skill on KLUwI2UUCMQ 23:30 (4K, the chain lying flat; tools/chain_neck.py:
+     the width across 18 plates every 0.05 of the pitch by erf edges, 0.71-0.74 at the waist), the arc's width along the plate within 0.025 of the diameter of the measured
+     profile's. Until 20 October 2026 a neck 0.64 wide (estimated) between the lobes, which read as beads on a rod */
+  const CPW=0.727*H/2,CPRS=((PC/2)**2+CPW*CPW-(H/2)**2)/(2*(H/2-CPW)),CPTA=Math.atan2(CPW+CPRS,-PC/2),CPTF=Math.atan2(-(CPW+CPRS),PC/2);   /* CPRS the sides' arc; CPTA, CPTF the tangent points' angles about the right lobe and the top side's centre */
+  const plate=y=>{const s=new THREE.Shape(),r=H/2;s.absarc(PC/2,0,r,-CPTA,CPTA,false);s.absarc(0,CPW+CPRS,CPRS,CPTF,-Math.PI-CPTF,true);s.absarc(-PC/2,0,r,Math.PI-CPTA,Math.PI+CPTA,false);s.absarc(0,-CPW-CPRS,CPRS,Math.PI+CPTF,-CPTF,true);s.closePath();
     const q=extrude(s,{depth:TK,bevelEnabled:false,curveSegments:10});q.rotateX(-Math.PI/2);q.translate(0,y-TK/2,0);return q;};
   const MAX=900,I4=new THREE.Matrix4(),geoA=mergeGeo([[plate(TK),I4],[plate(-TK),I4],...[PC/2,-PC/2].map(x=>[cylY(0.17,3*TK+0.08,10),new THREE.Matrix4().makeTranslation(x,0,0)])]),geoB=plate(0);
   const imA=new THREE.InstancedMesh(geoA,M.chain,MAX),imB=new THREE.InstancedMesh(geoB,M.chain2,MAX);g.add(imA,imB);imA.userData.partName=imB.userData.partName='chain';hn(imA,'42001');hn(imB,'42001',{sub:1});
