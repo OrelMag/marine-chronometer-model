@@ -27,6 +27,7 @@ async def load(b,h,mode=None):
     await pg.add_init_script(CLOCK);await pg.goto(PAGE+h);await pg.wait_for_function("!document.querySelector('#loading')&&window.__BX",timeout=120000);await pg.wait_for_timeout(2500)
     if mode:await pg.evaluate(f"window.__mpMode='{mode}'")
     if MP:await pg.evaluate(MP['pre'])
+    else:await pg.evaluate("window.__mpExact=1")   # the Hamilton's stops too, each point in an obstacle's box tested inside its solid (20 October 2026): the key's corner block is concave, a quarter round the ring, and its bounding box covers the ring's path (bounding boxes alone gave the ring 8.5°)
     r=json.loads(await pg.evaluate(JS))
     if MP:r['extra']=json.loads(await pg.evaluate(MP['extra']));r['alt']={k:json.loads(await pg.evaluate(f"window.__mpNoStops=1;window.__mpBowl={v};"+JS))['raw']['bowl'] for k,v in MP['alt'].items()}
     await pg.close()

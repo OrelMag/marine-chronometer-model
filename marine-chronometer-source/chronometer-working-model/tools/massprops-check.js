@@ -31,7 +31,7 @@
   const fin=Bd=>{const c=Bd.s.map(x=>x/Bd.m),S=Bd.S,I=[[S[1][1]+S[2][2],-S[0][1],-S[0][2]],[-S[0][1],S[0][0]+S[2][2],-S[1][2]],[-S[0][2],-S[1][2],S[0][0]+S[1][1]]];   /* the inertia tensor about the gimbal centre */
     const r=x=>+x.toFixed(4);return{m:r(Bd.m),cg:c.map(r),I:I.map(row=>row.map(r)),byMat:Object.fromEntries(Object.entries(Bd.byMat).map(([k,v])=>[k,r(v)]).sort((a,b)=>b[1]-a[1])),
       byPart:Object.fromEntries(Object.entries(Bd.byPart).map(([k,v])=>[k,r(v)]).sort((a,b)=>b[1]-a[1]).slice(0,25)),missing:Bd.missing};};
-  /* the stops: obstacles are every mesh of the box but the ring, the bowl and the ring's pivot screws (their groups' meshes), as bounding boxes in the box's frame; the moving
+  /* the stops (searched to 120°; null: nothing in the box meets it so far, as the Hamilton's case, which turns over in the ring to be wound, since 20 October 2026: 60° until then): obstacles are every mesh of the box but the ring, the bowl and the ring's pivot screws (their groups' meshes), as bounding boxes in the box's frame; the moving
      points are the vertices of the case's and the ring's own meshes (not the movement inside the case), every 3rd */
   const toRoot=new THREE.Matrix4().copy(root.matrixWorld).invert(),obs=[],movers=[];
   root.traverse(o=>{if(!o.isMesh||under(o,ring)||offRev(o)||!o.geometry.attributes.position)return;let p=o;   /* another version's pieces (hidden) aren't there to meet */while(p&&p.parent!==root)p=p.parent;
@@ -46,7 +46,7 @@
   const hits=()=>{root.updateMatrixWorld(true);const set=new Set();const v=new THREE.Vector3();
     for(const o of movers){const T=toRoot.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position;for(let i=0;i<P.count;i+=3){v.fromBufferAttribute(P,i).applyMatrix4(T);
       for(let k=0;k<obs.length;k++)if(obs[k].b.containsPoint(v)&&(!EX||inside(obs[k],v)))set.add(k);}}return set;};
-  const base=hits(),stop=(set,ax)=>{for(let d=0.5;d<=60;d+=0.5){set(d*Math.PI/180);const h=hits();for(const k of h)if(!base.has(k)){set(0);let p=obs[k].o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}return{deg:d,against:pn||obs[k].o.name||'?'};}}set(0);return{deg:null};};
+  const base=hits(),stop=(set,ax)=>{for(let d=0.5;d<=120;d+=0.5){set(d*Math.PI/180);const h=hits();for(const k of h)if(!base.has(k)){set(0);let p=obs[k].o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}return{deg:d,against:pn||obs[k].o.name||'?'};}}set(0);return{deg:null};};
   const stops=window.__mpNoStops?{}:{ring:[stop(a=>{ring.rotation.x=a;},'x'),stop(a=>{ring.rotation.x=-a;},'x')],bowl:[stop(a=>{bowl.rotation.z=a;},'z'),stop(a=>{bowl.rotation.z=-a;},'z')]};
   root.updateMatrixWorld(true);
   const mvM=toRing.clone().multiply(mv.matrixWorld).elements;   /* the movement's frame in the ring's (column-major) */
