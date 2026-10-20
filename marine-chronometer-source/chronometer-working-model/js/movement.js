@@ -504,7 +504,7 @@ function buildMovement(M){
      toward 3 o'clock. CK_Q0 still sets the hairspring stud's frame (SPD, below): the stud's holes were measured on the cock's top in that frame, not against the train bridge */
   const CK_Q0=PT([33.11,12.62]),CK_Q=[22.01,24.87];
   const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-13.6),add(L.F,ltu,6.1)],ltbp:[add(L.T,ltu,-16.4),add(add(L.F,ltu,2.6),[-ltu[1],ltu[0]],3.4)],pil:[...PILLARS.train,PILLARS.barrel],tb:PILLARS.train,bb:[PILLARS.barrel,[32.90,6.60],[-22.96,25.82]],bbp:[[29.78,1.83],[-21.58,19.73]],tbx:[-7.93,22.28],
-    ring:[91.5,214,336.5].map(a=>[42.0*Math.sin(a*D2R),-42.0*Math.cos(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
+    ring:[91.5,214,336.5].map(a=>[42.0*Math.sin(a*D2R),-42.0*Math.cos(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.23,-3.23].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[18.25,11.85],[-12.85,19.35]],lbp:[[20.54,13.84],[-12.25,16.75]],blc:[3.25,-3.25].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:CK_Q,ckp:[[6.08,-9.39],[-8.79,7.87]].map(d=>add(CK_Q,d))};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
      ckp: the cock's steady pins, in the two plain holes the train bridge shows under the cock, placed from the cock screw's hole beside them: KLUwI2UUCMQ 6:47 (the cock off; the
      camera fitted on 6:49.0, the same view, f 4,000-6,000) puts them (6.10-6.41, -9.10..-9.71) and (-8.76, 7.70-8.48) from it, 23:30 (the bridge face up, anchored on its rim, its cut
@@ -797,18 +797,24 @@ function buildMovement(M){
      22 long, across the train bridge's escape opening, its ends on the bridge's face with a countersunk screw flush in each, 8.3 from the jewel, and a steady pin 1.6 further out and
      1.3 toward the balance; under its middle it is 2.5 thick over 10.8 mm, with a round boss r 3.8 hanging 1.5 into the opening (Fig. 110-2's raised round middle), which holds
      the setting. The endstone cap sits in a round sink through the bar, flush with its top, on the boss, cut flat both sides with the bar's edges. Sizes as ratios to the end
-     screws' spacing (16.0-16.9 mm), medium; the ends lie in seats sunk SEAT_D in the train bridge's face (TB_SEAT), so the bar stands that much lower */
-  { const bu=ebu,bv=[-ebu[1],ebu[0]],P=(t,n)=>[L.E[0]+t*bu[0]+n*bv[0],L.E[1]+t*bu[1]+n*bv[1]],W=2.8,RS=4.12,TE=8.4,half=s=>{const o=[],N=12;
+     screws' spacing (16.0-16.9 mm), medium; the ends lie in seats sunk SEAT_D in the train bridge's face (TB_SEAT), so the bar stands that much lower. Since 20 October 2026, with
+     the measure-trace skill on 10:26.54 (the bridge off, outer face up, ~95 px/mm; an affine camera on the countersinks, sigma 0.033 mm; mfgfit.py fit on edges refined along their
+     normals) and 10:00 (scale and place, the train bridge's holes): the bar 5.45 +-0.02 wide (5.6 before), its long edges parallel to the screws' line within 0.15 deg; its
+     round ends r 2.80 concentric with the screws (TE 8.3, 8.4 before), 22.0-22.1 long; the cap round (R 4.15 at one circle) with two flats 5.71-5.75 apart, standing about
+     0.14 proud of the bar's edges each side (it was flush), its screws 6.46 apart (6.2) with heads r 0.85-0.90, its window r 1.70-1.76 (1.55) (E:/mc-video/oq/ledger/bridges2/eb).
+     Kept: the screws' spacing 16.6 (measured 16.46 +-0.06 on the train bridge's rim-r-40.5 scale, +-2-4 %) and the bar's direction 72 deg (69.0 +-0.5 on 10:00, against the
+     seats TB_SEAT traced on 23:30: open) */
+  { const bu=ebu,bv=[-ebu[1],ebu[0]],P=(t,n)=>[L.E[0]+t*bu[0]+n*bv[0],L.E[1]+t*bu[1]+n*bv[1]],W=2.725,RS=4.12,TE=8.3,half=s=>{const o=[],N=12;
       for(let k=0;k<=N;k++){const n=-W+2*W*k/N;o.push(P(s*Math.sqrt(RS*RS-n*n),n));}   /* the sink's edge, from one side to the other */
       for(let k=0;k<=16;k++){const a=Math.PI/2-Math.PI*k/16;o.push(P(s*(TE+W*Math.cos(a)),W*Math.sin(a)));}   /* round the end */
       return s>0?o:o.map(([x,z])=>[x,z]).reverse();};
     for(const s of[1,-1]){const q=S.eb[s>0?0:1],p=S.ebp[s>0?0:1],m=mesh(eb,polyGeo(half(s),0.7,[hC(...q,0.9),[...p,0.41]]),M.plate,0,EB_Y-0.7,0);if(s>0)R.escBridge=m;mesh(eb,polyGeo(half(s),0.3,[[...q,0.95]]),M.plate,0,EB_Y-1.0,0);
       hn(mesh(eb,cylY(0.4,1.7,16),M.steel,p[0],EB_Y+0.15,p[1]),'42064',{sub:1});}   /* the steady pin, pressed 0.7 into the bar and 1.0 into the train bridge */
-    mesh(eb,polyGeo(barBossPts(L.E,ebu,10.8,5.6,3.8),1.5,[[...L.E,1.6],...S.ebc.map(q=>hT(...q,ESCAP))]),M.plate,0,EB_Y,0);hn(eb,'42064'); }
+    mesh(eb,polyGeo(barBossPts(L.E,ebu,10.8,2*2.725,3.8),1.5,[[...L.E,1.6],...S.ebc.map(q=>hT(...q,ESCAP))]),M.plate,0,EB_Y,0);hn(eb,'42064'); }
   for(const q of S.eb)hn(screw(eb,...q,EB_Y-0.7,0.9,0.3,0.7+2.0),'20762.eb');   /* two screws (20762; Op. 22) into the train bridge, their heads flush in the bar's top */
   /* escape upper setting (42162: gilt setting, pierced jewel) pressed into the boss, and the endstone cap (42159) over it with its two screws into the boss (Fig. 110) */
   hn(mesh(eb,ring(1.6,0.95,0.9),M.gilt,L.E[0],EB_Y+0.45,L.E[1]),'42162.eu');hn(mesh(eb,stoneGeo(0.95,0.095,0.5,'olive'),M.ruby,L.E[0],EB_Y+0.25,L.E[1]),'J.eu');   /* its hole r 0.095: the bridge off and held to the light, cap side (KLUwI2UUCMQ 10:14.5), the hole a white disc 36-44 px across in the stone's 446 (light through the endstone alone); the stone 1.96 mm at the cap window's 3.1 mm (720 px), the model's 1.9: 0.17 +/- 0.02 mm; drawn 0.19, the top of that range, round the patent's 0.178 mm pivot (the arbor's comment). J.el taken the same */
-  endCap(eb,...L.E,ebu,EB_Y,1.0,3.1,['42159.eu','J.eue','20762.euc'],4.1,[[...ebn,2.8],[-ebn[0],-ebn[1],2.8]],1.0,1.55,0.85);   /* its flats and screws' heads: the bar 5.6 wide and the heads r 0.85 (KLUwI2UUCMQ 10:20 and 10:24, against the cap's R and its screws' spacing: 5.4-5.9, 0.84-0.88; the train bridge's traced seats 5.72 across); 5.2 and 0.75 until 5 October 2026 */   /* R 4.1, 1.0 thick, flat both sides with the bar's edges, its window a cone r 1.55 at the top down to the endstone, its screws' heads r 0.75 (10:00-10:16) */
+  endCap(eb,...L.E,ebu,EB_Y,1.0,3.23,['42159.eu','J.eue','20762.euc'],4.1,[[...ebn,2.865],[-ebn[0],-ebn[1],2.865]],1.0,1.73,0.85);   /* its flats and screws' heads: the bar 5.6 wide and the heads r 0.85 (KLUwI2UUCMQ 10:20 and 10:24, against the cap's R and its screws' spacing: 5.4-5.9, 0.84-0.88; the train bridge's traced seats 5.72 across); 5.2 and 0.75 until 5 October 2026 */   /* R 4.1, 1.0 thick, flat both sides with the bar's edges, its window a cone r 1.55 at the top down to the endstone, its screws' heads r 0.75 (10:00-10:16) */
   const bb=part('barrelBridge',-72);
   /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24), BB_CUT below */
   const bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
