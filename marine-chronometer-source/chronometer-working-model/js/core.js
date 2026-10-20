@@ -414,8 +414,11 @@ function blindHoles(g0,face,holes,depth,bev=0,inner=[]){const g=g0.index?g0.toNo
     const S=L;
     /* a zipper round both rings by angle, every vertex used (earcut drops a rim's nearly collinear vertex, which leaves a T-junction against the wall) */
     let i=0,j=0;const P3=(/** @type {number[]} */p)=>[p[0],y,p[2]],nS=S.length,nT=T.length;
+    /* every triangle wound as the loops run, decided once on a large one: a sliver where the rim steps back would flip on its own and its edges no longer pair */
+    const A0=S[0],B0=S[Math.floor(nS/3)],C0=S[Math.floor(2*nS/3)],ny=(C0[0]-A0[0])*(B0[2]-A0[2])-(B0[0]-A0[0])*(C0[2]-A0[2]),fl=ny*want[1]<0;
+    const put=(/** @type {number[][]} */q)=>{const o=fl?[q[0],q[2],q[1]]:q;for(const v of o){const p=P3(v);pos.push(...p);nor.push(...want);uv.push(p[0],-p[2]);}};
     while(i<nS||j<nT){const a=S[i%nS],b=T[j%nT],aN=i<nS?an(S[(i+1)%nS])+(i+1>=nS?TAU:0):1e9,bN=j<nT?an(T[(j+1)%nT])+(j+1>=nT?TAU:0):1e9;
-      if(aN<=bN){tri([P3(a),P3(S[(i+1)%nS]),P3(b)],want);i++;}else{tri([P3(a),P3(T[(j+1)%nT]),P3(b)],want);j++;}}};
+      if(aN<=bN){put([a,S[(i+1)%nS],b]);i++;}else{put([a,T[(j+1)%nT],b]);j++;}}};
   holes.forEach(([x,z],k)=>{const far=/** @type {number[][]} */([]),floor=/** @type {number[][]} */([]),farE=/** @type {number[][][]} */([]),floorE=/** @type {number[][][]} */([]);
     for(const t of own[k]){const V=[0,1,2].map(q=>[P.getX(t+q),P.getY(t+q),P.getZ(t+q)]),Q=[0,1,2].map(q=>[N.getX(t+q),N.getY(t+q),N.getZ(t+q)]);
       for(const v of V)if(Math.abs(v[1]-ye)<e)far.push(v);   /* the far face's opening: its rim */
