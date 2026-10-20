@@ -819,12 +819,15 @@ function buildMovement(M){
      normals: 192 points over 15.3 mm, a straight line to 0.33 mm rms (the frames 0.3 apart; a circle fits worse), through (28.51, 9.95) at 30.0 deg, from the cut round the balance
      to the rim. Until then the cock's straight edge less 0.15 (CK_TR, ckE: the bridge made to follow the cock, its own edge unread), 0.4-1.5 mm off it, most near the rim.
      Between x 29.5 and 36 the cock's straight edge (CK_TR, fitted with the rim held at r 40.1 and 0.8 mm off on 6:29 there) stands up to 0.31 mm over that line, inside both
-     readings' error: the bridge gives way to it there, the cock's edge less 0.05, until the cock is measured again. Taken as the lower of the two until 20 October 2026, which
-     bent the edge where it changed from the line to the cock's (x 29.2) and at each of the cock's traced points; now one arc on the line's chord, the shallowest that keeps
-     0.05 off the cock's edge: r 142.4, its sag 0.39 at the middle (the trace's own rms 0.33), 0.01-0.02 mm over the 0.05 at x 32.5-34 */
-  const BB_NE=(()=>{const a=[20.72,5.44],b=[38.90,15.95],ck=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]],cz=x=>{for(let k=1;k<ck.length;k++)if(x<=ck[k][0])return ck[k-1][1]+(ck[k][1]-ck[k-1][1])*(x-ck[k-1][0])/(ck[k][0]-ck[k-1][0]);return ck[ck.length-1][1];},
-    c=Math.hypot(b[0]-a[0],b[1]-a[1]),u=[(b[0]-a[0])/c,(b[1]-a[1])/c],h=c/2,arc=S=>{const R=(h*h+S*S)/(2*S),o=[];for(let k=0;k<=24;k++){const t=c*k/24,d=Math.sqrt(R*R-(t-h)**2)-(R-S);o.push([a[0]+u[0]*t+u[1]*d,a[1]+u[1]*t-u[0]*d]);}return o;};
-    let lo=0.001,hi=2;for(let i=0;i<40;i++){const m=(lo+hi)/2;arc(m).every(p=>p[0]<ck[0][0]||p[1]<=cz(p[0])-0.05+1e-9)?hi=m:lo=m;}return arc(hi);})();
+     readings' error: the bridge gave way to it there (the lower of the two until 20 October 2026, then one arc on the line's chord, r 142.4, the shallowest keeping the
+     cock's 0.05: drawn for clearance, not measured). Since 20 October 2026 a circle, measured (tools/bb_hornend.py): the same frames' traced edge pixels through their
+     solved cameras (E:\mc-video\oq\reanchor\et\et_bb_13-04.*.json) put on the face whose edge they are: the wall faces away from the camera on every frame, so the outline
+     against the mat is the near face's (the plate side, y -23.76, less its 0.25 bevel), not the far face's where the 19 October trace put it (0.4-0.5 mm out). Along
+     t 2.5-17 a circle fits far better than a line: 13:04.2 r 35.87 about (10.20, 40.02), 0.043 mm rms against the line's 0.203; 13:04.4 r 34.39 about (10.79, 38.71),
+     0.037 against 0.203 (BIC -337 and -348 against -166 and -163). As one circle, each frame its own shift (0.21 mm apart): r 35.15 +-0.68 about (10.69 +-0.37,
+     39.43 +-0.58), 0.040 mm rms. 13:04.0, the softest frame, gives r 66.6 at 0.20 rms, out of the fit. It bows toward the bridge, as the cock's straight edge does; the
+     straight line was this circle averaged over the frames */
+  const BB_NE=(()=>{const c=[10.69,39.43],r=35.15,o=[];for(let x=20.5;x<=38.5+1e-9;x+=0.5)o.push([x,c[1]-Math.sqrt(r*r-(x-c[0])**2)]);return o;})();
   /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim, curved, not straight: traced on the flat bridge
      (23:45, the same homography) from the bite to 1.5 mm short of the rim, FH (movement frame, every 1.69 mm along z, a cubic through the trace to 0.03 mm rms): it
      bows 0.46 mm off its 12.8 mm chord, most two thirds of the way out, leaving the bite turned about 15 deg further round than where it meets the rim. The top-view
@@ -848,7 +851,7 @@ function buildMovement(M){
   /* where the horn's end meets the cut round the balance, a fillet r 0.8 (+-0.2): KLUwI2UUCMQ 13:04.0, 13:04.2 and 13:04.4 (the bridge upside down, the plate side's bright metal
      against the barrel's brass and the mat, its edge taken on saturation and split into lines and arcs, mfgfit.py), the corner's arc 0.63, 0.95 and 0.72-1.04 mm at the
      frames' 32.5 px/mm; 13:03.5 (the owner's trace) turns the same way over about 3 mm, too few edge points there to size it. Sharp until 20 October 2026 */
-  const BBpoly=filletAt(clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),BB_NE,10),[21.6,6.0],0.8);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  const BBpoly=filletAt(clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),BB_NE,10),[21.71,6.05],0.8);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
   R.barrelBridge=mesh(bb,facePocket(polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),'top',S.bbN,BB_PK),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
