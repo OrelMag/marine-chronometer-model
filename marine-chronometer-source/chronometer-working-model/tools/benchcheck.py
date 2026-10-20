@@ -158,7 +158,7 @@ def demo():
          'depths_mm': {'fusee-centre': {'plate': 20.384, 'bridge': 20.390}, 'third-fourth': {'plate': 11.250, 'bridge': 11.300}},
          'endshake_mm': {'centre': 0.04, 'third': 0.02},
          'balance': {'oscillations': 241, 'seconds': 120},
-         'detent': {'ring_hz': 96},
+         'detent': {'ring_hz': 60},   # below the band (75-194 Hz since the detent's rebuild, 20 October 2026; 96 was below the old 120-222)
          'escapement': {'lock_deg': 4.2, 'letoff_deg': 8, 'overall_deg': 27.5, 'drop_deg': 2.1},
          'swing_deg': {'fully_wound': 252, 'run_down': 238}}
     out, bad = check(M); print('a made-up set of measurements:'); print('\n'.join(out))
