@@ -4,20 +4,43 @@ The owner asked for every remaining item of `PROVENANCE.md`'s order of work and 
 (`E:\mc-video\HANDOFF-hamilton-overhaul.md`), on branch `claude/hamilton-ledger` (from `claude/batch-20oct`). Measurements are
 reported in `E:\mc-video\oq\ledger\<item>\REPORT.md` and built into the model one part at a time, each against its frame (isolate.py).
 
-| # | Item | Status |
-|---|---|---|
-| 1 | The barrel's place (34:30's 0.5-0.8 mm out) | **Holds**: on 13:04.4 the bridge's other holes put the fusee-barrel distance at 36.5-38.2 by map (model 37.56); each bushing left out lands 0.1-0.45 from its place (`tools/holeloo.py`) |
-| 2 | The train bridge's holes through the plate-placed map (handover 1) | **Hold**: every hole on the owner's 23:30 trace within 0.6 mm left out of an affine or homography on the rest, most 0.35 (the train-blocking screw's 0.25) |
-| 3 | The pillar plate's holes (9:03, 14:43.38) | **Hold** within those oblique frames' 0.3-1.8 mm; nothing to move |
-| 4 | The barrel-bridge screw head past the rim (handover 3) | **Closed**: the screw now at (-22.96, 25.82), r 34.55, its head inside r 38.8 |
-| 5 | The balance's place (handover 5) | **Closed 19 October**: `L.B` stands (13:44, ±0.6) |
-| 6 | The barrel bridge's horn ends and rim (handover 2) | **Done**: the cock-side end a measured circle, r 35.15 about (10.69, 39.43) (13:04.2/.4 at the near face, 0.04 mm rms; `bb_hornend.py`), easing 0.05 clear of the cock over its last 2.5 mm (owner's choice) |
-| 7 | The mounting ring's flange, dial feet radius, dial thickness, case rim, bezel, crystal, hands' profile, case bracket | Agent measuring (`ledger\ring_dial`) |
-| 8 | The fusee cone and heights side-on, barrel level and cap, end plate, ratchets, chain | Agent measuring (`ledger\fusee_barrel`) |
-| 9 | The box and gimbals (Fig. 106) | **Measured** (`E:\mc-video\oq\ledger\box\REPORT.md`): height 196 (base 105, glass lid 71, outer lid 20) not 176, piano hinges, two split hasps, nuts 25 across, pivots 12 mm higher (RY about -8), cup washers, the latch bracket's screws one above the other, a concave key block; being built on `claude/hamilton-box` |
-| 10 | The cock's holes on their own camera, hairspring height, trip-spring bracket, train wheels' thicknesses, dust seal, setup cover, balance screws' slots, discharge jewel | **Measured** (`E:\mc-video\oq\ledger\balance_small\REPORT.md`). Built: the stud's holes 5.0/8.4/12.3 from the staff (sure), the clamp 3.83, the outer curve re-solved. Open: the dust seal's column r 5.0 conflicts with its chamber (r 4.85 holding a washer r 4.8); next the hairspring 7.3 tall, the trip-spring bracket 2.0-2.4, the escape pinion, the balance screws' slots, the timing nut's slit, the arm's holes |
-| 11 | The escape lower endstone cap | **Differs**: on 39:31 the setting sits in a round recess in the dial face (about r 4.8 on 40:08's camera, centred on `L.E` within the frame's 1.5 mm), a small hole beside it; on 40:05/40:08 a steel cap in the recess held by one screw (about 3.9 mm from the centre). The model: a flat cap, two screws ±2.1. Needs its outline traced |
-| 12 | The click's pivot (8.95 vs 10.0-11.0) | Owner's task 07 |
-| 13 | The lower train bridge, the escape bridge | Owner's tasks 04, 05 |
-| 14 | The fourth's upper setting (13:49.5) | Open |
-| 15 | Records out of step with the code (ledger summary 8, Fig. 108's stale records) | After the agents' readings, one pass |
+## Settled: holds as drawn
+
+| Item | Result |
+|---|---|
+| The barrel's place (34:30's 0.5-0.8 mm out) | Holds: on 13:04.4 the bridge's other holes put the fusee-barrel distance at 36.5-38.2 by map (model 37.56); each bushing left out lands 0.1-0.45 from its place (`tools/holeloo.py`) |
+| The train bridge's holes through the plate-placed map (handover 1) | Hold: every hole on the owner's 23:30 trace within 0.6 mm left out of an affine or homography on the rest, most 0.35 |
+| The pillar plate's holes (9:03, 14:43.38) | Hold within those oblique frames' 0.3-1.8 mm |
+| The barrel-bridge screw head past the rim (handover 3) | Closed: the screw at (-22.96, 25.82), r 34.55, its head inside r 38.8 |
+| The balance's place (handover 5) | Closed 19 October: `L.B` stands (13:44, ±0.6) |
+| The mounting ring's flange `MR_RO`, bore, dial feet radius, bezel radius | Hold: ratios to the bore agree to 0.5 %; absolute 47.4 ±0.6 against 47.95 (`ledger\ring_dial`) |
+| The fusee's turn pitch, the fusee wheel's level, the barrel's height | Hold (`ledger\fusee_barrel`) |
+| The cap screws' spacing, the counterbore's radius, the hairspring's top | Hold (`ledger\balance_small`) |
+
+## Built (with their checks)
+
+| Item | Change |
+|---|---|
+| The barrel bridge's cock-side horn end | A measured circle, r 35.15 about (10.69, 39.43) (13:04.2/.4 at the near face, 0.04 mm rms; `bb_hornend.py`), easing 0.05 clear of the cock over its last 2.5 mm (owner's choice) |
+| The hairspring stud's holes | 5.0 / 8.4 / 12.3 from the staff (42:08, 41:58; sure); the clamp 3.83; the outer curve re-solved; the essay's figures |
+| The trip spring's bracket | 2.4 tall (BM 117A; 11:08-11:13); the detent's inertia 3.683; the lock deepened to Op. 85's 6.0° (owner's choice), the chain of tables rewritten |
+| The box and gimbals | Rebuilt from Jones-Horan 63662 and 38240 (`claude/hamilton-box`, merged here): heights 105/71/20, piano hinges, hasps, 25 mm nuts, pivots at 92.9, cup washers, the latch bracket, the concave key block, the lid stay; the case can now turn over in the ring (Sec. III) |
+| The fusee's winding ratchet | 40 teeth (18:23.5 and three more readings), 36 before |
+| The bezel's knurl band | 3.4 tall (48:27.61), 5.1 before |
+| The case support brackets (42105) | Being rebuilt as bent straps (`claude/hamilton-casebracket`) |
+
+## Open: readings that conflict or can't be built yet
+
+| Item | Why |
+|---|---|
+| The barrel 0.4 lower (2:22, 2:05.5: 1.95, 1.97 against 2.4) | Would put its lower cap 0.1 into the centre wheel; the centre wheel's level was never read side-on: read it first |
+| The winding ratchet's tips r 7.3 (ratio on 18:23.5/.4) | The pawls' spring bed traced on 19:12 has its inner wall at r 7.04 with the ratchet inside: kept at 6.9 |
+| The fusee cone 0.4-0.8 slimmer (2:22) | Conflicts with 17:49 (within 0.1-0.25): read on bEWF2ivi1Rg 1:04-1:12 or umslgYaJYUY 0:09-0:21 |
+| The hairspring 7.3 tall (its bottom 0.9 lower, 6:49.5) | The collet would go 0.4-0.8 into the hub's boss; the hub and collet not seen: needs a side-on frame of them |
+| The dust seal's column r 5.0 (12:33.0) | Would leave 0.15 round its chamber (r 4.85, a washer r 4.8 in it): perhaps stepped; needs a frame |
+| The escape lower endstone cap | A round recess in the dial face with a cap held by one screw (39:31, 40:05, 40:08); the model a flat cap with two: needs its outline traced |
+| The escape pinion, third pinion, fourth wheel's thicknesses (42:56, 36:45) | Rough, each on its own arbor's ruler |
+| Balance screws' slots, timing nut's slit, the arm's holes | Seen (6:49.5, 6:52.5), sizes rough: to draw next |
+| DIAL_T 0.7-0.85, the hands' profile, the crystal, the ring band's height, the straps' slots, the key's length, the end plate, the sustaining ratchet, the chain | No frame settles them |
+| The click's pivot; the lower train bridge; the escape bridge; the dial feet (traces) | Owner's tasks 07, 04, 05, 06 |
+| Records out of step with the code (ledger summary 8, Fig. 108's stale records) | One pass before the merge |

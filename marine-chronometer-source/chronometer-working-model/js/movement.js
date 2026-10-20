@@ -1422,7 +1422,7 @@ function buildMovement(M){
      3.9 × 10⁻⁶ /mm a °F; a point φ from the fixed end then comes in by R² Δκ (1 - cos φ), 0.05 mm at the free end for 27½ °F. dF: °F from 72½, x: the exaggeration it is drawn with */
   R.CURLX=20;R.balCurl=(dF,x=R.CURLX)=>{const d=BR*BR*1.5*(19e-6-11.5e-6)/1.8/1.6*dF*x;if(Math.abs(d-(R.balSD||0))<1e-4)return;R.balSD=d;
     for(const q of balSR){q.st.geometry.dispose();q.br.geometry.dispose();q.st.geometry=band(q.a0,BR-1.6,BR-0.9,d);q.br.geometry=band(q.a0,BR-0.9,BR,d);const r=BR+1.1-d*(1-Math.cos(q.wa-q.a0));q.w.position.x=r*Math.cos(q.wa);q.w.position.z=-r*Math.sin(q.wa);}};
-  /* helical hairspring (Fig. 2): its coils r 5.1 (HS_RC; 5.27 to their outer edge) and 12 turns (HS_N; 13 wires down each side with the end curves), 6.7 tall (HS_H). The radius is the coils' outer edge against the balance
+  /* helical hairspring (Fig. 2): its coils r 5.1 (HS_RC; 5.27 to their outer edge) and 12 turns (HS_N; 13 wires down each side with the end curves), 6.4 tall (HS_H; 6:49.5's pitch says 7.3, open: the collet and the hub's boss). The radius is the coils' outer edge against the balance
      rim (r 14.5) on five sources, each a ratio in one picture: the restoration video side-on (KLUwI2UUCMQ 6:49.5: the coils 257.5 px across about the staff, x 648.75; the rim's
      back edge turns at x 998-1003, behind the timing weight's root, so 351 px out; the left end is under the glove), 0.367, r 5.3; face-on (6:52.5: the coils 310 px, the rim
      835, both ends of the coils within a few % of each other), 0.355-0.371, r 5.2-5.4; the top-view photograph (2E11795), about 0.35, r 5.0; the manual's Fig. 2 (600 dpi: the
