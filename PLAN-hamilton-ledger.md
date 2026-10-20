@@ -14,7 +14,7 @@ reported in `E:\mc-video\oq\ledger\<item>\REPORT.md` and built into the model on
 | 6 | The barrel bridge's horn ends and rim (handover 2) | **Done**: the cock-side end a measured circle, r 35.15 about (10.69, 39.43) (13:04.2/.4 at the near face, 0.04 mm rms; `bb_hornend.py`), easing 0.05 clear of the cock over its last 2.5 mm (owner's choice) |
 | 7 | The mounting ring's flange, dial feet radius, dial thickness, case rim, bezel, crystal, hands' profile, case bracket | Agent measuring (`ledger\ring_dial`) |
 | 8 | The fusee cone and heights side-on, barrel level and cap, end plate, ratchets, chain | Agent measuring (`ledger\fusee_barrel`) |
-| 9 | The box and gimbals (Fig. 106) | Agent measuring (`ledger\box`) |
+| 9 | The box and gimbals (Fig. 106) | **Measured** (`E:\mc-video\oq\ledger\box\REPORT.md`): height 196 (base 105, glass lid 71, outer lid 20) not 176, piano hinges, two split hasps, nuts 25 across, pivots 12 mm higher (RY about -8), cup washers, the latch bracket's screws one above the other, a concave key block; being built on `claude/hamilton-box` |
 | 10 | The cock's holes on their own camera, hairspring height, trip-spring bracket, train wheels' thicknesses, dust seal, setup cover, balance screws' slots, discharge jewel | Agent measuring (`ledger\balance_small`) |
 | 11 | The escape lower endstone cap | **Differs**: on 39:31 the setting sits in a round recess in the dial face (about r 4.8 on 40:08's camera, centred on `L.E` within the frame's 1.5 mm), a small hole beside it; on 40:05/40:08 a steel cap in the recess held by one screw (about 3.9 mm from the centre). The model: a flat cap, two screws ±2.1. Needs its outline traced |
 | 12 | The click's pivot (8.95 vs 10.0-11.0) | Owner's task 07 |
