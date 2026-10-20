@@ -37,7 +37,6 @@ EXPECTED = model.cfg('HOLE_EXPECTED', [
     ('lockArm', '', [-6.96, -30.65, -19.69], 'navy', "the Navy's second dust seal's chamber, closed underneath, the lever through its slot above (illustrative: its inside not seen)"),
     ('barrelBridge', '42061', [-13.96, -27.16, -23.11], 'arm', "the Navy seal's screw hole (13:04.4): the movement drawn is fitted for the Navy's Y-arm, and the manual's arm leaves it empty"),
     ('barrelBridge', '42061', [0.05, -27.16, -16.27], 'arm', "the Navy seal's other screw hole (13:04.4), empty with the manual's arm fitted"),
-    ('barrelBridge', '42061', [-30.24, -27.16, -2.15], None, "a countersunk hole west of the barrel arbor, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
     ('trainBridge', '42062', [-7.93, -23.76, 22.28], None, "a plain hole through the upper train bridge 4 mm beyond the train-blocking screw's (KLUwI2UUCMQ 23:30 and 13:44 through the plate-placed holes, within 0.4 mm), its use not given by any source"),
     ('pillar', '42060', [-0.6, -3.86, -32.2], None, "a hole at 12 o'clock past the wind indicator's post, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
     ('pillar', '42060', [26.6, -3.86, 19.0], None, "a hole past the access hole at 4 o'clock, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),

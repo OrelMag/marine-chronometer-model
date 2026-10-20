@@ -576,7 +576,7 @@ function buildMovement(M){
      the underside. Two more read here then, by the opening at 3 o'clock and in the far horn, are the bridge's steady pins (S.bbp) seen end on, and one beside that opening is a
      slot open at the rim (S.bbN) */
   S.navySeal=(([a,b])=>{const m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=unit(sub(b,a));return[add(m,d,-7.8),add(m,d,7.8)];})([[-14.69,-23.47],[0.78,-15.91]]);   /* read 17.2 apart: drawn 7.8 out, the fusee seal's, the same part (+-1 mm out here) */
-  S.bbX=[[-30.24,-2.15,0.55,1]];   /* (-15.30, -16.75) and (-27.72, 6.19) were the cover's screws' holes (S.cover since 20 October 2026: the same holes, 0.2 and 1.0 mm apart) */   /* the 1: as hC and hT's */
+  S.bbX=[];   /* the countersunk one west of the barrel arbor, (-30.24, -2.15), is the setup pawl spring's second pin's (h1: SPB in buildMovement, since 20 October 2026); */   /* (-15.30, -16.75) and (-27.72, 6.19) were the cover's screws' holes (S.cover since 20 October 2026: the same holes, 0.2 and 1.0 mm apart) */   /* the 1: as hC and hT's */
   S.bbN=(()=>{const a=[35.15,2.465],u=unit([2.80,0.265]),v=[-u[1],u[0]];return[add(a,v,-1.06),add(add(a,u,8),v,-1.06),add(add(a,u,8),v,1.06),add(a,v,1.06)];})();const BB_PK=1.0;   /* the pry slot in the
      barrel bridge's underside at 3 o'clock, open at the rim (facePocket): KLUwI2UUCMQ 13:04.4 (the bridge upside down, face-on; tools/anchors/KLUwI2UUCMQ_13-04.4.json, a
      homography on nine of its holes, 0.01-0.86 mm), its corners (37.92, 3.75), (35.04, 3.56), (35.26, 1.37), (37.98, 1.71): 2.04-2.20 wide (2.12 drawn), its inner end at
@@ -1607,11 +1607,16 @@ function buildMovement(M){
      and 0.423 mm, so 0.45 and 0.50 deep (0.42-0.53 with sigma 1 either way): 0.48, about 0.46 of the pitch at the tips (it was 2.25 m, 0.72, the gear convention,
      which would read 0.55-0.64). The faces read -2.5 and -5.6 deg (median) against the radius, undercut 3-6 deg (one leaning back 6 deg, as drawn until 11 October
      2026, reads +5.5 to +6.6): drawn undercut 4.5 deg, their middle (SRU; the readings spread 4-5 deg tooth to tooth, References/VIDEOS.md), radial until 14 October 2026 */
-  const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95),SRD=0.48,SRU=4.5*D2R;   /* SRU: the faces' undercut, the middle of the 3-6 deg read (14 October 2026; radial before): with it the click's load draws it in at any oil (tools/ratchets.js) */
-  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',rd:SRD,uc:SRU,flip:true,cuts:[[[-1.11,-1.11],[1.11,-1.11],[1.11,1.11],[-1.11,1.11]]]}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* radial faces meet the click against the mainspring's pull; on the arbor's square (ASQ), its hole square (KLUwI2UUCMQ 23:30, the ratchet off on the mat: the mat through a square hole; 11:58, 38:25, the ratchet on: the square rises from its face), 0.01 clear each side (a round bore r 1.4, pressed on, until 14 October 2026) */
+  /* SUT since 20 October 2026: 7.64 +-0.03 (KLUwI2UUCMQ 12:19 through two cameras, 12:07.4 and 11:58, each fitted on the bridge's holes h17, h1, h5, h7 at f 12000, 0.6-3.1 px:
+     7.61, 7.62, 7.68, 7.65, each tip the corner where its face and back lines meet, 14-21 tips; 38:38.1 7.73 on a weaker camera; sure). The 7.05 took the cover's screw holes
+     as 23.6 apart, where h17 and h5 are 26.04. The roots read 7.12-7.25 (about 7.18), so SRD's 0.48 holds; 42 teeth again (41.85-42.18). The ratchet sits on a flat polished
+     ring on the bridge, r 6.18-7.61 (12:23.8, the ratchet off; its two edges concentric to 0.03), its top at y -28.3 +-0.2 (the model's 1.0 thick on the bridge: -28.16):
+     0.35 lower than until then, which stood it in the air */
+  const SRZ=42,SUT=7.64,SRM=SUT/(SRZ/2+0.95),SRD=0.48,SRU=4.5*D2R,SRY=BB_T-0.5;   /* SRU: the faces' undercut, the middle of the 3-6 deg read (14 October 2026; radial before): with it the click's load draws it in at any oil (tools/ratchets.js) */
+  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',rd:SRD,uc:SRU,flip:true,cuts:[[[-1.1425,-1.1425],[1.1425,-1.1425],[1.1425,1.1425],[-1.1425,1.1425]]]}),M.steel,L.Ba[0],SRY,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* radial faces meet the click against the mainspring's pull; on the arbor's square (ASQ), its hole square (KLUwI2UUCMQ 23:30, the ratchet off on the mat: the mat through a square hole; 11:58, 38:25, the ratchet on: the square rises from its face), 0.01 clear each side (a round bore r 1.4, pressed on, until 14 October 2026) */
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
-  const BAB=2.35,ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=mesh(ba,new THREE.LatheGeometry([V2(0,-27.40),V2(BU_P,-27.40),V2(BU_P,TB_T+0.05),V2(BAB,TB_T+0.05),V2(BAB,y0-0.1),V2(BU_P,y0-0.1),V2(BU_P,-1),V2(0,-1)],40),M.steel,L.Ba[0],0,L.Ba[1]);   /* up to just under the ratchet, where the square begins (a collar r 2.3 over the ratchet until 14 October 2026: none on KLUwI2UUCMQ 11:58, the square rising straight from the ratchet's face) */
+  const BAB=2.35,ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=mesh(ba,new THREE.LatheGeometry([V2(0,BB_T),V2(BU_P,BB_T),V2(BU_P,TB_T+0.05),V2(BAB,TB_T+0.05),V2(BAB,y0-0.1),V2(BU_P,y0-0.1),V2(BU_P,-1),V2(0,-1)],40),M.steel,L.Ba[0],0,L.Ba[1]);   /* up to the bridge's face, where the square begins under the ratchet on its seat (the square to -27.40, the ratchet 0.35 higher, until 20 October 2026) (a collar r 2.3 over the ratchet until 14 October 2026: none on KLUwI2UUCMQ 11:58, the square rising straight from the ratchet's face) */
   /* its profile as Fig. 75 draws it: the upper pivot (BU_P) from the square through the barrel bridge's bushing; a bearing (BAB, r 2.35: Fig. 75's arrow 1, 0.48 of the core) from 0.05 under the bushing
      (the shoulder that sets the arbor's endshake, as the fusee's collar does under its own) through the barrel's own end; the core; the lower bearing (arrow 2, 0.50 of the core) through the cap
      down to the plate's bushing, on whose face it bears, the step's place estimated (Fig. 75 draws it below the cap); the lower pivot (BU_P) in the bushing. A plain r 1.4 rod in end holes r 1.43
@@ -1627,8 +1632,9 @@ function buildMovement(M){
      deep) is estimated */
   { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(fs.MS.y0+fs.MS.y1)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71+BB_DN,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],64); }
-  const ASQ=2.2,asq=hn(mesh(rt,new THREE.BoxGeometry(ASQ,8.56,ASQ),M.steel,L.Ba[0],-31.68,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, through the ratchet (which it carries) and about 7.5 mm over it (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5), 2.2 across the flats (KLUwI2UUCMQ 38:25, the ratchet off: 2.0-2.3 against the ratchet's tips) */
-  { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
+  const ASQ=2.265,asq=hn(mesh(rt,new THREE.BoxGeometry(ASQ,8.8,ASQ),M.steel,L.Ba[0],-35.96+4.4,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, through the ratchet (which it carries) and about 7.5 mm over it (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5; 12:19 about 8 +-1), 2.265 across the flats (KLUwI2UUCMQ 12:19 through two cameras, its three upright edges at 0.5-1.9 px: 2.26-2.27; 2.2 until 20 October 2026, from 38:25's 2.0-2.3 against the ratchet's tips) */
+  { const Pv=S.click,CL=5.07,dP=Math.hypot(Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]),rR=SUT-SRD+0.1,aP=Math.atan2(Pv[1]-L.Ba[1],Pv[0]-L.Ba[0])-Math.acos((dP*dP+rR*rR-CL*CL)/(2*dP*rR)),Tp=[L.Ba[0]+rR*Math.cos(aP),L.Ba[1]+rR*Math.sin(aP)],clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],SRY+0.05,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
+    hn(mesh(rt,polyGeo([...Array(48)].map((_,i)=>[Pv[0]+1.48*Math.cos(i/48*TAU),Pv[1]+1.48*Math.sin(i/48*TAU)]),0.8,[[...Pv,0.328]]),M.steel,0,SRY+0.05-0.4,0),'42027',{sub:1});   /* its eye, a round boss r 1.48 about the pivot (KLUwI2UUCMQ 12:05.6, the spring off: r 1.47-1.50 over about 250 deg of edge, 0.085-0.10 rms; Fig. 108's round eye), where pawlGeo's stock lever has r 0.94; its arm and nose not measured (pawlGeo's, 5.07 to the nose: the video and the top-view photograph about 5.1), the nose 0.1 over the root circle (r 7.26; the frames: in a gap at about 7.18), so the backs pass under it as the arbor is let down. Until 20 October 2026 aimed at a root 2.25 modules deep */
     /* the click 5.07 mm long (S.click), aimed at the old root (2.25 m deep); turn the ratchet (it is fixed in running) so a face bears on the click, then rest the click on it,
        seated by its outline as the winding pawls are (phaseAgainst's deep) */
     const pr=Object.assign(ratchetProf(SRZ,SRM,true,true,SRD),{uc:SRU}),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1,true);
@@ -1639,33 +1645,39 @@ function buildMovement(M){
         for(const P of CP){let w=false;for(let i=0,j=W.length-1;i<W.length;j=i++){const[xi,zi]=W[i],[xj,zj]=W[j];if((zi>P[1])!==(zj>P[1])&&P[0]<(xj-xi)*(P[1]-zi)/(zj-zi)+xi)w=!w;
           const dx=xj-xi,dz=zj-zi,l2=dx*dx+dz*dz,t=clamp(((P[0]-xi)*dx+(P[1]-zi)*dz)/l2,0,1);d=Math.min(d,Math.hypot(P[0]-xi-t*dx,P[1]-zi-t*dz));}if(w)inside=true;}return inside?-d:d;};
       let a=ph.psi-0.03,b=ph.psi;if(gap(a)<0&&gap(b)>0){for(let i=0;i<40;i++){const mm=(a+b)/2;gap(mm)>0.003?b=mm:a=mm;}srw.rotation.y=b;} asq.rotation.y=srw.rotation.y; }   /* the square turned with the ratchet on it */
-    /* setup pawl spring (42028, Figs. 17, 24, 80, 108): a blued band on edge, standing on the barrel bridge under the cover, round the ratchet about half a turn at r 9,
-       from its fixed end, held between two steady pins in the bridge ("pushed off by pressure on steady pins from the lower side of barrel bridge", Ops. 27, 41), to the
-       click's back, which it bears on at the click's height (C Spinner 11:58: about 180 deg at 1.23-1.31 of the ratchet's tip radius, so 8.7-9.2 mm, its edge about 0.9 mm seen from above at a slant; Fig. 108 draws
-       about as much; 0.3 thick and 0.85 tall, the pins' places estimated) */
-    const bk=pawlBack(pts,1.1,Pv,ph.th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13],SR=1.273*SUT/PHOTO_K,eA=(Math.atan2(E[1]-L.Ba[1],E[0]-L.Ba[0])-PHOTO_TURN)/D2R,arcP=[];   /* eA in P2's angles (the photographs' frame) */
-    /* the spring's fixed end at its pin in the counterbore (SPS): KLUwI2UUCMQ 13:03.5 (the owner's points, tools/traces/f_KLUwI2UUCMQ_13-03.5_crop.mm.json) and 13:04.4 (its round
-       features found and matched, the bridge upside down) each through a map on the bridge's holes (mfgfit.py match; 13:03.5 also held to the rim, r 38.8): a counterbore 2.87 across
-       with a hole about 0.9 across in it, a pin's end in that, at (-24.19, 3.86) and (-24.24, 3.44), 0.42 apart: their mean, 9.23 mm from the barrel arbor at 103 deg (the outer
-       pin's radius kept, 9.41: 0.18 inside both frames' 0.4-0.7 mm). The band from there round to the click's back, 158 deg; until 20 October 2026 174, its pins estimated
-       16 deg short of this */
-    const SPS=[-24.21,3.65],e1=(eA+360)%360-6,a0=(Math.atan2(SPS[1]-L.Ba[1],SPS[0]-L.Ba[0])-PHOTO_TURN)/D2R-3;for(let a=a0;a<e1;a+=6)arcP.push(P2(SR,a));
-    const cspr=hn(mesh(rt,stripGeo([...arcP,E],0.3,0.85),M.steel,0,BB_T-0.85,0),'42028');   /* on the bridge, up to the click's middle; polished steel, the setup ratchet's finish (KLUwI2UUCMQ 11:58; blued until 15 October 2026) */
+    /* setup pawl spring (42028, Figs. 17, 24, 80, 108): a flat C-shaped plate lying on the barrel bridge round the ratchet, about 2.2 wide across its radius, from its
+     fixed end at about 75-77 deg (about the barrel arbor) round past its two pins to a narrow free end bearing on the click's outer side at about 258-262 deg (KLUwI2UUCMQ
+     38:38.1, 95-175 deg about the arbor: its outer edge r 9.92, 0.06 rms; 11:58 10.3, rough; the inner edge about 7.5-7.9, at the ratchet's tips; 12:07.0 the spring in the
+     tweezers, a wide flat strip; Figs. 24, 80, 108 draw it flat). Two pins riveted flush in it, slotless, no screw (38:38.1, 11:58: Op. 32 pushes it off by them from
+     below), at G (SPS, r 0.59-0.61 on top) and h1 (SPB: -29.63, -1.78 on 11:58, -29.82, -1.72 on 38:38.1, -29.94, -1.59 from below on 13:04.4: their mean), each in a
+     counterbore in the bridge's underside (13:04.4: 2.89 and 2.94 across, a hole 1.23 across in each). Its inner edge drawn 0.1 outside the tips (SPI); its thickness (SPH),
+     the free end's width (SPW, narrowing from 225 to 240 deg) and its shape not seen: estimated. Until 20 October 2026 a band 0.3 x 0.85 on edge at r 8.97, its second pin
+     13 deg on from the first and 0.84 further in, where neither frame shows one */
+    const SPS=[-24.21,3.65],SPB=[-29.80,-1.70],SPI=SUT+0.1,SPO=9.92,SPF=75.5,SPN=225,SPT=240,SPW=0.5,SPH=0.5,SPC=1.8,dg=a=>[L.Ba[0]+Math.cos(a*D2R),L.Ba[1]+Math.sin(a*D2R)],
+      sprOut=th=>{const bk=pawlBack(pts,SPC,Pv,th,L.Ba),E=[bk.p[0]+bk.n[0]*(SPW/2-0.025),bk.p[1]+bk.n[1]*(SPW/2-0.025)],aE=(Math.atan2(E[1]-L.Ba[1],E[0]-L.Ba[0])/D2R+360)%360,cl=[],wd=[];
+        const at=(a,r)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];for(let a=SPF;a<SPT;a+=2.5){const w=a<=SPN?SPO-SPI:lerp(SPO-SPI,SPW,(a-SPN)/(SPT-SPN));cl.push(at(a,SPO-w/2));wd.push(w);}
+        const P0=at(SPT,SPO-SPW/2),Q=at((SPT+aE)/2,SPO-SPW/2);for(let i=0;i<=10;i++){const t=i/10;cl.push([(1-t)*(1-t)*P0[0]+2*t*(1-t)*Q[0]+t*t*E[0],(1-t)*(1-t)*P0[1]+2*t*(1-t)*Q[1]+t*t*E[1]]);wd.push(SPW);}
+        const nrm=i=>{const a=cl[Math.max(0,i-1)],b=cl[Math.min(cl.length-1,i+1)],dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz);return[dz/l,-dx/l];},sg=(()=>{const n=nrm(0);return Math.hypot(cl[0][0]+n[0]-L.Ba[0],cl[0][1]+n[1]-L.Ba[1])>Math.hypot(cl[0][0]-n[0]-L.Ba[0],cl[0][1]-n[1]-L.Ba[1])?1:-1;})();
+        const O=cl.map((p,i)=>{const n=nrm(i);return[p[0]+sg*n[0]*wd[i]/2,p[1]+sg*n[1]*wd[i]/2];}),I=cl.map((p,i)=>{const n=nrm(i);return[p[0]-sg*n[0]*wd[i]/2,p[1]-sg*n[1]*wd[i]/2];}),k=cl.length-1,
+          tx=cl[k][0]-cl[k-1][0],tz=cl[k][1]-cl[k-1][1],tl=Math.hypot(tx,tz),nO=[O[k][0]-cl[k][0],O[k][1]-cl[k][1]],o=[...O];
+        for(let i=1;i<8;i++){const a=Math.PI*i/8;o.push([cl[k][0]+nO[0]*Math.cos(a)+tx/tl*SPW/2*Math.sin(a),cl[k][1]+nO[1]*Math.cos(a)+tz/tl*SPW/2*Math.sin(a)]);}   /* its end round */
+        let len=0;for(let i=1;i<cl.length;i++)if(i>=Math.round((SPT-SPF)/2.5))len+=Math.hypot(cl[i][0]-cl[i-1][0],cl[i][1]-cl[i-1][1]);return{o:[...o,...I.reverse()],len};},
+      sprGeo=th=>polyGeo(sprOut(th).o,SPH,[[...SPS,0.6],[...SPB,0.6]]),SPP=[SPS,SPB];
+    const cspr=hn(mesh(rt,sprGeo(ph.th),M.steel,0,BB_T-SPH,0),'42028');   /* on the bridge, its face to the click's lower half; polished steel, the setup ratchet's finish (KLUwI2UUCMQ 11:58) */
     /* letting the mainspring down and setting it up again (update()'s ld and clk): the arbor, its ratchet and square turn; the click is held out of the teeth or rides
        over them, its spring's end on its back (as at build). R.su: what update() needs; lift, the click's turn out until its nearest point is 0.3 clear of the tips */
     { const q=[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],rmC=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of pts)m=Math.min(m,Math.hypot(q[0]+x*c+z*sn,q[1]-x*sn+z*c));return m;};
       const so=rmC(ph.th+0.01)>rmC(ph.th)?1:-1;let lift=0;while(lift<0.6&&rmC(ph.th+so*lift)<pr.ro+0.3)lift+=0.005;
       R.su={srw,clk,asq,ba,spr:cspr,pts,pr,q,c:[...L.Ba],base:srw.rotation.y,seat:ph.th,th0:cth0,so,lift,ld:0,cl:0,th:ph.th,
-        sprGeo:th=>{const bk=pawlBack(pts,1.1,Pv,th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13];return stripGeo([...arcP,E],0.3,0.85);}}; }
-    const SPP=[P2(SR+0.42,a0+3),P2(SR-0.42,a0+16)];SPP.forEach((q,i)=>hn(cylBetween(rt,0.25,-27.71,i?TB_T:TB_T-0.6,M.steel,...q),'42028',{sub:1}));   /* its steady pins, through the bridge to its underside
-       (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026. The outer one
-       in the counterbore (SPS), its end 0.1 down its hole under the counterbore's floor (the pin's end the frames show in it); the inner one estimated, 0.84 mm further in and
-       13 deg on (9 until 20 October 2026), clear of the counterbore: neither frame shows a second hole in it, nor one clear of it they can tell from its shadow */
+        sprGeo,spW:SPW,spH:SPH,spC:SPC,spLen:sprOut(ph.th).len}; }
+    SPP.forEach(q=>hn(cylBetween(rt,0.6,BB_T-SPH,TB_T-0.6,M.steel,...q),'42028',{sub:1}));   /* its pins, riveted flush in it and through the bridge to their counterbores
+       in its underside, each end 0.1 down its hole under the counterbore's floor (13:04.4: G's hole holds a pin's end; h1's reads dark: its end deeper, or the hole tapped
+       as 12:06.2-12:19 suggest from above: open). Until 20 October 2026 r 0.25, the second at a place no frame shows */
     /* the barrel bridge's last build: its holes through, the pins' holes, the winding stop's tapped hole blind from the underside (2.0, its thread) and the cover's
        screws' blind from the top (2.2, their threads: nothing under them on 13:04.4) */
     /* the outer pin's counterbore in the bridge's underside, 2.87 across (KLUwI2UUCMQ 13:04.4, its edge fitted; 13:03.5 shows its inner hole, 0.88), 0.5 deep (estimated: no frame
        shows it edge-on), for the punch that pushes the pin out */
-    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,[...SPP[0],1.435,0],[...SPP[1],0.25,1],R.bbWS,...CVH],0.25),'top',[[...SPP[0],1.435]],0.5,0,[0.25]),'top',[R.bbWS],2.0,0.25),'top',S.bbN,BB_PK);}   /* the cover's screws' holes (CVH) through the bridge, as 13:04.4 shows them from below (blind 2.2 from the cock side until 20 October 2026) */   /* the counterbore cut round (blindHoles' inner: the sink 0.5 deep, the pin's hole on through) */
+    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,[...SPP[0],1.435,0],[...SPP[1],1.47,0],R.bbWS,...CVH],0.25),'top',[[...SPP[0],1.435],[...SPP[1],1.47]],0.5,0,[0.615,0.615]),'top',[R.bbWS],2.0,0.25),'top',S.bbN,BB_PK);}   /* the cover's screws' holes (CVH) through the bridge, as 13:04.4 shows them from below (blind 2.2 from the cock side until 20 October 2026) */   /* the counterbore cut round (blindHoles' inner: the sink 0.5 deep, the pin's hole on through) */
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
@@ -1683,12 +1695,19 @@ function buildMovement(M){
        ~10 % small near the rim): a round boss r 1.35 round each screw, joined to the traced outline (estimated: no frame shows the cover's ends face-on) */
     const cvP=[...S.cover.map(q=>[q,1.35]),[S.click,1.1]].reduce((P,[q,r])=>subtractCircle(P,q,r,true),pts);   /* and r 1.1 round the click's pivot (S.click), measured at the cover's corner, whose end shows in the cover */
     const s=new THREE.Shape();cvP.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
-    for(const[x,z,r]of[[...L.Ba,3.0],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
+    for(const[x,z,r]of[[...L.Ba,3.08],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
     const cvg=extrude(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
     R.cover=hn(mesh(rt,cvg,M.plateSolid,0,-29.66,0),'42029');
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
-    /* the feet: steps under the cover's ends (Fig. 108), each round its screw and set 0.5 mm further out from the arbor, so the click's spring passes inside them */
-    for(const q of S.cover){const u=[q[0]-L.Ba[0],q[1]-L.Ba[1]],l=Math.hypot(...u),fc=[q[0]+u[0]/l*0.5,q[1]+u[1]/l*0.5];hn(mesh(rt,polyGeo([...Array(40)].map((_,i)=>[fc[0]+1.1*Math.cos(i/40*TAU),fc[1]+1.1*Math.sin(i/40*TAU)]),1.4,[hC(...q,0.9)]),M.plateSolid,0,-28.56,0),'42029',{sub:1});hn(screw(rt,...q,-29.66,1.05,1.0,1.1+1.4+2.2,0.45),'42056.cv');}   /* 42056 (as the detent block's), into the barrel bridge; standing proud, their sides showing (6:29) */
+    /* the pads: the cover's underside milled away across its middle, leaving its two ends as full-width pads bounded by arcs (KLUwI2UUCMQ 11:51-11:53, the cover face down;
+       Figs. 24, 80, 108 draw a thick skirt at the ends), standing on the bridge round its screws; no round feet (r 1.1 x 1.4 until 20 October 2026). The arcs drawn about the
+       arbor at r 11.8, past the click's eye (10.12 + 1.48); the pads' height (1.4, the feet's) and the arcs' place not measured: estimated */
+    { const RP=11.8,rr=p=>Math.hypot(p[0]-L.Ba[0],p[1]-L.Ba[1]),N=cvP.length,runs=[];let st=cvP.findIndex((p,i)=>rr(p)>=RP&&rr(cvP[(i+N-1)%N])<RP);
+      for(let k=0,cur=null;k<N;k++){const i=(st+k)%N,p=cvP[i];if(rr(p)>=RP){if(!cur){cur=[];runs.push(cur);}cur.push(p);}else cur=null;}
+      for(const run of runs){const a0=Math.atan2(run[run.length-1][1]-L.Ba[1],run[run.length-1][0]-L.Ba[0]),a1=Math.atan2(run[0][1]-L.Ba[1],run[0][0]-L.Ba[0]);let d=a1-a0;while(d>Math.PI)d-=TAU;while(d<-Math.PI)d+=TAU;
+        const pad=[...run];for(let k=1;k<12;k++)pad.push([L.Ba[0]+RP*Math.cos(a0+d*k/12),L.Ba[1]+RP*Math.sin(a0+d*k/12)]);
+        hn(mesh(rt,polyGeo(pad,1.4,S.cover.filter(q=>rr(q)>RP).map(q=>hC(...q,0.9)).filter(h=>{let w=false;for(let i=0,j=pad.length-1;i<pad.length;j=i++){const[xi,zi]=pad[i],[xj,zj]=pad[j];if((zi>h[1])!==(zj>h[1])&&h[0]<(xj-xi)*(h[1]-zi)/(zj-zi)+xi)w=!w;}return w;})),M.plateSolid,0,-28.56,0),'42029',{sub:1});}
+      for(const q of S.cover)hn(screw(rt,...q,-29.66,1.05,1.0,1.1+1.4+2.2,0.45),'42056.cv'); }   /* 42056 (as the detent block's), into the barrel bridge; standing proud, their sides showing (6:29) */
     /* setup pawl pivot screw (42036): put in from under the barrel bridge (Op. 41, Fig. 80), its head in the gap over the barrel, its shank the click's pivot, its end in
        the cover's hole, flush with its top, where the top-view photograph shows a small round end, not a screw head */
     { const cf=new THREE.Group();cf.rotation.x=Math.PI;rt.add(cf);hn(screw(cf,S.click[0],-S.click[1],-TB_T,0.6,0.4,TB_T+29.66-0.05),'42036'); } }
