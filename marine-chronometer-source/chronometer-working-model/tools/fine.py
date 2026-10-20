@@ -37,7 +37,7 @@ EXPECTED=model.cfg('EXPECTED',{
  ('barrel:Buffer(drum)','ratchet:Lathe'):("the barrel arbor's two bearings (r 2.35) and its pivots, on the barrel's axis through the barrel's end holes (Fig. 75; since 15 October 2026, a plain r 1.4 rod before)",300,16.5),
  ('barrel:Buffer(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75); the wall is tested as the drum it encloses, so the nose counts as inside it; since 5 October 2026 to the middle of the measured 1.95 wall",0.25,0.6),
  ('barrel:Buffer(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
- ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
+ ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel (3.0 x 3.1 since 20 October 2026, KLUwI2UUCMQ 15:47.45)",5.5,3.2),
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
  ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor's shoulder under the end plate, its hole not drawn (their own group, which the Exploded view takes off the arbor's end; the shoulder r 2.2 since 15 October 2026, r 1 and 0.25 mm3 before)",0.6,0.45),
 })
