@@ -1918,10 +1918,15 @@ function buildMovement(M){
 /* fusee + chain + barrel. Fusee's large end at the fusee wheel (pillar-plate side), small end toward the barrel bridge */
 function makeFusee(M,c){
   const g=new THREE.Group(),k=c.k??1,N=c.N,A=(1-(c.rmin/c.rmax)**2)/N,rf=m=>c.rmin/Math.sqrt(1-A*clamp(m,0,N)),PT=(c.yB-c.yS)/N,yf=m=>c.yS+PT*m,cT=c.cT??c.bT+1.2,cB=c.cB??c.bB-1.2,yb=m=>cT+(cB-cT)*m/N,fx=c.d/2,bx=-c.d/2;
-  /* the chain (Fig. 38): figure-8 plates standing on edge, h 0.9 across the chain (radial on the drums) and 0.18 thick, three deep along the arbor (an outer link's two plates
+  /* the chain's size measured with the measure-trace skill on 20 October 2026 (E:/mc-video/oq/ledger/chain_size): the pitch, rivet to rivet, 2.19 +-0.05 (sure: KLUwI2UUCMQ 23:30, the
+     plates on the mat against the flat 120-tooth indicator wheel's tips, 2.13-2.22; 17:19 against the fusee wheel's 90 tips, 2.18-2.25; R-DrJz1DYOY 2:09, about 55 links a barrel
+     turn, 2.15-2.32), the plates 1.95 +-0.1 across (likely: 23:30 1.89-1.96, 17:19 2.0-2.05), width over pitch 0.89 in three frames; the chain stands about 0.75 past the
+     flanges' tips on the side photograph and 17:19, as plates 1.25 deep in the groove would not. Until then 0.9 on 1.7: the side photograph's scale taken at the plate's
+     front edge (18.93 px/mm, the fusee standing back at 16.98) and the unroll on the pitch line, not the outer edge, read the pitch about 20 % short.
+     The chain (Fig. 38): figure-8 plates standing on edge, h (H) across the chain (radial on the drums) and 0.18 thick, three deep along the arbor (an outer link's two plates
      and an inner link's one), riveted at a 1.7 mm pitch parallel to the arbor: the side photograph's chain on the fusee unrolled about the cone, 1.55-1.76 at its 18.93 px/mm, and KLUwI2UUCMQ 23:45, the chain on the mat, 1.71-1.85 (1.0 until 4 October 2026); the plates' height 0.9 there too; their thickness estimated. Its pitch line (the rivets) runs 0.04 clear of the groove's
      floor on the fusee and 0.02 clear of the barrel's wall */
-  const H=0.9,TK=0.18,PC=1.7,rc=m=>rf(m)+H/2+0.04,rB=c.Rb+H/2+0.04,dl=n=>Math.asin((rB-rc(n))/(fx-bx));
+  const H=1.95,TK=0.18,PC=2.19,rc=m=>rf(m)+H/2+0.04,rB=c.Rb+H/2+0.04,dl=n=>Math.asin((rB-rc(n))/(fx-bx));
   /* barrel turns for m fusee turns of chain: the chain's length on the fusee's pitch line over the barrel's (rf is r0 / sqrt(1 - A m), the fusee for a pull falling
      in step with the barrel's turns) */
   const I=m=>(c.rmin*2/A*(1-Math.sqrt(1-A*clamp(m,0,N)))+(rc(0)-c.rmin)*m)/rB;
