@@ -219,7 +219,7 @@ function buildBox(M){
       return reclose(old,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P,false,'centripetal'),P.length*3,WR,6,false));};
     const sp=hn(mesh(bowl,geo(SH_REST,null),M.steel),'42126');let last=SH_REST;
     shield.userData.turn=r=>{shield.rotation.y=r;if(Math.abs(r-last)>1e-4){last=r;sp.geometry=geo(r,sp.geometry);}}; }
-  shield.userData.turn(SH_REST);shield.userData.hole={p:at(KHD,ah),c:fu,r:KH,rest:SH_REST};   /* for bom.py's check: the plate's hole (plate frame), the case's (case frame) */
+  shield.userData.turn(SH_REST);shield.userData.hole={p:at(KD,ah),c:fu,r:KH,rest:SH_REST};   /* for bom.py's check: the plate's hole (plate frame), the case's (case frame) */
   /* the bezel (42102), screwed onto the rim, rising to hold the crystal (42103) in a groove clear of the hands' square; its section estimated. YC, the crystal's underside, 2.4 over the
      square's measured top (14.5, the motion work in movement.js), as the deep bezel of Renaissance Antiques' side-on photograph allows (about 13 mm, against 8.3 before); MR_Y+5.6 until 5 October 2026 */
   /* its case end knurled (19 October 2026): KLUwI2UUCMQ 2:42 (the bezel upside down under the movement, the plate's 87.57 as the scale; PROVENANCE.md, "The bezel on 2:42 and
