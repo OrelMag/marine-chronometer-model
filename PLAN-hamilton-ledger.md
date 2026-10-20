@@ -33,7 +33,7 @@ reported in `E:\mc-video\oq\ledger\<item>\REPORT.md` and built into the model on
 
 | Item | Why |
 |---|---|
-| The barrel 0.4 lower (2:22, 2:05.5: 1.95, 1.97 against 2.4) | Would put its lower cap 0.1 into the centre wheel; the centre wheel's level was never read side-on: read it first |
+| The barrel 0.4 lower; the train's levels | **Built**: the centre wheel identified (90 teeth by its tooth period; a camera on 36:46) and its faces read on the plate's mirror, h 0.24-1.18, 0.94 thick (1.15-1.85, 0.7); the barrel's lower face h 2.0 (two movements), the whole barrel 0.4 lower; the third wheel under the centre wheel, sunk in the plate's r 11.3 opening (inferred), its pinion 2.5 long, the fourth pinion down to it; the centre wheel's collet on its upper side; the posts' screw heads flush in counterbores (34:30). bom's meshes and fine pass. Open: the third wheel's exact level (hidden on 36:46), the fourth wheel 2.9-3.7 rough (kept 3.15-4.05) |
 | The winding ratchet's tips r 7.3 (ratio on 18:23.5/.4) | The pawls' spring bed traced on 19:12 has its inner wall at r 7.04 with the ratchet inside: kept at 6.9 |
 | The fusee cone 0.4-0.8 slimmer (2:22) | Conflicts with 17:49 (within 0.1-0.25): read on bEWF2ivi1Rg 1:04-1:12 or umslgYaJYUY 0:09-0:21 |
 | The hairspring 7.3 tall (its bottom 0.9 lower, 6:49.5) | The hub and collet still not seen side-on (searched KLUwI2UUCMQ 6:43-7:25, 34:00-34:20, 42:50-44:20 and three other videos); 43:35.655 (soft) suggests the collet could sit 0.5 lower, 0.9 only if the cap is lower: rough, not built |
