@@ -713,8 +713,7 @@ function buildMovement(M){
      through the homographies on the holes the bare plate places (S.bbp's comment; until 19 October 2026 by the bridge's rims, the cut round the barrel and the centre bushing, tools/holemap.py) */
   for(const f of TB_SEAT){const ins=([x,z])=>{let c=false;for(let i=0,j=f.length-1;i<f.length;j=i++){const[a,b]=f[i],[e,d]=f[j];if((b>z)!==(d>z)&&x<(e-a)*(z-b)/(d-b)+a)c=!c;}return c;};   /* each seat's floor, with its screw's tapped hole and its pin's hole */
     mesh(tb,polyGeo(f,3.1-SEAT_D,[...S.eb.filter(ins).map(q=>hT(...q,0.9)),...S.ebp.filter(ins).map(q=>[...q,0.42,1])]),M.plate,0,TB_T+SEAT_D,0);}
-  {const C=PT([10.53,35.06]),A=PT([-0.9764,0.2161]),P=PT([0.2161,0.9764]),q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
-    const eg=mesh(tb,decalGeo([q(-5.5,-1.8),q(5.5,-1.8),q(5.5,1.8),q(-5.5,1.8)],PTi),M.engraveT,0,TB_T-0.02,0);eg.userData.noShadow=true;eg.userData.noCap=true;eg.userData.decal=true;}
+  /* the serial's second engraving on the train bridge at 6 o'clock (M.engraveT) left out since 20 October 2026: it stood off the bridge, in the air */
   /* three pillar screws (42055), each into its pillar (Op. 14); the third at the end of the tongue beside the notch's mouth, in the hole C Spinner's video shows there (23:30, a
      counterbore 5.3 mm across; 36:26), its head sunk in it, flush, where the top-view photograph shows it below a clearance hole in the barrel bridge, and driven down into
      its pillar (36:34). Its head (r 2.5, to fit the counterbore) and the counterbore's depth are estimated */
