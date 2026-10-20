@@ -36,8 +36,8 @@ reported in `E:\mc-video\oq\ledger\<item>\REPORT.md` and built into the model on
 | The barrel 0.4 lower (2:22, 2:05.5: 1.95, 1.97 against 2.4) | Would put its lower cap 0.1 into the centre wheel; the centre wheel's level was never read side-on: read it first |
 | The winding ratchet's tips r 7.3 (ratio on 18:23.5/.4) | The pawls' spring bed traced on 19:12 has its inner wall at r 7.04 with the ratchet inside: kept at 6.9 |
 | The fusee cone 0.4-0.8 slimmer (2:22) | Conflicts with 17:49 (within 0.1-0.25): read on bEWF2ivi1Rg 1:04-1:12 or umslgYaJYUY 0:09-0:21 |
-| The hairspring 7.3 tall (its bottom 0.9 lower, 6:49.5) | The collet would go 0.4-0.8 into the hub's boss; the hub and collet not seen: needs a side-on frame of them |
-| The dust seal's column r 5.0 (12:33.0) | Would leave 0.15 round its chamber (r 4.85, a washer r 4.8 in it): perhaps stepped; needs a frame |
+| The hairspring 7.3 tall (its bottom 0.9 lower, 6:49.5) | The hub and collet still not seen side-on (searched KLUwI2UUCMQ 6:43-7:25, 34:00-34:20, 42:50-44:20 and three other videos); 43:35.655 (soft) suggests the collet could sit 0.5 lower, 0.9 only if the cap is lower: rough, not built |
+| The dust seal's column | **Built**: r 5.9 holds (39:16, 39:18 side-on: 0.90-0.94 of the packing, no step; 12:33.0's r 5.0 was the mat's reflection); the column 6.25 long, not 3.6 (both seals, the Navy plunger's head raised with it). Open: the flange block 2.6 tall on 39:16 (rough), the packing's colour |
 | The escape lower endstone cap | A round recess in the dial face with a cap held by one screw (39:31, 40:05, 40:08); the model a flat cap with two: needs its outline traced |
 | The escape pinion, third pinion, fourth wheel's thicknesses (42:56, 36:45) | Rough, each on its own arbor's ruler |
 | Balance screws' slots, timing nut's slit, the arm's holes | Seen (6:49.5, 6:52.5), sizes rough: to draw next |
