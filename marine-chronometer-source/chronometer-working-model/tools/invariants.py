@@ -87,7 +87,7 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   const F=R.fs,N=FUSEE_TURNS;let tq=[1e9,-1e9],tm=0;for(let i=0;i<=100;i++){const v=F.torque(F.nT*i/100);tq=[Math.min(tq[0],v),Math.max(tq[1],v)];tm+=v/101;}
   chk('fusee: the spring pulls 1 fully wound',F.pull(0),1,1e-12,'');chk('fusee: and the lever ratio as the chain leaves it (the set-up)',F.pull(F.nT),F.lever(0)/F.lever(F.nT),1e-6,'');
   chk('fusee: its torque gone at run down (the chain’s line through the arbor)',F.torque(N),0,1e-9,'');
-  chk('fusee: torque on the fusee wheel within 2% of its mean, while the chain leaves the fusee',(tq[1]-tq[0])/2/tm,0.017,0.003,'');
+  chk('fusee: torque on the fusee wheel within 2% of its mean, while the chain leaves the fusee',(tq[1]-tq[0])/2/tm,0.012,0.003,'');   /* 1.2 % since the chain was measured (20 October 2026: plates 1.95 on 2.19, its pitch line 1.0 off the floor), 1.7 % before */
   /* temperature (core.js MTE): the Model 21's curvature against the test card of No. 3390 (90 F -0.02, 72.5 +0.06, 55 0.00 s a day: 72.5 above the ends' mean by 0.07) */
   chk('temperature: Model 21 balance, 72.5 F above the mean of 55 and 90 F',-(MTE.uncut(55)+MTE.uncut(90))/2,0.07,0.002,'s/day');
   chk('temperature: split balance, 0 at 72.5 F',MTE.split(72.5),0,1e-12,'s/day');

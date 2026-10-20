@@ -78,7 +78,7 @@ def check(M):
     fu = [x for x in (M.get('fusee') or {}).get('torque_Nm', []) if x is not None]
     if len(fu) >= 3:
         m = sum(fu) / len(fu); lo, hi = B['fusee']['band']; dev = [x / m - 1 for x in fu]; ok = all(lo <= d <= hi for d in dev)
-        a, b = fu[0], fu[-1]; Mup = a * 18.79 / R_UP; Mdn = b * 18.79 / R_DN; Rr = R_DN / R_UP; x = (Mup - Rr * Mdn) / (Rr - 1)   # the set-up moment that brings the ends to the profile's ratio
+        a, b = fu[0], fu[-1]; Mup = a * 19.315 / R_UP; Mdn = b * 19.315 / R_DN; Rr = R_DN / R_UP; x = (Mup - Rr * Mdn) / (Rr - 1)   # the set-up moment that brings the ends to the profile's ratio
         k = B['mainspring']['perTurn']; trend = 'rises toward run down' if b > a else 'falls toward run down'
         res(ok, 'fusee evenness', f'{m * 1000:.0f} mN·m mean, readings {min(dev) * 100:+.1f} to {max(dev) * 100:+.1f} % of it (the band {lo * 100:+.0f} to {hi * 100:+.0f} %); it {trend}',
             f'set-up {x / k:+.1f} turns ({x * 1000:+.0f} mN·m at the barrel): {"less" if x < 0 else "more"} set-up evens it; if that takes the torque out of its band, the spring\'s stiffness and the fusee\'s profile don\'t match (the mainspring test)')
