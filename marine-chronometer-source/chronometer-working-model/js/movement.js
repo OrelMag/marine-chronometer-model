@@ -826,8 +826,12 @@ function buildMovement(M){
      t 2.5-17 a circle fits far better than a line: 13:04.2 r 35.87 about (10.20, 40.02), 0.043 mm rms against the line's 0.203; 13:04.4 r 34.39 about (10.79, 38.71),
      0.037 against 0.203 (BIC -337 and -348 against -166 and -163). As one circle, each frame its own shift (0.21 mm apart): r 35.15 +-0.68 about (10.69 +-0.37,
      39.43 +-0.58), 0.040 mm rms. 13:04.0, the softest frame, gives r 66.6 at 0.20 rms, out of the fit. It bows toward the bridge, as the cock's straight edge does; the
-     straight line was this circle averaged over the frames */
-  const BB_NE=(()=>{const c=[10.69,39.43],r=35.15,o=[];for(let x=20.5;x<=38.5+1e-9;x+=0.5)o.push([x,c[1]-Math.sqrt(r*r-(x-c[0])**2)]);return o;})();
+     straight line was this circle averaged over the frames. Over its last 2.5 mm before the rim (x 33.6-36) it would run up to 0.52 mm past the cock's straight edge
+     (CK_TR, the owner's 41:58 trace; itself a circle, r 21.752 about (21.873, 30.86), 0.0125 mm rms over x 28-36), within the two readings' error: there the bridge eases
+     off to 0.05 clear of the cock's circle (less its 0.022 largest residual) by a smooth minimum of the two circles (k 0.5: on the measured circle within 0.01 mm to x 31,
+     at most 0.57 off it at the rim, no corner), the owner's choice (20 October 2026); that easing is estimated */
+  const BB_NE=(()=>{const c=[10.69,39.43],r=35.15,q=[21.873,30.86,21.752],k=0.5,o=[],fa=x=>c[1]-Math.sqrt(r*r-(x-c[0])**2),fb=x=>q[1]-Math.sqrt(q[2]*q[2]-(x-q[0])**2)-0.072;
+    for(let x=20.5;x<=38.5+1e-9;x+=0.5){const a=fa(x),b=fb(x),h=Math.min(1,Math.max(0,0.5+0.5*(b-a)/k));o.push([x,b*(1-h)+a*h-k*h*(1-h)]);}return o;})();
   /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim, curved, not straight: traced on the flat bridge
      (23:45, the same homography) from the bite to 1.5 mm short of the rim, FH (movement frame, every 1.69 mm along z, a cubic through the trace to 0.03 mm rms): it
      bows 0.46 mm off its 12.8 mm chord, most two thirds of the way out, leaving the bite turned about 15 deg further round than where it meets the rim. The top-view

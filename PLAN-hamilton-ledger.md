@@ -11,7 +11,7 @@ reported in `E:\mc-video\oq\ledger\<item>\REPORT.md` and built into the model on
 | 3 | The pillar plate's holes (9:03, 14:43.38) | **Hold** within those oblique frames' 0.3-1.8 mm; nothing to move |
 | 4 | The barrel-bridge screw head past the rim (handover 3) | **Closed**: the screw now at (-22.96, 25.82), r 34.55, its head inside r 38.8 |
 | 5 | The balance's place (handover 5) | **Closed 19 October**: `L.B` stands (13:44, ±0.6) |
-| 6 | The barrel bridge's horn ends and rim (handover 2) | **Done**: 13:04.x and the owner's 13:03.5 (this batch), the cock-side end one arc |
+| 6 | The barrel bridge's horn ends and rim (handover 2) | **Done**: the cock-side end a measured circle, r 35.15 about (10.69, 39.43) (13:04.2/.4 at the near face, 0.04 mm rms; `bb_hornend.py`), easing 0.05 clear of the cock over its last 2.5 mm (owner's choice) |
 | 7 | The mounting ring's flange, dial feet radius, dial thickness, case rim, bezel, crystal, hands' profile, case bracket | Agent measuring (`ledger\ring_dial`) |
 | 8 | The fusee cone and heights side-on, barrel level and cap, end plate, ratchets, chain | Agent measuring (`ledger\fusee_barrel`) |
 | 9 | The box and gimbals (Fig. 106) | Agent measuring (`ledger\box`) |
