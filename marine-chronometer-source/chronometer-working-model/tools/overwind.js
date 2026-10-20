@@ -30,7 +30,7 @@ out.hand={paddle,mean,sd,p95,swain,TH};
 
 /* ---------- forward, against the stop ---------- */
 const T0=PH.Tf,Fpull=PH.Mup*1000/PH.rB;   /* the fusee's even torque, which the chain puts on its arbor at every turn (physics.js) */
-const [SBZ,SBW,SBX]=num(mv,/const SBZ=([\d.]+),SBW=([\d.]+),SBX=([\d.]+)/,'the stop-bar'),[TS,TC]=num(mv,/,TS=([\d.]+),TC=([\d.]+)/,'the stop-bar\'s thickness'),[TSTOP]=num(mv,/TSTOP=([\d.]+);/,'its travel');
+const [SBZ,SBW,SBX]=num(mv,/const SBZ=([\d.]+),SBW=([\d.]+),SBX=([\d.]+)/,'the stop-bar'),[TS,TC]=num(mv,/,TS=([\d.]+),TC=([\d.]+)/,'the stop-bar\'s thickness'),[REC]=num(mv,/const REC=([\d.]+),/,'the recess'),[XSF]=num(mv,/XS=-SBX\+([\d.]+)\*2\*SBX/,'the step'),TSTOP=Math.sqrt(REC*REC-(SBZ+SBW/2)**2)-(-SBX+XSF*2*SBX);   /* its travel, as movement.js works it out (the step meeting the recess's rim on the outer edge; a bare 2.44 until 20 October 2026) */
 const [WL,WG]=num(mv,/WL=([\d.]+),WG=([\d.]+)/,'the stud\'s length'),[yS]=num(mv,/makeFusee\(M,\{yS:(-?[\d.]+)/,'the fusee\'s top'),[TB_T]=num(mv,/TB_T=(-?[\d.]+)/,'TB_T');
 const WSR=1.15,SR=Math.hypot(...MJ.L.Fu.map((v,i)=>v-[4.0,-19.9][i])),Ts=T=>T-T0;   /* the stud 2.3 across (movement.js WSR); its centre 11.6 from the fusee's axis (WSP) */
 say('');say(`Wound forward against the winding stop (full wind): the stop takes the key's torque less the chain's ${f(T0,3)} N·m (the fusee's even torque, physics.js); the chain carries only the mainspring's pull, ${f(Fpull,1)} N`);
@@ -38,7 +38,7 @@ const Fst=T=>Ts(T)*1000/SR;   /* N on the stud, at its centre's radius */
 /* the stop end of the bar, standing out of its slot by up to its full travel, bent in the fusee's plane: σ = 6 F a / (t w²) */
 /* the manual doesn't give the bar's or the stud's temper: the build hardens and tempers both (strength.js's range), and what mild steel would take is said */
 {const T=TH,F=Fst(T),a=TSTOP,s=6*F*a/(TS*SBW**2)*MPa,Tq=y=>T0+y*TS*SBW**2/(6*a)*SR/1000;
-  line(out.forward,`stop-bar's stop end (${SBW} wide, ${TS} thick, ${TSTOP} out of its slot)`,`${f(F,1)} N`,s,STEEL_Y,'hardened and tempered steel',Tq(STEEL_Y[0]));
+  line(out.forward,`stop-bar's stop end (${SBW} wide, ${TS} thick, ${f(TSTOP,2)} out of its slot)`,`${f(F,1)} N`,s,STEEL_Y,'hardened and tempered steel',Tq(STEEL_Y[0]));
   const Tb=Tq(STEEL_Y_SOFT[0]);out.softBar=Tb;out.softBarWhy=Tb<TH?"a strong hand's":Tb<1.5*TH?"under half as much again as a strong hand's (a gloved hand or a longer bow)":"past half as much again as a strong hand's";
   say(`    left soft (mild steel, yield ${STEEL_Y_SOFT.join('-')}), it would bend at ${f(Tb,2)} N·m on the key, ${out.softBarWhy}${Tb<1.5*TH?': harden and temper it':''}`);}
 /* the stud: a cantilever from the bridge's face to where the bar meets it (the bar's middle height, yS less half its thickness), σ = 32 F L / π d³; the thread

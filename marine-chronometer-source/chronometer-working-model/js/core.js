@@ -93,10 +93,14 @@ function escapeWheel(parent,M,rt,y,E){
      the spokes 0.5 and the hub r 1.5, estimated after Fig. 14 */
   const web=new THREE.Shape(),R1=0.77*rt,R0=0.31*rt,sw=0.105*rt;web.absarc(0,0,R,0,TAU,false);
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
-  const hb=new THREE.Path();hb.absarc(0,0,0.67,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's body (r 0.67, movement.js) */
+  const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's shaft (r 0.5, movement.js; 0.67 until 20 October 2026) */
   const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
-  const cl=new THREE.Mesh(ringGeo(0.20*rt,0.67,1.9),M.brass);cl.position.y=y+0.55+0.95;parent.add(cl);   /* the collet's pipe, on the web's face toward the pinion */
+  /* the collet, on the web's face toward the pinion, in two steps (KLUwI2UUCMQ 42:51 in the movement and 43:19, the original arbor: mfgfit's edges): a wide part next to
+     the wheel D 3.2-3.75, 0.95-1.07 long (0.263 of the tips: r 1.73, 1.0), then a pipe D 2.0-2.4, 1.36-1.54 long (0.167: r 1.1, 1.45), its end 15.1-15.9 from the lower
+     pivot's tip. Until 20 October 2026 one pipe r 0.20 of the tips, 1.9 long, read at 43:21.1 on the replacement arbor */
+  const cw=new THREE.Mesh(ringGeo(0.263*rt,0.5,1.0),M.brass);cw.position.y=y+0.55+0.5;parent.add(cw);
+  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5,1.45),M.brass);cl.position.y=y+0.55+1.0+0.725;parent.add(cl);
   return teeth;
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
@@ -137,7 +141,6 @@ function mats(){
     x.font=`600 ${sz*k}px "Instrument Sans", Arial, sans-serif`;fillTracked(x,t,len*k,0.8);x.restore();}};
   M.engraveB=eng(engraveCanvas((x,S,k)=>engr(x,S,k,[["MODEL 21, 14 JEWELS",-0.01,-32.94,17.6,1.9],["HAMILTON WATCH CO.",0.71,-30.34,24.4,2.5],["LANCASTER, PENNA.",1.01,-27.64,15.9,1.95],
     ["MADE IN U.S.A.",-11.55,-21.89,10.9,1.9],[SERIAL,-7.24,-17.82,8.1,2.7]])));
-  M.engraveT=eng(engraveCanvas((x,S,k)=>engr(x,S,k,[[SERIAL,10.53,35.06,9.3,2.7]])));   /* the serial again on the train bridge at 6 o'clock, where the barrel bridge is cut away */
   return M;
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */

@@ -8,7 +8,7 @@
 //   the chain: tension only (it goes slack), its stiffness from its plates and rivets (Fig. 38's chain as movement.js draws it: 0.9 × 0.18 plates at a 1.7 pitch; the
 //     sections strength.js loads), its lever on the fusee where the chain leaves it (r_B dIb/dn, the fusee table's own: 7.5 fully wound to 14.3 at its last turn) and on
 //     the drum (physics.js rB, 18.79), each lever rising and falling as a link comes onto it (the polygon a chain of 1.7 links makes round a drum);
-//   the two winding pawls (pivoted on the sustaining ratchet, opposite each other on the fusee's 36-tooth winding ratchet, so both bear at once: ratchets.js) and the
+//   the two winding pawls (pivoted on the sustaining ratchet, opposite each other on the fusee's 40-tooth winding ratchet, so both bear at once: ratchets.js) and the
 //     sustaining pawl (pivoted on the frame, on the sustaining ratchet's 120 teeth): each a body on its pivot under its spring (ratchets.js's: the winding pawls' bands
 //     0.3 × 0.5, the sustaining pawl's wire r 0.12 set 0.12 rad in), riding the teeth's backs, falling into the gaps and catching a face only if it is down;
 //   the sustaining spring (42016): a split ring weaker than the drive, BANKED in running (unlike the Wempe's maintaining spring, which runs open): its push opening
@@ -210,7 +210,7 @@ function build(TB,n,o={}){const mc=Mach(),b={},kd=o.kdrv??1;for(const k of['barr
     let Tn=d>0?Math.max(0,kc*d+cc*dv):0;ch.T=Tn;ch.rf=rf;B[b.barrel].F-=Tn*rb*pf(s,RB);B[b.fusee].F+=Tn*rf*pf(s+0.37*PC*1e-3,rf*1e3);};
   ch.post=()=>{ch.sF+=ch.rf*(B[b.fusee].q-ch.qF);ch.qF=B[b.fusee].q;};ch.rec=()=>{ch.maxT=Math.max(ch.maxT,ch.T);ch.minT=Math.min(ch.minT,ch.T);if(ch.T===0)ch.slack++;};mc.add(ch);
   ch.d0=Mrun(n)*kd/rb/kc;
-  /* the winding pawls between the fusee (its winding ratchet) and the sustaining ratchet, both on their faces (opposite on 36 teeth: ratchets.js); the sustaining pawl on the
+  /* the winding pawls between the fusee (its winding ratchet) and the sustaining ratchet, both on their faces (opposite on 40 teeth: ratchets.js); the sustaining pawl on the
      sustaining ratchet, its face half a tooth behind it running (where it creeps as the ratchet runs on) */
   const kfc=PAR.kcl*1e3*CK.rc*CK.rc,kfd=KDT*1e3*DT.rc*DT.rc,ks1=KSW(HP.w1),ks2=KSW(HP.w2);
   const c1=pawlEl(mc,b.c1,b.fusee,b.ratchet,CK,ks1,PSW(HP.w1),kfc,1,0),c2=pawlEl(mc,b.c2,b.fusee,b.ratchet,CK2,ks2,PSW(HP.w2),kfc,1,0);
@@ -346,7 +346,7 @@ const J={ripple:pool('ripple'),beat:pool('beat',{rigid:false,kdrv:KDRV}),beatR:p
 head('1. The transmission: every moving part, its inertia and what moves it');
 {const L=[['barrel and mainspring (42027, 42028), its moving half (2,100 estimated), the chain (42030) at its speed',JI.barrel,'mechanisms.json, the chain\'s 1.4 g estimated','the mainspring; holds the chain'],
   ['fusee with its winding ratchet and the arbor\'s square (42018)',JI.fusee,'mechanisms.json','the chain; the key winding'],
-  ['two winding pawls (on the sustaining ratchet, opposite on the winding ratchet\'s 36 teeth)',MJ.pawls.find(p=>p.name==='winding pawl 1').I,'mechanisms.json, about each pivot','their band springs and the winding ratchet'],
+  ['two winding pawls (on the sustaining ratchet, opposite on the winding ratchet\'s 40 teeth)',MJ.pawls.find(p=>p.name==='winding pawl 1').I,'mechanisms.json, about each pivot','their band springs and the winding ratchet'],
   ['sustaining ratchet, half its spring and the winding pawls (42015, 42016)',JI.ratchet,'mechanisms.json','the winding pawls running; the sustaining spring winding'],
   ['sustaining pawl (42019)',MJ.pawls.find(p=>p.name==='sustaining pawl').I,'mechanisms.json, about its arbor','its wire and the sustaining ratchet'],
   ['fusee wheel and half the sustaining spring (42014)',JI.fw,'mechanisms.json','the sustaining spring, banked'],
@@ -448,8 +448,8 @@ head('5. Winding: the key put on, a stroke, and the key let go (the escape wheel
   out.letgo={snap:LS,eased:LE};const worst=L=>L.reduce((a,b)=>a.Fc>b.Fc?a:b),shallow=Math.min(...LS.concat(LE).map(l=>l.catchE));
   chk(shallow>=0.25,`every catch takes ${f(100*shallow)} % of the pawls' faces or more: they are down before the faces come (their springs follow the winding ratchet's backs)`);
   say('');const wS=worst(LS),wE=worst(LE),fwS=Math.max(...LS.map(l=>l.fw)),fwE=Math.max(...LE.map(l=>l.fw));
-  /* the winding ratchet (hardened steel, ratchets.js's line), its blows at the strokes' ends few on each tooth: a day's 3.73 fusee turns in half-turn strokes over 36 teeth, about
-     2,300 on each in 30 years, low-cycle, against the steel's yield; the fusee wheel's teeth (strength.js's 21.8 N fully wound) against brass's yield. Eased is how the key is meant to
+  /* the winding ratchet (hardened steel, ratchets.js's line), its blows at the strokes' ends few on each tooth: a day's 3.73 fusee turns in half-turn strokes over 40 teeth, about
+     2,000 on each in 30 years, low-cycle, against the steel's yield; the fusee wheel's teeth (strength.js's 21.8 N fully wound) against brass's yield. Eased is how the key is meant to
      be let back (the hand following it to the pawls), judged hard; let go outright (the fingers off the plain key, the fusee and barrel flung forward up to a tooth of 10°) is judged
      softly, a misuse, as wempe_transmission.js judges the Wempe's: what it does is reported */
   const blows=Math.round(3.73/0.5*365*30/36);
