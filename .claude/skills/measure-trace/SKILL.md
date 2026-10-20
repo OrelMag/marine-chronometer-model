@@ -165,6 +165,18 @@ on 13:03.5 it turned a "right horn 1-2 mm out" into agreement. Prints model agai
 explains, and each traced big circle in mm; writes a `.matched.mm.json` that `fit` takes. Click centres only on the face; a feature
 standing above it (pillar tops, screw heads, bushings proud of it) needs its level h, or is left out.
 
+`match` also writes `OUT.png`: the model's holes through the map on the image, the points it named in green, the rest in red. Look at it
+before believing any table. On a frame cluttered with round features off the table (a plate seen through a ring's bore), give `--scale LO-HI`
+(px/mm) or the search can lock onto a wrong local fit.
+
+### `compare`: a traced outline against the model's
+
+    python tools/mfgfit.py compare MATCHED.mm.json --loops LOOPS.json --image IMG [--region rim=0,0,37.8-39.8 ...] [--png OUT]
+
+`holes.py PART --loops LOOPS.json` dumps the face's loops and its triangles. The outline is the triangles filled: the loops follow the
+triangulation's seams, so filling them overfills (the barrel bridge's cut looked solid that way). Each refined edge point's distance from
+it (+ outside the part), by region, with each region alone as a circle.
+
 ### `fuse`: one part on two frames
 
     python tools/mfgfit.py fuse A.mfg.json B.mfg.json [--tol 0.05]

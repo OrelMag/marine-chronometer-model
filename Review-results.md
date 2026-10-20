@@ -414,6 +414,8 @@ would still settle it.*
 
 ## Smaller issues
 
+- **`facePocket` (core.js) leaves open edges on a many-sided pocket** (found 20 October 2026, the barrel bridge's counterbore): 12, 24 and 48 sides about the same centre leave 5-37 open edges (T-junctions where the pocket's planes cut the same face triangles in turn), 16 closes. Matching its plane tolerance to its weld (1e-7 to 2e-6) changes nothing. The counterbore was drawn with 16 sides (0.027 mm off the circle) until blindHoles took an `inner` radius (20 October 2026): a hole stopped at a depth with a narrower one on through its floor, the floor and far face zipped round the cut rim (in its edges' order) and an inner circle, each triangle wound as the loops run, which cuts the sink round. facePocket itself still can't cut a round pocket: open, for a pocket that isn't a hole's counterbore.
+
 - **The balance's moment of inertia (open, 3 October 2026).** The restoration
   video measures the rim 0.6 mm thick (0.5–0.85 on three frames, edge-on,
   scaled by the rim's 29 mm and the impulse roller's 0.249 in, which agree to

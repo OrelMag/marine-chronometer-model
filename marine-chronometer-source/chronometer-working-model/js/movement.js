@@ -267,6 +267,15 @@ function clipPoly(poly,f){const out=[];
     if(f0>=0)out.push(P0);if((f0>=0)!==(f1>=0)){const t=f0/(f0-f1);out.push([P0[0]+(P1[0]-P0[0])*t,P0[1]+(P1[1]-P0[1])*t]);}}
   return out;}
 /* polygon clipped to z <= e(x) wherever x >= x0, e a polyline [[x, z], ...] with x rising (held level past its ends): the cut follows e between the crossings */
+/* the corner of a closed outline nearest `near` rounded by a tangent arc of radius r (on the inside of its turn), the sides walked along the
+   outline for its tangent length, so a curved side (an arc sampled densely) takes it as a straight one does; the arc every 5 deg */
+function filletAt(poly,near,r){const unit=v=>{const l=Math.hypot(v[0],v[1]);return[v[0]/l,v[1]/l];},sub=(p,q)=>[p[0]-q[0],p[1]-q[1]],add=(p,v,k)=>[p[0]+v[0]*k,p[1]+v[1]*k],n=poly.length,tn=k=>{const p=poly[(k-1+n)%n],q=poly[k],w=poly[(k+1)%n],u=unit(sub(q,p)),v=unit(sub(w,q));return Math.acos(Math.max(-1,Math.min(1,u[0]*v[0]+u[1]*v[1])));},i=poly.reduce((b,p,k)=>Math.hypot(p[0]-near[0],p[1]-near[1])<1&&tn(k)>tn(b)?k:b,poly.reduce((b,p,k)=>Math.hypot(p[0]-near[0],p[1]-near[1])<Math.hypot(poly[b][0]-near[0],poly[b][1]-near[1])?k:b,0)),C=poly[i];   /* the sharpest turn within 1 mm of near */
+  const step=(d,L)=>{let k=i,acc=0,P=C;for(let g=0;g<n;g++){const q=poly[(k+d+n)%n],s_=Math.hypot(q[0]-P[0],q[1]-P[1]);if(acc+s_>=L){const t=(L-acc)/s_;return{p:[P[0]+(q[0]-P[0])*t,P[1]+(q[1]-P[1])*t],k:(k+d+n)%n};}acc+=s_;P=q;k=(k+d+n)%n;}return{p:P,k};};
+  const a0=step(-1,0.3).p,b0=step(1,0.3).p,ui=unit(sub(C,a0)),uo=unit(sub(b0,C)),cr=ui[0]*uo[1]-ui[1]*uo[0],th=Math.acos(Math.max(-1,Math.min(1,ui[0]*uo[0]+ui[1]*uo[1]))),t=r*Math.tan(th/2);
+  const A=step(-1,t),B=step(1,t),nl=cr>0?[-ui[1],ui[0]]:[ui[1],-ui[0]],O=add(A.p,nl,r),a1=Math.atan2(A.p[1]-O[1],A.p[0]-O[0]),a2=Math.atan2(B.p[1]-O[1],B.p[0]-O[0]);
+  let da=a2-a1;while(da>Math.PI)da-=TAU;while(da<-Math.PI)da+=TAU;const m=Math.max(2,Math.ceil(Math.abs(da)/(5*D2R))),arc=[];for(let j=0;j<=m;j++){const a=a1+da*j/m;arc.push([O[0]+r*Math.cos(a),O[1]+r*Math.sin(a)]);}
+  const gone=new Set();for(let k=(A.k+1)%n;k!==B.k;k=(k+1)%n)gone.add(k);const res=[];for(let k=0;k<n;k++){if(!gone.has(k))res.push(poly[k]);if(k===A.k)res.push(...arc);}   /* the arc spliced in where the corner was, the outline's own start kept (its triangulation is sensitive to where it begins) */
+  return res.filter((p,k)=>Math.hypot(p[0]-res[(k+1)%res.length][0],p[1]-res[(k+1)%res.length][1])>2e-3);}   /* no point within 2 um of the next: an extrusion breaks on doubled points */
 function clipUnder(poly,E,x0){const e=x=>{if(x<=E[0][0])return E[0][1];for(let k=1;k<E.length;k++)if(x<=E[k][0])return E[k-1][1]+(E[k][1]-E[k-1][1])*(x-E[k-1][0])/(E[k][0]-E[k-1][0]);return E[E.length-1][1];};
   const f=p=>p[0]<x0?1:e(p[0])-p[1],s=poly.findIndex(p=>f(p)>=0),P=[...poly.slice(s),...poly.slice(0,s)],out=[];let A=null;
   for(let i=0;i<P.length;i++){const P0=P[i],P1=P[(i+1)%P.length],f0=f(P0),f1=f(P1);if(f0>=0)out.push(P0);
@@ -810,9 +819,12 @@ function buildMovement(M){
      normals: 192 points over 15.3 mm, a straight line to 0.33 mm rms (the frames 0.3 apart; a circle fits worse), through (28.51, 9.95) at 30.0 deg, from the cut round the balance
      to the rim. Until then the cock's straight edge less 0.15 (CK_TR, ckE: the bridge made to follow the cock, its own edge unread), 0.4-1.5 mm off it, most near the rim.
      Between x 29.5 and 36 the cock's straight edge (CK_TR, fitted with the rim held at r 40.1 and 0.8 mm off on 6:29 there) stands up to 0.31 mm over that line, inside both
-     readings' error: the bridge gives way to it there (BB_NE the lower of the two, the cock's edge less 0.05), until the cock is measured again */
-  const BB_NE=(()=>{const a=[20.72,5.44],b=[38.90,15.95],ln=x=>a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]),ck=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]],cz=x=>{for(let k=1;k<ck.length;k++)if(x<=ck[k][0])return ck[k-1][1]+(ck[k][1]-ck[k-1][1])*(x-ck[k-1][0])/(ck[k][0]-ck[k-1][0]);return ck[ck.length-1][1];},o=[];
-    for(let x=a[0];x<=b[0]+1e-9;x+=0.1)o.push([x,Math.min(ln(x),x>=ck[0][0]?cz(x)-0.05:1e9)]);return o;})();
+     readings' error: the bridge gives way to it there, the cock's edge less 0.05, until the cock is measured again. Taken as the lower of the two until 20 October 2026, which
+     bent the edge where it changed from the line to the cock's (x 29.2) and at each of the cock's traced points; now one arc on the line's chord, the shallowest that keeps
+     0.05 off the cock's edge: r 142.4, its sag 0.39 at the middle (the trace's own rms 0.33), 0.01-0.02 mm over the 0.05 at x 32.5-34 */
+  const BB_NE=(()=>{const a=[20.72,5.44],b=[38.90,15.95],ck=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]],cz=x=>{for(let k=1;k<ck.length;k++)if(x<=ck[k][0])return ck[k-1][1]+(ck[k][1]-ck[k-1][1])*(x-ck[k-1][0])/(ck[k][0]-ck[k-1][0]);return ck[ck.length-1][1];},
+    c=Math.hypot(b[0]-a[0],b[1]-a[1]),u=[(b[0]-a[0])/c,(b[1]-a[1])/c],h=c/2,arc=S=>{const R=(h*h+S*S)/(2*S),o=[];for(let k=0;k<=24;k++){const t=c*k/24,d=Math.sqrt(R*R-(t-h)**2)-(R-S);o.push([a[0]+u[0]*t+u[1]*d,a[1]+u[1]*t-u[0]*d]);}return o;};
+    let lo=0.001,hi=2;for(let i=0;i<40;i++){const m=(lo+hi)/2;arc(m).every(p=>p[0]<ck[0][0]||p[1]<=cz(p[0])-0.05+1e-9)?hi=m:lo=m;}return arc(hi);})();
   /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim, curved, not straight: traced on the flat bridge
      (23:45, the same homography) from the bite to 1.5 mm short of the rim, FH (movement frame, every 1.69 mm along z, a cubic through the trace to 0.03 mm rms): it
      bows 0.46 mm off its 12.8 mm chord, most two thirds of the way out, leaving the bite turned about 15 deg further round than where it meets the rim. The top-view
@@ -833,7 +845,10 @@ function buildMovement(M){
      top edge traced on 6:49.0 through the camera fitted there (r 16.85 about (6.84, 9.53), 21.6-22.3 mm from the staff), 1.5-1.9 mm outside it: that camera reads the
      third pillar screw's counterbore beside it 3 mm off (the near bridge screw's comment). It meets the horn's end (BB_NE) near (21.6, 6.0) */
   const BB_CUT=[2.03,9.96,20.06];
-  const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),BB_NE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  /* where the horn's end meets the cut round the balance, a fillet r 0.8 (+-0.2): KLUwI2UUCMQ 13:04.0, 13:04.2 and 13:04.4 (the bridge upside down, the plate side's bright metal
+     against the barrel's brass and the mat, its edge taken on saturation and split into lines and arcs, mfgfit.py), the corner's arc 0.63, 0.95 and 0.72-1.04 mm at the
+     frames' 32.5 px/mm; 13:03.5 (the owner's trace) turns the same way over about 3 mm, too few edge points there to size it. Sharp until 20 October 2026 */
+  const BBpoly=filletAt(clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),BB_NE,10),[21.6,6.0],0.8);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
   R.barrelBridge=mesh(bb,facePocket(polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),'top',S.bbN,BB_PK),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
@@ -1590,7 +1605,12 @@ function buildMovement(M){
        click's back, which it bears on at the click's height (C Spinner 11:58: about 180 deg at 1.23-1.31 of the ratchet's tip radius, so 8.7-9.2 mm, its edge about 0.9 mm seen from above at a slant; Fig. 108 draws
        about as much; 0.3 thick and 0.85 tall, the pins' places estimated) */
     const bk=pawlBack(pts,1.1,Pv,ph.th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13],SR=1.273*SUT/PHOTO_K,eA=(Math.atan2(E[1]-L.Ba[1],E[0]-L.Ba[0])-PHOTO_TURN)/D2R,arcP=[];   /* eA in P2's angles (the photographs' frame) */
-    const e1=(eA+360)%360-6,a0=e1-174;for(let a=a0;a<e1;a+=6)arcP.push(P2(SR,a));
+    /* the spring's fixed end at its pin in the counterbore (SPS): KLUwI2UUCMQ 13:03.5 (the owner's points, tools/traces/f_KLUwI2UUCMQ_13-03.5_crop.mm.json) and 13:04.4 (its round
+       features found and matched, the bridge upside down) each through a map on the bridge's holes (mfgfit.py match; 13:03.5 also held to the rim, r 38.8): a counterbore 2.87 across
+       with a hole about 0.9 across in it, a pin's end in that, at (-24.19, 3.86) and (-24.24, 3.44), 0.42 apart: their mean, 9.23 mm from the barrel arbor at 103 deg (the outer
+       pin's radius kept, 9.41: 0.18 inside both frames' 0.4-0.7 mm). The band from there round to the click's back, 158 deg; until 20 October 2026 174, its pins estimated
+       16 deg short of this */
+    const SPS=[-24.21,3.65],e1=(eA+360)%360-6,a0=(Math.atan2(SPS[1]-L.Ba[1],SPS[0]-L.Ba[0])-PHOTO_TURN)/D2R-3;for(let a=a0;a<e1;a+=6)arcP.push(P2(SR,a));
     const cspr=hn(mesh(rt,stripGeo([...arcP,E],0.3,0.85),M.steel,0,BB_T-0.85,0),'42028');   /* on the bridge, up to the click's middle; polished steel, the setup ratchet's finish (KLUwI2UUCMQ 11:58; blued until 15 October 2026) */
     /* letting the mainspring down and setting it up again (update()'s ld and clk): the arbor, its ratchet and square turn; the click is held out of the teeth or rides
        over them, its spring's end on its back (as at build). R.su: what update() needs; lift, the click's turn out until its nearest point is 0.3 clear of the tips */
@@ -1598,11 +1618,15 @@ function buildMovement(M){
       const so=rmC(ph.th+0.01)>rmC(ph.th)?1:-1;let lift=0;while(lift<0.6&&rmC(ph.th+so*lift)<pr.ro+0.3)lift+=0.005;
       R.su={srw,clk,asq,ba,spr:cspr,pts,pr,q,c:[...L.Ba],base:srw.rotation.y,seat:ph.th,th0:cth0,so,lift,ld:0,cl:0,th:ph.th,
         sprGeo:th=>{const bk=pawlBack(pts,1.1,Pv,th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13];return stripGeo([...arcP,E],0.3,0.85);}}; }
-    const SPP=[P2(SR+0.42,a0+3),P2(SR-0.42,a0+12)];for(const q of SPP)hn(cylBetween(rt,0.25,-27.71,TB_T,M.steel,...q),'42028',{sub:1});   /* its steady pins, through the bridge to its underside
-       (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026 */
+    const SPP=[P2(SR+0.42,a0+3),P2(SR-0.42,a0+16)];SPP.forEach((q,i)=>hn(cylBetween(rt,0.25,-27.71,i?TB_T:TB_T-0.6,M.steel,...q),'42028',{sub:1}));   /* its steady pins, through the bridge to its underside
+       (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026. The outer one
+       in the counterbore (SPS), its end 0.1 down its hole under the counterbore's floor (the pin's end the frames show in it); the inner one estimated, 0.84 mm further in and
+       13 deg on (9 until 20 October 2026), clear of the counterbore: neither frame shows a second hole in it, nor one clear of it they can tell from its shadow */
     /* the barrel bridge's last build: its holes through, the pins' holes, the winding stop's tapped hole blind from the underside (2.0, its thread) and the cover's
        screws' blind from the top (2.2, their threads: nothing under them on 13:04.4) */
-    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK);}
+    /* the outer pin's counterbore in the bridge's underside, 2.87 across (KLUwI2UUCMQ 13:04.4, its edge fitted; 13:03.5 shows its inner hole, 0.88), 0.5 deep (estimated: no frame
+       shows it edge-on), for the punch that pushes the pin out */
+    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,[...SPP[0],1.435,0],[...SPP[1],0.25,1],R.bbWS,...CVH],0.25),'top',[[...SPP[0],1.435]],0.5,0,[0.25]),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK);}   /* the counterbore cut round (blindHoles' inner: the sink 0.5 deep, the pin's hole on through) */
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
