@@ -106,11 +106,12 @@
   "trainBridge:Lathe | tw:Lathe | --23.86": 1
  },
  "box": {
-  "bowl:Extrude | bowl:Cylinder | +-62.80": 1,
-  "bowl:Extrude | bowl:Cylinder | +-63.80": 1,
-  "bowl:Extrude | bowl:Cylinder | --65.10": 1,
-  "bowl:Lathe | bowl:Cylinder | +-62.80": 1,
-  "latch:Extrude | latch:Cylinder | +-17.50": 1,
-  "ring:Lathe | bowl:Extrude | --27.00": 2
+  "bowl:Extrude | bowl:Cylinder | +-49.90": 1,
+  "bowl:Extrude | bowl:Cylinder | +-50.90": 1,
+  "bowl:Extrude | bowl:Cylinder | --52.20": 1,
+  "bowl:Lathe | bowl:Cylinder | +-49.90": 1,
+  "latch:Extrude | latch:Cylinder | +-4.60": 1,
+  "lidGlass:Box | lidGlass:Cylinder | +204.52": 2,
+  "ring:Lathe | bowl:Extrude | --14.10": 2
  }
 }

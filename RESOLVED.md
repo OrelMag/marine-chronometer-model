@@ -2190,6 +2190,8 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The gimbal pivots 13 mm too low: the case couldn't be turned over in its box to wind, and the box's heights and fittings were estimates** (20 October 2026). `RY` −20 put the ring's pivots 80 over the box's bottom, raised only to clear the floor; on Jones-Horan lots 63662 and 38240 (a cuboid camera on each photograph, `E:\mc-video\oq\ledger\box\REPORT.md`) they stand 92.9 over it, and the base, glass lid and lid are 105, 71 and 20 tall (were 100, 38, 38). Drawn so, nothing in the box stops the case short of turning over, as Sec. III's run-down chronometer is wound ("Slowly invert the instrument"; the case's bottom met the felt at 29.5° before), and the ring meets the box at 63.5° and 73.5°. With them: one piano hinge on each seam, two split hasps, the nameplate on the front, the corner caps on every tier, the handles' rosettes under the pivot, domed pivot heads in cup washers, 25 mm lock nuts, the straps' lengths, the latch bracket an L with its screws one above the other, the key in a concave corner block, a lid stay. Keep: the box's sizes from the photographs' report (README, "The mounting box"); `massprops.py` tests the Hamilton's stops inside the solids (`__mpExact`: the corner block is concave), searched to 120°, and `gimbals.js` takes each axis's stop (the case's none). `cbfdff43`
+
 - **Ship motion swung the movement** (18 October 2026, both pages). Since 16 October (2b58338a)
   the camera rode with the ship, so the box stood still and the ring and case swung in it about 20°
   each way at the 7 s roll; before that the box rolled in the true vertical's frame and the case
