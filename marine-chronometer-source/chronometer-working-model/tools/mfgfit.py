@@ -8,10 +8,13 @@ where the trace's own scatter allows them. The `measure-trace` skill (.claude/sk
   python mfgfit.py find IMAGE --map MAP.json [--holes HOLES.json [--search MM]] [--rmin MM --rmax MM] [--out OUT.mm.json]
                                          round features (holes, pins, bosses) found on a flattened image, at the model holes'
                                          places or anywhere (Hough), refined to the edge; a .mm.json that fit takes
-  python mfgfit.py match TRACE.json --holes HOLES.json [--image IMG] [--tol MM] [--arc NAME:i0-i1=x,z,r ...] [--out OUT.matched.mm.json]
+  python mfgfit.py match TRACE.json --holes HOLES.json [--image IMG] [--tol MM] [--scale LO-HI] [--arc NAME:i0-i1=x,z,r ...] [--out OUT.matched.mm.json]
                                          unnamed points (a hole's centre clicked) matched to the model's holes by a robust search
                                          over similarities (mirrored or not), each refined onto its hole's edge, the map to mm
                                          fitted on them; the table of model against measured; a .mm.json that fit takes
+  python mfgfit.py compare MATCHED.mm.json --loops LOOPS.json [--image IMG] [--curve NAME] [--region NAME=x,z,r1-r2 ...] [--png OUT]
+                                         a traced outline snapped to the image against the model's outline of that face (holes.py --loops:
+                                         its triangles, filled), each point's distance by region
   python mfgfit.py fuse A.mfg.json B.mfg.json [--tol MM] [--out OUT.json]
                                          one part fitted on two frames: B onto A by its round features, each primitive compared
   python mfgfit.py demo [--png DIR]      a synthetic machined part, traced as a hand traces it and refined on a rendered image;
@@ -986,12 +989,12 @@ def cmd_match(a):
     def opt(k, d=None):
         if k in a: i = a.index(k); v = a[i + 1]; del a[i:i + 2]; return v
         return d
-    hol, imgp, out, tol, arcs = opt('--holes'), opt('--image'), opt('--out'), float(opt('--tol', '0.6')), []
+    hol, imgp, out, tol, arcs, scl = opt('--holes'), opt('--image'), opt('--out'), float(opt('--tol', '0.6')), [], opt('--scale')   # --scale LO-HI: px per mm, when the points include many off the table (a frame's clutter)
     while '--arc' in a: arcs.append(opt('--arc'))   # NAME:i0-i1=x,z,r: the traced points i0..i1 of NAME lie on that circle (a rim of known radius about a known centre)
     tr = a[0]; d = json.load(open(tr, encoding='utf-8')); pl = next(iter(d['planes'].values())); T = pl['traces']
     Hj = json.load(open(hol, encoding='utf-8')); names = list(Hj['holes']); M = np.array([Hj['holes'][k][:2] for k in names], float); Rm = np.array([Hj['holes'][k][2] for k in names], float)
     pn = [k for k, t in T.items() if t['kind'] == 'point']; P = np.array([T[k]['points_px'][0] for k in pn], float)
-    H, pr, nin = match_points(P, M, tol)
+    H, pr, nin = match_points(P, M, tol, *(map(float, scl.split('-')) if scl else ()))
     if H is None: sys.exit('no match: are these the right holes (face, side)?')
     img = cv2.imread(imgp) if imgp else None; L = [f'{os.path.basename(tr)} against {os.path.basename(hol)} ({Hj.get("part")}, face y {Hj.get("face_y")}): {len(pr)} of {len(pn)} points on model holes (the similarity found {nin})']
     ref = {}
@@ -1056,6 +1059,53 @@ def cmd_match(a):
         T2[nk if nk not in T2 else k] = t
     d2 = dict(d, planes={'Face': dict(pl, calibration=dict(method=f'mfgfit match: homography on {len(use)} holes', H_mm_to_px=H.tolist(), holes=os.path.basename(hol)), traces=T2)}, matched=named)
     json.dump(d2, open(out, 'w', encoding='utf-8', newline='\n'), indent=1); print(f'-> {out}')
+    if img is not None:   # the model's holes through the map on the image, the points named (green) or not (red)
+        vis = img.copy(); k = 1600/max(vis.shape[:2]); vis = cv2.resize(vis, None, fx=k, fy=k, interpolation=cv2.INTER_AREA)
+        for nm, (x, z, r) in zip(names, np.c_[M, Rm]):
+            u = np.linspace(0, 2*math.pi, 40); C = H_apply(H, np.c_[x + r*np.cos(u), z + r*np.sin(u)])*k
+            cv2.polylines(vis, [np.round(C).astype(np.int32)], True, (255, 255, 0), 2); cv2.putText(vis, nm, tuple(int(v) for v in H_apply(H, [[x, z]])[0]*k + [8, 18]), 0, 0.55, (255, 255, 0), 2)
+        for i, nm in enumerate(pn):
+            c = tuple(int(v) for v in np.round(P[i]*k)); ok = nm in named; cv2.drawMarker(vis, c, (0, 255, 0) if ok else (0, 0, 255), cv2.MARKER_CROSS, 16, 2)
+            cv2.putText(vis, named.get(nm, nm), (c[0] + 6, c[1] - 6), 0, 0.5, (0, 255, 0) if ok else (0, 0, 255), 2)
+        po = re.sub(r'(\.mm)?\.json$', '', out) + '.png'; cv2.imwrite(po, vis); print(f'-> {po} (the model\'s holes through the map, cyan; points matched green, the rest red)')
+
+# ---------- compare: a traced outline against the model's ----------
+def face_outline(loops_json, k=40.0):
+    """A part's face in plan, exactly: its own triangles (holes.py --loops writes them) filled and their outer contour taken. The face's
+    loops follow its triangulation's seams and can't be filled one by one."""
+    import cv2
+    T = np.array(json.load(open(loops_json, encoding='utf-8'))['tris']); lo = T.reshape(-1, 2).min(0) - 2; hi = T.reshape(-1, 2).max(0) + 2
+    mk = np.zeros((int((hi[1] - lo[1])*k) + 1, int((hi[0] - lo[0])*k) + 1), np.uint8)
+    cv2.fillPoly(mk, list(np.round((T - lo)*k*16).astype(np.int32)), 255, cv2.LINE_8, 4)
+    cs, _ = cv2.findContours(mk, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE); C = max(cs, key=cv2.contourArea)[:, 0, :].astype(float); return C/k + lo + 0.5/k
+def cmd_compare(a):
+    """A traced outline (a .matched.mm.json or any trace with its plane's map) snapped to the image and set against the model's outline of that face:
+    each point's distance from it (+ outside the part), by region (a region a circle about a centre: NAME=x,z,r1-r2), and plotted."""
+    import cv2
+    from matplotlib.path import Path as MPath
+    def opt(k, d=None):
+        if k in a: i = a.index(k); v = a[i + 1]; del a[i:i + 2]; return v
+        return d
+    imgp, loops, curve, png, regs = opt('--image'), opt('--loops'), opt('--curve', 'edge1'), opt('--png'), []
+    while '--region' in a: regs.append(opt('--region'))
+    d = json.load(open(a[0], encoding='utf-8')); pl = next(iter(d['planes'].values())); H = np.array(pl['calibration']['H_mm_to_px']); Hi = np.linalg.inv(H)
+    P = np.array(pl['traces'][curve]['points_px'], float); o = [dict(name=curve, kind='curve', closed=False, h=0, px=P, corners=set(), Hm=None, mm=None)]
+    if imgp: print(refine(o, cv2.imread(imgp), None, 'auto', 6))
+    X = H_apply(Hi, o[0].get('px_refined', P)); L = face_outline(loops); L = np.vstack([L, L[:1]]); seg_a, seg_b = L[:-1], L[1:]; ab = seg_b - seg_a
+    def sd(x):
+        t = np.clip(((x - seg_a)*ab).sum(1)/np.maximum((ab*ab).sum(1), 1e-12), 0, 1); return np.min(np.hypot(*(x - (seg_a + t[:, None]*ab)).T))
+    e = np.where(MPath(L).contains_points(X), -1, 1)*np.array([sd(x) for x in X])
+    lab = np.array(['other']*len(X), dtype=object)
+    for rg in regs:
+        nm, v = rg.split('='); x, z, rr = v.split(','); r1, r2 = map(float, rr.split('-')); rad = np.hypot(X[:, 0] - float(x), X[:, 1] - float(z)); lab[(lab == 'other') & (rad >= r1) & (rad <= r2)] = nm
+    print(f'{len(X)} edge points against the model\'s outline ({os.path.basename(loops)}), mm, + outside the part:')
+    for nm in [r.split('=')[0] for r in regs] + ['other']:
+        k = lab == nm
+        if k.any(): print(f'  {nm:12s} n {k.sum():4d}  median {np.median(e[k]):+.3f}  5-95% {np.percentile(e[k], 5):+.3f} .. {np.percentile(e[k], 95):+.3f}' + (f'  (alone a circle r {fit_circle(X[k])[2]:.3f} about ({fit_circle(X[k])[0]:.3f}, {fit_circle(X[k])[1]:.3f}))' if k.sum() > 10 and nm != 'other' else ''))
+    if png:
+        import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+        fig, ax = plt.subplots(figsize=(10, 10)); ax.plot(L[:, 0], L[:, 1], '-', color='#888', lw=1, label='model outline'); sc = ax.scatter(X[:, 0], X[:, 1], c=np.clip(e, -1, 1), cmap='coolwarm', s=6, vmin=-1, vmax=1, label='traced edge, refined')
+        plt.colorbar(sc, label='off the model, mm (+ outside)'); ax.set_aspect('equal'); ax.invert_yaxis(); ax.legend(fontsize=8); fig.tight_layout(); fig.savefig(png, dpi=110); print(f'-> {png}')
 
 # ---------- fuse: one part on two frames ----------
 def cmd_fuse(a):
@@ -1243,5 +1293,5 @@ def cmd_demo(a):
 
 if __name__ == '__main__':
     a = sys.argv[1:]
-    if not a or a[0] not in ('fit', 'find', 'match', 'fuse', 'demo'): sys.exit(__doc__)
-    dict(fit=cmd_fit, find=cmd_find, match=cmd_match, fuse=cmd_fuse, demo=cmd_demo)[a[0]](a[1:])
+    if not a or a[0] not in ('fit', 'find', 'match', 'compare', 'fuse', 'demo'): sys.exit(__doc__)
+    dict(fit=cmd_fit, find=cmd_find, match=cmd_match, compare=cmd_compare, fuse=cmd_fuse, demo=cmd_demo)[a[0]](a[1:])
