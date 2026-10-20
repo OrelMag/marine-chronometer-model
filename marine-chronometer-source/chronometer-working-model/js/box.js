@@ -139,11 +139,49 @@ function buildBox(M){
   /* case (bowl) pivoted in the ring at 6 and 12 (Figs. 94, 106, 107): a support bracket on the case at each, shaped to the case, with a bushing (drawn in it) its pivot
      screw's point runs in; each pivot screw is threaded through the ring (and at 6 the case support strap) and locked by a knurled nut against it (Sec. III) */
   const bowl=new THREE.Group();bowl.userData.partName='bowl';ring.add(bowl);
-  /* each bracket 17.7 wide (17.6-17.8 on Jones-Horan lots 63662 and 38240 from above, at the box camera's scale, 20 October 2026, REPORT.md; likely); 14 (estimated) until then; its height and depth estimated */
-  for(const sz of[1,-1]){const bs=new THREE.Shape(),BW2=17.7/2;bs.moveTo(-BW2,-7);bs.lineTo(BW2,-7);bs.lineTo(BW2,5);bs.lineTo(-BW2,5);bs.closePath();for(const[x,y,r]of[[0,0,1.4],[-4.5,-4.5,0.66],[4.5,-4.5,0.66]]){const h=new THREE.Path();h.absarc(x,y,r,0,TAU,true);bs.holes.push(h);}
-    const bm=hn(mesh(bowl,extrude(bs,{depth:6.5,bevelEnabled:false,curveSegments:24}),M.brass2,0,0,sz*CR),'42105');if(sz<0)bm.rotation.y=Math.PI;   /* its back flat on the case, bored for the bushing and its two screws */
-    for(const t of[-4.5,4.5])hn(sHead(bowl,'z',sz,CR+6.5,1.2,0.6,-4.5,t,7.8),'42117');   /* through the bracket into the case's wall (drawn without a hole) */
-    const b=hn(mesh(bowl,ringGeo(1.4,0.82,2.5),M.steel,0,0,sz*(CR+5.25)),'42214.c');b.rotation.x=Math.PI/2;   /* pressed into the bracket's outer end */
+  /* each case support bracket (42105) a bent brass strap (Fig. 107 draws a strap with flanges for its screws), not a block (20 October 2026). Form: KLUwI2UUCMQ 47:43.0-47:46.0 (one lying loose
+     on the mat), 52:27.5 (one in the hand), 52:25.0 and 47:22.5 (on the case): two wings bent to the case's wall, each slotted round its screw, and between them the strap joggled out in a
+     hat whose flat runs on toward the bezel as a tab holding the bushing, its bore radial. Sizes on 47:22.5 (4K, the case upside down and nearly square-on to the bracket, rotated 6.5 deg),
+     at 22.0 px/mm, the scale the tab's width sets: 10.4 on Jones-Horan 63662_06 from above at the case rim's own scale there (12.2 px/mm for its 105; 127 px), 227-235 px here, the
+     screws' spacing against the tab the same on both (0.30 of it): the tab 10.5 wide; the hat 16.0 across at the wall (350 px); the strap 9.6 tall (206-217 px); the screws +-17.2 round
+     the wall (801 px apart, put back on the wall's radius at the heads' height), their heads 8.1 across (175-183 px), slotted and domed; the slots 14.0 x 4.6 (305 and 285 px long put back
+     on the wall, 97-108 wide), centred on the screws; the wings' ends +-27.3 round the wall (1,173 px across); the bushing 12.4 over the screws' line (274 px) and 5.8 short of the tab's end
+     (127 px). Form sure; sizes likely +-10 % (one frame, the scale resting on the tab). Drawn: the screws' line 13.15 under the pivot, the strap lowered 0.75 to stand on the wall
+     (CR*0.962) under the band's step (YB). Estimated: the strip 1.5 thick (1.2-1.7 edge-on on 47:43.0, blurred, at its tab's scale; the tab's end 1.9 deep on 52:25.0 and 3.4 from above on 63662_06, foreshortened or with the bushing behind it), the walls' run 2.7 (the hat less the tab), the heads' side 2.0 and dome 0.8, their
+     thread r 1.75. The tab's outer face kept at CR+6.5, so the bushing (42214) and the case pivots stand where they did. Open: the tab's hole reads 5.3-5.5 across with a lighter ring to
+     6.6 on 47:22.5 (about 3.3 in 4.7 on 52:25.0), larger than the drawn bushing (r 1.4) and the pivots' points (r 0.8); and the bushing stands at the thread's top edge on 47:22.5,
+     about 4 nearer the bezel than the model's YTB. The box report's 17.7 (63662_06 at the box camera's scale, a farther plane) is the tab's end. Until then a flat-backed block
+     17.7 x 12 x 6.5 with two screws r 1.2 */
+  const RW=CR*0.962,BT2=1.5,TA=5.25,UA=8.0,UL=27.3,US=17.2,VS=-13.15,SH2=9.6,yb0=VS-SH2/2,yb1=VS+SH2/2,RT1=CR+6.5,RT0=RT1-BT2,YE=5.8,SLW=4.6,SLL=14.0;   /* RW: the wall's radius (the lathe's CW below) */
+  /* a plate laid out flat (x along the wall, y up, z out of it from 0) bent round the wall at radius R: its triangles split until no edge runs more than du along x (an edge is split
+     the same way from both its triangles, so the solid stays closed), each point then put at the angle x/R and the radius R+z; the faces along the wall smooth (normals radial), the rest flat */
+  const bendGeo=(g0,R,du=0.8)=>{const p=(g0.index?g0.toNonIndexed():g0).attributes.position.array,V=[],id=new Map();let T=[];
+    const vi=(x,y,z)=>{const k=Math.round(x*1e4)+','+Math.round(y*1e4)+','+Math.round(z*1e4);if(!id.has(k)){id.set(k,V.length);V.push([x,y,z]);}return id.get(k);};
+    for(let i=0;i<p.length;i+=9)T.push([vi(p[i],p[i+1],p[i+2]),vi(p[i+3],p[i+4],p[i+5]),vi(p[i+6],p[i+7],p[i+8])]);
+    for(let it=0;it<24;it++){const Mm=new Map(),N=[];let any=0;const mid=(a,b)=>{const k=a<b?a+'_'+b:b+'_'+a;if(!Mm.has(k)){if(Math.abs(V[a][0]-V[b][0])<=du)Mm.set(k,-1);else{Mm.set(k,V.length);V.push(V[a].map((c,j)=>(c+V[b][j])/2));}}return Mm.get(k);};
+      for(const t of T){const E=[0,1,2].map(k=>[t[k],t[(k+1)%3],mid(t[k],t[(k+1)%3])]),s=E.filter(e=>e[2]>=0).length;if(!s){N.push(t);continue;}any=1;
+        if(s===3){const[a,b,c]=t,[ab,bc,ca]=E.map(e=>e[2]);N.push([a,ab,ca],[ab,b,bc],[ca,bc,c],[ab,bc,ca]);}
+        else if(s===1){const k=E.findIndex(e=>e[2]>=0),[x,y,m]=E[k],o=E[(k+1)%3][1];N.push([x,m,o],[m,y,o]);}
+        else{const k=E.findIndex(e=>e[2]<0),[x,y]=E[k],[,o,m1]=E[(k+1)%3],m2=E[(k+2)%3][2];N.push([m1,o,m2],[x,y,m1],[x,m1,m2]);}}
+      T=N;if(!any)break;}
+    const P=[],Nn=[],U=[],A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3(),at=v=>{const a=v[0]/R,r=R+v[2];return[r*Math.sin(a),v[1],r*Math.cos(a)];};
+    for(const t of T){const q=t.map(i=>at(V[i]));A.fromArray(q[0]);B.fromArray(q[1]).sub(A);C.fromArray(q[2]).sub(A);const n=B.cross(C).normalize(),rad=t.every(i=>Math.abs(V[i][2]-V[t[0]][2])<1e-6);
+      for(let k=0;k<3;k++){const v=V[t[k]];P.push(...q[k]);U.push(v[0],v[1]);if(rad){const a=v[0]/R,s=Math.sign(n.x*Math.sin(a)+n.z*Math.cos(a));Nn.push(s*Math.sin(a),0,s*Math.cos(a));}else Nn.push(n.x,n.y,n.z);}}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(Nn,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g0.dispose();return g;};
+  /* a wing (s: +1 toward +x), its slot a stadium round the screw */
+  const wingG=s=>{const sh=new THREE.Shape(),u0=s>0?UA:-UL,u1=s>0?UL:-UA,e=(SLL-SLW)/2;sh.moveTo(u0,yb0);sh.lineTo(u1,yb0);sh.lineTo(u1,yb1);sh.lineTo(u0,yb1);sh.closePath();
+    sh.holes.push(new THREE.Path(stadiumPts([s*US-e,VS],[s*US+e,VS],SLW).map(([x,y])=>new THREE.Vector2(x,y))));return bendGeo(extrude(sh,{depth:BT2,bevelEnabled:false,curveSegments:12}),RW);};
+  /* the hat in plan, over the strap's height: from each wing's end (UA round the wall) a wall out to the tab's flat (TA either side, its outer face at RT1), BT2 thick across the wall: its
+     inner face parallel to the outer, meeting the wall's radius a little inside the wing's end and the tab's inner face at TI */
+  const hatPts=(()=>{const f=UA/RW,P1=[RW*Math.sin(f),RW*Math.cos(f)],P2=[(RW+BT2)*Math.sin(f),(RW+BT2)*Math.cos(f)],d=[TA-P2[0],RT1-P2[1]],l=Math.hypot(d[0],d[1]),D=[d[0]/l,d[1]/l],Q=[P2[0]-BT2*D[1],P2[1]+BT2*D[0]];
+    const qd=Q[0]*D[0]+Q[1]*D[1],s=-qd+Math.sqrt(qd*qd-(Q[0]*Q[0]+Q[1]*Q[1])+RW*RW),P3=[Q[0]+s*D[0],Q[1]+s*D[1]],TI=[Q[0]+(RT0-Q[1])/D[1]*D[0],RT0],R=[TA,RT1,...P2,...P1,...P3,...TI],o=[];
+    for(let k=0;k<10;k+=2)o.push([-R[k],R[k+1]]);for(let k=8;k>=0;k-=2)o.push([R[k],R[k+1]]);return o.reverse();})();
+  const tabG=()=>{const sh=new THREE.Shape();sh.moveTo(-TA,yb1);sh.lineTo(TA,yb1);sh.lineTo(TA,YE);sh.lineTo(-TA,YE);sh.closePath();const h=new THREE.Path();h.absarc(0,0,1.4,0,TAU,true);sh.holes.push(h);
+    const g=extrude(sh,{depth:BT2,bevelEnabled:false,curveSegments:32});g.translate(0,0,RT0);return g;};   /* the tab above the hat, bored for the bushing (42214, pressed: r 1.4) */
+  for(const sz of[1,-1]){const bk=hn(new THREE.Group(),'42105');if(sz<0)bk.rotation.y=Math.PI;bowl.add(bk);
+    mesh(bk,wingG(1),M.brass2);mesh(bk,wingG(-1),M.brass2);mesh(bk,polyGeo(hatPts,SH2),M.brass2,0,yb0,0);mesh(bk,tabG(),M.brass2);
+    for(const s of[1,-1]){const g=new THREE.Group();g.rotation.y=(sz<0?Math.PI:0)+s*US/RW-Math.PI/2;bowl.add(g);hn(dHead(g,1,RW+BT2,4.05,2.0,0.8,VS,0,BT2+1.0,1.75),'42117');}   /* square to the wall, through the slot into the case's wall (drawn without a hole), 0.2 short of its inside */
+    const b=hn(mesh(bowl,ringGeo(1.4,0.82,2.5),M.steel,0,0,sz*(CR+5.25)),'42214.c');b.rotation.x=Math.PI/2;   /* pressed into the tab, its outer end flush with the tab's face, 1.0 standing in behind it */
     const rE=sz>0?RO+3.2:RO+2.4,sh=hn(mesh(ring,cylY(sz>0?1.6:1.85,rE-(CR+6.55),12),M.steel,0,0,sz*(rE+CR+6.55)/2),sz>0?'42119':'42118',{sub:1});sh.rotation.x=Math.PI/2;
     const pt=hn(mesh(ring,cylY(0.8,2.05,12),M.steel,0,0,sz*(CR+6.55-1.025)),sz>0?'42119':'42118',{sub:1});pt.rotation.x=Math.PI/2;}   /* the shank through the ring to its shoulder, 0.05 off the bushing, and its point in it */
   /* the case pivots' lock nuts inside the ring, between it and the case's bracket, the screws' heads outside (the top-view photograph at 12: the head outside the ring, the knurled nut
