@@ -1,0 +1,66 @@
+{
+ "url": "https://ciechanow.ski/mechanical-watch/",
+ "fetched": "2026-10-20",
+ "files": {
+  "css/base.css": {
+   "bytes": 15176,
+   "sha256": "62546094849441ffa8ff82e0f201629855e88a18c18da1feb50085b9461f4cde"
+  },
+  "css/watch.css": {
+   "bytes": 3114,
+   "sha256": "ebf95abb8b98db152da20f13b00197e76ccbd136b13e44f248b4be7dbc021370"
+  },
+  "favicon.ico": {
+   "bytes": 6518,
+   "sha256": "02a5b76f1f16eee23f8797df9754c9187ae76b23bfcd3298d851751dbc3ba9ef"
+  },
+  "images/anchor.png": {
+   "bytes": 528,
+   "sha256": "7628179d8742c3da5a0a48597a41dc579b4528c69cb653ae3d33b223cad675b3"
+  },
+  "images/og/watch.png": {
+   "bytes": 120950,
+   "sha256": "04b1d088e24b20e781650bd692b669367b8f7c87bcdf8d8a6dd79f2997e4f5f1"
+  },
+  "images/play_pause.png": {
+   "bytes": 3182,
+   "sha256": "44bdab5c0384b90a22abf73a96abb309a8c0013fa283eb99b813c3b65df20484"
+  },
+  "images/play_pause_white.png": {
+   "bytes": 3169,
+   "sha256": "e73fc4f1cec82b64272ca1e458ea01b22ae5572b95baad3346e44e929a404ab3"
+  },
+  "images/social/icons.png": {
+   "bytes": 4821,
+   "sha256": "7bcc05f3ee0e4be80cfbddf00c886682099a1b46f2af88ca20969d71db3cdc25"
+  },
+  "images/sqrt.svg": {
+   "bytes": 204,
+   "sha256": "bd8ef572c356adcc59925527c03039fceb7d713c36f3a64de9b04b580bd5d131"
+  },
+  "images/undo.png": {
+   "bytes": 1573,
+   "sha256": "2352b267bef521af126f8f081fc8acfe76593044b231856577f2fc2957f0612d"
+  },
+  "index.html": {
+   "bytes": 89498,
+   "sha256": "acb40896b13e6d64be89d6e1bc7b3007ae0f1774445a449ae3a0d060460f95cb"
+  },
+  "js/base.js": {
+   "bytes": 34409,
+   "sha256": "feb48c6feb7d2fb581bbb4d5929cea8d47359b5e7b7ec265b83e3c66289135b1"
+  },
+  "js/watch.js": {
+   "bytes": 327189,
+   "sha256": "6654d1815a60bfdf88d783dba160c04acf8dd889811a5568309f43f947c183c9"
+  },
+  "models/watch_indices.dat": {
+   "bytes": 1513200,
+   "sha256": "66b6d4b8b6e7411f2da00cf121f035164cf4ec9fffa6b1fd7db8ea236de4e321"
+  },
+  "models/watch_vertices.dat": {
+   "bytes": 4549392,
+   "sha256": "b444b634a8e29264552cc8e7401c65ebd99f4de11c7afcdd1fb00af7517752c6"
+  }
+ }
+}
