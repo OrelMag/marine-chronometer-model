@@ -226,7 +226,9 @@ function buildBox(M){
      48:30") and 48:30 (the bezel alone): a diamond knurl, its pitch about 0.85 mm both ways (23 px at 26.96 px/mm, so about 400 round r 54.2, where the end's ellipse puts the band:
      the model's TR+1.8, 54.3), the band about 5.1 mm tall (rows 1995-2128 at about 18 deg); the rows 0.8 apart (21 px); the knurl's depth 0.3 estimated. The lathe's band at the knurl's root (BZK.r0), the knurl a
      closed shell on it (knurlBand), crests at TR+1.8. Until then a plain band 3.7 mm tall (YTB to YT+1.2) */
-  const BZK={n:400,h:5.1,d:0.3,rp:0.8,r1:TR+1.8},BZr0=BZK.r1-BZK.d;   /* rp: the rows of diamonds 0.8 mm apart along the axis (21 px on 2:42, foreshortened by about cos 18 deg), each row's offset half a pitch from the last */
+  const BZK={n:400,h:3.4,d:0.3,rp:0.85,r1:TR+1.8},BZr0=BZK.r1-BZK.d;   /* rp: the rows of diamonds 0.8 mm apart along the axis (21 px on 2:42, foreshortened by about cos 18 deg), each row's offset half a pitch from the last. Since 20 October 2026
+     h 3.4 and rp 0.85: KLUwI2UUCMQ 48:27.61 (the bezel alone, edge-on) has about 4 rows in a band of 125-130 px, the rows 29-33 px apart against the knurl's round pitch
+     of 32.6 px (autocorrelation), that pitch the model's 0.853 (400 diamonds on r 54.3): 3.3-3.6 mm; 5.1 on 2:42 at 18 deg took in part of the cove (E:/mc-video/oq/ledger/ring_dial) */
   const knurlBand=(r1,d,y0,h,n,rp)=>{const m=Math.max(2,Math.round(h/rp)),N=2*n,P=[],I=[],r0=r1-d,ri=r0-0.05,ix=(i,j)=>j*N+(i%N);
     for(let j=0;j<=m;j++)for(let i=0;i<N;i++){const t=i/N*2*Math.PI,H=((i+j)%2)?1:0,r=r0+d*H;P.push(r*Math.cos(t),y0+h*j/m,-r*Math.sin(t));}   /* a checkerboard of crests and roots, two samples a pitch: the diamonds */
     const B=P.length/3;for(const y of[y0,y0+h])for(let i=0;i<N;i++){const t=i/N*2*Math.PI;P.push(ri*Math.cos(t),y,-ri*Math.sin(t));}
