@@ -1576,7 +1576,7 @@ function buildMovement(M){
   /* yS (and cT, the chain's top on the barrel, level with it): the top turn's height, 0.34 lower than drawn until 12 October 2026 (0.05 clear of the band at full wind), so it begins under the top's
      slotted band, as deep as the stop-bar's chain end (KLUwI2UUCMQ 37:22.323, 37:25.243, 37:26.578: the chain end's lower face level with the band's and 0.0-0.3 over
      the top of the chain's links on the top turn); cap so the top plate stays where the collar's 2.8 over the band puts it (20:00) */
-  const fs=makeFusee(M,{yS:-19.52,yB:-10.9,LE:SR_T-0.05-0.45-(-10.9+0.6),bandR:16.0,rimR:16.3,rimH:0.45,collarT:TB_T+0.05,bh:2.65,pv:BU_P,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:RB_O,bT:TB_T+1.0+BB_DN,bB:BB_LO,cT:-19.52,cB:-10.9,aT:BB_T,d:fd,cap:0.98,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
+  const fs=makeFusee(M,{yS:-19.52,yB:-19.52+FUSEE_TURNS*0.999,LE:SR_T-0.05-0.45-(-19.52+FUSEE_TURNS*0.999+0.6),bandR:16.0,rimR:16.3,rimH:0.45,collarT:TB_T+0.05,bh:2.65,pv:BU_P,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:RB_O,bT:TB_T+1.0+BB_DN,bB:BB_LO,cT:-19.52,cB:-10.9,aT:BB_T,d:fd,cap:0.98,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
     stopDir:Math.atan2(WSP[1]-L.Fu[1],WSP[0]-L.Fu[0])+Math.atan2(-dz,dx),stopR:Math.hypot(WSP[0]-L.Fu[0],WSP[1]-L.Fu[1]),stopRs:WSR});   /* the winding stop's place, measured (below) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* winding stop (42099): a plain steel stud screwed into the barrel bridge's underside (left-hand thread, Ops. 32, 42), square to it, no collar or head, its free end cut
@@ -1991,7 +1991,9 @@ function makeFusee(M,c){
      straight slot)
      (led in over 0.12 turn at the start, where the chain leaves the fusee at full wind, and out over 0.04 at the end, past the chain's end link),
      its top carved for the stop-bar (below) ---- */
-  const HF=1.25,HT=1.4,FT=0.08,FR=0.15,LI=0.12;
+  /* HF: the flanges' tips over the floor below them, 1.13 +-0.03 on seven turns of the side photograph (the left limb, erf edges row by row, 19.41 px/mm on the fusee wheel's tips
+     at both edges; E:/mc-video/oq/ledger/fusee_grooves, 20 October 2026; 1.25 until then, read off the same photograph at the plate's scale) */
+  const HF=1.13,HT=1.4,FT=0.08,FR=0.15,LI=0.12;
   const R=(x,z,y)=>{const th=Math.atan2(z,x),mu=(y-c.yS)/PT,ph=(((th-phi0)/TAU)%1+1)%1,nu=mu-ph,k=Math.floor(nu+0.5),u=nu-k,mc=k+ph;
     let r;if(mc<-LI)r=rf(0);else if(mc>N+LI/3)r=c.bandR??rf(N)+HF;else{const rg=rf(mc),mfl=mc+(u<0?-0.5:0.5),tip=mfl<0?rf(0):rf(mfl+0.5)+HF,d=(0.5-Math.abs(u))*PT,w=d<=FT?1:d>=FR?0:(FR-d)/(FR-FT);r=rg+(tip-rg)*w;}
     return r;};
@@ -2181,6 +2183,10 @@ function makeFusee(M,c){
      from the end link's place (m = ME; the angle against the groove's end isn't measured: the end is placed by the run-down, as before) on round the way the groove runs
      on, down under the last turn's floor to the hook's nose (the end pin, fPin), 0.3 inside its pitch line. The lathe's columns 1.7 deg apart, so the slot's ends slope over
      one, so it starts 4 deg before the end link; its top just under the chain's plates (three deep, TK each); its depth, where the nose ends, estimated. Until 18 October 2026 the pin went into the fusee under the last turn, in no slot */
+  /* the groove ends at the hook's hole (SNLqsS9wrrM 4:24, run down with the last link at the groove's square end; KLUwI2UUCMQ 17:49, 37:10.0: the hole inside the band's slot):
+     past the end link it is filled to the band's radius 13 deg on (GEA, the slot's length), where it ran on to N + LI/3, about 90 deg, until 20 October 2026 */
+  const GEA=13/360;for(let i=0;i<lp.count;i++){const x=lp.getX(i),z=lp.getZ(i),y=lp.getY(i),r=Math.hypot(x,z);if(r<=RIN+0.5)continue;const th=Math.atan2(z,x),ph=(((th-phi0)/TAU)%1+1)%1,nu=(y-c.yS)/PT-ph,mc=Math.floor(nu+0.5)+ph,rb=c.bandR??rf(N)+HF;
+    if(mc>ME+GEA&&mc<=N+LI/3+1e-9&&r<rb){lp.setX(i,x*rb/r);lp.setZ(i,z*rb/r);}}
   const SLA=13*D2R,SL0=-4*D2R,aE=phi0+TAU*ME,ys0=yf(ME)+TK*1.5,ys1=ys0+0.49,rS=rc(ME)-0.3,lq=lg.attributes.position;
   for(let i=0;i<lq.count;i++){const x=lq.getX(i),z=lq.getZ(i),y=lq.getY(i),r=Math.hypot(x,z);if(y<ys0||y>ys1||r<=rS)continue;const da=(((Math.atan2(z,x)-aE-SL0)%TAU)+TAU)%TAU;if(da>SLA)continue;lq.setX(i,x*rS/r);lq.setZ(i,z*rS/r);}
   lg.computeVertexNormals();fPin.geometry.dispose();fPin.geometry=cylY(0.17,ys1-0.05-(yf(ME)-0.2),10);
