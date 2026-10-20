@@ -1,42 +1,42 @@
 {
  "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
  "bowl": {
-  "m": 1242.0,
+  "m": 1243.592,
   "cg": [
-   0.091,
-   -10.403,
-   -0.246
+   0.073,
+   -10.415,
+   -0.256
   ],
   "I": [
    [
-    1379867.1,
-    21019.8,
-    -22066.7
+    1380814.6,
+    20393.5,
+    -22045.4
    ],
    [
-    21019.8,
-    1702235.6,
-    -2202.3
+    20393.5,
+    1703005.3,
+    -2299.1
    ],
    [
-    -22066.7,
-    -2202.3,
-    1375812.0
+    -22045.4,
+    -2299.1,
+    1377373.9
    ]
   ],
   "byMat": {
-   "brass": 566.75,
-   "plate": 356.96,
-   "brass2": 87.14,
-   "gilt": 63.54,
-   "steel": 57.52,
-   "plateSolid": 31.5,
+   "brass": 566.79,
+   "plate": 356.73,
+   "brass2": 87.01,
+   "gilt": 63.72,
+   "steel": 58.51,
+   "plateSolid": 32.06,
    "glass": 14.23,
-   "copper": 12.1,
-   "steelK": 1.8,
+   "copper": 12.18,
+   "steelK": 1.87,
    "blued": 1.35,
    "chain": 1.01,
-   "steelD": 0.78,
+   "steelD": 0.8,
    "steelS": 0.7,
    "fibre": 0.7,
    "packing": 0.58,
@@ -47,29 +47,29 @@
   },
   "byPart": {
    "bowl": 459.79,
-   "pillar": 295.54,
-   "barrelBridge": 79.28,
+   "pillar": 295.56,
+   "barrelBridge": 79.32,
    "cock": 49.58,
    "trainBridge": 46.89,
    "barrel": 41.04,
-   "fusee": 37.16,
+   "fusee": 37.17,
    "dial": 36.1,
-   "motion": 18.25,
-   "ratchet": 16.54,
+   "motion": 18.05,
+   "ratchet": 17.58,
    "lowerBridge": 15.74,
    "pillars": 13.77,
    "ltb": 12.91,
    "sq": 12.42,
-   "gw": 11.86,
-   "lockArm": 11.22,
+   "gw": 11.95,
+   "lockArm": 11.2,
    "bal": 9.41,
-   "sratchet": 8.16,
+   "sratchet": 8.3,
    "post": 6.43,
-   "cw": 3.34,
+   "cw": 3.86,
    "hands": 2.45,
    "escBridge": 1.65,
+   "tw": 1.44,
    "chain": 1.44,
-   "tw": 1.41,
    "sspring": 1.37,
    "mainspring": 44.4
   },
