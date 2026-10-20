@@ -6,7 +6,7 @@
   "bal:Extrude | spr:Buffer | --28.60": 1,
   "barrel:Lathe | barrel:Box | +-6.00": 3,
   "barrelBridge:Buffer | barrelBridge:Cylinder | +-23.76": 1,
-  "barrelBridge:Buffer | barrelBridge:Cylinder | --23.76": 2,
+  "barrelBridge:Buffer | barrelBridge:Cylinder | --23.76": 3,
   "barrelBridge:Buffer | barrelBridge:Extrude | +-23.76": 2,
   "barrelBridge:Buffer | barrelBridge:Extrude | --27.16": 2,
   "barrelBridge:Buffer | barrelBridge:Lathe | +-27.16": 2,
