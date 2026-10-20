@@ -4600,7 +4600,7 @@ function makeEsc(o={},base){
      with the drawn spring; until 14 October 2026 the whole 0.770 g, p. 61's clause missed), and a stiffer spring is set up with less preload; hD, the detent spring's two
      strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm,
      estimated) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
-     works it out from movement.js and checks this; 2.67 until 20 October 2026, before the trip spring's bracket was drawn 2.4 tall), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
+     works it out from movement.js and checks this; 2.67 until 20 October 2026, before the trip spring's bracket was measured 1.05 tall), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
      rB: the radius stoned on the back corner of the discharge jewel's end (unit frame), its acting corner left square: "set with a jewel with a radius to the back of
      the acting part of the tip" (the British Museum's Model 21, Catalogue of Watches VI, 1990, no. 117A), and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to
      a sharp corner. 0 is a square end, wD/2 (the most) the back half of a half round. The radius isn't given (estimated): wD/2, 0.158 mm, with rd at 0.296, where the
@@ -4611,13 +4611,13 @@ function makeEsc(o={},base){
      HS: the hairspring's own isochronism, s a day gained for each 10 deg the swing is above A (0: isochronous, the model's default; the adjuster's bench sets it).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
      rT: passing-spring tip; rd: discharge jewel reach (its grown outline's; the frames at 6:58 put the jewel 0.4-0.5 mm proud of its roller); dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97).
-     dL 0.019, the lock 6.0 deg, Op. 85's "about 6", since 20 October 2026 (0.017, 5.5 deg, until then): the trip spring's bracket drawn 2.4 tall (BM 117A) weighs the detent so
-     that at 5.5 deg a held tooth's stone rang through 46 % of the depth (tripping.js's limit 50 %), leaving the lock no room to wear (wear.js); the owner's choice */
+     dL 0.019, the lock 6.0 deg, Op. 85's "about 6", since 20 October 2026 (0.017, 5.5 deg, until then): the trip spring's bracket measured 1.05 tall (KLUwI2UUCMQ 11:08-11:26;
+     0.4 drawn before) weighs the detent so that 5.5 deg is the shallowest lock a held tooth's ringing allows (tripping.js), leaving it no room to wear (wear.js); the owner's choice */
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
   const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.019,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:67,MU:0.15,
-    I:578.5,JW:6.05,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:3.683,eS:0.3,HS:0};
+    I:578.5,JW:6.05,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:3.002,eS:0.3,HS:0};
   /* the settings a second chronometer needs (makeEsc(o, base)), each the Hamilton's as the code had it until 15 October 2026. NT: the wheel's teeth; ES: its radius (mm), the
      unit; LK: the locked tooth that many pitches before the pair straddling the line of centres, and LO (deg) the wheel's teeth turned so far from straddling it (the locking
      stone's place, lockA, and the teeth's at rest, t0); DA: the detent's angle to the line of centres (deg) and BL its length from Ft to the locking face; PSL: the passing
