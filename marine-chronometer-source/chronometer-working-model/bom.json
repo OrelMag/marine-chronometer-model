@@ -2907,7 +2907,7 @@
    "parent": "42093",
    "kind": "part",
    "part": "det",
-   "fn": "Holds the angle bracket to the detent.",
+   "fn": "Holds the angle bracket to the detent: across the bracket's leg on the detent into the blade (KLUwI2UUCMQ 11:10-11:33: that leg holds the screw).",
    "rel": [
     [
      "in",
@@ -2919,6 +2919,18 @@
      "42087",
      "embed"
     ]
+   ],
+   "dev": [
+    {
+     "rel": [
+      "in",
+      "42087"
+     ],
+     "inst": [
+      0
+     ],
+     "why": "its thread in the blade only as far as the blade is wide, 0.20 mm (Fig. 90's width, estimated; the frames read it 0.3-0.5 across, rough): the bracket's leg measured on the blade past the cross-piece, where it went along the leg into the cross-piece until 20 October 2026"
+    }
    ],
    "figs": "110"
   },

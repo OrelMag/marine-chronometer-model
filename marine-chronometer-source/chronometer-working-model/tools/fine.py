@@ -25,7 +25,7 @@ STATES=model.cfg('STATES',[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,
 # (part:geometry, part:geometry) sorted: (reason, largest volume mm3, largest depth along y mm) seen when recorded
 EXPECTED=model.cfg('EXPECTED',{
  ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot, and the shanks of the clamp, detent-adjusting and lock-adjusting screws in the foot and support block (horizontal screws in vertically extruded pieces, which can't be holed across)",1.15,0.95),
- ('det:Buffer','det:Extrude'):("the trip spring's screw through the hole in the spring's foot into the angle bracket's upright leg (Figs. 14, 54), and the bracket's screw along its leg into the cross-piece (horizontal screws in vertically extruded pieces, which can't be holed across)",0.02,0.2),
+ ('det:Buffer','det:Extrude'):("the trip spring's screw through the hole in the spring's foot into the angle bracket's upright leg (Figs. 14, 54), and the bracket's screw across its leg on the detent into the blade (since 20 October 2026; along its leg into the cross-piece before) (horizontal screws in vertically extruded pieces, which can't be holed across)",0.02,0.2),
  ('chain:Buffer','chain:Cylinder'):("that pin through the rivet hole of the chain's first link (an outer link: two plates and their rivets)",0.03,0.4),
  ('chain:Box','chain:Extrude'):("the barrel-end hook plate riveted to the chain's last link (an inner link's plate)",0.09,0.2),
  ('chain:Box','chain:Buffer'):("the barrel-end hook plate riveted to the chain's last link (an outer link)",0.03,0.2),
