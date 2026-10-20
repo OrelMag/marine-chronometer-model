@@ -1,6 +1,6 @@
 ---
 name: measure-trace
-description: Measure and trace a part's edges, holes and profiles on photographs, video frames or manual figures to the accuracy the image allows, and turn them into the machined geometry (exact lines, arcs, drilled holes, their relations) the model is built from. Use whenever an outline, hole, size or place of a Hamilton or Wempe part is to be measured, re-measured or rebuilt from an image or from the owner's hand trace (tracer.html, .trace.json, .mm.json), and before writing any traced numbers into movement.js.
+description: Measure and trace a part's edges, holes, pins, lugs, notches, pillars and side profiles on photographs, video frames or manual figures to the accuracy the image allows, and turn them into the machined geometry (exact lines, arcs, drilled holes, pin stock, turned diameters, their relations) the model is built from. Use it for every refinement of a part's shape or place: whenever an outline, hole, pin, size or place of a Hamilton or Wempe part is measured, re-measured, refined or rebuilt from an image or from the owner's hand trace (tracer.html, .trace.json, .mm.json), and before writing any traced numbers into movement.js.
 ---
 
 # Measuring and tracing a machined part
@@ -58,6 +58,12 @@ Rules to give them:
   straight runs and every 10-15 px round tight curves. Press **K** at every sharp corner.
 - **Holes as ellipses, 6-10 points round the edge**, not 3. Name each hole after the model hole it is (h7) or `hole_x1` if no model
   hole matches.
+- **Say what each edge is**: set the tracer's **Feature** (an ellipse is a hole, pin, boss/pillar/collar, screw head or counterbore;
+  a curve is an outline, lug, notch, pocket or side profile), or start its name with the type: `pin_`, `boss_`, `pillar_`,
+  `collar_`, `head_`, `bore_`, `lug_`, `notch_`, `pocket_`, `profile_`. A pin is traced as an ellipse round its top edge at its
+  level (h above the face). A pillar seen from above is one ellipse per collar, each at its height. A turned part seen side on is
+  `profile_a` and `profile_b`, its two silhouettes, every shoulder corner with K. A lug or notch is part of the outline (found
+  automatically), or its own open curve `notch_x` from mouth to mouth.
 - A smooth hand curve is fine. The tool uses the *clicks* (and the image), never the drawn Catmull-Rom curve, and finds the lines,
   arcs and corners itself.
 
@@ -106,6 +112,53 @@ centre for a rim, its own screw holes. `L` passes every arbor, and then a chance
 Judge every kept relation physically: equal radii between unrelated features, or a radial line through an arbor the part doesn't
 touch, is a coincidence to drop (rerun with fewer datums or `--no-snap`, then add back what's real).
 
+### Pins, lugs, notches, pillars
+
+- **Pins** (`pin`): sized against pin stock and drill blanks (fractional, number, letter, metric 0.1). A drill blank is the usual
+  steady pin.
+- **Turned groups**: every circle and arc about one centre is reported together, e.g. a pillar's foot collar, shaft and top
+  collar seen from above, a screw head in its counterbore, or a bushing in its oil sink. Concentricity is tested and kept by BIC.
+- **Notches and lugs** are read off the fitted outline: a U of three cuts interrupting a straight run, or an arc doing so. The tool
+  gives width between the sides, depth below the run, side lengths and corner angles, and which way it goes from the closed
+  outline's orientation (a notch cuts in, a lug stands out). An inside corner's radius is the cutter's, and equal ones across the
+  part are kept as equal radii (one cutter).
+- **Profiles** (`profile`): a turned part side on. The axis comes from the two silhouettes' mirror symmetry. Each side is then cut
+  into cylinders, cones, shoulders and rounds, and every **diameter is taken from both edges at once**: one edge about another
+  part's axis misled the fusee cone by 1-1.5 mm (memory `silhouette-both-edges`). Lengths along the axis are as good as the frame's
+  scale there.
+
+### `find`: round features without tracing
+
+    python tools/mfgfit.py find IMAGE --map MAP.json [--holes holes_PART.json [--search 0.6]] [--rmin 0.2 --rmax 3]
+
+The tool looks at each model hole's place (`--holes`), or anywhere by Hough circles. Each candidate goes through edge points on
+120 rays, a RANSAC circle, the erf refinement, then the blurred-disc model. It reports hole or pin by the contrast (dark or bright
+inside), the centre against the model's, the diameter and the drill or stock it is. It writes a `.found.mm.json` that `fit` takes,
+so the round features need no hand tracing on a flattened image; trace only the outlines.
+
+### Accuracy, measured (the demo and the bias table)
+
+- **Round features face on** are fitted by the exact Gaussian-blurred disc model, `ncx2.cdf((R/s)^2, 2, (d/s)^2)`: centre, radius,
+  blur and the light's tilt in one least squares over the ring's pixels. On exact renders, radius errors were within 1-2 sd
+  (under 0.01 px) at every radius from 3 to 40 px and blur 1.2-2 px. An edge found along each normal reads a small circle
+  0.1-0.3 px small at R 5-8 px, and the textbook s^2/2R correction would be wrong for it (it over-corrects). So the disc model is
+  what holes and pins go through.
+- **Straight edges and large arcs** (erf along the normal): about 0.1 px on clean synthetic edges. On real 4K frames the shape
+  accuracy is limited by the frame, not the locator: `--floor 1.0` px (0.025 mm at 40 px/mm).
+- **The demo plate** (10 lines, 6 arcs, a notch, 3 drilled holes, a pin in a collar, a pillar side on) came back with every radius
+  within 0.02 mm, holes and pin to 0.0001-0.0003 mm with the right drill and stock named, the notch 2.997 x 2.000 (drawn 3 x 2),
+  the pillar's diameters within 0.004 mm and its axis within 0.005 deg.
+- What the tool can't fix: the calibration (the plane's map to mm) and the camera. Those dominate on real frames, typically
+  0.05-0.3 mm absolute, which is why two frames are fused (below) and anchors are plate-placed holes.
+
+### `fuse`: one part on two frames
+
+    python tools/mfgfit.py fuse A.mfg.json B.mfg.json [--tol 0.05]
+
+B is brought onto A by a similarity on their common round features (a scale far from 1 means one frame's scale is off), then each
+primitive is compared: circles by centre and radius, lines by angle and offset, against 3 combined sd or `--tol`. Agreeing ones
+are averaged by their variances. A reading is **sure** only when two frames agree.
+
 ## 5. Read the result critically
 
 - Each primitive's **rms against the floor**, its **sd** (centre, radius) and its **n**. An arc held by 3-5 points has a loose radius:
@@ -115,8 +168,10 @@ touch, is a coincidence to drop (rerun with fewer datums or `--no-snap`, then ad
 - **Fillets and small radii a hand trace can't resolve**: a 3-4 point corner at σ 0.03 mm can't tell r 0.5 from sharp. Say so;
   don't invent the radius. Inside corners of a milled pocket can't be sharp (a cutter's radius). If the image can't show it, keep it as
   an estimate in the README's "Estimated" section, or take it from the manual's figure (memory `manual-shape-then-photo`).
-- **Second frame**: fit the same part on another frame and compare the primitives' parameters. Agreement within both sds (or 0.1 mm)
+- **Second frame**: fit the same part on another frame and `fuse` the two fits. Agreement within 3 combined sd (or 0.05-0.1 mm)
   makes the reading sure.
+- **Bows**: a straight edge reported bowing (its ends against its middle, over 3 sd) is the lens or the camera fit, or a real
+  curve. Check it on the other frame before believing either.
 
 ## 6. Build it into the model
 
