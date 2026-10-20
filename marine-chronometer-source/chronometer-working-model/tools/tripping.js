@@ -7,8 +7,8 @@
 //   node tripping.js --section 2,4  (only those of the report's sections 0-5 below; --quick is --section 0,1. ci.py runs 2, 3, 4 and 5 as steps of their own, side by side)
 //   node tripping.js --json OUT (also writes the figures for the report, verification/build-verification)
 // The detent as a plane frame (beam elements with stretching, bending and their consistent mass; Przemieniecki 1968, ch. 5 and 11) from the pieces movement.js draws
-// (ESC.pieces): the two-strip spring, the blade, the arm to the horn and the trip spring as elements, the cross-piece with the bracket and the jewel block with the stone as
-// rigid bodies; the trip spring rests on the horn. Its modes (the frame clamped at the foot) carry it in time, with the balance and the escape wheel, as in dynamics.js, but
+// (ESC.pieces): the two-strip spring, the blade, the arm to the horn and the trip spring as elements, the cross-piece, the bracket (screwed along the blade) and the jewel block with the stone
+// as rigid bodies; the trip spring rests on the horn. Its modes (the frame clamped at the foot) carry it in time, with the balance and the escape wheel, as in dynamics.js, but
 // every contact elastic, a spring with a dashpot set for its restitution (penalty contacts, Wriggers 2006, ch. 2): the discharge jewel on the trip spring's tip (the jewel's
 // own outline, dynamics.js's distance field), the trip spring on the horn, the blade on its stop button, the tooth on the locking stone (the stone's outline, makeEsc's
 // recoil: the flat's draw pushing the tooth back as the stone lifts, its edge after) and on the impulse jewel (makeEsc's bite). The preload is Op. 78's: the spring
@@ -50,7 +50,11 @@ function frame(o={}){
   /* the blade, from the cross-piece to the jewel block: X.blade's section; its ends inside the cross-piece and the block go with them */
   const nBl=(X.blade.n0+X.blade.n1)/2,wB=X.blade.n1-X.blade.n0,hB=hOf('blade');
   const b0=nd(X.cross.t1,nBl,'slave',F1),Kt=ESC.BL*ESC.ES/1000,K=nd(Kt,0),b1=nd(X.block.t0,nBl,'slave',K);   /* K: the block's own node, at the locking face's middle S */
-  const bt=X.button,bl=line(b0,b1,10,EBC*(o.eiB??1),wB,hB,RHO.Cu,'blade',[(bt.t0-X.cross.t1)/(X.block.t0-X.cross.t1),(bt.t1-X.cross.t1)/(X.block.t0-X.cross.t1)]);
+  /* the bracket's leg on the detent lies on the blade from its start to its leg across (X.bracket.t0 to tBk; shared/escapement.js, measured since 20 October 2026), screwed to it: the
+     blade's nodes along it go with the node at its start (Bn), which carries the bracket and the trip spring's root (until then the bracket stood on the cross-piece, F1) */
+  const tBk=(ESC.tR-1.14/ESC.ES)*ES,fb=t=>(t-X.cross.t1)/(X.block.t0-X.cross.t1);
+  const bt=X.button,bl=line(b0,b1,10,EBC*(o.eiB??1),wB,hB,RHO.Cu,'blade',[fb(bt.t0),fb(bt.t1),fb(X.bracket.t0),fb(tBk)]);
+  const Bn=bl.find(i=>Math.abs(N[i].t-X.bracket.t0)<1e-12);for(const i of bl)if(N[i].t>X.bracket.t0+1e-12&&N[i].t<=tBk+1e-12)N[i].k='slave',N[i].m=Bn;
   const nb=[bl.find(i=>Math.abs(N[i].t-bt.t0)<1e-9),bl.find(i=>Math.abs(N[i].t-bt.t1)<1e-9)];   /* the blade's nodes over the button's ends */
   /* the arm: thick(centre line, 0.025) in escapement.js, 0.33 mm wide, from inside the block out to the horn; the horn a rigid end piece */
   const rho=ESC.rho,cl=[ESC.D(ESC.BL+0.06,0),ESC.D(ESC.BL+0.2,0),ESC.D(ESC.tH-0.025,ESC.nR+rho-0.03),ESC.D(ESC.tH-0.025,ESC.nR+rho)].map(tn),wA=2*0.025*ESC.ES/1000,hA=hOf('arm');
@@ -58,7 +62,7 @@ function frame(o={}){
   const Hn=pa;   /* the horn's lower face, middle */
   /* the trip spring: Ps0 to Pt on the line n = nR, tsT x tsH, its root screwed to the bracket (rigid with the cross-piece) */
   const ts0=tn(ESC.Ps0),ts1=tn(ESC.Pt),hTs=S.tsH/1000,tT=S.tsT/1000,hornT=[ESC.tH-0.05,ESC.tH-0.025,ESC.tH].map(t=>t*ESC.ES/1000);
-  const r0=nd(ts0.t,ts0.n,'slave',F1),r1=nd(ts1.t,ts1.n);
+  const r0=nd(ts0.t,ts0.n,'slave',Bn),r1=nd(ts1.t,ts1.n);
   const tsN=line(r0,r1,10,ETS*(o.tsK??1),tT,hTs,RHO.El,'trip',hornT.map(t=>(t-ts0.t)/(ts1.t-ts0.t)));
   const nh=hornT.map(t=>tsN.find(i=>Math.abs(N[i].t-t)<1e-9));
   if(o.stiff){for(const i of[...bl.slice(1,-1),K,...arm.slice(1)])N[i].k='slave',N[i].m=F1;}
@@ -68,7 +72,7 @@ function frame(o={}){
   const pm=(k,f=1)=>H[k].map(([h,mat])=>{const q=polyM(PC[k],h,RHO[mat]);return{m:f*q.m,mx:f*q.mx,my:f*q.my,I:f*q.I};});
   const hole=(()=>{const n=24,d=[...Array(n)].map((_,i)=>({x:ESC.Jc.x+ESC.rJ*Math.cos(TAU*i/n),y:ESC.Jc.y+ESC.rJ*Math.sin(TAU*i/n)}));const q=polyM(d,H.block[0][0],RHO.Cu);return{m:-q.m,mx:-q.mx,my:-q.my,I:-q.I};})();
   const bladeEnds=[rectU(X.blade.t0,X.cross.t1,X.blade.n0,X.blade.n1),rectU(X.block.t0,X.blade.t1,X.blade.n0,X.blade.n1)].map(r=>polyM(r,hB,RHO.Cu));
-  body(F1,[...pm('cross'),...pm('bracket'),bladeEnds[0]]);
+  body(F1,[...pm('cross'),bladeEnds[0]]);body(Bn,pm('bracket'));
   body(K,[...pm('block'),hole,...pm('stone'),bladeEnds[1]]);
   body(Hn,pm('horn'));
   return{N,E,B,R0,F1,K,Hn,nb,nh,tip:r1,sp,bl,arm,tsN,o,lS,nS};
@@ -332,7 +336,7 @@ const pick=r=>({A:+f(r.A,2),rate:+f(r.rate,3),rel:+f(r.rel,2),offF:+f(r.offF,2),
 if(on(0)){say('0. The detent as a frame (the pieces movement.js draws)');
 const V={drawn:{},stiff:{stiff:true},hinge:{hinge:true,stiff:true}},DT={},MD={};
 for(const[k,o]of Object.entries(V)){DT[k]=detent(o);MD[k]=modal(DT[k],30000);}
-{const d=DT.drawn,F=d.F;say(`${F.E.length} beam elements on ${F.N.length} nodes (${d.nr} free coordinates): the spring's two strips ${f(1000*(X.spring.n1-X.spring.n0),3)} × ${f(1000*hOf('spring'),2)} mm, ${f(1000*X.spring.t1,2)} long; the blade ${f(1000*(X.blade.n1-X.blade.n0),3)} × ${f(1000*hOf('blade'),2)} mm; the arm ${f(2*0.025*ESC.ES,2)} × ${f(1000*hOf('arm'),2)}; the trip spring ${S.tsT} × ${S.tsH}, ${f(1000*(tn(ESC.Pt).t-tn(ESC.Ps0).t),1)} long; the cross-piece with the bracket, the block with the stone, the horn rigid`);
+{const d=DT.drawn,F=d.F;say(`${F.E.length} beam elements on ${F.N.length} nodes (${d.nr} free coordinates): the spring's two strips ${f(1000*(X.spring.n1-X.spring.n0),3)} × ${f(1000*hOf('spring'),2)} mm, ${f(1000*X.spring.t1,2)} long; the blade ${f(1000*(X.blade.n1-X.blade.n0),3)} × ${f(1000*hOf('blade'),2)} mm; the arm ${f(2*0.025*ESC.ES,2)} × ${f(1000*hOf('arm'),2)}; the trip spring ${S.tsT} × ${S.tsH}, ${f(1000*(tn(ESC.Pt).t-tn(ESC.Ps0).t),1)} long; the cross-piece, the bracket with the blade under its leg, the block with the stone, the horn rigid`);
   chk(Math.abs(d.mass/DY.DM.m-1)<0.02&&Math.abs(d.Ift/DY.ID-1)<0.02,`its mass ${f(d.mass*1e6,2)} mg and inertia about the spring's root ${f(d.Ift*1e9,3)} g·mm² are dynamics.js's (${f(DY.DM.m*1e6,2)}, ${f(DY.ID*1e9,3)}) within 2 %`);
   const h=DT.hinge;chk(Math.abs(h.kS*(BLu*ES)**2/DY.KD-1)<1e-3&&Math.abs(-h.alpha/DY.MPRE-1)<1e-3&&Math.abs(MD.hinge[0].w/Math.sqrt(DY.KD/h.Ift)-1)<1e-3,`hinged at Ft and rigid, it is dynamics.js's detent: ${f(h.kS,2)} N/m at the stone (KD/r² ${f(DY.KD/(BLu*ES)**2,2)}), Op. 78's preload ${f(-h.alpha*1e6,1)} µN·m (${f(DY.MPRE*1e6,1)}), its first mode ${f(MD.hinge[0].f,1)} Hz (√(KD/I): ${f(Math.sqrt(DY.KD/h.Ift)/TAU,1)})`);
   say(`as drawn its spring bends along its length instead of turning about its root: ${f(d.kS,2)} N/m at the stone (${f(100*(d.kS/h.kS-1),0)} % stiffer: a short flexure under a long lever turns about its middle, Howell 2001), the preload a moment of ${f(-d.alpha*1e6,1)} µN·m at the spring's end for the same 0.770 g`);
