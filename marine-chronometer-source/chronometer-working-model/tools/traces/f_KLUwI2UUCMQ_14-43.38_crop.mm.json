@@ -1,0 +1,377 @@
+{
+ "image": "f_KLUwI2UUCMQ_14-43.38_crop.png",
+ "source": "",
+ "note": "",
+ "planes": {
+  "Face": {
+   "face_y": null,
+   "calibration": {
+    "method": "none"
+   },
+   "traces": {
+    "pt1": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       539.9,
+       826.85
+      ]
+     ]
+    },
+    "pt2": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       476.79,
+       459.67
+      ]
+     ]
+    },
+    "pt3": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       350.58,
+       875.61
+      ]
+     ]
+    },
+    "pt4": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       634.56,
+       1346.05
+      ]
+     ]
+    },
+    "pt5": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       838.23,
+       1044.86
+      ]
+     ]
+    },
+    "pt6": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1179.59,
+       944.46
+      ]
+     ]
+    },
+    "pt7": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1142.3,
+       620.31
+      ]
+     ]
+    },
+    "pt8": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1498,
+       958.8
+      ]
+     ]
+    },
+    "pt9": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       2137.68,
+       901.43
+      ]
+     ]
+    },
+    "pt10": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       2309.79,
+       1532.51
+      ]
+     ]
+    },
+    "pt11": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       2137.68,
+       1876.74
+      ]
+     ]
+    },
+    "pt12": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1145.17,
+       1836.58
+      ]
+     ]
+    },
+    "pt13": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1122.22,
+       1472.27
+      ]
+     ]
+    },
+    "pt14": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       2392.98,
+       1182.55
+      ]
+     ]
+    },
+    "pt15": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       2163.5,
+       1165.34
+      ]
+     ]
+    },
+    "pt16": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       2048.76,
+       1113.7
+      ]
+     ]
+    },
+    "pt17": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1188.19,
+       1331.71
+      ]
+     ]
+    },
+    "pt18": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1259.91,
+       1369
+      ]
+     ]
+    },
+    "pt19": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1110.74,
+       1271.47
+      ]
+     ]
+    },
+    "pt20": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1300.07,
+       1558.33
+      ]
+     ]
+    },
+    "pt21": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1294.33,
+       1696.02
+      ]
+     ]
+    },
+    "pt22": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1541.02,
+       482.62
+      ]
+     ]
+    },
+    "pt23": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1555.37,
+       316.25
+      ]
+     ]
+    },
+    "pt24": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1845.09,
+       350.67
+      ]
+     ]
+    },
+    "pt25": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       2031.55,
+       261.74
+      ]
+     ]
+    },
+    "pt26": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1716.41,
+       1364.34
+      ]
+     ]
+    },
+    "pt27": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1449.38,
+       1526.47
+      ]
+     ]
+    },
+    "hole1": {
+     "kind": "ellipse",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1910.84,
+       1543.82
+      ],
+      [
+       2048.9,
+       1275.87
+      ],
+      [
+       1395.3,
+       1361.58
+      ],
+      [
+       1783.97,
+       1058.11
+      ]
+     ]
+    },
+    "hole2": {
+     "kind": "ellipse",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1418.54,
+       1099.71
+      ],
+      [
+       1265.82,
+       1171.78
+      ],
+      [
+       1291.56,
+       1283.32
+      ],
+      [
+       1396.23,
+       1322.79
+      ]
+     ]
+    },
+    "hole3": {
+     "kind": "ellipse",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1387.65,
+       1410.3
+      ],
+      [
+       1367.06,
+       1513.26
+      ],
+      [
+       1487.18,
+       1545.86
+      ]
+     ]
+    }
+   }
+  }
+ }
+}

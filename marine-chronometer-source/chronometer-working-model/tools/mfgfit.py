@@ -8,6 +8,10 @@ where the trace's own scatter allows them. The `measure-trace` skill (.claude/sk
   python mfgfit.py find IMAGE --map MAP.json [--holes HOLES.json [--search MM]] [--rmin MM --rmax MM] [--out OUT.mm.json]
                                          round features (holes, pins, bosses) found on a flattened image, at the model holes'
                                          places or anywhere (Hough), refined to the edge; a .mm.json that fit takes
+  python mfgfit.py match TRACE.json --holes HOLES.json [--image IMG] [--tol MM] [--arc NAME:i0-i1=x,z,r ...] [--out OUT.matched.mm.json]
+                                         unnamed points (a hole's centre clicked) matched to the model's holes by a robust search
+                                         over similarities (mirrored or not), each refined onto its hole's edge, the map to mm
+                                         fitted on them; the table of model against measured; a .mm.json that fit takes
   python mfgfit.py fuse A.mfg.json B.mfg.json [--tol MM] [--out OUT.json]
                                          one part fitted on two frames: B onto A by its round features, each primitive compared
   python mfgfit.py demo [--png DIR]      a synthetic machined part, traced as a hand traces it and refined on a rendered image;
@@ -903,6 +907,147 @@ def cmd_find(a):
     json.dump(dict(image=os.path.basename(a[0]), source='mfgfit.py find', planes={'found': dict(calibration=dict(method='fixed map', H_mm_to_px=Hi.tolist()), traces=tr)}), open(out, 'w', encoding='utf-8', newline='\n'), indent=1)
     print(f'-> {out} (fit it: mfgfit.py fit {os.path.basename(out)} --image ...)'); return tr
 
+# ---------- match: unnamed points to the model's holes ----------
+def match_points(P, M, tol_mm=0.6, smin=2.0, smax=200.0):
+    """P (n,2) px, M (m,2) mm. The similarity mm -> px (mirrored or not) that puts the most model holes on points, from every pair of
+    points against every pair of holes; then a homography on the matches by optimal assignment, tightened 4 times.
+    -> H (mm -> px), list of (point i, hole j) pairs, the similarity's inlier count."""
+    from scipy.optimize import linear_sum_assignment
+    n, m = len(P), len(M); spanP = np.ptp(P, 0).max(); seeds = []
+    A, B = np.triu_indices(m, 1); A, B = np.r_[A, B], np.r_[B, A]
+    for mir in (1, -1):
+        Mm = M*[1, mir]; dm = Mm[B] - Mm[A]; Lm = np.hypot(*dm.T); am = np.arctan2(dm[:, 1], dm[:, 0])
+        for i in range(n):
+            for j in range(n):
+                if i == j: continue
+                dp = P[j] - P[i]; Lp = math.hypot(*dp)
+                if Lp < 0.2*spanP: continue
+                s = Lp/np.maximum(Lm, 1e-9); ok = (s > smin) & (s < smax)
+                if not ok.any(): continue
+                th = math.atan2(dp[1], dp[0]) - am[ok]; ss = s[ok]; c, sn = np.cos(th)*ss, np.sin(th)*ss
+                X0 = Mm[None] - Mm[A[ok]][:, None]   # (k, m, 2)
+                X = np.stack([c[:, None]*X0[..., 0] - sn[:, None]*X0[..., 1], sn[:, None]*X0[..., 0] + c[:, None]*X0[..., 1]], -1) + P[i]
+                d = np.hypot(X[:, :, None, 0] - P[None, None, :, 0], X[:, :, None, 1] - P[None, None, :, 1])   # (k, m, n)
+                tol = np.maximum(6, 1.5*tol_mm*ss)[:, None]; sc = (d.min(1) < tol).sum(1)
+                for k in np.argsort(sc)[::-1][:3]: seeds.append((int(sc[k]), (mir, ss[k], th[k], A[ok][k], i)))
+    if not seeds: return None, [], 0
+    seeds.sort(key=lambda z: -z[0]); out = (None, [], 0)
+    for nin, (mir, s, th, a, i) in seeds[:25]:   # the best seeds each grown (a view at a slant is no similarity: the seed only starts it)
+        H, pr = grow(P, M, mir, s, th, a, i, tol_mm)
+        if len(pr) > len(out[1]): out = (H, pr, nin)
+    return out
+def grow(P, M, mir, s, th, a, i, tol_mm):
+    from scipy.optimize import linear_sum_assignment
+    c, sn = math.cos(th)*s, math.sin(th)*s; pr = []
+    H = np.array([[c, -sn*mir, P[i][0] - (c*M[a][0] - sn*mir*M[a][1])], [sn, c*mir, P[i][1] - (sn*M[a][0] + c*mir*M[a][1])], [0, 0, 1]])
+    tol = max(8.0, 2.5*tol_mm*s)   # wide first: a hole the model has a millimetre out is still the same hole; then tightened
+    for it in range(6):
+        X = H_apply(H, M); d = np.hypot(X[:, None, 0] - P[None, :, 0], X[:, None, 1] - P[None, :, 1]); r, cidx = linear_sum_assignment(np.minimum(d, 1e6))
+        pr = [(cidx[k], r[k]) for k in range(len(r)) if d[r[k], cidx[k]] < tol]
+        if len(pr) < 4: break
+        Pi, Mj = np.array([P[a_] for a_, b_ in pr]), np.array([M[b_] for a_, b_ in pr])
+        H = H_fit(Mj, Pi) if spread(Pi, P) > 0.5 and len(pr) >= 6 else np.r_[np.linalg.lstsq(np.c_[Mj, np.ones(len(Mj))], Pi, rcond=None)[0].T, [[0, 0, 1]]]   # affine until the matches cover the part: a homography on a cluster extrapolates badly (robust only at the end: early, RANSAC locks on small wrong subsets)
+        e = np.hypot(*(H_apply(H, Mj) - Pi).T); tol = max(4.0, 3.5*1.4826*np.median(e), (2.5 - 0.3*it)*tol_mm*s)
+    return H, pr
+def robustH(Mj, Pi, thr, full):
+    """mm -> px from matched pairs, robustly: MAGSAC homography (full) or RANSAC affine; points off the face (a pillar's top, a
+    screw head) fall out as outliers instead of bending the map. -> H, inlier mask."""
+    import cv2
+    Mj, Pi = np.asarray(Mj, np.float64), np.asarray(Pi, np.float64)
+    if full and len(Mj) >= 6:
+        H, mk = cv2.findHomography(Mj, Pi, cv2.USAC_MAGSAC, thr, maxIters=10000, confidence=0.999)
+        if H is not None: return H/H[2, 2], mk.ravel().astype(bool)
+    A, mk = cv2.estimateAffine2D(Mj, Pi, method=cv2.RANSAC, ransacReprojThreshold=thr, maxIters=5000, confidence=0.999)
+    if A is None: A = np.linalg.lstsq(np.c_[Mj, np.ones(len(Mj))], Pi, rcond=None)[0].T; mk = np.ones(len(Mj))
+    return np.r_[A, [[0, 0, 1]]], np.asarray(mk).ravel().astype(bool)
+def spread(Q, P):
+    """How much of all the points' convex hull the matched points' hull covers (0-1)."""
+    from scipy.spatial import ConvexHull
+    try: return ConvexHull(Q).volume/ConvexHull(P).volume
+    except Exception: return 0.0
+def local_scale(H, p):
+    """px per mm of the map mm -> px H at the image point p."""
+    Hi = np.linalg.inv(H); q = H_apply(Hi, [p])[0]; e = 1e-3; a = H_apply(H, [q])[0]
+    return math.sqrt(abs(np.cross(H_apply(H, [q + [e, 0]])[0] - a, H_apply(H, [q + [0, e]])[0] - a)))/e
+def cmd_match(a):
+    """Points traced (unnamed) on a part's face, matched to the model's holes; each refined onto its hole's edge; the map to mm fitted
+    on the refined holes; and the big circles traced as holes put in mm. Writes a .matched.mm.json that fit takes (its plane calibrated,
+    its points named after the model's holes)."""
+    import cv2
+    def opt(k, d=None):
+        if k in a: i = a.index(k); v = a[i + 1]; del a[i:i + 2]; return v
+        return d
+    hol, imgp, out, tol, arcs = opt('--holes'), opt('--image'), opt('--out'), float(opt('--tol', '0.6')), []
+    while '--arc' in a: arcs.append(opt('--arc'))   # NAME:i0-i1=x,z,r: the traced points i0..i1 of NAME lie on that circle (a rim of known radius about a known centre)
+    tr = a[0]; d = json.load(open(tr, encoding='utf-8')); pl = next(iter(d['planes'].values())); T = pl['traces']
+    Hj = json.load(open(hol, encoding='utf-8')); names = list(Hj['holes']); M = np.array([Hj['holes'][k][:2] for k in names], float); Rm = np.array([Hj['holes'][k][2] for k in names], float)
+    pn = [k for k, t in T.items() if t['kind'] == 'point']; P = np.array([T[k]['points_px'][0] for k in pn], float)
+    H, pr, nin = match_points(P, M, tol)
+    if H is None: sys.exit('no match: are these the right holes (face, side)?')
+    img = cv2.imread(imgp) if imgp else None; L = [f'{os.path.basename(tr)} against {os.path.basename(hol)} ({Hj.get("part")}, face y {Hj.get("face_y")}): {len(pr)} of {len(pn)} points on model holes (the similarity found {nin})']
+    ref = {}
+    for i, j in pr:   # each matched point onto its hole's edge
+        s = local_scale(H, P[i]); f = locate_circle(img, P[i], max(3.0, Rm[j]*s), max(4.0, 0.5*Rm[j]*s)) if img is not None else None
+        ref[i] = (f['c'], f['r'], f['how']) if f is not None and np.hypot(*(f['c'] - P[i])) < max(6, 0.6*Rm[j]*s) else None
+    use = [(i, j) for i, j in pr]; Pr = np.array([ref[i][0] if ref.get(i) else P[i] for i, j in use]); Mj = np.array([M[j] for i, j in use])
+    s0 = float(np.mean([local_scale(H, p) for p in Pr]))   # the map on the refined centres, robustly (off-face points out), then refitted on the inliers
+    full = spread(Pr, P) > 0.5 and len(use) >= 6; H0 = H_fit(Mj, Pr) if full else robustH(Mj, Pr, 1e9, False)[0]
+    def rres(h): Hh = np.r_[h, 1].reshape(3, 3) if full else np.r_[h.reshape(2, 3), [[0, 0, 1]]]; return (H_apply(Hh, Mj) - Pr).ravel()
+    r = least_squares(rres, (H0/H0[2, 2]).ravel()[:8] if full else H0[:2].ravel(), loss='cauchy', f_scale=max(2.0, 0.5*s0), x_scale='jac')   # an M-estimator: points on another level (a pillar's top, a screw head) lose their weight; a hole the model has half a millimetre out keeps it
+    H = np.r_[r.x, 1].reshape(3, 3) if full else np.r_[r.x.reshape(2, 3), [[0, 0, 1]]]; e = np.hypot(*(H_apply(H, Mj) - Pr).T); keep = e < max(6.0, 1.5*s0)
+    if keep.sum() >= 4:
+        use = [u for u, k in zip(use, keep) if k]; Pr, Mj = Pr[keep], Mj[keep]
+        from scipy.optimize import linear_sum_assignment   # every point again against the robust map: the model's holes up to 1.5 mm out still named (their offset is the reading)
+        X = H_apply(H, M); dd = np.hypot(X[:, None, 0] - P[None, :, 0], X[:, None, 1] - P[None, :, 1]); rr, cc = linear_sum_assignment(np.minimum(dd, 1e6))
+        pr = [(cc[k], rr[k]) for k in range(len(rr)) if dd[rr[k], cc[k]] < 1.5*s0]
+    AR = []
+    for spec in arcs:   # each arc's points refined onto the image's edge, kept between its two traced points
+        nm, rest = spec.split(':'); rg, crc = rest.split('='); i0, i1 = map(int, rg.split('-')); cx, cz, cr = map(float, crc.split(','))
+        Q = np.array(T[nm]['points_px'], float); o = [dict(name=nm, kind='curve', closed=False, h=0, px=Q[i0:i1+1], corners=set(), Hm=None, mm=None)]
+        if img is not None: refine(o, img, None, 'auto', 6)
+        AR.append((o[0].get('px_refined', o[0]['px']), np.array([cx, cz]), cr, nm))
+    if AR:   # the map refined on the holes' centres and the arcs together (geometric: each arc point's distance from its circle, in px)
+        s0 = float(np.mean([local_scale(H, p) for p in Pr]))
+        def res(h):
+            Hh = np.r_[h, 1].reshape(3, 3); Hh_i = np.linalg.inv(Hh); r1 = (H_apply(Hh, Mj) - Pr).ravel()
+            return np.concatenate([r1] + [(np.hypot(*(H_apply(Hh_i, Q) - c).T) - r)*s0 for Q, c, r, nm in AR])
+        r = least_squares(res, (H/H[2, 2]).ravel()[:8], loss='soft_l1', f_scale=3.0, x_scale='jac'); H = np.r_[r.x, 1].reshape(3, 3)
+        X = H_apply(H, M); dd = np.hypot(X[:, None, 0] - P[None, :, 0], X[:, None, 1] - P[None, :, 1])   # holes the better map now puts on points
+        from scipy.optimize import linear_sum_assignment
+        rr, cc = linear_sum_assignment(np.minimum(dd, 1e6)); pr = [(cc[k], rr[k]) for k in range(len(rr)) if dd[rr[k], cc[k]] < 1.2*tol*s0]
+        for i, j in pr:
+            if i not in ref: s_ = local_scale(H, P[i]); f = locate_circle(img, P[i], max(3.0, Rm[j]*s_), max(4.0, 0.5*Rm[j]*s_)) if img is not None else None; ref[i] = (f['c'], f['r'], f['how']) if f is not None and np.hypot(*(f['c'] - P[i])) < max(6, 0.6*Rm[j]*s_) else None
+        use = list(pr); Pr = np.array([ref[i][0] if ref.get(i) else P[i] for i, j in use]); Mj = np.array([M[j] for i, j in use])
+        r = least_squares(res, (H/H[2, 2]).ravel()[:8], loss='soft_l1', f_scale=3.0, x_scale='jac'); H = np.r_[r.x, 1].reshape(3, 3)
+        for Q, c, rad, nm in AR:
+            q = fit_circle(H_apply(np.linalg.inv(H), Q)); L.append(f'arc {nm} ({len(Q)} edge points) held to r {rad} about ({c[0]}, {c[1]}): it fits r {q[2]:.3f} about ({q[0]:.3f}, {q[1]:.3f}) on its own, rms {np.sqrt(np.mean(dist("C", np.r_[c, rad], H_apply(np.linalg.inv(H), Q))**2)):.3f} mm from the held circle')
+    Hi = np.linalg.inv(H); e = np.hypot(*(H_apply(H, Mj) - Pr).T); sc = np.array([local_scale(H, p) for p in Pr]); emm = e/sc
+    w = 1/(1 + (e/max(2.0, 0.5*s0))**2)   # the Cauchy weights: the rms over the points the map rests on
+    L.append(f'map mm -> px: {"a homography" if abs(H[2, 0]) + abs(H[2, 1]) > 0 else "an affine map (the matches cover under half the part)"} on {len(use)} refined holes{" and " + str(len(AR)) + " arcs" if AR else ""}, matches covering {spread(Pr, P):.0%} of the area the points cover, rms {np.sqrt(np.mean(e**2)):.2f} px = {np.sqrt(np.mean(emm**2)):.3f} mm (weighted {np.sqrt(np.sum(w*emm**2)/np.sum(w)):.3f} mm, median {np.median(emm):.3f}); {sc.mean():.1f} px/mm')
+    L.append(f'{"point":6s} {"hole":5s} {"model x, z (mm)":>17s} {"r":>6s} | {"off (mm)":>8s} {"measured r":>10s} {"how":5s}')
+    used = {i for i, j in use}; named = {}
+    for i, j in sorted(pr, key=lambda t: names[t[1]]):
+        q = H_apply(Hi, [ref[i][0] if ref.get(i) else P[i]])[0]; off = np.hypot(*(q - M[j])); s = local_scale(H, P[i])
+        rr = f'{ref[i][1]/s:10.3f}' if ref.get(i) else f'{"-":>10s}'; named[pn[i]] = names[j]
+        L.append(f'{pn[i]:6s} {names[j]:5s} {M[j][0]:8.3f},{M[j][1]:8.3f} {Rm[j]:6.3f} | {off:8.3f} {rr} {(ref[i][2] if ref.get(i) else "click"):5s}{"" if i in used else "  (left out of the map: off its fit)"}  at ({q[0]:.3f}, {q[1]:.3f})')
+    mm_un = [(pn[i], H_apply(Hi, [P[i]])[0]) for i in range(len(pn)) if i not in {i_ for i_, j_ in pr}]
+    if mm_un: L.append('not on a model hole of this face (another level, a pin, a screw head, or a hole the model lacks): ' + '; '.join(f'{k} at ({q[0]:.2f}, {q[1]:.2f}) at face level' for k, q in mm_un))
+    for k, t in T.items():   # the circles traced as holes: refined on the image, then in mm
+        if t['kind'] != 'ellipse' or len(t['points_px']) < 3: continue
+        Q = np.array(t['points_px'], float); o = [dict(name=k, kind='ellipse', closed=True, h=0, px=Q, corners=set(), Hm=None, mm=None)]
+        if img is not None: info = refine(o, img, np.linalg.inv(H), 'auto', 6)
+        R = o[0].get('px_refined', Q); q = fit_circle(H_apply(Hi, R))
+        if q is not None:
+            e2 = dist('C', q, H_apply(Hi, R)); L.append(f'{k}: circle in mm c ({q[0]:.3f}, {q[1]:.3f}) r {q[2]:.3f} (rms {np.sqrt(np.mean(e2**2)):.3f}, {len(R)} {"edge points on the image" if "px_refined" in o[0] else "traced points"})')
+    print('\n'.join(L))
+    out = out or re.sub(r'(\.mm)?\.json$', '', tr) + '.matched.mm.json'; T2 = {}
+    for k, t in T.items():
+        nk = named.get(k, k)
+        if k in named and ref.get(pn.index(k)): t = dict(t, points_px=[np.round(ref[pn.index(k)][0], 2).tolist()])
+        T2[nk if nk not in T2 else k] = t
+    d2 = dict(d, planes={'Face': dict(pl, calibration=dict(method=f'mfgfit match: homography on {len(use)} holes', H_mm_to_px=H.tolist(), holes=os.path.basename(hol)), traces=T2)}, matched=named)
+    json.dump(d2, open(out, 'w', encoding='utf-8', newline='\n'), indent=1); print(f'-> {out}')
+
 # ---------- fuse: one part on two frames ----------
 def cmd_fuse(a):
     """Two fits of the same part (on two frames): B brought onto A by a similarity on their common round features, then every primitive
@@ -1089,5 +1234,5 @@ def cmd_demo(a):
 
 if __name__ == '__main__':
     a = sys.argv[1:]
-    if not a or a[0] not in ('fit', 'find', 'fuse', 'demo'): sys.exit(__doc__)
-    dict(fit=cmd_fit, find=cmd_find, fuse=cmd_fuse, demo=cmd_demo)[a[0]](a[1:])
+    if not a or a[0] not in ('fit', 'find', 'match', 'fuse', 'demo'): sys.exit(__doc__)
+    dict(fit=cmd_fit, find=cmd_find, match=cmd_match, fuse=cmd_fuse, demo=cmd_demo)[a[0]](a[1:])

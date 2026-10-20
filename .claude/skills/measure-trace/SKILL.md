@@ -151,6 +151,20 @@ so the round features need no hand tracing on a flattened image; trace only the 
 - What the tool can't fix: the calibration (the plane's map to mm) and the camera. Those dominate on real frames, typically
   0.05-0.3 mm absolute, which is why two frames are fused (below) and anchors are plate-placed holes.
 
+### `match`: points clicked on hole centres, named and measured
+
+    python tools/mfgfit.py match TRACE.mm.json --holes holes_PART.json --image CROP.png [--arc NAME:i0-i1=x,z,r]
+
+For a trace of unnamed points (each a feature's centre) and no calibration: every pair of points against every pair of model holes
+seeds a similarity (mirrored or not), the 25 best each grown by optimal assignment (affine until the matches cover half the part, then a
+homography), each matched point snapped to its hole's edge (erf, then the blurred-disc model), and the final map fitted by a Cauchy
+M-estimator, so points off the face (a pillar's top, a screw head, a proud bushing) lose their weight without a consensus threshold.
+RANSAC/MAGSAC were tried and fail here: with the model itself half a millimetre out in places, they lock onto small degenerate subsets.
+`--arc` holds a traced stretch to a known circle (the bridges' rim, r 38.8 about C), which ties a map whose holes cluster on one side:
+on 13:03.5 it turned a "right horn 1-2 mm out" into agreement. Prints model against measured for every hole, the points no model hole
+explains, and each traced big circle in mm; writes a `.matched.mm.json` that `fit` takes. Click centres only on the face; a feature
+standing above it (pillar tops, screw heads, bushings proud of it) needs its level h, or is left out.
+
 ### `fuse`: one part on two frames
 
     python tools/mfgfit.py fuse A.mfg.json B.mfg.json [--tol 0.05]
