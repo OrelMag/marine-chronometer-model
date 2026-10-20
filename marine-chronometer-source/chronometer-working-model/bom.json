@@ -2297,7 +2297,19 @@
      "run"
     ]
    ],
-   "figs": "26, 109"
+   "figs": "26, 109",
+   "dev": [
+    {
+     "rel": [
+      "round",
+      "42170"
+     ],
+     "inst": [
+      0
+     ],
+     "why": "its end holes r 2.65 (KLUwI2UUCMQ 16:16.5) round the arbor's bearings r 2.53 (15:47.45), both measured with the measure-trace skill on 20 October 2026: 0.12 of play, twice a running fit's 0.06 and inside the two readings' error (about 0.05 each); a maker fits the holes to the arbor"
+    }
+   ]
   },
   {
    "id": "42006",
