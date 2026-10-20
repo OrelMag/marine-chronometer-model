@@ -2,7 +2,7 @@
 6 o'clock) and radius, as JSON for video.py anchor. The face is the part's top (or with --bottom its underside); a hole is an inner
 loop of its outline there, so countersinks and counterbores read at that face's size.
 
-  python holes.py trainBridge [--bottom] [--out holes_trainBridge.json] [--min 0.2] [--max 4] [--plan plan.png]
+  python holes.py trainBridge [--bottom] [--out holes_trainBridge.json] [--min 0.2] [--max 4] [--plan plan.png] [--loops loops.json]
 
 --plan draws the face in plan as the dial side sees it (+x, 3 o'clock, right; 12 o'clock up; 20 px/mm): every loop of its outline,
 the holes kept numbered.
@@ -21,18 +21,18 @@ def opt(k, d):
     return d
 bottom = '--bottom' in a
 if bottom: a.remove('--bottom')
-plan = opt('--plan', None); part = a[0]; out = opt('--out', f'holes_{part}.json'); rmin = float(opt('--min', 0.2)); rmax = float(opt('--max', 4))
+plan = opt('--plan', None); loops_out = opt('--loops', None); part = a[0]; out = opt('--out', f'holes_{part}.json'); rmin = float(opt('--min', 0.2)); rmax = float(opt('--max', 4))
 JS = """([name,bottom])=>{const g0=__mv.userData.parts[name];if(!g0)return null;let m=null;g0.traverse(o=>{if(o.isMesh&&(!m||o.geometry.attributes.position.count>m.geometry.attributes.position.count))m=o;});if(!m)return null;
   m.updateWorldMatrix(true,false);const inv=new THREE.Matrix4().copy(__mv.matrixWorld).invert(),T=new THREE.Matrix4().multiplyMatrices(inv,m.matrixWorld);
   const g=m.geometry.index?m.geometry.toNonIndexed():m.geometry,p=g.attributes.position,V=[];for(let i=0;i<p.count;i++)V.push(new THREE.Vector3().fromBufferAttribute(p,i).applyMatrix4(T));
   let y=bottom?1e9:-1e9;for(const v of V)y=bottom?Math.min(y,v.y):Math.max(y,v.y);
-  const key=v=>v.x.toFixed(4)+','+v.z.toFixed(4),E=new Map();
-  for(let i=0;i<V.length;i+=3){const t=[V[i],V[i+1],V[i+2]];if(!t.every(v=>Math.abs(v.y-y)<1e-3))continue;
+  const key=v=>v.x.toFixed(4)+','+v.z.toFixed(4),E=new Map(),TR=[];
+  for(let i=0;i<V.length;i+=3){const t=[V[i],V[i+1],V[i+2]];if(!t.every(v=>Math.abs(v.y-y)<1e-3))continue;TR.push(t.map(v=>[+v.x.toFixed(4),+v.z.toFixed(4)]));
     for(let k=0;k<3;k++){const a=key(t[k]),b=key(t[(k+1)%3]),e=a<b?a+'|'+b:b+'|'+a;E.set(e,(E.get(e)||0)+1);}}
   const adj=new Map();for(const[e,n]of E)if(n===1){const[a,b]=e.split('|');(adj.get(a)||adj.set(a,[]).get(a)).push(b);(adj.get(b)||adj.set(b,[]).get(b)).push(a);}
   const seen=new Set(),loops=[];for(const s of adj.keys()){if(seen.has(s))continue;const L=[];let c=s,prev=null;
     while(c&&!seen.has(c)){seen.add(c);L.push(c.split(',').map(Number));const n=adj.get(c).find(x=>x!==prev&&!seen.has(x));prev=c;c=n;}loops.push(L);}
-  return{y,loops};}"""
+  return{y,loops,tris:TR};}"""
 async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch(args=browser.ARGS)
@@ -47,6 +47,7 @@ for L in r['loops']:
     cx = sum(q[0] for q in L) / len(L); cz = sum(q[1] for q in L) / len(L); rr = sum(math.hypot(q[0] - cx, q[1] - cz) for q in L) / len(L)
     if rmin <= rr <= rmax: H.append((cx, cz, rr))
 H.sort(key=lambda h: math.atan2(h[1], h[0]))
+if loops_out: json.dump({'part': part, 'face_y': round(r['y'], 3), 'loops': [[[round(q[0], 4), round(q[1], 4)] for q in L] for L in sorted(r['loops'], key=len, reverse=True) if len(L) >= 3], 'tris': r['tris']}, open(loops_out, 'w'), indent=None); print(f'every loop of the face, and its triangles (the face exactly: loops can follow triangulation seams) -> {loops_out}')
 res = {'part': part, 'face_y': round(r['y'], 3), 'holes': {f'h{i + 1}': [round(x, 2), round(z, 2), round(rr, 2)] for i, (x, z, rr) in enumerate(H)}}
 json.dump(res, open(out, 'w'), indent=1); print(f"{len(H)} holes on {part}'s {'underside' if bottom else 'top'} (y {r['y']:.2f}) -> {out}")
 for k, (x, z, rr) in res['holes'].items(): print(f'  {k:4s} ({x:7.2f}, {z:7.2f})  r {rr:.2f}')

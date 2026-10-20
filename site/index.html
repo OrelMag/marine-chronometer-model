@@ -4613,7 +4613,12 @@ function buildMovement(M){
        click's back, which it bears on at the click's height (C Spinner 11:58: about 180 deg at 1.23-1.31 of the ratchet's tip radius, so 8.7-9.2 mm, its edge about 0.9 mm seen from above at a slant; Fig. 108 draws
        about as much; 0.3 thick and 0.85 tall, the pins' places estimated) */
     const bk=pawlBack(pts,1.1,Pv,ph.th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13],SR=1.273*SUT/PHOTO_K,eA=(Math.atan2(E[1]-L.Ba[1],E[0]-L.Ba[0])-PHOTO_TURN)/D2R,arcP=[];   /* eA in P2's angles (the photographs' frame) */
-    const e1=(eA+360)%360-6,a0=e1-174;for(let a=a0;a<e1;a+=6)arcP.push(P2(SR,a));
+    /* the spring's fixed end at its pin in the counterbore (SPS): KLUwI2UUCMQ 13:03.5 (the owner's points, tools/traces/f_KLUwI2UUCMQ_13-03.5_crop.mm.json) and 13:04.4 (its round
+       features found and matched, the bridge upside down) each through a map on the bridge's holes (mfgfit.py match; 13:03.5 also held to the rim, r 38.8): a counterbore 2.87 across
+       with a hole about 0.9 across in it, a pin's end in that, at (-24.19, 3.86) and (-24.24, 3.44), 0.42 apart: their mean, 9.23 mm from the barrel arbor at 103 deg (the outer
+       pin's radius kept, 9.41: 0.18 inside both frames' 0.4-0.7 mm). The band from there round to the click's back, 158 deg; until 20 October 2026 174, its pins estimated
+       16 deg short of this */
+    const SPS=[-24.21,3.65],e1=(eA+360)%360-6,a0=(Math.atan2(SPS[1]-L.Ba[1],SPS[0]-L.Ba[0])-PHOTO_TURN)/D2R-3;for(let a=a0;a<e1;a+=6)arcP.push(P2(SR,a));
     const cspr=hn(mesh(rt,stripGeo([...arcP,E],0.3,0.85),M.steel,0,BB_T-0.85,0),'42028');   /* on the bridge, up to the click's middle; polished steel, the setup ratchet's finish (KLUwI2UUCMQ 11:58; blued until 15 October 2026) */
     /* letting the mainspring down and setting it up again (update()'s ld and clk): the arbor, its ratchet and square turn; the click is held out of the teeth or rides
        over them, its spring's end on its back (as at build). R.su: what update() needs; lift, the click's turn out until its nearest point is 0.3 clear of the tips */
@@ -4621,11 +4626,16 @@ function buildMovement(M){
       const so=rmC(ph.th+0.01)>rmC(ph.th)?1:-1;let lift=0;while(lift<0.6&&rmC(ph.th+so*lift)<pr.ro+0.3)lift+=0.005;
       R.su={srw,clk,asq,ba,spr:cspr,pts,pr,q,c:[...L.Ba],base:srw.rotation.y,seat:ph.th,th0:cth0,so,lift,ld:0,cl:0,th:ph.th,
         sprGeo:th=>{const bk=pawlBack(pts,1.1,Pv,th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13];return stripGeo([...arcP,E],0.3,0.85);}}; }
-    const SPP=[P2(SR+0.42,a0+3),P2(SR-0.42,a0+12)];for(const q of SPP)hn(cylBetween(rt,0.25,-27.71,TB_T,M.steel,...q),'42028',{sub:1});   /* its steady pins, through the bridge to its underside
-       (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026 */
+    const SPP=[P2(SR+0.42,a0+3),P2(SR-0.42,a0+16)];SPP.forEach((q,i)=>hn(cylBetween(rt,0.25,-27.71,i?TB_T:TB_T-0.6,M.steel,...q),'42028',{sub:1}));   /* its steady pins, through the bridge to its underside
+       (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026. The outer one
+       in the counterbore (SPS), its end 0.1 down its hole under the counterbore's floor (the pin's end the frames show in it); the inner one estimated, 0.84 mm further in and
+       13 deg on (9 until 20 October 2026), clear of the counterbore: neither frame shows a second hole in it, nor one clear of it they can tell from its shadow */
     /* the barrel bridge's last build: its holes through, the pins' holes, the winding stop's tapped hole blind from the underside (2.0, its thread) and the cover's
        screws' blind from the top (2.2, their threads: nothing under them on 13:04.4) */
-    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK);}
+    /* the outer pin's counterbore in the bridge's underside, 2.87 across (KLUwI2UUCMQ 13:04.4, its edge fitted; 13:03.5 shows its inner hole, 0.88), 0.5 deep (estimated: no frame
+       shows it edge-on), for the punch that pushes the pin out */
+    const SPK=[...Array(16)].map((_,i)=>add(SPP[0],[Math.cos(-i/16*TAU),Math.sin(-i/16*TAU)],1.435));   /* 16 sides (0.027 mm off the circle at most): facePocket leaves open edges at 12, 24 and 48 here (T-junctions where its many planes cut the same face triangles; Review-results.md) */
+    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK),'top',SPK,0.5);}
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
