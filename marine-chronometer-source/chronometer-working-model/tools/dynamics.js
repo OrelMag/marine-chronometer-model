@@ -42,7 +42,7 @@ const WR=WEMPE?(i=>WL.WPHYS.STG[i][1]/WL.WPHYS.STG[i][2]):null,TR=WEMPE?null:Fun
   J4=WEMPE?(WJ.seconds.I+WJ.secondsHand.I)*1e-9:(MA.fourth.I+MA.secondsHand.I)*1e-9,JT=WEMPE?(WJ.escape.I+(WJ.seconds.I+WJ.secondsHand.I)/ra[0]**2+WJ.intermediate.I/ra[1]**2+JcM/ra[2]**2+(WJ.fuseeWheel.I+WJ.maintaining.I)/ra[3]**2)*1e-9:(MA.escape.I+(MA.fourth.I+MA.secondsHand.I)/ra[0]**2+MA.third.I/ra[1]**2+JcM/ra[2]**2+(MA.fuseeWheel.I+MA.sspring.I/2)/ra[3]**2)*1e-9;
 const TAUE=ESC.run.cl.w*K;   /* the escape wheel's torque the model is calibrated at (255°): physics.js's budget checks the train gives it */
 /* the detent: its pieces as movement.js draws them (poly(R.det, piece, bottom, top, material)), their plan ESC.pieces about the point of flexure Ft;
-   beryllium copper (C17200, 8.25 g/cm³), the locking stone ruby (3.98), the trip spring Elinvar-type (8.15) 7.9 mm long, tsT thick and 0.3 deep (movement.js) */
+   beryllium copper (C17200, 8.25 g/cm³), the locking stone ruby (3.98), the trip spring Elinvar-type (8.15) 5.8 mm free, tsT thick and tsH deep (movement.js; 7.9 and 0.3 until 20 October 2026) */
 const RHO={Cu:8250,ruby:3980,El:8150},Ft=ESC.Ft,H={};
 const polyM=(pts,h,rho)=>{let A=0,cx=0,cy=0,J0=0;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],x0=(a.x-Ft.x)*ES,y0=(a.y-Ft.y)*ES,x1=(b.x-Ft.x)*ES,y1=(b.y-Ft.y)*ES,c=x0*y1-x1*y0;
   A+=c/2;cx+=(x0+x1)*c/6;cy+=(y0+y1)*c/6;J0+=c*(x0*x0+x0*x1+x1*x1+y0*y0+y0*y1+y1*y1)/12;}const s=Math.sign(A)*rho*h;return{m:A*s,mx:cx*s,my:cy*s,I:J0*s};};
@@ -54,7 +54,7 @@ for(const m of mv.matchAll(/poly\(R\.det,'(\w+)',(-?[\d.]+),(-?[\d.]+),(\w+(?:\.
 for(const k of['spring','cross','blade','block','arm','horn','bracket','stone'])if(!H[k])throw Error('not found in movement.js: the detent\'s '+k);
 for(const[k,ls]of Object.entries(H))for(const[h,mat]of ls)add(polyM(ESC.pieces[k],h,RHO[mat]));
 {const hB=H.block[0][0],n=24,disc=[...Array(n)].map((_,i)=>({x:ESC.Jc.x+ESC.rJ*Math.cos(TAU*i/n),y:ESC.Jc.y+ESC.rJ*Math.sin(TAU*i/n)}));add(polyM(disc,hB,RHO.Cu),-1);}   /* the block's hole for the stone */
-{const a={x:(P0.x-Ft.x)*ES,y:(P0.y-Ft.y)*ES},b={x:(PT.x-Ft.x)*ES,y:(PT.y-Ft.y)*ES},m=RHO.El*LTS*tsT*0.3e-3;add({m,mx:m*(a.x+b.x)/2,my:m*(a.y+b.y)/2,I:m*(a.x*a.x+a.x*b.x+b.x*b.x+a.y*a.y+a.y*b.y+b.y*b.y)/3});}
+{const a={x:(P0.x-Ft.x)*ES,y:(P0.y-Ft.y)*ES},b={x:(PT.x-Ft.x)*ES,y:(PT.y-Ft.y)*ES},m=RHO.El*LTS*tsT*ESC.settings.tsH*1e-3;add({m,mx:m*(a.x+b.x)/2,my:m*(a.y+b.y)/2,I:m*(a.x*a.x+a.x*b.x+b.x*b.x+a.y*a.y+a.y*b.y+b.y*b.y)/3});}
 }else{/* the Wempe's detent as the page draws it (1436: blade, square, pipe, stone, horn, the gold spring and its screw, the spring's free half), weighed about its flexure with
   the detent at rest (wempe_inertia.json; its centre of mass in the plan, put in makeEsc's frame by MK); its spring 0.07 × 1.9 × 5, steel (1436), the heights escapement.js draws it at */
   const dj=WJ.detent,q=WL.WESC.MK([WL.WESC.DPIV[0]+dj.cg[0],WL.WESC.DPIV[1]+dj.cg[2]]),m=dj.m*1e-3;add({m,mx:m*(q.x-Ft.x)*ES,my:m*(q.y-Ft.y)*ES,I:dj.I*1e-9});
@@ -68,9 +68,9 @@ const ID=DM.I,rCM=Math.hypot(DM.mx,DM.my)/DM.m;
 const SP=ESC.pieces.spring,tD=(Math.max(...SP.map(p=>-(p.x-Ft.x)*ESC.dirB.y+(p.y-Ft.y)*ESC.dirB.x))-Math.min(...SP.map(p=>-(p.x-Ft.x)*ESC.dirB.y+(p.y-Ft.y)*ESC.dirB.x)))*ES,
   lD=(Math.max(...SP.map(p=>(p.x-Ft.x)*ESC.dirB.x+(p.y-Ft.y)*ESC.dirB.y))-Math.min(...SP.map(p=>(p.x-Ft.x)*ESC.dirB.x+(p.y-Ft.y)*ESC.dirB.y)))*ES;
 const EBC=WEMPE?ESC.settings.EB*1e9:128e9,KD=EBC*H.spring.reduce((s,[h])=>s+h*tD**3/12,0)/lD,rJ=Math.hypot(ESC.Jc.x-Ft.x,ESC.Jc.y-Ft.y)*ES,MW78=ESC.settings.W78*1e-3*G0*rJ,MPRE=MW78-KD*ESC.th78;   /* the Wempe's: steel, 205 GPa (200-210), its preload W78 itself (no Op. 78: th78 0) */
-/* the trip spring, a cantilever 7.9 mm long, Elinvar-type (180 GPa, as hairspring.js), bent at its tip by the discharge jewel on the return swing; the Wempe's gold spring 0.15 × 1.0,
+/* the trip spring, a cantilever 5.8 mm long (7.9 until 20 October 2026), Elinvar-type (180 GPa, as hairspring.js), bent at its tip by the discharge jewel on the return swing; the Wempe's gold spring 0.15 × 1.0,
    free 11.18 from its bending point (05 04 01-2, 05 04_1), 333 gold about 90 GPa (estimated), taken straight as makeEsc takes it (tripping.js bends it along its drawn path) */
-const KTIP=3*(WEMPE?ESC.settings.ET*1e9:180e9)*((WEMPE?ESC.settings.tsH*1e-3:0.3e-3)*tsT**3/12)/LTS**3;
+const KTIP=3*(WEMPE?ESC.settings.ET*1e9:180e9)*(ESC.settings.tsH*1e-3*tsT**3/12)/LTS**3;
 /* the lift: the passing spring's tip moves l (unit frame) along nH as the detent turns l/LEN about Ft (makeEsc's rot), so the detent's angle is d = l/LEN;
    the wheel is free once the stone clears the teeth, at lRel */
 const LEN=ESC.LEN,DREL=ESC.lRel/LEN,P=ESC.P,S=ESC.settings,CDR=S.dL*(Math.tan(S.DRAW*D)+S.MU)/(1-S.MU*Math.tan(S.DRAW*D));   /* the wheel's turn back as the stone is drawn out against the tooth (makeEsc) */
@@ -289,7 +289,7 @@ chk(Math.abs(JT*1e9-S.JW)<0.1&&Math.abs(ID*1e9-S.ID)<0.01&&Math.abs(KD/(ESC.KD*E
 if(!WEMPE){
 say(`the detent: ${f(DM.m*1e6,1)} mg, ${f(ID*1e9,3)} g·mm² about its flexure, its centre of mass ${f(rCM*1000,2)} mm from it (the drawn pieces, the trip spring with it)`);
 say(`its spring: two strips ${H.spring.map(([h])=>f(h*1000,2)).join(' + ')} mm tall, ${f(tD*1000,3)} thick, ${f(lD*1000,2)} long: ${f(KD*1e3,3)} mN·m a radian (beryllium copper, 128 GPa), preloaded ${f(MPRE*1e6,1)} µN·m by Op. 78 (as if bent ${f(MPRE/KD/D,2)}° past its stop)`);
-say(`the wheel is free at ${f(DREL/D,3)}° of the detent (lRel ${f(ESC.lRel*ESC.ES,3)} mm at the passing spring's tip); the trip spring ${f(LTS*1000,1)} × ${f(tsT*1000,2)} × 0.3 mm, ${f(KTIP,1)} N/m at its tip (Elinvar-type, 180 GPa)`);
+say(`the wheel is free at ${f(DREL/D,3)}° of the detent (lRel ${f(ESC.lRel*ESC.ES,3)} mm at the passing spring's tip); the trip spring ${f(LTS*1000,1)} × ${f(tsT*1000,3)} × ${ESC.settings.tsH} mm, ${f(KTIP,1)} N/m at its tip (Elinvar-type, 180 GPa)`);
 }else{
   say(`the detent: ${f(DM.m*1e6,1)} mg, ${f(ID*1e9,3)} g·mm² about its flexure (its spring's middle), its centre of mass ${f(rCM*1000,2)} mm from it (the page's solids weighed with the detent at rest: blade, square, pipe, stone, horn, the gold spring and its screw, the spring's free half)`);
   say(`its spring: ${f(tD*1000,3)} thick, ${f(H.spring[0][0]*1000,2)} tall, ${f(lD*1000,2)} long (1436): ${f(KD*1e3,3)} mN·m a radian (steel, ${ESC.settings.EB} GPa: 200-210), preloaded ${f(MPRE*1e6,1)} µN·m, ${ESC.settings.W78} g at the stone (estimated: no Wempe source gives it), as if bent ${f(MPRE/KD/D,2)}° past its banking (${f(MPRE/KD*rJ*1000,2)} mm at the stone)`);
