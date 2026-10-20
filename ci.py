@@ -136,6 +136,7 @@ STEPS=[('build',build,'quick'),
  ('hamilton-transmission',R(['node',TOOLS/'hamilton_transmission.js'],ROOT),'quick'),   # the Hamilton's whole transmission in time, as the Wempe's: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 70 s)
  ('wempe-essaydata',R(['node',TOOLS/'wempe_essaydata.js'],ROOT),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
  ('almanac',R(['node',TOOLS/'almanac.js'],ROOT),'quick'),
+ ('mfgfit',R([PY,TOOLS/'mfgfit.py','demo'],ROOT),'quick'),   # the measure-trace skill's fitter on a synthetic plate, pin, collar and pillar, hand-traced and rendered: lines, arcs, fillets, notch, drills, pin stock, turned groups, the side profile (about 11 s)
  ('hairspring',R(['node',TOOLS/'hairspring.js'],ROOT),'quick'),
  ('hairspring-fe',R(['node',TOOLS/'hairspring-fe.js'],ROOT),'quick'),   # the hairspring at large swings by co-rotational beam elements, against hairspring.js's elastica (about 20 s)
  ('physics',R(['node',TOOLS/'physics.js'],ROOT),'quick'),
