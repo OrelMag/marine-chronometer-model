@@ -819,9 +819,12 @@ function buildMovement(M){
      normals: 192 points over 15.3 mm, a straight line to 0.33 mm rms (the frames 0.3 apart; a circle fits worse), through (28.51, 9.95) at 30.0 deg, from the cut round the balance
      to the rim. Until then the cock's straight edge less 0.15 (CK_TR, ckE: the bridge made to follow the cock, its own edge unread), 0.4-1.5 mm off it, most near the rim.
      Between x 29.5 and 36 the cock's straight edge (CK_TR, fitted with the rim held at r 40.1 and 0.8 mm off on 6:29 there) stands up to 0.31 mm over that line, inside both
-     readings' error: the bridge gives way to it there (BB_NE the lower of the two, the cock's edge less 0.05), until the cock is measured again */
-  const BB_NE=(()=>{const a=[20.72,5.44],b=[38.90,15.95],ln=x=>a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]),ck=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]],cz=x=>{for(let k=1;k<ck.length;k++)if(x<=ck[k][0])return ck[k-1][1]+(ck[k][1]-ck[k-1][1])*(x-ck[k-1][0])/(ck[k][0]-ck[k-1][0]);return ck[ck.length-1][1];},o=[];
-    for(let x=a[0];x<=b[0]+1e-9;x+=0.1)o.push([x,Math.min(ln(x),x>=ck[0][0]?cz(x)-0.05:1e9)]);return o;})();
+     readings' error: the bridge gives way to it there, the cock's edge less 0.05, until the cock is measured again. Taken as the lower of the two until 20 October 2026, which
+     bent the edge where it changed from the line to the cock's (x 29.2) and at each of the cock's traced points; now one arc on the line's chord, the shallowest that keeps
+     0.05 off the cock's edge: r 142.4, its sag 0.39 at the middle (the trace's own rms 0.33), 0.01-0.02 mm over the 0.05 at x 32.5-34 */
+  const BB_NE=(()=>{const a=[20.72,5.44],b=[38.90,15.95],ck=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]],cz=x=>{for(let k=1;k<ck.length;k++)if(x<=ck[k][0])return ck[k-1][1]+(ck[k][1]-ck[k-1][1])*(x-ck[k-1][0])/(ck[k][0]-ck[k-1][0]);return ck[ck.length-1][1];},
+    c=Math.hypot(b[0]-a[0],b[1]-a[1]),u=[(b[0]-a[0])/c,(b[1]-a[1])/c],h=c/2,arc=S=>{const R=(h*h+S*S)/(2*S),o=[];for(let k=0;k<=24;k++){const t=c*k/24,d=Math.sqrt(R*R-(t-h)**2)-(R-S);o.push([a[0]+u[0]*t+u[1]*d,a[1]+u[1]*t-u[0]*d]);}return o;};
+    let lo=0.001,hi=2;for(let i=0;i<40;i++){const m=(lo+hi)/2;arc(m).every(p=>p[0]<ck[0][0]||p[1]<=cz(p[0])-0.05+1e-9)?hi=m:lo=m;}return arc(hi);})();
   /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim, curved, not straight: traced on the flat bridge
      (23:45, the same homography) from the bite to 1.5 mm short of the rim, FH (movement frame, every 1.69 mm along z, a cubic through the trace to 0.03 mm rms): it
      bows 0.46 mm off its 12.8 mm chord, most two thirds of the way out, leaving the bite turned about 15 deg further round than where it meets the rim. The top-view
