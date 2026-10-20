@@ -1611,8 +1611,7 @@ function buildMovement(M){
        screws' blind from the top (2.2, their threads: nothing under them on 13:04.4) */
     /* the outer pin's counterbore in the bridge's underside, 2.87 across (KLUwI2UUCMQ 13:04.4, its edge fitted; 13:03.5 shows its inner hole, 0.88), 0.5 deep (estimated: no frame
        shows it edge-on), for the punch that pushes the pin out */
-    const SPK=[...Array(16)].map((_,i)=>add(SPP[0],[Math.cos(-i/16*TAU),Math.sin(-i/16*TAU)],1.435));   /* 16 sides (0.027 mm off the circle at most): facePocket leaves open edges at 12, 24 and 48 here (T-junctions where its many planes cut the same face triangles; Review-results.md) */
-    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK),'top',SPK,0.5);}
+    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,[...SPP[0],1.435,0],[...SPP[1],0.25,1],R.bbWS,...CVH],0.25),'top',[[...SPP[0],1.435]],0.5,0,[0.25]),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK);}   /* the counterbore cut round (blindHoles' inner: the sink 0.5 deep, the pin's hole on through) */
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the

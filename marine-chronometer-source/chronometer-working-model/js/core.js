@@ -389,26 +389,44 @@ function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,
 /* blind holes: holes polyGeo (or discGeo) has cut through a closed solid whose faces are level (local y its thickness), closed at the far end so each stops depth
    into the metal from face ('top', its highest y, or 'bottom'): only each hole's own triangles change (within its radius + 0.35 in plan: its wall and the
    bevel's rings round it, bev as polyGeo's), the far bevel ring dropped, the wall cut short at the floor, the far face's opening and the floor each filled
-   with a fan. An extrusion's holes all go through: a tapped hole that stops in the metal (a stud's, a screw's from one side) can't be cut by it */
-/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} holes @param {number} depth @param {number} [bev] @returns {any} */
-function blindHoles(g0,face,holes,depth,bev=0){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count;
+   with a fan. An extrusion's holes all go through: a tapped hole that stops in the metal (a stud's, a screw's from one side) can't be cut by it.
+   inner (a radius per hole, 0 for none): a counterbore, the hole stopped as above and a narrower one of that radius on through its floor to the far face,
+   the floor and the far face rings round it, its wall sharing their vertices (a pin's sink: the barrel bridge's set-up spring pin) */
+/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} holes @param {number} depth @param {number} [bev] @param {number[]} [inner] @returns {any} */
+function blindHoles(g0,face,holes,depth,bev=0,inner=[]){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count;
   let y0=1e9,y1=-1e9;for(let i=0;i<n;i++){const y=P.getY(i);if(y<y0)y0=y;if(y>y1)y1=y;}
   const yf=face==='top'?y1:y0,ye=face==='top'?y0:y1,s=face==='top'?-1:1,yb=yf+s*depth,e=1e-5;
   /** @type {number[]} */const pos=[],nor=[],uv=[];const own=holes.map(()=>/** @type {number[]} */([]));
-  for(let t=0;t<n;t+=3){let h=-1;holes.forEach(([x,z,r],k)=>{if(h<0&&[0,1,2].every(q=>Math.hypot(P.getX(t+q)-x,P.getZ(t+q)-z)<r+0.35))h=k;});
+  for(let t=0;t<n;t+=3){let h=-1;holes.forEach(([x,z,r],k)=>{if(h<0&&[0,1,2].every(q=>Math.hypot(P.getX(t+q)-x,P.getZ(t+q)-z)<r+(bev?0.35:0.05)))h=k;});   /* a hole's own: its wall and, beveled, the bevel's rings */
     if(h>=0){own[h].push(t);continue;}for(let q=0;q<3;q++){pos.push(P.getX(t+q),P.getY(t+q),P.getZ(t+q));nor.push(N.getX(t+q),N.getY(t+q),N.getZ(t+q));uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
   /* each triangle wound so its normal points out of the metal (want: the outward normal) */
   const tri=(/** @type {number[][]} */q,/** @type {number[]} */want)=>{const[a,b,c]=q,u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],m=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
     const o=m[0]*want[0]+m[1]*want[1]+m[2]*want[2]<0?[a,c,b]:[a,b,c];for(const p of o){pos.push(...p);nor.push(...want);uv.push(p[0],-p[2]);}};   /* the new faces mapped as the extrusion maps its caps (the shape's x, -z) */
   const fan=(/** @type {number[][]} */R,/** @type {number} */x,/** @type {number} */y,/** @type {number} */z,/** @type {number[]} */want)=>{const S=[...new Map(R.map(p=>[p[0].toFixed(5)+','+p[2].toFixed(5),p])).values()].sort((a,b)=>Math.atan2(a[2]-z,a[0]-x)-Math.atan2(b[2]-z,b[0]-x));
     for(let i=0;i<S.length;i++)tri([[x,y,z],S[i],S[(i+1)%S.length]],want);};
-  holes.forEach(([x,z],k)=>{const far=/** @type {number[][]} */([]),floor=/** @type {number[][]} */([]);
+  const ring=(/** @type {number[][][]} */R,/** @type {number} */x,/** @type {number} */y,/** @type {number} */z,/** @type {number[][]} */I,/** @type {number[]} */want)=>{   /* the face between a cut rim R and an inner circle I, at y */
+    const an=(/** @type {number[]} */p)=>{const a=Math.atan2(p[2]-z,p[0]-x);return a<0?a+TAU:a;},T=[...I].sort((a,b)=>an(a)-an(b));
+    /* the rim in the order its edges run (the wall triangles' edges on that level, chained): sorting by angle mis-orders a rim vertex off the circle */
+    const kk=(/** @type {number[]} */p)=>p[0].toFixed(5)+','+p[2].toFixed(5),adj=new Map(),pt=new Map();for(const[a,b]of R){for(const[u,v]of[[a,b],[b,a]]){const ku=kk(u);pt.set(ku,u);(adj.get(ku)||adj.set(ku,[]).get(ku)).push(kk(v));}}
+    let L=[];{const st=[...pt.keys()].reduce((m,q)=>an(pt.get(q))<an(pt.get(m))?q:m);let c=st,pv=null;while(c&&L.length<=pt.size){L.push(pt.get(c));const nx=(adj.get(c)||[]).find(q=>q!==pv&&q!==c);pv=c;c=nx;if(c===st)break;}}
+    if(L.length>2&&an(L[1])<an(L[L.length-1])===false&&Math.abs(an(L[1])-an(L[0]))>Math.PI)L=[L[0],...L.slice(1).reverse()];
+    {let a2=0;for(let q=0;q<L.length;q++){const A=L[q],B=L[(q+1)%L.length];a2+=(A[0]-x)*(B[2]-z)-(B[0]-x)*(A[2]-z);}if(a2<0)L=[L[0],...L.slice(1).reverse()];}   /* counterclockwise in (x, z), as T */
+    const S=L;
+    /* a zipper round both rings by angle, every vertex used (earcut drops a rim's nearly collinear vertex, which leaves a T-junction against the wall) */
+    let i=0,j=0;const P3=(/** @type {number[]} */p)=>[p[0],y,p[2]],nS=S.length,nT=T.length;
+    while(i<nS||j<nT){const a=S[i%nS],b=T[j%nT],aN=i<nS?an(S[(i+1)%nS])+(i+1>=nS?TAU:0):1e9,bN=j<nT?an(T[(j+1)%nT])+(j+1>=nT?TAU:0):1e9;
+      if(aN<=bN){tri([P3(a),P3(S[(i+1)%nS]),P3(b)],want);i++;}else{tri([P3(a),P3(T[(j+1)%nT]),P3(b)],want);j++;}}};
+  holes.forEach(([x,z],k)=>{const far=/** @type {number[][]} */([]),floor=/** @type {number[][]} */([]),farE=/** @type {number[][][]} */([]),floorE=/** @type {number[][][]} */([]);
     for(const t of own[k]){const V=[0,1,2].map(q=>[P.getX(t+q),P.getY(t+q),P.getZ(t+q)]),Q=[0,1,2].map(q=>[N.getX(t+q),N.getY(t+q),N.getZ(t+q)]);
       for(const v of V)if(Math.abs(v[1]-ye)<e)far.push(v);   /* the far face's opening: its rim */
+      for(let q=0;q<3;q++){const a=V[q],b=V[(q+1)%3];if(Math.abs(a[1]-ye)<e&&Math.abs(b[1]-ye)<e)farE.push([a,b]);if(Math.abs(a[1]-ye)<=bev+e&&Math.abs(b[1]-ye)<=bev+e&&!(Math.abs(a[1]-ye)<e&&Math.abs(b[1]-ye)<e&&bev>0))floorE.push([[a[0],yb,a[2]],[b[0],yb,b[2]]]);}
       if(V.every(v=>Math.abs(v[1]-ye)<=bev+e))continue;   /* the far bevel ring: dropped */
       const W=V.map(v=>Math.abs(v[1]-ye)<=bev+e?(floor.push([v[0],yb,v[2]]),[v[0],yb,v[2]]):v);   /* the wall, cut short at the floor */
       for(let q=0;q<3;q++){pos.push(...W[q]);nor.push(...Q[q]);uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
-    fan(far,x,ye,z,[0,-s,0].map(v=>-v));fan(floor,x,yb,z,[0,-s,0]);});   /* the far face closed, and the floor facing the opening */
+    const ri=inner[k]||0;if(!ri){fan(far,x,ye,z,[0,-s,0].map(v=>-v));fan(floor,x,yb,z,[0,-s,0]);return;}   /* the far face closed, and the floor facing the opening */
+    const m=32,C=(/** @type {number} */y)=>[...Array(m)].map((_,i)=>[x+ri*Math.cos(i/m*TAU),y,z+ri*Math.sin(i/m*TAU)]),Ib=C(yb),Ie=C(ye);   /* the counterbore's through hole */
+    ring(farE,x,ye,z,Ie,[0,-s,0].map(v=>-v));ring(floorE,x,yb,z,Ib,[0,-s,0]);
+    for(let i=0;i<m;i++){const j=(i+1)%m,c=[x-(Ib[i][0]+Ib[j][0])/2,0,z-(Ib[i][2]+Ib[j][2])/2],l=Math.hypot(c[0],c[2]),w=[c[0]/l,0,c[2]/l];tri([Ib[i],Ib[j],Ie[j]],w);tri([Ib[i],Ie[j],Ie[i]],w);}});   /* its wall, facing the axis */
   const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
   o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
 /* a pocket cut depth into a face of a closed solid whose faces are level (local y its thickness, as polyGeo builds it), open where it runs past the outline (a pry
