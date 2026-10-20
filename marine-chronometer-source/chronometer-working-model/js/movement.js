@@ -267,6 +267,15 @@ function clipPoly(poly,f){const out=[];
     if(f0>=0)out.push(P0);if((f0>=0)!==(f1>=0)){const t=f0/(f0-f1);out.push([P0[0]+(P1[0]-P0[0])*t,P0[1]+(P1[1]-P0[1])*t]);}}
   return out;}
 /* polygon clipped to z <= e(x) wherever x >= x0, e a polyline [[x, z], ...] with x rising (held level past its ends): the cut follows e between the crossings */
+/* the corner of a closed outline nearest `near` rounded by a tangent arc of radius r (on the inside of its turn), the sides walked along the
+   outline for its tangent length, so a curved side (an arc sampled densely) takes it as a straight one does; the arc every 5 deg */
+function filletAt(poly,near,r){const unit=v=>{const l=Math.hypot(v[0],v[1]);return[v[0]/l,v[1]/l];},sub=(p,q)=>[p[0]-q[0],p[1]-q[1]],add=(p,v,k)=>[p[0]+v[0]*k,p[1]+v[1]*k],n=poly.length,tn=k=>{const p=poly[(k-1+n)%n],q=poly[k],w=poly[(k+1)%n],u=unit(sub(q,p)),v=unit(sub(w,q));return Math.acos(Math.max(-1,Math.min(1,u[0]*v[0]+u[1]*v[1])));},i=poly.reduce((b,p,k)=>Math.hypot(p[0]-near[0],p[1]-near[1])<1&&tn(k)>tn(b)?k:b,poly.reduce((b,p,k)=>Math.hypot(p[0]-near[0],p[1]-near[1])<Math.hypot(poly[b][0]-near[0],poly[b][1]-near[1])?k:b,0)),C=poly[i];   /* the sharpest turn within 1 mm of near */
+  const step=(d,L)=>{let k=i,acc=0,P=C;for(let g=0;g<n;g++){const q=poly[(k+d+n)%n],s_=Math.hypot(q[0]-P[0],q[1]-P[1]);if(acc+s_>=L){const t=(L-acc)/s_;return{p:[P[0]+(q[0]-P[0])*t,P[1]+(q[1]-P[1])*t],k:(k+d+n)%n};}acc+=s_;P=q;k=(k+d+n)%n;}return{p:P,k};};
+  const a0=step(-1,0.3).p,b0=step(1,0.3).p,ui=unit(sub(C,a0)),uo=unit(sub(b0,C)),cr=ui[0]*uo[1]-ui[1]*uo[0],th=Math.acos(Math.max(-1,Math.min(1,ui[0]*uo[0]+ui[1]*uo[1]))),t=r*Math.tan(th/2);
+  const A=step(-1,t),B=step(1,t),nl=cr>0?[-ui[1],ui[0]]:[ui[1],-ui[0]],O=add(A.p,nl,r),a1=Math.atan2(A.p[1]-O[1],A.p[0]-O[0]),a2=Math.atan2(B.p[1]-O[1],B.p[0]-O[0]);
+  let da=a2-a1;while(da>Math.PI)da-=TAU;while(da<-Math.PI)da+=TAU;const m=Math.max(2,Math.ceil(Math.abs(da)/(5*D2R))),arc=[];for(let j=0;j<=m;j++){const a=a1+da*j/m;arc.push([O[0]+r*Math.cos(a),O[1]+r*Math.sin(a)]);}
+  const gone=new Set();for(let k=(A.k+1)%n;k!==B.k;k=(k+1)%n)gone.add(k);const res=[];for(let k=0;k<n;k++){if(!gone.has(k))res.push(poly[k]);if(k===A.k)res.push(...arc);}   /* the arc spliced in where the corner was, the outline's own start kept (its triangulation is sensitive to where it begins) */
+  return res.filter((p,k)=>Math.hypot(p[0]-res[(k+1)%res.length][0],p[1]-res[(k+1)%res.length][1])>2e-3);}   /* no point within 2 um of the next: an extrusion breaks on doubled points */
 function clipUnder(poly,E,x0){const e=x=>{if(x<=E[0][0])return E[0][1];for(let k=1;k<E.length;k++)if(x<=E[k][0])return E[k-1][1]+(E[k][1]-E[k-1][1])*(x-E[k-1][0])/(E[k][0]-E[k-1][0]);return E[E.length-1][1];};
   const f=p=>p[0]<x0?1:e(p[0])-p[1],s=poly.findIndex(p=>f(p)>=0),P=[...poly.slice(s),...poly.slice(0,s)],out=[];let A=null;
   for(let i=0;i<P.length;i++){const P0=P[i],P1=P[(i+1)%P.length],f0=f(P0),f1=f(P1);if(f0>=0)out.push(P0);
@@ -833,7 +842,10 @@ function buildMovement(M){
      top edge traced on 6:49.0 through the camera fitted there (r 16.85 about (6.84, 9.53), 21.6-22.3 mm from the staff), 1.5-1.9 mm outside it: that camera reads the
      third pillar screw's counterbore beside it 3 mm off (the near bridge screw's comment). It meets the horn's end (BB_NE) near (21.6, 6.0) */
   const BB_CUT=[2.03,9.96,20.06];
-  const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),BB_NE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  /* where the horn's end meets the cut round the balance, a fillet r 0.8 (+-0.2): KLUwI2UUCMQ 13:04.0, 13:04.2 and 13:04.4 (the bridge upside down, the plate side's bright metal
+     against the barrel's brass and the mat, its edge taken on saturation and split into lines and arcs, mfgfit.py), the corner's arc 0.63, 0.95 and 0.72-1.04 mm at the
+     frames' 32.5 px/mm; 13:03.5 (the owner's trace) turns the same way over about 3 mm, too few edge points there to size it. Sharp until 20 October 2026 */
+  const BBpoly=filletAt(clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),BB_NE,10),[21.6,6.0],0.8);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
   R.barrelBridge=mesh(bb,facePocket(polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),'top',S.bbN,BB_PK),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
