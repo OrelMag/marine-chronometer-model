@@ -3312,6 +3312,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   `CS.over` and every `userData.rev==='first'` group. `f170e7a`
 
 ---
+- **The essay's helical spring figure drew a grey wireframe cylinder round the spring, and its labels overlapped** (the owner, 21 October 2026): a guide mesh left in the figure; "Terminal curve" sat on "Stud, fixed", and on phones the 3D figures sat small in tall frames. Keep: no guide meshes in the essay's figures; each figure's camera fitted to what it shows (`View3D`'s fit), labels placed clear of one another. `bfe3c1b0`, `a6db663b`, `6fd591ef`
 
 ## Fixed, not yet committed
 
