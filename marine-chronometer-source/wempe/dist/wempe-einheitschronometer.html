@@ -5549,7 +5549,8 @@ const WFUSEE=(()=>{
       const S1=tx([8.6,1.403]),S2=tx([5.6,-9.645+Math.sqrt(81-(5.6-6.273)**2)]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
       const thick=KIT.clipPoly(DTX,p=>sg*side(p)),thin=KIT.clipPoly(DTX,p=>-sg*side(p));
       pD.userData.step=Math.min(...thick.map(([x,y])=>Math.hypot(x-fw[0],y-fw[1])))-20.285;   /* the thick part's least clearance over the tips, at rest */
-      tag(mesh(gDc,slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),M.blue310),'050505-1');tag(mesh(gDc,slab(thin,[],DTU,DTT),M.blue310),'050505-1',1);}
+      /* one solid, drawn as one mesh: the thick part and the thin tip merged, so no seam is drawn across the upper face they share (Edges outlines each mesh); two meshes until 21 October 2026 */
+      const I4=new THREE.Matrix4();tag(mesh(gDc,mergeGeo([[slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),I4],[slab(thin,[],DTU,DTT),I4]]),M.blue310),'050505-1');}
     tag(mesh(gD,turned([[0,-22.075],[0.44,-22.075],[0.44,-18.975],[1.125,-18.975],[1.125,yD],[0.44,yD],[0.44,yD+3.1],[0,yD+3.1]].map(([r,y])=>[r,y]),20),M.steel),'050505-2');
     /* its wire spring (Feder 05 05 06-1: the coloured section's #24; no sheet) in its stud, at the top plate's hole 5 ("Drahtfeder", 05 08_1a: N 38.507 O 10.684, Körner 1.3,
        M 1.7, 4.73 from hole 4; 05 06_4's A-B marks the "Drahtfedermitte" beside the detent's arbor). Sizes off the photographs, each scaled by the hole table's own spacing (holes
