@@ -119,7 +119,7 @@
  const gearsOf=A=>{const o=[];A.traverse(q=>{if(q.userData.gear&&vis(q))o.push(q);});return o;};
  const angle=o=>{const ch=[];for(let p=o;p;p=p.parent)ch.unshift(p);let a=0,s=1;for(const p of ch){a+=s*p.rotation.y;if(Math.abs(Math.abs(p.rotation.x)-Math.PI)<1e-6)s=-s;}return a;};
  const wp=o=>new T.Vector3().setFromMatrixPosition(o.matrixWorld);
- const yr=o=>{const b=new T.Box3().setFromObject(o);return[b.min.y,b.max.y];};
+ const yr=o=>{const gb=o.userData.gear&&o.userData.gear.box,b=gb?new T.Box3(new T.Vector3(gb[0],gb[1],gb[2]),new T.Vector3(gb[3],gb[4],gb[5])).applyMatrix4(o.matrixWorld):new T.Box3().setFromObject(o);return[b.min.y,b.max.y];};   /* a toothed piece fused with the rest of its solid (fuse, core.js): its teeth's own box (gear.box) */
  const rel=[],gears=[];
  for(const l of BOM.lines){if(!l.rel||!l.rel.length||!INST[l.id])continue;
    for(const r of l.rel){const[kind,tgt]=r,T2=tgt.split('|');

@@ -31,7 +31,7 @@ function buildBox(M){
   /* brass corner caps (20 October 2026; REPORT.md: Jones-Horan 63662_17, 38240_05, 38240_21): about 10 tall, legs 26.5 along each face, one to each vertical edge on each tier at Y 184-195
      (the outer lid's, up to its top, a plate over the top's corner), 132-142 (the glass lid's), 63-74 and 2-11 (the base's) over the bottom; likely +-1.5. Legs 1.2 thick (estimated); the top's plates a
      quarter disc r 26.5 round the corner (the photographs' rounded inner edge; its radius estimated). Until then two caps 0.2 of the base tall, legs 12, on the base only and full-height strips on the lids */
-  const CL=26.5,CT=1.2,brassCorner=(p,x,y,z,h,cz=0)=>{const sx=Math.sign(x),sz=Math.sign(z-cz);mesh(p,new THREE.BoxGeometry(CL,h,CT),M.brass,x+sx*(CT-CL/2),y,z+sz*CT/2);mesh(p,new THREE.BoxGeometry(CT,h,CL-CT),M.brass,x+sx*CT/2,y,z-sz*(CL-CT)/2);};
+  const CL=26.5,CT=1.2,brassCorner=(p,x,y,z,h,cz=0)=>{const sx=Math.sign(x),sz=Math.sign(z-cz);return fuse([mesh(p,new THREE.BoxGeometry(CL,h,CT),M.brass,x+sx*(CT-CL/2),y,z+sz*CT/2),mesh(p,new THREE.BoxGeometry(CT,h,CL-CT),M.brass,x+sx*CT/2,y,z-sz*(CL-CT)/2)]);};   /* one cap, one mesh (fuse, core.js): its legs' faces ran flush, a line down its corner in Edges until 21 October 2026 */
   for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+68.5,sz*W,10);brassCorner(root,sx*W,yF+6.5,sz*W,10);}
   /* the side handles (20 October 2026; REPORT.md): Jones-Horan 38240_21's round rosettes 29.2 across, 68.5 apart (63662_17's are ovals 22.5 x 30, 82-83 apart: another pattern), their centres
      8-10 under the pivot (9 taken), the bail's lowest point 39-43 under it (41: 32 under the rosettes); its form a swan neck as 63662_17 shows it, each leg dropping from its knuckle on the
@@ -48,7 +48,7 @@ function buildBox(M){
      the key's foot on a brass socket at (65.5, -65.5) */
   const KR=70.5,KI=W-T,KC=KI-38,KS=Math.sqrt(KR*KR-KC*KC),KT=YL-1.5,KHD=25,KP=[54,-57],kw=4.4,kpts=[[KC,-KI],[KI,-KI],[KI,-KC]];
   {const a1=Math.atan2(-KC,KS),a2=Math.atan2(-KS,KC);for(let i=0;i<=32;i++){const a=a1+(a2-a1)*i/32;kpts.push([KR*Math.cos(a),KR*Math.sin(a)]);}}
-  const ky0=yF+T+1;mesh(root,polyGeo(kpts,KT-KHD-ky0),M.woodEdge,0,ky0,0);mesh(root,polyGeo(kpts,KHD,[[KP[0],KP[1],3.55]]),M.woodEdge,0,KT-KHD,0);   /* stands on the felt; the socket's hole through the upper part */
+  const ky0=yF+T+1;fuse([mesh(root,polyGeo(kpts,KT-KHD-ky0),M.woodEdge,0,ky0,0),mesh(root,polyGeo(kpts,KHD,[[KP[0],KP[1],3.55]]),M.woodEdge,0,KT-KHD,0)]);   /* one block, one mesh (fuse) */   /* stands on the felt; the socket's hole through the upper part */
   const kc=(3.55-0.6*kw)/(0.5*kw),KB=KT-(4.4*kw+kc*1.7*kw);   /* the key's foot: its cone (r 0.6 kw at 4.4 kw to 1.1 kw at 6.1 kw, core.js) on the hole's edge */
   const key=hn(new THREE.Group(),'42044');key.userData.partName='key';key.position.set(KP[0],KB,KP[1]);root.add(key);key.rotation.y=Math.PI/4;
   windingKey(key,M);   /* the key itself (core.js), the same one the movement shows on the fusee's square and the hands' */
@@ -84,9 +84,9 @@ function buildBox(M){
   /* the slot spans the angles at which the lever, swinging from released to latched, crosses the band (Fig. 106 draws it a long horizontal slot), 2 deg spare each end */
   const SLOT=(()=>{const len=Math.hypot(LATCH_X,LATCH_Z)-(CR+0.3);let a0=LATCH_A,a1=LATCH_A;for(let k=0;k<=200;k++){const th=LATCH_ON+(LATCH_OFF-LATCH_ON)*k/200,dx=Math.cos(th),dz=-Math.sin(th);
       for(let t=0;t<=len;t+=0.25){const x=LATCH_X+t*dx,z=LATCH_Z+t*dz,r=Math.hypot(x,z);if(r>=RI-1.6&&r<=RO+1.6){const f=Math.atan2(x,z);a0=Math.min(a0,f);a1=Math.max(a1,f);}}}return[a0-2*D2R,a1+2*D2R];})();
-  { const S0=SLOT[0],S1=SLOT[1],pr=(a,b)=>[V2(RI,a),V2(RO,a),V2(RO,b),V2(RI,b),V2(RI,a)];mesh(ring,closeGeo(new THREE.LatheGeometry(pr(-7,7),158,S1,TAU-(S1-S0))),M.brass);
-    for(const[a,b]of[[-7,-2.2],[2.2,7]])mesh(ring,closeGeo(new THREE.LatheGeometry(pr(a,b),Math.max(2,Math.ceil((S1-S0)/0.02)),S0,S1-S0)),M.brass);
-    for(const f of[S0,S1]){const w=mesh(ring,new THREE.BoxGeometry(RO-RI,4.4,0.02),M.brass,(RI+RO)/2*Math.sin(f),0,(RI+RO)/2*Math.cos(f));w.rotation.y=f-Math.PI/2;} }
+  { const S0=SLOT[0],S1=SLOT[1],pr=(a,b)=>[V2(RI,a),V2(RO,a),V2(RO,b),V2(RI,b),V2(RI,a)],rgM=[mesh(ring,closeGeo(new THREE.LatheGeometry(pr(-7,7),158,S1,TAU-(S1-S0))),M.brass)];
+    for(const[a,b]of[[-7,-2.2],[2.2,7]])rgM.push(mesh(ring,closeGeo(new THREE.LatheGeometry(pr(a,b),Math.max(2,Math.ceil((S1-S0)/0.02)),S0,S1-S0)),M.brass));
+    for(const f of[S0,S1]){const w=mesh(ring,new THREE.BoxGeometry(RO-RI,4.4,0.02),M.brass,(RI+RO)/2*Math.sin(f),0,(RI+RO)/2*Math.cos(f));w.rotation.y=f-Math.PI/2;}fuse(rgM); }   /* the ring one mesh (fuse): its band either side of the slot drew lines at the slot's ends in Edges until 21 October 2026 */
   /* the straps on the ring (Fig. 106): curved pieces of band on its outside, each held by two screws into the band (a turned band can't be holed across: drawn inside it) */
   /* SL, SS: each strap's length and its screws' spacing (20 October 2026, REPORT.md, Jones-Horan lots 63662 and 38240 from above at the box camera's scale, likely): the gimbal strap at 3,
      44.5 +-2 long, its screws 30.2 +-1.5 apart (45, 31); the case strap at 6, 53 +-2, its screws about 36.5 +-3 (52, 35; the earlier photograph's 32.6 for its screws lies inside both). Until then both 50, screws 32.6 apart */
@@ -124,8 +124,8 @@ function buildBox(M){
      32.5), in cup washers 9.9-10.0 across; their heads about 0.75 of the cups' width on 63662_17 (r 3.7, rough), slotted, domed. The plate 14 wide from the head to the wall and on to
      the leg; the leg 12 wide, 3 thick, down to 6 under the lower screw: estimated. Until then a plate 12.5 x 14, its screws side by side 2.2 under the pivot, heads r 1.1 */
   { const bt=BY+1.5,SZ=W-34.5,SY=[RY-11.5,RY-32.5],LB=SY[1]-6,bp=[[LP-3.5,LZ-7],[W-T,LZ-7],[W-T,SZ+6],[LP-3.5,SZ+6]];
-    hn(mesh(lat,polyGeo(bp,3,[hT(LP,LZ,1.8),hT(LP+4.2,LZ,0.5),hT(LP+5.6,LZ,0.5)]),M.brass2,0,BY-1.5,0),'42109');   /* tapped for the clamping screw and the take-up spring's screws */
-    hn(mesh(lat,new THREE.BoxGeometry(3,BY-1.5-LB,12),M.brass2,W-T-1.5,(BY-1.5+LB)/2,SZ),'42109',{sub:1});   /* the leg against the wall */
+    fuse([hn(mesh(lat,polyGeo(bp,3,[hT(LP,LZ,1.8),hT(LP+4.2,LZ,0.5),hT(LP+5.6,LZ,0.5)]),M.brass2,0,BY-1.5,0),'42109'),   /* tapped for the clamping screw and the take-up spring's screws */
+    hn(mesh(lat,new THREE.BoxGeometry(3,BY-1.5-LB,12),M.brass2,W-T-1.5,(BY-1.5+LB)/2,SZ),'42109',{sub:1})]);   /* the leg against the wall; the L one mesh (fuse) */
     for(const y of SY){hn(dHead(lat,1,W+0.6,3.7,2.2,0.8,y,SZ,T+3.0,1.5),'42115');hn(cupW(lat,1,W,5,1.52,0.6,3.85,1.5,y,SZ),'42123');}   /* through the box wall (drawn without a hole) 2.4 into the leg */
     hn(mesh(lat,polyGeo(stadiumPts([LP+1.6,LZ],[LP+6.3,LZ],1.2),0.3,[hC(LP+4.2,LZ,0.5),hC(LP+5.6,LZ,0.5)]),M.blued,0,bt,0),'42277');   /* the take-up spring, its free end under the lever's collar */
     for(const x of[LP+4.2,LP+5.6])vScrew(lat,x,LZ,bt+0.3,0.5,0.35,0.3+1.5,'42276');
@@ -179,7 +179,7 @@ function buildBox(M){
   const tabG=()=>{const sh=new THREE.Shape();sh.moveTo(-TA,yb1);sh.lineTo(TA,yb1);sh.lineTo(TA,YE);sh.lineTo(-TA,YE);sh.closePath();const h=new THREE.Path();h.absarc(0,0,1.4,0,TAU,true);sh.holes.push(h);
     const g=extrude(sh,{depth:BT2,bevelEnabled:false,curveSegments:32});g.translate(0,0,RT0);return g;};   /* the tab above the hat, bored for the bushing (42214, pressed: r 1.4) */
   for(const sz of[1,-1]){const bk=hn(new THREE.Group(),'42105');if(sz<0)bk.rotation.y=Math.PI;bowl.add(bk);
-    mesh(bk,wingG(1),M.brass2);mesh(bk,wingG(-1),M.brass2);mesh(bk,polyGeo(hatPts,SH2),M.brass2,0,yb0,0);mesh(bk,tabG(),M.brass2);
+    fuse([mesh(bk,wingG(1),M.brass2),mesh(bk,wingG(-1),M.brass2),mesh(bk,polyGeo(hatPts,SH2),M.brass2,0,yb0,0),mesh(bk,tabG(),M.brass2)]);   /* one bent strap, one mesh (fuse) */
     for(const s of[1,-1]){const g=new THREE.Group();g.rotation.y=(sz<0?Math.PI:0)+s*US/RW-Math.PI/2;bowl.add(g);hn(dHead(g,1,RW+BT2,4.05,2.0,0.8,VS,0,BT2+1.0,1.75),'42117');}   /* square to the wall, through the slot into the case's wall (drawn without a hole), 0.2 short of its inside */
     const b=hn(mesh(bowl,ringGeo(1.4,0.82,2.5),M.steel,0,0,sz*(CR+5.25)),'42214.c');b.rotation.x=Math.PI/2;   /* pressed into the tab, its outer end flush with the tab's face, 1.0 standing in behind it */
     const rE=sz>0?RO+3.2:RO+2.4,sh=hn(mesh(ring,cylY(sz>0?1.6:1.85,rE-(CR+6.55),12),M.steel,0,0,sz*(rE+CR+6.55)/2),sz>0?'42119':'42118',{sub:1});sh.rotation.x=Math.PI/2;
@@ -195,16 +195,16 @@ function buildBox(M){
      (42128) against the wall. The plate's depth (1.5), the screw's place in the hole and its length estimated. Until 5 October 2026 a back 4 by 6 with two cheeks */
   { const kp=hn(new THREE.Group(),'42113');kp.position.set(0,0,0);kp.rotation.y=LATCH_A-Math.PI/2;bowl.add(kp);
     const x0=CR+0.3,KT=6.5,KW=5.5,WY0=-1.4,WY1=2.6,WW=3.15,PB=-14.5,PY=-8;
-    mesh(kp,new THREE.BoxGeometry(4.5,KT-WY1,2*KW),M.brass2,x0+2.25,(KT+WY1)/2,0);mesh(kp,new THREE.BoxGeometry(4.5,WY0+4.5,2*KW),M.brass2,x0+2.25,(WY0-4.5)/2,0);   /* the block above and below the window */
-    for(const s of[1,-1])mesh(kp,new THREE.BoxGeometry(4.5,WY1-WY0,KW-WW),M.brass2,x0+2.25,(WY0+WY1)/2,s*(KW+WW)/2);mesh(kp,new THREE.BoxGeometry(0.3,WY1-WY0,2*WW),M.brass2,CR+0.15,(WY0+WY1)/2,0);   /* its sides and the window's back */
+    const kpM=[mesh(kp,new THREE.BoxGeometry(4.5,KT-WY1,2*KW),M.brass2,x0+2.25,(KT+WY1)/2,0),mesh(kp,new THREE.BoxGeometry(4.5,WY0+4.5,2*KW),M.brass2,x0+2.25,(WY0-4.5)/2,0)];   /* the block above and below the window */
+    for(const s of[1,-1])kpM.push(mesh(kp,new THREE.BoxGeometry(4.5,WY1-WY0,KW-WW),M.brass2,x0+2.25,(WY0+WY1)/2,s*(KW+WW)/2));kpM.push(mesh(kp,new THREE.BoxGeometry(0.3,WY1-WY0,2*WW),M.brass2,CR+0.15,(WY0+WY1)/2,0));   /* its sides and the window's back */
     { const pl=(h,r)=>{const s=new THREE.Shape();s.moveTo(-KW,PB);s.lineTo(KW,PB);s.lineTo(KW,-4.5);s.lineTo(-KW,-4.5);s.closePath();const p=new THREE.Path();p.absarc(0,PY,r,0,TAU,true);s.holes.push(p);const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:24});g.rotateY(Math.PI/2);return g;};
-      mesh(kp,pl(0.7,1.12),M.brass2,x0,0,0);mesh(kp,pl(0.8,2.2),M.brass2,x0+0.7,0,0); }   /* the plate below, counterbored for the screw */
+      kpM.push(mesh(kp,pl(0.7,1.12),M.brass2,x0,0,0),mesh(kp,pl(0.8,2.2),M.brass2,x0+0.7,0,0));fuse(kpM); }   /* the keeper one piece, one mesh (fuse): its block's pieces' faces ran flush, lines across it in Edges until 21 October 2026 */   /* the plate below, counterbored for the screw */
     hn(mesh(kp,ringGeo(1.6,1.12,0.3),M.brass2,CR+0.15,PY,0),'42128').rotation.z=Math.PI/2;
     hn(sHead(kp,'x',1,x0+0.7,2.0,0.8,PY,0,0.7+0.3+1.0),'42116.k'); }
   const KH=3.34,fu=L.Fu,BT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7), r 3.34 +-0.15: the shield plate's, the plate turned open with the mat seen through both
      (KLUwI2UUCMQ 47:36.5, rectified on the plate's edge and its shoulder screw, scaled by the key hole's 20.38 mm from the centre); the case's taken the same (r 2.3 until 5 October 2026). The bottom is BT thick (inside face at -FD, outside at -FD-BT), the wall CR-DB; both
      solids. The shield plate under the bottom sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
-  let bot;   /* the case's bottom: rebuilt below with the shield plate's screw holes */
+  let bot;const BOWL=[];   /* the bowl's pieces, one solid: merged once the bottom has its holes (below) */   /* the case's bottom: rebuilt below with the shield plate's screw holes */
   const botG=hs=>{const bs=new THREE.Shape();bs.absarc(0,0,FR,0,TAU,false);for(const[x,z,r]of[[fu[0],fu[1],KH],...hs]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);bs.holes.push(h);}const fl=extrude(bs,{depth:BT,bevelEnabled:false,curveSegments:60});fl.rotateX(-Math.PI/2);return fl;};
   /* the bottom's outside (KLUwI2UUCMQ 47:35, the case from below, nearly face-on): a flat annulus out to an edge rounded about 1.6 mm (RF), a raised ring at r 33.5-36 round a recess
      the shield plate fills (0.728 and 0.676 of the outer edge, read across the centre; the case's outside taken as CR). Until 4 October 2026 the bottom curved into the wall on r 11.5 */
@@ -217,13 +217,13 @@ function buildBox(M){
        r 54 at the bezel, is drawn as the band (the bezel's own r 52.5 limits it; not modelled). Until 5 October 2026 the wall was a plain cylinder r CR to a 1.6 mm round at the bottom */
     const CW=CR*0.962,CI=CW-1.2,YB=YTB-13.5,YC=-FD-BT+11.4,RB=CR*0.82;
     const pr=[V2(FR,-FD),V2(RB-1.2,-FD),V2(CI,YC+0.6),V2(CI,YB-0.6),V2(SH,YB+0.6),V2(SH,YS),V2(CR,YS),V2(CR,YB),V2(CW,YB),V2(CW,YC),V2(RB,-FD-BT),V2(FR,-FD-BT),V2(FR,-FD)];
-    hn(mesh(bowl,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101');   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
-    bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});hn(mesh(bowl,ringGeo(33.7,30.5,0.5+0.8+0.3),M.brass,0,-FD-BT-(0.5+0.8+0.3)/2,0),'42101',{sub:1});   /* the raised ring round the shield plate, r 30.5-33.7 (47:36.5, rough: its crest about 32), the plate sitting 0.3 below its top (the far side's inner wall shows; the depth estimated); r 33.5-36 and flush with the plate until 5 October 2026 */   /* 60: the rim's 120 points, the lathe's own */
+    BOWL.push(hn(mesh(bowl,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101'));   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
+    bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});BOWL.push(bot,hn(mesh(bowl,ringGeo(33.7,30.5,0.5+0.8+0.3),M.brass,0,-FD-BT-(0.5+0.8+0.3)/2,0),'42101',{sub:1}));   /* the raised ring round the shield plate, r 30.5-33.7 (47:36.5, rough: its crest about 32), the plate sitting 0.3 below its top (the far side's inner wall shows; the depth estimated); r 33.5-36 and flush with the plate until 5 October 2026 */   /* 60: the rim's 120 points, the lathe's own */
     /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: below the
        thread, and the rim with the band outside it the bezel screws onto */
     const w=0.75/DB,a0=-Math.PI/2,bore=[...Array(121).keys()].map(k=>{const a=a0+w+(TAU-2*w)*k/120;return[DB*Math.cos(a),DB*Math.sin(a)];}),circ=r=>[...Array(120).keys()].map(k=>{const a=k/120*TAU;return[r*Math.sin(a),r*Math.cos(a)];});
     bore.push([-0.75,-(MR_RO+1.0)],[0.75,-(MR_RO+1.0)]);
-    hn(mesh(bowl,polyGeo(circ(CR),YTB-YS,[{pts:bore}]),M.brass,0,YS,0),'42101',{sub:1});hn(mesh(bowl,polyGeo(circ(TR),YT-YTB,[{pts:bore}]),M.brass,0,YTB,0),'42101',{sub:1}); }
+    BOWL.push(hn(mesh(bowl,polyGeo(circ(CR),YTB-YS,[{pts:bore}]),M.brass,0,YS,0),'42101',{sub:1}),hn(mesh(bowl,polyGeo(circ(TR),YT-YTB,[{pts:bore}]),M.brass,0,YTB,0),'42101',{sub:1})); }
   /* winding-hole shield plate (42104; Fig. 107 and its parts list, the case's description, Sec. III and Fig. 7): a disc nearly the size of the case's flat bottom, turning on its
      shoulder screw (42124) at the case's centre. Its hole, as far out as the case's key hole, lines up with it when the plate is turned clockwise (seen from below); let go, the
      return spring (42126) turns it back: an open ring of wire between the plate and the bottom, its hooked end round the stop screw (42125), which goes up through the plate and
@@ -246,7 +246,7 @@ function buildBox(M){
   hn(yScrew(0,0,1.5,4.55,0.8,1.0),'42124');   /* its head 9.0-9.3 across (47:24.0, 47:36.5, scaled as the plate; 0.136 of the plate's width by eye agrees); r 2.8 until 5 October 2026 */
   const ss=at(RS,as);{const g=new THREE.Group();shield.add(g);mesh(g,cylY(2.3,0.8,24),M.steel,ss[0],-PT-0.4,ss[1]);const sl=mesh(g,new THREE.BoxGeometry(4.65,0.6,0.8),M.steelD,ss[0],-PT-0.55,ss[1]);sl.rotation.y=0.6;
     g.userData.axis=mesh(g,cylY(0.5,PT+GAP-0.05,12),M.steel,ss[0],(GAP-0.05-PT)/2,ss[1]);hn(g,'42125');}   /* its head 4.6 across (47:24.0) under the plate, its thread up through the plate into the gap, 0.05 under the bottom */
-  bot.geometry.dispose();bot.geometry=botG([[0,0,1.02]]);
+  bot.geometry.dispose();bot.geometry=botG([[0,0,1.02]]);fuse(BOWL);   /* the bowl one mesh (fuse): its wall, bottom, ring and rim drew lines where their faces ran flush in Edges until 21 October 2026 */
   /* the return spring, in the case's frame: a hook round the stop screw's end (in the plate, so it moves as the plate turns), the ring (r RS-0.92) round the long way to the case's pin, and its end turned in to the pin. It is
      built for the plate's turn and rebuilt in place (reclose) when it turns (shield.userData.turn, which app.js calls), so the hook stays on the screw and the end on the pin */
   { const ys=YO-GAP/2,ring=RS-0.92,V=(r,a)=>new THREE.Vector3(r*Math.cos(a),ys,r*Math.sin(a));
@@ -275,7 +275,7 @@ function buildBox(M){
     for(let i=0;i<N;i++){const a0=B+i,a1=B+(i+1)%N,b0=B+N+i,b1=B+N+(i+1)%N;q(a0,b0,b1,a1);q(ix(i,0),B+i,B+(i+1)%N,ix(i+1,0));q(ix(i+1,m),B+N+(i+1)%N,B+N+i,ix(i,m));}   /* inside, bottom, top */
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setIndex(I);const f=g.toNonIndexed();f.computeVertexNormals();return f;};   /* flat facets: each pyramid's faces lit apart, as the knurl's are */
   const YC=MR_Y+10.4,BL=DIAL_R-1.6,GR=DIAL_R+0.1,bz=hn(mesh(bowl,new THREE.LatheGeometry([V2(TR,YTB),V2(BZr0,YTB),V2(BZr0,YTB+BZK.h),V2(BZK.r1,YTB+BZK.h),V2(DB+0.9,YC+1.4),V2(BL,YC+1.4),V2(BL,YC+0.8),V2(GR,YC+0.8),V2(GR,YC),V2(BL,YC),V2(BL,YC-0.5),V2(DB+0.1,YC-0.5),V2(DB+0.1,YT),V2(TR,YT),V2(TR,YTB)],128),M.brass),'42102');
-  hn(mesh(bz,knurlBand(BZK.r1,BZK.d,YTB,BZK.h,BZK.n,BZK.rp),M.brass),'42102',{sub:1});
+  fuse([bz,hn(mesh(bz,knurlBand(BZK.r1,BZK.d,YTB,BZK.h,BZK.n,BZK.rp),M.brass),'42102',{sub:1})]);   /* its knurled band on it, one mesh (fuse): a ring at the band's edge in Edges until 21 October 2026 */
   const gl=hn(mesh(bowl,new THREE.CylinderGeometry(GR,GR,0.8,96),M.glass,0,YC+0.4,0),'42103');gl.renderOrder=5;bz.userData.bezel=gl.userData.bezel=true;   /* the bezel with its crystal, taken off to set the hands with the key (app.js) */
   /* lids hinged at the back: the glass lid (HG tall) on the box, the outer lid (HL) on the glass lid, so it opens on its own and never swings through the glass lid. Each turns about the
      knuckles of its piano hinge, HR behind the back (mid at the lower seam's axis, top at the upper's), so each lid's back face is at z HR in its own frame (LO its middle).
@@ -284,15 +284,15 @@ function buildBox(M){
   { const fw=11,p=mid,h=HG;wood(2*W,h,fw,0,h/2,HR+2*W-fw/2,p);wood(2*W,h,fw,0,h/2,HR+fw/2,p);wood(fw,h,2*W-2*fw,W-fw/2,h/2,LO,p);wood(fw,h,2*W-2*fw,-W+fw/2,h/2,LO,p);
     const g=mesh(p,new THREE.BoxGeometry(2*W-2*fw,0.8,2*W-2*fw),M.glass,0,h-3,LO);g.renderOrder=6; }
   wood(2*W,HL,2*W,0,HL/2,LO,top);
-  for(const sx of[1,-1])for(const sz of[HR,HR+2*W]){brassCorner(mid,sx*W,137-H0,sz,10,LO);brassCorner(top,sx*W,HL-5,sz,10,LO);   /* the glass lid's at Y 132-142; the outer lid's up to its top (Y 186-196 against the photographs' 184-195) */
-    const zc=sz+Math.sign(sz-LO)*CT,cx=sx*(W+CT),q=[[cx,zc]];for(let i=0;i<=16;i++){const a=Math.PI/2*i/16;q.push([cx-sx*CL*Math.cos(a),zc-Math.sign(sz-LO)*CL*Math.sin(a)]);}mesh(top,polyGeo(q,CT),M.brass,0,HL,0);}   /* the plate over the top's corner */
+  for(const sx of[1,-1])for(const sz of[HR,HR+2*W]){brassCorner(mid,sx*W,137-H0,sz,10,LO);const tc=brassCorner(top,sx*W,HL-5,sz,10,LO);   /* the glass lid's at Y 132-142; the outer lid's up to its top (Y 186-196 against the photographs' 184-195) */
+    const zc=sz+Math.sign(sz-LO)*CT,cx=sx*(W+CT),q=[[cx,zc]];for(let i=0;i<=16;i++){const a=Math.PI/2*i/16;q.push([cx-sx*CL*Math.cos(a),zc-Math.sign(sz-LO)*CL*Math.sin(a)]);}fuse([tc,mesh(top,polyGeo(q,CT),M.brass,0,HL,0)]);}   /* the plate over the top's corner */
   /* the hinges (20 October 2026, REPORT.md: Jones-Horan 63662_18 from behind, lots 63662 and 38240 open): one piano hinge on each seam, 157-159 long, centred (likely +-5); its leaves 0.6 thick on
      the back faces, 8 wide from the seam, the knuckle r 2.6 on the axis, in seven lengths, the lower part's four and the upper's three (estimated; leaves wider would run under the outer lid's
      corner caps). Each leaf stops where it meets the knuckle's surface (hk from the seam), not under the other half's knuckles. Until then two hinges r 2.6 x 30 at x +-55 */
   { const HGL=158,HGW=8,HGT=0.6,hk=Math.sqrt(HR*HR-(HR-HGT)**2),lf=(p,y0,y1,z)=>mesh(p,new THREE.BoxGeometry(HGL,Math.abs(y1-y0),HGT),M.brass,0,(y0+y1)/2,z),
-      kn=(p,y,z,odd)=>{for(let i=odd?1:0;i<7;i+=2){const k=mesh(p,cylY(HR,HGL/7,20),M.brass,-HGL/2+HGL/7*(i+0.5),y,z);k.rotation.z=Math.PI/2;}};
-    lf(root,YL-HGW,YL-hk,-W-HGT/2);kn(root,YL,-W-HR,0);lf(mid,hk,HGW,HR-HGT/2);kn(mid,0,0,1);   /* the lower: the box's half and the glass lid's */
-    lf(mid,HG-HGW,HG-hk,HR-HGT/2);kn(mid,HG,0,0);lf(top,hk,HGW,HR-HGT/2);kn(top,0,0,1); }   /* the upper: the glass lid's and the outer lid's */
+      kn=(p,y,z,odd)=>{const o=[];for(let i=odd?1:0;i<7;i+=2){const k=mesh(p,cylY(HR,HGL/7,20),M.brass,-HGL/2+HGL/7*(i+0.5),y,z);k.rotation.z=Math.PI/2;o.push(k);}return o;};   /* each half's leaf and knuckles one piece, one mesh (fuse) */
+    fuse([lf(root,YL-HGW,YL-hk,-W-HGT/2),...kn(root,YL,-W-HR,0)]);fuse([lf(mid,hk,HGW,HR-HGT/2),...kn(mid,0,0,1)]);   /* the lower: the box's half and the glass lid's */
+    fuse([lf(mid,HG-HGW,HG-hk,HR-HGT/2),...kn(mid,HG,0,0)]);fuse([lf(top,hk,HGW,HR-HGT/2),...kn(top,0,0,1)]); }   /* the upper: the glass lid's and the outer lid's */
   /* the hasps (20 October 2026, REPORT.md: Jones-Horan 38240_05 square-on, 63662's): two, each 51 x 22 split at its seam (Y 92-115 at the lower, 164-186 at the upper; likely +-1), a half on
      each side, its outer corners cut (about 2.5, estimated), two screws to a half, a turn knob about 10 across on the lower half; 1.2 thick, the screws' heads r 1.6 and the knob 4 proud,
      estimated. Until then one plate 14 x 18 on the outer lid's front */

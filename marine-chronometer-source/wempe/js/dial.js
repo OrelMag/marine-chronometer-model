@@ -264,14 +264,14 @@ const WDIAL=(()=>{
 
     /* ---------- the cannon tube on the centre arbor (turns with it) ---------- */
     const cnP=part('cannon',22),cn=grp(cnP,H[1]);R.cn=cn;
-    {const rb=y=>rSh(y)+0.01,pm=tag(mesh(cn,gear(CN.pin,CN.y1-CN.y0,{bore:rb(CN.y0)}),M.steel,0,(CN.y0+CN.y1)/2,0),'050503-3');pm.userData.gear={z:14,m:M_CH};R.cnPin=pm;
+    {const rb=y=>rSh(y)+0.01,cnM=[],pm=tag(mesh(cn,gear(CN.pin,CN.y1-CN.y0,{bore:rb(CN.y0)}),M.steel,0,(CN.y0+CN.y1)/2,0),'050503-3');pm.userData.gear={z:14,m:M_CH};R.cnPin=pm;cnM.push(pm);
       const g=[];for(let k=0;k<=10;k++){const t=Math.PI*k/10;g.push([CN.r-0.4*Math.sin(t),CN.yg-0.4*Math.cos(t)]);}   /* the groove, a half-round r 0.4 */
-      tag(mesh(cn,lathe([[rb(CN.y1),CN.y1],[CN.r,CN.y1],...g,[CN.r,CN.yb],[rb(CN.yb),CN.yb]],48),M.steel),'050503-3',1);
+      cnM.push(tag(mesh(cn,lathe([[rb(CN.y1),CN.y1],[CN.r,CN.y1],...g,[CN.r,CN.yb],[rb(CN.yb),CN.yb]],48),M.steel),'050503-3',1));
       const sqL=sqLoop(CN.sq,CN.sqR),F=[{p:C([0,0],rb(CN.yb),48),q:C([0,0],rb(CN.yk),48),a:CN.yb,b:CN.yk}];
-      tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1);
+      cnM.push(tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1));
       /* its crown, the square's last 0.5: the annuli from the bore out through circles 1.05 and 1.25 to the square (so the sphere is sampled across it) */
       const cr=p=>CN.yt-(CN.cr-Math.sqrt(CN.cr*CN.cr-p[0]*p[0]-p[1]*p[1]));
-      tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1);}
+      cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));fuse(cnM);}   /* the tube one piece, one mesh (fuse; the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
 
     /* ---------- the change wheel on the short stud at 19 ---------- */
     const chP=part('changeWheel',20),ch=grp(chP,H[19]);R.ch=ch;
@@ -305,30 +305,30 @@ const WDIAL=(()=>{
     /* the minute hand, on the tube's square (turns with the centre arbor) */
     const mh=grp(hdP,H[1]);R.mh=mh;
     {const y0=YM0,yf=y0+0.8,y1=y0+2.0,h0=CN.sq+0.01,sq=sqLoop(h0,CN.sqR+0.01),hole=y=>sq.map(p=>p.map(v=>v*(1+(y1-y)/140/h0)));   /* the square hole, widening 1:70 down from its top */
-      tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1');
+      const mM=[tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1')];
       /* the flange: flat inside Ø 5.2 round the square hole, and outside it a turned ring, its edge rounded r 0.4 (smooth: until 17 October 2026 annuli of solidGeo's
          cells, whose flat-shaded facets showed on the round and the rim); the ring's 72 sides fall on the flat part's 72 points */
       const r1=MIN.rf-0.4,rnd=[...Array(11).keys()].map(k=>{const a=(10-k)/10*Math.PI/2;return[r1+0.4*Math.sin(a),y1-0.4+0.4*Math.cos(a)];});
-      tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1);
-      tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1);
-      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1);}
+      mM.push(tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1),
+      tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1),
+      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1));fuse(mM);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the hour hand, on the hour wheel's pipe */
     const hh=grp(hdP,H[1]);R.hh=hh;
     {const y1=YH1,y0=y1-3.1,yf=y1-0.8,rb=y=>HRW.rh+(HRW.yt-y)/140+0.01;   /* its hole on the seat's 1:70, 0.01 clear */
-      tag(mesh(hh,lathe([[rb(y0),y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[rb(y1),y1]],72),goldin),'050200-2');
-      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L,-1,0.25,HOUR.rf),goldin),'050200-2',1);}
+      fuse([tag(mesh(hh,lathe([[rb(y0),y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[rb(y1),y1]],72),goldin),'050200-2'),
+      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L,-1,0.25,HOUR.rf),goldin),'050200-2',1)]);}
     /* the up-and-down hand, on its wheel's pipe */
     const uh=grp(hdP,H[2]);R.uh=uh;
     {const y1=YU1,yf=y1-0.5,y0=y1-1.4;
-      tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3');
-      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1);}
+      fuse([tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3'),
+      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1)]);}
     /* the seconds hand on its collet (Zeigerfutter 05 02 01-2, brass, no sheet), pressed on the seconds post's 1:90 taper: Ø 1.5 (the coloured section's, 1.6 scaled,
        inside the dial's Ø 1.7 hole) and 4.6 long (scaled there, pictorial), its end Ø 1.2 through the hand (the hand's hole), flush with its top; bored on the post, 0.005 clear */
     const sh=grp(hdP,H[35]);R.sh=sh;
     {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-0.1*(y-SW.ys-24.05)/9.1)/2+0.005;
-      tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1');
-      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1);
-      tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1);
+      const sM=[tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1'),
+      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1)];
+      sM.push(tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1));fuse(sM);   /* boss, pointer and tail one hand, one mesh (fuse) */
       const yc=y0-4.0;tag(mesh(sh,lathe([[post(yc),yc],[0.75,yc],[0.75,y0],[SEC.rh,y0],[SEC.rh,y1],[post(y1),y1]],32),M.brass),'050201-2');}
 
     /* ---------- the dial (05 02 00-4) ---------- */
