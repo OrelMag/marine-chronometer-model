@@ -1,27 +1,27 @@
 {
  "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
  "bowl": {
-  "m": 1246.154,
+  "m": 1247.148,
   "cg": [
-   0.065,
-   -10.424,
-   -0.281
+   0.046,
+   -10.438,
+   -0.287
   ],
   "I": [
    [
-    1381987.7,
-    20182.1,
-    -22178.8
+    1383067.8,
+    19526.7,
+    -22192.0
    ],
    [
-    20182.1,
-    1704514.2,
-    -2755.9
+    19526.7,
+    1705447.3,
+    -3017.9
    ],
    [
-    -22178.8,
-    -2755.9,
-    1378887.7
+    -22192.0,
+    -3017.9,
+    1380336.0
    ]
   ],
   "byMat": {
@@ -29,8 +29,8 @@
    "plate": 356.73,
    "brass2": 87.03,
    "gilt": 63.28,
-   "steel": 58.95,
-   "plateSolid": 32.06,
+   "steel": 58.93,
+   "plateSolid": 33.07,
    "glass": 14.23,
    "copper": 12.18,
    "chain": 2.66,
@@ -54,14 +54,14 @@
    "barrel": 41.04,
    "fusee": 36.71,
    "dial": 36.1,
+   "ratchet": 19.05,
    "motion": 18.05,
-   "ratchet": 18.03,
    "lowerBridge": 15.74,
    "pillars": 13.77,
    "ltb": 12.91,
    "sq": 12.42,
    "gw": 11.95,
-   "lockArm": 11.2,
+   "lockArm": 11.18,
    "bal": 9.41,
    "sratchet": 8.3,
    "post": 6.43,

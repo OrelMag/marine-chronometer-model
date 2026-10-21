@@ -208,7 +208,7 @@ class Model:
         try: C = np.linalg.pinv(s.J.T @ s.J)
         except Exception: return [None]*len(s.P)
         f = max(1.0, s.chi2/max(1, sum(len(p['idx']) for p in s.P) - s.nfree())); out = []; k = 0
-        for p in s.P: m = len(p['q']); out.append(np.sqrt(np.maximum(np.diag(C)[k:k+m]*f, 0))); k += m
+        for p in s.P: m = len(p['q']); v = np.sqrt(np.maximum(np.diag(C)[k:k+m]*f, 0)); out.append(v if len(v) == m else None); k += m   # None where the Jacobian doesn't (yet) cover the primitive
         return out
 
 def junction(a, b, near, tangent):

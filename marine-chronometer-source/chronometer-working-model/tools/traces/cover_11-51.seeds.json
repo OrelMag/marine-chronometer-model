@@ -1,0 +1,20 @@
+{
+ "frame": "f_KLUwI2UUCMQ_11-51.0.png",
+ "source": "KLUwI2UUCMQ 11:51.0 (4K), the set-up cover face down on the barrel bridge (a second view, its lower end whole, out of focus); points placed by Claude by eye on gridded crops (+-15 px), each moved onto the edge by cover_ends.py",
+ "scale": 0.5,
+ "origin": [2600, 1250],
+ "box": [1650, 200, 3700, 2160],
+ "holes": {
+  "arb": [2695, 1115, 185, 0],
+  "s0": [3127, 366, 40, 1],
+  "s1": [2176, 1854, 40, 1],
+  "ck": [2736, 1780, 27, 0]
+ },
+ "bands": {
+  "padU": {"pts": [[2575, 402], [2650, 402], [2750, 406], [2850, 416]], "levels": [1, 0], "win": 20}
+ },
+ "curves": {
+  "L_end": {"level": 1, "coarse": 25, "win": 8, "pts": [[1747, 1450], [1847, 1650], [1947, 1783], [2047, 1890], [2167, 1970], [2300, 2023], [2447, 2063], [2607, 2083], [2730, 2092]]},
+  "L_right": {"level": 1, "coarse": 25, "win": 8, "pts": [[2860, 1583], [2827, 1717], [2787, 1917], [2770, 2080]]}
+ }
+}
