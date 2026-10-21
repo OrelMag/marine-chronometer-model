@@ -234,6 +234,12 @@ function subtractCircle(poly,c,r,uni){
   const n=Math.ceil(Math.abs(d)/0.03);for(let q=1;q<n;q++){const a=aE+d*q/n;run.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}
   return run;
 }
+/* the setup click (42027) as one solid: pawlGeo's lever (w 1.3, 0.8 thick, centred on its height) with its eye the measured round boss r 1.48 about the pivot (KLUwI2UUCMQ
+   12:05.6), its pivot hole r 0.328; drawn until 21 October 2026 as the lever and a second solid for the boss, their faces coinciding, which drew speckled where they fought */
+function clickGeo(len){const w=1.3,r=w*0.72,s=new THREE.Shape();s.moveTo(0,r);s.absarc(0,0,r,Math.PI/2,-Math.PI/2,true);
+  s.lineTo(-len*0.8,-w*0.26);s.lineTo(-len,-w*0.62);s.lineTo(-len*0.96,w*0.08);s.quadraticCurveTo(-len*0.5,w*0.42,0,r);
+  const P=s.getPoints(16).map(v=>[v.x,-v.y]).filter((p,i,a)=>!i||Math.hypot(p[0]-a[i-1][0],p[1]-a[i-1][1])>1e-6);if(Math.hypot(P[0][0]-P[P.length-1][0],P[0][1]-P[P.length-1][1])<1e-6)P.pop();
+  const g=polyGeo(subtractCircle(P,[0,0],1.48,true),0.8,[[0,0,r*0.35]]);g.translate(0,-0.4,0);return g;}
 /* convex hull of points (Andrew's monotone chain) */
 function hull(P){P=[...P].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]),h=[];
   for(const s of[P,[...P].reverse()]){const k=h.length;for(const p of s){while(h.length>=k+2&&cr(h[h.length-2],h[h.length-1],p)<=0)h.pop();h.push(p);}h.pop();}return h;}
@@ -1636,8 +1642,8 @@ function buildMovement(M){
   { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,3.0,3.1),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(fs.MS.y0+fs.MS.y1)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71+BB_DN,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],64); }
   const ASQ=2.265,asq=hn(mesh(rt,new THREE.BoxGeometry(ASQ,8.8,ASQ),M.steel,L.Ba[0],-35.96+4.4,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, through the ratchet (which it carries) and about 7.5 mm over it (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5; 12:19 about 8 +-1), 2.265 across the flats (KLUwI2UUCMQ 12:19 through two cameras, its three upright edges at 0.5-1.9 px: 2.26-2.27; 2.2 until 20 October 2026, from 38:25's 2.0-2.3 against the ratchet's tips) */
-  { const Pv=S.click,CL=5.07,dP=Math.hypot(Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]),rR=SUT-SRD+0.1,aP=Math.atan2(Pv[1]-L.Ba[1],Pv[0]-L.Ba[0])-Math.acos((dP*dP+rR*rR-CL*CL)/(2*dP*rR)),Tp=[L.Ba[0]+rR*Math.cos(aP),L.Ba[1]+rR*Math.sin(aP)],clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],SRY+0.05,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
-    hn(mesh(rt,polyGeo([...Array(48)].map((_,i)=>[Pv[0]+1.48*Math.cos(i/48*TAU),Pv[1]+1.48*Math.sin(i/48*TAU)]),0.8,[[...Pv,0.328]]),M.steel,0,SRY+0.05-0.4,0),'42027',{sub:1});   /* its eye, a round boss r 1.48 about the pivot (KLUwI2UUCMQ 12:05.6, the spring off: r 1.47-1.50 over about 250 deg of edge, 0.085-0.10 rms; Fig. 108's round eye), where pawlGeo's stock lever has r 0.94; its arm and nose not measured (pawlGeo's, 5.07 to the nose: the video and the top-view photograph about 5.1), the nose 0.1 over the root circle (r 7.26; the frames: in a gap at about 7.18), so the backs pass under it as the arbor is let down. Until 20 October 2026 aimed at a root 2.25 modules deep */
+  { const Pv=S.click,CL=5.07,dP=Math.hypot(Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]),rR=SUT-SRD+0.1,aP=Math.atan2(Pv[1]-L.Ba[1],Pv[0]-L.Ba[0])-Math.acos((dP*dP+rR*rR-CL*CL)/(2*dP*rR)),Tp=[L.Ba[0]+rR*Math.cos(aP),L.Ba[1]+rR*Math.sin(aP)],clk=hn(mesh(rt,clickGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3),M.steel,Pv[0],SRY+0.05,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
+      /* its eye, a round boss r 1.48 about the pivot (KLUwI2UUCMQ 12:05.6, the spring off: r 1.47-1.50 over about 250 deg of edge, 0.085-0.10 rms; Fig. 108's round eye), where pawlGeo's stock lever has r 0.94; its arm and nose not measured (pawlGeo's, 5.07 to the nose: the video and the top-view photograph about 5.1), the nose 0.1 over the root circle (r 7.26; the frames: in a gap at about 7.18), so the backs pass under it as the arbor is let down. Until 20 October 2026 aimed at a root 2.25 modules deep */
     /* the click 5.07 mm long (S.click), aimed at the old root (2.25 m deep); turn the ratchet (it is fixed in running) so a face bears on the click, then rest the click on it,
        seated by its outline as the winding pawls are (phaseAgainst's deep) */
     const pr=Object.assign(ratchetProf(SRZ,SRM,true,true,SRD),{uc:SRU}),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1,true);
@@ -1697,10 +1703,9 @@ function buildMovement(M){
     /* since 20 October 2026 the cover's screws are measured (S.cover, 12.83 and 13.21 from the arbor), out past its ends as traced on the top-view photograph (12.69, which reads
        ~10 % small near the rim): a round boss r 1.35 round each screw, joined to the traced outline (estimated: no frame shows the cover's ends face-on) */
     const cvP=[...S.cover.map(q=>[q,1.35]),[S.click,1.1]].reduce((P,[q,r])=>subtractCircle(P,q,r,true),pts);   /* and r 1.1 round the click's pivot (S.click), measured at the cover's corner, whose end shows in the cover */
-    const s=new THREE.Shape();cvP.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
-    for(const[x,z,r]of[[...L.Ba,3.08],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
-    const cvg=extrude(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
-    R.cover=hn(mesh(rt,cvg,M.plateSolid,0,-29.66,0),'42029');
+    /* one solid, drawn as one mesh (the plate and its pads merged, their walls flush, as the balance lower bridge is): until 21 October 2026 a bevelled plate 0.15 wider at its
+       middle than the pads drawn under it as meshes of their own, which showed it as a plate on a second, smaller one */
+    const cvG=[[polyGeo(cvP,1.1,[[...L.Ba,3.08],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]),new THREE.Matrix4()]];
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
     /* the pads: the cover's underside milled away across its middle, leaving its two ends as full-width pads bounded by arcs (KLUwI2UUCMQ 11:51-11:53, the cover face down;
        Figs. 24, 80, 108 draw a thick skirt at the ends), standing on the bridge round its screws; no round feet (r 1.1 x 1.4 until 20 October 2026). The arcs drawn about the
@@ -1709,7 +1714,8 @@ function buildMovement(M){
       for(let k=0,cur=null;k<N;k++){const i=(st+k)%N,p=cvP[i];if(rr(p)>=RP){if(!cur){cur=[];runs.push(cur);}cur.push(p);}else cur=null;}
       for(const run of runs){const a0=Math.atan2(run[run.length-1][1]-L.Ba[1],run[run.length-1][0]-L.Ba[0]),a1=Math.atan2(run[0][1]-L.Ba[1],run[0][0]-L.Ba[0]);let d=a1-a0;while(d>Math.PI)d-=TAU;while(d<-Math.PI)d+=TAU;
         const pad=[...run];for(let k=1;k<12;k++)pad.push([L.Ba[0]+RP*Math.cos(a0+d*k/12),L.Ba[1]+RP*Math.sin(a0+d*k/12)]);
-        hn(mesh(rt,polyGeo(pad,1.4,S.cover.filter(q=>rr(q)>RP).map(q=>hC(...q,0.9)).filter(h=>{let w=false;for(let i=0,j=pad.length-1;i<pad.length;j=i++){const[xi,zi]=pad[i],[xj,zj]=pad[j];if((zi>h[1])!==(zj>h[1])&&h[0]<(xj-xi)*(h[1]-zi)/(zj-zi)+xi)w=!w;}return w;})),M.plateSolid,0,-28.56,0),'42029',{sub:1});}
+        cvG.push([polyGeo(pad,1.4,S.cover.filter(q=>rr(q)>RP).map(q=>hC(...q,0.9)).filter(h=>{let w=false;for(let i=0,j=pad.length-1;i<pad.length;j=i++){const[xi,zi]=pad[i],[xj,zj]=pad[j];if((zi>h[1])!==(zj>h[1])&&h[0]<(xj-xi)*(h[1]-zi)/(zj-zi)+xi)w=!w;}return w;})),new THREE.Matrix4().makeTranslation(0,1.1,0)]);}
+      R.cover=hn(mesh(rt,mergeGeo(cvG),M.plateSolid,0,-29.66,0),'42029');
       for(const q of S.cover)hn(screw(rt,...q,-29.66,1.05,1.0,1.1+1.4+2.2,0.45),'42056.cv'); }   /* 42056 (as the detent block's), into the barrel bridge; standing proud, their sides showing (6:29) */
     /* setup pawl pivot screw (42036): put in from under the barrel bridge (Op. 41, Fig. 80), its head in the gap over the barrel, its shank the click's pivot, its end in
        the cover's hole, flush with its top, where the top-view photograph shows a small round end, not a screw head */
