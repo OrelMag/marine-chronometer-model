@@ -62,7 +62,7 @@
    if(Array.isArray(mat)){for(const q of g.groups){const lo=Math.max(q.start,dr.start)/3,hi=Math.min(q.start+q.count,dr.start+dr.count)/3;for(const t of cs)if(t>=lo&&t<hi)test(t,mat[q.materialIndex],q.materialIndex);}}
    else{const lo=Math.max(0,dr.start)/3,hi=Math.min(N,dr.start+dr.count)/3;for(const t of cs)if(t>=lo&&t<hi)test(t,mat,0);}};
  const cast=(o,d,list,far)=>{RC.set(o,d);RC.near=0;RC.far=far;const h=[];for(const x of list){const k=h.length;rc(x.m,RC,h);for(let i=k;i<h.length;i++)h[i].x=x;}
-   for(const q of h){if(q.face){M3.getNormalMatrix(q.object.matrixWorld);nrm.copy(q.face.normal).applyMatrix3(M3).normalize();q.back=nrm.dot(d)>0;}else q.back=false;}return h.sort((a,b)=>a.distance-b.distance);};
+   for(const q of h){if(q.face){M3.getNormalMatrix(q.object.matrixWorld);nrm.copy(q.face.normal).applyMatrix3(M3).normalize();q.back=nrm.dot(d)>0;}else q.back=false;}return h.sort((a,b)=>Math.abs(a.distance-b.distance)<1e-6&&a.x===b.x&&a.back!==b.back?(a.back?-1:1):a.distance-b.distance);};   /* at one distance in one mesh, a back face before a front: the faces two pieces of one solid share inside it (fuse, core.js) end one run and start the next */
  /* a part's axis: its own +y (a screw from sHead: its shank's), through its origin; the extent of its meshes along it */
  const axisOf=A=>{const k=A.userData.axis||(A.userData.sc&&A.children.length===3&&A.children[2].geometry&&A.children[2].geometry.type==='CylinderGeometry'?A.children[2]:null);   /* userData.axis: the mesh a part turns about, where its group's origin is off it */
    const ref=k||A,P=new T.Vector3().setFromMatrixPosition(ref.matrixWorld),D=new T.Vector3(0,1,0).transformDirection(ref.matrixWorld).normalize();
@@ -71,7 +71,9 @@
    return{P,D,lo,hi};};
  /* runs of metal along a ray, per mesh: [from, to, mesh]; a ray that starts inside a mesh's metal (its first hit a back face) runs from 0 */
  const spans=(h,inside)=>{const st=new Map(),out=[];for(const q of h){const k=q.x;if(!st.has(k)){if(q.back&&inside&&!inside.has(k)){st.set(k,null);continue;}st.set(k,q.back?0:null);}if(!q.back)st.set(k,q.distance);else{const a=st.get(k);if(a!=null||!inside||inside.has(k))out.push([a==null?0:a,q.distance,k]);st.set(k,null);}}   /* inside: the meshes the ray starts in (a back face first elsewhere: a seam slipped through, ignored) */
-   for(const[k,a]of st)if(a!=null)out.push([a,9,k]);return out.sort((a,b)=>a[0]-b[0]);};
+   for(const[k,a]of st)if(a!=null)out.push([a,9,k]);out.sort((a,b)=>a[0]-b[0]);
+   for(let i=0;i<out.length;i++)for(let j=i+1;j<out.length;j++)if(out[j][2]===out[i][2]&&Math.abs(out[j][0]-out[i][1])<1e-6){out[i][1]=out[j][1];out.splice(j,1);j=i;}   /* a mesh's runs that meet (pieces of one solid merged) as one */
+   return out;};
  const perp=D=>{const a=Math.abs(D.y)<0.9?new T.Vector3(0,1,0):new T.Vector3(1,0,0),u=new T.Vector3().crossVectors(D,a).normalize(),v=new T.Vector3().crossVectors(D,u).normalize();return[u,v];};
  const near=(b,r)=>MS.filter(x=>x.b.intersectsBox(b.clone().expandByScalar(r)));
  const boxOf=xs=>{const b=new T.Box3();for(const x of xs)b.union(x.b);return b;};

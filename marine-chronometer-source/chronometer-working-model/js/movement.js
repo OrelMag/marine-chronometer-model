@@ -943,7 +943,7 @@ function buildMovement(M){
      stepped, its leaves from 0.3 to 4.3 (tips r 2.49), a collar r 1.57 to 5.3, a neck r 0.75 to 10.0, the square 2.16 across from 10.0 to 14.5; the hour wheel's boss r 3.47 from the
      wheel to 5.9, recessed over the leaves, its pipe r 2.2 to 9.5; the minute wheel's pinion tips r 3.1 from the wheel to an end disc r 2.1 at 5.5, its hole r 0.84. Until 5 October 2026
      the leaves to 2.2, one pipe r 1.7 to 8.99, the square 2.4 across from 8.84 to 11.74, the hour wheel's pipe r 2.3 to 8.79 straight off the wheel, the minute pinion 1.6 long (estimated) */
-  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:MWM.a,y:2.3,th:4.0,bore:0.5}}),'42077');fuse([R.cannon.userData.pin,mesh(R.cannon,ring(1.57,0.5,1.0),M.steel,0,4.8,0),mesh(R.cannon,ring(0.75,0.5,4.7),M.steel,0,7.65,0),mesh(R.cannon,new THREE.BoxGeometry(2.16,4.5,2.16),M.steel,0,12.25,0)]);   /* the pinion, its boss, pipe and square one piece, one mesh (fuse; the leaves' box kept, gear.box) */
+  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:MWM.a,y:2.3,th:4.0,bore:0.5}}),'42077');R.cnP=[R.cannon.userData.pin,mesh(R.cannon,ring(1.57,0.5,1.0),M.steel,0,4.8,0),mesh(R.cannon,ring(0.75,0.5,4.7),M.steel,0,7.65,0),mesh(R.cannon,new THREE.BoxGeometry(2.16,4.5,2.16),M.steel,0,12.25,0)];   /* the pinion, its boss, pipe and square one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box) */
   /* the winding key on the square, turned by its shank to set the hands (Fig. 8): shown only while setting, when the bezel is off */
   R.hkey=hn(pc(windingKey(new THREE.Group(),M),'key'),'42044',{sub:1});R.hkey.position.y=10.0;R.hkey.visible=false;R.cannon.add(R.hkey);   /* the key (core.js windingKey), its socket over the square (10.0-14.5); a T bar with balls on a rod until 5 October 2026, the box's key redrawn without it */
   /* the minute wheel and the wind indicator wheel turn on posts (42085, 42084) fixed to the pillar plate by screws (35779) from its train side (Fig. 110) */
@@ -977,7 +977,7 @@ function buildMovement(M){
   const SSF=0.488,SSH=[[16.14*FK,SSF-48.7*D2R],[16.51*FK,SSF-8.6*D2R]].map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);
   const gwP=[R.gw.userData.wheel,mesh(R.gw,discGeo(18.0*FK,GW_T-GW_R,[[0,0,2.75*FK],[...SSH[0],0.4]]),M.copper,0,GW_F,0)];   /* the rim and the floor, with the hole the spring's pin is pressed into */
   gwP.push(mesh(R.gw,discGeo(9.3*FK,0.3,[[0,0,2.75*FK]]),M.copper,0,GW_F-0.3,0),mesh(R.gw,ringGeo(4.0*FK,2.75*FK,0.3),M.copper,0,GW_F-0.45,0));   /* the raised disc and the hub; the bore (r 2.75 FK, video 27:26) free on the arbor's collar */
-  gwP.push(mesh(R.gw,ringGeo(3.2,2.75*FK,GW_F-0.6-(SR_T+0.05)),M.copper,0,(GW_F-0.6+SR_T+0.05)/2,0));fuse(gwP);   /* the wheel one mesh (fuse; the teeth's own box kept for the checks, gear.box): the floor's face flush with the rim's drew a ring in Edges until 21 October 2026 */   /* the hub's pipe, r 3.2 (KLUwI2UUCMQ 27:26: its edge r about 3.16, rough; r 2.87 until 20 October 2026, the old bore less a running fit), up through the sustaining ratchet's bore (r 3.34, 27:00) to 0.05 short of the
+  gwP.push(mesh(R.gw,ringGeo(3.2,2.75*FK,GW_F-0.6-(SR_T+0.05)),M.copper,0,(GW_F-0.6+SR_T+0.05)/2,0));R.gwP=gwP;   /* the wheel one mesh, merged once its teeth are phased (below; fuse, the teeth's own box kept for the checks, gear.box): the floor's face flush with the rim's drew a ring in Edges until 21 October 2026 */   /* the hub's pipe, r 3.2 (KLUwI2UUCMQ 27:26: its edge r about 3.16, rough; r 2.87 until 20 October 2026, the old bore less a running fit), up through the sustaining ratchet's bore (r 3.34, 27:00) to 0.05 short of the
      winding ratchet: the sustaining ratchet rides it, "a small amount of grease on the outside of the hub" (Op. 20, Fig. 71's arrow 2), the two assembled together before
      the wheel goes on the fusee (Fig. 71, Op. 25) and taken off together (Op. 41). Its outside the ratchet's bore less a running fit, its height to the winding ratchet,
      estimated; no frame shows it (27:26 the wheel's recess face-on). Until 15 October 2026 the ratchet rode a step r 2.87 on the arbor's collar, under the winding
@@ -1602,7 +1602,7 @@ function buildMovement(M){
      the bridge: the nearest ISO, M1.6). Until 12 October 2026 an estimated stud r 0.9, 3.2 long, 9.5 mm from the fusee about 108 deg round from here; kept solid while
      the key winds (app.js) */
   { const q=fs.stud,c=Math.cos(fs.g.rotation.y),s=Math.sin(fs.g.rotation.y),WS=[fs.g.position.x+q[0]*c+q[1]*s,fs.g.position.z-q[0]*s+q[1]*c],WL=5.5,WG=0.5,ga=Math.atan2(L.Fu[1]-WS[1],L.Fu[0]-WS[0]);
-    const ws=[hn(cylBetween(bb,WSR,TB_T,TB_T+WL-WG,M.steel,...WS,40),'42099')];ws[0].userData.wstop=true;ws.push(hn(cylBetween(bb,0.8,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1}));   /* the stud, and its thread 2 mm up into the bridge */
+    const ws=[hn(cylBetween(bb,WSR,TB_T,TB_T+WL-WG,M.steel,...WS,40),'42099')];ws[0].userData.wstop={r:WSR,h:WL-WG};   /* the stud's radius and length (maintaining.py: its cylinder, merged with its end below) */ws.push(hn(cylBetween(bb,0.8,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1}));   /* the stud, and its thread 2 mm up into the bridge */
     const gr=new THREE.Group();gr.position.set(WS[0],TB_T+WL-WG,WS[1]);gr.rotation.y=-ga;bb.add(gr);   /* its end: four lands between three grooves, seven bands of equal width */
     const w=2*WSR/7;for(let i=0;i<4;i++){const z0=-WSR+2*i*w,z1=z0+w,cuts=[];if(i>0)cuts.push([z0,0,1]);if(i<3)cuts.push([z1,0,-1]);ws.push(hn(mesh(gr,polyGeo(discClip(WSR,cuts,64),WG),M.steel),'42099',{sub:1}));}fuse(ws);   /* the stud and its grooved end one piece, one mesh (fuse): the lands' edges ran flush with its wall, lines in Edges until 21 October 2026 */
     R.bbWS=hT(...WS,1.6); }   /* its tapped hole blind,
@@ -1774,6 +1774,7 @@ function buildMovement(M){
   ph(TW.wheel,L.T,FW.pin,L.F,1);
   ph(FW.wheel,L.F,EW.pin,L.E,-1,BETA-ESC.t0);
   ph(R.cannon.userData.pin,L.C,R.minW.userData.wheel,L.Mw,-1);
+  fuse(R.gwP);fuse(R.cnP);   /* after their teeth's phase (ph turns the toothed piece alone): the pieces merged where they stand */
   ph(R.minW.userData.pin,L.Mw,R.hourW.userData.wheel,L.C,1);
   ph(R.fp.userData.pin,L.Fu,R.udW.userData.wheel,L.Ud,1);
   /* the indicator's backlash in the fusee's turn: running, the pinion drives the wheel on one flank; wound, the fusee turned back, it crosses the gap to the other before the wheel
@@ -2083,7 +2084,7 @@ function makeFusee(M,c){
     for(let k=0;k<NH;k++){const h0=H[k],h1=H[(k+1)%NH];quad([...h0,Z0],[...h1,Z0],[...h1,ZH],[...h0,ZH],[XH-(h0[0]+h1[0])/2,TC/2-(h0[1]+h1[1])/2,0]);tri([XH,TC/2,ZH],[...h0,ZH],[...h1,ZH],[0,0,-1]);}   /* the hole's wall and floor */
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.computeVertexNormals();mesh(stopBar,g,M.steel); }
   const bsp=hn(mesh(sbR,new THREE.BufferGeometry(),M.steel),'42025');let barX=null;
-  body.push(mesh(sbR,discGeo(1.05+0.1*Math.floor((REC-1.05)/0.1+1e-9),0.6,[[0,0,1.2],...HL.map(([x,z])=>[x,z,0.4])]),M.gilt,0,yR,0));fuse(body);   /* the fusee's body one mesh (fuse): its pieces' flush faces drew lines across it in Edges until 21 October 2026 */   /* the recess's floor, a plate over the turned body out to its last ring under the recess (its two tapped holes cut round) */
+  body.push(mesh(sbR,discGeo(1.05+0.1*Math.floor((REC-1.05)/0.1+1e-9),0.6,[[0,0,1.2],...HL.map(([x,z])=>[x,z,0.4])]),M.gilt,0,yR,0));   /* the body's pieces merged once its lathe has its groove's end and the chain's slot (below) */   /* the recess's floor, a plate over the turned body out to its last ring under the recess (its two tapped holes cut round) */
   /* the spring (42025): a round wire 0.30 +-0.05 across (20:01.23, the narrowest readings at half depth, 12-14 px at 40 px/mm) bent to an open C on the recess's floor
      hugging its wall (25:13), from its fixed end turned down into the tapped hole on the stop end's side (25:10.6-25:13.4; the C ends at it at 20:01.23) round the
      collar's far side, past the other hole on the chain end's side (just outside it, touching or 0.1 off: 20:01.23), then in to the bar's inner face near its chain end,
@@ -2120,12 +2121,12 @@ function makeFusee(M,c){
      ellipse, 563 px on its long axis for the inside radius and tilted 41 deg: 0.089 of that radius, 1.4-1.55 +-0.3), toward the barrel's own end 0.3 off its floor
      (estimated); 16:52 gives about 14 +-2 edge to edge. It was the room between the caps, 14.8 (0.2 under the cap), until 5 October 2026 */
   const MSY0=c.bT+0.9,MSY1=c.bB-0.6-1.45;
-  const bw=new THREE.Mesh(ringGeo(c.Rb,c.Rb-BWT,Math.abs(c.bT-c.bB)-1.2-BWE),M.brass);bw.position.y=(c.bT+c.bB-BWE)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.barrelWall=c.Rb;   /* between the barrel's end and the end ring (a dashed ring in Edges) */
+  const bw=new THREE.Mesh(ringGeo(c.Rb,c.Rb-BWT,Math.abs(c.bT-c.bB)-1.2-BWE),M.brass);bw.position.y=(c.bT+c.bB-BWE)/2;bz.add(bw);let bwEnd=null;bw.userData.driveGhost=true;bw.userData.barrelWall=c.Rb;   /* between the barrel's end and the end ring (a dashed ring in Edges) */
   const CSA=[0,1,2,3,4].map(k=>(115+72*k)*D2R),CS=CSA.map(a=>[(c.Rb-1.0)*Math.cos(a),(c.Rb-1.0)*Math.sin(a)]);   /* the cap's screws, into the wall's end (their starting angle estimated), on r 16.6 +-0.3 (KLUwI2UUCMQ 15:54 rectified: 0.918-0.969 of the wall's outer edge; 72 deg apart, gaps 69-75); r 17.2 until 5 October 2026 */
   mesh(bz,ringGeo(c.Rb,BH,0.6),M.gilt,0,c.bT+0.3,0).userData.driveGhost=true;   /* the barrel's own end, flush with the wall (TN24H 0:13.38, standing on its cap's end: 1.02 of the cap; bEWF2ivi1Rg 0:06 side-on, a plain cylinder); a lip r Rb+0.7 over a r 17.6 wall until 5 October 2026, as 23:30's fit read the top edge, 18.3 */
   { const cp=hn(mesh(bz,discGeo(c.Rb,0.6,[[0,0,BH],...CS.map(q=>hC(...q,0.3))]),M.gilt,0,c.bB-0.6,0),'42169');cp.userData.driveGhost=true;hn(mesh(bz,ringGeo(3.9,BH,0.3),M.gilt,0,c.bB+0.15,0),'42169',{sub:1}).userData.driveGhost=true;   /* a raised ring round its hole, r 3.9 (KLUwI2UUCMQ 33:21.5, 0.210 of the cap's radius; 3SFDplGq6vs 0:13.4 on another movement, 0.216: r 3.84-3.95), its height not seen (0.3, estimated) */   /* the cap (42169), r 18.3, flush with the wall (TN24H 3SFDplGq6vs 0:12.6, the cap flat on the cloth: r 18.26 +-0.5, above at RB_O); r 18.0 (Rb + 0.4) until 5 October 2026, then about flush with the wall (33:34: its four screw heads at 0.918-0.969 of its outline, 17.6-18.2); r 19.0 until 5 October 2026, read off 23:30's bottom outline */
     const ls=new THREE.Shape();ls.absarc(0,0,c.Rb,0,TAU,false);const lh=new THREE.Path();lh.absarc(0,0,c.Rb-BWT,0,TAU,true);ls.holes.push(lh);for(const q of CS){const h=new THREE.Path();h.absarc(q[0],-q[1],hT(0,0,0.3)[2],0,TAU,true);ls.holes.push(h);}
-    const lg=extrude(ls,{depth:BWE,bevelEnabled:false,curveSegments:96});lg.rotateX(-Math.PI/2);fuse([bw,mesh(bz,lg,M.brass,0,c.bB-0.6-BWE,0)]);   /* the wall and its tapped end one mesh (fuse): their walls flush, a ring round the barrel in Edges until 21 October 2026 */   /* the wall's end at the cap, tapped for them */
+    const lg=extrude(ls,{depth:BWE,bevelEnabled:false,curveSegments:96});lg.rotateX(-Math.PI/2);bwEnd=mesh(bz,lg,M.brass,0,c.bB-0.6-BWE,0);   /* merged into the wall once it is rebuilt with the hook's hole (below) */   /* the wall's end at the cap, tapped for them */
     if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;bz.add(fl);for(const q of CS)hn(c.screw(fl,q[0],-q[1],-c.bB,0.3,0.25,0.6+BWE),'37023');   /* through the cap and BWE into the wall's end */} }
   /* mainspring brace (42037, Fig. 75), the "hooking piece": a steel strip lining the wall "just under three quarters of the way round the inside of the barrel, a fixed
      hook in the mainspring proper locating in a hole in the piece", and the barrel's own "fixed steel hook" holding it (Royal Museums Greenwich ZBA7849, Hamilton 5674,
@@ -2204,6 +2205,7 @@ function makeFusee(M,c){
   const SLA=13*D2R,SL0=-4*D2R,aE=phi0+TAU*ME,ys0=yf(ME)+TK*1.5,ys1=ys0+0.49,rS=rc(ME)-0.3,lq=lg.attributes.position;
   for(let i=0;i<lq.count;i++){const x=lq.getX(i),z=lq.getZ(i),y=lq.getY(i),r=Math.hypot(x,z);if(y<ys0||y>ys1||r<=rS)continue;const da=(((Math.atan2(z,x)-aE-SL0)%TAU)+TAU)%TAU;if(da>SLA)continue;lq.setX(i,x*rS/r);lq.setZ(i,z*rS/r);}
   lg.computeVertexNormals();fPin.geometry.dispose();fPin.geometry=cylY(0.17,ys1-0.05-(yf(ME)-0.2),10);
+  fuse(body);   /* the fusee's body one mesh (fuse), its lathe now cut: its pieces' flush faces drew lines across it in Edges until 21 October 2026 */
   const geo=rot=>{if(rot>RT)return pinGeo(ME,rot);const m0=md0(rot),d=dl(m0),r0=rc(m0);return{m0,F0:[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0:[bx+rB*Math.sin(d),-rB*Math.cos(d)],bt:-Math.PI/2+d,S:Tg(m0),lever:r0};},md=rot=>geo(rot).m0;
   const wrapB=q=>TAU*I(q.m0)+(Tg(m00)-q.S)/rB;   /* the chain's turn round the barrel, tangent point to hook: what has come off the fusee, less the straight run's gain */
   const IB0=I(m00)-dl(m00)/TAU,Ib=(n,eps=0)=>{const q=geo(n*TAU+eps);return(-Math.PI/2-q.bt+wrapB(q))/TAU-IB0;};
@@ -2224,6 +2226,9 @@ function makeFusee(M,c){
       q(V(0,M,1),V(0,M,2),V(1,M,2),V(1,M,1),tan(M));q(V(0,0,1),V(0,0,2),V(1,0,2),V(1,0,1),tan(0).negate()); }   /* its sides */
     let wg=new THREE.BufferGeometry();wg.setAttribute('position',new THREE.Float32BufferAttribute(P,3));wg.setIndex(I);wg=wg.toNonIndexed();wg.computeVertexNormals();   /* flat faces, as the extruded wall had */
     bw.geometry.dispose();bw.geometry=wg;bw.position.y=0; }
+  /* the wall and its tapped end one mesh (fuse): their walls ran flush, a ring round the barrel in Edges until 21 October 2026. wallY keeps the wall's own height, the solid
+     the checks take it to enclose (fine-interference.js, contacts.js), as before */
+  if(bwEnd){bw.geometry.computeBoundingBox();bw.userData.wallY=[bw.geometry.boundingBox.min.y,bw.geometry.boundingBox.max.y];fuse([bw,bwEnd]);}
   function path(rot){const P=[],V=(x,y,z)=>P.push(new THREE.Vector3(x,y,z)),q=geo(rot),m0=q.m0,F0=q.F0,B0=q.B0,y0=yf(m0),y1=yb(m0);
     for(let m=ME;m>m0;m-=0.01){const a=phi0+TAU*m-rot,r=rc(m);V(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
     V(F0[0],y0,F0[1]);for(let s=0.1;s<1;s+=0.1)V(lerp(F0[0],B0[0],s),lerp(y0,y1,s),lerp(F0[1],B0[1],s));

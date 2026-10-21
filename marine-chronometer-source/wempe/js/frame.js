@@ -246,7 +246,7 @@ const WFRAME=(()=>{
       /* the band and the flange one ring (05 08 00-3), one mesh in each version (fuse, core.js): their bores' and walls' faces ran flush, rings round it in Edges until 21 October
          2026. The drawings' flange, shared by the plain band and Wempe 3955's, goes into each as a copy; the pin stays in the flange's group */
       { const cp=f=>{const m=mesh(f.parent,f.geometry.clone(),f.material);m.position.copy(f.position);return tag(m,'050800-3',1);},f=RF['last first 1943'];
-        fuse([RB['6mx'],RF['6mx']]);fuse([RB['last first 1943'],cp(f)]);fuse([RB['3955'],cp(f)]);f.parent.remove(f); }
+        fuse([RB['6mx'],RF['6mx']]);fuse([RB['last first 1943'],cp(f)]);fuse([RB['3955'],cp(f)]);f.parent.remove(f);FLG.length=0;FLG.push(RB['last first 1943'].parent,RB['3955'].parent,RB['6mx'].parent); }   /* the pin in each band's group, fixed with its ring (fine.py) */
       /* its three screws (WN number not read): heads Ø 6.2 × 3.05, brass, the shank 6.3, on the coloured section (Wempe_Einheitschronometer.jpg px 1819-1878 × 510-538.5, its
          shank 1837-1862: Ø 6.28 (6.2 kept, within the reading) × 3.07, M2.6, at 9.37 px/mm by the pillar's 178 px for 19; sure on the section, 2.25 high until 17 October 2026); head on the plate's inner face */
       for(const b of RS['last first 1943']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'last first 1943'),q[0],q[1],0,3.1,3.05,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}

@@ -271,7 +271,7 @@ const WDIAL=(()=>{
       cnM.push(tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1));
       /* its crown, the square's last 0.5: the annuli from the bore out through circles 1.05 and 1.25 to the square (so the sphere is sampled across it) */
       const cr=p=>CN.yt-(CN.cr-Math.sqrt(CN.cr*CN.cr-p[0]*p[0]-p[1]*p[1]));
-      cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));fuse(cnM);}   /* the tube one piece, one mesh (fuse; the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
+      cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));R.cnM=cnM;}   /* the tube one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
 
     /* ---------- the change wheel on the short stud at 19 ---------- */
     const chP=part('changeWheel',20),ch=grp(chP,H[19]);R.ch=ch;
@@ -298,7 +298,7 @@ const WDIAL=(()=>{
     /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
        change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
     const ph=(A,pa,B,pb,s)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b;};
-    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
+    ph(R.cnPin,H[1],R.chW,H[19],-1);fuse(R.cnM);   /* the tube's pieces merged where they stand, its leaves phased */ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
 
     /* ---------- the hands ---------- */
     const hdP=part('hands',56);

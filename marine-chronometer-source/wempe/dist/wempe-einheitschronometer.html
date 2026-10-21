@@ -1094,12 +1094,12 @@ function escapeWheel(parent,M,rt,y,E){
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
   const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's shaft (r 0.5, movement.js; 0.67 until 20 October 2026) */
   const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
-  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
+  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);fuse([teeth,wm]);   /* the teeth and the web one wheel, one mesh: their top faces flush, a line round the root in Edges until 21 October 2026 */
   /* the collet, on the web's face toward the pinion, in two steps (KLUwI2UUCMQ 42:51 in the movement and 43:19, the original arbor: mfgfit's edges): a wide part next to
      the wheel D 3.2-3.75, 0.95-1.07 long (0.263 of the tips: r 1.73, 1.0), then a pipe D 2.0-2.4, 1.36-1.54 long (0.167: r 1.1, 1.45), its end 15.1-15.9 from the lower
      pivot's tip. Until 20 October 2026 one pipe r 0.20 of the tips, 1.9 long, read at 43:21.1 on the replacement arbor */
   const cw=new THREE.Mesh(ringGeo(0.263*rt,0.5,1.0),M.brass);cw.position.y=y+0.55+0.5;parent.add(cw);
-  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5,1.45),M.brass);cl.position.y=y+0.55+1.0+0.725;parent.add(cl);
+  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5,1.45),M.brass);cl.position.y=y+0.55+1.0+0.725;parent.add(cl);fuse([cw,cl]);   /* the collet's two steps one piece, one mesh (their bores flush) */
   return teeth;
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
@@ -1521,6 +1521,16 @@ function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonIndexed():g.clone()).applyMatrix4(m);g.dispose();return q;}),out=new THREE.BufferGeometry();
   for(const[k,n]of[['position',3],['normal',3],['uv',2]]){if(!gs.every(g=>g.attributes[k]))continue;const a=new Float32Array(gs.reduce((t,g)=>t+g.attributes[k].array.length,0));let o=0;for(const g of gs){a.set(g.attributes[k].array,o);o+=g.attributes[k].array.length;}out.setAttribute(k,new THREE.BufferAttribute(a,n));}
   gs.forEach(g=>g.dispose());return out;}
+/* fuse(ms, k): the meshes ms, pieces of one solid (a machined part drawn as several extrusions or lathes), made one mesh: their geometries merged into k's (by default
+   the piece without {sub:1}, else the first), each placed by its transform relative to k as built, the others taken out. Edges outlines each mesh, so pieces of one part
+   sharing a visible face, or with walls running flush, drew a line across the part where the real one has none (the seam sweep, 21 October 2026). k keeps its userData,
+   its geometry's userData and its place; the pieces must not move against each other afterwards. A toothed k (userData.gear) keeps its teeth's own box as gear.box
+   (its frame: min x y z, max x y z), which the checks read for the faces' overlap in mesh (bom-check.js, invariants-wempe.js) in place of the whole solid's */
+function fuse(/** @type {any[]} */ms,/** @type {any} */k=null){k=k||ms.find(o=>!o.userData.sub)||ms[0];const ch=(/** @type {any} */o)=>{const m=new THREE.Matrix4();for(let q=o;q;q=q.parent){q.updateMatrix();m.premultiply(q.matrix);}return m;},inv=ch(k).invert(),gu=k.geometry.userData;
+  if(k.userData.gear&&!k.userData.gear.box){k.geometry.computeBoundingBox();const b=k.geometry.boundingBox;k.userData.gear.box=[...b.min.toArray(),...b.max.toArray()];}
+  const L=[[k.geometry,new THREE.Matrix4()]];for(const o of ms){if(o===k)continue;if(o.children.length)console.error('fuse: a piece with children',o);L.push([o.geometry,new THREE.Matrix4().multiplyMatrices(inv,ch(o))]);if(o.parent)o.parent.remove(o);}
+  if(k.userData.sub&&ms.some(o=>!o.userData.sub))delete k.userData.sub;   /* k given (the teeth): it carries the part's own line now */
+  k.geometry=mergeGeo(L);k.geometry.userData=gu;return k;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
 function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.filter(h=>!h.pts);   /* holes: circles [x,z,r], or {pts} outlines */
   if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
@@ -2518,7 +2528,7 @@ const CONTACTS=(()=>{
      if(o.isInstancedMesh)for(let i=0;i<o.count;i++)out.push({o,inst:i,part,pk,name,ver:0});else out.push({o,inst:-1,part,pk,name,ver:0});});
    return out;}
  const DRUM=new WeakMap();
- function drum(o){const g=o.geometry;let d=DRUM.get(g);if(d)return d;g.computeBoundingBox();const bb=g.boundingBox,R=o.userData.barrelWall;d=new THREE.CylinderGeometry(R,R,bb.max.y-bb.min.y,72);d.translate(0,(bb.max.y+bb.min.y)/2,0);DRUM.set(g,d);return d;}
+ function drum(o){const g=o.geometry;let d=DRUM.get(g);if(d)return d;g.computeBoundingBox();const bb=g.boundingBox,R=o.userData.barrelWall,[y0,y1]=o.userData.wallY||[bb.min.y,bb.max.y];d=new THREE.CylinderGeometry(R,R,y1-y0,72);d.translate(0,(y1+y0)/2,0);DRUM.set(g,d);return d;}
  const xf=(it,inv)=>{const Mo=new THREE.Matrix4().multiplyMatrices(inv,it.o.matrixWorld),Mt=Mo.clone();if(it.inst>=0){it.o.getMatrixAt(it.inst,M4);Mt.multiply(M4);}return[Mo,Mt];};
  const pver=it=>{const g=it.o.geometry;return g.attributes.position.version*1e6+(g.index?g.index.version:0);};
  /* an item's solid in mv's frame (P, its box, its triangles' boxes); false if it hasn't moved or changed since it was last placed */
@@ -2965,10 +2975,10 @@ const WFRAME=(()=>{
     {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
       /* the screws' places: the drawings' 340, 100, 220; the Soviet 6MX's 342.2, 102.2, 246.4 ±0.5 (Kirov No. 247: 2_Kirow_247_A.jpg and 3_Kirow_247_uZ.jpg, holemap.py
          --model wempe on each at 8.89 and 8.57 px/mm, the two faces agreeing; Kirov 009 and Poljot 20027 the same: sure), so 120°, 144° and 96° apart; the band built per version */
-      const RSV=/** @type {[string,number[]][]} */([['last first 1943',[340,100,220]],['6mx',[342.2,102.2,246.4]]]),RS={};for(const[V,b]of RSV)RS[V]=b;
+      const RSV=/** @type {[string,number[]][]} */([['last first 1943',[340,100,220]],['6mx',[342.2,102.2,246.4]]]),RS={},RB=/** @type {any} */({}),RF=/** @type {any} */({});   /* each version's band and flange, merged below */for(const[V,b]of RSV)RS[V]=b;
       for(const[V,BS]of RSV){const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
         ...BS.map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
-      tag(mesh(rv(rg,V==='6mx'?V:V+' -3955'),solidGeo([band]),V==='6mx'?M.gilt:M.plateSolid),'050800-3');}
+      RB[V]=tag(mesh(rv(rg,V==='6mx'?V:V+' -3955'),solidGeo([band]),V==='6mx'?M.gilt:M.plateSolid),'050800-3');}
       /* Wempe 3955's (the version as photographed) band: a groove across it on the hand-setting cut's line (through 18), under the plate's notch (above), from the lip out
          through the band's outside, for the hand-setting's shaft: straight sides, a round floor, closed in the band (the user's reading of 8_, 18 October 2026), which passes
          under the lip's drawn cone near its inner edge and so opens the lip there. 8_Wempe_3955_Räderwerk_plus.jpg through photocompare.py's w3955_train camera: its top edges
@@ -2994,12 +3004,16 @@ const WFRAME=(()=>{
         for(const s of[-1,1])for(let k=0;k<WS.length-1;k++){const w0=s*WS[k],w1=s*WS[k+1],A=E(w0),B=E(w1),inner=Math.abs(w1)<=we+1e-9?[]:among(C41,w0,w1);
           cells.push({loop:cc([A[1],...among(SP,w0,w1),B[1],B[2],...among(C48,w1,w0),A[2]]),y0,y1:6.35});   /* in the band */
           cells.push({loop:cc([A[0],...inner,B[0],B[1],...among(SP,w1,w0),A[1]]),y0:(/** @type {number[]} */p)=>Math.max(3.35,y0(p)),y1:yc});}   /* under the lip, from the plate's seat down */
-        tag(mesh(rv(rg,'3955'),solidGeo(cells),M.plateSolid),'050800-3');}   /* the 6MX's gilt brass (Kirov No. 247's A, N and W photographs, photocompare.py: sure; nickel until 18 October 2026) */
+        RB['3955']=tag(mesh(rv(rg,'3955'),solidGeo(cells),M.plateSolid),'050800-3');}   /* the 6MX's gilt brass (Kirov No. 247's A, N and W photographs, photocompare.py: sure; nickel until 18 October 2026) */
       const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
       for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
         ...AS.map(a=>{const rD=V==='6mx'?49.9:50.5;return{p:C([rD*Math.sin(a*D2R),-rD*Math.cos(a*D2R)],0.52),a:6.35,b:11.05};})]};   /* the 6MX's on r 49.9 (dial.js) */   /* the dial screws' M1 through the flange: they show on its underside in Wempe 3955's top plate photograph (2_Wempe_3955_A.jpg: likely; 2.5 deep until 16 October 2026) */   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
-      const gF=rv(rg,V);FLG.push(gF);tag(mesh(gF,solidGeo([fl]),V==='6mx'?M.gilt:M.plateSolid),'050800-3',1);}
+      const gF=rv(rg,V);FLG.push(gF);RF[V]=tag(mesh(gF,solidGeo([fl]),V==='6mx'?M.gilt:M.plateSolid),'050800-3',1);}
+      /* the band and the flange one ring (05 08 00-3), one mesh in each version (fuse, core.js): their bores' and walls' faces ran flush, rings round it in Edges until 21 October
+         2026. The drawings' flange, shared by the plain band and Wempe 3955's, goes into each as a copy; the pin stays in the flange's group */
+      { const cp=f=>{const m=mesh(f.parent,f.geometry.clone(),f.material);m.position.copy(f.position);return tag(m,'050800-3',1);},f=RF['last first 1943'];
+        fuse([RB['6mx'],RF['6mx']]);fuse([RB['last first 1943'],cp(f)]);fuse([RB['3955'],cp(f)]);f.parent.remove(f);FLG.length=0;FLG.push(RB['last first 1943'].parent,RB['3955'].parent,RB['6mx'].parent); }   /* the pin in each band's group, fixed with its ring (fine.py) */
       /* its three screws (WN number not read): heads Ø 6.2 × 3.05, brass, the shank 6.3, on the coloured section (Wempe_Einheitschronometer.jpg px 1819-1878 × 510-538.5, its
          shank 1837-1862: Ø 6.28 (6.2 kept, within the reading) × 3.07, M2.6, at 9.37 px/mm by the pillar's 178 px for 19; sure on the section, 2.25 high until 17 October 2026); head on the plate's inner face */
       for(const b of RS['last first 1943']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'last first 1943'),q[0],q[1],0,3.1,3.05,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
@@ -3073,9 +3087,9 @@ const WFRAME=(()=>{
        recess's floor: at 2.7 it stood 0.05 proud of it, 19.65 from the pillar plate, and the arbor's 19.7 +0.05 between its shoulders would have had no endshake */
     const fb=part('fuseeBush',-46),F10=H[10];
     {const r=2.26,lw=[V2(r,TT),V2(7.9905/2,TT),V2(7.9905/2,TT+2.6),V2(r,TT+2.6),V2(r,TT)],up=[V2(3.5,TT-4.4),V2(8.0235/2-2.9/140,TT-4.4),V2(8.0235/2,TT-1.5),V2(r,TT-1.5),V2(r,TT-4.4+3.5-r),V2(3.5,TT-4.4)];
-      const g=tag(mesh(fb,new THREE.LatheGeometry(lw,64),M.brass,F10[0],0,F10[1]),'050801-2');tag(mesh(fb,new THREE.LatheGeometry(up,64),M.brass,F10[0],0,F10[1]),'050801-2',1);
+      const g=tag(mesh(fb,new THREE.LatheGeometry(lw,64),M.brass,F10[0],0,F10[1]),'050801-2'),bu=tag(mesh(fb,new THREE.LatheGeometry(up,64),M.brass,F10[0],0,F10[1]),'050801-2',1);
       const y0=TT-1.5,y1=TT,F=[T(F10,r,y0,y1)];for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);F.push(T(q,1.55/2,y0,y1),A(q,2.207/2,y0,0.5));}
-      tag(mesh(fb,solidGeo([{loop:C(F10,6.6,240),y0,y1,F}]),M.brass),'050801-2',1);}
+      fuse([g,bu,tag(mesh(fb,solidGeo([{loop:C(F10,6.6,240),y0,y1,F}]),M.brass),'050801-2',1)]);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* its screws: heads Ø 2.1 × 0.45, just under the flange's face in the sinks (the dust bush stands on the flange), M1.4 × 3.2 through the flange into the plate, ending 0.4
        short of the recess's floor, as the coloured section draws them (Wempe_Einheitschronometer.jpg x 741-752: the head's top at y 313.3, the shank's end at 348.3, 2.7-4.5 px
        short of the recess's floor at 351, at 9.37 px/mm: 3.15-3.3 from the seat; likely; 3.6, to the recess, until 17 October 2026) */
@@ -3171,8 +3185,8 @@ const WFRAME=(()=>{
       foot.F=[T(H[8],rCl26,foot.y0,foot.y1),...sk(6,foot.y1),...sk(50,foot.y1)];web.F=[...sk(9,web.y1)];
       /* the auxiliary hole 20 (Ø 2.8) in the drawings' versions only: the 6MX's cock has none (Altmeppen's list: no window in the upper cock; his comparison's arrow on the
          Wempe's hole there; Kirov No. 247's cock is plain where the overlay puts 20: sure) */
-      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],faceUV(solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]})))),DR?GH:G6T),'050803-1');
-        tag(mesh(UCG[i],faceUV(solidGeo(boss.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]})))),DR?GH:G6T),'050803-1',1);});}
+      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;fuse([tag(mesh(UCG[i],faceUV(solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]})))),DR?GH:G6T),'050803-1'),
+        tag(mesh(UCG[i],faceUV(solidGeo(boss.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]})))),DR?GH:G6T),'050803-1',1)]);});}   /* the arm and its boss one cock, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026 */
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
     VER.forEach(([V],i)=>tag(screw(UCG[i],H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,V==='6mx'?M.steel:M.blued),'WN-ucs'));   /* the 6MX's polished steel (Kirov No. 247's A, N and W photographs: sure; blued until 18 October 2026) */
     /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
@@ -3415,8 +3429,8 @@ const WTRAIN=(()=>{
        Ø 2.6 (the photograph, through the m6_contact camera: likely); until 18 October 2026 a sawtooth knurl and a raised brass boss Ø 5.4. Its bracket on block 57 (Romanov:
        the disc fixed to block 57); the contact screw 54 brass, as there */
     {const D=C6.disc,t=[-Math.cos(D.th*D2R),Math.sin(D.th*D2R)],c=brg2(D.th,D.r),at=k=>[c[0]+t[0]*k,c[1]+t[1]*k],RC=3.0,RD=0.3;
-      hor(tag(mesh(g6,gear({xy:[...Array(192).keys()].map(i=>{const n=Math.floor(i/4),k=i%4,r=k<2?D.d/2:D.d/2-0.25,f=(n+(k===1||k===2?0.5:k===3?1:0))/48*TAU-(k===3?1e-4:0);return[r*Math.cos(f),r*Math.sin(f)];}),ro:D.d/2,ri:D.d/2-0.25},D.t,{bore:RC}),M.gilt,c[0],D.y,c[1]),'6MX.ctd'),t);
-      let q=at(RD/2);hor(tag(mesh(g6,new THREE.CylinderGeometry(RC+0.002,RC+0.002,D.t-RD,48),M.gilt,q[0],D.y,q[1]),'6MX.ctd',1),t);   /* the centre, its face RD under the rim's */
+      const dk=hor(tag(mesh(g6,gear({xy:[...Array(192).keys()].map(i=>{const n=Math.floor(i/4),k=i%4,r=k<2?D.d/2:D.d/2-0.25,f=(n+(k===1||k===2?0.5:k===3?1:0))/48*TAU-(k===3?1e-4:0);return[r*Math.cos(f),r*Math.sin(f)];}),ro:D.d/2,ri:D.d/2-0.25},D.t,{bore:RC}),M.gilt,c[0],D.y,c[1]),'6MX.ctd'),t);
+      let q=at(RD/2);fuse([dk,hor(tag(mesh(g6,new THREE.CylinderGeometry(RC+0.002,RC+0.002,D.t-RD,48),M.gilt,q[0],D.y,q[1]),'6MX.ctd',1),t)]);   /* the disc and its centre one mesh (fuse, core.js): their faces ran flush, a ring in Edges until 21 October 2026 */   /* the centre, its face RD under the rim's */
       q=at(-D.t/2+RD);const sh=new THREE.Group();sh.position.set(q[0],D.y,q[1]);hor(sh,t);g6.add(sh);tag(K.screw(sh,0,0,0,1.3,0.8,0,0.5,M.steel),'6MX.ctd',1).userData.lift=0;
       q=at(D.t/2+0.5);const br=tag(mesh(g6,new THREE.BoxGeometry(1.0,5.05,4.0),M.gilt,q[0],(-5.25-10.3)/2,q[1]),'6MX.ctd',1);br.rotation.y=Math.atan2(-t[1],t[0]);}
     /* the staff 69 (steel, its pivots Ø 0.4) in its jewels: the upper in a gilt setting in the base, the lower in the cock's arm under a cap plate, each a hole jewel and a cap
@@ -3442,9 +3456,9 @@ const WTRAIN=(()=>{
       const A0=C6.cockArm[0],A1=C6.cockArm[C6.cockArm.length-1],al=Math.hypot(A1[0]-A0[0],A1[1]-A0[1]),u=[(A1[0]-A0[0])/al,(A1[1]-A0[1])/al],nv=[-u[1],u[0]],cA=cen(C6.cockArm),sg=Math.sign((cA[0]-A0[0])*nv[0]+(cA[1]-A0[1])*nv[1]),
         P4=(a,b)=>[A0[0]+u[0]*a+nv[0]*sg*b,A0[1]+u[1]*a+nv[1]*sg*b],leg=cc([P4(0.5,0),P4(5.5,0),P4(5.5,1.5),P4(0.5,1.5)]),su=[-0.972,0.236],cs=[-2.1,2.1].map(k=>[S[0]+su[0]*k,S[1]+su[1]*k]);
       const armL=KIT.bool(cc(C6.cockArm),cir(cs[1],1.6,40)).uni[0],capL=KIT.bool(KIT.bool(cir(S,1.5,40),cir(cs[0],1.25,32)).uni[0],cir(cs[1],1.25,32)).uni[0];
-      tag(mesh(gCk,SG([{loop:cc(C6.cockFoot),y0:-3.5,y1:-2,F:[{p:cir(fc,0.72),a:-3.5,b:-2},...[fp,fq].map(q=>({p:cir(q,0.4,20),a:-3.5,b:-2}))]}]),M.gilt),'6MX.ctc');
-      tag(mesh(gCk,SG([{loop:leg,y0:CA[0],y1:-3.5}]),M.gilt),'6MX.ctc',1);
-      tag(mesh(gCk,SG([{loop:cc(armL),y0:CA[1],y1:CA[0],F:[{p:cir(S,0.9,40),a:CA[1],b:CA[0]},...cs.map(q=>({p:cir(q,0.5,20),a:CA[1],b:CA[1]+1.1}))]}]),M.gilt),'6MX.ctc',1);
+      fuse([tag(mesh(gCk,SG([{loop:cc(C6.cockFoot),y0:-3.5,y1:-2,F:[{p:cir(fc,0.72),a:-3.5,b:-2},...[fp,fq].map(q=>({p:cir(q,0.4,20),a:-3.5,b:-2}))]}]),M.gilt),'6MX.ctc'),
+      tag(mesh(gCk,SG([{loop:leg,y0:CA[0],y1:-3.5}]),M.gilt),'6MX.ctc',1),
+      tag(mesh(gCk,SG([{loop:cc(armL),y0:CA[1],y1:CA[0],F:[{p:cir(S,0.9,40),a:CA[1],b:CA[0]},...cs.map(q=>({p:cir(q,0.5,20),a:CA[1],b:CA[1]+1.1}))]}]),M.gilt),'6MX.ctc',1)]);   /* the cock's foot, leg and arm one piece, one mesh (fuse) */
       tag(mesh(gCk,SG([{loop:cc(capL),y0:CP,y1:CA[1],F:[{p:cir(S,0.9,40),a:CP,b:CA[1]},...cs.map(q=>({p:cir(q,0.5,20),a:CP,b:CA[1]}))]}]),M.gilt),'6MX.ctcc');
       for(const q of cs)tag(K.screw(gCk,q[0],q[1],CP,1.2,0.8,1.6,0.45,M.steel),'6MX.ctccs').userData.lift=0;
       tag(K.screw(gCk,fc[0],fc[1],-3.5,1.4,1.0,3.0,0.7,M.steel),'6MX.ctcs');
@@ -3456,8 +3470,8 @@ const WTRAIN=(()=>{
       const dS=Math.hypot(st[0]-S[0],st[1]-S[1])-1.25;for(let k=1;k<=8;k++){const r=ro+(dS-ro)*k/8;cl.push([S[0]+r*Math.cos(phE),S[1]+r*Math.sin(phE)]);}
       const off=(i,s2)=>{const a=cl[Math.max(0,i-1)],b=cl[Math.min(cl.length-1,i+1)],l=Math.hypot(b[0]-a[0],b[1]-a[1]);return[cl[i][0]-(b[1]-a[1])/l*0.05*s2,cl[i][1]+(b[0]-a[0])/l*0.05*s2];};
       const SY=[-12.3,-11.7],eP=cl[cl.length-1],eT=[Math.cos(phE),Math.sin(phE)],eN=[-eT[1]*0.05,eT[0]*0.05];
-      tag(mesh(gSp,SG([{loop:cc([...cl.map((_,i)=>off(i,1)),...cl.map((_,i)=>off(i,-1)).reverse()]),y0:SY[0],y1:SY[1]}]),M.copper),'6MX.cth');
-      tag(mesh(gSp,SG([{loop:cc([[eP[0]+eN[0]-eT[0]*0.3,eP[1]+eN[1]-eT[1]*0.3],[eP[0]+eN[0],eP[1]+eN[1]],[eP[0]-eN[0],eP[1]-eN[1]],[eP[0]-eN[0]-eT[0]*0.3,eP[1]-eN[1]-eT[1]*0.3]]),y0:SY[1],y1:-9.87}]),M.copper),'6MX.cth',1);   /* its end bent down onto the stud's top (clamped there: drawn 0.02 clear) */
+      fuse([tag(mesh(gSp,SG([{loop:cc([...cl.map((_,i)=>off(i,1)),...cl.map((_,i)=>off(i,-1)).reverse()]),y0:SY[0],y1:SY[1]}]),M.copper),'6MX.cth'),
+      tag(mesh(gSp,SG([{loop:cc([[eP[0]+eN[0]-eT[0]*0.3,eP[1]+eN[1]-eT[1]*0.3],[eP[0]+eN[0],eP[1]+eN[1]],[eP[0]-eN[0],eP[1]-eN[1]],[eP[0]-eN[0]-eT[0]*0.3,eP[1]-eN[1]-eT[1]*0.3]]),y0:SY[1],y1:-9.87}]),M.copper),'6MX.cth',1)]);   /* its end bent down onto the stud's top (clamped there: drawn 0.02 clear) */
       tag(mesh(C6L,ringT([[0.5,SY[0]-0.1],[1.9,SY[0]-0.1],[1.9,SY[1]+0.1],[0.5,SY[1]+0.1]],40),M.brass),'6MX.cth',1);
       tag(mesh(g6,SG([{loop:cc(C6.stud),y0:-9.85,y1:-5.25,F:[{p:cir(st,0.6),a:-9.85,b:-7.85}]}]),M.gilt),'6MX.ctq');
       tag(K.screw(g6,st[0],st[1],-9.85,1.1,1.0,2.0,0.6,M.steel),'6MX.ctqs');}
@@ -3468,10 +3482,10 @@ const WTRAIN=(()=>{
       tag(mesh(C6L,ringT([[0.5,-7.4],[1.5,-7.4],[1.5,-6.1],[0.5,-6.1]],40),M.steel),'6MX.ctl');
       const SA=[0,23],sl0=Math.hypot(C6.stone[0]-SA[0],C6.stone[1]-SA[1]),rd=[(C6.stone[0]-SA[0])/sl0,(C6.stone[1]-SA[1])/sl0],sc=loc([SA[0]+rd[0]*11.2,SA[1]+rd[1]*11.2]);
       const eA=[sc[0]-rd[1]*0.5,sc[1]+rd[0]*0.5];   /* the stone arm ends against the stone's side, at its middle, outside the wheel's tips: the stone set in the lever's end */
-      for(const e of[eA,eH])tag(mesh(C6L,SG([{loop:arm(e,1.1),y0:-7.4,y1:-6.1}]),M.gilt),'6MX.ctl',1);   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
+      const lvA=[eA,eH].map(e=>tag(mesh(C6L,SG([{loop:arm(e,1.1),y0:-7.4,y1:-6.1}]),M.gilt),'6MX.ctl',1));   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
       /* the screw's holder: a gilt block under the lever's end, down past the screw's axis (-5.2: dims.js), 1.6 along the screw and 1.8 across (14_E-Kontakt1.jpg: about
          1.0 × 1.4 by its rough camera: estimated), its foot 0.05 over block 52's top; until 18 October 2026 a steel collar at the lever's height */
-      {const d=[C6.screw54.tip[0]-C6.screw54.h[0],C6.screw54.tip[1]-C6.screw54.h[1]],y0=-7.4,y1=-5.3,hb=tag(mesh(C6L,new THREE.BoxGeometry(1.6,y1-y0,1.8),M.gilt,eH[0],(y0+y1)/2,eH[1]),'6MX.ctl',1);hb.rotation.y=-Math.atan2(d[1],d[0]);}
+      {const d=[C6.screw54.tip[0]-C6.screw54.h[0],C6.screw54.tip[1]-C6.screw54.h[1]],y0=-7.4,y1=-5.3,hb=tag(mesh(C6L,new THREE.BoxGeometry(1.6,y1-y0,1.8),M.gilt,eH[0],(y0+y1)/2,eH[1]),'6MX.ctl',1);hb.rotation.y=-Math.atan2(d[1],d[0]);fuse([...lvA,hb]);}   /* the lever's two arms and the holder one gilt piece, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026 */
       {const tn=[-rd[1],rd[0]],R0=9.7-11.2,Q=(a,b)=>[sc[0]+rd[0]*a+tn[0]*b,sc[1]+rd[1]*a+tn[1]*b];   /* the stone along the radius from the arbor, 0.8 wide, its end chamfered to 0.3 over 0.6 (Romanov: 'the bevel of stone 61') */
         tag(mesh(C6L,SG([{loop:cc([Q(R0,-0.15),Q(R0,0.15),Q(R0+0.6,0.4),Q(1.5,0.4),Q(1.5,-0.4),Q(R0+0.6,-0.4)]),y0:-7.4,y1:-6.4}]),M.ruby),'6MX.ctp');}
       const sd=[eT[0]-eH[0],eT[1]-eH[1]],sl=Math.hypot(sd[0],sd[1]),su=[sd[0]/sl,sd[1]/sl],sp=k=>[eH[0]+su[0]*k,eH[1]+su[1]*k];
@@ -3943,8 +3957,8 @@ const WESC=(()=>{
            with the hole, on its two jaws, the slot between them (one solid would have the hole cross its cells). Until 18 October 2026 WN-12a was a nut sunk in its inner face */
         const TOP=[{p:C(c,0.5,32),a:y0,b:y0+2.0},{p:C(c,0.925,32),q:C(c,0.5,32),a:y0,b:y0+0.425}],PF=ph?[{p:C(add(add(c,u0,ph[0]),[-u0[1],u0[0]],ph[1]),0.3,32),a:y1-1.0,b:y1}]:[];
         for(const[gm,Ft,Fi]of/** @type {[any,any[],any[]][]} */([[rv(bal,'last first 6mx 1943 -3955'),TOP,[]],[rv(bal,'3955'),[],PF]])){
-        tag(mesh(gm,solidGeo([{loop:ccw(C(c,mr,120)),y0,y1:ys,F:Ft}]),M.brass),'050301-4');
-        tag(mesh(gm,solidGeo([{loop:ccw(cI),y0:ys,y1,F:Fi},{loop:ccw(cO),y0:ys,y1}]),M.brass),'050301-4',1);
+        fuse([tag(mesh(gm,solidGeo([{loop:ccw(C(c,mr,120)),y0,y1:ys,F:Ft}]),M.brass),'050301-4'),
+        tag(mesh(gm,solidGeo([{loop:ccw(cI),y0:ys,y1,F:Fi},{loop:ccw(cO),y0:ys,y1}]),M.brass),'050301-4',1)]);   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
         /* its screw (WN-12), its slotted head sunk flush in the mass's outer face, threaded through the outer jaw to the rim's outer face: Wempe 3955's masses (9_Wempe_3955_Hemmung.jpg, the two
            nearest seen side-on at 15 px/mm: sure) show the head flush in the outer face, Ø 1.56 against the mass's 6.3, its slot across, and nothing standing out of the
            inner face. The faces are the mass's round side, which can't be counterbored here (a solid of
@@ -4061,11 +4075,11 @@ const WESC=(()=>{
       const Ep=L(-uw,c+1.25),Em=L(-uw,c-1.25),Cp=L(HU,c+1.55),Cm=L(HU,c-1.55),Ap=L(HU+6.6,c),Tp=L(13.7,c);
       const plane=(P,Q,S)=>{const u=[Q[0]-P[0],Q[1]-P[1],Q[2]-P[2]],v=[S[0]-P[0],S[1]-P[1],S[2]-P[2]],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
         return p=>P[2]-(n[0]*(p[0]-P[0])+n[1]*(p[1]-P[1]))/n[2];},fac=q=>plane([...q,yB],[...Ap,yB],[...Tp,ck-0.05]);   /* a facet: through the V's arm on the top and the point, 0.05 thick */
-      tag(mesh(st,solidGeo([{loop:ccw([Em,Cm,Ap,Cp,Ep]),y0:yB,y1:ck,F:[{p:C(L(HU,c),0.75+0.0045,48),a:yB,b:ck}]},{loop:ccw([Cp,Ap,Tp]),y0:fac(Cp),y1:ck},{loop:ccw([Cm,Tp,Ap]),y0:fac(Cm),y1:ck}]),M.brass),'050302-3');
+      const stB=tag(mesh(st,solidGeo([{loop:ccw([Em,Cm,Ap,Cp,Ep]),y0:yB,y1:ck,F:[{p:C(L(HU,c),0.75+0.0045,48),a:yB,b:ck}]},{loop:ccw([Cp,Ap,Tp]),y0:fac(Cp),y1:ck},{loop:ccw([Cm,Tp,Ap]),y0:fac(Cm),y1:ck}]),M.brass),'050302-3');
       /* the upright, built square to the bar from its underside and leant by a shear about that face; the slot in its middle */
       const v0=c-hw,v1=c+hw,s0=c-0.575,s1=c+0.575,up=solidGeo([{loop:ccw([L(-uw,v0),L(uw,v0),L(uw,s0),L(-uw,s0)]),y0:ck,y1:yE},
         {loop:ccw([L(-uw,s0),L(uw,s0),L(uw,s1),L(-uw,s1)]),y0:ck,y1:yE-2.0},{loop:ccw([L(-uw,s1),L(uw,s1),L(uw,v1),L(-uw,v1)]),y0:ck,y1:yE}]);
-      up.applyMatrix4(new THREE.Matrix4().set(1,-VO[0]*tn,0,VO[0]*tn*ck,0,1,0,0,0,-VO[1]*tn,1,VO[1]*tn*ck,0,0,0,1));tag(mesh(st,up,M.brass),'050302-3',1);
+      up.applyMatrix4(new THREE.Matrix4().set(1,-VO[0]*tn,0,VO[0]*tn*ck,0,1,0,0,0,-VO[1]*tn,1,VO[1]*tn*ck,0,0,0,1));fuse([stB,tag(mesh(st,up,M.brass),'050302-3',1)]);   /* the stud's bar and upright one piece, one mesh (fuse): their faces flush, lines in Edges until 21 October 2026 */
       const sp=tag(across(st,lathe([[0,-0.4],[0.33,-0.4],[0.33,0.4],[0,0.4]],16),M.steel,L(-0.5,RSTUD+HT/2+0.335),AX,yU),'050302-4.s');   /* the pin beside the spring's end in the slot, outside it, 0.005 clear of it, past the pinning point (4.36 out with the spring at 3.87 until 15 October 2026) */
       const sp0=[sp.position.x,sp.position.z];onRev(v=>{const f=v!=='last',o=f?-SH1*Math.tan(8*D2R):0;sp.position.set(sp0[0]+VO[0]*o,yU+(f?SH1:0),sp0[1]+VO[1]*o);});   /* out with the spring's end (hsOut), against the slot's outer wall as in the last state */
       /* its screw (WN-11): head Ø 2.3 × 1.6, M1.4 down through the bar and the cock's 2.4, its end 0.6 under the cock, as the coloured section draws it
@@ -4188,16 +4202,16 @@ const WESC=(()=>{
        out of it to the teeth; its lengths and plan the same (05 04_1's plan: 8.4 pipe to square, the square 2, the spring 5, the foot 6.6 under the block's edge, 18.8 from the
        stone to the block's screw). The gold spring lies on the thicker square 0.025 further out */
     const dv=(sS,sM,o)=>{const yd=d=>TI+d,y0F=yd(o.d0),y1F=yd(o.d0+2),y0b=yd(o.d0+1),y1b=yd(o.d0+2),rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],fh=o.tf/2;
-      tag(mesh(sS,solidGeo([{loop:rect(FOOT0,FOOT0+6.6,-fh,fh),y0:y0F,y1:y1F}]),M.steel),'050401-1');
+      const dS=[tag(mesh(sS,solidGeo([{loop:rect(FOOT0,FOOT0+6.6,-fh,fh),y0:y0F,y1:y1F}]),M.steel),'050401-1')],dM=[];   /* its pieces, fixed and turning, each set one mesh below (fuse) */
       const sp0=rect(TP,FOOT0,-0.035,0.035),sp1=rect(SPR0,TP,-0.035,0.035);
-      tag(mesh(sS,solidGeo([{loop:sp0,y0:y0F+0.05,y1:y1F-0.05}]),M.steel),'050401-1',1);
-      tag(mesh(sM,solidGeo([{loop:sp1,y0:y0F+0.05,y1:y1F-0.05}]),M.steel),'050401-1',1);
-      tag(mesh(sM,solidGeo([{loop:rect(SQ0,SPR0,-o.tq/2,o.tq/2),y0:y0F+0.05,y1:y1F-0.05}]),M.steel),'050401-1',1);   /* the square */
-      tag(mesh(sM,solidGeo([{loop:rect(SQ0-2.9,SQ0,-o.tq/2,o.tq/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1);   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
-      tag(mesh(sM,solidGeo([{loop:rect(0.4,SQ0-2.9,-o.tb/2,o.tb/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1);   /* the blade, into the pipe's wall */
-      tag(mesh(sM,solidGeo([{loop:C(P,1.15/2,96),y0:yd(o.pp),y1:yd(o.pp+o.pl),F:[{p:C(P,RS+0.002,64),a:yd(o.pp),b:yd(o.pp+o.pl)}]}]),M.steel),'050401-1',1);   /* the pipe */
+      dS.push(tag(mesh(sS,solidGeo([{loop:sp0,y0:y0F+0.05,y1:y1F-0.05}]),M.steel),'050401-1',1));
+      dM.push(tag(mesh(sM,solidGeo([{loop:sp1,y0:y0F+0.05,y1:y1F-0.05}]),M.steel),'050401-1',1));
+      dM.push(tag(mesh(sM,solidGeo([{loop:rect(SQ0,SPR0,-o.tq/2,o.tq/2),y0:y0F+0.05,y1:y1F-0.05}]),M.steel),'050401-1',1));   /* the square */
+      dM.push(tag(mesh(sM,solidGeo([{loop:rect(SQ0-2.9,SQ0,-o.tq/2,o.tq/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
+      dM.push(tag(mesh(sM,solidGeo([{loop:rect(0.4,SQ0-2.9,-o.tb/2,o.tb/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade, into the pipe's wall */
+      dM.push(tag(mesh(sM,solidGeo([{loop:C(P,1.15/2,96),y0:yd(o.pp),y1:yd(o.pp+o.pl),F:[{p:C(P,RS+0.002,64),a:yd(o.pp),b:yd(o.pp+o.pl)}]}]),M.steel),'050401-1',1));   /* the pipe */
       const HL=hornLine(o.th),hts=[];for(let i=0;i<=32;i++)hts.push(-0.45-(HORN_L-0.45)*i/32);   /* from inside the pipe's wall (r 0.46 at its corners, the bore 0.377) */
-      tag(mesh(sM,solidGeo([{loop:ccw([...hts.map(t=>D(t,HL.w(t))),...hts.slice().reverse().map(t=>D(t,HL.b(t)))]),y0:yd(o.d0+1.1),y1:yd(o.d0+1.9)}]),M.steel),'050401-1',1);   /* the horn */
+      dM.push(tag(mesh(sM,solidGeo([{loop:ccw([...hts.map(t=>D(t,HL.w(t))),...hts.slice().reverse().map(t=>D(t,HL.b(t)))]),y0:yd(o.d0+1.1),y1:yd(o.d0+1.9)}]),M.steel),'050401-1',1));fuse(dS);fuse(dM);   /* the horn; the detent's fixed pieces (foot, spring's half) and its turning ones (the spring's other half, the square, the blade, the pipe, the horn) each one mesh (fuse): one steel piece, 05 04 01-1, whose flush faces drew lines in Edges until 21 October 2026 */
       /* the locking stone (Ruhestein 05 04 01-3): Ø 0.75 in the pipe, ground half away below it to its flat, which faces the oncoming tooth along the line from the wheel's
          centre (05 04_1's plan: the hatched half); it stands out of the pipe to 0.1 over the teeth (estimated) */
       const hd=[];for(let i=0;i<=24;i++)hd.push(add([0,0],dir(P_A+180*i/24),RS));   /* the round half lies on the side the wheel turns toward, its flat on the line from the wheel's centre */
@@ -5305,7 +5319,7 @@ const WFUSEE=(()=>{
       const pr=[[7.5,S+SLD],...col,[14.9,F],[13.15,F-1.75],[13.15,FRC],[7.006/2,FRC],[7.006/2,S+1.6],[7.5,S+1.6],[7.5,S+SLD]];   /* from the stop bar's slot's floor (below) */
       const g=new THREE.LatheGeometry(pr.map(([r,y])=>V2(r,y)),216),p=g.attributes.position;
       for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),r=Math.hypot(x,z);if(r<PH-1)continue;const th=angOf(x,z),R=rBody(th,F-p.getY(i));p.setX(i,R*Math.cos(th));p.setZ(i,-R*Math.sin(th));}
-      g.computeVertexNormals();tag(mesh(gF,g,M.gilt),'050604-2');
+      g.computeVertexNormals();const bF=[tag(mesh(gF,g,M.gilt),'050604-2')];   /* the body's pieces below merged into it (fuse) */
       /* the small end's last 1.5, which the stop bar's slot crosses (05 06 04-2's Schnitt C-D: 2 H8 wide, its near edge 4 from the axis, "1,5+0,05 tief", right across the end
          and out through the hub and the top turn on both sides): the two pieces it leaves between the recess (Ø 15) and the radius field, the large one on the axis's side
          of the slot and the arch beyond it, each built ray by ray on the lathe's own angles and depths (so they meet its surface row for row) with more rays where the slot's
@@ -5315,13 +5329,13 @@ const WFUSEE=(()=>{
       const cols=(p0,p1,extra)=>{const L=[p0,p1,...extra.filter(f=>f>p0&&f<p1)];for(let k=0;k<N;k++){const f=p0+fr((k*TAU/N-Math.PI/2-barRot-p0)/TAU)*TAU;if(f>p0+1e-6&&f<p1-1e-6)L.push(f);}
         return[...new Set(L.map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot);};   /* the angles from the bar's direction, put in the fusee's frame */
       const sA=Math.asin(4/7.5),c1=fine(22.0,26.0),c2=fine(34.3,40.9);   /* the angles (from the bar's direction) where the slot's walls meet the outside */
-      tag(mesh(gF,radialSolid(cols(-sA,Math.PI+sA,[...c1.map(f=>-f),...c1.map(f=>Math.PI+f)]),rows,()=>7.5,(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),M.gilt),'050604-2',1);
+      bF.push(tag(mesh(gF,radialSolid(cols(-sA,Math.PI+sA,[...c1.map(f=>-f),...c1.map(f=>Math.PI+f)]),rows,()=>7.5,(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),M.gilt),'050604-2',1));
       const sC=Math.asin(6/10.5);
-      tag(mesh(gF,radialSolid(cols(Math.PI+sC,TAU-sC,[...c2.map(f=>Math.PI+f),...c2.map(f=>TAU-f)]),rows,th=>Math.max(7.5,-6/Math.sin(th-barRot)),(th,a)=>rBody(th,a)),M.gilt),'050604-2',1);
+      bF.push(tag(mesh(gF,radialSolid(cols(Math.PI+sC,TAU-sC,[...c2.map(f=>Math.PI+f),...c2.map(f=>TAU-f)]),rows,th=>Math.max(7.5,-6/Math.sin(th-barRot)),(th,a)=>rBody(th,a)),M.gilt),'050604-2',1));
       /* and the slot's shallow part toward the bar's upper end: from 1.1 to 1.5 deep, beyond u 8.0, between its walls */
       const r2=[LB-SLD];for(let k=Math.ceil(SLD/0.04)-1;k>=0;k--){const a=LB-0.04*k;if(a<LB-1.1-1e-9)r2.push(a);}r2.push(LB-1.1);
       const pA=Math.atan2(-6,SB.us),pB=Math.atan2(-4,Math.sqrt(10.6*10.6-16)),c3=[];for(let f=pA;f<=pB+1e-9;f+=0.25*D2R)c3.push(f);
-      tag(mesh(gF,radialSolid([...c3,pB].map(f=>f+barRot),r2,th=>{const f=th-barRot;return Math.max(SB.us/Math.cos(f),4/-Math.sin(f));},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1);}
+      bF.push(tag(mesh(gF,radialSolid([...c3,pB].map(f=>f+barRot),r2,th=>{const f=th-barRot;return Math.max(SB.us/Math.cos(f),4/-Math.sin(f));},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the arbor 05 06 04-1 (Schneckenwelle; Präz. Rundstahl 7,5, polished where marked): from the winding end, the square 3.17 r6 at its root tapering 1:100 (to the sheet's
        2.92 at its point), 20.3 long, the journal Ø 4.5 ±0.02 at the shoulder to 4.39 (1:70, 8 long) that runs in the fusee bush, the step Ø 6.1 -0.05 (3.1 +0.05) for the
        cover plate, the collar Ø 7.04 -0.01 (7.9) pressed into the body's bore, the Vorreiber's seat 4.5 ±0.02 to 4.38 (1:70), 8.7, the cross hole 1.1 for its pin 17.7 -0.05
@@ -5406,10 +5420,10 @@ const WFUSEE=(()=>{
     const pW=part('fuseeWheel',-21),gW=grp(pW,fx,fz),gWp=new THREE.Group();gW.add(gWp);
     const PINW=-Math.PI/2,TW=teeth(90,0.4356,40.57,37.84,14,0.64);
     {const RM=17.1/2,RH=8.65,ch=r=>W-(RM-r)/Math.tan(60*D2R);   /* the mouth's radius (17 +0.2), the hub's outer radius on the underside (the web's bore there), the chamfer's height at r */
-      tag(mesh(gWp,ringT([[2.275,WTB],[3.245,WTB],[3.245,WT],[7.8,WT],[8.3,WT+0.5],[8.3,WW],[RH,WW],[RH,W],[RM,W],[7.0,ch(7.0)],[7.0,W-1.3],[2.275,W-1.3]],96),M.gilt),'050600-3');
-      const pw=sh(14.2,PINW-295*D2R);   /* under the spring's pin at 295° (05 06 01-1), which goes down into the wheel (05 06_4 A-B; its eye's pin goes up into the ratchet) */tag(mesh(gWp,solidGeo([{loop:ring(0,0,16.15,320),y0:WW,y1:W,F:[{p:ring(0,0,RH,160),a:WW,b:W},{p:ring(pw[0],-pw[1],0.6035,32),a:WW,b:W}]}]),M.gilt),'050600-3',1);
-      tag(mesh(gWp,ringT([[16.15,WL],[16.9,WL],[16.9,W],[16.15,W]],320),M.gilt),'050600-3',1);
-      const tg=slab(TW.xy,[{c:[0,0],r:16.9}],WT,W);Object.assign(tg.userData,{ro:TW.ro,ri:TW.ri,pl:TW.xy});const tm=tag(mesh(gWp,tg,M.gilt),'050600-3',1);tm.userData.gear={z:90,m:0.4356};
+      const wP=[tag(mesh(gWp,ringT([[2.275,WTB],[3.245,WTB],[3.245,WT],[7.8,WT],[8.3,WT+0.5],[8.3,WW],[RH,WW],[RH,W],[RM,W],[7.0,ch(7.0)],[7.0,W-1.3],[2.275,W-1.3]],96),M.gilt),'050600-3')];
+      const pw=sh(14.2,PINW-295*D2R);   /* under the spring's pin at 295° (05 06 01-1), which goes down into the wheel (05 06_4 A-B; its eye's pin goes up into the ratchet) */wP.push(tag(mesh(gWp,solidGeo([{loop:ring(0,0,16.15,320),y0:WW,y1:W,F:[{p:ring(0,0,RH,160),a:WW,b:W},{p:ring(pw[0],-pw[1],0.6035,32),a:WW,b:W}]}]),M.gilt),'050600-3',1));
+      wP.push(tag(mesh(gWp,ringT([[16.15,WL],[16.9,WL],[16.9,W],[16.15,W]],320),M.gilt),'050600-3',1));
+      const tg=slab(TW.xy,[{c:[0,0],r:16.9}],WT,W);Object.assign(tg.userData,{ro:TW.ro,ri:TW.ri,pl:TW.xy});const tm=tag(mesh(gWp,tg,M.gilt),'050600-3',1);tm.userData.gear={z:90,m:0.4356};fuse([...wP,tm],tm);   /* the wheel one mesh (fuse; the teeth's own box kept, gear.box): its four solids' flush faces drew rings in Edges until 21 October 2026 */
       /* phased under load against the centre pinion (gearLash, core.js): the wheel drives it, turning rotation.y up; the pinion keeps its place (train.js), the wheel is turned to suit */
       const pin=TR.cw.userData.pin,[a,b]=gearLash(tm,FX,pin,H[1],1);tm.rotation.y=0;gWp.rotation.y=a+b*14/90;pW.userData.toothMesh=tm;}
 
@@ -5438,9 +5452,9 @@ const WFUSEE=(()=>{
     const GSO=ratchet(120,37.2/2,37.2/2-0.725,1,0,3),gsR=polarMax(GSO,8192);
     const CKP=[bk(270,GROT),bk(90,GROT)].map(a=>sh(9.75+0.0125,a)),SPP=[[228,210],[48,30]].map(pp=>pp.map(d=>bk(d,GROT)));
     {const ph=sh(14.2,EYEA),F_=[{p:ring(0,0,6.5075/2,96),a:GP,b:G},{p:ring(ph[0],-ph[1],0.6035,32),a:GP,b:G},...CKP.map(c=>({p:ring(c[0],-c[1],0.87,32),a:GP,b:G}))];
-      tag(mesh(gMW,solidGeo([{loop:GSO.map(([x,y])=>[x,-y]),y0:GT,y1:G,F:F_.map(f=>({...f,a:GT}))}]),M.gilt),'050602-1');
-      tag(mesh(gMW,solidGeo([{loop:ring(0,0,12.225,160),y0:GP,y1:GT,F:F_.filter((f,i)=>i!==1).map(f=>({...f,a:GP,b:GT}))}]),M.gilt),'050602-1',1);   /* the plate's 0.28 more inside the cup */
-      tag(mesh(gMW,ringT([[12.225,GC],[12.7,GC],[13.0,GC+0.3],[13.0,GT],[12.225,GT]],160),M.gilt),'050602-1',1);}
+      fuse([tag(mesh(gMW,solidGeo([{loop:GSO.map(([x,y])=>[x,-y]),y0:GT,y1:G,F:F_.map(f=>({...f,a:GT}))}]),M.gilt),'050602-1'),
+      tag(mesh(gMW,solidGeo([{loop:ring(0,0,12.225,160),y0:GP,y1:GT,F:F_.filter((f,i)=>i!==1).map(f=>({...f,a:GP,b:GT}))}]),M.gilt),'050602-1',1),   /* the plate's 0.28 more inside the cup */
+      tag(mesh(gMW,ringT([[12.225,GC],[12.7,GC],[13.0,GC+0.3],[13.0,GT],[12.225,GT]],160),M.gilt),'050602-1',1)]);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the clicks 05 06 02-3 (Sperrkegel; Bandstahl 11 × 2, hardened, blued at 295°): 10.05 -0.1 long, 1.82 -0.04 thick, the pivot hole 1.2 H7 5.2 from the nose's foot and from
        the tail's tip, the nose 2 high, the back an arc r 8, the underside hollowed r 3 about a point 2.78 and 3.54 from the hole; traced on the sheet (10:1, 33.8 px/mm) between
        those figures. The base line 1.52 under the hole: the r 3 hollow's chord there ends at the nose's foot, 5.2 from the hole (scaled 1.545: sure); the nose's face at 85° to
@@ -6380,14 +6394,14 @@ const WDIAL=(()=>{
 
     /* ---------- the cannon tube on the centre arbor (turns with it) ---------- */
     const cnP=part('cannon',22),cn=grp(cnP,H[1]);R.cn=cn;
-    {const rb=y=>rSh(y)+0.01,pm=tag(mesh(cn,gear(CN.pin,CN.y1-CN.y0,{bore:rb(CN.y0)}),M.steel,0,(CN.y0+CN.y1)/2,0),'050503-3');pm.userData.gear={z:14,m:M_CH};R.cnPin=pm;
+    {const rb=y=>rSh(y)+0.01,cnM=[],pm=tag(mesh(cn,gear(CN.pin,CN.y1-CN.y0,{bore:rb(CN.y0)}),M.steel,0,(CN.y0+CN.y1)/2,0),'050503-3');pm.userData.gear={z:14,m:M_CH};R.cnPin=pm;cnM.push(pm);
       const g=[];for(let k=0;k<=10;k++){const t=Math.PI*k/10;g.push([CN.r-0.4*Math.sin(t),CN.yg-0.4*Math.cos(t)]);}   /* the groove, a half-round r 0.4 */
-      tag(mesh(cn,lathe([[rb(CN.y1),CN.y1],[CN.r,CN.y1],...g,[CN.r,CN.yb],[rb(CN.yb),CN.yb]],48),M.steel),'050503-3',1);
+      cnM.push(tag(mesh(cn,lathe([[rb(CN.y1),CN.y1],[CN.r,CN.y1],...g,[CN.r,CN.yb],[rb(CN.yb),CN.yb]],48),M.steel),'050503-3',1));
       const sqL=sqLoop(CN.sq,CN.sqR),F=[{p:C([0,0],rb(CN.yb),48),q:C([0,0],rb(CN.yk),48),a:CN.yb,b:CN.yk}];
-      tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1);
+      cnM.push(tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1));
       /* its crown, the square's last 0.5: the annuli from the bore out through circles 1.05 and 1.25 to the square (so the sphere is sampled across it) */
       const cr=p=>CN.yt-(CN.cr-Math.sqrt(CN.cr*CN.cr-p[0]*p[0]-p[1]*p[1]));
-      tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1);}
+      cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));R.cnM=cnM;}   /* the tube one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
 
     /* ---------- the change wheel on the short stud at 19 ---------- */
     const chP=part('changeWheel',20),ch=grp(chP,H[19]);R.ch=ch;
@@ -6414,37 +6428,37 @@ const WDIAL=(()=>{
     /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
        change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
     const ph=(A,pa,B,pb,s)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b;};
-    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
+    ph(R.cnPin,H[1],R.chW,H[19],-1);fuse(R.cnM);   /* the tube's pieces merged where they stand, its leaves phased */ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
 
     /* ---------- the hands ---------- */
     const hdP=part('hands',56);
     /* the minute hand, on the tube's square (turns with the centre arbor) */
     const mh=grp(hdP,H[1]);R.mh=mh;
     {const y0=YM0,yf=y0+0.8,y1=y0+2.0,h0=CN.sq+0.01,sq=sqLoop(h0,CN.sqR+0.01),hole=y=>sq.map(p=>p.map(v=>v*(1+(y1-y)/140/h0)));   /* the square hole, widening 1:70 down from its top */
-      tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1');
+      const mM=[tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1')];
       /* the flange: flat inside Ø 5.2 round the square hole, and outside it a turned ring, its edge rounded r 0.4 (smooth: until 17 October 2026 annuli of solidGeo's
          cells, whose flat-shaded facets showed on the round and the rim); the ring's 72 sides fall on the flat part's 72 points */
       const r1=MIN.rf-0.4,rnd=[...Array(11).keys()].map(k=>{const a=(10-k)/10*Math.PI/2;return[r1+0.4*Math.sin(a),y1-0.4+0.4*Math.cos(a)];});
-      tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1);
-      tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1);
-      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1);}
+      mM.push(tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1),
+      tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1),
+      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1));fuse(mM);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the hour hand, on the hour wheel's pipe */
     const hh=grp(hdP,H[1]);R.hh=hh;
     {const y1=YH1,y0=y1-3.1,yf=y1-0.8,rb=y=>HRW.rh+(HRW.yt-y)/140+0.01;   /* its hole on the seat's 1:70, 0.01 clear */
-      tag(mesh(hh,lathe([[rb(y0),y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[rb(y1),y1]],72),goldin),'050200-2');
-      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L,-1,0.25,HOUR.rf),goldin),'050200-2',1);}
+      fuse([tag(mesh(hh,lathe([[rb(y0),y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[rb(y1),y1]],72),goldin),'050200-2'),
+      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L,-1,0.25,HOUR.rf),goldin),'050200-2',1)]);}
     /* the up-and-down hand, on its wheel's pipe */
     const uh=grp(hdP,H[2]);R.uh=uh;
     {const y1=YU1,yf=y1-0.5,y0=y1-1.4;
-      tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3');
-      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1);}
+      fuse([tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3'),
+      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1)]);}
     /* the seconds hand on its collet (Zeigerfutter 05 02 01-2, brass, no sheet), pressed on the seconds post's 1:90 taper: Ø 1.5 (the coloured section's, 1.6 scaled,
        inside the dial's Ø 1.7 hole) and 4.6 long (scaled there, pictorial), its end Ø 1.2 through the hand (the hand's hole), flush with its top; bored on the post, 0.005 clear */
     const sh=grp(hdP,H[35]);R.sh=sh;
     {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-0.1*(y-SW.ys-24.05)/9.1)/2+0.005;
-      tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1');
-      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1);
-      tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1);
+      const sM=[tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1'),
+      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1)];
+      sM.push(tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1));fuse(sM);   /* boss, pointer and tail one hand, one mesh (fuse) */
       const yc=y0-4.0;tag(mesh(sh,lathe([[post(yc),yc],[0.75,yc],[0.75,y0],[SEC.rh,y0],[SEC.rh,y1],[post(y1),y1]],32),M.brass),'050201-2');}
 
     /* ---------- the dial (05 02 00-4) ---------- */
@@ -6632,7 +6646,7 @@ const WCASE=(()=>{
     {const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],0.6,24),a:YB-59.5,b:YB-58}];
       /* the bottom and the winding hole's seat in the bowl's own stuff: brass as drawn, Wempe 3955's moulded Bakelite with the rest of it (its plate's Ø 8 shows the bottom dark
          through it: 16_Wempe_3955_Gehäusetopf_Kardan.jpg) */
-      const BW=/** @type {[any,any][]} */([[rv(bowl,'last first 1943 6mx -3955'),M.brass],[rv(bowl,'3955'),BAK]]);
+      const G1=rv(bowl,'last first 1943 -3955'),G6=rv(bowl,'6mx'),G3=rv(bowl,'3955'),BW=/** @type {[any,any][]} */([[G1,M.brass],[G6,M.brass],[G3,BAK]]);   /* each version's bowl in its own group, one mesh (fuse, below) */
       for(const[g,mt]of BW)tag(mesh(g,solidGeo([{loop:circ(34.1),y0:YB-59.5,y1:YB-53,F:F0}]),mt),'050100-1');
       /* the winding hole's seat inside: a raised ring round the hole on the bottom, which the cork ring on the dust bush (05 08 01-4, frame.js) meets. Not on the casting's
          sheet (it draws no hole and nothing machined); the 6MX's bowls have it: moMvyx8eXfo 3:35 (1080p, the bowl empty) a flat-topped ring standing on the bottom round
@@ -6644,11 +6658,11 @@ const WCASE=(()=>{
       const fil=[...Array(13).keys()].map(i=>{const t=i/12*Math.PI/2;return[42+7*Math.sin(t),YB-46-7*Math.cos(t)];}).reverse();   /* the round r 7 about (42, YB − 46), from the bore's wall down to the floor */
       const pr=[[34.1,YB-65],[36.25,YB-65],[53,YB-50.5],[53,YB-23.5],[54,YB-23.5],[54,YB-12],[59,YB-12],[59,YB],[49,YB],...fil,[34.1,YB-53]];
       const lg=pr=>{const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();return smoothRev(g);};   /* each face its own normal, then smoothed round the axis only (smoothRev), so the profile's corners stay sharp */
-      tag(mesh(rv(bowl,'last first 1943 -3955'),lg(pr),M.brass),'050100-1',1);
+      tag(mesh(G1,lg(pr),M.brass),'050100-1',1);
       /* Wempe 3955's (the version as photographed: 16_Wempe_3955_Gehäusetopf_Kardan.jpg, photocompare.py) black Bakelite, as the wartime Glashütte and Wempe bowls were, the
          gimbal ring too; their pivot screws and knurled lock wheels brass (sure). Its profile (by eye: a narrower drum to the bottom, a rounded shoulder) not measured: the
          sheet's kept */
-      tag(mesh(rv(bowl,'3955'),lg(pr),BAK),'050100-1',1);
+      tag(mesh(G3,lg(pr),BAK),'050100-1',1);
       /* the Soviet 6MX's bowl (the Variants' Version, '6mx'): the same inside (the bore, its round, the bottom, the recess and its closing plate, the winding hole's seat: the
          movement is the drawings' and stands in it as drawn), turned outside to another profile, with a threaded rim for the knurled bezel (below). Its radii: the rim
          Ø 110.5, measured on Kirov 247's dial photograph (dg-chrono-6mx/1_Kirow_247_Z.jpg, in its bowl, the bezel off) by dialtrace.py's own fit of the dial (8.75 px/mm,
@@ -6677,10 +6691,11 @@ const WCASE=(()=>{
         const sh=[[B6,hY(-7.76)],[56.6,hY(-7.76)],[56.6,hY(-5.55)],[55.25,hY(-5.55)]];
         const ci=[[49,hY(-44.69)],[34.1,hY(-52.84)]];   /* the inner cone: the outer's line (52.4, −46.7)-(36.7, −55.3) moved 3.4 across it, cut by the bore and the recess's wall */
         const p6=[[34.1,YB-65],[36.7,YB-65],...cn,[B6,hY(-46.7)],...sh,[55.25,YB],[49,YB],...ci,[34.1,YB-53]];
-        const g6=rv(bowl,'6mx');tag(mesh(g6,lg(p6),M.brass),'050100-1',1);
+        const g6=G6;tag(mesh(g6,lg(p6),M.brass),'050100-1',1);
         const a=-Math.PI/2,w=0.9/53.05,R0=53.05,R1=55.25;   /* the rim: a full ring to the notch's floor, then the ring less the notch */
         tag(mesh(g6,solidGeo([{loop:circ(R1),y0:YB,y1:YB+0.8,F:[{p:circ(R0),a:YB,b:YB+0.8}]}]),M.brass),'050100-1',1);
         tag(mesh(g6,solidGeo([{loop:sector(R0,R1,[a+w,a+TAU-w],[a+w*R0/R1,a+TAU-w*R0/R1]),y0:YB+0.8,y1:YB+4.7}]),M.brass),'050100-1',1);}
+      for(const g of[G1,G6,G3])fuse(g.children.filter(o=>o.isMesh&&o.userData.hn==='050100-1'));   /* the bowl one casting, one mesh in each version (fuse, core.js): its bottom, seat, body and rim's flush faces drew rings in Edges until 21 October 2026 */
         /* the electrical contact's parts in the bowl (Kirov No. 247: 11_Kirow247_E-Kontakt_2.jpg inside, 12_Kirow_247_E-Kontakt_3.jpg outside, a camera fitted on the
            bowl's band; Kirov 2973's the same; Romanov 1975, Fig. 95, 101 and p. 105's parts 63-66): two flat brass springs 66 inside, each a foot 5.5 high curved to the bore
            on a black insulating strip, held by two screws 65 through the wall, and three tines 6.5 wide rising from it and leaning in to bear on a block's outer end (spring A
@@ -6810,8 +6825,8 @@ const WCASE=(()=>{
       const rec=bool(C([0,0],53.05,720),[[-0.9,-52.5],[-0.9,-55.3],[0.9,-55.3],[0.9,-52.5]]).uni[0];
       const F=[{p:rec,a:b0,b:b0+4.75},{p:C([0,0],52.1,720),a:b0,b:b0+5.45},{p:C([0,0],46,600),a:b0,b:top},{p:C([0,0],56.1,720),a:top-2.3,b:top}];
       const kb=b0+4/Math.tan(30*D2R);   /* the knurl's foot, where the chamfer meets r 62 */
-      tag(mesh(bW,smoothRev(solidGeo(cells([58,62,62.5],[[b0,top],[ch,top],[kb+2.5,top]],[F]))),M.brass),'050101-2');
-      tag(mesh(bW,polyGeo(knurlPts(62.5,0.4,480),2.5,[[0,0,62]]),M.brass,0,kb,0),'050101-2',1);
+      fuse([tag(mesh(bW,smoothRev(solidGeo(cells([58,62,62.5],[[b0,top],[ch,top],[kb+2.5,top]],[F]))),M.brass),'050101-2'),
+      tag(mesh(bW,polyGeo(knurlPts(62.5,0.4,480),2.5,[[0,0,62]]),M.brass,0,kb,0),'050101-2',1)]);   /* the bezel and its knurl one mesh (fuse): a ring at the knurl's edge in Edges until 21 October 2026 */
       const gl=tag(mesh(bW,solidGeo([{loop:circ(56),y0:top-2.3,y1:top}]),M.glass),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
     /* the 6MX's bezel ('6mx'), knurled and screwed onto the bowl's threaded rim (Kirow 422's: 11_Kirow_DEC_422_Gehäuse.jpg; Kirov 14917's off its bowl, its inside threaded:
        rAw2zmulpk8 0:29, 2:52), its glass thick and standing proud (12_Kirow_DEC_422_Kasten_1.jpg: a green edge over a narrow brass top). Traced on the bowl photograph as the
@@ -6824,9 +6839,9 @@ const WCASE=(()=>{
     {const b6=rv(bz,'6mx'),yj=Y6(552),yk0=Y6(598),yk1=Y6(640),top=Y6(650),gu=YB+12.0;
       const bell=[[56.1,552],[56.5,556],[56.73,560],[57.09,564],[57.32,568],[57.56,572],[57.68,576],[57.82,580],[57.9,588],[57.9,598]].map(([r,w])=>[r,Y6(w)]);
       const pr=[[55.3,yj],...bell,[57.9,yk1],[58.0,yk1],[58.0,Y6(646)],[57.6,Y6(649)],[57.2,top],[53.6,top],[53.6,gu],[52.1,gu],[52.1,YB+4.7],[55.3,YB+4.7]];
-      const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();tag(mesh(b6,smoothRev(g),M.brass),'050101-2');
+      const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();const b6m=tag(mesh(b6,smoothRev(g),M.brass),'050101-2');
       const NK=360,kn=[];for(let i=0;i<NK;i++){const t=i/NK*TAU,u=t+Math.PI/NK;kn.push([58.3*Math.cos(t),58.3*Math.sin(t)],[57.9*Math.cos(u),57.9*Math.sin(u)]);}
-      tag(mesh(b6,solidGeo([{loop:kn,y0:yk0,y1:yk1,F:[{p:circ(57.85),a:yk0,b:yk1}]}]),M.brass),'050101-2',1);
+      fuse([b6m,tag(mesh(b6,solidGeo([{loop:kn,y0:yk0,y1:yk1,F:[{p:circ(57.85),a:yk0,b:yk1}]}]),M.brass),'050101-2',1)]);   /* one mesh (fuse) */
       const gq=[[0,gu],[53.5,gu],[53.5,gu+3.2],[52.7,gu+4.0],[0,gu+4.0]],gg=new THREE.LatheGeometry([...gq,gq[0]].map(([r,y])=>V2(r,y)),N);
       const gl=tag(mesh(b6,gg,M.glass),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
 
@@ -6866,9 +6881,9 @@ const WCASE=(()=>{
       /* the handles (Griff f. Chronometerkasten, Änderung von 51 00 10, 14.7.42, 1:1): a strip 100 long and 18 high, its ends 10 long flat on the side with a screw each, between
          them standing 10 off it, the grip pressed out to an oval 70 × 30, 6 deep; its middle 75 over the box's bottom, its top 3.5 under the pivot's screw (sure). The strip 3 thick (likely); the screws estimated */
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'510010');g.position.set(s*BW,YF+75,0);g.rotation.y=s>0?0:Math.PI;bxW.add(g);
-        const st=polyGeo([[0,-50],[3,-50],[3,-41],[10,-36],[10,36],[3,41],[3,50],[0,50],[0,40],[7,35],[7,-35],[0,-40]],18);st.translate(0,-9,0);mesh(g,st,MC.alu);   /* the strip seen from below: [off the side, along it] */
+        const st=polyGeo([[0,-50],[3,-50],[3,-41],[10,-36],[10,36],[3,41],[3,50],[0,50],[0,40],[7,35],[7,-35],[0,-40]],18);st.translate(0,-9,0);const sm=mesh(g,st,MC.alu);   /* the strip seen from below: [off the side, along it] */
         const ov=stadiumPts([-12,-20],[-12,20],30),cut=[];for(let i=0;i<ov.length;i++){const a=ov[i],b=ov[(i+1)%ov.length];if(a[0]<=-9)cut.push(a);if((a[0]<=-9)!==(b[0]<=-9)){const t=(-9-a[0])/(b[0]-a[0]);cut.push([-9,a[1]+t*(b[1]-a[1])]);}}
-        const o=new THREE.Shape(cut.map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);mesh(g,og,MC.alu,7,0,0);   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm); drawn below the strip only (y −9 down), so the two don't share their faces 7 and 10 off the side, which flickered where they overlapped (until 16 October 2026) */
+        const o=new THREE.Shape(cut.map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);fuse([sm,mesh(g,og,MC.alu,7,0,0)]);   /* the strip and its grip one pressing, one mesh (fuse): their walls ran flush, lines in Edges until 21 October 2026 */   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm); drawn below the strip only (y −9 down), so the two don't share their faces 7 and 10 off the side, which flickered where they overlapped (until 16 October 2026) */
         for(const z of[-45,45])tag(screw(along(g,[3,0,z],[-1,0,0]),0,0,0,2.5,1.6,11,1.2,M.steel),'WN-hg');}
       /* the hinge: one piano hinge across the back (no sheet: every photographed box has it; Lange 1947 from above, drouot_33810142_lange1947_2.jpg, 4.48 px/mm by the box's
          185: 148 long, 664 px, its leaves let into the box's and the lid's parting faces, the box's showing 6.7 over the wall, five screws about 33 apart; Wempe 6161's, Wempe
@@ -6876,7 +6891,7 @@ const WCASE=(()=>{
          2.5 behind the back, in seven lengths, the box's four and the lid's three (estimated). Until 16 October 2026 two hinges 40 long on the back's face (the README then said the
          photographs show two) */
       {const g=tag(new THREE.Group(),'Scharnier');bxW.add(g);box(g,HGL,HGT,6.5,0,YL-HGT/2,-BW+3.25,M.brass);
-        for(let i=0;i<7;i+=2){const k=mesh(g,cylY(2.5,HGL/7,20),M.brass,-HGL/2+HGL/7*(i+0.5),YL,-BW-2.5);k.rotation.z=Math.PI/2;}}
+        for(let i=0;i<7;i+=2){const k=mesh(g,cylY(2.5,HGL/7,20),M.brass,-HGL/2+HGL/7*(i+0.5),YL,-BW-2.5);k.rotation.z=Math.PI/2;}fuse(g.children.slice());}   /* the box's half, its leaf and knuckles one mesh (fuse) */
       /* the key's holder (no sheet: the box's own, 127-556.02, isn't in the set): a triangular shelf across the back right corner, the key standing in a hole through it, its
          body's cone seated on the hole's edge and its paddle up, as every photographed box keeps it: Greenwich's wartime Wempe (rmg_L5393_wempe_wartime_001.jpg: the black
          1943 key, its paddle's top 18 px over the back rim's line behind it, the key 21 in front of the back wall, the camera looking down about 35° (the box's 210 deep spans
@@ -6923,7 +6938,7 @@ const WCASE=(()=>{
       const g=tag(box(ldW,151,3,151,0,h-1.5,o,M.glass),'Deckelglas');g.userData.noShadow=g.userData.inkBox=1;   /* no Edges lines, as the bezel's glass */
       for(const s of[-1,1])box(B,BW-HGL/2,h,WT,s*(BW+HGL/2)/2,h/2,WT/2,MC.mah);box(B,HGL,h-HGT,WT,0,HGT+(h-HGT)/2,WT/2,MC.mah);   /* the lid's back wall, let in for the hinge's leaf */
       {const q=tag(new THREE.Group(),'Scharnier',1);ldW.add(q);box(q,HGL,HGT,6.5,0,HGT/2,3.25,M.brass);
-        for(let i=1;i<7;i+=2){const k=mesh(q,cylY(2.5,HGL/7,20),M.brass,-HGL/2+HGL/7*(i+0.5),0,-2.5);k.rotation.z=Math.PI/2;}}
+        for(let i=1;i<7;i+=2){const k=mesh(q,cylY(2.5,HGL/7,20),M.brass,-HGL/2+HGL/7*(i+0.5),0,-2.5);k.rotation.z=Math.PI/2;}fuse(q.children.slice());}   /* the lid's half, one mesh (fuse) */
       /* the lid's stay (no sheet: Wempe 6161, antiquorum_208-4_wempe6161.jpg, a brass bar with a long slot on the left, pivoted on the lid's wall near the hinge and riding on a
          pin in the box's wall near the back; Greenwich's wartime Wempe's on the left too, Lange 1947's on the right, 5.6 wide at 4.48 px/mm): the bar 6 wide and 1.5 thick on the
          walls' inside, its pivot 5 over the parting line and 40 from the back's outside on the lid, its pin 20 under it and 45 from the back on the box; the slot 2.4 wide from
@@ -6945,7 +6960,7 @@ const WCASE=(()=>{
       tag(screw(along(tz,[0,0,4],[0,0,-1]),0,0,0,4.5,2,12,3,M.steel),'WN-zg');   /* its pivot screw, M6 in the Ø 6.2, head Ø 9 (estimated) */
       const kn=tag(new THREE.Group(),'WN-zk');kn.position.set(0,-14,4);tz.add(kn);const kg=new THREE.LatheGeometry([V2(0,0),V2(1.75,0),V2(1.75,1.5),V2(3,1.5),V2(3,6),V2(2.5,7),V2(0,7)],24);kg.rotateX(Math.PI/2);mesh(kn,kg,MC.knob);}   /* its knob in the M3.5 (estimated) */
     /* its keeper on the box's front (estimated): a strap 16 wide, 1.5 thick, 4.4 off the front over the tongue's end */
-    {const g=tag(new THREE.Group(),'Schliessblech');bxW.add(g);box(g,18,10,1.5,0,YL-26,BW+5.15,M.steel);for(const s of[-1,1])box(g,3,10,4.4,s*7,YL-26,BW+2.2,M.steel);}
+    {const g=tag(new THREE.Group(),'Schliessblech');bxW.add(g);box(g,18,10,1.5,0,YL-26,BW+5.15,M.steel);for(const s of[-1,1])box(g,3,10,4.4,s*7,YL-26,BW+2.2,M.steel);fuse(g.children.slice());}   /* one bent strap, one mesh (fuse) */
 
     /* ================= the 6MX's box (Kirov No. 247's, '6mx') ================= */
     /* A box in three tiers, the body, a glazed lid and a top lid, two hasps with knurled screws across the parting lines, brass corner strips, a ring handle on each side
@@ -6969,7 +6984,7 @@ const WCASE=(()=>{
       for(const sx of[-1,1]){const q=mesh(g,cylY(1.4,0.6,12),M.brass,sx*21,y+(up?7:-7),z0+1.5);q.rotation.x=Math.PI/2;}
       if(knurl){const k=mesh(g,cylY(5.5,5,36),M.brass,0,y-6.4,z0+3.7);k.rotation.x=Math.PI/2;}};
     /* corner strips round the four vertical corners at height y (each a strip on the front or back and one on the side), the box centred at z c */
-    const strips=(par,y,c,h=12)=>{for(const sx of[-1,1])for(const sz of[-1,1]){box(par,27,h,1,sx*(B6-12.5),y,c+sz*(B6+0.5),M.brass);box(par,1,h,26,sx*(B6+0.5),y,c+sz*(B6-13),M.brass);}};
+    const strips=(par,y,c,h=12)=>{const o=[];for(const sx of[-1,1])for(const sz of[-1,1])o.push(fuse([box(par,27,h,1,sx*(B6-12.5),y,c+sz*(B6+0.5),M.brass),box(par,1,h,26,sx*(B6+0.5),y,c+sz*(B6-13),M.brass)]));return o;};   /* each corner's angle one piece, one mesh (fuse, core.js): a line down its corner in Edges until 21 October 2026 */
     {const g6=rv(bx,'6mx'),Bk=tag(new THREE.Group(),'Kasten6');g6.add(Bk);rv(root,'6mx').add(lid6G);const hb=P2-YF-W6;
       box(Bk,2*B6,W6,2*B6,0,YF+W6/2,0,MC.kir);
       for(const s of[-1,1]){box(Bk,2*B6,hb,W6,0,YF+W6+hb/2,s*(B6-W6/2),MC.kir);box(Bk,W6,hb,2*B6-2*W6,s*(B6-W6/2),YF+W6+hb/2,0,MC.kir);}
@@ -6977,7 +6992,7 @@ const WCASE=(()=>{
         const d=tag(mesh(g6,new THREE.CylinderGeometry(11.5,11.5,2.4,48),M.brass,s*(B6-W6-1.2),YP,0),'Lagerscheibe');d.rotation.z=Math.PI/2;}
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'Griff6');g6.add(g);const yh=P2-12;box(g,1.5,10,34,s*(B6+0.75),yh,0,M.brass);box(g,6,8,10,s*(B6+4.5),yh,0,M.brass);
         const r=mesh(g,new THREE.TorusGeometry(17,3,12,48),M.brass,s*(B6+6),yh-17,0);r.rotation.y=Math.PI/2;}
-      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier6');g6.add(g);box(g,40,12,1.2,s*55,P2-6,-B6-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,P2,-B6-2.5);k.rotation.z=Math.PI/2;}
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier6');g6.add(g);const lf=box(g,40,12,1.2,s*55,P2-6,-B6-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,P2,-B6-2.5);k.rotation.z=Math.PI/2;fuse([lf,k]);}   /* leaf and knuckle one mesh (fuse) */
       tag(mesh(g6,polyGeo([[B6-W6,-(B6-W6)],[B6-W6-65,-(B6-W6)],[B6-W6,-(B6-W6)+65]],10,[[KX,KZ,5.5]]),MC.kir,0,KH-10,0),'Schluesselhalter');   /* legs 65: its front edge where the drawn box's is (x − z 105), the key's hole where it is */
       {const g=tag(new THREE.Group(),'Beschlag6');g6.add(g);strips(g,YF+6,0);strips(g,P2-27,0);}
       leaf(g6,P2,B6,false,true);
@@ -6991,9 +7006,9 @@ const WCASE=(()=>{
         box(L6,2*B6,25,W6,0,80.5,o+s*(B6-W6/2),MC.kir);box(L6,W6,25,2*I6,s*(B6-W6/2),80.5,o,MC.kir);}
       box(L6,2*I6,W6,2*I6,0,88,o,MC.kir);
       const gl=tag(box(ld6,156,3,156,0,56.5,o,M.glass),'Deckelglas');gl.userData.noShadow=gl.userData.inkBox=1;
-      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier6',1);ld6.add(q);box(q,40,12,1.2,s*55,6,-0.6,M.brass);box(q,30,10,1.2,s*55,62,-0.6,M.brass);box(q,30,10,1.2,s*55,74,-0.6,M.brass);
-        const k=mesh(q,cylY(2.5,30,20),M.brass,s*55,68,-2.5);k.rotation.z=Math.PI/2;}
-      const g=tag(new THREE.Group(),'Beschlag6',1);ld6.add(g);strips(g,43,o);strips(g,87,o);for(const sx of[-1,1])for(const sz of[-1,1])box(g,26,1,26,sx*(B6-13),93.5,o+sz*(B6-13),M.brass);
+      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier6',1);ld6.add(q);box(q,40,12,1.2,s*55,6,-0.6,M.brass);const ua=box(q,30,10,1.2,s*55,62,-0.6,M.brass),ub=box(q,30,10,1.2,s*55,74,-0.6,M.brass);
+        const k=mesh(q,cylY(2.5,30,20),M.brass,s*55,68,-2.5);k.rotation.z=Math.PI/2;fuse([ua,k,ub]);}   /* the upper hinge's leaves on its one knuckle, one mesh (fuse) */
+      const g=tag(new THREE.Group(),'Beschlag6',1);ld6.add(g);strips(g,43,o);const tc=strips(g,87,o);let ci=0;for(const sx of[-1,1])for(const sz of[-1,1])fuse([tc[ci++],box(g,26,1,26,sx*(B6-13),93.5,o+sz*(B6-13),M.brass)]);   /* the top's caps with their angles, one mesh each */
       leaf(ld6,0,2*B6,true,false);leaf(ld6,68,2*B6,false,true);leaf(ld6,68,2*B6,true,false);
       const bg=tag(new THREE.Group(),'Firmenschild6');ld6.add(bg);const DM=[[19.3,0],[0,12],[-19.3,0],[0,-12]];plate(bg,DM,0.8,0,30.4,2*B6,M.steel);
       const sg=new THREE.ShapeGeometry(new THREE.Shape(DM.map(([a,b])=>V2(a,b)))),uv=sg.attributes.uv,ps=sg.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,(ps.getX(i)+19.3)/38.6,(ps.getY(i)+12)/24);
@@ -7040,7 +7055,7 @@ const WCASE=(()=>{
         /* the eyes on the plate's ends: a disc Ø 23 × 2 and its screw (3 × 15), whose round head is the centre Ø 8.5 */
         const ex=s*(OX+25);tag(mesh(overW,cylY(11.5,2,48),M.steel,ex,OB+OW+1,0),'Riemenoese');tag(screw(along(overW,[ex,OB+OW+2,0],[0,-1,0]),0,0,0,4.25,2.2,15,1.5,M.steel),'WN-ro');}
       /* the hinges (7) at the back: the body's leaves 32 × 12 × 1, the knuckle Ø 5 on the parting line (estimated but their length and place) */
-      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier.U');overW.add(g);box(g,32,12,1,s*84,OT-6,-OZ-0.5,M.brass);const k=mesh(g,cylY(2.5,32,20),M.brass,s*84,OT,-OZ-2.5);k.rotation.z=Math.PI/2;}
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier.U');overW.add(g);const lf=box(g,32,12,1,s*84,OT-6,-OZ-0.5,M.brass);const k=mesh(g,cylY(2.5,32,20),M.brass,s*84,OT,-OZ-2.5);k.rotation.z=Math.PI/2;fuse([lf,k]);}
       /* the eye of the hook and eye (9): a screw eye on the front, 9 under the rim (commercial, estimated: a ring Ø 9 of 1.6 wire on a shank) */
       {const g=tag(new THREE.Group(),'Hakenoese');overW.add(g);const r=mesh(g,new THREE.TorusGeometry(3.7,0.8,10,28),M.steel,0,OT-9,OZ+5.2);r.rotation.y=Math.PI/2;
         const sh=mesh(g,cylY(0.8,7,10),M.steel,0,OT-9,OZ-1.5);   /* from 5 into the wall to the ring's wire */sh.rotation.x=Math.PI/2;}}
@@ -7078,7 +7093,7 @@ const WCASE=(()=>{
       for(const s of[-1,1]){const q=tag(new THREE.Group(),'Riemen');g.add(q);box(q,3,OT6-(OP6+40),30,s*(OX6+1.5),(OT6+OP6+40)/2,0,MC.leather);
         for(const h of[50,100])tag(screw(along(g,[s*(OX6+3),OP6+h,0],[-s,0,0]),0,0,0,3.5,2.6,15,2,M.steel),'WN-ur');}
       {const q=tag(new THREE.Group(),'Hakenoese');g.add(q);const d=mesh(q,cylY(10,2,40),M.brass,0,OT6-51,OX6+1);d.rotation.x=Math.PI/2;const pn=mesh(q,cylY(1.5,5,16),M.steel,0,OT6-51,OX6+4.5);pn.rotation.x=Math.PI/2;}
-      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier.U');g.add(q);box(q,32,12,1,s*70,OT6-6,-OX6-0.5,M.brass);const k=mesh(q,cylY(2.5,32,20),M.brass,s*70,OT6,-OX6-2.5);k.rotation.z=Math.PI/2;}}
+      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier.U');g.add(q);const lf=box(q,32,12,1,s*70,OT6-6,-OX6-0.5,M.brass);const k=mesh(q,cylY(2.5,32,20),M.brass,s*70,OT6,-OX6-2.5);k.rotation.z=Math.PI/2;fuse([lf,k]);}}
     {const o=OX6,h=125-OW6,D=tag(new THREE.Group(),'Ueberkasten6.D');ol6.add(D);
       box(D,2*OX6,h,OW6,0,h/2,o-(OX6-OW6/2),MC.kir);for(const s of[-1,1])box(D,OW6,h,2*OX6-2*OW6,s*(OX6-OW6/2),h/2,o,MC.kir);box(D,2*OX6,OW6,2*OX6,0,h+OW6/2,o,MC.kir);
       plate(D,[[-OX6+OW6,h],[-OX6+OW6,0],[-NH+0.5,0],...arc6([0,NC],NR-0.5,-Math.PI+NA,-NA,24).slice(1,-1),[NH-0.5,0],[OX6-OW6,0],[OX6-OW6,h]],OW6,0,0,2*OX6-OW6,MC.kir);
@@ -7330,7 +7345,7 @@ buildWempe.DEV=(()=>{const H=WD.H,A={Ba:H[45],Fu:H[10],C:H[1],T:H[38],S:H[35],E:
 <script>
 /* Generated by tools/contacts.py --model wempe --write from checks.py: what the Contacts view (../../shared/contacts.js) counts as an expected overlap (fine.py's EXPECTED,
    'part:Type|part:Type': why) and the states its sweep poses the model in (fine.py's STATES: balance phase, escape teeth on, fusee turns from full wind, winding). Don't edit. */
-const WCONTACT={expected:{"pillarPlate:Buffer|secondsWheel:Extrude": "the Soviet 6MX's contact lever's stone riding a tooth of the contact wheel as the tooth lifts it (train.js: the lever's lift is worked out along the radius; the stone's slight move along the teeth as the lever turns isn't)", "detentBlock:Buffer|detentBlock:Lathe": "the Soviet 6MX's (Kirov No. 247's) screws across its block, drawn without holes across: the foot's stop screw's M1.4 in the base's free side and the banking screw's thread through the upright, which has no slit (escapement.js, blk6)", "detent:Lathe|detentBlock:Buffer": "the detent's foot screw (M1) and its two steady pins, across into the block's end (05 04 01-4, 1436): a block of vertical walls drawn without holes across", "hairspring:Buffer|hairspring:Buffer": "the hairspring's inner end in the hole across the collet's end (05 03 02-2), drawn without the hole (a collet of vertical walls)", "dustBush:Lathe|fuseeBush:Lathe": "the dust bush pressed on the fusee bush's taper above its flange (05 08 01-2: Ø 8 T6, +0.019/+0.028, 1:70; 05 08 01-3: bore 8 H7 +0.015, 1:70; drawn at the fits' middles, 0.008 interference on the radius over the taper's 2.9). Until 15 October 2026 the T6 was read on the spigot, pressed into the top plate's hole 10, now a g6 slide in it", "fusee:Lathe|udPinion:Extrude": "the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length", "stopWork:Buffer|stopWork:Cylinder": "the stop bar's pin (05 06 03-2) pressed across the bar in its hole (05 06_4's C-D, dashed inside the bar), which a solid of plan cells can't cut across", "fusee:Buffer|stopWork:Cylinder": "the stop bar's spring's pin (05 06 04-4) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end (its outer part, 2.8 of its 4.1, in the end left uncut past N: 0.56 mm³ of 0.80)", "barrelArbor:Cylinder|mainspring:Buffer": "the arbor's hook (05 07 02-2) in the mainspring's eye: its ramp, 0.475 at its face, stands 0.1 proud of the eyed coil (0.36) into the next, which rides over it on a real spring; the drawn coils lie at the strip's pitch and don't bend round it", "coverPlate:Lathe|fusee:Lathe": "the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body", "chain:Extrude|fusee:Cylinder": "the chain's top hook on the fusee's pin (05 06 00-6), round it", "chain:Buffer|chain:Extrude": "the chain's hooks riveted between its end links' plates (the rivets through them)", "band:Buffer|fusee:Lathe": "the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)", "band:Extrude|barrel:Lathe": "the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum", "band:Extrude|barrel:Buffer": "as revised (the drum notched, a BufferGeometry): the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum", "band:Buffer|fusee:Buffer": "the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)", "barrel:Lathe|chain:Extrude": "the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum", "barrel:Buffer|chain:Extrude": "as revised (the drum notched, a BufferGeometry): the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum", "band:Extrude|fusee:Cylinder": "the band's round hook (05 07 03-2) on the fusee's pin", "band:Buffer|band:Extrude": "the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start"},
+const WCONTACT={expected:{"pillarPlate:Buffer|secondsWheel:Extrude": "the Soviet 6MX's contact lever's stone riding a tooth of the contact wheel as the tooth lifts it (train.js: the lever's lift is worked out along the radius; the stone's slight move along the teeth as the lever turns isn't)", "detentBlock:Buffer|detentBlock:Lathe": "the Soviet 6MX's (Kirov No. 247's) screws across its block, drawn without holes across: the foot's stop screw's M1.4 in the base's free side and the banking screw's thread through the upright, which has no slit (escapement.js, blk6)", "detent:Lathe|detentBlock:Buffer": "the detent's foot screw (M1) and its two steady pins, across into the block's end (05 04 01-4, 1436): a block of vertical walls drawn without holes across", "hairspring:Buffer|hairspring:Buffer": "the hairspring's inner end in the hole across the collet's end (05 03 02-2), drawn without the hole (a collet of vertical walls)", "dustBush:Lathe|fuseeBush:Buffer": "the dust bush pressed on the fusee bush's taper above its flange (05 08 01-2: Ø 8 T6, +0.019/+0.028, 1:70; 05 08 01-3: bore 8 H7 +0.015, 1:70; drawn at the fits' middles, 0.008 interference on the radius over the taper's 2.9). Until 15 October 2026 the T6 was read on the spigot, pressed into the top plate's hole 10, now a g6 slide in it", "fusee:Lathe|udPinion:Extrude": "the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length", "stopWork:Buffer|stopWork:Cylinder": "the stop bar's pin (05 06 03-2) pressed across the bar in its hole (05 06_4's C-D, dashed inside the bar), which a solid of plan cells can't cut across", "fusee:Buffer|stopWork:Cylinder": "the stop bar's spring's pin (05 06 04-4) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end (its outer part, 2.8 of its 4.1, in the end left uncut past N: 0.56 mm³ of 0.80)", "barrelArbor:Cylinder|mainspring:Buffer": "the arbor's hook (05 07 02-2) in the mainspring's eye: its ramp, 0.475 at its face, stands 0.1 proud of the eyed coil (0.36) into the next, which rides over it on a real spring; the drawn coils lie at the strip's pitch and don't bend round it", "coverPlate:Lathe|fusee:Buffer": "the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body", "chain:Extrude|fusee:Cylinder": "the chain's top hook on the fusee's pin (05 06 00-6), round it", "chain:Buffer|chain:Extrude": "the chain's hooks riveted between its end links' plates (the rivets through them)", "band:Buffer|fusee:Lathe": "the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)", "band:Extrude|barrel:Lathe": "the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum", "band:Extrude|barrel:Buffer": "as revised (the drum notched, a BufferGeometry): the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum", "band:Buffer|fusee:Buffer": "the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)", "barrel:Lathe|chain:Extrude": "the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum", "barrel:Buffer|chain:Extrude": "as revised (the drum notched, a BufferGeometry): the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum", "band:Extrude|fusee:Cylinder": "the band's round hook (05 07 03-2) on the fusee's pin", "band:Buffer|band:Extrude": "the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start"},
 states:[[0.0, 0, 2.5, false], [0.2406, 0, 2.5, false], [0.243, 0, 2.5, false], [0.246, 0, 2.5, false], [0.2475, 0, 2.5, false], [0.2482, 0, 2.5, false], [0.2485, 0, 2.5, false], [0.2487, 0, 2.5, false], [0.249, 0, 2.5, false], [0.2495, 0, 2.5, false], [0.25, 0, 2.5, false], [0.2507, 0, 2.5, false], [0.251, 0, 2.5, false], [0.2515, 0, 2.5, false], [0.2518, 0, 2.5, false], [0.252, 0, 2.5, false], [0.253, 0, 2.5, false], [0.254, 0, 2.5, false], [0.255, 0, 2.5, false], [0.256, 0, 2.5, false], [0.257, 0, 2.5, false], [0.2578, 0, 2.5, false], [0.259, 0, 2.5, false], [0.26, 0, 2.5, false], [0.2606, 0, 2.5, false], [0.2608, 0, 2.5, false], [0.261, 0, 2.5, false], [0.262, 0, 2.5, false], [0.265, 0, 2.5, false], [0.27, 0, 2.5, false], [0.275, 0, 2.5, false], [0.28, 0, 2.5, false], [0.284, 0, 2.5, false], [0.2856, 0, 2.5, false], [0.2865, 0, 2.5, false], [0.2875, 0, 2.5, false], [0.2883, 0, 2.5, false], [0.29, 0, 2.5, false], [0.3, 0, 2.5, false], [0.4, 0, 2.5, false], [0.5, 0, 2.5, false], [0.6, 0, 2.5, false], [0.75, 0, 2.5, false], [0.7546, 0, 2.5, false], [0.756, 0, 2.5, false], [0.758, 0, 2.5, false], [0.76, 0, 2.5, false], [0.762, 0, 2.5, false], [0.7637, 0, 2.5, false], [0.765, 0, 2.5, false], [0.9, 0, 2.5, false], [0.0, 0, 2.5, false], [0.0, 97, 0, false], [0.0, 194, 0, true], [0.0, 291, 0.05, false], [0.0, 388, 0.12, false], [0.0, 485, 0.17, true], [0.0, 582, 0.3, false], [0.0, 679, 1.2, true], [0.0, 776, 3.1, false], [0.0, 873, 4.4, true], [0.0, 970, 5.7, false], [0.0, 1067, 7.0, false], [0.0, 1164, 8.2, false], [0.0, 1261, 8.7, false], [0.0, 1358, 8.78, false], [0.0, 1455, 6.3, true], [0.0, 1552, 2.0, false]]};
 
 </script>
