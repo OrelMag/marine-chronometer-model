@@ -2815,6 +2815,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   transparent means faded or glass as well as decal; key decal treatment on the
   flag. `ae670d5`
 - **The set-up cover plate looked like a plate on a second, smaller one, and the set-up click's eye speckled** (the owner's screenshots on a phone, 21 October 2026): the cover was a bevelled extrusion 0.15 wider at its middle than its two pads, drawn under it as meshes of their own, so Edges outlined a seam and the bevel stood out as a lip; the click's measured eye (r 1.48) was a second solid whose faces coincided with the lever's, and the two fought. Keep: the cover one mesh (`mergeGeo` of the plate and its pads, their walls flush, as the balance lower bridge is); the click one outline (`clickGeo`: the lever unioned with its eye); no part drawn as two solids sharing a face. `86b74079`
+- **The Wempe's maintaining detent drew a line across its upper face** (the owner's screenshot, 21 October 2026): its thick part and thin tip (05 05_12's step) were two meshes sharing the upper face, and Edges outlines each mesh. Keep: the detent one mesh (`mergeGeo` of the two slabs), its step below as drawn. `16499d1b`, `9a546c70`
 
 ## Controls and display
 
@@ -3314,7 +3315,6 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The Wempe's maintaining detent drew a line across its upper face** (Rendering; branch `claude/wempe-detent-seam`, the owner's screenshot, 21 October 2026): its thick part and thin tip (05 05_12's step) were two meshes sharing the upper face, and Edges outlines each mesh. Keep: the detent one mesh (`mergeGeo` of the two slabs), its step below as drawn.
 - **The winding pawls' springs read as empty beds, with wires drawn in them** (Winding and maintaining work; `f8299b5e`, branch `claude/hamilton-inner`): the yellow crescents on the sustaining ratchet's face at 19:12 were taken for beds cut in the face, the springs "off in every frame", and 0.3 mm steel wires drawn in them; on 27:00 (the wheel flat after cleaning) they are the springs, flat crescents with their own stoned face and their screws' ends flush in their feet (Figs. 69, 70). The face's readings were also made on the ratchet's tips at the old r 14.53 and needed x1.139, and the pawls stood round the wheel at 0.4 rad from no source where both frames put the spring's pin 58.5 deg from a stud. Keep: a coloured patch on a part is first read as a part; a ratio read against a size that was later corrected is rescaled with it.
 - **mechanisms-check.js took the winding ratchet to have 36 teeth after it was drawn with 40** (Build, tools and docs; `f8299b5e`): the count was written in the call. Keep: tools read a count from the model (`R.WRT.z`).
 - **The escape arbor's shaft read on the restorer's replacement arbor** (Going train and heights; `41c2e7b3`): r 0.67 from 43:21.1, where the old wheel is staked onto a new arbor; the original (42:51 in the movement, 43:19) is D 0.95-1.04, its collet in two steps. Keep: check which part a frame shows after a restorer's repair.
