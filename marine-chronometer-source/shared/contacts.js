@@ -29,7 +29,7 @@ const CONTACTS=(()=>{
      if(o.isInstancedMesh)for(let i=0;i<o.count;i++)out.push({o,inst:i,part,pk,name,ver:0});else out.push({o,inst:-1,part,pk,name,ver:0});});
    return out;}
  const DRUM=new WeakMap();
- function drum(o){const g=o.geometry;let d=DRUM.get(g);if(d)return d;g.computeBoundingBox();const bb=g.boundingBox,R=o.userData.barrelWall;d=new THREE.CylinderGeometry(R,R,bb.max.y-bb.min.y,72);d.translate(0,(bb.max.y+bb.min.y)/2,0);DRUM.set(g,d);return d;}
+ function drum(o){const g=o.geometry;let d=DRUM.get(g);if(d)return d;g.computeBoundingBox();const bb=g.boundingBox,R=o.userData.barrelWall,[y0,y1]=o.userData.wallY||[bb.min.y,bb.max.y];d=new THREE.CylinderGeometry(R,R,y1-y0,72);d.translate(0,(y1+y0)/2,0);DRUM.set(g,d);return d;}
  const xf=(it,inv)=>{const Mo=new THREE.Matrix4().multiplyMatrices(inv,it.o.matrixWorld),Mt=Mo.clone();if(it.inst>=0){it.o.getMatrixAt(it.inst,M4);Mt.multiply(M4);}return[Mo,Mt];};
  const pver=it=>{const g=it.o.geometry;return g.attributes.position.version*1e6+(g.index?g.index.version:0);};
  /* an item's solid in mv's frame (P, its box, its triangles' boxes); false if it hasn't moved or changed since it was last placed */

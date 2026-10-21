@@ -49,7 +49,8 @@
         m+=v*rho;I+=v*rho*S;}}return{m:r4(m/1000),I:r4(I/1000),missing:miss};};   /* g, g·mm² */
   const meshesOf=name=>{const o=[];mv.traverse(m=>{if(!m.isMesh||!vis(m)||m.userData.decal||m.userData.surface||m.isInstancedMesh)return;for(let p=m;p&&p!==mv;p=p.parent)if(p.userData.partName===name){o.push(m);break;}});return o;};
   /* one pawl on one ratchet */
-  const pair=(name,ratId,pawlMs,centre,pivot,z,LD,note)=>{const R0=outline(find(ratId)[0]),Rl=shift(R0.S,centre),ry=R0.y,pitch=TAU/z;
+  const pair=(name,ratId,pawlMs,centre,pivot,z,LD,note)=>{const ro_=l=>Math.max(...l.S.map(e=>Math.hypot(e.a[0]-centre[0],e.a[1]-centre[1]))),R0=levels(find(ratId)[0]).reduce((b,l)=>ro_(l)>ro_(b)?l:b);   /* the ratchet's toothed level: a ratchet merged with its plate and cup (the maintaining ratchet, 21 October 2026) read at its teeth, as its toothed solid alone was */
+    const Rl=shift(R0.S,centre),ry=R0.y,pitch=TAU/z;
     const ro=Math.max(...Rl.map(e=>Math.hypot(...e.a)));
     const PW=pawlMs.flatMap(levels).filter(o=>o.y[1]>ry[0]+1e-3&&o.y[0]<ry[1]-1e-3);   /* the pawl's solids at the ratchet's height */
     const W=PW.map(o=>shift(o.S,centre)),near=W.flatMap(w=>denseS(w,0.005)).filter(p=>Math.hypot(p[0],p[1])<ro+0.2);

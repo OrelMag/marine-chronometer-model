@@ -48,11 +48,11 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      m=Math.min(m,ins?-d:d);}return m;};
  /* how far into the teeth a pawl reaches: below the tips, at its nearest point to the wheel's centre */
  const deep=(pts,q,th,pr)=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of dense(pts))m=Math.min(m,Math.hypot(q[0]+x*c+z*sn,q[1]-x*sn+z*c));return pr.ro-m;};
- const stud=[];mv.traverse(o=>{if(o.userData.wstop&&o.geometry&&o.geometry.parameters&&o.geometry.parameters.radiusTop)stud.push(o);});
+ const stud=[];mv.traverse(o=>{if(o.userData.wstop&&o.geometry&&(o.userData.wstop.r||o.geometry.parameters&&o.geometry.parameters.radiusTop))stud.push(o);});   /* the stud: its cylinder's radius and length in userData.wstop since 21 October 2026 (one mesh with its grooved end) */
  /* the stop-bar's meshes (its halves) sampled over their triangles in the bar's frame, against the stud's cylinder: the least distance, negative inside */
  const SB=R.fs.stopBar,SBP=[];{mv.updateMatrixWorld(true);const bi=SB.matrixWorld.clone().invert();SB.traverse(o=>{if(!o.isMesh)return;const g=o.geometry,ps=g.attributes.position,ix=g.index,nT=(ix?ix.count:ps.count)/3,m=bi.clone().multiply(o.matrixWorld),v=i=>new THREE.Vector3().fromBufferAttribute(ps,ix?ix.getX(i):i).applyMatrix4(m);
    for(let t=0;t<nT;t++){const a=v(3*t),b=v(3*t+1),c=v(3*t+2);for(let i=0;i<=8;i++)for(let j=0;j<=8-i;j++)SBP.push(a.clone().multiplyScalar(1-(i+j)/8).addScaledVector(b,i/8).addScaledVector(c,j/8));}});}
- const barDist=()=>{mv.updateMatrixWorld(true);const S=stud[0],sr=S.geometry.parameters.radiusTop,sh=S.geometry.parameters.height,M=new THREE.Matrix4().copy(S.matrixWorld).invert().multiply(SB.matrixWorld),q=new THREE.Vector3();let g=1e9,how='';
+ const barDist=()=>{mv.updateMatrixWorld(true);const S=stud[0],W=S.userData.wstop,sr=W.r??S.geometry.parameters.radiusTop,sh=W.h??S.geometry.parameters.height,M=new THREE.Matrix4().copy(S.matrixWorld).invert().multiply(SB.matrixWorld),q=new THREE.Vector3();let g=1e9,how='';
    for(const p of SBP){q.copy(p).applyMatrix4(M);const rr=Math.hypot(q.x,q.z)-sr,dy=Math.abs(q.y)-sh/2,d=dy>0?Math.hypot(Math.max(rr,0),dy):rr;if(d<g){g=d;how=dy>0&&rr<0?'along the arbor':dy>0?'round the end edge':'radially';}}return{g,how};};
  const barGap=()=>barDist().g;
  const mod=(x,p)=>{const r=((x%p)+p)%p;return Math.min(r,p-r);};

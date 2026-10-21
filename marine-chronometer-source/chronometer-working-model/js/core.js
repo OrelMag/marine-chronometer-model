@@ -95,12 +95,12 @@ function escapeWheel(parent,M,rt,y,E){
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
   const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's shaft (r 0.5, movement.js; 0.67 until 20 October 2026) */
   const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
-  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
+  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);fuse([teeth,wm]);   /* the teeth and the web one wheel, one mesh: their top faces flush, a line round the root in Edges until 21 October 2026 */
   /* the collet, on the web's face toward the pinion, in two steps (KLUwI2UUCMQ 42:51 in the movement and 43:19, the original arbor: mfgfit's edges): a wide part next to
      the wheel D 3.2-3.75, 0.95-1.07 long (0.263 of the tips: r 1.73, 1.0), then a pipe D 2.0-2.4, 1.36-1.54 long (0.167: r 1.1, 1.45), its end 15.1-15.9 from the lower
      pivot's tip. Until 20 October 2026 one pipe r 0.20 of the tips, 1.9 long, read at 43:21.1 on the replacement arbor */
   const cw=new THREE.Mesh(ringGeo(0.263*rt,0.5,1.0),M.brass);cw.position.y=y+0.55+0.5;parent.add(cw);
-  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5,1.45),M.brass);cl.position.y=y+0.55+1.0+0.725;parent.add(cl);
+  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5,1.45),M.brass);cl.position.y=y+0.55+1.0+0.725;parent.add(cl);fuse([cw,cl]);   /* the collet's two steps one piece, one mesh (their bores flush) */
   return teeth;
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
@@ -522,6 +522,16 @@ function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonIndexed():g.clone()).applyMatrix4(m);g.dispose();return q;}),out=new THREE.BufferGeometry();
   for(const[k,n]of[['position',3],['normal',3],['uv',2]]){if(!gs.every(g=>g.attributes[k]))continue;const a=new Float32Array(gs.reduce((t,g)=>t+g.attributes[k].array.length,0));let o=0;for(const g of gs){a.set(g.attributes[k].array,o);o+=g.attributes[k].array.length;}out.setAttribute(k,new THREE.BufferAttribute(a,n));}
   gs.forEach(g=>g.dispose());return out;}
+/* fuse(ms, k): the meshes ms, pieces of one solid (a machined part drawn as several extrusions or lathes), made one mesh: their geometries merged into k's (by default
+   the piece without {sub:1}, else the first), each placed by its transform relative to k as built, the others taken out. Edges outlines each mesh, so pieces of one part
+   sharing a visible face, or with walls running flush, drew a line across the part where the real one has none (the seam sweep, 21 October 2026). k keeps its userData,
+   its geometry's userData and its place; the pieces must not move against each other afterwards. A toothed k (userData.gear) keeps its teeth's own box as gear.box
+   (its frame: min x y z, max x y z), which the checks read for the faces' overlap in mesh (bom-check.js, invariants-wempe.js) in place of the whole solid's */
+function fuse(/** @type {any[]} */ms,/** @type {any} */k=null){k=k||ms.find(o=>!o.userData.sub)||ms[0];const ch=(/** @type {any} */o)=>{const m=new THREE.Matrix4();for(let q=o;q;q=q.parent){q.updateMatrix();m.premultiply(q.matrix);}return m;},inv=ch(k).invert(),gu=k.geometry.userData;
+  if(k.userData.gear&&!k.userData.gear.box){k.geometry.computeBoundingBox();const b=k.geometry.boundingBox;k.userData.gear.box=[...b.min.toArray(),...b.max.toArray()];}
+  const L=[[k.geometry,new THREE.Matrix4()]];for(const o of ms){if(o===k)continue;if(o.children.length)console.error('fuse: a piece with children',o);L.push([o.geometry,new THREE.Matrix4().multiplyMatrices(inv,ch(o))]);if(o.parent)o.parent.remove(o);}
+  if(k.userData.sub&&ms.some(o=>!o.userData.sub))delete k.userData.sub;   /* k given (the teeth): it carries the part's own line now */
+  k.geometry=mergeGeo(L);k.geometry.userData=gu;return k;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
 function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.filter(h=>!h.pts);   /* holes: circles [x,z,r], or {pts} outlines */
   if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
