@@ -3263,6 +3263,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   string (`cfe3ebf8`), which ended at the apostrophe, so the report's one script failed to parse and none of its tables or charts
   drew (on the site too). A typographic apostrophe now. Keep: after editing the template, open `index.html` (or check its script with
   `node --check`): a quote in a label breaks the whole page, not just its table.
+- **deploy.py refused 3.25.00: the home page carried no version** (21 October 2026): it reads `"softwareVersion"` from `site/index.html`, which became the Wempe page, whose head had no JSON-LD. Keep: every page the build writes at `/` carries the JSON-LD with `"softwareVersion":"dev"` for changelog.py to stamp. `__HASH__`
 ## Essay
 
 - **The essay contradicted the model and itself.** Its last figure, "The whole
