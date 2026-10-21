@@ -2814,6 +2814,8 @@ An arbor needs pivots and shoulders; a stone its seat.
   are inked so now; other transparent parts are paper at their opacity. Keep:
   transparent means faded or glass as well as decal; key decal treatment on the
   flag. `ae670d5`
+- **The set-up cover plate looked like a plate on a second, smaller one, and the set-up click's eye speckled** (the owner's screenshots on a phone, 21 October 2026): the cover was a bevelled extrusion 0.15 wider at its middle than its two pads, drawn under it as meshes of their own, so Edges outlined a seam and the bevel stood out as a lip; the click's measured eye (r 1.48) was a second solid whose faces coincided with the lever's, and the two fought. Keep: the cover one mesh (`mergeGeo` of the plate and its pads, their walls flush, as the balance lower bridge is); the click one outline (`clickGeo`: the lever unioned with its eye); no part drawn as two solids sharing a face. `86b74079`
+- **The Wempe's maintaining detent drew a line across its upper face** (the owner's screenshot, 21 October 2026): its thick part and thin tip (05 05_12's step) were two meshes sharing the upper face, and Edges outlines each mesh. Keep: the detent one mesh (`mergeGeo` of the two slabs), its step below as drawn. `16499d1b`, `9a546c70`
 
 ## Controls and display
 
@@ -3049,6 +3051,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   and Essay tabs (`f011119`) repeated the header's switch between the models (`nav.models`). The tab
   link is gone; the tabs are only the page's two views again. Keep: one way between the models, the
   header's `nav.models`, on both pages, the current model marked.
+- **The Hamilton's page scrolled sideways by about 10 px on a phone** (found comparing the two pages at 390 px, 21 October 2026): Winding's "Exaggerate the spring's motion (×20)" (`.kwf`, `width:max-content`) ran past the panel. Keep: `.kwf` no wider than the panel less the label column, its box `flex:none`; no element past the viewport at 360-430 px. `60896da1`
 
 ## Build, tools and docs
 
