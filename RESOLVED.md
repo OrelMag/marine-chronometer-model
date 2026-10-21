@@ -3263,6 +3263,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   string (`cfe3ebf8`), which ended at the apostrophe, so the report's one script failed to parse and none of its tables or charts
   drew (on the site too). A typographic apostrophe now. Keep: after editing the template, open `index.html` (or check its script with
   `node --check`): a quote in a label breaks the whole page, not just its table.
+- **deploy.py refused 3.25.00: the home page carried no version** (21 October 2026): it reads `"softwareVersion"` from `site/index.html`, which became the Wempe page, whose head had no JSON-LD. Keep: every page the build writes at `/` carries the JSON-LD with `"softwareVersion":"dev"` for changelog.py to stamp. `b71dc00b`
 ## Essay
 
 - **The essay contradicted the model and itself.** Its last figure, "The whole
@@ -3312,6 +3313,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   `CS.over` and every `userData.rev==='first'` group. `f170e7a`
 
 ---
+- **The essay's helical spring figure drew a grey wireframe cylinder round the spring, and its labels overlapped** (the owner, 21 October 2026): a guide mesh left in the figure; "Terminal curve" sat on "Stud, fixed", and on phones the 3D figures sat small in tall frames. Keep: no guide meshes in the essay's figures; each figure's camera fitted to what it shows (`View3D`'s fit), labels placed clear of one another. `bfe3c1b0`, `a6db663b`, `6fd591ef`
 
 ## Fixed, not yet committed
 
