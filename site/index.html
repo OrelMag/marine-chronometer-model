@@ -392,7 +392,8 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-lbl::before{content:"";position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--paper)}
 .e-lbl span{display:block;margin:-7px 0 0 9px;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--paper) 82%,transparent)}
 .e-lbl i{display:block;font-style:normal;color:var(--muted);font-size:11px}
-.e-lbl.e-l span{position:absolute;right:9px;top:0}   /* near the figure's right edge: the name to the left of its point (essay.js) */
+.e-lbl.e-l span{position:absolute;right:9px;top:0}
+.e-lbl b.e-ln{position:absolute;left:-0.5px;top:4px;width:1px;background:var(--muted)}   /* a name set below what shows: its line up to its point */   /* near the figure's right edge: the name to the left of its point (essay.js) */
 .e-ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding:12px 18px 6px;font:14px/1.3 "Instrument Sans",system-ui,sans-serif;color:var(--ink)}
 .e-sl{display:flex;align-items:center;gap:10px;flex:1 1 250px;min-width:min(100%,290px)}   /* never shrunk under its contents by a button beside it: the button wraps */
 .e-sl>span{flex:0 0 auto;color:var(--muted)}

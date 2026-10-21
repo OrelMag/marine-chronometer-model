@@ -87,7 +87,8 @@ const ESSAY=(()=>{
     cv.addEventListener('webglcontextlost',e=>e.preventDefault());cv.addEventListener('webglcontextrestored',()=>{G.env=envTex(r);G.scenes.forEach(s=>s.environment=G.env);FIGS.forEach(f=>f.dirty=true);});
     return G;}
   class View3D{
-    constructor(st,f,o){this.st=st;this.f=f;this.cv=st.querySelector('canvas');this.x=this.cv.getContext('2d');this.aspect=o.aspect;const g=gl();
+    constructor(st,f,o){this.st=st;this.f=f;this.cv=st.querySelector('canvas');this.x=this.cv.getContext('2d');const a0=o.aspect;this.ca=0;this.fit=o.fit!==false;this.box=null;   /* fit: the camera framed on what shows (frame()); ca: its height over its width, which sets a narrow figure's aspect */
+      this.aspect=w=>w<520&&this.ca?clamp(this.ca*1.12+0.04,0.5,1.15):typeof a0==='function'?a0(w):a0;const g=gl();
       const s=this.scene=new THREE.Scene();s.environment=g.env;g.scenes.add(s);s.add(new THREE.HemisphereLight(0xffffff,0x3a3a3a,0.35));const dl=new THREE.DirectionalLight(0xffffff,1);dl.position.set(3,6,4);s.add(dl);
       this.cam=new THREE.PerspectiveCamera(o.fov||30,1,o.near||1,o.far||4000);this.yaw=o.yaw??0.6;this.pitch=o.pitch??0.5;this.dist=o.dist??100;this.target=new THREE.Vector3(...(o.target||[0,0,0]));
       this.minP=o.minPitch??-1.2;this.maxP=o.maxPitch??1.5;this.labels=[];this.lb=st.querySelector('.e-labels');
@@ -95,21 +96,44 @@ const ESSAY=(()=>{
       cv.addEventListener('pointerdown',e=>{pid=e.pointerId;lx=e.clientX;ly=e.clientY;try{cv.setPointerCapture(pid);}catch(_){}st.classList.add('grab');});
       cv.addEventListener('pointermove',e=>{if(e.pointerId!==pid)return;const dx=e.clientX-lx,dy=e.clientY-ly;lx=e.clientX;ly=e.clientY;this.yaw-=dx*0.009;this.pitch=clamp(this.pitch+dy*0.009,this.minP,this.maxP);f.dirty=true;});
       const up=e=>{if(e.pointerId===pid){pid=null;st.classList.remove('grab');}};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
-      new ResizeObserver(()=>this.resize()).observe(st);this.resize();}
+      new ResizeObserver(()=>this.resize()).observe(st);this.resize();if(/[?&]qa\b/.test(location.search))(window.__views=window.__views||{})[st.id]=this;}   /* ?qa: the views, for the tools */
     resize(){const w=this.st.clientWidth;if(!w)return;const h=Math.round(w*(typeof this.aspect==='function'?this.aspect(w):this.aspect)),d=Math.min(devicePixelRatio||1,2);
       if(w===this.w&&h===this.h&&d===this.d)return;this.w=w;this.h=h;this.d=d;this.cv.style.height=h+'px';this.cv.width=Math.round(w*d);this.cv.height=Math.round(h*d);this.cam.aspect=w/h;this.cam.updateProjectionMatrix();this.f.dirty=true;}
     label(t,sub,pos){const el=document.createElement('div');el.className='e-lbl';el.innerHTML='<span>'+t+(sub?'<i>'+sub+'</i>':'')+'</span>';this.lb.appendChild(el);const L={el,pos,show:true};this.labels.push(L);return L;}
-    render(){const c=Math.cos(this.pitch),cam=this.cam,g=G,r=g.r,W=this.cv.width,H=this.cv.height,D=this.dist*clamp(this.h/this.w/0.62,1,1.7);   /* a taller figure (a phone) steps back, to keep what shows across it */
+    /* the box round what shows (its meshes, their parents shown, the floor's shadow and instanced pieces left out, and the labels' points), once, or again when refit is set */
+    shown(){const b=new THREE.Box3(),v=new THREE.Vector3(),P=[];this.scene.updateMatrixWorld(true);
+      const vis=o=>{for(let p=o;p;p=p.parent)if(!p.visible)return false;return true;},ms=[];let n=0;
+      this.scene.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||o.userData.decal||o.material.depthWrite===false||!vis(o))return;ms.push(o);n+=o.geometry.attributes.position.count;});
+      const k=Math.max(1,Math.floor(n/6000));   /* about 6,000 of their vertices, so a round part frames by its outline, not its box's corners */
+      for(const o of ms){const a=o.geometry.attributes.position;for(let i=0;i<a.count;i+=k){v.fromBufferAttribute(a,i).applyMatrix4(o.matrixWorld);P.push(v.clone());b.expandByPoint(v);}}
+      for(const L of this.labels)if(L.show){L.pos(v);P.push(v.clone());b.expandByPoint(v);}b.pts=P;return b;}
+    /* the camera framed on the box for the view's direction: the target its middle, the distance the least that keeps each corner inside the frame with a margin;
+       a narrow figure (a phone) takes the height the box asks for, so the parts fill it at any width */
+    frame(){if(!this.box||this.refit){this.refit=false;this.box=this.shown();}if(this.box.isEmpty())return this.dist;const b=this.box,cn=b.getCenter(new THREE.Vector3()),c=Math.cos(this.pitch);
+      const dir=new THREE.Vector3(c*Math.sin(this.yaw),Math.sin(this.pitch),c*Math.cos(this.yaw)),rt=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),dir).normalize(),up=new THREE.Vector3().crossVectors(dir,rt);
+      const tv=Math.tan(this.cam.fov*Math.PI/360),th=tv*this.cam.aspect,M=1.1,q=new THREE.Vector3();let d=0,X=0,Y=0;
+      let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;for(const p of b.pts){q.copy(p).sub(cn);const x=q.dot(rt),y=q.dot(up);x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}
+      cn.addScaledVector(rt,(x0+x1)/2).addScaledVector(up,(y0+y1)/2);   /* the middle of what shows as seen, not of its box */
+      for(const p of b.pts){q.copy(p).sub(cn);const x=Math.abs(q.dot(rt)),y=Math.abs(q.dot(up)),z=q.dot(dir);X=Math.max(X,x);Y=Math.max(Y,y);d=Math.max(d,z+M*x/th,z+M*y/tv);}
+      this.target.copy(cn);const ca=Y/X;if(Math.abs(ca-this.ca)>0.02&&!this.caSet){this.ca=ca;this.caSet=true;this.resize();return this.frame();}return d;}
+    render(){const c=Math.cos(this.pitch),cam=this.cam,g=G,r=g.r,W=this.cv.width,H=this.cv.height,D=this.fit?this.frame():this.dist*clamp(this.h/this.w/0.62,1,1.7);   /* fit: framed on what shows; else a taller figure (a phone) steps back */
       cam.position.set(this.target.x+D*c*Math.sin(this.yaw),this.target.y+D*Math.sin(this.pitch),this.target.z+D*c*Math.cos(this.yaw));cam.lookAt(this.target);
       if(g.w<W||g.h<H){g.w=Math.max(g.w,W);g.h=Math.max(g.h,H);r.setSize(g.w,g.h,false);}   /* the buffer only grows: each figure uses its bottom-left corner */
       r.setViewport(0,0,W,H);r.setScissor(0,0,W,H);
       if(EDGES){const ms=[],hd=[];this.scene.traverse(o=>{if(o.isMesh)(o.userData.decal||o.userData.surface||o.material.depthWrite===false?hd:ms).push(o);});   /* the floor's shadow and the engravings left out, as the models leave them */
         g.ink=g.ink||makeInk(r);g.bs.set(W,H);r.inkBS=g.bs;r.inkPR=this.d;g.ink.lines(this.scene,cam,ms,hd);}
       else r.render(this.scene,cam);this.x.clearRect(0,0,W,H);this.x.drawImage(g.cv,0,g.h-H,W,H,0,0,W,H);
-      const v=new THREE.Vector3();
-      for(const L of this.labels){if(!L.show){L.el.style.opacity=0;continue;}L.pos(v);v.project(cam);const x=(v.x+1)/2*this.w,y=(1-v.y)/2*this.h;
-        if(!L.ow)L.ow=L.el.firstChild.offsetWidth;L.el.classList.toggle('e-l',L.left||x+9+L.ow>this.w-2&&x-9-L.ow>2);   /* past the right edge: the name on the point's left */
-        L.el.style.opacity=(v.z<1&&x>-20&&x<this.w+20)?1:0;L.el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;}}
+      /* the labels: each name right of its point, or left of it past the right edge or where it would cover a name or a point already placed; failing both, moved down clear */
+      const v=new THREE.Vector3(),R=[],hit=(a)=>R.some(b=>a[0]<b[2]&&b[0]<a[2]&&a[1]<b[3]&&b[1]<a[3]),pts=[];
+      for(const L of this.labels){if(!L.show)continue;L.pos(v);v.project(cam);L.sx=(v.x+1)/2*this.w;L.sy=(1-v.y)/2*this.h;L.vz=v.z;pts.push([L.sx-4,L.sy-4,L.sx+4,L.sy+4]);}
+      let yb=0;if(this.box&&this.box.pts)for(const p of this.box.pts){v.copy(p).project(cam);yb=Math.max(yb,(1-v.y)/2*this.h);}   /* the foot of what shows: a label set below (L.below) goes under it, on a line to its point */
+      for(const L of this.labels){if(!L.show){L.el.style.opacity=0;continue;}const x=L.sx,y=L.sy,sp=L.el.firstChild;if(!L.ow){L.ow=sp.offsetWidth;L.oh=sp.offsetHeight;}
+        const box=lf=>lf?[x-9-L.ow,y-7,x-9,y-7+L.oh]:[x+9,y-7,x+9+L.ow,y-7+L.oh],own=[x-4,y-4,x+4,y+4],clash=a=>hit(a)||pts.some(p=>p[0]!==own[0]&&a[0]<p[2]&&p[0]<a[2]&&a[1]<p[3]&&p[1]<a[3]);
+        let lf=L.left&&x-9-L.ow>=2||x+9+L.ow>this.w-2&&x-9-L.ow>2;   /* a name set left (L.left) goes right where the left has no room */if(clash(box(lf))&&!clash(box(!lf))&&(lf?x+9+L.ow<=this.w-2:x-9-L.ow>=2))lf=!lf;
+        let dy=L.below?Math.max(0,Math.min(this.h-L.oh+4,yb+14)-y):0,bx=box(lf);bx=[bx[0],bx[1]+dy,bx[2],bx[3]+dy];while(clash(bx)&&dy<160){dy+=4;bx=[bx[0],bx[1]+4,bx[2],bx[3]+4];}R.push(bx);
+        L.el.classList.toggle('e-l',lf);sp.style.transform=dy?`translateY(${dy}px)`:'';
+        if(L.below){if(!L.ln){L.ln=document.createElement('b');L.ln.className='e-ln';L.el.appendChild(L.ln);}L.ln.style.height=Math.max(0,dy-4)+'px';}
+        L.el.style.opacity=(L.vz<1&&x>-20&&x<this.w+20)?1:0;L.el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;}}
   }
   const at=(o,x,y,z)=>v=>{v.set(x,y,z);o.localToWorld(v);};
 
@@ -231,7 +255,7 @@ const ESSAY=(()=>{
     /* the masses (050301-4, their screws and nuts WN-12) swollen about their own centres by the mass slider */
     const MS=meshesOf(PT.balance,['050301-4','WN-12']).map(m=>{const b=new THREE.Box3().setFromBufferAttribute(m.geometry.attributes.position),c=b.getCenter(new THREE.Vector3()).multiply(m.scale).add(m.position);return{m,c,p:m.position.clone(),s:m.scale.clone()};});
     const rim=meshesOf(PT.balance,['050301-1'])[0],rb=boxOf([rim]),yR=(rb.min.y+rb.max.y)/2,sb=boxOf([PT.hairspring]),Rr=(rb.max.x-rb.min.x)/2;
-    V.label('Balance','nickel steel and brass',at(o,B[0]-Rr,yR,B[1]+3)).left=true;V.label('Hairspring','steel, tempered blue',at(o,B[0]-HL.RC-0.6,(sb.min.y+sb.max.y)/2,B[1]));
+    V.label('Balance','nickel steel and brass',at(o,B[0]-Rr,yR,B[1]+3)).below=true;V.label('Hairspring','steel, tempered blue',at(o,B[0]-HL.RC-0.6,(sb.min.y+sb.max.y)/2,B[1]));
     let m=1,k=1,ph=0.1,going=!RM,slow=false,own=null;const ins=qa('input[type=range]',P),ro=q('.e-ro',P);
     const upd=()=>{const T=0.5*Math.sqrt(m/k);ro.innerHTML=`Period <b>${T.toFixed(3)} s</b>, or <b>${Math.round(7200/T).toLocaleString('en-US')}</b> vibrations an hour · moment of inertia ${Math.round(WPHYS.SET.I*m).toLocaleString('en-US')} g·mm²`;f.dirty=true;};
     range(ins[0],v=>{m=v;upd();return '×'+v.toFixed(2);});range(ins[1],v=>{k=v;upd();return '×'+v.toFixed(2);});
@@ -250,7 +274,7 @@ const ESSAY=(()=>{
     /* the labels: the upper terminal curve half way along it (from where it leaves the coil to the stud), the collet and the stud at their far ends */
     const cb=boxOf([RE.hsRot]),sb=boxOf([PT.stud]),rr=p=>Math.hypot(p[0],p[2]);   /* the path about the balance's axis (the hairspring's group stands on it) */
     const Q=P0[0][1]<P0[P0.length-1][1]?P0:[...P0].reverse();let iC=0;while(iC<Q.length-1&&rr(Q[iC])<HL.RC-0.4)iC++;const pc=Q[Math.round(iC/2)];   /* the stud's end of the strip, in along its curve to where it joins the coil */
-    const Lt=V.label('Terminal curve','',at(o,pc[0]+cx,pc[1],pc[2]+cz));V.label('Collet','turns with the balance',at(o,(cb.min.x+cb.max.x)/2,cb.max.y,cb.max.z)).left=true;   /* its name to the left, the curve's to the right */V.label('Stud','fixed',at(o,(sb.min.x+sb.max.x)/2,sb.min.y,(sb.min.z+sb.max.z)/2));   /* at its top, its screw's head, clear of the curve's name */
+    const Lt=V.label('Terminal curve','',at(o,pc[0]+cx,pc[1],pc[2]+cz));V.label('Collet','turns with the balance',at(o,(cb.min.x+cb.max.x)/2,cb.max.y,cb.max.z)).below=true;   /* its name under the spring, on a line to it, clear of the coils */V.label('Stud','fixed',at(o,(sb.min.x+sb.max.x)/2,sb.min.y,(sb.min.z+sb.max.z)/2));   /* at its top, its screw's head, clear of the curve's name */
     let th=0,term=true;const lim=Math.round(WPHYS.ESC.A/D),inp=q('input[type=range]',P);inp.min=-lim;inp.max=lim;
     range(inp,v=>{th=v*D;f.dirty=true;return v+'°';});seg(q('.seg',P),v=>{term=v==='1';f.dirty=true;});
     return()=>{if(!f.dirty)return;f.dirty=false;plain.visible=!term;if(!term){plain.geometry.dispose();plain.geometry=plainSpring(HL.RC,y1-y0,HL.turns,-th,HL.HT/2);}Lt.show=term;
@@ -276,7 +300,7 @@ const ESSAY=(()=>{
       if(kind==='m21'){const r=m21(T);ro.innerHTML=`Model 21 at ${T.toFixed(1)} °C: <b>nothing curls</b>, and it ${r>=-0.005?'keeps its rate':`loses <b>${Math.abs(r).toFixed(2)} s a day</b> against 72½ °F`}. The Invar arm holds the rim’s diameter at its ends; the Elinvar hairspring hardly changes its stiffness.`;}
       else{const r=kind==='split'?comp(T):plain(T);ro.innerHTML=`${kind==='split'?'A cut bimetallic balance, as the Wempe’s,':'Plain brass balance'} at ${T.toFixed(1)} °C: ${r>=0?'gains':'loses'} <b>${Math.abs(r).toFixed(1)} s a day</b>`;}
       f.dirty=true;cf.dirty=true;};
-    range(q('input[type=range]',P),v=>{T=v;upd();return v.toFixed(1)+' °C';});seg(q('.seg',P),v=>{kind=v;upd();});
+    range(q('input[type=range]',P),v=>{T=v;upd();return v.toFixed(1)+' °C';});seg(q('.seg',P),v=>{kind=v;V.refit=true;upd();});
     return()=>{if(f.dirty){f.dirty=false;V.render();}
       if(cf.dirty){cf.dirty=false;const t55=F2C(55),t90=F2C(90);
         chart(C,{x0:-5,x1:45,y0:-8,y1:8,xt:[0,10,20,30,40],yt:[-8,-4,0,4,8],xf:x=>x+' °C',yf:y=>(y>0?'+':'')+y,xl:'Temperature',yl:'Rate, s a day',cursor:T,
