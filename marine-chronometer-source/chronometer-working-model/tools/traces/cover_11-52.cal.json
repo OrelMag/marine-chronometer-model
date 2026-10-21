@@ -1,0 +1,120 @@
+{
+ "frame": "f_KLUwI2UUCMQ_11-52.png",
+ "scale": 1.0,
+ "map": "homography",
+ "conc": false,
+ "rms_mm": 0.028760110074283713,
+ "delta_px": [
+  1.35,
+  -34.33
+ ],
+ "holes": {
+  "arb": {
+   "r": 3.1152,
+   "sd": 0.0067,
+   "level": 0,
+   "centre": [
+    -22.144,
+    -5.347
+   ],
+   "centre_sd": null,
+   "from_arbor": 0.0,
+   "rms": 0.0152
+  },
+  "s0": {
+   "r": 0.7878,
+   "sd": 0.0033,
+   "level": 1,
+   "centre": [
+    -28.64,
+    5.72
+   ],
+   "centre_sd": null,
+   "from_arbor": 12.833,
+   "rms": 0.0122
+  },
+  "s1": {
+   "r": 0.7494,
+   "sd": 0.0094,
+   "level": 1,
+   "centre": [
+    -15.19,
+    -16.58
+   ],
+   "centre_sd": null,
+   "from_arbor": 13.211,
+   "rms": 0.0177
+  },
+  "ck": {
+   "r": 0.4868,
+   "sd": 0.0071,
+   "level": 0,
+   "centre": [
+    -23.089,
+    -15.414
+   ],
+   "centre_sd": [
+    0.025,
+    0.055
+   ],
+   "from_arbor": 10.111,
+   "rms": 0.01,
+   "note": "centre free (read)"
+  }
+ },
+ "bands": {
+  "padU": {
+   "centre": [
+    -22.615,
+    -5.587
+   ],
+   "r": 11.305,
+   "sd": [
+    0.13,
+    0.495,
+    0.498
+   ],
+   "centre_from_arbor": 0.529
+  }
+ },
+ "H_px_to_mm": [
+  [
+   -0.014138845492426968,
+   0.0006144222811396642,
+   -23.102960196830352
+  ],
+  [
+   -0.0014814299774110608,
+   -0.015323104006001046,
+   -5.47866172460798
+  ],
+  [
+   -3.655135859182975e-05,
+   1.2910444151757616e-05,
+   1.0
+  ]
+ ],
+ "origin": [
+  2300.0,
+  1250.0
+ ],
+ "curves": {
+  "U_end (contour)": "610 samples off the contour",
+  "U_end": "370 edge points on luma, blur 1.96 px, level 1",
+  "U_cutR (contour)": "85 samples off the contour",
+  "U_cutR": "66 edge points on luma, blur 2.88 px, level 1",
+  "U_left (contour)": "111 samples off the contour",
+  "U_left": "99 edge points on luma, blur 1.46 px, level 1",
+  "R_side (contour)": "679 samples off the contour",
+  "R_side": "285 edge points on luma, blur 2.93 px, level 0",
+  "L_side (contour)": "453 samples off the contour",
+  "L_side": "356 edge points on luma, blur 2.20 px, level 0",
+  "L_cutL (contour)": "58 samples off the contour",
+  "L_cutL": "49 edge points on luma, blur 1.87 px, level 1",
+  "L_end (contour)": "355 samples off the contour",
+  "L_end": "68 edge points on luma, blur 2.86 px, level 1",
+  "L_right": "no contour near the seeds",
+  "L_step": "445 edge points on luma (valley), blur 0.00 px, level 1",
+  "U_band_thin": "61 edge points on luma (valley), blur 0.00 px, level 0.5"
+ }
+}
