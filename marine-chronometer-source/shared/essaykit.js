@@ -15,7 +15,7 @@ const ESSAYKIT={make(o){
   const q=(s,r=root)=>r.querySelector(s),qa=(s,r=root)=>[...r.querySelectorAll(s)];
   const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tabs=document.querySelector('.tabs'),home=tabs.parentNode,bar=q('.e-bar'),prog=q('.e-prog');
-  let shown=false,model=null,sec='',raf=0,last=0,io=null,fontsOK=false,yKeep=0;const SK=(o.store||'cm')+'-essay-y';
+  let shown=false,model=null,sec='',raf=0,last=0,io=null,fontsOK=false,yKeep=0;const SK=(o.store||'cm')+'-essay-y',KEY=o.key||'essay',KE=KEY+'=';   /* KEY: the hash's key, #essay=section unless the page names another (the Wempe's, #drawings=section: its Essay tab is the Hamilton's essay's page) */
   const sget=k=>{try{return sessionStorage.getItem(k);}catch(_){return null;}},sset=(k,v)=>{try{sessionStorage.setItem(k,v);}catch(_){}};
   const fill=()=>{try{o.fillLive&&o.fillLive(model);}catch(e){console.error(e);}};
   /* the fonts the canvases letter in: a figure drawn once and kept waits for them */
@@ -119,8 +119,8 @@ const ESSAYKIT={make(o){
     scT=requestAnimationFrame(()=>{scT=0;if(!shown)return;const max=root.scrollHeight-root.clientHeight;prog.style.transform=`scaleX(${max>0?root.scrollTop/max:0})`;
       sset(SK,String(Math.round(root.scrollTop)));const s=secNow();if(s!==sec){sec=s;changed();}});},{passive:true});
   function go(id,smooth){const h=id&&document.getElementById(id);if(h&&root.contains(h)){root.scrollTo({top:h.getBoundingClientRect().top-root.getBoundingClientRect().top+root.scrollTop-64,behavior:smooth&&!RM?'smooth':'auto'});sec=id;}}
-  /* the hash while the essay shows: #essay, or #essay=<section>. Once the model is built its page writes it; before that, the essay does */
-  function changed(){if(model)model.changed();else history.replaceState(null,'',shown?'#essay'+(sec?'='+sec:''):location.pathname+location.search);}
+  /* the hash while the essay shows: #essay, or #essay=<section> (KEY). Once the model is built its page writes it; before that, the essay does */
+  function changed(){if(model)model.changed();else history.replaceState(null,'',shown?'#'+KEY+(sec?'='+sec:''):location.pathname+location.search);}
   function select(on){for(const[b,v]of[[q('#tabModel',tabs),!on],[q('#tabEssay',tabs),on]]){b.setAttribute('aria-selected',v?'true':'false');b.tabIndex=v?0:-1;}}
   function show(on,s){
     if(on===shown){if(on&&s&&s!==sec)go(s,true);return;}
@@ -139,11 +139,11 @@ const ESSAYKIT={make(o){
   /* links within the essay (#essay=section) scroll to their section without a new history entry; links into the model (#view=…) are ordinary: Back returns here.
      A link to the hash already in the address bar fires no hashchange, so it is sent on */
   root.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href').slice(1);
-    if(h==='essay'||h.startsWith('essay=')){e.preventDefault();const s=h.slice(6);if(s)go(s,true);else root.scrollTo({top:0,behavior:RM?'auto':'smooth'});sec=s;changed();return;}
+    if(h===KEY||h.startsWith(KE)){e.preventDefault();const s=h.slice(KE.length);if(s)go(s,true);else root.scrollTo({top:0,behavior:RM?'auto':'smooth'});sec=s;changed();return;}
     if(location.hash.slice(1)===h){e.preventDefault();dispatchEvent(new HashChangeEvent('hashchange'));}});
   /* before the model is built, its page isn't listening for the hash: the essay follows it itself */
-  const own=()=>{if(model)return;const h=location.hash.slice(1);if(h==='essay'||h.startsWith('essay='))show(true,h.slice(6));else show(false);};
-  const api={show,on:()=>shown,section:()=>sec,
+  const own=()=>{if(model)return;const h=location.hash.slice(1);if(h===KEY||h.startsWith(KE))show(true,h.slice(KE.length));else show(false);};
+  const api={show,on:()=>shown,section:()=>sec,key:KEY,
     bind(m){model=m;removeEventListener('hashchange',own);if(shown)fill();FIGS.forEach(f=>{if(f.visible)build(f);});}};
   return{root,q,qa,RM,PAL,fig,range,play,seg,figOf,c2d,chart,halo,gl,View3D,at,api,model:()=>model,
     start(){addEventListener('hashchange',own);own();}};

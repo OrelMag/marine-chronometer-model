@@ -151,6 +151,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .tabs{position:absolute;z-index:6;right:10px;top:10px;display:flex;gap:2px;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .tabs button{border:0;border-radius:999px;padding:4px 12px;font-size:12.5px;background:none;color:var(--muted)}
 .tabs button[aria-selected="true"]{background:var(--blue);color:var(--panel)}
+.tabs a{display:flex;align-items:center;border-radius:999px;padding:4px 12px;font-size:12.5px;color:var(--muted);text-decoration:none}.tabs a:hover{color:var(--ink)}   /* a tab that is another page (the Wempe's Essay: the shared essay's page) */
 /* a view key pressed for a view that is off: its button flashes */
 @keyframes nope{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}.nope{animation:nope .3s 2}
 @media (prefers-reduced-motion:reduce){.nope{animation:none;outline:2px solid var(--hi)}}
@@ -276,7 +277,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
 /* touch: finger-sized targets */
 @media(pointer:coarse){button{min-height:44px}.ck{min-height:44px}.ck input{width:22px;height:22px}.prow .pn{min-height:40px}.prow input{width:22px;height:22px}
   input[type=range]{height:32px}.spd input[type=number],.clk input[type=time]{min-height:40px}
-  .tabs button{padding:6px 14px;min-height:36px}.info .x{padding:8px 12px}.opm .seg button,.opm .chips button{padding:6px 12px}
+  .tabs button,.tabs a{padding:6px 14px;min-height:36px}.info .x{padding:8px 12px}.opm .seg button,.opm .chips button{padding:6px 12px}
   details.more>summary{min-height:40px}#helpBtn{min-width:44px}}
 /* landscape phones: the stage fills the height from the top, with the title and the panel scrolling beside it
    (the body is the grid and .wrap steps aside, so the header can sit in the panel's column) */
@@ -350,6 +351,9 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-bar .e-t{font:400 17px/1.2 Spectral,Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);text-decoration:none}
 .e-bar .e-t span{color:var(--muted)}
 .e-bar .tabs{position:static;flex-shrink:0;box-shadow:none;background:color-mix(in srgb,var(--card) 70%,transparent)}
+/* the essay's own page: the models' links in the bar (essay.js), their names shortened on a narrow screen */
+.e-bar nav.models{margin:0;flex-wrap:nowrap;flex-shrink:0}
+@media (max-width:760px){.e-bar nav.models .nl{display:none}}
 .e-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--brass);transform-origin:0 50%;transform:scaleX(0)}
 .e-art{max-width:680px;margin:0 auto;padding:12px 22px 96px}
 #essay a{color:var(--blue);text-underline-offset:2px}
@@ -447,7 +451,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 <header>
   <h1>The Marine Chronometer, <em>working</em></h1>
   <div class="hd">
-    <nav class="models" aria-label="The models"><span aria-current="page">Hamilton Model 21</span><a href="../../wempe/dist/wempe-einheitschronometer.html">Wempe Einheits-Chronometer</a></nav>
+    <nav class="models" aria-label="The models"><span aria-current="page">Hamilton Model 21</span><a data-m="wempe" href="../../wempe/dist/wempe-einheitschronometer.html">Wempe Einheits-Chronometer</a></nav>
     <p>A two-day fusee chronometer with a spring detent escapement, built part by part and running in real time. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
   </div>
@@ -690,11 +694,11 @@ html.essay-on,html.essay-on body{overflow:hidden}
 <div class="e-bar"><a class="e-t" href="#essay">The Marine Chronometer <span>· an essay on the working model</span></a><div class="e-prog"></div></div>
 <div class="e-art">
 <header class="e-hero">
-  <div class="e-dial" id="eHeroSt"><canvas id="eHero" aria-label="The Hamilton Model 21's dial, showing the time the model on the other tab keeps"></canvas></div>
+  <div class="e-dial" id="eHeroSt"><canvas id="eHero" aria-label="The Hamilton Model 21's dial, showing the time the working model keeps"></canvas></div>
   <p class="e-dialcap" id="eHeroCap" aria-live="off">The model’s dial</p>
   <h1>The Marine Chronometer</h1>
   <p class="e-by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span> · <a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
-  <p class="e-deck">How a brass bowl hung in a mahogany box told a navigator where on Earth the ship was. This essay takes the instrument apart one idea at a time, using the Hamilton Model 21 on the other tab: every figure is drawn from that model’s own parts, counts and settings.</p>
+  <p class="e-deck">How a brass bowl hung in a mahogany box told a navigator where on Earth the ship was. This essay takes the instrument apart one idea at a time, using the Hamilton Model 21 working model: every figure is drawn from that model’s own parts, counts and settings.</p>
   <p class="e-after">In the spirit of Bartosz Ciechanowski’s <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>. Drag any 3D figure to turn it; a link ending in → opens the working model at the part it describes.</p>
   <nav class="e-toc" aria-label="Contents"><b>Contents</b><ol>
     <li><a href="#essay=time">Time is a position</a></li><li><a href="#essay=oscillator">An oscillator that ignores the sea</a></li><li><a href="#essay=spring">The spring that breathes</a></li>
@@ -972,7 +976,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 </figure>
 
 <h2 id="make"><a class="e-h" href="#essay=make">What the model gives a maker</a></h2>
-<p>The working model on the other tab is drawn from the manual, photographs and videos of real Model 21s, and every part in it is a closed solid in millimetres. That makes it something to work from, not only to look at. Each part's card has a <em>maker's sheet</em>: its lines of the manual's parts list, each with the fit the model measures (a pivot running in its jewel, a screw tapped into a bridge, with the least clearance), its material, finish and heat treatment, its size and its mass. The card also gives the part's drawing, plan and elevation to scale, and its solid as an STL file. The panel's <em>Making it</em> section measures between any two points, prints the whole build book, and gives the model's numbers as data: the train's counts and modules, the fusee's profile, the escapement's cycle and the hairspring's design.</p>
+<p>The working model is drawn from the manual, photographs and videos of real Model 21s, and every part in it is a closed solid in millimetres. That makes it something to work from, not only to look at. Each part's card has a <em>maker's sheet</em>: its lines of the manual's parts list, each with the fit the model measures (a pivot running in its jewel, a screw tapped into a bridge, with the least clearance), its material, finish and heat treatment, its size and its mass. The card also gives the part's drawing, plan and elevation to scale, and its solid as an STL file. The panel's <em>Making it</em> section measures between any two points, prints the whole build book, and gives the model's numbers as data: the train's counts and modules, the fusee's profile, the escapement's cycle and the hairspring's design.</p>
 <p>The manual holds a repairer to these limits, and a maker to the same; where it gives none, the fits on the sheets are the model's own:</p>
 <div class="e-book e-tbl"><table><thead><tr><th>What</th><th>The manual</th><th>Where</th></tr></thead><tbody>
 <tr><td>end-shake of every arbor, the balance staff's too</td><td>0.001–0.003 in</td><td>Sec. VIII, Ops. 15, 69, 74</td></tr>
@@ -1042,7 +1046,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 
 <h2 id="model21"><a class="e-h" href="#essay=model21">The Hamilton Model 21</a></h2>
 <p>The Model 21 was designed and made by the Hamilton Watch Company of Lancaster, Pennsylvania, to U.S. Navy Specification 18-C-7; the dial in these pages is from one made under a U.S. Maritime Commission contract. The Navy assigned its serial numbers and engraved them on the dial and the barrel bridge. It has fourteen jewels. It changed in service: chronometers put into the field before 1944 may have a one-piece roller, replaced at overhaul by two, whose angle can be set; later ones have a train-blocking screw, from serial 4003, to hold the mainspring’s power while the balance and escapement are out; and from the end of 1947 a balance locking arm was fitted at overhaul, in place of the folded wedges that had held the balance still in shipment.</p>
-<p>Most of what is known of it in this detail comes from one book, the Navy’s <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em> (NAVSHIPS 250-624, 1948), which this site carries: <a href="navships-250-624-1948.pdf">the manual</a> (113 pages, 8.9 MB, a scan by Google Books of a library’s copy). The model on the other tab is built from it and from photographs of surviving movements; the Royal Museums Greenwich holds one, No. 4E019.</p>
+<p>Most of what is known of it in this detail comes from one book, the Navy’s <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em> (NAVSHIPS 250-624, 1948), which this site carries: <a href="navships-250-624-1948.pdf">the manual</a> (113 pages, 8.9 MB, a scan by Google Books of a library’s copy). The working model is built from it and from photographs of surviving movements; the Royal Museums Greenwich holds one, No. 4E019.</p>
 <p>Radio time signals, and later satellite navigation, retired the chronometer from its work. The instrument itself, a small steel wheel swinging twice a second to keep a ship’s place on the planet, remains one of the most elegant answers ever built to a problem that once cost thousands of lives.</p>
 <div class="e-go">
   <p>See it working: every part can be picked out and named, and the hands keep Greenwich time, as the Navy’s chronometers were kept.</p>
@@ -1098,7 +1102,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
   <p>The Roman dial follows the A. Lange &amp; Söhne (Glashütte) deck chronometers, with gilt hands and the maker’s name and number left off. Its wind scale is drawn over this movement’s 314° sweep rather than the Lange dial’s near-full circle, so the hand still reads true.</p>
   <p>The Swiss dial follows the Ulysse Nardin (Le Locle) deck chronometers, such as the one the U.S. Coast and Geodetic Survey used in the 1940s (<a href="https://www.noaa.gov/heritage/stories/friday-find-1940s-timepiece-was-original-gps-for-ships">NOAA Heritage</a>). The Soviet dial follows the First Moscow Watch Factory’s deck chronometers, which copied the Nardin layout with Arabic hours. Both leave off the maker’s name and number, and both draw their wind scales over this movement’s 314° sweep.</p>
   <h3>Further reading</h3>
-  <p><a href="#essay">The Marine Chronometer</a>, the essay on the other tab: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals and keeping the rate, with live figures drawn from this model.</p>
+  <p><a href="#essay">The Marine Chronometer</a>, the essay beside the model, shared by both models: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals and keeping the rate, with live figures drawn from this model.</p>
   <h3>Licence</h3>
   <p>Code under the MIT licence; text, drawings and the model under Creative Commons Attribution 4.0. Built with three.js (MIT) and the Spectral and Instrument Sans typefaces (SIL Open Font License).</p>
 </dialog>
@@ -5702,7 +5706,13 @@ function shadowTex(){const cv=document.createElement('canvas');cv.width=cv.heigh
 "use strict";
 const ESSAY=(()=>{
   const root=document.getElementById('essay');
-  if(!root)return{show(){},on:()=>false,section:()=>'',bind(){}};
+  if(!root)return{show(){},on:()=>false,section:()=>'',bind(){},page:false,secOf:()=>''};
+  /* the essay's own page (the site's /essay/, 21 October 2026; ?essay on the source's index.html): this page built with <html data-page="essay" data-model="../hamilton/">, the essay
+     always showing, its hash the section alone (#detent), the tabs replaced by the models' links, and its links into the model (#tour=3, #view=…) opened on the model's page (MODEL).
+     AWAY: the model's page on the site (<html data-essay="../essay/">), whose Essay tab and #essay[=section] go to the essay's page. A page with neither (the single-file copies)
+     keeps the essay in its Essay tab, laid over the model */
+  const DS=document.documentElement.dataset,PAGE=DS.page==='essay'||/[?&]essay/.test(location.search),AWAY=PAGE?'':DS.essay||'',MODEL=DS.model||location.pathname;
+  const secOf=h=>h==='essay'?'':h.startsWith('essay=')?h.slice(6):PAGE?h:'';   /* the section a hash names: #essay=detent, or on the essay's page #detent */
   const q=(s,r=root)=>r.querySelector(s),qa=(s,r=root)=>[...r.querySelectorAll(s)];
   const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tabs=document.querySelector('.tabs'),home=tabs.parentNode,bar=q('.e-bar'),prog=q('.e-prog');
@@ -6230,9 +6240,11 @@ const ESSAY=(()=>{
     sset('cm-essay-y',String(Math.round(root.scrollTop)));const s=secNow();if(s!==sec){sec=s;changed();}});},{passive:true});
   function go(id,smooth){const h=id&&document.getElementById(id);if(h&&root.contains(h)){root.scrollTo({top:h.getBoundingClientRect().top-root.getBoundingClientRect().top+root.scrollTop-64,behavior:smooth&&!RM?'smooth':'auto'});sec=id;}}
   /* the hash while the essay shows: #essay, or #essay=<section>. Once the model is built app.js writes it (hashOf); before that, the essay does */
-  function changed(){if(model)model.changed();else history.replaceState(null,'',shown?'#essay'+(sec?'='+sec:''):location.pathname+location.search);}
+  function changed(){if(model)model.changed();else history.replaceState(null,'',PAGE?(sec?'#'+sec:location.pathname+location.search):shown?'#essay'+(sec?'='+sec:''):location.pathname+location.search);}
   function select(on){for(const[b,v]of[[q('#tabModel',tabs),!on],[q('#tabEssay',tabs),on]]){b.setAttribute('aria-selected',v?'true':'false');b.tabIndex=v?0:-1;}}
   function show(on,s){
+    if(AWAY){if(on)location.replace(AWAY+(s?'#'+s:''));return;}   /* the model's page on the site: the essay is on its own page */
+    if(PAGE&&!on)return;   /* the essay's page: it always shows */
     if(on===shown){if(on&&s&&s!==sec)go(s,true);return;}
     shown=on;select(on);
     if(on){const d=document;if(d.fullscreenElement||d.webkitFullscreenElement)(d.exitFullscreen||d.webkitExitFullscreen).call(d);
@@ -6243,18 +6255,22 @@ const ESSAY=(()=>{
     else{yKeep=root.scrollTop;root.hidden=true;document.documentElement.classList.remove('essay-on');home.appendChild(tabs);}
   }
   /* the tabs: a click, or the arrow keys between them (the tabs pattern) */
-  q('#tabEssay',tabs).addEventListener('click',()=>{show(true);changed();});
-  q('#tabModel',tabs).addEventListener('click',()=>{show(false);changed();});
+  q('#tabEssay',tabs).addEventListener('click',()=>{if(AWAY)location.href=AWAY;else{show(true);changed();}});
+  q('#tabModel',tabs).addEventListener('click',()=>{if(PAGE)location.href=MODEL;else{show(false);changed();}});
+  /* the essay's page: the models' links (the header's, as the build points them) in the bar, in place of the tabs */
+  if(PAGE){const n=document.createElement('nav'),w=document.querySelector('header nav.models a[data-m="wempe"]');n.className='models';n.setAttribute('aria-label','The models');
+    n.innerHTML=`<a data-m="hamilton" href="${MODEL}">Hamilton<span class="nl"> Model 21</span></a>${w?`<a data-m="wempe" href="${w.getAttribute('href')}">Wempe<span class="nl"> Einheits-Chronometer</span></a>`:''}<span aria-current="page">Essay</span>`;bar.appendChild(n);tabs.hidden=true;}
   tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();const on=e.key==='ArrowRight'||e.key==='End';show(on);changed();q(on?'#tabEssay':'#tabModel',tabs).focus();});
   /* links within the essay (#essay=section) scroll to their section without a new history entry; links into the model (#tour=3, #view=…) are ordinary: Back returns here.
      A link to the hash already in the address bar fires no hashchange, so it is sent on */
   root.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href').slice(1);
     if(h==='essay'||h.startsWith('essay=')){e.preventDefault();const s=h.slice(6);if(s)go(s,true);else root.scrollTo({top:0,behavior:RM?'auto':'smooth'});sec=s;changed();return;}
+    if(PAGE){e.preventDefault();location.href=MODEL+'#'+h;return;}   /* the essay's page: a link into the model opens the model's page there (Back returns here) */
     if(location.hash.slice(1)===h){e.preventDefault();dispatchEvent(new HashChangeEvent('hashchange'));}});
   /* before the model is built, app.js isn't listening for the hash: the essay follows it itself */
-  const own=()=>{if(model)return;const h=location.hash.slice(1);if(h==='essay'||h.startsWith('essay='))show(true,h.slice(6));else show(false);};
+  const own=()=>{if(model)return;const h=location.hash.slice(1);if(PAGE||h==='essay'||h.startsWith('essay='))show(true,secOf(h));else show(false);};
   addEventListener('hashchange',own);own();
-  return{show,on:()=>shown,section:()=>sec,
+  return{show,on:()=>shown,section:()=>sec,page:PAGE,secOf,
     /* app.js, once the model is built: its time, wind and tz, the fusee (rf, I), the balance's moment of inertia, changed() (wake and write the hash), and its parts (R, mv) and materials (M), which the maintaining work's figure clones */
     bind(api){model=api;removeEventListener('hashchange',own);if(shown)fillLive();FIGS.forEach(f=>{if(f.visible)build(f);});}};
 })();
@@ -8197,7 +8213,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 (Edges off; it is on by default), shadows=1 (Shadows on; off by default), merge=0 (Performance mode off; on by default), sec=x:-3.5 (a section; :f shows the other half),
      tz=local, t=12:00:00 (only once the hands have been set). #essay or #essay=detent: the essay (essay.js), at a section; open=bookDet (in a link only): open that panel section.
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState, so the back button isn't filled with views */
-  function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
+  function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return ESSAY.page?s:s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else if(OVH.on())h.set('ovh',OVH.hash());
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
@@ -8206,7 +8222,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&!g('tour')&&own(VIEWS,SET.view)?SET.view:'dial';   /* own keys only: 'constructor' is no view or part. At load, no view in the hash: the last one seen here */
-    if(h.has('essay')){ESSAY.show(true,g('essay'));return v;}ESSAY.show(false);   /* the essay: the model underneath is left as it is */
+    if(ESSAY.page||h.has('essay')){ESSAY.show(true,ESSAY.page?ESSAY.secOf(hashSeen):g('essay'));return v;}ESSAY.show(false);   /* the essay's page (essay.js): its hash is the section */   /* the essay: the model underneath is left as it is */
     if(g('tz')==='gmt'||g('tz')==='local'){if(g('tz')!==tz)setTz(g('tz'));}
     if(g('t'))setTod(g('t'));
     { const a=g('arm')==='1'?1:0,b=g('block')==='1'?1:0;if(a!==H.armT){armSet(a);H.arm=a;if(a)H.amp=0;}if(b!==H.blkT){blkSet(b);H.blk=b&&!R.blockClear(lastE??0)?Math.min(b,R.tbs.userData.vFace-0.005):b;} }   /* locked in a link: the balance is at rest */
@@ -8240,7 +8256,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       pose:([ph,dE,n,w],u)=>{const s=ESC.state(ph),E0=Math.floor(lastE??0);u({E:E0+dE+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:msShown(),slip,arm:0,blk:0});},
       label:([ph,dE,n,w])=>dE?`${n} turns from full wind${w?', winding':''}, the train ${dE} teeth on`:`the balance at ${(ESC.state(ph).th/D2R).toFixed(1)}°, phase ${ph}`}});
   for(const k of['finish','dial','bal','stop']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k==='stop'?'stopV':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
-  {const s=location.hash.slice(1)?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
+  {const s=location.hash.slice(1)||ESSAY.page?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
 
   /* ---------- gimbals with inertia (2.5 in IDEAS.md; gimStep and GIM in box.js): the case hangs below each axis as a pendulum, leaning to the apparent vertical as the box rolls and pitches

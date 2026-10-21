@@ -9,7 +9,13 @@
 "use strict";
 const ESSAY=(()=>{
   const root=document.getElementById('essay');
-  if(!root)return{show(){},on:()=>false,section:()=>'',bind(){}};
+  if(!root)return{show(){},on:()=>false,section:()=>'',bind(){},page:false,secOf:()=>''};
+  /* the essay's own page (the site's /essay/, 21 October 2026; ?essay on the source's index.html): this page built with <html data-page="essay" data-model="../hamilton/">, the essay
+     always showing, its hash the section alone (#detent), the tabs replaced by the models' links, and its links into the model (#tour=3, #view=…) opened on the model's page (MODEL).
+     AWAY: the model's page on the site (<html data-essay="../essay/">), whose Essay tab and #essay[=section] go to the essay's page. A page with neither (the single-file copies)
+     keeps the essay in its Essay tab, laid over the model */
+  const DS=document.documentElement.dataset,PAGE=DS.page==='essay'||/[?&]essay/.test(location.search),AWAY=PAGE?'':DS.essay||'',MODEL=DS.model||location.pathname;
+  const secOf=h=>h==='essay'?'':h.startsWith('essay=')?h.slice(6):PAGE?h:'';   /* the section a hash names: #essay=detent, or on the essay's page #detent */
   const q=(s,r=root)=>r.querySelector(s),qa=(s,r=root)=>[...r.querySelectorAll(s)];
   const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tabs=document.querySelector('.tabs'),home=tabs.parentNode,bar=q('.e-bar'),prog=q('.e-prog');
@@ -537,9 +543,11 @@ const ESSAY=(()=>{
     sset('cm-essay-y',String(Math.round(root.scrollTop)));const s=secNow();if(s!==sec){sec=s;changed();}});},{passive:true});
   function go(id,smooth){const h=id&&document.getElementById(id);if(h&&root.contains(h)){root.scrollTo({top:h.getBoundingClientRect().top-root.getBoundingClientRect().top+root.scrollTop-64,behavior:smooth&&!RM?'smooth':'auto'});sec=id;}}
   /* the hash while the essay shows: #essay, or #essay=<section>. Once the model is built app.js writes it (hashOf); before that, the essay does */
-  function changed(){if(model)model.changed();else history.replaceState(null,'',shown?'#essay'+(sec?'='+sec:''):location.pathname+location.search);}
+  function changed(){if(model)model.changed();else history.replaceState(null,'',PAGE?(sec?'#'+sec:location.pathname+location.search):shown?'#essay'+(sec?'='+sec:''):location.pathname+location.search);}
   function select(on){for(const[b,v]of[[q('#tabModel',tabs),!on],[q('#tabEssay',tabs),on]]){b.setAttribute('aria-selected',v?'true':'false');b.tabIndex=v?0:-1;}}
   function show(on,s){
+    if(AWAY){if(on)location.replace(AWAY+(s?'#'+s:''));return;}   /* the model's page on the site: the essay is on its own page */
+    if(PAGE&&!on)return;   /* the essay's page: it always shows */
     if(on===shown){if(on&&s&&s!==sec)go(s,true);return;}
     shown=on;select(on);
     if(on){const d=document;if(d.fullscreenElement||d.webkitFullscreenElement)(d.exitFullscreen||d.webkitExitFullscreen).call(d);
@@ -550,18 +558,22 @@ const ESSAY=(()=>{
     else{yKeep=root.scrollTop;root.hidden=true;document.documentElement.classList.remove('essay-on');home.appendChild(tabs);}
   }
   /* the tabs: a click, or the arrow keys between them (the tabs pattern) */
-  q('#tabEssay',tabs).addEventListener('click',()=>{show(true);changed();});
-  q('#tabModel',tabs).addEventListener('click',()=>{show(false);changed();});
+  q('#tabEssay',tabs).addEventListener('click',()=>{if(AWAY)location.href=AWAY;else{show(true);changed();}});
+  q('#tabModel',tabs).addEventListener('click',()=>{if(PAGE)location.href=MODEL;else{show(false);changed();}});
+  /* the essay's page: the models' links (the header's, as the build points them) in the bar, in place of the tabs */
+  if(PAGE){const n=document.createElement('nav'),w=document.querySelector('header nav.models a[data-m="wempe"]');n.className='models';n.setAttribute('aria-label','The models');
+    n.innerHTML=`<a data-m="hamilton" href="${MODEL}">Hamilton<span class="nl"> Model 21</span></a>${w?`<a data-m="wempe" href="${w.getAttribute('href')}">Wempe<span class="nl"> Einheits-Chronometer</span></a>`:''}<span aria-current="page">Essay</span>`;bar.appendChild(n);tabs.hidden=true;}
   tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();const on=e.key==='ArrowRight'||e.key==='End';show(on);changed();q(on?'#tabEssay':'#tabModel',tabs).focus();});
   /* links within the essay (#essay=section) scroll to their section without a new history entry; links into the model (#tour=3, #view=…) are ordinary: Back returns here.
      A link to the hash already in the address bar fires no hashchange, so it is sent on */
   root.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href').slice(1);
     if(h==='essay'||h.startsWith('essay=')){e.preventDefault();const s=h.slice(6);if(s)go(s,true);else root.scrollTo({top:0,behavior:RM?'auto':'smooth'});sec=s;changed();return;}
+    if(PAGE){e.preventDefault();location.href=MODEL+'#'+h;return;}   /* the essay's page: a link into the model opens the model's page there (Back returns here) */
     if(location.hash.slice(1)===h){e.preventDefault();dispatchEvent(new HashChangeEvent('hashchange'));}});
   /* before the model is built, app.js isn't listening for the hash: the essay follows it itself */
-  const own=()=>{if(model)return;const h=location.hash.slice(1);if(h==='essay'||h.startsWith('essay='))show(true,h.slice(6));else show(false);};
+  const own=()=>{if(model)return;const h=location.hash.slice(1);if(PAGE||h==='essay'||h.startsWith('essay='))show(true,secOf(h));else show(false);};
   addEventListener('hashchange',own);own();
-  return{show,on:()=>shown,section:()=>sec,
+  return{show,on:()=>shown,section:()=>sec,page:PAGE,secOf,
     /* app.js, once the model is built: its time, wind and tz, the fusee (rf, I), the balance's moment of inertia, changed() (wake and write the hash), and its parts (R, mv) and materials (M), which the maintaining work's figure clones */
     bind(api){model=api;removeEventListener('hashchange',own);if(shown)fillLive();FIGS.forEach(f=>{if(f.visible)build(f);});}};
 })();
