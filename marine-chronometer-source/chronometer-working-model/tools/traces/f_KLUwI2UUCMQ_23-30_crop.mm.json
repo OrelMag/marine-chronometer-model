@@ -1,0 +1,461 @@
+{
+ "image": "f_KLUwI2UUCMQ_23-30_crop.png",
+ "source": "",
+ "note": "",
+ "planes": {
+  "Face": {
+   "face_y": null,
+   "calibration": {
+    "method": "none"
+   },
+   "traces": {
+    "pt1": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       191.9,
+       633.12
+      ]
+     ]
+    },
+    "pt2": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       296.81,
+       640.95
+      ]
+     ]
+    },
+    "pt3": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       309.84,
+       732.16
+      ]
+     ]
+    },
+    "pt4": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       379.88,
+       587.03
+      ]
+     ]
+    },
+    "pt5": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       419.1,
+       598.24
+      ]
+     ]
+    },
+    "pt6": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       520.52,
+       620.09
+      ]
+     ]
+    },
+    "pt7": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       451.11,
+       765.79
+      ]
+     ]
+    },
+    "pt8": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       615.61,
+       806.05
+      ]
+     ]
+    },
+    "pt9": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       797.25,
+       794.69
+      ]
+     ]
+    },
+    "pt10": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       883.43,
+       745.12
+      ]
+     ]
+    },
+    "pt11": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       810.21,
+       620.8
+      ]
+     ]
+    },
+    "pt12": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       780.47,
+       629.19
+      ]
+     ]
+    },
+    "pt13": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       663.02,
+       476.66
+      ]
+     ]
+    },
+    "pt14": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       706.49,
+       498.78
+      ]
+     ]
+    },
+    "pt15": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       629.46,
+       446.92
+      ]
+     ]
+    },
+    "pt16": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       550.91,
+       487.34
+      ]
+     ]
+    },
+    "pt17": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       561.59,
+       513.27
+      ]
+     ]
+    },
+    "pt18": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       801.82,
+       551.4
+      ]
+     ]
+    },
+    "pt19": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       830.8,
+       585.72
+      ]
+     ]
+    },
+    "pt20": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       898.68,
+       620.04
+      ]
+     ]
+    },
+    "pt21": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       965.79,
+       655.89
+      ]
+     ]
+    },
+    "pt22": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       911.65,
+       455.31
+      ]
+     ]
+    },
+    "pt23": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       856.73,
+       427.09
+      ]
+     ]
+    },
+    "pt24": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       935.29,
+       370.65
+      ]
+     ]
+    },
+    "pt25": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       836.14,
+       361.5
+      ]
+     ]
+    },
+    "pt26": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       588.28,
+       308.88
+      ]
+     ]
+    },
+    "pt27": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1032.15,
+       285.24
+      ]
+     ]
+    },
+    "pt28": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1113.75,
+       333.28
+      ]
+     ]
+    },
+    "pt29": {
+     "kind": "point",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1094.68,
+       216.6
+      ]
+     ]
+    },
+    "hole1": {
+     "kind": "ellipse",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       133.14,
+       507.58
+      ],
+      [
+       357.05,
+       540.46
+      ],
+      [
+       521.46,
+       393.28
+      ],
+      [
+       490.14,
+       175.63
+      ]
+     ]
+    },
+    "hole2": {
+     "kind": "ellipse",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       542.12,
+       203.51
+      ],
+      [
+       674.89,
+       282.43
+      ],
+      [
+       932.73,
+       263.09
+      ],
+      [
+       1052.27,
+       86.38
+      ]
+     ]
+    },
+    "edge1": {
+     "kind": "curve",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       501.82,
+       139.39
+      ],
+      [
+       496.36,
+       142.12
+      ],
+      [
+       490.08,
+       145.94
+      ],
+      [
+       485.17,
+       149.22
+      ],
+      [
+       479.98,
+       153.04
+      ]
+     ]
+    },
+    "edge2": {
+     "kind": "curve",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       92.9,
+       608.9
+      ],
+      [
+       102.78,
+       585.03
+      ],
+      [
+       108.96,
+       566.5
+      ],
+      [
+       115.96,
+       548.8
+      ],
+      [
+       121.72,
+       534.39
+      ],
+      [
+       127.89,
+       522.45
+      ],
+      [
+       132.42,
+       510.93
+      ]
+     ]
+    },
+    "edge3": {
+     "kind": "curve",
+     "h": 0,
+     "closed": false,
+     "points_px": [
+      [
+       1123.24,
+       98.12
+      ],
+      [
+       1087.4,
+       89.73
+      ],
+      [
+       1060.7,
+       82.86
+      ]
+     ]
+    }
+   }
+  }
+ }
+}

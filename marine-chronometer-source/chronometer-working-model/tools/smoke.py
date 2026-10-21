@@ -1,17 +1,19 @@
 """Smoke test: load the model and click through every control, failing on any console error or warning or page error (exit code 1).
 
-    python smoke.py            # the model (../index.html), then its Essay tab
+    python smoke.py            # the model (../index.html), then the essay's own page (../../essay/index.html)
     python smoke.py --model    # the model only
-    python smoke.py --essay    # the Essay tab only
-    python smoke.py --model wempe   # the Wempe's page instead (wempe() below; tools/model.py)
+    python smoke.py --essay    # the essay's page only
+    python smoke.py --model wempe   # the Wempe's page instead (wempe() below; tools/model.py), then its Its drawings tab and its links to the essay and the Hamilton
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, the parts' pieces
 (every mesh of a part with pieces in one, a piece's card and its part's, one found by its number, hidden and shown from the list), every cross-section
 (and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new, About and Report a bug or inaccuracy (from the panel, a part's card and the essay), winding with the key (the sustaining spring's close-up and load path,
-shown while winding and gone after; its zoom, enlarge, slow motion and explanation; kept open in running), the keyboard, and a link through the URL hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
-two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
+shown while winding and gone after; its zoom, enlarge, slow motion and explanation; kept open in running), the keyboard, and a link through the URL hash. Then the essay's own page
+(since 21 October 2026; shared(): its figures the Wempe's model's): it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, every figure
+is built, the page has at most two WebGL contexts, a link into the Hamilton opens its walkthrough and Back returns to the essay where it was, a link into the Wempe opens its
+view, #detent and #essay=detent open it at that section, ?edges=0 turns its Edges off, and the Hamilton's Essay tab and its old #essay=detent lead there. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it.
-With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
+With --model wempe, the Wempe's page (../../wempe/index.html), then its Its drawings tab as the Hamilton's Essay tab was (#drawings=section; its checks.py's ESSAY: the link it follows into the model and the
 section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
 the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero), the 35-day trial's tables, and Escapement in plan (drawn, its figures, Show the escapement), and the walkthrough (every step and its inset, tour=N both ways, Finish and End)."""
@@ -78,7 +80,7 @@ async def model(b,errs,steps):
     # the export to Blender: the rig's script saved (the export itself, a minute and more in SwiftShader, is gltf_check.py's)
     await pg.evaluate("document.querySelector('#makeDet').open=true");await click('#mkRig','Blender rig')
     if not await pg.evaluate("!!document.querySelector('#mkGLB')&&typeof BLENDER==='object'&&typeof GLTF==='object'&&RIG_PY.length>1000"):errs.append('the export to Blender is not in the page')
-    await click('#tabEssay','Essay tab',600);await click('#tabModel','3D model tab')
+    if not (await pg.evaluate("document.querySelector('#tabEssay').getAttribute('href')")).endswith('essay/index.html'):errs.append('the Essay tab does not lead to the essay\'s page')
     # the parts list: search (a part number, a figure, nothing), sizes in inches on a card and back
     await pg.evaluate("document.querySelector('#partsDet').open=true")
     for q in['42087','fig 90','zzz','']:await pg.evaluate("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",q);steps.append(f'parts search {q!r}')
@@ -264,10 +266,68 @@ GLC="""(()=>{const g=HTMLCanvasElement.prototype.getContext;window.__glc=new Set
 # the essay's page-specific steps (the model's checks.py ESSAY for another model): the link into the model it follows and what that must give, the section a link opens, and
 # whether it has a report button; the Hamilton's are the defaults
 ESSAY=mdl.cfg('ESSAY',{'link':'#tour=3','got':"[ESSAY.on(),document.querySelector('#tStep').textContent]",'want':[False,'3 / 8'],'sec':'detent','report':True})
+EPAGE=(HERE.parents[1]/'essay'/'index.html').as_uri();HPAGE=(HERE.parent/'index.html').as_uri();WPAGE=(HERE.parents[1]/'wempe'/'index.html').as_uri()
+async def controls(pg,steps,label):
+    """every control of the page's essay: each slider to both ends, each box and button (links apart) pressed, each figure scrolled into view first so it is built"""
+    h=await pg.evaluate("document.querySelector('#essay').scrollHeight")
+    for y in range(0,h,600):await pg.evaluate(f"document.querySelector('#essay').scrollTop={y}");await pg.wait_for_timeout(250)
+    await pg.wait_for_timeout(1500);steps.append(f'{label} scrolled')
+    n=await pg.evaluate("document.querySelectorAll('#essay figure').length")
+    for i in range(n):
+        await pg.evaluate("i=>document.querySelectorAll('#essay figure')[i].scrollIntoView({block:'center'})",i);await pg.wait_for_timeout(600)
+        await pg.evaluate("""i=>{const f=document.querySelectorAll('#essay figure')[i];
+          for(const inp of f.querySelectorAll('input[type=range]'))for(const v of[inp.min,inp.max,inp.defaultValue]){inp.value=v;inp.dispatchEvent(new Event('input'));}
+          for(const c of f.querySelectorAll('input[type=checkbox]')){c.click();c.click();}
+          for(const bt of f.querySelectorAll('button'))bt.click();}""",i)
+        await pg.wait_for_timeout(700);steps.append(f'{label} figure {i+1}: every control')
+async def built(pg,errs,label):
+    f=await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&s._fig.fail).map(s=>s.id).join()")
+    if f:errs.append(f'{label} figures failed: '+f)
+    nb=await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&!s._fig.fail&&!s._fig.tick).map(s=>s.id).join()")
+    if nb:errs.append(f'{label} figures never built: '+nb)
+# the essay shared by both models, on its own page (../../essay/index.html), its 3D figures the Wempe's model lent to each in turn
+async def shared(b,errs,steps):
+    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'the essay\'s page');await pg.add_init_script(GLC)
+    await pg.goto(EPAGE);await pg.wait_for_function("ESSAY.on()&&!!ESSAY.model()",timeout=60000);await pg.wait_for_timeout(800);steps.append('the essay\'s page')
+    await controls(pg,steps,'essay')
+    glc=await pg.evaluate("window.__glc.size")
+    if glc>2:errs.append(f'{glc} WebGL contexts on the essay\'s page (one, its figures\' renderer, expected)')
+    await built(pg,errs,'essay')
+    if not await pg.evaluate("ESSAY.edges()"):errs.append('the essay\'s Edges are off by default')
+    await pg.evaluate("document.querySelector('#essay .e-report button').click()");steps.append("the essay's report");await pg.wait_for_timeout(300)
+    w=await pg.evaluate("document.querySelector('#report').open&&document.querySelector('#rpWhere').value")
+    if not(w and w.startswith('The essay')):errs.append(f"the essay's report: {w!r}")
+    await pg.evaluate("document.querySelector('#report').close()")
+    # a link into the Hamilton (the walkthrough's step 3), Back to the essay where it was; a link into the Wempe (its Train view)
+    for href,got,want in[('../chronometer-working-model/index.html#tour=3',"document.querySelector('#tStep').textContent",'3 / 8'),('../wempe/index.html#view=train',"document.querySelector('#views button[aria-pressed=\"true\"]').dataset.v",'train')]:
+        a=f"document.querySelector('#essay a[href=\"{href}\"]')"
+        if not await pg.evaluate(a):errs.append(f'the essay has no link to {href}');continue
+        await pg.evaluate(a+".scrollIntoView({block:'center'})");await pg.wait_for_timeout(600)
+        y=await pg.evaluate("document.querySelector('#essay').scrollTop")
+        await pg.evaluate(a+".click()");await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500);steps.append(f'essay link to {href}')
+        st=await pg.evaluate(got)
+        if st!=want:errs.append(f'the link to {href} gave {st!r}')
+        await pg.go_back();await pg.wait_for_function("typeof ESSAY==='object'&&ESSAY.on()",timeout=60000);await pg.wait_for_timeout(1200);steps.append('Back to the essay')
+        y2=await pg.evaluate("document.querySelector('#essay').scrollTop")
+        if abs(y2-y)>80:errs.append(f'Back from {href}: the essay at {y2}, not {y}')
+    await pg.close()
+    # straight to a section, as #detent and as the old #essay=detent; Edges off by the models' link
+    for h in['#detent','#essay=detent','?edges=0#detent']:
+        pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,f'the essay\'s page, {h}');await pg.goto(EPAGE+h);await pg.wait_for_timeout(2500)
+        t=await pg.evaluate("Math.round(document.querySelector('#detent').getBoundingClientRect().top)")
+        if not 0<=t<=140:errs.append(f'{h}: the section heading at {t}')
+        if await pg.evaluate("location.hash")!='#detent':errs.append(f'{h}: the address became {await pg.evaluate("location.hash")!r}, not #detent')
+        if 'edges=0' in h and await pg.evaluate("ESSAY.edges()"):errs.append(f'{h}: Edges still on')
+        steps.append(f'essay at {h}');await pg.close()
+    # the Hamilton's old address of a section, and its Essay tab
+    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'the Hamilton, #essay=detent');await pg.goto(HPAGE+'?snap&qa#essay=detent')
+    try:await pg.wait_for_url('**/essay/index.html#detent',timeout=30000);steps.append('the Hamilton\'s #essay=detent to the essay\'s page')
+    except Exception:errs.append('the Hamilton\'s #essay=detent went to '+pg.url)
+    await pg.close()
 async def essay(b,errs,steps):
-    E=ESSAY;pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'essay');await pg.add_init_script(GLC)
+    E=ESSAY;K=E.get('key','essay');pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'essay');await pg.add_init_script(GLC)
     await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
-    await pg.evaluate("document.querySelector('#tabEssay').click()");steps.append('Essay tab');await pg.wait_for_timeout(800)
+    await pg.evaluate("document.querySelector('#tabEssay').click()");steps.append('Its drawings tab');await pg.wait_for_timeout(800)
     if not await pg.evaluate("ESSAY.on()&&!document.querySelector('#essay').hidden&&document.querySelector('#tabEssay').getAttribute('aria-selected')==='true'"):errs.append('the Essay tab did not open the essay')
     r0=await pg.evaluate("__renders()");await pg.wait_for_timeout(1500)
     if await pg.evaluate("__renders()")!=r0:errs.append('the model is still drawn under the essay')
@@ -306,15 +366,30 @@ async def essay(b,errs,steps):
     if abs(y2-y)>80:errs.append(f'Back: the essay at {y2}, not {y}')
     await pg.close()
     # straight to a section
-    sec=E['sec'];pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,f'essay, #essay={sec}');await pg.goto(PAGE+f'#essay={sec}');await pg.wait_for_timeout(2500)
+    sec=E['sec'];pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,f'essay, #{K}={sec}');await pg.goto(PAGE+f'#{K}={sec}');await pg.wait_for_timeout(2500)
     t=await pg.evaluate(f"ESSAY.on()?Math.round(document.querySelector('#{sec}').getBoundingClientRect().top):null")
-    if t is None or not 0<=t<=140:errs.append(f'#essay={sec}: the section heading at {t}')
+    if t is None or not 0<=t<=140:errs.append(f'#{K}={sec}: the section heading at {t}')
     await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
-    if not await pg.evaluate("ESSAY.on()&&location.hash.startsWith('#essay')"):errs.append(f'#essay={sec}: the essay closed once the model loaded')
+    if not await pg.evaluate(f"ESSAY.on()&&location.hash.startsWith('#{K}')"):errs.append(f'#{K}={sec}: the essay closed once the model loaded')
     await pg.evaluate("document.querySelector('#tabModel').click()");await pg.wait_for_timeout(2000);steps.append('back to the model tab')
-    try:await pg.wait_for_function("!ESSAY.on()&&!location.hash.startsWith('#essay')",timeout=5000)   # polled: the hash is written 0.3 s after the change, on page time
+    try:await pg.wait_for_function(f"!ESSAY.on()&&!location.hash.startsWith('#{K}')",timeout=5000)   # polled: the hash is written 0.3 s after the change, on page time
     except Exception:errs.append('the 3D model tab left the essay open or in the address: '+await pg.evaluate("JSON.stringify({on:ESSAY.on(),hash:location.hash})"))
     await pg.close()
+    if mdl.HAMILTON:return
+    # the Wempe's page at the site's root (since 21 October 2026): its Essay tab leads to the shared essay; old links to the Hamilton (its #essay=…, its own keys, a part only it has)
+    # go on to the essay's page or the Hamilton's; a link from the Wempe's old address (/wempe/, worker.js: ?from=wempe) keeps #essay=… as this page's Its drawings
+    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'the Wempe\'s Essay tab');await pg.goto(PAGE)
+    if not (await pg.evaluate("document.querySelector('#tabShared').getAttribute('href')")).endswith('essay/index.html'):errs.append('the Wempe\'s Essay tab does not lead to the essay\'s page')
+    await pg.close()
+    for h,want in[('#essay=detent','**/essay/index.html#detent'),('#ovh=r46','**/chronometer-working-model/index.html#ovh=r46'),('#part=det&view=escapement','**/chronometer-working-model/index.html#part=det&view=escapement')]:
+        pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,f'the Wempe, {h}');await pg.goto(WPAGE+h)
+        try:await pg.wait_for_url(want,timeout=60000);steps.append(f'the Wempe\'s {h} sent on')
+        except Exception:errs.append(f'the Wempe\'s {h} went to {pg.url}, not {want}')
+        await pg.close()
+    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'the Wempe, ?from=wempe#essay=detent');await pg.goto(WPAGE+'?from=wempe#essay=detent');await pg.wait_for_timeout(2500)
+    st=await pg.evaluate("[location.search,location.hash,ESSAY.on()]")
+    if st!=['','#drawings=detent',True]:errs.append(f'the Wempe\'s ?from=wempe#essay=detent gave {st}')
+    steps.append('the Wempe\'s old address with #essay=detent');await pg.close()
 async def wempe(b,errs,steps):
     pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'wempe')
     await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
@@ -554,7 +629,7 @@ async def main():
         # spend that on a blank page, so the pages under test start with a context that stays
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         if '--essay' not in sys.argv:await (model if mdl.HAMILTON else wempe)(b,errs,steps)
-        if '--model' not in sys.argv:await essay(b,errs,steps)
+        if '--model' not in sys.argv:await (shared if mdl.HAMILTON else essay)(b,errs,steps)
         await b.close()
     print(f'{len(steps)} steps');[print(e) for e in errs]
     print('ok' if not errs else f'{len(errs)} problems');sys.exit(1 if errs else 0)

@@ -19,12 +19,12 @@ const line=(q,name,load,sig,rg,what)=>{const mL=rg[0]*MPa/sig,mH=rg[1]*MPa/sig,v
 const cr=(a,b)=>a[0]*b[1]-a[1]*b[0],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1],len=a=>Math.hypot(a[0],a[1]);
 const A=MJ.arbors,T0=PH.Tf,Fpull=PH.Mup*1000/PH.rB;
 /* what each holds, N·m, and what it is made of (movement.js): the setup ratchet and its click steel; the winding ratchet dark (tempered) steel, its pawls steel;
-   the sustaining ratchet gilt brass, its pawl steel. The pivots: the click's screw (shank r 0.3, sR of its 0.6 head), the winding pawls' studs (r 0.385), the
-   sustaining pawl's arbor (r 0.5); the pawls' narrowest width by the pivot (the click 1.3, pawlGeo; the winding pawls' arm 1.25, WPO; the sustaining pawl's
+   the sustaining ratchet gilt brass, its pawl steel. The pivots: the click's screw (shank r 0.3, sR of its 0.6 head), the winding pawls' studs (r 0.4385, 0.385 WFS), the
+   sustaining pawl's arbor (r 0.5); the pawls' narrowest width by the pivot (the click 1.3, pawlGeo; the winding pawls' arm 1.42, WPO's 1.25 WFS; the sustaining pawl's
    blade 2.5, SPN/SPE) */
 const SPEC={'setup click':{T:PH.Mup,n:1,rat:'steel',ratY:STEEL_Y,pv:0.3,w:1.3,under:'its faces undercut 4.5°, the middle of the 3-6° measured (KLUwI2UUCMQ 38:26: ratchetface.py)',holds:`the mainspring fully wound (${f(PH.Mup,3)} N·m on the barrel arbor, physics.js)`},
-  'winding pawl 1':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.385,w:1.25,holds:`the fusee's drive (${f(T0,3)} N·m), shared by the two pawls`},
-  'winding pawl 2':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.385,w:1.25,holds:`the fusee's drive, shared`},
+  'winding pawl 1':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.4385,w:1.42,holds:`the fusee's drive (${f(T0,3)} N·m), shared by the two pawls`},
+  'winding pawl 2':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.4385,w:1.42,holds:`the fusee's drive, shared`},
   'sustaining pawl':{T:T0,n:1,rat:'brass',ratY:BRASS_Y,pv:0.5,w:2.5,src:'its outline traced at KLUwI2UUCMQ 36:15, to about 0.1 mm',fitted:'its end drawn fitted along the face, as a maker stones it (movement.js fitEnd, 14 October 2026; as traced it leaned 43° off and the load pushed it out)',holds:`the sustaining spring loaded to the drive (${f(T0,3)} N·m) while the key winds`}};
 const MU=[0.10,0.20];
 const judge=(q,s,C,n)=>{const Q=q.pivot,t=[-n[1],n[0]],arm=Math.abs(cr(C,n)),F=s.T*1000/arm/s.n,QC=sub(C,Q),lt=len(QC),v=[-QC[1],QC[0]],sin=Math.sign(dot(v,[-C[0],-C[1]])),an=sin*cr(QC,n),at=Math.abs(cr(QC,t));
@@ -84,7 +84,7 @@ for(const q of MJ.pawls){const s=SPEC[q.name],o={name:q.name,holds:s.holds,lines
     /* the least the wire must be set in (rad) to drop the pawl in a tooth's time: none if it falls in time unloaded (bench.js's pawls test, montecarlo.js) */
     {let lo=0,hi=sp.preTurn*4;if(o.fallFree<=1/q.z)hi=0;else for(let i=0;i<40;i++){const md=(lo+hi)/2;fall(k*arm2*arm2*md)<=1/q.z?hi=md:lo=md;}o.wireNeed=hi;}
     if(o.fall0>1/q.z)fail=1;}}
-/* both winding pawls bear together: opposite each other on 36 teeth (an even count), each on its face */
+/* both winding pawls bear together: opposite each other on 40 teeth (an even count), each on its face */
 {const W=out.pawls.filter(o=>/winding/.test(o.name));say('');say(`the two winding pawls stand opposite on the ${MJ.pawls[1].z}-tooth ratchet, each ${f(W[0].depth,2)} mm in: they share the drive (made out by a tenth of a tooth, one carries it all: ${f(2*W[0].F,1)} N, still ${f(STEEL_Y[0]/(out.pawls[1].lines[0].sig*2),1)} times short of its tooth's yield)`);}
 out.rows=rows;module.exports=out;
 if(require.main===module){console.log(rows.join('\n'));const jo=process.argv.indexOf('--json');if(jo>0)fs.writeFileSync(process.argv[jo+1],JSON.stringify(out));process.exitCode=fail;}

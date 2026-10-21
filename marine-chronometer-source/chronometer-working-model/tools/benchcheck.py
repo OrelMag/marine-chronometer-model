@@ -78,7 +78,7 @@ def check(M):
     fu = [x for x in (M.get('fusee') or {}).get('torque_Nm', []) if x is not None]
     if len(fu) >= 3:
         m = sum(fu) / len(fu); lo, hi = B['fusee']['band']; dev = [x / m - 1 for x in fu]; ok = all(lo <= d <= hi for d in dev)
-        a, b = fu[0], fu[-1]; Mup = a * 18.79 / R_UP; Mdn = b * 18.79 / R_DN; Rr = R_DN / R_UP; x = (Mup - Rr * Mdn) / (Rr - 1)   # the set-up moment that brings the ends to the profile's ratio
+        a, b = fu[0], fu[-1]; Mup = a * 19.315 / R_UP; Mdn = b * 19.315 / R_DN; Rr = R_DN / R_UP; x = (Mup - Rr * Mdn) / (Rr - 1)   # the set-up moment that brings the ends to the profile's ratio
         k = B['mainspring']['perTurn']; trend = 'rises toward run down' if b > a else 'falls toward run down'
         res(ok, 'fusee evenness', f'{m * 1000:.0f} mN·m mean, readings {min(dev) * 100:+.1f} to {max(dev) * 100:+.1f} % of it (the band {lo * 100:+.0f} to {hi * 100:+.0f} %); it {trend}',
             f'set-up {x / k:+.1f} turns ({x * 1000:+.0f} mN·m at the barrel): {"less" if x < 0 else "more"} set-up evens it; if that takes the torque out of its band, the spring\'s stiffness and the fusee\'s profile don\'t match (the mainspring test)')
@@ -158,7 +158,7 @@ def demo():
          'depths_mm': {'fusee-centre': {'plate': 20.384, 'bridge': 20.390}, 'third-fourth': {'plate': 11.250, 'bridge': 11.300}},
          'endshake_mm': {'centre': 0.04, 'third': 0.02},
          'balance': {'oscillations': 241, 'seconds': 120},
-         'detent': {'ring_hz': 96},
+         'detent': {'ring_hz': 60},   # below the band (75-194 Hz since the detent's rebuild, 20 October 2026; 96 was below the old 120-222)
          'escapement': {'lock_deg': 4.2, 'letoff_deg': 8, 'overall_deg': 27.5, 'drop_deg': 2.1},
          'swing_deg': {'fully_wound': 252, 'run_down': 238}}
     out, bad = check(M); print('a made-up set of measurements:'); print('\n'.join(out))

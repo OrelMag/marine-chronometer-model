@@ -24,6 +24,14 @@
     for(let t=0;t<n;t+=3){const a=V[t],b=V[t+1],c=V[t+2],u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],w=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],nn=[u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0]],l=Math.hypot(...nn);
       if(l<1e-12||Math.abs(nn[1])>0.1*l)continue;const q=[a,b,c];for(let k=0;k<3;k++){const p1=q[k],p2=q[(k+1)%3];if(Math.abs(p1[1]-y1)<1e-4&&Math.abs(p2[1]-y1)<1e-4&&Math.hypot(p1[0]-p2[0],p1[2]-p2[2])>1e-6)S.push({a:[p1[0],p1[2]],b:[p2[0],p2[2]],n:[nn[0]/Math.hypot(nn[0],nn[2]),nn[2]/Math.hypot(nn[0],nn[2])]});}}
     return{S,y:[y0,y1]};};
+  /* a solid of several levels (one mesh: the maintaining detent's thick part and thin tip, merged 21 October 2026) as its levels: its side walls grouped by the heights they
+     span, each group's top edges the outline at that level, so each level is tested at its own height as separate solids were */
+  const levels=o=>{const M4=loc(o),g=o.geometry,P=g.attributes.position,I=g.index,n=I?I.count:P.count,V=[],v=new T.Vector3(),G=new Map();
+    for(let i=0;i<n;i++){v.fromBufferAttribute(P,I?I.getX(i):i).applyMatrix4(M4);V.push([v.x,v.y,v.z]);}
+    for(let t=0;t<n;t+=3){const q=[V[t],V[t+1],V[t+2]],u=[q[1][0]-q[0][0],q[1][1]-q[0][1],q[1][2]-q[0][2]],w=[q[2][0]-q[0][0],q[2][1]-q[0][1],q[2][2]-q[0][2]],nn=[u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0]],l=Math.hypot(...nn);
+      if(l<1e-12||Math.abs(nn[1])>0.1*l)continue;const lo=Math.min(...q.map(p=>p[1])),hi=Math.max(...q.map(p=>p[1])),k=lo.toFixed(4)+'|'+hi.toFixed(4);if(!G.has(k))G.set(k,{S:[],y:[lo,hi]});
+      for(let j=0;j<3;j++){const p1=q[j],p2=q[(j+1)%3];if(Math.abs(p1[1]-hi)<1e-4&&Math.abs(p2[1]-hi)<1e-4&&Math.hypot(p1[0]-p2[0],p1[2]-p2[2])>1e-6)G.get(k).S.push({a:[p1[0],p1[2]],b:[p2[0],p2[2]],n:[nn[0]/Math.hypot(nn[0],nn[2]),nn[2]/Math.hypot(nn[0],nn[2])]});}}
+    const L=[...G.values()];return L.length>1?L:[outline(o)];};
   const shift=(S,c)=>S.map(e=>({a:[e.a[0]-c[0],e.a[1]-c[1]],b:[e.b[0]-c[0],e.b[1]-c[1]],n:e.n}));
   const turnS=(S,a)=>S.map(e=>({a:rot(e.a,a),b:rot(e.b,a),n:rot(e.n,a)}));
   const inS=(S,x,z)=>{let w=false;for(const{a:[xi,zi],b:[xj,zj]}of S)if((zi>z)!==(zj>z)&&x<(xj-xi)*(z-zi)/(zj-zi)+xi)w=!w;return w;};
@@ -41,9 +49,10 @@
         m+=v*rho;I+=v*rho*S;}}return{m:r4(m/1000),I:r4(I/1000),missing:miss};};   /* g, g·mm² */
   const meshesOf=name=>{const o=[];mv.traverse(m=>{if(!m.isMesh||!vis(m)||m.userData.decal||m.userData.surface||m.isInstancedMesh)return;for(let p=m;p&&p!==mv;p=p.parent)if(p.userData.partName===name){o.push(m);break;}});return o;};
   /* one pawl on one ratchet */
-  const pair=(name,ratId,pawlMs,centre,pivot,z,LD,note)=>{const R0=outline(find(ratId)[0]),Rl=shift(R0.S,centre),ry=R0.y,pitch=TAU/z;
+  const pair=(name,ratId,pawlMs,centre,pivot,z,LD,note)=>{const ro_=l=>Math.max(...l.S.map(e=>Math.hypot(e.a[0]-centre[0],e.a[1]-centre[1]))),R0=levels(find(ratId)[0]).reduce((b,l)=>ro_(l)>ro_(b)?l:b);   /* the ratchet's toothed level: a ratchet merged with its plate and cup (the maintaining ratchet, 21 October 2026) read at its teeth, as its toothed solid alone was */
+    const Rl=shift(R0.S,centre),ry=R0.y,pitch=TAU/z;
     const ro=Math.max(...Rl.map(e=>Math.hypot(...e.a)));
-    const PW=pawlMs.map(outline).filter(o=>o.y[1]>ry[0]+1e-3&&o.y[0]<ry[1]-1e-3);   /* the pawl's solids at the ratchet's height */
+    const PW=pawlMs.flatMap(levels).filter(o=>o.y[1]>ry[0]+1e-3&&o.y[0]<ry[1]-1e-3);   /* the pawl's solids at the ratchet's height */
     const W=PW.map(o=>shift(o.S,centre)),near=W.flatMap(w=>denseS(w,0.005)).filter(p=>Math.hypot(p[0],p[1])<ro+0.2);
     const da=(p,a)=>Math.abs(Math.atan2(Math.sin(Math.atan2(p[1],p[0])-a),Math.cos(Math.atan2(p[1],p[0])-a)));
     const ang0=Math.atan2(near.reduce((q,p)=>q+p[1],0),near.reduce((q,p)=>q+p[0],0)),Rw=Rl.filter(e=>(da(e.a,ang0)<2.5*pitch||da(e.b,ang0)<2.5*pitch)&&Math.max(Math.hypot(...e.a),Math.hypot(...e.b))>0.6*ro),win=denseS(Rw,0.005).filter(p=>da(p,ang0)<2*pitch);

@@ -9,6 +9,7 @@ from inline import inline,remote_refs
 from changelog import stamp
 html,ver=stamp(inline((root/'index.html').read_text(encoding='utf-8'),root))
 html=html.replace('href="../wempe/index.html"','href="../../wempe/dist/wempe-einheitschronometer.html"')   # the link to the Wempe, from dist/ to its built page (the root build points it at the root copy's place and at /wempe/ on the site)
+html=html.replace('href="../essay/index.html','href="../../essay/dist/the-marine-chronometer.html')   # its Essay tab and links to the essay, the essay's own page (../essay/), from dist/ to its built page (the root build points them at the site's)
 (root/'dist').mkdir(exist_ok=True)
 (root/'dist/chronometer-working-model.html').write_text(html,encoding='utf-8',newline='\n')
 print('wrote dist/chronometer-working-model.html',len(html.encode()),'bytes, version',ver)

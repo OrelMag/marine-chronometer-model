@@ -33,7 +33,7 @@ LOGS=ROOT/'ci-logs'
 PY=sys.executable
 SITE='https://www.marinechronometermodel.com'
 WE=ROOT/'marine-chronometer-source'/'wempe'   # the second model, the Wempe (tools/model.py: --model wempe)
-BUILT=[ROOT/'chronometer-working-model.html',MC/'dist',WE/'dist',ROOT/'site']
+BUILT=[ROOT/'chronometer-working-model.html',MC/'dist',WE/'dist',ROOT/'marine-chronometer-source'/'essay'/'dist',ROOT/'site']
 TSC_PKG='typescript@5.9.3'
 def arg(k):return sys.argv[sys.argv.index(k)+1] if k in sys.argv and sys.argv.index(k)+1<len(sys.argv) and not sys.argv[sys.argv.index(k)+1].startswith('--') else None
 def digest():
@@ -136,6 +136,7 @@ STEPS=[('build',build,'quick'),
  ('hamilton-transmission',R(['node',TOOLS/'hamilton_transmission.js'],ROOT),'quick'),   # the Hamilton's whole transmission in time, as the Wempe's: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 70 s)
  ('wempe-essaydata',R(['node',TOOLS/'wempe_essaydata.js'],ROOT),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
  ('almanac',R(['node',TOOLS/'almanac.js'],ROOT),'quick'),
+ ('mfgfit',R([PY,TOOLS/'mfgfit.py','demo'],ROOT),'quick'),   # the measure-trace skill's fitter on a synthetic plate, pin, collar and pillar, hand-traced and rendered: lines, arcs, fillets, notch, drills, pin stock, turned groups, the side profile (about 11 s)
  ('hairspring',R(['node',TOOLS/'hairspring.js'],ROOT),'quick'),
  ('hairspring-fe',R(['node',TOOLS/'hairspring-fe.js'],ROOT),'quick'),   # the hairspring at large swings by co-rotational beam elements, against hairspring.js's elastica (about 20 s)
  ('physics',R(['node',TOOLS/'physics.js'],ROOT),'quick'),
@@ -165,7 +166,9 @@ STEPS=[('build',build,'quick'),
  ('wempe-dialtrace',R([PY,'dialtrace.py'],TOOLS),'quick'),   # the Wempe dial's printing traced off Wempe 3955's photograph, against js/dialface.js (about 13 s)
  ('wempe-dialtrace-lange',R([PY,'dialtrace.py','--dial','lange'],TOOLS),'quick'),   # the Lange dial's, against js/dialface_lange.js (about 20 s)
  ('wempe-types',TSC(WE/'jsconfig.json'),'quick'),   # the Wempe's scripts, core.js and the shared kit among them (about 10 s)
- ('smoke',R([PY,'smoke.py'],TOOLS),'browser'),
+ ('smoke',R([PY,'smoke.py'],TOOLS),'browser'),   # the Hamilton's page, then the essay's own (../essay/)
+ ('essay-hamdata',R([PY,'essay_hamdata.py'],TOOLS),'browser'),   # the Model 21's figures the essay quotes (essay/js/hamdata.js) against the Hamilton's page (about 20 s)
+ ('sitecheck',R([PY,'sitecheck.py'],TOOLS),'browser'),   # site/ through worker.js: every address, old and new, and where it leads (about 1½ minutes)
  ('invariants',R([PY,'invariants.py'],TOOLS),'browser'),
  ('massprops',R([PY,'massprops.py'],TOOLS),'browser'),   # the case and ring weighed on the model, against gimbals.json (about 30 s)
  ('mechanisms',R([PY,'mechanisms.py'],TOOLS),'browser'),   # the mechanisms off the built model, against mechanisms.json (about 40 s)
@@ -244,7 +247,8 @@ BROWSER={'fea'}|{s[0] for s in STEPS if s[2]=='full' and tool(s) in('fine.py','b
 SOLO={'smoke','wempe-smoke'}
 EXCL={'wempe-dialtrace':'r_dial','wempe-dialtrace-lange':'r_dial','types':'npx','wempe-types':'npx',**{s[0]:'r_bom.json' for s in STEPS if tool(s)=='bom.py'}}   # bom.py writes tools/r_bom.json for either model; two npx -y at once race in npm's cache
 AFTER={'blender':'gltf','wempe-blender':'wempe-gltf'}   # blender_check.py imports the r_model21.glb (r_wempe.glb) gltf_check.py writes
-EXTRA={'blender':[MC/'blender'/'rig.py'],'wempe-blender':[MC/'blender'/'rig.py']}   # inputs the trace can't see: Blender's own Python runs the rig
+EXTRA={'blender':[MC/'blender'/'rig.py'],'wempe-blender':[MC/'blender'/'rig.py'],   # inputs the trace can't see: Blender's own Python runs the rig; sitecheck.py's server (Node, siteserve.mjs) reads site/ and worker.js
+       'sitecheck':[ROOT/'worker.js',*[ROOT/'site'/f for f in('index.html','hamilton/index.html','essay/index.html','verification/build-verification/index.html','verification/real-chronometers/index.html','wempe/verification/index.html','sitemap.xml')]]}   # inputs the trace can't see: Blender's own Python runs the rig
 POOL=6   # the steps that run on processes of their own (tripping.js's bench figures, the Wempe's tripping.js, mainspring.py's sweeps) run on POOL of them (MC_PROCS,
 POOLED={'tripping-bench','wempe-tripping-full','wempe-build','mainspring-friction','wempe-mainspring-friction'}|{s[0] for s in STEPS if s[0].startswith('mainspring-') and s[0]!='mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
 EST={'wempe-transmission':200,'hamilton-transmission':90,'wempe-build':230,'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,

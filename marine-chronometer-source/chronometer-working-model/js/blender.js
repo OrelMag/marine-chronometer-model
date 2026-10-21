@@ -22,7 +22,7 @@ const BLENDER=(()=>{
   function apply(C,s){const{BX,mv}=C;
     mv.userData.update({E:s.E,th:s.th,lift:s.lift,psDef:s.psDef,n:s.n,winding:s.winding,slip:s.slip,hkeyOn:s.hkeyOn,keyOn:s.keyOn,blk:s.blk,arm:s.arm,ssX:0,dt:s.dt,springOn:true,msOn:true});
     BX.shield.userData.turn(s.sh==null?BX.shRest:s.sh);
-    const lM=s.up>0.05?Math.max(s.lidM,0.97):s.lidM,lT=s.up>0.05?Math.max(s.lidT,0.97):s.lidT;BX.mid.rotation.x=-lM*1.6;BX.top.rotation.x=-Math.max(0,lT*1.92-lM*1.6);   /* as app.js frame() */
+    const lM=s.up>0.05?Math.max(s.lidM,0.97):s.lidM,lT=s.up>0.05?Math.max(s.lidT,0.97):s.lidT;BX.mid.rotation.x=-lM*1.6;BX.top.rotation.x=-Math.max(0,lT*1.92-lM*1.6);BX.stay();   /* as app.js frame() */
     mv.userData.explode(smooth(s.ex));mv.userData.develop(smooth(s.dev));
     const L1=smooth(s.up/0.55),L2=smooth((s.up-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(s.flip),L2)*Math.PI;
     BX.root.rotation.set(s.pitch,s.tw,s.roll,'ZYX');BX.ring.rotation.x=s.gp-s.pitch;BX.bowl.rotation.z=s.gr-s.roll;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(s.latch));

@@ -14,7 +14,7 @@
    ],
    "vmat": "Nivaflex 45/5 (Co 45, Ni 21, Cr 18, Fe 5, W 4, Mo 4, Ti 1, Be 0.2 %)",
    "vtreat": "cold-drawn strip 0.386 mm thick (0.379-0.400 keeps the manual's swing) × 13.55 mm × 1064 mm, aged 2 h at 500 °C to over 3000 N/mm²; coiled; greased",
-   "why": "The same torque from a strip 0.386 mm thick (E 220 GPa against carbon steel's 207), so the fusee, the swing and the rate are unchanged. Fully wound it is stressed 2860 MPa, a margin of 1.05 on Nivaflex's 3000 N/mm² against carbon steel's 0.93-1.04; it doesn't take a set, rust in salt air or magnetize, so its pull, and with it the rate, holds steady over the months a navigator carries it. And it suits the arbor: the barrel arbor is 25.4 times the strip across (the steel's 24.9), where a carbon-steel spring wants 28 or more for its life (Daniels, Watchmaking, 1981, p. 254), and no carbon-steel strip at 28:1 gives the fusee's turns in the measured barrel at this torque (solved, 14 October 2026: 0.36 × 812 mm on r 5.04 has 3.4 turns from slack to coil-bound where the fusee and set-up want about 5.9; 0.385 × 1,064 × 14.3 mm on r 5.39, mainspring.py's variant d28w, leaves 0.10 turn past full wind, its coils' friction then 8 % and the fusee's pull uneven past the bench's band).",
+   "why": "The same torque from a strip 0.386 mm thick (E 220 GPa against carbon steel's 207), so the fusee, the swing and the rate are unchanged. Fully wound it is stressed 2966 MPa, a margin of 1.01 on Nivaflex's 3000 N/mm² against carbon steel's 0.90-1.00; it doesn't take a set, rust in salt air or magnetize, so its pull, and with it the rate, holds steady over the months a navigator carries it. And it suits the arbor: the barrel arbor is 25.4 times the strip across (the steel's 24.9), where a carbon-steel spring wants 28 or more for its life (Daniels, Watchmaking, 1981, p. 254), and no carbon-steel strip at 28:1 gives the fusee's turns in the measured barrel at this torque (solved, 14 October 2026: 0.36 × 812 mm on r 5.04 has 3.4 turns from slack to coil-bound where the fusee and set-up want about 5.9; 0.385 × 1,064 × 14.3 mm on r 5.39, mainspring.py's variant d28w, leaves 0.10 turn past full wind, its coils' friction then 8 % and the fusee's pull uneven past the bench's band).",
    "sources": [
     "Jacques Allemann, Nivaflex 45/5 data sheet JAS-014 (2021): composition, E 220 GPa, density 8.50, expansion 11.2 × 10⁻⁶/K, strength over 3000 N/mm², non-magnetic, corrosion",
     "Vacuumschmelze, Nivaflex 45/18 brochure: tensile strength up to 2900 MPa, hardness up to 800 HV, mainsprings among its uses",
@@ -25,8 +25,8 @@
     "t1": 0.3860813087074577,
     "E0": 207,
     "E1": 220,
-    "s0": 2746.6308349381807,
-    "s1": 2860.4554060131654,
+    "s0": 2847.512778750049,
+    "s1": 2965.518051445918,
     "SN": 3000,
     "SS": [
      2550,
@@ -344,7 +344,7 @@
    ],
    "vmat": "brass, as the Model 21's key, with a steel ratchet wheel on the socket and a click in the pipe, sprung",
    "vtreat": "the socket turns the fusee counterclockwise (seen from the key) and slips the other way; the Model 21's plain key kept to set the hands",
-   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.20 N·m bends the fusee wheel's teeth (overwind.js), about a third of what an average hand gives the key's paddle (0.63 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A ratchet in the key's pipe slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 1.5 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
+   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.53 N·m bends the fusee wheel's teeth (overwind.js), about a third of what an average hand gives the key's paddle (0.63 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A ratchet in the key's pipe slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 1.5 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
    "sources": [
     "overwind.js (the key forced, both ways)",
     "S. N. Imrhan and M. J. Munoz-Vasa, \"Finger Pinch Loosening and Tightening Torques on Small Cylindrical Handles Among Industrial Workers\", Industrial and Systems Engineering Review 1(2), 2013 (and Swain et al. 1970 there)",
@@ -352,7 +352,7 @@
     "Breguet's \"tipsy\" key (clé de sûreté), about 1790: a ratchet in the key that slips when turned the wrong way"
    ],
    "numbers": {
-    "Ty": 0.1959977526273447,
+    "Ty": 0.5329193408821993,
     "mean": 0.6281434555263158,
     "TH": 1.0592325,
     "TyF": 1.6026267105226204

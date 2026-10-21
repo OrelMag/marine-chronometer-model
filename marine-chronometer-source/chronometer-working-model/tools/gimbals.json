@@ -1,112 +1,112 @@
 {
  "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
  "bowl": {
-  "m": 1245.374,
+  "m": 1247.148,
   "cg": [
-   0.084,
-   -9.978,
-   -0.174
+   0.046,
+   -10.438,
+   -0.287
   ],
   "I": [
    [
-    1386327.9,
-    19806.7,
-    -22152.7
+    1383067.8,
+    19526.7,
+    -22192.0
    ],
    [
-    19806.7,
-    1726869.6,
-    700.9
+    19526.7,
+    1705447.3,
+    -3017.9
    ],
    [
-    -22152.7,
-    700.9,
-    1382662.9
+    -22192.0,
+    -3017.9,
+    1380336.0
    ]
   ],
   "byMat": {
-   "brass": 578.87,
-   "plate": 357.18,
-   "brass2": 83.53,
-   "gilt": 62.84,
-   "steel": 57.3,
-   "plateSolid": 27.22,
+   "brass": 566.79,
+   "plate": 356.73,
+   "brass2": 87.03,
+   "gilt": 63.28,
+   "steel": 58.93,
+   "plateSolid": 33.07,
    "glass": 14.23,
-   "copper": 12.11,
-   "steelK": 1.79,
+   "copper": 12.18,
+   "chain": 2.66,
+   "steelK": 1.87,
    "blued": 1.35,
-   "chain": 1.01,
+   "chain2": 1.26,
+   "steelD": 0.8,
    "steelS": 0.7,
    "fibre": 0.7,
-   "steelD": 0.6,
    "packing": 0.58,
    "invar": 0.47,
-   "chain2": 0.43,
    "ruby": 0.05,
    "clear": 0.01
   },
   "byPart": {
-   "bowl": 468.13,
-   "pillar": 295.55,
-   "barrelBridge": 79.47,
+   "bowl": 459.79,
+   "pillar": 295.56,
+   "barrelBridge": 79.32,
    "cock": 49.58,
-   "trainBridge": 46.88,
+   "trainBridge": 46.89,
    "barrel": 41.04,
-   "fusee": 37.16,
+   "fusee": 36.71,
    "dial": 36.1,
-   "motion": 18.25,
-   "ratchet": 16.55,
+   "ratchet": 19.05,
+   "motion": 18.05,
    "lowerBridge": 15.74,
    "pillars": 13.77,
    "ltb": 12.91,
    "sq": 12.42,
-   "gw": 11.86,
+   "gw": 11.95,
+   "lockArm": 11.18,
    "bal": 9.41,
-   "lockArm": 8.78,
-   "sratchet": 8.16,
-   "post": 4.23,
-   "cw": 2.63,
+   "sratchet": 8.3,
+   "post": 6.43,
+   "chain": 3.92,
+   "cw": 3.86,
    "hands": 2.45,
-   "escBridge": 1.69,
-   "det": 1.56,
-   "chain": 1.44,
+   "escBridge": 1.65,
+   "tw": 1.44,
    "sspring": 1.37,
-   "mainspring": 44.4
+   "mainspring": 44.46
   },
   "missing": {}
  },
  "ring": {
-  "m": 140.246,
+  "m": 151.007,
   "cg": [
-   3.869,
-   -0.161,
-   6.941
+   3.261,
+   -0.15,
+   6.589
   ],
   "I": [
    [
-    368998.1,
-    423.7,
-    5098.1
+    417376.4,
+    424.9,
+    5001.8
    ],
    [
-    423.7,
-    639094.7,
-    1131.7
+    424.9,
+    684630.7,
+    1126.7
    ],
    [
-    5098.1,
-    1131.7,
-    274780.7
+    5001.8,
+    1126.7,
+    273223.9
    ]
   ],
   "byMat": {
-   "brass": 97.81,
-   "brass2": 39.78,
+   "brass": 97.86,
+   "brass2": 50.49,
    "steel": 2.27,
    "steelD": 0.39
   },
   "byPart": {
-   "ring": 140.25
+   "ring": 151.01
   },
   "missing": {}
  },
@@ -131,26 +131,24 @@
  "stops": {
   "ring": [
    {
-    "deg": 29.5,
+    "deg": 63.5,
     "against": "box"
    },
    {
-    "deg": 29.5,
+    "deg": 73.5,
     "against": "box"
    }
   ],
   "bowl": [
    {
-    "deg": 29.5,
-    "against": "box"
+    "deg": null
    },
    {
-    "deg": 29.5,
-    "against": "box"
+    "deg": null
    }
   ]
  },
- "ringY": -20,
+ "ringY": -7.099999999999994,
  "RO": 68,
  "CR": 49.5
 }

@@ -40,7 +40,7 @@ const ESSAY=(()=>{
       hsIwp:Math.round(100*(Iw/P.SET.I-1))+' %',hsThin:f1(100*(1-(HS.kNeed/HS.k)**(1/3)),1)+' %',hsT14:f1(HS.alt.n14.T,3)+' s',hsT15:f1(HS.alt.n15.T,3)+' s',w78:f1(P.SET.W78,2)+' g'};
     for(const el of document.querySelectorAll('#essay [data-live]')){const v=V[el.dataset.live];if(v!=null)el.textContent=v;}
     for(const el of document.querySelectorAll('#essay [data-wphys]')){const v=WEDATA.phys[el.dataset.wphys];if(v!=null)el.textContent=v;}}
-  const K=ESSAYKIT.make({fillLive,store:'we'});
+  const K=ESSAYKIT.make({fillLive,store:'we',key:'drawings'});   /* its hash #drawings=section: the page's Essay tab is the Hamilton's essay, on its own page */
   if(!K)return{show(){},on:()=>false,section:()=>'',bind(){}};
   const{q,qa,PAL,fig,range,play,seg,figOf,c2d,chart,halo,gl,View3D,at,RM}=K;
   const css=(x,font,col,al='left',bl='alphabetic')=>{x.font=font;x.fillStyle=col;x.textAlign=al;x.textBaseline=bl;};

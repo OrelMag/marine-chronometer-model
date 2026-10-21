@@ -93,10 +93,14 @@ function escapeWheel(parent,M,rt,y,E){
      the spokes 0.5 and the hub r 1.5, estimated after Fig. 14 */
   const web=new THREE.Shape(),R1=0.77*rt,R0=0.31*rt,sw=0.105*rt;web.absarc(0,0,R,0,TAU,false);
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
-  const hb=new THREE.Path();hb.absarc(0,0,0.67,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's body (r 0.67, movement.js) */
+  const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's shaft (r 0.5, movement.js; 0.67 until 20 October 2026) */
   const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
-  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
-  const cl=new THREE.Mesh(ringGeo(0.20*rt,0.67,1.9),M.brass);cl.position.y=y+0.55+0.95;parent.add(cl);   /* the collet's pipe, on the web's face toward the pinion */
+  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);fuse([teeth,wm]);   /* the teeth and the web one wheel, one mesh: their top faces flush, a line round the root in Edges until 21 October 2026 */
+  /* the collet, on the web's face toward the pinion, in two steps (KLUwI2UUCMQ 42:51 in the movement and 43:19, the original arbor: mfgfit's edges): a wide part next to
+     the wheel D 3.2-3.75, 0.95-1.07 long (0.263 of the tips: r 1.73, 1.0), then a pipe D 2.0-2.4, 1.36-1.54 long (0.167: r 1.1, 1.45), its end 15.1-15.9 from the lower
+     pivot's tip. Until 20 October 2026 one pipe r 0.20 of the tips, 1.9 long, read at 43:21.1 on the replacement arbor */
+  const cw=new THREE.Mesh(ringGeo(0.263*rt,0.5,1.0),M.brass);cw.position.y=y+0.55+0.5;parent.add(cw);
+  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5,1.45),M.brass);cl.position.y=y+0.55+1.0+0.725;parent.add(cl);fuse([cw,cl]);   /* the collet's two steps one piece, one mesh (their bores flush) */
   return teeth;
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
@@ -137,7 +141,6 @@ function mats(){
     x.font=`600 ${sz*k}px "Instrument Sans", Arial, sans-serif`;fillTracked(x,t,len*k,0.8);x.restore();}};
   M.engraveB=eng(engraveCanvas((x,S,k)=>engr(x,S,k,[["MODEL 21, 14 JEWELS",-0.01,-32.94,17.6,1.9],["HAMILTON WATCH CO.",0.71,-30.34,24.4,2.5],["LANCASTER, PENNA.",1.01,-27.64,15.9,1.95],
     ["MADE IN U.S.A.",-11.55,-21.89,10.9,1.9],[SERIAL,-7.24,-17.82,8.1,2.7]])));
-  M.engraveT=eng(engraveCanvas((x,S,k)=>engr(x,S,k,[[SERIAL,10.53,35.06,9.3,2.7]])));   /* the serial again on the train bridge at 6 o'clock, where the barrel bridge is cut away */
   return M;
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
@@ -257,11 +260,11 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
   /* normals and ids: the solids, then the ghosts alone (for Edges, mv: mesh ids, the box masked, hide left out); no shadow map is drawn for these.
      Leaves the ghosts hidden and the line pass's uniforms set */
   function ids(scene,cam,meshes,mv,hide){
-    const pr=r.getPixelRatio(),gh=[],so=[];
+    const pr=r.inkPR||r.getPixelRatio(),gh=[],so=[];   /* r.inkPR, r.inkBS: a frame drawn into a corner of a larger buffer (the essay's figures share one renderer): its pixel ratio and size */
     for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;inkTag(o);}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
     /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while the drawing draws.
        Each is 4 bytes a pixel, 8 with a depth texture: Edges without ghosts keeps 12 a pixel, not 28 */
-    r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
+    if(r.inkBS)bs.copy(r.inkBS);else r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
     r.getClearColor(cc);const s={gh,ca:r.getClearAlpha(),au:r.shadowMap.autoUpdate},ov=scene.overrideMaterial,hv=hide.map(o=>o.visible);
     nid.clippingPlanes=SEC.on.value>0.5&&SEC.plane?[SEC.plane]:[];
     r.shadowMap.autoUpdate=false;scene.overrideMaterial=nid;idOn=true;idM=mv;r.setClearColor(0x000000,0);hide.forEach(o=>o.visible=false);
@@ -342,7 +345,7 @@ function drawMerge(scene,meshes){
    it lies in a pack on the wall with loose turns inside; wound, the coils draw in round the arbor, spread across the barrel rather than in two packs, and the pack
    on the wall thins to a turn or two. ey: the eye in its inner end for the arbor's hook, an oblong 7.2 along the strip and 5.2 across from 2.2 off the end
    (KLUwI2UUCMQ 15:54, the innermost turn's front, rough +-20 %): along the strip's centre line on the core, mm */
-const MSPRING={t:0.394,gap:0,ra:4.9,Rw:18.3-2.0-0.26,len:1064,ey:[2.2,9.4,5.2]};
+const MSPRING={t:0.394,gap:0,ra:4.9,Rw:18.3-2.0-0.26,len:1064,ey:[2.2,9.4,3.9]};   /* ey: the eye's near and far ends along the strip and its width across: 3.9 since 20 October 2026 (KLUwI2UUCMQ 15:54, erf edges, the height corrected for the 41 deg view: 7.25 x 3.9, +-20 %; 5.2 until then); its cap-side edge read 3.6 under the strip's, off its middle, drawn centred (rough) */
 /* MSHAPE decoded once: the grid along the strip (s, mm) and each state's r there, its theta rebuilt from r (each step's run round the arbor) and spread so it
    ends at TAU T exactly. msShape(T): the state at T, each piece of steel (each s) placed between its places in the two solved states either side */
 let MSD=null;
@@ -389,26 +392,47 @@ function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,
 /* blind holes: holes polyGeo (or discGeo) has cut through a closed solid whose faces are level (local y its thickness), closed at the far end so each stops depth
    into the metal from face ('top', its highest y, or 'bottom'): only each hole's own triangles change (within its radius + 0.35 in plan: its wall and the
    bevel's rings round it, bev as polyGeo's), the far bevel ring dropped, the wall cut short at the floor, the far face's opening and the floor each filled
-   with a fan. An extrusion's holes all go through: a tapped hole that stops in the metal (a stud's, a screw's from one side) can't be cut by it */
-/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} holes @param {number} depth @param {number} [bev] @returns {any} */
-function blindHoles(g0,face,holes,depth,bev=0){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count;
+   with a fan. An extrusion's holes all go through: a tapped hole that stops in the metal (a stud's, a screw's from one side) can't be cut by it.
+   inner (a radius per hole, 0 for none): a counterbore, the hole stopped as above and a narrower one of that radius on through its floor to the far face,
+   the floor and the far face rings round it, its wall sharing their vertices (a pin's sink: the barrel bridge's set-up spring pin) */
+/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} holes @param {number} depth @param {number} [bev] @param {number[]} [inner] @returns {any} */
+function blindHoles(g0,face,holes,depth,bev=0,inner=[]){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count;
   let y0=1e9,y1=-1e9;for(let i=0;i<n;i++){const y=P.getY(i);if(y<y0)y0=y;if(y>y1)y1=y;}
   const yf=face==='top'?y1:y0,ye=face==='top'?y0:y1,s=face==='top'?-1:1,yb=yf+s*depth,e=1e-5;
   /** @type {number[]} */const pos=[],nor=[],uv=[];const own=holes.map(()=>/** @type {number[]} */([]));
-  for(let t=0;t<n;t+=3){let h=-1;holes.forEach(([x,z,r],k)=>{if(h<0&&[0,1,2].every(q=>Math.hypot(P.getX(t+q)-x,P.getZ(t+q)-z)<r+0.35))h=k;});
+  for(let t=0;t<n;t+=3){let h=-1;holes.forEach(([x,z,r],k)=>{if(h<0&&[0,1,2].every(q=>Math.hypot(P.getX(t+q)-x,P.getZ(t+q)-z)<r+(bev?0.35:0.05)))h=k;});   /* a hole's own: its wall and, beveled, the bevel's rings */
     if(h>=0){own[h].push(t);continue;}for(let q=0;q<3;q++){pos.push(P.getX(t+q),P.getY(t+q),P.getZ(t+q));nor.push(N.getX(t+q),N.getY(t+q),N.getZ(t+q));uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
   /* each triangle wound so its normal points out of the metal (want: the outward normal) */
   const tri=(/** @type {number[][]} */q,/** @type {number[]} */want)=>{const[a,b,c]=q,u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],m=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
     const o=m[0]*want[0]+m[1]*want[1]+m[2]*want[2]<0?[a,c,b]:[a,b,c];for(const p of o){pos.push(...p);nor.push(...want);uv.push(p[0],-p[2]);}};   /* the new faces mapped as the extrusion maps its caps (the shape's x, -z) */
   const fan=(/** @type {number[][]} */R,/** @type {number} */x,/** @type {number} */y,/** @type {number} */z,/** @type {number[]} */want)=>{const S=[...new Map(R.map(p=>[p[0].toFixed(5)+','+p[2].toFixed(5),p])).values()].sort((a,b)=>Math.atan2(a[2]-z,a[0]-x)-Math.atan2(b[2]-z,b[0]-x));
     for(let i=0;i<S.length;i++)tri([[x,y,z],S[i],S[(i+1)%S.length]],want);};
-  holes.forEach(([x,z],k)=>{const far=/** @type {number[][]} */([]),floor=/** @type {number[][]} */([]);
+  const ring=(/** @type {number[][][]} */R,/** @type {number} */x,/** @type {number} */y,/** @type {number} */z,/** @type {number[][]} */I,/** @type {number[]} */want)=>{   /* the face between a cut rim R and an inner circle I, at y */
+    const an=(/** @type {number[]} */p)=>{const a=Math.atan2(p[2]-z,p[0]-x);return a<0?a+TAU:a;},T=[...I].sort((a,b)=>an(a)-an(b));
+    /* the rim in the order its edges run (the wall triangles' edges on that level, chained): sorting by angle mis-orders a rim vertex off the circle */
+    const kk=(/** @type {number[]} */p)=>p[0].toFixed(5)+','+p[2].toFixed(5),adj=new Map(),pt=new Map();for(const[a,b]of R){for(const[u,v]of[[a,b],[b,a]]){const ku=kk(u);pt.set(ku,u);(adj.get(ku)||adj.set(ku,[]).get(ku)).push(kk(v));}}
+    let L=[];{const st=[...pt.keys()].reduce((m,q)=>an(pt.get(q))<an(pt.get(m))?q:m);let c=st,pv=null;while(c&&L.length<=pt.size){L.push(pt.get(c));const nx=(adj.get(c)||[]).find(q=>q!==pv&&q!==c);pv=c;c=nx;if(c===st)break;}}
+    if(L.length>2&&an(L[1])<an(L[L.length-1])===false&&Math.abs(an(L[1])-an(L[0]))>Math.PI)L=[L[0],...L.slice(1).reverse()];
+    {let a2=0;for(let q=0;q<L.length;q++){const A=L[q],B=L[(q+1)%L.length];a2+=(A[0]-x)*(B[2]-z)-(B[0]-x)*(A[2]-z);}if(a2<0)L=[L[0],...L.slice(1).reverse()];}   /* counterclockwise in (x, z), as T */
+    const S=L;
+    /* a zipper round both rings by angle, every vertex used (earcut drops a rim's nearly collinear vertex, which leaves a T-junction against the wall) */
+    let i=0,j=0;const P3=(/** @type {number[]} */p)=>[p[0],y,p[2]],nS=S.length,nT=T.length;
+    /* every triangle wound as the loops run, decided once on a large one: a sliver where the rim steps back would flip on its own and its edges no longer pair */
+    const A0=S[0],B0=S[Math.floor(nS/3)],C0=S[Math.floor(2*nS/3)],ny=(C0[0]-A0[0])*(B0[2]-A0[2])-(B0[0]-A0[0])*(C0[2]-A0[2]),fl=ny*want[1]<0;
+    const put=(/** @type {number[][]} */q)=>{const o=fl?[q[0],q[2],q[1]]:q;for(const v of o){const p=P3(v);pos.push(...p);nor.push(...want);uv.push(p[0],-p[2]);}};
+    while(i<nS||j<nT){const a=S[i%nS],b=T[j%nT],aN=i<nS?an(S[(i+1)%nS])+(i+1>=nS?TAU:0):1e9,bN=j<nT?an(T[(j+1)%nT])+(j+1>=nT?TAU:0):1e9;
+      if(aN<=bN){put([a,S[(i+1)%nS],b]);i++;}else{put([a,T[(j+1)%nT],b]);j++;}}};
+  holes.forEach(([x,z],k)=>{const far=/** @type {number[][]} */([]),floor=/** @type {number[][]} */([]),farE=/** @type {number[][][]} */([]),floorE=/** @type {number[][][]} */([]);
     for(const t of own[k]){const V=[0,1,2].map(q=>[P.getX(t+q),P.getY(t+q),P.getZ(t+q)]),Q=[0,1,2].map(q=>[N.getX(t+q),N.getY(t+q),N.getZ(t+q)]);
       for(const v of V)if(Math.abs(v[1]-ye)<e)far.push(v);   /* the far face's opening: its rim */
+      for(let q=0;q<3;q++){const a=V[q],b=V[(q+1)%3];if(Math.abs(a[1]-ye)<e&&Math.abs(b[1]-ye)<e)farE.push([a,b]);if(Math.abs(a[1]-ye)<=bev+e&&Math.abs(b[1]-ye)<=bev+e&&!(Math.abs(a[1]-ye)<e&&Math.abs(b[1]-ye)<e&&bev>0))floorE.push([[a[0],yb,a[2]],[b[0],yb,b[2]]]);}
       if(V.every(v=>Math.abs(v[1]-ye)<=bev+e))continue;   /* the far bevel ring: dropped */
       const W=V.map(v=>Math.abs(v[1]-ye)<=bev+e?(floor.push([v[0],yb,v[2]]),[v[0],yb,v[2]]):v);   /* the wall, cut short at the floor */
       for(let q=0;q<3;q++){pos.push(...W[q]);nor.push(...Q[q]);uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
-    fan(far,x,ye,z,[0,-s,0].map(v=>-v));fan(floor,x,yb,z,[0,-s,0]);});   /* the far face closed, and the floor facing the opening */
+    const ri=inner[k]||0;if(!ri){fan(far,x,ye,z,[0,-s,0].map(v=>-v));fan(floor,x,yb,z,[0,-s,0]);return;}   /* the far face closed, and the floor facing the opening */
+    const m=32,C=(/** @type {number} */y)=>[...Array(m)].map((_,i)=>[x+ri*Math.cos(i/m*TAU),y,z+ri*Math.sin(i/m*TAU)]),Ib=C(yb),Ie=C(ye);   /* the counterbore's through hole */
+    ring(farE,x,ye,z,Ie,[0,-s,0].map(v=>-v));ring(floorE,x,yb,z,Ib,[0,-s,0]);
+    for(let i=0;i<m;i++){const j=(i+1)%m,c=[x-(Ib[i][0]+Ib[j][0])/2,0,z-(Ib[i][2]+Ib[j][2])/2],l=Math.hypot(c[0],c[2]),w=[c[0]/l,0,c[2]/l];tri([Ib[i],Ib[j],Ie[j]],w);tri([Ib[i],Ie[j],Ie[i]],w);}});   /* its wall, facing the axis */
   const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
   o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
 /* a pocket cut depth into a face of a closed solid whose faces are level (local y its thickness, as polyGeo builds it), open where it runs past the outline (a pry
@@ -498,6 +522,16 @@ function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonIndexed():g.clone()).applyMatrix4(m);g.dispose();return q;}),out=new THREE.BufferGeometry();
   for(const[k,n]of[['position',3],['normal',3],['uv',2]]){if(!gs.every(g=>g.attributes[k]))continue;const a=new Float32Array(gs.reduce((t,g)=>t+g.attributes[k].array.length,0));let o=0;for(const g of gs){a.set(g.attributes[k].array,o);o+=g.attributes[k].array.length;}out.setAttribute(k,new THREE.BufferAttribute(a,n));}
   gs.forEach(g=>g.dispose());return out;}
+/* fuse(ms, k): the meshes ms, pieces of one solid (a machined part drawn as several extrusions or lathes), made one mesh: their geometries merged into k's (by default
+   the piece without {sub:1}, else the first), each placed by its transform relative to k as built, the others taken out. Edges outlines each mesh, so pieces of one part
+   sharing a visible face, or with walls running flush, drew a line across the part where the real one has none (the seam sweep, 21 October 2026). k keeps its userData,
+   its geometry's userData and its place; the pieces must not move against each other afterwards. A toothed k (userData.gear) keeps its teeth's own box as gear.box
+   (its frame: min x y z, max x y z), which the checks read for the faces' overlap in mesh (bom-check.js, invariants-wempe.js) in place of the whole solid's */
+function fuse(/** @type {any[]} */ms,/** @type {any} */k=null){k=k||ms.find(o=>!o.userData.sub)||ms[0];const ch=(/** @type {any} */o)=>{const m=new THREE.Matrix4();for(let q=o;q;q=q.parent){q.updateMatrix();m.premultiply(q.matrix);}return m;},inv=ch(k).invert(),gu=k.geometry.userData;
+  if(k.userData.gear&&!k.userData.gear.box){k.geometry.computeBoundingBox();const b=k.geometry.boundingBox;k.userData.gear.box=[...b.min.toArray(),...b.max.toArray()];}
+  const L=[[k.geometry,new THREE.Matrix4()]];for(const o of ms){if(o===k)continue;if(o.children.length)console.error('fuse: a piece with children',o);L.push([o.geometry,new THREE.Matrix4().multiplyMatrices(inv,ch(o))]);if(o.parent)o.parent.remove(o);}
+  if(k.userData.sub&&ms.some(o=>!o.userData.sub))delete k.userData.sub;   /* k given (the teeth): it carries the part's own line now */
+  k.geometry=mergeGeo(L);k.geometry.userData=gu;return k;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
 function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.filter(h=>!h.pts);   /* holes: circles [x,z,r], or {pts} outlines */
   if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}

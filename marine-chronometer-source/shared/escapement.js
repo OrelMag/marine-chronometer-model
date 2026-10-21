@@ -29,24 +29,29 @@ function makeEsc(o={},base){
      W78, Op. 78's weight (g), hung on the locking jewel, and G78 (mm) what it should part the detent spring from its stop button by ("approximately 0.005 in", p. 61; Fig. 88's
      "(.005 in. clearance)"): the weight's moment is the spring's preload and its stiffness over that bend, so the preload is the weight's less the bend's (0.63 g at the jewel
      with the drawn spring; until 14 October 2026 the whole 0.770 g, p. 61's clause missed), and a stiffer spring is set up with less preload; hD, the detent spring's two
-     strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm,
-     estimated) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
-     works it out from movement.js and checks this), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
+     strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm: its band
+     0.36-0.39 tall beside the bracket, KLUwI2UUCMQ 11:10, 11:24, scaled by the block's pins; 0.3 estimated until 20 October 2026) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
+     works it out from movement.js and checks this; 2.609 since 20 October 2026, when the detent was rebuilt to its measured lengths (11:10-11:33: its locking jewel 10.1 from the flexure, the trip spring 5.8 free); 3.002 that day before, with the trip spring's bracket measured 1.05 tall; 2.67 before that), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
      rB: the radius stoned on the back corner of the discharge jewel's end (unit frame), its acting corner left square: "set with a jewel with a radius to the back of
      the acting part of the tip" (the British Museum's Model 21, Catalogue of Watches VI, 1990, no. 117A), and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to
      a sharp corner. 0 is a square end, wD/2 (the most) the back half of a half round. The radius isn't given (estimated): wD/2, 0.158 mm, with rd at 0.296, where the
-     jewel stands 0.50 mm proud of its roller (the frames: 0.4-0.5, its most), and rT 0.2894 puts overall in the middle of Op. 87's 26-30° (28.0°) with the most lift to
-     spare past the release (0.28 mm at the tip against 0.18): the square acting corner holds the trip spring's tip on the return, so overall wants less overlap of the
+     jewel stands 0.50 mm proud of its roller (the frames: 0.4-0.5, its most), and rT 0.2884 puts overall in the middle of Op. 87's 26-30° (28.0°) with the most lift to
+     spare past the release (0.2894 until 20 October 2026, when the trip spring became 5.8 mm free and 0.041 thick: its thinner tip came clear later; aD 269.9, 269.1 until
+     then, brings the drop back to Op. 97's 2°: 2.2°; at exactly 270 the unlocking roller's flats leave its face's triangulation open in movement.js): the square acting corner holds the trip spring's tip on the return, so overall wants less overlap of the
      jewel past the tips, and less overlap leaves less lift; a larger radius lets the detent off sooner at the same overlap (rB 0.010, 0.066 mm, the least within 30°, gave
      29.7° and 0.27 mm). Until 12 October 2026 the end was a half round (rnd), both corners, and rT 0.290, rd 0.300 and aD 271
      HS: the hairspring's own isochronism, s a day gained for each 10 deg the swing is above A (0: isochronous, the model's default; the adjuster's bench sets it).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
-     rT: passing-spring tip; rd: discharge jewel reach (its grown outline's; the frames at 6:58 put the jewel 0.4-0.5 mm proud of its roller); dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
+     rT: passing-spring tip; rd: discharge jewel reach (its grown outline's; the frames at 6:58 put the jewel 0.4-0.5 mm proud of its roller); dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97).
+     dL 0.019, the lock 6.0 deg, Op. 85's "about 6", since 20 October 2026 (0.017, 5.5 deg, until then): the trip spring's bracket measured 1.05 tall (KLUwI2UUCMQ 11:08-11:26;
+     0.4 drawn before) weighs the detent so that 5.5 deg is the shallowest lock a held tooth's ringing allows (tripping.js), leaving it no room to wear (wear.js); the owner's choice */
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
-     (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:67,MU:0.15,
-    I:578.5,JW:6.05,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
+     (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm; not measured: 0.041 keeps the
+     stiffness at its tip that the 0.06 x 0.3 strip 7.9 long had until 20 October 2026, when it was measured 5.8 mm free and 0.37 deep; 0.06 at that length would be 3.1 times as stiff,
+     taking 24 % of the impulse's work and leaving tolerances.js only 1.5 times its stiffness before the swing falls under 247.5°) */
+  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2884,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.019,DRAW:10,aI:181.3,aD:269.9,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.041,tsH:0.37,TF:67,MU:0.15,
+    I:578.5,JW:6.05,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.609,eS:0.3,HS:0};
   /* the settings a second chronometer needs (makeEsc(o, base)), each the Hamilton's as the code had it until 15 October 2026. NT: the wheel's teeth; ES: its radius (mm), the
      unit; LK: the locked tooth that many pitches before the pair straddling the line of centres, and LO (deg) the wheel's teeth turned so far from straddling it (the locking
      stone's place, lockA, and the teeth's at rest, t0); DA: the detent's angle to the line of centres (deg) and BL its length from Ft to the locking face; PSL: the passing
@@ -64,14 +69,14 @@ function makeEsc(o={},base){
      it); RW: 1 runs the wheel's chase from the release with the locking stone riding the tooth it has let go (the detent's preload and spring pressing it on the land and
      the back: the friction MU against the wheel's turn, the back's slope pushing it on), 0 the Hamilton's free chase. DEP and RW since 15 October 2026, for the Wempe,
      whose detent tools/dynamics.js --model wempe found flung off its stone's corner and its stone dragging on the escaping tooth. Unit-frame lengths in units of ES */
-  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.72,PSL:1.2,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.58,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30,DEP:0,RW:0});
+  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.5512,PSL:0.8815,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.5015,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30,DEP:0,RW:0});
   for(const k in {...base,...o})if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...base,...o};ES=c.ES;let A0=c.A*D2R;   /* A0: the reference's swing (with TQ, solved) */
   const NT=c.NT,P=TAU/NT,EX=c.EX,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2+c.LO*D2R,lockA=t0-c.LK*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
-  /* detent (Fig. 90): straight, 68 deg to the line of centres, the locking face 11.3 mm from the point of flexure Ft. The passing spring runs parallel to it
-     on the line through the balance staff, 7.9 mm long, its tip at rT; the horn meets it behind the tip, 0.25 mm outside the discharge jewel's path (Op. 88) */
+  /* detent (Fig. 90): straight, 68 deg to the line of centres, the locking face 10.21 mm from the point of flexure Ft (the stone's centre 10.1: KLUwI2UUCMQ 11:10-11:33, below;
+     11.3, Fig. 90 scaled 12-17 % large, until 20 October 2026). The passing spring runs parallel to it on the line through the balance staff, 5.8 mm free (7.9 until then), its tip at rT; the horn meets it behind the tip, 0.25 mm outside the discharge jewel's path (Op. 88) */
   const dirB={x:Math.cos(c.DA*D2R),y:Math.sin(c.DA*D2R)},nB={x:dirB.y,y:-dirB.x},BL=c.BL,Ft={x:S.x-BL*dirB.x,y:S.y-BL*dirB.y};   /* nB: direction the locking jewel moves (away from the wheel); the passing spring bends along -nB */
   const Pt={x:-rT*dirB.x+c.PSO*nB.x,y:-rT*dirB.y+c.PSO*nB.y},Ps0={x:Pt.x-c.PSL*dirB.x,y:Pt.y-c.PSL*dirB.y};
   const LEN=Math.hypot(Pt.x-Ft.x,Pt.y-Ft.y),nH={x:(Pt.y-Ft.y)/LEN,y:-(Pt.x-Ft.x)/LEN};   /* nH: direction the spring tip moves as the detent unlocks; lift = that travel */
@@ -183,23 +188,34 @@ function makeEsc(o={},base){
   const tH=tR+c.PSL-(rd+0.038-rT);   /* horn's inner face: 0.25 mm outside the discharge jewel's reach */
   const brO=nR+0.015+0.36/ES;   /* the angle bracket's upright leg, 0.36 mm thick (estimated), to take the trip spring's screw: its outer face */
   const thick=(pts,w)=>{const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);L2.push({x:p.x-dy/l*w,y:p.y+dx/l*w});R2.push({x:p.x+dy/l*w,y:p.y-dx/l*w});});return L2.concat(R2.reverse());};
-  const SPL=c.SPL,SPN=[c.SN0,c.SN1],dS=SPL-0.58;   /* the detent spring: its length to the cross-piece and its thickness across (unit frame), which set its stiffness below */
+  const SPL=c.SPL,SPN=[c.SN0,c.SN1];   /* the detent spring: its length to the cross-piece and its thickness across (unit frame), which set its stiffness below */
+  /* measured on KLUwI2UUCMQ 11:10-11:33 (the detent out, held up: a bundle adjustment of four frames on the block's positioning pins, 10.12 mm apart; Fig. 90 scaled by the
+     same pins agrees along the detent to 0.1-0.3 mm), in mm along the detent: the spring's start (the point of flexure) to the cross-piece 3.3 (BM 117A's strips 3.5,
+     Fig. 90 3.38), the cross-piece 0.42 wide; the jewel block 0.56 before the locking face to 0.34 past it (0.9 long: 11:26.435, 11:32.5); the arm bent 1.15 past the locking
+     face (12.0-12.2 on the pins' frame); the trip spring's bracket a Z of one strip (11:26 from above): its leg on the detent 2.64 to 1.44 before the trip spring's free
+     start (tR), lying on the blade's outer face 0.3 thick, its leg across 1.44 to 1.14 before it (0.3: 11:26.435), its leg along to 0.23 past it (the spring's foot screwed
+     to it, the spring leaving it at tR), 0.36 thick to take the trip spring's screw; the bracket placed from the trip spring it carries, whose tip the escapement places.
+     Until 20 October 2026 these were Fig. 90 scaled by an 11.3 mm flexure-to-jewel, 12-17 % large: the spring 3.82, the cross-piece 0.66 wide, the bracket's leg on the
+     cross-piece's t, the trip spring 7.9 long. brk: the bracket screw's place along the detent and the on-detent leg's outer face (movement.js) */
+  const tX=SPL+0.42/ES,bkN=-0.03+0.3/ES,brk={t:tR-2.04/ES,n:bkN};
   const pieces={
-    spring:rect(0,SPL,SPN[0],SPN[1]),cross:rect(SPL,0.68+dS,-0.075,0.083),blade:rect(0.66+dS,BL-0.07,-0.06,-0.03),block:rect(BL-0.08,BL+0.08,-0.08,0.08),
-    arm:thick([D(BL+0.06,0),D(BL+0.2,0),D(tH-0.025,nR+rho-0.03),D(tH-0.025,nR+rho),D(tH-0.025,nR+rho+0.05)],0.025),horn:rect(tH-0.05,tH,nR+rho,nR+rho+0.05),   /* the arm ends square over the horn, their outlines one */
-    bracket:[D(SPL,0.083),D(0.68+dS,0.083),D(0.68+dS,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,brO),D(SPL,brO)],   /* its leg continues the cross-piece (same t); its upright leg 0.36 mm thick, to take the trip spring's screw (brO: its outer face) */
+    spring:rect(0,SPL,SPN[0],SPN[1]),cross:rect(SPL,tX,-0.075,0.083),blade:rect(tX-0.02,BL-0.56/ES+0.01,-0.06,-0.03),block:rect(BL-0.56/ES,BL+0.34/ES,-0.08,0.08),
+    arm:thick([D(BL+0.3/ES,0),D(BL+1.15/ES,0),D(tH-0.025,nR+rho-0.03),D(tH-0.025,nR+rho),D(tH-0.025,nR+rho+0.05)],0.025),horn:rect(tH-0.05,tH,nR+rho,nR+rho+0.05),   /* the arm ends square over the horn, their outlines one */
+    bracket:[D(tR-2.64/ES,-0.03),D(tR-1.14/ES,-0.03),D(tR-1.14/ES,nR+0.015),D(tR+0.23/ES,nR+0.015),D(tR+0.23/ES,brO),D(tR-1.44/ES,brO),D(tR-1.44/ES,bkN),D(tR-2.64/ES,bkN)],   /* the Z: on the blade, across, along the trip spring (brO: its outer face) */
     stone
   };
   /* the detent-adjusting screw (Fig. 90; Ops. 84, 93): threaded into the block's end, its head (r 0.9 mm, 0.45 thick, 0.3 mm off the block) standing 0.3 mm deep in a slot
      across the foot, which runs on 0.6 mm past it, so turning it slides the detent along; adj: the head's inner and outer faces (t) and its centre (n) */
-  /* BE and blockMain's far end: the block's top face from t -10.5 to +3.85 mm, 3.1 wide (KLUwI2UUCMQ 11:26.435 and 11:33.443, the block held up, scaled by its two
-     positioning pins' 11.45 mm: ends 1.3 past each pin; Fig. 90 at the same scale gives -10.8 to +3.5 and 3.07); -15 to +5.92 and 2.74, read from Fig. 90 by another scale,
-     until 5 October 2026. The detent's foot and its adjusting screw end with the block's end, as before */
-  const BE=-10.5/ES,BM=3.85/ES,aS=BE-0.3/ES,aH=aS-0.45/ES,aN=-0.083+(0.3-0.9)/ES,adj={tS:aS,tH:aH,n:aN,r:0.9,BE},sDp=-0.083+0.35/ES,fE=aH-0.63/ES;
+  /* BE and blockMain's far end: the block's top face from t -9.46 to +2.99 mm from the point of flexure, 2.75 wide (KLUwI2UUCMQ 11:10-11:33 by the bundle adjustment on
+     its positioning pins, 10.12 apart: -8.35 to +4.10 from the point of flexure drawn until 20 October 2026, which stood 1.11 mm nearer the foot; across 2.75 +-0.17); the
+     block placed by its pins in the train bridge (movement.js's DBLK), so the detent's own length moved its numbers here, not the block. -10.5 to +3.85 and 3.1 wide
+     (the same frames scaled by the pins at 11.45) until 20 October 2026; -15 to +5.92 and 2.74, read from Fig. 90 by another scale, until 5 October 2026. The detent's
+     foot and its adjusting screw end with the block's end, as before */
+  const BE=-9.4607/ES,BM=2.9893/ES,aS=BE-0.3/ES,aH=aS-0.45/ES,aN=-0.083+(0.3-0.9)/ES,adj={tS:aS,tH:aH,n:aN,r:0.9,BE},sDp=-0.083+0.35/ES,fE=aH-0.63/ES;
   /* blockFront: split along its length by a slot open at the stop button's end (Fig. 90), so the button stands on a strip sprung from the block's root: the lock-adjusting
      screw, threaded in the outer part, bears on the strip and moves the button ("working through the locking jewel button", Sec. IV); the clamp screw, through the outer
      part into the strip, holds it. The slot and strip in Fig. 90's proportions of the front (0.24 and 0.36 mm) */
-  const fixed={foot:[D(fE,-0.083),D(aH-0.03/ES,-0.083),D(aH-0.03/ES,sDp),D(aS,sDp),D(aS,-0.083),D(0,-0.083),D(0,0.083),D(fE,0.083)],blockMain:rect(BE,BM,-0.083-3.1/ES,-0.083),blockFront:[D(BM,-0.3),D(BL-0.1,-0.3),D(BL-0.1,-0.173),D(BM+0.03,-0.173),D(BM+0.03,-0.137),D(BL-0.1,-0.137),D(BL-0.1,-0.083),D(BM,-0.083)],button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
+  const fixed={foot:[D(fE,-0.083),D(aH-0.03/ES,-0.083),D(aH-0.03/ES,sDp),D(aS,sDp),D(aS,-0.083),D(0,-0.083),D(0,0.083),D(fE,0.083)],blockMain:rect(BE,BM,-0.083-2.75/ES,-0.083),blockFront:[D(BM,-0.3),D(BL-0.1,-0.3),D(BL-0.1,-0.173),D(BM+0.03,-0.173),D(BM+0.03,-0.137),D(BL-0.1,-0.137),D(BL-0.1,-0.083),D(BM,-0.083)],button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
   /* the running amplitude A and the escapement's rate (the adjuster's bench changes both), from the work done each oscillation in units of the hairspring's stiffness k (rad²).
      The impulse: released from rest, the wheel and the train behind it (JW) gather speed under the torque w k (w: the torque over k) and chase the impulse jewel, already running
      away from it; the tooth strikes it (plastically: the balance, so much heavier, takes the wheel's surplus momentum, J v_j (v_w - v_j) of energy at the landing, v_w the
@@ -388,6 +404,6 @@ function makeEsc(o={},base){
      the unlocking's on it (the locking stone's draw, the detent's springs and blows: DEP's, or the whole table's); ret, the gold or trip spring's on the return swing
      (θ falling). Null where the tooth never lands. For a page drawing the balance's angle through the beat with them (the Wempe's, js/escapement.js) */
   const pushes=(a,s=1)=>{const im=CL&&ok?impulse(s,a,CL.w):null;return im?{gain:im.I,loss:R.map(([m,d])=>[m,s*CL.w*d]).concat(c.DEP?detG(a):Dp.concat(Dk)),ret:Tp}:null;};
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,pushes,ride,T,measure,checks,kB,MP,MW,th78,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,pushes,ride,T,measure,checks,kB,MP,MW,th78,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA,brk};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

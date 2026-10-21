@@ -24,7 +24,7 @@
     const d0=Math.max(...P.map(p=>Math.hypot(p[0],p[1]))),F=P.filter(p=>Math.hypot(p[0],p[1])>d0-0.05),m=F.reduce((s,p)=>[s[0]+p[0],s[1]+p[1]],[0,0]);return Math.atan2(m[0],-m[1]);};
   const H=WD.H,cw=a=>wrap(a)/D;   /* the hole table: [x, z] in the movement's frame */
   /* ---- the meshes ---- */
-  const G=[];mv.traverse(o=>{if(o.isMesh&&o.userData.gear&&vis(o)){const M=loc(o),bb=new T.Box3().setFromObject(o).applyMatrix4(new T.Matrix4().copy(mv.matrixWorld).invert());G.push({o,z:o.userData.gear.z,m:o.userData.gear.m,c:[M.elements[12],M.elements[14]],y:[bb.min.y,bb.max.y],hn:o.userData.hn||'?'});}});
+  const G=[];mv.traverse(o=>{if(o.isMesh&&o.userData.gear&&vis(o)){const M=loc(o),gb=o.userData.gear.box,bb=(gb?new T.Box3(new T.Vector3(gb[0],gb[1],gb[2]),new T.Vector3(gb[3],gb[4],gb[5])).applyMatrix4(o.matrixWorld):new T.Box3().setFromObject(o)).applyMatrix4(new T.Matrix4().copy(mv.matrixWorld).invert());G.push({o,z:o.userData.gear.z,m:o.userData.gear.m,c:[M.elements[12],M.elements[14]],y:[bb.min.y,bb.max.y],hn:o.userData.hn||'?'});}});
   const P=[];for(let i=0;i<G.length;i++)for(let j=i+1;j<G.length;j++){const a=G[i],b=G[j],d=Math.hypot(a.c[0]-b.c[0],a.c[1]-b.c[1]);
     if(Math.abs(a.m-b.m)>0.02*a.m||a.y[1]<b.y[0]||b.y[1]<a.y[0])continue;const want=(a.z>b.z?a.m:b.m)*(a.z+b.z)/2;   /* the wheel's module (the escape pinion's 0.263 is its label) */if(Math.abs(d-want)<0.05)P.push({a,b,d,want});}
   /* turned through the update: the train 6 escape teeth on and the fusee with it (running), and the fusee alone 0.3 turn (winding: the up-and-down pinion and wheel) */

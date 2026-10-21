@@ -414,6 +414,8 @@ would still settle it.*
 
 ## Smaller issues
 
+- **`facePocket` (core.js) leaves open edges on a many-sided pocket** (found 20 October 2026, the barrel bridge's counterbore): 12, 24 and 48 sides about the same centre leave 5-37 open edges (T-junctions where the pocket's planes cut the same face triangles in turn), 16 closes. Matching its plane tolerance to its weld (1e-7 to 2e-6) changes nothing. The counterbore was drawn with 16 sides (0.027 mm off the circle) until blindHoles took an `inner` radius (20 October 2026): a hole stopped at a depth with a narrower one on through its floor, the floor and far face zipped round the cut rim (in its edges' order) and an inner circle, each triangle wound as the loops run, which cuts the sink round. facePocket itself still can't cut a round pocket: open, for a pocket that isn't a hole's counterbore.
+
 - **The balance's moment of inertia (open, 3 October 2026).** The restoration
   video measures the rim 0.6 mm thick (0.5–0.85 on three frames, edge-on,
   scaled by the rim's 29 mm and the impulse roller's 0.249 in, which agree to
@@ -2672,3 +2674,45 @@ The oblique photograph (`photo-oblique-balance-side.jpg`), for appearance only, 
 - *The pillars*: a collar at the foot and under the plate, as the model's profile measured side-on on KLUwI2UUCMQ 42:56; the foot collar looks a little wider here (about 1.2 of the shaft against 1.07), within the photograph's perspective and reflections. The video stands.
 
 Not done: the restoration video's frames (face-on frames are where the model's places already came from, through `video.py anchor`, `holemap.py` and `rimfit.py`). The pilot's answer: a pass over the Hamilton's photographs adds little; the packing's colour was its one finding.
+
+## False seams: the sweep (21 October 2026)
+
+The Edges pass outlines each mesh, so two meshes of one solid whose faces run flush draw a line where the real part has none (the owner's screenshots of the set-up cover and the Wempe's maintaining detent). `tools/seams.py` (`seams.js`; `box`, `--model wempe`, `--rev`) lists every pair of meshes of one part whose flat faces lie in one plane, facing the same way, and meet or overlap (0.05 mm cells), with their parts-list lines and materials; it was run on both models in every state (movement and case). Each pair of pieces of one line and one material was judged against the real part; the merged ones are one mesh now (`fuse`, core.js), the others keep their line. After the merges seams.py lists only the pairs below marked kept.
+
+| Part (line) | Pieces | Decision | Why |
+|---|---|---|---|
+| Hamilton balance cap (42248) | two layers, collar | merged | one cap (Fig. 108) |
+| Hamilton staff and hub (42186), rim and arm (42178) | staff, hub flange, boss, sleeve; rim, arm | kept | pieces pressed on the staff; the rim stainless, the arm Invar |
+| Train bridge (42062) | the plate, its seats' floors, counterbores' floors, the pawl's pivot hole | merged | one plate; the floors only fill its own cuts (both states, `R.tbGeo`) |
+| Escape bridge (42064) | two halves of two layers, the boss | merged | one bar; its steady pins kept (pressed) |
+| Endstone caps (42159 .eu .bl .el) | layers, the window's cone | merged | one cap each; the jewels, settings and screws kept |
+| Pillar plate (42060) | the plate, the recess's floor | merged | one plate; bushings and settings kept (pressed in) |
+| Mounting ring (42057) | band, flange, the relief's layer | merged | one ring; the alignment pin kept |
+| Lower train bridge (42063) | three layers | merged | one bar; its steady pins kept |
+| Escape wheel (42076) | teeth, web; the collet's two steps | merged (each) | one wheel, one collet; wheel and collet kept apart (gilt wheel staked on a brass collet) |
+| Fusee (42021, 42022, 42013) | the body's lathe, rim, ratchet boss, top layers, hub, recess floor; the arbor's shaft, collars, shoulder, pivots; the winding ratchet's two layers | merged (each) | one turned body, one arbor, one ratchet. The shaft ran through the top collar (8.2 mm³ counted twice): drawn round it now |
+| Great wheel (42015) | toothed ring, floor, raised disc, hub, pipe | merged | one wheel (`gear.box` keeps the teeth's faces for bom-check) |
+| Hour and indicator wheels (42080, 42081) | hub and pipe rings | merged | one hub each; the wheels (other material) and the indicator's steel pipe kept |
+| Cannon pinion (42077) | leaves, boss, pipe, square | merged | one piece (`gear.box`) |
+| Fusee seal (42051), the Navy brake's seal (42106) | body, column, top, flange | merged | one seal each; the seal ring, spring and the three packing rings (42054) kept |
+| Detent block (42086) | main, front | merged | one block; the button and pins kept |
+| Detent (42087) | the spring's strips, cross-piece, blade, jewel block, arm, horn | merged (turning pieces) | one detent, rebuilt together with the escapement (escSet); the fixed foot kept apart, the spring bending between; the bracket (42092), stone and screws kept |
+| Winding stop (42099) | stud, its grooved end, thread | merged | one stud (audit's loose-end entry for it dropped) |
+| Barrel (42168) | wall, its tapped end | merged | one wall; the barrel's own end (gilt) and the wall (brass) kept as drawn, another material |
+| Hands (42032-42035) | blades, collets | kept | the collets pressed or riveted on (the seconds hand's, sources in movement.js) |
+| Set-up click spring (42028), sustaining stud (42189), sustaining ratchet (42009, 42007) | spring and pins; stud bar and pins; ratchet, pawls, springs | kept | pins riveted or pressed; other parts-list lines and materials |
+| Hamilton box: corner caps, the key's block, gimbal ring, case brackets (42105), keeper (42113), latch bracket (42109), bezel (42102), bowl (42101), hinges | legs; layers; band and slot pieces; strap pieces; block pieces and plate; plate and leg; lathe and knurl; wall, bottom, ring, rim; leaf and knuckles | merged | one piece each; the ring's slot-end faces, its pivot screws and bushings, the keeper's washer kept |
+| Hamilton box boards (42201), lids, glass frame, lid stay | boards; stay and its pin | kept | joined boards; the pin rides in the stay's slot |
+| Wempe balance (050301) | each mass's cap and jaws | merged | one mass; the bimetallic rim's steel and brass kept |
+| Wempe detent (050401-1) | foot, spring's halves, square, blade, pipe, horn | merged (fixed; turning) | one steel piece; the fixed and turning halves kept apart, the spring bending between; the gold spring's free part (050401-2) kept, bent by the model in its own group |
+| Wempe stud (050302-3), cannon tube (050503-3), hands (050200-1/2/3, 050201-1) | bar and upright; leaves, tube, square, crown; boss, flange, ring, blade, tail | merged | one piece each; the seconds collet (050201-2) kept |
+| Wempe maintaining ratchet (050602-1), fusee wheel (050600-3), fusee body (050604-2), fusee bush (050801-2), upper cock (050803-1) | teeth, plate, cup; hub, web, rim, teeth; lathe and slot pieces; three solids; arm and boss | merged | one piece each (`gear.box`; mechanisms-wempe.js reads the ratchet at its toothed level) |
+| Wempe movement ring (050800-3) | band, flange | merged in each version | one ring; the drawings' flange copied into the plain and Wempe 3955's bands; the pin kept |
+| 6MX contact (6MX.ctd, .ctc, .cth, .ctl) | disc and centre; cock's foot, leg, arm; spiral and its bent end; lever's two arms and holder | merged | one piece each; the bracket, the cap, the collets and the lever's steel boss kept |
+| Wempe barrel as first drawn (050701-1, -2) | ring, lid, bottom | kept | three pieces sprung together (0207) |
+| Chain (050704), Wempe case lock (050101.F) | links; arbor in its seat | kept | separate pieces |
+| Wempe bowl (050100-1), bezels (050101-2), hinges, corner angles, keeper, handles (510010) | bottom, seat, body, rim; body and knurl; leaf and knuckles; legs and caps; strap and legs; strip and grip | merged (each version) | one piece each; the boards of the boxes kept |
+
+Overlaps among the merged pieces (each pair's common volume on a grid by parity, a scratch tool): the Hamilton's fusee arbor (fixed above, 8.2 mm³); on the Wempe, as drawn before and so already weighed twice by massprops and wempe-inertia (the merge leaves the weights as they were): the hinges' leaves inside their knuckles (19.5 mm³ a leaf on the 6MX's lid, 43.1 on the outer boxes, 70.7 on the 6MX's base), the hands' blades' roots in their bosses (up to 0.37), the detent's blade and horn in its pipe's wall (up to 0.05), the 6MX lever's arms at its hub (1.34), and the bezel's knurl (373 by the test, though the drawn bands abut: likely the test's parity on the sloped ring's narrow sectors; not settled). Open: clip those pieces so nothing is counted twice, then rewrite the weights.
+
+What the merges asked of the checks (all passing after them, `ci.py --full --only` the geometry steps of both models, 64 of 64): the pieces are merged after anything that turns or rebuilds one of them alone (the gears' phase `ph`, the barrel wall's rebuild with the hook's hole, the fusee lathe's groove end and chain slot); bom-check.js joins a mesh's runs of metal where two merged pieces meet along a ray; fine.py's and the Wempe's `EXPECTED` keys follow the merged geometry types; fine-interference.js and contacts.js take the barrel wall's own height (`wallY`) for the solid it encloses; maintaining.py reads the winding stop's radius and length from `userData.wstop`; holecheck.py's three expected-empty holes (the lower endstone cap's window, the third's counterbore in the lower train bridge, the Navy seal's chamber) now read through to what is set in them; mechanisms.py's table rewritten (the fusee 0.064 g lighter, the arbor's doubled core gone; the rest in the fourth decimal); `contacts.py --write` for both models; audit-expected.json for the renamed pairs, the winding stop's loose end dropped and the winding ratchet's two screws listed as seated on a 0.15 floor. The build-verification report's mechanisms figures were not rebuilt (the fusee's mass, 0.2 %).

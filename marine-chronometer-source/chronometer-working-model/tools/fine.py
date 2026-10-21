@@ -25,7 +25,8 @@ STATES=model.cfg('STATES',[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,
 # (part:geometry, part:geometry) sorted: (reason, largest volume mm3, largest depth along y mm) seen when recorded
 EXPECTED=model.cfg('EXPECTED',{
  ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot, and the shanks of the clamp, detent-adjusting and lock-adjusting screws in the foot and support block (horizontal screws in vertically extruded pieces, which can't be holed across)",1.15,0.95),
- ('det:Buffer','det:Extrude'):("the trip spring's screw through the hole in the spring's foot into the angle bracket's upright leg (Figs. 14, 54), and the bracket's screw along its leg into the cross-piece (horizontal screws in vertically extruded pieces, which can't be holed across)",0.02,0.2),
+ ('det:Buffer','det:Cylinder'):("the screws and pins across the detent's foot and its support block (horizontal screws in vertically extruded pieces, which can't be holed across), where they pass the detent's turning pieces or the block, each one mesh since 21 October 2026 (fuse; counted under ('det:Cylinder','det:Extrude') before)",1.15,0.95),
+ ('det:Buffer','det:Extrude'):("the trip spring's screw through the hole in the spring's foot into the angle bracket's upright leg (Figs. 14, 54), and the bracket's screw across its leg on the detent into the blade (since 20 October 2026; along its leg into the cross-piece before) (horizontal screws in vertically extruded pieces, which can't be holed across)",0.02,0.2),
  ('chain:Buffer','chain:Cylinder'):("that pin through the rivet hole of the chain's first link (an outer link: two plates and their rivets)",0.03,0.4),
  ('chain:Box','chain:Extrude'):("the barrel-end hook plate riveted to the chain's last link (an inner link's plate)",0.09,0.2),
  ('chain:Box','chain:Buffer'):("the barrel-end hook plate riveted to the chain's last link (an outer link)",0.03,0.2),
@@ -37,9 +38,9 @@ EXPECTED=model.cfg('EXPECTED',{
  ('barrel:Buffer(drum)','ratchet:Lathe'):("the barrel arbor's two bearings (r 2.35) and its pivots, on the barrel's axis through the barrel's end holes (Fig. 75; since 15 October 2026, a plain r 1.4 rod before)",300,16.5),
  ('barrel:Buffer(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75); the wall is tested as the drum it encloses, so the nose counts as inside it; since 5 October 2026 to the middle of the measured 1.95 wall",0.25,0.6),
  ('barrel:Buffer(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
- ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
+ ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel (3.0 x 3.1 since 20 October 2026, KLUwI2UUCMQ 15:47.45)",5.5,3.2),
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
- ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor's shoulder under the end plate, its hole not drawn (their own group, which the Exploded view takes off the arbor's end; the shoulder r 2.2 since 15 October 2026, r 1 and 0.25 mm3 before)",0.6,0.45),
+ ('fusee:Buffer','fusee:Cylinder'):("the taper pin through the fusee arbor's shoulder under the end plate, its hole not drawn (their own group, which the Exploded view takes off the arbor's end; the shoulder r 2.2 since 15 October 2026, r 1 and 0.25 mm3 before)",0.6,0.45),
 })
 CORE=4.84   # mm: the barrel arbor's core (MSPRING.ra - 0.06, movement.js; 1.74 until 12 October 2026)
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid

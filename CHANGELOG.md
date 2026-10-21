@@ -4,6 +4,38 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.25.02 · 2026-10-21
+- Parts that are one piece of metal now look like one piece in both models and their cases: no more lines across their faces or along their sides.
+
+## 3.25.01 · 2026-10-21
+- The Hamilton's set-up cover plate measured on a restoration video: plain rounded ends with the screws inside them, where round bosses were drawn.
+
+## 3.25.00 · 2026-10-21
+- The Wempe Einheits-Chronometer is now the home page; the Hamilton Model 21 moves to /hamilton/, and every old address still leads to the same place.
+- The essay has a page of its own, /essay/, shared by both models; its figures are now drawn from the Wempe's model, with Edges.
+- The Wempe's own essay on its drawings is its Its drawings tab.
+- The hairspring figure loses its grey mesh, and its labels no longer overlap.
+
+## 3.24.02 · 2026-10-21
+- The Wempe's maintaining detent drawn as one piece, without a line across its face.
+
+## 3.24.01 · 2026-10-21
+- The Wempe page laid out as the Hamilton's: the same views, sections and short status line.
+- The Hamilton's set-up cover plate drawn as one piece, and the set-up click without a flicker on its eye.
+- The Hamilton's page no longer scrolls sideways on a phone.
+
+## 3.24.00 · 2026-10-21
+- The Hamilton's fusee chain at its measured size: plates 1.95 mm across on a 2.19 mm pitch, each a figure of eight with a broad waist.
+- The Hamilton's fusee grooves 1.13 mm deep, ending at the chain's hook.
+- The Hamilton's barrel: its bearings, end holes, boss, cap ring and the mainspring's hook and outer stud measured on the videos.
+- The Hamilton's energy figures worked again for the measured chain.
+
+## 3.23.00 · 2026-10-20
+- The Hamilton's winding pawls' springs drawn as the flat crescents the videos show, and the winding ratchet's 40 teeth.
+- The Hamilton's escape arbor, motion work posts and wheels, set-up ratchet, click and spring re-measured on the videos.
+- The Hamilton's stop-bar: its step, side hole and recess measured.
+- The Hamilton's detent, the train's levels, the escape bridge and the set-up click re-measured on the videos.
+
 ## 3.22.03 · 2026-10-19
 - The Wempe's 1950s build: a stronger mainspring strip (Nivaflex 0.393 mm, set more), so its inner coils stay within the alloy's strength; its uneven pull through the wind now reaches the escapement.
 - The Wempe's builds: wind with the key let back at each stroke, never let go outright.
