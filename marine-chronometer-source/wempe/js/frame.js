@@ -257,7 +257,7 @@ const WFRAME=(()=>{
       /* its radial pin to the case (Stellstift 3, WN-202 in the coloured section; P1f): in the radial hole at 12 o'clock, Ø 1.6 at 2.8 from the dial's face (05 08 00-3: the plan,
          drawn from the dial side under the section (first angle), draws it at 12 as a dashed pair across the ring figured "1,6"; the section draws it end on, ⊙ 2.8 under the
          top face on its centre line; sure for the place, likely for the size). Wempe 3955 shows its end on the ring's 45° cone at 12 (3_Wempe_3955_uZ.jpg, about r 44-46; the
-         hole meets the cone at r 44.4). It stands 2.0 out of the flange (the coloured section, 9.4 px/mm: 2.0) into the notch in the bezel's recess (case.js), which sets the
+         hole meets the cone at r 44.4). It stands 2.0 out of the flange (the coloured section, 9.4 px/mm: 2.0) inside the bezel's lower bore (case.js: 05 01 01 draws no notch; one was cut until 21 October 2026); it sets the
          movement's turn in the case; its inner end at r 45.3, inside the cone's face (45.2 at the pin's top edge), 9.7 long, its hole across the turned flange not cut
          (estimated). Until 15 October 2026 drawn Ø 1.1 at 6 o'clock (the sheet's hole Ø 1.1 and its "1,6" read the other way round, and the plan's top taken for 6) */
       for(const g of FLG){const p=tag(cylBetween(g,0.8,45.3,55.0,M.steel,0,0,16),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+55.0)/2);}}

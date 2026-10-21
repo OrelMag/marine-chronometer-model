@@ -88,7 +88,7 @@ const phys={msL:th(FN.L)+' mm',msT:fx(MSJ.strip.t,2)+' mm',msRms:pc(FN.rms,2),ms
   sSpring:rgS(SEC.Sspring),sPlain:rgS(SEC.Splain),sInt:rgS(SEC.Sintegral),
   /* the gimbals */
   gBowl:th(Math.round(GJ.bowl.m))+' g',gBrass:th(Math.round(bp.bowl))+' g',gV:fx(Vb,1)+' cm³',gRho:fx(350/Vb,2)+' g/cm³',gAlu:th(Math.round(Vb*2.7))+' g',gBak:th(Math.round(Vb*1.37))+' g',gBuna:th(Math.round(Vb*1.18))+' g',
-  gRing:th(Math.round(GJ.ring.m))+' g',gTot:fx((GJ.bowl.m+GJ.ring.m)/1000,2)+' kg',gBakM:th(Math.round(bak.m))+' g',gBakCg:fx(bak.cg[1],2)+' mm',
+  gRing:th(Math.round(GJ.ring.m))+' g',gTot:fx((GJ.bowl.m+GJ.ring.m)/1000,2)+' kg',gBakM:th(Math.round(bak.m))+' g',gBakCg:fx(-bak.cg[1],2)+' mm',
   gDy:fx(-GW.drawn.bowl[1],2)+' mm',gDx:fx(Math.abs(GW.drawn.bowl[0]),2)+' mm',gLean:fx(Math.atan2(Math.abs(GW.drawn.bowl[0]),-GW.drawn.bowl[1])/D,1)+'°',
   gTz:fx(GW.Tz,2)+' s',gTx:fx(GW.Tx,2)+' s',hTz:fx(GH.Tz,2)+' s',hTx:fx(GH.Tx,2)+' s',gH:fx(GW.h,1)+' mm',hH:fx(GH.h,1)+' mm',
   /* the Soviet 6MX against the drawings (wempe_6mx.js) */
