@@ -7218,7 +7218,7 @@ const ESSAY=(()=>{
     /* the labels: the upper terminal curve half way along it (from where it leaves the coil to the stud), the collet and the stud at their far ends */
     const cb=boxOf([RE.hsRot]),sb=boxOf([PT.stud]),rr=p=>Math.hypot(p[0],p[2]);   /* the path about the balance's axis (the hairspring's group stands on it) */
     const Q=P0[0][1]<P0[P0.length-1][1]?P0:[...P0].reverse();let iC=0;while(iC<Q.length-1&&rr(Q[iC])<HL.RC-0.4)iC++;const pc=Q[Math.round(iC/2)];   /* the stud's end of the strip, in along its curve to where it joins the coil */
-    const Lt=V.label('Terminal curve','',at(o,pc[0]+cx,pc[1],pc[2]+cz));V.label('Collet','turns with the balance',at(o,(cb.min.x+cb.max.x)/2,cb.max.y,cb.max.z)).below=true;   /* its name under the spring, on a line to it, clear of the coils */V.label('Stud','fixed',at(o,(sb.min.x+sb.max.x)/2,sb.min.y,(sb.min.z+sb.max.z)/2));   /* at its top, its screw's head, clear of the curve's name */
+    const Lt=V.label('Terminal curve','',at(o,pc[0]+cx,pc[1],pc[2]+cz));V.label('Collet','turns with the balance',at(o,(cb.min.x+cb.max.x)/2,cb.max.y,cb.max.z)).below=true;   /* its name under the spring, on a line to it, clear of the coils */V.label('Stud','fixed, on the cock',at(o,(sb.min.x+sb.max.x)/2,(sb.min.y+sb.max.y)/2,(sb.min.z+sb.max.z)/2));   /* on the stud itself, the bar 14.6 long tapering to its point (05 03 02-3: the whole part, its upright down to the spring), the cock left out so the spring shows */
     let th=0,term=true;const lim=Math.round(WPHYS.ESC.A/D),inp=q('input[type=range]',P);inp.min=-lim;inp.max=lim;
     range(inp,v=>{th=v*D;f.dirty=true;return v+'°';});seg(q('.seg',P),v=>{term=v==='1';f.dirty=true;});
     return()=>{if(!f.dirty)return;f.dirty=false;plain.visible=!term;if(!term){plain.geometry.dispose();plain.geometry=plainSpring(HL.RC,y1-y0,HL.turns,-th,HL.HT/2);}Lt.show=term;
@@ -7249,7 +7249,7 @@ const ESSAY=(()=>{
       if(cf.dirty){cf.dirty=false;const t55=F2C(55),t90=F2C(90);
         chart(C,{x0:-5,x1:45,y0:-8,y1:8,xt:[0,10,20,30,40],yt:[-8,-4,0,4,8],xf:x=>x+' °C',yf:y=>(y>0?'+':'')+y,xl:'Temperature',yl:'Rate, s a day',cursor:T,
           bands:kind==='m21'?[{x0:t55,x1:t90,y0:-0.6,y1:0.6,color:PAL.blue,label:'the Navy’s limit, 55–90 °F'}]:[],
-          series:[{f:plain,color:PAL.red,label:'plain: about −11 s a day per °C',lx:15.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:kind==='m21'?-28:-14,la:'center',width:kind==='split'?2.6:1.4}].concat(kind==='m21'?[{f:m21,color:PAL.blue,label:'Model 21, its test card',lx:34,dy:14,la:'center',width:2.6}]:[]),
+          series:[{f:plain,color:PAL.red,label:'plain: −11 s a day per °C',lx:19.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:kind==='m21'?-28:-14,la:'center',width:kind==='split'?2.6:1.4}].concat(kind==='m21'?[{f:m21,color:PAL.blue,label:'Model 21, its test card',lx:34,dy:14,la:'center',width:2.6}]:[]),
           marks:[{x:T,y:kind==='split'?comp(T):kind==='plain'?plain(T):m21(T),color:kind==='split'?PAL.brass:kind==='plain'?PAL.red:PAL.blue}]});
         const{x:ctx}=C;ctx.font='11px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='center';const pw=C.w-62;
         for(const[tf,lab]of[[55,'55 °F'],[72.5,'72½'],[90,'90 °F']]){const x=46+(F2C(tf)+5)/50*pw;ctx.fillRect(x-0.5,C.h-40,1,5);ctx.fillText(lab,x,C.h-46);}}};},'model');
