@@ -151,9 +151,9 @@ const R0=14.5,h=1.6,dA=19e-6-11.5e-6,d=R0*R0*1.5*dA/h,share=0.8,dIrel=2*d/R0*sha
 say(`a split bimetallic rim (brass 19 on steel 11.5, 1.6 thick, r 14.5, the model's variant): the free ends come in ${f(d*1000,2)} µm a °C, gaining ${f(comp,1)} s a day a °C`);
 const need=-rate(eSt,aSt,aSt);
 chk(comp>0.3*need&&comp<1.7*need,`against the ${f(need,1)} s a day a °C a steel spring loses: ${f(100*comp/need,0)} % with the screws at 90° on average; moving them toward the free ends (or the rim's thickness) brings it to 100 % (Table IV's job)`);
-/* the essay quotes these (spans data-phys="…" in index.html, "What the model gives a maker" and "Materials, hardening and tools"): each must be what is found here */
+/* the essay quotes these (spans data-phys="…" in the essay's page, ../../essay/index.html, "What the model gives a maker" and "Materials, hardening and tools"): each must be what is found here */
 {const want={swingM:f(Math.sqrt(Qm/Qneed(0.9))*255,0),stage:`${f(etaEq(Plo),2)}-${f(etaEq(Phi),2)}`,Qparts:`${f(qLo,0)}-${f(qHi,0)}`,TFparts:`${f(TF(qLo),0)}-${f(TF(qHi),0)}`,Mup:f(Mup,2),sUp:f(sUp/1e9,2),esc:range(esc,0.85,0.95).map(x=>f(x*1e6,0)).join('-'),chase:f(chaseDeg,0),TFm:f(TFm,0),Q:`${f(q0,0)}-${f(q1,0)}`,steelRate:f(-rate(eSt,aSt,aSt),1),comp:f(comp,1),eNeed:`${f(e0*1e6,0)} to ${f(e1*1e6,0)}`};
- const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-phys="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];
+ const html=fs.readFileSync(path.join(__dirname,'..','..','essay','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-phys="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];
  for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`);}
 /* for dynamics.js, strength.js and errorbudget.js: the fusee's torque, the train's ratio and efficiencies, the balance's damping from its parts */
 module.exports={Tf,Mup,MupL,Mdn,sUp,ratioT,Plo,Phi,qLo,qHi,qAir,qEnd,Mc,sideQ,qMat,Eb,MS,b,E,IN,rB,TFm,Qm,I,k,A,mBal,J,MODS,STG,TRAIN};

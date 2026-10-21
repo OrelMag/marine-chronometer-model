@@ -81,7 +81,7 @@ let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647,O={eye:6,ic:-
     if(up.length<3)continue;const pick=[up[0],up[Math.floor(up.length/2)],up[up.length-1]],ss=pick.map(i=>{const B=ALM.star(i,t),hs=ALM.sextant(B.name,t,la,lo,{...O,limb:'C'});return{gha:B.gha,dec:B.dec,ho:ALM.correct(hs,B,{...O,limb:'C'}).ho};});
     const f=ALM.fix(ss,la+0.7,lo-0.9);w=Math.max(w,Math.hypot(f.lat-la,n180(f.lon-lo)*Math.cos(la*D))*60);n++;}
  chk(`star fixes (${n}, three stars, from 1° out): the place back (worst, nautical miles)`,w,0.3,'nm');}
-/* the essay's stated accuracy (spans data-bound="…" in index.html, in ″, ′ for the hand rule, s for a lunar's GMT) must cover the worst found here */
-{const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-bound="(\w+)"[^>]*>([\d.]+)/g))got[m[1]]=+m[2];
+/* the essay's stated accuracy (spans data-bound="…" in the essay's page, ../../essay/index.html, in ″, ′ for the hand rule, s for a lunar's GMT) must cover the worst found here */
+{const html=fs.readFileSync(path.join(__dirname,'..','..','essay','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-bound="(\w+)"[^>]*>([\d.]+)/g))got[m[1]]=+m[2];
  for(const[k,v]of Object.entries(B))chk(`the essay states ${k} within ${got[k]??'(missing)'}: the worst found is ${v.toFixed(2)}`,got[k]!=null&&v<=got[k]?0:1,0,'');}
 console.log(rows.join('\n'));

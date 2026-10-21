@@ -1012,6 +1012,8 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
     copy:M=>{const C2=WCASE.build(M),m2=buildWempe(M);m2.userData.R.dl.setDial(dial);m2.userData.onRev.push(v=>{C2.root.traverse(o=>{if(o.userData.rev)o.visible=m2.userData.revShows(o.userData.rev,v);});C2.rev(v);C2.parts.key.userData.first=v==='first'||v==='3955';C2.keyRest();});
       m2.userData.setRev(rev);m2.userData.R.fu.setConn(conn);C2.inner.add(m2);m2.position.y=-C2.YP;C2.over.visible=false;   /* the outer box only in its view */
       m2.traverse(o=>{if(o.isMesh&&o.userData.hn==='050301-3')o.position.addScaledVector(new THREE.Vector3(0,1,0).applyQuaternion(o.quaternion),-RW.tw/8*TWP);});return{CS:C2,mv:m2};}});
+  /* the Essay tab: the shared essay's own page, its figures drawn with Edges as this page is (?edges=0 when they are off here) */
+  {const a=document.getElementById('tabShared');if(a&&V)a.addEventListener('click',e=>{if(V.st.edges)return;e.preventDefault();const u=new URL(a.href);u.searchParams.set('edges','0');location.href=u.href;});}
   if(ES&&V)ES.bind({time:dialRead,tz:()=>tz,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
   /* Report a bug or inaccuracy (the Hamilton's report.js): where the visitor is, and the model's state, in the report's details */
   if(V&&typeof REPORT!=='undefined')REPORT.bind({r:V.r,name:'Wempe Einheits-Chronometer',inacc:'Where the model or the essay differs from Wempe’s works drawings or a real Einheits-Chronometer, and what shows it. The drawings, then photographs and videos of real ones, decide what the model looks like and does, so a sheet’s number settles it fastest.',

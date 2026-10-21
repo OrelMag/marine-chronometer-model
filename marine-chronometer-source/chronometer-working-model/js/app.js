@@ -476,7 +476,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const help=$('#help'),helpBtn=$('#helpBtn');
   function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
-  document.addEventListener('keydown',e=>{if(ESSAY.on())return;   /* the essay shows: its keys scroll it, and the tabs take their own (essay.js) */
+  document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){closeOpm();showHelp(false);}
     if((e.key==='p'||e.key==='P')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open&&panelSide())pnb.click();
     if(e.key==='Backspace'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();if(e.shiftKey)histGo(HF,HB);else histGo(HB,HF);}   /* back and forward through the places the view has been */
@@ -600,7 +600,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   DET.forEach(d=>d.addEventListener('toggle',detSave));
   /* cm-state: the hash's settings (view, moving parts only, speed, section, drawing, colours, Edges, Shadows, Performance mode, time zone, bench, balance's weights, mainspring's set),
      without what belongs to a moment: a walkthrough step, the part shown, the hands' time, a section opened, the balance held. Written with the hash; at load it stands in for a missing hash */
-  const remSave=()=>{if(!REM||ESSAY.on()||st.tour>=0)return;const h=new URLSearchParams(hashOf());for(const k of['tour','part','t','open','arm','block'])h.delete(k);lsSet('cm-state',h.toString());};
+  const remSave=()=>{if(!REM||st.tour>=0)return;const h=new URLSearchParams(hashOf());for(const k of['tour','part','t','open','arm','block'])h.delete(k);lsSet('cm-state',h.toString());};
   $('#remember').checked=REM;$('#remember').addEventListener('change',e=>{REM=e.target.checked;
     if(REM){try{localStorage.setItem('cm-remember','1');}catch(_){}lsSet('cm-set',JSON.stringify(SET));lsSet('cm-theme',document.documentElement.dataset.theme||'auto');detSave();remSave();}
     else try{['cm-remember',...RK].forEach(k=>localStorage.removeItem(k));}catch(_){}});
@@ -1121,7 +1121,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 (Edges off; it is on by default), shadows=1 (Shadows on; off by default), merge=0 (Performance mode off; on by default), sec=x:-3.5 (a section; :f shows the other half),
      tz=local, t=12:00:00 (only once the hands have been set). #essay or #essay=detent: the essay (essay.js), at a section; open=bookDet (in a link only): open that panel section.
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState, so the back button isn't filled with views */
-  function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return ESSAY.page?s:s?'essay='+s:'essay';}const h=new URLSearchParams();
+  function hashOf(){const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else if(OVH.on())h.set('ovh',OVH.hash());
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
@@ -1130,7 +1130,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&!g('tour')&&own(VIEWS,SET.view)?SET.view:'dial';   /* own keys only: 'constructor' is no view or part. At load, no view in the hash: the last one seen here */
-    if(ESSAY.page||h.has('essay')){ESSAY.show(true,ESSAY.page?ESSAY.secOf(hashSeen):g('essay'));return v;}ESSAY.show(false);   /* the essay's page (essay.js): its hash is the section */   /* the essay: the model underneath is left as it is */
+    if(h.has('essay')){const s=g('essay');location.replace($('#tabEssay').getAttribute('href').replace(/#.*/,'')+(s?'#'+s:''));return v;}   /* #essay or #essay=detent, the essay's address here until 21 October 2026: its own page now (../essay/, the Essay tab's link), at that section */   /* the essay: the model underneath is left as it is */
     if(g('tz')==='gmt'||g('tz')==='local'){if(g('tz')!==tz)setTz(g('tz'));}
     if(g('t'))setTod(g('t'));
     { const a=g('arm')==='1'?1:0,b=g('block')==='1'?1:0;if(a!==H.armT){armSet(a);H.arm=a;if(a)H.amp=0;}if(b!==H.blkT){blkSet(b);H.blk=b&&!R.blockClear(lastE??0)?Math.min(b,R.tbs.userData.vFace-0.005):b;} }   /* locked in a link: the balance is at rest */
@@ -1164,7 +1164,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       pose:([ph,dE,n,w],u)=>{const s=ESC.state(ph),E0=Math.floor(lastE??0);u({E:E0+dE+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:msShown(),slip,arm:0,blk:0});},
       label:([ph,dE,n,w])=>dE?`${n} turns from full wind${w?', winding':''}, the train ${dE} teeth on`:`the balance at ${(ESC.state(ph).th/D2R).toFixed(1)}°, phase ${ph}`}});
   for(const k of['finish','dial','bal','stop']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k==='stop'?'stopV':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
-  {const s=location.hash.slice(1)||ESSAY.page?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
+  {const s=location.hash.slice(1)?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
 
   /* ---------- gimbals with inertia (2.5 in IDEAS.md; gimStep and GIM in box.js): the case hangs below each axis as a pendulum, leaning to the apparent vertical as the box rolls and pitches
@@ -1252,10 +1252,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(CT)CT.frame(now);
     const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk,ovS,...(CT?CT.sig():[])];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
-    if(!ESSAY.on()&&onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
+    if(onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
-    if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}if(!ESSAY.on()){swDraw(now);testShow(now);}
+    if(!still){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}swDraw(now);testShow(now);
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${sk<1?'&ensp;<b>Slow motion '+CUSN[cuSlowI]+'</b>':''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
@@ -1265,10 +1265,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!OVH.on()&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
-  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});
+  /* the Essay tab: the essay's own page, its figures drawn with Edges as the model is (?edges=0 when they are off here) */
+  $('#tabEssay').addEventListener('click',e=>{if(st.edges)return;e.preventDefault();const u=new URL(e.currentTarget.href);u.searchParams.set('edges','0');location.href=u.href;});
   /* Report a bug or inaccuracy (js/report.js): what it is about (the essay's section, the part picked or the view) and what the hash doesn't hold of the model's state */
-  REPORT.bind({r,where:()=>{if(ESSAY.on()){const s=ESSAY.section(),h=s&&document.getElementById(s);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');}if(st.pick)return INFO[st.pick][0];const b=$('#views [aria-pressed="true"]');return'The model'+(st.tour>=0?', the walkthrough':b?', '+b.textContent.trim()+' view':'');},
-    state:()=>[['Tab',ESSAY.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; speed ${st.speed}×; ${renders} frames drawn`]]});
+  REPORT.bind({r,where:()=>{if(st.pick)return INFO[st.pick][0];const b=$('#views [aria-pressed="true"]');return'The model'+(st.tour>=0?', the walkthrough':b?', '+b.textContent.trim()+' view':'');},
+    state:()=>[['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; speed ${st.speed}×; ${renders} frames drawn`]]});
   /* the export to Blender (blender.js): its own copy of the model, set as the page's is (the dial, balance and stop chosen, the timing weights, screws and temperature) */
   if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,PL,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
     config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');

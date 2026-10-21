@@ -21,7 +21,7 @@ the website (see the root README).
 |---|---|
 | `index.html` | Page markup: the stage with its 3D model / Essay tabs, walkthrough card, controls (View, Time, Winding and Display, open by default, and Parts, Rate and timing weights, Stopping and starting, Cross-section and Variants, closed; every section folds, and each viewer's open ones are remembered in `localStorage` as `cm-open`), the About dialog with sources and method, and the essay (`<article id="essay">`: its text and its figures' markup) |
 | `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
-| `css/essay.css` | The Essay tab: a reading page laid over the model, in the model's tokens; its classes start `e-` |
+| `css/essay.css` | The essay's styles (its page, `../essay/`; this page's Essay tab until 21 October 2026): a reading page in the model's tokens; its classes start `e-` |
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch, the tinted and ink drawings (`drawOf`, `makeInk`) |
 | `js/mainspring.js`, `tools/mainspring.py` | The mainspring's shape in its barrel over the wind, `MSHAPE`: the strip's equilibrium from its measured free curve, solved by `tools/mainspring.py` (torch, about 30 min; `--write` from its last solution) and drawn by `mainspringGeo` in `core.js` ("The mainspring, solved" below) |
 | `jsconfig.json`, `js/globals.d.ts` | Type checking without npm: the scripts in load order, and the globals TypeScript can't see; `core.js`, `movement.js`, `box.js` and the shared scripts start with `// @ts-check` (`ci.py` runs `tsc`) |
@@ -36,7 +36,7 @@ the website (see the root README).
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), screw positions and holes, pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, train-blocking screw and balance locking arm, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
 | `js/report.js` | Report a bug or inaccuracy (under Controls below): the dialog, and a log of the page's last 30 errors and warnings, kept from the first script on. Loaded first; one IIFE that declares only `REPORT` |
-| `js/essay.js` | The Essay tab (see "The Essay tab" below): its figures, drawn from the model's code, and the tab, hash and scroll handling. One IIFE that declares only `ESSAY` |
+| `../essay/js/essay.js` | The essay (see "The essay" below), on its own page since 21 October 2026: its figures, drawn from the Wempe's model, its sections and hash. One IIFE that declares only `ESSAY` |
 | `js/app.js` | The parts registry (`PARTS`: every part's name, description, part numbers, group, colour and flags; `PIECES`: the pieces of the parts that are several things), renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, stopping and starting (the balance's amplitude, the locking arm, the train-blocking screw, the twist), and the animation loop |
 | `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root), with the version and the list of changes from the root `CHANGELOG.md` (`changelog.py`) |
 | `dist/chronometer-working-model.html` | The built single file (committed) |
@@ -60,7 +60,7 @@ the website (see the root README).
 | `tools/escgolden.js` | The escapement's fingerprint: every result `makeEsc` gives the Hamilton hashed bit for bit against `tools/escgolden.json` (Node.js, no browser) |
 | `tools/keystone.js` | Measures the escapement against a period text's rules for the chronometer escapement (*Watch and Clock Escapements*, 1904); reports, never fails (Node.js, no browser) |
 | `tools/invariants.py` | Checks the model's arithmetic: hands against the time, the wind indicator's scale, the fusee's 56¼ h and 17½ half turns, the balance's moment of inertia and the rate for a turn of the weights (exit code 1 on a failure) |
-| `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, the overhaul, variants, sections, time zone, keys, a URL-hash link), then opens the Essay tab, scrolls it and works every control in it (the model not drawn under it, at most two WebGL contexts, a link into the model and Back, `#essay=detent`); fails on any console error or warning (`--model`, `--essay`: one half) |
+| `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, the overhaul, variants, sections, time zone, keys, a URL-hash link), then opens the essay's own page (`../essay/`), scrolls it and works every control in it (the model not drawn under it, at most two WebGL contexts, a link into the model and Back, `#essay=detent`); fails on any console error or warning (`--model`, `--essay`: one half) |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
 | `tools/gltf_check.py`, `tools/blender_check.py` | The export to Blender checked: the page's own export written to `r_model21.glb` and read back (structure, accessors, the tree, names, every clip), then that file imported into Blender headless (`MC_BLENDER`, else the usual install; skipped without one), the rig run and set against the export's own clips, and two renders (`r_blender_*.png`) |
 | `verification/lower-bridge-comparison.png` | The balance lower bridge against its sources: the restoration video's face-on frame (13:49.5) beside the model seen from the same camera (`tools/framecam.py`), the model's outline drawn on the frame, the measured and model plans (`tools/lower_bridge.py`), the two levels side-on (36:45), Figs. 110, 29 and 30, and the model from below, in place and from above |
@@ -143,52 +143,57 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Report a bug or inaccuracy (`js/report.js`): the panel's button under About, a link on every part's card (about that part, as an inaccuracy), one in About's byline and one at the essay's end (about the section being read). The dialog asks what kind (broken, inaccurate, something else), where, what's wrong and, for an inaccuracy, what shows it (a photograph, a video's time, the manual's page or figure). Ticked by default, technical details go with it: the version, the page's address (the model's state is its hash; a local copy gives the file's name, never its folders), the tab, the balance's swing, whether the train is held or winding, the hours since winding, the speed, the frames drawn, the browser, screen and pointer, the WebGL renderer, and the page's last 30 errors and warnings (`console.error`, `console.warn`, uncaught errors and rejections, failed loads, the WebGL context lost or restored, each at its second since load, URLs cut to their file). Nothing is sent from the page (no `fetch`: `tools/selfcontained.py`): "Write it in my email" is a `mailto:` link to the author with the report filled in, "In Gmail" Gmail's compose page, and "Copy it" the clipboard (or, without one, the report selected under "What will be sent", which shows every word that goes). A `mailto:` longer than 1,900 characters, which some mail programs cut short, is shortened from its end, the log first, and the whole report put on the clipboard as it opens. `smoke.py` reads the links it writes without following them.
 - Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere. A part casts a shadow only when its radius spans 6 texels of the shadow map, which follows the view: far views drop the screws and pins, close-ups keep them. The knurled nuts and the balance rim's holes are each one merged mesh (`mergeGeo` in `core.js`).
 
-## The Essay tab
+## The essay
 
-The page's second tab is *The Marine Chronometer*, an essay on how the chronometer keeps time at sea, in the manner of Bartosz Ciechanowski's
-*Mechanical Watch*. It replaced two things: a separate essay page (`marine-chronometer.html`, which predated the manual and had drifted from the model:
-a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the escapement's parts) and the Illustration tab, an overview drawing.
+*The Marine Chronometer*, an essay on how the chronometer keeps time at sea, in the manner of Bartosz Ciechanowski's *Mechanical Watch*, was this
+page's second tab until 21 October 2026. It is now shared by both models and has a page of its own, `../essay/` (`/essay/` on the site), and its 3D
+figures and dial are the Wempe Einheits-Chronometer's (the owner's choice, 21 October 2026). It replaced, before that, a separate essay page
+(`marine-chronometer.html`, which predated the manual and had drifted from the model) and the Illustration tab, an overview drawing.
 
-- **Where it is.** Its text and figure markup are the `<article id="essay">` in `index.html`, its styles `css/essay.css` (classes `e-…`, since the model's
-  `.stage`, `.sl` and `h2` mean other things), its code `js/essay.js`. It is laid over the whole page (`position: fixed`), so the model's layout underneath
-  is untouched, and the tab bar moves into its sticky bar while it shows.
-- **Sections** (each heading's id is its link: `#essay=detent`): time is a position, an oscillator that ignores the sea, the spring that breathes, heat,
-  constant force, winding, counting, the detent, level on a moving ship, keeping the rate, Greenwich time from the sky (equal altitudes ashore), longitude by
-  chronometer (the time sight), the lunar distance, an almanac to print (with the hand rules and the workbook), what the model gives a maker (with the manual's tolerances), oil and where it goes, adjusting the escapement, the order of work, materials, hardening and tools, the Hamilton Model 21.
-- **Figures, and what each takes from the model:**
+- **Where it is.** Its text and figure markup are `../essay/index.html` (the `<article id="essay">`), its styles this folder's `css/essay.css` (classes
+  `e-…`), its code `../essay/js/essay.js`. The page loads the Wempe's model's scripts (`../wempe/js/`, `../shared/kit.js`, this folder's `core.js`) and
+  builds the Wempe's movement once after its first frame; the Hamilton's `movement.js` can't load beside them (both declare `ESC`). This page's Essay
+  tab is a link to it (`?edges=0` added when Edges are off here), and `#essay` or `#essay=detent` here goes there (`../essay/index.html#detent`).
+- **Sections** (each heading's id is its link: `#detent`; the old `#essay=detent` works too): time is a position, an oscillator that ignores the sea, the
+  spring that breathes, heat, constant force, winding, counting, the detent, level on a moving ship, keeping the rate, Greenwich time from the sky (equal
+  altitudes ashore), longitude by chronometer (the time sight), the lunar distance, an almanac to print (with the hand rules and the workbook), what the
+  model gives a maker (the Hamilton's, with the manual's tolerances), oil and where it goes, adjusting the escapement, the order of work, materials,
+  hardening and tools, and the Hamilton Model 21.
+- **Figures, and what each takes from the Wempe's model** (the movement lent to each 3D figure as it draws: `lend()` puts it in the figure's scene, shows
+  the parts it names, poses it by its own `update(s)`, swaps colours, then puts everything back):
 
   | Figure | Drawn with |
   |---|---|
-  | The dial at the top | `dialCanvas('hamilton')` and the hands' outlines (`handShape`, core.js) at the model's own time and state of wind (`bind`) |
+  | The dial at the top | `WDIAL.face(1)` and `WDIAL.HANDS` at Greenwich time, wound daily at 08:00 GMT |
   | Longitude, clock error | 2D; 4 s of time is 1′ of longitude |
-  | Balance and hairspring | The Model 21's balance rebuilt in the essay (the model's is built inside `buildMovement`): `BAL_R`, the rim's section, screws and weights as `movement.js` places them; `springGeo` with the model's hairspring numbers; the swing `ESC.A`; the moment of inertia `R.timing(0,0)` |
-  | Terminal curves | `springGeo`, and a plain-ended coil (essay-only), drawn with 10 coils, r 5.5 and 9 tall, to show the curves (the model's spring has 12 turns, `HS_N`) |
-  | Heat | A split bimetallic rim (as history), a plain brass one and the Model 21's; the older balances' rate curves are illustrative; the Model 21's band is the Navy test's limit (Sec. IX), not a curve |
-  | Constant force | The model's fusee profile and barrel turns (`R.fs.rf`, `R.fs.I`), 8¾ turns, 0 to 56¼ h; the spring's pull shown is the one the profile answers |
-  | Maintaining power | The model's own maintaining-work meshes (`R.gw`, `R.ssg`, `R.sr`, `R.spawl` and the fusee's winding ratchet, cloned with their materials, bound by `bind`'s `R`, `mv` and `M`), the spring rebuilt with `R.sspGeo(d)`, the pawls seated with `seatPawl` on `R.SRP` and `R.FPR` and the ratchet where `phaseAgainst` has the sustaining pawl hold it; `d = SMAX t/10`. The fusee's turning back, half a turn a minute, is the figure's |
-  | Winding | The dial's up/down sub-dial and hand; 3.43 h a half turn (`FUSEE_PER_HOUR`) |
-  | Counting | `arbor`, `gearGeo` and `escapeWheel` with `TRAIN`'s counts and `MOD`'s modules; turn times from `ESC_PER` |
-  | The detent | `drawEscPlan` with the model's `ESC` (it follows the adjuster's bench) |
-  | Gimbals | `buildBox` itself, with a dial at the model's time |
+  | Balance and hairspring | The Wempe's balance, hairspring, rollers and stud, swinging `WPHYS.ESC.A`; the masses swollen and the strip thickened (`R.spPath`, `ribbonGeo`) by the sliders |
+  | Terminal curves | The Wempe's hairspring (05 03_7's curves) and, for plain ends, a coil of its size led straight in (essay-only, its drift exaggerated) |
+  | Heat | A copy of the Wempe's cut bimetallic balance, its quarters curled in by bending the rim's vertices (exaggerated), a plain brass rim its size, and the Model 21's simplified (`HAMDATA.BAL_R`); the curves illustrative, the Model 21's its Navy test card's |
+  | Constant force | The Wempe's fusee, chain and barrel posed at each hour (`n`); the lever from `R.fu.rf`; the force on the train 05 06_20's measured (`WPHYS.fusT`), the spring's pull its solved torque (`WEDATA.fusee.tq`) over the lever |
+  | Maintaining power | The Wempe's maintaining ratchet, spring and detent, and the fusee wheel, posed by `update()` with the spring's lead (`WPHYS.runPhi`, `susPhi`) |
+  | Winding | The Wempe's up-and-down sub-dial and hand; 3.21 h a half turn (`WPHYS.HPT`) |
+  | Counting | The Wempe's centre, intermediate, seconds and escape wheels, turned by the train from the escape wheel's teeth |
+  | The detent | The Wempe's escapement flattened into the wheel's plane (as its own essay draws it), moved by `WESC.ESC.state` |
+  | Gimbals | `WCASE.build` with the Wempe's dial at Greenwich time |
   | Keeping the rate | 2D; a simulated chronometer's rate book in the form of Table I |
-  | Equal altitudes, the time sight, the lunar distance | 2D, `ALM` (`shared/almanac.js`): fixed days and places (15 and 18 October 2026, Annapolis, 35° N 40° W), each sight made by `ALM.sextant` / `sextantLunar` at the true time and place and worked from the readings alone, as a sight form |
-  | The almanac's pages, the workbook | HTML tables from `ALM` for any days (Print lays them out alone, `#almPrint`, `html.alm-print`); the workbook reduces one's own sights |
+  | Equal altitudes, the time sight, the lunar distance | 2D, `ALM` (`shared/almanac.js`): fixed days and places, each sight made by `ALM.sextant` / `sextantLunar` at the true time and place and worked from the readings alone |
+  | The almanac's pages, the workbook | HTML tables from `ALM` for any days (Print lays them out alone); the workbook reduces one's own sights |
 
-- **Numbers in the text** that the model computes are `data-live` spans filled by `fillLive()` when the essay shows: the escapement's figures
-  (`ESC.measure()`), the swing and the least swing that keeps it going, the roller, the centre distance, the tooth counts, the fusee's radii, the
-  moment of inertia, the sustaining spring's travel (`ssDeg`). The text's other facts come from the manual (Secs. I–IV, VIII, IX) and this README; keep them to those sources. The sky sections
-  (from "Greenwich time from the sky" on) also use published literature, named in the text and under Sources (PLAN-self-contained.md, decision D1):
-  Meeus's *Astronomical Algorithms*, the Astronomical Almanac's short formulas for the Sun, Bowditch's *American Practical Navigator*; their stated
-  accuracy is in `data-bound` spans, which `tools/almanac.js` checks against what it finds.
-- **Building and drawing.** A figure is built the first time it comes within 300 px of the view (an `IntersectionObserver` on the essay), once the fonts
-  are loaded (the dial is drawn once and kept) and, for those that read the model (the fusee), once app.js has called `ESSAY.bind()`. A figure is drawn
-  only while the essay shows, and only when something in it changed. The 3D figures share one `WebGLRenderer` on a canvas off the page: each renders
-  into the bottom-left corner of that canvas and is copied onto its own 2D canvas in the same task, so the page has two WebGL contexts (the model's and
-  this one), where one per figure would have been seven more. The model keeps time under the essay but isn't drawn, and its keys are left alone.
-- **Hash and history.** `#essay`, or `#essay=<section>` as the reader scrolls, written by app.js's `hashOf` (by the essay itself before the model is
-  built). Links from the essay into the model are ordinary links (`#tour=3`, `#view=escapement&speed=0.05&part=det`, `#open=bookDet`), so Back returns
-  to the essay where it was left; `sessionStorage` (`cm-essay-y`) keeps the place through a reload. The essay's old address on the live site
-  (`/marine-chronometer`) is redirected to `/#essay` by `worker.js`.
+- **Numbers in the text.** What a Wempe figure shows is a `data-live` span, filled by `fillLive()` from `WESC`, `WPHYS` and the built movement. What the
+  text quotes of the Model 21 is a `data-ham` span, from `../essay/js/hamdata.js` (`HAMDATA`), which `tools/essay_hamdata.py --write` works out on this
+  page by the expressions the Essay tab's `fillLive()` used (`ESC.measure()`, `TRAIN`, `ESC_PER`, `RUN_H`, `R.timing`, `R.hsDesign`, `ESC.ampAt`/`rateAt`);
+  without `--write` it fails if the file is stale (`ci.py`'s essay-hamdata step). The Model 21's facts come from the manual and this README; the Wempe's
+  only from `References/wempe/` and the Wempe's README. The sky sections also use published literature (PLAN-self-contained.md, decision D1); their stated
+  accuracy is in `data-bound` spans, which `tools/almanac.js` checks; `data-phys` and `data-hs` spans are checked by `tools/physics.js` and
+  `tools/hairspring.js` (all three read `../essay/index.html`).
+- **Building and drawing.** A figure is built the first time it comes within 300 px of the view, once the fonts are loaded and, for those that show the
+  movement, once it is built. A figure is drawn only when something in it changed. The 3D figures share one `WebGLRenderer` on a canvas off the page:
+  each renders into the bottom-left corner of that canvas and is copied onto its own 2D canvas, so the page has one WebGL context. They are drawn with the
+  models' Edges (`makeInk(r).lines`, `core.js`, told the corner's size and pixel ratio by `r.inkBS` and `r.inkPR`), unless `?edges=0`.
+- **Hash and history.** `#detent`, the section in view as the reader scrolls (a heading within 150 px of the top). Links to the models are ordinary links
+  (`../wempe/index.html#view=train`, `../chronometer-working-model/index.html#tour=3`), so Back returns to the essay where it was left; `sessionStorage`
+  (`cm-essay-y`) keeps the place. On the site, `worker.js` sends the essay's first address (`/marine-chronometer`) to `/essay/`, and the Wempe's page at
+  `/` sends the Hamilton's old `/#essay=…` there.
 
 ## The hairspring, designed
 
@@ -479,7 +484,7 @@ times JavaScript's milliseconds of UT.
 
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part, or piece: `part=bal.staff`; `view=laidout` is the laid-out train), `arm=1` (the balance locked, at rest), `block=1` (the train-blocking screw down),
-`#tour=6` (a walkthrough step), `#ovh=d12` or `#ovh=r46` (the overhaul at Op. 12 of the disassembly, Op. 46 of the reassembly), `#essay` or `#essay=detent` (the Essay tab, at a section), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `merge=0` (Performance mode off), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
+`#tour=6` (a walkthrough step), `#ovh=d12` or `#ovh=r46` (the overhaul at Op. 12 of the disassembly, Op. 46 of the reassembly), `#essay` or `#essay=detent` (the essay, sent on to its own page at that section, `../essay/index.html#detent`), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `merge=0` (Performance mode off), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.

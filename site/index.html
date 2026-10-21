@@ -353,6 +353,8 @@ html.essay-on,html.essay-on body{overflow:hidden}
 /* the essay's own page: the models' links in the bar (essay.js), their names shortened on a narrow screen */
 .e-bar nav.models{margin:0;flex-wrap:nowrap;flex-shrink:0}
 @media (max-width:760px){.e-bar nav.models .nl{display:none}}
+/* the essay's page: its version and what's new, at the end */
+.e-foot{margin:3em 0 0;font:14px/1.5 "Instrument Sans",system-ui,sans-serif;color:var(--muted)}.e-foot summary{cursor:pointer}
 .e-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--brass);transform-origin:0 50%;transform:scaleX(0)}
 .e-art{max-width:680px;margin:0 auto;padding:12px 22px 96px}
 #essay a{color:var(--blue);text-underline-offset:2px}
@@ -390,6 +392,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-lbl::before{content:"";position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--paper)}
 .e-lbl span{display:block;margin:-7px 0 0 9px;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--paper) 82%,transparent)}
 .e-lbl i{display:block;font-style:normal;color:var(--muted);font-size:11px}
+.e-lbl.e-l span{position:absolute;right:9px;top:0}   /* near the figure's right edge: the name to the left of its point (essay.js) */
 .e-ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding:12px 18px 6px;font:14px/1.3 "Instrument Sans",system-ui,sans-serif;color:var(--ink)}
 .e-sl{display:flex;align-items:center;gap:10px;flex:1 1 250px;min-width:min(100%,290px)}   /* never shrunk under its contents by a button beside it: the button wraps */
 .e-sl>span{flex:0 0 auto;color:var(--muted)}
@@ -929,8 +932,8 @@ html.essay-on,html.essay-on body{overflow:hidden}
    on there before the model is built. #essay[=section] is the Hamilton's essay (this page's own is #drawings[=section]), unless the link came from this page's old address (/wempe/,
    which worker.js sends to /?from=wempe): then it is this page's. A part, view, panel section or walkthrough step this page hasn't goes on from the viewer (js/app.js's away) */
 (()=>{const L=location,q=new URLSearchParams(L.search),h=new URLSearchParams(L.hash.slice(1)),ham=document.querySelector('nav.models a[data-m="hamilton"]').getAttribute('href').replace(/#.*/,''),es=document.getElementById('tabShared').getAttribute('href'),eu=es.replace(/#.*/,'');
-  if(q.get('from')==='wempe'){document.documentElement.dataset.from='wempe';const s=h.get('essay');history.replaceState(null,'',L.pathname+L.search.replace(/[?&]from=wempe/,'').replace(/^&/,'?')+(s==null?L.hash:'#drawings'+(s?'='+s:'')));return;}
-  if(h.has('essay')){const s=h.get('essay');L.replace(es.includes('#essay')?eu+'#essay'+(s?'='+s:''):eu+(s?'#'+s:''));return;}   /* the shared essay: on the site its own page (essay/#section), in a file the Hamilton's Essay tab */
+  if(q.get('from')==='wempe'){document.documentElement.dataset.from='wempe';const s=h.get('essay');history.replaceState(null,'',L.pathname+L.search.replace(/[?&]from=wempe\b/,'').replace(/^&/,'?')+(s==null?L.hash:'#drawings'+(s?'='+s:'')));return;}
+  if(h.has('essay')){const s=h.get('essay');L.replace(eu+(s?'#'+s:''));return;}   /* the shared essay, on its own page (../essay/, essay/ on the site), at that section */
   if(['ovh','arm','block','esc','orig'].some(k=>h.has(k)))L.replace(ham+L.hash);})();   /* keys only the Hamilton's page writes: the overhaul, the balance locking arm, the train-blocking screw, the adjuster's bench, the build's deviations */
 </script>
 <script>
@@ -1276,11 +1279,11 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
   /* normals and ids: the solids, then the ghosts alone (for Edges, mv: mesh ids, the box masked, hide left out); no shadow map is drawn for these.
      Leaves the ghosts hidden and the line pass's uniforms set */
   function ids(scene,cam,meshes,mv,hide){
-    const pr=r.getPixelRatio(),gh=[],so=[];
+    const pr=r.inkPR||r.getPixelRatio(),gh=[],so=[];   /* r.inkPR, r.inkBS: a frame drawn into a corner of a larger buffer (the essay's figures share one renderer): its pixel ratio and size */
     for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;inkTag(o);}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
     /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while the drawing draws.
        Each is 4 bytes a pixel, 8 with a depth texture: Edges without ghosts keeps 12 a pixel, not 28 */
-    r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
+    if(r.inkBS)bs.copy(r.inkBS);else r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
     r.getClearColor(cc);const s={gh,ca:r.getClearAlpha(),au:r.shadowMap.autoUpdate},ov=scene.overrideMaterial,hv=hide.map(o=>o.visible);
     nid.clippingPlanes=SEC.on.value>0.5&&SEC.plane?[SEC.plane]:[];
     r.shadowMap.autoUpdate=false;scene.overrideMaterial=nid;idOn=true;idM=mv;r.setClearColor(0x000000,0);hide.forEach(o=>o.visible=false);
@@ -9285,6 +9288,8 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
     copy:M=>{const C2=WCASE.build(M),m2=buildWempe(M);m2.userData.R.dl.setDial(dial);m2.userData.onRev.push(v=>{C2.root.traverse(o=>{if(o.userData.rev)o.visible=m2.userData.revShows(o.userData.rev,v);});C2.rev(v);C2.parts.key.userData.first=v==='first'||v==='3955';C2.keyRest();});
       m2.userData.setRev(rev);m2.userData.R.fu.setConn(conn);C2.inner.add(m2);m2.position.y=-C2.YP;C2.over.visible=false;   /* the outer box only in its view */
       m2.traverse(o=>{if(o.isMesh&&o.userData.hn==='050301-3')o.position.addScaledVector(new THREE.Vector3(0,1,0).applyQuaternion(o.quaternion),-RW.tw/8*TWP);});return{CS:C2,mv:m2};}});
+  /* the Essay tab: the shared essay's own page, its figures drawn with Edges as this page is (?edges=0 when they are off here) */
+  {const a=document.getElementById('tabShared');if(a&&V)a.addEventListener('click',e=>{if(V.st.edges)return;e.preventDefault();const u=new URL(a.href);u.searchParams.set('edges','0');location.href=u.href;});}
   if(ES&&V)ES.bind({time:dialRead,tz:()=>tz,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
   /* Report a bug or inaccuracy (the Hamilton's report.js): where the visitor is, and the model's state, in the report's details */
   if(V&&typeof REPORT!=='undefined')REPORT.bind({r:V.r,name:'Wempe Einheits-Chronometer',inacc:'Where the model or the essay differs from Wempe’s works drawings or a real Einheits-Chronometer, and what shows it. The drawings, then photographs and videos of real ones, decide what the model looks like and does, so a sheet’s number settles it fastest.',

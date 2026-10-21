@@ -11,6 +11,7 @@ from changelog import stamp
 html,ver=stamp(inline((root/'index.html').read_text(encoding='utf-8'),root))
 html=html.replace('href="../chronometer-working-model/index.html','href="../../chronometer-working-model/dist/chronometer-working-model.html')   # the links to the Hamilton, from dist/ to its built page, by prefix, so its essay's sections (#essay=detent) keep their hashes (the root build points them at the site's home page)
 html=html.replace('href="verification/','href="../verification/')   # the links to its report (verification/index.html beside the page), from dist/ (the root build points them at site/wempe/verification/)
+html=html.replace('href="../essay/index.html','href="../../essay/dist/the-marine-chronometer.html')   # its Essay tab and links to the essay, the essay's own page (../essay/), from dist/ to its built page (the root build points them at the site's)
 (root/'dist').mkdir(exist_ok=True)
 (root/'dist/wempe-einheitschronometer.html').write_text(html,encoding='utf-8',newline='\n')
 print('wrote dist/wempe-einheitschronometer.html',len(html.encode()),'bytes, version',ver)

@@ -9,13 +9,14 @@
 Writes:
   marine-chronometer-source/chronometer-working-model/dist/chronometer-working-model.html
   marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html   (the second model, the Wempe Einheits-Chronometer; no root copy)
+  marine-chronometer-source/essay/dist/the-marine-chronometer.html      (the essay shared by both models, its figures the Wempe's; no root copy)
   chronometer-working-model.html      (the root copy, for opening straight from the repo)
   site/                               (the folder to upload to a web host; the addresses swapped on 21 October 2026: until then the Hamilton was the home page, the Wempe /wempe/)
-     index.html            the Wempe Einheits-Chronometer, the site's home page: its links to the Hamilton pointed at hamilton/, into the Hamilton's essay at essay/, to its report at
+     index.html            the Wempe Einheits-Chronometer, the site's home page: its links to the Hamilton pointed at hamilton/, to the essay at essay/, to its report at
                            wempe/verification/; its own essay is its Its drawings tab (#drawings), and a script on it sends old links to the Hamilton (by their hash) on to hamilton/ or essay/
-     hamilton/index.html   the Hamilton Model 21 working model (/hamilton/), its Essay tab and #essay[=section] sent to essay/ (<html data-essay>, essay.js)
-     essay/index.html      the essay 'The Marine Chronometer' on a page of its own (/essay/#section): the Hamilton's page built with <html data-page="essay">, the essay always
-                           showing over the model its figures are drawn from, its links into the model opened on hamilton/ (essay.js)
+     hamilton/index.html   the Hamilton Model 21 working model (/hamilton/), its Essay tab a link to essay/ and #essay[=section] sent there (app.js)
+     essay/index.html      the essay 'The Marine Chronometer', shared by both models, on a page of its own (/essay/#section; marine-chronometer-source/essay/): its figures
+                           drawn from the Wempe's model, its links to the models pointed at / and hamilton/
      social.png            link-preview image of the Hamilton's page (the dial in its box)
      social-movement.png   an image of the mechanism titled for the essay, for posting; the essay's page's link preview
      social-wempe.png      link-preview image of the Wempe's page, the home page (its dial in its box)
@@ -38,8 +39,11 @@ MODEL=ROOT/'marine-chronometer-source/chronometer-working-model'
 WEMPE=ROOT/'marine-chronometer-source/wempe'   # the second model (its own build.py writes its dist/)
 WE_HAM='href="../../chronometer-working-model/dist/chronometer-working-model.html'   # the Wempe's built page's links to the Hamilton (its build.py), pointed at hamilton/ on the site: a prefix, so a link keeps its hash (one into the Hamilton's essay, …html#essay=detent, goes to essay/#detent)
 HAM_WE='href="../../wempe/dist/wempe-einheitschronometer.html"'   # the Hamilton's built page's link to the Wempe (its build.py): from the root copy to the Wempe's built page, on the site to the home page
-HAM_SITE=[('href="navships-250-624-1948.pdf"','href="../navships-250-624-1948.pdf"'),('href="verification/','href="../verification/')]   # the Hamilton's page's links beside itself (the manual, its reports), from hamilton/ and essay/ to the site's root, where they stay
-ESSAY_D='How a marine chronometer keeps time at sea, one idea at a time: longitude, the balance and its spring, heat, the fusee, the detent escapement, the gimbals and the navigator’s sky, with live figures drawn from a working model of the Hamilton Model 21.'   # the essay's page's description
+HAM_SITE=[('href="navships-250-624-1948.pdf"','href="../navships-250-624-1948.pdf"'),('href="verification/','href="../verification/')]   # the Hamilton's page's links beside itself (the manual, its reports), from hamilton/ to the site's root, where they stay
+ESSAY=ROOT/'marine-chronometer-source/essay'   # the essay shared by both models (its own build.py writes its dist/)
+TO_ESSAY='href="../../essay/dist/the-marine-chronometer.html'   # the models' built pages' links to the essay (their build.py): a prefix, so a link to a section (…html#detent) keeps it
+ES_SITE=[('href="../../chronometer-working-model/dist/chronometer-working-model.html','href="../hamilton/'),('href="../../wempe/dist/wempe-einheitschronometer.html','href="../'),
+         ('href="../../chronometer-working-model/verification/','href="../verification/'),('href="navships-250-624-1948.pdf"','href="../navships-250-624-1948.pdf"')]   # the essay's built page's links (essay/build.py), on the site
 SITE=ROOT/'site'
 MANUAL='navships-250-624-1948.pdf'   # the page links to it by this name, beside itself
 REPORTS=['build-verification','real-chronometers']   # the checks' reports (the model's verification/, each built by its own build_report.py), served at the same paths beside the page
@@ -128,30 +132,33 @@ def main():
     subprocess.run([sys.executable,str(MODEL/'build.py')],check=True)
     model=(MODEL/'dist/chronometer-working-model.html').read_text(encoding='utf-8');check('working model',model);sizes('working model',model)
     if HAM_WE not in model:sys.exit(f'the working model has no {HAM_WE}: its link to the Wempe (its build.py), which the root copy and the site point at their own places')
-    write(ROOT/'chronometer-working-model.html',model.replace(HAM_WE,'href="marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html"'))
+    if TO_ESSAY not in model:sys.exit(f'the working model has no {TO_ESSAY}: its Essay tab (its build.py)')
+    write(ROOT/'chronometer-working-model.html',model.replace(HAM_WE,'href="marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html"').replace(TO_ESSAY,'href="marine-chronometer-source/essay/dist/the-marine-chronometer.html'))
     # the Wempe: its own build script writes its dist/ (no root copy)
     subprocess.run([sys.executable,str(WEMPE/'build.py')],check=True)
     wempe=(WEMPE/'dist/wempe-einheitschronometer.html').read_text(encoding='utf-8');check('wempe',wempe);sizes('wempe',wempe)
     if WE_HAM not in wempe:sys.exit(f'the Wempe page has no {WE_HAM}: its link to the Hamilton (wempe/build.py), which the site points at hamilton/')
+    if TO_ESSAY not in wempe:sys.exit(f'the Wempe page has no {TO_ESSAY}: its Essay tab (wempe/build.py)')
+    # the essay: its own build script writes its dist/ (no root copy)
+    subprocess.run([sys.executable,str(ESSAY/'build.py')],check=True)
+    essay=(ESSAY/'dist/the-marine-chronometer.html').read_text(encoding='utf-8');check('essay',essay);sizes('essay',essay)
     # site/: what a web host serves
     if SITE.exists():shutil.rmtree(SITE)
     SITE.mkdir()
-    # the Hamilton at hamilton/, and the same page as the essay's at essay/ (essay.js: <html data-essay> on the model's page, data-page="essay" on the essay's)
+    # the Hamilton at hamilton/
     for k,_ in HAM_SITE:
         if k not in model:sys.exit(f'the working model has no {k}: its link beside itself, which the site points at its root')
-    ham=model.replace(HAM_WE,'href="../"')
+    ham=model.replace(HAM_WE,'href="../"').replace(TO_ESSAY,'href="../essay/')
     for k,v in HAM_SITE:ham=ham.replace(k,v)
-    (SITE/'hamilton').mkdir();write(SITE/'hamilton/index.html',meta(ham.replace('<html lang="en">','<html lang="en" data-essay="../essay/">',1),a.site_url,'hamilton/index.html',keep=a.keep_html))
-    ess=ham.replace('<html lang="en">','<html lang="en" data-page="essay" data-model="../hamilton/">',1)
-    for k,v in [(r'<title>[^<]*</title>','<title>The Marine Chronometer: an essay</title>'),(r'<meta name="description" content="[^"]*">',f'<meta name="description" content="{ESSAY_D}">'),
-                (r'<meta property="og:title" content="[^"]*">','<meta property="og:title" content="The Marine Chronometer">'),(r'<meta property="og:description" content="[^"]*">',f'<meta property="og:description" content="{ESSAY_D}">')]:
-        ess,n=re.subn(k,lambda m:v,ess,count=1)
-        if not n:sys.exit(f'the working model has no {k}, which the essay page replaces')
-    (SITE/'essay').mkdir();write(SITE/'essay/index.html',meta(ess,a.site_url,'essay/index.html',img='social-movement.png',keep=a.keep_html))
+    (SITE/'hamilton').mkdir();write(SITE/'hamilton/index.html',meta(ham,a.site_url,'hamilton/index.html',keep=a.keep_html))
+    # the essay at essay/
+    for k,v in ES_SITE:
+        if k not in essay:sys.exit(f'the essay has no {k}: its link, which the site points at its place')
+        essay=essay.replace(k,v)
+    (SITE/'essay').mkdir();write(SITE/'essay/index.html',meta(essay,a.site_url,'essay/index.html',img='social-movement.png',keep=a.keep_html))
     # the Wempe, the home page
     if WE_REP not in wempe:sys.exit(f'the Wempe page has no {WE_REP}: its link to its report (wempe/build.py), which the site points at site/wempe/verification/')
-    we=re.sub(re.escape(WE_HAM)+r'#essay(?:=([^"]*))?"',lambda m:'href="essay/'+('#'+m.group(1) if m.group(1) else '')+'"',wempe)   # its links into the Hamilton's essay: the essay's page
-    write(SITE/'index.html',meta(we.replace(WE_HAM,'href="hamilton/').replace(WE_REP,'href="wempe/verification/'),a.site_url,'index.html',img='social-wempe.png',keep=a.keep_html))
+    write(SITE/'index.html',meta(wempe.replace(TO_ESSAY,'href="essay/').replace(WE_HAM,'href="hamilton/').replace(WE_REP,'href="wempe/verification/'),a.site_url,'index.html',img='social-wempe.png',keep=a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)

@@ -1,25 +1,23 @@
-/* essay.js: the Essay tab, 'The Marine Chronometer': how the chronometer keeps time at sea, one idea at a time, with live figures drawn from this model's own code
-   (the dial and hands, the escapement's solver and plan, the train's counts, the fusee's profile, the box and gimbals).
-   Part of 'The Marine Chronometer, working' (three.js r128). See README.md.
-   One IIFE; the page sees only ESSAY. The essay is laid over the model (css/essay.css) and the tabs move into its bar while it shows. A figure is built the first
-   time it comes near the view, with the fonts loaded (the dial and the canvases letter in them) and, for those that read the model (its time, its fusee), once
-   app.js has built it and called bind(). Figures are drawn only while the essay shows, and only when something in them changed.
-   The 3D figures share one WebGL renderer off screen: each is rendered into a corner of its canvas and copied onto its own 2D canvas in the same task (as the
-   model's Save button copies its frame), so the page has two WebGL contexts, not one for each figure. */
+/* essay.js: 'The Marine Chronometer', the essay shared by both models, on a page of its own (../index.html; until 21 October 2026 the Hamilton's Essay tab): how the
+   chronometer keeps time at sea, one idea at a time. Its 3D figures and its dial are the Wempe Einheits-Chronometer's, built here by the Wempe model's own scripts
+   (../wempe/js, ../shared/kit.js; the owner's choice, 21 October 2026): its dial and hands, balance and hairspring, fusee, chain and barrel, maintaining work, train,
+   escapement and box. Its text follows the Hamilton Model 21 where it speaks of it, and quotes the Model 21's figures from the Hamilton's page: js/hamdata.js (HAMDATA,
+   written by ../chronometer-working-model/tools/essay_hamdata.py), the spans data-ham="…"; the Wempe's figures are the spans data-live="…", worked out here (fillLive)
+   from WESC, WPHYS, WD and the built movement. The Hamilton's movement.js can't load beside the Wempe's (both declare ESC), so the essay draws no Hamilton part but the
+   Model 21's balance in Heat, simplified as before.
+   One IIFE; the page sees only ESSAY. A figure is built the first time it comes near the view, with the fonts loaded (the dial and the canvases letter in them) and,
+   for those that show the movement, once it is built (after the page's first frame). Figures are drawn only when something in them changed.
+   The 3D figures share one WebGL renderer off screen: each is rendered into a corner of its canvas and copied onto its own 2D canvas in the same task, so the page has
+   one WebGL context. The movement is built once and lent to each figure as it renders (lend: put in the figure's scene, only the parts it shows visible, posed by the
+   movement's own update(s), its colours swapped and put back), so every figure shows the model's own parts in the model's own motion. */
 "use strict";
 const ESSAY=(()=>{
   const root=document.getElementById('essay');
-  if(!root)return{show(){},on:()=>false,section:()=>'',bind(){},page:false,secOf:()=>''};
-  /* the essay's own page (the site's /essay/, 21 October 2026; ?essay on the source's index.html): this page built with <html data-page="essay" data-model="../hamilton/">, the essay
-     always showing, its hash the section alone (#detent), the tabs replaced by the models' links, and its links into the model (#tour=3, #view=…) opened on the model's page (MODEL).
-     AWAY: the model's page on the site (<html data-essay="../essay/">), whose Essay tab and #essay[=section] go to the essay's page. A page with neither (the single-file copies)
-     keeps the essay in its Essay tab, laid over the model */
-  const DS=document.documentElement.dataset,PAGE=DS.page==='essay'||/[?&]essay/.test(location.search),AWAY=PAGE?'':DS.essay||'',MODEL=DS.model||location.pathname;
-  const secOf=h=>h==='essay'?'':h.startsWith('essay=')?h.slice(6):PAGE?h:'';   /* the section a hash names: #essay=detent, or on the essay's page #detent */
+  if(!root)return{on:()=>false,section:()=>'',model:()=>null};
   const q=(s,r=root)=>r.querySelector(s),qa=(s,r=root)=>[...r.querySelectorAll(s)];
   const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const tabs=document.querySelector('.tabs'),home=tabs.parentNode,bar=q('.e-bar'),prog=q('.e-prog');
-  let shown=false,model=null,sec='',raf=0,last=0,io=null,fontsOK=false,yKeep=0;
+  const bar=q('.e-bar'),prog=q('.e-prog');
+  let shown=false,model=null,sec='',raf=0,last=0,io=null,fontsOK=false;
   const sget=k=>{try{return sessionStorage.getItem(k);}catch(_){return null;}},sset=(k,v)=>{try{sessionStorage.setItem(k,v);}catch(_){}};
   /* the fonts the canvases letter in: the dial is drawn once and kept, so it waits for them */
   Promise.race([Promise.all(['600 10px Spectral','400 10px Spectral','500 10px "Instrument Sans"','600 10px "Instrument Sans"'].map(f=>document.fonts.load(f))),new Promise(r=>setTimeout(r,2500))])
@@ -78,11 +76,13 @@ const ESSAY=(()=>{
     for(const s of o.series){if(!s.label)continue;ctx.fillStyle=s.color;ctx.textAlign=s.la||'left';ctx.fillText(s.label,X(s.lx)+(s.dx||0),Y(clamp(s.f(s.lx),o.y0,o.y1))+(s.dy??-12));}
     return{X,Y};}
 
-  /* ---------- 3D: one renderer for every figure ---------- */
+  /* ---------- 3D: one renderer for every figure, its figures drawn with the models' Edges (makeInk's lines, core.js) unless the model the reader came from had them off
+       (its Essay tab's link then carries ?edges=0) ---------- */
+  const EDGES=!/[?&]edges=0\b/.test(location.search);
   let G=null;
   function gl(){if(G)return G;const cv=document.createElement('canvas'),r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
     r.setPixelRatio(1);r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.05;r.setClearColor(0x000000,0);r.setScissorTest(true);
-    G={r,cv,w:1,h:1,env:envTex(r),M:mats(),scenes:new Set()};
+    G={r,cv,w:1,h:1,env:envTex(r),M:mats(),scenes:new Set(),ink:null,bs:new THREE.Vector2()};
     /* a lost context comes back without the environment map that lights the metals (as the model's, app.js) */
     cv.addEventListener('webglcontextlost',e=>e.preventDefault());cv.addEventListener('webglcontextrestored',()=>{G.env=envTex(r);G.scenes.forEach(s=>s.environment=G.env);FIGS.forEach(f=>f.dirty=true);});
     return G;}
@@ -102,34 +102,62 @@ const ESSAY=(()=>{
     render(){const c=Math.cos(this.pitch),cam=this.cam,g=G,r=g.r,W=this.cv.width,H=this.cv.height,D=this.dist*clamp(this.h/this.w/0.62,1,1.7);   /* a taller figure (a phone) steps back, to keep what shows across it */
       cam.position.set(this.target.x+D*c*Math.sin(this.yaw),this.target.y+D*Math.sin(this.pitch),this.target.z+D*c*Math.cos(this.yaw));cam.lookAt(this.target);
       if(g.w<W||g.h<H){g.w=Math.max(g.w,W);g.h=Math.max(g.h,H);r.setSize(g.w,g.h,false);}   /* the buffer only grows: each figure uses its bottom-left corner */
-      r.setViewport(0,0,W,H);r.setScissor(0,0,W,H);r.render(this.scene,cam);this.x.clearRect(0,0,W,H);this.x.drawImage(g.cv,0,g.h-H,W,H,0,0,W,H);
+      r.setViewport(0,0,W,H);r.setScissor(0,0,W,H);
+      if(EDGES){const ms=[],hd=[];this.scene.traverse(o=>{if(o.isMesh)(o.userData.decal||o.userData.surface||o.material.depthWrite===false?hd:ms).push(o);});   /* the floor's shadow and the engravings left out, as the models leave them */
+        g.ink=g.ink||makeInk(r);g.bs.set(W,H);r.inkBS=g.bs;r.inkPR=this.d;g.ink.lines(this.scene,cam,ms,hd);}
+      else r.render(this.scene,cam);this.x.clearRect(0,0,W,H);this.x.drawImage(g.cv,0,g.h-H,W,H,0,0,W,H);
       const v=new THREE.Vector3();
       for(const L of this.labels){if(!L.show){L.el.style.opacity=0;continue;}L.pos(v);v.project(cam);const x=(v.x+1)/2*this.w,y=(1-v.y)/2*this.h;
+        if(!L.ow)L.ow=L.el.firstChild.offsetWidth;L.el.classList.toggle('e-l',L.left||x+9+L.ow>this.w-2&&x-9-L.ow>2);   /* past the right edge: the name on the point's left */
         L.el.style.opacity=(v.z<1&&x>-20&&x<this.w+20)?1:0;L.el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;}}
   }
   const at=(o,x,y,z)=>v=>{v.set(x,y,z);o.localToWorld(v);};
 
-  /* ---------- the dial: the model's Hamilton dial (dialCanvas, core.js) with its hands (handShape), at time t (seconds, the hands stepping in half-seconds) and h hours since winding ---------- */
-  let DIAL=null;const dial=()=>DIAL||(DIAL=dialCanvas('hamilton'));
+  /* ---------- the dial: the Wempe's (WDIAL.face, Wempe 3955's printing) with its hands (WDIAL.HANDS: half-widths along each, from their sheets), as the Wempe page's
+       essay draws it (../wempe/js/essay.js) ---------- */
+  const D=Math.PI/180,f1=(v,n=1)=>v.toFixed(n),sgS=(v,n=1)=>(v<0?'−':'')+Math.abs(v).toFixed(n),SANS='"Instrument Sans",system-ui,sans-serif';
+  /* a label with a halo of the figure's paper round it, so a line it crosses doesn't cut it */
+  function halo(ctx,t,x,y,col){ctx.save();ctx.lineWidth=4;ctx.lineJoin='round';ctx.strokeStyle=PAL.paper;ctx.strokeText(t,x,y);ctx.restore();ctx.fillStyle=col;ctx.fillText(t,x,y);}
+  let DIAL=null;const dial=()=>DIAL||(DIAL=WDIAL.face(1));
+  const hwAt=(t,r)=>{if(r<=t[0][0])return t[0][1];for(let i=1;i<t.length;i++)if(r<=t[i][0]){const[a,p]=t[i-1],[b,v]=t[i];return p+(v-p)*(r-a)/(b-a);}return t[t.length-1][1];};
+  const blade=(hw,r0,L,dir=-1)=>{const R=[];for(let r=r0;r<L;r+=0.25)R.push(r);R.push(L);return[...R.map(r=>[hwAt(hw,r),dir*r]),...R.reverse().map(r=>[-hwAt(hw,r),dir*r])];};   /* a hand's outline up from its arbor (-y), r0 to its tip; dir 1 its tail */
   let HANDS=null;
-  const hands=()=>HANDS||(HANDS={hour:handShape(0,0,0,HAND_W.hour,0,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(0,0,0,HAND_W.min,0,{boss:3.2,sq:2.44}).extractPoints(20),
-    sec:handShape(0,0,0,HAND_W.sec).extractPoints(20),ud:handShape(0,0,0,HAND_W.ud).extractPoints(20)});   /* the model's hands, movement.js: sizes in mm (HAND_W, core.js) */
-  const udA=h=>UDA(clamp(h,0,RUN_H));   /* the up/down hand: UD_SWEEP degrees from UP to DOWN in 56 h (movement.js, UD) */
-  function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
-    for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}
-  function paintDial(x,S,t,h,o={}){const c=S/2,k=c/DIAL_R,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the dial is DIAL_R in radius (movement.js); sub-dials at their arbors (L.F, L.Ud) */
-    const ts=Math.floor(t*2)/2,sy=L.F[1]*k,uy=L.Ud[1]*k;
-    drawHand(x,H.ud,c,c+uy,udA(h),k);drawHand(x,H.sec,c,c+sy,((ts/60)%1)*TAU,k);
-    for(const y of[uy,sy]){x.beginPath();x.arc(c,c+y,0.9*k,0,TAU);x.fill();}
+  const hands=()=>{if(HANDS)return HANDS;const H=WDIAL.HANDS;
+    return HANDS={min:{p:[blade(H.MIN.hw,H.MIN.rf-0.2,H.MIN.L)],boss:H.MIN.rf,col:'#c39a46'},hour:{p:[blade(H.HOUR.hw,H.HOUR.rf1-0.2,H.HOUR.L)],boss:H.HOUR.rf,col:'#c39a46'},
+      ud:{p:[blade(H.UDH.hw,H.UDH.rf-0.2,10.2)],boss:H.UDH.rf,col:'#1d2c74'},sec:{p:[blade(H.SEC.hwP,H.SEC.rb-0.2,19.5),blade(H.SEC.hwT,H.SEC.rb-0.2,10,1)],boss:H.SEC.rb,col:'#1d2c74'}};};
+  function drawHand(x,h,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,k);x.fillStyle=h.col;x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=Math.max(1,k*0.6);x.shadowOffsetY=Math.max(1,k*0.25);
+    x.beginPath();for(const p of h.p){p.forEach(([u,v],i)=>i?x.lineTo(u,v):x.moveTo(u,v));x.closePath();}x.moveTo(h.boss,0);x.arc(0,0,h.boss,0,TAU);x.fill('nonzero');x.restore();}
+  /* the up-and-down hand h hours after winding: 22.5° right of 12 fully wound, a tenth of a turn for each of the fusee's turns (dial.js's update); its sub-dial 23 mm above the centre */
+  const UDY=-23,udA=h=>(22.5+36*clamp(h,0,HRUN())/WPHYS.HPT)*D;
+  function paintDial(x,S,t,h){const c=S/2,k=c/WDIAL.DR,H=hands(),ts=Math.floor(t*2)/2;x.clearRect(0,0,S,S);x.drawImage(dial(),0,0,S,S);
+    drawHand(x,H.ud,c,c+UDY*k,udA(h),k);drawHand(x,H.sec,c,c+23*k,((ts/60)%1)*TAU,k);
     drawHand(x,H.hour,c,c,((t/43200)%1)*TAU,k);drawHand(x,H.min,c,c,((t/3600)%1)*TAU,k);}
-  const nowT=()=>model?model.time():Date.now()/1000,nowH=()=>model?model.hrs():20;
+  /* the time the essay's dial keeps: Greenwich time by the reader's clock, the chronometer wound every day at 08:00 GMT (the routine of Winding, below), so h is the hours since */
+  const WOUND=8,nowT=()=>Date.now()/1000,nowH=()=>(((nowT()/3600-WOUND)%24)+24)%24,HRUN=()=>model?model.HRUN:55.9;
 
-  /* ---------- hero: the model's dial, keeping the model's time ---------- */
+  /* ---------- hero: the Wempe's dial, keeping Greenwich time ---------- */
   fig('eHeroSt',f=>{const cv=q('#eHero'),x=cv.getContext('2d'),cap=q('#eHeroCap');let S=0,lk=-1,lh=-1;
     const rs=()=>{const w=cv.clientWidth,d=Math.min(devicePixelRatio||1,2);if(!w)return;S=Math.round(w*d);if(cv.width!==S){cv.width=cv.height=S;f.dirty=true;}};new ResizeObserver(rs).observe(cv);rs();
     return()=>{const t=nowT(),h=nowH(),k=Math.floor(t*2);if(k===lk&&Math.abs(h-lh)<0.02&&!f.dirty)return;lk=k;lh=h;f.dirty=false;paintDial(x,S,t,h);
-      const tz=model?model.tz():'gmt',tt=((t%86400)+86400)%86400,hm=[Math.floor(tt/3600),Math.floor(tt%3600/60),Math.floor(tt%60)].map(v=>String(v).padStart(2,'0')).join(':');
-      cap.textContent=`The model’s dial: ${hm} ${tz==='gmt'?'Greenwich time':'local time'}, ${Math.max(0,RUN_H-h).toFixed(1)} h of power left`;};});
+      const tt=((t%86400)+86400)%86400,hm=[Math.floor(tt/3600),Math.floor(tt%3600/60),Math.floor(tt%60)].map(v=>String(v).padStart(2,'0')).join(':');
+      cap.textContent=`The Wempe’s dial: ${hm} Greenwich time, ${h.toFixed(1)} h since its winding at 0${WOUND}:00`;};});
+
+  /* ---------- the Wempe's movement, built once (model(), after the page's first frame) and lent to each 3D figure as it renders ----------
+     lend(V, at, keep, s, o): the movement put in the group at (in the figure's scene), its parts in the set keep shown and the rest hidden, posed by its own update(s)
+     ({E, th, lift, psDef, n, winding, ms}: the escape wheel's teeth, the balance's angle, the detent's and gold spring's turns, the fusee's turns from full wind, winding,
+     the maintaining spring's lead), then o.pose() (a change for this figure alone, returning what undoes it) and o.paint(mesh) (a material in place of the mesh's, or
+     nothing); rendered; and everything put back as it was, for the next figure */
+  const S0={E:0,th:0,lift:0,psDef:0,n:0,winding:false};
+  function lend(V,at,keep,s,o={}){const mv=model.mv,P=mv.userData.parts;if(mv.parent!==at)at.add(mv);for(const k in P)P[k].visible=keep.has(k);
+    mv.userData.update({...S0,...s});const undo=o.pose?o.pose():null,sw=[];
+    if(o.paint)for(const k of keep)P[k].traverse(m=>{if(m.isMesh){const t=o.paint(m,k);if(t){sw.push([m,m.material]);m.material=t;}}});
+    V.render();for(const[m,t]of sw)m.material=t;if(undo)undo();}
+  /* a material's copy tinted toward a colour (eMaint: rose carries the drive, teal holds), or see-through */
+  const TINT=new Map(),tint=(m0,c,gh)=>{const k=m0.uuid+c+(gh?'g':'');let t=TINT.get(k);if(!t){t=m0.clone();if(c){t.color=m0.color.clone().lerp(sc(c),0.8);if(t.emissive){t.emissive=sc(c);t.emissiveIntensity=0.25;}
+    if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}}if(gh){t.transparent=true;t.opacity=0.45;t.depthWrite=false;}TINT.set(k,t);}return t;};
+  /* a group's copy, sharing the model's geometry and materials (the Heat figure's balance, whose rim it bends): what is hidden left out */
+  const copy=o=>{const c=o.isMesh?new THREE.Mesh(o.geometry,o.material):new THREE.Group();c.position.copy(o.position);c.quaternion.copy(o.quaternion);c.scale.copy(o.scale);c.userData.hn=o.userData.hn;
+    for(const k of o.children)if(k.visible&&!k.isLight)c.add(copy(k));return c;};
 
   /* ---------- time is a position: the Earth from above the North Pole at the ship's local noon ---------- */
   fig('eLon',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?0.8:0.52);let lam=-40;
@@ -170,67 +198,83 @@ const ESSAY=(()=>{
       ship(X(0),PAL.ink,'True position',24);
       if(nm>0.3){ctx.strokeStyle=PAL.red;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(X(0),y-26);ctx.lineTo(X(nm),y-26);ctx.stroke();ctx.setLineDash([]);ship(X(nm),PAL.red,'Believed position',-30);}};});
 
-  /* ---------- the balance, in mm: 'uncut', the Model 21's as movement.js builds it, simplified (a stainless-steel rim 0.6 wide and 3.5 deep on an Invar arm, its
-     24 holes 15 deg apart, the standard four pairs of balance screws in holes 3, 5, 9 and 12 of each half, the timing weights at the arm's ends and the verniers inside the rim beside them); 'split', a bimetallic rim cut near each end of the arm, steel inside and brass
-     outside, with its compensation weights, which set(curl) bends in; 'plain', a plain brass rim, which set(0, grow) enlarges. userData.S: the screws and weights ---------- */
-  function balance(M,kind){const g=new THREE.Group(),BR=BAL_R,S=[];
-    mesh(g,new THREE.BoxGeometry(2*BR-1,1.1,2.4),kind==='uncut'?M.invar:kind==='plain'?M.brass:M.steel);mesh(g,cylY(2.2,1.3,24),M.steel,0,0.2,0);mesh(g,cylY(0.45,15,12),M.steel,0,2.5,0);
+  /* ---------- the Model 21's balance and a plain one, in mm, for Heat beside the Wempe's: 'uncut', the Model 21's as its movement.js builds it, simplified (a
+     stainless-steel rim 0.6 wide and 3.5 deep on an Invar arm, its 24 holes 15 deg apart, the standard four pairs of balance screws in holes 3, 5, 9 and 12 of each half, the
+     timing weights at the arm's ends and the verniers inside the rim beside them), its radius the Hamilton's (HAMDATA.BAL_R); 'plain', a plain brass rim of radius BR,
+     which set(0, grow) enlarges ---------- */
+  function balance(M,kind,BR){const g=new THREE.Group(),S=[];
+    mesh(g,new THREE.BoxGeometry(2*BR-1,1.1,2.4),kind==='uncut'?M.invar:M.brass);mesh(g,cylY(2.2,1.3,24),M.steel,0,0.2,0);mesh(g,cylY(0.45,15,12),M.steel,0,2.5,0);
     const radial=(a,r0,len,rr,mat)=>{const m=mesh(g,cylY(rr,len,12),mat,(r0+len/2)*Math.cos(a),0,(r0+len/2)*Math.sin(a));m.rotation.set(0,-a,Math.PI/2);return m;};
     if(kind==='uncut'){mesh(g,ringGeo(BR,BR-0.6,3.5),M.steel);const HA=(h,n)=>h*Math.PI+(n-1)*TAU/24;
       for(const h of[0,1])for(const[n,hh]of[[3,2.03],[5,1.24],[9,2.57],[12,1.24]])S.push(radial(HA(h,n),BR,hh,1.55,M.brass));
       for(const h of[0,1]){S.push(radial(HA(h,1),BR+0.55,1.7,1.2,M.steelD));S.push(radial(HA(h,2),BR-0.6-0.6-1.3,1.3,0.65,M.steelD));}
       g.userData.set=()=>{};}
-    else if(kind==='plain'){const r=mesh(g,undefined,M.brass);g.userData.set=(c,grow=0)=>{r.geometry.dispose();r.geometry=ringGeo(BR*(1+grow)+0.8,BR*(1+grow)-0.8,2.4);};}
-    else{const span=162*D2R,w=1.6,h=2.4,rims=[0,1].map(()=>[mesh(g,undefined,M.steel),mesh(g,undefined,M.brass)]);
-      const wts=[0,1].map(()=>{const p=new THREE.Group();g.add(p);const m=mesh(p,cylY(1.3,h*1.15,16),M.brass2);m.rotation.z=Math.PI/2;S.push(m);return{p,m};});
-      for(const s of[-1,1]){const n=mesh(g,cylY(0.7,1.4,12),M.gilt,s*(BR+w*0.5+0.6),0,0);n.rotation.z=Math.PI/2;}
-      const band=(a0,rf,w0,w1)=>{const s=new THREE.Shape(),N=40;for(let i=0;i<=N;i++){const u=i/N,a=a0+span*u,r=rf(u)+w1;i?s.lineTo(r*Math.cos(a),r*Math.sin(a)):s.moveTo(r*Math.cos(a),r*Math.sin(a));}
-        for(let i=N;i>=0;i--){const u=i/N,a=a0+span*u,r=rf(u)+w0;s.lineTo(r*Math.cos(a),r*Math.sin(a));}const geo=extrude(s,{depth:h,bevelEnabled:false});geo.rotateX(-Math.PI/2);geo.translate(0,-h/2,0);return geo;};
-      g.userData.wts=wts;
-      g.userData.set=curl=>{for(let k=0;k<2;k++){const a0=k*Math.PI,rf=u=>BR-curl*BR*0.32*u*u,[st,br]=rims[k];st.geometry.dispose();br.geometry.dispose();
-        st.geometry=band(a0,rf,-w/2,-w/2+w*0.42);br.geometry=band(a0,rf,-w/2+w*0.42,w/2);const u=0.62,a=a0+span*u;wts[k].p.rotation.y=-a;wts[k].m.position.x=rf(u)+w/2+1.2;}};}
+    else{const r=mesh(g,undefined,M.brass);g.userData.set=(c,grow=0)=>{r.geometry.dispose();r.geometry=ringGeo(BR*(1+grow)+0.8,BR*(1+grow)-0.8,2.4);};}
     g.userData.set(0);g.userData.S=S;return g;}
-  /* a helical spring with plain ends (the ends straight in to the collet and stud, no terminal curves): its coil's centre drifts sideways as it winds (exaggerated) */
-  function plainSpring(R,H,N,th,wire){const c=new THREE.Curve();c.arcLengthDivisions=1200;const Re=R*N/(N+th/TAU*0.8),rc=R*0.2,rs=R*0.3;
+  /* a helical spring with plain ends (the ends straight in to the collet and stud, no terminal curves): its coil's centre drifts sideways as it winds (exaggerated);
+     R its radius, H its height (negative: the Wempe's coil rises toward -y), N its turns, th the collet's turn, wire the strip's half thickness */
+  function plainSpring(R,H,N,th,wire){const c=new THREE.Curve();c.arcLengthDivisions=1200;const Re=R*N/(N+th/TAU*0.8),rc=R*0.3,rs=R*0.55;
     c.getPoint=(t,v=new THREE.Vector3())=>{let ang,r,y,ox=0;
       if(t<0.04){const s=t/0.04;ang=0;r=rc+(Re-rc)*s;y=0;}else if(t>0.96){const s=(t-0.96)/0.04;ang=TAU*N;r=Re-(Re-rs)*s;y=H;}
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[5.1,6.7,12,0.17,2.65,3.2];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
+  /* a figure's frame for the movement: turned over (the train side up, as a watchmaker sees it on the bench) or not, and shifted so the point p (movement frame, x z) is at the origin */
+  const frameAt=(V,p,over=true)=>{const t=new THREE.Group(),o=new THREE.Group();if(over)t.rotation.x=Math.PI;o.position.set(-p[0],0,-p[1]);t.add(o);V.scene.add(t);return{t,o};};
+  /* a box round the movement's pieces (its own frame), the movement taken out of whatever figure has it */
+  const boxOf=objs=>{const mv=model.mv,p=mv.parent;if(p)p.remove(mv);mv.updateMatrixWorld(true);const b=new THREE.Box3();for(const o of objs)b.expandByObject(o);if(p)p.add(mv);return b;};
+  const meshesOf=(g,hn)=>{const r=[];g.traverse(o=>{if(o.isMesh&&(!hn||hn.includes(o.userData.hn)))r.push(o);});return r;};
 
-  /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
-  fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;
-    const bal=balance(M,'uncut');V.scene.add(bal);const spr=mesh(V.scene,undefined,M.blued,0,1.3,0);
-    mesh(V.scene,new THREE.BoxGeometry(26,1.6,4.5),M.plate,11,HS[1]+2.2,0);mesh(V.scene,new THREE.BoxGeometry(4.5,20,4.5),M.plate,24,-1.6,0);mesh(V.scene,new THREE.BoxGeometry(1.2,1.3,1.4),M.steel,HS[4],HS[1]+1.2,0);
-    mesh(V.scene,cylY(21,1.2,64),M.plate,8,-12.2,0);
-    V.label('Balance','steel rim, Invar arm',v=>v.set(-BAL_R,0,3));V.label('Hairspring','Elinvar',v=>v.set(-5.5,4.5,0));V.label('Balance cock','',v=>v.set(18,HS[1]+3,0));
-    const ins=qa('input[type=range]',P),ro=q('.e-ro',P);let m=1,k=1,ph=0.1,going=!RM,slow=false;
-    const upd=()=>{const T=0.5*Math.sqrt(m/k);ro.innerHTML=`Period <b>${T.toFixed(3)} s</b>, or <b>${Math.round(7200/T).toLocaleString('en-US')}</b> vibrations an hour${model?` · moment of inertia ${(model.I0*m).toFixed(0)} g·mm²`:''}`;f.dirty=true;};
-    range(ins[0],v=>{m=v;bal.userData.S.forEach(o=>o.scale.set(Math.sqrt(v),1,Math.sqrt(v)));upd();return '×'+v.toFixed(2);});range(ins[1],v=>{k=v;upd();return '×'+v.toFixed(2);});
+  /* ---------- the balance and hairspring: T = 2π√(I/κ). The Wempe's (05 03 01-1, 05 03 02-1), swinging as its escapement keeps it (WPHYS.ESC.A) ---------- */
+  fig('eBal',f=>{const st=f.el,P=figOf(st),E=WPHYS.ESC,A=E.A,RE=model.R.esc,PT=model.mv.userData.parts,HL=WESC.HSL,B=WESC.B,keep=new Set(['balance','hairspring','stud','rollers']);
+    const bb=boxOf([PT.balance,PT.hairspring]),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.42,dist:82,target:[0,-(bb.min.y+bb.max.y)/2,0],near:2,far:1000}),{t,o}=frameAt(V,B);
+    /* the masses (050301-4, their screws and nuts WN-12) swollen about their own centres by the mass slider */
+    const MS=meshesOf(PT.balance,['050301-4','WN-12']).map(m=>{const b=new THREE.Box3().setFromBufferAttribute(m.geometry.attributes.position),c=b.getCenter(new THREE.Vector3()).multiply(m.scale).add(m.position);return{m,c,p:m.position.clone(),s:m.scale.clone()};});
+    const rim=meshesOf(PT.balance,['050301-1'])[0],rb=boxOf([rim]),yR=(rb.min.y+rb.max.y)/2,sb=boxOf([PT.hairspring]),Rr=(rb.max.x-rb.min.x)/2;
+    V.label('Balance','nickel steel and brass',at(o,B[0]-Rr,yR,B[1]+3)).left=true;V.label('Hairspring','steel, tempered blue',at(o,B[0]-HL.RC-0.6,(sb.min.y+sb.max.y)/2,B[1]));
+    let m=1,k=1,ph=0.1,going=!RM,slow=false,own=null;const ins=qa('input[type=range]',P),ro=q('.e-ro',P);
+    const upd=()=>{const T=0.5*Math.sqrt(m/k);ro.innerHTML=`Period <b>${T.toFixed(3)} s</b>, or <b>${Math.round(7200/T).toLocaleString('en-US')}</b> vibrations an hour · moment of inertia ${Math.round(WPHYS.SET.I*m).toLocaleString('en-US')} g·mm²`;f.dirty=true;};
+    range(ins[0],v=>{m=v;upd();return '×'+v.toFixed(2);});range(ins[1],v=>{k=v;upd();return '×'+v.toFixed(2);});
     q('.slow',P).addEventListener('change',e=>slow=e.target.checked);play(q('.play',P),()=>going,v=>going=v);
-    return dt=>{if(going){ph+=dt*(slow?0.2:1)/(0.5*Math.sqrt(m/k));f.dirty=true;}if(!f.dirty)return;f.dirty=false;
-      const th=A*Math.sin(TAU*ph);bal.rotation.y=th;spr.geometry.dispose();spr.geometry=springGeo(HS[0],HS[1],HS[2],th,HS[3]*Math.cbrt(k),HS[5],HS[4]);V.render();};},'3d');
+    return dt=>{if(going){ph+=dt*(slow?0.2:1)/(0.5*Math.sqrt(m/k));f.dirty=true;}if(!f.dirty)return;f.dirty=false;const th=A*Math.sin(TAU*ph);
+      lend(V,o,keep,{th},{pose:()=>{const s=Math.sqrt(m),g0=RE.spring.geometry;
+        for(const q2 of MS){q2.m.scale.set(q2.s.x*s,q2.s.y,q2.s.z*s);q2.m.position.set(q2.c.x+(q2.p.x-q2.c.x)*s,q2.p.y,q2.c.z+(q2.p.z-q2.c.z)*s);}
+        if(k!==1){own=ribbonGeo(RE.spPath(-th),HL.HB,HL.HT*Math.cbrt(k),own);RE.spring.geometry=own;}
+        return()=>{for(const q2 of MS){q2.m.scale.copy(q2.s);q2.m.position.copy(q2.p);}RE.spring.geometry=g0;};}});};},'model');
 
-  /* ---------- the hairspring close up: terminal curves or plain ends ---------- */
-  fig('eSpr',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.95:0.6,yaw:0.45,pitch:0.28,dist:42,target:[0,4.6,0]}),M=G.M,R=5.5,H=9,N=10;
-    const spr=mesh(V.scene,undefined,M.blued),staff=new THREE.Group();V.scene.add(staff);mesh(staff,cylY(0.45,14,12),M.steel,0,4.5,0);mesh(staff,cylY(1.4,1.1,24),M.brass,0,0,0);
-    mesh(V.scene,new THREE.BoxGeometry(1.4,1.4,1.4),M.brass,R*0.3,H+0.4,0);
-    mesh(V.scene,new THREE.CylinderGeometry(R,R,H,48,1,true),new THREE.MeshBasicMaterial({color:0x888888,wireframe:true,transparent:true,opacity:0.16}),0,H/2,0);
-    const Lt=V.label('Terminal curve','',v=>v.set(1.8,H,0.5));V.label('Collet on the staff','turns with the balance',v=>v.set(1.2,0,0.8));V.label('Stud','fixed',v=>v.set(R*0.3+0.8,H+1,0));
-    let th=0,term=true;const lim=Math.round(ESC.A/D2R),inp=q('input[type=range]',P);inp.min=-lim;inp.max=lim;
-    range(inp,v=>{th=v*D2R;f.dirty=true;return v+'°';});seg(q('.seg',P),v=>{term=v==='1';f.dirty=true;});
-    return()=>{if(!f.dirty)return;f.dirty=false;spr.geometry.dispose();spr.geometry=term?springGeo(R,H,N,th,0.2):plainSpring(R,H,N,th,0.2);staff.rotation.y=th;Lt.show=term;V.render();};},'3d');
+  /* ---------- the hairspring close up: the Wempe's, its terminal curves as 05 03_7 draws them, or the same coil with plain ends ---------- */
+  fig('eSpr',f=>{const st=f.el,P=figOf(st),RE=model.R.esc,PT=model.mv.userData.parts,HL=WESC.HSL,B=WESC.B,keep=new Set(['hairspring','stud']);
+    const P0=RE.spPath(0),ys=P0.map(p=>p[1]),y0=P0[0][1],y1=P0[P0.length-1][1],cx=B[0],cz=B[1];
+    const V=new View3D(st,f,{aspect:w=>w<520?0.95:0.6,yaw:0.45,pitch:0.78,dist:50,target:[0,-(Math.min(...ys)+Math.max(...ys))/2,0],near:1,far:500}),{t,o}=frameAt(V,B);
+    const plain=mesh(o,undefined,RE.spring.material);plain.position.set(cx,y0,cz);
+    /* the labels: the upper terminal curve half way along it (from where it leaves the coil to the stud), the collet and the stud at their far ends */
+    const cb=boxOf([RE.hsRot]),sb=boxOf([PT.stud]),rr=p=>Math.hypot(p[0],p[2]);   /* the path about the balance's axis (the hairspring's group stands on it) */
+    const Q=P0[0][1]<P0[P0.length-1][1]?P0:[...P0].reverse();let iC=0;while(iC<Q.length-1&&rr(Q[iC])<HL.RC-0.4)iC++;const pc=Q[Math.round(iC/2)];   /* the stud's end of the strip, in along its curve to where it joins the coil */
+    const Lt=V.label('Terminal curve','',at(o,pc[0]+cx,pc[1],pc[2]+cz));V.label('Collet','turns with the balance',at(o,(cb.min.x+cb.max.x)/2,cb.max.y,cb.max.z)).left=true;   /* its name to the left, the curve's to the right */V.label('Stud','fixed',at(o,(sb.min.x+sb.max.x)/2,sb.min.y,(sb.min.z+sb.max.z)/2));   /* at its top, its screw's head, clear of the curve's name */
+    let th=0,term=true;const lim=Math.round(WPHYS.ESC.A/D),inp=q('input[type=range]',P);inp.min=-lim;inp.max=lim;
+    range(inp,v=>{th=v*D;f.dirty=true;return v+'°';});seg(q('.seg',P),v=>{term=v==='1';f.dirty=true;});
+    return()=>{if(!f.dirty)return;f.dirty=false;plain.visible=!term;if(!term){plain.geometry.dispose();plain.geometry=plainSpring(HL.RC,y1-y0,HL.turns,-th,HL.HT/2);}Lt.show=term;
+      lend(V,o,keep,{th},{pose:()=>{RE.spring.visible=term;return()=>{RE.spring.visible=true;};}});};},'model');
 
-  /* ---------- heat: the split bimetallic balance, a plain brass one, and the Model 21's ---------- */
-  fig('eTemp',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.8:0.5,yaw:0.3,pitch:1.1,dist:82,target:[0,0,0]}),M=G.M;
-    const B={split:balance(M,'split'),plain:balance(M,'plain'),m21:balance(M,'uncut')};for(const b of Object.values(B))V.scene.add(b);
+  /* ---------- heat: the Wempe's cut bimetallic balance, a plain brass one, and the Model 21's ---------- */
+  fig('eTemp',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.8:0.5,yaw:0.3,pitch:1.1,dist:88,target:[0,0,0]}),M=G.M,PT=model.mv.userData.parts;
+    /* the Wempe's balance, a copy: its rim (05 03 01-1, nickel steel inside and brass outside) is cut at 90° from the arm, so each quarter hangs from an end of the arm,
+       which lies along 12-6 (z); warmer, each quarter's free end curls in (by curl u², u its angle from the arm's end over 90°), the masses on it with it */
+    const src=PT.balance.children[0],wb=copy(src),hold=new THREE.Group();wb.position.set(0,0,0);wb.quaternion.identity();hold.add(wb);
+    const rim=meshesOf(wb,['050301-1']),rb=new THREE.Box3();rim.forEach(m=>{m.geometry=m.geometry.clone();m.userData.p0=m.geometry.attributes.position.array.slice();rb.expandByObject(m);});
+    hold.position.y=-(rb.min.y+rb.max.y)/2;const BR=(rb.max.x-rb.min.x)/2,RIN=BR-1.2,uOf=a=>{const d=Math.min(Math.abs(a-Math.PI/2),Math.abs(a+Math.PI/2));return Math.min(1,d/(Math.PI/2));};
+    const MG=[];wb.traverse(g=>{if(g.isGroup&&g.children.some(c=>c.userData.hn==='050301-4')){const b=new THREE.Box3().setFromObject(g),c=b.getCenter(new THREE.Vector3());MG.push({g,a:Math.atan2(c.z,c.x),p:g.position.clone()});}});
+    const curlTo=c=>{for(const m of rim){const p=m.geometry.attributes.position,a0=m.userData.p0;for(let i=0;i<p.count;i++){const x=a0[3*i],z=a0[3*i+2],r=Math.hypot(x,z);if(r<RIN){p.setXYZ(i,x,a0[3*i+1],z);continue;}
+        const u=uOf(Math.atan2(z,x)),k=(r-c*BR*0.32*u*u)/r;p.setXYZ(i,x*k,a0[3*i+1],z*k);}p.needsUpdate=true;m.geometry.computeVertexNormals();}
+      for(const q2 of MG){const u=uOf(q2.a),d=c*BR*0.32*u*u;q2.g.position.set(q2.p.x-d*Math.cos(q2.a),q2.p.y,q2.p.z-d*Math.sin(q2.a));}};
+    const B={split:hold,plain:balance(M,'plain',BR),m21:balance(M,'uncut',HAMDATA.BAL_R)};for(const b of Object.values(B))V.scene.add(b);
     const cst=q('#eTempChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.62:0.34),ro=q('.e-ro',P);let T=20,kind='split';
-    const plain=t=>-11*(t-20),comp=MTE.splitC,F2C=t=>(t-32)/1.8,m21=t=>MTE.uncut(t*1.8+32);   /* illustrative rates, s/day (comp: core.js, which the model's rate panel uses too); °F to °C */
-    const Lw=V.label('Compensation weight','',v=>B.split.userData.wts[0].m.getWorldPosition(v)),Lb=V.label('Brass outside, steel inside','',v=>v.set(-BAL_R-0.5,0,-6)),Li=V.label('Invar arm','',v=>v.set(-7,0.8,0)),Ls=V.label('Uncut steel rim','',v=>v.set(-BAL_R*0.7,0,-BAL_R*0.72));
-    const upd=()=>{for(const k in B)B[k].visible=k===kind;B.split.userData.set(kind==='split'?(T-20)/25*0.6:0);B.plain.userData.set(0,(T-20)/25*0.05);Lw.show=Lb.show=kind==='split';Li.show=Ls.show=kind==='m21';
+    const plain=t=>-11*(t-20),comp=MTE.splitC,F2C=t=>(t-32)/1.8,m21=t=>MTE.uncut(t*1.8+32);   /* illustrative rates, s/day (comp: core.js); °F to °C */
+    const mg=MG[0],Lw=V.label('Compensation mass','',v=>{mg.g.updateMatrixWorld(true);new THREE.Box3().setFromObject(mg.g).getCenter(v);}),Lb=V.label('Brass outside, nickel steel inside','',v=>v.set(-BR-0.5,0,-7)),Lc=V.label('Cut','',v=>v.set(BR+0.6,0,0)),
+      Li=V.label('Invar arm','',v=>v.set(-7,0.8,0)),Ls=V.label('Uncut steel rim','',v=>v.set(-HAMDATA.BAL_R*0.7,0,-HAMDATA.BAL_R*0.72));
+    const upd=()=>{for(const k in B)B[k].visible=k===kind;curlTo(kind==='split'?(T-20)/25*0.6:0);B.plain.userData.set(0,(T-20)/25*0.05);Lw.show=Lb.show=Lc.show=kind==='split';Li.show=Ls.show=kind==='m21';
       if(kind==='m21'){const r=m21(T);ro.innerHTML=`Model 21 at ${T.toFixed(1)} °C: <b>nothing curls</b>, and it ${r>=-0.005?'keeps its rate':`loses <b>${Math.abs(r).toFixed(2)} s a day</b> against 72½ °F`}. The Invar arm holds the rim’s diameter at its ends; the Elinvar hairspring hardly changes its stiffness.`;}
-      else{const r=kind==='split'?comp(T):plain(T);ro.innerHTML=`${kind==='split'?'Compensation':'Plain brass'} balance at ${T.toFixed(1)} °C: ${r>=0?'gains':'loses'} <b>${Math.abs(r).toFixed(1)} s a day</b>`;}
+      else{const r=kind==='split'?comp(T):plain(T);ro.innerHTML=`${kind==='split'?'A cut bimetallic balance, as the Wempe’s,':'Plain brass balance'} at ${T.toFixed(1)} °C: ${r>=0?'gains':'loses'} <b>${Math.abs(r).toFixed(1)} s a day</b>`;}
       f.dirty=true;cf.dirty=true;};
     range(q('input[type=range]',P),v=>{T=v;upd();return v.toFixed(1)+' °C';});seg(q('.seg',P),v=>{kind=v;upd();});
     return()=>{if(f.dirty){f.dirty=false;V.render();}
@@ -240,138 +284,158 @@ const ESSAY=(()=>{
           series:[{f:plain,color:PAL.red,label:'plain: about −11 s a day per °C',lx:15.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:kind==='m21'?-28:-14,la:'center',width:kind==='split'?2.6:1.4}].concat(kind==='m21'?[{f:m21,color:PAL.blue,label:'Model 21, its test card',lx:34,dy:14,la:'center',width:2.6}]:[]),
           marks:[{x:T,y:kind==='split'?comp(T):kind==='plain'?plain(T):m21(T),color:kind==='split'?PAL.brass:kind==='plain'?PAL.red:PAL.blue}]});
         const{x:ctx}=C;ctx.font='11px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='center';const pw=C.w-62;
-        for(const[tf,lab]of[[55,'55 °F'],[72.5,'72½'],[90,'90 °F']]){const x=46+(F2C(tf)+5)/50*pw;ctx.fillRect(x-0.5,C.h-40,1,5);ctx.fillText(lab,x,C.h-46);}}};},'3d');
+        for(const[tf,lab]of[[55,'55 °F'],[72.5,'72½'],[90,'90 °F']]){const x=46+(F2C(tf)+5)/50*pw;ctx.fillRect(x-0.5,C.h-40,1,5);ctx.fillText(lab,x,C.h-46);}}};},'model');
 
-  /* ---------- constant force: the barrel, chain and fusee, in the model's profile ---------- */
-  fig('eFus',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:Math.PI-0.45,pitch:0.42,dist:112,target:[0,3.5,0]}),M=G.M,S=V.scene;
-    const fs=model.fs,rf=fs.rf,N=FUSEE_TURNS,H=8.96,yf=m=>H*(1-m/N),Rb=18.3,d=Math.hypot(L.Fu[0]-L.Ba[0],L.Fu[1]-L.Ba[1]),fx=d/2,bx=-d/2,V2=(a,b)=>new THREE.Vector2(a,b);
-    /* barrel turns for n fusee turns of chain, as the model reckons them (makeFusee's I, which counts the chain's thickness) */
-    const I=n=>fs.I(n);
-    const fz=new THREE.Group();fz.position.x=fx;S.add(fz);
-    const pts=[V2(0,-1),V2(rf(N)+0.8,-1),V2(rf(N)+0.8,0)];for(let i=0;i<=60;i++){const m=N*(1-i/60);pts.push(V2(rf(m)-0.25,yf(m)));}pts.push(V2(rf(0)+1,H),V2(rf(0)+1,H+0.6),V2(0,H+0.6));
-    mesh(fz,new THREE.LatheGeometry(pts,72),M.brass);
-    const gc=new THREE.Curve();gc.getPoint=(t,v=new THREE.Vector3())=>{const m=N*t,a=TAU*m-Math.PI/2,r=rf(m)-0.1;return v.set(r*Math.cos(a),yf(m),r*Math.sin(a));};mesh(fz,new THREE.TubeGeometry(gc,Math.round(N*48),0.12,4,false),M.brass2);
-    mesh(fz,cylY(0.9,H+10,12),M.steel,0,H/2,0);mesh(fz,new THREE.BoxGeometry(2.4,3,2.4),M.steel,0,H+6.2,0);
-    const gw=mesh(fz,gearGeo(TRAIN.fu,MOD.fusee,1.2,{spokes:4}),M.copper,0,-3,0);
-    const bz=new THREE.Group();bz.position.x=bx;S.add(bz);mesh(bz,new THREE.CylinderGeometry(Rb,Rb,H+2,64),M.brass2,0,H/2,0);
-    for(const y of[-1.2,H+1.2])mesh(bz,new THREE.CylinderGeometry(Rb+0.05,Rb+0.05,0.8,64),M.brass,0,y,0);mesh(bz,cylY(0.6,0.6,10),M.steel,Rb*0.55,H+1.9,0);mesh(bz,cylY(1.1,H+8,12),M.steel,0,H/2,0);
-    const chain=mesh(S,undefined,M.chain);let n=0,hrs=6;
-    function wind(nn){n=nn;fz.rotation.y=n*TAU;bz.rotation.y=I(n)*TAU;const Pp=[],Vv=(x,y,z)=>Pp.push(new THREE.Vector3(x,y,z));
-      for(let m=N;m>n;m-=0.03){const a=-Math.PI/2+TAU*(m-n),r=rf(m);Vv(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
-      const r0=rf(n),y0=yf(n);Vv(fx,y0,-r0);for(const s of[0.25,0.5,0.75])Vv(lerp(fx,bx,s),y0,-lerp(r0,Rb,s));Vv(bx,y0,-Rb);const In=I(n);
-      for(let m=n-0.03;m>=0;m-=0.03){const b=-Math.PI/2-TAU*(In-I(m));Vv(bx+Rb*Math.cos(b),yf(m),Rb*Math.sin(b));}if(Pp.length<4)Vv(bx-Rb,y0,0);
-      chain.geometry.dispose();chain.geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(Pp,false,'centripetal'),Math.min(1600,Pp.length*3),0.38,5,false);}
-    V.label('Barrel','mainspring inside',v=>v.set(bx,H+3,0));V.label('Fusee','',v=>v.set(fx,H+2,0));V.label('Chain','',v=>v.set(0,yf(n),-lerp(rf(n),Rb,0.5)));V.label('Fusee wheel','drives the train',v=>v.set(fx+16,-3,0));
-    const cst=q('#eFusChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.6:0.32),ro=q('.e-ro',P),pull=h=>fs.pull(h*FUSEE_PER_HOUR),T12=fs.torque(12*FUSEE_PER_HOUR),tq=h=>fs.torque(h*FUSEE_PER_HOUR)/T12,gb=h=>fs.pullB(Math.min(1,h/RUN_H))/fs.pullB(0.5)*tq(RUN_H/2);   /* the model's mainspring (its solved coils, msPull) at the chain's lever (makeFusee); gb: a going barrel with it, the same at 28 h */
-    const inp=q('input[type=range]',P);inp.max=RUN_H;
-    range(inp,v=>{hrs=v;wind(v*FUSEE_PER_HOUR);ro.innerHTML=`Spring pull <b>${Math.round(pull(v)*100)}%</b> of full, lever arm on the fusee <b>${fs.lever(n).toFixed(1)} mm</b>, ${(fs.lever(n)/fs.lever(0)).toFixed(2)}× the smallest, turning force on the fusee wheel <b>${Math.round(tq(v)*100)}%</b> (a going barrel: ${Math.round(gb(v)*100)}%)`;f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
-    return()=>{if(f.dirty){f.dirty=false;V.render();}
-      if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:RUN_H,y0:0,y1:1.6,xt:[0,8,16,24,32,40,48,56],yt:[0,0.5,1,1.5],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
-        series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'center'},{f:tq,color:PAL.blue,label:'pull × lever: the force on the train',lx:26,dy:-12,la:'center'},{f:gb,color:PAL.muted,width:1.4,dash:[5,4],label:'a going barrel',lx:10,dy:-12,la:'center'}],
+  /* ---------- the Wempe's fusee: the chain's lever n turns from full wind (its groove's radius where the chain leaves it, fusee.js's rf), the hours since winding ---------- */
+  const lever=n=>{const FU=model.R.fu,cg=FU.CG.chain;return FU.rf(cg.m0Of(cg.RF0+TAU*clamp(n,0,FU.NRUN)));};
+  const ctrOf=b=>b.getCenter(new THREE.Vector3());
+
+  /* ---------- constant force: the Wempe's barrel, chain and fusee, posed by the model at each hour ---------- */
+  fig('eFus',f=>{const st=f.el,P=figOf(st),PT=model.mv.userData.parts,FU=model.R.fu,HPT=WPHYS.HPT,HR=model.HRUN,Fx=WD.H[10],Bx=WD.H[45],mid=[(Fx[0]+Bx[0])/2,(Fx[1]+Bx[1])/2];
+    const keep=new Set(['fusee','fuseeWheel','maintaining','barrel','barrelArbor','setupRatchet','chain']);
+    const bF=boxOf([PT.fusee]),bB=boxOf([PT.barrel]),bW=boxOf([PT.fuseeWheel]),ym=(bF.min.y+bF.max.y)/2;
+    const V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:-0.5,pitch:0.42,dist:150,target:[0,-ym+4,0],near:2,far:2000}),{t,o}=frameAt(V,mid);
+    /* the torque the model's mainspring gives the fusee arbor (WEDATA.fusee.tq: the solved strip, by the fusee's turns from run down, tools/wempe_essaydata.js), its pull on the chain that over the lever */
+    const TQ=WEDATA.fusee.tq,lin=(tb,x)=>{if(x<=tb[0][0])return tb[0][1];for(let j=1;j<tb.length;j++)if(x<=tb[j][0]){const[a,p]=tb[j-1],[b,v]=tb[j];return p+(v-p)*(x-a)/(b-a);}return tb[tb.length-1][1];};
+    const nOf=h=>h/HPT,tqS=h=>lin(TQ,WPHYS.MF-nOf(h)),pullN=h=>tqS(h)/lever(nOf(h)),P0=pullN(0),pull=h=>pullN(h)/P0;
+    const T12=WPHYS.fusT(nOf(12)),tq=h=>WPHYS.fusT(nOf(h))/T12,gb=h=>pull(h)/pull(28)*tq(28);   /* the force on the train: 05 06_20, measured on the fusee arbor; gb: a going barrel with the same spring, matched at 28 h */
+    V.label('Barrel','mainspring inside',at(o,Bx[0],(bB.min.y+bB.max.y)/2,Bx[1]-(bB.max.x-bB.min.x)/2));V.label('Fusee','',at(o,Fx[0]-9,ym,Fx[1]));const Lc=V.label('Chain','',v=>v.set(0,0,0));
+    V.label('Fusee wheel','drives the train',at(o,Fx[0]-(bW.max.x-bW.min.x)/2,(bW.min.y+bW.max.y)/2,Fx[1]));
+    const cst=q('#eFusChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.6:0.32),ro=q('.e-ro',P);let hrs=6;
+    const inp=q('input[type=range]',P);inp.max=HR.toFixed(1);
+    range(inp,v=>{hrs=v;const n=nOf(v),L=lever(n);ro.innerHTML=`Spring pull <b>${Math.round(pull(v)*100)}%</b> of full, lever arm on the fusee <b>${L.toFixed(1)} mm</b>, ${(L/lever(0)).toFixed(2)}× the smallest, turning force on the fusee arbor <b>${Math.round(tq(v)*100)}%</b> (a going barrel: ${Math.round(gb(v)*100)}%)`;
+      const m=FU.CG.chain.m0Of(FU.CG.chain.RF0+TAU*clamp(n,0,FU.NRUN)),yc=FU.yc(m);Lc.pos=at(o,mid[0],yc,mid[1]);f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
+    return()=>{if(f.dirty){f.dirty=false;lend(V,o,keep,{n:nOf(hrs)});}
+      if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:HR,y0:0,y1:1.6,xt:[0,8,16,24,32,40,48,56],yt:[0,0.5,1,1.5],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
+        series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'center'},{f:tq,color:PAL.blue,label:'pull × lever: the force on the train, measured',lx:26,dy:-12,la:'center'},{f:gb,color:PAL.muted,width:1.4,dash:[5,4],label:'a going barrel',lx:10,dy:-12,la:'center'}],
         marks:[{x:hrs,y:pull(hrs),color:PAL.red},{x:hrs,y:tq(hrs),color:PAL.blue}]});
-        const{x:ctx}=C;ctx.strokeStyle=PAL.muted;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(X(56),Y(0));ctx.lineTo(X(56),Y(1.1));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=PAL.muted;ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='right';ctx.fillText('rated 56 h',X(56)-4,Y(0.08));}};},'model');
+        const{x:ctx}=C;ctx.strokeStyle=PAL.muted;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(X(56),Y(0));ctx.lineTo(X(56),Y(1.1));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=PAL.muted;ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='right';ctx.fillText('the dial’s 56 h',X(56)-4,Y(0.08));}};},'model');
 
-  /* ---------- winding: the up/down dial and the key's half turns ---------- */
+  /* ---------- winding: the Wempe's up-and-down dial and the key's half turns (the key on the fusee's square: a turn of the key a turn of the fusee) ---------- */
   fig('eWind',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?1.12:0.4),inp=q('input[type=range]',P),ro=q('.e-ro',P),btn=q('.wind',P);let h=20,kw=null;
-    const HT=0.5/FUSEE_PER_HOUR;inp.max=RUN_H;   /* hours per half turn of the key: 3.43 */
-    const say=()=>{const hf=h/HT,left=RUN_H-h;ro.innerHTML=kw?`Winding: half turn <b>${kw.i}</b> of ${kw.n}, counterclockwise.`:(h<0.05?'<b>Fully wound</b>: the stop-bar has met the winding stop. ':`<b>${(Math.round(hf*2)/2).toString().replace('.5','½').replace(/^0½/,'½')}</b> half turn${hf>1.25?'s':''} of the key to wind it fully. `)+
-      (kw?'':`${left.toFixed(1)} h of running left${h>56?', past the 56 hours it is designed for':''}.`);};
+    const HT=WPHYS.HPT/2,HR=()=>HRUN(),NH=Math.ceil(2*WPHYS.MF);inp.max=HR().toFixed(1);   /* hours per half turn of the key: 3.21; the fusee's 8.64 working turns, 18 half turns at most */
+    const say=()=>{const hf=h/HT,left=HR()-h;ro.innerHTML=kw?`Winding: half turn <b>${kw.i}</b> of ${kw.n}.`:(h<0.05?'<b>Fully wound</b>: the stop has caught the fusee. ':`<b>${(Math.round(hf*2)/2).toString().replace('.5','½').replace(/^0½/,'½')}</b> half turn${hf>1.25?'s':''} of the key to wind it fully. `)+
+      (kw?'':`${Math.max(0,left).toFixed(1)} h of running left${h>56?', past the 56 hours its dial counts':''}.`);};
     range(inp,v=>{if(kw)return;h=v;say();f.dirty=true;return v.toFixed(1)+' h';});
     btn.addEventListener('click',()=>{if(kw||h<0.05)return;kw={t:0,h0:h,n:Math.ceil(h/HT-1e-6),i:1};});
     return dt=>{if(kw){kw.t+=dt*(RM?4:1);const i=Math.floor(kw.t/0.8);kw.i=Math.min(kw.n,i+1);h=Math.max(0,kw.h0-HT*(i+smooth((kw.t-i*0.8)/0.55)));if(h<=0){h=0;kw=null;}inp.value=h;inp.parentElement.querySelector('output').textContent=h.toFixed(1)+' h';say();f.dirty=true;}
-      if(!f.dirty)return;f.dirty=false;const{x:ctx,w,h:H}=C;ctx.clearRect(0,0,w,H);const D=dial(),S=D.width,c=S/2,uy=c+L.Ud[1]*c/DIAL_R,hs=c*0.255*1.3,nw=w<520,sz=nw?Math.min(w*0.62,H*0.52):Math.min(H*0.92,w*0.46),dx=nw?(w-sz)/2:w*0.26-sz/2,dy=nw?8:(H-sz)/2,k=sz/(2*hs)*c/DIAL_R;
-      ctx.save();ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.clip();ctx.drawImage(D,c-hs,uy-hs,2*hs,2*hs,dx,dy,sz,sz);ctx.fillStyle='#1d2c74';drawHand(ctx,hands().ud,dx+sz/2,dy+sz/2,udA(h),k);ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,0.9*k,0,TAU);ctx.fill();ctx.restore();
+      if(!f.dirty)return;f.dirty=false;const{x:ctx,w,h:H}=C;ctx.clearRect(0,0,w,H);const DC=dial(),S=DC.width,c=S/2,k0=c/WDIAL.DR,uy=c+UDY*k0,hs=13*k0,nw=w<520,sz=nw?Math.min(w*0.62,H*0.52):Math.min(H*0.92,w*0.46),dx=nw?(w-sz)/2:w*0.26-sz/2,dy=nw?8:(H-sz)/2,k=sz/(2*hs)*k0;
+      ctx.save();ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.clip();ctx.drawImage(DC,c-hs,uy-hs,2*hs,2*hs,dx,dy,sz,sz);drawHand(ctx,hands().ud,dx+sz/2,dy+sz/2,udA(h),k);ctx.restore();
       ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.stroke();
-      /* the key's 17½ half turns from run down, seven to a row (a day's running), those still to go filled */
+      /* the key's half turns from run down, seven to a row, those still to go filled */
       const need=h/HT,cols=7,gap=nw?Math.min((w-60)/cols,(H-sz-dy-40)/3.4):Math.min((w-w*0.53-44)/cols,H*0.2),x0=nw?(w-cols*gap-40)/2:w*0.53,r=gap*0.36,y0=nw?dy+sz+gap*1.45:H/2-gap*0.9;
       ctx.font='12px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText('Half turns of the key, from run down',x0,y0-gap*0.7);
-      for(let i=0;i<18;i++){const cx=x0+(i%cols+0.5)*gap,cy=y0+Math.floor(i/cols)*gap,half=i===17,full=need-i;ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,half?Math.PI/2:Math.PI*1.5);if(half)ctx.closePath();ctx.stroke();
-        if(full>0){ctx.fillStyle=PAL.blue;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+TAU*(half?0.5:1)*clamp(full,0,1));ctx.closePath();ctx.fill();}}
-      ctx.fillStyle=PAL.muted;ctx.textBaseline='middle';for(const[row,t,c]of[[0,'24 h',7],[1,'48 h',7],[2,Math.round(RUN_H)+' h',4]])ctx.fillText(t,x0+c*gap+6,y0+row*gap);ctx.textBaseline='alphabetic';};});
+      for(let i=0;i<NH;i++){const cx=x0+(i%cols+0.5)*gap,cy=y0+Math.floor(i/cols)*gap,frac=Math.min(1,2*WPHYS.MF-i),part=frac<1,full=need-i;ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+TAU*frac);if(part)ctx.lineTo(cx,cy);if(part)ctx.closePath();ctx.stroke();
+        if(full>0){ctx.fillStyle=PAL.blue;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+TAU*frac*clamp(full/frac,0,1));ctx.closePath();ctx.fill();}}
+      ctx.fillStyle=PAL.muted;ctx.textBaseline='middle';for(let row=0;row*cols<NH;row++){const nn=Math.min(NH,(row+1)*cols),hh=Math.min(HR(),nn*HT);ctx.fillText(Math.round(hh)+' h',x0+(nn-row*cols)*gap+6,y0+row*gap);}ctx.textBaseline='alphabetic';};});
 
-  /* ---------- maintaining power: the fusee wheel's maintaining work, the model's own parts (bind's R), driven as the model's update() drives them ----------
-     The sustaining ratchet stands where the sustaining pawl holds it against a steep face (phaseAgainst, as holdBack leaves it). Running, the fusee's winding ratchet bears on
-     the winding pawls and the spring is closed on its banking (d 0); with the key turning for t minutes the fusee and its ratchet turn back under the pawls (half a turn a
-     minute, for the figure) and the spring relaxes at the fusee wheel's turn, d = t SR to SMAX (about 21 minutes), turning the fusee wheel on by d while the ratchet stays. Rose: what carries the drive; teal: what holds */
-  fig('eMaint',f=>{const st=f.el,P=figOf(st),R=model.R,mv=model.mv,M0=model.M,Fu=L.Fu,SMAX=R.SMAX,SR=FUSEE_PER_HOUR*TAU/60,TM=SMAX/SR;   /* SR: the spring's relaxing a minute; TM: its minutes */
-    const V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:0.35,pitch:1.05,dist:78,target:[0,8.6,0],minPitch:0.2});
-    const root=new THREE.Group();root.rotation.x=Math.PI;root.position.set(-Fu[0],0,Fu[1]);V.scene.add(root);   /* the movement's frame turned over (the train bridge's side up), the fusee's axis at the origin */
-    const cl=o=>{const c=o.isMesh?new THREE.Mesh(o.geometry,o.userData.mat0||o.material):new THREE.Group();c.position.copy(o.position);c.quaternion.copy(o.quaternion);c.scale.copy(o.scale);c.visible=o.visible;c.userData.src=o;
-      for(const k of o.children)if(!k.isInstancedMesh&&!k.isLight)c.add(cl(k));return c;};
-    const gw=cl(R.gw),ss=cl(R.ssg),sr=cl(R.sr),sp=cl(R.spawl);root.add(gw,ss,sr,sp);const spr=ss.children.find(o=>o.userData.src===R.sspring);
-    let wr=null;R.fs.g.traverse(o=>{if(!wr&&o.isMesh&&o.userData.hn==='42013')wr=o;});
-    const wrg=new THREE.Group();wrg.position.set(Fu[0],0,Fu[1]);root.add(wrg);{mv.updateMatrixWorld(true);const p=new THREE.Vector3();wr.getWorldPosition(p);mv.worldToLocal(p);const m=new THREE.Mesh(wr.geometry,wr.userData.mat0||wr.material);m.position.y=p.y;m.userData.src=wr;wrg.add(m);}
-    const wp=sr.children.filter(o=>R.wp.includes(o.userData.src)),srM=[];sr.traverse(o=>{if(o.isMesh&&o.userData.src.userData.mat0===M0.gilt)srM.push(o);});
-    /* tints and the see-through ratchet: copies of the model's materials */
-    const T=new Map(),tint=(m0,c)=>{const k=m0.uuid+c;let t=T.get(k);if(!t){t=m0.clone();t.color=m0.color.clone().lerp(sc(c),0.8);if(t.emissive){t.emissive=sc(c);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}T.set(k,t);}return t;};
-    const see=new Map(),ghost=m0=>{let g=see.get(m0);if(!g){g=m0.clone();g.transparent=true;g.opacity=0.45;g.depthWrite=false;see.set(m0,g);}return g;};
-    const ROSE='#e0306a',TEAL='#0e9f92',paint=(g,c,gh)=>g.traverse(o=>{if(!o.isMesh)return;const m0=o.userData.src.userData.mat0||o.userData.src.material,k=typeof c==='function'?c(o):c,t=k?tint(m0,k):m0;o.material=gh&&srM.includes(o)?ghost(t):t;});
-    const onM=o=>{for(let x=o.userData.src;x&&x!==R.sr;x=x.parent)if(x.userData.lp)return x.userData.lp==='m';return false;};   /* in the ratchet's assembly, the winding pawls, their springs and feet: the mainspring's side */
-    /* where the sustaining pawl holds the ratchet, and the pawls' seats (movement.js: seatPawl, phaseAgainst) */
-    const q0=[R.spawl.position.x-Fu[0],R.spawl.position.z-Fu[1]],su=R.spawl.userData,srA=phaseAgainst(R.SRP,su.pts,q0,su.base,-1).psi;
-    sr.rotation.y=srA;sp.rotation.y=seatPawl(su.pts,toWheel(q0,[0,0],srA),su.base-srA,R.SRP)+srA;
-    let t=0,lastD=-1,kw=null,key=0;const ro=q('.e-ro',P),inp=q('input[type=range]',P),out=inp.parentElement.querySelector('output'),btn=q('.wind',P);
-    function set(tm,mode){t=tm;const d=Math.min(SMAX,tm*SR),wind=mode==='turn'||(!mode&&tm>0);   /* mode: 'turn' the key turning, 'run' let go, or by the slider */gw.rotation.y=ss.rotation.y=srA+d;
-      if(Math.abs(d-lastD)>1e-4){lastD=d;spr.geometry.dispose();spr.geometry=R.sspGeo(d);}
-      if(wind)key=tm*Math.PI;const fz=srA+R.WPH-(wind?key:Math.floor(key/R.FPR.p)*R.FPR.p);   /* let go, the fusee turns on until its ratchet catches the pawls (update()'s catch): whole teeth from where the key left it */wrg.rotation.y=fz;for(const w of wp){const u=w.userData.src.userData,psi=fz-srA;w.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,R.FPR)+psi;}
-      paint(gw,wind?null:ROSE);paint(ss,ROSE);paint(sr,o=>wind?(onM(o)?null:TEAL):ROSE,true);for(const w of wp)paint(w,wind?null:ROSE);paint(sp,wind?TEAL:null);paint(wrg,wind?null:ROSE);
-      const left=TM-d/SR;ro.innerHTML=wind?`<b>Key turning</b>: the sustaining spring alone drives the fusee wheel, pushing off its ratchet, which the sustaining pawl holds. Relaxed <b>${(d/D2R).toFixed(1)}°</b> of its ${(SMAX/D2R).toFixed(1)}°, <b>${left.toFixed(1)} min</b> of drive left.`:
-        '<b>Running</b>: the mainspring, through the fusee, its winding ratchet and pawls, turns the sustaining ratchet, which drives the fusee wheel through the spring, held closed on its banking.';
+  /* ---------- maintaining power: the Wempe's maintaining work (05 06_4: the maintaining ratchet, its spring and its detent, in the fusee wheel), the model's own parts
+     driven by its update(): running, the fusee's click wheel turns the ratchet through two clicks, and the ratchet drives the fusee wheel through the maintaining spring,
+     closed by the drive WPHYS.runPhi(1) (15°); with the key turning for t minutes (here the key half a turn a minute), the clicks let go, the ratchet falls back half a
+     tooth onto the maintaining detent (MBK) and the spring, pushing off it, drives the wheel on alone, its lead falling as the wheel turns (WPHYS.susPhi), spent after SUS
+     s. Rose: what carries the drive; teal: what holds ---------- */
+  fig('eMaint',f=>{const st=f.el,P=figOf(st),PT=model.mv.userData.parts,Fx=WD.H[10],m0=WPHYS.runPhi(1),TM=WPHYS.SUS/60,n0=20/WPHYS.HPT,keep=new Set(['fusee','fuseeWheel','maintaining','maintDetent']);
+    const gMW=PT.maintaining.children[0],gMS=PT.maintaining.children[1],b=boxOf([PT.maintaining,PT.fuseeWheel]),bR=boxOf([gMW]),bS=boxOf([gMS]),bD=boxOf([PT.maintDetent]),bW=boxOf([PT.fuseeWheel]);
+    const V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:0.35,pitch:1.05,dist:84,target:[0,-(b.min.y+b.max.y)/2,0],minPitch:0.2}),{t,o}=frameAt(V,Fx);   /* from the train side, through the fusee (see-through) */
+    const ROSE='#e0306a',TEAL='#0e9f92',sub=m=>{for(let x=m;x;x=x.parent){if(x===gMW)return'r';if(x===gMS)return's';}return'';};
+    let tm=0,mode='run',kw=null,key=0,ms=m0;const ro=q('.e-ro',P),inp=q('input[type=range]',P),out=inp.parentElement.querySelector('output'),btn=q('.wind',P);
+    function set(v,md){tm=v;mode=md||(v>0?'turn':'run');if(mode==='turn'){key=tm*0.5;ms=WPHYS.susPhi(m0,tm*60);}else if(!md)ms=m0;
+      const left=Math.max(0,TM-tm);ro.innerHTML=mode==='turn'?`<b>Key turning</b>: the clicks let go and the maintaining detent holds the ratchet; the maintaining spring, pushing off it, drives the fusee wheel on alone. Its lead <b>${(ms/D).toFixed(1)}°</b> of the ${(m0/D).toFixed(1)}° the running drive closes it by, <b>${left.toFixed(1)} min</b> of drive left.`:
+        `<b>Running</b>: the mainspring, through the fusee and its two clicks on the click wheel, turns the maintaining ratchet, which drives the fusee wheel through the maintaining spring, held ${(ms/D).toFixed(1)}° closed by the drive.`;
       out.textContent=tm.toFixed(1)+' min';f.dirty=true;}
     inp.max=TM.toFixed(1);range(inp,v=>{if(kw)return;set(v);return v.toFixed(1)+' min';});
     btn.addEventListener('click',()=>{if(!kw)kw={t:0};});
-    V.label('Sustaining spring','drives while the key turns',at(ss,15.6*Math.cos(Math.PI*0.9),-7.62,15.6*Math.sin(Math.PI*0.9)));V.label('Sustaining ratchet','',at(sr,16.6*Math.cos(-2.2),-8.76,16.6*Math.sin(-2.2)));
-    V.label('Sustaining pawl','holds the ratchet',at(sp,0,0,0));V.label('Fusee wheel','to the train',at(gw,18.8*Math.cos(2.4),-7.0,18.8*Math.sin(2.4)));V.label('Winding ratchet','on the fusee',at(wrg,0,wrg.children[0].position.y,0));
+    V.label('Maintaining spring','drives while the key turns',at(o,(bS.min.x+bS.max.x)/2,bS.max.y,bS.max.z));V.label('Maintaining ratchet','',at(o,bR.min.x,bR.max.y,(bR.min.z+bR.max.z)/2));
+    V.label('Maintaining detent','holds the ratchet',at(o,(bD.min.x+bD.max.x)/2,bD.max.y,(bD.min.z+bD.max.z)/2));V.label('Fusee wheel','to the train',at(o,bW.max.x,(bW.min.y+bW.max.y)/2,Fx[1]));
     set(0);
-    return dt=>{if(kw){kw.t+=dt/(RM?4:1);const T1=4,T2=4.6,T3=5.2;   /* the key turns 3 minutes' worth in 4 s, rests, lets go, and the mainspring loads the spring again */
-        if(kw.t<T1)set(3*smooth(kw.t/T1),'turn');else if(kw.t<T2)set(3,'turn');else if(kw.t<T3)set(3*(1-smooth((kw.t-T2)/(T3-T2))),'run');else{kw=null;set(0,'run');}inp.value=t;}
-      if(!f.dirty)return;f.dirty=false;V.render();};},'model');
+    return dt=>{if(kw){kw.t+=dt/(RM?4:1);const T1=4,T2=4.6,T3=5.2;   /* the key turns 3 minutes' worth in 4 s, rests, lets go, and the mainspring closes the spring again */
+        if(kw.t<T1)set(3*smooth(kw.t/T1),'turn');else if(kw.t<T2)set(3,'turn');else if(kw.t<T3){const u=smooth((kw.t-T2)/(T3-T2)),s3=WPHYS.susPhi(m0,180);ms=s3+(m0-s3)*u;set(3*(1-u),'run');}else{kw=null;set(0,'run');}inp.value=tm;}
+      if(!f.dirty)return;f.dirty=false;const w=mode==='turn';
+      lend(V,o,keep,{n:n0-key,E:w?2*tm*60:0,ms,winding:w},{paint:(m,k)=>{const m0_=m.material,s=k==='maintaining'?sub(m):'';
+        const c=w?(k==='fuseeWheel'||s==='s'?ROSE:s==='r'||k==='maintDetent'?TEAL:null):(k==='maintDetent'?null:ROSE),gh=k==='fusee'||s==='r';return c||gh?tint(m0_,c,gh):null;}});};},'model');
 
-  /* ---------- counting: the centre, third, fourth and escape wheels, with the model's counts and modules ---------- */
-  fig('eTrain',f=>{const st=f.el,P=figOf(st),M=gl().M,T=TRAIN,S0=new THREE.Group(),dCT=MOD.centre*(T.cw+T.tp)/2,dTF=MOD.train*(T.tw+T.fp)/2,dFE=MOD.fourth*(T.fw+T.ep)/2;
-    const pl=(p,d,a)=>[p[0]+d*Math.cos(a*D2R),p[1]+d*Math.sin(a*D2R)],C0=[0,0],Tp=pl(C0,dCT,-25),Fp=pl(Tp,dTF,40),Ep=pl(Fp,dFE,-35),mid=[(C0[0]+Ep[0])/2,(C0[1]+Ep[1])/2];
-    const V=new View3D(st,f,{aspect:w=>w<520?0.95:0.58,yaw:0.25,pitch:0.85,dist:98,target:[mid[0],2,mid[1]]});V.scene.add(S0);
-    const ptr=(g,len)=>mesh(g,new THREE.BoxGeometry(len,0.5,0.9),M.blued,len/2,9.3,0);
-    const cw=arbor(S0,M,...C0,{wheel:{n:T.cw,m:MOD.centre,y:1.8,th:1,spokes:5,mate:T.tp},ar:[-3,9],r:0.75});ptr(cw,9);   /* stacked as Figs. 13, 29 and 110: the third wheel lowest, its pinion above it meshing the centre wheel; the fourth pinion under its wheel, meshing the third wheel */
-    const tw=arbor(S0,M,...Tp,{wheel:{n:T.tw,m:MOD.train,y:0,th:0.9,spokes:5,cside:-1,mate:T.fp},pin:{n:T.tp,m:MOD.centre,y:1.8,th:2.6},ar:[-3,9]});ptr(tw,5);
-    const fw=arbor(S0,M,...Fp,{wheel:{n:T.fw,m:MOD.fourth,y:3.6,th:0.9,spokes:5,cside:1,mate:T.ep},pin:{n:T.fp,m:MOD.train,y:1.475,th:3.25},ar:[-3,9]});ptr(fw,6);
-    const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9],r:0.67});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
-    /* each pinion phased on its wheel as the model phases its train (ph() in movement.js, gearLash in core.js): the teeth in mesh, the backlash on the far side; the
-       wheels turn as update() turns the model's (the centre back, the third forward, the fourth back), the escape pinion's frame at -t0 when the beat is whole */
-    for(const[A,pa,B,pb,s,x]of[[cw.userData.wheel,C0,tw.userData.pin,Tp,-1,0],[tw.userData.wheel,Tp,fw.userData.pin,Fp,1,0],[fw.userData.wheel,Fp,ew.userData.pin,Ep,-1,-ESC.t0]]){const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b-x;}
-    const eT=T.ew/2;   /* the escape wheel turns once in ew half seconds */
-    V.label('Centre wheel',`${T.cw} teeth, 1 turn / ${turnT(ESC_PER.cw*eT)}`,v=>v.set(C0[0]-10,2.3,C0[1]+7));V.label('Third wheel',`${T.tw} teeth, 1 turn / ${turnT(ESC_PER.tw*eT)}`,v=>v.set(Tp[0]+1,0.5,Tp[1]+9));
-    V.label('Fourth wheel',`${T.fw} teeth, 1 turn / ${turnT(ESC_PER.fw*eT)}`,v=>v.set(Fp[0]+2,4.1,Fp[1]-9));V.label('Escape wheel',`${T.ew} teeth, 1 turn / ${turnT(eT)}`,v=>v.set(Ep[0]+3,6,Ep[1]+4));
-    let t=0,speed=1,going=!RM;range(q('input[type=range]',P),v=>{speed=Math.pow(120,v);return '×'+(speed<10?speed.toFixed(1):Math.round(speed));});play(q('.play',P),()=>going,v=>going=v);
-    return dt=>{if(going){t+=dt*speed;f.dirty=true;}if(!f.dirty)return;f.dirty=false;
-      let b;if(speed<6){const k=Math.floor(t*2);b=k+smooth((t*2-k)/0.12);}else b=t*2;   /* beats: half seconds, stepping below 6× */
-      const esc=b*ESC.P;ew.rotation.y=-ESC.t0+esc;fw.rotation.y=-esc/ESC_PER.fw;tw.rotation.y=esc/ESC_PER.tw;cw.rotation.y=-esc/ESC_PER.cw;V.render();};},'3d');
+  /* ---------- counting: the Wempe's centre, intermediate, seconds and escape wheels, at their places, each turned by the model's train from the escape wheel's teeth ---------- */
+  const turnT=s=>{const[v,u]=s<60?[s,'s']:s<3600?[s/60,'min']:[s/3600,'h'],w=Math.floor(v+1e-9),fr=v-w;return(Math.abs(fr)<1e-6?String(w):Math.abs(fr-0.5)<1e-6?(w||'')+'½':v.toFixed(1))+' '+u;};   /* 7½ s, 8 min, 1 h */
+  fig('eTrain',f=>{const st=f.el,P=figOf(st),PT=model.mv.userData.parts,TR=model.R.tr,z=k=>TR[k].userData.wheel.userData.gear.z,zp=k=>TR[k].userData.pin.userData.gear.z,NT=WESC.SET.NT||15,ep=model.R.esc.pinion.userData.gear.z;
+    const keep=new Set(['centreWheel','intermediateWheel','secondsWheel','escapeWheel']),C0=WD.H[1],Tp=WD.H[38],Sp=WD.H[35],Ep=WESC.W,mid=[(C0[0]+Ep[0])/2,(C0[1]+Ep[1])/2];
+    const b=boxOf([...keep].map(k=>PT[k])),V=new View3D(st,f,{aspect:w=>w<520?0.95:0.58,yaw:0.25,pitch:0.85,dist:104,target:[0,-(b.min.y+b.max.y)/2,0],near:2,far:2000}),{t,o}=frameAt(V,mid);
+    /* turns an hour: the centre once, the intermediate 90/12, the seconds 60, the escape wheel 480 (15 teeth, a tooth each half second) */
+    const per={c:3600,t:3600*zp('tw')/z('cw'),s:3600*zp('tw')/z('cw')*zp('sw')/z('tw'),e:NT/2};
+    /* each name at its wheel's rim on the side toward the camera (the frame turned over: -z), at the wheel's face */
+    const lb=(k,p,n,sub,a)=>{const q2=boxOf([PT[k]]),r=Math.max(q2.max.x-q2.min.x,q2.max.z-q2.min.z)/2*0.92;V.label(n,sub,at(o,p[0]+r*Math.sin(a),q2.min.y,p[1]-r*Math.cos(a)));};
+    lb('centreWheel',C0,'Centre wheel',`${z('cw')} teeth, 1 turn / ${turnT(per.c)}`,-0.2);lb('intermediateWheel',Tp,'Intermediate wheel',`${z('tw')} teeth, 1 turn / ${turnT(per.t)}`,0.45);
+    lb('secondsWheel',Sp,'Seconds wheel',`${z('sw')} teeth, 1 turn / ${turnT(per.s)}`,0.5);lb('escapeWheel',Ep,'Escape wheel',`${NT} teeth, 1 turn / ${turnT(per.e)}`,-1.6);
+    let tt=0,speed=1,going=!RM;range(q('input[type=range]',P),v=>{speed=Math.pow(120,v);return '×'+(speed<10?speed.toFixed(1):Math.round(speed));});play(q('.play',P),()=>going,v=>going=v);
+    return dt=>{if(going){tt+=dt*speed;f.dirty=true;}if(!f.dirty)return;f.dirty=false;
+      let bt;if(speed<6){const k=Math.floor(tt*2);bt=k+smooth((tt*2-k)/0.12);}else bt=tt*2;   /* beats: half seconds, the train stepping below 6× */
+      lend(V,o,keep,{E:bt});};},'model');
 
-  /* ---------- the detent: the model's own escapement, solved (ESC), drawn in plan (drawEscPlan, ../shared/escplan.js) ---------- */
-  fig('eEsc',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?0.84:0.8);let ph=0.15,speed=0.08,going=!RM;
-    const phIn=q('.phase',P),spIn=q('.speed',P),ro=q('.e-ro',P);
-    const TXT={free:'The wheel is locked and the balance swings freely.',unlock:'Unlocking: the unlocking jewel pushes the trip spring against the horn and lifts the detent off its stop.',
-      drop:'Unlocked: the locking jewel is clear, and the escape wheel drops forward onto the impulse jewel.',impulse:'Impulse: a tooth drives the impulse jewel, pushing the balance.',
-      relock:'The detent falls back onto its stop, and the locking jewel catches the next tooth.',pass:'Return swing: the trip spring bends away from the horn. The detent doesn’t move.'};
+  /* ---------- the detent: the Wempe's escapement as its page runs it (WESC.ESC.state: makeEsc with its settings, WPHYS), its parts flattened into the wheel's plane, as
+       the Wempe page's essay draws it (../wempe/js/essay.js, eEsc); a cycle of the balance's swing, the escape wheel a tooth on each ---------- */
+  fig('eEsc',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?0.95:0.6),ro=q('.e-ro',P),RE=model.R.esc,PT=model.mv.userData.parts,MM=model.M,KE=WESC.ESC;let ph=0.15,speed=0.08,going=!RM,E0=0,lp=0.15;
+    const rel=(o,top)=>{const r=new THREE.Matrix4();for(let p=o;p&&p!==top;p=p.parent){p.updateMatrix();r.premultiply(p.matrix);}return r;};
+    const colOf=o=>{const mt=o.material;return mt===MM.ruby?'ruby':mt===MM.gilt?'gilt':mt===MM.brass||mt===MM.brass2?'brass':mt===MM.copper?'copper':mt===MM.blued?'blued':'steel';};
+    /* a mesh flattened: its triangles (each wound one way, so a fill is their union) as one Path2D in top's frame, with its mean height and its plan centre */
+    const flat=(o,top)=>{const gm=o.geometry,pa=gm.attributes.position,ix=gm.index,n=ix?ix.count:pa.count,mm=rel(o,top),v=new THREE.Vector3(),pth=new Path2D();let y=0,cx=0,cz=0,k=0;
+      for(let i=0;i+2<n;i+=3){const t=[0,1,2].map(j=>{v.fromBufferAttribute(pa,ix?ix.getX(i+j):i+j).applyMatrix4(mm);return[v.x,v.z,v.y];});
+        const ar=(t[1][0]-t[0][0])*(t[2][1]-t[0][1])-(t[2][0]-t[0][0])*(t[1][1]-t[0][1]);for(const p of t){y+=p[2];cx+=p[0];cz+=p[1];k++;}if(Math.abs(ar)<1e-7)continue;
+        const u=ar>0?t:[t[0],t[2],t[1]];pth.moveTo(u[0][0],u[0][1]);pth.lineTo(u[1][0],u[1][1]);pth.lineTo(u[2][0],u[2][1]);pth.closePath();}
+      return{pth,y:y/k,c:[cx/k,cz/k],hn:o.userData.hn,col:colOf(o)};};
+    const vis=o=>{for(let p=o;p;p=p.parent){if(p.userData.rev&&!model.mv.userData.revShows(p.userData.rev,model.mv.userData.rev||'last'))return false;}return true;};
+    const P2=[],add=(grp,top,mov,skip)=>grp.traverse(o=>{if(o.isMesh&&vis(o)&&!(skip&&skip(o)))P2.push({...flat(o,top),mov});});
+    const goldOf=o=>{for(let p=o;p;p=p.parent)if(p===RE.gold)return true;return false;};
+    add(RE.ew,RE.ew,'ew');add(RE.rol,RE.rol,'rol');add(RE.det,RE.det,'det',goldOf);add(RE.gold,RE.gold,'gold');
+    for(const c of PT.detent.children)if(c!==RE.det)add(c,model.mv,'');add(PT.detentBlock,model.mv,'');
+    P2.sort((a,b)=>(a.mov===''?0:1)-(b.mov===''?0:1)||b.y-a.y);   /* what stands (the block, the detent's foot) under what moves; seen from -y, the deepest first */
+    const gp=RE.gold.position,dp=RE.det.children[0].position;
+    const W=WESC.W,B=WESC.B,S=WESC.P,F=WESC.DPIV,bx=[Math.min(W[0]-7.5,B[0]-3.6,S[0],F[0])-1,Math.max(W[0]+7.5,B[0]+3.6,S[0],F[0])+1,Math.min(W[1]-7.5,B[1]-3.6,S[1],F[1])-1,Math.max(W[1]+7.5,B[1]+3.6,S[1],F[1])+1];
+    const phIn=q('.phase',P),spIn=q('.speed',P);
     range(phIn,v=>{ph=v/1000;f.dirty=true;return Math.round(v/10)+'%';});const upB=play(q('.play',P),()=>going,v=>going=v);
     phIn.addEventListener('pointerdown',()=>{going=false;upB();});range(spIn,v=>{speed=v;return '×'+v.toFixed(2);});
-    return dt=>{if(going){ph=(ph+dt*speed/0.5)%1;phIn.value=Math.round(ph*1000);phIn.parentElement.querySelector('output').textContent=Math.round(ph*100)+'%';f.dirty=true;}if(!f.dirty)return;f.dirty=false;
-      const s=ESC.state(ph);drawEscPlan(C.x,C.w,C.h,s,s.prog,{labels:'full',gauge:true,box:[-2.85,1.75,-2.5,1.2],pal:PAL});
-      ro.innerHTML=`<b>${s.ccw?'Unlocking swing.':'Return swing.'}</b> ${TXT[escStage(s)]||TXT.free}`;};});
+    const RU={steel:PAL.steel,gilt:PAL.brass,brass:PAL.brass,copper:PAL.copper,blued:PAL.blue,ruby:'#c3163b'};
+    const TXT=s=>!s.ccw?(s.psDef>1e-4?'Return swing: the discharge stone bends the gold spring aside; the detent stays where it rests, the wheel locked.':'Return swing: the wheel locked, the balance swinging free.'):
+      s.prog<=0?(s.lift>1e-4?'Unlocking: the discharge stone pushes the gold spring, and the detent with it, until the locking stone lets the tooth go.':'The wheel locked, the balance swinging free.'):
+      s.ride?'Let go: the wheel, from rest, turns toward the impulse stone; the detent, flung off the discharge stone, has fallen back onto the tooth it let go and rides it.':s.drop?'Let go: the wheel turns toward the impulse stone, chasing it.':s.run?'The impulse over: the next tooth runs on to the locking stone.':s.prog<1?'Impulse: a tooth drives the balance through the impulse stone.':'The wheel locked on the next tooth.';
+    return dt=>{if(going){ph=(ph+dt*speed/0.5)%1;phIn.value=Math.round(ph*1000);phIn.parentElement.querySelector('output').textContent=Math.round(ph*100)+'%';f.dirty=true;}
+      if(ph<lp-0.5)E0++;else if(ph>lp+0.5)E0--;lp=ph;if(!f.dirty)return;f.dirty=false;
+      const{x,w,h}=C,s=KE.state(ph,WPHYS.ESC.A),E=E0+Math.min(1,Math.max(0,s.prog)),narrow=w<520;
+      const k=Math.min(w/(bx[1]-bx[0]),h/(bx[3]-bx[2])),ox=(bx[0]+bx[1])/2,oz=(bx[2]+bx[3])/2;
+      x.clearRect(0,0,w,h);x.save();x.translate(w/2,h/2);x.scale(-k,k);x.translate(-ox,-oz);
+      const rot=a=>x.transform(Math.cos(a),-Math.sin(a),Math.sin(a),Math.cos(a),0,0),at2=(p,a)=>{x.translate(p.x,p.z);rot(a);};
+      const frame=q2=>{if(q2.mov==='ew')at2(RE.ew.position,E*TAU/15);else if(q2.mov==='rol')at2(RE.rol.position,-s.th);else if(q2.mov==='det'||q2.mov==='gold'){at2(RE.det.position,s.lift||0);if(q2.mov==='gold'){x.translate(dp.x+gp.x,dp.z+gp.z);rot(-(s.psDef||0));}}};
+      for(const q2 of P2){x.save();frame(q2);x.fillStyle=RU[q2.col];x.globalAlpha=q2.mov===''?0.28:q2.hn==='050403-1'?0.6:1;x.fill(q2.pth);x.restore();}   /* the impulse roller see-through: the discharge roller and its stone are under it, as 05 04_1 draws them dashed */
+      x.restore();
+      /* names, at each piece's place as moved, with a line to it, kept inside the figure */
+      const scr=(p,mov)=>{const u=new DOMMatrix().translate(w/2,h/2).scale(-k,k).translate(-ox,-oz),R2=(a,pp)=>{u.translateSelf(pp.x,pp.z);u.multiplySelf(new DOMMatrix([Math.cos(a),-Math.sin(a),Math.sin(a),Math.cos(a),0,0]));};
+        if(mov==='rol')R2(-s.th,RE.rol.position);else if(mov==='det'||mov==='gold')R2(s.lift||0,RE.det.position);if(mov==='gold')R2(-(s.psDef||0),{x:dp.x+gp.x,z:dp.z+gp.z});const r=u.transformPoint(new DOMPoint(p[0],p[1]));return[r.x,r.y];};
+      const zz=Math.min(1,w/640),fs=narrow?10.5:11.5,css=(font,col,al,bl)=>{x.font=font;x.fillStyle=col;x.textAlign=al;x.textBaseline=bl;};
+      const lab=(t,p,dx,dy,al='left')=>{if(!p)return;const tx=clamp(p[0]+dx*zz,4,w-4),ty=clamp(p[1]+dy*zz,8,h-8);if(dx||dy){x.strokeStyle=PAL.muted;x.lineWidth=0.8;x.beginPath();x.moveTo(p[0],p[1]);x.lineTo(tx,ty);x.stroke();}
+        css(`${fs}px ${SANS}`,PAL.ink,al,'middle');const tw=x.measureText(t).width,lx=al==='right'?Math.max(tx-4,tw+4):al==='center'?clamp(tx,tw/2+4,w-tw/2-4):Math.min(tx+4,w-tw-4);halo(x,t,lx,ty,PAL.ink);};
+      const pos=hn=>{const q2=P2.find(y=>y.hn===hn);return q2?scr(q2.c,q2.mov):null;};
+      const[ewx,ewy]=scr([W[0],W[1]],'');css(`${fs}px ${SANS}`,PAL.ink,'center','top');halo(x,'escape wheel',ewx,ewy+7.6*k+4,PAL.ink);
+      lab('impulse stone',pos('050403-2'),-56,-22,'right');lab('impulse roller',pos('050403-1'),-80,40,'right');lab('discharge stone',pos('050404-2'),44,-62);
+      lab('locking stone',pos('050401-3'),74,-6);lab('gold spring',pos('050401-2'),34,-62);lab('detent spring',scr([F[0],F[1]],''),0,30,'center');
+      {const q2=P2.find(y=>y.hn==='050401-4');if(q2){const p=scr(q2.c,'');lab('detent block',[clamp(p[0],60,w-60),clamp(p[1],20,h-20)],0,0,'center');}}
+      css(`${narrow?11:12}px ${SANS}`,PAL.muted,'right','top');x.fillText(`balance ${sgS(s.th/D,1)}°`,w-8,8);
+      ro.innerHTML=`<b>${s.ccw?'Unlocking swing.':'Return swing.'}</b> ${TXT(s)}`;};},'model');
 
-  /* ---------- level on a moving ship: the model's own box, gimbal ring, case and latch (buildBox, box.js), with its dial ---------- */
-  fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.9,pitch:0.36,dist:840,target:[0,32,0],near:20,far:5000}),M=G.M,S=V.scene;
-    const BX=buildBox(M);S.add(BX.root);BX.mid.rotation.x=-1.6;BX.top.rotation.x=-0.32;BX.stay();
+  /* ---------- level on a moving ship: the Wempe's own box, gimbal ring and case (WCASE.build, case.js), its dial keeping Greenwich time, as the Wempe page's essay
+       draws them ---------- */
+  fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.75,pitch:0.62,dist:600,target:[0,-10,0],near:20,far:5000}),M=gl().M,S=V.scene;
+    const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.stay();CS.tongue.rotation.z=-Math.PI/2;CS.over.visible=false;   /* the outer transport box left out, as the Wempe page's views but Transport box leave it */
+    CS.root.traverse(o=>{if(o.userData.rev&&!o.userData.rev.split(' ').includes('last'))o.visible=false;});   /* as last revised */
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
-    mesh(BX.bowl,cylY(DIAL_R,DIAL_T,96),M.brass2,0,MR_Y+DIAL_T/2,0);mesh(BX.bowl,new THREE.CircleGeometry(DIAL_R,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,MR_Y+DIAL_T+0.3,0);   /* the dial, 0.3 over its disc, held in front of it as the model's is */
-    const sh=mesh(S,new THREE.PlaneGeometry(640,640).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({map:shadowTex(),transparent:true,opacity:0.7,depthWrite:false}),0,-101,0);sh.renderOrder=-1;
-    V.label('Gimbal ring','',at(BX.ring,BX.RO,8,0));V.label('Case','hangs level',at(BX.bowl,-BX.CR*0.7,-40,BX.CR*0.7));V.label('Latch','',at(BX.root,80,0,76));
+    const yD=WDIAL.DY1-CS.YP;mesh(CS.bowl,cylY(WDIAL.DR,WDIAL.DY1-WDIAL.DY0,96),M.brass2,0,yD-(WDIAL.DY1-WDIAL.DY0)/2,0);
+    mesh(CS.bowl,new THREE.CircleGeometry(WDIAL.DR,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.3,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,yD+0.05,0);
+    {const c=document.createElement('canvas');c.width=c.height=128;const g2=c.getContext('2d'),gr=g2.createRadialGradient(64,64,6,64,64,64);gr.addColorStop(0,'rgba(0,0,0,0.55)');gr.addColorStop(1,'rgba(0,0,0,0)');g2.fillStyle=gr;g2.fillRect(0,0,128,128);
+      const sh=mesh(S,new THREE.PlaneGeometry(520,520).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.7,depthWrite:false}),0,CS.YP-93.5-2,0);sh.renderOrder=-1;}
+    V.label('Gimbal ring','',at(CS.ring,72,4,0));V.label('Case','hangs level',at(CS.bowl,-38,-40,38));V.label('Box','',at(CS.root,92,-60,60));
     let amp=18,t=0,going=!RM,lock=false,lk=0,lt=-1;
     range(q('input[type=range]',P),v=>{amp=v;f.dirty=true;return v+'°';});q('.lock',P).addEventListener('change',e=>{lock=e.target.checked;f.dirty=true;});play(q('.play',P),()=>going,v=>going=v);
     return dt=>{if(going){t+=dt;f.dirty=true;}const l0=lk;lk=RM?+lock:clamp(lk+(lock?1:-1)*dt*1.2,0,1);if(lk!==l0)f.dirty=true;
       const tt=Math.floor(nowT());if(tt!==lt){lt=tt;paintDial(dx,1024,nowT(),nowH());tex.needsUpdate=true;f.dirty=true;}
-      if(!f.dirty)return;f.dirty=false;const a=amp*D2R,roll=a*Math.sin(t*0.9),pitch=a*0.55*Math.sin(t*0.63+1.1),fr=1-smooth(Math.min(1,lk*2));
-      BX.root.rotation.set(pitch,0,roll,'ZYX');BX.ring.rotation.x=-pitch*fr;BX.bowl.rotation.z=-roll*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,lk*2-1)));V.render();};},'3d');
+      if(!f.dirty)return;f.dirty=false;const a=amp*D,roll=a*Math.sin(t*0.9),pitch=a*0.55*Math.sin(t*0.63+1.1),fr=1-smooth(Math.min(1,lk));
+      CS.root.rotation.set(pitch,0,roll,'ZYX');CS.ring.rotation.x=-pitch*fr;CS.bowl.rotation.z=-roll*fr;V.render();};},'3d');
 
   /* ---------- keeping the rate: a navigator's rate book (the manual's Table I), and what a steady rate is worth between signals ---------- */
   fig('eRate',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?0.66:0.4),[ri,wi,di]=qa('input[type=range]',P),tb=q('.e-book',P),ro=q('.e-ro',P);let rate=1.3,wand=0.3,days=20,seed=11;
@@ -525,55 +589,36 @@ const ESSAY=(()=>{
       form();});
     form();return()=>{};});
 
-  /* ---------- numbers in the text, from the model's code (the escapement's figures follow the adjuster's bench) ---------- */
-  function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
-      roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
-      gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(model?model.R.SMAX/D2R:12).toFixed(1)+'°',ssMin:Math.round((model?model.R.SMAX/D2R:12)/(FUSEE_PER_HOUR*6)),ssPu:Math.round((model?model.R.SPU:0.22)*100)+'%',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
-      I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.lever(0)):'7.5',rmax:model?f1(model.fs.rc(model.fs.ME)):'14.7'};
-    V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
-    { const d=model&&model.R&&model.R.hsDesign;Object.assign(V,d?{hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1)}:{hsB:'0.23 mm',hsT:'0.221 mm',hsL:'409 mm',hsOut:'14.8 mm',hsIn:'21.8 mm',hsInR:'3.2 mm',hsLat:'2.5e-5'}); }   /* the hairspring as designed (movement.js, R.hsDesign) */
-    { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
-    qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
+  /* ---------- numbers in the text: the Wempe's (data-live, what the figures show) from its model's code, the Model 21's (data-ham) from the Hamilton's page (HAMDATA) ---------- */
+  function fillLive(){const E=WPHYS.ESC,HL=WESC.HSL,W=WESC.W,B=WESC.B,V={A:Math.round(E.A/D)+'°',D:f1(Math.hypot(W[0]-B[0],W[1]-B[1]),2)+' mm',NT:String(WESC.SET.NT||15),
+      hsT:f1(HL.HT,3)+' mm',hsB:f1(HL.HB,2)+' mm',hsTurns:f1(HL.turns,2),halfT:f1(WPHYS.HPT/2,2),susMin:String(Math.round(WPHYS.SUS/60)),msDeg:f1(WPHYS.runPhi(1)/D,1)+'°',I:Math.round(WPHYS.SET.I).toLocaleString('en-US')};
+    if(model){const TR=model.R.tr,z=k=>TR[k].userData.wheel.userData.gear.z,zp=k=>TR[k].userData.pin.userData.gear.z;
+      Object.assign(V,{cw:z('cw'),tw:z('tw'),sw:z('sw'),cp:zp('cw'),tp:zp('tw'),sp:zp('sw'),ep:model.R.esc.pinion.userData.gear.z,rmin:f1(lever(0),1),rmax:f1(lever(model.R.fu.NRUN),1),run:f1(model.HRUN,1)});}
+    qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});
+    qa('[data-ham]').forEach(el=>{const v=HAMDATA.V[el.dataset.ham];if(v!=null)el.textContent=v;});}
 
-  /* ---------- showing, hiding, sections, the hash ---------- */
-  const H2=qa('h2[id]');
-  function secNow(){let s='';for(const h of H2){if(h.getBoundingClientRect().top-root.getBoundingClientRect().top<90)s=h.id;else break;}return s;}
-  let scT=0;root.addEventListener('scroll',()=>{if(scT||!shown)return;   /* hidden, it has no scroll position (display: none): nothing to note */
-  scT=requestAnimationFrame(()=>{scT=0;if(!shown)return;const max=root.scrollHeight-root.clientHeight;prog.style.transform=`scaleX(${max>0?root.scrollTop/max:0})`;
-    sset('cm-essay-y',String(Math.round(root.scrollTop)));const s=secNow();if(s!==sec){sec=s;changed();}});},{passive:true});
+  /* ---------- sections and the address: #detent, the section in view (the Hamilton's page and the Wempe's send their old #essay=detent here); links to a section scroll
+       to it without a new history entry, links to a model are ordinary (Back returns here, where the essay was) ---------- */
+  const H2=qa('h2[id]'),YK='cm-essay-y',secOf=h=>h==='essay'?'':h.startsWith('essay=')?h.slice(6):h;
+  function secNow(){let s='';for(const h of H2){if(h.getBoundingClientRect().top-root.getBoundingClientRect().top<150)s=h.id;else break;}return s;}   /* a heading within 150 px of the top: go() puts it at 64, and the figures above it, built as they come near, can push it down a little */
+  let scT=0;root.addEventListener('scroll',()=>{if(scT)return;
+    scT=requestAnimationFrame(()=>{scT=0;const max=root.scrollHeight-root.clientHeight;prog.style.transform=`scaleX(${max>0?root.scrollTop/max:0})`;
+      sset(YK,String(Math.round(root.scrollTop)));const s=secNow();if(s!==sec){sec=s;changed();}});},{passive:true});
   function go(id,smooth){const h=id&&document.getElementById(id);if(h&&root.contains(h)){root.scrollTo({top:h.getBoundingClientRect().top-root.getBoundingClientRect().top+root.scrollTop-64,behavior:smooth&&!RM?'smooth':'auto'});sec=id;}}
-  /* the hash while the essay shows: #essay, or #essay=<section>. Once the model is built app.js writes it (hashOf); before that, the essay does */
-  function changed(){if(model)model.changed();else history.replaceState(null,'',PAGE?(sec?'#'+sec:location.pathname+location.search):shown?'#essay'+(sec?'='+sec:''):location.pathname+location.search);}
-  function select(on){for(const[b,v]of[[q('#tabModel',tabs),!on],[q('#tabEssay',tabs),on]]){b.setAttribute('aria-selected',v?'true':'false');b.tabIndex=v?0:-1;}}
-  function show(on,s){
-    if(AWAY){if(on)location.replace(AWAY+(s?'#'+s:''));return;}   /* the model's page on the site: the essay is on its own page */
-    if(PAGE&&!on)return;   /* the essay's page: it always shows */
-    if(on===shown){if(on&&s&&s!==sec)go(s,true);return;}
-    shown=on;select(on);
-    if(on){const d=document;if(d.fullscreenElement||d.webkitFullscreenElement)(d.exitFullscreen||d.webkitExitFullscreen).call(d);
-      d.querySelectorAll('dialog[open]').forEach(x=>x.close());
-      root.hidden=false;d.documentElement.classList.add('essay-on');bar.appendChild(tabs);readPal();fillLive();watch();
-      if(s&&s!==sec)go(s);else root.scrollTop=yKeep||+(sget('cm-essay-y')||0);   /* back at the section it was left at (Back from a link into the model): where it was */
-      FIGS.forEach(f=>f.dirty=true);last=performance.now();if(!raf)raf=requestAnimationFrame(frame);root.focus({preventScroll:true});}
-    else{yKeep=root.scrollTop;root.hidden=true;document.documentElement.classList.remove('essay-on');home.appendChild(tabs);}
-  }
-  /* the tabs: a click, or the arrow keys between them (the tabs pattern) */
-  q('#tabEssay',tabs).addEventListener('click',()=>{if(AWAY)location.href=AWAY;else{show(true);changed();}});
-  q('#tabModel',tabs).addEventListener('click',()=>{if(PAGE)location.href=MODEL;else{show(false);changed();}});
-  /* the essay's page: the models' links (the header's, as the build points them) in the bar, in place of the tabs */
-  if(PAGE){const n=document.createElement('nav'),w=document.querySelector('header nav.models a[data-m="wempe"]');n.className='models';n.setAttribute('aria-label','The models');
-    n.innerHTML=`<a data-m="hamilton" href="${MODEL}">Hamilton<span class="nl"> Model 21</span></a>${w?`<a data-m="wempe" href="${w.getAttribute('href')}">Wempe<span class="nl"> Einheits-Chronometer</span></a>`:''}<span aria-current="page">Essay</span>`;bar.appendChild(n);tabs.hidden=true;}
-  tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();const on=e.key==='ArrowRight'||e.key==='End';show(on);changed();q(on?'#tabEssay':'#tabModel',tabs).focus();});
-  /* links within the essay (#essay=section) scroll to their section without a new history entry; links into the model (#tour=3, #view=…) are ordinary: Back returns here.
-     A link to the hash already in the address bar fires no hashchange, so it is sent on */
-  root.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href').slice(1);
-    if(h==='essay'||h.startsWith('essay=')){e.preventDefault();const s=h.slice(6);if(s)go(s,true);else root.scrollTo({top:0,behavior:RM?'auto':'smooth'});sec=s;changed();return;}
-    if(PAGE){e.preventDefault();location.href=MODEL+'#'+h;return;}   /* the essay's page: a link into the model opens the model's page there (Back returns here) */
-    if(location.hash.slice(1)===h){e.preventDefault();dispatchEvent(new HashChangeEvent('hashchange'));}});
-  /* before the model is built, app.js isn't listening for the hash: the essay follows it itself */
-  const own=()=>{if(model)return;const h=location.hash.slice(1);if(PAGE||h==='essay'||h.startsWith('essay='))show(true,secOf(h));else show(false);};
-  addEventListener('hashchange',own);own();
-  return{show,on:()=>shown,section:()=>sec,page:PAGE,secOf,
-    /* app.js, once the model is built: its time, wind and tz, the fusee (rf, I), the balance's moment of inertia, changed() (wake and write the hash), and its parts (R, mv) and materials (M), which the maintaining work's figure clones */
-    bind(api){model=api;removeEventListener('hashchange',own);if(shown)fillLive();FIGS.forEach(f=>{if(f.visible)build(f);});}};
+  function changed(){history.replaceState(null,'',sec?'#'+sec:location.pathname+location.search);}
+  root.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const s=secOf(a.getAttribute('href').slice(1));if(s&&!document.getElementById(s))return;
+    e.preventDefault();if(s)go(s,true);else root.scrollTo({top:0,behavior:RM?'auto':'smooth'});sec=s;changed();});
+  addEventListener('hashchange',()=>{const s=secOf(location.hash.slice(1));if(s)go(s,true);});
+  /* at load: at the section the address names; back at the place it was left at (Back from a model), if that is in the same section */
+  {shown=true;document.documentElement.classList.add('essay-on');readPal();fillLive();watch();const s=secOf(location.hash.slice(1)),y=+(sget(YK)||0);
+    if(y){root.scrollTop=y;if(s&&secNow()!==s)go(s);}else if(s)go(s);sec=s&&document.getElementById(s)&&secNow()===s?s:secNow();changed();   /* the address as this page writes it: #detent, not the old #essay=detent */last=performance.now();raf=requestAnimationFrame(frame);root.focus({preventScroll:true});}
+
+  /* ---------- the Wempe's movement, built after the page's first frame (the Wempe page's buildWempe, as last revised), then the figures waiting for it ---------- */
+  function buildModel(){try{const M=gl().M,mv=buildWempe(M);mv.userData.setRev('last');mv.userData.update(S0);model={mv,M,R:mv.userData.R,HRUN:+(mv.userData.R.fu.NRUN*WPHYS.HPT).toFixed(2)};}
+    catch(e){console.error(e);FIGS.forEach(f=>{if(f.need==='model'){f.fail=true;waitNote(f.el,false);}});return;}
+    fillLive();FIGS.forEach(f=>{if(f.visible)build(f);});}
+  requestAnimationFrame(()=>setTimeout(buildModel,30));
+  /* Report a bug or inaccuracy (../chronometer-working-model/js/report.js): the section being read */
+  if(typeof REPORT!=='undefined')REPORT.bind({name:'the essay',where:()=>{const h=sec&&document.getElementById(sec);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');},state:()=>[['Page','the essay'+(model?'':', its model not built yet')]]});
+  return{on:()=>shown,section:()=>sec,model:()=>model,edges:()=>EDGES};
 })();

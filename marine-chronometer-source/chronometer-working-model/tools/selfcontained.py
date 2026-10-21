@@ -35,16 +35,16 @@ none={c for c in cards if c not in parts}
 OK_NONE={'lid','lidGlass','box','lids','gimbal','case','crystal','bowl','dial','hands','key','shield','glass','labels','post','sq','pillars','plate','fs','engr'}
 missing=sorted(none-OK_NONE)
 chk(not missing,f'every part card has its parts-list lines in the maker\'s sheets ({len(cards)} cards; without lines and not expected: {", ".join(missing) or "none"})')
-idx=(MC/'index.html').read_text(encoding='utf-8')
-for k in ['sun','moon','stars','hand','lunar','venus','mars','jupiter','saturn']:chk(f'data-bound="{k}"' in idx,f'the essay states the almanac\'s {k} accuracy (checked by tools/almanac.js)')
-for k in ['Mup','sUp','esc','chase','Q','steelRate','comp','eNeed','stage','Qparts','TFparts']:chk(f'data-phys="{k}"' in idx,f'the essay quotes the physics\' {k} (checked by tools/physics.js)')
-for k in ['stiff','latBig','iso','slope']:chk(f'data-hs="{k}"' in idx,f'the essay quotes the hairspring\'s {k} at large swings (checked by tools/hairspring.js)')
+idx=(MC/'index.html').read_text(encoding='utf-8');ess=(MC.parent/'essay'/'index.html').read_text(encoding='utf-8')   # the essay, on its own page since 21 October 2026 (../../essay/)
+for k in ['sun','moon','stars','hand','lunar','venus','mars','jupiter','saturn']:chk(f'data-bound="{k}"' in ess,f'the essay states the almanac\'s {k} accuracy (checked by tools/almanac.js)')
+for k in ['Mup','sUp','esc','chase','Q','steelRate','comp','eNeed','stage','Qparts','TFparts']:chk(f'data-phys="{k}"' in ess,f'the essay quotes the physics\' {k} (checked by tools/physics.js)')
+for k in ['stiff','latBig','iso','slope']:chk(f'data-hs="{k}"' in ess,f'the essay quotes the hairspring\'s {k} at large swings (checked by tools/hairspring.js)')
 r=subprocess.run(['node',str(HERE/'wempe_essaydata.js')],capture_output=True,text=True,encoding='utf-8')   # the Wempe's essay: its generated data and quoted figures (data-wphys) are the tools'
 chk(r.returncode==0,"the Wempe essay's js/essaydata.js and its data-wphys figures are what tools/wempe_essaydata.js finds")
 for sel,what in [('id="mkMeasure"','the measuring tool'),('id="mkBook"','the build book'),('id="mkData"','the model\'s data'),('id="mkSTL"','the movement as STL'),('id="eAlm"','the almanac\'s pages'),
                  ('class="print"','the almanac\'s print'),('id="eWork"','the workbook'),('id="bookSun"','the rate book by equal altitudes'),('id="bookMoon"','the rate book by a lunar'),
                  ('id="oil"','the oiling chart'),('id="adjust"','the escapement\'s adjustment'),('id="order"','the order of work'),('id="materials"','materials and heat treatment')]:
-    chk(sel in idx,f'the page has {what}')
+    chk(sel in idx or sel in ess,f'the page or the essay has {what}')
 for f,what in [('shared/almanac.js','the almanac'),('shared/hairspring.js','the hairspring\'s design'),('chronometer-working-model/js/maker.js','the maker\'s tools')]:
     name=f.split('/')[-1];chk(name.replace('.js','') and (f'src="../shared/{name}"' in idx or f'src="js/{name}"' in idx) and ('const ALM=' in html if 'almanac' in f else 'const HSPR=' in html if 'hairspring' in f else 'const MAKER=' in html),f'{what} ({f}) is in the built page')
 for sel,what in [('id="mkGLB"','the export to Blender'),('id="mkRig"','the Blender rig')]:chk(sel in idx,f'the page has {what}')
