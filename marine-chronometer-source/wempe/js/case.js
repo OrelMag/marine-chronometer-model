@@ -309,19 +309,21 @@ const WCASE=(()=>{
        Its height comes out 16.0 (y 269 to 192.5), the casting's, and every line lies inside the casting: the sight cone starts at the casting's Ø 92 (r 45.9 at the step) and
        opens to r 55.3 at the glass's seat, 12.3 up; the lower bore r 54.9, 5.0 deep to the step; outside, r 56.6 at the underside, out to r 58.1 at 6.1 and 58.9 at 6.9,
        the widest band r 60.6 from 7.5 to 9.8 (Ø 121: 05 01's elevation scales the bezel about 120), then a bevel in to the glass's edge at the top. Every reading ±0.2 (a
-       pixel); likely. It lies on the bowl's top face, its step on the movement ring's flange (Ø 105.95 × 4.7), holding the movement down, relieved to 5.45 over the dial,
-       which stands 0.6 proud of the flange (estimated). The sheet marks a thread in the lower bore (its left end), which nothing drawn on the bowl takes: the bore drawn plain,
+       pixel); likely. Its step bears on the dial's rim and holds the movement down: the dial, 1.3 thick (05 02 00-4's "Stärke 1,3"), lies in the
+       movement ring's recess Ø 104 × 0.7 (05 08 00-3) in its flange 4.7 thick, so it stands 0.6 proud, its top YB + 5.3, and the step, 5.0 over the bezel's underside, puts
+       that 0.3 over the bowl's top face; the cone's foot (r 45.9) just outside the dial's minute track (Ø 90). Until 21 October 2026 the step was relieved over the dial
+       (estimated) and the bezel lay on the bowl's top face. The sheet marks a thread in the lower bore (its left end), which nothing drawn on the bowl takes: the bore drawn plain,
        opened to r 55.25 (1.7 px over the reading) so the movement ring's radial pin (WN-202, its end at r 55.0) stands clear; the sheet draws no notch for it (one was cut until
        21 October 2026, estimated). The glass (05 01 01-1) in the seat at the top: Ø 110.5 × 3.7 (the sheet's band, y 192.5 to 210), flush with the ring's edge, its underside
-       YB + 12.3, 15.3 over the pillar plate's dial face (05 02_1 asks 15.8, corrected in pencil to 17.0), 0.95 over the hands' highest point. The widest band knurled, 0.3
+       YB + 12.6, 15.6 over the pillar plate's dial face (05 02_1 asks 15.8, corrected in pencil to 17.0), 1.25 over the hands' highest point. The widest band knurled, 0.3
        deep, as Wempe 6161's and Wempe 5377's bezels show their widest band (antiquorum_208-4_wempe6161.jpg; bonhams_26816_327_wempe5377_type05.jpg): likely. Until 21 October
        2026 the ring was drawn as its casting (flat top, the glass Ø 112 × 2.3 flush in it) */
     const bz=prt(bowlS,'bezel',-YP),bW=rv(bz,'last first 1943');
     /* the bezel's glass, a little greener and less clear than the box's (M.glass, 0.12): a plain glass reads as nothing at 0.12, so the case view and a section showed the
        bezel open (21 October 2026). Its edge green, as Wempe 6161's (antiquorum_208-4_wempe6161.jpg: a green ring round the dial where the glass's edge shows) */
     const GLW=M.glassW=M.glassW||new THREE.MeshStandardMaterial({color:sc(0xd8efe4),metalness:0,roughness:0.02,transparent:true,opacity:0.3,depthWrite:false});
-    {const b0=YB,top=YB+16,RG=55.25,cone=p=>b0+5.0+(rr(p)-45.9)*7.3/(RG-45.9),bev=p=>top-(rr(p)-RG)*6.2/(60.6-RG),lin=(r0,h0,r1,h1)=>p=>b0+h0+(rr(p)-r0)*(h1-h0)/(r1-r0);
-      const RS=[46.6,52.1,RG,56.6,58.05,58.9,60.2],YS=[[b0,b0],[b0+5.45,cone],[b0+4.7,cone],[b0,bev],[lin(56.6,0,58.05,6.07),bev],[lin(58.05,6.07,58.9,6.9),bev],[lin(58.9,6.9,60.6,7.5),bev]];
+    {const b0=YB+0.3,top=b0+16,RG=55.25,cone=p=>b0+5.0+(rr(p)-45.9)*7.3/(RG-45.9),bev=p=>top-(rr(p)-RG)*6.2/(60.6-RG),lin=(r0,h0,r1,h1)=>p=>b0+h0+(rr(p)-r0)*(h1-h0)/(r1-r0);
+      const RS=[46.0,RG,56.6,58.05,58.9,60.2],YS=[[b0,b0],[b0+5.0,cone],[b0,bev],[lin(56.6,0,58.05,6.07),bev],[lin(58.05,6.07,58.9,6.9),bev],[lin(58.9,6.9,60.6,7.5),bev]];
       fuse([tag(mesh(bW,smoothRev(solidGeo(cells(RS,YS).slice(1))),M.brass),'050101-2'),
       tag(mesh(bW,polyGeo(knurlPts(60.6,0.3,460),2.3,[[0,0,60.2]]),M.brass,0,b0+7.5,0),'050101-2',1)]);   /* the ring and its knurl one mesh (fuse) */
       const gl=tag(mesh(bW,solidGeo([{loop:circ(RG),y0:b0+12.3,y1:top}]),GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */

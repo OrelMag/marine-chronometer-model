@@ -40,7 +40,7 @@ def main():
         for pts,col in((OUT,(255,0,0)),(IN,(255,0,0)),(GLASS[1:3],(0,160,0))):d.line([P(*p) for p in pts],fill=col,width=3)
         # case.js's profile (r, h) back to px
         RG=55.25;cone=lambda r:5.0+(r-45.9)*7.3/(RG-45.9);bev=lambda r:16-(r-RG)*6.2/(60.6-RG)
-        prof=[(46.6,5.45),(46.6,cone(46.6)),(RG,cone(RG)),(RG,16),(60.2,bev(60.2)),(60.6,9.8),(60.6,7.5),(58.9,6.9),(58.05,6.07),(56.6,0),(RG,0),(RG,4.7),(52.1,4.7),(52.1,5.45),(46.6,5.45)]
+        prof=[(46.0,5.0),(46.0,cone(46.0)),(RG,cone(RG)),(RG,16),(60.2,bev(60.2)),(60.6,9.8),(60.6,7.5),(58.9,6.9),(58.05,6.07),(56.6,0),(RG,0),(RG,5.0),(46.0,5.0)]
         d.line([P(CX+r*K,Y0-h*K) for r,h in prof],fill=(0,0,255),width=2)
         c.save(sys.argv[sys.argv.index('--png')+1]);print('red: traced; green: the glass; blue: case.js')
 main()
