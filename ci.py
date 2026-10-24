@@ -165,6 +165,7 @@ STEPS=[('build',build,'quick'),
  ('types',TSC(MC/'jsconfig.json'),'quick'),
  ('wempe-dialtrace',R([PY,'dialtrace.py'],TOOLS),'quick'),   # the Wempe dial's printing traced off Wempe 3955's photograph, against js/dialface.js (about 13 s)
  ('wempe-dialtrace-lange',R([PY,'dialtrace.py','--dial','lange'],TOOLS),'quick'),   # the Lange dial's, against js/dialface_lange.js (about 20 s)
+ ('wempe-dialsvg',R([PY,'dialsvg.py'],TOOLS),'quick'),   # the three dials' SVGs (wempe/dials/) against dial.js's face() as it draws them now (about 2 s)
  ('wempe-types',TSC(WE/'jsconfig.json'),'quick'),   # the Wempe's scripts, core.js and the shared kit among them (about 10 s)
  ('smoke',R([PY,'smoke.py'],TOOLS),'browser'),   # the Hamilton's page, then the essay's own (../essay/)
  ('essay-hamdata',R([PY,'essay_hamdata.py'],TOOLS),'browser'),   # the Model 21's figures the essay quotes (essay/js/hamdata.js) against the Hamilton's page (about 20 s)

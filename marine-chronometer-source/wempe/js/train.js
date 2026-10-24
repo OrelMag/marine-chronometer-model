@@ -207,7 +207,7 @@ const WTRAIN=(()=>{
     /* the staff: Ø 1.0 from the cock down to the lever's boss, Ø 0.6 under it to the base (12_KirPol_24020_E-Kontakt2.jpg and 14_E-Kontakt1.jpg, Kirov 2973: bare steel under the
        boss, 8-11 px across against the block screws' Ø 3.1 at 23-26 px a mm, a little further off, so Ø 0.4-0.6, and about 0.8 above it: likely; Ø 1.0 the whole way until
        24 October 2026) */
-    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,C6LB[0]],[0.3,C6LB[0]],[0.3,-2.6],[0.2,-2.4],[0.2,-1.9],[0,-1.9]],24),M.steel),'6MX.ctst');
+    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,C6LB[0]],[0.3,C6LB[0]],[0.3,-2.6],[0.2,-2.4],[0.2,-1.42],[0,-1.42]],24),M.steel),'6MX.ctst');   /* its upper pivot through its hole jewel to 0.02 off the cap jewel, as the lower (until 24 October 2026 it ended at -1.9, 0.1 into the stone, the staff 0.52 loose between its cap jewels) */
       tag(mesh(g6,ringT([[0.9,-2],[1.5,-2],[1.5,0],[0.9,0]],40),M.gilt,S[0],0,S[1]),'6MX.ctjs');   /* the upper jewels' setting in the base */
       tag(mesh(g6,ringT([[0.21,-2],[0.9,-2],[0.9,-1.4],[0.21,-1.4]],32),M.ruby,S[0],0,S[1]),'6MX.ctju');
       tag(mesh(g6,turned([[0,-1.4],[0.9,-1.4],[0.9,-1.0],[0,-1.0]],32),M.ruby,S[0],0,S[1]),'6MX.ctjeu');
