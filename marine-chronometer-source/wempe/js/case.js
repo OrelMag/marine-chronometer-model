@@ -277,7 +277,7 @@ const WCASE=(()=>{
            on block 52, +, 176-195°; B on block 57, −, 212-231°: train.js, WD.CONTACT6); outside, each spring's two slotted brass screws (heads Ø 5.6) and its terminal, a brass
            socket Ø 6.4 with a 3.0 hole standing 2 proud, each on a black fibre washer, all at y −27.5: A's at 178.4°, 189.3° and its + socket 200.6°, B's at 215.7°, 225.2° and
            − 235.9° (±1-3°, the case bracket's pivot taken as 180°): likely in kind and place; the springs' sizes estimated (±15 %). Bearings as frame.js's brg */
-        {const gC=new THREE.Group();gC.userData.rev='6mx';bowl.add(gC);const pol=(t,r,y)=>[-r*Math.sin(t*D2R),y,-r*Math.cos(t*D2R)],inw=t=>[Math.sin(t*D2R),0,Math.cos(t*D2R)];
+        {const gC=new THREE.Group();gC.userData.rev='6mx';gC.userData.contact=true;bowl.add(gC);const pol=(t,r,y)=>[-r*Math.sin(t*D2R),y,-r*Math.cos(t*D2R)],inw=t=>[Math.sin(t*D2R),0,Math.cos(t*D2R)];
           const yF=-27.5,rI=49,arcB=(t0,t1,r0,r1,y0,y1)=>{const n=Math.max(4,Math.ceil(Math.abs(t1-t0)/2)),A=[],B=[];for(let i=0;i<=n;i++){const t=(t0+(t1-t0)*i/n)*D2R;A.push([-r1*Math.sin(t),-r1*Math.cos(t)]);B.push([-r0*Math.sin(t),-r0*Math.cos(t)]);}return{loop:[...A,...B.reverse()],y0,y1};};
           for(const[F0,F1,T0,T1,S1,S2,SK,id]of/** @type {[number,number,number,number,number,number,number,string][]} */([[174.4,203.6,176,195,178.4,189.3,200.6,'+'],[211.7,238.9,212,231,215.7,225.2,235.9,'−']])){
             const c1=arcB(F0,F1,rI-1,rI,yF-2.75,yF+2.75);c1.loop=KIT.area(c1.loop)>0?c1.loop:c1.loop.slice().reverse();tag(mesh(gC,solidGeo([c1]),M.packing),'6MX.cfi');   /* the insulating strip on the bore */

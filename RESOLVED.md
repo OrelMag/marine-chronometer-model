@@ -2823,6 +2823,7 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **Double-clicking a part that turns swung the whole model sideways** (Controls and display; the owner, 24 October 2026, branch `claude/6mx-contact`, `2d21cbb2`): the viewer (`shared/viewer.js` and the Hamilton's `app.js`, `dblPick`) kept the camera's target in the frame of the mesh clicked, so on the 6MX's contact lever, its box off the staff it rocks about, the target swung 1.8 × 1.0 mm with every lift and the clock seemed to move sideways. Keep: a focused point lives in the movement's frame for a part in it (`fAnchor`), else in the part's group, never in a mesh that turns.
 - **The Wempe opened on its movement, its dial stayed solid in the Escapement view, and its balance stood still at 60× and
   3600×** (16 October 2026, the user's reports). It now opens as the Hamilton does: the box shut, seen from the Hamilton's
   opening camera (`openCam` in `shared/viewer.js`, `st.opening` holding the lid shut until then), easing to the Dial view as the

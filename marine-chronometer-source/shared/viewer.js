@@ -137,6 +137,9 @@ const VIEWER={start(cfg){
   hB.addEventListener('click',()=>histGo(HB,HF));hF.addEventListener('click',()=>histGo(HF,HB));
   /* double-click (double-tap) a part: the camera closes in to fit it and turns about it; 0 or Reset gives back the view */
   const fb=new THREE.Box3(),fbb=new THREE.Box3();
+  /* the frame the focused point is kept in: the movement's for a part in it (it moves only as a view lifts it out of its case), else the part's group; never the mesh
+     hit, which may turn with its part (the 6MX's contact lever rocking about its staff swung the whole clock sideways in the view until 24 October 2026) */
+  const fAnchor=h=>{for(let q=h;q;q=q.parent)if(q===mv)return mv;let q=h;while(q.parent&&!q.userData.partName)q=q.parent;return q.userData.partName?q:h;};
   function focusPart(p,o){fb.makeEmpty();root.updateMatrixWorld();root.traverse(m=>{if(m.isMesh&&m.userData.part===p&&shown(m)&&m.geometry.attributes.position){if(!m.geometry.boundingBox)m.geometry.computeBoundingBox();fbb.copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld);fb.union(fbb);}});
     if(fb.isEmpty())return;const c=fb.getCenter(new THREE.Vector3()),rr=Math.max(fb.getSize(new THREE.Vector3()).length()/2,1),lc=o.worldToLocal(c.clone()),v=cam.fov*Math.PI/360,hv=Math.atan(Math.tan(v)*cam.aspect);
     jump(()=>{G.follow=()=>o.localToWorld(lc.clone());panO.set(0,0,0);G.yaw=C.yaw;G.pitch=C.pitch;G.dist=clamp(Math.min(rr/Math.tan(Math.min(v,hv))*1.05,C.dist),30,1500);camFree=false;});}
@@ -176,7 +179,7 @@ const VIEWER={start(cfg){
   const rayAt=(x,y)=>{const rc=cv.getBoundingClientRect();ndc.set((x-rc.left)/rc.width*2-1,-(y-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);return ray.intersectObjects([root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);};
   const hitAt=e=>rayAt(e.clientX,e.clientY).find(h=>!through(h.object))||null;
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}
-  function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,hit.object);}else jump(()=>setView(st.view,true));}
+  function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches */
   let units='mm';const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
   /* a piece's card: its own text, and its source, note and figures where it has them, else its part's; a line up to its part. A part with pieces lists them */
