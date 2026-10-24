@@ -1,0 +1,153 @@
+{
+ "frame": "f_KLUwI2UUCMQ_11-46.5.png",
+ "source": "KLUwI2UUCMQ 11:46.5 (4K), the set-up cover in place on the barrel bridge, its screws out, seen from above at a slant (the camera on its stand); hole seeds placed by Claude by eye on gridded crops (+-5 px), each edge moved onto the image's step by cover_heights.py",
+ "f": 10000,
+ "box": [
+  900,
+  300,
+  3000,
+  1850
+ ],
+ "holes": {
+  "arb": {
+   "ell": [
+    1937,
+    960,
+    192,
+    175,
+    0
+   ],
+   "win": 10,
+   "clip": [
+    [
+     1815,
+     700,
+     2065,
+     1200
+    ]
+   ]
+  },
+  "s0": {
+   "ell": [
+    1246,
+    1270,
+    54,
+    48,
+    0
+   ],
+   "win": 6
+  },
+  "s1": {
+   "ell": [
+    2562,
+    635,
+    38,
+    35,
+    0
+   ],
+   "win": 6
+  },
+  "ck": {
+   "ell": [
+    2530,
+    985,
+    28,
+    22,
+    0
+   ],
+   "win": 5,
+   "free": true
+  }
+ },
+ "tops": {
+  "T_endL": {
+   "circle": "end",
+   "pts": [
+    [
+     2233,
+     389
+    ],
+    [
+     2300,
+     400
+    ],
+    [
+     2367,
+     422
+    ],
+    [
+     2456,
+     478
+    ],
+    [
+     2544,
+     539
+    ],
+    [
+     2622,
+     622
+    ],
+    [
+     2678,
+     694
+    ],
+    [
+     2722,
+     767
+    ],
+    [
+     2761,
+     844
+    ],
+    [
+     2789,
+     922
+    ],
+    [
+     2798,
+     975
+    ]
+   ]
+  },
+  "T_endU": {
+   "circle": "end",
+   "a0": 92,
+   "a1": 150,
+   "win": 10
+  },
+  "T_sideL": {
+   "circle": "sideL",
+   "a0": -170,
+   "a1": -128,
+   "win": 10
+  },
+  "T_sideR": {
+   "circle": "sideR",
+   "a0": 55,
+   "a1": 10,
+   "win": 10
+  }
+ },
+ "walls": {
+  "W_sideR": {
+   "circle": "sideR",
+   "a0": 63.0,
+   "a1": 1.2
+  },
+  "W_endU": {
+   "circle": "end",
+   "a0": 81.7,
+   "a1": 156.5
+  },
+  "W_endL": {
+   "circle": "end",
+   "a0": -92.3,
+   "a1": -18.4
+  },
+  "W_sideL": {
+   "circle": "sideL",
+   "a0": -177.6,
+   "a1": -119.1
+  }
+ }
+}
