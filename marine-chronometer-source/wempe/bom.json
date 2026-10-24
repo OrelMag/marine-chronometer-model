@@ -4125,6 +4125,21 @@
    "rev": "last first 1943"
   },
   {
+   "id": "DIN96",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Holzschraube DIN 96, 3 × 15 (the transit lock's bracket's wood screws, estimated)",
+   "qty": 2,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Round-headed wood screws through the bracket's wall leg into the box's right wall (the owner's case design, CAD Model Case.md §10: 2 × 3 × 15 DIN 96).",
+   "rel": [],
+   "figs": "05 01_1",
+   "rev": "last first 1943"
+  },
+  {
    "id": "Schliessblech",
    "idx": null,
    "no": "",
