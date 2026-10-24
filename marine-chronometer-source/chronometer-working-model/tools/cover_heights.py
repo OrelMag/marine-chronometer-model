@@ -15,6 +15,12 @@ mm below the top face, the pixel the camera puts it at, sampled. On the unrolled
 middle is milled away) and the foot on the barrel bridge are horizontal lines; each is found by the blurred step down the column
 (the same erf fit), and the wall's heights are their differences (the plan's own error moves the lines together, not apart). Writes
 NAME.cal.json (camera, holes, the end circle if free, the walls' steps per stretch), the unrolled walls (PNG) and an overlay.
+
+What it found (24 October 2026, PROVENANCE.md 108-35a/b): nothing settled, nothing changed in the model. With the radii free the holes'
+top edges read 0.13-0.18 over their bores (arbor 3.24-3.30, s0 0.91-0.94: their edges broken); fixed at the bores (11:52's) the camera
+put the outline about 1 mm out. The ends' top-edge circle (--free-end) reads r 14.34-14.43, 0.2-0.6 off the arbor as f runs 6000-16000
+(11:52's underside: 14.69, 0.94), so the two frames don't agree; the click hole again reads about 0.5 in -x from S.click, within the
+screws' play. The unrolled walls show no clean foot line (shadows, the milled gap under the plate), so no height is read.
 """
 import sys, os, json, math
 import numpy as np, cv2
@@ -25,6 +31,7 @@ from scipy.optimize import curve_fit
 D = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, D)
 import mfgfit as M
 import cover_overlay as CO
+import cover_ends as CE_
 
 VID = os.environ.get('MC_VIDEO', 'E:/mc-video')
 Ba = CO.Ba; SC = CO.SC; SCK = CO.SCK
@@ -134,6 +141,10 @@ def main(a):
     for it in range(2):
         tops = {}
         for n, o in S['tops'].items():
+            if 'pts' in o:   # seeded by hand (+-15 px): moved onto the strongest step near the seeds, then the blurred-step fit (cover_ends.curve_edge)
+                R_, ch, blur = CE_.curve_edge(img, o['pts'], o.get('win', 6), o.get('ch', 'luma'), o.get('coarse', 20)); R_ = R_[clipmask(R_, o.get('clip'))]
+                if len(R_) >= 8: tops[n] = (o['circle'], R_)
+                continue
             c, rr = CIRC[o['circle']] if o['circle'] != 'end' else endc
             ang = np.radians(np.arange(o['a0'], o['a1'], 0.25*np.sign(o['a1'] - o['a0']) or 0.25))
             P = np.c_[c[0] + rr*np.cos(ang), c[1] + rr*np.sin(ang)]; Q = cam.proj(np.c_[P, np.zeros(len(P))])
@@ -144,7 +155,7 @@ def main(a):
         cam, r, fc, endc = unpack(fit.x)
     J = fit.jac; s2 = np.sum(fit.fun**2)/max(1, len(fit.fun) - len(fit.x)); sdx = np.sqrt(np.clip(np.diag(np.linalg.pinv(J.T @ J)*s2), 0, None))
     _, sr, sfc, sendc = unpack(sdx)
-    rep = dict(frame=S['frame'], f=round(cam.f, 1), f_free=bool(ffree), f_sd=round(cam.f*float(sdx[6]), 1) if ffree else None, camera_centre=cam.C().round(3).tolist(),
+    rep = dict(frame=S['frame'], pose=cam.p.tolist(), f=round(cam.f, 1), f_free=bool(ffree), f_sd=round(cam.f*float(sdx[6]), 1) if ffree else None, camera_centre=cam.C().round(3).tolist(),
                tilt_deg=round(math.degrees(math.acos(abs(cam.R()[2, 2]))), 2), rms_px=round(float(np.sqrt(np.mean(fit.fun**2))), 3),
                holes={n: dict(r=round(float(S['holes'][n].get('rfix', r[n])), 4), rfix='rfix' in S['holes'][n], sd=round(float(sr[n]), 4), n=len(E[n]), centre=(fc[n] if n in fc else FIX[n]).round(3).tolist(),
                               centre_sd=sfc[n].round(3).tolist() if n in fc else None, from_arbor=round(float(np.hypot(*((fc[n] if n in fc else FIX[n]) - Ba))), 3),
