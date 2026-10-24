@@ -638,6 +638,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <button data-v="off" aria-pressed="true">Off</button><button data-v="x">12–6 plane</button><button data-v="z">3–9 plane</button><button data-v="y">Across the pillars</button></div>
         <div id="secOpts" class="hidden" style="margin-top:8px"><label class="sl"><span>Position</span><input type="range" id="secOff" min="-44" max="44" step="0.25" value="0"><output></output></label>
           <label class="ck" style="margin-top:6px"><input type="checkbox" id="secFlip"> Show the other half</label>
+           <label class="ck" style="margin-top:6px" title="With Edges on: the outlines of the faces inside a cut part, seen through its cut face"><input type="checkbox" id="secLines" checked> Outlines through the cut</label>
           <p class="note" style="margin:6px 0 0">Cut faces are hatched. The plane moves with the movement, so it works in every view.</p></div>
       </details>
       <details class="grp more" id="varDet">
@@ -1160,7 +1161,7 @@ function mats(){
   return M;
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
-const SEC={on:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};
+const SEC={on:{value:0},flat:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};   /* flat: Edges draw no lines inside a cut face (makeInk's nid; the panel's Outlines through the cut off) */
 /* a cut face (a back face seen through the cut) is drawn 0.015 mm nearer than it lies: at its own depth it z-fought the part lying on that face (the barrel
    bridge on the train bridge, a plate on its pillar) and showed it through the cut in patches. Not at the plane itself: the far side of an uncut part is a back
    face too, and would cover everything. Compiled in only while a section is on (setSection recompiles), as a shader that writes depth loses early depth testing */
@@ -1239,9 +1240,12 @@ function makeInk(r){
     const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once),
      and so is the mesh's own polygon offset: without it the dial's face, 0.02 above its brass disc, fought it, and Edges drew the fight as streaks across the dial */
-  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uA:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uA:{value:0},uSecOn:SEC.on,uSecFlat:SEC.flat},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight.
+    With SEC.flat a cut face is marked by a normal of 0 (no unit normal is), and the line pass draws no depth or crease line between two cut pixels: the back faces
+    inside a cut solid, at their own depths and normals, otherwise draw its hidden edges across the cut. Lines between parts (ids) and round the cut stay. Its depth
+    stays the back face's own: on the plane, the far side of an uncut part would cover what is in front of it */
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nattribute float aId;uniform float uId,uA;varying vec3 vN;varying float vId;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;vId=uA>0.5?aId:uId;}',
-    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;varying float vId;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,vId);'+SEC_DEPTH+'\n}'});
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uSecOn,uSecFlat;uniform mat4 projectionMatrix;varying vec3 vN;varying float vId;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,vId);if(uSecFlat>0.5&&uSecOn>0.5&&!gl_FrontFacing)gl_FragColor.rgb=vec3(0.0);'+SEC_DEPTH+'\n}'});
   nid.defaultAttributeValues.aId=[0];   /* a mesh without the attribute (all but the merged copies) reads 0 */
   /* the id is the part's (the drawing) or, for Edges, the mesh's (inkTag): a pawl lies on its own part's wheel. A merged copy (drawMerge) carries its pieces' own as aId */
   let idOn=false,idM=false;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniforms.uA.value=idM&&this.userData.merged?1:0;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
@@ -1253,8 +1257,9 @@ uniform sampler2D tN,tD,tG,tGD;uniform vec2 uPx,uNF;uniform float uTwo,uGh,uMv;v
 float vz(float d){return -perspectiveDepthToViewZ(d,uNF.x,uNF.y);}
 vec2 ed(sampler2D tn,sampler2D td,vec2 u,vec2 o){float d0=texture2D(td,u).x,d1=texture2D(td,u+o).x;bool b0=d0>0.999999,b1=d1>0.999999;
   if(b0&&b1)return vec2(0.0);vec4 n0=texture2D(tn,u),n1=texture2D(tn,u+o);if(uMv>0.5&&((!b0&&n0.a<0.001)||(!b1&&n1.a<0.001)))return vec2(0.0);   /* Edges: none on or at the box (id 0) */
-  if(b0!=b1)return vec2(1.0,0.0);float z0=vz(d0),z1=vz(d1);if(abs(z0-z1)>0.6+0.012*min(z0,z1))return vec2(1.0,0.0);
-  float c=dot(normalize(n0.xyz*2.0-1.0),normalize(n1.xyz*2.0-1.0))<0.8?0.75:0.0;return vec2(0.0,max(c,abs(n0.a-n1.a)>0.002?(uMv>0.5?0.75:0.6):0.0));}
+  if(b0!=b1)return vec2(1.0,0.0);bool c0=!b0&&dot(n0.rgb,vec3(1.0))<0.003,c1=!b1&&dot(n1.rgb,vec3(1.0))<0.003;float di=abs(n0.a-n1.a)>0.002?(uMv>0.5?0.75:0.6):0.0;   /* c: a cut face drawn flat (nid, SEC.flat) */
+  if(c0&&c1)return vec2(0.0,di);float z0=vz(d0),z1=vz(d1);if(abs(z0-z1)>0.6+0.012*min(z0,z1))return vec2(1.0,0.0);if(c0||c1)return vec2(0.0,max(0.75,di));
+  float c=dot(normalize(n0.xyz*2.0-1.0),normalize(n1.xyz*2.0-1.0))<0.8?0.75:0.0;return vec2(0.0,max(c,di));}
 vec2 lines(sampler2D tn,sampler2D td){vec2 e=vec2(0.0);vec2 D[4];D[0]=vec2(1.0,0.0);D[1]=vec2(0.0,1.0);D[2]=vec2(1.0,1.0);D[3]=vec2(1.0,-1.0);
   for(int i=0;i<4;i++){e=max(e,ed(tn,td,vUv,D[i]*uPx));if(uTwo>0.5)e=max(e,ed(tn,td,vUv,-D[i]*uPx));}return e;}
 void main(){vec2 s=lines(tN,tD),g=uGh>0.5?lines(tG,tGD):vec2(0.0);gl_FragColor=vec4(s,max(g.x,g.y*0.8),1.0);}`});
@@ -2203,6 +2208,7 @@ const VIEWER={start(cfg){
   document.querySelectorAll('#secs button').forEach(b=>b.addEventListener('click',()=>{secMode=b.dataset.v;document.querySelectorAll('#secs button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
     if(secMode!=='off'){const d=SECDEF[secMode];secIn.min=d.min;secIn.max=d.max;secOff=d.def;secIn.value=d.def;}applySec();look();}));
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});$('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
+  $('#secLines').addEventListener('change',e=>{SEC.flat.value=e.target.checked?0:1;});   /* off: Edges draw a cut face flat (core.js, makeInk) */
   /* ---------- state ---------- */
   const st={opening:true,tour:-1,drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
   const FOV0=cam.fov,cur={explode:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the frame stays hidden */
@@ -2458,10 +2464,10 @@ const VIEWER={start(cfg){
       if(!ok){l.el.style.opacity=0;continue;}placed.push(ok[2],{x0:px-4,y0:py-4,x1:px+4,y1:py+4});
       l.el.style.transform=`translate(${px.toFixed(1)}px,${py.toFixed(1)}px)`;l.sp.style.transform=`translate(${ok[0].toFixed(1)}px,${ok[1].toFixed(1)}px)`;l.el.style.opacity=1;}}
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
-  /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
+  /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f][:p], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
   function hashOf(){if(esOn()){const s=ES.section(),k=ES.key||'essay';return s?k+'='+s:k;}const h=new URLSearchParams();if(st.tour>=0)h.set('tour',st.tour+1);
-    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
+    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':'')+(SEC.flat.value?':p':''));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);if(CT)CT.hashWrite(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
@@ -2471,8 +2477,8 @@ const VIEWER={start(cfg){
     const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0',dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}
     const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
-    const sc=/^([xyz]):(-?[\d.]+)(:f)?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
-    if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
+    const sc=/^([xyz]):(-?[\d.]+)(:f)?(:p)?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
+    if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;SEC.flat.value=sc[4]?1:0;$('#secLines').checked=!sc[4];applySec();}
     if(DV){const d=g('drive')==='1';if(d!==st.drive){st.drive=d;look();}}   /* drive=1: Moving parts only */
     if(cfg.hash)cfg.hash.read(g,first);if(CT)CT.hashRead(g);
     const tr=parseInt(g('tour'));if(TOUR&&tr>=1&&tr<=TOUR.length)tourGo(tr-1);else{if(st.tour>=0)tourEnd();if(!first)setView(v);}   /* tour=3: the walkthrough at its third step */

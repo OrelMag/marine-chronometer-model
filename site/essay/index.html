@@ -1072,7 +1072,7 @@ function mats(){
   return M;
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
-const SEC={on:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};
+const SEC={on:{value:0},flat:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};   /* flat: Edges draw no lines inside a cut face (makeInk's nid; the panel's Outlines through the cut off) */
 /* a cut face (a back face seen through the cut) is drawn 0.015 mm nearer than it lies: at its own depth it z-fought the part lying on that face (the barrel
    bridge on the train bridge, a plate on its pillar) and showed it through the cut in patches. Not at the plane itself: the far side of an uncut part is a back
    face too, and would cover everything. Compiled in only while a section is on (setSection recompiles), as a shader that writes depth loses early depth testing */
@@ -1151,9 +1151,12 @@ function makeInk(r){
     const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once),
      and so is the mesh's own polygon offset: without it the dial's face, 0.02 above its brass disc, fought it, and Edges drew the fight as streaks across the dial */
-  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uA:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uA:{value:0},uSecOn:SEC.on,uSecFlat:SEC.flat},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight.
+    With SEC.flat a cut face is marked by a normal of 0 (no unit normal is), and the line pass draws no depth or crease line between two cut pixels: the back faces
+    inside a cut solid, at their own depths and normals, otherwise draw its hidden edges across the cut. Lines between parts (ids) and round the cut stay. Its depth
+    stays the back face's own: on the plane, the far side of an uncut part would cover what is in front of it */
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nattribute float aId;uniform float uId,uA;varying vec3 vN;varying float vId;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;vId=uA>0.5?aId:uId;}',
-    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;varying float vId;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,vId);'+SEC_DEPTH+'\n}'});
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uSecOn,uSecFlat;uniform mat4 projectionMatrix;varying vec3 vN;varying float vId;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,vId);if(uSecFlat>0.5&&uSecOn>0.5&&!gl_FrontFacing)gl_FragColor.rgb=vec3(0.0);'+SEC_DEPTH+'\n}'});
   nid.defaultAttributeValues.aId=[0];   /* a mesh without the attribute (all but the merged copies) reads 0 */
   /* the id is the part's (the drawing) or, for Edges, the mesh's (inkTag): a pawl lies on its own part's wheel. A merged copy (drawMerge) carries its pieces' own as aId */
   let idOn=false,idM=false;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniforms.uA.value=idM&&this.userData.merged?1:0;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
@@ -1165,8 +1168,9 @@ uniform sampler2D tN,tD,tG,tGD;uniform vec2 uPx,uNF;uniform float uTwo,uGh,uMv;v
 float vz(float d){return -perspectiveDepthToViewZ(d,uNF.x,uNF.y);}
 vec2 ed(sampler2D tn,sampler2D td,vec2 u,vec2 o){float d0=texture2D(td,u).x,d1=texture2D(td,u+o).x;bool b0=d0>0.999999,b1=d1>0.999999;
   if(b0&&b1)return vec2(0.0);vec4 n0=texture2D(tn,u),n1=texture2D(tn,u+o);if(uMv>0.5&&((!b0&&n0.a<0.001)||(!b1&&n1.a<0.001)))return vec2(0.0);   /* Edges: none on or at the box (id 0) */
-  if(b0!=b1)return vec2(1.0,0.0);float z0=vz(d0),z1=vz(d1);if(abs(z0-z1)>0.6+0.012*min(z0,z1))return vec2(1.0,0.0);
-  float c=dot(normalize(n0.xyz*2.0-1.0),normalize(n1.xyz*2.0-1.0))<0.8?0.75:0.0;return vec2(0.0,max(c,abs(n0.a-n1.a)>0.002?(uMv>0.5?0.75:0.6):0.0));}
+  if(b0!=b1)return vec2(1.0,0.0);bool c0=!b0&&dot(n0.rgb,vec3(1.0))<0.003,c1=!b1&&dot(n1.rgb,vec3(1.0))<0.003;float di=abs(n0.a-n1.a)>0.002?(uMv>0.5?0.75:0.6):0.0;   /* c: a cut face drawn flat (nid, SEC.flat) */
+  if(c0&&c1)return vec2(0.0,di);float z0=vz(d0),z1=vz(d1);if(abs(z0-z1)>0.6+0.012*min(z0,z1))return vec2(1.0,0.0);if(c0||c1)return vec2(0.0,max(0.75,di));
+  float c=dot(normalize(n0.xyz*2.0-1.0),normalize(n1.xyz*2.0-1.0))<0.8?0.75:0.0;return vec2(0.0,max(c,di));}
 vec2 lines(sampler2D tn,sampler2D td){vec2 e=vec2(0.0);vec2 D[4];D[0]=vec2(1.0,0.0);D[1]=vec2(0.0,1.0);D[2]=vec2(1.0,1.0);D[3]=vec2(1.0,-1.0);
   for(int i=0;i<4;i++){e=max(e,ed(tn,td,vUv,D[i]*uPx));if(uTwo>0.5)e=max(e,ed(tn,td,vUv,-D[i]*uPx));}return e;}
 void main(){vec2 s=lines(tN,tD),g=uGh>0.5?lines(tG,tGD):vec2(0.0);gl_FragColor=vec4(s,max(g.x,g.y*0.8),1.0);}`});
