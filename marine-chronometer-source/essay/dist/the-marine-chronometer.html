@@ -6257,27 +6257,26 @@ const WCASE=(()=>{
          fitting, the circle fitted on its rim (8 points, 0.4 px rms): Ø 19.5 (±1), its centre 10.35 from each of those lines (13.4-14.5 from the inner faces by the box's centre)
          and 1.1 inside the long edge, with two screws' heads on the box's diagonal 11.9 apart, one 6.4 inside the edge and one 5.2 outside it. Lange VEB 2285's box
          (drouot_33246921_langeVEB2285_3, from above) shows the same: a wooden shelf in the corner and the key's black body in a round black cup standing over its front edge.
-         Built so: the key's axis 14 from each wall (±1; 13.5 would leave the 1943 key's paddle, 3 thick, 0.24 from the walls at its widest), the shelf's long edge 1.1 beyond it (its legs 29.6 from the walls), notched round the key's body (r 6), 10
-         thick, its top 5 under the cup's; the cup Ø 19.5, 5 high (Lange 2285's, scaled on its Ø: estimated), brass (the drawing gives no material: Wempe 6161's key stands in a
+         Built so: the key's axis 14 from each wall (±1; 13.5 would leave the 1943 key's paddle, 3 thick, 0.24 from the walls at its widest); the shelf's front edge a concave arc about the box's centre, following the gimbal ring as Wempe 6161's
+         (antiquorum_208-4_wempe6161.jpg) and Wempe 3044's (milivault_529241_wempe3044_screen.png) do, r 82.5 so the cup stands wholly on the wood, 1 inside it (its legs 59.8 along the walls;
+         3044's scale about 45-50 against its box's inner width, ±15 %, its fitting smaller: the arc's radius and its centre estimated), the key's tube through a hole r 6 in it, 10
+         thick, its top 5 under the cup's (until 24 October 2026 a straight edge 1.1 beyond the key, as the drawing's triangle, which left the cup half over nothing and the key's tube in an open notch); the cup Ø 19.5, 5 high (Lange 2285's, scaled on its Ø: estimated), brass (the drawing gives no material: Wempe 6161's key stands in a
          brass ring at its cone's foot, antiquorum_208-4_wempe6161.jpg, and Wempe 3044's corner shows nothing black, milivault_529241_wempe3044_screen.png, its brass key's
          body top and paddle over the shelf; black, as Lange 2285's, until 24 October 2026), bored
          Ø 11 for the key's cone, which seats on its top edge 65 over the floor (the key's paddle 20.7 over the box's top, as before); its two screws 14 apart, heads Ø 2.2 on Ø 1.2 shanks
          (the dots read 11.9 apart and about Ø 2.4, ±1 each: so near the centre, heads that size would lie over the key's Ø 11 bore, so they are built as far out as the
-         reading allows), the inner into the shelf, the outer, beyond the shelf's edge, ending in the cup (what it holds there isn't drawn: estimated). The paddle (Ø 34.5 × 3, its top
+         reading allows), both into the shelf. The paddle (Ø 34.5 × 3, its top
          20.7 over the rim, facing the box's middle) clears the walls (and the closed lid's, flush with them) by 0.74 at its widest, the 1940 key's pear by 0.57 (measured on the page). Until 18 October
          2026 a shelf with legs 55 and the key in a hole 16.5 from each wall (estimated). The paddle faces the box's middle, its plane 94.8 from the gimbals' centre and its
-         body's near side 87.6, beyond the case's and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 130 against its 103.7) */
-      {const c=[BW-WT,-(BW-WT)],d=[-Math.SQRT1_2,Math.SQRT1_2],h=[Math.SQRT1_2,Math.SQRT1_2],K=[KX,KZ],eK=14*Math.SQRT2+1.1,L=eK*Math.SQRT2,rn=6,
-          F=[K[0]+1.1*d[0],K[1]+1.1*d[1]],w=Math.sqrt(rn*rn-1.1*1.1),P1=[F[0]-w*h[0],F[1]-w*h[1]],P2=[F[0]+w*h[0],F[1]+w*h[1]],
-          a1=Math.atan2(P1[1]-K[1],P1[0]-K[0]),a2=Math.atan2(P2[1]-K[1],P2[0]-K[0]),ad=Math.atan2(-d[1],-d[0]),arc=[];
-        let da=a2-a1;while(da<=0)da+=TAU;const mid=a1+da/2,flip=Math.cos(mid-ad)<0;if(flip)da-=TAU;   /* round the side toward the corner */
-        for(let i=1;i<24;i++){const a=a1+da*i/24;arc.push([K[0]+rn*Math.cos(a),K[1]+rn*Math.sin(a)]);}
-        const sIn=[K[0]-7*d[0],K[1]-7*d[1]],sOut=[K[0]+7*d[0],K[1]+7*d[1]];
-        tag(mesh(bxW,polyGeo([c,[c[0]-L,c[1]],P1,...arc,P2,[c[0],c[1]+L]],10,[[sIn[0],sIn[1],0.6]]),MC.mah,0,KH-15,0),'Schluesselhalter');
+         body's near side 87.6, beyond the case's and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's and the case's (82.5 from the centre against the ring's 73.3 and the case's reach 79.4) */
+      {const c=[BW-WT,-(BW-WT)],d=[-Math.SQRT1_2,Math.SQRT1_2],RS=Math.hypot(KX,KZ)-9.75-1,L=c[0]-Math.sqrt(RS*RS-c[0]*c[0]);   /* the front edge an arc about the box's centre, following the ring (Wempe 6161, 3044), r 82.5: the cup 1 inside it */
+        const sIn=[KX-7*d[0],KZ-7*d[1]],sOut=[KX+7*d[0],KZ+7*d[1]],a0=Math.atan2(c[1],c[0]-L),a1=Math.atan2(c[1]+L,c[0]),arc=[];
+        for(let i=0;i<=32;i++){const t=a0+(a1-a0)*i/32;arc.push([RS*Math.cos(t),RS*Math.sin(t)]);}
+        tag(mesh(bxW,polyGeo([c,...arc],10,[[KX,KZ,6],[sIn[0],sIn[1],0.6],[sOut[0],sOut[1],0.6]]),MC.mah,0,KH-15,0),'Schluesselhalter');
         const cup=[];for(let i=0;i<96;i++){const a=i/96*TAU;cup.push([KX+9.75*Math.cos(a),KZ+9.75*Math.sin(a)]);}
         tag(mesh(bxW,polyGeo(cup,5,[[KX,KZ,5.5],[sIn[0],sIn[1],0.6],[sOut[0],sOut[1],0.6]]),M.brass,0,KH-5,0),'Schluesselhalter.F');
         const rg=new THREE.Group();rg.rotation.x=Math.PI;bxW.add(rg);
-        tag(screw(rg,sIn[0],-sIn[1],-KH,1.1,1.0,10,0.6,M.steel),'WN-kh');tag(screw(rg,sOut[0],-sOut[1],-KH,1.1,1.0,4.5,0.6,M.steel),'WN-kh');}}
+        tag(screw(rg,sIn[0],-sIn[1],-KH,1.1,1.0,10,0.6,M.steel),'WN-kh');tag(screw(rg,sOut[0],-sOut[1],-KH,1.1,1.0,10,0.6,M.steel),'WN-kh');}}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
     /* the lid's stay (below, in the lid): the bar on its pivot, turned each frame to lie on its pin in the box's wall (stayAt); the pin a brass stud Ø 2 out of the wall */
     const stayP=new THREE.Group(),stayPin=[YL-STC,-BW+STD];
