@@ -79,7 +79,7 @@
   "pillar:Buffer | pillar:Lathe | -0.00": 4,
   "pillar:Extrude | pillar:Lathe | +-0.60": 1,
   "pillar:Lathe | fusee:Buffer | --3.96": 1,
-  "pillar:Lathe | ltb:Buffer | -0.00": 2,
+  "pillar:Lathe | ltb:Buffer | -0.00": 3,
   "pillar:Lathe | motion:Extrude | +5.06": 1,
   "pillar:Lathe | motion:Extrude | +7.44": 1,
   "pillar:Lathe | pillars:Lathe | +-3.86": 1,
