@@ -37,7 +37,9 @@ const WCASE=(()=>{
   /* turned solids as plan cells of rings: rs the radii, ys[i] the depths [y0, y1] of the disc (i 0) and of each ring (each a constant or a function of the plan point), F[i] its
      features; each ring in two halves (a ring isn't a simple outline), split at s0 so no feature crosses the split, a sloped one in N/4 sectors. Every circle is the same N points, so neighbouring cells share them */
   const cells=(rs,ys,F=[],s0=0)=>{const out=[{loop:circ(rs[0],s0),y0:ys[0][0],y1:ys[0][1],F:F[0]||[]}];
-    for(let i=1;i<rs.length;i++){const a=circ(rs[i-1],s0),b=circ(rs[i],s0),M=ys[i].some(y=>typeof y==='function')?N/4:2;   /* a sloped ring in narrow sectors, so its faces' triangles stay short and follow the slope */
+    for(let i=1;i<rs.length;i++){const a=circ(rs[i-1],s0),b=circ(rs[i],s0),M=ys[i].some(y=>typeof y==='function')?N:2;   /* a sloped ring in sectors one step wide, so each face is a quad whose two triangles span both circles and follow the slope.
+       N/4 sectors until 24 October 2026: their faces of 5 + 5 points triangulated with slivers on three points of one circle, flat (solidGeo gives a face level along its
+       outline a normal straight up), 50° off a cone's, which Edges drew as broken rings round every seam of the bezel's bevel and the sight cone */
       for(let h=0;h<M;h++){const ix=[...Array(N/M+1).keys()].map(k=>(k+h*N/M)%N);
         const f=(F[i]||[]).filter(q=>{const c=KIT.cen(q.p),t=((Math.atan2(c[1],c[0])-s0)%TAU+TAU)%TAU;return Math.floor(t/(TAU/M))===h;});
         out.push({loop:[...ix.map(k=>b[k]),...ix.slice().reverse().map(k=>a[k])],y0:ys[i][0],y1:ys[i][1],F:f});}}return out;};
@@ -54,7 +56,14 @@ const WCASE=(()=>{
   const along=(par,p,u)=>{const g=new THREE.Group();g.position.set(p[0],p[1],p[2]);g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(u[0],u[1],u[2]).normalize());par.add(g);return g;};
   /* a straight knurl: n teeth round a circle r, d deep (a tip at r, a root at r - d half a pitch on), h high from y 0, a hole hr through it (or none) */
   const knurlPts=(r,d,n,a0=0)=>{const o=[];for(let j=0;j<n;j++){const a=a0+j/n*TAU,b=a+Math.PI/n;o.push([r*Math.cos(a),r*Math.sin(a)],[(r-d)*Math.cos(b),(r-d)*Math.sin(b)]);}return o;};
-  const knurl=(r,d,h,n,hr=0)=>polyGeo(knurlPts(r,d,n),h,hr?[[0,0,hr]]:[]);
+  /* a knurl's flanks shaded leaning 15° off the radius, not their own 36-55°: neighbouring flanks then part by 30°, under the 37° at which Edges draws a crease (makeInk).
+     Their teeth, a pixel or less at any view of the case, drew every crease line by chance and the band came out in rows of dashes (the bezel, 24 October 2026); the
+     shading still alternates tooth by tooth. Only the side faces out at r0 (the teeth's roots) or beyond; a bore through it keeps its own */
+  const softKnurl=(g,r0)=>{const P=g.attributes.position,N=g.attributes.normal,c=Math.cos(15*Math.PI/180),s=Math.sin(15*Math.PI/180);
+    for(let i=0;i<P.count;i++){const x=P.getX(i),z=P.getZ(i),r=Math.hypot(x,z),nx=N.getX(i),nz=N.getZ(i);if(r<r0-1e-3||Math.abs(N.getY(i))>0.5)continue;
+      const ux=x/r,uz=z/r,a=nx*ux+nz*uz,b=-nx*uz+nz*ux;if(a<=0||Math.abs(b)<=a*s/c)continue;const sb=Math.sign(b);N.setXYZ(i,c*ux-sb*s*uz,0,c*uz+sb*s*ux);}
+    N.needsUpdate=true;return g;};
+  const knurl=(r,d,h,n,hr=0)=>softKnurl(polyGeo(knurlPts(r,d,n),h,hr?[[0,0,hr]]:[]),r-d);
   const box=(par,w,h,d,x,y,z,mt)=>mesh(par,new THREE.BoxGeometry(w,h,d),mt,x,y,z);
   /* the box's mahogany, drawn in code, as Wempe No. 6161's (Antiquorum 208-4, a brass bowl in brass gimbals as the drawings' Ms.): its colours sampled on that photograph,
      the lid's lit front a median #904527, its grain #773921 to #bb8166, the box's front in shade #491a10 to #8c4e34; quarter-sawn, so a ribbon figure of long light and dark
@@ -335,7 +344,7 @@ const WCASE=(()=>{
     {const b0=YB+0.3,top=b0+16,RG=55.25,cone=p=>b0+5.0+(rr(p)-45.9)*7.3/(RG-45.9),bev=p=>top-(rr(p)-RG)*6.2/(60.6-RG),lin=(r0,h0,r1,h1)=>p=>b0+h0+(rr(p)-r0)*(h1-h0)/(r1-r0);
       const RS=[46.0,RG,56.6,58.05,58.9,60.2],YS=[[b0,b0],[b0+5.0,cone],[b0,bev],[lin(56.6,0,58.05,6.07),bev],[lin(58.05,6.07,58.9,6.9),bev],[lin(58.9,6.9,60.6,7.5),bev]];
       fuse([tag(mesh(bW,smoothRev(solidGeo(cells(RS,YS).slice(1))),CB),'050101-2'),
-      tag(mesh(bW,polyGeo(knurlPts(60.6,0.3,460),2.3,[[0,0,60.2]]),CB,0,b0+7.5,0),'050101-2',1)]);   /* the ring and its knurl one mesh (fuse) */
+      tag(mesh(bW,softKnurl(polyGeo(knurlPts(60.6,0.3,460),2.3,[[0,0,60.2]]),60.3),CB,0,b0+7.5,0),'050101-2',1)]);   /* the ring and its knurl one mesh (fuse) */
       const gl=tag(mesh(bW,solidGeo([{loop:circ(RG),y0:b0+12.3,y1:top}]),GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
     /* the 6MX's bezel ('6mx'), knurled and screwed onto the bowl's threaded rim (Kirow 422's: 11_Kirow_DEC_422_Gehäuse.jpg; Kirov 14917's off its bowl, its inside threaded:
        rAw2zmulpk8 0:29, 2:52), its glass thick and standing proud (12_Kirow_DEC_422_Kasten_1.jpg: a green edge over a narrow brass top). Traced on the bowl photograph as the
@@ -350,7 +359,7 @@ const WCASE=(()=>{
       const pr=[[55.3,yj],...bell,[57.9,yk1],[58.0,yk1],[58.0,Y6(646)],[57.6,Y6(649)],[57.2,top],[53.6,top],[53.6,gu],[52.1,gu],[52.1,YB+4.7],[55.3,YB+4.7]];
       const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();const b6m=tag(mesh(b6,smoothRev(g),M.brass),'050101-2');
       const NK=360,kn=[];for(let i=0;i<NK;i++){const t=i/NK*TAU,u=t+Math.PI/NK;kn.push([58.3*Math.cos(t),58.3*Math.sin(t)],[57.9*Math.cos(u),57.9*Math.sin(u)]);}
-      fuse([b6m,tag(mesh(b6,solidGeo([{loop:kn,y0:yk0,y1:yk1,F:[{p:circ(57.85),a:yk0,b:yk1}]}]),M.brass),'050101-2',1)]);   /* one mesh (fuse) */
+      fuse([b6m,tag(mesh(b6,softKnurl(solidGeo([{loop:kn,y0:yk0,y1:yk1,F:[{p:circ(57.85),a:yk0,b:yk1}]}]),57.9),M.brass),'050101-2',1)]);   /* one mesh (fuse) */
       const gq=[[0,gu],[53.5,gu],[53.5,gu+3.2],[52.7,gu+4.0],[0,gu+4.0]],gg=new THREE.LatheGeometry([...gq,gq[0]].map(([r,y])=>V2(r,y)),N);
       const gl=tag(mesh(b6,gg,GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
 
