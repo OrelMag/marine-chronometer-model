@@ -337,10 +337,10 @@ const VIEWER={start(cfg){
       if(!ok){l.el.style.opacity=0;continue;}placed.push(ok[2],{x0:px-4,y0:py-4,x1:px+4,y1:py+4});
       l.el.style.transform=`translate(${px.toFixed(1)}px,${py.toFixed(1)}px)`;l.sp.style.transform=`translate(${ok[0].toFixed(1)}px,${ok[1].toFixed(1)}px)`;l.el.style.opacity=1;}}
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
-  /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f][:p], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
+  /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f][:o], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
   function hashOf(){if(esOn()){const s=ES.section(),k=ES.key||'essay';return s?k+'='+s:k;}const h=new URLSearchParams();if(st.tour>=0)h.set('tour',st.tour+1);
-    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':'')+(SEC.flat.value?':p':''));}
+    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':'')+(SEC.flat.value?'':':o'));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);if(CT)CT.hashWrite(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
@@ -350,8 +350,8 @@ const VIEWER={start(cfg){
     const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0',dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}
     const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
-    const sc=/^([xyz]):(-?[\d.]+)(:f)?(:p)?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
-    if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;SEC.flat.value=sc[4]?1:0;$('#secLines').checked=!sc[4];applySec();}
+    const sc=/^([xyz]):(-?[\d.]+)(:f)?(:[po])?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
+    if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;SEC.flat.value=sc[4]===':o'?0:1;$('#secLines').checked=sc[4]===':o';applySec();}
     if(DV){const d=g('drive')==='1';if(d!==st.drive){st.drive=d;look();}}   /* drive=1: Moving parts only */
     if(cfg.hash)cfg.hash.read(g,first);if(CT)CT.hashRead(g);
     const tr=parseInt(g('tour'));if(TOUR&&tr>=1&&tr<=TOUR.length)tourGo(tr-1);else{if(st.tour>=0)tourEnd();if(!first)setView(v);}   /* tour=3: the walkthrough at its third step */
