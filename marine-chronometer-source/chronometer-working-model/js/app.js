@@ -410,6 +410,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   hB.addEventListener('click',()=>histGo(HB,HF));hF.addEventListener('click',()=>histGo(HF,HB));
   /* double-click (double-tap) a part: the camera closes in to fit it (never backing away from a part larger than the view) and turns about it, following it as the movement lifts or spreads; 0 or Reset gives back the view */
   const fb=new THREE.Box3(),fbb=new THREE.Box3();
+  /* the frame the focused point is kept in: the movement's for a part in it (it moves only as a view lifts it out of its case), else the part's group; never the mesh
+     hit, which may turn with its part (the 6MX's contact lever rocking about its staff swung the whole clock sideways in the view until 24 October 2026) */
+  const fAnchor=h=>{for(let q=h;q;q=q.parent)if(q===mv)return mv;let q=h;while(q.parent&&!q.userData.partName)q=q.parent;return q.userData.partName?q:h;};
   function focusPart(p,o){fb.makeEmpty();BX.root.updateMatrixWorld();BX.root.traverse(m=>{if(m.isMesh&&m.userData.part===p&&shown(m)&&m.geometry.attributes.position){if(!m.geometry.boundingBox)m.geometry.computeBoundingBox();fbb.copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld);fb.union(fbb);}});
     if(fb.isEmpty())return;const c=fb.getCenter(new THREE.Vector3()),rad=Math.max(fb.getSize(new THREE.Vector3()).length()/2,1),lc=o.worldToLocal(c.clone()),v=cam.fov*Math.PI/360,hv=Math.atan(Math.tan(v)*cam.aspect);
     jump(()=>{G.follow=()=>o.localToWorld(lc.clone());panO.set(0,0,0);G.yaw=C.yaw;G.pitch=C.pitch;G.dist=clamp(Math.min(rad/Math.tan(Math.min(v,hv))*1.05,C.dist),30,1500);camFree=false;});}
@@ -439,7 +442,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!through(h.object));
     return hits.find(h=>INFO[h.object.userData.part])||null;}
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}   /* the piece, where its part has pieces */
-  function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,hit.object);}else if(st.tour<0)jump(()=>setView(st.view,true));}
+  function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else if(st.tour<0)jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
   const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
   /* a piece's card: its own text, and its source, note and figures where it has them, else its part's; a line up to its part. A part with pieces lists them, each a link to its card */

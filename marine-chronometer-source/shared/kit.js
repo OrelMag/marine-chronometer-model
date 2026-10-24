@@ -257,7 +257,7 @@ const KIT=(()=>{
        across the head (photocompare.py, Wempe 3955's N view). Cached by size */
     const HG={};
     /* domed (dome > 0, its rise over the rim): the top a spherical cap from the rim (no chamfer), built of rings so the cap is a surface, not a fan; the slot cut under it */
-    const headGeo=(r,h,dome=0)=>{const k=r+'_'+h+'_'+dome;if(HG[k])return HG[k];const c=dome>0?0:Math.min(0.35,r*0.14),w=Math.max(0.35,r*0.2),s=Math.max(Math.min(0.55,h*0.45),c+0.05,dome>0?dome+0.3:0),hw=w/2,n=24;
+    const headGeo=(r,h,dome=0,sw=0,ss=0)=>{const k=r+'_'+h+'_'+dome+'_'+sw+'_'+ss;if(HG[k])return HG[k];const c=dome>0?0:Math.min(0.35,r*0.14),w=sw||Math.max(0.35,r*0.2),s=ss||Math.max(Math.min(0.55,h*0.45),c+0.05,dome>0?dome+0.3:0),hw=w/2,n=24;   /* sw, ss: a slot of another width and depth (the 6MX's block stud) */
       const RD=dome>0?(r*r+dome*dome)/(2*dome):0,yD=q=>-h+RD-Math.sqrt(Math.max(0,RD*RD-q[0]*q[0]-q[1]*q[1]));   /* the cap: -h at the middle, -h+dome at the rim */
       const arc=(rr,sg,a0,a1)=>[...Array(n+1).keys()].map(i=>{const t=a0+(a1-a0)*i/n;return[rr*Math.cos(t),sg*rr*Math.sin(t)];});
       const ccw=L=>area(L)<0?L.slice().reverse():L,cells=[];
@@ -274,10 +274,10 @@ const KIT=(()=>{
         if(!cone&&!rim&&!cap)continue;for(let v=t;v<t+9;v+=3){const px=P[v],pz=P[v+2],pr=Math.hypot(px,pz)||1;
           if(cap){const yy=-Math.sqrt(Math.max(0,RD*RD-px*px-pz*pz));N[v]=px/RD;N[v+1]=yy/RD;N[v+2]=pz/RD;}else if(cone){const l=Math.SQRT2;N[v]=px/pr/l;N[v+1]=-1/l;N[v+2]=pz/pr/l;}else{N[v]=px/pr;N[v+1]=0;N[v+2]=pz/pr;}}}
       G.attributes.normal.needsUpdate=true;return HG[k]=G;};
-    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any,dome?:number)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius, the material (steel by default) and the head's dome (its rise, 0 flat) */
-    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0)=>{
+    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any,dome?:number,sl?:any)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius, the material (steel by default), the head's dome (its rise, 0 flat) and its slot where it isn't the usual ({w, s, a}: width, depth, heading in radians about y) */
+    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0,sl=null)=>{
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
-      const hd=mesh(g,headGeo(r,h,dome),mt||M.steel);hd.userData.screw=r;hd.rotation.y=(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before */
+      const hd=mesh(g,headGeo(r,h,dome,sl?sl.w:0,sl?sl.s:0),mt||M.steel);hd.userData.screw=r;hd.rotation.y=sl&&sl.a!=null?sl.a:(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before, unless given */
       if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt)),pr=[V2(0,-0.1),V2(rs,-0.1),V2(rs,len-n*pt-d)];   /* the shank from 0.1 inside the head: rings of thread (turned grooves, not a helix), a chamfered tip */
         for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));mesh(g,new THREE.LatheGeometry(pr,28),mt||M.steel);}
       return g;};
