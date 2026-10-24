@@ -257,10 +257,10 @@ const WFRAME=(()=>{
       /* its radial pin to the case (Stellstift 3, WN-202 in the coloured section; P1f): in the radial hole at 12 o'clock, Ø 1.6 at 2.8 from the dial's face (05 08 00-3: the plan,
          drawn from the dial side under the section (first angle), draws it at 12 as a dashed pair across the ring figured "1,6"; the section draws it end on, ⊙ 2.8 under the
          top face on its centre line; sure for the place, likely for the size). Wempe 3955 shows its end on the ring's 45° cone at 12 (3_Wempe_3955_uZ.jpg, about r 44-46; the
-         hole meets the cone at r 44.4). It stands 2.0 out of the flange (the coloured section, 9.4 px/mm: 2.0) inside the bezel's lower bore (case.js: 05 01 01 draws no notch; one was cut until 21 October 2026); it sets the
-         movement's turn in the case; its inner end at r 45.3, inside the cone's face (45.2 at the pin's top edge), 9.7 long, its hole across the turned flange not cut
+         hole meets the cone at r 44.4). It stands 1.78 out of the flange (the coloured section, 9.4 px/mm, reads 2.0: 2 px more), in the bowl's notch, its end inside the bezel's thread's crests (r 54.9), which pass over it as the bezel is screwed on (case.js; 2.0 out until 24 October 2026, the bezel's bore plain); it sets the
+         movement's turn in the case; its inner end at r 45.3, inside the cone's face (45.2 at the pin's top edge), 9.45 long, its hole across the turned flange not cut
          (estimated). Until 15 October 2026 drawn Ø 1.1 at 6 o'clock (the sheet's hole Ø 1.1 and its "1,6" read the other way round, and the plan's top taken for 6) */
-      for(const g of FLG){const p=tag(cylBetween(g,0.8,45.3,55.0,M.steel,0,0,16),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+55.0)/2);}}
+      for(const g of FLG){const p=tag(cylBetween(g,0.8,45.3,54.75,M.steel,0,0,16),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+54.75)/2);}}
 
     /* ================= the barrel bridge (Federhausbrücke, 05 08 05-1; kompl. 05 08 05) ================= */
     /* Messingblech 3,5 Ms 58, 3.32 -0.04 thick, on the top plate's outer face over the barrel. Its outer edge the plate's rim ("mit der Oberplatte überdrehen"), its inner edge a
@@ -351,7 +351,7 @@ const WFRAME=(()=>{
       for(const[V,,,,yC]of WB)tag(mesh(rv(db,V),solidGeo([{loop:lug,y0,y1:yC,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(yC),180),a:y0,b:yC}]}]),M.brass),'050801-3',1);}   /* the photographed collars, thinner (WB) */
     /* Korkring 05 08 01-4 (no sheet; 05 08 01 names it on the dust bush, the coloured section "Korkring 05 08 01-4", its "05 06 01-4" in the transcription's list a misreading):
        a cork ring of square-cut section on the dust bush's neck, sitting on the collar's top, under the bowl's winding hole. In the bowl (its bore 53 deep, R-05 01 00-1,
-       the movement on its flange) its top is 3.84 over the bottom, where the bowl's raised seat round the hole meets it (case.js: the 6MX's, estimated). Scaled on the coloured section (Wempe_Einheitschronometer.jpg) at 9.32 px/mm, by the bush's own drawn Ø 13.1 (122 px) and neck Ø 9.7
+       the movement on its flange) its top is 3.84 over the bottom, where the bowl's raised seat round the hole meets it (case.js: the 6MX's, estimated); in the drawn bowl, its bottom 49 under the seat (05 06_01, since 24 October 2026), its face 0.16 short of the section's 3.86: drawn 3.70, as squeezed between the bush's collar and the bottom. Scaled on the coloured section (Wempe_Einheitschronometer.jpg) at 9.32 px/mm, by the bush's own drawn Ø 13.1 (122 px) and neck Ø 9.7
        (90.5 px): Ø 16.1 outside (x 720-870.5 px), its bore the neck's, 3.86 high (y 135-171), so its top 0.95 over the neck's (y 144) (likely: a pictorial section, but
        the bush's own figures scale to 0.1 on it). Lange No. 5829's (stahl_113510_lange_4.jpg, side-on) has it 1.23 times the bush's body across, as the section's 16.1/13.1,
        and a quarter as high as wide (sure). Its bore drawn 0.01 clear of the neck. Natural cork, its colour off that photograph */
@@ -360,9 +360,9 @@ const WFRAME=(()=>{
        bowl, so the cork may have perished or stayed in the case's seat); the sheets' versions keep it */
     /* its colour Kirov No. 247's cork (4_Kirow_247_N.jpg, photocompare.py: hue 0.08, saturation 0.6 against 0.31 rendered from the colour read off Lange 5829's, the photograph's
        exposure 0.78 of the render's on the steel square; until 18 October 2026 0xc8a070, a cream). The 6MX's 2.4 thick (its top 1.6 under a 3.86 one's on the same photograph,
-       the agent's reading 2.5: likely); the drawings' versions keep the section's 3.86 */
+       the agent's reading 2.5: likely); the drawings' versions the section's 3.86 less 0.16 squeezed (above) */
     {const cm=new THREE.MeshStandardMaterial({color:sc(0xa06838),metalness:0,roughness:0.92});
-      for(const[V,th]of/** @type {[string,number][]} */([['last first 1943 -3955',3.86],['6mx',2.4]])){const yb=TT-1.5-15.1,yt=yb-th;tag(mesh(rv(ck,V),new THREE.LatheGeometry([V2(4.86,yt),V2(8.05,yt),V2(8.05,yb),V2(4.86,yb),V2(4.86,yt)],72),cm,F10[0],0,F10[1]),'050801-4');}}
+      for(const[V,th]of/** @type {[string,number][]} */([['last first 1943 -3955',3.70],['6mx',2.4]])){const yb=TT-1.5-15.1,yt=yb-th;tag(mesh(rv(ck,V),new THREE.LatheGeometry([V2(4.86,yt),V2(8.05,yt),V2(8.05,yb),V2(4.86,yb),V2(4.86,yt)],72),cm,F10[0],0,F10[1]),'050801-4');}}
 
     /* ================= the upper balance cock (Unruhkloben oben, 05 08 03-1; kompl. 127-556.04 U30) ================= */
     /* Profilmessing Ms 58, cranked: a foot 3.2 thick on the top plate's outer face, a web, and an arm 15 -0.1 over the foot's underside to the balance's upper setting at 23.
