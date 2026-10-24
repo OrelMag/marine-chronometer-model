@@ -1,0 +1,66 @@
+{
+ "frame": "f_KLUwI2UUCMQ_11-46.5.png",
+ "source": "KLUwI2UUCMQ 11:46.5 (4K), the set-up cover in place on the barrel bridge, its screws out, seen from above at a slant (the camera on its stand); hole seeds placed by Claude by eye on gridded crops (+-5 px), each edge moved onto the image's step by cover_heights.py",
+ "f": 10000,
+ "box": [
+  900,
+  300,
+  3000,
+  1850
+ ],
+ "holes": {
+  "arb": {
+   "ell": [
+    1937,
+    960,
+    192,
+    175,
+    0
+   ],
+   "win": 10,
+   "clip": [
+    [
+     1815,
+     700,
+     2065,
+     1200
+    ]
+   ],
+   "rfix": 3.115
+  },
+  "s0": {
+   "ell": [
+    1246,
+    1270,
+    54,
+    48,
+    0
+   ],
+   "win": 6
+  },
+  "s1": {
+   "ell": [
+    2562,
+    635,
+    38,
+    35,
+    0
+   ],
+   "win": 6,
+   "rfix": 0.749
+  },
+  "ck": {
+   "ell": [
+    2530,
+    985,
+    28,
+    22,
+    0
+   ],
+   "win": 5,
+   "free": true
+  }
+ },
+ "tops": {},
+ "walls": {}
+}

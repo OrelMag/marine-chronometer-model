@@ -1,0 +1,72 @@
+{
+ "frame": "f_KLUwI2UUCMQ_11-46.5.png",
+ "f": 10000.0,
+ "f_free": false,
+ "f_sd": null,
+ "camera_centre": [
+  -126.935,
+  18.641,
+  114.658
+ ],
+ "tilt_deg": 42.4,
+ "rms_px": 2.458,
+ "holes": {
+  "arb": {
+   "r": 3.115,
+   "rfix": true,
+   "sd": 0.0,
+   "n": 59,
+   "centre": [
+    -22.144,
+    -5.347
+   ],
+   "centre_sd": null,
+   "from_arbor": 0.0,
+   "rms": 21272.7053
+  },
+  "s0": {
+   "r": 0.9124,
+   "rfix": false,
+   "sd": 0.0106,
+   "n": 115,
+   "centre": [
+    -28.64,
+    5.72
+   ],
+   "centre_sd": null,
+   "from_arbor": 12.833,
+   "rms": 0.0619
+  },
+  "s1": {
+   "r": 0.749,
+   "rfix": true,
+   "sd": 0.0,
+   "n": 57,
+   "centre": [
+    -15.19,
+    -16.58
+   ],
+   "centre_sd": null,
+   "from_arbor": 13.211,
+   "rms": 4002.6634
+  },
+  "ck": {
+   "r": 0.5502,
+   "rfix": false,
+   "sd": 0.0144,
+   "n": 98,
+   "centre": [
+    -23.049,
+    -14.873
+   ],
+   "centre_sd": [
+    0.074,
+    0.061
+   ],
+   "from_arbor": 9.569,
+   "rms": 0.0442
+  }
+ },
+ "tops": {},
+ "walls": {}
+}
