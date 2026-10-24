@@ -1403,9 +1403,9 @@ function buildMovement(M){
   const W=[],VO=0.6,TWL=2.3,TR=1.05,TG=0.534,PM=0.5;
   /* the timing nut split (KLUwI2UUCMQ 6:52.621, 6:53.121, 21 October 2026; the nut seen along the staff from the cock's side, the lit wall toward the camera, at the rim's 42 px/mm):
      a slit along its length from its inner end, the end at the rim, ending 0.37 of the way short of its outer end: 65 of the nut's 100 px along its axis on 6:53.121, 55 of 87 on
-     6:52.621 (0.63 on both; 1.45 of TWL), its width 4-5 px across both (0.10-0.12 mm, about the frames' blur: a sawn slit, under 0.15). One line shows on the near wall; the far wall
+     6:52.621 (0.63 on both; 1.45 of TWL), its width 4-5 px across both (0.10 mm at 42 px/mm, about the frames' blur: a sawn slit, under 0.15). tools/balance_details.py reads them all. One line shows on the near wall; the far wall
      is hidden on every frame, so the slit drawn through both (a split nut's two jaws, gripping the screw's thread) is estimated. Not drawn until 21 October 2026 */
-  const TSL=0.12,TSD=1.45,nut=q=>{q.geometry.dispose();q.geometry=slotted(TR,0.42,TWL,TSL,TSD,1);return q;};
+  const TSL=0.10,TSD=1.45,nut=q=>{q.geometry.dispose();q.geometry=slotted(TR,0.42,TWL,TSL,TSD,1);return q;};
   for(const h of[0,1]){const at=HA(h,1),av=HA(h,2);
     W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(nut(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42)),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, the screw's end not told apart from the nut's (blurred); the nut runs 0.1 past it at mid-travel */
     W.push({kind:'v',a:av,len:1.5,rr:0.65,mg:10.5*PM,d0:BR-RW-VO-0.75,q:hn(radial(av,BR-RW-VO-1.5,1.5,0.65,M.steelD,12,0.27),'37115')});
@@ -1421,13 +1421,13 @@ function buildMovement(M){
   /* each screw's shank through the rim, ending in a point 1.3 mm inside it (the video's brass tips inside the rim, 6:47.5, 6:52.5-6:53.5; their length and taper estimated): one turned
      solid, run to the axis at both ends, its point toward the staff (radial()'s local +y) */
   /* the heads' slots (KLUwI2UUCMQ, 21 October 2026): a screwdriver's slot across each head's outer end. On 6:52.621 (the balance face-on, the light seen through the bottom
-     head's slot) 17 px wide on the head's 134 px across, three rows; on 6:50.035 (side-on, the head facing the camera seen end-on) its dark core 12 px and with its lit far wall
-     about 20 px on 155 px: 0.13 of the head's 3.1, 0.36 mm (0.33-0.39). Its depth along the head, seen side-on through it: 6:52.621, 32 px with the head's 13 deg tilt taken out
-     (its end face 30 px of 134), and 6:53.121, the same head exactly side-on, 28 px on its 113 px: 0.74 and 0.77 mm, BSD 0.75 (+-0.1), on a head about 1.8-2.1 long (0.080 in).
+     head's slot) 16 px wide on the head's 134 px across, three rows, 0.37 mm; on 6:50.035 (side-on, the head facing the camera seen end-on) its dark core 13 px and with its lit
+     far wall about 20 px on 155 px, 0.40 mm: BSW 0.38 (+-0.04) of the head's 3.1. Its depth along the head, seen side-on through it: 6:52.621, 31 px with the head's 13 deg tilt taken out
+     (its end face 30 px of 134), and 6:53.121, the same head exactly side-on, 28 px on its 113 px: 0.71 and 0.77 mm, BSD 0.75 (+-0.1), on a head about 1.8-2.1 long (0.080 in).
      Only that head's depth was read: the shorter heads' slots are kept within 0.6 of their length (estimated). Their heading: along the staff on 6:47.5 (three heads), 6:50.0
      (two) and 6:53.1 (two), across it on 6:50.0's head at the rim's end, and not readable on the top two at 6:53.1: it follows how far each is screwed home, so drawn along
      the staff for all (the heading estimated). Plain cylinders until 21 October 2026 */
-  const BSW=0.36,BSD=0.75,head=len=>slotted(SHR,0,len,BSW,Math.min(BSD,0.6*len),-1);
+  const BSW=0.38,BSD=0.75,head=len=>slotted(SHR,0,len,BSW,Math.min(BSD,0.6*len),-1);
   const SHR=1.55,SL={},TL=RW+1.3,TIP=new THREE.LatheGeometry([[0,-TL/2],[0.35,-TL/2],[0.35,TL/2-1.1],[0,TL/2]].map(([x,y])=>new THREE.Vector2(x,y)),12);R.BSZ=BSZ;R.BWA=BWA;
   for(const h of[0,1])for(const n of R.HOLES){const a=HA(h,n),g=new THREE.Group();g.visible=false;R.balU.add(g);const wg=new THREE.Group();wg.visible=false;g.add(wg);
     const th=radial(a,BR-TL,TL,0.35,M.brass,12,0,g);th.geometry.dispose();th.geometry=TIP;
