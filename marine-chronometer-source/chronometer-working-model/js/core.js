@@ -144,7 +144,7 @@ function mats(){
   return M;
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
-const SEC={on:{value:0},flat:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};   /* flat: Edges draw no lines inside a cut face (makeInk's nid; the panel's Outlines through the cut off) */
+const SEC={on:{value:0},flat:{value:1},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};   /* flat: Edges draw no lines inside a cut face (makeInk's nid; the panel's Outlines through the cut off, the default) */
 /* a cut face (a back face seen through the cut) is drawn 0.015 mm nearer than it lies: at its own depth it z-fought the part lying on that face (the barrel
    bridge on the train bridge, a plate on its pillar) and showed it through the cut in patches. Not at the plane itself: the far side of an uncut part is a back
    face too, and would cover everything. Compiled in only while a section is on (setSection recompiles), as a shader that writes depth loses early depth testing */
