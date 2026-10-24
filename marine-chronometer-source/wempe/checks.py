@@ -3,7 +3,7 @@ table the default where a name isn't here). P1a (14 October 2026): the frame; no
 Its parts list is bom.json beside this file, its expected coplanar faces audit-expected.json (audit.py --model wempe --update writes it)."""
 # audit.py: loose ends expected (part:geometry, place, radius, why); the Hamilton's Navy brake isn't fitted. The fusee's stop pin (05 08 01-5), standing out under the
 # top plate into the stop bar's path, its end free, is turned (its domed end) and so isn't among them: wempe_stopwork.py checks it
-LOOSE=[('ring:Cylinder',(0,8.25,-55.25),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 2.0 out of the flange into the notch in the bezel's recess (case.js): out of the case its end is free")]
+LOOSE=[('ring:Cylinder',(0,8.25,-55.25),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 2.0 out of the flange inside the bezel's lower bore, clear of it (case.js: 05 01 01 draws no notch for it): its end is free")]
 LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
@@ -13,7 +13,7 @@ FLOAT=[('ring:Buffer',(15.22,0,-41.82),3.1,_RS),('ring:Buffer',(-43.82,0,7.73),3
 # audit.py box (P1f, case.js): the box's screws whose heads bear outside the audit's probes (at 0.6 of the head's radius, which fall in the hole they pass through), in the box's frame (the
 # movement's at rest), the lid shut as the movement's views have it
 FLOAT_BOX=[('closingPlate:Buffer',(0,-55.15,0),3.6,"the closing plate's screw (WN-71, 05 01 00-2): its head bears on the counterbore's floor round the plate's Ø 5.5 hole, beyond 0.6 of its radius"),
-  ('lid:Buffer',(0,18.35,96.5),4.5,"the latch tongue's pivot screw (P. 51 00 02-2): its head bears round the tongue's Ø 6.2 hole, beyond 0.6 of its radius")]
+  ('lid:Buffer',(0,24.55,96.5),4.5,"the latch tongue's pivot screw (P. 51 00 02-2): its head bears round the tongue's Ø 6.2 hole, beyond 0.6 of its radius")]
 # fine.py: the states checked (balance phase, escape teeth, fusee turns from full wind, winding): the escapement's phases as makeEsc solves them (js/escapement.js's
 # ESC.state, at the reference's swing, 207 deg, and drive): the discharge stone meets the gold spring 0.2406 (-12.3 deg), unlocking to the release 0.2482 (-2.4 deg); the
 # detent flung off the stone's corner 0.2487 (-1.8 deg), falling back onto the tooth it let go 0.2507 (0.8 deg) and riding it, the escaping tooth's tip passing under the stone,
@@ -77,7 +77,7 @@ JEWELS={'last':12,'first':12,'3955':12,'6mx':20,'1943':12}   # the 6MX (the TU: 
 # the ring reach from the gimbal centre; alt: the bowl (R-05 01 00-1) in other materials, g/cm³: Bakelite (phenolic, wood-flour filled, 1.32-1.45), hard rubber of Buna
 # (ebonite, 1.15-1.20), cast aluminium (2.7): the sheet's "Gewicht 350 gr." against the drawn brass casting (estimated densities: published typical values)
 MASSPROPS={'out':'gimbals_wempe.json','hash':'#view=case','alt':{'bakelite':1.37,'buna':1.18,'aluminium':2.70},
-  'pre':"""window.__mpExact=1;(()=>{const K=new Set(Object.values(window.__M)),B={'050301-1':{steel:8.1},'050403-1':{copper:8.25},'050401-2':{gilt:11.6}},R={brass:8.45,brass2:8.45,gilt:8.45,plate:8.45,plateSolid:8.45,copper:8.45};
+  'pre':"""window.__mpExact=1;(()=>{const K=new Set(Object.values(window.__M)),B={'050301-1':{steel:8.1},'050403-1':{copper:8.25},'050401-2':{gilt:11.6}},R={brass:8.45,caseB:8.45,brass2:8.45,gilt:8.45,plate:8.45,plateSolid:8.45,copper:8.45};
     window.__mpRho=(o,key,mat)=>{let pn='',h='';for(let p=o;p;p=p.parent){if(!pn&&p.userData.partName)pn=p.userData.partName;if(!h&&p.userData.hn)h=String(p.userData.hn).split(' ')[0];}
       if(pn==='bowl'&&window.__mpBowl)return window.__mpBowl;if(pn==='corkRing')return 0.24;if(B[h]&&B[h][key])return B[h][key];if(!K.has(mat))return{dial:8.45,hands:8.45}[pn];return R[key];};})()""",
   'extra':"""(()=>{const BX=window.__BX,ring=BX.ring,bowl=BX.bowl;BX.root.updateMatrixWorld(true);const toR=new THREE.Matrix4().copy(ring.matrixWorld).invert(),v=new THREE.Vector3(),bb=new THREE.Box3();
