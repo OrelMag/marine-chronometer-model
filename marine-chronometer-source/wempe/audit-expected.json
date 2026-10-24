@@ -61,10 +61,7 @@
   "udWheel:Lathe | hands:Buffer | +12.36": 1,
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
- "box": {
-  "bezel:Buffer | bezel:Buffer | +22.36": 1,
-  "bowl:Buffer | gimbalRing:Buffer | +6.34": 1
- },
+ "box": {},
  "movement.first": {
   "balance:Buffer | balance:Buffer | +-23.10": 6,
   "balance:Buffer | balance:Buffer | --26.90": 2,
@@ -129,9 +126,7 @@
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box.first": {
-  "bezel:Buffer | bezel:Buffer | +22.36": 1,
-  "bowl:Buffer | gimbalRing:Buffer | +6.34": 1,
-  "key:Extrude | key:Lathe | --0.58": 1
+  "key:Extrude | key:Lathe | -5.62": 1
  },
  "movement.6mx": {
   "balance:Buffer | balance:Buffer | +-23.10": 6,
@@ -209,10 +204,10 @@
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box.6mx": {
-  "bowl:Buffer | bowl:Buffer | +-37.96": 2,
-  "bowl:Buffer | bowl:Buffer | --43.44": 2,
-  "box:Box | box:Buffer | --98.64": 4,
-  "lid:Box | lid:Buffer | +91.36": 12
+  "bowl:Buffer | bowl:Buffer | +-31.74": 2,
+  "bowl:Buffer | bowl:Buffer | --37.24": 2,
+  "box:Box | box:Buffer | --92.44": 4,
+  "lid:Box | lid:Buffer | +97.56": 12
  },
  "movement.1943": {
   "balance:Buffer | balance:Buffer | +-23.10": 6,
