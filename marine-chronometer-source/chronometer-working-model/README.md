@@ -485,7 +485,7 @@ times JavaScript's milliseconds of UT.
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part, or piece: `part=bal.staff`; `view=laidout` is the laid-out train), `arm=1` (the balance locked, at rest), `block=1` (the train-blocking screw down),
 `#tour=6` (a walkthrough step), `#ovh=d12` or `#ovh=r46` (the overhaul at Op. 12 of the disassembly, Op. 46 of the reassembly), `#essay` or `#essay=detent` (the essay, sent on to its own page at that section, `../essay/index.html#detent`), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `merge=0` (Performance mode off), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
-(a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
+(a cross-section; `:f` shows the other half, `:o` draws the Edges of the faces inside the cut parts across their cut faces: the panel's Outlines through the cut ticked; plain, unticked, is the default since 3.26.04, and `:p` from 3.26.03's links still reads as it), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.
 
@@ -1806,7 +1806,12 @@ edit; see "Changing things" in the root README for the loop and the checks.
   (`SEC_DEPTH`, compiled in only while a section is on, also in Edges' id pass),
   so a part lying on the cut one doesn't show through in patches. Two solids
   that overlap show each other through a cut, so keep parts from overlapping
-  except at their intended contacts (`tools/fine.py`).
+  except at their intended contacts (`tools/fine.py`). Edges draws the lines of
+  those back faces too (the hidden edges inside a cut part, across its cut);
+  Outlines through the cut (Cross-section, off by default since 3.26.04; `:o` in
+  the hash when on, both models) clears `SEC.flat`. With it set, the id pass marks a cut face
+  with a normal of 0, which the line pass reads as one flat face: no depth or crease
+  line between two cut pixels, only the lines between parts and round the cut.
 - **Static pieces drawn merged.** Each frame draws about 40% fewer meshes than
   the model has: the pieces under one group that share a material are drawn as
   one merged copy (`drawMerge` in `core.js`, synced in `app.js`'s `paint()`).
