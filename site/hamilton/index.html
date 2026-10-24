@@ -3977,6 +3977,15 @@ function buildMovement(M){
   const holesSet=used=>{const hs=[];for(const h of[0,1])for(const n of R.HOLES){if(used.has(n))continue;const a=HA(h,n);hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),RY,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}
     holeG.visible=hs.length>0;if(!hs.length)return;const g=mergeGeo(hs);if(holeM){holeM.geometry.dispose();holeM.geometry=g;}else holeM=mesh(holeG,g,M.steelD);};   /* a group of their own: look() shows every mesh */
   const radial=(a,r0,len,rr,mat,seg=12,bore=0,p=R.balU)=>{const q=mesh(p,bore?ringGeo(rr,bore,len):cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),RY,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};   /* bore: a nut's thread */
+  /* slotted(r, ri, len, w, d, end): a turned piece in radial()'s frame (along local y, centred, +y toward the staff; local x the staff's direction, z along the rim), r its
+     radius, ri its bore (0: solid), cut across by a slot w wide and d deep from its outer end (end -1) or its inner end (+1), the slot's plane through its axis and the staff's
+     direction. One geometry, as kit.js's headGeo cuts a screw's slot: the two jaws either side of the slot the whole length, the strip between them (two stubs of a ring)
+     short of the slot by d, so the only edges drawn are the slot's own */
+  const slotted=(r,ri,len,w,d,end)=>{const hw=w/2,n=24,xo=Math.sqrt(r*r-hw*hw),xi=ri?Math.sqrt(ri*ri-hw*hw):0,
+      arc=(rr,sg)=>{const a0=Math.asin(hw/rr);return[...Array(n+1)].map((_,i)=>{const t=a0+(Math.PI-2*a0)*i/n;return[rr*Math.cos(t),sg*rr*Math.sin(t)];});},T=y=>new THREE.Matrix4().makeTranslation(0,y,0);
+    const L=[1,-1].map(sg=>[polyGeo(ri?[...arc(r,sg),...arc(ri,sg).reverse()]:arc(r,sg),len),T(-len/2)]),y0=end<0?-len/2+d:-len/2;
+    for(const sx of ri?[1,-1]:[0])L.push([polyGeo(ri?[[sx*xi,-hw],[sx*xo,-hw],[sx*xo,hw],[sx*xi,hw]]:[[-xo,-hw],[xo,-hw],[xo,hw],[-xo,hw]],len-d),T(y0)]);
+    return mergeGeo(L);};
   /* 2 timing weights (93 mg) and 2 vernier timing weights (10.5 mg), each a nut on a screw (Fig. 3): the timing weights outside the rim at the arm's ends (hole 1), their
      screws through the rim into the arm; the verniers inside the rim one hole on (hole 2), their screws' heads outside (KLUwI2UUCMQ 6:47.5, 6:53.0: a large slotted steel nut
      at each arm's end, a small plain one inside the rim beside it). Drawn at mid-travel, where the manual starts them (p. 70): the timing nuts TG off the rim, three turns of their thread
@@ -3995,8 +4004,13 @@ function buildMovement(M){
      against the 1,157 Table II's screw changes then need (37 % short). Read as a pair's, Table II needs 578 and the drawing makes 534 (8 %, inside the rim's
      measured 0.5-0.85 thickness and Table II's own spread: Table III's washers give 16 % less) */
   const W=[],VO=0.6,TWL=2.3,TR=1.05,TG=0.534,PM=0.5;
+  /* the timing nut split (KLUwI2UUCMQ 6:52.621, 6:53.121, 21 October 2026; the nut seen along the staff from the cock's side, the lit wall toward the camera, at the rim's 42 px/mm):
+     a slit along its length from its inner end, the end at the rim, ending 0.37 of the way short of its outer end: 65 of the nut's 100 px along its axis on 6:53.121, 55 of 87 on
+     6:52.621 (0.63 on both; 1.45 of TWL), its width 4-5 px across both (0.10 mm at 42 px/mm, about the frames' blur: a sawn slit, under 0.15). tools/balance_details.py reads them all. One line shows on the near wall; the far wall
+     is hidden on every frame, so the slit drawn through both (a split nut's two jaws, gripping the screw's thread) is estimated. Not drawn until 21 October 2026 */
+  const TSL=0.10,TSD=1.45,nut=q=>{q.geometry.dispose();q.geometry=slotted(TR,0.42,TWL,TSL,TSD,1);return q;};
   for(const h of[0,1]){const at=HA(h,1),av=HA(h,2);
-    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, the screw's end not told apart from the nut's (blurred); the nut runs 0.1 past it at mid-travel */
+    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(nut(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42)),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, the screw's end not told apart from the nut's (blurred); the nut runs 0.1 past it at mid-travel */
     W.push({kind:'v',a:av,len:1.5,rr:0.65,mg:10.5*PM,d0:BR-RW-VO-0.75,q:hn(radial(av,BR-RW-VO-1.5,1.5,0.65,M.steelD,12,0.27),'37115')});
     hn(radial(av,BR-RW-VO-1.5-0.65,VO+1.5+0.65+RW+0.5,0.25,M.steel,10),'42197');hn(radial(av,BR+0.5,1.2,0.535,M.steel,12),'42197',{sub:1});}   /* the vernier's screw from inside the nut's furthest travel in, through the rim to a stem 0.5 across and 0.5 outside it, then a head 1.07 across and 1.2 long (6:53.0: 22, 45, 51 px at 41.8 px/mm); the nut 1.27 across and 1.5 long (56 and 71 px). A 1.1 stem and a 0.84 x 0.5 collar, and a 1.3 nut, estimated, until 5 October 2026 */
   /* balance screws (pp. 82, 93): the parts list's 4-6 of 0.049 in head height (125-130 mg), 2 of 0.080 (200-205 mg) and 2 of 0.101 (250-255 mg), in diametric pairs. The
@@ -4009,6 +4023,14 @@ function buildMovement(M){
   const BWA={'0.002':[0.002,4.5,'42181'],'0.003':[0.003,6.5,'42182'],'0.004':[0.004,8.5,'42183'],'0.006':[0.006,12.5,'42184'],'0.008':[0.008,16.5,'42185'],'0.010':[0.010,20.5,'42256']};
   /* each screw's shank through the rim, ending in a point 1.3 mm inside it (the video's brass tips inside the rim, 6:47.5, 6:52.5-6:53.5; their length and taper estimated): one turned
      solid, run to the axis at both ends, its point toward the staff (radial()'s local +y) */
+  /* the heads' slots (KLUwI2UUCMQ, 21 October 2026): a screwdriver's slot across each head's outer end. On 6:52.621 (the balance face-on, the light seen through the bottom
+     head's slot) 16 px wide on the head's 134 px across, three rows, 0.37 mm; on 6:50.035 (side-on, the head facing the camera seen end-on) its dark core 13 px and with its lit
+     far wall about 20 px on 155 px, 0.40 mm: BSW 0.38 (+-0.04) of the head's 3.1. Its depth along the head, seen side-on through it: 6:52.621, 31 px with the head's 13 deg tilt taken out
+     (its end face 30 px of 134), and 6:53.121, the same head exactly side-on, 28 px on its 113 px: 0.71 and 0.77 mm, BSD 0.75 (+-0.1), on a head about 1.8-2.1 long (0.080 in).
+     Only that head's depth was read: the shorter heads' slots are kept within 0.6 of their length (estimated). Their heading: along the staff on 6:47.5 (three heads), 6:50.0
+     (two) and 6:53.1 (two), across it on 6:50.0's head at the rim's end, and not readable on the top two at 6:53.1: it follows how far each is screwed home, so drawn along
+     the staff for all (the heading estimated). Plain cylinders until 21 October 2026 */
+  const BSW=0.38,BSD=0.75,head=len=>slotted(SHR,0,len,BSW,Math.min(BSD,0.6*len),-1);
   const SHR=1.55,SL={},TL=RW+1.3,TIP=new THREE.LatheGeometry([[0,-TL/2],[0.35,-TL/2],[0.35,TL/2-1.1],[0,TL/2]].map(([x,y])=>new THREE.Vector2(x,y)),12);R.BSZ=BSZ;R.BWA=BWA;
   for(const h of[0,1])for(const n of R.HOLES){const a=HA(h,n),g=new THREE.Group();g.visible=false;R.balU.add(g);const wg=new THREE.Group();wg.visible=false;g.add(wg);
     const th=radial(a,BR-TL,TL,0.35,M.brass,12,0,g);th.geometry.dispose();th.geometry=TIP;
@@ -4027,7 +4049,7 @@ function buildMovement(M){
   R.screwStd=[{n:3,h:'0.080',w:0},{n:5,h:'0.050',w:0},{n:9,h:'0.100',w:0},{n:12,h:'0.050',w:0}];
   R.screws=pairs=>{BS.length=0;for(const s of Object.values(SL))s.g.visible=false;const used=new Set();
     for(const p of pairs){if(!p||used.has(p.n)||!BSZ[p.h]||!R.HOLES.includes(p.n))continue;used.add(p.n);const[hin,mg,id]=BSZ[p.h],[tin,wmg,wid]=p.w&&BWA[p.w]?BWA[p.w]:[0,0,null],t=tin*25.4,len=hin*25.4;
-      for(const h of[0,1]){const s=SL[h*100+p.n];s.g.visible=true;if(s.len!==len){s.q.geometry.dispose();s.q.geometry=cylY(SHR,len,24);s.len=len;}hn(s.q,id);hn(s.th,id,{sub:1});
+      for(const h of[0,1]){const s=SL[h*100+p.n];s.g.visible=true;if(s.len!==len){s.q.geometry.dispose();s.q.geometry=head(len);s.len=len;}hn(s.q,id);hn(s.th,id,{sub:1});
         const d=BR+t+len/2;s.q.position.set(d*Math.cos(s.a),RY,d*Math.sin(s.a));s.wg.visible=!!t;if(t){s.wm.scale.set(1,t,1);s.wm.position.set((BR+t/2)*Math.cos(s.a),RY,(BR+t/2)*Math.sin(s.a));hn(s.wm,wid);}
         BS.push({len,rr:SHR,mg:mg*PM,off:t,wmg:wmg*PM});}}
     R.pairs=pairs.map(p=>p&&{...p});holesSet(used);};
