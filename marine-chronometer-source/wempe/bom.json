@@ -3674,7 +3674,7 @@
    "parent": "050800-3",
    "kind": "part",
    "part": "ring",
-   "fn": "Stands 2.0 out of the ring's flange at 6 o'clock into the notch in the bezel's recess: it sets the movement's turn in the case.",
+   "fn": "Stands 1.78 out of the ring's flange at 12 o'clock into the notch in the bowl's threaded rim: it sets the movement's turn in the case and holds it while the bezel is screwed down.",
    "rel": [
     [
      "in",
@@ -3694,7 +3694,7 @@
    "parent": null,
    "kind": "part",
    "part": "bowl",
-   "fn": "The cast brass bowl the movement ring's flange lies on; the winding hole in its bottom over the fusee's square.",
+   "fn": "The cast brass bowl: the movement ring's flange in a rebate in its rim, the rim threaded outside for the bezel and notched for the ring's pin; the winding hole in its bottom over the fusee's square.",
    "rel": [],
    "figs": "05 01_2, 05 01_1"
   },
@@ -3849,7 +3849,7 @@
    "parent": null,
    "kind": "part",
    "part": "bezel",
-   "fn": "Lies on the bowl's top face round the movement ring's flange; the glass in its top.",
+   "fn": "Screws onto the bowl's threaded rim round the movement ring's flange, its step on the dial holding the movement down; the glass in its top.",
    "rel": [
     [
      "on",
