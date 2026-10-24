@@ -167,7 +167,7 @@ const WTRAIN=(()=>{
        for half a second each second and stays closed a second and a half at the missing tooth, at the minute. The two springs 66 in the bowl (case.js) bear on the blocks'
        outer ends. The 6MX's (Kirov No. 247's) only: the pillar plate's pieces, its wheel the seconds wheel's, its lever turned by update() */
     const C6=WD.CONTACT6,cc=Q=>KIT.area(Q)>0?Q:Q.slice().reverse(),cir=(c,r,n=32)=>cc([...Array(n).keys()].map(i=>[c[0]+r*Math.cos(i/n*TAU),c[1]+r*Math.sin(i/n*TAU)]));
-    const SG=KIT.solidGeo,g6=rv(P.pillarPlate,'6mx'),cen=Q=>[Q.reduce((a,q)=>a+q[0],0)/Q.length,Q.reduce((a,q)=>a+q[1],0)/Q.length],brg2=(t,r)=>[-r*Math.sin(t*D2R),-r*Math.cos(t*D2R)];
+    const SG=KIT.solidGeo,g6=rv(P.pillarPlate,'6mx'),_c6=(g6.userData.contact=true),cen=Q=>[Q.reduce((a,q)=>a+q[0],0)/Q.length,Q.reduce((a,q)=>a+q[1],0)/Q.length],brg2=(t,r)=>[-r*Math.sin(t*D2R),-r*Math.cos(t*D2R)];
     const yAx=new THREE.Vector3(0,1,0),hor=(m,d)=>{m.quaternion.setFromUnitVectors(yAx,new THREE.Vector3(d[0],0,d[1]).normalize());return m;};
     /* the cock's foot: its screw 2 past its middle toward its far end, clear of the leg at the arm's root, its pins 2.2 either side across it (estimated) */
     const fs=cen(C6.cockFoot),fA=C6.cockFoot[1],fB=C6.cockFoot[0],fl=Math.hypot(fB[0]-fA[0],fB[1]-fA[1]),fu=[(fB[0]-fA[0])/fl,(fB[1]-fA[1])/fl],fv=[-fu[1],fu[0]],fc=[fs[0]+2*fu[0],fs[1]+2*fu[1]],fp=[fc[0]+2.2*fv[0],fc[1]+2.2*fv[1]],fq=[fc[0]-2.2*fv[0],fc[1]-2.2*fv[1]];
@@ -192,6 +192,11 @@ const WTRAIN=(()=>{
       q=at(D.t/2+0.5);const br=tag(mesh(g6,new THREE.BoxGeometry(1.0,5.05,4.0),M.gilt,q[0],(-5.25-10.3)/2,q[1]),'6MX.ctd',1);br.rotation.y=Math.atan2(-t[1],t[0]);}
     /* the staff 69 (steel, its pivots Ø 0.4) in its jewels: the upper in a gilt setting in the base, the lower in the cock's arm under a cap plate, each a hole jewel and a cap
        jewel (the TU's 20 jewels with the contact, 15 without: these four and the stone) */
+    /* C6LB: the lever's boss on the staff, just under the spiral's collet: on Kirov 2973 (14_E-Kontakt1.jpg) and 24020 (12_KirPol_24020_E-Kontakt2.jpg) the boss sits on the
+       staff right under the collet (0.1-0.3 of gap at the scale of the cock's arm, 16.7 px a mm on 24020), the staff bare under it, and its arm runs down from it to the screw's
+       holder on block 52 (likely; Kirov 247's own is hidden behind the stud and holder on 10_Kirow_247_E-Kontakt_1.jpg). The stone arm runs down the same way to the contact
+       wheel (estimated: no photograph shows it). Until 24 October 2026 the boss and both arms flat at -6.1 to -7.4, 4.5 under the spiral */
+    const C6LB=[-10.2,-11.5];
     const C6L=new THREE.Group();C6L.position.set(C6.staff[0],0,C6.staff[1]);g6.add(C6L);   /* the lever, staff and spiral's collet turn together (update(): C6L) */
     /* in the Exploded view the lever (its stone level with the contact wheel's teeth), its staff and spiral leave before the seconds wheel, 38 up, and the cock over them
        first, 43.5 with its cap plate's screws in it (1.0 under the top plate at full spread); the base, blocks and disc stay on the pillar plate under the train */
@@ -199,7 +204,10 @@ const WTRAIN=(()=>{
     /* heights (18 October 2026): the cock's arm -12.9 to -14.2, its cap plate to -14.7, the spiral at -11.7 to -12.3 under it, read on 10_Kirow_247_E-Kontakt_1.jpg against
        a millimetre scale stood at the staff through photocompare.py's m6_contact camera (0.6 mm residuals at the block screws; the arm's front edge -12.9 to -14.2, the
        spiral's collet -11.9 to -12.7: likely); until then the arm -11 to -13.2 and the spiral -8.5 to -9.1 (Fig. 101: estimate) */
-    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,-2.6],[0.2,-2.4],[0.2,-1.9],[0,-1.9]],24),M.steel),'6MX.ctst');
+    /* the staff: Ø 1.0 from the cock down to the lever's boss, Ø 0.6 under it to the base (12_KirPol_24020_E-Kontakt2.jpg and 14_E-Kontakt1.jpg, Kirov 2973: bare steel under the
+       boss, 8-11 px across against the block screws' Ø 3.1 at 23-26 px a mm, a little further off, so Ø 0.4-0.6, and about 0.8 above it: likely; Ø 1.0 the whole way until
+       24 October 2026) */
+    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,C6LB[0]],[0.3,C6LB[0]],[0.3,-2.6],[0.2,-2.4],[0.2,-1.9],[0,-1.9]],24),M.steel),'6MX.ctst');
       tag(mesh(g6,ringT([[0.9,-2],[1.5,-2],[1.5,0],[0.9,0]],40),M.gilt,S[0],0,S[1]),'6MX.ctjs');   /* the upper jewels' setting in the base */
       tag(mesh(g6,ringT([[0.21,-2],[0.9,-2],[0.9,-1.4],[0.21,-1.4]],32),M.ruby,S[0],0,S[1]),'6MX.ctju');
       tag(mesh(g6,turned([[0,-1.4],[0.9,-1.4],[0.9,-1.0],[0,-1.0]],32),M.ruby,S[0],0,S[1]),'6MX.ctjeu');
@@ -236,10 +244,14 @@ const WTRAIN=(()=>{
        in the holder at its other end with a lock nut: in a group about the staff, which update() turns (C6L) */
     {const S=C6.staff,loc=q=>[q[0]-S[0],q[1]-S[1]],arm=(e,w)=>{const l=Math.hypot(e[0],e[1]),n=[-e[1]/l*w/2,e[0]/l*w/2];return cc([[n[0],n[1]],[e[0]+n[0],e[1]+n[1]],[e[0]-n[0],e[1]-n[1]],[-n[0],-n[1]]]);};
       const eS=loc(C6.stone),eH=loc(C6.screw54.h),eT=loc(C6.screw54.tip);
-      tag(mesh(C6L,ringT([[0.5,-7.4],[1.5,-7.4],[1.5,-6.1],[0.5,-6.1]],40),M.steel),'6MX.ctl');
+      tag(mesh(C6L,ringT([[0.5,C6LB[1]],[1.5,C6LB[1]],[1.5,C6LB[0]],[0.5,C6LB[0]]],40),M.steel),'6MX.ctl');
       const SA=[0,23],sl0=Math.hypot(C6.stone[0]-SA[0],C6.stone[1]-SA[1]),rd=[(C6.stone[0]-SA[0])/sl0,(C6.stone[1]-SA[1])/sl0],sc=loc([SA[0]+rd[0]*11.2,SA[1]+rd[1]*11.2]);
       const eA=[sc[0]-rd[1]*0.5,sc[1]+rd[0]*0.5];   /* the stone arm ends against the stone's side, at its middle, outside the wheel's tips: the stone set in the lever's end */
-      const lvA=[eA,eH].map(e=>tag(mesh(C6L,SG([{loop:arm(e,1.1),y0:-7.4,y1:-6.1}]),M.gilt),'6MX.ctl',1));   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
+      /* each arm drawn flat at its end's height (-7.4 to -6.1), then sheared so it rises along its length to the boss's (C6LB): a linear shear, so its faces stay planar and the
+         solid closed */
+      const shear=(g,e)=>{const l=Math.hypot(e[0],e[1]),u=[e[0]/l,e[1]/l],k=C6LB[0]+C6LB[1]-(-7.4-6.1),ps=g.attributes.position;
+        for(let i=0;i<ps.count;i++){const t=Math.max(0,Math.min(1,(ps.getX(i)*u[0]+ps.getZ(i)*u[1])/l));ps.setY(i,ps.getY(i)+k/2*(1-t));}ps.needsUpdate=true;g.computeVertexNormals();g.computeBoundingBox();g.computeBoundingSphere();return g;};
+      const lvA=[eA,eH].map(e=>tag(mesh(C6L,shear(SG([{loop:arm(e,1.1),y0:-7.4,y1:-6.1}]),e),M.gilt),'6MX.ctl',1));   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
       /* the screw's holder: a gilt block under the lever's end, down past the screw's axis (-5.2: dims.js), 1.6 along the screw and 1.8 across (14_E-Kontakt1.jpg: about
          1.0 × 1.4 by its rough camera: estimated), its foot 0.05 over block 52's top; until 18 October 2026 a steel collar at the lever's height */
       {const d=[C6.screw54.tip[0]-C6.screw54.h[0],C6.screw54.tip[1]-C6.screw54.h[1]],y0=-7.4,y1=-5.3,hb=tag(mesh(C6L,new THREE.BoxGeometry(1.6,y1-y0,1.8),M.gilt,eH[0],(y0+y1)/2,eH[1]),'6MX.ctl',1);hb.rotation.y=-Math.atan2(d[1],d[0]);fuse([...lvA,hb]);}   /* the lever's two arms and the holder one gilt piece, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026 */
@@ -260,7 +272,7 @@ const WTRAIN=(()=>{
     {const W6=C6.wheel,rt=W6.tip/2,rr=W6.root/2,c0=10.6,xy=[],P2=(r,d)=>[r*Math.cos(d*D2R),r*Math.sin(d*D2R)];
       for(let n=0;n<60;n++){const c=c0+6*n;if(C6T(n)){xy.push(P2(rr,c));for(let k=1;k<=6;k++)xy.push(P2(rr+(rt-rr)*k/6,c+3.3*k/6));xy.push(P2(rr,c+3.3+0.02));for(let k=1;k<4;k++)xy.push(P2(rr,c+3.3+2.7*k/4));}
         else for(let k=0;k<8;k++)xy.push(P2(rr,c+6*k/8));}
-      const yu=y=>y-(TI+0.025),u0=yu(W6.y[1]),u1=yu(W6.y[0]),cu0=yu(W6.colY[1]),cu1=yu(W6.colY[0]),g=rv(R.sw,'6mx');
+      const yu=y=>y-(TI+0.025),u0=yu(W6.y[1]),u1=yu(W6.y[0]),cu0=yu(W6.colY[1]),cu1=yu(W6.colY[0]),g=rv(R.sw,'6mx');g.userData.contact=true;
       tag(mesh(g,gear({xy,ro:rt,ri:rr},u1-u0,{spokes:[W6.spokes,1.0,2.3,W6.rim/2],bore:W6.collet/2}),M.gilt,0,(u0+u1)/2,0),'6MX.cw');
       tag(mesh(g,ringT([[1.5/2+0.001,cu0],[W6.collet/2,cu0],[W6.collet/2,cu1],[1.5/2+0.001,cu1]]),M.gilt),'6MX.cw',1);}
     R.c6={lever:C6L,lift:c6lift};

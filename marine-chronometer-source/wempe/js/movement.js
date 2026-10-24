@@ -41,7 +41,11 @@ function buildWempe(M){
      so 'first' stays the drawings' fallback. A group listed 'first' shows in both, '3955' in the photographed version only, 'first -3955' in the drawn one only (revShows) */
   const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});mv.userData.revs=['last','first','3955','6mx','1943'];
   const revShows=(/** @type {string} */l,/** @type {string} */v)=>{const L=l.split(' ');return L.includes(v)||(v==='3955'&&L.includes('first')&&!L.includes('-3955'));};mv.userData.revShows=revShows;
-  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=revShows(o.userData.rev,s);for(const g of mv.userData.onRev)g(s);};
+  /* setContact(on): the 6MX's electrical seconds contact (its groups flagged userData.contact: train.js's on the pillar plate and on the seconds arbor) shown or not in its
+     version; on when built, so the tools weigh and check it; the page hides it unless asked (app.js's setCt) */
+  mv.userData.ctOn=true;const vis=(/** @type {any} */o)=>revShows(o.userData.rev,mv.userData.rev)&&(!o.userData.contact||mv.userData.ctOn);mv.userData.vis=vis;
+  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=vis(o);for(const g of mv.userData.onRev)g(s);};
+  mv.userData.setContact=(/** @type {boolean} */on)=>{mv.userData.ctOn=!!on;for(const o of RV)if(o.userData.contact)o.visible=vis(o);};
   mv.userData.setRev('last');
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's
