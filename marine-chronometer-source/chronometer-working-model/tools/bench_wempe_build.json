@@ -15,7 +15,7 @@
    "sheet": "05 06_20",
    "when": "the chain on, the barrel set up ¾ turn, before the train goes in",
    "how": "As Herb. Müller did in 1941 (05 06_20: \"Hebellänge 262 m/m\", the mean of two runs): a lever 262 mm long on the fusee arbor, and the weight (g) that holds it level read at each half turn running down from full wind (8.75 turns of the fusee, the curve's 0.05 to 8.74), twice; or a torque gauge (1 g on 262 mm is 2.57 mN·m).",
-   "pass": "Each reading within ×0.749-1.239 of the sheet's at the same turn (its readings' mean 132.7 g: 99.4-164.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.05 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 147.6 g mean (×1.112): open (README, Unresolved)."
+   "pass": "Each reading within ×0.749-1.239 of the sheet's at the same turn (its readings' mean 132.7 g: 99.5-164.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.05 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 147.6 g mean (×1.112): open (README, Unresolved)."
   },
   {
    "id": "depths",
@@ -47,7 +47,7 @@
    "sheet": "05 03, 05 04",
    "when": "the balance, hairspring and detent in, the train held still at a lock; before the mainspring is chosen",
    "how": "Give the balance a full swing (a twist of the movement) and let it run down, the train held. Film it from above at 30 frames a second, a card marked every 30° under it, and read the swing every few seconds (python wempe_swing.py reads a video so); time how long it takes to halve from about 207°.",
-   "pass": "The model's balance halves its swing in 61 s (its TF 111 s; a running 6MX on video, moMvyx8eXfo, has TF 102-125 s at it: wempe_startup.js, which the model's TF is set from). Halving in 47, 56, 61, 67, 81, 95 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 204, 223, 233, 244, 267, 289° at 12 h; the guard's 180° at the wind's lowest wants ×0.945, 0.804, 0.749, 0.692, 0.594, 0.522 of it, the sources' 225° ×1.418, 1.199, 1.112, 1.023, 0.869, 0.758 (the strip as the drive's cube root). Shorter than 47 s, look for a pivot, the endstone or the detent's springs dragging."
+   "pass": "The model's balance halves its swing in 61 s (its TF 111 s; a running 6MX on video, moMvyx8eXfo, has TF 102-125 s at it: wempe_startup.js, which the model's TF is set from). Halving in 47, 56, 61, 67, 81, 95 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 204, 223, 233, 244, 267, 289° at 12 h; the guard's 180° at the wind's lowest wants ×0.944, 0.804, 0.749, 0.692, 0.594, 0.523 of it, the sources' 225° ×1.418, 1.199, 1.112, 1.023, 0.869, 0.758 (the strip as the drive's cube root). Shorter than 47 s, look for a pivot, the endstone or the detent's springs dragging."
   },
   {
    "id": "detent",
@@ -101,8 +101,8 @@
  "criteria": {
   "mainspring": {
    "s": [
-    0.7491,
-    1.2393
+    0.7493,
+    1.2392
    ],
    "Mdown": 0.6168,
    "Mfull": 1.0744,
@@ -122,16 +122,16 @@
   },
   "fusee": {
    "s": [
-    0.7491,
-    1.2393
+    0.7493,
+    1.2392
    ],
    "g262": {
     "mean": 132.7375,
     "full": 138.4,
     "low": 126.5,
     "band": [
-     99.4385,
-     164.5007
+     99.4541,
+     164.4882
     ]
    },
    "shape": [
@@ -140,9 +140,9 @@
    ],
    "rms": 0.01053,
    "sources": {
-    "s": 1.1121,
+    "s": 1.1122,
     "t_mm": 0.4072,
-    "g262": 147.6168
+    "g262": 147.6325
    }
   },
   "depths": {
@@ -570,43 +570,43 @@
     [
      80,
      46.75,
-     203.7747,
-     0.9446,
+     203.7771,
+     0.9442,
      1.4185
     ],
     [
      100,
      56.25,
-     223.1926,
+     223.2171,
      0.8044,
      1.1992
     ],
     [
      111,
      61.25,
-     232.6464,
+     232.5741,
      0.7491,
      1.112
     ],
     [
      125,
      67.25,
-     243.5841,
+     243.5908,
      0.6922,
      1.0232
     ],
     [
      160,
      81.25,
-     267.188,
-     0.5941,
+     267.1989,
+     0.5937,
      0.8686
     ],
     [
      200,
      95.25,
-     289.1952,
-     0.5225,
+     289.2413,
+     0.5229,
      0.7577
     ]
    ]
@@ -693,8 +693,8 @@
     270
    ],
    "model": [
-    212.1312,
-    240.4734
+    212.1366,
+    240.4558
    ]
   },
   "maintaining": {
@@ -705,7 +705,7 @@
    ],
    "s": [
     684,
-    876.5
+    877
    ],
    "min": 300
   },
