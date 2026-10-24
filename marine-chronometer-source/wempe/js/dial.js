@@ -137,12 +137,16 @@ const WDIAL=(()=>{
      (in the hand's group, so the overlap with the boss is the hand's own), in the first strip. rb: the boss's radius, a station; inside it the blade's underside is drawn
      0.02 up (and with tp its top 0.02 down, where the blade's top is the boss's), so the two solids' faces in the overlap aren't one plane (until 17 October 2026 they were:
      the boss's face and the blade's root flickered through each other) */
-  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25,rb=0,tp=false){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip),rb>r1&&rb<tip?[rb]:[]).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b).filter((r,i,A)=>!i||r-A[i-1]>0.01);   /* every 0.25 and at each of the table's radii */
+  /* cone [rBot, rTop, h]: the boss's bevel (rBot at y0 to rTop h above), which the blade's root runs into: its underside follows the bevel inside rBot, up to its top where they
+     meet (r0, which the caller puts there), so the blade and the boss join without metal of both (until 24 October 2026 every hand's root ran 0.1-0.7 into its boss, 0.03-0.36 mm³
+     weighed twice: overlaps.py; each root now starts on its boss's wall) */
+  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25,rb=0,tp=false,cone=null){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip),rb>r1&&rb<tip?[rb]:[]).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b).filter((r,i,A)=>!i||r-A[i-1]>0.01);   /* every 0.25 and at each of the table's radii */
     if(tip-R[R.length-1]<0.01)R.pop();R.push(tip);
     const w=r=>hwAt(hw,r),P=(s,r)=>[s*w(r),dir*r],a0=Math.asin(Math.min(0.99,w(r0)/r0)),arc=[];
     for(let k=1;k<8;k++){const a=-a0+2*a0*k/8;arc.push([r0*Math.sin(a),dir*r0*Math.cos(a)]);}
-    const inB=p=>Math.hypot(p[0],p[1])<rb-1e-6,yb=p=>y0+(inB(p)?0.02:0),tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1]))-(tp&&inB(p)?0.02:0),cells=[];
-    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?[]:arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf});}
+    const inB=p=>Math.hypot(p[0],p[1])<rb-1e-6,yb=cone?(p=>{const r=Math.hypot(p[0],p[1]);return r<cone[0]?Math.min(tf(p),y0+(cone[0]-r)*cone[2]/(cone[0]-cone[1])):y0;}):p=>y0+(inB(p)?0.02:0),tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1]))-(tp&&inB(p)?0.02:0),cells=[];
+    const mid=r=>cone&&r<cone[0]-1e-9?[-3,-2,-1,0,1,2,3].map(k=>[k/4*w(r),dir*r]):[];   /* inside the bevel the stations' lines cut in eighths, so the underside's faces follow the cone across the blade */
+    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),...mid(R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?mid(R[i]).reverse():arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf});}
     return solidGeo(cells);}
   /* the minute hand's square hole and the tube's square: 2.6 across flats, the corners on a circle r (the tube's 1.6) */
   const sqLoop=(h,r,n=96)=>{let L=C([0,0],r,n);for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])L=clipPoly(L,p=>h-(p[0]*a+p[1]*b));return L;};
@@ -311,24 +315,24 @@ const WDIAL=(()=>{
       const r1=MIN.rf-0.4,rnd=[...Array(11).keys()].map(k=>{const a=(10-k)/10*Math.PI/2;return[r1+0.4*Math.sin(a),y1-0.4+0.4*Math.cos(a)];});
       mM.push(tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1),
       tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1),
-      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1));fuse(mM);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
+      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf,MIN.L,-1,0.25,MIN.rf),goldin),'050200-1',1));fuse(mM);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the hour hand, on the hour wheel's pipe */
     const hh=grp(hdP,H[1]);R.hh=hh;
     {const y1=YH1,y0=y1-3.1,yf=y1-0.8,rb=y=>HRW.rh+(HRW.yt-y)/140+0.01;   /* its hole on the seat's 1:70, 0.01 clear */
       fuse([tag(mesh(hh,lathe([[rb(y0),y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[rb(y1),y1]],72),goldin),'050200-2'),
-      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf1,HOUR.L,-1,0.25,HOUR.rf),goldin),'050200-2',1)]);}
+      tag(mesh(hh,blade(HOUR.hw,HOUR.t,yf,HOUR.rf-HOUR.t[0][1]*(HOUR.rf-HOUR.rf1)/(y1-yf),HOUR.L,-1,0.25,HOUR.rf,false,[HOUR.rf,HOUR.rf1,y1-yf]),goldin),'050200-2',1)]);}
     /* the up-and-down hand, on its wheel's pipe */
     const uh=grp(hdP,H[2]);R.uh=uh;
     {const y1=YU1,yf=y1-0.5,y0=y1-1.4;
       fuse([tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3'),
-      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1)]);}
+      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf,10.2,-1,0.25,UDH.rf,true),M.blued),'050200-3',1)]);}
     /* the seconds hand on its collet (Zeigerfutter 05 02 01-2, brass, no sheet), pressed on the seconds post's 1:90 taper: Ø 1.5 (the coloured section's, 1.6 scaled,
        inside the dial's Ø 1.7 hole) and 4.6 long (scaled there, pictorial), its end Ø 1.2 through the hand (the hand's hole), flush with its top; bored on the post, 0.005 clear */
     const sh=grp(hdP,H[35]);R.sh=sh;
     {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-0.1*(y-SW.ys-24.05)/9.1)/2+0.005;
       const sM=[tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1'),
-      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1)];
-      sM.push(tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1));fuse(sM);   /* boss, pointer and tail one hand, one mesh (fuse) */
+      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1)];
+      sM.push(tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1));fuse(sM);   /* boss, pointer and tail one hand, one mesh (fuse) */
       const yc=y0-4.0;tag(mesh(sh,lathe([[post(yc),yc],[0.75,yc],[0.75,y0],[SEC.rh,y0],[SEC.rh,y1],[post(y1),y1]],32),M.brass),'050201-2');}
 
     /* ---------- the dial (05 02 00-4) ---------- */

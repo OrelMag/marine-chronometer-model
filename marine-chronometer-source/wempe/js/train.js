@@ -187,7 +187,7 @@ const WTRAIN=(()=>{
        the disc fixed to block 57); the contact screw 54 brass, as there */
     {const D=C6.disc,t=[-Math.cos(D.th*D2R),Math.sin(D.th*D2R)],c=brg2(D.th,D.r),at=k=>[c[0]+t[0]*k,c[1]+t[1]*k],RC=3.0,RD=0.3;
       const dk=hor(tag(mesh(g6,gear({xy:[...Array(192).keys()].map(i=>{const n=Math.floor(i/4),k=i%4,r=k<2?D.d/2:D.d/2-0.25,f=(n+(k===1||k===2?0.5:k===3?1:0))/48*TAU-(k===3?1e-4:0);return[r*Math.cos(f),r*Math.sin(f)];}),ro:D.d/2,ri:D.d/2-0.25},D.t,{bore:RC}),M.gilt,c[0],D.y,c[1]),'6MX.ctd'),t);
-      let q=at(RD/2);fuse([dk,hor(tag(mesh(g6,new THREE.CylinderGeometry(RC+0.002,RC+0.002,D.t-RD,48),M.gilt,q[0],D.y,q[1]),'6MX.ctd',1),t)]);   /* the disc and its centre one mesh (fuse, core.js): their faces ran flush, a ring in Edges until 21 October 2026 */   /* the centre, its face RD under the rim's */
+      let q=at(RD/2);fuse([dk,hor(tag(mesh(g6,new THREE.CylinderGeometry(RC,RC,D.t-RD,48),M.gilt,q[0],D.y,q[1]),'6MX.ctd',1),t)]);   /* the disc and its centre one mesh (fuse, core.js): their faces ran flush, a ring in Edges until 21 October 2026. The centre fills the bore's own 48 corners (r RC: 0.002 over it until 24 October 2026, 0.035 mm³ weighed twice, overlaps.py) */   /* the centre, its face RD under the rim's */
       q=at(-D.t/2+RD);const sh=new THREE.Group();sh.position.set(q[0],D.y,q[1]);hor(sh,t);g6.add(sh);tag(K.screw(sh,0,0,0,1.3,0.8,0,0.5,M.steel),'6MX.ctd',1).userData.lift=0;
       q=at(D.t/2+0.5);const br=tag(mesh(g6,new THREE.BoxGeometry(1.0,5.05,4.0),M.gilt,q[0],(-5.25-10.3)/2,q[1]),'6MX.ctd',1);br.rotation.y=Math.atan2(-t[1],t[0]);}
     /* the staff 69 (steel, its pivots Ø 0.4) in its jewels: the upper in a gilt setting in the base, the lower in the cock's arm under a cap plate, each a hole jewel and a cap
