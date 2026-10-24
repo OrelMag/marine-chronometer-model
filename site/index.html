@@ -3469,7 +3469,7 @@ const WTRAIN=(()=>{
     /* heights (18 October 2026): the cock's arm -12.9 to -14.2, its cap plate to -14.7, the spiral at -11.7 to -12.3 under it, read on 10_Kirow_247_E-Kontakt_1.jpg against
        a millimetre scale stood at the staff through photocompare.py's m6_contact camera (0.6 mm residuals at the block screws; the arm's front edge -12.9 to -14.2, the
        spiral's collet -11.9 to -12.7: likely); until then the arm -11 to -13.2 and the spiral -8.5 to -9.1 (Fig. 101: estimate) */
-    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,-2.6],[0.2,-2.4],[0.2,-1.9],[0,-1.9]],24),M.steel),'6MX.ctst');
+    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,-2.6],[0.2,-2.4],[0.2,-1.42],[0,-1.42]],24),M.steel),'6MX.ctst');   /* its upper pivot through its hole jewel to 0.02 off the cap jewel, as the lower (until 24 October 2026 it ended at -1.9, 0.1 into the stone, the staff 0.52 loose between its cap jewels) */
       tag(mesh(g6,ringT([[0.9,-2],[1.5,-2],[1.5,0],[0.9,0]],40),M.gilt,S[0],0,S[1]),'6MX.ctjs');   /* the upper jewels' setting in the base */
       tag(mesh(g6,ringT([[0.21,-2],[0.9,-2],[0.9,-1.4],[0.21,-1.4]],32),M.ruby,S[0],0,S[1]),'6MX.ctju');
       tag(mesh(g6,turned([[0,-1.4],[0.9,-1.4],[0.9,-1.0],[0,-1.0]],32),M.ruby,S[0],0,S[1]),'6MX.ctjeu');
