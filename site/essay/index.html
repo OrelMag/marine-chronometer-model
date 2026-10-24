@@ -1985,7 +1985,7 @@ const KIT=(()=>{
        across the head (photocompare.py, Wempe 3955's N view). Cached by size */
     const HG={};
     /* domed (dome > 0, its rise over the rim): the top a spherical cap from the rim (no chamfer), built of rings so the cap is a surface, not a fan; the slot cut under it */
-    const headGeo=(r,h,dome=0)=>{const k=r+'_'+h+'_'+dome;if(HG[k])return HG[k];const c=dome>0?0:Math.min(0.35,r*0.14),w=Math.max(0.35,r*0.2),s=Math.max(Math.min(0.55,h*0.45),c+0.05,dome>0?dome+0.3:0),hw=w/2,n=24;
+    const headGeo=(r,h,dome=0,sw=0,ss=0)=>{const k=r+'_'+h+'_'+dome+'_'+sw+'_'+ss;if(HG[k])return HG[k];const c=dome>0?0:Math.min(0.35,r*0.14),w=sw||Math.max(0.35,r*0.2),s=ss||Math.max(Math.min(0.55,h*0.45),c+0.05,dome>0?dome+0.3:0),hw=w/2,n=24;   /* sw, ss: a slot of another width and depth (the 6MX's block stud) */
       const RD=dome>0?(r*r+dome*dome)/(2*dome):0,yD=q=>-h+RD-Math.sqrt(Math.max(0,RD*RD-q[0]*q[0]-q[1]*q[1]));   /* the cap: -h at the middle, -h+dome at the rim */
       const arc=(rr,sg,a0,a1)=>[...Array(n+1).keys()].map(i=>{const t=a0+(a1-a0)*i/n;return[rr*Math.cos(t),sg*rr*Math.sin(t)];});
       const ccw=L=>area(L)<0?L.slice().reverse():L,cells=[];
@@ -2002,10 +2002,10 @@ const KIT=(()=>{
         if(!cone&&!rim&&!cap)continue;for(let v=t;v<t+9;v+=3){const px=P[v],pz=P[v+2],pr=Math.hypot(px,pz)||1;
           if(cap){const yy=-Math.sqrt(Math.max(0,RD*RD-px*px-pz*pz));N[v]=px/RD;N[v+1]=yy/RD;N[v+2]=pz/RD;}else if(cone){const l=Math.SQRT2;N[v]=px/pr/l;N[v+1]=-1/l;N[v+2]=pz/pr/l;}else{N[v]=px/pr;N[v+1]=0;N[v+2]=pz/pr;}}}
       G.attributes.normal.needsUpdate=true;return HG[k]=G;};
-    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any,dome?:number)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius, the material (steel by default) and the head's dome (its rise, 0 flat) */
-    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0)=>{
+    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any,dome?:number,sl?:any)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius, the material (steel by default), the head's dome (its rise, 0 flat) and its slot where it isn't the usual ({w, s, a}: width, depth, heading in radians about y) */
+    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0,sl=null)=>{
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
-      const hd=mesh(g,headGeo(r,h,dome),mt||M.steel);hd.userData.screw=r;hd.rotation.y=(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before */
+      const hd=mesh(g,headGeo(r,h,dome,sl?sl.w:0,sl?sl.s:0),mt||M.steel);hd.userData.screw=r;hd.rotation.y=sl&&sl.a!=null?sl.a:(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before, unless given */
       if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt)),pr=[V2(0,-0.1),V2(rs,-0.1),V2(rs,len-n*pt-d)];   /* the shank from 0.1 inside the head: rings of thread (turned grooves, not a helix), a chamfered tip */
         for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));mesh(g,new THREE.LatheGeometry(pr,28),mt||M.steel);}
       return g;};
@@ -2756,7 +2756,7 @@ const WTRAIN=(()=>{
        for half a second each second and stays closed a second and a half at the missing tooth, at the minute. The two springs 66 in the bowl (case.js) bear on the blocks'
        outer ends. The 6MX's (Kirov No. 247's) only: the pillar plate's pieces, its wheel the seconds wheel's, its lever turned by update() */
     const C6=WD.CONTACT6,cc=Q=>KIT.area(Q)>0?Q:Q.slice().reverse(),cir=(c,r,n=32)=>cc([...Array(n).keys()].map(i=>[c[0]+r*Math.cos(i/n*TAU),c[1]+r*Math.sin(i/n*TAU)]));
-    const SG=KIT.solidGeo,g6=rv(P.pillarPlate,'6mx'),cen=Q=>[Q.reduce((a,q)=>a+q[0],0)/Q.length,Q.reduce((a,q)=>a+q[1],0)/Q.length],brg2=(t,r)=>[-r*Math.sin(t*D2R),-r*Math.cos(t*D2R)];
+    const SG=KIT.solidGeo,g6=rv(P.pillarPlate,'6mx'),_c6=(g6.userData.contact=true),cen=Q=>[Q.reduce((a,q)=>a+q[0],0)/Q.length,Q.reduce((a,q)=>a+q[1],0)/Q.length],brg2=(t,r)=>[-r*Math.sin(t*D2R),-r*Math.cos(t*D2R)];
     const yAx=new THREE.Vector3(0,1,0),hor=(m,d)=>{m.quaternion.setFromUnitVectors(yAx,new THREE.Vector3(d[0],0,d[1]).normalize());return m;};
     /* the cock's foot: its screw 2 past its middle toward its far end, clear of the leg at the arm's root, its pins 2.2 either side across it (estimated) */
     const fs=cen(C6.cockFoot),fA=C6.cockFoot[1],fB=C6.cockFoot[0],fl=Math.hypot(fB[0]-fA[0],fB[1]-fA[1]),fu=[(fB[0]-fA[0])/fl,(fB[1]-fA[1])/fl],fv=[-fu[1],fu[0]],fc=[fs[0]+2*fu[0],fs[1]+2*fu[1]],fp=[fc[0]+2.2*fv[0],fc[1]+2.2*fv[1]],fq=[fc[0]-2.2*fv[0],fc[1]-2.2*fv[1]];
@@ -2781,6 +2781,11 @@ const WTRAIN=(()=>{
       q=at(D.t/2+0.5);const br=tag(mesh(g6,new THREE.BoxGeometry(1.0,5.05,4.0),M.gilt,q[0],(-5.25-10.3)/2,q[1]),'6MX.ctd',1);br.rotation.y=Math.atan2(-t[1],t[0]);}
     /* the staff 69 (steel, its pivots Ø 0.4) in its jewels: the upper in a gilt setting in the base, the lower in the cock's arm under a cap plate, each a hole jewel and a cap
        jewel (the TU's 20 jewels with the contact, 15 without: these four and the stone) */
+    /* C6LB: the lever's boss on the staff, just under the spiral's collet: on Kirov 2973 (14_E-Kontakt1.jpg) and 24020 (12_KirPol_24020_E-Kontakt2.jpg) the boss sits on the
+       staff right under the collet (0.1-0.3 of gap at the scale of the cock's arm, 16.7 px a mm on 24020), the staff bare under it, and its arm runs down from it to the screw's
+       holder on block 52 (likely; Kirov 247's own is hidden behind the stud and holder on 10_Kirow_247_E-Kontakt_1.jpg). The stone arm runs down the same way to the contact
+       wheel (estimated: no photograph shows it). Until 24 October 2026 the boss and both arms flat at -6.1 to -7.4, 4.5 under the spiral */
+    const C6LB=[-10.2,-11.5];
     const C6L=new THREE.Group();C6L.position.set(C6.staff[0],0,C6.staff[1]);g6.add(C6L);   /* the lever, staff and spiral's collet turn together (update(): C6L) */
     /* in the Exploded view the lever (its stone level with the contact wheel's teeth), its staff and spiral leave before the seconds wheel, 38 up, and the cock over them
        first, 43.5 with its cap plate's screws in it (1.0 under the top plate at full spread); the base, blocks and disc stay on the pillar plate under the train */
@@ -2788,7 +2793,10 @@ const WTRAIN=(()=>{
     /* heights (18 October 2026): the cock's arm -12.9 to -14.2, its cap plate to -14.7, the spiral at -11.7 to -12.3 under it, read on 10_Kirow_247_E-Kontakt_1.jpg against
        a millimetre scale stood at the staff through photocompare.py's m6_contact camera (0.6 mm residuals at the block screws; the arm's front edge -12.9 to -14.2, the
        spiral's collet -11.9 to -12.7: likely); until then the arm -11 to -13.2 and the spiral -8.5 to -9.1 (Fig. 101: estimate) */
-    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,-2.6],[0.2,-2.4],[0.2,-1.9],[0,-1.9]],24),M.steel),'6MX.ctst');
+    /* the staff: Ø 1.0 from the cock down to the lever's boss, Ø 0.6 under it to the base (12_KirPol_24020_E-Kontakt2.jpg and 14_E-Kontakt1.jpg, Kirov 2973: bare steel under the
+       boss, 8-11 px across against the block screws' Ø 3.1 at 23-26 px a mm, a little further off, so Ø 0.4-0.6, and about 0.8 above it: likely; Ø 1.0 the whole way until
+       24 October 2026) */
+    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,C6LB[0]],[0.3,C6LB[0]],[0.3,-2.6],[0.2,-2.4],[0.2,-1.9],[0,-1.9]],24),M.steel),'6MX.ctst');
       tag(mesh(g6,ringT([[0.9,-2],[1.5,-2],[1.5,0],[0.9,0]],40),M.gilt,S[0],0,S[1]),'6MX.ctjs');   /* the upper jewels' setting in the base */
       tag(mesh(g6,ringT([[0.21,-2],[0.9,-2],[0.9,-1.4],[0.21,-1.4]],32),M.ruby,S[0],0,S[1]),'6MX.ctju');
       tag(mesh(g6,turned([[0,-1.4],[0.9,-1.4],[0.9,-1.0],[0,-1.0]],32),M.ruby,S[0],0,S[1]),'6MX.ctjeu');
@@ -2825,10 +2833,14 @@ const WTRAIN=(()=>{
        in the holder at its other end with a lock nut: in a group about the staff, which update() turns (C6L) */
     {const S=C6.staff,loc=q=>[q[0]-S[0],q[1]-S[1]],arm=(e,w)=>{const l=Math.hypot(e[0],e[1]),n=[-e[1]/l*w/2,e[0]/l*w/2];return cc([[n[0],n[1]],[e[0]+n[0],e[1]+n[1]],[e[0]-n[0],e[1]-n[1]],[-n[0],-n[1]]]);};
       const eS=loc(C6.stone),eH=loc(C6.screw54.h),eT=loc(C6.screw54.tip);
-      tag(mesh(C6L,ringT([[0.5,-7.4],[1.5,-7.4],[1.5,-6.1],[0.5,-6.1]],40),M.steel),'6MX.ctl');
+      tag(mesh(C6L,ringT([[0.5,C6LB[1]],[1.5,C6LB[1]],[1.5,C6LB[0]],[0.5,C6LB[0]]],40),M.steel),'6MX.ctl');
       const SA=[0,23],sl0=Math.hypot(C6.stone[0]-SA[0],C6.stone[1]-SA[1]),rd=[(C6.stone[0]-SA[0])/sl0,(C6.stone[1]-SA[1])/sl0],sc=loc([SA[0]+rd[0]*11.2,SA[1]+rd[1]*11.2]);
       const eA=[sc[0]-rd[1]*0.5,sc[1]+rd[0]*0.5];   /* the stone arm ends against the stone's side, at its middle, outside the wheel's tips: the stone set in the lever's end */
-      const lvA=[eA,eH].map(e=>tag(mesh(C6L,SG([{loop:arm(e,1.1),y0:-7.4,y1:-6.1}]),M.gilt),'6MX.ctl',1));   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
+      /* each arm drawn flat at its end's height (-7.4 to -6.1), then sheared so it rises along its length to the boss's (C6LB): a linear shear, so its faces stay planar and the
+         solid closed */
+      const shear=(g,e)=>{const l=Math.hypot(e[0],e[1]),u=[e[0]/l,e[1]/l],k=C6LB[0]+C6LB[1]-(-7.4-6.1),ps=g.attributes.position;
+        for(let i=0;i<ps.count;i++){const t=Math.max(0,Math.min(1,(ps.getX(i)*u[0]+ps.getZ(i)*u[1])/l));ps.setY(i,ps.getY(i)+k/2*(1-t));}ps.needsUpdate=true;g.computeVertexNormals();g.computeBoundingBox();g.computeBoundingSphere();return g;};
+      const lvA=[eA,eH].map(e=>tag(mesh(C6L,shear(SG([{loop:arm(e,1.1),y0:-7.4,y1:-6.1}]),e),M.gilt),'6MX.ctl',1));   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
       /* the screw's holder: a gilt block under the lever's end, down past the screw's axis (-5.2: dims.js), 1.6 along the screw and 1.8 across (14_E-Kontakt1.jpg: about
          1.0 × 1.4 by its rough camera: estimated), its foot 0.05 over block 52's top; until 18 October 2026 a steel collar at the lever's height */
       {const d=[C6.screw54.tip[0]-C6.screw54.h[0],C6.screw54.tip[1]-C6.screw54.h[1]],y0=-7.4,y1=-5.3,hb=tag(mesh(C6L,new THREE.BoxGeometry(1.6,y1-y0,1.8),M.gilt,eH[0],(y0+y1)/2,eH[1]),'6MX.ctl',1);hb.rotation.y=-Math.atan2(d[1],d[0]);fuse([...lvA,hb]);}   /* the lever's two arms and the holder one gilt piece, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026 */
@@ -2849,7 +2861,7 @@ const WTRAIN=(()=>{
     {const W6=C6.wheel,rt=W6.tip/2,rr=W6.root/2,c0=10.6,xy=[],P2=(r,d)=>[r*Math.cos(d*D2R),r*Math.sin(d*D2R)];
       for(let n=0;n<60;n++){const c=c0+6*n;if(C6T(n)){xy.push(P2(rr,c));for(let k=1;k<=6;k++)xy.push(P2(rr+(rt-rr)*k/6,c+3.3*k/6));xy.push(P2(rr,c+3.3+0.02));for(let k=1;k<4;k++)xy.push(P2(rr,c+3.3+2.7*k/4));}
         else for(let k=0;k<8;k++)xy.push(P2(rr,c+6*k/8));}
-      const yu=y=>y-(TI+0.025),u0=yu(W6.y[1]),u1=yu(W6.y[0]),cu0=yu(W6.colY[1]),cu1=yu(W6.colY[0]),g=rv(R.sw,'6mx');
+      const yu=y=>y-(TI+0.025),u0=yu(W6.y[1]),u1=yu(W6.y[0]),cu0=yu(W6.colY[1]),cu1=yu(W6.colY[0]),g=rv(R.sw,'6mx');g.userData.contact=true;
       tag(mesh(g,gear({xy,ro:rt,ri:rr},u1-u0,{spokes:[W6.spokes,1.0,2.3,W6.rim/2],bore:W6.collet/2}),M.gilt,0,(u0+u1)/2,0),'6MX.cw');
       tag(mesh(g,ringT([[1.5/2+0.001,cu0],[W6.collet/2,cu0],[W6.collet/2,cu1],[1.5/2+0.001,cu1]]),M.gilt),'6MX.cw',1);}
     R.c6={lever:C6L,lift:c6lift};
@@ -3738,7 +3750,10 @@ const WESC=(()=>{
          flush, slotted, Ø 3.3-3.5 at 8.99 px/mm; 2_Kirow_009_A.jpg bright; the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg at 30.3 px/mm across: Ø 3.55, standing
          about 2 proud of the face, 3.3 if the view is tilted only 20°: likely), screwed into the block M1.7 3.0 (estimated). What clamps the block to the plate isn't seen: the
          stud may be an eccentric, the adjusting slide beside it its key (README, Unresolved). It leaves the plate with the block */
-      tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,1.7,3.35+2.5,5.5,0.85),'WN-gk');   /* through the slide (2.5) and 3.0 into the block; its head standing 2.5 (±0.7) proud of the
+      /* its slot cut 0.5 wide and 0.9 deep, across the base (the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg at 30.3 px a mm by the stud's Ø 3.55: 15-17 px across,
+         running down the stud's side 12 px at that side's 13-15 px a mm of height, square to the base's long edges within 15°: likely; the kit's 0.35 × 0.55 at an
+         arbitrary heading until 24 October 2026) */
+      tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,1.7,3.35+2.5,5.5,0.85,null,0,{w:0.5,s:0.9,a:Math.atan2(-TD.t[1],TD.t[0])}),'WN-gk');   /* through the slide (2.5) and 3.0 into the block; its head standing 2.5 (±0.7) proud of the
          plate's outer face, polished steel (6_Kirow_247_S.jpg, photocompare.py's fit; 7_ the same); flush until 18 October 2026 */   /* its lift through the plate follows the block's (above) */
       /* its steady pins Ø 0.9 through the block, 1.3 into the plate: as last revised the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
       for(const[g,e2]of[[blkL,3],[blkF,6.5],[blk43,3]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');
@@ -5964,7 +5979,7 @@ const WCASE=(()=>{
            on block 52, +, 176-195°; B on block 57, −, 212-231°: train.js, WD.CONTACT6); outside, each spring's two slotted brass screws (heads Ø 5.6) and its terminal, a brass
            socket Ø 6.4 with a 3.0 hole standing 2 proud, each on a black fibre washer, all at y −27.5: A's at 178.4°, 189.3° and its + socket 200.6°, B's at 215.7°, 225.2° and
            − 235.9° (±1-3°, the case bracket's pivot taken as 180°): likely in kind and place; the springs' sizes estimated (±15 %). Bearings as frame.js's brg */
-        {const gC=new THREE.Group();gC.userData.rev='6mx';bowl.add(gC);const pol=(t,r,y)=>[-r*Math.sin(t*D2R),y,-r*Math.cos(t*D2R)],inw=t=>[Math.sin(t*D2R),0,Math.cos(t*D2R)];
+        {const gC=new THREE.Group();gC.userData.rev='6mx';gC.userData.contact=true;bowl.add(gC);const pol=(t,r,y)=>[-r*Math.sin(t*D2R),y,-r*Math.cos(t*D2R)],inw=t=>[Math.sin(t*D2R),0,Math.cos(t*D2R)];
           const yF=-27.5,rI=49,arcB=(t0,t1,r0,r1,y0,y1)=>{const n=Math.max(4,Math.ceil(Math.abs(t1-t0)/2)),A=[],B=[];for(let i=0;i<=n;i++){const t=(t0+(t1-t0)*i/n)*D2R;A.push([-r1*Math.sin(t),-r1*Math.cos(t)]);B.push([-r0*Math.sin(t),-r0*Math.cos(t)]);}return{loop:[...A,...B.reverse()],y0,y1};};
           for(const[F0,F1,T0,T1,S1,S2,SK,id]of/** @type {[number,number,number,number,number,number,number,string][]} */([[174.4,203.6,176,195,178.4,189.3,200.6,'+'],[211.7,238.9,212,231,215.7,225.2,235.9,'−']])){
             const c1=arcB(F0,F1,rI-1,rI,yF-2.75,yF+2.75);c1.loop=KIT.area(c1.loop)>0?c1.loop:c1.loop.slice().reverse();tag(mesh(gC,solidGeo([c1]),M.packing),'6MX.cfi');   /* the insulating strip on the bore */
@@ -6559,7 +6574,11 @@ function buildWempe(M){
      so 'first' stays the drawings' fallback. A group listed 'first' shows in both, '3955' in the photographed version only, 'first -3955' in the drawn one only (revShows) */
   const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});mv.userData.revs=['last','first','3955','6mx','1943'];
   const revShows=(/** @type {string} */l,/** @type {string} */v)=>{const L=l.split(' ');return L.includes(v)||(v==='3955'&&L.includes('first')&&!L.includes('-3955'));};mv.userData.revShows=revShows;
-  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=revShows(o.userData.rev,s);for(const g of mv.userData.onRev)g(s);};
+  /* setContact(on): the 6MX's electrical seconds contact (its groups flagged userData.contact: train.js's on the pillar plate and on the seconds arbor) shown or not in its
+     version; on when built, so the tools weigh and check it; the page hides it unless asked (app.js's setCt) */
+  mv.userData.ctOn=true;const vis=(/** @type {any} */o)=>revShows(o.userData.rev,mv.userData.rev)&&(!o.userData.contact||mv.userData.ctOn);mv.userData.vis=vis;
+  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=vis(o);for(const g of mv.userData.onRev)g(s);};
+  mv.userData.setContact=(/** @type {boolean} */on)=>{mv.userData.ctOn=!!on;for(const o of RV)if(o.userData.contact)o.visible=vis(o);};
   mv.userData.setRev('last');
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's
