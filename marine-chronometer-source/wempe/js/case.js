@@ -120,7 +120,7 @@ const WCASE=(()=>{
   const hinge=(par,L,x,kc,leaves,mt)=>{const r=2.5,n=20,P=[...Array(n).keys()].map(i=>{const t=i/n*TAU;return[-(kc[0]+r*Math.sin(t)),kc[1]+r*Math.cos(t)];});   /* plan [-y, z]: rotateZ(-90°) below makes it (y, z), the extrusion x */
     let U=P;for(const[y0,y1,z0,z1]of leaves){const u=bool(U,[[-y0,z0],[-y0,z1],[-y1,z1],[-y1,z0]]).uni;if(u.length!==1)console.error('hinge: leaf and knuckle not one outline',u.length);U=u[0];}
     const g=solidGeo([{loop:area(U)>0?U:U.slice().reverse(),y0:-L/2,y1:L/2}]);g.rotateZ(-Math.PI/2);
-    const Pa=g.attributes.position,Nm=g.attributes.normal,on=k=>Math.abs(Math.hypot(Pa.getY(k)-kc[0],Pa.getZ(k)-kc[1])-r)<1e-6;
+    const Pa=g.attributes.position,Nm=g.attributes.normal,on=k=>Math.abs(Math.hypot(Pa.getY(k)-kc[0],Pa.getZ(k)-kc[1])-r)<1e-3;   /* float32 positions: 1e-5 off at 100 mm */
     for(let t=0;t<Pa.count;t+=3)if(Math.abs(Nm.getX(t))<0.5&&on(t)&&on(t+1)&&on(t+2))for(let k=t;k<t+3;k++){const dy=Pa.getY(k)-kc[0],dz=Pa.getZ(k)-kc[1];Nm.setXYZ(k,0,dy/r,dz/r);}
     Nm.needsUpdate=true;return mesh(par,g,mt,x,0,0);};
   /* the box's mahogany, drawn in code, as Wempe No. 6161's (Antiquorum 208-4, a brass bowl in brass gimbals as the drawings' Ms.): its colours sampled on that photograph,
