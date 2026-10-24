@@ -4,6 +4,7 @@ Lange 5177's (the page's Variants switch between them).
     python dialtrace.py [--write] [--png]      # trace; --write writes dialface.js (without it, exits 1 if dialface.js is stale)
     python dialtrace.py --geo                  # the geometric printing's measurements, which dial.js draws from
     python dialtrace.py --compare              # the page's own canvas (WDIAL.face(), Playwright) on the rectified photo
+    python dialtrace.py --compare --canvas P   # the same with an image in the canvas's frame in its place (dialsvg.py --png: the dial's SVG)
     python dialtrace.py --fitonly              # the homography and the circles' fits
     python dialtrace.py --dial lange [...]     # any of these for A. Lange & Soehne No. 5177's dial: dialface_lange.js (WDIALFACE_LANGE), WDIAL.face(K, 'lange')
     python dialtrace.py --dial kirov [...]     # or for Kirov No. 247's (the Soviet 6MX): dialface_kirov.js (WDIALFACE_KIROV), WDIAL.face(K, 'kirov')
@@ -524,7 +525,8 @@ def compare():
             b=await pw.chromium.launch(args=browser.ARGS);pg=await b.new_page()
             await pg.goto((ROOT/'marine-chronometer-source/wempe/index.html').as_uri()+'?snap&qa');await pg.wait_for_function("typeof WDIAL!=='undefined'",timeout=120000)
             u=await pg.evaluate(f"WDIAL.face(1,'{DIAL}').toDataURL('image/png')");await b.close();return u
-    u=asyncio.run(grab());cvs=cv2.imdecode(np.frombuffer(base64.b64decode(u.split(',')[1]),np.uint8),cv2.IMREAD_GRAYSCALE)
+    if '--canvas' in a:cvs=cv2.imread(a[a.index('--canvas')+1],cv2.IMREAD_GRAYSCALE)   # another image of the canvas's frame (2048 px over the disc): dialsvg.py --png's raster of the SVG
+    else:u=asyncio.run(grab());cvs=cv2.imdecode(np.frombuffer(base64.b64decode(u.split(',')[1]),np.uint8),cv2.IMREAD_GRAYSCALE)
     DR=103.55/2;M=np.array([[cvs.shape[1]/(2*DR)/PX,0,0],[0,cvs.shape[0]/(2*DR)/PX,0]]);M[:,2]=cvs.shape[1]/2-M[0,0]*HALF*PX   # rectified px -> canvas px
     C=cv2.warpAffine(cvs,M,(N,N),flags=cv2.INTER_LINEAR|cv2.WARP_INVERSE_MAP,borderValue=242).astype(float)
     ph=np.clip(GR/np.maximum(BG,1)*242,0,255)
