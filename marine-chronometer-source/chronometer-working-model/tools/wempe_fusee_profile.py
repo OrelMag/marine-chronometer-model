@@ -14,7 +14,7 @@ from playwright.async_api import async_playwright
 PAGE = 'file:///' + os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'wempe', 'index.html')).replace('\\', '/') + '?snap&qa'
 JS = r"""() => { let m=null; __mv.traverse(o=>{ if(o.isMesh&&o.userData.hn==='050604-2'&&!o.userData.sub&&!m) m=o; });
   return m ? Array.from(m.geometry.attributes.position.array) : null; }"""
-A0, PAX = 1.235, 1.2   # fusee.js: FR2 + WLD/2 - PAX, the pitch
+A0, PAX = 1.235 - 0.2, 1.2   # fusee.js: FR2 + WLD/2 - PAX from the blank's face, less the large face's re-turn RT (the body's top is the re-turned face), the pitch
 SHEET = {1: 14.75, 2: 13.32, 3: 12.17, 4: 11.24, 5: 10.55, 6: 10.07, 7: 9.71, 8: 9.47}   # 05 06 04-2's Grund (05 06_20: 10.04 at 6)
 RFT = [17.25, 16.465, 15.785, 15.215, 14.75, 14.305, 13.935, 13.585, 13.32, 12.975, 12.685, 12.415, 12.17, 11.915, 11.675, 11.455, 11.24, 11.055, 10.865,
        10.705, 10.55, 10.405, 10.275, 10.155, 10.07, 9.945, 9.855, 9.78, 9.71, 9.635, 9.575, 9.525, 9.47, 9.435, 9.395, 9.355, 9.30]

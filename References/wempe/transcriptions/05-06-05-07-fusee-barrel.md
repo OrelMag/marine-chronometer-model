@@ -704,7 +704,7 @@ Conventions: dimensions in mm as printed (German decimal comma turned into a poi
 ## 0207 (127-556.04 U24) Federhaus — `05-07/Wempe_05-07_01.jpg`
 - **Title block:** Zeichnung Nr 127-556.04 U24 / 0207. Benennung "Federhaus" (barrel, assembly). Werkstoff — (blank). Maßstab 5:1. Arbeitspause Nr 12. gez. 15.4.41 ("Herb. Müller", likely), gepr. 13.5.41 (likely; "Herb. Müller"), N.gepr. blank. No revisions. "LC" stamp.
 - **What it shows:** two views at 5:1.
-  - Left, "Federhausdeckel abgenommen" (barrel lid removed), partly broken away: the drum seen from the lid side: its wall (outside 41,5, inside 38,5) with the lid's seat 39,2; the arbor in the middle (core 13,3 dia, the winding square shown at the centre); a 2-wide, 0,5-deep notch in the wall's inner face at 12 o'clock (the mainspring's hook seat, inferred); at 45° (1:30 o'clock) a tapped hole M2,6 through the wall with a 6 long flat/notch on its inside (the chain's hook, inferred, see 05 07 00-1); at 7:30 o'clock (45° from 6 o'clock) "Schlitz für Kette erst bei Schneckenmontage einsetzen" (slot for the chain, cut only at the fusee's assembly), 2,5 wide.
+  - Left, "Federhausdeckel abgenommen" (barrel lid removed), partly broken away: the drum seen from the lid side: its wall (outside 41,5, inside 38,5) with the lid's seat 39,2; the arbor in the middle (core 13,3 dia, the winding square shown at the centre); a 2-wide, 0,5-deep notch in the wall's inner face at 12 o'clock (the mainspring's hook seat, inferred); at 45° (1:30 o'clock) a tapped hole M2,6 through the wall with a 6 long flat/notch on its inside (the chain's hook, inferred, see 05 07 00-1); at 6 o'clock, on the 12-6 centre line opposite the notch, "Schlitz für Kette erst bei Schneckenmontage einsetzen" (slot for the chain, cut only at the fusee's assembly), 2,5 wide, cut through the wall leaning 45° to the radius (the "45°" beside it: its arc is centred on the slot's wall at the rim, its arms the 6 o'clock line and the wall produced). Corrected 25 October 2026: read until then as "at 7:30 o'clock (45° from 6 o'clock)"; the slot's walls measure 176.5°/184.8° from 12 at the bore and 174.3°/181.3° at the rim (12.27 px/mm, the drum's circles fitted), and the section, cut along the 12-6 line, draws the notch's Steg (106) at the top and the slot through the wall at the bottom. The notch at 12 is the Steg's (05 07 00-1), the M2,6 hole the mainspring's hook block's rivet (05 07 01-3), not the chain's hook.
   - Right, axial section between the "Unterplatte" (pillar plate, left, 3,3 thick) and the "Federhausbrücke" (barrel bridge, right, 3,3 thick): the drum (open towards the plate, lid on the plate side "warm einsprengen", sprung in warm), the arbor (105 "OZ") with its core 13,3 dia carrying a drilled hole 6 deep for the spring's hook (dashed) and a raised hook piece (3 wide, 0,5 high) on top; pivots: on the plate side 3 dia with a rounded end, then 8 dia, 5 dia in the lid; on the bridge side 5 dia in the drum's bottom, 4 dia in the bridge; then the ratchet square 2,7 (taper 1:100) projecting 10 beyond the bridge; on the square the ratchet wheel (104, "Sperrrad" inferred) and beside it the click screw 103 (a shouldered screw, shoulder 3,1 dia, 2,5 long) at 12 from the axis; 106 is a small part at the drum's rim by the bridge (the lid's or the drum's stop pin? unsure). "Lagerstellen Enger Laufsitz" (bearing points: close running fit).
 - **Dimensions:**
 
@@ -718,13 +718,13 @@ Conventions: dimensions in mm as printed (German decimal comma turned into a poi
 | notch width incl. chamfer | 2.5 | — | sure | |
 | notch depth | 0.5 | — | sure | |
 | lid seat step | 0.4 | — | sure | |
-| chain hook tapped hole | M2.6 | — | likely | "M2,6" |
+| hook block's rivet hole (05 07 01-3; read as the chain hook's until 25 October 2026) | M2.6 | — | likely | "M2,6" |
 | hook flat length | 6 | — | sure | |
 | wall thickness at the hook | 2 | — | likely | |
 | step at the hook | 0.5 | — | sure | |
 | core: hook groove | 0.5 | — | sure | on the core's circle |
 | angle of the hook hole | 45° | — | sure | from 12 o'clock |
-| angle of the chain slot | 45° | — | sure | from 6 o'clock |
+| lean of the chain slot through the wall | 45° | — | sure | to the 6 o'clock radius; the slot itself on the 6 o'clock line, 180° from the notch at 12 (corrected 25 October 2026: read as its angle from 6 o'clock) |
 | chain slot width | 2.5 | — | sure | |
 | rim/lid step (lower right) | 1.5 | — | sure | "1,5" across the rim |
 | plate thickness (Unterplatte) | 3.3 | — | sure | |
@@ -737,7 +737,7 @@ Conventions: dimensions in mm as printed (German decimal comma turned into a poi
 | core length halves | 7.9 + 7.9 | — | sure | from the lid and the bottom inner faces to the core's middle |
 | core cylindrical length | 12 | — | sure | |
 | core end chamfers / bosses | 3.1 (lid side), 2.9 (bottom side) | — | sure | |
-| chain-slot detail at the drum's bottom | 0.85 | — | likely | "0,85" at the bottom face (a slot width; meaning unsure) |
+| chain-slot detail at the drum's bottom | 0.85 | — | likely | "0,85": the chain slot's width along the axis, through the wall at the section's bottom (6 o'clock), 0.87 drawn, its middle 4.66 from the bottom's outer face (25 October 2026) |
 | plate pivot | 3 dia | — | sure | rounded end |
 | plate-side shoulder | 8 dia | — | sure | |
 | lid bearing | 8 dia / 5 dia | — | sure | "8ϕ", "5ϕ" |

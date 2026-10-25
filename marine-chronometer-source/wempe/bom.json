@@ -2464,7 +2464,7 @@
    "parent": "050604",
    "kind": "part",
    "part": "fusee",
-   "fn": "Holds the click wheel to the body; its head flush in the wheel's 1:8 hole, its thread in the body's M2 (not cut in the turned body).",
+   "fn": "Holds the click wheel to the body; its head flush in the wheel's 1:8 hole, its thread in the body's M2, 6 +0.5 deep from the large end's recess floor (05 06 04-2).",
    "rel": [
     [
      "in",
@@ -2474,7 +2474,7 @@
     [
      "in",
      "050604-2",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "05 06_3.2"
@@ -2489,12 +2489,12 @@
    "parent": "0506",
    "kind": "part",
    "part": "fusee",
-   "fn": "Across the flange's slot: the chain's (or band's) top hook takes it.",
+   "fn": "Across the flange's slot in its hole through both ribs (\"0,55∅ +0,01\", 05 06 04-2): the chain's (or band's) top hook takes it.",
    "rel": [
     [
      "in",
      "050604-2",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 06_2.2"
@@ -2533,7 +2533,7 @@
    "parent": "0506",
    "kind": "part",
    "part": "coverPlate",
-   "fn": "Countersunk in the cover plate, into the body's M1.7 (not cut in the turned body).",
+   "fn": "Countersunk in the cover plate, into the body's M1.7, 6 deep from the small end's recess floor (05 06 04-2).",
    "rel": [
     [
      "in",
@@ -2543,7 +2543,7 @@
     [
      "in",
      "050604-2",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "05 06_8"
@@ -2578,12 +2578,12 @@
    "parent": "0506",
    "kind": "part",
    "part": "vorreiber",
-   "fn": "Through the Vorreiber's hub and the arbor's cross hole (drawn as its two ends in the hub).",
+   "fn": "Through the Vorreiber's hub (its Ø 0.8 hole, 05 06 00-2) and the arbor's cross hole (Ø 1.1, 05 06 04-1): drawn as its two ends in the hub, so the Exploded view can part the arbor from the Vorreiber.",
    "rel": [
     [
      "in",
      "050600-2",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 06_6, 05 06_15"
@@ -2920,12 +2920,12 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "Along the slot in the body's hole 0.5 H7 (not cut in the small end), standing into the recess through the spring.",
+   "fn": "Along the slot in the body's hole 0.5 H7 (05 06 04-2), from the recess out through the end, standing into the recess through the spring.",
    "rel": [
     [
      "in",
      "050604-2",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 06_4, 05 06_2.2"
@@ -3139,12 +3139,12 @@
    "parent": "050702",
    "kind": "part",
    "part": "barrelArbor",
-   "fn": "Pressed in the core's hole (not cut in the turned arbor): takes the mainspring's inner end.",
+   "fn": "Pressed in the core's hole (Ø 2 × 6, 0207): takes the mainspring's inner end.",
    "rel": [
     [
      "in",
      "050702-1",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 07_8"
@@ -4019,7 +4019,7 @@
    "parent": "Holzkasten",
    "kind": "part",
    "part": "box",
-   "fn": "On each side, under the pivot.",
+   "fn": "On each side, under the pivot, over the wall's finger recess (an oval 70 × 30, 10.5 deep in the 12.5 wall).",
    "rel": [
     [
      "on",
