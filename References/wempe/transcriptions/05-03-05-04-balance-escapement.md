@@ -571,7 +571,7 @@ Files: every .jpg in `References/wempe/drawings/05-03/` (10) and `05-04/` (14), 
 | h6 | 1,7∅ | −0 / −0,007 |
 
 - **Notes:** handwritten: "Rad von uns aufgesetzt" = wheel mounted by us. "Steinlager einpassen" = fit to the jewel.
-- **Undimensioned lines (scale 17,6 px/mm from 22,8 = 401 px; scaled, not dimensioned):** wheel ∅ 13,7; wheel thickness about 0,9; pinion (05 04 09) about 3,0 ∅ × 3,4 long; collet ∅ about 2,6 at its base flange.
+- **Undimensioned lines (scale 17,6 px/mm from 22,8 = 401 px; scaled, not dimensioned):** wheel ∅ 13,7; wheel thickness about 0,9; pinion (05 04 09) about 3,0 ∅ × 4,0 long (re-scaled 25 October 2026: 71 px at 17,76 px/mm, checked on the 22,8, the 5,3 and the wheel's 1,4; first read 3,4); collet ∅ about 2,6 at its base flange.
 - **Cross-references:** 05 04 08 (wheel), 05 04 09 (pinion), 05 04 10 (collet), 05 04 05-1 (new number), 050408 bis 10 (old number).
 - **Illegible:** pencil beside 22,8 (x 600–640, y 380–440); the gepr. day.
 

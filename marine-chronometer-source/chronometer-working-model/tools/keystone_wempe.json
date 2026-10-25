@@ -137,7 +137,7 @@
   {
    "measure": "Detent spring: thickness",
    "book": "0.002 in, 0.051 mm (p. 138)",
-   "model": "0.070 mm",
+   "model": "0.079 mm",
    "source": "1436 (\"0,07\", faint)",
    "reading": "thicker; steel, as the book's"
   },
@@ -151,9 +151,9 @@
   {
    "measure": "Detent spring: stiffness (E w t³/L³)",
    "book": "steel, the book's sizes, L 2/7 of 0.55 in",
-   "model": "1.28 of the book's",
+   "model": "1.85 of the book's",
    "source": "1436 (steel, 205 GPa)",
-   "reading": "stiffer by 28%"
+   "reading": "stiffer by 85%"
   },
   {
    "measure": "Balance: vibrations an hour",
@@ -172,7 +172,7 @@
   {
    "measure": "Balance: swing",
    "book": "about 225° (p. 142)",
-   "model": "194°",
+   "model": "193°",
    "source": "solved (makeEsc on 05 06_20's drive)",
    "reading": "smaller: under the book's, as under the 1954 instruction's 225-270° (open: the Wempe README, Unresolved)"
   }
