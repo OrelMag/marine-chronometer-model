@@ -117,17 +117,7 @@ const WFRAME=(()=>{
        overall, the dome rising 0.8 over the rim (4_Kirow_247_N.jpg: the side and the dome against the model's 3.0 head of the same width, ±0.3: estimated) */
     for(const[V,P39]of VER)for(const q of[H[11],H[49],P39]){const six=V==='6mx';tag(screw(rv(tp,V),q[0],q[1],TT,S.r,six?2.4:S.h,S.len,S.rs,six?M.steel:M.brass,six?0.8:0),'WN-57');}
 
-    /* the maker's engraving on the top plate's outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, square-on at 7.74 px/mm by the plate's 85, the centre found from holes 10 and 23;
-       15_Wempe_3955_Logo_plus.jpg close): three lines reading along O with N up, centred at O 30.6, N 8.6: "Gerhard D." 8.7 long, its letters 1.2 high; "WEMPE" 9.85 long,
-       1.7 high (outlined capitals on the plate: drawn filled); "Hamburg" 7.4 long, 1.2 high; the lines 1.9 apart (likely). Not on the sheets. A decal on the face */
-    {const k=60,W=12,Hh=6.4,c=document.createElement('canvas');c.width=W*k;c.height=Hh*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
-      x.fillStyle='rgba(58,40,14,0.78)';x.textAlign='center';x.textBaseline='middle';
-      for(const[t,dv,len,h,wt]of/** @type {[string,number,number,number,number][]} */([['Gerhard D.',-1.9,8.7,1.2,500],['WEMPE',0,9.85,1.7,700],['Hamburg',1.9,7.4,1.2,500]])){
-        x.font=`${wt} ${h/0.72*k}px "Instrument Sans", Arial, sans-serif`;x.save();x.translate(W/2*k,(Hh/2+dv)*k);fillTracked(x,t,len*k,0.8);x.restore();}
-      const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
-      const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
-      const g=new THREE.PlaneGeometry(W,Hh);g.rotateX(Math.PI/2);g.rotateY(Math.PI);   /* facing out of the plate (−y); its text along −x (O), up toward −z (N) */
-      const e=mesh(rv(tp,'last first 1943'),g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;   /* Wempe's, so the drawings' versions only (not the Soviet 6MX's plate) */e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
+    /* the maker's engraving on the top plate's outer face (Gerhard D. WEMPE Hamburg, as Wempe 3955's: 2_Wempe_3955_A.jpg) left off since 25 October 2026, the owner's choice */
 
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
     /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 56, 57
