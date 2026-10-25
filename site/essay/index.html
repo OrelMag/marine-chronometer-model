@@ -2408,11 +2408,11 @@ const WFRAME=(()=>{
       const f=x=>Math.max(Math.hypot(x[0]-c12[0],x[1]-c12[1])-12.5,yb-x[1],6-Math.hypot(x[0]-c6[0],x[1]-c6[1]),-ln(tB,tC,x),Math.min(x[0]-cn[0],Math.hypot(x[0]-cn[0],x[1]-cn[1])-1));
       const loc=sdfOutline((x,z)=>f([x,z]),-10,-4,9,4,0.02),ex=brg(23.3),ey=brg(23.3-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);
       const ck=loose(new THREE.Group(),4);bb.add(ck);const y0=TT-3.32-2.6,y1=TT-3.32;
-      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
+      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
     /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), shoulder Ø 3.1 through the click (its hole 3.2) and 0.05 more, M2.6 through the bridge: the coloured section,
        scaled (estimated) */
     {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.65,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.65+3.2,rs=1.3,pt=0.3,d=pt*0.3,n=Math.floor((L-2.65-pt*0.6)/pt),pr=[V2(0,0),V2(3.1/2,0),V2(3.1/2,2.65),V2(rs,2.65),V2(rs,L-n*pt-d)];   /* its shoulder and thread turned below the head, the thread's rings as screw() draws them */
-      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;}
+      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
 
     /* ================= the fusee bush (Schneckenfutter, 05 08 01-2) and dust bush (Staubfutter, 05 08 01-3) ================= */
     /* Schneckenfutter: Rundmessing 13,5 Ms 58: a flange Ø 13.2 -0.2 × 1.5 -0.1 on the top plate's outer face, its spigot below it Ø 8 g6 (-0.005/-0.014, drawn at its middle,
@@ -5037,7 +5037,7 @@ const WFUSEE=(()=>{
        just past the bar's lower face: it draws the small end's stack 0.5 lower than the sheets put it, the cover plate's top level with the plate's face under an empty 0.5
        of the J-K recess, where the sheets leave 0.085) */
     {const PE=TI+1.6,PH=0.25,R=(0.64+PH*PH)/(2*PH),C=PE+PH-R,a0=Math.asin(0.8/R),cap=[];for(let i=0;i<=8;i++){const a=a0*(1-i/8);cap.push([R*Math.sin(a),C+R*Math.cos(a)]);}
-      tag(mesh(P.topPlate,turned([[0,TT],[0.8,TT],...cap],20),M.steel,SPX[0],0,SPX[1]),'050801-5');}
+      tag(mesh(P.topPlate,turned([[0,TT],[0.8,TT],...cap],20),M.steel,SPX[0],0,SPX[1]),'050801-5').userData.devKeep=true;}   /* devKeep: shown laid out, where the fusee and its stop bar stay */
 
 
     /* =============== the barrel 05 07 01 (Federhaus mit Deckel, as revised 20.4.48) =============== */
@@ -6760,13 +6760,16 @@ function buildWempe(M){
   /* schematic plates for the laid-out view, drawn see-through (the viewer, devPlate), standing in for the frame, whose holes no longer meet the arbors: the pillar plate and
      top plate along the line at their own heights and wide enough for the barrel (Ø 41.6) and fusee wheel, the intermediate bridge on the dial side under the intermediate and
      seconds arbors, a bridge over the barrel's arbor, the lower cock hanging from the top plate and the upper cock over the balance on a foot, and three pillars (Ø 8.1) beside
-     the line clear of the wheels, the chain and the detent. Not parts: no partName, so they can't be picked, listed or sectioned; schematic, not the movement's */
+     the line clear of the wheels, the chain and the detent. Not parts (no partName: not listed, sectioned or checked as the movement's; schematic), but each stands in for
+     its part (devOf, its piece pc), whose card a click on it opens while laid out (the viewer); the barrel bridge's runs from the barrel's arbor to the click's screw (hole
+     46, 12.0 off the line), as the real bridge does, so the click (r′ in a textbook's developed drawing, "Modern chronometer movement", Figs. 83-84), kept shown laid out (devKeep), hangs from it */
   {const dp=new THREE.Group();mv.add(dp);const w=DEV.w,n=[-w[1],w[0]],at=(/** @type {number} */t,s=0)=>[DEV.A.Ba[0]+w[0]*t+n[0]*s,DEV.A.Ba[1]+w[1]*t+n[1]*s],tB=DEV.t('B'),TI=-WD.INNER,TT=TI-WD.TOP_T,PPT=WD.PP_T,PW=48;
-    mesh(dp,KIT.stadium(at(0),at(tB),PW,PPT),M.gilt,0,0,0);mesh(dp,KIT.stadium(at(0),at(tB),PW,WD.TOP_T),M.gilt,0,TT,0);
-    mesh(dp,KIT.stadium(at(DEV.t('T')-5),at(DEV.t('S')+5),10,3.8),M.gilt,0,PPT,0);mesh(dp,KIT.stadium(at(-7),at(7),14,3.32),M.gilt,0,TT-3.32,0);
-    mesh(dp,KIT.stadium(at(tB),at(tB+12),8,3.22),M.gilt,0,TI+10-3.22,0);cylBetween(dp,3,TI,TI+10,M.gilt,...at(tB+12),32);
-    mesh(dp,KIT.stadium(at(tB),at(tB+18),9,2.4),M.gilt,0,TT-15,0);cylBetween(dp,3.5,TT-12.6,TT,M.gilt,...at(tB+18),32);
-    for(const[t,s]of[[22,19],[22,-19],[DEV.t('E'),19]])cylBetween(dp,WD.PIL.r,TI,0,M.brass,...at(t,s),48);
+    const dg=(/** @type {string} */k,/** @type {string} */pc)=>{const g=new THREE.Group();g.userData.devOf=k;if(pc)g.userData.pc=pc;dp.add(g);return g;},H46=WD.H[46],B0=DEV.A.Ba,l46=Math.hypot(H46[0]-B0[0],H46[1]-B0[1]),bb0=[B0[0]-(H46[0]-B0[0])*5/l46,B0[1]-(H46[1]-B0[1])*5/l46];
+    mesh(dg('pillarPlate','plate'),KIT.stadium(at(0),at(tB),PW,PPT),M.gilt,0,0,0);mesh(dg('topPlate','plate'),KIT.stadium(at(0),at(tB),PW,WD.TOP_T),M.gilt,0,TT,0);
+    mesh(dg('intermediateBridge','bridge'),KIT.stadium(at(DEV.t('T')-5),at(DEV.t('S')+5),10,3.8),M.gilt,0,PPT,0);mesh(dg('barrelBridge','bridge'),KIT.stadium(bb0,H46,14,3.32),M.gilt,0,TT-3.32,0);
+    {const g=dg('lowerCock','cock');mesh(g,KIT.stadium(at(tB),at(tB+12),8,3.22),M.gilt,0,TI+10-3.22,0);cylBetween(g,3,TI,TI+10,M.gilt,...at(tB+12),32);}
+    {const g=dg('upperCock','cock');mesh(g,KIT.stadium(at(tB),at(tB+18),9,2.4),M.gilt,0,TT-15,0);cylBetween(g,3.5,TT-12.6,TT,M.gilt,...at(tB+18),32);}
+    {const g=dg('pillars','');for(const[t,s]of[[22,19],[22,-19],[DEV.t('E'),19]])cylBetween(g,WD.PIL.r,TI,0,M.brass,...at(t,s),48);}
     dp.traverse(o=>{if(o.isMesh){o.userData.devPlate=true;o.userData.noCap=true;o.visible=false;}});}
   /* develop(e): 0 as built, 1 laid out in a line; moves only x, z and the turn about y, so it combines with the explode */
   mv.userData.develop=(/** @type {number} */e)=>{for(const[o,d]of DMV){o.position.x=o.userData.xz0[0]+d[0]*e;o.position.z=o.userData.xz0[1]+d[1]*e;}

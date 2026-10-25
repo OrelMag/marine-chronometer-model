@@ -69,13 +69,16 @@ function buildWempe(M){
   /* schematic plates for the laid-out view, drawn see-through (the viewer, devPlate), standing in for the frame, whose holes no longer meet the arbors: the pillar plate and
      top plate along the line at their own heights and wide enough for the barrel (Ø 41.6) and fusee wheel, the intermediate bridge on the dial side under the intermediate and
      seconds arbors, a bridge over the barrel's arbor, the lower cock hanging from the top plate and the upper cock over the balance on a foot, and three pillars (Ø 8.1) beside
-     the line clear of the wheels, the chain and the detent. Not parts: no partName, so they can't be picked, listed or sectioned; schematic, not the movement's */
+     the line clear of the wheels, the chain and the detent. Not parts (no partName: not listed, sectioned or checked as the movement's; schematic), but each stands in for
+     its part (devOf, its piece pc), whose card a click on it opens while laid out (the viewer); the barrel bridge's runs from the barrel's arbor to the click's screw (hole
+     46, 12.0 off the line), as the real bridge does, so the click (r′ in a textbook's developed drawing, "Modern chronometer movement", Figs. 83-84), kept shown laid out (devKeep), hangs from it */
   {const dp=new THREE.Group();mv.add(dp);const w=DEV.w,n=[-w[1],w[0]],at=(/** @type {number} */t,s=0)=>[DEV.A.Ba[0]+w[0]*t+n[0]*s,DEV.A.Ba[1]+w[1]*t+n[1]*s],tB=DEV.t('B'),TI=-WD.INNER,TT=TI-WD.TOP_T,PPT=WD.PP_T,PW=48;
-    mesh(dp,KIT.stadium(at(0),at(tB),PW,PPT),M.gilt,0,0,0);mesh(dp,KIT.stadium(at(0),at(tB),PW,WD.TOP_T),M.gilt,0,TT,0);
-    mesh(dp,KIT.stadium(at(DEV.t('T')-5),at(DEV.t('S')+5),10,3.8),M.gilt,0,PPT,0);mesh(dp,KIT.stadium(at(-7),at(7),14,3.32),M.gilt,0,TT-3.32,0);
-    mesh(dp,KIT.stadium(at(tB),at(tB+12),8,3.22),M.gilt,0,TI+10-3.22,0);cylBetween(dp,3,TI,TI+10,M.gilt,...at(tB+12),32);
-    mesh(dp,KIT.stadium(at(tB),at(tB+18),9,2.4),M.gilt,0,TT-15,0);cylBetween(dp,3.5,TT-12.6,TT,M.gilt,...at(tB+18),32);
-    for(const[t,s]of[[22,19],[22,-19],[DEV.t('E'),19]])cylBetween(dp,WD.PIL.r,TI,0,M.brass,...at(t,s),48);
+    const dg=(/** @type {string} */k,/** @type {string} */pc)=>{const g=new THREE.Group();g.userData.devOf=k;if(pc)g.userData.pc=pc;dp.add(g);return g;},H46=WD.H[46],B0=DEV.A.Ba,l46=Math.hypot(H46[0]-B0[0],H46[1]-B0[1]),bb0=[B0[0]-(H46[0]-B0[0])*5/l46,B0[1]-(H46[1]-B0[1])*5/l46];
+    mesh(dg('pillarPlate','plate'),KIT.stadium(at(0),at(tB),PW,PPT),M.gilt,0,0,0);mesh(dg('topPlate','plate'),KIT.stadium(at(0),at(tB),PW,WD.TOP_T),M.gilt,0,TT,0);
+    mesh(dg('intermediateBridge','bridge'),KIT.stadium(at(DEV.t('T')-5),at(DEV.t('S')+5),10,3.8),M.gilt,0,PPT,0);mesh(dg('barrelBridge','bridge'),KIT.stadium(bb0,H46,14,3.32),M.gilt,0,TT-3.32,0);
+    {const g=dg('lowerCock','cock');mesh(g,KIT.stadium(at(tB),at(tB+12),8,3.22),M.gilt,0,TI+10-3.22,0);cylBetween(g,3,TI,TI+10,M.gilt,...at(tB+12),32);}
+    {const g=dg('upperCock','cock');mesh(g,KIT.stadium(at(tB),at(tB+18),9,2.4),M.gilt,0,TT-15,0);cylBetween(g,3.5,TT-12.6,TT,M.gilt,...at(tB+18),32);}
+    {const g=dg('pillars','');for(const[t,s]of[[22,19],[22,-19],[DEV.t('E'),19]])cylBetween(g,WD.PIL.r,TI,0,M.brass,...at(t,s),48);}
     dp.traverse(o=>{if(o.isMesh){o.userData.devPlate=true;o.userData.noCap=true;o.visible=false;}});}
   /* develop(e): 0 as built, 1 laid out in a line; moves only x, z and the turn about y, so it combines with the explode */
   mv.userData.develop=(/** @type {number} */e)=>{for(const[o,d]of DMV){o.position.x=o.userData.xz0[0]+d[0]*e;o.position.z=o.userData.xz0[1]+d[1]*e;}
