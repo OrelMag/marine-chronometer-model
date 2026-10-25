@@ -3690,7 +3690,9 @@ const WESC=(()=>{
            the stud through it, screwed M1.7 3.0 into the block under it (estimated). The notch is the base's cells cut 2.5 short of the plate face (nS: its sides) */
         const B6=HOLES.block6,[,nS6]=toD(B6.stud),nS0=nS6-1.6,nS1=nS6+1.6,tS6=toD(B6.stud)[0]-1.6,yN=yP+2.5;
         const base6={loop:ccw([L(tT,nE),L(tT,nUl),L(tT,nUr-0.46),L(tT,nE-6.4),L(tS6,nE-6.4),L(tS6,nS1),L(tF,nS1),L(tF,nE)]),y0:yP,y1:yP+6.5,
-          F:[{p:C(B6.pins[0],0.45,32),a:yP,b:yP+1.2},{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
+          F:[{p:C(B6.pins[0],0.45,32),a:yP,b:yP+1.2}]};   /* no Ø 1.3 hole between the near pin and the stud: 05 04 01-4's, which the German block has (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg,
+             left: a dark Ø 1.3 between its pin and screw), the 6MX's face plain there on both its photographs (that one's right and 8_Gangfeder_mit_Kloben_Rus_einfach.jpg, about
+             30 px a mm, where it would be 40 px across: sure); drawn until 25 October 2026. Its face's dot between the stud and the far pin (about Ø 0.3: a hole or a punch mark) isn't drawn */
         const nb6={loop:ccw([L(tS6,nE-6.4),L(tF,nE-6.4),L(tF,nS1),L(tS6,nS1)]),y0:yN,y1:yP+6.5,F:[{p:C(B6.stud,0.87,48),a:yN,b:yN+3.0}]};
         const thin6={loop:ccw([L(tT,nE-6.4),L(tT,nUr-3),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nS0),L(tS6,nS0),L(tS6,nE-6.4)]),y0:yP,y1:yP+3,F:[{p:C(B6.pins[1],0.45,32),a:yP,b:yP+3}]};
         const nt6={loop:ccw([L(tS6,nS0),L(tF,nS0),L(tF,nE-6.4),L(tS6,nE-6.4)]),y0:yN,y1:yP+3};
