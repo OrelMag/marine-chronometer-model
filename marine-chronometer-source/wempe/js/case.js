@@ -558,7 +558,27 @@ const WCASE=(()=>{
     const WN80=(par,B,s,r,h)=>{const sh=s>0?77.4:74.1,te=s>0?72.3:70,sw=tag(screw(along(par,[s*B,YP,0],[-s,0,0]),0,0,0,r,h,B-sh,3,M.steel),'WN-80');
       mesh(sw,new THREE.LatheGeometry([[0,B-sh-0.1],[1.55,B-sh-0.1],[1.55,B-te-0.2],[1.35,B-te],[0,B-te]].map(([a,b])=>V2(a,b)),28),M.steel);};
     {const B=tag(new THREE.Group(),'Holzkasten');bxW.add(B);const hh=YL-YF-WT;
-      box(B,2*BW,WT,2*BW,0,YF+WT/2,0,MC.mah);for(const s of[-1,1]){if(s>0)box(B,2*BW,hh,WT,0,YF+WT+hh/2,s*(BW-WT/2),MC.mah);box(B,WT,hh,2*BW-2*WT,s*(BW-WT/2),YF+WT+hh/2,0,MC.mah);}
+      /* the side walls (12.5, between the front and back walls), each with the handle's finger recess in its outside behind the strap and the outer pivot's M6 through it.
+         The recess (51 00 10, 25 October 2026): the front view's oval 70 × 30 (dashed behind the strap, solid below it) is the section's unhatched hollow in the hatched
+         12.5 panel, not a pressing of the handle (drawn so until 25 October 2026, an aluminium oval 3 thick on the strap). Measured on the scan at 2.38 px/mm (by its 185):
+         the section's hollow 10.5 deep at its middle (panel 731-761 px, the hollow's floor at 736), leaving 2.0 of wood, its top and bottom rounded about as deep as it is
+         (2.5 over its foot it is 6.8 from the face: a radius 10.5 gives 6.8), 29.4 high (311-381 px); its middle 8.5 under the strap's (the front view 8.1, the section 8.7:
+         likely ±0.5), its foot 23.3 under it. Built as a cutter of radius 10.5 following the oval: the depth sqrt(R² - (R - s)²) at s in from the oval's edge, 10.5 flat
+         where the oval's own 15 leaves 4.5 to its middle line. The M6, "Verbohren 4,8 mm, Gew. M 6" (51 00 10, pencil), drawn at its thread's size and 0.02 as the
+         frame's tapped holes. Its outside's wood mapped as the box's other boards (BoxGeometry's uv) */
+      const sideWall=s=>{const Zm=BW-WT,hc=YF+75-8.5-(YF+WT+hh/2),R=10.5,K=10,ccw=L=>area(L)>0?L:L.slice().reverse();
+        const half=(rho,up)=>{const o=[];   /* the oval offset to rho, its upper (or lower) half from z = 20 + rho to z = -20 - rho on its middle line, points [-h, z] */
+          for(let i=0;i<=12;i++){const t=Math.PI/2*i/12;o.push([20+rho*Math.cos(t),hc+(up?1:-1)*rho*Math.sin(t)]);}for(let i=0;i<=12;i++){const t=Math.PI/2+Math.PI/2*i/12;o.push([-20+rho*Math.cos(t),hc+(up?1:-1)*rho*Math.sin(t)]);}
+          return o.map(([z,h])=>[-h,z]);};
+        const rho=[...Array(K+1).keys()].map(k=>15-R*(1-Math.cos(Math.PI/2*k/K))),H=rho.map(r=>[half(r,true),half(r,false)]);
+        const sIn=p=>{const z=p[1],h=-p[0],dz=Math.max(0,Math.abs(z)-20);return 15-Math.hypot(dz,h-hc);},dep=p=>{const t=Math.min(R,Math.max(0,sIn(p)));return WT/2-Math.sqrt(Math.max(0,R*R-(R-t)*(R-t)));};
+        const C=[];for(let k=0;k<K;k++)for(const j of[0,1])C.push({loop:ccw([...H[k][j],...H[k+1][j].slice().reverse()]),y0:-WT/2,y1:dep});   /* the hollow's rings, each half */
+        C.push({loop:ccw([...H[K][0],...H[K][1].slice(1,-1).reverse()]),y0:-WT/2,y1:WT/2-R});   /* its flat floor */
+        const top=[[-hc,Zm],[-hh/2,Zm],[-hh/2,-Zm],[-hc,-Zm],...H[0][0].slice().reverse()],bot=[[-hc,Zm],...H[0][1],[-hc,-Zm],[hh/2,-Zm],[hh/2,Zm]];
+        C.push({loop:ccw(top),y0:-WT/2,y1:WT/2,F:[{p:ring(-(YP-(YF+WT+hh/2)),0,3.02,48),a:-WT/2,b:WT/2}]},{loop:ccw(bot),y0:-WT/2,y1:WT/2});
+        const g=solidGeo(C),P=g.attributes.position,U=g.attributes.uv;for(let i=0;i<P.count;i++)U.setXY(i,(P.getZ(i)+Zm)/(2*Zm),(-P.getX(i)+hh/2)/hh);
+        g.rotateZ(-Math.PI/2);if(s<0)g.rotateY(Math.PI);g.translate(s*(BW-WT/2),YF+WT+hh/2,0);return g;};
+      box(B,2*BW,WT,2*BW,0,YF+WT/2,0,MC.mah);for(const s of[-1,1]){if(s>0)box(B,2*BW,hh,WT,0,YF+WT+hh/2,s*(BW-WT/2),MC.mah);mesh(B,sideWall(s),MC.mah);}
       /* the back wall, its top let in 0.6 for the hinge's leaf over the hinge's length (below) */
       for(const s of[-1,1])box(B,BW-HGL/2,hh,WT,s*(BW+HGL/2)/2,YF+WT+hh/2,-(BW-WT/2),MC.mah);box(B,HGL,hh-HGT,WT,0,YF+WT+(hh-HGT)/2,-(BW-WT/2),MC.mah);
       /* the outer pivots a (11: WN-80): M6 through the side walls (51 00 10: "Verbohren 4,8 mm Gew. M 6", 93.5 over the bottom), tipped as pivots in the ring's holes;
@@ -573,11 +593,11 @@ const WCASE=(()=>{
          Wempe 6161's and Lange 1947's show it (antiquorum_208-4_wempe6161.jpg at 9 and 3 o'clock, drouot_33810142_lange1947_2.jpg: likely) */
       for(const s of[-1,1]){WN80(bxW,BW,s,6,3.8);const dg=knurl(11.35,0.35,1.9,140,3);dg.translate(0,-0.95,0);const d=tag(mesh(bxW,dg,M.brass,s*(BW-WT-0.95),YP,0),'Lagerscheibe');d.rotation.z=Math.PI/2;}
       /* the handles (Griff f. Chronometerkasten, Änderung von 51 00 10, 14.7.42, 1:1): a strip 100 long and 18 high, its ends 10 long flat on the side with a screw each, between
-         them standing 10 off it, the grip pressed out to an oval 70 × 30, 6 deep; its middle 75 over the box's bottom, its top 3.5 under the pivot's screw (sure). The strip 3 thick (likely); the screws estimated */
+         them standing 10 off it, over the wall's finger recess (an oval 70 × 30, above); its middle 75 over the box's bottom, its top 3.5 under the pivot's screw (sure). The strip 3 thick (likely); the screws estimated */
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'510010');g.position.set(s*BW,YF+75,0);g.rotation.y=s>0?0:Math.PI;bxW.add(g);
         const st=polyGeo([[0,-50],[3,-50],[3,-41],[10,-36],[10,36],[3,41],[3,50],[0,50],[0,40],[7,35],[7,-35],[0,-40]],18);st.translate(0,-9,0);const sm=mesh(g,st,MC.alu);   /* the strip seen from below: [off the side, along it] */
-        const ov=stadiumPts([-12,-20],[-12,20],30),cut=[];for(let i=0;i<ov.length;i++){const a=ov[i],b=ov[(i+1)%ov.length];if(a[0]<=-9)cut.push(a);if((a[0]<=-9)!==(b[0]<=-9)){const t=(-9-a[0])/(b[0]-a[0]);cut.push([-9,a[1]+t*(b[1]-a[1])]);}}
-        const o=new THREE.Shape(cut.map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);fuse([sm,mesh(g,og,MC.alu,7,0,0)]);   /* the strip and its grip one pressing, one mesh (fuse): their walls ran flush, lines in Edges until 21 October 2026 */   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm); drawn below the strip only (y −9 down), so the two don't share their faces 7 and 10 off the side, which flickered where they overlapped (until 16 October 2026) */
+        /* the oval 70 × 30 under the strap is the finger recess in the wall (sideWall, above), 8.5 under the strap's middle: until 25 October 2026 it was drawn as an aluminium
+           pressing 3 thick hung 12 under the strap, fused with it */
         for(const z of[-45,45])tag(screw(along(g,[3,0,z],[-1,0,0]),0,0,0,2.5,1.6,11,1.2,M.steel),'WN-hg');}
       /* the hinge: one piano hinge across the back (no sheet: every photographed box has it; Lange 1947 from above, drouot_33810142_lange1947_2.jpg, 4.48 px/mm by the box's
          185: 148 long, 664 px, its leaves let into the box's and the lid's parting faces, the box's showing 6.7 over the wall, five screws about 33 apart; Wempe 6161's, Wempe

@@ -40,8 +40,8 @@
     ]
    },
    "height": 1.3,
-   "mass": 0.2522,
-   "I": 1.6812,
+   "mass": 0.2473,
+   "I": 1.6782,
    "note": "a maintaining click (05 06 02-3) on the click wheel 05 06 04-3: running, the fusee's drive through it to the maintaining ratchet"
   },
   {
@@ -83,8 +83,8 @@
     ]
    },
    "height": 1.3,
-   "mass": 0.2522,
-   "I": 1.6812,
+   "mass": 0.2473,
+   "I": 1.6782,
    "note": "a maintaining click (05 06 02-3) on the click wheel 05 06 04-3: running, the fusee's drive through it to the maintaining ratchet"
   },
   {
@@ -176,13 +176,13 @@
  ],
  "arbors": {
   "fusee": {
-   "m": 48.6648,
-   "I": 4078.1085,
+   "m": 47.9764,
+   "I": 4054.9711,
    "missing": {}
   },
   "barrel": {
-   "m": 108.1723,
-   "I": 27472.291,
+   "m": 108.0514,
+   "I": 27424.6541,
    "missing": {}
   }
  }
