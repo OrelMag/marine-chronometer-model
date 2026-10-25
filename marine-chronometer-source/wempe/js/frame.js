@@ -117,17 +117,7 @@ const WFRAME=(()=>{
        overall, the dome rising 0.8 over the rim (4_Kirow_247_N.jpg: the side and the dome against the model's 3.0 head of the same width, ±0.3: estimated) */
     for(const[V,P39]of VER)for(const q of[H[11],H[49],P39]){const six=V==='6mx';tag(screw(rv(tp,V),q[0],q[1],TT,S.r,six?2.4:S.h,S.len,S.rs,six?M.steel:M.brass,six?0.8:0),'WN-57');}
 
-    /* the maker's engraving on the top plate's outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, square-on at 7.74 px/mm by the plate's 85, the centre found from holes 10 and 23;
-       15_Wempe_3955_Logo_plus.jpg close): three lines reading along O with N up, centred at O 30.6, N 8.6: "Gerhard D." 8.7 long, its letters 1.2 high; "WEMPE" 9.85 long,
-       1.7 high (outlined capitals on the plate: drawn filled); "Hamburg" 7.4 long, 1.2 high; the lines 1.9 apart (likely). Not on the sheets. A decal on the face */
-    {const k=60,W=12,Hh=6.4,c=document.createElement('canvas');c.width=W*k;c.height=Hh*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
-      x.fillStyle='rgba(58,40,14,0.78)';x.textAlign='center';x.textBaseline='middle';
-      for(const[t,dv,len,h,wt]of/** @type {[string,number,number,number,number][]} */([['Gerhard D.',-1.9,8.7,1.2,500],['WEMPE',0,9.85,1.7,700],['Hamburg',1.9,7.4,1.2,500]])){
-        x.font=`${wt} ${h/0.72*k}px "Instrument Sans", Arial, sans-serif`;x.save();x.translate(W/2*k,(Hh/2+dv)*k);fillTracked(x,t,len*k,0.8);x.restore();}
-      const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
-      const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
-      const g=new THREE.PlaneGeometry(W,Hh);g.rotateX(Math.PI/2);g.rotateY(Math.PI);   /* facing out of the plate (−y); its text along −x (O), up toward −z (N) */
-      const e=mesh(rv(tp,'last first 1943'),g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;   /* Wempe's, so the drawings' versions only (not the Soviet 6MX's plate) */e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
+    /* the maker's engraving on the top plate's outer face (Gerhard D. WEMPE Hamburg, as Wempe 3955's: 2_Wempe_3955_A.jpg) left off since 25 October 2026, the owner's choice */
 
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
     /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 56, 57
@@ -301,11 +291,11 @@ const WFRAME=(()=>{
       const f=x=>Math.max(Math.hypot(x[0]-c12[0],x[1]-c12[1])-12.5,yb-x[1],6-Math.hypot(x[0]-c6[0],x[1]-c6[1]),-ln(tB,tC,x),Math.min(x[0]-cn[0],Math.hypot(x[0]-cn[0],x[1]-cn[1])-1));
       const loc=sdfOutline((x,z)=>f([x,z]),-10,-4,9,4,0.02),ex=brg(23.3),ey=brg(23.3-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);
       const ck=loose(new THREE.Group(),4);bb.add(ck);const y0=TT-3.32-2.6,y1=TT-3.32;
-      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
+      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
     /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), shoulder Ø 3.1 through the click (its hole 3.2) and 0.05 more, M2.6 through the bridge: the coloured section,
        scaled (estimated) */
     {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.65,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.65+3.2,rs=1.3,pt=0.3,d=pt*0.3,n=Math.floor((L-2.65-pt*0.6)/pt),pr=[V2(0,0),V2(3.1/2,0),V2(3.1/2,2.65),V2(rs,2.65),V2(rs,L-n*pt-d)];   /* its shoulder and thread turned below the head, the thread's rings as screw() draws them */
-      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;}
+      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
 
     /* ================= the fusee bush (Schneckenfutter, 05 08 01-2) and dust bush (Staubfutter, 05 08 01-3) ================= */
     /* Schneckenfutter: Rundmessing 13,5 Ms 58: a flange Ø 13.2 -0.2 × 1.5 -0.1 on the top plate's outer face, its spigot below it Ø 8 g6 (-0.005/-0.014, drawn at its middle,
