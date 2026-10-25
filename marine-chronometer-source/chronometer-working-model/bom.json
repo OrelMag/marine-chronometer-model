@@ -3233,7 +3233,7 @@
    "parent": "42000",
    "kind": "part",
    "part": "fw",
-   "fn": "Turns once a minute; its arbor carries the second hand (Sec. II).",
+   "fn": "Turns once a minute; its arbor carries the second hand (Sec. II). Make it in hard brass: its teeth take the escape wheel's stopping blows on the escape pinion near soft brass's fatigue limit (tools/traindyn.js).",
    "rel": [
     [
      "in",

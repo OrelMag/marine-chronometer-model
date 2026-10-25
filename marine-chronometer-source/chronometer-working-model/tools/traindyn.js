@@ -89,8 +89,12 @@ const flex=run(false),rig=run(true);
 const rat=flex.maxF.map((x,i)=>x/flex.Fs[i]);
 say(`a beat (dynamics.js's: let go at ${f(eRel.th/D2R,1)}°, the jewel caught at ${f(eStr.th/D2R,1)}°, left at ${f(eLv.th/D2R,1)}°, the tooth landing on the stone ${f(1000*(eLk.t-eRel.t),1)} ms after its release)`);
 say(`the meshes' largest force in the beat, from the fusee wheel down: ${rat.map(x=>f(x,2)).join(', ')} times the steady`);
-const sm=MJ&&require('child_process').execFileSync('node',[path.join(__dirname,'strength.js')],{encoding:'utf8'}),mg=[...sm.matchAll(/margin ([\d.]+)-[\d.]+/g)].slice(0,4).map(x=>+x[1]);
-chk(rat.every((x,i)=>x<mg[i]),`each under its teeth's margin in strength.js (${mg.map(x=>f(x,1)).join(', ')}): the blows of the stopping wheel don't load the teeth past their strength`);
+const sm=MJ&&require('child_process').execFileSync('node',[path.join(__dirname,'strength.js')],{encoding:'utf8'}),mm=[...sm.matchAll(/margin ([\d.]+)-([\d.]+)/g)].slice(0,4),mg=mm.map(x=>+x[1]),mgH=mm.map(x=>+x[2]);
+/* each blow against its mesh's margin over its material's range (strength.js: weak to strong): past the weak end only, '~~' (as strength.js marks a part only the strong end holds), the maker's
+   sheet asking for the strong end; past the strong end, a failure. Since 25 October 2026 the fourth wheel's teeth on the escape pinion, struck at 49.6 times their steady force with the escape
+   arbor 4.82 g.mm2 (its teeth measured 1.1 thick), are 2 % past the weakest brass's fatigue limit: the owner's choice, a margin note, the fourth wheel in hard brass */
+const weak=rat.map((x,i)=>x>=mg[i]&&x<mgH[i]);
+chk(rat.every((x,i)=>x<mgH[i])&&!weak.some(Boolean),`each under its teeth's margin in strength.js (${mg.map((x,i)=>f(x,1)+'-'+f(mgH[i],1)).join(', ')}): the blows of the stopping wheel don't load the teeth past their strength${weak.some(Boolean)?` (mesh ${weak.map((w,i)=>w?i+1:0).filter(Boolean).join(', ')} past the weak end, inside the strong: its wheel wants hard brass)`:''}`,rat.every((x,i)=>x<mgH[i]));
 const op=flex.opened.map(x=>x*1000);
 const WHEN={free:'as the escape wheel, let go, gathers speed',jewel:'after the tooth strikes the jewel at about twice its speed and is slowed to it, the train behind springing back',free2:'as the escape wheel, let go by the jewel, springs ahead into its backlash before it lands',locked:'after the landing, the train rebounding off the stopped wheel'};
 chk(op.every((x,i)=>x<ME[i].bl*1000),`${op.some(x=>x>0.01)?`the meshes open ${op.map((x,i)=>x>0.01?`${f(x,1)} µm (${ME[i].zw}:${ME[i].zp}, ${WHEN[flex.openAt[i]]})`:'').filter(Boolean).join('; ')}, inside their backlash (${ME.map(q=>f(q.bl*1000)).join(', ')} µm): no tooth meets the back of the next, and the train is back on its driving flanks within the beat`:'no mesh opens: the train stays on its driving flanks through the beat'}`);
