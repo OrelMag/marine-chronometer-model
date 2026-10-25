@@ -5,6 +5,8 @@ output as it prints it go to assets/geometry.json, which build_report.py reads. 
   python geometry.py              solids, fine, the screw audit (movement and box), exploded and the parts list (about 11 minutes: fine.py 3, bom.py 6)
   python geometry.py solids,fine  those again, the rest kept from assets/geometry.json
   The 6MX's (fine-6mx, audit-6mx, audit-box-6mx, exploded-6mx, bom-6mx) run the same with the page set to it: section 15 (about 11 minutes more)
+  Making it (fea, assembly, dfm): the frame under load, the order of assembly, each part against the machine; each also writes its JSON in assets/ (section 19;
+  about 5, 1 and 10 minutes)
 """
 import json, os, pathlib, subprocess, sys, time
 HERE = pathlib.Path(__file__).resolve().parent; TOOLS = HERE.parents[1] / 'chronometer-working-model' / 'tools'; OUT = HERE / 'assets' / 'geometry.json'
@@ -22,6 +24,11 @@ STEPS += [
     ('audit-box-6mx', ['audit.py', 'box', '--rev', '6mx'], 'The same for its case and boxes (box.6mx).'),
     ('exploded-6mx', ['exploded.py', *SIX], 'The Spread view\'s clearance in the 6MX.'),
     ('bom-6mx', ['bom.py', *SIX], 'The parts list in the 6MX: its lines with "rev" (its jewels in chatons, its boxes), its 15 jewels.')]
+STEPS += [
+    ('fea', ['fea.py', '--json', '{A}/fea.json'], "Finite elements on the parts that hold the train's pivots (the plates, the barrel bridge, the fusee bush, the intermediate bridge), fully wound and run down: each pivot hole's movement, each arbor's lean, the stress against brass's yield, each mesh's change of depth against its window."),
+    ('assembly', ['assembly.py', '--json', '{A}/assembly.json'], "The movement taken apart in the 1958 Soviet repair book's order for the MX, each step's parts drawn straight off along the arbors without passing through a part still in; put together the same backwards."),
+    ('dfm', ['dfm.py', '--json', '{A}/dfm.json'], "Each machined piece against the machine: its thinnest walls and floors, slots narrower than a 0.4 mm end mill, the inside corners it leaves rounded, its holes' depth over diameter, what is cut from each face, undercuts, and voids sealed inside a piece.")]
+MFG = ('fea', 'assembly', 'dfm')   # section 19's, kept out of section 1
 def main():
     want = sys.argv[1].split(',') if len(sys.argv) > 1 else [s[0] for s in STEPS]
     bad = [w for w in want if w not in [s[0] for s in STEPS]]
@@ -32,12 +39,12 @@ def main():
         if name not in want: continue
         t0 = time.time(); print(f'  {name:10s}', end=' ', flush=True)
         try:
-            p = subprocess.run([sys.executable, *args, '--model', 'wempe'], cwd=TOOLS, capture_output=True, text=True, encoding='utf-8', errors='replace', env=env, timeout=1200)
+            p = subprocess.run([sys.executable, *[a.replace('{A}', str(HERE / 'assets')) for a in args], '--model', 'wempe'], cwd=TOOLS, capture_output=True, text=True, encoding='utf-8', errors='replace', env=env, timeout=2400)
             rc, out = p.returncode, (p.stdout + ('\n' + p.stderr if p.stderr.strip() else ''))
         except subprocess.TimeoutExpired as e:
-            rc, out = 1, f'timed out after 1200 s\n{e.stdout or ""}'
+            rc, out = 1, f'timed out after 2400 s\n{e.stdout or ""}'
         dt = round(time.time() - t0)
-        res[name] = dict(cmd='python ' + ' '.join(args + ['--model', 'wempe']), what=what, rc=rc, secs=dt, out=out.replace('\r', '').rstrip())
+        res[name] = dict(cmd='python ' + ' '.join([a.replace('{A}', 'assets') for a in args] + ['--model', 'wempe']), what=what, rc=rc, secs=dt, out=out.replace('\r', '').rstrip())
         print(f'{"ok  " if rc == 0 else "FAIL"} {dt:4d} s')
     res = {s[0]: res[s[0]] for s in STEPS if s[0] in res}; res['_made'] = time.strftime('%Y-%m-%d')
     OUT.parent.mkdir(exist_ok=True); OUT.write_text(json.dumps(res), encoding='utf-8', newline='\n'); print('wrote assets/geometry.json')
