@@ -4164,6 +4164,27 @@
    "rev": "last first 1943"
   },
   {
+   "id": "Kastenstift",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Pin over the outer pivot (no number; inferred a lid-locating pin)",
+   "qty": 2,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Standing 2.3 out of each side wall's parting face over its outer pivot, into a hole in the closed lid's wall (05 01's elevation draws it; its purpose inferred).",
+   "rel": [
+    [
+     "in",
+     "Holzkasten",
+     "embed"
+    ]
+   ],
+   "figs": "05 01_1",
+   "rev": "last first 1943"
+  },
+  {
    "id": "Holzkasten.D",
    "idx": null,
    "no": "",

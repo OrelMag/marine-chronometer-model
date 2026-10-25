@@ -26,7 +26,7 @@ Columns: the part (its `hn`), its sheets, the photographs it was checked on (pho
 | Gold spring | 050401-2 | 05 04 01-2 | detentBlock | matches | sure | — |
 | Detent block (1943) | 050401-4 | 05 04 01-4 | detentBlock (Wempe 3955 has the 1941 block: its version) | matches the figures; projection still Unresolved | likely | — |
 | Balance jewels | 050406/7/8 .bu .bl | none (coloured section) | — | holes 0.04 over the pivot against the stated 0.02 | estimate | 0.02 (batch 1) |
-| Escape jewels | .eu .el | 05 09 01, 05 08 02-1 | — | holes 0.03 over; endshake 0.04 against the 1958 Soviet repair book's 0.05-0.07 | estimate | holes 0.02 (batch 1); endshake: batch 2 |
+| Escape jewels | .eu .el | 05 09 01, 05 08 02-1 | — | holes 0.03 over; endshake 0.04 against the 1958 Soviet repair book's 0.05-0.07 | estimate | holes 0.02 (batch 1); endshake 0.06, the endstones 0.03 off each end in every version (batch 5, 25 October) |
 
 ## Fusee, mainspring, chain and maintaining work (05 06, 05 07)
 
@@ -35,15 +35,15 @@ Columns: the part (its `hn`), its sheets, the photographs it was checked on (pho
 | Fusee body | 050604-2 | 05 06 04-2, 05 06 04 (rev. a, 1948), 05 06_20 | train (rms 2.4 px, 0.11 mm/px) | every figure matches; the groove's floor measured off the built solid (`tools/wempe_fusee_profile.py`): each whole turn within +0.002 to +0.021 of the sheets' radii, the working lands within 0.016 of 05 06_20's curve (rms 0.010, the sheet's ±0.05), the pitch 1.1991 (1,2 ±0,01); its place on the arbor: 05 06 04's 13.7 −0.1 from the large face to the top shoulder and 0.5 +0.05 to the click wheel against the model's 13.46 and 0.7, the face not re-turned; the 3 M2, M1.7, the 0.5 H7 and the chain pin's holes not cut | likely (place), sure (holes) | place: the large face re-turned 0.2 on the arbor (0.5 to the click wheel), falling 5° outside Ø 33, 13.6 from the step's end; the Vorreiber's face a 2.76 and the maintaining detent 6.2 to meet it (batch 4; README Readings corrected); holes: cut (batch 3: the M2 holes placed by C-D, 74°, 194°, 314° from the chain pin, where they were 47° off) |
 | Fusee arbor | 050604-1 | 05 06 04-1 | — | matches; its Ø 1.1 cross hole not cut | sure | cut (batch 3) |
 | Vorreiber | 050600-2 | 05 06 00-2 | not visible | matches; its Ø 0.8 pin hole not cut | sure | cut (batch 3) |
-| Dust plate | 050600-1 | 05 06 00-1 | — | matches, less its 0.5 × 45° (an outline's edge: not built) | sure | open (a maker's chamfer) |
+| Dust plate | 050600-1 | 05 06 00-1 | — | matches, less its 0.5 × 45° (an outline's edge: not built) | sure | 0.5 × 45° on the face toward the plates, the recess's other (`chamf`, batch 5) |
 | Fusee wheel | 050600-3 | 05 06 00-3 | train (teeth) | matches; the tube's counterbore 0.4 deep and the far face's groove not built | unsure (the bore's figure overwritten) | batch 3 |
-| Cover plate | 050600-4 | 05 06 00-4 | train | matches, less its outer 45° edge; its screw hole drawn 1.75 where the fit's middle is 1.80; its screw head looks smaller on Wempe 3955 (its version, unsure) | sure | hole 1.80 (batch 2); edge: batch 4 |
+| Cover plate | 050600-4 | 05 06 00-4 | train | matches, less its outer 45° edge; its screw hole drawn 1.75 where the fit's middle is 1.80; its screw head looks smaller on Wempe 3955 (its version, unsure) | sure | hole 1.80 (batch 2); the outer 45° on its outer face with the sinks, not sized: scaled 0.6-0.7, drawn 0.65 leaving a 0.15 land (estimate; `chamf`, batch 5) |
 | Click wheel | 050604-3 | 05 06 04-3 | not visible | matches; its depth in the recess follows the body's place; bore 0.3 × 45° not cut | sure | batch 2 |
 | Maintaining ratchet, spring, detent | 050601, 050601-1, 050505 | 05 06 01, 05 05 05 | not visible | match | sure | — |
 | Maintaining clicks and springs | 050602-3, 050602-2 | 05 06 02-3, -2 | not visible | outline matches; the pivot hole's 1.7 × 45° sink and Ø 2.2 opening not built; the springs 24.4 developed against 27.0 | sure | sink and opening built, springs to 5, 5 and 110° (26.6) (batch 3) |
 | Stop work (Steg, bar, pin, spring) | 050603 | 05 06_4 C-D, 05 06 04-2 | train (the bar's ends) | matches its trace; heights follow the body's place (the stop pin about 0.5 short then) | likely | with the body's place |
 | Chain | 050704 | 05 07 04 | W (rms 2.9 px), train | matches | sure | — |
-| Barrel drum and lid | 050701, 050703 | 05 07 01, 05 07_6 | W | match; the hook block's M2.6 rivet hole and the chain's 2.5 slot not cut | sure | cut (batch 3); the drum's insides (rivet hole, hook block, Steg and its notches, mainspring, arbor's hook) turned +136.6° to 0207's places about the chain's slot (BLK 3.585: the slot 180° from the Steg, 135° from the hole; 0207 had been misread as 180° from the hole) (batch 4) |
+| Barrel drum and lid | 050701, 050703 | 05 07 01, 05 07_6 | W | match; the hook block's M2.6 rivet hole and the chain's 2.5 slot not cut | sure | cut (batch 3); the drum's insides (rivet hole, hook block, Steg and its notches, mainspring, arbor's hook) turned +136.6° to 0207's places about the chain's slot (BLK 3.585: the slot 180° from the Steg, 135° from the hole; 0207 had been misread as 180° from the hole) (batch 4); the slot cut at 0207's 45° to the radius, leaning back toward the chain's run going in as the barb does, 2.5 round the rim, both drums and connectors (DRUM, batch 5) |
 | Barrel arbor | 050702-1 | (as revised not in the set) | W (its square) | fitted to the drum and plates, as recorded; the hook pin's Ø 2 × 6 hole not cut | known | cut (batch 3) |
 | Hook block, set-up ratchet and click | 050705, 050805-2 | 05 07, 05 08 05-2 | W | match | sure | — |
 | Mainspring | 050706 | 05 07 06 | — | estimated, as recorded (its torque 23 % over 05 06_20's) | known | — |
@@ -75,7 +75,7 @@ Every hole of both plates, both balance cocks, the barrel bridge and the interme
 | Plates' distance | dims.js `INNER` | 05 08 00-1 (19.6 ±0.01), seats 0.3 +0.03 | — | drawn at the seats' nominal 0.3: 19.0 between the inner faces where the seats' middle gives 18.97; the endshakes are 0.03 more than at the middle of the fits | sure (arithmetic) | recorded: a convention, every hole and height measured from it |
 | Balance cocks | 050803-1, 050800-2 | 05 08 03-1 (15 −0.1), 05 08 00-2 | A, topIn | match, at their nominal heights (the balance's endshake 0.08 more than at the fits' middles) | likely | recorded |
 | Barrel bridge, click, fusee bush, dust bush, intermediate bridge | 050805, 050801-2/-3, 050804-1 | their sheets | A, N, uZ | match (the bush's opened bore recorded) | sure | — |
-| Movement ring | 050800-3 | 05 08 00-3 | A, uZ | its M2.6 holes don't open through the cone (uZ shows them open): recorded | sure | open |
+| Movement ring | 050800-3 | 05 08 00-3 | A, uZ | its M2.6 holes don't open through the cone (uZ shows them open): recorded | sure | through the flange to the cone (frame.js FLC, fusee.js's `bore`; batch 5) |
 | Wempe 3955's screw under hole 12 | — | — | A | a slotted head seen through the access hole where the model shows the detent block's face | low | to look at with the detent block |
 
 ## Case, box and gimbals (05 01, 51 00)
@@ -91,7 +91,7 @@ Every hole of both plates, both balance cocks, the barrel bridge and the interme
 | Case brackets | 050100-3 | 05 01 C-D, elevation, A-B | Kirow 422 (another maker's) | 8-10 too low; their blocks met the ring's band at 55.5°, so the bowl could not turn over to be wound | likely | as C-D (batch 2): the bowl turns over freely; the boss 9.0 wide (the elevation face on, 9.0 ±0.5; A-B's 12.0 can't be: a section wider than the face-on outline; Kirow 422's proportions agree), the screws' 15.0 re-read and kept (25 October) |
 | Inner pivots and lock nuts | WN-79, WN-400 | 05 01 C-D | 3955, Lange 1947 | M4, Ø 7 head, no tip, nut Ø 19 (3955's); drawn M5, Ø 9.2 head, Ø 3 tip into the boss, nut Ø 22 | likely | as drawn (batch 2) |
 | Outer pivots and discs | WN-80 | 05 01 elevation; 51 00 10 | 6161, Lange 1947 | no reduced tip; drawn Ø 3.1 tips | likely | as 05 01 (batch 2); 51 00 10's form (M6 4.1 past the wall, pin Ø 2.7 × 6.0) read and set aside: the handle's sheet, the screw context, its pin reaching the ring's inside as 05 01's does (README, Readings corrected) |
-| Wooden box | Holzkasten | 05 01 note, 51 00 10 | 6161 | 185 × 185 × 180 as 05 01; 51 00 10's side 185 high (a version: open); a small pin over each pivot not built | medium | open |
+| Wooden box | Holzkasten | 05 01 note, 51 00 10 | 6161 | 185 × 185 × 180 as 05 01; 51 00 10's side 185 high (a version: open); a small pin over each pivot not built | medium | 180 kept (05 01 drawn 1940, reissued unchanged 1946/47; 51 00 10 a handle's change of 1942: README, Unresolved); the pins built, Ø 2.5, 2.3 proud, 3.3 in, on 05 01's elevation's pixel profiles, the lid bored for them, their purpose inferred (batch 5, 25 October) |
 | Handles | 510010 | 51 00 10 | — | the oval built as a metal plate; the sheet draws a finger recess in the wood | likely | the recess cut, 10.5 deep (batch 3) |
 | Keys, key holder, transit lock, maker's plate | 050102, 510011, 050101.F | 51 00 11, 05 01 02, 05 01 A-B | Fig. 2.35, 6161, 3044 | match | high | — |
 
