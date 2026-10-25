@@ -5009,7 +5009,7 @@ function buildBox(M){
      dial lies in it, as it does when the movement is put upside down on the case to be started (Sec. III: "the dial carefully located in the shoulder recess around the top edge
      of the case"), and the bezel screws on outside the rim (TR). The rim's 105 across and the gimbal ring's 66-68 radius are from the top-view photographs (estimated); the
      rest estimated. YT the rim's top, YTB the thread's foot; FD the floor's inside depth, FR the floor's edge (the bowl's inside rounds into it with radius SH-FR) */
-  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,TR=DB+4.5,YT=MR_Y+DIAL_T+0.6,YTB=5.2,FD=42.8,FR=38;   /* FD: the case 49 mm from the bezel's edge (YTB) to its outside bottom on Renaissance Antiques' photograph (LPEC109-4, the band's 712 px as CR's 99 mm: the base to the bezel 352 px), the floor 1 thick (BT); the movement's lowest part, the balance cock, at -37.96, so the floor clears it by 4.8. 64, set for clearance, until 5 October 2026 */
+  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,TR=DB+4.5,YT=MR_Y+DIAL_T+0.6,YTB=5.2,FD=42.8,FR=38,CW0=CR*0.962,YLIP=MR_FL;   /* CW0, YLIP: the wall's radius and the lip's foot, at the shoulder the movement's ring sits on (the profile below, YB) */   /* FD: the case 49 mm from the bezel's edge (YTB) to its outside bottom on Renaissance Antiques' photograph (LPEC109-4, the band's 712 px as CR's 99 mm: the base to the bezel 352 px), the floor 1 thick (BT); the movement's lowest part, the balance cock, at -37.96, so the floor clears it by 4.8. 64, set for clearance, until 5 October 2026 */
   /* NUT_R: the four pivots' knurled lock nuts (42121), r 12.5: 24.9, 25.2 and about 25 across on Jones-Horan lots 63662 and 38240 from above (ellipses fitted on their rims, at the
      box camera's scale), one at least 22.0 where it is half hidden (20 October 2026, REPORT.md; likely +-1.5); TN24H's 26 (3SFDplGq6vs 4:21) agrees. Fig. 106 draws all four as large discs and
      Sec. III calls the case rear one "the large, knurled lock nut". r 8.5 (KLUwI2UUCMQ 1:15: at least 16 across) until 20 October 2026, r 4.2 and 5 until 4 October. Their thickness (2.5) estimated */
@@ -5138,13 +5138,14 @@ function buildBox(M){
      goes into when latched; below it a plate with a round hole 4.4 across (taken as the counterbore of its screw, 42116, from outside) and a steady pin's mark. On a separating washer
      (42128) against the wall. The plate's depth (1.5), the screw's place in the hole and its length estimated. Until 5 October 2026 a back 4 by 6 with two cheeks */
   { const kp=hn(new THREE.Group(),'42113');kp.position.set(0,KPY,0);kp.rotation.y=LATCH_A-Math.PI/2;cs.add(kp);
-    const x0=CR+0.3,KT=6.5,KW=5.5,WY0=-1.4,WY1=2.6,WW=3.15,PB=-14.5,PY=-8;
-    const kpM=[mesh(kp,new THREE.BoxGeometry(4.5,KT-WY1,2*KW),M.brass2,x0+2.25,(KT+WY1)/2,0),mesh(kp,new THREE.BoxGeometry(4.5,WY0+4.5,2*KW),M.brass2,x0+2.25,(WY0-4.5)/2,0)];   /* the block above and below the window */
-    for(const s of[1,-1])kpM.push(mesh(kp,new THREE.BoxGeometry(4.5,WY1-WY0,KW-WW),M.brass2,x0+2.25,(WY0+WY1)/2,s*(KW+WW)/2));kpM.push(mesh(kp,new THREE.BoxGeometry(0.3,WY1-WY0,2*WW),M.brass2,CR+0.15,(WY0+WY1)/2,0));   /* its sides and the window's back */
+    const x0=CR+0.3,xb=CW0+0.3,xf=x0+4.5,KT=6.5,KW=5.5,WY0=-1.4,WY1=2.6,WW=3.15,PB=-14.5,PY=-8,YL=YLIP-KPY;   /* xb: its back on the wall (CW0) under the lip, x0 over it (YL, its own frame); the front 4.5 proud of the lip (xf) */
+    const blk=(y0,y1,w,z,xa=xb)=>mesh(kp,new THREE.BoxGeometry(xf-xa,y1-y0,w),M.brass2,(xa+xf)/2,(y0+y1)/2,z);
+    const kpM=[blk(WY1,YL,2*KW,0),blk(YL,KT,2*KW,0,x0),blk(-4.5,WY0,2*KW,0)];   /* the block above and below the window, stepped over the lip */
+    for(const s of[1,-1])kpM.push(blk(WY0,WY1,KW-WW,s*(KW+WW)/2));kpM.push(mesh(kp,new THREE.BoxGeometry(0.3,WY1-WY0,2*WW),M.brass2,CW0+0.15,(WY0+WY1)/2,0));   /* its sides and the window's back */
     { const pl=(h,r)=>{const s=new THREE.Shape();s.moveTo(-KW,PB);s.lineTo(KW,PB);s.lineTo(KW,-4.5);s.lineTo(-KW,-4.5);s.closePath();const p=new THREE.Path();p.absarc(0,PY,r,0,TAU,true);s.holes.push(p);const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:24});g.rotateY(Math.PI/2);return g;};
-      kpM.push(mesh(kp,pl(0.7,1.12),M.brass2,x0,0,0),mesh(kp,pl(0.8,2.2),M.brass2,x0+0.7,0,0));fuse(kpM); }   /* the keeper one piece, one mesh (fuse): its block's pieces' faces ran flush, lines across it in Edges until 21 October 2026 */   /* the plate below, counterbored for the screw */
-    hn(mesh(kp,ringGeo(1.6,1.12,0.3),M.brass2,CR+0.15,PY,0),'42128').rotation.z=Math.PI/2;
-    hn(sHead(kp,'x',1,x0+0.7,2.0,0.8,PY,0,0.7+0.3+1.0),'42116.k'); }
+      kpM.push(mesh(kp,pl(0.7,1.12),M.brass2,xb,0,0),mesh(kp,pl(0.8,2.2),M.brass2,xb+0.7,0,0));fuse(kpM); }   /* the keeper one piece, one mesh (fuse): its block's pieces' faces ran flush, lines across it in Edges until 21 October 2026 */   /* the plate below, counterbored for the screw */
+    hn(mesh(kp,ringGeo(1.6,1.12,0.3),M.brass2,CW0+0.15,PY,0),'42128').rotation.z=Math.PI/2;
+    hn(sHead(kp,'x',1,xb+0.7,2.0,0.8,PY,0,0.7+0.3+1.0),'42116.k'); }
   const KH=3.34,fu=L.Fu,BT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7), r 3.34 +-0.15: the shield plate's, the plate turned open with the mat seen through both
      (KLUwI2UUCMQ 47:36.5, rectified on the plate's edge and its shoulder screw, scaled by the key hole's 20.38 mm from the centre); the case's taken the same (r 2.3 until 5 October 2026). The bottom is BT thick (inside face at -FD, outside at -FD-BT), the wall CR-DB; both
      solids. The shield plate under the bottom sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
@@ -5159,10 +5160,10 @@ function buildBox(M){
        of the band across (584 px). The band is kept at CR, which holds the movement's ring, so the scale rests on it (the photograph's bezel then reads 108 against the top-view
        photograph's 105: ±3 %); from the bezel's edge (YTB) down: a cove 5.6 mm (40 px), the band 7.9 (57 px), the wall 24 (173 px), the chamfer 11.4 (82 px). The cove, flaring from the band to about
        r 54 at the bezel, is drawn as the band (the bezel's own r 52.5 limits it; not modelled). Until 5 October 2026 the wall was a plain cylinder r CR to a 1.6 mm round at the bottom */
-    const CW=CR*0.962,CI=CW-1.2,YB=YTB-2.7,YBI=Math.min(YB,YS-1.2),YC=-FD-BT+11.4,RB=CR*0.82;   /* YB: the lip under the thread, 2.7 (Jones-Horan 63662_07: 60 px under the five grooves' 120 px
+    const CW=CW0,CI=CW-1.2,YB=YLIP,YBI=YTB-13.5,YC=-FD-BT+11.4,RB=CR*0.82;   /* YB: the lip under the thread, 3.06 at the shoulder (YS: the movement's ring, r 47.95, needs the lip round it; Jones-Horan 63662_07 2.7, 60 px under the five grooves' 120 px
        for their 5.5 mm; KLUwI2UUCMQ 47:22.5 the silhouette stepping out only there, the wall plain from the strap up to it; rough +-0.7); YTB-13.5 (the bezel's cove and band on LPEC109-4, read as the case's)
-       until 25 October 2026. YBI: the inside's step to the shoulder's radius, under the shoulder */
-    const pr=[V2(FR,-FD),V2(RB-1.2,-FD),V2(CI,YC+0.6),V2(CI,YBI-0.6),V2(SH,YBI+0.6),V2(SH,YS),V2(CR,YS),V2(CR,YB),V2(CW,YB),V2(CW,YC),V2(RB,-FD-BT),V2(FR,-FD-BT),V2(FR,-FD)];
+       until 25 October 2026. YBI: the inside's step to the shoulder's radius, where it was (estimated; the wall 0.5 thick over it now, OPEN-QUESTIONS) */
+    const pr=[V2(FR,-FD),V2(RB-1.2,-FD),V2(CI,YC+0.6),V2(CI,YBI-0.6),V2(SH,YBI+0.6),V2(SH,YS),V2(CW,YS),V2(CW,YC),V2(RB,-FD-BT),V2(FR,-FD-BT),V2(FR,-FD)];
     BOWL.push(hn(mesh(cs,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101'));   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
     bot=hn(mesh(cs,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});BOWL.push(bot,hn(mesh(cs,ringGeo(33.7,30.5,0.5+0.8+0.3),M.brass,0,-FD-BT-(0.5+0.8+0.3)/2,0),'42101',{sub:1}));   /* the raised ring round the shield plate, r 30.5-33.7 (47:36.5, rough: its crest about 32), the plate sitting 0.3 below its top (the far side's inner wall shows; the depth estimated); r 33.5-36 and flush with the plate until 5 October 2026 */   /* 60: the rim's 120 points, the lathe's own */
     /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: below the
