@@ -623,7 +623,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
   else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
   return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
-/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[]}} WheelOpts
+/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[],ha?:number}} WheelOpts
     n teeth of module m, centred at y, th thick (1); mate: the pinion it drives (its addenda); collet: its radius, 0 for none; cp, cside: below */
 /** @typedef {{n?:number,m:number,y:number,th?:number,bore?:number}} PinionOpts  n leaves (10), th long (2.5), centred at y */
 /** @param {any} parent @param {any} M the materials @param {number} x @param {number} z
