@@ -271,7 +271,7 @@ def main():
     if '--json' in sys.argv:
         out = sys.argv[sys.argv.index('--json') + 1]
         for R in rows: R.pop('badcols', None)
-        json.dump(dict(mill=MILL, wall=WALL, drill=DRILL, deep=[DEEP, VDEEP], pieces=rows), open(out, 'w', encoding='utf-8'), indent=0, default=lambda o: o.tolist() if hasattr(o, 'tolist') else str(o)); print('wrote', out)
+        json.dump(dict(mill=MILL, wall=WALL, drill=DRILL, deep=[DEEP, VDEEP], pieces=rows), open(out, 'w', encoding='utf-8', newline='\n'), indent=0, default=lambda o: o.tolist() if hasattr(o, 'tolist') else str(o)); print('wrote', out)
     sys.exit(1 if fail or errs else 0)
 
 if __name__ == '__main__': main()

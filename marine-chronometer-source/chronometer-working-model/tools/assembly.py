@@ -59,6 +59,6 @@ async def main():
     for e in fails:print(f"FAIL step {e['op']} ({next(s[1] for s in SEQ['steps'] if s[0]==e['op'])}): {e['a']} x {e['b']}"+(f"  passes through at d {e['hit']}" if e['hit'] else '')+(f"  dragged the long way out of {e['long']}" if e['long'] else ''))
     print(f"{len(bodies)} parts, {len(r['pairs'])} pairs sharing a column, {len(SEQ['steps'])} steps ({SEQ['source']}), {len(known)} expected, {len(fails)} failing")
     if '--json' in sys.argv:
-        out=sys.argv[sys.argv.index('--json')+1];json.dump(dict(source=SEQ['source'],steps=rows,static=SEQ['static'],parts=len(bodies),pairs=len(r['pairs']),expected=len(known),fails=len(fails),left=left),open(out,'w',encoding='utf-8'),indent=1);print('wrote',out)
+        out=sys.argv[sys.argv.index('--json')+1];json.dump(dict(source=SEQ['source'],steps=rows,static=SEQ['static'],parts=len(bodies),pairs=len(r['pairs']),expected=len(known),fails=len(fails),left=left),open(out,'w',encoding='utf-8',newline='\n'),indent=1);print('wrote',out)
     sys.exit(1 if fails or errs or miss else 0)
 asyncio.run(main())
