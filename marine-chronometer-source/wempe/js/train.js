@@ -76,7 +76,8 @@ const WTRAIN=(()=>{
     /* the centre (minute) arbor, 05 05 03 (Minutenrad kompl., 22.7.43): its pinion and arbor 05 05 03-2 (Minutentrieb, Präz. Rundstahl 7,2, hardened and tempered at 295°)
        and the wheel 05 05 03-1 (Minutenrad, Messingblech 1,5 Ms 58 federhart) riveted on it ("vernietet").
        From the train-side shoulder (05 05 03-2): the pivot Ø 1.2 -0.02, 3 long (05 05 03; the pinion sheet's 5.1 -0.2 is the turned blank's, with its 60° centre), tapered
-       (its "Kegel 1:?0" too small to read; 1:30, as the seconds wheel's sheet of the same years: likely), rounded; the arbor Ø 2.5 to the pinion, a 30° chamfer at the
+       (its "Kegel 1:?0", the digit re-inked: 1:90 read at 8x, as the seconds pinion's "Kegel 1:90" of the same years, the journal C beside it plainly 1:30: likely; 1:30
+       until 25 October 2026), rounded; the arbor Ø 2.5 to the pinion, a 30° chamfer at the
        shoulder; the pinion 14 leaves, m 0.4356, d 6.098, tip 6.79 -0.02 (the blank's), root 4.24, 4 -0.1 long, its end 17.2 +0.05 from the shoulder; the wheel's seat
        Ø 5.4 n6 above it, the wheel on it against the pinion's end; the riveting collar to 19 +0.05 (framed): Ø 3.0 at its foot (05 05 03-2's "3,0∅"), flared to Ø 3.2 at
        its top, its flank running on down into a V groove in the seat's face under it, 0.99 deep to Ø 2.44, the groove's outer wall rising at 34° to the seat's edge, which
@@ -91,15 +92,15 @@ const WTRAIN=(()=>{
        05 05 03-2 of 1940 hasn't it: likely), which the punch drives the tube's wall into. Its end crowned with the tube's, flush (05 05 03 draws one arc across both, rising
        0.35 over the tube's 2.86 seen: a sphere r 3.1, likely; until 15 October 2026 its end chamfered 0.1). The sheets' 1.6 -0.1 for the seat and collar together
        (05 05 03-2) leaves 1.8 between the pinion's end and the framed 19: not settled (README).
-       The wheel (05 05 03-1): z 90, m 0.355 (d 31.976, so 0.35529), tip 33.10, root 30.86, l 0.52 (the tooth on the pitch circle), 1.3 -0.1 thick at the rim, five spokes
+       The wheel (05 05 03-1): z 90, m 0.355 (d 31.976, so 0.35529), tip 33.10, root 30.86, l 0.52 (the tooth on the pitch circle), 1.3 -0.1 thick at the rim (drawn 1.25, the fit's middle, as the other wheels; 1.3 until 25 October 2026), five spokes
        1.7 -0.2 wide, hub 10.6 -0.2, rim's inside 28.1 +0.2, hole 5.4 H7; its hub left the sheet's 1.5 thick and standing 0.2 proud on the dial side, turned to Ø 10 there
        (05 05 03: "0,2", "10∅"). */
     cw:{at:H[1],ys:TI+0.035,
-      prof:[...piv(1.19/2,(1.19-3/30)/2,3,-1),[2.5/2-C30,0],[2.5/2,c30],[2.5/2,17.225],[5.4/2,17.225],[5.4/2,18.775],[2.44/2,18.775-0.99],[3.2/2,19.03],
+      prof:[...piv(1.19/2,(1.19-3/90)/2,3,-1),[2.5/2-C30,0],[2.5/2,c30],[2.5/2,17.225],[5.4/2,17.225],[5.4/2,18.775],[2.44/2,18.775-0.99],[3.2/2,19.03],
         [rCj(19.03),19.03],[rCj(23.03),23.03],[rSh(23.03),23.03],[rSh(29.1),29.1],[rSh(29.1)-0.24,29.1],[rSh(29.76),29.76],...crown(rSh,37.33)],
       crown:CRN,
       pin:{z:14,m:6.098/14,D:6.79-0.01,dg:4.24,u0:17.225-3.95,u1:17.225},
-      wheel:{z:90,m:31.976/90,D:33.10,dg:30.86,l:0.52,mate:12,rim:[17.225,18.525],boss:[18.525,18.725,10/2],spokes:[5,1.6,10.5/2,28.2/2],bore:5.4/2}},
+      wheel:{z:90,m:31.976/90,D:33.10,dg:30.86,l:0.52,mate:12,rim:[17.225,18.475],boss:[18.475,18.725,10/2],spokes:[5,1.6,10.5/2,28.2/2],bore:5.4/2}},
     /* the intermediate arbor, 05 05 02 (Zwischenrad kompl., 27.7.40): its pinion and arbor 05 05 02-2 (Zwischentrieb, Präz. Rundstahl 5,2, redrawn 6.46) and the wheel
        05 05 02-1 (Zwischenrad, Messingblech 1,2 Ms 58 federhart) riveted on it. From the train-side shoulder: the pivot Ø 0.85 -0.05 (05 05 02-2; the kompl.'s 0.82 -0.02
        of 1940 superseded), 3 -0.1 long (05 05 02; the pinion sheet's 4.6 -0.2 the blank's, pointed), tapered ("Kegel 1:?0": 1:90, as the seconds pinion redrawn with it: likely),
@@ -279,7 +280,7 @@ const WTRAIN=(()=>{
     /* the 6MX's seconds wheel rises 30.6, not 33: its contact wheel stands 1.35 under the lower cock's deep part and lug, which rise 29.9 (exploded.py's 0.5 kept) */
     mv.userData.onRev.push(v=>{P.secondsWheel.userData.off=v==='6mx'?-30.6:-33;P.intermediateWheel.userData.off=v==='6mx'?9:-6;});   /* and its intermediate wheel leaves toward the dial after its bridge (+18), as a watchmaker takes it out, since the contact's base overhangs the plate's window it would rise through */
     tag(mesh(P.topPlate,bushGeo(rJ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
-    {const g=rv(P.topPlate,'last first 1943');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}
+    {const g=rv(P.topPlate,'last first 1943');tag(mesh(g,bushGeo(rJ,0.845/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.83/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}   /* each bored 0.02 over its pivot (the intermediate's 0.825, the seconds' 0.81), 05 05_1's "Lagerstellen: Enger Laufsitz", as WN-301's 1.21 on the centre's 1.19; both 0.86 until 25 October 2026 (the seconds pivot 0.05 clear) */
     /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen's list: the seconds and intermediate wheels in jewels in chatons, not brass bearings; the TU's 15
        jewels are the drawings' 12 and these three. Kirov No. 247's top plate (2_Kirow_247_A.jpg, 8.97 px/mm) shows at 35 and 38 a flush gilt setting about Ø 4.1 (±0.3), the
        pivot in its middle, no screws; its dial side (3_Kirow_247_uZ.jpg) the same at 38 in the intermediate bridge (the seconds arbor's lower jewel there as drawn). Each chaton

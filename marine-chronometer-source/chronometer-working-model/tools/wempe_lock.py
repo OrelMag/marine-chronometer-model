@@ -4,8 +4,10 @@
     python wempe_lock.py plan [OUT.png]    # Schnitt A-B resampled along the locking bracket's radius (50 deg from 6 o'clock toward 3) and across it,
                                            #   r 50-80 across, t -14..14 down (+ toward 3 o'clock), a 1 mm grid: the bracket's faces, its neck (hatched), the ring
     python wempe_lock.py elev [OUT.png]    # the elevation's bracket enlarged 10x on a 5 px grid (sheet pixels): the foot, crank, upright, neck and head
-    python wempe_lock.py sweep [L]         # the lever (its end's centre L from the knob's axis, default 27.0) turned in from its drawn place until it meets
+    python wempe_lock.py sweep [L] [--ro R] [--pin F]   # the lever (its end's centre L from the knob's axis, default 27.0) turned in from its drawn place until it meets
                                            #   the bracket's neck: the turn, how close it comes to the bowl's axis (the 1942 flange r 59), the arc of the band it crosses
+                                           #   (the ring r 70 to R, its outside, default 74.0: 05 01's 4.0 thick since 25 October 2026, 73.3 before), and how close
+                                           #   its pin (Ø 4, F of the way from the axis to the end, default 0.55) comes to the ring's outside over the whole turn
 
 What case.js builds from them is in its comments (the locking bracket, the gimbal ring's slot, the transit lock) and the Wempe README's
 "The locking bracket and the transit lock". Images go to the current directory."""
@@ -51,28 +53,30 @@ def elev(out):
     for y in range(y0,y1,5):d.line([(0,(y-y0)*S),(c.size[0],(y-y0)*S)],fill=(0,0,255) if y%10==0 else (180,180,255));d.text((2,(y-y0)*S+2),str(y),fill=(0,0,255))
     c.save(out);print('wrote',out,'(pivots at y 143.5; the bowl\'s axis at x 278.7: x = 0.766 r + 0.643 t from it, mm at 2.46)')
 
-def sweep(L):
+def sweep(L,RO=74.0,F=0.55):
     from shapely.geometry import Polygon,Point,LineString
     from shapely import affinity
     P=np.array([65.1,62.9]);e0=np.array([39,73]);u=(e0-P)/np.linalg.norm(e0-P)   # the knob's axis and the drawn end (x, z: 3 o'clock +x, 6 o'clock +z)
     er=np.array([np.sin(TH),np.cos(TH)]);et=np.array([np.cos(TH),-np.sin(TH)]);rt=lambda R,t:tuple(R*er+t*et)
     neck=Polygon([rt(59.6,1.75),rt(63.2,1.75),rt(63.2,7.85),rt(59.6,7.85)])   # case.js's, the bracket centred on its 50 deg line
     lev=LineString([tuple(P),tuple(P+L*u)]).buffer(4,resolution=64)   # 8 wide, its ends round
-    band=Point(0,0).buffer(73.3,resolution=720).difference(Point(0,0).buffer(70,resolution=720))
-    stop=None;mr=1e9;A=[]
+    band=Point(0,0).buffer(RO,resolution=720).difference(Point(0,0).buffer(70,resolution=720))
+    stop=None;mr=1e9;A=[];mp=1e9
     for d in np.arange(0,120,0.05):
         lv=affinity.rotate(lev,d,origin=tuple(P))   # counterclockwise in (x, z): clockwise seen from above
         if lv.intersects(neck):stop=d;break
-        mr=min(mr,lv.distance(Point(0,0)));x=lv.intersection(band)
+        mr=min(mr,lv.distance(Point(0,0)));x=lv.intersection(band);a=np.arctan2(u[1],u[0])+np.radians(d);mp=min(mp,np.hypot(*(P+F*L*np.array([np.cos(a),np.sin(a)]))))
         for g in([] if x.is_empty else getattr(x,'geoms',[x])):A+=[np.degrees(np.arctan2(p[0],p[1])) for p in g.exterior.coords]
-    a=np.arctan2(u[1],u[0])+np.radians(stop);tip=P+L*np.array([np.cos(a),np.sin(a)]);pin=P+0.55*(tip-P)
+    a=np.arctan2(u[1],u[0])+np.radians(stop);tip=P+L*np.array([np.cos(a),np.sin(a)]);pin=P+F*(tip-P)
     print(f'L {L}: meets the neck turned {stop:.2f} deg; comes {mr:.2f} from the bowl\'s axis (the flange r 59); crosses the band from {min(A):.1f} to {max(A):.1f} deg from 6 o\'clock (the sheet\'s slot 20.6-52.4)')
-    print(f'  its end\'s centre then at r {tip@er:.2f}, t {tip@et:.2f} off the 50 deg line; its pin {np.hypot(*pin):.2f} from the centre (the ring\'s outside 73.3, the pin r 2)')
+    print(f"  its end's centre then at r {tip@er:.2f}, t {tip@et:.2f} off the 50 deg line; its pin {np.hypot(*pin):.2f} from the centre, {mp:.2f} at the least over the turn: {mp-2-RO:.2f} clear of the ring's outside r {RO} (the pin r 2)")
 
 if __name__=='__main__':
     a=sys.argv[1:] or ['sweep']
     if a[0]=='centre':centre()
     elif a[0]=='plan':plan(a[1] if len(a)>1 else 'r_lock_plan.png')
     elif a[0]=='elev':elev(a[1] if len(a)>1 else 'r_lock_elev.png')
-    elif a[0]=='sweep':sweep(float(a[1]) if len(a)>1 else 27.0)
+    elif a[0]=='sweep':
+        o=lambda k,d:float(a[a.index(k)+1]) if k in a else d
+        sweep(float(a[1]) if len(a)>1 and not a[1].startswith('--') else 27.0,o('--ro',74.0),o('--pin',0.55))
     else:sys.exit(__doc__)

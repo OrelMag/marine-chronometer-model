@@ -538,7 +538,7 @@ Conventions: printed numbers keep the German decimal comma (4,5 = 4.5 mm); scale
 | upper pipe taper | Kegel 1:70 | — | sure | |
 
 - **Notes:** "vernietet".
-- **Undimensioned lines (scaled, not dimensioned):** 8,2 = 140 px → 17.1 px/mm. Collar ∅ ≈ 104 px → ≈6.1 mm; bore ≈ 55 px → ≈3.2 mm; wheel tip ∅ in plan ≈ 342 px → ≈20 mm (05 02 03-1 gives D 19,7 corrected).
+- **Undimensioned lines (scaled, not dimensioned):** 8,2 = 140 px → 17.1 px/mm. Collar ∅ ≈ 104 px → ≈6.1 mm (re-read 25 October 2026, the per-part audit: the collar block about 8,2 across at 16,6 px/mm, so it can't pass the dial's Ø 6,0 hole; the 104 px is likely the bore's step: unsure); bore ≈ 55 px → ≈3.2 mm; wheel tip ∅ in plan ≈ 342 px → ≈20 mm (05 02 03-1 gives D 19,7 corrected).
 - **Cross-references:** 05 02 03-1 (wheel), 05 02 03-2 (pipe; no sheet in this group).
 - **Illegible:** none.
 

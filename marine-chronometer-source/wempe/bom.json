@@ -3924,7 +3924,7 @@
    "parent": "050100-6",
    "kind": "part",
    "part": "gimbalRing",
-   "fn": "Hold the ring bracket to the ring (their holes across the turned ring not cut).",
+   "fn": "Hold the ring bracket to the ring: through its holes, tapped 2.75 into the ring (cut along the radius since 25 October 2026).",
    "rel": [],
    "figs": "05 01_1"
   },
@@ -3938,7 +3938,7 @@
    "parent": "050100-5",
    "kind": "part",
    "part": "gimbalRing",
-   "fn": "Through the ring at 12 and 6 o'clock, their points the inner pivots in the case brackets.",
+   "fn": "Through the ring at 12 and 6 o'clock (M5, tapped in it), their plain tips the inner pivots in the case brackets' holes (05 01 Schnitt C-D).",
    "rel": [],
    "figs": "05 01_1"
   },
@@ -3952,7 +3952,7 @@
    "parent": "050100-5",
    "kind": "part",
    "part": "gimbalRing",
-   "fn": "Lock the inner pivot screws where they are set: inside the ring, against its inner face (Wempe 3955).",
+   "fn": "Lock the inner pivot screws where they are set: inside the ring, against its inner face (05 01 Schnitt C-D: Ø 22 × 2.4).",
    "rel": [
     [
      "on",
@@ -3986,7 +3986,7 @@
    "parent": "Holzkasten",
    "kind": "part",
    "part": "box",
-   "fn": "Through the box's side walls, their ends the gimbal ring's pivots.",
+   "fn": "Through the box's side walls, their tips the gimbal ring's pivots: through the ring at 9 o'clock, through its bracket into the ring at 3 (05 01's elevation).",
    "rel": [],
    "figs": "05 01_1, 51 00_2"
   },
