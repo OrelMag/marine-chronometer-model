@@ -952,7 +952,7 @@ function buildMovement(M){
     const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===(kind==='usn'?'hamilton':kind);});};   /* the Navy's dial wears the Hamilton hands */   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',16);
   /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the
-     bright square the winding key sets the hands by (Fig. 8, Sec. III), 2.4 across as the fusee's, so one key fits both, 1.6 proud of the minute hand's collet. The hour wheel goes on over it and turns free on the pipe (Op. 59) */
+     bright square the winding key sets the hands by (Fig. 8, Sec. III), 2.16 across (40:39.0, below; the fusee's 2.4 on 20:00: Fig. 8's one key fits both, so one reading is off), 2.4 as the fusee's until 5 October 2026. The hour wheel goes on over it and turns free on the pipe (Op. 59) */
   /* the motion work's heights and sizes on the plate's dial side, the dial off (KLUwI2UUCMQ 40:39.0 and 40:16.6, the fixed camera of 40:08 refitted with rimfit, rims fitted as circles
      about the centre arbor or the minute stud, radius and height solved together, the minute stud landing 11.31 from the centre; radii +/-2 %, heights +/-10 %): the cannon pinion
      stepped, its leaves from 0.3 to 4.3 (tips r 2.49), a collar r 1.57 to 5.3, a neck r 0.75 to 10.0, the square 2.16 across from 10.0 to 14.5; the hour wheel's boss r 3.47 from the
@@ -1598,7 +1598,7 @@ function buildMovement(M){
   hn(mesh(ck,stoneGeo(0.95,0.19,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone; its hole r 0.19, 0.01 round the pivot's measured r 0.18 (the staff's comment): the hole's size an estimate */
   /* its two steady pins ("complete with pins", 42066), 1.5 mm into the train bridge, under the body: r 1.0 in their holes' 1.07 (S.ckp: the fit and length estimated) */
   for(const q of S.ckp)cylBetween(ck,1.0,TB_T,TB_T+1.5,M.steel,...q);
-  /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot), its head down in the counterbore */
+  /* one balance cock screw (parts list 42192), at S.cock: CK_Q, the train bridge's tapped-hole frames' place turned with the cock by CK_TURN (on the top-view photograph's place, p3map scr_cockfoot, CK_Q0, until 16 October 2026), its head down in the counterbore */
   hn(screw(ck,...S.cock,CK_T+CK_CB,CKH_R,CKH_L,TB_T-CK_T-CK_CB+2.5,CKH_T),'42192');   /* through the cock into the train bridge: a tall cheese head, r 3.33, 0.90 of its counterbore (the top-view photograph's 0.904; photo-cock-top.png, 53 px in about 61),
      1.5 times its width long, 10.0 (5:59 side-on, the sharpest; 43:54.5 gives 1.55), its top 1-1.5 under the cock's top in the counterbore (44:02 its wall above the head; 41:58, 6:29);
      the thread 0.37 of the head's width, r 1.23 (5:59). The head r 2.75 (the top-view photograph against the pillar screws' r 2.77), 8.2 long, thread r 1.0, in a counterbore r 3.05, until 12 October 2026:
