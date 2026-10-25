@@ -97,8 +97,8 @@ const MSK=P.MSK,MSK2=P.MSK2,MSB=P.MSB,msT=ph=>ph>0?MSK*ph+MSK2*ph*ph:MSK*ph,msPh
    fusee's axis (wempe_strength.js's sizes); the maintaining spring banked: its ends butted, the ring a strut between its pins, about 40 times its running stiffness;
    the cannon pinion's grip on the centre arbor 50 N·m a radian (its tube's 1:80 taper, a press);
    damping 3 % of critical in the meshes (oil), 5 % in the chain, the contacts and the clutch, 2 % in the springs */
-const KM=b=>1624*b,KCH=290,KDT=5e3,KST=2e3,KSTOP=6.68e3*14.0**2*1e-3,KCAN=50;   /* N/mm (KM a mm of face); KSTOP N·m a radian */
-const ZM=0.03,ZS=0.02,PAR={hy:1,kcl:1e4,kbank:40*MSK,zc:0.05,kch:KCH,tsl:3e-3,nck:2,brk:0};   /* PAR: the estimates section 5 varies (the click's face, the bank, the contacts' damping, the chain); nck the clicks, evenly spaced over a tooth, and brk a brake's torque (N·m) between the click wheel and the maintaining ratchet: the let-go fixes wempe_letgo_fix.js tries (the drawn 2 and 0) */
+const KM=b=>1624*b*PAR.km,KCH=290,KDT=5e3,KST=2e3,KSTOP=6.68e3*14.0**2*1e-3,KCAN=50;   /* N/mm (KM a mm of face); KSTOP N·m a radian */
+const ZM=0.03,ZS=0.02,PAR={hy:1,kcl:1e4,kbank:40*MSK,zc:0.05,kch:KCH,tsl:3e-3,nck:2,brk:0,km:+(process.env.MC_TR_KM||1),jr:+(process.env.MC_TR_JR||1),hs:+(process.env.MC_TR_H||1)};   /* PAR: the estimates section 5 varies (the click's face, the bank, the contacts' damping, the chain); nck the clicks, evenly spaced over a tooth, and brk a brake's torque (N·m) between the click wheel and the maintaining ratchet: the let-go fixes wempe_letgo_fix.js tries (the drawn 2 and 0) */
 /* the pawls (mechanisms_wempe.json: the clicks' and the detent's pivots, their contacts on the faces as drawn, the teeth's depth): the nose's lever about the pivot (how far it
    rises a radian of the pawl), the lift that clears a tip; their springs (wempe_ratchets.js's: the clicks' bronze 1.5 × 0.4, 586-1667 mN/mm at their backs 3 from the pivot, the
    geometric middle; the detent's wire Ø 0.25, 64 mN/mm 4.73 from its pivot), set 0.3 and 0.5 mm there (estimated) */
@@ -230,7 +230,7 @@ const recAll=(X,dt)=>{for(const e of X.mc.El)if(e.rec)e.rec(dt);};
 /* a beat at 12 h: the train as bodies on its meshes driving dynamics.js's escapement (rigid false), or the same escapement on a rigid train given the torque the train gives at its
    place (each mesh's ratio where its driver stands, every driver turned with the escape wheel by the ratios behind it, less the pivots' friction: no give, no inertia of its own, no
    backlash). The work an impulse gives: the balance's energy from before the unlocking (-0.85 rad) to after the impulse (+0.6 rad) on the active swing */
-function beat(TB,rigid){const n=12/HPT,X=build(TB,n,{free:true}),{mc,b,me,sp,c1,c2,cn,ch}=X,B=mc.B;
+function beat(TB,rigid,jr){const n=12/HPT,X=build(TB,n,{free:true}),{mc,b,me,sp,c1,c2,cn,ch}=X,B=mc.B;
   B[b.esc].q=0;B[b.esc].v=0;settle(X,0.08);   /* settled with the escape wheel held where it locks */
   const P_=E.P,J0=DY.JE/DY.JT,T=24,from=12,cs0=cn.slip;
   const A0s=me.slice(0,4).map((e,i)=>B[b[MESH[i].A]].q+e.offA),kk=me.slice(0,4).map(e=>e.T.k);
@@ -239,13 +239,13 @@ function beat(TB,rigid){const n=12/HPT,X=build(TB,n,{free:true}),{mc,b,me,sp,c1,
   const Eb=(th,w)=>0.5*DY.I*w*w+0.5*DY.K*th*th;
   const trk={W:[],S:[],qe:0,e0:null,l:null,nl:0,phO:0,f(t,th,w,ph){if(this.phO<-0.5*P_&&ph>-1e-12)this.nl++;this.phO=ph;this.qe=this.nl*P_-ph;
     if(w>0&&this.l!==null&&this.l<=-0.85&&th>-0.85){this.e0=Eb(th,w);if(t>from)this.S.push(qsT(this.qe));}if(w>0&&this.e0!==null&&this.l<=0.6&&th>0.6){if(t>from)this.W.push(Eb(th,w)-this.e0);this.e0=null;}this.l=th;}};
-  if(rigid){const r=DY.sim({T,from,tq:()=>qsT(trk.qe),watch:(t,th,w,d,dv,ph)=>trk.f(t,th,w,ph)});return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S};}
+  if(rigid){const r=DY.sim({T,from,J:jr??PAR.jr,hf:4e-6*PAR.hs,hc:1e-4*PAR.hs,tq:()=>qsT(trk.qe),watch:(t,th,w,d,dv,ph)=>trk.f(t,th,w,ph)});return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S};}
   let qeO=0,tO=0,wmO=0,sMax=-Infinity,nlO=0;const bnc=[];
   const watch=(t,th,w,d,dv,ph,pv,dm,wm)=>{trk.f(t,th,w,ph);const qe=trk.qe,dtt=t-tO;if(Math.round(qe/P_)!==nlO&&wm===0){nlO=Math.round(qe/P_);sMax=-Infinity;}
     if(dtt>0){const ns=Math.max(1,Math.ceil(dtt/1e-6)),h=dtt/ns,ve=(qe-qeO)/dtt;for(let i=0;i<ns;i++){B[b.esc].q=qeO+ve*h*(i+1);B[b.esc].v=ve;mc.step(h);if(t>from)recAll(X,h);if(wm===0)sMax=Math.max(sMax,B[b.sec].q);}}
     if(wmO===0&&wm===1&&t>from&&Number.isFinite(sMax))bnc.push(sMax-B[b.sec].q);   /* the seconds arbor's overshoot past where it rests on the stone, as the next release comes */
     wmO=wm;tO=t;qeO=qe;};
-  const r=DY.sim({T,from,J:J0,tq:()=>me[3].lam,watch});
+  const r=DY.sim({T,from,J:J0,hf:4e-6*PAR.hs,hc:1e-4*PAR.hs,tq:()=>me[3].lam,watch});
   return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S,T,from,meshes:me.map(e=>({maxL:e.maxL,back:e.back,free:e.free,freeMax:e.freeMax})),bnc,
     sp:[sp.minPsi,sp.maxPsi],ch:[ch.minT,ch.maxT],c1:c1.maxL,c2:c2.maxL,cn:cn.maxT,slip:cn.slip-cs0,lead:X.lead,tq:X.S.tq};}
 /* the drive over a whole run with every ripple at once (section 2): the swing stepped every second (A² towards ampAt's at the drive, TF), the rate each second; the swing's
@@ -293,7 +293,7 @@ function stopRun(TB){const X=build(TB,0.12,{key:true,Tmax:1.06});const{mc,b,hd,s
 
 module.exports={tabs,PAR,build,settle,MESH,JI,rho,fusT,Mrun,msT,msPh,MSB,CK,DT,meshTab,beat,windRun,stopRun,rippleRun};
 if(!isMainThread&&['beat','wind','ripple','stop'].includes(workerData.job)){const{job,TB,o,par}=workerData;   /* its own jobs only: a thread of another tool may load this module (wempe_transmission_trace.js) */
-  Object.assign(PAR,par||{});parentPort.postMessage(job==='beat'?beat(TB,o.rigid):job==='wind'?windRun(TB,o):job==='ripple'?rippleRun(TB):stopRun(TB));return;}
+  Object.assign(PAR,par||{});parentPort.postMessage(job==='beat'?beat(TB,o.rigid,o.jr):job==='wind'?windRun(TB,o):job==='ripple'?rippleRun(TB):stopRun(TB));return;}
 
 if(require.main===module)(async()=>{
 const strP=new Promise(ok=>require('child_process').execFile(process.execPath,[path.join(__dirname,'wempe_strength.js')],{cwd:__dirname,maxBuffer:1<<26},(e,o,er)=>ok(e?{err:e,o:o||'',er:er||''}:o||'')));
@@ -313,11 +313,11 @@ const CAN=(()=>{const g45=45*G0,lo=WJ.minuteHand.m*1e-3*g45*Math.hypot(WJ.minute
 PAR.tsl=CAN.take;
 /* the runs in time, each a thread of its own (at most 12 at once): section 4's beat and its rigid twin, section 5's winds, section 6's stop, while sections 1-3 are worked here */
 const pool=(()=>{let run=0;const q=[],LIM=Math.max(2,Math.min(12,require('os').cpus().length-2));const next=()=>{while(run<LIM&&q.length){const[job,o,ok,no]=q.shift();run++;
-  const w=new Worker(__filename,{workerData:{job,TB,o,par:{tsl:PAR.tsl}},argv:['--model','wempe']});const t0=Date.now();w.on('message',m=>{run--;if(process.env.MC_TR_PROF)console.error(job,JSON.stringify(o).slice(0,40),((Date.now()-t0)/1000).toFixed(1)+' s, at '+((Date.now()-T0)/1000).toFixed(0));ok(m);next();});w.on('error',e=>{run--;no(e);next();});}};
+  const w=new Worker(__filename,{workerData:{job,TB,o,par:{tsl:PAR.tsl,km:PAR.km,jr:PAR.jr,hs:PAR.hs}},argv:['--model','wempe']});const t0=Date.now();w.on('message',m=>{run--;if(process.env.MC_TR_PROF)console.error(job,JSON.stringify(o).slice(0,40),((Date.now()-t0)/1000).toFixed(1)+' s, at '+((Date.now()-T0)/1000).toFixed(0));ok(m);next();});w.on('error',e=>{run--;no(e);next();});}};
   return(job,o={})=>{const p=new Promise((ok,no)=>{q.push([job,o,ok,no]);next();});p.catch(()=>{});return p;};})();
 const US=[0.05,0.25,0.5,0.75,0.97],VAR=[['the click\'s face ×0.25 (4 times softer: the click\'s screw and the ratchet\'s plate giving)',{kcl:2.5e3}],['the click\'s face ×2',{kcl:2e4}],['the contacts\' damping 2 %',{zc:0.02}],['the contacts\' damping 20 %',{zc:0.2}],
   ['the bank ×0.25',{kbank:10*MSK}],['the bank ×4',{kbank:160*MSK}],['the chain 120 N/mm',{kch:120}],['the chain 700 N/mm',{kch:700}]];
-const J={ripple:pool('ripple'),beat:pool('beat',{rigid:false}),beatR:pool('beat',{rigid:true}),keyOn:pool('wind',{u:0.5}),snap:US.map(u=>pool('wind',{u,after:0.3})),eased:US.map(u=>pool('wind',{u,after:0.3,ease:0.15})),
+const J={ripple:pool('ripple'),beat:pool('beat',{rigid:false}),beatR:pool('beat',{rigid:true}),beatL:pool('beat',{rigid:true,jr:DY.JE/DY.JT}),keyOn:pool('wind',{u:0.5}),snap:US.map(u=>pool('wind',{u,after:0.3})),eased:US.map(u=>pool('wind',{u,after:0.3,ease:0.15})),
   vary:VAR.map(([lab,par])=>pool('wind',{u:0.97,par}).then(x=>({...x,lab}))),stop:pool('stop')};
 head('1. The transmission: every moving part, its inertia and what moves it');
 {const L=[['barrel and mainspring (05 07 01, 05 07 00-6), the chain (05 07 04) at its speed',JI.barrel,'mechanisms_wempe.json, the chain\'s 8.6 g estimated','the mainspring; holds the chain'],
@@ -384,14 +384,19 @@ head('3. The running transmission\'s modes at 12 h (the escape wheel on its ston
 
 /* ===================== 4. a beat ===================== */
 head('4. A beat: the train as bodies on its meshes driving dynamics.js\'s escapement, against the same escapement on a rigid train');
-{const[r1,r0]=await Promise.all([J.beat,J.beatR]),mean=a=>a.reduce((s,x)=>s+x,0)/a.length,W1=mean(r1.W),W0=mean(r0.W),s0=mean(r0.S)/DY.TAUE,sEq=s0*W1/W0,A0=E.ampAt(s0),A1=E.ampAt(sEq),n=12/HPT;
+{const[r1,r0,rL]=await Promise.all([J.beat,J.beatR,J.beatL]),mean=a=>a.reduce((s,x)=>s+x,0)/a.length,W1=mean(r1.W),W0=mean(r0.W),s0=mean(r0.S)/DY.TAUE,sEq=s0*W1/W0,A0=E.ampAt(s0),A1=E.ampAt(sEq),n=12/HPT;
   say(`at 12 h the train gives the escape wheel ${f(mean(r0.S)*1e6,1)} µN·m on average at the releases (${f(Math.min(...r0.S)*1e6,1)}-${f(Math.max(...r0.S)*1e6,1)}: each mesh's ratio where it stands; s ${f(s0,3)} of the reference), the wheel with its own inertia (${f(DY.JE*1e9,2)} g·mm²) and the train's bodies behind it on their meshes: ${r1.beats} beats in ${r1.T} s`);
   chk(r1.trips===0&&Math.abs(r1.beats-r0.beats)<=1,`every beat taken: ${r1.beats} beats, ${r1.trips} trips or missed (the rigid train ${r0.beats}, ${r0.trips})`);
   say(`the work an impulse gives the balance (its energy before the unlocking against after the impulse): ${f(W1*1e6,3)} µJ against ${f(W0*1e6,3)} on the rigid train at the same places of its meshes (${W1>=W0?'+':''}${f(100*(W1/W0-1),2)} %): the train behind the escape wheel gives and lags as it starts`);
+  /* why (25 October 2026): not the meshes' give. Stiffer meshes don't close the gap (×100, at a quarter of dynamics.js's step, which the stiff meshes need: +4.5 %; as drawn +5.1 % at
+     either step), but the train's backlash does it: the escape wheel lands dead on its stone, the seconds wheel runs on into the last mesh's backlash (it lets go about 1 % of the time),
+     and at the release the escape wheel starts free of the train behind it, picking it up as the backlash closes. So the impulse's work lies between a rigid train with the whole
+     train's inertia at the escape wheel (JT, makeEsc's JW) and one with the escape arbor's alone (JE): the equivalent inertia the meshes give, interpolated between the two */
+  {const WL=mean(rL.W),fr=(W1-W0)/(WL-W0),Jeq=DY.JT*(1-fr*(1-DY.JE/DY.JT));out.beat_eq={WL,fr,Jeq:Jeq*1e9};
+   chk(fr>=0&&fr<=1,`between the rigid trains: ${f(W0*1e6,3)} µJ with the whole train's inertia at the escape wheel (${f(DY.JT*1e9,2)} g·mm²) and ${f(WL*1e6,3)} with the escape arbor's alone (${f(DY.JE*1e9,2)}): the meshes' backlash gives ${f(100*fr,1)} % of the way, as a rigid train of ${f(Jeq*1e9,2)} g·mm² (interpolated linearly)`);}
   const dA=(A1-A0)/D,dR=E.rateAt(A1,sEq)-E.rateAt(A0,s0);
-  /* within 8° and 0.5 s a day (the user's choice, 19 October 2026; 3° and 0.3 until then): with the lock re-laid (0.235) and the preload 0.8 g the stone, pressed harder on the tooth it
-     let go through the chase, lets the train's meshes give back more than a rigid train would (+3.8 % of the impulse's work at TF 111 s, +4.6° as a drive; +2.1 % at 0.175, 0.63 g and TF 108 s): the rigid train makeEsc and
-     dynamics.js take reads the swing low by about that (README, Physics: the transmission) */
+  /* within 8° and 0.5 s a day (the user's choice, 19 October 2026; 3° and 0.3 until then): the rigid train makeEsc and dynamics.js take reads the swing low by about this, the
+     backlash's (above; README, Physics: the transmission) */
   chk(Math.abs(dA)<8&&Math.abs(dR)<0.5,`as a drive ${f(sEq,4)} of the reference: the swing it keeps ${f(A0/D,2)}° → ${f(A1/D,2)}° (${dA>=0?'+':''}${f(dA,2)}°), the escapement's rate ${dR>=0?'+':''}${f(dR,3)} s a day; over the run itself the escapement's rate ${f(r0.rate,3)} → ${f(r1.rate,3)} s a day, the swing ${f(r0.A,2)}° → ${f(r1.A,2)}°`);
   say('');say('  each mesh through the beats (its force at the driven gear\'s pitch circle; whether it lets go):');
   out.beat={beats:r1.beats,trips:r1.trips,W0,W1,s0,sEq,A0:A0/D,A1:A1/D,dA,dR,rate0:r0.rate,rate1:r1.rate,meshes:[]};const Ts=r1.T-r1.from;
