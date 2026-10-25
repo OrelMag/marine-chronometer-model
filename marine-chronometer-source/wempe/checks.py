@@ -4,7 +4,7 @@ Its parts list is bom.json beside this file, its expected coplanar faces audit-e
 # audit.py: loose ends expected (part:geometry, place, radius, why); the Hamilton's Navy brake isn't fitted. The fusee's stop pin (05 08 01-5), standing out under the
 # top plate into the stop bar's path, its end free, is turned (its domed end) and so isn't among them: wempe_stopwork.py checks it
 LOOSE=[('ring:Cylinder',(0,8.25,-55.0),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 1.78 out of the flange in the bowl's notch, inside the bezel's thread (case.js): its end is free"),
-  ('stopWork:Cylinder',(-20.33,-18.32,-10.31),0.25,"the stop bar's spring's pin (05 06 04-4), its inner end standing free 1.3 into the small end's recess through the spring's line (05 06_4's C-D), its outer end in its 0.5 H7 hole through the end (cut 25 October 2026), 0.02 under the hub's face")]
+  ('stopWork:Cylinder',(-20.33,-17.98,-10.31),0.25,"the stop bar's spring's pin (05 06 04-4), its inner end standing free 1.3 into the small end's recess through the spring's line (05 06_4's C-D), its outer end in its 0.5 H7 hole through the end (cut 25 October 2026), 0.02 under the hub's face")]
 LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
@@ -136,7 +136,7 @@ BLENDER={'prefix':'r_blender_wempe_','windRel':True,'parts':['escapeWheel','bala
 # intermediate and seconds arbors' dial-side bush and jewel in the intermediate bridge 05 08 04); each part's screws and what they go into (the top plate on the three
 # pillars, holes 11, 39, 49; the barrel bridge and the fusee bush onto the top plate; the intermediate bridge onto the pillar plate's dial face); the pillar plate held
 # in the movement ring on its rim (05 08 00-3). The cocks carry the balance alone, no load of the train's, and are left out. The pillars Ø 8.1 (05 08 00-1), 19.0 between the
-# plates' inner faces (WD.INNER). The chain at each case's turn of the fusee (fusee.js: RFT, ac, the large end face F -6.265): fully wound at 8.75 turns, the floor r 9.355
+# plates' inner faces (WD.INNER). The chain at each case's turn of the fusee (fusee.js: RFT, ac, from the blank's large end face F0 -5.925, which the groove's places are cut from; the face as re-turned F -6.125): fully wound at 8.75 turns, the floor r 9.355
 # plus the chain's pitch line 1.02, 11.735 from the large end; run down at turn 0, r 17.25 + 1.02, in the flange's slot 1.195 from it; the barrel's pitch line r 41.6/2 + 1.02
 # (wempe_strength.js's RB). The spring's moment at 05 06_20's level (wempe_physics.js: MupM; run down its solved Mdown at the same level, Kl).
 FEA={'parts':['pillarPlate','topPlate','barrelBridge','fuseeBush','intermediateBridge'],'plate':'pillarPlate','field':'topPlate','gearing':'gearing_wempe.json',
@@ -148,7 +148,7 @@ FEA={'parts':['pillarPlate','topPlate','barrelBridge','fuseeBush','intermediateB
   'fix':{'topPlate':[(-36.86,3.22,'pillars'),(6.42,-36.44,'pillars'),(18.5,32.04,'pillars')],'barrelBridge':[(32.04,18.5,'topPlate'),(17.37,-32.67,'topPlate')],
     'fuseeBush':[(-16.71,-20.49,'topPlate'),(-21.21,-12.69,'topPlate'),(-12.2,-12.69,'topPlate')],'intermediateBridge':[(-4.32,26.41,'pillarPlate'),(22.46,5.25,'pillarPlate')]},
   'pillarD':8.1,'pillarL':19.0,'rim':(41.5,42.6),'ringR':6.0,'rB':41.6/2+1.02,
-  'chain':[('fully wound','Mup',9.355+1.02,-6.265-11.735),('run down','Mdn',17.25+1.02,-6.265-1.195)],
+  'chain':[('fully wound','Mup',9.355+1.02,-5.925-11.735),('run down','Mdn',17.25+1.02,-5.925-1.195)],
   'node':"const P=require('./wempe_physics.js');console.log(JSON.stringify({Mup:P.MupM,Mdn:P.FN.Mdown*P.LV.Kl}))"}
 
 # assembly.py --model wempe: the movement taken apart in the order the Soviet Navy's repair book gives for the MX (Эксплуатация и ремонт измерителей времени, 1958,

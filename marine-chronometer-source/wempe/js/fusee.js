@@ -20,22 +20,33 @@ const WFUSEE=(()=>{
      The fusee arbor 05 06 04-1: 19.7 +0.05 between its shoulders, the dial-side one 0.025 off the pillar plate's inner face, the other 0.025 under the fusee bush (whose end is
      0.05 under the top plate's J-K recess floor, 19.75 from the pillar plate: frame.js). The Vorreiber's pin (05 06 00-5) through the arbor's cross hole, 2 from the dial
      shoulder (05 06 04-1's 19.7 less 17.7), its centre 1.1 from the Vorreiber's hub face (05 06 00-2; the coloured section draws it so), so the hub face 0.9 off the shoulder;
-     its face a, re-turned at the fusee's assembly ("bei Schneckenmontage ... Fläche a nachdrehen"), 2.9 from the hub face (the sheet's 3.1 -0.2, its flange 1.2 -0.2 taken to 1.0),
-     carries the fusee wheel's underside recess (05 06 00-3: 14 +0.1, 1.3 -0.1 deep), so the wheel's underside 2.5 off the plate. On the wheel, the maintaining spring (1.3,
-     in its 32.3 recess on the web, 1.22), then the maintaining ratchet 0.05 over the wheel's rim (2.62), its teeth at 5.2-6.2 off the plate, where the maintaining detent's
-     tip lies (05 05 05: its upper face 6.3 ±0.1 from its lower shoulder, the tip 1 thick at that face); the fusee body's large end 0.05 over the ratchet's plate, its cup
-     inside the body's recess (Ø 26.3 × 2.7); the click wheel on the recess's floor, at the clicks' height in the cup; the body (12.55: 05 06 04-2's 12.6 -0.1) to its small
-     end, the cover plate (0.8) on it, 0.085 under the J-K recess's floor */
+     its face a, re-turned at the fusee's assembly ("bei Schneckenmontage ... Fläche a nachdrehen"), 2.76 from the hub face (the sheet's 3.1 -0.2, its flange 1.2 -0.2 taken to
+     0.86: what the stack under the fusee body's face needs, below), carries the fusee wheel's underside recess (05 06 00-3: 14 +0.1, 1.3 -0.1 deep), so the wheel's underside
+     2.385 off the plate (the coloured section's 2.4). On the wheel, the maintaining spring (1.3, in its 32.3 recess on the web, 1.22), then the maintaining ratchet 0.05 over
+     the wheel's rim (2.62), its teeth at 5.08-6.1 off the plate (the coloured section's ratchet to 6.1), where the maintaining detent's tip lies (05 05 05: its upper face
+     6.3 ±0.1 from its lower shoulder, the tip 1 thick at that face; set at 6.2, the sheet's least, so the tip covers 0.85 of the teeth's 1.02 and stands 0.15 past their face);
+     the fusee body's large end 0.05 over the ratchet's plate, its cup inside the body's recess (Ø 26.3 × 2.7 as turned); the click wheel on the recess's floor, at the clicks'
+     height in the cup; the body to its small end, the cover plate (0.8) on it, 0.425 under the J-K recess's floor (the coloured section's empty 0.5).
+     The body's place on its arbor (05 06 04 as revised 2.3.48): pressed on, its large face is re-turned true to the arbor ("(a) Fläche muß schlagfrei zur Welle laufen")
+     to "13,7 -0,1" from the end of the arbor's Ø 6.1 step (taken at 13.6, the old "13,6 +0,1" and the new band's common end, which keeps the stack's 0.05 gaps), leaving
+     the click wheel's face "0,5 +0,05" under it: 0.2 off the turned blank's face (RT; the click wheel 0.7 under the blank's, 2.7 less its 2), so the body 12.35 long (the
+     sheet's bracketed reference 12.3), the flange's first rib 0.56 and the "2" over both ribs 1.8 (the bracketed reference 1.6, carried over from before the revision, is
+     the one figure it leaves); the groove, cut before, keeps its place from the small end (N 0.3). Outside "33∅ +0,1" the face falls back 5° ("5°", an angle at the
+     flange's outer corner with one leg on the 33's extension line), 0.114 at the rim: so the face bears on the ratchet's plate only inside Ø 33 (the purpose inferred).
+     Measured on 05 06_3.2 (25 October 2026; line centres on profiles, 12.02 px/mm by the arbor's 19.7 and 7.9 + 3.1): the face 13.61 from the step's end, the click
+     wheel 0.60 under it, the small end 1.29 from the step's end, the recess floor 11.24 (here 13.6, 0.5, 1.25, 11.1). Until 25 October 2026 the face 13.46 from the step's
+     end, not re-turned, and face a 2.9 */
   const yD=-0.025,yT=yD-19.7;                              /* the fusee arbor's shoulders */
-  const VHF=yD-0.9,VFA=VHF-2.9,VFB=VHF-1.9;                  /* the Vorreiber's hub face, face a, the flange's lower face */
+  const VHF=yD-0.9,VFA=VHF-2.76,VFB=VHF-1.9;                 /* the Vorreiber's hub face, face a, the flange's lower face */
   const W=VFA+1.3,WT=W-2.62,WW=W-1.22,WL=W-2.42,WTB=W-5.0;   /* the fusee wheel: underside, rim/hub top, web top, ledge top, its tube's top */
   const GS0=WW,GS1=WW-1.3;                                   /* the maintaining spring */
   const G=WT-0.05,GT=G-1.02,GP=G-1.3,GC=G-3.1;               /* the maintaining ratchet: underside, the plate's face at the teeth, its face inside the cup (the cup's floor), the cup's rim */
-  const F=GT-0.05,LB=12.55,S=F-LB,FRC=F-2.7;                 /* the fusee body: large end face, length, small end face, the large end's recess floor */
+  const F=GT-0.05,RT=0.2,F0=F+RT,LB=12.55,S=F0-LB,FRC=F0-2.7;   /* the fusee body: large end face (re-turned: yT + 13.6), the re-turn, the blank's face as turned (every depth
+                                                             of 05 06 04-2's from it), the blank's length, small end face, the large end's recess floor */
   const CW0=FRC,CW1=FRC+2;                                   /* the click wheel, on the recess floor */
   const DP0=S-0.8;                                           /* the cover plate (Deckplatte), S to DP0 */
   const SLD=1.5;                                             /* the stop bar's slot across the small end: 1.5 +0.05 deep (05 06 04-2) */
-  const DTU=yD-6.3,DTL=DTU+2,DTT=DTU+1;                      /* the maintaining detent: upper face, lower face (its thick part), the tip's lower face (thin, 1, at the upper face) */
+  const DTU=yD-6.2,DTL=DTU+2,DTT=DTU+1;                      /* the maintaining detent: upper face, lower face (its thick part), the tip's lower face (thin, 1, at the upper face) */
   const BB=-3.65,BR=BB-18.08,BI=BB-1.25,BBF=BB-3.1,BLT=BR+0.6,BLU=BLT+1.3,BLF=BLT+3.3;   /* the barrel: bottom's outer face, rim, bottom's inner face, its boss's face, the lid's top, underside, boss face */
   const BA0=-0.03,BA1=-22.32,BC0=BBF-0.05,BC1=BLF+0.05;       /* the barrel arbor's shoulders (22.29 apart, 22.2 +0.1: 0.06 endshake) and its core's ends, 0.05 off the bosses */
   const RS0=TT-3.32-0.05,RS1=RS0-2.65;                       /* the set-up ratchet, beside the click on the barrel bridge */
@@ -58,7 +69,7 @@ const WFUSEE=(()=>{
   const PAX=1.2,WLD=0.87,RIB=0.33,RIBH=0.6,A0=FR2+WLD/2-PAX,M_FULL=8.75;
   /* the first 0.15 turn: from the slot's middle, level along it where the top hook lies on its pin, into the helix at its pitch (a cubic: level at 0, the helix's slope at 0.15) */
   const ac=m=>{if(m>=0.15)return A0+PAX*m;const t=Math.max(0,m)/0.15,d=A0+PAX*0.15-FSC;return FSC+d*(3*t*t-2*t*t*t)+PAX*0.15*(t*t*t-t*t);};
-  const yc=m=>F-ac(m);
+  const yc=m=>F0-ac(m);
   /* the fusee's radius field: the flange (Ø 35.6, its two ribs and the slot between them, 0.87 wide, floor r 17.25), the slot deepened under the chain's pin (a cutter Ø 13.5,
      2.9 deep), the groove, and the small end's hub (Ø 21). The groove is cut only to its end N ("Gangende Punkt N", 0.3 from the small end: MN, the turn whose land's
      small-end edge is there); past N the end stays uncut at the hub's Ø 21, and so does the last turn's rib, so the hub's inner face follows the helix: 05 06 04-2's
@@ -70,9 +81,11 @@ const WFUSEE=(()=>{
      so the cutter is a slitting cutter in the slot, deepening it where the hook wraps the pin, not a flat across the ribs */
   const PHI0=0,PINA=PHI0-0.17,PINR=16.8,FLAT=PINA,RC=17.8-2.9+6.75;
   const rCut=th=>{const d=wrap(th-FLAT),q=RC*Math.sin(d);if(Math.abs(q)>=6.75||Math.cos(d)<0)return 99;return RC*Math.cos(d)-Math.sqrt(6.75*6.75-q*q);};
-  function rBody(th,a){
+  const T5=Math.tan(5*D2R);   /* the face's fall outside Ø 33 (05 06 04's "33∅ +0,1" and "5°") */
+  function rBody(th,a){   /* a from the blank's face (F0); the re-turned face at RT */
     if(a>=LB-0.3-1e-9)return 10.5;
     let r=a<FR1?17.8:a<FS1?17.25:17.8;
+    if(a<RT+1.3*T5)r=Math.min(r,16.5+Math.max(0,a-RT)/T5);
     if(a>=FR1){const mt=fr((th-PHI0)/TAU);let j=Math.floor((a-(ac(mt)-WLD/2))/PAX),m=mt+j;
       while(m+1>=0.15&&a>=ac(m+1)-WLD/2)m+=1;while(m>=0&&a<ac(m)-WLD/2)m-=1;   /* the turn whose land (or rib) holds a */
       if(m>=0){const d=a-(ac(m)-WLD/2);if(m>MN||(d>=WLD&&m+1>MN))return 10.5;   /* past N, or the last land's rib: the uncut end */
@@ -88,11 +101,11 @@ const WFUSEE=(()=>{
   /* an outline (shape coordinates) extruded from y0 to y1 (y0 < y1), one closed solid */
   const slab=(xy,holes,y0,y1,cs=24)=>{const g=extrude(shapeOf(xy,holes),{depth:y1-y0,bevelEnabled:false,curveSegments:cs});g.rotateX(-Math.PI/2);g.translate(0,y0,0);return g;};
   /* a solid of revolution's piece built ray by ray: at each angle th of cols (a part's own frame, rising), from rlo(th,a) out to rhi(th,a), at each depth a of rows (from the
-     body's large end face, F - a the height); the faces at the first and last row and the walls at the first and last angle close it. Flat faces stay flat; the curved ones
+     blank's large end face, F0 - a the height); the faces at the first and last row and the walls at the first and last angle close it. Flat faces stay flat; the curved ones
      are shaded smooth wherever neighbouring triangles turn less than 35° (the lathe's look), so the slot's walls keep their edges */
   function radialSolid(cols,rows,rlo,rhi){const P=[],T=[],nc=cols.length,nr=rows.length,I=[],O=[];
     for(let i=0;i<nc;i++){I.push([]);O.push([]);const th=cols[i],c=Math.cos(th),s=Math.sin(th);
-      for(let j=0;j<nr;j++){const lo=rlo(th,rows[j]),hi=Math.max(lo,rhi(th,rows[j]));I[i].push([lo*c,F-rows[j],-lo*s]);O[i].push([hi*c,F-rows[j],-hi*s]);}}
+      for(let j=0;j<nr;j++){const lo=rlo(th,rows[j]),hi=Math.max(lo,rhi(th,rows[j]));I[i].push([lo*c,F0-rows[j],-lo*s]);O[i].push([hi*c,F0-rows[j],-hi*s]);}}
     const tri=(a,b,c,n)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(...x);
       if(l<1e-12)return;if(x[0]*n[0]+x[1]*n[1]+x[2]*n[2]<0){const t=b;b=c;c=t;x[0]=-x[0];x[1]=-x[1];x[2]=-x[2];}T.push(x.map(q=>q/l));P.push(a,b,c);};
     const quad=(a,b,c,d,n)=>{tri(a,b,c,n);tri(a,c,d,n);};
@@ -341,16 +354,16 @@ const WFUSEE=(()=>{
        "0,55∅ +0,01" through both ribs of the flange, axial (section A-B), drawn Ø 0.555, to 2.05 under the large end; each a tapped hole drawn at its thread's size
        and 0.02, as the frame's (frame.js), flat at the drill's depth: the tapped holes cut in the tube (below), the pin's hole bored into the flange's lathe (bore, above). Gilt, as
        Wempe 3955's (8_Wempe_3955_Räderwerk_plus.jpg) */
-    {const PH=99,col=[[PH,S+SLD]];for(let a=LB-0.04*Math.ceil(SLD/0.04);a>-1e-9;a-=0.04)col.push([PH,F-Math.max(0,a)]);if(col[col.length-1][1]!==F)col.push([PH,F]);
+    {const PH=99,col=[[PH,S+SLD]];for(let a=LB-0.04*Math.ceil(SLD/0.04);a>RT+1e-9;a-=0.04)col.push([PH,F0-a]);col.push([PH,F]);   /* to the re-turned face */
       /* three closed pieces, each holed as a small solid (facePocket on the whole 120,000-triangle lathe took seconds): the flange's lathe to AS under the large end, through
          which the chain's pin's hole runs; the rest of the lathe outside r 7.5 under it; and the tube between the bore and r 7.5 from the small end's recess floor to the large
          end's, its tapped holes cut in it as a solid of plan cells (KIT.solidGeo). The pieces meet on the lathe's own rows and angles (the tube's circle on its 216 corners) */
-      const AS=col.map(q=>F-q[1]).filter(a=>a>2.1).reduce((m,a)=>Math.min(m,a),9);   /* AS: the first row under 2.1, below the hole's end (2.05) */
+      const AS=col.map(q=>F0-q[1]).filter(a=>a>2.1).reduce((m,a)=>Math.min(m,a),9);   /* AS: the first row under 2.1, below the hole's end (2.05) */
       const lathe=pr=>{const g=new THREE.LatheGeometry(pr.map(([r,y])=>V2(r,y)),216),p=g.attributes.position;
-        for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),r=Math.hypot(x,z);if(r<PH-1)continue;const th=angOf(x,z),R=rBody(th,F-p.getY(i));p.setX(i,R*Math.cos(th));p.setZ(i,-R*Math.sin(th));}
+        for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),r=Math.hypot(x,z);if(r<PH-1)continue;const th=angOf(x,z),R=rBody(th,F0-p.getY(i));p.setX(i,R*Math.cos(th));p.setZ(i,-R*Math.sin(th));}
         g.computeVertexNormals();return g;};
-      const gFl=(()=>{const q=pol(PINR,PINA);return capFix(bore(lathe([[13.15,F-AS],...col.filter(q=>q[1]>=F-AS-1e-9),[14.9,F],[13.15,F-1.75],[13.15,F-AS]]),[q[0],0,q[1]],[0,1,0],0.2775,F-2.05),null);})();   /* the chain's pin's hole through rib 1, the slot and rib 2 to the land under it (r 14.8 at the pin, inside the hole's 16.5) */
-      const gRe=lathe([[7.5,S+SLD],...col.filter(q=>q[1]<=F-AS+1e-9),[13.15,F-AS],[13.15,FRC],[7.5,FRC],[7.5,S+SLD]]);   /* from the stop bar's slot's floor (below) */
+      const gFl=(()=>{const q=pol(PINR,PINA);return capFix(bore(lathe([[13.15,F0-AS],...col.filter(q=>q[1]>=F0-AS-1e-9),[14.9-RT,F],[13.15,F0-1.75],[13.15,F0-AS]]),[q[0],0,q[1]],[0,1,0],0.2775,F0-2.05),null);})();   /* the chain's pin's hole through rib 1, the slot and rib 2 to the land under it (r 14.8 at the pin, inside the hole's 16.5) */
+      const gRe=lathe([[7.5,S+SLD],...col.filter(q=>q[1]<=F0-AS+1e-9),[13.15,F0-AS],[13.15,FRC],[7.5,FRC],[7.5,S+SLD]]);   /* from the stop bar's slot's floor (below) */
       const bo=ring(0,0,7.006/2,216),gTu=solidGeo([{loop:ring(0,0,7.5,216),y0:S+1.6,y1:FRC,F:[{p:bo,a:S+1.6,b:FRC},...CWH.map(c=>({p:ring(c[0],-c[1],1.02,40),a:FRC-6.25,b:FRC})),{p:ring(DPS[0],-DPS[1],0.87,36),a:S+1.6,b:S+1.6+6}]}]);   /* the M2s from the recess floor, the M1.7 from the small end's */
       const bF=[tag(mesh(gF,gRe,M.gilt),'050604-2'),tag(mesh(gF,gFl,M.gilt),'050604-2',1),tag(mesh(gF,gTu,M.gilt),'050604-2',1)];   /* the body's pieces, these and those below, merged into one (fuse) */
       /* the small end's last 1.5, which the stop bar's slot crosses (05 06 04-2's Schnitt C-D: 2 H8 wide, its near edge 4 from the axis, "1,5+0,05 tief", right across the end
@@ -426,7 +439,7 @@ const WFUSEE=(()=>{
       mesh(g,turned([[0,DP0],[1.55,DP0],[0.85,DP0+0.7],[0.85,S+1.6+3.3],[0.7,S+1.6+3.5],[0,S+1.6+3.5]],20),M.steel);const sl=mesh(g,new THREE.BoxGeometry(2.3,0.25,0.28),M.steelD,0,DP0+0.125-0.02,0);sl.rotation.y=1.1;}   /* the slot, standing 0.02 out of the head's face as screw() draws them */
     /* the chain's pin 05 06 00-6 (Kettenstift, coloured section; the hole "0,55∅ +0,01" through the flange's ribs, 05 06 04-2): Ø 0.55 across the slot, near the ribs' tops,
        where the chain's (or the band's) hook takes it */
-    {const q=pol(PINR,PINA);tag(cylBetween(gF,0.275,F,F-2.0,M.steel,q[0],q[1],16),'050600-6');}
+    {const q=pol(PINR,PINA);tag(cylBetween(gF,0.275,F,F0-2.0,M.steel,q[0],q[1],16),'050600-6');}
 
     /* =============== the Vorreiber 05 06 00-2 and its pin 05 06 00-5 =============== */
     /* Präz. Rundstahl 14: the flange Ø 14 d11 (drawn 13.895), the hub Ø 7.6 -0.2 (drawn 7.5), 3.1 -0.2 overall (face a re-turned at the fusee's assembly: 2.9, the flange 1.0),
@@ -1067,6 +1080,6 @@ const WFUSEE=(()=>{
     /* keySeat: where the winding key goes on (case.js keyAt): the dust plate's group, turning with the fusee and spread with the dust plate in the Exploded view (so the key
        stays outside the dust bush, which spreads further than the fusee), and the plate's face toward the key (y0 above: 7 from the square's root, where it is 3.1 across, as
        the key's square), where the square stops the key's socket; the tube's mouth, Ø 5.95, comes over the plate's recess there, Ø 6.2 */
-    return{update,fall,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-15},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,S,DP0,DTU,DTL,BB,BR}};}
+    return{update,fall,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-15},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,F0,S,DP0,DTU,DTL,BB,BR}};}
   return{build};
 })();
