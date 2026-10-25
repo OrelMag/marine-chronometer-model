@@ -11,15 +11,24 @@
  "criterion": {
   "day": 30,
   "median": 2,
-  "p95": 4.157849489766249
+  "p95": 4.157849489766249,
+  "boot": 1000,
+  "rule": "a half fails only if its whole 95 % bootstrap interval is over its limit"
  },
  "versions": {
   "last": {
    "name": "as last revised (the drawings, the masses set on the TU's trial)",
    "pass": false,
+   "verdict": "fails",
+   "median": "fails",
+   "p95": "fails",
    "set": 0.45,
+   "ciMed": [
+    4.0342,
+    4.4199
+   ],
    "ci95": [
-    8.8869,
+    8.8705,
     9.4392
    ],
    "swing": {
@@ -920,11 +929,18 @@
   },
   "build40": {
    "name": "the 1940s build",
-   "pass": false,
+   "pass": true,
+   "verdict": "passes within sampling",
+   "median": "passes",
+   "p95": "passes within sampling",
    "set": 0.1,
+   "ciMed": [
+    1.4138,
+    1.5727
+   ],
    "ci95": [
-    4.0526,
-    4.3121
+    4.0391,
+    4.3113
    ],
    "swing": {
     "median": 206.8772,
@@ -1764,8 +1780,15 @@
   },
   "build": {
    "name": "the 1950s build",
-   "pass": false,
+   "pass": true,
+   "verdict": "passes within sampling",
+   "median": "passes",
+   "p95": "passes within sampling",
    "set": 0.1,
+   "ciMed": [
+    1.4284,
+    1.5805
+   ],
    "ci95": [
     4.0134,
     4.3103

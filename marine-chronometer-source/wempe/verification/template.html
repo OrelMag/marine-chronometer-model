@@ -520,8 +520,10 @@ one: from 45° N in port to 15° N by day 20, where the box reaches 85 °F. The 
 favourable conditions a probable error of about ±2 miles (<em>The American Practical Navigator</em>, Pub. No. 9, 2019, Vol. 2, Ch. 3, "Navigational Errors"). It is taken here
 as a circular normal whose median radius is 2 miles (σ 1.70 a side, 95 % within 4.16), and the clock's error is added along the parallel. The criterion was stated before the
 results were known: after 30 days without a time signal, the chronometer should add no more than the sight itself. Its longitude error at the equator must be under 2 miles
-in the median (Bowditch's probable error, and the user's aim of about two miles a month) and under 4.16 miles in 19 voyages of 20 (the fix's own 95 % radius). The 1950s build
-must pass, and the tool fails if it doesn't.</p>
+in the median (Bowditch's probable error, and the user's aim of about two miles a month) and under 4.16 miles in 19 voyages of 20 (the fix's own 95 % radius). Each figure is itself
+a sample of 2,000 voyages, so each is judged with its sampling error: 1,000 bootstrap resamples of the voyages (seeded, the same each run) give each figure's 95 % interval,
+and a half fails only if that whole interval lies over its limit. A figure over its limit whose interval still reaches it <em>passes within sampling</em>: 2,000 voyages
+can't tell it from one on the limit. The limits were not moved. The 1950s build must pass, and the tool fails if it doesn't.</p>
 <div id="tNav" class="tw"></div>
 <figure><div class="chart" id="cNav"></div><figcaption>Figure 23. The longitude error the navigator carries, at the equator, day by day at sea after ten days' rating in port: the median (solid)
 and the error 19 voyages in 20 stay within (dashed, the same colour), for each version; the two builds' lines lie on each other (they differ in the drive and the escapement's
@@ -880,16 +882,16 @@ function draw(){
 
   /* ---------- 21. navigating by it ---------- */
   if(D.nav&&D.nav.versions){const NV=D.nav,VS=[['last','--s1'],['build40','--s3'],['build','--s2']].filter(([v])=>NV.versions[v]),C=NV.criterion,g=(x,n=2)=>f(x,n);
-    table('tNav',['Version','Masses set to','Days at sea','The clock (s): median / 95 %','Longitude at the equator (miles)','On the route (miles)','With the fix (miles)','Meets the criterion at 30 days'],
+    table('tNav',['Version','Masses set to','Days at sea','The clock (s): median / 95 %','Longitude at the equator (miles)','On the route (miles)','With the fix (miles)','The criterion at 30 days (each figure's 95 % sampling interval)'],
       VS.flatMap(([v])=>{const X=NV.versions[v];return X.at.map((q,i)=>[i?'':esc(X.name),i?'':'±'+X.set+'°',q.d,`${g(q.s[0],1)} / ${g(q.s[1],1)}`,`${g(q.eq[0])} / ${g(q.eq[1])}`,`${g(q.route[0])} / ${g(q.route[1])} at ${q.lat}° N`,`${g(q.total[0])} / ${g(q.total[1])}`,
-        i?'':`<span class="${X.pass?'ok':'no'}">${X.pass?'yes':'no'}</span> (the 95 % figure's sampling range ${g(X.ci95[0])}-${g(X.ci95[1])})`]);}),true);
+        i?'':`<span class="${X.verdict==='passes'?'ok':X.pass?'mid':'no'}">${esc(X.verdict||(X.pass?'passes':'fails'))}</span>: median ${g(X.at[1].eq[0],3)} (${g(X.ciMed[0],3)}-${g(X.ciMed[1],3)}) against ${g(C.median,0)}, ${esc(X.median||'')}; 95 % ${g(X.at[1].eq[1],3)} (${g(X.ci95[0],3)}-${g(X.ci95[1],3)}) against ${g(C.p95,3)}, ${esc(X.p95||'')}`]);}),true);
     chart('cNav',{label:'Longitude error at sea',x:[0,60],y:[0,26],xl:'days at sea',yl:'longitude error at the equator (nautical miles)',legend:true,r:150,
       hrefs:[{y:C.median,t:'the fix: probable error'},{y:C.p95,t:'the fix: 95 %'}],vrefs:[{x:30,t:'30 days'}],
       series:VS.flatMap(([v,c])=>{const X=NV.versions[v];return[{type:'line',c,dash:'5 4',w:1.5,data:X.curve.map(q=>[q.d,q.eq[1]]),tip:p=>`${esc(X.name)}: day ${p[0]}, 19 voyages in 20 within ${g(p[1])} miles`},{type:'line',name:X.name,c,data:X.curve.map(q=>[q.d,q.eq[0]]),tip:p=>`${esc(X.name)}: day ${p[0]}, median ${g(p[1])} miles`}];})});
     chart('cNavH',{label:'Spread after 30 days',x:[0,10],y:[0,0.12],xl:'longitude error at the equator after 30 days (nautical miles; the last bin all beyond 10)',yl:'share of voyages',legend:true,r:40,
       vrefs:[{x:C.median,t:'the fix: 2 miles'}],series:VS.map(([v,c])=>{const X=NV.versions[v];return{type:'line',name:X.name,c,data:X.hist.map(([x,y])=>[Math.min(x+0.125,10),y]),tip:p=>`${esc(X.name)}: around ${g(p[0])} miles, ${g(100*p[1],1)} %`};})});
     const B=NV.versions.build,L=NV.versions.last,b30=B.at.find(q=>q.d===30),l30=L.at.find(q=>q.d===30);
-    $('navMeaning').innerHTML=`What it means: a Wempe made to the drawings and adjusted on its trial leaves the navigator ${g(l30.eq[0])} miles out after a month (95 % within ${g(l30.eq[1])}), about twice the sight's own error. The builds, with their masses set closer, carry ${g(b30.eq[0])} miles in the median, under the fix's probable error, and ${g(b30.eq[1],3)} in 19 voyages of 20 against the fix's ${g(C.p95,3)}: ${B.pass?'within it':'on the line, short of it by less than the figure\'s own sampling error'} (the 95 % figure's range over 2,000 voyages is ${g(B.ci95[0])}-${g(B.ci95[1])}). With the fix's own error added, the position a month out is within ${g(b30.total[0])} miles in the median and ${g(b30.total[1])} in 19 of 20.`;
+    $('navMeaning').innerHTML=`What it means: a Wempe made to the drawings and adjusted on its trial leaves the navigator ${g(l30.eq[0])} miles out after a month (95 % within ${g(l30.eq[1])}), about twice the sight's own error. The builds, with their masses set closer, carry ${g(b30.eq[0])} miles in the median, under the fix's probable error, and ${g(b30.eq[1],3)} in 19 voyages of 20 against the fix's ${g(C.p95,3)}: ${B.verdict==='passes'?'within it':B.pass?'on the line: over it by less than the figure's own sampling error, so it passes within sampling':'over it beyond its sampling error'} (the 95 % figure's interval over 2,000 voyages is ${g(B.ci95[0],3)}-${g(B.ci95[1],3)}). With the fix's own error added, the position a month out is within ${g(b30.total[0])} miles in the median and ${g(b30.total[1])} in 19 of 20.`;
     checks('kNav','navigation');}
   /* ---------- 18. the mechanisms in turn ---------- */
   if(D.mech2&&D.mech2.wear){const M2=D.mech2,Wr=M2.wear,cs=Wr.contacts.filter(c=>c.curve),top=cs.slice().sort((a,b)=>a.yrs.good-b.yrs.good).slice(0,5),cc=['--s1','--s2','--s3','--s4','--muted'];
