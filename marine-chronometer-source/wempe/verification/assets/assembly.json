@@ -1,0 +1,337 @@
+{
+ "source": "the 1958 Soviet repair book's order for the MX, pp. 59-60",
+ "steps": [
+  {
+   "op": 1,
+   "title": "the hands",
+   "parts": [
+    "hands"
+   ],
+   "way": "dial",
+   "met": []
+  },
+  {
+   "op": 2,
+   "title": "the dial",
+   "parts": [
+    "dial"
+   ],
+   "way": "dial",
+   "met": []
+  },
+  {
+   "op": 3,
+   "title": "the motion work, the cannon pinion and the up-and-down work",
+   "parts": [
+    "hourWheel",
+    "changeWheel",
+    "cannon",
+    "udWheel",
+    "udPinion"
+   ],
+   "way": "dial",
+   "met": []
+  },
+  {
+   "op": 4,
+   "title": "the balance's cock and the balance",
+   "parts": [
+    "upperCock",
+    "balance",
+    "hairspring",
+    "stud",
+    "rollers",
+    "balanceJewelsUp"
+   ],
+   "way": "train",
+   "met": [
+    {
+     "op": 4,
+     "a": "dustBush",
+     "b": "balance",
+     "hit": [
+      [
+       -14.37,
+       -10.53
+      ]
+     ],
+     "long": [],
+     "why": "a timing screw's head on the balance's rim (about 21 from the staff) lies under the fusee arbor's dust bush and cork washer at the frozen state's swing (x -14, z -8.3): the balance is turned until its screws are clear, as it is free to turn"
+    },
+    {
+     "op": 4,
+     "a": "corkRing",
+     "b": "upperCock",
+     "hit": [
+      [
+       -20.3,
+       -1.6
+      ]
+     ],
+     "long": [],
+     "why": "the cock clears its seat 1.6 up, then the cork washer on the fusee arbor's end lies over its arm (1.6 into it in plan, x -10.3 to -8.7): it is drawn out sideways from under the washer (estimated), or the washer comes off first"
+    },
+    {
+     "op": 4,
+     "a": "corkRing",
+     "b": "balance",
+     "hit": [
+      [
+       -18.14,
+       -13.56
+      ]
+     ],
+     "long": [],
+     "why": "a timing screw's head on the balance's rim (about 21 from the staff) lies under the fusee arbor's dust bush and cork washer at the frozen state's swing (x -14, z -8.3): the balance is turned until its screws are clear, as it is free to turn"
+    }
+   ]
+  },
+  {
+   "op": 5,
+   "title": "the barrel arbor's ratchet",
+   "parts": [
+    "setupRatchet"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 6,
+   "title": "the barrel bridge",
+   "parts": [
+    "barrelBridge"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 7,
+   "title": "the barrel with its arbor, mainspring and the chain (estimated)",
+   "parts": [
+    "barrel",
+    "barrelArbor",
+    "mainspring",
+    "chain"
+   ],
+   "way": "train",
+   "met": [
+    {
+     "op": 7,
+     "a": "topPlate",
+     "b": "chain",
+     "hit": [
+      [
+       -15.29,
+       -0.6
+      ]
+     ],
+     "long": [],
+     "why": "the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"
+    },
+    {
+     "op": 7,
+     "a": "fusee",
+     "b": "chain",
+     "hit": [
+      [
+       -5.48,
+       -2.43
+      ],
+      [
+       -2.37,
+       -1.23
+      ]
+     ],
+     "long": [],
+     "why": "the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"
+    },
+    {
+     "op": 7,
+     "a": "coverPlate",
+     "b": "chain",
+     "hit": [
+      [
+       -6.31,
+       -3.52
+      ]
+     ],
+     "long": [],
+     "why": "the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"
+    },
+    {
+     "op": 7,
+     "a": "stopWork",
+     "b": "chain",
+     "hit": [
+      [
+       -7.48,
+       -2.78
+      ]
+     ],
+     "long": [],
+     "why": "the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"
+    }
+   ]
+  },
+  {
+   "op": 8,
+   "title": "the fusee arbor's cork washer, flange and washer",
+   "parts": [
+    "corkRing",
+    "dustBush",
+    "dustPlate"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 9,
+   "title": "the top plate, with its fusee bush, lower cock and jewels, and the detent's block and detent screwed to it (the book: before the barrel's ratchet)",
+   "parts": [
+    "topPlate",
+    "fuseeBush",
+    "lowerCock",
+    "balanceJewelsLow",
+    "escJewelUp",
+    "escEndstoneUp",
+    "detentBlock",
+    "detent"
+   ],
+   "way": "train",
+   "met": [
+    {
+     "op": 9,
+     "a": "topPlate",
+     "b": "maintDetent",
+     "hit": [
+      [
+       0,
+       5.25
+      ]
+     ],
+     "long": [],
+     "why": "the maintaining detent's screw, its head on the top plate's outer face (x -10, z -38.7), is taken out before the plate; the detent comes out at step 11"
+    },
+    {
+     "op": 9,
+     "a": "lowerCock",
+     "b": "escapeWheel",
+     "hit": [
+      [
+       3.49,
+       8.11
+      ]
+     ],
+     "long": [],
+     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug, its jewel's setting and the detent's pipe end pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
+    },
+    {
+     "op": 9,
+     "a": "escapeWheel",
+     "b": "detent",
+     "hit": [
+      [
+       -3.4,
+       -0.1
+      ]
+     ],
+     "long": [],
+     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug, its jewel's setting and the detent's pipe end pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
+    },
+    {
+     "op": 9,
+     "a": "escapeWheel",
+     "b": "balanceJewelsLow",
+     "hit": [
+      [
+       -8.96,
+       -6.71
+      ]
+     ],
+     "long": [],
+     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug, its jewel's setting and the detent's pipe end pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
+    }
+   ]
+  },
+  {
+   "op": 10,
+   "title": "the escape wheel",
+   "parts": [
+    "escapeWheel"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 11,
+   "title": "the maintaining detent",
+   "parts": [
+    "maintDetent"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 12,
+   "title": "the fusee with its wheel, maintaining work and stop work",
+   "parts": [
+    "fusee",
+    "fuseeWheel",
+    "maintaining",
+    "coverPlate",
+    "vorreiber",
+    "stopWork"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 13,
+   "title": "the seconds wheel",
+   "parts": [
+    "secondsWheel"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 14,
+   "title": "the centre wheel",
+   "parts": [
+    "centreWheel"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 15,
+   "title": "the intermediate wheel",
+   "parts": [
+    "intermediateWheel"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 16,
+   "title": "the intermediate bridge, off the dial side",
+   "parts": [
+    "intermediateBridge"
+   ],
+   "way": "dial",
+   "met": []
+  }
+ ],
+ "static": [
+  "pillarPlate",
+  "pillars",
+  "ring",
+  "escJewelLow",
+  "escEndstoneLow"
+ ],
+ "parts": 47,
+ "pairs": 397,
+ "expected": 11,
+ "fails": 0,
+ "left": []
+}
