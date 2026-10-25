@@ -75,22 +75,22 @@
  },
  "asMade": {
   "turns": 1,
-  "free": 0.0915,
+  "free": 0.0925,
   "bindBy": {
-   "centre": 0.01,
-   "intermediate": 0.3045,
-   "seconds": 0.411,
-   "escape": 0.0495,
-   "fusee": 0.7385,
-   "barrel": 0.5025
+   "centre": 0.011,
+   "intermediate": 0.298,
+   "seconds": 0.392,
+   "escape": 0.0455,
+   "fusee": 0.736,
+   "barrel": 0.4975
   },
-  "unlocks": 0.645,
-  "lock": 0.2715,
-  "runs": 0.062,
-  "band": 0.636,
+  "unlocks": 0.6455,
+  "lock": 0.2615,
+  "runs": 0.059,
+  "band": 0.6355,
   "sources": 0,
-  "times": 0.067,
-  "works": 0.0225
+  "times": 0.08,
+  "works": 0.024
  },
  "after": {
   "turns": 1,
@@ -103,80 +103,80 @@
  "swing": {
   "asMade": {
    "lo": [
-    181.7955,
-    187.7436,
-    195.2032
+    181.5705,
+    187.7311,
+    196.304
    ],
    "hi": [
-    192.783,
-    198.6636,
-    205.959
+    192.4005,
+    198.5877,
+    206.9426
    ]
   },
   "after": {
    "lo": [
-    181.1328,
-    185.2368,
-    190.4631
+    182.132,
+    186.9382,
+    191.8379
    ],
    "hi": [
-    192.1195,
-    196.2911,
-    201.5437
+    193.0165,
+    197.8744,
+    202.8803
    ]
   },
   "hist": [
-   [
-    172.5,
-    1
-   ],
    [
     175,
     3
    ],
    [
     177.5,
-    14
+    17
    ],
    [
     180,
-    70
+    80
    ],
    [
     182.5,
-    186
+    193
    ],
    [
     185,
-    331
+    322
    ],
    [
     187.5,
-    321
+    297
    ],
    [
     190,
-    195
+    200
    ],
    [
     192.5,
-    97
+    87
    ],
    [
     195,
-    42
+    52
    ],
    [
     197.5,
-    15
+    16
    ],
    [
     200,
-    10
+    16
    ],
    [
     202.5,
-    5
+    6
+   ],
+   [
+    205,
+    2
    ]
   ]
  },
@@ -188,29 +188,29 @@
   },
   "endshake": {
    "caught": 2000,
-   "arbors": 11036,
-   "bind": 1817,
+   "arbors": 11015,
+   "bind": 1815,
    "left": 0
   },
   "ring": {
    "caught": 4
   },
   "lock": {
-   "caught": 1682,
-   "wouldFail": 1457
+   "caught": 1749,
+   "wouldFail": 1477
   },
   "spring": {
-   "caught": 2
+   "caught": 1
   },
   "setup": {
-   "caught": 96,
-   "mended": 96
+   "caught": 21,
+   "mended": 21
   },
   "swing": {
    "caught": 0
   },
   "vibrated": {
-   "caught": 1866
+   "caught": 1840
   }
  },
  "uncaught": 0,
@@ -224,7 +224,7 @@
    "times": 0
   },
   "endshake": {
-   "asMade": 0.104,
+   "asMade": 0.086,
    "works": 1,
    "band": 1,
    "times": 0
@@ -236,9 +236,9 @@
    "times": 0
   },
   "mainspring": {
-   "asMade": 0.996,
+   "asMade": 1,
    "works": 1,
-   "band": 0.996,
+   "band": 1,
    "times": 0
   },
   "detent": {
@@ -254,19 +254,19 @@
    "times": 0
   },
   "tip": {
-   "asMade": 0.82,
+   "asMade": 0.786,
    "works": 1,
-   "band": 0.82,
+   "band": 0.786,
    "times": 0
   },
   "banking": {
-   "asMade": 0.49,
+   "asMade": 0.484,
    "works": 1,
-   "band": 0.892,
+   "band": 0.89,
    "times": 0
   },
   "preload": {
-   "asMade": 0.542,
+   "asMade": 0.572,
    "works": 1,
    "band": 1,
    "times": 0
@@ -275,7 +275,7 @@
    "asMade": 1,
    "works": 1,
    "band": 1,
-   "times": 0.1
+   "times": 0.072
   }
  },
  "worst": "endshake",
@@ -286,16 +286,16 @@
    "jam": 0
   },
   "holes50": {
-   "asMade": 0.998,
+   "asMade": 0.988,
    "works": 1,
-   "jam": 0.002
+   "jam": 0.012
   }
  },
  "rate": {
   "asMade": [
-   -598.4575,
-   957.0829,
-   2508.2816
+   -564.0084,
+   876.0957,
+   2510.9261
   ],
   "reach": [
    -293.4295,
