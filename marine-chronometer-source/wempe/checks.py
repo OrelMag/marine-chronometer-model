@@ -163,26 +163,32 @@ FEA={'parts':['pillarPlate','topPlate','barrelBridge','fuseeBush','intermediateB
 # bridge; ...). Estimated where the book is silent: the barrel lifted out after its bridge (the book puts the barrel in after the top plate), and the order of "all the
 # parts" as the assembly's reversed (the escape wheel, the maintaining detent, the fusee with its wheel and maintaining work, the seconds, centre and intermediate
 # wheels), then the intermediate bridge off the dial side. Each step's parts as the model groups them (a part's own screws go with it).
-# Where the model departs from the book (25 October 2026, assembly.py's first run): the detent's block (05 04 01-4 as last revised) lies under the top plate, inside
-# the frame, screwed through it from its outer face, the detent's blade 3.2 under the plate's inner face, so it can't come off before the plate as the book takes the
-# MX's: here it comes off with the plate it is screwed to; the stop work's bar lies in the fusee's small end under its cover plate, so it comes out with the fusee.
-ASSEMBLY={'source':'the 1958 Soviet repair book\'s order for the MX, pp. 59-60','static':['pillarPlate','pillars','ring','escJewelLow','escEndstoneLow'],
+# The detent's block in the book's place (25 October 2026): p. 59 "Снять колодку ходовой пружины" (take the detent's block off) after the balance and before the
+# barrel's ratchet, p. 60 "Установить и привернуть колодку ходовой пружины к платине" (fit the block and screw it to the plate) last, after the balance; the lower cock
+# stays on the top plate (p. 59: screwed to it first). The block hangs under the top plate's inner face between the plates, its end at the rim by a pillar, as Kirov
+# No. 247's shows it (8_Kirow_247_F.jpg), and Kirov 14100's top plate off carries it on neither face (chasy.ru 9985, 96890BF4 and 9A7ACAC8): its fixing screw out of
+# the plate's outer face (step 5), it drops 1.5 off its two steady pins (1.3 into the plate; 2 would meet the lower cock) and slides out under the plate between the
+# pillars along -x (any heading from 150 to 180 degrees in plan is clear, 25 October 2026), its detent's stone drawn back out of the escape wheel's teeth (step 6).
+# The stop work's bar lies in the fusee's small end under its cover plate, so it comes out with the fusee.
+ASSEMBLY={'source':'the 1958 Soviet repair book\'s order for the MX, pp. 59-60','static':['pillarPlate','pillars','ring','escJewelLow','escEndstoneLow'],'split':{'detentBlock':-21},
   'steps':[(1,'the hands',['hands'],'dial'),(2,'the dial',['dial'],'dial'),
     (3,'the motion work, the cannon pinion and the up-and-down work',['hourWheel','changeWheel','cannon','udWheel','udPinion'],'dial'),
     (4,'the balance\'s cock and the balance',['upperCock','balance','hairspring','stud','rollers','balanceJewelsUp'],'train'),
-    (5,'the barrel arbor\'s ratchet',['setupRatchet'],'train'),
-    (6,'the barrel bridge',['barrelBridge'],'train'),(7,'the barrel with its arbor, mainspring and the chain (estimated)',['barrel','barrelArbor','mainspring','chain'],'train'),
-    (8,'the fusee arbor\'s cork washer, flange and washer',['corkRing','dustBush','dustPlate'],'train'),
-    (9,'the top plate, with its fusee bush, lower cock and jewels, and the detent\'s block and detent screwed to it (the book: before the barrel\'s ratchet)',['topPlate','fuseeBush','lowerCock','balanceJewelsLow','escJewelUp','escEndstoneUp','detentBlock','detent'],'train'),
-    (10,'the escape wheel',['escapeWheel'],'train'),(11,'the maintaining detent',['maintDetent'],'train'),
-    (12,'the fusee with its wheel, maintaining work and stop work',['fusee','fuseeWheel','maintaining','coverPlate','vorreiber','stopWork'],'train'),
-    (13,'the seconds wheel',['secondsWheel'],'train'),(14,'the centre wheel',['centreWheel'],'train'),(15,'the intermediate wheel',['intermediateWheel'],'train'),
-    (16,'the intermediate bridge, off the dial side',['intermediateBridge'],'dial')],
+    (5,'the detent\'s block\'s fixing screw, out of the top plate\'s outer face',['detentBlock.screws'],'train'),
+    (6,'the detent\'s block with the detent, off its steady pins and out sideways under the top plate between the pillars',['detentBlock','detent'],{'path':[[0,1.5,0],[-45,1.5,0]]}),
+    (7,'the barrel arbor\'s ratchet',['setupRatchet'],'train'),
+    (8,'the barrel bridge',['barrelBridge'],'train'),(9,'the barrel with its arbor, mainspring and the chain (estimated)',['barrel','barrelArbor','mainspring','chain'],'train'),
+    (10,'the fusee arbor\'s cork washer, flange and washer',['corkRing','dustBush','dustPlate'],'train'),
+    (11,'the top plate, with its fusee bush, lower cock and jewels',['topPlate','fuseeBush','lowerCock','balanceJewelsLow','escJewelUp','escEndstoneUp'],'train'),
+    (12,'the escape wheel',['escapeWheel'],'train'),(13,'the maintaining detent',['maintDetent'],'train'),
+    (14,'the fusee with its wheel, maintaining work and stop work',['fusee','fuseeWheel','maintaining','coverPlate','vorreiber','stopWork'],'train'),
+    (15,'the seconds wheel',['secondsWheel'],'train'),(16,'the centre wheel',['centreWheel'],'train'),(17,'the intermediate wheel',['intermediateWheel'],'train'),
+    (18,'the intermediate bridge, off the dial side',['intermediateBridge'],'dial')],
   'expected':[(4,'corkRing|dustBush','balance',"a timing screw's head on the balance's rim (about 21 from the staff) lies under the fusee arbor's dust bush and cork washer at the frozen state's swing (x -14, z -8.3): the balance is turned until its screws are clear, as it is free to turn"),
     (4,'corkRing','upperCock',"the cock clears its seat 1.6 up, then the cork washer on the fusee arbor's end lies over its arm (1.6 into it in plan, x -10.3 to -8.7): it is drawn out sideways from under the washer (estimated), or the washer comes off first"),
-    (7,'chain','fusee|topPlate|coverPlate|stopWork',"the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"),
-    (9,'lowerCock|balanceJewelsLow|detent','escapeWheel',"only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug, its jewel's setting and the detent's pipe end pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"),
-    (9,'topPlate','maintDetent',"the maintaining detent's screw, its head on the top plate's outer face (x -10, z -38.7), is taken out before the plate; the detent comes out at step 11")]}
+    (9,'chain','fusee|topPlate|coverPlate|stopWork',"the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"),
+    (11,'lowerCock|balanceJewelsLow','escapeWheel',"only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug and its jewel's setting pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"),
+    (11,'topPlate','maintDetent',"the maintaining detent's screw, its head on the top plate's outer face (x -10, z -38.7), is taken out before the plate; the detent comes out at step 13")]}
 
 # dfm.py --model wempe: how a finding on a piece is cut, where its sections mislead (a helix sectioned level by level shows slivers no mill cuts)
 DFM={'notes':{'050405-1':"the web's recess, Ø 11.62 and 0.6 deep (05 04_7.2 scales 11.65), lies 0.04 inside the teeth's floor Ø 11.7: in each gap between the teeth a sliver of brass about 0.04 wide stands 0.6 high between the recess and the gap; a maker turns the recess to the floor's Ø 11.7 (the gaps then open into it) or leaves it under Ø 11.3",

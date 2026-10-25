@@ -6,8 +6,11 @@
  mv.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert(),v=new THREE.Vector3(),B=[];
  const addCol=(C,key,ys)=>{ys.sort((a,b)=>a-b);const c=C.get(key)||[];for(let i=0;i+1<ys.length;i+=2)c.push(ys[i],ys[i+1]);C.set(key,c);};
  const K=(i,k)=>(i+50000)*100000+k+50000,KI=q=>Math.floor(q/100000)-50000,KK=q=>q%100000-50000;
- for(const nm of names){const b={name:nm,cols:new Map(),bb:[1e9,1e9,-1e9,-1e9]};
-  P[nm].traverse(o=>{if(!o.isMesh||o.userData.decal||o.userData.surface||o.userData.devPlate)return;
+ /* opt.split {part: y}: the part's screws seated past y (toward the train side, mv frame) as a body of their own, NAME.screws (a screw taken out from outside before its part) */
+ const SP=opt.split||{},BY=new Map(),body=n=>BY.get(n)||(BY.set(n,{name:n,cols:new Map(),bb:[1e9,1e9,-1e9,-1e9]}),BY.get(n)),w=new THREE.Vector3();
+ const owner=(nm,o)=>{if(SP[nm]==null)return nm;for(let g=o;g&&g!==P[nm];g=g.parent)if(g.userData.sc){g.getWorldPosition(w);w.applyMatrix4(inv);if(w.y<SP[nm])return nm+'.screws';}return nm;};
+ for(const nm of names){body(nm);
+  P[nm].traverse(o=>{if(!o.isMesh||o.userData.decal||o.userData.surface||o.userData.devPlate)return;const b=body(owner(nm,o));
    let h=o,vis=true;while(h&&h!==mv){if(!h.visible)vis=false;h=h.parent;}if(!vis)return;
    const geo=o.geometry;if(!geo.attributes||!geo.attributes.position)return;const mats=[];
    if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<o.count;i++){o.getMatrixAt(i,im);mats.push(new THREE.Matrix4().multiplyMatrices(inv,new THREE.Matrix4().multiplyMatrices(o.matrixWorld,im)));}}
@@ -23,7 +26,8 @@
          const l1=((bz-cz)*(x-cx)+(cx-bx)*(z-cz))/den,l2=((cz-az)*(x-cx)+(ax-cx)*(z-cz))/den,l3=1-l1-l2;if(l1<0||l2<0||l3<0)continue;
          const q=K(i,k);(C.get(q)||C.set(q,[]).get(q)).push(l1*ay+l2*by+l3*cy);}}
      for(const[q,ys]of C){if(ys.length<2)continue;addCol(b.cols,q,ys);const i=KI(q),k=KK(q);b.bb[0]=Math.min(b.bb[0],i);b.bb[1]=Math.min(b.bb[1],k);b.bb[2]=Math.max(b.bb[2],i);b.bb[3]=Math.max(b.bb[3],k);}}});
-  if(b.cols.size)B.push(b);}
+  }
+ for(const b of BY.values())if(b.cols.size)B.push(b);
  for(const b of B)for(const[q,c]of b.cols){const s=[];for(let i=0;i<c.length;i+=2)s.push([c[i],c[i+1]]);s.sort((x,y)=>x[0]-y[0]);const m=[];for(const[a,e]of s){if(m.length&&a<=m[m.length-1][1]+1e-4)m[m.length-1][1]=Math.max(m[m.length-1][1],e);else m.push([a,e]);}b.cols.set(q,m.flat());}
  const out=[];
  for(let a=0;a<B.length;a++)for(let c=a+1;c<B.length;c++){const A=B[a],C=B[c];
@@ -37,4 +41,5 @@
  if(opt.pair){const[A,C]=opt.pair.map(n=>B.find(b=>b.name===n)),[lo,hi]=opt.range,w=[];   /* --where: the columns where two bodies meet at a relative rise in [lo, hi] */
    for(const[q,sa]of A.cols){const ta=C.cols.get(q);if(!ta)continue;for(let i=0;i<sa.length;i+=2)for(let j=0;j<ta.length;j+=2){const l=sa[i]-ta[j+1],h=sa[i+1]-ta[j];if(h>lo&&l<hi)w.push([+((KI(q)+0.5)*r).toFixed(1),+((KK(q)+0.5)*r).toFixed(1),+sa[i].toFixed(2),+sa[i+1].toFixed(2),+ta[j].toFixed(2),+ta[j+1].toFixed(2)]);}}
    return JSON.stringify({where:w});}
- return JSON.stringify({bodies:B.map(b=>({name:b.name,cols:b.cols.size})),pairs:out});}
+ const cols=opt.cols?B.map(b=>{const c={};for(const[q,m]of b.cols)c[KI(q)+','+KK(q)]=m.map(x=>+x.toFixed(3));return c;}):undefined;   /* opt.cols: every body's columns, for a step drawn along a path (assembly.py) */
+ return JSON.stringify({bodies:B.map(b=>({name:b.name,cols:b.cols.size})),pairs:out,cols});}
