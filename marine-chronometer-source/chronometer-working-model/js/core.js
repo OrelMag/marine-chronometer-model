@@ -563,7 +563,7 @@ function gearOutline(n,m,o={}){
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b],[rp,c-b]);
       for(let k=1;k<12;k++){const t=Math.PI*k/12,u=rp+rt*Math.sin(t),v=-rt*Math.cos(t);pts.push([Math.hypot(u,v),c+Math.atan2(v,u)]);}   /* the round tip, a semicircle on the pitch circle */
       pts.push([rp,c+b],[ri,c+b]);root(c+b,c+p-b);}}
-  else{const b=0.705*m/rp,rg=m*(o.mate||10)/4,hm=1.15*m,K=(rp+rg)/rg,ep=[];
+  else{const b=0.705*m/rp,rg=m*(o.mate||10)/4,hm=(o.ha??1.15)*m,K=(rp+rg)/rg,ep=[];
     for(let k=0;k<=24;k++){const t=0.6*k/24,x=(rp+rg)*Math.cos(t)-rg*Math.cos(K*t),y=(rp+rg)*Math.sin(t)-rg*Math.sin(K*t),r=Math.hypot(x,y),a=Math.atan2(y,x);
       if(a>=b||r>=rp+hm){ep.push([Math.min(r,rp+hm),Math.min(a,b)]);break;}ep.push([r,a]);}   /* the addendum's left side from the pitch point, until it reaches the tooth's centre or the cap */
     ro=ep[ep.length-1][0];
@@ -623,7 +623,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
   else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
   return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
-/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[]}} WheelOpts
+/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[],ha?:number}} WheelOpts
     n teeth of module m, centred at y, th thick (1); mate: the pinion it drives (its addenda); collet: its radius, 0 for none; cp, cside: below */
 /** @typedef {{n?:number,m:number,y:number,th?:number,bore?:number}} PinionOpts  n leaves (10), th long (2.5), centred at y */
 /** @param {any} parent @param {any} M the materials @param {number} x @param {number} z
@@ -631,7 +631,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
   let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
-  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate,prop:w.prop}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
+  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate,prop:w.prop,ha:w.ha}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
     const gu=g.userData.wheel.geometry.userData;wy=[w.y-th/2,w.y+th/2,w.spokes===0?gu.ro:gu.hub];
     /* cside ±1: collet on that side of the wheel only, cp proud of it there (0.6) and 0.05 proud of the other face, not flush with it */
     if(w.collet!==0){const cp=w.cp??0.6,h=w.cside?th+0.05+cp:th+1.2,c=w.y+(w.cside||0)*(cp-0.05)/2;mesh(g,cylY(w.collet||1.6,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6];}}

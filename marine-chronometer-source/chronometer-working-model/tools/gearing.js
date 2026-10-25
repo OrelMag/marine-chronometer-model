@@ -25,7 +25,7 @@ for(const[a,b]of[['k<=24;k++){const t=0.6*k/24','k<=400;k++){const t=0.6*k/400']
 const gearOutline=Function('TAU',src+';return gearOutline;')(TAU);
 
 /* a gear as a star-shaped outline: R(a), the outline's radius at angle a (the outline runs round with its angle never falling: radial flanks are steps) */
-function gear(z,m,mate){const{xy,ro,ri}=WEMPE?WT.outline(z,m):gearOutline(z,m,z>20?{mate}:{}),n=xy.length,ang=[],P=[];let off=0,prev=-Infinity;
+function gear(z,m,mate,ha){const{xy,ro,ri}=WEMPE?WT.outline(z,m):gearOutline(z,m,z>20?{mate,ha}:{}),n=xy.length,ang=[],P=[];let off=0,prev=-Infinity;
   for(const[x,y]of xy){let a=Math.atan2(y,x)+off;while(a<prev-1e-9){off+=TAU;a+=TAU;}ang.push(a);P.push([x,y]);prev=a;}
   ang.push(ang[0]+TAU);P.push(P[0]);const a0=ang[0];
   const R=a=>{a=a0+((a-a0)%TAU+TAU)%TAU;let lo=0,hi=n;while(hi-lo>1){const md=(lo+hi)>>1;if(ang[md]<=a)lo=md;else hi=md;}
@@ -65,7 +65,7 @@ function mesh(A,B,d){const k=A.z/B.z,a0=-0.375*A.p,b0=Math.PI-0.875*B.p;
 
 /* a stage through one pitch of A: the torque ratio (B's over A's, against the nominal zB/zA) at each step for each mu, drop, backlash, approach */
 const MU=[0,0.10,0.20],NS0=120;
-function stage(zA,zB,m,dd=0,NS=NS0){const A=gear(zA,m,zB),B=gear(zB,m),d=m*(zA+zB)/2+dd,M=mesh(A,B,d),out={al:[],fac:MU.map(()=>[]),approach:0,drop:0,bl:Infinity,jam:false,phi:0,tip:Math.min(d-A.ro-B.ri,d-B.ro-A.ri)};
+function stage(zA,zB,m,dd=0,NS=NS0,haB){const A=gear(zA,m,zB),B=gear(zB,m,undefined,haB),d=m*(zA+zB)/2+dd,M=mesh(A,B,d),out={al:[],fac:MU.map(()=>[]),approach:0,drop:0,bl:Infinity,jam:false,phi:0,tip:Math.min(d-A.ro-B.ri,d-B.ro-A.ri)};
   if(out.tip<=0){out.jam=true;return out;}
   let e=0,prev=null;const span=A.p,start=M.a0-span/2;
   /* go round once first, so the step at the pitch's start is caught from the tooth before */
