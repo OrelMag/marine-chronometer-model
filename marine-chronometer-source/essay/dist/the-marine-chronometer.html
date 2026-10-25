@@ -1545,7 +1545,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
   else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
   return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
-/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[]}} WheelOpts
+/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[],ha?:number}} WheelOpts
     n teeth of module m, centred at y, th thick (1); mate: the pinion it drives (its addenda); collet: its radius, 0 for none; cp, cside: below */
 /** @typedef {{n?:number,m:number,y:number,th?:number,bore?:number}} PinionOpts  n leaves (10), th long (2.5), centred at y */
 /** @param {any} parent @param {any} M the materials @param {number} x @param {number} z
@@ -3973,7 +3973,7 @@ function makeEsc(o={},base){
      with the drawn spring; until 14 October 2026 the whole 0.770 g, p. 61's clause missed), and a stiffer spring is set up with less preload; hD, the detent spring's two
      strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm: its band
      0.36-0.39 tall beside the bracket, KLUwI2UUCMQ 11:10, 11:24, scaled by the block's pins; 0.3 estimated until 20 October 2026) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
-     works it out from movement.js and checks this; 2.609 since 20 October 2026, when the detent was rebuilt to its measured lengths (11:10-11:33: its locking jewel 10.1 from the flexure, the trip spring 5.8 free); 3.002 that day before, with the trip spring's bracket measured 1.05 tall; 2.67 before that), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
+     works it out from movement.js and checks this; 2.510 since 25 October 2026, the trip spring 6.45 free with its bracket and root 0.65 nearer the flexure; 2.609 from 20 October 2026, when the detent was rebuilt to its measured lengths (11:10-11:33: its locking jewel 10.1 from the flexure, the trip spring 5.8 free); 3.002 that day before, with the trip spring's bracket measured 1.05 tall; 2.67 before that), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
      rB: the radius stoned on the back corner of the discharge jewel's end (unit frame), its acting corner left square: "set with a jewel with a radius to the back of
      the acting part of the tip" (the British Museum's Model 21, Catalogue of Watches VI, 1990, no. 117A), and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to
      a sharp corner. 0 is a square end, wD/2 (the most) the back half of a half round. The radius isn't given (estimated): wD/2, 0.158 mm, with rd at 0.296, where the
@@ -3993,7 +3993,7 @@ function makeEsc(o={},base){
      stiffness at its tip that the 0.06 x 0.3 strip 7.9 long had until 20 October 2026, k as t^3/L^3; 6.45 mm free and 0.37 deep since 25 October 2026 (5.8 and 0.041 for five days, the length to
      where it goes under the horn's tab read as its tip); 0.06 at that length would be 2.4 times as stiff, taking a large share of the impulse's work) */
   const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2884,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.019,DRAW:10,aI:181.3,aD:269.9,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.0456,tsH:0.37,TF:67,MU:0.15,
-    I:578.5,JW:5.65,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.609,eS:0.3,HS:0};
+    I:578.5,JW:5.65,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.510,eS:0.3,HS:0};
   /* the settings a second chronometer needs (makeEsc(o, base)), each the Hamilton's as the code had it until 15 October 2026. NT: the wheel's teeth; ES: its radius (mm), the
      unit; LK: the locked tooth that many pitches before the pair straddling the line of centres, and LO (deg) the wheel's teeth turned so far from straddling it (the locking
      stone's place, lockA, and the teeth's at rest, t0); DA: the detent's angle to the line of centres (deg) and BL its length from Ft to the locking face; PSL: the passing
