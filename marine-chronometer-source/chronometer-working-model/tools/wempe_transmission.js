@@ -296,10 +296,10 @@ if(!isMainThread&&['beat','wind','ripple','stop'].includes(workerData.job)){cons
   Object.assign(PAR,par||{});parentPort.postMessage(job==='beat'?beat(TB,o.rigid):job==='wind'?windRun(TB,o):job==='ripple'?rippleRun(TB):stopRun(TB));return;}
 
 if(require.main===module)(async()=>{
-const strP=new Promise(ok=>require('child_process').execFile(process.execPath,[path.join(__dirname,'wempe_strength.js')],{cwd:__dirname,maxBuffer:1<<26},(e,o)=>ok(o||'')));
+const strP=new Promise(ok=>require('child_process').execFile(process.execPath,[path.join(__dirname,'wempe_strength.js')],{cwd:__dirname,maxBuffer:1<<26},(e,o,er)=>ok(e?{err:e,o:o||'',er:er||''}:o||'')));
 const TB=await tabs(),STRO=await strP;if(TC&&!fs.existsSync(TC))fs.writeFileSync(TC,JSON.stringify(TB));   /* MC_TR_TABS: the tables kept in a file between runs (developing the tool; ci.py builds them) */
 /* the strengths: wempe_strength.js's own lines (its static loads fully wound and the stresses and ranges it judges them by), so a peak here is judged as it judges the static */
-const STR=(()=>{const R=STRO.replace(/\r/g,'').split('\n'),get=(key,name)=>{const r=R.find(x=>x.includes(key));if(!r)throw Error('wempe_strength.js has no line: '+key);
+const STR=(()=>{if(typeof STRO!=='string')throw Error('wempe_strength.js failed ('+STRO.err.message+'): '+STRO.o.slice(-600)+STRO.er.slice(-1200));const R=STRO.replace(/\r/g,'').split('\n'),get=(key,name)=>{const r=R.find(x=>x.includes(key));if(!r)throw Error('wempe_strength.js has no line: '+key);
   const m=/\)\s+([\d.]+) N.*?\s([\d.]+) MPa\s+(.*?)\s([\d.]+)-([\d.]+): margin/.exec(r);if(!m)throw Error('wempe_strength.js line unread: '+r);return{name,F:+m[1],s:+m[2],what:m[3],lo:+m[4],hi:+m[5]};};
   return{mesh:MESH.slice(0,4).map(q=>get(q.nm+' (',q.nm)),click:get('the click wheel\'s tooth under the click','the click wheel\'s tooth')};})();
 /* a peak force F on a part whose static line is S: its stress scaled from the static (each formula linear in its load), against the line's range and, for brass, its yield */
