@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.28.03 · 2026-10-25
+- The Wempe's escape pinion is 4 mm long, as its 1943 drawing gives it, so the seconds wheel meets it over its whole width
+- The Wempe's detent spring tapers from 0.09 mm at its ends to 0.07 mm at its middle, as drawn; the balance swings about a degree less
+- The Wempe detent's foot, blade and horn, the balance's rim cuts and the jewel holes at their drawings' sizes
+
 ## 3.28.02 · 2026-10-25
 - The Wempe's hinges, bezel knurls, fusee wheel, hands and detent no longer overlap inside themselves, so the model weighs them correctly.
 
