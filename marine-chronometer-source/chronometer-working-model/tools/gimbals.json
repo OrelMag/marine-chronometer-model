@@ -1,33 +1,33 @@
 {
  "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
  "bowl": {
-  "m": 1248.671,
+  "m": 1198.558,
   "cg": [
-   0.054,
-   -10.442,
-   -0.278
+   0.088,
+   -14.67,
+   -0.268
   ],
   "I": [
    [
-    1383232.6,
-    20030.6,
-    -22259.8
+    1442036.4,
+    20803.1,
+    -23242.0
    ],
    [
-    20030.6,
-    1705277.5,
-    -3335.2
+    20803.1,
+    1586743.0,
+    -4373.1
    ],
    [
-    -22259.8,
-    -3335.2,
-    1381554.6
+    -23242.0,
+    -4373.1,
+    1441690.1
    ]
   ],
   "byMat": {
-   "brass": 566.74,
+   "brass": 515.83,
    "plate": 357.45,
-   "brass2": 85.99,
+   "brass2": 86.78,
    "gilt": 63.24,
    "steel": 60.88,
    "plateSolid": 33.07,
@@ -46,7 +46,7 @@
    "clear": 0.01
   },
   "byPart": {
-   "bowl": 459.66,
+   "bowl": 409.55,
    "pillar": 295.56,
    "barrelBridge": 79.37,
    "cock": 50.24,
@@ -76,37 +76,37 @@
   "missing": {}
  },
  "ring": {
-  "m": 153.143,
+  "m": 153.879,
   "cg": [
-   3.192,
-   -0.148,
-   6.601
+   3.397,
+   -0.099,
+   6.799
   ],
   "I": [
    [
-    422780.2,
-    424.9,
-    5001.8
+    424466.9,
+    84.1,
+    3408.6
    ],
    [
-    424.9,
-    692971.4,
-    1126.7
+    84.1,
+    696276.6,
+    771.3
    ],
    [
-    5001.8,
-    1126.7,
-    276181.7
+    3408.6,
+    771.3,
+    277735.7
    ]
   ],
   "byMat": {
-   "brass": 97.86,
+   "brass": 98.59,
    "brass2": 49.95,
    "steel": 4.95,
    "steelD": 0.39
   },
   "byPart": {
-   "ring": 153.14
+   "ring": 153.88
   },
   "missing": {}
  },
@@ -124,7 +124,7 @@
   1.0,
   0.0,
   0.0,
-  0.0,
+  -4.0,
   0.0,
   1.0
  ],
