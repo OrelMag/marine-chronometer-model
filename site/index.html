@@ -5255,7 +5255,15 @@ const WFUSEE=(()=>{
   function capFix(g,yF){const P=g.attributes.position,keep=[];for(let t=0;t<P.count;t+=3){let f=yF!=null;for(let q=0;q<3&&f;q++)if(Math.abs(P.getY(t+q)-yF)>1e-5)f=false;if(!f)keep.push(t);}
     const o=new THREE.BufferGeometry();for(const k of['position','normal','uv']){const a=g.attributes[k];if(!a)continue;const w=a.itemSize,arr=new Float32Array(keep.length*3*w);
       keep.forEach((t,j)=>arr.set(a.array.subarray(t*w,(t+3)*w),j*3*w));o.setAttribute(k,new THREE.BufferAttribute(arr,w));}
-    g.dispose();const t=tjFix(o);t.setIndex([...Array(t.attributes.position.count).keys()]);return fillOpen(closeGeo(t));}   /* indexed: closeGeo copies an unindexed one through toNonIndexed, which warns */
+    g.dispose();const t=tjFix(o);t.setIndex([...Array(t.attributes.position.count).keys()]);return snapNear(fillOpen(closeGeo(t)));}   /* indexed: closeGeo copies an unindexed one through toNonIndexed, which warns */
+  /* snapNear(g): corners within 2 µm of each other, chained (union-find), put at one place, the triangles kept: holeCut's cuts leave corners a few tenths of a µm
+     apart, closed only when welded; a weld on a grid (the STL's at 1 µm in the movement's frame, gltf_check.py) splits or joins such a pair as it falls across a cell's
+     edge and leaves edges open. Afterwards distinct corners stand over 2 µm apart, beyond any 1 µm cell's reach, and a triangle folded flat by it adds each edge twice */
+  function snapNear(g){const p=g.attributes.position,n=p.count,c=2e-3,P=[...Array(n).keys()],f=x=>{while(P[x]!==x){P[x]=P[P[x]];x=P[x];}return x;},cell=new Map();
+    for(let i=0;i<n;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=[x,y,z].map(v=>Math.floor(v/c));
+      for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)for(let d=-1;d<=1;d++)for(const j of cell.get((k[0]+a)+','+(k[1]+b)+','+(k[2]+d))||[])if(Math.hypot(p.getX(j)-x,p.getY(j)-y,p.getZ(j)-z)<c)P[f(i)]=f(j);
+      const kk=k.join(',');(cell.get(kk)||cell.set(kk,[]).get(kk)).push(i);}
+    for(let i=0;i<n;i++){const r=f(i);if(r!==i)p.setXYZ(i,p.getX(r),p.getY(r),p.getZ(r));}p.needsUpdate=true;return g;}
   /* fillOpen(g): an indexed solid's open loops that closeGeo's triangulation left (three corners nearly in a line, a few µm across, where a hole's wall meets a faceted face:
      bore) closed by a fan from each loop's first corner, welded at 1 µm as tools/solids-check.js welds */
   function fillOpen(g){const p=g.attributes.position,ix=g.index.array,id=new Map(),V=[];for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e3)+','+Math.round(p.getY(i)*1e3)+','+Math.round(p.getZ(i)*1e3);if(!id.has(k))id.set(k,i);V.push(id.get(k));}
