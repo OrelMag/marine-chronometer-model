@@ -81,12 +81,16 @@ function decalGeo(poly,uvOf=q=>q){const s=new THREE.Shape();poly.forEach(([x,z],
 /* escape wheel (Figs. 14, 90; an original photographed in chronometerbook post 30): a thin plate (0.5 mm), its rim (0.5 mm wide) and four crossed spokes to a round collet,
    and on the plate's edge 16 thorn teeth standing the wheel's full 1.3 mm (Fig. 14's cut-away: tall teeth on a thin rim), each its outline E.toothPts from the escapement's solver
    closed along the root circle, where the plate ends (no face of the one lies on a face of the other). The tooth tips lie at angles k*P in the wheel's frame */
+/* EW_TH: the escape teeth's thickness along the arbor, 1.1 since 25 October 2026: KLUwI2UUCMQ 42:50.99, 42:51.49, 42:51.99 (4K, the movement side-on), the teeth's top to their
+   plate-side face on the escape arbor's own ruler (the teeth's top at h 15.85 to the plate's mirror line; checked by the collet's two steps, 0.93 and 1.44 against 1.0 and 1.45),
+   1.11; 1.0-1.15 read before; 1.3 until then, the figure Hamilton's specification gives as quoted in chronometerbook post 30 (the frames decide: the owner's choice) */
+const EW_TH=1.1;
 function escapeWheel(parent,M,rt,y,E){
   const R=rt*E.r0,gs=[];
   for(let k=0;k<16;k++){const a=k*E.P,q=E.toothPts(a).slice(0,-1),a0=a+E.settings.B*E.P,a1=a+E.U*E.P;for(let i=1;i<12;i++)q.push([E.r0,a0+(a1-a0)*i/12]);   /* back root to front root along the root circle */
-    gs.push([extrude(new THREE.Shape(q.map(([r,b])=>new THREE.Vector2(r*rt*Math.cos(b),-r*rt*Math.sin(b)))),{depth:1.3,bevelEnabled:false}),new THREE.Matrix4()]);}
-  const tg=mergeGeo(gs);tg.rotateX(-Math.PI/2);tg.translate(0,-0.65,0);
-  const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
+    gs.push([extrude(new THREE.Shape(q.map(([r,b])=>new THREE.Vector2(r*rt*Math.cos(b),-r*rt*Math.sin(b)))),{depth:EW_TH,bevelEnabled:false}),new THREE.Matrix4()]);}
+  const tg=mergeGeo(gs);tg.rotateX(-Math.PI/2);tg.translate(0,-EW_TH/2,0);
+  const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.75+EW_TH/2;parent.add(teeth);   /* the teeth's top face kept at y - 0.75 (0.95 under the train bridge: the side photograph), EW_TH thick toward the plate */
   /* the rim, spokes and hub as KLUwI2UUCMQ 43:21.1 shows the wheel face up in the staking tool (4K, along the tips' ellipse's long axis, 378 px for the tips' radius): the rim's
      inner edge 0.77 of the tips (290 px), the four spokes 0.105 wide (40 px, on the front spoke, whose width lies along the long axis), the hub r 0.31 (the collet's foot, 116 px)
      with the collet's pipe r 0.20 (74 px) standing about 1.9 toward the pinion (its height off the ellipse's 25 deg tilt: rough). Until 5 October 2026 the rim 0.5 wide,
