@@ -637,10 +637,10 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
   /* the ship's motion and the gimbals (Display, Ship motion; the Hamilton's GIM.sea and gimStep in box.js, its equations copied): the box rolls and pitches about a ship's axes
      RD m below it, the case hanging in its gimbals leans toward the apparent vertical, the pivots' friction pulling it after the box. The Wempe's own periods, from its weighed
-     case and ring (tools/gimbals.js --model wempe on massprops.py's gimbals_wempe.json, levelled): the bowl on its 12-6 pivots (about z here) 0.654 s, the ring on its 3-9 (about
-     x) 0.721 s (0.958 and 1.046 until 21 October 2026, the bowl hung 6.2 higher); the box stops neither within 60° (the same check), so LIM 60°; Z, the pivots' damping, the Hamilton's 0.05 (estimated). The transit lock on (latch), the ring
+     case and ring (tools/gimbals.js --model wempe on massprops.py's gimbals_wempe.json, levelled): the bowl on its 12-6 pivots (about z here) 0.673 s, the ring on its 3-9 (about
+     x) 0.765 s (0.654 and 0.721 until 25 October 2026, before the ring and the case brackets were drawn to 05 01's sections; 0.958 and 1.046 until 21 October 2026, the bowl hung 6.2 higher); the box stops neither within 60° (the same check), so LIM 60°; Z, the pivots' damping, the Hamilton's 0.05 (estimated). The transit lock on (latch), the ring
      and bowl are brought level with the box and go with it; turned over to wind (cw), the bowl is held by hand, so the same */
-  const GW={W0P:TAU/0.721,W0R:TAU/0.654,Z:0.05,LIM:60*D2R,RD:5,G:9.80665,PR:2/3,rock:false,latch:false,rockW:0,rockT:0,latchK:0,levK:0,roll:0,pitch:0,M:{p:[0,0],r:[0,0],lp:0,lr:0}};
+  const GW={W0P:TAU/0.765,W0R:TAU/0.673,Z:0.05,LIM:60*D2R,RD:5,G:9.80665,PR:2/3,rock:false,latch:false,rockW:0,rockT:0,latchK:0,levK:0,roll:0,pitch:0,M:{p:[0,0],r:[0,0],lp:0,lr:0}};
   const gwSea=(u,w,k)=>{const a=14*D2R*k,b=0.55*a,f=GW.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GW.RD*clamp((TAU/w-2)/2,0,1)};};
   function gwStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}const n=Math.ceil(dt/0.002),h=dt/n,rd=sea?sea.rd:0;
     for(const[q,f,f0,m,W0,k]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P,'ap'],[G.r,rl,G.lr,sea&&sea.r,GW.W0R,'ar']]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;

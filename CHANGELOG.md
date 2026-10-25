@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.28.08 · 2026-10-25
+- The Wempe's gimbal ring and case brackets drawn to their sheet's sections, so the case turns over in its ring to be wound; the gimbals' pivots with their drawn tips and lock nuts
+- The Wempe's centre arbor, its wheel and the top plate's bushes at their drawings' fits
+- The Wempe's case and ring swing at their new periods, 0.67 and 0.77 s
+
 ## 3.28.07 · 2026-10-25
 - The Hamilton's Laid out view now shows the fusee's winding stop, so it holds every part a textbook's developed drawing of a chronometer letters.
 - In the Hamilton's Laid out view, click a see-through plate (pillar plate, train bridge, barrel bridge, cock, pillars) to open that part's card.

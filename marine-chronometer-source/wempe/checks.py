@@ -13,7 +13,9 @@ FLOAT=[('ring:Buffer',(15.22,0,-41.82),3.1,_RS),('ring:Buffer',(-43.82,0,7.73),3
 # audit.py box (P1f, case.js): the box's screws whose heads bear outside the audit's probes (at 0.6 of the head's radius, which fall in the hole they pass through), in the box's frame (the
 # movement's at rest), the lid shut as the movement's views have it
 FLOAT_BOX=[('closingPlate:Buffer',(0,-50.45,0),3.6,"the closing plate's screw (WN-71, 05 01 00-2; 4.7 higher with the drawn bowl's casting since 24 October 2026): its head bears on the counterbore's floor round the plate's Ø 5.5 hole, beyond 0.6 of its radius"),
-  ('lid:Buffer',(0,24.55,96.5),4.5,"the latch tongue's pivot screw (P. 51 00 02-2): its head bears round the tongue's Ø 6.2 hole, beyond 0.6 of its radius")]
+  ('lid:Buffer',(0,24.55,96.5),4.5,"the latch tongue's pivot screw (P. 51 00 02-2): its head bears round the tongue's Ø 6.2 hole, beyond 0.6 of its radius"),
+  *[('gimbalRing:Buffer',(75.23,1.05,s*17.75),2.4,"a ring bracket's screw (05 01 00-6, put in along the radius: the probes stand off it in x and z): its head bears on the bracket's outside round its Ø 2.8 hole (cut since 25 October 2026), the middle probe and one along its axis in the hole") for s in(-1,1)],
+  *[('gimbalRing:Buffer',(0,1.05,s*74),4.6,"an inner pivot screw (WN-79, put in along the radius: the probes stand off it in x and z): its head bears on the ring's outside round its M5 hole (cut since 25 October 2026), the middle probe and one along its axis in the hole") for s in(-1,1)]]
 # fine.py: the states checked (balance phase, escape teeth, fusee turns from full wind, winding): the escapement's phases as makeEsc solves them (js/escapement.js's
 # ESC.state, at the reference's swing, 207 deg, and drive): the discharge stone meets the gold spring 0.2406 (-12.3 deg), unlocking to the release 0.2482 (-2.4 deg); the
 # detent flung off the stone's corner 0.2487 (-1.8 deg), falling back onto the tooth it let go 0.2507 (0.8 deg) and riding it, the escaping tooth's tip passing under the stone,
