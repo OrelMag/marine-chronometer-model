@@ -85,6 +85,28 @@ def m3d():
     lf = os.path.join(HERE, 'assets', 'letgo_fix.json')
     return dict(v=V, made=M['made'], lf=json.load(open(lf, encoding='utf-8')) if os.path.exists(lf) else None)
 
+def makers():
+    """Section 20: the maker's sheets' data (wempe/js/makers.js, tools/wempe_makers.py): the lines by how they are made, the special ones in full, the deviations"""
+    import html
+    s = open(os.path.join(WE, 'js', 'makers.js'), encoding='utf-8').read()
+    L = json.loads(re.search(r'const MAKERS=(\[.*?\]);\n', s, re.S).group(1)); D = json.loads(re.search(r'MAKERS\.devs=(\[.*?\]);\n', s, re.S).group(1))
+    T = json.loads(re.search(r'MAKERS\.tests=(\[.*?\]);\n', s, re.S).group(1)); e = html.escape
+    parts = [l for l in L if l['cls'] != 'asm']; drawn = sum(1 for l in parts if l['cls'] == 'drawing'); wn = sum(1 for l in parts if l['cls'] == 'none' and l['id'].startswith('WN-'))
+    by = {}
+    for l in parts: by.setdefault(l['how'], []).append(l)
+    out = [f'<p>{len(L)} lines as last revised ({len(L) - len(parts)} assemblies): {drawn} parts with their material on their own drawing, {len(parts) - drawn} without '
+           f'({wn} Wempe-Norm parts whose standard sheets aren\'t in the set; the rest drawn only on an assembly, or with the Werkstoff left blank). '
+           f'{sum(1 for l in L if not l["fit"].startswith("not measured"))} carry a fit measured on the model.</p>',
+           '<div class="tw"><table><tr><th>How it is made</th><th class="n">Lines</th></tr>' + ''.join(f'<tr><td>{e(k)}</td><td class="n">{len(v)}</td></tr>' for k, v in sorted(by.items(), key=lambda kv: -len(kv[1]))) + '</table></div>',
+           '<h3>What needs a hand, or a special supply</h3><div class="tw"><table><tr><th>Drawing</th><th>Part</th><th>Material (its drawing)</th><th>How</th></tr>' +
+           ''.join(f'<tr><td>{e(l["no"])}</td><td>{e(l["name"])}</td><td>{e(l["mat"])}</td><td>{e(l["how"])}: {e(l["hown"])}</td></tr>' for l in parts if any(w in l['how'] for w in ('hand', 'special')) or l['how'] == 'bought in') + '</table></div>',
+           '<h3>The materials the drawings give</h3><div class="tw"><table><tr><th>Drawing</th><th>Part</th><th>Material</th><th>Treatment</th></tr>' +
+           ''.join(f'<tr><td>{e(l["no"])}</td><td>{e(l["name"])}</td><td>{e(l["mat"])}</td><td>{e(l["treat"])}</td></tr>' for l in parts if l['cls'] == 'drawing') + '</table></div>',
+           '<h3>The 1950s build\'s deviations on the cards</h3><ul>' + ''.join(f'<li><b>{e(d["title"])}</b> ({e(d["period"])}): {e(d["vmat"])}; {e(d["vtreat"])}. {e(d["why"])}</li>' for d in D) + '</ul>',
+           f'<p>The book\'s last chapter: the bench\'s {len(T)} tests (<code>tools/wempe_bench.js</code>, the 1950s build), each on its part\'s sheet too. Not in the book yet: an order of '
+           'assembly (the Hamilton\'s is its manual\'s Sec. VIII reassembly; no Wempe or 6MX assembly instructions are in the sources).</p>']
+    return '\n'.join(out)
+
 def main():
     md = open(os.path.join(WE, 'README.md'), encoding='utf-8').read()
     est, nest = estimates(items(section(md, 'Estimated, not from the drawings')))
@@ -99,7 +121,7 @@ def main():
     t = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
     made = datetime.date.today().strftime('%#d %B %Y' if os.name == 'nt' else '%-d %B %Y')
     for k, v in {'/*DATA*/null': json.dumps(DATA, separators=(',', ':'), ensure_ascii=False).replace('</', '<\\/'), '<!--MADE-->': made,
-                 '<!--ESTIMATED-->': est, '<!--CORRECTED-->': ul(corr), '<!--UNRESOLVED-->': ul(unres, ' class="open"'), '<!--SOURCES-->': ul(src), '<!--SOVIET-->': sov}.items():
+                 '<!--ESTIMATED-->': est, '<!--CORRECTED-->': ul(corr), '<!--UNRESOLVED-->': ul(unres, ' class="open"'), '<!--SOURCES-->': ul(src), '<!--SOVIET-->': sov, '<!--BOOK-->': makers()}.items():
         if k not in t: raise SystemExit(f'template.html has no {k}')
         t = t.replace(k, v)
     open(os.path.join(HERE, 'index.html'), 'w', encoding='utf-8', newline='\n').write(t)

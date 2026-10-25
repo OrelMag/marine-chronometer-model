@@ -25,7 +25,8 @@
      contacts: the Contacts debug view (../shared/contacts.js, loaded before the page's app.js), if the page has it: {expected {'part:Type|part:Type': why} (its fine.py's EXPECTED),
      states (its fine.py's), pose(state, update): the model posed in a state through its own update, label(state, i)}; while it shows, every part is a ghost, drawn plainly
      (no merged copies, Edges or ink), and the hash keeps contacts=1|sweep, ctin=1, ceps.
-   Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO, tourEnd, focusOn, unfocus, focused}. */
+     pick(hit): a click on the model offered first to the page (the maker's Measure); true if it took it. card(p): each part card as it opens (the maker's sheet, js/maker.js).
+   Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO, PCE, PARTS, SRC, units, tourEnd, focusOn, unfocus, focused}. */
 const VIEWER={start(cfg){
   const stage=$('#stage'),cv=stage.querySelector('canvas'),QA=/[?&]qa\b/.test(location.search),SNAP=/[?&]snap\b/.test(location.search);
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return null;}
@@ -183,12 +184,12 @@ const VIEWER={start(cfg){
   const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&m0.opacity<0.5)return true;return !!ghOf(m,st.focus);};   /* faded below half, glass, or see-through: a click passes */
   const rayAt=(x,y)=>{const rc=cv.getBoundingClientRect();ndc.set((x-rc.left)/rc.width*2-1,-(y-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);return ray.intersectObjects([root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);};
   const hitAt=e=>{const hs=rayAt(e.clientX,e.clientY);return hs.find(h=>!through(h.object))||hs.filter(h=>h.object.userData.devPlate).sort((a,b)=>a.object.userData.rad-b.object.userData.rad)[0]||null;};   /* a see-through schematic plate (laid out) is picked only where no part shows through it, the smallest where they overlap (a bridge before the plate it lies on, which shows round it) */
-  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}
+  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(cfg.pick&&cfg.pick(hit))return;if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches */
   let units='mm';const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
   /* a piece's card: its own text, and its source, note and figures where it has them, else its part's; a line up to its part. A part with pieces lists them */
-  function showPart(p){showHelp(false);const pp=kp(p);st.hid.delete(p);st.hid.delete(pp);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
+  function showPart(p){showHelp(false);const pp=kp(p);if(cfg.card)setTimeout(()=>cfg.card(p),0);st.hid.delete(p);st.hid.delete(pp);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[pp],c=PCE[p]||{},src=c.src||q.src,sn=c.src?c.sn:q.sn,figs=c.figs??q.figs;
     info.querySelector('.src').innerHTML=src?`<i style="--ps:${SRC[src][1]}"></i>${SRC[src][0]}${pp!==p&&!c.src?` (the ${q.t.toLowerCase()} as a whole)`:''}${sn?': '+U(sn):''}${figs?`. ${FL} ${figs}`:''}.`:'';
     const lk=k=>`<button data-p="${k}">${INFO[k][0]}</button>`;info.querySelector('.of').innerHTML=pp!==p?`Part of: ${lk(pp)}`:q.pcs?'Its pieces: '+q.pcs.map(x=>lk(pp+'.'+x.k)).join(', '):'';info.classList.add('on');hintOff();}
@@ -399,4 +400,4 @@ const VIEWER={start(cfg){
     requestAnimationFrame(frame);}
   look();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===startView?'true':'false'));
   requestAnimationFrame(frame);
-  return{st,look,wake,setView,cam,scene,r,mv,M,INFO,tourEnd,focusOn,unfocus,focused:()=>zf};}};
+  return{st,look,wake,setView,cam,scene,r,mv,M,INFO,PCE,PARTS,SRC,units:()=>units,tourEnd,focusOn,unfocus,focused:()=>zf};}};
