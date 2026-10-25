@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.31.00 · 2026-10-25
+- Navigating by the Wempe: a new report section follows 2,000 made chronometers each through a month at sea. Both builds leave the navigator about 1.5 miles out in longitude after 30 days (95 % within about 4), within a celestial fix's own error.
+- Three of the Wempe's open physics questions are closed: the detent's preload now has a bench limit of 0.80 g, the gold spring gets a test of its return pass, and the hairspring's period is shown to agree with the 1958 repair book.
+- The Wempe's assembly check now takes the detent's block out as the 1958 repair book does, sideways under the top plate.
+
 ## 3.30.02 · 2026-10-25
 - The Hamilton's sustaining ratchet has the hole its sustaining spring's pin goes into, as a restoration video shows the bare wheel, and the pin is drawn at its measured size
 - The two winding pawls' ends are a little narrower, as the same video measures them
