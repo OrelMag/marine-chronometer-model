@@ -194,8 +194,11 @@ function sim(o={}){
     if(dm===0){out[2]=0;out[3]=0;}if(wm===0){out[4]=0;out[5]=0;}};
   /* the Wempe's stone landing on the escaping tooth, plastically (estimated): the detent's speed made the tooth's there, the wheel (and the balance with it, the tooth on the
      impulse stone) taking kW of the blow */
-  const landR=()=>{const R1=rd1(ph),g1=wm===2?(at(G1,th)||0):0,Mi=wm===2?(I+J*g1*g1)/(g1*g1||1e-30):J,c=dv-R1*pv,L=-c/(1/id+kW*R1*R1/Mi);
-    if(wm===2){w-=kW*L*R1*g1/(I+J*g1*g1);pv=g1*w;}else pv-=kW*L*R1/J;dm=3;d=rdA(ph);dv=R1*pv;st.rOn.push(th/D);if(st.rLand<st.lastOff){st.rLand=t;st.rFirst.push(th/D);}};
+  /* o.eR (default 0, plastic): the landing's restitution; with it the stone rebounds (the blow 1 + eR times the plastic one) and flies free, landing plastically only once it
+     comes back slower than 1 mrad/s (no chatter). King, White, Maxwell and Menon (EPL 93, 14002, 2011): brass on steel 0.80-0.95 at 1-10 cm/s, the softer brass yielding */
+  const eR=o.eR??0,landR=()=>{const R1=rd1(ph),g1=wm===2?(at(G1,th)||0):0,Mi=wm===2?(I+J*g1*g1)/(g1*g1||1e-30):J,c=dv-R1*pv,bo=eR>0&&-eR*c>1e-3,L=-(bo?1+eR:1)*c/(1/id+kW*R1*R1/Mi);
+    if(wm===2){w-=kW*L*R1*g1/(I+J*g1*g1);pv=g1*w;}else pv-=kW*L*R1/J;d=rdA(ph);st.rOn.push(th/D);if(wm===2)st.rImp=(st.rImp||0)+1;if(st.rLand<st.lastOff){st.rLand=t;st.rFirst.push(th/D);}
+    if(bo){dv+=L/id;dm=1;st.rBo=(st.rBo||0)+1;}else{dm=3;dv=R1*pv;}};
   /* event functions, crossing from > 0 to <= 0: the tooth reaching the impulse jewel, the next tooth reaching the stone, the stone clearing the tooth,
      the detent reaching its stop, the jewel meeting the passing spring's tip, a contact letting go, the detent leaving its stop */
   const evs=(v,tt)=>{const th=v[0],w=v[1],d=v[2],ph=v[4],r=R8;r.fill(1);acc(tt,v[0],v[1],v[2],v[3],v[4],v[5]);
@@ -266,7 +269,7 @@ function sim(o={}){
   const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN,tail=a=>a.slice(Math.floor(a.length/2));
   return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,twice:st.twice,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),offF:mean(tail(st.offF)),margin:Math.min(...tail(st.margin)),
     liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,home:mean(tail(st.home)),amps,ampT,cross:st.cross,stopped:st.beats===0,
-    ...(RIDE?{rOn:mean(tail(st.rFirst)),rOff:mean(tail(st.rOff)),rEnd:mean(tail(st.rEnd)),rN:st.rOn.length/Math.max(1,st.beats)}:{})};   /* the Wempe's: where the stone first lands on the escaping tooth, leaves it, rides off it; its landings a beat */
+    ...(RIDE?{rImp:st.rImp||0,rBo:st.rBo||0,rOn:mean(tail(st.rFirst)),rOff:mean(tail(st.rOff)),rEnd:mean(tail(st.rEnd)),rN:st.rOn.length/Math.max(1,st.beats)}:{})};   /* the Wempe's: where the stone first lands on the escaping tooth, leaves it, rides off it; its landings a beat */
 }
 module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,MW78,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2,G,G1,at,jd,JR,JH,JB,H,RHO,polyM,ES,W0,T0,WEMPE,WL,WJ,RIDE,RDT,rdA,rd1,slabP,TIPL};   /* tripping.js builds the detent as a frame from the same pieces and contacts */
 if(require.main!==module)return;

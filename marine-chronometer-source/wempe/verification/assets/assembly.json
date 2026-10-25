@@ -88,6 +88,38 @@
   },
   {
    "op": 5,
+   "title": "the detent's block's fixing screw, out of the top plate's outer face",
+   "parts": [
+    "detentBlock.screws"
+   ],
+   "way": "train",
+   "met": []
+  },
+  {
+   "op": 6,
+   "title": "the detent's block with the detent, off its steady pins and out sideways under the top plate between the pillars",
+   "parts": [
+    "detentBlock",
+    "detent"
+   ],
+   "way": {
+    "path": [
+     [
+      0,
+      1.5,
+      0
+     ],
+     [
+      -45,
+      1.5,
+      0
+     ]
+    ]
+   },
+   "met": []
+  },
+  {
+   "op": 7,
    "title": "the barrel arbor's ratchet",
    "parts": [
     "setupRatchet"
@@ -96,7 +128,7 @@
    "met": []
   },
   {
-   "op": 6,
+   "op": 8,
    "title": "the barrel bridge",
    "parts": [
     "barrelBridge"
@@ -105,7 +137,7 @@
    "met": []
   },
   {
-   "op": 7,
+   "op": 9,
    "title": "the barrel with its arbor, mainspring and the chain (estimated)",
    "parts": [
     "barrel",
@@ -116,7 +148,7 @@
    "way": "train",
    "met": [
     {
-     "op": 7,
+     "op": 9,
      "a": "topPlate",
      "b": "chain",
      "hit": [
@@ -129,7 +161,7 @@
      "why": "the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"
     },
     {
-     "op": 7,
+     "op": 9,
      "a": "fusee",
      "b": "chain",
      "hit": [
@@ -146,7 +178,7 @@
      "why": "the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"
     },
     {
-     "op": 7,
+     "op": 9,
      "a": "coverPlate",
      "b": "chain",
      "hit": [
@@ -159,7 +191,7 @@
      "why": "the chain is unhooked from the fusee and unwound off its groove, not lifted (the book lets the spring down first)"
     },
     {
-     "op": 7,
+     "op": 9,
      "a": "stopWork",
      "b": "chain",
      "hit": [
@@ -174,7 +206,7 @@
    ]
   },
   {
-   "op": 8,
+   "op": 10,
    "title": "the fusee arbor's cork washer, flange and washer",
    "parts": [
     "corkRing",
@@ -185,22 +217,20 @@
    "met": []
   },
   {
-   "op": 9,
-   "title": "the top plate, with its fusee bush, lower cock and jewels, and the detent's block and detent screwed to it (the book: before the barrel's ratchet)",
+   "op": 11,
+   "title": "the top plate, with its fusee bush, lower cock and jewels",
    "parts": [
     "topPlate",
     "fuseeBush",
     "lowerCock",
     "balanceJewelsLow",
     "escJewelUp",
-    "escEndstoneUp",
-    "detentBlock",
-    "detent"
+    "escEndstoneUp"
    ],
    "way": "train",
    "met": [
     {
-     "op": 9,
+     "op": 11,
      "a": "topPlate",
      "b": "maintDetent",
      "hit": [
@@ -210,10 +240,10 @@
       ]
      ],
      "long": [],
-     "why": "the maintaining detent's screw, its head on the top plate's outer face (x -10, z -38.7), is taken out before the plate; the detent comes out at step 11"
+     "why": "the maintaining detent's screw, its head on the top plate's outer face (x -10, z -38.7), is taken out before the plate; the detent comes out at step 13"
     },
     {
-     "op": 9,
+     "op": 11,
      "a": "lowerCock",
      "b": "escapeWheel",
      "hit": [
@@ -223,23 +253,10 @@
       ]
      ],
      "long": [],
-     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug, its jewel's setting and the detent's pipe end pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
+     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug and its jewel's setting pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
     },
     {
-     "op": 9,
-     "a": "escapeWheel",
-     "b": "detent",
-     "hit": [
-      [
-       -3.4,
-       -0.1
-      ]
-     ],
-     "long": [],
-     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug, its jewel's setting and the detent's pipe end pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
-    },
-    {
-     "op": 9,
+     "op": 11,
      "a": "escapeWheel",
      "b": "balanceJewelsLow",
      "hit": [
@@ -249,12 +266,12 @@
       ]
      ],
      "long": [],
-     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug, its jewel's setting and the detent's pipe end pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
+     "why": "only the escape wheel's teeth overlap them in plan (5.8-6.9 from its arbor: the root circle r 6.05, the tips 7; the 0.2 under the root is the raster's 0.2 mm columns): the lower cock's lug and its jewel's setting pass between two teeth, the wheel turned to a gap, as the book has the escape wheel in before the top plate with the lower cock on it"
     }
    ]
   },
   {
-   "op": 10,
+   "op": 12,
    "title": "the escape wheel",
    "parts": [
     "escapeWheel"
@@ -263,7 +280,7 @@
    "met": []
   },
   {
-   "op": 11,
+   "op": 13,
    "title": "the maintaining detent",
    "parts": [
     "maintDetent"
@@ -272,7 +289,7 @@
    "met": []
   },
   {
-   "op": 12,
+   "op": 14,
    "title": "the fusee with its wheel, maintaining work and stop work",
    "parts": [
     "fusee",
@@ -286,7 +303,7 @@
    "met": []
   },
   {
-   "op": 13,
+   "op": 15,
    "title": "the seconds wheel",
    "parts": [
     "secondsWheel"
@@ -295,7 +312,7 @@
    "met": []
   },
   {
-   "op": 14,
+   "op": 16,
    "title": "the centre wheel",
    "parts": [
     "centreWheel"
@@ -304,7 +321,7 @@
    "met": []
   },
   {
-   "op": 15,
+   "op": 17,
    "title": "the intermediate wheel",
    "parts": [
     "intermediateWheel"
@@ -313,7 +330,7 @@
    "met": []
   },
   {
-   "op": 16,
+   "op": 18,
    "title": "the intermediate bridge, off the dial side",
    "parts": [
     "intermediateBridge"
@@ -329,9 +346,9 @@
   "escJewelLow",
   "escEndstoneLow"
  ],
- "parts": 47,
- "pairs": 397,
- "expected": 11,
+ "parts": 48,
+ "pairs": 401,
+ "expected": 10,
  "fails": 0,
  "left": []
 }

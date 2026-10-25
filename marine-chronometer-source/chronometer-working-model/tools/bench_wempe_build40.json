@@ -63,7 +63,7 @@
    "sheet": "05 04_1, 05 04 01-4",
    "when": "the detent, its gold spring and the balance in; the train's power let down",
    "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
-   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -8.8° of the balance (05 04_1's −12°), the wheel released at 4.0° (lock 12.8°), the gold spring off the stone at 6.9° (let-off 2.8°), the return swing past it at -21.6° (overall 28.5°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.188 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 143 µm over its floor): never shallower than 0.092 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.285 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.64 g rider must leave the detent on its banking and a 2.63 g one part it; aim near 1.14 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.40 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 11.5° of swing)."
+   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -8.8° of the balance (05 04_1's −12°), the wheel released at 4.0° (lock 12.8°), the gold spring off the stone at 6.9° (let-off 2.8°), the return swing past it at -21.6° (overall 28.5°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.189 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 143 µm over its floor): never shallower than 0.092 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.285 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.64 g rider must leave the detent on its banking and a 0.80 g one part it; aim near 0.68 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.40 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 11.5° of swing; never over 0.80 g: above it the stone, falling back after the release, lands again on the escaping tooth's back during the impulse, where the models part: dynamics.js with brass's restitution). The return pass: turn the balance back slowly by hand through the discharge with the train's power on and watch the locking stone under a loupe: the discharge stone must bend the gold spring aside without lifting the detent (wempe_tripping.js: as the model takes the stone's contact on the gold spring no tooth gets past over 333 gold's whole range of modulus, 83-110 GPa, but at 4 times that contact's stiffness 6 in 12 do, whatever the alloy: only the made spring can show it); its tip at rest 0.10-0.15 short of the discharge stone and 0.35-0.40 past the detent's end (the 1958 Navy repair book's checks, p. 60)."
   },
   {
    "id": "swing",
@@ -682,10 +682,10 @@
     "dip": 0.3903
    },
    "depth": {
-    "aim": 0.1885,
+    "aim": 0.1886,
     "drawn": 0.235,
     "window": [
-     0.092,
+     0.0923,
      0.2849
     ],
     "tip": 0.25
@@ -694,9 +694,9 @@
     "model": 0.8,
     "window": [
      0.64,
-     2.6269
+     0.8
     ],
-    "aim": 1.14
+    "aim": 0.68
    }
   },
   "swing": {
