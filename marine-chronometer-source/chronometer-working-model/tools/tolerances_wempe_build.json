@@ -86,7 +86,9 @@
   "preload": {
    "g": 0.8,
    "min": 0.64,
-   "max": 3.9999,
+   "max": 0.8,
+   "back": 0.8,
+   "swing": 3.9999,
    "margin": 0.4,
    "knock": 0.64,
    "rows": [
