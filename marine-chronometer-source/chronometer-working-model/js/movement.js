@@ -1634,7 +1634,7 @@ function buildMovement(M){
      the bridge: the nearest ISO, M1.6). Until 12 October 2026 an estimated stud r 0.9, 3.2 long, 9.5 mm from the fusee about 108 deg round from here; kept solid while
      the key winds (app.js) */
   { const q=fs.stud,c=Math.cos(fs.g.rotation.y),s=Math.sin(fs.g.rotation.y),WS=[fs.g.position.x+q[0]*c+q[1]*s,fs.g.position.z-q[0]*s+q[1]*c],WL=5.5,WG=0.5,ga=Math.atan2(L.Fu[1]-WS[1],L.Fu[0]-WS[0]);
-    const ws=[hn(cylBetween(bb,WSR,TB_T,TB_T+WL-WG,M.steel,...WS,40),'42099')];ws[0].userData.wstop={r:WSR,h:WL-WG};   /* the stud's radius and length (maintaining.py: its cylinder, merged with its end below) */ws.push(hn(cylBetween(bb,0.8,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1}));   /* the stud, and its thread 2 mm up into the bridge */
+    const ws=[hn(cylBetween(bb,WSR,TB_T,TB_T+WL-WG,M.steel,...WS,40),'42099')];ws[0].userData.wstop={r:WSR,h:WL-WG};   /* the stud's radius and length (maintaining.py: its cylinder, merged with its end below) */ws.push(hn(cylBetween(bb,0.8,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1}));for(const m of ws)m.userData.devKeep=true;   /* devKeep: shown laid out (app.js), where the fusee and its stop-bar stay, though the barrel bridge is hidden */   /* the stud, and its thread 2 mm up into the bridge */
     const gr=new THREE.Group();gr.position.set(WS[0],TB_T+WL-WG,WS[1]);gr.rotation.y=-ga;bb.add(gr);   /* its end: four lands between three grooves, seven bands of equal width */
     const w=2*WSR/7;for(let i=0;i<4;i++){const z0=-WSR+2*i*w,z1=z0+w,cuts=[];if(i>0)cuts.push([z0,0,1]);if(i<3)cuts.push([z1,0,-1]);ws.push(hn(mesh(gr,polyGeo(discClip(WSR,cuts,64),WG),M.steel),'42099',{sub:1}));}fuse(ws);   /* the stud and its grooved end one piece, one mesh (fuse): the lands' edges ran flush with its wall, lines in Edges until 21 October 2026 */
     R.bbWS=hT(...WS,1.6); }   /* its tapped hole blind,
@@ -1826,12 +1826,14 @@ function buildMovement(M){
   const DMV=[[parts.cw,dC],[parts.motion,dC],[parts.hands,dC],[parts.tw,dOf('T')],[parts.fw,dF],[R.udW,[-dC[0],-dC[1]]],[R.fp,[-dC[0],-dC[1]]],[R.sec,DEV.sub(dF,dC)],[R.ud,[-dC[0],-dC[1]]]];
   for(const[o]of DMV)o.userData.xz0=[o.position.x,o.position.z];
   /* schematic plates for the laid-out view, drawn see-through (app.js): pillar plate and train bridge along the line, barrel bridge over the barrel and fusee,
-     a cock over the balance on a foot, and pillars beside the line clear of the wheels. Not parts: no partName, so they can't be picked, listed or sectioned */
+     a cock over the balance on a foot, and pillars beside the line clear of the wheels. Not parts (no partName: not listed, sectioned or checked as the movement's;
+     schematic), but each stands in for its part (devOf, its piece pc), whose card a click on it opens while laid out (app.js), as the Wempe's (25 October 2026) */
   const dp=new THREE.Group();mv.add(dp);
   { const w=DEV.w,n=[-w[1],w[0]],at=(t,s=0)=>[L.Ba[0]+w[0]*t+n[0]*s,L.Ba[1]+w[1]*t+n[1]*s],tB=DEV.len,tF=Math.hypot(...DEV.sub(L.Fu,L.Ba));
-    mesh(dp,stadium(at(6),at(tB),44,PP_T),M.plate,0,y0,0);mesh(dp,stadium(at(tF),at(tB),44,TB_U-TB_T),M.plate,0,TB_T,0);mesh(dp,stadium(at(6),at(tF),44,TB_T-BB_T),M.plate,0,BB_T,0);
-    mesh(dp,stadium(at(tB),at(tB+20.5),9,2.6),M.plate,0,CK_T,0);cylBetween(dp,2.8,TB_T,CK_T+2.6,M.plateSolid,...at(tB+20.5));
-    for(const[t,s,top]of[[8,19,TB_T],[62,-19,TB_U],[tB-8,19,TB_U]])cylBetween(dp,2.6,y0,top,M.plateSolid,...at(t,s),32); }
+    const dg=(k,pc)=>{const g=new THREE.Group();g.userData.devOf=k;if(pc)g.userData.pc=pc;dp.add(g);return g;};
+    mesh(dg('pillar','plate'),stadium(at(6),at(tB),44,PP_T),M.plate,0,y0,0);mesh(dg('trainBridge','bridge'),stadium(at(tF),at(tB),44,TB_U-TB_T),M.plate,0,TB_T,0);mesh(dg('barrelBridge','bridge'),stadium(at(6),at(tF),44,TB_T-BB_T),M.plate,0,BB_T,0);
+    {const g=dg('cock','cock');mesh(g,stadium(at(tB),at(tB+20.5),9,2.6),M.plate,0,CK_T,0);cylBetween(g,2.8,TB_T,CK_T+2.6,M.plateSolid,...at(tB+20.5));}
+    {const g=dg('pillars','');for(const[t,s,top]of[[8,19,TB_T],[62,-19,TB_U],[tB-8,19,TB_U]])cylBetween(g,2.6,y0,top,M.plateSolid,...at(t,s),32);} }
   dp.traverse(o=>{if(o.isMesh){o.userData.devPlate=true;o.userData.noCap=true;}});
   /* ---------- API ---------- */
   mv.userData.parts=parts;mv.userData.R=R;mv.userData.DEV=DEV;mv.userData.S=S;   /* S: screw positions, for the tools */
