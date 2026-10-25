@@ -3,7 +3,8 @@ table the default where a name isn't here). P1a (14 October 2026): the frame; no
 Its parts list is bom.json beside this file, its expected coplanar faces audit-expected.json (audit.py --model wempe --update writes it)."""
 # audit.py: loose ends expected (part:geometry, place, radius, why); the Hamilton's Navy brake isn't fitted. The fusee's stop pin (05 08 01-5), standing out under the
 # top plate into the stop bar's path, its end free, is turned (its domed end) and so isn't among them: wempe_stopwork.py checks it
-LOOSE=[('ring:Cylinder',(0,8.25,-55.0),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 1.78 out of the flange in the bowl's notch, inside the bezel's thread (case.js): its end is free")]
+LOOSE=[('ring:Cylinder',(0,8.25,-55.0),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 1.78 out of the flange in the bowl's notch, inside the bezel's thread (case.js): its end is free"),
+  ('stopWork:Cylinder',(-20.33,-17.98,-10.31),0.25,"the stop bar's spring's pin (05 06 04-4), its inner end standing free 1.3 into the small end's recess through the spring's line (05 06_4's C-D), its outer end in its 0.5 H7 hole through the end (cut 25 October 2026), 0.02 under the hub's face")]
 LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
@@ -15,7 +16,8 @@ FLOAT=[('ring:Buffer',(15.22,0,-41.82),3.1,_RS),('ring:Buffer',(-43.82,0,7.73),3
 FLOAT_BOX=[('closingPlate:Buffer',(0,-50.45,0),3.6,"the closing plate's screw (WN-71, 05 01 00-2; 4.7 higher with the drawn bowl's casting since 24 October 2026): its head bears on the counterbore's floor round the plate's Ø 5.5 hole, beyond 0.6 of its radius"),
   ('lid:Buffer',(0,24.55,96.5),4.5,"the latch tongue's pivot screw (P. 51 00 02-2): its head bears round the tongue's Ø 6.2 hole, beyond 0.6 of its radius"),
   *[('gimbalRing:Buffer',(75.23,1.05,s*17.75),2.4,"a ring bracket's screw (05 01 00-6, put in along the radius: the probes stand off it in x and z): its head bears on the bracket's outside round its Ø 2.8 hole (cut since 25 October 2026), the middle probe and one along its axis in the hole") for s in(-1,1)],
-  *[('gimbalRing:Buffer',(0,1.05,s*74),4.6,"an inner pivot screw (WN-79, put in along the radius: the probes stand off it in x and z): its head bears on the ring's outside round its M5 hole (cut since 25 October 2026), the middle probe and one along its axis in the hole") for s in(-1,1)]]
+  *[('gimbalRing:Buffer',(0,1.05,s*74),4.6,"an inner pivot screw (WN-79, put in along the radius: the probes stand off it in x and z): its head bears on the ring's outside round its M5 hole (cut since 25 October 2026), the middle probe and one along its axis in the hole") for s in(-1,1)],
+  *[('box:Buffer',(s*92.5,1.05,0),6,"an outer pivot's screw (WN-80, put in along the radius: the probes stand off it in y and z): its head bears on the side wall's outside round its M6 hole (51 00 10's \"Gew. M 6\", cut since 25 October 2026), the middle probe and one along its axis in the hole") for s in(-1,1)]]
 # fine.py: the states checked (balance phase, escape teeth, fusee turns from full wind, winding): the escapement's phases as makeEsc solves them (js/escapement.js's
 # ESC.state, at the reference's swing, 207 deg, and drive): the discharge stone meets the gold spring 0.2406 (-12.3 deg), unlocking to the release 0.2482 (-2.4 deg); the
 # detent flung off the stone's corner 0.2487 (-1.8 deg), falling back onto the tooth it let go 0.2507 (0.8 deg) and riding it, the escaping tooth's tip passing under the stone,
@@ -34,19 +36,14 @@ EXPECTED={('pillarPlate:Buffer','secondsWheel:Extrude'):("the Soviet 6MX's conta
   ('hairspring:Buffer','hairspring:Buffer'):("the hairspring's inner end in the hole across the collet's end (05 03 02-2), drawn without the hole (a collet of vertical walls)",0.45,0.55),
 ('dustBush:Lathe','fuseeBush:Buffer'):("the dust bush pressed on the fusee bush's taper above its flange (05 08 01-2: Ø 8 T6, +0.019/+0.028, 1:70; 05 08 01-3: bore 8 H7 +0.015, 1:70; drawn at the fits' middles, 0.008 interference on the radius over the taper's 2.9). Until 15 October 2026 the T6 was read on the spigot, pressed into the top plate's hole 10, now a g6 slide in it",0.8,2.9),
  # the fusee and barrel (P1c): joints in holes a turned or extruded part can't have cut across it, and the parts that touch by design
- ('fusee:Lathe','udPinion:Extrude'):("the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length",0.65,3.0),
+ ('fusee:Buffer','udPinion:Extrude'):("the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length",0.65,3.0),
  ('stopWork:Buffer','stopWork:Cylinder'):("the stop bar's pin (05 06 03-2) pressed across the bar in its hole (05 06_4's C-D, dashed inside the bar), which a solid of plan cells can't cut across",0.45,0.55),
- ('fusee:Buffer','stopWork:Cylinder'):("the stop bar's spring's pin (05 06 04-4) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end (its outer part, 2.8 of its 4.1, in the end left uncut past N: 0.56 mm³ of 0.80)",0.7,0.55),
  ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) in the mainspring's eye: its ramp, 0.475 at its face, stands 0.1 proud of the eyed coil (0.36) into the next, which rides over it on a real spring; the drawn coils lie at the strip's pitch and don't bend round it",0.05,1.6),
- ('coverPlate:Lathe','fusee:Buffer'):("the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body",8.5,3.6),
  ('chain:Extrude','fusee:Cylinder'):("the chain's top hook on the fusee's pin (05 06 00-6), round it",0.1,0.3),
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),
  ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
- ('band:Extrude','barrel:Lathe'):("the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
- ('band:Extrude','barrel:Buffer'):("as revised (the drum notched, a BufferGeometry): the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
  ('band:Buffer','fusee:Buffer'):("the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)",0.1,0.1),
- ('barrel:Lathe','chain:Extrude'):("the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum",0.4,0.3),
- ('barrel:Buffer','chain:Extrude'):("as revised (the drum notched, a BufferGeometry): the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum",0.4,0.3),
+ ('barrel:Buffer','chain:Extrude'):("at run down only (8.78 turns): the chain's bottom hook (05 07 04), laid where the chain's last link comes to it, 0.06 mm³ into the drum's wall off its slot; running, its barb (1.4 past its shank's edge) lies in the slot cut for it at the fusee's assembly (0207: 'Schlitz für Kette'), cut since 25 October 2026 (fusee.js, DRUM)",0.1,0.3),
  ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
  ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8)}
 WIND_SEQ=False
@@ -139,7 +136,7 @@ BLENDER={'prefix':'r_blender_wempe_','windRel':True,'parts':['escapeWheel','bala
 # intermediate and seconds arbors' dial-side bush and jewel in the intermediate bridge 05 08 04); each part's screws and what they go into (the top plate on the three
 # pillars, holes 11, 39, 49; the barrel bridge and the fusee bush onto the top plate; the intermediate bridge onto the pillar plate's dial face); the pillar plate held
 # in the movement ring on its rim (05 08 00-3). The cocks carry the balance alone, no load of the train's, and are left out. The pillars Ø 8.1 (05 08 00-1), 19.0 between the
-# plates' inner faces (WD.INNER). The chain at each case's turn of the fusee (fusee.js: RFT, ac, the large end face F -6.265): fully wound at 8.75 turns, the floor r 9.355
+# plates' inner faces (WD.INNER). The chain at each case's turn of the fusee (fusee.js: RFT, ac, from the blank's large end face F0 -5.925, which the groove's places are cut from; the face as re-turned F -6.125): fully wound at 8.75 turns, the floor r 9.355
 # plus the chain's pitch line 1.02, 11.735 from the large end; run down at turn 0, r 17.25 + 1.02, in the flange's slot 1.195 from it; the barrel's pitch line r 41.6/2 + 1.02
 # (wempe_strength.js's RB). The spring's moment at 05 06_20's level (wempe_physics.js: MupM; run down its solved Mdown at the same level, Kl).
 FEA={'parts':['pillarPlate','topPlate','barrelBridge','fuseeBush','intermediateBridge'],'plate':'pillarPlate','field':'topPlate','gearing':'gearing_wempe.json',
@@ -151,7 +148,7 @@ FEA={'parts':['pillarPlate','topPlate','barrelBridge','fuseeBush','intermediateB
   'fix':{'topPlate':[(-36.86,3.22,'pillars'),(6.42,-36.44,'pillars'),(18.5,32.04,'pillars')],'barrelBridge':[(32.04,18.5,'topPlate'),(17.37,-32.67,'topPlate')],
     'fuseeBush':[(-16.71,-20.49,'topPlate'),(-21.21,-12.69,'topPlate'),(-12.2,-12.69,'topPlate')],'intermediateBridge':[(-4.32,26.41,'pillarPlate'),(22.46,5.25,'pillarPlate')]},
   'pillarD':8.1,'pillarL':19.0,'rim':(41.5,42.6),'ringR':6.0,'rB':41.6/2+1.02,
-  'chain':[('fully wound','Mup',9.355+1.02,-6.265-11.735),('run down','Mdn',17.25+1.02,-6.265-1.195)],
+  'chain':[('fully wound','Mup',9.355+1.02,-5.925-11.735),('run down','Mdn',17.25+1.02,-5.925-1.195)],
   'node':"const P=require('./wempe_physics.js');console.log(JSON.stringify({Mup:P.MupM,Mdn:P.FN.Mdown*P.LV.Kl}))"}
 
 # assembly.py --model wempe: the movement taken apart in the order the Soviet Navy's repair book gives for the MX (Эксплуатация и ремонт измерителей времени, 1958,

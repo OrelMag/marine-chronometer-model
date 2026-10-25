@@ -4,6 +4,12 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.32.01 · 2026-10-25
+- The Wempe's fusee, barrel and their arbors have the screw, pin and rivet holes their drawings give; the maintaining clicks their drawn sinks and springs; the box's handles a finger recess in the wood
+- The Wempe's fusee sits where its 1948 drawing puts it, its large face re-turned at assembly and cut back outside 33 mm
+- The Wempe barrel's hook block, Steg and mainspring turned to their drawn places opposite the chain's slot
+- The Wempe case brackets' boss 9 mm wide as drawn, and the gimbal ring centred on its pivots
+
 ## 3.32.00 · 2026-10-25
 - The Hamilton's hour wheel drawn with the short teeth a restoration video shows (its tips 8.6 mm out, not 8.8)
 - The detent's trip spring drawn its full 6.45 mm length, its tip under the horn as on the real detent; the escapement's figures, bench tests and maker's sheets follow
