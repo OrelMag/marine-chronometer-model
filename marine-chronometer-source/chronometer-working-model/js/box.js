@@ -280,9 +280,9 @@ function buildBox(M){
   /* lids hinged at the back: the glass lid (HG tall) on the box, the outer lid (HL) on the glass lid, so it opens on its own and never swings through the glass lid. Each turns about the
      knuckles of its piano hinge, HR behind the back (mid at the lower seam's axis, top at the upper's), so each lid's back face is at z HR in its own frame (LO its middle).
      The glass lid's walls 11 thick (its frame round the glass about 11 +-2 wide from above, REPORT.md: rough; 26, estimated, until 20 October 2026), the glass 3 under its top (estimated) */
-  const HR=2.6,LO=HR+W,mid=new THREE.Group(),top=new THREE.Group();mid.userData.partName='lidGlass';top.userData.partName='lid';mid.position.set(0,YL,-W-HR);top.position.set(0,HG,0);root.add(mid);mid.add(top);
+  const HR=2.6,LO=HR+W,mid=new THREE.Group(),top=new THREE.Group();mid.userData.partName='lidGlass';mid.userData.pc='cover';top.userData.partName='lid';mid.position.set(0,YL,-W-HR);top.position.set(0,HG,0);root.add(mid);mid.add(top);
   { const fw=11,p=mid,h=HG;wood(2*W,h,fw,0,h/2,HR+2*W-fw/2,p);wood(2*W,h,fw,0,h/2,HR+fw/2,p);wood(fw,h,2*W-2*fw,W-fw/2,h/2,LO,p);wood(fw,h,2*W-2*fw,-W+fw/2,h/2,LO,p);
-    const g=mesh(p,new THREE.BoxGeometry(2*W-2*fw,0.8,2*W-2*fw),M.glass,0,h-3,LO);g.renderOrder=6; }
+    const g=pc(mesh(p,new THREE.BoxGeometry(2*W-2*fw,0.8,2*W-2*fw),M.glass,0,h-3,LO),'glass');g.renderOrder=6; }   /* its own piece (lidGlass.glass), so a click can pick it */
   wood(2*W,HL,2*W,0,HL/2,LO,top);
   for(const sx of[1,-1])for(const sz of[HR,HR+2*W]){brassCorner(mid,sx*W,137-H0,sz,10,LO);const tc=brassCorner(top,sx*W,HL-5,sz,10,LO);   /* the glass lid's at Y 132-142; the outer lid's up to its top (Y 186-196 against the photographs' 184-195) */
     const zc=sz+Math.sign(sz-LO)*CT,cx=sx*(W+CT),q=[[cx,zc]];for(let i=0;i<=16;i++){const a=Math.PI/2*i/16;q.push([cx-sx*CL*Math.cos(a),zc-Math.sign(sz-LO)*CL*Math.sin(a)]);}fuse([tc,mesh(top,polyGeo(q,CT),M.brass,0,HL,0)]);}   /* the plate over the top's corner */
