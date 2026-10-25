@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#open">18. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#mech2">18. The mechanisms in turn</a><a href="#open">21. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -418,7 +418,47 @@ them part on detail of the detent's motion (none bears on its safety), so each b
 <div id="tBuildsMC" class="tw"></div>
 <div id="kBuilds"></div>
 
-<h2 id="open">18. What stays open</h2>
+<h2 id="mech2">18. The mechanisms in turn: wear, the key, the motion work, the estimates</h2>
+<p>The Hamilton's model was checked mechanism by mechanism, as a maker would take its parts, by five tools beside the escapement's and the train's (its build report's
+section 11): wear, the key forced, the motion work, the train on sprung meshes and the estimates swept. The Wempe's counterparts follow, each reading the Wempe's own
+data (<code>wempe_strength.js</code>'s loads, <code>gearing_wempe.json</code>'s windows, <code>tolerances_wempe.json</code>'s lock window, <code>mechanisms_wempe.json</code>,
+<code>wempe_inertia.json</code>) and its sheets. The train on sprung meshes (the Hamilton's <code>traindyn.js</code>) has no counterpart here: section 13's
+<code>wempe_transmission.js</code> already runs every mesh tooth by tooth through the beat (the meshes' forces, which rattle, the seconds hand's bounce) and weighs every
+body on the solids (its section 1; the escape wheel's inertia against <code>WESC.SET</code>'s is <code>invariants.py --model wempe</code>'s), so it is cited, not repeated.</p>
+<h3>Wear: how long each contact keeps its figure</h3>
+<p>Archard's law at every sliding contact (V = k F s / H; k from Rabinowicz, 1e-7 well oiled, 1e-6 poorly, 1e-5 once the oil has gone; the escapement runs dry, as a
+chronometer's does, at Rabinowicz's unlubricated non-metal on metal, 1.5e-6), the loads <code>wempe_strength.js</code>'s fully wound, each depth against the tolerance it eats.
+An escape tooth's tip (gilt brass) wears as a wedge whose flat widens. The line is a service interval: the 1954 Soviet instruction's cleaning and fresh oil every three years
+(<code>6MX-figures.md</code>, п. 19); the TU's ten years' service life is reported against.</p>
+<figure><div class="chart" id="cWear"></div><figcaption>Figure 21. The share of its tolerance each contact wears away as it runs (well oiled; the escapement dry at 1.5e-6),
+year by year, as last revised (solid) and the escape tooth's tip in the 1950s build (dashed); the shaded band the three years between overhauls. Past 1 the figure is gone: the
+balance's endstone wears its endshake band (a repairer's setting the overhaul restores) and the drawn escapement's 15 µm lock window is spent by its brass teeth's wear in
+about four years.</figcaption></figure>
+<div id="tWear" class="tw"></div>
+<div id="kWear"></div><div id="kWearB"></div>
+<h3>The key forced</h3>
+<p>A strong hand on the key's Ø 34.5 paddle (Imrhan and Munoz-Vasa's handles carried on past their 19 mm, an extrapolation; Swain's 1.06 N·m beside it), wound against the
+stop, and turned the wrong way. The 1943 key (51 00 11) is a one-way clutch, its coil spring gripping the tube one way ("Linksaufzug b. Rechtsdrehung entspannt sich die Feder");
+the 1940 key it replaced was plain.</p>
+<div id="tOw" class="tw"></div>
+<div id="kOw"></div>
+<h3>The motion work and the up-and-down work, made on a CNC</h3>
+<p>Each mesh tooth by tooth on <code>dial.js</code>'s tables, its depthing window (closer until its tips reach the roots, wider until it loses contact or its hand has a
+quarter of an hour of play) and the hole its stud must be bored to (gearing.js's rule, the window's close side less the stud's shake, halved). The cannon pinion's friction
+window is <code>wempe_transmission.js</code>'s (section 13), put as a weight hung on the minute hand.</p>
+<div id="tMw" class="tw"></div>
+<div id="kMw"></div>
+<h3>The estimates swept, with the bench's correction</h3>
+<p>What <code>wempe_tolerances.js</code> (section 12) doesn't sweep: the balance's free run-down (TF) over 80-200 s with the strip the bench's run-down test chooses, the
+pivots' shake against each mesh's window, the hairspring's length read four ways off 05 03_7, and its outer terminal curve formed by hand; for the drawings as last revised
+and both builds.</p>
+<figure><div class="chart" id="cEst"></div><figcaption>Figure 22. The swing over the whole wind (band: its lowest to its highest) against the balance's free run-down TF,
+with the strip the run-down test chooses: as last revised and the two builds, against the guard band (shaded). The model's TF, 111 s, is a running 6MX's on video
+(section 15).</figcaption></figure>
+<div id="tEst" class="tw"></div>
+<div id="kEst"></div><div id="kEstB"></div><div id="kEst40"></div>
+
+<h2 id="open">21. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -454,6 +494,7 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <tr><td><a href="../../chronometer-working-model/tools/wempe_transmission.js"><code>wempe_transmission.js</code></a></td><td>The whole transmission in time, every part that moves (13)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/keystone.js"><code>keystone.js</code></a></td><td>The escapement against the 1904 text (14)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_swing.py"><code>wempe_swing.py</code></a>, <a href="../../chronometer-working-model/tools/wempe_startup.js"><code>wempe_startup.js</code></a></td><td>The swing read off a video and fitted (15)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_wear.js"><code>wempe_wear.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_overwind.js"><code>wempe_overwind.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_motionwork.js"><code>wempe_motionwork.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_estimates.js"><code>wempe_estimates.js</code></a></td><td>The mechanisms in turn: wear, the key forced, the motion work and its studs, the estimates swept (18)</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="geometry.py"><code>geometry.py</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This page's data and the page</td></tr>
 </table></div>
 
@@ -470,6 +511,7 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <li>C.-E. Guillaume, Nobel lecture (1920), and VintageWatchstraps, "Temperature Compensation by Nickel Steels": the nickel steels and the integral balance's secondary error at the Neuchâtel trials.</li>
 <li>M. A. Crisfield, <i>Non-linear Finite Element Analysis of Solids and Structures</i>, vol. 1 (1991), ch. 7: the co-rotational beam element; J. S. Przemieniecki, <i>Theory of Matrix Structural Analysis</i> (1968): the frame element and its consistent mass; P. Wriggers, <i>Computational Contact Mechanics</i> (2006): penalty contact.</li>
 <li>NORDFORSK, <i>Assessment of Ship Performance in a Seaway</i> (1987): the operability limit; MARIN (IMDC 2024) and Jachowski et al., KONES (2012): merchant ships' roll periods.</li>
+<li>J. F. Archard, "Contact and rubbing of flat surfaces", <i>Journal of Applied Physics</i> 24 (1953); E. Rabinowicz, <i>Friction and Wear of Materials</i> (2nd ed., 1995): the wear law and its coefficients. A. Imrhan and C. Munoz-Vasa, <i>Industrial and Systems Engineering Review</i> 1(2) (2013), and Swain et al. (1970): a hand's torque on small handles. EN 10270-1: patented cold-drawn spring wire's strength.</li>
 <li>Mainspring friction and losses: ICMFF9 (gruppofrattura.it), "the torque during unwinding is 10 to 20 per cent less than that during winding"; lubricated steel on steel, the CRC Handbook as cited in US 3,939,081.</li>
 <li>The Hamilton's reports, whose tools these are: <a href="../../chronometer-working-model/verification/build-verification/index.html">Would a chronometer made to the model run and keep time?</a> and <a href="../../chronometer-working-model/verification/real-chronometers/index.html">Does the model behave like a real Hamilton Model 21?</a></li>
 </ol>
@@ -760,6 +802,30 @@ function draw(){
     const K=S.committed;if(K&&(K.split.drive!==U.split.drive||K.split.span.join()!==U.split.span.join()||K.tf_at_model_drive.TF!==U.tf_at_model_drive.TF))$('vidMeaning').innerHTML+=` <b>The committed <code>wempe_startup.json</code> is not what the tool finds today</b> (<code>node wempe_startup.js --json wempe_startup.json</code> rewrites it): it holds TF ${f(K.split.TF,1)} s, ${K.split.span[0]}-${K.split.span[1]} s, on ${f(100*K.split.drive,1)} % of the drive (TF ${f(K.tf_at_model_drive.TF,1)} s at the model's), where today's run gives ${f(U.split.TF,1)} s, ${U.split.span[0]}-${U.split.span[1]} s, on ${f(100*U.split.drive,1)} % (${f(U.tf_at_model_drive.TF,1)} s). This page shows today's; <code>wempe_escapement.js</code>, the README and the essay quote the file's.`;}
   checks('kStart','startup');
 
+  /* ---------- 18. the mechanisms in turn ---------- */
+  if(D.mech2&&D.mech2.wear){const M2=D.mech2,Wr=M2.wear,cs=Wr.contacts.filter(c=>c.curve),top=cs.slice().sort((a,b)=>a.yrs.good-b.yrs.good).slice(0,5),cc=['--s1','--s2','--s3','--s4','--muted'];
+    const nm=c=>c.name.replace(/ \(.*$/,'');
+    const eB=M2.wearB&&M2.wearB.contacts.find(c=>/escape tooth/.test(c.name));
+    chart('cWear',{label:'Wear against tolerance',x:[0,12],y:[0,2],xl:'years running',yl:'share of its tolerance worn',vbands:[{x0:0,x1:3,c:'--band',t:'a service interval'}],hrefs:[{y:1,t:'tolerance spent'}],legend:true,r:40,
+      series:[...top.map((c,i)=>({type:'line',name:nm(c),c:cc[i],data:c.curve.map(p=>[p[0],Math.min(p[1],2)])})),...(eB?[{type:'line',name:'the escape tooth, 1950s build',c:'--s2',dash:'5 4',data:eB.curve.map(p=>[p[0],Math.min(p[1],2)])}]:[])]});
+    const yr=y=>y>1000?'>1000':y>=10?f(y,0):f(y,1);
+    table('tWear',['Contact','Load','Slid a year','Tolerance','Years: well oiled / poorly / dry'],Wr.contacts.slice().sort((a,b)=>a.yrs.good-b.yrs.good).map(c=>[`${esc(c.name)}${c.dry?' (dry)':''}`,c.F<1?f(c.F*1000,1)+' mN':f(c.F,1)+' N',f(c.s,0)+' m',`${f(c.tol*1000,1)} µm: ${esc(c.what)}`,['good','poor','dry'].map(k=>yr(c.yrs[k])).join(' / ')]),true);
+    checks('kWear','wear');checks('kWearB','wear-build');
+    const O=M2.ow,orow=x=>[esc(x.name),esc(x.load),f(x.sig,0)+' MPa',`${x.lo}-${x.hi} (${esc(x.what)})`,x.Ty!=null?f(x.Ty,2)+' N·m':'–',`<span class="${x.v==='ok'?'ok':x.v==='~~'?'mid':'no'}">${x.v}</span>`];
+    table('tOw',['Part','Load','Stress','Its range, MPa','Yields at, on the key',''],[[`<b>Forward against the stop, a strong hand ${f(O.TH,2)} N·m</b>`,'','','','',''],...O.forward.map(orow),[`<b>The wrong way with the plain 1940 key (the 1943 key passes about 5 mN·m)</b>`,'','','','',''],...O.backward.map(orow)],true);
+    checks('kOw','overwind');
+    const Mw=M2.mw;if(Mw&&Mw.win)table('tMw',['Mesh','Tip clearance','Backlash','Depthing window','Its stud’s hole'],Mw.meshes.map((m,i)=>{const w=Mw.win[i];return[esc(m.nm)+` (${m.za}:${m.zb})`,f(m.tip*1000,0)+' µm',f(m.blmm*1000,0)+' µm',`${f(w.lo*1000,0)} to +${f(w.hi*1000,0)} µm`,`hole ${w.hole}: ±${f(w.tp*1000,0)} µm`];}).concat([['The cannon pinion’s friction (bench)','','',`${f(Mw.cannon.lo*1000,1)}-${f(Mw.cannon.hi*1000,0)} mN·m`,`a weight ${f(Mw.cannon.g[0],0)}-${f(Mw.cannon.g[1],0)} g at ${Mw.cannon.rH} mm, set near ${f(Mw.cannon.g[2],0)} g`]]),true);
+    checks('kMw','motionwork');
+    const ES=[['as last revised',M2.est,'--s1'],['the 1950s build',M2.estB,'--s2'],['the 1940s build',M2.est40,'--s3']].filter(x=>x[1]);
+    chart('cEst',{label:'The swing against TF',x:[70,210],y:[160,280],xl:'the balance’s free run-down TF (s)',yl:'the swing over the wind (°)',hbands:[{y0:180,y1:270,c:'--manual'}],vbands:[{x0:102,x1:129,c:'--band',t:'the 6MX on video'}],legend:true,
+      series:ES.flatMap(([n,e,c])=>[{type:'area',c,data:e.tf.map(r=>[r.TF,r.A[0],r.A[1]])},{type:'line',name:n,c,data:e.tf.map(r=>[r.TF,(r.A[0]+r.A[1])/2])},{type:'dots',c,data:e.tf.map(r=>[r.TF,(r.A[0]+r.A[1])/2]),r:3.5,tip:p=>`${n}: TF ${p[0]} s`}])});
+    table('tEst',['',...ES.map(x=>x[0])],[
+      ['The strip TF 80-200 s wants (× the drive)',...ES.map(([,e])=>e.tf.map(r=>f(r.s,2)).join(', '))],
+      ['The rate’s spread over the wind (s a day)',...ES.map(([,e])=>e.tf.map(r=>sg(r.spread,2)).join(', '))],
+      ['The holes at a 50 µm shake (±µm, by mesh)',...ES.map(([,e])=>e.shake.map(r=>f(r.tp[2]*1000,0)).join(', '))],
+      ['The hairspring to 0.5 s (mm to let out / take in)',...ES.map(([,e])=>e.hs.map(r=>`${r.k} ${sg(r.dL,1)}`).join(', '))],
+      ['Its outer curve 1 mm off: force on the pivots (× couple / R)',...ES.map(([,e])=>f(e.curve[e.curve.length-1].lat,3))]],true);
+    checks('kEst','estimates');checks('kEstB','estimates-build');checks('kEst40','estimates-build40');}
   /* ---------- 15. the flags ---------- */
   $('flags').innerHTML=Object.keys(RUN).flatMap(k=>lines(k).filter(l=>l.s==='~~').map(l=>`<li><span class="st mid">~~</span><span><code>${esc(RUN[k].cmd.split(' ').slice(1,2)[0])}</code>: ${esc(l.t)}</span></li>`)).join('')||'<li>none</li>';}
 draw();
