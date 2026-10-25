@@ -3,7 +3,7 @@
   "bal:Extrude | bal:Extrude | +-24.50": 1,
   "bal:Extrude | bal:Extrude | +-25.10": 1,
   "bal:Extrude | spr:Buffer | --28.60": 1,
-  "barrel:Lathe | barrel:Box | +-5.60": 4,
+  "barrel:Lathe | barrel:Box | +-5.60": 5,
   "barrelBridge:Buffer | barrelBridge:Buffer | +-23.76": 1,
   "barrelBridge:Buffer | barrelBridge:Cylinder | --23.76": 2,
   "barrelBridge:Buffer | barrelBridge:Extrude | +-23.76": 2,
@@ -113,10 +113,13 @@
   "trainBridge:Lathe | tw:Lathe | --23.86": 1
  },
  "box": {
-  "bowl:Buffer | bowl:Cylinder | +-49.90": 1,
-  "bowl:Buffer | bowl:Cylinder | +-50.90": 1,
-  "bowl:Extrude | bowl:Cylinder | --52.20": 1,
-  "latch:Extrude | latch:Cylinder | +-4.60": 1,
+  "bowl:Buffer | bowl:Buffer | +-5.90": 1,
+  "bowl:Buffer | bowl:Buffer | +-8.96": 1,
+  "bowl:Buffer | bowl:Buffer | --8.96": 1,
+  "bowl:Buffer | bowl:Cylinder | +-53.90": 1,
+  "bowl:Buffer | bowl:Cylinder | +-54.90": 1,
+  "bowl:Extrude | bowl:Cylinder | --56.20": 1,
+  "latch:Extrude | latch:Cylinder | +-9.90": 1,
   "lidGlass:Box | lidGlass:Cylinder | +204.52": 2
  }
 }
