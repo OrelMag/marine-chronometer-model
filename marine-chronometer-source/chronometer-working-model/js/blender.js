@@ -10,7 +10,7 @@ const BLENDER=(()=>{
   const sleep=()=>new Promise(r=>setTimeout(r,0)),say=t=>{const r=document.getElementById('mkRead');if(r)r.innerHTML=t;};
   function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
   /* ---------- the copy, set as the page is ---------- */
-  function copy(){const BX=buildBox(A.M),mv=buildMovement(A.M);BX.bowl.add(mv);A.config(mv);const R=mv.userData.R,ms=[],inMv=new Set();mv.traverse(o=>inMv.add(o));
+  function copy(){const BX=buildBox(A.M),mv=buildMovement(A.M);BX.cs.add(mv);A.config(mv);const R=mv.userData.R,ms=[],inMv=new Set();mv.traverse(o=>inMv.add(o));
     const partOf=o=>{for(;o;o=o.parent)if(o.userData&&o.userData.partName)return o.userData.partName;return null;};
     BX.root.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.v0=o.visible;o.userData.inBox=!inMv.has(o);ms.push(o);}});
     return{BX,mv,R,ms};}

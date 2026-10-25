@@ -132,7 +132,8 @@ const PER=[0.25,0.3,0.4,0.5,0.6,0.65,0.68,0.7,0.72,0.74,0.76,0.8,0.9,1,1.25,1.5,
 for(const T of PER){const r=run(Bd,ship({reg:[T,2],rd:0}),{T:Math.max(30,T*12),from:Math.max(20,T*6)});RES.push([T,r.appMax/2,r.tiltMax/2]);}
 const pk=RES.reduce((a,b)=>b[1]>a[1]?b:a),at=T=>RES.find(r=>Math.abs(r[0]-T)<1e-9);
 say(`the case's lean from the apparent vertical, per degree of roll: ${f(at(20)[1],3)} at 20 s, ${f(at(8)[1],3)} at 8 s, ${f(at(4)[1],2)} at 4 s; ${f(pk[1],1)} at its own period (${pk[0]} s); ${f(at(0.5)[1],2)} at the balance's 0.5 s`);
-chk(Tz<0.5*3&&Tx<0.5*3&&Tz>0.5*1.15&&Tx>0.5*1.15,`its own periods (${f(Tz,2)}, ${f(Tx,2)} s) lie far below a ship's roll (10-30 s for merchant ships: MARIN, Jachowski; a small craft's 3-6 s, estimated) and clear of the balance's beat (0.5 s) by ${f(100*(Math.min(Tz,Tx)/0.5-1),0)} %`);
+/* clear of the beat by 10 % (15 % until 25 October 2026, when the case's measured pivots put it at 0.575 s; the owner's choice): a judgment, the beat moving the case 1.4" there (above) */
+chk(Tz<0.5*3&&Tx<0.5*3&&Tz>0.5*1.10&&Tx>0.5*1.10,`its own periods (${f(Tz,2)}, ${f(Tx,2)} s) lie far below a ship's roll (10-30 s for merchant ships: MARIN, Jachowski; a small craft's 3-6 s, estimated) and clear of the balance's beat (0.5 s) by ${f(100*(Math.min(Tz,Tx)/0.5-1),0)} %`);
 J.res=RES;
 /* the balance's beat: a balance out of poise by e (its centre of gravity off its staff) swinging A at 2 Hz pushes the case sideways at 2 Hz (its angular acceleration) and 4 Hz
    (its speed squared); the case's answer, about its pivots */

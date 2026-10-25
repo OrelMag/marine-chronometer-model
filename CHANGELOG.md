@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.32.02 · 2026-10-25
+- The Hamilton's case now hangs in its gimbals as a real one does: its pivots 4 mm nearer the bezel, as measured on the restoration video and an auction photograph, so the case swings a little lower and faster.
+- The Hamilton's case loses the deep band under its bezel: its wall now runs plain up to a short lip under the thread, and the case brackets' screws and the latch keeper follow.
+
 ## 3.32.01 · 2026-10-25
 - The Wempe's fusee, barrel and their arbors have the screw, pin and rivet holes their drawings give; the maintaining clicks their drawn sinks and springs; the box's handles a finger recess in the wood
 - The Wempe's fusee sits where its 1948 drawing puts it, its large face re-turned at assembly and cut back outside 33 mm
