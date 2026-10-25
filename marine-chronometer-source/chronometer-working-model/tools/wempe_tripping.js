@@ -5,9 +5,9 @@
 //                                            lock, a blow under 20 g across the plate trips it, or the frame made rigid on a hinge parts from dynamics.js --model wempe)
 //   node tripping.js --model wempe --quick  (the frame, its modes and the validation, about a minute)
 // The frame (makeEsc's frame: t along the detent from its flexure Ft toward the stone, n the way the stone lifts; metres), from the pieces escapement.js draws, in the detent's
-// own frame there (t from the stone toward the foot, n toward the wheel) put through MK: the spring 0.07 × 1.9, 5 long, clamped at the foot (1436), as beams; the square 2 ×
-// 0.5 × 1.9 rigid, with the gold spring's head, its fixed arm to its bending point (05 04_1's "Biegungspunkt") and its screw; the blade 0.50 × 1.0 for 2.9, then 0.28 × 1.0 to
-// the pipe, as beams; the pipe Ø 1.15 × 2 with the stone (Ø 0.75 ruby, the half below it) rigid, with the horn's root; the horn 0.22 × 0.8 to 4.4 from the stone (1436's figure, Wempe 3955's photograph) as beams; the
+// own frame there (t from the stone toward the foot, n toward the wheel) put through MK: the spring 1.9 wide, 5 long, 0.09 at its ends and 0.07 at its middle (as stiff as 0.0792 throughout), clamped at the foot (1436), as beams; the square 2 ×
+// 0.5 × 1.9 rigid, with the gold spring's head, its fixed arm to its bending point (05 04_1's "Biegungspunkt") and its screw; the blade 0.50 × 0.9 for 2.9, then 0.28 × 0.9 to
+// the pipe, as beams; the pipe Ø 1.15 × 2 with the stone (Ø 0.75 ruby, the half below it) rigid, with the horn's root; the horn 0.22 × 0.75 to 4.4 from the stone (1436's figure, Wempe 3955's photograph) as beams; the
 // gold spring 0.15 × 1.0 from its bending point along its drawn path to its square tip as beams (333 gold, Au/Ag/Cu 333-333 by the 6MX's passport: about 98 GPa and 11.6
 // g/cm³, likely, as WESC.SET and wempe-inertia.js; 90 and 11.0 until 19 October 2026), closing onto the horn near its end, its tip resting 5 µm off (escapement.js: the horn's curve and the gold spring's bow, WESC.HORN and WESC.GOLD; until 18 October 2026 a straight horn and the gold spring's polyline lying along it); steel 205 GPa (200-210), 7.85 g/cm³. The banking, the block's cross screw's domed head (escapement.js; its
 // head not drawn): the pipe's side toward the wheel rests on its face at the stone (05 04 01-4's 18.8, the 6MX's block photographed: likely; until 15 October 2026 under
@@ -58,16 +58,16 @@ function frame(o={}){
   const line=(i,j,ne,Em,b,h,rho,grp,extra=[])=>{const a=N[i],c=N[j],ts=[...new Set([0,1,...extra])].sort((x,y)=>x-y);let all=[];for(let k=0;k<ts.length-1;k++){const f0=ts[k],f1=ts[k+1],m=Math.max(1,Math.round(ne*(f1-f0)));for(let s=0;s<m;s++)all.push(f0+(f1-f0)*s/m);}all.push(1);
     let p=i;const out=[i];for(let k=1;k<all.length;k++){const q=k===all.length-1?j:nd({t:a.t+(c.t-a.t)*all[k],n:a.n+(c.n-a.n)*all[k]});el(p,q,Em,b,h,rho,grp);out.push(q);p=q;}return out;};
   /* the spring, its foot clamped (drawn) or a pin at Ft (hinged: its stiffness KD there, the spring's free half slaved to it, its foot half left out) */
-  const tS=0.07e-3*(o.tS??1);let R0,F1,sp;
+  const tS=0.0792e-3*(o.tS??1);   /* 1436's 0.09 at each end and 0.07 at the middle, as stiff as 0.0792 throughout (WESC.SET's SN0, SN1; 0.07 until 25 October 2026) */let R0,F1,sp;
   if(o.hinge){R0=nd({t:0,n:0},'pin');F1=nd(Q(SPR0,0),'slave',R0);sp=[R0,F1];}
   else{R0=nd(Q(FOOT0,0),'clamp');const Mf=nd(Q(TP,0));F1=nd(Q(SPR0,0));sp=[...line(R0,Mf,5,EST,tS,1.9e-3,RHO.st,'springFoot'),...line(Mf,F1,5,EST,tS,1.9e-3,RHO.st,'spring').slice(1)];}
   /* the blade: 0.50 thick for 2.9 from the square, then 0.28 to the pipe's wall (its nodes where makeEsc puts a stop button, the banking until 15 October 2026, kept: nb) */
   const bt=TR.X.button,b0=nd(Q(SQ0,0),'slave',F1),b1=nd(Q(SQ0-2.9,0)),K=nd({t:ESC.BL*ESC.ES/1000,n:0}),b2=nd(Q(0.575,0),'slave',K);   /* K: the stone's body node at the locking face's middle S */
-  const bl1=line(b0,b1,6,EST,0.5e-3,1.0e-3,RHO.st,'blade'),fr=t=>(t-N[b1].t)/(N[b2].t-N[b1].t),bl2=line(b1,b2,10,EST,0.28e-3,1.0e-3,RHO.st,'blade',[fr(bt.t0),fr(bt.t1)]);
+  const bl1=line(b0,b1,6,EST,0.5e-3,0.9e-3,RHO.st,'blade'),fr=t=>(t-N[b1].t)/(N[b2].t-N[b1].t),bl2=line(b1,b2,10,EST,0.28e-3,0.9e-3,RHO.st,'blade',[fr(bt.t0),fr(bt.t1)]);
   const nb=[bl2.find(i=>Math.abs(N[i].t-bt.t0)<1e-9),bl2.find(i=>Math.abs(N[i].t-bt.t1)<1e-9)];
   /* the horn: its root with the pipe, beams along its centre from HT0 to its end, a node at each place in HC */
   const hts=[...new Set([...Array(9)].map((_,i)=>HT0+(HT1-HT0)*i/8).concat(HC))].sort((a,b)=>b-a),hv=hts.map((t,i)=>i?nd(Q(t,HL.c(t))):nd(Q(t,HL.c(t)),'slave',K));
-  const hn=[hv[0]];for(let i=1;i<hv.length;i++){el(hv[i-1],hv[i],EST,0.22e-3,0.8e-3,RHO.st,'horn');hn.push(hv[i]);}
+  const hn=[hv[0]];for(let i=1;i<hv.length;i++){el(hv[i-1],hv[i],EST,0.22e-3,0.75e-3,RHO.st,'horn');hn.push(hv[i]);}
   const nh=HC.map(t=>hv[hts.indexOf(t)]);
   /* the gold spring: its bending point rigid with the square (its head screwed to it), beams along its drawn path to its tip; the nodes over the horn */
   /* o.tsBend [L, t]: the strip thinned to t over its first L mm from the bending point, as a passing spring is (wempe_detent_study.js; Belyakov's 0.06 "at its bend") */
@@ -81,10 +81,10 @@ function frame(o={}){
   const body=(a,parts)=>{let m=0,mx=0,my=0,I=0;for(const q of parts){m+=q.m;mx+=q.mx;my+=q.my;I+=q.I;}const St=mx*dB.x+my*dB.y,Sn=mx*nB.x+my*nB.y,A=N[a];
     B.push({a,m,St:St-m*A.t,Sn:Sn-m*A.n,Io:I-2*(A.t*St+A.n*Sn)+m*(A.t**2+A.n**2)});};
   const n0=GB[1]-GW/2,n1=GB[1]+GW/2,scr=(()=>{const c=U(HEAD-1.2,GB[1]+GW/2+0.15),m=WJ.detent.byHn['WN-14'].m*1e-3,x=(c.x-ESC.Ft.x)*ES,y=(c.y-ESC.Ft.y)*ES;return{m,mx:m*x,my:m*y,I:m*(x*x+y*y)};})();   /* the screw WN-14: its mass weighed, at its centre */
-  body(F1,[pm(rectP(SQ0,SPR0,-0.25,0.25),1.9,RHO.st),pm(rectP(H0,HEAD,n0,n1),2.0,RHO.gold),pm(rectP(GB[0],H0,n0,n1),1.0,RHO.gold),scr]);
-  const hornAll=pm(HORN.map(([t,n])=>U(t,n)),0.8,RHO.st),hornBeam=pm(HSTR(HT0,HT1).map(([t,n])=>U(t,n)),0.8,RHO.st);   /* the horn's root: the whole less what its beam carries */
+  body(F1,[pm(rectP(SQ0,SPR0,-0.25,0.25),1.9,RHO.st),pm(rectP(H0,HEAD,n0,n1),1.9,RHO.gold),pm(rectP(GB[0],H0,n0,n1),1.0,RHO.gold),scr]);
+  const hornAll=pm(HORN.map(([t,n])=>U(t,n)),0.75,RHO.st),hornBeam=pm(HSTR(HT0,HT1).map(([t,n])=>U(t,n)),0.75,RHO.st);   /* the horn's root: the whole less what its beam carries */
   body(K,[pm(discP([0,0],0.575),2.0,RHO.st),pm(discP([0,0],0.377),2.0,RHO.st,-1),pm(discP([0,0],0.375),2.0,RHO.ruby),pm(discP([0,0],0.375,48).slice(0,25),STONE_LO,RHO.ruby),
-    pm(rectP(0.4,0.575,-0.14,0.14),1.0,RHO.st),{m:hornAll.m-hornBeam.m,mx:hornAll.mx-hornBeam.mx,my:hornAll.my-hornBeam.my,I:hornAll.I-hornBeam.I}]);
+    pm(rectP(0.4,0.575,-0.14,0.14),0.9,RHO.st),{m:hornAll.m-hornBeam.m,mx:hornAll.mx-hornBeam.mx,my:hornAll.my-hornBeam.my,I:hornAll.I-hornBeam.I}]);
   return{N,E,B,R0,F1,K,nb,nh,ng,tip,hn,gs,o};
 }
 /* the half disc below the pipe: discP's first 25 points run half way round (the stone's lower half is ground to its flat; which half doesn't change its mass, and its moments by
@@ -241,7 +241,7 @@ const pick=r=>({A:+f(r.A,2),rate:+f(r.rate,3),rel:+f(r.rel,2),offF:+f(r.offF,2),
 say('0. The Wempe\'s detent as a frame (the pieces escapement.js draws, 1436 and 05 04 01-2)');
 const V={drawn:{},stiff:{stiff:true},hinge:{hinge:true,stiff:true}},DT={},MD={};
 for(const[k,o]of Object.entries(V)){DT[k]=detent(o);MD[k]=modal(DT[k],30000);}
-{const d=DT.drawn,F=d.F;say(`${F.E.length} beam elements on ${F.N.length} nodes (${d.nr} free coordinates): the spring 0.070 × 1.9 mm, 5.0 long, clamped at its foot; the blade 0.50 × 1.0 for 2.9, then 0.28 × 1.0 to the pipe; the horn 0.22 × 0.8 to ${f(HORN_L,1)} past the stone; the gold spring 0.15 × 1.0 along its path, ${f(GPATH.reduce((s,p,k)=>k?s+Math.hypot(p[0]-GPATH[k-1][0],p[1]-GPATH[k-1][1]):0,0),1)} mm from its bending point to its tip; the square with the gold spring's head and the pipe with the stone rigid`);
+{const d=DT.drawn,F=d.F;say(`${F.E.length} beam elements on ${F.N.length} nodes (${d.nr} free coordinates): the spring 0.079 × 1.9 mm (its taper's stiffness), 5.0 long, clamped at its foot; the blade 0.50 × 0.9 for 2.9, then 0.28 × 0.9 to the pipe; the horn 0.22 × 0.75 to ${f(HORN_L,1)} past the stone; the gold spring 0.15 × 1.0 along its path, ${f(GPATH.reduce((s,p,k)=>k?s+Math.hypot(p[0]-GPATH[k-1][0],p[1]-GPATH[k-1][1]):0,0),1)} mm from its bending point to its tip; the square with the gold spring's head and the pipe with the stone rigid`);
   chk(Math.abs(d.mass/DY.DM.m-1)<0.03&&Math.abs(d.Ift/DY.ID-1)<0.03,`its moving parts' mass ${f(d.mass*1e6,2)} mg and inertia about the flexure ${f(d.Ift*1e9,3)} g·mm² are the page's solids' as weighed (wempe_inertia.json: ${f(DY.DM.m*1e6,2)}, ${f(DY.ID*1e9,3)}) within 3 %`);
   const h=DT.hinge;chk(Math.abs(h.kS*(BLu*ES)**2/DY.KD-1)<1e-3&&Math.abs(-h.alpha/DY.MPRE-1)<1e-3&&Math.abs(MD.hinge[0].w/Math.sqrt(DY.KD/h.Ift)-1)<1e-2,`hinged at Ft and rigid, it is dynamics.js's detent: ${f(h.kS,2)} N/m at the stone (KD/r² ${f(DY.KD/(BLu*ES)**2,2)}), the preload ${f(-h.alpha*1e6,1)} µN·m (${f(DY.MPRE*1e6,1)}), its first mode ${f(MD.hinge[0].f,1)} Hz (√(KD/I): ${f(Math.sqrt(DY.KD/h.Ift)/TAU,1)}; the gold spring, a third of its mass, left flexible on it)`);
   say(`as drawn its spring bends along its whole 5 mm from the foot, the detent turning near its middle: ${f(d.kS,2)} N/m at the stone (${sg(100*(d.kS/h.kS-1),0)} % against the hinge makeEsc and dynamics.js take at its middle, the blade's own bending in series)`);
@@ -265,7 +265,7 @@ if(quick){if(fail)process.exitCode=1;if(JOUT)fs.writeFileSync(JOUT,JSON.stringif
    about 5 s of computing a second run) */
 const SW=[['the modes\' damping Q 30',{Q:30}],['Q 1000',{Q:1000}],['the banking dead (restitution 0)',{eB:0}],['the banking lively (0.6)',{eB:0.6}],
   ['the tooth on the stone lively (0.6)',{eL:0.6}],['every contact 4× stiffer',{kB:4e6,kT:4e6,kJ:8e5,kH:8e4,kR:2e3}],['every contact 4× softer',{kB:2.5e5,kT:2.5e5,kJ:5e4,kH:5e3,kR:125}],['the stone on the gold spring, returning, 4× stiffer (kR 2,000)',{kR:2000}],['and 4× softer (kR 125)',{kR:125}],
-  ['the gold spring half as stiff (its alloy)',{tsK:0.5}],['the spring 0.09 thick (1436\'s first figure)',{tS:0.09/0.07}],['no preload (the banking where drawn)',{pre:0}],['the stone on the tooth: μ 0.10',{MU:0.10}],['μ 0.20',{MU:0.20}],['the preload 0.1× (under the estimate)',{pre:0.1}],['the preload 0.2× (under the estimate)',{pre:0.2}],['the preload 0.5× (under the estimate)',{pre:0.5}],['the preload 0.8× (under the estimate)',{pre:0.8}],['the preload 1.5×',{pre:1.5}],['the preload 2×',{pre:2}],['the preload 3×',{pre:3}]];
+  ['the gold spring half as stiff (its alloy)',{tsK:0.5}],['the spring 0.09 thick throughout (1436\'s first figure)',{tS:0.09/0.0792}],['no preload (the banking where drawn)',{pre:0}],['the stone on the tooth: μ 0.10',{MU:0.10}],['μ 0.20',{MU:0.20}],['the preload 0.1× (under the estimate)',{pre:0.1}],['the preload 0.2× (under the estimate)',{pre:0.2}],['the preload 0.5× (under the estimate)',{pre:0.5}],['the preload 0.8× (under the estimate)',{pre:0.8}],['the preload 1.5×',{pre:1.5}],['the preload 2×',{pre:2}],['the preload 3×',{pre:3}]];
 const R2K=[['hinged at Ft, rigid (dynamics.js\'s)',{hinge:true,stiff:true}],['the spring as drawn, the rest rigid',{stiff:true}],['as drawn',{}],['as drawn, no preload',{pre:0}]];
 const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[[`preloaded (${S.W78} g, estimated)`,1],['as drawn (no preload)',0]],KK=[['a blow across the plate, 0.5 ms','b05',2,400,'g'],['a blow across the plate, 3 ms','b3',1,400,'g'],['a twist about the staff, 2 ms','tw',1,80,'rad/s']];
 /* the knock's floor (18 October 2026): the 3 ms blow on the frame at preloads either side of the estimate, for the least preload that takes 20 g (the bench's other floor).
