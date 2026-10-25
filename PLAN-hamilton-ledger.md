@@ -27,7 +27,7 @@ reported in `E:\mc-video\oq\ledger\<item>\REPORT.md` and built into the model on
 | The box and gimbals | Rebuilt from Jones-Horan 63662 and 38240 (`claude/hamilton-box`, merged here): heights 105/71/20, piano hinges, hasps, 25 mm nuts, pivots at 92.9, cup washers, the latch bracket, the concave key block, the lid stay; the case can now turn over in the ring (Sec. III) |
 | The fusee's winding ratchet | 40 teeth (18:23.5 and three more readings), 36 before |
 | The bezel's knurl band | 3.4 tall (48:27.61), 5.1 before |
-| The case support brackets (42105) | Bent straps with slotted wings and a tab holding the bushing (`claude/hamilton-casebracket`, merged). Open: the bushing larger and about 4 mm nearer the bezel on 47:22.5 |
+| The case support brackets (42105) | Bent straps with slotted wings and a tab holding the bushing (`claude/hamilton-casebracket`, merged). The bushing 7.0 bored 4.5 (25 October 2026, 3.32.00). **The pivots 4.0 nearer the bezel built** (`claude/hamilton-case-pivots`, 25 October 2026): the case in a frame `CSY` under the pivots', the screws' line 12.4 under them, the band's step at a lip 2.7 under the thread, the keeper's top under the bezel and the latch lever and ring slot at its window; the case's period 0.576 s (0.653), the ring's 0.654 (0.745). Open: the wall's radius under the lip and the case's depth; the bezel's knurl at its glass end (0:28.7, 1:22.5) against the model's case end (107-2) |
 
 ## Open: readings that conflict or can't be built yet
 
