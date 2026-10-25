@@ -21,7 +21,7 @@ reported in `E:\mc-video\oq\ledger\<item>\REPORT.md` and built into the model on
 
 | Item | Change |
 |---|---|
-| The barrel bridge's cock-side horn end | A measured circle, r 35.15 about (10.69, 39.43) (13:04.2/.4 at the near face, 0.04 mm rms; `bb_hornend.py`), easing 0.05 clear of the cock over its last 2.5 mm (owner's choice) |
+| The barrel bridge's cock-side horn end | A measured circle, r 35.15 about (10.69, 39.43) (13:04.2/.4 at the near face, 0.04 mm rms; `bb_hornend.py`), to the rim; the cock re-fitted on its holes and turned -5.03° about the staff to stand against it, 0.05 clear (25 October 2026, `tools/cock_refit.py`; 20-25 October the horn eased off to clear the cock as then drawn) |
 | The hairspring stud's holes | 5.0 / 8.4 / 12.3 from the staff (42:08, 41:58; sure); the clamp 3.83; the outer curve re-solved; the essay's figures |
 | The trip spring's bracket | 1.05 tall, measured on 11:08-11:26 (BM 117A's 2.4 is its leg across); the detent's inertia 3.002; the lock Op. 85's 6.0° (5.5° left no room for wear), the chain of tables rewritten. Open: it stands 2.1 mm further along the detent than drawn |
 | The box and gimbals | Rebuilt from Jones-Horan 63662 and 38240 (`claude/hamilton-box`, merged here): heights 105/71/20, piano hinges, hasps, 25 mm nuts, pivots at 92.9, cup washers, the latch bracket, the concave key block, the lid stay; the case can now turn over in the ring (Sec. III) |
