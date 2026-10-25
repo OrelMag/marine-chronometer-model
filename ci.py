@@ -202,6 +202,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-invariants',R([PY,'invariants.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's arithmetic: its seven meshes turning as their teeth, the hands against the time, the up-and-down hand on the dial's scale, the fusee's hours, the balance as weighed (about 10 s)
  ('wempe-mechanisms',R([PY,'mechanisms.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's pawls off the built model (the clicks, the maintaining detent, the set-up click), against mechanisms_wempe.json (about 15 s)
  ('wempe-holecheck',R([PY,'holecheck.py','--model','wempe'],TOOLS),'browser'),   # every round hole in the Wempe's parts populated or explained (checks.py's HOLE_EXPECTED), as last revised and as first drawn (1½-2¼ minutes)
+ ('wempe-assembly',R([PY,'assembly.py','--model','wempe'],TOOLS),'browser'),   # the Wempe taken apart in the 1958 Soviet repair book's order for the MX, each step's parts drawn straight off, none through another (checks.py's ASSEMBLY; about 15 s)
  ('wempe-stopwork',R([PY,'wempe_stopwork.py'],TOOLS),'browser'),   # the Wempe's stop bar against its stop pin over the last 1.2 turns, chain and band: the stop holds full wind, never catches early, the pin bears on the bar's whole thickness (about 45 s)
  ('estimates',R(['node',TOOLS/'estimates.js'],ROOT),'full'),   # the design values resting on estimates swept over their ranges, the bench's correction applied (about 4 min; a sensitivity sweep, so with the slow checks)
  ('dynamics-full',R(['node',TOOLS/'dynamics.js'],ROOT),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
@@ -219,6 +220,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-gimbals-full',R(['node',TOOLS/'gimbals.js','--model','wempe'],ROOT),'full'),   # the Wempe's: the seas in both installations, the stops, what reaches the escapement through makeEsc (about 4 minutes)
  ('gearing-full',R(['node',TOOLS/'gearing.js'],ROOT),'full'),   # and each mesh's depthing window, the holes' tolerance, against gearing.json (about 2 minutes)
  ('fea',R([PY,'fea.py'],TOOLS),'full'),   # finite elements on the plates and bridges: the pivots' holes under the chain's and teeth's loads, against the depths' windows (about 3 minutes)
+ ('wempe-fea',R([PY,'fea.py','--model','wempe'],TOOLS),'full'),   # the Wempe's plates, barrel bridge, fusee bush and intermediate bridge under load (checks.py's FEA; about 5 minutes)
+ ('wempe-dfm',R([PY,'dfm.py','--model','wempe'],TOOLS),'full'),   # each machined piece of the Wempe against the machine: walls, slots, corners, holes, undercuts, sealed voids (fails only on a sealed void)
  ('fine',R([PY,'fine.py'],TOOLS),'full'),
  ('maintaining',R([PY,'maintaining.py'],TOOLS),'full'),
  ('wempe-maintaining',R([PY,'maintaining.py','--model','wempe'],TOOLS),'full'),   # the Wempe's maintaining work: its clicks, ratchet, detent and wire on the solids through run and wind; the page's own loop through two winds (the maintaining spring's drive); the stop work (1½-2¾ minutes)
@@ -244,7 +247,7 @@ STEPS=[('build',build,'quick'),
 # views last. The longest steps start first (their last times in ci-logs/times.json, else EST). --jobs 1 runs every step one after another, as before 16 October 2026.
 # Every ci.py run on the machine also takes its steps' slots from one pool (citrace/cislots.py): runs in several worktrees queue instead of crowding the cores.
 def tool(s):return s[1].cmd[1] if isinstance(s[1],R) and len(s[1].cmd)>1 and s[1].cmd[0]==PY else None
-BROWSER={'fea'}|{s[0] for s in STEPS if s[2]=='full' and tool(s) in('fine.py','bom.py','maintaining.py','gltf_check.py','blender_check.py')}   # the full tier's steps that open a page
+BROWSER={'fea','wempe-fea','wempe-dfm'}|{s[0] for s in STEPS if s[2]=='full' and tool(s) in('fine.py','bom.py','maintaining.py','gltf_check.py','blender_check.py')}   # the full tier's steps that open a page
 SOLO={'smoke','wempe-smoke'}
 EXCL={'wempe-dialtrace':'r_dial','wempe-dialtrace-lange':'r_dial','types':'npx','wempe-types':'npx',**{s[0]:'r_bom.json' for s in STEPS if tool(s)=='bom.py'}}   # bom.py writes tools/r_bom.json for either model; two npx -y at once race in npm's cache
 AFTER={'blender':'gltf','wempe-blender':'wempe-gltf'}   # blender_check.py imports the r_model21.glb (r_wempe.glb) gltf_check.py writes
@@ -252,7 +255,7 @@ EXTRA={'blender':[MC/'blender'/'rig.py'],'wempe-blender':[MC/'blender'/'rig.py']
        'sitecheck':[ROOT/'worker.js',*[ROOT/'site'/f for f in('index.html','hamilton/index.html','essay/index.html','verification/build-verification/index.html','verification/real-chronometers/index.html','wempe/verification/index.html','sitemap.xml')]]}   # inputs the trace can't see: Blender's own Python runs the rig
 POOL=6   # the steps that run on processes of their own (tripping.js's bench figures, the Wempe's tripping.js, mainspring.py's sweeps) run on POOL of them (MC_PROCS,
 POOLED={'tripping-bench','wempe-tripping-full','wempe-build','mainspring-friction','wempe-mainspring-friction'}|{s[0] for s in STEPS if s[0].startswith('mainspring-') and s[0]!='mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
-EST={'wempe-transmission':200,'hamilton-transmission':90,'wempe-build':230,'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
+EST={'wempe-fea':300,'wempe-dfm':600,'wempe-assembly':20,'wempe-transmission':200,'hamilton-transmission':90,'wempe-build':230,'wempe-maintaining':150,'wempe-holecheck':130,'wempe-essaydata':120,'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
      'wempe-fine':190,'wempe-fine-first':190,'wempe-fine-6mx':190,'wempe-fine-1943':190,'wempe-bom-first':330,'wempe-bom-6mx':330,'wempe-bom-1943':330,'estimates':190,'wempe-tripping-full':180,'gimbals-full':180,'wempe-gimbals-full':170,'fine':150,'gearing-full':145,'tripping-run':130,'wempe-smoke':115,'gltf':110,'wempe-gltf':200,'wempe-blender':150}   # seconds: the medians of the worktrees' logs, 16 October 2026
 def lane(name,tier):return 'browser' if tier=='browser' or name in BROWSER else 'cpu'
 CACHE=None   # the results cache (cicache.Cache), unless --no-cache; KEYS: each step's key in it

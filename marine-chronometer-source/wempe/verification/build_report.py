@@ -95,7 +95,8 @@ def main():
     if not sov: raise SystemExit('the README has no section "The Soviet 6MX"')
     sov = ''.join(f'<p>{i["p"]}</p>' if 'p' in i else ul([i]) for i in items(sov.group(1).strip('\n').split('\n')))
     DATA = dict(data=A('data.json'), geo=A('geometry.json') if os.path.exists(os.path.join(HERE, 'assets', 'geometry.json')) else None, checks=checks_py(), bom=bom(),
-                counts=dict(estimates=nest, corrected=len(corr), unresolved=len(unres)), m3d=m3d())
+                counts=dict(estimates=nest, corrected=len(corr), unresolved=len(unres)), m3d=m3d(),
+                mfg={k: A(k + '.json') for k in ('fea', 'assembly', 'dfm') if os.path.exists(os.path.join(HERE, 'assets', k + '.json'))})
     t = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
     made = datetime.date.today().strftime('%#d %B %Y' if os.name == 'nt' else '%-d %B %Y')
     for k, v in {'/*DATA*/null': json.dumps(DATA, separators=(',', ':'), ensure_ascii=False).replace('</', '<\\/'), '<!--MADE-->': made,
