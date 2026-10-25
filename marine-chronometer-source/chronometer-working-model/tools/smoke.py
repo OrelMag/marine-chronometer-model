@@ -459,7 +459,7 @@ async def wempe(b,errs,steps):
     # the parts list: search, a box unticked hides its part, ticked shows it
     await ev("document.querySelector('#partsDet').open=true")
     for q in['pillar','050800','zzz','']:await ev("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",q);steps.append(f'parts search {q!r}')
-    vis="k=>{const v=[];window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part===k)v.push(o.visible);});return v;}"
+    vis="k=>{const v=[];window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part===k&&!o.userData.devPlate)v.push(o.visible);});return v;}"   # the part's own meshes, not its Laid out stand-ins (devPlate: shown only laid out)
     row="t=>[...document.querySelectorAll('#plist .prow')].find(r=>r.querySelector('.pn').textContent===t).firstChild.click()"
     await ev(row,'Pillars (Pfeiler)');await pg.wait_for_timeout(200);steps.append('pillars unticked')
     if any(await ev(vis,'pillars')):errs.append('unticking the pillars did not hide them')
