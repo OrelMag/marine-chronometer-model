@@ -1,31 +1,31 @@
 {
  "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
  "bowl": {
-  "m": 1198.558,
+  "m": 1166.138,
   "cg": [
-   0.088,
-   -14.67,
-   -0.268
+   0.091,
+   -14.684,
+   -0.275
   ],
   "I": [
    [
-    1442036.4,
-    20803.1,
-    -23242.0
+    1411375.1,
+    20804.7,
+    -23221.8
    ],
    [
-    20803.1,
-    1586743.0,
-    -4373.1
+    20804.7,
+    1502792.6,
+    -4376.2
    ],
    [
-    -23242.0,
-    -4373.1,
-    1441690.1
+    -23221.8,
+    -4376.2,
+    1411185.9
    ]
   ],
   "byMat": {
-   "brass": 515.83,
+   "brass": 483.41,
    "plate": 357.45,
    "brass2": 86.78,
    "gilt": 63.24,
@@ -46,7 +46,7 @@
    "clear": 0.01
   },
   "byPart": {
-   "bowl": 409.55,
+   "bowl": 377.12,
    "pillar": 295.56,
    "barrelBridge": 79.37,
    "cock": 50.24,
