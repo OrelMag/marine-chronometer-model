@@ -301,11 +301,11 @@ const WFRAME=(()=>{
       const f=x=>Math.max(Math.hypot(x[0]-c12[0],x[1]-c12[1])-12.5,yb-x[1],6-Math.hypot(x[0]-c6[0],x[1]-c6[1]),-ln(tB,tC,x),Math.min(x[0]-cn[0],Math.hypot(x[0]-cn[0],x[1]-cn[1])-1));
       const loc=sdfOutline((x,z)=>f([x,z]),-10,-4,9,4,0.02),ex=brg(23.3),ey=brg(23.3-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);
       const ck=loose(new THREE.Group(),4);bb.add(ck);const y0=TT-3.32-2.6,y1=TT-3.32;
-      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
+      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
     /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), shoulder Ø 3.1 through the click (its hole 3.2) and 0.05 more, M2.6 through the bridge: the coloured section,
        scaled (estimated) */
     {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.65,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.65+3.2,rs=1.3,pt=0.3,d=pt*0.3,n=Math.floor((L-2.65-pt*0.6)/pt),pr=[V2(0,0),V2(3.1/2,0),V2(3.1/2,2.65),V2(rs,2.65),V2(rs,L-n*pt-d)];   /* its shoulder and thread turned below the head, the thread's rings as screw() draws them */
-      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;}
+      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
 
     /* ================= the fusee bush (Schneckenfutter, 05 08 01-2) and dust bush (Staubfutter, 05 08 01-3) ================= */
     /* Schneckenfutter: Rundmessing 13,5 Ms 58: a flange Ø 13.2 -0.2 × 1.5 -0.1 on the top plate's outer face, its spigot below it Ø 8 g6 (-0.005/-0.014, drawn at its middle,

@@ -8,7 +8,8 @@
      PARTS {key: {t name, d what it does, sp sizes and numbers, g group (PG), c colour, pri label priority, plate (see-through with See-through), src (SRC), sn, figs}}, PG the groups,
      PIECES {part: [{k, t, h lines (userData.hn), d, sp, src, sn, figs}]}, SRC {key: [name, colour, what]}, figLabel ('Figs.'),
      VIEWS {key: {yaw, pitch, dist, target: [x, y, z] in mv's frame, explode, dev (the train laid out: develop, the Spread slider its share; the parts cfg.drive.hide
-     hidden meanwhile and the meshes flagged userData.devPlate shown see-through in their place, as the Hamilton's app.js), see, fov}}, VIEW_DESC, startView, SECDEF {x|y|z: {n, min, max, def}},
+     hidden meanwhile and the meshes flagged userData.devPlate shown see-through in their place, as the Hamilton's app.js; a devPlate under a group with userData.devOf
+     opens that part's card, and a mesh flagged devKeep stays shown laid out), see, fov}}, VIEW_DESC, startView, SECDEF {x|y|z: {n, min, max, def}},
      openCam {yaw, pitch, dist, target [x, y, z] in mv's frame as built}: where the camera stands as the page opens, before it eases to the start view (the Hamilton's: its box
      shut, from the front right); without it, turned from the start view and farther out. st.opening is true until then (a model can hold its case shut meanwhile),
      labels: (add, pw) => ...: add(text, sub, part, fn) a label at fn() (world), pw(group, x, y, z) a point in a group,
@@ -57,7 +58,7 @@ const VIEWER={start(cfg){
     window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=cur.fov=tgt.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:QT});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=false;};
     window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:[x,y,z]});};}
   const sk=$('#srcKey');if(sk)sk.innerHTML=Object.values(SRC).map(([t,c,d])=>`<span title="${t}: ${d}"><i style="--ps:${c}"></i>${t}</span>`).join('');
-  const partOf=o=>{while(o){if(o.userData&&o.userData.partName)return o.userData.partName;o=o.parent;}return null;};
+  const partOf=o=>{while(o){if(o.userData&&(o.userData.partName||o.userData.devOf))return o.userData.partName||o.userData.devOf;o=o.parent;}return null;};   /* devOf: a laid-out view's schematic plate (devPlate), standing in for its part */
   /* a mesh's key: its piece (part.k) where its part has pieces: the nearest pc tag up to the part, else the piece listing the nearest parts-list line; its part's otherwise */
   const pkOf=o=>{const p=o.userData.part;if(!PHN[p])return p;let h=null;for(let q=o;q;q=q.parent){const u=q.userData;if(u.pc)return p+'.'+u.pc;if(h==null&&u.hn)h=u.hn;if(u.partName)break;}return PHN[p][h]?p+'.'+PHN[p][h]:p;};
   const shown=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;};   /* r128's raycaster ignores visibility */
@@ -105,10 +106,14 @@ const VIEWER={start(cfg){
   const opHide=m=>{const u=m.userData;return st.hid.has(u.part)||st.hid.has(u.pk)||opOf(m)===0||isoOut(u.part,u.pk);};
   const dvOn=()=>(st.tour<0&&!!VIEWS[st.view].dev)||devShown;   /* laid out: the frame's holes no longer meet the arbors; the model's schematic plates (devPlate) stand in */
   const dvOut=p=>!!DV&&((st.drive||dvOn())&&DV.hide.has(p)||st.drive&&!st.mwOn&&DV.mw.has(p));   /* hidden by Moving parts only (the frame, dial and case, and the motion work unless it is included) and laid out (the frame, dial and case) */
-  const ghOf=(m,foc)=>{const p=m.userData.part;return (!!m.userData.devPlate&&dvOn())||(st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
+  /* a mesh hidden by Moving parts only or laid out: the schematic plates shown only laid out (not with Moving parts only), the frame's pieces flagged devKeep (the set-up click
+     and its screw, the stop pin) kept shown laid out where the parts they work with stay */
+  const mOut=m=>{const u=m.userData;return u.devPlate?!dvOn()||st.drive:dvOut(u.part)&&!(u.devKeep&&dvOn()&&!st.drive);};
+  const DVS=new Set(MVM.filter(m=>m.userData.devPlate||m.userData.devKeep).map(m=>m.userData.part).filter(Boolean));   /* the parts shown laid out by a stand-in or a piece kept */
+  const ghOf=(m,foc)=>{const p=m.userData.part;return (!!m.userData.devPlate&&dvOn()&&!(foc&&inK(foc,m)))||(st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
-    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!dvOut(m.userData.part)&&!(m.userData.devPlate&&(!dvOn()||st.drive));m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
+    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!mOut(m);m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
     if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
     cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${st.tour>=0&&TOUR?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
@@ -177,7 +182,7 @@ const VIEWER={start(cfg){
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();ray.layers.enable(2);   /* layer 2: the pieces drawn merged */
   const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&m0.opacity<0.5)return true;return !!ghOf(m,st.focus);};   /* faded below half, glass, or see-through: a click passes */
   const rayAt=(x,y)=>{const rc=cv.getBoundingClientRect();ndc.set((x-rc.left)/rc.width*2-1,-(y-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);return ray.intersectObjects([root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);};
-  const hitAt=e=>rayAt(e.clientX,e.clientY).find(h=>!through(h.object))||null;
+  const hitAt=e=>{const hs=rayAt(e.clientX,e.clientY);return hs.find(h=>!through(h.object))||hs.filter(h=>h.object.userData.devPlate).sort((a,b)=>a.object.userData.rad-b.object.userData.rad)[0]||null;};   /* a see-through schematic plate (laid out) is picked only where no part shows through it, the smallest where they overlap (a bridge before the plate it lies on, which shows round it) */
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches */
@@ -288,7 +293,7 @@ const VIEWER={start(cfg){
   $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
   function partsSync(){for(const q of PROWS){const k=q.p,p=kp(k),h=k!==p?st.hid.has(k)||st.hid.has(p)||isoOut(p,k):st.hid.has(p)||isoOut(p);q.ck.checked=!h;q.row.classList.toggle('off',h);
       if(q.kids){q.ck.indeterminate=!h&&q.kids.some(x=>st.hid.has(x.p)||isoOut(p,x.p));if(st.pick!==q.seen){q.seen=st.pick;if(st.pick&&kp(st.pick)===p)fold(q,true);}}
-      q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');q.b.disabled=dvOut(p);}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
+      q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');q.b.disabled=dvOut(p)&&!(DVS.has(p)&&dvOn()&&!st.drive);}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement)(d.exitFullscreen||d.webkitExitFullscreen).call(d);else(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);});
   /* Hide panel (P, or the tab on the stage's edge), where the panel sits beside the stage; its width by dragging the line between them, or the arrow keys on it */
@@ -364,7 +369,7 @@ const VIEWER={start(cfg){
   addEventListener('hashchange',()=>applyHash(false));
   /* the Contacts view (cfg.contacts, ../shared/contacts.js): a part hidden, faded away, isolated out or hidden by Moving parts only takes its contacts with it */
   if(cfg.contacts&&typeof CONTACTS!=='undefined')CT=CONTACTS.bind({mv,r,stage,st,look,wake,QA,cfg:cfg.contacts,name:k=>INFO[k]?INFO[k][0]:k,pick:k=>{if(Object.prototype.hasOwnProperty.call(INFO,k))showPart(k);},stop:()=>setSpeed(0),exploded:()=>cur.explode>1e-6||cur.dev>1e-6,
-    hid:m=>!!m.userData.part&&(opHide(m)||dvOut(m.userData.part))});
+    hid:m=>!!m.userData.part&&(!!m.userData.devPlate||opHide(m)||mOut(m))});
   const hashURL=!!location.hash.slice(1);   /* the page opened with a hash of its own (a link), not the settings remembered: only a link is sent on to another page (cfg.away) */
   {const s=location.hash.slice(1)?'':lsGet('state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
