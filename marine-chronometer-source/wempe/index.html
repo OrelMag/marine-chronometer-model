@@ -80,6 +80,7 @@
           <button data-v="plan" title="The top plate from straight above">Plan</button><button data-v="side" title="The frame from the side">Side</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button>
           <button data-v="transport" title="The wooden box in its padded outer box for transport">Transport box</button></div>
         <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
+        <div class="row hidden" id="expAllWrap"><span class="lab">Take apart</span><div class="seg" id="expAll" role="group" aria-label="What the exploded view takes apart"><button data-v="mv" aria-pressed="true" title="The movement alone, lifted out of its case">Movement</button><button data-v="all" aria-pressed="false" title="Every part: the movement, and its case, gimbals and box taken apart too">All</button></div></div>
         <label class="ck sw" title="Hide the plates, cocks, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
         <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
       </details>

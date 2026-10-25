@@ -571,7 +571,7 @@ const VIEWS={
   plan:{yaw:Math.PI,pitch:1.52,dist:270,target:[0,-11,0]},   /* straight down on the top plate, 12 o'clock at the top (so 3 o'clock on the left, as the sheets draw the Oberplatte: their O to the right) */
   dial:{yaw:0.3,pitch:1.02,dist:330,target:[0,12,0],case:{lid:1,lift:0}},   /* the dial in its case, from above and in front, the lid open, 12 o'clock at the top: the Hamilton's Dial view (its yaw and pitch), where both pages open */
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
-  exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
+  exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1,all:{yaw:0.6,pitch:0.25,dist:950,target:[0,153,0]}},   /* all: its All, the case taken apart under the movement, from the box's floor to the movement's top */
   /* the train laid out along the barrel-fusee line (movement.js, buildWempe.DEV), seen square from the side through a narrow field, as the textbooks draw it (the Hamilton's
      Laid out): barrel left, balance right, hands below */
   laidout:{yaw:Math.atan2(buildWempe.DEV.w[1],buildWempe.DEV.w[0]),pitch:0.05,dist:440,target:[buildWempe.DEV.mid[0],-11,buildWempe.DEV.mid[1]],dev:1,fov:20},
@@ -728,8 +728,8 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
       const dw=cw.t===null?0:clamp((now-cw.t)/1000,0,0.25);cw.t=now;
       {const c=st.opening&&!Q0?{lid:0,lift:0}:(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3),kl=SNAPC||RMC.matches?1:1-Math.exp(-dw*3);if(!c&&(cw.go||cw.u>0)){if(cw.go&&!winding)wind0();cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it, and a wind
           asked for goes on there (the key on the square once the movement is out) */
-        cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97?0:1)-cl)*kl;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
-        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.stay();CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;
+        cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97&&st.allK<1e-3?0:1)-cl)*kl;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
+        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450-st.allK*275;CS.explode(st.allK);   /* the Exploded view's All: the case taken apart under the movement (case.js explode), the movement brought down to about 30 over the bezel, the lid open */mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.stay();CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;
         /* the outer box (case.js), only in its view (over): its lid eased open to 95°, standing behind it as 51 00_1's section draws it */
         CS.over.visible=!!(c&&c.over)||!!CS.showOver;co+=((c&&c.over?1:0)-co)*kl;if(Math.abs(co-Math.round(co))<1e-4)co=Math.round(co);CS.overLid.rotation.x=-co*95*D2R;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
