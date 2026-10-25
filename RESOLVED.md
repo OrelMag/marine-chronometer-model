@@ -3278,7 +3278,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   says "Building the book…" while it works, and the book is emptied after
   printing. Keep: a drawing's lines as paths, not an element a segment; build
   the book for both models and print it before a release that adds parts.
-  `HASH`
+  `e02cd0fd`
 - **The endshake check could miss a pivot's end.** `bom-check.js` measured a
   part's free travel along its axis from a sample of 6,000 of its vertices;
   when the balance hub gained its sleeve, the sample skipped the staff's lower
