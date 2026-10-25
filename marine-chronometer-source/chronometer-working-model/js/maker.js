@@ -79,11 +79,12 @@ const MAKER=(()=>{
       Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. ${C.est}</p>${holeRows(holes(p))}${screwRows(p)}`;}
   /* the drawing: the solids' edges (creases over 30°) projected to the plan (x, z, seen from the dial side: 3 o'clock right, 12 up) and an elevation (x, y, the dial side
      up), to scale, with the overall sizes, and the holes (holes()) marked and numbered as the sheet's table lists them */
+  /* a geometry's creases (over 30°), kept while the book is built (EDG: its parts' pieces are drawn again on their own sheets, screws share a geometry) */
+  let EDG=null;const edgesOf=g=>{let P=EDG&&EDG.get(g);if(!P){const eg=new THREE.EdgesGeometry(g,30);P=eg.attributes.position;eg.dispose();if(EDG)EDG.set(g,P);}return P;};
   function drawingSVG(p,title){const segP=[],segE=[],box=new THREE.Box3();
-    for(const o of meshesOf(p)){const eg=new THREE.EdgesGeometry(o.geometry,30),P=eg.attributes.position,m=toMv(o),mats=[];
+    for(const o of meshesOf(p)){const P=edgesOf(o.geometry),m=toMv(o),mats=[];
       if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<Math.min(o.count,60);i++){o.getMatrixAt(i,im);mats.push(m.clone().multiply(im));}}else mats.push(m);
-      const a=new THREE.Vector3(),b=new THREE.Vector3();for(const mt of mats)for(let i=0;i<P.count;i+=2){a.fromBufferAttribute(P,i).applyMatrix4(mt);b.fromBufferAttribute(P,i+1).applyMatrix4(mt);box.expandByPoint(a);box.expandByPoint(b);segP.push([a.x,a.z,b.x,b.z]);segE.push([a.x,-a.y,b.x,-b.y]);}
-      eg.dispose();}
+      const a=new THREE.Vector3(),b=new THREE.Vector3();for(const mt of mats)for(let i=0;i<P.count;i+=2){a.fromBufferAttribute(P,i).applyMatrix4(mt);b.fromBufferAttribute(P,i+1).applyMatrix4(mt);box.expandByPoint(a);box.expandByPoint(b);segP.push([a.x,a.z,b.x,b.z]);segE.push([a.x,-a.y,b.x,-b.y]);}}
     const dd=L=>{const S=new Set();return L.filter(q=>{const a=q[0].toFixed(2)+','+q[1].toFixed(2),b=q[2].toFixed(2)+','+q[3].toFixed(2);if(a===b)return false;const k=a<b?a+'|'+b:b+'|'+a;if(S.has(k))return false;S.add(k);return true;});};   /* edges that coincide in the projection drawn once */
     segP.splice(0,segP.length,...dd(segP));segE.splice(0,segE.length,...dd(segE));
     if(box.isEmpty())return'';const s0=box.getSize(new THREE.Vector3()),
@@ -91,12 +92,17 @@ const MAKER=(()=>{
       SC=[20,10,5,4,2,1,0.5,0.25],fits=k=>(s0.x*1.3+8/k)*k<=180&&((s0.z+s0.y)*1.3+30/k)*k<=250,sc=SC.find(fits)||0.2,u=1/sc,
       pad=Math.max(12*u,0.12*Math.max(s0.x,s0.z)),s=s0,W=Math.max(s.x+2*pad,160*u),Hp=s.z+2*pad,He=s.y+2*pad,gap=6*u,
       scT=sc>=1?`${sc}:1`:`1:${1/sc}`;
-    const line=(q,ox,oy)=>`<line x1="${(q[0]-ox).toFixed(3)}" y1="${(q[1]-oy).toFixed(3)}" x2="${(q[2]-ox).toFixed(3)}" y2="${(q[3]-oy).toFixed(3)}"/>`;
+    /* the edges as one path of polylines, segments chained end to end, to the printed 0.02 mm (a <line> each made the Wempe's book 65 MB of SVG, which the print preview
+       couldn't lay out: the tab crashed) */
+    const dg=sc>=4?3:sc>=0.5?2:1,poly=(L,ox,oy)=>{const k=(x,y)=>(x-ox).toFixed(dg)+' '+(y-oy).toFixed(dg),E=L.map(q=>[k(q[0],q[1]),k(q[2],q[3])]).filter(e=>e[0]!==e[1]),adj=new Map(),used=new Uint8Array(E.length);
+      E.forEach((e,i)=>{for(const v of e){if(!adj.has(v))adj.set(v,[]);adj.get(v).push(i);}});
+      const walk=v=>{const out=[];for(;;){const n=adj.get(v).find(j=>!used[j]);if(n===undefined)return out;used[n]=1;v=E[n][0]===v?E[n][1]:E[n][0];out.push(v);}};
+      let d='';E.forEach((e,i)=>{if(used[i])return;used[i]=1;const f=walk(e[1]),b=walk(e[0]);d+='M'+[...b.reverse(),e[0],e[1],...f].join('L');});return`<path d="${d}"/>`;};
     const oxP=box.min.x-pad-(W-s.x-2*pad)/2,oyP=box.min.z-pad-8*u,oxE=oxP,oyE=-box.max.y-pad-Hp-gap-8*u,fs=2.2*u;
     const dim=(x1,y1,x2,y2,t,ox,oy,vert)=>`<g class="d"><line x1="${x1-ox}" y1="${y1-oy}" x2="${x2-ox}" y2="${y2-oy}"/><text stroke="none" x="${(x1+x2)/2-ox+(vert?-fs*0.6:0)}" y="${(y1+y2)/2-oy+(vert?0:-fs*0.5)}" font-size="${fs}" text-anchor="middle"${vert?` transform="rotate(-90 ${(x1+x2)/2-ox-fs*0.6} ${(y1+y2)/2-oy})"`:''}>${t}</text></g>`;
     const H=Hp+He+gap+8*u,HL=holes(p),hm=HL.map(h=>{const d=2*Math.max(h.top||0,h.bottom||0),x=h.x-oxP,y=h.z-oyP,c=Math.max(1.5*u,d*0.7);return`<g class="h"><line x1="${(x-c).toFixed(3)}" y1="${y.toFixed(3)}" x2="${(x+c).toFixed(3)}" y2="${y.toFixed(3)}"/><line x1="${x.toFixed(3)}" y1="${(y-c).toFixed(3)}" x2="${x.toFixed(3)}" y2="${(y+c).toFixed(3)}"/><text stroke="none" x="${(x+c*0.8).toFixed(3)}" y="${(y-c*0.8).toFixed(3)}" font-size="${(1.6*u).toFixed(3)}">h${h.n}</text></g>`;}).join('');   /* the number only: each hole's diameters are in the sheet's table */
     return`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(3)} ${H.toFixed(3)}" width="${(W*sc).toFixed(2)}mm" height="${(H*sc).toFixed(2)}mm" class="mkd"><title>${esc(title)}: plan and elevation, mm, scale ${scT}</title>
-      <g fill="none" stroke="currentColor" stroke-width="${(0.18*u).toFixed(4)}">${segP.map(q=>line(q,oxP,oyP)).join('')}${segE.map(q=>line(q,oxE,oyE)).join('')}</g>
+      <g fill="none" stroke="currentColor" stroke-width="${(0.18*u).toFixed(4)}">${poly(segP,oxP,oyP)}${poly(segE,oxE,oyE)}</g>
       <g stroke="currentColor" stroke-width="${(0.13*u).toFixed(4)}" fill="currentColor">${dim(box.min.x,box.max.z+pad*0.5,box.max.x,box.max.z+pad*0.5,s.x.toFixed(2)+' mm',oxP,oyP)}${dim(box.min.x-pad*0.5,box.min.z,box.min.x-pad*0.5,box.max.z,s.z.toFixed(2)+' mm',oxP,oyP,1)}
       ${dim(box.min.x-pad*0.5,-box.max.y,box.min.x-pad*0.5,-box.min.y,s.y.toFixed(2)+' mm',oxE,oyE,1)}</g>
       <g stroke="#c0392b" fill="#c0392b" stroke-width="${(0.13*u).toFixed(4)}">${hm}</g>
@@ -136,7 +142,7 @@ const MAKER=(()=>{
      then each piece to make with its own sheet and drawing (none but the pieces' carry its lines, so each line is on one sheet: tools/book.py); a piece marked nb, a variant
      or another part's copy (the split balance, the winding key on the hands' square), is left out */
   function book(){let pr=document.getElementById('bookPrint');if(!pr){pr=document.createElement('div');pr.id='bookPrint';document.body.appendChild(pr);}
-    const parts=Object.keys(A.INFO).filter(p=>!p.includes('.')&&meshesOf(p).length&&(!C.inBook||C.inBook(meshesOf(p)))),PCE=A.PCE||{};   /* C.inBook: the model's own choice of what is built (the Wempe's: its version's parts) */
+    EDG=new Map();const parts=Object.keys(A.INFO).filter(p=>!p.includes('.')&&meshesOf(p).length&&(!C.inBook||C.inBook(meshesOf(p)))),PCE=A.PCE||{};   /* C.inBook: the model's own choice of what is built (the Wempe's: its version's parts) */
     const sec=p=>{const q=A.PARTS[p]||{},pcs=(q.pcs||[]).map(c=>p+'.'+c.k).filter(k=>!PCE[k].nb&&meshesOf(k).length&&(!C.inBook||C.inBook(meshesOf(k))));
       if(!pcs.length)return`<section class="bk"><h2>${esc(A.INFO[p][0])}</h2><p>${esc(A.INFO[p][1])}</p>${sheetHTML(p)}${drawingSVG(p,A.INFO[p][0])}</section>`;
       return`<section class="bk asm"><h2>${esc(A.INFO[p][0])}</h2><p>${esc(A.INFO[p][1])}</p><p class="mkm">An assembly of ${pcs.length} pieces, each on its own sheet below: ${pcs.map(k=>esc(A.INFO[k][0])).join(', ')}. Its drawing as assembled.</p>${drawingSVG(p,A.INFO[p][0]+', assembled')}</section>`+
@@ -146,9 +152,12 @@ const MAKER=(()=>{
       /* putting it together: the manual's reassembly (Sec. VIII) in its own order, from the overhaul (overhaul.js) */
       (typeof OVH!=='undefined'?`<section class="bk order"><h2>Putting it together</h2><p>The manual's reassembly (Sec. VIII, Ops. 1-105), in its own order, with its tools (by the numbers of Sec. XIII), oils and checks, and the parts each operation puts on, by their lines of the parts list. Ops. 16-34 (the fusee) and 35-39 (the barrel) are usually done before Op. 1, as the manual says; it sets them where those parts go into the movement. The page's Overhaul shows each operation on the model, and tools/overhaul.py checks that every part goes on along its arbor without passing through another (where a real movement does it otherwise, sideways or tilted, it says so and why).</p>${OVH.RE.map(s=>`<h3>Op. ${s.op}. ${esc(s.t)}</h3><p>${s.x}</p>${OVH.meta(s).length?`<p class="mkm">${OVH.meta(s).join('. ')}.</p>`:''}`).join('')}</section>`:'')+
       /* the tests on the bench (tools/bench.js through makers.py): what the parts and the finished movement must read, from the model's checks and the manual's */
-      C.bookMore+`<section class="bk tests"><h2>Tests on the bench</h2>${C.testsIntro}${(MAKERS.tests||[]).map((t,i)=>`<h3>${i+1}. ${esc(t.title)}</h3><p class="mkm"><b>When:</b> ${esc(t.when)}.</p><p><b>How.</b> ${esc(t.how)}</p><p><b>It must read.</b> ${esc(t.pass)}</p>`).join('')}</section>`;
-    document.documentElement.classList.add('book-print');const done=()=>{document.documentElement.classList.remove('book-print');removeEventListener('afterprint',done);};addEventListener('afterprint',done);
-    if(!navigator.webdriver)print();else done();}
+      (C.bookMore||'')+`<section class="bk tests"><h2>Tests on the bench</h2>${C.testsIntro}${(MAKERS.tests||[]).map((t,i)=>`<h3>${i+1}. ${esc(t.title)}</h3><p class="mkm"><b>When:</b> ${esc(t.when)}.</p><p><b>How.</b> ${esc(t.how)}</p><p><b>It must read.</b> ${esc(t.pass)}</p>`).join('')}</section>`;
+    EDG=null;document.documentElement.classList.add('book-print');const done=()=>{document.documentElement.classList.remove('book-print');removeEventListener('afterprint',done);};
+    if(!navigator.webdriver){addEventListener('afterprint',()=>{done();pr.innerHTML='';},{once:true});print();}else done();}   /* emptied after printing: its drawings are tens of MB of SVG */
+  /* the button's: built after a paint that says so (the Wempe's takes some 15 s) */
+  function bookBtn(){const b=$('#mkBook');if(b.disabled)return;const t=b.textContent;b.disabled=true;b.textContent='Building the book…';
+    requestAnimationFrame(()=>setTimeout(()=>{try{book();}finally{b.disabled=false;b.textContent=t;}},30));}
   /* the model's numbers: the train, the fusee's profile, the escapement's cycle, the hairspring's design, the parts list with its fits and materials */
   function data(){const R=A.R,fs=R.fs,N=FUSEE_TURNS,prof=[];for(let i=0;i<=70;i++){const m=N*i/70;prof.push({turn:+m.toFixed(4),r:+fs.rf(m).toFixed(4),barrelTurns:+fs.I(m).toFixed(4)});}
     const cyc=[];for(let i=0;i<=360;i++){const s=ESC.state(i/360);cyc.push({phase:i/360,balanceDeg:+(s.th*180/Math.PI).toFixed(4),detentLift:+s.lift.toFixed(5),tripSpring:+s.psDef.toFixed(5),wheelTeeth:+s.prog.toFixed(5)});}
@@ -159,7 +168,7 @@ const MAKER=(()=>{
       balance:{I_TableII:R.I_T2,pitch:R.pitch},partsList:MAKERS};
     save(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}),'model21-data.json');}
   return{bind(api){A=api;if(api.cfg)C={...C,...api.cfg,cls:{...C.cls,...(api.cfg.cls||{})}};   /* another model's words; its data() (the model's numbers) where it has its own */
-      $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));if($('#mkOil'))$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',book);if($('#mkData'))$('#mkData').addEventListener('click',C.data||data);
+      $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));if($('#mkOil'))$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',bookBtn);if($('#mkData'))$('#mkData').addEventListener('click',C.data||data);
       if($('#mkSTL'))$('#mkSTL').addEventListener('click',()=>save(stl(A.meshes.filter(o=>!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&(()=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;})())),C.prefix+'-movement.stl'));},
     card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure,holes,book,orig:()=>[...ORIG].sort(),setOrig:ids=>{ORIG.clear();for(const i of ids)if((MAKERS.devs||[]).some(d=>d.id===i))ORIG.add(i);}};
 })();

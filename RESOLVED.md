@@ -3266,6 +3266,19 @@ An arbor needs pivots and shoulders; a stone its seat.
   in printed millimetres; a line shows the other side of the fits that name
   it, or says it isn't measured. Keep: a drawing for paper states its scale
   and prints at it; `book.py` (in `ci.py`) passes. `390218e`
+- **The Wempe's build book crashed the page instead of printing** (the owner,
+  25 October 2026): `drawingSVG` wrote every projected edge as its own
+  `<line>`, so the Wempe's 227 drawings came to 65 MB of SVG (about 800,000
+  elements; the Hamilton's 36 MB), built in one 15-20 s freeze with no sign of
+  it, then handed to the print preview, which couldn't lay it out. Now each
+  projection is one `<path>` of polylines, its segments chained end to end, to
+  the printed 0.02 mm (15 MB, the print laid out 6 times as fast); a geometry's
+  creases are kept while the book is built (a part's pieces drawn again on
+  their own sheets, screws sharing one geometry: 21 s to 11 s); the button
+  says "Building the book…" while it works, and the book is emptied after
+  printing. Keep: a drawing's lines as paths, not an element a segment; build
+  the book for both models and print it before a release that adds parts.
+  `e02cd0fd`
 - **The endshake check could miss a pivot's end.** `bom-check.js` measured a
   part's free travel along its axis from a sample of 6,000 of its vertices;
   when the balance hub gained its sleeve, the sample skipped the staff's lower
