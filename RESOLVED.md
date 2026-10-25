@@ -3270,6 +3270,19 @@ An arbor needs pivots and shoulders; a stone its seat.
   in printed millimetres; a line shows the other side of the fits that name
   it, or says it isn't measured. Keep: a drawing for paper states its scale
   and prints at it; `book.py` (in `ci.py`) passes. `390218e`
+- **The Wempe's build book crashed the page instead of printing** (the owner,
+  25 October 2026): `drawingSVG` wrote every projected edge as its own
+  `<line>`, so the Wempe's 227 drawings came to 65 MB of SVG (about 800,000
+  elements; the Hamilton's 36 MB), built in one 15-20 s freeze with no sign of
+  it, then handed to the print preview, which couldn't lay it out. Now each
+  projection is one `<path>` of polylines, its segments chained end to end, to
+  the printed 0.02 mm (15 MB, the print laid out 6 times as fast); a geometry's
+  creases are kept while the book is built (a part's pieces drawn again on
+  their own sheets, screws sharing one geometry: 21 s to 11 s); the button
+  says "Building the book…" while it works, and the book is emptied after
+  printing. Keep: a drawing's lines as paths, not an element a segment; build
+  the book for both models and print it before a release that adds parts.
+  `e02cd0fd`
 - **The endshake check could miss a pivot's end.** `bom-check.js` measured a
   part's free travel along its axis from a sample of 6,000 of its vertices;
   when the balance hub gained its sleeve, the sample skipped the staff's lower
@@ -3344,6 +3357,7 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
+- **The balance cock's top fitted on its holes' old places, and standing 1.7-2.8 mm off the barrel bridge's horn once re-fitted** (Plates, bridges, screws and arbors; `a6cc8c4f`, branch `claude/hamilton-cock-refit`): `CK_TR` (the owner's 41:58 trace) and `CK_SP` were put on the cock through the counterbore at `CK_Q0` (the photograph's place, 2.2 mm from the screw since 16 October) and the stud's holes at 6:29's old places, so the far end stood up to 3.2 mm off, and the barrel bridge's horn had been eased off to clear it. Re-fitted on the holes' places now and the rim (`tools/cock_refit.py`), the cock's shape agreed on 41:58 and 6:29 but left a gap to the horn no picture shows: its near holes and rim put its screw 30.0-33.5° about the staff, the tapped hole's frames 35.6°. Now the whole cock is turned -5.03° about the staff (`CK_TURN`: the screw, steady pins, stud's holes, cap and wall) and stands 0.05 clear of the horn's measured circle, which runs to the rim without easing. Keep: fit a traced outline on its holes where the model has them now, re-fit it when a hole it was fitted on moves, and turn everything a part carries with it (`ckT`).
 - **The essay's winding figure filled its half turns backwards** (Essay; the owner, 25 October 2026, branch `claude/essay-wind-circles`): under "Half turns of the key, from run down", the circles (rows ending 23 h, 45 h, 56 h) filled the half turns still to go from the first circle on, so the running hours sat at the run-down end and Wind it emptied them from the right, back toward run down. They now fill the half turns the spring holds, from run down, so winding fills them on toward 56 h and a full wind fills every one. Keep: a count laid out from run down shows the spring's state, winding moving it toward full wind.
 - **bom.py counting the 6MX's transit lock bracket's wood screws as extra** (Build, tools and docs; branch `claude/wempe-bezel-thread`): 3.26.00 built the bracket and its two DIN 96 screws in both the drawings' versions and the 6MX's, but their parts-list line named `last first 1943` only, so `wempe-bom-6mx` failed (model 2, list 0). The line now names `6mx` too. Keep: a part built in a version's loop carries that version in its line's `rev`.
 - **The Wempe's bezel held by nothing: its sheet's thread left out, the bowl's rim plain** (Setup, case and gimbals; the owner, 24 October 2026, branch `claude/wempe-bezel-thread`, with Kirov-Poljot 24020's photograph of the threaded rim and its notch): 05 01 01 marks a thread up the bezel's skirt, which the model had drawn plain since nothing on the bowl took it, and the bowl's casting stood with its top as the movement ring's seat, the bottom 53 under it with an estimated raised ring for the cork. Now the bezel's skirt and the bowl's rim are threaded (`TH`, the ISO 60° form, pitch 0.75 read on 24020), the rim turned from the casting's flange round the flange in a rebate, notched for the ring's pin (WN-202, 1.78 out, inside the bezel's crests), the bottom 49 from the seat as 05 06_01 gives it; the 6MX's rim threaded the same. Keep: a fixing the sheets mark is built on both parts it joins; a casting's sheet (`R-`) draws nothing machined, so look for the machining on the finished part's sheet and on photographs before calling a part held by nothing.
