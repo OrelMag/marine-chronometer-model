@@ -131,6 +131,13 @@ STEPS=[('build',build,'quick'),
  ('wempe-tolerances-build',RE(['node',TOOLS/'wempe_tolerances.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the build build's tolerances, against tolerances_wempe_build.json
  ('wempe-bench-build',RE(['node',TOOLS/'wempe_bench.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the build build's bench, against bench_wempe_build.json
  ('wempe-montecarlo-build',RE(['node',TOOLS/'wempe_montecarlo.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the build build's montecarlo, against montecarlo_wempe_build.json
+ ('wempe-wear',R(['node',TOOLS/'wempe_wear.js'],ROOT),'quick'),   # the Wempe's sliding contacts' wear by Archard against the tolerance each eats, over a service interval (about 10 s)
+ ('wempe-wear-build',RE(['node',TOOLS/'wempe_wear.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the 1950s build's wear: its strip's loads, its lock window
+ ('wempe-overwind',R(['node',TOOLS/'wempe_overwind.js'],ROOT),'quick'),   # the Wempe's key forced: against the stop, the wrong way through the one-way key and the plain 1940 key (about 5 s)
+ ('wempe-motionwork',R(['node',TOOLS/'wempe_motionwork.js'],ROOT),'quick'),   # the Wempe's motion work and up-and-down work: the meshes, their depthing windows and studs' holes, the cannon pinion as a bench test (about 1½-2½ min)
+ ('wempe-estimates',R(['node',TOOLS/'wempe_estimates.js'],ROOT),'quick'),   # the Wempe's estimated values swept with the bench's correction: TF, the pivots' shake, the hairspring's length, its curve formed by hand (about 30 s)
+ ('wempe-estimates-build',RE(['node',TOOLS/'wempe_estimates.js'],ROOT,{'MC_WREV':'build'}),'quick'),   # the 1950s build's estimates
+ ('wempe-estimates-build40',RE(['node',TOOLS/'wempe_estimates.js'],ROOT,{'MC_WREV':'build40'}),'quick'),   # the 1940s build's estimates
  ('wempe-ratchets',R(['node',TOOLS/'wempe_ratchets.js'],ROOT),'quick'),   # the Wempe's pawls on their ratchets: the load's draw against friction, the teeth, faces and pivots, the clicks' springs at let-go, the maintaining detent's catch against the spring's travel (about 2 s)
  ('wempe-transmission',R(['node',TOOLS/'wempe_transmission.js'],ROOT),'quick'),   # the Wempe's whole transmission in time, every part that moves, nonlinear: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 2 minutes)
  ('hamilton-transmission',R(['node',TOOLS/'hamilton_transmission.js'],ROOT),'quick'),   # the Hamilton's whole transmission in time, as the Wempe's: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 70 s)

@@ -90,6 +90,22 @@
    "pass": "The bar springs fully out at once every time, in both positions: its spring (05 06 03-3; no source draws its section: any height 0.9-1.5, its pin's hole to the recess's floor, 0.10 thick; wempe_strength.js) pushes it 0.06-0.08 N half way at the model's 1.0 high, 41 times or more the 0.5 g bar's sliding on the cover plate (μ 0.3, estimated). Assembled: the stop pin (hole 7) stops the fusee with the chain 8.638 turns on it (8.70 from run-down), 0.112 turn short of the groove's end N, and the bar never touches the pin earlier (0.69 off a turn before: wempe_stopwork.py). Sluggish: clean the slot and the bar, and look for a burr at the slot's ends; still slow, bend the spring's free span further in, keeping it under its steel's yield (wempe_strength.js). Stopping short of 8.64 turns: the bar is caught early (its spring too weak to hold it out, or the bar's upper end too long)."
   },
   {
+   "id": "stop",
+   "title": "The stop takes a strong hand, and the key is one-way",
+   "sheet": "05 08 01-5, 05 06_4 (C-D), 51 00 11",
+   "when": "the stop bar and pin hardened, the movement wound to the stop; the key made",
+   "how": "File-test the stop bar and the stop pin (a file skates on hardened steel). Wound to full wind, hold the key against the stop with a torque gauge on its square (or a lever and a weight) up to 1.36 N·m, a strong hand's on the key's Ø 34.5 paddle (wempe_overwind.js). Then turn the key the wrong way on a spare square held in a vice with a gauge: it must slip.",
+   "pass": "Nothing moves or marks: hardened, the stop bar yields at 3.73 N·m on the key and the pin at 9.98; left soft the bar bends at 1.42. The key's coil spring carries the hand: wound of spring wire Ø 0.68 or more (EN 10270-1 DH; 51 00 11 scales about 0.6, which yields at 1.57), its end in the body's hole formed on a radius. The wrong way it slips at a few mN·m (the model takes 5): one that grips both ways sends the hand into the click wheel, whose teeth yield at 0.61 N·m, as the plain 1940 key would."
+  },
+  {
+   "id": "cannon",
+   "title": "The cannon pinion's friction",
+   "sheet": "05 05 03-3, 05 02 00-1",
+   "when": "the motion work and the hands on, the movement level",
+   "how": "Hang a weight on the minute hand 30 mm from its arbor, the hand horizontal, and see whether it turns the hand (the cannon pinion slipping on the centre arbor).",
+   "pass": "It slips between 10.3 and 243 g (wempe_motionwork.js, wempe_transmission.js's window: looser, a 45 g knock turns the hands; tighter, setting them forward drives the balance to the escapement's trip): set it near 50 g. Set the hands forward only (the 6MX's instruction: backward \"can break the escape wheel's teeth\"): a fit near the window's top would turn the train back against its locking stone near run-down."
+  },
+  {
    "id": "trial",
    "title": "The rate, and the 6MX TU's trial",
    "sheet": "6MX TU 25-07-1533-84 (6MX-figures.md)",
@@ -708,6 +724,27 @@
     874
    ],
    "min": 300
+  },
+  "stop": {
+   "hand": 1.3579,
+   "bar": 3.7333,
+   "pin": 9.9778,
+   "softBar": 1.4166,
+   "wire": 0.6784,
+   "wrong": 0.6076
+  },
+  "cannon": {
+   "r": 30,
+   "g": [
+    10.3153,
+    243.2482,
+    50.0917
+   ],
+   "T": [
+    0.003,
+    0.0716
+   ],
+   "aim": 0.0147
   },
   "stopwork": {
    "height": [

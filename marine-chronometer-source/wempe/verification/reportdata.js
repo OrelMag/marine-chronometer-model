@@ -1,5 +1,5 @@
 // The data of the report "The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?" (index.html here, build_report.py): every
-// Wempe check run as ci.py runs it (its full runs where there is one: dynamics.js, tripping.js, gearing.js and gimbals.js with --model wempe; the build checks, the tolerances, the bench, the Monte Carlo and keystone.js), its exit code and its
+// Wempe check run as ci.py runs it (its full runs where there is one: dynamics.js, tripping.js, gearing.js and gimbals.js with --model wempe; the build checks, the tolerances, the bench, the Monte Carlo and keystone.js; the mechanisms in turn: wear, the key, the motion work, the estimates), its exit code and its
 // output kept as it prints it, and the figures the page charts, worked out by the tools' own modules or read from the JSON they wrote, gathered into assets/data.json.
 // Needs Node.js (and Python for wempe_mainspring.py --check):
 //   node reportdata.js               every check and figure (about 9 minutes: the full runs at once, in their own processes; gearing.js the longest)
@@ -30,6 +30,13 @@ const RUNS=[
   ['transmission','node',['wempe_transmission.js','--json',path.join(TMP,'_tr.json')],'The whole transmission in time, every part that moves: the mainspring, chain, fusee, clicks, maintaining work, the train on its meshes tooth by tooth driving dynamics.js\'s escapement, the motion work and up-and-down work, the key and the stop; nonlinear, stepped at a microsecond.'],
   ['keystone','node',['keystone.js','--model','wempe'],'The escapement against the rules of a period text, Watch and Clock Escapements (1904), Ch. III: reports, never judges; checks keystone_wempe.json is up to date.'],
   ['builds','node',['wempe_build.js'],'The two builds for a navigator (README, "The build"): the 1940s build (carbon steel at the drawings’ drive) and the 1950s (Nivaflex 45/5 at 1.26 times it), both with the gold spring thinned at its bend: the swing over the wind, the lock’s window, running in time, pushed, knocked, the preload’s floors, the energy, strength, the maintaining work and the voyage; checks wempe_build.json is up to date.'],
+  ['wear','node',['wempe_wear.js','--json',path.join(TMP,'_wear.json')],'Every sliding contact\'s wear by Archard\'s law against the tolerance it eats (the meshes\' depths, the endshake, the lock, the discharge\'s lift, the chain\'s pitch, the clicks\' faces), over a service interval.'],
+  ['wear-build','node',['wempe_wear.js','--json',path.join(TMP,'_wearB.json')],'The same for the 1950s build (MC_WREV=build): its strip\'s loads, its lock window.',{MC_WREV:'build'}],
+  ['overwind','node',['wempe_overwind.js','--json',path.join(TMP,'_ow.json')],'The key forced: a strong hand against the stop (the stop bar and pin, the fusee\'s square, the key\'s tube and its one-way coil spring), and the wrong way through the 1943 key and the plain 1940 key.'],
+  ['motionwork','node',['wempe_motionwork.js','--json',path.join(TMP,'_mw.json')],'The motion work\'s and up-and-down work\'s meshes at their drawn centres, their depthing windows and the studs\' holes a CNC must hold, the cannon pinion\'s friction as a bench test and the hands set backward.'],
+  ['estimates','node',['wempe_estimates.js','--json',path.join(TMP,'_est.json')],'The values resting on estimates swept over their sources\' ranges with the bench\'s correction applied: the balance\'s damping (TF), the pivots\' shake, the hairspring\'s length, its outer curve formed by hand.'],
+  ['estimates-build','node',['wempe_estimates.js','--json',path.join(TMP,'_estB.json')],'The same for the 1950s build (MC_WREV=build).',{MC_WREV:'build'}],
+  ['estimates-build40','node',['wempe_estimates.js','--json',path.join(TMP,'_est40.json')],'The same for the 1940s build (MC_WREV=build40).',{MC_WREV:'build40'}],
   ['soviet','node',['wempe_6mx.js'],'The Soviet 6MX against the drawings: its jewels\' shake and the holes\' tolerance, its escapement\'s bodies at the first-drawn heights through makeEsc (the swing and rate over the wind); checks wempe_6mx.json is up to date.'],
   ['startup','node',['wempe_startup.js','--json',path.join(TMP,'_su.json')],'A running 6MX\'s swing read off video (wempe_swing.py, wempe_swing.json) fitted with the Wempe\'s balance equation for its free run-down TF.']];
 const only=(i=>i>0?process.argv[i+1].split(','):null)(process.argv.indexOf('--only'));
@@ -78,19 +85,21 @@ function transcriptions(){const out=[];for(const f of fs.readdirSync(path.join(R
 (async()=>{const t0=Date.now(),want=RUNS.filter(q=>!only||only.includes(q[0]));
   console.log(`running ${want.map(q=>q[0]).join(', ')} at once, and the figures${only?'':' (about 9 minutes)'}`);
   const runs=prev?{...prev.runs}:{};
-  const jobs=want.map(([k,cmd,args,what])=>exec(cmd,args).then(q=>{runs[k]={cmd:(cmd==='py'?'python':'node')+' '+args.map(a=>a.startsWith(TMP)?'OUT.json':a).join(' '),what,...q};console.log(`  ${k}: exit ${q.rc} in ${q.secs} s`);}));
+  const jobs=want.map(([k,cmd,args,what,env])=>exec(cmd,args,env?{env:{...process.env,...env}}:{}).then(q=>{runs[k]={cmd:(cmd==='py'?'python':'node')+' '+args.map(a=>a.startsWith(TMP)?'OUT.json':a).join(' '),what,...q};console.log(`  ${k}: exit ${q.rc} in ${q.secs} s`);}));
   const figs=only?null:Promise.all([node(FIG.wind(0)),node(FIG.wind(30)),node(FIG.gear),node(FIG.hair),node(FIG.phys)]);
   await Promise.all(jobs);const F=figs?await figs:null;
   /* the 6MX's fit as wempe_startup.js finds it now (its --json): the committed wempe_startup.json, which wempe_escapement.js reads, is kept beside it to show whether it is current */
   const suNow=path.join(TMP,'_su.json'),SUN=fs.existsSync(suNow)?JSON.parse(fs.readFileSync(suNow,'utf8')):(prev&&prev.swing&&prev.swing.startup)||J('wempe_startup.json');
   const FS=only&&!only.includes('startup')?null:await node(FIG.swing,{MC_SU:fs.existsSync(suNow)?suNow:path.join(T,'wempe_startup.json')});if(fs.existsSync(suNow))fs.unlinkSync(suNow);
   const rd=f=>{const p=path.join(TMP,f);if(!fs.existsSync(p))return null;const j=JSON.parse(fs.readFileSync(p,'utf8'));fs.unlinkSync(p);return j;};
+  /* the mechanisms in turn (section 18): wear, the key forced, the motion work, the estimates; each kept from the last run when --only leaves it out */
+  const pm=(prev&&prev.mech2)||{},mech2={wear:rd('_wear.json')||pm.wear,wearB:rd('_wearB.json')||pm.wearB,ow:rd('_ow.json')||pm.ow,mw:rd('_mw.json')||pm.mw,est:rd('_est.json')||pm.est,estB:rd('_estB.json')||pm.estB,est40:rd('_est40.json')||pm.est40};
   const trip=rd('_trip.json')||(prev&&prev.trip),gim=rd('_gim.json')||(prev&&prev.gim),tr=rd('_tr.json')||(prev&&prev.tr);
   const WED=(()=>{const s=fs.readFileSync(path.join(WE,'js','essaydata.js'),'utf8');return Function(s+';return WEDATA;')();})();
   const MS=J('wempe_mainspring.json'),MF=J('mainspring_friction_wempe.json'),GI=J('gimbals_wempe.json'),IN=J('wempe_inertia.json'),GW=J('gearing_wempe.json'),SU=J('wempe_startup.json'),SW=J('wempe_swing.json').moMvyx8eXfo;
   const build={tol:J('tolerances_wempe.json'),bench:J('bench_wempe.json'),mc:J('montecarlo_wempe.json'),key:J('keystone_wempe.json')};
   const navb={checks:J('wempe_build.json'),...Object.fromEntries(['build40','build'].map(r=>[r,{tol:J(`tolerances_wempe_${r}.json`),bench:J(`bench_wempe_${r}.json`),mc:J(`montecarlo_wempe_${r}.json`)}]))};   /* the builds for a navigator (wempe_build.js; MC_WREV) */
-  const data=prev&&only?{...prev,runs,trip,gim,tr,build,navb,soviet:J('wempe_6mx.json'),...(FS?{swing:{...prev.swing,...FS,startup:SUN,committed:J('wempe_startup.json')}}:{}),made:new Date().toISOString().slice(0,10)}:{made:new Date().toISOString().slice(0,10),runs,trip,gim,tr,build,navb,
+  const data=prev&&only?{...prev,runs,trip,gim,tr,build,navb,mech2,soviet:J('wempe_6mx.json'),...(FS?{swing:{...prev.swing,...FS,startup:SUN,committed:J('wempe_startup.json')}}:{}),made:new Date().toISOString().slice(0,10)}:{made:new Date().toISOString().slice(0,10),runs,trip,gim,tr,build,navb,mech2,
     wind:{A12:F[0].A12,TF:F[0].TF,HS:F[0].HS,rows:[...F[0].rows,...F[1].rows]},gear:{...F[2],windows:GW},hair:F[3],swing:{...FS,json:{A_range:SW.A_range_deg,windows:SW.windows,f:SW.f_Hz,stretches:SW.stretches,sure:SW.sure},startup:SUN,committed:SU},phys:F[4],
     ms:{strip:MS.strip,setup:MS.setup,barrelTurns:MS.barrelTurns,marks:MS.marks,tries:MS.tries,Lfit:MS.Lfit,setFit:MS.setFit,rmsFit:MS.rmsFit,final:{...MS.final,fit:MS.final.fit,tq:MS.final.tq}},
     friction:MF.summary,mass:{bowl:{m:GI.bowl.m,cg:GI.bowl.cg,byPart:GI.bowl.byPart},ring:{m:GI.ring.m},alt:GI.alt},inertia:Object.fromEntries(Object.entries(IN).filter(([k])=>k!=='note').map(([k,v])=>[k,{m:v.m,I:v.I}])),
