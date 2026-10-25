@@ -26,7 +26,7 @@ STEPS += [
     ('bom-6mx', ['bom.py', *SIX], 'The parts list in the 6MX: its lines with "rev" (its jewels in chatons, its boxes), its 15 jewels.')]
 STEPS += [
     ('fea', ['fea.py', '--json', '{A}/fea.json'], "Finite elements on the parts that hold the train's pivots (the plates, the barrel bridge, the fusee bush, the intermediate bridge), fully wound and run down: each pivot hole's movement, each arbor's lean, the stress against brass's yield, each mesh's change of depth against its window."),
-    ('assembly', ['assembly.py', '--json', '{A}/assembly.json'], "The movement taken apart in the 1958 Soviet repair book's order for the MX, each step's parts drawn straight off along the arbors without passing through a part still in; put together the same backwards."),
+    ('assembly', ['assembly.py', '--json', '{A}/assembly.json'], "The movement taken apart in the 1958 Soviet repair book's order for the MX, each step's parts drawn straight off along the arbors, or out sideways along a path (the detent's block), without passing through a part still in; put together the same backwards."),
     ('dfm', ['dfm.py', '--json', '{A}/dfm.json'], "Each machined piece against the machine: its thinnest walls and floors, slots narrower than a 0.4 mm end mill, the inside corners it leaves rounded, its holes' depth over diameter, what is cut from each face, undercuts, and voids sealed inside a piece.")]
 MFG = ('fea', 'assembly', 'dfm')   # section 19's, kept out of section 1
 def main():
