@@ -183,7 +183,11 @@ const VIEWER={start(cfg){
   const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&m0.opacity<0.5)return true;return !!ghOf(m,st.focus);};   /* faded below half, glass, or see-through: a click passes */
   const rayAt=(x,y)=>{const rc=cv.getBoundingClientRect();ndc.set((x-rc.left)/rc.width*2-1,-(y-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);return ray.intersectObjects([root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);};
   const hitAt=e=>{const hs=rayAt(e.clientX,e.clientY);return hs.find(h=>!through(h.object))||hs.filter(h=>h.object.userData.devPlate).sort((a,b)=>a.object.userData.rad-b.object.userData.rad)[0]||null;};   /* a see-through schematic plate (laid out) is picked only where no part shows through it, the smallest where they overlap (a bridge before the plate it lies on, which shows round it) */
-  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}
+  /* a glass (see-through by its material, the bezel's) passes a click to what is behind it; clicking that again picks the glass in front of it, and again goes back. The glass
+     counts where only the pick's ghosting hides it (look hides a ghosted noShadow mesh) */
+  const glassIn=hit=>{const g=[];for(const h of ray.intersectObjects([root],true)){if(h.distance>=hit.distance)break;const o=h.object,u=o.userData,m0=u.mat0||o.material;
+      if(u.pk&&INFO[u.part]&&m0.transparent&&m0.opacity<0.5&&!u.devPlate&&(shown(o)||u.noShadow&&shown(o.parent)&&!opHide(o)&&!mOut(o))&&!g.includes(u.pk))g.push(u.pk);}return g;};
+  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}const pk=hit.object.userData.pk,stk=[pk,...glassIn(hit).filter(k=>k!==pk)],i=stk.indexOf(st.pick);showPart(stk[i<0?0:(i+1)%stk.length]);}
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches */
   let units='mm';const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
