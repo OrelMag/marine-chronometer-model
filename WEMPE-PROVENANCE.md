@@ -43,7 +43,7 @@ Columns: the part (its `hn`), its sheets, the photographs it was checked on (pho
 | Maintaining clicks and springs | 050602-3, 050602-2 | 05 06 02-3, -2 | not visible | outline matches; the pivot hole's 1.7 × 45° sink and Ø 2.2 opening not built; the springs 24.4 developed against 27.0 | sure | sink and opening built, springs to 5, 5 and 110° (26.6) (batch 3) |
 | Stop work (Steg, bar, pin, spring) | 050603 | 05 06_4 C-D, 05 06 04-2 | train (the bar's ends) | matches its trace; heights follow the body's place (the stop pin about 0.5 short then) | likely | with the body's place |
 | Chain | 050704 | 05 07 04 | W (rms 2.9 px), train | matches | sure | — |
-| Barrel drum and lid | 050701, 050703 | 05 07 01, 05 07_6 | W | match; the hook block's M2.6 rivet hole and the chain's 2.5 slot not cut | sure | cut (batch 3); the slot 88° from the rivet where 0207 draws 180° (the rivet's place an estimate): Unresolved |
+| Barrel drum and lid | 050701, 050703 | 05 07 01, 05 07_6 | W | match; the hook block's M2.6 rivet hole and the chain's 2.5 slot not cut | sure | cut (batch 3); the drum's insides (rivet hole, hook block, Steg and its notches, mainspring, arbor's hook) turned +136.6° to 0207's places about the chain's slot (BLK 3.585: the slot 180° from the Steg, 135° from the hole; 0207 had been misread as 180° from the hole) (batch 4) |
 | Barrel arbor | 050702-1 | (as revised not in the set) | W (its square) | fitted to the drum and plates, as recorded; the hook pin's Ø 2 × 6 hole not cut | known | cut (batch 3) |
 | Hook block, set-up ratchet and click | 050705, 050805-2 | 05 07, 05 08 05-2 | W | match | sure | — |
 | Mainspring | 050706 | 05 07 06 | — | estimated, as recorded (its torque 23 % over 05 06_20's) | known | — |

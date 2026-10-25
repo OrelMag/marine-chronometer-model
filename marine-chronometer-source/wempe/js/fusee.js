@@ -767,7 +767,17 @@ const WFUSEE=(()=>{
        underside, through the lid's 1.3 as its notch goes (estimated). Read from the lid's side (the plan, first-angle, below the section) the M2.6 hole stands 45° clockwise of
        it, so the slot is 45° back from the hook block (rotation.y falling) */
     const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last 1943'),gBF=rv(gB,'first 6mx');
-    const BLK=1.2;   /* the hook block's rivet hole's angle in the drum */
+    /* BLK: the hook block's rivet hole's angle in the drum, set by the chain's slot (DRUM, below: -19.57°, where the laid chain's barb comes to the drum, which stands at 0
+       fully wound) as 0207 draws them round the drum (127-556.04 U24, 15.4.41, its plan "Federhausdeckel abgenommen" at 12.27 px/mm by the drum's two circles fitted, rms
+       0.24 px): the Steg's notch on the 12 o'clock centre line, the M2.6 hole "45°" from it, and the "Schlitz für Kette" on the same line at 6 o'clock (its walls 176.5° and
+       184.8° from 12 at the bore, 174.3° and 181.3° at the rim: 180° ±2); the section, cut along that line, draws the Steg (106) under the wall at the top and the slot
+       through the wall at the bottom. The "45°" by the slot is its lean through the wall (the dimension's arc is centred on the slot's wall at the rim, not on the drum's
+       centre), not its place. So the slot is 180° from the Steg and 135° from the rivet hole: the slot + 225° (5π/4) here, the Steg 45° back from the hole (LS, as 05 07 01-1
+       has it and the strip's end needs, the drum running rotation.y falling). The slot's place is the chain's (cut at the fusee's assembly), so the drum's insides turn to it:
+       0207's is the drum of 1941, and the later sheets don't draw the slot; the lid's 3 o'clock notch (05 07 01-2), opposite the Steg, then lies at the slot's angle (sure on
+       0207, likely for the drum of 1948). 1.2 until 25 October 2026 (an estimate: the slot then 88° from the hole). The mainspring, the arbor's hook (HKA) and the Steg follow
+       it rigidly: the solve holds the strip's end and the Steg relative to each other (tools/wempe_mainspring.py's BLOCK, STEG), so nothing is re-solved; DRUM checks it */
+    const BLK=3.585;
     /* The Steg 05 07 00-1 (the coloured section's #6, "Steg", a thin steel strip standing inside the drum's wall; 0207's part 106, 127-556.04-097): a bar across the drum
        from its bottom to its lid, 45° back from the rivet hole (rotation.y falling), its tabs through the bottom's slot and the lid's 9 o'clock notch. 0207's plan (lid off,
        12.0 px/mm) draws its section 2 wide and "0,5" thick, "0,4" off the bore (r 18.35-18.85), its section through 12 o'clock the strip from the lid's outer face to the
@@ -849,12 +859,13 @@ const WFUSEE=(()=>{
          and the ramp falling the way it turns: the spring's eye, pulled along the strip (rotation.y rising, as the coil winds outward), catches the face with its trailing edge
          and the strip lies over the ramp. The arbor is then pulled against the set-up click (anticlockwise from the dial), as the crossed chain has it (2_Kirow_2973_A: README).
          Until 16 October 2026 the face was on the other side, read from the ball end */
-      /* the pin in its hole in the core, Ø 2 and 6 deep (0207's section dashes it from the core's face to r 0.65 with a drill's point: sure), bored into the arbor's lathe at the
+      /* the core's lathe (48 sides) turned first so the hole's axis crosses the middle of a facet: the hole's walls then cut its facets the same way at any turn of the
+         hook (at 1.65° off that, after BLK moved, holeCut's sections left a flat 0.06 into the pin: bom.py); the pin in its hole in the core, Ø 2 and 6 deep (0207's section dashes it from the core's face to r 0.65 with a drill's point: sure), bored into the arbor's lathe at the
          hook's turn (25 October 2026: until then the pin stood 0.55 into the unholed core); the pin pressed to its foot, 0.005 off the hole's floor */
-      var hookSet=a=>{for(const[hk,y,arb]of HKS){arb.geometry=capFix(bore(arb.geometry,[0,y,0],[Math.cos(a),0,-Math.sin(a)],1.0,0.65,24),null);
-        const g=new THREE.CylinderGeometry(1.0,1.0,1.0,24,1),p=g.attributes.position;g.rotateZ(-Math.PI/2);
-        for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i);p.setX(i,x>0?6.65+0.005+0.47*(1+z)/2:0.655);}
-        g.computeVertexNormals();g.translate(0,y,0);g.rotateY(a);hk.geometry.dispose();hk.geometry=g;}};}
+      var hookSet=a=>{for(const[hk,y,arb]of HKS){const st=TAU/48;arb.geometry.rotateY(a-st/2-Math.floor((a-st/2)/st)*st);arb.geometry=capFix(bore(arb.geometry,[0,y,0],[Math.cos(a),0,-Math.sin(a)],1.0,0.65,24),null);
+        const g=new THREE.CylinderGeometry(1.0,1.0,1.0,24,1),p=g.attributes.position;
+        for(let i=0;i<p.count;i++){const v=p.getY(i),z=p.getZ(i);p.setY(i,v>0?6.65+0.005+0.47*(1+z)/2:0.655);}
+        g.computeVertexNormals();hk.geometry.dispose();hk.geometry=g;hk.position.set(0,y,0);hk.rotation.set(0,a,-Math.PI/2);}};}   /* built along its own y, turned onto the hook's radius: the pin's axis is its mesh's (bom.py reads a part's axis so; built in the arbor's frame until 25 October 2026, its axis read upright through its box's middle, which an oblique pin's ramped end puts off the pin) */
     /* the set-up ratchet 05 07 00-3 (Sperrad; Messingblech 3 Ms 58, revised 24.11.47): 16 teeth, tips Ø 14.1 -0.2, roots 11.1 -0.2 (drawn 14.0, 11.0), each face along a line 1.2
        off the radius (10°), the back an arc Ø 12.5 (r 6.25) whose centre lies on the Ø 6.4 circle: the sheet's "12,5" runs across the circle through its centre (its two ends on
        it, scaled 12.7 at 16.9 px/mm), its centre 3.24 from the axis (scaled), on the "6,4" circle (r 3.2): sure. Each back's centre falls 3.12 from the axis with the drawn tips and
@@ -1068,13 +1079,14 @@ const WFUSEE=(()=>{
        the wall's height, through the wall: sure; 0207 draws it on the drum of 1941, and the later sheets keep its note's practice), cut where the hook's barb comes to the
        drum: the connector laid once and its drum hook's points inside the drum's Ø 41.6, put in the drum's frame, give the slot's middle, round the drum and along it (the
        chain's barb -21.7° to -17.5°, 1.03 into the wall, 0.80 high on y -18.0; the band's -40.3° to -34.7°, 0.33 in). Cut so in the drum of each version, each connector
-       its own drum (setConn swaps them). 0207 draws the slot 180° from the hook block's rivet hole, the model's chain's 88.4° (the drum's turn is the chain's, the rivet
-       hole's place BLK an estimate: README, Unresolved). 25 October 2026: until then not cut, the hooks' barbs in the drum's metal */
+       its own drum (setConn swaps them). 0207 draws the chain's slot 180° from the Steg and 135° from the hook block's rivet hole: BLK (above) is set from the chain's
+       slot so; the band's (no sheet places it) stands 162° from the Steg. 25 October 2026: until then not cut, the hooks' barbs in the drum's metal */
     const DRUM={};{const base=[dL.geometry,dF.geometry],sl=[[-0.425,-1.25],[0.425,-1.25],[0.425,1.25],[-0.425,1.25]];
       for(const k of['chain','band']){setConn(k);update({n:2.5},0);gB.updateWorldMatrix(true,true);const hk=k==='chain'?cHB:bHB,A=[],Y=[];hk.updateWorldMatrix(true,true);
         const inv=new THREE.Matrix4().copy(gB.matrixWorld).invert(),v=new THREE.Vector3();
         hk.traverse(o=>{if(!o.isMesh)return;const P=o.geometry.attributes.position,m=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld);for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);if(Math.hypot(v.x,v.z)<20.8){A.push(angOf(v.x,v.z));Y.push(v.y);}}});
         const a=(Math.min(...A)+Math.max(...A))/2,y=(Math.min(...Y)+Math.max(...Y))/2;pB.userData['slot_'+k]=[+(a/D2R).toFixed(2),+y.toFixed(3)];
+        if(k==='chain'&&Math.abs(wrap(a-BLK+5*Math.PI/4))>0.5*D2R)console.error(`fusee.js: the chain's slot at ${(a/D2R).toFixed(2)}° is not 225° behind the rivet hole (BLK ${BLK}): set BLK to the slot + 5π/4 (0207)`);
         DRUM[k]=base.map(g=>capFix(bore(g.clone(),[0,y,0],[Math.cos(a),0,-Math.sin(a)],0,19.0,4,sl),null));}
       base.forEach(g=>g.dispose());setConn('chain');}
     /* keySeat: where the winding key goes on (case.js keyAt): the dust plate's group, turning with the fusee and spread with the dust plate in the Exploded view (so the key
