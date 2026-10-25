@@ -4,6 +4,15 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.28.11 · 2026-10-25
+- The Wempe's bezel glass can be clicked: click the dial, then click it again to pick the glass in front of it
+
+## 3.28.10 · 2026-10-25
+- The Hamilton's part cards for the gimbal ring, winding key and dust seal now say which of their sizes are measured
+
+## 3.28.09 · 2026-10-25
+- In the essay's Winding figure, the half turns of the key now fill from run down as the spring is wound, toward 56 h, instead of emptying backwards
+
 ## 3.28.08 · 2026-10-25
 - The Wempe's gimbal ring and case brackets drawn to their sheet's sections, so the case turns over in its ring to be wound; the gimbals' pivots with their drawn tips and lock nuts
 - The Wempe's centre arbor, its wheel and the top plate's bushes at their drawings' fits
