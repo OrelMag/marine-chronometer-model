@@ -114,6 +114,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-physics',R(['node',TOOLS/'wempe_physics.js'],ROOT),'quick'),   # the Wempe's energy budget, mainspring to balance: does it close (a second)
  ('wempe-sustaining',R(['node',TOOLS/'wempe_sustaining.js'],ROOT),'quick'),   # the Wempe's maintaining spring from its drawn ring: banked, its push, the train on it while winding, escphys.js's figures (about 20 s)
  ('wempe-6mx',R(['node',TOOLS/'wempe_6mx.js'],ROOT),'quick'),   # the Soviet 6MX's physics against the drawings' (its jewels' shake, its first-drawn bodies): tools/wempe_6mx.json up to date (a second)
+ ('wempe-makers',R([PY,'wempe_makers.py','--check'],TOOLS),'quick'),   # the Wempe's maker's sheets' data (wempe/js/makers.js) up to date with its bom.json, BOM.md, transcriptions, bench and tolerances (a second)
  ('wempe-strength',R(['node',TOOLS/'wempe_strength.js'],ROOT),'quick'),   # the Wempe's loaded parts fully wound against their materials (about 20 s, with wempe_sustaining.js)
  ('wempe-gearing',R(['node',TOOLS/'gearing.js','--model','wempe','--quick'],ROOT),'quick'),   # the Wempe's meshes tooth by tooth, the swing over hours (about 30 s)
  ('wempe-hairspring',R(['node',TOOLS/'wempe_hairspring.js'],ROOT),'quick'),   # the Wempe's hairspring as drawn: its length's readings, Phillips' conditions on 05 03_7's curve, the force on the pivots, its isochronism by elastica and beam elements, against WESC.SET.HS (about 20 s)
@@ -184,6 +185,7 @@ STEPS=[('build',build,'quick'),
  ('exploded',R([PY,'exploded.py'],TOOLS),'browser'),
  ('overhaul',R([PY,'overhaul.py'],TOOLS),'browser'),
  ('book',R([PY,'book.py'],TOOLS),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
+ ('wempe-book',R([PY,'book.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's build book checked as paper, as the Hamilton's: every shown line on a sheet, each with its drawing's material or why it has none (about 1½ min)
  ('audit',R([PY,'audit.py'],TOOLS),'browser'),
  ('audit-box',R([PY,'audit.py','box'],TOOLS),'browser'),
  ('holecheck',R([PY,'holecheck.py'],TOOLS),'browser'),
