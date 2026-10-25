@@ -1109,12 +1109,16 @@ function decalGeo(poly,uvOf=q=>q){const s=new THREE.Shape();poly.forEach(([x,z],
 /* escape wheel (Figs. 14, 90; an original photographed in chronometerbook post 30): a thin plate (0.5 mm), its rim (0.5 mm wide) and four crossed spokes to a round collet,
    and on the plate's edge 16 thorn teeth standing the wheel's full 1.3 mm (Fig. 14's cut-away: tall teeth on a thin rim), each its outline E.toothPts from the escapement's solver
    closed along the root circle, where the plate ends (no face of the one lies on a face of the other). The tooth tips lie at angles k*P in the wheel's frame */
+/* EW_TH: the escape teeth's thickness along the arbor, 1.1 since 25 October 2026: KLUwI2UUCMQ 42:50.99, 42:51.49, 42:51.99 (4K, the movement side-on), the teeth's top to their
+   plate-side face on the escape arbor's own ruler (the teeth's top at h 15.85 to the plate's mirror line; checked by the collet's two steps, 0.93 and 1.44 against 1.0 and 1.45),
+   1.11; 1.0-1.15 read before; 1.3 until then, the figure Hamilton's specification gives as quoted in chronometerbook post 30 (the frames decide: the owner's choice) */
+const EW_TH=1.1;
 function escapeWheel(parent,M,rt,y,E){
   const R=rt*E.r0,gs=[];
   for(let k=0;k<16;k++){const a=k*E.P,q=E.toothPts(a).slice(0,-1),a0=a+E.settings.B*E.P,a1=a+E.U*E.P;for(let i=1;i<12;i++)q.push([E.r0,a0+(a1-a0)*i/12]);   /* back root to front root along the root circle */
-    gs.push([extrude(new THREE.Shape(q.map(([r,b])=>new THREE.Vector2(r*rt*Math.cos(b),-r*rt*Math.sin(b)))),{depth:1.3,bevelEnabled:false}),new THREE.Matrix4()]);}
-  const tg=mergeGeo(gs);tg.rotateX(-Math.PI/2);tg.translate(0,-0.65,0);
-  const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
+    gs.push([extrude(new THREE.Shape(q.map(([r,b])=>new THREE.Vector2(r*rt*Math.cos(b),-r*rt*Math.sin(b)))),{depth:EW_TH,bevelEnabled:false}),new THREE.Matrix4()]);}
+  const tg=mergeGeo(gs);tg.rotateX(-Math.PI/2);tg.translate(0,-EW_TH/2,0);
+  const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.75+EW_TH/2;parent.add(teeth);   /* the teeth's top face kept at y - 0.75 (0.95 under the train bridge: the side photograph), EW_TH thick toward the plate */
   /* the rim, spokes and hub as KLUwI2UUCMQ 43:21.1 shows the wheel face up in the staking tool (4K, along the tips' ellipse's long axis, 378 px for the tips' radius): the rim's
      inner edge 0.77 of the tips (290 px), the four spokes 0.105 wide (40 px, on the front spoke, whose width lies along the long axis), the hub r 0.31 (the collet's foot, 116 px)
      with the collet's pipe r 0.20 (74 px) standing about 1.9 toward the pinion (its height off the ellipse's 25 deg tilt: rough). Until 5 October 2026 the rim 0.5 wide,
@@ -4673,7 +4677,7 @@ function makeEsc(o={},base){
      wheel through the same train and losses as 52 s took for the old one (62.4 µN·m against 75.0: 0.611 of the fusee's torque reaching the escape wheel); 52 until then, and 34 until 11 October 2026, when the escapement's work still left out the wheel's chase and the detent's whole lift
      (tools/dynamics.js). MU: steel on sapphire. EX: the centre distance (9.40 mm; the model passes the one in its L).
      The bodies and springs, physical rather than fitted (since 11 October 2026; fD and fP, their shares of the work, were fitted before): I, the balance (g·mm², Table II);
-     JW, the train's inertia at the escape wheel: since 14 October 2026 every arbor weighed on its drawn solids (tools/mechanisms.json, summed by tools/dynamics.js and traindyn.js: the escape wheel, pinion and arbor 5.22 g·mm², the fourth wheel and seconds hand reflected 0.81, the rest 0.02); 5.9 before, the wheel's 4.80 and the fourth's 1.1 estimated (6.2 with 1.4 until 12 October 2026);
+     JW, the train's inertia at the escape wheel: since 14 October 2026 every arbor weighed on its drawn solids (tools/mechanisms.json, summed by tools/dynamics.js and traindyn.js: the escape wheel, pinion and arbor 4.82 g·mm², the fourth wheel and seconds hand reflected 0.81, the rest 0.02: 5.65 since 25 October 2026, when the teeth were measured 1.1 thick and the pinion's leaves 3.0 long; 6.05 with the escape arbor's 5.22 until then); 5.9 before, the wheel's 4.80 and the fourth's 1.1 estimated (6.2 with 1.4 until 12 October 2026);
      W78, Op. 78's weight (g), hung on the locking jewel, and G78 (mm) what it should part the detent spring from its stop button by ("approximately 0.005 in", p. 61; Fig. 88's
      "(.005 in. clearance)"): the weight's moment is the spring's preload and its stiffness over that bend, so the preload is the weight's less the bend's (0.63 g at the jewel
      with the drawn spring; until 14 October 2026 the whole 0.770 g, p. 61's clause missed), and a stiffer spring is set up with less preload; hD, the detent spring's two
@@ -4699,7 +4703,7 @@ function makeEsc(o={},base){
      stiffness at its tip that the 0.06 x 0.3 strip 7.9 long had until 20 October 2026, when it was measured 5.8 mm free and 0.37 deep; 0.06 at that length would be 3.1 times as stiff,
      taking 24 % of the impulse's work and leaving tolerances.js only 1.5 times its stiffness before the swing falls under 247.5°) */
   const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2884,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.019,DRAW:10,aI:181.3,aD:269.9,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.041,tsH:0.37,TF:67,MU:0.15,
-    I:578.5,JW:6.05,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.609,eS:0.3,HS:0};
+    I:578.5,JW:5.65,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.609,eS:0.3,HS:0};
   /* the settings a second chronometer needs (makeEsc(o, base)), each the Hamilton's as the code had it until 15 October 2026. NT: the wheel's teeth; ES: its radius (mm), the
      unit; LK: the locked tooth that many pitches before the pair straddling the line of centres, and LO (deg) the wheel's teeth turned so far from straddling it (the locking
      stone's place, lockA, and the teeth's at rest, t0); DA: the detent's angle to the line of centres (deg) and BL its length from Ft to the locking face; PSL: the passing

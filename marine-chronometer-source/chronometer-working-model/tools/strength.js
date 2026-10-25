@@ -34,8 +34,8 @@ say(`the pinions are hardened steel, ${f(STEEL_Y[0]/BRASS_Y[1],1)}-${f(STEEL_Y[1
 
 /* ---------- the escape wheel's teeth: the strike on the impulse jewel and the landing on the locking stone ---------- */
 /* the tooth meets each at about the jewel's speed (dynamics.js: it strikes the impulse jewel at twice the jewel's speed, so the jewel's speed relative); the wheel and the
-   fourth wheel behind it stop on the tooth, a cantilever (1 - r0) of the radius tall, about half the root pitch wide (estimated), 1.3 mm face, hardened steel */
-{const w=ESC.A*DY.K/DY.K*(2*Math.PI/ESC.T)*ESC.rRoll,KE=0.5*DY.JT*w*w,h=(1-ESC.r0)*ESC.ES/1000,wb=Math.PI*ESC.r0*ESC.ES/16/1000,b=1.3e-3,Ib=b*wb**3/12,kT=3*207e9*Ib/h**3,Fm=Math.sqrt(2*KE*kT),sig=Fm*h*(wb/2)/Ib;
+   fourth wheel behind it stop on the tooth, a cantilever (1 - r0) of the radius tall, about half the root pitch wide (estimated), 1.1 mm face (core.js EW_TH), hardened steel */
+{const w=ESC.A*DY.K/DY.K*(2*Math.PI/ESC.T)*ESC.rRoll,KE=0.5*DY.JT*w*w,h=(1-ESC.r0)*ESC.ES/1000,wb=Math.PI*ESC.r0*ESC.ES/16/1000,b=1.1e-3,Ib=b*wb**3/12,kT=3*207e9*Ib/h**3,Fm=Math.sqrt(2*KE*kT),sig=Fm*h*(wb/2)/Ib;
   line('escape wheel tooth, struck (the tooth alone springing)',`${f(Fm,1)} N peak, ${f(KE*1e6,1)} µJ`,sig,P(STEEL_Y),`steel's yield (${f(2*86400*365*yrs/16/1e6,0)}M strikes a tooth in ${yrs} y; below the endurance limit, about half the yield, it lasts)`);}
 
 /* ---------- pivots: bending at the shoulder (σ = 32 F L / π d³, the load at mid-bearing), and the bearing's pressure ---------- */

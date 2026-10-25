@@ -41,7 +41,7 @@ say(`the train fusee wheel to escape wheel ${f(ratioT,0)}:1; the escape wheel's 
 /* ---------- A4: the escape wheel with mass: its chase onto the impulse jewel (the model's escapement, shared/escapement.js, which tools/dynamics.js checks beat by beat) ---------- */
 say('A4: the escape wheel with mass');
 const rE=13.16/2/1000;   /* the escape wheel's radius */
-const J=4.80e-9;   /* the escape wheel, its pinion and arbor about their axis, kg·m²: the drawn solid in steel (7.85), integrated on the mesh (invariants.py checks this against it; 4.72e-9 before the arbor and pinion were measured, 4-5 October 2026) */
+const J=4.46e-9;   /* the escape wheel, its pinion and arbor about their axis, kg·m²: the drawn solid in steel (7.85), integrated on the mesh (invariants.py checks this against it; 4.46e-9 since 25 October 2026, the teeth 1.1 thick and the pinion 3.0 long, 4.80e-9 before; 4.72e-9 before the arbor and pinion were measured, 4-5 October 2026) */
 const RU=ESC.run,tqCal=RU.cl.w*ESC.kB,JW=ESC.settings.JW*1e-9;   /* the torque the model is calibrated at (255°); the wheel's inertia with the fourth wheel's reflected (shared/escapement.js JW) */
 chk(JW>J&&JW<1.5*J,`the escapement's wheel inertia (${f(JW*1e9,2)} g·mm²) is the escape wheel's ${f(J*1e9,2)} and the train's behind it, reflected through the pinions (${f((JW-J)*1e9,1)}: their solids weighed, mechanisms.json, dynamics.js)`);
 const chaseDeg=(RU.land-ESC.thRel)/D;
