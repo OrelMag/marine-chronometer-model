@@ -32,7 +32,7 @@ Columns: the part (its `hn`), its sheets, the photographs it was checked on (pho
 
 | Part | hn | Sheets | Photographs | Verdict | How sure | Done / left |
 |---|---|---|---|---|---|---|
-| Fusee body | 050604-2 | 05 06 04-2, 05 06 04 (rev. a, 1948) | train (rms 2.4 px, 0.11 mm/px) | every figure matches; its place on the arbor: 05 06 04's 13.7 −0.1 from the large end to the top shoulder and 0.5 +0.05 to the click wheel against the model's 13.46 and 0.75; the 3 M2, M1.7, the 0.5 H7 and the chain pin's holes not cut | likely (place), sure (holes) | place: README Unresolved (two readings; the one that fits every figure needs the ratchet's rim checked); holes: batch 4 |
+| Fusee body | 050604-2 | 05 06 04-2, 05 06 04 (rev. a, 1948), 05 06_20 | train (rms 2.4 px, 0.11 mm/px) | every figure matches; the groove's floor measured off the built solid (`tools/wempe_fusee_profile.py`): each whole turn within +0.002 to +0.021 of the sheets' radii, the working lands within 0.016 of 05 06_20's curve (rms 0.010, the sheet's ±0.05), the pitch 1.1991 (1,2 ±0,01); its place on the arbor: 05 06 04's 13.7 −0.1 from the large end to the top shoulder and 0.5 +0.05 to the click wheel against the model's 13.46 and 0.75; the 3 M2, M1.7, the 0.5 H7 and the chain pin's holes not cut | likely (place), sure (holes) | place: README Unresolved (two readings; the one that fits every figure needs the ratchet's rim checked); holes: batch 4 |
 | Fusee arbor | 050604-1 | 05 06 04-1 | — | matches; its Ø 1.1 cross hole not cut | sure | batch 3 |
 | Vorreiber | 050600-2 | 05 06 00-2 | not visible | matches; its Ø 0.8 pin hole not cut | sure | batch 3 |
 | Dust plate | 050600-1 | 05 06 00-1 | — | matches, less its 0.5 × 45° | sure | batch 3 |
