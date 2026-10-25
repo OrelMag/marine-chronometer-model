@@ -313,7 +313,13 @@ function buildBox(M){
     const cx=(r,l,x)=>{const c=mesh(stayP,cylY(r,l,16),M.brass,x,0,0);c.rotation.z=Math.PI/2;};cx(2,10.1,-0.75-5.05);cx(1,1.5,0);cx(1.6,0.8,1.15);   /* the post from the lid's wall, the pivot through the bar, its head */
     for(const[r,l,x]of[[1,2,-(W-T)+1],[2,0.8,-(W-T)+2.1]]){const pn=mesh(root,cylY(r,l,16),M.brass,x,YL+SPY,-W+SPZ);pn.rotation.z=Math.PI/2;} }   /* the pin, out of the box's wall through the slot, its head (r 2, 0.1 off the bar) keeping the bar on it */
   const stay=()=>{const al=mid.rotation.x,dy=SPY,dz=SPZ+HR,y=dy*Math.cos(al)+dz*Math.sin(al),z=-dy*Math.sin(al)+dz*Math.cos(al);stayP.rotation.x=Math.atan2(-(z-STB),-(y-STA));};stay();
-  return{root,ring,bowl,mid,top,stay,shield,shRest:SH_REST,latch:lv,RO,CR};
+  /* the Exploded view's All (app.js, e 0 to 1): the box and case taken apart up the bowl's axis, under the movement lifted out of it: the gimbal ring with its pivot screws
+     70 over the box, the case (bowl) 85 over the ring, its shield plate with its screw and spring 20 under the case, the bezel 45 and the crystal 75 over it; the latch and the key
+     out to the right, the glass lid back off its hinge and the outer lid back off the glass lid's. Each moved from where it was built (ex0) */
+  const EXP=[[ring,0,70,0],[gp,0,70,0],[bowl,0,85,0],[shield,0,-20,0],[lat,70,0,0],[key,150,60,0],[mid,0,0,-45],[top,0,45,0]];
+  for(const c of bowl.children){const h=c.userData.hn,d=h==='42102'?45:h==='42103'?75:h==='42124'||h==='42126'?-20:0;if(d)EXP.push([c,0,d,0]);}
+  const explode=e=>{for(const[g,dx,dy,dz]of EXP){const p=g.userData.ex0||(g.userData.ex0=g.position.clone());g.position.set(p.x+dx*e,p.y+dy*e,p.z+dz*e);}};
+  return{root,ring,bowl,mid,top,stay,shield,shRest:SH_REST,latch:lv,RO,CR,explode};
 }
 /* ================= motions the page (app.js) and the export (blender.js) both play: the gimbals, the twist, the banked balance ================= */
 /* the escape wheel held by the train-blocking screw's dog point a fraction f of a tooth past its lock (the next unlocking let it go until a spoke met the point): the tooth

@@ -6751,6 +6751,11 @@ const WCASE=(()=>{
     const out={setCase,stay:stayAt,root,ring:ringG,bowl:bowlG,inner:bowlS,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);cp.userData.turn();},lock:k=>{for(const t of LKT)t.rotation.y=-69.7*D2R*k;},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
     /* rev(v): the lids the page turns are the version's (app.js's onRev) */
     out.rev=v=>{const s=v==='6mx';out.lid=s?lid6G:lidG;out.tongue=s?tg6:tgG;out.overLid=s?ol6G:olG;bowlS.position.y=s?-DY6:0;cp.userData.spEnd(s?YB-61.3:YB-63,s?0:CPY);};
+    /* the Exploded view's All (app.js, the viewer's st.allK, e 0 to 1): the case taken apart up the bowl's axis, under the movement lifted out of it: the gimbal ring 50 over
+       the box, the closing plate 128, the bowl with its brackets 150, the bezel with its glass 195; the transit lock and the key out to the right, the lid back off its hinges.
+       Each moved from where it was built (ex0); the key, which keyAt moves, only while it stands in its holder (called each frame) */
+    out.explode=e=>{const at=(g,dx,dy,dz)=>{const p=g.userData.ex0||(g.userData.ex0=g.position.clone());g.position.set(p.x+dx*e,p.y+dy*e,p.z+dz*e);};
+      at(rgP,0,50,0);at(cp,0,128,0);at(bowl,0,150,0);at(bz,0,195,0);at(lk,90,0,0);at(lidG,0,0,-45);at(lid6G,0,0,-45);if(key.parent===root){KEYREST();key.position.x+=110*e;key.position.y+=40*e;}};
     return out;}
   return{build,YP,YB};
 })();
