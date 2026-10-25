@@ -47,15 +47,15 @@
    "no": "42178",
    "when": "the balance and its hairspring, the detent and its springs in, the train held by the train-blocking screw (Sec. III); before the mainspring is chosen",
    "how": "Give the balance a full swing (by hand through the train bridge's cutout, or a twist of the movement) and let it run down freely, the train held. Film it from above with a phone, a card marked every 30° under the cock, and read the swing every few seconds (python swing.py FILE reads it off the screws' sweep); time how long it takes to fall from 255° to half that, 127½°.",
-   "pass": "The model's balance halves its swing in 35 s (its free run-down TF 67 s). Any time from about 23 to 72 s is a sound balance: it sets the mainspring's strip, which goes as the drive's cube root. Halving in 23, 28, 33, 35, 40, 47, 56, 64, 72 s (TF 40, 50, 60, 67, 80, 100, 130, 160, 200) wants the strip 1.057, 1.034, 1.014, 1.000, 0.976, 0.942, 0.895, 0.851, 0.792 times the drawn: 0.417, 0.408, 0.399, 0.394, 0.385, 0.371, 0.353, 0.335, 0.312 mm in steel (the drawn 0.394), 0.408, 0.399, 0.391, 0.386, 0.377, 0.364, 0.345, 0.328, 0.306 in Nivaflex (the build's 0.386), the width and length as drawn. Shorter than 23 s, look for a pivot or the detent's springs dragging before choosing."
+   "pass": "The model's balance halves its swing in 35 s (its free run-down TF 67 s). Any time from about 23 to 72 s is a sound balance: it sets the mainspring's strip, which goes as the drive's cube root. Halving in 23, 28, 32, 35, 40, 47, 56, 63, 72 s (TF 40, 50, 60, 67, 80, 100, 130, 160, 200) wants the strip 1.057, 1.034, 1.014, 1.000, 0.976, 0.943, 0.896, 0.853, 0.795 times the drawn: 0.416, 0.408, 0.399, 0.394, 0.385, 0.371, 0.353, 0.336, 0.313 mm in steel (the drawn 0.394), 0.408, 0.399, 0.391, 0.386, 0.377, 0.364, 0.346, 0.329, 0.307 in Nivaflex (the build's 0.386), the width and length as drawn. Shorter than 23 s, look for a pivot or the detent's springs dragging before choosing."
   },
   {
    "id": "detent",
    "title": "The detent rings",
    "no": "42087",
    "when": "the detent made, before it goes in",
-   "how": "Clamp its foot as the block holds it (a printed jig with the foot's two screws does), the stone and the blade's end free of everything, and flick the end of the blade lightly with a hair or a pith stick. Record the ring with a phone held a few millimetres off and read its lowest strong pitch with a spectrum app, or python benchcheck.py --ring FILE (any recording ffmpeg reads). The trip spring rings too, near 935 Hz: the detent's own is the lower.",
-   "pass": "148 Hz with the spring as drawn (0.079 mm thick); 75-194 Hz for a spring 0.050-0.095 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to -Infinity % of the depth of lock, against 43 % as drawn: tools/tripping.js); higher than 194 Hz, the spring is stiffer and Op. 78's 0.005 in leaves it less preload (at 0.10 mm a held tooth's stone lifts 53 % of the depth of lock), none from 0.122 mm, where the test can't be met with the spring on its button (tools/tripping.js, tools/tolerances.js). From about 75 Hz (0.05 mm) it rings least (the stone 23 % of the depth of lock)."
+   "how": "Clamp its foot as the block holds it (a printed jig with the foot's two screws does), the stone and the blade's end free of everything, and flick the end of the blade lightly with a hair or a pith stick. Record the ring with a phone held a few millimetres off and read its lowest strong pitch with a spectrum app, or python benchcheck.py --ring FILE (any recording ffmpeg reads). The trip spring rings too, near 843 Hz: the detent's own is the lower.",
+   "pass": "151 Hz with the spring as drawn (0.079 mm thick); 77-230 Hz for a spring 0.050-0.105 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to -Infinity % of the depth of lock, against 13 % as drawn: tools/tripping.js); higher than 230 Hz, the spring is stiffer and Op. 78's 0.005 in leaves it less preload (at 0.11 mm a held tooth's stone lifts 62 % of the depth of lock), none from 0.122 mm, where the test can't be met with the spring on its button (tools/tripping.js, tools/tolerances.js). From about 101 Hz (0.06 mm) it rings least (the stone 13 % of the depth of lock)."
   },
   {
    "id": "escapement",
@@ -63,7 +63,7 @@
    "no": "42087",
    "when": "the detent, its springs and the balance in; the train's power let down to the set-up",
    "how": "Turn the balance slowly by hand with a protractor on the cock (a printed card under the balance does) and read each angle where the manual's operations read it, through a loupe; the roller's shake and the horn's clearance with feeler gauges.",
-   "pass": "The manual's figures: lock about 6° (the model 6.1°, Op. 85), let-off at least 6° (7.6°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.2°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78: 0.770 g on the locking jewel parts it from its stop button by about 0.005 in (0.13 mm; bend the spring until it does). Never a lock under 6°: shallower, the detent's ringing after each lock comes to over half the depth of lock (114 µm at the stone at 6°), the drop is gone at 4.0° and a tooth gets past at 3.5° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (33-39 g over 3 ms)."
+   "pass": "The manual's figures: lock about 6° (the model 6.1°, Op. 85), let-off at least 6° (7.8°, Op. 86), overall 26-30° (28.3°, Op. 87), drop about 2° (2.1°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78: 0.770 g on the locking jewel parts it from its stop button by about 0.005 in (0.13 mm; bend the spring until it does). Never a lock under 5°: shallower, the detent's ringing after each lock comes to over half the depth of lock (102 µm at the stone at 5°), the drop is gone at 4.0° and a tooth gets past at 3.0° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (35-40 g over 3 ms)."
   },
   {
    "id": "swing",
@@ -95,7 +95,7 @@
    "no": "42016",
    "when": "the movement running, part wound",
    "how": "Running, look at the sustaining spring's gap through the sustaining ratchet's holes: its ends must nearly meet, the drive holding it closed (Glasgow's test: the mainspring pulls it to its banking). Then turn the key back a little (winding) and hold it still, the fusee off the train: time how long it runs until the balance stops, and watch its swing against the cock's marks meanwhile.",
-   "pass": "Running, the ends nearly meet: if they stand open, the spring is stronger than the drive (its band too high) and thins. Held, the chronometer runs on five to ten minutes (Sec. IV; the model's 10.5), its swing falling under a turn within the first minute (0.5): a winding never takes so long. Under five minutes, the band is too low or its gap too small (sustaining.js: banked it pushes 28 % of the drive from a band 0.96 mm high and 1.24-1.93 wide, its 17.4° gap measured, KLUwI2UUCMQ 27:26)."
+   "pass": "Running, the ends nearly meet: if they stand open, the spring is stronger than the drive (its band too high) and thins. Held, the chronometer runs on five to ten minutes (Sec. IV; the model's 10.4), its swing falling under a turn within the first minute (0.5): a winding never takes so long. Under five minutes, the band is too low or its gap too small (sustaining.js: banked it pushes 28 % of the drive from a band 0.96 mm high and 1.24-1.93 wide, its 17.4° gap measured, KLUwI2UUCMQ 27:26)."
   },
   {
    "id": "cannon",
@@ -117,14 +117,14 @@
  "lines": {
   "42007": "The pawls' springs, the maintaining work assembled, before the fusee wheel goes on: Each winding pawl's spring set at least 0.00 mm (the aim twice that, and at least 0.15 mm more: a spring is bent to about 0.05): less, and when the key lets go the fusee's teeth can outrun the pawl and catch it part way in (ratchets.js): bend it back to the aim. The sustaining pawl's wire must press the pawl into the teeth (0.12 rad is the aim): from any wire that does, the pawl falls from a tip to the root in 4.8 ms or less, inside the 8.3 ms a tooth takes at a turn a second of the key (ratchets.js); one that leaves the pawl loose in its tooth, bend it in. The pawls drawn in by their load: the winding pawls' faces bear square (a draw of 16.5°), the sustaining pawl's end stoned to bear along its tooth's face, not on its corner.",
   "42015": "The fusee evens the pull, the chain on, the barrel set up, before the train goes in: Every reading within -5 to +11 % of their mean (the model's even 388 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope.",
-  "42016": "The maintaining work drives the train, the movement running, part wound: Running, the ends nearly meet: if they stand open, the spring is stronger than the drive (its band too high) and thins. Held, the chronometer runs on five to ten minutes (Sec. IV; the model's 10.5), its swing falling under a turn within the first minute (0.5): a winding never takes so long. Under five minutes, the band is too low or its gap too small (sustaining.js: banked it pushes 28 % of the drive from a band 0.96 mm high and 1.24-1.93 wide, its 17.4° gap measured, KLUwI2UUCMQ 27:26).",
+  "42016": "The maintaining work drives the train, the movement running, part wound: Running, the ends nearly meet: if they stand open, the spring is stronger than the drive (its band too high) and thins. Held, the chronometer runs on five to ten minutes (Sec. IV; the model's 10.4), its swing falling under a turn within the first minute (0.5): a winding never takes so long. Under five minutes, the band is too low or its gap too small (sustaining.js: banked it pushes 28 % of the drive from a band 0.96 mm high and 1.24-1.93 wide, its 17.4° gap measured, KLUwI2UUCMQ 27:26).",
   "42024": "The winding stop takes a strong hand, the stop-bar and the winding stop made, then wound to the stop: Nothing moves or marks: hardened, the stop-bar's end yields at 4.52 N·m and the stud's thread at 4.19; left soft the bar bends at 1.59, past half as much again as a strong hand's. The first thing to give is the key's own socket (1.60 N·m). Never turn the key the wrong way: 0.53 N·m clockwise bends the fusee wheel's teeth (the build's key has a ratchet in its pipe).",
   "42038": "The mainspring's torque, before it goes into the barrel, and again in the barrel: Fully wound 0.95-1.11 N·m (the model's 1.00; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 102 mN·m a turn, to about 0.53 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13); this matters most for carbon steel, whose arbor here is 25 times the strip where its life wants 28 (Daniels; no carbon strip at 28:1 fits the barrel's turns: deviations.js), so test it again after a month's running, while Nivaflex, the build's, holds its pull. Unwinding it reads less than winding: the coils' friction gives 4-8 % on the model's spring, mainsprings run 10-20 % under their winding (ICMFF9: 11-22 % read so; the strip's edges and its steel too); over 22 %, clean and grease it.",
   "42068": "The train's depths, the plates and bridges bored, before the jewels and bushes go in: Centres 20.383, 16.550, 11.297, 10.444 mm (fusee-centre, centre-third, third-fourth, fourth-escape), each within ±13 µm (tools/gearing.js: the wheel's tips stay off the pinion's root with the pivots' shake taken off). Every mesh turns smoothly with shake at its pinion; none butts or catches. A hole that errs should err wide: each mesh takes several times as much wide as close. One closer than its window's close side less the pivots' shake (48, 39, 28, 27 µm close): re-bush the hole, the bush bored on the drawn centre (benchcheck.py).",
   "42071": "Endshake, each arbor in its bearings, before the escapement goes in: 28-73 µm at 20 °C (Ops. 15, 69 and 74's 0.001-0.003 in, less what the brass takes from it at 40 °F and gives at 100 °F: tools/thermal.js).",
   "42077": "The cannon pinion's friction, the motion work and the hands on, the movement level: It slips between 3.5 and 117 g (motionwork.js: tighter, setting the hands forward drives the escapement to trip; looser, a knock turns the hands): set it near 20 g.",
-  "42087": "The detent rings, the detent made, before it goes in: 148 Hz with the spring as drawn (0.079 mm thick); 75-194 Hz for a spring 0.050-0.095 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to -Infinity % of the depth of lock, against 43 % as drawn: tools/tripping.js); higher than 194 Hz, the spring is stiffer and Op. 78's 0.005 in leaves it less preload (at 0.10 mm a held tooth's stone lifts 53 % of the depth of lock), none from 0.122 mm, where the test can't be met with the spring on its button (tools/tripping.js, tools/tolerances.js). From about 75 Hz (0.05 mm) it rings least (the stone 23 % of the depth of lock). The escapement's figures, the detent, its springs and the balance in; the train's power let down to the set-up: The manual's figures: lock about 6° (the model 6.1°, Op. 85), let-off at least 6° (7.6°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.2°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78: 0.770 g on the locking jewel parts it from its stop button by about 0.005 in (0.13 mm; bend the spring until it does). Never a lock under 6°: shallower, the detent's ringing after each lock comes to over half the depth of lock (114 µm at the stone at 6°), the drop is gone at 4.0° and a tooth gets past at 3.5° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (33-39 g over 3 ms).",
-  "42178": "The balance runs down free, the balance and its hairspring, the detent and its springs in, the train held by the train-blocking screw (Sec. III); before the mainspring is chosen: The model's balance halves its swing in 35 s (its free run-down TF 67 s). Any time from about 23 to 72 s is a sound balance: it sets the mainspring's strip, which goes as the drive's cube root. Halving in 23, 28, 33, 35, 40, 47, 56, 64, 72 s (TF 40, 50, 60, 67, 80, 100, 130, 160, 200) wants the strip 1.057, 1.034, 1.014, 1.000, 0.976, 0.942, 0.895, 0.851, 0.792 times the drawn: 0.417, 0.408, 0.399, 0.394, 0.385, 0.371, 0.353, 0.335, 0.312 mm in steel (the drawn 0.394), 0.408, 0.399, 0.391, 0.386, 0.377, 0.364, 0.345, 0.328, 0.306 in Nivaflex (the build's 0.386), the width and length as drawn. Shorter than 23 s, look for a pivot or the detent's springs dragging before choosing. The swing, the movement running, fully wound and again run down: 1⅜-1½ turns, 247.5-270° each way, fully wound and run down alike (Sec. II, Sec. IX). Low at both ends: the train's freedom or the depths; low at one end only: the fusee and the spring (the fusee test); high or low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it).",
+  "42087": "The detent rings, the detent made, before it goes in: 151 Hz with the spring as drawn (0.079 mm thick); 77-230 Hz for a spring 0.050-0.105 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to -Infinity % of the depth of lock, against 13 % as drawn: tools/tripping.js); higher than 230 Hz, the spring is stiffer and Op. 78's 0.005 in leaves it less preload (at 0.11 mm a held tooth's stone lifts 62 % of the depth of lock), none from 0.122 mm, where the test can't be met with the spring on its button (tools/tripping.js, tools/tolerances.js). From about 101 Hz (0.06 mm) it rings least (the stone 13 % of the depth of lock). The escapement's figures, the detent, its springs and the balance in; the train's power let down to the set-up: The manual's figures: lock about 6° (the model 6.1°, Op. 85), let-off at least 6° (7.8°, Op. 86), overall 26-30° (28.3°, Op. 87), drop about 2° (2.1°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78: 0.770 g on the locking jewel parts it from its stop button by about 0.005 in (0.13 mm; bend the spring until it does). Never a lock under 5°: shallower, the detent's ringing after each lock comes to over half the depth of lock (102 µm at the stone at 5°), the drop is gone at 4.0° and a tooth gets past at 3.0° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (35-40 g over 3 ms).",
+  "42178": "The balance runs down free, the balance and its hairspring, the detent and its springs in, the train held by the train-blocking screw (Sec. III); before the mainspring is chosen: The model's balance halves its swing in 35 s (its free run-down TF 67 s). Any time from about 23 to 72 s is a sound balance: it sets the mainspring's strip, which goes as the drive's cube root. Halving in 23, 28, 32, 35, 40, 47, 56, 63, 72 s (TF 40, 50, 60, 67, 80, 100, 130, 160, 200) wants the strip 1.057, 1.034, 1.014, 1.000, 0.976, 0.943, 0.896, 0.853, 0.795 times the drawn: 0.416, 0.408, 0.399, 0.394, 0.385, 0.371, 0.353, 0.336, 0.313 mm in steel (the drawn 0.394), 0.408, 0.399, 0.391, 0.386, 0.377, 0.364, 0.346, 0.329, 0.307 in Nivaflex (the build's 0.386), the width and length as drawn. Shorter than 23 s, look for a pivot or the detent's springs dragging before choosing. The swing, the movement running, fully wound and again run down: 1⅜-1½ turns, 247.5-270° each way, fully wound and run down alike (Sec. II, Sec. IX). Low at both ends: the train's freedom or the depths; low at one end only: the fusee and the spring (the fusee test); high or low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it).",
   "42188": "The balance and its hairspring vibrated, the hairspring pinned to its collet and stud, the balance on its staff: 2 oscillations a second (7,200 an hour): Table II's balance (578.5 g·mm²) wants a spring of 91.4 µN·m a radian. Within 40 s a day of it (one turn of the timing weights, Sec. IX) before the spring goes in; the weights take up the rest."
  },
  "criteria": {
@@ -167,8 +167,8 @@
   },
   "fusee": {
    "band": [
-    -0.0522,
-    0.1095
+    -0.0526,
+    0.1091
    ],
    "halfTurns": 17.5,
    "torque": 0.3881
@@ -190,7 +190,7 @@
    "windows": [
     [
      -0.0579,
-     0.1776
+     0.1784
     ],
     [
      -0.0487,
@@ -219,91 +219,91 @@
   },
   "detent": {
    "ring": [
-    74.9,
-    194.2
+    76.5,
+    230.3
    ],
-   "f0": 148,
-   "trip": 934.8,
+   "f0": 151.4,
+   "trip": 842.8,
    "t": [
     0.05,
-    0.095
+    0.105
    ],
    "rows": [
     [
      0.05,
-     74.9,
-     0.2311
+     76.5,
+     0.1688
     ],
     [
      0.06,
-     98.3,
-     0.3252
+     100.5,
+     0.1301
     ],
     [
      0.07,
-     123.7,
-     0.2986
+     126.5,
+     0.2032
     ],
     [
      0.072,
-     129,
-     0.4236
+     131.9,
+     0.1591
     ],
     [
      0.075,
-     137,
-     0.4097
+     140.2,
+     0.1361
     ],
     [
      0.079,
-     148,
-     0.4311
+     151.4,
+     0.1285
     ],
     [
      0.085,
-     164.9,
-     0.402
+     168.7,
+     0.139
     ],
     [
      0.09,
-     179.4,
-     0.4218
+     183.6,
+     0.1579
     ],
     [
      0.095,
-     194.2,
-     0.4478
+     198.9,
+     0.1773
     ],
     [
      0.1,
-     209.3,
-     0.5283
+     214.4,
+     0.2164
     ],
     [
      0.105,
-     224.7,
-     0.6883
+     230.3,
+     0.345
     ],
     [
      0.11,
-     240.4,
-     1.0308
+     246.5,
+     0.6184
     ],
     [
      0.12,
-     272.4,
-     0.7972
+     279.7,
+     0.8355
     ],
     [
      0.15,
-     372.5,
+     384,
      1.0309
     ]
    ]
   },
   "escapement": {
-   "lockTrip": 5.58,
-   "dropZero": 3.95,
+   "lockTrip": 5.12,
+   "dropZero": 4.03,
    "lock": [
     5,
     7
@@ -329,11 +329,11 @@
     0.066
    ],
    "model": {
-    "lock": 6.1,
-    "letoff": 7.58,
-    "overall": 28.02,
-    "drop": 2.15,
-    "horn": 0.2501,
+    "lock": 6.12,
+    "letoff": 7.76,
+    "overall": 28.28,
+    "drop": 2.09,
+    "horn": 0.2502,
     "shake": 0.0555
    }
   },
@@ -354,52 +354,52 @@
    10
   ],
   "rundown": {
-   "model": 35.25,
+   "model": 35,
    "rows": [
     [
      40,
      23.25,
-     1.0572
+     1.0567
     ],
     [
      50,
      28,
-     1.0345
+     1.0344
     ],
     [
      60,
-     32.5,
-     1.0137
+     32.25,
+     1.0136
     ],
     [
      67,
-     35.25,
+     35,
      1
     ],
     [
      80,
-     40.25,
-     0.9761
+     40,
+     0.9762
     ],
     [
      100,
-     47,
-     0.9419
+     46.75,
+     0.9428
     ],
     [
      130,
-     56,
-     0.895
+     55.75,
+     0.8964
     ],
     [
      160,
-     63.5,
-     0.8506
+     63.25,
+     0.8528
     ],
     [
      200,
-     72,
-     0.792
+     71.5,
+     0.795
     ]
    ]
   }

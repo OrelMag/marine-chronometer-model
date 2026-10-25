@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.32.00 · 2026-10-25
+- The Hamilton's hour wheel drawn with the short teeth a restoration video shows (its tips 8.6 mm out, not 8.8)
+- The detent's trip spring drawn its full 6.45 mm length, its tip under the horn as on the real detent; the escapement's figures, bench tests and maker's sheets follow
+- The third wheel's pinion shorter and the escape pinion's leaves longer, measured on video of the arbors
+- The fusee's stop slot now has the step its stop-bar strikes
+- The case's pivot bushings and the gimbal ring's drawn at the size a loose case bracket shows (7 mm across)
+
 ## 3.31.01 · 2026-10-25
 - The escape wheel's teeth drawn 1.1 mm thick, as video of a real Model 21 shows them, and the escape pinion's leaves starting higher above the plate
 - The escapement's figures, the bench tests and the maker's sheets follow the lighter escape wheel; the fourth wheel's sheet asks for hard brass

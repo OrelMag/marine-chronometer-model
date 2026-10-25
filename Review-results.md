@@ -857,7 +857,7 @@ the figures and listed in the model README's "Estimated, not from the manual".
 | Hands (42032–42035), cannon pinion (42077), minute wheel (42078), hour wheel (42080), wind indicator wheel (42081) | modelled | unchanged |
 | Case (42101), bezel (42102), crystal (42103), case support brackets (42105) and screws (42117) | modelled | the bracket screws have shanks |
 | Latch keeper (42113) and its screw (42116); separating washer (42128) | the keeper only | unchanged |
-| Shield plate (42104), shoulder screw (42124), stop screw (42125), return spring (42126) | modelled | unchanged. Fig. 107 draws the plate as a disc and the spring as an open ring. A disc that size, turning beside the key hole, would overhang the case's flat bottom, so the model keeps its lobed plate and coiled spring (estimated) |
+| Shield plate (42104), shoulder screw (42124), stop screw (42125), return spring (42126) | modelled | Fig. 107 draws the plate as a disc and the spring as an open ring. Since 5 October 2026 the model draws them so, measured on KLUwI2UUCMQ 47:24.0 and 47:36.5: a disc r 30.1 with the key's, the shoulder's, the stop screw's and a fourth hole, the stop screw screwed into the plate, the spring an open ring from a hook round the screw's end to a pin in the case's bottom (box.js; a lobed plate and coiled spring, estimated, until then) |
 | **Fig. 106: box and gimbals** | | |
 | Mounting box (42201), key (42044), gimbal ring (42106), gimbal and case support straps (42107, 42108) and screws (42116), pivot screws (42118–42120), washers (42122), lock nuts (42121) | modelled | strap screws have shanks |
 | Latch: support bracket (42109), lever (42111), handle (42112), bracket screws (42115) | modelled, shown released | unchanged |
