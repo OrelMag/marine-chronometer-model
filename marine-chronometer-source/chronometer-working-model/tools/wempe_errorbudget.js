@@ -94,6 +94,19 @@ module.exports.essay=()=>{seed=20261015;const o=adj(),rec=[];trial({...o,rec});r
    95 % of |x|), and how many pass; from the tool's seed, so the same each run */
 module.exports.summary=(n=NV)=>{seed=20261015;const st=R=>({...Object.fromEntries(['E','R','D','C','S','w','N'].map(k=>[k,[pct(R.map(r=>r[k]),0.5),pct(R.map(r=>Math.abs(r[k])),0.95)]])),pass:R.filter(r=>r.pass).length/R.length,n:R.length});
   return{adj:st(many(adj,n)),drawn:st(many(drawn,Math.min(n,500)))};};
+/* the heavy sea, as the gimbals pass it on: gimbals.js --model wempe's "a cargo ship beyond" NORDFORSK's limit, 120 s, through makeEsc as wempe_gimbals.js works it */
+let seaK0=null;const seaOf=()=>seaK0||(seaK0=(()=>{const av=process.argv.slice();process.argv.push('--model','wempe');const G=require('./gimbals.js');process.argv.length=0;process.argv.push(...av);
+  const r=G.run(G.bodies(),G.ship({Tr:14,roll:8,Tp:8,pitch:3,Ty:14,yaw:2,Th:8,heave:0.15,rd:8,lz:20},7),{T:140,from:20,rec:0.002,stop:60}),R=r.rec,mB=(()=>{const J=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8'));return(J.balance.m+J.rollers.m+J.collet.m+J.spring.m/2)/1000;})();
+  const Eb=E.kB*E.A*E.A/2,Qx=2*Math.PI*Eb/(4*0.15*mB*9.80665*0.05*0.105e-3*E.A),E2=W.makeEsc({...S,TF:(1/(1/Q0+1/Qx))*T0/Math.PI},S),dRf=(E.rateAt(E2.A,1)-r0)/0.05;
+  let fa=0;for(const q of R)fa+=Math.hypot(q[3],q[4])/9.80665;fa/=R.length;return{k:dRf*fa,fa,lat:r.boxLat};})());   /* computed once, when first wanted (the at-sea section, wempe_navigation.js) */
+const TV=d=>d<0?12.8:12.8+16.7*Math.min(d/20,1)+1.7*gauss();   /* its box's daily mean (°C): errorbudget.js's 55 → 85 °F over 20 days, ±3 °F */
+function voyage(p,on={}){const use=k=>!on.only||on.only===k,days=60,port=10,rates=[];const c2=-p.Sv/256,dr=p.k*SC.drS*gauss(),oil=0.10*rnd(),b=baro();
+  for(let d=-port;d<days;d++){const T=TV(d);let r=w8;if(use('temp'))r+=p.c1*(T-20)+c2*(T-20)**2+air(T);if(use('scatter'))r+=p.k*SC.sd*gauss();if(use('drift'))r+=dr*(d+port);
+    if(use('baro'))r+=airK*b();if(use('oil'))r+=-oil*(d+port)/365*(on.oilK!=null?on.oilK:oilK);if(use('sea')&&d>=0&&rnd()<0.2)r+=seaOf().k;rates.push(r);}
+  const rated=rates.slice(0,port).reduce((a,x)=>a+x,0)/port;let e=0;const out={};for(let d=0;d<days;d++){e+=rates[port+d]-rated;if(on.rec)on.rec.push(e);if(d===9||d===29||d===59)out[d+1]=e;}return out;}
+/* wempe_navigation.js: the voyage as section 2 runs it (60 days, rated over 10 days in port; on.rec the error each day at sea, on.oilK a made chronometer's own drive-to-rate
+   factor for the oil), the adjustments and the module's own random numbers, so its draws are the same machinery's */
+module.exports.nav=()=>({voyage,adj,adjB,drawn,rnd,gauss,reseed:x=>{seed=x;},SC,SETB,SET0,oilK,sea:seaOf,E,S,P,W});
 if(!MAIN)return;
 head('1. The TU\'s trial: 35 days at 36/20/4/20/36 °C, the first two days of each period not counted, wound daily to "8" (the 6MX\'s TU, 6MX-figures.md)');
 say(`scatter ${f(SC.sd,3)} s a day and drift ±${f(SC.drS*1000,2)} ms a day each day: calibrated on the 6MX's eight test cards (1953-1993), the trial's median E made theirs, ${f(cardE,3)}, and its median |R|, ${f(cardR,2)} (the Hamilton's No. 3390 card's 0.042 and ±2.66 until 18 October 2026)`);
@@ -115,17 +128,7 @@ console.log(rows.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,
 
 /* ---------- 2. at sea ---------- */
 head('2. At sea: 60 days from a port in winter (55 °F, 12.8 °C) into the tropics (85 °F, 29.4 °C), rated over 10 days in port, the error the navigator carries (errorbudget.js\'s voyage)');
-/* the heavy sea, as the gimbals pass it on: gimbals.js --model wempe's "a cargo ship beyond" NORDFORSK's limit, 120 s, through makeEsc as wempe_gimbals.js works it */
-const seaK=(()=>{const av=process.argv.slice();process.argv.push('--model','wempe');const G=require('./gimbals.js');process.argv.length=0;process.argv.push(...av);
-  const r=G.run(G.bodies(),G.ship({Tr:14,roll:8,Tp:8,pitch:3,Ty:14,yaw:2,Th:8,heave:0.15,rd:8,lz:20},7),{T:140,from:20,rec:0.002,stop:60}),R=r.rec,mB=(()=>{const J=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8'));return(J.balance.m+J.rollers.m+J.collet.m+J.spring.m/2)/1000;})();
-  const Eb=E.kB*E.A*E.A/2,Qx=2*Math.PI*Eb/(4*0.15*mB*9.80665*0.05*0.105e-3*E.A),E2=W.makeEsc({...S,TF:(1/(1/Q0+1/Qx))*T0/Math.PI},S),dRf=(E.rateAt(E2.A,1)-r0)/0.05;
-  let fa=0;for(const q of R)fa+=Math.hypot(q[3],q[4])/9.80665;fa/=R.length;return{k:dRf*fa,fa,lat:r.boxLat};})();
-say(`heavy weather (the gimbals in a sea beyond NORDFORSK's limit, ${f(seaK.lat,2)} g rms athwartships at the box): ${f(seaK.fa*1000,1)} mg across the staff on average, ${sg(seaK.k,4)} s a day (the balance's pivots loaded sideways, makeEsc)`);
-const TV=d=>d<0?12.8:12.8+16.7*Math.min(d/20,1)+1.7*gauss();   /* its box's daily mean (°C): errorbudget.js's 55 → 85 °F over 20 days, ±3 °F */
-function voyage(p,on={}){const use=k=>!on.only||on.only===k,days=60,port=10,rates=[];const c2=-p.Sv/256,dr=p.k*SC.drS*gauss(),oil=0.10*rnd(),b=baro();
-  for(let d=-port;d<days;d++){const T=TV(d);let r=w8;if(use('temp'))r+=p.c1*(T-20)+c2*(T-20)**2+air(T);if(use('scatter'))r+=p.k*SC.sd*gauss();if(use('drift'))r+=dr*(d+port);
-    if(use('baro'))r+=airK*b();if(use('oil'))r+=-oil*(d+port)/365*oilK;if(use('sea')&&d>=0&&rnd()<0.2)r+=seaK.k;rates.push(r);}
-  const rated=rates.slice(0,port).reduce((a,x)=>a+x,0)/port;let e=0;const out={};for(let d=0;d<days;d++){e+=rates[port+d]-rated;if(d===9||d===29||d===59)out[d+1]=e;}return out;}
+say(`heavy weather (the gimbals in a sea beyond NORDFORSK's limit, ${f(seaOf().lat,2)} g rms athwartships at the box): ${f(seaOf().fa*1000,1)} mg across the staff on average, ${sg(seaOf().k,4)} s a day (the balance's pivots loaded sideways, makeEsc)`);
 const runV=(mk,on)=>{const R=[...Array(NV)].map(()=>voyage(mk(),on));return k=>R.map(r=>Math.abs(r[k]));};
 const line=(nm,mk)=>{const r=runV(mk,{});say(`${nm.padEnd(40)} ${[10,30,60].map(k=>{const a=r(k);return`${k} days: ${f(pct(a,0.5),1)} s (${f(pct(a,0.5)/4,1)} mi), 95 % ${f(pct(a,0.95),1)} s (${f(pct(a,0.95)/4,1)} mi)`;}).join('; ')}`);return r;};
 say(`the error the navigator carries (median, and 95 % of ${NV} voyages; in miles of longitude on the equator, 4 s of time a mile):`);
