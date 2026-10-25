@@ -121,6 +121,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-thermal',R(['node',TOOLS/'wempe_thermal.js'],ROOT),'quick'),   # the Wempe's cut bimetallic balance and steel spring in heat and cold against the 6MX's TU: the linear term, the masses' place, the secondary error (under a second)
  ('wempe-gimbals',R(['node',TOOLS/'gimbals.js','--model','wempe','--quick'],ROOT),'quick'),   # the Wempe's case and ring as weighed (gimbals_wempe.json): levelled, their periods and resonance (about 12 s)
  ('wempe-errorbudget',R(['node',TOOLS/'wempe_errorbudget.js'],ROOT),'quick'),   # the Wempe through the TU's 35-day trial, as adjusted and as drawn, and the error carried at sea (about 10 s)
+ ('wempe-navigation',R(['node',TOOLS/'wempe_navigation.js'],ROOT),'quick'),   # a made Wempe rated in port and carried 60 days to sea, each version: its longitude error and the fix's (Bowditch); the 1950s build against the stated criterion, navigation_wempe.json current (about 1½-3 min)
  ('wempe-tolerances',R(['node',TOOLS/'wempe_tolerances.js'],ROOT),'quick'),   # how closely the Wempe's unsized parts must be made: the mainspring, the detent's and gold springs, the preload, the lock, the hairspring, against tolerances_wempe.json (about 40 s)
  ('wempe-keystone',R(['node',TOOLS/'keystone.js','--model','wempe'],ROOT),'quick'),   # the Wempe's escapement against the 1904 text's rules (reports), against keystone_wempe.json (about 5 s)
  ('wempe-bench',R(['node',TOOLS/'wempe_bench.js'],ROOT),'quick'),   # the Wempe's tests on the bench from its figures, against bench_wempe.json (about 45 s)
