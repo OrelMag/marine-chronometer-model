@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#mech2">18. The mechanisms in turn</a><a href="#mfg">19. Making it</a><a href="#book">20. The build book</a><a href="#open">21. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#mech2">18. The mechanisms in turn</a><a href="#mfg">19. Making it</a><a href="#book">20. The build book</a><a href="#nav">21. Navigating by it</a><a href="#open">22. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -507,7 +507,31 @@ or which has no sheet in the set (the Wempe-Norm screws and pins, the parts draw
 (<code>wempe/js/makers.js</code>; <code>--check</code> in <code>ci.py</code>), <code>book.py --model wempe</code> checks the book as paper (every shown line on a sheet, each
 with a material or the reason it has none and a fit, every drawing at its stated scale and legible on A4).</p>
 <!--BOOK-->
-<h2 id="open">21. What stays open</h2>
+<h2 id="nav">21. Navigating by it: the position a made Wempe gives at sea</h2>
+<p>Sections 11, 12 and 17 ask whether a Wempe passes its trial, can be made to its tolerances, and keeps about two miles a month in the builds. This section follows the
+whole chain a navigator depends on, from a chronometer as made to the ship's position. <code>tools/wempe_navigation.js</code> takes 2,000 made chronometers for each version,
+as <code>wempe_montecarlo.js</code> makes them after the bench. Their swing sets how much the oil's thickening moves the rate, and they are adjusted as each version is: as last
+revised, the masses within ±0.45° of their compensating place (the TU's trial, the 6MX passports' spread of C); the two builds within ±0.1° on further rounds of the trial.
+Each one is rated over ten days in port and carried sixty days to sea on <code>wempe_errorbudget.js</code>'s voyage: a winter port (55 °F) into the tropics (85 °F) over the
+first twenty days, the scatter and drift calibrated on the 6MX's test cards, the barometer, the oil, and heavy weather one day in five. The navigator carries the rated rate,
+as <code>rating.py</code>'s backtest does, so the error at sea is what the rate has wandered from it, added up.</p>
+<p>Four seconds of time are a minute of longitude, which is one nautical mile at the equator and cos(latitude) miles elsewhere. The route is estimated, since no source gives
+one: from 45° N in port to 15° N by day 20, where the box reaches 85 °F. The fix itself has an error too. Bowditch gives a celestial fix by an experienced observer in
+favourable conditions a probable error of about ±2 miles (<em>The American Practical Navigator</em>, Pub. No. 9, 2019, Vol. 2, Ch. 3, "Navigational Errors"). It is taken here
+as a circular normal whose median radius is 2 miles (σ 1.70 a side, 95 % within 4.16), and the clock's error is added along the parallel. The criterion was stated before the
+results were known: after 30 days without a time signal, the chronometer should add no more than the sight itself. Its longitude error at the equator must be under 2 miles
+in the median (Bowditch's probable error, and the user's aim of about two miles a month) and under 4.16 miles in 19 voyages of 20 (the fix's own 95 % radius). The 1950s build
+must pass, and the tool fails if it doesn't.</p>
+<div id="tNav" class="tw"></div>
+<figure><div class="chart" id="cNav"></div><figcaption>Figure 23. The longitude error the navigator carries, at the equator, day by day at sea after ten days' rating in port: the median (solid)
+and the error 19 voyages in 20 stay within (dashed, the same colour), for each version; the two builds' lines lie on each other (they differ in the drive and the escapement's
+swing, which the rating takes out, not in what moves the rate at sea); the grey dotted lines are the fix's own probable error (2 miles) and its 95 % radius.</figcaption></figure>
+<figure><div class="chart" id="cNavH"></div><figcaption>Figure 24. How the 2,000 made chronometers of each version spread after 30 days at sea: the share of voyages in each quarter mile of
+longitude error at the equator, beside the fix's 2-mile probable error.</figcaption></figure>
+<p id="navMeaning"></p>
+<div id="kNav"></div>
+
+<h2 id="open">22. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -539,6 +563,7 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <tr><td><a href="../../chronometer-working-model/tools/wempe_thermal.js"><code>wempe_thermal.js</code></a></td><td>Temperature (9)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/massprops.py"><code>massprops.py</code></a>, <a href="../../chronometer-working-model/tools/gimbals.js"><code>gimbals.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_gimbals.js"><code>wempe_gimbals.js</code></a></td><td>The case and gimbals (10)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_errorbudget.js"><code>wempe_errorbudget.js</code></a></td><td>The TU's trial and the voyage (11)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_navigation.js"><code>wempe_navigation.js</code></a></td><td>Made chronometers carried to sea, their longitude error and the fix's (21)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_tolerances.js"><code>wempe_tolerances.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_bench.js"><code>wempe_bench.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_montecarlo.js"><code>wempe_montecarlo.js</code></a></td><td>The tolerances, the bench's tests, the movement made to tolerances (12)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_transmission.js"><code>wempe_transmission.js</code></a></td><td>The whole transmission in time, every part that moves (13)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/keystone.js"><code>keystone.js</code></a></td><td>The escapement against the 1904 text (14)</td></tr>
@@ -853,6 +878,19 @@ function draw(){
     const K=S.committed;if(K&&(K.split.drive!==U.split.drive||K.split.span.join()!==U.split.span.join()||K.tf_at_model_drive.TF!==U.tf_at_model_drive.TF))$('vidMeaning').innerHTML+=` <b>The committed <code>wempe_startup.json</code> is not what the tool finds today</b> (<code>node wempe_startup.js --json wempe_startup.json</code> rewrites it): it holds TF ${f(K.split.TF,1)} s, ${K.split.span[0]}-${K.split.span[1]} s, on ${f(100*K.split.drive,1)} % of the drive (TF ${f(K.tf_at_model_drive.TF,1)} s at the model's), where today's run gives ${f(U.split.TF,1)} s, ${U.split.span[0]}-${U.split.span[1]} s, on ${f(100*U.split.drive,1)} % (${f(U.tf_at_model_drive.TF,1)} s). This page shows today's; <code>wempe_escapement.js</code>, the README and the essay quote the file's.`;}
   checks('kStart','startup');
 
+  /* ---------- 21. navigating by it ---------- */
+  if(D.nav&&D.nav.versions){const NV=D.nav,VS=[['last','--s1'],['build40','--s3'],['build','--s2']].filter(([v])=>NV.versions[v]),C=NV.criterion,g=(x,n=2)=>f(x,n);
+    table('tNav',['Version','Masses set to','Days at sea','The clock (s): median / 95 %','Longitude at the equator (miles)','On the route (miles)','With the fix (miles)','Meets the criterion at 30 days'],
+      VS.flatMap(([v])=>{const X=NV.versions[v];return X.at.map((q,i)=>[i?'':esc(X.name),i?'':'±'+X.set+'°',q.d,`${g(q.s[0],1)} / ${g(q.s[1],1)}`,`${g(q.eq[0])} / ${g(q.eq[1])}`,`${g(q.route[0])} / ${g(q.route[1])} at ${q.lat}° N`,`${g(q.total[0])} / ${g(q.total[1])}`,
+        i?'':`<span class="${X.pass?'ok':'no'}">${X.pass?'yes':'no'}</span> (the 95 % figure's sampling range ${g(X.ci95[0])}-${g(X.ci95[1])})`]);}),true);
+    chart('cNav',{label:'Longitude error at sea',x:[0,60],y:[0,26],xl:'days at sea',yl:'longitude error at the equator (nautical miles)',legend:true,r:150,
+      hrefs:[{y:C.median,t:'the fix: probable error'},{y:C.p95,t:'the fix: 95 %'}],vrefs:[{x:30,t:'30 days'}],
+      series:VS.flatMap(([v,c])=>{const X=NV.versions[v];return[{type:'line',c,dash:'5 4',w:1.5,data:X.curve.map(q=>[q.d,q.eq[1]]),tip:p=>`${esc(X.name)}: day ${p[0]}, 19 voyages in 20 within ${g(p[1])} miles`},{type:'line',name:X.name,c,data:X.curve.map(q=>[q.d,q.eq[0]]),tip:p=>`${esc(X.name)}: day ${p[0]}, median ${g(p[1])} miles`}];})});
+    chart('cNavH',{label:'Spread after 30 days',x:[0,10],y:[0,0.12],xl:'longitude error at the equator after 30 days (nautical miles; the last bin all beyond 10)',yl:'share of voyages',legend:true,r:40,
+      vrefs:[{x:C.median,t:'the fix: 2 miles'}],series:VS.map(([v,c])=>{const X=NV.versions[v];return{type:'line',name:X.name,c,data:X.hist.map(([x,y])=>[Math.min(x+0.125,10),y]),tip:p=>`${esc(X.name)}: around ${g(p[0])} miles, ${g(100*p[1],1)} %`};})});
+    const B=NV.versions.build,L=NV.versions.last,b30=B.at.find(q=>q.d===30),l30=L.at.find(q=>q.d===30);
+    $('navMeaning').innerHTML=`What it means: a Wempe made to the drawings and adjusted on its trial leaves the navigator ${g(l30.eq[0])} miles out after a month (95 % within ${g(l30.eq[1])}), about twice the sight's own error. The builds, with their masses set closer, carry ${g(b30.eq[0])} miles in the median, under the fix's probable error, and ${g(b30.eq[1],3)} in 19 voyages of 20 against the fix's ${g(C.p95,3)}: ${B.pass?'within it':'on the line, short of it by less than the figure\'s own sampling error'} (the 95 % figure's range over 2,000 voyages is ${g(B.ci95[0])}-${g(B.ci95[1])}). With the fix's own error added, the position a month out is within ${g(b30.total[0])} miles in the median and ${g(b30.total[1])} in 19 of 20.`;
+    checks('kNav','navigation');}
   /* ---------- 18. the mechanisms in turn ---------- */
   if(D.mech2&&D.mech2.wear){const M2=D.mech2,Wr=M2.wear,cs=Wr.contacts.filter(c=>c.curve),top=cs.slice().sort((a,b)=>a.yrs.good-b.yrs.good).slice(0,5),cc=['--s1','--s2','--s3','--s4','--muted'];
     const nm=c=>c.name.replace(/ \(.*$/,'');
