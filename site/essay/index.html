@@ -7573,10 +7573,10 @@ const ESSAY=(()=>{
       if(!f.dirty)return;f.dirty=false;const{x:ctx,w,h:H}=C;ctx.clearRect(0,0,w,H);const DC=dial(),S=DC.width,c=S/2,k0=c/WDIAL.DR,uy=c+UDY*k0,hs=13*k0,nw=w<520,sz=nw?Math.min(w*0.62,H*0.52):Math.min(H*0.92,w*0.46),dx=nw?(w-sz)/2:w*0.26-sz/2,dy=nw?8:(H-sz)/2,k=sz/(2*hs)*k0;
       ctx.save();ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.clip();ctx.drawImage(DC,c-hs,uy-hs,2*hs,2*hs,dx,dy,sz,sz);drawHand(ctx,hands().ud,dx+sz/2,dy+sz/2,udA(h),k);ctx.restore();
       ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.stroke();
-      /* the key's half turns from run down, seven to a row, those still to go filled */
-      const need=h/HT,cols=7,gap=nw?Math.min((w-60)/cols,(H-sz-dy-40)/3.4):Math.min((w-w*0.53-44)/cols,H*0.2),x0=nw?(w-cols*gap-40)/2:w*0.53,r=gap*0.36,y0=nw?dy+sz+gap*1.45:H/2-gap*0.9;
+      /* the key's half turns from run down, seven to a row, those the spring holds filled (winding fills them on toward the last, those still to go empty) */
+      const need=h/HT,wound=Math.max(0,2*WPHYS.MF-need),cols=7,gap=nw?Math.min((w-60)/cols,(H-sz-dy-40)/3.4):Math.min((w-w*0.53-44)/cols,H*0.2),x0=nw?(w-cols*gap-40)/2:w*0.53,r=gap*0.36,y0=nw?dy+sz+gap*1.45:H/2-gap*0.9;
       ctx.font='12px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText('Half turns of the key, from run down',x0,y0-gap*0.7);
-      for(let i=0;i<NH;i++){const cx=x0+(i%cols+0.5)*gap,cy=y0+Math.floor(i/cols)*gap,frac=Math.min(1,2*WPHYS.MF-i),part=frac<1,full=need-i;ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+TAU*frac);if(part)ctx.lineTo(cx,cy);if(part)ctx.closePath();ctx.stroke();
+      for(let i=0;i<NH;i++){const cx=x0+(i%cols+0.5)*gap,cy=y0+Math.floor(i/cols)*gap,frac=Math.min(1,2*WPHYS.MF-i),part=frac<1,full=wound-i;ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+TAU*frac);if(part)ctx.lineTo(cx,cy);if(part)ctx.closePath();ctx.stroke();
         if(full>0){ctx.fillStyle=PAL.blue;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+TAU*frac*clamp(full/frac,0,1));ctx.closePath();ctx.fill();}}
       ctx.fillStyle=PAL.muted;ctx.textBaseline='middle';for(let row=0;row*cols<NH;row++){const nn=Math.min(NH,(row+1)*cols),hh=Math.min(HR(),nn*HT);ctx.fillText(Math.round(hh)+' h',x0+(nn-row*cols)*gap+6,y0+row*gap);}ctx.textBaseline='alphabetic';};});
 
