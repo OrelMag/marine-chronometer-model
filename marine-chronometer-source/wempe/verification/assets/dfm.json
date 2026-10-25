@@ -1,0 +1,9830 @@
+{
+"mill": 0.2,
+"wall": 0.15,
+"drill": 0.2,
+"deep": [
+10,
+20
+],
+"pieces": [
+{
+"h": 0.06,
+"levels": 8,
+"y": [
+-22.35,
+-19.0
+],
+"round": 0.444,
+"roundFilled": 0.517,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.36,
+"at": [
+-9.04,
+21.5
+],
+"y": -21.3,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-36.86,
+3.22
+],
+"d": 4.506,
+"depth": 3.05,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+-38.49,
+12.57
+],
+"d": 0.923,
+"depth": 3.35,
+"through": true,
+"ratio": 3.6
+},
+{
+"c": [
+-35.74,
+9.58
+],
+"d": 3.505,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+-34.53,
+16.24
+],
+"d": 1.8,
+"depth": 3.35,
+"through": true,
+"ratio": 1.9
+},
+{
+"c": [
+-30.58,
+19.9
+],
+"d": 0.928,
+"depth": 3.35,
+"through": true,
+"ratio": 3.6
+},
+{
+"c": [
+-23.39,
+7.54
+],
+"d": 2.04,
+"depth": 2.0,
+"through": false,
+"ratio": 1.0
+},
+{
+"c": [
+-21.21,
+-12.69
+],
+"d": 1.438,
+"depth": 2.65,
+"through": false,
+"ratio": 1.8
+},
+{
+"c": [
+-20.84,
+24.09
+],
+"d": 2.042,
+"depth": 3.35,
+"through": true,
+"ratio": 1.6
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.006,
+"depth": 2.65,
+"through": false,
+"ratio": 0.3
+},
+{
+"c": [
+-16.7,
+-20.49
+],
+"d": 1.435,
+"depth": 2.65,
+"through": false,
+"ratio": 1.8
+},
+{
+"c": [
+-15.28,
+21.74
+],
+"d": 1.243,
+"depth": 3.35,
+"through": true,
+"ratio": 2.7
+},
+{
+"c": [
+-15.0,
+37.0
+],
+"d": 1.5,
+"depth": 3.35,
+"through": true,
+"ratio": 2.2
+},
+{
+"c": [
+-11.78,
+21.74
+],
+"d": 4.506,
+"depth": 0.5,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-12.2,
+-12.69
+],
+"d": 1.436,
+"depth": 2.65,
+"through": false,
+"ratio": 1.8
+},
+{
+"c": [
+-10.68,
+-38.51
+],
+"d": 1.738,
+"depth": 3.35,
+"through": true,
+"ratio": 1.9
+},
+{
+"c": [
+-8.28,
+21.74
+],
+"d": 1.241,
+"depth": 3.35,
+"through": true,
+"ratio": 2.7
+},
+{
+"c": [
+-6.42,
+-36.44
+],
+"d": 3.434,
+"depth": 0.5,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-5.68,
+-23.91
+],
+"d": 1.612,
+"depth": 3.35,
+"through": true,
+"ratio": 2.1
+},
+{
+"c": [
+-3.26,
+6.02
+],
+"d": 2.499,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-3.58,
+-27.82
+],
+"d": 1.605,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+-2.76,
+-11.55
+],
+"d": 1.604,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+0.5,
+11.92
+],
+"d": 6.013,
+"depth": 1.8,
+"through": false,
+"ratio": 0.3
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 4.597,
+"depth": 3.35,
+"through": true,
+"ratio": 0.7
+},
+{
+"c": [
+-0.0,
+23.0
+],
+"d": 4.597,
+"depth": 3.35,
+"through": true,
+"ratio": 0.7
+},
+{
+"c": [
+-0.56,
+-19.76
+],
+"d": 2.64,
+"depth": 3.35,
+"through": true,
+"ratio": 1.3
+},
+{
+"c": [
+-0.0,
+-37.0
+],
+"d": 3.505,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+4.26,
+17.83
+],
+"d": 2.494,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+6.43,
+-36.44
+],
+"d": 4.503,
+"depth": 3.05,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+6.08,
+-25.24
+],
+"d": 1.604,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 4.595,
+"depth": 3.35,
+"through": true,
+"ratio": 0.7
+},
+{
+"c": [
+17.37,
+-32.67
+],
+"d": 2.638,
+"depth": 3.35,
+"through": true,
+"ratio": 1.3
+},
+{
+"c": [
+18.5,
+32.04
+],
+"d": 4.506,
+"depth": 3.05,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+22.93,
+-31.55
+],
+"d": 1.604,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+26.16,
+26.16
+],
+"d": 3.502,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+30.73,
+24.01
+],
+"d": 1.601,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+32.04,
+18.5
+],
+"d": 2.635,
+"depth": 3.35,
+"through": true,
+"ratio": 1.3
+},
+{
+"c": [
+-11.78,
+21.74
+],
+"d": 5.207,
+"depth": 2.85,
+"through": false,
+"ratio": 0.5
+},
+{
+"c": [
+-6.42,
+-36.44
+],
+"d": 0.896,
+"depth": 2.85,
+"through": false,
+"ratio": 3.2
+},
+{
+"c": [
+-3.26,
+6.02
+],
+"d": 1.604,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+4.27,
+17.83
+],
+"d": 1.602,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+-3.58,
+-27.82
+],
+"d": 2.497,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-2.76,
+-11.56
+],
+"d": 2.496,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+6.08,
+-25.24
+],
+"d": 2.497,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+22.93,
+-31.55
+],
+"d": 2.497,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+30.73,
+24.01
+],
+"d": 2.498,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+0.5,
+11.92
+],
+"d": 2.799,
+"depth": 1.55,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 22.397,
+"depth": 0.4,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-36.86,
+3.23
+],
+"d": 8.601,
+"depth": 0.3,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 23.098,
+"depth": 0.3,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+6.43,
+-36.44
+],
+"d": 8.6,
+"depth": 0.3,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+18.5,
+32.04
+],
+"d": 8.6,
+"depth": 0.3,
+"through": false,
+"ratio": 0.0
+}
+],
+"floor": {
+"min": 0.5,
+"at": [
+-14.02,
+22.88
+]
+},
+"faces": {
+"low": 42.91,
+"high": 633.43
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "topPlate 050901",
+"part": "topPlate",
+"hn": "050901",
+"count": 1,
+"tris": 26256,
+"s": 11.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-22.35,
+-19.0
+],
+"round": 0.992,
+"roundFilled": 0.994,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 0.128,
+"at": [
+-1.75,
+1.39
+],
+"y": -22.21,
+"thin": [
+[
+0.13,
+[
+-1.75,
+1.39
+]
+],
+[
+0.13,
+[
+-1.74,
+-1.39
+]
+],
+[
+0.13,
+[
+1.39,
+-1.75
+]
+],
+[
+0.13,
+[
+1.4,
+1.74
+]
+]
+]
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+0.0
+],
+"d": 4.34,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+0.0
+],
+"d": 3.837,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+0.0
+],
+"d": 3.164,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 2.167,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 1.208,
+"depth": 2.23,
+"through": false,
+"ratio": 1.8
+}
+],
+"floor": {
+"min": 2.221,
+"at": [
+-0.44,
+-0.43
+]
+},
+"faces": {
+"low": 14.86,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "topPlate WN-301",
+"part": "topPlate",
+"hn": "WN-301",
+"count": 1,
+"tris": 1536,
+"s": 1.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-22.35,
+-19.0
+],
+"round": 0.993,
+"roundFilled": 0.994,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 0.128,
+"at": [
+8.16,
+16.56
+],
+"y": -22.21,
+"thin": [
+[
+0.13,
+[
+8.16,
+16.56
+]
+],
+[
+0.13,
+[
+8.18,
+13.76
+]
+],
+[
+0.13,
+[
+11.3,
+13.42
+]
+],
+[
+0.13,
+[
+11.31,
+16.91
+]
+]
+]
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+9.91,
+15.17
+],
+"d": 4.339,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 3.839,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 3.164,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 2.161,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 0.859,
+"depth": 2.23,
+"through": false,
+"ratio": 2.6
+}
+],
+"floor": {
+"min": 2.187,
+"at": [
+9.63,
+14.83
+]
+},
+"faces": {
+"low": 15.42,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "topPlate WN-300.t38",
+"part": "topPlate",
+"hn": "WN-300.t38",
+"count": 1,
+"tris": 1536,
+"s": 1.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-22.35,
+-19.0
+],
+"round": 0.993,
+"roundFilled": 0.994,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 0.128,
+"at": [
+-1.75,
+24.39
+],
+"y": -22.21,
+"thin": [
+[
+0.13,
+[
+-1.75,
+24.39
+]
+],
+[
+0.13,
+[
+-1.73,
+21.59
+]
+],
+[
+0.13,
+[
+1.39,
+21.25
+]
+],
+[
+0.13,
+[
+1.4,
+24.74
+]
+]
+]
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+23.0
+],
+"d": 4.339,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.0,
+23.0
+],
+"d": 3.839,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 3.164,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.0,
+23.0
+],
+"d": 2.161,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.0,
+23.0
+],
+"d": 0.859,
+"depth": 2.23,
+"through": false,
+"ratio": 2.6
+}
+],
+"floor": {
+"min": 2.187,
+"at": [
+-0.34,
+22.72
+]
+},
+"faces": {
+"low": 15.42,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "topPlate WN-300.t35",
+"part": "topPlate",
+"hn": "WN-300.t35",
+"count": 1,
+"tris": 1536,
+"s": 1.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 13,
+"y": [
+-22.35,
+-17.15
+],
+"round": 0.986,
+"roundFilled": 0.986,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 4.962,
+"at": [
+-5.03,
+-24.35
+]
+},
+"faces": {
+"low": 0.0,
+"high": 1.81
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "topPlate 050801-5",
+"part": "topPlate",
+"hn": "050801-5",
+"count": 1,
+"tris": 400,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.06,
+"levels": 5,
+"y": [
+0.0,
+3.35
+],
+"round": 0.647,
+"roundFilled": 0.995,
+"turned": false,
+"turnedcut": true,
+"wall": {
+"min": 0.36,
+"at": [
+-7.78,
+33.44
+],
+"y": 0.15,
+"thin": []
+},
+"corners": 55,
+"holes": [
+{
+"c": [
+-36.86,
+3.23
+],
+"d": 8.601,
+"depth": 0.3,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-35.74,
+9.58
+],
+"d": 3.505,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+-36.42,
+17.22
+],
+"d": 1.446,
+"depth": 3.35,
+"through": true,
+"ratio": 2.3
+},
+{
+"c": [
+-33.99,
+15.93
+],
+"d": 2.798,
+"depth": 3.35,
+"through": true,
+"ratio": 1.2
+},
+{
+"c": [
+-33.21,
+22.87
+],
+"d": 1.443,
+"depth": 3.35,
+"through": true,
+"ratio": 2.3
+},
+{
+"c": [
+-30.79,
+21.47
+],
+"d": 2.792,
+"depth": 3.35,
+"through": true,
+"ratio": 1.2
+},
+{
+"c": [
+-22.14,
+12.78
+],
+"d": 3.503,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 2.821,
+"depth": 3.35,
+"through": true,
+"ratio": 1.2
+},
+{
+"c": [
+-14.58,
+23.85
+],
+"d": 1.245,
+"depth": 3.35,
+"through": true,
+"ratio": 2.7
+},
+{
+"c": [
+-11.78,
+21.74
+],
+"d": 2.496,
+"depth": 3.1,
+"through": false,
+"ratio": 1.2
+},
+{
+"c": [
+-10.91,
+6.3
+],
+"d": 3.506,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 6.999,
+"depth": 3.35,
+"through": true,
+"ratio": 0.5
+},
+{
+"c": [
+-8.99,
+19.64
+],
+"d": 1.243,
+"depth": 3.35,
+"through": true,
+"ratio": 2.7
+},
+{
+"c": [
+-8.53,
+33.73
+],
+"d": 1.237,
+"depth": 3.35,
+"through": true,
+"ratio": 2.7
+},
+{
+"c": [
+-7.06,
+28.58
+],
+"d": 2.496,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-5.03,
+33.73
+],
+"d": 5.21,
+"depth": 2.85,
+"through": false,
+"ratio": 0.5
+},
+{
+"c": [
+-6.42,
+-36.44
+],
+"d": 0.888,
+"depth": 3.35,
+"through": true,
+"ratio": 3.8
+},
+{
+"c": [
+-4.32,
+26.41
+],
+"d": 2.638,
+"depth": 3.35,
+"through": true,
+"ratio": 1.3
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 4.597,
+"depth": 3.35,
+"through": true,
+"ratio": 0.7
+},
+{
+"c": [
+-1.53,
+33.73
+],
+"d": 1.241,
+"depth": 3.35,
+"through": true,
+"ratio": 2.7
+},
+{
+"c": [
+-0.0,
+-37.0
+],
+"d": 3.505,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+-0.0,
+-23.0
+],
+"d": 3.504,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+6.43,
+-36.44
+],
+"d": 8.6,
+"depth": 0.3,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+18.5,
+32.04
+],
+"d": 8.6,
+"depth": 0.3,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+22.46,
+5.26
+],
+"d": 2.64,
+"depth": 3.35,
+"through": true,
+"ratio": 1.3
+},
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 2.899,
+"depth": 3.35,
+"through": true,
+"ratio": 1.2
+},
+{
+"c": [
+25.21,
+3.08
+],
+"d": 2.498,
+"depth": 1.6,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+26.16,
+26.16
+],
+"d": 3.502,
+"depth": 3.35,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+-36.86,
+3.22
+],
+"d": 4.506,
+"depth": 3.05,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+6.43,
+-36.44
+],
+"d": 4.503,
+"depth": 3.05,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+18.5,
+32.04
+],
+"d": 4.506,
+"depth": 3.05,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+-7.06,
+28.58
+],
+"d": 1.599,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+25.21,
+3.08
+],
+"d": 1.604,
+"depth": 1.75,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+-5.03,
+33.73
+],
+"d": 4.598,
+"depth": 0.5,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-11.78,
+21.74
+],
+"d": 4.599,
+"depth": 0.25,
+"through": false,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 0.188,
+"at": [
+-31.36,
+14.06
+]
+},
+"faces": {
+"low": 173.13,
+"high": 11.72
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "pillarPlate 050802-1",
+"part": "pillarPlate",
+"hn": "050802-1",
+"count": 1,
+"tris": 19044,
+"s": 13.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+0.1,
+3.35
+],
+"round": 0.989,
+"roundFilled": 0.994,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+0.0
+],
+"d": 2.183,
+"depth": 1.08,
+"through": false,
+"ratio": 0.5
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 2.147,
+"depth": 1.08,
+"through": false,
+"ratio": 0.5
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 2.115,
+"depth": 0.81,
+"through": false,
+"ratio": 0.4
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 3.327,
+"depth": 0.27,
+"through": false,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 0.929,
+"at": [
+-0.73,
+0.78
+]
+},
+"faces": {
+"low": 0.32,
+"high": 7.44
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "pillarPlate WN-302",
+"part": "pillarPlate",
+"hn": "WN-302",
+"count": 1,
+"tris": 1536,
+"s": 1.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+0.0,
+3.35
+],
+"round": 0.988,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+-23.0
+],
+"d": 1.498,
+"depth": 3.35,
+"through": true,
+"ratio": 2.2
+}
+],
+"floor": {
+"min": 3.35,
+"at": [
+-1.13,
+-22.01
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "pillarPlate 050802-2",
+"part": "pillarPlate",
+"hn": "050802-2",
+"count": 1,
+"tris": 384,
+"s": 0.8,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+0.0,
+12.3
+],
+"round": 0.991,
+"roundFilled": 0.991,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 11.727,
+"at": [
+0.54,
+-22.52
+]
+},
+"faces": {
+"low": 1.63,
+"high": 1.63
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "pillarPlate 050200-6",
+"part": "pillarPlate",
+"hn": "050200-6",
+"count": 1,
+"tris": 624,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+0.0,
+3.35
+],
+"round": 0.988,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-10.91,
+6.3
+],
+"d": 1.498,
+"depth": 3.35,
+"through": true,
+"ratio": 2.2
+}
+],
+"floor": {
+"min": 3.35,
+"at": [
+-12.08,
+7.34
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "pillarPlate 050802-2",
+"part": "pillarPlate",
+"hn": "050802-2",
+"count": 1,
+"tris": 384,
+"s": 0.8,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+0.0,
+10.15
+],
+"round": 0.991,
+"roundFilled": 0.991,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 9.577,
+"at": [
+-10.37,
+6.79
+]
+},
+"faces": {
+"low": 1.63,
+"high": 1.63
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "pillarPlate 050200-7",
+"part": "pillarPlate",
+"hn": "050200-7",
+"count": 1,
+"tris": 624,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+0.0,
+3.35
+],
+"round": 0.99,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-22.14,
+12.78
+],
+"d": 1.298,
+"depth": 3.07,
+"through": false,
+"ratio": 2.4
+},
+{
+"c": [
+-22.14,
+12.78
+],
+"d": 1.359,
+"depth": 0.28,
+"through": false,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 3.195,
+"at": [
+-21.66,
+12.31
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.68
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "pillarPlate WN-hs",
+"part": "pillarPlate",
+"hn": "WN-hs",
+"count": 1,
+"tris": 480,
+"s": 0.8,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 14,
+"y": [
+-22.1,
+3.1
+],
+"round": 0.993,
+"roundFilled": 0.995,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-36.86,
+3.22
+],
+"d": 2.638,
+"depth": 25.2,
+"through": true,
+"ratio": 9.6
+}
+],
+"floor": {
+"min": 18.9,
+"at": [
+-34.69,
+4.91
+]
+},
+"faces": {
+"low": 37.01,
+"high": 37.01
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "pillars 050800-1",
+"part": "pillars",
+"hn": "050800-1",
+"count": 3,
+"tris": 3584,
+"s": 4.4,
+"note": ""
+},
+{
+"h": 0.06,
+"levels": 16,
+"y": [
+0.35,
+11.05
+],
+"round": 0.974,
+"roundFilled": 0.996,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 0.48,
+"at": [
+-0.08,
+41.74
+],
+"y": 3.63,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-43.82,
+7.73
+],
+"d": 2.632,
+"depth": 6.0,
+"through": false,
+"ratio": 2.3
+},
+{
+"c": [
+15.22,
+-41.82
+],
+"d": 2.639,
+"depth": 6.0,
+"through": false,
+"ratio": 2.3
+},
+{
+"c": [
+28.6,
+34.09
+],
+"d": 2.639,
+"depth": 6.0,
+"through": false,
+"ratio": 2.3
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 83.0,
+"depth": 2.0,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+0.0,
+42.49
+],
+"d": 0.988,
+"depth": 2.0,
+"through": false,
+"ratio": 2.0
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 83.349,
+"depth": 0.35,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 84.35,
+"depth": 0.65,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-43.73,
+25.24
+],
+"d": 1.04,
+"depth": 4.0,
+"through": false,
+"ratio": 3.8
+},
+{
+"c": [
+0.0,
+0.0
+],
+"d": 85.24,
+"depth": 0.24,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-5.29,
+-50.23
+],
+"d": 1.036,
+"depth": 4.0,
+"through": false,
+"ratio": 3.9
+},
+{
+"c": [
+5.28,
+-50.22
+],
+"d": 1.096,
+"depth": 4.0,
+"through": false,
+"ratio": 3.7
+},
+{
+"c": [
+43.73,
+25.25
+],
+"d": 1.038,
+"depth": 4.0,
+"through": false,
+"ratio": 3.9
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 86.374,
+"depth": 0.89,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 88.158,
+"depth": 0.89,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 89.94,
+"depth": 0.89,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+0.0,
+0.0
+],
+"d": 91.723,
+"depth": 0.89,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+0.0,
+0.0
+],
+"d": 92.806,
+"depth": 0.19,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+0.0,
+0.0
+],
+"d": 104.0,
+"depth": 0.7,
+"through": false,
+"ratio": 0.0
+}
+],
+"floor": {
+"min": 0.005,
+"at": [
+-42.44,
+2.26
+]
+},
+"faces": {
+"low": 1857.43,
+"high": 3080.88
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "ring 050800-3",
+"part": "ring",
+"hn": "050800-3",
+"count": 1,
+"tris": 22480,
+"s": 18.5,
+"note": ""
+},
+{
+"h": 0.011,
+"levels": 12,
+"y": [
+7.45,
+9.05
+],
+"round": 0.18,
+"roundFilled": 0.18,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.63,
+"at": [
+-0.01,
+-52.68
+],
+"y": 7.52,
+"thin": []
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.37,
+"at": [
+-0.76,
+-54.72
+]
+},
+"faces": {
+"low": 13.2,
+"high": 13.2
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "ring WN-202",
+"part": "ring",
+"hn": "WN-202",
+"count": 1,
+"tris": 64,
+"s": 1.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+0.1,
+5.35
+],
+"round": 0.962,
+"roundFilled": 0.962,
+"turned": false,
+"turnedcut": true,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 5.25,
+"at": [
+-0.47,
+42.51
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "ring WN-201",
+"part": "ring",
+"hn": "WN-201",
+"count": 1,
+"tris": 48,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.06,
+"levels": 2,
+"y": [
+-25.67,
+-22.35
+],
+"round": 0.364,
+"roundFilled": 0.384,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+17.37,
+-32.67
+],
+"d": 2.796,
+"depth": 3.32,
+"through": true,
+"ratio": 1.2
+},
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 3.902,
+"depth": 3.32,
+"through": true,
+"ratio": 0.9
+},
+{
+"c": [
+29.48,
+-17.05
+],
+"d": 2.636,
+"depth": 3.32,
+"through": true,
+"ratio": 1.3
+},
+{
+"c": [
+32.04,
+18.5
+],
+"d": 2.8,
+"depth": 3.32,
+"through": true,
+"ratio": 1.2
+},
+{
+"c": [
+22.93,
+-31.55
+],
+"d": 1.579,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+},
+{
+"c": [
+30.73,
+24.01
+],
+"d": 1.578,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+}
+],
+"floor": {
+"min": 0.82,
+"at": [
+22.5,
+-31.51
+]
+},
+"faces": {
+"low": 0.0,
+"high": 7.18
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrelBridge 050805-1",
+"part": "barrelBridge",
+"hn": "050805-1",
+"count": 1,
+"tris": 5584,
+"s": 3.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-24.05,
+-21.05
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+30.01,
+24.16
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrelBridge WN-203.bb",
+"part": "barrelBridge",
+"hn": "WN-203.bb",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-24.05,
+-21.05
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+22.18,
+-31.41
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrelBridge WN-203.bb",
+"part": "barrelBridge",
+"hn": "WN-203.bb",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.018,
+"levels": 1,
+"y": [
+-28.27,
+-25.67
+],
+"round": 0.201,
+"roundFilled": 0.286,
+"turned": false,
+"turnedcut": false,
+"corners": 1,
+"holes": [
+{
+"c": [
+29.47,
+-17.05
+],
+"d": 3.228,
+"depth": 2.6,
+"through": true,
+"ratio": 0.8
+}
+],
+"floor": {
+"min": 2.6,
+"at": [
+25.23,
+-21.43
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrelBridge 050805-2",
+"part": "barrelBridge",
+"hn": "050805-2",
+"count": 1,
+"tris": 824,
+"s": 1.4,
+"note": ""
+},
+{
+"h": 0.015,
+"levels": 4,
+"y": [
+-26.75,
+-19.75
+],
+"round": 0.802,
+"roundFilled": 0.99,
+"turned": false,
+"turnedcut": true,
+"wall": {
+"min": 0.645,
+"at": [
+-16.89,
+-21.58
+],
+"y": -22.85,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 4.518,
+"depth": 7.0,
+"through": true,
+"ratio": 1.5
+},
+{
+"c": [
+-21.21,
+-12.69
+],
+"d": 2.205,
+"depth": 0.5,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-16.71,
+-20.49
+],
+"d": 2.205,
+"depth": 0.5,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-12.2,
+-12.69
+],
+"d": 2.205,
+"depth": 0.5,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-21.21,
+-12.69
+],
+"d": 1.547,
+"depth": 1.0,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-16.71,
+-20.49
+],
+"d": 1.548,
+"depth": 1.0,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-12.2,
+-12.69
+],
+"d": 1.548,
+"depth": 1.0,
+"through": false,
+"ratio": 0.6
+}
+],
+"floor": {
+"min": 0.007,
+"at": [
+-20.12,
+-13.19
+]
+},
+"faces": {
+"low": 103.18,
+"high": 81.12
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "fuseeBush 050801-2",
+"part": "fuseeBush",
+"hn": "050801-2",
+"count": 1,
+"tris": 4120,
+"s": 4.5,
+"note": ""
+},
+{
+"h": 0.015,
+"levels": 12,
+"y": [
+-35.85,
+-23.85
+],
+"round": 0.979,
+"roundFilled": 0.992,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 2.562,
+"at": [
+-21.97,
+-15.55
+],
+"y": -25.35,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.86,
+"depth": 4.0,
+"through": false,
+"ratio": 0.5
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.917,
+"depth": 4.0,
+"through": false,
+"ratio": 0.5
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.974,
+"depth": 4.0,
+"through": false,
+"ratio": 0.5
+}
+],
+"floor": {
+"min": 3.601,
+"at": [
+-19.52,
+-12.53
+]
+},
+"faces": {
+"low": 0.0,
+"high": 3.85
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "dustBush 050801-3",
+"part": "dustBush",
+"hn": "050801-3",
+"count": 1,
+"tris": 720,
+"s": 4.1,
+"note": ""
+},
+{
+"h": 0.011,
+"levels": 12,
+"y": [
+-41.95,
+-38.95
+],
+"round": 0.975,
+"roundFilled": 0.995,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 0.539,
+"at": [
+-21.29,
+-15.25
+],
+"y": -41.33,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.988,
+"depth": 0.25,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.806,
+"depth": 0.25,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.625,
+"depth": 0.25,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.443,
+"depth": 0.25,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.261,
+"depth": 0.25,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.079,
+"depth": 0.25,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.897,
+"depth": 0.25,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.778,
+"depth": 1.25,
+"through": false,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 1.247,
+"at": [
+-13.91,
+-12.57
+]
+},
+"faces": {
+"low": 17.12,
+"high": 0.21
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "dustBush 050801-3",
+"part": "dustBush",
+"hn": "050801-3",
+"count": 1,
+"tris": 720,
+"s": 3.0,
+"note": ""
+},
+{
+"h": 0.017,
+"levels": 1,
+"y": [
+-38.95,
+-35.85
+],
+"round": 0.845,
+"roundFilled": 0.932,
+"turned": false,
+"turnedcut": true,
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.814,
+"depth": 3.1,
+"through": true,
+"ratio": 0.4
+}
+],
+"floor": {
+"min": 3.1,
+"at": [
+-24.22,
+-15.45
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.54
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "dustBush 050801-3",
+"part": "dustBush",
+"hn": "050801-3",
+"count": 1,
+"tris": 1796,
+"s": 3.0,
+"note": ""
+},
+{
+"h": 0.018,
+"levels": 1,
+"y": [
+-42.65,
+-38.95
+],
+"round": 0.98,
+"roundFilled": 0.992,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 9.713,
+"depth": 3.7,
+"through": true,
+"ratio": 0.4
+}
+],
+"floor": {
+"min": 3.7,
+"at": [
+-24.59,
+-16.71
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "corkRing 050801-4",
+"part": "corkRing",
+"hn": "050801-4",
+"count": 1,
+"tris": 576,
+"s": 2.6,
+"note": ""
+},
+{
+"h": 0.055,
+"levels": 16,
+"y": [
+-37.35,
+-22.35
+],
+"round": 0.443,
+"roundFilled": 0.444,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.332,
+"at": [
+-6.4,
+11.4
+],
+"y": -34.9,
+"thin": []
+},
+"slots": {
+"n": 1,
+"min": 0.111,
+"at": [
+-8.61,
+8.91
+],
+"y": -34.75
+},
+"corners": 15,
+"holes": [
+{
+"c": [
+-12.24,
+7.02
+],
+"d": 1.436,
+"depth": 2.4,
+"through": false,
+"ratio": 1.7
+},
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 5.205,
+"depth": 2.7,
+"through": false,
+"ratio": 0.5
+},
+{
+"c": [
+-10.01,
+15.52
+],
+"d": 0.944,
+"depth": 2.4,
+"through": false,
+"ratio": 2.5
+},
+{
+"c": [
+-8.18,
+8.7
+],
+"d": 0.944,
+"depth": 2.4,
+"through": false,
+"ratio": 2.5
+},
+{
+"c": [
+-6.51,
+2.45
+],
+"d": 2.799,
+"depth": 2.4,
+"through": false,
+"ratio": 0.9
+},
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 4.589,
+"depth": 0.5,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.56,
+-19.76
+],
+"d": 2.799,
+"depth": 3.2,
+"through": false,
+"ratio": 1.1
+},
+{
+"c": [
+-3.58,
+-27.82
+],
+"d": 1.582,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+},
+{
+"c": [
+-2.76,
+-11.56
+],
+"d": 1.579,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+},
+{
+"c": [
+6.08,
+-25.23
+],
+"d": 1.584,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+}
+],
+"floor": {
+"min": 0.005,
+"at": [
+-6.89,
+14.77
+]
+},
+"faces": {
+"low": 263.32,
+"high": 321.66
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "upperCock 050803-1",
+"part": "upperCock",
+"hn": "050803-1",
+"count": 1,
+"tris": 8184,
+"s": 2.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-24.05,
+-21.05
+],
+"round": 0.983,
+"roundFilled": 0.983,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+-4.33,
+-27.9
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "upperCock WN-203.uc",
+"part": "upperCock",
+"hn": "WN-203.uc",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-24.05,
+-21.05
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+-3.51,
+-11.61
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "upperCock WN-203.uc",
+"part": "upperCock",
+"hn": "WN-203.uc",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-24.05,
+-21.05
+],
+"round": 0.983,
+"roundFilled": 0.983,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+5.34,
+-25.11
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "upperCock WN-203.uc",
+"part": "upperCock",
+"hn": "WN-203.uc",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.026,
+"levels": 4,
+"y": [
+-19.0,
+-9.0
+],
+"round": 0.283,
+"roundFilled": 0.307,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 2.698,
+"at": [
+-9.24,
+15.75
+],
+"y": -11.97,
+"thin": []
+},
+"corners": 2,
+"holes": [
+{
+"c": [
+-3.26,
+6.02
+],
+"d": 1.581,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+},
+{
+"c": [
+0.5,
+11.92
+],
+"d": 2.64,
+"depth": 10.0,
+"through": true,
+"ratio": 3.8
+},
+{
+"c": [
+4.26,
+17.83
+],
+"d": 1.581,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+},
+{
+"c": [
+-12.05,
+13.99
+],
+"d": 1.239,
+"depth": 3.22,
+"through": false,
+"ratio": 2.6
+},
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 4.595,
+"depth": 0.5,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-6.15,
+10.23
+],
+"d": 1.236,
+"depth": 3.22,
+"through": false,
+"ratio": 2.6
+},
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 5.205,
+"depth": 2.72,
+"through": false,
+"ratio": 0.5
+}
+],
+"floor": {
+"min": 0.5,
+"at": [
+-11.57,
+12.33
+]
+},
+"faces": {
+"low": 66.17,
+"high": 4.7
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "lowerCock 050800-2",
+"part": "lowerCock",
+"hn": "050800-2",
+"count": 1,
+"tris": 2480,
+"s": 2.7,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-20.3,
+-17.3
+],
+"round": 0.983,
+"roundFilled": 0.983,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+-3.98,
+6.22
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "lowerCock WN-203.lc",
+"part": "lowerCock",
+"hn": "WN-203.lc",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-20.3,
+-17.3
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+3.53,
+17.75
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "lowerCock WN-203.lc",
+"part": "lowerCock",
+"hn": "WN-203.lc",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.042,
+"levels": 15,
+"y": [
+3.35,
+7.15
+],
+"round": 0.154,
+"roundFilled": 0.158,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 3.328,
+"at": [
+-7.46,
+28.9
+],
+"y": 5.87,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-7.06,
+28.58
+],
+"d": 1.581,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+},
+{
+"c": [
+-4.31,
+26.41
+],
+"d": 2.798,
+"depth": 1.8,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-0.0,
+23.0
+],
+"d": 5.201,
+"depth": 3.8,
+"through": true,
+"ratio": 0.7
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 5.384,
+"depth": 0.32,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+22.46,
+5.25
+],
+"d": 2.799,
+"depth": 1.8,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+25.21,
+3.08
+],
+"d": 1.585,
+"depth": 2.5,
+"through": false,
+"ratio": 1.6
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 4.75,
+"depth": 0.32,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 4.299,
+"depth": 3.17,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+-4.31,
+26.41
+],
+"d": 4.699,
+"depth": 2.0,
+"through": false,
+"ratio": 0.4
+},
+{
+"c": [
+22.46,
+5.25
+],
+"d": 4.699,
+"depth": 2.0,
+"through": false,
+"ratio": 0.4
+}
+],
+"floor": {
+"min": 1.3,
+"at": [
+25.19,
+3.48
+]
+},
+"faces": {
+"low": 14.57,
+"high": 22.38
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "intermediateBridge 050804-1",
+"part": "intermediateBridge",
+"hn": "050804-1",
+"count": 1,
+"tris": 4356,
+"s": 3.9,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+2.05,
+5.05
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+-7.77,
+28.26
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "intermediateBridge WN-203.zb",
+"part": "intermediateBridge",
+"hn": "WN-203.zb",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+2.05,
+5.05
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.0,
+"at": [
+24.62,
+3.58
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "intermediateBridge WN-203.zb",
+"part": "intermediateBridge",
+"hn": "WN-203.zb",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+4.06,
+7.15
+],
+"round": 0.992,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 0.41,
+"at": [
+8.4,
+13.94
+],
+"y": 7.02,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+9.91,
+15.17
+],
+"d": 0.859,
+"depth": 2.32,
+"through": false,
+"ratio": 2.7
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 2.129,
+"depth": 0.26,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 2.928,
+"depth": 0.26,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+9.91,
+15.17
+],
+"d": 3.476,
+"depth": 0.26,
+"through": false,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 2.233,
+"at": [
+9.59,
+15.48
+]
+},
+"faces": {
+"low": 0.0,
+"high": 9.95
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "intermediateBridge WN-300.zb",
+"part": "intermediateBridge",
+"hn": "WN-300.zb",
+"count": 1,
+"tris": 1536,
+"s": 1.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+3.55,
+7.15
+],
+"round": 0.976,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+23.0
+],
+"d": 3.695,
+"depth": 1.55,
+"through": false,
+"ratio": 0.4
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 3.596,
+"depth": 1.1,
+"through": false,
+"ratio": 0.3
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 3.695,
+"depth": 0.95,
+"through": false,
+"ratio": 0.3
+}
+],
+"floor": {
+"min": 1.1,
+"at": [
+-1.64,
+22.18
+]
+},
+"faces": {
+"low": 0.57,
+"high": 0.57
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "intermediateBridge 050504-2",
+"part": "intermediateBridge",
+"hn": "050504-2",
+"count": 1,
+"tris": 768,
+"s": 0.8,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+5.1,
+6.2
+],
+"round": 0.989,
+"roundFilled": 0.992,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+23.0
+],
+"d": 0.805,
+"depth": 0.18,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 0.783,
+"depth": 0.27,
+"through": false,
+"ratio": 0.4
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 0.844,
+"depth": 0.09,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 0.975,
+"depth": 0.09,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 1.105,
+"depth": 0.09,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 1.236,
+"depth": 0.09,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 1.367,
+"depth": 0.09,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 1.498,
+"depth": 0.09,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+23.0
+],
+"d": 1.629,
+"depth": 0.09,
+"through": false,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 0.372,
+"at": [
+-0.25,
+22.69
+]
+},
+"faces": {
+"low": 0.06,
+"high": 1.7
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "intermediateBridge 050504-1",
+"part": "intermediateBridge",
+"hn": "050504-1",
+"count": 1,
+"tris": 1088,
+"s": 0.9,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 17,
+"y": [
+-21.97,
+18.36
+],
+"round": 0.983,
+"roundFilled": 0.989,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.022,
+"at": [
+0.03,
+0.86
+]
+},
+"faces": {
+"low": 22.66,
+"high": 22.32
+},
+"undercut": {
+"area": 4.33,
+"gap": 0.99,
+"at": [
+-1.39,
+0.77
+],
+"ring": true
+},
+"setups": 2,
+"sealed": [],
+"name": "centreWheel 050503-2",
+"part": "centreWheel",
+"hn": "050503-2",
+"count": 1,
+"tris": 1728,
+"s": 2.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-5.69,
+-1.74
+],
+"round": 0.508,
+"roundFilled": 0.508,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 14,
+"root": 2.11,
+"tip": 3.39
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.95,
+"at": [
+-1.43,
+-1.18
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "centreWheel 050503-2",
+"part": "centreWheel",
+"hn": "050503-2",
+"count": 1,
+"tris": 948,
+"s": 1.4,
+"note": ""
+},
+{
+"h": 0.037,
+"levels": 1,
+"y": [
+-1.74,
+-0.44
+],
+"round": 0.505,
+"roundFilled": 0.934,
+"turned": false,
+"turnedcut": true,
+"teeth": {
+"n": 90,
+"root": 15.42,
+"tip": 16.55
+},
+"wall": {
+"min": 1.022,
+"at": [
+-13.29,
+-6.08
+],
+"y": -1.09,
+"thin": []
+},
+"corners": 33,
+"holes": [
+{
+"c": [
+-0.0,
+0.0
+],
+"d": 5.396,
+"depth": 1.3,
+"through": true,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 1.3,
+"at": [
+-15.17,
+1.79
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "centreWheel 050503-1",
+"part": "centreWheel",
+"hn": "050503-1",
+"count": 1,
+"tris": 17264,
+"s": 1.7,
+"note": ""
+},
+{
+"h": 0.011,
+"levels": 1,
+"y": [
+-0.44,
+-0.24
+],
+"round": 0.985,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+0.0
+],
+"d": 5.392,
+"depth": 0.2,
+"through": true,
+"ratio": 0.0
+}
+],
+"floor": {
+"min": 0.2,
+"at": [
+-4.85,
+0.88
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "centreWheel 050503-1",
+"part": "centreWheel",
+"hn": "050503-1",
+"count": 1,
+"tris": 384,
+"s": 2.9,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 16,
+"y": [
+-21.92,
+6.98
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.25,
+"at": [
+7.94,
+15.21
+]
+},
+"faces": {
+"low": 12.42,
+"high": 12.42
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "intermediateWheel 050502-2",
+"part": "intermediateWheel",
+"hn": "050502-2",
+"count": 1,
+"tris": 1472,
+"s": 1.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-4.27,
+0.23
+],
+"round": 0.484,
+"roundFilled": 0.484,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 12,
+"root": 1.42,
+"tip": 2.36
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 4.5,
+"at": [
+7.63,
+15.47
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "intermediateWheel 050502-2",
+"part": "intermediateWheel",
+"hn": "050502-2",
+"count": 1,
+"tris": 812,
+"s": 0.7,
+"note": ""
+},
+{
+"h": 0.026,
+"levels": 12,
+"y": [
+0.23,
+1.18
+],
+"round": 0.481,
+"roundFilled": 0.893,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 80,
+"root": 10.78,
+"tip": 11.66
+},
+"wall": {
+"min": 0.771,
+"at": [
+2.61,
+8.18
+],
+"y": 0.27,
+"thin": []
+},
+"corners": 240,
+"holes": [
+{
+"c": [
+9.91,
+15.17
+],
+"d": 3.997,
+"depth": 0.95,
+"through": true,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 0.95,
+"at": [
+-1.56,
+16.04
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "intermediateWheel 050502-1",
+"part": "intermediateWheel",
+"hn": "050502-1",
+"count": 1,
+"tris": 15744,
+"s": 3.7,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+1.18,
+1.38
+],
+"round": 0.991,
+"roundFilled": 0.996,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+9.91,
+15.17
+],
+"d": 3.994,
+"depth": 0.2,
+"through": true,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 0.2,
+"at": [
+6.46,
+15.3
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "intermediateWheel 050502-1",
+"part": "intermediateWheel",
+"hn": "050502-1",
+"count": 1,
+"tris": 384,
+"s": 1.7,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 16,
+"y": [
+-21.98,
+14.27
+],
+"round": 0.987,
+"roundFilled": 0.987,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.25,
+"at": [
+-1.07,
+23.51
+]
+},
+"faces": {
+"low": 5.21,
+"high": 5.09
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "secondsWheel 050501-2",
+"part": "secondsWheel",
+"hn": "050501-2",
+"count": 1,
+"tris": 1152,
+"s": 0.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-4.12,
+2.88
+],
+"round": 0.396,
+"roundFilled": 0.396,
+"turned": false,
+"turnedcut": false,
+"corners": 40,
+"holes": [],
+"floor": {
+"min": 7.0,
+"at": [
+-0.99,
+22.35
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "secondsWheel 050501-2",
+"part": "secondsWheel",
+"hn": "050501-2",
+"count": 1,
+"tris": 676,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.024,
+"levels": 1,
+"y": [
+-5.32,
+-4.32
+],
+"round": 0.453,
+"roundFilled": 0.89,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 80,
+"root": 10.11,
+"tip": 10.95
+},
+"wall": {
+"min": 0.619,
+"at": [
+-7.02,
+16.59
+],
+"y": -4.82,
+"thin": []
+},
+"corners": 24,
+"holes": [
+{
+"c": [
+0.0,
+23.0
+],
+"d": 2.596,
+"depth": 1.0,
+"through": true,
+"ratio": 0.4
+}
+],
+"floor": {
+"min": 1.0,
+"at": [
+-10.06,
+21.97
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "secondsWheel 050501-1",
+"part": "secondsWheel",
+"hn": "050501-1",
+"count": 1,
+"tris": 15744,
+"s": 1.8,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-4.33,
+-4.12
+],
+"round": 0.99,
+"roundFilled": 0.994,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 1.7,
+"at": [
+-2.15,
+22.96
+],
+"y": -4.32,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-0.0,
+23.0
+],
+"d": 2.596,
+"depth": 0.2,
+"through": true,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 0.2,
+"at": [
+-2.44,
+23.45
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "secondsWheel 050501-1",
+"part": "secondsWheel",
+"hn": "050501-1",
+"count": 1,
+"tris": 384,
+"s": 2.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 17,
+"y": [
+-35.83,
+-9.97
+],
+"round": 0.993,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.5,
+"at": [
+-8.88,
+13.12
+]
+},
+"faces": {
+"low": 3.54,
+"high": 3.54
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance",
+"part": "balance",
+"hn": "",
+"count": 1,
+"tris": 1280,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-22.8,
+-21.0
+],
+"round": 0.87,
+"roundFilled": 0.995,
+"turned": false,
+"turnedcut": true,
+"corners": 0,
+"holes": [
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 2.001,
+"depth": 1.8,
+"through": true,
+"ratio": 0.9
+},
+{
+"c": [
+-9.31,
+14.24
+],
+"d": 1.037,
+"depth": 1.8,
+"through": true,
+"ratio": 1.7
+},
+{
+"c": [
+-8.89,
+9.98
+],
+"d": 1.038,
+"depth": 1.8,
+"through": true,
+"ratio": 1.7
+}
+],
+"floor": {
+"min": 1.8,
+"at": [
+-12.15,
+12.63
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance 050402-2",
+"part": "balance",
+"hn": "050402-2",
+"count": 1,
+"tris": 1224,
+"s": 2.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-21.0,
+-18.7
+],
+"round": 0.948,
+"roundFilled": 0.988,
+"turned": false,
+"turnedcut": true,
+"teeth": {
+"n": 54,
+"root": 1.01,
+"tip": 1.3
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 1.414,
+"depth": 2.3,
+"through": true,
+"ratio": 1.6
+}
+],
+"floor": {
+"min": 1.307,
+"at": [
+-9.83,
+11.41
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.18
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance 050402-2",
+"part": "balance",
+"hn": "050402-2",
+"count": 1,
+"tris": 384,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-23.92,
+-23.72
+],
+"round": 0.16,
+"roundFilled": 0.16,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.2,
+"at": [
+-9.08,
+14.39
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance WN-10",
+"part": "balance",
+"hn": "WN-10",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-23.92,
+-23.72
+],
+"round": 0.206,
+"roundFilled": 0.206,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.2,
+"at": [
+-8.99,
+9.66
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance WN-10",
+"part": "balance",
+"hn": "WN-10",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.035,
+"levels": 2,
+"y": [
+-26.6,
+-22.8
+],
+"round": 0.232,
+"roundFilled": 0.255,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.393,
+"at": [
+-21.14,
+2.43
+],
+"y": -25.28,
+"thin": []
+},
+"corners": 4,
+"holes": [
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 2.011,
+"depth": 1.15,
+"through": false,
+"ratio": 0.6
+},
+{
+"c": [
+-9.31,
+14.24
+],
+"d": 0.996,
+"depth": 1.15,
+"through": false,
+"ratio": 1.2
+},
+{
+"c": [
+-8.89,
+9.98
+],
+"d": 0.996,
+"depth": 1.15,
+"through": false,
+"ratio": 1.2
+}
+],
+"floor": {
+"min": 0.802,
+"at": [
+-9.26,
+10.39
+]
+},
+"faces": {
+"low": 120.94,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance 050301-1",
+"part": "balance",
+"hn": "050301-1",
+"count": 1,
+"tris": 6820,
+"s": 1.2,
+"note": ""
+},
+{
+"h": 0.036,
+"levels": 1,
+"y": [
+-26.6,
+-22.8
+],
+"round": 0.008,
+"roundFilled": 0.008,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.5,
+"at": [
+-25.02,
+11.91
+],
+"y": -24.7,
+"thin": []
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.8,
+"at": [
+-25.13,
+11.66
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance 050301-1",
+"part": "balance",
+"hn": "050301-1",
+"count": 1,
+"tris": 2884,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.036,
+"levels": 1,
+"y": [
+-26.6,
+-22.8
+],
+"round": 0.0,
+"roundFilled": 0.0,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.5,
+"at": [
+-10.13,
+-3.77
+],
+"y": -24.7,
+"thin": []
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.8,
+"at": [
+-24.69,
+9.43
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance 050301-1",
+"part": "balance",
+"hn": "050301-1",
+"count": 1,
+"tris": 2884,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-29.26,
+-22.8
+],
+"round": 0.667,
+"roundFilled": 0.667,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [
+{
+"c": [
+-23.41,
+18.57
+],
+"d": 0.997,
+"depth": 2.0,
+"through": false,
+"ratio": 2.0
+}
+],
+"floor": {
+"min": 0.64,
+"at": [
+-23.87,
+18.38
+]
+},
+"faces": {
+"low": 2.56,
+"high": 5.91
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-4",
+"part": "balance",
+"hn": "050301-4",
+"count": 1,
+"tris": 1612,
+"s": 2.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.67,
+-24.83
+],
+"round": 0.284,
+"roundFilled": 0.284,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.239,
+"at": [
+-25.27,
+18.97
+]
+},
+"faces": {
+"low": 1.24,
+"high": 1.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 96,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.05,
+-24.45
+],
+"round": 0.252,
+"roundFilled": 0.252,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.412,
+"at": [
+-26.46,
+19.09
+]
+},
+"faces": {
+"low": 0.71,
+"high": 0.71
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 144,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.01,
+-24.49
+],
+"round": 0.579,
+"roundFilled": 0.579,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.131,
+"at": [
+-26.34,
+19.39
+]
+},
+"faces": {
+"low": 0.24,
+"high": 0.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-29.26,
+-22.8
+],
+"round": 0.667,
+"roundFilled": 0.667,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [
+{
+"c": [
+3.65,
+21.28
+],
+"d": 0.997,
+"depth": 2.0,
+"through": false,
+"ratio": 2.0
+}
+],
+"floor": {
+"min": 0.64,
+"at": [
+3.23,
+21.41
+]
+},
+"faces": {
+"low": 2.56,
+"high": 5.91
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-4",
+"part": "balance",
+"hn": "050301-4",
+"count": 1,
+"tris": 1612,
+"s": 2.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.67,
+-24.83
+],
+"round": 0.294,
+"roundFilled": 0.294,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.229,
+"at": [
+5.76,
+22.3
+]
+},
+"faces": {
+"low": 1.24,
+"high": 1.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 96,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.05,
+-24.45
+],
+"round": 0.264,
+"roundFilled": 0.264,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.381,
+"at": [
+5.66,
+23.68
+]
+},
+"faces": {
+"low": 0.71,
+"high": 0.71
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 144,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.01,
+-24.49
+],
+"round": 0.689,
+"roundFilled": 0.689,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.126,
+"at": [
+5.87,
+23.44
+]
+},
+"faces": {
+"low": 0.24,
+"high": 0.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-29.26,
+-22.8
+],
+"round": 0.667,
+"roundFilled": 0.667,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [
+{
+"c": [
+5.21,
+5.65
+],
+"d": 0.997,
+"depth": 2.0,
+"through": false,
+"ratio": 2.0
+}
+],
+"floor": {
+"min": 0.64,
+"at": [
+5.43,
+5.92
+]
+},
+"faces": {
+"low": 2.56,
+"high": 5.91
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-4",
+"part": "balance",
+"hn": "050301-4",
+"count": 1,
+"tris": 1612,
+"s": 2.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.67,
+-24.83
+],
+"round": 0.284,
+"roundFilled": 0.284,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.239,
+"at": [
+6.14,
+4.8
+]
+},
+"faces": {
+"low": 1.24,
+"high": 1.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 96,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.05,
+-24.45
+],
+"round": 0.252,
+"roundFilled": 0.252,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.412,
+"at": [
+7.37,
+3.83
+]
+},
+"faces": {
+"low": 0.71,
+"high": 0.71
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 144,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.01,
+-24.49
+],
+"round": 0.581,
+"roundFilled": 0.581,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.131,
+"at": [
+7.8,
+3.99
+]
+},
+"faces": {
+"low": 0.24,
+"high": 0.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-29.26,
+-22.8
+],
+"round": 0.667,
+"roundFilled": 0.667,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [
+{
+"c": [
+-21.85,
+2.94
+],
+"d": 0.997,
+"depth": 2.0,
+"through": false,
+"ratio": 2.0
+}
+],
+"floor": {
+"min": 0.64,
+"at": [
+-22.1,
+3.09
+]
+},
+"faces": {
+"low": 2.56,
+"high": 5.91
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-4",
+"part": "balance",
+"hn": "050301-4",
+"count": 1,
+"tris": 1612,
+"s": 2.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.67,
+-24.83
+],
+"round": 0.294,
+"roundFilled": 0.294,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.229,
+"at": [
+-22.22,
+2.18
+]
+},
+"faces": {
+"low": 1.24,
+"high": 1.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 96,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.05,
+-24.45
+],
+"round": 0.264,
+"roundFilled": 0.264,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.381,
+"at": [
+-24.47,
+2.01
+]
+},
+"faces": {
+"low": 0.71,
+"high": 0.71
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 144,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-26.01,
+-24.49
+],
+"round": 0.689,
+"roundFilled": 0.689,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.126,
+"at": [
+-24.54,
+1.57
+]
+},
+"faces": {
+"low": 0.24,
+"high": 0.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.4,
+-24.5
+],
+"round": 0.152,
+"roundFilled": 0.152,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.275,
+"at": [
+-11.05,
+27.29
+]
+},
+"faces": {
+"low": 4.05,
+"high": 4.05
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-2",
+"part": "balance",
+"hn": "050301-2",
+"count": 1,
+"tris": 128,
+"s": 0.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.77,
+-24.12
+],
+"round": 0.741,
+"roundFilled": 0.741,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.431,
+"at": [
+-9.82,
+27.24
+]
+},
+"faces": {
+"low": 1.75,
+"high": 1.75
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-2",
+"part": "balance",
+"hn": "050301-2",
+"count": 1,
+"tris": 144,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-25.08,
+-24.83
+],
+"round": 0.184,
+"roundFilled": 0.184,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.25,
+"at": [
+-11.29,
+26.1
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance 050301-2",
+"part": "balance",
+"hn": "050301-2",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 16,
+"y": [
+-26.85,
+-23.05
+],
+"round": 0.71,
+"roundFilled": 0.71,
+"turned": false,
+"turnedcut": false,
+"corners": 34,
+"holes": [],
+"floor": {
+"min": 0.259,
+"at": [
+-9.25,
+32.39
+]
+},
+"faces": {
+"low": 10.68,
+"high": 10.65
+},
+"undercut": {
+"area": 6.46,
+"gap": 0.89,
+"at": [
+-10.91,
+30.87
+],
+"ring": true
+},
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-3",
+"part": "balance",
+"hn": "050301-3",
+"count": 1,
+"tris": 640,
+"s": 1.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.4,
+-24.5
+],
+"round": 0.151,
+"roundFilled": 0.151,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.275,
+"at": [
+-7.75,
+-5.58
+]
+},
+"faces": {
+"low": 4.05,
+"high": 4.05
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-2",
+"part": "balance",
+"hn": "050301-2",
+"count": 1,
+"tris": 128,
+"s": 0.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.77,
+-24.12
+],
+"round": 0.741,
+"roundFilled": 0.741,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.431,
+"at": [
+-6.91,
+-1.81
+]
+},
+"faces": {
+"low": 1.75,
+"high": 1.75
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-2",
+"part": "balance",
+"hn": "050301-2",
+"count": 1,
+"tris": 144,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-25.08,
+-24.83
+],
+"round": 0.184,
+"roundFilled": 0.184,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.25,
+"at": [
+-8.5,
+-1.87
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "balance 050301-2",
+"part": "balance",
+"hn": "050301-2",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 16,
+"y": [
+-26.85,
+-23.05
+],
+"round": 0.709,
+"roundFilled": 0.709,
+"turned": false,
+"turnedcut": false,
+"corners": 34,
+"holes": [],
+"floor": {
+"min": 0.244,
+"at": [
+-9.07,
+-6.93
+]
+},
+"faces": {
+"low": 10.68,
+"high": 10.65
+},
+"undercut": {
+"area": 6.45,
+"gap": 0.89,
+"at": [
+-7.03,
+-7.76
+],
+"ring": true
+},
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-3",
+"part": "balance",
+"hn": "050301-3",
+"count": 1,
+"tris": 640,
+"s": 1.4,
+"note": ""
+},
+{
+"h": 0.016,
+"levels": 3,
+"y": [
+-38.95,
+-32.85
+],
+"round": 0.0,
+"roundFilled": 0.0,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-12.24,
+7.02
+],
+"d": 1.507,
+"depth": 1.6,
+"through": false,
+"ratio": 1.1
+}
+],
+"floor": {
+"min": 0.005,
+"at": [
+-13.02,
+10.17
+]
+},
+"faces": {
+"low": 5.01,
+"high": 26.25
+},
+"undercut": {
+"area": 1.15,
+"gap": 2.95,
+"at": [
+-11.77,
+10.49
+],
+"ring": false
+},
+"setups": 3,
+"sealed": [],
+"name": "stud 050302-3",
+"part": "stud",
+"hn": "050302-3",
+"count": 1,
+"tris": 252,
+"s": 0.9,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-33.7,
+-33.04
+],
+"round": 0.69,
+"roundFilled": 0.69,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.213,
+"at": [
+-13.42,
+11.46
+]
+},
+"faces": {
+"low": 0.35,
+"high": 0.35
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "stud 050302-4.s",
+"part": "stud",
+"hn": "050302-4.s",
+"count": 1,
+"tris": 96,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-17.2,
+-15.6
+],
+"round": 0.72,
+"roundFilled": 0.817,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 1.651,
+"depth": 1.6,
+"through": true,
+"ratio": 1.0
+},
+{
+"c": [
+-8.18,
+13.91
+],
+"d": 1.298,
+"depth": 1.6,
+"through": true,
+"ratio": 1.2
+}
+],
+"floor": {
+"min": 1.6,
+"at": [
+-11.5,
+10.25
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "rollers 050403-1",
+"part": "rollers",
+"hn": "050403-1",
+"count": 1,
+"tris": 1804,
+"s": 2.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-17.25,
+-15.55
+],
+"round": 0.3,
+"roundFilled": 0.3,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.7,
+"at": [
+-9.39,
+8.94
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "rollers 050403-2",
+"part": "rollers",
+"hn": "050403-2",
+"count": 1,
+"tris": 12,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-15.6,
+-14.0
+],
+"round": 0.696,
+"roundFilled": 0.766,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [
+{
+"c": [
+-9.1,
+12.11
+],
+"d": 1.201,
+"depth": 1.6,
+"through": true,
+"ratio": 1.3
+}
+],
+"floor": {
+"min": 1.6,
+"at": [
+-10.01,
+12.01
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "rollers 050404-1",
+"part": "rollers",
+"hn": "050404-1",
+"count": 1,
+"tris": 340,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-15.55,
+-13.85
+],
+"round": 0.632,
+"roundFilled": 0.632,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.7,
+"at": [
+-8.23,
+11.75
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "rollers 050404-2",
+"part": "rollers",
+"hn": "050404-2",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.015,
+"levels": 2,
+"y": [
+-17.11,
+-15.71
+],
+"round": 0.048,
+"roundFilled": 0.849,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 15,
+"root": 5.84,
+"tip": 7.0
+},
+"wall": {
+"min": 0.088,
+"at": [
+-7.99,
+17.78
+],
+"y": -16.11,
+"thin": [
+[
+0.09,
+[
+-17.29,
+21.57
+]
+],
+[
+0.09,
+[
+-12.5,
+16.29
+]
+],
+[
+0.09,
+[
+-12.02,
+27.23
+]
+],
+[
+0.09,
+[
+-7.99,
+17.78
+]
+],
+[
+0.09,
+[
+-6.36,
+22.6
+]
+]
+]
+},
+"corners": 6,
+"holes": [
+{
+"c": [
+-11.79,
+21.74
+],
+"d": 11.086,
+"depth": 0.6,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-11.78,
+21.74
+],
+"d": 1.705,
+"depth": 0.8,
+"through": false,
+"ratio": 0.5
+}
+],
+"floor": {
+"min": 0.8,
+"at": [
+-7.01,
+18.6
+]
+},
+"faces": {
+"low": 29.18,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "escapeWheel 050405-1",
+"part": "escapeWheel",
+"hn": "050405-1",
+"count": 1,
+"tris": 4656,
+"s": 1.8,
+"note": "the web's recess, \u00d8 11.62 and 0.6 deep (05 04_7.2 scales 11.65), lies 0.04 inside the teeth's floor \u00d8 11.7: in each gap between the teeth a sliver of brass about 0.04 wide stands 0.6 high between the recess and the gap; a maker turns the recess to the floor's \u00d8 11.7 (the gaps then open into it) or leaves it under \u00d8 11.3"
+},
+{
+"h": 0.01,
+"levels": 13,
+"y": [
+-19.49,
+3.29
+],
+"round": 0.988,
+"roundFilled": 0.988,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 18.914,
+"at": [
+-12.17,
+22.17
+]
+},
+"faces": {
+"low": 1.07,
+"high": 1.07
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "escapeWheel 050405-2",
+"part": "escapeWheel",
+"hn": "050405-2",
+"count": 1,
+"tris": 432,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-6.01,
+-2.01
+],
+"round": 0.396,
+"roundFilled": 0.396,
+"turned": false,
+"turnedcut": false,
+"corners": 40,
+"holes": [],
+"floor": {
+"min": 4.0,
+"at": [
+-12.48,
+20.57
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "escapeWheel 050405-2",
+"part": "escapeWheel",
+"hn": "050405-2",
+"count": 1,
+"tris": 676,
+"s": 0.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 14,
+"y": [
+-16.51,
+-11.01
+],
+"round": 0.983,
+"roundFilled": 0.99,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-11.78,
+21.74
+],
+"d": 1.2,
+"depth": 5.5,
+"through": true,
+"ratio": 4.6
+}
+],
+"floor": {
+"min": 1.465,
+"at": [
+-10.7,
+22.6
+]
+},
+"faces": {
+"low": 3.87,
+"high": 4.51
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "escapeWheel 050405-3",
+"part": "escapeWheel",
+"hn": "050405-3",
+"count": 1,
+"tris": 800,
+"s": 0.9,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-15.75,
+-13.85
+],
+"round": 0.057,
+"roundFilled": 0.057,
+"turned": false,
+"turnedcut": false,
+"corners": 24,
+"holes": [],
+"floor": {
+"min": 1.9,
+"at": [
+-33.75,
+24.45
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detent 050401-1",
+"part": "detent",
+"hn": "050401-1",
+"count": 1,
+"tris": 24,
+"s": 1.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 17,
+"y": [
+-15.59,
+-14.01
+],
+"round": 0.146,
+"roundFilled": 0.146,
+"turned": false,
+"turnedcut": false,
+"corners": 18,
+"holes": [],
+"floor": {
+"min": 0.252,
+"at": [
+-30.72,
+23.17
+]
+},
+"faces": {
+"low": 3.93,
+"high": 3.93
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "detent WN-gf",
+"part": "detent",
+"hn": "WN-gf",
+"count": 1,
+"tris": 200,
+"s": 0.7,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-15.02,
+-14.58
+],
+"round": 0.084,
+"roundFilled": 0.084,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.151,
+"at": [
+-28.86,
+22.82
+]
+},
+"faces": {
+"low": 0.9,
+"high": 0.9
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "detent WN-205.d",
+"part": "detent",
+"hn": "WN-205.d",
+"count": 1,
+"tris": 72,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-15.02,
+-14.58
+],
+"round": 0.084,
+"roundFilled": 0.084,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.151,
+"at": [
+-32.66,
+24.62
+]
+},
+"faces": {
+"low": 0.9,
+"high": 0.9
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "detent WN-205.d",
+"part": "detent",
+"hn": "WN-205.d",
+"count": 1,
+"tris": 72,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.017,
+"levels": 6,
+"y": [
+-15.75,
+-13.71
+],
+"round": 0.009,
+"roundFilled": 0.008,
+"turned": false,
+"turnedcut": false,
+"corners": 24,
+"holes": [
+{
+"c": [
+-14.39,
+15.1
+],
+"d": 0.754,
+"depth": 1.9,
+"through": false,
+"ratio": 2.5
+}
+],
+"floor": {
+"min": 0.75,
+"at": [
+-13.75,
+14.74
+]
+},
+"faces": {
+"low": 4.26,
+"high": 4.87
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "detent 050401-1",
+"part": "detent",
+"hn": "050401-1",
+"count": 1,
+"tris": 1000,
+"s": 0.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-15.61,
+-13.71
+],
+"round": 0.99,
+"roundFilled": 0.99,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.9,
+"at": [
+-14.71,
+14.97
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detent 050401-3",
+"part": "detent",
+"hn": "050401-3",
+"count": 1,
+"tris": 252,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-17.17,
+-15.61
+],
+"round": 0.476,
+"roundFilled": 0.476,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.56,
+"at": [
+-14.7,
+14.93
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detent 050401-3",
+"part": "detent",
+"hn": "050401-3",
+"count": 1,
+"tris": 96,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 2,
+"y": [
+-15.75,
+-13.85
+],
+"round": 0.025,
+"roundFilled": 0.025,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.0,
+"at": [
+-21.21,
+18.7
+]
+},
+"faces": {
+"low": 0.22,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detent 050401-2",
+"part": "detent",
+"hn": "050401-2",
+"count": 1,
+"tris": 24,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.011,
+"levels": 1,
+"y": [
+-14.85,
+-13.85
+],
+"round": 0.008,
+"roundFilled": 0.008,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.156,
+"at": [
+-12.17,
+14.41
+],
+"y": -14.35,
+"thin": []
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.0,
+"at": [
+-20.29,
+18.2
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detent 050401-2",
+"part": "detent",
+"hn": "050401-2",
+"count": 1,
+"tris": 772,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-15.5,
+-14.1
+],
+"round": 0.389,
+"roundFilled": 0.389,
+"turned": false,
+"turnedcut": false,
+"corners": 12,
+"holes": [],
+"floor": {
+"min": 0.234,
+"at": [
+-23.01,
+19.45
+]
+},
+"faces": {
+"low": 0.78,
+"high": 0.78
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "detent WN-14",
+"part": "detent",
+"hn": "WN-14",
+"count": 1,
+"tris": 336,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-15.09,
+-14.51
+],
+"round": 0.107,
+"roundFilled": 0.107,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.086,
+"at": [
+-23.16,
+20.01
+]
+},
+"faces": {
+"low": 0.22,
+"high": 0.22
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "detent WN-14",
+"part": "detent",
+"hn": "WN-14",
+"count": 1,
+"tris": 132,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.031,
+"levels": 3,
+"y": [
+-19.0,
+-12.5
+],
+"round": 0.269,
+"roundFilled": 0.284,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 1.348,
+"at": [
+-19.85,
+13.23
+],
+"y": -17.5,
+"thin": []
+},
+"corners": 2,
+"holes": [
+{
+"c": [
+-38.49,
+12.58
+],
+"d": 0.897,
+"depth": 3.0,
+"through": false,
+"ratio": 3.3
+},
+{
+"c": [
+-34.54,
+16.24
+],
+"d": 1.736,
+"depth": 3.0,
+"through": false,
+"ratio": 1.7
+},
+{
+"c": [
+-30.59,
+19.9
+],
+"d": 0.896,
+"depth": 6.5,
+"through": true,
+"ratio": 7.3
+},
+{
+"c": [
+-32.61,
+20.3
+],
+"d": 1.296,
+"depth": 3.0,
+"through": false,
+"ratio": 2.3
+}
+],
+"floor": {
+"min": 3.0,
+"at": [
+-40.94,
+11.35
+]
+},
+"faces": {
+"low": 0.0,
+"high": 112.16
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detentBlock 050401-4",
+"part": "detentBlock",
+"hn": "050401-4",
+"count": 1,
+"tris": 698,
+"s": 1.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 16,
+"y": [
+-18.39,
+-16.61
+],
+"round": 0.214,
+"roundFilled": 0.214,
+"turned": false,
+"turnedcut": false,
+"corners": 20,
+"holes": [],
+"floor": {
+"min": 0.285,
+"at": [
+-15.03,
+12.14
+]
+},
+"faces": {
+"low": 4.25,
+"high": 4.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "detentBlock WN-gkA",
+"part": "detentBlock",
+"hn": "WN-gkA",
+"count": 1,
+"tris": 200,
+"s": 0.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-20.3,
+-12.5
+],
+"round": 0.981,
+"roundFilled": 0.981,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 7.8,
+"at": [
+-30.91,
+20.06
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detentBlock WN-201.gk",
+"part": "detentBlock",
+"hn": "WN-201.gk",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-20.3,
+-16.0
+],
+"round": 0.978,
+"roundFilled": 0.978,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 4.3,
+"at": [
+-38.91,
+12.56
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "detentBlock WN-201.gk",
+"part": "detentBlock",
+"hn": "WN-201.gk",
+"count": 1,
+"tris": 64,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 15,
+"y": [
+4.07,
+18.25
+],
+"round": 0.4,
+"roundFilled": 0.479,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 16,
+"root": 1.29,
+"tip": 1.44
+},
+"wall": {
+"min": 0.12,
+"at": [
+-0.94,
+0.0
+],
+"y": 9.39,
+"thin": [
+[
+0.12,
+[
+-0.94,
+0.0
+]
+],
+[
+0.12,
+[
+-0.13,
+0.92
+]
+],
+[
+0.12,
+[
+-0.12,
+-0.93
+]
+],
+[
+0.12,
+[
+0.93,
+-0.13
+]
+],
+[
+0.14,
+[
+-0.13,
+-0.92
+]
+],
+[
+0.14,
+[
+0.92,
+-0.13
+]
+]
+]
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+-0.0
+],
+"d": 1.817,
+"depth": 2.4,
+"through": false,
+"ratio": 1.3
+},
+{
+"c": [
+-0.0,
+0.0
+],
+"d": 1.773,
+"depth": 2.33,
+"through": false,
+"ratio": 1.3
+},
+{
+"c": [
+-0.0,
+0.0
+],
+"d": 1.736,
+"depth": 3.55,
+"through": false,
+"ratio": 2.0
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 1.692,
+"depth": 2.52,
+"through": false,
+"ratio": 1.5
+},
+{
+"c": [
+-0.0,
+0.0
+],
+"d": 1.656,
+"depth": 3.39,
+"through": false,
+"ratio": 2.0
+}
+],
+"floor": {
+"min": 0.013,
+"at": [
+0.6,
+0.59
+]
+},
+"faces": {
+"low": 0.8,
+"high": 12.74
+},
+"undercut": {
+"area": 4.0,
+"gap": 0.8,
+"at": [
+1.79,
+0.18
+],
+"ring": true
+},
+"setups": 2,
+"sealed": [],
+"name": "cannon 050503-3",
+"part": "cannon",
+"hn": "050503-3",
+"count": 1,
+"tris": 3884,
+"s": 2.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 4,
+"y": [
+3.35,
+10.25
+],
+"round": 0.987,
+"roundFilled": 0.993,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-10.91,
+6.3
+],
+"d": 1.517,
+"depth": 6.9,
+"through": true,
+"ratio": 4.5
+}
+],
+"floor": {
+"min": 0.6,
+"at": [
+-13.63,
+6.44
+]
+},
+"faces": {
+"low": 16.4,
+"high": 16.4
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "changeWheel 050202-2",
+"part": "changeWheel",
+"hn": "050202-2",
+"count": 1,
+"tris": 960,
+"s": 1.6,
+"note": ""
+},
+{
+"h": 0.023,
+"levels": 1,
+"y": [
+4.35,
+5.35
+],
+"round": 0.832,
+"roundFilled": 0.84,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 56,
+"root": 9.51,
+"tip": 10.52
+},
+"wall": {
+"min": 7.108,
+"at": [
+-15.04,
+2.45
+],
+"y": 4.85,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-10.91,
+6.3
+],
+"d": 4.194,
+"depth": 1.0,
+"through": true,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 1.0,
+"at": [
+-21.05,
+6.78
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "changeWheel 050202-1",
+"part": "changeWheel",
+"hn": "050202-1",
+"count": 1,
+"tris": 8708,
+"s": 3.9,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+5.95,
+8.45
+],
+"round": 0.819,
+"roundFilled": 0.862,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 18,
+"root": 2.69,
+"tip": 3.45
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-10.91,
+6.3
+],
+"d": 3.045,
+"depth": 2.5,
+"through": true,
+"ratio": 0.8
+}
+],
+"floor": {
+"min": 2.5,
+"at": [
+-14.25,
+6.69
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "changeWheel 050202-3",
+"part": "changeWheel",
+"hn": "050202-3",
+"count": 1,
+"tris": 2932,
+"s": 1.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+6.61,
+14.81
+],
+"round": 0.937,
+"roundFilled": 0.989,
+"turned": false,
+"turnedcut": true,
+"corners": 0,
+"holes": [
+{
+"c": [
+0.0,
+0.0
+],
+"d": 3.617,
+"depth": 8.2,
+"through": true,
+"ratio": 2.3
+}
+],
+"floor": {
+"min": 2.585,
+"at": [
+-3.89,
+0.76
+]
+},
+"faces": {
+"low": 21.96,
+"high": 35.0
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "hourWheel 050203-2",
+"part": "hourWheel",
+"hn": "050203-2",
+"count": 1,
+"tris": 1024,
+"s": 2.8,
+"note": ""
+},
+{
+"h": 0.022,
+"levels": 1,
+"y": [
+6.61,
+7.61
+],
+"round": 0.836,
+"roundFilled": 0.853,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 54,
+"root": 8.93,
+"tip": 9.85
+},
+"wall": {
+"min": 5.633,
+"at": [
+4.0,
+-4.21
+],
+"y": 7.11,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-0.0,
+0.0
+],
+"d": 5.992,
+"depth": 1.0,
+"through": true,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 1.0,
+"at": [
+-7.98,
+0.19
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "hourWheel 050203-1",
+"part": "hourWheel",
+"hn": "050203-1",
+"count": 1,
+"tris": 8404,
+"s": 3.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 5,
+"y": [
+3.35,
+12.35
+],
+"round": 0.98,
+"roundFilled": 0.988,
+"turned": true,
+"turnedcut": false,
+"teeth": {
+"n": 63,
+"root": 0.76,
+"tip": 1.1
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-0.0,
+-23.0
+],
+"d": 0.928,
+"depth": 9.0,
+"through": true,
+"ratio": 9.7
+}
+],
+"floor": {
+"min": 0.7,
+"at": [
+-3.82,
+-22.94
+]
+},
+"faces": {
+"low": 37.38,
+"high": 42.64
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "udWheel 050204-2",
+"part": "udWheel",
+"hn": "050204-2",
+"count": 1,
+"tris": 1152,
+"s": 3.1,
+"note": ""
+},
+{
+"h": 0.038,
+"levels": 1,
+"y": [
+8.55,
+9.55
+],
+"round": 0.575,
+"roundFilled": 0.938,
+"turned": false,
+"turnedcut": true,
+"teeth": {
+"n": 119,
+"root": 16.27,
+"tip": 17.16
+},
+"wall": {
+"min": 1.604,
+"at": [
+5.32,
+-20.43
+],
+"y": 9.05,
+"thin": []
+},
+"corners": 36,
+"holes": [
+{
+"c": [
+0.0,
+-23.0
+],
+"d": 5.198,
+"depth": 1.0,
+"through": true,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 1.0,
+"at": [
+-16.15,
+-18.02
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "udWheel 050204-1",
+"part": "udWheel",
+"hn": "050204-1",
+"count": 1,
+"tris": 21824,
+"s": 2.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+7.05,
+10.05
+],
+"round": 0.345,
+"roundFilled": 0.489,
+"turned": false,
+"turnedcut": false,
+"corners": 48,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 1.597,
+"depth": 3.0,
+"through": true,
+"ratio": 1.9
+}
+],
+"floor": {
+"min": 3.0,
+"at": [
+-18.09,
+-14.65
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "udPinion 050200-5",
+"part": "udPinion",
+"hn": "050200-5",
+"count": 1,
+"tris": 1012,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.04,
+"levels": 32,
+"y": [
+-18.82,
+-6.26
+],
+"round": 0.893,
+"roundFilled": 0.916,
+"turned": false,
+"turnedcut": true,
+"wall": {
+"min": 0.814,
+"at": [
+-11.15,
+-2.93
+],
+"y": -8.89,
+"thin": []
+},
+"slots": {
+"n": 3,
+"min": 0.079,
+"at": [
+-26.77,
+-20.41
+],
+"y": -13.16
+},
+"corners": 79,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.006,
+"depth": 8.16,
+"through": false,
+"ratio": 1.2
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 26.298,
+"depth": 0.96,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 26.454,
+"depth": 0.32,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 27.499,
+"depth": 0.72,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 29.01,
+"depth": 0.79,
+"through": false,
+"ratio": 0.0
+}
+],
+"floor": {
+"min": 0.005,
+"at": [
+-10.48,
+-23.06
+]
+},
+"faces": {
+"low": 801.83,
+"high": 656.93
+},
+"undercut": {
+"area": 371.18,
+"gap": 3.31,
+"at": [
+-10.64,
+-23.86
+],
+"ring": true
+},
+"setups": 2,
+"sealed": [],
+"name": "fusee 050604-2",
+"part": "fusee",
+"hn": "050604-2",
+"count": 1,
+"tris": 180736,
+"s": 9.9,
+"note": "the chain's groove is cut on a fusee engine (05 06 04-2: a helix of pitch 1.2, square-cut lands 0.87): its sections' thin slivers are the helix, not slots for a mill"
+},
+{
+"h": 0.01,
+"levels": 17,
+"y": [
+-27.73,
+10.1
+],
+"round": 0.996,
+"roundFilled": 0.996,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 7.9,
+"at": [
+-20.16,
+-15.61
+]
+},
+"faces": {
+"low": 23.69,
+"high": 37.57
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "fusee 050604-1",
+"part": "fusee",
+"hn": "050604-1",
+"count": 1,
+"tris": 1120,
+"s": 4.7,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-45.37,
+-27.73
+],
+"round": 0.715,
+"roundFilled": 0.715,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 12.705,
+"at": [
+-18.26,
+-15.35
+]
+},
+"faces": {
+"low": 1.09,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee 050604-1",
+"part": "fusee",
+"hn": "050604-1",
+"count": 1,
+"tris": 16,
+"s": 0.7,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-48.03,
+-45.37
+],
+"round": 0.723,
+"roundFilled": 0.723,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.131,
+"at": [
+-15.01,
+-16.39
+]
+},
+"faces": {
+"low": 8.96,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee 050604-1",
+"part": "fusee",
+"hn": "050604-1",
+"count": 1,
+"tris": 256,
+"s": 0.9,
+"note": ""
+},
+{
+"h": 0.018,
+"levels": 12,
+"y": [
+-8.97,
+-7.01
+],
+"round": 0.758,
+"roundFilled": 0.913,
+"turned": false,
+"turnedcut": true,
+"teeth": {
+"n": 35,
+"root": 7.32,
+"tip": 7.99
+},
+"wall": {
+"min": 3.266,
+"at": [
+-22.09,
+-15.56
+],
+"y": -8.88,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-21.0,
+-19.12
+],
+"d": 2.028,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.522,
+"depth": 1.95,
+"through": true,
+"ratio": 0.3
+},
+{
+"c": [
+-17.87,
+-9.66
+],
+"d": 2.027,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-11.25,
+-17.1
+],
+"d": 2.026,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-21.0,
+-19.12
+],
+"d": 2.091,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-17.87,
+-9.66
+],
+"d": 2.09,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-11.25,
+-17.1
+],
+"d": 2.088,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-21.0,
+-19.12
+],
+"d": 2.152,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-17.87,
+-9.66
+],
+"d": 2.152,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-11.25,
+-17.1
+],
+"d": 2.152,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-21.0,
+-19.12
+],
+"d": 2.213,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-17.87,
+-9.66
+],
+"d": 2.215,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-11.25,
+-17.1
+],
+"d": 2.215,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+}
+],
+"floor": {
+"min": 0.478,
+"at": [
+-10.52,
+-16.37
+]
+},
+"faces": {
+"low": 0.0,
+"high": 2.46
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee 050604-3",
+"part": "fusee",
+"hn": "050604-3",
+"count": 1,
+"tris": 1716,
+"s": 5.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-12.77,
+-7.01
+],
+"round": 0.987,
+"roundFilled": 0.987,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.481,
+"at": [
+-20.27,
+-19.92
+]
+},
+"faces": {
+"low": 1.6,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee WN-19",
+"part": "fusee",
+"hn": "WN-19",
+"count": 1,
+"tris": 200,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-7.34,
+-6.99
+],
+"round": 0.125,
+"roundFilled": 0.125,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.35,
+"at": [
+-21.92,
+-19.33
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee WN-19",
+"part": "fusee",
+"hn": "WN-19",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-12.77,
+-7.01
+],
+"round": 0.987,
+"roundFilled": 0.987,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.481,
+"at": [
+-17.14,
+-10.47
+]
+},
+"faces": {
+"low": 1.6,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee WN-19",
+"part": "fusee",
+"hn": "WN-19",
+"count": 1,
+"tris": 200,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-7.34,
+-6.99
+],
+"round": 0.125,
+"roundFilled": 0.125,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.35,
+"at": [
+-18.76,
+-9.88
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee WN-19",
+"part": "fusee",
+"hn": "WN-19",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-12.77,
+-7.01
+],
+"round": 0.987,
+"roundFilled": 0.987,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.481,
+"at": [
+-10.52,
+-17.9
+]
+},
+"faces": {
+"low": 1.6,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee WN-19",
+"part": "fusee",
+"hn": "WN-19",
+"count": 1,
+"tris": 200,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-7.34,
+-6.99
+],
+"round": 0.125,
+"roundFilled": 0.125,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.35,
+"at": [
+-12.08,
+-17.46
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee WN-19",
+"part": "fusee",
+"hn": "WN-19",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-8.27,
+-6.26
+],
+"round": 0.975,
+"roundFilled": 0.975,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 2.0,
+"at": [
+-23.02,
+-31.05
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "fusee 050600-6",
+"part": "fusee",
+"hn": "050600-6",
+"count": 1,
+"tris": 64,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.023,
+"levels": 12,
+"y": [
+-19.61,
+-18.82
+],
+"round": 0.962,
+"roundFilled": 0.994,
+"turned": false,
+"turnedcut": true,
+"wall": {
+"min": 6.829,
+"at": [
+-23.83,
+-15.35
+],
+"y": -19.58,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 3.08,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.376,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.947,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.146,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.812,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 6.915,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.678,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 6.684,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.545,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 6.454,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.412,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 6.222,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.281,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 6.107,
+"depth": 0.4,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.147,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 2.013,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 1.881,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-19.8,
+-20.44
+],
+"d": 1.745,
+"depth": 0.13,
+"through": false,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 0.134,
+"at": [
+-20.44,
+-19.79
+]
+},
+"faces": {
+"low": 19.16,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "coverPlate 050600-4",
+"part": "coverPlate",
+"hn": "050600-4",
+"count": 1,
+"tris": 1828,
+"s": 7.9,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-19.59,
+-13.69
+],
+"round": 0.981,
+"roundFilled": 0.981,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.261,
+"at": [
+-18.93,
+-19.51
+]
+},
+"faces": {
+"low": 0.0,
+"high": 5.8
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "coverPlate WN-20",
+"part": "coverPlate",
+"hn": "WN-20",
+"count": 1,
+"tris": 200,
+"s": 1.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-19.61,
+-19.36
+],
+"round": 0.125,
+"roundFilled": 0.125,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.25,
+"at": [
+-20.3,
+-20.46
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "coverPlate WN-20",
+"part": "coverPlate",
+"hn": "WN-20",
+"count": 1,
+"tris": 12,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.015,
+"levels": 14,
+"y": [
+-3.83,
+-0.93
+],
+"round": 0.99,
+"roundFilled": 0.994,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 1.544,
+"at": [
+-19.69,
+-15.33
+],
+"y": -1.05,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 9.946,
+"depth": 0.43,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 4.43,
+"depth": 2.47,
+"through": false,
+"ratio": 0.6
+}
+],
+"floor": {
+"min": 0.575,
+"at": [
+-20.85,
+-15.07
+]
+},
+"faces": {
+"low": 62.42,
+"high": 107.38
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "vorreiber 050600-2",
+"part": "vorreiber",
+"hn": "050600-2",
+"count": 1,
+"tris": 1728,
+"s": 7.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-2.42,
+-1.63
+],
+"round": 0.494,
+"roundFilled": 0.494,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.252,
+"at": [
+-19.19,
+-15.99
+]
+},
+"faces": {
+"low": 0.87,
+"high": 0.87
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "vorreiber 050600-5",
+"part": "vorreiber",
+"hn": "050600-5",
+"count": 1,
+"tris": 48,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-2.42,
+-1.63
+],
+"round": 0.494,
+"roundFilled": 0.494,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.252,
+"at": [
+-13.27,
+-15.23
+]
+},
+"faces": {
+"low": 0.87,
+"high": 0.87
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "vorreiber 050600-5",
+"part": "vorreiber",
+"hn": "050600-5",
+"count": 1,
+"tris": 48,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 2,
+"y": [
+-34.72,
+-31.73
+],
+"round": 0.899,
+"roundFilled": 0.992,
+"turned": false,
+"turnedcut": true,
+"wall": {
+"min": 0.651,
+"at": [
+-19.25,
+-17.62
+],
+"y": -34.22,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 6.248,
+"depth": 1.0,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 3.537,
+"depth": 2.0,
+"through": false,
+"ratio": 0.6
+}
+],
+"floor": {
+"min": 2.0,
+"at": [
+-18.75,
+-14.8
+]
+},
+"faces": {
+"low": 20.84,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "dustPlate 050600-1",
+"part": "dustPlate",
+"hn": "050600-1",
+"count": 1,
+"tris": 880,
+"s": 2.5,
+"note": ""
+},
+{
+"h": 0.045,
+"levels": 5,
+"y": [
+-7.53,
+-2.53
+],
+"round": 0.82,
+"roundFilled": 0.934,
+"turned": false,
+"turnedcut": true,
+"teeth": {
+"n": 90,
+"root": 18.9,
+"tip": 20.29
+},
+"wall": {
+"min": 0.958,
+"at": [
+-18.8,
+-17.12
+],
+"y": -6.33,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 4.548,
+"depth": 3.7,
+"through": false,
+"ratio": 0.8
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 13.995,
+"depth": 0.08,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 14.983,
+"depth": 1.22,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-6.78,
+-5.14
+],
+"d": 1.203,
+"depth": 1.22,
+"through": false,
+"ratio": 1.0
+}
+],
+"floor": {
+"min": 1.076,
+"at": [
+-21.15,
+-8.28
+]
+},
+"faces": {
+"low": 1156.4,
+"high": 211.32
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "fuseeWheel 050600-3",
+"part": "fuseeWheel",
+"hn": "050600-3",
+"count": 1,
+"tris": 21876,
+"s": 8.5,
+"note": ""
+},
+{
+"h": 0.041,
+"levels": 14,
+"y": [
+-8.3,
+-5.2
+],
+"round": 0.954,
+"roundFilled": 0.968,
+"turned": false,
+"turnedcut": true,
+"teeth": {
+"n": 120,
+"root": 17.99,
+"tip": 18.6
+},
+"wall": {
+"min": 0.579,
+"at": [
+-29.25,
+-15.56
+],
+"y": -8.17,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 24.447,
+"depth": 1.8,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-26.42,
+-16.29
+],
+"d": 1.734,
+"depth": 1.3,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 6.507,
+"depth": 1.3,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-7.0,
+-14.29
+],
+"d": 1.734,
+"depth": 1.3,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+-18.16,
+-1.17
+],
+"d": 1.201,
+"depth": 1.02,
+"through": false,
+"ratio": 0.8
+}
+],
+"floor": {
+"min": 0.28,
+"at": [
+-28.38,
+-12.79
+]
+},
+"faces": {
+"low": 969.1,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050602-1",
+"part": "maintaining",
+"hn": "050602-1",
+"count": 1,
+"tris": 5588,
+"s": 10.9,
+"note": ""
+},
+{
+"h": 0.011,
+"levels": 1,
+"y": [
+-8.31,
+-6.49
+],
+"round": 0.236,
+"roundFilled": 0.314,
+"turned": false,
+"turnedcut": false,
+"corners": 2,
+"holes": [
+{
+"c": [
+-7.0,
+-14.29
+],
+"d": 1.207,
+"depth": 1.82,
+"through": true,
+"ratio": 1.5
+}
+],
+"floor": {
+"min": 1.82,
+"at": [
+-10.23,
+-10.42
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050602-3",
+"part": "maintaining",
+"hn": "050602-3",
+"count": 1,
+"tris": 348,
+"s": 2.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-8.31,
+-6.49
+],
+"round": 0.226,
+"roundFilled": 0.303,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-26.42,
+-16.29
+],
+"d": 1.207,
+"depth": 1.82,
+"through": true,
+"ratio": 1.5
+}
+],
+"floor": {
+"min": 1.82,
+"at": [
+-27.08,
+-17.93
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050602-3",
+"part": "maintaining",
+"hn": "050602-3",
+"count": 1,
+"tris": 348,
+"s": 2.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-8.41,
+-4.7
+],
+"round": 0.981,
+"roundFilled": 0.981,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.5,
+"at": [
+-8.22,
+-14.53
+]
+},
+"faces": {
+"low": 4.13,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining WN-21",
+"part": "maintaining",
+"hn": "WN-21",
+"count": 1,
+"tris": 280,
+"s": 0.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-4.93,
+-4.68
+],
+"round": 0.096,
+"roundFilled": 0.096,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.25,
+"at": [
+-8.13,
+-14.01
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining WN-21",
+"part": "maintaining",
+"hn": "WN-21",
+"count": 1,
+"tris": 12,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-8.41,
+-4.7
+],
+"round": 0.981,
+"roundFilled": 0.981,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.5,
+"at": [
+-27.67,
+-16.07
+]
+},
+"faces": {
+"low": 4.13,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining WN-21",
+"part": "maintaining",
+"hn": "WN-21",
+"count": 1,
+"tris": 280,
+"s": 0.7,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-4.93,
+-4.68
+],
+"round": 0.096,
+"roundFilled": 0.096,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.25,
+"at": [
+-27.58,
+-16.06
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining WN-21",
+"part": "maintaining",
+"hn": "WN-21",
+"count": 1,
+"tris": 12,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.022,
+"levels": 1,
+"y": [
+-7.99,
+-6.49
+],
+"round": 0.017,
+"roundFilled": 0.017,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.397,
+"at": [
+-17.53,
+-25.65
+],
+"y": -7.24,
+"thin": []
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.5,
+"at": [
+-25.57,
+-20.0
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050602-2",
+"part": "maintaining",
+"hn": "050602-2",
+"count": 1,
+"tris": 332,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-7.55,
+-6.95
+],
+"round": 0.25,
+"roundFilled": 0.25,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.171,
+"at": [
+-6.94,
+-22.08
+]
+},
+"faces": {
+"low": 0.72,
+"high": 0.72
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "maintaining 050602-4",
+"part": "maintaining",
+"hn": "050602-4",
+"count": 1,
+"tris": 48,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-7.55,
+-6.95
+],
+"round": 0.264,
+"roundFilled": 0.264,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.171,
+"at": [
+-9.55,
+-25.66
+]
+},
+"faces": {
+"low": 0.72,
+"high": 0.72
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "maintaining 050602-4",
+"part": "maintaining",
+"hn": "050602-4",
+"count": 1,
+"tris": 48,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.022,
+"levels": 1,
+"y": [
+-7.99,
+-6.49
+],
+"round": 0.018,
+"roundFilled": 0.018,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.402,
+"at": [
+-17.78,
+-4.94
+],
+"y": -7.24,
+"thin": []
+},
+"corners": 1,
+"holes": [],
+"floor": {
+"min": 1.5,
+"at": [
+-26.29,
+-8.23
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050602-2",
+"part": "maintaining",
+"hn": "050602-2",
+"count": 1,
+"tris": 332,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-7.55,
+-6.95
+],
+"round": 0.25,
+"roundFilled": 0.25,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.171,
+"at": [
+-27.29,
+-7.22
+]
+},
+"faces": {
+"low": 0.72,
+"high": 0.72
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "maintaining 050602-4",
+"part": "maintaining",
+"hn": "050602-4",
+"count": 1,
+"tris": 48,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-7.55,
+-6.95
+],
+"round": 0.264,
+"roundFilled": 0.264,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.171,
+"at": [
+-24.32,
+-5.24
+]
+},
+"faces": {
+"low": 0.72,
+"high": 0.72
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "maintaining 050602-4",
+"part": "maintaining",
+"hn": "050602-4",
+"count": 1,
+"tris": 48,
+"s": 0.3,
+"note": ""
+},
+{
+"h": 0.035,
+"levels": 12,
+"y": [
+-5.05,
+-3.74
+],
+"round": 0.169,
+"roundFilled": 0.15,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 1.994,
+"at": [
+-29.06,
+-21.22
+],
+"y": -4.99,
+"thin": []
+},
+"corners": 168,
+"holes": [
+{
+"c": [
+-18.16,
+-1.17
+],
+"d": 1.201,
+"depth": 1.3,
+"through": true,
+"ratio": 1.1
+},
+{
+"c": [
+-6.79,
+-5.14
+],
+"d": 1.196,
+"depth": 1.3,
+"through": true,
+"ratio": 1.1
+}
+],
+"floor": {
+"min": 1.3,
+"at": [
+-29.41,
+-21.92
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050601-1",
+"part": "maintaining",
+"hn": "050601-1",
+"count": 1,
+"tris": 2180,
+"s": 4.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-6.22,
+-3.74
+],
+"round": 0.982,
+"roundFilled": 0.982,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 2.48,
+"at": [
+-17.84,
+-1.09
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050600-8",
+"part": "maintaining",
+"hn": "050600-8",
+"count": 1,
+"tris": 64,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-5.05,
+-2.55
+],
+"round": 0.984,
+"roundFilled": 0.984,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 2.5,
+"at": [
+-7.31,
+-5.25
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintaining 050600-8",
+"part": "maintaining",
+"hn": "050600-8",
+"count": 1,
+"tris": 64,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.016,
+"levels": 2,
+"y": [
+-6.32,
+-4.32
+],
+"round": 0.293,
+"roundFilled": 0.288,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 1.384,
+"at": [
+-6.58,
+-38.24
+],
+"y": -5.82,
+"thin": []
+},
+"corners": 0,
+"holes": [
+{
+"c": [
+-6.42,
+-36.44
+],
+"d": 2.246,
+"depth": 2.0,
+"through": true,
+"ratio": 0.9
+}
+],
+"floor": {
+"min": 1.0,
+"at": [
+-14.14,
+-35.64
+]
+},
+"faces": {
+"low": 0.0,
+"high": 9.87
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintDetent 050505-1",
+"part": "maintDetent",
+"hn": "050505-1",
+"count": 1,
+"tris": 516,
+"s": 2.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-22.08,
+3.08
+],
+"round": 0.983,
+"roundFilled": 0.983,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 18.95,
+"at": [
+-7.53,
+-36.44
+]
+},
+"faces": {
+"low": 3.32,
+"high": 3.32
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "maintDetent 050505-2",
+"part": "maintDetent",
+"hn": "050505-2",
+"count": 1,
+"tris": 280,
+"s": 0.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 2,
+"y": [
+-24.25,
+-22.35
+],
+"round": 0.668,
+"roundFilled": 0.668,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [],
+"floor": {
+"min": 1.2,
+"at": [
+-11.12,
+-37.3
+]
+},
+"faces": {
+"low": 1.34,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintDetent",
+"part": "maintDetent",
+"hn": "",
+"count": 1,
+"tris": 132,
+"s": 1.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 13,
+"y": [
+-22.65,
+-18.6
+],
+"round": 0.99,
+"roundFilled": 0.99,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-10.68,
+-38.51
+],
+"d": 0.248,
+"depth": 1.5,
+"through": false,
+"ratio": 6.0
+}
+],
+"floor": {
+"min": 2.55,
+"at": [
+-10.79,
+-38.56
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.8
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "maintDetent",
+"part": "maintDetent",
+"hn": "",
+"count": 1,
+"tris": 528,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-20.1,
+-1.79
+],
+"round": 0.23,
+"roundFilled": 0.23,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.137,
+"at": [
+-10.8,
+-39.21
+]
+},
+"faces": {
+"low": 0.16,
+"high": 0.16
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "maintDetent 050506-1",
+"part": "maintDetent",
+"hn": "050506-1",
+"count": 1,
+"tris": 360,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.024,
+"levels": 2,
+"y": [
+-18.82,
+-17.36
+],
+"round": 0.068,
+"roundFilled": 0.068,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 1.05,
+"at": [
+-16.2,
+-25.53
+]
+},
+"faces": {
+"low": 0.0,
+"high": 13.79
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "stopWork 050603-1",
+"part": "stopWork",
+"hn": "050603-1",
+"count": 1,
+"tris": 116,
+"s": 1.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-18.57,
+-18.07
+],
+"round": 0.111,
+"roundFilled": 0.111,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.181,
+"at": [
+-11.41,
+-10.68
+]
+},
+"faces": {
+"low": 1.01,
+"high": 1.01
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "stopWork 050603-2",
+"part": "stopWork",
+"hn": "050603-2",
+"count": 1,
+"tris": 48,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.017,
+"levels": 1,
+"y": [
+-18.82,
+-17.82
+],
+"round": 0.002,
+"roundFilled": 0.002,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.1,
+"at": [
+-24.17,
+-15.41
+],
+"y": -18.32,
+"thin": [
+[
+0.1,
+[
+-24.17,
+-15.41
+]
+],
+[
+0.1,
+[
+-24.15,
+-14.94
+]
+],
+[
+0.1,
+[
+-24.13,
+-14.64
+]
+],
+[
+0.1,
+[
+-17.87,
+-7.93
+]
+],
+[
+0.1,
+[
+-17.37,
+-22.7
+]
+],
+[
+0.1,
+[
+-16.34,
+-22.72
+]
+]
+]
+},
+"corners": 1,
+"holes": [],
+"floor": {
+"min": 1.0,
+"at": [
+-12.85,
+-10.46
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "stopWork 050603-3",
+"part": "stopWork",
+"hn": "050603-3",
+"count": 1,
+"tris": 820,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-18.57,
+-18.07
+],
+"round": 0.08,
+"roundFilled": 0.08,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.181,
+"at": [
+-18.85,
+-25.49
+]
+},
+"faces": {
+"low": 1.44,
+"high": 1.44
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "stopWork 050604-4",
+"part": "stopWork",
+"hn": "050604-4",
+"count": 1,
+"tris": 48,
+"s": 0.5,
+"note": ""
+},
+{
+"h": 0.046,
+"levels": 15,
+"y": [
+-21.73,
+-3.65
+],
+"round": 0.925,
+"roundFilled": 0.994,
+"turned": false,
+"turnedcut": true,
+"wall": {
+"min": 1.202,
+"at": [
+4.56,
+-6.21
+],
+"y": -21.13,
+"thin": []
+},
+"corners": 5,
+"holes": [
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 39.198,
+"depth": 1.2,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 38.495,
+"depth": 13.78,
+"through": false,
+"ratio": 0.4
+},
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 37.634,
+"depth": 0.09,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 4.548,
+"depth": 3.1,
+"through": false,
+"ratio": 0.7
+},
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 37.223,
+"depth": 1.51,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 36.667,
+"depth": 0.26,
+"through": false,
+"ratio": 0.0
+}
+],
+"floor": {
+"min": 1.25,
+"at": [
+11.77,
+-5.38
+]
+},
+"faces": {
+"low": 1188.88,
+"high": 23.54
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "barrel 050701-1",
+"part": "barrel",
+"hn": "050701-1",
+"count": 1,
+"tris": 10878,
+"s": 12.1,
+"note": ""
+},
+{
+"h": 0.044,
+"levels": 15,
+"y": [
+-21.13,
+-17.83
+],
+"round": 0.975,
+"roundFilled": 0.977,
+"turned": true,
+"turnedcut": false,
+"wall": {
+"min": 2.157,
+"at": [
+22.19,
+-3.89
+],
+"y": -18.24,
+"thin": []
+},
+"corners": 24,
+"holes": [
+{
+"c": [
+24.78,
+-6.0
+],
+"d": 4.548,
+"depth": 3.3,
+"through": true,
+"ratio": 0.7
+}
+],
+"floor": {
+"min": 0.6,
+"at": [
+5.51,
+-7.2
+]
+},
+"faces": {
+"low": 0.0,
+"high": 1147.89
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrel 050701-2",
+"part": "barrel",
+"hn": "050701-2",
+"count": 1,
+"tris": 11448,
+"s": 11.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-21.13,
+-3.65
+],
+"round": 0.225,
+"roundFilled": 0.225,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 17.48,
+"at": [
+6.13,
+-3.7
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrel 050700-1",
+"part": "barrel",
+"hn": "050700-1",
+"count": 1,
+"tris": 12,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-14.23,
+-11.18
+],
+"round": 0.059,
+"roundFilled": 0.059,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.495,
+"at": [
+11.14,
+7.23
+],
+"y": -12.7,
+"thin": []
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 3.05,
+"at": [
+10.53,
+6.86
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrel 050701-3",
+"part": "barrel",
+"hn": "050701-3",
+"count": 1,
+"tris": 100,
+"s": 0.4,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-14.0,
+-11.4
+],
+"round": 0.681,
+"roundFilled": 0.681,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.423,
+"at": [
+12.0,
+9.91
+]
+},
+"faces": {
+"low": 4.69,
+"high": 4.69
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "barrel 050701-3",
+"part": "barrel",
+"hn": "050701-3",
+"count": 1,
+"tris": 80,
+"s": 1.0,
+"note": ""
+},
+{
+"h": 0.015,
+"levels": 16,
+"y": [
+-25.7,
+4.95
+],
+"round": 0.994,
+"roundFilled": 0.994,
+"turned": true,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 6.725,
+"at": [
+29.92,
+-1.83
+]
+},
+"faces": {
+"low": 126.74,
+"high": 138.11
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "barrelArbor 050702-1",
+"part": "barrelArbor",
+"hn": "050702-1",
+"count": 1,
+"tris": 1728,
+"s": 6.8,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-13.29,
+-11.29
+],
+"round": 0.349,
+"roundFilled": 0.349,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.468,
+"at": [
+18.76,
+-4.25
+]
+},
+"faces": {
+"low": 1.34,
+"high": 1.34
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "barrelArbor 050702-2",
+"part": "barrelArbor",
+"hn": "050702-2",
+"count": 1,
+"tris": 96,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 1,
+"y": [
+-35.2,
+-25.7
+],
+"round": 0.707,
+"roundFilled": 0.707,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 8.141,
+"at": [
+26.63,
+-5.99
+]
+},
+"faces": {
+"low": 0.47,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrelArbor 050702-1",
+"part": "barrelArbor",
+"hn": "050702-1",
+"count": 1,
+"tris": 16,
+"s": 0.6,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-35.7,
+-35.2
+],
+"round": 0.707,
+"roundFilled": 0.707,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.028,
+"at": [
+26.54,
+-6.0
+]
+},
+"faces": {
+"low": 6.42,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "barrelArbor 050702-1",
+"part": "barrelArbor",
+"hn": "050702-1",
+"count": 1,
+"tris": 16,
+"s": 0.8,
+"note": ""
+},
+{
+"h": 0.015,
+"levels": 1,
+"y": [
+-28.37,
+-25.72
+],
+"round": 0.795,
+"roundFilled": 0.821,
+"turned": false,
+"turnedcut": false,
+"teeth": {
+"n": 16,
+"root": 5.73,
+"tip": 6.99
+},
+"corners": 4,
+"holes": [],
+"floor": {
+"min": 2.65,
+"at": [
+19.62,
+-3.24
+]
+},
+"faces": {
+"low": 0.0,
+"high": 0.0
+},
+"undercut": null,
+"setups": 1,
+"sealed": [],
+"name": "setupRatchet 050700-3",
+"part": "setupRatchet",
+"hn": "050700-3",
+"count": 1,
+"tris": 592,
+"s": 3.2,
+"note": ""
+}
+]
+}
