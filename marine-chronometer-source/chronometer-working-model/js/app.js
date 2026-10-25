@@ -176,7 +176,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=cur.fov=tgt.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:mvL(0,-26,0)});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=false;};
   window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:mvL(x,y,z)});};}
   $('#srcKey').innerHTML=Object.values(SRC).map(([t,c,d])=>`<span title="${t}: ${d}"><i style="--ps:${c}"></i>${t}</span>`).join('');
-  const partOf=o=>{while(o){if(o.userData&&o.userData.partName)return o.userData.partName;o=o.parent;}return null;};
+  const partOf=o=>{while(o){if(o.userData&&(o.userData.partName||o.userData.devOf))return o.userData.partName||o.userData.devOf;o=o.parent;}return null;};   /* devOf: a laid-out view's schematic plate (devPlate), standing in for its part */
   /* a mesh's key: its piece (part.k) where its part has pieces: the nearest pc tag up to the part, else the piece listing the nearest parts-list line; its part's otherwise */
   const pkOf=o=>{const p=o.userData.part;if(!PHN[p])return p;let h=null;for(let q=o;q;q=q.parent){const u=q.userData;if(u.pc)return p+'.'+u.pc;if(h==null&&u.hn)h=u.hn;if(u.partName)break;}return PHN[p][h]?p+'.'+PHN[p][h]:p;};
   const shown=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;};   /* r128's raycaster ignores visibility: a mesh in a hidden group (the hand-setting key, another dial style's hands) must not take a click or hide a label */
@@ -261,16 +261,16 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!t){t=m0.clone();t.userData={inkDecal:m0.userData.inkDecal};patchSection(t,!!m0.userData.secCap);t.userData.side0=m0.userData.side0??m0.side;t.side=m0.side;t.clippingPlanes=[...(m0.clippingPlanes||[])];TINT.set(k,t);}
     if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}t.color.copy(m0.color).lerp(LPC[c],0.8);if(t.emissive){t.emissive.copy(LPC[c]);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}   /* less metal, so the colour shows rather than the room it reflects */
   /* a movement mesh drawn see-through (a ghost): plates with See-through, the laid-out view's schematic plates, the barrel's wall in drive mode, and whatever is outside the focus foc */
-  const ghOf=(m,foc)=>{const p=m.userData.part;return !(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||m.userData.devPlate||(st.drive&&m.userData.driveGhost)||(foc&&!inK(foc,m)&&!(p==='mainspring'&&anyOf(foc,'barrel'))));};
+  const ghOf=(m,foc)=>{const p=m.userData.part;return !(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||(m.userData.devPlate&&!(foc&&inK(foc,m)))||(st.drive&&m.userData.driveGhost)||(foc&&!inK(foc,m)&&!(p==='mainspring'&&anyOf(foc,'barrel'))));};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const ct=!!CT&&CT.on();
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
-      if(((st.drive||dvOn)&&DRIVE_HIDE.has(p))||(st.drive&&!st.mwOn&&(p==='motion'||p==='hands')))vis=false;
+      if(((st.drive||dvOn)&&DRIVE_HIDE.has(p)&&!m.userData.devPlate&&!(m.userData.devKeep&&dvOn&&!st.drive))||(st.drive&&!st.mwOn&&(p==='motion'||p==='hands')))vis=false;   /* the schematic plates stand in for the frame laid out; a piece of it flagged devKeep (the winding stop) stays */
       if(m.userData.onlyDrive&&!msShown())vis=false;
       if((st.drive||dvOn)&&m.userData.driveHide)vis=false;if(m.userData.devPlate&&(!dvOn||st.drive))vis=false;
       const gh=ghOf(m,foc);
       if(m.userData.noShadow&&gh)vis=false;
-      m.visible=vis&&!opHide(m)&&!OVH.hides(m);m.userData.ctOff=!m.visible&&!(m.userData.onlyDrive&&!msShown())&&!(m.userData.devPlate&&(!dvOn||st.drive))&&!(m.userData.noShadow&&gh);   /* ctOff: hidden by the visitor, Moving parts only or the overhaul, so Contacts leaves its contacts out */
+      m.visible=vis&&!opHide(m)&&!OVH.hides(m);m.userData.ctOff=!!m.userData.devPlate||!m.visible&&!(m.userData.onlyDrive&&!msShown())&&!(m.userData.devPlate&&(!dvOn||st.drive))&&!(m.userData.noShadow&&gh);   /* ctOff: hidden by the visitor, Moving parts only or the overhaul, so Contacts leaves its contacts out */
       const lc=!gh&&lpCol(m);m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
     for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!OVH.boxOff()&&!((ks||OVH.bezelOff())&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
@@ -439,8 +439,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* what a click passes through: what is faded below half, glass, or see-through as it would be with nothing picked; so with a part or piece picked, the ghosted rest still takes a click */
   const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&m0.opacity<0.5)return true;return m.userData.inkBox?!!(st.focus&&!inK(st.focus,m)):!!ghOf(m,st.focus);};
   function hitAt(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
-    const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!through(h.object));
-    return hits.find(h=>INFO[h.object.userData.part])||null;}
+    const all=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&INFO[h.object.userData.part]),hits=all.filter(h=>!through(h.object));
+    return hits[0]||all.filter(h=>h.object.userData.devPlate).sort((a,b)=>a.object.userData.rad-b.object.userData.rad)[0]||null;}   /* a see-through schematic plate (laid out) is picked only where no part shows through it, the smallest where they overlap */
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}   /* the piece, where its part has pieces */
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else if(st.tour<0)jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */

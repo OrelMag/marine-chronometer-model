@@ -14,9 +14,9 @@ const BLENDER=(()=>{
     const partOf=o=>{for(;o;o=o.parent)if(o.userData&&o.userData.partName)return o.userData.partName;return null;};
     BX.root.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.v0=o.visible;o.userData.inBox=!inMv.has(o);ms.push(o);}});
     return{BX,mv,R,ms};}
-  /* the page's look for a state (app.js look()): laid out (dv), the real plates and the box give way to the schematic plates; setting the hands (ks), the bezel and crystal are off */
+  /* the page's look for a state (app.js look()): laid out (dv), the real plates and the box give way to the schematic plates (a piece flagged devKeep, the winding stop, stays); setting the hands (ks), the bezel and crystal are off */
   function look(C,dv,ks){for(const m of C.ms){const u=m.userData;let v=u.v0;
-    if(u.devPlate)v=v&&dv;else if(dv&&(A.DRIVE_HIDE.has(u.part)||u.driveHide||u.inBox))v=false;if(ks&&u.bezel)v=false;m.visible=v;}}
+    if(u.devPlate)v=v&&dv;else if(dv&&((A.DRIVE_HIDE.has(u.part)&&!u.devKeep)||u.driveHide||u.inBox))v=false;if(ks&&u.bezel)v=false;m.visible=v;}}
   /* a state: the movement's (MoveState), the views' (lids, lift and turn, explode, laid out), the box's (pitch, roll, the case's angles in the gimbals, latch, twist), the shield plate */
   const REST=()=>({E:0,th:0,lift:0,psDef:0,n:0,winding:false,slip:0,hkeyOn:false,keyOn:false,blk:0,arm:0,dt:0,lidM:1,lidT:1,up:0,flip:0,ex:0,dev:0,pitch:0,roll:0,gp:0,gr:0,latch:0,tw:0,sh:null,teeth:null});
   function apply(C,s){const{BX,mv}=C;
