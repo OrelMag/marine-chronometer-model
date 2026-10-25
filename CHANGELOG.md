@@ -4,6 +4,14 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.29.00 · 2026-10-25
+- The Wempe can now be built from its own maker's sheets: every part's material, finish, fit, tolerance and bench test, with a drawing at scale, under Making it, and the whole as a printable build book.
+- The Wempe's report has three new sections on whether one could be made: wear and service life, the key forced, the motion work and the estimates swept; the frame under the mainspring's load, the order it comes apart and goes together, and each part checked against what a lathe, mill and drill can cut; and the build book.
+
+## 3.28.12 · 2026-10-25
+- The Hamilton's crystal and its box's glass can be clicked: click what is behind the glass, then click it again
+- The Hamilton's case has cards for its pieces: the case, bezel, crystal, support brackets, latch keeper and shield plate
+
 ## 3.28.11 · 2026-10-25
 - The Wempe's bezel glass can be clicked: click the dial, then click it again to pick the glass in front of it
 

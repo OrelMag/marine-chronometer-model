@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#open">18. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#mech2">18. The mechanisms in turn</a><a href="#mfg">19. Making it</a><a href="#book">20. The build book</a><a href="#open">21. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -418,7 +418,96 @@ them part on detail of the detent's motion (none bears on its safety), so each b
 <div id="tBuildsMC" class="tw"></div>
 <div id="kBuilds"></div>
 
-<h2 id="open">18. What stays open</h2>
+<h2 id="mech2">18. The mechanisms in turn: wear, the key, the motion work, the estimates</h2>
+<p>The Hamilton's model was checked mechanism by mechanism, as a maker would take its parts, by five tools beside the escapement's and the train's (its build report's
+section 11): wear, the key forced, the motion work, the train on sprung meshes and the estimates swept. The Wempe's counterparts follow, each reading the Wempe's own
+data (<code>wempe_strength.js</code>'s loads, <code>gearing_wempe.json</code>'s windows, <code>tolerances_wempe.json</code>'s lock window, <code>mechanisms_wempe.json</code>,
+<code>wempe_inertia.json</code>) and its sheets. The train on sprung meshes (the Hamilton's <code>traindyn.js</code>) has no counterpart here: section 13's
+<code>wempe_transmission.js</code> already runs every mesh tooth by tooth through the beat (the meshes' forces, which rattle, the seconds hand's bounce) and weighs every
+body on the solids (its section 1; the escape wheel's inertia against <code>WESC.SET</code>'s is <code>invariants.py --model wempe</code>'s), so it is cited, not repeated.</p>
+<h3>Wear: how long each contact keeps its figure</h3>
+<p>Archard's law at every sliding contact (V = k F s / H; k from Rabinowicz, 1e-7 well oiled, 1e-6 poorly, 1e-5 once the oil has gone; the escapement runs dry, as a
+chronometer's does, at Rabinowicz's unlubricated non-metal on metal, 1.5e-6), the loads <code>wempe_strength.js</code>'s fully wound, each depth against the tolerance it eats.
+An escape tooth's tip (gilt brass) wears as a wedge whose flat widens. The line is a service interval: the 1954 Soviet instruction's cleaning and fresh oil every three years
+(<code>6MX-figures.md</code>, п. 19); the TU's ten years' service life is reported against.</p>
+<figure><div class="chart" id="cWear"></div><figcaption>Figure 21. The share of its tolerance each contact wears away as it runs (well oiled; the escapement dry at 1.5e-6),
+year by year, as last revised (solid) and the escape tooth's tip in the 1950s build (dashed); the shaded band the three years between overhauls. Past 1 the figure is gone: the
+balance's endstone wears its endshake band (a repairer's setting the overhaul restores) and the drawn escapement's 15 µm lock window is spent by its brass teeth's wear in
+about four years.</figcaption></figure>
+<div id="tWear" class="tw"></div>
+<div id="kWear"></div><div id="kWearB"></div>
+<h3>The key forced</h3>
+<p>A strong hand on the key's Ø 34.5 paddle (Imrhan and Munoz-Vasa's handles carried on past their 19 mm, an extrapolation; Swain's 1.06 N·m beside it), wound against the
+stop, and turned the wrong way. The 1943 key (51 00 11) is a one-way clutch, its coil spring gripping the tube one way ("Linksaufzug b. Rechtsdrehung entspannt sich die Feder");
+the 1940 key it replaced was plain.</p>
+<div id="tOw" class="tw"></div>
+<div id="kOw"></div>
+<h3>The motion work and the up-and-down work, made on a CNC</h3>
+<p>Each mesh tooth by tooth on <code>dial.js</code>'s tables, its depthing window (closer until its tips reach the roots, wider until it loses contact or its hand has a
+quarter of an hour of play) and the hole its stud must be bored to (gearing.js's rule, the window's close side less the stud's shake, halved). The cannon pinion's friction
+window is <code>wempe_transmission.js</code>'s (section 13), put as a weight hung on the minute hand.</p>
+<div id="tMw" class="tw"></div>
+<div id="kMw"></div>
+<h3>The estimates swept, with the bench's correction</h3>
+<p>What <code>wempe_tolerances.js</code> (section 12) doesn't sweep: the balance's free run-down (TF) over 80-200 s with the strip the bench's run-down test chooses, the
+pivots' shake against each mesh's window, the hairspring's length read four ways off 05 03_7, and its outer terminal curve formed by hand; for the drawings as last revised
+and both builds.</p>
+<figure><div class="chart" id="cEst"></div><figcaption>Figure 22. The swing over the whole wind (band: its lowest to its highest) against the balance's free run-down TF,
+with the strip the run-down test chooses: as last revised and the two builds, against the guard band (shaded). The model's TF, 111 s, is a running 6MX's on video
+(section 15).</figcaption></figure>
+<div id="tEst" class="tw"></div>
+<div id="kEst"></div><div id="kEstB"></div><div id="kEst40"></div>
+
+<h2 id="mfg">19. Making it: the frame under load, the order it goes together, each part on the machine</h2>
+<p>Sections 7, 12 and 17 ask whether a Wempe made to the drawings would hold together, keep time and pass its bench. Three more checks ask whether it can be made and
+put together at all, each on the page's own solids: the parts that hold the pivots solved as elastic bodies under the mainspring's load, the movement taken apart and
+put back in the order a repairer's book gives, and every machined piece read against what a lathe, a mill and a drill can cut.</p>
+<h3>The frame under load</h3>
+<p><code>fea.py --model wempe</code> (the Hamilton's <code>fea.py</code>, its parts, arbors and fixings in <code>wempe/checks.py</code>'s <code>FEA</code>): each part that
+holds a pivot of the going train (the pillar plate, the top plate, the barrel bridge, the fusee bush and the intermediate bridge) cut into brass bricks (E 100 GPa,
+ν 0.34) from its solid, at two sizes, the coarser a check on the finer; loaded fully wound and run down with the chain's pull on the drums' common tangent (the spring's
+moment at 05 06_20's level, <code>wempe_physics.js</code>, on the barrel's pitch radius; the fusee's radius and the chain's height at that turn) and each mesh's tooth force
+with its pressure angle (<code>gearing_wempe.json</code>), shared between each arbor's two bearings by the lever rule; each part held at its screws, the top plate on the
+three pillars (Ø 8.1, 19 long, bending as beams), the pillar plate at its rim in the movement ring, the parts put together by superposition. What it leaves out: the
+arbors' own bending, the jewels' settings (taken as the brass round them), friction at the fixings, the cocks (they carry the balance, none of the train's load).</p>
+<div id="tFeaArb" class="tw"></div>
+<div id="tFeaDepth" class="tw"></div>
+<div id="cFeaField"></div>
+<p id="feaMeaning"></p>
+<h3>The order it goes together</h3>
+<p>The Einheits-Chronometer has no overhaul manual of its own in the set; the Soviet Navy's repair book of 1958 (<i>Эксплуатация и ремонт измерителей времени</i>,
+pp. 59-60, "Порядок разборки и сборки") gives the order for the MX, its copy on the same frame, step by step: the hands, the dial, the motion work and the up-and-down
+pinion from the dial side; then, dial down, the balance's cock and the balance, the detent's block, the barrel arbor's ratchet, the barrel bridge, the fusee arbor's cork
+washer, flange and washer, the top plate on its three screws, and the rest; and together the same backwards. <code>assembly.py --model wempe</code> rasters every part as
+assembled into columns 0.2 mm apart (<code>exploded.py</code>'s and <code>overhaul.py</code>'s method), freezes the movement in one state, and draws each step's parts
+straight off along the arbors: a pair fails if one passes through the other, or is dragged the long way out of a fit it sits in. Where the model's parts can't follow the
+book, or a real movement takes a part off another way (unhooked, unwound, turned to a gap, slid sideways), the step says so.</p>
+<div id="tAsm" class="tw"></div>
+<p id="asmMeaning"></p>
+<h3>Each part on the machine</h3>
+<p><code>dfm.py --model wempe</code> reads every machined piece off its solid (screws, jewels, springs, the chain, the dial's enamel and the hands left out: bought,
+stamped, rolled or wound): its sections sampled between every two heights at which it has a flat face, on a grid 0.01-0.06 mm square as the piece's size allows. It
+reports, against stated limits: walls in plan under <span id="dfmWall"></span> mm (fragile in brass; teeth left to the gear cutter), slots narrower than an end mill of
+radius <span id="dfmMill"></span> mm (a smaller mill, a slitting saw or EDM), the inside corners that mill leaves rounded, round holes and their depth over diameter (over
+10 peck drilling, over 20 a gun drill or EDM; under Ø 0.2 a micro drill), the thinnest floor along the arbors, what is cut from each face and whether the piece is round
+about one centre (turned) or nearly (turned, then cut), undercuts (material above and below a gap: a lathe's grooving tool, or a side cutter on a milled piece), the
+setups that follow, and any void sealed inside one piece (it fails: no tool reaches it).</p>
+<div id="tDfmSum" class="tw"></div>
+<div id="tDfmFind" class="tw"></div>
+<details><summary>Every piece</summary><div id="tDfm" class="tw"></div></details>
+<p id="dfmMeaning"></p>
+<div id="kMfg"></div>
+
+<h2 id="book">20. The build book: what each part is made of, and how</h2>
+<p>The page's Making it (the Hamilton's maker's sheets, in the Wempe's words): each part card has its maker's sheet, its lines of the parts list with the fit
+<code>bom.py</code> measured on the model, the material and treatment <em>its own drawing</em> gives (the title block's Werkstoff, the notes' hardening and tempering,
+the surface marks, read off <code>References/wempe/transcriptions/</code>), and how it is made; its drawing to scale, drawn from the model's solids; and the whole
+build book to print, ending with the bench's tests for the 1950s build (section 17). Nothing is filled from practice: a part whose sheet leaves the Werkstoff blank,
+or which has no sheet in the set (the Wempe-Norm screws and pins, the parts drawn only on an assembly), says so. <code>tools/wempe_makers.py</code> writes the data
+(<code>wempe/js/makers.js</code>; <code>--check</code> in <code>ci.py</code>), <code>book.py --model wempe</code> checks the book as paper (every shown line on a sheet, each
+with a material or the reason it has none and a fit, every drawing at its stated scale and legible on A4).</p>
+<!--BOOK-->
+<h2 id="open">21. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -428,7 +517,7 @@ them part on detail of the detent's motion (none bears on its safety), so each b
 <h2 id="reproduce">Reproduce</h2>
 <p>From <code>marine-chronometer-source/wempe/verification/</code>:</p>
 <pre>node reportdata.js        # every Wempe check run (the full runs, at once), and the figures: assets/data.json (about 9 minutes)
-python geometry.py        # the browser checks on the Wempe's page, one after another: assets/geometry.json (about 11 minutes)
+python geometry.py        # the browser checks on the Wempe's page, one after another: assets/geometry.json (about 11 minutes; section 19's fea, assembly and dfm about 16 more, each also writing its own JSON in assets/)
 python build_report.py    # this page, index.html (a second)</pre>
 <p>Each tool can be run on its own from <code>marine-chronometer-source/chronometer-working-model/tools/</code> (the commands are beside each tool's checks above). The
 model's <code>ci.py</code> runs the quick forms of all of them on every change, and the full runs with <code>--full</code>, but three: the readings off the videos
@@ -454,6 +543,9 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <tr><td><a href="../../chronometer-working-model/tools/wempe_transmission.js"><code>wempe_transmission.js</code></a></td><td>The whole transmission in time, every part that moves (13)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/keystone.js"><code>keystone.js</code></a></td><td>The escapement against the 1904 text (14)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_swing.py"><code>wempe_swing.py</code></a>, <a href="../../chronometer-working-model/tools/wempe_startup.js"><code>wempe_startup.js</code></a></td><td>The swing read off a video and fitted (15)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_wear.js"><code>wempe_wear.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_overwind.js"><code>wempe_overwind.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_motionwork.js"><code>wempe_motionwork.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_estimates.js"><code>wempe_estimates.js</code></a></td><td>The mechanisms in turn: wear, the key forced, the motion work and its studs, the estimates swept (18)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/fea.py"><code>fea.py</code></a>, <a href="../../chronometer-working-model/tools/assembly.py"><code>assembly.py</code></a> + <a href="../../chronometer-working-model/tools/assembly-check.js"><code>assembly-check.js</code></a>, <a href="../../chronometer-working-model/tools/dfm.py"><code>dfm.py</code></a></td><td>The frame under load, the order of assembly, each part on the machine (19)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_makers.py"><code>wempe_makers.py</code></a>, <a href="../../chronometer-working-model/tools/book.py"><code>book.py</code></a></td><td>The maker's sheets' data, and the build book checked as paper (20)</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="geometry.py"><code>geometry.py</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This page's data and the page</td></tr>
 </table></div>
 
@@ -470,6 +562,7 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <li>C.-E. Guillaume, Nobel lecture (1920), and VintageWatchstraps, "Temperature Compensation by Nickel Steels": the nickel steels and the integral balance's secondary error at the Neuchâtel trials.</li>
 <li>M. A. Crisfield, <i>Non-linear Finite Element Analysis of Solids and Structures</i>, vol. 1 (1991), ch. 7: the co-rotational beam element; J. S. Przemieniecki, <i>Theory of Matrix Structural Analysis</i> (1968): the frame element and its consistent mass; P. Wriggers, <i>Computational Contact Mechanics</i> (2006): penalty contact.</li>
 <li>NORDFORSK, <i>Assessment of Ship Performance in a Seaway</i> (1987): the operability limit; MARIN (IMDC 2024) and Jachowski et al., KONES (2012): merchant ships' roll periods.</li>
+<li>J. F. Archard, "Contact and rubbing of flat surfaces", <i>Journal of Applied Physics</i> 24 (1953); E. Rabinowicz, <i>Friction and Wear of Materials</i> (2nd ed., 1995): the wear law and its coefficients. A. Imrhan and C. Munoz-Vasa, <i>Industrial and Systems Engineering Review</i> 1(2) (2013), and Swain et al. (1970): a hand's torque on small handles. EN 10270-1: patented cold-drawn spring wire's strength.</li>
 <li>Mainspring friction and losses: ICMFF9 (gruppofrattura.it), "the torque during unwinding is 10 to 20 per cent less than that during winding"; lubricated steel on steel, the CRC Handbook as cited in US 3,939,081.</li>
 <li>The Hamilton's reports, whose tools these are: <a href="../../chronometer-working-model/verification/build-verification/index.html">Would a chronometer made to the model run and keep time?</a> and <a href="../../chronometer-working-model/verification/real-chronometers/index.html">Does the model behave like a real Hamilton Model 21?</a></li>
 </ol>
@@ -523,7 +616,7 @@ function ranges(id,o){const host=$(id);if(!host)return;host.innerHTML='';const W
     const hit=el('rect',{x:0,width:W,y:y-rh/2,height:rh,fill:'transparent'},svg);hit.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width;showTip(host,R.tip,(ev.clientX-r.left),y/k);});hit.addEventListener('mouseleave',hide);});}
 const table=(id,head,rows,txt)=>{const h=$(id);if(!h)return;h.innerHTML='<table><tr>'+head.map(x=>`<th>${x}</th>`).join('')+'</tr>'+rows.map(r=>'<tr>'+r.map((c,i)=>`<td${i&&!txt?' class="num"':''}>${c}</td>`).join('')+'</tr>').join('')+'</table>';};
 const C=['--s1','--s2','--s3','--s4'];
-const D=DATA.data,RUN=D.runs,GEO=DATA.geo||{},CK=DATA.checks,SOV=k=>k.endsWith('-6mx');   /* SOV: the 6MX's geometry checks (section 15), kept out of section 1 */
+const D=DATA.data,RUN=D.runs,GEO=DATA.geo||{},CK=DATA.checks,SOV=k=>k.endsWith('-6mx'),MFGK=k=>['fea','assembly','dfm'].includes(k);   /* SOV: the 6MX's geometry checks (section 15), kept out of section 1 */
 /* a tool's output as it printed it: its check lines (ok, ~~, !!) under the section headings they fall in, and the whole output */
 const ST={ok:'ok','~~':'mid','!!':'no'};
 function parse(out){const L=[];let h='';for(const ln of String(out||'').split('\n')){if(/^\S/.test(ln)&&!/^(ok|~~|!!)\s/.test(ln)||/^\s{1,2}\d+\.\s/.test(ln))h=ln.trim();const m=/^\s*(ok|~~|!!)\s+(.*)$/.exec(ln);if(m)L.push({s:m[1],t:m[2],h});}return L;}
@@ -535,7 +628,7 @@ function checks(id,k){const host=$(id),run=RUN[k];if(!host)return;if(!run){host.
     <p class="small" style="margin:4px 0">${esc(run.what)}</p>${L.length?`<ul class="chk">${li}</ul>`:'<p class="small">It reports and never fails: its findings are in its output.</p>'}<details><summary>its whole output</summary><pre>${esc(run.out)}</pre></details></div>`;}
 function draw(){
   /* ---------- tiles ---------- */
-  const all=Object.keys(RUN).flatMap(k=>lines(k)),cnt=s=>all.filter(l=>l.s===s).length,geoK=Object.keys(GEO).filter(k=>!k.startsWith('_')&&!SOV(k)),geoOk=geoK.filter(k=>GEO[k].rc===0).length;
+  const all=Object.keys(RUN).flatMap(k=>lines(k)),cnt=s=>all.filter(l=>l.s===s).length,geoK=Object.keys(GEO).filter(k=>!k.startsWith('_')&&!SOV(k)&&!MFGK(k)),geoOk=geoK.filter(k=>GEO[k].rc===0).length;
   const W_=D.wind.rows,aLo=Math.min(...W_.map(r=>r[2])),aHi=Math.max(...W_.map(r=>r[2])),rLo=Math.min(...W_.map(r=>r[3])),rHi=Math.max(...W_.map(r=>r[3]));
   const tu=find('errorbudget',/it passes ([\d.]+) % of (\d+) trials/),v30=find('errorbudget',/as adjusted, the card's scatter\s+10 days: [^;]+; 30 days: ([\d.]+) s \(([\d.]+) mi\)/),su=D.swing.startup.split;
   const failing=Object.keys(RUN).filter(k=>RUN[k].rc);
@@ -759,6 +852,60 @@ function draw(){
     $('vidMeaning').innerHTML=`<b>What it means for the Wempe.</b> The model's TF, ${D.wind.TF} s, estimated from the Wempe's parts, lies inside the measured ${U.split.span[0]}-${U.split.span[1]} s, so it stays, and <code>wempe_escapement.js</code> checks it against <code>wempe_startup.json</code>. The 6MX's balance is of the same kind but its own design, run out of its bowl, dial down, part wound: it settles at ${f(U.split.Ainf,0)}° on ${f(100*U.split.drive,0)} % of the model's drive, which at the model's drive would want TF ${f(U.tf_at_model_drive.TF,0)} s, outside every reading. So the video bounds the damping, not the drive: it says nothing of a wound Wempe's swing (section 15). The readings (${S.json.windows} windows, ${S.json.A_range[0]}-${S.json.A_range[1]}°): ${esc(S.json.sure)}.`;
     const K=S.committed;if(K&&(K.split.drive!==U.split.drive||K.split.span.join()!==U.split.span.join()||K.tf_at_model_drive.TF!==U.tf_at_model_drive.TF))$('vidMeaning').innerHTML+=` <b>The committed <code>wempe_startup.json</code> is not what the tool finds today</b> (<code>node wempe_startup.js --json wempe_startup.json</code> rewrites it): it holds TF ${f(K.split.TF,1)} s, ${K.split.span[0]}-${K.split.span[1]} s, on ${f(100*K.split.drive,1)} % of the drive (TF ${f(K.tf_at_model_drive.TF,1)} s at the model's), where today's run gives ${f(U.split.TF,1)} s, ${U.split.span[0]}-${U.split.span[1]} s, on ${f(100*U.split.drive,1)} % (${f(U.tf_at_model_drive.TF,1)} s). This page shows today's; <code>wempe_escapement.js</code>, the README and the essay quote the file's.`;}
   checks('kStart','startup');
+
+  /* ---------- 18. the mechanisms in turn ---------- */
+  if(D.mech2&&D.mech2.wear){const M2=D.mech2,Wr=M2.wear,cs=Wr.contacts.filter(c=>c.curve),top=cs.slice().sort((a,b)=>a.yrs.good-b.yrs.good).slice(0,5),cc=['--s1','--s2','--s3','--s4','--muted'];
+    const nm=c=>c.name.replace(/ \(.*$/,'');
+    const eB=M2.wearB&&M2.wearB.contacts.find(c=>/escape tooth/.test(c.name));
+    chart('cWear',{label:'Wear against tolerance',x:[0,12],y:[0,2],xl:'years running',yl:'share of its tolerance worn',vbands:[{x0:0,x1:3,c:'--band',t:'a service interval'}],hrefs:[{y:1,t:'tolerance spent'}],legend:true,r:40,
+      series:[...top.map((c,i)=>({type:'line',name:nm(c),c:cc[i],data:c.curve.map(p=>[p[0],Math.min(p[1],2)])})),...(eB?[{type:'line',name:'the escape tooth, 1950s build',c:'--s2',dash:'5 4',data:eB.curve.map(p=>[p[0],Math.min(p[1],2)])}]:[])]});
+    const yr=y=>y>1000?'>1000':y>=10?f(y,0):f(y,1);
+    table('tWear',['Contact','Load','Slid a year','Tolerance','Years: well oiled / poorly / dry'],Wr.contacts.slice().sort((a,b)=>a.yrs.good-b.yrs.good).map(c=>[`${esc(c.name)}${c.dry?' (dry)':''}`,c.F<1?f(c.F*1000,1)+' mN':f(c.F,1)+' N',f(c.s,0)+' m',`${f(c.tol*1000,1)} µm: ${esc(c.what)}`,['good','poor','dry'].map(k=>yr(c.yrs[k])).join(' / ')]),true);
+    checks('kWear','wear');checks('kWearB','wear-build');
+    const O=M2.ow,orow=x=>[esc(x.name),esc(x.load),f(x.sig,0)+' MPa',`${x.lo}-${x.hi} (${esc(x.what)})`,x.Ty!=null?f(x.Ty,2)+' N·m':'–',`<span class="${x.v==='ok'?'ok':x.v==='~~'?'mid':'no'}">${x.v}</span>`];
+    table('tOw',['Part','Load','Stress','Its range, MPa','Yields at, on the key',''],[[`<b>Forward against the stop, a strong hand ${f(O.TH,2)} N·m</b>`,'','','','',''],...O.forward.map(orow),[`<b>The wrong way with the plain 1940 key (the 1943 key passes about 5 mN·m)</b>`,'','','','',''],...O.backward.map(orow)],true);
+    checks('kOw','overwind');
+    const Mw=M2.mw;if(Mw&&Mw.win)table('tMw',['Mesh','Tip clearance','Backlash','Depthing window','Its stud’s hole'],Mw.meshes.map((m,i)=>{const w=Mw.win[i];return[esc(m.nm)+` (${m.za}:${m.zb})`,f(m.tip*1000,0)+' µm',f(m.blmm*1000,0)+' µm',`${f(w.lo*1000,0)} to +${f(w.hi*1000,0)} µm`,`hole ${w.hole}: ±${f(w.tp*1000,0)} µm`];}).concat([['The cannon pinion’s friction (bench)','','',`${f(Mw.cannon.lo*1000,1)}-${f(Mw.cannon.hi*1000,0)} mN·m`,`a weight ${f(Mw.cannon.g[0],0)}-${f(Mw.cannon.g[1],0)} g at ${Mw.cannon.rH} mm, set near ${f(Mw.cannon.g[2],0)} g`]]),true);
+    checks('kMw','motionwork');
+    const ES=[['as last revised',M2.est,'--s1'],['the 1950s build',M2.estB,'--s2'],['the 1940s build',M2.est40,'--s3']].filter(x=>x[1]);
+    chart('cEst',{label:'The swing against TF',x:[70,210],y:[160,280],xl:'the balance’s free run-down TF (s)',yl:'the swing over the wind (°)',hbands:[{y0:180,y1:270,c:'--manual'}],vbands:[{x0:102,x1:129,c:'--band',t:'the 6MX on video'}],legend:true,
+      series:ES.flatMap(([n,e,c])=>[{type:'area',c,data:e.tf.map(r=>[r.TF,r.A[0],r.A[1]])},{type:'line',name:n,c,data:e.tf.map(r=>[r.TF,(r.A[0]+r.A[1])/2])},{type:'dots',c,data:e.tf.map(r=>[r.TF,(r.A[0]+r.A[1])/2]),r:3.5,tip:p=>`${n}: TF ${p[0]} s`}])});
+    table('tEst',['',...ES.map(x=>x[0])],[
+      ['The strip TF 80-200 s wants (× the drive)',...ES.map(([,e])=>e.tf.map(r=>f(r.s,2)).join(', '))],
+      ['The rate’s spread over the wind (s a day)',...ES.map(([,e])=>e.tf.map(r=>sg(r.spread,2)).join(', '))],
+      ['The holes at a 50 µm shake (±µm, by mesh)',...ES.map(([,e])=>e.shake.map(r=>f(r.tp[2]*1000,0)).join(', '))],
+      ['The hairspring to 0.5 s (mm to let out / take in)',...ES.map(([,e])=>e.hs.map(r=>`${r.k} ${sg(r.dL,1)}`).join(', '))],
+      ['Its outer curve 1 mm off: force on the pivots (× couple / R)',...ES.map(([,e])=>f(e.curve[e.curve.length-1].lat,3))]],true);
+    checks('kEst','estimates');checks('kEstB','estimates-build');checks('kEst40','estimates-build40');}
+  /* ---------- 19. making it ---------- */
+  {const M=DATA.mfg||{},AN={Fu:'fusee',Ba:'barrel',C:'centre',T:'intermediate',S:'seconds',E:'escape'},g=(x,n=3)=>Number.isFinite(+x)?(+x).toFixed(n):'–';
+   if(M.fea){const F=M.fea,cs=Object.keys(F.cases);
+     table('tFeaArb',['Arbor','Its bearings',...cs.flatMap(c=>[`${esc(c)}: the holes move (µm)`,'lean (µrad)'])],Object.keys(F.cases[cs[0]].arbors).map(a=>{const A0=F.cases[cs[0]].arbors[a];
+       return[AN[a]||a,esc(A0.parts.join(', ')),...cs.flatMap(c=>{const A=F.cases[c].arbors[a];return[g(A.um[0])+', '+g(A.um[1]),g(A.lean_urad,1)];})];}));
+     table('tFeaDepth',['Mesh',...cs.map(c=>`${esc(c)}: the centres move (µm)`),'coarser bricks (µm)','the window may close (µm)','the holes\' tolerance (± µm)','share of the window'],F.cases[cs[0]].depths.map((d,i)=>
+       [esc(d.stage),...cs.map(c=>sg(F.cases[c].depths[i].um,4)),cs.map(c=>sg(F.cases[c].depths[i].coarse,4)).join(' / '),g(-d.lo,0),g(d.tp,0),g(Math.max(...cs.map(c=>Math.abs(F.cases[c].depths[i].um)))/-d.lo*100,3)+' %']));
+     const fk=Object.keys(F.cases[cs[0]].fields||{})[0],fd=fk&&F.cases[cs[0]].fields[fk];
+     if(fd&&fd.length){const W=520,H=520,xs=fd.map(p=>p[0]),zs=fd.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),z0=Math.min(...zs),z1=Math.max(...zs),sc=Math.min((W-40)/(x1-x0),(H-40)/(z1-z0)),vm=Math.max(...fd.map(p=>p[2]));
+       $('cFeaField').innerHTML=`<svg viewBox="0 0 ${W} ${H+30}" width="100%" style="max-width:${W}px" role="img" aria-label="the ${esc(fk)}'s movement in plan"><text x="10" y="18" font-size="12" fill="currentColor">${esc(fk)} in plan, ${esc(cs[0])}: moves 0 (blue) to ${g(vm,3)} µm (red)</text>`+
+         fd.map(p=>`<rect x="${(20+(p[0]-x0)*sc).toFixed(1)}" y="${(30+(p[1]-z0)*sc).toFixed(1)}" width="${(0.6*sc+0.3).toFixed(1)}" height="${(0.6*sc+0.3).toFixed(1)}" fill="hsl(${(220-220*p[2]/vm).toFixed(0)},70%,50%)"><title>${g(p[2],3)} µm</title></rect>`).join('')+'</svg>';}
+     const dmax=Math.max(...cs.flatMap(c=>F.cases[c].depths.map(d=>Math.abs(d.um)/-d.lo*100))),amax=Math.max(...cs.flatMap(c=>Object.values(F.cases[c].arbors).flatMap(a=>a.um))),smax=Math.max(...cs.flatMap(c=>Object.values(F.cases[c].parts).map(p=>p.vmmax)));
+     $('feaMeaning').innerHTML=`<b>What it means.</b> Fully wound the chain pulls ${g(F.cases[cs[0]].Tc,1)} N, yet no pivot hole moves more than ${g(amax,2)} µm and no mesh's depth changes by more than ${g(dmax,3)} % of the room its window leaves; the most stressed brass is at ${g(smax,1)} MPa against its yield of ${F.yieldMPa.join('-')}. The Wempe's full plates, 3.35 thick on three pillars Ø 8.1, are far stiffer than the train needs: the depths a maker must hold are set by the holes' drilling (the tolerances in section 12), not by the frame's bending.`;}
+   if(M.assembly){const S=M.assembly;
+     table('tAsm',['Step','What comes off','Its parts','Which way','What it meets'],S.steps.map(s=>[s.op,esc(s.title),esc(s.parts.join(', ')),s.way==='dial'?'off the dial side':'off the train side (dial down)',
+       s.met.length?s.met.map(m=>`<span class="${m.why?'mid':'no'}">${esc(m.a)} × ${esc(m.b)}</span>${m.why?': '+esc(m.why):' <b>fails</b>'}`).join('<br>'):'<span class="ok">clear</span>']),true);
+     $('asmMeaning').innerHTML=`<b>What it means.</b> ${S.parts} parts, ${S.pairs} pairs sharing a column; ${S.steps.length} steps, ${S.fails?`<span class="no">${S.fails} failing</span>`:'none failing'}, ${S.expected} pairs a real movement takes apart another way (above). Two places where the model can't follow the book as written: the detent's block, inside the frame under the top plate and screwed through it, comes off with the plate (the book takes the MX's off before it, after the balance), and the stop work, in the fusee's small end under its cover plate, with the fusee. The escape wheel stays in as the top plate comes off only because the lower cock's lug, its jewel's setting and the detent's end pass between two of its teeth. Left in: ${esc(S.static.join(', '))}.`;}
+   if(M.dfm){const Q=M.dfm,P=Q.pieces,pr=p=>p.turned?'turned':p.turnedcut?'turned, then cut':'milled',nm=p=>esc(p.name)+(p.note?` <span class="small">(${esc(p.note)})</span>`:'');$('dfmWall').textContent=Q.wall;$('dfmMill').textContent=Q.mill;
+     const cnt=k=>P.filter(p=>pr(p)===k).length,thin=P.filter(p=>p.wall&&p.wall.min<Q.wall),nar=P.filter(p=>p.slots),deep=P.flatMap(p=>p.holes.filter(h=>h.ratio>Q.deep[0]).map(h=>[p,h])),small=P.flatMap(p=>p.holes.filter(h=>h.d<Q.drill).map(h=>[p,h])),
+       und=P.filter(p=>p.undercut&&!p.turned&&!p.turnedcut),seal=P.filter(p=>p.sealed.length),su=[1,2,3].map(n=>P.filter(p=>p.setups===n).length);
+     table('tDfmSum',['Pieces','turned','turned, then cut','milled','toothed','one setup','two','three','holes','inside corners left rounded','sealed voids'],[[P.length,cnt('turned'),cnt('turned, then cut'),cnt('milled'),P.filter(p=>p.teeth).length,...su,P.reduce((a,p)=>a+p.holes.length,0),P.reduce((a,p)=>a+p.corners,0),`<span class="${seal.length?'no':'ok'}">${seal.length}</span>`]]);
+     const rows=[...thin.map(p=>['a wall under '+Q.wall+' mm',nm(p),g(p.wall.min)+' mm',`(${p.wall.at.join(', ')}), y ${p.wall.y}`]),...nar.map(p=>[`slots narrower than Ø ${2*Q.mill} mm`,nm(p),`${p.slots.n}, the narrowest ${g(p.slots.min)} mm`,`(${p.slots.at.join(', ')}), y ${p.slots.y}`]),
+       ...deep.map(([p,h])=>[`a hole over ${Q.deep[0]} diameters deep`,nm(p),`Ø ${h.d} × ${h.depth} (${h.ratio}×)`,`(${h.c.join(', ')})`]),...small.map(([p,h])=>[`a hole under Ø ${Q.drill}`,nm(p),`Ø ${h.d} × ${h.depth}`,`(${h.c.join(', ')})`]),
+       ...und.map(p=>['side work on a milled piece',nm(p),`${p.undercut.area} mm², a gap of ${p.undercut.gap}`,`(${p.undercut.at.join(', ')})`]),...seal.map(p=>['a void sealed inside',nm(p),p.sealed.map(s=>s.vol+' mm³').join(', '),p.sealed.map(s=>`(${s.at.join(', ')}), y ${s.y}`).join('; ')])];
+     table('tDfmFind',['Finding','Piece','How much','Where (x, z mm)'],rows.length?rows:[['none','','','']],true);
+     table('tDfm',['Piece','How it is made','Setups','Thinnest wall','Thinnest floor','Holes (Ø, deepest × Ø)','Undercut','Corners'],P.map(p=>[nm(p)+(p.count>1?` ×${p.count}`:''),pr(p)+(p.teeth?`, ${p.teeth.n} teeth cut`:''),p.setups,p.wall?g(p.wall.min):'–',p.floor?g(p.floor.min):'–',
+       p.holes.length?`${p.holes.length}: Ø ${g(Math.min(...p.holes.map(h=>h.d)),2)}-${g(Math.max(...p.holes.map(h=>h.d)),2)}, ${Math.max(...p.holes.map(h=>h.ratio))}×`:'–',p.undercut?`${p.undercut.area} mm²`:'–',p.corners]),true);
+     $('dfmMeaning').innerHTML=`<b>What it means.</b> ${seal.length?`<span class="no">${seal.length} piece(s) have a void no tool reaches</span>: they must be made in two.`:'No piece has a void no tool reaches: every one can be cut from the solid.'} ${thin.length} piece(s) have a wall under ${Q.wall} mm, ${nar.length} a slot narrower than the smallest usual end mill, ${deep.length} hole(s) deeper than ${Q.deep[0]} diameters and ${small.length} under Ø ${Q.drill}: the work a maker plans for (a finer cutter, a slitting saw, peck drilling, EDM), listed above with where they are. Every inside corner drawn sharp is left with a fillet up to the mill's radius; where a part sits in such a corner the mating part's edge is chamfered to clear it.`;}
+   const mk=['fea','assembly','dfm'].filter(k=>GEO[k]);$('kMfg').innerHTML=mk.map(k=>`<details><summary><code>${esc(GEO[k].cmd)}</code>: its whole output (${GEO[k].secs} s, exit ${GEO[k].rc})</summary><pre>${esc(GEO[k].out)}</pre></details>`).join('');}
 
   /* ---------- 15. the flags ---------- */
   $('flags').innerHTML=Object.keys(RUN).flatMap(k=>lines(k).filter(l=>l.s==='~~').map(l=>`<li><span class="st mid">~~</span><span><code>${esc(RUN[k].cmd.split(' ').slice(1,2)[0])}</code>: ${esc(l.t)}</span></li>`)).join('')||'<li>none</li>';}

@@ -33,23 +33,28 @@ What it leaves out: the arbors' own bending (steel, 2 to 4 times as stiff as bra
 settings (pressed in, taken as the brass round them), friction at the fixings (taken as bonded) and the case.
 """
 import asyncio, json, math, os, subprocess, sys, time
-import browser
+import browser, model
 import numpy as np, scipy.sparse as sp, pyamg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PAGE = 'file:///' + os.path.abspath(os.path.join(HERE, '..', 'index.html')).replace('\\', '/') + '?snap&qa'
-PARTS = ['pillar', 'trainBridge', 'barrelBridge', 'escBridge', 'lowerBridge', 'ltb']
+PAGE = 'file:///' + os.path.abspath(os.path.join(HERE, '..', 'index.html')).replace('\\', '/') + '?snap&qa' if model.HAMILTON else model.PAGE
+# --model wempe: the parts, arbors, fixings, meshes and loads from the model's checks.py (FEA); the Hamilton's below otherwise, its results as before
+CFG = model.cfg('FEA')
+PARTS = CFG['parts'] if CFG else ['pillar', 'trainBridge', 'barrelBridge', 'escBridge', 'lowerBridge', 'ltb']
+PLATE = CFG['plate'] if CFG else 'pillar'               # the plate the others stand on, held at its rim
 E_B, E_RANGE, NU = 100e3, (97e3, 110e3), 0.34          # brass, N/mm² (MPa)
 YIELD = (300, 450)                                      # half-hard to hard leaded brass, MPa
-PILLAR_D = 6.7                                          # the pillars' diameter (the pillars' group, probed: x -14.7..-8)
+PILLAR_D = CFG['pillarD'] if CFG else 6.7              # the pillars' diameter (the pillars' group, probed: x -14.7..-8)
 O = np.array([(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 1), (1, 0, 1), (1, 1, 1), (0, 1, 1)])   # a brick's corners (x, y, z index offsets)
 
 # ---------------------------------------------------------------- the geometry, from the page
-JS = """(names)=>{const inv=new THREE.Matrix4().copy(__mv.matrixWorld).invert(),out={parts:{},screws:[],L:{}};for(const k in L)out.L[k]=L[k];
-for(const n of names){const g0=__mv.userData.parts[n];let m=null;g0.traverse(o=>{if(o.isMesh&&o.geometry.attributes.position&&(!m||o.geometry.attributes.position.count>m.geometry.attributes.position.count))m=o;});
+JS = """([names,vis])=>{const inv=new THREE.Matrix4().copy(__mv.matrixWorld).invert(),out={parts:{},screws:[],L:{},gears:[]},shown=o=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;};if(typeof L!=='undefined')for(const k in L)out.L[k]=L[k];
+for(const n of names){const g0=__mv.userData.parts[n];let m=null;g0.traverse(o=>{if(o.isMesh&&o.geometry.attributes.position&&(!vis||shown(o)&&!o.userData.decal&&!o.userData.surface)&&(!m||o.geometry.attributes.position.count>m.geometry.attributes.position.count))m=o;});
  m.updateWorldMatrix(true,false);const T=new THREE.Matrix4().multiplyMatrices(inv,m.matrixWorld),g=m.geometry.index?m.geometry.toNonIndexed():m.geometry,p=g.attributes.position,V=[];
  for(let i=0;i<p.count;i++){const v=new THREE.Vector3().fromBufferAttribute(p,i).applyMatrix4(T);V.push(+v.x.toFixed(5),+v.y.toFixed(5),+v.z.toFixed(5));}out.parts[n]=V;}
-__mv.traverse(o=>{if(!o.userData.sc)return;o.updateWorldMatrix(true,false);const M=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld),p=new THREE.Vector3().applyMatrix4(M),ax=new THREE.Vector3(0,1,0).transformDirection(M);
+__mv.traverse(o=>{if(vis&&o.userData.gear&&shown(o)){o.updateWorldMatrix(true,false);const M=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld),b=new THREE.Box3().setFromBufferAttribute(o.geometry.attributes.position).applyMatrix4(M);let q=o,pn=null;while(q&&!pn){pn=q.userData.partName||null;q=q.parent;}
+ out.gears.push({z:o.userData.gear.z,x:(b.min.x+b.max.x)/2,zc:(b.min.z+b.max.z)/2,y:[b.min.y,b.max.y],part:pn});}
+ if(!o.userData.sc||vis&&!shown(o))return;o.updateWorldMatrix(true,false);const M=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld),p=new THREE.Vector3().applyMatrix4(M),ax=new THREE.Vector3(0,1,0).transformDirection(M);
  let q=o.parent,pn=null;while(q&&!pn){pn=q.userData.partName||null;q=q.parent;}out.screws.push({p:p.toArray(),ax:ax.toArray(),r:o.userData.sc.r,part:pn});});return out;}"""
 
 async def fetch():
@@ -57,8 +62,8 @@ async def fetch():
     async with async_playwright() as p:
         b = await p.chromium.launch(args=browser.ARGS)
         w = await b.new_page(); await w.set_content('<canvas></canvas>'); await w.evaluate("document.querySelector('canvas').getContext('webgl')"); await w.wait_for_timeout(3000); await w.close()   # see smoke.py
-        pg = await b.new_page(); await pg.goto(PAGE); await pg.wait_for_function("!document.querySelector('#loading')", timeout=120000); await pg.wait_for_timeout(1500)
-        r = await pg.evaluate(JS, PARTS); await b.close(); return r
+        pg = await b.new_page(); await pg.goto(PAGE); await pg.wait_for_function("!document.querySelector('#loading')", timeout=180000); await pg.wait_for_timeout(1500)
+        r = await pg.evaluate(JS, [PARTS, bool(CFG)]); await b.close(); return r
 
 # ---------------------------------------------------------------- voxels
 def voxelize(T, h, ratio=0.7):
@@ -144,6 +149,37 @@ def check():
 def node_js(expr):
     return json.loads(subprocess.run(['node', '-e', f"const P=require('./physics.js');console.log(JSON.stringify({expr}))"], cwd=HERE, capture_output=True, text=True, check=True).stdout)
 
+def mesh_heights(geo):
+    """another model's stages [(a, b, y)]: each mesh's height the middle of its wheel's and pinion's overlap, from the page's toothed meshes (userData.gear)"""
+    out = []
+    for a, b, zw, zp, pw, pp in CFG['stages']:
+        g = lambda z, part, arb: [q for q in geo['gears'] if q['z'] == z and q['part'] == part and math.hypot(q['x'] - CFG['at'][arb][0], q['zc'] - CFG['at'][arb][1]) < 0.5]
+        W, Q = g(zw, pw, a), g(zp, pp, b)
+        if not W or not Q: raise SystemExit(f'{a}-{b}: no toothed mesh z {zw} on {pw} or z {zp} on {pp} (FEA in checks.py)')
+        lo, hi = max(W[0]['y'][0], Q[0]['y'][0]), min(W[0]['y'][1], Q[0]['y'][1])
+        if lo >= hi: raise SystemExit(f'{a}-{b}: the wheel and pinion do not overlap in height')
+        out.append((a, b, round((lo + hi) / 2, 3)))
+    return out
+
+def loads_cfg(GJ, stg):
+    """another model's loads, as loads() works the Hamilton's: its mainspring's moment fully wound and run down (CFG['node'], printed by Node as {Mup, Mdn}),
+    the chain on the drums' external tangent at each case's fusee radius and height, each mesh's tooth force from the fusee's torque in that case"""
+    out = subprocess.run(['node', '-e', CFG['node']], cwd=HERE, capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1]
+    P = json.loads(out); Lp, W, cases = CFG['at'], CFG['turn'], {}
+    for case, Mk, rf, y in CFG['chain']:
+        Mom = P[Mk]; A = {k: [] for k in ARB}; rB = CFG['rB']; Tc = Mom / (rB / 1000)
+        C1, C2 = np.array(Lp['Fu'], float), np.array(Lp['Ba'], float); d = C2 - C1; D = np.hypot(*d); a0 = math.atan2(d[1], d[0]); al = math.acos((rf - rB) / D)
+        for sg in (1, -1):
+            n = np.array([math.cos(a0 + sg * al), math.sin(a0 + sg * al)]); Q1, Q2 = C1 + rf * n, C2 + rB * n; f = (Q2 - Q1) / np.hypot(*(Q2 - Q1)); rr = Q1 - C1
+            if (rr[1] * f[0] - rr[0] * f[1]) * W['Fu'] > 0: break
+        A['Fu'].append((Tc * f, y)); A['Ba'].append((-Tc * f, y)); tq = Tc * rf / 1000
+        for (a, b, yw), g, (_, _, zw, zp, _, _), m in zip(stg, GJ['stages'], CFG['stages'], CFG['mods']):
+            pa, pb = np.array(Lp[a], float), np.array(Lp[b], float); u = (pb - pa) / np.hypot(*(pb - pa)); rA = m * zw / 2; P_ = pa + rA * u
+            v = P_ - pb; t = np.array([W[b] * v[1], -W[b] * v[0]]); t /= np.hypot(*t); Ft = tq / (rA / 1000); FB = Ft * t + Ft * math.tan(math.radians(g['phi'])) * u
+            A[b].append((FB, yw)); A[a].append((-FB, yw)); tq = tq * zp / zw
+        cases[case] = (A, Tc)
+    return cases
+
 def loads(Lp, GJ):
     """each arbor's forces, [(Fx, Fz) N, y mm], for the two cases"""
     P = node_js('{Mup:P.Mup,Mdn:P.Mdn,rB:P.rB,Tf:P.Tf,TRAIN:P.TRAIN,MODS:P.MODS}'); T, M = P['TRAIN'], P['MODS']
@@ -173,10 +209,10 @@ class Part:
     def solid_at(s, x, z):
         G = s.G; i, k = int((x - G['x0']) // G['h']), int((z - G['z0']) // G['h'])
         return 0 <= i < G['nx'] and 0 <= k < G['nz'] and G['solid'][i, :, k].any()
-    def ring(s, x, z, R=5.0):
+    def ring(s, x, z, R=None):
         """the hole about (x, z): its wall's nodes, its radius, and whether the part closes round it (a bearing, not a clearance cut); R reaches past the
         widest, the fusee's and barrel's bushings' holes, r 3.4 (3.5 until 15 October 2026, when they were r 1.4-1.95)"""
-        r = np.hypot(s.ec[:, 0] - x, s.ec[:, 2] - z); near = r < R
+        r = np.hypot(s.ec[:, 0] - x, s.ec[:, 2] - z); near = r < (R or RING_R)
         if not near.any(): return None
         rh = r[near].min() - s.h / 2; th = np.arctan2(s.ec[near, 2] - z, s.ec[near, 0] - x); full = len(np.unique(np.floor((th[r[near] < rh + s.h / 2 + 1.2] + math.pi) / (2 * math.pi) * 16))) >= 12   # brass round most of it within 1.2 mm (a bridge's arm may be narrower than the hole's ring)
         rn = np.hypot(s.X[:, 0] - x, s.X[:, 2] - z); inel = np.zeros(len(s.X), bool); inel[np.unique(s.conn[r < rh + s.h * 1.01])] = True
@@ -209,13 +245,18 @@ def rigid(P, D):
 # fourth's jewels 42161 in the bridge on the plate's dial side, ltb; the train bridge's bushings bushO 42166-42167; the barrel bridge's bushR; the lower bridge's
 # and escape bridge's holes, LBh and eb)
 ARB = {'Fu': ('pillar', 'barrelBridge'), 'Ba': ('pillar', 'barrelBridge'), 'C': ('pillar', 'trainBridge'), 'T': ('ltb', 'trainBridge'), 'F': ('ltb', 'lowerBridge'), 'E': ('pillar', 'escBridge')}
+if CFG: ARB = {a: tuple(v) for a, v in CFG['arb'].items()}
+PIL_Y = 0.0                                             # the pillars' screws' heads, in the plate's outer face (the Hamilton's; another model lists its fixings)
+PIL_L = CFG.get('pillarL') if CFG else None            # the pillars' free length (the Hamilton's: the plate to the part)
+RIM = CFG.get('rim') if CFG else None                  # the plate's seat in its ring, radii (the Hamilton's: its outer 1 mm)
+RING_R = CFG.get('ringR', 5.0) if CFG else 5.0
 PILLARS = 'the pillar plate\'s screws from the dial side (y 0, pointing -y): each pillar stands on one'
 
 def movement(geo, scale, GJ, cases, say):
-    Lp = geo['L']; out = {}
+    Lp = CFG['at'] if CFG else geo['L']; out = {}
     tris = {n: np.array(v, float).reshape(-1, 3, 3) for n, v in geo['parts'].items()}
     area = {n: (np.ptp(T[:, :, 0]) * np.ptp(T[:, :, 2])) for n, T in tris.items()}
-    pil = [np.array(s['p'])[[0, 2]] for s in geo['screws'] if s['part'] == 'pillar' and abs(s['p'][1]) < 0.05 and s['ax'][1] < 0 and s['r'] > 2]
+    pil = [np.array(s['p'])[[0, 2]] for s in geo['screws'] if s['part'] == PLATE and abs(s['p'][1] - PIL_Y) < 0.05 and s['ax'][1] < 0 and s['r'] > 2]
     for case, (A, Tc) in cases.items():
         t0 = time.time()
         P = {n: Part(n, T, max(0.25, scale * math.sqrt(area[n]) / 160)) for n, T in tris.items()}
@@ -233,24 +274,29 @@ def movement(geo, scale, GJ, cases, say):
         # the fixings: each part's screws; what is beneath each (another part touching it there, else a pillar, else the plate)
         sup = {}
         for n in P:
-            if n == 'pillar':
-                r = np.hypot(P[n].X[:, 0], P[n].X[:, 2]); P[n].fix['rim'] = r > r.max() - 1.0; continue
+            if n == PLATE:
+                r = np.hypot(P[n].X[:, 0], P[n].X[:, 2]); P[n].fix['rim'] = (r > RIM[0]) & (r < RIM[1]) if RIM else r > r.max() - 1.0; continue
+            if CFG:   # another model's fixings as its checks.py lists them: each screw's place and what it goes into
+                for i, (x, z, under) in enumerate(CFG['fix'][n]):
+                    sc = min((q for q in geo['screws'] if q['part'] == n), key=lambda q: math.hypot(q['p'][0] - x, q['p'][2] - z))
+                    if math.hypot(sc['p'][0] - x, sc['p'][2] - z) > 0.2: raise SystemExit(f'{n}: no screw at ({x}, {z}) (FEA in checks.py)')
+                    key = f'{n}#{i}'; P[n].fix[key] = np.hypot(P[n].X[:, 0] - x, P[n].X[:, 2] - z) < sc['r']; sup[key] = (n, under, np.array([x, z]))
+                continue
             for i, s in enumerate(x for x in geo['screws'] if x['part'] == n):
                 x, z = s['p'][0], s['p'][2]; m = np.hypot(P[n].X[:, 0] - x, P[n].X[:, 2] - z) < s['r']
                 if not m.any(): continue
                 key = f'{n}#{i}'; P[n].fix[key] = m; under = None
                 for o in P:
-                    if o != n and o != 'pillar' and P[o].solid_at(x, z) and (abs(P[o].ytop - P[n].ybot) < 0.06 or abs(P[o].ybot - P[n].ytop) < 0.06): under = o
+                    if o != n and o != PLATE and P[o].solid_at(x, z) and (abs(P[o].ytop - P[n].ybot) < 0.06 or abs(P[o].ybot - P[n].ytop) < 0.06): under = o
                 if under is None and min(np.hypot(*(q - [x, z])) for q in pil) < 1.0: under = 'pillars'
                 if under is None:   # held through a post or a step the largest mesh leaves out: the nearest part in height solid there
                     c = [(min(abs(P[o].ybot - P[n].ytop), abs(P[o].ytop - P[n].ybot)), o) for o in P if o != n and P[o].solid_at(x, z)]
-                    under = min(c)[1] if c else 'pillar'
-                sup[key] = (n, under or 'pillar', np.array([x, z]))
-        # solve from the top down: a part's reactions go onto what is beneath it before that is solved
+                    under = min(c)[1] if c else PLATE
+                sup[key] = (n, under or PLATE, np.array([x, z]))
         # solve from the top down: a part's reactions go onto what is beneath it before that is solved (the plate last)
         above = {n: {v[0] for v in sup.values() if v[1] == n} for n in P}; order = []
         while len(order) < len(P):
-            nxt = [n for n in P if n not in order and n != 'pillar' and above[n] <= set(order)] or ['pillar']
+            nxt = [n for n in P if n not in order and n != PLATE and above[n] <= set(order)] or [PLATE]
             order += nxt[:1]
         for n in order:
             P[n].run()
@@ -258,19 +304,19 @@ def movement(geo, scale, GJ, cases, say):
                 pn, under, xz = v[:3]
                 if pn != n: continue
                 Rk = -P[n].R[P[n].fix[key]].sum(0)   # what the part puts on its fixing
-                tgt = under if under in P else 'pillar'; m = near(P[tgt], xz, 1.5 if under in P else PILLAR_D / 2); P[tgt].F[m] += Rk / m.sum()
+                tgt = under if under in P else PLATE; m = near(P[tgt], xz, 1.5 if under in P else PILLAR_D / 2); P[tgt].F[m] += Rk / m.sum()
                 sup[key] = (pn, under, xz, Rk)
         # the parts put together: the plate as solved; each part on its fixings, the plate's moved plus the pillar's bending, or the part's beneath
-        I = math.pi * PILLAR_D ** 4 / 64; move = {'pillar': lambda p: np.zeros(2)}
+        I = math.pi * PILLAR_D ** 4 / 64; move = {PLATE: lambda p: np.zeros(2)}
         for n in reversed(order[:-1]):
             pts, ds = [], []
             for key, v in sup.items():
                 pn, under, xz, Rk = v
                 if pn != n: continue
                 if under == 'pillars':
-                    Lb = P['pillar'].ybot - P[n].ybot if P[n].ybot < P['pillar'].ybot else 1.0; m = near(P['pillar'], xz, PILLAR_D / 2)
-                    d = P['pillar'].u[m].mean(0)[[0, 2]] + Rk[[0, 2]] * abs(Lb) ** 3 / (12 * E_B * I)
-                elif under == 'pillar': d = P['pillar'].u[near(P['pillar'], xz, 1.5)].mean(0)[[0, 2]]
+                    Lb = PIL_L if PIL_L else P[PLATE].ybot - P[n].ybot if P[n].ybot < P[PLATE].ybot else 1.0; m = near(P[PLATE], xz, PILLAR_D / 2)
+                    d = P[PLATE].u[m].mean(0)[[0, 2]] + Rk[[0, 2]] * abs(Lb) ** 3 / (12 * E_B * I)
+                elif under == PLATE: d = P[PLATE].u[near(P[PLATE], xz, 1.5)].mean(0)[[0, 2]]
                 else:
                     d = P[under].u[near(P[under], xz, 1.5)].mean(0)[[0, 2]] + move[under](xz)
                 pts.append(xz); ds.append(d)
@@ -290,16 +336,18 @@ def main():
         if not ok: fail[0] = 1
     if '--check' in a:
         print('the solver against a cantilever (Timoshenko):'); ok, w = check(); print(('  ok ' if ok else '  !! ') + f'at the finest {w * 100:+.1f} % (trilinear bricks are stiff in bending until fine through the depth: the parts here have 5-10 layers)'); sys.exit(0 if ok else 1)
-    cache = 'r_fea_geom.json'
+    cache = 'r_fea_geom.json' if model.HAMILTON else f'r_fea_geom_{model.NAME}.json'
     if '--reuse' in a and os.path.exists(cache): geo = json.load(open(cache))
     else: geo = asyncio.run(fetch()); json.dump(geo, open(cache, 'w'))
-    GJ = json.load(open(os.path.join(HERE, 'gearing.json'), encoding='utf-8')); cases = loads(geo['L'], GJ); Lp = geo['L']
+    GJ = json.load(open(os.path.join(HERE, CFG['gearing'] if CFG else 'gearing.json'), encoding='utf-8'))
+    if CFG: STG = mesh_heights(geo); cases = loads_cfg(GJ, STG); Lp = CFG['at']
+    else: cases = loads(geo['L'], GJ); Lp = geo['L']
     say('the solver against a cantilever (Timoshenko, P L³/3EI with shear):'); ok, w = check(); chk(ok, f'the voxel bricks come within {abs(w) * 100:.1f} % of it at the finest')
     runs = {}
     for scale in (1.4, 1.0):
         runs[scale] = movement(geo, scale, GJ, cases, say)
     fine, coarse = runs[1.0], runs[1.4]
-    stg = [('Fu', 'C', -6.6),   # the fusee wheel's teeth (-5.9 to -8.12) on the centre pinion's leaves (-5.76 to -7.30): -6.5, the wheel's middle, until 18 October 2026
+    stg = STG if CFG else [('Fu', 'C', -6.6),   # the fusee wheel's teeth (-5.9 to -8.12) on the centre pinion's leaves (-5.76 to -7.30): -6.5, the wheel's middle, until 18 October 2026
             ('C', 'T', -5.36), ('T', 'F', -4.535), ('F', 'E', -7.46)]
     def depth(r, a, b, y):
         def at(c):
@@ -314,7 +362,7 @@ def main():
         for n, p in r['P'].items():
             say(f'  {n:12s} {len(p.conn):6d} bricks ({p.h:.2f} mm, {p.dy:.2f} deep), solved to {p.rr:.0e}; stress under {np.percentile(p.vm, 99.5):.2f} MPa in 99.5 % of it, at most {p.vm.max():.2f} (at a voxel\'s corner)')
             jc['parts'][n] = dict(bricks=len(p.conn), h=p.h, dy=p.dy, vm995=float(np.percentile(p.vm, 99.5)), vmmax=float(p.vm.max()), res=float(p.rr))
-            if n == 'barrelBridge' and case == list(cases)[0]:   # the field in plan (the report draws it): each column's largest in-plane movement, on a 0.6 mm grid
+            if n == (CFG['field'] if CFG else 'barrelBridge') and case == list(cases)[0]:   # the field in plan (the report draws it): each column's largest in-plane movement, on a 0.6 mm grid
                 um = np.hypot(p.u[:, 0], p.u[:, 2]) * 1000; key = np.round(p.X[:, [0, 2]] / 0.6).astype(int); o = np.lexsort((-um, key[:, 1], key[:, 0])); k2 = key[o]; first = np.r_[True, (np.diff(k2, axis=0) != 0).any(1)]
                 jc['fields'][n] = [[round(float(kx) * 0.6, 2), round(float(kz) * 0.6, 2), round(float(v), 4)] for (kx, kz), v in zip(k2[first], um[o][first])]
             chk(p.vm.max() < YIELD[0] / 1.5, f'  {n}: at most {p.vm.max():.1f} MPa, against brass\'s yield {YIELD[0]}-{YIELD[1]}')

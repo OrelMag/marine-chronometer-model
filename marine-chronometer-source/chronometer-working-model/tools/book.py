@@ -13,13 +13,15 @@ print at A4's printable width (190 mm) and checks each part's section as a maker
 Prints one line per finding and a summary; exit code 1 on any. --pdf OUT also writes the book as an A4 PDF (Chromium's print).
 
     python book.py [--pdf OUT.pdf]          # about 1 min
+    python book.py --model wempe            # the Wempe's (its materials and processes chapter, section.procs, is text, not a part)
 """
 import asyncio,browser,json,pathlib,re,sys
+import model   # --model wempe: the Wempe's book (its js/makers.js, tools/wempe_makers.py): no reassembly chapter (the Wempe has no overhaul sequence: none is in its sources)
 from playwright.async_api import async_playwright
-HERE=pathlib.Path(__file__).resolve().parent;PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+HERE=pathlib.Path(__file__).resolve().parent;PAGE=model.PAGE
 PX=96/25.4;COL=190;PAGE_H=277
 JS=r"""()=>{MAKER.book();document.documentElement.classList.add('book-print');const out=[];
-  for(const s of document.querySelectorAll('#bookPrint section.bk:not(.tests):not(.order)')){const h=s.querySelector('h2').textContent,svg=s.querySelector('svg.mkd'),r={name:h,asm:s.classList.contains('asm'),lines:[],asBuilt:/As built: /.test(s.textContent),src:(s.textContent.match(/Source of its shape: ([^.]*)/)||[])[1]||''};
+  for(const s of document.querySelectorAll('#bookPrint section.bk:not(.tests):not(.order):not(.procs)')){const h=s.querySelector('h2').textContent,svg=s.querySelector('svg.mkd'),r={name:h,asm:s.classList.contains('asm'),lines:[],asBuilt:/As built: /.test(s.textContent),src:(s.textContent.match(/Source of its shape: ([^.]*)/)||[])[1]||''};
     for(const tr of s.querySelectorAll('table.mk:first-of-type tbody tr')){const td=[...tr.children].map(x=>x.textContent.trim());r.lines.push(td);}
     if(svg){const b=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,wmm=parseFloat(svg.getAttribute('width')),k=b.width/vb.width;   /* px a unit as laid out */
       const fs=[...svg.querySelectorAll('text')].map(t=>parseFloat(t.getAttribute('font-size'))||0).filter(x=>x>0),sw=[...svg.querySelectorAll('g[stroke-width]')].map(g=>parseFloat(g.getAttribute('stroke-width')));
@@ -28,13 +30,15 @@ JS=r"""()=>{MAKER.book();document.documentElement.classList.add('book-print');co
   /* the lines on the model (the parts' cards': MAKERS' part), and each part that has meshes: every one must be on a sheet in the book */
   const onModel=new Set(Object.keys(window.__parts).filter(p=>window.__mv&&(()=>{let n=0;let root=window.__mv;while(root.parent)root=root.parent;root.traverse(o=>{if(o.isMesh&&o.userData.part===p)n++;});return n;})()));
   const txt=document.getElementById('bookPrint').textContent;
-  return {sec:out,lines:MAKERS.filter(l=>l.part&&onModel.has(l.part)).map(l=>[l.no,l.name,l.part]),tol:MAKERS.filter(l=>l.tol).map(l=>[l.no,l.name,txt.includes('Tolerance ('+l.no+').')]),tests:[document.querySelectorAll('#bookPrint section.tests h3').length,(MAKERS.tests||[]).length],order:[document.querySelectorAll('#bookPrint section.order h3').length,typeof OVH!=='undefined'?OVH.RE.length:0],bench:MAKERS.filter(l=>l.bench).map(l=>[l.no,l.name,txt.includes('Test on the bench ('+l.no+').')])};}"""
+  /* BYHN (another model's book: its lines' cards and meshes may differ, and a version or a choice hides some): the lines a shown mesh carries, on the mesh or the group above it */
+  const HN=new Set();if(BYHN){let root=window.__mv;while(root.parent)root=root.parent;root.traverse(o=>{if(!o.isMesh||!o.geometry||!o.geometry.attributes.position)return;for(let q=o;q;q=q.parent)if(!q.visible)return;for(let q=o;q;q=q.parent)if(q.userData.hn){HN.add(q.userData.hn);break;}});}
+  return {sec:out,lines:MAKERS.filter(l=>l.part&&onModel.has(l.part)&&(!BYHN||HN.has(l.id))).map(l=>[l.no,l.name,l.part]),tol:MAKERS.filter(l=>l.tol).map(l=>[l.no,l.name,txt.includes('Tolerance ('+l.no+').')]),tests:[document.querySelectorAll('#bookPrint section.tests h3').length,(MAKERS.tests||[]).length],order:[document.querySelectorAll('#bookPrint section.order h3').length,typeof OVH!=='undefined'?OVH.RE.length:0],bench:MAKERS.filter(l=>l.bench).map(l=>[l.no,l.name,txt.includes('Test on the bench ('+l.no+').')])};}"""
 async def main():
     pdf=sys.argv[sys.argv.index('--pdf')+1] if '--pdf' in sys.argv else None
     async with async_playwright() as p:
         b=await p.chromium.launch(args=browser.ARGS);pg=await b.new_page(viewport={'width':round(COL*PX),'height':1000})
         await pg.goto(PAGE);await pg.wait_for_function('window.__mv&&typeof MAKER!=="undefined"&&typeof MAKERS!=="undefined"',timeout=120000);await pg.emulate_media(media='print')
-        R=await pg.evaluate(JS);S=R['sec']
+        R=await pg.evaluate(JS.replace('()=>{','()=>{const BYHN='+('false' if model.HAMILTON else 'true')+';',1));S=R['sec']
         if pdf:await pg.pdf(path=pdf,format='A4',margin={'top':'10mm','bottom':'10mm','left':'10mm','right':'10mm'},print_background=False)
         await b.close()
     bad=[];say=lambda n,m:bad.append(f'  !! {n}: {m}')
@@ -46,7 +50,7 @@ async def main():
     for no,name,shown in R['bench']:   # a line with a test on the bench (tools/bench.js): its sheet says so
         if not shown:say(name,f'line {no}: its test on the bench is on no sheet of the book')
     if R['tests'][0]!=R['tests'][1] or not R['tests'][1]:say('Tests on the bench',f"the chapter has {R['tests'][0]} tests of tools/bench.json's {R['tests'][1]}")
-    if R['order'][0]!=R['order'][1] or not R['order'][1]:say('Putting it together',f"the chapter has {R['order'][0]} operations of the manual's reassembly's {R['order'][1]} (js/overhaul.js)")
+    if (model.HAMILTON or R['order'][1]) and (R['order'][0]!=R['order'][1] or not R['order'][1]):say('Putting it together',f"the chapter has {R['order'][0]} operations of the manual's reassembly's {R['order'][1]} (js/overhaul.js)")
     for r in S:
         n=r['name']
         if not r['asm']:   # an assembly (a part with pieces) has its card and its drawing as assembled; its lines are on its pieces' sheets

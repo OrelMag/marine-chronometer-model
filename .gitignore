@@ -7,7 +7,7 @@ fit.json
 p3fit.json
 unproj.json
 r_bom.json
-r_fea_geom.json
+r_fea_geom*.json
 placements_*.json
 bundle.npy
 *.H.json
