@@ -14,13 +14,13 @@ const ESC=build().ESC,mv=fs.readFileSync(path.join(__dirname,'..','js','movement
 const num=(re,what)=>{const m=re.exec(mv);if(!m)throw Error('not found in movement.js: '+what);return m.slice(1).map(Number);};
 const f=(x,n=0)=>(+x).toFixed(n),D2R=Math.PI/180,TAU=2*Math.PI,G0=9.80665,rows=[],out={};let fail=0;const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);};
 const [cp,mw,mp,hw]=num(/const MW=\{cp:(\d+),mw:(\d+),mp:(\d+),hw:(\d+)\}/,'the motion work'),[ux,uz]=num(/Ud:\[(-?[\d.]+),(-?[\d.]+)\]/,'L.Ud'),L=MJ.L;
-const dMW=Math.hypot(L.Mw[0]-L.C[0],L.Mw[1]-L.C[1]),dUD=Math.hypot(L.Fu[0]-ux,L.Fu[1]-uz),ma=2*dMW/(cp+mw),mb=2*dMW/(mp+hw),mu=2*dUD/(12+120);
+const dMW=Math.hypot(L.Mw[0]-L.C[0],L.Mw[1]-L.C[1]),dUD=Math.hypot(L.Fu[0]-ux,L.Fu[1]-uz),ma=2*dMW/(cp+mw),mb=2*dMW/(mp+hw),mu=2*dUD/(12+120),[haHW]=num(/mate:MW\.mp,ha:([\d.]+)\}/,'the hour wheel addendum');   /* haHW: its short teeth (movement.js, 40:39.0) */
 /* 1. the meshes: each driver turned through a pitch, the driven wheel lagging until the teeth touch (gearing.js stage: its first tooth count drives) */
 say('1. The meshes, tooth by tooth (gearing.js\'s method on the model\'s outlines: core.js gearOutline)');
-const MS=[['cannon pinion → minute wheel',cp,mw,ma,'the minute wheel turns once in four hours'],['minute pinion → hour wheel',mp,hw,mb,'the hour wheel once in twelve'],['fusee pinion → wind indicator',12,120,mu,'the indicator\'s 56 hours over its scale']];
+const MS=[['cannon pinion → minute wheel',cp,mw,ma,'the minute wheel turns once in four hours'],['minute pinion → hour wheel',mp,hw,mb,'the hour wheel once in twelve',haHW],['fusee pinion → wind indicator',12,120,mu,'the indicator\'s 56 hours over its scale']];
 out.meshes=[];
 const jm=G.MU.indexOf(0.1)>=0?G.MU.indexOf(0.1):1;
-for(const[nm,za,zb,m,what]of MS){const s=G.stage(za,zb,m),q=G.st(s.fac[jm]);
+for(const[nm,za,zb,m,what,ha]of MS){const s=G.stage(za,zb,m,0,undefined,ha),q=G.st(s.fac[jm]);
   chk(!s.jam&&s.tip>0,`${nm} (${za}:${zb}, m ${f(m,4)}): ${s.jam?'jams':'runs'}; tip clearance ${f(s.tip*1000)} µm, backlash ${f(s.blmm*1000)} µm (${f(s.bl/D2R,2)}° of the driven wheel), ${f(100*s.approach)} % of the action before the line of centres, the torque passed ${f(q.mn,3)}-${f(q.mx,3)} of the frictionless at μ ${G.MU[jm]} (${what})`);
   out.meshes.push({nm,za,zb,m,jam:s.jam,tip:s.tip,bl:s.bl,blmm:s.blmm,approach:s.approach,al:[q.mn,q.mx]});}
 /* 2. the hands' play: a mesh's backlash lets the driven wheel stand anywhere over that angle; the hour hand through both meshes, the minute wheel's play carried
