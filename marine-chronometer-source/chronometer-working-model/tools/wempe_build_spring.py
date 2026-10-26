@@ -7,7 +7,8 @@ Takes every table wempe_mainspring.py --solve L --set S --t T has written (tools
 doesn't depend on the modulus, so the torque is the solved one's times 220/207), set up 3/4 turn past its slack as the drawn spring is:
   the barrel's torque run down and fully wound;
   the fusee arbor's mean torque over the working turns (the drawn fusee, wempe_mainspring.py's profile) against the drawn spring's (mainspring_wempe.js): the build
-    wants 1.122 of it (WESC.BUILD.k 1.26 on the escapement's drive less what the train's friction keeps back, wempe_build.js);
+    wants 1.256 of it (WESC.BUILD.k 1.26 times 05 06_20's measured drive, which is 0.997 of the drawn spring's solved torque: wempe_physics.js's Kl; 1.122 with the
+    drawn spring's free curve set ×0.6, its Kl 0.890, until 26 October 2026);
   its spread over the working turns (the evenness the fusee was cut for: the drawn spring's own is the measure);
   the bending stress on its inner coils fully wound, E t/2 |kappa - kappa0| along the strip (kappa0 its free curve: the Hamilton's measured, FREE_PX, scaled to the
     length and set, as mainspring.py takes it; the eye's first 12 points left out), and its median along the strip, against Nivaflex's 3,000 MPa;
@@ -16,7 +17,7 @@ Prints a line each; --json writes them. Reports, never fails."""
 import json,math,re,sys,base64,pathlib
 import numpy as np
 sys.argv,ARGV=['wempe_mainspring.py'],sys.argv;import wempe_mainspring as W;sys.argv=ARGV
-HERE=W.HERE;E_N=220e3;K=220/207;LIM=3000;WANT=1.122
+HERE=W.HERE;E_N=220e3;K=220/207;LIM=3000;WANT=1.256
 xs=np.linspace(0.29,8.75,200);d0=W.table(HERE/'mainspring_wempe.js');f0=np.mean([W.profile(d0,0.75)(x) for x in xs])
 FREE_PX=np.array([97,185,250,328,405,502,632,750],float)   # mainspring.py's free curve (the Hamilton's measured spring, KLUwI2UUCMQ 32:18): each turn's radius in px
 def free(L,SET):
