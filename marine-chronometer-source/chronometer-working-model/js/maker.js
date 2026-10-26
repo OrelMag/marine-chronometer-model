@@ -23,8 +23,9 @@ const MAKER=(()=>{
   const DENS={steel:7.85,steelD:7.85,blued:7.85,brass:8.5,gilt:8.5,brassD:8.5,invar:8.1,ruby:4.0,clear:3.5,glass:2.5,wood:0.6,woodEdge:0.6,felt:0.3,fibre:1.3,packing:1.2,delrin:1.4,gold:17,silver:10.5,nickel:8.9,chain:7.85,chain2:7.85};
   let matName=null;
   const nameOf=m=>{if(!matName){matName=new Map();for(const[k,v]of Object.entries(A.M))if(v&&v.isMaterial)matName.set(v,k);}return matName.get(m)||'';};
-  /* the part's meshes as built (the merged copies are drawing only: the pieces are still under the movement), visible or not, without the engravings */
-  const meshesOf=p=>(A.R&&A.R.springReady&&A.R.springReady(),[...A.meshes,...(A.boxMeshes||[])]).filter(o=>(p.includes('.')?o.userData.pk===p:o.userData.part===p)&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position);
+  /* the part's meshes as built (the merged copies are drawing only: the pieces are still under the movement), visible or not, without the engravings and the Laid out
+     view's schematic stand-ins (devPlate: the viewer tags them with the part they stand for, for its card) */
+  const meshesOf=p=>(A.R&&A.R.springReady&&A.R.springReady(),[...A.meshes,...(A.boxMeshes||[])]).filter(o=>(p.includes('.')?o.userData.pk===p:o.userData.part===p)&&!o.userData.decal&&!o.userData.surface&&!o.userData.devPlate&&o.geometry&&o.geometry.attributes.position);
   const toMv=o=>{const m=new THREE.Matrix4().copy(A.mv.matrixWorld).invert();return m.multiply(o.matrixWorld);};
   /* each triangle of a mesh in the movement's frame (mm), instances included */
   function tris(o,f){const g=o.geometry,P=g.attributes.position,I=g.index,mats=[];const base=toMv(o);
@@ -120,7 +121,7 @@ const MAKER=(()=>{
     for(const b of mk.querySelectorAll('.mkdevb'))b.onclick=()=>{const id=b.dataset.dev;ORIG.has(id)?ORIG.delete(id):ORIG.add(id);const open=mk.querySelector('.mkb').dataset.v==='s';card(p);if(open)mk.querySelector('[data-a=sheet]').click();if(A&&A.changed)A.changed();};
     const body=mk.querySelector('.mkb'),title=(A.INFO[p]||[p])[0];
     mk.querySelector('[data-a=sheet]').onclick=()=>{body.innerHTML=body.dataset.v==='s'?'':sheetHTML(p);body.dataset.v=body.dataset.v==='s'?'':'s';};
-    mk.querySelector('[data-a=dwg]').onclick=()=>save(new Blob([drawingSVG(p,title)],{type:'image/svg+xml'}),`${C.prefix}-${p}.svg`);
+    mk.querySelector('[data-a=dwg]').onclick=()=>C.bookPdf?open(`${C.bookPdf}#page=${C.bookPage(p)}`,'_blank','noopener'):save(new Blob([drawingSVG(p,title)],{type:'image/svg+xml'}),`${C.prefix}-${p}.svg`);   /* a model with its book as drawings (C.bookPdf, tools/drawbook.py): the part's sheet in it */
     if(C.cardSTL)mk.querySelector('[data-a=stl]').onclick=()=>save(stl(meshesOf(p)),`${C.prefix}-${p}.stl`);}
   /* measuring: two points picked on the model, their distance */
   let meas=null;
@@ -156,7 +157,7 @@ const MAKER=(()=>{
     EDG=null;document.documentElement.classList.add('book-print');const done=()=>{document.documentElement.classList.remove('book-print');removeEventListener('afterprint',done);};
     if(!navigator.webdriver){addEventListener('afterprint',()=>{done();pr.innerHTML='';},{once:true});print();}else done();}   /* emptied after printing: its drawings are tens of MB of SVG */
   /* the button's: built after a paint that says so (the Wempe's takes some 15 s) */
-  function bookBtn(){const b=$('#mkBook');if(b.disabled)return;const t=b.textContent;b.disabled=true;b.textContent='Building the book…';
+  function bookBtn(){if(C.bookPdf){open(C.bookPdf,'_blank','noopener');return;}const b=$('#mkBook');if(b.disabled)return;const t=b.textContent;b.disabled=true;b.textContent='Building the book…';
     requestAnimationFrame(()=>setTimeout(()=>{try{book();}finally{b.disabled=false;b.textContent=t;}},30));}
   /* the model's numbers: the train, the fusee's profile, the escapement's cycle, the hairspring's design, the parts list with its fits and materials */
   function data(){const R=A.R,fs=R.fs,N=FUSEE_TURNS,prof=[];for(let i=0;i<=70;i++){const m=N*i/70;prof.push({turn:+m.toFixed(4),r:+fs.rf(m).toFixed(4),barrelTurns:+fs.I(m).toFixed(4)});}
