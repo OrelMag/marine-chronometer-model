@@ -7,7 +7,7 @@
    "sheet": "05 06_20, 05 07 03-2",
    "when": "before it goes into the barrel, and again in its barrel",
    "how": "In its barrel, the arbor held by a lever (a 3D-printed arm 50 mm long and a hanging weight do: 1 kg at 50 mm is 0.49 N·m) or a torque gauge: wind it from slack and read the torque each half turn, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, wind it on until its coils lie tight on the arbor and count the turns from slack.",
-   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 473 to 824 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.940-1.262 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 0.93 past full wind). Unwinding reads less than winding: the coils' friction gives 3-6 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
+   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 427 to 839 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.940-1.194 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 0.93 past full wind). Unwinding reads less than winding: the coils' friction gives 1-3 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
   },
   {
    "id": "fusee",
@@ -15,7 +15,7 @@
    "sheet": "05 06_20",
    "when": "the chain on, the barrel set up ¾ turn, before the train goes in",
    "how": "As Herb. Müller did in 1941 (05 06_20: \"Hebellänge 262 m/m\", the mean of two runs): a lever 262 mm long on the fusee arbor, and the weight (g) that holds it level read at each half turn running down from full wind (8.75 turns of the fusee, the curve's 0.05 to 8.74), twice; or a torque gauge (1 g on 262 mm is 2.57 mN·m).",
-   "pass": "Each reading within ×0.940-1.262 of the sheet's at the same turn (its readings' mean 132.7 g: 124.8-167.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.05 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 177.6 g mean (×1.338): open (README, Unresolved)."
+   "pass": "Each reading within ×0.940-1.194 of the sheet's at the same turn (its readings' mean 132.7 g: 124.8-158.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 2.10 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 177.6 g mean (×1.338): open (README, Unresolved)."
   },
   {
    "id": "depths",
@@ -95,7 +95,7 @@
    "sheet": "05 08 01-5, 05 06_4 (C-D), 51 00 11",
    "when": "the stop bar and pin hardened, the movement wound to the stop; the key made",
    "how": "File-test the stop bar and the stop pin (a file skates on hardened steel). Wound to full wind, hold the key against the stop with a torque gauge on its square (or a lever and a weight) up to 1.36 N·m, a strong hand's on the key's Ø 34.5 paddle (wempe_overwind.js). Then turn the key the wrong way on a spare square held in a vice with a gauge: it must slip.",
-   "pass": "Nothing moves or marks: hardened, the stop bar yields at 3.63 N·m on the key and the pin at 9.87; left soft the bar bends at 1.31. The key's coil spring carries the hand: wound of spring wire Ø 0.68 or more (EN 10270-1 DH; 51 00 11 scales about 0.6, which yields at 1.57), its end in the body's hole formed on a radius. The wrong way it slips at a few mN·m (the model takes 5): one that grips both ways sends the hand into the click wheel, whose teeth yield at 0.73 N·m, as the plain 1940 key would."
+   "pass": "Nothing moves or marks: hardened, the stop bar yields at 3.63 N·m on the key and the pin at 9.87; left soft the bar bends at 1.31. The key's coil spring carries the hand: wound of spring wire Ø 0.68 or more (EN 10270-1 DH; 51 00 11 scales about 0.6, which yields at 1.57), its end in the body's hole formed on a radius. The wrong way it slips at a few mN·m (the model takes 5): one that grips both ways sends the hand into the click wheel, whose teeth yield at 0.72 N·m, as the plain 1940 key would."
   },
   {
    "id": "cannon",
@@ -118,17 +118,17 @@
   "mainspring": {
    "s": [
     0.9402,
-    1.2616
+    1.1943
    ],
-   "Mdown": 0.4728,
-   "Mfull": 0.8235,
+   "Mdown": 0.4265,
+   "Mfull": 0.8387,
    "setup": 0.75,
    "barrelTurns": 5.079,
-   "room": 0.9339,
+   "room": 0.927,
    "friction": {
     "coils": [
-     0.0312,
-     0.0624
+     0.0135,
+     0.0269
     ],
     "measured": [
      0.1,
@@ -139,7 +139,7 @@
   "fusee": {
    "s": [
     0.9402,
-    1.2616
+    1.1943
    ],
    "g262": {
     "mean": 132.7375,
@@ -147,14 +147,14 @@
     "low": 126.5,
     "band": [
      124.8039,
-     167.4646
+     158.5338
     ]
    },
    "shape": [
     -0.047,
     0.0427
    ],
-   "rms": 0.01053,
+   "rms": 0.02105,
    "sources": {
     "s": 1.338,
     "t_mm": 0.4077,
@@ -731,7 +731,7 @@
    "pin": 9.8702,
    "softBar": 1.3091,
    "wire": 0.6784,
-   "wrong": 0.7263
+   "wrong": 0.7191
   },
   "cannon": {
    "r": 30,
