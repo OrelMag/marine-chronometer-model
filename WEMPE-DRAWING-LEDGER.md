@@ -13,7 +13,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | marine-chronometer-source/wempe/drawing-check/batch5.md | 12 | 12 of 12 |
 | 6 | maintaining work, maintaining detent, stop work | marine-chronometer-source/wempe/drawing-check/batch6.md | 9 | 9 of 9 |
 | 7 | barrel, arbor, set-up ratchet, mainspring, chain | marine-chronometer-source/wempe/drawing-check/batch7.md | 14 | 14 of 14 |
-| 8 | going train | (running or to come) | 10 | — |
+| 8 | going train | marine-chronometer-source/wempe/drawing-check/batch8.md | 10 | 10 of 10 |
 | 9 | motion work, hands, dial | (running or to come) | 13 | — |
 | 10 | case, gimbals, boxes, keys | (running or to come) | 14 | — |
 
@@ -23,7 +23,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 
 | Image | Sheet | Batch | Status | Note |
 |---|---|---|---|---|
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6, 7 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6, 7, 8 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
 | `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded (also reviewed by batch 7) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | waiting for batch 10 |  |
@@ -71,16 +71,16 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | — | excluded (also reviewed by batch 4) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | — | excluded (also reviewed by batch 4) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 4 | reviewed by batch 4 |  |
-| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 8 | waiting for batch 8 |  |
+| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 8 | reviewed by batch 8 |  |
 | `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 6 | reviewed by batch 6 |  |
 | `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 6 | reviewed by batch 6 |  |
 | `05-06/Wempe_05-06_01.jpg` | 05 06 (cross-reference 05 04 06 struck) Schnecke kompl. | 5 | reviewed by batch 5 |  |
@@ -146,4 +146,4 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | waiting for batch 10 |  |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3, 4, 5, 6, 7 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3, 4, 5, 6, 7, 8 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
