@@ -26,7 +26,9 @@
      states (its fine.py's), pose(state, update): the model posed in a state through its own update, label(state, i)}; while it shows, every part is a ghost, drawn plainly
      (no merged copies, Edges or ink), and the hash keeps contacts=1|sweep, ctin=1, ceps.
      pick(hit): a click on the model offered first to the page (the maker's Measure); true if it took it. card(p): each part card as it opens (the maker's sheet, js/maker.js).
-   Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO, PCE, PARTS, SRC, units, tourEnd, focusOn, unfocus, focused}. */
+    tint(m): a colour ('#rrggbb') a movement mesh is drawn toward, or null (the Hamilton's load path: lpCol and tintOf in its app.js), applied by look(); overlay(): drawn
+    after each frame the stage is drawn, on its canvas (a close-up's own camera: the page's scissored viewport, as the Hamilton's cuDraw).
+   Returns {st, look, wake, setView, goCam, base, tintOf, size, cam, scene, r, mv, M, INFO, PCE, PARTS, SRC, units, tourEnd, focusOn, unfocus, focused}. */
 const VIEWER={start(cfg){
   const stage=$('#stage'),cv=stage.querySelector('canvas'),QA=/[?&]qa\b/.test(location.search),SNAP=/[?&]snap\b/.test(location.search);
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return null;}
@@ -100,6 +102,10 @@ const VIEWER={start(cfg){
   const opOf=m=>st.op[m.userData.pk]??st.op[m.userData.part];   /* a piece's own opacity, else its part's */
   const base=m=>{const p=m.userData.part,k=m.userData.pk,m0=st.colr||st.csrc?colourOf(m.userData.mat0,p,k):m.userData.mat0,op=opOf(m);return op!=null&&op<1?fadeOf(m0,k,op):m0;};
   const fin=m=>st.draw?drawOf(base(m)):base(m);
+  /* cfg.tint: a copy of what the part shows, its colour drawn toward the tint and a little of it lit, less metal, so the colour shows rather than the room it reflects (the Hamilton's tintOf) */
+  const TINT=new Map();function tintOf(m0,col){if(!m0.color)return m0;const k=m0.uuid+col;let t=TINT.get(k);
+    if(!t){t=m0.clone();t.userData={inkDecal:m0.userData.inkDecal};patchSection(t,!!m0.userData.secCap);t.userData.side0=m0.userData.side0??m0.side;t.side=m0.side;t.clippingPlanes=[...(m0.clippingPlanes||[])];TINT.set(k,t);}
+    if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}const c=sc(col);t.color.copy(m0.color).lerp(c,0.8);if(t.emissive){t.emissive.copy(c);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}
   /* the keys in st.pick, st.focus, st.hid, st.iso and st.op are parts or pieces (part.k), a part's covering its pieces */
   const anyOf=(s,p)=>!!s&&[...s].some(k=>kp(k)===p),inK=(s,m)=>s.has(m.userData.part)||s.has(m.userData.pk);
   const isoOut=(p,k)=>!!st.iso&&!st.iso.has(p)&&!(k?st.iso.has(k):anyOf(st.iso,p));
@@ -114,7 +120,7 @@ const VIEWER={start(cfg){
   const ghOf=(m,foc)=>{const p=m.userData.part;return (!!m.userData.devPlate&&dvOn()&&!(foc&&inK(foc,m)))||(st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
-    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!mOut(m);m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
+    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!mOut(m);const lc=!ct&&!gh&&cfg.tint?cfg.tint(m):null;m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
     if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
     cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${st.tour>=0&&TOUR?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
@@ -403,10 +409,10 @@ const VIEWER={start(cfg){
     if(CT)CT.frame(now);
     const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,cur.dev,cur.all,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs,...(CT?CT.sig():[])];
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
-    if(onScreen&&!still&&!esOn()){paint();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
+    if(onScreen&&!still&&!esOn()){paint();if(cfg.overlay)cfg.overlay();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{st.opening=false;if(st.tour>=0)tourGo(st.tour);else if(!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);}
   look();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===startView?'true':'false'));
   requestAnimationFrame(frame);
-  return{st,look,wake,setView,cam,scene,r,mv,M,INFO,PCE,PARTS,SRC,units:()=>units,tourEnd,focusOn,unfocus,focused:()=>zf};}};
+  return{st,look,wake,setView,goCam,base,tintOf,size:()=>[W,Hh],cam,scene,r,mv,M,INFO,PCE,PARTS,SRC,units:()=>units,tourEnd,focusOn,unfocus,focused:()=>zf};}};

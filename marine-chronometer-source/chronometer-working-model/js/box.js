@@ -395,7 +395,7 @@ function buildBox(M){
   const EXP=[[ring,0,70,0],[gp,0,70,0],[bowl,0,85,0],[shield,0,-20,0],[lat,70,0,0],[key,150,60,0],[mid,0,0,-45],[top,0,45,0]];
   for(const c of cs.children){const h=c.userData.hn,d=h==='42102'?45:h==='42103'?75:h==='42124'||h==='42126'?-20:0;if(d)EXP.push([c,0,d,0]);}
   const explode=e=>{for(const[g,dx,dy,dz]of EXP){const p=g.userData.ex0||(g.userData.ex0=g.position.clone());g.position.set(p.x+dx*e,p.y+dy*e,p.z+dz*e);}};
-  return{root,ring,bowl,cs,mid,top,stay,shield,shRest:SH_REST,latch:lv,RO,CR,explode};
+  return{root,ring,bowl,cs,mid,top,stay,shield,shRest:SH_REST,latch:lv,key,RO,CR,explode};   /* key: the winding key in its corner block, hidden while the movement's own (R.wkey) is on the square (app.js) */
 }
 /* ================= motions the page (app.js) and the export (blender.js) both play: the gimbals, the twist, the banked balance ================= */
 /* the escape wheel held by the train-blocking screw's dog point a fraction f of a tooth past its lock (the next unlocking let it go until a spoke met the point): the tooth
