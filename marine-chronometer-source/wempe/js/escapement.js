@@ -276,7 +276,7 @@ const WESC=(()=>{
   const FY=-22.8;   /* the balance's seat (the hub's flange top, 05 04 02), above */
   const Y={rimT:FY-3.8,armT:FY-1.15,flB:FY+1.8,hubB:FY+4.1,col:FY+5.6,ir0:FY+5.6,ir1:FY+7.2,dr0:FY+7.2,dr1:FY+8.8,
     tipU:-35.83,tipL:-9.97,   /* the staff's pivot ends, 0.02 off the endstones (the cock's setting and the lug's: below) */
-    ew0:-17.11,ew1:-15.71,ewWeb:-16.51,etU:-19.49,etL:3.29};   /* the escape wheel's faces (1.4 at the rim, 0.8 in the web, 05 04_1 and 05 04_7.1), its arbor's pivot ends (22.8 −0.02 apart less 0.04 of endshake).
+    ew0:-17.11,ew1:-15.71,ewWeb:-16.51,etU:-19.49,etL:3.29};   /* the escape wheel's faces (1.4 at the rim, 0.8 in the web, 05 04_1 and 05 04_7.1), its arbor's pivot ends (22.8 −0.02 apart, 05 04_7.1; the endstones 0.03 off each: 0.06 of endshake, the 1958 Soviet repair book's 0.05-0.07 for the escape pinion, Appendix 4, pp. 128-129, sure; 0.04 until 25 October 2026).
       The wheel's pinion-side face 19 from the arbor's pinion end (05 04_7.2's "19", sure), so its other face 2.38 from the top-plate end: the sheet's "2" runs from the end to
       the arbor's shoulder, 0.4 under the wheel (scaled 0.57 at 17.6 px/mm). Its teeth then lie 1.89-3.29 under the top plate, inside the impulse roller's 1.8-3.4 (0.09 and
       0.11 to spare). Until 15 October 2026 the wheel 2.0 from that end (the "2" read to the wheel), its teeth 1.51-2.91 under the plate */
@@ -285,7 +285,7 @@ const WESC=(()=>{
      collar (05 04_5, 4.4.41) to 4.7 −0.05 under the seat (boxed, sure), the impulse roller under it, 1.6 thick ("1,6", sure; 05 04_1 scales its top 0.42 under the plate
      against the collar's 0.6: the figures win), the discharge roller 1.6 under that ("1,6", sure); the escape wheel's teeth 0.5 under the plate, 1.4 thick ("0,5", "1,4",
      sure), the web 0.8 on the pinion's side (scaled 0.74). Its arbor 05 04_7.1 (4.4.41): the pinion's far face 15.2 from the wheel's plate face (likely), 17.7 from the
-     arbor's top-plate end (sure), 5.3 from its dial end (likely: the figure overwritten), 23 −0.2 overall (sure), less 0.04 of endshake at the dial end. The seconds wheel's
+     arbor's top-plate end (sure), 5.3 from its dial end (likely: the figure overwritten), 23 −0.2 overall (sure), built 0.04 short at the dial end (22.96, inside its tolerance; the endstones 0.03 off each end, below). The seconds wheel's
      rim (train.js: 5.33 to 4.33 over the pillar plate) lies wholly in the pinion's 3 */
   const FY1=TI-4.1,Y1={rimT:FY1-3.8,armT:FY1-1.15,col:FY1+4.7,ir0:FY1+4.7,ir1:FY1+6.3,dr0:FY1+6.3,dr1:FY1+7.9,ew0:TI+0.5,ew1:TI+1.9,ewWeb:TI+1.1,etU:TI+15.7-17.7,etL:TI+15.7+5.3-0.04,pf:TI+15.7};
   const SH1=FY1-FY;   /* the balance, its arm, rim and hairspring, stand this much higher as first drawn (-0.3) */
@@ -950,7 +950,7 @@ const WESC=(()=>{
        Ø 5.1, which the sheet's hole can't take): the section's form scaled to it (0.55: 0.45 thick, domed 0.17, its sink Ø 0.9 0.3 deep), its crown 0.03 off the endstone as
        at the other ends (until 18 October 2026 0.2 off, the bush's floor between them as first drawn, where the section draws the two stones together) */
     const eeu=part('escEndstoneUp',-37,[W[0],W[1],0]),eju=part('escJewelUp',-34,[W[0],W[1],0]),ejl=part('escJewelLow',-4,[W[0],W[1],0]),eel=part('escEndstoneLow',6,[W[0],W[1],0]);
-    /* each state's at its arbor's ends (Y, Y1). As first drawn (05 04_7.1) the top-plate end lies 2.0 into the plate: the hole jewel's setting fills the seat down to it, its
+    /* each state's at its arbor's ends (Y, Y1), each endstone 0.03 off its end (the 1958 book's 0.05-0.07 of endshake; 0.02 until 25 October 2026), the hole jewels where they were, so the oil gap between them 0.07 above and 0.04 below. As first drawn (05 04_7.1) the top-plate end lies 2.0 into the plate: the hole jewel's setting fills the seat down to it, its
        bore opened to 0.6 for the arbor's cone; the dial end 1.96 into the pillar plate: the bush shortened to it and the endstone in a plug set from the dial face under the
        cap, which is then plain (estimated, as the settings themselves: no sheet of them) */
     /* the Soviet 6MX's endstone setting at the first-drawn height, of steel, its two screws steel: Kirov No. 247's reads silvery and its screws dark (2_Kirow_247_A.jpg,
@@ -958,7 +958,7 @@ const WESC=(()=>{
        silvery too): likely */
     /* the hole jewel's height: as first drawn the arbor's end lies 2.0 into the plate and the section's 0.8 fits; as last revised it lies 0.49 in, and the stone, flush with
        the inner face behind its setting's lip, is 0.4 (the section's form scaled to it, its sink as wide; estimated) */
-    for(const[Q,v,ms]of/** @type {[any,string,any][]} */([[Y,'last',M.gilt],[Y1,'first 1943',M.gilt],[Y1,'6mx',M.steel]])){const eY=Q.etU-0.02,hY=eY+0.06,ge=rv(eeu,v),gj=rv(eju,v),lp=eLip(eY,-1),
+    for(const[Q,v,ms]of/** @type {[any,string,any][]} */([[Y,'last',M.gilt],[Y1,'first 1943',M.gilt],[Y1,'6mx',M.steel]])){const eY=Q.etU-0.03,hY=eY+0.07,ge=rv(eeu,v),gj=rv(eju,v),lp=eLip(eY,-1),
         tq=Math.min(JT,TI-hY-0.05),k=tq/JT,yq=hY+tq,yb=Math.max(TT,lp[1]-0.45);
       tag(mesh(ge,lathe([[1.85,TT],[2.25,TT],[2.25,TT+0.5],[2.6,TT+0.5],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp,[1.85,yb]],48),ms),'050408-2.eu');   /* the mouth a cone from the lip to Ø 3.7, then straight to the face */
       tag(mesh(ge,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.ruby),'050408-1.eu');
@@ -967,7 +967,7 @@ const WESC=(()=>{
     for(const[v,ms]of/** @type {[string,any][]} */([['last first 1943',M.brass],['6mx',M.steel]])){const g=rv(eeu,v);for(const s of[-1,1])K.headOn(tag(screw(g,3.5*s,0,TT,1.3,0.3,3.4,0.6,ms),'WN-es'),'escEndstoneUp','topPlate');}   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
       const lk=0.8/JR,lT=0.45,lD=JD*lk,lE=0.2,lH=0.15;   /* the lower hole jewel (above); as first drawn its endstone in the plug Ø 1.6 too, the balance's form scaled (estimated) */
-      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.02,hY=eY-0.03,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last',yq=hY-lT;
+      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.03,hY=eY-0.04,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last',yq=hY-lT;
         tag(mesh(gj,lathe([[0.7,yq-0.15],[1.25,yq-0.15],[1.25,f1?eY:PPT-0.25],[0.803,f1?eY:PPT-0.25],[0.803,yq],[0.7,yq]],48),M.brass),'050406-2.el');   /* its lip over the stone's rim */
         tag(mesh(gj,lathe(KIT.jewelPr(0.8,lT,0.13,lD,JC*lk*1.03,JH*lk,hY,-1),32),M.ruby),'050406-1.el');
         if(f1){tag(mesh(ge,lathe([[0,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0,PPT]],48),M.gilt),'050408-2.el');   /* as first drawn: the setting plain over the plug (its stone deep in the plate) */
