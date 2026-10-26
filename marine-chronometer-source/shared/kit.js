@@ -153,6 +153,46 @@ const KIT=(()=>{
 
   /* screw holes: thread radius sR for a head of radius r; a clearance hole (hC) where the screw passes through a part, a tapped hole (hT) where it screws in; [x, z, r, 1] as polyGeo takes (the 1: polyGeo keeps its size at the faces, below) */
   const sR=r=>r*0.5,hC=(x,z,r,rs=sR(r))=>[x,z,+(rs*1.12+0.01).toFixed(3),1],hT=(x,z,r,rs=sR(r))=>[x,z,+(rs+0.02).toFixed(3),1];   /* rs: a thread radius other than half the head's */
+  /* ISO metric threads (26 October 2026; until then the shanks were turned rings at rs × 0.42, not a helix). isoP(rs): the coarse pitch of the size nearest Ø 2·rs (ISO 261's,
+     with DIN 13's small sizes and the instrument makers' M1.7, M2.3 and M2.6 of DIN 14; a size the sources leave estimated keeps its estimated rs). The form ISO 68-1's basic
+     profile: 60°, H = 0.866 p, the depth 5H/8 = 0.5413 p, a flat p/8 wide at the major diameter and p/4 at the minor (isoU(u): 0 at the outside thread's root to 1 at its
+     crest, u in pitches, the root's middle at whole u; case.js's iso). An outside thread at 6g's maximum material, its major diameter less the fundamental deviation
+     es = (15 + 11p) µm (ISO 965-1), so isoEs, the radial allowance, is half that: 9 µm on an M1, 10 on an M2.6; an inside thread at 6H's minimum (EI 0: the basic profile).
+     A screw and its tapped hole on one helix are then isoEs apart radially all round (half that across the flanks), and no solid overlaps */
+  const ISOP=[[0.6,0.15],[0.7,0.175],[0.8,0.2],[0.9,0.225],[1,0.25],[1.2,0.25],[1.4,0.3],[1.7,0.35],[2,0.4],[2.3,0.4],[2.5,0.45],[2.6,0.45],[3,0.5],[3.5,0.6],[4,0.7],[5,0.8],[6,1]];
+  const isoP=rs=>ISOP.reduce((b,q)=>Math.abs(q[0]-2*rs)<Math.abs(b[0]-2*rs)-1e-9?q:b)[1],isoEs=p=>(0.015+0.011*p)/2,isoD=p=>0.5413*p;
+  const isoU=u=>{const a=Math.abs(u-Math.round(u));return a<0.125?0:a>0.4375?1:(a-0.125)/0.3125;};
+  /* the threaded face r = R + d·(isoU(u) − q), u = (y − yr)/p + θ/τ (θ = atan2(z, x): a right-hand thread toward +y), from y0 to y1, NA columns a turn. Each column holds
+     its points at y0, at y1 and wherever the profile has a corner between them (the edges of the flats, helices), and neighbouring columns are zipped by u, so the
+     flanks and flats are exact helical strips with no rows between their corners (case.js's thread() samples rows every p/16: too many for hundreds of screws). R the
+     outside thread's root (q 0) or the inside one's (q 1, its crest at R − d); T(a, b, c) takes each triangle. Returns each column's ends b0, b1 (the rings at y0 and y1) */
+  const helixSide=(R,d,p,yr,y0,y1,q,NA,T,e1=0)=>{const BK=[0.125,0.4375,0.5625,0.875],sr=y=>e1>0?Math.max(0,Math.min(1,(y1-y)/e1)):1;   /* e1: the thread run out to the root over e1 before y1 (an outside thread's tip) */
+    const col=k=>{const a=k/NA,uA=(y0-yr)/p+a,uB=(y1-yr)/p+a,us=[uA];for(let n=Math.floor(uA);n<=uB;n++)for(const b of BK){const u=n+b;if(u>uA+1e-9&&u<uB-1e-9)us.push(u);}
+      if(e1>0){const u=(y1-e1-yr)/p+a;if(u>uA+1e-9&&!us.some(v=>Math.abs(v-u)<1e-9))us.push(u);us.sort((x,y)=>x-y);}us.push(uB);
+      const t=a*TAU,c=Math.cos(t),s=Math.sin(t);return us.map((u,i)=>{const yy=i===0?y0:i===us.length-1?y1:yr+p*(u-a),r=R+d*sr(yy)*(isoU(u)-q),y=i===0?y0:i===us.length-1?y1:yr+p*(u-a);return{u,v:[r*c,y,r*s]};});};
+    const C=[...Array(NA).keys()].map(col);
+    for(let k=0;k<NA;k++){const A=C[k],B=k+1<NA?C[k+1]:C[0].map(e=>({u:e.u+1,v:e.v}));let i=0,j=0;   /* the last column zipped to the first a turn on */
+      while(i<A.length-1||j<B.length-1){if(j>=B.length-1||(i<A.length-1&&A[i+1].u<=B[j+1].u)){T(A[i].v,A[i+1].v,B[j].v);i++;}else{T(A[i].v,B[j+1].v,B[j].v);j++;}}}
+    return{b0:C.map(c=>c[0].v),b1:C.map(c=>c[c.length-1].v)};};
+  /* triangles into P, N: each wound to face out (out +1 away from the axis, -1 toward it; or along n for a flat face) and shaded round the axis (its normal turned to each
+     corner's azimuth). The thread's flanks are shaded leaning at most tilt off the radius, not their own 60°: Edges draws a crease past about 37° (makeInk), and at the
+     page's scale a crease line along every flank's edge, four a pitch, drew each shank black. A flat face (n given) keeps n */
+  const triOut=(P,N)=>(a,b,c,out,tilt=Math.PI/2,n=null)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(x[0],x[1],x[2]);if(l<1e-14)return;
+    const cx=(a[0]+b[0]+c[0])/3,cz=(a[2]+b[2]+c[2])/3,cr=Math.hypot(cx,cz)||1,w=n?x[0]*n[0]+x[1]*n[1]+x[2]*n[2]:out*(x[0]*cx+x[2]*cz);if(w<0){[b,c]=[c,b];x[0]=-x[0];x[1]=-x[1];x[2]=-x[2];}
+    const nr=Math.abs(x[0]*cx+x[2]*cz)/cr/l,ph=Math.min(tilt,Math.atan2(Math.abs(x[1])/l,nr)),sy=Math.sign(x[1]);
+    for(const q of[a,b,c]){P.push(q[0],q[1],q[2]);if(n){N.push(n[0],n[1],n[2]);continue;}const r=Math.hypot(q[0],q[2])||1;N.push(out*Math.cos(ph)*q[0]/r,sy*Math.sin(ph),out*Math.cos(ph)*q[2]/r);}};
+  const bufGeo=(P,N)=>{const g=new THREE.BufferGeometry(),U=[];for(let i=0;i<P.length;i+=3)U.push(Math.atan2(P[i+2],P[i])/TAU+0.5,P[i+1]);
+    g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));return g;};
+  /* a screw's threaded shank, one closed solid: the outside thread (isoP, isoEs) from y0 to y1 about the y axis, flat across at y0 (inside the head, or a shoulder) and
+     chamfered at its tip, the thread run out to its root over the pitch before y1 − d, then from there to a flat Ø (R − d/2)·2 at y1; yr the helix's phase (whole pitches from the head's seat, so a tapped hole drawn on the
+     same helix meets it); 16 columns a turn (a third of the triangles the rings took). Cached by size */
+  const TG={};
+  const threadGeo=(rs,y0,y1,yr=0,p=isoP(rs))=>{const key=[rs,y0,y1,yr,p].join('_');if(TG[key])return TG[key];
+    const d=isoD(p),R=rs-isoEs(p)-d,NA=16,P=[],N=[],T=triOut(P,N),ch=Math.min(d,(y1-y0)*0.3),rt=Math.max(R-d/2,R*0.6);
+    const S=helixSide(R,d,p,yr,y0,y1-ch,0,NA,(a,b,c)=>T(a,b,c,1,25*Math.PI/180),Math.min(p,(y1-ch-y0)/2));   /* run out to the root over the last pitch, so the chamfer (from the root) stays inside a tapped hole's crests */
+    const tip=S.b1.map((v,k)=>{const t=k/NA*TAU;return[rt*Math.cos(t),y1,rt*Math.sin(t)];});
+    for(let k=0;k<NA;k++){const k1=(k+1)%NA;T([0,y0,0],S.b0[k],S.b0[k1],1,0,[0,-1,0]);T(S.b1[k],S.b1[k1],tip[k1],1);T(S.b1[k],tip[k1],tip[k],1);T([0,y1,0],tip[k],tip[k1],1,0,[0,1,0]);}
+    return TG[key]=bufGeo(P,N);};
   /* flat spring: a strip w wide along a polyline in XZ, th tall from y 0 up (+y) */
   function stripGeo(pts,w,th){const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz);
     L2.push([p[0]-dz/l*w/2,p[1]+dx/l*w/2]);R2.push([p[0]+dz/l*w/2,p[1]-dx/l*w/2]);});return polyGeo(L2.concat(R2.reverse()),th);}
@@ -215,7 +255,7 @@ const KIT=(()=>{
     const W=[],LV=new Map(),lev=(p,y)=>{const k=K(p);if(!LV.has(k))LV.set(k,[]);const l=LV.get(k);if(!l.some(v=>Math.abs(v-y)<e))l.push(y);};
     const nOut=(p,q,s)=>{const dx=q[0]-p[0],dz=q[1]-p[1],l=Math.hypot(dx,dz)||1;return[s*dz/l,0,-s*dx/l];};   /* s +1: away from a counterclockwise loop's inside */
     const wall=(p,q,a0,b0,a1,b1,n)=>{if(b0-a0<e&&b1-a1<e)return;W.push([p,q,a0,b0,a1,b1,n]);lev(p,a0);lev(p,b0);lev(q,a1);lev(q,b1);};
-    const cone=[];   /* tapered walls: [loop at lo, loop at hi, lo, hi, s] */
+    const cone=[],TH=[];   /* tapered walls: [loop at lo, loop at hi, lo, hi, s]; the tapped holes' threads, for matchThreads */
     const SEG=new Map();cells.forEach((c,ci)=>{const L=c.loop;for(let i=0;i<L.length;i++)SEG.set(K(L[i])+'|'+K(L[(i+1)%L.length]),ci);});
     cells.forEach(c=>{const L=c.loop,s=Math.sign(area(L));
       for(let i=0;i<L.length;i++){const p=L[i],q=L[(i+1)%L.length],n=nOut(p,q,s),o=SEG.get(K(q)+'|'+K(p));
@@ -230,6 +270,7 @@ const KIT=(()=>{
       const at=(f,y)=>f.q&&Math.abs(y-f.hi)<e?f.q:f.p;
       const maxi=S=>S.filter(g=>!S.some(f=>inF(f,g)));
       for(const g of F){if(g.hi-g.lo<e)continue;const sg=Math.sign(area(g.p));
+        if(g.th){threadWall(g.p,g.th,g.lo,g.hi,tri);TH.push({c:cen(g.p),rs:g.th.rs,p:g.th.p||isoP(g.th.rs),yr:g.th.yr||0,lo:g.lo,hi:g.hi});continue;}   /* a tapped hole: its wall the inside thread (threadWall) */
         if(g.q){cone.push([g.p,g.q,g.lo,g.hi,sg]);continue;}for(let i=0;i<g.p.length;i++){const p=g.p[i],q=g.p[(i+1)%g.p.length];wall(p,q,g.lo,g.hi,g.lo,g.hi,nOut(p,q,-sg));}}
       /* floors: an A feature's (open on y0) at its b facing -y, none where it opens into a B feature round it; a B feature's at its a facing +y */
       for(const g of F){if(g.A&&g.B)continue;const y=g.A?g.b:g.a;if(g.A&&F.some(f=>f.B&&!f.A&&inF(f,g)&&f.a<=y+e))continue;if(g.B&&F.some(f=>f.A&&!f.B&&inF(f,g)&&f.b>=y-e))continue;
@@ -241,7 +282,46 @@ const KIT=(()=>{
       while(i<L0.length-1||j<L1.length-1){if(j>=L1.length-1||(i<L0.length-1&&L0[i+1]<=L1[j+1])){tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[p[0],L0[i+1],p[1]],n);i++;}else{tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[q[0],L1[j+1],q[1]],n);j++;}}}
     for(const[A,B,lo,hi,s]of cone)for(let i=0;i<A.length;i++){const j=(i+1)%A.length,a=A[i],b=A[j],c=B[j],d=B[i],n=nOut(a,b,-s);
       tri([a[0],lo,a[1]],[b[0],lo,b[1]],[c[0],hi,c[1]],n);tri([a[0],lo,a[1]],[c[0],hi,c[1]],[d[0],hi,d[1]],n);}
-    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));return g;}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));if(TH.length)g.userData.threads=TH;return g;}
+  /* a tapped hole's wall (a solidGeo feature's th: {rs, p?, yr?}): the inside thread of ISO 68-1's basic profile at 6H's minimum, its root at rs and its crest at rs − d (isoD),
+     u = (y − yr)/p + θ/τ about the loop's centre in the part's frame, from lo to hi; within a pitch of each end it runs out to the drilled loop (the feature's p, a ring at
+     the tapping drill's mouth: the hole's countersink or chamfer), so the faces, a countersink sharing the loop and the floors are as they were. th.out: an outside thread instead (a turned stud's, lathThread), at 6g, the loop at its root, to which it runs out, so it never stands proud of its thread. One column at each of the
+     loop's corners, zipped as helixSide's; faces toward the axis. The screw's shank is turned on its axis to meet it (matchThreads) */
+  function threadWall(L,th,lo,hi,tri){const p=th.p||isoP(th.rs),d=isoD(p),ex=!!th.out,full=u=>ex?th.rs-isoEs(p)-d+d*isoU(u):th.rs+d*(isoU(u)-1),yr=th.yr||0,c=cen(L),n=L.length,ew=Math.min(p,(hi-lo)/3),BK=[0.125,0.4375,0.5625,0.875];
+    const s=y=>Math.max(0,Math.min(1,(y-lo)/ew,(hi-y)/ew)),A=[];let a=Math.atan2(L[0][1]-c[1],L[0][0]-c[0])/TAU;
+    for(let k=0;k<n;k++){if(k){const t0=Math.atan2(L[k-1][1]-c[1],L[k-1][0]-c[0]),t1=Math.atan2(L[k][1]-c[1],L[k][0]-c[0]);a+=(((t1-t0)%TAU+3*Math.PI)%TAU-Math.PI)/TAU;}A.push(a);}   /* each corner's turn, unwrapped along the loop */
+    const ad=A[n-1]+(((Math.atan2(L[0][1]-c[1],L[0][0]-c[0])-Math.atan2(L[n-1][1]-c[1],L[n-1][0]-c[0]))%TAU+3*Math.PI)%TAU-Math.PI)/TAU-A[0];   /* +1 round an anticlockwise loop, -1 a clockwise */
+    const col=k=>{const ak=A[k],q=L[k],R0=Math.hypot(q[0]-c[0],q[1]-c[1]),ux=(q[0]-c[0])/R0,uz=(q[1]-c[1])/R0,uA=(lo-yr)/p+ak,uB=(hi-yr)/p+ak,us=[uA];
+      for(let m=Math.floor(uA);m<=uB;m++)for(const b of BK){const u=m+b;if(u>uA+1e-9&&u<uB-1e-9)us.push(u);}for(const y of[lo+ew,hi-ew]){const u=(y-yr)/p+ak;if(u>uA+1e-9&&u<uB-1e-9&&!us.some(v=>Math.abs(v-u)<1e-9))us.push(u);}us.sort((x,y)=>x-y);us.push(uB);
+      return us.map((u,i)=>{if(i===0)return{u,v:[q[0],lo,q[1]]};if(i===us.length-1)return{u,v:[q[0],hi,q[1]]};const y=yr+p*(u-ak),r=R0+s(y)*(full(u)-R0);return{u,v:[c[0]+r*ux,y,c[1]+r*uz]};});};
+    const C=[...Array(n).keys()].map(col),nn=v=>{const x=c[0]-v[0],z=c[1]-v[2],l=(Math.hypot(x,z)||1)*(ex?-1:1);return[x/l,0,z/l];};
+    for(let k=0;k<n;k++){const P0=C[k],P1=k+1<n?C[k+1]:C[0].map(o=>({u:o.u+ad,v:o.v}));let i=0,j=0;
+      while(i<P0.length-1||j<P1.length-1){if(j>=P1.length-1||(i<P0.length-1&&P0[i+1].u<=P1[j+1].u)){const t=[P0[i].v,P0[i+1].v,P1[j].v];tri(...t,nn(P0[i].v));i++;}else{const t=[P0[i].v,P1[j+1].v,P1[j].v];tri(...t,nn(P0[i].v));j++;}}}}
+  /* a turned part with a tapped bore, one closed solid: the closed profile pr ([r, y] or Vector2s, either way round) turned in n steps about the y axis as LatheGeometry
+     turns it, its edge from pr[k] to pr[k + 1] (a bore, r constant) cut as threadWall's inside thread (th: {rs, p?, yr?}), or its outside one (th.out: the edge at the thread's root); the turned faces shaded round. Its geometry carries
+     the thread for matchThreads, as solidGeo's */
+  const lathThread=(pr,k,th,n=64)=>{const Q=pr.map(q=>Array.isArray(q)?q:[q.x,q.y]),m=Q.length,P=[],N=[],TH=[];
+    const ar=Q.reduce((a,c,i)=>{const e=Q[(i+1)%m];return a+c[0]*e[1]-e[0]*c[1];},0)>0?1:-1,ang=i=>(i%n)/n*TAU,at=(r,y,i)=>[r*Math.cos(ang(i)),y,r*Math.sin(ang(i))];
+    const tri=(a,b,c,o,sm=true)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(x[0],x[1],x[2]);if(l<1e-14)return;
+      if(x[0]*o[0]+x[1]*o[1]+x[2]*o[2]<0){[b,c]=[c,b];x[0]=-x[0];x[1]=-x[1];x[2]=-x[2];}const cx=(a[0]+b[0]+c[0])/3,cz=(a[2]+b[2]+c[2])/3,cr=Math.hypot(cx,cz)||1,nr=(x[0]*cx+x[2]*cz)/cr/l,ny=x[1]/l;
+      for(const q of[a,b,c]){P.push(q[0],q[1],q[2]);const r=Math.hypot(q[0],q[2]);if(!sm||r<1e-9)N.push(x[0]/l,ny,x[2]/l);else N.push(nr*q[0]/r,ny,nr*q[2]/r);}};
+    for(let j=0;j<m;j++){const a=Q[j],b=Q[(j+1)%m],dr=b[0]-a[0],dy=b[1]-a[1];
+      if(j===k){const L=[...Array(n).keys()].map(i=>{const q=at(a[0],0,i);return[q[0],q[2]];}),lo=Math.min(a[1],b[1]),hi=Math.max(a[1],b[1]);threadWall(L,th,lo,hi,(p,q,s,o)=>tri(p,q,s,o,false));
+        if(!th.out)TH.push({c:[0,0],rs:th.rs,p:th.p||isoP(th.rs),yr:th.yr||0,lo,hi});continue;}   /* an outside thread is a shank, matched to its hole (userData.thread on its mesh) */
+      for(let i=0;i<n;i++){const t=(i+0.5)/n*TAU,o=[ar*dy*Math.cos(t),-ar*dr,ar*dy*Math.sin(t)],A=at(a[0],a[1],i),B=at(a[0],a[1],i+1),C=at(b[0],b[1],i+1),D=at(b[0],b[1],i);tri(A,B,C,o);tri(A,C,D,o);}}
+    const g=bufGeo(P,N);g.userData.threads=TH;return g;};
+  /* matchThreads(mv): each screw's shank (userData.thread) turned on its axis so its thread lies on the helix of the tapped hole it stands in (a solidGeo part's
+     geometry.userData.threads), found by axis (parallel within 0.1°, 0.02 apart) and overlap along it (the shank's own extent): one point of the hole's helix (u 0, at θ 0, yr) taken into the
+     shank's frame and the shank turned to put its own there (two right-hand helices of one pitch on one axis meet everywhere once they share a point, whichever way each runs).
+     A shank whose hole's size or pitch is not its own is left as it stands and listed in mv.userData.threadMiss; mv.userData.threadPairs lists the pairs */
+  const matchThreads=mv=>{mv.updateMatrixWorld(true);const V=(x,y,z)=>new THREE.Vector3(x,y,z),HS=[],pairs=[],miss=[];
+    mv.traverse(o=>{const T=o.isMesh&&o.geometry.userData.threads;if(!T)return;for(const t of T){const O=V(t.c[0],t.yr,t.c[1]).applyMatrix4(o.matrixWorld),Y=V(t.c[0],t.yr+1,t.c[1]).applyMatrix4(o.matrixWorld).sub(O).normalize();
+      const lo=V(t.c[0],t.lo,t.c[1]).applyMatrix4(o.matrixWorld).sub(O).dot(Y),hi=V(t.c[0],t.hi,t.c[1]).applyMatrix4(o.matrixWorld).sub(O).dot(Y);HS.push({t,o,O,Y,lo:Math.min(lo,hi),hi:Math.max(lo,hi),R:V(t.c[0]+1,t.yr,t.c[1]).applyMatrix4(o.matrixWorld)});}});
+    mv.traverse(o=>{const s=o.isMesh&&o.userData.thread;if(!s)return;const W=o.parent.matrixWorld,O=V(0,0,0).applyMatrix4(W),Y=V(0,1,0).applyMatrix4(W).sub(O).normalize(),bb=(o.geometry.boundingBox||(o.geometry.computeBoundingBox(),o.geometry.boundingBox));
+      const h=HS.find(h=>Math.abs(Math.abs(h.Y.dot(Y))-1)<1.5e-6&&O.clone().sub(h.O).cross(h.Y).length()<0.02&&(()=>{const a0=O.clone().sub(h.O).dot(h.Y),a=a0+bb.min.y*Y.dot(h.Y),b=a0+bb.max.y*Y.dot(h.Y);return Math.max(a,b)>h.lo+1e-3&&Math.min(a,b)<h.hi-1e-3;})());
+      if(!h)return;if(Math.abs(h.t.p-s.p)>1e-9||h.t.rs<s.rs-1e-6){miss.push({screw:o.parent,hole:h.o,rs:s.rs,p:s.p,hrs:h.t.rs,hp:h.t.p});return;}
+      const r=h.R.clone().applyMatrix4(W.clone().invert());o.rotation.y=-TAU*(r.y/s.p+Math.atan2(r.z,r.x)/TAU);o.updateMatrix();pairs.push({screw:o.parent,hole:h.o,t:h.t});});
+    mv.userData.threadPairs=pairs;mv.userData.threadMiss=miss;};
   /* the part and screw makers (movement.js, buildMovement's closures and its API at its end) */
   const parts=(mv,M)=>{const P={},V2=(a,b)=>new THREE.Vector2(a,b);
     /** @param {string} name its key (PARTS in the page's app.js) @param {number} off its rise in the Exploded view (mm) @param {number[]} [ef] a frame in it, at [x, z] turned ef[2] about y: returns that group */
@@ -278,12 +358,11 @@ const KIT=(()=>{
     const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0,sl=null)=>{
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
       const hd=mesh(g,headGeo(r,h,dome,sl?sl.w:0,sl?sl.s:0),mt||M.steel);hd.userData.screw=r;hd.rotation.y=sl&&sl.a!=null?sl.a:(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before, unless given */
-      if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt)),pr=[V2(0,-0.1),V2(rs,-0.1),V2(rs,len-n*pt-d)];   /* the shank from 0.1 inside the head: rings of thread (turned grooves, not a helix), a chamfered tip */
-        for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));mesh(g,new THREE.LatheGeometry(pr,28),mt||M.steel);}
+      if(len>0){const sh=mesh(g,threadGeo(rs,-0.1,len),mt||M.steel);sh.userData.thread={rs,p:isoP(rs)};g.userData.sc.p=isoP(rs);}   /* the shank from 0.1 inside the head: an ISO thread, its phase whole pitches from the seat, a chamfered tip */
       return g;};
     /* the API the page and the tools read: the parts, the screws and loose pieces (exploded.py), explode(e) (0 as built, 1 spread) */
     const done=()=>{mv.userData.parts=P;mv.userData.lifted=SCREWS;
-      mv.userData.explode=e=>{for(const k in P)P[k].position.y=P[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};mv.userData.explode(0);};
+      mv.userData.explode=e=>{for(const k in P)P[k].position.y=P[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};mv.userData.explode(0);matchThreads(mv);};   /* the shanks on their tapped holes' helices, as built */
     return{part,screw,loose,headOn,SCREWS,parts:P,done};};
   /* the jewels as the Wempe's coloured section draws them (Wempe_Einheitschronometer.jpg, its stones red): profiles [r, y] for a lathe, y0 the stone's face toward
      the endstone, s (+1 or -1) the way it runs from there. jewelPr: a hole jewel, that face domed (the crown at y0, d lower at the edge R), the edge straight to the
@@ -299,5 +378,5 @@ const KIT=(()=>{
     return pr.map(([r,y])=>[r,y0+s*y]);};
   /** @type {(R:number,e:number,h:number,y0:number,s:number)=>number[][]} */
   const endPr=(R,e,h,y0,s)=>{const pr=[[0,0],[R,0],[R,e]];for(let i=1;i<=8;i++){const r=R*(1-i/8);pr.push([r,e+domeAt(R,h,r)]);}return pr.map(([r,y])=>[r,y0+s*y]);};
-  return{domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  return{isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();

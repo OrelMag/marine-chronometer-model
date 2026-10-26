@@ -3,6 +3,8 @@
    and for every two bodies sharing a column the union over their shared columns of (a0 - b1, a1 - b0): every relative rise d = riseB - riseA at which they meet.
    Returns the bodies' names and the pairs' meeting sets; assembly.py follows the sequence along them. */
 (opt)=>{const mv=window.__mv,r=opt.r,P=mv.userData.parts,names=Object.keys(P).filter(n=>P[n].visible);
+ /* a threaded shank (userData.thread: KIT's ISO thread) stood in for by the cylinder of its root, over its length (26 October 2026: screws and their tapped holes are threaded, KIT.matchThreads) */
+ const RC=new Map(),rootCyl=o=>{const t=o.userData.thread,g=o.geometry;if(!RC.has(g)){g.computeBoundingBox();const b=g.boundingBox,r=t.rs-(0.015+0.011*t.p)/2-0.5413*t.p;RC.set(g,new THREE.CylinderGeometry(r,r,b.max.y-b.min.y,24).translate(0,(b.max.y+b.min.y)/2,0));}return RC.get(g);};
  mv.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert(),v=new THREE.Vector3(),B=[];
  const addCol=(C,key,ys)=>{ys.sort((a,b)=>a-b);const c=C.get(key)||[];for(let i=0;i+1<ys.length;i+=2)c.push(ys[i],ys[i+1]);C.set(key,c);};
  const K=(i,k)=>(i+50000)*100000+k+50000,KI=q=>Math.floor(q/100000)-50000,KK=q=>q%100000-50000;
@@ -12,7 +14,7 @@
  for(const nm of names){body(nm);
   P[nm].traverse(o=>{if(!o.isMesh||o.userData.decal||o.userData.surface||o.userData.devPlate)return;const b=body(owner(nm,o));
    let h=o,vis=true;while(h&&h!==mv){if(!h.visible)vis=false;h=h.parent;}if(!vis)return;
-   const geo=o.geometry;if(!geo.attributes||!geo.attributes.position)return;const mats=[];
+   const geo=o.userData.thread?rootCyl(o):o.geometry;if(!geo.attributes||!geo.attributes.position)return;   /* a threaded shank as the cylinder of its root: it comes out turning, through its tapped hole's thread (rootCyl) */const mats=[];
    if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<o.count;i++){o.getMatrixAt(i,im);mats.push(new THREE.Matrix4().multiplyMatrices(inv,new THREE.Matrix4().multiplyMatrices(o.matrixWorld,im)));}}
    else mats.push(new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld));
    const pos=geo.attributes.position,idx=geo.index,nt=idx?idx.count/3:pos.count/3;

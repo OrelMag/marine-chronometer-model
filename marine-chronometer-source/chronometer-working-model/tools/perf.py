@@ -5,6 +5,7 @@
     python perf.py --throttle 4           # the CPU slowed 4x (Chrome's throttling): about a phone's
     python perf.py --sw                   # SwiftShader, WebGL on the CPU: a weak GPU (slow: use --secs 3)
     python perf.py --dpr 2 --secs 2       # a pixel ratio of 2; seconds measured per setting (default 2)
+    python perf.py --model wempe          # the Wempe's page (its Dial, Movement, Train and Case views)
 
 Chromium runs with vsync and its frame-rate limit off, so the frame rate is what a frame costs, not the display's rate. Frame cost is taken on ?snap&qa,
 which draws every frame: for each view, as the page opens (Edges on, Shadows off), with Shadows, and with neither. Per frame: ms and fps, draw calls and
@@ -15,8 +16,10 @@ import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()
+WEMPE='--model' in sys.argv and sys.argv[sys.argv.index('--model')+1]=='wempe'   # --model wempe: the Wempe's page (its views by the same buttons)
+if WEMPE:PAGE=(HERE.parent.parent/'wempe'/'index.html').as_uri()
 def arg(k,d=None):return sys.argv[sys.argv.index(k)+1] if k in sys.argv else d
-SW='--sw' in sys.argv;THR=float(arg('--throttle',1));DPR=float(arg('--dpr',1));SECS=float(arg('--secs',2));VIEWS=arg('--views','dial,movement,escapement,box').split(',')
+SW='--sw' in sys.argv;THR=float(arg('--throttle',1));DPR=float(arg('--dpr',1));SECS=float(arg('--secs',2));VIEWS=arg('--views','dial,movement,escapement,box' if not WEMPE else 'dial,movement,train,case').split(',')
 ARGS=(["--use-gl=swiftshader","--enable-webgl","--enable-unsafe-swiftshader"] if SW else ["--use-angle=default","--enable-gpu"])+["--ignore-gpu-blocklist","--disable-gpu-vsync","--disable-frame-rate-limit"]
 INSTR="""()=>{const r=__r;r.info.autoReset=false;const R0=r.render.bind(r);window.__pf={rc:0,cpu:0};r.render=function(s,c){const t=performance.now();R0(s,c);__pf.cpu+=performance.now()-t;__pf.rc++;};
  window.__measure=ms=>new Promise(res=>{let n=0,t0=null,a={calls:0,tris:0,rc:0,cpu:0};const z=()=>{r.info.reset();__pf.rc=0;__pf.cpu=0;};

@@ -6,6 +6,8 @@
    n samples, as the page moves the step's parts, all by the same share), giving each pair's d along it; what the step leaves in the tray (OVH.check.away) is
    out of the way. Returns the bodies, the pairs' meeting sets and, for each step, the bodies' rises along it and those put away. */
 (opt)=>{const mv=window.__mv,r=opt.r,n=opt.n;
+ /* a threaded shank (userData.thread: KIT's ISO thread) stood in for by the cylinder of its root, over its length (26 October 2026: screws and their tapped holes are threaded, KIT.matchThreads) */
+ const RC=new Map(),rootCyl=o=>{const t=o.userData.thread,g=o.geometry;if(!RC.has(g)){g.computeBoundingBox();const b=g.boundingBox,r=t.rs-(0.015+0.011*t.p)/2-0.5413*t.p;RC.set(g,new THREE.CylinderGeometry(r,r,b.max.y-b.min.y,24).translate(0,(b.max.y+b.min.y)/2,0));}return RC.get(g);};
  const MV=OVH.check.movers(),MVS=new Set(MV),scr=new Set(mv.userData.lifted.filter(g=>g.userData.lift)),P=mv.userData.parts;
  const bodyOf=o=>{while(o&&o!==mv){if(MVS.has(o)||scr.has(o))return o;if(o.userData.partName&&P[o.userData.partName]===o)return o;o=o.parent;}return null;};
  const nameOf=g=>{if(MVS.has(g))return g.userData.ovId+(MV.filter(o=>o.userData.ovId===g.userData.ovId).length>1?' #'+MV.filter(o=>o.userData.ovId===g.userData.ovId).indexOf(g):'');
@@ -19,7 +21,7 @@
  const K=(i,k)=>(i+50000)*100000+k+50000,KI=q=>Math.floor(q/100000)-50000,KK=q=>q%100000-50000;
  mv.traverse(o=>{if(!o.isMesh||o.userData.decal||o.userData.surface||o.userData.devPlate)return;const g=bodyOf(o);if(!g)return;
    let h=o,vis=true;while(h&&h!==mv){if(!h.visible&&!(h===o&&o.userData.onlyDrive))vis=false;h=h.parent;}if(!vis)return;
-   const geo=o.geometry;if(!geo.attributes||!geo.attributes.position)return;
+   const geo=o.userData.thread?rootCyl(o):o.geometry;if(!geo.attributes||!geo.attributes.position)return;   /* a threaded shank as the cylinder of its root: it comes out turning, through its tapped hole's thread (rootCyl) */
    if(!B.has(g))B.set(g,{name:nameOf(g),mv:moverOf(g),cols:new Map(),bb:[1e9,1e9,-1e9,-1e9]});
    const b=B.get(g),mats=[];
    if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<o.count;i++){o.getMatrixAt(i,im);mats.push(new THREE.Matrix4().multiplyMatrices(inv,new THREE.Matrix4().multiplyMatrices(o.matrixWorld,im)));}}
