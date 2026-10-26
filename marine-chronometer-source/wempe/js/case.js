@@ -46,6 +46,7 @@ const WCASE=(()=>{
      when it is screwed down), its roots r 54.87 and crests r 55.276, Ø 110.55 (the 6MX's rim Ø 110.5 measured on Kirov 247's dial photograph: below). Right-hand (estimated),
      the bowl's and the bezel's on one helix (TH.yr). TC: the bowl's rim over the seat, the flange's 4.7 */
   const TC=4.7,TH={p:0.75,d:0.406,Rm:54.87,Rf:55.306,yr:YB};
+  const PIN={r:1.25,up:2.3,dn:3.3};   /* the box's pins over the outer pivots: radius, standing over the parting face, into the wall (05 01's elevation: below) */
   const HGL=148,HGT=0.6,STA=5,STB=40,STC=20,STD=45,STL=91,SS0=23.5,SS1=86.5;   /* the hinge's length and leaf, the lid stay's pivot (over the parting line, from the back's outside), its pin (under it, from the back) and the bar, its slot from the pivot */
   const KX=BW-WT-14,KZ=-(BW-WT-14),KH=YF+WT+65;   /* the key's holder: its fitting's centre (back right, 14 from each wall: 51-00_1, the box, below) and the fitting's top, where the key's cone seats */
   const N=240,CC=new Map(),circ=(r,s0=0)=>{const k=r+'|'+s0;if(!CC.has(k)){const o=[];for(let i=0;i<N;i++){const t=s0+i/N*TAU;o.push([r*Math.cos(t),r*Math.sin(t)]);}CC.set(k,o);}return CC.get(k);};
@@ -601,6 +602,17 @@ const WCASE=(()=>{
          wall's inside, then a pin Ø 2.9 × 6.3): 05 01's taken, as the case's sheet. Until 25 October 2026 a plain M6 22.5 long to the ring's inside. A brass bearing disc
          Ø 22.7 × 1.9 on each wall's inside (05 01's elevation: 55 px high, 1.8 and 2.0 thick at 9 and 3 o'clock; Ø 23 × 2.4 until 25 October 2026); its edge knurled, as
          Wempe 6161's and Lange 1947's show it (antiquorum_208-4_wempe6161.jpg at 9 and 3 o'clock, drouot_33810142_lange1947_2.jpg: likely) */
+      /* the pins over the outer pivots (PIN): 05 01's elevation draws on each side wall's parting face, over its pivot, a small round fitting standing out of the face and
+         let into the wood, its outline round-headed and its inside drawn in crossing coils (a thread or a spring: the sheet doesn't say), with no number or part line. Read on the
+         scan's pixel profiles (25 October 2026, 2.45 px/mm; the wall's top 115.0 px on the left, 117.0 on the right): its sides 64.0/69.5 px and 487/493 (line centres, the lines
+         about 1.5 px wide: Ø 2.2-2.4 between the lines' centres, 2.7-2.9 over their outsides; built Ø 2.5), its rounded top 109.5 and 111 px (2.2 and 2.4 over the face: 2.3), its
+         foot 123 and 125 px (3.3 into the wall on both), on the wall's middle line (the left wall 50-81 px, the pin's middle 66.8; the right 475-505, 490.0). Not drawn in Schnitt
+         C-D (cut through the front and back walls) nor on any other sheet in the set. What it is: inferred a pin locating the lid on the box (a ball catch would be drawn as a ball
+         in a sleeve), so the lid is bored for it (above). No photograph shows one: Greenwich's wartime Wempe (rmg_L5393_wempe_wartime_001.jpg, about 2.5 px/mm, its side walls'
+         tops over the pivots plain oak) and Wempe 6161 (antiquorum_208-4_wempe6161.jpg, a later box with a rebated lip at the parting) show none. Brass (estimated: the box's
+         fittings' metal). Whole: its likely place and size, its purpose inferred */
+      for(const s of[-1,1]){const pr=[[0,YL-PIN.dn],[PIN.r,YL-PIN.dn],[PIN.r,YL+PIN.up-PIN.r]];for(let i=1;i<=8;i++){const t=Math.PI/2*i/8;pr.push([PIN.r*Math.cos(t),YL+PIN.up-PIN.r+PIN.r*Math.sin(t)]);}
+        tag(mesh(bxW,new THREE.LatheGeometry(pr.map(([a,c])=>V2(a,c)),24),M.brass,s*(BW-WT/2),0,0),'Kastenstift');}   /* its foot a flat end r 0 to r, the dome to the axis: closed */
       for(const s of[-1,1]){WN80(bxW,BW,s,6,3.8);const dg=knurl(11.35,0.35,1.9,140,3);dg.translate(0,-0.95,0);const d=tag(mesh(bxW,dg,M.brass,s*(BW-WT-0.95),YP,0),'Lagerscheibe');d.rotation.z=Math.PI/2;}
       /* the handles (Griff f. Chronometerkasten, Änderung von 51 00 10, 14.7.42, 1:1): a strip 100 long and 18 high, its ends 10 long flat on the side with a screw each, between
          them standing 10 off it, over the wall's finger recess (an oval 70 × 30, above); its middle 75 over the box's bottom, its top 3.5 under the pivot's screw (sure). The strip 3 thick (likely); the screws estimated */
@@ -658,7 +670,11 @@ const WCASE=(()=>{
       stayP.rotation.x=Math.atan2(-(z-STB),-(y-STA));};
     const lidG=new THREE.Group();lidG.position.set(0,YL,-BW-2.5);root.add(lidG);const ld=prt(lidG,'lid');ld.position.z=2.5;const ldW=rv(ld,'last first 1943');   /* turning about the hinges' knuckles, 2.5 behind the back */
     {const B=tag(new THREE.Group(),'Holzkasten.D');ldW.add(B);const h=YT-YL-WT,o=BW;
-      for(const s of[-1,1]){if(s>0)box(B,2*BW,h,WT,0,h/2,o+s*(BW-WT/2),MC.mah);box(B,WT,h,2*BW-2*WT,s*(BW-WT/2),h/2,o,MC.mah);
+      /* each side wall bored from its parting face for the box's pin under it (below, PIN): Ø 2.7, 2.6 deep (inferred: no sheet draws the lid, but the pin stands 2.3 proud of
+         the box's face, so a closed lid must take it); its wood mapped as box()'s side faces */
+      const lidSide=s=>{const x0=s*(BW-WT),x1=s*BW,z0=o-(BW-WT),z1=o+(BW-WT),g=blindHoles(polyGeo([[x0,z0],[x1,z0],[x1,z1],[x0,z1]],h,[[s*(BW-WT/2),o,PIN.r+0.1]]),'bottom',[[s*(BW-WT/2),o,PIN.r+0.1]],PIN.up+0.3),P=g.attributes.position,U=g.attributes.uv;
+        for(let i=0;i<P.count;i++)U.setXY(i,(P.getZ(i)-z0)/(z1-z0),P.getY(i)/h);return g;};
+      for(const s of[-1,1]){if(s>0)box(B,2*BW,h,WT,0,h/2,o+s*(BW-WT/2),MC.mah);mesh(B,lidSide(s),MC.mah);
         box(B,2*BW,WT,20,0,h+WT/2,o+s*(BW-10),MC.mah);box(B,20,WT,2*BW-40,s*(BW-10),h+WT/2,o,MC.mah);}
       const g=tag(box(ldW,151,3,151,0,h-1.5,o,M.glass),'Deckelglas');g.userData.noShadow=g.userData.inkBox=1;   /* no Edges lines, as the bezel's glass */
       for(const s of[-1,1])box(B,BW-HGL/2,h,WT,s*(BW+HGL/2)/2,h/2,WT/2,MC.mah);box(B,HGL,h-HGT,WT,0,HGT+(h-HGT)/2,WT/2,MC.mah);   /* the lid's back wall, let in for the hinge's leaf */

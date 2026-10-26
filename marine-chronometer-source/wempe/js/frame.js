@@ -195,12 +195,13 @@ const WFRAME=(()=>{
        cross the cone); the M2.6 holes 6.0 deep (to the flange): estimated. Material not given ("——"); Wempe 3955's is nickel-bright: drawn nickel, estimated. Its radial pin
        to the case (P1f, below) */
     const rg=part('ring',12);
-    {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
+    {const RH=(/** @type {number[]} */p)=>C(p,rM26/Math.cos(Math.PI/24),24);   /* the screws' M2.6 holes: 24 flats rM26 from the axis (fusee.js bore's polygon; 83 corners on rM26 until 25 October 2026), one outline through band and flange */
+     const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
       /* the screws' places: the drawings' 340, 100, 220; the Soviet 6MX's 342.2, 102.2, 246.4 ±0.5 (Kirov No. 247: 2_Kirow_247_A.jpg and 3_Kirow_247_uZ.jpg, holemap.py
          --model wempe on each at 8.89 and 8.57 px/mm, the two faces agreeing; Kirov 009 and Poljot 20027 the same: sure), so 120°, 144° and 96° apart; the band built per version */
       const RSV=/** @type {[string,number[]][]} */([['last first 1943',[340,100,220]],['6mx',[342.2,102.2,246.4]]]),RS={},RB=/** @type {any} */({}),RF=/** @type {any} */({});   /* each version's band and flange, merged below */for(const[V,b]of RSV)RS[V]=b;
       for(const[V,BS]of RSV){const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
-        ...BS.map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
+        ...BS.map(b=>({p:RH(add([0,0],brg(b),89/2)),a:0.35,b:6.35}))]};   /* through the band; on through the flange to its cone below (the flange's, FLC) */
       RB[V]=tag(mesh(rv(rg,V==='6mx'?V:V+' -3955'),solidGeo([band]),V==='6mx'?M.gilt:M.plateSolid),'050800-3');}
       /* Wempe 3955's (the version as photographed) band: a groove across it on the hand-setting cut's line (through 18), under the plate's notch (above), from the lip out
          through the band's outside, for the hand-setting's shaft: straight sides, a round floor, closed in the band (the user's reading of 8_, 18 October 2026), which passes
@@ -217,7 +218,7 @@ const WFRAME=(()=>{
         const rect=[P(40,-wm),P(48.6,-wm),P(48.6,wm),P(40,wm)],C48=C([0,0],96/2,nS),C41=c41,SP=bb.dAB[0];
         const main=bool(C48,bool(bb.uni[0],rect).uni[0]).dAB[0],lip=bool(bb.dAB[0],bool(C41,rect).uni[0]).dAB[0];
         const yc=(/** @type {number[]} */p)=>Math.min(6.35,5.35+(Math.hypot(p[0],p[1])-41.5));   /* the drawn cone under the lip: Ø 83 at 5.35 to Ø 85 at 6.35 */
-        const cells=/** @type {any[]} */([{loop:cc(main),y0:0.35,y1:6.35,F:RS['last first 1943'].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))},{loop:cc(lip),y0:3.35,y1:yc},{loop:cc(bb.B2),y0:5.35,y1:yc}]);
+        const cells=/** @type {any[]} */([{loop:cc(main),y0:0.35,y1:6.35,F:RS['last first 1943'].map(b=>({p:RH(add([0,0],brg(b),89/2)),a:0.35,b:6.35}))},{loop:cc(lip),y0:3.35,y1:yc},{loop:cc(bb.B2),y0:5.35,y1:yc}]);
         const on=(/** @type {number[][]} */L,/** @type {number} */w)=>L.filter(p=>Math.abs(Wo(p)-w)<1e-7&&Uo(p)>0).sort((a,b)=>Uo(a)-Uo(b));
         const cross=(/** @type {number[][]} */L,/** @type {number} */w)=>{for(let i=0;i<L.length;i++){const p=L[i],q=L[(i+1)%L.length],a=Wo(p)-w,b=Wo(q)-w;if(a*b<0&&Uo(p)>0){const t=a/(a-b);return[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];}}return[0,0];};
         const among=(/** @type {number[][]} */L,/** @type {number} */w0,/** @type {number} */w1)=>L.filter(p=>Uo(p)>0&&Wo(p)>Math.min(w0,w1)&&Wo(p)<Math.max(w0,w1)).sort((a,b)=>(Wo(a)-Wo(b))*(w1>w0?1:-1));
@@ -230,9 +231,15 @@ const WFRAME=(()=>{
         RB['3955']=tag(mesh(rv(rg,'3955'),solidGeo(cells),M.plateSolid),'050800-3');}   /* the 6MX's gilt brass (Kirov No. 247's A, N and W photographs, photocompare.py: sure; nickel until 18 October 2026) */
       const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
       for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
-      const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
+      const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),...RS[V].map(b=>({p:RH(add([0,0],brg(b),89/2)),a:6.35,b:6.95})),
         ...AS.map(a=>{const rD=V==='6mx'?49.9:50.5;return{p:C([rD*Math.sin(a*D2R),-rD*Math.cos(a*D2R)],0.52),a:6.35,b:11.05};})]};   /* the 6MX's on r 49.9 (dial.js) */   /* the dial screws' M1 through the flange: they show on its underside in Wempe 3955's top plate photograph (2_Wempe_3955_A.jpg: likely; 2.5 deep until 16 October 2026) */   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
-      const gF=rv(rg,V);FLG.push(gF);RF[V]=tag(mesh(gF,solidGeo([fl]),V==='6mx'?M.gilt:M.plateSolid),'050800-3',1);}
+      /* FLC: the three M2.6 holes on through the flange until they open in its cone (Ø 85 at 6.35 to Ø 93 at the dial's recess): Wempe 3955's dial side shows all three as dark
+         holes in the cone's face (3_Wempe_3955_uZ.jpg: sure that they open there), and 05 08 00-3 draws them on Ø 89 (the cone's face crosses r 43.2-45.8, the hole's sides,
+         at 7.1-10.2 above the inner face); drawn at the band's tapped Ø 2.64, same polygon (the sheet sizes only the M2.6; whether tapped this far or drilled clear is not
+         drawn: estimated as the band's). Cut by fusee.js's bore (a prism up the hole's axis from inside its start, open past the cone), closed by its capFix. 25 October 2026:
+         until then they stopped at the flange (6.35), solidGeo cutting no hole through a cone's slope */
+      const FLC=(/** @type {any} */g)=>{for(const b of RS[V]){const c=add([0,0],brg(b),89/2);g=WFUSEE.capFix(WFUSEE.bore(g,[c[0],6.35,c[1]],[0,1,0],0,0.3,4,C([0,0],(rM26+0.005)/Math.cos(Math.PI/24),24)),null);}return g;};   /* from 0.3 inside each hole's start in the flange (fl above, 0.6 deep, under the cone there), its outline the start's 0.005 larger (the start's walls and the bore's planes coplanar left the bore's sections open): a 5 µm step 0.3 up the hole */
+      const gF=rv(rg,V);FLG.push(gF);RF[V]=tag(mesh(gF,FLC(solidGeo([fl])),V==='6mx'?M.gilt:M.plateSolid),'050800-3',1);}
       /* the band and the flange one ring (05 08 00-3), one mesh in each version (fuse, core.js): their bores' and walls' faces ran flush, rings round it in Edges until 21 October
          2026. The drawings' flange, shared by the plain band and Wempe 3955's, goes into each as a copy; the pin stays in the flange's group */
       { const cp=f=>{const m=mesh(f.parent,f.geometry.clone(),f.material);m.position.copy(f.position);return tag(m,'050800-3',1);},f=RF['last first 1943'];
