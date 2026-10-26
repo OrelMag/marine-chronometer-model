@@ -437,7 +437,7 @@ const WFRAME=(()=>{
         const seen=new Set(),disc=[];for(const Q of cells)for(const p of Q.loop)if(Math.abs(Math.hypot(p[0],p[1])-R0)<1e-9){const k=Math.round(p[0]*1e7)+','+Math.round(p[1]*1e7);if(!seen.has(k)){seen.add(k);disc.push(p);}}
         disc.sort((p,q)=>an(p)-an(q));return{cells,disc,R0};})();
       const ySl=q=>TT-11.8-clamp(rr(q)-bo.R0,0,0.8);
-      const boss=[...bo.cells.map(Q=>({L:Q.loop,y0:TT-12.6,y1:ySl,strip:Q.strip})),{L:bo.disc,y0:TT-12.6,y1:TT-11.8,F:[{p:C(c,5.206/2),a:TT-12.6,b:TT-12.3},{p:C(c,4.59/2),a:TT-12.3,b:TT-11.8}]}];
+      const boss=[...bo.cells.map(Q=>({L:Q.loop,y0:TT-12.6,y1:/** @type {any} */(ySl),strip:Q.strip,F:[]})),{L:bo.disc,y0:TT-12.6,y1:/** @type {any} */(TT-11.8),strip:0,F:[{p:C(c,5.206/2),a:TT-12.6,b:TT-12.3},{p:C(c,4.59/2),a:TT-12.3,b:TT-11.8}]}];
       const thF=[T(c,5.206/2,TT-15,TT-12.6),T(L(3.525,0),0.95/2,TT-15,TT-12.6),T(L(-3.525,0),0.95/2,TT-15,TT-12.6),
         T(WESC.HOLES.studScrew,rM14,TT-15,TT-12.6)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
       if(rr(WESC.HOLES.studScrew)+rM14>11.2)throw new Error('upper cock: the stud screw in the step');
