@@ -99,7 +99,7 @@ Read by `tools/drawing_ledger.py`, which puts each line beside its sheets in WEM
 
 ## Batch 10: case, gimbals, boxes, keys
 - 05-01/Wempe_05-01_4.jpg | corrected | the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) | 5c49513b
-- 05-01/Wempe_05-01_2.jpg | corrected | the bowl's floor disc on the wall's own 360 corners (a dotted ring where 240 facets crossed them) | 5c49513b
+- 05-01/Wempe_05-01_2.jpg | open | the dotted ring on the bowl's inside floor at r 34.1 (the bottom disc and the turned wall fused face to face): the disc moved onto circT's 360 corners, which didn't clear it (the render after still shows it) | 5c49513b
 - 51-00/Wempe_51-00_2.jpg | open | the box's handle 13 off the panel with S-bends (built 10, kinked: likely) and the finger recess's "10" deep (R 10.5), terraced | 5c49513b
 - 05-01/Wempe_05-01_6.jpg | open | the 1940 key's stem 32 out of its body (31.7, as drawn 31.74) | 5c49513b
 - 05-01/Wempe_05-01_1.jpg | open | the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) | 5c49513b

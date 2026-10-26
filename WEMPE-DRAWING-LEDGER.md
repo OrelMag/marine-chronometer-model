@@ -15,7 +15,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | 7 | barrel, arbor, set-up ratchet, mainspring, chain | marine-chronometer-source/wempe/drawing-check/batch7.md | 14 | 14 of 14 | 4 | 3 |
 | 8 | going train | marine-chronometer-source/wempe/drawing-check/batch8.md | 10 | 10 of 10 | 4 | 0 |
 | 9 | motion work, hands, dial | marine-chronometer-source/wempe/drawing-check/batch9.md | 13 | 13 of 13 | 1 | 3 |
-| 10 | case, gimbals, boxes, keys | marine-chronometer-source/wempe/drawing-check/batch10.md | 14 | 14 of 14 | 3 | 4 |
+| 10 | case, gimbals, boxes, keys | marine-chronometer-source/wempe/drawing-check/batch10.md | 14 | 14 of 14 | 2 | 5 |
 
 124 images: 113 in batches, 11 excluded with a reason, 0 without a batch.
 
@@ -26,7 +26,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6, 7, 8 | — | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
 | `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded (also reviewed by batch 7) | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | reviewed by batch 10 | open: the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) (5c49513b); corrected: the case's turned pieces (pivots' tips, key, lock) shaded square at their corners (2303c7d9) |  |
-| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | reviewed by batch 10 | corrected: the bowl's floor disc on the wall's own 360 corners (a dotted ring where 240 facets crossed them) (5c49513b) |  |
+| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | reviewed by batch 10 | open: the dotted ring on the bowl's inside floor at r 34.1 (the bottom disc and the turned wall fused face to face): the disc moved onto circT's 360 corners, which didn't clear it (the render after still shows it) (5c49513b) |  |
 | `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | reviewed by batch 10 | — |  |
 | `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | reviewed by batch 10 | corrected: the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) (5c49513b) |  |
 | `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | reviewed by batch 10 | — |  |
@@ -150,7 +150,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 
 ## Changes made
 
-From `marine-chronometer-source/wempe/drawing-check/changes.md`: 56 corrected, 25 left open, 1 kept as recorded departures.
+From `marine-chronometer-source/wempe/drawing-check/changes.md`: 55 corrected, 26 left open, 1 kept as recorded departures.
 
 | Drawings | Kind | What | Commit |
 |---|---|---|---|
@@ -230,7 +230,7 @@ From `marine-chronometer-source/wempe/drawing-check/changes.md`: 56 corrected, 2
 | `05-02/Wempe_05-02_09.jpg` | open | the hour wheel's 0,4 × 30° riveting sink and the change wheel's rivet relief (05 02 02, unsure) | 5c49513b |
 | `05-02/Wempe_05-02_06.jpg`, `05-02/Wempe_05-02_08.jpg` | open | the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) | 5c49513b |
 | `05-01/Wempe_05-01_4.jpg` | corrected | the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) | 5c49513b |
-| `05-01/Wempe_05-01_2.jpg` | corrected | the bowl's floor disc on the wall's own 360 corners (a dotted ring where 240 facets crossed them) | 5c49513b |
+| `05-01/Wempe_05-01_2.jpg` | open | the dotted ring on the bowl's inside floor at r 34.1 (the bottom disc and the turned wall fused face to face): the disc moved onto circT's 360 corners, which didn't clear it (the render after still shows it) | 5c49513b |
 | `51-00/Wempe_51-00_2.jpg` | open | the box's handle 13 off the panel with S-bends (built 10, kinked: likely) and the finger recess's "10" deep (R 10.5), terraced | 5c49513b |
 | `05-01/Wempe_05-01_6.jpg` | open | the 1940 key's stem 32 out of its body (31.7, as drawn 31.74) | 5c49513b |
 | `05-01/Wempe_05-01_1.jpg` | open | the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) | 5c49513b |
