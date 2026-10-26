@@ -8,7 +8,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 |---|---|---|---|---|
 | 1 | plates, pillars, movement ring | marine-chronometer-source/wempe/drawing-check/batch1.md | 10 | 10 of 10 |
 | 2 | bridges, bushes, cocks, set-up click | marine-chronometer-source/wempe/drawing-check/batch2.md | 9 | 9 of 9 |
-| 3 | balance, hairspring, stud, rollers, balance jewels | (running or to come) | 13 | — |
+| 3 | balance, hairspring, stud, rollers, balance jewels | marine-chronometer-source/wempe/drawing-check/batch3.md | 13 | 13 of 13 |
 | 4 | escape wheel, detent, detent block, escape jewels | (running or to come) | 9 | — |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | (running or to come) | 12 | — |
 | 6 | maintaining work, maintaining detent, stop work | (running or to come) | 9 | — |
@@ -23,7 +23,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 
 | Image | Sheet | Batch | Status | Note |
 |---|---|---|---|---|
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
 | `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | waiting for batch 10 |  |
@@ -47,22 +47,22 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 9 | waiting for batch 9 |  |
 | `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 9 | waiting for batch 9 |  |
 | `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 9 | waiting for batch 9 |  |
-| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 3 | waiting for batch 3 |  |
-| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 4 | waiting for batch 4 |  |
+| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 3 | reviewed by batch 3 |  |
+| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 3 | reviewed by batch 3 |  |
+| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 4 | reviewed by batch 3 |  |
 | `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 4 | waiting for batch 4 |  |
 | `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 3 | waiting for batch 3 |  |
-| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 3 | waiting for batch 3 |  |
+| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 3 | reviewed by batch 3 |  |
+| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 3 | reviewed by batch 3 |  |
+| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 3 | reviewed by batch 3 |  |
 | `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 4 | waiting for batch 4 |  |
 | `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 4 | waiting for batch 4 |  |
 | `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 4 | waiting for batch 4 |  |
@@ -123,7 +123,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 2 | reviewed by batch 2 |  |
 | `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 2 | reviewed by batch 2 |  |
-| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 2 | reviewed by batch 2 |  |
+| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 2 | reviewed by batch 2, 3 |  |
 | `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 2 | reviewed by batch 2 |  |
 | `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 2 | reviewed by batch 2 |  |
@@ -136,7 +136,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 1 | reviewed by batch 1 |  |
-| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | — | excluded (also reviewed by batch 2) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | — | excluded (also reviewed by batch 2, 3) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | — | excluded | the hand setting (05 33), not built: the lever chronometer BC 1010's (README, the owner's decision, 18 October 2026) |
 | `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
 | `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
@@ -146,4 +146,4 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | waiting for batch 10 |  |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
