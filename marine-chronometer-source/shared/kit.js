@@ -30,6 +30,20 @@ const KIT=(()=>{
     const n=Math.ceil(Math.abs(d)/0.03);for(let q=1;q<n;q++){const a=aE+d*q/n;run.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}
     return run;
   }
+  /* crease(g, deg): g's normals made again, each corner's the area-weighted mean of the faces round it within deg of its own face (30° by default), so a turned part's
+     square corners shade square and its curves smooth; the triangles, their order and the corners' places as they were (r128's lathe averages across corners: square
+     edges shaded round, 26 October 2026). Returns g unindexed, its userData kept */
+  /** @param {any} g @param {number} [deg] */
+  function crease(g,deg=30){const h=g.index?g.toNonIndexed():g,P=h.attributes.position.array,nt=P.length/9,FN=new Float64Array(nt*3),U=new Float64Array(nt*3),c=Math.cos(deg*Math.PI/180),VM=new Map();
+    for(let t=0;t<nt;t++){const o=9*t,ux=P[o+3]-P[o],uy=P[o+4]-P[o+1],uz=P[o+5]-P[o+2],vx=P[o+6]-P[o],vy=P[o+7]-P[o+1],vz=P[o+8]-P[o+2],x=uy*vz-uz*vy,y=uz*vx-ux*vz,z=ux*vy-uy*vx,l=Math.hypot(x,y,z);
+      FN[3*t]=x;FN[3*t+1]=y;FN[3*t+2]=z;if(l>1e-14){U[3*t]=x/l;U[3*t+1]=y/l;U[3*t+2]=z/l;}
+      for(let k=0;k<3;k++){const key=Math.round(P[o+3*k]*1e6)+','+Math.round(P[o+3*k+1]*1e6)+','+Math.round(P[o+3*k+2]*1e6);let L=VM.get(key);if(!L)VM.set(key,L=[]);L.push(t);}}
+    const N=h.attributes.normal?h.attributes.normal.array.slice():new Float32Array(P.length);
+    for(let t=0;t<nt;t++){if(!U[3*t]&&!U[3*t+1]&&!U[3*t+2])continue;const o=9*t;
+      for(let k=0;k<3;k++){const L=VM.get(Math.round(P[o+3*k]*1e6)+','+Math.round(P[o+3*k+1]*1e6)+','+Math.round(P[o+3*k+2]*1e6));let x=0,y=0,z=0;
+        for(const f of L)if(U[3*f]*U[3*t]+U[3*f+1]*U[3*t+1]+U[3*f+2]*U[3*t+2]>=c){x+=FN[3*f];y+=FN[3*f+1];z+=FN[3*f+2];}
+        const l=Math.hypot(x,y,z);if(l>0){N[o+3*k]=x/l;N[o+3*k+1]=y/l;N[o+3*k+2]=z/l;}}}
+    h.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));if(h!==g)Object.assign(h.userData,g.userData);return h;}
   /* latheF(pts, n): a turned solid as THREE.LatheGeometry turns the profile pts ([r, y] or Vector2s), but split at each corner of the profile (its direction turning more
      than 30°), each run turned on its own, so a corner's normals are its two faces' own: r128's lathe averages them, which shaded square edges round and sinks blotchy
      (26 October 2026); a curve drawn in short steps stays smooth. The pieces merged (core.js mergeGeo), one closed solid by position as before */
@@ -397,5 +411,5 @@ const KIT=(()=>{
     return pr.map(([r,y])=>[r,y0+s*y]);};
   /** @type {(R:number,e:number,h:number,y0:number,s:number)=>number[][]} */
   const endPr=(R,e,h,y0,s)=>{const pr=[[0,0],[R,0],[R,e]];for(let i=1;i<=8;i++){const r=R*(1-i/8);pr.push([r,e+domeAt(R,h,r)]);}return pr.map(([r,y])=>[r,y0+s*y]);};
-  return{latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  return{crease,latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();
