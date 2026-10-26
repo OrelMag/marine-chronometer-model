@@ -27,6 +27,15 @@ Started 26 October 2026, after the owner found two parts the fidelity audit (WEM
 
 Each agent reads only and writes its findings to `oq/drawing-check/batchN.md` in the scratchpad. After each pair, the corrections it calls for are made together in one batch on `claude/wempe-artifacts` (or a branch of their own), each built from the sheet's own figures, then isolated against the sheet; the geometry checks (`solids.py`, `fine.py`, `holecheck.py`, `audit.py`, `exploded.py`, `bom.py`, all `--model wempe`) run once a batch, and a release follows. A correction that moves a part others are fitted to (a hole, a height) is checked against those parts before it goes in. Readings a sheet doesn't settle go to the README's Estimated section, not into the model.
 
+The build book's drawings (`tools/drawbook.py`, `wempe/book/wempe-build-book.pdf`) are regenerated once, after every batch has been reviewed and corrected (the owner, 26 October 2026), not per batch.
+
+## The owner's decisions (26 October 2026)
+
+- Corrections that change the physics (the balance's timing weights and mass screws, the escape wheel's web, the detent's offset): re-measured on their sheets first; where confirmed, corrected and every Wempe physics tool and golden file rerun.
+- The dust bush in both forms: the main model (as last revised) waisted as the 1946 assembly 05 08 01 and the photographs draw it; the earlier versions straight as its own sheet 05 08 01-3 (1942).
+- The top plate's horn tips all three ways, one to a version: sharp as the part sheet (1943), r 1 as the 1946 assembly, r 0.3 on Wempe 3955 (its photograph).
+- One release at the end, after every batch is corrected and checked; the build book regenerated then too.
+
 ## Results
 
 (each batch's findings and what was corrected, as they come in)

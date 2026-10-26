@@ -80,7 +80,7 @@ const adj=()=>({c1:-(air(36)-air(4))/32+(2*rnd()-1)*cRes,Sv:Sint[0]+(Sint[1]-Sin
 const SETB=0.1,adjB=()=>({...adj(),c1:-(air(36)-air(4))/32+(2*rnd()-1)*perDeg*SETB});
 /* the calibration: the scatter's sd until the trial's median E is the cards', the drift's until its median |R| is (each by bisection, three rounds; the trial as adjusted,
    every other term in it) */
-{const mE=(k,n=500)=>pct([...Array(n)].map(()=>trial(adj())).map(r=>Math.abs(r[k])),0.5);
+{const CRN=+(process.env.MC_EB_CRN||7),mE=(k,n=4000)=>{const s0=seed;seed=CRN;const v=pct([...Array(n)].map(()=>trial(adj())).map(r=>Math.abs(r[k])),0.5);seed=s0;return v;};   /* each evaluation on the same draws (common random numbers), so the bisection follows a smooth function: until 26 October 2026 every step drew 500 fresh trials, and the drift it landed on wandered 10.7-12.3 ms a day with the draws, enough to flip wempe_navigation.js's verdict on the 1950s build */
   for(let it=0;it<3;it++){let a=0.01,b=2;for(let i=0;i<14;i++){SC.sd=Math.sqrt(a*b);mE('E')<cardE?a=SC.sd:b=SC.sd;}SC.sd=Math.sqrt(a*b);
     a=1e-4;b=0.2;for(let i=0;i<14;i++){SC.drS=Math.sqrt(a*b);mE('R')<cardR?a=SC.drS:b=SC.drS;}SC.drS=Math.sqrt(a*b);}}   /* adjusted: the masses null the whole linear term, the air's with the balance's */
 const drawn=()=>({c1:LIN.drawn,Sv:Sint[0]+(Sint[1]-Sint[0])*rnd(),k:1});

@@ -38,11 +38,15 @@ const lin=(xs,ys,x)=>{if(x<=xs[0])return ys[0]+(ys[1]-ys[0])*(x-xs[0])/(xs[1]-xs
 const S2=[0.8,1.0,1.2,1.4],KD=[0.5,0.75,1,1.4,2],KP=[0.6,0.8,1,1.2,1.4];
 const grid=(K,fn)=>S2.map(s=>{const a0=E.atK(s,1,1).A*D;return K.map(k=>k===1?0:fn(s,k)-a0);}),dKdG=grid(KD,(s,k)=>E.atK(s,k,1).A*D),dKpG=grid(KP,(s,k)=>E.atK(s,1,k).A*D);
 const bil=(Gd,K,s,k)=>lin(S2,S2.map((_,i)=>lin(K,Gd[i],k)),s);
-const S3=[0.85,1.0,1.15],A3=S3.map(s=>E.atK(s,1,1).A*D),reb=(K,o)=>{const g=S3.map(()=>[]);K.forEach(k=>{const e=W.makeEsc({...S,...o(k)},S);S3.forEach((s,i)=>g[i].push(e.atK(s,1,1).A*D-A3[i]));});return g;};
+const S3=[...new Set([...[...Array(13).keys()].map(i=>+(0.85+0.025*i).toFixed(3)),+dmin.toFixed(4),+dmax.toFixed(4)])].sort((a,b)=>a-b),   /* the drives the preload's and lock's grids are taken at: every 0.025 and the wind's own ends (0.85, 1.0, 1.15 until 26 October 2026: near the window's deep end the swing collapses at the lowest drive first, and interpolating from 0.85 dragged that collapse into the wind's lowest, 0.95) */A3=S3.map(s=>E.atK(s,1,1).A*D),reb=(K,o)=>{const g=S3.map(()=>[]);K.forEach(k=>{const e=W.makeEsc({...S,...o(k)},S);S3.forEach((s,i)=>g[i].push(e.atK(s,1,1).A*D-A3[i]));});return g;};
 const PREG=[0.1,0.35,S.W78,0.9,1.2,1.6],dPreG=reb(PREG,w=>({W78:w}));
 const LK0=S.dL*S.ES,LKG=[...[-0.055,-0.045,-0.035,-0.025,-0.02,-0.015,-0.012,-0.008,-0.005,0,0.005,0.01].map(x=>LK0+x).filter(x=>x<TOL.lock.deep-0.002),TOL.lock.deep-0.001],   /* about the drawn depth (0.175 until 19 October 2026) */dLkG=reb(LKG,d=>({dL:d/S.ES}));
 const bi3=(Gd,K,s,k)=>lin(S3,S3.map((_,i)=>lin(K,Gd[i],k)),s);
-const Asurf=(s,kd,kp,pre,dep)=>lin(SG,A0g,s)+bil(dKdG,KD,s,kd)+bil(dKpG,KP,s,kp)+bi3(dPreG,PREG,s,pre)+bi3(dLkG,LKG,s,Math.min(dep,LKG[LKG.length-1]));
+/* the preload and the lock together (since 26 October 2026): near the deep end of the window the stone's ride through the impulse (makeEsc's RWD) makes their effects on the swing
+   interact, which their two terms added missed by up to 6.5°; makeEsc rebuilt on the grid of both, at each drive, interpolated bilinearly */
+const dPLG=S3.map(()=>PREG.map(()=>[]));PREG.forEach((w,p)=>LKG.forEach(d=>{const e=W.makeEsc({...S,W78:w,dL:d/S.ES},S);S3.forEach((s,i)=>dPLG[i][p].push(e.atK(s,1,1).A*D-A3[i]));}));
+const bPL=(i,w,d)=>lin(PREG,PREG.map((_,p)=>lin(LKG,dPLG[i][p],d)),w);
+const Asurf=(s,kd,kp,pre,dep)=>lin(SG,A0g,s)+bil(dKdG,KD,s,kd)+bil(dKpG,KP,s,kp)+lin(S3,S3.map((_,i)=>bPL(i,pre,Math.min(dep,LKG[LKG.length-1]))),s);   /* (the preload's and the lock's terms added, bi3(dPreG)+bi3(dLkG), until 26 October 2026) */
 const VAL=[[0.92,0.8,1.15,0.9,-0.015],[1.1,1.3,0.85,0.4,0.005],[0.97,1.2,1.25,1.3,-0.03],[1.05,0.6,0.7,0.63,0],[0.9,1.5,1.0,1.1,-0.005]].map(([s,kd,kp,w,x])=>{const d=LK0+x;const e=W.makeEsc({...S,W78:w,dL:d/S.ES},S),a=e.atK(s,kd,kp).A*D;return{s,kd,kp,w,d,a,sf:Asurf(s,kd,kp,w,d)};});
 const vErr=Math.max(...VAL.map(v=>Math.abs(v.a-v.sf)));
 

@@ -393,7 +393,9 @@ head('4. A beat: the train as bodies on its meshes driving dynamics.js\'s escape
      and at the release the escape wheel starts free of the train behind it, picking it up as the backlash closes. So the impulse's work lies between a rigid train with the whole
      train's inertia at the escape wheel (JT, makeEsc's JW) and one with the escape arbor's alone (JE): the equivalent inertia the meshes give, interpolated between the two */
   {const WL=mean(rL.W),fr=(W1-W0)/(WL-W0),Jeq=DY.JT*(1-fr*(1-DY.JE/DY.JT));out.beat_eq={WL,fr,Jeq:Jeq*1e9};
-   chk(fr>=0&&fr<=1,`between the rigid trains: ${f(W0*1e6,3)} µJ with the whole train's inertia at the escape wheel (${f(DY.JT*1e9,2)} g·mm²) and ${f(WL*1e6,3)} with the escape arbor's alone (${f(DY.JE*1e9,2)}): the meshes' backlash gives ${f(100*fr,1)} % of the way, as a rigid train of ${f(Jeq*1e9,2)} g·mm² (interpolated linearly)`);}
+   /* soft (~~, the owner's choice, 26 October 2026): the work isn't smooth between the two: the locking stone, falling back after the unlocking, lands on the escaping tooth's back with a blow
+      (makeEsc's RWD) only while the wheel is slow enough, about up to 9.6 g·mm² as a rigid train; the meshed train's wheel lands as a heavier one, past that step, so its work falls outside both */
+   chk(fr>=0&&fr<=1,`between the rigid trains: ${f(W0*1e6,3)} µJ with the whole train's inertia at the escape wheel (${f(DY.JT*1e9,2)} g·mm²) and ${f(WL*1e6,3)} with the escape arbor's alone (${f(DY.JE*1e9,2)}): the meshes' backlash gives ${f(100*fr,1)} % of the way, as a rigid train of ${f(Jeq*1e9,2)} g·mm² (interpolated linearly; outside them where the stone's blow on the escaping tooth's back comes and goes between the two inertias: reported)`,true);}
   const dA=(A1-A0)/D,dR=E.rateAt(A1,sEq)-E.rateAt(A0,s0);
   /* within 8° and 0.5 s a day (the user's choice, 19 October 2026; 3° and 0.3 until then): the rigid train makeEsc and dynamics.js take reads the swing low by about this, the
      backlash's (above; README, Physics: the transmission) */

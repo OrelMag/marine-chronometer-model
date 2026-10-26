@@ -4,146 +4,240 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 
 ## Batches
 
-| # | Parts | Report | Sheets | Reviewed |
-|---|---|---|---|---|
-| 1 | plates, pillars, movement ring | (running or to come) | 11 | — |
-| 2 | bridges, bushes, cocks, set-up click | (running or to come) | 9 | — |
-| 3 | balance, hairspring, stud, rollers, balance jewels | (running or to come) | 13 | — |
-| 4 | escape wheel, detent, detent block, escape jewels | (running or to come) | 9 | — |
-| 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | (running or to come) | 12 | — |
-| 6 | maintaining work, maintaining detent, stop work | (running or to come) | 9 | — |
-| 7 | barrel, arbor, set-up ratchet, mainspring, chain | (running or to come) | 14 | — |
-| 8 | going train | (running or to come) | 10 | — |
-| 9 | motion work, hands, dial | (running or to come) | 13 | — |
-| 10 | case, gimbals, boxes, keys | (running or to come) | 14 | — |
+| # | Parts | Report | Sheets | Reviewed | Corrected | Open |
+|---|---|---|---|---|---|---|
+| 1 | plates, pillars, movement ring | marine-chronometer-source/wempe/drawing-check/batch1.md | 10 | 10 of 10 | 12 | 3 |
+| 2 | bridges, bushes, cocks, set-up click | marine-chronometer-source/wempe/drawing-check/batch2.md | 9 | 9 of 9 | 10 | 2 |
+| 3 | balance, hairspring, stud, rollers, balance jewels | marine-chronometer-source/wempe/drawing-check/batch3.md | 13 | 13 of 13 | 8 | 3 |
+| 4 | escape wheel, detent, detent block, escape jewels | marine-chronometer-source/wempe/drawing-check/batch4.md | 9 | 9 of 9 | 11 | 3 |
+| 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | marine-chronometer-source/wempe/drawing-check/batch5.md | 12 | 12 of 12 | 6 | 1 |
+| 6 | maintaining work, maintaining detent, stop work | marine-chronometer-source/wempe/drawing-check/batch6.md | 9 | 9 of 9 | 4 | 3 |
+| 7 | barrel, arbor, set-up ratchet, mainspring, chain | marine-chronometer-source/wempe/drawing-check/batch7.md | 14 | 14 of 14 | 4 | 3 |
+| 8 | going train | marine-chronometer-source/wempe/drawing-check/batch8.md | 10 | 10 of 10 | 4 | 0 |
+| 9 | motion work, hands, dial | marine-chronometer-source/wempe/drawing-check/batch9.md | 13 | 13 of 13 | 1 | 3 |
+| 10 | case, gimbals, boxes, keys | marine-chronometer-source/wempe/drawing-check/batch10.md | 14 | 14 of 14 | 2 | 5 |
 
-124 images: 114 in batches, 10 excluded with a reason, 0 without a batch.
+124 images: 113 in batches, 11 excluded with a reason, 0 without a batch.
 
 ## Every sheet
 
-| Image | Sheet | Batch | Status | Note |
-|---|---|---|---|---|
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | waiting for batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
-| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 1 | waiting for batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
-| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | waiting for batch 10 |  |
-| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 9 | waiting for batch 9 |  |
-| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 3 | waiting for batch 3 |  |
-| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 3 | waiting for batch 3 |  |
-| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 3 | waiting for batch 3 |  |
-| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 3 | waiting for batch 3 |  |
-| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 3 | waiting for batch 3 |  |
-| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 4 | waiting for batch 4 |  |
-| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 4 | waiting for batch 4 |  |
-| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 8 | waiting for batch 8 |  |
-| `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 6 | waiting for batch 6 |  |
-| `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_01.jpg` | 05 06 (cross-reference 05 04 06 struck) Schnecke kompl. | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_02-1.jpg` | 020613-2 (127-556.04-060) Schneckenkörper | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_02-2.jpg` | 05 06 04-2 Schneckenkörper | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_03-1.jpg` | 02 06 13 (127-556.04 U17) Schnecke | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_03-2.jpg` | 05 06 04 Schnecke | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_05.jpg` | 05 06 00-1 Staubplatte | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_06.jpg` | 05 06 00-2 Vorreiber | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_07.jpg` | 05 06 00-3 Schneckenrad | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_08.jpg` | 05 06 00-4 Deckplatte | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_09.jpg` | 020605 (127-556.04-U18) Gegenfeder kompl. | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_10.jpg` | 05 06 01-1 Gegenfeder | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_11.jpg` | 05 06 02 Gegensperrrad kompl. | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 6 | waiting for batch 6 |  |
-| `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | waiting for batch 5 |  |
-| `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | waiting for batch 5 |  |
-| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 7 | waiting for batch 7 |  |
-| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | — | excluded | the hand setting (05 33), not built: the lever chronometer BC 1010's (README, the owner's decision, 18 October 2026) |
-| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
-| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
-| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | — | excluded | the electrical seconds contact (38 00), not on this model |
-| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | waiting for batch 10 |  |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | waiting for batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| Image | Sheet | Batch | Status | Changes | Note |
+|---|---|---|---|---|---|
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6, 7, 8 | — | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded (also reviewed by batch 7) | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | reviewed by batch 10 | open: the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) (5c49513b); corrected: the case's turned pieces (pivots' tips, key, lock) shaded square at their corners (2303c7d9) |  |
+| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | reviewed by batch 10 | open: the dotted ring on the bowl's inside floor at r 34.1 (the bottom disc and the turned wall fused face to face): the disc moved onto circT's 360 corners, which didn't clear it (the render after still shows it) (5c49513b) |  |
+| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | reviewed by batch 10 | — |  |
+| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | reviewed by batch 10 | corrected: the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) (5c49513b) |  |
+| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | reviewed by batch 10 | — |  |
+| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | reviewed by batch 10 | open: the 1940 key's stem 32 out of its body (31.7, as drawn 31.74) (5c49513b) |  |
+| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | reviewed by batch 10 | corrected: the case's turned pieces (pivots' tips, key, lock) shaded square at their corners (2303c7d9) |  |
+| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | reviewed by batch 10 | — |  |
+| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | reviewed by batch 10 | open: the key tube's 60° countersink; the tongue's 0.5 × 45° chamfer and thinned end (5c49513b) |  |
+| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 9 | reviewed by batch 9 | — |  |
+| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
+| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
+| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
+| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
+| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 9 | reviewed by batch 9 | open: the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) (5c49513b) |  |
+| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 9 | reviewed by batch 9 | — |  |
+| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9); open: the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) (5c49513b) |  |
+| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 9 | reviewed by batch 9 | open: the hour wheel's 0,4 × 30° riveting sink and the change wheel's rivet relief (05 02 02, unsure) (5c49513b) |  |
+| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
+| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 9 | reviewed by batch 9 | — |  |
+| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 9 | reviewed by batch 9 | — |  |
+| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 9 | reviewed by batch 9 | open: the Lange dial variant keeps the Wempe disc (1453/A: Ø 103, 1,5 thick, Ø 2,2 seconds hole, no screw holes); the variant swaps only the printing (5c49513b) |  |
+| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 3 | reviewed by batch 3 | — |  |
+| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 3 | reviewed by batch 3 | corrected: the timing weights Ø 4.25 as drawn (re-measured: 4.21 and 4.33 at 12.0 px/mm; read 3.5 and 4.3, built 3.8), Wempe 3955's and the 6MX's 3.8 (935291e6); corrected: the mass screws WN-12 1.85 over the rim's lower face (re-measured 1.83-1.88; read 2.83, built 2.45), Wempe 3955's 2.55; their heads' faces following the mass's round side (two crescents) (935291e6); corrected: follow-on: the escapement's bodies from the solids after the timing weights and the escape wheel's web (WESC.SET I 2575.4, JW 9.53, ID 8.16; the 6MX's SET6 2521.0, 10.45, 7.94), HS -0.470 for the swing (0ba0867d, 39116257) |  |
+| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 3 | reviewed by batch 3 | — |  |
+| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 3 | reviewed by batch 3 | open: the lower pivot 12.83 below the seat against this later staff's 12,6; its cones concave (the "6" unsure) (ec88cb81) |  |
+| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 3 | reviewed by batch 3 | corrected: the rim's tapped holes Ø 0.9 at 2.15 for the timing screws, through steel and brass (the screws in the metal); the screws with their weights in each version's group, their heads following the rim's curve (935291e6; 457b4a5e); corrected: the rim's cuts with parallel walls 1.6 apart (radial) (935291e6) |  |
+| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 3 | reviewed by batch 3 | — |  |
+| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 3 | reviewed by batch 3 | — |  |
+| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 3 | reviewed by batch 3 | — |  |
+| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 3 | reviewed by batch 3 | corrected: the collet's spring hole Ø 0.8 across its narrow end, 3.5 from the bore and 0.75 from its face; the pin through the bar's 2.7 in it (935291e6); open: the collet's bore 1,6 H7 1:70 against the 1946 staff's seat (drawn straight 1.648) (ec88cb81) |  |
+| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 3 | reviewed by batch 3 | open: the stud's round point Ø 0.8 and its pin hole Ø 0.7 across the upright (the bore can't close it) (ec88cb81) |  |
+| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 4 | reviewed by batch 3, 4 | open: the block screw 23,8 from the wheel against hole 13's 23.41 in the plate's table (the table kept) (ec88cb81) |  |
+| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 4 | reviewed by batch 4 | corrected: the gold spring's head 2 high (1.9) with its hole Ø 0.7 1.2 from its end (935291e6) |  |
+| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 4 | reviewed by batch 4 | corrected: the block's M1 in its end face to the Ø 1.3 and the steady pins' holes, as last revised and in the 6MX (the screw and pins in the metal) (935291e6); open: the 1943 block's end-face holes (the bore won't close that block); its upright's joint drawn convex about r 2 though figured 3 r (the cove kept) (ec88cb81) |  |
+| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 3 | reviewed by batch 3 | corrected: the staff's arms one taper each, 1:30 above to Ø 1.2 at the step and 1:70 below (a cone and a cylinder; 1:16) (935291e6); corrected: the hub's neck opened to the collar's Ø 2.14 at its foot, so the two faces aren't in one plane (a serrated band) (935291e6) |  |
+| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 3 | reviewed by batch 3 | — |  |
+| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 3 | reviewed by batch 3 | — |  |
+| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 4 | reviewed by batch 4 | corrected: the escape wheel's web 0.7 and its recess 0.7 deep (re-measured: "0,8" struck for "0,7", the recess line at mid-thickness; 0.8) (935291e6); corrected: the arbors' shoulders concave arcs r 3 from the pivot's root to the arbor (straight cones), both versions (935291e6); corrected: the first-drawn collet's cone Ø 3.0 to Ø 2.7 at 1.8 (to Ø 2.2) (935291e6); corrected: follow-on: the escapement's bodies from the solids after the timing weights and the escape wheel's web (WESC.SET I 2575.4, JW 9.53, ID 8.16; the 6MX's SET6 2521.0, 10.45, 7.94), HS -0.470 for the swing (0ba0867d, 39116257); corrected: follow-on: with the lighter escape wheel the locking stone lands on the escaping tooth's back with a blow; makeEsc counts it (RWD, the Wempe's), agreeing with dynamics.js within 1.2°; the cliff recorded (README, Unresolved) and the transmission check's bracket reported (the owner's choice) (4e2c0f9c); corrected: follow-on: the lock's deep tolerance where the swing stays in the guard band (0.244, from 0.2469: past it the escapement collapses in time, as on main); the Monte Carlo's preload and lock surface joint (e598afa8) |  |
+| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 4 | reviewed by batch 4 | corrected: the escape wheel's web 0.7 and its recess 0.7 deep (re-measured: "0,8" struck for "0,7", the recess line at mid-thickness; 0.8) (935291e6); corrected: the arbors' shoulders concave arcs r 3 from the pivot's root to the arbor (straight cones), both versions (935291e6); corrected: follow-on: the escapement's bodies from the solids after the timing weights and the escape wheel's web (WESC.SET I 2575.4, JW 9.53, ID 8.16; the 6MX's SET6 2521.0, 10.45, 7.94), HS -0.470 for the swing (0ba0867d, 39116257); corrected: follow-on: with the lighter escape wheel the locking stone lands on the escaping tooth's back with a blow; makeEsc counts it (RWD, the Wempe's), agreeing with dynamics.js within 1.2°; the cliff recorded (README, Unresolved) and the transmission check's bracket reported (the owner's choice) (4e2c0f9c); corrected: follow-on: the lock's deep tolerance where the swing stays in the guard band (0.244, from 0.2469: past it the escapement collapses in time, as on main); the Monte Carlo's preload and lock surface joint (e598afa8) |  |
+| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 4 | reviewed by batch 4 | — |  |
+| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 4 | reviewed by batch 4 | corrected: the detent's foot's clearance hole for its screw and its two pins' holes; the square's tapped hole for WN-14 (935291e6); open: the blade flush with one side of its thicker part (re-measured: sure), 0.11 off the spring's plane; which side faces the block not read (it would turn the detent 0.34° about the stone): left centred (ec88cb81); corrected: follow-on: the bored parts keep their tapped holes' threads (bore and capFix carry userData: the detent block's screw stood crest on crest); the bom relations of the bored holes (tap, press, clear) with their deviations (0518a42a) |  |
+| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 4 | reviewed by batch 4 | — |  |
+| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | — | excluded (also reviewed by batch 4) | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | — | excluded (also reviewed by batch 4) | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 4 | reviewed by batch 4 | corrected: the crossings' middles 17.7° behind a tooth's tip (6°) (935291e6) |  |
+| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 8 | reviewed by batch 8 | corrected: the arbors in 64 segments; the top-plate bushes' cups out to their rims (a 0.023 sliver ring) (4c1725e6) |  |
+| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 8 | reviewed by batch 8 | corrected: the intermediate and seconds wheels' hubs flush with their rims (the 0,2 the riveting; a hub 0.2 proud), the seconds wheel's face 9.2 from its shoulder (4c1725e6) |  |
+| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 8 | reviewed by batch 8 | — |  |
+| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 8 | reviewed by batch 8 | corrected: the train-side shoulders one 30° cone from the pivot's root to the arbor (flat, chamfered 0.15) (4c1725e6); kept: follow-on: the shoulder cones' endshake read where they meet the jewel: the centre arbor 0.084, inside the 1958 book's 0.07-0.10; the 6MX's intermediate 0.103 (0.003 over) and seconds 0.093, recorded as deviations (0518a42a) |  |
+| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 8 | reviewed by batch 8 | corrected: the intermediate and seconds wheels' hubs flush with their rims (the 0,2 the riveting; a hub 0.2 proud), the seconds wheel's face 9.2 from its shoulder (4c1725e6) |  |
+| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 8 | reviewed by batch 8 | — |  |
+| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 8 | reviewed by batch 8 | corrected: the intermediate pinion's leaves 3.25 (re-measured: the 4,6 spans the leaves and the seat, the 1,3 the seat; 4.5), its seat flush with the wheel (4c1725e6); corrected: the train-side shoulders one 30° cone from the pivot's root to the arbor (flat, chamfered 0.15) (4c1725e6); kept: follow-on: the shoulder cones' endshake read where they meet the jewel: the centre arbor 0.084, inside the 1958 book's 0.07-0.10; the 6MX's intermediate 0.103 (0.003 over) and seconds 0.093, recorded as deviations (0518a42a) |  |
+| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 8 | reviewed by batch 8, 9 | — |  |
+| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 8 | reviewed by batch 8 | — |  |
+| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 8 | reviewed by batch 8 | corrected: the train-side shoulders one 30° cone from the pivot's root to the arbor (flat, chamfered 0.15) (4c1725e6); kept: follow-on: the shoulder cones' endshake read where they meet the jewel: the centre arbor 0.084, inside the 1958 book's 0.07-0.10; the 6MX's intermediate 0.103 (0.003 over) and seconds 0.093, recorded as deviations (0518a42a) |  |
+| `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 6 | reviewed by batch 6 | — |  |
+| `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 6 | reviewed by batch 6 | — |  |
+| `05-06/Wempe_05-06_01.jpg` | 05 06 (cross-reference 05 04 06 struck) Schnecke kompl. | 5 | reviewed by batch 5 | — |  |
+| `05-06/Wempe_05-06_02-1.jpg` | 020613-2 (127-556.04-060) Schneckenkörper | 5 | reviewed by batch 5 | — |  |
+| `05-06/Wempe_05-06_02-2.jpg` | 05 06 04-2 Schneckenkörper | 5 | reviewed by batch 5 | corrected: the fusee body and every turned part of the fusee group shaded square at their corners (KIT.crease; a dish, a donut, a radial seam) (e96fa808); open: the groove's walls stepped on the lathe's 0.04 rows (a swept profile would be exact) (ec88cb81) |  |
+| `05-06/Wempe_05-06_03-1.jpg` | 02 06 13 (127-556.04 U17) Schnecke | 5 | reviewed by batch 5 | — |  |
+| `05-06/Wempe_05-06_03-2.jpg` | 05 06 04 Schnecke | 5 | reviewed by batch 5 | corrected: the fusee body and every turned part of the fusee group shaded square at their corners (KIT.crease; a dish, a donut, a radial seam) (e96fa808) |  |
+| `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 6 | reviewed by batch 5, 6 | open: C-D's "3,2" travel and "2"/"12" against the bar drawn 3.6 and r 12.36-12.51; the stop spring's traced end turning back round the pin (shaded inside out there) (ec88cb81) |  |
+| `05-06/Wempe_05-06_05.jpg` | 05 06 00-1 Staubplatte | 5 | reviewed by batch 5 | — |  |
+| `05-06/Wempe_05-06_06.jpg` | 05 06 00-2 Vorreiber | 5 | reviewed by batch 5 | — |  |
+| `05-06/Wempe_05-06_07.jpg` | 05 06 00-3 Schneckenrad | 5 | reviewed by batch 5 | corrected: the fusee wheel's lip alone at the full 2.62, the rim and teeth 0.2 lower (the other way round) (e96fa808); corrected: the fusee wheel's hub 0.4 under the lip, a 45° flank 1.0 down to Ø 16.6 (as high as the lip, its edge 0.5 × 45°) (e96fa808) |  |
+| `05-06/Wempe_05-06_08.jpg` | 05 06 00-4 Deckplatte | 5 | reviewed by batch 5 | — |  |
+| `05-06/Wempe_05-06_09.jpg` | 020605 (127-556.04-U18) Gegenfeder kompl. | 6 | reviewed by batch 6 | — |  |
+| `05-06/Wempe_05-06_10.jpg` | 05 06 01-1 Gegenfeder | 6 | reviewed by batch 6 | corrected: the maintaining spring's contour on a 0.02 grid (0.05: stair-stepped end) (e96fa808); open: the spring's eye joined to its band (the eye r 1,8 about a hole at r 14,2 stops 0.125 inside the band) and its swell as the r 6 arc (ec88cb81) |  |
+| `05-06/Wempe_05-06_11.jpg` | 05 06 02 Gegensperrrad kompl. | 6 | reviewed by batch 6 | corrected: the click screws WN-21's heads 0.9 high and their ends domed 0.25 inside the cup's rim (0.5, flat, 0.12 past it) (e96fa808) |  |
+| `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 6 | reviewed by batch 6 | corrected: the cup's holes Ø 0.6 for the click springs' pins at 42° and 60° (the pins in the metal) (e96fa808); open: the click springs' own Ø 0,6 holes; WN-21's M1,7 thread; the ratchet as first drawn (tips Ø 37,5, no chamfer) (ec88cb81) |  |
+| `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 6 | reviewed by batch 6 | open: the click springs' own Ø 0,6 holes; WN-21's M1,7 thread; the ratchet as first drawn (tips Ø 37,5, no chamfer) (ec88cb81) |  |
+| `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 6 | reviewed by batch 6 | corrected: the maintaining clicks' top edge one line tangent to the boss, y = 1.738 − 0.585x, rounding r 0.2 into the base (kinked to a sharp tip, up to 0.30 thin) (e96fa808) |  |
+| `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | reviewed by batch 5 | corrected: the arbor's square shaded flat with its corners (a 4-sided smooth cylinder) (c965d11e) |  |
+| `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | reviewed by batch 5 | corrected: the click wheel's 0.3 × 45° on its face against the body (on the free face) (e96fa808) |  |
+| `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | reviewed by batch 5, 7 | open: the groove's walls stepped on the lathe's 0.04 rows (a swept profile would be exact) (ec88cb81); corrected: the mainspring drawn 15 high in the drum's 15.53 inside (14.8) (c965d11e) |  |
+| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 7 | reviewed by batch 7 | — |  |
+| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 7 | reviewed by batch 7 | — |  |
+| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 7 | reviewed by batch 7 | — |  |
+| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 7 | reviewed by batch 7 | corrected: the lid flush with the rim (re-measured: on the rim's line, the 0,6 the arbor's shoulder over it; sunk 0.6), its edge one 5° face Ø 39.2 to 39.39, the drum's seat cut to match 1.3 deep (c965d11e); corrected: the arbor's core faces Ø 10 with 1.65 × 45° chamfers (Ø 9 and 2.15, the 1941 core's) (c965d11e); corrected: the mainspring drawn 15 high in the drum's 15.53 inside (14.8) (c965d11e) |  |
+| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 7 | reviewed by batch 7 | — |  |
+| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 7 | reviewed by batch 7 | corrected: the drum, lid and arbor shaded square at their corners (KIT.crease) (e96fa808); open: the drum's seat 1,2 against the lid's 1,3 (cut 1.3) (ec88cb81) |  |
+| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 7 | reviewed by batch 7 | corrected: the lid flush with the rim (re-measured: on the rim's line, the 0,6 the arbor's shoulder over it; sunk 0.6), its edge one 5° face Ø 39.2 to 39.39, the drum's seat cut to match 1.3 deep (c965d11e); corrected: the drum, lid and arbor shaded square at their corners (KIT.crease) (e96fa808) |  |
+| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 7 | reviewed by batch 7 | corrected: the arbor's core faces Ø 10 with 1.65 × 45° chamfers (Ø 9 and 2.15, the 1941 core's) (c965d11e); open: the 1943 arbor 40.65 against 40,2; the hook's ramp as a radial face 15° off the line (ec88cb81) |  |
+| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 7 | reviewed by batch 7 | — |  |
+| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 7 | reviewed by batch 7 | — |  |
+| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 7 | reviewed by batch 7 | — |  |
+| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 7 | reviewed by batch 7 | open: the band's hooks still placeholders (ec88cb81) |  |
+| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 7 | reviewed by batch 7 | open: the band's hooks still placeholders (ec88cb81) |  |
+| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 7 | reviewed by batch 7 | — |  |
+| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 1 | reviewed by batch 1 | corrected: hole 7 Ø 1.6045, 26's M1.2 at 3.525 (the escape setting's screws with them), the pocket 1.325 deep: the middles of their fits (2303c7d9); open: revision a's "6,15 in 4,59" against P-Q's 4,5 H7 (4.506 kept); J-K's 22 at the floor or the face (ec88cb81) |  |
+| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 1 | reviewed by batch 1 | corrected: the steady pins' Ø 2.5 × 1.6 openings ending in a 118° drill point into the reamed hole (flat floors), both plates (2303c7d9); corrected: the top plate's horn tips at the exact crossings of the cut and the rim (KIT.subtractCircle: the last chord lay 0.09 outside the cut) (2303c7d9); corrected: the horn tips a version each (the owner's choice): sharp as 05 09 01 (1943), r 1 as 05 08 01 (1946) as last revised, r 0.3 on Wempe 3955 (2c177006); corrected: the balance opening's tongue's round end in 0.05 chords (16 a half round: banded) (2303c7d9) |  |
+| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 1 | reviewed by batch 1, 2 | corrected: the horn tips a version each (the owner's choice): sharp as 05 09 01 (1943), r 1 as 05 08 01 (1946) as last revised, r 0.3 on Wempe 3955 (2c177006); corrected: the dust bush both ways (the owner's choice): waisted as 05 08 01 (1946) as last revised, straight as 05 08 01-3 (1942) as first drawn and in 1943 (2c177006) |  |
+| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 1 | reviewed by batch 1 | corrected: the pillar plate's hand-setting bore Ø 2 at 1.68 from the dial face, from the window out through the rim (left out: "solidGeo can't cut across") (2303c7d9); corrected: the hand-setting window's Ø 14 hollow ends in 24 chords (six flat bands before) (2303c7d9); open: the hidden Ø 5.8 round hole 30; the "9,5" across the hand-setting cut (ec88cb81) |  |
+| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 1 | reviewed by batch 1 | corrected: the hand-setting window's Ø 14 hollow ends in 24 chords (six flat bands before) (2303c7d9); corrected: the steady pins' Ø 2.5 × 1.6 openings ending in a 118° drill point into the reamed hole (flat floors), both plates (2303c7d9); open: the hidden Ø 5.8 round hole 30; the "9,5" across the hand-setting cut (ec88cb81) |  |
+| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 2 | reviewed by batch 2 | — |  |
+| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 2 | reviewed by batch 2 | corrected: the upper cock's relief step a 45° cone from r 12 in to r 11.2 (it ran out to 12.8), built as a strip; hole 20 a bay in it (44f47dea (live 3.36.01)); corrected: the upper cock's boss turned, face Ø 6, a 45° flank to Ø 7.6 (Ø 5.8/7.5, faceted) (44f47dea (live 3.36.01)); corrected: the upper cock's two M1.2 tapped (Ø 0.95 plain), breaking 0.095 into the boss's face; their screws M1.2 (thinned to 0.46 before) (2303c7d9); open: seams where the cock's boss and arm meet face to face (one mesh fused, faces kept) (ec88cb81) |  |
+| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 2 | reviewed by batch 2, 3 | corrected: the upper cock's relief step a 45° cone from r 12 in to r 11.2 (it ran out to 12.8), built as a strip; hole 20 a bay in it (44f47dea (live 3.36.01)); corrected: the upper cock's boss turned, face Ø 6, a 45° flank to Ø 7.6 (Ø 5.8/7.5, faceted) (44f47dea (live 3.36.01)); corrected: the upper cock's two M1.2 tapped (Ø 0.95 plain), breaking 0.095 into the boss's face; their screws M1.2 (thinned to 0.46 before) (2303c7d9) |  |
+| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 1 | reviewed by batch 1 | corrected: the ring's radial hole Ø 1.6 for the case pin WN-202 at 12 o'clock, 2.8 under the dial's face, cut through the flange (the pin stood in the metal) (2303c7d9); corrected: the ring's three M2.6 bored through the flange from under it, 24 flats, without the 5 µm step 0.3 up each hole (2303c7d9); corrected: the ring's outside Ø 105.90 and its recess Ø 104.05, the middles of 105,95 −0,1 and 104 +0,1 (2303c7d9); kept: the M2.6 carried through the flange into the cone (Wempe 3955's dial side), the coloured section's blind holes not followed (—) |  |
+| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 2 | reviewed by batch 2 | — |  |
+| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 2 | reviewed by batch 2 | corrected: the dust bush's bottom: a 0.3 × 45° corner, a flat ring 0.5 wide, the face dished 5° to the bore (read as a 5° × 0.5 chamfer) (2303c7d9); corrected: the dust bush both ways (the owner's choice): waisted as 05 08 01 (1946) as last revised, straight as 05 08 01-3 (1942) as first drawn and in 1943 (2c177006) |  |
+| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 2 | reviewed by batch 2 | corrected: the steady pins WN-203 chamfered at both ends (0.1 × 45°, not figured) (2303c7d9); corrected: the intermediate bridge's 45° mouth at hole 38 on the bush's own ring (a 0.01 ledge) (2303c7d9) |  |
+| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 1 | reviewed by batch 1 | corrected: the pillars' body Ø 8.0 and spigots 2.75 long, the middles of 8,1 −0,2 and 2,8 −0,1 (2303c7d9); open: the pillars' 90° countersinks drawn to the tap drill, 0.25 deep: built 0.03, the thread can't be cut through a countersink here (tried and reverted: fine.py) (457b4a5e) |  |
+| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 2 | reviewed by batch 2, 7 | corrected: the steady pins WN-203 chamfered at both ends (0.1 × 45°, not figured) (2303c7d9) |  |
+| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 2 | reviewed by batch 2 | — |  |
+| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 2 | reviewed by batch 2 | corrected: the set-up click's outline walked from its lines and arcs (a distance field's contour: a sliver at the beak) (44f47dea (live 3.36.01)); corrected: the click's back r 12.5 through the beak's corner and tangent to the nose r 1 (0.18 short: a nick) (44f47dea (live 3.36.01)); corrected: the click 2.56 thick (2.6 −0.03/−0.05's middle), its screw's shoulder 2.61 (2303c7d9); open: the sheet's 17,4 overall against 17.53 from its own 9,7, 7,5 and r 1 (the figures drawn) (ec88cb81) |  |
+| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | — | excluded | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | — | excluded | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | — | excluded | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 1 | reviewed by batch 1, 9 | — |  |
+| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | — | excluded (also reviewed by batch 2, 3) | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | — | excluded | — | the hand setting (05 33), not built: the lever chronometer BC 1010's (README, the owner's decision, 18 October 2026) |
+| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | — | excluded | — | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
+| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | — | excluded | — | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
+| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | — | excluded | — | the electrical seconds contact (38 00), not on this model |
+| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | reviewed by batch 10 | — |  |
+| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | reviewed by batch 10 | open: the box's handle 13 off the panel with S-bends (built 10, kinked: likely) and the finger recess's "10" deep (R 10.5), terraced (5c49513b) |  |
+| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | reviewed by batch 10 | — |  |
+| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | reviewed by batch 10 | open: the key tube's 60° countersink; the tongue's 0.5 × 45° chamfer and thinned end (5c49513b) |  |
+| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | reviewed by batch 10 | — |  |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 10, 2, 3, 4, 5, 6, 7, 8, 9 | corrected: the ring's radial hole Ø 1.6 for the case pin WN-202 at 12 o'clock, 2.8 under the dial's face, cut through the flange (the pin stood in the metal) (2303c7d9) | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+
+## Changes made
+
+From `marine-chronometer-source/wempe/drawing-check/changes.md`: 59 corrected, 26 left open, 2 kept as recorded departures.
+
+| Drawings | Kind | What | Commit |
+|---|---|---|---|
+| `05-08/Wempe_05-08_07.jpg`, `Wempe_Einheitschronometer.jpg` | corrected | the ring's radial hole Ø 1.6 for the case pin WN-202 at 12 o'clock, 2.8 under the dial's face, cut through the flange (the pin stood in the metal) | 2303c7d9 |
+| `05-08/Wempe_05-08_07.jpg` | corrected | the ring's three M2.6 bored through the flange from under it, 24 flats, without the 5 µm step 0.3 up each hole | 2303c7d9 |
+| `05-08/Wempe_05-08_07.jpg` | corrected | the ring's outside Ø 105.90 and its recess Ø 104.05, the middles of 105,95 −0,1 and 104 +0,1 | 2303c7d9 |
+| `05-08/Wempe_05-08_03a.jpg` | corrected | the pillar plate's hand-setting bore Ø 2 at 1.68 from the dial face, from the window out through the rim (left out: "solidGeo can't cut across") | 2303c7d9 |
+| `05-08/Wempe_05-08_03b.jpg`, `05-08/Wempe_05-08_03a.jpg` | corrected | the hand-setting window's Ø 14 hollow ends in 24 chords (six flat bands before) | 2303c7d9 |
+| `05-08/Wempe_05-08_01b.jpg`, `05-08/Wempe_05-08_03b.jpg` | corrected | the steady pins' Ø 2.5 × 1.6 openings ending in a 118° drill point into the reamed hole (flat floors), both plates | 2303c7d9 |
+| `05-08/Wempe_05-08_01b.jpg` | corrected | the top plate's horn tips at the exact crossings of the cut and the rim (KIT.subtractCircle: the last chord lay 0.09 outside the cut) | 2303c7d9 |
+| `05-08/Wempe_05-08_01b.jpg`, `05-08/Wempe_05-08_02.jpg` | corrected | the horn tips a version each (the owner's choice): sharp as 05 09 01 (1943), r 1 as 05 08 01 (1946) as last revised, r 0.3 on Wempe 3955 | 2c177006 |
+| `05-08/Wempe_05-08_01b.jpg` | corrected | the balance opening's tongue's round end in 0.05 chords (16 a half round: banded) | 2303c7d9 |
+| `05-08/Wempe_05-08_01a.jpg` | corrected | hole 7 Ø 1.6045, 26's M1.2 at 3.525 (the escape setting's screws with them), the pocket 1.325 deep: the middles of their fits | 2303c7d9 |
+| `05-08/Wempe_05-08_11.jpg` | corrected | the pillars' body Ø 8.0 and spigots 2.75 long, the middles of 8,1 −0,2 and 2,8 −0,1 | 2303c7d9 |
+| `05-08/Wempe_05-08_11.jpg` | open | the pillars' 90° countersinks drawn to the tap drill, 0.25 deep: built 0.03, the thread can't be cut through a countersink here (tried and reverted: fine.py) | 457b4a5e |
+| `05-08/Wempe_05-08_01a.jpg` | open | revision a's "6,15 in 4,59" against P-Q's 4,5 H7 (4.506 kept); J-K's 22 at the floor or the face | ec88cb81 |
+| `05-08/Wempe_05-08_03b.jpg`, `05-08/Wempe_05-08_03a.jpg` | open | the hidden Ø 5.8 round hole 30; the "9,5" across the hand-setting cut | ec88cb81 |
+| `05-08/Wempe_05-08_07.jpg` | kept | the M2.6 carried through the flange into the cone (Wempe 3955's dial side), the coloured section's blind holes not followed | — |
+| `05-08/Wempe_05-08_05.jpg`, `05-08/Wempe_05-08_06.jpg` | corrected | the upper cock's relief step a 45° cone from r 12 in to r 11.2 (it ran out to 12.8), built as a strip; hole 20 a bay in it | 44f47dea (live 3.36.01) |
+| `05-08/Wempe_05-08_05.jpg`, `05-08/Wempe_05-08_06.jpg` | corrected | the upper cock's boss turned, face Ø 6, a 45° flank to Ø 7.6 (Ø 5.8/7.5, faceted) | 44f47dea (live 3.36.01) |
+| `05-08/Wempe_05-08_05.jpg`, `05-08/Wempe_05-08_06.jpg` | corrected | the upper cock's two M1.2 tapped (Ø 0.95 plain), breaking 0.095 into the boss's face; their screws M1.2 (thinned to 0.46 before) | 2303c7d9 |
+| `05-08/Wempe_05-08_14.jpg` | corrected | the set-up click's outline walked from its lines and arcs (a distance field's contour: a sliver at the beak) | 44f47dea (live 3.36.01) |
+| `05-08/Wempe_05-08_14.jpg` | corrected | the click's back r 12.5 through the beak's corner and tangent to the nose r 1 (0.18 short: a nick) | 44f47dea (live 3.36.01) |
+| `05-08/Wempe_05-08_14.jpg` | corrected | the click 2.56 thick (2.6 −0.03/−0.05's middle), its screw's shoulder 2.61 | 2303c7d9 |
+| `05-08/Wempe_05-08_14.jpg` | open | the sheet's 17,4 overall against 17.53 from its own 9,7, 7,5 and r 1 (the figures drawn) | ec88cb81 |
+| `05-08/Wempe_05-08_09.jpg` | corrected | the dust bush's bottom: a 0.3 × 45° corner, a flat ring 0.5 wide, the face dished 5° to the bore (read as a 5° × 0.5 chamfer) | 2303c7d9 |
+| `05-08/Wempe_05-08_02.jpg`, `05-08/Wempe_05-08_09.jpg` | corrected | the dust bush both ways (the owner's choice): waisted as 05 08 01 (1946) as last revised, straight as 05 08 01-3 (1942) as first drawn and in 1943 | 2c177006 |
+| `05-08/Wempe_05-08_12.jpg`, `05-08/Wempe_05-08_10.jpg` | corrected | the steady pins WN-203 chamfered at both ends (0.1 × 45°, not figured) | 2303c7d9 |
+| `05-08/Wempe_05-08_10.jpg` | corrected | the intermediate bridge's 45° mouth at hole 38 on the bush's own ring (a 0.01 ledge) | 2303c7d9 |
+| `05-08/Wempe_05-08_05.jpg` | open | seams where the cock's boss and arm meet face to face (one mesh fused, faces kept) | ec88cb81 |
+| `05-03/Wempe_05-03_2.jpg` | corrected | the timing weights Ø 4.25 as drawn (re-measured: 4.21 and 4.33 at 12.0 px/mm; read 3.5 and 4.3, built 3.8), Wempe 3955's and the 6MX's 3.8 | 935291e6 |
+| `05-03/Wempe_05-03_2.jpg` | corrected | the mass screws WN-12 1.85 over the rim's lower face (re-measured 1.83-1.88; read 2.83, built 2.45), Wempe 3955's 2.55; their heads' faces following the mass's round side (two crescents) | 935291e6 |
+| `05-03/Wempe_05-03_4.jpg` | corrected | the rim's tapped holes Ø 0.9 at 2.15 for the timing screws, through steel and brass (the screws in the metal); the screws with their weights in each version's group, their heads following the rim's curve | 935291e6; 457b4a5e |
+| `05-03/Wempe_05-03_4.jpg` | corrected | the rim's cuts with parallel walls 1.6 apart (radial) | 935291e6 |
+| `05-03/Wempe_05-03_8.jpg` | corrected | the collet's spring hole Ø 0.8 across its narrow end, 3.5 from the bore and 0.75 from its face; the pin through the bar's 2.7 in it | 935291e6 |
+| `05-04/Wempe_05-04_04.jpg` | corrected | the staff's arms one taper each, 1:30 above to Ø 1.2 at the step and 1:70 below (a cone and a cylinder; 1:16) | 935291e6 |
+| `05-04/Wempe_05-04_04.jpg` | corrected | the hub's neck opened to the collar's Ø 2.14 at its foot, so the two faces aren't in one plane (a serrated band) | 935291e6 |
+| `05-03/Wempe_05-03_8.jpg` | open | the collet's bore 1,6 H7 1:70 against the 1946 staff's seat (drawn straight 1.648) | ec88cb81 |
+| `05-03/Wempe_05-03_3-2.jpg` | open | the lower pivot 12.83 below the seat against this later staff's 12,6; its cones concave (the "6" unsure) | ec88cb81 |
+| `05-03/Wempe_05-03_9.jpg` | open | the stud's round point Ø 0.8 and its pin hole Ø 0.7 across the upright (the bore can't close it) | ec88cb81 |
+| `05-04/Wempe_05-04_07-1.jpg`, `05-04/Wempe_05-04_07-2.jpg` | corrected | the escape wheel's web 0.7 and its recess 0.7 deep (re-measured: "0,8" struck for "0,7", the recess line at mid-thickness; 0.8) | 935291e6 |
+| `05-04/Wempe_05-04_23.jpg` | corrected | the crossings' middles 17.7° behind a tooth's tip (6°) | 935291e6 |
+| `05-04/Wempe_05-04_07-2.jpg`, `05-04/Wempe_05-04_07-1.jpg` | corrected | the arbors' shoulders concave arcs r 3 from the pivot's root to the arbor (straight cones), both versions | 935291e6 |
+| `05-04/Wempe_05-04_07-1.jpg` | corrected | the first-drawn collet's cone Ø 3.0 to Ø 2.7 at 1.8 (to Ø 2.2) | 935291e6 |
+| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | corrected | the detent's foot's clearance hole for its screw and its two pins' holes; the square's tapped hole for WN-14 | 935291e6 |
+| `05-04/Wempe_05-04_02.jpg` | corrected | the gold spring's head 2 high (1.9) with its hole Ø 0.7 1.2 from its end | 935291e6 |
+| `05-04/Wempe_05-04_03.jpg` | corrected | the block's M1 in its end face to the Ø 1.3 and the steady pins' holes, as last revised and in the 6MX (the screw and pins in the metal) | 935291e6 |
+| `05-04/Wempe_05-04_03.jpg` | open | the 1943 block's end-face holes (the bore won't close that block); its upright's joint drawn convex about r 2 though figured 3 r (the cove kept) | ec88cb81 |
+| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | open | the blade flush with one side of its thicker part (re-measured: sure), 0.11 off the spring's plane; which side faces the block not read (it would turn the detent 0.34° about the stone): left centred | ec88cb81 |
+| `05-04/Wempe_05-04_01.jpg` | open | the block screw 23,8 from the wheel against hole 13's 23.41 in the plate's table (the table kept) | ec88cb81 |
+| `05-06/Wempe_05-06_07.jpg` | corrected | the fusee wheel's lip alone at the full 2.62, the rim and teeth 0.2 lower (the other way round) | e96fa808 |
+| `05-06/Wempe_05-06_07.jpg` | corrected | the fusee wheel's hub 0.4 under the lip, a 45° flank 1.0 down to Ø 16.6 (as high as the lip, its edge 0.5 × 45°) | e96fa808 |
+| `05-06/Wempe_05-06_16.jpg` | corrected | the click wheel's 0.3 × 45° on its face against the body (on the free face) | e96fa808 |
+| `05-06/Wempe_05-06_02-2.jpg`, `05-06/Wempe_05-06_03-2.jpg` | corrected | the fusee body and every turned part of the fusee group shaded square at their corners (KIT.crease; a dish, a donut, a radial seam) | e96fa808 |
+| `05-06/Wempe_05-06_15.jpg` | corrected | the arbor's square shaded flat with its corners (a 4-sided smooth cylinder) | c965d11e |
+| `05-06/Wempe_05-06_02-2.jpg`, `05-06/Wempe_05-06_20.jpg` | open | the groove's walls stepped on the lathe's 0.04 rows (a swept profile would be exact) | ec88cb81 |
+| `05-06/Wempe_05-06_14.jpg` | corrected | the maintaining clicks' top edge one line tangent to the boss, y = 1.738 − 0.585x, rounding r 0.2 into the base (kinked to a sharp tip, up to 0.30 thin) | e96fa808 |
+| `05-06/Wempe_05-06_12.jpg` | corrected | the cup's holes Ø 0.6 for the click springs' pins at 42° and 60° (the pins in the metal) | e96fa808 |
+| `05-06/Wempe_05-06_11.jpg` | corrected | the click screws WN-21's heads 0.9 high and their ends domed 0.25 inside the cup's rim (0.5, flat, 0.12 past it) | e96fa808 |
+| `05-06/Wempe_05-06_10.jpg` | corrected | the maintaining spring's contour on a 0.02 grid (0.05: stair-stepped end) | e96fa808 |
+| `05-06/Wempe_05-06_10.jpg` | open | the spring's eye joined to its band (the eye r 1,8 about a hole at r 14,2 stops 0.125 inside the band) and its swell as the r 6 arc | ec88cb81 |
+| `05-06/Wempe_05-06_04.jpg` | open | C-D's "3,2" travel and "2"/"12" against the bar drawn 3.6 and r 12.36-12.51; the stop spring's traced end turning back round the pin (shaded inside out there) | ec88cb81 |
+| `05-06/Wempe_05-06_13.jpg`, `05-06/Wempe_05-06_12.jpg` | open | the click springs' own Ø 0,6 holes; WN-21's M1,7 thread; the ratchet as first drawn (tips Ø 37,5, no chamfer) | ec88cb81 |
+| `05-07/Wempe_05-07_04.jpg`, `05-07/Wempe_05-07_07.jpg` | corrected | the lid flush with the rim (re-measured: on the rim's line, the 0,6 the arbor's shoulder over it; sunk 0.6), its edge one 5° face Ø 39.2 to 39.39, the drum's seat cut to match 1.3 deep | c965d11e |
+| `05-07/Wempe_05-07_04.jpg`, `05-07/Wempe_05-07_08.jpg` | corrected | the arbor's core faces Ø 10 with 1.65 × 45° chamfers (Ø 9 and 2.15, the 1941 core's) | c965d11e |
+| `05-06/Wempe_05-06_20.jpg`, `05-07/Wempe_05-07_04.jpg` | corrected | the mainspring drawn 15 high in the drum's 15.53 inside (14.8) | c965d11e |
+| `05-07/Wempe_05-07_06.jpg`, `05-07/Wempe_05-07_07.jpg` | corrected | the drum, lid and arbor shaded square at their corners (KIT.crease) | e96fa808 |
+| `05-07/Wempe_05-07_06.jpg` | open | the drum's seat 1,2 against the lid's 1,3 (cut 1.3) | ec88cb81 |
+| `05-07/Wempe_05-07_08.jpg` | open | the 1943 arbor 40.65 against 40,2; the hook's ramp as a radial face 15° off the line | ec88cb81 |
+| `05-07/Wempe_05-07_12.jpg`, `05-07/Wempe_05-07_13.jpg` | open | the band's hooks still placeholders | ec88cb81 |
+| `05-05/Wempe_05-05_07.jpg` | corrected | the intermediate pinion's leaves 3.25 (re-measured: the 4,6 spans the leaves and the seat, the 1,3 the seat; 4.5), its seat flush with the wheel | 4c1725e6 |
+| `05-05/Wempe_05-05_05.jpg`, `05-05/Wempe_05-05_02.jpg` | corrected | the intermediate and seconds wheels' hubs flush with their rims (the 0,2 the riveting; a hub 0.2 proud), the seconds wheel's face 9.2 from its shoulder | 4c1725e6 |
+| `05-05/Wempe_05-05_10.jpg`, `05-05/Wempe_05-05_07.jpg`, `05-05/Wempe_05-05_04.jpg` | corrected | the train-side shoulders one 30° cone from the pivot's root to the arbor (flat, chamfered 0.15) | 4c1725e6 |
+| `05-05/Wempe_05-05_01.jpg` | corrected | the arbors in 64 segments; the top-plate bushes' cups out to their rims (a 0.023 sliver ring) | 4c1725e6 |
+| `05-02/Wempe_05-02_08.jpg`, `05-02/Wempe_05-02_10.jpg`, `05-02/Wempe_05-02_02.jpg`, `05-02/Wempe_05-02_03.jpg`, `05-02/Wempe_05-02_04.jpg`, `05-02/Wempe_05-02_05.jpg` | corrected | every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) | 2303c7d9 |
+| `05-02/Wempe_05-02_13.jpg` | open | the Lange dial variant keeps the Wempe disc (1453/A: Ø 103, 1,5 thick, Ø 2,2 seconds hole, no screw holes); the variant swaps only the printing | 5c49513b |
+| `05-02/Wempe_05-02_09.jpg` | open | the hour wheel's 0,4 × 30° riveting sink and the change wheel's rivet relief (05 02 02, unsure) | 5c49513b |
+| `05-02/Wempe_05-02_06.jpg`, `05-02/Wempe_05-02_08.jpg` | open | the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) | 5c49513b |
+| `05-01/Wempe_05-01_4.jpg` | corrected | the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) | 5c49513b |
+| `05-01/Wempe_05-01_2.jpg` | open | the dotted ring on the bowl's inside floor at r 34.1 (the bottom disc and the turned wall fused face to face): the disc moved onto circT's 360 corners, which didn't clear it (the render after still shows it) | 5c49513b |
+| `51-00/Wempe_51-00_2.jpg` | open | the box's handle 13 off the panel with S-bends (built 10, kinked: likely) and the finger recess's "10" deep (R 10.5), terraced | 5c49513b |
+| `05-01/Wempe_05-01_6.jpg` | open | the 1940 key's stem 32 out of its body (31.7, as drawn 31.74) | 5c49513b |
+| `05-01/Wempe_05-01_1.jpg` | open | the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) | 5c49513b |
+| `05-01/Wempe_05-01_9.jpg`, `51-00/Wempe_51-00_4.jpg` | open | the key tube's 60° countersink; the tongue's 0.5 × 45° chamfer and thinned end | 5c49513b |
+| `05-01/Wempe_05-01_1.jpg`, `05-01/Wempe_05-01_7.jpg` | corrected | the case's turned pieces (pivots' tips, key, lock) shaded square at their corners | 2303c7d9 |
+| `05-03/Wempe_05-03_2.jpg`, `05-04/Wempe_05-04_07-1.jpg`, `05-04/Wempe_05-04_07-2.jpg` | corrected | follow-on: the escapement's bodies from the solids after the timing weights and the escape wheel's web (WESC.SET I 2575.4, JW 9.53, ID 8.16; the 6MX's SET6 2521.0, 10.45, 7.94), HS -0.470 for the swing | 0ba0867d, 39116257 |
+| `05-04/Wempe_05-04_07-1.jpg`, `05-04/Wempe_05-04_07-2.jpg` | corrected | follow-on: with the lighter escape wheel the locking stone lands on the escaping tooth's back with a blow; makeEsc counts it (RWD, the Wempe's), agreeing with dynamics.js within 1.2°; the cliff recorded (README, Unresolved) and the transmission check's bracket reported (the owner's choice) | 4e2c0f9c |
+| `05-04/Wempe_05-04_07-1.jpg`, `05-04/Wempe_05-04_07-2.jpg` | corrected | follow-on: the lock's deep tolerance where the swing stays in the guard band (0.244, from 0.2469: past it the escapement collapses in time, as on main); the Monte Carlo's preload and lock surface joint | e598afa8 |
+| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | corrected | follow-on: the bored parts keep their tapped holes' threads (bore and capFix carry userData: the detent block's screw stood crest on crest); the bom relations of the bored holes (tap, press, clear) with their deviations | 0518a42a |
+| `05-05/Wempe_05-05_10.jpg`, `05-05/Wempe_05-05_07.jpg`, `05-05/Wempe_05-05_04.jpg` | kept | follow-on: the shoulder cones' endshake read where they meet the jewel: the centre arbor 0.084, inside the 1958 book's 0.07-0.10; the 6MX's intermediate 0.103 (0.003 over) and seconds 0.093, recorded as deviations | 0518a42a |

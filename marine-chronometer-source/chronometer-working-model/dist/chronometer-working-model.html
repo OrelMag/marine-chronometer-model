@@ -1202,9 +1202,11 @@ function facePocket(g0,face,poly,depth){const g=g0.index?g0.toNonIndexed():g0,P=
   const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
   o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
 function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[],S=[];
-  for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));S.push(i);}V.push(id.get(k));}
-  const E=new Set(),nx=new Map();for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u+'_'+v);}
-  for(const k of E){const[u,v]=k.split('_').map(Number);if(!E.has(v+'_'+u))nx.set(v,u);}   /* an open edge u->v: its cap runs v->u */
+  /* corners welded at 0.1 µm by a hash of their rounded coordinates, edges keyed as numbers (strings until 26 October 2026: the most of the Wempe's bores' closing); the same welds and caps */
+  for(let i=0;i<p.count;i++){const x=Math.round(p.getX(i)*1e4),y=Math.round(p.getY(i)*1e4),z=Math.round(p.getZ(i)*1e4),h=((x*73856093)^(y*19349663)^(z*83492791))>>>0;let L=id.get(h);if(!L)id.set(h,L=[]);
+    let u=-1;for(const e of L)if(e[0]===x&&e[1]===y&&e[2]===z){u=e[3];break;}if(u<0){u=P.length;L.push([x,y,z,u]);P.push(new THREE.Vector3().fromBufferAttribute(p,i));S.push(i);}V.push(u);}
+  const EK=2**26,E=new Set(),nx=new Map();for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u*EK+v);}
+  for(const k of E){const u=Math.floor(k/EK),v=k-u*EK;if(!E.has(v*EK+u))nx.set(v,u);}   /* an open edge u->v: its cap runs v->u */
   if(!nx.size)return g;const pos=[],nor=[],src=[],done=new Set();
   for(const s of nx.keys()){if(done.has(s))continue;const L=[],Q=[];let q=s;while(q!==undefined&&!done.has(q)&&L.length<=nx.size){done.add(q);L.push(P[q]);Q.push(S[q]);q=nx.get(q);}if(L.length<3)continue;
     const N=new THREE.Vector3();L.forEach((a,i)=>{const b=L[(i+1)%L.length];N.x+=(a.y-b.y)*(a.z+b.z);N.y+=(a.z-b.z)*(a.x+b.x);N.z+=(a.x-b.x)*(a.y+b.y);});N.normalize();   /* Newell: the cap's normal */

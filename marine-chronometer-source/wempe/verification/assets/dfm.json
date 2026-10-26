@@ -9,22 +9,22 @@
 "pieces": [
 {
 "h": 0.06,
-"levels": 19,
+"levels": 17,
 "y": [
 -22.35,
 -19.0
 ],
-"round": 0.449,
-"roundFilled": 0.517,
+"round": 0.446,
+"roundFilled": 0.514,
 "turned": false,
 "turnedcut": false,
 "wall": {
 "min": 0.36,
 "at": [
 -9.04,
-21.56
+21.62
 ],
-"y": -19.29,
+"y": -19.77,
 "thin": []
 },
 "corners": 0,
@@ -131,7 +131,7 @@
 },
 {
 "c": [
--15.3,
+-15.32,
 21.78
 ],
 "d": 1.051,
@@ -164,7 +164,7 @@
 -12.25,
 -12.69
 ],
-"d": 1.226,
+"d": 1.224,
 "depth": 2.65,
 "through": false,
 "ratio": 2.2
@@ -174,17 +174,17 @@
 -10.65,
 -38.53
 ],
-"d": 1.492,
+"d": 1.493,
 "depth": 1.68,
 "through": false,
 "ratio": 1.1
 },
 {
 "c": [
--8.3,
+-8.28,
 21.78
 ],
-"d": 1.053,
+"d": 1.049,
 "depth": 3.35,
 "through": true,
 "ratio": 3.2
@@ -204,7 +204,7 @@
 -5.68,
 -23.91
 ],
-"d": 1.612,
+"d": 1.606,
 "depth": 3.35,
 "through": true,
 "ratio": 2.1
@@ -214,10 +214,10 @@
 -3.26,
 6.02
 ],
-"d": 2.499,
-"depth": 1.6,
+"d": 2.495,
+"depth": 1.68,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
@@ -225,9 +225,9 @@
 -27.82
 ],
 "d": 1.605,
-"depth": 1.75,
+"depth": 1.68,
 "through": false,
-"ratio": 1.1
+"ratio": 1.0
 },
 {
 "c": [
@@ -235,9 +235,9 @@
 -11.55
 ],
 "d": 1.604,
-"depth": 1.75,
+"depth": 1.68,
 "through": false,
-"ratio": 1.1
+"ratio": 1.0
 },
 {
 "c": [
@@ -295,9 +295,9 @@
 17.83
 ],
 "d": 2.494,
-"depth": 1.6,
+"depth": 1.68,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
@@ -315,9 +315,9 @@
 -25.24
 ],
 "d": 1.604,
-"depth": 1.75,
+"depth": 1.68,
 "through": false,
-"ratio": 1.1
+"ratio": 1.0
 },
 {
 "c": [
@@ -355,9 +355,9 @@
 -31.55
 ],
 "d": 1.604,
-"depth": 1.75,
+"depth": 1.68,
 "through": false,
-"ratio": 1.1
+"ratio": 1.0
 },
 {
 "c": [
@@ -375,9 +375,9 @@
 24.01
 ],
 "d": 1.601,
-"depth": 1.75,
+"depth": 1.68,
 "through": false,
-"ratio": 1.1
+"ratio": 1.0
 },
 {
 "c": [
@@ -711,153 +711,83 @@
 },
 {
 "c": [
--23.46,
-7.45
-],
-"d": 1.762,
-"depth": 0.2,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--20.92,
-24.01
-],
-"d": 1.763,
-"depth": 0.2,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--0.49,
--19.88
-],
-"d": 2.328,
-"depth": 0.2,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
-17.44,
--32.78
-],
-"d": 2.331,
-"depth": 0.2,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
-32.11,
-18.39
-],
-"d": 2.339,
-"depth": 0.2,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--23.42,
-7.64
-],
-"d": 1.814,
-"depth": 0.15,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--20.86,
-24.2
+-23.5,
+7.52
 ],
 "d": 1.76,
-"depth": 0.15,
+"depth": 0.28,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-20.95,
+24.07
+],
+"d": 1.764,
+"depth": 0.28,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-0.55,
+-19.9
+],
+"d": 2.328,
+"depth": 0.28,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
--3.26,
-6.02
+17.37,
+-32.8
 ],
-"d": 1.604,
-"depth": 1.75,
-"through": false,
-"ratio": 1.1
-},
-{
-"c": [
--0.69,
--19.79
-],
-"d": 2.336,
-"depth": 0.15,
+"d": 2.329,
+"depth": 0.28,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
-4.27,
-17.83
-],
-"d": 1.602,
-"depth": 1.75,
-"through": false,
-"ratio": 1.1
-},
-{
-"c": [
-17.24,
--32.69
+32.04,
+18.37
 ],
 "d": 2.334,
-"depth": 0.15,
+"depth": 0.28,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
-31.92,
-18.48
+-23.31,
+7.56
 ],
-"d": 2.33,
-"depth": 0.15,
+"d": 1.934,
+"depth": 0.35,
 "through": false,
-"ratio": 0.1
+"ratio": 0.2
 },
 {
 "c": [
--10.79,
--38.48
+-20.72,
+24.12
 ],
-"d": 1.493,
+"d": 1.76,
 "depth": 0.13,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
--23.32,
-7.53
+-10.77,
+-38.44
 ],
-"d": 1.955,
-"depth": 0.25,
+"d": 1.496,
+"depth": 0.13,
 "through": false,
 "ratio": 0.1
-},
-{
-"c": [
--20.73,
-24.06
-],
-"d": 1.763,
-"depth": 0.05,
-"through": false,
-"ratio": 0.0
 },
 {
 "c": [
@@ -865,79 +795,99 @@
 -27.82
 ],
 "d": 2.497,
-"depth": 1.6,
+"depth": 1.68,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
+},
+{
+"c": [
+-3.26,
+6.02
+],
+"d": 2.041,
+"depth": 0.13,
+"through": false,
+"ratio": 0.1
 },
 {
 "c": [
 -2.76,
 -11.56
 ],
-"d": 2.496,
-"depth": 1.6,
+"d": 2.493,
+"depth": 1.68,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
--0.54,
+-0.61,
 -19.64
 ],
-"d": 2.331,
-"depth": 0.05,
+"d": 2.332,
+"depth": 0.13,
 "through": false,
-"ratio": 0.0
+"ratio": 0.1
+},
+{
+"c": [
+4.26,
+17.82
+],
+"d": 2.04,
+"depth": 0.13,
+"through": false,
+"ratio": 0.1
 },
 {
 "c": [
 6.08,
--25.24
+-25.23
 ],
-"d": 2.497,
-"depth": 1.6,
+"d": 2.493,
+"depth": 1.68,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
-17.39,
--32.54
+17.33,
+-32.55
 ],
-"d": 2.33,
-"depth": 0.05,
+"d": 2.328,
+"depth": 0.13,
 "through": false,
-"ratio": 0.0
+"ratio": 0.1
 },
 {
 "c": [
 22.93,
 -31.55
 ],
-"d": 2.497,
-"depth": 1.6,
+"d": 2.495,
+"depth": 1.68,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
 30.73,
 24.01
 ],
-"d": 2.498,
-"depth": 1.6,
+"d": 2.496,
+"depth": 1.68,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
-32.07,
-18.63
+32.0,
+18.62
 ],
 "d": 2.335,
-"depth": 0.05,
+"depth": 0.13,
 "through": false,
-"ratio": 0.0
+"ratio": 0.1
 },
 {
 "c": [
@@ -961,6 +911,16 @@
 },
 {
 "c": [
+-3.26,
+6.02
+],
+"d": 1.604,
+"depth": 1.55,
+"through": false,
+"ratio": 1.0
+},
+{
+"c": [
 -0.43,
 -19.77
 ],
@@ -978,6 +938,16 @@
 "depth": 1.55,
 "through": false,
 "ratio": 0.6
+},
+{
+"c": [
+4.27,
+17.83
+],
+"d": 1.602,
+"depth": 1.55,
+"through": false,
+"ratio": 1.0
 },
 {
 "c": [
@@ -1001,101 +971,101 @@
 },
 {
 "c": [
--20.94,
-24.14
-],
-"d": 1.765,
-"depth": 0.05,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
--10.71,
--38.61
-],
-"d": 1.493,
-"depth": 0.05,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
--0.54,
--19.9
-],
-"d": 2.335,
-"depth": 0.05,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
-17.39,
--32.8
-],
-"d": 2.326,
-"depth": 0.05,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
-32.06,
-18.37
-],
-"d": 2.338,
-"depth": 0.05,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
--20.74,
-24.15
+-20.93,
+24.16
 ],
 "d": 1.762,
-"depth": 0.23,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-10.73,
+-38.6
+],
+"d": 1.491,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-0.56,
+-19.9
+],
+"d": 2.33,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+17.37,
+-32.8
+],
+"d": 2.335,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+32.04,
+18.37
+],
+"d": 2.333,
+"depth": 0.07,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-20.73,
+24.13
+],
+"d": 1.765,
+"depth": 0.21,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
--10.72,
+-10.7,
 -38.41
 ],
-"d": 1.496,
-"depth": 0.23,
-"through": false,
-"ratio": 0.2
-},
-{
-"c": [
--0.69,
--19.74
-],
-"d": 2.334,
-"depth": 0.23,
+"d": 1.489,
+"depth": 0.21,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
-17.24,
--32.64
+-0.68,
+-19.71
 ],
 "d": 2.334,
-"depth": 0.23,
+"depth": 0.21,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+17.25,
+-32.62
+],
+"d": 2.33,
+"depth": 0.21,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
 31.92,
-18.53
+18.55
 ],
-"d": 2.328,
-"depth": 0.23,
+"d": 2.332,
+"depth": 0.21,
 "through": false,
 "ratio": 0.1
 },
@@ -1423,16 +1393,16 @@
 "floor": {
 "min": 0.005,
 "at": [
--23.98,
-8.18
+-21.7,
+23.66
 ]
 },
 "faces": {
-"low": 55.22,
-"high": 645.91
+"low": 55.2,
+"high": 645.86
 },
 "undercut": {
-"area": 11.79,
+"area": 11.78,
 "gap": 0.34,
 "at": [
 -0.16,
@@ -1446,8 +1416,8 @@
 "part": "topPlate",
 "hn": "050901",
 "count": 1,
-"tris": 72960,
-"s": 16.2,
+"tris": 75398,
+"s": 14.2,
 "note": ""
 },
 {
@@ -1462,42 +1432,13 @@
 "turned": true,
 "turnedcut": false,
 "wall": {
-"min": 0.128,
+"min": 0.36,
 "at": [
--1.75,
-1.39
+-2.11,
+-0.17
 ],
-"y": -22.21,
-"thin": [
-[
-0.13,
-[
--1.75,
-1.39
-]
-],
-[
-0.13,
-[
--1.74,
--1.39
-]
-],
-[
-0.13,
-[
-1.39,
--1.75
-]
-],
-[
-0.13,
-[
-1.4,
-1.74
-]
-]
-]
+"y": -21.93,
+"thin": []
 },
 "corners": 0,
 "holes": [
@@ -1506,27 +1447,7 @@
 0.0,
 0.0
 ],
-"d": 4.34,
-"depth": 0.28,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
-0.0,
-0.0
-],
-"d": 3.837,
-"depth": 0.28,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
-0.0,
-0.0
-],
-"d": 3.164,
+"d": 4.381,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1536,7 +1457,27 @@
 -0.0,
 -0.0
 ],
-"d": 2.167,
+"d": 3.872,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.0,
+-0.0
+],
+"d": 3.191,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+0.0,
+0.0
+],
+"d": 2.185,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1553,14 +1494,14 @@
 }
 ],
 "floor": {
-"min": 2.221,
+"min": 2.22,
 "at": [
 -0.44,
 -0.43
 ]
 },
 "faces": {
-"low": 14.86,
+"low": 15.17,
 "high": 0.0
 },
 "undercut": null,
@@ -1571,7 +1512,7 @@
 "hn": "WN-301",
 "count": 1,
 "tris": 1536,
-"s": 1.5,
+"s": 1.4,
 "note": ""
 },
 {
@@ -1586,42 +1527,13 @@
 "turned": true,
 "turnedcut": false,
 "wall": {
-"min": 0.128,
+"min": 0.36,
 "at": [
-8.16,
-16.56
+7.8,
+15.0
 ],
-"y": -22.21,
-"thin": [
-[
-0.13,
-[
-8.16,
-16.56
-]
-],
-[
-0.13,
-[
-8.18,
-13.76
-]
-],
-[
-0.13,
-[
-11.3,
-13.42
-]
-],
-[
-0.13,
-[
-11.31,
-16.91
-]
-]
-]
+"y": -21.93,
+"thin": []
 },
 "corners": 0,
 "holes": [
@@ -1630,7 +1542,7 @@
 9.91,
 15.17
 ],
-"d": 4.339,
+"d": 4.38,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1640,7 +1552,7 @@
 9.91,
 15.17
 ],
-"d": 3.839,
+"d": 3.873,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1650,7 +1562,7 @@
 9.91,
 15.17
 ],
-"d": 3.164,
+"d": 3.191,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1660,7 +1572,7 @@
 9.91,
 15.17
 ],
-"d": 2.161,
+"d": 2.179,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1684,7 +1596,7 @@
 ]
 },
 "faces": {
-"low": 15.44,
+"low": 15.76,
 "high": 0.0
 },
 "undercut": null,
@@ -1710,42 +1622,13 @@
 "turned": true,
 "turnedcut": false,
 "wall": {
-"min": 0.128,
+"min": 0.36,
 "at": [
--1.75,
-24.39
+-2.11,
+22.83
 ],
-"y": -22.21,
-"thin": [
-[
-0.13,
-[
--1.75,
-24.39
-]
-],
-[
-0.13,
-[
--1.73,
-21.59
-]
-],
-[
-0.13,
-[
-1.39,
-21.25
-]
-],
-[
-0.13,
-[
-1.4,
-24.74
-]
-]
-]
+"y": -21.93,
+"thin": []
 },
 "corners": 0,
 "holes": [
@@ -1754,17 +1637,7 @@
 0.0,
 23.0
 ],
-"d": 4.339,
-"depth": 0.28,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--0.0,
-23.0
-],
-"d": 3.838,
+"d": 4.38,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1774,7 +1647,7 @@
 0.0,
 23.0
 ],
-"d": 3.164,
+"d": 3.873,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1784,7 +1657,17 @@
 -0.0,
 23.0
 ],
-"d": 2.162,
+"d": 3.191,
+"depth": 0.28,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-0.0,
+23.0
+],
+"d": 2.18,
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
@@ -1808,7 +1691,7 @@
 ]
 },
 "faces": {
-"low": 15.46,
+"low": 15.78,
 "high": 0.0
 },
 "undercut": null,
@@ -1859,7 +1742,7 @@
 },
 {
 "h": 0.06,
-"levels": 16,
+"levels": 17,
 "y": [
 0.0,
 3.35
@@ -1877,7 +1760,7 @@
 "y": 0.43,
 "thin": []
 },
-"corners": 169,
+"corners": 166,
 "holes": [
 {
 "c": [
@@ -1964,7 +1847,7 @@
 -14.55,
 23.83
 ],
-"d": 1.048,
+"d": 1.049,
 "depth": 3.35,
 "through": true,
 "ratio": 3.2
@@ -2024,10 +1907,10 @@
 -7.06,
 28.58
 ],
-"d": 2.496,
-"depth": 1.6,
+"d": 2.494,
+"depth": 1.67,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
@@ -2074,7 +1957,7 @@
 -1.49,
 33.71
 ],
-"d": 1.05,
+"d": 1.051,
 "depth": 3.35,
 "through": true,
 "ratio": 3.2
@@ -2144,10 +2027,10 @@
 25.21,
 3.08
 ],
-"d": 2.498,
-"depth": 1.6,
+"d": 2.497,
+"depth": 1.67,
 "through": false,
-"ratio": 0.6
+"ratio": 0.7
 },
 {
 "c": [
@@ -2211,21 +2094,41 @@
 },
 {
 "c": [
--4.19,
-26.37
+-4.23,
+26.51
 ],
-"d": 2.333,
-"depth": 0.28,
+"d": 2.329,
+"depth": 0.11,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+22.55,
+5.35
+],
+"d": 2.332,
+"depth": 0.11,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-4.26,
+26.29
+],
+"d": 2.336,
+"depth": 0.17,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
-22.59,
-5.21
+22.52,
+5.13
 ],
-"d": 2.33,
-"depth": 0.28,
+"d": 2.332,
+"depth": 0.17,
 "through": false,
 "ratio": 0.1
 },
@@ -2271,21 +2174,21 @@
 },
 {
 "c": [
--4.25,
-26.53
+-4.2,
+26.48
 ],
-"d": 2.336,
-"depth": 0.2,
+"d": 2.334,
+"depth": 0.28,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
-22.53,
-5.36
+22.57,
+5.32
 ],
-"d": 2.337,
-"depth": 0.2,
+"d": 2.329,
+"depth": 0.28,
 "through": false,
 "ratio": 0.1
 },
@@ -2295,39 +2198,9 @@
 28.58
 ],
 "d": 1.599,
-"depth": 1.75,
+"depth": 1.67,
 "through": false,
-"ratio": 1.1
-},
-{
-"c": [
--4.23,
-26.31
-],
-"d": 2.333,
-"depth": 0.07,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
-22.55,
-5.15
-],
-"d": 2.327,
-"depth": 0.07,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
-25.21,
-3.08
-],
-"d": 1.604,
-"depth": 1.75,
-"through": false,
-"ratio": 1.1
+"ratio": 1.0
 },
 {
 "c": [
@@ -2348,6 +2221,16 @@
 "depth": 0.28,
 "through": false,
 "ratio": 0.1
+},
+{
+"c": [
+25.21,
+3.08
+],
+"d": 1.604,
+"depth": 1.67,
+"through": false,
+"ratio": 1.0
 },
 {
 "c": [
@@ -2391,21 +2274,41 @@
 },
 {
 "c": [
--4.42,
-26.33
+-4.32,
+26.28
 ],
-"d": 2.329,
-"depth": 0.28,
+"d": 2.334,
+"depth": 0.16,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
-22.36,
-5.17
+22.46,
+5.12
 ],
-"d": 2.333,
-"depth": 0.28,
+"d": 2.337,
+"depth": 0.16,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-4.43,
+26.46
+],
+"d": 2.335,
+"depth": 0.12,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+22.35,
+5.31
+],
+"d": 2.331,
+"depth": 0.12,
 "through": false,
 "ratio": 0.1
 },
@@ -2498,15 +2401,15 @@
 ]
 },
 "faces": {
-"low": 178.99,
+"low": 178.98,
 "high": 17.56
 },
 "undercut": {
-"area": 5.56,
-"gap": 0.34,
+"area": 22.06,
+"gap": 2.0,
 "at": [
-21.74,
-6.02
+-30.76,
+17.84
 ],
 "ring": false
 },
@@ -2516,8 +2419,8 @@
 "part": "pillarPlate",
 "hn": "050802-1",
 "count": 1,
-"tris": 46940,
-"s": 16.6,
+"tris": 62479,
+"s": 16.7,
 "note": ""
 },
 {
@@ -2639,7 +2542,7 @@
 "hn": "050802-2",
 "count": 1,
 "tris": 384,
-"s": 0.8,
+"s": 0.7,
 "note": ""
 },
 {
@@ -2720,7 +2623,7 @@
 "hn": "050802-2",
 "count": 1,
 "tris": 384,
-"s": 0.8,
+"s": 0.7,
 "note": ""
 },
 {
@@ -2818,63 +2721,83 @@
 "h": 0.01,
 "levels": 14,
 "y": [
--22.1,
-3.1
+-22.05,
+3.05
 ],
-"round": 0.96,
-"roundFilled": 0.995,
+"round": 0.957,
+"roundFilled": 0.994,
 "turned": false,
 "turnedcut": true,
 "corners": 0,
 "holes": [
 {
 "c": [
--36.96,
-3.14
-],
-"d": 2.332,
-"depth": 2.1,
-"through": false,
-"ratio": 0.9
-},
-{
-"c": [
--36.96,
-3.14
-],
-"d": 2.332,
-"depth": 2.1,
-"through": false,
-"ratio": 0.9
-},
-{
-"c": [
--36.96,
+-36.76,
 3.31
 ],
 "d": 2.332,
-"depth": 1.4,
+"depth": 0.66,
 "through": false,
-"ratio": 0.6
+"ratio": 0.3
+},
+{
+"c": [
+-36.76,
+3.14
+],
+"d": 2.332,
+"depth": 2.09,
+"through": false,
+"ratio": 0.9
+},
+{
+"c": [
+-36.94,
+3.13
+],
+"d": 2.332,
+"depth": 2.09,
+"through": false,
+"ratio": 0.9
+},
+{
+"c": [
+-36.93,
+3.33
+],
+"d": 2.332,
+"depth": 2.09,
+"through": false,
+"ratio": 0.9
+},
+{
+"c": [
+-36.75,
+3.3
+],
+"d": 2.332,
+"depth": 0.66,
+"through": false,
+"ratio": 0.3
 }
 ],
 "floor": {
 "min": 0.005,
 "at": [
--37.9,
-2.67
+-35.76,
+3.3
 ]
 },
 "faces": {
-"low": 38.97,
-"high": 38.97
+"low": 37.71,
+"high": 37.71
 },
 "undercut": {
-"area": 1.86,
+"area": 1.85,
 "gap": 0.34,
 "at": [
 -35.99,
-3.83
+2.62
 ],
 "ring": true
 },
@@ -2884,8 +2807,8 @@
 "part": "pillars",
 "hn": "050800-1",
 "count": 3,
-"tris": 32440,
-"s": 5.3,
+"tris": 32328,
+"s": 5.1,
 "note": ""
 },
 {
@@ -2895,54 +2818,68 @@
 0.35,
 11.05
 ],
-"round": 0.966,
-"roundFilled": 0.996,
+"round": 0.965,
+"roundFilled": 0.967,
 "turned": false,
 "turnedcut": true,
+"teeth": {
+"n": 15,
+"root": 52.88,
+"tip": 53.01
+},
 "wall": {
-"min": 0.24,
+"min": 0.48,
 "at": [
--42.5,
-7.12
+-7.44,
+-51.78
 ],
-"y": 6.84,
+"y": 10.7,
 "thin": []
 },
-"corners": 22,
+"slots": {
+"n": 1,
+"min": 0.36,
+"at": [
+0.0,
+-51.6
+],
+"y": 7.47
+},
+"corners": 1,
 "holes": [
 {
 "c": [
--43.82,
+-43.83,
 7.73
 ],
 "d": 2.647,
-"depth": 6.68,
+"depth": 6.24,
 "through": false,
-"ratio": 2.5
+"ratio": 2.4
 },
 {
 "c": [
 15.22,
--41.82
+-41.81
 ],
-"d": 2.648,
-"depth": 6.68,
+"d": 2.646,
+"depth": 6.24,
 "through": false,
-"ratio": 2.5
+"ratio": 2.4
 },
 {
 "c": [
-28.61,
+28.6,
 34.09
 ],
-"d": 2.648,
-"depth": 6.68,
+"d": 2.645,
+"depth": 6.24,
 "through": false,
-"ratio": 2.5
+"ratio": 2.4
 },
 {
 "c": [
--0.0,
+0.0,
 -0.0
 ],
 "d": 83.0,
@@ -2955,27 +2892,27 @@
 0.0,
 42.49
 ],
-"d": 0.988,
+"d": 1.006,
 "depth": 2.0,
 "through": false,
 "ratio": 2.0
 },
 {
 "c": [
--0.0,
+0.0,
 -0.0
 ],
-"d": 83.349,
+"d": 83.35,
 "depth": 0.35,
 "through": false,
 "ratio": 0.0
 },
 {
 "c": [
--0.0,
+0.0,
 -0.0
 ],
-"d": 84.35,
+"d": 84.348,
 "depth": 0.65,
 "through": false,
 "ratio": 0.0
@@ -2983,32 +2920,32 @@
 {
 "c": [
 -43.73,
-25.24
+25.25
 ],
-"d": 1.04,
+"d": 1.036,
 "depth": 4.0,
 "through": false,
-"ratio": 3.8
+"ratio": 3.9
 },
 {
 "c": [
 0.0,
-0.0
+-0.0
 ],
-"d": 85.24,
+"d": 85.242,
 "depth": 0.24,
 "through": false,
 "ratio": 0.0
 },
 {
 "c": [
--5.29,
--50.23
+-5.28,
+-50.22
 ],
-"d": 1.036,
+"d": 1.047,
 "depth": 4.0,
 "through": false,
-"ratio": 3.9
+"ratio": 3.8
 },
 {
 "c": [
@@ -3025,7 +2962,7 @@
 43.73,
 25.25
 ],
-"d": 1.038,
+"d": 1.036,
 "depth": 4.0,
 "through": false,
 "ratio": 3.9
@@ -3035,27 +2972,17 @@
 -0.0,
 -0.0
 ],
-"d": 85.542,
-"depth": 0.06,
+"d": 90.63,
+"depth": 0.22,
 "through": false,
 "ratio": 0.0
 },
 {
 "c": [
 0.0,
-0.0
+-0.0
 ],
-"d": 85.977,
-"depth": 0.38,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
-0.0,
-0.0
-],
-"d": 91.723,
+"d": 91.724,
 "depth": 0.89,
 "through": false,
 "ratio": 0.0
@@ -3063,9 +2990,9 @@
 {
 "c": [
 0.0,
-0.0
+-0.0
 ],
-"d": 92.806,
+"d": 92.808,
 "depth": 0.19,
 "through": false,
 "ratio": 0.0
@@ -3073,9 +3000,9 @@
 {
 "c": [
 0.0,
-0.0
+-0.0
 ],
-"d": 104.0,
+"d": 104.049,
 "depth": 0.7,
 "through": false,
 "ratio": 0.0
@@ -3084,23 +3011,31 @@
 "floor": {
 "min": 0.005,
 "at": [
--9.98,
-41.32
+-24.66,
+-34.62
 ]
 },
 "faces": {
-"low": 1841.14,
-"high": 3064.45
+"low": 1833.38,
+"high": 3072.39
 },
-"undercut": null,
-"setups": 2,
+"undercut": {
+"area": 12.87,
+"gap": 1.6,
+"at": [
+0.06,
+-52.14
+],
+"ring": false
+},
+"setups": 3,
 "sealed": [],
 "name": "ring 050800-3",
 "part": "ring",
 "hn": "050800-3",
 "count": 1,
-"tris": 33386,
-"s": 20.8,
+"tris": 67374,
+"s": 19.7,
 "note": ""
 },
 {
@@ -3110,8 +3045,8 @@
 7.45,
 9.05
 ],
-"round": 0.18,
-"roundFilled": 0.18,
+"round": 0.186,
+"roundFilled": 0.186,
 "turned": false,
 "turnedcut": false,
 "wall": {
@@ -3126,15 +3061,15 @@
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.37,
+"min": 0.404,
 "at": [
--0.76,
--54.72
+-0.77,
+-48.89
 ]
 },
 "faces": {
-"low": 13.2,
-"high": 13.2
+"low": 11.91,
+"high": 11.91
 },
 "undercut": null,
 "setups": 2,
@@ -3143,7 +3078,7 @@
 "part": "ring",
 "hn": "WN-202",
 "count": 1,
-"tris": 64,
+"tris": 192,
 "s": 1.1,
 "note": ""
 },
@@ -3423,84 +3358,84 @@
 "hn": "050805-1",
 "count": 1,
 "tris": 10818,
-"s": 4.7,
+"s": 4.6,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 -24.05,
 -21.05
 ],
-"round": 0.984,
-"roundFilled": 0.984,
+"round": 0.991,
+"roundFilled": 0.991,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
-30.01,
-24.16
+30.23,
+23.41
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "barrelBridge WN-203.bb",
 "part": "barrelBridge",
 "hn": "WN-203.bb",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 -24.05,
 -21.05
 ],
-"round": 0.984,
-"roundFilled": 0.984,
+"round": 0.991,
+"roundFilled": 0.991,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
-22.18,
--31.41
+23.43,
+-32.15
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "barrelBridge WN-203.bb",
 "part": "barrelBridge",
 "hn": "WN-203.bb",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
 "h": 0.018,
-"levels": 1,
+"levels": 12,
 "y": [
--28.27,
+-28.23,
 -25.67
 ],
 "round": 0.214,
@@ -3515,16 +3450,16 @@
 -17.05
 ],
 "d": 3.23,
-"depth": 2.6,
+"depth": 2.56,
 "through": true,
 "ratio": 0.8
 }
 ],
 "floor": {
-"min": 2.6,
+"min": 2.56,
 "at": [
-25.7,
--21.44
+25.84,
+-21.09
 ]
 },
 "faces": {
@@ -3539,7 +3474,7 @@
 "hn": "050805-2",
 "count": 1,
 "tris": 2836,
-"s": 1.9,
+"s": 2.7,
 "note": ""
 },
 {
@@ -3654,14 +3589,14 @@
 "hn": "050801-2",
 "count": 1,
 "tris": 4120,
-"s": 4.5,
+"s": 4.4,
 "note": ""
 },
 {
 "h": 0.015,
 "levels": 12,
 "y": [
--35.85,
+-36.85,
 -23.85
 ],
 "round": 0.979,
@@ -3669,12 +3604,12 @@
 "turned": true,
 "turnedcut": false,
 "wall": {
-"min": 2.562,
+"min": 1.297,
 "at": [
--21.97,
--15.55
+-20.18,
+-18.31
 ],
-"y": -25.35,
+"y": -30.89,
 "thin": []
 },
 "corners": 0,
@@ -3684,52 +3619,62 @@
 -16.71,
 -15.29
 ],
-"d": 7.86,
-"depth": 4.0,
+"d": 7.84,
+"depth": 3.25,
 "through": false,
-"ratio": 0.5
+"ratio": 0.4
 },
 {
 "c": [
 -16.71,
 -15.29
 ],
-"d": 7.917,
-"depth": 4.0,
+"d": 7.887,
+"depth": 3.25,
 "through": false,
-"ratio": 0.5
+"ratio": 0.4
 },
 {
 "c": [
 -16.71,
 -15.29
 ],
-"d": 7.974,
-"depth": 4.0,
+"d": 7.933,
+"depth": 3.25,
 "through": false,
-"ratio": 0.5
+"ratio": 0.4
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.979,
+"depth": 3.25,
+"through": false,
+"ratio": 0.4
 }
 ],
 "floor": {
 "min": 3.601,
 "at": [
--19.52,
--12.53
+-19.57,
+-12.59
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 3.85
+"low": 48.14,
+"high": 58.92
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "dustBush 050801-3",
 "part": "dustBush",
 "hn": "050801-3",
 "count": 1,
-"tris": 720,
-"s": 4.1,
+"tris": 1152,
+"s": 4.0,
 "note": ""
 },
 {
@@ -3862,12 +3807,21 @@
 "levels": 1,
 "y": [
 -38.95,
--35.85
+-36.85
 ],
-"round": 0.845,
+"round": 0.846,
 "roundFilled": 0.932,
 "turned": false,
 "turnedcut": true,
+"wall": {
+"min": 3.654,
+"at": [
+-20.93,
+-19.16
+],
+"y": -37.9,
+"thin": []
+},
 "corners": 0,
 "holes": [
 {
@@ -3875,22 +3829,22 @@
 -16.71,
 -15.29
 ],
-"d": 7.814,
-"depth": 3.1,
+"d": 7.806,
+"depth": 2.1,
 "through": true,
-"ratio": 0.4
+"ratio": 0.3
 }
 ],
 "floor": {
-"min": 3.1,
+"min": 2.1,
 "at": [
--24.22,
--15.45
+-24.2,
+-15.43
 ]
 },
 "faces": {
 "low": 0.0,
-"high": 0.54
+"high": 0.36
 },
 "undercut": null,
 "setups": 1,
@@ -3900,7 +3854,7 @@
 "hn": "050801-3",
 "count": 1,
 "tris": 1796,
-"s": 3.0,
+"s": 2.9,
 "note": ""
 },
 {
@@ -3946,7 +3900,7 @@
 "hn": "050801-4",
 "count": 1,
 "tris": 576,
-"s": 2.6,
+"s": 2.5,
 "note": ""
 },
 {
@@ -3969,7 +3923,7 @@
 "y": -34.75,
 "thin": []
 },
-"corners": 16,
+"corners": 10,
 "holes": [
 {
 "c": [
@@ -3993,23 +3947,23 @@
 },
 {
 "c": [
--10.01,
-15.52
+-10.07,
+15.56
 ],
-"d": 0.944,
+"d": 1.05,
 "depth": 2.4,
 "through": false,
-"ratio": 2.5
+"ratio": 2.3
 },
 {
 "c": [
--8.18,
-8.7
+-8.25,
+8.74
 ],
-"d": 0.944,
+"d": 1.042,
 "depth": 2.4,
 "through": false,
-"ratio": 2.5
+"ratio": 2.3
 },
 {
 "c": [
@@ -4075,16 +4029,16 @@
 "floor": {
 "min": 0.005,
 "at": [
--9.66,
-8.36
+-5.57,
+13.5
 ]
 },
 "faces": {
-"low": 264.0,
-"high": 322.37
+"low": 265.03,
+"high": 322.44
 },
 "undercut": {
-"area": 0.64,
+"area": 1.63,
 "gap": 0.22,
 "at": [
 -11.81,
@@ -4098,113 +4052,113 @@
 "part": "upperCock",
 "hn": "050803-1",
 "count": 1,
-"tris": 11380,
-"s": 2.5,
+"tris": 17848,
+"s": 2.6,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 -24.05,
 -21.05
 ],
-"round": 0.983,
-"roundFilled": 0.983,
+"round": 0.99,
+"roundFilled": 0.99,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
--4.33,
--27.9
+-2.98,
+-28.33
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "upperCock WN-203.uc",
 "part": "upperCock",
 "hn": "WN-203.uc",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 -24.05,
 -21.05
 ],
-"round": 0.984,
-"roundFilled": 0.984,
+"round": 0.994,
+"roundFilled": 0.994,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
--3.51,
--11.61
+-2.16,
+-11.05
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "upperCock WN-203.uc",
 "part": "upperCock",
 "hn": "WN-203.uc",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 -24.05,
 -21.05
 ],
-"round": 0.983,
-"roundFilled": 0.983,
+"round": 0.99,
+"roundFilled": 0.99,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
-5.34,
--25.11
+6.68,
+-25.74
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "upperCock WN-203.uc",
 "part": "upperCock",
 "hn": "WN-203.uc",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
@@ -4507,82 +4461,82 @@
 "hn": "050800-2",
 "count": 1,
 "tris": 25920,
-"s": 4.1,
+"s": 4.0,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 -20.3,
 -17.3
 ],
-"round": 0.983,
-"roundFilled": 0.983,
+"round": 0.99,
+"roundFilled": 0.99,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
--3.98,
-6.22
+-2.66,
+6.52
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "lowerCock WN-203.lc",
 "part": "lowerCock",
 "hn": "WN-203.lc",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 -20.3,
 -17.3
 ],
-"round": 0.984,
-"roundFilled": 0.984,
+"round": 0.991,
+"roundFilled": 0.991,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
-3.53,
-17.75
+4.86,
+17.32
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "lowerCock WN-203.lc",
 "part": "lowerCock",
 "hn": "WN-203.lc",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
 "h": 0.042,
-"levels": 15,
+"levels": 14,
 "y": [
 3.35,
 7.15
@@ -4592,10 +4546,10 @@
 "turned": false,
 "turnedcut": false,
 "wall": {
-"min": 3.328,
+"min": 3.197,
 "at": [
--7.46,
-28.9
+-8.28,
+26.72
 ],
 "y": 5.87,
 "thin": []
@@ -4607,27 +4561,27 @@
 -7.06,
 28.58
 ],
-"d": 1.581,
+"d": 1.578,
 "depth": 2.5,
 "through": false,
 "ratio": 1.6
 },
 {
 "c": [
--4.31,
+-4.32,
 26.41
 ],
-"d": 2.798,
+"d": 2.801,
 "depth": 1.8,
 "through": false,
 "ratio": 0.6
 },
 {
 "c": [
--0.0,
+0.0,
 23.0
 ],
-"d": 5.201,
+"d": 5.202,
 "depth": 3.8,
 "through": true,
 "ratio": 0.7
@@ -4637,17 +4591,17 @@
 9.91,
 15.17
 ],
-"d": 5.384,
+"d": 5.378,
 "depth": 0.32,
 "through": false,
 "ratio": 0.1
 },
 {
 "c": [
-22.46,
+22.47,
 5.25
 ],
-"d": 2.799,
+"d": 2.8,
 "depth": 1.8,
 "through": false,
 "ratio": 0.6
@@ -4657,7 +4611,7 @@
 25.21,
 3.08
 ],
-"d": 1.585,
+"d": 1.578,
 "depth": 2.5,
 "through": false,
 "ratio": 1.6
@@ -4667,7 +4621,7 @@
 9.91,
 15.17
 ],
-"d": 4.75,
+"d": 4.733,
 "depth": 0.32,
 "through": false,
 "ratio": 0.1
@@ -4677,17 +4631,17 @@
 9.91,
 15.17
 ],
-"d": 4.299,
+"d": 4.3,
 "depth": 3.17,
 "through": false,
 "ratio": 0.7
 },
 {
 "c": [
--4.31,
+-4.32,
 26.41
 ],
-"d": 4.699,
+"d": 4.7,
 "depth": 2.0,
 "through": false,
 "ratio": 0.4
@@ -4697,7 +4651,7 @@
 22.46,
 5.25
 ],
-"d": 4.699,
+"d": 4.7,
 "depth": 2.0,
 "through": false,
 "ratio": 0.4
@@ -4706,12 +4660,12 @@
 "floor": {
 "min": 1.3,
 "at": [
-25.19,
-3.48
+-7.27,
+28.45
 ]
 },
 "faces": {
-"low": 14.57,
+"low": 14.53,
 "high": 22.38
 },
 "undercut": null,
@@ -4721,78 +4675,78 @@
 "part": "intermediateBridge",
 "hn": "050804-1",
 "count": 1,
-"tris": 4356,
-"s": 3.9,
+"tris": 6564,
+"s": 4.0,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 2.05,
 5.05
 ],
-"round": 0.984,
-"roundFilled": 0.984,
+"round": 0.994,
+"roundFilled": 0.994,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
--7.77,
-28.26
+-6.47,
+29.09
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "intermediateBridge WN-203.zb",
 "part": "intermediateBridge",
 "hn": "WN-203.zb",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
+"levels": 12,
 "y": [
 2.05,
 5.05
 ],
-"round": 0.984,
-"roundFilled": 0.984,
+"round": 0.991,
+"roundFilled": 0.991,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 3.0,
+"min": 2.832,
 "at": [
-24.62,
-3.58
+24.61,
+2.58
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 0.0
+"low": 0.38,
+"high": 0.38
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "intermediateBridge WN-203.zb",
 "part": "intermediateBridge",
 "hn": "WN-203.zb",
 "count": 1,
-"tris": 64,
-"s": 0.1,
+"tris": 320,
+"s": 0.2,
 "note": ""
 },
 {
@@ -5074,34 +5028,43 @@
 },
 {
 "h": 0.01,
-"levels": 17,
+"levels": 16,
 "y": [
 -21.97,
 18.36
 ],
-"round": 0.983,
-"roundFilled": 0.989,
+"round": 0.986,
+"roundFilled": 0.986,
 "turned": true,
 "turnedcut": false,
-"corners": 0,
+"wall": {
+"min": 0.96,
+"at": [
+-0.09,
+2.22
+],
+"y": -0.84,
+"thin": []
+},
+"corners": 2,
 "holes": [],
 "floor": {
-"min": 0.005,
+"min": 0.006,
 "at": [
--0.25,
--0.81
+-0.24,
+-0.82
 ]
 },
 "faces": {
-"low": 22.65,
-"high": 22.32
+"low": 22.76,
+"high": 22.43
 },
 "undercut": {
-"area": 4.33,
+"area": 4.35,
 "gap": 0.99,
 "at": [
-1.14,
--1.12
+0.63,
+1.47
 ],
 "ring": true
 },
@@ -5111,8 +5074,8 @@
 "part": "centreWheel",
 "hn": "050503-2",
 "count": 1,
-"tris": 1728,
-"s": 2.4,
+"tris": 6656,
+"s": 2.3,
 "note": ""
 },
 {
@@ -5136,8 +5099,8 @@
 "floor": {
 "min": 3.95,
 "at": [
-0.59,
-1.8
+-1.88,
+2.26
 ]
 },
 "faces": {
@@ -5162,12 +5125,12 @@
 -1.74,
 -0.49
 ],
-"round": 0.505,
-"roundFilled": 0.934,
+"round": 0.503,
+"roundFilled": 0.933,
 "turned": false,
 "turnedcut": true,
 "teeth": {
-"n": 89,
+"n": 90,
 "root": 15.42,
 "tip": 16.55
 },
@@ -5175,19 +5138,19 @@
 "min": 1.022,
 "at": [
 -13.29,
--6.05
+6.09
 ],
 "y": -1.12,
 "thin": []
 },
-"corners": 35,
+"corners": 37,
 "holes": [
 {
 "c": [
 0.0,
-0.0
+-0.0
 ],
-"d": 5.393,
+"d": 5.395,
 "depth": 1.25,
 "through": true,
 "ratio": 0.2
@@ -5196,8 +5159,8 @@
 "floor": {
 "min": 1.25,
 "at": [
--15.54,
-3.14
+-16.23,
+1.56
 ]
 },
 "faces": {
@@ -5212,7 +5175,7 @@
 "hn": "050503-1",
 "count": 1,
 "tris": 17264,
-"s": 1.8,
+"s": 1.7,
 "note": ""
 },
 {
@@ -5222,8 +5185,8 @@
 -0.49,
 -0.24
 ],
-"round": 0.987,
-"roundFilled": 0.994,
+"round": 0.99,
+"roundFilled": 0.995,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -5233,7 +5196,7 @@
 0.0,
 0.0
 ],
-"d": 5.392,
+"d": 5.393,
 "depth": 0.25,
 "through": true,
 "ratio": 0.0
@@ -5242,8 +5205,8 @@
 "floor": {
 "min": 0.25,
 "at": [
--4.22,
-0.5
+3.68,
+-1.36
 ]
 },
 "faces": {
@@ -5258,32 +5221,32 @@
 "hn": "050503-1",
 "count": 1,
 "tris": 384,
-"s": 3.0,
+"s": 2.8,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 16,
+"levels": 15,
 "y": [
 -21.92,
 6.98
 ],
-"round": 0.984,
-"roundFilled": 0.984,
+"round": 0.985,
+"roundFilled": 0.985,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 1.25,
+"min": 0.95,
 "at": [
 7.94,
-15.05
+15.16
 ]
 },
 "faces": {
-"low": 12.42,
-"high": 12.42
+"low": 12.48,
+"high": 12.48
 },
 "undercut": null,
 "setups": 2,
@@ -5292,7 +5255,7 @@
 "part": "intermediateWheel",
 "hn": "050502-2",
 "count": 1,
-"tris": 1472,
+"tris": 5632,
 "s": 1.3,
 "note": ""
 },
@@ -5300,11 +5263,11 @@
 "h": 0.01,
 "levels": 1,
 "y": [
--4.27,
+-3.02,
 0.23
 ],
-"round": 0.484,
-"roundFilled": 0.484,
+"round": 0.483,
+"roundFilled": 0.483,
 "turned": false,
 "turnedcut": false,
 "teeth": {
@@ -5315,10 +5278,10 @@
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 4.5,
+"min": 3.25,
 "at": [
-7.64,
-14.65
+7.91,
+14.11
 ]
 },
 "faces": {
@@ -5343,8 +5306,8 @@
 0.23,
 1.18
 ],
-"round": 0.481,
-"roundFilled": 0.894,
+"round": 0.479,
+"roundFilled": 0.892,
 "turned": false,
 "turnedcut": false,
 "teeth": {
@@ -5355,8 +5318,8 @@
 "wall": {
 "min": 0.77,
 "at": [
-2.54,
-22.07
+2.36,
+8.5
 ],
 "y": 0.27,
 "thin": []
@@ -5377,8 +5340,8 @@
 "floor": {
 "min": 0.95,
 "at": [
--1.63,
-15.55
+-1.55,
+15.57
 ]
 },
 "faces": {
@@ -5393,64 +5356,18 @@
 "hn": "050502-1",
 "count": 1,
 "tris": 15744,
-"s": 3.7,
+"s": 3.6,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 1,
-"y": [
-1.18,
-1.38
-],
-"round": 0.988,
-"roundFilled": 0.995,
-"turned": true,
-"turnedcut": false,
-"corners": 0,
-"holes": [
-{
-"c": [
-9.91,
-15.17
-],
-"d": 3.994,
-"depth": 0.2,
-"through": true,
-"ratio": 0.1
-}
-],
-"floor": {
-"min": 0.2,
-"at": [
-6.45,
-15.26
-]
-},
-"faces": {
-"low": 0.0,
-"high": 0.0
-},
-"undercut": null,
-"setups": 1,
-"sealed": [],
-"name": "intermediateWheel 050502-1",
-"part": "intermediateWheel",
-"hn": "050502-1",
-"count": 1,
-"tris": 384,
-"s": 1.7,
-"note": ""
-},
-{
-"h": 0.01,
-"levels": 16,
+"levels": 15,
 "y": [
 -21.98,
 14.27
 ],
-"round": 0.981,
-"roundFilled": 0.981,
+"round": 0.982,
+"roundFilled": 0.982,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -5458,13 +5375,13 @@
 "floor": {
 "min": 1.25,
 "at": [
--0.92,
-23.88
+-1.21,
+22.98
 ]
 },
 "faces": {
-"low": 5.2,
-"high": 5.09
+"low": 5.23,
+"high": 5.11
 },
 "undercut": null,
 "setups": 2,
@@ -5473,8 +5390,8 @@
 "part": "secondsWheel",
 "hn": "050501-2",
 "count": 1,
-"tris": 1152,
-"s": 0.5,
+"tris": 3840,
+"s": 0.6,
 "note": ""
 },
 {
@@ -5493,8 +5410,8 @@
 "floor": {
 "min": 7.0,
 "at": [
--1.44,
-22.8
+-1.37,
+22.73
 ]
 },
 "faces": {
@@ -5516,11 +5433,11 @@
 "h": 0.024,
 "levels": 1,
 "y": [
--5.32,
--4.32
+-5.12,
+-4.12
 ],
-"round": 0.455,
-"roundFilled": 0.891,
+"round": 0.453,
+"roundFilled": 0.89,
 "turned": false,
 "turnedcut": false,
 "teeth": {
@@ -5534,14 +5451,14 @@
 -7.02,
 29.41
 ],
-"y": -4.82,
+"y": -4.62,
 "thin": []
 },
-"corners": 25,
+"corners": 24,
 "holes": [
 {
 "c": [
--0.0,
+0.0,
 23.0
 ],
 "d": 2.596,
@@ -5553,8 +5470,8 @@
 "floor": {
 "min": 1.0,
 "at": [
--10.06,
-20.9
+-10.11,
+22.87
 ]
 },
 "faces": {
@@ -5574,59 +5491,13 @@
 },
 {
 "h": 0.01,
-"levels": 12,
-"y": [
--4.33,
--4.12
-],
-"round": 0.992,
-"roundFilled": 0.996,
-"turned": true,
-"turnedcut": false,
-"corners": 0,
-"holes": [
-{
-"c": [
--0.0,
-23.0
-],
-"d": 2.596,
-"depth": 0.2,
-"through": true,
-"ratio": 0.1
-}
-],
-"floor": {
-"min": 0.2,
-"at": [
--2.94,
-23.22
-]
-},
-"faces": {
-"low": 0.0,
-"high": 0.0
-},
-"undercut": null,
-"setups": 1,
-"sealed": [],
-"name": "secondsWheel 050501-1",
-"part": "secondsWheel",
-"hn": "050501-1",
-"count": 1,
-"tris": 384,
-"s": 2.1,
-"note": ""
-},
-{
-"h": 0.01,
 "levels": 17,
 "y": [
 -35.83,
 -9.97
 ],
-"round": 0.993,
-"roundFilled": 0.993,
+"round": 0.992,
+"roundFilled": 0.992,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -5634,8 +5505,8 @@
 "floor": {
 "min": 1.5,
 "at": [
--9.62,
-13.0
+-10.13,
+12.03
 ]
 },
 "faces": {
@@ -5649,7 +5520,7 @@
 "part": "balance",
 "hn": "",
 "count": 1,
-"tris": 1280,
+"tris": 1216,
 "s": 0.4,
 "note": ""
 },
@@ -5660,7 +5531,7 @@
 -22.8,
 -21.0
 ],
-"round": 0.87,
+"round": 0.869,
 "roundFilled": 0.995,
 "turned": false,
 "turnedcut": true,
@@ -5668,8 +5539,8 @@
 "holes": [
 {
 "c": [
--10.39,
-13.82
+-10.15,
+10.24
 ],
 "d": 1.038,
 "depth": 1.8,
@@ -5688,8 +5559,8 @@
 },
 {
 "c": [
--7.81,
-10.4
+-8.05,
+13.98
 ],
 "d": 1.038,
 "depth": 1.8,
@@ -5700,8 +5571,8 @@
 "floor": {
 "min": 1.8,
 "at": [
--12.18,
-12.25
+-12.15,
+12.63
 ]
 },
 "faces": {
@@ -5716,7 +5587,7 @@
 "hn": "050402-2",
 "count": 1,
 "tris": 1224,
-"s": 2.4,
+"s": 2.3,
 "note": ""
 },
 {
@@ -5726,8 +5597,8 @@
 -21.0,
 -18.7
 ],
-"round": 0.952,
-"roundFilled": 0.99,
+"round": 0.951,
+"roundFilled": 0.989,
 "turned": false,
 "turnedcut": true,
 "teeth": {
@@ -5749,15 +5620,15 @@
 }
 ],
 "floor": {
-"min": 1.288,
+"min": 1.259,
 "at": [
--9.73,
-11.32
+-9.89,
+11.48
 ]
 },
 "faces": {
 "low": 0.0,
-"high": 0.19
+"high": 0.31
 },
 "undercut": null,
 "setups": 1,
@@ -5766,7 +5637,7 @@
 "part": "balance",
 "hn": "050402-2",
 "count": 1,
-"tris": 384,
+"tris": 480,
 "s": 0.3,
 "note": ""
 },
@@ -5777,8 +5648,8 @@
 -23.92,
 -23.72
 ],
-"round": 0.124,
-"roundFilled": 0.124,
+"round": 0.163,
+"roundFilled": 0.163,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -5786,8 +5657,8 @@
 "floor": {
 "min": 0.2,
 "at": [
--8.18,
-9.94
+-10.76,
+10.27
 ]
 },
 "faces": {
@@ -5812,8 +5683,8 @@
 -23.92,
 -23.72
 ],
-"round": 0.15,
-"roundFilled": 0.15,
+"round": 0.124,
+"roundFilled": 0.124,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -5821,8 +5692,8 @@
 "floor": {
 "min": 0.2,
 "at": [
--10.71,
-14.27
+-8.4,
+13.67
 ]
 },
 "faces": {
@@ -5842,32 +5713,32 @@
 },
 {
 "h": 0.035,
-"levels": 2,
+"levels": 4,
 "y": [
 -26.6,
 -22.8
 ],
-"round": 0.232,
-"roundFilled": 0.254,
+"round": 0.23,
+"roundFilled": 0.252,
 "turned": false,
 "turnedcut": false,
 "wall": {
 "min": 0.393,
 "at": [
--21.21,
-21.68
+-21.14,
+2.43
 ],
-"y": -23.38,
+"y": -26.01,
 "thin": []
 },
-"corners": 4,
+"corners": 8,
 "holes": [
 {
 "c": [
--10.39,
-13.82
+-10.15,
+10.24
 ],
-"d": 0.996,
+"d": 0.998,
 "depth": 1.15,
 "through": false,
 "ratio": 1.2
@@ -5877,47 +5748,55 @@
 -9.1,
 12.11
 ],
-"d": 2.008,
+"d": 2.01,
 "depth": 1.15,
 "through": false,
 "ratio": 0.6
 },
 {
 "c": [
--7.81,
-10.4
+-8.05,
+13.98
 ],
-"d": 0.997,
+"d": 0.998,
 "depth": 1.15,
 "through": false,
 "ratio": 1.2
 }
 ],
 "floor": {
-"min": 0.809,
+"min": 0.804,
 "at": [
--7.41,
-10.01
+-8.42,
+14.39
 ]
 },
 "faces": {
-"low": 120.94,
+"low": 120.92,
 "high": 0.0
 },
-"undercut": null,
-"setups": 1,
+"undercut": {
+"area": 0.72,
+"gap": 0.94,
+"at": [
+-1.54,
+25.71
+],
+"ring": false
+},
+"setups": 2,
 "sealed": [],
 "name": "balance 050301-1",
 "part": "balance",
 "hn": "050301-1",
 "count": 1,
-"tris": 6820,
-"s": 1.2,
+"tris": 13117,
+"s": 1.5,
 "note": ""
 },
 {
-"h": 0.032,
-"levels": 1,
+"h": 0.033,
+"levels": 3,
 "y": [
 -26.6,
 -22.8
@@ -5927,41 +5806,49 @@
 "turned": false,
 "turnedcut": false,
 "wall": {
-"min": 0.496,
+"min": 0.518,
 "at": [
--20.44,
-0.96
+-21.62,
+2.3
 ],
-"y": -24.7,
+"y": -26.01,
 "thin": []
 },
-"corners": 0,
+"corners": 2,
 "holes": [],
 "floor": {
-"min": 3.8,
+"min": 1.179,
 "at": [
--21.36,
-1.81
+-16.75,
+-1.67
 ]
 },
 "faces": {
 "low": 0.0,
 "high": 0.0
 },
-"undercut": null,
+"undercut": {
+"area": 0.48,
+"gap": 0.94,
+"at": [
+-16.75,
+-1.6
+],
+"ring": false
+},
 "setups": 1,
 "sealed": [],
 "name": "balance 050301-1",
 "part": "balance",
 "hn": "050301-1",
 "count": 1,
-"tris": 2884,
-"s": 0.3,
+"tris": 7026,
+"s": 0.5,
 "note": ""
 },
 {
-"h": 0.032,
-"levels": 1,
+"h": 0.033,
+"levels": 3,
 "y": [
 -26.6,
 -22.8
@@ -5971,36 +5858,44 @@
 "turned": false,
 "turnedcut": false,
 "wall": {
-"min": 0.508,
+"min": 0.518,
 "at": [
--25.01,
-11.82
+-21.62,
+21.91
 ],
-"y": -24.7,
+"y": -26.01,
 "thin": []
 },
-"corners": 0,
+"corners": 2,
 "holes": [],
 "floor": {
-"min": 3.8,
+"min": 1.179,
 "at": [
--25.04,
-13.5
+-1.45,
+25.89
 ]
 },
 "faces": {
 "low": 0.0,
 "high": 0.0
 },
-"undercut": null,
+"undercut": {
+"area": 0.48,
+"gap": 0.94,
+"at": [
+-1.45,
+25.82
+],
+"ring": false
+},
 "setups": 1,
 "sealed": [],
 "name": "balance 050301-1",
 "part": "balance",
 "hn": "050301-1",
 "count": 1,
-"tris": 2884,
-"s": 0.3,
+"tris": 7026,
+"s": 0.5,
 "note": ""
 },
 {
@@ -6018,8 +5913,8 @@
 "holes": [
 {
 "c": [
-6.49,
-14.0
+-1.1,
+-1.4
 ],
 "d": 0.998,
 "depth": 2.0,
@@ -6030,8 +5925,8 @@
 "floor": {
 "min": 0.64,
 "at": [
-6.0,
-13.93
+-1.59,
+-1.4
 ]
 },
 "faces": {
@@ -6053,20 +5948,20 @@
 "h": 0.01,
 "levels": 12,
 "y": [
--25.67,
--24.83
+-25.07,
+-24.23
 ],
-"round": 0.388,
-"roundFilled": 0.388,
+"round": 0.307,
+"roundFilled": 0.307,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.247,
+"min": 0.235,
 "at": [
-7.87,
-13.77
+0.4,
+-3.13
 ]
 },
 "faces": {
@@ -6088,25 +5983,25 @@
 "h": 0.01,
 "levels": 12,
 "y": [
--26.05,
--24.45
+-25.45,
+-23.85
 ],
-"round": 0.353,
-"roundFilled": 0.353,
+"round": 0.293,
+"roundFilled": 0.293,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.421,
+"min": 0.395,
 "at": [
-9.61,
-13.6
+-0.37,
+-4.13
 ]
 },
 "faces": {
-"low": 0.71,
-"high": 0.71
+"low": 0.66,
+"high": 0.66
 },
 "undercut": null,
 "setups": 2,
@@ -6123,25 +6018,25 @@
 "h": 0.01,
 "levels": 12,
 "y": [
--26.01,
--24.49
+-25.41,
+-23.89
 ],
-"round": 0.386,
-"roundFilled": 0.386,
+"round": 0.7,
+"roundFilled": 0.7,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.135,
+"min": 0.129,
 "at": [
-9.48,
-13.9
+0.03,
+-4.19
 ]
 },
 "faces": {
-"low": 0.24,
-"high": 0.24
+"low": 0.22,
+"high": 0.22
 },
 "undercut": null,
 "setups": 2,
@@ -6169,8 +6064,8 @@
 "holes": [
 {
 "c": [
--15.26,
--2.33
+-24.8,
+11.93
 ],
 "d": 0.998,
 "depth": 2.0,
@@ -6181,8 +6076,8 @@
 "floor": {
 "min": 0.64,
 "at": [
--15.71,
--2.54
+-25.28,
+11.89
 ]
 },
 "faces": {
@@ -6197,27 +6092,36 @@
 "hn": "050301-4",
 "count": 1,
 "tris": 1612,
-"s": 2.6,
+"s": 2.5,
 "note": ""
 },
 {
 "h": 0.01,
 "levels": 12,
 "y": [
--25.67,
--24.83
+-25.07,
+-24.23
 ],
-"round": 0.286,
-"roundFilled": 0.286,
+"round": 0.421,
+"roundFilled": 0.421,
 "turned": false,
 "turnedcut": false,
+"wall": {
+"min": 0.32,
+"at": [
+-27.11,
+11.91
+],
+"y": -24.27,
+"thin": []
+},
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.24,
+"min": 0.248,
 "at": [
--15.84,
--4.7
+-27.07,
+12.3
 ]
 },
 "faces": {
@@ -6239,25 +6143,25 @@
 "h": 0.01,
 "levels": 12,
 "y": [
--26.05,
--24.45
+-25.45,
+-23.85
 ],
-"round": 0.253,
-"roundFilled": 0.253,
+"round": 0.391,
+"roundFilled": 0.391,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.414,
+"min": 0.422,
 "at": [
--17.05,
--4.58
+-27.48,
+12.67
 ]
 },
 "faces": {
-"low": 0.71,
-"high": 0.71
+"low": 0.66,
+"high": 0.66
 },
 "undercut": null,
 "setups": 2,
@@ -6274,176 +6178,25 @@
 "h": 0.01,
 "levels": 12,
 "y": [
--26.01,
--24.49
+-25.41,
+-23.89
 ],
-"round": 0.693,
-"roundFilled": 0.693,
+"round": 0.016,
+"roundFilled": 0.016,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.131,
+"min": 0.06,
 "at": [
--16.83,
--4.86
+-27.91,
+12.2
 ]
 },
 "faces": {
-"low": 0.24,
-"high": 0.24
-},
-"undercut": null,
-"setups": 2,
-"sealed": [],
-"name": "balance WN-12",
-"part": "balance",
-"hn": "WN-12",
-"count": 1,
-"tris": 12,
-"s": 0.0,
-"note": ""
-},
-{
-"h": 0.01,
-"levels": 3,
-"y": [
--29.26,
--22.8
-],
-"round": 0.665,
-"roundFilled": 0.665,
-"turned": false,
-"turnedcut": false,
-"corners": 4,
-"holes": [
-{
-"c": [
--24.69,
-10.22
-],
-"d": 0.998,
-"depth": 2.0,
-"through": false,
-"ratio": 2.0
-}
-],
-"floor": {
-"min": 0.64,
-"at": [
--25.11,
-10.12
-]
-},
-"faces": {
-"low": 2.56,
-"high": 5.91
-},
-"undercut": null,
-"setups": 2,
-"sealed": [],
-"name": "balance 050301-4",
-"part": "balance",
-"hn": "050301-4",
-"count": 1,
-"tris": 1612,
-"s": 2.6,
-"note": ""
-},
-{
-"h": 0.01,
-"levels": 12,
-"y": [
--25.67,
--24.83
-],
-"round": 0.388,
-"roundFilled": 0.388,
-"turned": false,
-"turnedcut": false,
-"corners": 0,
-"holes": [],
-"floor": {
-"min": 0.247,
-"at": [
--26.34,
-9.62
-]
-},
-"faces": {
-"low": 1.24,
-"high": 1.24
-},
-"undercut": null,
-"setups": 2,
-"sealed": [],
-"name": "balance WN-12",
-"part": "balance",
-"hn": "WN-12",
-"count": 1,
-"tris": 96,
-"s": 0.2,
-"note": ""
-},
-{
-"h": 0.01,
-"levels": 12,
-"y": [
--26.05,
--24.45
-],
-"round": 0.353,
-"roundFilled": 0.353,
-"turned": false,
-"turnedcut": false,
-"corners": 0,
-"holes": [],
-"floor": {
-"min": 0.421,
-"at": [
--27.23,
-9.13
-]
-},
-"faces": {
-"low": 0.71,
-"high": 0.71
-},
-"undercut": null,
-"setups": 2,
-"sealed": [],
-"name": "balance WN-12",
-"part": "balance",
-"hn": "WN-12",
-"count": 1,
-"tris": 144,
-"s": 0.1,
-"note": ""
-},
-{
-"h": 0.01,
-"levels": 12,
-"y": [
--26.01,
--24.49
-],
-"round": 0.593,
-"roundFilled": 0.593,
-"turned": false,
-"turnedcut": false,
-"corners": 0,
-"holes": [],
-"floor": {
-"min": 0.135,
-"at": [
--27.7,
-9.4
-]
-},
-"faces": {
-"low": 0.24,
-"high": 0.24
+"low": 0.22,
+"high": 0.22
 },
 "undercut": null,
 "setups": 2,
@@ -6471,8 +6224,8 @@
 "holes": [
 {
 "c": [
--2.94,
-26.55
+-17.1,
+25.62
 ],
 "d": 0.998,
 "depth": 2.0,
@@ -6483,8 +6236,8 @@
 "floor": {
 "min": 0.64,
 "at": [
--3.42,
-26.67
+-17.21,
+25.77
 ]
 },
 "faces": {
@@ -6499,27 +6252,27 @@
 "hn": "050301-4",
 "count": 1,
 "tris": 1612,
-"s": 2.6,
+"s": 2.5,
 "note": ""
 },
 {
 "h": 0.01,
 "levels": 12,
 "y": [
--25.67,
--24.83
+-25.07,
+-24.23
 ],
-"round": 0.286,
-"roundFilled": 0.286,
+"round": 0.307,
+"roundFilled": 0.307,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.24,
+"min": 0.235,
 "at": [
--2.32,
-27.0
+-17.17,
+26.51
 ]
 },
 "faces": {
@@ -6541,25 +6294,25 @@
 "h": 0.01,
 "levels": 12,
 "y": [
--26.05,
--24.45
+-25.45,
+-23.85
 ],
-"round": 0.253,
-"roundFilled": 0.253,
+"round": 0.292,
+"roundFilled": 0.292,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.414,
+"min": 0.395,
 "at": [
--2.5,
-29.56
+-19.24,
+27.7
 ]
 },
 "faces": {
-"low": 0.71,
-"high": 0.71
+"low": 0.66,
+"high": 0.66
 },
 "undercut": null,
 "setups": 2,
@@ -6576,25 +6329,185 @@
 "h": 0.01,
 "levels": 12,
 "y": [
--26.01,
--24.49
+-25.41,
+-23.89
 ],
-"round": 0.693,
-"roundFilled": 0.693,
+"round": 0.698,
+"roundFilled": 0.698,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.131,
+"min": 0.128,
 "at": [
--2.14,
-29.59
+-19.07,
+28.04
 ]
 },
 "faces": {
-"low": 0.24,
-"high": 0.24
+"low": 0.22,
+"high": 0.22
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 12,
+"s": 0.0,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 3,
+"y": [
+-29.26,
+-22.8
+],
+"round": 0.667,
+"roundFilled": 0.667,
+"turned": false,
+"turnedcut": false,
+"corners": 4,
+"holes": [
+{
+"c": [
+6.6,
+12.29
+],
+"d": 0.998,
+"depth": 2.0,
+"through": false,
+"ratio": 2.0
+}
+],
+"floor": {
+"min": 0.64,
+"at": [
+6.1,
+12.34
+]
+},
+"faces": {
+"low": 2.56,
+"high": 5.91
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance 050301-4",
+"part": "balance",
+"hn": "050301-4",
+"count": 1,
+"tris": 1612,
+"s": 2.5,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.07,
+-24.23
+],
+"round": 0.421,
+"roundFilled": 0.421,
+"turned": false,
+"turnedcut": false,
+"wall": {
+"min": 0.32,
+"at": [
+7.35,
+12.3
+],
+"y": -25.03,
+"thin": []
+},
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.248,
+"at": [
+7.39,
+12.69
+]
+},
+"faces": {
+"low": 1.24,
+"high": 1.24
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 96,
+"s": 0.2,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.45,
+-23.85
+],
+"round": 0.39,
+"roundFilled": 0.39,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.422,
+"at": [
+9.51,
+13.09
+]
+},
+"faces": {
+"low": 0.66,
+"high": 0.66
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "balance WN-12",
+"part": "balance",
+"hn": "WN-12",
+"count": 1,
+"tris": 144,
+"s": 0.1,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-25.41,
+-23.89
+],
+"round": 0.023,
+"roundFilled": 0.023,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [],
+"floor": {
+"min": 0.051,
+"at": [
+9.71,
+12.6
+]
+},
+"faces": {
+"low": 0.22,
+"high": 0.22
 },
 "undercut": null,
 "setups": 2,
@@ -6614,17 +6527,17 @@
 -25.4,
 -24.5
 ],
-"round": 0.107,
-"roundFilled": 0.107,
+"round": 0.093,
+"roundFilled": 0.093,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.236,
+"min": 0.25,
 "at": [
-3.55,
--4.03
+-17.35,
+-3.43
 ]
 },
 "faces": {
@@ -6639,7 +6552,7 @@
 "hn": "050301-2",
 "count": 1,
 "tris": 128,
-"s": 1.0,
+"s": 0.9,
 "note": ""
 },
 {
@@ -6649,22 +6562,22 @@
 -25.77,
 -24.12
 ],
-"round": 0.687,
-"roundFilled": 0.687,
+"round": 0.691,
+"roundFilled": 0.691,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.38,
+"min": 0.402,
 "at": [
-0.23,
-1.02
+-16.7,
+0.23
 ]
 },
 "faces": {
-"low": 1.75,
-"high": 1.75
+"low": 1.74,
+"high": 1.74
 },
 "undercut": null,
 "setups": 2,
@@ -6674,7 +6587,7 @@
 "hn": "050301-2",
 "count": 1,
 "tris": 144,
-"s": 0.3,
+"s": 0.2,
 "note": ""
 },
 {
@@ -6684,8 +6597,8 @@
 -25.08,
 -24.83
 ],
-"round": 0.131,
-"roundFilled": 0.131,
+"round": 0.115,
+"roundFilled": 0.115,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -6693,8 +6606,8 @@
 "floor": {
 "min": 0.25,
 "at": [
--1.34,
-0.44
+-16.64,
+0.27
 ]
 },
 "faces": {
@@ -6716,32 +6629,32 @@
 "h": 0.01,
 "levels": 16,
 "y": [
--26.85,
--23.05
+-27.07,
+-22.83
 ],
-"round": 0.668,
-"roundFilled": 0.668,
+"round": 0.659,
+"roundFilled": 0.659,
 "turned": false,
 "turnedcut": false,
 "corners": 34,
 "holes": [],
 "floor": {
-"min": 0.239,
+"min": 0.27,
 "at": [
-3.79,
--1.93
+-16.56,
+-5.44
 ]
 },
 "faces": {
-"low": 10.68,
-"high": 10.65
+"low": 12.08,
+"high": 12.08
 },
 "undercut": {
-"area": 6.45,
+"area": 7.04,
 "gap": 0.89,
 "at": [
-3.1,
--4.04
+-18.57,
+-4.6
 ],
 "ring": true
 },
@@ -6762,17 +6675,17 @@
 -25.4,
 -24.5
 ],
-"round": 0.107,
-"roundFilled": 0.107,
+"round": 0.092,
+"roundFilled": 0.092,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.236,
+"min": 0.25,
 "at": [
--19.64,
-25.43
+0.49,
+30.03
 ]
 },
 "faces": {
@@ -6787,7 +6700,7 @@
 "hn": "050301-2",
 "count": 1,
 "tris": 128,
-"s": 1.0,
+"s": 0.9,
 "note": ""
 },
 {
@@ -6797,22 +6710,22 @@
 -25.77,
 -24.12
 ],
-"round": 0.687,
-"roundFilled": 0.687,
+"round": 0.691,
+"roundFilled": 0.691,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.38,
+"min": 0.403,
 "at": [
--17.3,
-24.36
+-2.4,
+25.66
 ]
 },
 "faces": {
-"low": 1.75,
-"high": 1.75
+"low": 1.74,
+"high": 1.74
 },
 "undercut": null,
 "setups": 2,
@@ -6832,8 +6745,8 @@
 -25.08,
 -24.83
 ],
-"round": 0.131,
-"roundFilled": 0.131,
+"round": 0.115,
+"roundFilled": 0.115,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -6841,8 +6754,8 @@
 "floor": {
 "min": 0.25,
 "at": [
--18.23,
-22.93
+-1.9,
+24.27
 ]
 },
 "faces": {
@@ -6864,32 +6777,32 @@
 "h": 0.01,
 "levels": 16,
 "y": [
--26.85,
--23.05
+-27.07,
+-22.83
 ],
-"round": 0.668,
-"roundFilled": 0.668,
+"round": 0.659,
+"roundFilled": 0.659,
 "turned": false,
 "turnedcut": false,
 "corners": 34,
 "holes": [],
 "floor": {
-"min": 0.24,
+"min": 0.267,
 "at": [
--22.0,
-26.16
+-1.64,
+29.66
 ]
 },
 "faces": {
-"low": 10.68,
-"high": 10.65
+"low": 12.08,
+"high": 12.08
 },
 "undercut": {
-"area": 6.45,
+"area": 7.04,
 "gap": 0.89,
 "at": [
--20.39,
-27.02
+0.84,
+29.74
 ],
 "ring": true
 },
@@ -6999,12 +6912,22 @@
 -17.2,
 -15.6
 ],
-"round": 0.718,
-"roundFilled": 0.813,
+"round": 0.717,
+"roundFilled": 0.812,
 "turned": false,
 "turnedcut": false,
 "corners": 4,
 "holes": [
+{
+"c": [
+-10.89,
+11.16
+],
+"d": 1.298,
+"depth": 1.6,
+"through": true,
+"ratio": 1.2
+},
 {
 "c": [
 -9.1,
@@ -7014,23 +6937,13 @@
 "depth": 1.6,
 "through": true,
 "ratio": 1.0
-},
-{
-"c": [
--8.96,
-10.09
-],
-"d": 1.298,
-"depth": 1.6,
-"through": true,
-"ratio": 1.2
 }
 ],
 "floor": {
 "min": 1.6,
 "at": [
--12.12,
-10.97
+-12.27,
+13.11
 ]
 },
 "faces": {
@@ -7045,7 +6958,7 @@
 "hn": "050403-1",
 "count": 1,
 "tris": 1804,
-"s": 2.1,
+"s": 2.0,
 "note": ""
 },
 {
@@ -7055,8 +6968,8 @@
 -17.25,
 -15.55
 ],
-"round": 0.291,
-"roundFilled": 0.291,
+"round": 0.251,
+"roundFilled": 0.251,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -7064,8 +6977,8 @@
 "floor": {
 "min": 1.7,
 "at": [
--10.58,
-14.23
+-8.0,
+13.36
 ]
 },
 "faces": {
@@ -7090,8 +7003,8 @@
 -15.6,
 -14.0
 ],
-"round": 0.713,
-"roundFilled": 0.782,
+"round": 0.689,
+"roundFilled": 0.759,
 "turned": false,
 "turnedcut": false,
 "corners": 4,
@@ -7110,8 +7023,8 @@
 "floor": {
 "min": 1.6,
 "at": [
--9.63,
-11.64
+-9.93,
+11.9
 ]
 },
 "faces": {
@@ -7125,7 +7038,7 @@
 "part": "rollers",
 "hn": "050404-1",
 "count": 1,
-"tris": 340,
+"tris": 724,
 "s": 0.2,
 "note": ""
 },
@@ -7136,8 +7049,8 @@
 -15.55,
 -13.85
 ],
-"round": 0.651,
-"roundFilled": 0.651,
+"round": 0.599,
+"roundFilled": 0.599,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -7145,8 +7058,8 @@
 "floor": {
 "min": 1.7,
 "at": [
--10.45,
-11.77
+-9.97,
+13.16
 ]
 },
 "faces": {
@@ -7183,16 +7096,16 @@
 "wall": {
 "min": 0.088,
 "at": [
--8.02,
-17.74
+-7.99,
+17.78
 ],
-"y": -16.11,
+"y": -16.06,
 "thin": [
 [
 0.09,
 [
 -17.29,
-21.83
+21.57
 ]
 ],
 [
@@ -7205,22 +7118,29 @@
 [
 0.09,
 [
--12.01,
+-12.02,
 27.23
 ]
 ],
 [
 0.09,
 [
--8.02,
-17.74
+-7.99,
+17.78
 ]
 ],
 [
 0.09,
 [
 -6.41,
-20.64
+20.62
+]
+],
+[
+0.09,
+[
+-6.38,
+22.71
 ]
 ]
 ]
@@ -7233,7 +7153,7 @@
 21.74
 ],
 "d": 11.086,
-"depth": 0.6,
+"depth": 0.7,
 "through": false,
 "ratio": 0.1
 },
@@ -7243,16 +7163,16 @@
 21.74
 ],
 "d": 1.705,
-"depth": 0.8,
+"depth": 0.7,
 "through": false,
-"ratio": 0.5
+"ratio": 0.4
 }
 ],
 "floor": {
-"min": 0.8,
+"min": 0.7,
 "at": [
--16.79,
-21.72
+-8.33,
+21.83
 ]
 },
 "faces": {
@@ -7284,10 +7204,10 @@
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 18.915,
+"min": 17.599,
 "at": [
--12.22,
-21.36
+-12.17,
+22.17
 ]
 },
 "faces": {
@@ -7301,7 +7221,7 @@
 "part": "escapeWheel",
 "hn": "050405-2",
 "count": 1,
-"tris": 432,
+"tris": 1296,
 "s": 0.1,
 "note": ""
 },
@@ -7312,8 +7232,8 @@
 -6.01,
 -2.01
 ],
-"round": 0.397,
-"roundFilled": 0.397,
+"round": 0.396,
+"roundFilled": 0.396,
 "turned": false,
 "turnedcut": false,
 "corners": 40,
@@ -7321,8 +7241,8 @@
 "floor": {
 "min": 4.0,
 "at": [
--12.7,
-21.43
+-12.48,
+20.57
 ]
 },
 "faces": {
@@ -7344,11 +7264,11 @@
 "h": 0.01,
 "levels": 14,
 "y": [
--16.51,
+-16.41,
 -11.01
 ],
-"round": 0.986,
-"roundFilled": 0.992,
+"round": 0.983,
+"roundFilled": 0.99,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -7358,17 +7278,17 @@
 -11.78,
 21.74
 ],
-"d": 1.201,
-"depth": 5.5,
+"d": 1.2,
+"depth": 5.4,
 "through": true,
-"ratio": 4.6
+"ratio": 4.5
 }
 ],
 "floor": {
 "min": 1.465,
 "at": [
--10.81,
-22.72
+-10.7,
+22.6
 ]
 },
 "faces": {
@@ -7388,7 +7308,7 @@
 },
 {
 "h": 0.01,
-"levels": 12,
+"levels": 16,
 "y": [
 -15.75,
 -13.85
@@ -7397,28 +7317,36 @@
 "roundFilled": 0.057,
 "turned": false,
 "turnedcut": false,
-"corners": 24,
+"corners": 63,
 "holes": [],
 "floor": {
-"min": 1.9,
+"min": 0.006,
 "at": [
--33.75,
-24.45
+-29.69,
+22.08
 ]
 },
 "faces": {
 "low": 0.0,
 "high": 0.0
 },
-"undercut": null,
+"undercut": {
+"area": 1.2,
+"gap": 1.1,
+"at": [
+-31.33,
+23.08
+],
+"ring": true
+},
 "setups": 1,
 "sealed": [],
 "name": "detent 050401-1",
 "part": "detent",
 "hn": "050401-1",
 "count": 1,
-"tris": 24,
-"s": 1.0,
+"tris": 6175,
+"s": 1.3,
 "note": ""
 },
 {
@@ -7528,7 +7456,7 @@
 },
 {
 "h": 0.017,
-"levels": 6,
+"levels": 8,
 "y": [
 -15.75,
 -13.71
@@ -7537,7 +7465,7 @@
 "roundFilled": 0.008,
 "turned": false,
 "turnedcut": false,
-"corners": 24,
+"corners": 37,
 "holes": [
 {
 "c": [
@@ -7551,25 +7479,33 @@
 }
 ],
 "floor": {
-"min": 0.75,
+"min": 0.6,
 "at": [
--13.75,
-14.74
+-22.84,
+19.21
 ]
 },
 "faces": {
 "low": 4.26,
 "high": 4.87
 },
-"undercut": null,
-"setups": 2,
+"undercut": {
+"area": 0.29,
+"gap": 0.7,
+"at": [
+-22.82,
+19.16
+],
+"ring": false
+},
+"setups": 3,
 "sealed": [],
 "name": "detent 050401-1",
 "part": "detent",
 "hn": "050401-1",
 "count": 1,
-"tris": 1000,
-"s": 0.6,
+"tris": 2171,
+"s": 0.7,
 "note": ""
 },
 {
@@ -7644,36 +7580,44 @@
 },
 {
 "h": 0.01,
-"levels": 2,
+"levels": 4,
 "y": [
--15.75,
+-15.85,
 -13.85
 ],
 "round": 0.025,
 "roundFilled": 0.025,
 "turned": false,
 "turnedcut": false,
-"corners": 0,
+"corners": 4,
 "holes": [],
 "floor": {
-"min": 1.0,
+"min": 0.012,
 "at": [
--21.21,
-18.7
+-22.97,
+19.5
 ]
 },
 "faces": {
 "low": 0.22,
 "high": 0.0
 },
-"undercut": null,
-"setups": 1,
+"undercut": {
+"area": 0.1,
+"gap": 0.7,
+"at": [
+-22.63,
+19.4
+],
+"ring": false
+},
+"setups": 2,
 "sealed": [],
 "name": "detent 050401-2",
 "part": "detent",
 "hn": "050401-2",
 "count": 1,
-"tris": 24,
+"tris": 1767,
 "s": 0.1,
 "note": ""
 },
@@ -7793,7 +7737,7 @@
 },
 {
 "h": 0.031,
-"levels": 14,
+"levels": 18,
 "y": [
 -19.0,
 -12.5
@@ -7811,7 +7755,16 @@
 "y": -18.73,
 "thin": []
 },
-"corners": 12,
+"slots": {
+"n": 2,
+"min": 0.281,
+"at": [
+-33.85,
+22.58
+],
+"y": -14.62
+},
+"corners": 75,
 "holes": [
 {
 "c": [
@@ -7899,16 +7852,26 @@
 20.3
 ],
 "d": 1.296,
-"depth": 3.0,
+"depth": 0.2,
 "through": false,
-"ratio": 2.3
+"ratio": 0.2
+},
+{
+"c": [
+-32.61,
+20.3
+],
+"d": 1.296,
+"depth": 1.8,
+"through": false,
+"ratio": 1.4
 }
 ],
 "floor": {
 "min": 0.005,
 "at": [
--33.76,
-16.12
+-31.65,
+21.33
 ]
 },
 "faces": {
@@ -7916,11 +7879,11 @@
 "high": 113.17
 },
 "undercut": {
-"area": 0.93,
-"gap": 0.26,
+"area": 4.54,
+"gap": 1.0,
 "at": [
--33.91,
-16.02
+-32.22,
+20.92
 ],
 "ring": false
 },
@@ -7930,8 +7893,8 @@
 "part": "detentBlock",
 "hn": "050401-4",
 "count": 1,
-"tris": 4178,
-"s": 2.1,
+"tris": 9732,
+"s": 2.3,
 "note": ""
 },
 {
@@ -8046,21 +8009,73 @@
 4.07,
 18.25
 ],
-"round": 0.401,
-"roundFilled": 0.48,
+"round": 0.4,
+"roundFilled": 0.479,
 "turned": false,
 "turnedcut": false,
 "teeth": {
-"n": 14,
-"root": 1.74,
-"tip": 2.93
+"n": 21,
+"root": 1.29,
+"tip": 1.44
+},
+"wall": {
+"min": 0.12,
+"at": [
+-0.94,
+0.01
+],
+"y": 9.39,
+"thin": [
+[
+0.12,
+[
+-0.94,
+0.01
+]
+],
+[
+0.12,
+[
+-0.14,
+-0.92
+]
+],
+[
+0.12,
+[
+-0.14,
+0.92
+]
+],
+[
+0.12,
+[
+0.92,
+-0.15
+]
+],
+[
+0.14,
+[
+-0.93,
+0.01
+]
+],
+[
+0.14,
+[
+-0.11,
+0.92
+]
+]
+]
 },
 "corners": 0,
 "holes": [
 {
 "c": [
 -0.0,
-0.0
+-0.0
 ],
 "d": 1.817,
 "depth": 2.4,
@@ -8109,10 +8124,10 @@
 }
 ],
 "floor": {
-"min": 0.006,
+"min": 0.01,
 "at": [
--0.65,
-0.53
+0.72,
+-0.44
 ]
 },
 "faces": {
@@ -8123,8 +8138,8 @@
 "area": 4.0,
 "gap": 0.8,
 "at": [
-1.65,
-0.71
+0.42,
+-1.75
 ],
 "ring": true
 },
@@ -8135,7 +8150,7 @@
 "hn": "050503-3",
 "count": 1,
 "tris": 3884,
-"s": 1.9,
+"s": 1.8,
 "note": ""
 },
 {
@@ -8145,8 +8160,8 @@
 3.35,
 10.25
 ],
-"round": 0.981,
-"roundFilled": 0.991,
+"round": 0.985,
+"roundFilled": 0.993,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -8165,13 +8180,13 @@
 "floor": {
 "min": 0.6,
 "at": [
--13.61,
-6.08
+-13.63,
+6.14
 ]
 },
 "faces": {
-"low": 16.41,
-"high": 16.41
+"low": 16.4,
+"high": 16.4
 },
 "undercut": null,
 "setups": 2,
@@ -8181,7 +8196,7 @@
 "hn": "050202-2",
 "count": 1,
 "tris": 960,
-"s": 1.6,
+"s": 1.5,
 "note": ""
 },
 {
@@ -8191,23 +8206,14 @@
 4.35,
 5.35
 ],
-"round": 0.833,
-"roundFilled": 0.841,
+"round": 0.831,
+"roundFilled": 0.839,
 "turned": false,
 "turnedcut": false,
 "teeth": {
 "n": 56,
-"root": 9.5,
+"root": 9.51,
 "tip": 10.52
-},
-"wall": {
-"min": 7.111,
-"at": [
--15.04,
-2.45
-],
-"y": 4.85,
-"thin": []
 },
 "corners": 0,
 "holes": [
@@ -8216,7 +8222,7 @@
 -10.91,
 6.3
 ],
-"d": 4.195,
+"d": 4.193,
 "depth": 1.0,
 "through": true,
 "ratio": 0.2
@@ -8225,8 +8231,8 @@
 "floor": {
 "min": 1.0,
 "at": [
--21.1,
-8.44
+-21.26,
+5.47
 ]
 },
 "faces": {
@@ -8267,7 +8273,7 @@
 -10.91,
 6.3
 ],
-"d": 3.046,
+"d": 3.045,
 "depth": 2.5,
 "through": true,
 "ratio": 0.8
@@ -8276,8 +8282,8 @@
 "floor": {
 "min": 2.5,
 "at": [
--14.16,
-6.14
+-14.29,
+6.53
 ]
 },
 "faces": {
@@ -8292,7 +8298,7 @@
 "hn": "050202-3",
 "count": 1,
 "tris": 2932,
-"s": 1.5,
+"s": 1.7,
 "note": ""
 },
 {
@@ -8302,8 +8308,8 @@
 6.61,
 14.81
 ],
-"round": 0.933,
-"roundFilled": 0.988,
+"round": 0.937,
+"roundFilled": 0.989,
 "turned": false,
 "turnedcut": true,
 "corners": 0,
@@ -8322,8 +8328,8 @@
 "floor": {
 "min": 2.585,
 "at": [
--3.89,
-0.09
+-3.87,
+-0.87
 ]
 },
 "faces": {
@@ -8354,14 +8360,14 @@
 "turnedcut": false,
 "teeth": {
 "n": 54,
-"root": 8.93,
+"root": 8.94,
 "tip": 9.85
 },
 "wall": {
-"min": 5.647,
+"min": 5.638,
 "at": [
--5.83,
-0.01
+-2.81,
+-5.09
 ],
 "y": 7.11,
 "thin": []
@@ -8370,10 +8376,10 @@
 "holes": [
 {
 "c": [
-0.0,
+-0.0,
 0.0
 ],
-"d": 5.991,
+"d": 5.992,
 "depth": 1.0,
 "through": true,
 "ratio": 0.2
@@ -8382,8 +8388,8 @@
 "floor": {
 "min": 1.0,
 "at": [
--7.88,
--0.65
+-8.48,
+2.55
 ]
 },
 "faces": {
@@ -8398,7 +8404,7 @@
 "hn": "050203-1",
 "count": 1,
 "tris": 8404,
-"s": 3.5,
+"s": 3.4,
 "note": ""
 },
 {
@@ -8413,7 +8419,7 @@
 "turned": true,
 "turnedcut": false,
 "teeth": {
-"n": 54,
+"n": 60,
 "root": 0.76,
 "tip": 1.1
 },
@@ -8421,10 +8427,10 @@
 "holes": [
 {
 "c": [
--0.0,
+0.0,
 -23.0
 ],
-"d": 0.93,
+"d": 0.929,
 "depth": 9.0,
 "through": true,
 "ratio": 9.7
@@ -8433,8 +8439,8 @@
 "floor": {
 "min": 0.7,
 "at": [
--3.81,
--22.93
+-3.8,
+-22.94
 ]
 },
 "faces": {
@@ -8460,7 +8466,7 @@
 9.55
 ],
 "round": 0.575,
-"roundFilled": 0.937,
+"roundFilled": 0.938,
 "turned": false,
 "turnedcut": true,
 "teeth": {
@@ -8471,8 +8477,8 @@
 "wall": {
 "min": 1.604,
 "at": [
-6.05,
--20.12
+5.28,
+-20.46
 ],
 "y": 9.05,
 "thin": []
@@ -8493,8 +8499,8 @@
 "floor": {
 "min": 1.0,
 "at": [
--16.34,
--25.8
+-16.19,
+-22.18
 ]
 },
 "faces": {
@@ -8509,7 +8515,7 @@
 "hn": "050204-1",
 "count": 1,
 "tris": 21824,
-"s": 2.0,
+"s": 1.9,
 "note": ""
 },
 {
@@ -8519,8 +8525,8 @@
 7.05,
 10.05
 ],
-"round": 0.341,
-"roundFilled": 0.486,
+"round": 0.337,
+"roundFilled": 0.485,
 "turned": false,
 "turnedcut": false,
 "corners": 48,
@@ -8539,8 +8545,8 @@
 "floor": {
 "min": 3.0,
 "at": [
--16.82,
--13.58
+-17.83,
+-16.17
 ]
 },
 "faces": {
@@ -8555,7 +8561,7 @@
 "hn": "050200-5",
 "count": 1,
 "tris": 1012,
-"s": 0.4,
+"s": 0.3,
 "note": ""
 },
 {
@@ -8577,51 +8583,49 @@
 "wall": {
 "min": 0.079,
 "at": [
--22.19,
--10.09
+-22.15,
+-10.05
 ],
 "y": -18.35,
 "thin": [
 [
 0.08,
 [
--22.19,
--10.09
+-22.15,
+-10.05
 ]
 ],
 [
 0.08,
 [
--12.5,
--9.06
+-12.42,
+-9.14
 ]
 ],
 [
 0.11,
 [
--22.66,
--10.6
+-22.5,
+-10.41
 ]
-]
-]
-},
-"slots": {
-"n": 1,
-"min": 0.158,
-"at": [
--17.87,
--23.78
 ],
-"y": -17.73
+[
+0.11,
+[
+-11.78,
+-9.58
+]
+]
+]
 },
-"corners": 24,
+"corners": 21,
 "holes": [
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
-"d": 1.735,
+"d": 1.737,
 "depth": 6.24,
 "through": false,
 "ratio": 3.6
@@ -8631,15 +8635,15 @@
 -16.71,
 -15.29
 ],
-"d": 7.007,
+"d": 7.006,
 "depth": 8.52,
 "through": false,
 "ratio": 1.2
 },
 {
 "c": [
--23.2,
--14.59
+-22.71,
+-15.64
 ],
 "d": 0.077,
 "depth": 0.32,
@@ -8648,7 +8652,27 @@
 },
 {
 "c": [
--22.0,
+-22.4,
+-14.43
+],
+"d": 0.077,
+"depth": 0.32,
+"through": false,
+"ratio": 4.1
+},
+{
+"c": [
+-22.29,
+-15.56
+],
+"d": 0.077,
+"depth": 0.32,
+"through": false,
+"ratio": 4.1
+},
+{
+"c": [
+-22.13,
 -15.73
 ],
 "d": 0.077,
@@ -8658,47 +8682,7 @@
 },
 {
 "c": [
--13.73,
--9.84
-],
-"d": 0.077,
-"depth": 0.32,
-"through": false,
-"ratio": 4.1
-},
-{
-"c": [
--13.47,
--20.15
-],
-"d": 0.077,
-"depth": 0.32,
-"through": false,
-"ratio": 4.1
-},
-{
-"c": [
--13.46,
--9.56
-],
-"d": 0.077,
-"depth": 0.32,
-"through": false,
-"ratio": 4.1
-},
-{
-"c": [
--13.22,
--20.66
-],
-"d": 0.077,
-"depth": 0.32,
-"through": false,
-"ratio": 4.1
-},
-{
-"c": [
--13.1,
+-14.01,
 -10.24
 ],
 "d": 0.077,
@@ -8708,8 +8692,8 @@
 },
 {
 "c": [
--13.04,
--10.43
+-13.87,
+-20.82
 ],
 "d": 0.077,
 "depth": 0.32,
@@ -8718,8 +8702,8 @@
 },
 {
 "c": [
--12.98,
--10.24
+-13.55,
+-20.32
 ],
 "d": 0.077,
 "depth": 0.32,
@@ -8728,28 +8712,8 @@
 },
 {
 "c": [
--22.46,
--15.1
-],
-"d": 2.037,
-"depth": 6.24,
-"through": false,
-"ratio": 3.1
-},
-{
-"c": [
--14.0,
--20.37
-],
-"d": 2.034,
-"depth": 6.24,
-"through": false,
-"ratio": 3.1
-},
-{
-"c": [
--13.67,
--10.41
+-22.45,
+-14.92
 ],
 "d": 2.036,
 "depth": 6.24,
@@ -8758,10 +8722,30 @@
 },
 {
 "c": [
--16.63,
+-14.16,
+-20.45
+],
+"d": 2.036,
+"depth": 6.24,
+"through": false,
+"ratio": 3.1
+},
+{
+"c": [
+-13.52,
+-10.51
+],
+"d": 2.036,
+"depth": 6.24,
+"through": false,
+"ratio": 3.1
+},
+{
+"c": [
+-16.66,
 -16.3
 ],
-"d": 16.679,
+"d": 16.682,
 "depth": 2.35,
 "through": false,
 "ratio": 0.1
@@ -8771,15 +8755,15 @@
 "min": 0.005,
 "at": [
 -32.51,
--21.92
+-21.96
 ]
 },
 "faces": {
-"low": 801.56,
-"high": 754.32
+"low": 801.58,
+"high": 754.3
 },
 "undercut": {
-"area": 372.05,
+"area": 372.03,
 "gap": 3.31,
 "at": [
 -10.16,
@@ -8794,7 +8778,7 @@
 "hn": "050604-2",
 "count": 1,
 "tris": 194359,
-"s": 9.1,
+"s": 8.8,
 "note": "the chain's groove is cut on a fusee engine (05 06 04-2: a helix of pitch 1.2, square-cut lands 0.87): its sections' thin slivers are the helix, not slots for a mill"
 },
 {
@@ -8804,17 +8788,17 @@
 -27.73,
 10.1
 ],
-"round": 0.991,
-"roundFilled": 0.991,
+"round": 0.99,
+"roundFilled": 0.99,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.007,
+"min": 0.011,
 "at": [
--14.53,
--14.97
+-14.67,
+-14.47
 ]
 },
 "faces": {
@@ -8825,8 +8809,8 @@
 "area": 4.78,
 "gap": 1.1,
 "at": [
--18.82,
--15.77
+-18.86,
+-15.7
 ],
 "ring": true
 },
@@ -8837,7 +8821,7 @@
 "hn": "050604-1",
 "count": 1,
 "tris": 8379,
-"s": 3.3,
+"s": 3.1,
 "note": ""
 },
 {
@@ -8847,17 +8831,17 @@
 -45.37,
 -27.73
 ],
-"round": 0.709,
-"roundFilled": 0.709,
+"round": 0.711,
+"roundFilled": 0.711,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 12.642,
+"min": 12.675,
 "at": [
--16.05,
--13.49
+-14.92,
+-16.06
 ]
 },
 "faces": {
@@ -8882,8 +8866,8 @@
 -48.03,
 -45.37
 ],
-"round": 0.713,
-"roundFilled": 0.713,
+"round": 0.717,
+"roundFilled": 0.717,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -8891,8 +8875,8 @@
 "floor": {
 "min": 0.132,
 "at": [
--15.71,
--13.54
+-17.72,
+-17.04
 ]
 },
 "faces": {
@@ -8907,7 +8891,7 @@
 "hn": "050604-1",
 "count": 1,
 "tris": 256,
-"s": 0.9,
+"s": 0.8,
 "note": ""
 },
 {
@@ -8917,8 +8901,8 @@
 -8.62,
 -6.68
 ],
-"round": 0.757,
-"roundFilled": 0.913,
+"round": 0.753,
+"roundFilled": 0.914,
 "turned": false,
 "turnedcut": true,
 "teeth": {
@@ -8930,9 +8914,9 @@
 "min": 0.177,
 "at": [
 -23.65,
--15.21
+-15.02
 ],
-"y": -7.08,
+"y": -6.92,
 "thin": []
 },
 "corners": 0,
@@ -8940,12 +8924,52 @@
 {
 "c": [
 -22.45,
--15.1
+-14.92
 ],
 "d": 2.027,
 "depth": 0.49,
 "through": false,
 "ratio": 0.2
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 8.159,
+"depth": 0.16,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-14.16,
+-20.45
+],
+"d": 2.027,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-13.52,
+-10.51
+],
+"d": 2.027,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-16.71,
+-15.29
+],
+"d": 7.835,
+"depth": 0.16,
+"through": false,
+"ratio": 0.0
 },
 {
 "c": [
@@ -8959,38 +8983,8 @@
 },
 {
 "c": [
--14.0,
--20.37
-],
-"d": 2.028,
-"depth": 0.49,
-"through": false,
-"ratio": 0.2
-},
-{
-"c": [
--13.67,
--10.41
-],
-"d": 2.027,
-"depth": 0.49,
-"through": false,
-"ratio": 0.2
-},
-{
-"c": [
 -22.45,
--15.1
-],
-"d": 2.089,
-"depth": 0.49,
-"through": false,
-"ratio": 0.2
-},
-{
-"c": [
--14.0,
--20.37
+-14.92
 ],
 "d": 2.09,
 "depth": 0.49,
@@ -8999,8 +8993,18 @@
 },
 {
 "c": [
--13.67,
--10.41
+-14.16,
+-20.45
+],
+"d": 2.09,
+"depth": 0.49,
+"through": false,
+"ratio": 0.2
+},
+{
+"c": [
+-13.52,
+-10.51
 ],
 "d": 2.09,
 "depth": 0.49,
@@ -9010,7 +9014,7 @@
 {
 "c": [
 -22.45,
--15.1
+-14.92
 ],
 "d": 2.152,
 "depth": 0.49,
@@ -9019,28 +9023,28 @@
 },
 {
 "c": [
--14.0,
--20.37
+-14.16,
+-20.45
 ],
-"d": 2.151,
+"d": 2.152,
 "depth": 0.49,
 "through": false,
 "ratio": 0.2
 },
 {
 "c": [
--13.67,
--10.41
+-13.52,
+-10.51
 ],
-"d": 2.151,
+"d": 2.152,
 "depth": 0.49,
 "through": false,
 "ratio": 0.2
 },
 {
 "c": [
--22.46,
--15.1
+-22.45,
+-14.92
 ],
 "d": 2.214,
 "depth": 0.49,
@@ -9049,65 +9053,45 @@
 },
 {
 "c": [
--14.0,
--20.37
+-14.16,
+-20.45
 ],
-"d": 2.214,
+"d": 2.213,
 "depth": 0.49,
 "through": false,
 "ratio": 0.2
 },
 {
 "c": [
--13.67,
--10.41
+-13.52,
+-10.51
 ],
 "d": 2.214,
 "depth": 0.49,
 "through": false,
 "ratio": 0.2
-},
-{
-"c": [
--16.71,
--15.29
-],
-"d": 7.834,
-"depth": 0.16,
-"through": false,
-"ratio": 0.0
-},
-{
-"c": [
--16.71,
--15.29
-],
-"d": 8.159,
-"depth": 0.16,
-"through": false,
-"ratio": 0.0
 }
 ],
 "floor": {
-"min": 0.476,
+"min": 0.486,
 "at": [
--21.73,
--15.83
+-13.41,
+-19.74
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 11.87
+"low": 9.44,
+"high": 2.46
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "fusee 050604-3",
 "part": "fusee",
 "hn": "050604-3",
 "count": 1,
 "tris": 1908,
-"s": 4.2,
+"s": 4.0,
 "note": ""
 },
 {
@@ -9117,17 +9101,17 @@
 -12.43,
 -6.68
 ],
-"round": 0.987,
-"roundFilled": 0.987,
+"round": 0.986,
+"roundFilled": 0.986,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.494,
+"min": 0.488,
 "at": [
--21.67,
--15.86
+-21.61,
+-15.6
 ]
 },
 "faces": {
@@ -9161,8 +9145,8 @@
 "floor": {
 "min": 0.35,
 "at": [
--23.22,
--15.53
+-23.38,
+-15.18
 ]
 },
 "faces": {
@@ -9187,17 +9171,17 @@
 -12.43,
 -6.68
 ],
-"round": 0.987,
-"roundFilled": 0.987,
+"round": 0.986,
+"roundFilled": 0.986,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.494,
+"min": 0.488,
 "at": [
--12.88,
--11.17
+-14.08,
+-11.44
 ]
 },
 "faces": {
@@ -9231,7 +9215,7 @@
 "floor": {
 "min": 0.35,
 "at": [
--14.47,
+-14.31,
 -10.7
 ]
 },
@@ -9257,17 +9241,17 @@
 -12.43,
 -6.68
 ],
-"round": 0.987,
-"roundFilled": 0.987,
+"round": 0.986,
+"roundFilled": 0.986,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.494,
+"min": 0.488,
 "at": [
--13.22,
--21.12
+-14.72,
+-21.38
 ]
 },
 "faces": {
@@ -9301,7 +9285,7 @@
 "floor": {
 "min": 0.35,
 "at": [
--14.85,
+-14.98,
 -20.79
 ]
 },
@@ -9327,8 +9311,8 @@
 -7.93,
 -6.12
 ],
-"round": 0.977,
-"roundFilled": 0.977,
+"round": 0.975,
+"roundFilled": 0.975,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -9336,8 +9320,8 @@
 "floor": {
 "min": 1.8,
 "at": [
--22.13,
--31.28
+-22.61,
+-31.11
 ]
 },
 "faces": {
@@ -9362,8 +9346,8 @@
 -19.27,
 -18.48
 ],
-"round": 0.954,
-"roundFilled": 0.995,
+"round": 0.961,
+"roundFilled": 0.993,
 "turned": false,
 "turnedcut": true,
 "wall": {
@@ -9379,10 +9363,10 @@
 "holes": [
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
-"d": 3.081,
+"d": 3.08,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
@@ -9399,10 +9383,10 @@
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.53
 ],
-"d": 2.954,
+"d": 2.953,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
@@ -9412,17 +9396,17 @@
 -16.71,
 -15.29
 ],
-"d": 7.147,
+"d": 7.146,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
-"d": 2.825,
+"d": 2.826,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
@@ -9432,17 +9416,17 @@
 -16.71,
 -15.29
 ],
-"d": 6.916,
+"d": 6.915,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
-"d": 2.696,
+"d": 2.697,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
@@ -9459,10 +9443,10 @@
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
-"d": 2.566,
+"d": 2.567,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
@@ -9472,17 +9456,17 @@
 -16.71,
 -15.29
 ],
-"d": 6.454,
+"d": 6.453,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
-"d": 2.44,
+"d": 2.439,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
@@ -9499,8 +9483,8 @@
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
 "d": 2.311,
 "depth": 0.07,
@@ -9519,8 +9503,8 @@
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
 "d": 2.182,
 "depth": 0.07,
@@ -9529,8 +9513,8 @@
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.53
 ],
 "d": 2.053,
 "depth": 0.07,
@@ -9539,18 +9523,18 @@
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.53
 ],
-"d": 1.928,
+"d": 1.926,
 "depth": 0.07,
 "through": false,
 "ratio": 0.0
 },
 {
 "c": [
--19.48,
--20.61
+-19.64,
+-20.52
 ],
 "d": 1.799,
 "depth": 0.13,
@@ -9559,10 +9543,10 @@
 }
 ],
 "floor": {
-"min": 0.139,
+"min": 0.137,
 "at": [
--18.92,
--19.86
+-20.23,
+-19.79
 ]
 },
 "faces": {
@@ -9577,7 +9561,7 @@
 "hn": "050600-4",
 "count": 1,
 "tris": 2788,
-"s": 5.1,
+"s": 5.0,
 "note": ""
 },
 {
@@ -9587,8 +9571,8 @@
 -19.25,
 -18.55
 ],
-"round": 0.986,
-"roundFilled": 0.986,
+"round": 0.985,
+"roundFilled": 0.985,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -9596,8 +9580,8 @@
 "floor": {
 "min": 0.045,
 "at": [
--20.73,
--19.8
+-20.88,
+-19.69
 ]
 },
 "faces": {
@@ -9622,8 +9606,8 @@
 -18.65,
 -13.35
 ],
-"round": 0.973,
-"roundFilled": 0.973,
+"round": 0.972,
+"roundFilled": 0.972,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -9631,8 +9615,8 @@
 "floor": {
 "min": 0.005,
 "at": [
--20.0,
--20.09
+-19.39,
+-21.16
 ]
 },
 "faces": {
@@ -9643,8 +9627,8 @@
 "area": 0.87,
 "gap": 0.31,
 "at": [
--19.81,
--19.85
+-20.38,
+-20.13
 ],
 "ring": true
 },
@@ -9665,15 +9649,15 @@
 -19.27,
 -19.02
 ],
-"round": 0.135,
-"roundFilled": 0.135,
+"round": 0.13,
+"roundFilled": 0.13,
 "turned": false,
 "turnedcut": false,
 "wall": {
 "min": 0.28,
 "at": [
--20.24,
--20.6
+-20.61,
+-20.48
 ],
 "y": -19.15,
 "thin": []
@@ -9683,8 +9667,8 @@
 "floor": {
 "min": 0.25,
 "at": [
--19.58,
--20.72
+-20.58,
+-20.6
 ]
 },
 "faces": {
@@ -9714,15 +9698,15 @@
 "turned": true,
 "turnedcut": false,
 "wall": {
-"min": 1.543,
+"min": 1.544,
 "at": [
--19.69,
--15.35
+-19.7,
+-15.32
 ],
 "y": -1.04,
 "thin": []
 },
-"corners": 36,
+"corners": 32,
 "holes": [
 {
 "c": [
@@ -9756,22 +9740,22 @@
 }
 ],
 "floor": {
-"min": 0.395,
+"min": 0.435,
 "at": [
--20.27,
--16.47
+-20.7,
+-15.33
 ]
 },
 "faces": {
-"low": 62.41,
-"high": 107.39
+"low": 62.42,
+"high": 107.38
 },
 "undercut": {
 "area": 2.46,
 "gap": 0.8,
 "at": [
--18.88,
--15.76
+-18.92,
+-15.7
 ],
 "ring": false
 },
@@ -9782,7 +9766,7 @@
 "hn": "050600-2",
 "count": 1,
 "tris": 11245,
-"s": 5.6,
+"s": 5.5,
 "note": ""
 },
 {
@@ -9792,17 +9776,17 @@
 -2.42,
 -1.63
 ],
-"round": 0.477,
-"roundFilled": 0.477,
+"round": 0.488,
+"roundFilled": 0.488,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.249,
+"min": 0.25,
 "at": [
--19.82,
--15.5
+-19.76,
+-16.15
 ]
 },
 "faces": {
@@ -9827,17 +9811,17 @@
 -2.42,
 -1.63
 ],
-"round": 0.477,
-"roundFilled": 0.477,
+"round": 0.488,
+"roundFilled": 0.488,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.249,
+"min": 0.25,
 "at": [
--13.7,
--15.1
+-13.87,
+-15.22
 ]
 },
 "faces": {
@@ -9869,8 +9853,8 @@
 "wall": {
 "min": 0.651,
 "at": [
--19.24,
--17.64
+-19.28,
+-17.59
 ],
 "y": -34.6,
 "thin": []
@@ -9891,8 +9875,8 @@
 "floor": {
 "min": 2.0,
 "at": [
--19.74,
--15.09
+-19.06,
+-15.79
 ]
 },
 "faces": {
@@ -9907,32 +9891,32 @@
 "hn": "050600-1",
 "count": 1,
 "tris": 1360,
-"s": 3.4,
+"s": 3.3,
 "note": ""
 },
 {
 "h": 0.045,
-"levels": 5,
+"levels": 6,
 "y": [
 -7.39,
--2.39
+-2.38
 ],
-"round": 0.819,
-"roundFilled": 0.933,
+"round": 0.801,
+"roundFilled": 0.934,
 "turned": false,
 "turnedcut": true,
 "teeth": {
-"n": 89,
+"n": 90,
 "root": 18.9,
-"tip": 20.28
+"tip": 20.29
 },
 "wall": {
-"min": 0.958,
+"min": 0.765,
 "at": [
--18.8,
--17.12
+-29.49,
+-4.81
 ],
-"y": -6.2,
+"y": -4.91,
 "thin": []
 },
 "corners": 0,
@@ -9952,6 +9936,16 @@
 -16.71,
 -15.29
 ],
+"d": 31.639,
+"depth": 0.4,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-16.71,
+-15.29
+],
 "d": 13.995,
 "depth": 0.08,
 "through": false,
@@ -9959,10 +9953,10 @@
 },
 {
 "c": [
--30.57,
--12.19
+-30.46,
+-11.77
 ],
-"d": 1.207,
+"d": 1.202,
 "depth": 1.22,
 "through": false,
 "ratio": 1.0
@@ -9972,22 +9966,22 @@
 -16.71,
 -15.29
 ],
-"d": 14.977,
+"d": 14.979,
 "depth": 1.22,
 "through": false,
 "ratio": 0.1
 }
 ],
 "floor": {
-"min": 1.076,
+"min": 0.92,
 "at": [
--23.13,
--20.54
+-13.8,
+-17.16
 ]
 },
 "faces": {
-"low": 1156.35,
-"high": 211.31
+"low": 1156.32,
+"high": 211.42
 },
 "undercut": null,
 "setups": 2,
@@ -9996,28 +9990,28 @@
 "part": "fuseeWheel",
 "hn": "050600-3",
 "count": 1,
-"tris": 21876,
-"s": 4.7,
+"tris": 21684,
+"s": 4.6,
 "note": ""
 },
 {
 "h": 0.041,
-"levels": 14,
+"levels": 16,
 "y": [
 -8.15,
 -5.05
 ],
 "round": 0.954,
-"roundFilled": 0.967,
+"roundFilled": 0.968,
 "turned": false,
 "turnedcut": true,
 "teeth": {
-"n": 119,
-"root": 18.03,
+"n": 120,
+"root": 17.97,
 "tip": 18.61
 },
 "wall": {
-"min": 0.578,
+"min": 0.579,
 "at": [
 -29.25,
 -15.6
@@ -10025,24 +10019,43 @@
 "y": -8.03,
 "thin": []
 },
-"corners": 0,
+"slots": {
+"n": 3,
+"min": 0.165,
+"at": [
+-18.09,
+-28.0
+],
+"y": -7.39
+},
+"corners": 54,
 "holes": [
 {
 "c": [
 -16.71,
 -15.29
 ],
-"d": 24.447,
-"depth": 1.8,
+"d": 24.448,
+"depth": 0.75,
 "through": false,
-"ratio": 0.1
+"ratio": 0.0
 },
 {
 "c": [
--22.66,
--7.56
+-16.71,
+-15.29
 ],
-"d": 1.734,
+"d": 24.448,
+"depth": 0.45,
+"through": false,
+"ratio": 0.0
+},
+{
+"c": [
+-22.42,
+-7.38
+],
+"d": 1.732,
 "depth": 1.3,
 "through": false,
 "ratio": 0.8
@@ -10052,27 +10065,27 @@
 -16.71,
 -15.29
 ],
-"d": 6.507,
+"d": 6.506,
 "depth": 1.3,
 "through": false,
 "ratio": 0.2
 },
 {
 "c": [
--10.75,
--23.02
+-10.99,
+-23.21
 ],
-"d": 1.734,
+"d": 1.732,
 "depth": 1.3,
 "through": false,
 "ratio": 0.8
 },
 {
 "c": [
--27.96,
--23.96
+-28.22,
+-23.61
 ],
-"d": 1.204,
+"d": 1.203,
 "depth": 1.02,
 "through": false,
 "ratio": 0.8
@@ -10081,23 +10094,31 @@
 "floor": {
 "min": 0.28,
 "at": [
--11.11,
--17.87
+-28.88,
+-15.68
 ]
 },
 "faces": {
-"low": 969.14,
+"low": 969.26,
 "high": 0.0
 },
-"undercut": null,
-"setups": 1,
+"undercut": {
+"area": 1.86,
+"gap": 0.6,
+"at": [
+-15.28,
+-2.42
+],
+"ring": false
+},
+"setups": 2,
 "sealed": [],
 "name": "maintaining 050602-1",
 "part": "maintaining",
 "hn": "050602-1",
 "count": 1,
-"tris": 5588,
-"s": 5.9,
+"tris": 12167,
+"s": 6.1,
 "note": ""
 },
 {
@@ -10107,7 +10128,103 @@
 -8.18,
 -6.36
 ],
-"round": 0.211,
+"round": 0.215,
+"roundFilled": 0.264,
+"turned": false,
+"turnedcut": false,
+"corners": 0,
+"holes": [
+{
+"c": [
+-22.42,
+-7.38
+],
+"d": 2.015,
+"depth": 0.15,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-22.42,
+-7.38
+],
+"d": 1.657,
+"depth": 0.15,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-22.42,
+-7.38
+],
+"d": 1.301,
+"depth": 0.15,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-22.42,
+-7.38
+],
+"d": 1.205,
+"depth": 1.06,
+"through": false,
+"ratio": 0.9
+},
+{
+"c": [
+-22.42,
+-7.38
+],
+"d": 1.25,
+"depth": 0.15,
+"through": false,
+"ratio": 0.1
+},
+{
+"c": [
+-22.42,
+-7.38
+],
+"d": 1.545,
+"depth": 0.15,
+"through": false,
+"ratio": 0.1
+}
+],
+"floor": {
+"min": 1.178,
+"at": [
+-22.02,
+-6.91
+]
+},
+"faces": {
+"low": 2.48,
+"high": 1.01
+},
+"undercut": null,
+"setups": 2,
+"sealed": [],
+"name": "maintaining 050602-3",
+"part": "maintaining",
+"hn": "050602-3",
+"count": 1,
+"tris": 440,
+"s": 2.3,
+"note": ""
+},
+{
+"h": 0.01,
+"levels": 12,
+"y": [
+-8.18,
+-6.36
+],
+"round": 0.219,
 "roundFilled": 0.267,
 "turned": false,
 "turnedcut": false,
@@ -10115,8 +10232,8 @@
 "holes": [
 {
 "c": [
--22.66,
--7.56
+-10.99,
+-23.21
 ],
 "d": 2.015,
 "depth": 0.15,
@@ -10125,8 +10242,8 @@
 },
 {
 "c": [
--22.67,
--7.56
+-10.99,
+-23.21
 ],
 "d": 1.658,
 "depth": 0.15,
@@ -10135,8 +10252,8 @@
 },
 {
 "c": [
--22.67,
--7.56
+-10.99,
+-23.21
 ],
 "d": 1.301,
 "depth": 0.15,
@@ -10145,8 +10262,8 @@
 },
 {
 "c": [
--22.67,
--7.56
+-10.99,
+-23.21
 ],
 "d": 1.205,
 "depth": 1.06,
@@ -10155,8 +10272,8 @@
 },
 {
 "c": [
--22.67,
--7.56
+-10.99,
+-23.21
 ],
 "d": 1.249,
 "depth": 0.15,
@@ -10165,8 +10282,8 @@
 },
 {
 "c": [
--22.67,
--7.56
+-10.99,
+-23.21
 ],
 "d": 1.545,
 "depth": 0.15,
@@ -10175,10 +10292,10 @@
 }
 ],
 "floor": {
-"min": 1.177,
+"min": 1.179,
 "at": [
--22.2,
--7.15
+-10.51,
+-22.82
 ]
 },
 "faces": {
@@ -10192,128 +10309,32 @@
 "part": "maintaining",
 "hn": "050602-3",
 "count": 1,
-"tris": 404,
-"s": 2.2,
-"note": ""
-},
-{
-"h": 0.01,
-"levels": 12,
-"y": [
--8.18,
--6.36
-],
-"round": 0.216,
-"roundFilled": 0.27,
-"turned": false,
-"turnedcut": false,
-"corners": 0,
-"holes": [
-{
-"c": [
--10.75,
--23.03
-],
-"d": 2.015,
-"depth": 0.15,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--10.75,
--23.03
-],
-"d": 1.658,
-"depth": 0.15,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--10.75,
--23.03
-],
-"d": 1.301,
-"depth": 0.15,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--10.75,
--23.03
-],
-"d": 1.205,
-"depth": 1.06,
-"through": false,
-"ratio": 0.9
-},
-{
-"c": [
--10.75,
--23.03
-],
-"d": 1.249,
-"depth": 0.15,
-"through": false,
-"ratio": 0.1
-},
-{
-"c": [
--10.75,
--23.03
-],
-"d": 1.545,
-"depth": 0.15,
-"through": false,
-"ratio": 0.1
-}
-],
-"floor": {
-"min": 1.177,
-"at": [
--10.34,
--22.57
-]
-},
-"faces": {
-"low": 2.48,
-"high": 1.01
-},
-"undercut": null,
-"setups": 2,
-"sealed": [],
-"name": "maintaining 050602-3",
-"part": "maintaining",
-"hn": "050602-3",
-"count": 1,
-"tris": 404,
+"tris": 440,
 "s": 2.3,
 "note": ""
 },
 {
 "h": 0.01,
-"levels": 3,
+"levels": 14,
 "y": [
--8.27,
--4.55
+-7.91,
+-4.16
 ],
-"round": 0.975,
-"roundFilled": 0.975,
+"round": 0.985,
+"roundFilled": 0.985,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.5,
+"min": 0.9,
 "at": [
--23.89,
--7.21
+-23.57,
+-7.84
 ]
 },
 "faces": {
-"low": 4.13,
+"low": 5.1,
 "high": 0.0
 },
 "undercut": null,
@@ -10323,19 +10344,19 @@
 "part": "maintaining",
 "hn": "WN-21",
 "count": 1,
-"tris": 280,
-"s": 0.4,
+"tris": 360,
+"s": 0.5,
 "note": ""
 },
 {
 "h": 0.01,
 "levels": 1,
 "y": [
--4.78,
--4.53
+-4.39,
+-4.14
 ],
-"round": 0.112,
-"roundFilled": 0.112,
+"round": 0.118,
+"roundFilled": 0.118,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -10343,8 +10364,8 @@
 "floor": {
 "min": 0.25,
 "at": [
--23.07,
--6.51
+-22.17,
+-8.49
 ]
 },
 "faces": {
@@ -10364,26 +10385,26 @@
 },
 {
 "h": 0.01,
-"levels": 3,
+"levels": 14,
 "y": [
--8.27,
--4.55
+-7.91,
+-4.16
 ],
-"round": 0.975,
-"roundFilled": 0.975,
+"round": 0.985,
+"roundFilled": 0.985,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.5,
+"min": 0.9,
 "at": [
--11.89,
--23.14
+-12.19,
+-23.62
 ]
 },
 "faces": {
-"low": 4.13,
+"low": 5.1,
 "high": 0.0
 },
 "undercut": null,
@@ -10393,19 +10414,19 @@
 "part": "maintaining",
 "hn": "WN-21",
 "count": 1,
-"tris": 280,
-"s": 0.4,
+"tris": 360,
+"s": 0.5,
 "note": ""
 },
 {
 "h": 0.01,
 "levels": 1,
 "y": [
--4.78,
--4.53
+-4.39,
+-4.14
 ],
-"round": 0.112,
-"roundFilled": 0.112,
+"round": 0.118,
+"roundFilled": 0.118,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -10413,8 +10434,8 @@
 "floor": {
 "min": 0.25,
 "at": [
--11.12,
--22.14
+-10.79,
+-23.88
 ]
 },
 "faces": {
@@ -10439,26 +10460,26 @@
 -7.86,
 -6.36
 ],
-"round": 0.008,
-"roundFilled": 0.008,
+"round": 0.01,
+"roundFilled": 0.01,
 "turned": false,
 "turnedcut": false,
 "wall": {
-"min": 0.394,
+"min": 0.397,
 "at": [
--16.81,
--3.3
+-7.69,
+-21.15
 ],
 "y": -7.11,
 "thin": []
 },
-"corners": 2,
+"corners": 1,
 "holes": [],
 "floor": {
 "min": 1.5,
 "at": [
--11.67,
--4.49
+-7.95,
+-21.75
 ]
 },
 "faces": {
@@ -10483,17 +10504,17 @@
 -7.41,
 -6.8
 ],
-"round": 0.342,
-"roundFilled": 0.342,
+"round": 0.33,
+"roundFilled": 0.33,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.204,
+"min": 0.199,
 "at": [
--15.42,
--2.06
+-15.02,
+-2.25
 ]
 },
 "faces": {
@@ -10518,17 +10539,17 @@
 -7.41,
 -6.8
 ],
-"round": 0.255,
-"roundFilled": 0.255,
+"round": 0.253,
+"roundFilled": 0.253,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.188,
+"min": 0.186,
 "at": [
--11.94,
--3.01
+-11.76,
+-3.58
 ]
 },
 "faces": {
@@ -10558,10 +10579,10 @@
 "turned": false,
 "turnedcut": false,
 "wall": {
-"min": 0.393,
+"min": 0.395,
 "at": [
--27.17,
--15.19
+-22.14,
+-25.98
 ],
 "y": -7.11,
 "thin": []
@@ -10571,8 +10592,8 @@
 "floor": {
 "min": 1.5,
 "at": [
--26.58,
--18.97
+-27.22,
+-15.32
 ]
 },
 "faces": {
@@ -10597,17 +10618,17 @@
 -7.41,
 -6.8
 ],
-"round": 0.342,
-"roundFilled": 0.342,
+"round": 0.33,
+"roundFilled": 0.33,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.204,
+"min": 0.199,
 "at": [
--17.35,
--27.19
+-17.73,
+-27.3
 ]
 },
 "faces": {
@@ -10632,17 +10653,17 @@
 -7.41,
 -6.8
 ],
-"round": 0.255,
-"roundFilled": 0.255,
+"round": 0.253,
+"roundFilled": 0.253,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.188,
+"min": 0.186,
 "at": [
--21.55,
--26.31
+-22.07,
+-26.58
 ]
 },
 "faces": {
@@ -10668,14 +10689,14 @@
 -3.61
 ],
 "round": 0.187,
-"roundFilled": 0.156,
+"roundFilled": 0.153,
 "turned": false,
 "turnedcut": false,
 "wall": {
-"min": 1.998,
+"min": 1.999,
 "at": [
--27.99,
--5.24
+-28.09,
+-5.37
 ],
 "y": -4.26,
 "thin": []
@@ -10684,20 +10705,20 @@
 "holes": [
 {
 "c": [
--30.57,
--12.19
+-30.46,
+-11.77
 ],
-"d": 1.197,
+"d": 1.194,
 "depth": 1.3,
 "through": true,
 "ratio": 1.1
 },
 {
 "c": [
--27.96,
--23.95
+-28.22,
+-23.61
 ],
-"d": 1.199,
+"d": 1.198,
 "depth": 1.3,
 "through": true,
 "ratio": 1.1
@@ -10706,8 +10727,8 @@
 "floor": {
 "min": 1.3,
 "at": [
--14.93,
--28.39
+-31.19,
+-17.4
 ]
 },
 "faces": {
@@ -10721,7 +10742,7 @@
 "part": "maintaining",
 "hn": "050601-1",
 "count": 1,
-"tris": 2180,
+"tris": 2612,
 "s": 1.2,
 "note": ""
 },
@@ -10741,8 +10762,8 @@
 "floor": {
 "min": 2.48,
 "at": [
--28.53,
--23.94
+-28.7,
+-23.56
 ]
 },
 "faces": {
@@ -10767,8 +10788,8 @@
 -4.91,
 -2.4
 ],
-"round": 0.981,
-"roundFilled": 0.981,
+"round": 0.982,
+"roundFilled": 0.982,
 "turned": true,
 "turnedcut": false,
 "corners": 0,
@@ -10776,8 +10797,8 @@
 "floor": {
 "min": 2.5,
 "at": [
--31.12,
--12.29
+-31.03,
+-11.75
 ]
 },
 "faces": {
@@ -10802,8 +10823,8 @@
 -6.22,
 -4.22
 ],
-"round": 0.294,
-"roundFilled": 0.287,
+"round": 0.293,
+"roundFilled": 0.288,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -10813,7 +10834,7 @@
 -6.42,
 -36.44
 ],
-"d": 2.247,
+"d": 2.246,
 "depth": 2.0,
 "through": true,
 "ratio": 0.9
@@ -10822,8 +10843,8 @@
 "floor": {
 "min": 1.0,
 "at": [
--17.99,
--34.47
+-18.0,
+-33.69
 ]
 },
 "faces": {
@@ -10972,22 +10993,22 @@
 -20.1,
 -1.79
 ],
-"round": 0.809,
-"roundFilled": 0.809,
+"round": 0.526,
+"roundFilled": 0.526,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 1.103,
+"min": 1.14,
 "at": [
 -10.8,
--39.33
+-39.21
 ]
 },
 "faces": {
-"low": 0.19,
-"high": 0.19
+"low": 0.16,
+"high": 0.16
 },
 "undercut": null,
 "setups": 2,
@@ -11007,8 +11028,8 @@
 -18.48,
 -17.02
 ],
-"round": 0.074,
-"roundFilled": 0.074,
+"round": 0.071,
+"roundFilled": 0.071,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -11016,8 +11037,8 @@
 "floor": {
 "min": 1.05,
 "at": [
--15.56,
--25.18
+-15.01,
+-27.39
 ]
 },
 "faces": {
@@ -11042,17 +11063,17 @@
 -18.23,
 -17.73
 ],
-"round": 0.121,
-"roundFilled": 0.121,
+"round": 0.115,
+"roundFilled": 0.115,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.184,
+"min": 0.182,
 "at": [
--10.15,
--11.34
+-11.47,
+-10.56
 ]
 },
 "faces": {
@@ -11084,62 +11105,62 @@
 "wall": {
 "min": 0.094,
 "at": [
--13.02,
--10.39
+-12.82,
+-10.56
 ],
 "y": -17.98,
 "thin": [
 [
 0.09,
 [
--13.02,
--10.39
+-12.82,
+-10.56
 ]
 ],
 [
 0.1,
 [
 -24.17,
--15.47
+-15.49
 ]
 ],
 [
 0.1,
 [
 -24.15,
--15.82
+-15.8
 ]
 ],
 [
 0.1,
 [
 -24.15,
--14.91
+-14.84
 ]
 ],
 [
 0.1,
 [
--20.23,
--8.72
+-17.7,
+-7.93
 ]
 ],
 [
 0.1,
 [
--17.58,
--8.0
+-17.25,
+-22.72
 ]
 ]
 ]
 },
-"corners": 1,
+"corners": 2,
 "holes": [],
 "floor": {
 "min": 1.0,
 "at": [
--23.44,
--12.13
+-17.27,
+-7.96
 ]
 },
 "faces": {
@@ -11164,17 +11185,17 @@
 -18.23,
 -17.73
 ],
-"round": 0.086,
-"roundFilled": 0.086,
+"round": 0.083,
+"roundFilled": 0.083,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 0.184,
+"min": 0.182,
 "at": [
--18.08,
--23.66
+-18.6,
+-24.35
 ]
 },
 "faces": {
@@ -11194,33 +11215,33 @@
 },
 {
 "h": 0.046,
-"levels": 19,
+"levels": 20,
 "y": [
 -21.73,
 -3.65
 ],
-"round": 0.925,
+"round": 0.909,
 "roundFilled": 0.994,
 "turned": false,
 "turnedcut": true,
 "wall": {
-"min": 1.202,
+"min": 1.158,
 "at": [
-4.56,
--6.16
+6.41,
+-14.44
 ],
-"y": -21.13,
+"y": -21.08,
 "thin": []
 },
-"corners": 8,
+"corners": 10,
 "holes": [
 {
 "c": [
 24.78,
 -6.0
 ],
-"d": 39.199,
-"depth": 1.2,
+"d": 39.293,
+"depth": 1.3,
 "through": false,
 "ratio": 0.0
 },
@@ -11230,7 +11251,7 @@
 -6.0
 ],
 "d": 38.495,
-"depth": 2.45,
+"depth": 2.35,
 "through": false,
 "ratio": 0.1
 },
@@ -11289,115 +11310,115 @@
 24.78,
 -6.0
 ],
-"d": 36.667,
+"d": 36.666,
 "depth": 0.26,
 "through": false,
 "ratio": 0.0
 }
 ],
 "floor": {
-"min": 1.25,
+"min": 0.007,
 "at": [
-9.32,
--8.43
+6.64,
+-13.42
 ]
 },
 "faces": {
-"low": 1188.93,
-"high": 23.52
+"low": 1188.92,
+"high": 23.54
 },
 "undercut": {
-"area": 7.86,
+"area": 19.01,
 "gap": 2.64,
 "at": [
 43.67,
--10.28
+-9.95
 ],
-"ring": false
+"ring": true
 },
-"setups": 3,
+"setups": 2,
 "sealed": [],
 "name": "barrel 050701-1",
 "part": "barrel",
 "hn": "050701-1",
 "count": 1,
-"tris": 22867,
-"s": 6.8,
+"tris": 22887,
+"s": 6.7,
 "note": ""
 },
 {
 "h": 0.044,
-"levels": 14,
+"levels": 13,
 "y": [
--21.13,
--17.83
+-21.73,
+-18.43
 ],
-"round": 0.98,
-"roundFilled": 0.981,
+"round": 0.974,
+"roundFilled": 0.977,
 "turned": true,
 "turnedcut": false,
 "wall": {
-"min": 2.157,
+"min": 1.857,
 "at": [
-22.19,
--3.89
+22.4,
+-8.17
 ],
-"y": -18.24,
+"y": -18.57,
 "thin": []
 },
-"corners": 24,
+"corners": 20,
 "holes": [
 {
 "c": [
 24.78,
 -6.0
 ],
-"d": 4.548,
+"d": 4.551,
 "depth": 3.3,
 "through": true,
 "ratio": 0.7
 }
 ],
 "floor": {
-"min": 0.6,
+"min": 0.975,
 "at": [
-5.34,
--5.41
+38.42,
+8.11
 ]
 },
 "faces": {
-"low": 0.0,
-"high": 1147.9
+"low": 10.96,
+"high": 1159.09
 },
 "undercut": null,
-"setups": 1,
+"setups": 2,
 "sealed": [],
 "name": "barrel 050701-2",
 "part": "barrel",
 "hn": "050701-2",
 "count": 1,
-"tris": 11452,
-"s": 6.0,
+"tris": 10458,
+"s": 5.6,
 "note": ""
 },
 {
 "h": 0.01,
 "levels": 12,
 "y": [
--21.13,
+-21.73,
 -3.65
 ],
-"round": 0.194,
-"roundFilled": 0.194,
+"round": 0.193,
+"roundFilled": 0.193,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
 "holes": [],
 "floor": {
-"min": 17.48,
+"min": 18.08,
 "at": [
-39.85,
-4.47
+39.7,
+4.68
 ]
 },
 "faces": {
@@ -11422,15 +11443,15 @@
 -14.23,
 -11.18
 ],
-"round": 0.083,
-"roundFilled": 0.083,
+"round": 0.084,
+"roundFilled": 0.084,
 "turned": false,
 "turnedcut": false,
 "wall": {
 "min": 0.5,
 "at": [
-43.76,
--6.85
+43.77,
+-6.54
 ],
 "y": -14.12,
 "thin": []
@@ -11440,8 +11461,8 @@
 "floor": {
 "min": 0.205,
 "at": [
-43.07,
--10.42
+43.15,
+-9.93
 ]
 },
 "faces": {
@@ -11452,8 +11473,8 @@
 "area": 1.32,
 "gap": 2.64,
 "at": [
-43.54,
--10.32
+43.6,
+-10.06
 ],
 "ring": false
 },
@@ -11474,8 +11495,8 @@
 -14.0,
 -11.4
 ],
-"round": 0.708,
-"roundFilled": 0.708,
+"round": 0.712,
+"roundFilled": 0.712,
 "turned": false,
 "turnedcut": false,
 "corners": 0,
@@ -11483,8 +11504,8 @@
 "floor": {
 "min": 0.463,
 "at": [
-43.44,
--9.09
+43.92,
+-11.47
 ]
 },
 "faces": {
@@ -11516,7 +11537,7 @@
 "corners": 4,
 "holes": [],
 "floor": {
-"min": 2.365,
+"min": 3.165,
 "at": [
 30.11,
 -2.08
@@ -11530,8 +11551,8 @@
 "area": 11.93,
 "gap": 2.0,
 "at": [
-30.17,
--2.24
+30.18,
+-2.23
 ],
 "ring": false
 },
@@ -11541,16 +11562,16 @@
 "part": "barrelArbor",
 "hn": "050702-1",
 "count": 1,
-"tris": 4756,
-"s": 6.3,
+"tris": 4848,
+"s": 6.1,
 "note": ""
 },
 {
 "h": 0.01,
 "levels": 12,
 "y": [
--13.29,
--11.29
+-13.59,
+-11.59
 ],
 "round": 0.233,
 "roundFilled": 0.233,
@@ -11577,7 +11598,7 @@
 "hn": "050702-2",
 "count": 1,
 "tris": 96,
-"s": 1.8,
+"s": 1.7,
 "note": ""
 },
 {
@@ -11687,7 +11708,7 @@
 "hn": "050700-3",
 "count": 1,
 "tris": 592,
-"s": 3.1,
+"s": 3.0,
 "note": ""
 }
 ]

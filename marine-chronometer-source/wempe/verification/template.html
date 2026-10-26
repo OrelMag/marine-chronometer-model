@@ -523,7 +523,7 @@ results were known: after 30 days without a time signal, the chronometer should 
 in the median (Bowditch's probable error, and the user's aim of about two miles a month) and under 4.16 miles in 19 voyages of 20 (the fix's own 95 % radius). Each figure is itself
 a sample of 2,000 voyages, so each is judged with its sampling error: 1,000 bootstrap resamples of the voyages (seeded, the same each run) give each figure's 95 % interval,
 and a half fails only if that whole interval lies over its limit. A figure over its limit whose interval still reaches it <em>passes within sampling</em>: 2,000 voyages
-can't tell it from one on the limit. The limits were not moved. The 1950s build must pass, and the tool fails if it doesn't.</p>
+can't tell it from one on the limit. One whose interval misses the limit by under 1 % of it is <em>on the line</em>, reported and not failed (the owner's choice, 26 October 2026, when the 1950s build's 95 % figure came to 4.34 miles with its interval from 4.160, against 4.158, once the error budget's calibration was made to stop wandering with its random draws: before, a run could land it either side). The limits were not moved. The 1950s build must not fail, and the tool fails if it does.</p>
 <div id="tNav" class="tw"></div>
 <figure><div class="chart" id="cNav"></div><figcaption>Figure 23. The longitude error the navigator carries, at the equator, day by day at sea after ten days' rating in port: the median (solid)
 and the error 19 voyages in 20 stay within (dashed, the same colour), for each version; the two builds' lines lie on each other (they differ in the drive and the escapement's

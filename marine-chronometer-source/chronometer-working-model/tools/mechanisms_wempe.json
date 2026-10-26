@@ -40,8 +40,8 @@
     ]
    },
    "height": 1.5,
-   "mass": 0.2473,
-   "I": 1.6782,
+   "mass": 0.2541,
+   "I": 1.8039,
    "note": "a maintaining click (05 06 02-3) on the click wheel 05 06 04-3: running, the fusee's drive through it to the maintaining ratchet"
   },
   {
@@ -83,8 +83,8 @@
     ]
    },
    "height": 1.5,
-   "mass": 0.2473,
-   "I": 1.6782,
+   "mass": 0.2541,
+   "I": 1.8039,
    "note": "a maintaining click (05 06 02-3) on the click wheel 05 06 04-3: running, the fusee's drive through it to the maintaining ratchet"
   },
   {
@@ -168,9 +168,9 @@
      5.9072
     ]
    },
-   "height": 2.55,
-   "mass": 1.4619,
-   "I": 35.8639,
+   "height": 2.51,
+   "mass": 1.4394,
+   "I": 35.3121,
    "note": "the set-up click (05 08 05-2, hole 46) on the set-up ratchet 05 07 00-3: it holds the mainspring's set-up and its wind on the barrel arbor"
   }
  ],
@@ -181,8 +181,8 @@
    "missing": {}
   },
   "barrel": {
-   "m": 108.0518,
-   "I": 27424.8047,
+   "m": 108.9942,
+   "I": 27662.942,
    "missing": {}
   }
  }
