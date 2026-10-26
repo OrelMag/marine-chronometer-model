@@ -82,8 +82,21 @@ const WFRAME=(()=>{
        9.4 to 7.5 scaled: sure); until 15 October 2026 drawn 8 wide throughout. 1.35 -0.05 deep (Schnitt N-O). The Hilfslöcher 3, 12, 40, Ø 3.50 (read until 16 October 2026 as
        Altmeppen's three small windows by the pillars, which he says the 6MX lacks; Kirov No. 247 has all three: README, The Soviet 6MX) */
     const tp=part('topPlate',-40);
+    /* the crescent's outline, its horns' tips rounded rho (0: sharp, the exact crossings): a fillet tangent to the rim and to the cut, its centre R - rho from the plate's
+       and 21.25 + rho from 45's; the rim the long way round between the fillets, the cut through the plate between them */
+    const hornOut=rho=>{if(!rho)return KIT.subtractCircle(C([0,0],R,1200),H[45],42.5/2);const c=H[45],rc=42.5/2,d=Math.hypot(...c),u=[c[0]/d,c[1]/d],an=p=>Math.atan2(p[1],p[0]);
+      const X=(r0,r1)=>{const a=(r0*r0-r1*r1+d*d)/(2*d),h=Math.sqrt(r0*r0-a*a);return[[a*u[0]-h*u[1],a*u[1]+h*u[0]],[a*u[0]+h*u[1],a*u[1]-h*u[0]]];};   /* the two crossings of r0 about the plate's centre and r1 about 45's */
+      const Cs=X(R-rho,rc+rho),T=Cs.map(q=>({c:q,r:[q[0]*R/(R-rho),q[1]*R/(R-rho)],k:[c[0]+(q[0]-c[0])*rc/(rc+rho),c[1]+(q[1]-c[1])*rc/(rc+rho)]}));   /* each fillet: centre, its point on the rim, on the cut */
+      const arc=(o,r,a0,a1,step)=>{const n=Math.max(2,Math.ceil(Math.abs(a1-a0)*r/step)),L=[];for(let i=1;i<n;i++){const a=a0+(a1-a0)*i/n;L.push([o[0]+r*Math.cos(a),o[1]+r*Math.sin(a)]);}return L;};   /* inner points */
+      const wrap=a=>((a%TAU)+TAU)%TAU,mid=(a,b)=>{const m=a+wrap(b-a)/2;return[R*Math.cos(m),R*Math.sin(m)];},inCut=q=>Math.hypot(q[0]-c[0],q[1]-c[1])<rc;
+      const[A,B]=T,ra=an(A.r),rb=an(B.r),ccw=!inCut(mid(ra,rb));   /* the rim from A to B the way that stays outside the cut */
+      const rim=arc([0,0],R,ra,ccw?ra+wrap(rb-ra):ra-wrap(ra-rb),0.25);
+      const fil=(F,from,to)=>{let a0=an([from[0]-F.c[0],from[1]-F.c[1]]),a1=an([to[0]-F.c[0],to[1]-F.c[1]]);while(a1-a0>Math.PI)a1-=TAU;while(a0-a1>Math.PI)a1+=TAU;return arc(F.c,rho,a0,a1,0.05);};   /* the short way round */
+      const ka=an([A.k[0]-c[0],A.k[1]-c[1]]),kb=an([B.k[0]-c[0],B.k[1]-c[1]]),cm=k=>{const m=ka+k;return[c[0]+rc*Math.cos(m),c[1]+rc*Math.sin(m)];};
+      const cw=Math.hypot(...cm(wrap(kb-ka)/2))<R;   /* the cut from B back to A through the plate: the way whose middle lies inside the rim */
+      const cut=arc(c,rc,kb,cw?kb-wrap(kb-ka):kb+wrap(ka-kb),0.1);
+      return[A.r,...rim,B.r,...fil(B,B.r,B.k),B.k,...cut,A.k,...fil(A,A.k,A.r)];};
     for(const[V,P39,DR]of VER){const y0=TT,y1=TI,F=[];
-      const out=KIT.subtractCircle(C([0,0],R,1200),H[45],42.5/2);
       for(const k of[1,35,38])F.push(T(H[k],rJ,y0,y1));                                  /* 4.4 punched, 4.59 +0.012 reamed: the centre, seconds and intermediate wheels' settings (WN-301, WN-300: 05 08 01) */
       for(const k of[3,12,40])F.push(T(H[k],rH35,y0,y1));                                /* Hilfslöcher, 3.50 +0.012 */
       F.push({p:C(H[4],2.15,60),q:C(H[4],1.2,60),a:y0,b:y0+0.55},{p:C(H[4],1.2,60),q:C(H[4],0.45,60),a:y0+0.55,b:y0+0.95},{p:C(H[4],0.45,60),a:y0+0.95,b:y1});   /* hole 4's oil sink on the outer face, Ø 4.3 (Wempe 3955, 2_Wempe_3955_A.jpg: spherical, the pivot bright in it; its depth estimated, as the bushes' sinks; two cones for the sphere) */
@@ -119,7 +132,9 @@ const WFRAME=(()=>{
       const pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),Pc,X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
       if(pk.uni.length!==1||fl.length!==1)console.warn('topPlate: the pocket and the balance opening cross in',pk.uni.length,'and',fl.length,'loops');
       F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.325,b:y1,floorOut:fl[0]});   /* N-O's 1.35 -0.05, drawn at the middle (1.35 until 26 October 2026) */
-      tag(mesh(rv(tp,V),faceUV(solidGeo([{loop:out,y0,y1,F}])),DR?GH:G6T),'050901');}
+      /* the horns' tips (the owner's choice, 26 October 2026, a version to each): sharp as 05 09 01 (1943) draws them, r 1 as the assembly 05 08 01 (2.11.46, scaled at 2:1)
+         rounds them as last revised, r 0.3 on Wempe 3955 (12_Wempe_3955_obere_Platte_oben.jpg); the 6MX's sharp */
+      for(const[VV,rho]of/** @type {[string,number][]} */(DR?[['last',1.0],['first 1943 -3955',0],['3955',0.3]]:[[V,0]]))tag(mesh(rv(tp,VV),faceUV(solidGeo([{loop:hornOut(rho),y0,y1,F}])),DR?GH:G6T),'050901');}
     /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's (39's in each version's group) */
     const S=WD.PSCR,P3=(par,f)=>{for(const q of[H[11],H[49]])f(par,q);for(const[V,P39]of VER)f(rv(par,V),P39);};
     /* the 6MX's (Kirov No. 247's) are polished steel with domed heads (its A, N, O and W photographs, photocompare.py: sure), lower than the drawings' brass cheese heads: 2.4
@@ -336,11 +351,13 @@ const WFRAME=(()=>{
        turned any other way the collar would stand 0.55 into the cock's web (inferred). Its bottom (05 08 01-3's section at 12×): the outer corner chamfered 45°, 0.3 (scaled,
        not figured: estimated), a flat ring 0.5 wide that bears on the flange, and inside it the face dished 5° up to the bore (the sheet's "5°" and "0,5": sure); until 26
        October 2026 read as a 5° × 0.5 chamfer on the outer edge, the face flat. The assembly 05 08 01 (2.11.46) draws the body waisted under the collar, as Wempe 3955's and the
-       6MX's are (below); this sheet (2.7.42) and the coloured section draw it straight, which the drawings' versions keep (README, Unresolved) */
+       6MX's are (below); this sheet (2.7.42) and the coloured section draw it straight. Both are built (the owner's choice, 26 October 2026): as last revised waisted as 05 08 01 draws it (its
+       section at 20.6 px/mm by the body's Ø 13.1: the body 5.34 from the flange, a 45° shoulder, the waist Ø 10.5, the collar 2.18 thick: built 5.4, 1.3 × 45°, Ø 10.5, 2.1;
+       likely, scaled), as first drawn and in 1943 straight as 05 08 01-3 */
     const db=part('dustBush',-66);
     {const Yb=TT-1.5,Yt=Yb-18.1,rr=y=>8.0075/2-(Yb-y)/140,rT=rr(Yt+1.8)+1.8*Math.tan(20*D2R),nf=brg(255);
       const yd=Yb-(5.75-rr(Yb))*Math.tan(5*D2R),bot=[V2(6.55,Yb-0.3),V2(6.25,Yb),V2(5.75,Yb),V2(rr(yd),yd)],lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),...bot,V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
-      const g=tag(mesh(rv(db,'last first 1943 -3955'),KIT.latheF(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');
+      const g=tag(mesh(rv(db,'first 1943 -3955'),KIT.latheF(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');
       /* Wempe 3955's (the version as photographed): the body turned down to a waist under the collar (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on the bush,
          its silhouette traced on a 5 px grid): the Ø 13.1 body to a flat shoulder at y -29.0 (±0.3), then Ø 9.0 (±0.4: 93-95 px across) up to the collar; the collar 1.85 thick (±0.2: its lower
          edge, traced at full size on both silhouettes beside the model's outline, 16.5 px above a 3.1 collar's and 3-6 px below a 1.4 one's; its top the sheet's), the waist running up to it, its plan (14.2 across toward the
@@ -348,11 +365,11 @@ const WFRAME=(()=>{
          (2.7.42) draws the body straight */
       /* Kirov No. 247's (the 6MX), the same in kind (4_Kirow_247_N.jpg, photocompare.py's fit, 10.3 px/mm): the body 4.8 high, a flare, the waist Ø 9.8 ±0.3, the collar
          about 1.2 thick; traced as Wempe 3955's (below) */
-      const WB=/** @type {[string,number,number,number,number][]} */([['3955',-29.0,-29.0,4.5,-37.1],['6mx',Yb-4.8,Yb-6.45,4.9,-37.75]]);   /* [version, the body's shoulder, the waist's foot (a cone between), its radius, the collar's underside] */
+      const WB=/** @type {[string,number,number,number,number][]} */([['last',Yb-5.4,Yb-6.7,10.5/2,Yb-13.0],['3955',-29.0,-29.0,4.5,-37.1],['6mx',Yb-4.8,Yb-6.45,4.9,-37.75]]);   /* [version, the body's shoulder, the waist's foot (a cone between), its radius, the collar's underside] */
       for(const[V,yS,yW,rW,yC]of WB){const w=[V2(rr(yC),yC),V2(rW,yC),V2(rW,yW),V2(6.55,yS),...bot,V2(rr(yC),yC)].filter((q,i,a)=>!i||q.x!==a[i-1].x||q.y!==a[i-1].y);
         tag(mesh(rv(db,V),KIT.latheF(w,72),M.brass,F10[0],0,F10[1]),'050801-3');}tag(mesh(db,KIT.latheF(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
       const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
-      tag(mesh(rv(db,'last first 1943 -3955'),solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);
+      tag(mesh(rv(db,'first 1943 -3955'),solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);
       for(const[V,,,,yC]of WB)tag(mesh(rv(db,V),solidGeo([{loop:lug,y0,y1:yC,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(yC),180),a:y0,b:yC}]}]),M.brass),'050801-3',1);}   /* the photographed collars, thinner (WB) */
     /* Korkring 05 08 01-4 (no sheet; 05 08 01 names it on the dust bush, the coloured section "Korkring 05 08 01-4", its "05 06 01-4" in the transcription's list a misreading):
        a cork ring of square-cut section on the dust bush's neck, sitting on the collar's top, under the bowl's winding hole. In the bowl (its bore 53 deep, R-05 01 00-1,
