@@ -679,7 +679,13 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
      sent on there with its hash (the header's link to the Hamilton, its place on the site). Not a link that came from the Wempe's old address (/wempe/, which worker.js sends to /?from=wempe) */
   const away=(h,k)=>{if(document.documentElement.dataset.from==='wempe'||!((h.has('part')&&!k.part)||(h.has('view')&&!k.view)||(h.has('open')&&!k.open)||(h.has('tour')&&!k.tour)))return false;
     const a=document.querySelector('nav.models a[data-m="hamilton"]');if(!a)return false;location.replace(a.href.replace(/#.*/,'')+location.hash);return true;};
-  const V=VIEWER.start({essay:ES,away,name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:Q0||'dial',openCam:Q0?null:{yaw:0.75,pitch:0.42,dist:640,target:[0,-20,0]},   /* opening as the Hamilton's: the box shut, seen from the front right (its camera), then the lid opening onto the dial */
+  /* the load path (Load path in colour, Winding; the Hamilton's lpCol): while winding (LP.ph 'w') the maintaining spring drives the fusee wheel (rose), pushing off its ratchet,
+     which the maintaining detent holds (teal); for 2 s after the key lets go ('r') the drive is the mainspring's again: barrel, chain, fusee, its click wheel, the clicks, the
+     ratchet, the spring, the fusee wheel. Each mesh's role (lpk) from its part or piece, as the Hamilton's movement.js tags them: s the spring and its pins, w the fusee wheel, r the ratchet, h the detent, m the mainspring's path */
+  const LP={ph:'',end:0,on:true},LPC={d:'#e0306a',h:'#0e9f92'};let mClk=0;   /* mClk: the key's and the load path's clock (ms), slowed only by the close-up's slow motion */
+  const LPK={fuseeWheel:'w','maintaining.spring':'s','maintaining.springPinsG':'s','maintaining.ratchet':'r',maintDetent:'h',maintaining:'m',fusee:'m',chain:'m',band:'m',barrel:'m',mainspring:'m'};
+  const lpCol=(m,ph=LP.ph)=>{const u=m.userData,k=u.lpk??(u.lpk=LPK[u.pk]??LPK[u.part]??'');if(!LP.on||!ph||!k)return null;return ph==='w'?(k==='s'?'d':k==='h'||k==='r'?'h':null):(k==='h'?null:'d');};
+  const V=VIEWER.start({essay:ES,away,tint:m=>{const c=lpCol(m);return c?LPC[c]:null;},overlay:()=>cuDraw(),name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:Q0||'dial',openCam:Q0?null:{yaw:0.75,pitch:0.42,dist:640,target:[0,-20,0]},   /* opening as the Hamilton's: the box shut, seen from the front right (its camera), then the lid opening onto the dial */
     SECDEF,
     pick:hit=>typeof MAKER!=='undefined'&&MAKER.measuring()?(MAKER.measureHit(hit),true):false,card:p=>{if(typeof MAKER!=='undefined')MAKER.card(p);},   /* Making it: Measure takes a click on the model; each card has its maker's sheet and drawing (../chronometer-working-model/js/maker.js) */
     build:M=>{CS=WCASE.build(M);CS.setCase(cs);const root=CS.root;mv=buildWempe(M);MAT=M;M.setFinish(fin);mv.userData.R.dl.setDial(dial);mv.userData.onRev.push(v=>{physRev(v);root.traverse(o=>{if(o.userData.rev)o.visible=mv.userData.revShows(o.userData.rev,v)&&(!o.userData.contact||ct);});CS.rev(v);CS.parts.key.userData.first=v==='first'||v==='3955';CS.keyRest();});mv.userData.setContact(ct);mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.inner.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
@@ -724,6 +730,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
        (below, REAL_X) and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
     tick:(dt,now,st)=>{if(!mv)return[];if(x6i>=0&&!V.focused()){x6i=-1;x6Sync();}   /* the 6MX sheet's change ended by a view chosen, Reset or Back */
+      const sk=cuSlowK();mClk+=clamp(cw.t===null?0:now-cw.t,0,250)*sk;dt*=sk;   /* the close-up's slow motion: the key, the model's time and the load path's clock */
       /* dw: the wall clock's step (s), up to 0.25: the lid and winding in the case are shown in real time, where dt, the viewer's step, is held to 0.05 a frame, so on a
          renderer drawing a few frames a second they took several times as long (until 15 October 2026) */
       const dw=cw.t===null?0:clamp((now-cw.t)/1000,0,0.25);cw.t=now;
@@ -733,7 +740,8 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
         const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450-st.allK*275;CS.explode(st.allK);   /* the Exploded view's All: the case taken apart under the movement (case.js explode), the movement brought down to about 30 over the bezel, the lid open */mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.stay();CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;
         /* the outer box (case.js), only in its view (over): its lid eased open to 95°, standing behind it as 51 00_1's section draws it */
         CS.over.visible=!!(c&&c.over)||!!CS.showOver;co+=((c&&c.over?1:0)-co)*kl;if(Math.abs(co-Math.round(co))<1e-4)co=Math.round(co);CS.overLid.rotation.x=-co*95*D2R;}
-      if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
+      if(kw)kwStep();else if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
+      if(winding)LP.end=mClk+2000;{const ph=winding?'w':mClk<LP.end?'r':'';if(ph!==LP.ph){LP.ph=ph;V.look();cuShow();}}   /* the load path's phase: winding, then 2 s of the mainspring's drive again */
       /* winding in the case, as the 6MX's instruction has it (pp. 3-4: the chronometer turned over in its gimbals, the key hole opened, the key put in and turned, then taken out
          and the chronometer turned back) and two videos show it on 6MXs (DIxob2Rl4dc 7:05-7:22: the bowl turned about its 12-6 pivots, the dial toward 3 o'clock, until its
          bottom faces up, the key put in from above; Uy8A88_j-cA 5:16-5:26): the lid opens, the bowl turns over in the ring, the closing plate opens, the key comes onto the
@@ -777,7 +785,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
       const ms=H.ms=winding?Math.max(0,H.m0-H.fall-(E-H.E0)*WTOOTH):H.ms==null?PH.runPhi(drv):hrs>=HRUN-1e-6?(E>(H.Ep??E)?Math.max(0,H.ms-(E-H.Ep)*WTOOTH):H.ms):drv>0&&E>(H.Ep??E)?Math.max(PH.runPhi(drv),H.ms-(E-H.Ep)*WTOOTH):H.ms;H.Ep=E;   /* running, the lead follows the drive, but never back faster than the wheel goes on (the detent: between beats, the drive's slow fall along the fusee's curve can't turn the ratchet back), and only as it goes on (an escapement's recoil draws the ratchet back with the train) */   /* the maintaining spring: closed by the drive, its ends nearly meeting (H.Ep: the escape wheel last frame); while the key turns the ratchet held by its detent, so its lead falls as the fusee wheel goes on (by the train, tooth by tooth); run down, the detent holds the ratchet where it was */
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,ms});
       swRec(now);if(!(ES&&ES.on())){swDraw(now,drv);rateShow(now);testShow(now);if(epOn())epDraw($('#benchCv'),s,E,$('#benchCap'));if(tIns)tinDraw(now,s,E);}
-      showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4),+GW.levK.toFixed(4),+ms.toFixed(4)];},
+      showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4),+GW.levK.toFixed(4),+ms.toFixed(4),LP.ph?now:0];},   /* winding and the 2 s after it draw every frame: the close-up */
     hash:{write:h=>{if(typeof MAKER!=='undefined'&&MAKER.orig().length)h.set('orig',MAKER.orig().join(','));if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(MSET)h.set('mset',Math.round(MSET*100));{const b=balStr();if(b)h.set('bal',b);}if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);if(fin!=='plain')h.set('fin',fin);if(ct!==CT0)h.set('contact',ct?'1':'0');if(cs!=='brass')h.set('case',cs);},
       read:(g,first)=>{if(typeof MAKER!=='undefined')MAKER.setOrig((g('orig')||'').split(',').filter(Boolean));   /* orig=gold,mainspring: the build's deviations set back to the drawings on their cards (maker.js) */
         if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
@@ -789,7 +797,114 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
     hud:st=>{const run=hrs<HRUN-1e-6,tod=((dialRead()%86400)+86400)%86400,p2=v=>String(Math.floor(v)).padStart(2,'0'),
       why=winding||!H.held?'':H.amp>0.5*D2R?'Stopping: the balance swings too little to unlock':'Stopped: twist to start',
       spd=v=>v===0?'stopped':(v<1&&Math.abs(1/v-Math.round(1/v))<1e-9?'1/'+Math.round(1/v):String(+v.toPrecision(3)))+'×';
-      return`<b>${p2(tod/3600)}:${p2(tod%3600/60)}:${p2(tod%60)}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run||winding?`${(HRUN-hrs).toFixed(1)} h of power left${why?'&ensp;<b>'+why+'</b>':''}`:H.held?'Run down. Wind it, then twist to start.':'<b>Run down</b>, the maintaining spring driving the train'}${st.speed!==1?`&ensp;<b>${spd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(H.held?'':', the maintaining spring driving the train'):cw.go?'&ensp;<b>Turning it over to wind</b>':''}`;}});
+      return`<b>${p2(tod/3600)}:${p2(tod%3600/60)}:${p2(tod%60)}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run||winding?`${(HRUN-hrs).toFixed(1)} h of power left${why?'&ensp;<b>'+why+'</b>':''}`:H.held?'Run down. Wind it, then twist to start.':'<b>Run down</b>, the maintaining spring driving the train'}${st.speed!==1?`&ensp;<b>${spd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(H.held?'':', the maintaining spring driving the train'):cw.go?'&ensp;<b>Turning it over to wind</b>':''}${cuSlowK()<1?'&ensp;<b>Slow motion '+CUSN[cuSlowI]+'</b>':''}`;}});
+
+  /* ---------- the maintaining spring close up (Close-up, Winding; the Hamilton's sustaining spring's, its app.js) ----------
+     While winding and for 2 s after (LP.ph), or kept open (cuPin: its pin, or Open the close-up), the fusee wheel's maintaining work drawn again into the box #cu, on the stage's
+     own canvas after each frame (the viewer's cfg.overlay): only its parts (layer 1: the fusee wheel, the maintaining ratchet, spring, clicks and their springs, the maintaining
+     detent, the fusee's click wheel), seen from the top plate's side in the movement's own frame, so it holds whatever the view, the ratchet see-through so the spring under it
+     shows, tinted as the load path. Under it, how long the spring can still drive the train: the ratchet's lead over the wheel (H.ms) at the wheel's turn (WPHYS.WFW).
+     Its tools (cuBind): the wheel, a pinch or + and - zoom (about the pointer), a drag moves, a double-click resets (cuV: zoom z, pan p in the movement frame, f a part followed:
+     the spring's eye, the maintaining detent, a click); enlarge (.big); slow motion (CUSL, while it shows: the key, model time and the load path's clock, mClk); keep open; and
+     how the spring takes the load (#cuh, cuHelpSet: the phase now picked out, its figures live) */
+  const stage=$('#stage'),cuEl=$('#cu'),cuG=$('#ssGauge'),cuH=$('#cuh'),cam2=new THREE.PerspectiveCamera(30,1,0.3,2000),CU=[];
+  mv.traverse(m=>{const u=m.userData;if(m.isMesh&&(u.part==='fuseeWheel'||u.part==='maintaining'||u.part==='maintDetent'||u.pk==='fusee.clickWheel')){CU.push(m);m.layers.enable(1);}});V.scene.traverse(o=>{if(o.isLight)o.layers.enable(1);});cam2.layers.set(1);
+  const CUG=new Set(CU.filter(m=>m.userData.hn==='050602-1')),CUGM=new Map();   /* the maintaining ratchet, drawn at 45% */
+  const cuGhost=m0=>{let g=CUGM.get(m0);if(!g){g=m0.clone();g.userData={};g.transparent=true;g.opacity=0.45;g.depthWrite=false;patchSection(g,false);g.clippingPlanes=[...(m0.clippingPlanes||[])];CUGM.set(m0,g);}return syncMat(g,m0);};
+  let cuOn=false,cuS='',cuPin=false,cuBig=false,cuHelp=false,cuSlowI=0,cuHS='',cuSt=true;const cuBg=new THREE.Color(),cuCC=new THREE.Color(),cuT=new THREE.Vector3(),cuE=new THREE.Vector3(),cuQ=new THREE.Vector3(),cuBox=new THREE.Box3();
+  /* the view: from outward of the fusee (away from the movement's centre) and from the top plate's side, looking onto the ratchet and the wheel's recess (the fusee wheel y -7.4 to
+     -2.4, the spring -4.9 to -3.6 under the ratchet's -8.2 to -5.1: measured on the built solids); right and up on the box, in the movement frame */
+  const FU=WD.H[10],cuUl=Math.hypot(FU[0],FU[1]),cuUx=FU[0]/cuUl,cuUz=FU[1]/cuUl,CU_T0=new THREE.Vector3(FU[0]+cuUx*2,-6,FU[1]+cuUz*2),CU_OFF=new THREE.Vector3(cuUx*22,-68,cuUz*22),CU_D=CU_OFF.length();
+  const cuBk=CU_OFF.clone().normalize(),cuUp=new THREE.Vector3(-cuUx,0,-cuUz),cuRt=new THREE.Vector3().crossVectors(cuUp,cuBk).normalize();cuUp.crossVectors(cuBk,cuRt);
+  const cuV={z:1,p:new THREE.Vector3(),f:/** @type {string|null} */(null)},cuVP={cx:0,cy:0,h:1},CUZ=[0.6,16];
+  const CUSL=[1,1/4,1/10,1/25],CUSN=['1×','¼×','⅒×','1/25×'];function cuSlowK(){return cuOn||(cuSt&&winding)?CUSL[cuSlowI]:1;}   /* slow motion acts only while the close-up shows */
+  const CUF={gap:CU.find(m=>m.userData.hn==='050600-8'&&m.parent.rotation.y!==0)||null,detent:CU.find(m=>m.userData.hn==='050505-1')||null,clicks:CU.find(m=>m.userData.hn==='050602-3')||null};
+  const cuFol=k=>{const o=CUF[k];if(!o)return null;cuBox.setFromObject(o).getCenter(cuQ);return mv.worldToLocal(cuQ);};
+  const cuMpp=()=>2*CU_D/cuV.z*Math.tan(15*D2R)/cuVP.h;   /* mm a pixel at the target */
+  const cuPan=(dx,dy)=>{const k=cuMpp();cuV.p.addScaledVector(cuRt,-dx*k).addScaledVector(cuUp,dy*k);V.wake();};
+  const cuZoom=(f,x,y)=>{const z1=clamp(cuV.z*f,CUZ[0],CUZ[1]),k0=cuMpp(),k1=k0*cuV.z/z1;if(x!=null){const ox=x-cuVP.cx,oy=y-cuVP.cy;cuV.p.addScaledVector(cuRt,ox*(k0-k1)).addScaledVector(cuUp,-oy*(k0-k1));}cuV.z=z1;V.wake();};   /* the point under the pointer stays under it */
+  const cuReset=()=>{cuV.z=1;cuV.p.set(0,0,0);cuV.f=null;V.wake();};
+  const cuGo=k=>{cuV.f=k;cuV.p.set(0,0,0);cuV.z=3;V.wake();};
+  const cuRect=()=>{const b=cuEl.getBoundingClientRect(),s=stage.getBoundingClientRect();return{x0:b.left-s.left,y0:b.top-s.top,x1:b.right-s.left,y1:b.bottom-s.top};};
+  /* the explanation beside the close-up, or above it where the stage is too narrow */
+  function cuPlace(){if(cuH.classList.contains('hidden'))return;const b=cuRect(),sw=stage.clientWidth,sh=stage.clientHeight;
+    if(sw-b.x1-22>=300)Object.assign(cuH.style,{left:b.x1+8+'px',bottom:(sh-b.y1)+'px',width:Math.min(340,sw-b.x1-22)+'px',maxHeight:(b.y1-10)+'px'});
+    else Object.assign(cuH.style,{left:'14px',bottom:(sh-b.y0+8)+'px',width:Math.min(340,sw-28)+'px',maxHeight:Math.max(100,b.y0-62)+'px'});}
+  function cuShow(){cuOn=(cuSt&&!!LP.ph)||cuPin;cuEl.classList.toggle('hidden',!cuOn);cuEl.classList.toggle('big',cuBig);cuS='';cuHS='';
+    $('#cuBig').setAttribute('aria-pressed',String(cuBig));$('#cuPin').setAttribute('aria-pressed',String(cuPin));$('#cuOpen').setAttribute('aria-pressed',String(cuPin));$('#cuOpen').textContent=cuPin?'Close the close-up':'Open the close-up';$('#cuHelp').setAttribute('aria-pressed',String(cuHelp));
+    const sb=$('#cuSlow');sb.textContent=CUSN[cuSlowI];sb.classList.toggle('on',cuSlowI>0);sb.setAttribute('aria-label','Slow motion: '+(cuSlowI?CUSN[cuSlowI]+' speed':'real speed'));
+    cuH.classList.toggle('hidden',!(cuOn&&cuHelp));if(cuOn&&cuHelp){if(!cuH.firstChild)cuHelpBuild();cuPlace();}V.wake();}
+  /* the drive's figures: the spring's push (times the 12-hour drive, WPHYS.msDrv at the ratchet's lead H.ms), the fusee's, the time the spring has left (s: the lead at the wheel's
+     turn), and from the running lead at 12 h (PH.runPhi(1)) */
+  const msLeft=(m=H.ms??PH.runPhi(1))=>Math.max(0,m)/PH.WFW,msFull=()=>msLeft(PH.runPhi(1)),mmss=s=>`${Math.floor(s/60+1e-9)} min ${String(Math.min(59,Math.floor(s%60))).padStart(2,'0')} s`;
+  /* how the spring takes the load: the three phases, the one now picked out and open (cuHelpSet), with the figures of the moment. From the parts' sheets (05 06 01-1, 05 06 02,
+     05 05 05), the cards' descriptions and escphys.js (wempe_sustaining.js's figures) */
+  function cuHelpBuild(){const go=(k,t)=>`<button class="go" data-f="${k}" title="Zoom the close-up there">${t}</button>`;
+    cuH.innerHTML=`<h4>How the maintaining spring takes the load</h4>
+      <p>Harrison’s maintaining work. The spring (05 06 01-1) is an open steel ring lying in the recess in the fusee wheel’s face; its eye is pinned to the maintaining ratchet (${go('gap','see it')}), its other end to the fusee wheel. The ratchet turns loose on the wheel’s tube, so all the drive passes through the ring: the ratchet pushes the eye round toward the other end, and the ring, closed, pushes the fusee wheel on.</p>
+      <ol><li data-ph="run"><b>Running: the mainspring loads it.</b><span class="tx"> <span class="path">Barrel → chain → fusee → its click wheel → the two ${go('clicks','clicks')} in the ratchet’s cup → the maintaining ratchet → the spring → the fusee wheel → the centre pinion.</span> The drive closes the ring until its ends nearly meet, the ratchet then about 15° ahead of the wheel; the two turn together, once in ${(HPT).toFixed(1)} hours. <span class="num" data-v="run"></span></span></li>
+      <li data-ph="w"><b>Winding: the spring drives alone.</b><span class="tx"> The key turns the fusee back, so it no longer pushes: the clicks ride over the click wheel’s backs. The spring pushes the ratchet back until the ${go('detent','maintaining detent')}, on its own arbor between the plates, drops into a tooth and holds it. Its eye held still, the spring pushes the fusee wheel on by its other end, and the train keeps going; it opens as it turns the wheel, and its push falls. <span class="num" data-v="w"></span></span></li>
+      <li data-ph="r"><b>Key let go: the mainspring takes the load back.</b><span class="tx"> The fusee turns forward until the click wheel’s teeth meet the clicks, which carry the ratchet forward off its detent, closing the ring until it again pushes as hard as the fusee drives. <span class="num" data-v="r"></span></span></li></ol>
+      <p><small>An open ring weaker than the drive: running, the fusee’s pull holds it closed, its ends nearly meeting. From there it keeps the train going about ${Math.round(msFull()/60)} minutes, its push falling as it opens. Its section and outline from its sheet, its push worked out from its section as a bent ring (wempe_sustaining.js). The two clicks are half a tooth apart on the click wheel’s 35, so one always bears. Rose drives, teal holds.</small></p>`;
+    cuH.querySelectorAll('button.go').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();cuGo(/** @type {HTMLElement} */(b).dataset.f);}));
+    cuH.querySelectorAll('li').forEach(li=>li.addEventListener('click',()=>{if(!li.classList.contains('now'))li.classList.toggle('open');}));}   /* the phase now is open; the others open on a click */
+  function cuHelpSet(){if(!cuHelp||!cuOn)return;const ph=LP.ph==='w'?'w':LP.ph==='r'?'r':'run',pu=Math.round(PH.msDrv(H.ms??0)*100),fd=Math.round((hrs<HRUN-1e-6?PH.drv(hrs/HPT)*(1-MSET):0)*100),lead=((H.ms??0)/D2R).toFixed(1),A=Math.round(H.amp/D2R);
+    const v={run:ph!=='run'?'':hrs>=HRUN-1e-6?'Now: run down, the fusee drives nothing.':`Now: the fusee drives ${fd}% of its 12-hour drive; the spring pushes ${pu}%, the ratchet ${lead}° ahead of the wheel.`,
+      w:ph!=='w'?'':`Now: the spring pushes ${pu}% of the 12-hour drive, the ratchet ${lead}° ahead of the wheel, the balance swinging ${A}°; ${msLeft()<=0?'spent: the train stops':mmss(msLeft())+' of drive left'}.`,
+      r:ph!=='r'?'':`Now: the spring pushes ${pu}%, the ratchet ${lead}° ahead of the wheel.`};
+    const k=ph+v.run+v.w+v.r;if(k===cuHS)return;cuHS=k;cuH.querySelectorAll('li').forEach(li=>li.classList.toggle('now',/** @type {HTMLElement} */(li).dataset.ph===ph));cuH.querySelectorAll('[data-v]').forEach(e=>e.textContent=v[/** @type {HTMLElement} */(e).dataset.v]);}
+  function cuDraw(){if(!cuOn||!mv)return;const r=V.r,[W,Hh]=V.size(),b=cuRect(),gH=cuG.offsetHeight,tH=18,w=b.x1-b.x0-2,h=b.y1-b.y0-2-gH-tH;if(w<20||h<20)return;   /* between the title and the gauge */
+    {const sb=stage.getBoundingClientRect();cuVP.cx=sb.left+b.x0+1+w/2;cuVP.cy=sb.top+b.y0+1+tH+h/2;cuVP.h=h;}
+    const fo=cuV.f?cuFol(cuV.f):null;cuT.copy(fo||CU_T0).add(cuV.p);cuE.copy(CU_OFF).divideScalar(cuV.z).add(cuT);mv.localToWorld(cuT);mv.localToWorld(cuE);
+    cam2.position.copy(cuE);cam2.up.set(-cuUx,0,-cuUz).transformDirection(mv.matrixWorld);cam2.lookAt(cuT);cam2.aspect=w/h;cam2.updateProjectionMatrix();
+    const ph=LP.ph||'r',keep=CU.map(m=>m.material),on=LP.on;LP.on=true;for(const m of CU){const lc=lpCol(m,ph),b0=V.base(m),t=lc?V.tintOf(b0,LPC[lc]):b0;m.material=CUG.has(m)?cuGhost(t):t;}LP.on=on;
+    const au=r.shadowMap.autoUpdate,ca=r.getClearAlpha();r.getClearColor(cuCC);r.shadowMap.autoUpdate=false;cuBg.set(getComputedStyle(stage).getPropertyValue('--card').trim()||'#ffffff');
+    r.setScissorTest(true);r.setViewport(b.x0+1,Hh-b.y1+1+gH,w,h);r.setScissor(b.x0+1,Hh-b.y1+1,w,h+gH+tH);r.setClearColor(cuBg,1);r.clear();r.render(V.scene,cam2);
+    r.setClearColor(cuCC,ca);r.setScissorTest(false);r.setViewport(0,0,W,Hh);r.shadowMap.autoUpdate=au;CU.forEach((m,i)=>m.material=keep[i]);
+    const left=msLeft(),run=LP.ph!=='w',pu=Math.round(PH.msDrv(H.ms??0)*100);
+    const t=LP.ph==='r'?'Key let go: the mainspring drives the train again, through the fusee and its clicks, and closes the maintaining spring<br><em class="d">the mainspring’s drive</em>':
+      run?`Running: the spring carries the whole drive, closed until its ends nearly meet; let go it would push <b>${pu}%</b> of the 12-hour drive<br><em class="d">the mainspring’s drive</em>`:
+      `<b>${mmss(left)}</b> of drive left <small>(about ${Math.round(msFull()/60)} min from running)</small><br><em class="d">spring drives</em> <em class="h">ratchet and detent hold</em>`;
+    const k=t+run;if(k!==cuS){cuS=k;cuG.classList.toggle('run',run);cuG.querySelector('b').style.width=clamp(LP.ph?100*left/msFull():pu,0,100).toFixed(1)+'%';cuG.querySelector('span').innerHTML=t;}cuHelpSet();}
+  /* the close-up's own pointer: one finger or the mouse moves it, two pinch, the wheel zooms about the pointer, a double-click resets; and its buttons */
+  {const pts=new Map();
+    cuEl.addEventListener('pointerdown',e=>{if(/** @type {Element} */(e.target).closest('button'))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cuEl.setPointerCapture(e.pointerId);}catch(_){}cuEl.classList.add('grab');e.preventDefault();});
+    cuEl.addEventListener('pointermove',e=>{const q=pts.get(e.pointerId);if(!q)return;
+      if(pts.size===1){if(cuV.f){const fo=cuFol(cuV.f);if(fo)cuV.p.add(fo).sub(CU_T0);cuV.f=null;}cuPan(e.clientX-q.x,e.clientY-q.y);}   /* a drag lets go of the part followed, from where it is */
+      else if(pts.size===2){const o=[...pts.entries()].find(([id])=>id!==e.pointerId)[1],d0=Math.hypot(q.x-o.x,q.y-o.y),d1=Math.hypot(e.clientX-o.x,e.clientY-o.y);if(d0>4)cuZoom(d1/d0,(e.clientX+o.x)/2,(e.clientY+o.y)/2);}
+      q.x=e.clientX;q.y=e.clientY;});
+    const up=e=>{pts.delete(e.pointerId);if(!pts.size)cuEl.classList.remove('grab');};cuEl.addEventListener('pointerup',up);cuEl.addEventListener('pointercancel',up);
+    cuEl.addEventListener('wheel',e=>{e.preventDefault();cuZoom(Math.exp(-e.deltaY*0.0015),e.clientX,e.clientY);},{passive:false});
+    cuEl.addEventListener('dblclick',e=>{if(!/** @type {Element} */(e.target).closest('button'))cuReset();});
+    $('#cuIn').addEventListener('click',()=>cuZoom(1.5));$('#cuOut').addEventListener('click',()=>cuZoom(1/1.5));
+    $('#cuBig').addEventListener('click',()=>{cuBig=!cuBig;cuShow();});
+    $('#cuSlow').addEventListener('click',()=>{cuSlowI=(cuSlowI+1)%CUSL.length;cuShow();});
+    $('#cuPin').addEventListener('click',()=>{cuPin=!cuPin;cuShow();});
+    $('#cuOpen').addEventListener('click',()=>{cuPin=!cuPin;if(cuPin){cuSt=true;$('#cuOn').checked=true;}cuShow();});
+    $('#cuHelp').addEventListener('click',()=>{cuHelp=!cuHelp;cuShow();});
+    $('#cuOn').addEventListener('change',e=>{cuSt=/** @type {HTMLInputElement} */(e.target).checked;cuShow();});
+    $('#lpOn').addEventListener('change',e=>{LP.on=/** @type {HTMLInputElement} */(e.target).checked;V.look();});
+    new ResizeObserver(cuPlace).observe(cuEl);new ResizeObserver(cuPlace).observe(stage);}
+  if(/[?&]qa\b/.test(location.search)){window.__lp=()=>({ph:LP.ph,end:LP.end,cu:cuOn,now:mClk});window.__cu=()=>({z:cuV.z,p:cuV.p.toArray(),f:cuV.f,big:cuBig,pin:cuPin,help:cuHelp,slow:CUSL[cuSlowI]});}   /* as the Hamilton's */
+
+  /* wind with the key (the Hamilton's, its app.js), on mClk so slow frames don't slow it: half turns of the fusee, 0.7 s each with a 0.3 s pause to change grip, until the chain presses
+     the stop bar in and its upper end meets the stop pin in the top plate (hole 7). The movement lifted out (the Movement view), its plates see-through, the parts that take part
+     in winding picked out; the key on the square (keyOn: winding with the movement out), held there 3 s at full wind, then let go (kwStop) */
+  let kw=null;const kwBtn=$('#kwBtn'),kwOut=$('#kwOut'),KWF=['fusee','chain','band','barrel','mainspring','fuseeWheel','maintaining','maintDetent','stopWork','coverPlate','dustPlate','key'];
+  const HT=()=>HPT/2,KWV={yaw:0.6,pitch:0.36,dist:240,target:[FU[0],-52,FU[1]]};   /* key and fusee from outside the fusee, train side up */
+  const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
+  function kwStart(){if(kw){kwStop();return;}if(V.st.tour>=0)V.tourEnd();cw.go=false;
+    if($('#kwFull').checked){hrs=HRUN;H.ms=0;}   /* run down: the chain all on the barrel, the maintaining spring spent; 17½ half turns to wind */
+    else if(hrs<HT()/10){kwOut.innerHTML='<b>Already fully wound:</b> the stop bar’s upper end is against the stop pin, and the key turns no further. Tick <i>From run down</i> to watch a whole winding.';kwOut.classList.remove('hidden');return;}
+    winding=false;wind0();kw={t0:mClk,h0:hrs,end:0,zoom:false};V.setView('movement');V.st.see=true;V.st.focus=new Set(KWF);V.look();V.goCam(KWV);
+    kwBtn.textContent='Stop winding';kwBtn.setAttribute('aria-pressed','true');kwOut.classList.remove('hidden');showH();}
+  function kwStop(){if(!kw)return;if(kw.zoom)V.goCam(KWV);kw=null;winding=false;V.st.focus=null;V.look();kwBtn.textContent='Wind with the key';kwBtn.setAttribute('aria-pressed','false');}
+  function kwStep(){const t=(mClk-kw.t0)/1000;if(kw.end){if(t>kw.end)kwStop();return;}
+    const i=Math.floor(t),ht=HT(),tot=kw.h0/ht;hrs=Math.max(0,kw.h0-ht*(i+smooth(Math.min(1,(t-i)/0.7))));showH();
+    if(!kw.zoom&&hrs<1.25*ht){kw.zoom=true;V.goCam({yaw:0.6,pitch:0.6,dist:80,target:[WD.H[7][0],-24,WD.H[7][1]]});}   /* close in on the fusee's small end before the stop bar meets its pin */
+    if(hrs===0){kw.end=t+3;kwOut.innerHTML=`<b>Fully wound after ${halfs(tot)} half turns.</b> The chain has pressed in the stop bar across the fusee’s small end, its upper end has met the stop pin in the top plate, and the key can turn no further.`;}
+    else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}. ${(HRUN-hrs).toFixed(1)} h of running stored. ${H.held?'The train is stopped: once wound, a twist starts it.':'The maintaining spring drives the train meanwhile.'}`;}
+  kwBtn.addEventListener('click',kwStart);
   /* the tick sound (Time, Sound; the Hamilton's): on by default; browsers start audio only from a user gesture (and warn if a page tries sooner), so the context is made or
      resumed on the first click, tap or key, and the ticks are silent until then. A click each time the escape wheel's place E passes a half tooth (its tooth driving the
      impulse stone), a beat each 0.5 s; at up to real time; none while the train is held */
@@ -965,7 +1080,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function wind0(){H.w0=H.held?0:drvNow();H.m0=H.ms??PH.runPhi(H.w0);H.fall=Math.min(mv.userData.R.fu.fall(),H.m0);H.ms=H.m0-H.fall;H.E0=null;winding=true;H.wT=0;}   /* the key on: the ratchet falls back to its detent (fusee.js fall()), the spring keeping the rest; the drive from it (PH.msDrv) */   /* the key turning: the maintaining spring carries what drove the train as it goes on (read before winding is set, or drvNow gives the spring's own last drive: until 16 October 2026 every wind stopped the train, maintaining.py) */
   function showH(){if(!hIn)return;const v=Math.round(hrs*10)/10;if(v===hShown)return;hShown=v;hOut.textContent=v.toFixed(1)+' h';hIn.max=String(HRUN);hIn.value=String(v);}
-  if(hIn){hIn.addEventListener('input',()=>{const v=parseFloat(hIn.value);hrs=v>=parseFloat(hIn.max)-1e-9?HRUN:Math.min(HRUN,v);H.ms=hrs>=HRUN?0:PH.runPhi(PH.drv(hrs/HPT));   /* a set: run down, the maintaining spring spent */   /* the slider's last step is run down (HRUN 55.91, past its 0.1 steps) */winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding&&!cw.go){if(cf<0.5)cw.go=true;else wind0();}});}   /* in its case, turned over first (cw, tick) */   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
+  if(hIn){hIn.addEventListener('input',()=>{const v=parseFloat(hIn.value);hrs=v>=parseFloat(hIn.max)-1e-9?HRUN:Math.min(HRUN,v);H.ms=hrs>=HRUN?0:PH.runPhi(PH.drv(hrs/HPT));   /* a set: run down, the maintaining spring spent */   /* the slider's last step is run down (HRUN 55.91, past its 0.1 steps) */winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(kw)kwStop();if(hrs>0&&!winding&&!cw.go){if(cf<0.5)cw.go=true;else wind0();}});}   /* in its case, turned over first (cw, tick) */   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
   /* the twist: the box turned about the hands and back sets a stopped balance swinging, about 130 deg (estimated: the 6MX's "light jerk"); going, it does nothing here */
   {const tw=document.getElementById('twist');if(tw)tw.addEventListener('click',()=>{if(H.held&&H.amp<PE.AMIN)H.kick=Math.max(H.amp,0.6*PE.ampAt(1));});}
   /* Time: Set the hands, Now and Keep (slip, sw, tz above); declarations, as the link's state is read as the viewer starts */

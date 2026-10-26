@@ -600,7 +600,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
     <li>Space bar stops and restarts the movement; keys 1 to 9 pick the views in the order of their buttons. With the model focused (click it, or Tab to it), the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, views change without animation and the walkthrough leaves ship motion off.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
     <li>The model keeps Greenwich Mean Time, as Navy chronometers were kept; under Time, Keep: Local time switches to your time zone. (The manual has the hands set only when the chronometer is started, the error being recorded instead; here Set the hands works at any time.)</li>
-    <li>Wind with the key (under Winding) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
+    <li>Wind (under Winding), with the movement in its case, turns the case over in its gimbals, opens the shield plate and puts the key on, as the manual winds it; Wind with the key turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
     <li>It doesn’t start by itself. Run down, or stopped with the balance locking arm or the train-blocking screw (under Stopping and starting), it needs winding and then Twist to start, the quick twist of the box the manual prescribes; the hands lose the time it stood.</li>
   </ul>
   <h3>Sources</h3>
@@ -4501,10 +4501,10 @@ function buildMovement(M){
      0.02 deg long */
   R.release=()=>{if(!MWK.w||MWK.g===null)return 0;let r=(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU;
     if(MWK.n!==null)for(let i=0;i<4;i++){const n=MWK.n+r,D=n>=FUSEE_TURNS?0:R.drvN(n);r=(catchAt(srA,MWK.fa,MWK.g,ssQ(D)).fa-MWK.fa)/TAU;}return r;};
-  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
+  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,keyD?:number,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
       E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
       n: fusee turns from full wind; winding: the key turning; spent: run down (the fusee drives nothing); reset: the train set (the hands set, Now), not run;
-      slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown;
+      slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown; keyD: how far out along the square the winding key still is (coming on or going off: app.js's winding in the case);
       blk, arm: the train-blocking screw and the locking arm, 0 (up, unlocked) to 1; ssX: the sustaining spring drawn that many times relaxed (0: as it is); dt: the frame's seconds;
       springOn, msOn: rebuild the hairspring, the mainspring (only when they can be seen); ld, clk: the mainspring let down that many turns, the set-up click held out (0 to 1) */
   /** @param {MoveState} s */
@@ -4560,7 +4560,7 @@ function buildMovement(M){
     R.staff.rotation.y=-s.th;
     { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyLock(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
-    const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
+    const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;R.wkey.position.y=-36.36-(s.keyD||0);   /* the arbor, its square and pinion turn with the fusee */
     udX=udX===null||(!s.winding&&fa<udF-1e-9)?fa:clamp(udX,fa,fa+UD_LASH);udF=fa;const udA=udX*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;   /* udX: the fusee's turn the wheel stands at, within the backlash of fa; the fusee set back without the key (the slider, the export's clips) is a set: on the running flank */
     /* the mainspring let down (Op. 8) or set up (Op. 53): ld, the turns the barrel arbor has been let down by (0 in use: it never turns, Sec. II), the way the spring
        pulls it (its ratchet's steep faces meet the click as rotation.y falls); clk, how far the click is held out of the teeth (0 to 1; at 0 with ld > 0 it rides over
@@ -5342,7 +5342,7 @@ function buildBox(M){
   const EXP=[[ring,0,70,0],[gp,0,70,0],[bowl,0,85,0],[shield,0,-20,0],[lat,70,0,0],[key,150,60,0],[mid,0,0,-45],[top,0,45,0]];
   for(const c of cs.children){const h=c.userData.hn,d=h==='42102'?45:h==='42103'?75:h==='42124'||h==='42126'?-20:0;if(d)EXP.push([c,0,d,0]);}
   const explode=e=>{for(const[g,dx,dy,dz]of EXP){const p=g.userData.ex0||(g.userData.ex0=g.position.clone());g.position.set(p.x+dx*e,p.y+dy*e,p.z+dz*e);}};
-  return{root,ring,bowl,cs,mid,top,stay,shield,shRest:SH_REST,latch:lv,RO,CR,explode};
+  return{root,ring,bowl,cs,mid,top,stay,shield,shRest:SH_REST,latch:lv,key,RO,CR,explode};   /* key: the winding key in its corner block, hidden while the movement's own (R.wkey) is on the square (app.js) */
 }
 /* ================= motions the page (app.js) and the export (blender.js) both play: the gimbals, the twist, the banked balance ================= */
 /* the escape wheel held by the train-blocking screw's dog point a fraction f of a tooth past its lock (the next unlocking let it go until a spoke met the point): the tooth
@@ -6461,6 +6461,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
+  /* winding in the case (cw), as the Wempe's page winds (its app.js), the manual's way (Sec. III, Winding: "turn the chronometer over in its gimbals", the shield plate turned to
+     uncover the key hole, the key put on, wound, the case turned back): go, Wind pressed with the movement in its case; on, the key turning; u, 0-3, how far the bowl is turned
+     over (0-1), the shield plate turned open (1-2) and the key come onto the square (2-3), CW_T s each (estimated, the Wempe's); the lids open and the latch's lever out first.
+     levK: the latch's lever (0 out, 1 in), out while the case is turned over */
+  const cw={go:false,on:false,u:0},CW_T=0.8;let levK=0;
   let hrs=20,winding=false,kw=null,rateK=1,escK=1,rateW=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,units='mm',book=[],pend=new Set(),bookDay=0,wasHeld=false,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
@@ -6790,7 +6795,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const hIn=$('#hrs'),hOut=hIn.parentElement.querySelector('output');
   const showH=()=>{hOut.textContent=hrs.toFixed(1)+' h';hIn.value=hrs.toFixed(1);};
   hIn.addEventListener('input',()=>{if(kw)kwStop();if(ldq)ldStop();hrs=parseFloat(hIn.value);winding=false;showH();});showH();
-  $('#wind').addEventListener('click',()=>{if(kw)kwStop();if(ldq)ldStop();winding=true;});
+  /* Wind: with the movement in its case, wound in the case as the Wempe's is (cw, the loop); lifted out of it, or with Moving parts only, the key goes straight onto the square */
+  const inCase=()=>tgt.lift<0.5&&!st.drive&&!OVH.on();
+  $('#wind').addEventListener('click',()=>{if(kw)kwStop();if(ldq)ldStop();if(winding||cw.go)return;if(inCase())cw.go=true;else winding=true;});
   $('#reset').addEventListener('click',()=>{jump(()=>setView(st.view,true));});
   /* exploded view: how far apart the parts spread */
   const expR=$('#expR'),expO=$('#expWrap output');function expV(){return expR.valueAsNumber/100;}
@@ -7438,9 +7445,16 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
   function frame(now){
-    const sk=cuSlowK(),dt=clamp((now-last)/1000,0,0.05),dtM=dt*sk;mClk+=Math.max(0,now-last)*sk;last=now;   /* sk: the close-up's slow motion; mClk, the key's and the load path's clock, slowed with it */   /* the first frame's time can come before last was set: never a step back */const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
-    for(const q of['lift','flip','explode','lidM','lidT','dev','all','fov'])cur[q]+=(tgt[q]-cur[q])*k;
+    const sk=cuSlowK(),dw=clamp((now-last)/1000,0,0.25),dt=clamp((now-last)/1000,0,0.05),dtM=dt*sk;mClk+=Math.max(0,now-last)*sk;last=now;   /* sk: the close-up's slow motion; mClk, the key's and the load path's clock, slowed with it */   /* the first frame's time can come before last was set: never a step back */const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
+    const cwOn=cw.go||cw.u>0;   /* winding in the case: both lids open meanwhile */
+    for(const q of['lift','flip','explode','lidM','lidT','dev','all','fov'])cur[q]+=((cwOn&&(q==='lidM'||q==='lidT')?1:tgt[q])-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
+    /* winding in the case (cw): a view out of the case sets the bowl back at once, and a wind asked for goes on there (the key on the square once the movement is out); the
+       bowl turns over only once the glass lid is open and the latch's lever out (the Wempe's: its transit lock's), on the wall clock (dw: slow frames don't slow it) */
+    {if(!inCase()&&cwOn){if(cw.go&&!winding)winding=true;cw.go=cw.on=false;cw.u=0;}
+      if(cw.go&&cw.on&&!winding)cw.go=false;if(!cw.go)cw.on=false;const t=cw.go?3:0,fix=SNAP||RM.matches;
+      if(!(t>cw.u&&(levK>0||cur.lidM<0.9)))cw.u=fix?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dw/CW_T);
+      if(cw.go&&!cw.on&&cw.u>=3){cw.on=true;winding=true;}}
     const run=hrs<RUN_H,go=canDrive(),dtS=dtM*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
     if(ldq)ldStep(now);
     if(kw)kwStep(mClk);else if(winding){hrs=Math.max(0,hrs-dtM*14);if(hrs===0)windEnd();showH();}
@@ -7473,25 +7487,31 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(H.tw){const k=(tM-H.twT)/TWIST.T;   /* a twist under way: the balance drawn on its path through it (TWIST.path, on the model's time, as the box turns), then left with the swing and phase it ends with */
       if(k<1&&H.held){const P=H.tw.P;s={...s,th:P[Math.min(P.length-1,Math.round(k*(P.length-1)))]};}else{if(H.held){H.bph=Math.floor(H.bph)+H.tw.pe;H.amp=H.tw.a1;H.kick=0;}H.tw=null;}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
+    /* the key: on the fusee's square while it winds with the movement out of its case, or in it turned over (cw), coming on and going off along the square 60 mm (the Wempe's);
+       meanwhile not in its corner block */
+    const kC=cw.u>2,kD=kC?(1-smooth(clamp(cw.u-2,0,1)))*60:0,kOn=(winding&&(cur.lift>0.8||st.drive))||kC;BX.key.visible=!kOn;
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,ld:LDv.ld,clk:LDv.clk,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt:dtM,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
-    {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,ld:LDv.ld,clk:LDv.clk,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:kOn,keyD:kD,ssX:st.ssx?20:0,dt:dtM,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
+    {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(cw.u>0?lerp(BX.shRest,0,smooth(clamp(cw.u-1,0,1))):SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key (in the case, by hand: cw); its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);BX.stay();   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));const ovS=OVH.frame(dt,SNAP||RM.matches);   /* the overhaul's parts, where its operations have them (overhaul.js) */if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
     if((cur.dev>0.02)!==devShown){devShown=cur.dev>0.02;look();}
     const L1=smooth(cur.lift/0.55),L2=smooth((cur.lift-0.35)/0.65),aK=smooth(cur.all);BX.explode(aK);mv.position.y=L1*130+L2*95-aK*40;   /* aK: the Exploded view's All, the box and case taken apart (box.js explode; the movement, in the bowl, rises with it, less 40: about 45 over the crystal) */mv.rotation.x=Math.min(smooth(cur.flip),L2)*Math.PI;
     const wR=TAU/(+$('#rollP').value||7);rockW+=((st.rock?1:0)-rockW)*k;if(!st.rock&&rockW<1e-4)rockW=0;if(rockW>0)rockT+=dt*wR;const sea=rockW>0?GIM.sea(rockT,wR,rockW):null;roll=sea?sea.r[0]:0;pitch=sea?sea.p[0]:0;   /* the ship's motion (GIM.sea), eased in and out; its rates and accelerations move the gimbals' pivots */
     const jt=H.jT>0?(now-H.jT)/1000:1;const jk=jt<0.25&&!RM.matches?H.jS*2.5*D2R*Math.sin(Math.PI*jt/0.25)*(1-jt/0.25):0;if(jt>=1)H.jT=0;   /* a jolt knocks the box over and back in a quarter second */
-    /* latching: the ring and case are brought level with the box, then the lever swings in; released, the reverse. Latched, they tilt with the box */    latchK=SNAP||RM.matches?+st.latch:clamp(latchK+(st.latch?1:-1)*dt*1.2,0,1);const fr=1-smooth(Math.min(1,latchK*2));
+    /* latching: the ring and case are brought level with the box, then the lever swings in; released, the reverse. Latched, they tilt with the box */    /* turned over to wind (cw), the case is held by hand, level with the box, the lever out (the Wempe's transit lock): levK, the lever, swings in once the case is level (latchK
+       past 0.5, about 0.4 s), out again before it is let go or turned over */
+    {const lk=st.latch||cw.go||cw.u>0,lv=st.latch&&!cw.go&&cw.u<=0,fix=SNAP||RM.matches;latchK=fix?+lk:clamp(latchK+(lk?1:-1)*dt*1.2,0,1);levK=fix?+lv:clamp(levK+(lv&&latchK>=0.5?1:-1)*dt*2.4,0,1);}
+    const fr=1-smooth(Math.min(1,latchK*2));
     const tw=H.twT<0||RM.matches?0:tM-H.twT;if(tw>TWIST.T)H.twT=-1;   /* the twist that starts it: the box turned sharply and back (TWIST) */
     if(SNAP||RM.matches){GM.p=[0,0];GM.r=[0,0];GM.lp=pitch;GM.lr=roll+jk;GM.ap=GM.ar=0;}else gimStep(GM,dt,pitch,roll+jk,sea,fr);
     /* drawn with the apparent vertical up (18 October 2026), as a plumb line hung beside the box would show down (GM.ap, GM.ar: gimStep's): the case, hanging along it, stays put
        and the box rolls and pitches round it, the ring and case against the box as the gimbals take it (GM, in the world's frame, less the box's); latched, the case goes with
        the box. Until 16 October the box rolled in the true vertical's frame and the case leaned in it toward the apparent vertical (5.4° at 7 s), so both seemed to move; then
        until 18 October the camera rode with the ship, the box still and the movement swinging in it about 20°. The twist and the jolt are the box moved by hand */
-    BX.root.rotation.set(pitch-(GM.ap||0),tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,roll+jk-(GM.ar||0),'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
+    BX.root.rotation.set(pitch-(GM.ap||0),tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,roll+jk-(GM.ar||0),'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr-Math.PI*smooth(clamp(cw.u,0,1));BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(levK));   /* turned over about its 6-12 pivots to wind (cw) */
     BX.root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow()).add(panO);
     if(st.spin&&!ptrs.size){G.yaw+=dt*0.2;if(camFree)C.yaw+=dt*0.2;}
@@ -7501,14 +7521,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
     const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
     if(CT)CT.frame(now);
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.all,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk,ovS,...(CT?CT.sig():[])];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.all,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,levK,cw.u,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk,ovS,...(CT?CT.sig():[])];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
     if(!still){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}swDraw(now);testShow(now);
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${sk<1?'&ensp;<b>Slow motion '+CUSN[cuSlowI]+'</b>':''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):cw.go?'&ensp;<b>Turning it over to wind</b>':''}${sk<1?'&ensp;<b>Slow motion '+CUSN[cuSlowI]+'</b>':''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
