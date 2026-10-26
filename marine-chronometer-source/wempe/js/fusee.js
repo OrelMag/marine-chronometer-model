@@ -444,7 +444,7 @@ const WFUSEE=(()=>{
        under its face, M1.7 across the small end's recess and 3.5 into the body (its M1.7 6 deep): estimated. Until 18 October 2026 the head was drawn flush, 0.025 off the
        sink all round, holding nothing (the Contacts view, Inside the part) */
     {const g=new THREE.Group();g.position.set(DPS[0],0.025,-DPS[1]);gDP.add(g);tag(g,'WN-20');
-      mesh(g,turned([[0,DP0],[1.55,DP0],[0.85,DP0+0.7],[0.85,S+1.6+3.3],[0.7,S+1.6+3.5],[0,S+1.6+3.5]],20),M.steel);const sl=mesh(g,new THREE.BoxGeometry(2.3,0.25,0.28),M.steelD,0,DP0+0.125-0.02,0);sl.rotation.y=1.1;}   /* the slot, standing 0.02 out of the head's face as screw() draws them */
+      mesh(g,turned([[0,DP0],[1.55,DP0],[0.85,DP0+0.7],[0,DP0+0.7]],20),M.steel);mesh(g,KIT.threadGeo(0.85,DP0+0.6,S+1.6+3.5),M.steel).userData.thread={rs:0.85,p:KIT.isoP(0.85)};const sl=mesh(g,new THREE.BoxGeometry(2.3,0.25,0.28),M.steelD,0,DP0+0.125-0.02,0);sl.rotation.y=1.1;}   /* the slot, standing 0.02 out of the head's face as screw() draws them */
     /* the chain's pin 05 06 00-6 (Kettenstift, coloured section; the hole "0,55∅ +0,01" through the flange's ribs, 05 06 04-2): Ø 0.55 across the slot, near the ribs' tops,
        where the chain's (or the band's) hook takes it */
     {const q=pol(PINR,PINA);tag(cylBetween(gF,0.275,F,F0-2.0,M.steel,q[0],q[1],16),'050600-6');}
@@ -668,8 +668,8 @@ const WFUSEE=(()=>{
       const arc=(a,b,n)=>Array.from({length:n+1},(_,i)=>pt(a+(b-a)*i/n)),A=arc(-t0,t0,14),B=arc(Math.PI-t0,Math.PI+t0,14),C=[...arc(t0,Math.PI-t0,2),...arc(Math.PI+t0,TAU-t0,2)];   /* the slot's ends: the circle's short arcs, through the halves' chord ends */
       /* steel, as drawn; Wempe 3955's (the version as photographed) brass, head and all (2_Wempe_3955_A.jpg from above and 5_Wempe_3955_O.jpg from the side: brass coloured,
          slotted, beside the steel pivot in hole 4's sink; photocompare.py: likely), in its own group (a version that differs only in metal gets its own copy) */
-      const hd=solidGeo([{loop:A,y0:TT-1.9,y1:TT},{loop:B,y0:TT-1.9,y1:TT},{loop:C,y0:hb,y1:TT}]),sk=turned([[0,TT-0.3],[0.85,TT-0.3],[0.85,WR-0.25],...[1,2,3,4,5].map(i=>{const a=i/6*Math.PI/2;return[0.6+0.25*Math.cos(a),WR-0.25+0.25*Math.sin(a)];}),[0.6,WR],[WRW,WR],[WRW,WR-WH],[0,WR-WH]],24);
-      for(const[V,mt]of/** @type {[string,any][]} */([['last first 6mx 1943 -3955',M.steel],['3955',M.brass]])){const g=rv(gWS,V);mesh(g,hd,mt);mesh(g,sk,mt);}}   /* the head (its two halves, the slot's floor between them) and the shank, from inside the head */
+      const hd=solidGeo([{loop:A,y0:TT-1.9,y1:TT},{loop:B,y0:TT-1.9,y1:TT},{loop:C,y0:hb,y1:TT}]),Rr=0.85-KIT.isoEs(0.35)-KIT.isoD(0.35),sk=KIT.lathThread([[0,TT-0.3],[Rr,TT-0.3],[Rr,WR-0.25],...[1,2,3,4,5].map(i=>{const a=i/6*Math.PI/2;return[Rr-0.25+0.25*Math.cos(a),WR-0.25+0.25*Math.sin(a)];}),[Rr-0.25,WR],[WRW,WR],[WRW,WR-WH],[0,WR-WH]],1,{rs:0.85,out:true},24);   /* the shank an M1.7 thread (ISO, KIT's lathThread: tapped hole 5 is threaded, 26 October 2026), its end rounded from the thread's root */
+      for(const[V,mt]of/** @type {[string,any][]} */([['last first 6mx 1943 -3955',M.steel],['3955',M.brass]])){const g=rv(gWS,V);mesh(g,hd,mt);mesh(g,sk,mt).userData.thread={rs:0.85,p:KIT.isoP(0.85)};}}   /* the head (its two halves, the slot's floor between them) and the shank, from inside the head */
     /* the wire's deflection: the least that puts its section (WRW) clear of the detent's outline at the arm's upper face, its click turned g; along the outline's normal there */
     const wireDef=g=>{const c=Math.cos(g),s=Math.sin(g),Q=DTX.map(([x,y])=>[x*c-y*s,x*s+y*c]),pt=[WP[0],WP[1]];let dx=0,dy=0;
       for(let it=0;it<4;it++){let best=9,q=null;for(let i=0;i<Q.length;i++){const a=Q[i],b=Q[(i+1)%Q.length],ex=b[0]-a[0],ey=b[1]-a[1],t=Math.max(0,Math.min(1,((pt[0]-a[0])*ex+(pt[1]-a[1])*ey)/(ex*ex+ey*ey))),X=[a[0]+ex*t,a[1]+ey*t],d=Math.hypot(pt[0]-X[0],pt[1]-X[1]);if(d<best){best=d;q=X;}}

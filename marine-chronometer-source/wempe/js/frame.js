@@ -15,7 +15,10 @@ const WFRAME=(()=>{
   /* hole radii: tapped (the thread's and 0.02, as the Hamilton's hT), clearance and reamed */
   const rM26=1.32,rM2=1.02,rM17=0.87,rM14=0.72,rM12=0.62,rCl26=2.8/2,rPinP=1.6025/2,rPinQ=1.5825/2,rPin=1.6/2,rJ=4.596/2,rH35=3.506/2;
   /* a feature cut in a cell from y0 to y1: T through, A from y0 d deep, B from y1 d deep */
-  const T=(p,r,y0,y1)=>({p:C(p,r),a:y0,b:y1}),A=(p,r,y0,d)=>({p:C(p,r),a:y0,b:y0+d}),B=(p,r,y1,d)=>({p:C(p,r),a:y1-d,b:y1});
+  /* a tapped hole (one of the radii above) is threaded: its wall the inside thread at the screw's size (KIT's threadWall: ISO basic profile at 6H, running out to the drilled
+     ring at each face), the screw's shank turned to meet it (matchThreads, 26 October 2026) */
+  const TAP=new Map([[rM26,1.3],[rM2,1.0],[rM17,0.85],[rM14,0.7],[rM12,0.6]]),th=(r,f)=>TAP.has(r)?{...f,th:{rs:TAP.get(r)}}:f;
+  const T=(p,r,y0,y1)=>th(r,{p:C(p,r),a:y0,b:y1}),A=(p,r,y0,d)=>th(r,{p:C(p,r),a:y0,b:y0+d}),B=(p,r,y1,d)=>th(r,{p:C(p,r),a:y1-d,b:y1});
   const PL={};   /* places for the later groups */
 
   function build(mv,M,K){const{part,screw,loose,headOn}=K,V2=(a,b)=>new THREE.Vector2(a,b),tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
@@ -180,7 +183,7 @@ const WFRAME=(()=>{
     {const P=WD.PIL,yb=WD.PIL_SEAT[1],yt=TI-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,rb=S.rs+0.02,cd=P.cs-rb,[gr,gd]=P.grv,gc=(P.sr+gr)/2,ga=(gr-P.sr)/2;
       const grv=(y,s)=>[...Array(9).keys()].map(i=>{const t=Math.PI*(1-i/8);return V2(gc+ga*Math.cos(t),y+s*gd*Math.sin(t));});   /* from the spigot out (s: into the body, +1 at the top shoulder) */
       const prof=[V2(P.cs,e0),V2(P.tip[0],e0),V2(P.sr,e0+P.tip[1]),...grv(yt,1),V2(P.r,yt),V2(P.r,yb),...grv(yb,-1).reverse(),V2(P.sr,e1-P.tip[1]),V2(P.tip[0],e1),V2(P.cs,e1),V2(rb,e1-cd),V2(rb,e0+cd),V2(P.cs,e0)];
-      const pil=part('pillars',-20),pg=new THREE.LatheGeometry(prof,64);P3(pil,(g,[x,z])=>tag(mesh(g,pg,M.brass,x,0,z),'050800-1'));}
+      const pil=part('pillars',-20),pg=KIT.lathThread(prof,prof.length-3,{rs:S.rs},64);   /* the bore (rb, between the countersinks) tapped: the inside thread, one helix through (KIT's lathThread; 26 October 2026) */P3(pil,(g,[x,z])=>tag(mesh(g,pg,M.brass,x,0,z),'050800-1'));}
 
     /* ================= the movement ring (Werkring, 05 08 00-3, as revised 6.12.46) ================= */
     /* The pillar plate sits in its seat (Ø 85 H9, 3 +0.1 deep) on a lip (Ø 83), the plate 0.35 proud of the ring's inner face (the coloured section, Wempe_Einheitschronometer.jpg,
@@ -301,8 +304,8 @@ const WFRAME=(()=>{
       tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
     /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), shoulder Ø 3.1 through the click (its hole 3.2) and 0.05 more, M2.6 through the bridge: the coloured section,
        scaled (estimated) */
-    {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.65,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.65+3.2,rs=1.3,pt=0.3,d=pt*0.3,n=Math.floor((L-2.65-pt*0.6)/pt),pr=[V2(0,0),V2(3.1/2,0),V2(3.1/2,2.65),V2(rs,2.65),V2(rs,L-n*pt-d)];   /* its shoulder and thread turned below the head, the thread's rings as screw() draws them */
-      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
+    {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.65,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.65+3.2;   /* its shoulder turned below the head, and the M2.6 thread below it from 0.1 inside the shoulder, as screw() draws its shanks (KIT.threadGeo) */
+      mesh(g,new THREE.LatheGeometry([V2(0,0),V2(3.1/2,0),V2(3.1/2,2.65),V2(0,2.65)],28),M.steel);mesh(g,KIT.threadGeo(1.3,2.55,L),M.steel).userData.thread={rs:1.3,p:KIT.isoP(1.3)};g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
 
     /* ================= the fusee bush (Schneckenfutter, 05 08 01-2) and dust bush (Staubfutter, 05 08 01-3) ================= */
     /* Schneckenfutter: Rundmessing 13,5 Ms 58: a flange Ø 13.2 -0.2 × 1.5 -0.1 on the top plate's outer face, its spigot below it Ø 8 g6 (-0.005/-0.014, drawn at its middle,
