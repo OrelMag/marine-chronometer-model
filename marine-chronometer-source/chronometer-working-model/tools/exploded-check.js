@@ -4,6 +4,8 @@
    holds [a0,a1] and B holds [b0,b1] makes them meet when d = offB - offA lies in (a0 - b1, a1 - b0); the union over their shared columns is every d at which
    they meet. Returns, for each pair of bodies that share a column, that union, and each body's offset (measured: its shift from explode 0 to explode 1). */
 (opt)=>{const mv=window.__mv,r=opt.r;
+ /* a threaded shank (userData.thread: KIT's ISO thread) stood in for by the cylinder of its root, over its length (26 October 2026: screws and their tapped holes are threaded, KIT.matchThreads) */
+ const RC=new Map(),rootCyl=o=>{const t=o.userData.thread,g=o.geometry;if(!RC.has(g)){g.computeBoundingBox();const b=g.boundingBox,r=t.rs-(0.015+0.011*t.p)/2-0.5413*t.p;RC.set(g,new THREE.CylinderGeometry(r,r,b.max.y-b.min.y,24).translate(0,(b.max.y+b.min.y)/2,0));}return RC.get(g);};
  const scr=new Set(mv.userData.lifted.filter(g=>g.userData.lift));   /* screws and loose pieces: each its own body (one that stays in, lift 0, is its part's) */
  const P=mv.userData.parts,roots=new Map();
  const bodyOf=o=>{while(o&&o!==mv){if(scr.has(o))return o;if(o.userData.partName&&P[o.userData.partName]===o)return o;o=o.parent;}return null;};
@@ -18,7 +20,7 @@
  const K=(i,k)=>(i+50000)*100000+k+50000,KI=q=>Math.floor(q/100000)-50000,KK=q=>q%100000-50000;   /* column key from grid indices, and back */
  mv.traverse(o=>{if(!o.isMesh||o.userData.decal||o.userData.surface||o.userData.devPlate)return;const g=bodyOf(o);if(!g)return;
    let h=o,vis=true;while(h&&h!==mv){if(!h.visible&&!(h===o&&o.userData.onlyDrive)&&!(opt.hidden||[]).includes(h.userData.partName))vis=false;h=h.parent;}if(!vis)return;
-   const geo=o.geometry;if(!geo.attributes||!geo.attributes.position)return;
+   const geo=o.userData.thread?rootCyl(o):o.geometry;if(!geo.attributes||!geo.attributes.position)return;   /* a threaded shank as the cylinder of its root: it comes out turning, through its tapped hole's thread (rootCyl) */
    if(!B.has(g)){const q=at(g),s=p1.get(g);B.set(g,{name:nameOf(g),off:+(s.y-q.y).toFixed(3),drift:Math.hypot(s.x-q.x,s.z-q.z),cols:new Map(),bb:[1e9,1e9,-1e9,-1e9]});}
    const b=B.get(g),mats=[];
    if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<o.count;i++){o.getMatrixAt(i,im);mats.push(new THREE.Matrix4().multiplyMatrices(inv,new THREE.Matrix4().multiplyMatrices(o.matrixWorld,im)));}}

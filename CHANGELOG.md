@@ -4,6 +4,32 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.36.02 · 2026-10-26
+- The 3D viewers of every moving part, beside both verification reports, brought up to date: the Wempe's parts as audited and threaded, the Hamilton's latest changes, each part's stress solved again, and the contact and let-go studies redone
+
+## 3.36.01 · 2026-10-26
+- The Wempe's upper balance cock as its drawing draws it: the step under its arm in the right place, and the boss round the balance's setting a true turned cone, no longer faceted.
+- The Wempe's set-up click on the barrel bridge as drawn: its beak's tip clean and its back running smoothly into its nose.
+
+## 3.36.00 · 2026-10-26
+- The Wempe's build book is now a book of engineering drawings (a PDF beside the page), laid out as the Wempe's own works drawings are: every part in first-angle views with hidden lines removed, turned parts in half section, flat parts with a section through them, each with its sizes, a picture of the part and the title block
+- Each part's second sheet lists its holes (where, how big, how deep), its outline as a machine would cut it and its teeth; each assembly has a sheet with its pieces numbered and listed; screw threads and pinion leaves are drawn as engineering drawings draw them
+- A part card's Drawing button now opens the book at that part's sheet
+- Fixed: a part card's size and weight, and its drawing, counted the Laid out view's stand-in plates as part of the real part
+
+## 3.35.00 · 2026-10-26
+- The Wempe's screws have real threads: each a right-hand metric thread at its size's pitch (an M2.6 0.45 mm), and the tapped holes in its plates, bridges, pillars and detent block threaded to match, every screw sitting on its hole's thread
+
+## 3.34.00 · 2026-10-26
+- The Hamilton: the fusee chain's hooked end, as a restoration video shows it, hooked into the fusee at the end of its groove
+- The Hamilton: the third wheel sits lower and its lower jewel at the bar's face, measured on the video
+- The Hamilton: a train pillar moved 2 mm to where four video frames put it
+
+## 3.33.00 · 2026-10-26
+- The Hamilton winds as the Wempe does: Wind turns the case over in its gimbals, opens the shield plate and puts the key on from its block
+- The Wempe: Wind with the key, to watch the movement wind half a turn at a time
+- The Wempe: the load path in colour and a close-up of the maintaining spring while it winds, with the time it has left
+
 ## 3.32.06 · 2026-10-26
 - The Hamilton's bezel sits lower: the dial is level with where the bezel starts to taper, and the glass is at its top with a bright cone down to the dial, as on real Model 21s
 - The winding key at its real size, 98 mm long, measured on a restoration video, standing pipe down in its block in the box

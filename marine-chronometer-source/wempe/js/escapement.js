@@ -717,7 +717,7 @@ const WESC=(()=>{
       const base={loop:[L(tT,nE),L(tT,nUl),L(tT,nE-6.4),L(tF,nE-6.4),L(tF,nE)],y0:yP,y1:yP+6.5,
         F:[{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP+3.5,b:yP+6.5}]};   /* the boss at the end, 6.5 deep */
       const thin={loop:[L(tT,nE-6.4),L(tT,nUr-3),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nE-6.4)],y0:yP,y1:yP+3,
-        F:[{p:C(H[13],0.87,48),a:yP,b:yP+3},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+3}]};   /* the rest, 3 deep on the plate */
+        F:[{th:{rs:0.85},p:C(H[13],0.87,48),a:yP,b:yP+3},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+3}]};   /* the rest, 3 deep on the plate */
       upCell.loop=ccw(upCell.loop);base.loop=ccw(base.loop);thin.loop=ccw(thin.loop);
       tag(mesh(blkL,solidGeo([base,thin,upCell]),M.brass),'050401-4');
       /* the cross screw M1.2 across the upright's slit end (its number not read), drawn without its hole. It is the detent's banking (15 October 2026, likely): the 6MX's
@@ -753,7 +753,7 @@ const WESC=(()=>{
           F:[{p:C(B6.pins[0],0.45,32),a:yP,b:yP+1.2}]};   /* no Ø 1.3 hole between the near pin and the stud: 05 04 01-4's, which the German block has (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg,
              left: a dark Ø 1.3 between its pin and screw), the 6MX's face plain there on both its photographs (that one's right and 8_Gangfeder_mit_Kloben_Rus_einfach.jpg, about
              30 px a mm, where it would be 40 px across: sure); drawn until 25 October 2026. Its face's dot between the stud and the far pin (about Ø 0.3: a hole or a punch mark) isn't drawn */
-        const nb6={loop:ccw([L(tS6,nE-6.4),L(tF,nE-6.4),L(tF,nS1),L(tS6,nS1)]),y0:yN,y1:yP+6.5,F:[{p:C(B6.stud,0.87,48),a:yN,b:yN+3.0}]};
+        const nb6={loop:ccw([L(tS6,nE-6.4),L(tF,nE-6.4),L(tF,nS1),L(tS6,nS1)]),y0:yN,y1:yP+6.5,F:[{th:{rs:0.85},p:C(B6.stud,0.87,48),a:yN,b:yN+3.0}]};
         const thin6={loop:ccw([L(tT,nE-6.4),L(tT,nUr-3),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nS0),L(tS6,nS0),L(tS6,nE-6.4)]),y0:yP,y1:yP+3,F:[{p:C(B6.pins[1],0.45,32),a:yP,b:yP+3}]};
         const nt6={loop:ccw([L(tS6,nS0),L(tF,nS0),L(tF,nE-6.4),L(tS6,nE-6.4)]),y0:yN,y1:yP+3};
         tag(mesh(blk6,solidGeo([base6,nb6,thin6,nt6,up6]),M.brass),'050401-4');
@@ -850,7 +850,7 @@ const WESC=(()=>{
          the banking screw's head (above) */
       {const nF=-0.325,tE=-2.9,nA0=nF,nA1=nF-3.56,rc=1.82,nC=nA1-rc,tC=tT-2.6;
         const plate={loop:ccw([L(tT,nF),L(tT,nC),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nF)]),y0:yP,y1:yP+6.5,
-          F:[{p:C(H[13],0.87,48),a:yP,b:yP+6.5},{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
+          F:[{th:{rs:0.85},p:C(H[13],0.87,48),a:yP,b:yP+6.5},{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
         const stub={loop:ccw([L(tT-0.5,nA0),L(tT,nA0),L(tT,nC),L(tT-0.5,nC)]),y0:yP+3.7,y1:yP+6.5},base1=solidGeo([plate,stub]);   /* the arm's root, 0.5 of it, in the base's solid */
         /* the arm, its near face on the base's edge, slit along the banking screw to clamp it: a saw cut through the arm's width at the screw's axis, 1.4 over the arm's lower
            face (5.1 under the plate), crossing the screw's hole (the M1.2's, drawn r 0.62 round the shank's 0.6 as the 1943 screw's). 05 04_1's elevation (24.4 px/mm): open at the end, 6.1 long from it (to px 386 from the end's 237, the
