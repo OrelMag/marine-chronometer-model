@@ -550,7 +550,7 @@ are fixed, and the bench, the Monte Carlo and the maker's sheets are rewritten f
 <li><b>The damping measured on video</b> (<code>wempe_startup.json</code>) had been fitted on 19 October, before batch 1 changed the balance's inertia and the detent's. Refitted on
 today's escapement, it gives TF <span id="vTF"></span>. The model keeps 111 s (the owner's choice, 26 October 2026), inside the refitted range, and
 <code>wempe_escapement.js</code> now checks that the model's TF lies inside the fit's range (it asked for within 2 s of its middle).</li>
-<li><b>Left as they are, no verdict moving:</b> the frame's load uses the chain's radius fully wound as 9.355 (the fusee's own table ends at 9.30: 0.5 %); <code>wempe_wear.js</code> takes
+<li><b>Left as they are, no verdict moving:</b> the frame's load takes the chain's radius fully wound as 9.355, the fusee's table at 8.75 turns, while the strength checks take its last entry, 9.30, a quarter turn past (0.5 %, the cautious side): both read the table, neither stale; <code>wempe_wear.js</code> takes
 the maintaining clicks' spring force as an estimated 0.44 N, and <code>wempe_ratchets.js</code> their springs' free span as 12-16, neither from the clicks as re-drawn in batch 5;
 the trial's label now reads "GOST 8916-58's class II trial, its limits GOST 8916-70's class 2" (6MX-figures.md).</li>
 </ul>
