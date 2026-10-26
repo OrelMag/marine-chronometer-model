@@ -32,10 +32,10 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
     INNER:19.0,   // the plates' inner faces apart: sheet 001 "innerer Plattenabstand 19 mm" = the pillar's 19.6 between shoulders less its two 0.3 seats (PIL_SEAT): sure
     PIL_SEAT:[8.6/2,0.3],PIL_SEAT_T:0.03,   // each pillar's seat in each plate's inner face: Ø 8.6, 0.3 +0.03 deep (05 09 01 Schnitt L-M, 05 08 02-1 Schnitt E-F; dashed from the top plate's outer face): sure
-    PIL:{r:8.1/2,   // the pillar (05 08 00-1, Pfeiler, Rundmessing 8,5 Ms 58): body Ø 8.1 -0.2 (read "8,1∅", the ∅ written high as on its "4,3∅" and "4,5∅"; 8.06 scaled at 5:1): likely
+    PIL:{r:8.0/2,   // the pillar (05 08 00-1, Pfeiler, Rundmessing 8,5 Ms 58): body Ø 8.1 -0.2 (read "8,1∅", the ∅ written high as on its "4,3∅" and "4,5∅"; 8.06 scaled at 5:1): likely; drawn at the middle, 8.0 (8.1 until 26 October 2026)
       L:19.6,LT:0.01,   // shoulder to shoulder 19.6 ±0.01: sure
       sr:mid(PSF)/2,sF:PSF,   // its end spigots Ø 4.5 f7 (-0.010/-0.022, PSF), drawn at the middle of the fit, 4.484: sure
-      sL:2.8,   // each 2.8 -0.1 long: sure
+      sL:2.75,   // each 2.8 -0.1 long, drawn at the middle (2.8 until 26 October 2026): sure
       tip:[4.3/2,1.1],   // each spigot's end turned to Ø 4.3 -0.2 over 1.1 -0.2, a 6° lead: sure
       cs:2.7/2,   // the 90° countersink at each end of the thread, Ø 2.7 at the face: scaled at 5:1 (no figure), about the thread's own diameter: estimated
       grv:[3.25,0.35],   // a relief groove in each shoulder's face round the spigot's root, out to r 3.25 and 0.35 deep, half-round: drawn at 5:1 without figures, scaled: estimated

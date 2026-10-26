@@ -38,9 +38,9 @@ const WTRAIN=(()=>{
     if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
     const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:o.spokes?40:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro:T.ro,ri:T.ri,pl:T.xy});return g;}
   /* a turned solid from a profile [[r, y], ...] listed from one end on the axis to the other, y rising (counterclockwise in r, y, as shaftGeo's) */
-  const turned=(P,seg=32)=>new THREE.LatheGeometry(P.map(([r,y])=>V2(r,y)),seg);
+  const turned=(P,seg=32)=>KIT.latheF(P.map(([r,y])=>V2(r,y)),seg);
   /* a turned ring (a bush, a setting): its profile a closed loop counterclockwise in r, y (the first point again at the end) */
-  const ringT=(P,seg=48)=>new THREE.LatheGeometry([...P,P[0]].map(([r,y])=>V2(r,y)),seg);
+  const ringT=(P,seg=48)=>KIT.latheF([...P,P[0]].map(([r,y])=>V2(r,y)),seg);
   /* a 30 deg chamfer on a shoulder (the pinion sheets' "30°"): the body's edge cut C30 across, at 30 deg to the shoulder's face */
   const C30=0.15,c30=C30*Math.tan(30*D2R);
   /* a pivot l long from a shoulder at u0, Ø 2r at the shoulder tapering to 2re at its end, the end rounded (a quarter ellipse re across, 0.6 re deep); s -1 toward -u (listed

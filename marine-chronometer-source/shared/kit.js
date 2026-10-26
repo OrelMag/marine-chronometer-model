@@ -18,12 +18,26 @@ const KIT=(()=>{
     let s0=-1;for(let k=0;k<N;k++)if(!ins(dense[k])&&ins(dense[(k+N-1)%N])){s0=k;break;}
     if(s0<0)return dense;                       /* circle does not cross the boundary */
     const run=[];let k=s0;while(!ins(dense[k%N])&&run.length<N){run.push(dense[k%N]);k++;}
+    /* the run's two ends at the exact crossings of the boundary with the circle (until 26 October 2026 the last dense point outside, joined to the arc by a chord: a flat
+       0.2 long on the Wempe top plate's horn, 0.09 outside the cut) */
+    const X=(p,q)=>{const d=[q[0]-p[0],q[1]-p[1]],f=[p[0]-c[0],p[1]-c[1]],a=d[0]*d[0]+d[1]*d[1],b=2*(f[0]*d[0]+f[1]*d[1]),cc=f[0]*f[0]+f[1]*f[1]-r*r,s=Math.sqrt(Math.max(0,b*b-4*a*cc));
+      const T=[(-b-s)/(2*a),(-b+s)/(2*a)].filter(t=>t>=-1e-9&&t<=1+1e-9).sort((u,v)=>Math.abs(u-0.5)-Math.abs(v-0.5)),t=T.length?T[0]:0.5;return[p[0]+d[0]*t,p[1]+d[1]*t];};
+    const xs=X(dense[(s0-1+N)%N],dense[s0]),xe=X(run[run.length-1],dense[k%N]),far=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1])>1e-6;
+    if(far(xs,run[0]))run.unshift(xs);else run[0]=xs;if(far(xe,run[run.length-1]))run.push(xe);else run[run.length-1]=xe;
     const aOf=p=>Math.atan2(p[1]-c[1],p[0]-c[0]),aE=aOf(run[run.length-1]),aS=aOf(run[0]);
     const inPoly=p=>{let w=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,zi]=poly[i],[xj,zj]=poly[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
     let d=((aS-aE)%TAU+TAU)%TAU;const mid=aE+d/2;if(inPoly([c[0]+r*Math.cos(mid),c[1]+r*Math.sin(mid)])===!!uni)d=d-TAU;
     const n=Math.ceil(Math.abs(d)/0.03);for(let q=1;q<n;q++){const a=aE+d*q/n;run.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}
     return run;
   }
+  /* latheF(pts, n): a turned solid as THREE.LatheGeometry turns the profile pts ([r, y] or Vector2s), but split at each corner of the profile (its direction turning more
+     than 30°), each run turned on its own, so a corner's normals are its two faces' own: r128's lathe averages them, which shaded square edges round and sinks blotchy
+     (26 October 2026); a curve drawn in short steps stays smooth. The pieces merged (core.js mergeGeo), one closed solid by position as before */
+  /** @param {any[]} pts @param {number} [n] */
+  function latheF(pts,n=12){const P=pts.map(q=>Array.isArray(q)?new THREE.Vector2(q[0],q[1]):q),Q=P.filter((q,i)=>!i||q.distanceTo(P[i-1])>1e-9),dir=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x),runs=[];let cur=[Q[0]];
+    for(let i=1;i<Q.length;i++){cur.push(Q[i]);if(i<Q.length-1){const t=Math.abs(((dir(Q[i],Q[i+1])-dir(Q[i-1],Q[i]))%TAU+3*Math.PI)%TAU-Math.PI);if(t>30*Math.PI/180){runs.push(cur);cur=[Q[i]];}}}
+    runs.push(cur);if(runs.length===1)return new THREE.LatheGeometry(Q,n);
+    return mergeGeo(runs.filter(r=>r.length>=2).map(r=>[new THREE.LatheGeometry(r,n),new THREE.Matrix4()]));}
   /* convex hull of points (Andrew's monotone chain) */
   function hull(P){P=[...P].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]),h=[];
     for(const s of[P,[...P].reverse()]){const k=h.length;for(const p of s){while(h.length>=k+2&&cr(h[h.length-2],h[h.length-1],p)<=0)h.pop();h.push(p);}h.pop();}return h;}
@@ -144,8 +158,8 @@ const KIT=(()=>{
     for(const{pts:hp}of polyH){const h=new THREE.Path();cwise(hp.map(([x,z])=>new THREE.Vector2(x,-z))).forEach((q,i)=>i?h.lineTo(q.x,q.y):h.moveTo(q.x,q.y));h.closePath();s.holes.push(h);}
     const g=extrude(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
   function stadiumPts(p0,p1,w){const dx=p1[0]-p0[0],dz=p1[1]-p0[1],l=Math.hypot(dx,dz),nx=-dz/l*w/2,nz=dx/l*w/2,pts=[];
-    const a0=Math.atan2(nz,nx);for(let i=0;i<=16;i++){const a=a0+Math.PI*i/16;pts.push([p0[0]+w/2*Math.cos(a),p0[1]+w/2*Math.sin(a)]);}
-    for(let i=0;i<=16;i++){const a=a0+Math.PI+Math.PI*i/16;pts.push([p1[0]+w/2*Math.cos(a),p1[1]+w/2*Math.sin(a)]);}return pts;}
+    const a0=Math.atan2(nz,nx),m=Math.max(16,Math.ceil(Math.PI*w/2/0.05));for(let i=0;i<=m;i++){const a=a0+Math.PI*i/m;pts.push([p0[0]+w/2*Math.cos(a),p0[1]+w/2*Math.sin(a)]);}   /* its ends' chords 0.05 or less (16 a half round until 26 October 2026: the Wempe top plate's tongue end banded) */
+    for(let i=0;i<=m;i++){const a=a0+Math.PI+Math.PI*i/m;pts.push([p1[0]+w/2*Math.cos(a),p1[1]+w/2*Math.sin(a)]);}return pts;}
   function stadium(p0,p1,w,th,holes=[]){return polyGeo(stadiumPts(p0,p1,w),th,holes);}
   /* a straight bar w wide and l long overall (round ends) along the unit u through c, with a round boss of radius r at c */
   function barBossPts(c,u,l,w,r){const v=[-u[1],u[0]],P=(t,n)=>[c[0]+t*u[0]+n*v[0],c[1]+t*u[1]+n*v[1]],t0=l/2-w/2,a=Math.atan2(w/2,Math.sqrt(r*r-w*w/4)),o=[],arc=(ct,rr,f0,f1,N)=>{for(let k=0;k<=N;k++){const f=f0+(f1-f0)*k/N;o.push(P(ct+rr*Math.cos(f),rr*Math.sin(f)));}};
@@ -350,7 +364,7 @@ const KIT=(()=>{
       const top=dome>0?yD:q=>-h+Math.max(0,Math.hypot(q[0],q[1])-(r-c));
       for(const sg of[1,-1]){const ARC=A.map(a=>arc(a,sg,Math.asin(hw/a),Math.PI-Math.asin(hw/a)));   /* the half on the z sg side: each arc's ends on the slot's edge */
         cells.push({loop:ccw(ARC[0]),y0:dome>0?yD:-h,y1:0});   /* the middle: the first arc closed by the slot's edge */
-        for(let i=1;i<A.length;i++)cells.push({loop:ccw([...ARC[i],...ARC[i-1].slice().reverse()]),y0:top,y1:0});}   /* the rings, open at the slot */
+        for(let i=1;i<A.length;i++)cells.push({loop:ccw([...ARC[i],...ARC[i-1].slice().reverse()]),y0:top,y1:0,strip:1});}   /* the rings, open at the slot: strips (their arcs paired point for point), so a chamfer or the dome's ring is straight across, not faceted along chords (earcut's until 26 October 2026) */
       const X=A.map(a=>Math.sqrt(a*a-hw*hw));
       cells.push({loop:ccw([...X.slice().reverse().map(x=>[x,-hw]).reverse(),...X.slice().reverse().map(x=>[x,hw]),...X.map(x=>[-x,hw]),...X.slice().reverse().map(x=>[-x,-hw])]),y0:-h+s,y1:0});   /* the slot's strip, its ends on the rim */
       const G=solidGeo(cells),P=G.attributes.position.array,N=G.attributes.normal.array;   /* the cap's, the chamfer's and the rim's triangles shaded round (their own normals), not faceted */
@@ -383,5 +397,5 @@ const KIT=(()=>{
     return pr.map(([r,y])=>[r,y0+s*y]);};
   /** @type {(R:number,e:number,h:number,y0:number,s:number)=>number[][]} */
   const endPr=(R,e,h,y0,s)=>{const pr=[[0,0],[R,0],[R,e]];for(let i=1;i<=8;i++){const r=R*(1-i/8);pr.push([r,e+domeAt(R,h,r)]);}return pr.map(([r,y])=>[r,y0+s*y]);};
-  return{isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  return{latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();

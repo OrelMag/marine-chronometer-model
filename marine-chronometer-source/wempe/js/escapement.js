@@ -21,7 +21,7 @@ const WESC=(()=>{
   const brg=b=>[-Math.sin(b*D2R),-Math.cos(b*D2R)],al=v=>Math.atan2(-v[1],v[0])/D2R,dir=a=>[Math.cos(a*D2R),-Math.sin(a*D2R)],pol=(c,r,a)=>add(c,dir(a),r),wrap=a=>((a%360)+540)%360-180;
   const V2=(a,b)=>new THREE.Vector2(a,b),smooth01=x=>{x=clamp(x,0,1);return x*x*(3-2*x);};
   /* a turned solid from [r, y] points, from the axis round to it (closed) */
-  const lathe=(pr,seg=32)=>{let q=pr[0][0]>0&&pr[pr.length-1][0]>0?[...pr,pr[0]]:pr;if(KIT.area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),seg);};   /* a ring's profile closed back to its start; wound so it faces out */
+  const lathe=(pr,seg=32)=>{let q=pr[0][0]>0&&pr[pr.length-1][0]>0?[...pr,pr[0]]:pr;if(KIT.area(q)<0)q=q.slice().reverse();return KIT.latheF(q.map(([r,y])=>V2(r,y)),seg);};   /* a ring's profile closed back to its start; wound so it faces out */
   const ccw=L=>KIT.area(L)>0?L:L.slice().reverse();   /* cells of one solid all one way round, so a shared edge runs opposite ways in the two */
   /* a turned piece lying across: its axis along the plan direction d, centred at plan point p and height y */
   const across=(par,g,mt,p,d,y)=>{const m=mesh(par,g,mt,p[0],y,p[1]);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(d[0],0,d[1]).normalize());return m;};
@@ -927,7 +927,7 @@ const WESC=(()=>{
            one would show the ruby under it); the 6MX's a ruby (red through the setting, 2_Kirow_247_A.jpg: likely) */
         tag(mesh(g,lathe([[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),V==='6mx'?M.steel:M.gilt),'050408-2.bu');
         tag(mesh(g,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),V==='6mx'?M.ruby:M.steel),'050408-1.bu');
-        for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(g,q[0],q[1],cT,1.25,1.3,2.1,0.46,mt),'WN-55.ck');}}}
+        for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(g,q[0],q[1],cT,1.25,1.3,2.1,0.6,mt),'WN-55.ck');}}}
     {const lf=TI+10,eY=Y.tipL+0.02,hY=eY-0.03,lp=eLip(eY,1),o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
       tag(mesh(bjl,lathe([[1.5,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,eY],[JR+0.003,eY],[JR+0.003,hY-JT],[1.2,hY-JT],[1.2,hY-JT-0.07],[1.5,hY-JT-0.37]],48),M.brass),'050406-2.bl');   /* over the stone, open Ø 3.0 round the staff (the section) */
       tag(mesh(bjl,lathe(KIT.jewelPr(JR,JT,0.115,JD,JC,JH,hY,-1),32),M.ruby),'050407-1.bl');
@@ -964,7 +964,7 @@ const WESC=(()=>{
       tag(mesh(ge,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.ruby),'050408-1.eu');
       tag(mesh(gj,lathe([[2.6,TI],[2.6,hY],[JR+0.003,hY],[JR+0.003,yq],...(TI-yq<0.2?[[1.2,yq],[1.2,TI]]:[[0.85,yq],[0.6,yq+0.2],[0.6,TI]])],48),M.brass),'050406-2.eu');   /* a lip under the stone's rim; as first drawn the seat filled down to the inner face, bored 0.6 for the arbor's cone */
       tag(mesh(gj,lathe(KIT.jewelPr(JR,tq,0.13,JD*k,JC,JH*k,hY,1),32),M.ruby),'050406-1.eu');}
-    for(const[v,ms]of/** @type {[string,any][]} */([['last first 1943',M.brass],['6mx',M.steel]])){const g=rv(eeu,v);for(const s of[-1,1])K.headOn(tag(screw(g,3.5*s,0,TT,1.3,0.3,3.4,0.6,ms),'WN-es'),'escEndstoneUp','topPlate');}   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
+    for(const[v,ms]of/** @type {[string,any][]} */([['last first 1943',M.brass],['6mx',M.steel]])){const g=rv(eeu,v);for(const s of[-1,1])K.headOn(tag(screw(g,3.525*s,0,TT,1.3,0.3,3.4,0.6,ms),'WN-es'),'escEndstoneUp','topPlate');}   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
       const lk=0.8/JR,lT=0.45,lD=JD*lk,lE=0.2,lH=0.15;   /* the lower hole jewel (above); as first drawn its endstone in the plug Ø 1.6 too, the balance's form scaled (estimated) */
       for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.03,hY=eY-0.04,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last',yq=hY-lT;

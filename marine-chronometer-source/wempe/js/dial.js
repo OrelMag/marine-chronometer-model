@@ -19,7 +19,7 @@ const WDIAL=(()=>{
   /* a dial angle (deg clockwise from 12, seen from the dial) at radius r about plan point c, to a plan point */
   const at=(a,r,c=[0,0])=>[c[0]+r*Math.sin(a*D2R),c[1]-r*Math.cos(a*D2R)];
   /* a turned solid from a closed [r, y] profile (the first point not repeated), wound so it faces out (as escapement.js's lathe) */
-  const lathe=(pr,seg=48)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),seg);};
+  const lathe=(pr,seg=48)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return KIT.latheF(q.map(([r,y])=>V2(r,y)),seg);};
   const{teeth,gear}=WTRAIN;
 
   /* ================= heights ================= */

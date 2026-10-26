@@ -137,13 +137,21 @@ const WFUSEE=(()=>{
     g.computeVertexNormals();return g;}
   /* tjFix(g): a non-indexed solid's T-junctions closed: an edge only one triangle has, with points of other such edges lying along it (core.js facePocket's sections leave
      out a point a cut put in a straight line, as earcut does), its triangle split at them as a fan from its third corner */
-  function tjFix(g){const P=g.attributes.position,Nm=g.attributes.normal,Uv=g.attributes.uv,K=i=>[P.getX(i),P.getY(i),P.getZ(i)].map(x=>Math.round(x*1e5)).join(',');
+  /* IK(): an id for each integer triple (a hash of the three, its bucket searched): the corner and cell keys of tjFix, snapNear and fillOpen (strings until 26 October 2026,
+     most of the time the bores' closing took) */
+  const IK=()=>{const m=new Map();let n=0;return(a,b,c)=>{const h=((a*73856093)^(b*19349663)^(c*83492791))>>>0;let L=m.get(h);if(!L)m.set(h,L=[]);for(const e of L)if(e[0]===a&&e[1]===b&&e[2]===c)return e[3];L.push([a,b,c,n]);return n++;};};
+  function tjFix(g){const P=g.attributes.position,Nm=g.attributes.normal,Uv=g.attributes.uv,ik=IK(),K=i=>ik(Math.round(P.getX(i)*1e5),Math.round(P.getY(i)*1e5),Math.round(P.getZ(i)*1e5));
     let T=[];for(let t=0;t<P.count;t+=3)T.push([0,1,2].map(q=>({k:K(t+q),p:[P.getX(t+q),P.getY(t+q),P.getZ(t+q)],n:[Nm.getX(t+q),Nm.getY(t+q),Nm.getZ(t+q)],u:Uv?[Uv.getX(t+q),Uv.getY(t+q)]:[0,0]})));
-    for(let pass=0;pass<4;pass++){const E=new Set();for(const t of T)for(let i=0;i<3;i++)E.add(t[i].k+'|'+t[(i+1)%3].k);
-      const open=[];T.forEach((t,ti)=>{for(let i=0;i<3;i++)if(!E.has(t[(i+1)%3].k+'|'+t[i].k))open.push([ti,i]);});if(!open.length)break;
+    const EK=2**26;for(let pass=0;pass<4;pass++){const E=new Set();for(const t of T)for(let i=0;i<3;i++)E.add(t[i].k*EK+t[(i+1)%3].k);
+      const open=[];T.forEach((t,ti)=>{for(let i=0;i<3;i++)if(!E.has(t[(i+1)%3].k*EK+t[i].k))open.push([ti,i]);});if(!open.length)break;
       const pts=new Map();for(const[ti,i]of open)for(const v of[T[ti][i],T[ti][(i+1)%3]])pts.set(v.k,v);let ch=0;const add=[],drop=new Set();
+      /* the open edges' points in a grid of 2 mm cells, so each edge tries only those in the cells its box covers (every point until 26 October 2026: quadratic, 30 s
+         for the Wempe ring's bores); the same points found */
+      const G=2,gk=IK(),grid=new Map();for(const v of pts.values()){const k=gk(...v.p.map(x=>Math.floor(x/G)));(grid.get(k)||grid.set(k,[]).get(k)).push(v);}
+      const near=(a,b)=>{const lo=[0,1,2].map(j=>Math.floor((Math.min(a.p[j],b.p[j])-1e-4)/G)),hi=[0,1,2].map(j=>Math.floor((Math.max(a.p[j],b.p[j])+1e-4)/G)),o=[];
+        for(let x=lo[0];x<=hi[0];x++)for(let y=lo[1];y<=hi[1];y++)for(let z=lo[2];z<=hi[2];z++){const c=grid.get(gk(x,y,z));if(c)for(const v of c)o.push(v);}return o;};
       for(const[ti,i]of open){if(drop.has(ti))continue;const a=T[ti][i],b=T[ti][(i+1)%3],c=T[ti][(i+2)%3],d=[0,1,2].map(j=>b.p[j]-a.p[j]),L2=d[0]*d[0]+d[1]*d[1]+d[2]*d[2],on=[];
-        for(const v of pts.values()){if(v.k===a.k||v.k===b.k)continue;const w=[0,1,2].map(j=>v.p[j]-a.p[j]),s=(w[0]*d[0]+w[1]*d[1]+w[2]*d[2])/L2;if(s<=1e-6||s>=1-1e-6)continue;
+        for(const v of near(a,b)){if(v.k===a.k||v.k===b.k)continue;const w=[0,1,2].map(j=>v.p[j]-a.p[j]),s=(w[0]*d[0]+w[1]*d[1]+w[2]*d[2])/L2;if(s<=1e-6||s>=1-1e-6)continue;
           const e=[0,1,2].map(j=>w[j]-s*d[j]);if(Math.hypot(...e)<2e-5)on.push([s,v]);}
         if(!on.length)continue;on.sort((x,y)=>x[0]-y[0]);const mid=on.map(([s,v])=>({k:v.k,p:v.p,n:a.n.map((x,j)=>x+(b.n[j]-x)*s),u:a.u.map((x,j)=>x+(b.u[j]-x)*s)})),ch2=[a,...mid,b];
         for(let j=0;j<ch2.length-1;j++)add.push([ch2[j],ch2[j+1],c]);drop.add(ti);ch=1;}
@@ -160,16 +168,20 @@ const WFUSEE=(()=>{
   /* snapNear(g): corners within 2 µm of each other, chained (union-find), put at one place, the triangles kept: holeCut's cuts leave corners a few tenths of a µm
      apart, closed only when welded; a weld on a grid (the STL's at 1 µm in the movement's frame, gltf_check.py) splits or joins such a pair as it falls across a cell's
      edge and leaves edges open. Afterwards distinct corners stand over 2 µm apart, beyond any 1 µm cell's reach, and a triangle folded flat by it adds each edge twice */
-  function snapNear(g){const p=g.attributes.position,n=p.count,c=2e-3,P=[...Array(n).keys()],f=x=>{while(P[x]!==x){P[x]=P[P[x]];x=P[x];}return x;},cell=new Map();
-    for(let i=0;i<n;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=[x,y,z].map(v=>Math.floor(v/c));
-      for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)for(let d=-1;d<=1;d++)for(const j of cell.get((k[0]+a)+','+(k[1]+b)+','+(k[2]+d))||[])if(Math.hypot(p.getX(j)-x,p.getY(j)-y,p.getZ(j)-z)<c)P[f(i)]=f(j);
-      const kk=k.join(',');(cell.get(kk)||cell.set(kk,[]).get(kk)).push(i);}
-    for(let i=0;i<n;i++){const r=f(i);if(r!==i)p.setXYZ(i,p.getX(r),p.getY(r),p.getZ(r));}p.needsUpdate=true;return g;}
+  function snapNear(g){const p=g.attributes.position,n=p.count,A=p.array,c=2e-3;
+    /* the corners exactly alike first (a corner is repeated in every triangle round it), then the 2 µm search among the distinct ones only (every corner against its
+       neighbours' cells until 26 October 2026: 19 s of the Wempe page's build); the same welds */
+    const B=new Uint32Array(A.buffer,A.byteOffset,A.length),ik=IK(),of=new Int32Array(n),U=[];for(let i=0;i<n;i++){const u=ik(B[3*i],B[3*i+1],B[3*i+2]);if(u===U.length)U.push(i);of[i]=u;}   /* alike to the bit */
+    const m=U.length,P=new Int32Array(m);for(let u=0;u<m;u++)P[u]=u;const f=x=>{while(P[x]!==x){P[x]=P[P[x]];x=P[x];}return x;},cell=new Map(),ck=IK();
+    for(let u=0;u<m;u++){const i=U[u],x=A[3*i],y=A[3*i+1],z=A[3*i+2],k0=Math.floor(x/c),k1=Math.floor(y/c),k2=Math.floor(z/c);
+      for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)for(let d=-1;d<=1;d++){const L=cell.get(ck(k0+a,k1+b,k2+d));if(L)for(const v of L){const j=U[v];if(Math.hypot(A[3*j]-x,A[3*j+1]-y,A[3*j+2]-z)<c)P[f(u)]=f(v);}}
+      const kk=ck(k0,k1,k2);(cell.get(kk)||cell.set(kk,[]).get(kk)).push(u);}
+    for(let i=0;i<n;i++){const r=U[f(of[i])];if(r!==i)p.setXYZ(i,A[3*r],A[3*r+1],A[3*r+2]);}p.needsUpdate=true;return g;}
   /* fillOpen(g): an indexed solid's open loops that closeGeo's triangulation left (three corners nearly in a line, a few µm across, where a hole's wall meets a faceted face:
      bore) closed by a fan from each loop's first corner, welded at 1 µm as tools/solids-check.js welds */
-  function fillOpen(g){const p=g.attributes.position,ix=g.index.array,id=new Map(),V=[];for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e3)+','+Math.round(p.getY(i)*1e3)+','+Math.round(p.getZ(i)*1e3);if(!id.has(k))id.set(k,i);V.push(id.get(k));}
-    const E=new Set(),nx=new Map();for(let t=0;t<ix.length;t+=3){const a=V[ix[t]],b=V[ix[t+1]],c=V[ix[t+2]];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u+'_'+v);}
-    for(const k of E){const[u,v]=k.split('_').map(Number);if(!E.has(v+'_'+u))nx.set(v,u);}if(!nx.size)return g;const I=Array.from(ix),done=new Set();
+  function fillOpen(g){const p=g.attributes.position,ix=g.index.array,ik=IK(),first=[],V=[];for(let i=0;i<p.count;i++){const u=ik(Math.round(p.getX(i)*1e3),Math.round(p.getY(i)*1e3),Math.round(p.getZ(i)*1e3));if(u===first.length)first.push(i);V.push(first[u]);}
+    const EK=2**26,E=new Set(),nx=new Map();for(let t=0;t<ix.length;t+=3){const a=V[ix[t]],b=V[ix[t+1]],c=V[ix[t+2]];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u*EK+v);}
+    for(const k of E){const u=Math.floor(k/EK),v=k-u*EK;if(!E.has(v*EK+u))nx.set(v,u);}if(!nx.size)return g;const I=Array.from(ix),done=new Set();
     for(const s of nx.keys()){if(done.has(s))continue;const L=[];let q=s;while(q!==undefined&&!done.has(q)){done.add(q);L.push(q);q=nx.get(q);}for(let i=1;i+1<L.length;i++)I.push(L[0],L[i],L[i+1]);}
     g.setIndex(I);return g;}
   /* bore(g, o, d, r, from, n, poly, h): a hole cut in a closed solid g of any shape (a turned part's lathe, a wall, an extrusion) along the axis through o ([x, y, z] in g's
