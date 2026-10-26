@@ -388,7 +388,7 @@ def choose(A):
     best={};ext=A['b'][1]-A['b'][0]
     for paper in ('A4','A3'):
         ok=[(sc,L) for sc in SCALES for L in [place(A,sc,paper)] if L]
-        if ok:best[paper]=next(((sc,L) for sc,L in ok if max(ext)*sc<=160),ok[-1])   # no larger than reads well: a 3 mm bush at 20:1, not 50:1
+        if ok:best[paper]=next(((sc,L) for sc,L in ok if sc<=5 or max(ext)*sc<=160),ok[-1])   # no larger than reads well: a 3 mm bush at 20:1, not 50:1 (5:1 always, as the cock's)
     if 'A4' in best and not('A3' in best and best['A3'][0]>best['A4'][0] and max(ext)*best['A4'][0]<100):return ('A4',*best['A4'])
     if 'A3' in best:return ('A3',*best['A3'])
     for sc in SCALES:                                                                   # nothing fits with its render: the largest scale that fits without it
