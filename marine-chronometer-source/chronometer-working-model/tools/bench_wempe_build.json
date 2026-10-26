@@ -39,7 +39,7 @@
    "sheet": "05 03_6, 05 03_7, 05 03 01-1",
    "when": "the spring pinned to its collet and stud, its curves bent to 05 03_7, before it goes in",
    "how": "Vibrate the balance on its spring in a vibrating tool (or the cock on a holder) against a master or a phone's timer: count the oscillations over two minutes, the weights against their screws' heads as drawn.",
-   "pass": "2 oscillations a second (7,200 an hour), or slow by up to 293 s a day: the timing weights stand against their screws' heads as drawn and can only be screwed in, 5.0 turns of 58.7 s a day each (wempe_tolerances.js; their size estimated). The drawn spring on the weighed balance (2,501 g·mm²) is 18 min a day fast (0.4937 s): the strip wants 0.2826 mm, not 0.285 (0.2808-0.2854 over the steel's 200-210 GPa). No section tolerance holds the period (a µm of the strip is 455 s a day, the coil's ±0.05 ±173): fast, grind the strip thinner or choose a weaker spring; slow past the weights' reach, a stronger one."
+   "pass": "2 oscillations a second (7,200 an hour), or slow by up to 373 s a day: the timing weights stand against their screws' heads as drawn and can only be screwed in, 5.0 turns of 74.6 s a day each (wempe_tolerances.js; their size estimated). The drawn spring on the weighed balance (2,501 g·mm²) is 18 min a day fast (0.4937 s): the strip wants 0.2826 mm, not 0.285 (0.2808-0.2854 over the steel's 200-210 GPa). No section tolerance holds the period (a µm of the strip is 455 s a day, the coil's ±0.05 ±173): fast, grind the strip thinner or choose a weaker spring; slow past the weights' reach, a stronger one."
   },
   {
    "id": "rundown",
@@ -63,7 +63,7 @@
    "sheet": "05 04_1, 05 04 01-4",
    "when": "the detent, its gold spring and the balance in; the train's power let down",
    "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
-   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -8.8° of the balance (05 04_1's −12°), the wheel released at 4.0° (lock 12.8°), the gold spring off the stone at 6.9° (let-off 2.8°), the return swing past it at -21.6° (overall 28.5°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.187 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 146 µm over its floor): never shallower than 0.089 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.285 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.64 g rider must leave the detent on its banking and a 0.80 g one part it; aim near 0.68 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.40 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 10.4° of swing; never over 0.80 g: above it the stone, falling back after the release, lands again on the escaping tooth's back during the impulse, where the models part: dynamics.js with brass's restitution). The return pass: turn the balance back slowly by hand through the discharge with the train's power on and watch the locking stone under a loupe: the discharge stone must bend the gold spring aside without lifting the detent (wempe_tripping.js: as the model takes the stone's contact on the gold spring no tooth gets past over 333 gold's whole range of modulus, 83-110 GPa, but at 4 times that contact's stiffness 6 in 12 do, whatever the alloy: only the made spring can show it); its tip at rest 0.10-0.15 short of the discharge stone and 0.35-0.40 past the detent's end (the 1958 Navy repair book's checks, p. 60)."
+   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -8.8° of the balance (05 04_1's −12°), the wheel released at 4.0° (lock 12.8°), the gold spring off the stone at 6.9° (let-off 2.8°), the return swing past it at -21.6° (overall 28.5°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.188 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 143 µm over its floor): never shallower than 0.092 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.285 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.64 g rider must leave the detent on its banking and a 0.80 g one part it; aim near 0.68 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.40 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 10.4° of swing; never over 0.80 g: above it the stone, falling back after the release, lands again on the escaping tooth's back during the impulse, where the models part: dynamics.js with brass's restitution). The return pass: turn the balance back slowly by hand through the discharge with the train's power on and watch the locking stone under a loupe: the discharge stone must bend the gold spring aside without lifting the detent (wempe_tripping.js: as the model takes the stone's contact on the gold spring no tooth gets past over 333 gold's whole range of modulus, 83-110 GPa, but at 4 times that contact's stiffness 6 in 12 do, whatever the alloy: only the made spring can show it); its tip at rest 0.10-0.15 short of the discharge stone and 0.35-0.40 past the detent's end (the 1958 Navy repair book's checks, p. 60)."
   },
   {
    "id": "swing",
@@ -111,7 +111,7 @@
    "sheet": "6MX TU 25-07-1533-84 (6MX-figures.md)",
    "when": "cased, in its gimbals, rated",
    "how": "Each day at the same hour compare it with a time signal to a tenth of a second and log the error (python rating.py works the daily rates). The trial: 35 days in five periods of seven at 36, 20, 4, 20, 36 °C (a wine cooler, a room, a box with a lamp and a thermostat), the first two days of each not counted, wound daily after the comparison to \"8\" on the up-and-down dial, to \"0\" at each period's end.",
-   "pass": "The TU's figures (losing positive): E, the mean of |each counted rate − its period's mean|, within ±0.35; R = ω_V − ω_I ±2.00; D, the largest change between consecutive rates in a period, ±2.30; C = (ω36 − ω4)/32 ±0.10 s a day a °C; S = (ω36 + ω4)/2 − ω20 ±1.20; every period's mean ±3.50; N = 42E + 4.5R + 60C + 2.4S ≤ 30 (wempe_errorbudget.js passes it as adjusted). Out on C: move the four masses along the rim (\"8 Körner in 60 Teilung\", 6° a division) by trial: at the drawn place (30° from the cuts' line) the balance loses 2.55 s a day a °C, they null it near 19.3° from the cuts' line, a degree along the rim 0.228 s a day a °C (wempe_thermal.js). For a chronometer to navigate by (about 2 miles of longitude a month: wempe_errorbudget.js's voyage, 6 s at 30 days against 17 s with the 6MX passports' ±0.45°), go on past the TU's ±0.10: repeat the 4 °C and 36 °C periods (five counted days each, which measure C to about ±0.005) and move the masses by C / 0.228 degrees each round until |C| is within ±0.023 s a day a °C, the masses within ±0.1° of their place: 27 µm along the rim at r 15.7, both of a pair moved alike to keep the poise, against a scribed line under a 10× loupe; two or three rounds. Out on S past ±1.20: the nickel steel isn't Guillaume's integral alloy (wempe_thermal.js)."
+   "pass": "The TU's figures (losing positive): E, the mean of |each counted rate − its period's mean|, within ±0.35; R = ω_V − ω_I ±2.00; D, the largest change between consecutive rates in a period, ±2.30; C = (ω36 − ω4)/32 ±0.10 s a day a °C; S = (ω36 + ω4)/2 − ω20 ±1.20; every period's mean ±3.50; N = 42E + 4.5R + 60C + 2.4S ≤ 30 (wempe_errorbudget.js passes it as adjusted). Out on C: move the four masses along the rim (\"8 Körner in 60 Teilung\", 6° a division) by trial: at the drawn place (30° from the cuts' line) the balance loses 2.71 s a day a °C, they null it near 18.4° from the cuts' line, a degree along the rim 0.223 s a day a °C (wempe_thermal.js). For a chronometer to navigate by (about 2 miles of longitude a month: wempe_errorbudget.js's voyage, 6 s at 30 days against 17 s with the 6MX passports' ±0.45°), go on past the TU's ±0.10: repeat the 4 °C and 36 °C periods (five counted days each, which measure C to about ±0.005) and move the masses by C / 0.223 degrees each round until |C| is within ±0.022 s a day a °C, the masses within ±0.1° of their place: 27 µm along the rim at r 15.7, both of a pair moved alike to keep the poise, against a scribed line under a 10× loupe; two or three rounds. Out on S past ±1.20: the nickel steel isn't Guillaume's integral alloy (wempe_thermal.js)."
   }
  ],
  "criteria": {
@@ -567,12 +567,12 @@
    "fast": 1097.8074,
    "hNeed": 0.2826,
    "weights": {
-    "m": 0.5747,
-    "r": 18.6503,
-    "secTurn": 58.6859,
+    "m": 0.7298,
+    "r": 18.6569,
+    "secTurn": 74.5506,
     "reach": 0.8,
     "turnsIn": 5,
-    "gain": 293.4295
+    "gain": 372.753
    }
   },
   "rundown": {
@@ -682,10 +682,10 @@
     "dip": 0.3903
    },
    "depth": {
-    "aim": 0.187,
+    "aim": 0.1885,
     "drawn": 0.235,
     "window": [
-     0.089,
+     0.092,
      0.2849
     ],
     "tip": 0.25
@@ -781,12 +781,12 @@
     "N": 30
    },
    "masses": {
-    "drawn": -2.555,
-    "zero": 19.2911,
-    "perDeg": 0.228,
+    "drawn": -2.7088,
+    "zero": 18.4473,
+    "perDeg": 0.2234,
     "build": {
      "set": 0.1,
-     "C": 0.0228,
+     "C": 0.0223,
      "um": 27.4017
     }
    }

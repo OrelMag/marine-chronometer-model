@@ -89,7 +89,7 @@
   "runs": 0.069,
   "band": 0.6375,
   "sources": 0,
-  "times": 0.0745,
+  "times": 0.09,
   "works": 0.029
  },
  "after": {
@@ -206,7 +206,7 @@
    "caught": 0
   },
   "vibrated": {
-   "caught": 1851
+   "caught": 1820
   }
  },
  "uncaught": 0,
@@ -271,7 +271,7 @@
    "asMade": 1,
    "works": 1,
    "band": 1,
-   "times": 0.068
+   "times": 0.076
   }
  },
  "worst": "endshake",
@@ -294,12 +294,12 @@
    2514.5133
   ],
   "reach": [
-   -293.4295,
+   -372.753,
    0
   ]
  },
  "temperature": {
-  "drawnC": 2.555,
+  "drawnC": 2.7088,
   "nZero": 28
  }
 }
