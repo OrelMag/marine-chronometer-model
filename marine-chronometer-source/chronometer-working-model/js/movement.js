@@ -2217,8 +2217,23 @@ function makeFusee(M,c){
   const mtx=new THREE.Matrix4(),t=new THREE.Vector3(),up=new THREE.Vector3(),nn=new THREE.Vector3(),pos=new THREE.Vector3(),q0=new THREE.Vector3(),q1=new THREE.Vector3();
   /* the chain's ends (Figs. 26, 28, 75): a pin through the end link, parallel to the arbor, into the fusee below the groove's last turn, and at the barrel end a hook plate
      whose nose goes into the barrel's wall; placed from the chain's path */
-  const endM=m=>{m.userData.partName='chain';hn(m,'42001',{sub:1});g.add(m);return m;},fPin=endM(new THREE.Mesh(cylY(0.17,0.8,10),M.steel)),hkB=endM(new THREE.Mesh(new THREE.BoxGeometry(1.3,TK,H),M.chain)),hkN=endM(new THREE.Mesh(cylY(0.28,0.3,10),M.chain));hkN.userData.hookNose=true;   /* in its hole in the barrel's wall: barrel-clearance.js leaves it out */
+  const endM=m=>{m.userData.partName='chain';hn(m,'42001',{sub:1});g.add(m);return m;},crook=endM(Object.assign(new THREE.Mesh(new THREE.BufferGeometry(),M.chain),{name:"crook"})),hkB=endM(new THREE.Mesh(new THREE.BoxGeometry(1.3,TK,H),M.chain)),hkN=endM(new THREE.Mesh(cylY(0.28,0.3,10),M.chain));hkN.userData.hookNose=true;   /* in its hole in the barrel's wall: barrel-clearance.js leaves it out */
   const Y=new THREE.Vector3(0,1,0),rad=(o,cx,p)=>new THREE.Vector3(p.x-cx,0,p.z).normalize();
+  /* the chain's fusee end: a link plate run on into a crook (a hook) whose nose goes into a hole r 0.29 in the fusee at the groove's end, KLUwI2UUCMQ 37:10.0 and 37:10.5 (4K,
+     the hook face-on on a black glove beside its end link, each frame mapped to mm by the link's two lobes, PC 2.19; mfgfit.py's edges, the frames within 0.05-0.08 mm and 1 deg;
+     likely), the hole on 17:43 (E:/mc-video/oq/ledger/run3_chain_end). In the plate's frame: u from the end rivet along the chain away from it, v across it toward the nose,
+     which turns in toward the arbor (37:12.1, 37:12.86): the shank's outer edge, the back r 1.756, the nose's tip r 0.266, its inner edge, the throat r 0.355, the shank's
+     inner edge, and the tail round the rivet r 0.925 (under the end link's plates, unseen: estimated). It takes an inner plate's place between the end link's two, TK thick
+     (not seen edge-on: estimated). Its nose 1.85 inside the pitch line, 0.84 under the groove's floor, in its hole, which isn't cut: whether it runs radially or along the
+     arbor is open, and so is the turn it is on (37:12-17:43 put it 72 deg clockwise of the stop-bar seen from the key, against the run-down's place here: the owner kept
+     8 3/4 turns, OPEN-QUESTIONS.md). Until 26 October 2026 a pin r 0.17 through the end link down into the band's slot */
+  const CRK_TH=1.21,CRK_NR=1.22,CRK_V=1.85;   /* the crook's narrowest sections, the bend across the throat and the nose at its root (strength.js), and the nose's reach */
+  const crookGeo=sg=>{const P=[],arc=(c,r,p0,p1,ccw)=>{const a0=Math.atan2(p0[1]-c[1],p0[0]-c[0]);let d=Math.atan2(p1[1]-c[1],p1[0]-c[0])-a0;if(ccw&&d<=0)d+=TAU;if(!ccw&&d>=0)d-=TAU;
+      const n=Math.max(2,Math.ceil(Math.abs(d)/0.1));for(let i=0;i<n;i++)P.push([c[0]+r*Math.cos(a0+d*i/n),c[1]+r*Math.sin(a0+d*i/n)]);};   /* each piece from its start, the next piece's start its end */
+    P.push([-0.1741,-0.9226]);arc([2.2398,0.117],1.7557,[2.9119,-1.505],[2.5574,1.8437],1);arc([2.5093,1.5824],0.2657,[2.5574,1.8437],[2.2632,1.4821],1);P.push([2.2632,1.4821]);
+    arc([2.3874,0.2375],0.3547,[2.7159,0.3714],[2.2309,-0.0808],0);P.push([2.2309,-0.0808]);arc([0,0],0.925,[0.402,0.818],[-0.1741,-0.9226],1);
+    const Q=sg>0?P:P.map(([u,v])=>[u,-v]).reverse(),S=new THREE.Shape(Q.map(([u,v])=>new THREE.Vector2(u,v)));
+    const q=extrude(S,{depth:TK,bevelEnabled:false,curveSegments:1});q.rotateX(-Math.PI/2);q.translate(0,-TK/2,0);return q;};
   /* the chain's pitch line, locked to the groove (local angle phi0 + TAU m on the fusee turned rot): wound on the fusee from its end pin (m = ME) to md, where it
      leaves along the drums' common tangent (dl past their lowest point), then wound on the barrel from md back to its hook (m = 0) */
   const md0=rot=>{let m=rot/TAU;for(let i=0;i<3;i++)m=(-Math.PI/2+dl(m)+rot-phi0)/TAU;return m;};
@@ -2244,15 +2259,20 @@ function makeFusee(M,c){
      shows in the large end's band side-on, SNLqsS9wrrM 4:24 (57 px long, 3.5 mm, 13 deg of the band; 8 rows tall, 0.49 mm, its top at the band's, just under the chain's last
      link, which lies along the band toward the barrel; the frame's mm as the stack's, 16.25 px/mm) and KLUwI2UUCMQ 17:49 (4K: a long dark slot on the band's front). Cut
      from the end link's place (m = ME; the angle against the groove's end isn't measured: the end is placed by the run-down, as before) on round the way the groove runs
-     on, down under the last turn's floor to the hook's nose (the end pin, fPin), 0.3 inside its pitch line. The lathe's columns 1.7 deg apart, so the slot's ends slope over
+     on, down under the last turn's floor to the hook's nose (the end pin until 26 October 2026; the crook since, above), 0.3 inside its pitch line. The lathe's columns 1.7 deg apart, so the slot's ends slope over
      one, so it starts 4 deg before the end link; its top just under the chain's plates (three deep, TK each); its depth, where the nose ends, estimated. Until 18 October 2026 the pin went into the fusee under the last turn, in no slot */
   /* the groove ends at the hook's hole (SNLqsS9wrrM 4:24, run down with the last link at the groove's square end; KLUwI2UUCMQ 17:49, 37:10.0: the hole inside the band's slot):
-     past the end link it is filled to the band's radius 13 deg on (GEA, the slot's length), where it ran on to N + LI/3, about 90 deg, until 20 October 2026 */
-  const GEA=13/360;for(let i=0;i<lp.count;i++){const x=lp.getX(i),z=lp.getZ(i),y=lp.getY(i),r=Math.hypot(x,z);if(r<=RIN+0.5)continue;const th=Math.atan2(z,x),ph=(((th-phi0)/TAU)%1+1)%1,nu=(y-c.yS)/PT-ph,mc=Math.floor(nu+0.5)+ph,rb=c.bandR??rf(N)+HF;
+     past the end link it is filled to the band's radius from the crook's back on (GEA: its 4.0 from the end rivet, 37:10, and 0.1; the hook is the last piece at the groove's square end,
+     4:24), where it ran on 13 deg (the slot's length) until 26 October 2026, and on to N + LI/3, about 90 deg, until 20 October 2026 */
+  const GEA=(4.0+0.1)/(TAU*rc(ME));for(let i=0;i<lp.count;i++){const x=lp.getX(i),z=lp.getZ(i),y=lp.getY(i),r=Math.hypot(x,z);if(r<=RIN+0.5)continue;const th=Math.atan2(z,x),ph=(((th-phi0)/TAU)%1+1)%1,nu=(y-c.yS)/PT-ph,mc=Math.floor(nu+0.5)+ph,rb=c.bandR??rf(N)+HF;
     if(mc>ME+GEA&&mc<=N+LI/3+1e-9&&r<rb){lp.setX(i,x*rb/r);lp.setZ(i,z*rb/r);}}
   const SLA=13*D2R,SL0=-4*D2R,aE=phi0+TAU*ME,ys0=yf(ME)+TK*1.5,ys1=ys0+0.49,rS=rc(ME)-0.3,lq=lg.attributes.position;
   for(let i=0;i<lq.count;i++){const x=lq.getX(i),z=lq.getZ(i),y=lq.getY(i),r=Math.hypot(x,z);if(y<ys0||y>ys1||r<=rS)continue;const da=(((Math.atan2(z,x)-aE-SL0)%TAU)+TAU)%TAU;if(da>SLA)continue;lq.setX(i,x*rS/r);lq.setZ(i,z*rS/r);}
-  lg.computeVertexNormals();fPin.geometry.dispose();fPin.geometry=cylY(0.17,ys1-0.05-(yf(ME)-0.2),10);
+  lg.computeVertexNormals();
+  { /* the crook hooked in the fusee, turning with it (its tail pivots on the end rivet as the chain swings off at run down): at the end rivet, along the groove past it,
+       its nose toward the arbor */
+    const a=phi0+TAU*ME,u=new THREE.Vector3(-Math.sin(a),0,Math.cos(a)),w=new THREE.Vector3().crossVectors(u,Y),sg=w.dot(new THREE.Vector3(-Math.cos(a),0,-Math.sin(a)))<0?1:-1;
+    crook.geometry.dispose();crook.geometry=crookGeo(sg);crook.matrix.makeBasis(u,Y,w).setPosition(rc(ME)*Math.cos(a),yf(ME),rc(ME)*Math.sin(a));crook.matrix.decompose(crook.position,crook.quaternion,crook.scale);fz.add(crook); }
   fuse(body);   /* the fusee's body one mesh (fuse), its lathe now cut: its pieces' flush faces drew lines across it in Edges until 21 October 2026 */
   const geo=rot=>{if(rot>RT)return pinGeo(ME,rot);const m0=md0(rot),d=dl(m0),r0=rc(m0);return{m0,F0:[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0:[bx+rB*Math.sin(d),-rB*Math.cos(d)],bt:-Math.PI/2+d,S:Tg(m0),lever:r0};},md=rot=>geo(rot).m0;
   const wrapB=q=>TAU*I(q.m0)+(Tg(m00)-q.S)/rB;   /* the chain's turn round the barrel, tangent point to hook: what has come off the fusee, less the straight run's gain */
@@ -2295,7 +2315,7 @@ function makeFusee(M,c){
     for(let k=0;k+1<J.length&&ia<MAX&&ib<MAX;k++){q0.copy(J[k]);q1.copy(J[k+1]);pos.addVectors(q0,q1).multiplyScalar(0.5);t.subVectors(q1,q0).normalize();
       up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0)imA.setMatrixAt(ia++,mtx);else imB.setMatrixAt(ib++,mtx);}
     imA.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
-    { fPin.position.copy(J[0]).addScaledVector(Y,(ys1-0.05-(yf(ME)-0.2))/2-0.2);   /* the hook's nose: through the first outer link's rivet hole, down into its slot under the last turn */
+    {
       /* the hook at the chain's end on the barrel (HKA in the barrel's frame, turned with it), its plate from the last joint to it (the same length all through the wind:
          the chain keeps its length, wrapB), its nose through the wall to mid-thickness */
       const ha=HKN-bz.rotation.y,pe=new THREE.Vector3(bx+rB*Math.cos(ha),HKY,rB*Math.sin(ha)),pb=J[J.length-1],ub=rad(0,bx,pe),tb=new THREE.Vector3().subVectors(pe,pb),tl=tb.length();tb.normalize();

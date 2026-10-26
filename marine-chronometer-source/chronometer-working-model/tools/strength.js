@@ -50,14 +50,16 @@ say('Pivots and bearings');
 
 /* ---------- the chain and its ends, fully wound ---------- */
 say('The fusee chain, fully wound');
-{const pull=PH.Mup/(PH.rB/1000),[H,TK,PC]=num(/const H=([\d.]+),TK=([\d.]+),PC=([\d.]+)/,'the chain'),[rR]=num(/cylY\(([\d.]+),3\*TK\+0\.08/,'its rivets'),[rP,lP]=num(/fPin=endM\(new THREE\.Mesh\(cylY\(([\d.]+),([\d.]+)/,'the fusee end pin'),[rN,lN]=num(/hkN=endM\(new THREE\.Mesh\(cylY\(([\d.]+),([\d.]+)/,'the hook\'s nose');
+{const pull=PH.Mup/(PH.rB/1000),[H,TK,PC]=num(/const H=([\d.]+),TK=([\d.]+),PC=([\d.]+)/,'the chain'),[rR]=num(/cylY\(([\d.]+),3\*TK\+0\.08/,'its rivets'),[wT,wN,vN]=num(/const CRK_TH=([\d.]+),CRK_NR=([\d.]+),CRK_V=([\d.]+)/,'the fusee end\'s crook'),[rN,lN]=num(/hkN=endM\(new THREE\.Mesh\(cylY\(([\d.]+),([\d.]+)/,'the hook\'s nose');
   const mm2=x=>x*1e-6;
   say(`pull ${f(pull,1)} N (the spring's ${f(PH.Mup,2)} N·m on the barrel's chain radius ${f(PH.rB,2)} mm, physics.js); plates ${H} × ${TK} mm, rivets r ${rR}, pitch ${PC}`);
   line('an inner link: its one plate across the rivet hole',`${f(pull,1)} N`,pull/mm2((H-2*rR)*TK),P(STEEL_UTS),'steel\'s strength');
   line('  the same plate at its waist',`${f(pull,1)} N`,pull/mm2(2*Math.sqrt((H/2)**2-((H/2)**2-0.32**2))*TK),P(STEEL_UTS),'steel\'s strength');
   line('a rivet, in double shear',`${f(pull,1)} N`,pull/mm2(2*Math.PI*rR*rR),P(STEEL_SH),'steel\'s shear strength');
   line('the rivet bearing on the inner plate',`${f(pull,1)} N`,pull/mm2(2*rR*TK),P(STEEL_UTS.map(x=>1.5*x)),'steel in bearing (1.5 × strength)');
-  line(`the fusee's end pin (r ${rP}), in shear`,`${f(pull,1)} N`,pull/mm2(Math.PI*rP*rP),P(STEEL_SH),'steel\'s shear strength');
+  line(`the fusee end's crook across its throat (${wT} × ${TK}), in tension`,`${f(pull,1)} N`,pull/mm2(wT*TK),P(STEEL_UTS),'steel\'s strength');
+  line(`  its nose at the root (${wN} × ${TK}), in shear`,`${f(pull,1)} N`,pull/mm2(wN*TK),P(STEEL_SH),'steel\'s shear strength');
+  line(`  the nose bearing in its hole in the fusee (${TK} × ${f(vN-H/2-0.04,2)} deep)`,`${f(pull,1)} N`,pull/mm2(TK*(vN-H/2-0.04)),P(BRASS_Y.map(x=>1.5*x)),'brass in bearing (1.5 × yield)');
   line(`the hook's nose (r ${rN}, ${lN} into the wall), in shear`,`${f(pull,1)} N`,pull/mm2(Math.PI*rN*rN),P(STEEL_SH),'steel\'s shear strength');
   line('  bearing on the barrel\'s brass wall',`${f(pull,1)} N`,pull/mm2(2*rN*lN),P(BRASS_Y.map(x=>1.5*x)),'brass in bearing (1.5 × yield)');}
 
