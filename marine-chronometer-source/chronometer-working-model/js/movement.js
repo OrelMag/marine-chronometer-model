@@ -1888,10 +1888,10 @@ function buildMovement(M){
      0.02 deg long */
   R.release=()=>{if(!MWK.w||MWK.g===null)return 0;let r=(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU;
     if(MWK.n!==null)for(let i=0;i<4;i++){const n=MWK.n+r,D=n>=FUSEE_TURNS?0:R.drvN(n);r=(catchAt(srA,MWK.fa,MWK.g,ssQ(D)).fa-MWK.fa)/TAU;}return r;};
-  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
+  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,keyD?:number,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
       E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
       n: fusee turns from full wind; winding: the key turning; spent: run down (the fusee drives nothing); reset: the train set (the hands set, Now), not run;
-      slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown;
+      slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown; keyD: how far out along the square the winding key still is (coming on or going off: app.js's winding in the case);
       blk, arm: the train-blocking screw and the locking arm, 0 (up, unlocked) to 1; ssX: the sustaining spring drawn that many times relaxed (0: as it is); dt: the frame's seconds;
       springOn, msOn: rebuild the hairspring, the mainspring (only when they can be seen); ld, clk: the mainspring let down that many turns, the set-up click held out (0 to 1) */
   /** @param {MoveState} s */
@@ -1947,7 +1947,7 @@ function buildMovement(M){
     R.staff.rotation.y=-s.th;
     { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyLock(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
-    const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
+    const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;R.wkey.position.y=-36.36-(s.keyD||0);   /* the arbor, its square and pinion turn with the fusee */
     udX=udX===null||(!s.winding&&fa<udF-1e-9)?fa:clamp(udX,fa,fa+UD_LASH);udF=fa;const udA=udX*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;   /* udX: the fusee's turn the wheel stands at, within the backlash of fa; the fusee set back without the key (the slider, the export's clips) is a set: on the running flank */
     /* the mainspring let down (Op. 8) or set up (Op. 53): ld, the turns the barrel arbor has been let down by (0 in use: it never turns, Sec. II), the way the spring
        pulls it (its ratchet's steep faces meet the click as rotation.y falls); clk, how far the click is held out of the teeth (0 to 1; at 0 with ld > 0 it rides over
