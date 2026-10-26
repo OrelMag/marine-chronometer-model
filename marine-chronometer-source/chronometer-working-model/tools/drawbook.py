@@ -4,7 +4,8 @@ maker's sheet (its parts-list lines, material, fits). Made offline from the mode
 
     python drawbook.py --model wempe export [--only a,b]     # the page's parts, their solids and renders into r_drawbook/MODEL/ (about 1-3 min)
     python drawbook.py --model wempe draw [--only a,b]       # each part's sheet as SVG from the export (drawbook_geo.py: views, hidden lines, sections, dimensions)
-    python drawbook.py --model wempe pdf OUT.pdf             # the sheets printed into one PDF (Chromium)
+    python drawbook.py --model wempe check                   # every part drawn at a standard scale and paged, every line on a sheet (a few seconds)
+    python drawbook.py --model wempe pdf OUT.pdf [--pages JS] # the sheets printed into one PDF (Chromium); --pages writes the page each part starts on (WBOOK)
 
 The export (drawbook-export.js in the page, ?snap&qa, the model frozen as isolate.py freezes it) lists the parts in the build book's order (maker.js's
 book()), writes each one's triangles in the movement's frame (mm; y the arbors' axis toward the dial side) as r_drawbook/MODEL/parts/KEY.npz, its
@@ -41,6 +42,10 @@ async def export(only):
         await pg.add_script_tag(path=str(HERE/'drawbook-export.js'))
         L=await pg.evaluate('DB.list()');(OUT/'list.json').write_text(json.dumps({'mid':await pg.evaluate('DB.mid()'),'parts':L},indent=1),encoding='utf-8')
         mk={l['id']:l for l in await pg.evaluate('MAKERS.map(l=>l)')}
+        # the book's words, as the page's own book() writes them: its title and introduction, and its closing chapters (how each part is made, the tests on the bench)
+        fb=await pg.evaluate('''()=>{MAKER.book();const b=document.getElementById('bookPrint'),h=b.querySelector('h1'),intro=[];for(let e=h.nextElementSibling;e&&e.tagName==='P';e=e.nextElementSibling)intro.push(e.outerHTML);
+          const out={title:h.textContent,intro:intro.join(''),back:[...b.querySelectorAll('section.procs,section.tests')].map(s=>s.outerHTML).join('')};b.innerHTML='';document.documentElement.classList.remove('book-print');return out;}''')
+        (OUT/'bookwords.json').write_text(json.dumps(fb,indent=1),encoding='utf-8')
         for e in L:
             k=e['k']
             if only and k not in only and k.split('.')[0] not in only:continue
@@ -55,9 +60,29 @@ async def export(only):
             png=OUT/'parts'/f'{k}.png';await pg.screenshot(path=str(png));crop(png);print(k,sum(len(f) for f in F),'triangles',flush=True)
         await b.close()
     if errs:print('page errors:',errs)
+def check(OUT):
+    """the book as committed against the export: every part drawn, its sheet at a standard scale, the page map (WBOOK) naming every part, every parts-list line a
+    drawn part carries on some sheet; exit 1 on a finding"""
+    import re
+    L=json.loads((OUT/'list.json').read_text(encoding='utf-8'))['parts'];bad=[]
+    js=model.DIR/'js'/'bookpages.js';P=json.loads(re.search(r'const WBOOK=(\{.*\});',js.read_text(encoding='utf-8')).group(1))['pages'] if js.exists() else {}
+    if not (model.DIR/'book').is_dir() or not list((model.DIR/'book').glob('*.pdf')):bad.append('no book PDF in '+str(model.DIR/'book'))
+    seen=set();want=set()
+    for e in L:
+        k=e['k'];svg=OUT/'sheets'/f'{k}.svg'
+        if not svg.exists():bad.append(f'{k}: no sheet');continue
+        t=svg.read_text(encoding='utf-8')
+        if not re.search(r'>(50|20|10|5|2|1):1<|>1:(2|4|5|10)<',t):bad.append(f'{k}: no standard scale in its title block')
+        if k not in P:bad.append(f'{k}: not in the page map (bookpages.js)')
+        meta=json.loads((OUT/'parts'/f'{k}.json').read_text(encoding='utf-8'))
+        for l in meta.get('lines') or []:(seen if not e['asm'] else want).add(l['no'])
+    for no in sorted(want-seen):bad.append(f'line {no}: on an assembly but on no piece’s sheet')
+    for b_ in bad:print(b_)
+    print(len(L),'parts,',len(bad),'findings');sys.exit(1 if bad else 0)
 if __name__=='__main__':
     cmd=sys.argv[1] if len(sys.argv)>1 else '';only=set(opt('--only','').split(','))-{''}
     if cmd=='export':asyncio.run(export(only))
     elif cmd=='draw':import drawbook_geo;drawbook_geo.main(OUT,only)
-    elif cmd=='pdf':import drawbook_sheet;asyncio.run(drawbook_sheet.pdf(OUT,sys.argv[2]))
+    elif cmd=='check':check(OUT)
+    elif cmd=='pdf':import drawbook_sheet;asyncio.run(drawbook_sheet.pdf(OUT,sys.argv[2],opt('--pages')))
     else:sys.exit(__doc__)

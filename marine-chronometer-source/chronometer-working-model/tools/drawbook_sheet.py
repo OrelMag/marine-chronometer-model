@@ -13,7 +13,7 @@ from shapely.geometry import Polygon,MultiPolygon,LineString,Point,box as sbox
 from shapely.ops import unary_union
 import drawbook_geo as G
 import trimesh
-SCALES=[50,20,10,5,2,1,0.5,0.25]
+SCALES=[50,20,10,5,2,1,0.5,0.25,0.2,0.1]
 LW_VIS,LW_THIN,LW_HID=0.5,0.18,0.3
 TXT=2.5;ARR=2.2           # lettering height and arrow length, printed mm
 esc=lambda s:html.escape(str(s),quote=True)
@@ -116,9 +116,39 @@ def teeth(ring,cx,cy):
     return {'z':z,'tip':2*d.max(),'root':2*d.min()}
 def contour_elems(ring,tol):
     P=np.asarray(ring.coords);return G.prims(P,tol)
-def analyse(dirp,k,ymid):
-    m,meta=G.load(dirp,k);kind,T,share=G.frame(m,meta,ymid);m.apply_transform(T)
-    b=m.bounds;A={'k':k,'meta':meta,'kind':kind,'share':share,'m':m,'T':T,'b':b}
+def one_instance(m):
+    """a piece made several times (screws, pins, masses): its bodies grouped into instances (bodies whose boxes meet are one instance: a screw's head and shank,
+    a timing screw and its weight), and if every instance is the same (faces and extents), one of them and how many; else the whole and 1"""
+    bodies=m if isinstance(m,list) else [m]
+    if len(bodies)<2:return (bodies[0] if bodies else m),1
+    B=[q.bounds for q in bodies];par=list(range(len(bodies)))
+    def f(i):
+        while par[i]!=i:par[i]=par[par[i]];i=par[i]
+        return i
+    for i in range(len(B)):
+        for j in range(i+1,len(B)):
+            if np.all(B[i][0]<=B[j][1]+0.05) and np.all(B[j][0]<=B[i][1]+0.05):par[f(i)]=f(j)
+    groups={}
+    for i in range(len(B)):groups.setdefault(f(i),[]).append(i)
+    inst=list(groups.values())
+    if len(inst)<2:return m,1
+    def sig(g):
+        q=trimesh.util.concatenate([bodies[i] for i in g]);return (len(q.faces),round(q.area,1))   # alike turned or mirrored: faces and area, not extents
+    S=[sig(g) for g in inst]
+    if any(x!=S[0] for x in S):return trimesh.util.concatenate(bodies),1
+    return trimesh.util.concatenate([bodies[i] for i in inst[0]]),len(inst)
+def analyse(dirp,k,ymid,whole=False):
+    m,meta=G.load(dirp,k);n=1
+    if not whole:
+        # the model's meshes as exported (each a body: a screw's head, its shank), grouped into instances
+        d=np.load(dirp/f'{k}.npz');bodies=[]
+        for i in np.unique(d['M']):
+            F=d['F'][d['M']==i];q=trimesh.Trimesh(d['V'].astype(np.float64),F.astype(np.int64),process=False);q.remove_unreferenced_vertices();bodies.append(q)
+        if len(bodies)>1:
+            one,n=one_instance(bodies)
+            if n>1:m=one;m.merge_vertices(digits_vertex=5)
+    kind,T,share=G.frame(m,meta,ymid);m.apply_transform(T)
+    b=m.bounds;A={'k':k,'meta':meta,'kind':kind,'share':share,'m':m,'T':T,'b':b,'n':n}
     A['gear']=next((x['gear'] for x in meta['meshes'] if x.get('gear')),None)
     if kind=='turned':
         A['views']=['front']+(['top'] if share<0.985 else [])
@@ -187,7 +217,7 @@ def hatch(poly,X,Y,sc,ang=45):
     P=shapely.affinity.affine_transform(poly,[sc,0,0,-sc,X(0),Y(0)])
     out=[]
     for g in getattr(P,'geoms',[P]):
-        if g.is_empty:continue
+        if g.is_empty or g.geom_type!='Polygon':continue                              # a cut's stray points and lines (a face lying in the plane) aren't area
         thin=g.buffer(-0.35).is_empty
         if thin:
             out.append('<path class="fill" d="'+''.join('M'+'L'.join(f'{x:.3f} {y:.3f}' for x,y in ring.coords)+'Z' for ring in [g.exterior,*g.interiors])+'"/>');continue
@@ -232,9 +262,50 @@ def centre_cross(pen,x,y,r):
     e=r+1.5;pen.line(x-e,y,x+e,y,'c');pen.line(x,y-e,x,y+e,'c')
 # ---------- the views drawn and dimensioned ----------
 def draw_view(pen,V,X,Y,sc):
-    for key,cls in (('hid','hid'),('vis','vis')):
+    for key,cls in (('hid','hid'),('thin','thin'),('pitch','c'),('vis','vis')):
+        if key not in V:continue
         d=''.join(prim_svg(p,X,Y,sc,cls) for p in V[key])
         if d:pen.add(f'<path class="{cls}" d="{d}"/>')
+ISO=[(0.8,0.2),(1,0.25),(1.2,0.25),(1.4,0.3),(1.6,0.35),(1.8,0.35),(2,0.4),(2.5,0.45),(3,0.5),(3.5,0.6),(4,0.7),(5,0.8),(6,1)]   # ISO 261 coarse, as maker.js's cards
+def prim_pts(p):
+    if p[0]=='line':return [(p[1],p[2]),(p[3],p[4])]
+    if p[0]=='circle':return [(p[1]-p[3],p[2]),(p[1]+p[3],p[2])]
+    return [(p[4],p[5]),(p[6],p[7]),(p[1],p[2])]
+def radius(half,b):
+    """a turned profile's outer radius along its axis, every 4 µm (at least 400 places)"""
+    L=b[1,2]-b[0,2];n=max(400,int(L/0.004));W=np.linspace(b[0,2],b[1,2],n);r=np.zeros(n)
+    for i,w in enumerate(W):
+        x=half.intersection(LineString([(0,w),(100,w)]))
+        r[i]=x.bounds[2] if not x.is_empty else 0
+    return W,r
+def leaves(m,gear):
+    """a pinion's leaves on a turned part, from its tooth data (z, m): the run along the axis of the solid's points standing out past the pitch radius (a section
+    may cut between two leaves), and their tip radius"""
+    rp=gear['m']*gear['z']/2;V=m.vertices;r=np.hypot(V[:,0],V[:,1]);on=(r>rp*0.98)&(r<rp+2*gear['m'])
+    if on.sum()<3*gear['z']:return None
+    return {'lo':float(V[on,2].min()),'hi':float(V[on,2].max()),'rt':float(r[on].max()),'rp':rp,'z':gear['z'],'m':gear['m']}
+def thread(half,b):
+    """an outside thread on a turned profile: where the outer radius rises and falls regularly (six crests or more, evenly spaced, shallow against the radius):
+    its ends, major and minor radii and pitch"""
+    W,r=radius(half,b)
+    d=np.diff(r);sgn=np.sign(d);sgn[sgn==0]=1;pk=np.flatnonzero((sgn[:-1]>0)&(sgn[1:]<0))+1
+    pk=[i for i in pk if r[i]>0.05]
+    if len(pk)<6:return None
+    # the longest run of crests spaced alike
+    best=None;i=0
+    while i<len(pk)-1:
+        j=i+1;sp=W[pk[j]]-W[pk[i]]
+        while j+1<len(pk) and abs((W[pk[j+1]]-W[pk[j]])-sp)<0.15*sp:j+=1
+        if best is None or j-i>best[1]-best[0]:best=(i,j)
+        i=j
+    i,j=best
+    if j-i<5:return None
+    p=(W[pk[j]]-W[pk[i]])/(j-i);lo=W[pk[i]]-p/2;hi=W[pk[j]]+p/2;sel=(W>=W[pk[i]])&(W<=W[pk[j]])
+    rM=r[sel].max();rm=r[sel].min()
+    if rM-rm>0.2*rM or rM-rm<0.02*rM:return None
+    lo=max(lo,b[0,2]);hi=min(hi,b[1,2])
+    M,P=min(ISO,key=lambda q:abs(q[0]-2*rM))
+    return {'lo':lo,'hi':hi,'rM':rM,'rm':rm,'p':p,'iso':f'M{M:g} × {P:g}'}
 def turned(A,sc):
     """a turned part's front view, the left half as seen, the right half cut through its axis, hatched; its diameters across, its lengths chained up the left"""
     m=A['m'];b=A['b'];R=max(abs(b[0,0]),abs(b[1,0]))
@@ -244,6 +315,26 @@ def turned(A,sc):
     V={'vis':Vl['vis']+Vr['vis'],'hid':Vl['hid']}
     half=A['sec'].intersection(sbox(0,b[0,2]-1,R+1,b[1,2]+1)) if not A['sec'].is_empty else A['sec']
     half=half.simplify(2e-4,preserve_topology=True)                                   # a straight run split at a stray vertex is one run
+    th=thread(half,b)
+    if th:
+        # a thread drawn as DIN ISO 6410 draws it: its flanks left out, a thick line at the major diameter, a thin one at the minor, a thick line where it ends;
+        # the section hatched to the major diameter
+        lo,hi,rM,rm,pitch=th['lo'],th['hi'],th['rM'],th['rm'],th['p'];e=0.6*pitch
+        inband=lambda p:all(lo-e<=y<=hi+e and abs(x)<=rM+0.02 for x,y in prim_pts(p)) and (all(x<=1e-3 for x,_ in prim_pts(p)) or all(abs(x)>=rm-0.02 for x,_ in prim_pts(p)))   # the seen half's flanks and rings, the cut half's outline
+        V={k:[p for p in V[k] if not inband(p)] for k in V}
+        half=unary_union([half.difference(sbox(rm-1e-3,lo,rM+1,hi)),sbox(0,lo,rM,hi)]).simplify(2e-4,preserve_topology=True)
+        V['vis']+=[('line',-rM,lo,-rM,hi),('line',rM,lo,rM,hi)];V['thin']=[('line',-rm,lo,-rm,hi),('line',rm,lo,rm,hi)]
+        end=lo if hi>=b[1,2]-0.01 else hi;V['vis'].append(('line',-rM,end,rM,end))
+        A['thread']=th
+    lv=leaves(m,A['gear']) if A.get('gear') and A['gear'].get('z') and A['gear'].get('m') else None
+    if lv:
+        # leaves drawn as DIN 3966 draws teeth: the part plain to its tip diameter, uncut in the section, the pitch line a chain line
+        lo,hi,rt=lv['lo'],lv['hi'],lv['rt']
+        inleaf=lambda p:all(lo-0.01<=y<=hi+0.01 and abs(x)<=rt+0.02 for x,y in prim_pts(p))
+        V={k:[p for p in V[k] if not inleaf(p)] for k in V}
+        half=unary_union([half.difference(sbox(0,lo,rt+1,hi)),sbox(0,lo,rt,hi)]).simplify(2e-4,preserve_topology=True)
+        V['vis']+=[('line',-rt,lo,-rt,hi),('line',rt,lo,rt,hi),('line',-rt,lo,rt,lo),('line',-rt,hi,rt,hi)];V['pitch']=[('line',-lv['rp'],lo-1,-lv['rp'],hi+1),('line',lv['rp'],lo-1,lv['rp'],hi+1)]
+        A['leaves']=lv
     # the profile: the cut's outline right of the axis, its upright runs (diameters) and its level runs (shoulders)
     dia={};lev={round(b[0,2],3),round(b[1,2],3)};bores={}
     for g in getattr(half,'geoms',[half]):
@@ -263,15 +354,20 @@ def area(paper):
     """the drawing's room on the sheet: inside the frame (a 20 mm filing margin on the left, 10 elsewhere, 5 more inside), above the title block"""
     W,H=PAPER[paper];return (25,15,W-15,H-10-40-5)
 def margins(A,sc):
-    """the room each view's dimensions take round it, printed mm: (left, right, top, bottom)"""
+    """the room each view's dimensions take round it, printed mm: (left, right, top, bottom); an assembly's views the ring of its balloons"""
+    if A.get('kind_draw')=='asm':return {'front':(17,17,17,17),'top':(17,17,17,17)}
     if A['kind']=='turned':return {'front':(30,26,5,5),'top':(5,5,7,5)}
     M={'front':(20,4,8,4),'top':(9,15,4,15)}
     if 'left' in A['views']:M['left']=(4,4,8,4)
     return M
 def place(A,sc,paper):
+    x0,y0,x1,y1=area(paper)
+    if A.get('plist'):y1-=5.5*(A['plist']+1)+3                                         # an assembly's parts list over the title block
+    return place_in(A,sc,paper,(x0,y0,x1,y1))
+def place_in(A,sc,paper,box,need_rend=True):
     """the views' places in first angle (the front view, the view from the left right of it, the plan under it, the front and plan on one column so their
     projection lines meet) and the render's in the first free corner; None if they don't fit"""
-    b=A['b'];ext=b[1]-b[0];x0,y0,x1,y1=area(paper);M=margins(A,sc)
+    b=A['b'];ext=b[1]-b[0];x0,y0,x1,y1=box;M=margins(A,sc)
     size={'front':(ext[0]*sc,ext[2]*sc),'top':(ext[0]*sc,ext[1]*sc),'left':(ext[1]*sc,ext[2]*sc)}
     vs=[v for v in ('front','top','left') if v in A['views'] or v=='top' and 'bottom' in A['views']]
     colx=x0+max(M[v][0] for v in vs if v in ('front','top'))
@@ -285,19 +381,22 @@ def place(A,sc,paper):
     if 'left' in vs:cands.append((P['left'][0],max(blocks[vs.index('left')][3]+4,y0)))
     cands+=[(max(r[2] for r in blocks)+GAP,y0),(x0,y1-REND-5),(x0,max(r[3] for r in blocks)+4)]
     rend=next(((x,y) for x,y in cands if x>=x0 and y>=y0 and x+REND<=x1 and y+REND+5<=y1 and not hit((x-2,y-2,x+REND+2,y+REND+7))),None)
-    if rend is None:return None
+    if rend is None and need_rend:return None
     return {'P':P,'size':size,'M':M,'blocks':blocks,'rend':rend}
 def choose(A):
     """the largest standard scale on A4; A3 where it gives a larger scale and A4 would print the part's largest view under 100 mm"""
-    best={}
+    best={};ext=A['b'][1]-A['b'][0]
     for paper in ('A4','A3'):
-        for sc in SCALES:
-            L=place(A,sc,paper)
-            if L:best[paper]=(sc,L);break
-    ext=A['b'][1]-A['b'][0]
+        ok=[(sc,L) for sc in SCALES for L in [place(A,sc,paper)] if L]
+        if ok:best[paper]=next(((sc,L) for sc,L in ok if max(ext)*sc<=160),ok[-1])   # no larger than reads well: a 3 mm bush at 20:1, not 50:1
     if 'A4' in best and not('A3' in best and best['A3'][0]>best['A4'][0] and max(ext)*best['A4'][0]<100):return ('A4',*best['A4'])
     if 'A3' in best:return ('A3',*best['A3'])
-    return 'A3',SCALES[-1],place(A,SCALES[-1],'A3')
+    for sc in SCALES:                                                                   # nothing fits with its render: the largest scale that fits without it
+        x0,y0,x1,y1=area('A3')
+        if A.get('plist'):y1-=5.5*(A['plist']+1)+3
+        L=place_in(A,sc,'A3',(x0,y0,x1,y1),need_rend=False)
+        if L:return 'A3',sc,L
+    raise ValueError('no sheet holds its views')
 def chain_v(pen,x,xedge,zs,Y,overall=None):
     """lengths chained up a line at x between the levels zs (part mm), each level's extension line from the part's edge at xedge; a span too short for its text
     has it set level beside the line, moved clear of its neighbours; too short for arrows, oblique ticks (DIN 406); then the whole length outside (overall: its x)"""
@@ -338,7 +437,7 @@ def wrap(t,width,size):
     return out
 def layout_and_draw(A,dirp,date,version):
     """the sheet: views at the chosen scale, arranged in first angle, dimensioned; the render. Returns (pen, paper, sc, notes)"""
-    m=A['m'];b=A['b'];kind=A['kind'];k=A['k'];ext=b[1]-b[0]
+    m=A['m'];b=A['b'];kind=A['kind'];k=A['k'];ext=b[1]-b[0];G.TURNED=kind=='turned'
     if kind=='flat':
         top0=G.view(m,'top',5/max(ext[:2].max(),1));finish_flat(A,top0)                  # the holes and levels first: the margins depend on them
     paper,sc,L=choose(A);W,H=PAPER[paper];pen=Pen();notes=[]
@@ -360,6 +459,17 @@ def layout_and_draw(A,dirp,date,version):
             if pb[0]-pa[0]>2*ARR+1:pen.line(*pa,*pb,'d');pen.arrow(*pa,-1,0);pen.arrow(*pb,1,0);pen.line(pb[0],pb[1],tx-1,y,'d')
             else:pen.line(pa[0]-ARR-1.5,pa[1],pb[0]+ARR+1.5,pb[1],'d');pen.arrow(*pa,1,0);pen.arrow(*pb,-1,0);pen.line(pb[0]+ARR+1.5,pb[1],tx-1,y,'d')
             pen.line(tx-1,y,tx+len(t)*TXT*0.55,y,'d');pen.text(tx,y-0.7,t,anchor='start')
+        th=A.get('thread')
+        if th:
+            levels=sorted(set(levels)|{round(th['lo'],3),round(th['hi'],3)});levels=[z for i,z in enumerate(levels) if i==0 or z-levels[i-1]>0.03]
+            # a level inside the thread is a crest, not a shoulder
+            levels=[z for z in levels if not(th['lo']+0.01<z<th['hi']-0.01)]
+            t=f"{th['iso']} (drawn Ø {f2(2*th['rM'])}, pitch {f2(th['p'])})";ym=FY((th['lo']+th['hi'])/2)
+            leader(pen,(FX(th['rM']),ym),(FX(R)+8,ym-6),t)
+        lv=A.get('leaves')
+        if lv:
+            levels=sorted(set(levels)|{round(lv['lo'],3),round(lv['hi'],3)});levels=[z for i,z in enumerate(levels) if (i==0 or z-levels[i-1]>0.03) and not(lv['lo']+0.01<z<lv['hi']-0.01)]
+            ym=FY((lv['lo']+lv['hi'])/2);leader(pen,(FX(lv['rt']),ym),(FX(R)+8,ym-6),f"Pinion z {lv['z']}, m {lv['m']:g}: tooth data on sheet 2")
         chain_v(pen,FX(-R)-7,FX(-R),levels,FY,overall=FX(-R)-24)
         if len(A['views'])>1:
             ev=A['views'][1];tx0,ty0=P['top'];TY=lambda v:ty0+(b[1,1]-v)*sc
@@ -402,7 +512,7 @@ def layout_and_draw(A,dirp,date,version):
             draw_view(pen,Vl,lambda x:lx0+x*sc,FY,sc)
             pen.text(lx0+ext[1]*sc/2,fy-3,'View from the left',size=2.5,cls='t vn')
     png=dirp/f'{k}.png'
-    if png.exists():
+    if png.exists() and L['rend']:
         rx,ry=L['rend']
         pen.add(f'<rect class="rf" x="{rx:.2f}" y="{ry:.2f}" width="{REND}" height="{REND}"/><image href="{png.name}" x="{rx+1:.2f}" y="{ry+1:.2f}" width="{REND-2}" height="{REND-2}" preserveAspectRatio="xMidYMid meet"/>')
         pen.text(rx+REND/2,ry+REND+3.2,'Isometric view, not to scale',size=2.0,cls='t vn')
@@ -444,6 +554,7 @@ CSS="""
 .c{stroke:#000;stroke-width:0.18;stroke-dasharray:5 0.8 0.6 0.8;fill:none}
 .cut{stroke:#000;stroke-width:0.7}
 .d{stroke:#000;stroke-width:0.18}
+.thin{fill:none;stroke:#000;stroke-width:0.18}
 .h{fill:none;stroke:#000;stroke-width:0.13}
 .v{fill:none;stroke:#000;stroke-width:0.5}
 .fill{fill:#000;stroke:#000;stroke-width:0.1}
@@ -453,6 +564,7 @@ CSS="""
 .tbo{fill:none;stroke:#000;stroke-width:0.6}
 .tb{stroke:#000;stroke-width:0.3}
 .rf{fill:none;stroke:#000;stroke-width:0.18}
+.bal{fill:#fff;stroke:#000;stroke-width:0.3}
 .tk{stroke:#000;stroke-width:0.35}
 .t{font-family:'Instrument Sans',sans-serif;font-style:oblique 15deg;fill:#000}
 .tbl{fill:#333}
@@ -465,13 +577,15 @@ def sheet1(A,dirp,date,version,model_title):
     W,H=PAPER[paper]
     pen.add(f'<rect class="frame" x="20" y="10" width="{W-30}" height="{H-20}"/>')
     title_block(pen,W,H,A,sc,1,2,date,version,model_title)
-    if notes:pen.text(25,H-10-42-3,' '.join(notes),size=2.0,anchor='start')
+    if A.get('n',1)>1:notes.insert(0,f"{A['n']} made; one drawn.")
+    if notes:pen.text(25,H-10-42-3,' '.join(notes),size=2.2,anchor='start')
     svg=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}mm" height="{H}mm">'+''.join(pen.o)+'</svg>'
     return svg,paper,sc
 def sheet2(A,version):
     """the tables, as HTML: the parts-list lines, the holes, the contour, the teeth"""
     meta=A['meta'];o=[]
     L=meta.get('lines') or []
+    if A.get('n',1)>1:o.append(f"<p><b>{A['n']} made, all alike;</b> the drawing shows one, in its own frame (the holes' and contour's coordinates are that one's).</p>")
     if L:
         o.append('<h3>Parts list</h3><table><tr><th>Drawing</th><th>Name</th><th>Units</th><th>Material</th><th>Finish, heat treatment</th><th>Fit, as measured on the model</th></tr>'+
           ''.join(f"<tr><td>{esc(l['no'])}</td><td>{esc(l['name'])}</td><td>{esc(l.get('qty',''))}</td><td>{esc(l.get('mat',''))}</td><td>{esc(l.get('treat',''))}</td><td>{esc(l.get('fit',''))}</td></tr>" for l in L)+'</table>')
@@ -508,11 +622,123 @@ def sheet2(A,version):
         o.append(f"<p>Turned about its axis; length {f2(b[1,2]-b[0,2])}, largest Ø {f2(2*max(abs(b[0,0]),abs(b[1,0])))}. Diameters: {', '.join('Ø '+f2(x) for x in d.get('dia',[]))}"+
                  (f"; bores {', '.join('Ø '+f2(x) for x in d.get('bores',[]))}" if d.get('bores') else '')+
                  f". Shoulders from the lower end: {', '.join(f2(z-b[0,2]) for z in d.get('levels',[]))}.</p>")
+        th=A.get('thread')
+        if th:o.append(f"<h3>Thread</h3><p>Outside thread {f2(th['lo']-b[0,2])}-{f2(th['hi']-b[0,2])} from the lower end, {f2(th['hi']-th['lo'])} long: drawn Ø {f2(2*th['rM'])} over its crests, {f2(2*th['rm'])} at its roots, pitch {f2(th['p'])}. Cut the ISO 261 coarse thread nearest it, {th['iso']}, where the part's own sheet gives none (the Wempe-Norm screws' sheets aren't in the set).</p>")
     t=A.get('teeth');g=A.get('gear')
+    if A.get('leaves') and not t:lv=A['leaves'];t={'z':lv['z'],'tip':2*lv['rt'],'root':None};o.append(f"<p>Leaves {f2(lv['lo']-b[0,2])}-{f2(lv['hi']-b[0,2])} from the lower end, pitch Ø {f2(2*lv['rp'])}; their form is the view from the end, drawn at the sheet's scale.</p>")
     if t or g:
         o.append('<h3>Teeth</h3><table><tr><th>Number</th><th class="n">Module</th><th class="n">Tip Ø</th><th class="n">Root Ø</th></tr>'+
-                 f"<tr><td>{(g or {}).get('z',t and t['z'])}</td><td class='n'>{(g or {}).get('m','see the tooth form')}</td><td class='n'>{f2(t['tip']) if t else ''}</td><td class='n'>{f2(t['root']) if t else ''}</td></tr></table>")
+                 f"<tr><td>{(g or {}).get('z',t and t['z'])}</td><td class='n'>{(g or {}).get('m','see the tooth form')}</td><td class='n'>{f2(t['tip']) if t else ''}</td><td class='n'>{f2(t['root']) if t and t.get('root') else ''}</td></tr></table>")
     return ''.join(o)
+def anchors(A,dirp,pcs,view):
+    """for each piece, a point on it seen in the view (the assembly's ray from the viewer meets that piece first there): its paper coordinates in the view's own
+    plane (x, y up), or None where the piece is hidden in that view"""
+    m=A['m'];d,ax,ay=G.VIEWS[view];out={}
+    for k in pcs:
+        try:pm,_=G.load(dirp,k)
+        except Exception:out[k]=None;continue
+        pm.apply_transform(A['T']);V=pm.vertices
+        if not len(V):out[k]=None;continue
+        c=V.mean(0);o=np.argsort(np.linalg.norm(V-c,axis=1))                            # from the piece's middle outward, nearest its centre first
+        cand=V[o[::max(1,len(o)//60)]][:60]
+        loc,ri,_=m.ray.intersects_location(cand-d*(m.extents.max()+5),np.tile(d,(len(cand),1)),multiple_hits=False)
+        best=None
+        for p,i in zip(loc,ri):
+            if np.linalg.norm(p-cand[i])<max(0.02,0.002*m.extents.max()):best=cand[i];break
+        if best is None:
+            # a point of its surface instead of a vertex: its faces' centres
+            C=pm.triangles_center[::max(1,len(pm.faces)//80)]
+            loc,ri,_=m.ray.intersects_location(C-d*(m.extents.max()+5),np.tile(d,(len(C),1)),multiple_hits=False)
+            for p,i in zip(loc,ri):
+                if np.linalg.norm(p-C[i])<max(0.02,0.002*m.extents.max()):best=C[i];break
+        out[k]=None if best is None else (float(best[ax]),float(best[ay]))
+    return out
+def balloons(pen,pts,box,X,Y,R=3.2):
+    """numbered balloons round a view's box (paper), each joined to its point on its piece by a leader with a dot; set in the order of their angle round the
+    view's middle, along a ring 10 mm outside the box, spread so they don't touch"""
+    if not pts:return
+    x0,y0,x1,y1=box;cx,cy=(x0+x1)/2,(y0+y1)/2;out=[]
+    for n,(u,v) in pts:
+        px,py=X(u),Y(v);a=math.atan2(py-cy,px-cx);out.append([a,n,px,py])
+    out.sort()
+    # places on the box's offset outline, by angle, then pushed apart along it
+    e=10+R;bx0,by0,bx1,by1=x0-e,y0-e,x1+e,y1+e;per=2*((bx1-bx0)+(by1-by0))
+    def at(t):
+        t%=per;w,h=bx1-bx0,by1-by0
+        if t<w:return bx0+t,by0
+        t-=w
+        if t<h:return bx1,by0+t
+        t-=h
+        if t<w:return bx1-t,by1
+        return bx0,by1-(t-w)
+    def param(x,y):
+        # the outline's parameter nearest the ray from the middle through (x, y)
+        best=None
+        for i in range(400):
+            t=per*i/400;qx,qy=at(t);dd=abs(math.atan2(qy-cy,qx-cx)-math.atan2(y-cy,x-cx));dd=min(dd,2*math.pi-dd)
+            if best is None or dd<best[0]:best=(dd,t)
+        return best[1]
+    ts=[param(px,py) for _,_,px,py in out];o=np.argsort(ts);ts=[ts[i] for i in o];out=[out[i] for i in o]
+    gap=2*R+1.5
+    for _ in range(50):
+        moved=False
+        for i in range(len(ts)):
+            j=(i+1)%len(ts);d=(ts[j]-ts[i])%per
+            if len(ts)>1 and d<gap:ts[j]=ts[i]+gap;moved=True
+        if not moved:break
+    for (a,n,px,py),t in zip(out,ts):
+        bx,by=at(t);l=math.hypot(bx-px,by-py)
+        ex,ey=bx-(bx-px)/l*R,by-(by-py)/l*R
+        pen.line(px,py,ex,ey,'d');pen.add(f'<circle class="dot" cx="{px:.3f}" cy="{py:.3f}" r="0.45"/><circle class="bal" cx="{bx:.3f}" cy="{by:.3f}" r="{R}"/>')
+        pen.text(bx,by+1.25,str(n),size=3.5,cls='t vn')
+def asm_sheet(OUT,e,L,ymid,date,version,model_title):
+    """an assembly's sheet: its views put together, a balloon on each piece, the parts list over the title block naming each piece's sheet"""
+    dirp=OUT/'parts';k=e['k'];A=analyse(dirp,k,ymid,whole=True);m=A['m'];b=A['b'];ext=b[1]-b[0]
+    pcs=e['pcs'];metas={}
+    for q in pcs:
+        try:metas[q]=json.load(open(dirp/f'{q}.json',encoding='utf-8'))
+        except Exception:metas[q]={'title':q,'lines':[]}
+    A['views']=['front','top'];A['kind_draw']='asm';A['plist']=len(pcs)
+    G.TURNED=False
+    paper,sc,Lp=choose(A);W,H=PAPER[paper];pen=Pen()
+    P=Lp['P'];fx,fy=P['front'];FX=lambda u:fx+(u-b[0,0])*sc;FY=lambda w:fy+(b[1,2]-w)*sc
+    tx0,ty0=P['top'];TY=lambda v:ty0+(b[1,1]-v)*sc
+    Vf=G.view(m,'front',sc);Vf['hid']=[];draw_view(pen,Vf,FX,FY,sc)
+    Vt=G.view(m,'top',sc);Vt['hid']=[];draw_view(pen,Vt,FX,TY,sc)
+    pen.text(FX(b[0,0]),fy-3,'Front view',size=2.5,anchor='start',cls='t vn');pen.text(FX(b[0,0]),ty0-3,'Plan',size=2.5,anchor='start',cls='t vn')
+    # each piece ballooned once: in the plan where it shows, else in the front view
+    at_t=anchors(A,dirp,pcs,'top');at_f=anchors(A,dirp,pcs,'front');bt=[];bf=[];missing=[]
+    for i,q in enumerate(pcs):
+        if at_t.get(q):bt.append((i+1,at_t[q]))
+        elif at_f.get(q):bf.append((i+1,at_f[q]))
+        else:missing.append(i+1)
+    balloons(pen,bt,(FX(b[0,0]),TY(b[1,1]),FX(b[1,0]),TY(b[0,1])),FX,TY)
+    balloons(pen,bf,(FX(b[0,0]),FY(b[1,2]),FX(b[1,0]),FY(b[0,2])),FX,FY)
+    # the parts list over the title block (DIN 6771-2): Pos., units, name, drawing, material; a row links to the piece's sheet
+    x1,y1=W-10,H-10-40;rh=5.5;cols=[0,12,24,104,136,180];x0=x1-180;n=len(pcs);ytop=y1-rh*(n+1)
+    pen.add(f'<rect class="tbo" x="{x0}" y="{ytop:.2f}" width="180" height="{rh*(n+1):.2f}"/>')
+    for c in cols[1:-1]:pen.line(x0+c,ytop,x0+c,y1,'tb')
+    for i in range(n+1):pen.line(x0,ytop+rh*(i+1),x1,ytop+rh*(i+1),'tb')
+    hdr=['Pos.','Units','Benennung / Name','Zeichnung / Drawing','Werkstoff / Material']
+    # rows run upward from the title block, the header at the foot (DIN 6771-2)
+    for j,h in enumerate(hdr):pen.text(x0+cols[j]+1,y1-1.7,h,size=2.0,anchor='start',cls='t tbv')
+    for i,q in enumerate(pcs):
+        y=y1-rh*(i+1)-1.7;mt=metas[q];ln=(mt.get('lines') or [{}])[0]
+        qty=str(ln.get('qty','')) if ln else ''
+        cells=[str(i+1),qty,mt.get('title',q)[:58],ln.get('no','—') if ln else '—',(ln.get('mat','') if ln else '')[:30]]
+        pen.add(f'<a href="#{q}">')
+        for j,c in enumerate(cells):pen.text(x0+cols[j]+1,y,c,size=2.2,anchor='start')
+        pen.add('</a>')
+    png=dirp/f'{k}.png'
+    if png.exists() and Lp['rend']:
+        rx,ry=Lp['rend'];pen.add(f'<rect class="rf" x="{rx:.2f}" y="{ry:.2f}" width="{REND}" height="{REND}"/><image href="{png.name}" x="{rx+1:.2f}" y="{ry+1:.2f}" width="{REND-2}" height="{REND-2}" preserveAspectRatio="xMidYMid meet"/>')
+        pen.text(rx+REND/2,ry+REND+3.2,'Isometric view, not to scale',size=2.0,cls='t vn')
+    pen.add(f'<rect class="frame" x="20" y="10" width="{W-30}" height="{H-20}"/>')
+    A['meta']=dict(A['meta']);A['meta']['lines']=[{'no':'(assembly)','mat':'see the parts list','treat':''}] if not A['meta'].get('lines') else A['meta']['lines']
+    title_block(pen,W,H,A,sc,1,1,date,version,model_title)
+    if missing:pen.text(25,H-10-42-3-rh*(n+1),'Not seen in either view (inside the assembly): Pos. '+', '.join(map(str,missing))+'.',size=2.2,anchor='start')
+    svg=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}mm" height="{H}mm">'+''.join(pen.o)+'</svg>'
+    return A,svg,paper,sc
 def main(OUT,only):
     """each part's two sheets, as an HTML page per part in OUT/sheets (its render beside it), and the book's index"""
     import subprocess
@@ -525,12 +751,19 @@ def main(OUT,only):
         k=e['k']
         if only and k not in only:continue
         if not (dirp/f'{k}.npz').exists():continue
-        A=analyse(dirp,k,ymid)
-        svg,paper,sc=sheet1(A,dirp,date,version,'Wempe Einheits-Chronometer')
-        tab=sheet2(A,version)
+        import time,traceback;t0=time.time()
+        try:
+            if e.get('asm'):
+                A,svg,paper,sc=asm_sheet(OUT,e,L,ymid,date,version,'Wempe Einheits-Chronometer');tab=None
+            else:
+                A=analyse(dirp,k,ymid)
+                svg,paper,sc=sheet1(A,dirp,date,version,'Wempe Einheits-Chronometer')
+                tab=sheet2(A,version)
+        except Exception as ex:
+            print(k,'FAILED',type(ex).__name__,str(ex)[:200],traceback.format_exc().strip().splitlines()[-3][:200],flush=True);continue
         (sd/f'{k}.svg').write_text(svg,encoding='utf-8')
-        (sd/f'{k}.html').write_text(page(k,A,svg,paper,tab),encoding='utf-8');(sd/f'{k}.frag.html').write_text(frag(k,A,svg,paper,tab,f'parts/{k}.png'),encoding='utf-8')
-        print(k,A['kind'],paper,sc,len(A.get('holes') or []),'holes',flush=True)
+        (sd/f'{k}.html').write_text(page(k,A,svg,paper,tab),encoding='utf-8') if tab is not None else (sd/f'{k}.html').write_text(head(A['meta']['title'],FONT.as_uri())+frag(k,A,svg,paper,None,f'../parts/{k}.png')+'</body></html>',encoding='utf-8');(sd/f'{k}.frag.html').write_text(frag(k,A,svg,paper,tab,f'parts/{k}.png'),encoding='utf-8')
+        print(k,A['kind'],paper,sc,len(A.get('holes') or []),'holes',f'{time.time()-t0:.1f}s',flush=True)
 def head(title,font_rel):
     return f"""<!doctype html><html><head><meta charset="utf-8"><title>{esc(title)}</title><style>
 @font-face{{font-family:'Instrument Sans';src:url('{font_rel}') format('woff2');font-style:normal}}
@@ -539,24 +772,47 @@ body{{margin:0;background:#888}}.sh{{background:#fff;margin:8px auto;box-sizing:
 .sh svg{{display:block}}
 .tab{{width:210mm;min-height:297mm;padding:15mm 12mm 15mm 22mm;font:9pt/1.35 'Instrument Sans',sans-serif;background:#fff;margin:8px auto;box-sizing:border-box}}
 table{{border-collapse:collapse;width:100%;margin:2mm 0 4mm}}th,td{{border:0.2mm solid #000;padding:0.8mm 1.4mm;text-align:left;vertical-align:top}}th{{font-weight:600}}.n{{text-align:right;font-variant-numeric:tabular-nums}}
-tr{{break-inside:avoid}}h2{{font-size:13pt;margin:0 0 3mm}}h3{{font-size:10pt;margin:4mm 0 1mm;break-after:avoid}}
+tr{{break-inside:avoid}}h1{{font-size:20pt;margin:20mm 0 6mm}}h2{{font-size:13pt;margin:0 0 3mm}}.toc{{columns:2;font-size:8.5pt;padding-left:5mm}}.toc .pc{{margin-left:3mm;color:#333}}.toc a{{color:#000;text-decoration:none}}
+.back section{{break-before:page}}.back table.mk{{font-size:8pt}}h3{{font-size:10pt;margin:4mm 0 1mm;break-after:avoid}}
 @media print{{body{{background:none}}.sh,.tab{{margin:0;break-after:page}}}}
 {CSS}</style></head><body>"""
 def frag(k,A,svg,paper,tab,img):
-    """a part's two sheets as a fragment of the book (img: the path its render is found at from the page)"""
+    """a part's sheets as a fragment of the book (img: the path its render is found at from the page; tab None for an assembly's one sheet)"""
     svg=svg.replace(f'href="{k}.png"',f'href="{img}"')
-    return f"""<div class="sh {paper}">{svg}</div><div class="tab"><h2>{esc(A['meta']['title'])} — sheet 2</h2><p>{esc(A['meta'].get('desc',''))}</p>{tab}</div>"""
+    return f"""<div class="sh {paper}" id="{esc(k)}">{svg}</div>"""+('' if tab is None else f"""<div class="tab"><h2>{esc(A['meta']['title'])} — sheet 2</h2><p>{esc(A['meta'].get('desc',''))}</p>{tab}</div>""")
 FONT=pathlib.Path(__file__).resolve().parents[3]/'vendor'/'fonts'/'InstrumentSans-normal-400.woff2'
 def page(k,A,svg,paper,tab):
     return head(A['meta']['title'],FONT.as_uri())+frag(k,A,svg,paper,tab,f'../parts/{k}.png')+'</body></html>'
 def book_html(OUT,title):
-    """the drawn parts' sheets in the build book's order, one HTML (its renders and font beside it in OUT)"""
-    L=json.loads((OUT/'list.json').read_text(encoding='utf-8'))['parts'];o=[]
+    """the book in one HTML (its renders and font beside it in OUT): the page's title and introduction and a contents list, the drawn parts' sheets in the
+    build book's order, then the page's closing chapters"""
+    L=json.loads((OUT/'list.json').read_text(encoding='utf-8'))['parts'];o=[];W={}
+    try:W=json.loads((OUT/'bookwords.json').read_text(encoding='utf-8'))
+    except Exception:pass
+    toc=''.join(f"<li class='{'pc' if e.get('parent') else 'pt'}'><a href='#{esc(e['k'])}'>{esc(e['title'])}</a></li>" for e in L if (OUT/'sheets'/f"{e['k']}.frag.html").exists())
+    o.append(f"<div class='tab front'><h1>{esc(W.get('title',title))}</h1>{W.get('intro','')}<p>Each part has its drawing, laid out as the Wempe's own works drawings are (first-angle projection, sizes in mm), drawn from the working model's solids by tools/drawbook.py, with a second sheet of its parts-list lines, holes and contour; each assembly a sheet with its pieces ballooned and listed. The works drawings themselves are not reproduced.</p><h2>Contents</h2><ol class='toc'>{toc}</ol></div>")
     for e in L:
         f=OUT/'sheets'/f"{e['k']}.frag.html"
         if f.exists():o.append(f.read_text(encoding='utf-8'))
-    (OUT/'book.html').write_text(head(title,FONT.as_uri())+''.join(o)+'</body></html>',encoding='utf-8');return OUT/'book.html',len(o)
-async def pdf(OUT,dest):
+    if W.get('back'):o.append(f"<div class='tab back'>{W['back']}</div>")
+    # the renders as JPEG for the book (at most 900 px, on white): a PDF of PNGs at twice the screen's size is several times larger
+    from PIL import Image
+    for f in (OUT/'parts').glob('*.png'):
+        j=f.with_suffix('.jpg')
+        if not j.exists() or j.stat().st_mtime<f.stat().st_mtime:
+            im=Image.open(f).convert('RGB');im.thumbnail((900,900));im.save(j,quality=85)
+    o=[x.replace('.png"','.jpg"') for x in o]
+    (OUT/'book.html').write_text(head(title,FONT.as_uri())+''.join(o)+'</body></html>',encoding='utf-8');return OUT/'book.html',len(L)
+def pages(pdfp,OUT):
+    """the page each part's sheet starts on: the first page whose title block names its key"""
+    import pymupdf
+    keys={e['k'] for e in json.loads((OUT/'list.json').read_text(encoding='utf-8'))['parts']};P={}
+    for i,pg in enumerate(pymupdf.open(pdfp)):
+        r=pg.rect;mm=72/25.4
+        for w in pg.get_text('words'):                                                    # only in a title block's Teil / Part cell (title_block: 11-22 mm under its top)
+            if w[4] in keys and w[4] not in P and r.height-41*mm<w[1]<r.height-27*mm and w[0]>r.width-80*mm:P[w[4]]=i+1
+    return P
+async def pdf(OUT,dest,pages_js=None):
     import browser
     from playwright.async_api import async_playwright
     f,n=book_html(OUT,'Build book')
@@ -565,3 +821,11 @@ async def pdf(OUT,dest):
         await pg.goto(f.as_uri());await pg.wait_for_timeout(1500)
         await pg.pdf(path=dest,prefer_css_page_size=True,print_background=True);await b.close()
     print(n,'parts into',dest)
+    if pages_js:
+        P=pages(dest,OUT);missing=[e['k'] for e in json.loads((OUT/'list.json').read_text(encoding='utf-8'))['parts'] if e['k'] not in P]
+        nm=pathlib.Path(dest).name
+        js=(f"/* bookpages.js: the page of the build book (book/{nm}, tools/drawbook.py) each part's sheet starts on, for its card's Drawing button.\n"
+            "   Written by tools/drawbook.py pdf --pages; do not edit by hand. Declares only WBOOK */\n\"use strict\";\n"
+            "const WBOOK="+json.dumps({'pdf':'book/'+nm,'pages':P},separators=(',',':'))+";\n")
+        pathlib.Path(pages_js).write_bytes(js.encode('utf-8'))
+        print(len(P),'parts paged;',len(missing),'without a page:',missing[:12])

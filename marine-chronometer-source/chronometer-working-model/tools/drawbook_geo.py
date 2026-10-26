@@ -53,12 +53,20 @@ VIEWS={'front':(np.array([0,1.,0]),0,2),     # (direction from the viewer into t
        'top':(np.array([0,0,-1.]),0,1),      # down the axis w: u right, v up
        'left':(np.array([1.,0,0]),1,2),
        'bottom':(np.array([0,0,1.]),0,1)}    # up the axis from beneath: u reversed on the paper (a screw's head seen end on)      # from -u looking along +u: in first angle drawn right of the front; v... see note
+TURNED=False   # set by the caller for a turned part (its axis the frame's w through the origin)
 def edges(m,d):
-    """the creases and the silhouettes against direction d: (n,2) vertex pairs"""
+    """the creases and the silhouettes against direction d: (n,2) vertex pairs. On a turned part, two faces of its turned surface (their normals in the plane
+    through the axis) meet at a crease only where their profiles do: a chamfer joining rings of different counts twists its triangles, which isn't an edge"""
     fa=m.face_adjacency;ang=m.face_adjacency_angles;ev=m.face_adjacency_edges
     n=m.face_normals;s0=n[fa[:,0]]@d;s1=n[fa[:,1]]@d
     sil=(s0*s1<0)&(np.abs(s0-s1)>1e-6)
     crease=ang>math.radians(CREASE)
+    if TURNED:
+        c=m.triangles_center;rr=np.hypot(c[:,0],c[:,1])+1e-12;er=np.c_[c[:,0]/rr,c[:,1]/rr];nr=n[:,0]*er[:,0]+n[:,1]*er[:,1];nt=-n[:,0]*er[:,1]+n[:,1]*er[:,0]
+        rev=(np.abs(nt)<0.75)|(rr<1e-6)
+        both=rev[fa[:,0]]&rev[fa[:,1]];V=m.vertices;a0=V[ev[:,0]];a1=V[ev[:,1]]
+        circ=(np.abs(np.hypot(a0[:,0],a0[:,1])-np.hypot(a1[:,0],a1[:,1]))<2e-3)&(np.abs(a0[:,2]-a1[:,2])<2e-3)   # a turned corner runs round a circle
+        crease&=~(both&~circ)
     E=ev[crease|sil]
     # boundary edges (an open solid's): drawn
     try:

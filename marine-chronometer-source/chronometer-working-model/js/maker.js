@@ -121,7 +121,7 @@ const MAKER=(()=>{
     for(const b of mk.querySelectorAll('.mkdevb'))b.onclick=()=>{const id=b.dataset.dev;ORIG.has(id)?ORIG.delete(id):ORIG.add(id);const open=mk.querySelector('.mkb').dataset.v==='s';card(p);if(open)mk.querySelector('[data-a=sheet]').click();if(A&&A.changed)A.changed();};
     const body=mk.querySelector('.mkb'),title=(A.INFO[p]||[p])[0];
     mk.querySelector('[data-a=sheet]').onclick=()=>{body.innerHTML=body.dataset.v==='s'?'':sheetHTML(p);body.dataset.v=body.dataset.v==='s'?'':'s';};
-    mk.querySelector('[data-a=dwg]').onclick=()=>save(new Blob([drawingSVG(p,title)],{type:'image/svg+xml'}),`${C.prefix}-${p}.svg`);
+    mk.querySelector('[data-a=dwg]').onclick=()=>C.bookPdf?open(`${C.bookPdf}#page=${C.bookPage(p)}`,'_blank','noopener'):save(new Blob([drawingSVG(p,title)],{type:'image/svg+xml'}),`${C.prefix}-${p}.svg`);   /* a model with its book as drawings (C.bookPdf, tools/drawbook.py): the part's sheet in it */
     if(C.cardSTL)mk.querySelector('[data-a=stl]').onclick=()=>save(stl(meshesOf(p)),`${C.prefix}-${p}.stl`);}
   /* measuring: two points picked on the model, their distance */
   let meas=null;
@@ -157,7 +157,7 @@ const MAKER=(()=>{
     EDG=null;document.documentElement.classList.add('book-print');const done=()=>{document.documentElement.classList.remove('book-print');removeEventListener('afterprint',done);};
     if(!navigator.webdriver){addEventListener('afterprint',()=>{done();pr.innerHTML='';},{once:true});print();}else done();}   /* emptied after printing: its drawings are tens of MB of SVG */
   /* the button's: built after a paint that says so (the Wempe's takes some 15 s) */
-  function bookBtn(){const b=$('#mkBook');if(b.disabled)return;const t=b.textContent;b.disabled=true;b.textContent='Building the book…';
+  function bookBtn(){if(C.bookPdf){open(C.bookPdf,'_blank','noopener');return;}const b=$('#mkBook');if(b.disabled)return;const t=b.textContent;b.disabled=true;b.textContent='Building the book…';
     requestAnimationFrame(()=>setTimeout(()=>{try{book();}finally{b.disabled=false;b.textContent=t;}},30));}
   /* the model's numbers: the train, the fusee's profile, the escapement's cycle, the hairspring's design, the parts list with its fits and materials */
   function data(){const R=A.R,fs=R.fs,N=FUSEE_TURNS,prof=[];for(let i=0;i<=70;i++){const m=N*i/70;prof.push({turn:+m.toFixed(4),r:+fs.rf(m).toFixed(4),barrelTurns:+fs.I(m).toFixed(4)});}
