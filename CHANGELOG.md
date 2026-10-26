@@ -4,6 +4,16 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.33.00 · 2026-10-26
+- The Hamilton winds as the Wempe does: Wind turns the case over in its gimbals, opens the shield plate and puts the key on from its block
+- The Wempe: Wind with the key, to watch the movement wind half a turn at a time
+- The Wempe: the load path in colour and a close-up of the maintaining spring while it winds, with the time it has left
+
+## 3.32.06 · 2026-10-26
+- The Hamilton's bezel sits lower: the dial is level with where the bezel starts to taper, and the glass is at its top with a bright cone down to the dial, as on real Model 21s
+- The winding key at its real size, 98 mm long, measured on a restoration video, standing pipe down in its block in the box
+- The box narrower, 172 mm, with thinner walls, as photographs of real boxes show
+
 ## 3.32.05 · 2026-10-26
 - The Wempe's mainspring fitted to its 1941 force measurement with the coils' friction counted: the drawn 0.37 mm strip now gives the measured pull, its stress within the steel's limit
 - The Wempe's 1950s build swings 226-237° over the whole wind

@@ -20,8 +20,9 @@ const line=(list,name,load,sig,rg,what,Ty)=>{const mL=rg[0]*MPa/sig,mH=rg[1]*MPa
   list.push({name,load,sig:sig/MPa,lo:rg[0],hi:rg[1],what,Ty,v:v.trim()});return v;};
 
 /* ---------- the hand ---------- */
-const kw=num(core,/function windingKey\(g,M\)\{const kw=([\d.]+)/,'the key\'s size')[0],paddle=3.1*kw;   /* core.js windingKey: the paddle 3.1 kw wide */
-const FL={w:[9.5,19.0],mean:[73.7,108.7],sd:[18.08,16.1]},u=(paddle-FL.w[0])/(FL.w[1]-FL.w[0]),mean=(FL.mean[0]+u*(FL.mean[1]-FL.mean[0]))*INOZ,sd=(FL.sd[0]+u*(FL.sd[1]-FL.sd[0]))*INOZ,
+const[kr,paddle]=num(core,/function windingKey\(g,M\)\{const KR=([\d.]+),KP=([\d.]+)/,'the key\'s size');   /* core.js windingKey: the pipe's radius and the paddle's width */
+/* the study's handles 9.5 to 19.0 across: a paddle wider than the widest (the key's 25.4 since 26 October 2026) is held at the widest's figures, not extrapolated */
+const FL={w:[9.5,19.0],mean:[73.7,108.7],sd:[18.08,16.1]},u=Math.min(1,Math.max(0,(paddle-FL.w[0])/(FL.w[1]-FL.w[0]))),mean=(FL.mean[0]+u*(FL.mean[1]-FL.mean[0]))*INOZ,sd=(FL.sd[0]+u*(FL.sd[1]-FL.sd[0]))*INOZ,
   p95=mean+1.645*sd,swain=150*INOZ,TH=Math.max(p95,swain);
 say(`The hand: the key's paddle ${f(paddle,1)} mm wide (core.js), held between finger and thumb`);
 say(`men tightening flanged handles 9.5-19 mm wide (Imrhan and Munoz-Vasa 2013), at ${f(paddle,1)} mm: mean ${f(mean,2)} N·m, s.d. ${f(sd,2)}, 95th percentile ${f(p95,2)}; Swain et al. (1970): 95th-percentile men on a 12.7 mm knurled knob ${f(swain,2)}`);
@@ -55,8 +56,8 @@ const Fst=T=>Ts(T)*1000/SR;   /* N on the stud, at its centre's radius */
 {const T=TH,a=2.4,s=T*1000/(0.208*a**3)*MPa,d=2.4,s2=16*T*1000/(Math.PI*d**3)*MPa;
   line(out.forward,'fusee arbor\'s square (2.4 across) in torsion',`${f(T,2)} N·m`,s,STEEL_SH.map(Math.round),'hardened steel in shear',STEEL_SH[0]*0.208*a**3/1000);
   line(out.forward,'  its neck under the square (2.4 across)',`${f(T,2)} N·m`,s2,STEEL_SH.map(Math.round),'hardened steel in shear',STEEL_SH[0]*Math.PI*d**3/16/1000);}
-/* the key's brass socket (core.js: r kw/2 outside, the square 2.46): the thinnest wall at a corner, a thin-walled square tube, τ = T / 2 A t */
-{const ro=kw/2,a=2.46,t=ro-a/Math.SQRT2,Am=((2*ro+a)/2)**2*0.85,s=TH*1000/(2*Am*t)*MPa;
+/* the key's brass socket (core.js: r KR outside, the square 2.46): the thinnest wall at a corner, a thin-walled square tube, τ = T / 2 A t */
+{const ro=kr,a=2.46,t=ro-a/Math.SQRT2,Am=((2*ro+a)/2)**2*0.85,s=TH*1000/(2*Am*t)*MPa;
   line(out.forward,`the key's socket (brass, ${f(t,2)} at its thinnest)`,`${f(TH,2)} N·m`,s,BRASS_SH.map(Math.round),'brass in shear',BRASS_SH[0]*2*Am*t/1000);}
 /* winding fast into the stop: the fusee and the barrel through the chain (at full wind the chain leaves the fusee at its smallest radius, T0 / pull) stopped on
    the bar's stop end and the stud in series (cantilevers, 3 E I / L³); the key and square stand behind the arbor's neck, far softer in torsion, so the hand's own
@@ -92,7 +93,7 @@ say('');say(`forward, the first to yield: ${wf.name.trim()}, at ${f(wf.Ty,2)} N�
 say(`the wrong way, the first to yield: ${wb.name.trim()}, at ${f(wb.Ty,2)} N·m on the key (${f(wb.Ty/mean,1)} times an average hand's ${f(mean,2)}, ${f(wb.Ty/TH,1)} times a strong one's)`);
 out.weakF={name:wf.name.trim(),Ty:wf.Ty};out.weakB={name:wb.name.trim(),Ty:wb.Ty};
 const okF=wf.Ty>1.5*TH;rows.push(`${okF?'  ok ':'  !! '} wound forward against the stop, a strong hand (${f(TH,2)} N·m) leaves every part ${f(wf.Ty/TH,1)} times short of yielding${okF?'':': the stop is the weak point'}`);if(!okF)fail=1;
-const okB=wb.Ty>TH;rows.push(`${okB?'  ok ':'  ~~ '} turned the wrong way and forced, ${okB?'nothing yields under a strong hand':`${f(wb.Ty,2)} N·m bends the ${wb.name.trim().split(' (')[0]}'s teeth, ${f(wb.Ty/mean*100,0)} % of an average hand's twist: the manual's "counterclockwise" is all that keeps it, as on the Model 21; a winding key that turns the arbor one way only (a ratchet in its pipe, as Breguet's "tipsy" key of about 1790; deviations.js) makes it impossible`}`);
+const okB=wb.Ty>TH;rows.push(`${okB?'  ok ':'  ~~ '} turned the wrong way and forced, ${okB?'nothing yields under a strong hand':`${f(wb.Ty,2)} N·m bends the ${wb.name.trim().split(' (')[0]}'s teeth, ${f(wb.Ty/mean*100,0)} % of an average hand's twist: the manual's "counterclockwise" is all that keeps it, as on the Model 21; a winding key that turns the arbor one way only (a spring clutch in its body, as chronometerbook.com makes one, after Breguet's "tipsy" key of about 1790; deviations.js) makes it impossible`}`);
 out.okF=okF;out.okB=okB;out.rows=rows;module.exports=out;
 if(require.main===module){console.log(rows.join('\n'));
   const jo=process.argv.indexOf('--json');if(jo>0)fs.writeFileSync(process.argv[jo+1],JSON.stringify(out));
