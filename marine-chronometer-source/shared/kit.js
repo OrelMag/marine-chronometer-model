@@ -236,7 +236,8 @@ const KIT=(()=>{
      many points as p where the cut's wall ends (a cone: p where it starts, q where it ends); floorOut the outline of its floor where p shares part of its edge with a feature
      inside it (the floor is p less the features under it otherwise). Features are nested or apart, never crossing (cross them first with bool, and give the floor). A feature's wall
      runs from the floor of the feature it's in (or the face) to its own floor; cells with features have flat faces. Where two cells touch, the one that reaches further gets the wall
-     between their depths. Walls are split where another wall at the same corner ends, so no edge has a vertex in its middle. UVs in plan, as cbGeo */
+     between their depths. Walls are split where another wall at the same corner ends, so no edge has a vertex in its middle. A sloped cell with strip: 1 has its sloped face
+     built across its paired rails (strip, below). UVs in plan, as cbGeo */
   function solidGeo(cells){
     const P=[],U=[],N=[],e=1e-6,K=p=>Math.round(p[0]*1e5)+','+Math.round(p[1]*1e5),yv=(y,p)=>typeof y==='function'?y(p):y;
     /* each triangle wound to face n, its normal worked in double precision (a flat face's exactly n: float32 normals of long thin triangles show in the Edges drawing) */
@@ -251,6 +252,10 @@ const KIT=(()=>{
           if(s!=null)for(let k=0;k<n;){const a=ix(s+k);let m=k+1;const run=[];while(m<=n&&!used.has(ix(s+m))){run.push(ix(s+m));m++;}if(run.length){const b=ix(s+m),ti=E.get(ek(a,b));
             if(ti!=null&&T[ti]){const c=T[ti].find(v=>v!==a&&v!==b),ch=[a,...run,b];T[ti]=null;for(let q=0;q<ch.length-1;q++){const t=[ch[q],ch[q+1],c];T.push(t);for(let r=0;r<3;r++)E.set(ek(t[r],t[(r+1)%3]),T.length-1);}}}k=m;}o+=n;}}
       for(const t of T)if(t)tri(...t.map(i=>all[i]).map(p=>[p[0],yv(y,p),p[1]]),[0,ny,0]);};
+    /* a strip's sloped face (a cell's strip: 1, its loop [...A, ...B reversed], A[i] and B[i] paired across it: a cone's two rails at the same angles about its axis):
+       quads straight across from rail to rail, every corner on the surface, so a cone or a chamfer comes out exact where earcut's chords along a rail would facet it
+       (26 October 2026; the slope's own refinement cost the page minutes) */
+    const strip=(L,y,ny)=>{const n=L.length/2,P3=p=>[p[0],y(p),p[1]];for(let i=0;i<n-1;i++){const a=L[i],b=L[i+1],c=L[2*n-2-i],d=L[2*n-1-i];tri(P3(a),P3(b),P3(c),[0,ny,0]);tri(P3(a),P3(c),P3(d),[0,ny,0]);}};
     /* walls: [p, q, lo(p), hi(p), lo(q), hi(q), normal]; each corner's depths gathered first, so a wall is split where another ends there */
     const W=[],LV=new Map(),lev=(p,y)=>{const k=K(p);if(!LV.has(k))LV.set(k,[]);const l=LV.get(k);if(!l.some(v=>Math.abs(v-y)<e))l.push(y);};
     const nOut=(p,q,s)=>{const dx=q[0]-p[0],dz=q[1]-p[1],l=Math.hypot(dx,dz)||1;return[s*dz/l,0,-s*dx/l];};   /* s +1: away from a counterclockwise loop's inside */
@@ -276,8 +281,8 @@ const KIT=(()=>{
       for(const g of F){if(g.A&&g.B)continue;const y=g.A?g.b:g.a;if(g.A&&F.some(f=>f.B&&!f.A&&inF(f,g)&&f.a<=y+e))continue;if(g.B&&F.some(f=>f.A&&!f.B&&inF(f,g)&&f.b>=y-e))continue;
         const out=g.floorOut||(g.A?at(g,g.b):g.p),hs=maxi(F.filter(f=>f!==g&&f.a<=y+e&&f.b>=y-e&&(g.A?f.b>y+e:f.a<y-e)&&pip(f.an,out))).map(f=>at(f,y));
         if(hs.some(h=>h===out))continue;face(out,hs,y,g.A?-1:1);}
-      if(typeof y0==='number')face(L,maxi(F.filter(f=>f.A)).map(f=>at(f,y0)),y0,-1);else face(L,[],y0,-1);
-      if(typeof y1==='number')face(L,maxi(F.filter(f=>f.B)).map(f=>at(f,y1)),y1,1);else face(L,[],y1,1);});
+      if(typeof y0==='number')face(L,maxi(F.filter(f=>f.A)).map(f=>at(f,y0)),y0,-1);else if(c.strip)strip(L,y0,-1);else face(L,[],y0,-1);
+      if(typeof y1==='number')face(L,maxi(F.filter(f=>f.B)).map(f=>at(f,y1)),y1,1);else if(c.strip)strip(L,y1,1);else face(L,[],y1,1);});
     for(const[p,q,a0,b0,a1,b1,n]of W){const ls=(x,a,b)=>[a,...(LV.get(K(x))||[]).filter(v=>v>a+e&&v<b-e).sort((u,w)=>u-w),b],L0=ls(p,a0,b0),L1=ls(q,a1,b1);let i=0,j=0;   /* a ladder up the two edges, a rung wherever either edge has a depth */
       while(i<L0.length-1||j<L1.length-1){if(j>=L1.length-1||(i<L0.length-1&&L0[i+1]<=L1[j+1])){tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[p[0],L0[i+1],p[1]],n);i++;}else{tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[q[0],L1[j+1],q[1]],n);j++;}}}
     for(const[A,B,lo,hi,s]of cone)for(let i=0;i<A.length;i++){const j=(i+1)%A.length,a=A[i],b=A[j],c=B[j],d=B[i],n=nOut(a,b,-s);
