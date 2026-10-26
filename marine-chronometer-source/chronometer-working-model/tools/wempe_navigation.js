@@ -15,8 +15,10 @@
 // The criterion (stated before the results were known): after 30 days without a time signal the chronometer adds no more than the sight itself: its error in longitude at
 // the equator under 2 miles (8 s) in the median, Bowditch's probable error of the fix (and the user's aim for the build, about 2 miles a month, 19 October 2026), and in 19
 // voyages of 20 under the fix's own 95 % radius (4.16 miles). Each half is judged on its sampling: its figure's 95 % bootstrap interval (1,000 resamples of the voyages,
-// seeded) must reach its limit; a figure over the limit whose interval still reaches it "passes within sampling" (the user's choice, 25 October 2026). The 1950s build
-// must pass (exit 1); the drawings as last revised and the 1940s build are judged and reported.
+// seeded) must reach its limit; a figure over the limit whose interval still reaches it "passes within sampling" (the user's choice, 25 October 2026), one whose interval
+// misses it by under 1 % of the limit is "on the line" (~~, reported, not failed: the owner's choice, 26 October 2026, when the 1950s build's 95 % figure came to 4.34 miles,
+// its interval from 4.160 against 4.158, once the error budget's calibration stopped wandering with its draws). The 1950s build must not fail (exit 1); the drawings as
+// last revised and the 1940s build are judged and reported.
 //   node wempe_navigation.js [--n 2000] [--json OUT]   (about 1-2 minutes: a child process for each version, MC_WREV; exits 1 if the 1950s build fails or the file is stale)
 //   node wempe_navigation.js --write                    writes tools/navigation_wempe.json (the Wempe report's section 21)
 //   node wempe_navigation.js --fault                    the 1950s build's masses left at their drawn place: must fail
@@ -30,7 +32,7 @@ const OUT=path.join(__dirname,'navigation_wempe.json'),VERS=[['last','as last re
 const STRICT={r95:{name:'2 miles as the fix\'s 95 % radius',median:PE*Math.sqrt(2*Math.log(2))/Math.sqrt(-2*Math.log(0.05)),p95:PE},axis:{name:'the fix\'s error along the parallel alone',median:0.6745*SIG,p95:1.96*SIG}};
 const BOOT=1000;   /* the bootstrap's resamples of the voyages for each figure's sampling range */
 /* a half of the criterion: passes at or under its limit, passes within sampling over it while its interval still reaches it, fails only with the whole interval over it */
-const judge=(x,ci,lim)=>x<=lim?'passes':ci[0]<=lim?'passes within sampling':'fails';
+const judge=(x,ci,lim)=>x<=lim?'passes':ci[0]<=lim?'passes within sampling':ci[0]<=lim*1.01?'on the line':'fails';   /* on the line: the interval misses the limit by under 1 % of it */
 const pct=(a,p)=>{const b=Float64Array.from(a).sort();return b[Math.min(b.length-1,Math.floor(p*b.length))];},f=(x,n=1)=>(+x).toFixed(n),r4=x=>+(+x).toFixed(4);
 
 /* ---------- a child: one version (MC_WREV), its voyages ---------- */
@@ -57,7 +59,7 @@ if(process.argv.includes('--one')){
   return;}
 
 /* ---------- the parent: the three versions, judged ---------- */
-const t0=Date.now(),rows=[],say=s=>rows.push('  '+s);let fail=0;const chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);};
+const t0=Date.now(),rows=[],say=s=>rows.push('  '+s);let fail=0;const chk=(ok,s,line)=>{if(!ok)fail=1;rows.push(`${!ok?'  !! ':line?'  ~~ ':'  ok '} ${s}`);};
 const run=rev=>new Promise((ok,no)=>cp.execFile(process.execPath,[__filename,'--one','--n',String(N),...(FAULT?['--fault']:[])],{cwd:__dirname,env:{...process.env,MC_WREV:rev==='last'||rev==='lastB'?'':rev,MC_NAV_SET:rev==='lastB'?'b':''},maxBuffer:1<<28},
   (e,o,er)=>e?no(Error(`${rev}: ${e.message}\n${er}`)):ok(JSON.parse(o))));
 (async()=>{const R=await Promise.all(VERS.map(([v])=>run(v)));
@@ -66,10 +68,10 @@ const run=rev=>new Promise((ok,no)=>cp.execFile(process.execPath,[__filename,'--
   const C={day:30,median:PE,p95:R95,boot:BOOT,rule:'a half fails only if its whole 95 % bootstrap interval is over its limit'},res={note:'tools/wempe_navigation.js: the error a navigator carries in longitude from a made Wempe, rated in port, and the position with a celestial fix\'s own error',
     n:N,fix:{pe:PE,sigma:r4(SIG),r95:r4(R95),src:'N. Bowditch, The American Practical Navigator, Pub. No. 9 (2019), Vol. 2, Ch. 3, Navigational Errors'},route:'45° N in port to 15° N by day 20, then 15° N (estimated)',criterion:C,versions:{}};
   for(const[i,[v,nm]]of VERS.entries()){const r=R[i],a30=r.at.find(q=>q.d===30),/* each half judged on its sampling range: over the limit only if the whole range is (the point over it, the range not: within sampling) */
-    jm=judge(a30.eq[0],r.ciMed,C.median),jp=judge(a30.eq[1],r.ci95,C.p95),pass=jm!=='fails'&&jp!=='fails',verdict=[jm,jp].includes('fails')?'fails':[jm,jp].includes('passes within sampling')?'passes within sampling':'passes';
+    jm=judge(a30.eq[0],r.ciMed,C.median),jp=judge(a30.eq[1],r.ci95,C.p95),pass=jm!=='fails'&&jp!=='fails',verdict=[jm,jp].includes('fails')?'fails':[jm,jp].includes('on the line')?'on the line':[jm,jp].includes('passes within sampling')?'passes within sampling':'passes';
     say('');say(`${nm}: the masses to ±${r.set}°, its swing after the bench ${f(r.swing.median,1)}° (sd ${f(r.swing.sd,1)}°) against the model's ${f(r.swing.model,1)}°; the cards' scatter ${f(r.sd,3)} s a day`);
     for(const q of r.at)say(`  ${String(q.d).padStart(2)} days: the clock ${f(q.s[0],1)} s (95 % ${f(q.s[1],1)} s): ${f(q.eq[0],2)} miles at the equator (95 % ${f(q.eq[1],2)}), ${f(q.route[0],2)} at ${f(q.lat,0)}° N (${f(q.route[1],2)}); with the fix ${f(q.total[0],2)} miles (95 % ${f(q.total[1],2)})`);
-    (v==='build'?chk:(ok,s)=>say(s))(pass,`${verdict}: after 30 days the clock's longitude error at the equator ${f(a30.eq[0],3)} miles in the median (range ${f(r.ciMed[0],3)}-${f(r.ciMed[1],3)}; limit ${C.median}, the fix's probable error: ${jm}) and ${f(a30.eq[1],3)} in 19 voyages of 20 (range ${f(r.ci95[0],3)}-${f(r.ci95[1],3)}; limit ${f(C.p95,3)}, the fix's 95 %: ${jp}); each range the figure's 95 % bootstrap interval over ${BOOT} resamples of the ${N} voyages`);
+    (v==='build'?(ok,s)=>chk(ok,s,verdict==='on the line'):(ok,s)=>say(s))(pass,`${verdict}: after 30 days the clock's longitude error at the equator ${f(a30.eq[0],3)} miles in the median (range ${f(r.ciMed[0],3)}-${f(r.ciMed[1],3)}; limit ${C.median}, the fix's probable error: ${jm}) and ${f(a30.eq[1],3)} in 19 voyages of 20 (range ${f(r.ci95[0],3)}-${f(r.ci95[1],3)}; limit ${f(C.p95,3)}, the fix's 95 %: ${jp}); each range the figure's 95 % bootstrap interval over ${BOOT} resamples of the ${N} voyages`);
     const st={};for(const[k,L]of Object.entries(STRICT)){st[k]={name:L.name,median:r4(L.median),p95:r4(L.p95),jm:judge(a30.eq[0],r.ciMed,L.median),jp:judge(a30.eq[1],r.ci95,L.p95)};
       say(`  read strictly, ${L.name}: limits ${f(L.median,2)} (median) and ${f(L.p95,2)} (95 %): ${st[k].jm}, ${st[k].jp} (reported; the verdict stays on the probable error)`);}
     res.versions[v]={name:nm,pass,verdict,median:jm,p95:jp,strict:st,set:r.set,ciMed:r.ciMed.map(r4),ci95:r.ci95.map(r4),swing:{median:r4(r.swing.median),sd:r4(r.swing.sd),model:r4(r.swing.model)},at:r.at.map(q=>({d:q.d,lat:q.lat,s:q.s.map(r4),eq:q.eq.map(r4),route:q.route.map(r4),total:q.total.map(r4)})),

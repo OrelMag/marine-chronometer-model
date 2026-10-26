@@ -1816,10 +1816,10 @@
   },
   "build": {
    "name": "the 1950s build",
-   "pass": false,
-   "verdict": "fails",
+   "pass": true,
+   "verdict": "on the line",
    "median": "passes",
-   "p95": "fails",
+   "p95": "on the line",
    "strict": {
     "r95": {
      "name": "2 miles as the fix's 95 % radius",
@@ -2691,10 +2691,10 @@
   },
   "lastB": {
    "name": "as last revised, its masses set as the builds' (±0.1° on further rounds of the trial): reported beside the drawn version's own verdict",
-   "pass": false,
-   "verdict": "fails",
+   "pass": true,
+   "verdict": "on the line",
    "median": "passes",
-   "p95": "fails",
+   "p95": "on the line",
    "strict": {
     "r95": {
      "name": "2 miles as the fix's 95 % radius",
