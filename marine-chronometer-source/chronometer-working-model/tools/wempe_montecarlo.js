@@ -6,8 +6,8 @@
 //   endshake, every term of each arbor's stack from its sheet (bench_wempe.json: the pillars 19.6 ±0.01, their seats 0.3 +0.03, the bushes', the arbors' lengths), the
 //     top plate, the jewel's depth, the escape arbor's endstones, the fusee bush and the barrel's bearings estimated;
 //   the mainspring's strip 0.37 ±0.005 (estimated), the drive as its thickness cubed; each mesh's tooth friction μ 0.10-0.20 (gearing_wempe.json's torque ratios);
-//   the detent's spring 0.07 ±0.005 and the gold spring 0.15 ±0.005 (estimated), their stiffness as the thickness cubed;
-//   the depth of lock: the wheel's tips Ø 14 +0.03 (05 04_23, drawn: the tip) and the banking as first set, ±0.02 (estimated); the preload as first set, 0.63 ±0.3 g
+//   the detent's spring as stiff as 0.0792 (1436's 0.09 at its ends, 0.07 at its middle: TOL.detent.t, TD0) ±0.005 and the gold spring 0.15 ±0.005 (estimated), their stiffness as the thickness cubed;
+//   the depth of lock: the wheel's tips Ø 14 +0.03 (05 04_23, drawn: the tip) and the banking as first set, ±0.02 (estimated); the preload as first set, WESC's W78 (0.8) ±0.3 g
 //     (estimated: by eye, before the bench's riders);
 //   the hairspring: its strip 0.285 ±0.003 (boxed, no tolerance: estimated), its coil Ø 12.8 ±0.05 (boxed, drawn), its cut length ±0.3 mm (estimated), the steel's
 //     modulus 200-210 GPa (published).
@@ -59,7 +59,7 @@ const stack=(a,cache,use)=>a.gap.reduce((s,t)=>s+term(t,cache,use),0)-a.arbor.re
 const HS=TOL.hairspring,h0=0.285,REACH=[-HS.weights.gain,0];   /* the weights, against their heads, only gain: a spring slow by up to their reach times */
 const hsRate=o=>{const dT=-1.5*o.dh/h0+0.5*o.dc/12.8+0.5*o.dl/505.4-0.5*(o.E-206)/206;return 86400*(0.5/(HS.T*(1+dT))-1);};
 
-const EC=BC.escapement,DW=EC.depth.window,PRA=EC.preload,TS=[TOL.detent.inTime[0],TOL.detent.inTime[1]],MSB=BC.mainspring.s;
+const EC=BC.escapement,DW=EC.depth.window,PRA=EC.preload,TS=[TOL.detent.inTime[0],TOL.detent.inTime[1]],TD0=TOL.detent.t,MSB=BC.mainspring.s;
 const one=(only)=>{const use=k=>!only||only===k,o={};
   /* the meshes' centres, each arbor's holes off by e; a mesh jams outside its window */
   const HTn=only==='holes25'?0.025:only==='holes50'?0.05:HT,uH=use('holes')||HTn!==HT,e=AR.map(()=>uH?[N2(HTn),N2(HTn)]:[0,0]);
@@ -71,10 +71,10 @@ const one=(only)=>{const use=k=>!only||only===k,o={};
   const es1=es.map((x,i)=>outB(x,i)?(ARBS[i].band[0]+ARBS[i].band[1])/2+U(-0.01,0.01):x);o.bind1=es1.some(x=>x<ESF);
   /* the drive: the mainspring's strip and the meshes' friction; the springs' stiffness */
   let tms=0.37+(use('mainspring')?N2(0.005):0);const mu=[0,1,2,3].map(()=>use('friction')?U(0.10,0.20):0.15),eta4=mu.reduce((p,m,i)=>p*eta(i,m),1)/etaN;
-  let tdt=0.07+(use('detent')?N2(0.005):0);const kp=((0.15+(use('gold')?N2(0.005):0))/0.15)**3;
+  let tdt=TD0+(use('detent')?N2(0.005):0);const kp=((0.15+(use('gold')?N2(0.005):0))/0.15)**3;
   /* the escapement as first assembled: the lock's depth (the wheel's tips and the banking) and the preload */
   let dep=LK0+(use('tip')?U(0,0.015):0)+(use('banking')?N2(0.02):0),pre=use('preload')?Math.max(0,S.W78+N2(0.3)):S.W78;
-  const swing=(sm,td,w,d)=>{const s=(sm/0.37)**3*eta4,kd=(td/0.07)**3;return[Asurf(s*dmin,kd,kp,w,d),Asurf(s*dmax,kd,kp,w,d)];};
+  const swing=(sm,td,w,d)=>{const s=(sm/0.37)**3*eta4,kd=(td/TD0)**3;return[Asurf(s*dmin,kd,kp,w,d),Asurf(s*dmax,kd,kp,w,d)];};
   const lockOk=(d,w)=>d>=DW[0]&&d<=DW[1]&&w>=PRA.window[0]-1e-9;   /* the lock in its window and the preload no less than the frame was run at (wempe_tripping.js) */
   o.unlocks=dep<=TOL.lock.deep;o.lock=lockOk(dep,pre);
   [o.Alo,o.Ahi]=o.unlocks?swing(tms,tdt,pre,dep):[0,0];o.goes=o.unlocks&&o.Alo>AMIN;o.runs=!o.jam&&!o.bind&&o.goes;o.band=o.goes&&inB(o.Alo,o.Ahi,G.guard);o.src=o.goes&&inB(o.Alo,o.Ahi,G.sources);
@@ -82,7 +82,7 @@ const one=(only)=>{const use=k=>!only||only===k,o={};
   const hs={dh:use('hairspring')?N2(0.003):0,dc:use('hairspring')?U(-0.05,0.05):0,dl:use('hairspring')?N2(0.3):0,E:use('hairspring')?U(200,210):206};o.rate=hsRate(hs);o.times=o.rate>=REACH[0]&&o.rate<=REACH[1];
   o.worksAsMade=o.runs&&o.band&&o.lock;o.bindAt=es.map(x=>x<ESF);
   /* the bench, in its order. The detent's ring: a spring out of its band (half to twice the drawn stiffness) replaced */
-  o.cRing=tdt<TS[0]||tdt>TS[1];while(tdt<TS[0]||tdt>TS[1])tdt=0.07+N2(0.005);
+  o.cRing=tdt<TS[0]||tdt>TS[1];while(tdt<TS[0]||tdt>TS[1])tdt=TD0+N2(0.005);
   /* the escapement: the banking set to its aim (the window's middle), the preload to its aim (estimated: a feeler's and the riders' steps), set again until both read in their
      windows, as a maker measures after setting (since 19 October 2026: the lock's window 15 µm wide, once set it missed in 7 of 2,000) */
   o.cLock=!lockOk(dep,pre)||Math.abs(dep-EC.depth.aim)>0.01||Math.abs(pre-PRA.aim)>0.1;for(let n=0;n<50;n++){dep=EC.depth.aim+N2(0.005);pre=PRA.aim+N2(0.05);if(lockOk(dep,pre))break;}
@@ -90,7 +90,7 @@ const one=(only)=>{const use=k=>!only||only===k,o={};
   const sm0=(tms/0.37)**3;o.cSpring=sm0<MSB[0]||sm0>MSB[1];for(let n=0;n<50&&((tms/0.37)**3<MSB[0]||(tms/0.37)**3>MSB[1]);n++)tms=0.37+N2(0.005);
   /* the swing: out of the guard band, the set-up turned to bring the drive back to the model's (the springs, the preload and the lock as now set) */
   let[Alo,Ahi]=swing(tms,tdt,pre,dep);o.cSetup=!o.jam1&&!inB(Alo,Ahi,G.guard);
-  if(o.cSetup){const kd=(tdt/0.07)**3;Alo=Asurf(dmin,kd,kp,pre,dep);Ahi=Asurf(dmax,kd,kp,pre,dep);}
+  if(o.cSetup){const kd=(tdt/TD0)**3;Alo=Asurf(dmin,kd,kp,pre,dep);Ahi=Asurf(dmax,kd,kp,pre,dep);}
   o.Alo1=Alo;o.Ahi1=Ahi;o.band1=!o.jam1&&!o.bind1&&Alo>AMIN&&inB(Alo,Ahi,G.guard);o.src1=o.band1&&inB(Alo,Ahi,G.sources);o.cSwing=!o.band1;
   /* the balance vibrated: the spring matched to the period (chosen or ground) */
   o.cVib=!o.times;o.times1=true;o.lock1=lockOk(dep,pre);
@@ -100,7 +100,7 @@ const one=(only)=>{const use=k=>!only||only===k,o={};
   return o;};
 const all=[...Array(N)].map(()=>one()),frac=(a,k)=>a.filter(x=>x[k]).length/a.length,cnt=(a,fn)=>a.filter(fn).length,pc=x=>f(100*x,1)+' %';
 const Wk=frac(all,'works'),W0=frac(all,'worksAsMade');
-say(`${N} movements, each tolerance drawn at once: the holes ±${HT*1000} µm (estimated: the tables give none), endshake from the sheets' fits, the mainspring 0.37 ±0.005, μ 0.10-0.20, the detent's spring 0.07 ±0.005 and the gold spring 0.15 ±0.005, the lock (the wheel 14 +0.03, the banking ±0.02), the preload 0.63 ±0.3 g, the hairspring (0.285 ±0.003, Ø 12.8 ±0.05, its length ±0.3, 200-210 GPa): estimated where the sheets give none`);
+say(`${N} movements, each tolerance drawn at once: the holes ±${HT*1000} µm (estimated: the tables give none), endshake from the sheets' fits, the mainspring 0.37 ±0.005, μ 0.10-0.20, the detent's spring ${TD0} ±0.005 (as stiff as 1436's taper) and the gold spring 0.15 ±0.005, the lock (the wheel 14 +0.03, the banking ±0.02), the preload ${S.W78} ±0.3 g, the hairspring (0.285 ±0.003, Ø 12.8 ±0.05, its length ±0.3, 200-210 GPa): estimated where the sheets give none`);
 say(`the swing as a response surface over the drive, the springs, the preload and the lock: against makeEsc rebuilt at ${VAL.length} points it is within ${f(vErr,2)}° (${VAL.map(v=>f(v.sf-v.a,2)).join(', ')}: makeEsc's swing moves in steps of up to 2° as the lock's depth passes its tables' cells, 0.160-0.163 mm, which the grid takes only so far)`);
 say(`the train turns: ${pc(1-frac(all,'jam'))}; every arbor free (endshake at least ${ESF} mm): ${pc(1-frac(all,'bind'))}; it unlocks: ${pc(frac(all,'unlocks'))}; the lock in its window (${DW.join('-')} mm, the preload at least ${PRA.window[0]} g): ${pc(frac(all,'lock'))}`);
 const As=all.filter(x=>x.goes),pq=(a,k,p)=>{const b=a.map(x=>x[k]).sort((x,y)=>x-y);return b[Math.floor(p*(b.length-1))];};

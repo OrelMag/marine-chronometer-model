@@ -1,7 +1,7 @@
 // Would the Wempe pass its trial, and keep time at sea? errorbudget.js's method for the Wempe (Node.js, no browser):
 //   node wempe_errorbudget.js           (about 30 s; exits with 1 if the model as adjusted fails the TU's trial)
 //   node wempe_errorbudget.js --n 4000  (more trials and voyages)
-// 1. The TU's trial (the 6MX's TU 25-07-1533-84, 6MX-figures.md; GOST 8916-58's class II): 35 days in five periods of seven at 36, 20, 4, 20 and 36 °C, the first two days
+// 1. The TU's trial (the 6MX's TU 25-07-1533-84, 6MX-figures.md: GOST 8916-58's class II trial, its limits GOST 8916-70's class 2): 35 days in five periods of seven at 36, 20, 4, 20 and 36 °C, the first two days
 //    of each not counted; wound daily after the comparison to "8" on the up-and-down dial (8 h short of full wind: the spring runs between 8 and 32 h down), to "0" at
 //    each period's end; daily rates read to 0.01 s. Its figures, losing positive: E the mean of |each counted rate - its period's mean| (±0.35), R = ω_V - ω_I (±2.00),
 //    D the largest change between consecutive rates in a period (±2.30), C = (ω36 - ω4)/32 (±0.10 s a day a °C), S = (ω36 + ω4)/2 - ω20 (±1.20), every period's mean
@@ -106,6 +106,8 @@ function voyage(p,on={}){const use=k=>!on.only||on.only===k,days=60,port=10,rate
   const rated=rates.slice(0,port).reduce((a,x)=>a+x,0)/port;let e=0;const out={};for(let d=0;d<days;d++){e+=rates[port+d]-rated;if(on.rec)on.rec.push(e);if(d===9||d===29||d===59)out[d+1]=e;}return out;}
 /* wempe_navigation.js: the voyage as section 2 runs it (60 days, rated over 10 days in port; on.rec the error each day at sea, on.oilK a made chronometer's own drive-to-rate
    factor for the oil), the adjustments and the module's own random numbers, so its draws are the same machinery's */
+/* terms30(): what each source adds at 30 days alone (median |error|, s), as adjusted (±SET0) and in the build (±SETB), and all together: section 2's table, for the report's section 22 */
+module.exports.terms30=()=>{seed=20261015;const runV=(mk,on)=>[...Array(NV)].map(()=>Math.abs(voyage(mk(),on)[30]));const o={};for(const k of['temp','drift','scatter','baro','oil','sea'])o[k]=[pct(runV(adj,{only:k}),0.5),pct(runV(adjB,{only:k}),0.5)];o.all=[pct(runV(adj,{}),0.5),pct(runV(adjB,{}),0.5)];return o;};
 module.exports.nav=()=>({voyage,adj,adjB,drawn,rnd,gauss,reseed:x=>{seed=x;},SC,SETB,SET0,oilK,sea:seaOf,E,S,P,W});
 if(!MAIN)return;
 head('1. The TU\'s trial: 35 days at 36/20/4/20/36 °C, the first two days of each period not counted, wound daily to "8" (the 6MX\'s TU, 6MX-figures.md)');

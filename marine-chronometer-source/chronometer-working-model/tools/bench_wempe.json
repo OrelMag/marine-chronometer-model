@@ -55,7 +55,7 @@
    "sheet": "1436, 05 04 01-2",
    "when": "the detent made with its gold spring on, before it goes in",
    "how": "Clamp its foot as the block holds it (a printed jig with the foot's screw and two steady pins), the stone and the horn free, and flick the blade's end lightly with a hair. Record the ring with a phone a few millimetres off and read its lowest strong pitch with a spectrum app, or python benchcheck.py --ring FILE.",
-   "pass": "97 Hz with the spring as drawn (0.070 mm, 1436's \"0,07\"); 83-164 Hz for a spring 0.063-0.100 mm thick, half to twice the drawn stiffness, over which the detent is home before the next tooth (dynamics.js --model wempe). The pitch goes nearly as the thickness to the 1.5 (0.050 mm 59 Hz, 0.063 mm 83 Hz, 0.060 mm 78 Hz, 0.070 mm 97 Hz, 0.080 mm 119 Hz, 0.100 mm 164 Hz, 0.090 mm 141 Hz: wempe_tripping.js's frame clamped at the foot), so it measures the spring's section, which no figure on 1436 settles (its \"0,09\" would ring 141 Hz). The gold spring rings near 639 Hz: the detent's own is the lower."
+   "pass": "97 Hz with the spring as drawn (1436's 0.09 at its ends and \"0,07\" at its middle, as stiff as 0.0792 mm throughout); 69-137 Hz for a spring 0.063-0.100 mm thick, half to twice the drawn stiffness, over which the detent is home before the next tooth (dynamics.js --model wempe). The pitch goes nearly as the thickness to the 1.5 (0.050 mm 49 Hz, 0.060 mm 65 Hz, 0.063 mm 69 Hz, 0.070 mm 81 Hz, 0.079 mm 97 Hz, 0.090 mm 118 Hz, 0.100 mm 137 Hz, 0.110 mm 158 Hz: wempe_tripping.js's frame clamped at the foot), so it measures the spring's section, which no figure on 1436 settles (its \"0,09\" would ring 118 Hz). The gold spring rings near 639 Hz: the detent's own is the lower."
   },
   {
    "id": "escapement",
@@ -630,8 +630,8 @@
   "detent": {
    "f0": 97.4,
    "band": [
-    83.1,
-    164
+    69.2,
+    137
    ],
    "t": [
     0.0629,
@@ -641,31 +641,35 @@
    "rows": [
     [
      0.05,
-     59
-    ],
-    [
-     0.0629,
-     83.1
+     49.1
     ],
     [
      0.06,
-     77.5
+     64.5
+    ],
+    [
+     0.0629,
+     69.2
     ],
     [
      0.07,
+     81.1
+    ],
+    [
+     0.0792,
      97.4
     ],
     [
-     0.08,
-     118.7
+     0.09,
+     117.7
     ],
     [
      0.0998,
-     164
+     137
     ],
     [
-     0.09,
-     141.1
+     0.11,
+     157.9
     ]
    ]
   },
