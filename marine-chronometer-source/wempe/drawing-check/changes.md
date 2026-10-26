@@ -92,5 +92,16 @@ Read by `tools/drawing_ledger.py`, which puts each line beside its sheets in WEM
 ## Batch 9: motion work, hands, dial
 - 05-02/Wempe_05-02_08.jpg; 05-02/Wempe_05-02_10.jpg; 05-02/Wempe_05-02_02.jpg; 05-02/Wempe_05-02_03.jpg; 05-02/Wempe_05-02_04.jpg; 05-02/Wempe_05-02_05.jpg | corrected | every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) | 2303c7d9
 
+## Batch 9 (open)
+- 05-02/Wempe_05-02_13.jpg | open | the Lange dial variant keeps the Wempe disc (1453/A: Ø 103, 1,5 thick, Ø 2,2 seconds hole, no screw holes); the variant swaps only the printing | 5c49513b
+- 05-02/Wempe_05-02_09.jpg | open | the hour wheel's 0,4 × 30° riveting sink and the change wheel's rivet relief (05 02 02, unsure) | 5c49513b
+- 05-02/Wempe_05-02_06.jpg; 05-02/Wempe_05-02_08.jpg | open | the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) | 5c49513b
+
 ## Batch 10: case, gimbals, boxes, keys
+- 05-01/Wempe_05-01_4.jpg | corrected | the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) | 5c49513b
+- 05-01/Wempe_05-01_2.jpg | corrected | the bowl's floor disc on the wall's own 360 corners (a dotted ring where 240 facets crossed them) | 5c49513b
+- 51-00/Wempe_51-00_2.jpg | open | the box's handle 13 off the panel with S-bends (built 10, kinked: likely) and the finger recess's "10" deep (R 10.5), terraced | 5c49513b
+- 05-01/Wempe_05-01_6.jpg | open | the 1940 key's stem 32 out of its body (31.7, as drawn 31.74) | 5c49513b
+- 05-01/Wempe_05-01_1.jpg | open | the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) | 5c49513b
+- 05-01/Wempe_05-01_9.jpg; 51-00/Wempe_51-00_4.jpg | open | the key tube's 60° countersink; the tongue's 0.5 × 45° chamfer and thinned end | 5c49513b
 - 05-01/Wempe_05-01_1.jpg; 05-01/Wempe_05-01_7.jpg | corrected | the case's turned pieces (pivots' tips, key, lock) shaded square at their corners | 2303c7d9

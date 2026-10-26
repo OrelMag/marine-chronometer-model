@@ -14,8 +14,8 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | 6 | maintaining work, maintaining detent, stop work | marine-chronometer-source/wempe/drawing-check/batch6.md | 9 | 9 of 9 | 4 | 3 |
 | 7 | barrel, arbor, set-up ratchet, mainspring, chain | marine-chronometer-source/wempe/drawing-check/batch7.md | 14 | 14 of 14 | 4 | 3 |
 | 8 | going train | marine-chronometer-source/wempe/drawing-check/batch8.md | 10 | 10 of 10 | 4 | 0 |
-| 9 | motion work, hands, dial | marine-chronometer-source/wempe/drawing-check/batch9.md | 13 | 13 of 13 | 1 | 0 |
-| 10 | case, gimbals, boxes, keys | marine-chronometer-source/wempe/drawing-check/batch10.md | 14 | 14 of 14 | 1 | 0 |
+| 9 | motion work, hands, dial | marine-chronometer-source/wempe/drawing-check/batch9.md | 13 | 13 of 13 | 1 | 3 |
+| 10 | case, gimbals, boxes, keys | marine-chronometer-source/wempe/drawing-check/batch10.md | 14 | 14 of 14 | 3 | 4 |
 
 124 images: 113 in batches, 11 excluded with a reason, 0 without a batch.
 
@@ -25,28 +25,28 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 |---|---|---|---|---|---|
 | `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6, 7, 8 | — | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
 | `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded (also reviewed by batch 7) | — | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | reviewed by batch 10 | corrected: the case's turned pieces (pivots' tips, key, lock) shaded square at their corners (2303c7d9) |  |
-| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | reviewed by batch 10 | — |  |
+| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | reviewed by batch 10 | open: the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) (5c49513b); corrected: the case's turned pieces (pivots' tips, key, lock) shaded square at their corners (2303c7d9) |  |
+| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | reviewed by batch 10 | corrected: the bowl's floor disc on the wall's own 360 corners (a dotted ring where 240 facets crossed them) (5c49513b) |  |
 | `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | reviewed by batch 10 | — |  |
-| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | reviewed by batch 10 | — |  |
+| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | reviewed by batch 10 | corrected: the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) (5c49513b) |  |
 | `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | reviewed by batch 10 | — |  |
-| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | reviewed by batch 10 | — |  |
+| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | reviewed by batch 10 | open: the 1940 key's stem 32 out of its body (31.7, as drawn 31.74) (5c49513b) |  |
 | `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | reviewed by batch 10 | corrected: the case's turned pieces (pivots' tips, key, lock) shaded square at their corners (2303c7d9) |  |
 | `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | reviewed by batch 10 | — |  |
-| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | reviewed by batch 10 | — |  |
+| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | reviewed by batch 10 | open: the key tube's 60° countersink; the tongue's 0.5 × 45° chamfer and thinned end (5c49513b) |  |
 | `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 9 | reviewed by batch 9 | — |  |
 | `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
 | `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
 | `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
 | `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
-| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 9 | reviewed by batch 9 | — |  |
+| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 9 | reviewed by batch 9 | open: the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) (5c49513b) |  |
 | `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 9 | reviewed by batch 9 | — |  |
-| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
-| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 9 | reviewed by batch 9 | — |  |
+| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9); open: the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) (5c49513b) |  |
+| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 9 | reviewed by batch 9 | open: the hour wheel's 0,4 × 30° riveting sink and the change wheel's rivet relief (05 02 02, unsure) (5c49513b) |  |
 | `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 9 | reviewed by batch 9 | corrected: every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) (2303c7d9) |  |
 | `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 9 | reviewed by batch 9 | — |  |
 | `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 9 | reviewed by batch 9 | — |  |
-| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 9 | reviewed by batch 9 | — |  |
+| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 9 | reviewed by batch 9 | open: the Lange dial variant keeps the Wempe disc (1453/A: Ø 103, 1,5 thick, Ø 2,2 seconds hole, no screw holes); the variant swaps only the printing (5c49513b) |  |
 | `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 3 | reviewed by batch 3 | — |  |
 | `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 3 | reviewed by batch 3 | corrected: the timing weights Ø 4.25 as drawn (re-measured: 4.21 and 4.33 at 12.0 px/mm; read 3.5 and 4.3, built 3.8), Wempe 3955's and the 6MX's 3.8 (935291e6); corrected: the mass screws WN-12 1.85 over the rim's lower face (re-measured 1.83-1.88; read 2.83, built 2.45), Wempe 3955's 2.55; their heads' faces following the mass's round side (two crescents) (935291e6) |  |
 | `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 3 | reviewed by batch 3 | — |  |
@@ -142,15 +142,15 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | — | excluded | — | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
 | `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | — | excluded | — | the electrical seconds contact (38 00), not on this model |
 | `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | reviewed by batch 10 | — |  |
-| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | reviewed by batch 10 | — |  |
+| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | reviewed by batch 10 | open: the box's handle 13 off the panel with S-bends (built 10, kinked: likely) and the finger recess's "10" deep (R 10.5), terraced (5c49513b) |  |
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | reviewed by batch 10 | — |  |
-| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | reviewed by batch 10 | — |  |
+| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | reviewed by batch 10 | open: the key tube's 60° countersink; the tongue's 0.5 × 45° chamfer and thinned end (5c49513b) |  |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | reviewed by batch 10 | — |  |
 | `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 10, 2, 3, 4, 5, 6, 7, 8, 9 | corrected: the ring's radial hole Ø 1.6 for the case pin WN-202 at 12 o'clock, 2.8 under the dial's face, cut through the flange (the pin stood in the metal) (2303c7d9) | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
 
 ## Changes made
 
-From `marine-chronometer-source/wempe/drawing-check/changes.md`: 54 corrected, 18 left open, 1 kept as recorded departures.
+From `marine-chronometer-source/wempe/drawing-check/changes.md`: 56 corrected, 25 left open, 1 kept as recorded departures.
 
 | Drawings | Kind | What | Commit |
 |---|---|---|---|
@@ -226,4 +226,13 @@ From `marine-chronometer-source/wempe/drawing-check/changes.md`: 54 corrected, 1
 | `05-05/Wempe_05-05_10.jpg`, `05-05/Wempe_05-05_07.jpg`, `05-05/Wempe_05-05_04.jpg` | corrected | the train-side shoulders one 30° cone from the pivot's root to the arbor (flat, chamfered 0.15) | 4c1725e6 |
 | `05-05/Wempe_05-05_01.jpg` | corrected | the arbors in 64 segments; the top-plate bushes' cups out to their rims (a 0.023 sliver ring) | 4c1725e6 |
 | `05-02/Wempe_05-02_08.jpg`, `05-02/Wempe_05-02_10.jpg`, `05-02/Wempe_05-02_02.jpg`, `05-02/Wempe_05-02_03.jpg`, `05-02/Wempe_05-02_04.jpg`, `05-02/Wempe_05-02_05.jpg` | corrected | every turned piece of the motion work and hands shaded square at its corners (the hour wheel's collar a dome, the bosses donuts) | 2303c7d9 |
+| `05-02/Wempe_05-02_13.jpg` | open | the Lange dial variant keeps the Wempe disc (1453/A: Ø 103, 1,5 thick, Ø 2,2 seconds hole, no screw holes); the variant swaps only the printing | 5c49513b |
+| `05-02/Wempe_05-02_09.jpg` | open | the hour wheel's 0,4 × 30° riveting sink and the change wheel's rivet relief (05 02 02, unsure) | 5c49513b |
+| `05-02/Wempe_05-02_06.jpg`, `05-02/Wempe_05-02_08.jpg` | open | the wheels' bores in 24 flats under their pipes' finer seats (0.02-0.03 into the flats, under fine.py's grid) | 5c49513b |
+| `05-01/Wempe_05-01_4.jpg` | corrected | the bezel's glass a flat disc Ø 111.6 on the ring's seat at 12.3, 3.5 thick, chamfered, 2.4 proud of the ring's lip 13.4 high (re-measured at 6× on the section; the ring read 16 high wrapping a flush glass) | 5c49513b |
+| `05-01/Wempe_05-01_2.jpg` | corrected | the bowl's floor disc on the wall's own 360 corners (a dotted ring where 240 facets crossed them) | 5c49513b |
+| `51-00/Wempe_51-00_2.jpg` | open | the box's handle 13 off the panel with S-bends (built 10, kinked: likely) and the finger recess's "10" deep (R 10.5), terraced | 5c49513b |
+| `05-01/Wempe_05-01_6.jpg` | open | the 1940 key's stem 32 out of its body (31.7, as drawn 31.74) | 5c49513b |
+| `05-01/Wempe_05-01_1.jpg` | open | the bowl's tapped holes for the brackets' five screws; the ring bracket's screws drawn right through the ring (tapped 2.75) | 5c49513b |
+| `05-01/Wempe_05-01_9.jpg`, `51-00/Wempe_51-00_4.jpg` | open | the key tube's 60° countersink; the tongue's 0.5 × 45° chamfer and thinned end | 5c49513b |
 | `05-01/Wempe_05-01_1.jpg`, `05-01/Wempe_05-01_7.jpg` | corrected | the case's turned pieces (pivots' tips, key, lock) shaded square at their corners | 2303c7d9 |
