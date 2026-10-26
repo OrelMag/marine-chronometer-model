@@ -340,7 +340,7 @@ const WESC=(()=>{
       const hubF=[{p:C([0,0],2.009/2,64),a:ya,b:y1},...[-1,1].flatMap(s=>[{p:C([0,s*2.14],0.9,40),q:C([0,s*2.14],0.5,40),a:ya,b:ya+0.4},{p:C([0,s*2.14],0.5,40),a:ya+0.4,b:y1}])];   /* the hub's screws' holes, countersunk 90° in the arm's top to Ø 1.8, 0.4 deep (05 03 01-1's hole drawn double-ringed, its "0,4"; the coloured section's heads sunk flush) */
       /* the timing screws' tapped holes (05 03 01-1's side view: Ø 0.9, 0.16 pitch, 2.15 over the lower face) across the rim at the arm's ends, steel and brass, cut by fusee.js's
          bore from inside the rim outward (left out until 26 October 2026, the screws in the metal) */
-      const tH=(g,a)=>{const u=dir(a);return WFUSEE.capFix(WFUSEE.bore(g,[u[0]*(r0-0.2),FY-2.15,u[1]*(r0-0.2)],[u[0],0,u[1]],0.45,0,16),null);};
+      const tH=(g,a)=>{const u=dir(a);return WFUSEE.capFix(WFUSEE.bore(g,[u[0]*(r0-0.2),FY-2.15,u[1]*(r0-0.2)],[u[0],0,u[1]],0.47,0,16),null);};   /* its flats 0.47 out, clear of the screw's 16 corners at 0.45 (the thread's 0.9 drawn plain) */
       tag(mesh(bal,tH(tH(solidGeo([{loop:ccw(armLoop),y0:ya,y1,F:hubF},{loop:ccw(half(90,eTop)),y0,y1},{loop:ccw(half(270,eBot)),y0,y1}]),90),270),M.steel),'050301-1');
       /* the maker's mark stamped on the arm's top: "RGG" in a triangle (Wempe 3955, 15_Wempe_3955_Logo_plus.jpg, and Christie's "balance signed RGG"), about 2.2 across, 11 out
          along the arm (the photograph oblique: scaled against the escape wheel's endstone screws, 7.0 apart; estimated). A decal, turning with the balance */
@@ -418,10 +418,12 @@ const WESC=(()=>{
         for(const sz of[1,-1])cells.push({loop:ccw([[-h,sz*xb],[-h,sz*xo],[h,sz*xo],[h,sz*xb]]),y0:y0+dB,y1});
         return solidGeo(cells);};
       for(const a of[90,270]){const u=dir(a);
-        tag(across(bal,lathe([[0,rI],[0.45,rI],[0.45,TIP-0.05],[0.4,TIP],[0,TIP]],16),M.steel,[0,0],u,yS),'050301-2');
-        tag(across(bal,lathe([[0,rI-1.3],[0.825,rI-1.3],[0.825,rI],[0,rI]],24),M.steel,[0,0],u,yS),'050301-2',1);   /* its head, on the rim's inner face */
-        tag(across(bal,new THREE.BoxGeometry(1.67,0.3,0.25).translate(0,rI-1.3+0.15-0.02,0),M.steelD,[0,0],u,yS),'050301-2',1);   /* its slot, toward the staff */
-        for(const[gw,Rw]of/** @type {[any,number][]} */([[rv(bal,'last first 1943 -3955'),4.25/2],[rv(bal,'3955 6mx'),1.9]]))tag(across(gw,split(Rw,0.45,W0,W1,0.15,1.3,1.7),M.brass,[0,0],u,yS),'050301-3');}}
+        for(const[gw,Rw]of/** @type {[any,number][]} */([[rv(bal,'last first 1943 -3955'),4.25/2],[rv(bal,'3955 6mx'),1.9]])){   /* each version's screw and weight in one group (fine.py takes pieces fixed to each other by their shared group) */
+        tag(across(gw,lathe([[0,rI],[0.45,rI],[0.45,TIP-0.05],[0.4,TIP],[0,TIP]],16),M.steel,[0,0],u,yS),'050301-2');
+        const hg=lathe([[0,rI-1.3],[0.825,rI-1.3],[0.825,rI],[0,rI]],24),HP=hg.attributes.position;for(let i=0;i<HP.count;i++)if(HP.getY(i)>rI-0.03){const w=HP.getX(i)*u[1]-HP.getZ(i)*u[0];HP.setY(i,Math.sqrt(rI*rI-w*w));}HP.needsUpdate=true;
+        tag(across(gw,hg,M.steel,[0,0],u,yS),'050301-2',1);   /* its head, on the rim's inner face: its face following the rim's curve, as a maker files it to bear (flat until 26 October 2026, 0.022 into the rim at its sides) */
+        tag(across(gw,new THREE.BoxGeometry(1.67,0.3,0.25).translate(0,rI-1.3+0.15-0.02,0),M.steelD,[0,0],u,yS),'050301-2',1);   /* its slot, toward the staff */
+        tag(across(gw,split(Rw,0.45,W0,W1,0.15,1.3,1.7),M.brass,[0,0],u,yS),'050301-3');}}}
     /* the balance staff (Unruhwelle 05 04 02-1, kompl. 05 04 02, 29.5.46: hardened, tempered at 240 deg): from its top, the arm Ø 1.2 ±0.02 tapering 1:30 to the pivot's
        shoulder; the hairspring collet's seat 1:70 from Ø 1.58 to Ø 1.65 s6 over the 6.1 above the hub's flange; the arm's seat Ø 2 h6, 1.1 high; inside the brass hub
        (Unruhbutzen 05 04 02-2) on 1:70; the collar Ø 2.14 below the hub, to 5.6 under the flange's top; the impulse roller's seat Ø 1.65 s6, the discharge roller's Ø 1.2 r6,

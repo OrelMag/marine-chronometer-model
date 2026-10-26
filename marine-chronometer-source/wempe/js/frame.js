@@ -202,11 +202,11 @@ const WFRAME=(()=>{
     /* turned brass (Rundmessing 8,5 Ms 58), the body Ø 8.1 for 19.6 between its shoulders, which sit in the plates' seats; a spigot Ø 4.5 f7 at each end, 2.8 long, its last 1.1
        turned to Ø 4.3 at 6°; tapped M2.6 through from both ends (drawn at the thread's size and 0.02, as the tapped holes), a 90° countersink at each end; a half-round relief
        groove in each shoulder's face round the spigot's root (drawn, not figured: WD.PIL.grv). One profile turned about the pillar's axis, its outer wall rising in y */
-    {const P=WD.PIL,yb=WD.PIL_SEAT[1],yt=TI-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,rb=S.rs-KIT.isoD(KIT.isoP(S.rs)),cd=P.cs-rb,[gr,gd]=P.grv,gc=(P.sr+gr)/2,ga=(gr-P.sr)/2;
+    {const P=WD.PIL,yb=WD.PIL_SEAT[1],yt=TI-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,rb=S.rs+0.02,cd=P.cs-rb,[gr,gd]=P.grv,gc=(P.sr+gr)/2,ga=(gr-P.sr)/2;
       const grv=(y,s)=>[...Array(9).keys()].map(i=>{const t=Math.PI*(1-i/8);return V2(gc+ga*Math.cos(t),y+s*gd*Math.sin(t));});   /* from the spigot out (s: into the body, +1 at the top shoulder) */
       const prof=[V2(P.cs,e0),V2(P.tip[0],e0),V2(P.sr,e0+P.tip[1]),...grv(yt,1),V2(P.r,yt),V2(P.r,yb),...grv(yb,-1).reverse(),V2(P.sr,e1-P.tip[1]),V2(P.tip[0],e1),V2(P.cs,e1),V2(rb,e1-cd),V2(rb,e0+cd),V2(P.cs,e0)];
-      /* the 90° countersinks from Ø 2.7 at each face down to the thread's crests (rb, the minor radius), 0.29 deep (05 08 00-1 draws them to the tap drill; until 26 October
-         2026 they ended at the thread's size and 0.02, 0.03 deep, a flat ring at the face) */
+      /* the 90° countersinks: 05 08 00-1 draws them from about Ø 2.6 down to the tap drill, 0.25 deep; drawn to the thread's size and 0.02, 0.03 deep, since the thread can't
+         be cut through a countersink here (ended at the crests, the thread's run-out lay under the screw's: fine.py, 26 October 2026; README, Unresolved) */
       const pil=part('pillars',-20),pg=KIT.lathThread(prof,prof.length-3,{rs:S.rs},64);   /* the bore (rb, between the countersinks) tapped: the inside thread, one helix through (KIT's lathThread; 26 October 2026) */P3(pil,(g,[x,z])=>tag(mesh(g,pg,M.brass,x,0,z),'050800-1'));}
 
     /* ================= the movement ring (Werkring, 05 08 00-3, as revised 6.12.46) ================= */

@@ -44,14 +44,10 @@ const KIT=(()=>{
         for(const f of L)if(U[3*f]*U[3*t]+U[3*f+1]*U[3*t+1]+U[3*f+2]*U[3*t+2]>=c){x+=FN[3*f];y+=FN[3*f+1];z+=FN[3*f+2];}
         const l=Math.hypot(x,y,z);if(l>0){N[o+3*k]=x/l;N[o+3*k+1]=y/l;N[o+3*k+2]=z/l;}}}
     h.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));if(h!==g)Object.assign(h.userData,g.userData);return h;}
-  /* latheF(pts, n): a turned solid as THREE.LatheGeometry turns the profile pts ([r, y] or Vector2s), but split at each corner of the profile (its direction turning more
-     than 30°), each run turned on its own, so a corner's normals are its two faces' own: r128's lathe averages them, which shaded square edges round and sinks blotchy
-     (26 October 2026); a curve drawn in short steps stays smooth. The pieces merged (core.js mergeGeo), one closed solid by position as before */
+  /* latheF(pts, n): a turned solid as THREE.LatheGeometry turns the profile pts ([r, y] or Vector2s), its normals made again by crease (30°), so a corner of the profile
+     shades as its two faces do: r128's lathe averages them, which shaded square edges round and sinks blotchy (26 October 2026); a curve drawn in short steps stays smooth */
   /** @param {any[]} pts @param {number} [n] */
-  function latheF(pts,n=12){const P=pts.map(q=>Array.isArray(q)?new THREE.Vector2(q[0],q[1]):q),Q=P.filter((q,i)=>!i||q.distanceTo(P[i-1])>1e-9),dir=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x),runs=[];let cur=[Q[0]];
-    for(let i=1;i<Q.length;i++){cur.push(Q[i]);if(i<Q.length-1){const t=Math.abs(((dir(Q[i],Q[i+1])-dir(Q[i-1],Q[i]))%TAU+3*Math.PI)%TAU-Math.PI);if(t>30*Math.PI/180){runs.push(cur);cur=[Q[i]];}}}
-    runs.push(cur);if(runs.length===1)return new THREE.LatheGeometry(Q,n);
-    return mergeGeo(runs.filter(r=>r.length>=2).map(r=>[new THREE.LatheGeometry(r,n),new THREE.Matrix4()]));}
+  function latheF(pts,n=12){const P=pts.map(q=>Array.isArray(q)?new THREE.Vector2(q[0],q[1]):q);return crease(new THREE.LatheGeometry(P,n),30);}   /* the lathe's own triangles, its normals creased (split into runs until the audit found their faces' levels doubled) */
   /* convex hull of points (Andrew's monotone chain) */
   function hull(P){P=[...P].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]),h=[];
     for(const s of[P,[...P].reverse()]){const k=h.length;for(const p of s){while(h.length>=k+2&&cr(h[h.length-2],h[h.length-1],p)<=0)h.pop();h.push(p);}h.pop();}return h;}
