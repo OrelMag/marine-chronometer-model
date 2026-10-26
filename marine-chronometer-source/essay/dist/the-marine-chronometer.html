@@ -1424,14 +1424,19 @@ function reclose(old,g){const u=old&&old.userData.capOf,p=g.attributes.position,
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 /* a round collet or socket with a square hole a across (a hand broached square, a key's socket), centred on its y like ringGeo */
-/* the winding key (42044) as KLUwI2UUCMQ 0:45 shows it held up (box.js, where it stands; movement.js, on the fusee's square and the hands' square): its pipe from its end at y 0
-   along +y, a square socket in the pipe's first 4.5 mm (2.46 across, over the fusee's 2.4 square and the cannon pinion's 2.16), a short neck, a cone widening to a collar, and a
-   flat paddle with a rounded top, in proportion to the pipe's width kw (traced on the frame: total 10.6 widths, the pipe 4.1 of them, cone 2.0, collar 0.9 and 2.2 wide, paddle 2.9
-   tall and 3.1 wide); the pipe's outside r 2.2, so the scale is estimated (+-15 %); the paddle's thickness (0.8 of the pipe's width) estimated */
-function windingKey(g,M){const kw=4.4,V=(a,b)=>new THREE.Vector2(a,b);mesh(g,sqRingGeo(kw/2,2.46,4.5),M.brass,0,2.25,0);
-  mesh(g,new THREE.LatheGeometry([V(0,4.5),V(kw/2,4.5),V(kw/2,4.1*kw),V(0.6*kw,4.4*kw),V(1.1*kw,6.1*kw),V(1.1*kw,7.0*kw),V(0,7.0*kw)],24),M.brass);   /* pipe, neck, cone, collar */
-  const pw=3.1*kw/2,ph=2.9*kw,pt=0.8*kw,sh=new THREE.Shape();sh.moveTo(-1.05*kw,0);sh.lineTo(-pw,ph-pw);sh.absarc(0,ph-pw,pw,Math.PI,0,true);sh.lineTo(1.05*kw,0);sh.closePath();
-  const pg=extrude(sh,{depth:pt,bevelEnabled:false,curveSegments:24});pg.translate(0,7.0*kw,-pt/2);mesh(g,pg,M.brass);return g;}   /* the paddle on the collar, as wide as it at its foot, widening to its rounded top */
+/* the winding key (42044) as KLUwI2UUCMQ 0:45 shows it held up nearly side-on (4K; box.js, where it stands; movement.js, on the fusee's square and the hands' square): its pipe from its
+   end at y 0 along +y, a neck ring, a cone, a body tapering out to a collar, and a flat paddle with a rounded top in a slot across the body's end. Read on 0:45 (26 October 2026; the
+   widths across the axis, the lengths along it, the key within about 10 deg of the image's plane) against the pipe's Ø6, the 8 mm rod turned to 6 of chronometerbook.com's key
+   ("8. Making a chronometer key", 30 July 2013, Fig. 2; the case's key hole, r 3.34, and the box's, r 3.55, pass it), 10.3 px/mm: the pipe 405 px long (39), the neck ring 85 across and
+   30 tall (Ø8.2 x 3), the cone 95 to 170 over 80 (Ø9.2 to 16.5 over 8), the body 170 to 215 over 120 (to Ø20.9 over 12), the collar 235 over 40 (Ø22.8 x 4), the paddle 330 tall (32), as wide
+   as the collar at its foot and about 255 (25) under its round top (its face oblique: the width likely a little more); +-10 % in all. The square socket the pipe's first 25 (the book's
+   hole, drilled 25 to 30 deep), 2.46 across (over the fusee's 2.4 square and the cannon pinion's 2.16; the book's 3 is filed to the arbor's square); the paddle 3 thick, the book's knob.
+   Inside (the book's construction, not drawn): the pipe is the shaft, its head and a helical spring in the body's bore, the paddle held in its slot by a pin. Until 26 October 2026 the
+   same form 46.6 long, scaled by a pipe r 2.2 (estimated) */
+function windingKey(g,M){const KR=3.0,KP=25.4,KS=25,V=(a,b)=>new THREE.Vector2(a,b);mesh(g,sqRingGeo(KR,2.46,KS),M.brass,0,KS/2,0);   /* KR the pipe's radius, KP the paddle's width (overwind.js reads both) */
+  mesh(g,new THREE.LatheGeometry([V(0,KS),V(KR,KS),V(KR,39),V(4.1,39),V(4.1,42),V(4.6,42),V(8.25,50),V(10.45,62),V(11.4,62),V(11.4,66),V(0,66)],32),M.brass);   /* pipe, neck ring, cone, body, collar */
+  const sh=new THREE.Shape();sh.moveTo(-11.4,0);sh.lineTo(-KP/2,19.3);sh.absarc(0,19.3,KP/2,Math.PI,0,true);sh.lineTo(11.4,0);sh.closePath();
+  const pg=extrude(sh,{depth:3,bevelEnabled:false,curveSegments:32});pg.translate(0,66,-1.5);mesh(g,pg,M.brass);return g;}   /* the paddle on the collar, as wide as it at its foot, widening to its round top, 98 over the pipe's end */
 function sqRingGeo(ro,a,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);s.holes.push(sqPath(a));
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 function sqPath(a){const q=a/2,h=new THREE.Path();h.moveTo(q,q);h.lineTo(q,-q);h.lineTo(-q,-q);h.lineTo(-q,q);h.closePath();return h;}   /* clockwise, a hole */
