@@ -73,7 +73,43 @@ function buildBox(M){
      dial lies in it, as it does when the movement is put upside down on the case to be started (Sec. III: "the dial carefully located in the shoulder recess around the top edge
      of the case"), and the bezel screws on outside the rim (TR). The rim's 105 across and the gimbal ring's 66-68 radius are from the top-view photographs (estimated); the
      rest estimated. YT the rim's top, YTB the thread's foot; FD the floor's inside depth, FR the floor's edge (the bowl's inside rounds into it with radius SH-FR) */
-  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,TR=DB+4.5,YT=MR_Y+DIAL_T+0.6,YTB=5.2,FD=42.8,FR=38,CW0=CR*0.962,YLIP=MR_FL;   /* CW0, YLIP: the wall's radius and the lip's foot, at the shoulder the movement's ring sits on (the profile below, YB) */   /* FD: the case 49 mm from the bezel's edge (YTB) to its outside bottom on Renaissance Antiques' photograph (LPEC109-4, the band's 712 px as CR's 99 mm: the base to the bezel 352 px), the floor 1 thick (BT); the movement's lowest part, the balance cock, at -37.96, so the floor clears it by 4.8. 64, set for clearance, until 5 October 2026 */
+  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,YTB=5.2,YT=YTB+5.5,FD=42.8,FR=38,CW0=CR*0.962,YLIP=MR_FL;   /* CW0, YLIP: the wall's radius and the lip's foot, at the shoulder the movement's ring sits on (the profile below, YB) */
+  /* the bezel screws onto the case's rim (26 October 2026, the Wempe's way: wempe/js/case.js, TH): a thread outside the rim from the lip (YTB) up 5.5 to its top (YT), five grooves on
+     KLUwI2UUCMQ 47:22.5 (the case upside down, the bezel off: 5.3-5.7 tall at the tab's 22.0 px/mm) and Jones-Horan 63662_07 (five grooves), so a pitch of 1.1 (a 24 tpi's 1.058
+     inside it; likely), the 60 deg basic form 0.595 deep; right-hand (estimated). Its radii fit between the movement's ring's recess (DB, r 48.0) and the bezel's skirt (r 49.45 on
+     LPEC109-4, below): the rim's roots r 48.35 (0.35 of wall over the recess), crests 48.95; the bezel's inside thread 0.03 clear of it radially, on one helix (yr). The rim's top
+     YT 7.74 (just over the dial, estimated) and the thread 2.54 tall, its radius TR 52.5 (the top-view photographs' 105 across), until then */
+  const TH={p:1.1,d:0.595,R:48.35,c:0.03,yr:YTB};
+  /* the thread's machinery, as the Wempe's (wempe/js/case.js: iso, rowsY, thread, lathT, smoothRev): the ISO basic profile along the pitch, the heights a sixteenth of it apart */
+  const iso=u=>{const a=Math.abs(u-Math.round(u));return a<0.125?0:a>0.4375?1:(a-0.125)/0.3125;};
+  const rowsY=(y0,y1,yr,p)=>{const dy=p/16,lo=Math.min(y0,y1),hi=Math.max(y0,y1),o=[];for(let k=Math.floor((lo-yr)/dy)+1;yr+k*dy<hi-1e-6;k++)if(yr+k*dy>lo+1e-6)o.push(yr+k*dy);return y1<y0?o.reverse():o;};
+  /* turned faces shaded smooth round the axis, the flanks sharp */
+  const smoothRev=g=>{const P=g.attributes.position,Nm=g.attributes.normal;for(let t=0;t<P.count;t+=3){const cx=(P.getX(t)+P.getX(t+1)+P.getX(t+2))/3,cz=(P.getZ(t)+P.getZ(t+1)+P.getZ(t+2))/3,cr=Math.hypot(cx,cz);if(cr<1e-6)continue;
+    const nx=Nm.getX(t),ny=Nm.getY(t),nz=Nm.getZ(t),h=Math.hypot(nx,nz);if(h<0.05||Math.abs(nx*cz-nz*cx)/(h*cr)>0.05)continue;const sg=Math.sign(nx*cx+nz*cz);
+    for(let k=t;k<t+3;k++){const x=P.getX(k),z=P.getZ(k),r=Math.hypot(x,z)||1;Nm.setXYZ(k,sg*h*x/r,ny,sg*h*z/r);}}Nm.needsUpdate=true;return g;};
+  /* a thread chased on a turned face: a band from y0 to y1 between a plain face at rp and the threaded face r(t, y) = R + d s(y) (iso(u) - (inside ? 1 : 0)), u = (y - yr)/p + t/TAU,
+     R the outside thread's root or the inside one's; s(y) runs out over e0, e1 at the ends; slot: a slot's half-width cut through it at angle a. One closed solid */
+  const thread=({R,rp,d,p,yr,y0,y1,e0=0.5,e1=0.5,inside=false,slot=0,a=0})=>{const NT=360,Y=[y0,...rowsY(y0,y1,yr,p),y1],NY=Y.length-1,q=inside?1:0,P=[],out=inside?-1:1;
+    const s=y=>Math.min(1,(y-y0)/e0,(y1-y)/e1),rf=(t,y)=>R+d*Math.max(0,s(y))*(iso((y-yr)/p+t/TAU)-q);
+    const ang=(r,i)=>slot?a+slot/r+(TAU-2*slot/r)*i/NT:i/NT*TAU,ni=slot?NT+1:NT,ix=i=>i%ni;
+    const T=[],Q=[];for(let i=0;i<ni;i++){const tt=ang(R,i),tp=ang(rp,i),A=[],B=[];for(const y of Y){const r=rf(tt,y);A.push([r*Math.cos(tt),y,r*Math.sin(tt)]);B.push([rp*Math.cos(tp),y,rp*Math.sin(tp)]);}T.push(A);Q.push(B);}
+    const tr=(a,b,c,n)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];P.push(...(x[0]*n[0]+x[1]*n[1]+x[2]*n[2]<0?[a,c,b]:[a,b,c]));};
+    const quad=(a,b,c,e,n)=>{tr(a,b,c,n);tr(a,c,e,n);},rad=(pt,k)=>{const r=Math.hypot(pt[0],pt[2]);return[k*pt[0]/r,0,k*pt[2]/r];};
+    for(let i=0;i<NT;i++){const i1=ix(i+1);
+      for(let j=0;j<NY;j++){quad(T[i][j],T[i1][j],T[i1][j+1],T[i][j+1],rad(T[i][j],out));quad(Q[i][j],Q[i1][j],Q[i1][j+1],Q[i][j+1],rad(Q[i][j],-out));}
+      quad(T[i][NY],T[i1][NY],Q[i1][NY],Q[i][NY],[0,1,0]);quad(T[i][0],T[i1][0],Q[i1][0],Q[i][0],[0,-1,0]);}
+    if(slot)for(const[i,k]of[[0,-1],[NT,1]]){const t=ang(R,i),n=[-k*Math.sin(t),0,k*Math.cos(t)];for(let j=0;j<NY;j++)quad(T[i][j],Q[i][j],Q[i][j+1],T[i][j+1],n);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P.flat(),3));g.computeVertexNormals();return smoothRev(g);};
+  /* a turned part with a thread on one edge of its closed profile pr ([r, y]): the edge pr[k] to pr[k+1] threaded as thread() threads a band (th: R, d, p, yr, k, inside) */
+  const lathT=(pr,th)=>{const NT=360,{R,d,p,yr,k,inside=false,e0=0.5,e1=0.5}=th,q=inside?1:0,s0=Math.min(pr[k][1],pr[(k+1)%pr.length][1]),s1=Math.max(pr[k][1],pr[(k+1)%pr.length][1]);
+    const s=y=>Math.min(1,(y-s0)/e0,(s1-y)/e1),rf=(t,y)=>R+d*Math.max(0,s(y))*(iso((y-yr)/p+t/TAU)-q);
+    const n=pr.length,k1=(k+1)%n,rg=[];for(let i=0;i<n;i++){const[r,y]=pr[i],on=i===k||i===k1;rg.push({y,r:on?t=>rf(t,y):()=>r});if(i===k)for(const yy of rowsY(y,pr[k1][1],yr,p))rg.push({y:yy,r:t=>rf(t,yy)});}
+    const ar=pr.reduce((a,c,i)=>{const e=pr[(i+1)%n];return a+c[0]*e[1]-e[0]*c[1];},0)>0?1:-1,P=[];
+    const tr=(a,b,c,nn)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(Math.hypot(...x)<1e-12)return;P.push(...(x[0]*nn[0]+x[1]*nn[1]+x[2]*nn[2]<0?[a,c,b]:[a,b,c]));};
+    const V=rg.map(g=>[...Array(NT).keys()].map(i=>{const t=i/NT*TAU,r=g.r(t);return[r*Math.cos(t),g.y,r*Math.sin(t)];}));
+    for(let a=0;a<V.length;a++){const b=(a+1)%V.length,dy=rg[b].y-rg[a].y;
+      for(let i=0;i<NT;i++){const i1=(i+1)%NT,t=(i+0.5)/NT*TAU,dr=rg[b].r(t)-rg[a].r(t),nr=ar*dy,ny=-ar*dr,nn=[nr*Math.cos(t),ny,nr*Math.sin(t)];tr(V[a][i],V[a][i1],V[b][i1],nn);tr(V[a][i],V[b][i1],V[b][i],nn);}}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P.flat(),3));g.computeVertexNormals();return smoothRev(g);};   /* FD: the case 49 mm from the bezel's edge (YTB) to its outside bottom on Renaissance Antiques' photograph (LPEC109-4, the band's 712 px as CR's 99 mm: the base to the bezel 352 px), the floor 1 thick (BT); the movement's lowest part, the balance cock, at -37.96, so the floor clears it by 4.8. 64, set for clearance, until 5 October 2026 */
   /* NUT_R: the four pivots' knurled lock nuts (42121), r 12.5: 24.9, 25.2 and about 25 across on Jones-Horan lots 63662 and 38240 from above (ellipses fitted on their rims, at the
      box camera's scale), one at least 22.0 where it is half hidden (20 October 2026, REPORT.md; likely +-1.5); TN24H's 26 (3SFDplGq6vs 4:21) agrees. Fig. 106 draws all four as large discs and
      Sec. III calls the case rear one "the large, knurled lock nut". r 8.5 (KLUwI2UUCMQ 1:15: at least 16 across) until 20 October 2026, r 4.2 and 5 until 4 October. Their thickness (2.5) estimated */
@@ -234,7 +270,7 @@ function buildBox(M){
        thread, and the rim with the band outside it the bezel screws onto */
     const w=0.75/DB,a0=-Math.PI/2,bore=[...Array(121).keys()].map(k=>{const a=a0+w+(TAU-2*w)*k/120;return[DB*Math.cos(a),DB*Math.sin(a)];}),circ=r=>[...Array(120).keys()].map(k=>{const a=k/120*TAU;return[r*Math.sin(a),r*Math.cos(a)];});
     bore.push([-0.75,-(MR_RO+1.0)],[0.75,-(MR_RO+1.0)]);
-    BOWL.push(hn(mesh(cs,polyGeo(circ(CR),YTB-YS,[{pts:bore}]),M.brass,0,YS,0),'42101',{sub:1}),hn(mesh(cs,polyGeo(circ(TR),YT-YTB,[{pts:bore}]),M.brass,0,YTB,0),'42101',{sub:1})); }
+    BOWL.push(hn(mesh(cs,polyGeo(circ(CR),YTB-YS,[{pts:bore}]),M.brass,0,YS,0),'42101',{sub:1}),hn(mesh(cs,thread({R:TH.R,rp:DB,d:TH.d,p:TH.p,yr:TH.yr,y0:YTB,y1:YT,slot:0.75,a:a0}),M.brass),'42101',{sub:1})); }   /* the rim threaded, the alignment pin's slot cut through it */
   /* winding-hole shield plate (42104; Fig. 107 and its parts list, the case's description, Sec. III and Fig. 7): a disc nearly the size of the case's flat bottom, turning on its
      shoulder screw (42124) at the case's centre. Its hole, as far out as the case's key hole, lines up with it when the plate is turned clockwise (seen from below); let go, the
      return spring (42126) turns it back: an open ring of wire between the plate and the bottom, its hooked end round the stop screw (42125), which goes up through the plate and
@@ -275,7 +311,7 @@ function buildBox(M){
      48:30") and 48:30 (the bezel alone): a diamond knurl, its pitch about 0.85 mm both ways (23 px at 26.96 px/mm, so about 400 round r 54.2, where the end's ellipse puts the band:
      the model's TR+1.8, 54.3), the band about 5.1 mm tall (rows 1995-2128 at about 18 deg); the rows 0.8 apart (21 px); the knurl's depth 0.3 estimated. The lathe's band at the knurl's root (BZK.r0), the knurl a
      closed shell on it (knurlBand), crests at TR+1.8. Until then a plain band 3.7 mm tall (YTB to YT+1.2) */
-  const BZK={n:400,h:3.4,d:0.3,rp:0.85,r1:TR+1.8},BZr0=BZK.r1-BZK.d;   /* rp: the rows of diamonds 0.8 mm apart along the axis (21 px on 2:42, foreshortened by about cos 18 deg), each row's offset half a pitch from the last. Since 20 October 2026
+  /* the knurl's sizes (BZK) with the bezel, below. rp: the rows of diamonds 0.8 mm apart along the axis (21 px on 2:42, foreshortened by about cos 18 deg), each row's offset half a pitch from the last. Since 20 October 2026
      h 3.4 and rp 0.85: KLUwI2UUCMQ 48:27.61 (the bezel alone, edge-on) has about 4 rows in a band of 125-130 px, the rows 29-33 px apart against the knurl's round pitch
      of 32.6 px (autocorrelation), that pitch the model's 0.853 (400 diamonds on r 54.3): 3.3-3.6 mm; 5.1 on 2:42 at 18 deg took in part of the cove (E:/mc-video/oq/ledger/ring_dial) */
   const knurlBand=(r1,d,y0,h,n,rp)=>{const m=Math.max(2,Math.round(h/rp)),N=2*n,P=[],I=[],r0=r1-d,ri=r0-0.05,ix=(i,j)=>j*N+(i%N);
@@ -285,8 +321,19 @@ function buildBox(M){
     for(let j=0;j<m;j++)for(let i=0;i<N;i++){const a=ix(i,j),b=ix(i+1,j),c=ix(i+1,j+1),e=ix(i,j+1);if((i+j)%2)I.push(a,b,e,b,c,e);else q(a,b,c,e);}   /* outside: each cell split on its root-to-root diagonal, so every crest is a four-sided pyramid (a diamond) */
     for(let i=0;i<N;i++){const a0=B+i,a1=B+(i+1)%N,b0=B+N+i,b1=B+N+(i+1)%N;q(a0,b0,b1,a1);q(ix(i,0),B+i,B+(i+1)%N,ix(i+1,0));q(ix(i+1,m),B+N+(i+1)%N,B+N+i,ix(i,m));}   /* inside, bottom, top */
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setIndex(I);const f=g.toNonIndexed();f.computeVertexNormals();return f;};   /* flat facets: each pyramid's faces lit apart, as the knurl's are */
-  const YC=MR_Y+10.4,BL=DIAL_R-1.6,GR=DIAL_R+0.1,bz=hn(mesh(cs,new THREE.LatheGeometry([V2(TR,YTB),V2(BZr0,YTB),V2(BZr0,YTB+BZK.h),V2(BZK.r1,YTB+BZK.h),V2(DB+0.9,YC+1.4),V2(BL,YC+1.4),V2(BL,YC+0.8),V2(GR,YC+0.8),V2(GR,YC),V2(BL,YC),V2(BL,YC-0.5),V2(DB+0.1,YC-0.5),V2(DB+0.1,YT),V2(TR,YT),V2(TR,YTB)],128),M.brass),'42102');
-  fuse([bz,hn(mesh(bz,knurlBand(BZK.r1,BZK.d,YTB,BZK.h,BZK.n,BZK.rp),M.brass),'42102',{sub:1})]);   /* its knurled band on it, one mesh (fuse): a ring at the band's edge in Edges until 21 October 2026 */
+  /* the bezel's section (26 October 2026): its outside traced on Renaissance Antiques' LPEC109-4 (the case side-on), both edges of the silhouette every 2 px (E:/mc-video/oq/ledger/run3_case/
+     bezel_prof.py), scaled by the knurl's r 54.2 (KLUwI2UUCMQ 2:42, the plate's 87.57 as the scale): 7.17 px/mm. From its foot on the case's lip: a short chamfer, a plain skirt
+     r 49.45-49.6 over the rim's thread, at 7.0 a cove flaring to the knurl, r 53.85 at 13.7, the knurled band (3.4: 48:27.61) at the top, r 54.15, the top at 17.6. The knurl at the
+     glass end, with a plain skirt under it, as KLUwI2UUCMQ 0:28.7 and 1:22.5 show it on the case and 2:33-2:43 the bezel alone (a knurl, a flare and a band); likely. Inside: the
+     skirt threaded on the rim's thread (TH), a plain bore over the rim's top, the glass's seat (BL, the dial photograph's opening r 45.9) and over the glass a sight cone up to
+     the top's inner edge, r 53.0 (the bright cone round the glass on 0:28.7; its depth and edge estimated), the glass at YC as before. Until then a cone from the knurl, at the case
+     end, up to the crystal: the knurl was read as the case end on 48:30 and LPEC109-4's cove and band as the case's */
+  const YC=MR_Y+10.4,BL=DIAL_R-1.6,GR=DIAL_R+0.1,YZ=YTB+17.6,RSK=49.45,RBz=TH.R+TH.d+TH.c,h=v=>YTB+v;
+  const BZK={n:400,h:3.4,d:0.3,rp:0.85,r1:54.15},BZr0=BZK.r1-BZK.d;   /* the knurl: a diamond knurl about 0.85 round (400 on r 54.3, 2:42) and its rows 0.85 apart (48:27.61), 0.3 deep (estimated) */
+  const COVE=[[49.61,6.97],[49.75,7.81],[50.03,8.65],[50.37,9.48],[50.93,10.32],[51.42,10.88],[51.97,11.44],[52.6,11.99],[53.23,12.55],[53.85,13.11]];   /* [r, h over the foot], LPEC109-4 x 544-588 */
+  const bpr=[[RBz,YTB],[RSK-0.25,YTB],[RSK,h(0.25)],[RSK,h(1.4)],...COVE.map(([r,v])=>[r,h(v)]),[BZr0,h(13.67)],[BZr0,YZ],[53.0,YZ],[GR-0.3,YC+0.8],[GR+0.1,YC+0.8],[GR+0.1,YC],[BL,YC],[BL,YC-0.5],[DB+0.1,YC-0.5],[DB+0.1,YT],[RBz,YT]];
+  const bz=hn(mesh(cs,lathT(bpr,{R:RBz,d:TH.d,p:TH.p,yr:TH.yr,k:bpr.length-1,inside:true}),M.brass),'42102');
+  fuse([bz,hn(mesh(bz,knurlBand(BZK.r1,BZK.d,YZ-BZK.h,BZK.h,BZK.n,BZK.rp),M.brass),'42102',{sub:1})]);   /* its knurled band on it, one mesh (fuse) */
   const gl=hn(mesh(cs,new THREE.CylinderGeometry(GR,GR,0.8,96),M.glass,0,YC+0.4,0),'42103');gl.renderOrder=5;bz.userData.bezel=gl.userData.bezel=true;   /* the bezel with its crystal, taken off to set the hands with the key (app.js) */
   /* lids hinged at the back: the glass lid (HG tall) on the box, the outer lid (HL) on the glass lid, so it opens on its own and never swings through the glass lid. Each turns about the
      knuckles of its piano hinge, HR behind the back (mid at the lower seam's axis, top at the upper's), so each lid's back face is at z HR in its own frame (LO its middle).
