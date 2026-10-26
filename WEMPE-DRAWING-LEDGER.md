@@ -12,7 +12,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | 4 | escape wheel, detent, detent block, escape jewels | marine-chronometer-source/wempe/drawing-check/batch4.md | 9 | 9 of 9 |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | marine-chronometer-source/wempe/drawing-check/batch5.md | 12 | 12 of 12 |
 | 6 | maintaining work, maintaining detent, stop work | marine-chronometer-source/wempe/drawing-check/batch6.md | 9 | 9 of 9 |
-| 7 | barrel, arbor, set-up ratchet, mainspring, chain | (running or to come) | 14 | — |
+| 7 | barrel, arbor, set-up ratchet, mainspring, chain | marine-chronometer-source/wempe/drawing-check/batch7.md | 14 | 14 of 14 |
 | 8 | going train | (running or to come) | 10 | — |
 | 9 | motion work, hands, dial | (running or to come) | 13 | — |
 | 10 | case, gimbals, boxes, keys | (running or to come) | 14 | — |
@@ -23,8 +23,8 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 
 | Image | Sheet | Batch | Status | Note |
 |---|---|---|---|---|
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
-| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6, 7 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded (also reviewed by batch 7) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | waiting for batch 10 |  |
@@ -101,21 +101,21 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 6 | reviewed by batch 6 |  |
 | `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | reviewed by batch 5 |  |
 | `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | reviewed by batch 5 |  |
-| `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | reviewed by batch 5 |  |
-| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 7 | waiting for batch 7 |  |
-| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 7 | waiting for batch 7 |  |
+| `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | reviewed by batch 5, 7 |  |
+| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 7 | reviewed by batch 7 |  |
+| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 7 | reviewed by batch 7 |  |
 | `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 1 | reviewed by batch 1, 2 |  |
@@ -129,7 +129,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 2 | reviewed by batch 2 |  |
 | `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 2 | reviewed by batch 2 |  |
 | `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 1 | reviewed by batch 1 |  |
-| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 2 | reviewed by batch 2 |  |
+| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 2 | reviewed by batch 2, 7 |  |
 | `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 2 | reviewed by batch 2 |  |
 | `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 2 | reviewed by batch 2 |  |
 | `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
@@ -146,4 +146,4 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | waiting for batch 10 |  |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3, 4, 5, 6 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3, 4, 5, 6, 7 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
