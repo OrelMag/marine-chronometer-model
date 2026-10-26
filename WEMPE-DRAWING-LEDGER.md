@@ -15,7 +15,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | 7 | barrel, arbor, set-up ratchet, mainspring, chain | marine-chronometer-source/wempe/drawing-check/batch7.md | 14 | 14 of 14 |
 | 8 | going train | marine-chronometer-source/wempe/drawing-check/batch8.md | 10 | 10 of 10 |
 | 9 | motion work, hands, dial | marine-chronometer-source/wempe/drawing-check/batch9.md | 13 | 13 of 13 |
-| 10 | case, gimbals, boxes, keys | (running or to come) | 14 | — |
+| 10 | case, gimbals, boxes, keys | marine-chronometer-source/wempe/drawing-check/batch10.md | 14 | 14 of 14 |
 
 124 images: 113 in batches, 11 excluded with a reason, 0 without a batch.
 
@@ -25,15 +25,15 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 |---|---|---|---|---|
 | `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1, 3, 6, 7, 8 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
 | `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded (also reviewed by batch 7) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | waiting for batch 10 |  |
-| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | waiting for batch 10 |  |
+| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | reviewed by batch 10 |  |
+| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | reviewed by batch 10 |  |
 | `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 9 | reviewed by batch 9 |  |
 | `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 9 | reviewed by batch 9 |  |
 | `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 9 | reviewed by batch 9 |  |
@@ -141,9 +141,9 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
 | `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
 | `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | — | excluded | the electrical seconds contact (38 00), not on this model |
-| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | waiting for batch 10 |  |
-| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | waiting for batch 10 |  |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3, 4, 5, 6, 7, 8, 9 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | reviewed by batch 10 |  |
+| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | reviewed by batch 10 |  |
+| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | reviewed by batch 10 |  |
+| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | reviewed by batch 10 |  |
+| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | reviewed by batch 10 |  |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 10, 2, 3, 4, 5, 6, 7, 8, 9 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
