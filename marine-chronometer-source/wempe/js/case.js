@@ -280,8 +280,8 @@ const WCASE=(()=>{
       const yd=YC-59.5,F1=[{p:C(H[10],8.2/2,72),a:yd,b:YB-49},{p:C([0,0],1.52,40),a:yd,b:YB-49},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],0.6,24),a:yd,b:yd+1.5}];
       /* the bottom drawn 0.01 inside the turned part's wall (r 34.09 against its 34.1): its 240 facets and the wall's 360 would cross, and a ray out from the axis would meet
          the wall's face before the bottom's at r 34.1 as often as not, so that bom.py's rays read the bottom's metal as ending at the axis (the closing plate's screw, 24 October 2026) */
-      for(const[g,mt]of BW)tag(mesh(g,solidGeo([{loop:circ(34.09),y0:yd,y1:YB-49,F:F1}]),mt),'050100-1');
-      tag(mesh(G6,solidGeo([{loop:circ(34.09),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
+      for(const[g,mt]of BW)tag(mesh(g,solidGeo([{loop:circT(34.09),y0:yd,y1:YB-49,F:F1}]),mt),'050100-1');   /* on the wall's own 360 corners (circT), 0.01 inside them (240 facets until 26 October 2026, which crossed the wall's: a dotted ring on the floor) */
+      tag(mesh(G6,solidGeo([{loop:circT(34.09),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
       /* the winding hole's seat inside: a raised ring round the hole on the bottom, which the cork ring on the dust bush (05 08 01-4, frame.js) meets. Not on the casting's
          sheet (it draws no hole and nothing machined); the 6MX's bowls have it: moMvyx8eXfo 3:35 (1080p, the bowl empty) a flat-topped ring standing on the bottom round
          the hole (sure that it stands), 72 px across against the hole's 38.5, so Ø 15.3 by the hole's 8.2 (likely), the cork's 16.1 nearly; its top an ellipse 60 px by 72,
@@ -497,13 +497,18 @@ const WCASE=(()=>{
     /* the bezel's glass, a little greener and less clear than the box's (M.glass, 0.12): a plain glass reads as nothing at 0.12, so the case view and a section showed the
        bezel open (21 October 2026). Its edge green, as Wempe 6161's (antiquorum_208-4_wempe6161.jpg: a green ring round the dial where the glass's edge shows) */
     const GLW=M.glassW=M.glassW||new THREE.MeshStandardMaterial({color:sc(0xd8efe4),metalness:0,roughness:0.02,transparent:true,opacity:0.3,depthWrite:false});
-    {const b0=YB+0.3,top=b0+16,RG=55.25,cone=r=>b0+5.0+(r-45.9)*7.3/(RG-45.9),bev=r=>top-(r-RG)*6.2/(60.6-RG);
+    /* 26 October 2026, the drawings check (drawing-check/batch10.md, re-measured on the sheet at 6× zoom): the glass lies ON the ring, a flat disc Ø 111.6 (r 55.8) from 12.3 to
+       15.8 over the underside, its top edge chamfered to r 54.3, standing about 2.4 proud of the ring's lip, which is only 13.4 high at r 57.2 (pixel scans at 4.78 px/mm,
+       the right-hand section: likely ±0.2); the ring's bevel runs from the widest band (r 60.2 at 9.9) up to the lip, the lip's inside falls to r 56.2 at 12.6 and the seat
+       at 12.3 carries the glass, the sight cone running down from the seat's inner edge (r 55.3) to Ø 92 at the step. Until then the ring was read 16 high, wrapping a glass
+       flush with its edge (the glass's top line taken for the ring's: tools/wempe_bezel_trace.py) */
+    {const b0=YB+0.3,top=b0+16,RG=55.3,cone=r=>b0+5.0+(r-45.9)*7.3/(RG-45.9);
       /* its section as traced (above), turned, the skirt's bore (its edge 1, at the thread's root TH.Rf) threaded: the step's underside, the bore, the underside, the outside's three lines
          (to r 58.05 at 6.07, 58.9 at 6.9, toward 60.6 at 7.5), the widest band, the bevel to the glass's edge, the seat's wall, the sight cone (cells of rings until 24 October 2026) */
-      const pz=[[46.0,b0+5.0],[TH.Rf,b0+5.0],[TH.Rf,b0],[56.6,b0],[58.05,b0+6.07],[58.9,b0+6.9],[60.2,b0+6.9+(60.2-58.9)*0.6/1.7],[60.2,bev(60.2)],[RG,top],[RG,cone(RG)],[46.0,cone(46.0)]];
+      const pz=[[46.0,b0+5.0],[TH.Rf,b0+5.0],[TH.Rf,b0],[56.6,b0],[58.05,b0+6.07],[58.9,b0+6.9],[60.2,b0+6.9+(60.2-58.9)*0.6/1.7],[60.2,b0+9.9],[57.2,b0+13.4],[56.2,b0+12.6],[56.2,b0+12.3],[RG,b0+12.3],[46.0,cone(46.0)]];   /* the bevel to the lip, the lip's inside, the seat, the sight cone */
       fuse([tag(mesh(bW,lathT(pz,{R:TH.Rf,d:TH.d,p:TH.p,yr:TH.yr,k:1,inside:true}),CB),'050101-2'),
       tag(mesh(bW,softKnurl(solidGeo([{loop:knurlPts(60.6,0.3,460),y0:b0+7.5,y1:b0+9.8,F:[{p:circT(60.2),a:b0+7.5,b:b0+9.8}]}]),60.3),CB),'050101-2',1)]);   /* the ring and its knurl one mesh (fuse). The knurl's bore on the ring's own 360 corners (lathT's, circT): polyGeo's coarser circle cut 0.04 into the ring, 36 mm³ of brass weighed twice until 24 October 2026 (overlaps.py) */
-      const gl=tag(mesh(bW,solidGeo([{loop:circ(RG),y0:b0+12.3,y1:top}]),GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
+      const gl=tag(mesh(bW,KIT.latheF([[0,b0+12.3],[55.8,b0+12.3],[55.8,b0+14.3],[54.3,b0+15.8],[0,b0+15.8]],120),GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;void top;}   /* the glass Ø 111.6 on its seat, 3.5 thick, its top edge chamfered (05 01 01: 0.3 under the old 16 at its top) */   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
     /* the 6MX's bezel ('6mx'), knurled and screwed onto the bowl's threaded rim (Kirow 422's: 11_Kirow_DEC_422_Gehäuse.jpg; Kirov 14917's off its bowl, its inside threaded:
        rAw2zmulpk8 0:29, 2:52), its glass thick and standing proud (12_Kirow_DEC_422_Kasten_1.jpg: a green edge over a narrow brass top). Traced on the bowl photograph as the
        bowl (rows by Y6, radii at 8.42 px/mm, the right edge less its 0.45 offset at the knurl): its lower edge r 56.1 at row 552, swelling (a bell) to the knurl's tips, r 58.3
