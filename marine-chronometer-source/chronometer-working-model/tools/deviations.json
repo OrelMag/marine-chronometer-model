@@ -334,28 +334,29 @@
   },
   {
    "id": "key",
-   "title": "Winding key with a one-way ratchet",
-   "period": "Breguet's \"tipsy\" key, about 1790: a ratchet in the key's pipe",
+   "title": "Winding key with a one-way spring clutch",
+   "period": "Breguet's \"tipsy\" key, about 1790; the spring clutch as chronometerbook.com makes it",
    "parts": [
     "key"
    ],
    "lines": [
     "42044"
    ],
-   "vmat": "brass, as the Model 21's key, with a steel ratchet wheel on the socket and a click in the pipe, sprung",
-   "vtreat": "the socket turns the fusee counterclockwise (seen from the key) and slips the other way; the Model 21's plain key kept to set the hands",
-   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.53 N·m bends the fusee wheel's teeth (overwind.js), about a third of what an average hand gives the key's paddle (0.63 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A ratchet in the key's pipe slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 1.5 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
+   "vmat": "brass, as the Model 21's key, made as chronometerbook.com's: the pipe a shaft of 8 mm rod turned to 6, its square drilled 25 deep and filed to the arbor's, its head in the body's 8 mm bore; a helical spring of 0.7 mm steel wire, 6 mm inside and 18 mm free, on the shaft in the bore, one end anchored in the body; the paddle pinned in a 3 mm slot across the body's end",
+   "vtreat": "the spring winds tight on the shaft and turns it as the paddle turns the fusee counterclockwise (seen from the key), and opens and slips the other way (its coil wound clockwise for it); the Model 21's plain key kept to set the hands",
+   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.53 N·m bends the fusee wheel's teeth (overwind.js), 69 % of what an average hand gives the key's paddle (0.77 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A spring clutch in the key's body slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 2.2 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
    "sources": [
     "overwind.js (the key forced, both ways)",
     "S. N. Imrhan and M. J. Munoz-Vasa, \"Finger Pinch Loosening and Tightening Torques on Small Cylindrical Handles Among Industrial Workers\", Industrial and Systems Engineering Review 1(2), 2013 (and Swain et al. 1970 there)",
     "The manual: Sec. III and IV (the key wound counterclockwise, the hands set forward), Tool 47",
-    "Breguet's \"tipsy\" key (clé de sûreté), about 1790: a ratchet in the key that slips when turned the wrong way"
+    "Breguet's \"tipsy\" key (clé de sûreté), about 1790: a ratchet in the key that slips when turned the wrong way",
+    "chronometerbook.com, \"8. Making a chronometer key\" (30 July 2013): the key's parts, their drawing (Fig. 2) and the steps to make them"
    ],
    "numbers": {
     "Ty": 0.5329193408821993,
-    "mean": 0.6281434555263158,
+    "mean": 0.767590485,
     "TH": 1.0592325,
-    "TyF": 1.6026267105226204
+    "TyF": 2.280042284269328
    }
   }
  ]

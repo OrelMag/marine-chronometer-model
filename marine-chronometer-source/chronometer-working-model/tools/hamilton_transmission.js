@@ -88,9 +88,10 @@ const Mrun=n=>fusT(n)*RB/rho(n),Mfl=n=>fusT0(n)*RB/rho(n),Fcf=n=>Math.max(0,Mfl(
    the mainspring's moving half on the drum (2,100, overwind.js's and ratchets.js's estimate); the chain (measured 20 October 2026: plates 1.95 across on a 2.19 pitch, 6.64 mm² each,
    0.18 thick, a plate and a half a pitch, and a rivet r 0.17, about 1.84 mm³ of steel a pitch; IN 4.72 turns of the 19.32 drum plus the span, about 600 mm: 3.9 g, all moving at the chain's speed, so at the drum
    m RB²); the wind indicator's wheel and hand (a 120-tooth brass wheel of r 15.1 (motionwork.js's module), spoked, 0.5 thick, and its hand as half the hour hand: about 200); the key
-   (core.js windingKey, brass, kw 4.4: the pipe, the collar Ø 9.7 × 4 and the paddle 13.6 × 12.8 × 3.5, about 10 g: about 120 about its axis) */
+   (core.js windingKey, brass, as measured on KLUwI2UUCMQ 0:45 since 26 October 2026: the pipe Ø 6, the body to the collar Ø 22.8 and the paddle 25.4 × 32 × 3, taken solid, about 79 g: 3,270 about its axis;
+   the earlier key, 46.6 long, about 10 g and 120, until then) */
 const MCH=600/2.19*1.84*7.85e-3,JI={barrel:A_.barrel.I+2100+MCH*RB*RB,fusee:A_.fusee.I+A_.square.I,ratchet:A_.sratchet.I+A_.sspring.I/2+2*0.0335*(Math.hypot(7.6945,4.2289))**2,fw:A_.fuseeWheel.I+A_.sspring.I/2,
-  centre:A_.centre.I,cannon:A_.cannon.I+A_.minuteHand.I,change:A_.minuteWheel.I,hour:A_.hourWheel.I+A_.hourHand.I,inter:A_.third.I,sec:A_.fourth.I+A_.secondsHand.I,esc:A_.escape.I,ud:200,key:120};
+  centre:A_.centre.I,cannon:A_.cannon.I+A_.minuteHand.I,change:A_.minuteWheel.I,hour:A_.hourWheel.I+A_.hourHand.I,inter:A_.third.I,sec:A_.fourth.I+A_.secondsHand.I,esc:A_.escape.I,ud:200,key:3270};
 /* the parts' figures from their own tools (computed once in the main thread, handed to the runs' threads): the sustaining spring (sustaining.js), the pawls and their springs
    (ratchets.js, off mechanisms.json), the stop (overwind.js), the cannon pinion's window (motionwork.js) */
 let HP=null;

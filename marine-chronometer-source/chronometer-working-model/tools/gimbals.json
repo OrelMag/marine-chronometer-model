@@ -1,37 +1,37 @@
 {
  "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
  "bowl": {
-  "m": 1166.138,
+  "m": 1297.316,
   "cg": [
-   0.091,
-   -14.684,
-   -0.275
+   0.818,
+   -11.517,
+   -0.996
   ],
   "I": [
    [
-    1411375.1,
-    20804.7,
-    -23221.8
+    2383105.7,
+    116295.5,
+    -8594.6
    ],
    [
-    20804.7,
-    1502792.6,
-    -4376.2
+    116295.5,
+    1527495.6,
+    -98017.0
    ],
    [
-    -23221.8,
-    -4376.2,
-    1411185.9
+    -8594.6,
+    -98017.0,
+    2382253.6
    ]
   ],
   "byMat": {
-   "brass": 483.41,
+   "brass": 611.18,
    "plate": 357.45,
    "brass2": 86.78,
    "gilt": 63.24,
    "steel": 60.88,
    "plateSolid": 33.07,
-   "glass": 14.23,
+   "glass": 17.64,
    "copper": 12.18,
    "chain": 2.66,
    "steelK": 1.86,
@@ -46,20 +46,20 @@
    "clear": 0.01
   },
   "byPart": {
-   "bowl": 377.12,
+   "bowl": 374.95,
    "pillar": 295.56,
+   "motion": 84.7,
    "barrelBridge": 79.37,
+   "sq": 79.1,
    "cock": 50.24,
    "trainBridge": 46.9,
    "barrel": 41.04,
    "fusee": 36.65,
    "dial": 36.1,
    "ratchet": 19.05,
-   "motion": 18.03,
    "lowerBridge": 15.74,
    "ltb": 14.08,
    "pillars": 13.77,
-   "sq": 12.42,
    "gw": 11.95,
    "lockArm": 11.18,
    "bal": 9.36,
@@ -76,37 +76,37 @@
   "missing": {}
  },
  "ring": {
-  "m": 153.879,
+  "m": 153.855,
   "cg": [
-   3.397,
-   -0.099,
-   6.799
+   3.389,
+   -0.046,
+   6.794
   ],
   "I": [
    [
-    424466.9,
-    84.1,
-    3408.6
+    424316.6,
+    -293.9,
+    3458.5
    ],
    [
-    84.1,
-    696276.6,
-    771.3
+    -293.9,
+    696167.5,
+    382.2
    ],
    [
-    3408.6,
-    771.3,
-    277735.7
+    3458.5,
+    382.2,
+    277543.2
    ]
   ],
   "byMat": {
-   "brass": 98.59,
+   "brass": 98.57,
    "brass2": 49.95,
    "steel": 4.95,
    "steelD": 0.39
   },
   "byPart": {
-   "ring": 153.88
+   "ring": 153.85
   },
   "missing": {}
  },
@@ -124,18 +124,18 @@
   1.0,
   0.0,
   0.0,
-  -4.0,
+  1.03,
   0.0,
   1.0
  ],
  "stops": {
   "ring": [
    {
-    "deg": 63.5,
+    "deg": 67,
     "against": "box"
    },
    {
-    "deg": 73.5,
+    "deg": 84,
     "against": "box"
    }
   ],
@@ -148,7 +148,7 @@
    }
   ]
  },
- "ringY": -7.099999999999994,
+ "ringY": -18.889340101522848,
  "RO": 68,
  "CR": 49.5
 }
