@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#mech2">18. The mechanisms in turn</a><a href="#mfg">19. Making it</a><a href="#book">20. The build book</a><a href="#nav">21. Navigating by it</a><a href="#open">22. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#trans">13. The transmission</a><a href="#keystone">14. Against a period text</a><a href="#video">15. The swing on video</a><a href="#soviet">16. The Soviet 6MX</a><a href="#builds">17. The builds</a><a href="#mech2">18. The mechanisms in turn</a><a href="#mfg">19. Making it</a><a href="#book">20. The build book</a><a href="#nav">21. Navigating by it</a><a href="#verify">22. An independent pass</a><a href="#open">23. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -533,7 +533,71 @@ longitude error at the equator, beside the fix's 2-mile probable error.</figcapt
 <p id="navMeaning"></p>
 <div id="kNav"></div>
 
-<h2 id="open">22. What stays open</h2>
+<h2 id="verify">22. An independent pass: can it be built, and would it navigate?</h2>
+<p>The per-part audit of 25-26 October 2026 (six batches, <code>WEMPE-PROVENANCE.md</code>) changed parts the analyses above rest on: the escape pinion (4.0 long),
+the detent (its spring tapered, its heights), the endshake (0.06, the 1958 book's 0.05-0.07), the fusee body's place, the barrel's internals, the maintaining clicks and
+springs, the case and gimbals, and the mainspring's set (×0.75). This section is not a rerun. It reads each analysis again, adversarially, and asks three questions. Does it
+read the changed parts from their one source, or from a copy of their old numbers? Do its criteria match their sources? What does it assume that a maker couldn't meet?
+Two read-throughs were made, one hunting stale numbers and one weighing criteria and assumptions, and every finding was checked against the code before anything was changed.</p>
+<h3>Stale copies, found and fixed</h3>
+<ul>
+<li><b>The detent spring's thickness on the bench.</b> Since 25 October the tripping frame takes the spring's thickness as a factor of the tapered spring's uniform equivalent,
+0.0792 mm (1436's 0.09 at its ends and 0.07 at its middle). The bench's ring test (<code>wempe_bench.js</code>) still divided by 0.07, so every thickness in its table was a spring
+13 % thicker than its label. Its band read 83-164 Hz; it is <span id="vDetBand"></span> Hz, the spring as drawn ringing at <span id="vDetF0"></span> Hz. The Monte Carlo
+(<code>wempe_montecarlo.js</code>) centred its detent springs on 0.07 against a band centred on 0.0792, and so replaced 4 springs in 2,000 movements that needed none (0 now). Both
+are fixed, and the bench, the Monte Carlo and the maker's sheets are rewritten for all three versions. No verdict changes.</li>
+<li><b>The escape pinion's face</b> in <code>wempe_train.js</code> was still 3 long (4.0 since the audit). Every mesh takes the narrower face, the wheel's rim, so no figure moves.</li>
+<li><b>The damping measured on video</b> (<code>wempe_startup.json</code>) had been fitted on 19 October, before batch 1 changed the balance's inertia and the detent's. Refitted on
+today's escapement, it gives TF <span id="vTF"></span>. The model keeps 111 s (the owner's choice, 26 October 2026), inside the refitted range, and
+<code>wempe_escapement.js</code> now checks that the model's TF lies inside the fit's range (it asked for within 2 s of its middle).</li>
+<li><b>Left as they are, no verdict moving:</b> the frame's load uses the chain's radius fully wound as 9.355 (the fusee's own table ends at 9.30: 0.5 %); <code>wempe_wear.js</code> takes
+the maintaining clicks' spring force as an estimated 0.44 N, and <code>wempe_ratchets.js</code> their springs' free span as 12-16, neither from the clicks as re-drawn in batch 5;
+the trial's label now reads "GOST 8916-58's class II trial, its limits GOST 8916-70's class 2" (6MX-figures.md).</li>
+</ul>
+<p>Everything else reads its source: the energy budget's level (0.913) is computed live from the re-solved spring; the gimbals' bodies come from <code>gimbals_wempe.json</code>, reweighed
+after the threads (periods 0.67 and 0.77 s); the bench's endshake stacks agree with the escape arbor's and the fusee's drawn lengths; the chain's lever on the stop and in the
+strength checks is the fusee's own table's.</p>
+<h3>The criteria against their sources</h3>
+<div class="tw"><table><tr><th>Criterion</th><th>As the tools encode it</th><th>The source</th><th>Agreement</th></tr>
+<tr><td>The TU's trial</td><td>36/20/4/20/36 °C, the first 2 days of each period not counted; E 0.35, R 2.00, D 2.30, C 0.10, S 1.20, ω 3.50, N 30 (<code>wempe_errorbudget.js</code>)</td><td>TU 25-07-1533-84, Table 5 (6MX-figures.md): GOST 8916-58's class II trial, GOST 8916-70's class 2 limits</td><td class="ok">every limit and formula matches</td></tr>
+<tr><td>Endshake</td><td>fusee 0.08-0.12, escape 0.05-0.07, balance 0.04-0.06 (<code>wempe_bench.js</code>)</td><td>the 1958 repair book, Appendix 4</td><td class="ok">matches</td></tr>
+<tr><td>The swing</td><td>a guard band, 180-270° over the whole wind (<code>wempe_build.js</code>, <code>wempe_tolerances.js</code>, <code>wempe_montecarlo.js</code>)</td><td>225-270° (the 1954 instruction)</td><td class="mid">relaxed, and the tools say so: the drawn version (193°) and the 1940s build (202-212°) swing under the sources' 225°</td></tr>
+<tr><td>The fix's error</td><td>a 2-mile median radius (σ 1.70 a side), its 95 % radius 4.16; the clock's error along the parallel against that radius (<code>wempe_navigation.js</code>)</td><td>Bowditch: a fix "seldom in error by more than 2 miles"</td><td class="mid">the arithmetic is right, the reading the lenient one: "seldom" reads more like a 95 % bound, and the clock's error is along one axis. Both stricter readings are reported below; the verdict stays on this one (the owner's choice, 26 October 2026)</td></tr>
+</table></div>
+<h3>Can it be made and put together?</h3>
+<p>Yes, as drawn, with the work a 1950s shop would expect, and on nothing a maker can't do. Section 19's checks run on the page's own solids, which since 26 October carry
+their threads (ISO metric, the tapped holes threaded and each screw on its hole's helix). <code>dfm.py</code> finds no void sealed inside a piece. What it flags is ordinary
+watchmaking: walls under 0.15 mm (the escape wheel's and fusee's teeth and groove lands, the cannon pinion), two slots narrower than a 0.4 mm end mill (the upper cock's and the
+fusee's: a slitting saw), undercuts on eleven milled pieces (a side cutter) and the sharp inside corners an end mill leaves rounded. It also reads eight holes of Ø 0.077 in the
+fusee body, which no sheet has: a reading of the groove's surface, to be confirmed. <code>assembly.py</code> takes the movement apart and back in the 1958 book's order with nothing
+passing through anything. The fits the sheets left impossible were found and corrected by the audit itself (README, Readings corrected; the collet's bore against the 1946 staff,
+the hour wheel's collar against the dial). One fit a maker must make on the bench: the endshake. Made to the sheets' fits, every one of the Monte Carlo's 2,000 movements has
+some arbor outside the 1958 book's band (about five arbors each out of band, some of them binding), and the bench sets each.</p>
+<h3>Would it keep time to navigate by? The chain and its weakest link</h3>
+<p>The chain is the made chronometer's swing (<code>wempe_montecarlo.js</code>), its trial and voyage (<code>wempe_errorbudget.js</code>) and the position (<code>wempe_navigation.js</code>).
+What each source adds alone after 30 days at sea, median |error|:</p>
+<div id="tVerTerms" class="tw"></div>
+<p>As adjusted on the TU's trial, the masses set to the 6MX passports' ±0.45°, the temperature's residual dominates: the rate moves by up to 0.1 s a day for each °C, and the
+voyage climbs 16.7 °C in its first twenty days. With the masses set to ±0.1° (two or three more rounds of the 4 °C and 36 °C periods, about two weeks on the bench), drift
+becomes the largest term. That is a slow change of rate, calibrated on eight test cards as a constant slope, which a ten-day rating in port cannot see.</p>
+<p><b>Why the drawn version fails.</b> It is mostly not the low swing. It is the masses' setting: run the drawn escapement with the builds' ±0.1°, and it carries
+<span id="vLastB"></span>. The swing (193°, from the drive and damping the owner chose) is left only the difference between that and the builds' figures. Where the swing does
+matter is over a year rather than a month: at 193° the rate is about seven times as sensitive to the drive as the 1950s build's at 230°, so as the oil thickens between services
+it wanders more, and each voyage's fresh rating has more to take out.</p>
+<div id="tVerNav" class="tw"></div>
+<h3>What a maker must do on the bench</h3>
+<p>Pass the TU's trial; then keep repeating its 4 °C and 36 °C periods, five counted days each, moving all four masses by C/0.228 degrees each round (a pair alike, to keep
+the poise), until |C| is under 0.023 s a day per °C. That step decides whether a made one navigates. Then set every arbor's endshake to the 1958 book's band, the banking to the
+middle of the lock's window and the preload to its aim with wire riders, replace a detent spring that rings outside its band, change the strip if the mainspring's pull is out
+of its band, and turn the set-up until the swing stays in band over the whole wind (section 17's tests).</p>
+<p><b>What the model assumes the maker achieves, and doesn't model.</b> The ±0.1° assumes that a compensation, once set, holds: that moving the masses and tightening them
+again doesn't shift the poise, and that the nickel-steel rim doesn't age between the trial and the voyage. The scatter is white noise, and the drift a constant slope. The oil
+loses 0-10 % of the drive a year, linearly, its viscosity's change with temperature left out (it matters most to the drawn version). Missed or irregular winding is not modelled.</p>
+<h3>The verdict, version by version</h3>
+<ul id="vVerdict"></ul>
+<p id="vChange"></p>
+
+<h2 id="open">23. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -881,7 +945,7 @@ function draw(){
   checks('kStart','startup');
 
   /* ---------- 21. navigating by it ---------- */
-  if(D.nav&&D.nav.versions){const NV=D.nav,VS=[['last','--s1'],['build40','--s3'],['build','--s2']].filter(([v])=>NV.versions[v]),C=NV.criterion,g=(x,n=2)=>f(x,n);
+  if(D.nav&&D.nav.versions){const NV=D.nav,VS=[['last','--s1'],['build40','--s3'],['build','--s2'],['lastB','--s4']].filter(([v])=>NV.versions[v]),C=NV.criterion,g=(x,n=2)=>f(x,n);
     table('tNav',['Version','Masses set to','Days at sea','The clock (s): median / 95 %','Longitude at the equator (miles)','On the route (miles)','With the fix (miles)','The criterion at 30 days (each figure’s 95 % sampling interval)'],
       VS.flatMap(([v])=>{const X=NV.versions[v];return X.at.map((q,i)=>[i?'':esc(X.name),i?'':'±'+X.set+'°',q.d,`${g(q.s[0],1)} / ${g(q.s[1],1)}`,`${g(q.eq[0])} / ${g(q.eq[1])}`,`${g(q.route[0])} / ${g(q.route[1])} at ${q.lat}° N`,`${g(q.total[0])} / ${g(q.total[1])}`,
         i?'':`<span class="${X.verdict==='passes'?'ok':X.pass?'mid':'no'}">${esc(X.verdict||(X.pass?'passes':'fails'))}</span>: median ${g(X.at[1].eq[0],3)} (${g(X.ciMed[0],3)}-${g(X.ciMed[1],3)}) against ${g(C.median,0)}, ${esc(X.median||'')}; 95 % ${g(X.at[1].eq[1],3)} (${g(X.ci95[0],3)}-${g(X.ci95[1],3)}) against ${g(C.p95,3)}, ${esc(X.p95||'')}`]);}),true);
@@ -893,6 +957,24 @@ function draw(){
     const B=NV.versions.build,L=NV.versions.last,b30=B.at.find(q=>q.d===30),l30=L.at.find(q=>q.d===30);
     $('navMeaning').innerHTML=`What it means: a Wempe made to the drawings and adjusted on its trial leaves the navigator ${g(l30.eq[0])} miles out after a month (95 % within ${g(l30.eq[1])}), about twice the sight's own error. The builds, with their masses set closer, carry ${g(b30.eq[0])} miles in the median, under the fix's probable error, and ${g(b30.eq[1],3)} in 19 voyages of 20 against the fix's ${g(C.p95,3)}: ${B.verdict==='passes'?'within it':B.pass?'on the line: over it by less than the figure’s own sampling error, so it passes within sampling':'over it beyond its sampling error'} (the 95 % figure's interval over 2,000 voyages is ${g(B.ci95[0],3)}-${g(B.ci95[1],3)}). With the fix's own error added, the position a month out is within ${g(b30.total[0])} miles in the median and ${g(b30.total[1])} in 19 of 20.`;
     checks('kNav','navigation');}
+  /* ---------- 22. the independent pass ---------- */
+  if(D.verify&&D.nav&&D.nav.versions){const V=D.verify,NV=D.nav,g=(x,n=2)=>f(x,n),T=V.terms;
+    $('vDetBand').textContent=`${g(V.detent.band[0],0)}-${g(V.detent.band[1],0)}`;$('vDetF0').textContent=g(V.detent.f0,0);
+    $('vTF').textContent=`${g(V.startup.TF,1)} s (${V.startup.range[0]}-${V.startup.range[1]}; ${V.startup.span[0]}-${V.startup.span[1]} over the stretches' scale), where the 19 October fit gave 111.1 s (108-114)`;
+    table('tVerTerms',['Source, alone','As adjusted, masses ±0.45° (s)','The masses ±0.1° (s)'],[['the temperature curve (12.8 → 29.4 °C)','temp'],['drift','drift'],['day-to-day scatter','scatter'],['the barometer','baro'],['the oil thickening','oil'],['heavy weather one day in five','sea'],['all together','all']]
+      .filter(([,k])=>T[k]).map(([n,k])=>[k==='all'?`<b>${n}</b>`:n,`${g(T[k][0],2)} (${g(T[k][0]/4,2)} mi)`,`${g(T[k][1],2)} (${g(T[k][1]/4,2)} mi)`]));
+    const LB=NV.versions.lastB,lb30=LB&&LB.at.find(q=>q.d===30);
+    if(lb30)$('vLastB').textContent=`${g(lb30.eq[0])} miles in the median and ${g(lb30.eq[1])} in 19 voyages of 20 after 30 days (the builds' ${g(NV.versions.build.at.find(q=>q.d===30).eq[0])} and ${g(NV.versions.build.at.find(q=>q.d===30).eq[1])}): it passes the median, and ${LB.p95} at 95 %`;
+    const cls=x=>x==='passes'?'ok':x==='fails'?'no':'mid',sp=x=>`<span class="${cls(x)}">${esc(x)}</span>`,VS=['last','lastB','build40','build'].filter(v=>NV.versions[v]);
+    table('tVerNav',['Version','Masses','After 30 days at the equator: median / 95 % (miles)','The verdict: 2 miles the fix\'s probable error (95 % 4.16)','Read strictly: 2 miles the fix\'s 95 % radius (0.96 / 2.00)','Read strictly: the fix along the parallel alone (1.15 / 3.33)'],
+      VS.map(v=>{const X=NV.versions[v],a=X.at.find(q=>q.d===30),st=X.strict||{};return[esc(X.name),'±'+X.set+'°',`${g(a.eq[0])} / ${g(a.eq[1])}`,sp(X.verdict),st.r95?`${sp(st.r95.jm)}, ${sp(st.r95.jp)}`:'',st.axis?`${sp(st.axis.jm)}, ${sp(st.axis.jp)}`:''];}),true);
+    const L=NV.versions.last,B4=NV.versions.build40,B=NV.versions.build,a=X=>X.at.find(q=>q.d===30);
+    $('vVerdict').innerHTML=[
+      `<li><b>As drawn</b> (the sheets as last revised): it can be made and put together (sections 19-20) and passes its trial as adjusted (section 11), but as a navigator's clock it <span class="no">fails</span>: ${g(a(L).eq[0])} miles at 30 days in the median, ${g(a(L).eq[1])} in 19 voyages of 20. Set as the builds are, it passes the median and ${LB?esc(LB.p95):''} at 95 % (${LB?g(a(LB).eq[1]):''} against 4.16): the masses' setting accounts for most of the failure, the low swing for the rest.</li>`,
+      `<li><b>The 1940s build</b>: <span class="${cls(B4.verdict)}">${esc(B4.verdict)}</span>, ${g(a(B4).eq[0])} and ${g(a(B4).eq[1],3)} miles against 2 and 4.16, its swing over the wind under the sources' 225° (in the tools' guard band).</li>`,
+      `<li><b>The 1950s build</b>: <span class="${cls(B.verdict)}">${esc(B.verdict)}</span>, ${g(a(B).eq[0])} and ${g(a(B).eq[1],3)} miles, with no margin at 95 % (the figure's sampling interval ${g(B.ci95[0],3)}-${g(B.ci95[1],3)} straddles 4.16). Its swing is in the sources' band, and section 17's checks and 99.9 % of its Monte Carlo pass.</li>`,
+      `<li><b>Read strictly</b>, either way, every version fails at 95 % and in the median: a made Wempe adds about as much error in a month as the sight itself, not less.</li>`].join('');
+    $('vChange').innerHTML=`What would change it: a longer rating in port, which would see the drift (the builds' largest term), or a steadier rate; a compensation that doesn't hold to ±0.1° (the builds' pass rests on it, and the model takes it as holding); the stricter reading of the fix; or, for the drawn version, its masses set as the builds'. Nothing here changes the drawn version's drive or damping, the builds' choices or any check's criterion: those are the owner's.`;}
   /* ---------- 18. the mechanisms in turn ---------- */
   if(D.mech2&&D.mech2.wear){const M2=D.mech2,Wr=M2.wear,cs=Wr.contacts.filter(c=>c.curve),top=cs.slice().sort((a,b)=>a.yrs.good-b.yrs.good).slice(0,5),cc=['--s1','--s2','--s3','--s4','--muted'];
     const nm=c=>c.name.replace(/ \(.*$/,'');
