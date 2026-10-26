@@ -6,7 +6,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 
 | # | Parts | Report | Sheets | Reviewed |
 |---|---|---|---|---|
-| 1 | plates, pillars, movement ring | (running or to come) | 11 | — |
+| 1 | plates, pillars, movement ring | marine-chronometer-source/wempe/drawing-check/batch1.md | 10 | 10 of 10 |
 | 2 | bridges, bushes, cocks, set-up click | (running or to come) | 9 | — |
 | 3 | balance, hairspring, stud, rollers, balance jewels | (running or to come) | 13 | — |
 | 4 | escape wheel, detent, detent block, escape jewels | (running or to come) | 9 | — |
@@ -17,14 +17,14 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | 9 | motion work, hands, dial | (running or to come) | 13 | — |
 | 10 | case, gimbals, boxes, keys | (running or to come) | 14 | — |
 
-124 images: 114 in batches, 10 excluded with a reason, 0 without a batch.
+124 images: 113 in batches, 11 excluded with a reason, 0 without a batch.
 
 ## Every sheet
 
 | Image | Sheet | Batch | Status | Note |
 |---|---|---|---|---|
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | waiting for batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
-| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 1 | waiting for batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 1 | reviewed by batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | waiting for batch 10 |  |
@@ -116,26 +116,26 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 7 | waiting for batch 7 |  |
 | `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 7 | waiting for batch 7 |  |
 | `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 7 | waiting for batch 7 |  |
-| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 1 | waiting for batch 1 |  |
-| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 1 | waiting for batch 1 |  |
+| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 1 | reviewed by batch 1 |  |
+| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 1 | reviewed by batch 1 |  |
+| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 1 | reviewed by batch 1 |  |
+| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 1 | reviewed by batch 1 |  |
+| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 2 | waiting for batch 2 |  |
 | `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 2 | waiting for batch 2 |  |
 | `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 1 | waiting for batch 1 |  |
+| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 2 | waiting for batch 2 |  |
 | `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 2 | waiting for batch 2 |  |
 | `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 2 | waiting for batch 2 |  |
-| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 1 | waiting for batch 1 |  |
+| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 2 | waiting for batch 2 |  |
 | `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 2 | waiting for batch 2 |  |
 | `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 2 | waiting for batch 2 |  |
 | `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 1 | waiting for batch 1 |  |
+| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 1 | reviewed by batch 1 |  |
 | `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | — | excluded | the hand setting (05 33), not built: the lever chronometer BC 1010's (README, the owner's decision, 18 October 2026) |
 | `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
@@ -146,4 +146,4 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | waiting for batch 10 |  |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | waiting for batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |

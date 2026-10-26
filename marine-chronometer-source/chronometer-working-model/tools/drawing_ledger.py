@@ -15,7 +15,7 @@ BATCH={1:'plates, pillars, movement ring',2:'bridges, bushes, cocks, set-up clic
   9:'motion work, hands, dial',10:'case, gimbals, boxes, keys'}
 ANKER='the lever (Anker) chronometer\'s, not this model\'s: read to confirm nothing on it is the spring-detent chronometer\'s'
 # (pattern on the path under drawings/, batch, note); the first that matches
-RULES=[(r'^001-002/|Wempe_Einheitschronometer\.jpg$',1,'general arrangement: every batch reads it for its parts\' places and heights; batch 1 for the frame'),
+RULES=[(r'^001-002/Wempe_002\.jpg$',0,ANKER),(r'^001-002/Wempe_001\.jpg$|Wempe_Einheitschronometer\.jpg$',1,'general arrangement: every batch reads it for its parts\' places and heights; batch 1 for the frame'),
   (r'05-08/Wempe_05-08_(01a|01b|02|03a|03b|07|11|32-2)\.jpg$',1,''),(r'05-08/Wempe_05-08_(04|05|06|08|09|10|12|13|14)\.jpg$',2,''),
   (r'05-08/Wempe_05-08_(30|31|32-1|33)\.jpg$',0,ANKER),
   (r'05-03/',3,''),(r'05-04/Wempe_05-04_0[456]\.jpg$',3,''),(r'05-04/Wempe_05-04_2[01]\.jpg$',0,ANKER),(r'05-04/',4,''),
