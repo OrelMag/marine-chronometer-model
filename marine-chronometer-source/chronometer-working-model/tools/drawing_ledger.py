@@ -1,10 +1,11 @@
 """drawing_ledger.py: the Wempe's drawings-check ledger (PLAN-wempe-drawing-check.md). Every drawing image in References/wempe/drawings/, its sheet (the transcriptions'
 headers), the batch that compares it with the model (or why none does), and whether that batch's report lists it as reviewed: the reports are
 marine-chronometer-source/wempe/drawing-check/batchN.md, each with a "## Sheets reviewed" list of "- 05-08/Wempe_05-08_14.jpg — ..." lines (and "## Sheets not reviewed").
-Writes WEMPE-DRAWING-LEDGER.md at the root.
+The changes made, sheet by sheet, are read from marine-chronometer-source/wempe/drawing-check/changes.md ("- IMAGES | kind | what | commit": corrected,
+open or kept) and listed beside each sheet. Writes WEMPE-DRAWING-LEDGER.md at the root.
 
     python drawing_ledger.py            # rewrite the ledger
-    python drawing_ledger.py --check    # and exit 1 if a sheet has no batch, or a reported batch left one of its sheets unreviewed
+    python drawing_ledger.py --check    # and exit 1 if a sheet has no batch, a reported batch left one of its sheets unreviewed, or a change names no drawing
 
 No browser, under a second."""
 import pathlib,re,sys
@@ -37,8 +38,18 @@ def reports():
     n=int(re.search(r'batch(\d+)',f.name).group(1));txt=f.read_text(encoding='utf-8');sec=lambda h:(re.search(r'^## '+h+r'\s*$(.*?)(?=^## |\Z)',txt,re.M|re.S) or [None,''])[1]
     R[n]={'done':set(re.findall(r'^- ([\w./-]+\.jpg)',sec('Sheets reviewed'),re.M)),'not':{k:v for k,v in re.findall(r'^- ([\w./-]+\.jpg)\s*[—-]\s*(.*)$',sec('Sheets not reviewed'),re.M)},'file':f.relative_to(ROOT).as_posix()}
   return R
+def changes():
+  f=REP/'changes.md';C=[]
+  if not f.exists():return C
+  for l in f.read_text(encoding='utf-8').splitlines():
+    m=re.match(r'^- (.+?) \| (corrected|open|kept) \| (.+?) \| (.+)$',l)
+    if m:C.append({'imgs':[i.strip() for i in m.group(1).split(';')],'kind':m.group(2),'what':m.group(3),'commit':m.group(4).strip()})
+  return C
 def main():
-  T=sheets();R=reports();imgs=sorted(p.relative_to(DR).as_posix() for p in DR.rglob('*.jpg'));rows=[];bad=[]
+  T=sheets();R=reports();CH=changes();imgs=sorted(p.relative_to(DR).as_posix() for p in DR.rglob('*.jpg'));rows=[];bad=[]
+  for c in CH:
+    for i in c['imgs']:
+      if i not in imgs:bad.append(i+': a change names it, not a drawing')
   for i in imgs:
     b,note=next(((b,n) for p,b,n in RULES if re.search(p,i)),(None,''))
     by=[n for n,r in R.items() if i in r['done']];nr=[(n,r['not'][i]) for n,r in R.items() if i in r['not']]
@@ -49,13 +60,18 @@ def main():
     else:st='waiting for batch %d'%b
     rows.append((i,T.get(i,'(no transcription header)'),b,note,st))
   L=['# The Wempe\'s drawings, each against the model','','Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_ledger.py` (do not edit by hand): every drawing image in `References/wempe/drawings/`, the batch of PLAN-wempe-drawing-check.md that compares it with the built model, and whether that batch\'s report (`marine-chronometer-source/wempe/drawing-check/batchN.md`) lists it under "Sheets reviewed". `--check` fails on a sheet with no batch or one a reported batch left out.','',
-    '## Batches','','| # | Parts | Report | Sheets | Reviewed |','|---|---|---|---|---|']
+    '## Batches','','| # | Parts | Report | Sheets | Reviewed | Corrected | Open |','|---|---|---|---|---|---|---|']
   for n,d in BATCH.items():
     mine=[r for r in rows if r[2]==n];rv=sum(1 for r in mine if r[4].startswith('reviewed'))
-    L.append('| %d | %s | %s | %d | %s |'%(n,d,R[n]['file'] if n in R else '(running or to come)',len(mine),'%d of %d'%(rv,len(mine)) if n in R else '—'))
+    mi={r[0] for r in mine};cn=lambda k:sum(1 for c in CH if c['kind']==k and mi&set(c['imgs']))
+    L.append('| %d | %s | %s | %d | %s | %d | %d |'%(n,d,R[n]['file'] if n in R else '(running or to come)',len(mine),'%d of %d'%(rv,len(mine)) if n in R else '—',cn('corrected'),cn('open')))
   ex=sum(1 for r in rows if r[2]==0);L+=['','%d images: %d in batches, %d excluded with a reason, %d without a batch.'%(len(rows),len(rows)-ex-sum(1 for r in rows if r[2] is None),ex,sum(1 for r in rows if r[2] is None)),'',
-    '## Every sheet','','| Image | Sheet | Batch | Status | Note |','|---|---|---|---|---|']
-  for i,t,b,note,st in rows:L.append('| `%s` | %s | %s | %s | %s |'%(i,t.replace('|','/'),'—' if not b else b,st,note))
+    '## Every sheet','','| Image | Sheet | Batch | Status | Changes | Note |','|---|---|---|---|---|---|']
+  for i,t,b,note,st in rows:
+    mc=[c for c in CH if i in c['imgs']];cs='; '.join('%s: %s (%s)'%(c['kind'],c['what'],c['commit']) for c in mc).replace('|','/') or '—'
+    L.append('| `%s` | %s | %s | %s | %s | %s |'%(i,t.replace('|','/'),'—' if not b else b,st,cs,note))
+  L+=['','## Changes made','','From `marine-chronometer-source/wempe/drawing-check/changes.md`: %d corrected, %d left open, %d kept as recorded departures.'%tuple(sum(1 for c in CH if c['kind']==k) for k in('corrected','open','kept')),'',
+    '| Drawings | Kind | What | Commit |','|---|---|---|---|']+['| %s | %s | %s | %s |'%(', '.join('`%s`'%i for i in c['imgs']),c['kind'],c['what'].replace('|','/'),c['commit']) for c in CH]
   extra=sorted({i for r in R.values() for i in r['done']}-set(imgs))
   if extra:L+=['','Listed as reviewed but not in the drawings folder (a misspelt path): '+', '.join('`%s`'%e for e in extra)];bad+=[e+': not a drawing' for e in extra]
   OUT.write_text('\n'.join(L)+'\n',encoding='utf-8',newline='\n');print('wrote',OUT.name,'-',len(rows),'images;',len(bad),'problems')
