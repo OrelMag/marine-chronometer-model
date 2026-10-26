@@ -14,7 +14,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | 6 | maintaining work, maintaining detent, stop work | marine-chronometer-source/wempe/drawing-check/batch6.md | 9 | 9 of 9 |
 | 7 | barrel, arbor, set-up ratchet, mainspring, chain | marine-chronometer-source/wempe/drawing-check/batch7.md | 14 | 14 of 14 |
 | 8 | going train | marine-chronometer-source/wempe/drawing-check/batch8.md | 10 | 10 of 10 |
-| 9 | motion work, hands, dial | (running or to come) | 13 | — |
+| 9 | motion work, hands, dial | marine-chronometer-source/wempe/drawing-check/batch9.md | 13 | 13 of 13 |
 | 10 | case, gimbals, boxes, keys | (running or to come) | 14 | — |
 
 124 images: 113 in batches, 11 excluded with a reason, 0 without a batch.
@@ -34,19 +34,19 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | waiting for batch 10 |  |
 | `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | waiting for batch 10 |  |
-| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 9 | waiting for batch 9 |  |
-| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 9 | waiting for batch 9 |  |
+| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 9 | reviewed by batch 9 |  |
+| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 9 | reviewed by batch 9 |  |
 | `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 3 | reviewed by batch 3 |  |
 | `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 3 | reviewed by batch 3 |  |
 | `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 3 | reviewed by batch 3 |  |
@@ -78,7 +78,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 8 | reviewed by batch 8 |  |
 | `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 8 | reviewed by batch 8 |  |
 | `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 8 | reviewed by batch 8 |  |
-| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 8 | reviewed by batch 8 |  |
+| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 8 | reviewed by batch 8, 9 |  |
 | `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 8 | reviewed by batch 8 |  |
 | `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 8 | reviewed by batch 8 |  |
 | `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 6 | reviewed by batch 6 |  |
@@ -135,7 +135,7 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | — | excluded | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
-| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 1 | reviewed by batch 1 |  |
+| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 1 | reviewed by batch 1, 9 |  |
 | `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | — | excluded (also reviewed by batch 2, 3) | the lever (Anker) chronometer's, not this model's: read to confirm nothing on it is the spring-detent chronometer's |
 | `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | — | excluded | the hand setting (05 33), not built: the lever chronometer BC 1010's (README, the owner's decision, 18 October 2026) |
 | `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | — | excluded | the balance holding device (05 36), not built (the owner's decision, 18 October 2026) |
@@ -146,4 +146,4 @@ Written by `marine-chronometer-source/chronometer-working-model/tools/drawing_le
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | waiting for batch 10 |  |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | waiting for batch 10 |  |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3, 4, 5, 6, 7, 8 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 1 | reviewed by batch 1, 2, 3, 4, 5, 6, 7, 8, 9 | general arrangement: every batch reads it for its parts' places and heights; batch 1 for the frame |
