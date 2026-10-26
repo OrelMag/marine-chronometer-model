@@ -13,7 +13,7 @@ Columns: the part (its `hn`), its sheets, the photographs it was checked on (pho
 | Rim and arm | 050301-1 | 05 03_4 | hem_2 (rms 6 px, 0.07 mm/px) | matches; the cut was 1.5, the fit's middle 1.6 | sure | cut 1.6 (batch 1) |
 | Masses (WN-12), timing screws and weights | 050301-2/-3/-4 | 05 03_2, _4 | hem_2 | match | likely | — |
 | Staff and hub | 050402-1/-2 | 05 04 02, 05 03_3.2 | hem_2 (pivot within 0.15) | match; the lower arm's taper 1:16 against 1:70, the blank's turning (the 1:70 can't fit the length) | sure | note only |
-| Hairspring | 050302-1 | 05 03_5, _6, _7 | hem_2 | section matches; its length against its period open (0.494 s; 05 03_5's 13.0 turns of helix) | sure / open | README Unresolved (batch 1) |
+| Hairspring | 050302-1 | 05 03_5, _6, _7; 05 03_1; the 1958 repair book p. 58 | hem_2; `5_Wempe_3955_O.jpg` | section matches; the length 05 03_7's whole strip, 13 turns less 3.5 mm (505.4 mm pin to pin, 11.81 turns of helix): the book's 502.35 mm and 12.78 working turns are turns of the coil, Wempe 3955's helix rises 8.1 ± 0.4 against 8.62 (13 turns of helix 9.43); 05 03_5's 9.5 stack is the lever chronometer's fitting, its stud's height "6≈" set at timing (05 03_1). 0.494 s on the weighed balance at 206 GPa, inside the modulus's, strip's and masses' ranges; the bench vibrates it to its balance (the timing weights can't: 44.2 s a day a turn, only gaining) | sure (the reading) / likely (the period) | README Closed (26 October 2026); the coiled pitch 0.73 kept |
 | Collet | 050302-2 | 05 03_8, 05 03 02-2 | — | bore 1.648 against the sheet's 1.6 H7, to sit on the 1946 staff's seat | sure | README Estimated (batch 1) |
 | Stud | 050302-3 | 05 03_9 | recorded | matches | likely | — |
 | Impulse roller and stone | 050403-1/-2 | 02 04 02, 05 04_6 | hem_2 | matches; the layout's stone end 3.33 against 3.35 | sure | `SIMP` 3.35 (batch 1) |
@@ -46,7 +46,7 @@ Columns: the part (its `hn`), its sheets, the photographs it was checked on (pho
 | Barrel drum and lid | 050701, 050703 | 05 07 01, 05 07_6 | W | match; the hook block's M2.6 rivet hole and the chain's 2.5 slot not cut | sure | cut (batch 3); the drum's insides (rivet hole, hook block, Steg and its notches, mainspring, arbor's hook) turned +136.6° to 0207's places about the chain's slot (BLK 3.585: the slot 180° from the Steg, 135° from the hole; 0207 had been misread as 180° from the hole) (batch 4); the slot cut at 0207's 45° to the radius, leaning back toward the chain's run going in as the barb does, 2.5 round the rim, both drums and connectors (DRUM, batch 5) |
 | Barrel arbor | 050702-1 | (as revised not in the set) | W (its square) | fitted to the drum and plates, as recorded; the hook pin's Ø 2 × 6 hole not cut | known | cut (batch 3) |
 | Hook block, set-up ratchet and click | 050705, 050805-2 | 05 07, 05 08 05-2 | W | match | sure | — |
-| Mainspring | 050706 | 05 07 06 | — | estimated, as recorded (its torque 23 % over 05 06_20's) | known | — |
+| Mainspring | 050706 | 05 07 06; 05 06_20 | — | its length and free curve on no sheet: 1,240 mm, the free curve ×0.75, fitted to 05 06_20's force with the coils' friction counted (1.83 % rms); its level then closes with the drawn 0.37 at the losses' middle (0.913 of the solved; 23 % over 05 06_20's at ×0.6, the frictionless fit, until 26 October 2026) | likely | `wempe_mainspring.py` FINAL (1240, 0.75) (26 October 2026); README Closed |
 
 ## Going train and motion work (05 05, 05 02)
 

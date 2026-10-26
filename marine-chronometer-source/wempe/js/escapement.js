@@ -994,10 +994,11 @@ const WESC=(()=>{
      (Belyakov 1957, Table 3: Lange's MX 0.06 at its bend; 05 04 01-2's 0.15 taken as the blank: tools/wempe_detent_study.js, the lock's window 21 to 196 µm), which makeEsc
      takes as the uniform strip of the same tip stiffness, 0.0702 (the cantilever's integral of (L - x)² / EI over its 11.41 mm). tools/wempe_load.js applies it (MC_WREV=build) */
   /* its mainspring: Nivaflex 45/5 (Straumann, patented 1948) 0.393 × 15 × 1,240 mm, its free curve set ×0.8, E 220 GPa, over 3,000 N/mm² (Jacques Allemann's data sheet
-     JAS-014), solved by tools/wempe_mainspring.py --t 0.393 --set 0.8 (the shape doesn't depend on the modulus: its torque the table's times 220/207): 536-1,074 mN·m, 1.119
-     times the drawn strip's at the fusee arbor (the build wants 1.122), its inner coils 2.88-2.96 GPa fully wound (E t/2 |kappa - kappa0| along the strip: tools/motion3d_springs.py,
-     tools/wempe_build_spring.py), 2.78 by 6M / b t²; its drive turn by turn through the drawn fusee (strip.drive, tools/wempe_build_drive.json: 1.13-1.31 times 05 06_20's, mean 1.25), which
-     tools/wempe_load.js applies, so the escapement sees its own unevenness (the swing 216-241° over the wind). The user's choice, 19 October 2026, after the 3D analysis found
+     JAS-014), solved by tools/wempe_mainspring.py --t 0.393 --set 0.8 (the shape doesn't depend on the modulus: its torque the table's times 220/207): 536-1,074 mN·m, 1.257
+     times the drawn strip's solved at the fusee arbor (the build wants 1.256, the measured level 0.997 of the drawn strip's solved with its free curve at ×0.75; 1.119 and
+     1.122 at ×0.6 until 26 October 2026), its inner coils 2.88-2.96 GPa fully wound (E t/2 |kappa - kappa0| along the strip: tools/motion3d_springs.py,
+     tools/wempe_build_spring.py), 2.78 by 6M / b t²; its drive turn by turn through the drawn fusee (strip.drive, tools/wempe_build_drive.json: 1.253-1.281 times 05 06_20's, mean 1.26; 1.13-1.31 until 26 October 2026), which
+     tools/wempe_load.js applies, so the escapement sees its own unevenness (the swing 226-237° over the wind; 215-240° until 26 October 2026). The user's choice, 19 October 2026, after the 3D analysis found
      the 0.377 strip at set 0.6 (until then) 3.25 GPa on its inner coils fully wound, past the alloy (motion3d_springs.py; its 2.94 GPa was 6M / b t², the strip's mean).
      A carbon strip strong enough is past its 2.5-2.6 GPa (0.385: 2.89) */
   const BUILD={k:1.26,bend:[3,0.06],set:{tsT:0.0702},strip:{name:'Nivaflex 45/5',t:0.393,set:0.8,E:220,lim:3.0e9,table:'mainspring_wempe_t0.393_L1240_s0.8.js',drive:'wempe_build_drive.json'}};
