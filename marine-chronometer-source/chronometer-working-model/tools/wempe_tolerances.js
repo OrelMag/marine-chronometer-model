@@ -73,13 +73,15 @@ say(`  softer is free for the swing but not for the lock: wempe_tripping.js's sw
 
 /* ---------- the depth of lock ---------- */
 head(`The depth of lock (05 04_1: the tips ${f(S.dL*S.ES,3)} into the stone's flat; the wheel Ø 14 +0.03, 05 04_23; the banking sets it)`);
-/* makeEsc rebuilt with dL (the stone's place against the tips): the deepest that still unlocks (the discharge stone lifts the gold spring's tip, and the stone with it, only so far),
+/* makeEsc rebuilt with dL (the stone's place against the tips): the deepest that still unlocks (the discharge stone lifts the gold spring's tip, and the stone with it, only so far)
+   and keeps the swing in the guard band at the wind's lowest (since 26 October 2026: past about 0.243 the escapement in time collapses to about 70°, the tooth landing on the impulse
+   stone at once and the detent leaving the discharge stone early, on main's escape wheel as on the drawn one; makeEsc follows it since its ride carries through the impulse, RWD),
    and the shallowest that keeps a held tooth's stone ringing under half the depth (wempe_tripping.js as drawn, 19 October 2026: 49 % of 235 µm, 116 µm, at the 0.8 g preload, the longer discharge reach bending the gold spring 0.39 on the return: twice it; 44 % of 175 µm, 77 µm, until the lock was re-laid, and 41 % before the horn was traced) */
 const lockAt=d=>{const e=W.makeEsc({...S,dL:d/S.ES},S),m=e.measure();return m.runs?{A:e.A*D,Amin:e.ampAt(dmin)*D,lock:m.lock,letoff:m.letoff,lRel:e.lRel*e.BL/e.LEN*e.ES}:null;};
-const d0=S.dL*S.ES,dDeep=(()=>{let a=d0,b=d0+(BREV?0.08:0.03);for(let i=0;i<14;i++){const m=(a+b)/2;lockAt(m)?a=m:b=m;}return a;})(),RING=BJ?BJ.window.ring:0.493*0.235,dShal=2*RING,dTip=d0+0.015;
+const d0=S.dL*S.ES,dDeep=(()=>{let a=d0,b=d0+(BREV?0.08:0.03);for(let i=0;i<14;i++){const m=(a+b)/2,L=lockAt(m);L&&L.Amin>=GUARD[0]?a=m:b=m;}return a;})(),RING=BJ?BJ.window.ring:0.493*0.235,dShal=2*RING,dTip=d0+0.015;
 const L0=lockAt(d0),LS=lockAt(dShal),LD=lockAt(dDeep-0.002),liftMax=Math.max(...E.LI)*E.BL/E.LEN*E.ES;
 say(`as drawn ${f(d0,3)} mm deep: lock ${f(L0.lock,1)}°, let-off ${f(L0.letoff,1)}°, the stone lifted ${f(L0.lRel,3)} mm at the release; ${f(L0.Amin,1)}-${f(L0.A,1)}° (the wind's lowest, 12 h)`);
-say(`deepest that unlocks: ${f(dDeep,3)} mm (the discharge stone lifts the stone at most ${f(liftMax,3)} mm); there lock ${f(LD.lock,1)}°, let-off ${f(LD.letoff,1)}°, ${f(LD.Amin,1)}° at the wind's lowest`);
+say(`deepest that unlocks with the swing in the guard band: ${f(dDeep,3)} mm (the discharge stone lifts the stone at most ${f(liftMax,3)} mm); there lock ${f(LD.lock,1)}°, let-off ${f(LD.letoff,1)}°, ${f(LD.Amin,1)}° at the wind's lowest`);
 say(`shallowest with a held tooth's stone ringing under half the depth (wempe_tripping.js: ${f(RING*1000,0)} µm as drawn): ${f(dShal,3)} mm; there lock ${f(LS.lock,1)}°, ${f(LS.Amin,1)}-${f(LS.A,1)}° (a shallower lock gives the swing back: the unlocking costs less)`);
 say(`the wheel's tips Ø 14 +0.03: with the banking left where the drawn wheel puts it, a wheel at the top of its tolerance locks ${f(dTip,3)} deep, ${dTip>dDeep?`past ${f(dDeep,3)}: it would not unlock. The banking is set to the wheel as made`:'inside the window'}`);
 
