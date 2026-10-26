@@ -12,15 +12,23 @@
    pivot (LATCH_A, LatheGeometry angle, from +z toward +x); the lever turns on its pin from LATCH_OFF (along the right wall toward the front) to LATCH_ON (toward the centre).
    LATCH_H: the clamping screw's knurled head, r 9.75 (19-20 across: Jones-Horan lot 63662_06, from above, at the box camera's scale, 20 October 2026, E:\mc-video\oq\ledger\box\REPORT.md; rough);
    r 8.5 until then, so LATCH_X 68.5; the video's 67 (above) agrees with 67.25 */
-const BOX_W=98.5,BOX_T=21,LATCH_H=9.75,LATCH_X=BOX_W-BOX_T-LATCH_H-0.5,LATCH_Z=47,LATCH_A=Math.atan2(LATCH_X,LATCH_Z),LATCH_OFF=Math.PI*3/2,LATCH_ON=Math.atan2(LATCH_Z,-LATCH_X);
+/* BOX_S: the box's size against the survey's (20 October 2026, REPORT.md), which scaled its photographs by a 197 width (a sale listing's 7 3/4 in; another's 7 1/2): since 26 October 2026
+   172 (0.873 of it), the walls 7.5 thick round the same inside, 157 (KLUwI2UUCMQ 0:28.7 and photo-movement-2E12055.jpg, at the bezel's scale, below). Two photographs at the bezel's scale (its
+   knurl 108.3 across, the box's top 6.7 mm under it): Jones-Horan 63662_04 (open, from above the front) the outside 1,835 px against the bezel's 1,178 along the row through the case's centre,
+   171, and KLUwI2UUCMQ 0:28.7 (4K) 1,810 against 1,173, 169; the inside over the outside along a row of 63662_04, which needs no scale, 0.908-0.915 (the tops' brass edging at their inner
+   edges, the walls' inner faces below them), so walls of 7.3-8.0 round the inside's 157 (likely +-1.5; the outside +-3). The listings' 190-197 likely take in the handles. Everything the survey
+   read at the box's scale (the tiers, the pivots' height, corner caps, handles, hasps, nameplate, the latch bracket's screws) is scaled by BOX_S; what it read against the ring or the case
+   (the key block's face, the lock nuts, the latch's head) is not. Until then 197 outside and walls 21 */
+const BOX_S=172/197,BOX_W=86,BOX_T=7.5,LATCH_H=9.75,LATCH_X=BOX_W-BOX_T-LATCH_H-0.5,LATCH_Z=47,LATCH_A=Math.atan2(LATCH_X,LATCH_Z),LATCH_OFF=Math.PI*3/2,LATCH_ON=Math.atan2(LATCH_Z,-LATCH_X);
 function buildBox(M){
   /* the heights (20 October 2026; REPORT.md above: a cuboid camera fitted to the box's edges on Jones-Horan 63662_17 (right side), 63662_19 (left), 38240_21 (right) and 38240_05 (front),
      0.75-1.6 px rms, scaled by the box's 197 width): closed 196.4 +-1.5 (0.994-0.999 of the width), the base 105.1 +-0.6, the glass lid's tier 71.4 +-0.8, the outer lid 19.8 +-0.8 (sure).
-     H0 105, HG 71, HL 20. The bottom stays at yF -100 (the floor's shadow, app.js), so the base's top, the lower seam, is YL 5. Until then 100 + 38 + 38 (176, estimated) */
-  const root=hn(new THREE.Group(),'42201');root.userData.partName='box';const W=BOX_W,T=BOX_T,yF=-100,H0=105,HG=71,HL=20,YL=yF+H0;   /* T: the walls 21 thick, so the inside is 157 across: KLUwI2UUCMQ 0:28.7, the right wall's inner face 77 mm from the case's axis at the bezel's scale (the latch head against it), and photo-movement-2E12055.jpg about 155 (SHAPE-PASS 106-3); the outside, 197, the sale listings' 190-197. T 10 (estimated) until 5 October 2026 */
+     H0, HG, HL those times BOX_S (above): 91.8, 62.3, 17.3 since 26 October 2026 (105, 71, 20 until then). The bottom stays at yF -100 (the floor's shadow, app.js), so the base's top, the lower
+     seam, is YL -8.2. Until 20 October 2026 100 + 38 + 38 (176, estimated) */
+  const root=hn(new THREE.Group(),'42201');root.userData.partName='box';const W=BOX_W,T=BOX_T,yF=-100,H0=105.1*BOX_S,HG=71.4*BOX_S,HL=19.8*BOX_S,YL=yF+H0;   /* T: the walls 7.5 thick (21 until 26 October 2026: BOX_S above), so the inside is 157 across: KLUwI2UUCMQ 0:28.7, the right wall's inner face 77 mm from the case's axis at the bezel's scale (the latch head against it), and photo-movement-2E12055.jpg about 155 (SHAPE-PASS 106-3); the outside, 197 until 26 October 2026, the sale listings' 190-197. T 10 (estimated) until 5 October 2026 */
   /* RY: the gimbal ring's pivots, 92.7 and 93.1 over the box's bottom on Jones-Horan 63662_17 and _19 (90.3 on 38240_21; likely +-1.5): 92.9, so -7.1 (12.1 under the base's top).
      -20 (80 over the bottom, raised only to clear the box's floor, eae5358) until 20 October 2026. The case's lowest point (the shield plate's screw, 46 under the pivots) stands 25 over the felt */
-  const RY=yF+92.9;
+  const RY=yF+92.9*BOX_S;   /* 81.1 over the bottom at the box's 172 (BOX_S), 10.7 under the base's top */
   const wood=(w,h,d,x,y,z,p=root,m=M.wood)=>mesh(p,new THREE.BoxGeometry(w,h,d),m,x,y,z);
   wood(2*W,T,2*W,0,yF+T/2,0);
   wood(2*W,H0,T,0,yF+H0/2,W-T/2);wood(2*W,H0,T,0,yF+H0/2,-W+T/2);
@@ -31,26 +39,27 @@ function buildBox(M){
   /* brass corner caps (20 October 2026; REPORT.md: Jones-Horan 63662_17, 38240_05, 38240_21): about 10 tall, legs 26.5 along each face, one to each vertical edge on each tier at Y 184-195
      (the outer lid's, up to its top, a plate over the top's corner), 132-142 (the glass lid's), 63-74 and 2-11 (the base's) over the bottom; likely +-1.5. Legs 1.2 thick (estimated); the top's plates a
      quarter disc r 26.5 round the corner (the photographs' rounded inner edge; its radius estimated). Until then two caps 0.2 of the base tall, legs 12, on the base only and full-height strips on the lids */
-  const CL=26.5,CT=1.2,brassCorner=(p,x,y,z,h,cz=0)=>{const sx=Math.sign(x),sz=Math.sign(z-cz);return fuse([mesh(p,new THREE.BoxGeometry(CL,h,CT),M.brass,x+sx*(CT-CL/2),y,z+sz*CT/2),mesh(p,new THREE.BoxGeometry(CT,h,CL-CT),M.brass,x+sx*CT/2,y,z-sz*(CL-CT)/2)]);};   /* one cap, one mesh (fuse, core.js): its legs' faces ran flush, a line down its corner in Edges until 21 October 2026 */
-  for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+68.5,sz*W,10);brassCorner(root,sx*W,yF+6.5,sz*W,10);}
+  const CL=26.5*BOX_S,CT=1.2,brassCorner=(p,x,y,z,h,cz=0)=>{const sx=Math.sign(x),sz=Math.sign(z-cz);return fuse([mesh(p,new THREE.BoxGeometry(CL,h,CT),M.brass,x+sx*(CT-CL/2),y,z+sz*CT/2),mesh(p,new THREE.BoxGeometry(CT,h,CL-CT),M.brass,x+sx*CT/2,y,z-sz*(CL-CT)/2)]);};   /* one cap, one mesh (fuse, core.js): its legs' faces ran flush, a line down its corner in Edges until 21 October 2026 */
+  for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+68.5*BOX_S,sz*W,10*BOX_S);brassCorner(root,sx*W,yF+6.5*BOX_S,sz*W,10*BOX_S);}   /* the survey's sizes at the box's scale (BOX_S) */
   /* the side handles (20 October 2026; REPORT.md): Jones-Horan 38240_21's round rosettes 29.2 across, 68.5 apart (63662_17's are ovals 22.5 x 30, 82-83 apart: another pattern), their centres
      8-10 under the pivot (9 taken), the bail's lowest point 39-43 under it (41: 32 under the rosettes); its form a swan neck as 63662_17 shows it, each leg dropping from its knuckle on the
      rosette nearly straight, rounding into a flat grip (the path's points traced by eye on that photograph at its rosettes' scale: estimated within +-2), on a knuckle r 3.2 standing 5 off the rosette.
      The bail's section r 2.4 and the rosettes' thickness estimated. Until then (KLUwI2UUCMQ 0:45, +-10 %) rosettes r 15, 61 apart, at the pivot's height, the bail a half circle */
-  const V2=(a,b)=>new THREE.Vector2(a,b),RZ=34.25,RR=14.6,HY=RY-9,HB=32;   /* HY: the rosettes' centres; HB: the bail's drop under them */
+  const V2=(a,b)=>new THREE.Vector2(a,b),RZ=34.25*BOX_S,RR=14.6*BOX_S,HY=RY-9*BOX_S;   /* at the box's scale (BOX_S) */   /* HY: the rosettes' centres; the bail's drop under them, 32 (its path's last point), scaled with it */
   for(const sx of[1,-1]){for(const sz of[1,-1]){const ro=mesh(root,cylY(RR,1.6,40),M.brass,sx*(W+0.8),HY,sz*RZ);ro.rotation.z=Math.PI/2;const ey=mesh(root,cylY(3.2,5,20),M.brass,sx*(W+1.6+2.5),HY,sz*RZ);ey.rotation.z=Math.PI/2;}
-    const q=[[0,0],[-1.5,-5],[-3.5,-12],[-5.5,-20],[-8,-26.5],[-12.5,-30.6],[-19,-HB]],P=[...q.map(([z,y])=>new THREE.Vector3(0,y,RZ+z)),...q.slice().reverse().map(([z,y])=>new THREE.Vector3(0,y,-RZ-z))];
+    const q=[[0,0],[-1.5,-5],[-3.5,-12],[-5.5,-20],[-8,-26.5],[-12.5,-30.6],[-19,-32]].map(([z,y])=>[z*BOX_S,y*BOX_S]),P=[...q.map(([z,y])=>new THREE.Vector3(0,y,RZ+z)),...q.slice().reverse().map(([z,y])=>new THREE.Vector3(0,y,-RZ-z))];
     mesh(root,closeGeo(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P,false,'centripetal'),96,2.4,12,false)),M.brass,sx*(W+5.5),HY,0);}
   /* the winding key's corner block at the back right (Fig. 1, 106; 20 October 2026, REPORT.md, Jones-Horan 63662_06 from above, KLUwI2UUCMQ 0:38.5-0:47.5): a concave quarter block, its face
      about concentric with the ring, r 70.5 +-3 from the case's axis, its legs 36-40 along each wall (38), its top near the base's top (1.5 under it, estimated) (the form likely); the key's socket a hole
-     7.1 across at (54, -56.5) +-3 (rough; back right is +x, -z, as the photograph shows it beside the hinge and the latch's opposite corner). The hole's depth (25) estimated: the key stands in it on
-     its cone, seated on the hole's edge (r 3.55 on the cone 22.45 over the key's foot), as the Wempe's in its holder. Until then a square block 24 x 24 x 36 low enough for the 38 mm glass lid,
-     the key's foot on a brass socket at (65.5, -65.5) */
-  const KR=70.5,KI=W-T,KC=KI-38,KS=Math.sqrt(KR*KR-KC*KC),KT=YL-1.5,KHD=25,KP=[54,-57],kw=4.4,kpts=[[KC,-KI],[KI,-KI],[KI,-KC]];
+     7.1 across at (54, -56.5) +-3 (rough; back right is +x, -z, as the photograph shows it beside the hinge and the latch's opposite corner; KLUwI2UUCMQ 0:44 the same, on the block's top about
+     three quarters of the way from the corner to its face). The key goes in pipe first (0:46.5): its pipe (Ø 6, 39 long, core.js) in the hole, its neck ring (Ø 8.2) on the block's top, so the hole
+     is 41 deep (estimated: as deep as the pipe and a little); its paddle across the corner, square to the line from the case's axis, clear of both walls. Until 26 October 2026 the hole 25 deep and the
+     key, 46.6 long, standing in it on its cone. Until 20 October 2026 a square block 24 x 24 x 36 low enough for the 38 mm glass lid, the key's foot on a brass socket at (65.5, -65.5) */
+  const KR=70.5,KI=W-T,KC=KI-38,KS=Math.sqrt(KR*KR-KC*KC),KT=YL-1.5,KHD=41,KP=[54,-57],kpts=[[KC,-KI],[KI,-KI],[KI,-KC]];
   {const a1=Math.atan2(-KC,KS),a2=Math.atan2(-KS,KC);for(let i=0;i<=32;i++){const a=a1+(a2-a1)*i/32;kpts.push([KR*Math.cos(a),KR*Math.sin(a)]);}}
   const ky0=yF+T+1;fuse([mesh(root,polyGeo(kpts,KT-KHD-ky0),M.woodEdge,0,ky0,0),mesh(root,polyGeo(kpts,KHD,[[KP[0],KP[1],3.55]]),M.woodEdge,0,KT-KHD,0)]);   /* one block, one mesh (fuse) */   /* stands on the felt; the socket's hole through the upper part */
-  const kc=(3.55-0.6*kw)/(0.5*kw),KB=KT-(4.4*kw+kc*1.7*kw);   /* the key's foot: its cone (r 0.6 kw at 4.4 kw to 1.1 kw at 6.1 kw, core.js) on the hole's edge */
-  const key=hn(new THREE.Group(),'42044');key.userData.partName='key';key.position.set(KP[0],KB,KP[1]);root.add(key);key.rotation.y=Math.PI/4;
+  const KB=KT-39;   /* the key's foot: its neck ring (39 over the pipe's end, core.js) on the block's top */
+  const key=hn(new THREE.Group(),'42044');key.userData.partName='key';key.position.set(KP[0],KB,KP[1]);root.add(key);key.rotation.y=Math.atan2(-KP[0],-KP[1]);   /* the paddle's width square to the radius */
   windingKey(key,M);   /* the key itself (core.js), the same one the movement shows on the fusee's square and the hands' */
     /* slotted screw along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h, and its shank (half the head's radius) sh mm back into the part under it */
   const sHead=(p0,ax,s,r0,rad,h,y,t,sh=2.5)=>{const p=new THREE.Group();p0.add(p);p.userData.sc={r:rad,h,len:sh,rs:rad*0.5};const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0),k=mesh(p,cylY(rad*0.5,sh,12),M.brass2,0,y,0);
@@ -73,7 +82,12 @@ function buildBox(M){
      dial lies in it, as it does when the movement is put upside down on the case to be started (Sec. III: "the dial carefully located in the shoulder recess around the top edge
      of the case"), and the bezel screws on outside the rim (TR). The rim's 105 across and the gimbal ring's 66-68 radius are from the top-view photographs (estimated); the
      rest estimated. YT the rim's top, YTB the thread's foot; FD the floor's inside depth, FR the floor's edge (the bowl's inside rounds into it with radius SH-FR) */
-  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,YTB=5.2,YT=YTB+5.5,FD=42.8,FR=38,CW0=CR*0.962,YLIP=MR_FL;   /* CW0, YLIP: the wall's radius and the lip's foot, at the shoulder the movement's ring sits on (the profile below, YB) */
+  /* the case's height on the movement (26 October 2026): the dial's face level with where the bezel starts to taper, outside (its cove, 6.97 over its foot on LPEC109-4, below) and
+     inside (its sight cone, from the dial's edge to the glass: KLUwI2UUCMQ 0:28.7, the bright cone round the dial, the glass at the bezel's top; the owner's reading, 26 October 2026), so the
+     thread's foot YTB 6.97 under the dial's face; the rim's top YT flush with the dial's face, as Sec. III seats the dial in the recess round the case's top edge, the thread (YTT)
+     5.5 over its foot and the rim plain above it. Everything on the case is measured from the thread or the bezel (the 49 to the bottom, the pivots, the lip), so it moved with them: the
+     movement stands 5.03 higher in the case than drawn until then (YTB 5.2: the rim 3.5 over the dial, the bezel's cove 5 over it and its glass on a bore 10 deep) */
+  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,YTB=MR_Y+DIAL_T-6.97,YTT=YTB+5.5,YT=MR_Y+DIAL_T,FD=48-YTB,FR=38,CW0=CR*0.962,YLIP=YTB-3.06;   /* CW0, YLIP: the wall's radius and the lip's foot, 3.06 under the thread (the profile below, YB); FD: the bottom (1 thick, BT) 49 under the thread's foot */
   /* the bezel screws onto the case's rim (26 October 2026, the Wempe's way: wempe/js/case.js, TH): a thread outside the rim from the lip (YTB) up 5.5 to its top (YT), five grooves on
      KLUwI2UUCMQ 47:22.5 (the case upside down, the bezel off: 5.3-5.7 tall at the tab's 22.0 px/mm) and Jones-Horan 63662_07 (five grooves), so a pitch of 1.1 (a 24 tpi's 1.058
      inside it; likely), the 60 deg basic form 0.595 deep; right-hand (estimated). Its radii fit between the movement's ring's recess (DB, r 48.0) and the bezel's skirt (r 49.45 on
@@ -90,7 +104,7 @@ function buildBox(M){
   /* a thread chased on a turned face: a band from y0 to y1 between a plain face at rp and the threaded face r(t, y) = R + d s(y) (iso(u) - (inside ? 1 : 0)), u = (y - yr)/p + t/TAU,
      R the outside thread's root or the inside one's; s(y) runs out over e0, e1 at the ends; slot: a slot's half-width cut through it at angle a. One closed solid */
   const thread=({R,rp,d,p,yr,y0,y1,e0=0.5,e1=0.5,inside=false,slot=0,a=0})=>{const NT=360,Y=[y0,...rowsY(y0,y1,yr,p),y1],NY=Y.length-1,q=inside?1:0,P=[],out=inside?-1:1;
-    const s=y=>Math.min(1,(y-y0)/e0,(y1-y)/e1),rf=(t,y)=>R+d*Math.max(0,s(y))*(iso((y-yr)/p+t/TAU)-q);
+    const s=y=>Math.min(1,e0?(y-y0)/e0:1,e1?(y1-y)/e1:1),rf=(t,y)=>R+d*Math.max(0,s(y))*(iso((y-yr)/p+t/TAU)-q);   /* e0, e1 0: no runout there (a band that a band on the same helix carries on) */
     const ang=(r,i)=>slot?a+slot/r+(TAU-2*slot/r)*i/NT:i/NT*TAU,ni=slot?NT+1:NT,ix=i=>i%ni;
     const T=[],Q=[];for(let i=0;i<ni;i++){const tt=ang(R,i),tp=ang(rp,i),A=[],B=[];for(const y of Y){const r=rf(tt,y);A.push([r*Math.cos(tt),y,r*Math.sin(tt)]);B.push([rp*Math.cos(tp),y,rp*Math.sin(tp)]);}T.push(A);Q.push(B);}
     const tr=(a,b,c,n)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];P.push(...(x[0]*n[0]+x[1]*n[1]+x[2]*n[2]<0?[a,c,b]:[a,b,c]));};
@@ -117,7 +131,7 @@ function buildBox(M){
   /* the latch keeper on the case (below), its top at the thread's foot (YTB), just under the bezel's lower edge (KLUwI2UUCMQ 1:22.5: the case in the ring, the bezel on; 1:21.5-1:24.5), 1.3 lower
      in the case than drawn until 25 October 2026 (its top 6.5, by the bezel's knurl); so its window's middle stands LSC from the pivots, where the lever latches (LY) and the ring's slot (SLY) is cut.
      The lever's height and the slot were estimated at the pivots' height (+0.6) until then, the band's height (14) still estimated */
-  const KPY=YTB-6.5,LSC=0.6+KPY-4.0,SLH=1.5;
+  const KPY=YTB-6.5,LSC=0.6+KPY-(YTB-1.2),SLH=1.5;   /* YTB-1.2: CSY, the case's frame under the pivots (below); 4.0 written here until 26 October 2026 left the lever 5.03 under the keeper once CSY moved */
   const ring=hn(new THREE.Group(),'42106');ring.userData.partName='ring';ring.position.y=RY;root.add(ring);
   /* the band, with a slot at the front right (Fig. 106) that the latch lever passes through to the case: the band round the rest of the ring, the band above and
      below the slot, and the slot's two side walls */
@@ -163,7 +177,7 @@ function buildBox(M){
      Jones-Horan 63662_17 and 38240_21 square-on, at the box camera's scale; likely) one above the other, 34.2-34.7 from the front corner (34.5: z 64), 11-12 and 31-34 under the pivot (11.5,
      32.5), in cup washers 9.9-10.0 across; their heads about 0.75 of the cups' width on 63662_17 (r 3.7, rough), slotted, domed. The plate 14 wide from the head to the wall and on to
      the leg; the leg 12 wide, 3 thick, down to 6 under the lower screw: estimated. Until then a plate 12.5 x 14, its screws side by side 2.2 under the pivot, heads r 1.1 */
-  { const bt=BY+1.5,SZ=W-34.5,SY=[RY-11.5,RY-32.5],LB=SY[1]-6,bp=[[LP-3.5,LZ-7],[W-T,LZ-7],[W-T,SZ+6],[LP-3.5,SZ+6]];
+  { const bt=BY+1.5,SZ=W-34.5*BOX_S,SY=[RY-11.5*BOX_S,RY-32.5*BOX_S],LB=SY[1]-6,bp=[[LP-3.5,LZ-7],[W-T,LZ-7],[W-T,SZ+6],[LP-3.5,SZ+6]];
     fuse([hn(mesh(lat,polyGeo(bp,3,[hT(LP,LZ,1.8),hT(LP+4.2,LZ,0.5),hT(LP+5.6,LZ,0.5)]),M.brass2,0,BY-1.5,0),'42109'),   /* tapped for the clamping screw and the take-up spring's screws */
     hn(mesh(lat,new THREE.BoxGeometry(3,BY-1.5-LB,12),M.brass2,W-T-1.5,(BY-1.5+LB)/2,SZ),'42109',{sub:1})]);   /* the leg against the wall; the L one mesh (fuse) */
     for(const y of SY){hn(dHead(lat,1,W+0.6,3.7,2.2,0.8,y,SZ,T+3.0,1.5),'42115');hn(cupW(lat,1,W,5,1.52,0.6,3.85,1.5,y,SZ),'42123');}   /* through the box wall (drawn without a hole) 2.4 into the leg */
@@ -182,8 +196,8 @@ function buildBox(M){
   /* the case's own frame (cs, the movement's: app.js and blender.js put the movement in it) CSY under the pivots' (bowl, which turns on them; the brackets and their bushings in it). The pivots stand
      4.0 +-0.6 nearer the bezel than the thread's foot less 5.2 drawn until 25 October 2026 (the bowl's frame was the case's): KLUwI2UUCMQ 47:22.5 (4K, the case upside down, the bezel off) the bushing's
      centre 24 +-10 px (1.0-1.1 mm) under the thread's first groove, 1,111 of the 1,135 px from the case's outside bottom (0.979 against 0.894 drawn: +4.2 on either datum); Jones-Horan 63662_07
-     (No. 2E12225, the bracket side-on) the lock nut's centre 1-2 under the thread's lip (+3.2 to +4.2); E:/mc-video/oq/ledger/run2_bracket. Likely */
-  const CSY=4.0,cs=new THREE.Group();cs.position.y=-CSY;bowl.add(cs);
+     (No. 2E12225, the bracket side-on) the lock nut's centre 1-2 under the thread's lip (+3.2 to +4.2); E:/mc-video/oq/ledger/run2_bracket. Likely. So 1.2 under the thread's foot: 4.0 until the case was set on the dial (26 October 2026, above), the case and the gimbals where they were */
+  const CSY=YTB-1.2,cs=new THREE.Group();cs.position.y=-CSY;bowl.add(cs);
   /* each case support bracket (42105) a bent brass strap (Fig. 107 draws a strap with flanges for its screws), not a block (20 October 2026). Form: KLUwI2UUCMQ 47:43.0-47:46.0 (one lying loose
      on the mat), 52:27.5 (one in the hand), 52:25.0 and 47:22.5 (on the case): two wings bent to the case's wall, each slotted round its screw, and between them the strap joggled out in a
      hat whose flat runs on toward the bezel as a tab holding the bushing, its bore radial. Sizes on 47:22.5 (4K, the case upside down and nearly square-on to the bracket, rotated 6.5 deg),
@@ -262,15 +276,15 @@ function buildBox(M){
        r 54 at the bezel, is drawn as the band (the bezel's own r 52.5 limits it; not modelled). Until 5 October 2026 the wall was a plain cylinder r CR to a 1.6 mm round at the bottom */
     const CW=CW0,CI=CW-1.2,YB=YLIP,YBI=YTB-13.5,YC=-FD-BT+11.4,RB=CR*0.82;   /* YB: the lip under the thread, 3.06 at the shoulder (YS: the movement's ring, r 47.95, needs the lip round it; Jones-Horan 63662_07 2.7, 60 px under the five grooves' 120 px
        for their 5.5 mm; KLUwI2UUCMQ 47:22.5 the silhouette stepping out only there, the wall plain from the strap up to it; rough +-0.7); YTB-13.5 (the bezel's cove and band on LPEC109-4, read as the case's)
-       until 25 October 2026. YBI: the inside's step to the shoulder's radius, where it was (estimated; the wall 0.5 thick over it now, OPEN-QUESTIONS) */
-    const pr=[V2(FR,-FD),V2(RB-1.2,-FD),V2(CI,YC+0.6),V2(CI,YBI-0.6),V2(SH,YBI+0.6),V2(SH,YS),V2(CW,YS),V2(CW,YC),V2(RB,-FD-BT),V2(FR,-FD-BT),V2(FR,-FD)];
+       until 25 October 2026. YBI: the inside's step to the shoulder's radius, where it was (estimated; the wall 0.5 thick over it now, OPEN-QUESTIONS). Since 26 October 2026 the shoulder (YS)
+       stands 1.97 over the thread's foot, so the lathe runs up inside the thread to it (SH to DB) and out under the thread to the band (CR) */
+    const pr=[V2(FR,-FD),V2(RB-1.2,-FD),V2(CI,YC+0.6),V2(CI,YBI-0.6),V2(SH,YBI+0.6),V2(SH,YS),V2(DB,YS),V2(DB,YTB),V2(CR,YTB),V2(CR,YB),V2(CW,YB),V2(CW,YC),V2(RB,-FD-BT),V2(FR,-FD-BT),V2(FR,-FD)];
     BOWL.push(hn(mesh(cs,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101'));   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
     bot=hn(mesh(cs,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});BOWL.push(bot,hn(mesh(cs,ringGeo(33.7,30.5,0.5+0.8+0.3),M.brass,0,-FD-BT-(0.5+0.8+0.3)/2,0),'42101',{sub:1}));   /* the raised ring round the shield plate, r 30.5-33.7 (47:36.5, rough: its crest about 32), the plate sitting 0.3 below its top (the far side's inner wall shows; the depth estimated); r 33.5-36 and flush with the plate until 5 October 2026 */   /* 60: the rim's 120 points, the lathe's own */
-    /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: below the
-       thread, and the rim with the band outside it the bezel screws onto */
-    const w=0.75/DB,a0=-Math.PI/2,bore=[...Array(121).keys()].map(k=>{const a=a0+w+(TAU-2*w)*k/120;return[DB*Math.cos(a),DB*Math.sin(a)];}),circ=r=>[...Array(120).keys()].map(k=>{const a=k/120*TAU;return[r*Math.sin(a),r*Math.cos(a)];});
-    bore.push([-0.75,-(MR_RO+1.0)],[0.75,-(MR_RO+1.0)]);
-    BOWL.push(hn(mesh(cs,polyGeo(circ(CR),YTB-YS,[{pts:bore}]),M.brass,0,YS,0),'42101',{sub:1}),hn(mesh(cs,thread({R:TH.R,rp:DB,d:TH.d,p:TH.p,yr:TH.yr,y0:YTB,y1:YT,slot:0.75,a:a0}),M.brass),'42101',{sub:1})); }   /* the rim threaded, the alignment pin's slot cut through it */
+    /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: the rim the bezel
+       screws onto, threaded, and plain over the thread to the dial's face (since 26 October 2026 the shoulder stands inside the thread: a slotted band, outside it, under the thread until then) */
+    const a0=-Math.PI/2,thr=(y0,y1,o)=>hn(mesh(cs,thread({R:TH.R,rp:DB,d:TH.d,p:TH.p,yr:TH.yr,y0,y1,...o}),M.brass),'42101',{sub:1});
+    BOWL.push(thr(YTB,YS,{e1:0}),thr(YS,YTT,{e0:0,slot:0.75,a:a0}),thr(YTT,YT,{R:TH.R+TH.d,d:0,slot:0.75,a:a0})); }   /* the rim threaded on one helix, the alignment pin's slot cut through it above the shoulder; its plain top a band of no depth, slotted the same */
   /* winding-hole shield plate (42104; Fig. 107 and its parts list, the case's description, Sec. III and Fig. 7): a disc nearly the size of the case's flat bottom, turning on its
      shoulder screw (42124) at the case's centre. Its hole, as far out as the case's key hole, lines up with it when the plate is turned clockwise (seen from below); let go, the
      return spring (42126) turns it back: an open ring of wire between the plate and the bottom, its hooked end round the stop screw (42125), which goes up through the plate and
@@ -305,8 +319,8 @@ function buildBox(M){
     const sp=hn(mesh(cs,geo(SH_REST,null),M.steel),'42126');let last=SH_REST;
     shield.userData.turn=r=>{shield.rotation.y=r;if(Math.abs(r-last)>1e-4){last=r;sp.geometry=geo(r,sp.geometry);}}; }
   shield.userData.turn(SH_REST);shield.userData.hole={p:at(KD,ah),c:fu,r:KH,rest:SH_REST};   /* for bom.py's check: the plate's hole (plate frame), the case's (case frame) */
-  /* the bezel (42102), screwed onto the rim, rising to hold the crystal (42103) in a groove clear of the hands' square; its section estimated. YC, the crystal's underside, 2.4 over the
-     square's measured top (14.5, the motion work in movement.js), as the deep bezel of Renaissance Antiques' side-on photograph allows (about 13 mm, against 8.3 before); MR_Y+5.6 until 5 October 2026 */
+  /* the bezel (42102), screwed onto the rim, rising to hold the crystal (42103) in a groove clear of the hands' square (its section below). YC, the crystal's underside, MR_Y+5.6 until 5 October 2026,
+     MR_Y+10.4 (2.4 over the square's top) until 26 October 2026 */
   /* its case end knurled (19 October 2026): KLUwI2UUCMQ 2:42 (the bezel upside down under the movement, the plate's 87.57 as the scale; PROVENANCE.md, "The bezel on 2:42 and
      48:30") and 48:30 (the bezel alone): a diamond knurl, its pitch about 0.85 mm both ways (23 px at 26.96 px/mm, so about 400 round r 54.2, where the end's ellipse puts the band:
      the model's TR+1.8, 54.3), the band about 5.1 mm tall (rows 1995-2128 at about 18 deg); the rows 0.8 apart (21 px); the knurl's depth 0.3 estimated. The lathe's band at the knurl's root (BZK.r0), the knurl a
@@ -325,13 +339,16 @@ function buildBox(M){
      bezel_prof.py), scaled by the knurl's r 54.2 (KLUwI2UUCMQ 2:42, the plate's 87.57 as the scale): 7.17 px/mm. From its foot on the case's lip: a short chamfer, a plain skirt
      r 49.45-49.6 over the rim's thread, at 7.0 a cove flaring to the knurl, r 53.85 at 13.7, the knurled band (3.4: 48:27.61) at the top, r 54.15, the top at 17.6. The knurl at the
      glass end, with a plain skirt under it, as KLUwI2UUCMQ 0:28.7 and 1:22.5 show it on the case and 2:33-2:43 the bezel alone (a knurl, a flare and a band); likely. Inside: the
-     skirt threaded on the rim's thread (TH), a plain bore over the rim's top, the glass's seat (BL, the dial photograph's opening r 45.9) and over the glass a sight cone up to
-     the top's inner edge, r 53.0 (the bright cone round the glass on 0:28.7; its depth and edge estimated), the glass at YC as before. Until then a cone from the knurl, at the case
-     end, up to the crystal: the knurl was read as the case end on 48:30 and LPEC109-4's cove and band as the case's */
-  const YC=MR_Y+10.4,BL=DIAL_R-1.6,GR=DIAL_R+0.1,YZ=YTB+17.6,RSK=49.45,RBz=TH.R+TH.d+TH.c,h=v=>YTB+v;
+     skirt threaded on the rim's thread (TH), a plain bore over the rim's plain top. Since 26 October 2026 the sight cone runs from the dial up to the glass, as KLUwI2UUCMQ 0:28.7
+     shows it (the bright cone wide on the far side, a thin edge on the near: it rises from the dial's edge to the glass at the bezel's top): its foot a lip YLB 0.05 over the dial's face at the
+     dial photograph's opening (BL, r 45.9), its top under the glass's seat, the glass (GR, r 53.0, the top's inner edge as read before; estimated) 0.3 under the top, held by a lip
+     0.3 over its edge (estimated), YC its underside 2.17 over the hands' square (14.5). Until then the glass sat on a ledge at r 45.9 over a plain bore 10 deep from the rim's top, the
+     cone over the glass (YC 2.4 over the square), the bezel 5.03 higher on the dial. Until 26 October 2026 a cone from the knurl, at the case end, up to the crystal: the knurl was
+     read as the case end on 48:30 and LPEC109-4's cove and band as the case's */
+  const YZ=YTB+17.6,YC=YZ-1.1,YLB=YT+0.05,BL=DIAL_R-1.6,GR=53.0,RSK=49.45,RBz=TH.R+TH.d+TH.c,h=v=>YTB+v;
   const BZK={n:400,h:3.4,d:0.3,rp:0.85,r1:54.15},BZr0=BZK.r1-BZK.d;   /* the knurl: a diamond knurl about 0.85 round (400 on r 54.3, 2:42) and its rows 0.85 apart (48:27.61), 0.3 deep (estimated) */
   const COVE=[[49.61,6.97],[49.75,7.81],[50.03,8.65],[50.37,9.48],[50.93,10.32],[51.42,10.88],[51.97,11.44],[52.6,11.99],[53.23,12.55],[53.85,13.11]];   /* [r, h over the foot], LPEC109-4 x 544-588 */
-  const bpr=[[RBz,YTB],[RSK-0.25,YTB],[RSK,h(0.25)],[RSK,h(1.4)],...COVE.map(([r,v])=>[r,h(v)]),[BZr0,h(13.67)],[BZr0,YZ],[53.0,YZ],[GR-0.3,YC+0.8],[GR+0.1,YC+0.8],[GR+0.1,YC],[BL,YC],[BL,YC-0.5],[DB+0.1,YC-0.5],[DB+0.1,YT],[RBz,YT]];
+  const bpr=[[RBz,YTB],[RSK-0.25,YTB],[RSK,h(0.25)],[RSK,h(1.4)],...COVE.map(([r,v])=>[r,h(v)]),[BZr0,h(13.67)],[BZr0,YZ],[GR-0.3,YZ],[GR-0.3,YC+0.8],[GR+0.1,YC+0.8],[GR+0.1,YC],[GR-0.6,YC],[BL,YLB],[RBz,YLB],[RBz,YTT]];
   const bz=hn(mesh(cs,lathT(bpr,{R:RBz,d:TH.d,p:TH.p,yr:TH.yr,k:bpr.length-1,inside:true}),M.brass),'42102');
   fuse([bz,hn(mesh(bz,knurlBand(BZK.r1,BZK.d,YZ-BZK.h,BZK.h,BZK.n,BZK.rp),M.brass),'42102',{sub:1})]);   /* its knurled band on it, one mesh (fuse) */
   const gl=hn(mesh(cs,new THREE.CylinderGeometry(GR,GR,0.8,96),M.glass,0,YC+0.4,0),'42103');gl.renderOrder=5;bz.userData.bezel=gl.userData.bezel=true;   /* the bezel with its crystal, taken off to set the hands with the key (app.js) */
@@ -339,35 +356,36 @@ function buildBox(M){
      knuckles of its piano hinge, HR behind the back (mid at the lower seam's axis, top at the upper's), so each lid's back face is at z HR in its own frame (LO its middle).
      The glass lid's walls 11 thick (its frame round the glass about 11 +-2 wide from above, REPORT.md: rough; 26, estimated, until 20 October 2026), the glass 3 under its top (estimated) */
   const HR=2.6,LO=HR+W,mid=new THREE.Group(),top=new THREE.Group();mid.userData.partName='lidGlass';mid.userData.pc='cover';top.userData.partName='lid';mid.position.set(0,YL,-W-HR);top.position.set(0,HG,0);root.add(mid);mid.add(top);
-  { const fw=11,p=mid,h=HG;wood(2*W,h,fw,0,h/2,HR+2*W-fw/2,p);wood(2*W,h,fw,0,h/2,HR+fw/2,p);wood(fw,h,2*W-2*fw,W-fw/2,h/2,LO,p);wood(fw,h,2*W-2*fw,-W+fw/2,h/2,LO,p);
+  { const fw=T,p=mid,h=HG;   /* fw: the glass lid's walls as thick as the base's (the survey's frame 11 +-2 wide at its 197 scale, 9.6 at the box's; 11 until 26 October 2026: the lid stay's bar, against the base's wall, then ran inside the lid's) */
+   wood(2*W,h,fw,0,h/2,HR+2*W-fw/2,p);wood(2*W,h,fw,0,h/2,HR+fw/2,p);wood(fw,h,2*W-2*fw,W-fw/2,h/2,LO,p);wood(fw,h,2*W-2*fw,-W+fw/2,h/2,LO,p);
     const g=pc(mesh(p,new THREE.BoxGeometry(2*W-2*fw,0.8,2*W-2*fw),M.glass,0,h-3,LO),'glass');g.renderOrder=6; }   /* its own piece (lidGlass.glass), so a click can pick it */
   wood(2*W,HL,2*W,0,HL/2,LO,top);
-  for(const sx of[1,-1])for(const sz of[HR,HR+2*W]){brassCorner(mid,sx*W,137-H0,sz,10,LO);const tc=brassCorner(top,sx*W,HL-5,sz,10,LO);   /* the glass lid's at Y 132-142; the outer lid's up to its top (Y 186-196 against the photographs' 184-195) */
+  for(const sx of[1,-1])for(const sz of[HR,HR+2*W]){brassCorner(mid,sx*W,137*BOX_S-H0,sz,10*BOX_S,LO);const tc=brassCorner(top,sx*W,HL-5*BOX_S,sz,10*BOX_S,LO);   /* the glass lid's at Y 132-142; the outer lid's up to its top (Y 186-196 against the photographs' 184-195) */
     const zc=sz+Math.sign(sz-LO)*CT,cx=sx*(W+CT),q=[[cx,zc]];for(let i=0;i<=16;i++){const a=Math.PI/2*i/16;q.push([cx-sx*CL*Math.cos(a),zc-Math.sign(sz-LO)*CL*Math.sin(a)]);}fuse([tc,mesh(top,polyGeo(q,CT),M.brass,0,HL,0)]);}   /* the plate over the top's corner */
   /* the hinges (20 October 2026, REPORT.md: Jones-Horan 63662_18 from behind, lots 63662 and 38240 open): one piano hinge on each seam, 157-159 long, centred (likely +-5); its leaves 0.6 thick on
      the back faces, 8 wide from the seam, the knuckle r 2.6 on the axis, in seven lengths, the lower part's four and the upper's three (estimated; leaves wider would run under the outer lid's
      corner caps). Each leaf stops where it meets the knuckle's surface (hk from the seam), not under the other half's knuckles. Until then two hinges r 2.6 x 30 at x +-55 */
-  { const HGL=158,HGW=8,HGT=0.6,hk=Math.sqrt(HR*HR-(HR-HGT)**2),lf=(p,y0,y1,z)=>mesh(p,new THREE.BoxGeometry(HGL,Math.abs(y1-y0),HGT),M.brass,0,(y0+y1)/2,z),
+  { const HGL=158*BOX_S,HGW=8,HGT=0.6,hk=Math.sqrt(HR*HR-(HR-HGT)**2),lf=(p,y0,y1,z)=>mesh(p,new THREE.BoxGeometry(HGL,Math.abs(y1-y0),HGT),M.brass,0,(y0+y1)/2,z),
       kn=(p,y,z,odd)=>{const o=[];for(let i=odd?1:0;i<7;i+=2){const k=mesh(p,cylY(HR,HGL/7,20),M.brass,-HGL/2+HGL/7*(i+0.5),y,z);k.rotation.z=Math.PI/2;o.push(k);}return o;};   /* each half's leaf and knuckles one piece, one mesh (fuse) */
     fuse([lf(root,YL-HGW,YL-hk,-W-HGT/2),...kn(root,YL,-W-HR,0)]);fuse([lf(mid,hk,HGW,HR-HGT/2),...kn(mid,0,0,1)]);   /* the lower: the box's half and the glass lid's */
     fuse([lf(mid,HG-HGW,HG-hk,HR-HGT/2),...kn(mid,HG,0,0)]);fuse([lf(top,hk,HGW,HR-HGT/2),...kn(top,0,0,1)]); }   /* the upper: the glass lid's and the outer lid's */
   /* the hasps (20 October 2026, REPORT.md: Jones-Horan 38240_05 square-on, 63662's): two, each 51 x 22 split at its seam (Y 92-115 at the lower, 164-186 at the upper; likely +-1), a half on
      each side, its outer corners cut (about 2.5, estimated), two screws to a half, a turn knob about 10 across on the lower half; 1.2 thick, the screws' heads r 1.6 and the knob 4 proud,
      estimated. Until then one plate 14 x 18 on the outer lid's front */
-  const hasp=(p,y,zf,up,knob)=>{const sg=up?1:-1,v0=sg*0.25,v1=sg*11.25,c=2.5,q=[[-25.5,v0],[25.5,v0],[25.5,v1-sg*c],[25.5-c,v1],[-25.5+c,v1],[-25.5,v1-sg*c]];
-    mesh(p,facePlate(q,1.2),M.brass,0,y,zf);for(const x of[-21,21])mesh(p,cylY(1.6,0.6,16),M.brass2,x,y+sg*5.75,zf+1.5).rotation.x=Math.PI/2;
-    if(knob)mesh(p,cylY(5,4,32),M.brass2,0,y+sg*5.75,zf+3.2).rotation.x=Math.PI/2;};
+  const hasp=(p,y,zf,up,knob)=>{const S=BOX_S,sg=up?1:-1,v0=sg*0.25,v1=sg*11.25*S,c=2.5,hw=25.5*S,q=[[-hw,v0],[hw,v0],[hw,v1-sg*c],[hw-c,v1],[-hw+c,v1],[-hw,v1-sg*c]];   /* at the box's scale (BOX_S) */
+    mesh(p,facePlate(q,1.2),M.brass,0,y,zf);for(const x of[-21*S,21*S])mesh(p,cylY(1.6,0.6,16),M.brass2,x,y+sg*5.75*S,zf+1.5).rotation.x=Math.PI/2;
+    if(knob)mesh(p,cylY(5*S,4,32),M.brass2,0,y+sg*5.75*S,zf+3.2).rotation.x=Math.PI/2;};
   hasp(root,YL,W,false,true);hasp(mid,0,HR+2*W,true,false);hasp(mid,HG,HR+2*W,false,true);hasp(top,0,HR+2*W,true,false);
   /* the nameplate on the glass lid's front (Fig. 106 draws one; 20 October 2026, REPORT.md: Jones-Horan 38240_05, the Hamilton plate 87 x 17 at Y 148; boxes vary, likely): its ends cut
      (3, estimated), 0.8 thick, a screw at each end (estimated). Until then a plate 70 x 26 on the outer lid's top */
-  { const q=[[-40.5,-8.5],[40.5,-8.5],[43.5,-5.5],[43.5,5.5],[40.5,8.5],[-40.5,8.5],[-43.5,5.5],[-43.5,-5.5]];mesh(mid,facePlate(q,0.8),M.brass,0,148-H0,HR+2*W);
-    for(const x of[-40,40])mesh(mid,cylY(1.2,0.5,16),M.brass2,x,148-H0,HR+2*W+1.05).rotation.x=Math.PI/2; }
+  { const q=[[-40.5,-8.5],[40.5,-8.5],[43.5,-5.5],[43.5,5.5],[40.5,8.5],[-40.5,8.5],[-43.5,5.5],[-43.5,-5.5]].map(([u,v])=>[u*BOX_S,v*BOX_S]);mesh(mid,facePlate(q,0.8),M.brass,0,148*BOX_S-H0,HR+2*W);   /* at the box's scale (BOX_S) */
+    for(const x of[-40,40])mesh(mid,cylY(1.2,0.5,16),M.brass2,x*BOX_S,148*BOX_S-H0,HR+2*W+1.05).rotation.x=Math.PI/2; }
   /* the lid stay (20 October 2026, REPORT.md: a brass slotted stay on the glass lid's left, inside, on Jones-Horan 63662's and 38240's open boxes; Fig. 106 draws a bar in the open lid): the
      form only, its sizes estimated, as the Wempe's (wempe/js/case.js, Wempe 6161's): a bar 6 wide and 1.5 thick against the base's left wall's inside (x -(W-T)), on a pivot 5 over the seam and
      40 from the back on a post 10.1 long out of the glass lid's wall, riding by its slot (2.4 wide, 23.5 to 85 from the pivot) on a headed pin 20 under the seam and 45 from the back in the box's wall:
      the pin 25.5 from the pivot shut and 82.4 open (1.6 rad), the bar's end 1.7 over the felt shut. stay() turns it to lie on the pin (app.js, the essay and the export call it after the lids) */
-  const STA=5,STB=HR+40,SPY=-20,SPZ=45,STL=88,stayP=new THREE.Group();stayP.position.set(-(W-T)+0.85,STA,STB);mid.add(stayP);
-  { const g=polyGeo(stadiumPts([0,0],[0,-STL+3],6),1.5,[{pts:stadiumPts([0,-23.5],[0,-85],2.4)},[0,0,1]]);g.translate(0,-0.75,0);g.rotateZ(Math.PI/2);g.rotateX(-Math.PI/2);mesh(stayP,g,M.brass);   /* along -y from its pivot, its thickness across the wall */
+  const STA=5*BOX_S,STB=HR+40*BOX_S,SPY=-20*BOX_S,SPZ=45*BOX_S,STL=88*BOX_S,stayP=new THREE.Group();stayP.position.set(-(W-T)+0.85,STA,STB);mid.add(stayP);
+  { const g=polyGeo(stadiumPts([0,0],[0,-STL+3],6),1.5,[{pts:stadiumPts([0,-23.5*BOX_S],[0,-85*BOX_S],2.4)},[0,0,1]]);   /* the stay's estimated sizes with the box's (BOX_S) */g.translate(0,-0.75,0);g.rotateZ(Math.PI/2);g.rotateX(-Math.PI/2);mesh(stayP,g,M.brass);   /* along -y from its pivot, its thickness across the wall */
     const cx=(r,l,x)=>{const c=mesh(stayP,cylY(r,l,16),M.brass,x,0,0);c.rotation.z=Math.PI/2;};cx(2,10.1,-0.75-5.05);cx(1,1.5,0);cx(1.6,0.8,1.15);   /* the post from the lid's wall, the pivot through the bar, its head */
     for(const[r,l,x]of[[1,2,-(W-T)+1],[2,0.8,-(W-T)+2.1]]){const pn=mesh(root,cylY(r,l,16),M.brass,x,YL+SPY,-W+SPZ);pn.rotation.z=Math.PI/2;} }   /* the pin, out of the box's wall through the slot, its head (r 2, 0.1 off the bar) keeping the bar on it */
   const stay=()=>{const al=mid.rotation.x,dy=SPY,dz=SPZ+HR,y=dy*Math.cos(al)+dz*Math.sin(al),z=-dy*Math.sin(al)+dz*Math.cos(al);stayP.rotation.x=Math.atan2(-(z-STB),-(y-STA));};stay();
