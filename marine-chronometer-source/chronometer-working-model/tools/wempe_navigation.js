@@ -23,7 +23,11 @@
 const fs=require('fs'),path=require('path'),cp=require('child_process');
 const arg=(k,d)=>{const i=process.argv.indexOf(k);return i>0?+process.argv[i+1]:d;},N=arg('--n',2000),FAULT=process.argv.includes('--fault');
 const PE=2,SIG=PE/Math.sqrt(2*Math.log(2)),R95=SIG*Math.sqrt(-2*Math.log(0.05)),DAYS=[10,30,60],LAT=d=>45-30*Math.min(d/20,1);   /* the fix: its median radius PE; the route's latitude (° N) on day d */
-const OUT=path.join(__dirname,'navigation_wempe.json'),VERS=[['last','as last revised (the drawings, the masses set on the TU\'s trial)'],['build40','the 1940s build'],['build','the 1950s build']];
+const OUT=path.join(__dirname,'navigation_wempe.json'),VERS=[['last','as last revised (the drawings, the masses set on the TU\'s trial)'],['build40','the 1940s build'],['build','the 1950s build'],
+  ['lastB','as last revised, its masses set as the builds\' (±0.1° on further rounds of the trial): reported beside the drawn version\'s own verdict']];   /* lastB (26 October 2026, the owner's choice): the drawn escapement with the builds' setting, which shows the drawn version fails on its masses' setting, not its swing */
+/* the stricter readings of Bowditch's "seldom in error by more than 2 miles" (reported beside the verdict, which stays on the probable error: the owner's choice, 26 October 2026): 2 miles as the fix's
+   95 % radius (its median radius then 0.96), and the fix's own error along the parallel alone, the clock's being along it (its median |x| 0.674σ, 95 % 1.96σ) */
+const STRICT={r95:{name:'2 miles as the fix\'s 95 % radius',median:PE*Math.sqrt(2*Math.log(2))/Math.sqrt(-2*Math.log(0.05)),p95:PE},axis:{name:'the fix\'s error along the parallel alone',median:0.6745*SIG,p95:1.96*SIG}};
 const BOOT=1000;   /* the bootstrap's resamples of the voyages for each figure's sampling range */
 /* a half of the criterion: passes at or under its limit, passes within sampling over it while its interval still reaches it, fails only with the whole interval over it */
 const judge=(x,ci,lim)=>x<=lim?'passes':ci[0]<=lim?'passes within sampling':'fails';
@@ -37,7 +41,7 @@ if(process.argv.includes('--one')){
   /* the oil's factor at the drive s (wempe_errorbudget.js's oilK at s 1: the rate moved by the drive lost), tabulated against the swing at s once, read between */
   const oilAt=s=>(E.rateAt(E.ampAt(0.95*s),0.95*s)-E.rateAt(E.ampAt(s),s))/0.05,TB=Array.from({length:41},(_,i)=>{const s=0.6+i*0.02;return[E.ampAt(s)/D,oilAt(s)];});
   const oilOf=a=>{if(a<=TB[0][0])return TB[0][1];for(let i=1;i<TB.length;i++)if(a<=TB[i][0])return TB[i-1][1]+(TB[i][1]-TB[i-1][1])*(a-TB[i-1][0])/(TB[i][0]-TB[i-1][0]);return TB[TB.length-1][1];};
-  V.reseed(20261025);const mk=rev==='last'?V.adj:FAULT&&rev==='build'?V.drawn:V.adjB,res=[];
+  V.reseed(20261025);const SB=process.env.MC_NAV_SET==='b',mk=rev==='last'&&!SB?V.adj:FAULT&&rev==='build'?V.drawn:V.adjB,res=[];   /* MC_NAV_SET=b: the builds' setting on this version (lastB) */
   for(let n=0;n<N;n++){const dA=sdA*V.gauss(),rec=[];V.voyage(mk(),{rec,oilK:oilOf(A1+dA)});
     const fx=[0,1,2].map(()=>[SIG*V.gauss(),SIG*V.gauss()]);res.push({rec,dA,fx});}
   const day=Array.from({length:60},(_,d)=>{const lat=LAT(d+1)*D,c=res.map(r=>r.rec[d]/4);return{eq:c.map(Math.abs),route:c.map(x=>Math.abs(x*Math.cos(lat)))};});
@@ -48,13 +52,13 @@ if(process.argv.includes('--one')){
   const[ciMed,ci95]=(()=>{const a=day[29].eq,m=[],b=[];for(let k=0;k<BOOT;k++){const x=new Float64Array(a.length);for(let i=0;i<a.length;i++)x[i]=a[Math.floor(V.rnd()*a.length)];m.push(pct(x,0.5));b.push(pct(x,0.95));}
     return[[pct(m,0.025),pct(m,0.975)],[pct(b,0.025),pct(b,0.975)]];})();
   const hist=(()=>{const a=day[29].eq,b={};for(const x of a){const q=Math.min(40,Math.floor(x/0.25));b[q]=(b[q]||0)+1;}return Object.entries(b).map(([q,v])=>[+q*0.25,v/a.length]).sort((x,y)=>x[0]-y[0]);})();
-  process.stdout.write(JSON.stringify({rev,n:N,swing:{median:mA,sd:sdA,model:A1},sd:V.SC.sd,drS:V.SC.drS,set:rev==='last'?V.SET0:V.SETB,ciMed,ci95,
+  process.stdout.write(JSON.stringify({rev,n:N,swing:{median:mA,sd:sdA,model:A1},sd:V.SC.sd,drS:V.SC.drS,set:rev==='last'&&!SB?V.SET0:V.SETB,ciMed,ci95,
     curve:day.map((q,d)=>({d:d+1,eq:[0.5,0.95].map(p=>pct(q.eq,p)),route:[0.5,0.95].map(p=>pct(q.route,p))})),at,hist}));
   return;}
 
 /* ---------- the parent: the three versions, judged ---------- */
 const t0=Date.now(),rows=[],say=s=>rows.push('  '+s);let fail=0;const chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);};
-const run=rev=>new Promise((ok,no)=>cp.execFile(process.execPath,[__filename,'--one','--n',String(N),...(FAULT?['--fault']:[])],{cwd:__dirname,env:{...process.env,MC_WREV:rev==='last'?'':rev},maxBuffer:1<<28},
+const run=rev=>new Promise((ok,no)=>cp.execFile(process.execPath,[__filename,'--one','--n',String(N),...(FAULT?['--fault']:[])],{cwd:__dirname,env:{...process.env,MC_WREV:rev==='last'||rev==='lastB'?'':rev,MC_NAV_SET:rev==='lastB'?'b':''},maxBuffer:1<<28},
   (e,o,er)=>e?no(Error(`${rev}: ${e.message}\n${er}`)):ok(JSON.parse(o))));
 (async()=>{const R=await Promise.all(VERS.map(([v])=>run(v)));
   say(`Navigating by a made Wempe: ${N} made chronometers a version, each rated over 10 days in port and carried 60 days to sea (wempe_errorbudget.js's voyage), the rated rate carried`);
@@ -66,7 +70,9 @@ const run=rev=>new Promise((ok,no)=>cp.execFile(process.execPath,[__filename,'--
     say('');say(`${nm}: the masses to ±${r.set}°, its swing after the bench ${f(r.swing.median,1)}° (sd ${f(r.swing.sd,1)}°) against the model's ${f(r.swing.model,1)}°; the cards' scatter ${f(r.sd,3)} s a day`);
     for(const q of r.at)say(`  ${String(q.d).padStart(2)} days: the clock ${f(q.s[0],1)} s (95 % ${f(q.s[1],1)} s): ${f(q.eq[0],2)} miles at the equator (95 % ${f(q.eq[1],2)}), ${f(q.route[0],2)} at ${f(q.lat,0)}° N (${f(q.route[1],2)}); with the fix ${f(q.total[0],2)} miles (95 % ${f(q.total[1],2)})`);
     (v==='build'?chk:(ok,s)=>say(s))(pass,`${verdict}: after 30 days the clock's longitude error at the equator ${f(a30.eq[0],3)} miles in the median (range ${f(r.ciMed[0],3)}-${f(r.ciMed[1],3)}; limit ${C.median}, the fix's probable error: ${jm}) and ${f(a30.eq[1],3)} in 19 voyages of 20 (range ${f(r.ci95[0],3)}-${f(r.ci95[1],3)}; limit ${f(C.p95,3)}, the fix's 95 %: ${jp}); each range the figure's 95 % bootstrap interval over ${BOOT} resamples of the ${N} voyages`);
-    res.versions[v]={name:nm,pass,verdict,median:jm,p95:jp,set:r.set,ciMed:r.ciMed.map(r4),ci95:r.ci95.map(r4),swing:{median:r4(r.swing.median),sd:r4(r.swing.sd),model:r4(r.swing.model)},at:r.at.map(q=>({d:q.d,lat:q.lat,s:q.s.map(r4),eq:q.eq.map(r4),route:q.route.map(r4),total:q.total.map(r4)})),
+    const st={};for(const[k,L]of Object.entries(STRICT)){st[k]={name:L.name,median:r4(L.median),p95:r4(L.p95),jm:judge(a30.eq[0],r.ciMed,L.median),jp:judge(a30.eq[1],r.ci95,L.p95)};
+      say(`  read strictly, ${L.name}: limits ${f(L.median,2)} (median) and ${f(L.p95,2)} (95 %): ${st[k].jm}, ${st[k].jp} (reported; the verdict stays on the probable error)`);}
+    res.versions[v]={name:nm,pass,verdict,median:jm,p95:jp,strict:st,set:r.set,ciMed:r.ciMed.map(r4),ci95:r.ci95.map(r4),swing:{median:r4(r.swing.median),sd:r4(r.swing.sd),model:r4(r.swing.model)},at:r.at.map(q=>({d:q.d,lat:q.lat,s:q.s.map(r4),eq:q.eq.map(r4),route:q.route.map(r4),total:q.total.map(r4)})),
       curve:r.curve.map(q=>({d:q.d,eq:q.eq.map(r4),route:q.route.map(r4)})),hist:r.hist.map(([x,y])=>[x,r4(y)])};}
   if(FAULT)say('(--fault: the 1950s build\'s masses left at their drawn place)');
   else{const js=JSON.stringify(res,null,1)+'\n';if(process.argv.includes('--write')){fs.writeFileSync(OUT,js);say('wrote tools/navigation_wempe.json');}

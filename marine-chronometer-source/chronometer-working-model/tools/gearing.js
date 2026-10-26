@@ -4,7 +4,7 @@
 //   node gearing.js --quick     (the drawn centres only, no depthing windows: a few seconds)
 //   node gearing.js --model wempe [--quick] [--write]   the Wempe's train (wempe_train.js: its four meshes on the page's own tables and tooth forms, its holes' places, its
 //                               escapement and drive from escphys.js); its band 185-270° (wempe_escapement.js's: the sources' 225-270° less the damping's estimate, the
-//                               model swinging 199.4° at 12 h, its floor 14° under it as 193° was under 207° and 200° under 214° until 15 October 2026), the pivots' shake each mesh's own; into gearing_wempe.json, with each mesh's mean torque ratio (about 2 min)
+//                               model swinging 193° at 12 h (199.4° until the per-part audit), its floor 14° under it as 193° was under 207° and 200° under 214° until 15 October 2026), the pivots' shake each mesh's own; into gearing_wempe.json, with each mesh's mean torque ratio (about 2 min)
 // For each stage the wheel (A) drives the pinion (B) at its centre distance m(z1+z2)/2 (tools/solve.py: the modules are the arbors' places'). A is turned through
 // a pitch in small steps; at each, B is turned back against its load until its flank meets A's (B lags as far as the teeth allow, the outlines densified so the
 // meeting is found to well under a micrometre). That gives where they touch, the line the force acts along (the touching outline's normal) and the slip, so

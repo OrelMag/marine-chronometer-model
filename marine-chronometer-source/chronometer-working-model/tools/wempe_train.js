@@ -16,7 +16,7 @@ const FW={z:90,m:0.4356,D:40.57,dg:37.84,l:0.64,mate:14},EP={z:10,m:0.263,D:2.97
 const STG=[['fusee wheel → centre pinion',90,14,FW.m,90/14*3600,FW,A.cw.pin,[H[10],H[1]],[0.595,1.0895],[2.62,A.cw.pin.u1-A.cw.pin.u0]],
   ['centre wheel → intermediate pinion',90,12,+A.cw.wheel.m.toFixed(5),3600,A.cw.wheel,A.tw.pin,[H[1],H[38]],[0.4125,0.4125],[A.cw.wheel.rim[1]-A.cw.wheel.rim[0],A.tw.pin.u1-A.tw.pin.u0]],
   ['intermediate wheel → seconds pinion',80,10,+A.tw.wheel.m.toFixed(5),3600/(90/12),A.tw.wheel,A.sw.pin,[H[38],H[35]],[0.405,0.375],[A.tw.wheel.rim[1]-A.tw.wheel.rim[0],A.sw.pin.u1-A.sw.pin.u0]],
-  ['seconds wheel → escape pinion',80,10,+A.sw.wheel.m.toFixed(5),60,A.sw.wheel,EP,[H[35],H[26]],[0.12,0.12],[A.sw.wheel.rim[1]-A.sw.wheel.rim[0],3]]];
+  ['seconds wheel → escape pinion',80,10,+A.sw.wheel.m.toFixed(5),60,A.sw.wheel,EP,[H[35],H[26]],[0.12,0.12],[A.sw.wheel.rim[1]-A.sw.wheel.rim[0],4.0]]];   /* the escape pinion's face 4.0 long (escapement.js: 05 04_7.2 scaled; 3 until 26 October 2026: every consumer takes the rim, the narrower) */
 /* the outlines by teeth and the stage's module (a wheel's z@m, its pinion's z@m: each pair is one): the tables' own tips, roots and tooth thicknesses */
 const OUT={};for(const[,zA,zB,m,,w,p]of STG){OUT[`${zA}@${m}`]=WTRAIN.teeth(w.z,w.m,w.D,w.dg,w.mate,w.l);OUT[`${zB}@${m}`]=WTRAIN.teeth(p.z,p.m,p.D,p.dg);}
 const outline=(z,m)=>{const o=OUT[`${z}@${m}`];if(!o)throw Error(`no Wempe gear ${z}@${m}`);return o;};
