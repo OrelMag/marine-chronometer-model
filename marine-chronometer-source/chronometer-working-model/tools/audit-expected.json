@@ -3,7 +3,7 @@
   "bal:Extrude | bal:Extrude | +-24.50": 1,
   "bal:Extrude | bal:Extrude | +-25.10": 1,
   "bal:Extrude | spr:Buffer | --28.60": 1,
-  "barrel:Lathe | barrel:Box | +-5.60": 5,
+  "barrel:Lathe | barrel:Box | +-5.60": 4,
   "barrelBridge:Buffer | barrelBridge:Buffer | +-23.76": 1,
   "barrelBridge:Buffer | barrelBridge:Cylinder | --23.76": 2,
   "barrelBridge:Buffer | barrelBridge:Extrude | +-23.76": 2,
@@ -44,9 +44,10 @@
   "hands:Extrude | motion:Buffer | +9.50": 1,
   "hands:Extrude | motion:Cylinder | +7.84": 1,
   "hands:Extrude | motion:Cylinder | -7.44": 1,
+  "lockArm:Extrude | lockArm:Cylinder | --31.76": 2,
+  "lockArm:Extrude | post:Extrude | --31.76": 1,
   "lockArm:Extrude | spr:Buffer | +-31.30": 1,
-  "lockArm:Extrude | spr:Buffer | --31.74": 1,
-  "lockArm:Lathe | lockArm:Extrude | --40.70": 1,
+  "lockArm:Extrude | spr:Buffer | --31.76": 1,
   "lowerBridge:Buffer | det:Buffer | --20.66": 1,
   "lowerBridge:Buffer | lowerBridge:Buffer | --12.16": 1,
   "lowerBridge:Buffer | lowerBridge:Cylinder | +-11.90": 1,
@@ -75,7 +76,7 @@
   "pillar:Buffer | pillar:Lathe | +0.00": 4,
   "pillar:Buffer | pillar:Lathe | +2.14": 3,
   "pillar:Buffer | pillar:Lathe | --3.86": 2,
-  "pillar:Buffer | pillar:Lathe | -0.00": 4,
+  "pillar:Buffer | pillar:Lathe | -0.00": 3,
   "pillar:Extrude | pillar:Lathe | +-0.60": 1,
   "pillar:Lathe | fusee:Buffer | --3.96": 1,
   "pillar:Lathe | ltb:Buffer | -0.00": 3,
@@ -118,6 +119,6 @@
   "bowl:Buffer | bowl:Cylinder | +-65.68": 1,
   "bowl:Buffer | bowl:Cylinder | +-66.68": 1,
   "bowl:Extrude | bowl:Cylinder | --67.98": 1,
-  "latch:Extrude | latch:Cylinder | +-26.72": 1
+  "latch:Extrude | latch:Cylinder | +-21.68": 1
  }
 }

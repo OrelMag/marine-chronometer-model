@@ -131,7 +131,7 @@ function buildBox(M){
   /* the latch keeper on the case (below), its top at the thread's foot (YTB), just under the bezel's lower edge (KLUwI2UUCMQ 1:22.5: the case in the ring, the bezel on; 1:21.5-1:24.5), 1.3 lower
      in the case than drawn until 25 October 2026 (its top 6.5, by the bezel's knurl); so its window's middle stands LSC from the pivots, where the lever latches (LY) and the ring's slot (SLY) is cut.
      The lever's height and the slot were estimated at the pivots' height (+0.6) until then, the band's height (14) still estimated */
-  const KPY=YTB-6.5,LSC=0.6+KPY-4.0,SLH=1.5;
+  const KPY=YTB-6.5,LSC=0.6+KPY-(YTB-1.2),SLH=1.5;   /* YTB-1.2: CSY, the case's frame under the pivots (below); 4.0 written here until 26 October 2026 left the lever 5.03 under the keeper once CSY moved */
   const ring=hn(new THREE.Group(),'42106');ring.userData.partName='ring';ring.position.y=RY;root.add(ring);
   /* the band, with a slot at the front right (Fig. 106) that the latch lever passes through to the case: the band round the rest of the ring, the band above and
      below the slot, and the slot's two side walls */
