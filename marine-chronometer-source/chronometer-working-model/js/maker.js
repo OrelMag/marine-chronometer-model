@@ -23,8 +23,9 @@ const MAKER=(()=>{
   const DENS={steel:7.85,steelD:7.85,blued:7.85,brass:8.5,gilt:8.5,brassD:8.5,invar:8.1,ruby:4.0,clear:3.5,glass:2.5,wood:0.6,woodEdge:0.6,felt:0.3,fibre:1.3,packing:1.2,delrin:1.4,gold:17,silver:10.5,nickel:8.9,chain:7.85,chain2:7.85};
   let matName=null;
   const nameOf=m=>{if(!matName){matName=new Map();for(const[k,v]of Object.entries(A.M))if(v&&v.isMaterial)matName.set(v,k);}return matName.get(m)||'';};
-  /* the part's meshes as built (the merged copies are drawing only: the pieces are still under the movement), visible or not, without the engravings */
-  const meshesOf=p=>(A.R&&A.R.springReady&&A.R.springReady(),[...A.meshes,...(A.boxMeshes||[])]).filter(o=>(p.includes('.')?o.userData.pk===p:o.userData.part===p)&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position);
+  /* the part's meshes as built (the merged copies are drawing only: the pieces are still under the movement), visible or not, without the engravings and the Laid out
+     view's schematic stand-ins (devPlate: the viewer tags them with the part they stand for, for its card) */
+  const meshesOf=p=>(A.R&&A.R.springReady&&A.R.springReady(),[...A.meshes,...(A.boxMeshes||[])]).filter(o=>(p.includes('.')?o.userData.pk===p:o.userData.part===p)&&!o.userData.decal&&!o.userData.surface&&!o.userData.devPlate&&o.geometry&&o.geometry.attributes.position);
   const toMv=o=>{const m=new THREE.Matrix4().copy(A.mv.matrixWorld).invert();return m.multiply(o.matrixWorld);};
   /* each triangle of a mesh in the movement's frame (mm), instances included */
   function tris(o,f){const g=o.geometry,P=g.attributes.position,I=g.index,mats=[];const base=toMv(o);
