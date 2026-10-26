@@ -166,7 +166,7 @@ const WFUSEE=(()=>{
   function capFix(g,yF){const P=g.attributes.position,keep=[];for(let t=0;t<P.count;t+=3){let f=yF!=null;for(let q=0;q<3&&f;q++)if(Math.abs(P.getY(t+q)-yF)>1e-5)f=false;if(!f)keep.push(t);}
     const o=new THREE.BufferGeometry();for(const k of['position','normal','uv']){const a=g.attributes[k];if(!a)continue;const w=a.itemSize,arr=new Float32Array(keep.length*3*w);
       keep.forEach((t,j)=>arr.set(a.array.subarray(t*w,(t+3)*w),j*3*w));o.setAttribute(k,new THREE.BufferAttribute(arr,w));}
-    g.dispose();const t=tjFix(o);t.setIndex([...Array(t.attributes.position.count).keys()]);return snapNear(fillOpen(closeGeo(t)));}   /* indexed: closeGeo copies an unindexed one through toNonIndexed, which warns */
+    const ud=g.userData;g.dispose();const t=tjFix(o);t.setIndex([...Array(t.attributes.position.count).keys()]);const z=snapNear(fillOpen(closeGeo(t)));z.userData={...ud};return z;}   /* indexed: closeGeo copies an unindexed one through toNonIndexed, which warns */
   /* snapNear(g): corners within 2 µm of each other, chained (union-find), put at one place, the triangles kept: holeCut's cuts leave corners a few tenths of a µm
      apart, closed only when welded; a weld on a grid (the STL's at 1 µm in the movement's frame, gltf_check.py) splits or joins such a pair as it falls across a cell's
      edge and leaves edges open. Afterwards distinct corners stand over 2 µm apart, beyond any 1 µm cell's reach, and a triangle folded flat by it adds each edge twice */
@@ -195,7 +195,7 @@ const WFUSEE=(()=>{
     if(X.lengthSq()<1e-9){X=new THREE.Vector3(1,0,0);X.addScaledVector(D,-X.dot(D));}X.normalize();const Z=new THREE.Vector3().crossVectors(X,D);
     const B=new THREE.Matrix4().makeBasis(X,D,Z).setPosition(o[0],o[1],o[2]);g.applyMatrix4(B.clone().invert());   /* B: the hole's frame (x along h, y along d) to g's */
     const R=r/Math.cos(Math.PI/n),pl=poly||[...Array(n).keys()].map(i=>[R*Math.cos((i+0.5)/n*TAU),R*Math.sin((i+0.5)/n*TAU)]),P=g.attributes.position;
-    const out=holeCut(g,pl,from);out.applyMatrix4(B);return out;}
+    const out=holeCut(g,pl,from);out.applyMatrix4(B);out.userData={...g.userData};return out;}   /* the part's userData kept (its tapped holes' threads, for matchThreads: lost until 26 October 2026, so a bored part's screws stood crest on crest) */
   /* holeCut(g, poly, yb): what core.js facePocket(g, 'top', poly, y1 - yb) cuts (the prism over the convex plan poly, from y = yb up), but only the triangles that come
      within the prism's box are split by its planes. facePocket splits every triangle each of its infinite planes crosses, and every plane of a hole across a turned part
      runs through it from side to side near its axis, so the pieces multiply there (a drum's 16,000 corners became 560,000, and the page took 25 s to build). The sections that

@@ -640,7 +640,19 @@
      "WN-302"
     ]
    ],
-   "figs": "05 05_10, 05 05_8"
+   "figs": "05 05_10, 05 05_8",
+   "dev": [
+    {
+     "rel": [
+      "endshake",
+      "WN-301"
+     ],
+     "inst": [
+      0
+     ],
+     "why": "the train-side shoulder is one 30° cone from the pivot's root (05 05 03-2), so it bears on the jewel at its hole's edge, 0.014 up the cone from where a flat shoulder bore (26 October 2026): 0.084 in all, inside the Wempe's own band for the centre arbor, the 1958 Soviet MX repair book's 0.07-0.10 (Appendix 4; wempe_bench.js), over the Hamilton manual's 0.003 in this check takes"
+    }
+   ]
   },
   {
    "id": "050503-1",
@@ -708,7 +720,20 @@
      "WN-300.zb"
     ]
    ],
-   "figs": "05 05_7, 05 05_5"
+   "figs": "05 05_7, 05 05_5",
+   "dev": [
+    {
+     "rel": [
+      "endshake",
+      "WN-300.t38"
+     ],
+     "inst": [
+      0
+     ],
+     "rev": "6mx",
+     "why": "in the Soviet 6MX the train-side shoulder's 30° cone (its sheet) sits into the 6MX's own upper jewel's wider mouth, so it bears 0.073 from the jewel's face where a flat shoulder bore about 0.03 (26 October 2026): 0.103 in all, 0.003 over the 1958 Soviet MX repair book's 0.07-0.10 for it (Appendix 4; wempe_bench.js): reported, the 6MX's jewels' mouths not measured on a source; over the Hamilton manual's 0.003 in this check takes"
+    }
+   ]
   },
   {
    "id": "050502-1",
@@ -776,7 +801,20 @@
      "050504-1"
     ]
    ],
-   "figs": "05 05_4, 05 05_2"
+   "figs": "05 05_4, 05 05_2",
+   "dev": [
+    {
+     "rel": [
+      "endshake",
+      "WN-300.t35"
+     ],
+     "inst": [
+      0
+     ],
+     "rev": "6mx",
+     "why": "in the Soviet 6MX the train-side shoulder's 30° cone (its sheet) sits into the 6MX's own upper jewel's wider mouth, so it bears 0.068 from the jewel's face where a flat shoulder bore about 0.03 (26 October 2026): 0.093 in all, inside the 1958 Soviet MX repair book's 0.07-0.10 for it (Appendix 4; wempe_bench.js); over the Hamilton manual's 0.003 in this check takes"
+    }
+   ]
   },
   {
    "id": "050501-1",
@@ -1265,7 +1303,7 @@
     [
      "in",
      "050301-1",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "05 03_2, 05 03_4"
@@ -1417,7 +1455,7 @@
     [
      "in",
      "050302-2",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 03_8"
@@ -1715,10 +1753,22 @@
     [
      "in",
      "050401-1",
-     "embed"
+     "tap"
     ]
    ],
-   "figs": "05 04_1"
+   "figs": "05 04_1",
+   "dev": [
+    {
+     "rel": [
+      "in",
+      "050401-1"
+     ],
+     "inst": [
+      0
+     ],
+     "why": "the detent's square is 0.50 thick across (0.55 as first drawn: 05 04 01-1), so the gold spring's M0.7 screw engages 0.39 of its tapped hole, 0.42 deep (the sheet gives no depth), under this check's 0.4: all the square has"
+    }
+   ]
   },
   {
    "id": "WN-gf",
@@ -1735,7 +1785,7 @@
     [
      "in",
      "050401-1",
-     "embed"
+     "clear"
     ],
     [
      "in",
@@ -1760,15 +1810,29 @@
     [
      "in",
      "050401-1",
-     "embed"
+     "press"
     ],
     [
      "in",
      "050401-4",
-     "embed"
+     "press"
     ]
    ],
-   "figs": "05 04_10.1"
+   "figs": "05 04_10.1",
+   "dev": [
+    {
+     "rel": [
+      "in",
+      "050401-4"
+     ],
+     "inst": [
+      0,
+      1
+     ],
+     "why": "as first drawn and in 1943 the block's end face isn't bored for the pins (fusee.js's bore leaves that block open with them: the Wempe README, Unresolved, \"Left open by the drawings check\"), so the pins stand in its metal; bored as last revised and in the 6MX (26 October 2026)",
+     "rev": "first 1943"
+    }
+   ]
   },
   {
    "id": "050401-4",
@@ -2730,12 +2794,12 @@
    "parent": "050602",
    "kind": "part",
    "part": "maintaining",
-   "fn": "Through the cup's wall and the spring's hole (not cut in the turned cup).",
+   "fn": "Through the cup's wall and the spring's hole (its Ø 0.6 holes cut through the cup, 26 October 2026).",
    "rel": [
     [
      "in",
      "050602-1",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 06_11, 05 06_12"
@@ -3683,7 +3747,7 @@
     [
      "in",
      "050800-3",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 08_7"

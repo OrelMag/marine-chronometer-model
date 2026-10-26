@@ -44,6 +44,9 @@ const WTRAIN=(()=>{
   /* a 30 deg chamfer on a shoulder (the pinion sheets' "30°"): the body's edge cut C30 across, at 30 deg to the shoulder's face; on the train side the whole shoulder is one 30° cone
      from the pivot's root to the arbor, as the three pinion sheets draw it (a flat shoulder chamfered C30 until 26 October 2026) */
   const C30=0.15,c30=C30*Math.tan(30*D2R);
+  /* a train-side shoulder's 30° cone from the pivot's root r0 out to r1, ringed every 0.025 of radius: the same cone, sampled so a ray along the arbor from it meets the jewel
+     where the cone does, at the hole's edge (two rings left bom.py's endshake reading the cone's rim, 0.38 up) */
+  const cone30=(r0,r1)=>{const n=Math.max(1,Math.ceil((r1-r0)/0.025)),o=[];for(let i=1;i<=n;i++){const r=r0+(r1-r0)*i/n;o.push([r,(r-r0)*Math.tan(30*D2R)]);}return o;};
   /* a pivot l long from a shoulder at u0, Ø 2r at the shoulder tapering to 2re at its end, the end rounded (a quarter ellipse re across, 0.6 re deep); s -1 toward -u (listed
      from its end on the axis out to the shoulder), +1 toward +u (from the shoulder to its end on the axis) */
   const piv=(r,re,l,s,u0=0)=>{const h=0.6*re,o=[];for(let k=0;k<=6;k++){const t=k/6*Math.PI/2;o.push([re*Math.sin(t),u0+s*(l-h+h*Math.cos(t))]);}
@@ -97,7 +100,7 @@ const WTRAIN=(()=>{
        1.7 -0.2 wide, hub 10.6 -0.2, rim's inside 28.1 +0.2, hole 5.4 H7; its hub left the sheet's 1.5 thick and standing 0.2 proud on the dial side, turned to Ø 10 there
        (05 05 03: "0,2", "10∅"). */
     cw:{at:H[1],ys:TI+0.035,
-      prof:[...piv(1.19/2,(1.19-3/90)/2,3,-1),[2.5/2,(2.5/2-1.19/2)*Math.tan(30*D2R)],[2.5/2,17.225],[5.4/2,17.225],[5.4/2,18.775],[2.44/2,18.775-0.99],[3.2/2,19.03],
+      prof:[...piv(1.19/2,(1.19-3/90)/2,3,-1),...cone30(1.19/2,2.5/2),[2.5/2,17.225],[5.4/2,17.225],[5.4/2,18.775],[2.44/2,18.775-0.99],[3.2/2,19.03],
         [rCj(19.03),19.03],[rCj(23.03),23.03],[rSh(23.03),23.03],[rSh(29.1),29.1],[rSh(29.1)-0.24,29.1],[rSh(29.76),29.76],...crown(rSh,37.33)],
       crown:CRN,
       pin:{z:14,m:6.098/14,D:6.79-0.01,dg:4.24,u0:17.225-3.95,u1:17.225},
@@ -116,7 +119,7 @@ const WTRAIN=(()=>{
        The wheel (05 05 02-1): z 80, m 0.280 (d 22.453, so 0.28066), tip 23.33, root 21.57, l 0.40, 1.0 -0.1 thick at the rim, five spokes 1.3 -0.2, hub 7.5 -0.1, rim's
        inside 19.3 +0.2, hole 4 H7; its hub flush with the rim (05 05 02's column scans; the "0,2" and "7∅" the riveting's sink: until 26 October 2026 a hub 0.2 proud) */
     tw:{at:H[38],ys:TI+0.03,
-      prof:[...piv(0.825/2,(0.825-2.95/90)/2,2.95,-1),[1.95/2,(1.95/2-0.825/2)*Math.tan(30*D2R)],[1.95/2,19.2],[4.0/2,19.2],[4.0/2,20.15],[1.95/2,20.15],[1.95/2,23.0-c30],[1.95/2-C30,23.0],
+      prof:[...piv(0.825/2,(0.825-2.95/90)/2,2.95,-1),...cone30(0.825/2,1.95/2),[1.95/2,19.2],[4.0/2,19.2],[4.0/2,20.15],[1.95/2,20.15],[1.95/2,23.0-c30],[1.95/2-C30,23.0],
         ...piv(0.825/2,(0.825-2.95/90)/2,2.95,1,23.0)],
       pin:{z:12,m:4.264/12,D:4.264+1.28*4.264/12,dg:4.264-3.93*4.264/12,u0:19.2-3.25,u1:19.2},
       wheel:{z:80,m:22.453/80,D:23.33,dg:21.57,l:0.40,mate:10,rim:[19.2,20.15],boss:null,spokes:[5,1.2,7.45/2,19.4/2],bore:4.0/2}},
@@ -134,7 +137,7 @@ const WTRAIN=(()=>{
        inside 18.3 +0.2, hole 2.6 H7; its hub flush with the rim, its face 9.2 from the dial-side shoulder (05 05 01's 9,2 ±0,05; the "0,2" and "6∅" the riveting's: until 26 October
        2026 a hub 0.2 proud, the rim 0.2 lower, clearing the intermediate pinion's 4.5 by 0.05; its 3.25 now leaves 1.1) */
     sw:{at:H[35],ys:TI+0.025,
-      prof:[...piv(0.81/2,(0.81-3/90)/2,3,-1),[1.5/2,(1.5/2-0.81/2)*Math.tan(30*D2R)],[1.5/2,13.6],[2.6/2,13.6],[2.6/2,14.85],[1.5/2,14.85],[1.5/2,24.05],[0.75/2,24.05],[0.65/2,33.15],[0.65/2-0.1,33.25],[0,33.25]],
+      prof:[...piv(0.81/2,(0.81-3/90)/2,3,-1),...cone30(0.81/2,1.5/2),[1.5/2,13.6],[2.6/2,13.6],[2.6/2,14.85],[1.5/2,14.85],[1.5/2,24.05],[0.75/2,24.05],[0.65/2,33.15],[0.65/2-0.1,33.25],[0,33.25]],
       pin:{z:10,m:2.807/10,D:2.807+1.28*2.807/10,dg:2.807-3.93*2.807/10,u0:14.85,u1:24.05-2.2},
       wheel:{z:80,m:21.066/80,D:21.9,dg:20.23,l:0.38,mate:10,rim:[13.85,14.85],boss:null,spokes:[5,1.2,6.4/2,18.4/2],bore:2.6/2}}};
 
