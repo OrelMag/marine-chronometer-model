@@ -851,8 +851,10 @@ const WESC=(()=>{
         const ge=solidGeo([{loop:ccw(pr.map(([t,y])=>[t,s*y])),y0:nUr,y1:nUl}]);
         ge.applyMatrix4(new THREE.Matrix4().set(TD.t[0],TD.n[0],0,P[0], 0,0,s,0, TD.t[1],TD.n[1],0,P[1], 0,0,0,1));
         const one=new THREE.BufferGeometry(),AT={position:[],normal:[],uv:[]};
-        /* its end face's M1 to the Ø 1.3 and the steady pins' holes, as the 6MX's (05 04 01-4; the M1 on 20 sides here, where fusee.js's bore leaves 16 open beside the Ø 1.3: left out until 27 October 2026) */
-        for(const g of[nBore(endH(solidGeo([base43,thin,up43]),1.3,6),ROW,nE-2.8,yP+2.3,0.5,20),ge]){const p=g.attributes.position.array,at=i=>Math.abs(toD([p[3*i],p[3*i+2]])[0]-tE)<1e-4;
+        /* its end face's M1 to the Ø 1.3 and the steady pins' holes, as the 6MX's (05 04 01-4; the M1 on 20 sides here, where fusee.js's bore leaves 16 open beside the Ø 1.3: left out until 27 October 2026):
+           the M1 drilled at its thread's minor diameter (ISO M1 × 0.25: D1 0.729), the foot's screw's thread standing in the metal round it as a tapped hole's (bom.json's embed: a thread
+           drawn without its helix); at the major diameter, 0.5, until 27 October 2026, the screw's crests stood within 0.008 of a plain bore and only its tip, past the bore, in metal */
+        for(const g of[nBore(endH(solidGeo([base43,thin,up43]),1.3,6),ROW,nE-2.8,yP+2.3,0.729/2,20),ge]){const p=g.attributes.position.array,at=i=>Math.abs(toD([p[3*i],p[3*i+2]])[0]-tE)<1e-4;
           for(let i=0;i<p.length/3;i+=3){if(at(i)&&at(i+1)&&at(i+2))continue;for(const k in AT){const a=g.attributes[k],w=k==='uv'?2:3;for(let j=i*w;j<(i+3)*w;j++)AT[k].push(a?a.array[j]:0);}}}
         for(const k in AT)one.setAttribute(k,new THREE.Float32BufferAttribute(AT[k],k==='uv'?2:3));
         tag(mesh(blk43,one,M.brass),'050401-4');
@@ -883,7 +885,7 @@ const WESC=(()=>{
       R.blkPins=[L(ROW-2,nE-2.3),L(ROW+2,nE-12.3)];
       /* As first drawn: 05 04_1's block (no sheet of its own; the plan at 10:1, 24.4 px/mm), as on Wempe 3955 (11_Wempe_3955_Gangfeder_plus.jpg, 10_Vergleich_CWW-6MX). The
          same base, its fixing screw, steady pins and the detent's foot under its edge (the plan's holes fall on 05 04 01-4's: sure), the foot's face 0.025 further out for
-         1436's thicker foot; in place of the upright a long arm toward the stone, 2.8 thick on the base's free side, 3.7 to 6.5 under the plate ("2,8", "6,5", sure), 3.56 wide
+         1436's thicker foot (nE − 0.025: −0.215 since the blade is flush toward the block, its foot 0.11 off the stone's line, as last revised; −0.325 until 27 October 2026); in place of the upright a long arm toward the stone, 2.8 thick on the base's free side, 3.7 to 6.5 under the plate ("2,8", "6,5", sure), 3.56 wide
          and flush with the base's edge, as both photographs have it (11_, 10_Vergleich_CWW-6MX: 3.6 wide at 22.3 px/mm by the base's 14.6); 05 04_1 sets it back 1.06 and
          draws it 2.5 wide, its far edge 3.56 behind the base's edge as the photographs' (scaled, 24.4 px/mm). Its end 2.9 past the stone (scaled 21.84 from the block's screw),
          joined to the base by a cove r 1.82 and a ledge 0.78 to the base's face (scaled; the photographs show the cove). Through the arm, on the stone's line, the banking screw (WN-16 by the coloured section's label, its leader to
@@ -899,7 +901,7 @@ const WESC=(()=>{
          drilled from the plate's side, 3 deep to meet the screw 2.3 under the plate: Wempe 3955's base shows it on that face, 2.4-2.5 from the edge (scaled, 28.4 px/mm).
          The photograph puts the fixing screw 9.1 from the edge, the plate's hole 13 and 05 04_1 7.6: drawn at 13. The gilt dish both photographs show at the detent's tip is
          the banking screw's head (above) */
-      {const nF=-0.325,tE=-2.9,nA0=nF,nA1=nF-3.56,rc=1.82,nC=nA1-rc,tC=tT-2.6;
+      {const nF=nE-0.025,tE=-2.9,nA0=nF,nA1=nF-3.56,rc=1.82,nC=nA1-rc,tC=tT-2.6;
         const plate={loop:ccw([L(tT,nF),L(tT,nC),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nF)]),y0:yP,y1:yP+6.5,
           F:[{th:{rs:0.85},p:C(H[13],0.87,48),a:yP,b:yP+6.5},{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
         const stub={loop:ccw([L(tT-0.5,nA0),L(tT,nA0),L(tT,nC),L(tT-0.5,nC)]),y0:yP+3.7,y1:yP+6.5},base1=solidGeo([plate,stub]);   /* the arm's root, 0.5 of it, in the base's solid */
