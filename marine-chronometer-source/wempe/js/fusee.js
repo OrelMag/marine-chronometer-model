@@ -623,25 +623,38 @@ const WFUSEE=(()=>{
       const yE=GC+0.25;mesh(g,turned([[0,yE],[0.3,yE+0.03],[0.5,yE+0.09],[0.595,yE+0.15],[0.595,GP+0.05],[0,GP+0.05]],20),M.steel);mesh(g,turned([[0,G],[1.3,G],[1.3,G+0.9],[0,G+0.9]],20),M.steel);   /* the head 0.9 high and the end domed 0.25 inside the cup's rim, as 05 06 02's section draws them (until 26 October 2026 0.5 and flat, 0.12 past the rim: estimated) */
       {const tg=KIT.threadGeo(0.85,GP-0.1,G,G+GP).clone();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,G+GP,0);mesh(g,tg,M.steel).userData.thread={rs:0.85,p:KIT.isoP(0.85)};}   /* the M1.7 through the plate, from 0.1 in the head to the cup's floor, an ISO thread on the plate's (matchThreads; a plain Ø 1.7 until 27 October 2026): built tip up and turned over about y (G + GP)/2, its helix's phase (yr G + GP) still 0 at the screw's origin, so matchThreads turns it as any shank (the profile is even in u) */
       const sl=mesh(g,new THREE.BoxGeometry(2.4,0.25,0.3),M.steelD,0,G+0.9+0.02-0.125,0);sl.rotation.y=0.4;}
-    /* the clicks' springs 05 06 02-2 (Sperrfeder; Bronzeband 1.5 × 0.4 federhart, "gestreckt 27,0"): along the cup's wall on r 12.0 from their end, through the pin hole
-       0.6 5 from it, 5 more to the S (05 06 02-2: sure; at 17.1 px/mm the end and the bend scale 23.5° and 22.1° from the hole, 4.9 and 4.6), the S round two 2.2 mandrels
-       in to r 10.4 over 8.5° (05 06 02 at 12.1 px/mm: 97.1° to 88.6°; likely ±2°), then on r 10.4 to their tip on the click's back, 110° round from the hole (the part's
-       "110°", and 05 06 02 draws the tip there, 8.6° over 3 o'clock with the hole at 118.8°: sure), pressing the click's nose toward the click wheel. The hole is on the
-       pin at 60° over 9 o'clock (05 06 02-1's 42° and 60°, 18° apart), the other pin beside the end. Developed so about 26.6 (the sheet's 27.0: the S's own length
-       not drawn). Until 25 October 2026 the end 1.44 short of the 42° pin and the S 3.6 past the 60° (the sheets' 5 and 5), the tip on the back a third of the way
-       from the nose (99° from the hole): 24.4 long. The free end runs to the click wherever the click stands (rebuilt as it rides) */
+    /* the clicks' springs 05 06 02-2 (Sperrfeder; Bronzeband 1.5 × 0.4 federhart, "gestreckt 27,0"): along the cup's wall from their end, through the pin hole
+       0.6 5 from it, 5 more to the S (05 06 02-2: sure; at 17.1 px/mm the end and the bend scale 23.5° and 22.1° from the hole, 4.9 and 4.6), the S round two Ø 2.2
+       formers (02-2 draws both circles, the strip on the inside one then the outside one) in 1.6 to the long arm (the "12,0" and "10,4" to the outer face, as 05 06_4's
+       A-B's "0,2" from the cup's wall puts it: the strip's middle on r 11.825 along the wall, 0.2 off the wall's 12.225 (the second drawing check, 3-M5: on r 12.0, 0.025
+       off it, until 28 October 2026), and 10.225 on the arm): its bends round the formers (their middle line r 1.3) and the straight between them solved so the arm
+       starts 15° round from where the S leaves the wall, where 02-2 draws the formers' tangencies (until 28 October 2026 a cosine ramp over 8.5°, scaled on the
+       sprung assembly 05 06 02; 3-M7); then on the arm to the tip on the click's back (below). The hole is on the pin at 60° over 9 o'clock (05 06 02-1's 42° and 60°,
+       18° apart), the other pin beside the end. Its length the sheet's 27.0: the tip, sprung onto the click's back, lies where the strip ends (TIPL; 05 06 02 draws it
+       8.6° over 3 o'clock, 110° from the hole, as 02-2's free spring's "110°": with the S and runs as figured the strip reaches about 115° on the drawn r 10.4, the
+       refuter's centreline on 02-2 26.9 long at 113.9°, so the figure is the drawing's round number: likely). Until 28 October 2026 the tip on the 110° line, 26.6 long;
+       until 25 October 2026 the end 1.44 short of the 42° pin and the S 3.6 past the 60° (the sheets' 5 and 5), the tip on the back a third of the way from the nose
+       (99° from the hole): 24.4 long. The free end runs to the click wherever the click stands (rebuilt as it rides) */
     const spr=[],SPH=1.5,CKBK=CKL.slice(17,31);   /* CKBK: the click's back, its r 8 arc from the nose's tip to the boss */
     SPP.forEach((pp,i)=>{const m=tag(mesh(gMW,new THREE.BufferGeometry(),M.brass2),'050602-2');spr.push({m,pp,ck:gCK[1-i],last:null});
       for(const a of pp){const cg=new THREE.CylinderGeometry(0.3,0.3,1.6,12);cg.rotateZ(Math.PI/2);cg.translate(12.6,SPY,0);cg.rotateY(a);tag(mesh(gMW,cg,M.brass2),'050602-4');}});
     function sprGeo(o){const ck=o.ck,P=[],Y=SPY,V=(r,a)=>new THREE.Vector3(r*Math.cos(a),Y,-r*Math.sin(a));
-      const a0=o.pp[1]-5/12,a1=o.pp[1]+5/12;for(let i=0;i<=12;i++)P.push(V(12.0,a0+(a1-a0)*i/12));   /* along the wall from its end, the hole on the 60° pin halfway */
-      const aS=a1+8.5*D2R;for(let i=1;i<=6;i++){const f=i/6;P.push(V(12.0-1.6*(0.5-0.5*Math.cos(Math.PI*f)),a1+(aS-a1)*f));}   /* the S, in to r 10.4 */
-      /* its tip on the click's back where it crosses the line 110° round from the hole (or the back's nearer end), in this frame */
-      const aT=o.pp[1]+110*D2R,W=CKBK.map(q=>new THREE.Vector3(q[0],0,q[1]).applyAxisAngle(new THREE.Vector3(0,1,0),ck.rotation.y).add(ck.position)),rel=v=>wrap(angOf(v.x,v.z)-aT);
-      let E=Math.abs(rel(W[0]))<Math.abs(rel(W[W.length-1]))?W[0]:W[W.length-1];for(let k=0;k+1<W.length;k++){const u=rel(W[k]),w=rel(W[k+1]);if(u*w<=0&&u!==w){E=W[k].clone().lerp(W[k+1],u/(u-w));break;}}
-      const rE=Math.hypot(E.x,E.z)+0.21;let aE=angOf(E.x,E.z);while(aE<aS)aE+=TAU;while(aE>aS+TAU)aE-=TAU;
-      const n=Math.max(4,Math.ceil((aE-aS)/0.05));for(let i=1;i<=n;i++){const f=i/n;P.push(V(10.4+(rE-10.4)*f*f*f,aS+(aE-aS)*f));}
-      return ribbonHoleGeo(P,0.4,SPH,[{s:12.0*(o.pp[0]-a0),r:0.305},{s:5,r:0.305}]);}   /* its own holes Ø 0.6 +0.02 on both pins (05 06 02-2: the one 5 from the end figured, the end's "0,6∅" across the other's dashed lines, 18° from it, on the 42° pin, as 05 06 02 draws both pins through the spring; "0,8 -0,05" from its edge: on its middle, 0.75, the lower limit; a plain ribbon until 27 October 2026, the pins in the metal) */
+      const RO=11.825,RI=RO-1.6,RC=1.3,DS=15*D2R,TIPL=27.0;   /* the wall run's and the arm's middle radii, the formers' (1.1) plus half the strip, the S's span, the strip's length */
+      const a0=o.pp[1]-5/RO,a1=o.pp[1]+5/RO;for(let i=0;i<=12;i++)P.push(V(RO,a0+(a1-a0)*i/12));   /* along the wall from its end, the hole on the 60° pin halfway */
+      /* the S, in the frame of its start (on r RO at angle 0, heading round): a bend b1 in round the first former, a straight, a bend b1 - DS out round the second, onto r RI at DS */
+      const cs=Math.cos(a1),sn=Math.sin(a1),pt=(X,Z)=>new THREE.Vector3(X*cs-Z*sn,Y,-(X*sn+Z*cs)),c1=[RO-RC,0],c2=[RI*Math.cos(DS)+RC*Math.cos(DS),RI*Math.sin(DS)+RC*Math.sin(DS)];
+      const ends=b=>{const h=Math.PI/2+b,P1=[c1[0]+RC*Math.cos(h-Math.PI/2),c1[1]+RC*Math.sin(h-Math.PI/2)],Q=[c2[0]+RC*Math.cos(h+Math.PI/2),c2[1]+RC*Math.sin(h+Math.PI/2)];return[P1,Q,Math.cos(h)*(Q[1]-P1[1])-Math.sin(h)*(Q[0]-P1[0])];};
+      let lo=0.5,hi=1.2;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(ends(m)[2]>0)lo=m;else hi=m;}const b1=(lo+hi)/2;   /* 47.3°, the straight 1.58: 02-2 draws 51-55° and 36-40° round formers 15° apart (its step there drawn 1.82 for the figured 1.6) */
+      for(let i=1;i<=8;i++){const h=Math.PI/2+b1*i/8;P.push(pt(c1[0]+RC*Math.cos(h-Math.PI/2),c1[1]+RC*Math.sin(h-Math.PI/2)));}
+      for(let i=0;i<=8;i++){const h=Math.PI/2+b1-(b1-DS)*i/8;P.push(pt(c2[0]+RC*Math.cos(h+Math.PI/2),c2[1]+RC*Math.sin(h+Math.PI/2)));}
+      const aS=a1+DS,len=Q=>{let l=0;for(let i=1;i<Q.length;i++)l+=Q[i].distanceTo(Q[i-1]);return l;},L0=len(P);
+      /* its tip on the click's back where the strip's 27.0 ends (or the back's nearer end), in this frame: the arm drawn out from r RI onto the back where it crosses the line at aT, aT found so the whole is TIPL */
+      const W=CKBK.map(q=>new THREE.Vector3(q[0],0,q[1]).applyAxisAngle(new THREE.Vector3(0,1,0),ck.rotation.y).add(ck.position));
+      const arm=aT=>{const rel=v=>wrap(angOf(v.x,v.z)-aT);let E=Math.abs(rel(W[0]))<Math.abs(rel(W[W.length-1]))?W[0]:W[W.length-1];for(let k=0;k+1<W.length;k++){const u=rel(W[k]),w=rel(W[k+1]);if(u*w<=0&&u!==w){E=W[k].clone().lerp(W[k+1],u/(u-w));break;}}
+        const rE=Math.hypot(E.x,E.z)+0.21;let aE=angOf(E.x,E.z);while(aE<aS)aE+=TAU;while(aE>aS+TAU)aE-=TAU;
+        const n=Math.max(4,Math.ceil((aE-aS)/0.05)),A=[P[P.length-1]];for(let i=1;i<=n;i++){const f=i/n;A.push(V(RI+(rE-RI)*f*f*f,aS+(aE-aS)*f));}return A;};
+      let tl=o.pp[1]+90*D2R,th=o.pp[1]+135*D2R;for(let i=0;i<30;i++){const m=(tl+th)/2;if(L0+len(arm(m))<TIPL)tl=m;else th=m;}const A=arm((tl+th)/2);P.push(...A.slice(1));
+      const g=ribbonHoleGeo(P,0.4,SPH,[{s:RO*(o.pp[0]-a0),r:0.305},{s:5,r:0.305}]);g.userData.len=L0+len(A);g.userData.tipA=((tl+th)/2-o.pp[1])/D2R;return g;}   /* its own holes Ø 0.6 +0.02 on both pins (05 06 02-2: the one 5 from the end figured, the end's "0,6∅" across the other's dashed lines, 18° from it, on the 42° pin, as 05 06 02 draws both pins through the spring; "0,8 -0,05" from its edge: on its middle, 0.75, the lower limit; a plain ribbon until 27 October 2026, the pins in the metal) */
     /* the maintaining spring 05 06 01-1 (Gegenfeder; Bandstahl 35 × 1.75, hardened in oil, blued at 310°, its ends tempered at 400°): an open ring Ø 32.3 -0.1, 2 wide, 1.35
        -0.1 thick (drawn 1.3, the kompl. sheet's finished 1.3), its eye turned in at 0° (r 1.8, the hole 1.2 H7 on the 0° line: EYO, above), widened inward to 4 at its square end, 6
        short of the eye, its other hole 1.2 H7 on r 14.2 at 65° from the eye: the outline from 05 06 01-1, its inner edge three arcs traced on the sheet (5:1, 17.26 px/mm by
