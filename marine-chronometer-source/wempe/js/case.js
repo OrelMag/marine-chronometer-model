@@ -245,7 +245,7 @@ const WCASE=(()=>{
        brackets hold them 5.3 under the bowl's top (YP); the Soviet 6MX's (Kirov No. 247's) 1.7 over it, so its bowl hangs 7.0 lower in the gimbals (DY6, rev) */
     const prt=(par,name,y=0)=>{const g=new THREE.Group();g.userData.partName=name;g.position.y=y;par.add(g);return g;};
     /* the versions (movement.js's setRev; app.js shows each group whose rev lists the version): rv(par, 'last first 1943' or '6mx': the escapement of 1943 has the drawings' case) a group of the pieces only those versions have */
-    const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};
+    const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;g.userData.sub='case';par.add(g);return g;};   /* the Variants' Case (movement.js's SUBS); the key's are its Key */
     /* the case's own brass (bowl, bezel, gimbal ring and bracket, the transit lock's bracket), which the Variants' black case (setCase, below) lacquers black: Wempe
        No. 3044's (milivault_529241_wempe3044_screen.png, a Kriegsmarine chronometer: its bowl, bezel and gimbal ring black, the bezel's glass in a bright edge; the transit
        lock's bracket a black block, its knob and the pivots brass) */
@@ -341,7 +341,7 @@ const WCASE=(()=>{
            on block 52, +, 176-195°; B on block 57, −, 212-231°: train.js, WD.CONTACT6); outside, each spring's two slotted brass screws (heads Ø 5.6) and its terminal, a brass
            socket Ø 6.4 with a 3.0 hole standing 2 proud, each on a black fibre washer, all at y −27.5: A's at 178.4°, 189.3° and its + socket 200.6°, B's at 215.7°, 225.2° and
            − 235.9° (±1-3°, the case bracket's pivot taken as 180°): likely in kind and place; the springs' sizes estimated (±15 %). Bearings as frame.js's brg */
-        {const gC=new THREE.Group();gC.userData.rev='6mx';gC.userData.contact=true;bowl.add(gC);const pol=(t,r,y)=>[-r*Math.sin(t*D2R),y,-r*Math.cos(t*D2R)],inw=t=>[Math.sin(t*D2R),0,Math.cos(t*D2R)];
+        {const gC=new THREE.Group();gC.userData.rev='6mx';gC.userData.sub='case';gC.userData.contact=true;bowl.add(gC);const pol=(t,r,y)=>[-r*Math.sin(t*D2R),y,-r*Math.cos(t*D2R)],inw=t=>[Math.sin(t*D2R),0,Math.cos(t*D2R)];
           const yF=-27.5,rI=49,arcB=(t0,t1,r0,r1,y0,y1)=>{const n=Math.max(4,Math.ceil(Math.abs(t1-t0)/2)),A=[],B=[];for(let i=0;i<=n;i++){const t=(t0+(t1-t0)*i/n)*D2R;A.push([-r1*Math.sin(t),-r1*Math.cos(t)]);B.push([-r0*Math.sin(t),-r0*Math.cos(t)]);}return{loop:[...A,...B.reverse()],y0,y1};};
           for(const[F0,F1,T0,T1,S1,S2,SK,id]of/** @type {[number,number,number,number,number,number,number,string][]} */([[174.4,203.6,176,195,178.4,189.3,200.6,'+'],[211.7,238.9,212,231,215.7,225.2,235.9,'−']])){
             const c1=arcB(F0,F1,rI-1,rI,yF-2.75,yF+2.75);c1.loop=KIT.area(c1.loop)>0?c1.loop:c1.loop.slice().reverse();tag(mesh(gC,solidGeo([c1]),M.packing),'6MX.cfi');   /* the insulating strip on the bore */
@@ -919,7 +919,7 @@ const WCASE=(()=>{
        Ø 9.14 to 14.5 over 10, from 33.0); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
        middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
     const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:36.47),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
-    {const g=new THREE.Group();g.userData.rev='last 6mx 1943';key.add(g);
+    {const g=new THREE.Group();g.userData.rev='last 6mx 1943';g.userData.sub='key';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return KIT.latheF(q.map(([r,y])=>V2(r,y)),n);};
       const T=50.1,B0=T+8-25.1,BT=B0+25.1,sq=3.15/Math.SQRT2;
       tag(mesh(g,smoothRev(solidGeo(cells([2.3,2.975],[[0,19],[p=>(rr(p)-2.3)*2.5/0.675,19]],[[{p:[[sq,0],[0,sq],[-sq,0],[0,-sq]],a:0,b:19}]]))),M.brass),'050102-3');   /* the socket end: the square, the relief */
@@ -995,7 +995,7 @@ const WCASE=(()=>{
        with its collar brass, the screw steel: Wempe No. 6161's key (antiquorum_208-4_wempe6161.jpg, px 2350-3050 × 2200-2900: the pear-shaped handle about Ø 35.6 and the
        collar with its slotted screw brass; the body under it not seen: sure for the handle and collar), which the sheet doesn't give (black, as the later key's, until 18 October
        2026). It stands in the holder as the later key does, on its cone (KEYREST) */
-    {const g=new THREE.Group();g.userData.rev='first';key.add(g);   /* placed by the key part (KEYREST, keyAt): the same frame, its stem's end at 0 */
+    {const g=new THREE.Group();g.userData.rev='first';g.userData.sub='key';key.add(g);   /* placed by the key part (KEYREST, keyAt): the same frame, its stem's end at 0 */
       const lathe=(pr,n=48)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return KIT.latheF(q.map(([r,y])=>V2(r,y)),n);};
       tag(mesh(g,lathe([[3.0,31.7],[5.16,31.7],[8.95,51.0],[10.25,51.0],[10.25,54.0],[0,54.0],[0,45.0],[3.0,45.0]]),M.brass),'127556.02-02');   /* the body and collar, the stem pressed 13.3 into it (estimated) */
       tag(mesh(g,lathe([[1.55,0],[2.1,0],[3.0,0.9],[3.0,45.0],[0,45.0],[0,28.0],[1.55,27.2]]),M.brass),'127556.02-03');
