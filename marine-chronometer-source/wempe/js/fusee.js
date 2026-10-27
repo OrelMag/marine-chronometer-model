@@ -593,19 +593,22 @@ const WFUSEE=(()=>{
         tag(mesh(g,cupH.clone(),M.gilt),'050602-1',1)]);}}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the clicks 05 06 02-3 (Sperrkegel; Bandstahl 11 × 2, hardened, blued at 295°): 10.05 -0.1 long, 1.82 -0.04 thick, the pivot hole 1.2 H7 5.2 from the nose's foot and from
        the tail's tip, the nose 2 high, the back an arc r 8, the underside hollowed r 3 about a point 2.78 and 3.54 from the hole; traced on the sheet (10:1, 33.8 px/mm) between
-       those figures. The base line 1.52 under the hole: the r 3 hollow's chord there ends at the nose's foot, 5.2 from the hole (scaled 1.545: sure); the nose's face at 85° to
+       those figures. The base line 1.5 under the hole, tangent to the boss's thin Ø 3 circle: the r 3 hollow's chord there ends at the nose's foot 5.201 from the hole, the
+       "5,2 -0,1" (a radius about the pivot: the sheet draws its arc through the nose's foot); it scales 1.52-1.545, and was built at 1.52 until 28 October 2026, which put the
+       foot 5.224 out, past the figure (the second drawing check, 3-M2); the nose's face at 85° to
        it, leaning back toward the pivot (scaled 85.1°, sure), so its tip 2 over the base line and 0.17 nearer the pivot than its foot. Until 15 October 2026 the base line lay
        1.68 under the hole and the face 1.84 tall, leaning out (91.6°). Each turns on its screw's shoulder, seated by the click wheel (seat(), below) */
-    const CKB=-1.52,CKN=[-2.78-Math.sqrt(9-(3.54+CKB)**2),CKB],CKT=[CKN[0]+2/Math.tan(85*D2R),CKB+2];   /* the base line, the nose's foot and its tip */
+    const CKB=-1.5,CKN=[-2.78-Math.sqrt(9-(3.54+CKB)**2),CKB],CKT=[CKN[0]+2/Math.tan(85*D2R),CKB+2];   /* the base line, the nose's foot and its tip */
     const CKL=(()=>{const o=[],arc=(c,r,a0,a1,n)=>{for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;o.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}};
       const C3=[-2.78,-3.54],h0=[-2.78+Math.sqrt(9-(3.54+CKB)**2),CKB],q8=(()=>{const A=CKT,B=[-0.4,1.45],m=[(A[0]+B[0])/2,(A[1]+B[1])/2],d=[B[0]-A[0],B[1]-A[1]],l=Math.hypot(...d),h=Math.sqrt(64-l*l/4);return[m[0]+d[1]/l*h,m[1]-d[0]/l*h];})();
-      const TL=[0.585,1].map(v=>v/Math.hypot(0.585,1)),TC=[(1.738-0.2*Math.hypot(0.585,1)-(CKB+0.2))/0.585,CKB+0.2],T1=[TC[0]+0.2*TL[0],TC[1]+0.2*TL[1]],TB=Math.atan2(TL[1],TL[0]);   /* the top edge's normal, the tail's round r 0.2 (its centre, its point on the top edge) */
+      const TK=(()=>{let a=0.5,b=0.7;for(let i=0;i<50;i++){const k=(a+b)/2,s=Math.hypot(k,1);if(Math.hypot((1.5*s-0.2*s-(CKB+0.2))/k,CKB+0.2)+0.2>5.2)a=k;else b=k;}return(a+b)/2;})();   /* the top edge's slope: tangent to the boss, its tail's round reaching the sheet's 5.2 from the hole (0.581; scanned 0.585, which with the base at 1.5 leaves the tail 5.17) */
+      const TL=[TK,1].map(v=>v/Math.hypot(TK,1)),TC=[(1.5*Math.hypot(TK,1)-0.2*Math.hypot(TK,1)-(CKB+0.2))/TK,CKB+0.2],T1=[TC[0]+0.2*TL[0],TC[1]+0.2*TL[1]],TB=Math.atan2(TL[1],TL[0]);   /* the top edge's normal, the tail's round r 0.2 (its centre, its point on the top edge) */
       o.push([TC[0],CKB]);o.push(h0);   /* from where the tail's round meets the base line, along it to the hollow */
       arc(C3,3,Math.atan2(h0[1]-C3[1],h0[0]-C3[0]),Math.atan2(CKN[1]-C3[1],CKN[0]-C3[0]),14);   /* the hollow, from the base line back to the nose's foot */
       o.push(CKT);   /* the nose's face up to its tip */
       arc(q8,8,Math.atan2(CKT[1]-q8[1],CKT[0]-q8[0]),Math.atan2(1.45-q8[1],-0.4-q8[0]),12);   /* the back, r 8, to the boss */
       arc([0,0],1.5,Math.atan2(1.45,-0.4),TB,8);   /* round the boss to the top edge's tangent point */
-      o.push(T1);for(let i=1;i<8;i++){const a=TB+(-Math.PI/2-TB)*i/8;o.push([TC[0]+0.2*Math.cos(a),TC[1]+0.2*Math.sin(a)]);}return o;})();   /* the top edge, one line tangent to the boss (05 06 02-3: y = 1.738 - 0.585 x scanned), and the tail's round r 0.2 into the base line (scaled), its far point 5.21 from the hole, the sheet's 5.2 (until 26 October 2026 the edge kinked at (1.4, 1.0) to a sharp tip, up to 0.30 thin) */
+      o.push(T1);for(let i=1;i<8;i++){const a=TB+(-Math.PI/2-TB)*i/8;o.push([TC[0]+0.2*Math.cos(a),TC[1]+0.2*Math.sin(a)]);}return o;})();   /* the top edge, one line tangent to the boss (05 06 02-3: y = 1.738 - 0.585 x scanned; its slope set to 0.581, TK, so the tail's far point is the sheet's 5.2 with the base at 1.5), and the tail's round r 0.2 into the base line (scaled); overall 10.01, the 10,05 -0,1 (until 26 October 2026 the edge kinked at (1.4, 1.0) to a sharp tip, up to 0.30 thin) */
     const gCK=[];
     for(const c of CKP){const g=new THREE.Group();g.position.set(c[0],0,-c[1]);gMW.add(g);gCK.push(g);
       const xy=CKL.map(([x,y])=>[x,-y]);   /* mirrored: the sheet is seen from the back */
