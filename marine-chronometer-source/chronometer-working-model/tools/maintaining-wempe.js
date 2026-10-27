@@ -13,7 +13,7 @@
   if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const find=(id,sub)=>{const o=[];mv.traverse(m=>{if(m.isMesh&&m.userData.hn===id&&(sub===undefined||!!m.userData.sub===sub))o.push(m);});return o;};
   const vis=o=>{for(let h=o;h&&h!==mv;h=h.parent)if(!h.visible)return false;return true;};
-  const RAT=find('050602-1',false)[0],CKS=find('050602-3'),CW=find('050604-3')[0],DET=find('050505-1').filter(vis),WIRE=find('050506-1')[0];
+  const RAT=find('050602-1',false).filter(vis)[0],CKS=find('050602-3'),CW=find('050604-3')[0],DET=find('050505-1').filter(vis),WIRE=find('050506-1')[0];
   if(!RAT||CKS.length!==2||!CW||!DET.length||!WIRE)return JSON.stringify({fails:['parts: the ratchet, two clicks, the click wheel, the detent and its wire not all found'],cnt:{parts:1}});
   const inv=new T.Matrix4(),loc=o=>{mv.updateMatrixWorld(true);inv.copy(mv.matrixWorld).invert();return new T.Matrix4().multiplyMatrices(inv,o.matrixWorld);};
   const ang=o=>{const e=loc(o).elements;return Math.atan2(e[8],e[0]);};   /* its turn about y in the movement's frame */
