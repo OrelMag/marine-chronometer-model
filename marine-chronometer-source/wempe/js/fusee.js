@@ -637,7 +637,13 @@ const WFUSEE=(()=>{
        (99° from the hole): 24.4 long. The free end runs to the click wherever the click stands (rebuilt as it rides) */
     const spr=[],SPH=1.5,CKBK=CKL.slice(17,31);   /* CKBK: the click's back, its r 8 arc from the nose's tip to the boss */
     SPP.forEach((pp,i)=>{const m=tag(mesh(gMW,new THREE.BufferGeometry(),M.brass2),'050602-2');spr.push({m,pp,ck:gCK[1-i],last:null});
-      for(const a of pp){const cg=new THREE.CylinderGeometry(0.3,0.3,1.6,12);cg.rotateZ(Math.PI/2);cg.translate(12.6,SPY,0);cg.rotateY(a);tag(mesh(gMW,cg,M.brass2),'050602-4');}});
+      /* their rivets 05 06 02-4 (the coloured section's "Niet"; 05 06 02 draws each with a rounded head on both sides, about 0.2 high, past the wall's outer face and inside the
+         spring's inner face: the second drawing check, 3-M6): the shank Ø 0.6 through the spring and the cup's wall, a domed head 0.2 high each side, Ø 1.0 (estimated: no
+         sheet sizes the heads), seated on the spring's inner face (r 11.625, its base 0.012 inside so it clears the face's curve) and the wall's outer face (r 13.0). Until 28
+         October 2026 plain pins Ø 0.6 × 1.6, flush with the spring inside and 0.4 proud of the wall */
+      const RV=(()=>{const cap=(u0,sg)=>{const o=[];for(let i=0;i<=8;i++){const a=Math.atan2(0.5,0.725-0.2)*(1-i/8);o.push([0.725*Math.sin(a),u0+sg*(0.725*Math.cos(a)-0.525)]);}return o;};
+        return[...cap(11.613,-1).reverse(),[0.3,11.613],[0.3,13.002],...cap(13.002,1)];})();
+      for(const a of pp){const cg=turned(RV,16);cg.rotateZ(-Math.PI/2);cg.translate(0,SPY,0);cg.rotateY(a);tag(mesh(gMW,cg,M.brass2),'050602-4');}});
     function sprGeo(o){const ck=o.ck,P=[],Y=SPY,V=(r,a)=>new THREE.Vector3(r*Math.cos(a),Y,-r*Math.sin(a));
       const RO=11.825,RI=RO-1.6,RC=1.3,DS=15*D2R,TIPL=27.0;   /* the wall run's and the arm's middle radii, the formers' (1.1) plus half the strip, the S's span, the strip's length */
       const a0=o.pp[1]-5/RO,a1=o.pp[1]+5/RO;for(let i=0;i<=12;i++)P.push(V(RO,a0+(a1-a0)*i/12));   /* along the wall from its end, the hole on the 60° pin halfway */
