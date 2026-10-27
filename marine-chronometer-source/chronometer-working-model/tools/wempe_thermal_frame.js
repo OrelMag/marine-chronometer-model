@@ -16,8 +16,8 @@
 // Two sets of constants: their middle, and the corner of the published ranges that moves each part most (brass the most, steel the least); judged on the corner.
 // What it found (27 October 2026): the lock hardly moves (0.13 µm), but the gold spring's tip does, 1.8-2.3 µm from the staff at 36 °C (the steel detent from its
 // brass-held foot), and the Wempe has little let-off to give (1.50° drawn, the cliff about 1.0-1.1°, where the tooth runs a pitch before it lands on the impulse stone:
-// makeEsc and dynamics.js --model wempe in time agree). So the lock window that holds over 4-36 °C is narrower than wempe_tolerances.js's at 20 °C alone, and the
-// bench's middle lies past it; it also searches that window's top.
+// makeEsc and dynamics.js --model wempe in time agree). So the lock window that holds over 4-36 °C is about half the one at 20 °C alone; since that day (the owner's
+// choice) wempe_tolerances.js takes it as its window (wempe_escheat.js), and this tool checks the bench's aim inside it and searches its top again.
 // Exits 1 if a mesh's depth moves a tenth of its window's side, no endshake set at 20 °C holds its band at both ends, or, with the drawn lock and the constants' middle,
 // the escapement loses its impulse, the swing leaves the guard band, the stone passes 1 µm into a tooth, or the rate's share passes the TU's C or S. The drawn lock at the
 // constants' corner, the bench's lock and the window over the range are reported (~~): the owner's to settle. About 2½ minutes.
@@ -56,8 +56,8 @@ head('3. The escapement (makeEsc in the brass wheel\'s frame, the steel, gold an
 const ES=S.ES;
 const HS=[0,12,24,36,48,55],wind=(e,kd)=>{let mn=1e9,mx=-1e9;for(let h=0;h<=56;h+=2){const a=e.ampAt(P.drv(h/P.HPT)*kd)*D;mn=Math.min(mn,a);mx=Math.max(mx,a);}return[mn,mx];};
 const rate=(e,kd,h)=>{const s=P.drv(h/P.HPT)*kd,a=e.ampAt(s);return{A:a*D,r:e.rateAt(a,s)};},inG=w=>w[0]>=G.guard[0]&&w[1]<=G.guard[1];
-const m0=E0.measure(),w0=wind(E0,1),r0=HS.map(h=>rate(E0,1,h)),aim=(LK.shallow+LK.deep)/2;
-say(`at ${T0} °C: depth of lock ${f(S.dL*ES*1000,1)} µm (the window ${f(LK.shallow*1000,1)}-${f(LK.deep*1000,1)}, wempe_tolerances.js, its top where the let-off runs out: ${f(LK.at.deep.letoff,2)}°; the bench sets it to its middle, ${f(aim*1000,1)}), lock ${f(m0.lock,2)}°, let-off ${f(m0.letoff,2)}°, overall ${f(m0.overall,2)}°, drop ${f(m0.drop,2)}°; the swing ${f(w0[0],1)}-${f(w0[1],1)}° over the wind`);
+const m0=E0.measure(),w0=wind(E0,1),r0=HS.map(h=>rate(E0,1,h)),aim=LK.aim??(LK.shallow+LK.deep)/2;
+say(`at ${T0} °C: depth of lock ${f(S.dL*ES*1000,1)} µm (the window ${f(LK.shallow*1000,1)}-${f(LK.deep*1000,1)}, wempe_tolerances.js, its top where the let-off runs out: ${f(LK.at.deep.letoff,2)}°; the bench's aim ${f(aim*1000,1)}), lock ${f(m0.lock,2)}°, let-off ${f(m0.letoff,2)}°, overall ${f(m0.overall,2)}°, drop ${f(m0.drop,2)}°; the swing ${f(w0[0],1)}-${f(w0[1],1)}° over the wind`);
 const RT={};
 for(const[sn,dL0]of[['drawn',S.dL],['bench',aim/ES]])for(const[kn,k]of[['mid',K.mid],['most',K.most]])for(const t of TS){const{o,E,kd,dr,dt}=at(k,t,dL0),m=E.measure(),w=wind(E,kd);
   const rr=sn==='drawn'?HS.map(h=>rate(E,kd,h)):null;if(rr)(RT[kn]=RT[kn]||{})[t]=rr;

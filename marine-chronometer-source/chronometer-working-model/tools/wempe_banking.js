@@ -25,7 +25,7 @@ const kid=(rev,a,b)=>new Promise((ok,no)=>cp.execFile(process.execPath,['-e',
 const half=Math.ceil(DS.length/2),run=rev=>Promise.all([kid(rev,0,half),kid(rev,half,DS.length)]).then(([p,q])=>({d0:r(p.d0,4),
   rows:[...p.o,...q.o].map(([d,u,lk,lo,am,sw])=>[d,u,r(lk,2),r(lo,2),r(am,2),sw.map(([a,t])=>[r(a,2),r(t,3)])])}));
 Promise.all([run('last'),run('6mx')]).then(([last,six])=>{
-  const WB={S,pitch:0.25,win:{shallow:TOL.shallow,deep:TOL.deep,ring:TOL.ring,tip:TOL.tip,liftMax:TOL.liftMax},last,'6mx':six};
+  const WB={S,pitch:0.25,win:{shallow:TOL.shallow,deep:TOL.deep,aim:TOL.aim??(TOL.shallow+TOL.deep)/2,ring:TOL.ring,tip:TOL.tip,liftMax:TOL.liftMax},last,'6mx':six};
   const js=`/* bankdata.js: the Wempe's banking screw turned (Swing and isochronism, Banking screw), written by marine-chronometer-source/chronometer-working-model/tools/wempe_banking.js
    --write: generated, don't edit (rerun the tool; without --write it checks this file). Part of the Wempe model; declares only WBANK (the tool's header says what it holds). */
 const WBANK=${JSON.stringify(WB)};

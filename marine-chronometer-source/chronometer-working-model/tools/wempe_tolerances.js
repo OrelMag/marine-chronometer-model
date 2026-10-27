@@ -84,6 +84,9 @@ const d0=S.dL*S.ES;let dDeep=(()=>{let a=d0,b=d0+(BREV?0.08:0.03);for(let i=0;i<
    published constants' middle; at their corner none does: README, Unresolved) caps the window; the lock moves only 0.1 µm, so its floor stays */
 const HT=require('./wempe_escheat.js')(W),hotOk=d=>{const{E:e,kd}=HT.at(HT.K.mid,HT.TS[1],d/S.ES),m=e.measure();return m.runs&&e.ampAt(dmin*kd)*D>=GUARD[0];};
 const dHot=(()=>{let a=d0-0.006,b=dDeep;if(hotOk(b))return b;for(let i=0;i<14;i++){const m=(a+b)/2;hotOk(m)?a=m:b=m;}return a;})(),dDeep20=dDeep;dDeep=Math.min(dDeep,dHot);
+/* the bench's aim: the window's middle, but as last revised just under its top (the owner's choice, 27 October 2026): a worn tooth's tip only makes the lock shallower, away from
+   the let-off's cliff, and the dry escapement's wear (wempe_wear.js, 2.1 µm a year) wants about 6.2 µm over the floor for the 1954 instruction's three years between overhauls */
+const aimL=BREV?(dShal+dDeep)/2:dDeep-0.0001;
 const L0=lockAt(d0),LS=lockAt(dShal),LD=lockAt(dDeep-0.002),liftMax=Math.max(...E.LI)*E.BL/E.LEN*E.ES;
 say(`as drawn ${f(d0,3)} mm deep: lock ${f(L0.lock,1)}°, let-off ${f(L0.letoff,1)}°, the stone lifted ${f(L0.lRel,3)} mm at the release; ${f(L0.Amin,1)}-${f(L0.A,1)}° (the wind's lowest, 12 h)`);
 say(`deepest that unlocks with the swing in the guard band: ${f(dDeep20,4)} mm at 20 °C, ${f(dHot,4)} set at 20 °C to hold at 36 °C (wempe_thermal_frame.js: the gold spring's tip drawn back, the let-off taken; the window's top ${f(dDeep,4)})`);
@@ -111,7 +114,7 @@ const J={note:'tools/wempe_tolerances.js: how closely the Wempe\'s parts the dra
   mainspring:{t:t0,tMeasured:r4(tm),s:[r4(sLo),r4(sTop)],sSwing:[r4(sLo),r4(sHi)],t_mm:[r4(t0*Math.cbrt(sLo)),r4(t0*Math.cbrt(sTop))],tMeasured_mm:[r4(tm*Math.cbrt(sLo)),r4(tm*Math.cbrt(sTop))],g262:{mean:r4(gMean),full:gFull,low:gLow,band:[r4(gMean*sLo),r4(gMean*sTop)]},rate:[r4(rLo),r4(rHi)],stressGPa:r4(sM/1e9),sStress:r4(sStress),sources:{s:r4(sLoS),t_mm:r4(t0*Math.cbrt(sLoS)),g262:r4(gMean*sLoS)}},
   detent:{t:r4(td),k:[0,r4(kdHi)],t_mm:[0,r4(tdHi)],inTime:[r4(td/Math.cbrt(2)),r4(td*Math.cbrt(2))],t09:{k:r4(k09),A:A09.map(r4)},A0:r4(Ak0),preload:{g:S.W78,min:r4(wLo),max:r4(wHi),back:WBACK,swing:r4(wSw),margin:r4(wTrip),knock:r4(wKnock),rows:PRE}},
   gold:{t:0.15,E:90,k:[0,r4(kpHi)],t_mm:r4(0.15*Math.cbrt(kpHi)),E_max:r4(90*kpHi),A0:r4(Ap0),half:Ap5.map(r4)},
-  lock:{d:r4(d0),deep:r4(dDeep),deep20:r4(dDeep20),hot:r4(dHot),shallow:r4(dShal),ring:r4(RING),tip:r4(dTip),liftMax:r4(liftMax),at:{drawn:{lock:r4(L0.lock),letoff:r4(L0.letoff),A:r4(L0.A),Amin:r4(L0.Amin)},deep:{lock:r4(LD.lock),letoff:r4(LD.letoff),Amin:r4(LD.Amin)},shallow:{lock:r4(LS.lock),A:r4(LS.A),Amin:r4(LS.Amin)}}},
+  lock:{d:r4(d0),deep:r4(dDeep),deep20:r4(dDeep20),hot:r4(dHot),aim:r4(aimL),shallow:r4(dShal),ring:r4(RING),tip:r4(dTip),liftMax:r4(liftMax),at:{drawn:{lock:r4(L0.lock),letoff:r4(L0.letoff),A:r4(L0.A),Amin:r4(L0.Amin)},deep:{lock:r4(LD.lock),letoff:r4(LD.letoff),Amin:r4(LD.Amin)},shallow:{lock:r4(LS.lock),A:r4(LS.A),Amin:r4(LS.Amin)}}},
   hairspring:{T:r4(T),fast:r4(fast),perUm:r4(perH),perCoil001:r4(perC),perMm:r4(perL),perGPa:r4(perE),hNeed:r4(hNeed),hNeedE:hE.map(r4).reverse(),weights:{m:TW.m,r:r4(rTW),secTurn:r4(secTurn),reach:r4(reach),turnsIn:r4(turnsIn),gain:r4(gain)}}};
 const OUT=path.join(__dirname,`tolerances_wempe${SUF}.json`),txt=JSON.stringify(J,null,1)+'\n';
 console.log(rows.join('\n'));
