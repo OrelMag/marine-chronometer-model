@@ -18,10 +18,10 @@
   const inv=new T.Matrix4(),loc=o=>{mv.updateMatrixWorld(true);inv.copy(mv.matrixWorld).invert();return new T.Matrix4().multiplyMatrices(inv,o.matrixWorld);};
   const ang=o=>{const e=loc(o).elements;return Math.atan2(e[8],e[0]);};   /* its turn about y in the movement's frame */
   /* a mesh's triangles in its own frame, each with its box */
-  const TRI=new Map(),tri=o=>{if(TRI.has(o))return TRI.get(o);const g=o.geometry,p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,t=new Float64Array(n*3),bx=new Float64Array(n/3*6),bb=new T.Box3(),v=new T.Vector3();
+  const TRI=new Map(),tri=o=>{if(TRI.has(o.geometry))return TRI.get(o.geometry);const g=o.geometry,p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,t=new Float64Array(n*3),bx=new Float64Array(n/3*6),bb=new T.Box3(),v=new T.Vector3();
     for(let i=0;i<n;i++){v.fromBufferAttribute(p,ix?ix[i]:i);t.set([v.x,v.y,v.z],3*i);bb.expandByPoint(v);}
     for(let k=0;k<n/3;k++){for(let a=0;a<3;a++){bx[6*k+a]=Math.min(t[9*k+a],t[9*k+3+a],t[9*k+6+a]);bx[6*k+3+a]=Math.max(t[9*k+a],t[9*k+3+a],t[9*k+6+a]);}}
-    const r={t,bx,bb,n:n/3};TRI.set(o,r);return r;};
+    const r={t,bx,bb,n:n/3};TRI.set(o.geometry,r);return r;};   /* by geometry: the wire's is rebuilt as the detent rides (cached by mesh until 27 October 2026, so the wire was measured as first built) */
   /* the closest point on a triangle (Ericson, Real-Time Collision Detection 5.1.5): its distance */
   const cpt=(p,a,b,c)=>{const ab=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],ac=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],ap=[p[0]-a[0],p[1]-a[1],p[2]-a[2]],dt=(u,w)=>u[0]*w[0]+u[1]*w[1]+u[2]*w[2],ds=q=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2]);
     const d1=dt(ab,ap),d2=dt(ac,ap);if(d1<=0&&d2<=0)return ds(a);const bp=[p[0]-b[0],p[1]-b[1],p[2]-b[2]],d3=dt(ab,bp),d4=dt(ac,bp);if(d3>=0&&d4<=d3)return ds(b);
@@ -60,8 +60,8 @@
       if(w)info.wound++;
       if(!w&&prev.w){const c=dF-dG;info.catches.push(c*D);if(c<-1e-9||c>=P35)fail('catch',`${at}: the key let go, the fusee caught ${(c*D).toFixed(3)} deg against the ratchet (0 to ${(P35*D).toFixed(2)}, a click wheel's tooth)`);}}
     const gc=CKS.map(c=>gap([c],[CW])),gd=gap(DET,[RAT]),gw=gap([WIRE],DET);
-    /* in their teeth: past 0.012, the precision fusee.js seats them to (seat() against a table of the outline's radius every 0.044 deg, which cuts across the ratchet's sharp
-       tips by up to 0.01); the wire bearing within 0.025 (wireDef clears its section at the arm's upper face in four steps, which leaves it up to 0.019 in, 16 October 2026) */
+    /* in their teeth: past 0.012, the precision fusee.js seats them to (seat() against a table of the outline's radius every 0.044 deg; for the maintaining detent the higher
+       of the two rays about each angle and its outline every 0.01 since 27 October 2026, so it stays 0.01-0.025 off); the wire bearing within 0.025 (wireDef clears its section at the arm's upper face in four steps, which leaves it up to 0.019 in, 16 October 2026) */
     gc.forEach((g,i)=>{mm(info.ck,g);if(g<-0.012)fail('click',`${at}: click ${i} ${(-g).toFixed(3)} into the click wheel`);if(g>0.06)fail('click',`${at}: click ${i} ${g.toFixed(3)} off the click wheel`);});
     mm(info.det,gd);if(gd<-0.012)fail('detent',`${at}: the maintaining detent ${(-gd).toFixed(3)} into the ratchet`);if(gd>0.06)fail('detent',`${at}: the maintaining detent ${gd.toFixed(3)} off the ratchet`);
     mm(info.wire,gw);if(gw<-0.025||gw>0.025)fail('wire',`${at}: the wire spring ${gw.toFixed(3)} from the detent (bearing on it wanted)`);
