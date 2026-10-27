@@ -15,7 +15,7 @@
    "sheet": "05 06_20",
    "when": "the chain on, the barrel set up ¾ turn, before the train goes in",
    "how": "As Herb. Müller did in 1941 (05 06_20: \"Hebellänge 262 m/m\", the mean of two runs): a lever 262 mm long on the fusee arbor, and the weight (g) that holds it level read at each half turn running down from full wind (8.75 turns of the fusee, the curve's 0.05 to 8.74), twice; or a torque gauge (1 g on 262 mm is 2.57 mN·m).",
-   "pass": "Each reading within ×0.893-1.194 of the sheet's at the same turn (its readings' mean 132.7 g: 118.6-158.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 2.10 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 174.7 g mean (×1.316): open (README, Unresolved)."
+   "pass": "Each reading within ×0.893-1.194 of the sheet's at the same turn (its readings' mean 132.7 g: 118.6-158.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 2.10 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 174.6 g mean (×1.316): open (README, Unresolved)."
   },
   {
    "id": "depths",
@@ -47,7 +47,7 @@
    "sheet": "05 03, 05 04",
    "when": "the balance, hairspring and detent in, the train held still at a lock; before the mainspring is chosen",
    "how": "Give the balance a full swing (a twist of the movement) and let it run down, the train held. Film it from above at 30 frames a second, a card marked every 30° under it, and read the swing every few seconds (python wempe_swing.py reads a video so); time how long it takes to halve from about 207°.",
-   "pass": "The model's balance halves its swing in 45 s (its TF 111 s; a running 6MX on video, moMvyx8eXfo, has TF 133-332 s at it: wempe_startup.js, which the model's TF is set from). Halving in 37, 42, 45, 48, 55, 61 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 178, 192, 197, 202, 221, 239° at 12 h; the guard's 180° at the wind's lowest wants ×1.069, 0.927, 0.893, 0.835, 0.780, 0.699 of it, the sources' 225° ×1.558, 1.399, 1.316, 1.250, 1.079, 0.958 (the strip as the drive's cube root). Shorter than 37 s, look for a pivot, the endstone or the detent's springs dragging."
+   "pass": "The model's balance halves its swing in 45 s (its TF 111 s, set from an earlier fit of a running 6MX on video, moMvyx8eXfo, which now gives TF 133-154 s at it: wempe_startup.js). Halving in 37, 42, 45, 48, 55, 61 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 178, 192, 197, 202, 221, 239° at 12 h; the guard's 180° at the wind's lowest wants ×1.070, 0.927, 0.893, 0.835, 0.780, 0.699 of it, the sources' 225° ×1.559, 1.398, 1.315, 1.250, 1.079, 0.958 (the strip as the drive's cube root). Shorter than 37 s, look for a pivot, the endstone or the detent's springs dragging."
   },
   {
    "id": "detent",
@@ -63,7 +63,7 @@
    "sheet": "05 04_1, 05 04 01-4",
    "when": "the detent, its gold spring and the balance in; the train's power let down",
    "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
-   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -10.7° of the balance (05 04_1's −12°), the wheel released at 2.2° (lock 12.9°), the gold spring off the stone at 3.7° (let-off 1.5°), the return swing past it at -20.1° (overall 23.7°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.238 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 3 µm over its floor): never shallower than 0.232 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.244 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.78 g rider must leave the detent on its banking and a 0.80 g one part it; aim near 0.79 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.78 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 3.8° of swing; never over 0.80 g: above it the stone, falling back after the release, lands again on the escaping tooth's back during the impulse, where the models part: dynamics.js with brass's restitution). The return pass: turn the balance back slowly by hand through the discharge with the train's power on and watch the locking stone under a loupe: the discharge stone must bend the gold spring aside without lifting the detent (wempe_tripping.js: as the model takes the stone's contact on the gold spring no tooth gets past over 333 gold's whole range of modulus, 83-110 GPa, but at 4 times that contact's stiffness 6 in 12 do, whatever the alloy: only the made spring can show it); its tip at rest 0.10-0.15 short of the discharge stone and 0.35-0.40 past the detent's end (the 1958 Navy repair book's checks, p. 60)."
+   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -10.7° of the balance (05 04_1's −12°), the wheel released at 2.2° (lock 12.9°), the gold spring off the stone at 3.7° (let-off 1.5°), the return swing past it at -20.1° (overall 23.7°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.238 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 3 µm over its floor): never shallower than 0.232 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.244 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.78 g rider must leave the detent on its banking and a 0.80 g one part it; aim near 0.79 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.78 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 3.5° of swing; never over 0.80 g: above it the stone, falling back after the release, lands again on the escaping tooth's back during the impulse, where the models part: dynamics.js with brass's restitution). The return pass: turn the balance back slowly by hand through the discharge with the train's power on and watch the locking stone under a loupe: the discharge stone must bend the gold spring aside without lifting the detent (wempe_tripping.js: as the model takes the stone's contact on the gold spring no tooth gets past over 333 gold's whole range of modulus, 83-110 GPa, but at 4 times that contact's stiffness 6 in 12 do, whatever the alloy: only the made spring can show it); its tip at rest 0.10-0.15 short of the discharge stone and 0.35-0.40 past the detent's end (the 1958 Navy repair book's checks, p. 60)."
   },
   {
    "id": "swing",
@@ -71,7 +71,7 @@
    "sheet": "—",
    "when": "the movement running, fully wound, at 24 h and near run-down",
    "how": "Read the balance's swing against marks under it, from a phone's slow-motion video (python wempe_swing.py reads the arm's sweep), or from a recording of the beat (python acoustic.py --model wempe FILE fits its clicks to the escapement in time).",
-   "pass": "In the guard band, 180-270° each way, over the whole wind (the model 192.5-203.9°, 197.4° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
+   "pass": "In the guard band, 180-270° each way, over the whole wind (the model 192.2-200.9°, 197.1° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
   },
   {
    "id": "maintaining",
@@ -156,9 +156,9 @@
    ],
    "rms": 0.02105,
    "sources": {
-    "s": 1.3164,
-    "t_mm": 0.4055,
-    "g262": 174.7394
+    "s": 1.3156,
+    "t_mm": 0.4054,
+    "g262": 174.6281
    }
   },
   "depths": {
@@ -580,48 +580,48 @@
    "TF": 111,
    "video": [
     133,
-    332
+    154
    ],
    "rows": [
     [
      80,
      36.5,
-     177.7567,
-     1.0692,
-     1.5579
+     177.7139,
+     1.0699,
+     1.5586
     ],
     [
      100,
      42,
-     192.4249,
+     192.1749,
      0.9269,
-     1.3987
+     1.398
     ],
     [
      111,
      44.75,
-     197.4006,
+     197.0846,
      0.8934,
-     1.3165
+     1.3154
     ],
     [
      125,
      48,
-     202.3395,
-     0.8347,
+     202.0715,
+     0.8354,
      1.2502
     ],
     [
      160,
-     55,
+     54.75,
      220.7807,
      0.7798,
-     1.0789
+     1.0785
     ],
     [
      200,
-     61.25,
-     238.8276,
+     61,
+     238.7943,
      0.6986,
      0.9583
     ]
@@ -713,8 +713,8 @@
     270
    ],
    "model": [
-    192.453,
-    203.8903
+    192.2367,
+    200.8813
    ]
   },
   "maintaining": {
@@ -741,8 +741,8 @@
    "r": 30,
    "g": [
     10.3153,
-    293.7928,
-    55.0505
+    293.7758,
+    55.0489
    ],
    "T": [
     0.003,

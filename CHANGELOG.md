@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.42.02 · 2026-10-27
+- The Wempe's escapement model corrected: it now times each landing of the locking stone on the escaping tooth exactly, which had held the swing at full wind about 3° low; the swing over the wind is now 192.5–203.9° (197.4° half wound), matching the escapement simulated beat by beat
+- The Wempe page reads the balance's swing from a precomputed table, so it stays quick
+
+## 3.42.01 · 2026-10-27
+- The Wempe's Its drawings essay and verification report corrected on how quickly a running 6MX's balance loses its swing, measured off a video: 141 s (133–158 s), where an error in the fit had given 332 s; the model keeps its 111 s
+
 ## 3.42.00 · 2026-10-27
 - The Wempe's banking screw can now be turned (Swing and isochronism, Banking screw): the screw turns on the model, and the depth of lock, the lock and let-off, the swing over the wind and whether the escapement still works are shown as it goes; As drawn and The bench's aim set it back
 - The Wempe's escapement as last revised now stands at the heights its drawings give: the 1946 balance staff's rollers read again, the escape wheel just under the top plate, the detent and its block higher, the banking screw drawn whole under the detent's pipe

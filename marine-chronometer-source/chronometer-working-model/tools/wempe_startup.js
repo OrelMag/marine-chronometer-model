@@ -18,8 +18,10 @@ const J=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_swing.json'),'utf8
 const SEG={'set down (17:55-18:10)':[1073,1092],'after its edge (18:20-18:32)':[1098,1114],'moved on the table (18:41-18:44)':[1119,1126],'after the twist (18:52-19:48)':[1130,1190]};
 const mk=(kPost=1)=>Object.entries(SEG).map(([k,[a,b]])=>({k,p:P.filter(r=>r[0]>=a&&r[0]<=b).map(r=>[r[0],r[0]>=1130?r[1]*kPost:r[1]])})).filter(s=>s.p.length>1);
 let segs=mk();
-/* Wn(s, A) tabulated (makeEsc solves each impulse, a few ms a call): s 0.2-2.5 by 0.05, A 60-330 deg by 2, bilinear between */
-const SG=[...Array(47)].map((_,i)=>0.2+0.05*i),AG=[...Array(136)].map((_,i)=>60+2*i),TB=SG.map(s=>AG.map(a=>{const v=E.wn(s,a*D);return Number.isFinite(v)?v:0;}));
+/* Wn(s, A) tabulated (makeEsc solves each impulse, a few ms a call): s 0.2-2.5 by 0.05, A 60-330 deg by 2, bilinear between; NaN where makeEsc gives no impulse
+   (a weak drive at a large swing: the jewel gone before the tooth reaches it), and a fit that passes there is no fit (until 27 October 2026 it counted as no work,
+   a free run-down, and the fit took it: the drive 0.45, TF 332 s, the 6MX coasting without an impulse from 185 to 157 deg) */
+const SG=[...Array(47)].map((_,i)=>0.2+0.05*i),AG=[...Array(136)].map((_,i)=>60+2*i),TB=SG.map(s=>AG.map(a=>{const v=E.wn(s,a*D);return Number.isFinite(v)?v:NaN;}));
 const wn=(s,a)=>{const x=Math.min(SG.length-1.001,Math.max(0,(s-0.2)/0.05)),y=Math.min(AG.length-1.001,Math.max(0,(a/D-60)/2)),i=Math.floor(x),j=Math.floor(y),u=x-i,v=y-j;
   return (TB[i][j]*(1-v)+TB[i][j+1]*v)*(1-u)+(TB[i+1][j]*(1-v)+TB[i+1][j+1]*v)*u;};
 /* the damping's dependence on the swing: viscous (a constant TF), or split as wempe_escapement.js's parts give it at the model's swing A0 (the air's pressure drag, its loss
@@ -30,7 +32,7 @@ const run=(kind,work,TF,A0,ts)=>{let u=(A0*D)**2,t=ts[0];const out=[];const g=x=
   for(const tt of ts){while(t<tt-1e-9){const h=Math.min(0.1,tt-t),k1=g(u),k2=g(u+h/2*k1),k3=g(u+h/2*k2),k4=g(u+h*k3);u+=h/6*(k1+2*k2+2*k3+k4);t+=h;}out.push(Math.sqrt(Math.max(u,0))/D);}return out;};
 const gold=(c,lo,hi,n=25)=>{for(let i=0;i<n;i++){const m1=lo+(hi-lo)*0.382,m2=lo+(hi-lo)*0.618;c(m1)<c(m2)?hi=m2:lo=m1;}return(lo+hi)/2;};
 /* each stretch's best start (within 25 deg of its first reading), the residuals' sum of squares */
-const sse=(kind,work,TF,sg)=>{const ts=sg.p.map(r=>r[0]),y=sg.p.map(r=>r[1]),c=a0=>run(kind,work,TF,a0,ts).reduce((q,v,i)=>q+(v-y[i])**2,0),a0=gold(c,y[0]-25,y[0]+25);return{e:c(a0),a0};};
+const sse=(kind,work,TF,sg)=>{const ts=sg.p.map(r=>r[0]),y=sg.p.map(r=>r[1]),c=a0=>{const e=run(kind,work,TF,a0,ts).reduce((q,v,i)=>q+(v-y[i])**2,0);return Number.isFinite(e)?e:Infinity;},a0=gold(c,y[0]-25,y[0]+25);return{e:c(a0),a0};};
 const tot=(kind,work,TF,use)=>segs.filter(s=>use.includes(s.k)).reduce((q,s)=>q+sse(kind,work,TF,s).e,0);
 const ainf=(kind,work,TF)=>{let lo=20*D,hi=400*D;const g=a=>work(a)-a*a*T*fac(kind,a)/TF;if(g(lo)<=0)return NaN;for(let i=0;i<60;i++){const m=(lo+hi)/2;g(m)>0?lo=m:hi=m;}return lo/D;};
 const n=k=>segs.filter(s=>k.includes(s.k)).reduce((q,s)=>q+s.p.length,0),ALL=segs.map(s=>s.k);

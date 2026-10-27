@@ -47,7 +47,7 @@
    "sheet": "05 03, 05 04",
    "when": "the balance, hairspring and detent in, the train held still at a lock; before the mainspring is chosen",
    "how": "Give the balance a full swing (a twist of the movement) and let it run down, the train held. Film it from above at 30 frames a second, a card marked every 30° under it, and read the swing every few seconds (python wempe_swing.py reads a video so); time how long it takes to halve from about 207°.",
-   "pass": "The model's balance halves its swing in 60 s (its TF 111 s; a running 6MX on video, moMvyx8eXfo, has TF 133-332 s at it: wempe_startup.js, which the model's TF is set from). Halving in 46, 56, 60, 66, 80, 93 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 202, 221, 231, 242, 265, 288° at 12 h; the guard's 180° at the wind's lowest wants ×0.833, 0.730, 0.680, 0.629, 0.536, 0.472 of it, the sources' 225° ×1.285, 1.087, 1.008, 0.928, 0.785, 0.685 (the strip as the drive's cube root). Shorter than 46 s, look for a pivot, the endstone or the detent's springs dragging."
+   "pass": "The model's balance halves its swing in 60 s (its TF 111 s, set from an earlier fit of a running 6MX on video, moMvyx8eXfo, which now gives TF 133-154 s at it: wempe_startup.js). Halving in 46, 56, 60, 66, 80, 93 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 202, 221, 231, 242, 265, 288° at 12 h; the guard's 180° at the wind's lowest wants ×0.832, 0.730, 0.680, 0.629, 0.536, 0.472 of it, the sources' 225° ×1.285, 1.087, 1.008, 0.928, 0.785, 0.685 (the strip as the drive's cube root). Shorter than 46 s, look for a pivot, the endstone or the detent's springs dragging."
   },
   {
    "id": "detent",
@@ -580,34 +580,34 @@
    "TF": 111,
    "video": [
     133,
-    332
+    154
    ],
    "rows": [
     [
      80,
      46.25,
-     201.9827,
-     0.8327,
+     201.9684,
+     0.8324,
      1.2854
     ],
     [
      100,
      55.5,
-     221.3768,
+     221.379,
      0.7301,
      1.0871
     ],
     [
      111,
      60.25,
-     230.8049,
+     230.8223,
      0.68,
      1.0084
     ],
     [
      125,
      66.25,
-     241.814,
+     241.7767,
      0.6285,
      0.9281
     ],
@@ -621,8 +621,8 @@
     [
      200,
      93,
-     287.6044,
-     0.472,
+     287.6122,
+     0.4716,
      0.6852
     ]
    ]
@@ -689,7 +689,7 @@
     "aim": 0.1823,
     "drawn": 0.235,
     "window": [
-     0.084,
+     0.0839,
      0.2806
     ],
     "tip": 0.25
@@ -713,8 +713,8 @@
     270
    ],
    "model": [
-    223.9683,
-    237.7062
+    223.9507,
+    237.6996
    ]
   },
   "maintaining": {
@@ -724,8 +724,8 @@
     -0.2753
    ],
    "s": [
-    777.5,
-    970
+    778,
+    971
    ],
    "min": 300
   },
