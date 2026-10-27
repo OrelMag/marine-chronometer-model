@@ -16,8 +16,8 @@
 // Two sets of constants: their middle, and the corner of the published ranges that moves each part most (brass the most, steel the least); judged on the corner.
 // What it found (27 October 2026): the lock hardly moves (0.13 µm), but the gold spring's tip does, 1.8-2.3 µm from the staff at 36 °C (the steel detent from its
 // brass-held foot), and the Wempe has little let-off to give (1.50° drawn, the cliff about 1.0-1.1°, where the tooth runs a pitch before it lands on the impulse stone:
-// makeEsc and dynamics.js --model wempe in time agree). So the lock window that holds over 4-36 °C is narrower than wempe_tolerances.js's at 20 °C alone, and the
-// bench's middle lies past it; it also searches that window's top.
+// makeEsc and dynamics.js --model wempe in time agree). So the lock window that holds over 4-36 °C is about half the one at 20 °C alone; since that day (the owner's
+// choice) wempe_tolerances.js takes it as its window (wempe_escheat.js), and this tool checks the bench's aim inside it and searches its top again.
 // Exits 1 if a mesh's depth moves a tenth of its window's side, no endshake set at 20 °C holds its band at both ends, or, with the drawn lock and the constants' middle,
 // the escapement loses its impulse, the swing leaves the guard band, the stone passes 1 µm into a tooth, or the rate's share passes the TU's C or S. The drawn lock at the
 // constants' corner, the bench's lock and the window over the range are reported (~~): the owner's to settle. About 2½ minutes.
@@ -27,14 +27,8 @@ const BREV=/^build/.test(process.env.MC_WREV||'')?process.env.MC_WREV:'',SUF=BRE
 const J=f=>JSON.parse(fs.readFileSync(path.join(__dirname,f),'utf8')),GW=J('gearing_wempe.json'),TOL=J(`tolerances_wempe${SUF}.json`),LK=TOL.lock,G=TOL.band;
 const D=180/Math.PI,f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),r6=x=>+(+x).toFixed(6),rows=[];let fail=0;
 const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);},warn=(ok,s)=>rows.push(`${ok?'  ok ':'  ~~ '} ${s}`),head=s=>rows.push('\n'+s);
-/* expansion a °C (published ranges): brass, the sheets' Ms 58 (leaded, CuZn39Pb3) and Ms 63 (CuZn37), 18.5-20.9 × 10⁻⁶ (wempe_thermal.js's 18.5-20.0 and thermal.js's
-   leaded clock brass 18.7-20.9 together); hardened carbon steel 10.8-12.5 (thermal.js); beryllium copper (C17200, hardened) 16.7-17.8 (wempe_thermal.js's 17); a gold
-   spring alloy 13.5-15.0 (estimated: fine gold 14.2, its alloy not on 05 04 01-2). The discharge roller (05 04 04-1, bought in, no material drawn) taken as steel (estimated).
-   Thermoelastic coefficients, 1/E dE/dT: carbon steel -240 to -270 × 10⁻⁶ (wempe_thermal.js's hairspring; the detent spring and mainspring alike), gold -200 to -300
-   (estimated) */
-const MAT={b:[18.5e-6,20.9e-6],s:[10.8e-6,12.5e-6],r:[16.7e-6,17.8e-6],g:[13.5e-6,15.0e-6],es:[-2.7e-4,-2.4e-4],eg:[-3.0e-4,-2.0e-4]};
-const mid=r=>(r[0]+r[1])/2,K={mid:{b:mid(MAT.b),s:mid(MAT.s),r:mid(MAT.r),g:mid(MAT.g),es:mid(MAT.es),eg:mid(MAT.eg)},most:{b:MAT.b[1],s:MAT.s[0],r:MAT.r[0],g:MAT.g[0],es:MAT.es[0],eg:MAT.eg[0]}};
-const T0=20,TS=[4,36],DA=K.most.b-K.most.s,OUT={MAT,T:TS,T0,depth:[],endshake:[],esc:[],rate:{}};
+const HT=require('./wempe_escheat.js'),{MAT,K}=HT,{at}=HT(W);   /* the constants and the escapement moved in heat and cold */
+const{T0,TS}=HT,DA=K.most.b-K.most.s,OUT={MAT,T:TS,T0,depth:[],endshake:[],esc:[],rate:{}};
 say(`brass grows ${f(MAT.b[0]*1e6,1)}-${f(MAT.b[1]*1e6,1)} × 10⁻⁶ a °C, steel ${f(MAT.s[0]*1e6,1)}-${f(MAT.s[1]*1e6,1)}: brass up to ${f(DA*1e6,1)} more; from ${T0} °C to the TU's ${TS[0]} °C (${sg(TS[0]-T0,0)}) and ${TS[1]} °C (${sg(TS[1]-T0,0)})`);
 
 /* ---------- 1. the train's depths ---------- */
@@ -57,28 +51,13 @@ for(const a of ARB){const gap=a.gap.reduce((s,x)=>s+x[1],0),arb=a.arbor.reduce((
   chk(set[1]>set[0],`${a.name}: the gap ${f(gap,2)} mm of brass, the arbor ${f(arb,2)} of steel: ${sg(c*1000,1)} µm at ${TS[0]} °C, ${sg(h*1000,1)} at ${TS[1]} °C; set at ${T0} °C between ${f(set[0],3)} and ${f(set[1],3)} mm it stays in the book's ${f(a.band[0],2)}-${f(a.band[1],2)} at both (drawn ${f(a.drawn,3)}${in20?(drawnIn?', inside':', in the band at 20 °C but not at both ends'):`, under the band at ${T0} °C already: the bench sets it (wempe_bench.js)`})`);}
 
 /* ---------- 3. the escapement ---------- */
-/* makeEsc's frame: the balance's centre at the origin, the wheel's at EX, its tip radius the unit: brass held, so EX, the teeth and their root stay. In it, at γ = (α - αb) ΔT
-   for each part (negative warm for anything that grows less than brass):
-   - the detent (steel) from its foot Ft, held by its brass block: the stone's flat at S moves by BL γs along the detent, dirB: its radial part (from the wheel's centre at
-     the locked tooth, uS) changes the depth of lock, dL - BL γs (dirB·uS), its tangential part the angle the wheel rests at, LO; BL itself grows by γs
-   - the gold spring's tip Pt, carried by the detent from Ft to the spring's root Ps0 and by the gold spring from there (γg): rT and PSO, its place from the staff
-   - the impulse roller (beryllium copper, rRoll, rp) and the discharge roller's reach (rd, rDR: steel, estimated) on the steel staff (γr, γs)
-   - the detent spring's stiffness (EB) by its thermoelastic coefficient and its height's growth (its length and thickness grow alike: their ratio holds), the preload
-     with its modulus (OP78 0: W78 the preload); the gold spring's (ET) likewise
-   - the drive: the mainspring's torque E b t³ θ / L, by es + 3 αs; the fusee's and barrel's radii both brass, their ratio held */
+/* makeEsc in the brass wheel's frame, each part that isn't brass moved against it: wempe_escheat.js */
 head('3. The escapement (makeEsc in the brass wheel\'s frame, the steel, gold and beryllium copper parts moved against it)');
-const uS=[Math.cos(E0.lockA),Math.sin(E0.lockA)],tS=[-uS[1],uS[0]],dB=[E0.dirB.x,E0.dirB.y],nB=[E0.nB.x,E0.nB.y],dot=(a,b)=>a[0]*b[0]+a[1]*b[1];
-const Ft=[E0.Ft.x,E0.Ft.y],Pt=[E0.Pt.x,E0.Pt.y],Ps0=[E0.Ps0.x,E0.Ps0.y],ES=S.ES;
-/* the escapement at t with the constants k, its lock set at 20 °C to dL0 (units of ES: the drawn S.dL, or the bench's) */
-const at=(k,t,dL0=S.dL)=>{const dT=t-T0,gs=(k.s-k.b)*dT,gg=(k.g-k.b)*dT,gr=(k.r-k.b)*dT,dr=S.BL*gs*dot(dB,uS),dt=S.BL*gs*dot(dB,tS);
-  const Pn=[0,1].map(i=>Ft[i]+(Ps0[i]-Ft[i])*(1+gs)+(Pt[i]-Ps0[i])*(1+gg));
-  const o={...S,dL:dL0-dr,LO:S.LO+dt*D,BL:S.BL*(1+gs),rT:-dot(Pn,dB),PSO:dot(Pn,nB),PSL:S.PSL*(1+gg),rRoll:S.rRoll*(1+gr),rp:S.rp*(1+gr),rd:S.rd*(1+gs),rDR:S.rDR*(1+gs),
-    EB:S.EB*(1+(k.es+k.s)*dT),W78:S.W78*(1+k.es*dT),ET:S.ET*(1+(k.eg+k.g)*dT)};
-  return{o,E:W.makeEsc(o,S),kd:1+(k.es+3*k.s)*dT,dr,dt};};
+const ES=S.ES;
 const HS=[0,12,24,36,48,55],wind=(e,kd)=>{let mn=1e9,mx=-1e9;for(let h=0;h<=56;h+=2){const a=e.ampAt(P.drv(h/P.HPT)*kd)*D;mn=Math.min(mn,a);mx=Math.max(mx,a);}return[mn,mx];};
 const rate=(e,kd,h)=>{const s=P.drv(h/P.HPT)*kd,a=e.ampAt(s);return{A:a*D,r:e.rateAt(a,s)};},inG=w=>w[0]>=G.guard[0]&&w[1]<=G.guard[1];
-const m0=E0.measure(),w0=wind(E0,1),r0=HS.map(h=>rate(E0,1,h)),aim=(LK.shallow+LK.deep)/2;
-say(`at ${T0} °C: depth of lock ${f(S.dL*ES*1000,1)} µm (the window ${f(LK.shallow*1000,1)}-${f(LK.deep*1000,1)}, wempe_tolerances.js, its top where the let-off runs out: ${f(LK.at.deep.letoff,2)}°; the bench sets it to its middle, ${f(aim*1000,1)}), lock ${f(m0.lock,2)}°, let-off ${f(m0.letoff,2)}°, overall ${f(m0.overall,2)}°, drop ${f(m0.drop,2)}°; the swing ${f(w0[0],1)}-${f(w0[1],1)}° over the wind`);
+const m0=E0.measure(),w0=wind(E0,1),r0=HS.map(h=>rate(E0,1,h)),aim=LK.aim??(LK.shallow+LK.deep)/2;
+say(`at ${T0} °C: depth of lock ${f(S.dL*ES*1000,1)} µm (the window ${f(LK.shallow*1000,1)}-${f(LK.deep*1000,1)}, wempe_tolerances.js, its top the deepest that holds at ${TS[1]} °C, ${f((LK.deep20??LK.deep)*1000,1)} at ${T0} °C alone; the bench's aim ${f(aim*1000,1)}), lock ${f(m0.lock,2)}°, let-off ${f(m0.letoff,2)}°, overall ${f(m0.overall,2)}°, drop ${f(m0.drop,2)}°; the swing ${f(w0[0],1)}-${f(w0[1],1)}° over the wind`);
 const RT={};
 for(const[sn,dL0]of[['drawn',S.dL],['bench',aim/ES]])for(const[kn,k]of[['mid',K.mid],['most',K.most]])for(const t of TS){const{o,E,kd,dr,dt}=at(k,t,dL0),m=E.measure(),w=wind(E,kd);
   const rr=sn==='drawn'?HS.map(h=>rate(E,kd,h)):null;if(rr)(RT[kn]=RT[kn]||{})[t]=rr;
@@ -94,7 +73,7 @@ for(const[sn,dL0]of[['drawn',S.dL],['bench',aim/ES]])for(const[kn,k]of[['mid',K.
 const deepAt=k=>{const ok=x=>{const{E,kd}=at(k,TS[1],x/ES);return inG(wind(E,kd));};let lo=LK.shallow-0.004,hi=LK.deep;if(ok(hi))return hi;if(!ok(lo))return null;for(let i=0;i<9;i++){const md=(lo+hi)/2;ok(md)?lo=md:hi=md;}return lo>=LK.shallow?lo:null;};   /* null: no lock over the window's floor (the held tooth's ringing) holds at 36 °C */
 OUT.window={shallow:LK.shallow,deep:LK.deep,aim,drawn:S.dL*ES};
 for(const kn of['mid','most']){const dp=deepAt(K[kn]);OUT.window[kn]=dp;
-  warn(dp!==null&&dp>=aim,`the lock window over ${TS[0]}-${TS[1]} °C, ${kn==='mid'?'the constants\' middle':'the corner'}: ${dp===null?`none: every lock over the floor (${f(LK.shallow*1000,1)} µm, the held tooth's ringing) runs out of let-off by ${TS[1]} °C`:`${f(LK.shallow*1000,1)}-${f(dp*1000,1)} µm set at ${T0} °C (${f((dp-LK.shallow)*1000,1)} µm wide, against ${f((LK.deep-LK.shallow)*1000,1)} at ${T0} °C alone): set deeper, the let-off runs out by ${TS[1]} °C${dp<aim?`; the bench's middle (${f(aim*1000,1)}) is past it`:''}`}`);}
+  warn(dp!==null&&dp>=aim,`the lock window over ${TS[0]}-${TS[1]} °C, ${kn==='mid'?'the constants\' middle':'the corner'}: ${dp===null?`none: every lock over the floor (${f(LK.shallow*1000,1)} µm, the held tooth's ringing) runs out of let-off by ${TS[1]} °C`:`${f(LK.shallow*1000,1)}-${f(dp*1000,1)} µm set at ${T0} °C (${f((dp-LK.shallow)*1000,1)} µm wide, against ${f(((LK.deep20??LK.deep)-LK.shallow)*1000,1)} at ${T0} °C alone): set deeper, the let-off runs out by ${TS[1]} °C${dp<aim?`; the bench's middle (${f(aim*1000,1)}) is past it`:''}`}`);}
 /* the rate this share gives, gaining positive, against 20 °C at each hour of the wind (the drawn lock); the TU's C = (ω36 - ω4)/32 and S = (ω36 + ω4)/2 - ω20 (its sign
    convention aside: the magnitudes), each at 12 h and their largest over the wind */
 for(const kn of['mid','most']){const R=RT[kn],d=t=>R[t].map((x,i)=>x.r-r0[i].r),c=d(TS[1]).map((x,i)=>(x-d(TS[0])[i])/(TS[1]-TS[0])),sv=d(TS[1]).map((x,i)=>(x+d(TS[0])[i])/2),i12=HS.indexOf(12);

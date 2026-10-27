@@ -276,7 +276,7 @@ Files: every .jpg in `References/wempe/drawings/05-03/` (10) and `05-04/` (14), 
 
 ## 05 03 02-3 Klötzchen (hairspring stud block) — `05-03/Wempe_05-03_9.jpg`
 - **Title block:** Werkstoff "Flachmessing 15×7 Din 1759 Ms 58". Maßstab 5:1 (1:1). gez. 6.6.41 ("J. Zwanicke"? unsure), gepr. 15.6.41 ("Kurt Müller"), N.gepr. 27.4.43. Zeichnung Nr 05 03 02-3. Benennung "Klötzchen". Surface ∇∇∇ and ∇∇.
-- **What it shows:** An L-shaped brass stud carrier: plan (a pointed arm 14,6 long, 3,1 wide, tapering to a 0,8 r point, with a V-cut inside the point, a hole ∅1,5 H7 at 5 from the right end, and a block at the right end 2,5 tall with a 1,2 slot), side elevation (a 6,1 long arm with an angled end at 98°, a 0,7 hole "drilled at assembly"), and a section (the L: the upright 1,8 g6 thick, the bar with the ∅1,5 H7 hole, chamfered tip).
+- **What it shows:** An L-shaped brass stud carrier: plan (a pointed arm 14,6 long, 3,1 wide, tapering to a 0,8 r point, with a V-cut inside the point, a hole ∅1,5 H7 at 5 from the right end, and the upright seen from above at the right end, its sides hidden under the bar, dashed, 1.87 apart), side elevation (a 6,1 long arm with an angled end at 98°, a 0,7 hole "drilled at assembly", its centre about 0.72 from the end and 0.36 from the upright's middle toward the side it leans to), and a section (the L: the upright 1,8 g6 thick, the bar with the ∅1,5 H7 hole, chamfered tip).
 - **Dimensions:**
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
@@ -289,7 +289,7 @@ Files: every .jpg in `References/wempe/drawings/05-03/` (10) and `05-04/` (14), 
 | plan width | 3,1 | −0,2 | sure | |
 | point radius | 0,8 r (read "0,8") | | likely | |
 | hole ∅ | 1,5 ∅ H7 | +0,009 | sure | section |
-| block slot | 1,2 | −0,1 | sure | |
+| bar's middle to its edge at the square end | 1,2 | −0,1 | sure | read as a slot until 27 October 2026; the dashed lines are the upright's sides |
 | block height | 2,5 | −0,2 | sure | |
 | | 1,6 | −0,2 | sure | right edge |
 | hole to V-cut apex | 6,6 | −0,2 | sure | |
