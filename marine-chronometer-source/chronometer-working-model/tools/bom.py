@@ -31,6 +31,8 @@ import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html
 BOM=json.loads((model.DIR/'bom.json').read_text(encoding='utf-8'))   # the model's parts list, beside its page
 JS=(HERE/'bom-check.js').read_text(encoding='utf-8');FNJS=(HERE/'bom-fn.js').read_text(encoding='utf-8')
 IN={'tap':(0.4,-0.03,0.35),'clear':(0.1,0.0,9),'run':(0.1,0.003,0.06),'free':(0.2,0.003,0.25),'press':(0.04,-0.03,0.05),'embed':(0.3,-9,-0.01)}   # kind: least length engaged, gap from, gap to (mm)
+import os
+for _k,_v in json.loads(os.environ.get('MC_BOM_IN','{}')).items():IN[_k]=tuple(_v)   # a trial of other limits ({"press":[0.04,-0.03,0.02]}): the parts that would fail
 # press and run in a bevelled hole: at its faces, where it has its size (it is wider inside); embed: a thread or pin across a part drawn without a hole for it
 # (the part is an extrusion or a turned solid that can't be holed across: the balance rim, the detent's block and foot, the fusee arbor), so inside its metal
 ENDSHAKE=(0.0254,0.0762)
