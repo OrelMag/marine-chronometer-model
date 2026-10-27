@@ -139,7 +139,7 @@ This one command:
    - `_headers` holds security and caching headers.
    - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the pages link to.
    - `book/wempe-build-book.pdf` is the Wempe's build book as engineering drawings (made by `tools/drawbook.py`, committed in `wempe/book/`). The Wempe page's Build book and its part cards open it.
-   - `verification/build-verification/` and `verification/real-chronometers/` are the Hamilton's two reports (each check's method, results and what they mean). `wempe/verification/` is the Wempe's: *The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?* Each is copied as its own `build_report.py` last wrote it, with its links into the repository pointed at GitHub. The pages' About and the essays link to them.
+   - `verification/build-verification/` and `verification/real-chronometers/` are the Hamilton's two reports (each check's method, results and what they mean). `wempe/verification/` is the Wempe's: *The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?* (since 3.43.00 its section 9 also takes the frame, train and escapement through heat and cold, `tools/wempe_thermal_frame.js`) Each is copied as its own `build_report.py` last wrote it, with its links into the repository pointed at GitHub. The pages' About and the essays link to them.
    - `sitemap.xml` (the pages and the reports) and `robots.txt`, for search engines, when `--site-url` is given (below).
 
 `build.py` doesn't rebuild the reports. After changing what a report reports,
