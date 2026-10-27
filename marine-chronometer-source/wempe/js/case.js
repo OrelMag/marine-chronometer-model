@@ -278,10 +278,15 @@ const WCASE=(()=>{
          through it: 16_Wempe_3955_Gehäusetopf_Kardan.jpg) */
       const G1=rv(bowl,'last first 1943 -3955'),G6=rv(bowl,'6mx'),G3=rv(bowl,'3955'),BW=/** @type {[any,any][]} */([[G1,CB],[G3,BAK]]);   /* each version's bowl in its own group, one mesh (fuse, below) */
       const yd=YC-59.5,F1=[{p:C(H[10],8.2/2,72),a:yd,b:YB-49},{p:C([0,0],1.52,40),a:yd,b:YB-49},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],0.6,24),a:yd,b:yd+1.5}];
-      /* the bottom drawn 0.01 inside the turned part's wall (r 34.09 against its 34.1): its 240 facets and the wall's 360 would cross, and a ray out from the axis would meet
-         the wall's face before the bottom's at r 34.1 as often as not, so that bom.py's rays read the bottom's metal as ending at the axis (the closing plate's screw, 24 October 2026) */
-      for(const[g,mt]of BW)tag(mesh(g,solidGeo([{loop:circT(34.09),y0:yd,y1:YB-49,F:F1}]),mt),'050100-1');   /* on the wall's own 360 corners (circT), 0.01 inside them (240 facets until 26 October 2026, which crossed the wall's: a dotted ring on the floor) */
-      tag(mesh(G6,solidGeo([{loop:circT(34.09),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
+      /* the bottom on the turned part's own 360 corners at its wall r 34.1 (circT), the two faces where they meet taken out once fused (bowlJoin, below), so the bowl is one
+         closed solid with no wall inside it. Until 27 October 2026 the bottom stood 0.01 inside the wall (r 34.09: two walls face to face crossed bom.py's rays), and that
+         0.01 slot 10 deep, seen into now and then between pixels, drew a dotted ring round the floor in Edges (batch 10, A1); 240 facets before 26 October 2026 */
+      for(const[g,mt]of BW)tag(mesh(g,solidGeo([{loop:circT(34.1),y0:yd,y1:YB-49,F:F1}]),mt),'050100-1');
+      tag(mesh(G6,solidGeo([{loop:circT(34.1),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
+      /* bowlJoin(m, ya, yb): the fused bowl's triangles lying on the cylinder r 34.1 between ya and yb (the bottom's wall and the turned part's, face to face) dropped */
+      const bowlJoin=(m,ya,yb)=>{const P=m.geometry.attributes.position,keep=[];for(let t=0;t<P.count;t+=3){let on=Math.abs(P.getY(t)-P.getY(t+1))+Math.abs(P.getY(t)-P.getY(t+2))>1e-4;   /* a wall's (a cap's three corners on the circle are level) */for(let k=t;k<t+3&&on;k++){const y=P.getY(k);on=Math.abs(Math.hypot(P.getX(k),P.getZ(k))-34.1)<1e-3&&y>ya-1e-3&&y<yb+1e-3;}if(!on)keep.push(t);}
+        const g=new THREE.BufferGeometry();for(const nm of Object.keys(m.geometry.attributes)){const a=m.geometry.attributes[nm],s=a.itemSize,o=new Float32Array(keep.length*3*s);keep.forEach((t,i)=>o.set(a.array.subarray(t*s,(t+3)*s),i*3*s));g.setAttribute(nm,new THREE.BufferAttribute(o,s));}
+        g.userData=m.geometry.userData;m.geometry.dispose();m.geometry=g;};
       /* the winding hole's seat inside: a raised ring round the hole on the bottom, which the cork ring on the dust bush (05 08 01-4, frame.js) meets. Not on the casting's
          sheet (it draws no hole and nothing machined); the 6MX's bowls have it: moMvyx8eXfo 3:35 (1080p, the bowl empty) a flat-topped ring standing on the bottom round
          the hole (sure that it stands), 72 px across against the hole's 38.5, so Ø 15.3 by the hole's 8.2 (likely), the cork's 16.1 nearly; its top an ellipse 60 px by 72,
@@ -292,7 +297,7 @@ const WCASE=(()=>{
       const fil=[...Array(13).keys()].map(i=>{const t=i/12*Math.PI/2;return[42+7*Math.sin(t),YB-42-7*Math.cos(t)];}).reverse();   /* the round r 7 about (42, YB − 42), from the bore's wall down to the floor */
       /* the casting from its rim's top YC: the flange Ø 118 to 12 under it, the band Ø 108 to 23.5, the body Ø 106 to the cone, 50.5, the foot 65; the flange's top 4.7 turned
          down to the thread (below), so the profile's top is the seat's level, YB, the flange's shoulder outside the thread 0.3 under the bezel */
-      const pr=[[34.1,YC-65],[36.25,YC-65],[53,YC-50.5],[53,YC-23.5],[54,YC-23.5],[54,YC-12],[59,YC-12],[59,YB],[TH.Rm,YB],[TH.Rm,YB+0.8],[53.03,YB+0.8],[53.03,YB],[49,YB],...fil,[34.1,YB-49]];
+      const pr=[[34.1,YC-65],[36.25,YC-65],[53,YC-50.5],[53,YC-23.5],[54,YC-23.5],[54,YC-12],[59,YC-12],[59,YB],[TH.Rm,YB],[TH.Rm,YB+0.8],[53.03,YB+0.8],[53.03,YB],[49,YB],...fil,[34.1,YB-49],[34.1,yd]];   /* [34.1, yd]: a ring where the bottom's underside meets the wall (bowlJoin) */
       /* the threaded rim, from the seat's level to the flange's top: inside, the rebate's wall r 53.03; outside, the thread, run out into an undercut at its root 0.5 over the
          shoulder and a lead chamfer 0.5 to the top; the notch through it at 12 o'clock, 1.8 wide (the pin's Ø 1.6 0.1 clear each side), down to 0.8 over the seat (the pin's
          underside 1.1: the pin 2.8 under the flange's top, 05 08 00-3): the 6MX's, as 24020's photograph shows it cut (its depth not seen: estimated). The rim to the notch's
@@ -331,10 +336,10 @@ const WCASE=(()=>{
         const cn=[[50.6,hY(-47)],[47.0,hY(-49)],[43.7,hY(-51)],[40.3,hY(-53)],[37.1,hY(-55)],[36.7,hY(-55.3)]].reverse();
         const sh=[[B6,hY(-7.76)],[56.6,hY(-7.76)],[56.6,hY(-5.55)],[TH.Rm,hY(-5.55)]];   /* under the thread to the collar at its root: the undercut */
         const ci=[[49,hY(-44.69)],[34.1,hY(-52.84)]];   /* the inner cone: the outer's line (52.4, −46.7)-(36.7, −55.3) moved 3.4 across it, cut by the bore and the recess's wall */
-        const p6=[[34.1,YB-65],[36.7,YB-65],...cn,[B6,hY(-46.7)],...sh,[TH.Rm,YB+0.8],[53.05,YB+0.8],[53.05,YB],[49,YB],...ci,[34.1,YB-53]];
+        const p6=[[34.1,YB-65],[36.7,YB-65],...cn,[B6,hY(-46.7)],...sh,[TH.Rm,YB+0.8],[53.05,YB+0.8],[53.05,YB],[49,YB],...ci,[34.1,YB-53],[34.1,YB-59.5]];
         const g6=G6;tag(mesh(g6,lathT(p6,tho(p6.findIndex(q=>q[0]===TH.Rm))),M.brass),'050100-1',1);
         rim(g6,M.brass,53.05);}   /* the rim, threaded (TH: until 24 October 2026 a plain ring r 55.25), its notch: the drawn bowl's */
-      for(const g of[G1,G6,G3])fuse(g.children.filter(o=>o.isMesh&&o.userData.hn==='050100-1'));   /* the bowl one casting, one mesh in each version (fuse, core.js): its bottom, seat, body and rim's flush faces drew rings in Edges until 21 October 2026 */
+      for(const g of[G1,G6,G3]){const f=fuse(g.children.filter(o=>o.isMesh&&o.userData.hn==='050100-1'));bowlJoin(f,g===G6?YB-59.5:yd,g===G6?YB-53:YB-49);}   /* the bowl one casting, one mesh in each version (fuse, core.js): its bottom, seat, body and rim's flush faces drew rings in Edges until 21 October 2026 */
         /* the electrical contact's parts in the bowl (Kirov No. 247: 11_Kirow247_E-Kontakt_2.jpg inside, 12_Kirow_247_E-Kontakt_3.jpg outside, a camera fitted on the
            bowl's band; Kirov 2973's the same; Romanov 1975, Fig. 95, 101 and p. 105's parts 63-66): two flat brass springs 66 inside, each a foot 5.5 high curved to the bore
            on a black insulating strip, held by two screws 65 through the wall, and three tines 6.5 wide rising from it and leaning in to bear on a block's outer end (spring A
