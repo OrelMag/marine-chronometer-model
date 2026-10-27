@@ -183,6 +183,13 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 3-M14 | 05-05_12 | maintDetent arbor | chamfered shoulders and the 1:70 taper missing (first pass's, not acted on); the detent's Ø 2.25 hole plain where tapered | missing | sure | b3 reader, comparer | confirmed, and the pivot ends domed on 05-05_11 (model flat) | open |
 | 3-M15 | 05-06_04 | stopWork (bar) | the slide at full wind 3.36 (cap 3.6) against the figured 3,2 between the drawn positions: a 0.16 overshoot; the README's reason (the chain slides it 3.36) is circular | wrong | likely | refuter | — | open |
 | 3-M16 | 05-05_11 | maintDetent arbor | the pivot ends drawn domed; the model's flat | missing | likely | refuter | — | open |
+| S-1 | 05-03_2 | balance (masses) | the mass screws WN-12 run through the masses' outer jaws with no hole cut (all versions); WFUSEE.bore along the radius leaves the mass's round side open (8 masses not solid), so it needs another way | joint | sure | seatcheck (c9) | — | open (batch 1); SEAT_EXPECTED OPEN entry on c9's branch, delete it with the fix |
+| S-2 | 05-04_01, 05-04_03 | detentBlock (first, 3955) | the detent's steady pins WN-205.d and its screw WN-gf stand in the block with no holes cut | joint | sure | seatcheck (c9) | — | open (batch 2); SEAT_EXPECTED OPEN entry |
+| S-3 | — (6MX photographs) | detentBlock (6MX) | the block's screw WN-gkA has no hole cut | joint | sure | seatcheck (c9) | — | open (batch 2); SEAT_EXPECTED OPEN entry |
+| S-4 | — (6MX photographs) | detent (6MX) | the foot's stop screw 6MX.gke has no hole cut | joint | sure | seatcheck (c9) | — | open (batch 2); SEAT_EXPECTED OPEN entry |
+| S-5 | — (6MX photographs) | 6MX contact | the contact screw 6MX.ctk and its lock nut have no hole in their holder | joint | sure | seatcheck (c9) | — | open (batch 11); SEAT_EXPECTED OPEN entry |
+| S-6 | 05-08_07, 05-03_4, 05-06_08 | ring, balance hub, cover plate | the screws WN-rs, WN-10.d and WN-20 go into plain holes, not tapped ones (their threads have no partner) | joint | likely | c9 (fuse() threads fix) | — | open (batches 9, 1, 5) |
+| S-7 | 05-06_04 | stopWork (spring) | seatcheck can't see the stop spring's pin 050604-4 (the ribbon is under its 0.2 threshold): 3-M4 is checked by hand | note | sure | c9 | — | with 3-M4 |
 
 ## For the owner
 
@@ -203,4 +210,4 @@ What other sessions found that bears on this check. A GUB (Glashütte, post-war)
   - **Escape wheel** (batch 2): 15 teeth. Where the crossings meet the teeth can't be read.
   - **Assembly order:** the GUB restorer's, with four differences from the 1958 book, recorded only.
   - GUB 12255's plates: a hole survey is still running (batches 8 and 9).
-- **marine-chronometer-c9's seat audit** (origin/claude/wempe-seat-audit): `seatcheck.py`, batch 0. The collet's pin is now half round and brass, and the 6MX cap plate's screws are now tapped.
+- **marine-chronometer-c9's seat audit** (later `f91a43b3`: buried pins fail as BURIED; the open holes it found are S-1 to S-7 in Findings; on its branch it also straightened the hairspring's inner end along the collet's hole (`spPath`), and fixed `core.js` `fuse()` dropping every piece's tapped holes but the first) (origin/claude/wempe-seat-audit): `seatcheck.py`, batch 0. The collet's pin is now half round and brass, and the 6MX cap plate's screws are now tapped.
