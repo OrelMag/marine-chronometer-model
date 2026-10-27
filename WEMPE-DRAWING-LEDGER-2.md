@@ -50,15 +50,15 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 3 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 3 | — | — | — | — | — | not started |
-| `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 3 | — | — | — | — | — | not started |
-| `05-06/Wempe_05-06_09.jpg` | 020605 (127-556.04-U18) Gegenfeder kompl. | 3 | — | — | — | — | — | not started |
-| `05-06/Wempe_05-06_10.jpg` | 05 06 01-1 Gegenfeder | 3 | — | — | — | — | — | not started |
-| `05-06/Wempe_05-06_11.jpg` | 05 06 02 Gegensperrrad kompl. | 3 | — | — | — | — | — | not started |
-| `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 3 | — | — | — | — | — | not started |
-| `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 3 | — | — | — | — | — | not started |
-| `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 3 | — | — | — | — | — | not started |
+| `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-06/Wempe_05-06_09.jpg` | 020605 (127-556.04-U18) Gegenfeder kompl. | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-06/Wempe_05-06_10.jpg` | 05 06 01-1 Gegenfeder | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-06/Wempe_05-06_11.jpg` | 05 06 02 Gegensperrrad kompl. | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 3 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
