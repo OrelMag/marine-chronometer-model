@@ -51,8 +51,8 @@
      "b": "balance",
      "hit": [
       [
-       -14.42,
-       -11.48
+       -14.4,
+       -11.5
       ]
      ],
      "long": [],
@@ -347,7 +347,7 @@
   "escEndstoneLow"
  ],
  "parts": 48,
- "pairs": 401,
+ "pairs": 400,
  "expected": 10,
  "fails": 0,
  "left": []

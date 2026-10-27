@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.41.00 · 2026-10-27
+- The Wempe's detent now sits as its drawing draws it: its thin blade flush with the side of its thicker part that faces the block, which turns it a third of a degree about its locking stone; the escapement retuned to match (its swing 197° when half wound)
+- Every one of the Wempe's drawing sheets now matches the model or records why not (the drawings ledger)
+- The Wempe's verification report rebuilt; the build book follows in the next release
+
 ## 3.40.00 · 2026-10-27
 - The Wempe's open drawing readings settled but one (the detent's blade, next): the parts that had been left short of their drawings are now drawn as their sheets give them, or kept for a stated reason (the drawings ledger lists each)
 - Among them: the pillars' countersinks, the top plate's escape setting, the balance staff's lower pivot and its hollow cones, the hairspring collet's tapered bore, the detent block's foot, the fusee's groove now cut smooth, the maintaining spring's eye and swell, the click springs' holes, the barrel's lid and arbor hook, the mainspring's band hooks, the hour and change wheels' riveting sinks, the box's handles and finger recess, the 1940 key, the key tube and the case's floor
