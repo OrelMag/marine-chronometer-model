@@ -95,19 +95,19 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | — | — | — | read; model comparison next |
 | `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | — | — | — | read; model comparison next |
 | `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | — | — | — | — | — | not started |
-| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | — | — | — | — | — | not started |
+| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | — | — | — | — | — | not started |
 | `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | — | — | — | — | — | not started |
 | `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | — | — | — | — | — | not started |
