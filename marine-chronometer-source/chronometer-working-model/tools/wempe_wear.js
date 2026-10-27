@@ -34,7 +34,7 @@ const chain=fud*2*Math.PI*rfm,brd=2*chain/(2*Math.PI*RB);   /* mm a day running;
 const R=GJ.stages.map(s=>-s.lo-s.tp-s.sh);
 /* the lock's room: the banking set to the window's middle (wempe_bench.js), the shallow end the floor; a tooth's tip worn by h takes h off the depth, an escape pivot worn
    toward the balance closes the centre distance by as much (taken 1:1, estimated) */
-const LK=TOL.lock,lockRoom=(LK.deep+LK.shallow)/2-LK.shallow;
+const LK=TOL.lock,lockRoom=(LK.aim??(LK.deep+LK.shallow)/2)-LK.shallow;   /* the bench's aim (tolerances_wempe.json) over the floor */
 /* the discharge's lift: makeEsc's release lift (lRel, mm at the stone), the tooth free at 82 % of it (tripping.js), so the gold spring's face may wear 18 % of it before a pass fails to unlock */
 const m=E.measure(),liftRoom=0.18*m.lRel;
 const C=(name,F,s,Hs,A,tol,what,src,dryEsc,wedge,soft)=>{const o={name,F,s,A,tol,what,src,dry:!!dryEsc,soft:soft||'',h:{},yrs:{}},KK=dryEsc?KD:K;
