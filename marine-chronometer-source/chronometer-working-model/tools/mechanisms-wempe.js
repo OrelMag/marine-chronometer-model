@@ -80,6 +80,12 @@
   const out={pawls:[]};
   CK.forEach((m,i)=>{const p=new T.Vector3().setFromMatrixPosition(m.parent.matrixWorld).applyMatrix4(new T.Matrix4().copy(mv.matrixWorld).invert());
     out.pawls.push(pair('click '+(i+1),'050604-3',[m],FX,[p.x,p.z],35,1,"a maintaining click (05 06 02-3) on the click wheel 05 06 04-3: running, the fusee's drive through it to the maintaining ratchet"));});
+  /* the maintaining detent as it works: its nose down in a gap, the ratchet then turned back onto the steep face (pair's run). Running it rides the teeth, so where the frozen
+     state leaves it depends on the train's phase and on how fusee.js seats it: re-frozen at the train's place over a ratchet tooth (E, every 0.5 over 420, a tooth and more)
+     that puts its nose nearest the ratchet's axis (until 27 October 2026 measured where E 1000 left it: on 27 October fusee.js's finer seat left it on a tooth's tip there,
+     and the contact read at the tip, r 18.59 of 18.6, so wempe_transmission.js's detent barely lifted) */
+  {const D=find('050505-1'),nose=()=>{mv.updateMatrixWorld(true);let m=1e9;const v=new T.Vector3();for(const o of D){const M=loc(o),P=o.geometry.attributes.position;for(let i=0;i<P.count;i+=1){v.fromBufferAttribute(P,i).applyMatrix4(M);m=Math.min(m,Math.hypot(v.x-FX[0],v.z-FX[1]));}}return m;};
+    const at=E=>{mv.userData._u({E:E+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:3,winding:false,slip:0});return nose();};let bE=1000,bm=at(1000);for(let E=1000.5;E<=1420;E+=0.5){const m=at(E);if(m<bm-1e-6){bm=m;bE=E;}}at(bE);out.detentE=bE;}
   out.pawls.push(pair('maintaining detent','050602-1',find('050505-1'),FX,[H[4][0],H[4][1]],120,-1,"the maintaining detent (05 05 05-1, hole 4) on the maintaining ratchet 05 06 02-1: winding, it holds the ratchet against the maintaining spring"));
   out.pawls.push(pair('set-up click','050700-3',find('050805-2'),BX,[H[46][0],H[46][1]],16,1,"the set-up click (05 08 05-2, hole 46) on the set-up ratchet 05 07 00-3: it holds the mainspring's set-up and its wind on the barrel arbor"));
   /* the arbors that move with the clicks when the key lets go: the fusee (with its click wheel, cover plate, stop work, dust plate and Vorreiber), the barrel with its spring */

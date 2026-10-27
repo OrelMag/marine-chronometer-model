@@ -82,7 +82,7 @@ const PARTS={
     sp:'Settings 05 04 06-2 and 05 04 08-2, stones 05 04 07-1 and 05 04 08-1 · stones Ø 2.9 · seat Ø 5.2 H7 · screws WN-55 (upper) and WN-10 (lower), by the coloured section’s labels'},
   escEndstoneUp:{t:'Escape wheel endstone, upper',g:2,src:'est',sn:'The seat from the top plate’s section P-Q; the setting’s spigot and screws from outside as Wempe No. 3955 shows them',figs:'05 08_1b',c:'#c8163c',pri:1,
     d:'The endstone over the escape wheel arbor’s upper pivot: its gilt setting goes up into the top plate’s seat from inside, its spigot through the lip flush with the plate’s face, the whole domed ruby showing in its bevelled mouth, and two brass screws put in from outside hold it, their heads at its edge.',
-    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · stone Ø 2.9 · seat Ø 5.2 H7, the spigot Ø 4.5 H7 · screws M1.2, 3.5 either side'},
+    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · stone Ø 2.9 · seat Ø 5.2 H7, the spigot Ø 4.59 H7 · screws M1.2, 3.5 either side'},
   escJewelUp:{t:'Escape wheel jewel, upper',g:2,src:'est',sn:'Its seat and screw holes from the top plate’s section P-Q; the setting as the coloured section draws it',figs:'05 08_1b',c:'#c8163c',pri:1,
     d:'The escape wheel arbor’s upper hole jewel, in its setting flush with the top plate’s inner face, held by two screws whose heads lie over its edge. It is domed toward the endstone, with an oil sink opening toward the wheel.',
     sp:'Setting 05 04 06-2, jewel 05 04 06-1 (for the Ø 0.24 pivot) · stone Ø 2.9 × 0.4 (0.8 as first drawn) · two M1.2'},

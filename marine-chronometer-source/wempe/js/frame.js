@@ -73,8 +73,8 @@ const WFRAME=(()=>{
        the rim (05 08_1b, _2; Wempe 3955's plate off, 12_ and 13_Wempe_3955_obere_Platte_*.jpg). Every hole of 05 09 01's table at its drilled, reamed or tapped size (sure) and
        the sheet's sections: L-M the pillar seats (Ø 8.6 × 0.3 in the inner face); A-B the steady pins' holes 6, 9, 41, 47, 50 reamed from the outer face and opened Ø 2.5 from the
        inner face to 1.6 deep, C-D 22 and 37 the other way (their pins come from the lower cock, under the plate); G-H hole 36 sunk Ø 6 H7 × 1.8 from the outer face for the lower
-       cock's screw head; P-Q the escape wheel's setting at 26 (Ø 5.2 H7 from the inner face to 0.5 under the outer one, Ø 4.5 H7 through that, two M1.2 3.5 +0.05 either side
-       along the O-W line); J-K a recess Ø 22 × 0.7 round the fusee's hole 10 in the inner face, its wall at 45° (dashed on 05 08_1b, seen on 13_…unten); the fusee bush's three
+       cock's screw head; P-Q the escape wheel's setting at 26 (Ø 5.2 H7 from the inner face to 0.5 under the outer one, Ø 4.59 H7 through that (revision a), two M1.2 3.5 +0.05 either side
+       along the O-W line); J-K a recess Ø 22 × 0.7 round the fusee's hole 10 in the inner face (Ø 22 at the face), its wall at 45° (dashed on 05 08_1b, seen on 13_…unten); the fusee bush's three
        M1.4 on a radius 5.2 ±0.05, 120° apart, the first toward N (05 08_1b; the transcription's "2,65" there is the 22,65 from hole 1). The balance's opening 23 (Ø 10 with a
        tongue 2.5 wide) and, in the inner face, the pocket N-O for the balance holding work: from the opening to hole 51 with its end r 4 about it (read "4ʳ"; the
        transcription's "4,7 r" is the 4 and its arrowhead), its two dashed edges the common tangents of the opening's r 5 and that r 4 (traced on 05 08_1b at 4:1: the edges
@@ -106,10 +106,14 @@ const WFRAME=(()=>{
       for(const k of[22,37])F.push(...pinBore(H[k],y0,y1,'A'));           /* steady pins from below (C-D) */
       F.push(T(H[36],2.8/2,y0,y1),A(H[36],6.012/2,y0,1.8));                              /* the lower cock's screw, its head sunk (G-H) */
       for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),B(q,WD.PIL_SEAT[0],y1,WD.PIL_SEAT[1]));
-      F.push(T(H[26],4.506/2,y0,y1),{p:C(H[26],5.206/2),a:y0+0.5,b:y1});                 /* P-Q */
+      F.push(T(H[26],4.596/2,y0,y1),{p:C(H[26],5.206/2),a:y0+0.5,b:y1});                 /* P-Q: the lip 4.59 H7 by revision a ("∅ 4,5 in 4,59", its circled a on P-Q's
+        "4,5∅ H7"; read "6,15 in 4,59" until 27 October 2026), the reamer of 1, 35, 38 and of every 5.2 seat's lip (05 08 02-1 G-H, the cocks' 23): 4.506 until then */
       for(const q of DR?WESC.HOLES.blockPins:WESC.HOLES.block6.pins)F.push({p:C(q,0.7,40),q:C(q,0.4625,40),a:y0,b:y0+0.24},{p:C(q,0.4625,40),a:y0+0.24,b:y1});   /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly through the plate and countersunk Ø 1.4 on its outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, 8.81 px/mm: 10.7 apart, the model's 10.8; likely); blind from the inside until 16 October 2026 */
       for(const s of[-1,1])F.push(T(add(H[26],[1,0],3.525*s),rM12,y0,y1));   /* 3.5 +0.05, drawn at the middle (3.5 until 26 October 2026; the escape setting's screws with them, escapement.js) */
-      {const n=176;F.push(T(H[10],8.0075/2,y0,y1),{p:C(H[10],11,n),q:C(H[10],11.7,n),a:y1-0.7,b:y1});   /* the fusee bush's hole 8.0 +0.015; J-K's recess Ø 22 at its floor, its wall opening at 45° to the face (P1c: the fusee's cover plate, Ø 21.1, lies in it; read until then as Ø 22 at the face, its floor Ø 20.6, which the plate can't enter) */
+      {const n=176;F.push(T(H[10],8.0075/2,y0,y1),{p:C(H[10],10.3,n),q:C(H[10],11,n),a:y1-0.7,b:y1});   /* the fusee bush's hole 8.0 +0.015; J-K's recess Ø 22 at the face, its 45° wall to the floor Ø 20.6, 0.7 deep: on 05 08_1a's J-K the
+        22's extension line drops from the wall's corner on the face line, not the floor's (pixels 153 and 146 across, the arrow's tip at 152), and 05 08_1b's one hidden circle,
+        the outermost edge, fits Ø 21.8-22.3 (27 October 2026; Ø 22 at the floor from P1c until then, for the fusee's cover plate, Ø 21.1: it stands only 0.275 into the recess,
+        where the wall is Ø 21.45, and clears it) */
         for(const b of[0,120,240])F.push(T(add(H[10],brg(b),5.2),rM14,y0,y1));}
       /* the balance's opening and the pocket, crossed (KIT.bool) so their outlines share their corners. The tongue, a slot 2.5 wide ("2,5" on 05 08_1b: sure) with a round
          end: its axis toward 113.5°, passing 0.85 S of 23's centre, its end r 9.0 from it. 05 08_1b traced (the opening's circle fitted, 9.81 px/mm, the sheet's N up by
@@ -161,7 +165,12 @@ const WFRAME=(()=>{
       F.push(B(H[26],4.6/2,y1,0.25));   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
       for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
       for(const k of[29,44])F.push(...pinBore(H[k],y0,y1,'A'));
-      F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
+      /* hole 30: G-H's setting (above). Sheet b's plan draws it as a solid circle Ø 4.78 and a dashed one Ø 5.35 (the circles fitted on 05 08_3b at 9.71 px/mm, by hole 1 to
+         30's 34.10; the sheet's other holes drawn 2.39-3.45 for 2.50-3.50): G-H's 4.59 and 5.2 (+0.19, +0.15), no third feature (the "hidden Ø 5.8" read in the drawings
+         check, 26 October 2026). The table (sheet a) reams it 2.50 ±0.009 instead, and Wempe 3955's plate has that: a plain hole Ø 2.4 dark, 2.9 over its chamfer, on the dial
+         face (3_Wempe_3955_uZ.jpg, 8.36 px/mm by the plate's 85) and Ø 2.4-2.8 on the inner face, no seat (8_Wempe_3955_Räderwerk_plus.jpg, by its M1.2 holes' 7.05):
+         the photographed version's plate so (F30, 27 October 2026), the drawn ones G-H's */
+      const i30=F.length;F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});const F30=[...F.slice(0,i30),T(H[30],2.50/2,y0,y1)];for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
       for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),A(q,WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
       if(V==='6mx')for(const q of WD.CONTACT6.screws56)F.push(T(q,rM17,y0,y1));   /* the 6MX's electrical contact's base screws, M1.7 through (train.js; WD.CONTACT6) */
       F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
@@ -192,7 +201,7 @@ const WFRAME=(()=>{
            8.3 apart, the bore's mouth in its face at r 42.16 on its middle line; 3_Wempe_3955_uZ.jpg, 8.42 px/mm, the plate's edge seen at r 42.17 where the ring's channel
            opens the lip, below; ±0.3: likely). On no sheet. The bore (above) opens in it */
         const eu=unit(H[18]),et=[-eu[1],eu[0]],P=(u,w)=>add(eu.map(q=>q*u),et,w),nt=bool(out,[P(42.16,-4.15),P(44,-4.15),P(44,4.15),P(42.16,4.15)]).dAB[0];
-        tag(mesh(rv(pp,'3955'),faceUV(hsb(solidGeo([{loop:nt,y0,y1,F}]))),DR?GH:G6D),'050802-1');}
+        tag(mesh(rv(pp,'3955'),faceUV(hsb(solidGeo([{loop:nt,y0,y1,F:[...F30,...F.slice(F30.length+1)]}]))),DR?GH:G6D),'050802-1');}
       else tag(mesh(rv(pp,V),faceUV(hsb(solidGeo([{loop:out,y0,y1,F}]))),DR?GH:G6D),'050802-1');}
     /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);   /* the 6MX's polished steel (3_Kirow_247_uZ.jpg, photocompare.py: sure) */
@@ -202,12 +211,13 @@ const WFRAME=(()=>{
     /* turned brass (Rundmessing 8,5 Ms 58), the body Ø 8.1 for 19.6 between its shoulders, which sit in the plates' seats; a spigot Ø 4.5 f7 at each end, 2.8 long, its last 1.1
        turned to Ø 4.3 at 6°; tapped M2.6 through from both ends (drawn at the thread's size and 0.02, as the tapped holes), a 90° countersink at each end; a half-round relief
        groove in each shoulder's face round the spigot's root (drawn, not figured: WD.PIL.grv). One profile turned about the pillar's axis, its outer wall rising in y */
-    {const P=WD.PIL,yb=WD.PIL_SEAT[1],yt=TI-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,rb=S.rs+0.02,cd=P.cs-rb,[gr,gd]=P.grv,gc=(P.sr+gr)/2,ga=(gr-P.sr)/2;
+    {const P=WD.PIL,yb=WD.PIL_SEAT[1],yt=TI-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,[gr,gd]=P.grv,gc=(P.sr+gr)/2,ga=(gr-P.sr)/2;
       const grv=(y,s)=>[...Array(9).keys()].map(i=>{const t=Math.PI*(1-i/8);return V2(gc+ga*Math.cos(t),y+s*gd*Math.sin(t));});   /* from the spigot out (s: into the body, +1 at the top shoulder) */
-      const prof=[V2(P.cs,e0),V2(P.tip[0],e0),V2(P.sr,e0+P.tip[1]),...grv(yt,1),V2(P.r,yt),V2(P.r,yb),...grv(yb,-1).reverse(),V2(P.sr,e1-P.tip[1]),V2(P.tip[0],e1),V2(P.cs,e1),V2(rb,e1-cd),V2(rb,e0+cd),V2(P.cs,e0)];
-      /* the 90° countersinks: 05 08 00-1 draws them from about Ø 2.6 down to the tap drill, 0.25 deep; drawn to the thread's size and 0.02, 0.03 deep, since the thread can't
-         be cut through a countersink here (ended at the crests, the thread's run-out lay under the screw's: fine.py, 26 October 2026; README, Unresolved) */
-      const pil=part('pillars',-20),pg=KIT.lathThread(prof,prof.length-3,{rs:S.rs},64);   /* the bore (rb, between the countersinks) tapped: the inside thread, one helix through (KIT's lathThread; 26 October 2026) */P3(pil,(g,[x,z])=>tag(mesh(g,pg,M.brass,x,0,z),'050800-1'));}
+      const prof=[V2(P.cs,e0),V2(P.tip[0],e0),V2(P.sr,e0+P.tip[1]),...grv(yt,1),V2(P.r,yt),V2(P.r,yb),...grv(yb,-1).reverse(),V2(P.sr,e1-P.tip[1]),V2(P.tip[0],e1),V2(P.cs,e1)];
+      /* the 90° countersinks: 05 08 00-1 draws them at 5:1 from Ø 2.59 at each face (44 px against the spigot's 4.5 at 77 px) down to the tap drill; cut, as a maker cuts
+         them, through the thread: the bore's wall from face to face the thread's or the cone's (r 1.3 at the face, 90°), whichever is wider, 0.24 deep to the thread's crests
+         (threadWall's th.cs; 27 October 2026: until then Ø 2.7 to the thread's size and 0.02, 0.03 deep, since a thread run out to the crests lay under the screw's: fine.py) */
+      const pil=part('pillars',-20),pg=KIT.lathThread(prof,prof.length-1,{rs:S.rs,cs:P.cs},64);   /* the bore tapped face to face through its countersinks: the inside thread, one helix through (KIT's lathThread; 26 October 2026) */P3(pil,(g,[x,z])=>tag(mesh(g,pg,M.brass,x,0,z),'050800-1'));}
 
     /* ================= the movement ring (Werkring, 05 08 00-3, as revised 6.12.46) ================= */
     /* The pillar plate sits in its seat (Ø 85 H9, 3 +0.1 deep) on a lip (Ø 83), the plate 0.35 proud of the ring's inner face (the coloured section, Wempe_Einheitschronometer.jpg,
@@ -463,7 +473,10 @@ const WFRAME=(()=>{
         for(const p of hin){put(p);put([-p[0],p[1]]);}
         disc.sort((p,q)=>an(p)-an(q));return{cells,disc,R0};})();
       const ySl=q=>TT-11.8-clamp(rr(q)-bo.R0,0,0.8);
-      const boss=[...bo.cells.map(Q=>({L:Q.loop,y0:TT-12.6,y1:/** @type {any} */(ySl),strip:Q.strip,F:[]})),{L:bo.disc,y0:TT-12.6,y1:/** @type {any} */(TT-11.8),strip:0,F:[{p:C(c,5.206/2),a:TT-12.6,b:TT-12.3},{p:C(c,4.59/2),a:TT-12.3,b:TT-11.8}]}];
+      /* the boss's foot 0.01 into the arm (yB): face to face at TT-12.6 the two solids' walls met edge to edge with their own steps, and the seat's and the setting screws' hole
+         walls showed a broken seam line there, the faces between them lying in the cracks (the drawings check, 05 08_05, 26 October 2026); overlapped, the fused mesh has no
+         face at the joint to show (27 October 2026) */
+      const yB=TT-12.61,boss=[...bo.cells.map(Q=>({L:Q.loop,y0:yB,y1:/** @type {any} */(ySl),strip:Q.strip,F:[]})),{L:bo.disc,y0:yB,y1:/** @type {any} */(TT-11.8),strip:0,F:[{p:C(c,5.206/2),a:yB,b:TT-12.3},{p:C(c,4.59/2),a:TT-12.3,b:TT-11.8}]}];
       const thF=[T(c,5.206/2,TT-15,TT-12.6),T(L(3.525,0),rM12,TT-15,TT-12.6),T(L(-3.525,0),rM12,TT-15,TT-12.6),
         T(WESC.HOLES.studScrew,rM14,TT-15,TT-12.6)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
       if(rr(WESC.HOLES.studScrew)+rM14>11.2)throw new Error('upper cock: the stud screw in the step');
