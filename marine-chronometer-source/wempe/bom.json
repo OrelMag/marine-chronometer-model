@@ -1489,27 +1489,14 @@
    "parent": "050302-3",
    "kind": "part",
    "part": "stud",
-   "fn": "Wedges the spring's outer end in the stud's slot.",
+   "fn": "Wedges the spring's outer end in the stud's hole (Ø 0.7, drilled at assembly), as the collet's pin holds the inner end.",
    "rel": [
     [
      "on",
      "050302-3"
     ]
    ],
-   "figs": "05 03_9",
-   "dev": [
-    {
-     "rel": [
-      "on",
-      "050302-3"
-     ],
-     "inst": [
-      0
-     ],
-     "why": "as first drawn (and in the Soviet 6MX, at those heights) the spring's top curve rides 0.3 higher in the stud's slot and its pin with it, 0.05 off the stud: the 1941 stud's seat for the pin isn't drawn (found 16 October 2026, already so on main at 3.00.01)",
-     "rev": "first 6mx 1943"
-    }
-   ]
+   "figs": "05 03_9"
   },
   {
    "id": "WN-11",

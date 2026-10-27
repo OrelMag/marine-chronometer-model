@@ -3619,15 +3619,18 @@ const WESC=(()=>{
        slot, 3.55 from the staff as the inner end is in the collet, the stud's leaning upright reaching in to it (05 03 02-3; above).
        Going up the helix the coils turn counterclockwise seen from the dial (left-hand). The spring's lower end turns with the balance, the coils share the turn */
     const colB=Y.armT-0.05,yL=colB-0.75,yU=yL-PITCH*TURNS;   /* the collet's underside 0.05 over the arm; the spring's lower end 0.75 over it (05 03_5) */
-    /* hsOut: the outer curve's end formed out to the stud's slot, its weight HSW along the curve (none to 150 deg, all from 200 deg, before the slot). The upright leans 8 deg,
-       so its slot's inner wall stands 0.3 tan 8 deg (0.042) further out where the spring meets it 0.3 higher, as first drawn: the maker forms the curve to where the slot
-       holds it, the spring 0.009 off that wall at its top edge as in the last state. The drawn spring only: the physics (HSP) keeps 05 03_7's curve. Until 18 October 2026
-       the end stood where the last state puts it, 0.033 into the wall as first drawn (the Contacts view) */
-    let hsOut=0;const HSW=HS0.map(([,a,u])=>u===1?smooth((a-a0U-150)/50):0);
-    const spPath=tw=>hsBend(tw).map(([x,z,u],i)=>{const k=hsOut*HSW[i]/(Math.hypot(x,z)||1);return[x*(1+k),yL-PITCH*TURNS*u,z*(1+k)];});   /* breathing (hsBend, above) */
+    /* the stud's hole (05 03 02-3; the stud, below): Ø 0.7, its centre 0.72 from the upright's end and 0.36 from its middle toward the axis, 3.46 from the staff */
+    const SK=TT-15,SYH=SK-1.6+6.1-0.72,SVH=4.35-Math.tan(8*D2R)*(SYH-SK)-0.36,SVS=SVH-0.06;
+    /* the outer curve's end formed into it: the drawn curve bows 0.18 across the stud's 1.8 (3.44 to 3.62 from the staff along it) and its top curve stands 0.2 under the
+       hole, so the maker straightens its last stretch along the hole, 0.06 inside its centre (the pin beside it, outside), and sets it up into it, over the curve's last 70
+       deg (HSW: none to 150 deg, all from 200 deg; the straightening from 2.1 to 1.45 along the bar before the pinning point, past the pin's end). The drawn spring only: the physics (HSP)
+       keeps 05 03_7's curve. Until 27 October 2026 the end ran in an open slot at the spring's height, formed out 0.3 tan 8 deg as first drawn */
+    let hsUp=0;const HSW=HS0.map(([,a,u])=>u===1?smooth((a-a0U-150)/50):0);
+    const spPath=tw=>hsBend(tw).map(([x,z,u],i)=>{if(HSW[i]>0){const uu=x*AX[0]+z*AX[1],vv=x*VO[0]+z*VO[1],w=vv>0?HSW[i]*smooth((2.1-uu)/0.65):0,dv=(SVS-vv)*w;x+=VO[0]*dv;z+=VO[1]*dv;}
+      return[x,yL-PITCH*TURNS*u+hsUp*HSW[i],z];});   /* breathing (hsBend, above) */
     const hs=part('hairspring',OFFB,[B[0],B[1],0]),hsRot=new THREE.Group();hs.add(hsRot);R.hsRot=hsRot;
-    onRev(v=>{const f=v!=='last';hs.position.y=f?SH1:0;hsOut=f?-SH1*Math.tan(8*D2R):0;R.spring.geometry=ribbonGeo(spPath(-(lastTw||0)),HB,HT,R.spring.geometry);});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher in the stud's slot (3.69 under its bar), the
-       stud's pin with it (its hole drilled at assembly, 05 03 02-3) */
+    onRev(v=>{const f=v!=='last';hs.position.y=f?SH1:0;hsUp=SYH-yU-(f?SH1:0);R.spring.geometry=ribbonGeo(spPath(-(lastTw||0)),HB,HT,R.spring.geometry);});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher: set down 0.1 into the hole, not up 0.2 */
+    hsUp=SYH-yU;
     const spring=tag(mesh(hs,ribbonGeo(spPath(0),HB,HT),M.mspring),'050302-1');R.spring=spring;R.spPath=spPath;
     /* the collet (Spiralrolle 05 03 02-2, 24.2.43: Messingblech Ms 58): a bar 9.1 −0.2 long, 3.8 −0.2 wide at its slit end and 2.7 −0.2 at the other, 3.3 high; bored 1.6 H7 at
        1:70 for the staff; slit 0.2 +0.1 from the wide end to 0.1 +0.05 short of the bore (built 0.25 and 0.125, the fits' middles); the spring's hole Ø 0.8 (Kegel 1:90)
@@ -3658,24 +3661,41 @@ const WESC=(()=>{
        ground so, shows under Ø 0.3 across (2_Wempe_3955_A.jpg at 8.81 px/mm, enlarged 5×, where Ø 0.8 would be 7 px: likely): left out, a maker rounds the blank and grinds it away. The upright: 1.8 g6 thick along the bar, flush with its square end, 1.9 −0.2 across (drawn 1.86, so its inner face
        clears the cock's slot by 0.01 with the bar's middle on the hole), 6.1 −0.2 from the bar's top to its end, cut square to the bar; it leans 8° toward the balance's axis
        (the side view's 98°, its end's far edge 1.6 −0.2 from the bar's middle in the plan: 1.57 here), along the cock's slot's inner wall (05 08 03-1, Schnitt C-D: 82°;
-       frame.js). Its end's slot, 1.2 −0.1 (drawn 1.15), takes the spring and the pin across it (the pin's hole Ø 0.7 "bei Montage der Spirale gebohrt", drilled when the spring is fitted, so placed by the spring:
-       the end view's circle, drawn about Ø 0.8 and 0.7 from the end, stands 0.56 from the upright's face toward the axis, the spring then against the outer wall, 4.4 from the
-       staff against 05 03_7's pinning radius and the collet's 3.5: the spring's place kept, the pin in the slot beside it, so no metal is drilled): the slot in the upright's middle
-       brings it 0.56 nearer the axis at the spring's height than an upright square to the bar would, so the spring lies 3.55 out, as in the collet, its pin beside it against the
-       slot's outer wall; the slot's depth, 2.0, is estimated. On the cock's top, the bar
+       frame.js). The upright is solid to its end: the plan's dashed lines, 1.87 apart, are its own sides hidden under the bar, and its "1,2 −0,1" runs from the bar's
+       middle to its edge at the square end ("2,5 −0,2" the whole width; "1,6 −0,2" the middle to the upright's end's far edge): no slot (one read as a slot 1.2 wide,
+       2.0 deep, open at the end, until 27 October 2026). The spring's end goes into the hole across its end (below). On the cock's top, the bar
        along the arm toward the foot (Wempe 3955), the upright down through the slot; screwed down through its hole (Schraube WN-11, the coloured section). Until 15 October
        2026 the bar was 1.4 thick and 3.1 wide to its square end, its hole 5.9 from that end, a V cut through its point 2.1 deep, and the upright square to it */
     {const st=part('stud',OFFB),ck=TT-15,SBT=1.6,yB=ck-SBT,yE=yB+6.1,L=STUD,uw=0.895,c=4.35,tn=Math.tan(8*D2R),hw=0.93/Math.cos(8*D2R),HU=4.1;
       const Ep=L(-uw,c+1.25),Em=L(-uw,c-1.25),Cp=L(HU,c+1.55),Cm=L(HU,c-1.55),Ap=L(HU+6.6,c),Tp=L(13.7,c);
       const plane=(P,Q,S)=>{const u=[Q[0]-P[0],Q[1]-P[1],Q[2]-P[2]],v=[S[0]-P[0],S[1]-P[1],S[2]-P[2]],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
         return p=>P[2]-(n[0]*(p[0]-P[0])+n[1]*(p[1]-P[1]))/n[2];},fac=q=>plane([...q,yB],[...Ap,yB],[...Tp,ck-0.05]);   /* a facet: through the V's arm on the top and the point, 0.05 thick */
+      /* the hole (05 03 02-3's end view, at 5:1, 167 px/mm enlarged: sure to ±0.05): Ø 0.7 "bei Montage der Spirale gebohrt", along the bar through the upright, its centre
+         0.72 from the end and 0.36 from the upright's middle toward the axis, 3.46 from the staff, where 05 03_7's curve and the collet (3.5, 05 03 02-2) pin the spring:
+         the spring's end in it with its pin (Spiralstift 05 03 02-4), outside it (below), as the collet holds the inner end in its Ø 0.8 with its own. Until 27 October 2026 a Ø 0.66 pin beside the spring in a slot */
+      const v0=c-hw,v1=c+hw,dq=yE-ck,o0=L(0,0),fl=(r,n)=>r/Math.cos(Math.PI/n);
       const stB=tag(mesh(st,solidGeo([{loop:ccw([Em,Cm,Ap,Cp,Ep]),y0:yB,y1:ck,F:[{p:C(L(HU,c),0.75+0.0045,48),a:yB,b:ck}]},{loop:ccw([Cp,Ap,Tp]),y0:fac(Cp),y1:ck},{loop:ccw([Cm,Tp,Ap]),y0:fac(Cm),y1:ck}]),M.brass),'050302-3');
-      /* the upright, built square to the bar from its underside and leant by a shear about that face; the slot in its middle */
-      const v0=c-hw,v1=c+hw,s0=c-0.575,s1=c+0.575,up=solidGeo([{loop:ccw([L(-uw,v0),L(uw,v0),L(uw,s0),L(-uw,s0)]),y0:ck,y1:yE},
-        {loop:ccw([L(-uw,s0),L(uw,s0),L(uw,s1),L(-uw,s1)]),y0:ck,y1:yE-2.0},{loop:ccw([L(-uw,s1),L(uw,s1),L(uw,v1),L(-uw,v1)]),y0:ck,y1:yE}]);
-      up.applyMatrix4(new THREE.Matrix4().set(1,-VO[0]*tn,0,VO[0]*tn*ck,0,1,0,0,0,-VO[1]*tn,1,VO[1]*tn*ck,0,0,0,1));fuse([stB,tag(mesh(st,up,M.brass),'050302-3',1)]);   /* the stud's bar and upright one piece, one mesh (fuse): their faces flush, lines in Edges until 21 October 2026 */
-      const sp=tag(across(st,lathe([[0,-0.4],[0.33,-0.4],[0.33,0.4],[0,0.4]],16),M.steel,L(-0.5,RSTUD+HT/2+0.335),AX,yU),'050302-4.s');   /* the pin beside the spring's end in the slot, outside it, 0.005 clear of it, past the pinning point (4.36 out with the spring at 3.87 until 15 October 2026) */
-      const sp0=[sp.position.x,sp.position.z];onRev(v=>{const f=v!=='last',o=f?-SH1*Math.tan(8*D2R):0;sp.position.set(sp0[0]+VO[0]*o,yU+(f?SH1:0),sp0[1]+VO[1]*o);});   /* out with the spring's end (hsOut), against the slot's outer wall as in the last state */
+      /* the upright: its side outline (v across, the height down, leaning 8°) extruded along the bar through its 1.79 with the hole through it (its polygon's flats on its
+         radius); built in that frame, then turned into the movement's */
+      let up=solidGeo([{loop:ccw([[v0,ck],[v1,ck],[v1-tn*dq,yE],[v0-tn*dq,yE]]),y0:-uw,y1:uw,F:[{p:ccw(C([SVH,SYH],fl(0.35,32),32)),a:-uw,b:uw}]}]);
+      const sU=Math.sign(AX[0]*VO[1]-VO[0]*AX[1])||1;   /* the bar's way chosen so the frame turns without mirroring (the solid stays facing out) */
+      up.applyMatrix4(new THREE.Matrix4().set(VO[0],sU*AX[0],0,o0[0],0,0,1,0,VO[1],sU*AX[1],0,o0[1],0,0,0,1));
+      fuse([stB,tag(mesh(st,up,M.brass),'050302-3',1)]);   /* the stud's bar and upright one piece, one mesh (fuse): their faces flush, lines in Edges until 21 October 2026 */
+      /* the pin: half round (D), the hole's round less the spring's side, its flat 0.005 off the strip, 0.45 proud of each face (estimated), brass (Ldzmn4kuKMA 4:32-4:34:
+         a brass end about as wide as the hole beside the spring's; likely) */
+      const PRr=0.349,vf=SVS+HT/2+0.005-SVH,t0=Math.acos(vf/PRr),dP=[...Array(25).keys()].map(i=>{const t=-t0+2*t0*i/24;return[SVH+PRr*Math.cos(t),SYH+PRr*Math.sin(t)];});
+      /* lofted along the bar, each end domed over its last 0.2 (the section drawn in toward its middle, to 0.35 of itself at the tip) */
+      const dc=dP.reduce((a,p)=>[a[0]+p[0]/25,a[1]+p[1]/25],[0,0]),UE=uw+0.45,dk=[0,0.05,0.1,0.15,0.2],sk=d=>0.35+0.65*Math.sqrt(Math.max(0,1-((0.2-d)/0.2)**2));
+      const stn=[...dk.map(d=>[-UE+d,sk(d)]),...dk.slice().reverse().map(d=>[UE-d,sk(d)])],pv=[],ix=[],nP=dP.length;
+      for(const[uu,k]of stn)for(const p of dP)pv.push(dc[0]+(p[0]-dc[0])*k,uu,dc[1]+(p[1]-dc[1])*k);
+      for(let s=0;s+1<stn.length;s++)for(let i=0;i<nP;i++){const a=s*nP+i,b=s*nP+(i+1)%nP,c2=a+nP,d2=b+nP;ix.push(a,b,d2,a,d2,c2);}
+      const cA=pv.length/3;pv.push(dc[0],-UE,dc[1]);const cB=cA+1;pv.push(dc[0],UE,dc[1]);const lS=(stn.length-1)*nP;
+      for(let i=0;i<nP;i++){ix.push(cA,(i+1)%nP,i);ix.push(cB,lS+i,lS+(i+1)%nP);}
+      const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.Float32BufferAttribute(pv,3));
+      {let V=0;for(let t=0;t<ix.length;t+=3){const p=[0,1,2].map(q=>[pv[ix[t+q]*3],pv[ix[t+q]*3+1],pv[ix[t+q]*3+2]]);V+=p[0][0]*(p[1][1]*p[2][2]-p[1][2]*p[2][1])-p[0][1]*(p[1][0]*p[2][2]-p[1][2]*p[2][0])+p[0][2]*(p[1][0]*p[2][1]-p[1][1]*p[2][0]);}
+        if(V<0)for(let t=0;t<ix.length;t+=3){const q=ix[t+1];ix[t+1]=ix[t+2];ix[t+2]=q;}}   /* wound to face out */
+      pg.setIndex(ix);pg.applyMatrix4(new THREE.Matrix4().set(VO[0],sU*AX[0],0,o0[0],0,0,1,0,VO[1],sU*AX[1],0,o0[1],0,0,0,1));
+      tag(mesh(st,(g=>{g.computeVertexNormals();return g;})(pg.toNonIndexed()),M.brass),'050302-4.s');
       /* its screw (WN-11): head Ø 2.3 × 1.6, M1.4 down through the bar and the cock's 2.4, its end 0.6 under the cock, as the coloured section draws it
          (Wempe_Einheitschronometer.jpg px 1408.4-1429.6 × 156-171.4, the shank's rounded end at 215.6 under the cock's underside at 210, at 9.37 px/mm: Ø 2.26 × 1.64,
          0.6 through; likely: head Ø 2.4 × 0.8 and blind 2.0 in the cock until 17 October 2026) */
