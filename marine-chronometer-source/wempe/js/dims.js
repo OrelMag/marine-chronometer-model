@@ -37,7 +37,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       sr:mid(PSF)/2,sF:PSF,   // its end spigots Ø 4.5 f7 (-0.010/-0.022, PSF), drawn at the middle of the fit, 4.484: sure
       sL:2.75,   // each 2.8 -0.1 long, drawn at the middle (2.8 until 26 October 2026): sure
       tip:[4.3/2,1.1],   // each spigot's end turned to Ø 4.3 -0.2 over 1.1 -0.2, a 6° lead: sure
-      cs:2.7/2,   // the 90° countersink at each end of the thread, Ø 2.7 at the face: scaled at 5:1 (no figure), about the thread's own diameter: estimated
+      cs:2.6/2,   // the 90° countersink at each end of the thread, Ø 2.6 at the face (2.59 scaled at 5:1, no figure: the thread's own diameter), to the tap drill (about 0.25 deep, drawn): likely (2.7 until 27 October 2026)
       grv:[3.25,0.35],   // a relief groove in each shoulder's face round the spigot's root, out to r 3.25 and 0.35 deep, half-round: drawn at 5:1 without figures, scaled: estimated
       Ltot:25.3},   // overall 25.3 -0.2 (19.6 + 2 × 2.8 = 25.2): sure; tapped M2.6 through from both ends ("Gewinde von beiden Seiten einschneiden")
     PIL_HOLE:mid(PHF)/2,PIL_HF:PHF,   // the plates' pillar holes, reamed 4.50 +0.012 (PHF; 05 09 01 nos. 11, 39, 49; 05 08 02-1 the same), drawn at the middle of the fit, 4.506: sure

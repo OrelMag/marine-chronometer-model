@@ -315,14 +315,17 @@ const KIT=(()=>{
   /* a tapped hole's wall (a solidGeo feature's th: {rs, p?, yr?}): the inside thread of ISO 68-1's basic profile at 6H's minimum, its root at rs and its crest at rs − d (isoD),
      u = (y − yr)/p + θ/τ about the loop's centre in the part's frame, from lo to hi; within a pitch of each end it runs out to the drilled loop (the feature's p, a ring at
      the tapping drill's mouth: the hole's countersink or chamfer), so the faces, a countersink sharing the loop and the floors are as they were. th.out: an outside thread instead (a turned stud's, lathThread), at 6g, the loop at its root, to which it runs out, so it never stands proud of its thread. One column at each of the
-     loop's corners, zipped as helixSide's; faces toward the axis. The screw's shank is turned on its axis to meet it (matchThreads) */
+     loop's corners, zipped as helixSide's; faces toward the axis. The screw's shank is turned on its axis to meet it (matchThreads). th.cs: a 90° countersink at each end, the loop
+     its mouth (r cs ≥ rs): the thread cut through it, the wall the larger of the thread's and the cone's r cs − (depth from the face), no run-out (the pillars, 05 08 00-1, 27 October 2026) */
   function threadWall(L,th,lo,hi,tri){const p=th.p||isoP(th.rs),d=isoD(p),ex=!!th.out,full=u=>ex?th.rs-isoEs(p)-d+d*isoU(u):th.rs+d*(isoU(u)-1),yr=th.yr||0,c=cen(L),n=L.length,ew=Math.min(p,(hi-lo)/3),BK=[0.125,0.4375,0.5625,0.875];
-    const s=y=>Math.max(0,Math.min(1,(y-lo)/ew,(hi-y)/ew)),A=[];let a=Math.atan2(L[0][1]-c[1],L[0][0]-c[0])/TAU;
+    const cs=th.cs,s=y=>cs?1:Math.max(0,Math.min(1,(y-lo)/ew,(hi-y)/ew)),A=[];let a=Math.atan2(L[0][1]-c[1],L[0][0]-c[0])/TAU;
     for(let k=0;k<n;k++){if(k){const t0=Math.atan2(L[k-1][1]-c[1],L[k-1][0]-c[0]),t1=Math.atan2(L[k][1]-c[1],L[k][0]-c[0]);a+=(((t1-t0)%TAU+3*Math.PI)%TAU-Math.PI)/TAU;}A.push(a);}   /* each corner's turn, unwrapped along the loop */
     const ad=A[n-1]+(((Math.atan2(L[0][1]-c[1],L[0][0]-c[0])-Math.atan2(L[n-1][1]-c[1],L[n-1][0]-c[0]))%TAU+3*Math.PI)%TAU-Math.PI)/TAU-A[0];   /* +1 round an anticlockwise loop, -1 a clockwise */
     const col=k=>{const ak=A[k],q=L[k],R0=Math.hypot(q[0]-c[0],q[1]-c[1]),ux=(q[0]-c[0])/R0,uz=(q[1]-c[1])/R0,uA=(lo-yr)/p+ak,uB=(hi-yr)/p+ak,us=[uA];
-      for(let m=Math.floor(uA);m<=uB;m++)for(const b of BK){const u=m+b;if(u>uA+1e-9&&u<uB-1e-9)us.push(u);}for(const y of[lo+ew,hi-ew]){const u=(y-yr)/p+ak;if(u>uA+1e-9&&u<uB-1e-9&&!us.some(v=>Math.abs(v-u)<1e-9))us.push(u);}us.sort((x,y)=>x-y);us.push(uB);
-      return us.map((u,i)=>{if(i===0)return{u,v:[q[0],lo,q[1]]};if(i===us.length-1)return{u,v:[q[0],hi,q[1]]};const y=yr+p*(u-ak),r=R0+s(y)*(full(u)-R0);return{u,v:[c[0]+r*ux,y,c[1]+r*uz]};});};
+      for(let m=Math.floor(uA);m<=uB;m++)for(const b of BK){const u=m+b;if(u>uA+1e-9&&u<uB-1e-9)us.push(u);}for(const y of[lo+ew,hi-ew]){const u=(y-yr)/p+ak;if(u>uA+1e-9&&u<uB-1e-9&&!us.some(v=>Math.abs(v-u)<1e-9))us.push(u);}
+      if(cs){const cd=cs-th.rs+d;for(const[y0,y1]of[[lo,lo+cd],[hi-cd,hi]])for(let i=1;i<24;i++){const u=(y0+(y1-y0)*i/24-yr)/p+ak;if(u>uA+1e-9&&u<uB-1e-9)us.push(u);}}   /* the countersinks' cone met finely */
+      us.sort((x,y)=>x-y);us.push(uB);
+      return us.map((u,i)=>{if(i===0)return{u,v:[q[0],lo,q[1]]};if(i===us.length-1)return{u,v:[q[0],hi,q[1]]};const y=yr+p*(u-ak),r=cs?Math.max(full(u),cs-Math.min(y-lo,hi-y)):R0+s(y)*(full(u)-R0);return{u,v:[c[0]+r*ux,y,c[1]+r*uz]};});};
     const C=[...Array(n).keys()].map(col),nn=v=>{const x=c[0]-v[0],z=c[1]-v[2],l=(Math.hypot(x,z)||1)*(ex?-1:1);return[x/l,0,z/l];};
     for(let k=0;k<n;k++){const P0=C[k],P1=k+1<n?C[k+1]:C[0].map(o=>({u:o.u+ad,v:o.v}));let i=0,j=0;
       while(i<P0.length-1||j<P1.length-1){if(j>=P1.length-1||(i<P0.length-1&&P0[i+1].u<=P1[j+1].u)){const t=[P0[i].v,P0[i+1].v,P1[j].v];tri(...t,nn(P0[i].v));i++;}else{const t=[P0[i].v,P1[j+1].v,P1[j].v];tri(...t,nn(P0[i].v));j++;}}}}

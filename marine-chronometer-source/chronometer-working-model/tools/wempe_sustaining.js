@@ -23,10 +23,10 @@ const num=(re,what)=>{const m=re.exec(FU);if(!m)throw Error('not found in fusee.
 const f=(x,n=0)=>(+x).toFixed(n),D2R=Math.PI/180,TAU=2*Math.PI,rows=[],out={};let fail=0;
 const say=s=>rows.push('  '+s),chk=(ok,s,soft)=>{if(!ok&&!soft)fail=1;rows.push(`${ok?'  ok ':soft?'  ~~ ':'  !! '} ${s}`);};
 /* the ring as fusee.js draws it: its widths (05 06 01-1, traced), its outer radius, the eye's offset and radius, the square end, the pin at 295°, its thickness */
-const WT=JSON.parse(num(/w48=tab\((\[\[[^\n]*?\]\])\)/,'the widths')[0]),[RO]=num(/\(([\d.]+)-w\)-r,r-[\d.]+\)/,'the outer radius').map(Number);
+const W48=new Function('D2R',num(/\/\* MS-W48 \*\/([\s\S]*?)\/\* \/MS-W48 \*\//,'the widths (its MS-W48 block)')[0]+';return w48;')(D2R),[RO]=num(/\(([\d.]+)-w\)-r,r-[\d.]+\)/,'the outer radius').map(Number);
 const [EYO]=num(/EYO=([-\d.]+)/,'the eye\'s offset').map(Number),[ER]=num(/Math\.hypot\(x-eye\[0\],y-eye\[1\]\)-([\d.]+)/,'the eye\'s radius').map(Number);
 const [USQ]=num(/if\(u>(\d+)\/360\)return 1/,'the square end').map(Number),[UPIN]=num(/PINS=bk\((\d+),0\)/,'the pin at 295°').map(Number),[TH]=num(/GS1=WW-([\d.]+)/,'the thickness').map(Number);
-const wAt=d=>{for(let i=1;i<WT.length;i++)if(d<=WT[i][0]){const[a0,w0]=WT[i-1],[a1,w1]=WT[i];return w0+(w1-w0)*(d-a0)/(a1-a0);}return WT[WT.length-1][1];};
+const wAt=W48;   /* fusee.js's own width function, its MS-W48 block run here (a table read from it until 27 October 2026) */
 /* in the sheet's sense (u from 0° at the eye, the way the widths run; mirrored in the model, the same figures): a point at r, u. The eye's hole EYO toward the square end
    off its 0° line, as fusee.js has it (0: 05 06 01-1, to scale there, draws it on the line; its "0,8" by the eye is tried both ways below) */
 const at=(r,u)=>[r*Math.sin(u*D2R),-r*Math.cos(u*D2R)],RP=14.2;
@@ -57,7 +57,7 @@ function ring({t=TH,E_=207e3,eo=-EYO,u0=ER/RP/D2R}={}){
   const psiB=lo*D2R,B=nl(psiB),H=nl(psiB/2),h=psiB/2,k2=(B.T-2*H.T)/(2*h*h),k1=(H.T-k2*h*h)/h,small=nl(0.25*D2R);
   return{k0,k1,k2,kS:small.T/(0.25*D2R),psiB,Tb:B.T,B,nl,ue,Tq:ph=>k1*ph+k2*ph*ph,phOf:T=>(-k1+Math.sqrt(k1*k1+4*k2*T))/(2*k2)};}   /* N·m a radian (k0 Castigliano's, kS the elastica's at 0.25°), T = k1 ψ + k2 ψ² through the elastica's at ψB / 2 and ψB */
 const R0=ring();
-say(`the ring as drawn (fusee.js, from 05 06 01-1): Ø ${f(2*RO,2)}, ${TH} thick, ${f(wAt(100),1)} wide (radially) to 272°, widening to ${f(wAt(USQ),1)} at its square end (${USQ}°); its pins on r ${RP} at the eye and at ${UPIN}°; the eye's pin up into the ratchet, the other down into the fusee wheel (05 06_4 A-B)`);
+say(`the ring as drawn (fusee.js, from 05 06 01-1): Ø ${f(2*RO,2)}, ${TH} thick, ${f(wAt(100),1)} wide (radially) from 50° to 270° (${f(wAt(10),2)} at 10°, toward the eye), widening to ${f(wAt(USQ),1)} at its square end (${USQ}°); its pins on r ${RP} at the eye and at ${UPIN}°; the eye's pin up into the ratchet, the other down into the fusee wheel (05 06_4 A-B)`);
 say(`the band from the eye's round end (${f(ER/RP/D2R,1)}°) to the wheel's pin, held there by the recess's wall, bent as an elastica: its eye would meet the square end after ${f(R0.psiB/D2R,1)}° of closing, the spring then pushing ${f(R0.Tb*1000,0)} mN·m (${f(R0.Tb/R0.psiB,3)} N·m a radian on average; ${f(R0.k1,3)} at small turns, stiffening as it closes: T = ${f(R0.k1,4)} ψ + ${f(R0.k2,4)} ψ², ψ in rad)`);
 chk(Math.abs(R0.kS-R0.k0)<0.01*R0.k0&&Math.abs(R0.k1-R0.k0)<0.02*R0.k0,`at small turns the elastica gives Castigliano's stiffness: ${f(R0.kS,3)} at 0.25° against ${f(R0.k0,3)} N·m a radian (and the fit's ${f(R0.k1,3)})`);
 chk(R0.B.miss<1e-6,`the elastica brings the eye's pin where the ratchet turns it (missing by ${(R0.B.miss*1e3).toExponential(1)} µm)`);

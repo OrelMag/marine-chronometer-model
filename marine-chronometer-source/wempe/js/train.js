@@ -35,7 +35,8 @@ const WTRAIN=(()=>{
   function gear(T,th,o={}){const s=new THREE.Shape();s.moveTo(T.xy[0][0],T.xy[0][1]);for(let i=1;i<T.xy.length;i++)s.lineTo(T.xy[i][0],T.xy[i][1]);s.closePath();
     if(o.spokes){const[n,sw,R0,R1,sw1]=o.spokes,d1=Math.asin((sw1||sw)/2/R1),d0=Math.asin(sw/2/R0);   /* sw at the hub, sw1 (if given) at the rim: straight edges between, a taper */
       for(let j=0;j<n;j++){const a0=j/n*TAU,a1=(j+1)/n*TAU,h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
-    if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
+    if(o.bore){const h=new THREE.Path();if(o.bseg){for(let k=0;k<o.bseg;k++){const t=-k/o.bseg*TAU;if(k)h.lineTo(o.bore*Math.cos(t),o.bore*Math.sin(t));else h.moveTo(o.bore,0);}h.closePath();}else h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}   /* bseg (a multiple of 4): the bore an
+       n-gon on the same angles as a lathe of n segments, so a pipe turned to the bore's radius lies on its flats exactly (the curve's 24 points left the motion work's 48- and 64-segment seats 0.02-0.03 into them until 27 October 2026) */
     const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:o.spokes?40:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro:T.ro,ri:T.ri,pl:T.xy});return g;}
   /* a turned solid from a profile [[r, y], ...] listed from one end on the axis to the other, y rising (counterclockwise in r, y, as shaftGeo's) */
   const turned=(P,seg=64)=>KIT.latheF(P.map(([r,y])=>V2(r,y)),seg);
