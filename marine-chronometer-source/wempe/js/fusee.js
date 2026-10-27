@@ -703,7 +703,7 @@ const WFUSEE=(()=>{
          cubed: t and E drop out of the shape), M = (p - x) × F the moment about the bent band's point of the force on the eye's pin, F found by Newton so the eye's pin
          lies where the ratchet turns it (wempe_sustaining.js solves the same, and gives the push). Each outline point moves with the band's section at its angle round,
          the eye's round end with the band's end, the tail past the pin not at all */
-      const bend=wf=>{const u0=1.8/14.2/D2R,N=300,C=[],I=[];for(let i=0;i<=N;i++){const u=295-(295-u0)*i/N,w=wf(u);C.push(i?sh(16.125-w/2,aE-u*D2R):hs);I.push(w**3);}
+      const bend=(wf,R0=16.125)=>{const u0=1.8/14.2/D2R,N=300,C=[],I=[];for(let i=0;i<=N;i++){const u=295-(295-u0)*i/N,w=wf(u);C.push(i?sh(R0-w/2,aE-u*D2R):hs);I.push(w**3);}
         const Ls=[],As=[];for(let i=1;i<=N;i++){Ls.push(Math.hypot(C[i][0]-C[i-1][0],C[i][1]-C[i-1][1]));As.push(Math.atan2(C[i][1]-C[i-1][1],C[i][0]-C[i-1][0]));}
         const rot=(v,a)=>[v[0]*Math.cos(a)-v[1]*Math.sin(a),v[0]*Math.sin(a)+v[1]*Math.cos(a)],off=[eye[0]-C[N][0],eye[1]-C[N][1]];
         const shoot=(F,tg)=>{let x=hs.slice(),d=0;const X=[x],TH=[0];for(let i=0;i<N;i++){const m=[x[0]+0.5*Ls[i]*Math.cos(As[i]+d),x[1]+0.5*Ls[i]*Math.sin(As[i]+d)];
@@ -720,7 +720,7 @@ const WFUSEE=(()=>{
          edge running on into the eye's round with no step (05 06 01-1, 020605); 05 06 01-1's line comes in over the 60° before the eye (tools/wempe_maintspring.py: 0.17
          inside its own radius over 60-120° at 10°, 0.10 at 40°, 0.07 at 60°, the drawn ring wandering ±0.08 about its circle). So an arc tangent to the outer circle 60° from
          the eye and to the eye's round (r 15.88, its centre 0.25 off the axis; 0.09 inside the circle at 10°, 0.03 at 30°): until 27 October 2026 the band was cut square at the eye's centre line, its outer corner 0.125 proud of the eye (the drawings check, batch 6) */
-      const U1=60,RB=16.125-((16.125-1.8)**2-14.2*14.2)/(2*(16.125-1.8)-2*14.2*Math.cos(U1*D2R)),QB=sh(16.125-RB,aE-U1*D2R),bl=(x,y)=>fr((aE-Math.atan2(y,x))/TAU)*360<U1?Math.hypot(x-QB[0],y-QB[1])-RB:-1e9;
+      const U1=60,blendOf=R=>{const RB=R-((R-1.8)**2-14.2*14.2)/(2*(R-1.8)-2*14.2*Math.cos(U1*D2R));return{RB,QB:sh(R-RB,aE-U1*D2R)};};   /* the blend's radius and centre for a ring of outer radius R */
       for(const v of['last 6mx 1943','first']){const g=rv(gMS2,v);
         const band=(x,y)=>{const r=Math.hypot(x,y),a=angOf(x,-y),u=fr((aE-a)/TAU);   /* u: the way round from the eye, clockwise here */
           if(u>336/360)return 1;const w=(v==='first'?w41:w48)(u*360);return Math.max((16.125-w)-r,r-16.125);};
@@ -728,16 +728,18 @@ const WFUSEE=(()=>{
            build book listed hundreds of segments; the second drawing check, 3-M8): the outer circle r 16.125 from the square end to 60° from the eye, the blend r RB to its
            tangency with the eye's round, the eye's round r 1.8 about its hole to where the inner edge meets it, the inner edge (the width w48's arcs or 020605's table) back
            to the square end at 336°, its corners on their breakpoints, the end radial */
-        const wf=v==='first'?w41:w48,at=(u,r)=>sh(r,aE-u*D2R),in_=u=>at(u,16.125-wf(u)),dE=p=>Math.hypot(p[0]-eye[0],p[1]-eye[1]),L=[];
-        for(let u=336;u>U1;u-=1)L.push(at(u,16.125));
-        const tB=Math.atan2(eye[1]-QB[1],eye[0]-QB[0]),aB0=Math.atan2(at(U1,16.125)[1]-QB[1],at(U1,16.125)[0]-QB[0]);let dB=tB-aB0;while(dB>Math.PI)dB-=TAU;while(dB<-Math.PI)dB+=TAU;   /* the blend, from its tangency with the ring to the eye's (internal: QB, the eye's centre and the tangency in a line) */
+        /* the ring's outside: 05 06 01-1's Ø 32.3 -0.1 drawn 32.25; as first drawn 020605's boxed [32,3 -0,02] (32.28-32.30, checked at acceptance), drawn at its middle, 32.29
+           (32.25 until 28 October 2026: the second drawing check, 3-M12a); the pins' holes on r 14.2 in both */
+        const R0v=v==='first'?16.145:16.125,{RB,QB}=blendOf(R0v),wf=v==='first'?w41:w48,at=(u,r)=>sh(r,aE-u*D2R),in_=u=>at(u,R0v-wf(u)),dE=p=>Math.hypot(p[0]-eye[0],p[1]-eye[1]),L=[];
+        for(let u=336;u>U1;u-=1)L.push(at(u,R0v));
+        const tB=Math.atan2(eye[1]-QB[1],eye[0]-QB[0]),aB0=Math.atan2(at(U1,R0v)[1]-QB[1],at(U1,R0v)[0]-QB[0]);let dB=tB-aB0;while(dB>Math.PI)dB-=TAU;while(dB<-Math.PI)dB+=TAU;   /* the blend, from its tangency with the ring to the eye's (internal: QB, the eye's centre and the tangency in a line) */
         for(let i=0;i<=12;i++){const a=aB0+dB*i/12;L.push([QB[0]+RB*Math.cos(a),QB[1]+RB*Math.sin(a)]);}
         let ul=0,uh=40;for(let i=0;i<60;i++){const m=(ul+uh)/2;if(dE(in_(m))<1.8)ul=m;else uh=m;}const ui=(ul+uh)/2,Pi=in_(ui);   /* where the inner edge leaves the eye's round (the shallow corner) */
         const eT=Math.atan2(L[L.length-1][1]-eye[1],L[L.length-1][0]-eye[0]),eP=Math.atan2(Pi[1]-eye[1],Pi[0]-eye[0]);
         let dA=eP-eT;while(dA<0)dA+=TAU;const mid=d=>{const a=eT+d/2;return[eye[0]+1.8*Math.cos(a),eye[1]+1.8*Math.sin(a)];};if(band(...mid(dA))<0)dA-=TAU;   /* round the eye's end, the way outside the band */
         const nE=Math.ceil(Math.abs(dA)/(3*D2R));for(let i=1;i<nE;i++){const a=eT+dA*i/nE;L.push([eye[0]+1.8*Math.cos(a),eye[1]+1.8*Math.sin(a)]);}
         const BK=v==='first'?[40,100,150,195,240,270]:[50.3,270,w48.UC];for(let u=ui;u<336;){L.push(in_(u));const nb=BK.filter(b=>b>u+1e-9).concat(336)[0];u=Math.min(u+1,nb);}L.push(in_(336));   /* the inner edge every 1° and at its breakpoints */
-        const loc=L.map(([x,y])=>[x,-y]),sv=bend(wf);
+        const loc=L.map(([x,y])=>[x,-y]),sv=bend(wf,R0v);
         const geo=phi=>{const d=sv(phi),c=Math.cos(phi),sn=Math.sin(phi);   /* the eye's hole turned as the ratchet turns its pin (the same circle about the pin as bent with the band's end, its facets kept on the pin's) */
           return solidGeo([{loop:bent(loc,d),y0:GS1,y1:GS0,F:[{p:eyeH.map(([x,z])=>[x*c+z*sn,-x*sn+z*c]),a:GS1,b:GS0},{p:hsH,a:GS1,b:GS0}]}]);};
         msBent.push({m:tag(mesh(g,geo(WPHYS.runPhi(1)),M.blue310),'050601-1'),geo});}
