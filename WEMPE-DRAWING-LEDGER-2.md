@@ -85,16 +85,16 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | done | done | — | — | — | read; model comparison next |
 | `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | done | done | — | — | — | read; model comparison next |
 | `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | — | — | — | — | — | not started |
-| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | — | — | — | — | — | not started |
+| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | — | — | — | read; model comparison next |
 | `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | — | — | — | — | — | not started |
 | `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | — | — | — | — | — | not started |
 | `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | — | — | — | — | — | not started |
