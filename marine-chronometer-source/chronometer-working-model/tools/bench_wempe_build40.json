@@ -47,7 +47,7 @@
    "sheet": "05 03, 05 04",
    "when": "the balance, hairspring and detent in, the train held still at a lock; before the mainspring is chosen",
    "how": "Give the balance a full swing (a twist of the movement) and let it run down, the train held. Film it from above at 30 frames a second, a card marked every 30° under it, and read the swing every few seconds (python wempe_swing.py reads a video so); time how long it takes to halve from about 207°.",
-   "pass": "The model's balance halves its swing in 57 s (its TF 111 s; a running 6MX on video, moMvyx8eXfo, has TF 133-332 s at it: wempe_startup.js, which the model's TF is set from). Halving in 44, 53, 57, 62, 74, 85 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 180, 194, 203, 212, 233, 252° at 12 h; the guard's 180° at the wind's lowest wants ×1.046, 0.917, 0.854, 0.790, 0.673, 0.593 of it, the sources' 225° ×1.615, 1.366, 1.267, 1.166, 0.987, 0.861 (the strip as the drive's cube root). Shorter than 44 s, look for a pivot, the endstone or the detent's springs dragging."
+   "pass": "The model's balance halves its swing in 57 s (its TF 111 s, set from an earlier fit of a running 6MX on video, moMvyx8eXfo, which now gives TF 133-154 s at it: wempe_startup.js). Halving in 44, 53, 57, 62, 74, 85 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 180, 194, 203, 212, 233, 252° at 12 h; the guard's 180° at the wind's lowest wants ×1.046, 0.917, 0.854, 0.790, 0.673, 0.593 of it, the sources' 225° ×1.615, 1.366, 1.267, 1.166, 0.987, 0.861 (the strip as the drive's cube root). Shorter than 44 s, look for a pivot, the endstone or the detent's springs dragging."
   },
   {
    "id": "detent",
@@ -117,7 +117,7 @@
  "criteria": {
   "mainspring": {
    "s": [
-    0.8543,
+    0.8544,
     1.1943
    ],
    "Mdown": 0.4265,
@@ -138,7 +138,7 @@
   },
   "fusee": {
    "s": [
-    0.8543,
+    0.8544,
     1.1943
    ],
    "g262": {
@@ -146,7 +146,7 @@
     "full": 138.4,
     "low": 126.5,
     "band": [
-     113.398,
+     113.4119,
      158.5338
     ]
    },
@@ -580,48 +580,48 @@
    "TF": 111,
    "video": [
     133,
-    332
+    154
    ],
    "rows": [
     [
      80,
      44.25,
-     180.2574,
+     180.2614,
      1.046,
      1.6152
     ],
     [
      100,
      52.5,
-     194.2476,
+     194.2456,
      0.9172,
      1.3662
     ],
     [
      111,
      56.75,
-     202.5341,
+     202.533,
      0.8544,
      1.2671
     ],
     [
      125,
      62,
-     212.1836,
+     212.1811,
      0.7901,
      1.1662
     ],
     [
      160,
      73.5,
-     232.8664,
+     232.8663,
      0.6734,
      0.987
     ],
     [
      200,
      85,
-     252.2251,
+     252.2199,
      0.5929,
      0.8609
     ]
@@ -686,11 +686,11 @@
     "dip": 0.3903
    },
    "depth": {
-    "aim": 0.184,
+    "aim": 0.1841,
     "drawn": 0.235,
     "window": [
-     0.0898,
-     0.2783
+     0.09,
+     0.2782
     ],
     "tip": 0.25
    },
@@ -713,8 +713,8 @@
     270
    ],
    "model": [
-    197.2017,
-    207.4849
+    197.1985,
+    207.4784
    ]
   },
   "maintaining": {
@@ -724,7 +724,7 @@
     0.5786
    ],
    "s": [
-    672,
+    672.5,
     865
    ],
    "min": 300
@@ -785,8 +785,8 @@
     "N": 30
    },
    "masses": {
-    "drawn": -2.7088,
-    "zero": 18.4473,
+    "drawn": -2.7087,
+    "zero": 18.4478,
     "perDeg": 0.2234,
     "build": {
      "set": 0.1,

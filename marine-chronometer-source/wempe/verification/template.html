@@ -79,7 +79,7 @@ with movable masses, and its hairspring is a helix with drawn terminal curves. T
 <tr><td>6</td><td>Do the gears mesh, and how exactly must the holes be placed?</td><td>Tooth-by-tooth contact on the page's own outlines; the train in time; each mesh's depthing window</td><td><code>gearing.js</code></td></tr>
 <tr><td>7</td><td>Will the loaded parts hold, fully wound?</td><td>Each part's stress against its material's published range</td><td><code>wempe_strength.js</code></td></tr>
 <tr><td>8</td><td>Does the drawn hairspring keep the balance free of side forces, and isochronous?</td><td>Phillips' conditions on 05 03_7's curve; the spring at large swings as an elastica and as beam elements</td><td><code>wempe_hairspring.js</code></td></tr>
-<tr><td>9</td><td>Does the bimetallic balance compensate, and where must the masses sit?</td><td>The rim's quarters as bimetal cantilevers, every part weighed; the secondary error</td><td><code>wempe_thermal.js</code></td></tr>
+<tr><td>9</td><td>Does the bimetallic balance compensate, and where must the masses sit?</td><td>The rim's quarters as bimetal cantilevers, every part weighed; the secondary error</td><td><code>wempe_thermal.js</code>, <code>wempe_thermal_frame.js</code></td></tr>
 <tr><td>10</td><td>Does the case hang level and stay so at sea?</td><td>The case and ring weighed on the model, levelled as 05 01 says, run in a seaway</td><td><code>massprops.py</code>, <code>gimbals.js</code></td></tr>
 <tr><td>11</td><td>Would it pass the 6MX's trial, and what would a navigator carry?</td><td>The TU's 35-day trial and a 60-day voyage, Monte Carlo over the rate's parts</td><td><code>wempe_errorbudget.js</code></td></tr>
 <tr><td>12</td><td>Would a Wempe made to its drawings work, and how is it tested?</td><td>The unsized parts' tolerances from the escapement's swing over the wind; the bench's tests with their pass figures; 2,000 movements made to tolerances, as made and after the bench</td><td><code>wempe_tolerances.js</code>, <code>wempe_bench.js</code>, <code>wempe_montecarlo.js</code></td></tr>
@@ -256,6 +256,21 @@ nickel steel at the constants' middle (line) and over their 32 corners (band), a
 drawn place (Wempe 3955's and the 6MX's) and the place that compensates are marked. <code>wempe_thermal.js</code>.</figcaption></figure>
 <div id="kHeat"></div>
 
+<h3 id="heatF">The frame, train and escapement in heat and cold</h3>
+<p>The plates, pillars, bridges, wheels and, unlike the Hamilton's, the escape wheel (05 04 05-1, Ms 63) are brass; the pinions, arbors and detent steel, the gold spring
+gold, the impulse roller beryllium copper. Over the TU's working range, 4 to 36 °C, assembled at 20 °C, what isn't brass moves against what is.</p>
+<p><b>Method.</b> Each mesh's depth changes by the pinion's pitch radius times the brass's and steel's difference, against <code>gearing_wempe.json</code>'s windows; each
+arbor's endshake by its brass gap and steel length (the bench's stacks, <code>wempe_endshake.js</code>), against the 1958 MX repair book's bands. The escapement runs through
+makeEsc in the brass wheel's own frame: the steel detent from its brass-held foot (the depth of lock, the gold spring's tip), the rollers on the steel staff, the springs'
+moduli and the mainspring's torque by their thermoelastic coefficients; at the published constants' middle and at the corner that moves each part most (brass 20.9,
+steel 10.8 × 10⁻⁶ a °C), with the drawn lock and with the bench's, the window's middle. Where makeEsc loses the impulse, <code>dynamics.js --model wempe</code> in time
+was run on the same settings and agrees (the swing 91-97°, the detent leaving the discharge stone 4.9° early).</p>
+<p><b>Found.</b> The depths, endshakes, lock and chain hardly notice (under 4 µm). The gold spring's tip does: 1.8-2.3 µm farther from the staff at 36 °C, taking 0.3-0.45°
+of the 1.50° let-off, and the escapement loses its impulse at about 1.0-1.1° (the same edge that tops <code>wempe_tolerances.js</code>'s lock window). The drawn lock holds
+at the constants' middle; the bench's middle doesn't at 36 °C, and the lock window that holds over the range is about half the one at 20 °C (none at the corner).</p>
+<div id="tHeatF"></div>
+<div id="kHeatF"></div>
+
 <h2 id="gim">10. The case and gimbals</h2>
 <p><b>Method.</b> The bowl with the movement in it and the gimbal ring are weighed on the model, every closed solid at its material's density (<code>massprops.py --model
 wempe</code>): mass, centre of gravity and inertia about the gimbal centre. 05 01 says to move the case brackets "bis Gleichgewicht erreicht ist", until it hangs level, and
@@ -395,6 +410,14 @@ escapement at the first-drawn heights, with the first-drawn balance staff and co
 <div id="t6Wind" class="tw"></div>
 <div id="t6Train" class="tw"></div>
 <div id="k6"></div>
+<h3 id="e1943">The escapement of 1943 against the drawings</h3>
+<p>The page's fourth version stands its escapement as the German movements photographed with the 1943 detent block are made: the first-drawn balance, rollers and escape
+wheel at their heights, the 6MX's detent and the block with its banking screw (the model's README, "The escapement of 1943 as photographed"). Its plan is the drawings'
+(the banking screw sets the drawn depth of lock), so, as for the 6MX, only its bodies change: weighed on the page's solids in that version and run through makeEsc
+(<code>wempe_1943.js</code>), and through <code>dynamics.js --model wempe</code> in time on the same bodies (300 beats, no tooth lost; the swing 198.7° against
+makeEsc's 197.6°). The page itself runs the drawings' escapement in this version.</p>
+<div id="t43Wind" class="tw"></div>
+<div id="k43"></div>
 
 <h2 id="builds">17. The builds: a Wempe to navigate by</h2>
 <p>What a maker would build to navigate by: about two miles of longitude a month, 8 s after 30 days at sea. As drawn, the balance swings 191-200° over the wind,
@@ -548,8 +571,9 @@ Two read-throughs were made, one hunting stale numbers and one weighing criteria
 are fixed, and the bench, the Monte Carlo and the maker's sheets are rewritten for all three versions. No verdict changes.</li>
 <li><b>The escape pinion's face</b> in <code>wempe_train.js</code> was still 3 long (4.0 since the audit). Every mesh takes the narrower face, the wheel's rim, so no figure moves.</li>
 <li><b>The damping measured on video</b> (<code>wempe_startup.json</code>) had been fitted on 19 October, before batch 1 changed the balance's inertia and the detent's. Refitted on
-today's escapement, it gives TF <span id="vTF"></span>. The model keeps 111 s (the owner's choice, 26 October 2026), inside the refitted range, and
-<code>wempe_escapement.js</code> now checks that the model's TF lies inside the fit's range (it asked for within 2 s of its middle).</li>
+the escapement as it was that day, it gave TF 114.4 s (111-118); the model kept 111 s (the owner's choice, 26 October 2026), inside that range, and
+<code>wempe_escapement.js</code> checks that the model's TF lies inside the fit's range (it asked for within 2 s of its middle). The escapement's reconciliation and the detent's blade
+have since moved the fit to TF <span id="vTF"></span>: the model keeps 111 s outside it (the owner's choice, 27 October 2026), and the check reports it.</li>
 <li><b>Left as they are, no verdict moving:</b> the frame's load takes the chain's radius fully wound as 9.355, the fusee's table at 8.75 turns, while the strength checks take its last entry, 9.30, a quarter turn past (0.5 %, the cautious side): both read the table, neither stale; <code>wempe_wear.js</code> takes
 the maintaining clicks' spring force as an estimated 0.44 N, and <code>wempe_ratchets.js</code> their springs' free span as 12-16, neither from the clicks as re-drawn in batch 5;
 the trial's label now reads "GOST 8916-58's class II trial, its limits GOST 8916-70's class 2" (6MX-figures.md).</li>
@@ -627,6 +651,7 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <tr><td><a href="../../chronometer-working-model/tools/wempe_strength.js"><code>wempe_strength.js</code></a></td><td>The parts' strength (7)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_hairspring.js"><code>wempe_hairspring.js</code></a></td><td>The hairspring (8)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_thermal.js"><code>wempe_thermal.js</code></a></td><td>Temperature (9)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_thermal_frame.js"><code>wempe_thermal_frame.js</code></a></td><td>Temperature (9)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/massprops.py"><code>massprops.py</code></a>, <a href="../../chronometer-working-model/tools/gimbals.js"><code>gimbals.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_gimbals.js"><code>wempe_gimbals.js</code></a></td><td>The case and gimbals (10)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_errorbudget.js"><code>wempe_errorbudget.js</code></a></td><td>The TU's trial and the voyage (11)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_navigation.js"><code>wempe_navigation.js</code></a></td><td>Made chronometers carried to sea, their longitude error and the fix's (21)</td></tr>
@@ -755,6 +780,9 @@ function draw(){
     table('t6Wind',['Hours from full wind','Swing, as last revised (°)','Swing, the 6MX (°)','Rate against 12 h, as last revised (s/d)','The 6MX (s/d)'],S6.wind.map(w=>[w.h,f(w.a,1),f(w.a6,1),sg(w.r),sg(w.r6)]),true);
     table('t6Train',['Mesh','Pivots\' shake, drawn → 6MX (µm)','Holes within, drawn → 6MX (µm)'],S6.train.map(t=>[esc(t.stage),`${Math.round(t.sh*1000)} → ${Math.round(t.sh6*1000)}`,`±${Math.round(t.tp*1000)} → ±${Math.round(t.tp6*1000)}`]),true);
     checks('k6','soviet');}
+  if(D.e1943){const E4=D.e1943;
+    table('t43Wind',['Hours from full wind','Swing, as last revised (°)','Swing, 1943 (°)','Rate against 12 h, as last revised (s/d)','1943 (s/d)'],E4.wind.map(w=>[w.h,f(w.a,1),f(w.a43,1),sg(w.r),sg(w.r43)]),true);
+    checks('k43','e1943');}
   const st=$('geoStates');if(st){const m=GEO.fine&&/^(\d+) states/m.exec(GEO.fine.out);st.textContent=m?m[1]:CK.states;}
   table('tGeo',['Check','What it checks','Result','Exit','Time'],geoK.map(k=>{const g=GEO[k];return[`<code>${esc(g.cmd)}</code>`,esc(g.what),esc((gkey[k]||(()=>''))(g.out)),`<span class="${g.rc?'no':'ok'}">${g.rc}</span>`,g.secs+' s'];}),true);
   {const fo=GEO.fine?GEO.fine.out:'',meas={};for(const m of fo.matchAll(/^(\S+)\s+([\d.]+) mm3 depth\s+([\d.]+)\s+(\S+)\s+x (\S+)/gm))meas[m[4]+'|'+m[5]]=[m[1],+m[2],+m[3]];
@@ -848,6 +876,9 @@ function draw(){
       series:[{type:'area',name:'Guillaume\'s nickel steel, the constants\' corners',c:'--s1',data:R.map(q=>[q[0],q[2],q[3]])},{type:'line',name:'Guillaume\'s nickel steel, their middle',c:'--s1',data:R.map(q=>[q[0],q[1]]),tip:p=>`${p[0]}°: ${sg(p[1],2)} s/d/°C`},
         {type:'line',name:'a plain nickel steel',c:'--s2',dash:'5 4',data:R.map(q=>[q[0],q[4]]),tip:p=>`${p[0]}°: ${sg(p[1],2)} s/d/°C (plain)`}]});}
   checks('kHeat','thermal');
+  {const H=D.mech2&&D.mech2.heatF;if(H){const C={mid:'middle',most:'corner'};
+    table('tHeatF',['Lock set','Constants','°C','Lock (µm)','Let-off','Swing over the wind','Holds'],H.esc.map(r=>[r.set==='drawn'?'drawn':'the bench’s',C[r.consts],r.T,f(r.dLum,1),f(r.letoff,2)+'°',`${f(r.swing[0],1)}-${f(r.swing[1],1)}°`,r.ok?'yes':'<b>no</b>']),true);}}
+  checks('kHeatF','thermalframe');
 
   /* ---------- 10. gimbals ---------- */
   {const M=D.mass,bp=M.bowl.byPart,mv=M.bowl.m-['bowl','bezel','closingPlate'].reduce((a,k)=>a+(bp[k]||0),0);
@@ -940,7 +971,7 @@ function draw(){
       ['the same, the damping viscous (TF at the 6MX\'s swing)',f(U.model.TF,1)+' s',`${U.model.range[0]}-${U.model.range[1]} s`,`${U.model.span[0]}-${U.model.span[1]} s`,f(U.model.Ainf,1)+'°',f(U.model.rms,2)+'°'],
       ['the work held flat (the plain A² law)',f(U.flat.TF,1)+' s',`${U.flat.range[0]}-${U.flat.range[1]} s`,'–',f(U.flat.Ainf,1)+'°',f(U.flat.rms,2)+'°'],
       ...Object.keys(U).filter(k=>k.startsWith('alone: ')).map(k=>[esc(k.replace('alone: ','one stretch alone: ')),f(U[k].TF,1)+' s',`${U[k].range[0]}-${U[k].range[1]} s`,'–',f(U[k].Ainf,1)+'°','–'])]);
-    $('vidMeaning').innerHTML=`<b>What it means for the Wempe.</b> The model's TF, ${D.wind.TF} s, estimated from the Wempe's parts, lies inside the measured ${U.split.span[0]}-${U.split.span[1]} s, so it stays, and <code>wempe_escapement.js</code> checks it against <code>wempe_startup.json</code>. The 6MX's balance is of the same kind but its own design, run out of its bowl, dial down, part wound: it settles at ${f(U.split.Ainf,0)}° on ${f(100*U.split.drive,0)} % of the model's drive, which at the model's drive would want TF ${f(U.tf_at_model_drive.TF,0)} s, outside every reading. So the video bounds the damping, not the drive: it says nothing of a wound Wempe's swing (section 15). The readings (${S.json.windows} windows, ${S.json.A_range[0]}-${S.json.A_range[1]}°): ${esc(S.json.sure)}.`;
+    $('vidMeaning').innerHTML=`<b>What it means for the Wempe.</b> The model's TF, ${D.wind.TF} s, inside the 81-210 s the Wempe's parts allow, ${D.wind.TF>=U.split.span[0]&&D.wind.TF<=U.split.span[1]?`lies inside the measured ${U.split.span[0]}-${U.split.span[1]} s, so it stays`:`lies outside the measured ${U.split.span[0]}-${U.split.span[1]} s: the fit has moved with each change to the escapement (111, 114, 133, then ${f(U.split.TF,0)} s since 19 October 2026), and the model keeps its TF (the owner's choice, 27 October 2026)`}, and <code>wempe_escapement.js</code> checks it against <code>wempe_startup.json</code>. The 6MX's balance is of the same kind but its own design, run out of its bowl, dial down, part wound: it settles at ${f(U.split.Ainf,0)}° on ${f(100*U.split.drive,0)} % of the model's drive, which at the model's drive would want TF ${f(U.tf_at_model_drive.TF,0)} s, outside every reading. So the video bounds the damping, not the drive: it says nothing of a wound Wempe's swing (section 15). The readings (${S.json.windows} windows, ${S.json.A_range[0]}-${S.json.A_range[1]}°): ${esc(S.json.sure)}.`;
     const K=S.committed;if(K&&(K.split.drive!==U.split.drive||K.split.span.join()!==U.split.span.join()||K.tf_at_model_drive.TF!==U.tf_at_model_drive.TF))$('vidMeaning').innerHTML+=` <b>The committed <code>wempe_startup.json</code> is not what the tool finds today</b> (<code>node wempe_startup.js --json wempe_startup.json</code> rewrites it): it holds TF ${f(K.split.TF,1)} s, ${K.split.span[0]}-${K.split.span[1]} s, on ${f(100*K.split.drive,1)} % of the drive (TF ${f(K.tf_at_model_drive.TF,1)} s at the model's), where today's run gives ${f(U.split.TF,1)} s, ${U.split.span[0]}-${U.split.span[1]} s, on ${f(100*U.split.drive,1)} % (${f(U.tf_at_model_drive.TF,1)} s). This page shows today's; <code>wempe_escapement.js</code>, the README and the essay quote the file's.`;}
   checks('kStart','startup');
 

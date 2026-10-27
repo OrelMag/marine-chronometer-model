@@ -51,11 +51,15 @@ const WPHYS=(()=>{
     alt:Object.fromEntries(['n14','n15','h13'].map(n=>[n,{L:WESC.HSL[n].L,T:Tof(SET.I,kOf(WESC.HSL[n].L))}]))};
   /* the swing stepped as the Hamilton's ampStep: driven at drv, A² relaxes to ampAt(drv)² as exp(-2t/TF), exactly whatever the step; free (the train held), freeStep */
   const stepOf=(E,S)=>(a,dt,drive)=>{if(drive>0){const u=E.ampAt(drive)**2;return Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/S.TF));}const b=E.freeStep(a,dt);return b<0.2*D2R?0:b;};
+  /* on the page the swing a drive keeps is read off WBANK.amp (bankdata.js: tools/wempe_banking.js, each version at its drawn settings, every 0.005 of drive from 0.2 to 1.8), since
+     makeEsc's own solve, its work averaged over the beat (SET.SMW) since 27 October 2026, takes about a second; the tools, which don't load it, solve it */
+  const tabA=(E,k)=>{const f0=E.ampAt;E.ampAt=s=>{const T=typeof WBANK!=='undefined'&&WBANK.amp&&WBANK.amp[k];if(!T)return f0(s);const f=(s-T.s0)/T.ds,i=Math.floor(f);
+    return i>=0&&i<T.A.length-1&&T.A[i]>0&&T.A[i+1]>0?(T.A[i]+(T.A[i+1]-T.A[i])*(f-i))*D2R:f0(s);};return E;};tabA(ESC,'last');
   const ampStep=stepOf(ESC,SET);
   /* each version's escapement (the page's Variants, Version; the user's choice, 17 October 2026): the drawings' as last revised and as first drawn share this one; the Soviet 6MX's
      (Kirov No. 247) has its own bodies, weighed on its solids (WESC.SET6: the first-drawn staff and collar, its detent), the layout, drive and hairspring the drawings'. Built
      when first asked for (a makeEsc solve), its rate against its own reference, as the timing weights would set it: what it runs before timing is tools/wempe_6mx.js's */
   const REV={last:{ESC,SET,HS,ampStep}};
-  const rev=v=>{const k=v==='6mx'?'6mx':'last';if(!REV[k]){const S={...SET,...WESC.SET6},E=makeEsc(S,S),T=Tof(S.I,kOf(WESC.HSL.L));REV[k]={ESC:E,SET:S,HS:{...HS,kNeed:S.I*1e-9*(TAU/0.5)**2,T},ampStep:stepOf(E,S)};}return REV[k];};
+  const rev=v=>{const k=v==='6mx'?'6mx':'last';if(!REV[k]){const S={...SET,...WESC.SET6},E=tabA(makeEsc(S,S),'6mx'),T=Tof(S.I,kOf(WESC.HSL.L));REV[k]={ESC:E,SET:S,HS:{...HS,kNeed:S.I*1e-9*(TAU/0.5)**2,T},ampStep:stepOf(E,S)};}return REV[k];};
   return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,MSK,MSK2,MSB,MBK,WFW,SUS,susDrv,susPhi,runPhi,msDrv,HS,ampStep,rev};
 })();

@@ -338,9 +338,11 @@ chk(Math.abs(own-RU.own)<0.3,`the escapement's own rate within 0.3 s a day of Ai
   say(`the drive ${f(100*s0,0)} % → ${f(100*s1,0)} %${WEMPE?' (05 06_20 over the wind)':''}: the model ${f(ESC.ampAt(s0)/D,0)}° → ${f(ESC.ampAt(s1)/D,0)}°, the rate ${sg(dM)} s a day${WEMPE?` (the escapement's; with the drawn hairspring's ${sg(dH)}, ${sg(dM+dH)})`:''}; in time ${f(lo.A,0)}° → ${f(hi.A,0)}°, ${sg(dT)} s a day (${sg(sl,3)} s a day for each 10° of swing)`);
   /* the Wempe's within 0.2 (the user's choice, 19 October 2026): since its lock was re-laid (0.235) the stone comes off the escaping tooth's back about 0.9° after the impulse begins, a
      last degree makeEsc rides quasi-statically and the integration with its hops, where they meet shifting with the drive (0.14 s a day apart at 0.8 g, 0.01 at 0.175 and 0.63 g) */
-  /* the Wempe's within 0.3 since 27 October 2026 (the owner's choice): with the detent's blade flush toward its block the stone hops along the escaping tooth's back through the impulse,
-     and whether a hop lands again flips with the swing, makeEsc's work rough by about 3 % (tools/wempe_cliff.js): its swing at full wind held on such a step, 201° where in time 204°, +0.29 s a day apart */
-  const isoTol=WEMPE?0.3:0.1;chk(Math.abs(dT-dM)<isoTol,`isochronism (the rate's change over the ${WEMPE?'wind\'s':'manual\'s'} range of swing) within ${isoTol} s a day of the model's (${sg(dT-dM,2)})`);
+  /* the Wempe's within 0.3 from 27 October 2026 (the owner's choice): with the detent's blade flush toward its block the stone hops along the escaping tooth's back through the impulse,
+     and whether a hop lands again flips with the swing, makeEsc's work rough by about 3 % (tools/wempe_cliff.js): its swing at full wind held on such a step, 201° where in time 204°, +0.29 s a day apart;
+     back to 0.2 the same day, the steps found to be makeEsc's own (its landings timed at a quarter step's end): each now timed inside its step, the ride stepped finer and the swing
+     solved on the work averaged over the beat (RSR, SMW: the Wempe README, Readings corrected), −0.08 apart */
+  const isoTol=WEMPE?0.2:0.1;chk(Math.abs(dT-dM)<isoTol,`isochronism (the rate's change over the ${WEMPE?'wind\'s':'manual\'s'} range of swing) within ${isoTol} s a day of the model's (${sg(dT-dM,2)})`);
   /* the Wempe's: the escapement with its drawn hairspring's own isochronism (HS), the chronometer as made (since 15 October 2026, when the masses' height made its balance 10 % heavier and its
      swing 7° smaller: the escapement alone +0.51 s a day for each 10°, its hairspring −0.66); the Hamilton's spring is linear, its escapement the whole */
   const slC=WEMPE?(dT+dH)/(hi.A-lo.A)*10:sl;
