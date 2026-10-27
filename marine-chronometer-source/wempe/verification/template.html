@@ -410,6 +410,14 @@ escapement at the first-drawn heights, with the first-drawn balance staff and co
 <div id="t6Wind" class="tw"></div>
 <div id="t6Train" class="tw"></div>
 <div id="k6"></div>
+<h3 id="e1943">The escapement of 1943 against the drawings</h3>
+<p>The page's fourth version stands its escapement as the German movements photographed with the 1943 detent block are made: the first-drawn balance, rollers and escape
+wheel at their heights, the 6MX's detent and the block with its banking screw (the model's README, "The escapement of 1943 as photographed"). Its plan is the drawings'
+(the banking screw sets the drawn depth of lock), so, as for the 6MX, only its bodies change: weighed on the page's solids in that version and run through makeEsc
+(<code>wempe_1943.js</code>), and through <code>dynamics.js --model wempe</code> in time on the same bodies (300 beats, no tooth lost; the swing 198.7° against
+makeEsc's 197.6°). The page itself runs the drawings' escapement in this version.</p>
+<div id="t43Wind" class="tw"></div>
+<div id="k43"></div>
 
 <h2 id="builds">17. The builds: a Wempe to navigate by</h2>
 <p>What a maker would build to navigate by: about two miles of longitude a month, 8 s after 30 days at sea. As drawn, the balance swings 191-200° over the wind,
@@ -772,6 +780,9 @@ function draw(){
     table('t6Wind',['Hours from full wind','Swing, as last revised (°)','Swing, the 6MX (°)','Rate against 12 h, as last revised (s/d)','The 6MX (s/d)'],S6.wind.map(w=>[w.h,f(w.a,1),f(w.a6,1),sg(w.r),sg(w.r6)]),true);
     table('t6Train',['Mesh','Pivots\' shake, drawn → 6MX (µm)','Holes within, drawn → 6MX (µm)'],S6.train.map(t=>[esc(t.stage),`${Math.round(t.sh*1000)} → ${Math.round(t.sh6*1000)}`,`±${Math.round(t.tp*1000)} → ±${Math.round(t.tp6*1000)}`]),true);
     checks('k6','soviet');}
+  if(D.e1943){const E4=D.e1943;
+    table('t43Wind',['Hours from full wind','Swing, as last revised (°)','Swing, 1943 (°)','Rate against 12 h, as last revised (s/d)','1943 (s/d)'],E4.wind.map(w=>[w.h,f(w.a,1),f(w.a43,1),sg(w.r),sg(w.r43)]),true);
+    checks('k43','e1943');}
   const st=$('geoStates');if(st){const m=GEO.fine&&/^(\d+) states/m.exec(GEO.fine.out);st.textContent=m?m[1]:CK.states;}
   table('tGeo',['Check','What it checks','Result','Exit','Time'],geoK.map(k=>{const g=GEO[k];return[`<code>${esc(g.cmd)}</code>`,esc(g.what),esc((gkey[k]||(()=>''))(g.out)),`<span class="${g.rc?'no':'ok'}">${g.rc}</span>`,g.secs+' s'];}),true);
   {const fo=GEO.fine?GEO.fine.out:'',meas={};for(const m of fo.matchAll(/^(\S+)\s+([\d.]+) mm3 depth\s+([\d.]+)\s+(\S+)\s+x (\S+)/gm))meas[m[4]+'|'+m[5]]=[m[1],+m[2],+m[3]];
