@@ -32,13 +32,23 @@ Each step writes its results into the sheet's row of the ledger and into the bat
 
 ## The permanent fit check (batch 0)
 
-Before the sheet batches start, `bom-check.js` is extended so every pin, screw, spring end and stud in the Wempe's `bom.json` names the hole or seat it sits `in`. `bom.py --model wempe` fails if:
+Session marine-chronometer-c9 built this on its own branch, `claude/wempe-seat-audit`, at the same time as this plan (27 October 2026), and this pass adopts it instead of building another. `tools/seatcheck.py` (with `seatcheck.js`, `--model wempe`, and `ci.py`'s `wempe-seatcheck` step) follows every pin, screw, pipe, bush and hook along its own axis. It fails unless some other part is round it (a hole, not a slot and not nothing), or unless `SEAT_EXPECTED` in `wempe/checks.py` gives the reason it is held another way. It passes all five versions (503 pieces). Its expected entries are the stud, the movement ring's screws, and the 6MX contact's lock nut and stud. It found the collet's pin loose (now half round and brass, like the stud's) and the 6MX cap plate's screws in plain holes (now tapped).
 
-- such a line has no `in` relation;
-- its piece isn't inside the named hole on the built solid;
-- the hole isn't cut.
+Once it is on `main`, this pass:
 
-This first run lists every joint that is unnamed or loose today, which gives the Joints table its starting rows. A planted fault proves the check: the stud's pin moved out of its hole must fail. It runs in `ci.py` with `bom.py`. The Hamilton's lines are left as they are, unless the owner decides otherwise.
+- seeds the Joints table from `seatcheck.py -v` (every piece and what holds it);
+- re-checks each `SEAT_EXPECTED` entry against its sheet as part of the fit list.
+
+`seatcheck.py` can't see a hole the sheet draws that the model never built. Step 6 and the extra checks below cover that.
+
+## Extra checks across the transcriptions (handed over by marine-chronometer-c9)
+
+Every batch also does these for its sheets:
+
+- **Slots, notches and grooves.** Every slot, notch or groove in a transcription or code comment is re-read against every view of the sheet. The stud's slot came from a lone "1,2 −0,1".
+- **Drawn holes.** Every hole a sheet or transcription draws must be in the model. The stud's Ø 0.7 was never built, so `holecheck.py` couldn't see it missing.
+- **Excuses.** Every `dev` entry in `bom.json` and every expected entry for the batch's parts is re-checked against the sheet: `fine.py`'s and checks.py's `EXPECTED`, `HOLE_EXPECTED`, `SEAT_EXPECTED`, `audit.py`'s `LOOSE`. Each excuse must still hold.
+- **bom.py's tolerances.** `bom.py`'s `in` relations pass a press fit with a 0.05 mm gap and a tapped hole with 0.35 mm, and that is how the collet's pin passed. marine-chronometer-c9 is asking the owner whether to tighten them. The fit list judges each fit against the sheet's own tolerance whatever `bom.py` allows.
 
 ## Batches (two agents at a time: a reader and a refuter)
 
@@ -46,7 +56,7 @@ Small parts and joints first, plates and the case last (the owner, 27 October 20
 
 | # | Parts | Sheets |
 |---|---|---|
-| 0 | the permanent fit check (`bom-check.js`), and the Joints table's first rows | — |
+| 0 | the permanent fit check (`seatcheck.py`, marine-chronometer-c9's `claude/wempe-seat-audit`), and the Joints table's first rows | — |
 | 1 | balance (rim, arm, masses, timing screws, staff, hub), hairspring, stud and its pin, collet, rollers, balance jewels | 13 |
 | 2 | escape wheel (arbor, collet), detent and its springs, detent block in each version, escape jewels and endstones | 9 |
 | 3 | maintaining work (ratchet, clicks, springs, spring), maintaining detent and its wire spring, stop work | 9 |
