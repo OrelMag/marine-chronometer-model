@@ -78,10 +78,16 @@ head(`The depth of lock (05 04_1: the tips ${f(S.dL*S.ES,3)} into the stone's fl
    stone at once and the detent leaving the discharge stone early, on main's escape wheel as on the drawn one; makeEsc follows it since its ride carries through the impulse, RWD),
    and the shallowest that keeps a held tooth's stone ringing under half the depth (wempe_tripping.js as drawn, 19 October 2026: 49 % of 235 µm, 116 µm, at the 0.8 g preload, the longer discharge reach bending the gold spring 0.39 on the return: twice it; 44 % of 175 µm, 77 µm, until the lock was re-laid, and 41 % before the horn was traced) */
 const lockAt=d=>{const e=W.makeEsc({...S,dL:d/S.ES},S),m=e.measure();return m.runs?{A:e.A*D,Amin:e.ampAt(dmin)*D,lock:m.lock,letoff:m.letoff,lRel:e.lRel*e.BL/e.LEN*e.ES}:null;};
-const d0=S.dL*S.ES,dDeep=(()=>{let a=d0,b=d0+(BREV?0.08:0.03);for(let i=0;i<14;i++){const m=(a+b)/2,L=lockAt(m);L&&L.Amin>=GUARD[0]?a=m:b=m;}return a;})(),RING=BJ?BJ.window.ring:0.493*0.235,dShal=2*RING,dTip=d0+0.015;
+const d0=S.dL*S.ES;let dDeep=(()=>{let a=d0,b=d0+(BREV?0.08:0.03);for(let i=0;i<14;i++){const m=(a+b)/2,L=lockAt(m);L&&L.Amin>=GUARD[0]?a=m:b=m;}return a;})();const RING=BJ?BJ.window.ring:0.493*0.235,dShal=2*RING,dTip=d0+0.015;
+/* in heat (wempe_thermal_frame.js; the owner's choice, 27 October 2026: the window over the TU's 4-36 °C is the window): the steel detent draws the gold spring's tip from the
+   staff as the brass frame grows, taking let-off, so the deepest lock set at 20 °C that keeps the swing in the guard band at the wind's lowest at 36 °C (wempe_escheat.js, the
+   published constants' middle; at their corner none does: README, Unresolved) caps the window; the lock moves only 0.1 µm, so its floor stays */
+const HT=require('./wempe_escheat.js')(W),hotOk=d=>{const{E:e,kd}=HT.at(HT.K.mid,HT.TS[1],d/S.ES),m=e.measure();return m.runs&&e.ampAt(dmin*kd)*D>=GUARD[0];};
+const dHot=(()=>{let a=d0-0.006,b=dDeep;if(hotOk(b))return b;for(let i=0;i<14;i++){const m=(a+b)/2;hotOk(m)?a=m:b=m;}return a;})(),dDeep20=dDeep;dDeep=Math.min(dDeep,dHot);
 const L0=lockAt(d0),LS=lockAt(dShal),LD=lockAt(dDeep-0.002),liftMax=Math.max(...E.LI)*E.BL/E.LEN*E.ES;
 say(`as drawn ${f(d0,3)} mm deep: lock ${f(L0.lock,1)}°, let-off ${f(L0.letoff,1)}°, the stone lifted ${f(L0.lRel,3)} mm at the release; ${f(L0.Amin,1)}-${f(L0.A,1)}° (the wind's lowest, 12 h)`);
-say(`deepest that unlocks with the swing in the guard band: ${f(dDeep,3)} mm (the discharge stone lifts the stone at most ${f(liftMax,3)} mm); there lock ${f(LD.lock,1)}°, let-off ${f(LD.letoff,1)}°, ${f(LD.Amin,1)}° at the wind's lowest`);
+say(`deepest that unlocks with the swing in the guard band: ${f(dDeep20,4)} mm at 20 °C, ${f(dHot,4)} set at 20 °C to hold at 36 °C (wempe_thermal_frame.js: the gold spring's tip drawn back, the let-off taken; the window's top ${f(dDeep,4)})`);
+say(`at ${f(dDeep,4)} mm (the discharge stone lifts the stone at most ${f(liftMax,3)} mm); there lock ${f(LD.lock,1)}°, let-off ${f(LD.letoff,1)}°, ${f(LD.Amin,1)}° at the wind's lowest`);
 say(`shallowest with a held tooth's stone ringing under half the depth (wempe_tripping.js: ${f(RING*1000,0)} µm as drawn): ${f(dShal,3)} mm; there lock ${f(LS.lock,1)}°, ${f(LS.Amin,1)}-${f(LS.A,1)}° (a shallower lock gives the swing back: the unlocking costs less)`);
 say(`the wheel's tips Ø 14 +0.03: with the banking left where the drawn wheel puts it, a wheel at the top of its tolerance locks ${f(dTip,3)} deep, ${dTip>dDeep?`past ${f(dDeep,3)}: it would not unlock. The banking is set to the wheel as made`:'inside the window'}`);
 
@@ -105,7 +111,7 @@ const J={note:'tools/wempe_tolerances.js: how closely the Wempe\'s parts the dra
   mainspring:{t:t0,tMeasured:r4(tm),s:[r4(sLo),r4(sTop)],sSwing:[r4(sLo),r4(sHi)],t_mm:[r4(t0*Math.cbrt(sLo)),r4(t0*Math.cbrt(sTop))],tMeasured_mm:[r4(tm*Math.cbrt(sLo)),r4(tm*Math.cbrt(sTop))],g262:{mean:r4(gMean),full:gFull,low:gLow,band:[r4(gMean*sLo),r4(gMean*sTop)]},rate:[r4(rLo),r4(rHi)],stressGPa:r4(sM/1e9),sStress:r4(sStress),sources:{s:r4(sLoS),t_mm:r4(t0*Math.cbrt(sLoS)),g262:r4(gMean*sLoS)}},
   detent:{t:r4(td),k:[0,r4(kdHi)],t_mm:[0,r4(tdHi)],inTime:[r4(td/Math.cbrt(2)),r4(td*Math.cbrt(2))],t09:{k:r4(k09),A:A09.map(r4)},A0:r4(Ak0),preload:{g:S.W78,min:r4(wLo),max:r4(wHi),back:WBACK,swing:r4(wSw),margin:r4(wTrip),knock:r4(wKnock),rows:PRE}},
   gold:{t:0.15,E:90,k:[0,r4(kpHi)],t_mm:r4(0.15*Math.cbrt(kpHi)),E_max:r4(90*kpHi),A0:r4(Ap0),half:Ap5.map(r4)},
-  lock:{d:r4(d0),deep:r4(dDeep),shallow:r4(dShal),ring:r4(RING),tip:r4(dTip),liftMax:r4(liftMax),at:{drawn:{lock:r4(L0.lock),letoff:r4(L0.letoff),A:r4(L0.A),Amin:r4(L0.Amin)},deep:{lock:r4(LD.lock),letoff:r4(LD.letoff),Amin:r4(LD.Amin)},shallow:{lock:r4(LS.lock),A:r4(LS.A),Amin:r4(LS.Amin)}}},
+  lock:{d:r4(d0),deep:r4(dDeep),deep20:r4(dDeep20),hot:r4(dHot),shallow:r4(dShal),ring:r4(RING),tip:r4(dTip),liftMax:r4(liftMax),at:{drawn:{lock:r4(L0.lock),letoff:r4(L0.letoff),A:r4(L0.A),Amin:r4(L0.Amin)},deep:{lock:r4(LD.lock),letoff:r4(LD.letoff),Amin:r4(LD.Amin)},shallow:{lock:r4(LS.lock),A:r4(LS.A),Amin:r4(LS.Amin)}}},
   hairspring:{T:r4(T),fast:r4(fast),perUm:r4(perH),perCoil001:r4(perC),perMm:r4(perL),perGPa:r4(perE),hNeed:r4(hNeed),hNeedE:hE.map(r4).reverse(),weights:{m:TW.m,r:r4(rTW),secTurn:r4(secTurn),reach:r4(reach),turnsIn:r4(turnsIn),gain:r4(gain)}}};
 const OUT=path.join(__dirname,`tolerances_wempe${SUF}.json`),txt=JSON.stringify(J,null,1)+'\n';
 console.log(rows.join('\n'));
