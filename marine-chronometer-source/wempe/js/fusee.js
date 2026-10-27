@@ -809,10 +809,10 @@ const WFUSEE=(()=>{
       for(let k=1;k<=n;k++){const a=aD+(SPE-aD)*k/n;o.push([SPW*Math.cos(a),SPW*Math.sin(a)]);}   /* along the wall to its fixed end */
       return o.map(([u,v])=>new THREE.Vector3(u,S+0.5,-v));};
     /* its hole for its pin 05 06 04-4 (C-D draws the pin through the spring's line where the spring lies on the wall, so the spring is held on it: a hole through the ribbon
-       seen edge on, which that view can't draw): Ø 0.51 for the pin's 0.5 (no sheet: the click springs' +0.02 on their pins' 0.6 taken, estimated), where the ribbon's
-       middle crosses the pin's axis (v -1.5, on the wall, 11.6° under the slot's line): left out until 28 October 2026, the pin through the ribbon (the second drawing check, 3-M4) */
+       seen edge on, which that view can't draw): Ø 0.54 for the pin's 0.5 (no sheet, estimated: the pin, along the slot, crosses the strip
+       obliquely, so the hole's width across it is about 0.51, the click springs' +0.02 on their pins' 0.6), where the ribbon's middle crosses the pin's axis (v -1.5, on the wall, 11.6° under the slot's line): left out until 28 October 2026, the pin through the ribbon (the second drawing check, 3-M4) */
     const spGeo=t=>{const P=spPath(t);let s=0,h=null;for(let i=1;i<P.length&&h===null;i++){const a=P[i-1],b=P[i],l=a.distanceTo(b);if(a.x>0&&b.x>0&&(a.z-1.5)*(b.z-1.5)<=0&&a.z!==b.z)h=s+l*(1.5-a.z)/(b.z-a.z);s+=l;}
-      return ribbonHoleGeo(P,0.10,1.0,h===null?[]:[{s:h,r:0.255}]);};
+      return ribbonHoleGeo(P,0.10,1.0,h===null?[]:[{s:h,r:0.27}]);};
     let spT=0;const spM=tag(mesh(gBar,spGeo(0),M.blued),'050603-3');
     /* the bar's pin (Stift 05 06 03-2: the coloured section's label; 05 06_4's C-D draws it in both positions, the spring's line ending on it, at 12.2 px/mm): Ø 0.5 (6 px)
        pressed across the bar's 2 at u -6.0 in its hole (dashed inside the bar), standing 0.9 (11 px) out of its near side, toward the arbor, where the spring's end bears on it;
