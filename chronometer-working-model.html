@@ -1801,7 +1801,7 @@ function makeEsc(o={},base){
   const rwM=new Map(),rideR=pr=>{const f=Math.min(1,Math.max(0,pr))*NQ,j=Math.min(NQ-1,Math.floor(f));return(SR[j]+(SR[j+1]-SR[j])*(f-j))/LEN;},
     chaseAt=(T_,th)=>{const f=(th-TH0)/DT-T_.i0,i=Math.floor(f);if(f<=0)return 0;if(i>=T_.ph.length-1)return T_.ph[T_.ph.length-1];return T_.ph[i]+(T_.ph[i+1]-T_.ph[i])*(f-i);};
   const chaseRW=(a,acc)=>{if(!(a>thRel)||!(acc>0))return null;const key=Math.round(a*1e6)+','+Math.round(acc*1e3);let T_=rwM.get(key);if(T_)return T_;
-    const f=depart(a),aR=Math.acos(Math.max(-1,-thRel/a)),tOf=th=>(Math.acos(Math.max(-1,Math.min(1,-th/a)))-aR)/W0,ph=[0],vs=[0],onS=[false],frS=[null];let phi=0,v=0,on=false,acW=-acc,fr=f?{t:tOf(f.th),d:f.d0,v:f.v0}:null;
+    const f=depart(a),aR=Math.acos(Math.max(-1,-thRel/a)),tOf=th=>(Math.acos(Math.max(-1,Math.min(1,-th/a)))-aR)/W0,ph=[0],vs=[0],onS=[false],frS=[null];let phi=0,v=0,on=false,held=false,acW=-acc,fr=f?{t:tOf(f.th),d:f.d0,v:f.v0}:null;
     const rr=u=>rideR(u/P),e_=2e-4;   /* the ride at the wheel's turn u = -phi; its slopes in u by differences */
     for(let i=iRel;i<NTB-1;i++){const th0=TH0+i*DT,th1=th0+DT;if(th1>=a)break;const t0=tOf(th0),t1=tOf(th1),h=(t1-t0)/4;
       for(let k=0;k<4;k++){const t=t0+k*h,u=-phi,r=rr(u);
@@ -1809,8 +1809,8 @@ function makeEsc(o={},base){
         if(on&&!(r>0)){on=false;fr=null;}
         let F=acc;if(on){const r1=(rr(u+e_)-rr(u-e_))/(2*e_),r2=(rr(u+e_)-2*r+rr(u-e_))/(e_*e_),ud=-v,udd=-acW,lam=MP+KD*r+IDk*(r2*ud*ud+r1*udd);   /* the detent's angle r(u): its acceleration r'' u'² + r' u'', which the preload and spring must give it */
           if(lam<0){on=false;fr={t,d:r,v:r1*ud};}else F+=(lam*-r1-c.MU*lam/BL*Math.tanh(-v/0.05))/JR;}   /* off the back where they can't: it falls from there (fallD, closed form) and lands again on the tooth */
-        acW=-F;v-=F*h;phi+=v*h;}
-      ph.push(phi);vs.push(v);onS.push(on);frS.push(fr);if(phi<=-P)break;}
+        acW=-F;v-=F*h;phi+=v*h;if(phi>0){phi=0;v=0;on=false;fr=null;held=true;break;}}   /* driven back past its lock (the stone's fall and preload on the back's rise beating a weak drive): the tooth is locked again, and stays (the beat lost; until 27 October 2026 the wheel ran on backwards through the stone) */
+      ph.push(phi);vs.push(v);onS.push(on);frS.push(fr);if(phi<=-P||held)break;}
     T_={i0:iRel,ph,v:vs,on:onS,fr:frS};if(rwM.size>4000)rwM.clear();rwM.set(key,T_);return T_;};
   /* RWD: the stone on the escaping tooth carried on through the impulse, from the tooth's landing on the impulse stone (table step i0) with the detent as the chase left it,
      the wheel now turned by the impulse stone (PA): on the tooth, its preload and spring push the wheel on by λ (-r') and drag it by MU λ / BL, work the balance takes;
