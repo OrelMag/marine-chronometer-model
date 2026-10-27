@@ -724,10 +724,14 @@ const WFUSEE=(()=>{
     const DTX=DTO.map(([x,y])=>{const X=-x,c=Math.cos(DTA),s=Math.sin(DTA);return[X*c-y*s,X*s+y*c];});
     const gDc=new THREE.Group();gD.add(gDc);const DTN=DTX.flatMap((p,i)=>{const q=DTX[(i+1)%DTX.length],n=Math.ceil(Math.hypot(q[0]-p[0],q[1]-p[1])/0.01);return[...Array(n).keys()].map(k=>[p[0]+(q[0]-p[0])*k/n,p[1]+(q[1]-p[1])*k/n]);}).filter(([x,y])=>Math.hypot(x,y)>7);   /* the outline toward its tip, every 0.01 along its edges (its corners only until 27 October 2026, so a tooth's tip could reach between them), to seat it on the ratchet */
     {/* the step: a straight hidden edge on 05 05_12 (dashed), from the back where the "8,6" meets it (8.6 from the hole, 1.40 above it on the r 18) obliquely down to the
-         hollow about 5.6 from the hole (scaled ±0.3; section A-B's step where the line crosses it, about 5.9): the thick part 0.52-0.61 clear of the fusee wheel's tips
-         (r 20.285) as the click rides on its ratchet. Until 16 October 2026 an arc about the hole at 7.55, the 8.6 taken as a radius, which put it over the tips */
+         hollow at the sheet's "150°": the angle between the step's construction line and the horizontal through the boss's underside, so the step runs at 30° to it
+         (drawn 30.4-31.3°; the construction line meets the pivot's centre line 3.65-3.75 under the hole, where 30° from (8.6, 1.403) puts it 3.56), meeting the r 9 hollow
+         at (4.859, -0.757): the thick part about 0.68 clear of the fusee wheel's tips (r 20.285) as the click rides on its ratchet. Until 16 October 2026 an arc about the
+         hole at 7.55, the 8.6 taken as a radius, which put it over the tips; until 28 October 2026 the line ran at 34.7° to x 5.6 on the hollow (scaled ±0.3; the second
+         drawing check, 3-M1) */
       const fw=[FX[0]-DX[0],-(FX[1]-DX[1])],tx=([x,y])=>{const X=-x,c=Math.cos(DTA),s=Math.sin(DTA);return[X*c-y*s,X*s+y*c];};
-      const S1=tx([8.6,1.403]),S2=tx([5.6,-9.645+Math.sqrt(81-(5.6-6.273)**2)]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
+      const SA=[8.6,1.403],SD=[-Math.cos(30*D2R),-Math.sin(30*D2R)],Sq=[SA[0]-6.273,SA[1]+9.645],Sb=Sq[0]*SD[0]+Sq[1]*SD[1],St=-Sb-Math.sqrt(Sb*Sb-(Sq[0]**2+Sq[1]**2-81));   /* the 30° line from the 8,6 point to the r 9 hollow */
+      const S1=tx(SA),S2=tx([SA[0]+St*SD[0],SA[1]+St*SD[1]]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
       const thick=KIT.clipPoly(DTX,p=>sg*side(p)),thin=KIT.clipPoly(DTX,p=>-sg*side(p));
       pD.userData.step=Math.min(...thick.map(([x,y])=>Math.hypot(x-fw[0],y-fw[1])))-20.285;   /* the thick part's least clearance over the tips, at rest */
       /* one solid, drawn as one mesh: the thick part and the thin tip merged, so no seam is drawn across the upper face they share (Edges outlines each mesh); two meshes until 21 October 2026 */
