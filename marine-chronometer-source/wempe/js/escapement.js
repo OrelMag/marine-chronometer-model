@@ -43,10 +43,13 @@ const WESC=(()=>{
   const D0=0.01/RT/D2R;   /* the locked tooth's tip 0.01 short of the stone's flat (a contact drawn as a gap, for the tools) */
   /* the detent's own frame (t along the blade from the stone toward the foot, n across toward the wheel): the block's screw at hole 13 (the plate's table, 05 09 01) and the
      block's sheet (05 04 01-4, 8.7.43): its screw 7.3 from the end the detent's foot is clamped to, its cross screw 18.8 ±0.03 from the screw's row along the upright, which
-     05 04_1 gives as the stone's distance from the block's screw ("18,8"); the detent's centre plane 0.30 off that end (half the foot's 0.60, 1436), the stone on it (1436's left
-     view draws the pipe on the blade's line; the blade itself flush with its thicker part's face toward the block, 0.11 off that plane: not built, README, Unresolved). With the stone where 05 04_1 puts it, the block's turn about 13 follows, and the stone lands 18.73 along from the screw's row, 0.07
-     short of 18.8: fitted (README) */
-  const ACR=7.3+0.30,dS=sub(H[13],P),LS=hyp(dS),ALG=Math.sqrt(LS*LS-ACR*ACR);
+     05 04_1 gives as the stone's distance from the block's screw ("18,8"); the detent's foot, spring and square centred on one plane 0.30 off that end (half the foot's 0.60, 1436),
+     the blade (the pipe and stone on its line, 1436's left view) flush with their thicker part's face toward the block, so its line DOFF (0.11, (0,50 − 0,28)/2; as first drawn
+     (0,55 − 0,33)/2) nearer the block: 1436's left view draws the blade, its thicker part and the square flush on one side, its "linke Seite" (10-2), the side its horn ("Spitze")
+     bends to, toward the block as the horn photographed on Wempe 3955 and the CWW's block (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg) is (sure; the blade centred until
+     27 October 2026). With the stone where 05 04_1 puts it, the block's turn about 13 follows, and the stone lands 18.77 along from the screw's row, 0.03 short of 18.8
+     (18.73 with the blade centred): fitted (README) */
+  const DOFF=0.11,ACR=7.3+0.30-DOFF,dS=sub(H[13],P),LS=hyp(dS),ALG=Math.sqrt(LS*LS-ACR*ACR);
   const TD=(()=>{const u=unit(dS),g=-Math.atan2(ACR,ALG),t=[u[0]*Math.cos(g)-u[1]*Math.sin(g),u[0]*Math.sin(g)+u[1]*Math.cos(g)];let n=[-t[1],t[0]];if(n[0]*(W[0]-P[0])+n[1]*(W[1]-P[1])<0)n=[-n[0],-n[1]];return{t,n};})();
   const D=(t,n)=>[P[0]+t*TD.t[0]+n*TD.n[0],P[1]+t*TD.t[1]+n*TD.n[1]],toD=q=>{const v=sub(q,P);return[v[0]*TD.t[0]+v[1]*TD.t[1],v[0]*TD.n[0]+v[1]*TD.n[1]];};
   const ROW=ALG,[tB,nB]=toD(B);   /* the block screw's row along the detent; the balance's centre in the detent's frame */
@@ -57,11 +60,14 @@ const WESC=(()=>{
      the wheel pushed by the discharge stone's end; the detent's horn (1436's "Spitze") under it. The discharge stone's end reaches RD from the staff: the detent turns about TP
      until the stone has lifted 0.245, 0.07 past the depth of lock, as the stone's end leaves the gold spring's tip (inferred: the sheet scales 1.7-1.75) */
   const GT=tB+1.54,GN=nB+0.005,GW=0.15,GNF=GN+GW/2,GNB=GN-GW/2;
-  const RD=Math.hypot(1.54,(DEPTH+0.07)*(TP-GT)/TP-(GNF-nB)),DSW=0.4;   /* the discharge stone's end; its width across 0.4 (scaled) */
-  const GB=[6.7,0.325];   /* the gold spring's bending point (05 04_1 "Biegungspunkt der Goldfeder", 6.7 from the stone, scaled) */
+  const RD=Math.hypot(1.54+DOFF*(DEPTH+0.07)/TP,(DEPTH+0.07)*(TP-GT)/TP-(GNF-nB)),DSW=0.4;   /* the discharge stone's end (1.578); its width across 0.4 (scaled). The flexure DOFF off the blade's line,
+     the gold spring's tip, turning about it, slides out along the blade by DOFF times the turn (2.6 µm at the release's lift) as it lifts: the reach takes it, so the detent is still lifted as far past
+     the lock (makeEsc's 0.052 at the tip, 0.0519 with the blade centred). Without it (1.5754) the detent is lifted 12 µm less at the tip, falls back 0.6° sooner, lands on the escaping
+     tooth at its tip with a weak drive (the wheel driven back into its lock: makeEsc's swing 78° at 90 % of the drive) and the stone's blow on its back's end pins the swing (README, Closed) */
+  const GB=[6.7,0.325+DOFF];   /* the gold spring's bending point (05 04_1 "Biegungspunkt der Goldfeder", 6.7 from the stone, scaled), on the square's face toward the wheel */
   /* the horn's length from the stone, HORN_L: 1436's figure, 4.4 to the pipe's centre (its drawing scales 5.2: not to scale there); Wempe 3955's detent seen along its
      pipe (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, 21.7 px/mm by the pipe's Ø 1.15) measures 4.4-4.55, the gold spring's tip just past it, as on the 6MX's
-     (8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Its end then lies 1.598 from the staff, 0.038 outside the discharge stone's reach (RD 1.560), and the gold spring's tip
+     (8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Its end then lies 1.661 from the staff, 0.083 outside the discharge stone's reach (RD 1.578), and the gold spring's tip
      (1.54) 0.056 past it (likely; 3.5 until 15 October 2026, an estimate kept 1 short of the tip). An unbracketed figure, so the first drawn detent's too */
   const HORN_L=4.4;
   /* its line in plan: on the blade's line at the pipe, bending steadily toward the block to its end, as Wempe 3955's (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, flattened
@@ -134,7 +140,7 @@ const WESC=(()=>{
     return{th,ccw,lift,psDef,prog,drop,run,p:q};}
   /* holes in the frame's parts for this group's screws and pins (frame.js cuts them): the detent block's two steady pins in the top plate's inner face (not in its table:
      drilled at assembly), the stud's screw in the upper cock (not on its sheet) */
-  const VO=brg(75),AX=brg(345),STUD=(u,v)=>add(add(B,AX,u),VO,v),BLK_NE=-0.30,HOLES={blockPins:[D(ROW-2,BLK_NE-2.3),D(ROW+2,BLK_NE-12.3)],studScrew:STUD(4.1,4.35),
+  const VO=brg(75),AX=brg(345),STUD=(u,v)=>add(add(B,AX,u),VO,v),BLK_NE=7.3-ACR,HOLES={blockPins:[D(ROW-2,BLK_NE-2.3),D(ROW+2,BLK_NE-12.3)],studScrew:STUD(4.1,4.35),
     /* the Soviet 6MX's (Kirov No. 247): its block fixed not through hole 13 but by a slotted stud Ø 3.4 flush in the top plate's outer face 2.2 S of it, between two steady
        pins 10.0 apart, measured on 2_Kirow_247_A.jpg (holemap.py --model wempe, six seeds, 8.993 px/mm, every residual under 0.57) and 2_Kirow_009_A.jpg (by hand), each
        corrected by hole 12's offset (0.4): the two agree to 0.3 (sure to ±0.4). In the block's frame the pins stand 1.9 nearer its end than 05 04 01-4 draws them and the
@@ -192,7 +198,7 @@ const WESC=(()=>{
      round: a plan point q goes to MK(q), its angle about the balance mirrored about the line of centres and turned so that the wheel lies on -x. Each setting from this
      file's layout above (05 04_1 and the parts' sheets); makeEsc's own names for them (its header). Lengths in units of ES, angles in degrees */
   const ES_=RT,MK=q=>{const v=sub(q,B),f=(180+aBW-al(v))*D2R,r=hyp(v)/ES_;return{x:r*Math.cos(f),y:r*Math.sin(f)};},dt=(a,b)=>a.x*b.x+a.y*b.y,DST=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
-  const SET=(()=>{const S=MK(pol(W,RT,P_A)),F=MK(D(TP,0)),BL=DST(S,F),dB={x:(S.x-F.x)/BL,y:(S.y-F.y)/BL},nB={x:dB.y,y:-dB.x};   /* the locked tooth's tip on the stone's flat (the 0.01 the drawing leaves is for the tools); the detent's flexure, its spring's middle */
+  const SET=(()=>{const S=MK(pol(W,RT,P_A)),F=MK(D(TP,DOFF)),BL=DST(S,F),dB={x:(S.x-F.x)/BL,y:(S.y-F.y)/BL},nB={x:dB.y,y:-dB.x};   /* the locked tooth's tip on the stone's flat (the 0.01 the drawing leaves is for the tools); the detent's flexure, its spring's middle */
     const Wm=MK(W),Pc=MK(P),fl=Math.hypot(Wm.x-Pc.x,Wm.y-Pc.y),fF={x:(Wm.x-Pc.x)/fl,y:(Wm.y-Pc.y)/fl},rho=GW/2/ES_,Pt=MK(D(GT,GN)),Gb=MK(D(GB[0],GB[1]));   /* the flat along the wheel's radius; the gold spring's square end's middle (TSQ), its bending point */
     return{NT:15,ES:ES_,EX:Wm.x,LK:2,LO:-(P_A-aB)+1.5*24,   /* 15 teeth (24 deg), the locked tooth two pitches on from the pair across the line of centres, at 37.0 deg (makeEsc's lockA = t0 - 2 P) */
       DA:Math.atan2(dB.y,dB.x)/D2R,BL,DRAW:Math.atan2(dt(fF,dB),-dt(fF,nB))/D2R,   /* the detent's line from its flexure (the spring's middle, TP) to the locked tip; the flat's draw against it */
@@ -263,7 +269,7 @@ const WESC=(()=>{
        lifted over the tooth where it is drawn (makeEsc's ride at the progress less D0's share of a pitch); and each contact makeEsc solves exactly is drawn GAP apart, as the
        layout kept them (0.01 at the gold spring's tip: the discharge stone carrying it or bending it on the return, the locking stone on the tooth), for the tools. The gold
        spring's bend: makeEsc moves its strip bodily across (PS, the tip's travel), the drawing turns it about its bending point, PSL from the tip; the stone, reaching 0.02
-       past the tip (RD 1.560 against 1.54), meets it at its square end, so the two agree there */
+       past the tip (RD 1.578 against 1.54), meets it at its square end, so the two agree there */
     const GAP=0.01/E.ES,DP=D0/24;
     const conv=(z,q,a)=>{const dl=z.ccw?detL(q,z.th,a):0,l0=z.ccw?tab(E.LI,z.th):0,rd=z.ccw&&z.prog>0&&z.prog<1?E.ride(z.prog-DP):0,ride=rd>0&&rd>=dl,
         lift=Math.max(dl>0?dl+(l0>0&&dl<=l0+1e-12?GAP:0):0,ride?rd+GAP:0);
@@ -651,7 +657,7 @@ const WESC=(()=>{
        the wheel 0.38 lower (05 04_7.2's 19) would leave 0.01 under its teeth): PIPE0, its top's depth under the plate */
     const PIPE0=Y.ew1-TI+0.1;
     const det=part('detent',-30),detS=new THREE.Group(),detM=new THREE.Group();det.add(detS,detM);R.det=detM;
-    const piv=D(TP,0);detM.position.set(piv[0],0,piv[1]);const dm=new THREE.Group();dm.position.set(-piv[0],0,-piv[1]);detM.add(dm);   /* the detent turns about its spring's middle */
+    const piv=D(TP,DOFF);detM.position.set(piv[0],0,piv[1]);const dm=new THREE.Group();dm.position.set(-piv[0],0,-piv[1]);detM.add(dm);   /* the detent turns about its spring's middle */
     /* each state's detent (dv below): its two groups, fixed (sS) and turning (sM); as last revised the heights above and the bracketed sizes. As first drawn (05 04_1's
        elevation): the detent 2 wide from 1.3 to 3.3 under the plate ("1,3", sure; 1436's width), the blade's 1 flush with its lower edge (scaled 2.34 to 3.36), so 1.9 nearer
        the plate; 1436's first sizes (the unbracketed figures): the foot 0.65, the square and the blade's thicker part 0.55, the blade 0.33, the horn 0.25; the pipe Ø 1.15 from
@@ -662,15 +668,15 @@ const WESC=(()=>{
        (the right view), the horn o.wh (0,75) at the blade's middle; the gold spring 1 wide (05 04 01-2) flush with the same edge. Until 25 October 2026 the foot 2, the blade 1
        and the horn 0.8 (the unbracketed) as last revised, the spring and square 1.9 */
     const dv=(sS,sM,o)=>{const yd=d=>TI+d,c=(2-o.w)/2,y0F=yd(o.d0+c),y1F=yd(o.d0+2-c),b1=o.d0+2-c,y0b=yd(b1-o.wb),y1b=yd(b1),hm=b1-o.wb/2,gy0=yd(b1-1),gy1=y1b,rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],fh=o.tf/2;
-      const tz=(t0,t1,h0,h1)=>[D(t0,-h0),D(t1,-h1),D(t1,h1),D(t0,h0)];   /* a spring half, h0 across at t0 to h1 at t1 */
+      const f=DOFF,tz=(t0,t1,h0,h1)=>[D(t0,f-h0),D(t1,f-h1),D(t1,f+h1),D(t0,f+h0)];   /* a spring half, h0 across at t0 to h1 at t1; f: the foot, spring, square and the blade's thicker part centred DOFF off the blade's line (each version's (tq − tb)/2, 0.11), the blade flush with them toward the block (1436: above) */
       /* the foot, with its screw's clearance hole (Ø 1.1 for the M1, WN-gf) and its two steady pins' (Ø 0.45) across it, as 1436 draws them (left out until 26 October 2026) */
-      const yc0=yd(o.d0+1),fg=[[ROW,0.55],[ROW-2.1,0.225],[ROW+2.1,0.225]].reduce((g,[t,r])=>nBore(g,t,-fh-0.05,yc0,r),solidGeo([{loop:rect(FOOT0,FOOT0+6.6,-fh,fh),y0:y0F,y1:y1F}]));
+      const yc0=yd(o.d0+1),fg=[[ROW,0.55],[ROW-2.1,0.225],[ROW+2.1,0.225]].reduce((g,[t,r])=>nBore(g,t,f-fh-0.05,yc0,r),solidGeo([{loop:rect(FOOT0,FOOT0+6.6,f-fh,f+fh),y0:y0F,y1:y1F}]));
       const dS=[tag(mesh(sS,fg,M.steel),'050401-1')],dM=[];   /* its pieces, fixed and turning, each set one mesh below (fuse) */
       const sp0=tz(TP,FOOT0,0.035,0.045),sp1=tz(SPR0,TP,0.045,0.035);   /* 1436's left view: 0,09 at each end, 0,07 at its middle, straight between (until 25 October 2026 0.07 throughout) */
       dS.push(tag(mesh(sS,solidGeo([{loop:sp0,y0:y0F,y1:y1F}]),M.steel),'050401-1',1));
       dM.push(tag(mesh(sM,solidGeo([{loop:sp1,y0:y0F,y1:y1F}]),M.steel),'050401-1',1));
-      dM.push(tag(mesh(sM,nBore(solidGeo([{loop:rect(SQ0,SPR0,-o.tq/2,o.tq/2),y0:y0F,y1:y1F}]),SQ0+1.0,o.tq/2-0.42,yc0,0.35),M.steel),'050401-1',1));   /* the square, tapped 0.42 deep for the gold spring's screw WN-14 (M0.7; left out until 26 October 2026) */
-      dM.push(tag(mesh(sM,solidGeo([{loop:rect(SQ0-2.9,SQ0,-o.tq/2,o.tq/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
+      dM.push(tag(mesh(sM,nBore(solidGeo([{loop:rect(SQ0,SPR0,f-o.tq/2,f+o.tq/2),y0:y0F,y1:y1F}]),SQ0+1.0,f+o.tq/2-0.42,yc0,0.35),M.steel),'050401-1',1));   /* the square, tapped 0.42 deep for the gold spring's screw WN-14 (M0.7; left out until 26 October 2026) */
+      dM.push(tag(mesh(sM,solidGeo([{loop:rect(SQ0-2.9,SQ0,f-o.tq/2,f+o.tq/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
       const PO=C(P,1.15/2,96),inP=(a0,a1)=>o.pp<=a0+1e-9&&o.pp+o.pl>=a1-1e-9,offP=(L,a0,a1)=>{if(!inP(a0,a1)){console.warn('detent: a piece outside the pipe height');return L;}const c=bool(L,PO).dAB;return c.length===1?c[0]:L;};   /* a piece's end cut to the pipe's outside (its 96 corners), where the pipe covers its height: until 24 October 2026 the blade and horn ran into the pipe's wall, 0.07 mm³ weighed twice (overlaps.py) */
       dM.push(tag(mesh(sM,solidGeo([{loop:ccw(offP(rect(0.4,SQ0-2.9,-o.tb/2,o.tb/2),b1-o.wb,b1)),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade, to the pipe */
       dM.push(tag(mesh(sM,solidGeo([{loop:C(P,1.15/2,96),y0:yd(o.pp),y1:yd(o.pp+o.pl),F:[{p:C(P,RS+0.002,64),a:yd(o.pp),b:yd(o.pp+o.pl)}]}]),M.steel),'050401-1',1));   /* the pipe */
@@ -714,8 +720,8 @@ const WESC=(()=>{
         const xs=[];for(let k=0;k<=16;k++)xs.push(-0.7+1.4*k/16);const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,yt(Math.abs(x))+0.15]),...xs.slice().reverse().map(x=>[x,yt(Math.abs(x))-0.01])]),y0:-0.12,y1:0.12}]);
         sg.rotateX(-Math.PI/2);sg.rotateY(0.7);tag(across(sM,sg,M.steelD,at,dn,yc),'WN-14',1);}   /* its slot, 0.15 deep under the rounded top, its face 0.01 over it */
       /* the foot's screw M1 along it into the block (number not read) and its two steady pins (Stellstift 2, WN-201 in the coloured section), drawn without holes across */
-      tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
-      for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
+      tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,f+fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
+      for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,f-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
     R.golds=[];
     dv(rv(detS,'last'),rv(dm,'last'),{w:1.9,wb:0.9,wh:0.75,d0:3.2,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y.ew0});
     dv(rv(detS,'first'),rv(dm,'first'),{w:2,wb:1,wh:0.8,d0:1.3,pp:1.95,pl:1.7,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
@@ -748,7 +754,7 @@ const WESC=(()=>{
        and the escape wheel whose teeth lie 0.05 over the detent's pipe, rises 30.3 and the cock 29.9 (frame.js's 31 as last revised), which keeps the 0.5 exploded.py asks
        from the block and from the seconds wheel under the cock's lug (33) */
     {const P=K.parts;onRev(v=>{const f=v!=='last';P.lowerCock.userData.off=f?-29.9:-31;for(const k of['detentBlock','detent','escapeWheel'])P[k].userData.off=f?-30.3:-30;});}
-    {const yP=TI,nE=-0.30,L=(t,n)=>D(t,n),tF=ROW+3.75,tT=ROW-3.75,tU=tF-25,nUl=nE-1.4,nUr=nUl-3,sl0=nUl-1.35,sl1=sl0-0.3;
+    {const yP=TI,nE=BLK_NE,L=(t,n)=>D(t,n),tF=ROW+3.75,tT=ROW-3.75,tU=tF-25,nUl=nE-1.4,nUr=nUl-3,sl0=nUl-1.35,sl1=sl0-0.3;
       /* the upright's foot on its far side (05 04 01-4's front view, 17.1 px/mm by its 17,5): its edge down to 15 from its top (2.5 over the base), a step 0.35 out (6 px),
          then a cove "3 r" (its arc's 35 rows fitted with a circle: r 2.96, its centre 3.20 out and 3.09 over the base, in the air, rms 0.3 px: sure) to 2.0 out and 0.4 over the
          base, down 0.4 to it there, flush with the base's 6.5-deep part's end (the front view's hidden line under it): built r 3 through those two ends (its centre then 3.29
@@ -1052,5 +1058,5 @@ const WESC=(()=>{
   const BUILD40={k:1,bend:[3,0.06],set:{tsT:0.0702},strip:null};
   const SET6={I:2521.0,JW:10.45,ID:7.94};   /* I 2524.6, JW 10.90 and ID 7.96 until 26 October 2026 (the drawings check: the escape wheel's web, the seconds wheel's hub, the collet); I 2526.0, JW 10.89 and ID 8.19 until 25 October 2026 (the rim's cut 1.6, the detent at its bracketed heights and its spring tapered: the per-part audit); ID 8.28 until 24 October 2026 (the blade and horn counted twice in the pipe's wall: overlaps.py); ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,DSPH:2-0.1,PIPE0:Y.ew1-TI+0.1};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
 })();
