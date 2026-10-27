@@ -28,28 +28,28 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 
 | Image | Sheet | Batch | Inv | Views | Overlay | Joints | Refuted | Status |
 |---|---|---|---|---|---|---|---|---|
-| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 1 | — | — | — | — | — | not started |
-| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 1 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 1 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 1 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 1 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | — | — | — | — | — | not started |
+| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 3 | — | — | — | — | — | not started |
 | `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 3 | — | — | — | — | — | not started |
 | `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 3 | — | — | — | — | — | not started |
