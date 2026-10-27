@@ -53,16 +53,16 @@
   {
    "measure": "Impulse arc (balance)",
    "book": "43° of the 48° (Fig. 141)",
-   "model": "37.4° (tooth lands 12.5°, ends 49.9°)",
+   "model": "38.4° (tooth lands 11.6°, ends 49.9°)",
    "source": "solved (05 04_1: 21° of the wheel, 10.5° either side of the line of centres)",
-   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 9.9° after the release (dynamics.js --model wempe)"
+   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 9.4° after the release (dynamics.js --model wempe)"
   },
   {
    "measure": "Jewel inside the wheel before release",
    "book": "5° (Fig. 141)",
-   "model": "-3.8°",
+   "model": "-4.2°",
    "source": "solved (05 04_1)",
-   "reading": "the other way: the stone comes into the teeth's path 3.8° after the release, the wheel running free to it"
+   "reading": "the other way: the stone comes into the teeth's path 4.2° after the release, the wheel running free to it"
   },
   {
    "measure": "Unlocking: balance arc",
@@ -74,14 +74,14 @@
   {
    "measure": "Unlocking: the detent's turn",
    "book": "about 2° (p. 150, Drop and draw)",
-   "model": "1.15°",
+   "model": "1.14°",
    "source": "solved",
    "reading": "less; the book's 2° is ambiguous (the Hamilton's README)"
   },
   {
    "measure": "Locking stone: draw",
    "book": "about 12° (p. 150, Drop and draw)",
-   "model": "-3.3°",
+   "model": "-3.5°",
    "source": "05 04_1 (the flat on the wheel's radius)",
    "reading": "none: the preload holds the tooth, not the draw (tripping.js --model wempe)"
   },
@@ -123,14 +123,14 @@
   {
    "measure": "Detent: flexure to locking jewel",
    "book": "the wheel's diameter, 14.00 mm (p. 138)",
-   "model": "12.83 mm",
+   "model": "12.88 mm",
    "source": "05 04_1 (the spring's middle to the stone)",
    "reading": "agrees roughly"
   },
   {
    "measure": "Detent spring: length",
-   "book": "2/7 of that, 3.67 mm (p. 138)",
-   "model": "5.00 mm (0.390 of it)",
+   "book": "2/7 of that, 3.68 mm (p. 138)",
+   "model": "5.00 mm (0.388 of it)",
    "source": "1436 (5, scaled)",
    "reading": "longer"
   },
@@ -172,7 +172,7 @@
   {
    "measure": "Balance: swing",
    "book": "about 225° (p. 142)",
-   "model": "195°",
+   "model": "197°",
    "source": "solved (makeEsc on 05 06_20's drive)",
    "reading": "smaller: under the book's, as under the 1954 instruction's 225-270° (open: the Wempe README, Unresolved)"
   }
