@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.45.02 · 2026-10-28
+- The Wempe's swing over the wind now matches the escapement run in time: its rate changes by under 0.2 s a day between full wind and run down, as its isochronism check asks (the last release had only half this fix)
+- The Wempe's tolerances, bench tests, made-chronometer trials, navigation figures and maker's sheets worked out again on it
+
 ## 3.45.01 · 2026-10-27
 - The Wempe's hairspring stud as its drawing has it: a solid upright, the spring's end pinned in its 0.7 mm hole beside a half-round brass pin (it had been drawn with a slot the drawing doesn't have).
 

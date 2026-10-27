@@ -39,7 +39,7 @@
       V.forEach((v,i)=>{const s=Math.min(ns-1,Math.floor((t[i]-t0)/len*ns)),d=new THREE.Vector3(v[0]-m[0],v[1]-m[1],v[2]-m[2]),r=d.sub(A.clone().multiplyScalar(t[i])).length();if(r>R[s])R[s]=r;});
       /* a step with no vertex in it (a plain cylinder's or a prism's sides run from end to end) takes the smaller of the nearest steps' each side */
       {const R0=R.slice();for(let s=0;s<ns;s++)if(!R0[s]){let a=s,b=s;while(a>=0&&!R0[a])a--;while(b<ns&&!R0[b])b++;R[s]=Math.min(a>=0?R0[a]:1e9,b<ns?R0[b]:1e9);}}
-      const others=ms.filter(o=>!P.includes(o)&&hnOf(o).split('|')[0]!==hnOf(P[0]).split('|')[0]),held=[];let best=0,bestBy='';
+      const others=ms.filter(o=>!P.includes(o)&&hnOf(o).split('|')[0]!==hnOf(P[0]).split('|')[0]),held=[];let best=0,bestBy='',emb=0;const embBy=new Set(),embAt=[];
       /* the piece's outside along a ray from its axis: its farthest crossing of the piece's own triangles (a bush's bore and oil sink lie inside it) */
       const far=(c,d)=>{let tm=0;for(const o of P){const{T}=W.get(o);for(let i=0;i<T.length;i+=9){const ax_=T[i],ay=T[i+1],az=T[i+2],f1=[T[i+3]-ax_,T[i+4]-ay,T[i+5]-az],f2=[T[i+6]-ax_,T[i+7]-ay,T[i+8]-az];
         const h=[d.y*f2[2]-d.z*f2[1],d.z*f2[0]-d.x*f2[2],d.x*f2[1]-d.y*f2[0]],a=f1[0]*h[0]+f1[1]*h[1]+f1[2]*h[2];if(Math.abs(a)<1e-12)continue;const f=1/a,s0=[c.x-ax_,c.y-ay,c.z-az],u=f*(s0[0]*h[0]+s0[1]*h[1]+s0[2]*h[2]);if(u<0||u>1)continue;
@@ -48,11 +48,15 @@
         /* the step's outside the largest of its twelve rays (a thread's crest: a ray on its flank would probe the thread's clearance) */
         const ds=[...Array(12).keys()].map(k=>{const a=k/12*2*Math.PI+0.13;return e1.clone().multiplyScalar(Math.cos(a)).addScaledVector(e2,Math.sin(a));}),rs=Math.max(...ds.map(d=>far(c,d)))||R[s];
         for(const d of ds)qs.push(c.clone().addScaledVector(d,rs+opt.gap));
+        /* buried: points in the piece's own metal (its axis and half its radius) inside another part too, a pin in solid metal with no hole for it (a press fit's
+           hundredths don't reach so deep): the Wempe's stop bar's and stop spring's pins (marine-chronometer-1b's drawing check, 27 October 2026) */
+        {const ins=[c,...ds.filter((_,k)=>k%3===0).map(d=>c.clone().addScaledVector(d,rs*0.5))].filter(q=>P.some(o=>inside(o,q)));
+          for(const o of others){if(ins.some(q=>inside(o,q))){emb++;embAt.push(s);embBy.add(pn(o)+':'+hnOf(o));break;}}}
         /* held: the points in other metal at least opt.need of twelve, and one part round at least half of them (a pin wedging a spring's end in its hole has the
            strip on one side: the Wempe's at the collet and the stud) */
         const bq=new THREE.Box3().setFromPoints(qs),any=new Set();let top=0,topBy='';
         for(const o of others){if(!W.get(o).bb.intersectsBox(bq))continue;const ins=qs.map((q,i)=>inside(o,q)?i:-1).filter(i=>i>=0),n=ins.length;ins.forEach(i=>any.add(i));
           if(opt.detail&&n)(out.detail=out.detail||[]).push([hnOf(P[0]),s,+R[s].toFixed(3),pn(o)+':'+hnOf(o),n]);if(n>top){top=n;topBy=pn(o)+':'+hnOf(o);}}
         if(any.size>best){best=any.size;bestBy=topBy;}if(any.size>=opt.need&&top>=6)held.push(topBy);}
-      const by=[...new Set(held)];out.push({part:pn(P[0]),hn:hnOf(P[0]),c:m.map(x=>+x.toFixed(2)),ax:ax.map(x=>+x.toFixed(2)),len:+len.toFixed(2),r:+Math.min(...R.filter(x=>x>0)).toFixed(3),steps:ns,held:held.length,by,best,bestBy});}}
+      const by=[...new Set(held)];out.push({part:pn(P[0]),hn:hnOf(P[0]),c:m.map(x=>+x.toFixed(2)),ax:ax.map(x=>+x.toFixed(2)),len:+len.toFixed(2),r:+Math.min(...R.filter(x=>x>0)).toFixed(3),steps:ns,held:held.length,by,best,bestBy,emb,embAt,embBy:[...embBy]});}}
   return out;}
