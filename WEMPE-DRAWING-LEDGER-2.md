@@ -59,20 +59,20 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 3 | — | — | — | — | — | not started |
 | `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 3 | — | — | — | — | — | not started |
 | `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 3 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 4 | — | — | — | — | — | not started |
-| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 4 | — | — | — | — | — | not started |
+| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-06/Wempe_05-06_01.jpg` | 05 06 (cross-reference 05 04 06 struck) Schnecke kompl. | 5 | — | — | — | — | — | not started |
 | `05-06/Wempe_05-06_02-1.jpg` | 020613-2 (127-556.04-060) Schneckenkörper | 5 | — | — | — | — | — | not started |
 | `05-06/Wempe_05-06_02-2.jpg` | 05 06 04-2 Schneckenkörper | 5 | — | — | — | — | — | not started |
