@@ -277,17 +277,25 @@ const WDIAL=(()=>{
       const cr=p=>CN.yt-(CN.cr-Math.sqrt(CN.cr*CN.cr-p[0]*p[0]-p[1]*p[1]));
       cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));R.cnM=cnM;}   /* the tube one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
 
+    /* the riveting sink in the change and hour wheels' holes, on their lower faces, the pipe's foot flared into it ("vernietet"): 0.4 deep at 30° (040204-1's edge view,
+       "0,4" from the face to the line its end circle draws across the hole, "30°" at the corner: sure; the 30° read to the axis, its leader on the corner's short chamfer,
+       about 0.2 across at 5:1, 15.5 px/mm: likely), Ø 6.46 at the face; 05 02 02's and 05 02 03's sections draw the same chamfer on the lower face, the pipe filling it
+       (enlarged 6×: about 0.4-0.5 deep, 0.19-0.22 across; the change wheel's not figured, the hour wheel's taken: likely). Until 27 October 2026 straight bores, the pipes
+       square. sunk(T, th, rb, n): the wheel as one solid (solidGeo), its hole an n-gon on the pipe's lathe's angles (n a multiple of 4: ring's and the lathe's points coincide) */
+    const SK={d:0.4,w:0.4*Math.tan(30*D2R)},sunk=(T,th,rb,n)=>{const h=-th/2,Cr=C([0,0],rb,n),g=solidGeo([{loop:T.xy.map(([x,y])=>[x,-y]),y0:h,y1:-h,F:[{p:C([0,0],rb+SK.w,n),q:Cr,a:h,b:h+SK.d},{p:Cr,a:h,b:-h}]}]);
+      Object.assign(g.userData,{ro:T.ro,ri:T.ri,pl:T.xy});return g;};
+
     /* ---------- the change wheel on the short stud at 19 ---------- */
     const chP=part('changeWheel',20),ch=grp(chP,H[19]);R.ch=ch;
-    {const c=CHW;tag(mesh(ch,lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rc,c.yw1],[c.rc,c.yc],[c.r,c.yc],[c.r,c.yt],[c.rb,c.yt]],48),M.brass),'050202-2');
-      const wm=tag(mesh(ch,gear(c.wheel,1.0,{bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050202-1');wm.userData.gear={z:56,m:M_CH};R.chW=wm;
+    {const c=CHW;tag(mesh(ch,lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs+SK.w,c.yw0],[c.rs,c.yw0+SK.d],[c.rs,c.yw1],[c.rc,c.yw1],[c.rc,c.yc],[c.r,c.yc],[c.r,c.yt],[c.rb,c.yt]],48),M.brass),'050202-2');
+      const wm=tag(mesh(ch,sunk(c.wheel,1.0,c.rs,48),M.gilt,0,(c.yw0+c.yw1)/2,0),'050202-1');wm.userData.gear={z:56,m:M_CH};R.chW=wm;
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.steel]]){const gv=new THREE.Group();gv.userData.rev=V;ch.add(gv);   /* the 6MX's steel (3_Kirow_247_uZ.jpg and Kirova 14100's, photocompare.py: sure) */
-        const pm=tag(mesh(gv,gear(c.pin,c.yp1-c.yc,{bore:c.r}),mt,0,(c.yc+c.yp1)/2,0),'050202-3');pm.userData.gear={z:18,m:M_HR};if(V!=='6mx')R.chP=pm;else R.chP6=pm;}}
+        const pm=tag(mesh(gv,gear(c.pin,c.yp1-c.yc,{bore:c.r,bseg:48}),mt,0,(c.yc+c.yp1)/2,0),'050202-3');pm.userData.gear={z:18,m:M_HR};if(V!=='6mx')R.chP=pm;else R.chP6=pm;}}
 
     /* ---------- the hour wheel on the cannon tube (turns a twelfth of it) ---------- */
     const hwP=part('hourWheel',26),hw=grp(hwP,H[1]);R.hw=hw;
-    {const c=HRW;tag(mesh(hw,lathe([[c.r,c.y0],[c.rs,c.y0],[c.rs,c.yw1],[c.rc,c.yw1],[c.rc,c.yc],[c.rh+(c.yt-c.yc)/140,c.yc],[c.rh,c.yt],[c.r,c.yt]],64),M.brass),'050203-2');   /* the hand's seat on its 1:70, Ø 4.4 at its top (until 15 October 2026 straight) */
-      const wm=tag(mesh(hw,gear(c.wheel,1.0,{bore:c.rs}),M.gilt,0,c.y0+0.5,0),'050203-1');wm.userData.gear={z:54,m:M_HR};R.hwW=wm;}
+    {const c=HRW;tag(mesh(hw,lathe([[c.r,c.y0],[c.rs+SK.w,c.y0],[c.rs,c.y0+SK.d],[c.rs,c.yw1],[c.rc,c.yw1],[c.rc,c.yc],[c.rh+(c.yt-c.yc)/140,c.yc],[c.rh,c.yt],[c.r,c.yt]],64),M.brass),'050203-2');   /* the hand's seat on its 1:70, Ø 4.4 at its top (until 15 October 2026 straight) */
+      const wm=tag(mesh(hw,sunk(c.wheel,1.0,c.rs,64),M.gilt,0,c.y0+0.5,0),'050203-1');wm.userData.gear={z:54,m:M_HR};R.hwW=wm;}
 
     /* ---------- the up-and-down wheel on the long stud at 2, and its pinion on the fusee arbor at 10 ---------- */
     const udP=part('udWheel',30),ud=grp(udP,H[2]);R.ud=ud;
@@ -295,7 +303,7 @@ const WDIAL=(()=>{
       /* the Soviet 6MX's spokes taper, 1.82 at the hub to 1.18 at the rim (3_3_Auf-_und_Ab_rus.jpg, the wheel loose, rectified by its rim's inside fitted as an ellipse, Ø 28.2:
          the five spokes' widths read on circles r 8 to 13.6, their mean 1.62 to 1.22, a line through them; 3_Kirow_247_uZ.jpg in place the same: likely); the drawings' 1.6 straight */
       for(const[V,sp]of/** @type {[string,number[]][]} */([['last first 1943',[5,1.6,10.4/2,28.3/2]],['6mx',[5,1.82,10.4/2,28.3/2,1.18]]])){const gv=new THREE.Group();gv.userData.rev=V;ud.add(gv);tag(mesh(gv,hub,M.brass),'050204-2');   /* the hub in each version's group with its wheel (fine.py takes pieces fixed to each other by their shared group) */
-        const wm=tag(mesh(gv,gear(c.wheel,1.0,{spokes:sp,bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};if(V==='6mx')R.udW6=wm;else R.udW=wm;}}
+        const wm=tag(mesh(gv,gear(c.wheel,1.0,{spokes:sp,bore:c.rs,bseg:48}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};if(V==='6mx')R.udW6=wm;else R.udW=wm;}}
     const upP=part('udPinion',20),up=grp(upP,H[10]);R.up=up;
     {const pm=tag(mesh(up,gear(UDP.pin,UDP.y1-UDP.y0,{bore:UDP.rb}),M.steel,0,(UDP.y0+UDP.y1)/2,0),'050200-5');pm.userData.gear={z:12,m:M_UD};R.upP=pm;}
 
@@ -358,7 +366,8 @@ const WDIAL=(()=>{
       const fm=mesh(gV,g,new THREE.MeshStandardMaterial({map:texOf('wempe'),metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
       Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=R.face||fm;FMS.push(fm);
       /* R.setDial(d): the printing shown, 'wempe', 'lange' or 'kirov' (app.js's Variants), each texture drawn when first asked for: on the face's own material (the viewer may be
-         showing a faded or coloured copy of it, which follows on its next look()) and on the copy shown, if another */
+         showing a faded or coloured copy of it, which follows on its next look()) and on the copy shown, if another. Only the printing: Lange's disc (1453/A: Ø 103 × 1.5, Eisen, the
+         seconds hole 2.2) isn't built, its 0.2 more thickness meeting the up-and-down hand's flange and the bezel's step, Lange's heights for which no sheet gives (README, The Lange dial) */
       R.setDial=(/** @type {string} */d)=>{const dd=d==='lange'||d==='kirov'?d:'wempe',t=texOf(dd);for(const f of FMS){const m=f.userData.mat0||f.material;for(const q of new Set([m,f.material]))if(q.map!==undefined&&q.map!==null){q.map=t;q.needsUpdate=true;}}R.dial=dd;};R.dial='wempe';
 }
     /* its three screws (WN-10 by the coloured section's label, "10" or "18": likely): M1 through its Ø 1.1 holes into the ring's flange (tapped 2.5 deep there: frame.js), the
