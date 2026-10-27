@@ -757,8 +757,16 @@ const WFUSEE=(()=>{
       const thick=KIT.clipPoly(DTX,p=>sg*side(p)),thin=KIT.clipPoly(DTX,p=>-sg*side(p));
       pD.userData.step=Math.min(...thick.map(([x,y])=>Math.hypot(x-fw[0],y-fw[1])))-20.285;   /* the thick part's least clearance over the tips, at rest */
       /* one solid, drawn as one mesh: the thick part and the thin tip merged, so no seam is drawn across the upper face they share (Edges outlines each mesh); two meshes until 21 October 2026 */
-      const I4=new THREE.Matrix4();tag(mesh(gDc,mergeGeo([[slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),I4],[slab(thin,[],DTU,DTT),I4]]),M.blue310),'050505-1');}
-    tag(mesh(gD,turned([[0,-22.075],[0.44,-22.075],[0.44,-18.975],[1.125,-18.975],[1.125,yD],[0.44,yD],[0.44,yD+3.1],[0,yD+3.1]].map(([r,y])=>[r,y]),20),M.steel),'050505-2');
+      /* its hole Ø 2.25 H7 "Kegel 1:70" (05 05_12's section A-B): opening 1:70 on the diameter toward the arbor's lower shoulder (yD), the way the detent was knocked on from 7,5
+         to 6,3 (05 05_11), Ø 2.25 at its small end (DTU) and 2.279 at DTL: the hole's wall turned to the cone (straight until 28 October 2026: the second drawing check, 3-M14) */
+      const I4=new THREE.Matrix4(),tk=slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),tp=tk.attributes.position;for(let i=0;i<tp.count;i++){const x=tp.getX(i),z=tp.getZ(i),r=Math.hypot(x,z);if(Math.abs(r-1.125)<1e-5){const k=(1.125+(tp.getY(i)-DTU)/140)/r;tp.setXYZ(i,x*k,tp.getY(i),z*k);}}tk.computeVertexNormals();
+      tag(mesh(gDc,mergeGeo([[tk,I4],[slab(thin,[],DTU,DTT),I4]]),M.blue310),'050505-1');}
+    /* the arbor (05 05_11 draws it, 5:1, at 17.2 px/mm by its body's 2.25): its shoulders chamfered about 0.25 × 45° (scaled 0.22-0.29 each way), its pivots' ends domed, the end
+       by the lower shoulder (yD, the 6,3's) rising 0.35 and the other 0.25 over the pivot's 0.44 (scaled ±0.06: likely); its seat on the detent tapered 1:70 as the detent's hole
+       (05 05_12's "Kegel 1:70"), line to line with it across the detent and on over the 1.2 it was knocked along (7,5 to 6,3), the body straight either side at the taper's end
+       diameters, 2.233 and 2.279 (no sheet sizes the body: estimated). Square shoulders, flat ends and a straight Ø 2.25 until 28 October 2026 (the second drawing check, 3-M14, 3-M16) */
+    {const dome=(y0,sg,h)=>{const R=(0.44*0.44+h*h)/(2*h),o=[];for(let i=0;i<=8;i++){const a=Math.asin(0.44/R)*(1-i/8);o.push([R*Math.sin(a),y0+sg*(R*Math.cos(a)-(R-h))]);}return o;},rT=y=>1.125+(y-DTU)/140,ya=DTU-1.2;
+      tag(mesh(gD,turned([...dome(-21.825,-1,0.25).reverse(),[0.44,-18.975],[rT(ya)-0.25,-18.975],[rT(ya),-18.725],[rT(ya),ya],[rT(DTL),DTL],[rT(DTL),yD-0.25],[rT(DTL)-0.25,yD],[0.44,yD],...dome(yD+2.75,1,0.35)].map(([r,y])=>[r,y]),20),M.steel),'050505-2');}
     /* its wire spring (Feder 05 05 06-1: the coloured section's #24; no sheet) in its stud, at the top plate's hole 5 ("Drahtfeder", 05 08_1a: N 38.507 O 10.684, Körner 1.3,
        M 1.7, 4.73 from hole 4; 05 06_4's A-B marks the "Drahtfedermitte" beside the detent's arbor). Sizes off the photographs, each scaled by the hole table's own spacing (holes
        49, 3, 4 and 5 on the top plate: 8.8 px/mm from above, 11-12 from the north) and checked on the coloured section (9.37 px/mm by the plates' 19):
