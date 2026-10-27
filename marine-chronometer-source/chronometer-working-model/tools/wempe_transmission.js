@@ -57,7 +57,7 @@ if(!isMainThread&&!workerData.job){parentPort.postMessage(meshTab(workerData));r
 const fs=require('fs'),path=require('path');
 const W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,WD=W.WD,H=WD.H,WT=require('./wempe_train.js');
 const quiet=f=>{const o=console.log;console.log=()=>{};try{return f();}finally{console.log=o;}};
-const WP=quiet(()=>require('./wempe_physics.js')),DY=require('./dynamics.js'),WJ=require('./wempe_inertia.json'),MJ=require('./mechanisms_wempe.json'),MF=require('./mainspring_friction_wempe.json');
+const WP=quiet(()=>require('./wempe_physics.js')),DY=require('./dynamics.js'),WJ=require('./wempe_inertia.json'),MJ=require(process.env.MC_MECH_WEMPE||'./mechanisms_wempe.json'),MF=require('./mainspring_friction_wempe.json');
 const D=Math.PI/180,TAU=2*Math.PI,G0=9.80665,f=(x,n=0)=>Number.isFinite(+x)?(+x).toFixed(n):'-',rows=[],out={};let fail=0;
 const say=s=>rows.push('  '+s),head=s=>rows.push('\n'+s),chk=(ok,s,soft)=>{if(!ok&&!soft)fail=1;rows.push(`${ok?'  ok ':soft?'  ~~ ':'  !! '} ${s}`);};
 const FUS=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','fusee.js'),'utf8'),T0=Date.now();
