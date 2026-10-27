@@ -187,7 +187,8 @@ files. To make a release, name the kind of change and what changed:
 `patch` is for fixes and small changes, `minor` for new features or parts (or
 a merged branch), and `major` for a milestone. The build adds the next version,
 dated today, with one line for each `-m` (written for visitors), then builds as
-usual. Commit `CHANGELOG.md` with the built files. The build fails if the file
+usual. Commit `CHANGELOG.md` with the built files, and bring this README up to date
+with what the release changed. The build fails if the file
 is malformed: a heading that isn't `## M.mm.pp · YYYY-MM-DD`, versions out of
 order, or a version with no lines.
 
