@@ -1,32 +1,52 @@
 # The Marine Chronometer
 
-A browser-based working model of the marine chronometer, the Hamilton Model 21:
-a two-day fusee chronometer with a spring detent escapement, made for the U.S.
-Navy from 1941; and a second, the German Wempe Einheits-Chronometer, built from
-Wempe's works drawings. An essay on how a chronometer keeps time at sea, shared by
-both, has a page of its own; its figures are drawn from the Wempe's model. On the
-site (since 21 October 2026) the Wempe is the home page, the Hamilton is at
-`/hamilton/` and the essay at `/essay/`.
+Browser-based working models of two marine chronometers, and an essay on how a
+chronometer keeps time at sea:
+
+- **The Hamilton Model 21**, a two-day fusee chronometer with a spring detent
+  escapement, made for the U.S. Navy from 1941. It is built from the 1948
+  overhaul manual (NAVSHIPS 250-624) and from photographs and videos of real
+  ones.
+- **The Wempe Einheits-Chronometer**, the German standard chronometer (spring
+  detent, fusee, three pillars), built from Wempe's works drawings. It comes in
+  several versions: as first drawn, the escapement of 1943, Wempe No. 3955 as
+  photographed, and the Soviet 6MX.
+- **The Marine Chronometer**, a long-form interactive essay shared by both
+  models. Its text follows the Model 21; its 3D figures and dial are drawn
+  from the Wempe's model.
+
+The live site is <https://www.marinechronometermodel.com>. Since 21 October 2026
+the Wempe has been the home page, with the Hamilton at `/hamilton/` and the
+essay at `/essay/`.
 
 Orel Magidish (assisted by Claude Opus 5.5) – September 2026  
-[orelmag@gmail.com](mailto:orelmag@gmail.com). On the page, **Report a bug or inaccuracy** (under About, on
-every part's card and at the essay's end) writes the report into an email to
-this address, with the version, the model's settings, the browser and the
-page's last errors.
+[orelmag@gmail.com](mailto:orelmag@gmail.com). On every page, **Report a bug or
+inaccuracy** (under About, on every part's card and at the essay's end) writes
+the report into an email to this address. The email includes the version, the
+model's settings, the browser and the page's last errors.
 
 | File | What it is |
 |---|---|
-| [`chronometer-working-model.html`](chronometer-working-model.html) | An interactive 3D model of the Model 21 running in real time inside its gimballed case and mounting box, with an eight-step walkthrough, cross-sections and part descriptions with Hamilton part numbers. Its **Essay** tab is a long-form interactive essay: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals and keeping the rate, with live figures drawn from the model's own code |
+| [`chronometer-working-model.html`](chronometer-working-model.html) | The Hamilton's model as one file: the Model 21 running in real time in its gimballed case and mounting box. It has views (Exploded, Laid out and Contacts among them), an eight-step walkthrough, cross-sections, winding, setting the hands, stopping and starting, the rate and timing weights, and the manual's overhaul operation by operation. Each part's card gives its Hamilton part numbers, its maker's sheet, its drawing and its STL. Its **Essay** tab links to the essay's page |
+| [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, Making it (maker's sheets, and the build book as engineering drawings) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
+| [`marine-chronometer-source/essay/dist/the-marine-chronometer.html`](marine-chronometer-source/essay/dist/the-marine-chronometer.html) | The essay: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals, keeping the rate, navigating without radio and making the chronometer. The models' own code computes its live figures |
 
-It is a single self-contained HTML file: download it and open it in any modern
-browser. It works offline and needs no server. three.js and the fonts are built
-into the file.
+Each is a single self-contained HTML file: download it and open it in any
+modern browser. It works offline and needs no server, because three.js and the
+fonts are built into the file. The pages link to each other, both on the site
+and in the repository.
 
-In Blender: the model's panel, Making it, **Blender (.glb)** saves the whole instrument as a glTF 2.0 file, every part a
-named object in its hierarchy, in its materials, with every motion the model has as an action (running, a beat in slow motion, run down, winding, setting
-the hands, stopping and starting, exploded, laid out, lifting out, the lids, the latch, at sea). **Blender rig (.py)** saves a script: import the file in
-Blender 5 (File, Import, glTF 2.0), open the script in the Text Editor and run it, and the chronometer runs on the timeline at its own ratios, with controls
-for the wind, the hands, explode, laid out, lift, lids, latch, roll and pitch. The model's README, "The model in Blender", has the details.
+**In Blender:** each model's panel has **Blender (.glb)** (the Hamilton's under
+Making it, the Wempe's under Download). It saves the whole instrument as a
+glTF 2.0 file. Every part is a named object in its hierarchy, with its
+materials, and every motion the model has is an action: running, a beat in
+slow motion, run down, winding, setting the hands, stopping and starting,
+exploded, laid out, lifting out, the lids, the latch, at sea. **Blender rig
+(.py)** saves a script. Import the file in Blender 5 (File, Import, glTF 2.0),
+then open the script in the Text Editor and run it. The chronometer then runs
+on the timeline at its own ratios, with controls for the wind, the hands,
+explode, laid out, lift, lids, latch, roll and pitch. The Hamilton's README,
+"The model in Blender", has the details.
 
 Contents:
 [Repository layout](#repository-layout) ·
@@ -40,26 +60,37 @@ Contents:
 ## Repository layout
 
     build.py                     builds everything (see Building)
-    inline.py                    inlines scripts, stylesheets and fonts into one HTML file (used by the builds)
+    inline.py                    inlines scripts, stylesheets, fonts and images into one HTML file (used by the builds)
     CHANGELOG.md                 the site's versions and what changed in each, newest first (read by the build; see Versions)
-    changelog.py                 reads and checks CHANGELOG.md, puts the version and the list into the page, adds a release
+    changelog.py                 reads and checks CHANGELOG.md, puts the version and the list into the pages, adds a release
     deploy.py                    puts site/ live, only as a new version (wrangler.jsonc runs its check before every deploy)
-    chronometer-working-model.html   published copy of the model (generated by build.py: do not edit by hand)
-    site-assets/                 files only the website needs: social.png (the link preview), social-movement.png (an image for posting the essay), _headers (host settings)
+    worker.js, wrangler.jsonc    the Cloudflare Worker that serves site/: its domains, and the redirects from old and other addresses
+    ci.py, citrace/              the checks, run on this machine (no GitHub workflows), with their results cache and the machine's shared slots
+    chronometer-working-model.html   the Hamilton's page as one file (generated by build.py: do not edit by hand)
+    site-assets/                 files only the website needs: the link previews (social.png, social-wempe.png), social-movement.png (an image for posting the essay), _headers (host settings)
     site/                        the website, ready to upload (generated by build.py, committed)
     vendor/                      three.js r128 and the fonts, with their licences
+    docs/motion-3d/              the method behind the moving parts' 3D viewers (kinematics, the transmission in time, stress by finite elements)
     marine-chronometer-source/
-      chronometer-working-model/ the Hamilton's 3D model: index.html, css/, js/, tools/, verification/ (reference renders),
-                                 dist/ (its built file); its README has the details
-      wempe/                     the Wempe Einheits-Chronometer's model, with its own essay on its drawings (its Its drawings tab); its README has the details
-      essay/                     the essay shared by both models, 'The Marine Chronometer': index.html (its text and figures' markup), js/essay.js (its
-                                 figures, drawn from the Wempe's model), js/hamdata.js (the Model 21's figures it quotes, from tools/essay_hamdata.py), dist/
-      shared/                    escapement.js, the detent escapement's solver, used by the page and the model's tools; escplan.js, its plan drawing;
-                                 almanac.js, the essay's nautical almanac and sight reduction
-    References/                  source material: the 1948 manual, photographs, drawings; its README lists each file
-    ci.py                        the checks, run here (no GitHub workflows): build and built copies, escapement, types, smoke test, invariants, solids, exploded, audit
+      chronometer-working-model/ the Hamilton Model 21: index.html, css/, js/, tools/ (the verification and measuring tools, for both models),
+                                 verification/ (its two reports and reference renders), blender/ (the rig), dist/ (its built file); its README has the details
+      wempe/                     the Wempe Einheits-Chronometer: index.html, js/, css/, checks.py (its tables for the shared tools), bom.json, dials/ (its
+                                 dials as SVG), book/ (the build book's PDF), verification/ (its report), dist/; its README has the details
+      essay/                     the essay shared by both models: index.html (its text and figures' markup), js/essay.js (its figures),
+                                 js/hamdata.js (the Model 21's figures it quotes, from tools/essay_hamdata.py), dist/
+      shared/                    scripts both models use: escapement.js (the detent escapement's solver, makeEsc), escplan.js (its plan
+                                 drawing), almanac.js (the essay's nautical almanac and sight reduction), hairspring.js (the hairspring's design),
+                                 contacts.js (the Contacts view), kit.js (the Wempe's part and screw builders), viewer.js (the Wempe's viewer),
+                                 essaykit.js (the essays' machinery)
+    References/                  source material: the 1948 manual, photographs, drawings (References/wempe/: the Wempe's works drawings and
+                                 their transcriptions); its README lists each file; VIDEOS.md catalogues videos of real chronometers
+    CLAUDE.md                    instructions for Claude Code: how the repository works, its rules, every tool and how long it takes
     RESOLVED.md                  bugs already found and fixed, from the commit history; check it before changing a part
-    IDEAS.md                     ways to improve the model and the application
+    OPEN-QUESTIONS.md            readings no source has settled; REQUESTS.md is the post to send owners and the NAWCC for them
+    PROVENANCE.md                the Hamilton's ledger: what each part's outline, sizes and place rest on
+    WEMPE-PROVENANCE.md, WEMPE-DRAWING-LEDGER.md   the Wempe's: each part against its photographs and against its drawing
+    IDEAS.md, Review-results.md, PERFORMANCE.md    ideas, open review findings, frame-time measurements
+    PLAN-*.md                    plans of work, each with what is done and what is left
     BOM.md                       the manual's parts list against the model, part by part (generated by the model's tools/bom.py --md)
 
 ## Setting up
@@ -74,46 +105,59 @@ Clone and build:
 
     git clone git@github.com:OrelMag/marine-chronometer-model.git
     cd marine-chronometer-model
-    python build.py
+    python build.py --site-url https://www.marinechronometermodel.com
 
 On macOS and Linux, use `python3` wherever these instructions say `python`.
 
-The verification tools (optional, only needed when you change the model's
-geometry) need three Python packages and a browser that Playwright drives:
+The verification tools are optional; you need them only when you change a
+model. They need more software:
 
-    python -m pip install numpy scipy playwright
-    python -m playwright install chromium
+- **Node.js**, for the physics tools (`escapement.js`, `dynamics.js` and the
+  rest), the type check (`npx`) and deploying (`wrangler`).
+- **Python packages**, and a Chromium for Playwright to drive:
+
+      python -m pip install numpy scipy playwright opencv-python matplotlib pillow shapely
+      python -m playwright install chromium
+
+  A few tools need more: torch for the mainspring's solve, pyamg for `fea.py`,
+  skyfield for the almanac's references, yt-dlp and imageio-ffmpeg for videos,
+  and trimesh and its helpers for the drawings. Each tool's docstring says what
+  it needs.
+- **Blender 5** (optional), for `blender_check.py`, which is skipped without it.
 
 ## Building
 
-    python build.py
+    python build.py --site-url https://www.marinechronometermodel.com
 
 This one command:
 
 1. Builds the Hamilton's model into `marine-chronometer-source/chronometer-working-model/dist/chronometer-working-model.html`, the Wempe's into `marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html` and the essay into `marine-chronometer-source/essay/dist/the-marine-chronometer.html`.
 2. Copies the Hamilton's to the repository root.
 3. Assembles `site/`, the folder you upload to a web host:
-   - `index.html` is the Wempe's model, so the site opens straight into it; `hamilton/index.html` the Hamilton's; `essay/index.html` the essay (`/essay/#detent` opens it at a section);
-   - `social-wempe.png` is the home page's link-preview image, `social.png` the Hamilton's (the dial in its box), and `social-movement.png` an image of the mechanism titled for the essay, for posting and as the essay's preview;
-   - `_headers` holds security and caching headers, read by Cloudflare Pages and Netlify.
-   - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the page links to beside it;
-   - `verification/build-verification/` and `verification/real-chronometers/` are the checks' two reports (each check's method, results and what they mean), copied as their own `build_report.py` last wrote them, their links to the tools pointed at GitHub; the page's About and the essay link to them. A report isn't rebuilt by `build.py`: rebuild it (its `build_report.py`) after changing what it reports, then build;
-   - `wempe/verification/` is the Wempe's report, *The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?* (every Wempe check's method and results), beside the Wempe's page at `wempe/`, as `marine-chronometer-source/wempe/verification/build_report.py` last wrote it, its links into the repository pointed at GitHub; the Wempe page's About and its essay link to it. Rebuild it (`node reportdata.js`, `python geometry.py`, `python build_report.py` there) after changing what it reports, then build;
+   - `index.html` is the Wempe's model, so the site opens straight into it. `hamilton/index.html` is the Hamilton's, and `essay/index.html` the essay (`/essay/#detent` opens it at a section).
+   - `social-wempe.png` is the home page's link-preview image and `social.png` the Hamilton's (the dial in its box). `social-movement.png` is an image of the mechanism titled for the essay, for posting and as the essay's preview.
+   - `_headers` holds security and caching headers.
+   - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the pages link to.
+   - `book/wempe-build-book.pdf` is the Wempe's build book as engineering drawings (made by `tools/drawbook.py`, committed in `wempe/book/`). The Wempe page's Build book and its part cards open it.
+   - `verification/build-verification/` and `verification/real-chronometers/` are the Hamilton's two reports (each check's method, results and what they mean). `wempe/verification/` is the Wempe's: *The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?* Each is copied as its own `build_report.py` last wrote it, with its links into the repository pointed at GitHub. The pages' About and the essays link to them.
    - `sitemap.xml` (the pages and the reports) and `robots.txt`, for search engines, when `--site-url` is given (below).
 
-The build fails if the page still loads a script, stylesheet or font from another
-server. That keeps the published files working offline and in countries where
-common CDNs are blocked.
+`build.py` doesn't rebuild the reports. After changing what a report reports,
+rebuild it with its `build_report.py`, then build. For the Wempe's, run
+`node reportdata.js`, `python geometry.py` and `python build_report.py` in its
+folder.
 
-It prints where the page's bytes go (three.js, fonts, images and the rest) and how
-much a visitor downloads compressed, so growth shows up on every build, and warns,
-without stopping, if the page grows past its size budget (`BUDGET` in `build.py`:
-1.43 MB): a tripwire for growth nobody meant, not a limit the host sets.
+The build fails if a page still loads a script, stylesheet, font or image from
+another server. That keeps the published files working offline and in
+countries where common CDNs are blocked.
 
-Once you know the site's address, pass it in. The page then shows a picture when
-the link is shared, and search engines see the canonical address:
+The build prints where each page's bytes go (three.js, fonts, images and the
+rest) and how much a visitor downloads compressed. It sets no size limit.
 
-    python build.py --site-url https://marine-chronometer.pages.dev
+`--site-url` gives the site's address. With it, the pages show a picture when
+the link is shared, and search engines see the canonical address. A build
+without it leaves out `robots.txt` and `sitemap.xml`, so always commit builds
+made with the address.
 
 Page addresses are written without `.html`, because Cloudflare redirects
 `/page.html` to `/page`. On a host that serves the `.html` address directly
@@ -122,42 +166,44 @@ Page addresses are written without `.html`, because Cloudflare redirects
 The addresses changed on 21 October 2026: the Wempe moved from `/wempe/` to the home
 page, the Hamilton from the home page to `/hamilton/`, and the essay from the
 Hamilton's Essay tab (`/#essay`) to `/essay/` (it was once a page of its own too,
-`/marine-chronometer`). On the live site `worker.js` sends `/wempe/` to
-`/?from=wempe` and `/marine-chronometer` to `/essay/`; a hash never reaches the
-server, so the Wempe's page itself sends the Hamilton's old links on (`/#essay=detent`
-to `/essay/#detent`, `/#part=det` and the Hamilton's own settings to `/hamilton/`).
+`/marine-chronometer`). On the live site, `worker.js` sends `/wempe/` to
+`/?from=wempe` and `/marine-chronometer` to `/essay/`. A hash never reaches the
+server, so the Wempe's page itself sends the Hamilton's old links on: `/#essay=detent`
+to `/essay/#detent`, and `/#part=det` and the Hamilton's own settings to `/hamilton/`.
 The reports and the manual keep their addresses. `tools/sitecheck.py` serves `site/`
 through `worker.js` and follows every address, old and new. On another host, add
 redirects of your own if old links matter.
 
 ### Versions
 
-The site has a version, `M.mm.pp` (1.05.00, for example). The panel's last
-section, Version … · what's new, shows it with the list of
-changes; About's byline shows it too. Both come from `CHANGELOG.md` at the root,
-newest first. A plain build only reads it, so building twice gives the
-same files. To make a release, name the kind of change and what changed:
+The site has a version, `M.mm.pp` (3.38.00, for example). The panel's last
+section, Version … · what's new, shows it with the list of changes, and
+About's byline shows it too. Both come from `CHANGELOG.md` at the root, newest
+first. A plain build only reads the file, so building twice gives the same
+files. To make a release, name the kind of change and what changed:
 
     python build.py --release patch -m "The camera turns further below the model" --site-url https://www.marinechronometermodel.com
 
-`patch` is for fixes and small changes, `minor` for new features or parts, and
-`major` for a milestone. The build adds the next version, dated today, with one
-line for each `-m`, then builds as usual. Commit `CHANGELOG.md` with the built
-files. The build fails if the file is malformed: a heading that isn't
-`## M.mm.pp · YYYY-MM-DD`, versions out of order, or a version with no lines.
+`patch` is for fixes and small changes, `minor` for new features or parts (or
+a merged branch), and `major` for a milestone. The build adds the next version,
+dated today, with one line for each `-m` (written for visitors), then builds as
+usual. Commit `CHANGELOG.md` with the built files. The build fails if the file
+is malformed: a heading that isn't `## M.mm.pp · YYYY-MM-DD`, versions out of
+order, or a version with no lines.
 
-Rebuild after every change and commit the regenerated root copy and `site/` with
-your source changes, so that they stay identical.
+Rebuild after every change. Commit the regenerated root copy, the `dist/`
+files and `site/` with your source changes, so that they stay identical.
 
 ## Changing things
 
-### The model
+### The models
 
-Work on the unbuilt source, which loads the files directly, so a browser reload
+Work on the unbuilt source. It loads the files directly, so a browser reload
 shows each edit:
 
-1. Open `marine-chronometer-source/chronometer-working-model/index.html` in a
-   browser (double-clicking it works).
+1. Open `marine-chronometer-source/chronometer-working-model/index.html` (the
+   Hamilton) or `marine-chronometer-source/wempe/index.html` (the Wempe) in a
+   browser. Double-clicking the file works.
 2. Edit the files in `css/` and `js/`, then reload the page.
 3. Keep the browser's developer console open (F12). Errors appear there, and so
    do warnings from the geometry builders, for example a hole that crosses a
@@ -171,44 +217,69 @@ Useful URL flags:
 
 For example: `index.html?snap&qa`.
 
-If the page is opened from a local web server instead of the file, start one at
-the repository root. The page reads `../../vendor/`, so the server must be able
-to reach it:
+If you open a page from a local web server instead of the file, start the
+server at the repository root. The pages read `../../vendor/`, so the server
+must be able to reach it:
 
     python -m http.server 8000
     # then open http://localhost:8000/marine-chronometer-source/chronometer-working-model/
 
-The model's own [README](marine-chronometer-source/chronometer-working-model/README.md)
-explains how the code is organised. Its "Modifying the model" section walks
+The Hamilton's [README](marine-chronometer-source/chronometer-working-model/README.md)
+explains how its code is organised. Its "Modifying the model" section walks
 through common changes: a part's shape, a new part, gear ratios, the dial, the
-walkthrough, views and materials.
+walkthrough, views and materials. The Wempe's
+[README](marine-chronometer-source/wempe/README.md) says how each of its parts
+was read off its drawings. Its dimensions are in `wempe/js/dims.js`, each with
+its drawing's number. It loads the Hamilton's `core.js` and the shared
+`kit.js` and `viewer.js`. Its section "The page's capabilities against the
+Hamilton's" lists what was ported and what was left out.
 
-The escapement's solver, `makeEsc` in
-`marine-chronometer-source/shared/escapement.js`, is shared by the model, the
-essay's detent figure and the model's `tools/escapement.js`, so a change to it
-reaches all three. Its plan drawing, `drawEscPlan` in `shared/escplan.js`, is
-shared by the walkthrough's inset, the adjuster's bench and the essay.
+Every outline, size and place is measured first, on a photograph, a video
+frame, a manual figure or a works drawing, never drawn by eye. The code comment
+beside it names its source. Each model's README has an "Estimated" section
+listing what no source shows.
+
+Some scripts in `marine-chronometer-source/shared/` are used by both models
+and the tools, so a change to one reaches all of them:
+
+- `escapement.js` holds the escapement's solver, `makeEsc`. The Wempe's is
+  `makeEsc(settings, base)` against the Hamilton's settings. After changing it,
+  `tools/escgolden.js` must still match: it holds the Hamilton's results bit
+  for bit.
+- `escplan.js` holds its plan drawing, `drawEscPlan`, used by the walkthrough's
+  inset, the adjuster's bench and the essay.
 
 The essay's sky sections (rating the chronometer by the Sun, longitude by
 chronometer, the lunar distance, an almanac to print) compute with `ALM` in
-`shared/almanac.js`, checked by `tools/almanac.js` against JPL Horizons and
-skyfield; the model README's "The almanac" says how and how well.
+`shared/almanac.js`. `tools/almanac.js` checks it against JPL Horizons and
+skyfield; the Hamilton's README, "The almanac", says how and how well.
 
 ### The essay
 
 The essay is shared by both models and has a page of its own,
-`marine-chronometer-source/essay/`: its text and figure markup are in its
-`index.html`, its styles in the Hamilton's `css/essay.css`, and its figures in
-`js/essay.js`, which builds the Wempe's movement from the Wempe's own scripts and
-lends it to each 3D figure as it draws (its dial, balance and hairspring, fusee,
-maintaining work, train, escapement and box), with the models' Edges (off with
-`?edges=0`, which the models' Essay tabs pass on when theirs are off). Open
-`essay/index.html` to work on it; a reload shows each edit. The Wempe's numbers a
-figure shows are filled in live from `data-live` spans; the Model 21's numbers the
-text quotes are `data-ham` spans, from `js/hamdata.js`, which
-`tools/essay_hamdata.py --write` works out on the Hamilton's page (run it after
-changing the Hamilton's escapement, train, balance or hairspring; `ci.py` checks it).
-The model README's "The essay" section explains the rest.
+`marine-chronometer-source/essay/`:
+
+- Its text and figure markup are in its `index.html`, and its styles in the
+  Hamilton's `css/essay.css`.
+- Its figures are in `js/essay.js`. It builds the Wempe's movement from the
+  Wempe's own scripts and lends it to each 3D figure as it draws: the dial, the
+  balance and hairspring, the fusee, the maintaining work, the train, the
+  escapement and the box. The figures use the models' Edges, off with
+  `?edges=0`; the models' Essay tabs pass that on when their Edges are off.
+
+Open `essay/index.html` to work on it; a reload shows each edit. Numbers come
+from two places:
+
+- The Wempe's numbers that a figure shows are `data-live` spans, filled in live.
+- The Model 21's numbers that the text quotes are `data-ham` spans, from
+  `js/hamdata.js`. `tools/essay_hamdata.py --write` works them out on the
+  Hamilton's page. Run it after changing the Hamilton's escapement, train,
+  balance or hairspring; `ci.py` checks it.
+
+The Hamilton's README, "The essay", explains the rest. The Wempe's own essay
+(its **Its drawings** tab) is `wempe/js/essay.js` and the `<article id="essay">`
+in `wempe/index.html`. Its data that only Node can work out is in
+`wempe/js/essaydata.js`, written by `tools/wempe_essaydata.js --write`.
 
 ### Tracing by hand
 
@@ -221,101 +292,136 @@ video frame, with the Edge Tracer:
   keys. **Save** writes `NAME.trace.json`; keep it in `tools/traces/`.
 - **On a phone or tablet**: open the private copy on claude.ai,
   <https://claude.ai/artifact/Ju3PQ8QErkH3fdRWZcSLjq> (only its owner can open
-  it). Claude puts the frames to trace there with a note on what to trace:
-  **Panel**, then **From Claude**, then **Open**. Tap to add a point. To place
-  one precisely, hold, then slide (a ring and the magnifier show where it
-  goes) and lift. Drag a point to move it, pan with one finger and pinch with
-  two. **Fine** makes drags and aiming move a quarter as far as the finger.
-  The bar at the bottom has the keyboard's actions (Done, Insert, Delete
-  point, Corner, Close curve). When done, tap **Send to Claude**: Claude reads
-  the trace from there and saves it in `tools/traces/`.
+  it). Claude puts the frames to trace there with a note on what to trace. To
+  open one, choose **Panel**, then **From Claude**, then **Open**.
+  - Tap to add a point.
+  - To place one precisely, hold, then slide (a ring and the magnifier show
+    where it goes), then lift.
+  - Drag a point to move it. Pan with one finger and pinch with two.
+  - **Fine** makes drags and aiming move a quarter as far as the finger.
+  - The bar at the bottom has the keyboard's actions (Done, Insert, Delete
+    point, Corner, Close curve).
+
+  When done, tap **Send to Claude**. Claude reads the trace from there and
+  saves it in `tools/traces/`.
 
 The same file runs in both places. After changing `tracer.html`, Claude
 rebuilds the phone copy with `tools/tracer_artifact.py` and publishes it to the
 same link.
 
+Claude measures parts itself with the `measure-trace` skill
+(`.claude/skills/measure-trace/`), whose engine is `tools/mfgfit.py`. The skill
+snaps a trace onto the image's edge and fits it as machined lines, arcs and
+drilled holes.
+
 ## Checking your changes
 
-Before committing a change to the model:
+The tools are in `marine-chronometer-source/chronometer-working-model/tools/`,
+for both models: most take `--model wempe` for the Wempe. Run them from that
+folder; they write their output files into it. [CLAUDE.md](CLAUDE.md) lists
+every tool, what it checks and how long it takes. Before committing a change:
 
 1. **Past fixes.** Look up the part, control or build step in
    [RESOLVED.md](RESOLVED.md), so an old bug doesn't come back.
-2. **Build.** `python build.py` at the root must finish without errors.
-3. **Console and arithmetic.** From
-   `marine-chronometer-source/chronometer-working-model/tools/`, run
-   `python smoke.py` (clicks through every control of the model, then opens
-   the essay's page, scrolls it and works every control in it, and fails on any
-   console error or warning) and
-   `python invariants.py` (hands against the time, the wind indicator, the
-   fusee's figures and the balance's). Both print `ok`.
-4. **Geometry** (if you changed any part), run from
-   `marine-chronometer-source/chronometer-working-model/tools/`:
+2. **Build.** `python build.py --site-url https://www.marinechronometermodel.com`
+   at the root must finish without errors.
+3. **Console and arithmetic.** Run these two; both print `ok`:
+   - `python smoke.py` clicks through every control of the model, then opens
+     the essay's page, scrolls it and works every control in it. It fails on
+     any console error or warning.
+   - `python invariants.py` checks the hands against the time, the wind
+     indicator, and the fusee's and the balance's figures.
+4. **Geometry**, if you changed any part:
 
-       python dyn.py        # collisions through a full escapement cycle
-       python fine.py       # the same at 0.05 mm, round the train and over the wind, plus the barrel's margins (exit code 1 on anything new)
+       python isolate.py PART --ref IMAGE   # the part alone beside a photograph or frame of a real one: compare them before going on
+       python fine.py       # collisions at 0.05 mm, through the escapement, round the train and over the wind, plus the barrel's margins (exit code 1 on anything new)
        python fine.py --hold    # the same with the balance locking arm locked and the train-blocking screw down
        python maintaining.py    # the fusee's maintaining work over run and wind cycles (exit code 1 on a failure)
-       python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after (`python ci.py --views` does the same for a branch)
+       python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after
        python solids.py     # every part a closed solid, facing out (exit code 1 on a failure)
        python exploded.py   # no two parts meet in the Exploded view, at any spread (exit code 1 on a failure)
-       python overhaul.py   # every operation of the manual's overhaul takes its parts off, or puts them on, clear of the rest (exit code 1 on a failure; ~~ the expected, each with its reason)
+       python overhaul.py   # every operation of the manual's overhaul takes its parts off, or puts them on, clear of the rest
+       python holecheck.py  # every hole has something in it, or a reason it is empty on the real movement
        python placements.py dump before   # (before the change) every mesh's place in seven states; after it: dump after, then --diff before after
        python audit.py      # screws, pivots, loose parts in the movement (exit code 1 on anything not expected; --update after an intended change of coplanar faces)
        python audit.py box  # the same for the box and gimbals
-       python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
-       node escapement.js   # the escapement's lock, let-off, overall, drop and clearances (Node.js only)
-       node almanac.js      # the essay's almanac and sight reduction against JPL Horizons and skyfield (Node.js only, about 1 s)
-       node hairspring.js   # the hairspring's design: Phillips' curves, the strip, the force on the pivots (Node.js only, about 12 s)
-       node physics.js      # the energy budget, the escape wheel's chase, the detent spring's share, temperature (Node.js only)
-       python selfcontained.py   # the page alone enough to make the chronometer and navigate with it
-       npx -p typescript@5.9.3 tsc -p ../jsconfig.json   # the types of the files that start with // @ts-check (TypeScript fetched by npx, nothing installed in the repository)
-       python bom.py        # every part against the manual's parts list: counts, how each is held and runs, the gears, the 14 jewels (exit code 1 on a failure; --md rewrites BOM.md)
-       python video.py      # teeth counted on frames of videos of real Model 21s (References/README.md); pip install opencv-python yt-dlp; videos kept outside the repository
-       python gltf_check.py     # the export to Blender, written (r_model21.glb) and read back: structure, the tree, names, every clip (about 2 minutes)
-       python blender_check.py  # that file in Blender 5 headless (MC_BLENDER, else the usual install; skipped without one): the rig against the export's own clips, two renders
+       python bom.py        # every part against the parts list: counts, how each is held and runs, the gears, the jewels (--md rewrites BOM.md)
+       python contacts.py --write   # after changing fine.py's tables: the Contacts view's data
+       python gltf_check.py     # the export to Blender, written and read back
+       python blender_check.py  # that file in Blender 5 headless (skipped without one): the rig against the export's own clips
+       npx -p typescript@5.9.3 tsc -p ../jsconfig.json   # the types of the files that start with // @ts-check
 
-   `dyn.py` should list only intended joints: pivots in their jewels, collets
-   on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
-   its table `EXPECTED` gives the reason for each intended contact. The
-   `views.py` diff should show changed pixels only on the parts you changed, and
-   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice, `exploded.py` and `overhaul.py` `0 failing`. `audit.py` ends with `OK: nothing new`:
-   it compares its findings with the expected ones (the loose ends in its
-   `LOOSE` table, each with its reason, and the coplanar faces, mostly faces in
-   contact, in `audit-expected.json`). `escapement.js` marks each figure
-   `ok` or not against the manual's value. `bom.py` prints `ok` (a known
-   deviation, with its reason, is printed with `~~`); after changing a part,
-   run `python bom.py --md` and commit the regenerated `BOM.md`. The tools write their output files
-   into the folder they're run from.
-5. **Preview images.** If the model's appearance changed, re-render them:
-   `python social.py` (from the same `tools/` folder), then rebuild. If the box,
-   gimbals, fusee, escapement, train or balance changed, look over the essay's
-   figures too (`marine-chronometer-source/essay/index.html`): the Wempe's are built from its model's code.
-   `topview.py` and `p3fit.py` turn Shadows on (off on the page by default), as their images were made.
-6. **Frame time** (if you changed the render loop, a rebuilt part, or what is drawn):
-   `python perf.py` (same folder) prints each view's frame cost, draw calls and
+   What each should print:
+   - `fine.py` prints `ok` on every line. Its table `EXPECTED` gives the
+     reason for each intended contact.
+   - The `views.py` diff shows changed pixels only on the parts you changed.
+     The `placements.py` diff lists only the parts you rebuilt.
+   - `solids.py` prints `0 not solid` twice. `exploded.py` and `overhaul.py`
+     print `0 failing`.
+   - `audit.py` ends with `OK: nothing new`. It compares its findings with the
+     expected ones: the loose ends in its `LOOSE` table, each with its reason,
+     and the coplanar faces, mostly faces in contact, in `audit-expected.json`.
+   - `bom.py` prints `ok`; a known deviation, with its reason, is printed with
+     `~~`. After changing a part, run `python bom.py --md` and commit the
+     regenerated `BOM.md`.
+5. **Timing and physics**, if you changed the escapement, balance, springs,
+   fusee or train. These are Node.js tools: `node escapement.js` (the
+   escapement against the manual's figures), `node escgolden.js`,
+   `node physics.js`, `node dynamics.js`, `node tripping.js` and
+   `node gearing.js`. For the Wempe, run `node wempe_escapement.js` and the
+   other `wempe_*.js` tools. Several write a golden JSON file with `--write`;
+   without it, they fail if that file is stale. The reports then need
+   rebuilding (see Building).
+6. **Preview images.** If a model's appearance changed, re-render them with
+   `python social.py` (`social.py wempe` for the Wempe's), then rebuild. If the
+   Wempe's box, gimbals, fusee, escapement, train or balance changed, look over
+   the essay's figures too: they are built from its model's code.
+7. **Frame time**, if you changed the render loop, a rebuilt part, or what is
+   drawn. `python perf.py` prints each view's frame cost, draw calls and
    triangles with the page's settings, with Shadows and without Edges, and how
    often the page draws when left alone. It runs on your GPU with vsync off;
-   `--throttle 4` slows the CPU to about a phone's. Compare with a run before
-   the change.
-7. **All the checks at once.** `python ci.py` at the root runs them here, one after
-   another, and prints each ok or FAIL (logs in `ci-logs/`; about 5 minutes): the build
-   with `--site-url https://www.marinechronometermodel.com`, as the live site is, failing
-   if building changes a built copy (commit what it writes), `escapement.js`, `almanac.js`, `hairspring.js`, `physics.js`, `selfcontained.py`, the type
-   check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py`, `overhaul.py`, `book.py` and `audit.py`.
-   `--full` adds `fine.py`, `maintaining.py`, `bom.py`, `gltf_check.py` and `blender_check.py`; `--views` renders every view before
-   and after the branch and prints the changed pixels; `--quick` is the first seven only.
-   A step that passed is skipped (`cached`) while every file it read is as it was then,
-   in this worktree or any other (`citrace/`: each step's reads are traced, its pass kept
-   in `.git/ci-cache/`), so a run after a small change reruns only the steps that read
-   what changed. `--plan` lists what would run and the input that changed for each;
-   `--no-cache` runs everything; `--changed` runs only the steps that read a file the
-   branch changed since `main`; `--fail-fast` stops at the first failure. Runs in
-   several worktrees share the machine's cores through `.git/ci-slots/` (`MC_CI_CPU`,
-   `MC_CI_BROWSERS`): a second run queues instead of slowing the first.
-   Nothing runs on GitHub: merge a branch only when `ci.py` passes on it.
-7. **Record fixes.** If the change fixes a bug, add it to
+   `--throttle 4` slows the CPU to about a phone's. Compare it with a run from
+   before the change.
+8. **All the checks at once.** `python ci.py` at the root runs them here and
+   prints each step `ok` or `FAIL`, with its logs in `ci-logs/`. It runs about
+   a hundred steps for both models, side by side (up to 12 at once, 3 with a
+   browser), in about 20 minutes. Among them is the build with the live
+   address, which fails if building changes a built copy (commit what it
+   writes). The options:
+   - `--quick` runs the steps without a browser.
+   - `--full` adds the slow ones (`fine.py`, `bom.py`, the full physics runs,
+     `fea.py`, the Blender export).
+   - `--views` renders every view before and after the branch and prints the
+     changed pixels.
+   - `--only a,b` runs those steps.
+   - `--plan` lists what would run, and the changed input behind each step.
+   - `--no-cache` runs everything.
+   - `--changed` runs only the steps that read a file the branch changed since
+     `main`.
+   - `--fail-fast` stops at the first failure.
+
+   A step that passed is skipped (`cached`) while every file it read is
+   unchanged, in this worktree or any other. `citrace/` traces each step's
+   reads, and `.git/ci-cache/` keeps its pass. Runs in several worktrees share
+   the machine's cores through `.git/ci-slots/` (`MC_CI_CPU`,
+   `MC_CI_BROWSERS`), so a second run queues instead of slowing the first.
+   Nothing runs on GitHub.
+
+   Choose the checks by what the change can break:
+   - Text no check reads (ledgers, plans, READMEs, comments) needs only the
+     build.
+   - A page's strings or controls need the build, the type check and
+     `smoke.py` (and `sitecheck.py` if `site/` changed).
+   - Timing or physics needs the tools that compute it and their golden files.
+   - Geometry needs `python ci.py --full` (with `--views` if anything drawn
+     changed).
+   - A change to `ci.py`, the shared scripts or several areas needs
+     `python ci.py`.
+9. **Record fixes.** If the change fixes a bug, add it to
    [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.
-8. **Commit** the source and the regenerated root copies together.
+10. **Commit** the source and the regenerated built copies together. Work on a
+    branch. Merge it into `main` with `git merge --no-ff` once its checks pass,
+    and push every branch to GitHub.
 
 ## Publishing the website
 
@@ -351,7 +457,7 @@ redeployed. After a deploy, `deploy.py` tags the commit `vM.mm.pp`; push it
 with `git push origin main --follow-tags`. Pushing to GitHub doesn't deploy it. The steps below are for setting up a new
 site elsewhere.
 
-### Recommended: Cloudflare Pages
+### A new site: Cloudflare Pages
 
 It's free, has unlimited bandwidth on the free plan, serves from hundreds of
 cities worldwide, and works with a private GitHub repository. Cloudflare
@@ -404,7 +510,7 @@ domains**. Rebuild with `--site-url https://your-domain` and upload again, so
 link previews use the new address.
 
 **Check the link preview:** paste the address into https://www.opengraph.xyz.
-It should show the dial picture, with the page's title and description.
+It should show the Wempe in its box, with the page's title and description.
 
 ### Alternatives
 
