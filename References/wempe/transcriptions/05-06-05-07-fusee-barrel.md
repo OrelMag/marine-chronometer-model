@@ -262,11 +262,11 @@ Conventions: dimensions in mm as printed (German decimal comma turned into a poi
 | maintaining-work band width (A-B, left) | 1.2 | — | likely | "1,2", rotated |
 | C-D: stop arm height overall | 22.5 | — | sure | |
 | C-D: radius | 14 | — | sure | "14", arc radius |
-| C-D: radius | 12 | — | sure | |
-| C-D: radius | 17.6 | — | likely | "17,6" (read "176") |
-| C-D: offset | 2 | — | sure | |
+| C-D: from the hub (Ø 21) in to the top land's floor (r 9.3), where the bar's lower end lies wound | 1.2 | — | sure | "1,2" (read "12" until 27 October 2026: its arrows end on the hub's circle and a thin arc at r 9.3, scaled 12.32 px/mm by the hub) |
+| C-D: from the hub (Ø 21) out to the bar's lower point, running | 1.76 | — | sure | "1,76" (read "17,6" until 27 October 2026: from the hub's circle to a thin arc drawn at r 12.44) |
+| C-D: from the hub (Ø 21) out to the bar's upper far corner, running | 2 | — | sure | its arrows on the hub's circle and a thin arc through the corner (drawn r 12.39) |
 | C-D: pin width / slot | 1.5 | — | sure | "1,5" |
-| C-D: arm lower end | 3.2 | — | sure | |
+| C-D: the bar's lower end, running to wound (the slide at full wind) | 3.2 | — | sure | drawn 3.6 between the two positions |
 | C-D: nose depth | 3.3 | — | sure | |
 
 - **Notes:** "Drahtfedermitte" — wire-spring centre. "Gegensperrad" — maintaining (counter-) ratchet wheel. "Schneckenrad" — fusee wheel. "Schneckensperrad" — fusee ratchet (click) wheel. "Stift nach oben" — pin upward. "Stellung im aufgezogenen Zustand" — position when wound up. "Anschlagstift in Oberplatte" — stop pin in top plate. "Stegstellung" — web (stop) position. "Schnitt A-B", "Schnitt C-D".
@@ -517,7 +517,7 @@ Conventions: dimensions in mm as printed (German decimal comma turned into a poi
 | developed length | 27.0 | — | sure | "gestreckt 27,0" (stretched out 27,0) |
 | pin hole | 0.6 dia | +0.02 | sure | |
 | pin hole position across the strip | 0.8 | −0.05 | sure | lower view, from the edge |
-| dimension at the left end | 0.6 (dia) | — | likely | "0,6ϕ" across the end (meaning unsure: the end's width or a second hole) |
+| second pin hole, by the end | 0.6 dia | — | likely | "0,6ϕ" across two dashed lines by the end, 18° from the figured hole: a second hole, on the cup's 42° pin (05 06 02 draws both pins through the spring; read 27 October 2026) |
 | left arc radius | 12.0 r | — | sure | |
 | long arc radius | 10.4 r | — | sure | |
 | bend mandrels | 2.2 dia (two) | — | sure | |
