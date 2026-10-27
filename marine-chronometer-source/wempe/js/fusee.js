@@ -730,11 +730,11 @@ const WFUSEE=(()=>{
            to the square end at 336°, its corners on their breakpoints, the end radial */
         /* the ring's outside: 05 06 01-1's Ø 32.3 -0.1 drawn 32.25; as first drawn 020605's boxed [32,3 -0,02] (32.28-32.30, checked at acceptance), drawn at its middle, 32.29
            (32.25 until 28 October 2026: the second drawing check, 3-M12a); the pins' holes on r 14.2 in both */
-        const R0v=v==='first'?16.145:16.125,{RB,QB}=blendOf(R0v),wf=v==='first'?w41:w48,at=(u,r)=>sh(r,aE-u*D2R),in_=u=>at(u,R0v-wf(u)),dE=p=>Math.hypot(p[0]-eye[0],p[1]-eye[1]),L=[];
+        const R0v=v==='first'?16.145:16.125,{RB,QB}=blendOf(R0v),wf=v==='first'?w41:w48,at=(u,r)=>sh(r,aE-u*D2R),in_=u=>at(u,R0v-wf(u)),eyeF=(x,y)=>Math.hypot(x-eye[0],y-eye[1])-1.8,L=[];   /* eyeF: tools/wempe_sustaining.js reads the eye's radius from it */
         for(let u=336;u>U1;u-=1)L.push(at(u,R0v));
         const tB=Math.atan2(eye[1]-QB[1],eye[0]-QB[0]),aB0=Math.atan2(at(U1,R0v)[1]-QB[1],at(U1,R0v)[0]-QB[0]);let dB=tB-aB0;while(dB>Math.PI)dB-=TAU;while(dB<-Math.PI)dB+=TAU;   /* the blend, from its tangency with the ring to the eye's (internal: QB, the eye's centre and the tangency in a line) */
         for(let i=0;i<=12;i++){const a=aB0+dB*i/12;L.push([QB[0]+RB*Math.cos(a),QB[1]+RB*Math.sin(a)]);}
-        let ul=0,uh=40;for(let i=0;i<60;i++){const m=(ul+uh)/2;if(dE(in_(m))<1.8)ul=m;else uh=m;}const ui=(ul+uh)/2,Pi=in_(ui);   /* where the inner edge leaves the eye's round (the shallow corner) */
+        let ul=0,uh=40;for(let i=0;i<60;i++){const m=(ul+uh)/2;if(eyeF(...in_(m))<0)ul=m;else uh=m;}const ui=(ul+uh)/2,Pi=in_(ui);   /* where the inner edge leaves the eye's round (the shallow corner) */
         const eT=Math.atan2(L[L.length-1][1]-eye[1],L[L.length-1][0]-eye[0]),eP=Math.atan2(Pi[1]-eye[1],Pi[0]-eye[0]);
         let dA=eP-eT;while(dA<0)dA+=TAU;const mid=d=>{const a=eT+d/2;return[eye[0]+1.8*Math.cos(a),eye[1]+1.8*Math.sin(a)];};if(band(...mid(dA))<0)dA-=TAU;   /* round the eye's end, the way outside the band */
         const nE=Math.ceil(Math.abs(dA)/(3*D2R));for(let i=1;i<nE;i++){const a=eT+dA*i/nE;L.push([eye[0]+1.8*Math.cos(a),eye[1]+1.8*Math.sin(a)]);}
