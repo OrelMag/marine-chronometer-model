@@ -1274,10 +1274,16 @@ function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonInde
    sharing a visible face, or with walls running flush, drew a line across the part where the real one has none (the seam sweep, 21 October 2026). k keeps its userData,
    its geometry's userData and its place; the pieces must not move against each other afterwards. A toothed k (userData.gear) keeps its teeth's own box as gear.box
    (its frame: min x y z, max x y z), which the checks read for the faces' overlap in mesh (bom-check.js, invariants-wempe.js) in place of the whole solid's */
-function fuse(/** @type {any[]} */ms,/** @type {any} */k=null){k=k||ms.find(o=>!o.userData.sub)||ms[0];const ch=(/** @type {any} */o)=>{const m=new THREE.Matrix4();for(let q=o;q;q=q.parent){q.updateMatrix();m.premultiply(q.matrix);}return m;},inv=ch(k).invert(),gu=k.geometry.userData;
+function fuse(/** @type {any[]} */ms,/** @type {any} */k=null){k=k||ms.find(o=>!o.userData.sub)||ms[0];const ch=(/** @type {any} */o)=>{const m=new THREE.Matrix4();for(let q=o;q;q=q.parent){q.updateMatrix();m.premultiply(q.matrix);}return m;},inv=ch(k).invert();let gu=k.geometry.userData;
   if(k.userData.gear&&!k.userData.gear.box){k.geometry.computeBoundingBox();const b=k.geometry.boundingBox;k.userData.gear.box=[...b.min.toArray(),...b.max.toArray()];}
   const L=[[k.geometry,new THREE.Matrix4()]];for(const o of ms){if(o===k)continue;if(o.children.length)console.error('fuse: a piece with children',o);L.push([o.geometry,new THREE.Matrix4().multiplyMatrices(inv,ch(o))]);if(o.parent)o.parent.remove(o);}
   if(k.userData.sub&&ms.some(o=>!o.userData.sub))delete k.userData.sub;   /* k given (the teeth): it carries the part's own line now */
+  /* the pieces' tapped holes (geometry.userData.threads, solidGeo's) kept, moved into k's frame: until 27 October 2026 only k's own were, so a screw tapped into another
+     piece (the Wempe's ring flange's, the 6MX contact cock arm's) was matched to no hole by matchThreads and stood unturned (seatcheck.py, bom.py). A piece turned against
+     k would turn the helix's start too, which a thread's record can't carry: left out with a warning */
+  for(const[g,M]of L.slice(1)){const T=g.userData&&g.userData.threads;if(!T||!T.length)continue;const e=M.elements;
+    if(Math.abs(e[0]-1)>1e-6||Math.abs(e[5]-1)>1e-6||Math.abs(e[10]-1)>1e-6){console.warn('fuse: a tapped piece turned against the part, its threads left out',k.userData.hn);continue;}
+    gu={...gu,threads:[...(gu.threads||[]),...T.map((/** @type {any} */t)=>({...t,c:[t.c[0]+e[12],t.c[1]+e[14]],yr:t.yr+e[13],lo:t.lo+e[13],hi:t.hi+e[13]}))]};}   /* a fresh object: a cloned geometry shares its userData (r128) */
   k.geometry=mergeGeo(L);k.geometry.userData=gu;return k;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
 function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.filter(h=>!h.pts);   /* holes: circles [x,z,r], or {pts} outlines */
