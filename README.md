@@ -293,7 +293,8 @@ video frame, with the Edge Tracer:
   keys. **Save** writes `NAME.trace.json`; keep it in `tools/traces/`.
 - **On a phone or tablet**: open the private copy on claude.ai,
   <https://claude.ai/artifact/Ju3PQ8QErkH3fdRWZcSLjq> (only its owner can open
-  it). Claude puts the frames to trace there with a note on what to trace. To
+  it). Claude measures parts itself (below), so tracing is optional: when you
+  offer to trace, Claude puts the frames there with a note on what to trace. To
   open one, choose **Panel**, then **From Claude**, then **Open**.
   - Tap to add a point.
   - To place one precisely, hold, then slide (a ring and the magnifier show
