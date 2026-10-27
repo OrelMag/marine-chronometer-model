@@ -1,14 +1,15 @@
 // The Wempe's banking screw turned (the page's Swing and isochronism, Banking screw: js/app.js): the escapement rebuilt with the depth of lock it sets, for each depth on a
 // grid the swing and the escapement's rate it settles at against the drive, its lock and let-off, whether it unlocks at all, and the least swing that works. A makeEsc
 // rebuild takes about a second and each swing solve 0.05-0.3 s, so they are worked out here and the page reads between them (as WEDATA.swing). Needs only Node.js:
-//   node wempe_banking.js           exits 1 if js/bankdata.js isn't what it finds (about 1 minute: two processes for each version)
+//   node wempe_banking.js           exits 1 if js/bankdata.js isn't what it finds (about 5 minutes: six processes for each version)
 //   node wempe_banking.js --write   writes marine-chronometer-source/wempe/js/bankdata.js (WBANK)
 // What it gives (WBANK): last, the drawings' escapement (every version but the 6MX's: they share its physics, js/escphys.js), and 6mx, the Soviet 6MX's (its own bodies),
 //   each {d0, rows: [[depth mm, unlocks 1/0, lock deg, let-off deg, AMIN deg, [[swing deg, rate s a day or null] at each drive in S]], ...]}; S the drives (times the
 //   reference's: the wind's 0.89-1.05 inside them); win, the bench's window (tolerances_wempe.json's lock: the shallowest whose held tooth's stone rings under half the depth,
 //   ring twice its ring, taken the same at every depth as wempe_tolerances.js takes it; the deepest that unlocks with the swing in the guard band); pitch, the banking
 //   screw's M1.2 thread, 0.25 mm a turn, the head bearing on the pipe at the stone (escapement.js), so a turn moves the stone 0.25 nearer the wheel or away. The 6MX's window is
-//   the drawings' (no tolerances run is made for it).
+//   the drawings' (no tolerances run is made for it). amp: each version's swing at its drawn settings for drives from 0.2 to 1.8 every 0.005 ({s0, ds, A: [deg]}), which the
+//   page reads in place of makeEsc's ampAt (js/escphys.js): since 27 October 2026 the Wempe's work is averaged over the beat (SMW), a solve taking about a second.
 // Run it after changing the Wempe's escapement, detent or drive (makeEsc's settings, WESC.SET, escphys.js), then the build.
 const fs=require('fs'),path=require('path'),cp=require('child_process');
 const OUT=path.join(__dirname,'..','..','wempe','js','bankdata.js');
@@ -22,10 +23,15 @@ const kid=(rev,a,b)=>new Promise((ok,no)=>cp.execFile(process.execPath,['-e',
    for(let i=${a};i<${b};i++){const d=DS[i],e=W.makeEsc({...T,dL:d/T.ES},T),m=e.measure();
      o.push([d,m.runs?1:0,m.lock,m.letoff,e.AMIN/D,S.map(s=>{if(!m.runs)return[0,null];const a=e.ampAt(s);return[a/D,a>=e.AMIN?e.rateAt(a,s):null];})]);}
    console.log(JSON.stringify({d0:T.dL*T.ES,o}))`],{cwd:__dirname,encoding:'utf8',maxBuffer:1<<26,env:{...process.env,MC_WREV:rev}},(e,o)=>e?no(e):ok(JSON.parse(o))));
-const half=Math.ceil(DS.length/2),run=rev=>Promise.all([kid(rev,0,half),kid(rev,half,DS.length)]).then(([p,q])=>({d0:r(p.d0,4),
+const AS0=0.2,ADS=0.005,AN=321,kidA=(rev,a,b)=>new Promise((ok,no)=>cp.execFile(process.execPath,['-e',
+  `const W=require('./wempe_load.js')(),E=W.WPHYS.ESC,o=[];for(let i=${a};i<${b};i++)o.push(E.ampAt(${AS0}+${ADS}*i)*180/Math.PI);console.log(JSON.stringify(o))`],
+  {cwd:__dirname,encoding:'utf8',maxBuffer:1<<26,env:{...process.env,MC_WREV:rev}},(e,o)=>e?no(e):ok(JSON.parse(o))));
+const parts=(n,k)=>Array.from({length:k},(_,j)=>[Math.floor(n*j/k),Math.floor(n*(j+1)/k)]);
+const run=rev=>Promise.all([...parts(DS.length,2).map(([a,b])=>kid(rev,a,b)),Promise.all(parts(AN,4).map(([a,b])=>kidA(rev,a,b)))]).then(([p,q,am])=>({d0:r(p.d0,4),amp:{s0:AS0,ds:ADS,A:am.flat().map(x=>r(x,3))},
   rows:[...p.o,...q.o].map(([d,u,lk,lo,am,sw])=>[d,u,r(lk,2),r(lo,2),r(am,2),sw.map(([a,t])=>[r(a,2),r(t,3)])])}));
 Promise.all([run('last'),run('6mx')]).then(([last,six])=>{
-  const WB={S,pitch:0.25,win:{shallow:TOL.shallow,deep:TOL.deep,aim:TOL.aim??(TOL.shallow+TOL.deep)/2,ring:TOL.ring,tip:TOL.tip,liftMax:TOL.liftMax},last,'6mx':six};
+  const amp={last:last.amp,'6mx':six.amp};delete last.amp;delete six.amp;
+  const WB={S,pitch:0.25,win:{shallow:TOL.shallow,deep:TOL.deep,aim:TOL.aim??(TOL.shallow+TOL.deep)/2,ring:TOL.ring,tip:TOL.tip,liftMax:TOL.liftMax},last,'6mx':six,amp};
   const js=`/* bankdata.js: the Wempe's banking screw turned (Swing and isochronism, Banking screw), written by marine-chronometer-source/chronometer-working-model/tools/wempe_banking.js
    --write: generated, don't edit (rerun the tool; without --write it checks this file). Part of the Wempe model; declares only WBANK (the tool's header says what it holds). */
 const WBANK=${JSON.stringify(WB)};
