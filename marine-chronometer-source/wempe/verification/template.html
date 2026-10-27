@@ -79,7 +79,7 @@ with movable masses, and its hairspring is a helix with drawn terminal curves. T
 <tr><td>6</td><td>Do the gears mesh, and how exactly must the holes be placed?</td><td>Tooth-by-tooth contact on the page's own outlines; the train in time; each mesh's depthing window</td><td><code>gearing.js</code></td></tr>
 <tr><td>7</td><td>Will the loaded parts hold, fully wound?</td><td>Each part's stress against its material's published range</td><td><code>wempe_strength.js</code></td></tr>
 <tr><td>8</td><td>Does the drawn hairspring keep the balance free of side forces, and isochronous?</td><td>Phillips' conditions on 05 03_7's curve; the spring at large swings as an elastica and as beam elements</td><td><code>wempe_hairspring.js</code></td></tr>
-<tr><td>9</td><td>Does the bimetallic balance compensate, and where must the masses sit?</td><td>The rim's quarters as bimetal cantilevers, every part weighed; the secondary error</td><td><code>wempe_thermal.js</code></td></tr>
+<tr><td>9</td><td>Does the bimetallic balance compensate, and where must the masses sit?</td><td>The rim's quarters as bimetal cantilevers, every part weighed; the secondary error</td><td><code>wempe_thermal.js</code>, <code>wempe_thermal_frame.js</code></td></tr>
 <tr><td>10</td><td>Does the case hang level and stay so at sea?</td><td>The case and ring weighed on the model, levelled as 05 01 says, run in a seaway</td><td><code>massprops.py</code>, <code>gimbals.js</code></td></tr>
 <tr><td>11</td><td>Would it pass the 6MX's trial, and what would a navigator carry?</td><td>The TU's 35-day trial and a 60-day voyage, Monte Carlo over the rate's parts</td><td><code>wempe_errorbudget.js</code></td></tr>
 <tr><td>12</td><td>Would a Wempe made to its drawings work, and how is it tested?</td><td>The unsized parts' tolerances from the escapement's swing over the wind; the bench's tests with their pass figures; 2,000 movements made to tolerances, as made and after the bench</td><td><code>wempe_tolerances.js</code>, <code>wempe_bench.js</code>, <code>wempe_montecarlo.js</code></td></tr>
@@ -255,6 +255,21 @@ steel is tried beside it. The secondary error (Dent's, 2 s) against Guillaume's 
 nickel steel at the constants' middle (line) and over their 32 corners (band), and with a plain nickel steel. The green band is the TU's ±0.10 s a day a °C; the
 drawn place (Wempe 3955's and the 6MX's) and the place that compensates are marked. <code>wempe_thermal.js</code>.</figcaption></figure>
 <div id="kHeat"></div>
+
+<h3 id="heatF">The frame, train and escapement in heat and cold</h3>
+<p>The plates, pillars, bridges, wheels and, unlike the Hamilton's, the escape wheel (05 04 05-1, Ms 63) are brass; the pinions, arbors and detent steel, the gold spring
+gold, the impulse roller beryllium copper. Over the TU's working range, 4 to 36 °C, assembled at 20 °C, what isn't brass moves against what is.</p>
+<p><b>Method.</b> Each mesh's depth changes by the pinion's pitch radius times the brass's and steel's difference, against <code>gearing_wempe.json</code>'s windows; each
+arbor's endshake by its brass gap and steel length (the bench's stacks, <code>wempe_endshake.js</code>), against the 1958 MX repair book's bands. The escapement runs through
+makeEsc in the brass wheel's own frame: the steel detent from its brass-held foot (the depth of lock, the gold spring's tip), the rollers on the steel staff, the springs'
+moduli and the mainspring's torque by their thermoelastic coefficients; at the published constants' middle and at the corner that moves each part most (brass 20.9,
+steel 10.8 × 10⁻⁶ a °C), with the drawn lock and with the bench's, the window's middle. Where makeEsc loses the impulse, <code>dynamics.js --model wempe</code> in time
+was run on the same settings and agrees (the swing 91-97°, the detent leaving the discharge stone 4.9° early).</p>
+<p><b>Found.</b> The depths, endshakes, lock and chain hardly notice (under 4 µm). The gold spring's tip does: 1.8-2.3 µm farther from the staff at 36 °C, taking 0.3-0.45°
+of the 1.50° let-off, and the escapement loses its impulse at about 1.0-1.1° (the same edge that tops <code>wempe_tolerances.js</code>'s lock window). The drawn lock holds
+at the constants' middle; the bench's middle doesn't at 36 °C, and the lock window that holds over the range is about half the one at 20 °C (none at the corner).</p>
+<div id="tHeatF"></div>
+<div id="kHeatF"></div>
 
 <h2 id="gim">10. The case and gimbals</h2>
 <p><b>Method.</b> The bowl with the movement in it and the gimbal ring are weighed on the model, every closed solid at its material's density (<code>massprops.py --model
@@ -627,6 +642,7 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <tr><td><a href="../../chronometer-working-model/tools/wempe_strength.js"><code>wempe_strength.js</code></a></td><td>The parts' strength (7)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_hairspring.js"><code>wempe_hairspring.js</code></a></td><td>The hairspring (8)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_thermal.js"><code>wempe_thermal.js</code></a></td><td>Temperature (9)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_thermal_frame.js"><code>wempe_thermal_frame.js</code></a></td><td>Temperature (9)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/massprops.py"><code>massprops.py</code></a>, <a href="../../chronometer-working-model/tools/gimbals.js"><code>gimbals.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_gimbals.js"><code>wempe_gimbals.js</code></a></td><td>The case and gimbals (10)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_errorbudget.js"><code>wempe_errorbudget.js</code></a></td><td>The TU's trial and the voyage (11)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_navigation.js"><code>wempe_navigation.js</code></a></td><td>Made chronometers carried to sea, their longitude error and the fix's (21)</td></tr>
@@ -848,6 +864,9 @@ function draw(){
       series:[{type:'area',name:'Guillaume\'s nickel steel, the constants\' corners',c:'--s1',data:R.map(q=>[q[0],q[2],q[3]])},{type:'line',name:'Guillaume\'s nickel steel, their middle',c:'--s1',data:R.map(q=>[q[0],q[1]]),tip:p=>`${p[0]}°: ${sg(p[1],2)} s/d/°C`},
         {type:'line',name:'a plain nickel steel',c:'--s2',dash:'5 4',data:R.map(q=>[q[0],q[4]]),tip:p=>`${p[0]}°: ${sg(p[1],2)} s/d/°C (plain)`}]});}
   checks('kHeat','thermal');
+  {const H=D.mech2&&D.mech2.heatF;if(H){const C={mid:'middle',most:'corner'};
+    table('tHeatF',['Lock set','Constants','°C','Lock (µm)','Let-off','Swing over the wind','Holds'],H.esc.map(r=>[r.set==='drawn'?'drawn':'the bench’s',C[r.consts],r.T,f(r.dLum,1),f(r.letoff,2)+'°',`${f(r.swing[0],1)}-${f(r.swing[1],1)}°`,r.ok?'yes':'<b>no</b>']),true);}}
+  checks('kHeatF','thermalframe');
 
   /* ---------- 10. gimbals ---------- */
   {const M=D.mass,bp=M.bowl.byPart,mv=M.bowl.m-['bowl','bezel','closingPlate'].reduce((a,k)=>a+(bp[k]||0),0);

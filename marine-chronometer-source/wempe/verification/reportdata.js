@@ -22,6 +22,7 @@ const RUNS=[
   ['sustaining','node',['wempe_sustaining.js'],'The maintaining spring from its drawn ring (05 06 01-1), its pins as 05 06_4 A-B puts them: its stiffness by Castigliano and as an elastica, where it banks, its push and stress, and the train run on it while the key is held.'],
   ['hairspring','node',['wempe_hairspring.js'],'The hairspring as drawn: its length\'s readings, 05 03_7\'s curve against Phillips\' conditions, the force on the pivots, its isochronism by elastica and by beam elements.'],
   ['thermal','node',['wempe_thermal.js'],'The cut bimetallic balance and steel spring in heat and cold: the linear term against the masses\' place, the secondary error.'],
+  ['thermalframe','node',['wempe_thermal_frame.js','--json',path.join(TMP,'_heatF.json')],'The frame, train and escapement in heat and cold (4-36 \u00b0C, the TU\u2019s range): each mesh\u2019s depth, each arbor\u2019s endshake, the escapement through makeEsc with its steel, gold and beryllium copper parts moved against the brass, the drive by the mainspring\u2019s modulus, the chain.'],
   ['gimbals','node',['gimbals.js','--model','wempe','--json',path.join(TMP,'_gim.json')],'The case and gimbal ring weighed on the model, levelled as 05 01 says, run in a seaway; what reaches the escapement.'],
   ['errorbudget','node',['wempe_errorbudget.js'],'The chronometer through the 6MX\'s TU trial (35 days at 36/20/4/20/36 °C), as adjusted and as drawn, and the error a navigator carries over a 60-day voyage.'],
   ['tolerances','node',['wempe_tolerances.js'],'How closely the parts the drawings don’t size must be made: each range keeping the swing in the guard band over the whole wind; checks tolerances_wempe.json is up to date.'],
@@ -94,7 +95,7 @@ function transcriptions(){const out=[];for(const f of fs.readdirSync(path.join(R
   const FS=only&&!only.includes('startup')?null:await node(FIG.swing,{MC_SU:fs.existsSync(suNow)?suNow:path.join(T,'wempe_startup.json')});if(fs.existsSync(suNow))fs.unlinkSync(suNow);
   const rd=f=>{const p=path.join(TMP,f);if(!fs.existsSync(p))return null;const j=JSON.parse(fs.readFileSync(p,'utf8'));fs.unlinkSync(p);return j;};
   /* the mechanisms in turn (section 18): wear, the key forced, the motion work, the estimates; each kept from the last run when --only leaves it out */
-  const pm=(prev&&prev.mech2)||{},mech2={wear:rd('_wear.json')||pm.wear,wearB:rd('_wearB.json')||pm.wearB,ow:rd('_ow.json')||pm.ow,mw:rd('_mw.json')||pm.mw,est:rd('_est.json')||pm.est,estB:rd('_estB.json')||pm.estB,est40:rd('_est40.json')||pm.est40};
+  const pm=(prev&&prev.mech2)||{},mech2={wear:rd('_wear.json')||pm.wear,wearB:rd('_wearB.json')||pm.wearB,ow:rd('_ow.json')||pm.ow,mw:rd('_mw.json')||pm.mw,est:rd('_est.json')||pm.est,estB:rd('_estB.json')||pm.estB,est40:rd('_est40.json')||pm.est40,heatF:rd('_heatF.json')||pm.heatF};
   const trip=rd('_trip.json')||(prev&&prev.trip),gim=rd('_gim.json')||(prev&&prev.gim),tr=rd('_tr.json')||(prev&&prev.tr);
   const WED=(()=>{const s=fs.readFileSync(path.join(WE,'js','essaydata.js'),'utf8');return Function(s+';return WEDATA;')();})();
   const MS=J('wempe_mainspring.json'),MF=J('mainspring_friction_wempe.json'),GI=J('gimbals_wempe.json'),IN=J('wempe_inertia.json'),GW=J('gearing_wempe.json'),SU=J('wempe_startup.json'),SW=J('wempe_swing.json').moMvyx8eXfo;
