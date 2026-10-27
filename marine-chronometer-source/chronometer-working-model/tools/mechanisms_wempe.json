@@ -100,25 +100,25 @@
    "load": -1,
    "face": {
     "kind": "on the face",
-    "along": 0.9951,
+    "along": 0.9949,
     "C": [
-     -1.3809,
-     -18.3148
+     -1.2962,
+     -17.9861
     ],
     "n": [
-     0.9848,
-     -0.1739
+     0.985,
+     -0.1725
     ],
-    "gap": 0.5554,
+    "gap": 0.0412,
     "r": [
-     18.3668,
-     18.3668
+     18.0328,
+     18.0328
     ],
-    "depth": 0.2332,
+    "depth": 0.5672,
     "np": 1
    },
    "back": {
-    "gap": 0.0377,
+    "gap": 0.0373,
     "along": 0.9952,
     "r": [
      18.6,
@@ -174,6 +174,7 @@
    "note": "the set-up click (05 08 05-2, hole 46) on the set-up ratchet 05 07 00-3: it holds the mainspring's set-up and its wind on the barrel arbor"
   }
  ],
+ "detentE": 1169,
  "arbors": {
   "fusee": {
    "m": 47.0721,
@@ -182,7 +183,7 @@
   },
   "barrel": {
    "m": 108.0849,
-   "I": 27484.1116,
+   "I": 27486.6019,
    "missing": {}
   }
  }
