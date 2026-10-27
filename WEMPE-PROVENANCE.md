@@ -24,7 +24,7 @@ Columns: the part (its `hn`), its sheets, the photographs it was checked on (pho
 | Detent | 050401-1 | 1436 | detentBlock (rms 3.8 px, 0.03 mm/px) | spring 0.07 throughout where 1436 draws 0.09 at its ends; foot, blade, horn at the unbracketed heights | sure | tapered, heights 1.9/0.9/0.75 (batch 1) |
 | Locking stone | 050401-3 | 05 04_1 | detentBlock (0.13 mm) | matches | likely | — |
 | Gold spring | 050401-2 | 05 04 01-2 | detentBlock | matches | sure | — |
-| Detent block (1943) | 050401-4 | 05 04 01-4 | detentBlock (Wempe 3955 has the 1941 block: its version) | matches the figures; projection still Unresolved | likely | — |
+| Detent block (1943) | 050401-4 | 05 04 01-4 | detentBlock (Wempe 3955 has the 1941 block: its version) | matches the figures; read in first angle, as last revised too since 27 October 2026 (Wempe 9166, 1972; the 1946 staff read again: Readings corrected) | likely | — |
 | Balance jewels | 050406/7/8 .bu .bl | none (coloured section) | — | holes 0.04 over the pivot against the stated 0.02 | estimate | 0.02 (batch 1) |
 | Escape jewels | .eu .el | 05 09 01, 05 08 02-1 | — | holes 0.03 over; endshake 0.04 against the 1958 Soviet repair book's 0.05-0.07 | estimate | holes 0.02 (batch 1); endshake 0.06, the endstones 0.03 off each end in every version (batch 5, 25 October) |
 
