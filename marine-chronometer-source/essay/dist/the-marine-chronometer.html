@@ -261,7 +261,7 @@ table.rt th,table.rt td{text-align:left;padding:4px 4px;border-bottom:1px solid 
 table.rt th{color:var(--muted);font-weight:500}
 table.rt td.n{text-align:right}
 /* the adjuster's bench: its plan, and each figure against the manual's */
-#benchCv,canvas.mini{display:block;width:100%;margin-top:6px;border-radius:8px;background:var(--card)}#testOut td.rs{font-size:11px;line-height:1.3}table.rt.bench td.bad,table.rt.book td.bad,#tempOut b.bad{color:var(--hi);font-weight:600}
+#benchCv,canvas.mini{display:block;width:100%;margin-top:6px;border-radius:8px;background:var(--card)}#testOut td.rs{font-size:11px;line-height:1.3}table.rt.bench td.bad,table.rt.book td.bad,#tempOut b.bad,#bankOut b.bad{color:var(--hi);font-weight:600}
 /* the rate book: seconds in the columns, dates on one line */
 table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book td{padding:4px 3px}
 .note{font-size:12.5px;color:var(--muted)}
@@ -3124,9 +3124,11 @@ const WTRAIN=(()=>{
    the wheel turns clockwise there, so counterclockwise from the dial (rotation.y rising with E), and the balance the other way during the impulse.
    Heights (y, the movement frame) from the balance staff 05 04 02 (29.5.46) and the hairspring's sheets: the balance's seat (the hub's flange top, the arm on it) FY, set so
    the spring's collet sits clear over the arm with the spring 0.75 under the cock's arm (05 03_5: 3.15 and 13.4 under the stud's bar; the cock 15 high, 05 08 03-1), which
-   puts the rim 0.45 over the top plate (the coloured section draws 0.53: agrees); the impulse roller under the staff's collar 5.6 below the seat (05 04 02); the escape wheel
-   level with it, its arbor's pivots in both plates (05 04 05-1, 22.8 −0.02 overall). 05 04_1 (1941) and the coloured section draw the rollers about 1.4 higher: superseded by
-   05 04 02's 5.6 (README). Units mm; the movement frame: dial side +y, 12 o'clock −z, 3 o'clock +x (x = the sheets' W, z = their S). Plan angles here are measured as the
+   puts the rim 0.45 over the top plate (the coloured section draws 0.53: agrees); the impulse roller on the staff's Ø 1.65 s6 seat from the hub's end, 4.1 below the seat
+   (05 04 02: the seat 1.6 wide on the sheet, 28 px at 17.6 px/mm, where a Ø 2.14 would be 38; 05 03_3.2 of 1965 its 1.6 long, 4.1 to 5.7; 05 04_1's "4,1 bis Unruhauflage"),
+   the discharge roller under it on the Ø 1.2 r6, so the rollers 0.3-3.5 under the top plate, as the coloured section draws them; the escape wheel level with the impulse roller,
+   just under the plate, its arbor's pivots in both plates (05 04 05-1, 22.8 −0.02 overall), as Wempe No. 9166 (1972) is made (README). Until 27 October 2026 the rollers
+   hung under a Ø 2.14 "collar" to 5.6, 1.5 lower, the wheel and detent with them. Units mm; the movement frame: dial side +y, 12 o'clock −z, 3 o'clock +x (x = the sheets' W, z = their S). Plan angles here are measured as the
    plan point (r cos a, −r sin a): counterclockwise seen from the dial. */
 const WESC=(()=>{
   const H=WD.H,TT=-WD.INNER-WD.TOP_T,TI=-WD.INNER,PPT=WD.PP_T,{ring,bool,solidGeo,stadiumPts}=KIT;
@@ -3394,12 +3396,15 @@ const WESC=(()=>{
 
   /* ================= heights ================= */
   const FY=-22.8;   /* the balance's seat (the hub's flange top, 05 04 02), above */
-  const Y={rimT:FY-3.8,armT:FY-1.15,flB:FY+1.8,hubB:FY+4.1,col:FY+5.6,ir0:FY+5.6,ir1:FY+7.2,dr0:FY+7.2,dr1:FY+8.8,
-    tipU:-35.83,tipL:-9.97,   /* the staff's pivot ends, 0.02 off the endstones (the cock's setting and the lug's: below) */
-    ew0:-17.11,ew1:-15.71,ewWeb:-16.41,etU:-19.49,etL:3.29};   /* the escape wheel's faces (1.4 at the rim, 0.7 in the web: 05 04_7.1's "0,8" struck and "0,7" written, 05 04_7.2's recess line at mid-thickness, 0.73 of 1.4 at 17.6 px/mm; 0.8 until 26 October 2026; 05 04_1), its arbor's pivot ends (22.8 −0.02 apart, 05 04_7.1; the endstones 0.03 off each: 0.06 of endshake, the 1958 Soviet repair book's 0.05-0.07 for the escape pinion, Appendix 4, pp. 128-129, sure; 0.04 until 25 October 2026).
+  const Y={rimT:FY-3.8,armT:FY-1.15,flB:FY+1.8,hubB:FY+4.1,seat:FY+5.6,ir0:FY+4.12,ir1:FY+5.72,dr0:FY+5.72,dr1:FY+7.32,
+    tipU:-35.83,tipL:-9.97,   /* the staff's pivot ends, 0.02 off the endstones (the cock's setting and the lug's: below). seat: the Ø 1.65 s6's end, where the Ø 1.2 r6 begins (05 04 02's 5.6);
+       the impulse roller (1.6 thick, 02 04 02) from 0.02 under the hub's end (its 4.1 +0.05; so no face lies in the hub's) to 0.12 past the seat, as 05 03_3.2's seat 1.6 long; the discharge roller (1.6, 05 04_1) right under it */
+    ew0:-18.6,ew1:-17.2,ewWeb:-17.9,etU:-20.98,etL:1.8};   /* the escape wheel's faces (1.4 at the rim, 0.7 in the web: 05 04_7.1's "0,8" struck and "0,7" written, 05 04_7.2's recess line at mid-thickness, 0.73 of 1.4 at 17.6 px/mm; 0.8 until 26 October 2026; 05 04_1), its arbor's pivot ends (22.8 −0.02 apart, 05 04_7.1; the endstones 0.03 off each: 0.06 of endshake, the 1958 Soviet repair book's 0.05-0.07 for the escape pinion, Appendix 4, pp. 128-129, sure; 0.04 until 25 October 2026).
       The wheel's pinion-side face 19 from the arbor's pinion end (05 04_7.2's "19", sure), so its other face 2.38 from the top-plate end: the sheet's "2" runs from the end to
-      the arbor's shoulder, 0.4 under the wheel (scaled 0.57 at 17.6 px/mm). Its teeth then lie 1.89-3.29 under the top plate, inside the impulse roller's 1.8-3.4 (0.09 and
-      0.11 to spare). Until 15 October 2026 the wheel 2.0 from that end (the "2" read to the wheel), its teeth 1.51-2.91 under the plate */
+      the arbor's shoulder, 0.4 under the wheel (scaled 0.57 at 17.6 px/mm). The arbor's place along its 2.9 of room between the plates' outer faces isn't printed: the wheel
+      centred in the impulse roller's 0.3-1.9 under the top plate, its teeth 0.4-1.8 under it (05 04_1's 0.5-1.9 for the 1941 roller; Wempe 9166's just under the plate), so
+      its ends 1.98 into the top plate and 1.55 into the pillar plate from its dial face, within 0.16 of 05 04_7.1's (2.0 and 1.39). Until 27 October 2026 its teeth 1.89-3.29
+      under the plate with the rollers 1.5 lower (above), its ends 0.49 and 0.06 in; until 15 October 2026 the wheel 2.0 from that end, its teeth 1.51-2.91 under the plate */
   /* the heights as first drawn (the page's Variants: the sheets of 1940-41, which Wempe 3955 has: its escape wheel just under the top plate, 10_Wempe_3955_Feder_plus.jpg).
      05 04_1's elevation (10:1): the balance's seat 4.1 over the top plate's inner face ("4,1 bis Unruhauflage", sure), 0.3 higher than 05 04 02's; the 1941 staff's brass
      collar (05 04_5, 4.4.41) to 4.7 −0.05 under the seat (boxed, sure), the impulse roller under it, 1.6 thick ("1,6", sure; 05 04_1 scales its top 0.42 under the plate
@@ -3544,18 +3549,18 @@ const WESC=(()=>{
         tag(across(gw,split(Rw,0.45,W0,W1,0.15,1.3,1.7),M.brass,[0,0],u,yS),'050301-3');}}}
     /* the balance staff (Unruhwelle 05 04 02-1, kompl. 05 04 02, 29.5.46: hardened, tempered at 240 deg): from its top, the arm Ø 1.2 ±0.02 tapering 1:30 to the pivot's
        shoulder; the hairspring collet's seat 1:70 from Ø 1.58 to Ø 1.65 s6 over the 6.1 above the hub's flange; the arm's seat Ø 2 h6, 1.1 high; inside the brass hub
-       (Unruhbutzen 05 04 02-2) on 1:70; the collar Ø 2.14 below the hub, to 5.6 under the flange's top; the impulse roller's seat Ø 1.65 s6, the discharge roller's Ø 1.2 r6,
+       (Unruhbutzen 05 04 02-2) on 1:70, its bore's foot Ø 2.14 +0.01; below the hub the impulse roller's seat Ø 1.65 s6 to 5.6 under the flange's top, the discharge roller's Ø 1.2 r6 (the sheet's widths: 28 and 21 px at 17.6 px/mm; read until 27 October 2026 as a collar Ø 2.14 to 5.6 with the impulse roller's seat under it),
        the lower arm 1:70 to the pivot. 05 04 02 draws the staff as a blank between centres, its ends Ø (1.1): the pivots, Ø 0.21 × 0.4 ("in Lagerstein einpassen") with their
        cones 2 long, are 05 03_3.2's (13.3.65, 25.6 overall, the same 6.1, 4.1, 5.6-5.7 and 1.65), each end to its endstone less 0.02. 05 03_3.2 (1965, numbered 05 04 01 in pencil,
        one piece with its flange) is the later production staff; 05 04 02 is the one of the drawings' time and the coloured section's (05 04 02-1, -2): built */
     {const pv=0.105,rU=0.6-((FY-6.1)-(Y.tipU+2.4))/60,rL=0.6-((Y.tipL-2.4)-Y.dr1)/140,sh=[[0,Y.tipU],[pv,Y.tipU],[pv,Y.tipU+0.4],[rU,Y.tipU+2.4],[0.6,FY-6.1],[0.79,FY-6.1],[0.8225,FY-1.1],[1.0,FY-1.1],[1.0,FY],
-      [1.0293,Y.hubB],[1.07,Y.hubB],[1.07,Y.col],[0.825,Y.col],[0.825,Y.ir1],[0.6,Y.ir1],[0.6,Y.dr1],[rL,Y.tipL-2.4],[pv,Y.tipL-0.4],[pv,Y.tipL],[0,Y.tipL]];   /* the arms one taper each, 1:30 above and 1:70 below as 05 04 02 draws them (a 1:30 cone and a Ø 1.2 × 1.53 cylinder above, 1:16 below, until 26 October 2026) */
+      [1.0293,Y.hubB],[0.825,Y.hubB],[0.825,Y.seat],[0.6,Y.seat],[0.6,Y.dr1],[rL,Y.tipL-2.4],[pv,Y.tipL-0.4],[pv,Y.tipL],[0,Y.tipL]];   /* the arms one taper each, 1:30 above and 1:70 below as 05 04 02 draws them (a 1:30 cone and a Ø 1.2 × 1.53 cylinder above, 1:16 below, until 26 October 2026) */
       mesh(balL,lathe(sh,32),M.steel);R.staff=sh;}
     /* the hub (Unruhbutzen 05 04 02-2, brass): its flange Ø 6.3 −0.1 × 1.8 with the arm's screws' two M1 (05 04 02: sure; 05 03_3.2's "nach Bohrlehre 2 x M1"), its neck Ø 2.63 −0.06
        down to 4.1 +0.05 under the flange's top, pressed on the staff's 1:70 */
     {const F=[{p:C([0,0],1.0+0.0015,64),a:FY,b:Y.flB},...[-1,1].map(s=>({p:C([0,s*2.14],0.52,40),a:FY,b:Y.flB}))];
       tag(mesh(balL,solidGeo([{loop:C([0,0],6.25/2,160),y0:FY,y1:Y.flB,F}]),M.brass),'050402-2');
-      tag(mesh(balL,lathe([[1.0+0.0015+0.0001,Y.flB],[2.6/2,Y.flB],[2.6/2,Y.hubB],[1.07,Y.hubB],[1.0293+0.0015,Y.hubB-0.04]],48),M.brass),'050402-2',1);}   /* its bore's foot opened to the collar's Ø 2.14 over 0.04, so its underside and the collar's top don't lie in one plane where they overlap (they drew a serrated band until 26 October 2026) */
+      tag(mesh(balL,lathe([[1.0+0.0015+0.0001,Y.flB],[2.6/2,Y.flB],[2.6/2,Y.hubB],[1.07,Y.hubB],[1.0293+0.0015,Y.hubB-0.04]],48),M.brass),'050402-2',1);}   /* its bore's foot opened to Ø 2.14 over 0.04 (05 04 02's 2,14 +0.01) */
     /* the hub's screws (Schraube WN-10, the coloured section): put in from the arm's top, their 90° countersunk heads flush in its countersinks, through the arm's Ø 1 into the
        flange's M1, their ends at the flange's underside, as the coloured section draws them (Wempe_Einheitschronometer.jpg px 1467.5-1483.8 and 1507.3-1523.5, from 313.8
        to the shanks' ends at 341.3: the heads Ø 1.73 at 9.37 px/mm, the shanks Ø 0.93 down through the arm to the flange's underside; sure). The head Ø 1.8 × 0.4, the countersink's: 05 03 01-1's "0,4" (likely).
@@ -3745,13 +3750,14 @@ const WESC=(()=>{
        5,4 (4,9). Every pair differs by 0.03-0.1, the bracketed always the smaller: read as the size to grind it to from the first (the blank's): the finished sizes are
        built (inferred; README). The foot 0.60 × 1.9 × 6.6, clamped to the block's end (05 04 01-4) by a screw M1 along it, two steady pins; the spring 0.09 thick at each end and 0.07 at its middle (1436's left view: sure; until 25 October 2026
        built 0.07 throughout), 1.9 wide, 5 long (scaled); the square 1.9 × 2 (Viereck); the blade 0.50 then 0.28 thick, 0.9 wide; the pipe Ø 1.15 (likely) × 1.9 across the blade for the
-       stone; the horn ("Spitze", 0.22 × 0.75) on past the stone, bent toward the block (1436's "Anschrägen") so the gold spring rests on it, HORN_L long from the stone. Heights: the foot 3.2-5.2 under the plate (its screw 2.3 from the block's lower face, 05 04 01-4), the blade 0.9 wide at its lower
-       edge (1436's right view: the narrow blade flush with one edge), the pipe from 0.1 under the wheel's teeth down 1.9 (1436's 1.9 across the blade; until 15 October 2026 from 3.3 under the plate down 2.0, which
-       the wheel 0.38 lower (05 04_7.2's 19) would leave 0.01 under its teeth): PIPE0, its top's depth under the plate */
+       stone; the horn ("Spitze", 0.22 × 0.75) on past the stone, bent toward the block (1436's "Anschrägen") so the gold spring rests on it, HORN_L long from the stone. Heights: the foot 1.3-3.2 under the plate (its screw 2.3 under it, 05 04 01-4 read in first angle; 05 04_1's "1,3"), the blade 0.9 wide at its lower
+       edge (1436's right view: the narrow blade flush with one edge), the pipe from 0.1 under the wheel's teeth down 1.9 (1436's 1.9 across the blade), its side on the banking
+       screw's head (the block below): PIPE0, its top's depth under the plate. Until 27 October 2026 the foot 3.2-5.2 (the block read in third angle, its upright on the plate)
+       and the pipe 3.39-5.29, with the rollers 1.5 lower (Y); until 15 October 2026 the pipe from 3.3 under the plate down 2.0 */
     const PIPE0=Y.ew1-TI+0.1;
     const det=part('detent',-30),detS=new THREE.Group(),detM=new THREE.Group();det.add(detS,detM);R.det=detM;
     const piv=D(TP,0);detM.position.set(piv[0],0,piv[1]);const dm=new THREE.Group();dm.position.set(-piv[0],0,-piv[1]);detM.add(dm);   /* the detent turns about its spring's middle */
-    /* each state's detent (dv below): its two groups, fixed (sS) and turning (sM); as last revised the heights above and the bracketed sizes. As first drawn (05 04_1's
+    /* each state's detent (dv below): its two groups, fixed (sS) and turning (sM); as last revised the heights above and the bracketed sizes (the escapement of 1943's but for its pipe, at the revised wheel). As first drawn (05 04_1's
        elevation): the detent 2 wide from 1.3 to 3.3 under the plate ("1,3", sure; 1436's width), the blade's 1 flush with its lower edge (scaled 2.34 to 3.36), so 1.9 nearer
        the plate; 1436's first sizes (the unbracketed figures): the foot 0.65, the square and the blade's thicker part 0.55, the blade 0.33, the horn 0.25; the pipe Ø 1.15 from
        1.95 to 3.65 under the plate, between the wheel's teeth and the block's arm (05 04_1's elevation draws pipe and stone over the wheel's arbor and can't be read apart: estimated), the stone
@@ -3816,7 +3822,7 @@ const WESC=(()=>{
       tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
     R.golds=[];
-    dv(rv(detS,'last'),rv(dm,'last'),{w:1.9,wb:0.9,wh:0.75,d0:3.2,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y.ew0});
+    dv(rv(detS,'last'),rv(dm,'last'),{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y.ew0});
     dv(rv(detS,'first'),rv(dm,'first'),{w:2,wb:1,wh:0.8,d0:1.3,pp:1.95,pl:1.7,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
     /* the 6MX's: at the first-drawn heights its block holds it at (the foot 1.3-3.3 under the plate, the pipe at the wheel just under it), with 1436's revised (bracketed)
        sections, as the later sheets the 6MX was copied from give them (likely: its detent's sections aren't measured; its length, 6.4 from the pipe to the square on
@@ -3835,37 +3841,28 @@ const WESC=(()=>{
        the face the fixing screw and the far steady pin come through, so with the plate (sure: a base standing off the plate there couldn't be screwed to it). Built 6.4,
        as drawn: the figure would cut 0.05 into the M1.7's thread, whose edge the front view draws touching the step. Until 15 October 2026 the base was 6.5 deep over its
        whole 14.6. The front view is the face on the plate seen from above, as the frame's plans are: only so does the base's end the detent's foot is clamped to face the
-       detent. Its side view is read as the right end (third angle), which puts the upright flush with the plate and the M1 2.3 from the free face, at the escapement's level
-       (inferred; the hole Ø 1.3 is drilled from the free face to meet it). The sheet itself reads as first-angle (DIN's): its side view draws the M1 hole in the end face
-       as seen (a view of the left end, placed right), the view under the front view draws the upright and its fillet as seen (a view from above, placed below), and only so
-       does the Ø 1.3, 3 deep from the front face, meet the M1 2.3 from that face; read so, the upright lies at the free face and the detent's foot 1.3-3.3 under the plate,
-       as 05 04_1 draws the 1941 detent, where the 1946 staff's discharge roller (05 04 02: 3.4-5.0 under the plate) couldn't reach its gold spring. Kept as built (README,
-       Unresolved). Screwed up from the top plate's outer face through hole 13, the pins in the plate (holes drilled at assembly: estimated). The 0.4 step at the base's top
+       detent. The sheet reads as first-angle (DIN's): its side view draws the M1 hole in the end face as seen (a view of the left end, placed right), the view under the front
+       view draws the upright and its fillet as seen (a view from above, placed below), and only so does the Ø 1.3, 3 deep from the front face, meet the M1 2.3 from that face;
+       so the upright lies at the free face, 3.5-6.5 under the plate, the banking screw 5.0 under it and the detent's foot 1.3-3.3 (sure: 05 04_1's elevation prints the
+       upright under the detent, 6.5 to its end, 2.8 high, the screw's axis 1.4 from its end, 5.1 under the plate; every photograph of the block in place; Wempe No. 9166 of
+       1972, the escape wheel just under the plate and the screw's head under the detent at the stone: README). Built as the escapement of 1943's block below (its upright's
+       end and banking screw as the German movements with this block are made). Until 27 October 2026 the last revised block was read in third angle, its upright flush with
+       the plate and the screw a plain shank through it bearing on nothing, to put the detent at the 1946 staff's rollers as misread (Y). Screwed up from the top plate's outer face through hole 13, the pins in the plate (holes drilled at assembly: estimated). The 0.4 step at the base's top
        and the 90 +0.5 deg end are left out. The cone Wempe 3955's block carries at the stone (10_, 11_Wempe_3955) belongs to the 1941 block of 05 04_1, not this one */
-    const blk=part('detentBlock',-30),blkL=rv(blk,'last'),blkF=rv(blk,'first'),blk6=rv(blk,'6mx'),blk43=rv(blk,'1943');
-    /* As first drawn the block's arm lies over the lower cock's lug, 0.28 above it (and the 6MX's upright, at the free face, the same), so in the Exploded view the arm leaves first: the block, with the detent clamped to it
-       and the escape wheel whose teeth lie 0.05 over the detent's pipe, rises 30.3 and the cock 29.9 (frame.js's 31 as last revised), which keeps the 0.5 exploded.py asks
-       from the block and from the seconds wheel under the cock's lug (33) */
-    {const P=K.parts;onRev(v=>{const f=v!=='last';P.lowerCock.userData.off=f?-29.9:-31;for(const k of['detentBlock','detent','escapeWheel'])P[k].userData.off=f?-30.3:-30;});}
-    {const yP=TI,nE=-0.30,L=(t,n)=>D(t,n),tF=ROW+3.75,tT=ROW-3.75,tU=tF-25,nUl=nE-1.4,nUr=nUl-3,sl0=nUl-1.35,sl1=sl0-0.3,fr=[];
-      for(let i=1;i<12;i++){const a=Math.PI/2*i/12;fr.push(L(tT-3+3*Math.sin(a),nUr-3+3*Math.cos(a)));}
-      const upCell={loop:[L(tT,nUl),L(tU+7,nUl),L(tU,nUl),L(tU,sl0),L(tU+7,sl0),L(tU+7,sl1),L(tU,sl1),L(tU,nUr),L(tT-3,nUr),...fr,L(tT,nUr-3),L(tT,nE-6.4)],y0:yP,y1:yP+3};
+    const blk=part('detentBlock',-30),blkF=rv(blk,'first'),blk6=rv(blk,'6mx'),blk43=rv(blk,'last 1943');
+    /* The block's arm (as first drawn) or upright (every other version, at the free face) lies over the lower cock's lug, 0.28 above it, so in the Exploded view it leaves first: the block, with the detent clamped to it
+       and the escape wheel whose teeth lie 0.05 over the detent's pipe, rises 30.3 and the cock 29.9 (frame.js's 31), which keeps the 0.5 exploded.py asks
+       from the block and from the seconds wheel under the cock's lug (33). Until 27 October 2026 the last revised block's upright lay on the plate and they rose 30 and 31 */
+    {const P=K.parts;onRev(()=>{P.lowerCock.userData.off=-29.9;for(const k of['detentBlock','detent','escapeWheel'])P[k].userData.off=-30.3;});}
+    {const yP=TI,nE=-0.30,L=(t,n)=>D(t,n),tF=ROW+3.75,tT=ROW-3.75,tU=tF-25,nUl=nE-1.4,nUr=nUl-3;
       const base={loop:[L(tT,nE),L(tT,nUl),L(tT,nE-6.4),L(tF,nE-6.4),L(tF,nE)],y0:yP,y1:yP+6.5,
         F:[{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP+3.5,b:yP+6.5}]};   /* the boss at the end, 6.5 deep */
       const thin={loop:[L(tT,nE-6.4),L(tT,nUr-3),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nE-6.4)],y0:yP,y1:yP+3,
         F:[{th:{rs:0.85},p:C(H[13],0.87,48),a:yP,b:yP+3},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+3}]};   /* the rest, 3 deep on the plate */
-      upCell.loop=ccw(upCell.loop);base.loop=ccw(base.loop);thin.loop=ccw(thin.loop);
+      base.loop=ccw(base.loop);thin.loop=ccw(thin.loop);
       /* the end face's M1 for the detent's foot screw (WN-gf), along the base to the Ø 1.3 hole 2.8 in, and its two steady pins' holes Ø 0.45 1.6 deep (05 04 01-4; left out
          until 26 October 2026, the screw and pins in the metal); the 6MX's and 1943 blocks the same (below) */
       const endH=(g,d0,k=7)=>[[ROW,-2.8,0.5,16],[ROW-2.1,-1.6,0.225,16],[ROW+2.1,-1.6,0.225,16]].filter((_,i)=>k>>i&1).reduce((q,[t,dn,r,m])=>nBore(q,t,nE+dn,yP+d0+1,r,m),g);
-      tag(mesh(blkL,endH(solidGeo([base,thin,upCell]),3.2),M.brass),'050401-4');
-      /* the cross screw M1.2 across the upright's slit end (its number not read), drawn without its hole. It is the detent's banking (15 October 2026, likely): the 6MX's
-         block of this form (8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg) has a screw through its upright with a domed brass head
-         on the detent's far side, the pipe resting on its face, the slit gripping its thread; Wempe 3955's earlier block the same at its stone; the 1954 instruction's п. 11
-         and the 6MX's book: a banking screw sets the depth of lock. Its head and its length to it aren't drawn: where it passes the detent depends on which face of the block
-         the upright is flush with (README, Unresolved). Its end 0.02 inside the upright's far face (until 17 October 2026 on it: the two faces in one plane flickered through
-         each other) */
-      tag(across(blkL,lathe([[0,0],[0.9,0],[0.9,0.5],[0.6,0.5],[0.6,0.5+2.98],[0,3.48]],20),M.steel,L(ROW-18.8,nUr-0.5),TD.n,yP+1.5),'WN-gkA');
       /* The Soviet 6MX's block: 05 04 01-4's form (the base with its fixing screw between two steady pins at opposite corners, the upright with its fillet, the foot clamped
          to the base's end by a screw along it: 8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, sure) read in first angle, as the
          sheet itself reads (DIN's; above): the upright at the free face, 3.5-6.5 under the plate, so the detent's foot lies 1.3-3.3 under it and the cross screw 5.0 under,
@@ -3940,9 +3937,10 @@ const WESC=(()=>{
         const ge=solidGeo([{loop:ccw(pr.map(([t,y])=>[t,s*y])),y0:nUr,y1:nUl}]);
         ge.applyMatrix4(new THREE.Matrix4().set(TD.t[0],TD.n[0],0,P[0], 0,0,s,0, TD.t[1],TD.n[1],0,P[1], 0,0,0,1));
         const one=new THREE.BufferGeometry(),AT={position:[],normal:[],uv:[]};
-        for(const g of[solidGeo([base43,thin,up43]),ge]){   /* its end face's M1 and pins' holes not cut: fusee.js's bore leaves this block open with them (each pin's alone closes, the three or the two pins together don't; README, Unresolved) */const p=g.attributes.position.array,at=i=>Math.abs(toD([p[3*i],p[3*i+2]])[0]-tE)<1e-4;
+        const TH43=[];for(const g of[solidGeo([base43,thin,up43]),ge]){TH43.push(...(g.userData.threads||[]));   /* its end face's M1 and pins' holes not cut: fusee.js's bore leaves this block open with them (each pin's alone closes, the three or the two pins together don't; README, Unresolved) */const p=g.attributes.position.array,at=i=>Math.abs(toD([p[3*i],p[3*i+2]])[0]-tE)<1e-4;
           for(let i=0;i<p.length/3;i+=3){if(at(i)&&at(i+1)&&at(i+2))continue;for(const k in AT){const A=g.attributes[k].array,w=g.attributes[k].itemSize;for(let j=i*w;j<(i+3)*w;j++)AT[k].push(A[j]);}}}
         for(const k in AT)one.setAttribute(k,new THREE.Float32BufferAttribute(AT[k],k==='uv'?2:3));
+        one.userData.threads=TH43;   /* the tapped hole for the fixing screw (thin's, hole 13), for matchThreads: until 27 October 2026 only the last revised block's own mesh carried it, for the screw both share */
         tag(mesh(blk43,one,M.brass),'050401-4');
         /* the banking screw, from its threaded end (0) to the dome's top: the thread's rings as the kit's screws draw them (pitch 0.25, M1.2's), a chamfered end */
         const nH=0.58,lT=8.2,rH=1.7,hc=1.1,hd=0.4,R4=(rH*rH+hd*hd)/(2*hd),rs=0.6,pt=0.25,dt=pt*0.3,zt=r=>lT+hc+Math.sqrt(R4*R4-r*r)-(R4-hd),pf=[[0,0],[rs-dt,0],[rs,dt]];
@@ -3955,7 +3953,7 @@ const WESC=(()=>{
       /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 (Wempe 3955's, 11_) × 2.4, a tall cheese head (6_Wempe_3955_S.jpg, photocompare.py's
          fit: its foot and width on the model's, its top 8.8 px higher at 7.5 px a mm of height; 5_ and 7_ the same, 2.5-3; 1.2 read on 11_ until 18 October 2026), M1.7, 3.0
          into the block (estimated) */
-      {const fx=K.headOn(tag(screw(rv(blk,'last first 1943'),H[13][0],H[13][1],TT,1.5,2.4,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(v=>{const f=v!=='last';fx.userData.lift=l0+(f?-0.3:0);});}
+      {const fx=K.headOn(tag(screw(rv(blk,'last first 1943'),H[13][0],H[13][1],TT,1.5,2.4,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;fx.userData.lift=l0-0.3;}
       /* the 6MX's: a slotted steel stud Ø 3.4 seated on the block's plate face and standing through the plate's Ø 3.5 to flush with its outer face (2_Kirow_247_A.jpg: dark,
          flush, slotted, Ø 3.3-3.5 at 8.99 px/mm; 2_Kirow_009_A.jpg bright; the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg at 30.3 px/mm across: Ø 3.55, standing
          about 2 proud of the face, 3.3 if the view is tilted only 20°: likely), screwed into the block M1.7 3.0 (estimated). What clamps the block to the plate isn't seen: the
@@ -3965,8 +3963,8 @@ const WESC=(()=>{
          arbitrary heading until 24 October 2026) */
       tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,1.7,3.35+2.5,5.5,0.85,null,0,{w:0.5,s:0.9,a:Math.atan2(-TD.t[1],TD.t[0])}),'WN-gk');   /* through the slide (2.5) and 3.0 into the block; its head standing 2.5 (±0.7) proud of the
          plate's outer face, polished steel (6_Kirow_247_S.jpg, photocompare.py's fit; 7_ the same); flush until 18 October 2026 */   /* its lift through the plate follows the block's (above) */
-      /* its steady pins Ø 0.9 through the block, 1.3 into the plate: as last revised the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
-      for(const[g,e2]of[[blkL,3],[blkF,6.5],[blk43,3]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');
+      /* its steady pins Ø 0.9 through the block, 1.3 into the plate: in 05 04 01-4's block the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
+      for(const[g,e2]of[[blkF,6.5],[blk43,3]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');
       for(const[q,e]of/** @type {[number[],number][]} */([[HOLES.block6.pins[0],1.2],[HOLES.block6.pins[1],3]]))tag(cylBetween(blk6,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');   /* the 6MX's at Kirov 247's (HOLES.block6); the near one 0.55 inside the end face, so 1.2 into the block, clear above the detent foot's pins (estimated: through, as drawn, it would cross them) */
       R.blkPins=[L(ROW-2,nE-2.3),L(ROW+2,nE-12.3)];
       /* As first drawn: 05 04_1's block (no sheet of its own; the plan at 10:1, 24.4 px/mm), as on Wempe 3955 (11_Wempe_3955_Gangfeder_plus.jpg, 10_Vergleich_CWW-6MX). The
@@ -4082,7 +4080,7 @@ const WESC=(()=>{
        whole in a dark bevel Ø 3.7: the setting's mouth a cone from the stone's lip to Ø 3.7 (likely). Until 18 October 2026 the stone Ø 2.5, seen through Ø 2.2 (estimated).
        Until 16 October 2026 the setting stood under the lip, closed over the stone, the screws in from the inside.
        Lower, in the pillar plate's 26 (reamed 2.50, 05 08 02-1): the hole jewel in a bush pressed in; the endstone in a round setting Ø 4.6 flush in a seat 0.25 deep in the
-       dial face, a boss Ø 2.6 in its middle standing 0.36 over the face round the stone (Ø 2.2, seen through Ø 1.9) (the pivot's end is at the face), held by the plate's two M1.2 (05 08 02-1, on the
+       dial face, its stone (Ø 2.2) 1.5 down its window Ø 1.9 (the pivot's end 1.55 in; below), held by the plate's two M1.2 (05 08 02-1, on the
        line 37 deg below O toward S) whose heads Ø 2.6 lap its rim: Wempe 3955's dial side (3_Wempe_3955_uZ.jpg, 8.33 px/mm by the plate's 85): the setting Ø 4.6 in its seat
        (5.1 outside), the ruby showing (Ø 2.3-2.6 across its dark disc, blurred), the screws' heads 2.6 lapping it 7.7 apart (the sheet's 7.0 kept): likely. Until 16 October 2026 a stadium cap 7 × 3 over both
        screws. Their sizes otherwise as the balance's (estimated). The 2.50 bore leaves the hole jewel Ø 1.6 (the section draws this end as the upper, Ø 2.9 in a setting
@@ -4095,8 +4093,8 @@ const WESC=(()=>{
     /* the Soviet 6MX's endstone setting at the first-drawn height, of steel, its two screws steel: Kirov No. 247's reads silvery and its screws dark (2_Kirow_247_A.jpg,
        enlarged at the escape arbor, 18 px/mm: the setting Ø 4.6, the heads about Ø 2.5, 7.0 apart, as drawn within the photograph's ±0.5; the balance's cap setting beside it
        silvery too): likely */
-    /* the hole jewel's height: as first drawn the arbor's end lies 2.0 into the plate and the section's 0.8 fits; as last revised it lies 0.49 in, and the stone, flush with
-       the inner face behind its setting's lip, is 0.4 (the section's form scaled to it, its sink as wide; estimated) */
+    /* the hole jewel's height: the arbor's end lies 2.0 into the plate as first drawn and 1.98 as last revised, and the section's 0.8 fits (until 27 October 2026 the last
+       revised end 0.49 in, its stone thinned to 0.4) */
     for(const[Q,v,ms]of/** @type {[any,string,any][]} */([[Y,'last',M.gilt],[Y1,'first 1943',M.gilt],[Y1,'6mx',M.steel]])){const eY=Q.etU-0.03,hY=eY+0.07,ge=rv(eeu,v),gj=rv(eju,v),lp=eLip(eY,-1),
         tq=Math.min(JT,TI-hY-0.05),k=tq/JT,yq=hY+tq,yb=Math.max(TT,lp[1]-0.45);
       tag(mesh(ge,lathe([[1.85,TT],[2.25,TT],[2.25,TT+0.5],[2.6,TT+0.5],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp,[1.85,yb]],48),ms),'050408-2.eu');   /* the mouth a cone from the lip to Ø 3.7, then straight to the face */
@@ -4107,15 +4105,18 @@ const WESC=(()=>{
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
       const lk=0.8/JR,lT=0.45,lD=JD*lk,lE=0.2,lH=0.15;   /* the lower hole jewel (above); as first drawn its endstone in the plug Ø 1.6 too, the balance's form scaled (estimated) */
       for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.03,hY=eY-0.04,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last',yq=hY-lT;
-        tag(mesh(gj,lathe([[0.7,yq-0.15],[1.25,yq-0.15],[1.25,f1?eY:PPT-0.25],[0.803,f1?eY:PPT-0.25],[0.803,yq],[0.7,yq]],48),M.brass),'050406-2.el');   /* its lip over the stone's rim */
+        tag(mesh(gj,lathe([[0.7,yq-0.15],[1.25,yq-0.15],[1.25,eY],[0.803,eY],[0.803,yq],[0.7,yq]],48),M.brass),'050406-2.el');   /* its lip over the stone's rim */
         tag(mesh(gj,lathe(KIT.jewelPr(0.8,lT,0.13,lD,JC*lk*1.03,JH*lk,hY,-1),32),M.ruby),'050406-1.el');
         if(f1){tag(mesh(ge,lathe([[0,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0,PPT]],48),M.gilt),'050408-2.el');   /* as first drawn: the setting plain over the plug (its stone deep in the plate) */
           const pk=[...Array(9).keys()].map(i=>{const r=0.803*i/8;return[r,eY+lE+KIT.domeAt(0.8,lH,Math.min(r,0.8))+0.003];});
-          tag(mesh(ge,lathe([...pk,[0.803,eY],[1.25,eY],[1.25,PPT-0.25],[0,PPT-0.25]],48),M.brass),'050408-2.el',1);}   /* the plug, the stone in its end, its pocket the stone's dome */
-        else{tag(mesh(ge,lathe([[0.95,eY+0.35],[1.103,eY+0.35],[1.103,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[1.3,PPT],[1.3,eY+0.4],[0.95,eY+0.4]],48),M.gilt),'050408-2.el');
-          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.94,eY+0.35],[0.6,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}
-        if(f1)tag(mesh(ge,lathe(KIT.endPr(0.8,lE,lH,eY,1),32),M.ruby),'050408-1.el');}
-      const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.5*s);tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* the last state's; as first drawn they hold the cap, through it */
+          tag(mesh(ge,lathe([...pk,[0.803,eY],[1.25,eY],[1.25,PPT-0.25],[0,PPT-0.25]],48),M.brass),'050408-2.el',1);   /* the plug, the stone in its end, its pocket the stone's dome */
+          tag(mesh(ge,lathe(KIT.endPr(0.8,lE,lH,eY,1),32),M.ruby),'050408-1.el');}
+        /* as last revised the stone Ø 2.2 on the bush, 1.5 under the dial face, seen down the setting's window Ø 1.9 (Wempe 3955's dark disc round its ruby, above): the setting
+           a tube in the 2.50 bore from the stone to its flange flush in the seat, its lip over the stone's rim (estimated). Until 27 October 2026 the arbor's end lay at the face and
+           the stone in a boss Ø 2.6 standing 0.36 over it */
+        else{tag(mesh(ge,lathe([[0.95,eY+0.35],[1.103,eY+0.35],[1.103,eY],[1.25,eY],[1.25,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0.95,PPT]],48),M.gilt),'050408-2.el');
+          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.94,eY+0.35],[0.6,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}}
+      const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.5*s);tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* as last revised they lap the setting's rim; as first drawn they hold the cap, through it */
 
     /* ================= motion ================= */
     let lastTw=null;

@@ -183,6 +183,9 @@
         <canvas id="swCv" class="mini" aria-label="The balance's swing: over the last minute, the rate against it, or over a wind"></canvas>
         <label class="sl rw" style="margin-top:6px" title="A mainspring that has taken a set pulls that much less all through its run: the fusee evens out the pull over a wind, but can't make up a weaker spring"><span>Mainspring set</span><input type="range" id="msetR" min="0" max="30" step="1" value="0" aria-label="Mainspring set, per cent weaker"><output></output></label>
         <div class="rate" id="swOut" aria-live="polite"></div>
+        <label class="sl rw" style="margin-top:10px" title="The banking screw across the detent block's upright: the detent's pipe rests on its domed head, so turning it sets how deep the locking stone stands in the escape wheel's teeth, 0.25 mm a turn"><span>Banking screw</span><input type="range" id="bankR" min="150" max="250" step="0.5" value="235" aria-label="Banking screw: the depth of lock it sets, micrometres"><output></output></label>
+        <div class="seg" id="bankSeg" role="group" aria-label="Set the banking screw"><button data-v="drawn" title="The depth of lock 05 04_1 draws, 0.235 mm">As drawn</button><button data-v="mid" title="The middle of the bench's window, where a maker sets it">The bench's aim</button></div>
+        <div class="rate" id="bankOut" aria-live="polite"></div>
         <p class="note" style="margin:8px 0 0">The shaded band is 225° to 270° each way, the 1954 instruction’s for chronometers in general (the Hamilton manual’s 1⅜ to 1½ turns, 248° to 270°): no Wempe source gives the Einheits-Chronometer’s own. The model swings under it, because its damping, the balance’s free run-down in 111 s, is the one a running 6MX on video gives back (its parts allow 81 to 209 s, and about 165 s would reach 225°); the dashed line is the floor of the tools’ guard band, 180°. The drive is 05 06_20’s measured force through the train. The swing and the rate are makeEsc’s, solved with the Wempe’s settings in Node (<code>tools/wempe_essaydata.js</code>, as <code>tools/wempe_escapement.js</code> checks them) and read here between the drives solved; the maintaining spring’s minute is 05 06_9’s 0.27 mm (likely).</p>
       </details>
       <details class="grp more" id="benchDet">
@@ -524,6 +527,7 @@
 <script src="js/movement.js"></script>
 <script src="js/contactdata.js"></script>
 <script src="js/essaydata.js"></script>
+<script src="js/bankdata.js"></script>
 <script src="../shared/essaykit.js"></script>
 <script src="js/essay.js"></script>
 <script src="../chronometer-working-model/js/gltf.js"></script>

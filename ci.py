@@ -144,6 +144,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-transmission',R(['node',TOOLS/'wempe_transmission.js'],ROOT),'quick'),   # the Wempe's whole transmission in time, every part that moves, nonlinear: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 2 minutes)
  ('hamilton-transmission',R(['node',TOOLS/'hamilton_transmission.js'],ROOT),'quick'),   # the Hamilton's whole transmission in time, as the Wempe's: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 70 s)
  ('wempe-essaydata',R(['node',TOOLS/'wempe_essaydata.js'],ROOT),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
+ ('wempe-banking',R(['node',TOOLS/'wempe_banking.js'],ROOT),'quick'),   # the Wempe's banking screw turned: js/bankdata.js (the escapement rebuilt at each depth of lock) against what makeEsc gives (about 1 min)
  ('almanac',R(['node',TOOLS/'almanac.js'],ROOT),'quick'),
  ('mfgfit',R([PY,TOOLS/'mfgfit.py','demo'],ROOT),'quick'),   # the measure-trace skill's fitter on a synthetic plate, pin, collar and pillar, hand-traced and rendered: lines, arcs, fillets, notch, drills, pin stock, turned groups, the side profile (about 11 s)
  ('hairspring',R(['node',TOOLS/'hairspring.js'],ROOT),'quick'),
