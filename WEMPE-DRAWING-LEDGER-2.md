@@ -174,3 +174,17 @@ Readings the two agents still disagree on after each has seen the other's argume
 
 | # | Sheet | Question | Reading A | Reading B | Evidence | Decision |
 |---|---|---|---|---|---|---|
+
+## Evidence from other sessions
+
+What other sessions found that bears on this check. A GUB (Glashütte, post-war) is a later maker's clock: it shows that clock's version and doesn't overrule a sheet, but it can decide between two readings of one.
+
+- **Session Epsilon's video review** (origin/claude/wempe-video-review, `2e0f0f4e`; References/wempe/VIDEOS.md, "The video review (27 October 2026)"). No model change.
+  - **Stud** (batch 1): the bar, the upright and the notch in the cock as built (5eOap3PJb8Y 8:36.5). The GUB's bar hole is sunk (Ø 2.2 or more) with a chamfered corner, its own feature. The pin's length can't be read.
+  - **Thinning** (batch 2): in the GUB restoration the thinned zone is the detent spring's, not the gold spring's (Ldzmn4kuKMA 3:09-3:29).
+  - **Old detent** (batch 2): the GUB's foot, pins, spring and square match 1436. Its blade is 1 mm longer, its horn 4.8 and its pipe Ø 1.31 (its own block). This bears on the blade-side and foot-pin findings.
+  - **Impulse roller** (batch 1): the hollow side is verified. The hollow is 2.5 wide against 02 04 02's 3.5 (the GUB's).
+  - **Escape wheel** (batch 2): 15 teeth. Where the crossings meet the teeth can't be read.
+  - **Assembly order:** the GUB restorer's, with four differences from the 1958 book, recorded only.
+  - GUB 12255's plates: a hole survey is still running (batches 8 and 9).
+- **marine-chronometer-c9's seat audit** (origin/claude/wempe-seat-audit): `seatcheck.py`, batch 0. The collet's pin is now half round and brass, and the 6MX cap plate's screws are now tapped.
