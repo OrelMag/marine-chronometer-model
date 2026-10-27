@@ -1829,8 +1829,8 @@
       0,
       1
      ],
-     "why": "as first drawn and in 1943 the block's end face isn't bored for the pins (fusee.js's bore leaves that block open with them: the Wempe README, Unresolved, \"Left open by the drawings check\"), so the pins stand in its metal; bored as last revised and in the 6MX (26 October 2026)",
-     "rev": "first 1943"
+     "why": "as first drawn and in 1943 the block's end face isn't bored for the pins (fusee.js's bore leaves that block open with them: the Wempe README, Unresolved, \"Left open by the drawings check\"), so the pins stand in its metal; bored in the 6MX (26 October 2026); as last revised the 1943 block since 27 October 2026",
+     "rev": "last first 1943"
     }
    ]
   },
@@ -1891,7 +1891,7 @@
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "Across the slit end of the upright.",
+   "fn": "The Soviet 6MX's banking screw through its upright (as last revised until 27 October 2026, a plain shank across the slit end, bearing on nothing).",
    "rel": [
     [
      "in",
@@ -1911,7 +1911,7 @@
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "Along the upright's slit end, the slit gripping its thread; its head's underside bears on the detent's pipe and sets the depth of lock. The thread from the block's sheet (M1.2), its head measured on Kirow DEC 422's, DEC 479's and Lange No. 5177's photographs, its length the 6MX's loose block's.",
+   "fn": "Along the upright's slit end, the slit gripping its thread; its head's underside bears on the detent's pipe and sets the depth of lock. The thread from the block's sheet (M1.2), its head measured on Kirow DEC 422's, DEC 479's and Lange No. 5177's photographs, its length the 6MX's loose block's. As last revised too since 27 October 2026 (Wempe 9166; the 1946 staff read again).",
    "rel": [
     [
      "in",
@@ -1920,7 +1920,7 @@
     ]
    ],
    "figs": "05 04_3",
-   "rev": "1943"
+   "rev": "last 1943"
   },
   {
    "id": "cone41",

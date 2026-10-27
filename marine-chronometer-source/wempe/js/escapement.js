@@ -824,9 +824,10 @@ const WESC=(()=>{
         const ge=solidGeo([{loop:ccw(pr.map(([t,y])=>[t,s*y])),y0:nUr,y1:nUl}]);
         ge.applyMatrix4(new THREE.Matrix4().set(TD.t[0],TD.n[0],0,P[0], 0,0,s,0, TD.t[1],TD.n[1],0,P[1], 0,0,0,1));
         const one=new THREE.BufferGeometry(),AT={position:[],normal:[],uv:[]};
-        for(const g of[solidGeo([base43,thin,up43]),ge]){   /* its end face's M1 and pins' holes not cut: fusee.js's bore leaves this block open with them (each pin's alone closes, the three or the two pins together don't; README, Unresolved) */const p=g.attributes.position.array,at=i=>Math.abs(toD([p[3*i],p[3*i+2]])[0]-tE)<1e-4;
+        const TH43=[];for(const g of[solidGeo([base43,thin,up43]),ge]){TH43.push(...(g.userData.threads||[]));   /* its end face's M1 and pins' holes not cut: fusee.js's bore leaves this block open with them (each pin's alone closes, the three or the two pins together don't; README, Unresolved) */const p=g.attributes.position.array,at=i=>Math.abs(toD([p[3*i],p[3*i+2]])[0]-tE)<1e-4;
           for(let i=0;i<p.length/3;i+=3){if(at(i)&&at(i+1)&&at(i+2))continue;for(const k in AT){const A=g.attributes[k].array,w=g.attributes[k].itemSize;for(let j=i*w;j<(i+3)*w;j++)AT[k].push(A[j]);}}}
         for(const k in AT)one.setAttribute(k,new THREE.Float32BufferAttribute(AT[k],k==='uv'?2:3));
+        one.userData.threads=TH43;   /* the tapped hole for the fixing screw (thin's, hole 13), for matchThreads: until 27 October 2026 only the last revised block's own mesh carried it, for the screw both share */
         tag(mesh(blk43,one,M.brass),'050401-4');
         /* the banking screw, from its threaded end (0) to the dome's top: the thread's rings as the kit's screws draw them (pitch 0.25, M1.2's), a chamfered end */
         const nH=0.58,lT=8.2,rH=1.7,hc=1.1,hd=0.4,R4=(rH*rH+hd*hd)/(2*hd),rs=0.6,pt=0.25,dt=pt*0.3,zt=r=>lT+hc+Math.sqrt(R4*R4-r*r)-(R4-hd),pf=[[0,0],[rs-dt,0],[rs,dt]];
