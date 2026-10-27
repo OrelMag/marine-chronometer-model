@@ -39,7 +39,7 @@ EXPECTED={('balance:Buffer','balance:Buffer'):("the timing screws' heads (05 03 
  # the fusee and barrel (P1c): joints in holes a turned or extruded part can't have cut across it, and the parts that touch by design
  ('fusee:Buffer','udPinion:Extrude'):("the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length",0.65,3.0),
  ('stopWork:Buffer','stopWork:Cylinder'):("the stop bar's pin (05 06 03-2) pressed across the bar in its hole (05 06_4's C-D, dashed inside the bar), which a solid of plan cells can't cut across",0.45,0.55),
- ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) in the mainspring's eye: its ramp, 0.475 at its face, stands 0.1 proud of the eyed coil (0.36) into the next, which rides over it on a real spring; the drawn coils lie at the strip's pitch and don't bend round it",0.05,1.6),
+ ('barrelArbor:Extrude','mainspring:Buffer'):("the arbor's hook's head (05 07 02-2) in the mainspring's eye: its land, 0.475 at its face, stands 0.1 proud of the eyed coil (0.36) into the next, which rides over it on a real spring; the drawn coils lie at the strip's pitch and don't bend round it (the pin's own ramped end, 'Cylinder', until 27 October 2026)",0.05,2.1),
  ('chain:Extrude','fusee:Cylinder'):("the chain's top hook on the fusee's pin (05 06 00-6), round it",0.1,0.3),
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),
  ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
