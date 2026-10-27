@@ -52,10 +52,10 @@ const WFUSEE=(()=>{
   const DP0=S-0.8;                                           /* the cover plate (Deckplatte), S to DP0 */
   const SLD=1.5;                                             /* the stop bar's slot across the small end: 1.5 +0.05 deep (05 06 04-2) */
   const DTU=yD-6.2,DTL=DTU+2,DTT=DTU+1;                      /* the maintaining detent: upper face, lower face (its thick part), the tip's lower face (thin, 1, at the upper face) */
-  const BB=-3.65,BR=BB-18.08,BI=BB-1.25,BBF=BB-3.1,BLT=BR,BLU=BLT+1.3,BLF=BLT+3.3;   /* the barrel: bottom's outer face, rim, bottom's inner face, its boss's face, the lid's top (flush with the rim: 05 07 01 and the coloured section draw it so, the "0,6" running from the arbor's shoulder to it; 0.6 under the rim until 26 October 2026), underside, boss face */
+  const BB=-3.65,BR=BB-18.08,BI=BB-1.25,BBF=BB-3.1,BLT=BR,BLU=BLT+1.2,BLF=BLT+3.3;   /* the barrel: bottom's outer face, rim, bottom's inner face, its boss's face, the lid's top (flush with the rim: 05 07 01 and the coloured section draw it so, the "0,6" running from the arbor's shoulder to it; 0.6 under the rim until 26 October 2026), underside (the lid 1.2: its 1,3 -0,1 at the drum's 1,2 seat, below), boss face */
   const BA0=-0.03,BA1=-22.32,BC0=BBF-0.05,BC1=BLF+0.05;       /* the barrel arbor's shoulders (22.29 apart, 22.2 +0.1: 0.06 endshake) and its core's ends, 0.05 off the bosses */
   const RS0=TT-3.32-0.05,RS1=RS0-2.65;                       /* the set-up ratchet, beside the click on the barrel bridge */
-  const MS0=(BI+BLU)/2+7.5,MS1=(BI+BLU)/2-7.5;               /* the mainspring's edges, 15 high (05 06_20's "Zugfeder 15 × 0,37"), in the middle of the drum's 15.53 inside (14.8 high until 26 October 2026, under the lid sunk 0.6) */
+  const MS0=(BI+BLU)/2+7.5,MS1=(BI+BLU)/2-7.5;               /* the mainspring's edges, 15 high (05 06_20's "Zugfeder 15 × 0,37"), in the middle of the drum's 15.63 inside (14.8 high until 26 October 2026, under the lid sunk 0.6; 15.53 under a 1.3 seat until 27 October 2026); its middle 0.015 off the hook block's (9,05 from the bottom's face: 05 07 01-1) */
 
   /* ---------- the fusee's curve: the groove's floor radius by turns m from the large end (05 06 04-2's "Grund" radii, the same as 05 06_20's whole turns but its 10.04 at
      turn 6, where the body's 10.07 is taken; between them 05 06_20's curve scaled at quarter turns, less 0.035, which it runs above the written values: scaled) ---------- */
@@ -820,11 +820,13 @@ const WFUSEE=(()=>{
     /* the hook block's rivet hole M2.6 through the wall (05 07 01-1; drawn at its thread's size and 0.02, Ø 2.64, as the frame's tapped holes), bored into the lathe (25 October
        2026: until then not cut, the rivet in the metal); the slot for the chain's (or the band's) hook, below, cut once the connector is laid (slotCut) */
     const YRV=BB-9.05,RVD=[Math.cos(BLK),0,-Math.sin(BLK)];
-    const dL=tag(mesh(gBL,bore(facePocket(ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.3],[19.695,BR+1.3]],240),'top',rect(LS,18.3,19.1,2.025),1.6),[0,YRV,0],RVD,1.32,18.6),M.gilt),'050701-1');
+    const dL=tag(mesh(gBL,bore(facePocket(ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BLU],[19.695,BLU]],240),'top',rect(LS,18.3,19.1,2.025),1.6),[0,YRV,0],RVD,1.32,18.6),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face flush with the rim (05 07 01's section, the lid's face on the rim's line at
-       both walls, its "0,6 -0,1" the arbor's shoulder over it; until 26 October 2026 read as 0.6 under the rim); 1.3 -0.1 thick, its edge one 5° face from Ø 39.2 at its face
-       to Ø 39.39 at its underside (05 07 01-2), sprung into the drum's seat cut to match, 1.3 deep (the drum's sheet 1.2: the lid's 1.3 decides, estimated; until then a
-       stepped edge, Ø 38.4 under a 1.2 seat); its boss 3.3 -0.1 from its face, the face Ø 8, a 45° cone to Ø 12; bore 4.55; its two
+       both walls, its "0,6 -0,1" the arbor's shoulder over it; until 26 October 2026 read as 0.6 under the rim); 1.3 -0.1 thick, drawn 1.2, its edge one 5° face from Ø 39.2 at its face
+       to Ø 39.39 at its underside (05 07 01-2), sprung into the drum's seat cut to match, 1.2 deep: 05 07 01-1's (1,2), bracketed by its revision a (11.3.48: "Maß 1,2 -0,1 in
+       Klammern") as the chain 18,1 - 13,8 - 3,1 then fixes it (18.08 - 13.78 - 3.1: the 13,8 -0,05 from the seat's floor to the boss's face holds only on a 1.2 seat), and the
+       lid's 1,3 -0,1 at its least, so its face lies on the rim as 05 07 01 draws it (27 October 2026; 1.3 deep and the lid 1.3 from 26 October, the seat 0.1 under the 13,8's
+       limit; until then a stepped edge, Ø 38.4 under a 1.2 seat); its boss 3.3 -0.1 from its face, the face Ø 8, a 45° cone to Ø 12; bore 4.55; its two
        notches through it: at 9 o'clock, on the drum's slot, 2 +0.05 wide to 18.3 ±0.02 from the centre (drawn 2.025, 18.3), and opposite, at 3 o'clock, 2.7 +0.1 wide, 2 +0.2 deep
        from its 39.39 (drawn 2.75 wide to r 19.695 - 2.1); the 9 o'clock notch is the Steg's seat (above), the 3 o'clock notch's use isn't drawn (for prising the lid out:
        likely) (sure on both, unrevised since 7.4.41) */
@@ -858,21 +860,34 @@ const WFUSEE=(()=>{
     /* the arbor 05 07 02 (Federkern kompl.): its pivot in the pillar plate (the 1941 arbor 020704-1's Ø 3, drawn 2.88 in the plate's 2.90 reamed: the arbor as last revised,
        05 07 02-1, isn't in the set), its end a ball, polished, 5 from the shoulder; the journals the drum's bosses run on (4.48 in their 4.55: 020704-1's 5 don't pass them),
        22.2 +0.1 between their outer shoulders (framed); the core Ø 13.3 between them, its ends Ø 10 chamfered 45° 1.65 (05 07 01: faces about Ø 10, the cylinder 8.7; 05 07 02 Ø 10.1;
-       Ø 9 and 2.15 until 26 October 2026, the 1941 core's) to 0.05 off the bosses (11.58 long: the 1941 core's 12 can't pass the 1948 drum's 11.68 between its bosses); the pivot in the barrel bridge (drawn 3.88 in its 3.9 ±0.01), then the square 2.7 ±0.02 (1:100), 10 long, for the set-up
-       ratchet. The hook (Federhaken 05 07 02-2): a pin Ø 2 in the core's hole, its end a ramp across it: 05 07 02's end view draws it rising over the pin's width from
-       flush with the core to 0.5 -0.05 (drawn 0.475) at a radial face 15° from the vertical centre line (sure). The face takes the mainspring's eye, so it is put on the side
+       Ø 9 and 2.15 until 26 October 2026, the 1941 core's) to 0.05 off the bosses (11.58 long: the 1941 core's 12 can't pass the 1948 drum's 11.68 between its bosses); the pivot in the barrel bridge (drawn 3.88 in its 3.9 ±0.01; 2.93 long, BSQ below), then the square 2.7 ±0.02 (1:100), 10 long, for the set-up
+       ratchet. The hook (Federhaken 05 07 02-2): a pin Ø 2 in the core's hole with a head over the core: 05 07 02's end view (unwrapped about the core's circle
+       fitted at 9.88 px/mm, 0.23 px median: tools/wempe_bandhooks.py endview) draws the head standing on the core from a radial face at 15.5° from
+       the vertical centre line (the pin's, which the side view draws on it; the figure "15°" between that radius and a line 15° on) to flush 4-5° past the centre line on the
+       other side, its top falling evenly from the face (0,5 -0,05, drawn 0.475; the face's top scaled 0.6-0.75, the drawing not to scale) to the core: 20° of the core, 2.3
+       wide, wider than the Ø 2 pin (17°) as the 1941 hook's head was (0207: a block 3 wide over its Ø 2 pin), 2 along the axis as the side view draws it (2.09). The face 15°
+       and the land to 5° past (scaled, ±2°); the head's own sheet (05 07 02-2) isn't in the set: likely. Until 27 October 2026 the pin's own end ramped across its width (the
+       face its flat side, 8.6° off the line, 0.545 over the core there and 0.08 at the back). The pin's hole: 05 07 02 dashes it through the core to the far side (no drill
+       point), the 1941 arbor's 6 deep with its point (0207); both drawn 6 deep, the pin to its foot (bore() leaves a hole through a turned core's axis open: README,
+       Unresolved, the tools' limits). The face takes the mainspring's eye, so it is put on the side
        the spring pulls (its coil runs on from its inner end the way rotation.y rises: the barrel's run, README): seen from the ball end, as the view reads that way (from the
        square's end the face would stand on the other side, and the spring would pull against the photographed set-up click: likely). Until 15 October 2026 a flat-topped pin
        0.5 proud. Präz. Rundstahl 14, hardened, tempered at 270 */
+    /* BSQ: where the 1943 arbor's square starts. 05 07 02 gives it 40,2 over all (its general tolerance ±0.1: "nicht eingetr. Toleranz ± 0,1"), with the ball's 5 and the
+       square's 10 (its point included): 25.2 between the ball's shoulder and the square, so with the shoulders 22.29 apart (22,2 +0,1) the bridge pivot 2.93 (the sheet
+       scales 3.3 and 21.96: drawn not to scale). The barrel bridge is 3.32 thick (05 08 05-1), so the square starts 0.42 inside its hole: its diagonal 3.82 in the
+       hole's 3.9 ±0.01, and the set-up ratchet, its hole 2,7 H7 1:100 on the square's 1:100, pressed down the taper to 0.05 off the bridge's face, where the square is
+       2.696 across (its 2,7 ±0,02 hold anywhere along the first 2 mm). 3.38 (40.65 over all) until 27 October 2026; the 1941 arbor (020704-1's 7 + 22,2 + 15) keeps it */
+    const BSQ=BA1-2.93;
     const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]);
     {const bal=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;bal.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}
       const gAL=rv(gBA,'last 1943'),gAF=rv(gBA,'first 6mx');
-      const aL=tag(mesh(gAL,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,BC1],[5.0,BC1],[6.65,BC1+1.65],[6.65,BC0-1.65],[5.0,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
+      const aL=tag(mesh(gAL,turned([[0,BSQ],[1.94,BSQ],[1.94,BA1],[2.24,BA1],[2.24,BC1],[5.0,BC1],[6.65,BC1+1.65],[6.65,BC0-1.65],[5.0,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
         var aF=tag(mesh(gAF,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,c1],[4.5,c1],[6.65,c1+ch],[6.65,c0-ch],[4.5,c0],[2.24,c0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');}
-      const sq=KIT.crease(new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1));sq.translate(0,-25.70-4.75,0);tag(mesh(rv(gBA,'last 1943'),sq,M.steel),'050702-1',1);
-      const pt=KIT.crease(new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1));pt.translate(0,-35.2-0.25,0);tag(mesh(rv(gBA,'last 1943'),pt,M.steel),'050702-1',1);
+      const sq=KIT.crease(new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1));sq.translate(0,BSQ-4.75,0);tag(mesh(rv(gBA,'last 1943'),sq,M.steel),'050702-1',1);
+      const pt=KIT.crease(new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1));pt.translate(0,BSQ-9.5-0.25,0);tag(mesh(rv(gBA,'last 1943'),pt,M.steel),'050702-1',1);
       /* as first drawn (020704-1, 1941): the square end 15 from the upper journal's shoulder (7 + 22.2 + 15 = its 44.2 overall, centres included: sure), so its tip at BA1-15,
          and the turning centre left on it, a cone the sheet draws undimensioned (scaled about 2.5). Wempe 3955's (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on
          the arbor): the square's sides end 13.1 from the shoulder (y -35.4 ±0.3; the model's 1943 square -35.2), the point 2.2 ±0.3 high to its tip at -37.6 ±0.3, the
@@ -881,8 +896,8 @@ const WFUSEE=(()=>{
          1.4 and the tip 3.0 above the 1943 square's), pointed as the 1941 one */
       for(const[V,yS,yT]of/** @type {[string,number,number][]} */([['first',-35.4,BA1-15],['6mx',-36.6,-38.5]])){const s1=2.7-(yS+25.70)*-0.01,sq1=KIT.crease(new THREE.CylinderGeometry(2.7/Math.SQRT2,s1/Math.SQRT2,-25.70-yS,4,1));sq1.translate(0,(-25.70+yS)/2,0);tag(mesh(rv(gBA,V),sq1,M.steel),'050702-1',1);
         const pt1=KIT.crease(new THREE.CylinderGeometry(s1/Math.SQRT2,0.2/Math.SQRT2*2,yS-yT,4,1));pt1.translate(0,(yS+yT)/2,0);tag(mesh(rv(gBA,V),pt1,M.steel),'050702-1',1);}
-      /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core */
-      const HKS=[[gAL,(BC0+BC1)/2,aL],[gAF,(-3.7-3.1-21.7+2.9)/2,aF]].map(([g,y,a])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y,a]);
+      /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core: the pin and its head */
+      const HKS=[[gAL,(BC0+BC1)/2,aL],[gAF,(-3.7-3.1-21.7+2.9)/2,aF]].map(([g,y,a])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y,a,tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2',1)]);
       /* the pin along +x from 6.1 into the core; its end over the core (r 6.65) by 0.475 at its face (+z, the side rotation.y falls toward) down to 0 at its back (-z).
          05 07 02's end view, first-angle (DIN) and so seen from the square's end, from above (the square drawn solid), puts the square face on the side the arbor turns from
          and the ramp falling the way it turns: the spring's eye, pulled along the strip (rotation.y rising, as the coil winds outward), catches the face with its trailing edge
@@ -891,10 +906,15 @@ const WFUSEE=(()=>{
       /* the core's lathe (48 sides) turned first so the hole's axis crosses the middle of a facet: the hole's walls then cut its facets the same way at any turn of the
          hook (at 1.65° off that, after BLK moved, holeCut's sections left a flat 0.06 into the pin: bom.py); the pin in its hole in the core, Ø 2 and 6 deep (0207's section dashes it from the core's face to r 0.65 with a drill's point: sure), bored into the arbor's lathe at the
          hook's turn (25 October 2026: until then the pin stood 0.55 into the unholed core); the pin pressed to its foot, 0.005 off the hole's floor */
-      var hookSet=a=>{for(const[hk,y,arb]of HKS){const st=TAU/48;arb.geometry.rotateY(a-st/2-Math.floor((a-st/2)/st)*st);arb.geometry=capFix(bore(arb.geometry,[0,y,0],[Math.cos(a),0,-Math.sin(a)],1.0,0.65,24),null);
-        const g=new THREE.CylinderGeometry(1.0,1.0,1.0,24,1),p=g.attributes.position;
-        for(let i=0;i<p.count;i++){const v=p.getY(i),z=p.getZ(i);p.setY(i,v>0?6.65+0.005+0.47*(1+z)/2:0.655);}
-        g.computeVertexNormals();hk.geometry.dispose();hk.geometry=g;hk.position.set(0,y,0);hk.rotation.set(0,a,-Math.PI/2);}};}   /* built along its own y, turned onto the hook's radius: the pin's axis is its mesh's (bom.py reads a part's axis so; built in the arbor's frame until 25 October 2026, its axis read upright through its box's middle, which an oblique pin's ramped end puts off the pin) */
+      /* the head in the pin's frame (its y the radius, +z the face's side, x along the arbor): a slab 2 along the arbor, its outline about the core's axis from HFT (flush)
+         to HFA (the face), its top r 6.65 + 0.475 at the face falling evenly to 6.65, its underside r 6.64 on the core's facets, the face radial */
+      const HFA=15*D2R,HFT=-5*D2R,hd=[];for(let i=0;i<=20;i++){const f=HFT+(HFA-HFT)*i/20,r=6.65+0.475*i/20;hd.push([r*Math.sin(f),-r*Math.cos(f)]);}
+      for(let i=20;i>=0;i--){const f=HFT+(HFA-HFT)*i/20;hd.push([6.64*Math.sin(f),-6.64*Math.cos(f)]);}
+      const hdG=slab(hd,[],-1.0,1.0);hdG.applyMatrix4(new THREE.Matrix4().makeBasis(new THREE.Vector3(0,0,1),new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0)));   /* the slab's (x, thickness, -y) onto the pin's (z, x, y): a turn */
+      var hookSet=a=>{for(const[hk,y,arb,hh]of HKS){const st=TAU/48;arb.geometry.rotateY(a-st/2-Math.floor((a-st/2)/st)*st);arb.geometry=capFix(bore(arb.geometry,[0,y,0],[Math.cos(a),0,-Math.sin(a)],1.0,0.65,24),null);
+        const g=new THREE.CylinderGeometry(1.0,1.0,1.0,24,1),p=g.attributes.position;for(let i=0;i<p.count;i++){const z=p.getZ(i),c=Math.sqrt(6.65*6.65-z*z);p.setY(i,p.getY(i)>0?c:0.655);}
+        g.computeVertexNormals();hk.geometry.dispose();   /* its top on the core's round, its foot 0.005 off the hole's floor */
+        hk.geometry=g;hk.position.set(0,y,0);hk.rotation.set(0,a,-Math.PI/2);hh.geometry=hdG;hh.position.set(0,y,0);hh.rotation.set(0,a,-Math.PI/2);}};}   /* built along its own y, turned onto the hook's radius: the pin's axis is its mesh's (bom.py reads a part's axis so; built in the arbor's frame until 25 October 2026, its axis read upright through its box's middle, which an oblique pin's ramped end puts off the pin) */
     /* the set-up ratchet 05 07 00-3 (Sperrad; Messingblech 3 Ms 58, revised 24.11.47): 16 teeth, tips Ø 14.1 -0.2, roots 11.1 -0.2 (drawn 14.0, 11.0), each face along a line 1.2
        off the radius (10°), the back an arc Ø 12.5 (r 6.25) whose centre lies on the Ø 6.4 circle: the sheet's "12,5" runs across the circle through its centre (its two ends on
        it, scaled 12.7 at 16.9 px/mm), its centre 3.24 from the axis (scaled), on the "6,4" circle (r 3.2): sure. Each back's centre falls 3.12 from the axis with the drawn tips and
@@ -919,7 +939,7 @@ const WFUSEE=(()=>{
       rg3.rotateY(rho);tag(mesh(rv(gSR,'3955 6mx'),rg3,M.gilt),'050700-3');}   /* Kirov No. 247's has it too (4_Kirow_247_N.jpg) */
 
     /* =============== the mainspring 05 07 00-6 (Zugfeder) =============== */
-    /* "Zugfeder 15 × 0,37" (05 06_20; 0207: "Zugfeder 15", its space 15.8 ±0.1 framed): drawn 15 high in the 1948 drum's 15.53 inside (its lid flush; 14.8 in a 14.95 until 26 October 2026, the lid read as sunk 0.6)
+    /* "Zugfeder 15 × 0,37" (05 06_20; 0207: "Zugfeder 15", its space 15.8 ±0.1 framed): drawn 15 high in the 1948 drum's 15.63 inside (its lid flush, 1.2 thick in its 1.2 seat; 15.53 under a 1.3 seat until 27 October 2026; 14.8 in a 14.95 until 26 October 2026, the lid read as sunk 0.6)
        and 0.36 thick so packed coils lie at the strip's 0.37 pitch. Its length isn't drawn anywhere: 1,240 mm, fitted to the sheet's own force (05 06_20: the spring solved
        in this drum by tools/mainspring.py at lengths 1,180-1,360 and its torque taken through the drawn fusee gives the measured pull's shape best at 1,240, to 1.1 % rms;
        tools/wempe_mainspring.py, README Physics: energy; 1,386, the strip filling half the room, until 15 October 2026). It lies 11.9 turns all on the wall and 18.9 on the
@@ -933,10 +953,10 @@ const WFUSEE=(()=>{
     onRev(v=>{const f=v==='first'||v==='3955'||v==='6mx';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
     /* the eye the arbor's hook holds it by: no sheet draws the strip's ends, so the Hamilton's (MSPRING.ey: 2.2 to 9.4 along the strip from its end, 5.2 high, KLUwI2UUCMQ
        15:54), as tools/mainspring.py holds the Wempe's inner end on the core through it (MC_MS_EYE 9.4): estimated. Its end toward the tip stands 0.05 off the hook's face at
-       the strip's inner edge (the face 1.0 off the pin's centre line: r 6.65, so asin(1.05/6.65)); the eye 7.2 long past it takes the Ø 2 pin and lets the strip lie over
-       the ramp. Until 17 October 2026 the eye wasn't cut (the hook passed through the drawn strip, fine.py's expected overlap) and the tip stood 0.18 rad behind the hook */
+       the strip's inner edge (the face radial, 15° off the pin's centre line: 0.05/6.65 rad more; the pin's flat side 1.0 off it, asin(1.05/6.65), until 27 October 2026);
+       the eye 7.2 long past it takes the head (2.3 round the core) and the Ø 2 pin and lets the strip lie over the land. Until 17 October 2026 the eye wasn't cut (the hook passed through the drawn strip, fine.py's expected overlap) and the tip stood 0.18 rad behind the hook */
     const [EY0,EY1,EYH]=MSPRING.ey,tAt=s=>(Math.sqrt(MSa*MSa+MST*s/Math.PI)-MSa)/MST;   /* the turns from the tip to s mm along the core's coil (r MSa + MST tau) */
-    const TIP=Math.asin(1.05/(MSa-MST/2))+TAU*tAt(EY0);   /* rad from the tip to the hook's centre line */
+    const TIP=15*D2R+0.05/(MSa-MST/2)+TAU*tAt(EY0);   /* rad from the tip to the hook's centre line */
     /* its turns T: from its inner end, its tip TIP behind the arbor's hook (HKA), the hook in its eye, winding outward the way the drum runs (rotation.y rising), to its outer
        end lying on the hook block, 0.3 short of its far end (MSE past the rivet hole, estimated: the hook's form isn't drawn); set up 0.75 turn past lying all on the wall
        at run down (with the chain: the band turns the drum a little less, so its set-up there is a little more), which sets the hook's angle. Until 18 October 2026 the end
@@ -1024,14 +1044,59 @@ const WFUSEE=(()=>{
     const hkMesh=(o,id,mat)=>{const g=new THREE.Group();gC.add(g);tag(mesh(g,slab(o,[{c:[0,0],r:RVH}],-0.13,0.13),mat),id,1);   /* the eye's hole, its end link's rivet through it */
       const b=offEye(o,1.1);tag(mesh(g,slab(b,[],0.13,0.40),mat),id,1);tag(mesh(g,slab(b,[],-0.40,-0.13),mat),id,1);return g;};   /* the eye 0.26; the body 0.80 */
     const cHT=hkMesh(HKT,'050704',M.chain),cHB=hkMesh(HKB,'050704',M.chain);
-    /* the band: its strip a ribbon along its pitch line; its hooks (Bandstahl 10 × 0.8, brazed to it): the round hook 05 07 03-2 (its back r 6, the crown r 1.5, the nose 1.7
-       from the band's slot with r 0.4 at its tip) round the fusee's pin, the drum's hook 05 07 03-3 (its back r 10, front r 20, a barb 1.4 out, the tip 4.5 above the barb)
-       into the drum's slot: outlines approximated on those figures */
+    /* the band: its strip a ribbon along its pitch line; its hooks (Bandstahl 10 × 0.8 DIN 1016, 0.8 -0.05 thick: drawn 0.78), the band's end brazed into each.
+       Their plan views (10:1) traced on the scans (tools/wempe_bandhooks.py: the outline's middle, 34.5 px/mm checked on each sheet's own figures) and cut into lines and
+       arcs by tools/mfgfit.py (floor 1 px, 0.03 mm), each figure the sheet writes taken in place of its traced reading; the arcs it doesn't figure (or figures against its
+       own drawing) are the traced ones. Coordinates in mm on each sheet as drawn (x right, y up).
+       The round hook 05 07 03-2 (Bandhaken rund, 18.3.43), its origin the seat's centre: the throat's top r 0,4 (the fusee's pin's seat; traced 0.43, the line's width) at
+       the origin; its right wall straight down 0.4 from it (traced 0.38) to the bottom r 1 about (1,4, -2,5) (the "7r" read "1r": traced 1.21 and 0.91 at its two sides),
+       which it meets tangent, as the figures make it; the nose r 0,4 about (-1,25, -0,5) (traced 0.44 about (-1.24, -0.51)), the throat's left wall the line tangent to it
+       and the seat, 31.7° off the vertical (the sheet's "30°": its other figures make 31.7; traced 27.4 ±0.3); the nose's back a line 7.9° off the vertical (traced, 0.010
+       rms) up to the crown, a corner there; the crown r 2.08 about (0.17, -0.34) (traced, 0.006 rms on both its pieces: the bracketed "(1,5r)" isn't what's drawn); the
+       flank r 5.93 about (-3.47, -1.70) (traced r 5.90 ±0.07 about that, 0.007 rms; its "6r" and "3,55" hold, its "2,8" below is drawn 1.70: the drawing kept), set
+       tangent to the bottom circle (5.93 then). The band 0,22 +0,03 in its slot at 5° to the vertical, its right face through the bottom circle's centre (the 5°'s vertex, 1,4
+       and 2,5 from the seat), leaving through a notch with its edges broken ("Kante brechen": 0.1 here). The fusee's pin in the seat, the band pulling down: laid level in
+       the flange's slot as the chain's top hook. Its extent 4.1 across × 5.2 along.
+       The drum hook 05 07 03-3 (Bandhaken f. Trommel), its origin where the barb's line (0,3 above the barb's centre) crosses the vertical centre line: the tip r 0,2
+       about (0, 4,5) (drawn about r 0.3, its centre 0.08 right); the back r 10 about (-7.97, -1,2), tangent to the tip: the figures decide, the drawn back lying 0.10-0.15
+       outside it over its middle (traced r 9.99 ±0.03 about (-7.87, -1.07), 0.008 rms; through the traced back at the 1,2 the circle would leave the tip r 0.3); the bottom
+       r 1 about (1,0, -2,5) on both sides of the band's notch (the "7r" read "1r": traced r 1.009 ±0.002 about (0.995, -2.511), one circle); the barb's tip r 0,2 about (-1,0,
+       -0,3); its upper flank r 4 about (2,8, -0,35) (traced 3.98 ±0.05 about (2.72, -0.42)), which the barb's circle touches inside (4 - 0.2 = 3.80: the figures agree to
+       0.002); the barb's lower edge the line tangent to it and to the notch's r 0,2 about the origin, 50.8° off the vertical (the sheet's "50°"; traced 50.2); the left wall
+       from the notch to the bottom circle, tangent to both (4.7° off the vertical; traced 5.2); the front a line 7.5° off the vertical tangent to the tip (traced, 0.010 rms;
+       the sheet's "20r" bows it 0.014 over its 1.5), meeting the barb's flank in a corner. The band at 10° to the vertical, its right face 0.2 left of the bottom's centre
+       ("0,2"; traced 0.26), leaving through a notch as the round hook's. Its extent 3.4 across × 8.1 along. Laid with its left wall on the drum, its barb in the drum's
+       slot (DRUM, below), the band rising off the drum into it.
+       Until 27 October 2026 both were placeholders: 12- and 10-point outlines about half the size, no throat, slot, crown, barb or notch */
     const pBd=part('band',-33),gBd=new THREE.Group();pBd.add(gBd);const bdM=tag(mesh(gBd,new THREE.BufferGeometry(),M.steel),'050703-1');
-    const BHT=[[0,-0.45],[1.4,-0.6],[2.6,-0.25],[3.2,0.5],[2.9,1.35],[2.0,1.6],[1.3,1.2],[1.6,0.75],[2.1,0.6],[2.2,0.15],[1.5,0.0],[0,0.45]];
-    const BHB=[[0,-0.45],[2.0,-0.55],[4.5,-0.6],[6.9,-0.4],[7.0,-0.05],[6.2,0.3],[4.9,0.75],[4.6,1.15],[2.5,0.7],[0,0.45]];
-    const hkB=(o,id)=>{const g=new THREE.Group();gBd.add(g);tag(mesh(g,slab(o,[],-0.38,0.38),M.chain),id);return g;};
-    const bHT=hkB(BHT,'050703-2'),bHB=hkB(BHB,'050703-3');
+    const BHK=(()=>{const V=(a,b)=>[a[0]-b[0],a[1]-b[1]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1],ang=(c,p)=>Math.atan2(p[1]-c[1],p[0]-c[0]),pt=(c,r,a)=>[c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)];
+      const tg=(c1,r1,s1,c2,r2,s2)=>{const D=V(c2,c1),L=Math.hypot(...D),th=Math.atan2(D[1],D[0])-Math.asin((s2*r2-s1*r1)/L),n=[-Math.sin(th),Math.cos(th)];   /* the line tangent to both, directed c1 to c2, circle i on its left (s +1) or right (-1) */
+        return[[c1[0]-s1*r1*n[0],c1[1]-s1*r1*n[1]],[c2[0]-s2*r2*n[0],c2[1]-s2*r2*n[1]]];};
+      const arc=(o,c,r,a0,a1,ccw)=>{let d=a1-a0;if(ccw)while(d<=0)d+=TAU;else while(d>=0)d-=TAU;const n=Math.max(2,Math.ceil(Math.abs(d)/(6*D2R)));for(let i=0;i<=n;i++)o.push(pt(c,r,a0+d*i/n));return o;};
+      const cc=(c1,r1,c2,r2)=>{const D=V(c2,c1),L=Math.hypot(...D),a=(r1*r1-r2*r2+L*L)/(2*L),h=Math.sqrt(Math.max(0,r1*r1-a*a)),m=[c1[0]+D[0]*a/L,c1[1]+D[1]*a/L];return[[m[0]-D[1]*h/L,m[1]+D[0]*h/L],[m[0]+D[1]*h/L,m[1]-D[0]*h/L]];};   /* circles' crossings */
+      const lc=(p,d,c,r)=>{const w=V(p,c),b=dot(w,d),q=b*b-(dot(w,w)-r*r);return[-b-Math.sqrt(q),-b+Math.sqrt(q)].map(t=>[p[0]+d[0]*t,p[1]+d[1]*t]);};   /* a line's crossings with a circle, along d */
+      const notch=(B,p,d,w)=>{const nl=[-d[1],d[0]],pl=[p[0]-nl[0]*w,p[1]-nl[1]*w],xR=lc(p,d,B,1)[1],xL=lc(pl,d,B,1)[1];   /* the band's faces (p on its right face, d down it, w across) out through the bottom circle B (r 1) */
+        return{aL:ang(B,xL),aR:ang(B,xR),put:o=>{o.push([xL[0]-d[0]*0.1,xL[1]-d[1]*0.1],[xR[0]-d[0]*0.1,xR[1]-d[1]*0.1]);},mouth:[(xL[0]+xR[0])/2,(xL[1]+xR[1])/2]};};
+      /* the round hook, walked round anticlockwise from the bottom circle's tangent with the right wall */
+      const S=[0,0],N=[-1.25,-0.5],B=[1.4,-2.5],K=[0.165,-0.343],RK=2.076,F=[-3.465,-1.700],RF=Math.hypot(...V(B,F))+1,b5=5*D2R,dB=[Math.sin(b5),-Math.cos(b5)];
+      const nb=notch(B,B,dB,0.22),[lw0,lw1]=tg(N,0.4,1,S,0.4,-1),b7=7.9*D2R,dk=[-Math.sin(b7),-Math.cos(b7)],nk=[-dk[1],dk[0]],pN=[N[0]-0.4*nk[0],N[1]-0.4*nk[1]];
+      const X1=cc(F,RF,K,RK).sort((a,b)=>b[1]-a[1])[0],X2=lc(pN,dk,K,RK)[0];
+      const T=[];arc(T,B,1,Math.PI,nb.aL-0.1,true);nb.put(T);arc(T,B,1,nb.aR+0.1,ang(F,B),true);arc(T,F,RF,ang(F,B),ang(F,X1),true);arc(T,K,RK,ang(K,X1),ang(K,X2),true);
+      arc(T,N,0.4,ang(N,pN),ang(N,lw0),true);arc(T,S,0.4,ang(S,lw1),0,false);
+      /* the drum hook, from the tip */
+      const Tp=[0,4.5],CR=[-7.972,-1.2],B3=[1.0,-2.5],Q=[0,0],BT=[-1.0,-0.3],A4=[2.8,-0.35],b10=10*D2R,dB3=[-Math.sin(b10),-Math.cos(b10)],b75=7.5*D2R,df=[Math.sin(b75),-Math.cos(b75)],nf=[-df[1],df[0]];
+      const pT=[Tp[0]-0.2*nf[0],Tp[1]-0.2*nf[1]],Xa=lc(pT,df,A4,4)[0],tA=pt(A4,4,ang(A4,BT)),[bl0,bl1]=tg(BT,0.2,1,Q,0.2,-1),[wl0,wl1]=tg(Q,0.2,-1,B3,1,1);
+      const n3=notch(B3,[0.8,-2.5],dB3,0.22),XB=cc(B3,1,CR,10).sort((a,b)=>a[1]-b[1])[0],tT=pt(CR,10,ang(CR,Tp));
+      const D=[];arc(D,Tp,0.2,ang(Tp,tT),ang(Tp,pT),true);D.push(Xa);arc(D,A4,4,ang(A4,Xa),ang(A4,tA),true);arc(D,BT,0.2,ang(BT,tA),ang(BT,bl0),true);arc(D,Q,0.2,ang(Q,bl1),ang(Q,wl0),false);
+      arc(D,B3,1,ang(B3,wl1),n3.aL-0.1,true);n3.put(D);arc(D,B3,1,n3.aR+0.1,ang(B3,XB),true);arc(D,CR,10,ang(CR,XB),ang(CR,tT),true);
+      /* into the chain's hooks' frames: the round hook's x up the band from its mouth (the band's middle where it leaves), y to its left; the drum hook's x up its left
+         wall from 1.5 behind the mouth (where the band, laid on the drum, ends), y out from the wall (the barb on -y): turned over, so its order reversed */
+      const dedup=o=>o.filter((p,i)=>Math.hypot(...V(p,o[(i+1)%o.length]))>1e-4);
+      const u5=[-dB[0],-dB[1]],v5=[-u5[1],u5[0]],M5=nb.mouth,top=dedup(T).map(p=>{const q=V(p,M5);return[dot(q,u5),dot(q,v5)];});
+      const uw=V(wl0,wl1),lw=Math.hypot(...uw),uW=[uw[0]/lw,uw[1]/lw],mW=[uW[1],-uW[0]],bot=dedup(D).map(p=>[dot(V(p,n3.mouth),uW)+1.5,dot(V(p,wl1),mW)]).reverse();
+      return{top,bot,seat:[dot(V(S,M5),u5),dot(V(S,M5),v5)],mouth:[1.5,dot(V(n3.mouth,wl1),mW)]};})();
+    const hkB=(o,id)=>{const g=new THREE.Group();gBd.add(g);tag(mesh(g,slab(o,[],-0.39,0.39),M.chain),id);return g;};
+    const BYW=20.81-CG.band.rbp,bHT=hkB(BHK.top,'050703-2'),bHB=hkB(BHK.bot.map(([x,y])=>[x,y+BYW]),'050703-3');   /* the drum hook's wall 0.01 off the drum */
 
     /* the chain's first rivet: where along the chain's path (from its start, m 0) the top hook's seat, 3.70 from its rivet, reaches the pin (about 0.4: the path starts at
        the flange's slot on the chain's pitch line, which the hook's real run into the deepened slot below it shortens) */
@@ -1086,7 +1151,11 @@ const WFUSEE=(()=>{
         imA.count=imR.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=imR.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
         /* the hooks: the top one from the first rivet back to the pin, the bottom one on from the last rivet along the drum */
         const nJ=J.length-1;place(cHT,J[0],PINA,Rf,'top',Math.atan2(HKSEAT[1],HKSEAT[0]),J[1].clone().sub(J[0]).normalize());place(cHB,J[nJ],null,beta,'bot',0,J[nJ].clone().sub(J[nJ-1]).normalize());}
-      else{bdM.geometry.dispose();bdM.geometry=ribbonGeo(pts,0.22,0.78);place(bHT,pts[0],PINA,Rf,'top');place(bHB,pts[pts.length-1],null,beta,'bot');}
+      else{const q=pol(PINR,PINA+Rf),SD=Math.hypot(...BHK.seat),dh=v=>Math.hypot(v.x-fx-q[0],v.z-fz-q[1]);let i=1;while(i<pts.length-1&&dh(pts[i])<SD)i++;   /* the band from where its round hook's seat, SD from its mouth, lies on the pin */
+        const a=pts[i-1],b=pts[i],t=(SD-dh(a))/Math.max(1e-9,dh(b)-dh(a)),p0=dh(a)>=SD?a:a.clone().lerp(b,Math.min(1,Math.max(0,t))),bp=[p0,...pts.slice(i)];
+        place(bHT,p0,PINA,Rf,'top',Math.atan2(BHK.seat[1],BHK.seat[0]));place(bHB,pts[pts.length-1],null,beta,'bot');
+        bp.push(new THREE.Vector3(BHK.mouth[0],0,-(BHK.mouth[1]+BYW)).applyMatrix4(bHB.matrix));   /* on into the drum hook's mouth, risen off the drum */
+        bdM.geometry.dispose();bdM.geometry=ribbonGeo(bp,0.22,0.78);}
       /* the mainspring: the barrel's turns from run down give its turns (its outer end turns with the drum, its inner end stays with the arbor) */
       const T=msTurns(beta);msM.geometry.dispose();msM.geometry=msGeo(Math.max(msT+0.1,T));pMS.userData.T=T;
       /* the stop bar: as far in as the connector presses it; its spring follows */
