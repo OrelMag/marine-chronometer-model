@@ -108,15 +108,15 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | — | — | — | read; model comparison next |
 | `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | — | — | — | read; model comparison next |
 | `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | — | — | — | — | — | not started |
+| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | — | — | — | — | — | not started |
 | `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | — | — | — | — | — | not started |
 | `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | — | — | — | — | — | not started |
