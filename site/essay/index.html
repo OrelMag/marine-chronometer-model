@@ -5275,7 +5275,7 @@ const WFUSEE=(()=>{
     /* As first drawn (05 06 02-1 before revision (a), 11.3.48: "Maß 37,25∅ war 37,5∅"): the tips Ø 37.5, drawn 37.45 (its tolerance not kept: the revised one's -0.1 taken), the
        teeth as deep, so 0.125 further out under the maintaining detent; revision (a)'s other changes leave the part as it was (its struck "25,4∅" the chamfer's top, 26.1 less
        2 × 0.35, as the revised 0.3 +0.15 puts it on the drawn cup's 26.0: the same chamfer, built in both). Built 27 October 2026 (until then in neither version) */
-    const GSO=ratchet(120,37.2/2,37.2/2-0.725,1,0,3),GSO1=ratchet(120,37.45/2,37.45/2-0.725,1,0,3),gsR0=polarMax(GSO,8192,true),gsR1=polarMax(GSO1,8192,true),SPY=GP-0.75;   /* SPY: the click springs' and their pins' height */
+    const GSO=ratchet(120,37.2/2,37.2/2-0.725,1,0,3),GSO1=ratchet(120,37.45/2,37.45/2-0.725,1,0,3),gsR0=polarMax(GSO,12000,true),gsR1=polarMax(GSO1,12000,true),SPY=GP-0.75;   /* SPY: the click springs' and their pins' height; the tables 100 rays a tooth, so each tooth's seat is the same (8192: the drop moved a ray from tooth to tooth, and the rig's one-tooth loop missed it by the drop) */
     let gsR=gsR0;onRev(v=>{gsR=v==='first'||v==='3955'?gsR1:gsR0;});   /* the teeth the maintaining detent seats on, the version's */
     const CKP=[bk(270,GROT),bk(90,GROT)].map(a=>sh(9.75+0.0125,a)),SPP=[[228,210],[48,30]].map(pp=>pp.map(d=>bk(d,GROT)));
     {const ph=sh(14.2,EYEA),F_=[{p:ring(0,0,6.5075/2,96),a:GP,b:G},{p:ring(ph[0],-ph[1],0.6035,32),a:GP,b:G},...CKP.map(c=>({p:ring(c[0],-c[1],0.87,32),a:GP,b:G,th:{rs:0.85}}))];   /* the clicks' screws' M1.7 tapped (KIT's threadWall; plain until 27 October 2026) */
