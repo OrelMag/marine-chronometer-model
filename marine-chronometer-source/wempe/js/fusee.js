@@ -105,23 +105,36 @@ const WFUSEE=(()=>{
     for(const h of holes){const p=new THREE.Path();if(h.c){p.absarc(h.c[0],h.c[1],h.r,0,TAU,true);}else{p.moveTo(h[0][0],h[0][1]);for(let i=1;i<h.length;i++)p.lineTo(h[i][0],h[i][1]);p.closePath();}s.holes.push(p);}return s;};
   /* an outline (shape coordinates) extruded from y0 to y1 (y0 < y1), one closed solid */
   const slab=(xy,holes,y0,y1,cs=24)=>{const g=extrude(shapeOf(xy,holes),{depth:y1-y0,bevelEnabled:false,curveSegments:cs});g.rotateX(-Math.PI/2);g.translate(0,y0,0);return g;};
-  /* a solid of revolution's piece built ray by ray: at each angle th of cols (a part's own frame, rising), from rlo(th,a) out to rhi(th,a), at each depth a of rows (from the
-     blank's large end face, F0 - a the height); the faces at the first and last row and the walls at the first and last angle close it. Flat faces stay flat; the curved ones
-     are shaded smooth wherever neighbouring triangles turn less than 35° (the lathe's look), so the slot's walls keep their edges */
-  function radialSolid(cols,rows,rlo,rhi){const P=[],T=[],nc=cols.length,nr=rows.length,I=[],O=[];
-    for(let i=0;i<nc;i++){I.push([]);O.push([]);const th=cols[i],c=Math.cos(th),s=Math.sin(th);
-      for(let j=0;j<nr;j++){const lo=rlo(th,rows[j]),hi=Math.max(lo,rhi(th,rows[j]));I[i].push([lo*c,F0-rows[j],-lo*s]);O[i].push([hi*c,F0-rows[j],-hi*s]);}}
-    const tri=(a,b,c,n)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(...x);
-      if(l<1e-12)return;if(x[0]*n[0]+x[1]*n[1]+x[2]*n[2]<0){const t=b;b=c;c=t;x[0]=-x[0];x[1]=-x[1];x[2]=-x[2];}T.push(x.map(q=>q/l));P.push(a,b,c);};
-    const quad=(a,b,c,d,n)=>{tri(a,b,c,n);tri(a,c,d,n);};
-    for(let i=0;i<nc-1;i++){const m=(cols[i]+cols[i+1])/2,rn=[Math.cos(m),0,-Math.sin(m)],ri=rn.map(q=>-q);
-      for(let j=0;j<nr-1;j++){quad(O[i][j],O[i+1][j],O[i+1][j+1],O[i][j+1],rn);quad(I[i][j],I[i+1][j],I[i+1][j+1],I[i][j+1],ri);}
-      quad(I[i][nr-1],I[i+1][nr-1],O[i+1][nr-1],O[i][nr-1],[0,-1,0]);quad(I[i][0],I[i+1][0],O[i+1][0],O[i][0],[0,1,0]);}
-    for(const[i,sg]of[[0,-1],[nc-1,1]]){const th=cols[i],tn=[-Math.sin(th)*sg,0,-Math.cos(th)*sg];for(let j=0;j<nr-1;j++)quad(I[i][j],I[i][j+1],O[i][j+1],O[i][j],tn);}
+  /* a solid of revolution's piece built ray by ray, its groove swept (05 06 04-2, 05 06_20): at each angle th of cols (a part's own frame, rising) the ray's section from
+     a0 to a1 under the blank's large end face (F0 - a the height): out along inner(th) ([a, r] from a0 to a1) and back along the outer line, rhi(th, a). The body is flat
+     along a at any angle but for the groove's walls, its lands' edges ac(m) - WLD/2 and ac(m) + WLD/2 (rBody), so the outer line has a corner pair at each wall, its foot and
+     its top at the wall's own depth, and none between; neighbouring rays are joined wall to wall, each wall named by its turn as a thread's flank (KIT's helixSide), the
+     walls a wall comes or goes at (the groove's end N, a0, a1, a cap) fanned from the neighbour. So the walls are square and on the helix: until 27 October 2026 the rays had
+     rows every 0.04 (radialSolid, and the body's LatheGeometry), each wall a 0.04 slope between rows and its edge jumping 0.04 as the helix crossed a row, every turn's rib
+     stair-stepped (the drawings check, batch 5, A5). A full turn (its last angle its first's plus TAU) closes on itself; any other is capped at its first and last angle.
+     Flat faces stay flat; the curved ones are shaded smooth wherever neighbouring triangles turn less than 35° (the lathe's look) */
+  function helixSolid(cols,a0,a1,inner,rhi){const e=1e-7,full=Math.abs(cols[cols.length-1]-cols[0]-TAU)<1e-9;
+    const loopAt=th=>{const mt=(th-PHI0)/TAU,W=[],c=Math.cos(th),s=Math.sin(th),I=inner(th),rin=a=>{let k=1;while(k<I.length-1&&I[k][0]<a)k++;const[p,q]=[I[k-1],I[k]];return q[0]>p[0]?p[1]+(q[1]-p[1])*(a-p[0])/(q[0]-p[0]):q[1];},rh=a=>Math.max(rin(a),rhi(th,a));   /* never inside the inner line (radialSolid's clamp: the slot's walls cut the hub there) */
+      for(let j=Math.floor((a0-A0)/PAX-mt)-2;j<=Math.ceil((a1-A0)/PAX-mt)+2;j++){const m=mt+j;if(m<0)continue;const q=ac(m);
+        for(const[k,w]of[['s',q-WLD/2],['e',q+WLD/2]])if(w>a0+1e-6&&w<a1-1e-6){const r0=rh(w-e),r1=rh(w+e);if(Math.abs(r0-r1)>2e-3)W.push([w,j+k,r0,r1]);}}   /* a step under 2 µm (where a slot's wall or the hub caps both sides) is none */
+      W.sort((p,q)=>p[0]-q[0]);const L=[{id:'A',a:a0,r:rh(a0+e)}];for(const[w,id,r0,r1]of W)L.push({id:id+'0',a:w,r:r0},{id:id+'1',a:w,r:r1});L.push({id:'B',a:a1,r:rh(a1-e)});
+      for(let i=I.length-1;i>=0;i--)L.push({id:'i'+i,a:I[i][0],r:I[i][1]});
+      return L.map(q=>({id:q.id,a:q.a,r:q.r,p:[q.r*c,F0-q.a,-q.r*s]}));};
+    const R=cols.map(loopAt),P=[],tri=(a,b,c)=>P.push(a,b,c);
+    for(let i=0;i<R.length-1;i++){const A=[...R[i],R[i][0]],B=[...R[i+1],R[i+1][0]],inA=new Set(A.map(q=>q.id)),inB=new Set(B.map(q=>q.id));let p=0,q=0;
+      while(p<A.length-1||q<B.length-1){const a=A[p+1],b=B[q+1];
+        if(a&&b&&a.id===b.id){tri(A[p].p,B[q].p,b.p);tri(A[p].p,b.p,a.p);p++;q++;}
+        else if(a&&!inB.has(a.id)){tri(A[p].p,B[q].p,a.p);p++;}else if(b&&!inA.has(b.id)){tri(A[p].p,B[q].p,b.p);q++;}else throw Error('helixSolid: walls out of order');}}
+    if(!full)for(const[i,sg]of[[0,1],[R.length-1,-1]]){const L=R[i],T=THREE.ShapeUtils.triangulateShape(L.map(q=>V2(q.r,q.a)),[]);
+      for(const t of T){const o=[...t].sort((x,y)=>sg*(x-y));tri(L[o[0]].p,L[o[1]].p,L[o[2]].p);}}   /* the end caps wound against the side's edges along them */
+    let vol=0;for(let k=0;k<P.length;k+=3){const[a,b,c]=[P[k],P[k+1],P[k+2]];vol+=a[0]*(b[1]*c[2]-b[2]*c[1])-a[1]*(b[0]*c[2]-b[2]*c[0])+a[2]*(b[0]*c[1]-b[1]*c[0]);}
+    if(vol<0)for(let k=0;k<P.length;k+=3){const t=P[k+1];P[k+1]=P[k+2];P[k+2]=t;}   /* wound to face out */
+    const T=[],Q=[];for(let k=0;k<P.length;k+=3){const[a,b,c]=[P[k],P[k+1],P[k+2]],u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(...x);
+      if(l<1e-12)continue;T.push(x.map(z=>z/l));Q.push(a,b,c);}   /* a sliver's triangle with no area dropped */
     /* normals: each corner the mean of the triangles round its point that turn less than 35° from its own */
-    const K=p=>p.map(q=>Math.round(q*1e5)).join(','),at=new Map();P.forEach((p,k)=>{const key=K(p);if(!at.has(key))at.set(key,[]);at.get(key).push(Math.floor(k/3));});
-    const pos=new Float32Array(P.length*3),nor=new Float32Array(P.length*3),cs=Math.cos(35*D2R);
-    P.forEach((p,k)=>{const f=Math.floor(k/3),n=T[f],a=[0,0,0];for(const g of at.get(K(p))){const m=T[g];if(m[0]*n[0]+m[1]*n[1]+m[2]*n[2]>cs){a[0]+=m[0];a[1]+=m[1];a[2]+=m[2];}}
+    const K=p=>p.map(q=>Math.round(q*1e5)).join(','),at=new Map();Q.forEach((p,k)=>{const key=K(p);if(!at.has(key))at.set(key,[]);at.get(key).push(Math.floor(k/3));});
+    const pos=new Float32Array(Q.length*3),nor=new Float32Array(Q.length*3),cs=Math.cos(35*D2R);
+    Q.forEach((p,k)=>{const f=Math.floor(k/3),n=T[f],a=[0,0,0];for(const g of at.get(K(p))){const m=T[g];if(m[0]*n[0]+m[1]*n[1]+m[2]*n[2]>cs){a[0]+=m[0];a[1]+=m[1];a[2]+=m[2];}}
       const l=Math.hypot(...a)||1;pos.set(p,k*3);nor.set([a[0]/l,a[1]/l,a[2]/l],k*3);});
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('normal',new THREE.BufferAttribute(nor,3));return g;}
   /* a closed ribbon along points P (THREE.Vector3), w across (along the horizontal normal to the path) and h high (centred on each point's y); ends capped */
@@ -374,38 +387,37 @@ const WFUSEE=(()=>{
        "0,55∅ +0,01" through both ribs of the flange, axial (section A-B), drawn Ø 0.555, to 2.05 under the large end; each a tapped hole drawn at its thread's size
        and 0.02, as the frame's (frame.js), flat at the drill's depth: the tapped holes cut in the tube (below), the pin's hole bored into the flange's lathe (bore, above). Gilt, as
        Wempe 3955's (8_Wempe_3955_Räderwerk_plus.jpg) */
-    {const PH=99,col=[[PH,S+SLD]];for(let a=LB-0.04*Math.ceil(SLD/0.04);a>RT+1e-9;a-=0.04)col.push([PH,F0-a]);col.push([PH,F]);   /* to the re-turned face */
+    {const PH=99,N=216,col=[[PH,S+SLD]];for(let a=LB-0.04*Math.ceil(SLD/0.04);a>RT+1e-9;a-=0.04)col.push([PH,F0-a]);col.push([PH,F]);   /* to the re-turned face */
       /* three closed pieces, each holed as a small solid (facePocket on the whole 120,000-triangle lathe took seconds): the flange's lathe to AS under the large end, through
-         which the chain's pin's hole runs; the rest of the lathe outside r 7.5 under it; and the tube between the bore and r 7.5 from the small end's recess floor to the large
-         end's, its tapped holes cut in it as a solid of plan cells (KIT.solidGeo). The pieces meet on the lathe's own rows and angles (the tube's circle on its 216 corners) */
+         which the chain's pin's hole runs; the rest outside r 7.5 under it, swept ray by ray with the groove's walls square (helixSolid); and the tube between the bore and r 7.5
+         from the small end's recess floor to the large end's, its tapped holes cut in it as a solid of plan cells (KIT.solidGeo). The pieces meet on the lathe's own angles and
+         at AS on its row (the tube's circle on its 216 corners) */
       const AS=col.map(q=>F0-q[1]).filter(a=>a>2.1).reduce((m,a)=>Math.min(m,a),9);   /* AS: the first row under 2.1, below the hole's end (2.05) */
       const lathe=pr=>{const g=new THREE.LatheGeometry(pr.map(([r,y])=>V2(r,y)),216),p=g.attributes.position;
         for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),r=Math.hypot(x,z);if(r<PH-1)continue;const th=angOf(x,z),R=rBody(th,F0-p.getY(i));p.setX(i,R*Math.cos(th));p.setZ(i,-R*Math.sin(th));}
         return KIT.crease(g);};   /* its faces' own normals at corners (computeVertexNormals until 26 October 2026: the large face shaded as a dish, the small end streaked) */
       const gFl=(()=>{const q=pol(PINR,PINA);return capFix(bore(lathe([[13.15,F0-AS],...col.filter(q=>q[1]>=F0-AS-1e-9),[14.9-RT,F],[13.15,F0-1.75],[13.15,F0-AS]]),[q[0],0,q[1]],[0,1,0],0.2775,F0-2.05),null);})();   /* the chain's pin's hole through rib 1, the slot and rib 2 to the land under it (r 14.8 at the pin, inside the hole's 16.5) */
-      const gRe=lathe([[7.5,S+SLD],...col.filter(q=>q[1]<=F0-AS+1e-9),[13.15,F0-AS],[13.15,FRC],[7.5,FRC],[7.5,S+SLD]]);   /* from the stop bar's slot's floor (below) */
+      const gRe=helixSolid([...Array(N+1).keys()].map(k=>k*TAU/N),AS,LB-SLD,()=>[[AS,13.15],[2.7,13.15],[2.7,7.5],[LB-SLD,7.5]],rBody);   /* from AS to the stop bar's slot's floor (below), the groove swept (helixSolid; the lathe's 0.04 rows until 27 October 2026), the recess's wall r 13.15 to its floor FRC (2.7) inside */
       const bo=ring(0,0,7.006/2,216),gTu=solidGeo([{loop:ring(0,0,7.5,216),y0:S+1.6,y1:FRC,F:[{p:bo,a:S+1.6,b:FRC},...CWH.map(c=>({p:ring(c[0],-c[1],1.02,40),a:FRC-6.25,b:FRC})),{p:ring(DPS[0],-DPS[1],0.87,36),a:S+1.6,b:S+1.6+6}]}]);   /* the M2s from the recess floor, the M1.7 from the small end's */
       const bF=[tag(mesh(gF,gRe,M.gilt),'050604-2'),tag(mesh(gF,gFl,M.gilt),'050604-2',1),tag(mesh(gF,gTu,M.gilt),'050604-2',1)];   /* the body's pieces, these and those below, merged into one (fuse) */
       /* the small end's last 1.5, which the stop bar's slot crosses (05 06 04-2's Schnitt C-D: 2 H8 wide, its near edge 4 from the axis, "1,5+0,05 tief", right across the end
          and out through the hub and the top turn on both sides): the two pieces it leaves between the recess (Ø 15) and the radius field, the large one on the axis's side
-         of the slot and the arch beyond it, each built ray by ray on the lathe's own angles and depths (so they meet its surface row for row) with more rays where the slot's
+         of the slot and the arch beyond it, each built ray by ray on the lathe's own angles, the groove swept as in the rest (helixSolid), with more rays where the slot's
          walls meet the outside. Pieces of the body: drawn gilt as it is */
-      const N=216,rows=[LB-SLD];for(let k=Math.ceil(SLD/0.04)-1;k>=0;k--)rows.push(LB-0.04*k);
-      const fine=(a0,a1)=>{const o=[];for(let d=a0;d<=a1+1e-9;d+=0.15)o.push(d*D2R);return o;};
+            const fine=(a0,a1)=>{const o=[];for(let d=a0;d<=a1+1e-9;d+=0.15)o.push(d*D2R);return o;};
       const cols=(p0,p1,extra)=>{const L=[p0,p1,...extra.filter(f=>f>p0&&f<p1)];for(let k=0;k<N;k++){const f=p0+fr((k*TAU/N-Math.PI/2-barRot-p0)/TAU)*TAU;if(f>p0+1e-6&&f<p1-1e-6)L.push(f);}
         return[...new Set(L.map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot);};   /* the angles from the bar's direction, put in the fusee's frame */
       const sA=Math.asin(4/7.5),c1=fine(22.0,26.0),c2=fine(34.3,40.9);   /* the angles (from the bar's direction) where the slot's walls meet the outside */
       /* with the stop bar's spring's pin's hole "0,5 H7" (05 06 04-2's C-D, dashed along the slot; drawn Ø 0.5045) from the recess out through the end, on the pin's axis
          (below: 1.5 from the line through the axis along the slot, at the spring's mid-height, S + 0.5); 25 October 2026, until then not cut */
       {const c=Math.cos(barRot),s_=Math.sin(barRot),u0=Math.sqrt(6.4*6.4-1.5*1.5);
-        bF.push(tag(mesh(gF,capFix(bore(radialSolid(cols(-sA,Math.PI+sA,[...c1.map(f=>-f),...c1.map(f=>Math.PI+f)]),rows,()=>7.5,(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),
+        bF.push(tag(mesh(gF,capFix(bore(helixSolid(cols(-sA,Math.PI+sA,[...c1.map(f=>-f),...c1.map(f=>Math.PI+f)]),LB-SLD,LB,()=>[[LB-SLD,7.5],[LB,7.5]],(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),
           [u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],[c,0,-s_],0.25225,0,20),null),M.gilt),'050604-2',1));}
       const sC=Math.asin(6/10.5);
-      bF.push(tag(mesh(gF,radialSolid(cols(Math.PI+sC,TAU-sC,[...c2.map(f=>Math.PI+f),...c2.map(f=>TAU-f)]),rows,th=>Math.max(7.5,-6/Math.sin(th-barRot)),(th,a)=>rBody(th,a)),M.gilt),'050604-2',1));
+      bF.push(tag(mesh(gF,helixSolid(cols(Math.PI+sC,TAU-sC,[...c2.map(f=>Math.PI+f),...c2.map(f=>TAU-f)]),LB-SLD,LB,th=>{const r=Math.max(7.5,-6/Math.sin(th-barRot));return[[LB-SLD,r],[LB,r]];},rBody),M.gilt),'050604-2',1));
       /* and the slot's shallow part toward the bar's upper end: from 1.1 to 1.5 deep, beyond u 8.0, between its walls */
-      const r2=[LB-SLD];for(let k=Math.ceil(SLD/0.04)-1;k>=0;k--){const a=LB-0.04*k;if(a<LB-1.1-1e-9)r2.push(a);}r2.push(LB-1.1);
       const pA=Math.atan2(-6,SB.us),pB=Math.atan2(-4,Math.sqrt(10.6*10.6-16)),c3=[];for(let f=pA;f<=pB+1e-9;f+=0.25*D2R)c3.push(f);
-      bF.push(tag(mesh(gF,radialSolid([...c3,pB].map(f=>f+barRot),r2,th=>{const f=th-barRot;return Math.max(SB.us/Math.cos(f),4/-Math.sin(f));},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
+      bF.push(tag(mesh(gF,helixSolid([...c3,pB].map(f=>f+barRot),LB-SLD,LB-1.1,th=>{const f=th-barRot,r=Math.max(SB.us/Math.cos(f),4/-Math.sin(f));return[[LB-SLD,r],[LB-1.1,r]];},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the arbor 05 06 04-1 (Schneckenwelle; Präz. Rundstahl 7,5, polished where marked): from the winding end, the square 3.17 r6 at its root tapering 1:100 (to the sheet's
        2.92 at its point), 20.3 long, the journal Ø 4.5 ±0.02 at the shoulder to 4.39 (1:70, 8 long) that runs in the fusee bush, the step Ø 6.1 -0.05 (3.1 +0.05) for the
        cover plate, the collar Ø 7.04 -0.01 (7.9) pressed into the body's bore, the Vorreiber's seat 4.5 ±0.02 to 4.38 (1:70), 8.7, the cross hole 1.1 for its pin 17.7 -0.05
