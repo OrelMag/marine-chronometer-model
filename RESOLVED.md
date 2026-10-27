@@ -3326,6 +3326,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   drew (on the site too). A typographic apostrophe now. Keep: after editing the template, open `index.html` (or check its script with
   `node --check`): a quote in a label breaks the whole page, not just its table.
 - **deploy.py refused 3.25.00: the home page carried no version** (21 October 2026): it reads `"softwareVersion"` from `site/index.html`, which became the Wempe page, whose head had no JSON-LD. Keep: every page the build writes at `/` carries the JSON-LD with `"softwareVersion":"dev"` for changelog.py to stamp. `b71dc00b`
+- **The 6MX video's damping fit read 332 s** (`20ea6f3f`; 27 October 2026): `wempe_startup.js` tabulated makeEsc's `wn` with a missed impulse (−Infinity: a weak drive at a large swing, the jewel gone before the tooth reaches it) as 0, a free run-down, and after the detent's blade the fit took the drive to 0.45 and let the stretch after the twist coast down without an impulse: TF 332 s (286-332), which the essay quoted as bearing out the model's 111 s. A fit that passes a missed impulse is now no fit: 141 s (133-158). Keep: a tool tabulating makeEsc's work never turns a non-finite value into a number; a state where the escapement can't run is excluded from a fit, not taken as zero work.
 ## Essay
 
 - **The essay contradicted the model and itself.** Its last figure, "The whole

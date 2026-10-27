@@ -224,7 +224,7 @@ const WESC=(()=>{
                   home, now catches the escaping tooth's steep back in its last micrometres before it passes (13.47°, the back's end at 13.48°), a blow that gives the balance
                   0.0024 k a beat (3.4 % of the impulse): dynamics.js's 196.3° against makeEsc's 192.7° without it, 195.1° with it (0 until then: at JW 9.98 the detent
                   reached the back's end just as it passed, and makeEsc agreed by that chance; the W78 note's 0.85 g, above, was where this began then) */
-      TH1:60,TF:111};})();   /* the balance's free run-down (s): where a running 6MX's swing on video, fitted with this escapement's work at the model's own swing, gives it back (tools/wempe_startup.js: 111 s, 108-114, at 194.3°; README Physics); 108 s at 199.4° until the lock was re-laid and the preload set to 0.8 g, 19 October 2026 */
+      TH1:60,TF:111};})();   /* the balance's free run-down (s): where a running 6MX's swing on video, fitted with this escapement's work at the model's own swing, gives it back (tools/wempe_startup.js: 111 s, 108-114, at 194.3°; README Physics); 108 s at 199.4° until the lock was re-laid and the preload set to 0.8 g, 19 October 2026; the fit has since moved to 141 s, 133-158 (the reconciled makeEsc and the detent's blade), and 111 s is kept, the owner's choice, 27 October 2026 */
   /* makeEsc's lift (the gold spring tip's travel, units of ES) as this file's detent turn (rad, rotation.y about TP): makeEsc turns the detent by -lift/LEN about its flexure,
      clockwise in its frame, anticlockwise seen from the dial (tools/wempe_escapement.js checks the stone's place both ways) */
   const toKin=(l,LEN)=>l/LEN;
