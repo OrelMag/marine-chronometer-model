@@ -13,7 +13,7 @@ const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),{WPHY
 const BREV=/^build/.test(process.env.MC_WREV||'')?process.env.MC_WREV:'',SUF=BREV?'_'+BREV:'';   /* a build's tests (MC_WREV=build40, build): its own files (wempe_tolerances.js) */
 const J=f=>JSON.parse(fs.readFileSync(path.join(__dirname,f),'utf8')),TOL=J(`tolerances_wempe${SUF}.json`),GW=J('gearing_wempe.json'),MSJ=J('wempe_mainspring.json'),MFJ=J('mainspring_friction_wempe.json').summary;
 const D=180/Math.PI,f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),r4=x=>+(+x).toFixed(4),tStart=Date.now();
-const m=E.measure(),{FN,Kl}=PHY,G=TOL.band,MS=TOL.mainspring,LK=TOL.lock,LKA=(TOL.lock.shallow+TOL.lock.deep)/2,   /* the banking's aim: the lock window's middle (since 19 October 2026: the drawn 0.235 lies 3 µm over the window's floor; the drawn depth until then) */
+const m=E.measure(),{FN,Kl}=PHY,G=TOL.band,MS=TOL.mainspring,LK=TOL.lock,LKA=TOL.lock.aim??(TOL.lock.shallow+TOL.lock.deep)/2,   /* the banking's aim: the lock window's middle (since 19 October 2026: the drawn 0.235 lies 3 µm over the window's floor; the drawn depth until then) */
   PR=TOL.detent.preload,HS=TOL.hairspring;
 /* the drive that swings a, on an escapement e */
 const sAt=(e,a,n=13)=>{let lo=0.3,hi=3;for(let i=0;i<n;i++){const md=(lo+hi)/2;e.ampAt(md)*D<a?lo=md:hi=md;}return(lo+hi)/2;};
