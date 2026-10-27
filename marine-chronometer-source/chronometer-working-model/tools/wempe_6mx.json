@@ -2,7 +2,7 @@
  "note": "tools/wempe_6mx.js: the Soviet 6MX against the drawings (as last revised): the bodies (g·mm²), the rate before timing (s a day), the swing (deg) and rate against 12 h (s a day) over the wind, each mesh's shake and hole tolerance (mm)",
  "bodies": {
   "last": {
-   "I": 2575.397,
+   "I": 2575.377,
    "JW": 9.53,
    "ID": 8.23
   },
@@ -12,7 +12,7 @@
    "ID": 8.01
   }
  },
- "rateBeforeTiming": 926.88,
+ "rateBeforeTiming": 926.54,
  "wind": [
   {
    "h": 0,
