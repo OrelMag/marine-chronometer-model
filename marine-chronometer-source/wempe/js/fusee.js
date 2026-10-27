@@ -586,11 +586,21 @@ const WFUSEE=(()=>{
     let gsR=gsR0;onRev(v=>{gsR=v==='first'||v==='3955'?gsR1:gsR0;});   /* the teeth the maintaining detent seats on, the version's */
     const CKP=[bk(270,GROT),bk(90,GROT)].map(a=>sh(9.75+0.0125,a)),SPP=[[228,210],[48,30]].map(pp=>pp.map(d=>bk(d,GROT)));
     {const ph=sh(14.2,EYEA),F_=[{p:ring(0,0,6.5075/2,96),a:GP,b:G},{p:ring(ph[0],-ph[1],0.6035,32),a:GP,b:G},...CKP.map(c=>({p:ring(c[0],-c[1],0.87,32),a:GP,b:G,th:{rs:0.85}}))];   /* the clicks' screws' M1.7 tapped (KIT's threadWall; plain until 27 October 2026) */
-      const cupH=SPP.flat().reduce((g,a)=>capFix(bore(g,[11.9*Math.cos(a),SPY,-11.9*Math.sin(a)],[Math.cos(a),0,-Math.sin(a)],0.3,0,16),null),ringT([[12.225,GC],[12.7,GC],[13.0,GC+0.3],[13.0,GT],[12.225,GT]],160));   /* the springs' pins' holes Ø 0.6 through its wall (left out until 26 October 2026, the pins in the metal) */
-      for(const[V,O]of/** @type {[string,any][]} */([['last 6mx 1943',GSO],['first',GSO1]])){const g=rv(gMW,V);
-        fuse([tag(mesh(g,solidGeo([{loop:O.map(([x,y])=>[x,-y]),y0:GT,y1:G,F:F_.map(f=>({...f,a:GT}))}]),M.gilt),'050602-1'),
-        tag(mesh(g,solidGeo([{loop:ring(0,0,12.225,160),y0:GP,y1:GT,F:F_.filter((f,i)=>i!==1).map(f=>({...f,a:GP,b:GT}))}]),M.gilt),'050602-1',1),   /* the plate's 0.28 more inside the cup */
-        tag(mesh(g,cupH.clone(),M.gilt),'050602-1',1)]);}}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
+      /* one solid of plan cells (solidGeo), each depth filled once: inside the cup the floor GP..G with the bore and the clicks' tapped holes; the cup's wall GC..G from r 12.225
+         to 12.7; its chamfer 0.3 × 45° to r 13.0 (a strip); the plate at the teeth GT..G, with the spring's pin hole; the rings and the plate each in two halves, split on the
+         radial line through a tooth's tip and the one opposite, away from the pin hole and the rivets' holes. Then the springs' rivets' Ø 0.6 holes bored through the wall (left out until 26 October
+         2026, the pins in the metal). Until 28 October 2026 three solids fused (the plate GT..G over the whole disc, the floor GP..GT and the wall GC..GT), whose faces at GT
+         and r 12.225 lay inside the part (the second drawing check, 3-M13) */
+      const pA=Math.atan2(ph[1],ph[0]),PT=TAU/120,k0=(()=>{const far=(a,d)=>Math.abs(wrap(a))>d&&Math.abs(wrap(a+Math.PI))>d;for(let k=0;k<60;k++)if(far(pA-k*PT,0.35)&&SPP.flat().every(a=>far(a-k*PT,0.15)))return k;return 0;})(),f0=-k0*PT;   /* the split: the plan angle of tooth k0's tip, 20° or more from the pin hole and 8.6° from the rivets */
+      const arc=(R,a)=>Array.from({length:81},(_,j)=>[R*Math.cos(a+Math.PI*j/80),R*Math.sin(a+Math.PI*j/80)]),ccw=L=>{let A=0;for(let q=0;q<L.length;q++){const u=L[q],w=L[(q+1)%L.length];A+=u[0]*w[1]-w[0]*u[1];}return A>0?L:L.slice().reverse();};
+      const inH=(a,p)=>wrap(Math.atan2(p[1],p[0])-a-Math.PI/2)**2<(Math.PI/2)**2;   /* a plan point in the half from angle a to a + π */
+      const cupG=O=>{const Op=O.map(([x,y])=>[x,-y]),n=Op.length,i0=k0*4,C=[];
+        for(const[h,a]of[[0,f0-Math.PI],[1,f0]]){const T=[];for(let q=0;q<=n/2;q++)T.push(Op[(i0+h*n/2+q)%n]);   /* the teeth from one split tip to the other, plan angles falling from a + π to a */
+          const PH=inH(a,[ph[0],-ph[1]])?[{p:ring(ph[0],-ph[1],0.6035,32),a:GT,b:G}]:[];
+          C.push({loop:ccw([...T,...arc(13.0,a)]),y0:GT,y1:G,F:PH},{loop:ccw([...arc(12.7,a),...arc(13.0,a).reverse()]),y0:q=>GC+(Math.hypot(q[0],q[1])-12.7),y1:G,strip:1},{loop:ccw([...arc(12.225,a),...arc(12.7,a).reverse()]),y0:GC,y1:G});}
+        C.push({loop:ccw([...arc(12.225,f0-Math.PI).slice(0,80),...arc(12.225,f0).slice(0,80)]),y0:GP,y1:G,F:F_.filter((f,q)=>q!==1)});
+        return SPP[0].reduce((g,a)=>capFix(bore(g,[13.5*Math.cos(a),SPY,-13.5*Math.sin(a)],[-Math.cos(a),0,Math.sin(a)],0.3,0,16),null),solidGeo(C));};   /* each pair's holes in one bore, from outside across the cup (its pins at 228° and 48°, 210° and 30°: on one line) */
+      for(const[V,O]of/** @type {[string,any][]} */([['last 6mx 1943',GSO],['first',GSO1]]))tag(mesh(rv(gMW,V),cupG(O),M.gilt),'050602-1');}   /* one solid, one mesh: flush faces drew lines on it in Edges until 21 October 2026 */
     /* the clicks 05 06 02-3 (Sperrkegel; Bandstahl 11 × 2, hardened, blued at 295°): 10.05 -0.1 long, 1.82 -0.04 thick, the pivot hole 1.2 H7 5.2 from the nose's foot and from
        the tail's tip, the nose 2 high, the back an arc r 8, the underside hollowed r 3 about a point 2.78 and 3.54 from the hole; traced on the sheet (10:1, 33.8 px/mm) between
        those figures. The base line 1.5 under the hole, tangent to the boss's thin Ø 3 circle: the r 3 hollow's chord there ends at the nose's foot 5.201 from the hole, the
