@@ -134,7 +134,7 @@ const WFRAME=(()=>{
       F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.325,b:y1,floorOut:fl[0]});   /* N-O's 1.35 -0.05, drawn at the middle (1.35 until 26 October 2026) */
       /* the horns' tips (the owner's choice, 26 October 2026, a version to each): sharp as 05 09 01 (1943) draws them, r 1 as the assembly 05 08 01 (2.11.46, scaled at 2:1)
          rounds them as last revised, r 0.3 on Wempe 3955 (12_Wempe_3955_obere_Platte_oben.jpg); the 6MX's sharp */
-      for(const[VV,rho]of/** @type {[string,number][]} */(DR?[['last',1.0],['first 1943 -3955',0],['3955',0.3]]:[[V,0]]))tag(mesh(rv(tp,VV),faceUV(solidGeo([{loop:hornOut(rho),y0,y1,F}])),DR?GH:G6T),'050901');}
+      for(const[VV,rho]of/** @type {[string,number][]} */(DR?[['last',1.0],['first 1943 -3955',0],['3955',0.3]]:[[V,0]])){const g=rv(tp,VV);g.userData.sub='esc';tag(mesh(g,faceUV(solidGeo([{loop:hornOut(rho),y0,y1,F}])),DR?GH:G6T),'050901');}}   /* each horn with its escapement (the Variants' Subassemblies: movement.js's TIES keep the 6MX's with its plates) */
     /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's (39's in each version's group) */
     const S=WD.PSCR,P3=(par,f)=>{for(const q of[H[11],H[49]])f(par,q);for(const[V,P39]of VER)f(rv(par,V),P39);};
     /* the 6MX's (Kirov No. 247's) are polished steel with domed heads (its A, N, O and W photographs, photocompare.py: sure), lower than the drawings' brass cheese heads: 2.4

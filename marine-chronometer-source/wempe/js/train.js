@@ -173,7 +173,7 @@ const WTRAIN=(()=>{
        for half a second each second and stays closed a second and a half at the missing tooth, at the minute. The two springs 66 in the bowl (case.js) bear on the blocks'
        outer ends. The 6MX's (Kirov No. 247's) only: the pillar plate's pieces, its wheel the seconds wheel's, its lever turned by update() */
     const C6=WD.CONTACT6,cc=Q=>KIT.area(Q)>0?Q:Q.slice().reverse(),cir=(c,r,n=32)=>cc([...Array(n).keys()].map(i=>[c[0]+r*Math.cos(i/n*TAU),c[1]+r*Math.sin(i/n*TAU)]));
-    const SG=KIT.solidGeo,g6=rv(P.pillarPlate,'6mx'),_c6=(g6.userData.contact=true),cen=Q=>[Q.reduce((a,q)=>a+q[0],0)/Q.length,Q.reduce((a,q)=>a+q[1],0)/Q.length],brg2=(t,r)=>[-r*Math.sin(t*D2R),-r*Math.cos(t*D2R)];
+    const SG=KIT.solidGeo,g6=rv(P.pillarPlate,'6mx'),_c6=(g6.userData.contact=true,g6.userData.sub='train'),cen=Q=>[Q.reduce((a,q)=>a+q[0],0)/Q.length,Q.reduce((a,q)=>a+q[1],0)/Q.length],brg2=(t,r)=>[-r*Math.sin(t*D2R),-r*Math.cos(t*D2R)];
     const yAx=new THREE.Vector3(0,1,0),hor=(m,d)=>{m.quaternion.setFromUnitVectors(yAx,new THREE.Vector3(d[0],0,d[1]).normalize());return m;};
     /* the cock's foot: its screw 2 past its middle toward its far end, clear of the leg at the arm's root, its pins 2.2 either side across it (estimated) */
     const fs=cen(C6.cockFoot),fA=C6.cockFoot[1],fB=C6.cockFoot[0],fl=Math.hypot(fB[0]-fA[0],fB[1]-fA[1]),fu=[(fB[0]-fA[0])/fl,(fB[1]-fA[1])/fl],fv=[-fu[1],fu[0]],fc=[fs[0]+2*fu[0],fs[1]+2*fu[1]],fp=[fc[0]+2.2*fv[0],fc[1]+2.2*fv[1]],fq=[fc[0]-2.2*fv[0],fc[1]-2.2*fv[1]];
@@ -283,16 +283,16 @@ const WTRAIN=(()=>{
       tag(mesh(g,ringT([[1.5/2+0.001,cu0],[W6.collet/2,cu0],[W6.collet/2,cu1],[1.5/2+0.001,cu1]]),M.gilt),'6MX.cw',1);}
     R.c6={lever:C6L,lift:c6lift};
     /* the 6MX's seconds wheel rises 30.6, not 33: its contact wheel stands 1.35 under the lower cock's deep part and lug, which rise 29.9 (exploded.py's 0.5 kept) */
-    mv.userData.onRev.push(v=>{P.secondsWheel.userData.off=v==='6mx'?-30.6:-33;P.intermediateWheel.userData.off=v==='6mx'?9:-6;});   /* and its intermediate wheel leaves toward the dial after its bridge (+18), as a watchmaker takes it out, since the contact's base overhangs the plate's window it would rise through */
+    mv.userData.onRev.push(Object.assign(v=>{P.secondsWheel.userData.off=v==='6mx'?-30.6:-33;P.intermediateWheel.userData.off=v==='6mx'?9:-6;},{sub:'train'}));   /* and its intermediate wheel leaves toward the dial after its bridge (+18), as a watchmaker takes it out, since the contact's base overhangs the plate's window it would rise through */
     tag(mesh(P.topPlate,bushGeo(rJ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
-    {const g=rv(P.topPlate,'last first 1943');tag(mesh(g,bushGeo(rJ,0.845/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.83/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}   /* each bored 0.02 over its pivot (the intermediate's 0.825, the seconds' 0.81), 05 05_1's "Lagerstellen: Enger Laufsitz", as WN-301's 1.21 on the centre's 1.19; both 0.86 until 25 October 2026 (the seconds pivot 0.05 clear) */
+    {const g=rv(P.topPlate,'last first 1943');g.userData.sub='train';tag(mesh(g,bushGeo(rJ,0.845/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.83/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}   /* each bored 0.02 over its pivot (the intermediate's 0.825, the seconds' 0.81), 05 05_1's "Lagerstellen: Enger Laufsitz", as WN-301's 1.21 on the centre's 1.19; both 0.86 until 25 October 2026 (the seconds pivot 0.05 clear) */
     /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen's list: the seconds and intermediate wheels in jewels in chatons, not brass bearings; the TU's 15
        jewels are the drawings' 12 and these three. Kirov No. 247's top plate (2_Kirow_247_A.jpg, 8.97 px/mm) shows at 35 and 38 a flush gilt setting about Ø 4.1 (±0.3), the
        pivot in its middle, no screws; its dial side (3_Kirow_247_uZ.jpg) the same at 38 in the intermediate bridge (the seconds arbor's lower jewel there as drawn). Each chaton
        is taken to fill the bush's hole (4.59 in the plate, 4.3 in the bridge: likely), the stone flush with the face the arbor's shoulder bears on, as the bush's face is, so the
        endshake stays the drawings' (likely); the stone Ø 2.2 × 0.6, its hole olive, the pivot's and 0.025, and the oil sink a cone from Ø 3.4 at the outer face to the lip
        over the stone, Ø 1.2 (estimated: the photographs show the settings' faces only) */
-    {const g=rv(P.topPlate,'6mx'),rw=1.1,hj=0.6,rl=0.6,rs=1.7,ch=ringT([[rs,TT],[rJ,TT],[rJ,TI],[rw,TI],[rw,TI-hj],[rl,TI-hj]]);   /* the chaton from the outer face (TT) to the inner (TI), the stone in its inner end */
+    {const g=rv(P.topPlate,'6mx'),_s=(g.userData.sub='train'),rw=1.1,hj=0.6,rl=0.6,rs=1.7,ch=ringT([[rs,TT],[rJ,TT],[rJ,TI],[rw,TI],[rw,TI-hj],[rl,TI-hj]]);   /* the chaton from the outer face (TT) to the inner (TI), the stone in its inner end */
       for(const[k,pv,u]of/** @type {[number,number,string][]} */([[38,0.825,'38u'],[35,0.81,'35u']])){tag(mesh(g,ch,M.gilt,H[k][0],0,H[k][1]),'6MX.ch'+u);
         tag(mesh(g,stoneGeo(rw,(pv+0.025)/2,hj,'olive'),M.ruby,H[k][0],TI-hj/2,H[k][1]),'6MX.jw'+u);}}
     /* the pillar plate's bush for the centre arbor's journal (WN-302, 05 08 02 Schnitt A-B; Messinglager in the coloured section): in hole 1 (4.59 +0.012), its inner face

@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.39.00 · 2026-10-27
+- Wempe: under Variants, each subassembly can now be shown in its own version (the escapement, fusee and maintaining work, barrel and mainspring, train, dial and motion work, plates and bridges, case and key), for example the escapement as first drawn on a movement otherwise as last revised; the Version buttons still set them all at once
+- The Soviet 6MX's escapement and dial come with its plates, which are drilled for them; a link keeps the mix
+
 ## 3.38.00 · 2026-10-27
 - Every part of the Wempe now matches its works drawing: all 113 drawing sheets were checked against the model and 55 corrections made (among them the upper cock's boss, the set-up click, the balance's timing weights and screws, the escape wheel's web, the train's shoulders and hubs, the fusee's wheel and clicks, the barrel's lid, the bezel and glass, and the holes for screws and pins)
 - Where the Wempe's drawings disagree with themselves or leave a part open, the model says so in its notes; a ledger lists every sheet and every change
