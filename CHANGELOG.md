@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.44.00 · 2026-10-27
+- The Wempe's verification report now runs the escapement of 1943 (as photographed, with the 6MX's detent and the banking screw) through the same physics: it keeps time as the last revised escapement does, its swing 193-204° over the wind
+
 ## 3.43.00 · 2026-10-27
 - The Wempe's verification report has a new section on the movement in heat and cold, over the 4-36 °C its Soviet successor's specification works it in: the gears, the arbors' end play, the escapement and the chain
 - Found: the escapement's let-off is the narrow part. At 36 °C the steel detent, held by the brass frame, draws its gold spring 2 µm back from the balance, enough to cost a third of its let-off; how deep the lock may be set is about halved (open, in the Wempe's README)
