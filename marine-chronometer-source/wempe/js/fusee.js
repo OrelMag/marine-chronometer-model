@@ -786,9 +786,9 @@ const WFUSEE=(()=>{
     const pSW=part('stopWork',-33),gSW=grp(pSW,fx,fz),gBar=new THREE.Group();gSW.add(gBar);gBar.rotation.y=barRot;pSW.userData.mTip=mTip;
     {const clip=(P,c,k)=>{const o=[],f=q=>k*(q[0]-c);for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length];if(f(a)<=0)o.push(a);if(f(a)*f(b)<0){const t=f(a)/(f(a)-f(b));o.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]);}}return o;};
       const pl=P=>P.map(([u,v])=>[u,-v]);   /* the shape's (u, v) as solidGeo's plan (x, z) */
-      tag(mesh(gBar,solidGeo([{loop:pl(clip(SBO,SB.ub,1)),y0:S,y1:S+1.45},{loop:pl(clip(SBO,SB.ub,-1)),y0:S,y1:S+SB.tt}]),M.steel),'050603-1');}   /* the bar's frame: x along it (u), the shape's y across (v); the first child, which slides */
+      tag(mesh(gBar,capFix(bore(solidGeo([{loop:pl(clip(SBO,SB.ub,1)),y0:S,y1:S+1.45},{loop:pl(clip(SBO,SB.ub,-1)),y0:S,y1:S+SB.tt}]),[SB.sp,S+0.5,3.5],[0,0,1],0.25,0,16),null),M.steel),'050603-1');}   /* the bar's frame: x along it (u), the shape's y across (v); the first child, which slides. Its pin's hole Ø 0.5 across it at u -6.0, at the pin's height (05 06_4's C-D draws it dashed across the bar in both positions; the pin pressed, line to line): left out until 28 October 2026, the pin in solid steel (the second drawing check, 3-M3) */
     /* its spring (Stegfeder 05 06 03-3; no sheet: the coloured section names it, 05 06_4's C-D draws it in both positions): a steel strip in the small end's recess against
-       its wall, from its end at the slot's near wall round the bar's upper side and the recess to a free span that comes in to the hole across the bar near its lower end,
+       its wall, from its end at the slot's near wall round the bar's upper side and the recess to a free span whose end bears on the bar's pin near its lower end (below),
        pressing the bar out toward that end. Its two drawn shapes traced on C-D (12.2 px/mm, each point at the line's darkest pixel; the dashed, wound one searched along rays
        through its gaps), scaled 0.989 as the bar, mirrored into the bar's frame: running it leaves the wall 152° round from the bar's upper end, wound (the bar slid 3.6) at 95°, looping
        in to 3.15 from the axis, 0.1 off the arbor's step. Drawn between the two as the bar slides (the drawn shapes' lengths differ by 4 %, 32.1 and 30.8: the drawing's
@@ -808,7 +808,12 @@ const WFUSEE=(()=>{
       const aD=SPA0+(SPA1-SPA0)*f,n=Math.ceil((aD-SPE)/(3*D2R));o[o.length-1]=[SPW*Math.cos(aD),SPW*Math.sin(aD)];
       for(let k=1;k<=n;k++){const a=aD+(SPE-aD)*k/n;o.push([SPW*Math.cos(a),SPW*Math.sin(a)]);}   /* along the wall to its fixed end */
       return o.map(([u,v])=>new THREE.Vector3(u,S+0.5,-v));};
-    let spT=0;const spM=tag(mesh(gBar,ribbonGeo(spPath(0),0.10,1.0),M.blued),'050603-3');
+    /* its hole for its pin 05 06 04-4 (C-D draws the pin through the spring's line where the spring lies on the wall, so the spring is held on it: a hole through the ribbon
+       seen edge on, which that view can't draw): Ø 0.51 for the pin's 0.5 (no sheet: the click springs' +0.02 on their pins' 0.6 taken, estimated), where the ribbon's
+       middle crosses the pin's axis (v -1.5, on the wall, 11.6° under the slot's line): left out until 28 October 2026, the pin through the ribbon (the second drawing check, 3-M4) */
+    const spGeo=t=>{const P=spPath(t);let s=0,h=null;for(let i=1;i<P.length&&h===null;i++){const a=P[i-1],b=P[i],l=a.distanceTo(b);if(a.x>0&&b.x>0&&(a.z-1.5)*(b.z-1.5)<=0&&a.z!==b.z)h=s+l*(1.5-a.z)/(b.z-a.z);s+=l;}
+      return ribbonHoleGeo(P,0.10,1.0,h===null?[]:[{s:h,r:0.255}]);};
+    let spT=0;const spM=tag(mesh(gBar,spGeo(0),M.blued),'050603-3');
     /* the bar's pin (Stift 05 06 03-2: the coloured section's label; 05 06_4's C-D draws it in both positions, the spring's line ending on it, at 12.2 px/mm): Ø 0.5 (6 px)
        pressed across the bar's 2 at u -6.0 in its hole (dashed inside the bar), standing 0.9 (11 px) out of its near side, toward the arbor, where the spring's end bears on it;
        at the spring's mid-height (likely, ±0.1). Built 17 October 2026: until then the spring's end went 1 into the hole */
@@ -1228,7 +1233,7 @@ const WFUSEE=(()=>{
       const T=msTurns(beta);msM.geometry.dispose();msM.geometry=msGeo(Math.max(msT+0.1,T));pMS.userData.T=T;
       /* the stop bar: as far in as the connector presses it; its spring follows */
       const tr=barTravel(pts,kf,m0,Rf);gBar.children[0].position.x=tr;pSW.userData.travel=tr;
-      if(Math.abs(tr-spT)>1e-4){spT=tr;spM.geometry.dispose();spM.geometry=ribbonGeo(spPath(tr),0.10,1.0);}
+      if(Math.abs(tr-spT)>1e-4){spT=tr;spM.geometry.dispose();spM.geometry=spGeo(tr);}
       return Rf;}
     /* the hooks' places: the top hook from the connector's first point back to the fusee's pin; the bottom hook on from its last point along the drum */
     /* phi: the angle of the hook's seat off its own line (the chain's top hook), which then lies on the pin; t: the end link's direction, whose plates the hook lies between

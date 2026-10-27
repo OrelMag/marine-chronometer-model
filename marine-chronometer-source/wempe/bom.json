@@ -2971,7 +2971,7 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "Along the slot in the body's hole 0.5 H7 (05 06 04-2), from the recess out through the end, standing into the recess through the spring.",
+   "fn": "Along the slot in the body's hole 0.5 H7 (05 06 04-2), from the recess out through the end, standing into the recess through the spring's hole, which it holds.",
    "rel": [
     [
      "in",
@@ -2991,12 +2991,12 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "Pressed across the bar near its lower end, standing 0.9 out of its near side, where the bar's spring bears (05 06_4's C-D).",
+   "fn": "Pressed across the bar near its lower end in its Ø 0.5 hole (05 06_4's C-D, dashed across the bar), standing 0.9 out of its near side, where the bar's spring's end bears.",
    "rel": [
     [
      "in",
      "050603-1",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 06_4, 05 06_2.2"
@@ -3011,7 +3011,7 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "A strip in the small end's recess, round its wall to the hole across the bar near its lower end, its end in that hole (not cut in the bar): holds the bar out toward that end (no sheet: drawn as 05 06_4's C-D draws it).",
+   "fn": "A strip in the small end's recess, held on its pin 05 06 04-4 through a hole in it where it lies on the wall, round the wall and the bar's upper side to a free span whose end bears on the bar's pin 05 06 03-2 near the bar's lower end: holds the bar out toward that end (no sheet: drawn as 05 06_4's C-D draws it).",
    "rel": [
     [
      "on",
