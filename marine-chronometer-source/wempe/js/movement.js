@@ -5,7 +5,7 @@
    Part of the Wempe model (three.js r128). Units mm; the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (dims.js: x = the sheets' W, z = their S).
    The pillar plate's inner face at y 0, its dial face at +PP_T; the top plate's inner face at -INNER, its outer face (the train side) at -INNER-TOP_T.
    Everything is built inside buildWempe, so none of its names reach the page's globals: core.js reads the Hamilton's (L, DIAL_R, SEC_L, UDA, UD_SWEEP, MSHAPE) lazily.
-   Its API on mv.userData: update(s), explode(e), develop(e) (the Laid out view), setRev(v), parts, R, S, DEV.
+   Its API on mv.userData: update(s), explode(e), develop(e) (the Laid out view), setRev(v) (a version or each subassembly's), parts, R, S, DEV.
    Declares only buildWempe and ESC. */
 /* parts-list lines (userData.hn, bom.json ids): the drawing's number without its spaces (as 05 09 01's title block writes it, 050901), since a piece's lines are a space-separated list */
 /* ESC: the escapement's motion (js/escapement.js): the tools set the model through ESC.state(phase) (the freeze strings of audit.py, exploded.py, fine.py,
@@ -39,13 +39,38 @@ function buildWempe(M){
      tools skip what isn't shown), and each builder's onRev(v) moves what they share but stands elsewhere */
   /* '3955': Wempe 3955 as photographed (References/wempe/photos/dg-chrono-dec, photocompare.py): the first-drawn sheets' pieces but where its photographs show another form,
      so 'first' stays the drawings' fallback. A group listed 'first' shows in both, '3955' in the photographed version only, 'first -3955' in the drawn one only (revShows) */
-  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});mv.userData.revs=['last','first','3955','6mx','1943'];
+  /* Each version's pieces and moves belong to one of the movement's subassemblies (SUBS; the Variants' Subassemblies, 27 October 2026, the owner's choice: each chosen on its
+     own, the parts tied by their heights kept in one, so every mix runs): a group's userData.sub, set where it is built or else its part's (PSUB), an onRev's f.sub ('*': the
+     whole mix). setRev(v) takes a version for all of them (a preset: the tools' states) or a mix {esc:'first', ...} (the others as last revised); mv.userData.rev is the
+     version all of them show, or 'mix'; mv.userData.mix each one's */
+  const SUBS=['esc','fusee','barrel','train','dial','frame','case','key'];mv.userData.subs=SUBS;
+  const PSUB=/** @type {Record<string,string>} */({});for(const[s,ks]of/** @type {[string,string][]} */([['esc','balance hairspring rollers escapeWheel detent detentBlock escJewelUp escJewelLow escEndstoneUp escEndstoneLow balanceJewelsUp balanceJewelsLow dustBush upperCock lowerCock'],
+    ['fusee','fusee maintaining maintDetent'],['barrel','barrel barrelArbor setupRatchet mainspring'],['train','centreWheel intermediateWheel secondsWheel intermediateBridge'],['dial','dial changeWheel hourWheel udWheel hands']]))for(const k of ks.split(' '))PSUB[k]=s;
+  mv.userData.subOf=(/** @type {string} */k)=>PSUB[k]||'frame';
+  const RV=[];{const key=new Map();for(const k in mv.userData.parts)key.set(mv.userData.parts[k],k);
+    mv.traverse(o=>{if(!o.userData.rev||o===mv)return;RV.push(o);if(o.userData.sub)return;let p=o,s=null;for(;p&&!s;p=p.parent)s=p.userData.sub||(key.has(p)?mv.userData.subOf(key.get(p)):null);o.userData.sub=s||'frame';});}
+  mv.userData.revs=['last','first','3955','6mx','1943'];
+  /* TIES: [a, va, b, vb], a shows va if and only if b shows vb: the 6MX's escapement and its plates (the top plate's holes for its detent block and its horn are the 6MX's own),
+     its dial and its plates (fine.py: the 6MX's dial in the drawings' ring, or theirs in its, 1.0 mm3 2.0 deep at its fixing) */
+  const TIES=[['esc','6mx','frame','6mx'],['dial','6mx','frame','6mx']];mv.userData.ties=TIES;
   const revShows=(/** @type {string} */l,/** @type {string} */v)=>{const L=l.split(' ');return L.includes(v)||(v==='3955'&&L.includes('first')&&!L.includes('-3955'));};mv.userData.revShows=revShows;
+  /* mixOf(v, ch): a preset's or a mix's versions, each subassembly's, held to TIES; shows(o): o's pieces in the mix shown (whatever the contact) */
+  const mixOf=(/** @type {any} */v,/** @type {string=} */ch=undefined)=>{const m=/** @type {Record<string,string>} */({});for(const s of SUBS){const x=typeof v==='string'?v:v&&v[s];m[s]=mv.userData.revs.includes(x)?x:'last';}
+    const fx=new Set(),Q=ch?[ch]:[];for(const s0 of SUBS){if(!fx.has(s0)&&!Q.length)Q.push(s0);while(Q.length){const p=/** @type {string} */(Q.shift());if(fx.has(p))continue;fx.add(p);   /* from ch, the one just chosen, along the ties: each settled once, so its choice holds */
+      for(const[a,va,b,vb]of TIES)for(const[x,vx,q,vq]of[[a,va,b,vb],[b,vb,a,va]])if(x===p&&!fx.has(q)){if(m[p]===vx)m[q]=vq;else if(m[q]===vq)m[q]='last';Q.push(q);}}}
+    return m;};mv.userData.mixOf=mixOf;
+  const shows=(/** @type {any} */o,/** @type {any=} */m)=>revShows(o.userData.rev,(m||mv.userData.mix)[o.userData.sub||'frame']||'last');mv.userData.shows=shows;
   /* setContact(on): the 6MX's electrical seconds contact (its groups flagged userData.contact: train.js's on the pillar plate and on the seconds arbor) shown or not in its
      version; on when built, so the tools weigh and check it; the page hides it unless asked (app.js's setCt) */
-  mv.userData.ctOn=true;const vis=(/** @type {any} */o)=>revShows(o.userData.rev,mv.userData.rev)&&(!o.userData.contact||mv.userData.ctOn);mv.userData.vis=vis;
-  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=vis(o);for(const g of mv.userData.onRev)g(s);};
+  mv.userData.ctOn=true;const vis=(/** @type {any} */o)=>shows(o)&&(!o.userData.contact||mv.userData.ctOn&&mv.userData.mix.frame==='6mx');   /* the contact's base through the 6MX's pillar plate */mv.userData.vis=vis;
+  mv.userData.setRev=(/** @type {any} */v)=>{const m=mixOf(v);mv.userData.mix=m;const u=SUBS.map(s=>m[s]);mv.userData.rev=u.every(x=>x===u[0])?u[0]:'mix';
+    for(const o of RV)o.visible=vis(o);for(const g of mv.userData.onRev)g(g.sub==='*'?m:m[g.sub||'esc']);};
   mv.userData.setContact=(/** @type {boolean} */on)=>{mv.userData.ctOn=!!on;for(const o of RV)if(o.userData.contact)o.visible=vis(o);};
+  /* subOpts(extra, cards): each subassembly's choices, the versions that show it alike (its groups here and in extra, the case's; cards(s, v) a key for the cards it takes)
+     in one: {esc: [['last'], ['first'], ...], frame: [['last','first','1943'], ['3955'], ['6mx']], ...} */
+  mv.userData.subOpts=(/** @type {any[]} */extra,/** @type {(s:string,v:string)=>string} */cards)=>{const all=[...RV,...(extra||[])],O=/** @type {Record<string,string[][]>} */({});
+    for(const s of SUBS){const G=all.filter(o=>(o.userData.sub||'frame')===s),C=/** @type {Record<string,string[]>} */({});
+      for(const v of mv.userData.revs){const k=G.map(o=>revShows(o.userData.rev,v)?1:0).join('')+'|'+(cards?cards(s,v):'');(C[k]=C[k]||[]).push(v);}O[s]=Object.values(C);}return O;};
   mv.userData.setRev('last');
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's
