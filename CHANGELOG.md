@@ -4,6 +4,15 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.48.00 · 2026-10-28
+- The Wempe checked against its works drawings a second time: the balance, hairspring, stud, escapement and going train corrected to their sheets.
+- The Wempe's escape wheel as its drawings make it, the teeth standing on a recessed rim; Wempe 3955 keeps the full rim its photographs show.
+- The Wempe's gold spring and detent spring bend where the escapement layout marks them, and the detent's pipe runs its drawn length.
+- The Wempe's balance masses are 6.35 mm and held by their screws in tapped holes; the hub, timing and mass screws are threaded.
+- The Wempe's hairspring is pinned in the stud at its drawn height, and the balance rim carries its four sets of punch marks.
+- The Wempe's train wheels' hubs are flush, the seconds post is its finished 7.2 mm, and the cannon tube is held by its dents.
+- The Wempe's swing, rate, trial and navigation figures recomputed for the corrected parts.
+
 ## 3.47.00 · 2026-10-28
 - The Wempe checked a second time against its works drawings, each sheet read afresh: the maintaining work, stop work, barrel, chain and fusee corrected to their sheets.
 - The Wempe's stop bar and stop spring pins now pass through holes cut in their parts (they sat in solid metal before).
