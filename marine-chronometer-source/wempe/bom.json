@@ -176,6 +176,11 @@
      "in",
      "050800-3",
      "press"
+    ],
+    [
+     "in",
+     "050802-1",
+     "press"
     ]
    ],
    "figs": "05 08_7"
@@ -3703,12 +3708,12 @@
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Stift (dial pin)",
+   "name": "Stellstift WN-201 (the dial pin)",
    "qty": 1,
    "parent": "050200-4",
    "kind": "part",
    "part": "dial",
-   "fn": "In the ring's pin hole at 6 deg past 12 (05 08 00-3), stepped into the dial's (no number read).",
+   "fn": "In the ring's pin hole at 6 deg past 12 (05 08 00-3), stepped into the dial's (no number read) (the coloured section labels it Stellstift WN-201, with the ring's pin: the second drawing check's 11-M7).",
    "rel": [
     [
      "in",
