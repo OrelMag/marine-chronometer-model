@@ -547,7 +547,7 @@ const WFUSEE=(()=>{
          holes (the 0.075 on the radius its taper adds at the hub's faces not drawn: bore cuts straight holes), the pin Ø 1.16 in them, 0.0023-0.0055 tight on the radius
          (a pin driven home in its reamed hole; estimated: the pin's own figure isn't in the set), 8.3 long, its ends rounded r 0.25. Until 28 October 2026 drawn Ø 0.8 as
          two ends in the hub stopping 0.025 short of the arbor's metal, the arbor's hole empty (drawing check 2, 5-M3 and 5-M16) */
-      const PL=4.15,lp=[[0,-PL]];for(let k=0;k<=4;k++){const t=k/4*Math.PI/2;lp.push([0.33+0.25*Math.sin(t),-PL+0.25*(1-Math.cos(t))]);}for(let k=4;k>=0;k--){const t=k/4*Math.PI/2;lp.push([0.33+0.25*Math.sin(t),PL-0.25*(1-Math.cos(t))]);}lp.push([0,PL]);
+      const PL=4.15,lp=[[0,-PL]];for(let k=0;k<=2;k++){const t=k/2*Math.PI/2;lp.push([0.33+0.25*Math.sin(t),-PL+0.25*(1-Math.cos(t))]);}for(let k=2;k>=0;k--){const t=k/2*Math.PI/2;lp.push([0.33+0.25*Math.sin(t),PL-0.25*(1-Math.cos(t))]);}lp.push([0,PL]);   /* the round in two steps: a crease at each end that the book's drawing (its edges over 30°) shows */
       const m=tag(mesh(gV,turned(lp,48),M.steel),'050600-5');m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(...d));m.position.set(0,VHF-1.1,0);}
 
     /* =============== the dust plate 05 06 00-1 (Staubplatte) on the winding square =============== */
