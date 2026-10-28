@@ -13,7 +13,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 0 | the permanent fit check (`seatcheck.py`, from claude/wempe-seat-audit) | — | — | 0 | 0 | 0 | 0 | 0 | 0 |
 | 1 | balance, hairspring, stud, collet, rollers, balance jewels | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2 | escape wheel, detent, detent block, escape jewels | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 3 | maintaining work, maintaining detent, stop work | 9 | 0 | 18 | 12 (4 kept) | 16 | 0 | 0 | 16 |
+| 3 | maintaining work, maintaining detent, stop work | 9 | 9 | 18 | 14 (4 kept) | 16 | 13 | 1 | 2 (book) |
 | 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 6 | going train | 10 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -50,15 +50,15 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_09.jpg` | 020605 (127-556.04-U18) Gegenfeder kompl. | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_10.jpg` | 05 06 01-1 Gegenfeder | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_11.jpg` | 05 06 02 Gegensperrrad kompl. | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 3 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 3 | done | done | done | done | done | refuted; corrections next |
+| `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-06/Wempe_05-06_09.jpg` | 020605 (127-556.04-U18) Gegenfeder kompl. | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-06/Wempe_05-06_10.jpg` | 05 06 01-1 Gegenfeder | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-06/Wempe_05-06_11.jpg` | 05 06 02 Gegensperrrad kompl. | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
+| `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
 | `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
@@ -167,22 +167,22 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 
 | # | Sheet | Part | Finding | Kind | Sure | Found by | Refuted? | Outcome |
 |---|---|---|---|---|---|---|---|---|
-| 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | open |
-| 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | open |
-| 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | open |
-| 3-M4 | 05-06_04 | stopWork (spring) | no hole for the pin 05 06 04-4: the pin runs through the ribbon; hidden by the same entry | joint | sure | comparer | confirmed (sure); the sheet implies the hole (its view can't draw one) | open |
-| 3-M5 | 05-06_11, 05-06_13 | maintaining (click springs) | the springs' radius: the two sheets disagree (0,2 gap vs 12,0 r) and the model follows neither | inconsistent | possible | b3 reader F3, comparer | amended: the sheets agree (12,0 to the outer face); the model off A-B's 0,2 (spring centre 11.825, not 12.0) | open |
-| 3-M6 | 05-06_11 | maintaining (05 06 02-4) | rivets ("Niet", coloured section), not plain pins; stand 0.4 proud outside the cup wall | wrong | likely | b3 reader F6, comparer | amended: heads about 0.2 high on both sides | open |
-| 3-M7 | 05-06_13 | maintaining (click springs) | developed length 26.65 against the sheet's 27,0 | wrong | likely | comparer | confirmed (model 26.59-26.63; the drawn centreline 26.9; S spans 8.5° vs 15°) | open |
-| 3-M8 | 05-06_10 | maintaining spring | outline a 0.02 grid contour: its square end stepped, the book's list hundreds of segments where the code builds arcs | artifact | sure | comparer | confirmed (cosmetic: ±0.009 zigzag) | open |
-| 3-M9 | 05-06_10 | build book | the maintaining spring drawn bent as running (31.30 × 30.77), not the free Ø 32.25 ring a maker needs | book | sure | comparer | not tested | open |
-| 3-M10 | 05-06_11 | build book | the maintaining assembly's sheet numbered 05 06 00-8, not 05 06 02 | book | sure | comparer | not tested | open |
-| 3-M11 | 05-06_04 | bom.json, book | still say the stop spring's end sits in a hole in the bar; it bears on the bar's pin | stale | sure | comparer | not tested | open |
-| 3-M12 | 05-06_09 | maintaining spring (first) | Ø 32.25 outside the boxed [32,3 −0,02]; the eye drawn otherwise in the overlay | version | possible | comparer | confirmed (sure) | open |
-| 3-M13 | 05-06_12 | maintaining ratchet | internal coincident faces (first pass's, not acted on) | artifact | sure | comparer | not tested | open |
-| 3-M14 | 05-05_12 | maintDetent arbor | chamfered shoulders and the 1:70 taper missing (first pass's, not acted on); the detent's Ø 2.25 hole plain where tapered | missing | sure | b3 reader, comparer | confirmed, and the pivot ends domed on 05-05_11 (model flat) | open |
-| 3-M15 | 05-06_04 | stopWork (bar) | the slide at full wind 3.36 (cap 3.6) against the figured 3,2 between the drawn positions: a 0.16 overshoot; the README's reason (the chain slides it 3.36) is circular | wrong | likely | refuter | — | open |
-| 3-M16 | 05-05_11 | maintDetent arbor | the pivot ends drawn domed; the model's flat | missing | likely | refuter | — | open |
+| 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
+| 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
+| 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
+| 3-M4 | 05-06_04 | stopWork (spring) | no hole for the pin 05 06 04-4: the pin runs through the ribbon; hidden by the same entry | joint | sure | comparer | confirmed (sure); the sheet implies the hole (its view can't draw one) | corrected `f3696341` (Ø 0.54, estimated) |
+| 3-M5 | 05-06_11, 05-06_13 | maintaining (click springs) | the springs' radius: the two sheets disagree (0,2 gap vs 12,0 r) and the model follows neither | inconsistent | possible | b3 reader F3, comparer | amended: the sheets agree (12,0 to the outer face); the model off A-B's 0,2 (spring centre 11.825, not 12.0) | corrected `3bb8994b` |
+| 3-M6 | 05-06_11 | maintaining (05 06 02-4) | rivets ("Niet", coloured section), not plain pins; stand 0.4 proud outside the cup wall | wrong | likely | b3 reader F6, comparer | amended: heads about 0.2 high on both sides | corrected `8e04c305`, `bc201ebc` |
+| 3-M7 | 05-06_13 | maintaining (click springs) | developed length 26.65 against the sheet's 27,0 | wrong | likely | comparer | confirmed (model 26.59-26.63; the drawn centreline 26.9; S spans 8.5° vs 15°) | corrected `3bb8994b` (27.000; tip 113.6°) |
+| 3-M8 | 05-06_10 | maintaining spring | outline a 0.02 grid contour: its square end stepped, the book's list hundreds of segments where the code builds arcs | artifact | sure | comparer | confirmed (cosmetic: ±0.009 zigzag) | corrected `f5c2cf77`, `56ed1ed6` |
+| 3-M9 | 05-06_10 | build book | the maintaining spring drawn bent as running (31.30 × 30.77), not the free Ø 32.25 ring a maker needs | book | sure | comparer | not tested | for the book's regeneration (`fc032c5f`) |
+| 3-M10 | 05-06_11 | build book | the maintaining assembly's sheet numbered 05 06 00-8, not 05 06 02 | book | sure | comparer | not tested | for the book's regeneration (`fc032c5f`) |
+| 3-M11 | 05-06_04 | bom.json, book | still say the stop spring's end sits in a hole in the bar; it bears on the bar's pin | stale | sure | comparer | not tested | corrected `c5e1ab3d`, `8bcbabfc` |
+| 3-M12 | 05-06_09 | maintaining spring (first) | Ø 32.25 outside the boxed [32,3 −0,02]; the eye drawn otherwise in the overlay | version | possible | comparer | confirmed (sure) | corrected `f240a726` (Ø 32.29); its eye (M12b) not yet read at full zoom |
+| 3-M13 | 05-06_12 | maintaining ratchet | internal coincident faces (first pass's, not acted on) | artifact | sure | comparer | not tested | corrected `31da1e90` |
+| 3-M14 | 05-05_12 | maintDetent arbor | chamfered shoulders and the 1:70 taper missing (first pass's, not acted on); the detent's Ø 2.25 hole plain where tapered | missing | sure | b3 reader, comparer | confirmed, and the pivot ends domed on 05-05_11 (model flat) | corrected `2401084e` |
+| 3-M15 | 05-06_04 | stopWork (bar) | the slide at full wind 3.36 (cap 3.6) against the figured 3,2 between the drawn positions: a 0.16 overshoot; the README's reason (the chain slides it 3.36) is circular | wrong | likely | refuter | — | kept: README Estimated (`fac16955`): the figures can't all hold on the figured groove |
+| 3-M16 | 05-05_11 | maintDetent arbor | the pivot ends drawn domed; the model's flat | missing | likely | refuter | — | corrected `2401084e`, `8bcbabfc` |
 | S-1 | 05-03_2 | balance (masses) | the mass screws WN-12 run through the masses' outer jaws with no hole cut (all versions); WFUSEE.bore along the radius leaves the mass's round side open (8 masses not solid), so it needs another way | joint | sure | seatcheck (c9) | — | open (batch 1); SEAT_EXPECTED OPEN entry on c9's branch, delete it with the fix |
 | S-2 | 05-04_01, 05-04_03 | detentBlock (first, 3955) | the detent's steady pins WN-205.d and its screw WN-gf stand in the block with no holes cut | joint | sure | seatcheck (c9) | — | open (batch 2); SEAT_EXPECTED OPEN entry |
 | S-3 | — (6MX photographs) | detentBlock (6MX) | the block's screw WN-gkA has no hole cut | joint | sure | seatcheck (c9) | — | open (batch 2); SEAT_EXPECTED OPEN entry |
@@ -197,6 +197,7 @@ Readings the two agents still disagree on after each has seen the other's argume
 
 | # | Sheet | Question | Reading A | Reading B | Evidence | Decision |
 |---|---|---|---|---|---|---|
+| O-1 | — (batch 3 fixes) | wempe_transmission.js fails on the fixes branch: the seconds wheel → escape pinion fatigue line takes its peak from start phase 0 alone (229.7× running vs main's 78.6×; 46.7× with main's mechanisms file), inputs under 1 % apart | judge that line over the 8 starts, as the beat is judged | accept the line as it stands | the other starts reach about 1,000×; the full-wind swing reads 204.6° vs main's 200.9° with either file (cause not found) | |
 
 ## Evidence from other sessions
 
