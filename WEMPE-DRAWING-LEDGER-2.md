@@ -11,7 +11,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | Batch | Parts | Sheets | Closed | Joints | Holding | Findings | Corrected | Kept | Open |
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | the permanent fit check (`seatcheck.py`: on main and live as 3.46.00, `28ab3a44`) | — | done | 0 | 0 | 0 | 0 | 0 | 0 |
-| 1 | balance, hairspring, stud, collet, rollers, balance jewels | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 1 | balance, hairspring, stud, collet, rollers, balance jewels | 13 | 0 | 19 | 17 | 13 | 0 | 0 | 13 |
 | 2 | escape wheel, detent, detent block, escape jewels | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 3 | maintaining work, maintaining detent, stop work | 9 | 9 | 18 | 14 (4 kept) | 16 | 13 | 1 | 2 (book) |
 | 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 14 | 16 | 16 | 19 | 12 | 6 | 3 (book) |
@@ -28,19 +28,19 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 
 | Image | Sheet | Batch | Inv | Views | Overlay | Joints | Refuted | Status |
 |---|---|---|---|---|---|---|---|---|
-| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 1 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 1 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 1 | done | done | done | done | — | compared; refutation next |
 | `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
 | `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
@@ -159,7 +159,7 @@ Every place one piece goes into, onto or through another: what goes where, what 
 
 | # | Piece | Into / onto | Hole or seat (size, place) | Held by | Source | Model | Holds | Batch |
 |---|---|---|---|---|---|---|---|---|
-| J1 | hairspring's outer end | stud 05 03 02-3 | Ø 0.7 hole, 0.72 from the end, 0.36 toward the axis | half-round brass pin beside it | 05 03_9 end view; Ldzmn4kuKMA 4:32-4:34 | fixed in 3.45.01 (`a800abb8`) | to recheck in batch 1 | 1 |
+| J1 | hairspring's outer end | stud 05 03 02-3 | Ø 0.7 hole, 0.72 from the end, 0.36 toward the axis | half-round brass pin beside it | 05 03_9 end view; Ldzmn4kuKMA 4:32-4:34 | fixed in 3.45.01 (`a800abb8`) | yes: no slot in any view or the model; the end through the Ø 0.7 hole the whole upright, 0.72 from the end, 3.46 from the staff; the half-round pin held, ends 0.45 proud; the upright 1.79 in the cock's 1.8 slot (comparer, 3.46.00) | 1 |
 
 ## Findings
 
@@ -167,6 +167,19 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 
 | # | Sheet | Part | Finding | Kind | Sure | Found by | Refuted? | Outcome |
 |---|---|---|---|---|---|---|---|---|
+| 1-M1 | 05-03_1, _2 | balance masses | Ø 6.35 as 05-03_1 boxes it (05-03_2 scales 6.32-6.33), not 6.3: about +27.7 g·mm² (+1.1 % of I), period +0.54 %: the physics chain (inertia tables incl. the 6MX's by hand, escapement, hairspring, thermal, banking, dynamics, tripping, build, transmission, navigation, essay, massprops, report) | wrong | likely | b1 reader, comparer | — | open (physics) |
+| 1-M2 | 05-03_2 | mass screws WN-12 (S-1) | in solid brass in all five versions, tips 0.03 off the rim; the mass's slot clears the rim 0.02 a side: nothing holds a mass. A radial tapped hole and a head counterbore in the mass, the tip onto the rim | joint | sure | seatcheck, comparer | — | open |
+| 1-M3 | 05-04_04 | hub screws WN-10 (S-6) | "M1" is written on 05-04_04 with its own arrows (the reader missed it); the hub's two holes and the shanks plain: the screws held only by the arm's clearance holes | joint | sure | comparer | — | open |
+| 1-M4 | 05-03_2, _4 | timing screws, WN-10, WN-12 | M0.9 × 0.16 (and the others) drawn plain in plain holes; README 577's thread convention doesn't describe the balance's screws | fastener | sure | comparer | — | open |
+| 1-M5 | 05-03_2, coloured section | WN-12a | both show it fitted in one mass; the model leaves all four holes empty: for the owner (O-4) | version | possible | comparer | — | open |
+| 1-M6 | 05-03_3-2 | balance staff | 25.62 between pivots, 0.02 over 25.6 −0.02 (the upper end 13.03 where 13.0 allows 13.02 at most) | wrong | sure | comparer | — | open |
+| 1-M7 | 05-04_04, _06, 05-03_8 | staff seats, impulse roller, collet | the s6/r6 seats and the roller's reamed 1:70 bore drawn straight with 0.0015 clearance; the collet's seat tapers 1:77, not 1:70 | joint | likely | comparer | — | open |
+| 1-M8 | — | escapement.js 157-158, 494; README 99, 103, 630, 633; cards; checks.py EXPECTED | stale: the stud's slot; the collet comment's 0.004 (2.7/90 is 0.030); cards (the staff 25.9); the hairspring entry "drawn without the hole" (no spring vertex in the collet now) | stale | sure | b1 reader, comparer | — | open |
+| 1-M9 | 05-03_8 | collet's spring hole | square to its tapered side, about 2-3.7° off square to the bar's axis | wrong | possible | b1 reader, comparer | — | open |
+| 1-M10 | 05-03_4 | README | record that "1,8 H7" and "0,4" don't attach to the countersink; the coloured section confirms conical heads: the countersink stays | stale | likely | b1 reader, comparer | — | open |
+| 1-M11 | 05-03_4, _2, _8 | rim, masses, collet | the rim's punch-mark graduation, the masses' top chamfer, the collet hole's 1:90 taper left out | missing | possible | comparer | — | open |
+| 1-M12 | 05-03 | build book (v3.41.00) | still draws the stud's slot and the old collet pin; the balance turned 20°, the spring breathing (Ø 12.41/12.51 for 12.8); no fits, tapers or threads | book | sure | comparer | — | for the book |
+| 1-M13 | — | bom.json | no relations for the stones, the spring's ends, the upright in the cock's slot; the stud pin "on" the stud, not in its hole | joint | sure | comparer | — | open |
 | 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
 | 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
 | 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
@@ -249,6 +262,8 @@ Readings the two agents still disagree on after each has seen the other's argume
 |---|---|---|---|---|---|---|
 | O-1 | — (batch 3 fixes) | wempe_transmission.js fails on the fixes branch. Investigated 28 Oct: not the branch's doing. The swing is 204.6° on main too (main's own 3.45.02 restored RSR/SMW/HS; 200.9° was before it). The seconds → escape pinion fatigue line is an impact spike that doesn't converge with the step: start 0, main / tip, at MC_TR_H 1: 46.7 / 229.7×; 0.5: 38.1 / 55.0 (both pass); 0.25: 115.5 / 115.4 (both fail). Over 8 starts both reach about 1,000×. Main's own reports failed it twice on 27 Oct. wempe_escapement, physics, sustaining and strength are identical on both commits | (a) report the line as ~~ until it converges, recorded in README Unresolved and Review-results.md | (b) replace the peak with a converging measure (impulse per re-engagement, a filtered peak, or a physical landing restitution), studied at steps 1, 0.5, 0.25 and 0.125, then judged over the 8 starts | raw runs in the scratchpad dc2/tr/ | closed by Session Alpha in 3.46.01 (`f8fa8bd0`, merge `cac95021`): the escape body's speed now dynamics.js's own (-pv), not differenced over bisected impacts; the worst of 8 starts 56.1-58.5× at MC_TR_H 1 to 0.125, judged hard: 112 MPa, margin 1.07-1.52, passes (tools/wempe_transmission_converge.js). At the fixes branch's merge: drop its own README Unresolved entry and its Review-results section of the same name |
 | O-2 | 05-07_14 | the chain's top hook: build the drawn ~50° inner edge, or keep the 30.1° the figures give? | keep 30.1°: only edge tangent to the seat R 0,4 at the bold 3,5 with the throat 1,8 and the nose 2 / 2.5 (the drawn edge goes with an older seat at 3.0) | build the drawn ~50°: breaks the 3,5 or the 2 | batch 4 corrector's construction (`c4c919d9`, README Readings corrected) | |
+| O-3 | 05-05_02, _05, _08 | which side the three wheels' hubs stand proud | the sheet's 0,2 on the pinion side, all three alike | toward the top plate, as Wempe 3955's photograph shows the seconds hub | batch 6 comparer (6-M1) | |
+| O-4 | 05-03_2, coloured section | fit WN-12a in one mass, as the coloured section and 05-03_2 show? | fit it in one mass (as drawn) | leave the four holes empty (a poising screw fitted where needed) | batch 1 comparer (1-M5) | |
 
 ## Evidence from other sessions
 
