@@ -44,8 +44,7 @@ EXPECTED={('balance:Buffer','balance:Buffer'):("the timing screws' heads (05 03 
  ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
  ('band:Buffer','fusee:Buffer'):("the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)",0.1,0.1),
  ('barrel:Buffer','chain:Extrude'):("the chain's bottom hook (05 07 04) in the drum's slot, cut for it at the fusee's assembly (0207: 'Schlitz für Kette', 45° to the radius, leaning back toward the chain's run as the barb does; fusee.js, DRUM): kept for the hook laid where the chain's last link comes to it at run down (8.78 turns), 0.06 mm³ into the wall beside the radial slot cut until 25 October 2026; in the leaning slot it meets nothing in fine.py's states",0.1,0.3),
- ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
- ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8)}
+ ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8)}   # ('band:Buffer','band:Extrude'), the band's end butting on its hooks, gone 28 October 2026: each hook's slot is cut and the band runs up it (drawing check 2, 4-M8)
 WIND_SEQ=False
 # contacts.py: the Contacts view's data (its expected overlaps, EXPECTED's, and its sweep's states, STATES), written beside index.html as the global named (--write)
 CONTACTDATA=('js/contactdata.js','WCONTACT')
