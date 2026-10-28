@@ -2721,3 +2721,18 @@ What the merges asked of the checks (all passing after them, `ci.py --full --onl
 ## The Einheits-Chronometer videos against the Wempe model (27-28 October 2026)
 
 The review of every video of a GUB, a Lange VEB and a 6MX (References/wempe/VIDEOS.md, "The video review"): no reading contradicts a sheet; what differs is recorded as that clock's, and nothing in the model was changed. Open: the hole survey of GUB No. 12255's plates is inconclusive (the frames register to 1.5-2 mm, not the ±0.05 the check needs); a camera fit with its focal length free on two poses of the pillar plate's train side (ZEc91vwppVk 7:39.8, UG44DSWMv3o 10:15) or on ZEc91vwppVk 8:27.6, checking the train's centre distances first, is the next step if wanted. Also still open from the videos: the hands' heights, the fusee's groove end N, the mainspring's length, the stud pin's length, the 6MX's adjusting slide; no swing or lift angle of a German Einheits movement could be read (no hairspring at 4:12-4:30, a moving camera, music on every soundtrack).
+
+## The transmission's fatigue line on the seconds wheel's mesh (28 October 2026)
+
+`wempe_transmission.js`'s strength line on the seconds wheel → escape pinion judged a peak that didn't converge with the step (the Wempe README's Unresolved until today; ledger item O-1). The cause was the coupling: the beat gave the escape body the speed of its place differenced over dynamics.js's steps, and dynamics.js bisects its impacts (the catch on the impulse jewel, the lock) to steps of 2-100 ns, so for one step the body's speed was −400 to −7,500 rad/s and the mesh's damping spiked. Now the body takes dynamics.js's own speed, interpolated over the step. `wempe_transmission_converge.js` (main at 3.46.00 with the fix; `MC_TR_H`, the factor on dynamics.js's steps), each mesh's peak over its running force across the 8 starts:
+
+| `MC_TR_H` | seconds wheel: worst / median / start 0 | as differenced (the old formula, same run): worst / median / start 0 | intermediate, worst | impulse work, the starts' mean (µJ) | beats, trips |
+|---|---|---|---|---|---|
+| 1 | 56.1 / 54.6 / 54.9 | 2,510 / 73.8 / 188.6 | 2.5 | 13.341 | 48 each, 0 |
+| 0.5 | 58.5 / 54.7 / 26.0 | 1,732 / 211.3 / 36.1 | 2.7 | 13.420 | 48 each, 0 |
+| 0.25 | 57.8 / 54.7 / 54.7 | 32,757 / 270.1 / 370.0 | 2.7 | 13.554 | 48 each, 0 |
+| 0.125 | 56.7 / 55.4 / 55.0 | 11,270 / 431.6 / 2,172.6 | 2.6 | 13.413 | 48 each, 0 |
+
+From a quarter of the step to an eighth the worst moves −1.9 %, the median +1.1 %. The fusee's and centre wheel's meshes stay at 1.0-1.3 times running at every step. The converged figure matches the impact's own bound: v·√(K·J) at the escape arbor, the seconds wheel at about 80 rad/s on the mesh's 2.8 N·m/rad there and its 1.25e-9 kg·m² reflected, 4.7 mN·m, 55 times the running 8.66e-5 N·m. It comes with the escape wheel locked, after its dead landing (dynamics.js's `eR` 0). The tool now judges the worst of the 8 starts, not their median, and no longer softly: 56.06 times running, 5.5 N, 112 MPa fully wound against brass's 120-170 endurance, margin 1.07-1.52 (passes). Why the worst: over 30 years every tooth meets every way the train's meshes stand, so the worst of the 384 take-ups recurs far more often than an endurance limit allows to discount.
+
+The Hamilton (`hamilton_transmission.js`, one start): no spike. The escape pinion's peak is 37.67 times running as it stood and 37.52 with the same fix, which it now takes (`hamilton_transmission_trace.js` too). Its strength lines are unchanged and pass.

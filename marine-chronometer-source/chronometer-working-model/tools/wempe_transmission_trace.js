@@ -16,11 +16,11 @@ const cols=X=>['t',...X.mc.B.map(b=>'q:'+b.n),...TR.MESH.map(q=>'mesh:'+q.nm),'c
 function run(TB,scen){
   if(scen==='beat'){   /* as wempe_transmission.js's beat(): from 10 to 11.6 s, every 20 µs within 20 ms of the escape wheel's moving, every ms else */
     const X=TR.build(TB,12/HPT,{free:true}),{mc,b,me}=X,B=mc.B;B[b.esc].q=0;TR.settle(X,0.08);
-    const P_=DY.ESC.P,T0=10.0,T1=11.6;let nl=0,phO=0,qeO=0,tO=0,last=-1,lastEv=-1;const F=[];
+    const P_=DY.ESC.P,T0=10.0,T1=11.6;let nl=0,phO=0,qeO=0,tO=0,pvO=0,last=-1,lastEv=-1;const F=[];
     DY.sim({T:T1,from:5,J:DY.JE/DY.JT,tq:()=>me[3].lam,watch:(t,th,w,d,dv,ph,pv,dm,wm)=>{if(phO<-0.5*P_&&ph>-1e-12)nl++;phO=ph;const qe=nl*P_-ph,dtt=t-tO;
-      if(dtt>0){const ns=Math.max(1,Math.ceil(dtt/1e-6)),h=dtt/ns,ve=(qe-qeO)/dtt;for(let i=0;i<ns;i++){B[b.esc].q=qeO+ve*h*(i+1);B[b.esc].v=ve;mc.step(h);
+      if(dtt>0){const ns=Math.max(1,Math.ceil(dtt/1e-6)),h=dtt/ns,ve=(qe-qeO)/dtt;for(let i=0;i<ns;i++){B[b.esc].q=qeO+ve*h*(i+1);B[b.esc].v=-(pvO+(pv-pvO)*(i+1)/ns);mc.step(h);
         const tt=tO+h*(i+1);if(wm!==0)lastEv=tt;if(tt>=T0&&tt<=T1&&tt-last>=(tt-lastEv<0.02?2e-5:1e-3)){F.push(frame(X,tt,[r(th,7),r(w,5),r(d,6),wm,dm]));last=tt;}}}
-      tO=t;qeO=qe;}});
+      tO=t;qeO=qe;pvO=pv;}});
     return{cols:[...cols(X),'balance','balanceW','detentLift','wheelMode','detentMode'],F};}
   if(scen==='snap'||scen==='eased'){   /* as windRun(): a half-turn stroke, slowed, crept on to the place, held, let go; frames from 20 ms before letting go */
     const ease=scen==='eased'?0.15:0,X=TR.build(TB,24/HPT,{key:true}),{mc,b,hd,c1,c2,dt}=X,B=mc.B;TR.settle(X,0.06);

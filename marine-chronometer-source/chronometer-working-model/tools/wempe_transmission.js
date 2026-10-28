@@ -131,8 +131,8 @@ function meshEl(mc,T,ia,ib,K,o={}){const NS=T.NS,k=T.k,pe=MU>=0.1?(MU-0.1)/0.1:0
   el.set=pen0=>{const x=tab(B[ia].q+el.offA);el.offB=x.qc-pen0-B[ib].q;};
   el.f=()=>{const x=tab(B[ia].q+el.offA),qb=B[ib].q+el.offB,pen=x.qc-qb,dv=x.d*B[ia].v-B[ib].v;let L=0;
     if(pen>0)L=Math.max(0,K*pen+c*dv);else if(-pen>x.bl)L=Math.min(0,K*(pen+x.bl)+c*dv);
-    el.lam=L;if(!el.on)return;B[ib].F+=L;B[ia].F-=L>0?L*k/x.fac:L*k;};
-  el.rec=dt=>{const L=el.lam;el.maxL=Math.max(el.maxL,L);el.minL=Math.min(el.minL,L);if(L<0)el.back++;if(L===0){el.run+=dt;el.freeMax=Math.max(el.freeMax,el.run);el.free+=dt;}else el.run=0;};
+    el.lam=L;if(B[ib].vfd!=null)el.lamO=pen>0?Math.max(0,K*pen+c*(x.d*B[ia].v-B[ib].vfd)):0;if(!el.on)return;B[ib].F+=L;B[ia].F-=L>0?L*k/x.fac:L*k;};   /* lamO: the force the beat's escape wheel gave with its speed differenced over dynamics.js's steps (until 28 October 2026), for comparison only */
+  el.rec=dt=>{const L=el.lam;el.maxL=Math.max(el.maxL,L);if(el.lamO!=null)el.maxO=Math.max(el.maxO||0,el.lamO);el.minL=Math.min(el.minL,L);if(L<0)el.back++;if(L===0){el.run+=dt;el.freeMax=Math.max(el.freeMax,el.run);el.free+=dt;}else el.run=0;};
   return mc.add(el);}
 /* a spring between two bodies (or to the frame, j < 0): torque fn(ψ), ψ = q_i - q_j + off */
 function springEl(mc,i,j,fn,kt,z,off=0){const B=mc.B,c=crit(kt,B[i].J,j<0?1e9:B[j].J,z),el={psi:0,T:0,maxPsi:-Infinity,minPsi:Infinity,maxT:0};
@@ -235,18 +235,23 @@ function beat(TB,rigid,jr,phs){const n=12/HPT,X=build(TB,n,{free:true,phs}),{mc,
   const P_=E.P,J0=DY.JE/DY.JT,T=24,from=12,cs0=cn.slip;
   const A0s=me.slice(0,4).map((e,i)=>B[b[MESH[i].A]].q+e.offA),kk=me.slice(0,4).map(e=>e.T.k);
   const qsT=qe=>{let T=X.S.Tf;for(let i=0;i<4;i++){let r=1;for(let j=i;j<4;j++)r*=kk[j];const x=me[i].tab(A0s[i]+qe/r);T=T/kk[i]*x.fac*(1-X.S.lp[i]);}return T;};
-  me.forEach(e=>{e.maxL=0;e.minL=Infinity;e.back=0;e.free=0;e.freeMax=0;e.run=0;});sp.maxPsi=-Infinity;sp.minPsi=Infinity;ch.maxT=0;ch.minT=Infinity;c1.maxL=0;c2.maxL=0;cn.maxT=0;
+  me.forEach(e=>{e.maxL=0;e.maxO=0;e.minL=Infinity;e.back=0;e.free=0;e.freeMax=0;e.run=0;});sp.maxPsi=-Infinity;sp.minPsi=Infinity;ch.maxT=0;ch.minT=Infinity;c1.maxL=0;c2.maxL=0;cn.maxT=0;
   const Eb=(th,w)=>0.5*DY.I*w*w+0.5*DY.K*th*th;
   const trk={W:[],S:[],qe:0,e0:null,l:null,nl:0,phO:0,f(t,th,w,ph){if(this.phO<-0.5*P_&&ph>-1e-12)this.nl++;this.phO=ph;this.qe=this.nl*P_-ph;
     if(w>0&&this.l!==null&&this.l<=-0.85&&th>-0.85){this.e0=Eb(th,w);if(t>from)this.S.push(qsT(this.qe));}if(w>0&&this.e0!==null&&this.l<=0.6&&th>0.6){if(t>from)this.W.push(Eb(th,w)-this.e0);this.e0=null;}this.l=th;}};
   if(rigid){const r=DY.sim({T,from,J:jr??PAR.jr,hf:4e-6*PAR.hs,hc:1e-4*PAR.hs,tq:()=>qsT(trk.qe),watch:(t,th,w,d,dv,ph)=>trk.f(t,th,w,ph)});return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S};}
-  let qeO=0,tO=0,wmO=0,sMax=-Infinity,nlO=0;const bnc=[];
+  let qeO=0,tO=0,wmO=0,sMax=-Infinity,nlO=0,pvO=0;const bnc=[];
+  /* the escape wheel's place each µs between dynamics.js's steps by its own, its speed dynamics.js's own (-pv) between the step's ends: until 28 October 2026 the speed was the
+     place's change over the step, and a step dynamics.js ends at an impact (the tooth caught on the impulse jewel, or locked: 2-100 ns after bisection) carries the impact's
+     change of speed, so the difference gave the escape body 400-7,500 rad/s backwards for one step and the mesh's damping a spike in the seconds wheel's force that grew as the
+     step shrank (99 to 955 times running at start 0 over MC_TR_H 1 to 0.125, 304 to 3,056 the worst of the starts), its impulse a false kick to the seconds wheel. vfd keeps
+     that difference for the comparison only (lamO in meshEl) */
   const watch=(t,th,w,d,dv,ph,pv,dm,wm)=>{trk.f(t,th,w,ph);const qe=trk.qe,dtt=t-tO;if(Math.round(qe/P_)!==nlO&&wm===0){nlO=Math.round(qe/P_);sMax=-Infinity;}
-    if(dtt>0){const ns=Math.max(1,Math.ceil(dtt/1e-6)),h=dtt/ns,ve=(qe-qeO)/dtt;for(let i=0;i<ns;i++){B[b.esc].q=qeO+ve*h*(i+1);B[b.esc].v=ve;mc.step(h);if(t>from)recAll(X,h);if(wm===0)sMax=Math.max(sMax,B[b.sec].q);}}
+    if(dtt>0){const ns=Math.max(1,Math.ceil(dtt/1e-6)),h=dtt/ns,ve=(qe-qeO)/dtt;for(let i=0;i<ns;i++){B[b.esc].q=qeO+ve*h*(i+1);B[b.esc].v=-(pvO+(pv-pvO)*(i+1)/ns);B[b.esc].vfd=ve;mc.step(h);if(t>from)recAll(X,h);if(wm===0)sMax=Math.max(sMax,B[b.sec].q);}}
     if(wmO===0&&wm===1&&t>from&&Number.isFinite(sMax))bnc.push(sMax-B[b.sec].q);   /* the seconds arbor's overshoot past where it rests on the stone, as the next release comes */
-    wmO=wm;tO=t;qeO=qe;};
+    wmO=wm;tO=t;qeO=qe;pvO=pv;};
   const r=DY.sim({T,from,J:J0,hf:4e-6*PAR.hs,hc:1e-4*PAR.hs,tq:()=>me[3].lam,watch});
-  return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S,T,from,meshes:me.map(e=>({maxL:e.maxL,back:e.back,free:e.free,freeMax:e.freeMax})),bnc,
+  return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S,T,from,meshes:me.map(e=>({maxL:e.maxL,maxO:e.maxO,back:e.back,free:e.free,freeMax:e.freeMax})),bnc,
     sp:[sp.minPsi,sp.maxPsi],ch:[ch.minT,ch.maxT],c1:c1.maxL,c2:c2.maxL,cn:cn.maxT,slip:cn.slip-cs0,lead:X.lead,tq:X.S.tq};}
 /* the drive over a whole run with every ripple at once (section 2): the swing stepped every second (A² towards ampAt's at the drive, TF), the rate each second; the swing's
    and the rate's tables over drives 0.3-1.7 (the meshes' ratios take it down to about 0.6 at the intermediate's dip) and swings 150-300°, linear between */
@@ -410,14 +415,16 @@ head('4. A beat: the train as bodies on its meshes driving dynamics.js\'s escape
   RUN.forEach((x,k)=>say(`    start ${k}${k?'':' (the meshes as MESH sets them)'}: as a drive ${f(x.sEq,4)}, the swing ${f(x.A0/D,2)}° → ${f(x.A1/D,2)}° (${x.dA>=0?'+':''}${f(x.dA,2)}°), the rate ${x.dR>=0?'+':''}${f(x.dR,3)} s a day; over the run ${f(x.rate0,3)} → ${f(x.rate1,3)} s a day, ${f(x.swing0,2)}° → ${f(x.swing1,2)}°`));
   chk(Math.abs(dA)<8&&Math.abs(dR)<0.5,`as a drive, the mean of ${NPH} starts: the swing ${dA>=0?'+':''}${f(dA,2)}° (${f(Math.min(...dAs),2)} to ${f(Math.max(...dAs),2)}, sd ${f(sd(dAs),2)}; the drive ${f(sEq,4)} of the reference, ${f(A0/D,2)}° → ${f(A1/D,2)}° at the mean drive), the escapement's rate ${dR>=0?'+':''}${f(dR,3)} s a day (${f(Math.min(...RUN.map(x=>x.dR)),3)} to ${f(Math.max(...RUN.map(x=>x.dR)),3)})`);
   say('');say('  each mesh through the beats (its force at the driven gear\'s pitch circle; whether it lets go):');
-  out.beat={beats:r1.beats,trips:r1.trips,W0,W1,s0,sEq,A0:A0/D,A1:A1/D,dA,dR,rate0:r0.rate,rate1:r1.rate,meshes:[],nph:NPH,dAmin:Math.min(...dAs),dAmax:Math.max(...dAs),dAsd:sd(dAs),runs:RUN.map((x,k)=>({ph:PHS[k].slice(0,4),dA:x.dA,dR:x.dR,sEq:x.sEq,W0:x.W0,W1:x.W1,beats:x.beats,trips:x.trips,pk:RS[k][0].meshes.slice(0,4).map((e,i)=>e.maxL/RS[k][0].tq[MESH[i].B])}))};   /* dA, dR, W0, W1, s0, sEq: the starts' means (one start's until 27 October 2026); the meshes: start 0's */const Ts=r1.T-r1.from;
+  out.beat={beats:r1.beats,trips:r1.trips,W0,W1,s0,sEq,A0:A0/D,A1:A1/D,dA,dR,rate0:r0.rate,rate1:r1.rate,meshes:[],nph:NPH,dAmin:Math.min(...dAs),dAmax:Math.max(...dAs),dAsd:sd(dAs),runs:RUN.map((x,k)=>({ph:PHS[k].slice(0,4),dA:x.dA,dR:x.dR,sEq:x.sEq,W0:x.W0,W1:x.W1,beats:x.beats,trips:x.trips,pk:RS[k][0].meshes.slice(0,4).map((e,i)=>e.maxL/RS[k][0].tq[MESH[i].B]),pkO:RS[k][0].meshes.slice(0,4).map((e,i)=>e.maxO/RS[k][0].tq[MESH[i].B])}))};   /* dA, dR, W0, W1, s0, sEq: the starts' means (one start's until 27 October 2026); the meshes: start 0's */const Ts=r1.T-r1.from;
   r1.meshes.forEach((e,i)=>{const q=MESH[i],r=q.m*q.zB/2e3,st=i<4?r1.tq[q.B]:NaN,fr=e.free/Ts,ln=e.freeMax;out.beat.meshes.push({nm:q.nm,Fmax:e.maxL/r,Fst:st/r,fac:e.maxL/st,free:fr,freeMax:ln,back:e.back*1e-6});
     const lets=i<4?(fr>0?`lets go ${f(100*fr,2)} % of the time, at most ${f(ln*1000,2)} ms at once`:'never lets go'):i<6?`rests in its backlash between steps (only friction loads the motion work; static friction holds it there) and is taken up each step`:`free in its backlash: the fusee hardly turns in a beat`;
     say(`    ${q.nm.padEnd(38)} ${f(e.maxL/r,e.maxL/r<1?4:2)} N at most${i<4?` (${f(e.maxL/st,2)} times its running ${f(st/r,st/r<1?4:2)} N)`:''}; ${lets}${e.back?`; on its back flank ${f(e.back*1e-3,2)} ms in all`:'; never on its back flank'}`);});
-  say(`    (the escape wheel lands on its stone dead, as dynamics.js lands it, so the seconds wheel's way into the escape pinion's mesh is the most it can be)`);
-  say(`    the meshes' peaks over running from each start (${MESH.slice(0,4).map(q=>q.nm.split(' → ')[0]).join(', ')}): ${out.beat.runs.map((x,k)=>`${k}: ${x.pk.map(v=>f(v,1)).join('/')}`).join('; ')}`);   /* the peak judged below is the starts' median */
-  say('');MESH.slice(0,4).forEach((q,i)=>{const P=out.beat.runs.map(x=>x.pk[i]).sort((a,b)=>a-b),pm=(P[(P.length-1)>>1]+P[P.length>>1])/2,Fd=pm*STR.mesh[i].F;   /* the peak's factor over running, the median of the starts' (the owner's choice, 28 October 2026: start 0's alone until then, a tooth's landing on a tip that jumps with a micron's change, 47 to 99 times when the collet's pin added 0.002 % to the balance, another start's 1090), on wempe_strength.js's fully wound force */
-    out.beat.meshes[i].str=judge(STR.mesh[i],Fd,`  ${q.nm}, its peak fully wound (the ${NPH} starts' median, ${f(pm,2)} times running (${f(P[0],1)} to ${f(P[P.length-1],1)}), on wempe_strength.js's ${STR.mesh[i].F} N)${i===3?`; reported, not judged: its peak doesn't converge with the step`:''}`,i===3);});   /* the seconds wheel's into the escape pinion soft (~~; the owner's choice, 28 October 2026): the seconds wheel's blow re-engaging after its backlash, 46.7, 38.1 and 115.5 times running at start 0 with MC_TR_H 1, 0.5 and 0.25, about 1,000 at some start in each; the Wempe README's Unresolved, a converging measure its own task */
+  say(`    (the escape wheel lands on its stone dead, as dynamics.js lands it, so the seconds wheel's way into the escape pinion's mesh is the most it can be: its take-up after the landing is the seconds wheel's blow on the stopped pinion, at most its speed times the root of the mesh's stiffness and its inertia, about 55 times running)`);
+  say(`    the meshes' peaks over running from each start (${MESH.slice(0,4).map(q=>q.nm.split(' → ')[0]).join(', ')}): ${out.beat.runs.map((x,k)=>`${k}: ${x.pk.map(v=>f(v,1)).join('/')}`).join('; ')}`);   /* the peak judged below is the starts' worst */
+  say(`    the seconds wheel's peak with the escape wheel's speed differenced over dynamics.js's steps, as until 28 October 2026 (an artefact that grew as the step shrank): ${out.beat.runs.map((x,k)=>`${k}: ${f(x.pkO[3],1)}`).join('; ')}`);
+  say('');MESH.slice(0,4).forEach((q,i)=>{const P=out.beat.runs.map(x=>x.pk[i]).sort((a,b)=>a-b),pm=(P[(P.length-1)>>1]+P[P.length>>1])/2,pw=P[P.length-1],Fd=pw*STR.mesh[i].F;   /* the peak's factor over running, the worst of the starts' (28 October 2026: start 0's alone until then, then for a day the starts' median, while the seconds wheel's peak was the differenced speed's spike: README, Physics: the transmission), on wempe_strength.js's fully wound force. The worst, not the mean: over 30 years every tooth meets every way the train's meshes stand, so the worst take-up of the 8 starts' 384 recurs on each tooth far more often than an endurance limit's 10^6-10^7 cycles allow to discount */
+    out.beat.meshes[i].pkW=pw;out.beat.meshes[i].pkMed=pm;out.beat.meshes[i].pkLo=P[0];
+    out.beat.meshes[i].str=judge(STR.mesh[i],Fd,`  ${q.nm}, its peak fully wound (the worst of ${NPH} starts, ${f(pw,2)} times running (${f(P[0],1)} to ${f(pw,1)}, the median ${f(pm,1)}), on wempe_strength.js's ${STR.mesh[i].F} N)`);});
   const bm=r1.bnc.length?Math.max(...r1.bnc):0,stepTh=TAU/120;
   say(`  the seconds hand steps ${f(stepTh/D,1)}° a beat and overshoots where it comes to rest by ${f(bm/D*3600,1)}″ at most (${f(100*bm/stepTh,3)} % of a step): the escape pinion's mesh and the seconds wheel's teeth give, and it rings down before the next release`);
   say(`  the cannon pinion's fit carries at most ${f(r1.cn*1000,3)} mN·m (the motion work's friction and its inertia's share of each step) against its ${f(PAR.tsl*1000,1)} mN·m (section 7)`);
