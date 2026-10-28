@@ -60,10 +60,10 @@ Columns: the line's id, its drawing, its units per chronometer, the pieces in th
 | 6MX.ch38l |  | Chaton (6MX), intermediate arbor's lower jewel | 1 | 0 | intermediateBridge | Holds the intermediate arbor's lower jewel in the intermediate bridge, where the drawings press the bush WN-300. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated. |  | ✓ |
 | 6MX.jw38l |  | Hole jewel (6MX), intermediate arbor, lower | 1 | 0 | intermediateBridge | The intermediate arbor's lower pivot runs in it; its face takes the arbor's shoulder. No sheet: the Soviet 6MX's (Altmeppen; Kirov No. 247's photographs), its sizes estimated. |  | ✓ |
 | WN-hs |  | Bush in hole 18, the hand-setting pinion's (not named on 05 08 02) | 1 | 1 | pillarPlate | The bearing of the hand-setting work's pinion (Zeigerstelltrieb), pressed into the pillar plate's hole 18; on Wempe 3955 the only part of that work fitted, empty. | in 050802-1 (press): 3.352 mm, least gap 0.0019 | ✓ |
-| WN-12 |  | Schraube (WN-12), the mass screw | 4 | 4 | balance | Holds a mass on the rim: radially through its outer jaw, its tip on the rim's outer face (the 6MX's book, Fig. 5.62). | in 050301-4 (embed): 2.71 mm, least gap -0.7973 | ✓ |
-| WN-12a |  | Schraube (WN-12a), for the tapped hole in a mass's top (not fitted) | 0-4 | 0 | balance | In the M1.2 hole, countersunk, in the middle of a mass's top: the coloured section draws one on one mass; Wempe's lever 2965 and the earlier 2493 show such holes empty; the Einheits examples photographed (Wempe 3955, the Langes) have plain tops (a poising screw fitted where needed, likely). |  | ✓ |
-| WN-10 |  | Schraube (WN-10), the hub's screws | 0-2 | 2 | balance | From under the hub's flange into the arm. Only on the 1946 hub: the 1941 collar has no holes for them. | in 050402-2 (tap): 1.75 mm, least gap 0.0404<br>in 050301-1 (clear): 1.118 mm, least gap 0.0056 | ✓ |
-| WN-11 |  | Schraube (WN-11), the stud's screw | 1 | 1 | stud | Holds the stud to the cock. | in 050302-3 (clear): 1.637 mm, least gap 0.0662<br>in 050803-1 (tap): 2.381 mm, least gap 0.0104 | ✓ |
+| WN-12 |  | Schraube (WN-12), the mass screw | 4 | 4 | balance | Holds a mass on the rim: M0.8 (estimated) radially through its outer jaw's tapped hole, its head in a counterbore in the mass's round side, its tip on the rim's outer face (05 03_2; the 6MX's book, Fig. 5.62). | in 050301-4 (tap): 2.263 mm, least gap 0.0108 | ✓ |
+| WN-12a |  | Schraube (WN-12a), for the tapped hole in a mass's top (not fitted) | 0-4 | 0 | balance | For the tapped hole M1.2 in the middle of a mass's top, its top flat (not fitted: holes in all four, empty, the owner's choice, 28 October 2026): the coloured section draws one, a cheese head on one mass; Wempe's lever 2965 and the earlier 2493 show such holes empty; the Einheits examples photographed (Wempe 3955, the Langes) have plain tops (a poising screw fitted where needed). |  | ✓ |
+| WN-10 |  | Schraube (WN-10), the hub's screws | 0-2 | 2 | balance | From the arm's top, their countersunk heads flush in it, through the arm's Ø 1 into the hub's flange, tapped M1 (05 04 02, the coloured section). Only on the 1946 hub: the 1941 collar has no holes for them. | in 050402-2 (tap): 1.652 mm, least gap 0.011<br>in 050301-1 (clear): 1.118 mm, least gap 0.0057 | ✓ |
+| WN-11 |  | Schraube (WN-11), the stud's screw | 1 | 1 | stud | Holds the stud to the cock. | in 050302-3 (clear): 1.476 mm, least gap 0.0728<br>in 050803-1 (tap): 2.411 mm, least gap 0.0151 | ✓ |
 | WN-14 |  | Schraube (WN-14), the gold spring's screw | 1 | 1 | detent | Holds the gold spring to the detent's square. | in 050401-1 (tap): 0.388 mm, least gap 0.0038 | ✓ (deviation) |
 | WN-gf | WN-13 | Detent foot screw, M1 (WN-13 by the coloured section's label, likely) | 1 | 1 | detent | Clamps the detent's foot to the block's end. | in 050401-1 (clear): 0.593 mm, least gap 0.05<br>in 050401-4 (embed): 2.322 mm, least gap -0.1301 | ✓ |
 | WN-205.d | WN-205 | Stellstift (WN-205 by the coloured section's label), the detent's foot pins | 2 | 2 | detent | Place the detent's foot on the block. | in 050401-1 (press): 0.586 mm, least gap -0.0164<br>in 050401-4 (press): 1.61 mm, least gap 0.0042 | ✓ (deviation) |
@@ -179,16 +179,16 @@ Columns: the line's id, its drawing, its units per chronometer, the pieces in th
 |---|---|---|---|---|---|---|---|---|
 | 050503-2 | 05 05 03-2 | Minutentrieb (centre pinion and arbor) | 1 | 1 | centreWheel | Driven by the fusee wheel; turns once an hour; runs in the top plate's bush WN-301 and, by its journal, in the pillar plate's WN-302, and carries the cannon tube (05 05 03-3) on its shank. | in WN-301 (run): 2.255 mm, least gap 0.0102<br>in WN-302 (run): 3.006 mm, least gap 0.012<br>endshake 0.084 mm (WN-302 / WN-301) | ✓ (deviation) |
 | 050503-1 | 05 05 03-1 | Minutenrad (centre wheel) | 1 | 1 | centreWheel | Riveted on the pinion's seat; drives the intermediate pinion. | round 050503-2 (press): 0.501 mm, least gap 0.0002<br>meshes 050502-2: centres 18.1201 (m(z1+z2)/2 18.1197), 90/12 teeth, faces overlap 1.25, ratio -7.5 | ✓ |
-| 050502-2 | 05 05 02-2 | Zwischentrieb (intermediate pinion and arbor) | 1 | 1 | intermediateWheel | Driven by the centre wheel; runs in the top plate's bush WN-300 and the intermediate bridge's. In the Soviet 6MX (the page's Variants) it runs in jewels in chatons at both ends. | in WN-300.t38/6MX.jw38u (run): 2.154 mm, least gap 0.0107<br>in WN-300.zb/6MX.jw38l (run): 2.154 mm, least gap 0.0182<br>endshake 0.074 mm (WN-300.zb / WN-300.t38) | ✓ (deviation) |
+| 050502-2 | 05 05 02-2 | Zwischentrieb (intermediate pinion and arbor) | 1 | 1 | intermediateWheel | Driven by the centre wheel; runs in the top plate's bush WN-300 and the intermediate bridge's. In the Soviet 6MX (the page's Variants) it runs in jewels in chatons at both ends. | in WN-300.t38/6MX.jw38u (run): 2.154 mm, least gap 0.0107<br>in WN-300.zb/6MX.jw38l (run): 2.154 mm, least gap 0.0107<br>endshake 0.074 mm (WN-300.zb / WN-300.t38) | ✓ (deviation) |
 | 050502-1 | 05 05 02-1 | Zwischenrad (intermediate wheel) | 1 | 1 | intermediateWheel | Riveted on the pinion's seat; drives the seconds pinion. | round 050502-2 (press): 1.077 mm, least gap 0.0009<br>meshes 050501-2: centres 12.63 (m(z1+z2)/2 12.6298), 80/10 teeth, faces overlap 0.95, ratio -8 | ✓ |
-| 050501-2 | 05 05 01-2 | Sekundentrieb (seconds pinion and arbor) | 1 | 1 | secondsWheel | Driven by the intermediate wheel; turns once a minute; runs in the top plate's bush WN-300 and the jewel 05 05 04-1 in the intermediate bridge; its lower pivot goes on as the seconds hand's post. In the Soviet 6MX its upper pivot runs in a jewel in a chaton. | in WN-300.t35/6MX.jw35u (run): 2.252 mm, least gap 0.0108<br>in 050504-1 (run): 0.676 mm, least gap 0.0163<br>endshake 0.065 mm (050504-1 / WN-300.t35) | ✓ (deviation) |
-| 050501-1 | 05 05 01-1 | Sekundenrad (seconds wheel) | 1 | 1 | secondsWheel | Riveted on the pinion's seat; drives the escape pinion (05 04 05-2). | round 050501-2 (press): 0.901 mm, least gap 0.0002<br>meshes 050405-2: centres 11.8499 (m(z1+z2)/2 11.8496), 80/10 teeth, faces overlap 1, ratio -8 | ✓ |
+| 050501-2 | 05 05 01-2 | Sekundentrieb (seconds pinion and arbor) | 1 | 1 | secondsWheel | Driven by the intermediate wheel; turns once a minute; runs in the top plate's bush WN-300 and the jewel 05 05 04-1 in the intermediate bridge; its lower pivot goes on as the seconds hand's post. In the Soviet 6MX its upper pivot runs in a jewel in a chaton. | in WN-300.t35/6MX.jw35u (run): 2.127 mm, least gap 0.0104<br>in 050504-1 (run): 0.638 mm, least gap 0.0154<br>endshake 0.065 mm (050504-1 / WN-300.t35) | ✓ (deviation) |
+| 050501-1 | 05 05 01-1 | Sekundenrad (seconds wheel) | 1 | 1 | secondsWheel | Riveted on the pinion's seat; drives the escape pinion (05 04 05-2). | round 050501-2 (press): 1.063 mm, least gap 0.0002<br>meshes 050405-2: centres 11.8499 (m(z1+z2)/2 11.8496), 80/10 teeth, faces overlap 1, ratio -8 | ✓ |
 | 050504-2 | 05 05 04-2 | Fassung (the seconds jewel's setting) | 1 | 1 | intermediateBridge | Holds the seconds arbor's lower jewel in the intermediate bridge (its sheet isn't in the set; the coloured section names it). | in 050804-1 (press): 3.596 mm, least gap 0.0034 | ✓ |
 | 050504-1 | 05 05 04-1 | Lagerstein f. Sek. (the seconds arbor's lower jewel) | 1 | 1 | intermediateBridge | The seconds arbor's lower pivot runs in it; its face takes the arbor's endshake (its sheet isn't in the set; the coloured section names it). |  | ✓ |
 | 050505-1 | 05 05 05-1 | Gegensperrkegel (maintaining detent) | 1 | 1 | maintDetent | Rides on the maintaining ratchet's teeth; holds it while the chronometer is wound. | round 050505-2 (press): 2.031 mm, least gap 0.0048 | ✓ |
 | 050505-2 | 05 05 05-2 | Gegensperrwelle (its arbor) | 1 | 1 | maintDetent | Runs in the plates' holes 4 (drilled 0.9). | in 050802-1 (run): 2.968 mm, least gap 0.009<br>in 050901 (run): 2.499 mm, least gap 0.0111<br>endshake 0.050 mm (050802-1 / 050901) | ✓ |
 | 050506-1 | 05 05 06-1 | Feder (the maintaining detent's wire spring) | 1 | 1 | maintDetent | A straight steel wire hanging from its stud past the detent's back: bent out by the detent, it presses the detent onto the maintaining ratchet's teeth (no sheet in the set; the coloured section names it, 05 06_4 marks its "Drahtfedermitte"). | on wireStud: 0 mm<br>on 050505-1: 0.0014 mm | ✓ |
-| 050503-3 | 05 05 03-3 | Minutenrohr (cannon tube) | 1 | 1 | cannon | Pressed on the centre arbor's 1:80 shank, held by centre-punch marks in its groove: its foot is the cannon pinion (14 leaves, m 0.36), which drives the change wheel; its square carries the minute hand (no sheet of its own: 05 05 03 gives it). | round 050503-2 (press): 13.026 mm, least gap 0.0098 | ✓ |
+| 050503-3 | 05 05 03-3 | Minutenrohr (cannon tube) | 1 | 1 | cannon | Pressed on the centre arbor's 1:80 shank, held by three punched dents in its groove pressed into the shank's groove under it (05 05 03's "Körner": the dents estimated): its foot is the cannon pinion (14 leaves, m 0.36), which drives the change wheel; its square carries the minute hand (no sheet of its own: 05 05 03 gives it). | round 050503-2 (press): 13.026 mm, least gap 0.0098 | ✓ |
 
 ## Group 05 02
 
@@ -207,32 +207,32 @@ Columns: the line's id, its drawing, its units per chronometer, the pieces in th
 | 050200-1 | 05 02 00-1 | Minutenzeiger (minute hand) | 1 | 1 | hands | On the cannon tube's square (no relation here: as the Hamilton's hands, so the centre arbor's endshake isn't sampled through it). |  | ✓ |
 | 050200-2 | 05 02 00-2 | Stundenzeiger (hour hand) | 1 | 1 | hands | On the hour wheel's pipe's tapered seat. | round 050203-2 (press): 2.698 mm, least gap 0.0111 | ✓ |
 | 050200-3 | 05 02 00-3 | Auf u. Abzeiger (up-and-down hand) | 1 | 1 | hands | On the up-and-down wheel's pipe's seat, down on its shoulder. | round 050204-2 (press): 1.397 mm, least gap 0.0089<br>on 050204-2: 0 mm | ✓ |
-| 050201-1 | 05 02 01-1 | Sekundenzeiger (seconds hand) | 1 | 1 | hands | On its collet. | round 050201-2 (press): 0.594 mm, least gap 0.0016 | ✓ |
-| 050201-2 | 05 02 01-2 | Zeigerfutter (seconds hand collet) | 1 | 1 | hands | Pressed on the seconds arbor's post through the dial; the hand riveted on its end (no sheet in the set; numbered by the coloured section's label). | round 050501-2 (press): 4.504 mm, least gap 0.0036 | ✓ |
+| 050201-1 | 05 02 01-1 | Sekundenzeiger (seconds hand) | 1 | 1 | hands | On its collet. | round 050201-2 (press): 0.587 mm, least gap 0.0016 | ✓ |
+| 050201-2 | 05 02 01-2 | Zeigerfutter (seconds hand collet) | 1 | 1 | hands | Pressed on the seconds arbor's post through the dial; the hand riveted on its end (no sheet in the set; numbered by the coloured section's label). | round 050501-2 (press): 4.467 mm, least gap 0.0035 | ✓ |
 | 050200-4 | 05 02 00-4 | Zifferblatt (dial) | 1 | 1 | dial | In the movement ring's recess, placed by its pin, held by three screws. | on 050800-3: 0 mm | ✓ |
 
 ## Group 05 03
 
 | Id | Drawing | Name | Units | Model | Card | Function | Fit and drive (measured) | |
 |---|---|---|---|---|---|---|---|---|
-| 050301-1 | 05 03 01-1 | Unruhreifen (balance rim with arm, nickel steel and brass) | 1 | 1 | balance | The cut bimetallic rim and its arm, on the hub of the staff. | round 050402-1 (press): 1.114 mm, least gap 0.0077<br>on 050402-2: 0 mm | ✓ (deviation) |
+| 050301-1 | 05 03 01-1 | Unruhreifen (balance rim with arm, nickel steel and brass) | 1 | 1 | balance | The cut bimetallic rim and its arm, on the hub of the staff. | round 050402-1 (press): 1.112 mm, least gap 0.0077<br>on 050402-2: 0 mm | ✓ (deviation) |
 | 050301-4 | 05 03 01-4 | Masse (compensation mass) | 4 | 4 | balance | Round brass masses across the rim, which the rim carries in as it warms. | on 050301-1: 0.0199 mm | ✓ |
-| 050301-2 | 05 03 01-2 | Zeitschraube (timing screw) | 2 | 2 | balance | Across the rim at the arm's end in its tapped hole Ø 0.9 × 0.16, carrying the timing weight. | in 050301-1 (tap): 0.939 mm, least gap 0.0201 | ✓ |
-| 050301-3 | 05 03 01-3 | Zeitmasse (timing weight) | 2 | 2 | balance | On the timing screw: turned in or out, sets the rate. | round 050301-2 (tap): 3.31 mm, least gap 0.0063 | ✓ |
+| 050301-2 | 05 03 01-2 | Zeitschraube (timing screw) | 2 | 2 | balance | Across the rim at the arm's end in its tapped hole Ø 0.9 × 0.16, carrying the timing weight. | in 050301-1 (tap): 0.889 mm, least gap 0.0183 | ✓ |
+| 050301-3 | 05 03 01-3 | Zeitmasse (timing weight) | 2 | 2 | balance | On the timing screw: turned in or out, sets the rate. | round 050301-2 (tap): 3.31 mm, least gap 0.0146 | ✓ |
 | 050302-1 | 05 03 02-1 | Spiralfeder (helical hairspring) | 1 | 1 | hairspring | The balance spring: 13 turns between its two terminal curves. |  | ✓ |
-| 050302-2 | 05 03 02-2 | Spiralrolle (hairspring collet) | 1 | 1 | hairspring | On the staff's 1:70 seat; the spring's inner end pinned in the hole across its end. | round 050402-1 (press): 3.182 mm, least gap 0.0041 | ✓ |
-| 050302-4.c | 05 03 02-4 | Spiralstift (hairspring pin, at the collet) | 1 | 1 | hairspring | Wedges the spring's inner end in the collet's hole (Ø 0.8, Kegel 1:90): half round, brass, its flat on the strip, as the stud's pin holds the outer end (its form estimated from the stud's). | in 050302-2 (press): 0.091 mm, least gap 0.0023 | ✓ |
+| 050302-2 | 05 03 02-2 | Spiralrolle (hairspring collet) | 1 | 1 | hairspring | On the staff's 1:70 seat; the spring's inner end pinned in the hole across its end. | round 050402-1 (press): 3.337 mm, least gap 0.0026 | ✓ |
+| 050302-4.c | 05 03 02-4 | Spiralstift (hairspring pin, at the collet) | 1 | 1 | hairspring | Wedges the spring's inner end in the collet's hole (Ø 0.8, Kegel 1:90): half round, brass, its flat on the strip, as the stud's pin holds the outer end (its form estimated from the stud's). | in 050302-2 (press): 2.755 mm, least gap 0.0039 | ✓ |
 | 050302-3 | 05 03 02-3 | Klötzchen (hairspring stud) | 1 | 1 | stud | On the cock, its upright through the cock's slot, holding the spring's outer end. | on 050803-1: 0 mm | ✓ |
-| 050302-4.s | 05 03 02-4 | Stift (hairspring pin, at the stud) | 1 | 1 | stud | Wedges the spring's outer end in the stud's hole (Ø 0.7, drilled at assembly), as the collet's pin holds the inner end. | on 050302-3: 0.001 mm | ✓ |
+| 050302-4.s | 05 03 02-4 | Stift (hairspring pin, at the stud) | 1 | 1 | stud | Wedges the spring's outer end in the stud's hole (Ø 0.7, drilled at assembly, 3.15 under the bar), as the collet's pin holds the inner end. | in 050302-3 (press): 1.75 mm, least gap 0.0011 | ✓ |
 
 ## Group 05 04
 
 | Id | Drawing | Name | Units | Model | Card | Function | Fit and drive (measured) | |
 |---|---|---|---|---|---|---|---|---|
 | 050402-1 | 05 04 02-1 | Unruhwelle (balance staff) | 1 | 1 | balance | The balance staff, its pivots in the jewels of the two cocks. As last revised 05 04 02 (29.5.46); as first drawn (the page's Variants) 05 04_5's staff of 4.4.41, which carries this number in pencil. | in 050407-1.bu (run): 0.318 mm, least gap 0.0165<br>in 050407-1.bl (run): 0.318 mm, least gap 0.0165<br>endshake 0.040 mm (050408-1.bl / 050408-1.bu) | ✓ |
-| 050402-2 | 05 04 02-2 | Unruhbutzen (balance hub, brass) | 1 | 1 | balance | Pressed on the staff, its flange carries the arm. As first drawn (the page's Variants) 05 04_5's brass collar (040401-2), the arm riveted on its neck, with no screws. | round 050402-1 (press): 4.137 mm, least gap -0.0088 | ✓ |
+| 050402-2 | 05 04 02-2 | Unruhbutzen (balance hub, brass) | 1 | 1 | balance | Pressed on the staff, its flange carries the arm. As first drawn (the page's Variants) 05 04_5's brass collar (040401-2), the arm riveted on its neck, with no screws. | round 050402-1 (press): 3.973 mm, least gap 0.0022 | ✓ |
 | 050403-2 | 05 04 03-2 | Hebestein (impulse stone, sapphire) | 1 | 1 | rollers | Receives the escape wheel's impulse. |  | ✓ |
-| 050404-1 | 05 04 04-1 | Auslöserolle (discharge roller) | 1 | 1 | rollers | Carries the discharge stone. | round 050402-1 (press): 1.591 mm, least gap 0.0028 | ✓ |
+| 050404-1 | 05 04 04-1 | Auslöserolle (discharge roller) | 1 | 1 | rollers | Carries the discharge stone. | round 050402-1 (press): 1.589 mm, least gap -0.0039 | ✓ |
 | 050404-2 | 05 04 04-2 | Auslösestein (discharge stone) | 1 | 1 | rollers | Lifts the detent through the gold spring on one swing; passes it on the other. |  | ✓ |
 | 050405-1 | 05 04 05-1 | Gangrad (escape wheel, 15 teeth) | 1 | 1 | escapeWheel | Locked on the detent's stone between impulses, it gives the balance its impulse. | round 050405-3 (press): 0.693 mm, least gap 0.0065 | ✓ |
 | 050405-2 | 05 04 05-2 | Gangtrieb (escape pinion, z 10, m 0.263, and arbor) | 1 | 1 | escapeWheel | The arbor and pinion; driven by the seconds wheel. As first drawn (the page's Variants) 05 04_7.1's arbor of 4.4.41 (050408 bis 10, renumbered 05 04 05 on 05 04_7.2), the wheel 1.4 nearer the top plate. | in 050406-1.eu (run): 0.283 mm, least gap 0.015<br>in 050406-1.el (run): 0.141 mm, least gap 0.0121<br>endshake 0.060 mm (050408-1.el / 050408-1.eu) | ✓ |
@@ -241,9 +241,9 @@ Columns: the line's id, its drawing, its units per chronometer, the pieces in th
 | 050401-3 | 05 04 01-3 | Ruhestein (locking stone) | 1 | 1 | detent | Locks each tooth of the escape wheel. |  | ✓ |
 | 050401-2 | 05 04 01-2 | Goldfeder (gold passing spring) | 1 | 1 | detent | Screwed to the detent, resting on its horn: the discharge stone lifts the detent through it on one swing and bends it aside on the other. | on 050401-1: 0 mm | ✓ |
 | 050401-4 | 05 04 01-4 | Gangfederkloben (detent block) | 1 | 1 | detentBlock | Under the top plate, carries the detent. As first drawn (05 04_1, Wempe 3955), a base with a long arm and its banking screw in place of the upright. | on 050901: 0 mm | ✓ |
-| 050408-2.bu | 05 04 08-2 | Fassung (endstone setting), balance, upper | 1 | 1 | balanceJewelsUp | Holds the upper endstone in the cock. | in 050803-1 (press): 1.507 mm, least gap 0.0064 | ✓ |
+| 050408-2.bu | 05 04 08-2 | Fassung (endstone setting), balance, upper | 1 | 1 | balanceJewelsUp | Holds the upper endstone in the cock. | in 050803-1 (press): 1.533 mm, least gap 0.0064 | ✓ |
 | 050408-1.bu | 05 04 08-1 | Deckstein (endstone), balance, upper | 1 | 1 | balanceJewelsUp | Stops the staff's upper pivot end. |  | ✓ |
-| 050406-2.bu | 05 04 06-2 | Fassung (jewel setting), balance, upper | 1 | 1 | balanceJewelsUp | Holds the upper hole jewel in the cock, its flange in the sink below. | in 050803-1 (press): 1.2 mm, least gap 0.0064 | ✓ |
+| 050406-2.bu | 05 04 06-2 | Fassung (jewel setting), balance, upper | 1 | 1 | balanceJewelsUp | Holds the upper hole jewel in the cock, its flange in the sink below. | in 050803-1 (press): 1.17 mm, least gap 0.0064 | ✓ |
 | 050407-1.bu | 05 04 07-1 | Lagerstein (hole jewel), balance, upper | 1 | 1 | balanceJewelsUp | The staff's upper pivot runs in it. |  | ✓ |
 | 050406-2.bl | 05 04 06-2 | Fassung (jewel setting), balance, lower | 1 | 1 | balanceJewelsLow | Holds the lower hole jewel in the lug of the lower cock. | in 050800-2 (press): 1.53 mm, least gap 0.0064 | ✓ |
 | 050407-1.bl | 05 04 07-1 | Lagerstein (hole jewel), balance, lower | 1 | 1 | balanceJewelsLow | The staff's lower pivot runs in it. |  | ✓ |
@@ -262,7 +262,7 @@ Columns: the line's id, its drawing, its units per chronometer, the pieces in th
 
 | Id | Drawing | Name | Units | Model | Card | Function | Fit and drive (measured) | |
 |---|---|---|---|---|---|---|---|---|
-| 050403-1 | 02 04 02 | Heberolle (impulse roller, beryllium copper; 05 04 03-1 in the coloured section) | 1 | 1 | rollers | Carries the impulse stone, which the escape wheel pushes. | round 050402-1 (press): 1.432 mm, least gap 0.0041 | ✓ |
+| 050403-1 | 02 04 02 | Heberolle (impulse roller, beryllium copper; 05 04 03-1 in the coloured section) | 1 | 1 | rollers | Carries the impulse stone, which the escape wheel pushes. | round 050402-1 (press): 1.43 mm, least gap -0.0165 | ✓ |
 
 ## Group 05 06
 
@@ -340,8 +340,8 @@ Columns: the line's id, its drawing, its units per chronometer, the pieces in th
 | Jewel | Kind | Arbor, end | Set in | Least gap |
 |---|---|---|---|---|
 | Lagerstein f. Sek. (the seconds arbor's lower jewel) | hole | 050501-2 lower | 050504-2 (1.1 mm) | 0.006 |
-| Hebestein (impulse stone, sapphire) | pallet |   | 050403-1 (1.6 mm), 050402-2 (0.05 mm) | 0.0031 |
-| Auslösestein (discharge stone) | pallet |   | 050404-1 (1.56 mm), 050402-1 (0.14 mm) | 0.0031 |
+| Hebestein (impulse stone, sapphire) | pallet |   | 050403-1 (1.61 mm), 050402-1 (0.05 mm) | 0.0031 |
+| Auslösestein (discharge stone) | pallet |   | 050404-1 (1.55 mm), 050402-1 (0.15 mm) | 0.0031 |
 | Ruhestein (locking stone) | pallet |   | 050401-1 (1.9 mm), 050405-1 (1.41 mm) | 0.002 |
 | Deckstein (endstone), balance, upper | end | 050402-1 upper | 050408-2.bu (0.9 mm) | 0.0078 |
 | Lagerstein (hole jewel), balance, upper | hole | 050402-1 upper | 050406-2.bu (0.8 mm) | 0.0078 |

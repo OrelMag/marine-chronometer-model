@@ -84,8 +84,11 @@ const WFUSEE=(()=>{
   const MN=(LB-0.3-WLD/2-A0)/PAX;   /* 8.817: 0.067 turn past the full wind's 8.75, as 02-2's view C-D draws N past the groove's end at 8.75 */
   /* the chain's pin (A on the sheet's view C-D) at PHI0-0.17, just behind the groove's start, 1 under the ribs' tops (the view's "1"), in the middle of the cutter's arc (the view
      centres the arc on A): section A-B, through the pin, draws both ribs whole to their tops with the pin's hole across them and the slot between them about 2.8 deep (scaled),
-     so the cutter is a slitting cutter in the slot, deepening it where the hook wraps the pin, not a flat across the ribs */
-  const PHI0=0,PINA=PHI0-0.17,PINR=16.8,FLAT=PINA,RC=17.8-2.9+6.75;
+     so the cutter is a slitting cutter in the slot, deepening it where the hook wraps the pin, not a flat across the ribs. Plunged 0.2 deeper than the sheet's 2,9 ±0,1 from
+     the rim (05 06 04-2): its floor r 14.7 at the pin, so the band's round hook (05 07 03-2, 1943), whose crown wraps the pin to r 14.73 (r 2.08 about its seat, 05 07_12),
+     clears it (the owner's choice, 28 October 2026: drawing check 2's O-5, N-2; the band's hook and the 1948 body don't agree there and no sheet says which gives way; until
+     then 2.9, the hook 0.550 mm³ into the floor); the chain's top hook (05 07 04) fits it as before */
+  const PHI0=0,PINA=PHI0-0.17,PINR=16.8,FLAT=PINA,RC=17.8-2.9-0.2+6.75;
   const rCut=th=>{const d=wrap(th-FLAT),q=RC*Math.sin(d);if(Math.abs(q)>=6.75||Math.cos(d)<0)return 99;return RC*Math.cos(d)-Math.sqrt(6.75*6.75-q*q);};
   const T5=Math.tan(5*D2R);   /* the face's fall outside Ø 33 (05 06 04's "33∅ +0,1" and "5°") */
   function rBody(th,a){   /* a from the blank's face (F0); the re-turned face at RT */
@@ -240,19 +243,20 @@ const WFUSEE=(()=>{
      the hole's end along d must lie clear of it (a hole through, or a blind one opening outward). Its outline a regular n-gon whose flats lie r from the axis (a pin r
      across fits it), or poly ([u, w] across d, u along h projected square to d, w along u × d): a slot. So a turned part is holed across or along, closed: until 25
      October 2026 such holes weren't cut ("a turned body can't be holed across", README). Returns the cut geometry, not yet closed (capFix) */
-  function bore(g,o,d,r,from,n=24,poly=null,h=[0,1,0]){const D=new THREE.Vector3(...d).normalize();let X=new THREE.Vector3(...h);X.addScaledVector(D,-X.dot(D));
+  /* tp (0 by default): the hole narrowing along d, its radius falling tp a mm (a taper's half-angle's tangent: 1/180 for a 1:90 reamer), r its radius at o */
+  function bore(g,o,d,r,from,n=24,poly=null,h=[0,1,0],tp=0){const D=new THREE.Vector3(...d).normalize();let X=new THREE.Vector3(...h);X.addScaledVector(D,-X.dot(D));
     if(X.lengthSq()<1e-9){X=new THREE.Vector3(1,0,0);X.addScaledVector(D,-X.dot(D));}X.normalize();const Z=new THREE.Vector3().crossVectors(X,D);
     const B=new THREE.Matrix4().makeBasis(X,D,Z).setPosition(o[0],o[1],o[2]);g.applyMatrix4(B.clone().invert());   /* B: the hole's frame (x along h, y along d) to g's */
     const R=r/Math.cos(Math.PI/n),pl=poly||[...Array(n).keys()].map(i=>[R*Math.cos((i+0.5)/n*TAU),R*Math.sin((i+0.5)/n*TAU)]),P=g.attributes.position;
-    const out=holeCut(g,pl,from);out.applyMatrix4(B);out.userData={...g.userData};return out;}   /* the part's userData kept (its tapped holes' threads, for matchThreads: lost until 26 October 2026, so a bored part's screws stood crest on crest) */
+    const out=holeCut(g,pl,from,tp);out.applyMatrix4(B);out.userData={...g.userData};return out;}   /* the part's userData kept (its tapped holes' threads, for matchThreads: lost until 26 October 2026, so a bored part's screws stood crest on crest) */
   /* holeCut(g, poly, yb): what core.js facePocket(g, 'top', poly, y1 - yb) cuts (the prism over the convex plan poly, from y = yb up), but only the triangles that come
      within the prism's box are split by its planes. facePocket splits every triangle each of its infinite planes crosses, and every plane of a hole across a turned part
      runs through it from side to side near its axis, so the pieces multiply there (a drum's 16,000 corners became 560,000, and the page took 25 s to build). The sections that
      close the hole's walls and floor are still each plane's whole loop through the solid: a far triangle's crossing worked out as its split would be, its edge left whole
      (capFix's tjFix splits it where a near piece's corner lies on it) */
-  function holeCut(g0,poly,yb){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,Nm=g.attributes.normal,U=g.attributes.uv,n=P.count,e=1e-7;
+  function holeCut(g0,poly,yb,tp=0){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,Nm=g.attributes.normal,U=g.attributes.uv,n=P.count,e=1e-7;
     const cx=poly.reduce((a,p)=>a+p[0],0)/poly.length,cz=poly.reduce((a,p)=>a+p[1],0)/poly.length,PL=[{n:[0,-1,0],c:-yb}];   /* inside the pocket where n·p < c */
-    poly.forEach((a,k)=>{const b=poly[(k+1)%poly.length];let m=[a[1]-b[1],0,b[0]-a[0]];if(m[0]*(cx-a[0])+m[2]*(cz-a[1])>0)m=m.map(v=>-v);const l=Math.hypot(m[0],m[2]);m=m.map(v=>v/l);PL.push({n:m,c:m[0]*a[0]+m[2]*a[1]});});
+    poly.forEach((a,k)=>{const b=poly[(k+1)%poly.length];let m=[a[1]-b[1],0,b[0]-a[0]];if(m[0]*(cx-a[0])+m[2]*(cz-a[1])>0)m=m.map(v=>-v);const l=Math.hypot(m[0],m[2]);m=m.map(v=>v/l);const kt=Math.hypot(1,tp);PL.push({n:[m[0]/kt,tp/kt,m[2]/kt],c:(m[0]*a[0]+m[2]*a[1])/kt});});   /* tp: each side leaning in tp a mm along the hole (a taper) */
     const dist=(pl,v)=>{const d=pl.n[0]*v[0]+pl.n[1]*v[1]+pl.n[2]*v[2]-pl.c;return Math.abs(d)<e?0:d;};
     const cut=(a,b,da,db)=>{if(a[0]>b[0]||a[0]===b[0]&&(a[1]>b[1]||a[1]===b[1]&&a[2]>b[2])){[a,b]=[b,a];[da,db]=[db,da];}const t=da/(da-db);return a.map((x,i)=>x+(b[i]-x)*t);};   /* facePocket's: an edge's point the same from both its triangles */
     const xs=poly.map(p=>p[0]),zs=poly.map(p=>p[1]),bx=[Math.min(...xs)-1e-4,Math.max(...xs)+1e-4,yb-1e-4,Math.min(...zs)-1e-4,Math.max(...zs)+1e-4];
