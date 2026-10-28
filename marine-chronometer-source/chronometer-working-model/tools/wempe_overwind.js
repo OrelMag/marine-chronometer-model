@@ -2,7 +2,8 @@
 // Wound forward against the stop at full wind, the key's torque (less the chain's, which pulls the other way) goes from the paddle through the key's body, its coil spring
 // gripping the tube, the tube's square socket and the fusee arbor's square into the fusee, its stop bar and the stop pin (wempe_strength.js sizes them for a strong hand: here
 // the key torque at which each reaches the weak end of its yield). Turned the wrong way, the 1943 key (51 00 11, "Linksaufzug b. Rechtsdrehung entspannt sich die Feder": the
-// coil spring a one-way clutch) passes only its spring's drag; the 1940 key (127-556.02 U 01, as first drawn) is a plain key, which puts the hand's torque on the chain's and
+// coil spring a one-way clutch) passes only its spring's drag, and so does the 1940 key (127-556.02 U 01, as first drawn: its click spring 4 drawn round the pipe, the pipe free
+// in the body, the second drawing check's 10-M5; read as a plain key until 28 October 2026). A key that grips both ways (its spring jammed or missing) puts the hand's torque on the chain's and
 // sends it through the click wheel and its clicks, the maintaining ratchet, the maintaining spring (banked: solid), the fusee wheel and the train, held by the escapement.
 // The 6MX's user instruction warns of the same for its hands: set backward, "can break the escape wheel's teeth" (6MX-figures.md: the motion work's, wempe_motionwork.js).
 //   node wempe_overwind.js [--json OUT] [--fault]   (about 5 s; exits 1 if a strong hand's torque wound forward against the stop leaves a part under 1.5 times short of
@@ -15,7 +16,7 @@ const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),{WPHY
 const f=(x,n=0)=>(+x).toFixed(n),MPa=1e6,rows=[],out={hand:{},forward:[],backward:[],notes:[]};let fail=0;const say=s=>rows.push('  '+s),INOZ=0.00706155,D=180/Math.PI;
 const FAULT=process.argv.includes('--fault'),BRASS_Y=[300,450],STEEL_Y=[1200,1800],STEEL_UTS=[1400,2000],STEEL_SH=STEEL_UTS.map(x=>0.6*x),BRASS_SH=BRASS_Y.map(x=>0.58*x),STEEL_Y_SOFT=[350,550];
 /* one line: the stress sig at the load, the range [lo, hi] MPa; Ty the key torque at which it reaches the weak end */
-const line=(list,name,load,sig,rg,what,Ty)=>{const mL=rg[0]*MPa/sig,mH=rg[1]*MPa/sig,v=mL>=1.5?'ok ':mH>=1||list===out.backward?'~~ ':'!! ';   /* the wrong way is the superseded 1940 key's: reported */
+const line=(list,name,load,sig,rg,what,Ty)=>{const mL=rg[0]*MPa/sig,mH=rg[1]*MPa/sig,v=mL>=1.5?'ok ':mH>=1||list===out.backward?'~~ ':'!! ';   /* the wrong way through a key that grips both ways: reported */
   rows.push(`  ${v} ${name.padEnd(60)} ${load.padEnd(14)} ${(f(sig/MPa)+' MPa').padStart(9)}   ${what} ${rg[0]}-${rg[1]}: margin ${f(mL,1)}-${f(mH,1)}${Ty!=null?`; yields at ${f(Ty,2)} N·m on the key`:''}`);
   list.push({name,load,sig:sig/MPa,lo:rg[0],hi:rg[1],what,Ty,v:v.trim()});return v;};
 
@@ -56,12 +57,17 @@ const MW=[1700,1875];
   let lo=0.3,hi=0.9;for(let i=0;i<40;i++){const m=(lo+hi)/2,Tm2=MW[0]*Math.PI*m*m/4*(5.95+m)/2/1000;Tm2<1.5*TH?lo=m:hi=m;}const dN=(lo+hi)/2;out.coil={d,dNeed:dN,fits:dN<=0.85};
   rows.push(`${dN<=0.85?'  ok ':'  !! '}   the wire it needs to carry ${f(1.5*TH,2)} N·m: Ø ${f(dN,2)}, ${dN<=0.85?"which fits the drawn coil (pitch 0.95) and the body's Ø 0.9 hole: the maker's sheet names it":"more than the drawn coil and the body's Ø 0.9 hole take"}`);if(dN>0.85)fail=1;
   say(`    the wire's end turned down into the body's hole: bent through a right angle there, it is the place the coil would give first; a maker forms it on a radius, not sharp`);}
+/* the 1940 key's click spring (05-01_6: five turns of wire about 0.7, 0.6-0.8 drawn, round the pipe's head, scaled; its head Ø 6.78 estimated): the same clutch, its driven end
+   carrying the hand's torque at the coil's radius; reported, a design value (the key superseded) */
+{const d=0.7,rc=(6.78+d)/2,F=TH*1000/rc,s=F/(Math.PI*d*d/4)*MPa;
+  line(out.forward,`the 1940 key's click spring, its driven end in tension (wire Ø ${d}, scaled)`,`${f(F,0)} N`,s,MW,'spring wire, EN 10270-1 DH (no sheet: estimated)',MW[0]*Math.PI*d*d/4*rc/1000);
+  out.forward[out.forward.length-1].design=true;out.coil40={d,Ty:MW[0]*Math.PI*d*d/4*rc/1000};}
 
 /* ---------- the wrong way ---------- */
 const drag=5e-3;   /* the 1943 key's coil spring slipping back: its drag, 5 mN·m (estimated: the Wempe README's transmission, the hand) */
-say('');say(`Turned the wrong way: the 1943 key's coil spring unwraps and slips ("Linksaufzug b. Rechtsdrehung entspannt sich die Feder"), passing only its drag, about ${f(drag*1000)} mN·m (estimated), ${f(100*drag/Tm,1)} % of the chain's ${f(Tm,3)} N·m: nothing in the train notices`);
+say('');say(`Turned the wrong way: the 1943 key's coil spring unwraps and slips, as the 1940 key's click spring (127-556.02-04, five turns of about 0.7 round the pipe's head: 05-01_6) does ("Linksaufzug b. Rechtsdrehung entspannt sich die Feder"), passing only its drag, about ${f(drag*1000)} mN·m (estimated), ${f(100*drag/Tm,1)} % of the chain's ${f(Tm,3)} N·m: nothing in the train notices`);
 const okDrag=drag<0.05*Tm;
-say(`The 1940 key (127-556.02 U 01, as first drawn) is plain: the hand's torque adds to the chain's, through the click wheel's two clicks, the maintaining ratchet, the maintaining spring (closed onto its bank: solid), the fusee wheel and the train to the escape wheel, held on the locking stone`);
+say(`A key that grips both ways (its one-way spring jammed or missing): the hand's torque adds to the chain's, through the click wheel's two clicks, the maintaining ratchet, the maintaining spring (closed onto its bank: solid), the fusee wheel and the train to the escape wheel, held on the locking stone`);
 const back=T=>T+T0;
 /* the click wheel 05 06 04-3 (brass 2, 35 teeth, Ø 16.0/14.5) under one click (05 06 02-3, 1.30 met): a tooth in bending at the click's radius, wempe_strength.js's line; brass's yield */
 {const Fc=T=>back(T)/7.6e-3,pc=Math.PI*14.5/35,sg=T=>6*Fc(T)*0.75e-3/(1.30e-3*(pc*1e-3)**2),Ty=BRASS_Y[0]*MPa*1.30e-3*(pc*1e-3)**2/(6*0.75e-3)*7.6e-3-T0;
@@ -75,10 +81,10 @@ const back=T=>T+T0;
   out.notes.push({esc:{k,A,trip,kT,Tk:kT*T0-T0}});}
 const nm=x=>x.name.split(' (')[0].replace(/^the /,''),weak=L=>L.filter(x=>x.Ty!=null&&!x.design).sort((a,b)=>a.Ty-b.Ty)[0],wf=weak(out.forward),wb=weak(out.backward);
 say('');say(`forward, the first to yield (the coil's wire, a design value, apart): the ${nm(wf)}, at ${f(wf.Ty,2)} N·m on the key (${f(wf.Ty/TH,1)} times a strong hand's ${f(TH,2)})`);
-say(`the wrong way with the 1940 key, the first to yield: the ${nm(wb)}, at ${f(wb.Ty,2)} N·m on the key (${f(wb.Ty/mean,1)} times an average hand's ${f(mean,2)})`);
+say(`the wrong way through a key that grips both ways, the first to yield: the ${nm(wb)}, at ${f(wb.Ty,2)} N·m on the key (${f(wb.Ty/mean,1)} times an average hand's ${f(mean,2)})`);
 out.weakF={name:wf.name,Ty:wf.Ty};out.weakB={name:wb.name,Ty:wb.Ty};
 const okF=wf.Ty>1.5*TH;rows.push(`${okF?'  ok ':'  !! '} wound forward against the stop, a strong hand (${f(TH,2)} N·m) leaves every part ${f(wf.Ty/TH,1)} times short of yielding${okF?'':`: the ${nm(wf)} is the weak point`}`);if(!okF)fail=1;
 rows.push(`${okDrag?'  ok ':'  !! '} the wrong way, the 1943 key passes ${f(drag*1000)} mN·m: its one-way spring keeps the train from the hand${okDrag?'':' (it drags too hard)'}`);if(!okDrag)fail=1;
-rows.push(`  ${wb.Ty>TH?'ok ':'~~ '} the wrong way with the plain 1940 key: ${wb.Ty>TH?'nothing yields under a strong hand':`${f(wb.Ty,2)} N·m bends the ${nm(wb)}, an average hand's twist and less: the 1943 key's one-way spring makes it impossible`}`);
+rows.push(`  ${wb.Ty>TH?'ok ':'~~ '} the wrong way through a key that grips both ways: ${wb.Ty>TH?'nothing yields under a strong hand':`${f(wb.Ty,2)} N·m bends the ${nm(wb)}, an average hand's twist and less: both keys' one-way springs make it impossible`}`);
 out.okF=okF;out.okDrag=okDrag;out.TH=TH;out.Tm=Tm;out.T0=T0;out.rows=rows;module.exports=out;
 if(require.main===module){console.log(rows.join('\n'));const jo=process.argv.indexOf('--json');if(jo>0)fs.writeFileSync(process.argv[jo+1],JSON.stringify(out));process.exitCode=fail;}

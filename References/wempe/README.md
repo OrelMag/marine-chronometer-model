@@ -59,12 +59,12 @@ What the sources say differs between the drawings' chronometer and its copies (q
 - **Glashütte against Hamburg** (Knirim/Schmiedchen, watch-wiki): the bowl and gimbal ring in Bakelite, with a heavy bottom weight from No. 5100; the balance lowered to 3.8 mm from No. 5111; the counter-spring (Gegenfeder) redesigned at Lange from No. 5201. They also give these against Lange's earlier Kal. 100: three pillars instead of four, the barrel cap underneath, the fusee 12.2 mm high, the motion work 7 mm, the movement ring 104 mm.
 - **Unsettled:** whether the fusee drew a chain or a steel band from the start. The drawings have both a Kette (05 07 04, 16.07.41) and a Schneckenband (05 07 03, 01.03.43). Greenwich's wartime Wempe has a band, and Wempe 3955's `14_Wempe_3955_Band_Kette.jpg` shows both. Found 16 October 2026, both in Glashütte's run: Lange 5499 (about 1943) has a chain, its lot text calling it "still with chain and fusee instead of the simple steel band", and Lange 5373 (about 1944) a band; Wempe 3053 shows a chain on fusee and barrel (likely original). So both were fitted in the war, the band the later and simpler (likely). Also unsettled: whether the barrel's cap is above or below (Knirim: below; an uhrforum post: above, framed by the barrel).
 
-The sheets as the page lists them (its own numbering, title, drawing number and date; 05 08_1 and _3 each have two sheets, a and b, and the page's link for 05 04_22, Ankerrad, opens the 05 04_21 sheet):
+The sheets as the page lists them (its own numbering, title, drawing number and date; 05 08_1 and _3 each have two sheets, a and b, and the page's link for 05 04_22, Ankerrad, opens the 05 04_21 sheet). Where a sheet's own title block reads otherwise its reading is given (28 October 2026, the second drawing check's 11-M4: 001 and 002 dated 19.3.41, the year's digit smudged, where the index has 10.03.41; 05 04_21 12.6.41, not 16.09.42; 05 08_30 22.9.41, not 22.04.41; 05 08_31 25.9.41, not 25.07.41; 05 33 numbered 127-556.05 / 33 00, not "12 05_33"; 05 36_2 127-556.06-06, not 127-566.06; 05 38 the sheet 3800, not "05 30_00"; 05 08_33's own date not settled, the index's kept):
 
 | File | Page no. | Title (Benennung) | Drawing no. as listed | Date |
 |---|---|---|---|---|
-| [001-002/Wempe_001.jpg](drawings/001-002/Wempe_001.jpg) | 001 | Federchronometer (Aufsicht Oberplatte und Unterplatte mit „Aufbauten“) | Ohne Nummer | 10.03.41 |
-| [001-002/Wempe_002.jpg](drawings/001-002/Wempe_002.jpg) | 002 | Ankerchronometer (Aufsicht Oberplatte und Unterplatte mit „Aufbauten“) | Ohne Nummer | 10.03.41 |
+| [001-002/Wempe_001.jpg](drawings/001-002/Wempe_001.jpg) | 001 | Federchronometer (Aufsicht Oberplatte und Unterplatte mit „Aufbauten“) | Ohne Nummer | 19.03.41 |
+| [001-002/Wempe_002.jpg](drawings/001-002/Wempe_002.jpg) | 002 | Ankerchronometer (Aufsicht Oberplatte und Unterplatte mit „Aufbauten“) | Ohne Nummer | 19.03.41 |
 | [51-00/Wempe_51-00_1.jpg](drawings/51-00/Wempe_51-00_1.jpg) | 51 00_1 | Boden-Chronometer | 127-556. A-104/52/33/36 | 04.03.42 |
 | [51-00/Wempe_51-00_2.jpg](drawings/51-00/Wempe_51-00_2.jpg) | 51 00_2 | Griff f. Chronometerkasten | 51 00 10 | 14.07.42 |
 | [51-00/Wempe_51-00_3.jpg](drawings/51-00/Wempe_51-00_3.jpg) | 51 00_3 | Firmenschild | 00 01 01-905 01 02_2 | 22.03.43 |
@@ -114,7 +114,7 @@ The sheets as the page lists them (its own numbering, title, drawing number and 
 | [05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg](drawings/05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg) | 05 04_10.1 | Gangfeder / Ruth Grießbach | 1436 | 17.02.43 |
 | [05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg](drawings/05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg) | 05 04_10.2 | Gangfeder / Ruth Grießbach | 1436 | 17.02.43 |
 | [05-04/Wempe_05-04_20.jpg](drawings/05-04/Wempe_05-04_20.jpg) | 05 04_20 | Hemmung für Anker-Chronometer | So 127-556.04 | 03.02.41 |
-| [05-04/Wempe_05-04_21.jpg](drawings/05-04/Wempe_05-04_21.jpg) | 05 04_21 | Anker kompl. | 127-556.04 U 1004 04 04 / 06 | 16.09.42 |
+| [05-04/Wempe_05-04_21.jpg](drawings/05-04/Wempe_05-04_21.jpg) | 05 04_21 | Anker kompl. | 127-556.04 U 1004 04 04 / 06 | 12.06.41 |
 | [05-04/Wempe_05-04_21.jpg](drawings/05-04/Wempe_05-04_21.jpg) | 05 04_22 | Ankerrad | 127-556.04-04004 04 08 | 13.05.41 |
 | [05-04/Wempe_05-04_23.jpg](drawings/05-04/Wempe_05-04_23.jpg) | 05 04_23 | Gangrad Zahnform | 02 04 08 | 20.01.42 |
 | [05-05/Wempe_05-05_01.jpg](drawings/05-05/Wempe_05-05_01.jpg) | 05 05_1 | Laufwerk | So 127-556.0404 05 | 26.09.41 |
@@ -176,12 +176,12 @@ The sheets as the page lists them (its own numbering, title, drawing number and 
 | [05-08/Wempe_05-08_12.jpg](drawings/05-08/Wempe_05-08_12.jpg) | 05 08_12 | Federhausbrücke kompl. | 05 08 05 | 21.07 41 |
 | [05-08/Wempe_05-08_13.jpg](drawings/05-08/Wempe_05-08_13.jpg) | 05 08_13 | Federhausbrücke | 05 08 05-1 | 19.04 41 |
 | [05-08/Wempe_05-08_14.jpg](drawings/05-08/Wempe_05-08_14.jpg) | 05 08_14 | Sperrkegel | 05 08 05-2 | 29.09.41 |
-| [05-08/Wempe_05-08_30.jpg](drawings/05-08/Wempe_05-08_30.jpg) | 05 08_30 | Oberplatte | 127-556.04-13704 09 01/05 09 01 05 08 01 | 22.04.41 |
-| [05-08/Wempe_05-08_31.jpg](drawings/05-08/Wempe_05-08_31.jpg) | 05 08_31 | Oberplatte kompl. | 127-556.04 U 35 | 25.07.41 |
+| [05-08/Wempe_05-08_30.jpg](drawings/05-08/Wempe_05-08_30.jpg) | 05 08_30 | Oberplatte | 127-556.04-13704 09 01/05 09 01 05 08 01 | 22.09.41 |
+| [05-08/Wempe_05-08_31.jpg](drawings/05-08/Wempe_05-08_31.jpg) | 05 08_31 | Oberplatte kompl. | 127-556.04 U 35 | 25.09.41 |
 | [05-08/Wempe_05-08_32-1.jpg](drawings/05-08/Wempe_05-08_32-1.jpg) | 05 08_32.1 | Unterplatte kompl. | 127-556.04 U 36 | 23.10.41 |
 | [05-08/Wempe_05-08_32-2.jpg](drawings/05-08/Wempe_05-08_32-2.jpg) | 05 08_32.2 | Unterplatte kompl. | 05 08 02 | 23.10.41 |
-| [05-08/Wempe_05-08_33.jpg](drawings/05-08/Wempe_05-08_33.jpg) | 05 08_33 | Unruhkloben unten kompl. | 127-556.04 U 31 | 18.07.41 |
-| [05-33/Wempe_05-33.jpg](drawings/05-33/Wempe_05-33.jpg) | 12 05_33 | Zeigerstellung kompl. | 127-556.0533 00 | 05.11.41 |
+| [05-08/Wempe_05-08_33.jpg](drawings/05-08/Wempe_05-08_33.jpg) | 05 08_33 | Unruhkloben unten kompl. | 127-556.04 U 31 | 18.07.41 (the index's; the sheet's own date not settled) |
+| [05-33/Wempe_05-33.jpg](drawings/05-33/Wempe_05-33.jpg) | 05 33 | Zeigerstellung kompl. | 127-556.05 / 33 00 | 05.11.41 |
 | [05-36/Wempe_05-36.jpg](drawings/05-36/Wempe_05-36.jpg) | 05 36_1 | Unruhhaltevorrichtung | 127-556.0636 00 | 26.02.42 |
-| [05-36/Wempe_05-36_2.jpg](drawings/05-36/Wempe_05-36_2.jpg) | 05 36_2 | Zangenteil | 127-566.06 -0636 00 01-1 | 29.08.41 |
-| [05-38/Wempe_05-38.jpg](drawings/05-38/Wempe_05-38.jpg) | 05 30_00 | Sekundenkontakt | 38 00 | 09.12.42 |
+| [05-36/Wempe_05-36_2.jpg](drawings/05-36/Wempe_05-36_2.jpg) | 05 36_2 | Zangenteil | 127-556.06-06 / 36 00 01-1 | 29.08.41 |
+| [05-38/Wempe_05-38.jpg](drawings/05-38/Wempe_05-38.jpg) | 05 38 | Sekundenkontakt | 38 00 | 09.12.42 |

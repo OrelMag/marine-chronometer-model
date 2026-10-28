@@ -67,6 +67,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Cross-references:** 01b (the plan), 02 (05 08 01 Oberplatte kompl.).
 - **Illegible:** the revision text, box (440,870)-(705,900); the J-K step figure, box (150,60)-(195,120).
 
+- **Corrected by the second drawing check (28 October 2026, batch 9's 9-M1, 9-M12; the model already read each so) for sheets a and b:** Schnitt L-M's pillar seats Ø 8,6 × 0,3 are in the inner face (dashed in plan; 001's inner distance 19,0 = 19,6 − 2 × 0,3), not "on the face shown"; revision a is "∅ 4,5 … 4,59" (P-Q's "4,5∅ H7" carries the circled "a"; nothing on the sheet is 6,15); row 13's kalibr. reads "—" (the clearance hole for the detent block's screw); Schnitt N-O is the holding work's pocket from 23 to 51 in the inner face, 1,35 −0,05 deep (N's leader on 23's edge, the line through 23's and 51's centres), not the barrel cut-out's edge; the "2,65" at the lower M1,4 is 22,65, hole 1 to hole 10, on the 1-10 chain line; the "7 r" at 26 is "7°"/"7 r", the escape wheel's r 7 tip arc, and the "50°" runs from the pocket's S edge to the tongue's N side; the dashed arc at 51 is the pocket's hidden end r 4 about 51 (far face, joining the dashed line from 23's tongue), not a spot face; the dashed circle round 10 is J-K's recess Ø 22 × 0,7; the "10,0" in 23 is the 23-26 centre distance (03b writes the same on the same line); the tables' 2,5 at 26 (and the pillar plate's at 30) are the jig-bored pilots, the sections' seats the finished holes; the plan's solid Ø 5,2 at 26 is a drafting slip (P-Q draws the seat from the inner face, possible).
+
 ## 05 09 01 Oberplatte (sheet b: plan) — `05-08/Wempe_05-08_01b.jpg`
 - **Title block:** none (continuation of 01a; scale 4:1 from 01a, and the scan's scale here is 10,1 px/mm: hole 1 to hole 35, 23,0 mm, is 233 px). Finish mark ▽▽▽ at top left.
 - **What it shows:** the upper plate's plan at 4:1 with Schnitte A-B, C-D, G-H, N-O, P-Q. The plate is the 85 disc with a large round cut-out on the left, centred on hole 45 (the barrel): "vor dem Kalibrieren auf 42,5ϕ fräsen" (mill to 42,5 dia before reaming). The cut-out runs out through the rim, so the plate is a crescent whose two horns end in points at the upper left and lower left (the cut's circle crosses the rim). Holes drawn with their numbers: 49 (pillar, dashed counterbore), 3, 4, 5 at the top; 47 and 48 (barrel bridge pin and screw) near the upper horn; 50, 6, 7, 8, 9 (balance cock: pins 50, 6, 9; screw 8; stop pin 7) on and beside the vertical centre line; 10 (fusee) in a large dashed circle with three M1,4 holes; 1 (centre); 22, 36, 37 (lower balance cock: pins 22 and 37, screw 36); 23 (the balance's opening: a round cut with a tongue); 38, 35 (intermediate and seconds wheels); 26 (escape wheel, a jewel-setting seat); 51, 52 (M2), 53 (1,5 H7); 42, 41 (barrel bridge screw and pin) near the lower horn; 40; 39 (pillar, dashed counterbore).
@@ -124,6 +126,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Undimensioned lines:** the plate outline as 01b: the cut-out is the 42,5 mm barrel recess (01b), here milled right through so the plate is a crescent (inferred from the plan: the cut-out's edge is a full line and the barrel area is empty). In Schnitt A-B the fusee bush stands about 7,5 mm proud of the plate's top, and the dust bush sits on it (scaled at 2:1, about 4,7 px/mm on this scan: scaled, not dimensioned; the drawn sizes are given on sheets 08, 09).
 - **Cross-references:** 05 08 01-1, -2, -3, -4, -5; WN-34, WN-300, WN-301.
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1, 9-M2):** 05 08 01 (revision a, "zeichnerisch geändert", 2.11.46; the first digit a looped 2 or 8) leaves out 26, 51, 52, 53 and the N-O pocket, their erased lines visible at 26, 52, 53, and draws the tongue at 23 curved, marked (a): a drafting change, the same erasure taking out 26, which the plate must have; 05 09 01 (the part sheet) and Wempe 3955's plate keep 51-53, the pocket and the straight tongue (the model builds "as last revised" so: the owner's choice, O-9).
+
 ## 05 08 02-1 Unterplatte (sheet a: hole table) — `05-08/Wempe_05-08_03a.jpg`
 - **Title block:** Werkstoff "Messingblech 4 / SonderMs α-βGef."; Maßstab 4:1; Arbeitspause Nr blank; "Hamburg 11, Stubbenhuk 25"; gez. 23.4.41 Herb. Müller, gepr. 29.4.41 Herb. Müller, N.gepr. 5.5.41 Schwarzer, 30.4.43 (initials). No revisions. Zeichnung Nr 05 08 02-1; Benennung "Unterplatte" (lower plate, the pillar plate on the dial side).
 - **What it shows:** the hole table, the left part of the plan (holes 11 to 17 near the rim) and Schnitt E-F (pillar 11) and Schnitt C-D (the hand-setting cut).
@@ -180,6 +184,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Cross-references:** 03b (the plan), 05 08 04 (Zwischenbrücke: holes 28, 29, 43, 44), 05 08 00-1 (pillars 11, 39, 49).
 - **Illegible:** the replacement thickness under the struck "3,35", box (15,970)-(130,1010).
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1):** row 39's tolerance is "+0,1" struck through and "+0,012" written after; row 30 has only a short dash after its number (not struck as 14-18 are); the hand-setting "9,5" is a location from the rim (or "0,5"), unattached, the window's width 03b's "6,5"; C-D's figures are the bore Ø 2 (the "2" spans the circle between tangent extension lines), its centre 1,68 from a face, not a "step 2"; the gepr. date may read 24.4.41.
+
 ## 05 08 02-1 Unterplatte (sheet b: hole plan) — `05-08/Wempe_05-08_03b.jpg`
 - **Title block:** none on this sheet (it is the second half of the 05 08 02-1 sheet, 03a; scale 4:1 from 03a's title block, inferred: the scan's own scale is 9.74 px/mm of plate, from holes 1 to 2 = 23,0 mm over 224 px).
 - **What it shows:** the Unterplatte (pillar/dial-side plate) seen from one face, an 85 mm disc (rim arc at the left and bottom; the right edge of the sheet cuts it), every hole numbered as in 03a's table. The centre line cross (horizontal and vertical chain lines) passes through hole 1 (the plate's centre, inferred: hole 1 sits on both centre lines and the 85 mm rim is centred on it, 412 px to the left rim = 42.3 mm). Holes drawn: 49 (large counterbored circle, top left of the vertical centre line), 3 and 2 on the vertical centre line above 1, 4 (small) right of 3, 10 (up-right of 1, 22,65 from 1), 45 (left, above the horizontal line), 44 (counterbored, section A-B) and 43 below it, 19 (right-below 1), 23 (Ø7 circle, right), 18 (far right on a chain line from 1), 38 (a large round recess about 24,8 mm across, scaled: 242 px; its centre 18,12 from hole 1; a notch, 35, on its rim at lower right), 35 (a small notch at the bottom right of recess 38), 26 (with two M1,2 screw holes beside), 28, 29 (counterbored, section A-B mark), 30 (Ø5,2 seat with two M1,2 holes either side, section G-H), 40, 39 (counterbored), 57, 56 (dashed seats, below), and a rectangular cut at the far right (section C-D direction, 6,5 / 6,5 / 8,3 dims, 37° to the horizontal).
@@ -217,9 +223,11 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Cross-references:** 03a (table, title block).
 - **Illegible:** the step tolerance in Schnitt G-H, box (280,880)-(320,960).
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1, 9-M2) for sheet b:** hole 30's Ø 5,2 H7 seat is on the dial face: the plan shows the inner face (its pillar seats and A-B's "oben" counterbores solid) and draws 30's 4,59 solid and its 5,2 dashed, and 05 08 02 (32-2) dashes the setting's two screws, their heads over the setting on the seat's face; 38 is a through opening (32-2 draws the intermediate bridge across it, seen through the plate), not "a large round recess"; the M1,2 pairs at 26 and 30 lie 3,5 +0,05 either side on the line 37° below O toward S.
+
 ## 05 08 00-2 Unruhkloben unten — `05-08/Wempe_05-08_04.jpg`
 - **Title block:** Werkstoff "Profilmessing 20×10×8×3,3 Ms 58"; Maßstab 5:1 and 1:1; gez. 19.4.41 (name: Zwinscher?, unsure), gepr. 29.4.41 Herb. Müller, N.gepr. 5.5.41 Schwarzer, and 21.7.43 (initials, unsure); revision (a), "1×", "Toleranz war +0,05", 2.12.46, initials. Zeichnung Nr 05 08 00-2; Benennung "Unruhkloben unten". Finish mark ▽▽▽.
-- **What it shows:** the lower balance cock (it holds the balance's lower jewel, on the Unterplatte side, inferred from "unten"), an L-shaped block cut from profile brass: a rectangular bar 20 × 8 (three holes 22, 36, 37 on its centre line, 7 apart) and a lug 10 wide ending in a 5 r semicircle with the balance hole 23 (Ø5,2 H7 seat, two M1,2 screw holes either side). Views: "Lage des Klobens nach Koordinaten" (position on the plate, the bar's axis at 32°30' from S toward W, i.e. clockwise from the S axis to the left, inferred), plan, Schnitt A-B (along the bar, 20 long), Schnitt C-D (across the lug), 1:1 sketch.
+- **What it shows:** the lower balance cock (it holds the balance's lower jewel under the top plate's inner face, screwed from the top plate's outer face through 36: hole 36 clear in 05 09 01, the counterbores "oben" at 22, 37, the coloured section; corrected 28 October 2026, the second drawing check's 8-M1: "on the Unterplatte side, inferred from 'unten'" until then), an L-shaped block cut from profile brass: a rectangular bar 20 × 8 (three holes 22, 36, 37 on its centre line, 7 apart) and a lug 10 wide ending in a 5 r semicircle with the balance hole 23 (Ø5,2 H7 seat, two M1,2 screw holes either side). Views: "Lage des Klobens nach Koordinaten" (position on the plate, the bar's axis at 32°30' from S toward W, i.e. clockwise from the S axis to the left, inferred), plan, Schnitt A-B (along the bar, 20 long), Schnitt C-D (across the lug), 1:1 sketch.
 - **Dimensions:**
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
@@ -229,8 +237,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | bar height (block thickness) | 10 | −0,1 | sure | "10 -0,1" |
 | lug thickness | 3,22 | −0,04 | likely | "3,22-0,04" |
 | lug seat bore (jewel setting) | 5,2 | H7 +0,012 | sure | |
-| seat step | 0,5 | +0,03 | sure | "(a)" revision mark beside it |
-| seat to screw hole | 3,5 | +0,1 | sure | |
+| seat step | 0,5 | +0,03 | sure | |
+| seat to screw hole | 3,5 | +0,1 | sure | the "(a)" of 2.12.46 ("Toleranz war +0,05") stands directly over this "+0,1": most likely widened from +0,05, as 05 08 03-1 and the top plate's P-Q still draw the same holes (likely; the second drawing check's 8-M5, read beside the 0,5 until 28 October 2026) |
 | screw holes | M1,2 | — | sure | |
 | lug width | 10 | — | sure | |
 | lug end radius | 5 r | — | sure | |
@@ -238,8 +246,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | blind hole depth (steady pins) | 2,5 | — | sure | Schnitt A-B |
 | hole 22 to hole 36 | 7 | — | sure | on bar axis |
 | hole 36 to hole 37 | 7 | — | sure | |
-| hole 36 to hole 23 (perpendicular) | 5 | — | sure | |
-| bar axis to hole 23 centre (along) | 8,2 | — | sure | "82" in the position view, read 8,2 |
+| hole 36 to hole 23 (along the bar's axis) | 5 | — | sure | the table's coordinates give 5,00 along and 8,20 across (corrected 28 October 2026, 8-M1: "perpendicular" until then) |
+| bar axis to hole 23 centre (across) | 8,2 | — | sure | "82" in the position view, read 8,2 |
 | bar axis angle from S | 32°30' | — | sure | |
 
 - **Tables verbatim:**
@@ -259,7 +267,7 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 
 ## 05 08 03-1 Unruhkloben oben — `05-08/Wempe_05-08_05.jpg`
 - **Title block:** Werkstoff "Profilmessing 50×15×3,3×5,5 Ms58" (the "5,5" likely); Maßstab 2:1, 4:1, 1:1; gez. 18.4.41 Herb. Müller (likely), gepr. 29.4.41 Herb. Müller, N.gepr. 5.5.41 Schwarzer, 30.4.43 (initials). Zeichnung Nr 05 08 03-1; Benennung "Unruhkloben oben". Finish ▽▽▽. No revision.
-- **What it shows:** the balance cock (upper), a cranked (Z-section) bar: a foot 3,2 thick screwed to the Oberplatte (holes 50, 6 steady pins, 8 screw), a vertical web, and an arm 3,2 thick reaching 15 above the foot's underside to the balance jewel seat (hole 23, Ø5,2 H7 with 6 Ø recess, two M1,2 holes), a slot 1,8 wide at the end (C-D), 82° chamfer (Schnitt C-D). Plan: tapered, 17 wide at the foot end, the end a 6 r semicircle, 49 long overall. Position view: the cock's axis 15° from N (toward O, inferred).
+- **What it shows:** the balance cock (upper), a cranked (Z-section) bar: a foot 3,2 thick screwed to the Oberplatte (holes 50, 6 steady pins, 8 screw), a vertical web, and an arm 3,2 thick reaching 15 above the foot's underside to the balance jewel seat (hole 23, Ø5,2 H7 with 6 Ø recess, two M1,2 holes), a slot 1,8 wide at the end (C-D), its inner end wall at 82°, 8° off square, leaning toward the axis going down (Schnitt C-D; "82° chamfer" until 28 October 2026). Plan: tapered, 17 wide at the foot end, the end a 6 r semicircle, 49 long overall. Position view: from the bore (23) toward the foot the axis runs 15° W of N (8 is N 19,765 O 0,559, 23 S 12,110 O 9,10; "toward O, inferred" until 28 October 2026, 8-M1). The "6 Ø" is a boss under the relieved arm (its face Ø 6, 45° flanks), not a recess.
 - **Dimensions:**
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
@@ -267,14 +275,14 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | overall height (foot underside to arm top) | 15 | −0,1 | sure | Schnitt A-B |
 | foot thickness | 3,2 | — | sure | |
 | steady pin hole depth | 2,5 | — | sure | |
-| countersink/centre 0,2 at 90° | 0,2 | — | likely | "0,2" and 90° at the screw hole under the web |
+| countersink/centre 0,2 at 90° | 0,2 | — | likely | "0,2" and 90° at steady-pin hole 9 under the web (a blind hole from below with its drill cone; the screw hole 8 is in the foot); the model sinks all three pin holes (6, 9, 50) so (8-M1: "at the screw hole" until 28 October 2026) |
 | arm thickness at seat | 3,2 | ±0,02 | sure | |
 | chamfer angle at the arm | 45° | — | sure | |
 | seat bore | 5,2 Ø | H7 +0,012 | sure | |
-| recess under seat | 6 Ø | — | sure | |
+| boss round the seat | 6 Ø | — | sure | the boss's face under the relieved arm (8-M1: "recess" until 28 October 2026) |
 | seat step depths | 0,5 and 0,8? | — | unsure | small figures in the seat ("0,5", "0,8"?) |
 | arm underside relief | 0,8? | — | unsure | "0,8" beside the arm's underside step |
-| web to seat centre | 12 r | — | likely | "12ʳ" |
+| underside step | 12 r | — | likely | "12ʳ": the radius of the underside's 45° step about the bore (its extension line from the full underside's corner); the web's faces are r 22 and 26,5 (8-M1: "web to seat centre" until 28 October 2026) |
 | plan width at foot | 17 | — | sure | |
 | foot length | 16,5 | — | sure | |
 | from foot line to seat | 26,5 | — | sure | |
@@ -288,7 +296,7 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | 3,4 | 3,4 | — | sure | slot to axis (vertical in plan) |
 | 4,5 | 4,5 | — | sure | the arc (dashed) offset |
 | 22 | 22 | ±0,1 | sure | arc radius-ish dim from seat to dashed arc |
-| Schnitt C-D chamfer | 82° | — | sure | |
+| Schnitt C-D, the slot's inner end wall | 82° | — | sure | 8° off square (8-M1) |
 | position: hole 6 to 50 spacing | 5 + 5 | — | sure | each 5 either side of the axis |
 | position: from 23 to 9 | 24,5 | — | sure | |
 | position: from 23 to 8 | 33 | — | sure | |
@@ -321,8 +329,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 |---|---|---|---|---|
 | overall height | 15 | — | sure | |
 | foot thickness | 3,2 | — | sure | |
-| web thickness | 3,2 | — | sure | |
-| arm thickness | 2,4 | — | sure | at the arm (the 3,2 of 05 reduced?) |
+| arm thickness from the web to r 12 | 3,2 | — | sure | the "3,2" stands on the arm's top band (8-M1: "web thickness" until 28 October 2026) |
+| arm thickness past r 12 | 2,4 | — | sure | relieved 0,8 |
 | relief under arm | 0,8 | — | sure | |
 | from arm underside to foot underside | 11,8 | — | sure | |
 | steady pin protrusion | 1,3 / 1,7 / 3 | — | sure | "1,3", "1,7", "3" |
@@ -331,9 +339,9 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | screw head height above | 0,1? | — | unsure | "0,1" |
 | setting heights | 1,4, 1,4 | — | likely | |
 | setting step | 0,5 | — | sure | |
-| slot | 1,8 −0,1? | — | unsure | "1,8-01" |
-| slot to steady hole | 5 | — | sure | |
-| steady hole to axis | 4,2 | — | sure | |
+| slot | 1,8 H7 | — | likely | written small, no comma ("1,8-01" read until 28 October 2026; the second drawing check's refuter) |
+| the stud's screw hole to the slot's far wall | 5 | — | sure | the "5"'s arrowhead on the slot's far wall, so the hole 4,1 along from 23 (8-M1: "slot to steady hole" until 28 October 2026) |
+| the stud's screw hole to the axis | 4,2 | — | sure | across; the hole drawn Ø 1,43 with a dashed circle about 1,03 inside: an M1,4 ("steady hole" until 28 October 2026). The Wempe's model taps its M1.4 here, 4.1 along and 4.2 across (the owner's choice, O-8) |
 | arc radius | 22 r | — | sure | |
 | end radius | 6 r | — | sure | |
 | screw spacing | 3,5 | — | sure | |
@@ -383,22 +391,24 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Notes:** "wird bei Montage des Zifferblattes gebohrt" = "drilled when the dial is fitted"; "wird bei Montage der Unterplatte gebohrt" = "drilled when the lower plate is fitted".
 - **Illegible:** 83 Ø and 96 Ø tolerances, boxes (270,185)-(340,230) and (260,245)-(340,280).
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1) for 05 08 00-3:** the "1,6" is across the radial hole at 12 o'clock (its lines run radially across the wall), not a dial hole; the "45°" is taken as the inner cone from the lip Ø 83 to Ø 93 at the recess's floor (the section's inner slope drawn plainly; the arrow at the far left isn't on an outside corner: possible); the 96's tolerance is erased, not legible ("−0,3" possible). The revised figures (a, 6.12.46) close only at their nominals: 10,7 − 0,7 − 7 = 3 (9-M9).
+
 ## 05 08 01-2 Schneckenfutter — `05-08/Wempe_05-08_08.jpg`
 - **Title block:** Werkstoff "Rundmessing 13,5 Din 1758 Ms 58"; Maßstab 5:1, 1:1; gez. 14.1.41 Herb. Müller, gepr. 15.1.41 Schwarzer, N.gepr. 30.4.43 (initials). Zeichnung Nr 05 08 01-2; Benennung "Schneckenfutter" (fusee bush). Finish ▽▽▽.
-- **What it shows:** a flanged bush (pressed into a plate, T6) with a conical 45° sink and three 2,2 H8 holes on a flange at 120°.
+- **What it shows:** a flanged bush with a conical 45° sink and three counterbored holes on a flange at 120°: its 8 g6 spigot below the flange slides into the top plate's 8,0 +0,015 and the flange is screwed down; the 8 r6 taper above it is the dust bush's press fit (corrected 28 October 2026, 8-M1: "pressed into a plate, T6" until then).
 - **Dimensions:**
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
 |---|---|---|---|---|
-| outside diameter (press fit) | 8 Ø | T6 +0,028 / +0,019 | sure | |
-| sink top diameter | (7,96) | ref. | sure | |
+| outside above the flange (the dust bush's press fit) | 8 Ø | r6 +0,028 / +0,019 | sure | a lower-case r, its stem crossed by the centre line (ISO 286's r6 for 6-10 mm; there is no shaft fit "T6", read until 28 October 2026) |
+| that outside at its top | (7,96) | ref. | sure | from Ø 8 r6 by the 1:70 taper (its extension lines on the outer walls; "sink top diameter" until 28 October 2026) |
 | bore | 4,1 Ø | +0,2 | sure | |
 | sink diameter | 7 Ø | ±0,1 | sure | |
 | sink angle | 45 | — | sure | |
 | taper | Kegel 1:70 | — | sure | |
-| flange holes | 2,2 Ø | H8 +0,014 | sure | |
-| flange hole countersink | 1,5 Ø | +0,1 | sure | |
-| flange thickness | 0,5 | +0,05 | sure | |
+| flange holes' counterbore | 2,2 Ø | H8 +0,014 | sure | from the flange's top (8-M1: the counterbore and the hole the other way round until 28 October 2026) |
+| flange holes | 1,5 Ø | +0,1 | sure | through |
+| counterbore depth | 0,5 | +0,05 | sure | |
 | flange diameter | 13,2 | −0,2 | sure | |
 | hole circle | 10,4 | ±0,05 | sure | |
 | flange to top | 2,9 | +0,2 | sure | |
@@ -415,7 +425,7 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | feature | nominal (mm) | tolerance or fit | how sure | note |
 |---|---|---|---|---|
 | top diameter | 9,7 Ø | −0,2 | sure | |
-| inner top diameter | (7,62 Ø) | ref. | sure | |
+| inner top diameter | (7,62 Ø) | ref. | sure | the bore at the mouth's foot, 1,8 under the top; it doesn't follow from the 8 H7 at 1:70 over the 16,3 below (7,767-7,782; 7,62 would need 1:43): the model follows the 1:70 (7.775; the second drawing check's 8-M6) |
 | chamfer | 20° | — | sure | |
 | top step | 1,8 | +0,2 | sure | |
 | flange | 3,1 | −0,2 | sure | |
@@ -431,7 +441,7 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 
 ## 05 08 04 Zwischenbrücke kompl. — `05-08/Wempe_05-08_10.jpg`
 - **Title block:** Werkstoff "——"; Maßstab 2:1; gez. 21.7.41 Zwinscher (likely), gepr. 15.8.41 Herb. Müller, N.gepr. 30.4.43 (initials). Zeichnung Nr 05 08 04; Benennung "Zwischenbrücke kompl." (intermediate bridge, assembly). No revision.
-- **What it shows:** a straight bridge with round ends (plan: an obround bar), section along its axis: two steady pins (WN-203) standing 1,3 proud of its underside, two screw holes (counterbored from the top, one at each end), a pressed jewel at the centre-left (a jewel with an olive hole flush with the top, "0,7 +0,02" set below the top, inferred: the jewel's recess) and a WN-300 jewel setting at centre-right (cap-jewel style, 1,7 dimension). The bridge itself is 05 08 04-1 (no sheet in this group). Corrected 25 October 2026 (the per-part audit): the WN-300 leader goes to the left setting, at hole 38 (the "0,7 +0,02"), and the jewel with the 1,7 is the right one, at hole 35, by their distances from the bridge's screws (16,4 and 28,7); read the other way round the intermediate arbor would have 24,05 and the seconds arbor 23,05 between bearings. The model has them so (train.js).
+- **What it shows:** a straight bridge with round ends (plan: an obround bar), section along its axis: two steady pins (WN-203) standing 1,3 proud of its underside, two screw holes (counterbored from the top, one at each end), a pressed jewel at the centre-left (a jewel with an olive hole flush with the top, "0,7 +0,02" set below the top, inferred: the jewel's recess) and a WN-300 brass bush (hatched solid, with an oil sink; the coloured section's "Messinglager WN-300"; "a jewel setting, cap-jewel style" until 28 October 2026, 8-M1) at centre-right (1,7 dimension). The bridge itself is 05 08 04-1 (no sheet in this group). Corrected 25 October 2026 (the per-part audit): the WN-300 leader goes to the left setting, at hole 38 (the "0,7 +0,02"), and the jewel with the 1,7 is the right one, at hole 35, by their distances from the bridge's screws (16,4 and 28,7); read the other way round the intermediate arbor would have 24,05 and the seconds arbor 23,05 between bearings. The model has them so (train.js).
 - **Dimensions:**
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
@@ -465,6 +475,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Cross-references:** none.
 - **Illegible:** a faint pencil note beside 25,3, box (520,280)-(560,360): unreadable.
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1, 9-M8):** the "1,1 −0,2" is the lead-in's length (its lower extension line at the taper's junction), not a countersink's depth; the 19,6's tolerance reads ±0,04 more likely than ±0,01 (the last glyph has a crossbar and a stem; at about 3 px a glyph: possible to likely); the body "8,1∅ −0,2", the ∅ written high as on "4,5∅" (or "8,14"); the figures over-determine the overall (19,6 + 2 × 2,8 = 25,2 against 25,3 −0,2) and the lead-in (6° over 1,1 from 4,5 f7 gives a tip Ø 4,25 within 4,3 −0,2).
+
 ## 05 08 05 Federhausbrücke kompl. — `05-08/Wempe_05-08_12.jpg`
 - **Title block:** Werkstoff "——"; Maßstab 2:1; gez. 21.7.41 Zwinscher (likely), gepr. 15.8.41 Herb. Müller, N.gepr. 30.4.43 (initials). Zeichnung Nr 05 08 05; Benennung "Federhausbrücke kompl." (barrel bridge, assembly).
 - **What it shows:** the barrel bridge (05 08 05-1), a crescent-shaped plate, with two steady pins (WN-203), the click (Sperrkegel 05 08 05-2) held by a shouldered screw (WN-22) on its face, and three screw/arbor holes. Side view: plate thickness and the steady pins.
@@ -493,7 +505,7 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | steady pin hole depth | 2,5 | — | sure | |
 | countersink | 90° | — | sure | |
 | countersink depth | 0,3 | — | likely | |
-| position: 42 and 48 radius | 42,5 r | — | sure | |
+| position: 42 and 48 radius | 37 r | — | sure | 42,5 is the outer edge ("42,5 r" here until 28 October 2026, a slip: the check below gives 37; 8-M1) |
 | position: 41/47 radius | 39 r | — | likely | "39ʳ" on 47 |
 | position: inner arc radius | 37 r | — | sure | |
 | position: 48 angle from W | 62° | — | sure | |
@@ -520,7 +532,7 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 
 ## 05 08 05-2 Sperrkegel — `05-08/Wempe_05-08_14.jpg`
 - **Title block:** Werkstoff "Messingblech 3 Din 1751 Ms 58 federhart"; Maßstab 5:1, 1:1; gez. 20.9.41 Zwinscher (likely), gepr. 10.10.41 Herb. Müller, N.gepr. 30.4.43 (initials). Revision a, 1×: "Änderung vom 25.5.48" (initials). Zeichnung Nr 05 08 05-2; Benennung "Sperrkegel." (click). Finish ▽▽▽.
-- **What it shows:** the barrel's click: a flat hook-shaped piece 2,6 thick, a Ø3,2 hole for its screw, an upper convex edge (radius 8,5 from a centre, 85°?) and a concave underside (6 r and 12,5 r arcs) ending in a beak at the left; the right end a 1 r nose.
+- **What it shows:** the barrel's click: a flat hook-shaped piece 2,6 thick, a Ø3,2 hole for its screw, an upper convex edge (the back, r 12,5) with the beak's face at 85°, and a concave underside (the r 6 arc; corrected 28 October 2026, 8-M1: "radius 8,5" and "6 r and 12,5 r arcs" until then) ending in a beak at the left; the right end a 1 r nose.
 - **Dimensions:**
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
@@ -529,15 +541,14 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 | height at beak | 3,5 | — | sure | |
 | hole | 3,2 Ø | +0,03 (a) | sure | |
 | thickness | 2,6 | −0,03 / −0,05 | sure | |
-| top arc radius | 8,5 | — | likely | "85" with a leader; read 8,5 r |
-| angle | 85°? | — | unsure | the arc arrow from the beak to the top with "°": could be the radius 8,5 and an unlabelled angle |
-| hole circle | 5,7 r | — | likely | "5,7" (radius of the boss) |
+| beak face angle | 85° | — | sure | one rotated "85" with a degree circle on an arc about the beak's foot (no comma: not 8,5; 8-M1) |
+| hole circle | 5,7 Ø | — | likely | the thin circle round the hole, its radius 2,9 on the scan ("5,7 r, radius of the boss" until 28 October 2026) |
 | 9,7 | 9,7 | — | likely | from hole to beak (radius) |
 | 7,5 | 7,5 | — | sure | hole to nose |
 | nose radius | 1 r | — | sure | |
-| underside arc | 6 r | — | sure | centre 7,212 below the base line, 5,142 left of the hole |
-| underside arc | 12,5 r | — | sure | |
-| arc centre below hole | 7,212 | — | sure | |
+| underside arc | 6 r | — | sure | centre 7,212 below the hole's centre line, 5,142 left of the hole |
+| back (upper convex edge) | 12,5 r | — | sure | a circle r 12,5 through the beak's corner, tangent to the nose ("underside arc" until 28 October 2026, 8-M1) |
+| arc centre below hole | 7,212 | — | sure | below the hole's centre line (the dimension's upper extension line), not the base line |
 | arc centre left of hole | 5,142 | — | sure | |
 
 - **Notes:** "nicht eingetr. Toleranz ±0,1"; "M 1:1".
@@ -682,6 +693,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Notes:** "Futter an dieser Seite eindrücken" = "press the bush in from this side".
 - **Cross-references:** 05 08 02-1, 05 08 02-2, WN-302, WN-52.
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1) for 05 08 02 (32-2):** the rim's notch at 6 o'clock takes the ring's pin across the joint (WN-201, drilled at assembly); the 6,8 pin is the stud at 19 (S 6,3), shown in A-B though off its line; the "12,3" stud is placed by its extension line on the inner face, the stud 12,3 long; the bush under 19's stud is hatched in A-B (05 08 02-2 at 2 and 19: likely); WN-302 0,1 +0,02 under the inner face.
+
 ## 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) — `05-08/Wempe_05-08_33.jpg`
 - **Title block:** Werkstoff "——"; Maßstab 5:1 and 1:1; Arbeitspause Nr 6; gez. 18.7.41 E. Zwinscher (likely), gepr. 2?.8.41 H. Müller (likely). Zeichnung Nr 127-556.04 U31; Benennung "Unruhkloben unten kompl." (lower balance cock, assembled). A "KOPIE" stamp. No revisions.
 - **What it shows:** the lever chronometer's lower balance cock assembled: Ansicht A (side view: an L-shaped block, a tall end 10 high carrying a pin 134 on top, a low arm with the jewel setting and its two screws), plan (a parallelogram-like plate with a notch and a lug: two holes at the tall end, the jewel setting C-D with two screws, a lug with a hole at the bottom right), Schnitt C-D through the jewel setting (hole jewel and endstone in a setting, two screws, a pin 139 standing out sideways, and a second jewel lower down: the lever's? inferred), a 1:1 sketch.
@@ -749,7 +762,7 @@ The same hole on the upper plate (01a; the lever version 30) and the lower plate
 - **Pillars (11, 39, 49)** lie on one circle of r 37,000 at bearings 95°, 210° and 350° (N towards O), 115°, 140° and 105° apart, not 120°. The Hilfslöcher 3, 12, 40 and the Gegensperrkegel 4 are on the same 37 circle (0°, 105°, 225°, 10°). The barrel bridge's screws 42 and 48 are on r 37,00 (at 30,0° and 62,0° from W, as 13's position view says), its steady pins 41 and 47 on r 39,00 (38° and 54°).
 - **Arbors (both plates):** centre/minute 1 at N 0 O 0; fusee 10 at N 15,292 O 16,708; barrel 45 at N 6,0 W 24,784; intermediate (Zwischenrad) 38 at S 15,170 W 9,910; seconds 35 at S 23,0 O/W 0; escape (Gangrad) 26 at S 21,743 O 11,783; balance 23 at S 12,110 O 9,10; motion-work wheel (Wechselrad) 19 at S 6,30 O 10,912 (lower plate only); up-and-down 2 at N 23,0 (lower plate only).
 - **Centre distances** from the coordinates (my arithmetic), against the figures drawn on the plans: fusee-barrel 42,52; fusee-centre 22,65 (drawn on 03b: 22,65); centre-intermediate 18,12 (drawn 18,12 on 01b, 03b, 30); intermediate-seconds 12,63 (drawn 12,63); seconds-escape 11,85 (drawn 11,85); escape-balance 10,00 (drawn 10,0); centre-Wechselrad 12,60; lever: escape 30-lever 27 8,50, lever-balance 13,50, seconds-Ankerrad 30 11,85 (drawn 11,85 on 03b); escape 26 to lever 27 6,33. Every drawn figure agrees with the table to 0,005.
-- **Sizes differ between the plates, as expected for the two ends of an arbor** (not disagreements): 10 fusee: upper reamed 8,0 +0,015 (for the Schneckenfutter, 08: 8 T6) against lower 2,70 ±0,009 (pivot hole); 26 escape: upper 2,5 +0,009 against lower 2,50 ±0,009 (same size, tolerance written differently: "+0,009" against "±0,009"; unsure whether one is a slip); 35 seconds: upper 4,4 punch, 4,59 +0,012 ream (a jewel setting), lower 6,0 punch, no ream; 38 intermediate: upper 4,59 +0,012, lower 4,4 punch, no ream; 45 barrel: upper 4,4 punch, no ream (the plate is cut away there to 42,5), lower 2,7 drill, 2,90 ±0,009; 23 balance: upper punched 10,0 (the opening for the staff, the lower cock 04 carries the jewel), lower punched 4,4, no ream.
+- **Sizes differ between the plates, as expected for the two ends of an arbor** (not disagreements): 10 fusee: upper reamed 8,0 +0,015 (for the Schneckenfutter, 08: its 8 g6 spigot) against lower 2,70 ±0,009 (pivot hole); 26 escape: upper 2,5 +0,009 against lower 2,50 ±0,009 (same size, tolerance written differently: "+0,009" against "±0,009"; unsure whether one is a slip); 35 seconds: upper 4,4 punch, 4,59 +0,012 ream (a jewel setting), lower 6,0 punch, no ream; 38 intermediate: upper 4,59 +0,012, lower 4,4 punch, no ream; 45 barrel: upper 4,4 punch, no ream (the plate is cut away there to 42,5), lower 2,7 drill, 2,90 ±0,009; 23 balance: upper punched 10,0 (the opening for the staff, the lower cock 04 carries the jewel), lower punched 4,4, no ream.
 - **Pillar holes** are 4,50 +0,012 on both plates (for the pillar's 4,5 f7 pivots, sheet 11), except that 03a's row 39 tolerance is struck through ("+0,1"? or "+0,012", unsure).
 - **The cocks' and bridge's own tables against the plate:** 04 (Unruhkloben unten: 23, 36, 22, 37) and 05 (Unruhkloben oben: 23, 8, 6, 9, 50) and 13 (Federhausbrücke: 45, 42, 48, 41, 47) give the same coordinates as 01a for every common hole. Differences in size are by design: the screw holes are tapped M2,6 (drill 2,1) in the plate and clear (2,8) in the cock or bridge; the steady-pin holes are 1,6025 in the plate and 1,585 −0,005 in the cocks and bridge (the pins pressed into the cock, a slide fit in the plate, inferred). Hole 20 "Hilfsloch f. U. Kl. ob." (S 2,451 O 6,512, on 05) and 46 "Sperrkegel" (N 17,046 W 29,474, on 13) are not in the plate tables. 05's table gives 23 the balance as "O 9,10" with two decimals only, as the plates do.
 - **So all the cocks and bridges of the balance and barrel sit on the upper plate:** both balance cocks' holes (6, 8, 9, 50 above; 22, 36, 37 below) are in 01a's table, none in 03a's. The lower cock (04, 10 high) is screwed under the upper plate, inferred from its holes, and holds the balance's lower jewel; the balance runs in the upper plate's 10,0 opening.
