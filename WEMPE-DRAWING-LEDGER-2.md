@@ -20,7 +20,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 7 | motion work, hands, dial | 13 | 0 | 17 | 13 | 12 | 0 | 0 | 12 |
 | 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 18 | 18 | 14 | 0 | 0 | 14 |
 | 9 | plates, pillars, movement ring | 8 | 0 | 26 | 24 | 14 | 0 | 1 | 13 |
-| 10 | case, gimbals, boxes, keys | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 10 | case, gimbals, boxes, keys | 14 | 0 | 23 | 15 | 16 | 0 | 1 | 15 |
 | 11 | arrangements; the sheets the first pass left out | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | | **all** | **124** | **0** | **0** | **0** | **0** | **0** | **0** | **0** |
 
@@ -125,20 +125,20 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | done | done | done | done | — | compared; refutation next |
 | `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | done | done | done | done | — | compared; refutation next |
 | `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | done | done | — | — | — | read; model comparison next |
-| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | done | done | — | — | — | read; model comparison next |
-| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | done | done | — | — | — | read; model comparison next |
-| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | done | done | — | — | — | read; model comparison next |
-| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | — | — | — | read; model comparison next |
-| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | — | — | — | read; model comparison next |
-| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | — | — | — | read; model comparison next |
+| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | done | done | done | done | — | compared; refutation next |
+| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | done | done | done | done | — | compared; refutation next |
+| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | done | done | done | done | — | compared; refutation next |
+| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | done | done | — | compared; refutation next |
+| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | done | done | — | compared; refutation next |
+| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | done | done | — | compared; refutation next |
 | `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | done | done | — | — | — | read |
 | `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | done | done | — | — | — | read |
 | `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | done | done | — | — | — | read |
@@ -208,7 +208,7 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 7-M7 | 05-02_11, _12, _01 | README, transcription | F3 (35,3 is the blank's; tips 34,33 right) and F7 (the seconds hole Ø 1,7 by the small-hole convention) to Readings corrected; F1 and F2 into the transcription | stale | sure | comparer | — | open |
 | 7-M8 | 05-02 | build book (v3.41.00) | the hands drawn skewed 2.5-13° with bounding-box sizes, no station widths or fits; the dial's page no plan (its eight off-axis holes missing); tapered bores as "hole + sink"; the hour pipe's r6 seat undimensioned; the up-and-down wheel's module unrounded (0.2787833333333333), its rim, hub, spokes undimensioned; the cannon's half section hatched wrongly; predates batch 6 | book | sure | comparer | — | for the book |
 | 7-M9 | — | dialsvg.py --verify | fails on the Kirov dial's red serial (0.75 % against its 0.5 %); ci.py runs only the stale check | tool | sure | comparer | — | open |
-| 7-M10 | 05-02_01 | glass (batch 10) | drawn 3 thick, its underside 15,8 / pencil 17,0 over the plate; the model's 3.7, about 15.0 (from case.js's comment, not measured) | wrong | possible | comparer | amended: the model's glass measured 3.5 thick, underside 15.60 over the plate face (not 3.7, 15.0); the sheet "Glas 3", 15,8 inked (17,0 pencil) | open (batch 10) |
+| 7-M10 | 05-02_01 | glass (batch 10) | drawn 3 thick, its underside 15,8 / pencil 17,0 over the plate; the model's 3.7, about 15.0 (from case.js's comment, not measured) | wrong | possible | comparer | amended: the model's glass measured 3.5 thick, underside 15.60 over the plate face (not 3.7, 15.0); the sheet "Glas 3", 15,8 inked (17,0 pencil) | kept (10-M15: 05 02_1 is the lever chronometer's; the bezel's own sheet gives 3.56 / 15.8, as built) |
 | 7-M11 | 05-02_12 | dial thickness | "Stärke 1,3" and the title block's "Messingblech 1,3" both struck, "1,2" written over; "Eisenblech 1,3" a separate iron revision; the model 1.3 at brass's density matches neither | wrong | likely | refuter | — | open |
 | 7-M12 | — | seconds collet | 0.0033-0.0048 clear on its post though bom.json says Pressed: no hand nor the collet held | joint | sure | refuter | — | open |
 | 8-M1 | 05-08 | transcription | the misreads the blind reading found (the code already right) | stale | sure | b8 reader, comparer | — | open |
@@ -239,6 +239,22 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 9-M13 | 05-08 | build book (v3.41.00) | every tapped hole missing from the hole tables, the pocket, tongue, recesses too; the top plate's contour with zero-length elements; the pillar's thread and lead-in, the ring's holes and cone missing | book | sure | comparer | — | for the book |
 | 9-M14 | 05-08_01a | escape settings' screws | their heads bear on only 0.07 and 0.10 of the settings' rims | joint | possible | comparer | — | open |
 | 9-M15 | — | holes.py | ignores --model and opens the Hamilton's page | tool | sure | comparer | — | open |
+| 10-M1 | 05-01_3 | closing plate (every version) | mirrored: the sheet puts the knob's M2.6 and the Ø 1.2 90° clockwise from the Ø 8 window on the inner face, the model 90° counterclockwise; Wempe 3955's photograph agrees with the sheet | wrong | sure | comparer | — | open (massprops) |
+| 10-M2 | 05-01_3 | closing plate | the web 2.00 where 2 −0,05/−0,1 allows 1.90-1.95 | wrong | sure | comparer | — | open |
+| 10-M3 | 05-01_3, _1 | WN-71 | a plain M3 in the plate's Ø 5.5 bore: 1.27 of play; the bore and the tight web a shoulder screw's seat | joint | likely | comparer | — | open |
+| 10-M4 | 05-01_2 | bowl | its inner corner round r 6.3 on the scan, the model r 7.0 | wrong | possible | comparer | — | open (massprops) |
+| 10-M5 | 05-01_6 | 1940 key | a one-way key: the spring drawn round the pipe, the pipe free up to the cap; the model presses a stem 13 into the body with no spring (wempe_overwind.js forces it as a plain key) | wrong | likely | b10 reader F4, comparer | — | open (overwind) |
+| 10-M6 | 05-01_6 | 1940 key's socket (5-M17) | round Ø 3.1 can't take the square: a 3.1 square socket, 28.7 deep (scaled) | wrong | sure | comparer | — | open |
+| 10-M7 | 05-01_6 | 1940 key's cap | a separate part held by a countersunk screw 5 in a tapped hole; the model's screw 5 only a head disc, the grip held by nothing | joint | likely | comparer | — | open |
+| 10-M8 | 51-00_3 | maker's plate | its four Ø 1.2 holes not cut, its pins without shanks | joint | sure | comparer | — | open |
+| 10-M9 | 51-00_4 | tongue | tapers on both edges and ends in a shallow arc (R ≈ 7); the model tapers one edge 3.2° and ends in a semicircle r 4 | wrong | likely | comparer | — | open |
+| 10-M10 | 05-01_1 | case brackets, locking bracket | their screw holes not cut: the screws run through solid brass | joint | sure | comparer | — | open (massprops) |
+| 10-M11 | 51-00_5 | outer box | its rim strip 2 over the walls; the sheet and the code's comment say 4 | wrong | sure | comparer | — | open |
+| 10-M12 | 05-01_1 | the wall disc at the outer pivot | most likely lock nut 10 (WN-400), as at the inner pivots; the leader "10" ends at the wall-top fitting, whose purpose stays open | note | likely | b10 reader F13, F17, comparer | — | open |
+| 10-M13 | — | README, bom.json, makers.js, case.js, transcription | stale: the glass "flush", the bezel thread "not built", the 1943 key with the 1940's number, the tube's ▽▽▽ (said ▽▽), the key body's fits "middles" (tolerance tops) | stale | sure | comparer | — | open |
+| 10-M14 | 05-01, 51-00 | build book (pp. 373-511) | gaps; no sheet for the 1940 key | book | sure | comparer | — | for the book |
+| 10-M15 | 05-02_01, 05-01_4 | glass (7-M10) | kept: 05 02_1's title block is the lever chronometer's (So 127 556 04, 0402); the Einheits bezel's sheet 05 01 01 draws the glass 3.56 thick, its top 15.8 over the bezel's underside, as built | note | likely | comparer | — | kept |
+| 10-M16 | — | checks.py FLOAT_BOX | four entries don't apply to the 6MX version | excuse | sure | comparer | — | open |
 | 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
 | 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
 | 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
