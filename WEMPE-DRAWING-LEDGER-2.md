@@ -17,7 +17,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 14 | 16 | 16 | 19 | 12 | 6 | 3 (book) |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 12 | 18 | 18 | 17 | 13 | 2 | 2 (book, batch 10) |
 | 6 | going train | 10 | 0 | 16 | 15 | 12 | 0 | 0 | 12 |
-| 7 | motion work, hands, dial | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 7 | motion work, hands, dial | 13 | 0 | 17 | 14 | 10 | 0 | 0 | 10 |
 | 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 9 | plates, pillars, movement ring | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 10 | case, gimbals, boxes, keys | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -95,19 +95,19 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | done | done | done | refuted; corrections next |
 | `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | done | done | done | refuted; corrections next |
 | `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | — | — | — | read; model comparison next |
-| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | — | — | — | read; model comparison next |
+| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | done | done | — | compared; refutation next |
+| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | done | done | — | compared; refutation next |
 | `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | done | done | — | — | — | read; model comparison next |
@@ -199,6 +199,16 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 2-M14 | — | bom.json | no relations for the locking stone; WN-14's "tap" names a plain bore (the gold spring's screw: a plain Ø 0.66 shank in a plain Ø 0.70 bore labelled tapped) | joint | sure | comparer | — | open |
 | 2-M15 | 05-04_07-1, -2 | escape arbor | drawn about Ø 1.0-1.1 between the wheel and the pinion; the model Ø 1.2 | wrong | possible | comparer | confirmed for 05 04_7.2 (last: 1.07 between collet and pinion); refuted for 7.1 (first: 1,2 as built) | open |
 | 2-M16 | 05-04_07-1, _07-2, _01, 02 04 08 a; Wempe 3955 photos 8_, 9_ | escape wheel's rim | the sheets recess the top plate's face 0.7 over the whole rim to the roots (7.1 dimensions it 11,9 → 12,4; 7.2 draws it Ø 11.9 by ratio; 05 04_1 draws the teeth as blocks on a 0.8 web; Tarasov's 6MX the same): not a misreading, but the model's 0.04 edge at 11.62 isn't drawn. Wempe 3955's photographs show a full-thickness rim Ø 10.9-11.7 with the teeth flush, only the crossings and hub sunk (high). The code's comment puts 7.1's recess on the pinion's side: both sheets put it on the top plate's | version | sure (sheets), high (3955) | the owner; escape-wheel check | — | owner (28 Oct): the drawn versions keep the sheets' recess to the roots (no 0.04 edge); Wempe 3955 gets its photographed full rim (O-7) |
+| 7-M1 | 05-02_02, _03, _05 | hands (minute, hour, seconds) | all three H7-on-r6 press fits drawn 0.01 clear on the radius (seats at nominal, holes 0.02 over): nothing holds any hand; bom.py passes two, the minute hand has no relation. The fits' middles: 0.011-0.013 interference | joint | sure | comparer | — | open |
+| 7-M2 | 05-02_10, _11 | up-and-down wheel | not riveted to its pipe: nothing under it, unlike the change and hour wheels' riveting sinks | joint | likely | comparer | — | open |
+| 7-M3 | 05-02_12, 05-08_07 | dial screws in the ring (batch 9's ring) | the ring's M1 holes plain Ø 1.04 under threaded screws; bom.py's tap tolerance passes them; README's "tapped 2.5 deep" stale | joint | sure | comparer | — | open |
+| 7-M4 | 05-02_04 | up-and-down hand | the blade 0.3 thick along its length on the sheet, the model's tapers from 0.5; the boss a drawn-up collar (the model's Ø 3.0 pipe kept, recorded) | wrong | likely / possible | b7 reader F10, comparer | — | open |
+| 7-M5 | 05-02_01 | README, dial.js | say 05 02_1 draws the hour and minute hands "about 2 lower"; measured about 0.95 (the 1943 tube still bounds the heights: text only) | stale | sure | comparer | — | open |
+| 7-M6 | — | seatcheck.py | its name pattern misses "Minutenrohr" and "Zeigerfutter": the cannon tube and the seconds collet never followed | tool | sure | comparer | — | open |
+| 7-M7 | 05-02_11, _12, _01 | README, transcription | F3 (35,3 is the blank's; tips 34,33 right) and F7 (the seconds hole Ø 1,7 by the small-hole convention) to Readings corrected; F1 and F2 into the transcription | stale | sure | comparer | — | open |
+| 7-M8 | 05-02 | build book (v3.41.00) | the hands drawn skewed 2.5-13° with bounding-box sizes, no station widths or fits; the dial's page no plan (its eight off-axis holes missing); tapered bores as "hole + sink"; the hour pipe's r6 seat undimensioned; the up-and-down wheel's module unrounded (0.2787833333333333), its rim, hub, spokes undimensioned; the cannon's half section hatched wrongly; predates batch 6 | book | sure | comparer | — | for the book |
+| 7-M9 | — | dialsvg.py --verify | fails on the Kirov dial's red serial (0.75 % against its 0.5 %); ci.py runs only the stale check | tool | sure | comparer | — | open |
+| 7-M10 | 05-02_01 | glass (batch 10) | drawn 3 thick, its underside 15,8 / pencil 17,0 over the plate; the model's 3.7, about 15.0 (from case.js's comment, not measured) | wrong | possible | comparer | — | open (batch 10) |
 | 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
 | 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
 | 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
