@@ -501,12 +501,32 @@ const WESC=(()=>{
        deg (HSW: none to 150 deg, all from 200 deg; the straightening from 2.1 to 1.45 along the bar before the pinning point, past the pin's end). The drawn spring only: the physics (HSP)
        keeps 05 03_7's curve. Until 27 October 2026 the end ran in an open slot at the spring's height, formed out 0.3 tan 8 deg as first drawn */
     let hsUp=0;const HSW=HS0.map(([,a,u])=>u===1?smooth((a-a0U-150)/50):0);
-    const spPath=tw=>hsBend(tw).map(([x,z,u],i)=>{if(HSW[i]>0){const uu=x*AX[0]+z*AX[1],vv=x*VO[0]+z*VO[1],w=vv>0?HSW[i]*smooth((2.1-uu)/0.65):0,dv=(SVS-vv)*w;x+=VO[0]*dv;z+=VO[1]*dv;}
+    /* the inner curve's end the same in the collet's hole (05 03 02-2: straight across the bar at 3.5): the drawn curve, an arc r 3.51 about the staff, falls 0.28 toward
+       the staff over the bar's ±1.4, its inner face from 3.45 to 3.12 against the hole's wall at 3.1 (seatcheck.py, 27 October 2026: the pin beside it cut into it); the
+       maker straightens it along the hole at its pinning point's 3.51 from the staff (rL(220)), over the curve's last 100 deg (HSL: none to 120 deg from the coil, all
+       from 170) and 2.5 either side of the pinning point along the hole (past the pin's ends), in the hole's frame, which turns with the collet. The drawn spring only */
+    const EL0=rL(220),HSL=HS0.map(([,,u],i)=>{const th=TE_L-4*i;return u===0&&th>0?smooth((th-120)/50):0;});
+    const spPath=tw=>hsBend(tw).map(([x,z,u],i)=>{if(HSL[i]>0){const A=turnA(...pol([0,0],1,aPinL),tw),ee=x*A[0]+z*A[1],tt=z*A[0]-x*A[1],dv=(EL0-ee)*HSL[i]*smooth((2.5-Math.abs(tt))/0.65);x+=A[0]*dv;z+=A[1]*dv;}
+      if(HSW[i]>0){const uu=x*AX[0]+z*AX[1],vv=x*VO[0]+z*VO[1],w=vv>0?HSW[i]*smooth((2.1-uu)/0.65):0,dv=(SVS-vv)*w;x+=VO[0]*dv;z+=VO[1]*dv;}
       return[x,yL-PITCH*TURNS*u+hsUp*HSW[i],z];});   /* breathing (hsBend, above) */
     const hs=part('hairspring',OFFB,[B[0],B[1],0]),hsRot=new THREE.Group();hs.add(hsRot);R.hsRot=hsRot;
     onRev(v=>{const f=v!=='last';hs.position.y=f?SH1:0;hsUp=SYH-yU-(f?SH1:0);R.spring.geometry=ribbonGeo(spPath(-(lastTw||0)),HB,HT,R.spring.geometry);});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher: set down 0.1 into the hole, not up 0.2 */
     hsUp=SYH-yU;
     const spring=tag(mesh(hs,ribbonGeo(spPath(0),HB,HT),M.mspring),'050302-1');R.spring=spring;R.spPath=spPath;
+    /* a hairspring pin (Spiralstift 05 03 02-4): half round (D), in the frame (x across the hole, y along it, z up): the hole's circle r R about (c0, c1) less the side of a
+       chord vf from its centre (the strip's side), the round on the sg side (1 +x, -1 -x), lofted from -UE to UE along y, each end domed over its last 0.2 (the section
+       drawn in toward its middle, to 0.35 of itself at the tip), wound to face out */
+    const dPin=(c0,c1,R,vf,sg,UE)=>{const t0=Math.acos(vf/R),dP=[...Array(25).keys()].map(i=>{const t=-t0+2*t0*i/24;return[c0+sg*R*Math.cos(t),c1+R*Math.sin(t)];});
+      const dc=dP.reduce((a,p)=>[a[0]+p[0]/25,a[1]+p[1]/25],[0,0]),dk=[0,0.05,0.1,0.15,0.2],sk=d=>0.35+0.65*Math.sqrt(Math.max(0,1-((0.2-d)/0.2)**2));
+      const stn=[...dk.map(d=>[-UE+d,sk(d)]),...dk.slice().reverse().map(d=>[UE-d,sk(d)])],pv=[],ix=[],nP=dP.length;
+      for(const[uu,k]of stn)for(const p of dP)pv.push(dc[0]+(p[0]-dc[0])*k,uu,dc[1]+(p[1]-dc[1])*k);
+      for(let s=0;s+1<stn.length;s++)for(let i=0;i<nP;i++){const a=s*nP+i,b=s*nP+(i+1)%nP,c2=a+nP,d2=b+nP;ix.push(a,b,d2,a,d2,c2);}
+      const cA=pv.length/3;pv.push(dc[0],-UE,dc[1]);const cB=cA+1;pv.push(dc[0],UE,dc[1]);const lS=(stn.length-1)*nP;
+      for(let i=0;i<nP;i++){ix.push(cA,(i+1)%nP,i);ix.push(cB,lS+i,lS+(i+1)%nP);}
+      const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.Float32BufferAttribute(pv,3));
+      {let V=0;for(let t=0;t<ix.length;t+=3){const p=[0,1,2].map(q=>[pv[ix[t+q]*3],pv[ix[t+q]*3+1],pv[ix[t+q]*3+2]]);V+=p[0][0]*(p[1][1]*p[2][2]-p[1][2]*p[2][1])-p[0][1]*(p[1][0]*p[2][2]-p[1][2]*p[2][0])+p[0][2]*(p[1][0]*p[2][1]-p[1][1]*p[2][0]);}
+        if(V<0)for(let t=0;t<ix.length;t+=3){const q=ix[t+1];ix[t+1]=ix[t+2];ix[t+2]=q;}}
+      pg.setIndex(ix);return pg;};
     /* the collet (Spiralrolle 05 03 02-2, 24.2.43: Messingblech Ms 58): a bar 9.1 −0.2 long, 3.8 −0.2 wide at its slit end and 2.7 −0.2 at the other, 3.3 high; bored 1.6 H7 at
        1:70 for the staff; slit 0.2 +0.1 from the wide end to 0.1 +0.05 short of the bore (built 0.25 and 0.125, the fits' middles); the spring's hole Ø 0.8 (Kegel 1:90)
        across its narrow end 3.5 −0.02 from the bore, 0.75 ±0.05 from its face (sure). Its plan traced (34.5 px/mm by its 9.1): the bore in the middle of its length (4.58 and
@@ -525,8 +545,11 @@ const WESC=(()=>{
       const cg=solidGeo([{loop:ccw(cut[0]),y0:colB-3.3,y1:colB,F:[{p:C([0,0],rb,64),a:colB-3.3,b:colB}]}]),CP=cg.attributes.position;
       for(let i=0;i<CP.count;i++){const x=CP.getX(i),z=CP.getZ(i),r=Math.hypot(x,z);if(Math.abs(r-rb)<1e-4){const k=(0.79+0.0325*(CP.getY(i)-(FY-6.1))/5+0.0015)/r;CP.setX(i,x*k);CP.setZ(i,z*k);}}
       tag(mesh(hsRot,WFUSEE.capFix(WFUSEE.bore(cg,[hO[0],yL,hO[1]],[pp[0],0,pp[1]],0.4,0,24),null),M.brass),'050302-2');
-      /* its taper pin (Spiralstift 05 03 02-4) in the hole beside the spring's end, Ø 0.22, through the bar's 2.7 (estimated; 1.2 long until 26 October 2026, in the metal) */
-      tag(across(hsRot,lathe([[0,-1.4],[0.11,-1.4],[0.11,1.4],[0,1.4]],12),M.steel,pol([0,0],3.25,aPinL),[ax[1]*-1,ax[0]],yL),'050302-4.c');}
+      /* its pin (Spiralstift 05 03 02-4, the stud's pin's number): half round, as the stud's (below), the hole's round less the spring's side toward the staff, its flat 0.005
+         off the strip (straightened along the hole at its pinning point's 3.51 from the staff, rL(220): above), 0.45 proud of each side of the bar (2.81 across at the hole),
+         brass. Until 27 October 2026 a steel rod Ø 0.22 at 3.25, 0.02 off the strip and 0.04 off the hole's wall: in the hole, holding nothing (seatcheck.py) */
+      {const pg=dPin(3.5,yL,0.399,3.5-(EL0-HT/2-0.005),-1,(3.8-(3.5+cw)/(cw+cn)*1.1)/2+0.45);
+        pg.applyMatrix4(new THREE.Matrix4().set(ax[0],-pp[0],0,0,0,0,1,0,ax[1],-pp[1],0,0,0,0,0,1));tag(mesh(hsRot,(g=>{g.computeVertexNormals();return g;})(pg.toNonIndexed()),M.brass),'050302-4.c');}}
     /* the stud (Klötzchen 05 03 02-3, 6.6.41: Flachmessing 15 × 7 Ms 58; every figure sure but where said): a bar 14.6 −0.2 long and 1.6 −0.2 thick (the side view's head),
        2.5 −0.2 wide at its square end and 3.1 −0.2 at its hole, Ø 1.5 H7, 5 ±0.1 from that end; from the hole it tapers to its point, where two facets, ground from the V the
        plan draws (its apex 6.6 −0.2 on from the hole, its arms running to the bar's widest corners beside the hole) down to the point, meet along the middle: the section draws
@@ -558,18 +581,7 @@ const WESC=(()=>{
       fuse([stB,tag(mesh(st,up,M.brass),'050302-3',1)]);   /* the stud's bar and upright one piece, one mesh (fuse): their faces flush, lines in Edges until 21 October 2026 */
       /* the pin: half round (D), the hole's round less the spring's side, its flat 0.005 off the strip, 0.45 proud of each face (estimated), brass (Ldzmn4kuKMA 4:32-4:34:
          a brass end about as wide as the hole beside the spring's; likely) */
-      const PRr=0.349,vf=SVS+HT/2+0.005-SVH,t0=Math.acos(vf/PRr),dP=[...Array(25).keys()].map(i=>{const t=-t0+2*t0*i/24;return[SVH+PRr*Math.cos(t),SYH+PRr*Math.sin(t)];});
-      /* lofted along the bar, each end domed over its last 0.2 (the section drawn in toward its middle, to 0.35 of itself at the tip) */
-      const dc=dP.reduce((a,p)=>[a[0]+p[0]/25,a[1]+p[1]/25],[0,0]),UE=uw+0.45,dk=[0,0.05,0.1,0.15,0.2],sk=d=>0.35+0.65*Math.sqrt(Math.max(0,1-((0.2-d)/0.2)**2));
-      const stn=[...dk.map(d=>[-UE+d,sk(d)]),...dk.slice().reverse().map(d=>[UE-d,sk(d)])],pv=[],ix=[],nP=dP.length;
-      for(const[uu,k]of stn)for(const p of dP)pv.push(dc[0]+(p[0]-dc[0])*k,uu,dc[1]+(p[1]-dc[1])*k);
-      for(let s=0;s+1<stn.length;s++)for(let i=0;i<nP;i++){const a=s*nP+i,b=s*nP+(i+1)%nP,c2=a+nP,d2=b+nP;ix.push(a,b,d2,a,d2,c2);}
-      const cA=pv.length/3;pv.push(dc[0],-UE,dc[1]);const cB=cA+1;pv.push(dc[0],UE,dc[1]);const lS=(stn.length-1)*nP;
-      for(let i=0;i<nP;i++){ix.push(cA,(i+1)%nP,i);ix.push(cB,lS+i,lS+(i+1)%nP);}
-      const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.Float32BufferAttribute(pv,3));
-      {let V=0;for(let t=0;t<ix.length;t+=3){const p=[0,1,2].map(q=>[pv[ix[t+q]*3],pv[ix[t+q]*3+1],pv[ix[t+q]*3+2]]);V+=p[0][0]*(p[1][1]*p[2][2]-p[1][2]*p[2][1])-p[0][1]*(p[1][0]*p[2][2]-p[1][2]*p[2][0])+p[0][2]*(p[1][0]*p[2][1]-p[1][1]*p[2][0]);}
-        if(V<0)for(let t=0;t<ix.length;t+=3){const q=ix[t+1];ix[t+1]=ix[t+2];ix[t+2]=q;}}   /* wound to face out */
-      pg.setIndex(ix);pg.applyMatrix4(new THREE.Matrix4().set(VO[0],sU*AX[0],0,o0[0],0,0,1,0,VO[1],sU*AX[1],0,o0[1],0,0,0,1));
+      const pg=dPin(SVH,SYH,0.349,SVS+HT/2+0.005-SVH,1,uw+0.45);pg.applyMatrix4(new THREE.Matrix4().set(VO[0],sU*AX[0],0,o0[0],0,0,1,0,VO[1],sU*AX[1],0,o0[1],0,0,0,1));
       tag(mesh(st,(g=>{g.computeVertexNormals();return g;})(pg.toNonIndexed()),M.brass),'050302-4.s');
       /* its screw (WN-11): head Ø 2.3 × 1.6, M1.4 down through the bar and the cock's 2.4, its end 0.6 under the cock, as the coloured section draws it
          (Wempe_Einheitschronometer.jpg px 1408.4-1429.6 × 156-171.4, the shank's rounded end at 215.6 under the cock's underside at 210, at 9.37 px/mm: Ø 2.26 × 1.64,

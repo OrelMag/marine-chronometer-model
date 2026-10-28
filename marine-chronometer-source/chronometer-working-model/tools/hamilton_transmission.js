@@ -265,11 +265,11 @@ function beat(TB,rigid,kdrv){const n=12/HPT,X=build(TB,n,{free:true,kdrv}),{mc,b
   const trk={W:[],S:[],qe:0,e0:null,l:null,nl:0,phO:0,f(t,th,w,ph){if(this.phO<-0.5*P_&&ph>-1e-12)this.nl++;this.phO=ph;this.qe=this.nl*P_-ph;
     if(w>0&&this.l!==null&&this.l<=-0.85&&th>-0.85){this.e0=Eb(th,w);if(t>from)this.S.push(qsT(this.qe));}if(w>0&&this.e0!==null&&this.l<=0.6&&th>0.6){if(t>from)this.W.push(Eb(th,w)-this.e0);this.e0=null;}this.l=th;}};
   if(rigid){const r=DY.sim({T,from,tq:()=>qsT(trk.qe),watch:(t,th,w,d,dv,ph)=>trk.f(t,th,w,ph)});return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S};}
-  let qeO=0,tO=0,wmO=0,sMax=-Infinity,nlO=0;const bnc=[];
+  let qeO=0,tO=0,wmO=0,sMax=-Infinity,nlO=0,pvO=0;const bnc=[];   /* the escape wheel's speed dynamics.js's own (-pv), not its place's change over a step: wempe_transmission.js's beat (28 October 2026) */
   const watch=(t,th,w,d,dv,ph,pv,dm,wm)=>{trk.f(t,th,w,ph);const qe=trk.qe,dtt=t-tO;if(Math.round(qe/P_)!==nlO&&wm===0){nlO=Math.round(qe/P_);sMax=-Infinity;}
-    if(dtt>0){const ns=Math.max(1,Math.ceil(dtt/1e-6)),h=dtt/ns,ve=(qe-qeO)/dtt;for(let i=0;i<ns;i++){B[b.esc].q=qeO+ve*h*(i+1);B[b.esc].v=ve;mc.step(h);if(t>from)recAll(X,h);if(wm===0)sMax=Math.max(sMax,B[b.sec].q);}}
+    if(dtt>0){const ns=Math.max(1,Math.ceil(dtt/1e-6)),h=dtt/ns,ve=(qe-qeO)/dtt;for(let i=0;i<ns;i++){B[b.esc].q=qeO+ve*h*(i+1);B[b.esc].v=-(pvO+(pv-pvO)*(i+1)/ns);mc.step(h);if(t>from)recAll(X,h);if(wm===0)sMax=Math.max(sMax,B[b.sec].q);}}
     if(wmO===0&&wm===1&&t>from&&Number.isFinite(sMax))bnc.push(sMax-B[b.sec].q);
-    wmO=wm;tO=t;qeO=qe;};
+    wmO=wm;tO=t;qeO=qe;pvO=pv;};
   const r=DY.sim({T,from,J:J0,tq:()=>me[3].lam,watch});
   return{beats:r.beats,trips:r.trips,rate:r.rate,A:r.A,W:trk.W,S:trk.S,T,from,meshes:me.map(e=>({maxL:e.maxL,back:e.back,free:e.free,freeMax:e.freeMax})),bnc,
     sp:[sp.minPsi,sp.maxPsi],ch:[ch.minT,ch.maxT],c1:c1.maxL,c2:c2.maxL,cn:cn.maxT,slip:cn.slip-cs0,lead:X.lead,tq:X.S.tq};}

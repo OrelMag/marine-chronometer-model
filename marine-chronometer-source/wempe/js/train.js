@@ -230,7 +230,7 @@ const WTRAIN=(()=>{
       const armL=KIT.bool(cc(C6.cockArm),cir(cs[1],1.6,40)).uni[0],capL=KIT.bool(KIT.bool(cir(S,1.5,40),cir(cs[0],1.25,32)).uni[0],cir(cs[1],1.25,32)).uni[0];
       fuse([tag(mesh(gCk,SG([{loop:cc(C6.cockFoot),y0:-3.5,y1:-2,F:[{p:cir(fc,0.72),a:-3.5,b:-2},...[fp,fq].map(q=>({p:cir(q,0.4,20),a:-3.5,b:-2}))]}]),M.gilt),'6MX.ctc'),
       tag(mesh(gCk,SG([{loop:leg,y0:CA[0],y1:-3.5}]),M.gilt),'6MX.ctc',1),
-      tag(mesh(gCk,SG([{loop:cc(armL),y0:CA[1],y1:CA[0],F:[{p:cir(S,0.9,40),a:CA[1],b:CA[0]},...cs.map(q=>({p:cir(q,0.5,20),a:CA[1],b:CA[1]+1.1}))]}]),M.gilt),'6MX.ctc',1)]);   /* the cock's foot, leg and arm one piece, one mesh (fuse) */
+      tag(mesh(gCk,SG([{loop:cc(armL),y0:CA[1],y1:CA[0],F:[{p:cir(S,0.9,40),a:CA[1],b:CA[0]},...cs.map(q=>({th:{rs:0.45},p:cir(q,0.47,32),a:CA[1],b:CA[1]+1.1}))]}]),M.gilt),'6MX.ctc',1)]);   /* the cock's foot, leg and arm one piece, one mesh (fuse); the cap plate's screws tapped M0.9 into the arm (bom.json's "tap"), 0.02 over the thread as the Wempe's other tapped holes (until 27 October 2026 plain Ø 1.0, the screws loose in both: seatcheck.py) */
       tag(mesh(gCk,SG([{loop:cc(capL),y0:CP,y1:CA[1],F:[{p:cir(S,0.9,40),a:CP,b:CA[1]},...cs.map(q=>({p:cir(q,0.5,20),a:CP,b:CA[1]}))]}]),M.gilt),'6MX.ctcc');
       for(const q of cs)tag(K.screw(gCk,q[0],q[1],CP,1.2,0.8,1.6,0.45,M.steel),'6MX.ctccs').userData.lift=0;
       tag(K.screw(gCk,fc[0],fc[1],-3.5,1.4,1.0,3.0,0.7,M.steel),'6MX.ctcs');

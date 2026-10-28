@@ -340,7 +340,9 @@ down; the maintaining spring's drawn ring, stiffening as it closes, with its ban
 place under load through each pitch, the backlash to its back flank and the teeth's friction, contact on either flank or neither; the cannon pinion's friction fit,
 which slips past its torque; the key's one-way coil spring (it grips whenever the hand holds the key against the fusee, and slips only if the key is turned the wrong
 way); the stop bar on its pin. The escapement is <code>dynamics.js</code>'s own (section 3.2), its escape wheel driven each step by the train through the escape pinion's
-mesh. It is stepped in time at a microsecond. The stiffnesses no sheet gives (the teeth's give, the chain's, the clicks' faces, the bank) are estimated from the parts,
+mesh, at its own place and speed. The beat runs from 8 starts of the train's meshes, and each mesh's peak is judged on the worst of them, a figure that holds as the
+step is refined (<code>wempe_transmission_converge.js</code>: the seconds wheel's, the escape pinion's take-up after the escape wheel lands on its stone, within 2 %
+from a quarter of the step to an eighth). It is stepped in time at a microsecond. The stiffnesses no sheet gives (the teeth's give, the chain's, the clicks' faces, the bank) are estimated from the parts,
 and those the results rest on are varied.</p>
 <p><a href="assets/transmission/index.html"><b>Watch the run</b></a>: the movement in plan, every part coloured by the load it carries against its running load and its deviations from rigid motion magnified, as a finite-element post-processor shows a deformed shape; a beat, the key let go outright and eased back, and the stop, played in slow motion with their time histories (<code>wempe_transmission_trace.js</code>).</p>
 <div id="tTrW" class="tw"></div>
@@ -929,7 +931,7 @@ function draw(){
   checks('kTol','tolerances');checks('kBench','bench');checks('kMC','montecarlo');checks('kKey','keystone');
   {const T=D.tr;if(T){const g=(x,n=1)=>Number.isFinite(+x)?(+x).toFixed(n):'–';
     table('tTrW',['Turns from full wind','Hours','The chain\'s lever','Its pull','The click\'s face','The maintaining spring\'s lead','Fusee wheel teeth','Escape wheel','Swing'],T.qs.map(r=>[g(r.n,2),g(r.h),g(r.rho,2)+' mm',g(r.pull)+' N',g(r.click)+' N',g(r.lead*180/Math.PI,2)+'° ('+g((T.MSB-r.lead)*180/Math.PI,2)+'° short)',g(r.F[0])+' N',g(r.esc*1e6)+' µN·m',g(r.A)+'°']));
-    const B=T.beat;if(B)table('tTrB',['Mesh, in a beat at 12 h','Peak force','Times its running','Lets go','Strength (fully wound)'],B.meshes.map(m=>[esc(m.nm),g(m.Fmax,m.Fmax<1?4:2)+' N',Number.isFinite(m.fac)?g(m.fac,2):'–',/(cannon|change|up-and-down)/.test(m.nm)?(m.back?'on its back flank':'rests in its backlash between steps, never on its back flank'):m.free>0?g(100*m.free,2)+' % of the time':'never',m.str?`<span class="st ${ST[m.str.v]}">${m.str.v}</span> margin ${g(m.str.mL,2)}-${g(m.str.mH,2)}`:'–']));
+    const B=T.beat;if(B)table('tTrB',['Mesh, in a beat at 12 h','Peak force','Times its running (start 0; the worst of the starts, judged)','Lets go','Strength (fully wound)'],B.meshes.map(m=>[esc(m.nm),g(m.Fmax,m.Fmax<1?4:2)+' N',Number.isFinite(m.fac)?g(m.fac,2)+(Number.isFinite(m.pkW)?` (${g(m.pkW,2)})`:''):'–',/(cannon|change|up-and-down)/.test(m.nm)?(m.back?'on its back flank':'rests in its backlash between steps, never on its back flank'):m.free>0?g(100*m.free,2)+' % of the time':'never',m.str?`<span class="st ${ST[m.str.v]}">${m.str.v}</span> margin ${g(m.str.mL,2)}-${g(m.str.mH,2)}`:'–']));
     const L=T.letgo,yl=T.letgoSum;if(L){const fy=[300,450].map(s=>51.4*s/105),run=L.snap[0].Fc&&T.runClick;
       chart('cTrL',{label:'The click\'s catch',x:[0,5.5],y:[0,Math.max(450,...L.snap.map(q=>q.Fc))*1.05],xl:'free travel to the nearer click\'s face (°)',yl:'the catch on the click wheel\'s tooth (N)',r:150,
         hrefs:[{y:fy[0],t:'brass yields (300 MPa)'},{y:fy[1],t:'(450 MPa)'},{y:T.runClick,t:'running'}],

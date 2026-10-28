@@ -4,6 +4,16 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.46.01 · 2026-10-28
+- The Wempe report's whole-transmission check now couples the escape wheel at its true speed, so the seconds wheel's load on the escape pinion no longer depends on the simulation's time step: it converges at about 56 times its running force and is judged on the worst of eight starts (112 MPa against brass's 120-170, it passes).
+- The Hamilton's transmission tool takes the same correction; its figures are unchanged.
+
+## 3.46.00 · 2026-10-28
+- The Wempe's hairspring collet now holds the spring's inner end with a half-round brass pin in its 0.8 mm hole, as at the stud (a loose rod held nothing before)
+- The Soviet 6MX's barrel cap screws now go into tapped holes
+- Pins and fits checked more tightly on both models: the Wempe's click spring pins and the Hamilton's hour and minute hand collets refitted to sit properly on their posts
+- The Wempe's strength and shock-resistance figures are now worked out from several starting points, so a tiny change elsewhere no longer flips their verdict
+
 ## 3.45.03 · 2026-10-28
 - The Wempe's verification report worked out again on the corrected swing: all 31 checks pass
 
