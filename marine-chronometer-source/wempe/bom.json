@@ -2629,11 +2629,16 @@
    "parent": "0506",
    "kind": "part",
    "part": "vorreiber",
-   "fn": "Through the Vorreiber's hub (its Ø 0.8 hole, 05 06 00-2) and the arbor's cross hole (Ø 1.1, 05 06 04-1): drawn as its two ends in the hub, so the Exploded view can part the arbor from the Vorreiber.",
+   "fn": "One taper pin through the Vorreiber's hub and the arbor's cross hole, reamed through both together at the fusee's assembly (05 06 04-1: \"1,1 bohren + konisch reiben\"; the Vorreiber's drilled Ø 0.8, 05 06 00-2; 05 06_1 draws it Ø 1.2): drawn Ø 1.16 in the two holes' Ø 1.15, its rounded ends standing 0.4 out of the hub, as the coloured section draws it.",
    "rel": [
     [
      "in",
      "050600-2",
+     "press"
+    ],
+    [
+     "in",
+     "050604-1",
      "press"
     ]
    ],
@@ -3549,7 +3554,13 @@
    "kind": "part",
    "part": "udPinion",
    "fn": "Pressed on the fusee arbor's dial-side end (the fusee group's): drives the up-and-down wheel (no sheet in the set; numbered by the coloured section's label).",
-   "rel": [],
+   "rel": [
+    [
+     "round",
+     "050604-1",
+     "press"
+    ]
+   ],
    "figs": "05 02_1"
   },
   {
