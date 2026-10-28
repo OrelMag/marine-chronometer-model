@@ -197,7 +197,7 @@ Readings the two agents still disagree on after each has seen the other's argume
 
 | # | Sheet | Question | Reading A | Reading B | Evidence | Decision |
 |---|---|---|---|---|---|---|
-| O-1 | — (batch 3 fixes) | wempe_transmission.js fails on the fixes branch: the seconds wheel → escape pinion fatigue line takes its peak from start phase 0 alone (229.7× running vs main's 78.6×; 46.7× with main's mechanisms file), inputs under 1 % apart | judge that line over the 8 starts, as the beat is judged | accept the line as it stands | the other starts reach about 1,000×; the full-wind swing reads 204.6° vs main's 200.9° with either file (cause not found) | |
+| O-1 | — (batch 3 fixes) | wempe_transmission.js fails on the fixes branch. Investigated 28 Oct: not the branch's doing. The swing is 204.6° on main too (main's own 3.45.02 restored RSR/SMW/HS; 200.9° was before it). The seconds → escape pinion fatigue line is an impact spike that doesn't converge with the step: start 0, main / tip, at MC_TR_H 1: 46.7 / 229.7×; 0.5: 38.1 / 55.0 (both pass); 0.25: 115.5 / 115.4 (both fail). Over 8 starts both reach about 1,000×. Main's own reports failed it twice on 27 Oct. wempe_escapement, physics, sustaining and strength are identical on both commits | (a) report the line as ~~ until it converges, recorded in README Unresolved and Review-results.md | (b) replace the peak with a converging measure (impulse per re-engagement, a filtered peak, or a physical landing restitution), studied at steps 1, 0.5, 0.25 and 0.125, then judged over the 8 starts | raw runs in the scratchpad dc2/tr/ | |
 
 ## Evidence from other sessions
 
