@@ -979,10 +979,17 @@ const WFUSEE=(()=>{
        list; Knirim's against Lange's Kal. 100), as this drum of the drawings' has it; Kirov No. 247's side views (4_, 6_Kirow_247_N, S) show a drum about Ø 41.5 × 18
        under the chain, too fine to tell this ring from the later drum turned over: likely */
     const S41=[18.35,18.85];   /* the Steg as first drawn (0207) */
-    {const R1=20.75,Ri=19.25,Rs=19.6,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275,sl=rect(LS,S41[0],S41[1]+0.05,2.025);
-      var dF=tag(mesh(gBF,bore(ringT([[Rs,yB+1.0],[Rs,yB],[R1,yB],[R1,yL],[Rs,yL],[Rs,yL-1.2],[Ri,yL-1.2],[Ri,yB+1.0]],240),[0,YRV,0],RVD,1.32,18.6),M.gilt),'050701-1');   /* the ring, its seats at both ends, the rivet's hole through it (above) */
-      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yL],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[Rs,yLi],[Rs,yL]],240),'top',sl,1.5),null),M.gilt),'050701-1',1);   /* the bottom (Boden) on the plate's side, its boss inward: with the ring, the drum 05 07 01-1's counterpart */
-      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yB],[Rs,yB],[Rs,yBi],[6.0,yBi],[6.0,yB+2.9-0.62],[4.5,yB+2.9],[bo,yB+2.9]],240),'bottom',sl,1.3),null),M.gilt),'050701-2');   /* the lid (Deckel) on the bridge's side */
+    /* the ring's seats: 020701-3 (the ring's own sheet, 2:1, 7.4.41) cuts one, at one end: Ø 39.2 +0.1 (framed), 1.5 deep, its wall undercut 5° (framed), the ring then 19 long
+       (Rohmaß 42 × 2 × 20); 020701 (the barrel, 2:1) faces it to 18 and cuts the other at assembly, its wall at 3° (the lid's end: its "3°" on the wall's extension line,
+       leaning in toward the mouth); 0207 draws its "5°" at the plate side's corner, both discs flush with the ring's ends and the plate-side disc 1.2 deep in its seat. So the
+       bottom's seat at the plate's end, sprung in warm, 1.2 deep as finished (020701-3's 1.5 less 0.3 faced off with the ring's 19 to 18: its mouth Ø 39.25, its floor Ø
+       39.46 at 5°); the lid's at the bridge's end, 1.0 deep (0207's lid), its mouth Ø 39.2, its floor Ø 39.30 at 3°. Each disc's edge turned to its seat's cone (sprung in,
+       as the drum of 1948 takes its lid). Until 28 October 2026 plain seats Ø 39.2 at both ends (drawing check 2, 4-M11) */
+    const RP0=19.6+0.3*Math.tan(5*D2R),RP1=19.6+1.5*Math.tan(5*D2R),RB0=19.6,RB1=19.6+1.0*Math.tan(3*D2R);
+    {const R1=20.75,Ri=19.25,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275,sl=rect(LS,S41[0],S41[1]+0.05,2.025);
+      var dF=tag(mesh(gBF,bore(ringT([[RB1,yBi],[RB0,yB],[R1,yB],[R1,yL],[RP0,yL],[RP1,yLi],[Ri,yLi],[Ri,yBi]],240),[0,YRV,0],RVD,1.32,18.6),M.gilt),'050701-1');   /* the ring, its seats at both ends, the rivet's hole through it (above) */
+      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yL],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[RP1,yLi],[RP0,yL]],240),'top',sl,1.5),null),M.gilt),'050701-1',1);   /* the bottom (Boden) on the plate's side, its boss inward: with the ring, the drum 05 07 01-1's counterpart */
+      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yB],[RB0,yB],[RB1,yBi],[6.0,yBi],[6.0,yB+2.9-0.62],[4.5,yB+2.9],[bo,yB+2.9]],240),'bottom',sl,1.3),null),M.gilt),'050701-2');   /* the lid (Deckel) on the bridge's side */
       const sg=new THREE.BoxGeometry(S41[1]-S41[0],yL-yB,2*SGW);sg.translate((S41[0]+S41[1])/2,(yL+yB)/2,0);sg.rotateY(LS);tag(mesh(gBF,sg,M.steel),'050700-1');}
     {const sg=new THREE.BoxGeometry(SG1-SG0,BB-BLT,2*SGW);sg.translate((SG0+SG1)/2,(BB+BLT)/2,0);sg.rotateY(LS);tag(mesh(gBL,sg,M.steel),'050700-1');}   /* the Steg as last revised, bottom to lid */
     /* the hook block 05 07 01-3: 0.5 deep off the bore (above), 6 long round it (0207's flat "6", dimensioned: the later sheets scale it 5-7), 3.05 high at the rivet hole's
