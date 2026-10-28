@@ -2,7 +2,7 @@
 6 o'clock) and radius, as JSON for video.py anchor. The face is the part's top (or with --bottom its underside); a hole is an inner
 loop of its outline there, so countersinks and counterbores read at that face's size.
 
-  python holes.py trainBridge [--bottom] [--out holes_trainBridge.json] [--min 0.2] [--max 4] [--plan plan.png] [--loops loops.json]
+  python holes.py trainBridge [--model wempe] [--bottom] [--out holes_trainBridge.json] [--min 0.2] [--max 4] [--plan plan.png] [--loops loops.json]
 
 --plan draws the face in plan as the dial side sees it (+x, 3 o'clock, right; 12 o'clock up; 20 px/mm): every loop of its outline,
 the holes kept numbered.
@@ -13,7 +13,7 @@ give the ones you anchor on their names in the JSON (what each is: the S table i
 import asyncio, json, math, os, sys
 import browser
 from playwright.async_api import async_playwright
-PAGE = 'file:///' + os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'index.html')).replace('\\', '/') + '?snap&qa'
+import model; PAGE = model.PAGE   # the Hamilton's page, or another model's with --model NAME (model.py strips it from argv; the Hamilton's only until 28 October 2026: drawing check 2's 9-M15)
 a = sys.argv[1:]
 if not a: sys.exit(__doc__)
 def opt(k, d):

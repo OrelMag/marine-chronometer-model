@@ -415,8 +415,9 @@ const WDIAL=(()=>{
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;gV.add(rg);for(const p of SCR)tag(screw(rg,p[0],-p[1],-(DY1-1.0),0.85,0.8,2.3,0.5,M.steel),'WN-10.d');}}
     /* its pin at 6 deg: Ø 1.1 in the ring's hole (05 08 00-3's "1,1 Ø"; Ø 1.6 until 15 October 2026, the ring's radial hole's figure) 3.7 deep, its top 0.3 under the
        flange's top, as the coloured section draws it (Wempe_Einheitschronometer.jpg px 86-97 × 594.7-639.3 at 9.37 px/mm: 3.69 in the ring, its top 0.26 under the
-       flange's 592.3, through the dial to 0.26 short of its face; likely; 2.0 deep until 17 October 2026), stepped to the dial's Ø 1.0, 0.1 under its face (the step estimated) */
-    tag(mesh(dlP,lathe([[0,DY0-3.7],[0.545,DY0-3.7],[0.545,DY0],[0.49,DY0],[0.49,DY1-0.1],[0,DY1-0.1]],20),M.steel,PINa[0],0,PINa[1]),'dialPin');
+       flange's 592.3, through the dial to 0.26 short of its face; likely; 2.0 deep until 17 October 2026), stepped to the dial's Ø 1.0, 0.1 under its face (the step estimated). Pressed in the ring, Ø 1.11 in its 1.1 (0.01 over: estimated; Ø 1.09, 0.012 loose, until
+       28 October 2026, drawing check 2's 9-M7), 0.02 clear in the dial's Ø 1.0, which it locates */
+    tag(mesh(dlP,lathe([[0,DY0-3.7],[0.555,DY0-3.7],[0.555,DY0],[0.49,DY0],[0.49,DY1-0.1],[0,DY1-0.1]],20),M.steel,PINa[0],0,PINa[1]),'dialPin');
 
     /* update(s, ang): the motion work from the centre arbor's angle (ang.c): the change wheel turns back at 14/56 of it, the hour wheel on at 56/14 × 54/18 = 12 times
        slower; the seconds hand with the seconds arbor (ang.s); the up-and-down work from the fusee's turn f (ang.f, the fusee group's, rising as it runs down from full

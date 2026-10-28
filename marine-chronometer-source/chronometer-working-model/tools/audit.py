@@ -56,7 +56,7 @@ def main():
         print(f'wrote {EXP.name} [{KEY}]: {sum(zf.values())} coplanar faces in {len(zf)} pairs')
     bad,gone=[],[]
     bad+=[f'page error: {e}' for e in errs]
-    fl=list(FLOAT)
+    fl=[e for e in FLOAT if len(e)<5 or (REV or 'last') in e[4].split()]   # an entry's fifth field, if any, the versions it applies to (another model's Variants, setRev's names; the default 'last'): judged only there (28 October 2026, the Wempe's drawing check 2's 9-M6: the 6MX's ring screws reported "no longer found" in every other version)
     for x in r['floatScrews']:
         m=next((e for e in fl if e[0]==x[0] and abs(e[2]-x[2])<1e-6 and max(abs(a-b) for a,b in zip(x[1],e[1]))<=0.3),None)
         if m:fl.remove(m)
