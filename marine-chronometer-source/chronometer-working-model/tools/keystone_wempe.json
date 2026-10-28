@@ -53,9 +53,9 @@
   {
    "measure": "Impulse arc (balance)",
    "book": "43° of the 48° (Fig. 141)",
-   "model": "38.3° (tooth lands 11.6°, ends 49.9°)",
+   "model": "38.9° (tooth lands 11.1°, ends 49.9°)",
    "source": "solved (05 04_1: 21° of the wheel, 10.5° either side of the line of centres)",
-   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 9.5° after the release (dynamics.js --model wempe)"
+   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 8.9° after the release (dynamics.js --model wempe)"
   },
   {
    "measure": "Jewel inside the wheel before release",
@@ -67,14 +67,14 @@
   {
    "measure": "Unlocking: balance arc",
    "book": "about 5° (p. 146)",
-   "model": "12.9°",
+   "model": "13.0°",
    "source": "solved (05 04_1: the gold spring met at −12°)",
    "reading": "more: the lock 0.175 deep on a 7 mm wheel (05 04_1)"
   },
   {
    "measure": "Unlocking: the detent's turn",
    "book": "about 2° (p. 150, Drop and draw)",
-   "model": "1.14°",
+   "model": "1.18°",
    "source": "solved",
    "reading": "less; the book's 2° is ambiguous (the Hamilton's README)"
   },
@@ -123,14 +123,14 @@
   {
    "measure": "Detent: flexure to locking jewel",
    "book": "the wheel's diameter, 14.00 mm (p. 138)",
-   "model": "12.88 mm",
+   "model": "12.51 mm",
    "source": "05 04_1 (the spring's middle to the stone)",
-   "reading": "agrees roughly"
+   "reading": "smaller"
   },
   {
    "measure": "Detent spring: length",
-   "book": "2/7 of that, 3.68 mm (p. 138)",
-   "model": "5.00 mm (0.388 of it)",
+   "book": "2/7 of that, 3.57 mm (p. 138)",
+   "model": "5.00 mm (0.400 of it)",
    "source": "1436 (5, scaled)",
    "reading": "longer"
   },
@@ -172,7 +172,7 @@
   {
    "measure": "Balance: swing",
    "book": "about 225° (p. 142)",
-   "model": "197°",
+   "model": "196°",
    "source": "solved (makeEsc on 05 06_20's drive)",
    "reading": "smaller: under the book's, as under the 1954 instruction's 225-270° (open: the Wempe README, Unresolved)"
   }

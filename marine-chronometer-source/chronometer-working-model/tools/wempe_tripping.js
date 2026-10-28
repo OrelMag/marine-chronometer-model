@@ -34,7 +34,7 @@ const tH_={x:(X.DPIV[0]-X.P[0])/X.TP,y:(X.DPIV[1]-X.P[1])/X.TP},nH_=(()=>{let n=
 const Dp=(t,n)=>[X.P[0]+t*tH_.x+n*nH_.x,X.P[1]+t*tH_.y+n*nH_.y],toDp=q=>{const v=[q[0]-X.P[0],q[1]-X.P[1]];return[v[0]*tH_.x+v[1]*tH_.y,v[0]*nH_.x+v[1]*nH_.y];};
 const U=(t,n)=>X.MK(Dp(t,n)),Q=(t,n)=>tn(U(t,n));   /* makeEsc's unit frame, and its (t, n) in metres from Ft */
 /* escapement.js's numbers (05 04_1, 1436, 05 04 01-2; its comments say how each was read) */
-const TP=X.TP,FOOT0=TP+2.5,SPR0=TP-2.5,SQ0=SPR0-2,[tB,nBp]=toDp(X.B),GT=tB+1.54,GN=nBp+0.005,GW=0.15,GNB=GN-GW/2,GB=[6.7,0.325],HEAD=SQ0+2.2,H0=HEAD-2.4;
+const TP=X.TP,FOOT0=X.FOOT0,SPR0=X.SPR0,SQ0=SPR0-2,[tB,nBp]=toDp(X.B),GT=tB+1.54,GN=nBp+0.005,GW=0.15,GNB=GN-GW/2,GB=[X.GB[0],0.325],HEAD=SQ0+2.2,H0=HEAD-2.4;   /* the spring's ends and the gold spring's bending point escapement.js's (FOOT0, SPR0, GB: TP at 05 04_1's bending mark since 28 October 2026, no longer the spring's middle; GB 6.7 until then) */
 const HORN_L=X.HORN.L,HL=X.HORN.line(0.22),HT0=-0.6,HT1=-HORN_L,HC=[-3.6,-4.0,HT1];   /* the horn as escapement.js draws it (its curve toward the block: HL.c its centre, HL.w its face toward the
    wheel), its beam along its centre from HT0; HC the places the gold spring closes onto it, near its end (the gold spring rests on the horn only there) */
 const HSTR=(a,b)=>{const ts=[];for(let i=0;i<=24;i++)ts.push(a+(b-a)*i/24);return[...ts.map(t=>[t,HL.w(t)]),...ts.slice().reverse().map(t=>[t,HL.b(t)])];},HORN=HSTR(-0.45,-HORN_L);   /* its outline, from inside the pipe's wall */
@@ -66,8 +66,10 @@ function frame(o={}){
   const bl1=line(b0,b1,6,EST,0.5e-3,0.9e-3,RHO.st,'blade'),fr=t=>(t-N[b1].t)/(N[b2].t-N[b1].t),bl2=line(b1,b2,10,EST,0.28e-3,0.9e-3,RHO.st,'blade',[fr(bt.t0),fr(bt.t1)]);
   const nb=[bl2.find(i=>Math.abs(N[i].t-bt.t0)<1e-9),bl2.find(i=>Math.abs(N[i].t-bt.t1)<1e-9)];
   /* the horn: its root with the pipe, beams along its centre from HT0 to its end, a node at each place in HC */
-  const hts=[...new Set([...Array(9)].map((_,i)=>HT0+(HT1-HT0)*i/8).concat(HC))].sort((a,b)=>b-a),hv=hts.map((t,i)=>i?nd(Q(t,HL.c(t))):nd(Q(t,HL.c(t)),'slave',K));
-  const hn=[hv[0]];for(let i=1;i<hv.length;i++){el(hv[i-1],hv[i],EST,0.22e-3,0.75e-3,RHO.st,'horn');hn.push(hv[i]);}
+  /* its end bevelled over its last 0.74 to 0.05 at the tip (escapement.js since 28 October 2026, 1436's right view: drawing check 2's 2-M11): its elements there thinner, by their middle's place */
+  const HBV=-HORN_L+0.74,hth=t=>t>=HBV?0.22e-3:0.22e-3*(0.05/0.22+(1-0.05/0.22)*(t+HORN_L)/0.74);
+  const hts=[...new Set([...Array(9)].map((_,i)=>HT0+(HT1-HT0)*i/8).concat(HC,[HBV,(HBV+HT1)/2]))].sort((a,b)=>b-a),hv=hts.map((t,i)=>i?nd(Q(t,HL.c(t))):nd(Q(t,HL.c(t)),'slave',K));
+  const hn=[hv[0]];for(let i=1;i<hv.length;i++){el(hv[i-1],hv[i],EST,hth((hts[i-1]+hts[i])/2),0.75e-3,RHO.st,'horn');hn.push(hv[i]);}
   const nh=HC.map(t=>hv[hts.indexOf(t)]);
   /* the gold spring: its bending point rigid with the square (its head screwed to it), beams along its drawn path to its tip; the nodes over the horn */
   /* o.tsBend [L, t]: the strip thinned to t over its first L mm from the bending point, as a passing spring is (wempe_detent_study.js; Belyakov's 0.06 "at its bend") */
