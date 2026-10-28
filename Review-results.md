@@ -2717,3 +2717,15 @@ Overlaps among the merged pieces (each pair's common volume on a grid by parity,
 
 What the merges asked of the checks (all passing after them, `ci.py --full --only` the geometry steps of both models, 64 of 64): the pieces are merged after anything that turns or rebuilds one of them alone (the gears' phase `ph`, the barrel wall's rebuild with the hook's hole, the fusee lathe's groove end and chain slot); bom-check.js joins a mesh's runs of metal where two merged pieces meet along a ray; fine.py's and the Wempe's `EXPECTED` keys follow the merged geometry types; fine-interference.js and contacts.js take the barrel wall's own height (`wallY`) for the solid it encloses; maintaining.py reads the winding stop's radius and length from `userData.wstop`; holecheck.py's three expected-empty holes (the lower endstone cap's window, the third's counterbore in the lower train bridge, the Navy seal's chamber) now read through to what is set in them; mechanisms.py's table rewritten (the fusee 0.064 g lighter, the arbor's doubled core gone; the rest in the fourth decimal); `contacts.py --write` for both models; audit-expected.json for the renamed pairs, the winding stop's loose end dropped and the winding ratchet's two screws listed as seated on a 0.15 floor. The build-verification report's mechanisms figures were not rebuilt (the fusee's mass, 0.2 %).
 - The 6MX's contact lever still counts 1.38 mm³ twice (its arms crossing at the staff, under the boss and into the holder): the overlaps branch's one-outline lever gave way to 3.28.00's photographed, sheared arms in the merge (25 October 2026); cut them where they meet on the new geometry.
+
+## The transmission's fatigue line on the seconds wheel's mesh (28 October 2026)
+
+Found by the second drawing check (WEMPE-DRAWING-LEDGER-2.md, O-1) when `wempe_transmission.js` failed on its fixes branch and passed on main. It isn't the fixes': the line's figure is an impact spike that doesn't converge with the integration step, and main fails it too at a finer step.
+
+| `MC_TR_H` | main, start 0 / max over 8 | fixes, start 0 / max over 8 | verdict main / fixes |
+|---|---|---|---|
+| 1 (default) | 46.7× / 1089.6× | 229.7× / 1021.0× | ok / fails |
+| 0.5 | 38.1× / 257.3× | 55.0× / 278.4× | ok / ok |
+| 0.25 | 115.5× / 2326.0× | 115.4× / 8777.2× | fails / fails |
+
+The full-wind swing, 204.6° on both, moved from 200.9° with main's own 3.45.02 (RSR 8, SMW 0.5, HS -0.485 restored), not with the fixes. `wempe_escapement.js`, `wempe_physics.js`, `wempe_sustaining.js` and `wempe_strength.js` print the same on both commits. The owner's choice: the line reported soft (`~~`) now; a converging measure, studied at four steps and judged over the 8 starts, is open (the Wempe README, Unresolved).
