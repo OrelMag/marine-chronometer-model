@@ -151,11 +151,12 @@ const WTRAIN=(()=>{
        2026 a hub 0.2 proud, the rim 0.2 lower, clearing the intermediate pinion's 4.5 by 0.05; its 3.25 now leaves 1.1); the seat 1.25 standing 0.25 past it on the train
        side as turned, for the riveting.
        As first drawn and in 1943 (05 05 01 of 1940, before the pinion's redrawing of 6.46 and its revision of 24.3.48: "war 24 −0,05"): 24 −0.05 between the shoulders
-       (drawn 23.975, the dial-side shoulder moved, so its endshake to the jewel is 0.125, the 1948 revision's reason likely), the post Ø 0.73 over its first 2 (in the jewel)
+       (drawn at its nominal 24.0, the dial-side shoulder moved, with the jewel's face at 05 08 04's 1.7 (below): endshake 0.064, as last revised; at the middle, 23.975, with
+       the jewel at 1.75 it was 0.139, out of the 0.025-0.076 band (bom.py), until 28 October 2026; 1940's 24 at its least, 23.95, leaves 0.114, the 1948 revision's reason likely), the post Ø 0.73 over its first 2 (in the jewel)
        and on at 1:90 to its 7.2, the train-side pivot Ø 0.8 −0.02 (drawn 0.79), 3 long (prof1: drawing check 2's 6-M4) */
     sw:{at:H[35],ys:TI+0.025,
       prof:[...piv(0.81/2,(0.81-3/90)/2,3,-1),...cone30(0.81/2,1.5/2),[1.5/2,13.6],[2.6/2,13.6],[2.6/2,14.85],[1.5/2,14.85],[1.5/2,24.05],[0.75/2,24.05],[(0.75-7.1/90)/2,31.15],[(0.75-7.1/90)/2-0.1,31.25],[0,31.25]],
-      prof1:[...piv(0.79/2,(0.79-3/90)/2,3,-1),...cone30(0.79/2,1.5/2),[1.5/2,13.6],[2.6/2,13.6],[2.6/2,14.85],[1.5/2,14.85],[1.5/2,23.975],[0.73/2,23.975],[0.73/2,25.975],[(0.73-5.1/90)/2,31.075],[(0.73-5.1/90)/2-0.1,31.175],[0,31.175]],
+      prof1:[...piv(0.79/2,(0.79-3/90)/2,3,-1),...cone30(0.79/2,1.5/2),[1.5/2,13.6],[2.6/2,13.6],[2.6/2,14.85],[1.5/2,14.85],[1.5/2,24.0],[0.73/2,24.0],[0.73/2,26.0],[(0.73-5.1/90)/2,31.1],[(0.73-5.1/90)/2-0.1,31.2],[0,31.2]],
       pin:{z:10,m:2.807/10,D:2.807+1.28*2.807/10,dg:2.807-3.93*2.807/10,u0:14.85,u1:24.05-2.2},
       wheel:{z:80,m:21.066/80,D:21.9,dg:20.23,l:0.38,mate:10,rim:[13.85,14.85],spokes:[5,1.2,6.4/2,18.4/2],bore:2.6/2}}};
 
@@ -337,10 +338,11 @@ const WTRAIN=(()=>{
        (estimated: the section draws neither). The jewel Ø 3.6 × 1.1, scaled on the coloured section (9.4 px/mm; a pictorial section, so estimated; 05 08 04 draws it about 1.15),
        its hole Ø 0.78 olive for the pivot's 0.75 at the jewel; the setting's sheets aren't in the set. Its form the section's (traced on its red, 18 October 2026, ±0.1): flat
        on the arbor's side, where the shoulder runs, an oil sink in its dial face, a cone from the hole to Ø 1.7 0.6 deep (until 18 October 2026 a plain disc) */
-    {const y0=PPT+0.2,yj=PPT+1.75,hj=1.1,rjw=3.6/2;
-      tag(mesh(P.intermediateBridge,ringT([[3.7/2,y0],[5.2/2,y0],[5.2/2,ZB],[3.7/2,ZB],[3.7/2,yj+hj],[rjw,yj+hj],[rjw,yj],[3.7/2,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
+    /* as first drawn and in 1943 the jewel's face at the sheet's 1.7 itself, with the 1940 arbor's shoulders at 24 (above); as last revised 1.75 with the 1948 arbor's 24.05 */
+    for(const[V,yd]of/** @type {[string,number][]} */([['last 3955 6mx',1.75],['first 1943 -3955',1.7]])){const G=rv(P.intermediateBridge,V),y0=PPT+0.2,yj=PPT+yd,hj=1.1,rjw=3.6/2;
+      tag(mesh(G,ringT([[3.7/2,y0],[5.2/2,y0],[5.2/2,ZB],[3.7/2,ZB],[3.7/2,yj+hj],[rjw,yj+hj],[rjw,yj],[3.7/2,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
       let q=KIT.jewelPr(rjw,hj,0.78/2,0.001,0.85,0.6,yj,1);if(KIT.area([...q,q[0]])<0)q=q.slice().reverse();   /* flat (domed 0.001) toward the arbor */
-      tag(mesh(P.intermediateBridge,ringT(q,32),M.ruby,H[35][0],0,H[35][1]),'050504-1');}
+      tag(mesh(G,ringT(q,32),M.ruby,H[35][0],0,H[35][1]),'050504-1');}
     /* the pillar plate's bushes for the motion work's studs (05 08 02 Schnitt A-B): 05 08 02-2 pressed into hole 2 (3.50 +0.012) from the inner face ("Futter an dieser Seite
        eindrücken"), through the plate, and the stud (Anrichtstift lg, 05 02 00-6, in the coloured section) pressed in it, 12.3 long from the plate's inner face; the short stud
        (Anrichtstift kurz, 05 02 00-7) at hole 19 (3.50 +0.012), standing 6.8 out of the dial face, in a bush drawn dashed beside it, taken as a second 05 08 02-2 (estimated).
