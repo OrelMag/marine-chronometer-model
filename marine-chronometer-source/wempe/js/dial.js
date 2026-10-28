@@ -85,7 +85,9 @@ const WDIAL=(()=>{
      stub 1.6), 3 long, its top 0.3 under the dial (05 02_1: "3", "0,3", likely); 12 leaves of the wheel's module, steel, long and narrow, tip Ø 4.2 and root Ø 2.6 on Wempe
      3955 (the coloured section colours it yellow; the photograph shows steel), drawn tip 4.0 and root 2.4: the wheel's roots and tips (Ø 32.57, 34.33 at 18.4) leave
      no more. The fusee arbor is the fusee group's */
-  const UDP={y1:DY0-0.3,y0:DY0-3.3,rb:1.6/2,pin:PIN(12,M_UD,4.0,2.4)};
+  const UDP={y1:DY0-0.3,y0:DY0-3.3,rb:y=>0.8375+(8.1625-y)/140-0.026,pin:PIN(12,M_UD,4.0,2.4)};   /* rb: its bore at y, tapered 1:70 as the stub it is pressed on (fusee.js: the stub r 0.8375 at its
+     middle, y 8.1625, 1:70 on the diameter), 0.026 under it on the radius at its 48 corners (0.023-0.028 tight on the stub's 40 facets: the stub's +0.05 over a 1.6 bore,
+     0.025, the sheets' least; bom.py's press takes 0.03); straight Ø 1.6 until 28 October 2026, 0.030-0.0375 tight */
 
   /* ================= the hands (05 02 00-1, -2, -3, 05 02 01-1) =================
      Every outline is a blade of half-widths hw(r) along the hand (r from the arbor), at the sheets' figures where they give them and between them as traced on the sheets'
@@ -305,7 +307,9 @@ const WDIAL=(()=>{
       for(const[V,sp]of/** @type {[string,number[]][]} */([['last first 1943',[5,1.6,10.4/2,28.3/2]],['6mx',[5,1.82,10.4/2,28.3/2,1.18]]])){const gv=new THREE.Group();gv.userData.rev=V;ud.add(gv);tag(mesh(gv,hub,M.brass),'050204-2');   /* the hub in each version's group with its wheel (fine.py takes pieces fixed to each other by their shared group) */
         const wm=tag(mesh(gv,gear(c.wheel,1.0,{spokes:sp,bore:c.rs,bseg:48}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};if(V==='6mx')R.udW6=wm;else R.udW=wm;}}
     const upP=part('udPinion',20),up=grp(upP,H[10]);R.up=up;
-    {const pm=tag(mesh(up,gear(UDP.pin,UDP.y1-UDP.y0,{bore:UDP.rb}),M.steel,0,(UDP.y0+UDP.y1)/2,0),'050200-5');pm.userData.gear={z:12,m:M_UD};R.upP=pm;}
+    {const yc=(UDP.y0+UDP.y1)/2,pg=gear(UDP.pin,UDP.y1-UDP.y0,{bore:UDP.rb(yc),bseg:48}),pp=pg.attributes.position;   /* the bore's corners (the only ones inside r 1) moved out to its taper at their height */
+      for(let i=0;i<pp.count;i++){const x=pp.getX(i),z=pp.getZ(i),r=Math.hypot(x,z);if(r>1.0||r<1e-9)continue;const k=UDP.rb(pp.getY(i)+yc)/r;pp.setXYZ(i,x*k,pp.getY(i),z*k);}pg.computeBoundingBox();
+      const pm=tag(mesh(up,pg,M.steel,0,yc,0),'050200-5');pm.userData.gear={z:12,m:M_UD};R.upP=pm;}
 
     /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
        change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
