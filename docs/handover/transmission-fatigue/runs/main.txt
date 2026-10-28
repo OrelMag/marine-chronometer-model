@@ -1,0 +1,156 @@
+
+1. The transmission: every moving part, its inertia and what moves it
+  barrel and mainspring (05 07 01, 05 07 00-6), the chain (05 07 04) at its speed                31551 g·mm²  (mechanisms_wempe.json, the chain's 8.6 g estimated); moved by the mainspring; holds the chain
+  fusee with its click wheel, cover, dust plate and the key's tube (05 06 04, 05 06 04-3)         3930 g·mm²  (mechanisms_wempe.json); moved by the chain; the key winding
+  two clicks (05 06 02-3) on the maintaining ratchet                                              1.80 g·mm²  (mechanisms_wempe.json, about each pivot); moved by their springs (05 06 02-2) and the click wheel
+  maintaining ratchet and spring (05 06 02-1, 05 06 01-1)                                         2291 g·mm²  (wempe_inertia.json); moved by the clicks running; the spring winding
+  maintaining detent (05 05 05-1)                                                                   14 g·mm²  (mechanisms_wempe.json, about its arbor); moved by its wire (05 05 06-1) and the ratchet
+  fusee wheel (05 06 00-3)                                                                        3576 g·mm²  (wempe_inertia.json); moved by the maintaining spring
+  centre arbor (05 05 03)                                                                          493 g·mm²  (wempe_inertia.json); moved by the fusee wheel
+  cannon pinion and minute hand (05 05 03-3, 05 02 00-1)                                           179 g·mm²  (wempe_inertia.json); moved by its friction on the centre arbor
+  change wheel and pinion (05 02 02)                                                               136 g·mm²  (wempe_inertia.json); moved by the cannon pinion
+  hour wheel and hand (05 02 03, 05 02 00-2)                                                       246 g·mm²  (wempe_inertia.json); moved by the change pinion
+  intermediate arbor (05 05 02)                                                                     99 g·mm²  (wempe_inertia.json); moved by the centre wheel
+  seconds arbor and hand (05 05 01, 05 02 01-1)                                                     80 g·mm²  (wempe_inertia.json); moved by the intermediate wheel
+  escape wheel and arbor (05 04 05)                                                               8.28 g·mm²  (wempe_inertia.json); moved by the seconds wheel; its locking stone; the impulse stone
+  balance, rollers, collet, a third of the spring (05 03 01)                                      2575 g·mm²  (wempe_inertia.json); moved by the hairspring; the impulse; dynamics.js
+  detent (05 04 01)                                                                               8.23 g·mm²  (wempe_inertia.json); moved by dynamics.js, tripping.js
+  up-and-down wheel and hand (05 02 04, 05 02 00-3)                                                560 g·mm²  (estimated (05 02 04-1's rim, spokes, hub)); moved by the up-and-down pinion on the fusee arbor
+  the key (51 00 11), winding                                                                     2200 g·mm²  (estimated (its paddle and body)); moved by the hand, through its one-way coil spring
+  the case and its gimbals are gimbals.js --model wempe's; the balance's and detent's motion dynamics.js's and tripping.js's: here the escapement is dynamics.js's own, driven by the train
+  
+  the meshes tooth by tooth (gearing.js's mesh on the page's outlines, mu 0.15 on the teeth; the driven gear's angle under load and its backlash over a pitch of the driver):
+    fusee wheel → centre pinion            90:14 m 0.4356: tips 245 µm clear, backlash 265-271 µm, the driven's lag through a pitch 4.8 µm at its pitch circle, the torque ratio 0.881-0.999 of nominal (mu 0.10-0.20); 4255 N/mm on 2.62 of face
+    centre wheel → intermediate pinion     90:12 m 0.3553: tips 136 µm clear, backlash 222-223 µm, the driven's lag through a pitch 1.1 µm at its pitch circle, the torque ratio 0.922-1.000 of nominal (mu 0.10-0.20); 2030 N/mm on 1.25 of face
+    intermediate wheel → seconds pinion    80:10 m 0.2807: tips 113 µm clear, backlash 185-187 µm, the driven's lag through a pitch 1.2 µm at its pitch circle, the torque ratio 0.904-1.000 of nominal (mu 0.10-0.20); 1543 N/mm on 0.95 of face
+    seconds wheel → escape pinion          80:10 m 0.2633: tips 100 µm clear, backlash 170-171 µm, the driven's lag through a pitch 0.8 µm at its pitch circle, the torque ratio 0.872-0.999 of nominal (mu 0.10-0.20); 1624 N/mm on 1.00 of face
+    cannon pinion → change wheel           14:56 m 0.3600: tips 155 µm clear, backlash 144-182 µm, the driven's lag through a pitch 28.5 µm at its pitch circle, the torque ratio 0.896-1.149 of nominal (mu 0.10-0.20); 1624 N/mm on 1.00 of face
+    change pinion → hour wheel             18:54 m 0.3500: tips 50 µm clear, backlash 50-50 µm, the driven's lag through a pitch 0.0 µm at its pitch circle, the torque ratio 0.907-1.000 of nominal (mu 0.10-0.20); 1624 N/mm on 1.00 of face
+    up-and-down pinion → its wheel         12:120 m 0.2788: tips 35 µm clear, backlash 134-150 µm, the driven's lag through a pitch 26.9 µm at its pitch circle, the torque ratio 0.885-1.187 of nominal (mu 0.10-0.20); 1624 N/mm on 1.00 of face
+
+2. The whole wind, part by part (static, running: each element carrying the fusee arbor's measured torque, 05 06_20, down the train at mu 0.15)
+  n (turns from full wind)  hours  chain lever  chain pull  click face  spring lead (bank 16.72°)  fusee wheel teeth  centre  intermediate  seconds  escape torque  swing  rate
+    0.00               0.0      10.39       34.2 N     48.4 N       15.64° (1.08° short)  18.1 N  3.2 N  0.573 N  0.071 N  90.3 µN·m  204.6°  0.25 s/d
+    0.50               3.2      10.47       33.3 N     47.5 N       15.35° (1.37° short)  17.8 N  3.1 N  0.561 N  0.070 N  88.5 µN·m  202.2°  0.19 s/d
+    1.00               6.4      10.57       32.7 N     47.2 N       15.26° (1.46° short)  17.6 N  3.1 N  0.558 N  0.070 N  87.9 µN·m  201.4°  0.17 s/d
+    2.00              12.9      10.83       31.3 N     46.3 N       14.99° (1.73° short)  17.3 N  3.0 N  0.547 N  0.068 N  86.3 µN·m  199.2°  0.12 s/d
+    3.00              19.3      11.23       29.7 N     45.4 N       14.72° (2.00° short)  17.0 N  3.0 N  0.537 N  0.067 N  84.6 µN·m  195.6°  -0.06 s/d
+    4.00              25.7      11.80       28.1 N     45.3 N       14.67° (2.05° short)  16.9 N  3.0 N  0.535 N  0.067 N  84.3 µN·m  195.2°  -0.07 s/d
+    5.00              32.1      12.57       26.6 N     45.7 N       14.80° (1.92° short)  17.1 N  3.0 N  0.540 N  0.067 N  85.1 µN·m  196.2°  -0.04 s/d
+    6.00              38.6      13.56       25.0 N     46.2 N       14.97° (1.75° short)  17.3 N  3.0 N  0.546 N  0.068 N  86.1 µN·m  197.4°  -0.02 s/d
+    7.00              45.0      14.76       23.5 N     47.4 N       15.32° (1.40° short)  17.7 N  3.1 N  0.560 N  0.070 N  88.3 µN·m  201.9°  0.19 s/d
+    8.00              51.4      16.49       21.1 N     47.4 N       15.32° (1.40° short)  17.7 N  3.1 N  0.560 N  0.070 N  88.3 µN·m  201.9°  0.18 s/d
+    8.50              54.6      17.84       18.6 N     45.2 N       14.65° (2.07° short)  16.9 N  3.0 N  0.534 N  0.067 N  84.2 µN·m  195.0°  -0.07 s/d
+    8.64              55.5      18.27       17.8 N     44.3 N       14.38° (2.34° short)  16.6 N  2.9 N  0.524 N  0.065 N  82.6 µN·m  193.0°  -0.12 s/d
+  ok  the maintaining spring never banks running: its lead is at most 15.64° (fully wound, the drive at its highest), 1.08° short of where its eye meets its square end (MSB 16.72°)
+  the train's static efficiency at mu 0.15 (the meshes' own mean ratios, the pivots at mu_p 0.12): 0.784 (the model's 0.780, escphys.js; wempe_physics.js's range 0.730-0.833)
+  ok  it lies in the range wempe_physics.js's parts give: the transmission's drive at the escape wheel is the budget's
+  
+  The drive over a whole run with every ripple at once: the chain's polygon on the fusee and the drum (the line of pull swinging about the last rivet on each, a 2.05 link on its radius), each mesh's ratio through its pitch (its table), against the smooth
+    the chain's polygon: its lever swings 0.49 % on the fusee fully wound (r 10.39), 0.16 % run down (r 18.27), 0.11 % on the drum, once a link (every 640 s at mid wind): 05 06_20's ±0.7 g reading is 0.53 %, as fine as this ripple
+    the swing over the run (TF 111 s): smooth 194.47-203.86°; with the chain's polygon 194.27-204.05°; with the meshes 192.85-204.50°; with both 192.69-204.58°
+  ok  the time's wander within a day from all the ripples together 57.8 ms (the chain's 0.7, the meshes' 57.9): a navigator rating it daily carries nothing of it
+
+3. The running transmission's modes at 12 h (the escape wheel on its stone; linearised about the running state only to find them)
+    at rest, free in their backlash (only friction loads them): change, ud
+       49.6 Hz  barrel 57 %, fusee 27 %
+      499.6 Hz  barrel 43 %, fusee 35 %
+      2.49 kHz  cannon 93 %, centre 4 %
+      3.01 kHz  hour 83 %, change 17 %
+      3.08 kHz  ratchet 62 %, fusee 38 %
+      3.37 kHz  fw 91 %, cannon 4 %
+      5.55 kHz  centre 78 %, inter 13 %
+      7.10 kHz  inter 52 %, sec 37 %
+      7.99 kHz  sec 62 %, inter 35 %
+     17.62 kHz  esc 99 %, sec 1 %
+     49.68 kHz  maintaining detent 99 %, ratchet 1 %
+     60.82 kHz  click 1 100 %, barrel 0 %
+     60.84 kHz  click 2 100 %, ratchet 0 %
+  ok  the lowest, 49.6 Hz (barrel and fusee), lies far above the beat's 2 Hz and its first harmonics: no part of the transmission is driven near its own frequency by the escapement
+
+4. A beat: the train as bodies on its meshes driving dynamics.js's escapement, against the same escapement on a rigid train
+  at 12 h the train gives the escape wheel 84.3 µN·m on average at the releases (79.1-88.9: each mesh's ratio where it stands; s 1.001 of the reference), the wheel with its own inertia (8.28 g·mm²) and the train's bodies behind it on their meshes: 48 beats in 24 s
+  ok  every beat taken, from each of 8 starts: 48, 48, 48, 48, 48, 48, 48, 48 beats, 0 trips or missed (the rigid train 48, 48, 48, 48, 48, 48, 48, 48)
+  the work an impulse gives the balance (its energy before the unlocking against after the impulse): 13.668 µJ against 13.713 on the rigid train at the same places of its meshes (-0.33 %): the train behind the escape wheel gives and lags as it starts
+  ~~  between the rigid trains: 13.713 µJ with the whole train's inertia at the escape wheel (9.56 g·mm²) and 14.430 with the escape arbor's alone (8.28): the meshes' backlash gives -6.4 % of the way, as a rigid train of 9.64 g·mm² (interpolated linearly; outside them where the stone's blow on the escaping tooth's back comes and goes between the two inertias: reported)
+      start 0 (the meshes as MESH sets them): as a drive 1.0159, the swing 195.19° → 198.87° (+3.68°), the rate +0.076 s a day; over the run -11.405 → -11.876 s a day, 196.42° → 195.02°
+      start 1: as a drive 0.9245, the swing 195.50° → 189.38° (-6.11°), the rate -0.157 s a day; over the run -11.431 → -10.839 s a day, 198.38° → 196.15°
+      start 2: as a drive 1.0069, the swing 199.17° → 199.63° (+0.46°), the rate +0.075 s a day; over the run -11.398 → -11.101 s a day, 199.30° → 199.55°
+      start 3: as a drive 1.0725, the swing 202.76° → 203.09° (+0.34°), the rate -0.166 s a day; over the run -11.492 → -11.524 s a day, 200.45° → 201.74°
+      start 4: as a drive 1.0808, the swing 200.04° → 203.71° (+3.67°), the rate -0.119 s a day; over the run -11.496 → -12.121 s a day, 198.40° → 196.51°
+      start 5: as a drive 0.8233, the swing 195.92° → 176.04° (-19.88°), the rate -0.825 s a day; over the run -11.453 → -10.071 s a day, 196.82° → 192.24°
+      start 6: as a drive 1.0996, the swing 204.30° → 206.40° (+2.09°), the rate -0.147 s a day; over the run -11.815 → -12.205 s a day, 199.53° → 199.22°
+      start 7: as a drive 0.9585, the swing 192.54° → 192.90° (+0.36°), the rate +0.010 s a day; over the run -10.787 → -10.577 s a day, 196.79° → 196.17°
+  ok  as a drive, the mean of 8 starts: the swing -1.93° (-19.88 to 3.68, sd 7.37; the drive 0.9978 of the reference, 198.97° → 197.07° at the mean drive), the escapement's rate -0.157 s a day (-0.825 to 0.076)
+  
+    each mesh through the beats (its force at the driven gear's pitch circle; whether it lets go):
+      fusee wheel → centre pinion            16.21 N at most (1.02 times its running 15.96 N); never lets go; never on its back flank
+      centre wheel → intermediate pinion     3.27 N at most (1.13 times its running 2.89 N); never lets go; never on its back flank
+      intermediate wheel → seconds pinion    0.8878 N at most (1.73 times its running 0.5142 N); never lets go; never on its back flank
+      seconds wheel → escape pinion          3.07 N at most (46.73 times its running 0.0657 N); lets go 1.09 % of the time, at most 0.85 ms at once; never on its back flank
+      cannon pinion → change wheel           0.0199 N at most; rests in its backlash between steps (only friction loads the motion work; static friction holds it there) and is taken up each step; never on its back flank
+      change pinion → hour wheel             0.0138 N at most; rests in its backlash between steps (only friction loads the motion work; static friction holds it there) and is taken up each step; never on its back flank
+      up-and-down pinion → its wheel         0.0000 N at most; free in its backlash: the fusee hardly turns in a beat; never on its back flank
+      (the escape wheel lands on its stone dead, as dynamics.js lands it, so the seconds wheel's way into the escape pinion's mesh is the most it can be)
+      the meshes' peaks over running from each start (fusee wheel, centre wheel, intermediate wheel, seconds wheel): 0: 1.0/1.1/1.7/46.7; 1: 1.1/1.3/2.6/56.7; 2: 1.1/1.3/2.6/182.6; 3: 1.1/1.2/1.8/146.4; 4: 1.0/1.2/1.8/1089.6; 5: 1.0/1.2/2.5/76.3; 6: 1.1/1.2/1.8/114.6; 7: 1.0/1.2/2.4/53.9
+  
+  ok    fusee wheel → centre pinion, its peak fully wound (this beat's 1.02 times running on wempe_strength.js's 20.2 N): 20.5 N, 90 MPa against brass's yield (41k cycles in 30 y) 300-450: margin 3.32-4.98
+  ok    centre wheel → intermediate pinion, its peak fully wound (this beat's 1.13 times running on wempe_strength.js's 3.9 N): 4.4 N, 49 MPa against brass's yield (263k cycles in 30 y) 300-450: margin 6.18-9.26
+  ok    intermediate wheel → seconds pinion, its peak fully wound (this beat's 1.73 times running on wempe_strength.js's 0.733 N): 1.3 N, 24 MPa against brass's endurance (2.0M cycles in 30 y) 120-170: margin 4.96-7.03
+  ok    seconds wheel → escape pinion, its peak fully wound (this beat's 46.73 times running on wempe_strength.js's 0.098 N): 4.6 N, 93 MPa against brass's endurance (15.8M cycles in 30 y) 120-170: margin 1.28-1.82
+    the seconds hand steps 3.0° a beat and overshoots where it comes to rest by 19.6″ at most (0.181 % of a step): the escape pinion's mesh and the seconds wheel's teeth give, and it rings down before the next release
+    the cannon pinion's fit carries at most 0.649 mN·m (the motion work's friction and its inertia's share of each step) against its 16.2 mN·m (section 7)
+  ok  the cannon pinion doesn't slip running (0.0000″)
+    the maintaining spring's lead 15.0133-15.0156° through the beats (static 15.035°); the chain's pull 31.488-31.491 N; click 1's face 46.56 N at most, click 2 stays on its tooth's back
+
+5. Winding: the key put on, a stroke, and the key let go (the escape wheel on its stone: the train hardly turns in a wind's few seconds)
+  the key put on at 24 h, the fusee wound back half a turn at a turn a second: the maintaining ratchet falls back 1.51° onto its detent (from half a tooth; anywhere from 0 to 3.0°), the detent's face taking 18.18 N at most (it holds 16.44 N after)
+  while the key turns the hand needs 358 mN·m at most (the mainspring's winding branch through the chain's lever, the clicks riding the click wheel's backs, the key's coil spring), the chain 25.4-31.2 N
+  
+  the key let go outright (the fingers off its paddle), the nearer click so far short of its face:
+     0.28° free: the click catches 100 % of its face with 97 N (running 45.3); the maintaining spring to 16.98° (banked 0.26°); the fusee wheel's teeth 30.2 N (running 15.6), the locking stone 0.027 N (0.0121); the chain 10.1-50.1 N
+     1.31° free: the click catches 100 % of its face with 123 N (running 45.3); the maintaining spring to 17.50° (banked 0.78°); the fusee wheel's teeth 51.5 N (running 15.6), the locking stone 0.044 N (0.0121); the chain 0.0-71.2 N, slack 2.2 ms
+     2.61° free: the click catches 100 % of its face with 217 N (running 45.3); the maintaining spring to 17.57° (banked 0.85°); the fusee wheel's teeth 54.5 N (running 15.6), the locking stone 0.051 N (0.0121); the chain 0.0-104.3 N, slack 1.1 ms
+     3.88° free: the click catches 100 % of its face with 403 N (running 45.3); the maintaining spring to 17.69° (banked 0.97°); the fusee wheel's teeth 71.4 N (running 15.6), the locking stone 0.078 N (0.0121); the chain 0.0-116.6 N, slack 1.7 ms
+     5.01° free: the click catches 100 % of its face with 295 N (running 45.3); the maintaining spring to 17.96° (banked 1.24°); the fusee wheel's teeth 78.9 N (running 15.6), the locking stone 0.141 N (0.0121); the chain 0.0-128.1 N, slack 1.2 ms
+  
+  the key eased back (the torque the hand holds it with relaxed to nothing over 0.15 s):
+     0.28° free: the click catches 100 % of its face with 47 N (running 45.3); the maintaining spring to 15.23°; the fusee wheel's teeth 16.5 N (running 15.6), the locking stone 0.014 N (0.0121); the chain 27.4-33.0 N
+     1.31° free: the click catches 100 % of its face with 47 N (running 45.3); the maintaining spring to 15.21°; the fusee wheel's teeth 16.4 N (running 15.6), the locking stone 0.014 N (0.0121); the chain 23.7-39.6 N
+     2.61° free: the click catches 100 % of its face with 47 N (running 45.3); the maintaining spring to 15.21°; the fusee wheel's teeth 16.4 N (running 15.6), the locking stone 0.014 N (0.0121); the chain 18.6-45.5 N
+     3.88° free: the click catches 100 % of its face with 60 N (running 45.3); the maintaining spring to 15.20°; the fusee wheel's teeth 16.4 N (running 15.6), the locking stone 0.014 N (0.0121); the chain 17.9-52.0 N
+     5.01° free: the click catches 100 % of its face with 68 N (running 45.3); the maintaining spring to 15.21°; the fusee wheel's teeth 16.4 N (running 15.6), the locking stone 0.014 N (0.0121); the chain 14.7-52.3 N
+  ok  every catch takes 100 % of the click's face or more: the clicks are down before the face comes (their springs follow the click wheel's backs)
+  
+  ok  eased, the click wheel's tooth at the worst catch: 67.8 N, 139 MPa against brass's yield (blows at the end of the strokes: about 2315 on each tooth in 30 years, a wind's 3.7 fusee turns in half-turn strokes over 35 teeth: low-cycle, where brass's fatigue strength is near its yield; the running load against its endurance is wempe_strength.js's) 300-450: margin 2.16-3.24
+  ok    the fusee wheel's teeth then: 16.5 N, 72 MPa against brass's yield (41k cycles in 30 y) 300-450: margin 4.14-6.21
+  ~~  let go outright, the click wheel's tooth at the worst catch: 402.5 N, 825 MPa against brass's yield 300-450: margin 0.36-0.55
+  ~~    the fusee wheel's teeth then: 78.9 N, 347 MPa against brass's yield 300-450: margin 0.86-1.30
+  ok  the chain goes slack as the fusee is caught and the drum runs on, then snatches: 128.1 N at most let go outright (eased 52.3), 3.1 times under its weakest part's strength (the rivet in shear, wempe_strength.js: margin 10.5 at 37.8 N)
+  
+  the worst outright let-go with the estimates it rests on varied:
+    the click's face ×0.25 (4 times softer: the click's screw and the ratchet's plate giving) the click 224 N, the fusee wheel's teeth 73.3 N, the stone 0.073 N, the spring to 17.95°
+    the click's face ×2                                                                    the click 456 N, the fusee wheel's teeth 81.1 N, the stone 0.089 N, the spring to 17.92°
+    the contacts' damping 2 %                                                              the click 449 N, the fusee wheel's teeth 85.0 N, the stone 0.098 N, the spring to 17.96°
+    the contacts' damping 20 %                                                             the click 238 N, the fusee wheel's teeth 72.1 N, the stone 0.072 N, the spring to 17.91°
+    the bank ×0.25                                                                         the click 295 N, the fusee wheel's teeth 51.9 N, the stone 0.048 N, the spring to 19.58°
+    the bank ×4                                                                            the click 367 N, the fusee wheel's teeth 139.3 N, the stone 1.873 N, the spring to 17.34°
+    the chain 120 N/mm                                                                     the click 278 N, the fusee wheel's teeth 91.1 N, the stone 0.090 N, the spring to 18.32°
+    the chain 700 N/mm                                                                     the click 410 N, the fusee wheel's teeth 90.4 N, the stone 0.121 N, the spring to 18.26°
+  ok  the maintaining spring is thrown to 17.96° at most (its bank 16.72°): let go outright it banks, and the blow passes through the fusee wheel and the train to the locking stone (0.141 N at most against 0.0121 running: the tooth's pressure draws the detent in, so a harder push holds it the faster)
+
+6. The stop at full wind: the key wound into it at a turn a second, then forced by a strong hand (1.06 N·m, Swain 1970: overwind.js's)
+  the stop bar meets the stop pin with the fusee, the key and the barrel at a turn a second: 35 N in the blow's first 20 ms, 50 N at most with the hand behind it (held there, the hand's 1.06 less the spring's 0.355 N·m on the fusee: 50 N; wempe_strength.js takes them added, 104 N, which is on the safe side)
+  the chain 25.6-40.0 N (fully wound running 34.2 N)
+  ok  the stop bar's bending at that 256 MPa, the pin's 88 MPa (wempe_strength.js's 532 and 183 MPa at its 104 N): under hardened steel's 1200-1800
+  ok  the chain's worst pull 40.0 N: 9.9 times under its weakest part's strength (the rivet in shear, wempe_strength.js: margin 10.5 at 37.8 N)
+
+7. The motion work and the up-and-down work
+  the hour hand's play against the minute hand: 1.1-1.3 minutes of time (the hour wheel's backlash on the change pinion, the change wheel's on the cannon pinion through 18/54)
+  ok  under a quarter hour: the hour hand reads with the minute hand
+  the up-and-down hand's play: 0.46-0.51° on the dial, 5-5 minutes of its 56-hour scale (7/8 of a turn), taken up as the fusee turns either way
+  the cannon pinion's friction: a 45 g knock across the case turns the hands on it at 3.03 mN·m (the minute hand's 0.56 g, 11.4 mm off its axis; the hour hand's through 1/12); setting the hands forward adds it to the centre arbor's 52.5 mN·m fully wound, and past 86 mN·m (the drive ×2.65) the balance swings to the escapement's trip (349°)
+  ok  the window 3.0-86 mN·m is wide; the model takes its middle, 16.2 mN·m (estimated: no sheet gives the fit). Set back, a fit over the centre arbor's 50.3 mN·m at 12 h pushes the train back on its locking stone while the hands turn
+
+(626 s)
+exit 0
