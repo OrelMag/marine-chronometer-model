@@ -21,7 +21,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 18 | 18 | 14 | 0 | 0 | 14 |
 | 9 | plates, pillars, movement ring | 8 | 0 | 26 | 24 | 14 | 0 | 1 | 13 |
 | 10 | case, gimbals, boxes, keys | 14 | 0 | 23 | 15 | 16 | 0 | 1 | 15 |
-| 11 | arrangements; the sheets the first pass left out | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 11 | arrangements; the sheets the first pass left out | 13 | 0 | 74 | 74 | 13 | 0 | 3 | 10 |
 | | **all** | **124** | **0** | **0** | **0** | **0** | **0** | **0** | **0** |
 
 ## Every sheet
@@ -139,19 +139,19 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | done | done | — | compared; refutation next |
 | `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | done | done | — | compared; refutation next |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | done | done | — | compared; refutation next |
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | done | done | — | — | — | read |
-| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | done | done | — | — | — | read |
-| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | done | done | — | — | — | read |
-| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | 11 | done | done | — | — | — | read |
-| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
-| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
-| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
-| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
-| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | 11 | done | done | — | — | — | read |
-| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | 11 | done | done | — | — | — | read |
-| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | 11 | done | done | — | — | — | read |
-| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | 11 | done | done | — | — | — | read |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 11 | done | done | — | — | — | read |
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | done | done | done | done | done | compared; refutation next |
+| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | 11 | done | done | done | done | done | compared; refutation next |
+| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | 11 | done | done | done | done | done | compared; refutation next |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 11 | done | done | done | done | done | compared; refutation next |
 
 ## Joints
 
@@ -255,6 +255,19 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 10-M14 | 05-01, 51-00 | build book (pp. 373-511) | gaps; no sheet for the 1940 key | book | sure | comparer | — | for the book |
 | 10-M15 | 05-02_01, 05-01_4 | glass (7-M10) | kept: 05 02_1's title block is the lever chronometer's (So 127 556 04, 0402); the Einheits bezel's sheet 05 01 01 draws the glass 3.56 thick, its top 15.8 over the bezel's underside, as built | note | likely | comparer | — | kept |
 | 10-M16 | — | checks.py FLOAT_BOX | four entries don't apply to the 6MX version | excuse | sure | comparer | — | open |
+| 11-M1 | coloured section, 05-03_2 | the lower balance settings' screws | read WN-18 (or WN-16), M1.2, not WN-10 (the hub's and dial's M1): rename | stale | likely | b11 reader F3, comparer | — | open |
+| 11-M2 | coloured section | WN-12a | drawn fitted in one mass's top as a brass cheese head (sure); the model keeps the holes empty per the owner's O-4 | note | sure | comparer | — | kept (O-4) |
+| 11-M3 | coloured section | heights | past ±0.3 at the arbors' domed ends, the drum floor, the escape wheel, the detent block's depth and the up-and-down pinion: each part's own sheet decides; record only | note | sure | comparer | — | kept |
+| 11-M4 | References catalogue, the essay's sheet chart | dates and numbers | carry Missing_details.md's wrong dates and numbers (05-36_2 127-556, 05-38 3800, 05-33 127-556.05/3300, ...): fix, then wempe_essaydata.js --write | stale | sure | b11 reader F5, comparer | — | open |
+| 11-M5 | — | README | stale: the Steg "Not built" (line 752: built, 0207's part 106); the hand setting's "BC 1010" reason (001 draws its block over holes 14-17: planned on this calibre's own plate) | stale | sure | comparer | — | open |
+| 11-M6 | coloured section | ring pin WN-201 | no `in 050802-1` relation; the section draws it 7.2 long against the model's estimated 5.25 | joint | likely | comparer | — | open |
+| 11-M7 | coloured section | the dial pin, the banking screw | lack the WN names the section gives them | stale | likely | comparer | — | open |
+| 11-M8 | coloured section | the connector's default | the section draws the band; the model defaults to the chain: for the owner (O-10) | version | sure | comparer | — | open |
+| 11-M9 | — | seconds jewel 050504-1 | no relation (bom-check.js checks jewels' seating by rays; batch 6's refuter: not a gap) | note | sure | comparer | — | kept |
+| 11-M10 | 05-08_03a | pillar plate holes 56, 57 (the contact, "nur bei Bedarf") | built in no version; Wempe 3955's plate has none: keep them out and note why (for the owner, O-10) | version | likely | b11 reader F10, comparer | — | open |
+| 11-M11 | — | 6MX contact screw and nut (S-5) | tap M1.0 through the holder and the lock nut; remove the OPEN SEAT_EXPECTED entry | joint | sure | seatcheck, comparer | — | open |
+| 11-M12 | — | the blind reading's errors | J8, J24, J32, J43, J52, J55, the fusee rows: the model right in each | note | sure | comparer | — | closed |
+| 11-M13 | — | audit.py (N-3, 9-M6) | the three floatScrews entries are the 6MX's ring screws: run the audit per version | tool | sure | comparer | — | open (with 9-M6) |
 | 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
 | 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
 | 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
@@ -344,7 +357,7 @@ Readings the two agents still disagree on after each has seen the other's argume
 | O-6 | 05-04_01 | the detent spring's bending point: the mark (12.48-12.56) or the spring's middle (12.884)? and the gold spring's (6.10-6.23, not 6.7) | adopt both marks | keep TP at the middle as an estimate | batch 2 comparer and refuter (2-M3, 2-M4) | owner (28 Oct): both, with batch 2's other corrections, then one physics rerun; stop and report if the swing, lock window or navigation leaves its band |
 | O-7 | 05-04_07-1, _07-2, _01; Wempe 3955 | the escape wheel: the sheets' rim recessed to 0.7 with teeth 1.4 standing, or 3955's full rim? | the sheets in the drawn versions, 3955 its photograph | full rim everywhere (the arbor's inertia +29 %) | escape-wheel check (2-M16) | owner (28 Oct): the sheets in the drawn versions; 3955 its photograph |
 | O-8 | 05-08_06 (U30), 05-03_9, Wempe 3955 | the stud's screw hole across the cock: U30's dimensioned 4,2, or the model's 4.35 (derived assuming a centred upright, which 05 03_9 doesn't draw); and the stud's square end and upright off-centre as 05 03_9 draws them (8-M15) | 4,2 with the stud drawn off-centre as its sheet shows | keep 4.35 and the symmetric stud | batch 8 comparer and refuter (8-M3, 8-M15); Wempe 3955 can't decide (±0.15) | owner (28 Oct): U30's 4,2, and the stud built off-centre as 05 03_9 draws it (square end 1.20 / 1.26, upright 0.96 / 0.82 about the hole line) |
-| O-9 | 05-08_02 (1946), 05-08_01b (1943) | the top plate as last revised: the 1946 sheet erases holes 51-53 (the holding device), the N-O pocket and 26, and draws the balance opening's tongue curved; the model's "last" keeps 51-53, the pocket and a straight tongue | drop 51-53 and the pocket, curve the tongue (scaled, estimated), keep 26 (its erasure a slip: the escape wheel needs it) | keep "last" as now | batch 9 comparer (9-M3) | |
+| O-9 | 05-08_02 (1946), 05-08_01b (1943) | the top plate as last revised: the 1946 sheet erases holes 51-53 (the holding device), the N-O pocket and 26, and draws the balance opening's tongue curved; the model's "last" keeps 51-53, the pocket and a straight tongue | drop 51-53 and the pocket, curve the tongue (scaled, estimated), keep 26 (its erasure a slip: the escape wheel needs it) | keep "last" as now | batch 9 comparer (9-M3) | owner (28 Oct, after the renders o9_compare.png): 1946 keeping 26: holes 51-53 and the pocket dropped, the tongue curved (an arc r 8.11 about 23 + (−3.04, +10.16), reach about 10-10.8: estimated), hole 26 kept; the other versions unchanged; app.js's step at H[53] retargeted |
 
 ## Evidence from other sessions
 
