@@ -43,6 +43,18 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/ci_expedite.py\"",
+            "timeout": 120
+          }
+        ]
+      }
     ]
   }
 }
