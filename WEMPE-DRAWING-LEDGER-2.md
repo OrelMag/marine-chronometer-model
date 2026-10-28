@@ -12,7 +12,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | the permanent fit check (`seatcheck.py`: on main and live as 3.46.00, `28ab3a44`) | — | done | 0 | 0 | 0 | 0 | 0 | 0 |
 | 1 | balance, hairspring, stud, collet, rollers, balance jewels | 13 | 0 | 19 | 16 | 15 | 0 | 0 | 15 |
-| 2 | escape wheel, detent, detent block, escape jewels | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2 | escape wheel, detent, detent block, escape jewels | 9 | 0 | 14 | 11 | 15 | 0 | 0 | 15 |
 | 3 | maintaining work, maintaining detent, stop work | 9 | 9 | 18 | 14 (4 kept) | 16 | 13 | 1 | 2 (book) |
 | 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 14 | 16 | 16 | 19 | 12 | 6 | 3 (book) |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 12 | 18 | 18 | 17 | 13 | 2 | 2 (book, batch 10) |
@@ -41,15 +41,15 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 1 | done | done | done | done | done | refuted; corrections next |
 | `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 1 | done | done | done | done | done | refuted; corrections next |
 | `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | done | done | done | done | — | compared; refutation next |
+| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | done | done | done | done | — | compared; refutation next |
 | `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
 | `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
 | `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
@@ -182,6 +182,21 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 1-M13 | — | bom.json | no relations for the stones, the spring's ends, the upright in the cock's slot; the stud pin "on" the stud, not in its hole | joint | sure | comparer | not tested | open |
 | 1-M14 | 05-03_5, 05-03_1, coloured section | hairspring stud's Ø 0.7 hole (J1, J16) | its height: 05-03_5 dimensions the upper pinning point 3,15 under the stud bar (3.15 + 9.5 + 0.75 = 13.4 closes), 05-03_1's stud detail 3,15 and 0,7 from the cock's underside, the coloured section draws it about 0.8 under the cock; 05-03_9 gives the hole no place (drilled at fitting). The model's hole 3.78 under the bar, 0.63 too far toward the dial: the spring's ends 8.82 apart, not 9.5; moving it brings its radius to about 3.55. Shared with the README Physics 2c reading of the turns (physics) | wrong | likely | refuter | — | open (physics) |
 | 1-M15 | 05-03_9, _1, 05-03_3-2 | stud bar, collet, staff sizes | built at a limit, not the middle of the fit as elsewhere: the bar at the top of 1,6 −0,2 (05-03_1's detail gives 1,5), 3,5 −0,02 and 9,1 −0,2 at their maxima, 1,6 +0,1 at its minimum, 2,14 at its lower limit | wrong | likely | refuter | — | open |
+| 2-M1 | 05-04_10-1, 05-04_01 | detent pipe (all versions) | 1436 and 05 04_1 run the pipe from the blade's top edge down 1.9 (2.0 as first drawn) to about 4.25 under the plate; the model 1.90-3.80 as last revised, 1.95-3.65 (1.7 long) as first drawn, 1943 and 6MX: the detent's inertia +0.8 % / +2.6 %, WESC.PIPE0 (physics) | wrong | likely | comparer | — | open (physics) |
+| 2-M2 | 05-04_01 | detent arm (first) | 05 04_1's arm 2.5 wide, set back 1.07 from the stone's line; the model's photographed 3.56 (Wempe 3955 keeps the photographs) | version | likely | comparer | — | open |
+| 2-M3 | 05-04_01 | gold spring bending point | the dashed line 6.22 from the stone; the model's GB 6.7 lands on the "0,0?" glyphs: the free length 11.24 → 10.77, the strip about 14 % stiffer, the lock's window moves: re-measure on the sheet first, then the whole escapement chain (physics) | wrong | likely | comparer | — | open (physics) |
+| 2-M4 | 05-04_01 | detent spring bending point | marked 12.60 from the stone; the model's TP 12.88 is the spring's middle: for the owner (O-6) | wrong | possible | comparer | — | open |
+| 2-M5 | 05-04_07-2, 05-04_01, 02 04 08 a | escape wheel's fit | 1,8 H7/h6 (the callout, 05 04_1, the hub's scale; the spigot drawn 1.9-2.05 wide), not the table's 1.7 (the limits are alike for both) | wrong | likely | b2 reader, comparer | — | open |
+| 2-M6 | 05-04_01, _03 | detent block (first, 3955): S-2 | no M1 and no pin holes; 05 04_1 draws the pins and screw going into the block; the GUB's old detent has the pins | joint | sure | seatcheck, comparer | — | open |
+| 2-M7 | — | 6MX block screw WN-gkA, foot stop screw 6MX.gke: S-3, S-4 | both run in solid metal | joint | sure | seatcheck, comparer | — | open |
+| 2-M8 | 05-04_03 | detent block end face | 05 04 01-4 draws only the M1; the model's Ø 0.45 pin holes (needed for 1436's pins) an estimate the code credits to that sheet; the gold spring's screw hole also an estimate | stale | sure | b2 reader, comparer | — | open |
+| 2-M9 | 05-04_03 | detent block's split upright | it clamps the banking screw; the sheet's slit lies across the plate, the model's parallel to it (from other clocks' photographs), as last revised too | wrong | likely | b2 reader, comparer | — | open |
+| 2-M10 | 05-04_02, _01 | gold spring's head | the 1940 layout's head against the part sheet | inconsistent | possible | comparer | — | open |
+| 2-M11 | 05-04_10-1, -2 | detent horn | flush with the "oben" edge; an end bevel line 0.75 from the tip | wrong | possible | comparer | — | open |
+| 2-M12 | — | README, code, DFM | stale: "18.77" (18.738), "0.8 in the web" (0.7), DFM's "0.6 deep", "the 0.4 step left out" (built), the gold spring "about 15" (15.31) | stale | sure | comparer | — | open |
+| 2-M13 | 05-04 | build book (v3.41.00), makers.js | the detent page no section sizes, no H7/h6 or "Rad von uns aufgesetzt"; the surface signs ▽▽▽, (▽▽▽▽) ▽▽▽ not carried; a makers.js citation wrong | book | sure | b2 reader, comparer | — | for the book (makers.js open) |
+| 2-M14 | — | bom.json | no relations for the locking stone; WN-14's "tap" names a plain bore (the gold spring's screw: a plain Ø 0.66 shank in a plain Ø 0.70 bore labelled tapped) | joint | sure | comparer | — | open |
+| 2-M15 | 05-04_07-1, -2 | escape arbor | drawn about Ø 1.0-1.1 between the wheel and the pinion; the model Ø 1.2 | wrong | possible | comparer | — | open |
 | 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
 | 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
 | 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
