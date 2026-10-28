@@ -1214,18 +1214,23 @@ const WFUSEE=(()=>{
       const arc=(o,c,r,a0,a1,ccw)=>{let d=a1-a0;if(ccw)while(d<=0)d+=TAU;else while(d>=0)d-=TAU;const n=Math.max(2,Math.ceil(Math.abs(d)/(6*D2R)));for(let i=0;i<=n;i++)o.push(pt(c,r,a0+d*i/n));return o;};
       const cc=(c1,r1,c2,r2)=>{const D=V(c2,c1),L=Math.hypot(...D),a=(r1*r1-r2*r2+L*L)/(2*L),h=Math.sqrt(Math.max(0,r1*r1-a*a)),m=[c1[0]+D[0]*a/L,c1[1]+D[1]*a/L];return[[m[0]-D[1]*h/L,m[1]+D[0]*h/L],[m[0]+D[1]*h/L,m[1]-D[0]*h/L]];};   /* circles' crossings */
       const lc=(p,d,c,r)=>{const w=V(p,c),b=dot(w,d),q=b*b-(dot(w,w)-r*r);return[-b-Math.sqrt(q),-b+Math.sqrt(q)].map(t=>[p[0]+d[0]*t,p[1]+d[1]*t]);};   /* a line's crossings with a circle, along d */
-      const notch=(B,p,d,w)=>{const nl=[-d[1],d[0]],pl=[p[0]-nl[0]*w,p[1]-nl[1]*w],xR=lc(p,d,B,1)[1],xL=lc(pl,d,B,1)[1];   /* the band's faces (p on its right face, d down it, w across) out through the bottom circle B (r 1) */
-        return{aL:ang(B,xL),aR:ang(B,xR),put:o=>{o.push([xL[0]-d[0]*0.1,xL[1]-d[1]*0.1],[xR[0]-d[0]*0.1,xR[1]-d[1]*0.1]);},mouth:[(xL[0]+xR[0])/2,(xL[1]+xR[1])/2]};};
+      /* the band's slot (12 and 13 each draw the band 0,22 +0,03 running up into the hook from its notch to the sheet's reference line, 2,5 over the bottom circle's centre:
+         the round hook's through the seat's centre, the drum hook's along the barb's line; "hart gelötet", 11): cut 0.235 wide (the 0,22 +0,03's middle) about the band's
+         faces, its end square to the band where its right face reaches the line yt; its mouth's edges broken 0.1 ("Kante brechen"). Until 28 October 2026 only the 0.1 break
+         was cut and the band butted on it (drawing check 2, 4-M8) */
+      const notch=(B,p,d,w,yt)=>{const nl=[-d[1],d[0]],e=(0.235-w)/2,off=(q,k)=>[q[0]+nl[0]*k,q[1]+nl[1]*k],pR=off(p,e),pL=off(p,-w-e),xR=lc(pR,d,B,1)[1],xL=lc(pL,d,B,1)[1];   /* the slot's faces (p on the band's right face, d down it, w across) out through the bottom circle B (r 1) */
+        const up=(q,y)=>{const t=(y-q[1])/-d[1];return[q[0]-d[0]*t,q[1]-d[1]*t];},tR=up(pR,yt),tL=off(tR,-0.235),bR=lc(p,d,B,1)[1],bL=lc(off(p,-w),d,B,1)[1],tM=off(up(p,yt),-w/2);
+        return{aL:ang(B,xL),aR:ang(B,xR),put:o=>{o.push([xL[0]-d[0]*0.1,xL[1]-d[1]*0.1],tL,tR,[xR[0]-d[0]*0.1,xR[1]-d[1]*0.1]);},mouth:[(bL[0]+bR[0])/2,(bL[1]+bR[1])/2],top:[tM[0]+d[0]*0.01,tM[1]+d[1]*0.01]};};   /* top: the band's end, its middle 0.01 short of the slot's end */
       /* the round hook, walked round anticlockwise from the bottom circle's tangent with the right wall */
       const S=[0,0],N=[-1.25,-0.5],B=[1.4,-2.5],K=[0.165,-0.343],RK=2.076,F=[-3.465,-1.700],RF=Math.hypot(...V(B,F))+1,b5=5*D2R,dB=[Math.sin(b5),-Math.cos(b5)];
-      const nb=notch(B,B,dB,0.22),[lw0,lw1]=tg(N,0.4,1,S,0.4,-1),b7=7.9*D2R,dk=[-Math.sin(b7),-Math.cos(b7)],nk=[-dk[1],dk[0]],pN=[N[0]-0.4*nk[0],N[1]-0.4*nk[1]];
+      const nb=notch(B,B,dB,0.22,0),[lw0,lw1]=tg(N,0.4,1,S,0.4,-1),b7=7.9*D2R,dk=[-Math.sin(b7),-Math.cos(b7)],nk=[-dk[1],dk[0]],pN=[N[0]-0.4*nk[0],N[1]-0.4*nk[1]];
       const X1=cc(F,RF,K,RK).sort((a,b)=>b[1]-a[1])[0],X2=lc(pN,dk,K,RK)[0];
       const T=[];arc(T,B,1,Math.PI,nb.aL-0.1,true);nb.put(T);arc(T,B,1,nb.aR+0.1,ang(F,B),true);arc(T,F,RF,ang(F,B),ang(F,X1),true);arc(T,K,RK,ang(K,X1),ang(K,X2),true);
       arc(T,N,0.4,ang(N,pN),ang(N,lw0),true);arc(T,S,0.4,ang(S,lw1),0,false);
       /* the drum hook, from the tip */
       const Tp=[0,4.5],CR=[-7.972,-1.2],B3=[1.0,-2.5],Q=[0,0],BT=[-1.0,-0.3],A4=[2.8,-0.35],b10=10*D2R,dB3=[-Math.sin(b10),-Math.cos(b10)],b75=7.5*D2R,df=[Math.sin(b75),-Math.cos(b75)],nf=[-df[1],df[0]];
       const pT=[Tp[0]-0.2*nf[0],Tp[1]-0.2*nf[1]],Xa=lc(pT,df,A4,4)[0],tA=pt(A4,4,ang(A4,BT)),[bl0,bl1]=tg(BT,0.2,1,Q,0.2,-1),[wl0,wl1]=tg(Q,0.2,-1,B3,1,1);
-      const n3=notch(B3,[0.8,-2.5],dB3,0.22),XB=cc(B3,1,CR,10).sort((a,b)=>a[1]-b[1])[0],tT=pt(CR,10,ang(CR,Tp));
+      const n3=notch(B3,[0.8,-2.5],dB3,0.22,0),XB=cc(B3,1,CR,10).sort((a,b)=>a[1]-b[1])[0],tT=pt(CR,10,ang(CR,Tp));
       const D=[];arc(D,Tp,0.2,ang(Tp,tT),ang(Tp,pT),true);D.push(Xa);arc(D,A4,4,ang(A4,Xa),ang(A4,tA),true);arc(D,BT,0.2,ang(BT,tA),ang(BT,bl0),true);arc(D,Q,0.2,ang(Q,bl1),ang(Q,wl0),false);
       arc(D,B3,1,ang(B3,wl1),n3.aL-0.1,true);n3.put(D);arc(D,B3,1,n3.aR+0.1,ang(B3,XB),true);arc(D,CR,10,ang(CR,XB),ang(CR,tT),true);
       /* into the chain's hooks' frames: the round hook's x up the band from its mouth (the band's middle where it leaves), y to its left; the drum hook's x up its left
@@ -1233,7 +1238,7 @@ const WFUSEE=(()=>{
       const dedup=o=>o.filter((p,i)=>Math.hypot(...V(p,o[(i+1)%o.length]))>1e-4);
       const u5=[-dB[0],-dB[1]],v5=[-u5[1],u5[0]],M5=nb.mouth,top=dedup(T).map(p=>{const q=V(p,M5);return[dot(q,u5),dot(q,v5)];});
       const uw=V(wl0,wl1),lw=Math.hypot(...uw),uW=[uw[0]/lw,uw[1]/lw],mW=[uW[1],-uW[0]],bot=dedup(D).map(p=>[dot(V(p,n3.mouth),uW)+1.5,dot(V(p,wl1),mW)]).reverse();
-      return{top,bot,seat:[dot(V(S,M5),u5),dot(V(S,M5),v5)],mouth:[1.5,dot(V(n3.mouth,wl1),mW)]};})();
+      return{top,bot,seat:[dot(V(S,M5),u5),dot(V(S,M5),v5)],mouth:[1.5,dot(V(n3.mouth,wl1),mW)],endT:[dot(V(nb.top,M5),u5),dot(V(nb.top,M5),v5)],endB:[dot(V(n3.top,n3.mouth),uW)+1.5,dot(V(n3.top,wl1),mW)]};})();   /* endT, endB: the band's ends in the slots, in each hook's frame */
     const hkB=(o,id)=>{const g=new THREE.Group();gBd.add(g);tag(mesh(g,slab(o,[],-0.39,0.39),M.chain),id);return g;};
     const BYW=20.81-CG.band.rbp,bHT=hkB(BHK.top,'050703-2'),bHB=hkB(BHK.bot.map(([x,y])=>[x,y+BYW]),'050703-3');   /* the drum hook's wall 0.01 off the drum */
 
@@ -1291,9 +1296,10 @@ const WFUSEE=(()=>{
         /* the hooks: the top one from the first rivet back to the pin, the bottom one on from the last rivet along the drum */
         const nJ=J.length-1;place(cHT,J[0],PINA,Rf,'top',Math.atan2(HKSEAT[1],HKSEAT[0]),J[1].clone().sub(J[0]).normalize());place(cHB,J[nJ],null,beta,'bot',0,J[nJ].clone().sub(J[nJ-1]).normalize());}
       else{const q=pol(PINR,PINA+Rf),SD=Math.hypot(...BHK.seat),dh=v=>Math.hypot(v.x-fx-q[0],v.z-fz-q[1]);let i=1;while(i<pts.length-1&&dh(pts[i])<SD)i++;   /* the band from where its round hook's seat, SD from its mouth, lies on the pin */
-        const a=pts[i-1],b=pts[i],t=(SD-dh(a))/Math.max(1e-9,dh(b)-dh(a)),p0=dh(a)>=SD?a:a.clone().lerp(b,Math.min(1,Math.max(0,t))),bp=[p0,...pts.slice(i)];
+        const a=pts[i-1],b=pts[i],t=(SD-dh(a))/Math.max(1e-9,dh(b)-dh(a)),p0=dh(a)>=SD?a:a.clone().lerp(b,Math.min(1,Math.max(0,t)));
         place(bHT,p0,PINA,Rf,'top',Math.atan2(BHK.seat[1],BHK.seat[0]));place(bHB,pts[pts.length-1],null,beta,'bot');
-        bp.push(new THREE.Vector3(BHK.mouth[0],0,-(BHK.mouth[1]+BYW)).applyMatrix4(bHB.matrix));   /* on into the drum hook's mouth, risen off the drum */
+        const bp=[new THREE.Vector3(BHK.endT[0],0,-BHK.endT[1]).applyMatrix4(bHT.matrix),p0,...pts.slice(i)];   /* from its end in the round hook's slot */
+        bp.push(new THREE.Vector3(BHK.mouth[0],0,-(BHK.mouth[1]+BYW)).applyMatrix4(bHB.matrix),new THREE.Vector3(BHK.endB[0],0,-(BHK.endB[1]+BYW)).applyMatrix4(bHB.matrix));   /* on into the drum hook's mouth, risen off the drum, and up its slot */
         bdM.geometry.dispose();bdM.geometry=ribbonGeo(bp,0.22,0.78);}
       /* the mainspring: the barrel's turns from run down give its turns (its outer end turns with the drum, its inner end stays with the arbor) */
       const T=msTurns(beta);msM.geometry.dispose();msM.geometry=msGeo(Math.max(msT+0.1,T));pMS.userData.T=T;
