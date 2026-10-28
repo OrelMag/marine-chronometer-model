@@ -15,7 +15,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 2 | escape wheel, detent, detent block, escape jewels | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 3 | maintaining work, maintaining detent, stop work | 9 | 9 | 18 | 14 (4 kept) | 16 | 13 | 1 | 2 (book) |
 | 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 14 | 16 | 16 | 19 | 12 | 6 | 3 (book) |
-| 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 0 | 18 | 14 | 16 | 0 | 1 | 15 |
+| 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 12 | 18 | 18 | 17 | 13 | 2 | 2 (book, batch 10) |
 | 6 | going train | 10 | 0 | 16 | 15 | 12 | 0 | 0 | 12 |
 | 7 | motion work, hands, dial | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -73,18 +73,18 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 4 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
 | `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 4 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
 | `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 4 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
-| `05-06/Wempe_05-06_01.jpg` | 05 06 (cross-reference 05 04 06 struck) Schnecke kompl. | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_02-1.jpg` | 020613-2 (127-556.04-060) Schneckenkörper | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_02-2.jpg` | 05 06 04-2 Schneckenkörper | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_03-1.jpg` | 02 06 13 (127-556.04 U17) Schnecke | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_03-2.jpg` | 05 06 04 Schnecke | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_05.jpg` | 05 06 00-1 Staubplatte | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_06.jpg` | 05 06 00-2 Vorreiber | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_07.jpg` | 05 06 00-3 Schneckenrad | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_08.jpg` | 05 06 00-4 Deckplatte | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | done | done | done | done | done | refuted; corrections next |
+| `05-06/Wempe_05-06_01.jpg` | 05 06 (cross-reference 05 04 06 struck) Schnecke kompl. | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_02-1.jpg` | 020613-2 (127-556.04-060) Schneckenkörper | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_02-2.jpg` | 05 06 04-2 Schneckenkörper | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_03-1.jpg` | 02 06 13 (127-556.04 U17) Schnecke | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_03-2.jpg` | 05 06 04 Schnecke | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_05.jpg` | 05 06 00-1 Staubplatte | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_06.jpg` | 05 06 00-2 Vorreiber | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_07.jpg` | 05 06 00-3 Schneckenrad | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_08.jpg` | 05 06 00-4 Deckplatte | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
+| `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 |
 | `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 6 | done | done | done | done | — | compared; refutation next |
 | `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 6 | done | done | done | done | — | compared; refutation next |
 | `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 6 | done | done | done | done | — | compared; refutation next |
@@ -222,24 +222,25 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 4-M18 | 05-07_06, _07, _08, _03 | build book | drum and lid pages lack a plan view; the arbor's Ø 2 labelled Ø 1.50; the ratchet's A-A misses its axis | book | sure | comparer | — | for the book |
 | 4-M19 | 05-07_11-14 | build book | chain, band and mainspring drawn as they lie in the movement; the hooks' contour tables with wrong arc radii | book | sure | comparer | — | for the book |
 | 4-M20 | 05-07_14 | chain top hook | the "30°" against the drawing | inconsistent | possible | comparer | confirmed (the edge about 45° to the throat wall) | kept `c4c919d9`: the figures (R 0,4 at 3,5, throat 1,8, nose 2 / 2.5) leave one tangent edge at 30.1°; the drawn ~50° goes with an older seat at 3.0 — for the owner (O-2) |
-| N-2 | 05-07_12, _13 | band (fine.py with the band) | the band's round hook in the fusee's flange (0.550 mm³) and its drum hook in the barrel (0.039 mm³); on main too; band runs not in ci | wrong | sure | batch 4 corrector | — | open (batch 4/5) |
+| N-2 | 05-07_12, _13 | band (fine.py with the band) | the band's round hook in the fusee's flange (0.550 mm³) and its drum hook in the barrel (0.039 mm³); on main too; band runs not in ci | wrong | sure | batch 4 corrector | — | recorded in README Unresolved (batch 5): no sheet settles it — for the owner (O-5) |
 | N-3 | — | audit.py (wempe) | three ring-screw expected entries no longer found ('take it out'); on main too | excuse | sure | batch 4 corrector | — | open (batch 9) |
-| 5-M1 | 05-06_15 | fusee arbor (winding square) | "3,1 r6" (+0.023/+0.015 is r6 for 3-6 mm; 2,92 at the point follows from 3.12 at 1:100 over 20.3); the model's 3.17 is 0.05 too large: affects the key's socket (batch 10) and the dust plate | wrong | sure | comparer | confirmed (sure: the 1:100 to 2,92 needs 3.12) | open |
-| 5-M2 | 05-06_05 | dust plate | its square hole straight 3.134 (no 1:100 taper, 0.022 over H7), 0.004-0.034 loose; it sits 4 off the journal's shoulder, where the coloured section draws it on the square's root | joint | likely | comparer | confirmed: 0.004-0.024 loose (the square only 2.0 of the hole); 05 06_1 draws it 1 off the root | open |
-| 5-M3 | 05-06_06, _01 | Vorreiber and its pin | the pin drawn as two ends stopping 0.012 short of the arbor; the arbor's 1.1 cross hole empty; the Vorreiber 0.01 clear on its taper: nothing holds it, the fusee wheel or the maintaining work on the arbor; the recorded reason is the Exploded view's, not a sheet's; the coloured section draws the pin standing out of the hub both sides | joint | sure | b5 reader F7, comparer | confirmed: the ends 0.025 short of the arbor's metal; the stack can drop 0.92 to the pillar plate and turn | open |
-| 5-M4 | 05-06_02-2 | pin 05 06 04-4 in the fusee body | Ø 0.500 in a 0.5045 hole: clearance where the sheet presses it (0.006-0.022) | joint | sure | comparer | confirmed (0,5 H7 with the pin +0.022/+0.015) | open |
-| 5-M5 | — | bom.json | the Vorreiber and the chain pin called press though clear on the solid; the up-and-down pinion has no relation (all fail once press ≤0.02 lands) | joint | sure | comparer | confirmed; the dust plate and pin 05 06 04-4 also called press while clear | open |
-| 5-M6 | — | README (line 607) | says the Vorreiber's relief is 0.06-0.31 deep; the solid's is 0.425 | stale | sure | comparer | confirmed | open |
-| 5-M7 | 05-06_16 | fusee.js comment | puts the click wheel's chamfer on the wrong face; the geometry's right | stale | sure | comparer | not tested | open |
-| 5-M8 | — | checks.py EXPECTED | ('band:Buffer','fusee:Lathe') stale: no fusee mesh is a lathe now; the band's entries need fine.py run with the band | excuse | sure | comparer | confirmed (no LatheGeometry in any version) | open |
-| 5-M9 | 05-06_02-2 | fusee body | A-B's lower half draws no flange slot away from A | inconsistent | possible | comparer | confirmed, likely (B draws one land about 1.15 wide) | open |
-| 5-M10 | 05-06_07 | README (line 822) | its wording on the wheel's tube figure ("6,6 +0,1", drawn about 6.3-6.4; the model's 6.5 g6 kept for the 1948 ratchet's 6.5 H7 bore) | stale | likely | b5 reader F4, comparer | confirmed: the ratchet's 6,5 H7 is 05 06 02-1 of 1940, unchanged in 1948; the tube drawn 6.31-6.44 | open |
-| 5-M11 | 05-06_03-2 | click wheel screws WN-19 | no thread drawn on them, unlike WN-20 and WN-21 | fastener | likely | comparer | confirmed | open |
+| 5-M1 | 05-06_15 | fusee arbor (winding square) | "3,1 r6" (+0.023/+0.015 is r6 for 3-6 mm; 2,92 at the point follows from 3.12 at 1:100 over 20.3); the model's 3.17 is 0.05 too large: affects the key's socket (batch 10) and the dust plate | wrong | sure | comparer | confirmed (sure: the 1:100 to 2,92 needs 3.12) | corrected `62ed7032` (3.12, 1:100 to 2,92; the key's 3.1 +0.05 socket takes it) |
+| 5-M2 | 05-06_05 | dust plate | its square hole straight 3.134 (no 1:100 taper, 0.022 over H7), 0.004-0.034 loose; it sits 4 off the journal's shoulder, where the coloured section draws it on the square's root | joint | likely | comparer | confirmed: 0.004-0.024 loose (the square only 2.0 of the hole); 05 06_1 draws it 1 off the root | corrected `62ed7032` (1:100, 0.0014 tight, 1.0 off the root per 05 06_1) |
+| 5-M3 | 05-06_06, _01 | Vorreiber and its pin | the pin drawn as two ends stopping 0.012 short of the arbor; the arbor's 1.1 cross hole empty; the Vorreiber 0.01 clear on its taper: nothing holds it, the fusee wheel or the maintaining work on the arbor; the recorded reason is the Exploded view's, not a sheet's; the coloured section draws the pin standing out of the hub both sides | joint | sure | b5 reader F7, comparer | confirmed: the ends 0.025 short of the arbor's metal; the stack can drop 0.92 to the pillar plate and turn | corrected `62ed7032`, `3bc7d079` (seated 0.0002-0.008 tight; one taper pin through hub and arbor, reamed together, built straight Ø 1.15/1.16; Exploded: the stack spreads with the fusee) |
+| 5-M4 | 05-06_02-2 | pin 05 06 04-4 in the fusee body | Ø 0.500 in a 0.5045 hole: clearance where the sheet presses it (0.006-0.022) | joint | sure | comparer | confirmed (0,5 H7 with the pin +0.022/+0.015) | corrected (pin Ø 0.5185 in 0.5045) |
+| 5-M5 | — | bom.json | the Vorreiber and the chain pin called press though clear on the solid; the up-and-down pinion has no relation (all fail once press ≤0.02 lands) | joint | sure | comparer | confirmed; the dust plate and pin 05 06 04-4 also called press while clear | corrected `b42da35c`, `00a4f81f` (the chain pin Ø 0.567 in 0.555 estimated; the pinion 0.023-0.028 tight) |
+| 5-M6 | — | README (line 607) | says the Vorreiber's relief is 0.06-0.31 deep; the solid's is 0.425 | stale | sure | comparer | confirmed | corrected |
+| 5-M7 | 05-06_16 | fusee.js comment | puts the click wheel's chamfer on the wrong face; the geometry's right | stale | sure | comparer | not tested | corrected |
+| 5-M8 | — | checks.py EXPECTED | ('band:Buffer','fusee:Lathe') stale: no fusee mesh is a lathe now; the band's entries need fine.py run with the band | excuse | sure | comparer | confirmed (no LatheGeometry in any version) | corrected (stale entries out; three sheet-backed entries in) |
+| 5-M9 | 05-06_02-2 | fusee body | A-B's lower half draws no flange slot away from A | inconsistent | possible | comparer | confirmed, likely (B draws one land about 1.15 wide) | corrected (fusee 0.35 g heavier, I 3880 → 3963) |
+| 5-M10 | 05-06_07 | README (line 822) | its wording on the wheel's tube figure ("6,6 +0,1", drawn about 6.3-6.4; the model's 6.5 g6 kept for the 1948 ratchet's 6.5 H7 bore) | stale | likely | b5 reader F4, comparer | confirmed: the ratchet's 6,5 H7 is 05 06 02-1 of 1940, unchanged in 1948; the tube drawn 6.31-6.44 | corrected |
+| 5-M11 | 05-06_03-2 | click wheel screws WN-19 | no thread drawn on them, unlike WN-20 and WN-21 | fastener | likely | comparer | confirmed | corrected (WN-19 M2 and the body's holes tapped) |
 | 5-M12 | 05-06 | build book | level figures outside the frame (p. 210); p. 211 repeats the "flat milled across the flange"; facet-flat diameters (p. 214); the cover plate's screw hole as two broken arcs; the Vorreiber's and fusee wheel's holes and bores listed wrongly or missing | book | sure | comparer | not tested | for the book |
-| 5-M13 | 05-06_02-2 | fusee body groove | 10.07 against 10,04: the reading not recorded in the README | stale | possible | b5 reader F10, comparer | refuted: both body issues read 10,07; 05 06_20's 10,04 is a steel fusee's curve | closed: 10,07 as built (record only) |
-| 5-M14 | 05-06_15 | fusee arbor stub | its 1:70 taper (the up-and-down pinion's seat) not modelled | missing | possible | comparer | confirmed, likely: the stub tapers 1:225 where the sheet says 1:70 | open |
-| 5-M15 | 05-06_07, _01 | fusee wheel bore | 4.55 matches neither "4 +0,1" nor 05 06_1's 4,45 H7/g6: 0.08-0.12 clearance, 4-5 times H7/g6's; an estimate, not a reading | estimate | sure | refuter | — | open (record or bore 4,45 H7) |
-| 5-M16 | 05-06_06, _15, _01 | Vorreiber pin | its size differs over the sheets: 0.8 in the hub (05 06 00-2), 1.1 taper-reamed in the arbor (05 06 04-1), Ø 1.2 on 05 06_1 | inconsistent | sure | refuter | — | open (with 5-M3) |
+| 5-M13 | 05-06_02-2 | fusee body groove | 10.07 against 10,04: the reading not recorded in the README | stale | possible | b5 reader F10, comparer | refuted: both body issues read 10,07; 05 06_20's 10,04 is a steel fusee's curve | closed (Readings corrected) |
+| 5-M14 | 05-06_15 | fusee arbor stub | its 1:70 taper (the up-and-down pinion's seat) not modelled | missing | possible | comparer | confirmed, likely: the stub tapers 1:225 where the sheet says 1:70 | corrected (1:70, 1.675 mid) |
+| 5-M15 | 05-06_07, _01 | fusee wheel bore | 4.55 matches neither "4 +0,1" nor 05 06_1's 4,45 H7/g6: 0.08-0.12 clearance, 4-5 times H7/g6's; an estimate, not a reading | estimate | sure | refuter | — | kept as an estimate: a 4,45 H7 bore would wedge on the 1:70 seat |
+| 5-M16 | 05-06_06, _15, _01 | Vorreiber pin | its size differs over the sheets: 0.8 in the hub (05 06 00-2), 1.1 taper-reamed in the arbor (05 06 04-1), Ø 1.2 on 05 06_1 | inconsistent | sure | refuter | — | corrected with 5-M3 |
+| 5-M17 | 05-01_6 | 1940 key (batch 10) | its round Ø 3.1 socket can't take a square 3.08-3.12 across the flats (wrong with the old square too) | joint | sure | batch 5 corrector | — | open (batch 10) |
 | 6-M1 | 05-05_02, _05, _08 | seconds, intermediate, centre wheels | the hubs treated three ways (the centre's 0.25 proud on the dial side, the others flush); the kompl. sheets draw all three alike, each hub at the metal's thickness with its seat 0-0.1 beyond for riveting; Wempe 3955 shows the seconds hub proud toward the top plate where the sheet's 0,2 is on the pinion side — which side: for the owner (O-3) | inconsistent | likely | b6 reader F1, comparer | — | open |
 | 6-M2 | — | README 84/85, app.js cards | say the intermediate and seconds hubs stand 0.2 proud (undone 26 Oct) | stale | sure | b6 reader F2, comparer | — | open |
 | 6-M3 | 05-05_04, _02, 05-02_01 | seconds post | built to the 1946 sheet's 9.2, which draws its tip as a turning centre like every pivot; the 1940 kompl., 05 02_1 and the coloured section give a finished 7.2: the post 7.2, the hands lowered (batch 7) | wrong | likely | comparer | — | open |
@@ -264,6 +265,7 @@ Readings the two agents still disagree on after each has seen the other's argume
 | O-2 | 05-07_14 | the chain's top hook: build the drawn ~50° inner edge, or keep the 30.1° the figures give? | keep 30.1°: only edge tangent to the seat R 0,4 at the bold 3,5 with the throat 1,8 and the nose 2 / 2.5 (the drawn edge goes with an older seat at 3.0) | build the drawn ~50°: breaks the 3,5 or the 2 | batch 4 corrector's construction (`c4c919d9`, README Readings corrected) | |
 | O-3 | 05-05_02, _05, _08 | which side the three wheels' hubs stand proud | the sheet's 0,2 on the pinion side, all three alike | toward the top plate, as Wempe 3955's photograph shows the seconds hub | batch 6 comparer (6-M1) | |
 | O-4 | 05-03_2, coloured section | fit WN-12a in one mass, as the coloured section and 05-03_2 show? | fit it in one mass (as drawn) | leave the four holes empty (a poising screw fitted where needed) | batch 1 comparer (1-M5) | |
+| O-5 | 05-07_12, 05-06_02-2 | the band's round hook's crown (r 2.08 about its pin, reaching r 14.73) against the fusee's cutter pocket floor (r 14.9 at the pin): 0.550 mm³ with the band fitted; which gives way? | the hook's crown cut down to clear the pocket | the pocket cut deeper (the chain's top hook fits it as it is) | batch 5 corrector; README Unresolved | |
 
 ## Evidence from other sessions
 
