@@ -318,7 +318,7 @@ const WESC=(()=>{
      sure), the web 0.8 on the pinion's side (scaled 0.74). Its arbor 05 04_7.1 (4.4.41): the pinion's far face 15.2 from the wheel's plate face (likely), 17.7 from the
      arbor's top-plate end (sure), 5.3 from its dial end (likely: the figure overwritten), 23 −0.2 overall (sure), built 0.04 short at the dial end (22.96, inside its tolerance; the endstones 0.03 off each end, below). The seconds wheel's
      rim (train.js: 5.33 to 4.33 over the pillar plate) lies wholly in the pinion's 3 */
-  const FY1=TI-4.1,Y1={rimT:FY1-3.8,armT:FY1-1.15,col:FY1+4.7,ir0:FY1+4.7,ir1:FY1+6.35,dr0:FY1+6.35,dr1:FY1+7.95,   /* the impulse roller 1.65 (02 04 02's 1,6 +0,1, its middle), the discharge roller 1.6 under it */ew0:TI+0.5,ew1:TI+1.9,ewWeb:TI+1.2,etU:TI+15.7-17.7,etL:TI+15.7+5.3-0.04,pf:TI+15.7};
+  const FY1=TI-4.1,Y1={rimT:FY1-3.8,armT:FY1-1.15,col:FY1+4.7,ir0:FY1+4.7,ir1:FY1+6.3,dr0:FY1+6.3,dr1:FY1+7.9,   /* the rollers 1.6 each as 05 04_1 stacks them in the first-drawn layout (02 04 02's 1,6 +0,1 at its lower limit): its middle, 1.65, put the discharge stone 0.0001 under the 6MX's and 1943's gold spring (the last revised detent, 1.9 wide, on this layout: bom.py's balance endshake 0.020, fine.py's detent x rollers 0.004 mm3), 28 October 2026 */ew0:TI+0.5,ew1:TI+1.9,ewWeb:TI+1.2,etU:TI+15.7-17.7,etL:TI+15.7+5.3-0.04,pf:TI+15.7};
   const SH1=FY1-FY;   /* the balance, its arm, rim and hairspring, stand this much higher as first drawn (-0.3) */
 
   function build(mv,M,K){const{part,screw}=K,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),R={};
@@ -857,7 +857,10 @@ const WESC=(()=>{
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,f-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
     R.golds=[];
     dv(rv(detS,'last'),rv(dm,'last'),{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y.ew0});
-    dv(rv(detS,'first'),rv(dm,'first'),{w:2,wb:1,wh:0.8,d0:1.3,pp:2.30,pl:2.0,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
+    dv(rv(detS,'first -3955'),rv(dm,'first -3955'),{w:2,wb:1,wh:0.8,d0:1.3,pp:2.30,pl:2.0,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
+    /* Wempe 3955's (as photographed) the same but its pipe 1.95-3.65 (built for every version until 28 October 2026): its block's arm stands flush with the base's edge, as its
+       photographs show it (above, the block), where the drawn pipe to 4.30 would run 0.16 into it (bom.py's locking stone); the photographs don't show the pipe's ends (estimated) */
+    dv(rv(detS,'3955'),rv(dm,'3955'),{w:2,wb:1,wh:0.8,d0:1.3,pp:1.95,pl:1.7,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
     /* the 6MX's: at the first-drawn heights its block holds it at (the foot 1.3-3.3 under the plate, the pipe at the wheel just under it), with 1436's revised (bracketed)
        sections, as the later sheets the 6MX was copied from give them (likely: its detent's sections aren't measured; its length, 6.4 from the pipe to the square on
        8_Gangfeder_mit_Kloben_Rus_einfach.jpg against 1436's 8.4, isn't taken: README, The Soviet 6MX). The escapement of 1943's the same: the 1943 block (05 04 01-4,
