@@ -55,7 +55,7 @@
    "book": "43° of the 48° (Fig. 141)",
    "model": "38.3° (tooth lands 11.6°, ends 49.9°)",
    "source": "solved (05 04_1: 21° of the wheel, 10.5° either side of the line of centres)",
-   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 9.4° after the release (dynamics.js --model wempe)"
+   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 9.5° after the release (dynamics.js --model wempe)"
   },
   {
    "measure": "Jewel inside the wheel before release",
