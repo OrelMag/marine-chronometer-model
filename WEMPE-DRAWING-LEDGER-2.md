@@ -10,7 +10,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 
 | Batch | Parts | Sheets | Closed | Joints | Holding | Findings | Corrected | Kept | Open |
 |---|---|---|---|---|---|---|---|---|---|
-| 0 | the permanent fit check (`seatcheck.py`, from claude/wempe-seat-audit) | — | — | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | the permanent fit check (`seatcheck.py`: on main and live as 3.46.00, `28ab3a44`) | — | done | 0 | 0 | 0 | 0 | 0 | 0 |
 | 1 | balance, hairspring, stud, collet, rollers, balance jewels | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2 | escape wheel, detent, detent block, escape jewels | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 3 | maintaining work, maintaining detent, stop work | 9 | 9 | 18 | 14 (4 kept) | 16 | 13 | 1 | 2 (book) |
