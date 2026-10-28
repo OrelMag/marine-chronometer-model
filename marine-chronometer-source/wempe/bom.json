@@ -1693,8 +1693,14 @@
    "parent": "050401-1",
    "kind": "jewel",
    "part": "detent",
-   "fn": "Locks each tooth of the escape wheel.",
-   "rel": [],
+   "fn": "Locks each tooth of the escape wheel: Ø 0.75 in the detent's pipe, ground half away below it.",
+   "rel": [
+    [
+     "in",
+     "050401-1",
+     "press"
+    ]
+   ],
    "figs": "05 04_1",
    "jewel": {
     "type": "pallet",
@@ -1800,21 +1806,7 @@
      "press"
     ]
    ],
-   "figs": "05 04_10.1",
-   "dev": [
-    {
-     "rel": [
-      "in",
-      "050401-4"
-     ],
-     "inst": [
-      0,
-      1
-     ],
-     "why": "as first drawn the block's end face (05 04_1's block) isn't bored for the pins, so the pins stand in its metal; bored in the 6MX (26 October 2026) and in 1943 (27 October 2026), which as last revised is the 1943 block since 27 October 2026",
-     "rev": "first"
-    }
-   ]
+   "figs": "05 04_10.1"
   },
   {
    "id": "050401-4",
@@ -1873,12 +1865,12 @@
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "The Soviet 6MX's banking screw through its upright (as last revised until 27 October 2026, a plain shank across the slit end, bearing on nothing).",
+   "fn": "The Soviet 6MX's banking screw across its upright, in its tapped hole (cut 28 October 2026; as last revised until 27 October 2026, a plain shank across the slit end, bearing on nothing).",
    "rel": [
     [
      "in",
      "050401-4",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "05 04_3"
@@ -1987,7 +1979,7 @@
     [
      "in",
      "050401-4",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "",

@@ -34,7 +34,7 @@ const tH_={x:(X.DPIV[0]-X.P[0])/X.TP,y:(X.DPIV[1]-X.P[1])/X.TP},nH_=(()=>{let n=
 const Dp=(t,n)=>[X.P[0]+t*tH_.x+n*nH_.x,X.P[1]+t*tH_.y+n*nH_.y],toDp=q=>{const v=[q[0]-X.P[0],q[1]-X.P[1]];return[v[0]*tH_.x+v[1]*tH_.y,v[0]*nH_.x+v[1]*nH_.y];};
 const U=(t,n)=>X.MK(Dp(t,n)),Q=(t,n)=>tn(U(t,n));   /* makeEsc's unit frame, and its (t, n) in metres from Ft */
 /* escapement.js's numbers (05 04_1, 1436, 05 04 01-2; its comments say how each was read) */
-const TP=X.TP,FOOT0=TP+2.5,SPR0=TP-2.5,SQ0=SPR0-2,[tB,nBp]=toDp(X.B),GT=tB+1.54,GN=nBp+0.005,GW=0.15,GNB=GN-GW/2,GB=[6.7,0.325],HEAD=SQ0+2.2,H0=HEAD-2.4;
+const TP=X.TP,FOOT0=X.FOOT0,SPR0=X.SPR0,SQ0=SPR0-2,[tB,nBp]=toDp(X.B),GT=tB+1.54,GN=nBp+0.005,GW=0.15,GNB=GN-GW/2,GB=[X.GB[0],0.325],HEAD=SQ0+2.2,H0=HEAD-2.4;   /* the spring's ends and the gold spring's bending point escapement.js's (FOOT0, SPR0, GB: TP at 05 04_1's bending mark since 28 October 2026, no longer the spring's middle; GB 6.7 until then) */
 const HORN_L=X.HORN.L,HL=X.HORN.line(0.22),HT0=-0.6,HT1=-HORN_L,HC=[-3.6,-4.0,HT1];   /* the horn as escapement.js draws it (its curve toward the block: HL.c its centre, HL.w its face toward the
    wheel), its beam along its centre from HT0; HC the places the gold spring closes onto it, near its end (the gold spring rests on the horn only there) */
 const HSTR=(a,b)=>{const ts=[];for(let i=0;i<=24;i++)ts.push(a+(b-a)*i/24);return[...ts.map(t=>[t,HL.w(t)]),...ts.slice().reverse().map(t=>[t,HL.b(t)])];},HORN=HSTR(-0.45,-HORN_L);   /* its outline, from inside the pipe's wall */
