@@ -279,7 +279,11 @@ const WFRAME=(()=>{
       /* the 6MX's: steel, slotted, their heads Ø 6.1 ±0.2 × 2.0 ±0.2 (6_Kiro_247_S.jpg, 7_Kirow_247_W.jpg, scaled by pillar 39: likely), M2.6; drawn Ø 6.2, inside the
          reading, as the drawings' (their heads reach over the plate's rim by 1.1, which the photographs show them doing, bearing on it) */
       for(const b of RS['6mx']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'6mx'),q[0],q[1],0,3.1,2.0,6.3,1.3,M.steel),'WN-rs'),'ring','pillarPlate');}
-      tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
+      /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1.01 pressed (0.01 over its Ø 1 hole, drilled at assembly across the plate's rim and the seat's wall:
+         estimated; Ø 0.98, 0.02 loose, until 28 October 2026, the second drawing check's 9-M7), its top 0.1 under the plate's face (drawn flush: estimated), its end 5.35 in the
+         ring's lip: the coloured section draws it 7.1 long, down the ring's wall, but the ring's own 45° cone from Ø 83 (05 08 00-3) leaves its inner side metal only to 5.8
+         under the plate, so the ring's sheet decides (11-M6, recorded) */
+      tag(cylBetween(rg,0.505,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');
       /* its radial pin to the case (Stellstift 3, WN-202 in the coloured section; P1f): in the radial hole at 12 o'clock, Ø 1.6 at 2.8 from the dial's face (05 08 00-3: the plan,
          drawn from the dial side under the section (first angle), draws it at 12 as a dashed pair across the ring figured "1,6"; the section draws it end on, ⊙ 2.8 under the
          top face on its centre line; sure for the place, likely for the size). Wempe 3955 shows its end on the ring's 45° cone at 12 (3_Wempe_3955_uZ.jpg, about r 44-46; the

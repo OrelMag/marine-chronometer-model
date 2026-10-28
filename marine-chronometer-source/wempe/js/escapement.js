@@ -1173,7 +1173,10 @@ const WESC=(()=>{
       tag(mesh(gj,lathe(KIT.jewelPr(JR,tq,0.13,JD*k,JC,JH*k,hY,1),32),M.ruby),'050406-1.eu');}
     for(const[v,ms]of/** @type {[string,any][]} */([['last first 1943',M.brass],['6mx',M.steel]])){const g=rv(eeu,v);for(const s of[-1,1])K.headOn(tag(screw(g,3.525*s,0,TT,1.3,0.3,3.4,0.6,ms),'WN-es'),'escEndstoneUp','topPlate');}   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
-      const lk=0.8/JR,lT=0.45,lD=JD*lk,lE=0.2,lH=0.15;   /* the lower hole jewel (above); as first drawn its endstone in the plug Ø 1.6 too, the balance's form scaled (estimated) */
+      /* the lower hole jewel (above) 0.8 thick, as the coloured section draws it (0.6-1.4 over the plate's inner face, the stone's lines at 9.3 px/mm: likely; no sheet sizes it;
+         0.45, the balance's form scaled, until 28 October 2026: the second drawing check's 11-M17), its face toward the endstone where it was; as first drawn its endstone in
+         the plug Ø 1.6 too, the balance's form scaled (estimated) */
+      const lk=0.8/JR,lT=0.8,lD=JD*lk,lE=0.2,lH=0.15;
       for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.03,hY=eY-0.04,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last',yq=hY-lT;
         tag(mesh(gj,lathe([[0.7,yq-0.15],[1.25,yq-0.15],[1.25,eY],[0.803,eY],[0.803,yq],[0.7,yq]],48),M.brass),'050406-2.el');   /* its lip over the stone's rim */
         tag(mesh(gj,lathe(KIT.jewelPr(0.8,lT,0.13,lD,JC*lk*1.03,JH*lk,hY,-1),32),M.ruby),'050406-1.el');
@@ -1184,8 +1187,9 @@ const WESC=(()=>{
         /* as last revised the stone Ø 2.2 on the bush, 1.5 under the dial face, seen down the setting's window Ø 1.9 (Wempe 3955's dark disc round its ruby, above): the setting
            a tube in the 2.50 bore from the stone to its flange flush in the seat, its lip over the stone's rim (estimated). Until 27 October 2026 the arbor's end lay at the face and
            the stone in a boss Ø 2.6 standing 0.36 over it */
-        else{tag(mesh(ge,lathe([[0.95,eY+0.35],[1.103,eY+0.35],[1.103,eY],[1.25,eY],[1.25,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0.95,PPT]],48),M.gilt),'050408-2.el');
-          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.94,eY+0.35],[0.6,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}}
+        /* its endstone 0.75 thick, as the section draws it (1.9-2.6: likely; 0.42 until 28 October 2026, 11-M17), its face on the arbor's end where it was, the setting's lip over it */
+        else{tag(mesh(ge,lathe([[0.95,eY+0.68],[1.103,eY+0.68],[1.103,eY],[1.25,eY],[1.25,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0.95,PPT]],48),M.gilt),'050408-2.el');
+          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.68],[0.94,eY+0.68],[0.6,eY+0.73],[0,eY+0.75]],32),M.ruby),'050408-1.el');}}
       const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.525*s);   /* at the plate's holes, 3.525 (frame.js; 3.5 until 28 October 2026) */
         tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* as last revised they lap the setting's rim; as first drawn they hold the cap, through it */
 
