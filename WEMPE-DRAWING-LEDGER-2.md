@@ -139,19 +139,19 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | — | — | — | read; model comparison next |
 | `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | — | — | — | read; model comparison next |
 | `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | — | — | — | read; model comparison next |
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | — | — | — | — | — | not started |
-| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | — | — | — | — | — | not started |
-| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | 11 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | 11 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | 11 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | 11 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | 11 | — | — | — | — | — | not started |
-| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | 11 | — | — | — | — | — | not started |
-| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | 11 | — | — | — | — | — | not started |
-| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | 11 | — | — | — | — | — | not started |
-| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | 11 | — | — | — | — | — | not started |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 11 | — | — | — | — | — | not started |
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | done | done | — | — | — | read |
+| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | done | done | — | — | — | read |
+| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | done | done | — | — | — | read |
+| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | 11 | done | done | — | — | — | read |
+| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
+| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
+| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
+| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | 11 | done | done | — | — | — | read |
+| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | 11 | done | done | — | — | — | read |
+| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | 11 | done | done | — | — | — | read |
+| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | 11 | done | done | — | — | — | read |
+| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | 11 | done | done | — | — | — | read |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 11 | done | done | — | — | — | read |
 
 ## Joints
 
