@@ -660,7 +660,7 @@ const WFUSEE=(()=>{
       /* the S, in the frame of its start (on r RO at angle 0, heading round): a bend b1 in round the first former, a straight, a bend b1 - DS out round the second, onto r RI at DS */
       const cs=Math.cos(a1),sn=Math.sin(a1),pt=(X,Z)=>new THREE.Vector3(X*cs-Z*sn,Y,-(X*sn+Z*cs)),c1=[RO-RC,0],c2=[RI*Math.cos(DS)+RC*Math.cos(DS),RI*Math.sin(DS)+RC*Math.sin(DS)];
       const ends=b=>{const h=Math.PI/2+b,P1=[c1[0]+RC*Math.cos(h-Math.PI/2),c1[1]+RC*Math.sin(h-Math.PI/2)],Q=[c2[0]+RC*Math.cos(h+Math.PI/2),c2[1]+RC*Math.sin(h+Math.PI/2)];return[P1,Q,Math.cos(h)*(Q[1]-P1[1])-Math.sin(h)*(Q[0]-P1[0])];};
-      let lo=0.5,hi=1.2;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(ends(m)[2]>0)lo=m;else hi=m;}const b1=(lo+hi)/2;   /* 47.3°, the straight 1.58: 02-2 draws 51-55° and 36-40° round formers 15° apart (its step there drawn 1.82 for the figured 1.6) */
+      let lo=0.5,hi=1.2;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(/** @type {number} */(ends(m)[2])>0)lo=m;else hi=m;}const b1=(lo+hi)/2;   /* 47.3°, the straight 1.58: 02-2 draws 51-55° and 36-40° round formers 15° apart (its step there drawn 1.82 for the figured 1.6) */
       for(let i=1;i<=8;i++){const h=Math.PI/2+b1*i/8;P.push(pt(c1[0]+RC*Math.cos(h-Math.PI/2),c1[1]+RC*Math.sin(h-Math.PI/2)));}
       for(let i=0;i<=8;i++){const h=Math.PI/2+b1-(b1-DS)*i/8;P.push(pt(c2[0]+RC*Math.cos(h+Math.PI/2),c2[1]+RC*Math.sin(h+Math.PI/2)));}
       const aS=a1+DS,len=Q=>{let l=0;for(let i=1;i<Q.length;i++)l+=Q[i].distanceTo(Q[i-1]);return l;},L0=len(P);
@@ -777,7 +777,7 @@ const WFUSEE=(()=>{
          drawing check, 3-M1) */
       const fw=[FX[0]-DX[0],-(FX[1]-DX[1])],tx=([x,y])=>{const X=-x,c=Math.cos(DTA),s=Math.sin(DTA);return[X*c-y*s,X*s+y*c];};
       const SA=[8.6,1.403],SD=[-Math.cos(30*D2R),-Math.sin(30*D2R)],Sq=[SA[0]-6.273,SA[1]+9.645],Sb=Sq[0]*SD[0]+Sq[1]*SD[1],St=-Sb-Math.sqrt(Sb*Sb-(Sq[0]**2+Sq[1]**2-81));   /* the 30° line from the 8,6 point to the r 9 hollow */
-      const S1=tx(SA),S2=tx([SA[0]+St*SD[0],SA[1]+St*SD[1]]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
+      const S1=tx(/** @type {[number,number]} */(SA)),S2=tx([SA[0]+St*SD[0],SA[1]+St*SD[1]]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
       const thick=KIT.clipPoly(DTX,p=>sg*side(p)),thin=KIT.clipPoly(DTX,p=>-sg*side(p));
       pD.userData.step=Math.min(...thick.map(([x,y])=>Math.hypot(x-fw[0],y-fw[1])))-20.285;   /* the thick part's least clearance over the tips, at rest */
       /* one solid, drawn as one mesh: the thick part and the thin tip merged, so no seam is drawn across the upper face they share (Edges outlines each mesh); two meshes until 21 October 2026 */
