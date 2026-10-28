@@ -279,7 +279,7 @@
      "b": "balanceJewelsLow",
      "hit": [
       [
-       -10.45,
+       -10.89,
        -8.2
       ]
      ],
@@ -365,7 +365,7 @@
   "escEndstoneLow"
  ],
  "parts": 48,
- "pairs": 404,
+ "pairs": 405,
  "expected": 11,
  "fails": 0,
  "left": []
