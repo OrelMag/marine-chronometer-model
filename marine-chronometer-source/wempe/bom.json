@@ -1255,12 +1255,12 @@
    "parent": "050301-4",
    "kind": "part",
    "part": "balance",
-   "fn": "Holds a mass on the rim: radially through its outer jaw, its tip on the rim's outer face (the 6MX's book, Fig. 5.62).",
+   "fn": "Holds a mass on the rim: M0.8 (estimated) radially through its outer jaw's tapped hole, its head in a counterbore in the mass's round side, its tip on the rim's outer face (05 03_2; the 6MX's book, Fig. 5.62).",
    "rel": [
     [
      "in",
      "050301-4",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "05 03_2"
@@ -1278,14 +1278,8 @@
    "parent": "050301-4",
    "kind": "part",
    "part": "balance",
-   "fn": "In the M1.2 hole, countersunk, in the middle of a mass's top: the coloured section draws one on one mass; Wempe's lever 2965 and the earlier 2493 show such holes empty; the Einheits examples photographed (Wempe 3955, the Langes) have plain tops (a poising screw fitted where needed, likely).",
-   "rel": [
-    [
-     "in",
-     "050301-4",
-     "embed"
-    ]
-   ],
+   "fn": "For the tapped hole M1.2 in the middle of a mass's top, its top flat (not fitted: holes in all four, empty, the owner's choice, 28 October 2026): the coloured section draws one, a cheese head on one mass; Wempe's lever 2965 and the earlier 2493 show such holes empty; the Einheits examples photographed (Wempe 3955, the Langes) have plain tops (a poising screw fitted where needed).",
+   "rel": [],
    "figs": "05 03_2"
   },
   {
@@ -1391,7 +1385,7 @@
    "parent": "050402-2",
    "kind": "part",
    "part": "balance",
-   "fn": "From under the hub's flange into the arm. Only on the 1946 hub: the 1941 collar has no holes for them.",
+   "fn": "From the arm's top, their countersunk heads flush in it, through the arm's Ø 1 into the hub's flange, tapped M1 (05 04 02, the coloured section). Only on the 1946 hub: the 1941 collar has no holes for them.",
    "rel": [
     [
      "in",
@@ -1489,11 +1483,12 @@
    "parent": "050302-3",
    "kind": "part",
    "part": "stud",
-   "fn": "Wedges the spring's outer end in the stud's hole (Ø 0.7, drilled at assembly), as the collet's pin holds the inner end.",
+   "fn": "Wedges the spring's outer end in the stud's hole (Ø 0.7, drilled at assembly, 3.15 under the bar), as the collet's pin holds the inner end.",
    "rel": [
     [
-     "on",
-     "050302-3"
+     "in",
+     "050302-3",
+     "press"
     ]
    ],
    "figs": "05 03_9"
@@ -1698,8 +1693,14 @@
    "parent": "050401-1",
    "kind": "jewel",
    "part": "detent",
-   "fn": "Locks each tooth of the escape wheel.",
-   "rel": [],
+   "fn": "Locks each tooth of the escape wheel: Ø 0.75 in the detent's pipe, ground half away below it.",
+   "rel": [
+    [
+     "in",
+     "050401-1",
+     "press"
+    ]
+   ],
    "figs": "05 04_1",
    "jewel": {
     "type": "pallet",
@@ -1805,21 +1806,7 @@
      "press"
     ]
    ],
-   "figs": "05 04_10.1",
-   "dev": [
-    {
-     "rel": [
-      "in",
-      "050401-4"
-     ],
-     "inst": [
-      0,
-      1
-     ],
-     "why": "as first drawn the block's end face (05 04_1's block) isn't bored for the pins, so the pins stand in its metal; bored in the 6MX (26 October 2026) and in 1943 (27 October 2026), which as last revised is the 1943 block since 27 October 2026",
-     "rev": "first"
-    }
-   ]
+   "figs": "05 04_10.1"
   },
   {
    "id": "050401-4",
@@ -1878,12 +1865,12 @@
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
-   "fn": "The Soviet 6MX's banking screw through its upright (as last revised until 27 October 2026, a plain shank across the slit end, bearing on nothing).",
+   "fn": "The Soviet 6MX's banking screw across its upright, in its tapped hole (cut 28 October 2026; as last revised until 27 October 2026, a plain shank across the slit end, bearing on nothing).",
    "rel": [
     [
      "in",
      "050401-4",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "05 04_3"
@@ -1992,7 +1979,7 @@
     [
      "in",
      "050401-4",
-     "embed"
+     "tap"
     ]
    ],
    "figs": "",
@@ -3331,7 +3318,7 @@
    "parent": "050503",
    "kind": "part",
    "part": "cannon",
-   "fn": "Pressed on the centre arbor's 1:80 shank, held by centre-punch marks in its groove: its foot is the cannon pinion (14 leaves, m 0.36), which drives the change wheel; its square carries the minute hand (no sheet of its own: 05 05 03 gives it).",
+   "fn": "Pressed on the centre arbor's 1:80 shank, held by three punched dents in its groove pressed into the shank's groove under it (05 05 03's \"Körner\": the dents estimated): its foot is the cannon pinion (14 leaves, m 0.36), which drives the change wheel; its square carries the minute hand (no sheet of its own: 05 05 03 gives it).",
    "rel": [
     [
      "round",
