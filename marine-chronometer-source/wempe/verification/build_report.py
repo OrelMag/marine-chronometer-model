@@ -66,7 +66,7 @@ def checks_py():
     """The Wempe's tables for the tools (../checks.py): the expected contacts (fine.py) and leftovers (audit.py), each with its reason."""
     s = importlib.util.spec_from_file_location('wempe_checks', os.path.join(WE, 'checks.py')); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
     return dict(expected=[[a, b, r, v, d] for (a, b), (r, v, d) in m.EXPECTED.items()], loose=[[p, r] for p, _, _, r in m.LOOSE],
-                float=[[p, r] for p, _, _, r in m.FLOAT], floatBox=[[p, r] for p, _, _, r in m.FLOAT_BOX], jewels=m.JEWELS, states=len(m.STATES))
+                float=[[p, r] for p, _, _, r, *_ in m.FLOAT], floatBox=[[p, r] for p, _, _, r, *_ in m.FLOAT_BOX], jewels=m.JEWELS, states=len(m.STATES))
 
 def bom():
     b = json.load(open(os.path.join(WE, 'bom.json'), encoding='utf-8'))
