@@ -117,14 +117,14 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 9 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 9 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | — | — | — | — | — | not started |
-| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | — | — | — | — | — | not started |
+| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | done | done | — | — | — | read; model comparison next |
 | `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | — | — | — | — | — | not started |
 | `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | — | — | — | — | — | not started |
 | `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | — | — | — | — | — | not started |
