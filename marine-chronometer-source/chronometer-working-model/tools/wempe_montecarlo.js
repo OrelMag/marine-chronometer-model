@@ -3,7 +3,7 @@
 // The tolerances, drawn where the sheets give them (uniform within their limits: a part made to the drawing and inspected), estimated where they don't (normal, the
 // figure its 95 % band), each named:
 //   the arbors' holes: the hole tables (05 09 01, 05 08 02-1) give the places to 0.001 mm and no tolerance: ±13 µm each way (estimated: a CNC boring them, the Hamilton's);
-//   endshake, every term of each arbor's stack from its sheet (bench_wempe.json: the pillars 19.6 ±0.01, their seats 0.3 +0.03, the bushes', the arbors' lengths), the
+//   endshake, every term of each arbor's stack from its sheet (bench_wempe.json: the pillars 19.6 ±0.04, their seats 0.3 +0.03, the bushes', the arbors' lengths), the
 //     top plate, the jewel's depth, the escape arbor's endstones, the fusee bush and the barrel's bearings estimated;
 //   the mainspring's strip 0.37 ±0.005 (estimated), the drive as its thickness cubed; each mesh's tooth friction μ 0.10-0.20 (gearing_wempe.json's torque ratios);
 //   the detent's spring as stiff as 0.0792 (1436's 0.09 at its ends, 0.07 at its middle: TOL.detent.t, TD0) ±0.005 and the gold spring 0.15 ±0.005 (estimated), their stiffness as the thickness cubed;

@@ -161,7 +161,7 @@ const WFRAME=(()=>{
     for(const[V,P39,DR]of VER){const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,96,0.5)).dAB[0];
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
-      for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
+      for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.525*s),rM12,y0,y1));   /* 3,5 +0,05 drawn at its middle, as the top plate's (3.5, its least, until 28 October 2026: drawing check 2's 9-M10) */
       F.push(B(H[26],4.6/2,y1,0.25));   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
       for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
       for(const k of[29,44])F.push(...pinBore(H[k],y0,y1,'A'));
@@ -169,8 +169,10 @@ const WFRAME=(()=>{
          30's 34.10; the sheet's other holes drawn 2.39-3.45 for 2.50-3.50): G-H's 4.59 and 5.2 (+0.19, +0.15), no third feature (the "hidden Ø 5.8" read in the drawings
          check, 26 October 2026). The table (sheet a) reams it 2.50 ±0.009 instead, and Wempe 3955's plate has that: a plain hole Ø 2.4 dark, 2.9 over its chamfer, on the dial
          face (3_Wempe_3955_uZ.jpg, 8.36 px/mm by the plate's 85) and Ø 2.4-2.8 on the inner face, no seat (8_Wempe_3955_Räderwerk_plus.jpg, by its M1.2 holes' 7.05):
-         the photographed version's plate so (F30, 27 October 2026), the drawn ones G-H's */
-      const i30=F.length;F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});const F30=[...F.slice(0,i30),T(H[30],2.50/2,y0,y1)];for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
+         the photographed version's plate so (F30, 27 October 2026), the drawn ones G-H's. The seat on the dial face, the lip at the inner: the plan shows the inner face (its
+         pillar seats and A-B's "oben" counterbores solid) and draws 30's 4.59 solid and its 5.2 dashed, and 05 08 02 (32-2) dashes the setting's two screws, their heads over
+         the setting on the seat's face (likely; the other way round until 28 October 2026: drawing check 2's 9-M2) */
+      const i30=F.length;F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0+0.5,b:y1});const F30=[...F.slice(0,i30),T(H[30],2.50/2,y0,y1)];for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.525*s),rM12,y0,y1));
       for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),A(q,WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
       if(V==='6mx')for(const q of WD.CONTACT6.screws56)F.push(T(q,rM17,y0,y1));   /* the 6MX's electrical contact's base screws, M1.7 through (train.js; WD.CONTACT6) */
       F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
@@ -238,7 +240,7 @@ const WFRAME=(()=>{
          --model wempe on each at 8.89 and 8.57 px/mm, the two faces agreeing; Kirov 009 and Poljot 20027 the same: sure), so 120°, 144° and 96° apart; the band built per version */
       const RSV=/** @type {[string,number[]][]} */([['last first 1943',[340,100,220]],['6mx',[342.2,102.2,246.4]]]),RS={},RB=/** @type {any} */({}),RF=/** @type {any} */({});   /* each version's band and flange, merged below */for(const[V,b]of RSV)RS[V]=b;
       const mkBand=(/** @type {number[]} */BS)=>({loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
-        ...BS.map(b=>({p:RH(add([0,0],brg(b),89/2)),a:0.35,b:6.35}))]});   /* through the band; on through the flange to its cone below (the flange's, FLC) */
+        ...BS.map(b=>({p:RH(add([0,0],brg(b),89/2)),a:0.35,b:6.35,th:{rs:1.3}}))]});   /* through the band, tapped M2.6 (05 08 00-3's "M 2,6"; KIT's threadWall, the screws' threads matched to it: plain Ø 2.64 under threaded screws until 28 October 2026, drawing check 2's 9-M4, S-6); on through the flange to its cone below, plain (the flange's, FLC) */
       for(const[V,BS]of RSV)RB[V]=tag(mesh(rv(rg,V==='6mx'?V:V+' -3955'),solidGeo([mkBand(BS)]),V==='6mx'?M.gilt:M.plateSolid),'050800-3');
       /* Wempe 3955's (the version as photographed) band: a groove across it on the hand-setting cut's line (through 18), under the plate's notch (above), from the lip out
          through the band's outside, for the hand-setting's shaft: straight sides, a round floor, closed in the band (the user's reading of 8_, 18 October 2026), which passes
@@ -283,7 +285,8 @@ const WFRAME=(()=>{
          top face on its centre line; sure for the place, likely for the size). Wempe 3955 shows its end on the ring's 45° cone at 12 (3_Wempe_3955_uZ.jpg, about r 44-46; the
          hole meets the cone at r 44.4). It stands 1.78 out of the flange (the coloured section, 9.4 px/mm, reads 2.0: 2 px more), in the bowl's notch, its end inside the bezel's thread's crests (r 54.9), which pass over it as the bezel is screwed on (case.js; 2.0 out until 24 October 2026, the bezel's bore plain); it sets the
          movement's turn in the case; its inner end at r 45.3, inside the cone's face (45.2 at the pin's top edge), 9.45 long, in its hole (FLC). Until 15 October 2026 drawn Ø 1.1 at 6 o'clock (the sheet's hole Ø 1.1 and its "1,6" read the other way round, and the plan's top taken for 6) */
-      for(const g of FLG){const p=tag(cylBetween(g,0.8,45.3,54.75,M.steel,0,0,48),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+54.75)/2);}}
+      for(const g of FLG){const p=tag(cylBetween(g,0.805,45.3,54.75,M.steel,0,0,48),'WN-202');   /* pressed: Ø 1.61 in its Ø 1.6, 0.01 over (estimated; line to line until 28 October 2026, drawing check 2's 9-M7) */
+        p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+54.75)/2);}}
 
     /* ================= the barrel bridge (Federhausbrücke, 05 08 05-1; kompl. 05 08 05) ================= */
     /* Messingblech 3,5 Ms 58, 3.32 -0.04 thick, on the top plate's outer face over the barrel. Its outer edge the plate's rim ("mit der Oberplatte überdrehen"), its inner edge a

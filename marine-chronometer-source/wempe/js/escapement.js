@@ -1186,7 +1186,8 @@ const WESC=(()=>{
            the stone in a boss Ø 2.6 standing 0.36 over it */
         else{tag(mesh(ge,lathe([[0.95,eY+0.35],[1.103,eY+0.35],[1.103,eY],[1.25,eY],[1.25,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0.95,PPT]],48),M.gilt),'050408-2.el');
           tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.94,eY+0.35],[0.6,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}}
-      const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.5*s);tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* as last revised they lap the setting's rim; as first drawn they hold the cap, through it */
+      const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.525*s);   /* at the plate's holes, 3.525 (frame.js; 3.5 until 28 October 2026) */
+        tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* as last revised they lap the setting's rim; as first drawn they hold the cap, through it */
 
     /* ================= motion ================= */
     let lastTw=null;

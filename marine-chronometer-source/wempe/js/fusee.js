@@ -942,8 +942,10 @@ const WFUSEE=(()=>{
        (Ø 1.5, for 1.6). So 1.6 straight and a 0.25 dome, 1.85 in all; the bar's thin end, 1.235 under the face, bears on its straight part (the section draws the dome
        just past the bar's lower face: it draws the small end's stack 0.5 lower than the sheets put it, the cover plate's top level with the plate's face under an empty 0.5
        of the J-K recess, where the sheets leave 0.085) */
-    {const PE=TI+1.6,PH=0.25,R=(0.64+PH*PH)/(2*PH),C=PE+PH-R,a0=Math.asin(0.8/R),cap=[];for(let i=0;i<=8;i++){const a=a0*(1-i/8);cap.push([R*Math.sin(a),C+R*Math.cos(a)]);}
-      tag(mesh(P.topPlate,turned([[0,TT],[0.8,TT],...cap],20),M.steel,SPX[0],0,SPX[1]),'050801-5').userData.devKeep=true;}   /* devKeep: shown laid out, where the fusee and its stop bar stay */
+    /* pressed (05 08 01: "Anschlagstift", its hole reamed 1,6 +0,009): Ø 1.615, 0.01 over the hole's middle (estimated; Ø 1.6, 0.0045 loose, until 28 October 2026, drawing
+       check 2's 9-M7). The stop's place (SPu, above) keeps the bar 0.02 off a Ø 1.6 pin, 0.0125 off this one */
+    {const rP=1.615/2,PE=TI+1.6,PH=0.25,R=(rP*rP+PH*PH)/(2*PH),C=PE+PH-R,a0=Math.asin(rP/R),cap=[];for(let i=0;i<=8;i++){const a=a0*(1-i/8);cap.push([R*Math.sin(a),C+R*Math.cos(a)]);}
+      tag(mesh(P.topPlate,turned([[0,TT],[rP,TT],...cap],20),M.steel,SPX[0],0,SPX[1]),'050801-5').userData.devKeep=true;}   /* devKeep: shown laid out, where the fusee and its stop bar stay */
 
 
     /* =============== the barrel 05 07 01 (Federhaus mit Deckel, as revised 20.4.48) =============== */
