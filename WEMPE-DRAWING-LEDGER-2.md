@@ -14,7 +14,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 1 | balance, hairspring, stud, collet, rollers, balance jewels | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2 | escape wheel, detent, detent block, escape jewels | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 3 | maintaining work, maintaining detent, stop work | 9 | 9 | 18 | 14 (4 kept) | 16 | 13 | 1 | 2 (book) |
-| 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 0 | 16 | 14 | 19 | 0 | 1 | 18 |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 6 | going train | 10 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 7 | motion work, hands, dial | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -59,20 +59,20 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-06/Wempe_05-06_12.jpg` | 05 06 02-1 Gegensperrrad | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
 | `05-06/Wempe_05-06_13.jpg` | 05 06 02-2 Sperrfeder | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
 | `05-06/Wempe_05-06_14.jpg` | 05 06 02-3 Sperrkegel | 3 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2; checks pass but wempe_transmission.js (for the owner) |
-| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
-| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 4 | done | done | — | — | — | read; model comparison waits for seatcheck on main |
+| `05-07/Wempe_05-07_01.jpg` | 0207 (127-556.04 U24) Federhaus | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_02.jpg` | 020701 (127-556.04 U22) Federhaus | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_03.jpg` | 05 07 00-3 Sperrad | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_04.jpg` | 05 07 01 Federhaus mit Deckel | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_05.jpg` | R 05 0701-1 Federhausrohling | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_06.jpg` | 05 07 01-1 Federhaustrommel | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_07.jpg` | 05 07 01-2 Federhausdeckel | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_08.jpg` | 05 07 02 Federkern kompl. | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_09.jpg` | 020704-1 (127-556.04-093) Federkern | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_10.jpg` | 020701-3 (127-556.04-088) Federhausring | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_11.jpg` | 05 07 03 Schneckenband | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_12.jpg` | 05 07 03-2 Bandhaken rund | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_13.jpg` | 05 07 03-3 Bandhaken f. Trommel | 4 | done | done | done | done | — | compared; refutation next |
+| `05-07/Wempe_05-07_14.jpg` | 05 07 04 Kette | 4 | done | done | done | done | — | compared; refutation next |
 | `05-06/Wempe_05-06_01.jpg` | 05 06 (cross-reference 05 04 06 struck) Schnecke kompl. | 5 | done | done | — | — | — | read; model comparison next |
 | `05-06/Wempe_05-06_02-1.jpg` | 020613-2 (127-556.04-060) Schneckenkörper | 5 | done | done | — | — | — | read; model comparison next |
 | `05-06/Wempe_05-06_02-2.jpg` | 05 06 04-2 Schneckenkörper | 5 | done | done | — | — | — | read; model comparison next |
@@ -190,6 +190,26 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | S-5 | — (6MX photographs) | 6MX contact | the contact screw 6MX.ctk and its lock nut have no hole in their holder | joint | sure | seatcheck (c9) | — | open (batch 11); SEAT_EXPECTED OPEN entry |
 | S-6 | 05-08_07, 05-03_4, 05-06_08 | ring, balance hub, cover plate | the screws WN-rs, WN-10.d and WN-20 go into plain holes, not tapped ones (their threads have no partner) | joint | likely | c9 (fuse() threads fix) | — | open (batches 9, 1, 5) |
 | S-7 | 05-06_04 | stopWork (spring) | seatcheck can't see the stop spring's pin 050604-4 (the ribbon is under its 0.2 threshold): 3-M4 is checked by hand | note | sure | c9 | — | with 3-M4 |
+| 4-M1 | 05-07_01, _02 | barrel (1941: first, 3955, 6mx) | the plate-side disc is the bottom (sprung in hot), the lid on the bridge side: the model's disc names are swapped; the README's "sure" doesn't hold | version | likely | b4 reader F1, comparer | — | open |
+| 4-M2 | 05-07_01 | barrel (1941) | the oil sink Ø 8 at 10° round the Ø 5 hole on the plate-side disc's outer face not built | missing | likely | b4 reader F4, comparer | — | open |
+| 4-M3 | 05-07_02, _07 | barrel lid (1941) | the half-round prising notch (about 2.6 × 2.0, 180° from the Steg) missing; the model's closed slot where 07 has a notch open to the rim | missing | likely | b4 reader F17, comparer | — | open |
+| 4-M4 | 05-07_01 | barrel arbor (1941) | the hook head 2 long; the sheet gives 3 | wrong | likely | comparer | — | open |
+| 4-M5 | 05-07_01, _09 | barrel arbor (1941) | the square ends in a point 1.65 past where 01 ends it (10 past the bridge, no point; the point is 09's turning centre); 3955 keeps it from its photograph | wrong | likely | comparer | — | open |
+| 4-M6 | 05-07_09, _01, _02 | barrel arbor (1941) | journals 4.48, pivots 2.88/3.88 against 09/01's Ø 5, Ø 3, Ø 4; 02's holes Ø 4.5: the sheets disagree among themselves | inconsistent | sure (figures); possible (which rules) | b4 reader F15, comparer | — | open |
+| 4-M7 | 05-07_03 | setupRatchet | the square hole straight, 2.714 across, no 1:100 taper: 0.019-0.045 loose on the square, nothing holds it; bom.py's press passes it with a 0.011 gap | joint | sure | comparer | — | open |
+| 4-M8 | 05-07_12, _13 | band hooks (1943 band) | neither hook has its 0.22 +0.03 slot for the band; the band butts on each; hidden by checks.py EXPECTED ('band:Buffer','band:Extrude') | joint | sure | comparer | — | open |
+| 4-M9 | 05-07_02 | hook block (1941) | 0.1 off 02's middle | wrong | possible | comparer | — | open |
+| 4-M11 | 05-07_10 | barrel ring (1941) | one seat 1.5 deep with a 5° undercut wall; the model has plain seats at both ends | inconsistent | possible | b4 reader F16, comparer | — | open |
+| 4-M12 | 05-07_06 | barrel drum (1948) | the slot widened to 0.8 suggests a Steg 0.8 thick: would change the mainspring's outer-end solve if adopted | inconsistent | possible | comparer | — | open (physics) |
+| 4-M13 | 05-07_01 | barrel (1941) | the chain slot 0.6 off where drawn (undimensioned: estimate) | version | possible | comparer | — | open |
+| 4-M14 | 05-07_02 | hook block | fixed by a plain pin; the sheets call for an M2.6 thread and a rivet | fastener | likely | comparer | — | open |
+| 4-M15 | 05-07_06, _07 | barrel lid | the lid's fit at nominal; holds by its 5° cone | note | sure | b4 reader F18, comparer | — | kept |
+| 4-M16 | — | page cards | the mainspring card and the book say "1.39 m, half the room" (1,240 since 15 Oct); the chain card 374 links against 375 drawn | stale | sure | comparer | — | open |
+| 4-M17 | 05-07_04 | build book | the barrel assembly page numbered 05 07 00-1 (the Steg's) | book | sure | comparer | — | for the book |
+| 4-M18 | 05-07_06, _07, _08, _03 | build book | drum and lid pages lack a plan view; the arbor's Ø 2 labelled Ø 1.50; the ratchet's A-A misses its axis | book | sure | comparer | — | for the book |
+| 4-M19 | 05-07_11-14 | build book | chain, band and mainspring drawn as they lie in the movement; the hooks' contour tables with wrong arc radii | book | sure | comparer | — | for the book |
+| 4-M20 | 05-07_14 | chain top hook | the "30°" against the drawing | inconsistent | possible | comparer | — | open |
+| N-1 | — | detent (first, 3955) | fine.py first/3955 on main bd869088: a new 0.005 mm³ self-overlap detent:Buffer × detent:Buffer @ (-20.22, -16.2, 18.11), ph 0.2515 (c9's report; not from the fixes branch) | artifact | sure | c9 | — | open (batch 2) |
 
 ## For the owner
 
@@ -197,7 +217,7 @@ Readings the two agents still disagree on after each has seen the other's argume
 
 | # | Sheet | Question | Reading A | Reading B | Evidence | Decision |
 |---|---|---|---|---|---|---|
-| O-1 | — (batch 3 fixes) | wempe_transmission.js fails on the fixes branch. Investigated 28 Oct: not the branch's doing. The swing is 204.6° on main too (main's own 3.45.02 restored RSR/SMW/HS; 200.9° was before it). The seconds → escape pinion fatigue line is an impact spike that doesn't converge with the step: start 0, main / tip, at MC_TR_H 1: 46.7 / 229.7×; 0.5: 38.1 / 55.0 (both pass); 0.25: 115.5 / 115.4 (both fail). Over 8 starts both reach about 1,000×. Main's own reports failed it twice on 27 Oct. wempe_escapement, physics, sustaining and strength are identical on both commits | (a) report the line as ~~ until it converges, recorded in README Unresolved and Review-results.md | (b) replace the peak with a converging measure (impulse per re-engagement, a filtered peak, or a physical landing restitution), studied at steps 1, 0.5, 0.25 and 0.125, then judged over the 8 starts | raw runs in the scratchpad dc2/tr/ | |
+| O-1 | — (batch 3 fixes) | wempe_transmission.js fails on the fixes branch. Investigated 28 Oct: not the branch's doing. The swing is 204.6° on main too (main's own 3.45.02 restored RSR/SMW/HS; 200.9° was before it). The seconds → escape pinion fatigue line is an impact spike that doesn't converge with the step: start 0, main / tip, at MC_TR_H 1: 46.7 / 229.7×; 0.5: 38.1 / 55.0 (both pass); 0.25: 115.5 / 115.4 (both fail). Over 8 starts both reach about 1,000×. Main's own reports failed it twice on 27 Oct. wempe_escapement, physics, sustaining and strength are identical on both commits | (a) report the line as ~~ until it converges, recorded in README Unresolved and Review-results.md | (b) replace the peak with a converging measure (impulse per re-engagement, a filtered peak, or a physical landing restitution), studied at steps 1, 0.5, 0.25 and 0.125, then judged over the 8 starts | raw runs in the scratchpad dc2/tr/ | owner (28 Oct): (a) soft now, the tool's measure fixed later as its own task |
 
 ## Evidence from other sessions
 
