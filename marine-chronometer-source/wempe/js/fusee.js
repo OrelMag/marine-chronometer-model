@@ -952,7 +952,7 @@ const WFUSEE=(()=>{
       slot=(a,r0,w)=>rect(a,r0,23,w);   /* a slot's outline in plan along the angle a, from r0 to r1 (slot: out past the drum) */
     /* the hook block's rivet hole M2.6 through the wall (05 07 01-1; drawn at its thread's size and 0.02, Ø 2.64, as the frame's tapped holes), bored into the lathe (25 October
        2026: until then not cut, the rivet in the metal); the slot for the chain's (or the band's) hook, below, cut once the connector is laid (slotCut) */
-    const YRV=BB-9.05,RVD=[Math.cos(BLK),0,-Math.sin(BLK)];
+    const YRV=BB-9.05,YRV41=(-3.7-1.2-21.7+1.0)/2,RVD=[Math.cos(BLK),0,-Math.sin(BLK)];   /* YRV41: as first drawn (below) */
     const dL=tag(mesh(gBL,bore(facePocket(ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BLU],[19.695,BLU]],240),'top',rect(LS,18.3,19.1,2.025),1.6),[0,YRV,0],RVD,1.32,18.6),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face flush with the rim (05 07 01's section, the lid's face on the rim's line at
        both walls, its "0,6 -0,1" the arbor's shoulder over it; until 26 October 2026 read as 0.6 under the rim); 1.3 -0.1 thick, drawn 1.2, its edge one 5° face from Ø 39.2 at its face
@@ -992,7 +992,7 @@ const WFUSEE=(()=>{
     const SKB=4.0,SKL=3.7,SKA=Math.tan(10*D2R);
     const RP0=19.6+0.3*Math.tan(5*D2R),RP1=19.6+1.5*Math.tan(5*D2R),RB0=19.6,RB1=19.6+1.0*Math.tan(3*D2R);
     {const R1=20.75,Ri=19.25,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275,sl=slot(LS,S41[0],2.025);
-      var dF=tag(mesh(gBF,bore(ringT([[RB1,yBi],[RB0,yB],[R1,yB],[R1,yL],[RP0,yL],[RP1,yLi],[Ri,yLi],[Ri,yBi]],240),[0,YRV,0],RVD,1.32,18.6),M.gilt),'050701-1');   /* the ring, its seats at both ends, the rivet's hole through it (above) */
+      var dF=tag(mesh(gBF,bore(ringT([[RB1,yBi],[RB0,yB],[R1,yB],[R1,yL],[RP0,yL],[RP1,yLi],[Ri,yLi],[Ri,yBi]],240),[0,YRV41,0],RVD,1.32,18.6),M.gilt),'050701-1');   /* the ring, its seats at both ends, the rivet's hole through it (above) */
       tag(mesh(gBF,capFix(facePocket(ringT([[SKB,yL],[bo,yL-(SKB-bo)*SKA],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[RP1,yLi],[RP0,yL]],240),'top',sl,1.5),null),M.gilt),'050701-1',1);   /* the bottom (Boden) on the plate's side, its boss inward: with the ring, the drum 05 07 01-1's counterpart */
       /* the lid's prising notch: 020701's plan (6.94 px/mm by the ring's Ø 41.5) draws a half-round notch in the lid's edge at 3 o'clock, 2.5 wide and 1.9 deep (scaled; 05 07
          01-2 of 7.4.41 has its 2.7 +0.1 × 2 +0.2 at 3 o'clock, square), 135° from the "vernieten" hook block: turned onto 0207's plan (both seen from the bridge's side, by
@@ -1009,10 +1009,17 @@ const WFUSEE=(()=>{
        the hole's sides 3.3-5.9 along the flat from its end toward the Steg: likely ±0.5), so it runs 4.6 back toward the Steg. Until 18 October 2026 0.35 × 3 centred on the
        hole, as much as cleared the spring drawn without it; the spring is now solved and drawn over it (tools/wempe_mainspring.py's BLOCK, msGeo below). The rivet through
        the wall and the block, its head flush with the drum's outside (estimated) */
+    /* As first drawn the block's middle at the middle of the 15.8 between the 1941 discs (0207's "7,9" either side of it, under the section; 020701's "7,9", revised from
+       9,7, from the bottom's inside to it), y -12.80: until 28 October 2026 at the 1948 drum's 9.05, 0.10 toward the plate (drawing check 2, 4-M9).
+       Its fixing (0207 and 05 07 01-1 write "M2,6" at the wall's hole; 020701 "Ø 2,6, vernieten", 05 07 01 "vernieten"): as last revised an M2.6 thread (05 07 01-1's,
+       the drum's own sheet), its shank threaded from the drum's outside, 0.05 under it, to the block's face, the wall's and the block's holes drawn at the thread's size and
+       0.02 (Ø 2.64: a radial hole in a turned wall is bored plain, bore()); as first drawn a rivet Ø 2.6 (020701), flush both ends (riveted over: the heads' form isn't
+       drawn). Until 28 October 2026 a plain pin in both (drawing check 2, 4-M14) */
     const HB0=4.6,HB1=1.4,BLD=0.5;
-    for(const g of[gBL,gBF]){const yb=BB-9.05,a0=BLK-HB0/19.25,a1=BLK+HB1/19.25,ar=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;ar.push([Math.cos(a),Math.sin(a)]);}
+    for(const[g,yb]of/** @type {[any,number][]} */([[gBL,BB-9.05],[gBF,YRV41]])){const a0=BLK-HB0/19.25,a1=BLK+HB1/19.25,ar=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;ar.push([Math.cos(a),Math.sin(a)]);}
       tag(mesh(g,capFix(bore(slab([...ar.map(([c,s])=>[19.25*c,19.25*s]),...ar.reverse().map(([c,s])=>[(19.25-BLD)*c,(19.25-BLD)*s])],[],yb-1.525,yb+1.525),[0,yb,0],RVD,1.32,17),null),M.steel),'050701-3');   /* in each state's drum (fixed to it); the rivet's hole through it as through the wall (25 October 2026) */
-      const rg=new THREE.CylinderGeometry(1.3,1.3,20.75-(19.25-BLD),20);rg.rotateZ(Math.PI/2);rg.translate((20.75+19.25-BLD)/2,yb,0);rg.rotateY(BLK);tag(mesh(g,rg,M.steel),'050701-3',1);}
+      const rg=g===gBL?KIT.threadGeo(1.3,0,20.75-(19.25-BLD)).clone():new THREE.CylinderGeometry(1.3,1.3,20.75-(19.25-BLD),20);   /* the M2.6 shank along +y from the drum's outside (its tip at the block's face), or the rivet */
+      if(g===gBL){rg.rotateZ(Math.PI/2);rg.translate(20.75,yb,0);}else{rg.rotateZ(Math.PI/2);rg.translate((20.75+19.25-BLD)/2,yb,0);}rg.rotateY(BLK);tag(mesh(g,rg,M.steel),'050701-3',1);}
     /* the arbor 05 07 02 (Federkern kompl.): its pivot in the pillar plate (the 1941 arbor 020704-1's Ø 3, drawn 2.88 in the plate's 2.90 reamed: the arbor as last revised,
        05 07 02-1, isn't in the set), its end a ball, polished, 5 from the shoulder; the journals the drum's bosses run on (4.48 in their 4.55: 020704-1's 5 don't pass them),
        22.2 +0.1 between their outer shoulders (framed); the core Ø 13.3 between them, its ends Ø 10 chamfered 45° 1.65 (05 07 01: faces about Ø 10, the cylinder 8.7; 05 07 02 Ø 10.1;
