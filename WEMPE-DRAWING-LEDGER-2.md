@@ -255,7 +255,7 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 6-M10 | 05-05 | build book; bom.json | assembly pages numbered with the wheels' numbers; p. 93's tapers drawn as bulging arcs, sizes left out; pivots and inner sizes missing; no bom relation for the seconds jewel in its setting | book | sure | comparer | — | for the book (bom relation open) |
 | 6-M11 | — | page cards | the pinions' old tips (5.0, 3.4) and lengths | stale | sure | comparer | — | open |
 | 6-M12 | 05-05_01 | README Estimated | the 1941 layout's lesser figures (17 to the centre wheel, the oil cup's depth, a chamfer) to record | stale | possible | comparer | — | open |
-| N-1 | — | detent (first, 3955) | fine.py first/3955 on main bd869088: a new 0.005 mm³ self-overlap detent:Buffer × detent:Buffer @ (-20.22, -16.2, 18.11), ph 0.2515 (c9's report; not from the fixes branch) | artifact | sure | c9 | — | taken by Session Alpha (28 Oct; also fails on main 3.46.01) |
+| N-1 | — | detent (first, 3955) | fine.py first/3955 on main bd869088: a new 0.005 mm³ self-overlap detent:Buffer × detent:Buffer @ (-20.22, -16.2, 18.11), ph 0.2515 (c9's report; not from the fixes branch) | artifact | sure | c9 | — | closed by Session Alpha in 3.46.02 (`356420bd`, merge `592c2536`): not a self-overlap; the gold spring's free bow against the detent's turning body, its inner edge on the square's face to 0.4 µm, read by the 0.05 grid at a few lifts; an EXPECTED entry (0.01 mm³, depth 1.0), no geometry change |
 
 ## For the owner
 
