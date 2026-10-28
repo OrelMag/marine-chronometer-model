@@ -16,7 +16,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 3 | maintaining work, maintaining detent, stop work | 9 | 9 | 18 | 14 (4 kept) | 16 | 13 | 1 | 2 (book) |
 | 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 14 | 16 | 16 | 19 | 12 | 6 | 3 (book) |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 0 | 18 | 14 | 16 | 0 | 1 | 15 |
-| 6 | going train | 10 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 6 | going train | 10 | 0 | 16 | 15 | 12 | 0 | 0 | 12 |
 | 7 | motion work, hands, dial | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 9 | plates, pillars, movement ring | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -85,16 +85,16 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | done | done | done | done | done | refuted; corrections next |
 | `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | done | done | done | done | done | refuted; corrections next |
 | `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | — | — | — | read; model comparison next |
-| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | — | — | — | read; model comparison next |
+| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | done | done | — | compared; refutation next |
+| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | done | done | — | compared; refutation next |
 | `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | done | done | — | — | — | read; model comparison next |
 | `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | done | done | — | — | — | read; model comparison next |
 | `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | done | done | — | — | — | read; model comparison next |
@@ -227,6 +227,18 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 5-M14 | 05-06_15 | fusee arbor stub | its 1:70 taper (the up-and-down pinion's seat) not modelled | missing | possible | comparer | confirmed, likely: the stub tapers 1:225 where the sheet says 1:70 | open |
 | 5-M15 | 05-06_07, _01 | fusee wheel bore | 4.55 matches neither "4 +0,1" nor 05 06_1's 4,45 H7/g6: 0.08-0.12 clearance, 4-5 times H7/g6's; an estimate, not a reading | estimate | sure | refuter | — | open (record or bore 4,45 H7) |
 | 5-M16 | 05-06_06, _15, _01 | Vorreiber pin | its size differs over the sheets: 0.8 in the hub (05 06 00-2), 1.1 taper-reamed in the arbor (05 06 04-1), Ø 1.2 on 05 06_1 | inconsistent | sure | refuter | — | open (with 5-M3) |
+| 6-M1 | 05-05_02, _05, _08 | seconds, intermediate, centre wheels | the hubs treated three ways (the centre's 0.25 proud on the dial side, the others flush); the kompl. sheets draw all three alike, each hub at the metal's thickness with its seat 0-0.1 beyond for riveting; Wempe 3955 shows the seconds hub proud toward the top plate where the sheet's 0,2 is on the pinion side — which side: for the owner (O-3) | inconsistent | likely | b6 reader F1, comparer | — | open |
+| 6-M2 | — | README 84/85, app.js cards | say the intermediate and seconds hubs stand 0.2 proud (undone 26 Oct) | stale | sure | b6 reader F2, comparer | — | open |
+| 6-M3 | 05-05_04, _02, 05-02_01 | seconds post | built to the 1946 sheet's 9.2, which draws its tip as a turning centre like every pivot; the 1940 kompl., 05 02_1 and the coloured section give a finished 7.2: the post 7.2, the hands lowered (batch 7) | wrong | likely | comparer | — | open |
+| 6-M4 | 05-05_02, _04 | train (first, 1943) | build the 1946/48 pinions; the cards leave out the 1940 post (7.2, Ø 0.73) and the seconds' 0.8 pivot | version | likely | b6 reader F4, comparer | — | open |
+| 6-M5 | — | train.js 95, 98-99; README 595, 597 | stale: the seat-and-collar question closed (README 853); 39.65 is not a blank length (05 05_10 has a blank view); the centre pivot's taper is 1:90 since 25 Oct, not 1:30 | stale | sure | b6 reader F8, comparer | — | open |
+| 6-M6 | 05-05_08 | cannon tube (batch 7) | 0.01 clear of the shank everywhere, the punched dents not built: nothing holds it; bom's press passes it on the gap | joint | sure | comparer | — | open (batch 7) |
+| 6-M7 | 05-05_10 | centre shank | Ø 1.800 against the framed 1,8 g6 (1.792-1.798) | wrong | sure | comparer | — | open |
+| 6-M8 | 05-08_10 | bridge bush WN-300.zb | bored 0.86 (0.035 over its pivot); its comment says "as the top plate's", now 0.845/0.83 | wrong | likely | comparer | — | open |
+| 6-M9 | 05-05_02, _05, _08 | wheel seats | riveted three ways (the centre as turned, the intermediate cut to 0.95 against 1,3, the seconds 0.25 unspread); README 601 wrong for two | inconsistent | likely | comparer | — | open |
+| 6-M10 | 05-05 | build book; bom.json | assembly pages numbered with the wheels' numbers; p. 93's tapers drawn as bulging arcs, sizes left out; pivots and inner sizes missing; no bom relation for the seconds jewel in its setting | book | sure | comparer | — | for the book (bom relation open) |
+| 6-M11 | — | page cards | the pinions' old tips (5.0, 3.4) and lengths | stale | sure | comparer | — | open |
+| 6-M12 | 05-05_01 | README Estimated | the 1941 layout's lesser figures (17 to the centre wheel, the oil cup's depth, a chamfer) to record | stale | possible | comparer | — | open |
 | N-1 | — | detent (first, 3955) | fine.py first/3955 on main bd869088: a new 0.005 mm³ self-overlap detent:Buffer × detent:Buffer @ (-20.22, -16.2, 18.11), ph 0.2515 (c9's report; not from the fixes branch) | artifact | sure | c9 | — | open (batch 2) |
 
 ## For the owner
