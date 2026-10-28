@@ -67,6 +67,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Cross-references:** 01b (the plan), 02 (05 08 01 Oberplatte kompl.).
 - **Illegible:** the revision text, box (440,870)-(705,900); the J-K step figure, box (150,60)-(195,120).
 
+- **Corrected by the second drawing check (28 October 2026, batch 9's 9-M1, 9-M12; the model already read each so) for sheets a and b:** Schnitt L-M's pillar seats Ø 8,6 × 0,3 are in the inner face (dashed in plan; 001's inner distance 19,0 = 19,6 − 2 × 0,3), not "on the face shown"; revision a is "∅ 4,5 … 4,59" (P-Q's "4,5∅ H7" carries the circled "a"; nothing on the sheet is 6,15); row 13's kalibr. reads "—" (the clearance hole for the detent block's screw); Schnitt N-O is the holding work's pocket from 23 to 51 in the inner face, 1,35 −0,05 deep (N's leader on 23's edge, the line through 23's and 51's centres), not the barrel cut-out's edge; the "2,65" at the lower M1,4 is 22,65, hole 1 to hole 10, on the 1-10 chain line; the "7 r" at 26 is "7°"/"7 r", the escape wheel's r 7 tip arc, and the "50°" runs from the pocket's S edge to the tongue's N side; the dashed arc at 51 is the pocket's hidden end r 4 about 51 (far face, joining the dashed line from 23's tongue), not a spot face; the dashed circle round 10 is J-K's recess Ø 22 × 0,7; the "10,0" in 23 is the 23-26 centre distance (03b writes the same on the same line); the tables' 2,5 at 26 (and the pillar plate's at 30) are the jig-bored pilots, the sections' seats the finished holes; the plan's solid Ø 5,2 at 26 is a drafting slip (P-Q draws the seat from the inner face, possible).
+
 ## 05 09 01 Oberplatte (sheet b: plan) — `05-08/Wempe_05-08_01b.jpg`
 - **Title block:** none (continuation of 01a; scale 4:1 from 01a, and the scan's scale here is 10,1 px/mm: hole 1 to hole 35, 23,0 mm, is 233 px). Finish mark ▽▽▽ at top left.
 - **What it shows:** the upper plate's plan at 4:1 with Schnitte A-B, C-D, G-H, N-O, P-Q. The plate is the 85 disc with a large round cut-out on the left, centred on hole 45 (the barrel): "vor dem Kalibrieren auf 42,5ϕ fräsen" (mill to 42,5 dia before reaming). The cut-out runs out through the rim, so the plate is a crescent whose two horns end in points at the upper left and lower left (the cut's circle crosses the rim). Holes drawn with their numbers: 49 (pillar, dashed counterbore), 3, 4, 5 at the top; 47 and 48 (barrel bridge pin and screw) near the upper horn; 50, 6, 7, 8, 9 (balance cock: pins 50, 6, 9; screw 8; stop pin 7) on and beside the vertical centre line; 10 (fusee) in a large dashed circle with three M1,4 holes; 1 (centre); 22, 36, 37 (lower balance cock: pins 22 and 37, screw 36); 23 (the balance's opening: a round cut with a tongue); 38, 35 (intermediate and seconds wheels); 26 (escape wheel, a jewel-setting seat); 51, 52 (M2), 53 (1,5 H7); 42, 41 (barrel bridge screw and pin) near the lower horn; 40; 39 (pillar, dashed counterbore).
@@ -124,6 +126,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Undimensioned lines:** the plate outline as 01b: the cut-out is the 42,5 mm barrel recess (01b), here milled right through so the plate is a crescent (inferred from the plan: the cut-out's edge is a full line and the barrel area is empty). In Schnitt A-B the fusee bush stands about 7,5 mm proud of the plate's top, and the dust bush sits on it (scaled at 2:1, about 4,7 px/mm on this scan: scaled, not dimensioned; the drawn sizes are given on sheets 08, 09).
 - **Cross-references:** 05 08 01-1, -2, -3, -4, -5; WN-34, WN-300, WN-301.
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1, 9-M2):** 05 08 01 (revision a, "zeichnerisch geändert", 2.11.46; the first digit a looped 2 or 8) leaves out 26, 51, 52, 53 and the N-O pocket, their erased lines visible at 26, 52, 53, and draws the tongue at 23 curved, marked (a): a drafting change, the same erasure taking out 26, which the plate must have; 05 09 01 (the part sheet) and Wempe 3955's plate keep 51-53, the pocket and the straight tongue (the model builds "as last revised" so: the owner's choice, O-9).
+
 ## 05 08 02-1 Unterplatte (sheet a: hole table) — `05-08/Wempe_05-08_03a.jpg`
 - **Title block:** Werkstoff "Messingblech 4 / SonderMs α-βGef."; Maßstab 4:1; Arbeitspause Nr blank; "Hamburg 11, Stubbenhuk 25"; gez. 23.4.41 Herb. Müller, gepr. 29.4.41 Herb. Müller, N.gepr. 5.5.41 Schwarzer, 30.4.43 (initials). No revisions. Zeichnung Nr 05 08 02-1; Benennung "Unterplatte" (lower plate, the pillar plate on the dial side).
 - **What it shows:** the hole table, the left part of the plan (holes 11 to 17 near the rim) and Schnitt E-F (pillar 11) and Schnitt C-D (the hand-setting cut).
@@ -180,6 +184,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Cross-references:** 03b (the plan), 05 08 04 (Zwischenbrücke: holes 28, 29, 43, 44), 05 08 00-1 (pillars 11, 39, 49).
 - **Illegible:** the replacement thickness under the struck "3,35", box (15,970)-(130,1010).
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1):** row 39's tolerance is "+0,1" struck through and "+0,012" written after; row 30 has only a short dash after its number (not struck as 14-18 are); the hand-setting "9,5" is a location from the rim (or "0,5"), unattached, the window's width 03b's "6,5"; C-D's figures are the bore Ø 2 (the "2" spans the circle between tangent extension lines), its centre 1,68 from a face, not a "step 2"; the gepr. date may read 24.4.41.
+
 ## 05 08 02-1 Unterplatte (sheet b: hole plan) — `05-08/Wempe_05-08_03b.jpg`
 - **Title block:** none on this sheet (it is the second half of the 05 08 02-1 sheet, 03a; scale 4:1 from 03a's title block, inferred: the scan's own scale is 9.74 px/mm of plate, from holes 1 to 2 = 23,0 mm over 224 px).
 - **What it shows:** the Unterplatte (pillar/dial-side plate) seen from one face, an 85 mm disc (rim arc at the left and bottom; the right edge of the sheet cuts it), every hole numbered as in 03a's table. The centre line cross (horizontal and vertical chain lines) passes through hole 1 (the plate's centre, inferred: hole 1 sits on both centre lines and the 85 mm rim is centred on it, 412 px to the left rim = 42.3 mm). Holes drawn: 49 (large counterbored circle, top left of the vertical centre line), 3 and 2 on the vertical centre line above 1, 4 (small) right of 3, 10 (up-right of 1, 22,65 from 1), 45 (left, above the horizontal line), 44 (counterbored, section A-B) and 43 below it, 19 (right-below 1), 23 (Ø7 circle, right), 18 (far right on a chain line from 1), 38 (a large round recess about 24,8 mm across, scaled: 242 px; its centre 18,12 from hole 1; a notch, 35, on its rim at lower right), 35 (a small notch at the bottom right of recess 38), 26 (with two M1,2 screw holes beside), 28, 29 (counterbored, section A-B mark), 30 (Ø5,2 seat with two M1,2 holes either side, section G-H), 40, 39 (counterbored), 57, 56 (dashed seats, below), and a rectangular cut at the far right (section C-D direction, 6,5 / 6,5 / 8,3 dims, 37° to the horizontal).
@@ -216,6 +222,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Undimensioned lines:** the plate outline is the 85 mm disc (from 03a). Hole sizes other than those dimensioned are scaled only: hole 1 ≈ 4,0 mm (39 px), holes 2/3/10/45/40/19/18/28 ≈ 3,1-3,4 mm (30-33 px), 49 ≈ 4,3 inner / 8,6 outer (counterbore of Schnitt E-F on 03a), 39 ≈ 3,9 inner / 7,9 outer; scaled, not dimensioned (9.74 px/mm).
 - **Cross-references:** 03a (table, title block).
 - **Illegible:** the step tolerance in Schnitt G-H, box (280,880)-(320,960).
+
+- **Corrected by the second drawing check (28 October 2026, 9-M1, 9-M2) for sheet b:** hole 30's Ø 5,2 H7 seat is on the dial face: the plan shows the inner face (its pillar seats and A-B's "oben" counterbores solid) and draws 30's 4,59 solid and its 5,2 dashed, and 05 08 02 (32-2) dashes the setting's two screws, their heads over the setting on the seat's face; 38 is a through opening (32-2 draws the intermediate bridge across it, seen through the plate), not "a large round recess"; the M1,2 pairs at 26 and 30 lie 3,5 +0,05 either side on the line 37° below O toward S.
 
 ## 05 08 00-2 Unruhkloben unten — `05-08/Wempe_05-08_04.jpg`
 - **Title block:** Werkstoff "Profilmessing 20×10×8×3,3 Ms 58"; Maßstab 5:1 and 1:1; gez. 19.4.41 (name: Zwinscher?, unsure), gepr. 29.4.41 Herb. Müller, N.gepr. 5.5.41 Schwarzer, and 21.7.43 (initials, unsure); revision (a), "1×", "Toleranz war +0,05", 2.12.46, initials. Zeichnung Nr 05 08 00-2; Benennung "Unruhkloben unten". Finish mark ▽▽▽.
@@ -383,6 +391,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Notes:** "wird bei Montage des Zifferblattes gebohrt" = "drilled when the dial is fitted"; "wird bei Montage der Unterplatte gebohrt" = "drilled when the lower plate is fitted".
 - **Illegible:** 83 Ø and 96 Ø tolerances, boxes (270,185)-(340,230) and (260,245)-(340,280).
 
+- **Corrected by the second drawing check (28 October 2026, 9-M1) for 05 08 00-3:** the "1,6" is across the radial hole at 12 o'clock (its lines run radially across the wall), not a dial hole; the "45°" is taken as the inner cone from the lip Ø 83 to Ø 93 at the recess's floor (the section's inner slope drawn plainly; the arrow at the far left isn't on an outside corner: possible); the 96's tolerance is erased, not legible ("−0,3" possible). The revised figures (a, 6.12.46) close only at their nominals: 10,7 − 0,7 − 7 = 3 (9-M9).
+
 ## 05 08 01-2 Schneckenfutter — `05-08/Wempe_05-08_08.jpg`
 - **Title block:** Werkstoff "Rundmessing 13,5 Din 1758 Ms 58"; Maßstab 5:1, 1:1; gez. 14.1.41 Herb. Müller, gepr. 15.1.41 Schwarzer, N.gepr. 30.4.43 (initials). Zeichnung Nr 05 08 01-2; Benennung "Schneckenfutter" (fusee bush). Finish ▽▽▽.
 - **What it shows:** a flanged bush with a conical 45° sink and three counterbored holes on a flange at 120°: its 8 g6 spigot below the flange slides into the top plate's 8,0 +0,015 and the flange is screwed down; the 8 r6 taper above it is the dust bush's press fit (corrected 28 October 2026, 8-M1: "pressed into a plate, T6" until then).
@@ -464,6 +474,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 - **Notes:** "Gewinde von beiden Seiten einschneiden" = "cut the thread from both ends"; "wie oben" = "as above" (the lower end is the same as the upper); "M 1:1".
 - **Cross-references:** none.
 - **Illegible:** a faint pencil note beside 25,3, box (520,280)-(560,360): unreadable.
+
+- **Corrected by the second drawing check (28 October 2026, 9-M1, 9-M8):** the "1,1 −0,2" is the lead-in's length (its lower extension line at the taper's junction), not a countersink's depth; the 19,6's tolerance reads ±0,04 more likely than ±0,01 (the last glyph has a crossbar and a stem; at about 3 px a glyph: possible to likely); the body "8,1∅ −0,2", the ∅ written high as on "4,5∅" (or "8,14"); the figures over-determine the overall (19,6 + 2 × 2,8 = 25,2 against 25,3 −0,2) and the lead-in (6° over 1,1 from 4,5 f7 gives a tip Ø 4,25 within 4,3 −0,2).
 
 ## 05 08 05 Federhausbrücke kompl. — `05-08/Wempe_05-08_12.jpg`
 - **Title block:** Werkstoff "——"; Maßstab 2:1; gez. 21.7.41 Zwinscher (likely), gepr. 15.8.41 Herb. Müller, N.gepr. 30.4.43 (initials). Zeichnung Nr 05 08 05; Benennung "Federhausbrücke kompl." (barrel bridge, assembly).
@@ -680,6 +692,8 @@ Source folder: `References/wempe/drawings/05-08/`, 21 JPEG scans (the brief said
 
 - **Notes:** "Futter an dieser Seite eindrücken" = "press the bush in from this side".
 - **Cross-references:** 05 08 02-1, 05 08 02-2, WN-302, WN-52.
+
+- **Corrected by the second drawing check (28 October 2026, 9-M1) for 05 08 02 (32-2):** the rim's notch at 6 o'clock takes the ring's pin across the joint (WN-201, drilled at assembly); the 6,8 pin is the stud at 19 (S 6,3), shown in A-B though off its line; the "12,3" stud is placed by its extension line on the inner face, the stud 12,3 long; the bush under 19's stud is hatched in A-B (05 08 02-2 at 2 and 19: likely); WN-302 0,1 +0,02 under the inner face.
 
 ## 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) — `05-08/Wempe_05-08_33.jpg`
 - **Title block:** Werkstoff "——"; Maßstab 5:1 and 1:1; Arbeitspause Nr 6; gez. 18.7.41 E. Zwinscher (likely), gepr. 2?.8.41 H. Müller (likely). Zeichnung Nr 127-556.04 U31; Benennung "Unruhkloben unten kompl." (lower balance cock, assembled). A "KOPIE" stamp. No revisions.
