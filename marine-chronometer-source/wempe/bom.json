@@ -352,7 +352,7 @@
    "parent": "050801-2",
    "kind": "part",
    "part": "dustBush",
-   "fn": "Pressed on the fusee bush's tapered top (8 H7 on 8 T6, both 1:70), up to the case's winding hole.",
+   "fn": "Pressed on the fusee bush's tapered top (8 H7 on 8 r6, both 1:70), up to the case's winding hole.",
    "rel": [
     [
      "round",
@@ -1995,12 +1995,12 @@
    "parent": "050803-1",
    "kind": "part",
    "part": "balanceJewelsUp",
-   "fn": "Holds the upper endstone in the cock.",
+   "fn": "Holds the upper endstone in the cock, over the hole jewel's setting in the Ø 5.2 H7 seat, 0.006 clear, held by its two M1.2 screws over its edge (U30; the coloured section).",
    "rel": [
     [
      "in",
      "050803-1",
-     "press"
+     "clear"
     ]
    ],
    "figs": "05 08_5"
@@ -2035,12 +2035,12 @@
    "parent": "050803-1",
    "kind": "part",
    "part": "balanceJewelsUp",
-   "fn": "Holds the upper hole jewel in the cock, its flange in the sink below.",
+   "fn": "Holds the upper hole jewel in the cock: in its Ø 5.2 H7 seat on the 0.5 lip, 0.006 clear (a located seat, not a press), held down with the endstone's setting over it by the two M1.2 setting screws over its edge (U30's 129-131; the coloured section).",
    "rel": [
     [
      "in",
      "050803-1",
-     "press"
+     "clear"
     ]
    ],
    "figs": "05 08_5"
@@ -2099,12 +2099,12 @@
    "parent": "050800-2",
    "kind": "part",
    "part": "balanceJewelsLow",
-   "fn": "Holds the lower hole jewel in the lug of the lower cock.",
+   "fn": "Holds the lower hole jewel in the lug of the lower cock: in the Ø 5.2 H7 seat on the 0.5 lip, 0.006 clear, held with the endstone's setting by the two M1.2 screws over its edge.",
    "rel": [
     [
      "in",
      "050800-2",
-     "press"
+     "clear"
     ]
    ],
    "figs": "05 08_4"
@@ -2139,12 +2139,12 @@
    "parent": "050800-2",
    "kind": "part",
    "part": "balanceJewelsLow",
-   "fn": "Holds the lower endstone.",
+   "fn": "Holds the lower endstone, in the lug's Ø 5.2 H7 seat, 0.006 clear, held by its two M1.2 screws.",
    "rel": [
     [
      "in",
      "050800-2",
-     "press"
+     "clear"
     ]
    ],
    "figs": "05 08_4"
