@@ -55,7 +55,7 @@
    "sheet": "1436, 05 04 01-2",
    "when": "the detent made with its gold spring on, before it goes in",
    "how": "Clamp its foot as the block holds it (a printed jig with the foot's screw and two steady pins), the stone and the horn free, and flick the blade's end lightly with a hair. Record the ring with a phone a few millimetres off and read its lowest strong pitch with a spectrum app, or python benchcheck.py --ring FILE.",
-   "pass": "94 Hz with the spring as drawn (1436's 0.09 at its ends and \"0,07\" at its middle, as stiff as 0.0792 mm throughout); 68-123 Hz for a spring 0.063-0.100 mm thick, half to twice the drawn stiffness, over which the detent is home before the next tooth (dynamics.js --model wempe). The pitch goes nearly as the thickness to the 1.5 (0.050 mm 49 Hz, 0.060 mm 64 Hz, 0.063 mm 68 Hz, 0.070 mm 79 Hz, 0.079 mm 94 Hz, 0.090 mm 110 Hz, 0.100 mm 123 Hz, 0.110 mm 135 Hz: wempe_tripping.js's frame clamped at the foot), so it measures the spring's section, which no figure on 1436 settles (its \"0,09\" would ring 110 Hz). The gold spring rings near 223 Hz: the detent's own is the lower."
+   "pass": "94 Hz with the spring as drawn (1436's 0.09 at its ends and \"0,07\" at its middle, as stiff as 0.0792 mm throughout); 68-123 Hz for a spring 0.063-0.100 mm thick, half to twice the drawn stiffness, over which the detent is home before the next tooth (dynamics.js --model wempe). The pitch goes nearly as the thickness to the 1.5 (0.050 mm 49 Hz, 0.060 mm 64 Hz, 0.063 mm 68 Hz, 0.070 mm 79 Hz, 0.079 mm 94 Hz, 0.090 mm 110 Hz, 0.100 mm 123 Hz, 0.110 mm 135 Hz: wempe_tripping.js's frame clamped at the foot), so it measures the spring's section, which no figure on 1436 settles (its \"0,09\" would ring 110 Hz). The gold spring rings near 2281 Hz: the detent's own is the lower."
   },
   {
    "id": "escapement",
@@ -63,7 +63,7 @@
    "sheet": "05 04_1, 05 04 01-4",
    "when": "the detent, its gold spring and the balance in; the train's power let down",
    "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
-   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -9.3° of the balance (05 04_1's −12°), the wheel released at 3.6° (lock 12.9°), the gold spring off the stone at 6.3° (let-off 2.7°), the return swing past it at -23.1° (overall 29.4°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.189 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 133 µm over its floor): never shallower than 0.102 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.275 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.64 g rider must leave the detent on its banking and a 0.80 g one part it; aim near 0.68 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.40 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 9.8° of swing; never over 0.80 g: above it the stone, falling back after the release, lands again on the escaping tooth's back during the impulse, where the models part: dynamics.js with brass's restitution). The return pass: turn the balance back slowly by hand through the discharge with the train's power on and watch the locking stone under a loupe: the discharge stone must bend the gold spring aside without lifting the detent (wempe_tripping.js: as the model takes the stone's contact on the gold spring no tooth gets past over 333 gold's whole range of modulus, 83-110 GPa, but at 4 times that contact's stiffness 6 in 12 do, whatever the alloy: only the made spring can show it); its tip at rest 0.10-0.15 short of the discharge stone and 0.35-0.40 past the detent's end (the 1958 Navy repair book's checks, p. 60)."
+   "pass": "05 04_1's layout and the model: the impulse stone's face 28°10' before the line of centres at rest, the locking stone 37.0° on in the wheel's turn and 7.14 from its centre; the gold spring met at -9.3° of the balance (05 04_1's −12°), the wheel released at 3.6° (lock 12.9°), the gold spring off the stone at 6.3° (let-off 2.7°), the return swing past it at -23.1° (overall 29.4°); roller shake 0.011 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.188 mm deep at the stone, the middle of its window (the drawing's 0.235 lies 133 µm over its floor): never shallower than 0.102 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.275 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.250 deep where the drawn wheel locks 0.235: set the banking to the wheel as made. The preload at the stone: a 0.64 g rider must leave the detent on its banking and a 0.80 g one part it; aim near 0.68 g (the model's 0.8 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 44 % of the depth of lock there, under half from 0.40 g, teeth getting past at a fifth of it and under; and a 3 ms blow of 20 g across the plate lets a tooth go under 0.64 g, the floor taken here, the higher; each gram more costs about 9.8° of swing; never over 0.80 g: above it the stone, falling back after the release, lands again on the escaping tooth's back during the impulse, where the models part: dynamics.js with brass's restitution). The return pass: turn the balance back slowly by hand through the discharge with the train's power on and watch the locking stone under a loupe: the discharge stone must bend the gold spring aside without lifting the detent (wempe_tripping.js: as the model takes the stone's contact on the gold spring no tooth gets past over 333 gold's whole range of modulus, 83-110 GPa, but at 4 times that contact's stiffness 6 in 12 do, whatever the alloy: only the made spring can show it); its tip at rest 0.10-0.15 short of the discharge stone and 0.35-0.40 past the detent's end (the 1958 Navy repair book's checks, p. 60)."
   },
   {
    "id": "swing",
@@ -637,7 +637,7 @@
     0.0629,
     0.0998
    ],
-   "gold": 223,
+   "gold": 2281,
    "rows": [
     [
      0.05,
@@ -686,10 +686,10 @@
     "dip": 0.3903
    },
    "depth": {
-    "aim": 0.1887,
+    "aim": 0.1883,
     "drawn": 0.235,
     "window": [
-     0.1025,
+     0.1019,
      0.2748
     ],
     "tip": 0.25
@@ -740,9 +740,9 @@
   "cannon": {
    "r": 30,
    "g": [
-    10.3153,
+    10.3149,
     239.6865,
-    49.7236
+    49.7226
    ],
    "T": [
     0.003,
