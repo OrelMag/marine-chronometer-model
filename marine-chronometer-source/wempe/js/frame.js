@@ -312,7 +312,7 @@ const WFRAME=(()=>{
     for(const g of BBG)for(const k of[41,47])tag(pinM(g,TT-1.7,TT+1.3,H[k][0],H[k][1]),'WN-203.bb');
     /* the click (Sperrkegel, 05 08 05-2, revised 25.5.48): Messingblech 3 Ms 58 federhart, so its own spring (no separate spring is drawn); 2.6 -0.03/-0.05 thick on the bridge's
        face, turning on a shouldered screw (WN-22) in hole 46. Its outline in its own frame (x from its hole toward its nose, y away from its base line), from 05 08 05-2 at 5:1:
-       the hole Ø 3.2 +0.03; 17.4 long; the base 2.85 under the hole (the thin circle "Ø 5,7" about the hole, tangent to it: 2.81 scaled until 16 October 2026); the nose r 1 at
+       the hole Ø 3.2 +0.03 (revision a, 25.5.48: drawn at its middle, 3.215; at its top, 3.23, until 28 October 2026: drawing check 2's 8-M13); 17.4 long (the outline's own figures close on 17.53 from the foot, 17.22 from the beak's top corner, never 17.4: built on the figures, 8-M10, README Readings corrected); the base 2.85 under the hole (the thin circle "Ø 5,7" about the hole, tangent to it: 2.81 scaled until 16 October 2026); the nose r 1 at
        7.5 from the hole; the beak 3.5 high at the base's other end, its end face at 85° to the base leaning toward the hole as it rises (the "85°", its arc about the beak's foot;
        82.4° until 16 October 2026), its tip 9.7 from the hole; under it the hollow r 6 about a point 5.142 back and 7.212 under the hole (sure), which meets the base 9.69 from the
        hole, the tip's "9,7"; the back an arc r 12.5 (sure), its centre traced on the sheet (a circle fitted to 37 points along it, 0.05 mm rms: 1.53 back, 9.55 under the hole) ; set
@@ -328,18 +328,19 @@ const WFRAME=(()=>{
       const loc=[[cn[0],yb]];arc(c6,6,at(c6,H1),at(c6,tB),loc);loc.push(tB);arc(c12,12.5,at(c12,tC),at(c12,Tn),loc);arc(cn,1,at(cn,Tn),-Math.PI/2,loc);
       const ex=brg(23.3),ey=brg(23.3-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);
       const ck=loose(new THREE.Group(),4);bb.add(ck);const y0=TT-3.32-2.56,y1=TT-3.32;   /* 2.6 -0.03/-0.05 thick, drawn at the middle, 2.56 (2.6 until 26 October 2026) */
-      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
-    /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), shoulder Ø 3.1 through the click (its hole 3.2) and 0.05 more, M2.6 through the bridge: the coloured section,
-       scaled (estimated) */
+      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.215/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
+    /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), the coloured section, scaled (estimated); shoulder Ø 3.19 through the click and 0.05 more, M2.6 through
+       the bridge: a close running fit, 0.025 clear in the click's 3.2 +0.03 at its middle, which revision a (25.5.48) held to 0.03 (no WN sheet: estimated; Ø 3.1, 0.13 clear,
+       scaled on the coloured section until 28 October 2026: drawing check 2's 8-M8) */
     {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.61,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.61+3.2;   /* the shoulder the click's 2.56 and 0.05 */   /* its shoulder turned below the head, and the M2.6 thread below it from 0.1 inside the shoulder, as screw() draws its shanks (KIT.threadGeo) */
-      mesh(g,KIT.latheF([V2(0,0),V2(3.1/2,0),V2(3.1/2,2.61),V2(0,2.61)],28),M.steel);mesh(g,KIT.threadGeo(1.3,2.55,L),M.steel).userData.thread={rs:1.3,p:KIT.isoP(1.3)};g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
+      mesh(g,KIT.latheF([V2(0,0),V2(3.19/2,0),V2(3.19/2,2.61),V2(0,2.61)],28),M.steel);mesh(g,KIT.threadGeo(1.3,2.55,L),M.steel).userData.thread={rs:1.3,p:KIT.isoP(1.3)};g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
 
     /* ================= the fusee bush (Schneckenfutter, 05 08 01-2) and dust bush (Staubfutter, 05 08 01-3) ================= */
     /* Schneckenfutter: Rundmessing 13,5 Ms 58: a flange Ø 13.2 -0.2 × 1.5 -0.1 on the top plate's outer face, its spigot below it Ø 8 g6 (-0.005/-0.014, drawn at its middle,
        7.9905) in the plate's hole 10 (8.0 +0.015: a slide fit, the bush held by its three screws; the spigot runs to the J-K recess, which leaves the plate 2.65 there), above
-       the flange Ø 8 T6 (+0.019/+0.028, drawn at its middle, 8.0235) tapering 1:70 (to the sheet's 7.96 at its top), on which the dust bush's 8 H7 bore is pressed, 2.9 +0.2 high,
-       7.1 -0.2 overall (05 08 01-2 at 5:1: the T6's dimension line runs across the part above the flange, under the "Kegel 1:70" leader, the g6's extension lines down the
-       spigot's walls: sure; until 15 October 2026 the fits were taken the other way round, the spigot T6 pressed into the plate); bore 4.1 +0.2, its top sunk
+       the flange Ø 8 r6 (+0.019/+0.028, drawn at its middle, 8.0235; read "T6" until 28 October 2026: a lower-case r, its stem crossed by the centre line, ISO 286's r6 for 6-10 mm, drawing check 2's 8-M4) tapering 1:70 (to the sheet's 7.96 at its top), on which the dust bush's 8 H7 bore is pressed, 2.9 +0.2 high,
+       7.1 -0.2 overall (05 08 01-2 at 5:1: the r6's dimension line runs across the part above the flange, under the "Kegel 1:70" leader, the g6's extension lines down the
+       spigot's walls: sure; until 15 October 2026 the fits were taken the other way round, the spigot r6 pressed into the plate); bore 4.1 +0.2, its top sunk
        Ø 7 ±0.1 at 45°; the flange's three holes Ø 1.5 +0.1, sunk Ø 2.2 H8 × 0.5 +0.05, on Ø 10.4 ±0.05 (sure), for M1.4 screws (WN-34) into the plate (the coloured section and
        05 08 01's section put them in from above). Three solids: the body below the flange and above it turned, the flange with its holes cut.
        Two figures give way to the fusee arbor's (P1c, js/fusee.js; README, Unresolved): the bore is drawn 4.52, reamed to the arbor's journal (05 06 04-1: Ø 4.5 ±0.02 at its
@@ -354,8 +355,8 @@ const WFRAME=(()=>{
        short of the recess's floor, as the coloured section draws them (Wempe_Einheitschronometer.jpg x 741-752: the head's top at y 313.3, the shank's end at 348.3, 2.7-4.5 px
        short of the recess's floor at 351, at 9.37 px/mm: 3.15-3.3 from the seat; likely; 3.6, to the recess, until 17 October 2026) */
     for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);tag(screw(fb,q[0],q[1],TT-1.0,1.05,0.45,3.2,0.7),'WN-34');}
-    /* Staubfutter: Rundmessing 15 Ms 58, 18.1 -0.2 long on the bush's flange, pressed on its top (bore Ø 8 H7 on the bush's 8 T6, both tapering 1:70: 0.008 interference on
-       the radius at the fits' middles; until 15 October 2026 a slide over the bush's g6 as then read; its top Ø 7.62 under a 20° mouth
+    /* Staubfutter: Rundmessing 15 Ms 58, 18.1 -0.2 long on the bush's flange, pressed on its top (bore Ø 8 H7 on the bush's 8 r6, both tapering 1:70: 0.008 interference on
+       the radius at the fits' middles; until 15 October 2026 a slide over the bush's g6 as then read; its bore Ø 7.775 at the mouth's foot by its 1:70 (the sheet's reference "(7,62)" there doesn't follow from Ø 8 at 1:70 over the 16.3 below it, which gives 7.767-7.782: drawing check 2's 8-M6; README, Readings corrected) under a 20° mouth
        1.8 +0.2 deep); body Ø 13.1 -0.2 for 15.1, then a neck Ø 9.7 -0.2 (for 05 08 01-4, not in the set); at the body's top a collar 3.1 -0.2 high, Ø 15.1 -0.2 with a flat 14.1
        from its far side, so flush with the body on one side (sure). The flat faces the upper balance cock, which passes 7.0 from the fusee's axis (the cock's coordinates):
        turned any other way the collar would stand 0.55 into the cock's web (inferred). Its bottom (05 08 01-3's section at 12×): the outer corner chamfered 45°, 0.3 (scaled,
@@ -408,7 +409,7 @@ const WFRAME=(()=>{
        3.2; sure: three dimensioned views draw it as the cock's metal, the section leaving it unhatched only where the setting screws' holes run down through it): built
        as drawn, turned: its face Ø 6 and its flank a 45° cone to Ø 7.6, the stud's slot, milled through it to 2.93 from the axis, nicking the face's edge 0.07 (until
        26 October 2026 Ø 5.8 and 7.5, the slot clear of the face, and the flank drawn as one sloped face, which came out faceted). The setting's
-       seat Ø 5.2 H7 2.7 deep from the top, leaving a floor 0.5 thick bored Ø 4.59 (U30: 0.1 + 1.4 + 1.4 + 0.5 = 3.3 from the settings' top, 0.1 proud; the floor's hole the table's
+       seat Ø 5.2 H7 2.7 deep from the top, leaving a floor 0.5 thick bored Ø 4.596, the middle of the table's 4,59 +0,012 (4.590, its least, until 28 October 2026: drawing check 2's 8-M13; the floor's 0,5 +0,03 stays at its least, since the arm's 3,2 ±0,02 at its middle and the seat over it place the setting, and the balance's endshake with it) (U30: 0.1 + 1.4 + 1.4 + 0.5 = 3.3 from the settings' top, 0.1 proud; the floor's hole the table's
        "Körner 4,4, kalibr. 4,59" for 23): both settings go in from the top, a piloted counterbore (until 17 October 2026 the hole jewel's setting came from below with a flange
        Ø 6 in a sink 0.5 deep, and the arm was flat 2.4 there). Two M1.2 3.5 +0.05 either side along the axis, tapped, at 3.525, through the boss and out of its flanks, breaking 0.095 into
        its face as the sheet's figures put it (drawn at their tap drill, Ø 0.95, until 26 October 2026, the screws thinned to fit);
@@ -424,7 +425,8 @@ const WFRAME=(()=>{
       const arc=(r,a0,a1)=>{const n=Math.max(2,Math.ceil(Math.abs(a1-a0)*r/0.1)),o=[];for(let i=1;i<n;i++){const a=a0+(a1-a0)*i/n;o.push([r*Math.cos(a),r*Math.sin(a)]);}return o;};   /* interior points */
       const cut=r=>{const[p,m]=Xs[r];return[p,...arc(r,Math.atan2(p[1],p[0]),Math.atan2(m[1],m[0])),m];};   /* X+ round through u > 0 to X- */
       const K22=cut(22),Ku=Xs.u,rev=a=>a.slice().reverse();
-      const S1=[-0.9,Math.sqrt(36-0.81)],S2=onE(Tp,Fp,q=>q[0]-0.9),aS1=Math.atan2(S1[1],S1[0]),aTm=Math.atan2(Tm[1],Tm[0]);
+      /* the slot 1.8 H7 (+0.009) drawn at its middle, 1.8045 (at its least, 1.800, until 28 October 2026: drawing check 2's 8-M13), SH its half */
+      const SH=1.8045/2,S1=[-SH,Math.sqrt(36-SH*SH)],S2=onE(Tp,Fp,q=>q[0]-SH),aS1=Math.atan2(S1[1],S1[0]),aTm=Math.atan2(Tm[1],Tm[0]);
       const end=[Tm,...arc(6,aTm,aS1-TAU),S1];   /* round the end from T- through u < 0 to the slot */
       const TN=Math.tan(8*D2R),SW=3.4-2.4*TN;   /* the slot's inner wall at 82° to the faces (C-D), 3.4 from the axis on the top, SW under the thin end */
       const an=p=>Math.atan2(p[1],p[0]),pt=(r,t)=>[r*Math.cos(t),r*Math.sin(t)],rr=q=>Math.hypot(q[0]-c[0],q[1]-c[1]);
@@ -444,9 +446,9 @@ const WFRAME=(()=>{
         const n=Math.max(4,Math.ceil(Math.abs(d)*1.4/0.08)),bay=[];for(let k=1;k<n;k++){const f=f1+d*k/n;bay.push([h20[0]+1.4*Math.cos(f),h20[1]+1.4*Math.sin(f)]);}
         return{A,B,At:[...A.slice(0,i1+1),...bay,...A.slice(i2)]};};
       const yS=q=>TT-12.6+clamp(rr(q)-11.2,0,0.8);
-      const cellsV=DR=>{const{A,B,At}=rails(DR);return[{L:[...end,[-0.9,3.4],[-0.9,SW],[0.9,SW],[0.9,3.4],S2,...At],y0:TT-15,y1:TT-12.6},{L:[...rev(A),...B],y0:TT-15,y1:yS,strip:1},
+      const cellsV=DR=>{const{A,B,At}=rails(DR);return[{L:[...end,[-SH,3.4],[-SH,SW],[SH,SW],[SH,3.4],S2,...At],y0:TT-15,y1:TT-12.6},{L:[...rev(A),...B],y0:TT-15,y1:yS,strip:1},
         {L:[...rev(B),...K22],y0:TT-15,y1:TT-11.8},{L:[...rev(K22),Ku[0],Ku[1]],y0:TT-15,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-3.2,y1:TT},
-        {L:[[0.9,SW],[-0.9,SW],[-0.9,3.4],[0.9,3.4]],y0:TT-15,y1:q=>TT-15+Math.max(0,3.4-((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))/TN}];};   /* the wall's overhang, its underside the 82° face */
+        {L:[[SH,SW],[-SH,SW],[-SH,3.4],[SH,3.4]],y0:TT-15,y1:q=>TT-15+Math.max(0,3.4-((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))/TN}];};   /* the wall's overhang, its underside the 82° face */
       const L=(u,v)=>add(add(c,ax,u),vo,v);
       /* the boss under the thin end, turned: its face Ø 6 0.8 below the relieved underside, its flank a 45° cone to Ø 7.6 there (05 08 03-1, U30). The flank is cut by the
          setting screws' holes on the axis (Ø 0.95 at 3.525: their inner edge 3.05, 0.05 outside the face) and the stud's slot (|u| < 0.9, its end wall SN from the axis, the
@@ -455,14 +457,14 @@ const WFRAME=(()=>{
       const bo=(()=>{const R0=3,R=3.8,d=3.525,rh=0.62,SN=SW-0.8*TN-0.02,tT=12*D2R;   /* rh: the setting screws' tapped M1.2 (rM12), which breaks 0.095 into the face as the sheet's 3.5 and Ø 6 put it */
         const xh=(R0*R0-rh*rh+d*d)/(2*d),yh=Math.sqrt(R0*R0-xh*xh),th=Math.atan2(yh,xh),fh=Math.atan2(yh,xh-d);   /* where the hole crosses the face's edge: th about the axis, fh about the hole */
         const xi=(R*R-rh*rh+d*d)/(2*d),yi=Math.sqrt(R*R-xi*xi),aI=Math.atan2(yi,xi),fI=Math.atan2(yi,xi-d);   /* and the flank's foot */
-        const tA=Math.acos(0.9/R0),tB=Math.acos(0.9/R),tN=Math.atan2(SN,Math.sqrt(R0*R0-SN*SN)),tc=tA-4*D2R;if(!(SN>R0*Math.sin(tA)&&tN>tA&&tT>Math.asin(rh/d)&&tc>tT))throw new Error('upper cock: the boss against its slot and holes');
+        const tA=Math.acos(SH/R0),tB=Math.acos(SH/R),tN=Math.atan2(SN,Math.sqrt(R0*R0-SN*SN)),tc=tA-4*D2R;if(!(SN>R0*Math.sin(tA)&&tN>tA&&tT>Math.asin(rh/d)&&tc>tT))throw new Error('upper cock: the boss against its slot and holes');
         const ra=(r,a0,a1,n)=>{const o=[];for(let i=0;i<=n;i++)o.push(pt(r,a0+(a1-a0)*i/n));return o;},nn=(a0,a1)=>Math.max(2,Math.ceil(Math.abs(a1-a0)*R0/0.08));   /* ends included */
         const ha=(f0,f1)=>{const n=Math.max(2,Math.ceil(Math.abs(f1-f0)*rh/0.04)),o=[];for(let i=0;i<=n;i++){const f=f0+(f1-f0)*i/n;o.push([d+rh*Math.cos(f),rh*Math.sin(f)]);}return o;};   /* the hole's edge, ends included */
         const sr=(a0,a1)=>{const n=nn(a0,a1);return{loop:[...ra(R0,a0,a1,n),...rev(ra(R,a0,a1,n))],strip:1};};
         /* the bite: the flank's sector to 12° (past the hole's tangent at 10.1°) less the hole: from where the hole leaves the face's edge, over its top to the flank's foot,
            out along the foot to 12°, in, and back along the face's edge */
         const bite={loop:[...ha(fh,fI),...ra(R,aI,tT,Math.max(2,Math.ceil((tT-aI)*R/0.08))).slice(1),...ra(R0,tT,th,nn(tT,th)).slice(0,-1)]};
-        const corner={loop:[...ra(R0,tc,tN,nn(tc,tN)),[0.9,SN],...ra(R,tB,tc,Math.max(2,Math.ceil((tB-tc)*R/0.08)))]};
+        const corner={loop:[...ra(R0,tc,tN,nn(tc,tN)),[SH,SN],...ra(R,tB,tc,Math.max(2,Math.ceil((tB-tc)*R/0.08)))]};
         const mir=(/** @type {any} */Q,/** @type {number} */sx,/** @type {number} */sy)=>({loop:Q.loop.map(([x,y])=>[sx*x,sy*y]),strip:Q.strip});
         const Q4=[bite,sr(tT,tc),corner],cells=[...Q4,...Q4.map(Q=>mir(Q,-1,1)),mir(bite,1,-1),mir(bite,-1,-1),sr(-tT,-(Math.PI-tT))];
         const fix=o=>{let a=0;for(let i=0;i<o.length;i++){const p=o[i],q=o[(i+1)%o.length];a+=p[0]*q[1]-q[0]*p[1];}return a<0?o.slice().reverse():o;};
@@ -476,9 +478,9 @@ const WFRAME=(()=>{
       /* the boss's foot 0.01 into the arm (yB): face to face at TT-12.6 the two solids' walls met edge to edge with their own steps, and the seat's and the setting screws' hole
          walls showed a broken seam line there, the faces between them lying in the cracks (the drawings check, 05 08_05, 26 October 2026); overlapped, the fused mesh has no
          face at the joint to show (27 October 2026) */
-      const yB=TT-12.61,boss=[...bo.cells.map(Q=>({L:Q.loop,y0:yB,y1:/** @type {any} */(ySl),strip:Q.strip,F:[]})),{L:bo.disc,y0:yB,y1:/** @type {any} */(TT-11.8),strip:0,F:[{p:C(c,5.206/2),a:yB,b:TT-12.3},{p:C(c,4.59/2),a:TT-12.3,b:TT-11.8}]}];
+      const yB=TT-12.61,boss=[...bo.cells.map(Q=>({L:Q.loop,y0:yB,y1:/** @type {any} */(ySl),strip:Q.strip,F:[]})),{L:bo.disc,y0:yB,y1:/** @type {any} */(TT-11.8),strip:0,F:[{p:C(c,5.206/2),a:yB,b:TT-12.3},{p:C(c,4.596/2),a:TT-12.3,b:TT-11.8}]}];
       const thF=[T(c,5.206/2,TT-15,TT-12.6),T(L(3.525,0),rM12,TT-15,TT-12.6),T(L(-3.525,0),rM12,TT-15,TT-12.6),
-        T(WESC.HOLES.studScrew,rM14,TT-15,TT-12.6)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
+        T(WESC.HOLES.studScrew,rM14,TT-15,TT-12.6)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies, at 127-556.04 U30's 4.1 along and 4,2 across (escapement.js: the owner's choice, O-8) */
       if(rr(WESC.HOLES.studScrew)+rM14>11.2)throw new Error('upper cock: the stud screw in the step');
       const sk=(k,y)=>[{p:C(H[k],rPinQ,40),a:y-2.5,b:y-0.2},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.2,40),a:y-0.2,b:y}];   /* the pins' holes, 2.5 deep, their 0.2 × 90° sinks (05 08_05) */
       /* hole 20 (Ø 2.8) in the drawings' versions only, the bay in the step (above): the 6MX's cock has none (Altmeppen's list: no window in the upper cock; his comparison's arrow on the
@@ -486,7 +488,7 @@ const WFRAME=(()=>{
       VER.forEach(([,,DR],i)=>{const cs=cellsV(!!DR);cs[0].F=thF;cs[3].F=[...sk(9,TT)];cs[4].F=[T(H[8],rCl26,TT-3.2,TT),...sk(6,TT),...sk(50,TT)];
         fuse([tag(mesh(UCG[i],faceUV(solidGeo(cs.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[],strip:q.strip})))),DR?GH:G6T),'050803-1'),
         tag(mesh(UCG[i],faceUV(solidGeo(boss.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[],strip:q.strip})))),DR?GH:G6T),'050803-1',1)]);});}   /* the arm and its boss one cock, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026 */
-    /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
+    /* its screw (hole 8; WN-55, the coloured section's "Schraube WN-55" at it, as at the barrel bridge's: likely, the second drawing check's 8-M14): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
     VER.forEach(([V],i)=>tag(screw(UCG[i],H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,V==='6mx'?M.steel:M.blued),'WN-ucs'));   /* the 6MX's polished steel (Kirov No. 247's A, N and W photographs: sure; blued until 18 October 2026) */
     /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
     for(const g of UCG)for(const k of[6,9,50])tag(pinM(g,TT-1.7,TT+1.3,H[k][0],H[k][1]),'WN-203.uc');
@@ -495,12 +497,13 @@ const WFRAME=(()=>{
     /* Profilmessing 20×10×8×3,3 Ms 58: a bar 20 × 8 and 10 -0.1 deep under the top plate's inner face, its axis through 22, 36, 37 (7 apart) at 32°30' from S toward W, and a lug
        10 wide flush with its end at 22, 3.22 -0.04 thick at the bar's far face, ending in r 5 round the balance's lower setting at 23 (8.2 from the bar's axis, 5 along it from
        36; 17.2 across both). The setting's seat Ø 5.2 H7 from the lug's far face to 0.5 +0.03 from its near one, Ø 4.59 +0.012 through that; two M1.2 3.5 +0.1 either side
-       across the bar's axis. 36 tapped M2.6 through for the screw from the top plate (G-H); 22, 37 its steady pins, 1.585 -0.005 × 2.5 deep (sure). Two cells: the bar and the lug */
+       across the bar's axis, drawn at its middle, 3.55 (revision a widened it from +0.05: at 3.5, its least, until 28 October 2026, drawing check 2's 8-M13; the inner
+       one's thread then 0.05 inside the bar's face, as the figures put it). 36 tapped M2.6 through for the screw from the top plate (G-H); 22, 37 its steady pins, 1.585 -0.005 × 2.5 deep (sure). Two cells: the bar and the lug */
     const lc=part('lowerCock',-31);
     {const o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(H[23][0]-o[0])+q[1]*(H[23][1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]),L=(u,w)=>add(add(o,bu,u),nv,w);
       const L1=L(0,4),L2=L(-10,4),semi=[...Array(41).keys()].map(i=>{const t=Math.PI*i/40;return L(-5+5*Math.cos(t),8.2+5*Math.sin(t));});
       const bar={loop:[L(-10,-4),L(10,-4),L(10,4),L1,L2],y0:TI,y1:TI+10,F:[T(o,rM26,TI,TI+10),A(H[22],rPinQ,TI,2.5),A(H[37],rPinQ,TI,2.5)]};
-      const ly0=TI+10-3.22,ly1=TI+10,lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],5.206/2,ly1,3.22-0.5),T(add(H[23],nv,3.5),rM12,ly0,ly1),T(add(H[23],nv,-3.5),rM12,ly0,ly1)]};
+      const ly0=TI+10-3.22,ly1=TI+10,lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],5.206/2,ly1,3.22-0.5),T(add(H[23],nv,3.55),rM12,ly0,ly1),T(add(H[23],nv,-3.55),rM12,ly0,ly1)]};
       tag(mesh(rv(lc,'last first 1943'),solidGeo([bar,lug]),M.gilt),'050800-2');
       /* the Soviet 6MX's: the bar full depth only over the lug, the rest toward the screw and pins cut back from the pillar plate's side to 3.5 under the top plate (every 6MX
          side view of the detent, 8_Kirow_247_F.jpg and the gallery's 13 Feder photographs, a stamped number on the deep part; on 247's, the full depth taken as the drawn 10:

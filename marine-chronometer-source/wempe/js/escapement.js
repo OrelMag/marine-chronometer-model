@@ -146,8 +146,11 @@ const WESC=(()=>{
     else{prog=1;psDef=passAt(thd);}
     return{th,ccw,lift,psDef,prog,drop,run,p:q};}
   /* holes in the frame's parts for this group's screws and pins (frame.js cuts them): the detent block's two steady pins in the top plate's inner face (not in its table:
-     drilled at assembly), the stud's screw in the upper cock (not on its sheet) */
-  const VO=brg(75),AX=brg(345),STUD=(u,v)=>add(add(B,AX,u),VO,v),BLK_NE=7.3-ACR,HOLES={blockPins:[D(ROW-2,BLK_NE-2.3),D(ROW+2,BLK_NE-12.3)],studScrew:STUD(4.1,4.35),
+     drilled at assembly), the stud's screw in the upper cock: not on 05 08 03-1, but the lever chronometer's same cock 127-556.04 U30 draws it, an M1.4 (drawn Ø 1.43 with
+     a dashed Ø 1.03 inside), "5" from its centre to the slot's far wall, so 4.1 along from 23 toward the foot (sure), and "4,2" across from 23's line toward O (sure on the
+     sheet), the only figure in the set that places it (the owner's choice, 28 October 2026, the second drawing check's O-8: 4.35 until then, derived from a stud drawn
+     symmetric, which 05 03_9 doesn't draw; Wempe 3955, 2_Wempe_3955_A.jpg at 9.34 px/mm by the setting screws, reads 4.22-4.33 along and 4.25-4.36 across, ±0.15) */
+  const VO=brg(75),AX=brg(345),STUD=(u,v)=>add(add(B,AX,u),VO,v),BLK_NE=7.3-ACR,HOLES={blockPins:[D(ROW-2,BLK_NE-2.3),D(ROW+2,BLK_NE-12.3)],studScrew:STUD(4.1,4.2),
     /* the Soviet 6MX's (Kirov No. 247): its block fixed not through hole 13 but by a slotted stud Ø 3.4 flush in the top plate's outer face 2.2 S of it, between two steady
        pins 10.0 apart, measured on 2_Kirow_247_A.jpg (holemap.py --model wempe, six seeds, 8.993 px/mm, every residual under 0.57) and 2_Kirow_009_A.jpg (by hand), each
        corrected by hole 12's offset (0.4): the two agree to 0.3 (sure to ±0.4). In the block's frame the pins stand 1.9 nearer its end than 05 04 01-4 draws them and the
@@ -160,7 +163,7 @@ const WESC=(()=>{
      pinned at 220 deg; the strip 0.285 thick (radial: the coil bends it in that direction) and 0.52 high; the coil's middle radius RC; TURNS of helix between the curves;
      the outer curve the same as the inner (kU 1), pinned as far from the staff in the stud as the inner is in the collet; each end runs on past its pinning point into the
      collet's hole and the stud's (TE_L, TE_U, deg). The stud's upright leans 8° toward the axis (05 03 02-3's 98°, along the cock's slot's 82° wall), which brings its hole
-     in to there: the spring 3.55 out in the Ø 0.7 hole with its pin beside it (likely; the drawn spring is straightened into the holes, below). Until 15 October 2026 the
+     in to there: the spring 3.48 out in the Ø 0.7 hole (3.55 until 28 October 2026: the stud built off-centre, O-8) with its pin beside it (likely; the drawn spring is straightened into the holes, below). Until 15 October 2026 the
      outer curve was drawn in proportion (kU 0.883) to end 3.87 out, where an upright square to the bar let the stud stand */
   const TBL=[6.12,6.07,6.01,5.96,5.90,5.83,5.78,5.74,5.72,5.65,5.59,5.49,5.34,5.19,5.01,4.79,4.54,4.31,4.11,3.88,3.69,3.52,3.41,3.37,3.37,3.37];
   const tbl=th=>{const i=clamp(Math.floor(th/10),0,24),f=clamp(th/10-i,0,1);return TBL[i]+(TBL[i+1]-TBL[i])*f;};
@@ -550,16 +553,18 @@ const WESC=(()=>{
        (boxed), 0.21 between the coils, 15 turns left-hand ("links") 11.5 high as wound; "before bending the curve shorten to 13 turns less 3.5 mm" (05 03_7): 12.911 turns
        between the two terminal curves. Both ends are curved inward on 05 03_7's table (Spiralkurve: the radii to the strip's inside every 10 deg from where the curve leaves the
        coil, 6.12 at 0 to 3.37 at 230-250, the pinning point at 220 deg, boxed): the inner end into the collet's hole 3.49 from the staff (05 03 02-2); the outer end into the stud's
-       hole, 3.55 from the staff (05 03 02-3; below).
+       hole, 3.48 from the staff (05 03 02-3; below).
        Going up the helix the coils turn counterclockwise seen from the dial (left-hand). The spring's lower end turns with the balance, the coils share the turn */
     const colB=Y.armT-0.05,yL=colB-0.75;   /* the collet's underside 0.05 over the arm; the spring's lower end 0.75 over it (05 03_5) */
     /* the stud's hole (05 03 02-3; the stud, below): Ø 0.7, its centre 3.15 under the stud's bar (05 03_5: "3,15" from the bar's underside to the spring's upper pin, closing
        with its 9,5 between the spring's ends and 0,75 from the lower end to the collet's underside to its 13,4; 05 03_1's stud detail: the bar 1,5, then 3,15 to the pin, 0,7
        from the cock's underside, the upright 6,0 from the bar's top; the coloured section about 0.8 under the cock: likely; 05 03_9 gives the hole no place, "bei Montage der
-       Spirale gebohrt"), so 1.35 from the upright's end, and 0.36 from its middle toward the axis (05 03_9's end view), 3.55 from the staff, the upright leaning in 8° to it.
+       Spirale gebohrt"), so 1.35 from the upright's end, and 0.36 from its middle toward the axis (05 03_9's end view), 3.48 from the staff (3.55 until 28 October 2026, O-8), the upright leaning in 8° to it.
        Until 28 October 2026 3.78 under the bar, 0.72 from the upright's end (scaled on 05 03_9, where its place isn't drawn): the spring's ends 8.82 apart, not 9.5 (drawing
        check 2's 1-M14) */
-    const SK=TT-15,SYH=SK+3.15,SVH=4.35-Math.tan(8*D2R)*(SYH-SK)-0.36,SVS=SVH-0.06;
+    /* the upright's middle 4.285 from 23's line on the cock's top (the stud built off-centre about its screw's line at 4.2, below), 0.36 toward the axis from it at the hole:
+       3.48 from the staff (3.55 until 28 October 2026, the upright's middle at 4.35: O-8) */
+    const SK=TT-15,SYH=SK+3.15,SVH=4.2+(0.96-0.79)/2-Math.tan(8*D2R)*(SYH-SK)-0.36,SVS=SVH-0.06;
     /* the outer curve's end formed into it: the drawn curve bows 0.18 across the stud's 1.8 (3.44 to 3.62 from the staff along it), so the maker straightens its last stretch
        along the hole, 0.06 inside its centre (the pin beside it, outside), over the curve's last 70 deg (HSW: none to 150 deg, all from 200 deg; the straightening from 2.1 to
        1.45 along the bar before the pinning point, past the pin's end). Its ends 9.5 apart (05 03_5), each in its hole: the drawn helix opened to them, its pitch hD/TURNS
@@ -623,13 +628,17 @@ const WESC=(()=>{
         pm.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(F0.n[0],0,F0.n[1]),new THREE.Vector3(-F0.d[0],0,-F0.d[1]),new THREE.Vector3(0,1,0)));}}
     /* the stud (Klötzchen 05 03 02-3, 6.6.41: Flachmessing 15 × 7 Ms 58; every figure sure but where said): a bar 14.6 −0.2 long and 1.6 −0.2 thick (the side view's head; drawn
        1.5, its middle and 05 03_1's stud detail's "1,5"; 1.6, its top limit, until 28 October 2026: drawing check 2's 1-M15),
-       2.5 −0.2 wide at its square end and 3.1 −0.2 at its hole, Ø 1.5 H7, 5 ±0.1 from that end; from the hole it tapers to its point, where two facets, ground from the V the
+       2.5 −0.2 wide at its square end and 3.1 −0.2 at its hole, Ø 1.5 H7, 5 ±0.1 from that end; the square end drawn off-centre about the hole's line, 1.20 to its outer edge
+       (its "1,2 −0,1") and 1.26 to its inner (toward the axis), on the plan at 17.1 px/mm by its 14,6 (likely; the owner's choice, 28 October 2026, the second drawing check's
+       O-8 and 8-M15: ±1.25 until then); from the hole it tapers to its point, where two facets, ground from the V the
        plan draws (its apex 6.6 −0.2 on from the hole, its arms running to the bar's widest corners beside the hole) down to the point, meet along the middle: the section draws
        that ridge falling from the V's apex to a knife edge at the point, on the face under it, and Wempe 3955 (2_Wempe_3955_A.jpg) shows the two facets, one lit and one dark,
        meeting along it. The plan's Ø 0.8 round at the point (its "0,8" with the diameter's sign; drawn about Ø 0.55) is the blank's outline: flat facets from the V's arms to the
        knife edge the section draws at the point leave no metal for it (their edges on the face under them meet 0.35 short of where its arc would end), and Wempe 3955's point,
-       ground so, shows under Ø 0.3 across (2_Wempe_3955_A.jpg at 8.81 px/mm, enlarged 5×, where Ø 0.8 would be 7 px: likely): left out, a maker rounds the blank and grinds it away. The upright: 1.8 g6 thick along the bar, flush with its square end, 1.9 −0.2 across (drawn 1.86, so its inner face
-       clears the cock's slot by 0.01 with the bar's middle on the hole), 6.1 −0.2 from the bar's top to its end (drawn 6.0, its middle and 05 03_1's "6,0", so its end stays
+       ground so, shows under Ø 0.3 across (2_Wempe_3955_A.jpg at 8.81 px/mm, enlarged 5×, where Ø 0.8 would be 7 px: likely): left out, a maker rounds the blank and grinds it away. The upright: 1.8 g6 (its own −0,003/−0,010) thick along the bar, drawn at its middle, 1.7935 (at its least, 1.790, until 28 October 2026: drawing
+       check 2's 8-M7), in the slot's 1.8045, flush with its square end, 1.9 −0.2 across, drawn off-centre about the hole's line as the plan's dashed sides are (0.96 outside
+       it, 0.82 inside, on the plan at 17.1 px/mm: O-8, 8-M15), built 0.96 and 0.79 on the cock's top so its inner face clears the slot's end at 3,4 by 0.01 with the screw at
+       U30's 4,2 (at the drawn 0.82 it stands 0.02 into it, inside the scan's ±0.05): 1.75 across (1.86, centred on the hole, until then), 6.1 −0.2 from the bar's top to its end (drawn 6.0, its middle and 05 03_1's "6,0", so its end stays
        4.5 under the cock's top: 6.1 until 28 October 2026), cut square to the bar; it leans 8° toward the balance's axis
        (the side view's 98°, its end's far edge 1.6 −0.2 from the bar's middle in the plan: 1.57 here), along the cock's slot's inner wall (05 08 03-1, Schnitt C-D: 82°;
        frame.js). The upright is solid to its end: the plan's dashed lines, 1.87 apart, are its own sides hidden under the bar, and its "1,2 −0,1" runs from the bar's
@@ -637,15 +646,15 @@ const WESC=(()=>{
        2.0 deep, open at the end, until 27 October 2026). The spring's end goes into the hole across its end (below). On the cock's top, the bar
        along the arm toward the foot (Wempe 3955), the upright down through the slot; screwed down through its hole (Schraube WN-11, the coloured section). Until 15 October
        2026 the bar was 1.4 thick and 3.1 wide to its square end, its hole 5.9 from that end, a V cut through its point 2.1 deep, and the upright square to it */
-    {const st=part('stud',OFFB),ck=TT-15,SBT=1.5,yB=ck-SBT,yE=yB+6.0,L=STUD,uw=0.895,c=4.35,tn=Math.tan(8*D2R),hw=0.93/Math.cos(8*D2R),HU=4.1;
-      const Ep=L(-uw,c+1.25),Em=L(-uw,c-1.25),Cp=L(HU,c+1.55),Cm=L(HU,c-1.55),Ap=L(HU+6.6,c),Tp=L(13.7,c);
+    {const st=part('stud',OFFB),ck=TT-15,SBT=1.5,yB=ck-SBT,yE=yB+6.0,L=STUD,uw=1.7935/2,c=4.2,tn=Math.tan(8*D2R),HU=4.1;   /* c: the screw's line, 4.2 from 23's (O-8) */
+      const Ep=L(-uw,c+1.20),Em=L(-uw,c-1.26),Cp=L(HU,c+1.55),Cm=L(HU,c-1.55),Ap=L(HU+6.6,c),Tp=L(13.7,c);
       const plane=(P,Q,S)=>{const u=[Q[0]-P[0],Q[1]-P[1],Q[2]-P[2]],v=[S[0]-P[0],S[1]-P[1],S[2]-P[2]],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
         return p=>P[2]-(n[0]*(p[0]-P[0])+n[1]*(p[1]-P[1]))/n[2];},fac=q=>plane([...q,yB],[...Ap,yB],[...Tp,ck-0.05]);   /* a facet: through the V's arm on the top and the point, 0.05 thick */
       /* the hole (05 03 02-3's end view, at 5:1, 167 px/mm enlarged: sure to ±0.05): Ø 0.7 "bei Montage der Spirale gebohrt", along the bar through the upright, its centre
-         0.36 from the upright's middle toward the axis (its end view) and 3.15 under the bar (05 03_5, 05 03_1: above, SYH), 1.35 from the upright's end, 3.55 from the staff,
+         0.36 from the upright's middle toward the axis (its end view) and 3.15 under the bar (05 03_5, 05 03_1: above, SYH), 1.35 from the upright's end, 3.48 from the staff (3.55 until 28 October 2026, the upright centred on the bar at 4.35: O-8),
          where 05 03_7's curve and the collet (3.49, 05 03 02-2) pin the spring: the spring's end in it with its pin (Spiralstift 05 03 02-4), outside it (below), as the collet
          holds the inner end in its Ø 0.8 with its own. Until 28 October 2026 0.72 from the end, 3.46 from the staff (1-M14); until 27 October 2026 a Ø 0.66 pin beside the spring in a slot */
-      const v0=c-hw,v1=c+hw,dq=yE-ck,o0=L(0,0),fl=(r,n)=>r/Math.cos(Math.PI/n);
+      const v0=c-0.79,v1=c+0.96,dq=yE-ck,o0=L(0,0),fl=(r,n)=>r/Math.cos(Math.PI/n);
       const stB=tag(mesh(st,solidGeo([{loop:ccw([Em,Cm,Ap,Cp,Ep]),y0:yB,y1:ck,F:[{p:C(L(HU,c),0.75+0.0045,48),a:yB,b:ck}]},{loop:ccw([Cp,Ap,Tp]),y0:fac(Cp),y1:ck},{loop:ccw([Cm,Tp,Ap]),y0:fac(Cm),y1:ck}]),M.brass),'050302-3');
       /* the upright: its side outline (v across, the height down, leaning 8°) extruded along the bar through its 1.79 with the hole through it (its polygon's flats on its
          radius); built in that frame, then turned into the movement's */
@@ -1130,7 +1139,8 @@ const WESC=(()=>{
       tag(mesh(bjl,lathe(KIT.jewelPr(JR,JT,0.115,JD,JC,JH,hY,-1),32),M.ruby),'050407-1.bl');
       tag(mesh(bjl,lathe([[1.5,lf],[2.6,lf],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY+EE],lp,[1.5,lp[1]+0.08]],48),M.brass),'050408-2.bl');
       tag(mesh(bjl,lathe(KIT.endPr(ER,EE,EH,eY,1),32),M.ruby),'050408-1.bl');
-      const f=flip(bjl);for(const s of[-1,1]){const q=BL(add(B,nv,3.5*s));tag(screw(f,q[0],-q[1],-lf,1.25,1.4,2.0,0.6),'WN-10.bl');}}
+      const f=flip(bjl);for(const s of[-1,1]){const q=BL(add(B,nv,3.55*s));   /* at the lug's holes, 3.55 (frame.js; 3.5 until 28 October 2026) */
+        tag(screw(f,q[0],-q[1],-lf,1.25,1.4,2.0,0.6),'WN-10.bl');}}
     /* ================= jewels: the escape wheel's ================= */
     /* Upper, in the top plate's seat 26 (05 09 01 P-Q: Ø 5.2 H7 from the inner face to 0.5 under the outer, Ø 4.59 H7 through that by revision a): the endstone's setting from the inside,
        its spigot Ø 4.59 through the lip (the H7 is its fit; 4.5 until 27 October 2026, the lip's figure before revision a) flush with the outer face, held by two screws M1.2 from the outside (the plate's two at ±3.5 on the O-W line), their
