@@ -17,7 +17,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 4 | barrel, arbor, set-up ratchet, mainspring, chain | 14 | 14 | 16 | 16 | 19 | 12 | 6 | 3 (book) |
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 12 | 18 | 18 | 17 | 13 | 2 | 2 (book, batch 10) |
 | 6 | going train | 10 | 0 | 16 | 15 | 12 | 0 | 0 | 12 |
-| 7 | motion work, hands, dial | 13 | 0 | 17 | 13 | 12 | 0 | 0 | 12 |
+| 7 | motion work, hands, dial | 13 | 13 | 17 | 17 | 12 | 10 | 2 | 0 |
 | 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 18 | 18 | 14 | 0 | 0 | 14 |
 | 9 | plates, pillars, movement ring | 8 | 0 | 26 | 24 | 14 | 0 | 1 | 13 |
 | 10 | case, gimbals, boxes, keys | 14 | 0 | 23 | 15 | 16 | 0 | 1 | 15 |
@@ -95,19 +95,19 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
 | `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
 | `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
-| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | done | done | done | refuted; corrections next |
+| `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_04.jpg` | 05 02 00-3 Auf u. Abzeiger (up-and-down hand) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_05.jpg` | 05 02 01-1 Sekundenzeiger (seconds hand) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_06.jpg` | 05 02 02 Wechselrad kompl. (change wheel complete) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_07.jpg` | 127-556.04-004 / 040202-1 Wechselrad (change wheel) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_08.jpg` | 05 02 03 Stundenrad kompl. (hour wheel complete) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_09.jpg` | 127-556.04-008 / 040204-1 Stundenrad (hour wheel) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_10.jpg` | 05 02 04 Auf u. Abrad kompl. (up-and-down wheel complete) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
+| `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | done | done | done | corrected on claude/wempe-drawing-fixes-2 (3d6bf700..a509e992) |
 | `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | done | done | done | done | done | refuted; corrections next |
 | `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | done | done | done | done | done | refuted; corrections next |
 | `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | done | done | done | done | done | refuted; corrections next |
@@ -125,20 +125,20 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | done | done | done | done | done | refuted; corrections next |
 | `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | done | done | done | done | done | refuted; corrections next |
 | `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | done | done | done | done | — | compared; refutation next |
-| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | done | done | done | done | — | compared; refutation next |
-| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | done | done | done | done | — | compared; refutation next |
-| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | done | done | done | done | — | compared; refutation next |
-| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | done | done | — | compared; refutation next |
-| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | done | done | — | compared; refutation next |
-| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | done | done | — | compared; refutation next |
+| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | done | done | done | done | done | refuted; corrections next |
+| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | done | done | done | done | done | refuted; corrections next |
+| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | done | done | done | done | done | refuted; corrections next |
+| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | done | done | done | done | done | refuted; corrections next |
+| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | done | done | done | refuted; corrections next |
+| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | done | done | done | refuted; corrections next |
+| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | done | done | done | refuted; corrections next |
 | `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | done | done | done | done | done | compared; refutation next |
 | `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | done | done | done | done | done | compared; refutation next |
 | `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | done | done | done | done | done | compared; refutation next |
@@ -226,7 +226,7 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 8-M14 | coloured section | WN numbers | the upper cock's and barrel bridge's screws WN-55; the setting screws' label reads more like WN-56, the model names them WN-55.ck | stale | possible | comparer | WN-55 for the cock's and bridge's screws confirmed (likely); the setting screws' digit undecidable | open |
 | 8-M15 | 05-03_9 | stud (batch 1's part) | the sheet draws the square end 1.20 / 1.26 and the upright 0.96 / 0.82 about the hole line, both off-centre; the model builds both symmetric (±1.25, ±0.93) | wrong | likely | refuter | — | open (with O-8) |
 | 9-M2 | 05-08_03b, _32-2 | pillar plate hole 30 (last, first, 1943) | the Ø 5.2 H7 seat on the wrong face: 03b's plan (the inner face) draws 30's 4.59 solid and its 5.2 dashed, 32-2 dashes the setting's screws: the seat on the dial face; HOLE_EXPECTED's "30, its lip" with it | wrong | likely | b9 reader F9, comparer | confirmed (likely): 03b dashes 30's 5.2, 32-2 dashes the setting's flange and screw heads; probed: the model's 5.206 at the inner face, the lip at the dial face: reversed | open |
-| 9-M3 | 05-08_02, 05-08_01b | top plate (last) | "last" mixes 05 08 01's 1946 horn tips with 05 09 01's 1943 holes 51-53, the N-O pocket and the straight tongue; the 1946 sheet erases 51-53, the pocket and 26 and draws the tongue curved: for the owner (O-9) | version | likely | b9 reader F10, F11, comparer | facts confirmed; read otherwise: 05 08 01's revision (a) is "zeichnerisch geändert" (2.11.46), a drafting change; the same erasure took out 26 (a slip, sure); the 1943 part drawing and Wempe 3955's plate (12_, 13_) keep 51-53, the pocket and a straight tongue: keep "last" as built | open |
+| 9-M3 | 05-08_02, 05-08_01b | top plate (last) | "last" mixes 05 08 01's 1946 horn tips with 05 09 01's 1943 holes 51-53, the N-O pocket and the straight tongue; the 1946 sheet erases 51-53, the pocket and 26 and draws the tongue curved: for the owner (O-9) | version | likely | b9 reader F10, F11, comparer | facts confirmed; read otherwise: 05 08 01's revision (a) is "zeichnerisch geändert" (2.11.46), a drafting change; the same erasure took out 26 (a slip, sure); the 1943 part drawing and Wempe 3955's plate (12_, 13_) keep 51-53, the pocket and a straight tongue: keep "last" as built | kept by the owner (O-9): recorded in the README |
 | 9-M4 | 05-08_07 | ring screws WN-rs (S-6) | the ring's three M2.6 holes plain Ø 2.64-2.66; SEAT_EXPECTED's reason wrong (the shanks end at 6.30 before the cone at 6.35, the holes full circles): the holes untapped | joint | sure | comparer | confirmed (sure): 24-gons r 1.32-1.331, no thread; seatcheck's 9/12 from its probe points in a hole 0.03 larger, not the cone | open |
 | 9-M5 | 05-08_07, 05-02_12 | dial screws' M1 holes (7-M3) | plain Ø 1.04; README line 153's "tapped 2.5 deep" stale (batch 7's corrector tapped them on the fixes branch) | joint | sure | comparer | — | open (with 7-M3) |
 | 9-M6 | — | audit.py (N-3) | the three "no longer found" FLOAT entries are the 6MX's ring screws: audit.py runs only in "last"; with setRev('6mx') it finds them: keep the entries, make the audit run them per version | tool | sure | comparer | confirmed | open |
@@ -239,21 +239,21 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 9-M13 | 05-08 | build book (v3.41.00) | every tapped hole missing from the hole tables, the pocket, tongue, recesses too; the top plate's contour with zero-length elements; the pillar's thread and lead-in, the ring's holes and cone missing | book | sure | comparer | — | for the book |
 | 9-M14 | 05-08_01a | escape settings' screws | their heads bear on only 0.07 and 0.10 of the settings' rims | joint | possible | comparer | confirmed; 3955's photograph about 0.03: record, not a defect | open |
 | 9-M15 | — | holes.py | ignores --model and opens the Hamilton's page | tool | sure | comparer | — | open |
-| 10-M1 | 05-01_3 | closing plate (every version) | mirrored: the sheet puts the knob's M2.6 and the Ø 1.2 90° clockwise from the Ø 8 window on the inner face, the model 90° counterclockwise; Wempe 3955's photograph agrees with the sheet | wrong | sure | comparer | — | open (massprops) |
-| 10-M2 | 05-01_3 | closing plate | the web 2.00 where 2 −0,05/−0,1 allows 1.90-1.95 | wrong | sure | comparer | — | open |
-| 10-M3 | 05-01_3, _1 | WN-71 | a plain M3 in the plate's Ø 5.5 bore: 1.27 of play; the bore and the tight web a shoulder screw's seat | joint | likely | comparer | — | open |
-| 10-M4 | 05-01_2 | bowl | its inner corner round r 6.3 on the scan, the model r 7.0 | wrong | possible | comparer | — | open (massprops) |
-| 10-M5 | 05-01_6 | 1940 key | a one-way key: the spring drawn round the pipe, the pipe free up to the cap; the model presses a stem 13 into the body with no spring (wempe_overwind.js forces it as a plain key) | wrong | likely | b10 reader F4, comparer | — | open (overwind) |
-| 10-M6 | 05-01_6 | 1940 key's socket (5-M17) | round Ø 3.1 can't take the square: a 3.1 square socket, 28.7 deep (scaled) | wrong | sure | comparer | — | open |
-| 10-M7 | 05-01_6 | 1940 key's cap | a separate part held by a countersunk screw 5 in a tapped hole; the model's screw 5 only a head disc, the grip held by nothing | joint | likely | comparer | — | open |
-| 10-M8 | 51-00_3 | maker's plate | its four Ø 1.2 holes not cut, its pins without shanks | joint | sure | comparer | — | open |
-| 10-M9 | 51-00_4 | tongue | tapers on both edges and ends in a shallow arc (R ≈ 7); the model tapers one edge 3.2° and ends in a semicircle r 4 | wrong | likely | comparer | — | open |
-| 10-M10 | 05-01_1 | case brackets, locking bracket | their screw holes not cut: the screws run through solid brass | joint | sure | comparer | — | open (massprops) |
-| 10-M11 | 51-00_5 | outer box | its rim strip 2 over the walls; the sheet and the code's comment say 4 | wrong | sure | comparer | — | open |
+| 10-M1 | 05-01_3 | closing plate (every version) | mirrored: the sheet puts the knob's M2.6 and the Ø 1.2 90° clockwise from the Ø 8 window on the inner face, the model 90° counterclockwise; Wempe 3955's photograph agrees with the sheet | wrong | sure | comparer | confirmed (sure): the plan's circles Ø 5.6, 10.2, 26.5 are the inner face's; there the knob is 90° clockwise from the window; the model 90° counterclockwise from inside; the 6MX's too | open (massprops) |
+| 10-M2 | 05-01_3 | closing plate | the web 2.00 where 2 −0,05/−0,1 allows 1.90-1.95 | wrong | sure | comparer | confirmed | open |
+| 10-M3 | 05-01_3, _1 | WN-71 | a plain M3 in the plate's Ø 5.5 bore: 1.27 of play; the bore and the tight web a shoulder screw's seat | joint | likely | comparer | confirmed (1.28 radial play; a shoulder screw likely) | open |
+| 10-M4 | 05-01_2 | bowl | its inner corner round r 6.3 on the scan, the model r 7.0 | wrong | possible | comparer | refuted as a defect: the drawn round fits r 6.95 over 95-173° (6.2 over its middle 30° only): r 7 inside what the line allows: keep | kept (refuted) |
+| 10-M5 | 05-01_6 | 1940 key | a one-way key: the spring drawn round the pipe, the pipe free up to the cap; the model presses a stem 13 into the body with no spring (wempe_overwind.js forces it as a plain key) | wrong | likely | b10 reader F4, comparer | confirmed (likely) | open (overwind) |
+| 10-M6 | 05-01_6 | 1940 key's socket (5-M17) | round Ø 3.1 can't take the square: a 3.1 square socket, 28.7 deep (scaled) | wrong | sure | comparer | confirmed: square sure; depth 29.2 ±0.4 to the point's foot (the model 27.2) | open |
+| 10-M7 | 05-01_6 | 1940 key's cap | a separate part held by a countersunk screw 5 in a tapped hole; the model's screw 5 only a head disc, the grip held by nothing | joint | likely | comparer | confirmed (likely): the cap hatched apart, a countersunk screw about Ø 4.0 head / M2 shank 5.7 off the axis, and a second screw opposite at −5.85 | open |
+| 10-M8 | 51-00_3 | maker's plate | its four Ø 1.2 holes not cut, its pins without shanks | joint | sure | comparer | confirmed | open |
+| 10-M9 | 51-00_4 | tongue | tapers on both edges and ends in a shallow arc (R ≈ 7); the model tapers one edge 3.2° and ends in a semicircle r 4 | wrong | likely | comparer | confirmed (likely): both edges taper (+1.8°, −2.2°), the narrow end an arc about R 7.5; also the round end R 6 about the Ø 6.2 hole (the model r 5) | open |
+| 10-M10 | 05-01_1 | case brackets, locking bracket | their screw holes not cut: the screws run through solid brass | joint | sure | comparer | confirmed (sure) | open (massprops) |
+| 10-M11 | 51-00_5 | outer box | its rim strip 2 over the walls; the sheet and the code's comment say 4 | wrong | sure | comparer | confirmed (the 4 over the walls' hidden top edge: likely) | open |
 | 10-M12 | 05-01_1 | the wall disc at the outer pivot | most likely lock nut 10 (WN-400), as at the inner pivots; the leader "10" ends at the wall-top fitting, whose purpose stays open | note | likely | b10 reader F13, F17, comparer | — | open |
 | 10-M13 | — | README, bom.json, makers.js, case.js, transcription | stale: the glass "flush", the bezel thread "not built", the 1943 key with the 1940's number, the tube's ▽▽▽ (said ▽▽), the key body's fits "middles" (tolerance tops) | stale | sure | comparer | — | open |
 | 10-M14 | 05-01, 51-00 | build book (pp. 373-511) | gaps; no sheet for the 1940 key | book | sure | comparer | — | for the book |
-| 10-M15 | 05-02_01, 05-01_4 | glass (7-M10) | kept: 05 02_1's title block is the lever chronometer's (So 127 556 04, 0402); the Einheits bezel's sheet 05 01 01 draws the glass 3.56 thick, its top 15.8 over the bezel's underside, as built | note | likely | comparer | — | kept |
+| 10-M15 | 05-02_01, 05-01_4 | glass (7-M10) | kept: 05 02_1's title block is the lever chronometer's (So 127 556 04, 0402); the Einheits bezel's sheet 05 01 01 draws the glass 3.56 thick, its top 15.8 over the bezel's underside, as built | note | likely | comparer | partly: 05 01 01 draws 3.56 / 15.8 as built; the lever attribution likely from 05 02_1's hand-setting pinion and 51-00_1's dial, not the title block | kept |
 | 10-M16 | — | checks.py FLOAT_BOX | four entries don't apply to the 6MX version | excuse | sure | comparer | — | open |
 | 11-M1 | coloured section, 05-03_2 | the lower balance settings' screws | read WN-18 (or WN-16), M1.2, not WN-10 (the hub's and dial's M1): rename | stale | likely | b11 reader F3, comparer | — | open |
 | 11-M2 | coloured section | WN-12a | drawn fitted in one mass's top as a brass cheese head (sure); the model keeps the holes empty per the owner's O-4 | note | sure | comparer | — | kept (O-4) |
@@ -357,7 +357,7 @@ Readings the two agents still disagree on after each has seen the other's argume
 | O-6 | 05-04_01 | the detent spring's bending point: the mark (12.48-12.56) or the spring's middle (12.884)? and the gold spring's (6.10-6.23, not 6.7) | adopt both marks | keep TP at the middle as an estimate | batch 2 comparer and refuter (2-M3, 2-M4) | owner (28 Oct): both, with batch 2's other corrections, then one physics rerun; stop and report if the swing, lock window or navigation leaves its band |
 | O-7 | 05-04_07-1, _07-2, _01; Wempe 3955 | the escape wheel: the sheets' rim recessed to 0.7 with teeth 1.4 standing, or 3955's full rim? | the sheets in the drawn versions, 3955 its photograph | full rim everywhere (the arbor's inertia +29 %) | escape-wheel check (2-M16) | owner (28 Oct): the sheets in the drawn versions; 3955 its photograph |
 | O-8 | 05-08_06 (U30), 05-03_9, Wempe 3955 | the stud's screw hole across the cock: U30's dimensioned 4,2, or the model's 4.35 (derived assuming a centred upright, which 05 03_9 doesn't draw); and the stud's square end and upright off-centre as 05 03_9 draws them (8-M15) | 4,2 with the stud drawn off-centre as its sheet shows | keep 4.35 and the symmetric stud | batch 8 comparer and refuter (8-M3, 8-M15); Wempe 3955 can't decide (±0.15) | owner (28 Oct): U30's 4,2, and the stud built off-centre as 05 03_9 draws it (square end 1.20 / 1.26, upright 0.96 / 0.82 about the hole line) |
-| O-9 | 05-08_02 (1946), 05-08_01b (1943) | the top plate as last revised: the 1946 sheet erases holes 51-53 (the holding device), the N-O pocket and 26, and draws the balance opening's tongue curved; the model's "last" keeps 51-53, the pocket and a straight tongue | drop 51-53 and the pocket, curve the tongue (scaled, estimated), keep 26 (its erasure a slip: the escape wheel needs it) | keep "last" as now | batch 9 comparer (9-M3) | owner (28 Oct, after the renders o9_compare.png): 1946 keeping 26: holes 51-53 and the pocket dropped, the tongue curved (an arc r 8.11 about 23 + (−3.04, +10.16), reach about 10-10.8: estimated), hole 26 kept; the other versions unchanged; app.js's step at H[53] retargeted |
+| O-9 | 05-08_02 (1946), 05-08_01b (1943) | the top plate as last revised: the 1946 sheet erases holes 51-53 (the holding device), the N-O pocket and 26, and draws the balance opening's tongue curved; the model's "last" keeps 51-53, the pocket and a straight tongue | drop 51-53 and the pocket, curve the tongue (scaled, estimated), keep 26 (its erasure a slip: the escape wheel needs it) | keep "last" as now | batch 9 comparer (9-M3) | owner (28 Oct), final, after the renders and the refuter's evidence: keep as built (the 1943 part sheet's straight tongue, 51-53 and the pocket, as Wempe 3955's plate); the 1946 assembly's curved tongue and erasures recorded as a drafting change ("zeichnerisch geändert", 2.11.46) |
 | O-10 | coloured section, 05-08_03a | the connector's default (the section draws the band); holes 56-57 (the contact, "nur bei Bedarf") | — | — | batch 11 comparer (11-M8, 11-M10) | owner (28 Oct): the chain stays the default; 56-57 left out, recorded |
 
 ## Evidence from other sessions
