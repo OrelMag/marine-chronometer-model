@@ -1063,12 +1063,18 @@ const WFUSEE=(()=>{
       /* then turned on until a face meets the beak */
       let rho=best.rho;const pen=r=>{let m=-9;for(const p of pts){const rr=Math.hypot(p[0],p[1]);if(rr>7.2)continue;m=Math.max(m,sr(Math.atan2(p[1],p[0])-r)-rr);}return m;};
       for(let i=0;i<4000&&pen(rho+0.0005)<-0.03;i++)rho+=0.0005;
-      const a=2.7/Math.SQRT2+0.01,sq=[[0,a],[a,0],[0,-a],[-a,0]].map(([x,z])=>[x*Math.cos(rho)-z*Math.sin(rho),x*Math.sin(rho)+z*Math.cos(rho)]);   /* the square hole turned back by what rotateY(rho) turns it on: it stays on the arbor's square */
-      const rgg=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:sq,a:RS1,b:RS0}]}]);rgg.rotateY(rho);const pSR=part('setupRatchet',-60),gSR=grp(pSR,BX[0],BX[1]);tag(mesh(rv(gSR,'last first 1943 -3955'),rgg,M.gilt),'050700-3');   /* a part of its own: it comes off the square before the bridge (the Exploded view) */pBA.userData.ratchetPen=pen(rho);
+      /* the square hole 2,7 H7 "Kegel 1:100" (05 07 00-3's section A-B: the taper written in the hole), cut as the arbor's square tapers, 0.01 across a mm: at each face the
+         square's own across there and 0.002 (line to line, 0.001 a side), so it is held on the taper where it is pressed down to, 0.05 off the bridge (the square 2.6953 across
+         at the ratchet's bridge-side face and 2.6688 at its outer face as last revised, its 2.7 at BSQ; 2.6998 and 2.6733 on the 1941 arbor's, its 2.7 at -25.70). Until 28
+         October 2026 straight, 2.714 across (2.7/√2 + 0.01 at the corners): 0.019-0.045 loose on the square, nothing holding it (drawing check 2, 4-M7). yS: where that
+         version's square is 2.7 across; turned back by what rotateY(rho) turns it on, so it stays on the arbor's square */
+      const sqH=(yS,y)=>{const a=(2.7-(yS-y)*0.01+0.002)/Math.SQRT2;return[[0,a],[a,0],[0,-a],[-a,0]].map(([x,z])=>[x*Math.cos(rho)-z*Math.sin(rho),x*Math.sin(rho)+z*Math.cos(rho)]);};
+      const pSR=part('setupRatchet',-60),gSR=grp(pSR,BX[0],BX[1]);
+      for(const[V,yS]of/** @type {[string,number][]} */([['last 1943',BSQ],['first -3955',-25.70]])){const rgg=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:sqH(yS,RS1),q:sqH(yS,RS0),a:RS1,b:RS0}]}]);rgg.rotateY(rho);tag(mesh(rv(gSR,V),rgg,M.gilt),'050700-3');}   /* a part of its own: it comes off the square before the bridge (the Exploded view) */pBA.userData.ratchetPen=pen(rho);
       /* Wempe 3955's (the version as photographed): a turned recess round the square in its outer face, Ø 8.7 at the face to Ø 7.3 at its floor (2_Wempe_3955_A.jpg square-on,
          0.111 mm/px: the cone's two edges, 78 and 66 px across, ±0.2), its wall seen lit on the far side in 4_Wempe_3955_N.jpg; 0.7 deep, the wall taken at 45° (estimated).
          05 07 00-3 (revised 24.11.47) draws the face flat; the earlier issue (05 05 00-1) isn't in the set */
-      const C=(r,n=96)=>[...Array(n).keys()].map(i=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]),rg3=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:C(8.7/2),q:C(7.3/2),a:RS1,b:RS1+0.7},{p:sq,a:RS1,b:RS0}]}]);
+      const C=(r,n=96)=>[...Array(n).keys()].map(i=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]),rg3=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:C(8.7/2),q:C(7.3/2),a:RS1,b:RS1+0.7},{p:sqH(-25.70,RS1+0.7),q:sqH(-25.70,RS0),a:RS1,b:RS0}]}]);   /* the square's hole from the recess's floor, on the 1941 arbor's square */
       rg3.rotateY(rho);tag(mesh(rv(gSR,'3955 6mx'),rg3,M.gilt),'050700-3');}   /* Kirov No. 247's has it too (4_Kirow_247_N.jpg) */
 
     /* =============== the mainspring 05 07 00-6 (Zugfeder) =============== */
