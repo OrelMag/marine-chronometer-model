@@ -19,7 +19,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 6 | going train | 10 | 0 | 16 | 15 | 12 | 0 | 0 | 12 |
 | 7 | motion work, hands, dial | 13 | 0 | 17 | 13 | 12 | 0 | 0 | 12 |
 | 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 18 | 18 | 14 | 0 | 0 | 14 |
-| 9 | plates, pillars, movement ring | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 9 | plates, pillars, movement ring | 8 | 0 | 26 | 24 | 14 | 0 | 1 | 13 |
 | 10 | case, gimbals, boxes, keys | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 11 | arrangements; the sheets the first pass left out | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | | **all** | **124** | **0** | **0** | **0** | **0** | **0** | **0** | **0** |
@@ -117,14 +117,14 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | done | done | done | done | done | refuted; corrections next |
 | `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | done | done | done | done | done | refuted; corrections next |
 | `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 9 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 9 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 9 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 9 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | done | done | done | done | — | compared; refutation next |
 | `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | done | done | — | — | — | read; model comparison next |
 | `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | done | done | — | — | — | read; model comparison next |
 | `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | done | done | — | — | — | read; model comparison next |
@@ -225,6 +225,20 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 8-M13 | 05-08_05, _04 | upper and lower cock | figures at a tolerance's end: the upper cock's lip hole 4.590 (the lower cock and plate 4.596), the lower cock's M1.2 at 3.500 | wrong | likely | comparer | confirmed (the lower M1.2 3.500, the upper 3.525) | open |
 | 8-M14 | coloured section | WN numbers | the upper cock's and barrel bridge's screws WN-55; the setting screws' label reads more like WN-56, the model names them WN-55.ck | stale | possible | comparer | WN-55 for the cock's and bridge's screws confirmed (likely); the setting screws' digit undecidable | open |
 | 8-M15 | 05-03_9 | stud (batch 1's part) | the sheet draws the square end 1.20 / 1.26 and the upright 0.96 / 0.82 about the hole line, both off-centre; the model builds both symmetric (±1.25, ±0.93) | wrong | likely | refuter | — | open (with O-8) |
+| 9-M2 | 05-08_03b, _32-2 | pillar plate hole 30 (last, first, 1943) | the Ø 5.2 H7 seat on the wrong face: 03b's plan (the inner face) draws 30's 4.59 solid and its 5.2 dashed, 32-2 dashes the setting's screws: the seat on the dial face; HOLE_EXPECTED's "30, its lip" with it | wrong | likely | b9 reader F9, comparer | — | open |
+| 9-M3 | 05-08_02, 05-08_01b | top plate (last) | "last" mixes 05 08 01's 1946 horn tips with 05 09 01's 1943 holes 51-53, the N-O pocket and the straight tongue; the 1946 sheet erases 51-53, the pocket and 26 and draws the tongue curved: for the owner (O-9) | version | likely | b9 reader F10, F11, comparer | — | open |
+| 9-M4 | 05-08_07 | ring screws WN-rs (S-6) | the ring's three M2.6 holes plain Ø 2.64-2.66; SEAT_EXPECTED's reason wrong (the shanks end at 6.30 before the cone at 6.35, the holes full circles): the holes untapped | joint | sure | comparer | — | open |
+| 9-M5 | 05-08_07, 05-02_12 | dial screws' M1 holes (7-M3) | plain Ø 1.04; README line 153's "tapped 2.5 deep" stale (batch 7's corrector tapped them on the fixes branch) | joint | sure | comparer | — | open (with 7-M3) |
+| 9-M6 | — | audit.py (N-3) | the three "no longer found" FLOAT entries are the 6MX's ring screws: audit.py runs only in "last"; with setRev('6mx') it finds them: keep the entries, make the audit run them per version | tool | sure | comparer | — | open |
+| 9-M7 | 05-08 | pressed bushes, studs, pins | WN-300/301/302, 050802-2, WN-hs, the studs, WN-202, WN-201, the dial pin drawn line to line or loose; the stop pin "pressed" 0.005 loose in its 1.6 +0.009 | joint | likely (stop pin), possible (rest) | comparer | — | open |
+| 9-M8 | 05-08_11 | pillar | 25.10 overall at the lower limit of 25.3 −0.2; the lead-in 4.8° against the drawn 6°; 19.6 more likely ±0.04 than ±0.01 (dims.js and README 375 say ±0.01 sure; the bench's endshake term would need a rerun) | wrong | likely | b9 reader F15, comparer | — | open |
+| 9-M9 | 05-08_07 | ring | its revised figures drawn at their nominals, which close the chain (recorded) | note | sure | comparer | — | kept |
+| 9-M10 | 05-08 | plates | figures at a tolerance's end: the pillar plate's M1.2 at 3.500 (the top plate's 3.525), the pillar seats 0.30, the lips 0.50, WN-302 0.10 below its face | wrong | likely | comparer | — | open |
+| 9-M11 | — | README | hole 4's Ø 4.3 oil sink (from Wempe 3955) in no Estimated entry | stale | sure | comparer | — | open |
+| 9-M12 | 05-08 | transcription, README | the readings settled (F12 pilots, F13 slip, F16 the r 7 tip arc, F17-F20, F22) recorded | stale | sure | comparer | — | open |
+| 9-M13 | 05-08 | build book (v3.41.00) | every tapped hole missing from the hole tables, the pocket, tongue, recesses too; the top plate's contour with zero-length elements; the pillar's thread and lead-in, the ring's holes and cone missing | book | sure | comparer | — | for the book |
+| 9-M14 | 05-08_01a | escape settings' screws | their heads bear on only 0.07 and 0.10 of the settings' rims | joint | possible | comparer | — | open |
+| 9-M15 | — | holes.py | ignores --model and opens the Hamilton's page | tool | sure | comparer | — | open |
 | 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
 | 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
 | 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
@@ -314,6 +328,7 @@ Readings the two agents still disagree on after each has seen the other's argume
 | O-6 | 05-04_01 | the detent spring's bending point: the mark (12.48-12.56) or the spring's middle (12.884)? and the gold spring's (6.10-6.23, not 6.7) | adopt both marks | keep TP at the middle as an estimate | batch 2 comparer and refuter (2-M3, 2-M4) | owner (28 Oct): both, with batch 2's other corrections, then one physics rerun; stop and report if the swing, lock window or navigation leaves its band |
 | O-7 | 05-04_07-1, _07-2, _01; Wempe 3955 | the escape wheel: the sheets' rim recessed to 0.7 with teeth 1.4 standing, or 3955's full rim? | the sheets in the drawn versions, 3955 its photograph | full rim everywhere (the arbor's inertia +29 %) | escape-wheel check (2-M16) | owner (28 Oct): the sheets in the drawn versions; 3955 its photograph |
 | O-8 | 05-08_06 (U30), 05-03_9, Wempe 3955 | the stud's screw hole across the cock: U30's dimensioned 4,2, or the model's 4.35 (derived assuming a centred upright, which 05 03_9 doesn't draw); and the stud's square end and upright off-centre as 05 03_9 draws them (8-M15) | 4,2 with the stud drawn off-centre as its sheet shows | keep 4.35 and the symmetric stud | batch 8 comparer and refuter (8-M3, 8-M15); Wempe 3955 can't decide (±0.15) | owner (28 Oct): U30's 4,2, and the stud built off-centre as 05 03_9 draws it (square end 1.20 / 1.26, upright 0.96 / 0.82 about the hole line) |
+| O-9 | 05-08_02 (1946), 05-08_01b (1943) | the top plate as last revised: the 1946 sheet erases holes 51-53 (the holding device), the N-O pocket and 26, and draws the balance opening's tongue curved; the model's "last" keeps 51-53, the pocket and a straight tongue | drop 51-53 and the pocket, curve the tongue (scaled, estimated), keep 26 (its erasure a slip: the escape wheel needs it) | keep "last" as now | batch 9 comparer (9-M3) | |
 
 ## Evidence from other sessions
 
