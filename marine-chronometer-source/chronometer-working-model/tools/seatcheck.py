@@ -17,7 +17,7 @@ if '--page' in sys.argv: PAGE = pathlib.Path(sys.argv[sys.argv.index('--page') +
 FREEZE = """(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const s=ESC.state(0),E=1000+s.prog;mv.userData._u({E,th:s.th,lift:s.lift,psDef:s.psDef,n:2.5,winding:false,springOn:true,msOn:false,arm:0,blk:0});})()"""   # holecheck.py's
 STATES = model.cfg('HOLE_STATES', [(st, "document.querySelector('#stopV button[data-v=\"%s\"]').click()" % st) for st in ('navy', 'arm')])
-NAME = model.cfg('SEAT_NAME', r'(?i)\b(pins?|stift|kerbstift|stellstift|stud|pipe|rohr|post|rivet|niet|peg|dowel|screws?|schraube|bush|futter|hook|haken)\b')
+NAME = model.cfg('SEAT_NAME', r'(?i)\b(pins?|stift|kerbstift|stellstift|stud|pipe|post|rivet|niet|peg|dowel|screws?|schraube|bush|hook|haken)\b|rohr|futter')   # the German compounds' last words anywhere in a word (Minutenrohr, Zeigerfutter, Schlüsselrohr): until 28 October 2026 only as words of their own, so the Wempe's cannon tube and seconds collet were never followed (drawing check 2's 7-M6)
 SKIP = model.cfg('SEAT_SKIP', r'(?i)holzschraube|DIN 96')   # lines not in the movement's metal (wood screws)
 # (part, line, why it is held another way[, the states it holds in, space-separated])
 EXPECTED = model.cfg('SEAT_EXPECTED', [])
