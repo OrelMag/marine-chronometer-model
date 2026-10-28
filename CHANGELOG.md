@@ -4,6 +4,15 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.47.00 · 2026-10-28
+- The Wempe checked a second time against its works drawings, each sheet read afresh: the maintaining work, stop work, barrel, chain and fusee corrected to their sheets.
+- The Wempe's stop bar and stop spring pins now pass through holes cut in their parts (they sat in solid metal before).
+- The Wempe's Vorreiber is pinned through the fusee arbor and seated on its taper, and the dust plate wedged on the square, as their drawings show.
+- The Wempe's winding square is 3.1 mm (r6) as drawn, the set-up ratchet and dust plate tapered onto it, and every press fit built tight.
+- The Wempe's maintaining detent's step at its drawn 30°, the clicks and click springs to their sheets, and the click springs' fixings shown as riveted.
+- The Wempe's band hooks have their slots for the band, the 1941 barrel's lid and bottom the right way round with its oil sinks and prising notch, and the barrel hook block threaded or riveted as each drawing says.
+- The Wempe's page gives the mainspring as 1.24 m and the chain as 375 links.
+
 ## 3.46.02 · 2026-10-28
 - The Hamilton's detent bench test and maker's sheets brought up to date with the refitted hands' weights.
 - The Wempe's Contacts view lists the gold spring resting on the detent's square as an expected contact.
