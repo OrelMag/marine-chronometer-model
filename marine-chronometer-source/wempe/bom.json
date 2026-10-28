@@ -2629,11 +2629,16 @@
    "parent": "0506",
    "kind": "part",
    "part": "vorreiber",
-   "fn": "Through the Vorreiber's hub (its Ø 0.8 hole, 05 06 00-2) and the arbor's cross hole (Ø 1.1, 05 06 04-1): drawn as its two ends in the hub, so the Exploded view can part the arbor from the Vorreiber.",
+   "fn": "One taper pin through the Vorreiber's hub and the arbor's cross hole, reamed through both together at the fusee's assembly (05 06 04-1: \"1,1 bohren + konisch reiben\"; the Vorreiber's drilled Ø 0.8, 05 06 00-2; 05 06_1 draws it Ø 1.2): drawn Ø 1.16 in the two holes' Ø 1.15, its rounded ends standing 0.4 out of the hub, as the coloured section draws it.",
    "rel": [
     [
      "in",
      "050600-2",
+     "press"
+    ],
+    [
+     "in",
+     "050604-1",
      "press"
     ]
    ],
@@ -2781,7 +2786,7 @@
    "parent": "050602",
    "kind": "part",
    "part": "maintaining",
-   "fn": "Through the cup's wall and the spring's hole (its Ø 0.6 holes cut through the cup, 26 October 2026).",
+   "fn": "A rivet (the coloured section's \"Niet\"): through the cup's wall and the spring's hole (its Ø 0.6 holes cut through the cup, 26 October 2026), headed both sides (05 06 02: domed, about 0.2 high).",
    "rel": [
     [
      "in",
@@ -2971,7 +2976,7 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "Along the slot in the body's hole 0.5 H7 (05 06 04-2), from the recess out through the end, standing into the recess through the spring.",
+   "fn": "Along the slot in the body's hole 0.5 H7 (05 06 04-2), from the recess out through the end, standing into the recess through the spring's hole, which it holds.",
    "rel": [
     [
      "in",
@@ -2991,12 +2996,12 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "Pressed across the bar near its lower end, standing 0.9 out of its near side, where the bar's spring bears (05 06_4's C-D).",
+   "fn": "Pressed across the bar near its lower end in its Ø 0.5 hole (05 06_4's C-D, dashed across the bar), standing 0.9 out of its near side, where the bar's spring's end bears.",
    "rel": [
     [
      "in",
      "050603-1",
-     "embed"
+     "press"
     ]
    ],
    "figs": "05 06_4, 05 06_2.2"
@@ -3011,7 +3016,7 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "A strip in the small end's recess, round its wall to the hole across the bar near its lower end, its end in that hole (not cut in the bar): holds the bar out toward that end (no sheet: drawn as 05 06_4's C-D draws it).",
+   "fn": "A strip in the small end's recess, held on its pin 05 06 04-4 through a hole in it where it lies on the wall, round the wall and the bar's upper side to a free span whose end bears on the bar's pin 05 06 03-2 near the bar's lower end: holds the bar out toward that end (no sheet: drawn as 05 06_4's C-D draws it).",
    "rel": [
     [
      "on",
@@ -3549,7 +3554,13 @@
    "kind": "part",
    "part": "udPinion",
    "fn": "Pressed on the fusee arbor's dial-side end (the fusee group's): drives the up-and-down wheel (no sheet in the set; numbered by the coloured section's label).",
-   "rel": [],
+   "rel": [
+    [
+     "round",
+     "050604-1",
+     "press"
+    ]
+   ],
    "figs": "05 02_1"
   },
   {
