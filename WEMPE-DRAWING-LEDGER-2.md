@@ -18,7 +18,7 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | 5 | fusee, fusee wheel, cover plate, vorreiber, dust plate | 12 | 12 | 18 | 18 | 17 | 13 | 2 | 2 (book, batch 10) |
 | 6 | going train | 10 | 0 | 16 | 15 | 12 | 0 | 0 | 12 |
 | 7 | motion work, hands, dial | 13 | 0 | 17 | 13 | 12 | 0 | 0 | 12 |
-| 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 8 | bridges, bushes, cocks, set-up click | 9 | 0 | 18 | 18 | 13 | 0 | 0 | 13 |
 | 9 | plates, pillars, movement ring | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 10 | case, gimbals, boxes, keys | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 11 | arrangements; the sheets the first pass left out | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -108,15 +108,15 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | done | done | done | refuted; corrections next |
 | `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | done | done | done | refuted; corrections next |
 | `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | done | done | — | — | — | read; model comparison next |
-| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | done | done | — | — | — | read; model comparison next |
+| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | done | done | done | done | — | compared; refutation next |
+| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | done | done | done | done | — | compared; refutation next |
 | `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | done | done | — | — | — | read; model comparison next |
 | `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | done | done | — | — | — | read; model comparison next |
@@ -211,6 +211,19 @@ One row per finding. **Kind**: `misread` (blind reading ≠ transcription), `wro
 | 7-M10 | 05-02_01 | glass (batch 10) | drawn 3 thick, its underside 15,8 / pencil 17,0 over the plate; the model's 3.7, about 15.0 (from case.js's comment, not measured) | wrong | possible | comparer | amended: the model's glass measured 3.5 thick, underside 15.60 over the plate face (not 3.7, 15.0); the sheet "Glas 3", 15,8 inked (17,0 pencil) | open (batch 10) |
 | 7-M11 | 05-02_12 | dial thickness | "Stärke 1,3" and the title block's "Messingblech 1,3" both struck, "1,2" written over; "Eisenblech 1,3" a separate iron revision; the model 1.3 at brass's density matches neither | wrong | likely | refuter | — | open |
 | 7-M12 | — | seconds collet | 0.0033-0.0048 clear on its post though bom.json says Pressed: no hand nor the collet held | joint | sure | refuter | — | open |
+| 8-M1 | 05-08 | transcription | the misreads the blind reading found (the code already right) | stale | sure | b8 reader, comparer | — | open |
+| 8-M3 | 05-08_05, _06, 05-03_9 | stud's screw hole (F2) | the model's M1.4 at 4.10 / 4.35 holds (U30's "5" ends on the slot's far wall: 4.1 along; 4.35 across from the stud's sheet and the slot's 3.4 end; Wempe 3955 4.22 / 4.34 ±0.15): cite U30 and 3955 in the comments and README Estimated | stale | likely | b8 reader F2, comparer | — | open |
+| 8-M4 | 05-08_08 | fusee bush text | "T6" → r6 in frame.js, checks.py, bom.json, BOM.md, the card, the transcription; the card's "pressed into the plate" wrong (its g6 part slides into hole 10) | stale | sure | b8 reader F5, comparer | — | open |
+| 8-M5 | 05-08_04 | lower cock's revision card | names the wrong figure (revision a over the M1.2's "3,5 +0,1", most likely widened) | stale | likely | comparer | — | open |
+| 8-M6 | — | README, frame.js | stale: the upper cock's M1.2 into a "sink" (tapped into a boss); the dust bush's "5° × 0.5 chamfer" (a 0.5 ring and a 5° dish); the click's base 2.85 under the hole (2.81); WN-22's shoulder 2.61 (2.65); the cocks' pins WN-203 per the coloured section; the dust bush's (7,62) comment (the solid's 7.775 by its 1:70) | stale | sure | b8 reader F8, comparer | — | open |
+| 8-M7 | 05-03_9, 05-08_05 | stud upright in the cock's slot | 1.790, 0.002 under g6's least, in the slot's 1.800 (H7's least): 0.010 clearance, inside the fit | joint | sure | comparer | — | open (to the fit's middles) |
+| 8-M8 | 05-08_14 | set-up click on WN-22 | 0.13 of play: the hole Ø 3,2 +0,03, the estimated shoulder Ø 3.10; a shoulder about Ø 3.19 matches the hole's close tolerance | joint | possible | comparer | — | open |
+| 8-M9 | — | bom.json | the balance jewel settings called press; they sit 0.006 clear, each held by two screws | excuse | sure | comparer | — | open |
+| 8-M10 | 05-08_14 | set-up click | 17.53 long against 17,4; its 9,7, r 6 and 7,5 don't close on 17,4 (kept in the first pass) | inconsistent | possible | comparer | — | open |
+| 8-M11 | 05-08_10 | intermediate bridge | the bush WN-300 and the seconds jewel's setting line to line, no press | joint | possible | comparer | — | open |
+| 8-M12 | 05-08 | build book (v3.41.00) | the barrel bridge's chord as an arc R 73.52, its short edge a 0.8 line, hole 46 missing; the lower cock askew; tapped holes, seats, counterbores missing; the bushes' sections wrong, the dust bush's diameters about 0.25 off; the click screw's shoulder missing | book | sure | comparer | — | for the book |
+| 8-M13 | 05-08_05, _04 | upper and lower cock | figures at a tolerance's end: the upper cock's lip hole 4.590 (the lower cock and plate 4.596), the lower cock's M1.2 at 3.500 | wrong | likely | comparer | — | open |
+| 8-M14 | coloured section | WN numbers | the upper cock's and barrel bridge's screws WN-55; the setting screws' label reads more like WN-56, the model names them WN-55.ck | stale | possible | comparer | — | open |
 | 3-M1 | 05-05_12 | maintDetent | the step runs at 34.7°; the sheet's 150° (drawn 30.4-31.3°) means 30°: its end to x 4.86 (5.60), clearance over the fusee wheel's tips 0.57 → 0.68 | wrong | likely | b3 reader F1, comparer | confirmed (sure) | corrected `8498ff0a` |
 | 3-M2 | 05-06_14 | maintaining (clicks) | the base line 1.52 under the pivot, not 1.5 (tangent to the Ø 3 boss): the nose 5.224 from the pivot, past 5,2 −0,1 (5.201 at 1.5); rerun maintaining.py, mechanisms.py, wempe_ratchets.js after | wrong | likely | comparer | confirmed (likely) | corrected `058a9d83` |
 | 3-M3 | 05-06_04 | stopWork (bar) | no hole for the pin 05 06 03-2: the pin sits in solid steel; hidden by checks.py EXPECTED ('stopWork:Buffer','stopWork:Cylinder') and bom.json's embed, whose excuse no longer holds (bore() cuts across) | joint | sure | comparer | confirmed (sure) | corrected `c5e1ab3d`, `8bcbabfc` |
