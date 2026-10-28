@@ -108,50 +108,50 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-02/Wempe_05-02_11.jpg` | 05 02 04-1 Auf u. Abrad (up-and-down wheel) | 7 | done | done | done | done | done | live in 3.49.00 (v3.49.00, ad5e77d9) |
 | `05-02/Wempe_05-02_12.jpg` | 127-556.04-162 (struck: 05 04 01 11) / 05 02 00-4 Zifferblatt (dial) | 7 | done | done | done | done | done | live in 3.49.00 (v3.49.00, ad5e77d9) |
 | `05-02/Wempe_05-02_13.jpg` | 1453/A (A. Lange & Söhne) Chronometer Zifferblatt (dial, Lange version) | 7 | done | done | done | done | done | live in 3.49.00 (v3.49.00, ad5e77d9) |
-| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | done | done | done | done | done | refuted; corrections next |
-| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | done | done | done | done | done | refuted; corrections next |
-| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | done | done | done | done | done | refuted; corrections next |
-| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | done | done | done | done | done | refuted; corrections next |
-| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | done | done | done | refuted; corrections next |
-| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | done | done | done | refuted; corrections next |
-| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | done | done | done | refuted; corrections next |
-| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | done | done | done | done | done | refuted; corrections running |
-| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | 11 | done | done | done | done | done | refuted; corrections running |
-| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | 11 | done | done | done | done | done | refuted; corrections running |
-| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 11 | done | done | done | done | done | refuted; corrections running |
+| `05-08/Wempe_05-08_04.jpg` | 05 08 00-2 Unruhkloben unten | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_05.jpg` | 05 08 03-1 Unruhkloben oben | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_06.jpg` | 127-556.04 U30 Unruhkloben oben komp(l). | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_08.jpg` | 05 08 01-2 Schneckenfutter | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_09.jpg` | 05 08 01-3 Staubfutter | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_10.jpg` | 05 08 04 Zwischenbrücke kompl. | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_12.jpg` | 05 08 05 Federhausbrücke kompl. | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_13.jpg` | 05 08 05-1 Federhausbrücke | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_14.jpg` | 05 08 05-2 Sperrkegel | 8 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_01a.jpg` | 05 09 01 Oberplatte (sheet a: hole table) | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_01b.jpg` | 05 09 01 Oberplatte (sheet b: plan) | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_02.jpg` | 05 08 01 Oberplatte kompl. | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_03a.jpg` | 05 08 02-1 Unterplatte (sheet a: hole table) | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_03b.jpg` | 05 08 02-1 Unterplatte (sheet b: hole plan) | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_07.jpg` | 05 08 00-3 Werkring | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_11.jpg` | 05 08 00-1 Pfeiler | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_32-2.jpg` | 05 08 02 Unterplatte kompl. | 9 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_1.jpg` | 05 01 Gehäuse Kardan (gimballed case, assembly) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_2.jpg` | R-05 01 00-1 Gehäusetopf (bowl) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_3.jpg` | 05 01 00-2 Verschlußplatte (closing plate, under the bowl) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_4.jpg` | 05 01 01 Glasrand kompl. (bezel with glass, assembly) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_5.jpg` | R-05 01 01-2 Glasrand (bezel ring) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_6.jpg` | 127-556. 02 U 01 / 51 00 11 Aufzugschlüssel (winding key) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_7.jpg` | 51 00 11 Chronometerschlüssel (chronometer key, one-way) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_8.jpg` | 05 01 02-2 Schlüsselmittelteil (key body, part 2 of the one-way key) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-01/Wempe_05-01_9.jpg` | 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `51-00/Wempe_51-00_1.jpg` | 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `51-00/Wempe_51-00_2.jpg` | Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `51-00/Wempe_51-00_3.jpg` | 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `51-00/Wempe_51-00_4.jpg` | P. 51 00 02-2 Zunge (tongue, a flat latch bar) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `51-00/Wempe_51-00_5.jpg` | 127-556.01 / 52 00 16 Überkasten (outer box) | 10 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `001-002/Wempe_001.jpg` | (no number) Federchronometer (plan views, 2:1) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `001-002/Wempe_002.jpg` | (no number) Ankerchronometer (plan views, 2:1) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-04/Wempe_05-04_20.jpg` | So 127-556.04 040… Hemmung für Ankerchronometer (lever escapement for the ANKER-CHRONOMETER) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-04/Wempe_05-04_21.jpg` | 127-556.04 U10 / 040404/06 Anker kompl. (lever complete, ANKER-CHRONOMETER) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_30.jpg` | 127-556.04-137 Oberplatte (LEVER / Anker chronometer) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_31.jpg` | 127-556.04 U35 Oberplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_32-1.jpg` | 127-556.04 U36 Unterplatte kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-08/Wempe_05-08_33.jpg` | 127-556.04 U31 Unruhkloben unten kompl. (LEVER / Anker chronometer) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-33/Wempe_05-33.jpg` | 127-556.05 / 33 00 Zeigerstellung kompl. (hand setting, complete) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-36/Wempe_05-36.jpg` | 127-556.06 / 36 00 Unruhhaltevorrichtung (balance-holding device) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-36/Wempe_05-36_2.jpg` | 127-556.06-06 / 3600 01-1 Zangenteil (clamp/tong piece) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `05-38/Wempe_05-38.jpg` | 38 00 Sekundenkontakt (electrical seconds contact) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
+| `Wempe_Einheitschronometer.jpg` | Federchronometer 05 (coloured full section, no drawing number) | 11 | done | done | done | done | done | live in 3.50.00 (v3.50.00, cb55c340) |
 
 ## Joints
 
