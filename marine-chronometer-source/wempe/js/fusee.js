@@ -1060,7 +1060,7 @@ const WFUSEE=(()=>{
       for(const[V,yS,yT]of/** @type {[string,number,number][]} */([['first',-35.4,BA1-15],['6mx',-36.6,-38.5]])){const s1=2.7-(yS+25.70)*-0.01,sq1=KIT.crease(new THREE.CylinderGeometry(2.7/Math.SQRT2,s1/Math.SQRT2,-25.70-yS,4,1));sq1.translate(0,(-25.70+yS)/2,0);tag(mesh(rv(gBA,V),sq1,M.steel),'050702-1',1);
         const pt1=KIT.crease(new THREE.CylinderGeometry(s1/Math.SQRT2,0.2/Math.SQRT2*2,yS-yT,4,1));pt1.translate(0,(yS+yT)/2,0);tag(mesh(rv(gBA,V),pt1,M.steel),'050702-1',1);}
       /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core: the pin and its head */
-      const HKS=[[gAL,(BC0+BC1)/2,aL],[gAF,(-3.7-3.1-21.7+2.9)/2,aF]].map(([g,y,a])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y,a,tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2',1)]);
+      const HKS=[[gAL,(BC0+BC1)/2,aL],[gAF,(-3.7-3.1-21.7+2.9)/2,aF]].map(([g,y,a])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y,a,tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2',1),g]);
       /* the pin along +x from 6.1 into the core; its end over the core (r 6.65) by 0.475 at its face (+z, the side rotation.y falls toward) down to 0 at its back (-z).
          05 07 02's end view, first-angle (DIN) and so seen from the square's end, from above (the square drawn solid), puts the square face on the side the arbor turns from
          and the ramp falling the way it turns: the spring's eye, pulled along the strip (rotation.y rising, as the coil winds outward), catches the face with its trailing edge
@@ -1073,11 +1073,14 @@ const WFUSEE=(()=>{
          to HFA (the face), its top r 6.65 + 0.475 at the face falling evenly to 6.65, its underside r 6.64 on the core's facets, the face radial */
       const HFA=15*D2R,HFT=-5*D2R,hd=[];for(let i=0;i<=20;i++){const f=HFT+(HFA-HFT)*i/20,r=6.65+0.475*i/20;hd.push([r*Math.sin(f),-r*Math.cos(f)]);}
       for(let i=20;i>=0;i--){const f=HFT+(HFA-HFT)*i/20;hd.push([6.64*Math.sin(f),-6.64*Math.cos(f)]);}
-      const hdG=slab(hd,[],-1.0,1.0);hdG.applyMatrix4(new THREE.Matrix4().makeBasis(new THREE.Vector3(0,0,1),new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0)));   /* the slab's (x, thickness, -y) onto the pin's (z, x, y): a turn */
-      var hookSet=a=>{for(const[hk,y,arb,hh]of HKS){const st=TAU/48;arb.geometry.rotateY(a-st/2-Math.floor((a-st/2)/st)*st);arb.geometry=capFix(bore(arb.geometry,[0,y,0],[Math.cos(a),0,-Math.sin(a)],1.0,0.65,24),null);
+      /* as first drawn the head 3 along the arbor: 0207's section dimensions it "3" (its arrows on its ends) and 0,5 high over the Ø 2 pin, its far edge 9,4 from the bottom's
+         inside (centred on the core's middle); 020704-1 draws the arbor without its hook. Its end-view form as revised (no 1941 end view). 2 until 28 October 2026 (drawing
+         check 2, 4-M4) */
+      const hdT=new THREE.Matrix4().makeBasis(new THREE.Vector3(0,0,1),new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0)),hdG=slab(hd,[],-1.0,1.0),hdG41=slab(hd,[],-1.5,1.5);hdG.applyMatrix4(hdT);hdG41.applyMatrix4(hdT);   /* the slab's (x, thickness, -y) onto the pin's (z, x, y): a turn */
+      var hookSet=a=>{for(const[hk,y,arb,hh,g0]of HKS){const st=TAU/48;arb.geometry.rotateY(a-st/2-Math.floor((a-st/2)/st)*st);arb.geometry=capFix(bore(arb.geometry,[0,y,0],[Math.cos(a),0,-Math.sin(a)],1.0,0.65,24),null);
         const g=new THREE.CylinderGeometry(1.0,1.0,1.0,24,1),p=g.attributes.position;for(let i=0;i<p.count;i++){const z=p.getZ(i),c=Math.sqrt(6.65*6.65-z*z);p.setY(i,p.getY(i)>0?c:0.655);}
         g.computeVertexNormals();hk.geometry.dispose();   /* its top on the core's round, its foot 0.005 off the hole's floor */
-        hk.geometry=g;hk.position.set(0,y,0);hk.rotation.set(0,a,-Math.PI/2);hh.geometry=hdG;hh.position.set(0,y,0);hh.rotation.set(0,a,-Math.PI/2);}};}   /* built along its own y, turned onto the hook's radius: the pin's axis is its mesh's (bom.py reads a part's axis so; built in the arbor's frame until 25 October 2026, its axis read upright through its box's middle, which an oblique pin's ramped end puts off the pin) */
+        hk.geometry=g;hk.position.set(0,y,0);hk.rotation.set(0,a,-Math.PI/2);hh.geometry=g0===gAF?hdG41:hdG;hh.position.set(0,y,0);hh.rotation.set(0,a,-Math.PI/2);}};}   /* built along its own y, turned onto the hook's radius: the pin's axis is its mesh's (bom.py reads a part's axis so; built in the arbor's frame until 25 October 2026, its axis read upright through its box's middle, which an oblique pin's ramped end puts off the pin) */
     /* the set-up ratchet 05 07 00-3 (Sperrad; Messingblech 3 Ms 58, revised 24.11.47): 16 teeth, tips Ø 14.1 -0.2, roots 11.1 -0.2 (drawn 14.0, 11.0), each face along a line 1.2
        off the radius (10°), the back an arc Ø 12.5 (r 6.25) whose centre lies on the Ø 6.4 circle: the sheet's "12,5" runs across the circle through its centre (its two ends on
        it, scaled 12.7 at 16.9 px/mm), its centre 3.24 from the axis (scaled), on the "6,4" circle (r 3.2): sure. Each back's centre falls 3.12 from the axis with the drawn tips and
