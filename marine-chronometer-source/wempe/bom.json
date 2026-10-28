@@ -3805,7 +3805,7 @@
    "parent": "050100-1",
    "kind": "part",
    "part": "bowl",
-   "fn": "Hold the case brackets and the locking bracket to the bowl, M4 (the case brackets', heads Ø 7) and M2.5, 3.3 into its 4 wall (length estimated); their tapped holes across the turned bowl not cut (embed: the thread measured inside the bowl's metal).",
+   "fn": "Hold the case brackets and the locking bracket to the bowl, M4 (the case brackets', heads Ø 7) and M2.5, 3.3 into its 4 wall (length estimated); through clearance holes in the brackets' feet (Ø 4.5 and Ø 2.9, round: estimated; cut since 28 October 2026, 10-M10); their tapped holes across the turned bowl not cut (embed: the thread measured inside the bowl's metal).",
    "rel": [
     [
      "in",
@@ -3860,7 +3860,7 @@
    "parent": "050100-2",
    "kind": "part",
    "part": "closingPlate",
-   "fn": "The screw in the bowl's bottom the closing plate turns on.",
+   "fn": "A shoulder screw in the bowl's bottom: the closing plate turns on its shoulder (Ø 5.45 × 1.95 in the plate's Ø 5.5 +0.1, through its web 1.925), which bears on the bottom, the head 0.025 over the counterbore's floor (no WN sheet: estimated; a plain M3 until 28 October 2026, the second drawing check's 10-M3).",
    "rel": [
     [
      "in",
@@ -3933,7 +3933,7 @@
    "parent": "050101-2",
    "kind": "part",
    "part": "bezel",
-   "fn": "In the bezel's top, flush with it.",
+   "fn": "On the bezel's seat inside its lip, 3.5 thick, standing 2.4 proud of the lip, its top 15.8 over the bezel's underside (05 01 01).",
    "rel": [
     [
      "on",
@@ -4052,16 +4052,16 @@
    "figs": "05 01_1, 51 00_2"
   },
   {
-   "id": "Lagerscheibe",
+   "id": "WN-400.w",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Bearing disc (no number)",
+   "name": "Kontermutter WN-400 (10 on 05 01) at the outer pivots, knurled brass",
    "qty": 2,
    "parent": "Holzkasten",
    "kind": "part",
    "part": "box",
-   "fn": "On each side wall's inside round the outer pivot.",
+   "fn": "Lock the outer pivot screws (WN-80) where they are set: against each side wall's inside round the M6 (05 01's disc at a, Ø 23 × 2: the parts list's one lock-nut line, 10, and nothing else stops WN-80 turning; its thread not drawn, the bore plain: estimated). Named a bearing disc with no number until 28 October 2026 (the second drawing check's 10-M12).",
    "rel": [
     [
      "on",
@@ -4289,7 +4289,7 @@
    "parent": "Holzkasten.D",
    "kind": "part",
    "part": "lid",
-   "fn": "On the lid's front.",
+   "fn": "On the lid's front, held by four pins Ø 1.2 in its holes 2 from its edges, driven into the lid's wood (their heads and depth estimated).",
    "rel": [
     [
      "on",
@@ -4844,7 +4844,7 @@
    "idx": null,
    "no": "",
    "dwg": "127-556.02-02",
-   "name": "Körper (the 1940 key's body, with its collar)",
+   "name": "Körper (the 1940 key's body)",
    "qty": [
     0,
     1
@@ -4861,7 +4861,7 @@
    "idx": null,
    "no": "",
    "dwg": "127-556.02-01",
-   "name": "Griff (the 1940 key's flat pear-shaped handle, its tang)",
+   "name": "Griff (the 1940 key's flat pear-shaped handle, its blade let into the cap)",
    "qty": [
     0,
     1
@@ -4869,7 +4869,7 @@
    "parent": "127556.02-02",
    "kind": "part",
    "part": "key",
-   "fn": "The handle, a flat plate, its tang in the body.",
+   "fn": "The handle, a flat plate, its blade let into the cap (05-01_6: hatched apart from the body), which the two screws hold to the body.",
    "rel": [],
    "figs": "05 01_6"
   },
@@ -4878,7 +4878,7 @@
    "idx": null,
    "no": "",
    "dwg": "127-556.02-03",
-   "name": "Schaft (the 1940 key's stem, with the socket for the fusee's square)",
+   "name": "Schaft (the 1940 key's pipe, with the square socket for the fusee's square)",
    "qty": [
     0,
     1
@@ -4886,14 +4886,31 @@
    "parent": "127556.02-02",
    "kind": "part",
    "part": "key",
-   "fn": "Pressed into the body; its socket takes the fusee's winding square.",
+   "fn": "Free in the body's Ø 6.05 bore, its head under the cap; the spring 127-556.02-04 grips its head one way (a one-way key); its square socket takes the fusee's winding square (28 October 2026: pressed into the body, a plain key, until then).",
    "rel": [
     [
      "in",
      "127556.02-02",
-     "press"
+     "free"
     ]
    ],
+   "figs": "05 01_6"
+  },
+  {
+   "id": "127556.02-04",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-04",
+   "name": "Feder (the 1940 key's click spring)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "127556.02-02",
+   "kind": "part",
+   "part": "key",
+   "fn": "Round the pipe's head in the body's bore, five turns of 0.7 wire (05-01_6: drawn; its wire, hand and ends scaled or estimated): it grips the pipe one way and slips the other.",
+   "rel": [],
    "figs": "05 01_6"
   },
   {
@@ -4901,16 +4918,22 @@
    "idx": null,
    "no": "",
    "dwg": "127-556.02-05",
-   "name": "Schraube (the 1940 key's screw beside the tang)",
+   "name": "Schraube (the 1940 key's two countersunk screws in the cap)",
    "qty": [
     0,
-    1
+    2
    ],
    "parent": "127556.02-02",
    "kind": "part",
    "part": "key",
-   "fn": "On the collar beside the tang (its click spring 127-556.02-04 not drawn).",
-   "rel": [],
+   "fn": "Two countersunk M2 screws, flush in the cap's top either side of the blade, into holes in the body's top: they hold the cap with the handle's blade to the body (05-01_6's section; one head disc and no shank until 28 October 2026).",
+   "rel": [
+    [
+     "in",
+     "127556.02-02",
+     "tap"
+    ]
+   ],
    "figs": "05 01_6"
   },
   {

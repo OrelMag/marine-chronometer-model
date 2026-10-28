@@ -580,7 +580,7 @@ Left view (dial side, mirrored), plate centre px (257.6, 310.6):
 
 ## 05 01 02-3 Schlüsselrohr (key tube, part 3 of the one-way key) — `05-01/Wempe_05-01_9.jpg`
 
-- **Title block:** Werkstoff **"Ms. 58"** (sure; brass, CuZn40Pb, inferred). Maßstab **2:1** and **1:1** (sure; the small view at the lower left is "M. 1:1"). gez. **16.7.43** (sure); gepr. **18.7.43** (likely) signed "...Müller"(?); N.gepr. **21.7.43** (unsure). Änderung **a**, "1×": **"Maß 29 +2 geänd. in 19 +2"** (dimension 29 +2 changed to 19 +2), dated **29.9.47** (unsure: "29.8.47"/"29.9.47"), initialled; second line **"neu ausgegeben"** **10.4.47** (likely). Zeichnung Nr **05 01 02-3** (sure). Benennung **Schlüsselrohr** (sure). Surface sign "▽▽" top right.
+- **Title block:** Werkstoff **"Ms. 58"** (sure; brass, CuZn40Pb, inferred). Maßstab **2:1** and **1:1** (sure; the small view at the lower left is "M. 1:1"). gez. **16.7.43** (sure); gepr. **18.7.43** (likely) signed "...Müller"(?); N.gepr. **21.7.43** (unsure). Änderung **a**, "1×": **"Maß 29 +2 geänd. in 19 +2"** (dimension 29 +2 changed to 19 +2), dated **29.9.47** (unsure: "29.8.47"/"29.9.47"), initialled; second line **"neu ausgegeben"** **10.4.47** (likely). Zeichnung Nr **05 01 02-3** (sure). Benennung **Schlüsselrohr** (sure). Surface sign "▽▽▽" top right (read "▽▽" until 28 October 2026: the second drawing check's 10-M13 e, three triangles at full zoom).
 - **What it shows:** the key's tube at 2:1, one elevation, the right part broken out in section; plus a 1:1 outline at the lower left. A turned brass pin: a head (collar) ⌀ 8 × 2,6 at one end with a 0,3 radius under it, a shank ⌀ 5,95, total 50,1 long; from the other end a drilled hole 23 deep with a square socket 3,1 across, 19 deep (formed by broaching, drawn as crossed lines), a 60° countersink at the mouth (1 deep), and an outer chamfer/relief 2,5 long at that end. The head end is solid (a drill point drawn at the bottom of the bore).
 - **Dimensions:**
 
@@ -784,3 +784,13 @@ Left view (dial side, mirrored), plate centre px (257.6, 310.6):
 6. **Überkasten height**: 88 + 157 = 245 printed against a pencil "240"; base "250" changed in pencil to "260".
 7. **05 01 Lfd Nr 7 (Schraube WN-71?)**: the number is over-written.
 8. **Plan views 001/002**: every position is scaled (4.84–4.90 px/mm); the dial side's smaller wheels and the bars are identified by inference.
+
+## Corrected by the second drawing check (28 October 2026, batch 10's 10-M13 k; the model already read each so but where said)
+
+- **05-01_7, 05-01_8 (the 1943 key):** the handle is a flat round grip 3 thick in the 3 H11 slot (a strip in the section, a circle face on), not a ball; the "35 ϕ" arc is the slot's floor, 6,3 +0,1 deep where it meets the outside (sure). The small round view of 05-01_8 is from below (it draws the Ø 6 hole and the Ø 0,9 at r 3,8 and no slot: likely); its "4 −0,05" runs from the top face to the cross hole's centre (likely).
+- **05-01_3 (the closing plate):** "2 −0,05/−0,1" is the web, from the plate's inner face to the counterbore's ceiling, the counterbore 3 deep (likely; the model since builds the web at its middle, 1.925); the "small groove at the boss's edge" is the Ø 1,2 hole cut by the section (likely); "3 +0,2" is the blind Ø 1,2's depth from the groove's floor to the drill point's foot (likely, F5). The plan is the inner face: the M 2,6 and the Ø 1,2 lie 90° clockwise from the Ø 8 window on it (sure).
+- **05-01_4 (the bezel):** its lower bore goes over the movement ring's flange (Ø 105,95) on the bowl's rim, not over the bowl's 108 band (likely); the dashed zig-zag up that bore is a thread (likely).
+- **05-01_1:** the elevation's left half is cut and its right half in view (sure); the disc at a against each wall's inside is most likely the lock nut 10 (WN-400), as at b (likely).
+- **05-01_6 (the 1940 key):** spring 4 is drawn coaxial round the pipe's top in both views (a zig-zag across a dashed bore in the outside view, wire sections at r 3-3,8 in the section), not in a pocket beside the tang: a one-way key as the 1943 key (likely); the cap is hatched apart from the body, held by countersunk screws 5 (two: 5,7 and 5,85 either side of the axis).
+- **51-00_2:** "105" runs from the bottom edge to the lid's parting line, the M 6 11,5 under it (likely).
+- **51-00_5:** "250" is across the walls' outsides (225 + 2 × 12,5) (likely); the rim strip stands "4" over the walls.

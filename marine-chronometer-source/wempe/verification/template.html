@@ -464,7 +464,7 @@ about four years.</figcaption></figure>
 <h3>The key forced</h3>
 <p>A strong hand on the key's Ø 34.5 paddle (Imrhan and Munoz-Vasa's handles carried on past their 19 mm, an extrapolation; Swain's 1.06 N·m beside it), wound against the
 stop, and turned the wrong way. The 1943 key (51 00 11) is a one-way clutch, its coil spring gripping the tube one way ("Linksaufzug b. Rechtsdrehung entspannt sich die Feder");
-the 1940 key it replaced was plain.</p>
+the 1940 key it replaced is one-way too, its click spring drawn round its pipe (05-01_6; read as a plain key until 28 October 2026). The table's wrong-way lines are what a key that grips both ways would do.</p>
 <div id="tOw" class="tw"></div>
 <div id="kOw"></div>
 <h3>The motion work and the up-and-down work, made on a CNC</h3>
@@ -1018,7 +1018,7 @@ function draw(){
     table('tWear',['Contact','Load','Slid a year','Tolerance','Years: well oiled / poorly / dry'],Wr.contacts.slice().sort((a,b)=>a.yrs.good-b.yrs.good).map(c=>[`${esc(c.name)}${c.dry?' (dry)':''}`,c.F<1?f(c.F*1000,1)+' mN':f(c.F,1)+' N',f(c.s,0)+' m',`${f(c.tol*1000,1)} µm: ${esc(c.what)}`,['good','poor','dry'].map(k=>yr(c.yrs[k])).join(' / ')]),true);
     checks('kWear','wear');checks('kWearB','wear-build');
     const O=M2.ow,orow=x=>[esc(x.name),esc(x.load),f(x.sig,0)+' MPa',`${x.lo}-${x.hi} (${esc(x.what)})`,x.Ty!=null?f(x.Ty,2)+' N·m':'–',`<span class="${x.v==='ok'?'ok':x.v==='~~'?'mid':'no'}">${x.v}</span>`];
-    table('tOw',['Part','Load','Stress','Its range, MPa','Yields at, on the key',''],[[`<b>Forward against the stop, a strong hand ${f(O.TH,2)} N·m</b>`,'','','','',''],...O.forward.map(orow),[`<b>The wrong way with the plain 1940 key (the 1943 key passes about 5 mN·m)</b>`,'','','','',''],...O.backward.map(orow)],true);
+    table('tOw',['Part','Load','Stress','Its range, MPa','Yields at, on the key',''],[[`<b>Forward against the stop, a strong hand ${f(O.TH,2)} N·m</b>`,'','','','',''],...O.forward.map(orow),[`<b>The wrong way through a key that grips both ways (both keys are one-way: they pass about 5 mN·m)</b>`,'','','','',''],...O.backward.map(orow)],true);
     checks('kOw','overwind');
     const Mw=M2.mw;if(Mw&&Mw.win)table('tMw',['Mesh','Tip clearance','Backlash','Depthing window','Its stud’s hole'],Mw.meshes.map((m,i)=>{const w=Mw.win[i];return[esc(m.nm)+` (${m.za}:${m.zb})`,f(m.tip*1000,0)+' µm',f(m.blmm*1000,0)+' µm',`${f(w.lo*1000,0)} to +${f(w.hi*1000,0)} µm`,`hole ${w.hole}: ±${f(w.tp*1000,0)} µm`];}).concat([['The cannon pinion’s friction (bench)','','',`${f(Mw.cannon.lo*1000,1)}-${f(Mw.cannon.hi*1000,0)} mN·m`,`a weight ${f(Mw.cannon.g[0],0)}-${f(Mw.cannon.g[1],0)} g at ${Mw.cannon.rH} mm, set near ${f(Mw.cannon.g[2],0)} g`]]),true);
     checks('kMw','motionwork');
