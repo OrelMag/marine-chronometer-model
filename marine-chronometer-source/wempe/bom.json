@@ -3560,8 +3560,14 @@
    "parent": null,
    "kind": "part",
    "part": "hands",
-   "fn": "On the cannon tube's square (no relation here: as the Hamilton's hands, so the centre arbor's endshake isn't sampled through it).",
-   "rel": [],
+   "fn": "Pressed on the cannon tube's square, its square hole (2,6 H7, Kegel 1:70) on the square's 2,6 r6 (05 05 03), down on the square's shoulder.",
+   "rel": [
+    [
+     "round",
+     "050503-3",
+     "press"
+    ]
+   ],
    "figs": "05 02_2"
   },
   {
