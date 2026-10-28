@@ -24,10 +24,12 @@ const WDIAL=(()=>{
 
   /* ================= heights ================= */
   /* the dial on the movement ring's recess floor: 7 −0.1 over the seat's floor, where the pillar plate's dial face lies (05 08 00-3, drawn 7.0 as frame.js; 05 02_1's
-     "7" from the plate to the dial: sure), Ø 103.6 −0.1 × 1.3 (05 02 00-4: the brass "Messingblech 1,3", its 1,3 struck to 1,2 in pencil, then "Eisenblech 1,3 gebondert", iron
-     sheet 1.3 bonderised, lettered under the blank's "Rohmaß 1,3 × 110 × 110" as the last revision: the pencilled 1.2 was the brass dial's, which the iron one replaced
-     (likely; read on the sheet 15 October 2026); 05 02_1 draws it 1.3, which puts the up-and-down hand's flange 0.2 over it, 05 02_1's "0,2") */
-  const DY0=PPT+7.0,DT=1.3,DY1=DY0+DT,DR=103.55/2;
+     "7" from the plate to the dial: sure), Ø 103.6 −0.1 × 1.2 (05 02 00-4, the brass dial: "Stärke 1,3" and the title block's "Messingblech 1,3" both struck through, "1,2" written
+     over each, faced from the blank's "Rohmaß 1,3 × 110 × 110", "plan gespannt": sure that both are struck; "Eisenblech 1,3 gebondert", iron sheet 1.3 bonderised, is a
+     separate revision in another material). The model's dial is the brass one (its density 8.45, checks.py's MASSPROPS), so 1.2: until 28 October 2026 1.3, the iron
+     revision's thickness in brass, which matches neither (drawing check 2's 7-M11). 05 02_1 (1941) draws it 1.3, with the up-and-down hand's flange 0,2 over it: 0.3 over
+     the 1.2 dial, the pipe's heights being 05 02 04's, set from the plate */
+  const DY0=PPT+7.0,DT=1.2,DY1=DY0+DT,DR=103.55/2;
   /* the glass's underside, 17.0 over the plate's dial face (05 02_1's "15,8", corrected in pencil to "17,0": unsure): the case (05 01) is a later phase; nothing here
      stands within 1 mm of it */
   const GLASS=PPT+17.0;
@@ -140,7 +142,7 @@ const WDIAL=(()=>{
      (the side view's "2,5∅", 0.5 + 0.1: scaled), the hole 1.2 +0.05 (sure). Thickness 0.4 at the boss, 0.3 at the tip; the tail's arm 0.3, the drop 0.5 (sure) */
   const SEC={hwP:[[1.5,0.3],[19.5,0.1]],tP:[[1.5,0.4],[19.5,0.3]],hwT:[[1.5,0.15],[6.5,0.15],[6.55,0.35],[6.75,0.62],[7.0,0.78],[7.35,0.85],[8,0.64],[8.6,0.48],[9.2,0.3],[9.7,0.14],[10,0.02]],
     tT:[[1.5,0.3],[6.4,0.3],[6.6,0.5],[10,0.5]],rb:1.6,rr:2.5/2,rh:1.2/2};
-  /* the hands' heights: the seconds hand's underside 0.1 over the dial, its boss's top 0.075 over the post's end (the post 7.2 from its shoulder, 0.625 over the dial: train.js),
+  /* the hands' heights: the seconds hand's underside 0.2 over the dial (0.1 over the 1.3 dial until 28 October 2026: the hand kept where it stood when the dial came down to 05 02 00-4's 1.2, drawing check 2's 7-M11, so its boss's top stays over the post's end), its boss's top 0.075 over the post's end (the post 7.2 from its shoulder, 0.625 over the dial: train.js),
      as the coloured section draws it (Wempe_Einheitschronometer.jpg at the seconds arbor, about 29 px/mm by the dial's 1.3: the blued hand 0.1 off the dial's face, the
      post's end and the collet's about 1.0 over it), on the 1940 post that 05 05_01 ends 0.5 over the dial; until 28 October 2026 1.9 over the dial, at the turned 9.2 post's
      top (batch 7's part, moved with the post: drawing check 2's 6-M3). The hour hand's top 2.6 over the dial (05 02_1's boxed 2,6), its blade's underside 0.8 under it,
@@ -149,7 +151,7 @@ const WDIAL=(()=>{
      its top flush with the seat's (until 28 October 2026 the hour hand's top 3.55 over the dial, sitting 0.385 over its seat's top, and the minute hand 0.5 over it: drawing
      check 2's 7-M5) */
   const SW=WTRAIN.A.sw;
-  const YS0=DY1+0.1,YH1=DY1+2.6,YM0=CN.yb,YU1=UDW.yt;
+  const YS0=DY1+0.2,YH1=DY1+2.6,YM0=CN.yb,YU1=UDW.yt;
 
   /* a blade from r0 to its tip along -z (the hand's 12 o'clock), its half-widths hw and thickness t over r, its underside at y0: solidGeo cells with a sloped top, one strip
      across the blade between each two stations, so its top's triangles each span one station's step (one cell, triangulated whole, joined points far apart along the two edges:
