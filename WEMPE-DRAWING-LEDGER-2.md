@@ -28,28 +28,28 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 
 | Image | Sheet | Batch | Inv | Views | Overlay | Joints | Refuted | Status |
 |---|---|---|---|---|---|---|---|---|
-| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 1 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | done | done | done | done | done | refuted; corrections next |
-| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | done | done | done | done | done | refuted; corrections next |
+| `05-03/Wempe_05-03_1.jpg` | 127-556.04 U09 / 0403 Unruh kompl. (balance complete, ANKER-CHRONOMETER) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_2.jpg` | 05 03 01 Unruh (balance, spring-detent chronometer) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_3-1.jpg` | 17 04 01 Unruhwelle (balance staff; a small staff, 5,73 long — not the chronometer's) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_3-2.jpg` | 050401 Unruhwelle kpl. (balance staff complete, spring-detent chronometer) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_4.jpg` | 05 03 01-1 Unruhreifen (balance rim with arm, spring-detent chronometer) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_5.jpg` | 127-556.04 U06 / 04 03/10 bis 12 Spiralfeder kompl. (hairspring complete, ANKER-CHRONOMETER series) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_6.jpg` | 127-556.04-021 / 020310 Spiralfaden (hairspring as coiled; Anker-Chronometer Sach-Nr and a 02-series number) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_7.jpg` | So. 127-556. 04 / So. 040310 Spiralkurve (hairspring terminal curve; 04-series, Anker-Chronometer by its numbers) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_8.jpg` | 05 03 02-2 Spiralrolle (hairspring collet) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-03/Wempe_05-03_9.jpg` | 05 03 02-3 Klötzchen (hairspring stud block) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_04.jpg` | 05 04 02 Unruhwelle, kompl. (balance staff complete, with its brass hub; spring-detent chronometer) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_05.jpg` | 040401-1 (pencil: 05 04 02-1) Unruhwelle (balance staff with brass collar; 04-series number, see the header note) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_06.jpg` | 020402 Heberolle (impulse roller) | 1 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_01.jpg` | (no number; "Kaliber 020…") Hemmung für Federchronometer (spring-detent escapement layout) | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_02.jpg` | 05 04 01-2 Goldfeder (gold passing spring) | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_03.jpg` | 05 04 01-4 Gangfederkloben (detent block) | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_07-1.jpg` | 050408 bis 10 Gangrad (escape wheel and pinion, assembled on the arbor) | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_07-2.jpg` | 050408 bis 10, re-numbered 05 04 05-1 Gangrad (escape wheel on its arbor, later issue) | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_08.jpg` | Hz 05 04 05-2 Gangtrieb (escape pinion, as turned and cut, between centres) | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_10-1_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 1, dimensions | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_10-2_Wempe_Griessbach.jpg` | .1436 Gangfeder (spring detent), sheet 2, names of the parts | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-04/Wempe_05-04_23.jpg` | 02 04 08 a Gangrad. Zahnform (escape wheel tooth form, spring-detent chronometer) | 2 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
 | `05-05/Wempe_05-05_11.jpg` | 05 05 05 Gegensperrkegel kompl. (maintaining-work click complete) | 3 | done | done | done | done | done | live in 3.47.00 (v3.47.00, 70271e23) |
 | `05-05/Wempe_05-05_12.jpg` | 05 05 05-1 Gegensperrkegel (maintaining-work click) | 3 | done | done | done | done | done | live in 3.47.00 (v3.47.00, 70271e23) |
 | `05-06/Wempe_05-06_04.jpg` | 05 06 Schnecke Teilansicht, Blatt 2 | 3 | done | done | done | done | done | live in 3.47.00 (v3.47.00, 70271e23) |
@@ -85,16 +85,16 @@ Status: `not started`, `reading`, `refuting`, `findings open`, `closed`.
 | `05-06/Wempe_05-06_15.jpg` | 05 06 04-1 Schneckenwelle | 5 | done | done | done | done | done | live in 3.47.00 (v3.47.00, 70271e23) |
 | `05-06/Wempe_05-06_16.jpg` | 05 06 04-3 Schneckensperrrad | 5 | done | done | done | done | done | live in 3.47.00 (v3.47.00, 70271e23) |
 | `05-06/Wempe_05-06_20.jpg` | (no drawing number) Schneckenkurve / Kraftverlauf | 5 | done | done | done | done | done | live in 3.47.00 (v3.47.00, 70271e23) |
-| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | done | done | done | refuted; corrections next |
-| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | done | done | done | refuted; corrections next |
+| `05-05/Wempe_05-05_01.jpg` | 04 05 (So 127-556.04) Laufwerk | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_02.jpg` | 05 05 01 Sekundenrad kompl. (seconds wheel complete) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_03.jpg` | 05 05 01-1 Sekundenrad (seconds wheel) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_04.jpg` | 05 05 01-2 Sekundentrieb (seconds pinion) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_05.jpg` | 05 05 02 Zwischenrad kompl. (intermediate wheel complete) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_06.jpg` | 05 05 02-1 Zwischenrad (intermediate wheel) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_07.jpg` | 05 05 02-2 Zwischentrieb (intermediate pinion) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_08.jpg` | 05 05 03 Minutenrad kompl. (minute/centre wheel complete) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_09.jpg` | 05 05 03-1 Minutenrad (minute/centre wheel) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
+| `05-05/Wempe_05-05_10.jpg` | 05 05 03-2 Minutentrieb (minute/centre pinion) | 6 | done | done | done | done | done | live in 3.48.00 (v3.48.00, d178fd63) |
 | `05-02/Wempe_05-02_01.jpg` | So 127 556 04 / 0402 Zeigerwerk, Auf u. Ab gesamt (motion work and up-and-down work, general arrangement) | 7 | done | done | done | done | done | refuted; corrections next |
 | `05-02/Wempe_05-02_02.jpg` | 05 02 00-1 Minutenzeiger (minute hand) | 7 | done | done | done | done | done | refuted; corrections next |
 | `05-02/Wempe_05-02_03.jpg` | 05 02 00-2 Stundenzeiger (hour hand) | 7 | done | done | done | done | done | refuted; corrections next |
