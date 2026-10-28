@@ -16,32 +16,32 @@
     "kind": "on the face",
     "along": 0.9884,
     "C": [
-     6.0351,
-     4.164
+     6.0493,
+     4.145
     ],
     "n": [
-     0.4366,
-     -0.8997
+     0.4337,
+     -0.9011
     ],
-    "gap": 0.1845,
+    "gap": 0.1861,
     "r": [
-     7.3322,
-     7.3322
+     7.3332,
+     7.3332
     ],
-    "depth": 0.6628,
+    "depth": 0.6618,
     "np": 1
    },
    "back": {
     "gap": 0.0349,
-    "along": 0.5,
+    "along": 0.5002,
     "r": [
-     7.3322,
-     7.3322
+     7.3332,
+     7.3332
     ]
    },
    "height": 1.5,
-   "mass": 0.2541,
-   "I": 1.8039,
+   "mass": 0.2528,
+   "I": 1.7881,
    "note": "a maintaining click (05 06 02-3) on the click wheel 05 06 04-3: running, the fusee's drive through it to the maintaining ratchet"
   },
   {
@@ -59,32 +59,32 @@
     "kind": "on the face",
     "along": 0.9894,
     "C": [
-     -6.2837,
-     -4.3994
+     -6.2974,
+     -4.3803
     ],
     "n": [
-     -0.4488,
-     0.8936
+     -0.4461,
+     0.895
     ],
-    "gap": 0.777,
+    "gap": 0.7776,
     "r": [
-     7.6707,
-     7.6707
+     7.6711,
+     7.6711
     ],
-    "depth": 0.3243,
+    "depth": 0.3239,
     "np": 1
    },
    "back": {
     "gap": 0.036,
-    "along": 0.4885,
+    "along": 0.4886,
     "r": [
-     7.6707,
-     7.6707
+     7.6711,
+     7.6711
     ]
    },
    "height": 1.5,
-   "mass": 0.2541,
-   "I": 1.8039,
+   "mass": 0.2528,
+   "I": 1.7881,
    "note": "a maintaining click (05 06 02-3) on the click wheel 05 06 04-3: running, the fusee's drive through it to the maintaining ratchet"
   },
   {
@@ -119,15 +119,15 @@
    },
    "back": {
     "gap": 0.0373,
-    "along": 0.9952,
+    "along": 0.6066,
     "r": [
      18.6,
      18.6
     ]
    },
    "height": 1.02,
-   "mass": 0.5928,
-   "I": 14.3104,
+   "mass": 0.5868,
+   "I": 14.1029,
    "note": "the maintaining detent (05 05 05-1, hole 4) on the maintaining ratchet 05 06 02-1: winding, it holds the ratchet against the maintaining spring"
   },
   {
@@ -177,13 +177,13 @@
  "detentE": 1169,
  "arbors": {
   "fusee": {
-   "m": 47.0721,
-   "I": 3880.4564,
+   "m": 47.0688,
+   "I": 3880.2568,
    "missing": {}
   },
   "barrel": {
    "m": 108.0849,
-   "I": 27486.6019,
+   "I": 27486.8979,
    "missing": {}
   }
  }
