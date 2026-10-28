@@ -32,8 +32,8 @@ const WDIAL=(()=>{
      stands within 1 mm of it */
   const GLASS=PPT+17.0;
   /* the centre arbor (train.js, 05 05 03-2): its journal "C" ends 23.03 over its train-side shoulder, where the cannon tube's foot sits (05 05 03: the tube's pinion block
-     from the C shoulder to 25.4 from the lower shoulder, its square to 14.3 over C); the shank Ø 1.8 at C tapers 1:80 */
-  const CW=WTRAIN.A.cw,yC=CW.ys+23.03,rSh=y=>(1.8-(y-yC)/80)/2;
+     from the C shoulder to 25.4 from the lower shoulder, its square to 14.3 over C); the shank Ø 1.8 g6 at C (drawn 1.795, its middle: train.js) tapers 1:80 */
+  const CW=WTRAIN.A.cw,yC=CW.ys+23.03,rSh=y=>(1.795-(y-yC)/80)/2;
 
   /* ================= the motion work (05 02_1, Zeigerwerk, Auf u. Ab gesamt, 28.3.41, 5:1; and the parts' sheets) =================
      The centre distances: Wechselrad–Minuten 12,6 and Auf u. Ab–Schnecke 18,4 (05 02_1): the tables put hole 19 12.600 from hole 1 and hole 2 18.400 from hole 10 (sure).
@@ -93,8 +93,8 @@ const WDIAL=(()=>{
      Every outline is a blade of half-widths hw(r) along the hand (r from the arbor), at the sheets' figures where they give them and between them as traced on the sheets'
      plans (2:1: 7.28, 6.77 and 9.7 px/mm by the hands' own lengths): the outermost of the outline's two lines in each column, less its stroke, scaled to meet the sheet's
      widths at its stations; and a thickness t(r) from the side views' figures, the underside flat ("Schnitt A-B": flat under, rounded over; the rounding across isn't drawn).
-     Heights: the hands as last revised. The seconds arbor's post ends 9.2 over its shoulder (05 05 01-2, 1946; 05 05 01 of 1940 gave 7.2), 2.6 over the dial: the seconds
-     hand rides at its top, so the hour hand's blade passes 0.1 over the post's end (the hour wheel's pipe, 8.2 overall, reaches there: 05 02 03); the minute hand 0.5 over the
+     Heights: the hands as last revised. The hour hand's blade 2.75 over the dial (the hour wheel's pipe, 8.2 overall, reaches there: 05 02 03; it passed 0.125 over the seconds post's
+     end while the post was built to 05 05 01-2's turned 9.2, until 28 October 2026); the seconds hand on the post's finished 7.2 (train.js), just over the dial; the minute hand 0.5 over the
      hour hand's boss, on the tube's square (05 02_1 at 5:1, 11.87 px/mm: 5.8 px between the minute hand's boss and the hour hand's top; its "1,2" there is the minute hand's
      own, its top to its flange's underside, as on 05 02 00-1: likely; until 15 October 2026 1.2, read as the gap, which with the hour hand's boss raised below would have put
      the minute hand's top over the tube's). 05 02_1 (1941) and the coloured section draw the hands 2 mm lower, the seconds hand lowest, on the shorter post of 1940 (README). */
@@ -126,12 +126,16 @@ const WDIAL=(()=>{
      (the side view's "2,5∅", 0.5 + 0.1: scaled), the hole 1.2 +0.05 (sure). Thickness 0.4 at the boss, 0.3 at the tip; the tail's arm 0.3, the drop 0.5 (sure) */
   const SEC={hwP:[[1.5,0.3],[19.5,0.1]],tP:[[1.5,0.4],[19.5,0.3]],hwT:[[1.5,0.15],[6.5,0.15],[6.55,0.35],[6.75,0.62],[7.0,0.78],[7.35,0.85],[8,0.64],[8.6,0.48],[9.2,0.3],[9.7,0.14],[10,0.02]],
     tT:[[1.5,0.3],[6.4,0.3],[6.6,0.5],[10,0.5]],rb:1.6,rr:2.5/2,rh:1.2/2};
-  /* the hands' heights: the seconds hand's underside 1.9 over the dial, its boss's top 0.125 under the post's end (the post's end 14.275, train.js); the hour hand's blade
-     0.125 over the post's end (its boss's top 15.2, 0.8 over the blade's underside: its pipe's foot then 0.45 over the dial; it sits 0.385 over its seat's top, its 1:70 hole
-     on the 1:70 seat; until 15 October 2026 0.3 lower, with the blade's top flush with the boss's); the minute hand 0.5 over the hour hand's boss (its top then 0.665 under
-     the tube's crown); the up-and-down hand down on its pipe's shoulder, its top flush with the seat's */
-  const SW=WTRAIN.A.sw,ySp=SW.ys+33.25;   /* the seconds post's end (train.js's profile) */
-  const YS0=ySp-0.725,YH1=ySp+0.925,YM0=YH1+0.5,YU1=UDW.yt;
+  /* the hands' heights: the seconds hand's underside 0.1 over the dial, its boss's top 0.075 over the post's end (the post 7.2 from its shoulder, 0.625 over the dial: train.js),
+     as the coloured section draws it (Wempe_Einheitschronometer.jpg at the seconds arbor, about 29 px/mm by the dial's 1.3: the blued hand 0.1 off the dial's face, the
+     post's end and the collet's about 1.0 over it), on the 1940 post that 05 05_01 ends 0.5 over the dial; until 28 October 2026 1.9 over the dial, at the turned 9.2 post's
+     top (batch 7's part, moved with the post: drawing check 2's 6-M3). The hour hand's blade 2.75 over the dial (its boss's top 15.2, 0.8 over the blade's underside: its
+     pipe's foot then 0.45 over the dial; it sits 0.385 over its seat's top, its 1:70 hole on the 1:70 seat; until 15 October 2026 0.3 lower, with the blade's top flush with the
+     boss's); the minute hand 0.5 over the hour hand's boss (its top then 0.665 under the tube's crown); the up-and-down hand down on its pipe's shoulder, its top flush with
+     the seat's. 05 02_1 (1941) and the coloured section draw the hour and minute hands about 2 lower; 05 05 03's tube and square don't leave the minute hand room for it
+     (README) */
+  const SW=WTRAIN.A.sw;
+  const YS0=DY1+0.1,YH1=DY1+3.55,YM0=YH1+0.5,YU1=UDW.yt;
 
   /* a blade from r0 to its tip along -z (the hand's 12 o'clock), its half-widths hw and thickness t over r, its underside at y0: solidGeo cells with a sloped top, one strip
      across the blade between each two stations, so its top's triangles each span one station's step (one cell, triangulated whole, joined points far apart along the two edges:
@@ -277,7 +281,15 @@ const WDIAL=(()=>{
       cnM.push(tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1));
       /* its crown, the square's last 0.5: the annuli from the bore out through circles 1.05 and 1.25 to the square (so the sphere is sampled across it) */
       const cr=p=>CN.yt-(CN.cr-Math.sqrt(CN.cr*CN.cr-p[0]*p[0]-p[1]*p[1]));
-      cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));R.cnM=cnM;}   /* the tube one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
+      cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));
+      /* the punch's dents ("Körner", 05 05 03): the tube's wall driven in at its groove into the shank's groove under it (train.js: its square shoulder 6.07 over C, its cone
+         0.24 deep rising to the shank at 6.73), which holds the tube on the shank by friction and keeps it from rising; the sheet draws the groove and the mark, not the dents:
+         three, 120° apart, each 20° round and 0.4 high at the groove's middle (6.1 to 6.5 over C, clear of the shank's square shoulder, so the tube still slips round
+         when the hands are set), their inner faces on the shank's cone, line to line, as the model draws a press (estimated: drawing check 2's 6-M6; until 28 October 2026
+         none, the tube 0.01 clear of the shank all along, held by nothing) */
+      {const s0=yC+6.07,s1=yC+6.73,g0=rSh(s0)-0.24,gr=y=>g0+(rSh(s1)-g0)*(y-s0)/(s1-s0),ya=yC+6.1,yb=yC+6.5,P=[[gr(ya),ya],[rb(ya)+0.05,ya],[rb(yb)+0.05,yb],[gr(yb),yb],[gr(ya),ya]].map(([r,y])=>new THREE.Vector2(r,y));
+        for(let k=0;k<3;k++)cnM.push(tag(mesh(cn,closeGeo(new THREE.LatheGeometry(P,6,(k/3-10/360)*TAU,20/360*TAU)),M.steel),'050503-3',1));}
+      R.cnM=cnM;}   /* the tube one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
 
     /* the riveting sink in the change and hour wheels' holes, on their lower faces, the pipe's foot flared into it ("vernietet"): 0.4 deep at 30° (040204-1's edge view,
        "0,4" from the face to the line its end circle draws across the hole, "30°" at the corner: sure; the 30° read to the axis, its leader on the corner's short chamfer,
@@ -341,7 +353,7 @@ const WDIAL=(()=>{
     /* the seconds hand on its collet (Zeigerfutter 05 02 01-2, brass, no sheet), pressed on the seconds post's 1:90 taper: Ø 1.5 (the coloured section's, 1.6 scaled,
        inside the dial's Ø 1.7 hole) and 4.6 long (scaled there, pictorial), its end Ø 1.2 through the hand (the hand's hole), flush with its top; bored on the post, 0.005 clear */
     const sh=grp(hdP,H[35]);R.sh=sh;
-    {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-0.1*(y-SW.ys-24.05)/9.1)/2+0.005;
+    {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-(y-SW.ys-24.05)/90)/2+0.005;   /* the post's 1:90 (train.js), carried on past its end, which is 0.075 under the hand's top */
       const sM=[tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1'),
       tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb,19.5,-1,0.25,SEC.rb,true),M.blued),'050201-1',1)];
       sM.push(tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb,10,1,0.25,SEC.rb,true),M.blued),'050201-1',1));fuse(sM);   /* boss, pointer and tail one hand, one mesh (fuse) */
