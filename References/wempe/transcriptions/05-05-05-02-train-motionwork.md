@@ -338,13 +338,13 @@ Conventions: printed numbers keep the German decimal comma (4,5 = 4.5 mm); scale
 | boss height of the setting pinion / its post above the plate | 3 | — | likely | far left |
 | clearance under the dial at the change wheel | 0,2 Luft | — | sure | |
 | change wheel: pinion length (above the wheel) | 2,5 | — | sure | |
-| change wheel thickness | 0,6 | — | likely | |
-| framed dimension: hour wheel (dial underside to top of hour pipe?) | 3,2 | framed | sure (number) | pencil note beside it: "ohne Zeigerstellung mit Rückh. (?) 0,8" — unsure reading ("without hand-setting, with … 0,8") |
+| collar between the change wheel and its pinion | 0,6 | — | likely | not the wheel's thickness, which 05 02_06 and _07 give 1,0 (the second drawing check's F4) |
+| framed dimension: the dial's top face to the minute hand's underside | 3,2 | framed | sure (number); likely (its ends: the second drawing check's F5 and 7-M5, the minute hand on the cannon tube's square's shoulder) | pencil note beside it: "ohne Zeigerstellung mit Rückh. (?) 0,8" — unsure reading ("without hand-setting, with … 0,8") |
 | from the top of the framed 3,2 to the glass | 3,5 | — | sure | |
 | minute-hand collet: height | 2 | — | sure | |
 | minute hand boss to … | 1,8 | — | likely | |
 | hour hand boss top to minute hand underside | 1,2 | — | likely | |
-| framed dimension at the hour pipe | 2,6 | framed | sure (number) | the "2,6" fit of the cannon on the arbor, inferred; small "0" above it |
+| framed dimension: the dial's top face to the hour hand's top | 2,6 | framed | sure (number); likely (its ends) | a digit overwritten (possibly 2,8); small "0" above it; read as the cannon's fit until 28 October 2026 (the second drawing check's F5, 7-M5) |
 | change-wheel stud / dial: "8,5" over "3,7" | 8,5 / 3,7 | — | unsure | sloped, px (330–355, 240–275) |
 | cannon pinion bore | 2,3 ∅ | — | sure | written "2,3ϕ" on the arbor |
 | hour wheel thickness | 1 | — | sure | |
@@ -367,7 +367,7 @@ Conventions: printed numbers keep the German decimal comma (4,5 = 4.5 mm); scale
 | dial thickness | 1,3 | — | sure | |
 | minute hand height above the glass reference (pencil) | 8,5 (printed "3,5" struck?) | — | unsure | "~~3,5~~ 8,5" at px (900–940, 140–170) |
 | total height (pencil) | 15,8 (printed), "17,0" in pencil | — | unsure | struck-through and corrected |
-| pivot hole cone at the fusee arbor | 28° | — | likely | |
+| fusee arbor's diameter in the plate | 2,8 ∅ | — | sure | read "28°" as a pivot cone until 28 October 2026: horizontal arrows on the hole's walls (the second drawing check's F1); the plate's hole at 10 is Ø 2.82 |
 | centre-arbor nut clearance under the plate | 0,1 Luft | — | sure | |
 
 - **Notes:** "Laufstellen: Enger Laufsitz" (running points: close running fit). "Festsitz" (press fit). Pencil "Schnecke" under the struck "Federhaus": the up-and-down work is driven from the fusee arbor (inferred from the correction). Pencil "Minutenzeiger" and "Stundenzeiger" written on the two hands.
@@ -490,7 +490,7 @@ Conventions: printed numbers keep the German decimal comma (4,5 = 4.5 mm); scale
 | feature | nominal (mm) | tolerance or fit | how sure | note |
 |---|---|---|---|---|
 | pipe outer diameter at the pinion | 3,05 ∅ | −0,04 | sure | |
-| top of the pipe to the wheel's upper face | 4,3 | +0,1 | sure | |
+| top of the pipe to the pinion's underside | 4,3 | +0,1 | sure | the pinion's lower face, not the wheel's upper face (read so until 28 October 2026: the second drawing check's F2) |
 | wheel thickness | 1 | — | sure | |
 | overall height | 7 | −0,1 | sure | |
 | pipe's foot below the wheel | 0,9 | +0,2 | sure | |
@@ -593,7 +593,7 @@ Conventions: printed numbers keep the German decimal comma (4,5 = 4.5 mm); scale
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
 |---|---|---|---|---|
-| outside (blank) diameter | 35,3 | −0,2 | sure | |
+| outside (blank) diameter | 35,3 | −0,2 | sure | the blank's: its arrows on the outermost circle, which is the tip circle D 34,33 (the ratios and an overlay; the second drawing check's F3), as on 05 02_7 and _9 |
 | rim inner diameter | 28,2 | +0,2 | sure | |
 | spoke width | 1,7 | −0,2 | sure | |
 | spoke pitch | 72° | — | sure | |
@@ -624,7 +624,7 @@ Conventions: printed numbers keep the German decimal comma (4,5 = 4.5 mm); scale
 | hole pitch circle (inferred) | 101 | — | sure (number), likely (meaning) | the five holes lie on it, scaled r 50.5–50.7 |
 | minute track outer circle | 90 | — | sure | scaled ∅90.0 |
 | minute track inner circle | 85 | — | sure | scaled ∅85.4 |
-| thickness (Stärke) | 1,3 (pencil 1,2) | — | sure | |
+| thickness (Stärke) | 1,2 (1,3 struck, 1,2 written over it) | — | sure | the title block's "Messingblech 1,3" struck to 1,2 as well; "Eisenblech 1,3 gebondert" a separate iron revision (the second drawing check's 7-M11) |
 | subdial centres from the dial centre | 23 | ±0,03 | sure | both, up-and-down above, seconds below |
 | hour-numeral height | 9 | — | sure | scaled 9.0–9.2 |
 | minute-stroke width | 0,3 | — | sure | |
@@ -643,7 +643,7 @@ Conventions: printed numbers keep the German decimal comma (4,5 = 4.5 mm); scale
 | seconds subdial outer circle | 37 | — | sure | scaled ∅36.8 |
 | seconds track inner circle | 33 | — | sure | scaled ∅33.0 |
 | seconds numeral ring inner circle | 23 | — | sure | scaled ∅23.0 |
-| seconds hole | 1,7 | — | sure | "17"; scaled ≈2.1 |
+| seconds hole | 1,7 | — | sure | "17", its arrows drawn outside pointing in to extension lines tangent to the hole: the small-hole convention, the hole drawn oversize (the second drawing check's F7) |
 | seconds strokes | 0,2 (each second), 0,5 (heavier strokes) | — | likely | |
 | seconds figures | 10 20 … 60 | — | sure (60, 10 drawn) | figure height 2,7 ("27" beside "60") |
 | serial number height | 2,2 | — | likely | "22" beside "2367" |

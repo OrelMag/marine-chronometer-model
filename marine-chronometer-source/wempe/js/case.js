@@ -488,14 +488,15 @@ const WCASE=(()=>{
        Its height comes out 16.0 (y 269 to 192.5), the casting's, and every line lies inside the casting: the sight cone starts at the casting's Ø 92 (r 45.9 at the step) and
        opens to r 55.3 at the glass's seat, 12.3 up; the lower bore r 54.9, 5.0 deep to the step; outside, r 56.6 at the underside, out to r 58.1 at 6.1 and 58.9 at 6.9,
        the widest band r 60.6 from 7.5 to 9.8 (Ø 121: 05 01's elevation scales the bezel about 120), then a bevel in to the glass's edge at the top. Every reading ±0.2 (a
-       pixel); likely. Its step bears on the dial's rim and holds the movement down: the dial, 1.3 thick (05 02 00-4's "Stärke 1,3"), lies in the
-       movement ring's recess Ø 104 × 0.7 (05 08 00-3) in its flange 4.7 thick, so it stands 0.6 proud, its top YB + 5.3, and the step, 5.0 over the bezel's underside, puts
-       that 0.3 over the bowl's top face; the cone's foot (r 45.9) just outside the dial's minute track (Ø 90). Until 21 October 2026 the step was relieved over the dial
+       pixel); likely. Its step bears on the dial's rim and holds the movement down: the dial, 1.2 thick (05 02 00-4's "Stärke 1,2", the 1,3 struck: 1.3
+       until 28 October 2026), lies in the movement ring's recess Ø 104 × 0.7 (05 08 00-3) in its flange 4.7 thick, so it stands 0.5 proud, its top YB + 5.2 (WDIAL.DY1),
+       and the step, 5.0 over the bezel's underside, puts that 0.2 over the bowl's top face (0.3 with the 1.3 dial: the bezel screwed 0.1 further down its thread); the cone's foot (r 45.9) just outside the dial's minute track (Ø 90). Until 21 October 2026 the step was relieved over the dial
        (estimated) and the bezel lay on the bowl's top face. The sheet marks a thread in the lower bore (its left end): since 24 October 2026 cut there (TH), its crests at the
        traced r 54.9, its roots r 55.306, from the underside to the step, run out 0.5 at each end (a lead-in, a relief under the step), screwed onto the bowl's rim (above),
        and the movement ring's radial pin (WN-202, its end at r 54.75) in the bowl's notch inside its crests; until then the bore plain r 55.25 (1.7 px over the reading) and
        nothing on the bowl for it to screw onto; the bezel has no notch for the pin (one was cut until 21 October 2026, estimated). The glass (05 01 01-1) in the seat at the top: Ø 110.5 × 3.7 (the sheet's band, y 192.5 to 210), flush with the ring's edge, its underside
-       YB + 12.6, 15.6 over the pillar plate's dial face (05 02_1 asks 15.8, corrected in pencil to 17.0), 1.25 over the hands' highest point. The widest band knurled, 0.3
+       YB + 12.5, 15.5 over the pillar plate's dial face (05 02_1 asks 15.8, corrected in pencil to 17.0: the second drawing check's 7-M10, for its batch 10), 2.1 over the minute
+       hand's top (since 28 October 2026 at 05 02_1's boxed heights) and 0.6 over the cannon tube's crown. The widest band knurled, 0.3
        deep, as Wempe 6161's and Wempe 5377's bezels show their widest band (antiquorum_208-4_wempe6161.jpg; bonhams_26816_327_wempe5377_type05.jpg): likely. Until 21 October
        2026 the ring was drawn as its casting (flat top, the glass Ø 112 × 2.3 flush in it) */
     const bz=prt(bowlS,'bezel',-YP),bW=rv(bz,'last first 1943');
@@ -507,7 +508,7 @@ const WCASE=(()=>{
        the right-hand section: likely ±0.2); the ring's bevel runs from the widest band (r 60.2 at 9.9) up to the lip, the lip's inside falls to r 56.2 at 12.6 and the seat
        at 12.3 carries the glass, the sight cone running down from the seat's inner edge (r 55.3) to Ø 92 at the step. Until then the ring was read 16 high, wrapping a glass
        flush with its edge (the glass's top line taken for the ring's: tools/wempe_bezel_trace.py) */
-    {const b0=YB+0.3,top=b0+16,RG=55.3,cone=r=>b0+5.0+(r-45.9)*7.3/(RG-45.9);
+    {const b0=WDIAL.DY1-5.0,top=b0+16,RG=55.3,cone=r=>b0+5.0+(r-45.9)*7.3/(RG-45.9);
       /* its section as traced (above), turned, the skirt's bore (its edge 1, at the thread's root TH.Rf) threaded: the step's underside, the bore, the underside, the outside's three lines
          (to r 58.05 at 6.07, 58.9 at 6.9, toward 60.6 at 7.5), the widest band, the bevel to the glass's edge, the seat's wall, the sight cone (cells of rings until 24 October 2026) */
       const pz=[[46.0,b0+5.0],[TH.Rf,b0+5.0],[TH.Rf,b0],[56.6,b0],[58.05,b0+6.07],[58.9,b0+6.9],[60.2,b0+6.9+(60.2-58.9)*0.6/1.7],[60.2,b0+9.9],[57.2,b0+13.4],[56.2,b0+12.6],[56.2,b0+12.3],[RG,b0+12.3],[46.0,cone(46.0)]];   /* the bevel to the lip, the lip's inside, the seat, the sight cone */
@@ -520,8 +521,8 @@ const WCASE=(()=>{
        (Ø 116.6) by row 598; the knurl to row 640 (diamond on the photographs, drawn as 360 straight teeth 0.4 deep: the diamond's crossing isn't drawn); a plain lip, rounded
        into the top face at row 650 (YB + 13.5). Inside (not on any photograph: estimated): the glass in a seat 1.5 deep to r 53.6, the sight bore r 52.1 (the dial's edge 51.8
        under it), the shoulder at the rim's top (YB + 4.7) bearing on the ring's flange and the rim, which holds the movement down as the drawn bezel's recess does, the thread
-       to its edge (TH; its bore r 55.3 plain until 24 October 2026). The glass: Ø 107 × 4.0, its top edge chamfered 0.8, its underside YB + 12.0, 0.65 over the hands' highest point (the minute hand's boss, 17.70 in
-       the movement's frame), its top YB + 16.0, where the drawn bezel's top is (estimated: the photographs give no height) */
+       to its edge (TH; its bore r 55.3 plain until 24 October 2026). The glass: Ø 107 × 4.0, its top edge chamfered 0.8, its underside YB + 12.0, 0.1 over the cannon tube's crown (18.25 in the movement's frame; 0.65 over the minute hand's boss at 17.70 until 28 October 2026, when the hands came down
+       to 05 02_1's boxed heights), its top YB + 16.0, where the drawn bezel's top is (estimated: the photographs give no height) */
     {const b6=rv(bz,'6mx'),yj=Y6(552),yk0=Y6(598),yk1=Y6(640),top=Y6(650),gu=YB+12.0;
       const bell=[[56.1,552],[56.5,556],[56.73,560],[57.09,564],[57.32,568],[57.56,572],[57.68,576],[57.82,580],[57.9,588],[57.9,598]].map(([r,w])=>[r,Y6(w)]);
       const pr=[[TH.Rf,yj],...bell,[57.9,yk1],[58.0,yk1],[58.0,Y6(646)],[57.6,Y6(649)],[57.2,top],[53.6,top],[53.6,gu],[52.1,gu],[52.1,YB+4.7],[TH.Rf,YB+4.7]];
