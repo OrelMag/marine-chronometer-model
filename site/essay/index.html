@@ -5387,7 +5387,8 @@ const WFUSEE=(()=>{
        from the nose (99° from the hole): 24.4 long. The free end runs to the click wherever the click stands (rebuilt as it rides) */
     const spr=[],SPH=1.5,CKBK=CKL.slice(17,31);   /* CKBK: the click's back, its r 8 arc from the nose's tip to the boss */
     SPP.forEach((pp,i)=>{const m=tag(mesh(gMW,new THREE.BufferGeometry(),M.brass2),'050602-2');spr.push({m,pp,ck:gCK[1-i],last:null});
-      for(const a of pp){const cg=new THREE.CylinderGeometry(0.3,0.3,1.6,12);cg.rotateZ(Math.PI/2);cg.translate(12.6,SPY,0);cg.rotateY(a);tag(mesh(gMW,cg,M.brass2),'050602-4');}});
+      for(const a of pp){const cg=new THREE.CylinderGeometry(0.3,0.3,1.6,32);   /* the pins (05 06 02-4) pressed in the cup's Ø 0.6 holes (05 06 02-1): 32 sides, their flats on the hole (12 until 28 October 2026, 0.034 loose: bom.py at press 0.02) */
+        cg.rotateZ(Math.PI/2);cg.translate(12.6,SPY,0);cg.rotateY(a);tag(mesh(gMW,cg,M.brass2),'050602-4');}});
     function sprGeo(o){const ck=o.ck,P=[],Y=SPY,V=(r,a)=>new THREE.Vector3(r*Math.cos(a),Y,-r*Math.sin(a));
       const a0=o.pp[1]-5/12,a1=o.pp[1]+5/12;for(let i=0;i<=12;i++)P.push(V(12.0,a0+(a1-a0)*i/12));   /* along the wall from its end, the hole on the 60° pin halfway */
       const aS=a1+8.5*D2R;for(let i=1;i<=6;i++){const f=i/6;P.push(V(12.0-1.6*(0.5-0.5*Math.cos(Math.PI*f)),a1+(aS-a1)*f));}   /* the S, in to r 10.4 */
