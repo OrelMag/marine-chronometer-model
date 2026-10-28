@@ -985,11 +985,23 @@ const WFUSEE=(()=>{
        bottom's seat at the plate's end, sprung in warm, 1.2 deep as finished (020701-3's 1.5 less 0.3 faced off with the ring's 19 to 18: its mouth Ø 39.25, its floor Ø
        39.46 at 5°); the lid's at the bridge's end, 1.0 deep (0207's lid), its mouth Ø 39.2, its floor Ø 39.30 at 3°. Each disc's edge turned to its seat's cone (sprung in,
        as the drum of 1948 takes its lid). Until 28 October 2026 plain seats Ø 39.2 at both ends (drawing check 2, 4-M11) */
+    /* the oil sinks round the discs' bores on their outer faces (0207's section, 5:1 at 12.2 px/mm): the bottom's dimensioned Ø 8 at the face ("8ρ"), its cone "10°" off the
+       face (the figure: scaled the cone reads nearer 20°, 0.5 deep, the drawing loose), so 0.30 deep to the bore; the lid's drawn the same way, undimensioned: Ø 7.4 scaled
+       against the bottom's drawn Ø 8 (555 px against 600 at 6×; estimated), at the same 10°, 0.25 deep. 020701 draws the bores straight (not shown at its 2:1). Until 28
+       October 2026 not cut (drawing check 2, 4-M2) */
+    const SKB=4.0,SKL=3.7,SKA=Math.tan(10*D2R);
     const RP0=19.6+0.3*Math.tan(5*D2R),RP1=19.6+1.5*Math.tan(5*D2R),RB0=19.6,RB1=19.6+1.0*Math.tan(3*D2R);
-    {const R1=20.75,Ri=19.25,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275,sl=rect(LS,S41[0],S41[1]+0.05,2.025);
+    {const R1=20.75,Ri=19.25,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275,sl=slot(LS,S41[0],2.025);
       var dF=tag(mesh(gBF,bore(ringT([[RB1,yBi],[RB0,yB],[R1,yB],[R1,yL],[RP0,yL],[RP1,yLi],[Ri,yLi],[Ri,yBi]],240),[0,YRV,0],RVD,1.32,18.6),M.gilt),'050701-1');   /* the ring, its seats at both ends, the rivet's hole through it (above) */
-      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yL],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[RP1,yLi],[RP0,yL]],240),'top',sl,1.5),null),M.gilt),'050701-1',1);   /* the bottom (Boden) on the plate's side, its boss inward: with the ring, the drum 05 07 01-1's counterpart */
-      tag(mesh(gBF,capFix(facePocket(ringT([[bo,yB],[RB0,yB],[RB1,yBi],[6.0,yBi],[6.0,yB+2.9-0.62],[4.5,yB+2.9],[bo,yB+2.9]],240),'bottom',sl,1.3),null),M.gilt),'050701-2');   /* the lid (Deckel) on the bridge's side */
+      tag(mesh(gBF,capFix(facePocket(ringT([[SKB,yL],[bo,yL-(SKB-bo)*SKA],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[RP1,yLi],[RP0,yL]],240),'top',sl,1.5),null),M.gilt),'050701-1',1);   /* the bottom (Boden) on the plate's side, its boss inward: with the ring, the drum 05 07 01-1's counterpart */
+      /* the lid's prising notch: 020701's plan (6.94 px/mm by the ring's Ø 41.5) draws a half-round notch in the lid's edge at 3 o'clock, 2.5 wide and 1.9 deep (scaled; 05 07
+         01-2 of 7.4.41 has its 2.7 +0.1 × 2 +0.2 at 3 o'clock, square), 135° from the "vernieten" hook block: turned onto 0207's plan (both seen from the bridge's side, by
+         rotation alone) it stands opposite 0207's Steg at 12 o'clock, on the "Schlitz für Kette" line, as 05 07 01-2's 3 o'clock notch stands opposite its Steg's (likely: were
+         020701's plan mirrored it would stand 90° from the Steg). Cut so: its round end r 1.25, 1.9 in from the lid's edge at its face. The Steg's slots in both discs open to
+         their rims, 2.025 wide to r 18.35, as 05 07 01-2 (7.4.41) draws the lid's 9 o'clock notch (until 28 October 2026 closed slots 2.025 × 0.55, estimated: drawing check 2,
+         4-M3); the ring's seat closes them outside */
+      const uN=(a,rc,w)=>{const u=[Math.cos(a),-Math.sin(a)],v=[Math.sin(a),Math.cos(a)],P=[[rc,w/2],[23,w/2],[23,-w/2],[rc,-w/2]];for(let i=1;i<12;i++){const t=-Math.PI/2+Math.PI*i/12;P.push([rc-w/2*Math.cos(t),w/2*Math.sin(t)]);}return P.map(([r,t])=>[u[0]*r+v[0]*t,u[1]*r+v[1]*t]);};
+      tag(mesh(gBF,capFix(facePocket(facePocket(ringT([[SKL,yB],[RB0,yB],[RB1,yBi],[6.0,yBi],[6.0,yB+2.9-0.62],[4.5,yB+2.9],[bo,yB+2.9],[bo,yB+(SKL-bo)*SKA]],240),'bottom',sl,1.3),'bottom',uN(LS+Math.PI,RB0-1.9+1.25,2.5),1.3),null),M.gilt),'050701-2');   /* the lid (Deckel) on the bridge's side */
       const sg=new THREE.BoxGeometry(S41[1]-S41[0],yL-yB,2*SGW);sg.translate((S41[0]+S41[1])/2,(yL+yB)/2,0);sg.rotateY(LS);tag(mesh(gBF,sg,M.steel),'050700-1');}
     {const sg=new THREE.BoxGeometry(SG1-SG0,BB-BLT,2*SGW);sg.translate((SG0+SG1)/2,(BB+BLT)/2,0);sg.rotateY(LS);tag(mesh(gBL,sg,M.steel),'050700-1');}   /* the Steg as last revised, bottom to lid */
     /* the hook block 05 07 01-3: 0.5 deep off the bore (above), 6 long round it (0207's flat "6", dimensioned: the later sheets scale it 5-7), 3.05 high at the rivet hole's
