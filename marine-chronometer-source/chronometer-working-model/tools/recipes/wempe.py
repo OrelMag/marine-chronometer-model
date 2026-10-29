@@ -978,7 +978,7 @@ def settingEL():return setting('settingEL','050406-2.el',"Escape wheel's lower j
 def settingCEL():return setting('settingCEL','050408-2.el',"Escape wheel's lower endstone setting (Fassung)",WJ()['e']['el'],'brass, gilt (Wempe 3955)',"in the pillar plate's 2.50 bore, its flange Ø 4.6 flush in the seat 0.25 deep in the dial face, under the plate's two screws","a tube to the stone, its window Ø 1.9 and a lip over the stone's rim (estimated; Wempe 3955, 3_Wempe_3955_uZ.jpg)")
 def _jscr(key,hn,title,q,mat,src):return screw(key,hn,title,q[0],q[1],q[2],q[3],mat,src)
 def _escU(r):
-    q=WJ()['BJ']['scrEU'];r.expect.append({'at':(0,0),'r':0.45,'max':0.04,'why':f"the page's shank runs 0.1 into the head (screw()), but this head is only {q[1]} high and its slot (KIT headGeo) {max(min(0.55,q[1]*0.45),min(0.35,q[0]*0.14)+0.05):.3f} deep: the shank's end stands 0.032 up into the slot (the page's mesh, not the size)"});return r
+    q=WJ()['BJ']['scrEU'];r.expect.append({'at':(0,0),'r':q[3]+0.1,'max':0.04,'why':f"the page's shank runs 0.1 into the head (screw()), but this head is only {q[1]} high and its slot (KIT headGeo) {max(min(0.55,q[1]*0.45),min(0.35,q[0]*0.14)+0.05):.3f} deep: the shank's end stands 0.032 up into the slot (the page's mesh, not the size)"});return r
 def jewelScrews():
     B=WJ()['BJ'];s='escapement.js BJ (the coloured section at 9.4 px/mm; Wempe 3955: heads Ø 2.5 sure, heights likely)'
     return {'settingScrewU':_jscr('settingScrewU','WN-55.ck',"Upper endstone setting's screw (WN-55), two",B['scrU'],'brass (Wempe 3955)',s),
