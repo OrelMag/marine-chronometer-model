@@ -165,6 +165,8 @@ def check(r,pm):
         for o in r.ops():
             if getattr(o,'spin',False):o.angle=a
     part=r.build();rm=tess(part);rm.vertices=xf(M,rm.vertices);pages=tm_of(pm['meshes']);zones=r.zones()
+    if getattr(r,'near',None) is not None:   # only the page's pieces at the part (a line whose pieces are tagged in several copies: the timing screws' heads at both ends of the arm)
+        lo,hi=rm.bounds[0]-r.near,rm.bounds[1]+r.near;pages=[m for m in pages if (m.bounds[0]<=hi).all() and (m.bounds[1]>=lo).all()]
     vr=part.volume;vp=sum(m.volume for m in pages);res['volume']={'recipe':round(vr,3),'page':round(vp,3),'diff':round(vr-vp,3),'rel':round((vr-vp)/vp,5)}
     # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL
     ta=sum(math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5 for (_,r0,r1,z0,z1) in zones)+sum(e.get('vol',0) for e in r.expect);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)   # an expect's vol: a known departure's own volume (a radial tapped hole drawn plain at its size)

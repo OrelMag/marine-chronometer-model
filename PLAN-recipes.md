@@ -123,8 +123,8 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
 | 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
 | 6 | Small turned parts | the bushes WN-301, WN-300 (×3), WN-302 and the hand-setting bush, the seconds jewel's setting, the studs' bushes and both studs, the escape wheel's collet; the seconds jewel (bought) | done, 29 Oct (the balance's and escape wheel's jewel settings, the hairspring's collet and stud moved to batch 8) |
-| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (the frozen pose: 7b, done 29 Oct); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c); 7b, the detent and gold spring made, the locking stone bought (29 Oct); the block and the maintaining spring left |
-| 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | |
+| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (the frozen pose: 7b, done 29 Oct); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c); 7b, the detent and gold spring made, the locking stone bought (29 Oct); the block made (29 Oct); the maintaining spring left |
+| 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | done, 29 Oct: the collet and the stud (05 03 02-2, -3), the hub and mass screws (WN-10, WN-12) and the stud screw (WN-11) left (below) |
 | 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | done but the fusee body (9d) and the maintaining spring (7b), 29 Oct |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
 | 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
@@ -409,18 +409,63 @@ offsets it. Both curves are the page's own functions, not traces.
 `bore`, cut by `holeCut`, closed by `capFix`) joins its two mouths' vertices with wall triangles that skip round the hole. The chords lie 0.025 inside
 the circle at the detent foot's screw hole and 0.048 at the gold spring's head hole. The holes' sizes and places are the page's to 0.002.
 
-**Deferred: the detent block 05 04 01-4.** As last revised, the block is the 1943 block's base with its fillet, the thin part and the upright, plus the
-slit end built across. That is three solid sets fused, an end hole (`endH`), the M1 bore, a tapped fixing hole and the slit's two leaves, with sizes
-spread over about 150 lines of `escapement.js` shared by four versions. It needs its own lift, as large as the detent's, and wasn't started in this
-session's budget.
+**The detent block: done in batch 8 (below).**
 
 **Deferred: the maintaining spring 05 06 01-1 (step 3).** The frozen pose makes it reliable (`ms` 0: the page draws the outline unbent). But its
 inner edge's construction (`w48`, between fusee.js's `MS-W48` markers) is read from fusee.js's source by `wempe_sustaining.js`. Lifting it into
 `dims.js` means changing that tool's reader too, and checking `wempe_sustaining.js`'s output byte for byte. Next.
 
-**Deferred: batch 8 (the balance) and the screws WN-19, WN-20, WN-21.** Batch 8 needs the balance's locals (`JR`, `JT`, `hY`, `eY`, `ER`, `EE`, `ck`)
-lifted for about twenty lines. The three screws aren't the kit's `screw()`: WN-19 is countersunk in the click wheel's 1:8 holes, WN-20 is countersunk in
+**Deferred: the screws WN-19, WN-20, WN-21** (batch 8 done, below). The three screws aren't the kit's `screw()`: WN-19 is countersunk in the click wheel's 1:8 holes, WN-20 is countersunk in
 the cover plate, and WN-21 is shouldered. Each has its own literals in fusee.js to lift first.
+
+### Batch 8 and the detent block (29 October 2026): 21 made parts pass, 11 lines bought
+
+**The lift, the page unchanged.** `escapement.js`'s balance, jewel and block literals moved to module scope with the same expressions in the same order, and
+`build` reads them: `BJ` (the stones' sizes, `eLip`, the settings' screws) with `jewProf(Q)` (each setting's turned profile, the balance's and the escape
+wheel's at Q's heights), `BAL` (the rim's radii, the cuts, the arm's flanks `sw` and `AT`, the hub's and screws' holes, the timing screws' tapped holes),
+`HUB`, `MS` (the masses), `TSW` (the timing screws and weights), `ROLI`, `ROLD` with `rolImp()`, `rolDis()` and `rolGeo()` (the rollers' plans at rest), and
+`BLK` (the detent block's sizes, shared by its four versions where `build` reads them). All exported on `WESC` (`BLK`, `BLK_NE` and `H13` on `WESC.DET`).
+Each lift was checked on its own: the 51 lines of the balance, rollers, hairspring's collet and stud, jewels, escape wheel and detent group (`recipes_pagehash.py`)
+matched within 1e-5 mm in all five versions (last, first, 3955, 6mx, 1943) after the jewels, the balance, the hub and the block, and the Wempe type check
+is clean. `escgolden.js`, `wempe_escapement.js`, `dynamics.js --model wempe --quick`, `tripping.js --model wempe --quick`, `wempe_hairspring.js`,
+`wempe_thermal.js`, `wempe_physics.js` and `wempe_strength.js` gave byte-identical output (the elapsed-time lines aside), and `wempe_inertia.py` reports
+`wempe_inertia.json` up to date with output identical to before. `wempe_load.js` now gives the context's `KIT` kit.js's own `domeAt` (read from kit.js's
+source), which `jewProf` needs; no Node tool read `KIT` before.
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max) |
+|---|---|---|---|
+| Rim with its arm 05 03 01-1 (one bimetallic solid; the arm's flanks straight then arcs r 20; the cuts; the hub's hole, the screws' holes and 90° sinks; the timing screws' M0.9 × 0.16 across the rim) | 8 | 464.10 / 463.68 (3 pieces) | 0.0013 at p99; 0.106 expected (the tapped holes, below) |
+| Compensation mass 05 03 01-4 (the chamfered top, the rim's slot, the counterbore, M0.8 across, M1.2 in its top) | 5 | 178.22 / 177.34 (2 pieces) | 0.038 at p99 (the M0.8's helix); 0.141 expected |
+| Timing screw 05 03 01-2 (its head filed to the rim's inside, M0.9 × 0.16) | 7 | 6.19 / 5.65 | 0.0072; 0.126 expected (the slot, below) |
+| Timing weight 05 03 01-3 (tapped, two saw cuts at right angles) | 4 | 43.86 / 43.18 (the thread) | 0.0013 |
+| Hub 05 04 02-2 (flange, neck, the 1:70 bore and its foot, two M1) | 4 | 52.66 / 51.96 (2 pieces, the threads) | 0.0028 |
+| Impulse roller 02 04 02 (the hollow r 3.5 as an exact arc, the stone's slot, the 1:70 bore, the Ø 1.3 hole) | 4 | 49.297 / 49.307 | 0.0014 |
+| Discharge roller 05 04 04-1 (the stadium, the stone's slot, the bore) | 3 | 5.710 / 5.713 | 0.0013 |
+| The balance's jewel and endstone settings (050406-2.bu, .bl; 050408-2.bu, .bl) and the escape wheel's (050406-2.eu, .el; 050408-2.eu, .el) | 2 each | within 0.29 % (the page's 48-sided lathes) | 0.0027-0.0056 |
+| Their screws WN-55.ck, WN-10.bl, WN-es, WN-ec | 6 each | thread allowance | 0.0118-0.0123; WN-es 0.032 expected (below) |
+| Detent block 05 04 01-4 as last revised (base, thin part, upright with its cove r 3 as an exact arc, the slit across, the banking screw's M1.2 across the leaves, the pins' holes, the Ø 1.3, the fixing M1.7, the end face's M1 and two pin holes) | 10 | 638.42 / 635.73 | 0.155 expected (the M1.2 across, below); the rest within 0.02 |
+| Block screw WN-gk | 6 | thread allowance | 0.0102 |
+
+Bought: the four balance stones (hole jewels and endstones, `050407-1.bu`, `.bl`, `050408-1.bu`, `.bl`), the escape wheel's three (`050406-1.eu`, `.el`,
+`050408-1.eu`, `.el`), the impulse and discharge stones, the block's steady pins (`WN-201.gk`) and the detent foot's (`WN-205.d`).
+
+**No faults in the recipes.** One change to the check: `near` (a recipe attribute) keeps only the page's pieces whose box comes within it of the recipe's:
+the timing screws' heads are pieces of their line at both ends of the arm, and the exporter took both.
+
+**Page faults, recorded in `expect`** (and in the table below): the timing screw's slot is a solid dark box over the head (1.67 × 0.3 × 0.25, standing
+0.02 out of its end), not cut into it; the escape wheel's upper endstone screws (WN-es) have heads 0.3 high whose slot is 0.232 deep, and `screw()`'s
+shank runs 0.1 into the head, so its end stands 0.032 up into the slot. Thread conventions, reported not failed: the radial and cross tapped holes (the
+rim's M0.9, the mass's M0.8, the block's M1.2) are drawn plain or as helices at their size, the recipes at the tap drill; a hole not along Z has no
+thread zone, so each is an `expect` with its volume.
+
+**Deferred, and why:**
+- **The hairspring's collet 05 03 02-2.** Its bore is the staff's 1:70 seat (`SF.CS`) warped vertex by vertex onto a polygon solid, and its spring's hole
+  is a 1:90 taper 3.7° off square to the bar, cut by `bore` with the hole's frame `CHD(0)` from the hairspring's own construction (`aPinL`, `CTH`). The
+  sizes are reachable, but the collet's frame and the hole's lean come from the spring's solved ends: a lift as large as the detent's, not started.
+- **The stud 05 03 02-3.** Its two facets are planes through the V's arms and the point at 0.05, its upright an 8° lean extruded in its own frame and fused,
+  its Ø 0.7 hole set from the spring's end (`SVH`, `SYH`). Same reason; its screw WN-11 waits with it (its length reads `SBT`).
+- **The hub's and the masses' screws WN-10 and WN-12.** Not the kit's `screw()`: WN-10's head is a 90° countersunk lathe with a slot box, WN-12's head and slot
+  are bent onto the mass's round side (`onMass`). Small, but each needs its own literals lifted.
 
 ## Page faults found (for a later fix on the page)
 
@@ -432,6 +477,8 @@ the cover plate, and WN-21 is shouldered. Each has its own literals in fusee.js 
 | Barrel drum 05 07 01-1 | the Steg's slot | 0.35 | its pocket is 1.6 deep through the 1.25 bottom, and facePocket leaves its floor as a stray face in the drum's hollow 0.35 under the bottom; in the recipe's `expect` |
 | Detent 05 04 01-1, gold spring 05 04 01-2 | the foot's screw hole, the head's hole | 0.025, 0.048 | the bore across a thin strip (fusee.js's `bore` through `holeCut`, closed by `capFix`) joins its two mouths' vertices with wall triangles that skip round the hole, chords inside its circle; in both recipes' `expect` |
 | Set-up ratchet 05 07 00-3 | its height | 0.02 | RS0 counts the barrel bridge 3.32 thick (WD.FU.SR.BB, lifted as fusee.js had it), but the bridge is 3.30 since the owner's correction (WD.BB.t): the ratchet stands 0.07 off the bridge, not the 0.05 its comment says. The recipe and page agree; not changed here |
+| Timing screw 05 03 01-2 | its slot | 0.126 | drawn as a solid dark box (1.67 × 0.3 × 0.25) standing 0.02 out of the head's end, not cut into the head; in the recipe's `expect` |
+| Escape wheel's upper endstone screws WN-es | the shank's end in the slot | 0.032 | `screw()` runs the shank 0.1 into the head, but this head is 0.3 high with a 0.232 slot (KIT headGeo): the shank's end stands up into the slot; in the recipe's `expect` |
 | ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
 
 ## Decided
