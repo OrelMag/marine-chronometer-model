@@ -117,11 +117,11 @@ const MAKER=(()=>{
   function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
   /* the card: a sheet below the description, opened on demand */
   function card(p){const info=$('#info');let mk=info.querySelector('.mkc');if(!mk){mk=document.createElement('div');mk.className='mkc';info.appendChild(mk);}
-    mk.innerHTML=`${devsOf(p).map(d=>devHTML(d,true)).join('')}<div class="seg"><button data-a="sheet">Maker's sheet</button><button data-a="dwg">Drawing</button>${C.cardSTL?'<button data-a="stl">STL</button>':''}</div><div class="mkb"></div>`;
+    mk.innerHTML=`${devsOf(p).map(d=>devHTML(d,true)).join('')}<div class="seg"><button data-a="sheet">Maker's sheet</button>${C.drawings===false?'':'<button data-a="dwg">Drawing</button>'}${C.cardSTL?'<button data-a="stl">STL</button>':''}</div><div class="mkb"></div>`;
     for(const b of mk.querySelectorAll('.mkdevb'))b.onclick=()=>{const id=b.dataset.dev;ORIG.has(id)?ORIG.delete(id):ORIG.add(id);const open=mk.querySelector('.mkb').dataset.v==='s';card(p);if(open)mk.querySelector('[data-a=sheet]').click();if(A&&A.changed)A.changed();};
     const body=mk.querySelector('.mkb'),title=(A.INFO[p]||[p])[0];
     mk.querySelector('[data-a=sheet]').onclick=()=>{body.innerHTML=body.dataset.v==='s'?'':sheetHTML(p);body.dataset.v=body.dataset.v==='s'?'':'s';};
-    mk.querySelector('[data-a=dwg]').onclick=()=>C.bookPdf?open(`${C.bookPdf}#page=${C.bookPage(p)}`,'_blank','noopener'):save(new Blob([drawingSVG(p,title)],{type:'image/svg+xml'}),`${C.prefix}-${p}.svg`);   /* a model with its book as drawings (C.bookPdf, tools/drawbook.py): the part's sheet in it */
+    if(C.drawings!==false)mk.querySelector('[data-a=dwg]').onclick=()=>C.bookPdf?open(`${C.bookPdf}#page=${C.bookPage(p)}`,'_blank','noopener'):save(new Blob([drawingSVG(p,title)],{type:'image/svg+xml'}),`${C.prefix}-${p}.svg`);   /* a model with its book as drawings (C.bookPdf, tools/drawbook.py): the part's sheet in it */
     if(C.cardSTL)mk.querySelector('[data-a=stl]').onclick=()=>save(stl(meshesOf(p)),`${C.prefix}-${p}.stl`);}
   /* measuring: two points picked on the model, their distance */
   let meas=null;
@@ -169,7 +169,8 @@ const MAKER=(()=>{
       balance:{I_TableII:R.I_T2,pitch:R.pitch},partsList:MAKERS};
     save(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}),'model21-data.json');}
   return{bind(api){A=api;if(api.cfg)C={...C,...api.cfg,cls:{...C.cls,...(api.cfg.cls||{})}};   /* another model's words; its data() (the model's numbers) where it has its own */
-      $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));if($('#mkOil'))$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',bookBtn);if($('#mkData'))$('#mkData').addEventListener('click',C.data||data);
+      $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));if($('#mkOil'))$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',bookBtn);if(C.drawings===false)$('#mkBook').style.display='none';   /* a model without drawings (the Wempe's since 29 October 2026, its PDF book withdrawn): no Drawing on the cards, no Build book */
+      if($('#mkData'))$('#mkData').addEventListener('click',C.data||data);
       if($('#mkSTL'))$('#mkSTL').addEventListener('click',()=>save(stl(A.meshes.filter(o=>!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&(()=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;})())),C.prefix+'-movement.stl'));},
     card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure,holes,book,orig:()=>[...ORIG].sort(),setOrig:ids=>{ORIG.clear();for(const i of ids)if((MAKERS.devs||[]).some(d=>d.id===i))ORIG.add(i);}};
 })();

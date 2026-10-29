@@ -20,7 +20,6 @@ Writes:
      social.png            link-preview image of the Hamilton's page (the dial in its box)
      social-movement.png   an image of the mechanism titled for the essay, for posting; the essay's page's link preview
      social-wempe.png      link-preview image of the Wempe's page, the home page (its dial in its box)
-     book/wempe-build-book.pdf   the Wempe's build book as engineering drawings (tools/drawbook.py, committed in wempe/book/), which its page's Build book and part cards open
      navships-250-624-1948.pdf   the manual itself (References/, Google Books' scan of the 1948 Navy manual), which the Hamilton's page and the essay link to
      verification/build-verification/   the checks' report "Would a chronometer made to the model run and keep time?" (its build_report.py, committed)
      verification/real-chronometers/    the report "Does the model behave like a real Hamilton Model 21?", with its plots
@@ -163,7 +162,6 @@ def main():
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)
-    if (WEMPE/'book').is_dir():(SITE/'book').mkdir(exist_ok=True);[shutil.copy(f,SITE/'book'/f.name) for f in (WEMPE/'book').glob('*.pdf')]   # the Wempe's build book as drawings (tools/drawbook.py), which its page opens beside itself
     pages=['index.html','hamilton/index.html','essay/index.html']+reports(a.site_url,a.keep_html)+[wempe_report(a.site_url,a.keep_html)]
     if a.site_url:   # for search engines: the pages, at the addresses their canonical tags name
         write(SITE/'sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+

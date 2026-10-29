@@ -28,7 +28,7 @@ model's settings, the browser and the page's last errors.
 | File | What it is |
 |---|---|
 | [`chronometer-working-model.html`](chronometer-working-model.html) | The Hamilton's model as one file: the Model 21 running in real time in its gimballed case and mounting box. It has views (Exploded, Laid out and Contacts among them), an eight-step walkthrough, cross-sections, parts to fade, hide or isolate one at a time or as a selection (Ctrl-click, or a lasso by Alt-drag; Select and Lasso on touch), winding, setting the hands, stopping and starting, the rate and timing weights, and the manual's overhaul operation by operation. Each part's card gives its Hamilton part numbers, its maker's sheet, its drawing and its STL. Its **Essay** tab links to the essay's page |
-| [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, a banking screw to turn (Swing and isochronism: the depth of lock it sets, with the swing and whether the escapement still works shown live), Making it (maker's sheets, and the build book as engineering drawings) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
+| [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, a banking screw to turn (Swing and isochronism: the depth of lock it sets, with the swing and whether the escapement still works shown live), Making it (maker's sheets; its build book of drawings was withdrawn on 29 October 2026, to be replaced by a CAD file and operation sheet per part) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
 | [`marine-chronometer-source/essay/dist/the-marine-chronometer.html`](marine-chronometer-source/essay/dist/the-marine-chronometer.html) | The essay: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals, keeping the rate, navigating without radio and making the chronometer. The models' own code computes its live figures |
 
 Each is a single self-contained HTML file: download it and open it in any
@@ -75,7 +75,7 @@ Contents:
       chronometer-working-model/ the Hamilton Model 21: index.html, css/, js/, tools/ (the verification and measuring tools, for both models),
                                  verification/ (its two reports and reference renders), blender/ (the rig), dist/ (its built file); its README has the details
       wempe/                     the Wempe Einheits-Chronometer: index.html, js/, css/, checks.py (its tables for the shared tools), bom.json, dials/ (its
-                                 dials as SVG), book/ (the build book's PDF), verification/ (its report), dist/; its README has the details
+                                 dials as SVG), verification/ (its report), dist/; its README has the details
       essay/                     the essay shared by both models: index.html (its text and figures' markup), js/essay.js (its figures),
                                  js/hamdata.js (the Model 21's figures it quotes, from tools/essay_hamdata.py), dist/
       shared/                    scripts both models use: escapement.js (the detent escapement's solver, makeEsc), escplan.js (its plan
@@ -138,7 +138,6 @@ This one command:
    - `social-wempe.png` is the home page's link-preview image and `social.png` the Hamilton's (the dial in its box). `social-movement.png` is an image of the mechanism titled for the essay, for posting and as the essay's preview.
    - `_headers` holds security and caching headers.
    - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the pages link to.
-   - `book/wempe-build-book.pdf` is the Wempe's build book as engineering drawings (made by `tools/drawbook.py`, committed in `wempe/book/`). The Wempe page's Build book and its part cards open it.
    - `verification/build-verification/` and `verification/real-chronometers/` are the Hamilton's two reports (each check's method, results and what they mean). `wempe/verification/` is the Wempe's: *The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?* (since 3.43.00 its section 9 also takes the frame, train and escapement through heat and cold, `tools/wempe_thermal_frame.js`) Each is copied as its own `build_report.py` last wrote it, with its links into the repository pointed at GitHub. The pages' About and the essays link to them.
    - `sitemap.xml` (the pages and the reports) and `robots.txt`, for search engines, when `--site-url` is given (below).
 
