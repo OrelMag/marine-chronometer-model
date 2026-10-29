@@ -338,10 +338,11 @@ const WESC=(()=>{
         const arcP=[];for(let i=1;i<48;i++){const b=b0+db*i/48;arcP.push([Qc[0]+OR*Math.cos(b),Qc[1]+OR*Math.sin(b)]);}
         OP.push([p1,...rimArc,p2,...arcP]);}
     return{o,TC,IN,OP};};
-  const EARB={pv:0.12,r0:0.5,r1:0.6,d:1.07,pf:5.3,pl:4,col:4.7,web:0.002,z:10,m:0.263,D:2.97,dg:1.6};
+  const EARB={pv:0.12,r0:0.5,r1:0.6,d:1.07,pf:5.3,pl:4,col:4.7,web:0.002,z:10,m:0.263,D:2.97,dg:1.6,cl:{b:0.6+0.0015,sp:0.8985,r:1.4,h:1.6,ch:0.15,p:0.85}};   /* cl: the collet 05 04 05-3: its bore on the arbor, its spigot 1.8 h6 (1.797) in the wheel, Ø 2.8 for 1.6 over the wheel, then Ø 1.7, each step's top edge chamfered 0.15 */
   const EShd=(pv,R,y,s)=>{const H=Math.sqrt(9-(3+pv-R)**2),o=[];for(let i=0;i<=10;i++){const h=H*i/10;o.push([pv+3-Math.sqrt(9-h*h),y+s*h]);}return o;};   /* from the root at y outward (s: the way along y), ends included */
   const earProf=()=>{const E=EARB,pv=E.pv,yP1=Y.etL-E.pf,yP0=yP1-E.pl,c2=Y.ew1+E.col;
-    return{ar:[[0,Y.etU],[pv,Y.etU],...EShd(pv,E.r0,Y.etU+0.5,1),[E.r0,Y.ewWeb-E.web],[E.r1,Y.ewWeb-E.web],[E.r1,c2],[E.d/2,c2],[E.d/2,yP0],[E.r1,yP0],...EShd(pv,E.r1,Y.etL-0.5,-1).reverse(),[pv,Y.etL],[0,Y.etL]],yP0,yP1,c2};};
+    const K=E.cl,c0=Y.ew1,c1=c0+K.h,ch=K.ch,col=[[K.b,Y.ewWeb],[K.sp,Y.ewWeb],[K.sp,c0],[K.r,c0],[K.r,c1-ch],[K.r-ch,c1],[K.p,c1],[K.p,c2-ch],[K.p-ch,c2],[K.b,c2]];
+    return{col,ar:[[0,Y.etU],[pv,Y.etU],...EShd(pv,E.r0,Y.etU+0.5,1),[E.r0,Y.ewWeb-E.web],[E.r1,Y.ewWeb-E.web],[E.r1,c2],[E.d/2,c2],[E.d/2,yP0],[E.r1,yP0],...EShd(pv,E.r1,Y.etL-0.5,-1).reverse(),[pv,Y.etL],[0,Y.etL]],yP0,yP1,c2};};
   const Y={rimT:FY-3.8,armT:FY-1.15,flB:FY+1.8,hubB:FY+4.1,seat:FY+5.6,ir0:FY+4.12,ir1:FY+5.77,dr0:FY+5.77,dr1:FY+7.37,
     tipU:FY-13.0,tipL:FY+12.59,   /* the staff's pivot ends, 0.02 off the endstones (the cock's setting and the lug's: below): 13.0 above the seat and 12.59 below, 05 03_3.2's 25,6 −0,02 overall
       and 12,6 −0,02 below (so 12.98-13.02 above): 25.59, the overall's middle (13.03, 25.62, over its limit, until 28 October 2026: drawing check 2's 1-M6; the upper jewels follow, below)
@@ -779,8 +780,7 @@ const WESC=(()=>{
     {const g=ew.children.find(c=>c.userData.rev==='last'),{ar,yP0,yP1,c2}=earProf(),E=EARB;
       tag(mesh(g,lathe(ar,24),M.steel),'050405-2');
       const pn=tag(mesh(g,WTRAIN.gear(WTRAIN.teeth(E.z,E.m,E.D,E.dg),E.pl),M.steel,0,(yP0+yP1)/2,0),'050405-2',1);   /* the leaves on the sheet's tip and root, as the train's pinions (train.js) */pn.userData.gear={z:10,m:0.263};R.pinion=pn;
-      const c0=Y.ew1,c1=c0+1.6,ch=0.15;
-      tag(mesh(g,lathe([[0.6+0.0015,Y.ewWeb],[0.8985,Y.ewWeb],[0.8985,c0],[1.4,c0],[1.4,c1-ch],[1.4-ch,c1],[0.85,c1],[0.85,c2-ch],[0.85-ch,c2],[0.6+0.0015,c2]],40),M.brass),'050405-3');}
+      tag(mesh(g,lathe(earProf().col,40),M.brass),'050405-3');}
     /* As first drawn, the arbor 05 04_7.1 (Gangrad 050408 bis 10, 4.4.41; Y1 above): the pinion's far face 5.3 from the dial end, the leaves as 05 04 05-2's; the arbor Ø 1.2
        under the pinion ("1,2", likely; "Kegel 1:70" drawn straight); from the wheel's plate face Ø 1.05 for 0.5 (scaled), a cone to the pivot Ø 0.24 (boxed) × 0.5 (sure),
        2.5 in all (17.7 − 15.2; the sheet's "2" runs from the cylinder's end); the collet a cone Ø 3.0 at the wheel to Ø 2.7 at 1.8 (sure; 2.67-2.73 scaled: Ø 2.2 until 26 October 2026), then a pipe Ø 1.8
