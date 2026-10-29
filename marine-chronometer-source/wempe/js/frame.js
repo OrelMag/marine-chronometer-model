@@ -425,43 +425,43 @@ const WFRAME=(()=>{
        C-D's 82°: the slot's inner wall leans 8° toward the axis going down, 3.4 from it on the top and 3.06 under the thin end, as the stud's upright does (05 03 02-3's 98°,
        js/escapement.js; left out until 15 October 2026). The pins' 0.2 × 90° sinks are in (since 16 October 2026). Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
     const uc=part('upperCock',-58),UCG=VER.map(([V])=>rv(uc,V));   /* each version's cock with its screw and pins in one group (fine.py takes pieces fixed to each other by their shared group) */
-    {const c=H[23],ax=brg(345),vo=brg(75),pl=new Map(),P=q=>{if(!pl.has(q))pl.set(q,add(add(c,ax,q[0]),vo,q[1]));return pl.get(q);};   /* local [u along the axis, v toward O] to plan, one plan point per local point */
-      const Fp=[43,8.5],Fm=[43,-8.5],ph=Math.atan2(8.5,43)+Math.acos(6/Math.hypot(43,8.5)),Tp=[6*Math.cos(ph),6*Math.sin(ph)],Tm=[Tp[0],-Tp[1]];
+    {const U=WD.UC,c=H[23],ax=brg(U.ax),vo=brg(U.vo),pl=new Map(),P=q=>{if(!pl.has(q))pl.set(q,add(add(c,ax,q[0]),vo,q[1]));return pl.get(q);};   /* local [u along the axis, v toward O] to plan, one plan point per local point */
+      const Fp=[U.foot[0],U.foot[1]],Fm=[U.foot[0],-U.foot[1]],ph=Math.atan2(U.foot[1],U.foot[0])+Math.acos(U.r6/Math.hypot(U.foot[0],U.foot[1])),Tp=[U.r6*Math.cos(ph),U.r6*Math.sin(ph)],Tm=[Tp[0],-Tp[1]];
       const onE=(Tq,Fq,f)=>{const D=[Fq[0]-Tq[0],Fq[1]-Tq[1]];let a=0,b=1;for(let i=0;i<60;i++){const m=(a+b)/2;(f([Tq[0]+D[0]*m,Tq[1]+D[1]*m])<0)?a=m:b=m;}return[Tq[0]+D[0]*a,Tq[1]+D[1]*a];};
-      const X=(s,r)=>onE(s>0?Tp:Tm,s>0?Fp:Fm,typeof r==='number'?q=>Math.hypot(q[0],q[1])-r:q=>q[0]-26.5),Xs={};for(const r of[11.2,12,22,'u'])Xs[r]=[X(1,r),X(-1,r)];
+      const X=(s,r)=>onE(s>0?Tp:Tm,s>0?Fp:Fm,typeof r==='number'?q=>Math.hypot(q[0],q[1])-r:q=>q[0]-U.web),Xs={};for(const r of[U.step[0],U.step[1],U.r22,'u'])Xs[r]=[X(1,r),X(-1,r)];
       const arc=(r,a0,a1)=>{const n=Math.max(2,Math.ceil(Math.abs(a1-a0)*r/0.1)),o=[];for(let i=1;i<n;i++){const a=a0+(a1-a0)*i/n;o.push([r*Math.cos(a),r*Math.sin(a)]);}return o;};   /* interior points */
       const cut=r=>{const[p,m]=Xs[r];return[p,...arc(r,Math.atan2(p[1],p[0]),Math.atan2(m[1],m[0])),m];};   /* X+ round through u > 0 to X- */
-      const K22=cut(22),Ku=Xs.u,rev=a=>a.slice().reverse();
+      const K22=cut(U.r22),Ku=Xs.u,rev=a=>a.slice().reverse();
       /* the slot 1.8 H7 (+0.009) drawn at its middle, 1.8045 (at its least, 1.800, until 28 October 2026: drawing check 2's 8-M13), SH its half */
-      const SH=1.8045/2,S1=[-SH,Math.sqrt(36-SH*SH)],S2=onE(Tp,Fp,q=>q[0]-SH),aS1=Math.atan2(S1[1],S1[0]),aTm=Math.atan2(Tm[1],Tm[0]);
-      const end=[Tm,...arc(6,aTm,aS1-TAU),S1];   /* round the end from T- through u < 0 to the slot */
-      const TN=Math.tan(8*D2R),SW=3.4-2.4*TN;   /* the slot's inner wall at 82° to the faces (C-D), 3.4 from the axis on the top, SW under the thin end */
+      const SH=U.slot/2,S1=[-SH,Math.sqrt(U.r6**2-SH*SH)],S2=onE(Tp,Fp,q=>q[0]-SH),aS1=Math.atan2(S1[1],S1[0]),aTm=Math.atan2(Tm[1],Tm[0]);
+      const end=[Tm,...arc(U.r6,aTm,aS1-TAU),S1];   /* round the end from T- through u < 0 to the slot */
+      const TN=Math.tan(U.lean*D2R),SW=U.slotIn-U.armT*TN;   /* the slot's inner wall at 82° to the faces (C-D), 3.4 from the axis on the top, SW under the thin end */
       const an=p=>Math.atan2(p[1],p[0]),pt=(r,t)=>[r*Math.cos(t),r*Math.sin(t)],rr=q=>Math.hypot(q[0]-c[0],q[1]-c[1]);
       /* the relief's step: a 45° cone about the setting from r 11.2 on the relieved underside to r 12 on the full one, a strip between rails at 11.2 and 12 on one set of
          angles (solidGeo's strip). Hole 20 (Ø 2.8 at 10 from 23, out to r 11.4) cuts it in the drawings' versions: a bay in the thin end (its inner arc) and the strip's inner
          rail on the hole's far edge, where U30's section draws the hole's edge at the chamfer's top corner */
       const h20=[(H[20][0]-c[0])*ax[0]+(H[20][1]-c[1])*ax[1],(H[20][0]-c[0])*vo[0]+(H[20][1]-c[1])*vo[1]],dh=Math.hypot(...h20);
-      const[X1,X2]=(()=>{const a=(11.2**2-1.4**2+dh*dh)/(2*dh),h=Math.sqrt(11.2**2-a*a),u=[h20[0]/dh,h20[1]/dh],m=[a*u[0],a*u[1]];return[[m[0]-h*u[1],m[1]+h*u[0]],[m[0]+h*u[1],m[1]-h*u[0]]].sort((p,q)=>an(q)-an(p));})();
-      const t1=an(X1),t2=an(X2),tS=Math.min(an(Xs[11.2][0]),an(Xs[12][0])),tE=Math.max(an(Xs[11.2][1]),an(Xs[12][1]));
+      const[X1,X2]=(()=>{const a=(U.step[0]**2-(U.h20/2)**2+dh*dh)/(2*dh),h=Math.sqrt(U.step[0]**2-a*a),u=[h20[0]/dh,h20[1]/dh],m=[a*u[0],a*u[1]];return[[m[0]-h*u[1],m[1]+h*u[0]],[m[0]+h*u[1],m[1]-h*u[0]]].sort((p,q)=>an(q)-an(p));})();
+      const t1=an(X1),t2=an(X2),tS=Math.min(an(Xs[U.step[0]][0]),an(Xs[U.step[1]][0])),tE=Math.max(an(Xs[U.step[0]][1]),an(Xs[U.step[1]][1]));
       if(!(t1<tS&&t2>tE))throw new Error('upper cock: hole 20 off the step');
       const TH=(()=>{const n=Math.ceil((tS-tE)*12/0.1),o=[];for(let i=1;i<n;i++)o.push(tS+(tE-tS)*i/n);for(let i=0;i<=8;i++)o.push(t1+(t2-t1)*i/8);
         return o.sort((a,b)=>b-a).filter((t,i,A)=>(!i||A[i-1]-t>1e-6)&&t<tS-1e-6&&t>tE+1e-6);})();
       const rFar=t=>{const e=[Math.cos(t),Math.sin(t)],eh=e[0]*h20[0]+e[1]*h20[1];return eh+Math.sqrt(Math.max(0,eh*eh-dh*dh+1.96));};
-      const rails=DR=>{const A=[Xs[11.2][0],...TH.map(t=>pt(DR&&t<t1-1e-9&&t>t2+1e-9?rFar(t):11.2,t)),Xs[11.2][1]],B=[Xs[12][0],...TH.map(t=>pt(12,t)),Xs[12][1]];if(!DR)return{A,B,At:A};
+      const rails=DR=>{const A=[Xs[U.step[0]][0],...TH.map(t=>pt(DR&&t<t1-1e-9&&t>t2+1e-9?rFar(t):U.step[0],t)),Xs[U.step[0]][1]],B=[Xs[U.step[1]][0],...TH.map(t=>pt(U.step[1],t)),Xs[U.step[1]][1]];if(!DR)return{A,B,At:A};
         const i1=TH.findIndex(t=>Math.abs(t-t1)<1e-9)+1,i2=TH.findIndex(t=>Math.abs(t-t2)<1e-9)+1,f1=Math.atan2(A[i1][1]-h20[1],A[i1][0]-h20[0]),f2=Math.atan2(A[i2][1]-h20[1],A[i2][0]-h20[0]),fc=Math.atan2(-h20[1],-h20[0]);
         let d=((f2-f1)%TAU+TAU)%TAU;if(((fc-f1)%TAU+TAU)%TAU>d)d-=TAU;   /* round the side toward the setting */
-        const n=Math.max(4,Math.ceil(Math.abs(d)*1.4/0.08)),bay=[];for(let k=1;k<n;k++){const f=f1+d*k/n;bay.push([h20[0]+1.4*Math.cos(f),h20[1]+1.4*Math.sin(f)]);}
+        const n=Math.max(4,Math.ceil(Math.abs(d)*1.4/0.08)),bay=[];for(let k=1;k<n;k++){const f=f1+d*k/n;bay.push([h20[0]+U.h20/2*Math.cos(f),h20[1]+U.h20/2*Math.sin(f)]);}
         return{A,B,At:[...A.slice(0,i1+1),...bay,...A.slice(i2)]};};
-      const yS=q=>TT-12.6+clamp(rr(q)-11.2,0,0.8);
-      const cellsV=DR=>{const{A,B,At}=rails(DR);return[{L:[...end,[-SH,3.4],[-SH,SW],[SH,SW],[SH,3.4],S2,...At],y0:TT-15,y1:TT-12.6},{L:[...rev(A),...B],y0:TT-15,y1:yS,strip:1},
-        {L:[...rev(B),...K22],y0:TT-15,y1:TT-11.8},{L:[...rev(K22),Ku[0],Ku[1]],y0:TT-15,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-3.2,y1:TT},
-        {L:[[SH,SW],[-SH,SW],[-SH,3.4],[SH,3.4]],y0:TT-15,y1:q=>TT-15+Math.max(0,3.4-((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))/TN}];};   /* the wall's overhang, its underside the 82° face */
+      const yS=q=>TT-U.arm+clamp(rr(q)-U.step[0],0,U.relief);
+      const cellsV=DR=>{const{A,B,At}=rails(DR);return[{L:[...end,[-SH,U.slotIn],[-SH,SW],[SH,SW],[SH,U.slotIn],S2,...At],y0:TT-U.top,y1:TT-U.arm},{L:[...rev(A),...B],y0:TT-U.top,y1:yS,strip:1},
+        {L:[...rev(B),...K22],y0:TT-U.top,y1:TT-U.armFull},{L:[...rev(K22),Ku[0],Ku[1]],y0:TT-U.top,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-U.footT,y1:TT},
+        {L:[[SH,SW],[-SH,SW],[-SH,U.slotIn],[SH,U.slotIn]],y0:TT-U.top,y1:q=>TT-U.top+Math.max(0,U.slotIn-((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))/TN}];};   /* the wall's overhang, its underside the 82° face */
       const L=(u,v)=>add(add(c,ax,u),vo,v);
       /* the boss under the thin end, turned: its face Ø 6 0.8 below the relieved underside, its flank a 45° cone to Ø 7.6 there (05 08 03-1, U30). The flank is cut by the
          setting screws' holes on the axis (Ø 0.95 at 3.525: their inner edge 3.05, 0.05 outside the face) and the stud's slot (|u| < 0.9, its end wall SN from the axis, the
          upright's 82° lean at the face: it nicks the face's edge over |u| < 0.64, as a milled slot does). Each quadrant: the bite round the hole (the sector to 9° from the axis, past the hole's tangent at 7.74°), a strip of the cone, a corner
          at the slot (the bottom quadrants a strip on to the other hole); the face's disc through the strips' inner points (local u, v) */
-      const bo=(()=>{const R0=3,R=3.8,d=3.525,rh=0.62,SN=SW-0.8*TN-0.02,tT=12*D2R;   /* rh: the setting screws' tapped M1.2 (rM12), which breaks 0.095 into the face as the sheet's 3.5 and Ø 6 put it */
+      const bo=(()=>{const R0=U.boss[0]/2,R=U.boss[1]/2,d=U.scr,rh=rM12,SN=SW-U.relief*TN-0.02,tT=12*D2R;   /* rh: the setting screws' tapped M1.2 (rM12), which breaks 0.095 into the face as the sheet's 3.5 and Ø 6 put it */
         const xh=(R0*R0-rh*rh+d*d)/(2*d),yh=Math.sqrt(R0*R0-xh*xh),th=Math.atan2(yh,xh),fh=Math.atan2(yh,xh-d);   /* where the hole crosses the face's edge: th about the axis, fh about the hole */
         const xi=(R*R-rh*rh+d*d)/(2*d),yi=Math.sqrt(R*R-xi*xi),aI=Math.atan2(yi,xi),fI=Math.atan2(yi,xi-d);   /* and the flank's foot */
         const tA=Math.acos(SH/R0),tB=Math.acos(SH/R),tN=Math.atan2(SN,Math.sqrt(R0*R0-SN*SN)),tc=tA-4*D2R;if(!(SN>R0*Math.sin(tA)&&tN>tA&&tT>Math.asin(rh/d)&&tc>tT))throw new Error('upper cock: the boss against its slot and holes');
@@ -481,22 +481,22 @@ const WFRAME=(()=>{
         for(const Q of cells)for(const p of Q.loop)if(Math.abs(Math.hypot(p[0],p[1])-R0)<1e-9)put(p);
         for(const p of hin){put(p);put([-p[0],p[1]]);}
         disc.sort((p,q)=>an(p)-an(q));return{cells,disc,R0};})();
-      const ySl=q=>TT-11.8-clamp(rr(q)-bo.R0,0,0.8);
-      /* the boss's foot 0.01 into the arm (yB): face to face at TT-12.6 the two solids' walls met edge to edge with their own steps, and the seat's and the setting screws' hole
+      const ySl=q=>TT-U.armFull-clamp(rr(q)-bo.R0,0,U.relief);
+      /* the boss's foot 0.01 into the arm (yB): face to face at TT-U.arm the two solids' walls met edge to edge with their own steps, and the seat's and the setting screws' hole
          walls showed a broken seam line there, the faces between them lying in the cracks (the drawings check, 05 08_05, 26 October 2026); overlapped, the fused mesh has no
          face at the joint to show (27 October 2026) */
-      const yB=TT-12.61,boss=[...bo.cells.map(Q=>({L:Q.loop,y0:yB,y1:/** @type {any} */(ySl),strip:Q.strip,F:[]})),{L:bo.disc,y0:yB,y1:/** @type {any} */(TT-11.8),strip:0,F:[{p:C(c,5.206/2),a:yB,b:TT-12.3},{p:C(c,4.596/2),a:TT-12.3,b:TT-11.8}]}];
-      const thF=[T(c,5.206/2,TT-15,TT-12.6),T(L(3.525,0),rM12,TT-15,TT-12.6),T(L(-3.525,0),rM12,TT-15,TT-12.6),
-        T(WESC.HOLES.studScrew,rM14,TT-15,TT-12.6)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies, at 127-556.04 U30's 4.1 along and 4,2 across (escapement.js: the owner's choice, O-8) */
+      const yB=TT-12.61,boss=[...bo.cells.map(Q=>({L:Q.loop,y0:yB,y1:/** @type {any} */(ySl),strip:Q.strip,F:[]})),{L:bo.disc,y0:yB,y1:/** @type {any} */(TT-U.armFull),strip:0,F:[{p:C(c,U.seat/2),a:yB,b:TT-U.seatY},{p:C(c,U.floor/2),a:TT-U.seatY,b:TT-U.armFull}]}];
+      const thF=[T(c,U.seat/2,TT-U.top,TT-U.arm),T(L(U.scr,0),rM12,TT-U.top,TT-U.arm),T(L(-U.scr,0),rM12,TT-U.top,TT-U.arm),
+        T(WESC.HOLES.studScrew,rM14,TT-U.top,TT-U.arm)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies, at 127-556.04 U30's 4.1 along and 4,2 across (escapement.js: the owner's choice, O-8) */
       if(rr(WESC.HOLES.studScrew)+rM14>11.2)throw new Error('upper cock: the stud screw in the step');
-      const sk=(k,y)=>[{p:C(H[k],rPinQ,40),a:y-2.5,b:y-0.2},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.2,40),a:y-0.2,b:y}];   /* the pins' holes, 2.5 deep, their 0.2 × 90° sinks (05 08_05) */
+      const sk=(k,y)=>[{p:C(H[k],rPinQ,40),a:y-U.pinD,b:y-U.pinCs},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+U.pinCs,40),a:y-U.pinCs,b:y}];   /* the pins' holes, 2.5 deep, their 0.2 × 90° sinks (05 08_05) */
       /* hole 20 (Ø 2.8) in the drawings' versions only, the bay in the step (above): the 6MX's cock has none (Altmeppen's list: no window in the upper cock; his comparison's arrow on the
          Wempe's hole there; Kirov No. 247's cock is plain where the overlay puts 20: sure) */
-      VER.forEach(([,,DR],i)=>{const cs=cellsV(!!DR);cs[0].F=thF;cs[3].F=[...sk(9,TT)];cs[4].F=[T(H[8],rCl26,TT-3.2,TT),...sk(6,TT),...sk(50,TT)];
+      VER.forEach(([,,DR],i)=>{const cs=cellsV(!!DR);cs[0].F=thF;cs[3].F=[...sk(9,TT)];cs[4].F=[T(H[8],rCl26,TT-U.footT,TT),...sk(6,TT),...sk(50,TT)];
         fuse([tag(mesh(UCG[i],faceUV(solidGeo(cs.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[],strip:q.strip})))),DR?GH:G6T),'050803-1'),
         tag(mesh(UCG[i],faceUV(solidGeo(boss.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[],strip:q.strip})))),DR?GH:G6T),'050803-1',1)]);});}   /* the arm and its boss one cock, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026 */
     /* its screw (hole 8; WN-55, the coloured section's "Schraube WN-55" at it, as at the barrel bridge's: likely, the second drawing check's 8-M14): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
-    VER.forEach(([V],i)=>tag(screw(UCG[i],H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,V==='6mx'?M.steel:M.blued),'WN-ucs'));   /* the 6MX's polished steel (Kirov No. 247's A, N and W photographs: sure; blued until 18 October 2026) */
+    VER.forEach(([V],i)=>tag(screw(UCG[i],H[8][0],H[8][1],TT-WD.UC.footT,WD.UC.scrH[0],WD.UC.scrH[1],WD.UC.scrH[2],1.3,V==='6mx'?M.steel:M.blued),'WN-ucs'));   /* the 6MX's polished steel (Kirov No. 247's A, N and W photographs: sure; blued until 18 October 2026) */
     /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
     for(const g of UCG)for(const k of[6,9,50])tag(pinM(g,TT-1.7,TT+1.3,H[k][0],H[k][1]),'WN-203.uc');
 
@@ -508,9 +508,9 @@ const WFRAME=(()=>{
        one's thread then 0.05 inside the bar's face, as the figures put it). 36 tapped M2.6 through for the screw from the top plate (G-H); 22, 37 its steady pins, 1.585 -0.005 × 2.5 deep (sure). Two cells: the bar and the lug */
     const lc=part('lowerCock',-31);
     {const o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(H[23][0]-o[0])+q[1]*(H[23][1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]),L=(u,w)=>add(add(o,bu,u),nv,w);
-      const L1=L(0,4),L2=L(-10,4),semi=[...Array(41).keys()].map(i=>{const t=Math.PI*i/40;return L(-5+5*Math.cos(t),8.2+5*Math.sin(t));});
-      const bar={loop:[L(-10,-4),L(10,-4),L(10,4),L1,L2],y0:TI,y1:TI+10,F:[T(o,rM26,TI,TI+10),A(H[22],rPinQ,TI,2.5),A(H[37],rPinQ,TI,2.5)]};
-      const ly0=TI+10-3.22,ly1=TI+10,lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],5.206/2,ly1,3.22-0.5),T(add(H[23],nv,3.55),rM12,ly0,ly1),T(add(H[23],nv,-3.55),rM12,ly0,ly1)]};
+      const Q=WD.LC,L1=L(0,Q.bar[1]/2),L2=L(-Q.lug[0],Q.bar[1]/2),semi=[...Array(41).keys()].map(i=>{const t=Math.PI*i/40;return L(Q.ctr[0]+Q.r5*Math.cos(t),Q.ctr[1]+Q.r5*Math.sin(t));});
+      const bar={loop:[L(-Q.bar[0]/2,-Q.bar[1]/2),L(Q.bar[0]/2,-Q.bar[1]/2),L(Q.bar[0]/2,Q.bar[1]/2),L1,L2],y0:TI,y1:TI+Q.bar[2],F:[T(o,rM26,TI,TI+Q.bar[2]),A(H[22],rPinQ,TI,Q.pinD),A(H[37],rPinQ,TI,Q.pinD)]};
+      const ly0=TI+Q.bar[2]-Q.lug[1],ly1=TI+Q.bar[2],lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],Q.seat/2,ly1,Q.lug[1]-Q.floor),T(add(H[23],nv,Q.scr),rM12,ly0,ly1),T(add(H[23],nv,-Q.scr),rM12,ly0,ly1)]};
       tag(mesh(rv(lc,'last first 1943'),solidGeo([bar,lug]),M.gilt),'050800-2');
       /* the Soviet 6MX's: the bar full depth only over the lug, the rest toward the screw and pins cut back from the pillar plate's side to 3.5 under the top plate (every 6MX
          side view of the detent, 8_Kirow_247_F.jpg and the gallery's 13 Feder photographs, a stamped number on the deep part; on 247's, the full depth taken as the drawn 10:
@@ -523,7 +523,7 @@ const WFRAME=(()=>{
       tag(mesh(rv(lc,'6mx'),solidGeo([b6a,b6b,lug]),M.gilt),'050800-2');}
     for(const g of lc.children.filter(c=>c.userData.rev))for(const k of[22,37])tag(pinM(g,TI-1.3,TI+1.7,H[k][0],H[k][1]),'WN-203.lc');   /* in each version's group with its cock (fine.py takes pieces fixed together by their shared group) */   /* before the screws' groups (below), which aren't the cock's */
     /* its screw (WN-53 in the coloured section): head Ø 5.8 × 1.7 in the plate's Ø 6 × 1.8 sink, M2.6 × 5.0, 3.45 into the cock: the coloured section, scaled (estimated) */
-    headOn(tag(screw(rv(lc,'last first 1943'),H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3,M.brass),'WN-53'),'lowerCock','topPlate');   /* brass, as Wempe 3955's (2_Wempe_3955_A.jpg; steel until 16 October 2026) */
+    headOn(tag(screw(rv(lc,'last first 1943'),H[36][0],H[36][1],TT+WD.LC.sink,WD.LC.scrH[0],WD.LC.scrH[1],WD.LC.scrH[2],1.3,M.brass),'WN-53'),'lowerCock','topPlate');   /* brass, as Wempe 3955's (2_Wempe_3955_A.jpg; steel until 16 October 2026) */
     headOn(tag(screw(rv(lc,'6mx'),H[36][0],H[36][1],TT+1.8,2.7,1.7,5.0,1.3,M.steel),'WN-53'),'lowerCock','topPlate');   /* the 6MX's steel, its head Ø 5.4 (2_Kirow_247_A.jpg, photocompare.py's fit: likely) */
 
     /* ================= the intermediate bridge (Zwischenbrücke kompl., 05 08 04) ================= */
@@ -538,12 +538,12 @@ const WFRAME=(()=>{
        face: likely). Until 15 October 2026 both were sunk Ø 6.2 from the plate side, 0.7 and 1.7 deep (estimated; the section draws neither). Drawn gilt (Wempe 3955's,
        3_Wempe_3955_uZ.jpg) */
     const zb=part('intermediateBridge',18),ZBG=VER.map(([V])=>rv(zb,V));   /* each version's bridge (the 6MX's striped) with its pins */
-    {const d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+3.8;
-      const h38=C(H[38],4.3/2,180);   /* the bush's hole and its 45° mouth on one ring of points (the mouth ended 0.01 outside the hole until 26 October 2026: a ledge) */
-      const F=[T(H[28],rCl26,y0,y1),T(H[43],rCl26,y0,y1),B(H[28],2.35,y1,2.0),B(H[43],2.35,y1,2.0),A(H[29],rPinQ,y0,2.5),A(H[44],rPinQ,y0,2.5),{p:h38,a:y0,b:y1},{p:C(H[38],2.85,180),q:h38,a:y0,b:y0+0.69},T(H[35],5.2/2,y0,y1)];
-      const zg=faceUV(solidGeo([{loop:stadiumPts(add(m,d,-17.75),add(m,d,17.75),10),y0,y1,F}]));VER.forEach(([,,DR],i)=>tag(mesh(ZBG[i],zg,DR?GH:G6D),'050804-1'));
+    {const Z=WD.ZB,d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+Z.t;
+      const h38=C(H[38],Z.bush/2,180);   /* the bush's hole and its 45° mouth on one ring of points (the mouth ended 0.01 outside the hole until 26 October 2026: a ledge) */
+      const F=[T(H[28],rCl26,y0,y1),T(H[43],rCl26,y0,y1),B(H[28],Z.sink[0],y1,Z.sink[1]),B(H[43],Z.sink[0],y1,Z.sink[1]),A(H[29],rPinQ,y0,Z.pinD),A(H[44],rPinQ,y0,Z.pinD),{p:h38,a:y0,b:y1},{p:C(H[38],Z.mouth[0],180),q:h38,a:y0,b:y0+Z.mouth[1]},T(H[35],Z.set/2,y0,y1)];
+      const zg=faceUV(solidGeo([{loop:stadiumPts(add(m,d,-Z.half),add(m,d,Z.half),Z.w),y0,y1,F}]));VER.forEach(([,,DR],i)=>tag(mesh(ZBG[i],zg,DR?GH:G6D),'050804-1'));
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.blued]]){const g=new THREE.Group();g.rotation.x=Math.PI;rv(zb,V).add(g);   /* the 6MX's blued (3_Kirow_247_uZ.jpg, photocompare.py: sure) */
-        for(const k of[28,43])tag(screw(g,H[k][0],-H[k][1],-(PPT+1.8),2.1,1.9,4.7,1.3,mt),'WN-52');}   /* heads Ø 4.2 × 1.9 (Wempe 3955 4.4), just under the bridge's face, M2.6 × 4.7 into the plate: estimated */
+        for(const k of[28,43])tag(screw(g,H[k][0],-H[k][1],-(PPT+Z.scrY),Z.scr[0],Z.scr[1],Z.scr[2],1.3,mt),'WN-52');}   /* heads Ø 4.2 × 1.9 (Wempe 3955 4.4), just under the bridge's face, M2.6 × 4.7 into the plate: estimated */
       for(const g of ZBG)for(const k of[29,44])tag(pinM(g,PPT-1.3,PPT+1.7,H[k][0],H[k][1]),'WN-203.zb');}
     return PL;}
   return{build,TT,TI};

@@ -119,7 +119,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 |---|---|---|---|
 | 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-56, the ring's; pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
 | 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | done, 29 Oct |
-| 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 and bush | next |
+| 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 (the bush WN-300 goes with batch 6) | done, 29 Oct |
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; fusee arbor; barrel arbor; balance staff | |
 | 5 | Wheels with teeth | train wheels, escape wheel, fusee wheel, click wheel, maintaining ratchet, set-up ratchet, motion work's wheels | |
 | 6 | Small turned parts | bushes WN-300/301/302, settings and caps, studs, collets, the remaining WN screws; jewels (bought) | |
@@ -181,11 +181,26 @@ The recipes now restate none of them.
 before and after, and the type check is clean. `placements.py --diff` lists only the barrel, fusee, chain, mainspring, hands and motion work: parts that
 follow the running clock and the wind between runs (the known flake), none of them touched.
 
+### Batch 3 (29 October 2026): all 6 made parts pass, the frame complete
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max) |
+|---|---|---|---|
+| Upper balance cock 05 08 03-1 (cranked: foot, web, arm; relief with its 45° step; the turned boss; the 82° slot; the settings' seat) | 18 | 2773.71 / 2771.75 | 0.0017 at p99; 0.13 at the slot in the boss (expected, below) |
+| Lower balance cock 05 08 00-2 | 9 | 1746.23 / 1736.58 (the threads) | 0.0038 |
+| Intermediate bridge 05 08 04 | 10 | 1406.55 / 1406.64 | 0.0016 |
+| Screws WN-ucs, WN-53, WN-52 | 6 each | thread allowance | 0.010-0.016 |
+| Steady pins WN-203 (cocks, bridge) | bought | | |
+
+No faults in the recipes or the engine. One page fault, recorded in the upper cock's `expect` and listed below.
+
+**Moved into `dims.js`:** `WD.UC`, `WD.LC` and `WD.ZB`. The 27 frame lines hashed identical before and after, and the type check is clean.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
 |---|---|---|---|
 | Top plate 05 09 01 | the pocket N-O's far side | 0.047 | drawn tangent to r 4.95 about 23 (frame.js, so it crosses the opening cleanly); the sheet's r 5 |
+| Upper balance cock 05 08 03-1 | the stud's slot through the boss | 0.13 | the boss draws the slot's end wall upright, 0.02 inside its place at the boss's face, where the arm's wall leans 8° (C-D's 82°); one milled slot is one plane through arm and boss |
 | Barrel bridge, fusee bush, dust bush | thickness 3.32 -0.04; flange Ø 13.2 -0.2; body Ø 13.1 -0.2, collar Ø 15.1 -0.2, neck Ø 9.7 -0.2 | 0.02-0.1 | drawn at the figure's top, where the page's convention (and the plates, the pillar, the bushes' fits) draws a toleranced size at its middle; the dust bush's collar at 15.1 is more than its Rundmessing 15 gives. The recipes follow the page; a fix would move these to their middles on the page and in the recipes together |
 
 ## Decided

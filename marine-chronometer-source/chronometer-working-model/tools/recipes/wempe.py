@@ -239,6 +239,9 @@ def ring():
 def pinsBought():
     return [Bought('stellstift203','WN-203.bb','Steady pin (Stellstift WN-203)','dowel pin, hardened',"Ø 1.6 m6, cut to length (barrel bridge 3; the cocks' and the intermediate bridge's as fitted)",'ISO 8734 (DIN 6325), or Ø 1.6 silver steel ground','steel','frame.js pinM: Ø 1.6, both ends chamfered 0.1 × 45° (estimated)'),
             Bought('stellstift201','WN-201','Plate pin (Stellstift WN-201)','dowel pin, pressed','Ø 1.0 m6 × 5.25','ISO 8734, or silver steel Ø 1','steel','frame.js: Ø 1.01 pressed in its Ø 1 hole, 5.25 long (estimated)'),
+            Bought('stellstift203uc','WN-203.uc','Steady pins, upper balance cock (holes 6, 9, 50)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM; 127-556.04 U30 (sure for that cock)'),
+            Bought('stellstift203lc','WN-203.lc','Steady pins, lower balance cock (holes 22, 37)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM (estimated)'),
+            Bought('stellstift203zb','WN-203.zb','Steady pins, intermediate bridge (holes 29, 44)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM (estimated)'),
             Bought('stellstift202','WN-202','Case pin (Stellstift WN-202)','dowel pin, pressed','Ø 1.6 m6 × 9.45','ISO 8734, or silver steel Ø 1.6','steel','frame.js: Ø 1.61 pressed, 9.45 long, 1.78 out of the flange (05 08 00-3)')]
 
 # ---------------- the barrel bridge (Federhausbrücke, 05 08 05-1) ----------------
@@ -342,6 +345,102 @@ def dustBush():
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,Yb,0)),fits=['bore 8 H7, 1:70, pressed on the fusee bush\'s 8 r6'],
       notes=['Rundmessing 15 for a collar drawn Ø 15.1 -0.2: the model draws the collar and body at their figures\' tops (15.1, 13.1), which a Ø 15 bar leaves short; the bar\'s size and the collar\'s tolerance agree at 15.0.'])
 
+# ---------------- the upper balance cock (Unruhkloben oben, 05 08 03-1; kompl. 127-556.04 U30) ----------------
+def upperCock():
+    X=W();D=X['WD'];H={int(k):v for k,v in D['H'].items()};U=D['UC'];FR=D['FRAME'];TT=-D['INNER']-D['TOP_T'];src='05 08 03-1'
+    c=H[23];ax=brg(U['ax']);vo=brg(U['vo']);sg=1 if ax[0]*vo[1]-vo[0]*ax[1]>0 else -1   # its own frame: u along the axis, v toward 75° (Y = sg v, so the map is a rotation)
+    loc=lambda q:((q[0]-c[0])*ax[0]+(q[1]-c[1])*ax[1],sg*((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))
+    V=lambda u,v:bd.Vector(u,sg*v)
+    F0,F1=U['foot'];r6=U['r6'];ph=math.atan2(F1,F0)+math.acos(r6/math.hypot(F0,F1));Tp=(r6*math.cos(ph),r6*math.sin(ph))
+    w=bd.Wire([bd.Edge.make_line(V(*Tp),V(F0,F1)),bd.Edge.make_line(V(F0,F1),V(F0,-F1)),bd.Edge.make_line(V(F0,-F1),V(Tp[0],-Tp[1])),bd.Edge.make_three_point_arc(V(Tp[0],-Tp[1]),V(-r6,0),V(*Tp))])
+    top,arm,full,ft=U['top'],U['arm'],U['armFull'],U['footT'];TN=math.tan(math.radians(U['lean']));SW=U['slotIn']-U['armT']*TN;SH=U['slot']/2
+    def overFoot():return bd.Box(60,60,top-ft+0.1,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((U['web'],0,ft)))
+    def underArm():return bd.Cylinder(U['r22'],full+0.1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,-0.1)))
+    def relief():
+        from . import _rev
+        r0,r1=U['step'];rl=U['relief'];R0,R1=U['boss'][0]/2,U['boss'][1]/2
+        return _rev([(0,full-0.01),(r1+0.01,full-0.01),(r0,arm),(0,arm)])-_rev([(0,full),(R0,full),(R1,full+rl),(0,full+rl)])
+    def slot():
+        vw=lambda z:SW+(z-arm)*TN;z0,z1=full-0.1,top+0.1
+        f=bd.Face(bd.Wire.make_polygon([V(-SH,vw(z0))+bd.Vector(0,0,z0),V(-SH,20)+bd.Vector(0,0,z0),V(-SH,20)+bd.Vector(0,0,z1),V(-SH,vw(z1))+bd.Vector(0,0,z1)],close=True))
+        return bd.extrude(f,2*SH,dir=(1,0,0))
+    ops1=[Plate(bd.Face(w),top,'Cut the blank from Profilmessing Ms 58 and mill the outline: tapering from 17 wide at the foot to r 6 round the setting at 23',
+            [S('length','49 from the arm\'s end to the foot\'s',None,src),S('foot end','17 wide',None,src),S('end','r 6 about 23',None,src),S('height',f'{top}','15 -0.1 over the foot\'s underside',src)],src),
+          Cut(overFoot,'Mill the foot down to its thickness, from the web\'s outer face out',[S('foot',f'{ft} thick',None,src),S('web\'s outer face',f'{U["web"]} from 23',None,src)],src,at=(35,0))]
+    ops2=[Cut(underArm,'Mill under the arm: the web\'s inner face an arc about 23',[S('web\'s inner face',f'r {U["r22"]} about 23','±0.1',src),S('arm',f'{top-full:.1f} thick',None,src)],src,at=(-U['r22'],0)),
+          Cut(relief,'On the faceplate about 23: turn the relief under the thin end, its 45° step, leaving the boss',[S('relief',f'{U["relief"]} deep, the step from r {U["step"][1]} to r {U["step"][0]}, 45°',None,src+' ("0,8", "45°", "12ʳ")'),S('boss',f'face Ø {U["boss"][0]}, flank 45° to Ø {U["boss"][1]}','3.2 ±0.02 to its face',src+'; U30')],src,at=(0,0))]
+    sq=loc(X['HOLES']['studScrew']);h20=loc(H[20]);i12=iso(1.2);i14=iso(1.4)
+    ops3=[Cut(slot,'Mill the stud\'s slot across the arm, its inner wall at 82°',[S('slot',f'{U["slot"]:.4f} wide','1.8 H7, at the middle',src+' C-D'),S('inner wall',f'{U["slotIn"]} from the axis on the top, 82° to the faces',None,src+' C-D')],src,at=(0,4.5*sg)),
+          Hole((0,0),U['seat'],'out',top,top-U['seatY'],'Bore the settings\' seat from the top (a piloted counterbore)',[S('seat',f'Ø {U["seat"]:.3f}, {top-U["seatY"]:.1f} deep','5.2 H7, at the middle',src)],src,key='23'),
+          Drill((0,0,full-0.01),(0,0,1),U['floor'],U['seatY']-full+0.01,'and ream the floor\'s hole',[S('floor',f'Ø {U["floor"]:.3f}, the floor 0.5 thick','4.59 +0.012, at the middle; 0.5 +0.03',src)],key='23f'),
+          *[Drill((sx*U['scr'],0,full-0.01),(0,0,1),i12['D1'],top-full+0.02,'The setting\'s screw: drill and tap M1.2 through the boss',[S('',f'M1.2, {U["scr"]} from 23 along the axis','3.5 +0.05, at the middle',src)],thread=i12,key='s12') for sx in (1,-1)],
+          Drill((sq[0],sq[1],arm-0.01),(0,0,1),i14['D1'],top-arm+0.02,'The hairspring stud\'s screw: drill and tap M1.4',[S('','M1.4 at the stud\'s hole',None,'127-556.04 U30 (escapement.js; not on 05 08 03-1)')],thread=i14,key='stud'),
+          Drill((h20[0],h20[1],full-0.3),(0,0,1),U['h20'],top-full+0.4,'Hole 20 (auxiliary): drill',[S('',f'Ø {U["h20"]} at 10 from 23',None,src)],key='20')]
+    ops4=[Hole(loc(H[8]),2*FR['rCl26'],'in',top,ft,'Hole 8 (its screw): drill clear for M2.6',[S('','Ø 2.8',None,src)],src,key='8')]
+    for k in (6,50,9):
+        ops4.append(Hole(loc(H[k]),2*FR['rPinQ'],'in',top,U['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {U["pinD"]}',None,src)],src,key=str(k)))
+        ops4.append(Cone(loc(H[k]),FR['rPinQ']+U['pinCs'],FR['rPinQ'],'in',top,U['pinCs'],'and sink it 90°',[S('',f'{U["pinCs"]} × 90°',None,'05 08_05')]))
+    r=Recipe('upperCock','050803-1','Upper balance cock (Unruhkloben oben)','05 08 03-1 (kompl. 127-556.04 U30)','Profilmessing Ms 58 (05 08 03-1)','gilt (Wempe 3955)',[
+        Setup('1','profile bar on the mill, top up',ops1,view='top'),Setup('2','underside up, on the mill and the faceplate',ops2,view='bottom'),
+        Setup('3','top up',ops3,view='top'),Setup('4','underside up: the foot\'s holes',ops4,view='bottom')],
+      page_matrix([[ax[0],sg*vo[0],0],[0,0,-1],[ax[1],sg*vo[1],0]],(c[0],TT,c[1])),faces=('underside','top'),
+      expect=[{'at':(0,3.0*sg),'r':1.2,'max':0.14,'why':"the page's boss (frame.js, bo's corner at SN) has the slot's end wall upright at 0.02 inside its place at the boss's face, where the arm's wall leans 8° (C-D's 82°); one milled slot is one plane through arm and boss, so at the boss's top the page's wall stands 0.13 inside it: the old mesh"}],
+      fits=['seat 5.2 H7 for the endstone\'s and the jewel\'s settings, both from the top','steady pins pressed in 1.585 -0.005'])
+    r.flat=True;return r
+def upperCockScrew():
+    Q=W()['WD']['UC']['scrH'];return screw('upperCockScrew','WN-ucs','Upper balance cock screw (hole 8; WN-55 by the coloured section)',Q[0],Q[1],Q[2],1.3,'steel, blued (Wempe 3955)','dims.js UC.scrH (the coloured section, scaled: estimated)')
+
+# ---------------- the lower balance cock (Unruhkloben unten, 05 08 00-2, revised 2.12.46) ----------------
+def lowerCock():
+    X=W();D=X['WD'];H={int(k):v for k,v in D['H'].items()};Q=D['LC'];FR=D['FRAME'];TI=-D['INNER'];src='05 08 00-2'
+    o=H[36];bu=(H[37][0]-H[22][0],H[37][1]-H[22][1]);l=math.hypot(*bu);bu=(bu[0]/l,bu[1]/l);nv=(-bu[1],bu[0])
+    if nv[0]*(H[23][0]-o[0])+nv[1]*(H[23][1]-o[1])<0:nv=(-nv[0],-nv[1])
+    sg=-1 if bu[0]*nv[1]-nv[0]*bu[1]>0 else 1   # page = o + bu u + nv w, y = TI + Z: Y = sg w makes it a rotation
+    loc=lambda q:((q[0]-o[0])*bu[0]+(q[1]-o[1])*bu[1],sg*((q[0]-o[0])*nv[0]+(q[1]-o[1])*nv[1]))
+    V=lambda u,w_:bd.Vector(u,sg*w_)
+    bl,bw,bd_=Q['bar'];lw,lt=Q['lug'];cx,cy=Q['ctr'];r5=Q['r5'];t=bd_
+    assert abs(lw-bl/2)<1e-12,"the lug flush with the bar's end"
+    out=bd.Wire([bd.Edge.make_line(V(-bl/2,-bw/2),V(bl/2,-bw/2)),bd.Edge.make_line(V(bl/2,-bw/2),V(bl/2,bw/2)),bd.Edge.make_line(V(bl/2,bw/2),V(0,bw/2)),
+       bd.Edge.make_line(V(0,bw/2),V(0,cy)),bd.Edge.make_three_point_arc(V(0,cy),V(cx,cy+r5),V(-lw,cy)),bd.Edge.make_line(V(-lw,cy),V(-bl/2,-bw/2))])   # the lug flush with the bar's end at 22 (lw = bl/2)
+    lugF=bd.Face(bd.Wire([bd.Edge.make_line(V(-lw,bw/2),V(0,bw/2)),bd.Edge.make_line(V(0,bw/2),V(0,cy)),bd.Edge.make_three_point_arc(V(0,cy),V(cx,cy+r5),V(-lw,cy)),bd.Edge.make_line(V(-lw,cy),V(-lw,bw/2))]))
+    i26=iso(2.6);i12=iso(1.2);c23=loc(H[23]);nvl=(0,sg)
+    ops=[Plate(bd.Face(out),t,'Cut the blank from Profilmessing 20×10×8×3,3 Ms 58 to length',[S('bar',f'{bl} × {bw} × {bd_}','10 -0.1 deep',src),S('lug',f'{lw} wide, r {r5} round 23, {lt} thick at the far face','3.22 -0.04 (drawn at its top)',src)],src),
+         Pocket(lugF,'in',t,t-lt,'Mill the lug down to its thickness from the plate side',[S('lug',f'{lt} thick',None,src)]),
+         Hole(loc(o),i26['D1'],'in',t,None,'Hole 36: drill and tap M2.6 through (the screw from the top plate)',[S('','M2.6',None,src+' G-H')],src,thread=i26,key='36')]
+    for k in (22,37):ops.append(Hole(loc(H[k]),2*FR['rPinQ'],'in',t,Q['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {Q["pinD"]}',None,src)],src,key=str(k)))
+    ops2=[Hole(c23,2*FR['rJ'],'out',t,lt,'Hole 23: ream through the lug',[S('','Ø 4.59','+0.012',src)],src,key='23'),
+          Hole(c23,Q['seat'],'out',t,lt-Q['floor'],'Bore the setting\'s seat from the far face',[S('',f'Ø {Q["seat"]:.3f} to {Q["floor"]} from the near face','5.2 H7; 0.5 +0.03',src)],src,key='23')]
+    for sx in (1,-1):ops2.append(Hole((c23[0]+nvl[0]*Q['scr']*sx,c23[1]+nvl[1]*Q['scr']*sx),i12['D1'],'out',t,lt,'Its screw: drill and tap M1.2',[S('',f'M1.2, {Q["scr"]} from 23 across the axis','3.5 +0.1 (revision a), at the middle',src)],src,thread=i12,key='s12'))
+    r=Recipe('lowerCock','050800-2','Lower balance cock (Unruhkloben unten)','05 08 00-2 (revised 2.12.46)','Profilmessing 20×10×8×3,3 Ms 58 (05 08 00-2)','gilt',[
+        Setup('1','bar on the mill, the plate side up',ops,view='bottom'),Setup('2','far face up',ops2,view='top')],
+      page_matrix([[bu[0],sg*nv[0],0],[0,0,1],[bu[1],sg*nv[1],0]],(o[0],TI,o[1])),faces=('plate side','far face'),fits=['seat 5.2 H7','steady pins pressed in 1.585 -0.005'])
+    r.flat=True;return r
+def lowerCockScrew():
+    Q=W()['WD']['LC']['scrH'];return screw('lowerCockScrew','WN-53','Lower balance cock screw (WN-53)',Q[0],Q[1],Q[2],1.3,"brass (Wempe 3955's)",'dims.js LC.scrH (the coloured section, scaled: estimated)')
+
+# ---------------- the intermediate bridge (Zwischenbrücke, 05 08 04; its 05 08 04-1 not in the set) ----------------
+def intermediateBridge():
+    X=W();D=X['WD'];H={int(k):v for k,v in D['H'].items()};Z=D['ZB'];FR=D['FRAME'];PPT=D['PP_T'];t=Z['t'];src='05 08 04'
+    pl=lambda q:(q[0],-q[1]);a,b=pl(H[43]),pl(H[28]);m=((a[0]+b[0])/2,(a[1]+b[1])/2);dd=(b[0]-a[0],b[1]-a[1]);l=math.hypot(*dd);dd=(dd[0]/l,dd[1]/l)
+    ang=math.degrees(math.atan2(dd[1],dd[0]))
+    with bd.BuildSketch() as sk:
+        with bd.Locations(bd.Location((m[0],m[1],0),(0,0,ang))):bd.SlotCenterToCenter(2*Z['half'],Z['w'])
+    ops=[Plate(sk.sketch.faces()[0],t,'Cut the bridge from brass sheet, face to thickness, mill the outline with round ends',[S('outline',f'{2*Z["half"]+Z["w"]:.1f} × {Z["w"]}, round ends','scaled on 05 08 04 at 2:1; Wempe 3955 45.7 × 9.75 (likely)',src),S('thickness',f'{t}',None,src)],src)]
+    for k in (28,43):
+        ops.append(Hole(pl(H[k]),2*FR['rCl26'],'in',t,None,f'Hole {k}: drill clear for M2.6',[S('','Ø 2.8',None,src)],src,key=str(k)))
+        ops.append(Hole(pl(H[k]),2*Z['sink'][0],'out',t,Z['sink'][1],'and sink it for the screw\'s head',[S('',f'Ø {2*Z["sink"][0]} × {Z["sink"][1]}',None,'Wempe 3955 (likely); depth estimated')],src,key=str(k)))
+    for k in (29,44):ops.append(Hole(pl(H[k]),2*FR['rPinQ'],'in',t,Z['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {Z["pinD"]}',None,src)],src,key=str(k)))
+    ops.append(Hole(pl(H[38]),Z['bush'],'in',t,None,'Hole 38: bore for the bush WN-300',[S('',f'Ø {Z["bush"]}',None,src)],src,key='38'))
+    ops.append(Cone(pl(H[38]),Z['mouth'][0],Z['bush']/2,'in',t,Z['mouth'][1],'and its 45° mouth on the plate side',[S('','Ø 5.7 at the face, 45°',None,src+' section (likely)')]))
+    ops.append(Hole(pl(H[35]),Z['set'],'in',t,None,'Hole 35: bore for the seconds jewel\'s setting',[S('',f'Ø {Z["set"]}',None,src)],src,key='35'))
+    r=Recipe('intermediateBridge','050804-1','Intermediate bridge (Zwischenbrücke)','05 08 04 (05 08 04-1 not in the set)','brass (not given: estimated)','gilt (Wempe 3955)',[
+        Setup('1','sheet on the mill, the plate side up',ops,view='bottom')],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,PPT,0)),faces=('plate side','dial side'),fits=['steady pins pressed in 1.585 -0.005; the bush WN-300 pressed in 38'])
+    r.flat=True;return r
+def intermediateBridgeScrew():
+    Q=W()['WD']['ZB']['scr'];return screw('intermediateBridgeScrew','WN-52','Intermediate bridge screw (WN-52)',Q[0],Q[1],Q[2],1.3,"brass (Wempe 3955's)",'dims.js ZB.scr (estimated)')
+
 RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
-  'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush}
+  'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
+  'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew}
 for _b in pinsBought():RECIPES[_b.key]=(lambda b=_b:b)

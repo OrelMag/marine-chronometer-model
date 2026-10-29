@@ -84,6 +84,13 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     CLICK:{d:5.7,c6:[-5.142,-7.212],r6:6,rn:1,ln:7.5,beak:3.5,ang:85,rb:12.5,rb2:11.5,brg:23.3,t:2.56,hole:3.215,scr:{r:2.25,h:2.1,sd:3.19,sl:2.61,t0:2.55,len:3.2}},
     FB:{r:2.26,spD:7.9905,lo:2.6,upD:8.0235,up:2.9,top:4.4,cs:3.5,fl:6.6,flT:1.5,holeD:1.55,sinkD:2.207,sinkH:0.5,pcd:5.2,taper:140,scr:[1.05,0.45,3.2,0.7],scrY:1.0},
     DB:{L:18.1,bore:8.0075,taper:140,mouth:1.8,mAng:20,body:6.55,ch:0.3,ring:[6.25,5.75],dish:5,neck:4.85,nkY:15.1,col:15.1,lugY:12.0,flatBrg:255,last:[5.4,6.7,10.5/2,13.0]},
+    /* the upper balance cock (05 08 03-1; kompl. 127-556.04 U30), the lower (05 08 00-2, revised 2.12.46) and the intermediate bridge (05 08 04), with their screws (WN-ucs,
+       WN-53, WN-52): their sizes as frame.js's comments read them, here for the recipes (29 October 2026). UC: in its own frame, u along its axis from 23 toward 345°, v toward
+       75°; heights over the top plate's outer face (the foot's underside) */
+    UC:{ax:345,vo:75,foot:[43,8.5],r6:6,web:26.5,r22:22,step:[11.2,12],relief:0.8,top:15,arm:12.6,armT:2.4,armFull:11.8,footT:3.2,slot:1.8045,slotIn:3.4,lean:8,
+      boss:[6,7.6],seat:5.206,seatY:12.3,floor:4.596,scr:3.525,h20:2.8,pinD:2.5,pinCs:0.2,scrH:[3.2,3.0,6.2]},
+    LC:{bar:[20,8,10],lug:[10,3.22],ctr:[-5,8.2],r5:5,floor:0.5,scr:3.55,pinD:2.5,seat:5.206,scrH:[2.9,1.7,5.0],sink:1.8},
+    ZB:{half:17.75,w:10,t:3.8,sink:[2.35,2.0],bush:4.3,mouth:[2.85,0.69],set:5.2,pinD:2.5,scr:[2.1,1.9,4.7],scrY:1.8},
     PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
       h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set
