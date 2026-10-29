@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.56.00 · 2026-10-29
+- More of the Wempe's parts to make: the bushes, the seconds jewel's setting, the dial studs and the escape wheel's collet, each with a CAD file (STEP) and an operation sheet on its card; the seconds jewel as a line saying what to buy.
+
 ## 3.55.00 · 2026-10-29
 - The Wempe's train wheels and escape wheel as parts to make: the centre, intermediate and seconds wheels and the escape wheel, each with a CAD file (STEP) and an operation sheet on its card.
 
