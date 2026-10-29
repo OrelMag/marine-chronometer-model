@@ -35,7 +35,7 @@ EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.user
   const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(),out=[],v=new THREE.Vector3();let rotY=null;
   const b64=a=>{const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);};
   const own=o=>{for(let q=o;q;q=q.parent)if(q.userData.hn)return q.userData.hn;return null;};let gearRot=null;   /* a mesh is the part's only if its nearest line is the part's (the staff's line is on the whole balance's group) */
-  const seen=new Set();for(const r of[root,...subs])r.traverse(o=>{if(seen.has(o))return;seen.add(o);if(!o.isMesh||!o.geometry||o.userData.decal||o.userData.surface||!shows(o)||own(o)!==hn)return;if(o.userData.screw&&rotY===null)rotY=o.rotation.y;if(o.userData.gear&&gearRot===null)gearRot=o.rotation.y;
+  const seen=new Set();for(const r of[root,...subs])r.traverse(o=>{if(seen.has(o))return;seen.add(o);if(!o.isMesh||!o.geometry||o.userData.decal||o.userData.surface||!shows(o)||own(o)!==hn)return;if(o.userData.screw&&rotY===null)rotY=o.rotation.y;if(o!==root&&o.userData.gear&&gearRot===null)gearRot=o.rotation.y;   /* a gear piece's turn about its arbor relative to the part's root (a wheel that is the root itself is exported in its own frame) */
     const m=inv.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position,n=P.count,pos=new Float32Array(3*n);
     for(let i=0;i<n;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);pos[3*i]=v.x;pos[3*i+1]=v.y;pos[3*i+2]=v.z;}
     const I=o.geometry.index?Uint32Array.from(o.geometry.index.array):Uint32Array.from({length:n},(_,i)=>i);out.push({pos:b64(pos),idx:b64(I)});});
@@ -115,11 +115,13 @@ def check(r,pm):
     res={'part':r.key,'hn':r.hn,'fail':[]};F=res['fail']
     if not pm or not pm['meshes']:F.append('no page mesh for '+r.hn);return res
     M=r.to_page.copy()
+    if getattr(r,'spin',False) and pm.get('gearRot') is not None:   # a wheel turned on its arbor by the page's phase: the whole recipe turned about Z by it
+        a=pm['gearRot'];Rz=np.eye(4);Rz[:2,:2]=[[math.cos(a),-math.sin(a)],[math.sin(a),math.cos(a)]];M=M@Rz
     if pm.get('rotY'):   # the page turns each screw's slot by its own angle about the axis (page y)
         a=pm['rotY'];Ry=np.array([[math.cos(a),0,math.sin(a)],[0,1,0],[-math.sin(a),0,math.cos(a)]]);M[:3,:3]=Ry@M[:3,:3];M[:3,3]=Ry@M[:3,3]
     from recipes import CutLeaves
     for o in r.ops():   # a pinion's leaves at the page's phase (its gear mesh's turn about the arbor)
-        if isinstance(o,CutLeaves) and pm.get('gearRot') is not None:o.phase=pm['gearRot']
+        if isinstance(o,CutLeaves) and pm.get('gearRot') is not None and not getattr(r,'spin',False):o.phase=pm['gearRot']   # a spun recipe turns whole (below)
     part=r.build();rm=tess(part);rm.vertices=xf(M,rm.vertices);pages=tm_of(pm['meshes']);zones=r.zones()
     vr=part.volume;vp=sum(m.volume for m in pages);res['volume']={'recipe':round(vr,3),'page':round(vp,3),'diff':round(vr-vp,3),'rel':round((vr-vp)/vp,5)}
     # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL

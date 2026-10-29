@@ -316,6 +316,28 @@ const WESC=(()=>{
   const staffProf=()=>{const{SI,RD6,CS}=SF,cc=SCc,pv=0.105,rU=0.6-((FY-6.1)-(Y.tipU+2.4))/60,rL=0.6-((Y.tipL-2.4)-Y.dr1)/140;
     return[[0,Y.tipU],[pv,Y.tipU],...cc([pv,Y.tipU+0.4],[rU,Y.tipU+2.4]),[0.6,FY-6.1],[0.79,FY-6.1],[CS(FY-1.1),FY-1.1],[1.0,FY-1.1],[1.0,FY],
       [1.0293,Y.hubB],[SI,Y.hubB],[SI,Y.seat],[RD6,Y.seat],[RD6,Y.dr1],[0.6,Y.dr1],...cc([rL,Y.tipL-2.4],[pv,Y.tipL-0.4]),[pv,Y.tipL],[0,Y.tipL]];};
+  /* the escape wheel's outlines (05 04_23, 05 04_7.2; build's escape wheel gives each figure's source): ewGeo(last) each tooth's outline to its base's chord (TC), the
+     floor's loop with the chords across the teeth's bases (IN), the whole outline (o) and the three openings (OP), the crossings 17.7° behind a tooth's tip as last revised
+     (6° as first drawn); EWG the openings' rim and arc (05 04_23). Here so the recipes read them (29 October 2026) */
+  const EWG={rim:10.9/2,OC:9.43,OR:7.9,cr:17.7,cr1:6};
+  const ewGeo=(/** @type {boolean} */last)=>{const tip0=P_A-D0,o=[],TC=[],IN=[];
+      for(let j=0;j<15;j++){const a=tip0+24*j,T=p=>{const r=hyp(p),b=al(p);return pol([0,0],r,a+b);};
+        const fr=-al(TOOTH.face),tc=[pol([0,0],RR,a-BF),pol([0,0],RB0,a-BK)];for(let i=TOOTH.arc.length-2;i>0;i--)tc.push(T(TOOTH.arc[i]));tc.push(pol([0,0],RT,a-1.5),pol([0,0],RT,a),pol([0,0],RR,a-fr));
+        o.push(...tc);TC.push(tc);IN.push(tc[0],tc[tc.length-1]);for(let k=1;k<12;k++){const q=pol([0,0],RR,a-fr+(24-BF+fr)*k/12);o.push(q);IN.push(q);}}
+      /* the openings (05 04_23's crossing, its two flanks traced and fitted: r 7.93 and 7.92, the sheet's "7,9 r", their centres 9.43 from the wheel's on the openings' middle
+         lines, 60.2 and 60.1 deg either side of the crossing, rms 0.24 px: sure): each opening bounded by the rim's inside and ONE arc r 7.9 from a centre 9.43 out, which comes
+         within 1.53 of the wheel's centre (05 04_23 fits 1.50, 05 04_1 1.54) and leaves the crossings 0.53 wide at their narrowest, 4.7 out, 0.6 at the rim (05 04_23
+         draws 0.51 at 4.9 out). Until 15 October 2026 two arcs r 7.9 met at a point 1.4 from the centre, the crossings 0.7 wide at the rim. The recess on the top plate's
+         side, 0.7 deep (0.6 until 26 October 2026), Ø 11.62: 05 04_7.2's dashed recess scales 11.65 (17.6 px/mm), the teeth's floor (11.7): drawn 0.04 inside it, so the floor keeps an edge.
+         The crossings' middles 17.7 deg behind a tooth's tip, as 05 04_23 draws them (6 until 26 October 2026; as first drawn 05 04_1's, under the locked tooth, kept) */
+      const g0=last?tip0-EWG.cr:tip0-EWG.cr1,{rim,OC,OR}=EWG,OP=[];   /* Wempe 3955's recess just outside the openings' rim arcs */
+      for(let k=0;k<3;k++){const bis=g0+120*k+60,ph=Math.acos((OC*OC+rim*rim-OR*OR)/(2*OC*rim))/D2R,Qc=pol([0,0],OC,bis),p1=pol([0,0],rim,bis-ph),p2=pol([0,0],rim,bis+ph),rimArc=[];
+        for(let i=1;i<48;i++)rimArc.push(pol([0,0],rim,bis-ph+2*ph*i/48));
+        const b0=Math.atan2(p2[1]-Qc[1],p2[0]-Qc[0]),b1=Math.atan2(p1[1]-Qc[1],p1[0]-Qc[0]),bc=Math.atan2(-Qc[1],-Qc[0]);let db=b1-b0;while(db>Math.PI)db-=TAU;while(db<-Math.PI)db+=TAU;
+        {let dc=bc-b0;while(dc>Math.PI)dc-=TAU;while(dc<-Math.PI)dc+=TAU;if(Math.sign(dc)!==Math.sign(db)||Math.abs(dc)>Math.abs(db))db-=Math.sign(db)*TAU;}   /* the way round past the side toward the wheel's centre */
+        const arcP=[];for(let i=1;i<48;i++){const b=b0+db*i/48;arcP.push([Qc[0]+OR*Math.cos(b),Qc[1]+OR*Math.sin(b)]);}
+        OP.push([p1,...rimArc,p2,...arcP]);}
+    return{o,TC,IN,OP};};
   const EARB={pv:0.12,r0:0.5,r1:0.6,d:1.07,pf:5.3,pl:4,col:4.7,web:0.002,z:10,m:0.263,D:2.97,dg:1.6};
   const EShd=(pv,R,y,s)=>{const H=Math.sqrt(9-(3+pv-R)**2),o=[];for(let i=0;i<=10;i++){const h=H*i/10;o.push([pv+3-Math.sqrt(9-h*h),y+s*h]);}return o;};   /* from the root at y outward (s: the way along y), ends included */
   const earProf=()=>{const E=EARB,pv=E.pv,yP1=Y.etL-E.pf,yP0=yP1-E.pl,c2=Y.ew1+E.col;
@@ -740,23 +762,8 @@ const WESC=(()=>{
        11.62 built until then, a full-thickness ring 0.04 wide left inside the floor, wider than the rim's inside Ø 10.9: no rim of full thickness); 05 04_7.1 dimensions it 11,9
        struck for 12,4, which would cut the 1942 tooth form's roots at Ø 12.1: the floor's 11.7 taken in every drawn version. Wempe 3955's own wheel (as photographed) has a rim of
        full thickness from Ø 10.9 to the teeth, flush with them, the recess 0.7 only inside it (8_Wempe_3955_Räderwerk_plus.jpg, 9_Wempe_3955_Hemmung.jpg) */
-    for(const[Q,g,bo,ph]of/** @type {[any,any,number,boolean][]} */([[Y,rv(ew,'last'),1.8,false],[Y1,rv(ew,'first 6mx 1943 -3955'),1.8,false],[Y1,rv(ew,'3955'),1.8,true]])){const tip0=P_A-D0,o=[],TC=[],IN=[];   /* TC each tooth's outline to its base's chord, IN the floor's loop, the chords across the teeth's bases (ph: Wempe 3955's, one cell) */   /* the bore 1,8 H7 (05 04_7.2's callout, 05 04_1's 1,8, 02 04 08 a's hub: the fit table's 1,7 a slip, its limits the same for both; 1.7 as last revised until 28 October 2026: drawing check 2's 2-M5) */
-      for(let j=0;j<15;j++){const a=tip0+24*j,T=p=>{const r=hyp(p),b=al(p);return pol([0,0],r,a+b);};
-        const fr=-al(TOOTH.face),tc=[pol([0,0],RR,a-BF),pol([0,0],RB0,a-BK)];for(let i=TOOTH.arc.length-2;i>0;i--)tc.push(T(TOOTH.arc[i]));tc.push(pol([0,0],RT,a-1.5),pol([0,0],RT,a),pol([0,0],RR,a-fr));
-        o.push(...tc);TC.push(tc);IN.push(tc[0],tc[tc.length-1]);for(let k=1;k<12;k++){const q=pol([0,0],RR,a-fr+(24-BF+fr)*k/12);o.push(q);IN.push(q);}}
-      /* the openings (05 04_23's crossing, its two flanks traced and fitted: r 7.93 and 7.92, the sheet's "7,9 r", their centres 9.43 from the wheel's on the openings' middle
-         lines, 60.2 and 60.1 deg either side of the crossing, rms 0.24 px: sure): each opening bounded by the rim's inside and ONE arc r 7.9 from a centre 9.43 out, which comes
-         within 1.53 of the wheel's centre (05 04_23 fits 1.50, 05 04_1 1.54) and leaves the crossings 0.53 wide at their narrowest, 4.7 out, 0.6 at the rim (05 04_23
-         draws 0.51 at 4.9 out). Until 15 October 2026 two arcs r 7.9 met at a point 1.4 from the centre, the crossings 0.7 wide at the rim. The recess on the top plate's
-         side, 0.7 deep (0.6 until 26 October 2026), Ø 11.62: 05 04_7.2's dashed recess scales 11.65 (17.6 px/mm), the teeth's floor (11.7): drawn 0.04 inside it, so the floor keeps an edge.
-         The crossings' middles 17.7 deg behind a tooth's tip, as 05 04_23 draws them (6 until 26 October 2026; as first drawn 05 04_1's, under the locked tooth, kept) */
-      const g0=Q===Y?tip0-17.7:tip0-6,rim=10.9/2,OC=9.43,OR=7.9,F=[...(ph?[{p:C([0,0],10.94/2,240),a:Q.ew0,b:Q.ewWeb}]:[]),{p:C([0,0],bo/2+0.004,48),a:Q.ew0,b:Q.ew1}];   /* Wempe 3955's recess just outside the openings' rim arcs */
-      for(let k=0;k<3;k++){const bis=g0+120*k+60,ph=Math.acos((OC*OC+rim*rim-OR*OR)/(2*OC*rim))/D2R,Qc=pol([0,0],OC,bis),p1=pol([0,0],rim,bis-ph),p2=pol([0,0],rim,bis+ph),rimArc=[];
-        for(let i=1;i<48;i++)rimArc.push(pol([0,0],rim,bis-ph+2*ph*i/48));
-        const b0=Math.atan2(p2[1]-Qc[1],p2[0]-Qc[0]),b1=Math.atan2(p1[1]-Qc[1],p1[0]-Qc[0]),bc=Math.atan2(-Qc[1],-Qc[0]);let db=b1-b0;while(db>Math.PI)db-=TAU;while(db<-Math.PI)db+=TAU;
-        {let dc=bc-b0;while(dc>Math.PI)dc-=TAU;while(dc<-Math.PI)dc+=TAU;if(Math.sign(dc)!==Math.sign(db)||Math.abs(dc)>Math.abs(db))db-=Math.sign(db)*TAU;}   /* the way round past the side toward the wheel's centre */
-        const arcP=[];for(let i=1;i<48;i++){const b=b0+db*i/48;arcP.push([Qc[0]+OR*Math.cos(b),Qc[1]+OR*Math.sin(b)]);}
-        F.push({p:[p1,...rimArc,p2,...arcP],a:Q.ew0,b:Q.ew1});}   /* each opening: round the rim's inside, back along its one arc */
+    for(const[Q,g,bo,ph]of/** @type {[any,any,number,boolean][]} */([[Y,rv(ew,'last'),1.8,false],[Y1,rv(ew,'first 6mx 1943 -3955'),1.8,false],[Y1,rv(ew,'3955'),1.8,true]])){   /* TC each tooth's outline to its base's chord, IN the floor's loop, the chords across the teeth's bases (ph: Wempe 3955's, one cell) */   /* the bore 1,8 H7 (05 04_7.2's callout, 05 04_1's 1,8, 02 04 08 a's hub: the fit table's 1,7 a slip, its limits the same for both; 1.7 as last revised until 28 October 2026: drawing check 2's 2-M5) */
+      const{o,TC,IN,OP}=ewGeo(Q===Y),F=[...(ph?[{p:C([0,0],10.94/2,240),a:Q.ew0,b:Q.ewWeb}]:[]),{p:C([0,0],bo/2+0.004,48),a:Q.ew0,b:Q.ew1},...OP.map(p=>({p,a:Q.ew0,b:Q.ew1}))];   /* each opening: round the rim's inside, back along its one arc */
       tag(mesh(g,solidGeo(ph?[{loop:o,y0:Q.ew0,y1:Q.ew1,F}]:[...TC.map(tc=>({loop:ccw(tc),y0:Q.ew0,y1:Q.ew1})),{loop:ccw(IN),y0:Q.ewWeb,y1:Q.ew1,F}]),M.gilt),'050405-1');}   /* the drawn wheels: the teeth full, the rest the web, recessed 0.7 from the top plate's face */
     /* its arbor and pinion (05 04 05-2, Hz 7.6.40: Präz. Rundstahl 3,4; 05 04_7.2): 10 leaves of m 0.263 (tips Ø 2.97, roots 1.6: sure), 4.0 long (05 04_7.2 scaled, 71 px at 17.76 px/mm by its 22.8; Wempe 3955's 4.3 ±0.3: likely; until 25 October 2026 05 04_7.1's 3, which left 0.3 of the seconds wheel's rim past the leaves); its face 5.3 from the
        arbor's pinion end (05 04_7.2: sure), the wheel 19 from it (sure), 22.8 −0.02 overall; pivots Ø 0.24 (boxed) × 0.5 (sure); the arbor Ø 1.2 under the pinion (05 04_7.1,
@@ -1238,5 +1245,5 @@ const WESC=(()=>{
   const BUILD40={k:1,bend:[3,0.06],set:{tsT:GTEQ},strip:null};
   const SET6={I:2513.3,JW:10.21,ID:7.62};   /* I 2521.0, JW 10.45 and ID 8.01 until 28 October 2026 (drawing check 2's batches 1, 2 and 6); ID 7.94 until 27 October 2026, the blade centred (DOFF); I 2524.6, JW 10.90 and ID 7.96 until 26 October 2026 (the drawings check: the escape wheel's web, the seconds wheel's hub, the collet); I 2526.0, JW 10.89 and ID 8.19 until 25 October 2026 (the rim's cut 1.6, the detent at its bracketed heights and its spring tapered: the per-part audit); ID 8.28 until 24 October 2026 (the blade and horn counted twice in the pipe's wall: overlaps.py); ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,EARB,earProf,staffProf,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,EARB,earProf,staffProf,EWG,ewGeo,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
 })();

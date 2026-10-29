@@ -121,12 +121,12 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | done, 29 Oct |
 | 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 (the bush WN-300 goes with batch 6) | done, 29 Oct |
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
-| 5 | Wheels with teeth | train wheels, escape wheel, fusee wheel, click wheel, maintaining ratchet, set-up ratchet, motion work's wheels | |
+| 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
 | 6 | Small turned parts | bushes WN-300/301/302, settings and caps, studs, collets, the remaining WN screws; jewels (bought) | |
 | 7 | Springs and the detent | the detent and its block, gold spring, clicks and click springs, maintaining spring, stop bar and its spring; mainspring and hairspring strip (bought) | |
 | 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud | |
-| 9 | Fusee and barrel | fusee arbor, fusee body, cover plate, Vorreiber, dust plate; barrel arbor, drum, lid, hook block, Steg | |
-| 10 | Motion work, hands, dial | | |
+| 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | |
+| 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
 | 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
 
 ### Batch 1 (29 October 2026): all 8 made parts pass
@@ -234,6 +234,27 @@ mm before and after, and the type check is clean. The train's arbors read `train
 
 **Left for batch 9:** the fusee arbor and the barrel arbor. Their sizes are in `fusee.js`, which `wempe_load.js` doesn't run: it needs a loader, or the
 profiles lifted into a pure export, along with the rest of the fusee and barrel.
+
+### Batch 5 (29 October 2026): the train's wheels and the escape wheel pass
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max) |
+|---|---|---|---|
+| Centre wheel 05 05 03-1 (z 90, five spokes) | 4 | 376.49 / 376.54 | 0.0021 |
+| Intermediate wheel 05 05 02-1 (z 80) | 4 | 151.47 / 151.49 | 0.0015 |
+| Seconds wheel 05 05 01-1 (z 80) | 4 | 138.85 / 138.87 | 0.001 |
+| Escape wheel 05 04 05-1 (15 teeth, the recess, three openings) | 4 | 34.69 / 34.70 | 0.0019 |
+
+The train wheels are cut to the page's `teeth()` (cycloidal, the sheets' tips and roots) and crossed out with the page's spoke windows. The escape wheel's
+outline, floor and openings come from `WESC.ewGeo()`.
+
+**No faults in the recipes or the page.** Three in my own work, fixed:
+- The blank was larger than the teeth's cut, leaving a ring.
+- The check turned a wheel's teeth twice: once with the whole solid and once through its own phase.
+- A wheel that is the part's root mesh is exported in its own frame, so its page phase doesn't apply. The exporter now reports a gear's phase only for a
+  piece other than the root (a pinion on its arbor).
+
+**Moved, the page unchanged:** the escape wheel's tooth outlines, floor and openings into `WESC.ewGeo()` and `WESC.EWG` at module scope, which `build`
+calls. The 6 lines of the wheels and the escape arbor matched within 1e-5 mm before and after, and the type check is clean.
 
 ## Page faults found (for a later fix on the page)
 

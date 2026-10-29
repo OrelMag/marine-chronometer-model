@@ -16,9 +16,9 @@ def W():
 def WT():
     """the train's arbors as train.js has them (A: each arbor's turned profile, its pinion and wheel) and each pinion's leaves' outline from its teeth()"""
     js=("const W=require(%r)({train:true}),A=W.WTRAIN.A,o={};for(const k of['cw','tw','sw']){const a=A[k],p=a.pin;"
-        "o[k]={at:a.at,ys:a.ys,prof:a.prof,pin:p,xy:W.WTRAIN.teeth(p.z,p.m,p.D,p.dg).xy};}"
+        "const w=a.wheel;o[k]={at:a.at,ys:a.ys,prof:a.prof,pin:p,xy:W.WTRAIN.teeth(p.z,p.m,p.D,p.dg).xy,wheel:w,wxy:W.WTRAIN.teeth(w.z,w.m,w.D,w.dg,w.mate,w.l).xy};}"
         "const E=W.WESC.EARB,e=W.WESC.earProf();o.ew={prof:e.ar,pin:{z:E.z,m:E.m,D:E.D,dg:E.dg,u0:e.yP0,u1:e.yP1},xy:W.WTRAIN.teeth(E.z,E.m,E.D,E.dg).xy};"
-        "o.staff=W.WESC.staffProf();process.stdout.write(JSON.stringify(o))")%str(TOOLS/'wempe_load.js')
+        "o.staff=W.WESC.staffProf();o.ewg=W.WESC.ewGeo(true);o.Y=W.WESC.Y;process.stdout.write(JSON.stringify(o))")%str(TOOLS/'wempe_load.js')
     return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
 
 def brg(b):
@@ -491,10 +491,48 @@ def staff():
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),fits=['the hub pressed on its 1:70','the rollers pressed on their s6 and r6 seats','the collet gripping its 1:70 seat by its slit'],
       notes=["The pivots' cones are concave (05 03_3.2's R 6), turned to the page's profile point by point."])
     return r
+def trainWheel(k,key,hn,title,dwg,sheet,stock,mate_note):
+    a=WT()[k];w=a['wheel'];th=w['rim'][1]-w['rim'][0];src=dwg;n,sw,R0,R1=w['spokes'];ro=w['D']/2
+    with bd.BuildSketch() as sk:bd.Circle(ro+0.1)
+    def spokes():   # each window between the hub (R0) and the rim's inside (R1), its sides the spokes' straight edges, as train.js's gear() cuts them
+        d1=math.asin(sw/2/R1);d0=math.asin(sw/2/R0);sol=None
+        for j in range(n):
+            a0=j/n*2*math.pi;a1=(j+1)/n*2*math.pi;P=lambda r,t:bd.Vector(r*math.cos(t),r*math.sin(t),-0.01)
+            e=[bd.Edge.make_three_point_arc(P(R1,a0+d1),P(R1,(a0+a1)/2),P(R1,a1-d1)),bd.Edge.make_line(P(R1,a1-d1),P(R0,a1-d0)),
+               bd.Edge.make_three_point_arc(P(R0,a1-d0),P(R0,(a0+a1)/2),P(R0,a0+d0)),bd.Edge.make_line(P(R0,a0+d0),P(R1,a0+d1))]
+            x=bd.extrude(bd.Face(bd.Wire(e)),th+0.02,dir=(0,0,1));sol=x if sol is None else sol+x
+        return sol
+    ops=[Plate(sk.sketch.faces()[0],th,f'Cut the blank from {stock}',[S('thickness',f'{th:.2f}',"at the fit's middle",sheet)],sheet),
+         CutLeaves(a['wxy'],ro+0.2,0,th,f"Cut the {w['z']} teeth (a wheel cutter of the sheet's form)",[S('teeth',f'z {w["z"]}, m {w["m"]:.5f}, tip Ø {w["D"]}, root Ø {w["dg"]}, tooth {w["l"]} on the pitch circle',None,sheet),S('form',mate_note,None,"train.js teeth(): the sheets' rounded ogives")],sheet,z=w['z']),
+         Cut(spokes,f'Cross it out: {n} spokes',[S('spokes',f'{n}, {sw} wide',None,sheet),S('hub',f'Ø {2*R0:.2f}',None,sheet),S("rim's inside",f'Ø {2*R1:.2f}',None,sheet)],sheet,at=(0,0)),
+         Hole((0,0),2*w['bore'],'in',th,None,"Bore the hole for the pinion's seat",[S('',f'Ø {2*w["bore"]:.2f}','H7',sheet)],sheet,key='bore')]
+    r=Recipe(key,hn,title,dwg,stock,'none',[Setup('1','on the wheel-cutting engine, then crossed out',ops,view='top')],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,-th/2,0)),faces=('train side','dial side'),fits=["riveted on its pinion's seat, n6 in its H7 hole"])
+    r.flat=True;r.spin=True;return r
+def centreWheel():return trainWheel('cw','centreWheel','050503-1','Centre wheel (Minutenrad)','05 05 03-1','05 05 03-1','Messingblech 1,5 Ms 58 federhart','cycloidal for the intermediate pinion of 12')
+def intermediateWheel():return trainWheel('tw','intermediateWheel','050502-1','Intermediate wheel (Zwischenrad)','05 05 02-1','05 05 02-1','Messingblech 1,2 Ms 58 federhart','cycloidal for the seconds pinion of 10')
+def secondsWheel():return trainWheel('sw','secondsWheel','050501-1','Seconds wheel (Sekundenrad)','05 05 01-1','05 05 01-1','Messingblech 1,2 Ms 58 federhart','cycloidal for the escape pinion of 10')
+def escapeWheel():
+    D=WT();G=D['ewg'];Y=D['Y'];t=Y['ew1']-Y['ew0'];web=Y['ew1']-Y['ewWeb'];src='05 04 05-1 (05 04_23, 02 04 08a, 20.1.42; 05 04_7.2)'
+    P=lambda q:(q[0],-q[1])   # the page's plan [x, z] to the part's frame (Y = -z)
+    def poly(L):
+        Q=[P(q) for i,q in enumerate(L) if i==0 or abs(q[0]-L[i-1][0])+abs(q[1]-L[i-1][1])>1e-9]
+        return bd.Face(bd.Wire.make_polygon([bd.Vector(x,y,0) for x,y in Q],close=True))
+    ops=[Plate(poly(G['o']),t,"Cut the blank from Messingblech 1,6 Ms 63 federhart and cut the 15 teeth (a fly cutter of the tooth's form, the back hollowed by the Ø 6 cutter)",
+           [S('tips','Ø 14','+0.03',src),S('teeth','15; the locking face straight, leaning 25° back from the radius; the tip flat 0.1834 (1½°); the back hollow to Ø 12.1, stepped 0.2 to the floor; 1 wide at the root',None,src),
+            S('floor','Ø 11.7',None,'02 04 08a'),S('thickness',f'{t:.1f} at the teeth',None,'05 04_1')],src),
+         Pocket(poly(G['IN']),'in',t,t-web,"Turn the recess on the top plate's side inside the teeth's floor",[S('recess',f'{t-web:.1f} deep over the floor, the web {web:.1f}','"0,8" struck for "0,7"','05 04_7.1')]),
+         Cut(lambda:sum((bd.extrude(poly(L).moved(bd.Location((0,0,-0.01))),t+0.02,dir=(0,0,1)) for L in G['OP'][1:]),bd.extrude(poly(G['OP'][0]).moved(bd.Location((0,0,-0.01))),t+0.02,dir=(0,0,1))),
+             "Cross it out: three openings, each the rim's inside and one arc",[S('openings',"the rim inside Ø 10.9; each arc r 7.9 from a centre 9.43 out; the crossings 0.6 wide at the rim, 17.7° behind a tooth's tip",None,'05 04_23 (traced: sure)')],src,at=(0,0)),
+         Hole((0,0),1.8+0.008,'in',t,None,"Bore the hole for the collet's spigot",[S('','Ø 1.8','H7',src+'; 05 04_1')],src,key='bore')]
+    ops[-1].mz=t-web/2   # the bore measured in the web, below the recess's floor
+    r=Recipe('escapeWheel','050405-1','Escape wheel (Gangrad)',src,'Messingblech 1,6 Ms 63 federhart','gilt (Wempe 3955)',[Setup('1','on the wheel-cutting engine, then crossed out and recessed',ops,view='bottom')],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,Y['ew0'],0)),faces=("top plate's side","the pinion's side"),fits=["the collet's spigot 1.8 h6 in its 1.8 H7"])
+    r.flat=True;return r
 def secondsArbor():return trainArbor('sw','secondsArbor','050501-2','Seconds pinion and arbor (Sekundentrieb)','05 05 01-2 (kompl. 05 05 01, revised 24.3.48)',3.5,'Präz. Rundstahl 3,5','not given on the sheet',"z 10 from the centre distance (confirmed); tip and root by 05 04_8's proportions (likely)")
 
 RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
   'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
   'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew,
-  'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff}
+  'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel}
 for _b in pinsBought():RECIPES[_b.key]=(lambda b=_b:b)
