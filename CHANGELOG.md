@@ -10,6 +10,9 @@ Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to ca
 - A light and dark switch at the top, the tools as icons, and the title on one line, so the model starts higher, on a phone too
 - Look: Metal, Tinted or Ink as one choice and Colour by as another; the boxes are switches, and the longer explanations fold away
 
+## 3.51.02 · 2026-10-29
+- The Wempe's build book of drawings is withdrawn: it was drawn back from the model's surfaces and wasn't fit to make parts from. Its replacement, a CAD file and an operation sheet for each part, is on the way.
+
 ## 3.51.01 · 2026-10-29
 - Time: a quarter speed (¼×) beside 1/20× and 1× on both models.
 

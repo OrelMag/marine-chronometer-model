@@ -597,7 +597,7 @@ async def wempe(b,errs,steps):
     await ev("location.hash='#part=fusee'");await pg.wait_for_timeout(500);await click('#infoSTL','the fusee STL from its card',1500)
     if 'fusee.stl' not in await ev("document.querySelector('#xRead').textContent"):errs.append('the part card STL: nothing written')
     await ev("document.querySelector('#dlDet').open=false")
-    # Making it: the fusee's maker's sheet (its body's drawn material), the detent's card switching the gold spring to as drawn and back (orig=gold in the link), Measure, the build book, Data
+    # Making it: the fusee's maker's sheet (its body's drawn material), the detent's card switching the gold spring to as drawn and back (orig=gold in the link), Measure, no build book or Drawing, Data
     await ev("document.querySelector('#makeDet').open=true");await click('.info .mkc [data-a=sheet]',"the fusee's maker's sheet",600)
     ms=await ev("[document.querySelectorAll('.info .mkc table.mk tbody tr').length,document.querySelector('.info .mkc').textContent.includes('Rundmessing')]")
     if not(ms[0]>=3 and ms[1]):errs.append(f"the fusee's maker's sheet: {ms}")
@@ -607,9 +607,9 @@ async def wempe(b,errs,steps):
     await click('#mkMeasure','Measure on',300)
     if 'two points' not in await ev("document.querySelector('#mkRead').textContent"):errs.append('Measure: no prompt')
     await click('#mkMeasure','Measure off',300)
-    bk=await ev("(()=>{MAKER.book();const p=document.getElementById('bookPrint');return[p.querySelectorAll('section.bk').length,!!p.querySelector('section.procs'),p.querySelectorAll('section.tests h3').length,MAKERS.tests.length,p.querySelectorAll('svg.mkd').length]})()")
-    steps.append(f'the build book: {bk[0]} sections, {bk[4]} drawings')
-    if not(bk[0]>100 and bk[1] and bk[2]==bk[3] and bk[3] and bk[4]>100):errs.append(f'the build book: {bk}')
+    bk=await ev("[getComputedStyle(document.querySelector('#mkBook')).display,document.querySelectorAll('.info .mkc [data-a=dwg]').length]")   # the drawings withdrawn (29 October 2026): no Build book, no Drawing on a card
+    steps.append(f'the build book and drawings withdrawn: {bk}')
+    if not(bk[0]=='none' and bk[1]==0):errs.append(f'the build book or a Drawing still offered: {bk}')
     await click('#mkData','Data')
     await ev("document.querySelector('#makeDet').open=false")
     # ship motion, the transit lock, the roll period (near the case's own swing and off it)
