@@ -122,6 +122,16 @@ def check(r,pm):
     from recipes import CutLeaves
     for o in r.ops():   # a pinion's leaves at the page's phase (its gear mesh's turn about the arbor)
         if isinstance(o,CutLeaves) and pm.get('gearRot') is not None and not getattr(r,'spin',False):o.phase=pm['gearRot']   # a spun recipe turns whole (below)
+    fa=[o for o in r.ops() if getattr(o,'free_angle',False)]
+    if fa:   # a hole at a free angle: its direction read off the page's own walls (the page surface inside the hole's band, well inside the part's radius)
+        import trimesh as _t
+        S_=ixf(M,np.concatenate([_t.sample.sample_surface(m,20000,seed=5)[0] for m in tm_of(pm['meshes'])]))
+        for o in fa:
+            rr=np.hypot(S_[:,0],S_[:,1]);k=(np.abs(S_[:,2]-o.z)<o.d)&(rr>o.r0+0.2)&(rr<o.r1-0.5)
+            if k.any():
+                Q_=S_[k];a0=math.atan2(Q_[:,1].mean(),Q_[:,0].mean())
+                cost=lambda t:np.mean((np.hypot(Q_[:,0]*math.sin(t)-Q_[:,1]*math.cos(t),Q_[:,2]-o.z)-o.d/2)**2)   # each wall point's distance from the hole's axis, against its radius
+                T=np.linspace(a0-0.1,a0+0.1,401);o.angle=float(T[np.argmin([cost(t) for t in T])]);res['free_angle']=round(math.degrees(o.angle),3)
     part=r.build();rm=tess(part);rm.vertices=xf(M,rm.vertices);pages=tm_of(pm['meshes']);zones=r.zones()
     vr=part.volume;vp=sum(m.volume for m in pages);res['volume']={'recipe':round(vr,3),'page':round(vp,3),'diff':round(vr-vp,3),'rel':round((vr-vp)/vp,5)}
     # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL

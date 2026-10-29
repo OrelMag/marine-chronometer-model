@@ -3,13 +3,13 @@ by wempe_load.js: a size frame.js drew as a literal beside its part is moved int
 meshes hashed before and after (recipes_pagehash.py) so the move changes nothing."""
 import functools,json,math,pathlib,subprocess
 import build123d as bd
-from . import (Blank,TurnProfile,CutLeaves,Recipe,Setup,S,iso,page_matrix,Bar,Ring,TurnOD,TurnCone,TurnAway,FaceGroove,Bore,Countersink,ThreadOD,SlotHead,Plate,Hole,Cone,Pocket,InnerCone,Drill,Cut,Bought)
+from . import (RadialDrill,Blank,TurnProfile,CutLeaves,Recipe,Setup,S,iso,page_matrix,Bar,Ring,TurnOD,TurnCone,TurnAway,FaceGroove,Bore,Countersink,ThreadOD,SlotHead,Plate,Hole,Cone,Pocket,InnerCone,Drill,Cut,Bought)
 TOOLS=pathlib.Path(__file__).resolve().parents[1]
 
 @functools.lru_cache()
 def W():
     """WD and WESC.HOLES as the page has them (functions left out)"""
-    js="const W=require(%r)();process.stdout.write(JSON.stringify({WD:W.WD,HOLES:W.WESC.HOLES}))"%str(TOOLS/'wempe_load.js')
+    js="const W=require(%r)();process.stdout.write(JSON.stringify({WD:W.WD,HOLES:W.WESC.HOLES,FAprof:W.WD.FA.prof(),BARprof:W.WD.BAR.prof()}))"%str(TOOLS/'wempe_load.js')
     return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
 
 @functools.lru_cache()
@@ -252,6 +252,8 @@ def pinsBought():
             Bought('stellstift203lc','WN-203.lc','Steady pins, lower balance cock (holes 22, 37)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM (estimated)'),
             Bought('stellstift203zb','WN-203.zb','Steady pins, intermediate bridge (holes 29, 44)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM (estimated)'),
             Bought("jewel35","050504-1","Seconds arbor's lower jewel (Lagerstein f. Sek.)","hole jewel, synthetic ruby, olived hole, an oil sink in its dial face","Ø 3.6 × 1.1, hole Ø 0.78 (olive) for the pivot's 0.75","a watch jewel to size (Seitz-type stock, or ground to fit)","synthetic corundum (ruby)","train.js: scaled on the coloured section (estimated); its form traced on the section's red (±0.1)"),
+            Bought('hairspringStrip','050302-1','Hairspring strip (Spiralfaden)','hairspring strip, polished, to be wound in 13 turns and its terminal curves formed (05 03 10)','0.52 × 0.285 (Bandstahl), about 13 turns at Ø 12.8 outside less 3.5 mm as fitted',"balance-spring strip to size (the 1950s build's Nivarox: deviations, the part's card)",'spring steel (Bandstahl), as 05 03 02-1; Nivarox in the 1950s build','05 03 02-1 (Spiralfaden, Bandstahl 0,52 × 0,285); WESC.HSP (HB 0.52, HT 0.285)'),
+            Bought('mainspringStrip','050700-6','Mainspring strip (Zugfeder)','mainspring strip, its ends to be formed for the barrel hook and the arbor hook',"15 × 0.37, about 1.24 m long (fitted to 05 06_20's measured pull; no sheet draws its length)",'carbon mainspring strip as drawn; the 1950s build: Nivaflex 45/5, 0.393 (deviations)','spring steel; Nivaflex 45/5 in the 1950s build','05 06_20: “Zugfeder 15 × 0,37”; the length fitted (wempe_mainspring.py, estimated)'),
             Bought('stellstift202','WN-202','Case pin (Stellstift WN-202)','dowel pin, pressed','Ø 1.6 m6 × 9.45','ISO 8734, or silver steel Ø 1.6','steel','frame.js: Ø 1.61 pressed, 9.45 long, 1.78 out of the flange (05 08 00-3)')]
 
 # ---------------- the barrel bridge (Federhausbrücke, 05 08 05-1) ----------------
@@ -547,11 +549,48 @@ def smallTurned(hn,key,title,dwg,mat,fit,bore):
     ops=[Blank(2*ro+0.3,z0-0.05,z1+0.05,'Cut the blank from bar',[S('length',f'{z1-z0:.2f}',None,src),S('outside',f'Ø {2*ro:.3f}','0.01 over its hole (a press, estimated)' if mat.startswith('brass') else None,src)],src),
          TurnProfile(P,'Turn, bore and sink it to its profile',[S('',bore,None,src),S('length',f'{z1-z0:.2f}',None,src)],src)]
     return Recipe(key,hn,title,dwg,mat,'none',[Setup('1','bar in the collet, parted off',ops)],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),fits=[fit])
+
+# ---------------- the fusee arbor (Schneckenwelle, 05 06 04-1) and the barrel arbor (Federkern, 05 07 02-1): WD.FA, WD.BAR ----------------
+def _square(c,z):
+    """a square across the corners 2c at height z, its corners on X and Y (as the page's 4-segment cylinders put them)"""
+    return bd.Wire.make_polygon([bd.Vector(c,0,z),bd.Vector(0,c,z),bd.Vector(-c,0,z),bd.Vector(0,-c,z)],close=True)
+def fuseeArbor():
+    X=W();F=X['WD']['FA'];P=X['FAprof'];yT=F['yD']-F['len'];yP=yT-F['LS'];R0=F['SQ0']/math.sqrt(2)+0.01;tA=math.tan(math.radians(F['ang']));src='05 06 04-1'
+    side=lambda y:F['SQ0']-(yT-8-y)/100   # across the flats, 1:100 from 3.12 at its root
+    Q=[(0,yP),(R0,yP),(R0,P[0][1])]+[tuple(q) for q in P[1:]]
+    def sq():
+        loft=bd.Solid.make_loft([_square(side(yP-0.01)/math.sqrt(2),yP-0.01),_square(side(yT-8)/math.sqrt(2),yT-8)])
+        return bd.Cylinder(R0+0.2,yT-8-yP+0.01,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,yP-0.01)))-loft
+    a=F['hole']['a'];u=(math.cos(a),math.sin(a),0);o=(F['hole']['from']*u[0],F['hole']['from']*u[1],F['yD']-F['hole']['dy'])
+    ops=[Blank(7.5,yP-0.05,P[-1][1]+0.05,'Cut the blank from Präz. Rundstahl 7,5 between centres',[S('length',f'{P[-1][1]-yP:.2f} from the point to the stub\'s end (the sheet\'s 60.6 counts the centres)',None,src)],src),
+         TurnProfile(Q,'Turn the arbor: the journal 1:70 in the fusee bush, the step for the cover plate, the collar for the body, the Vorreiber\'s seat 1:70, the dial-side pivot 1:70, the stub for the up-and-down pinion',
+           [S('journal','Ø 4.5 ±0.02 at the shoulder to 4.39 (1:70), 8 long',None,src),S('step','Ø 6.1 -0.05 × 3.1 +0.05',None,src),S('collar','Ø 7.04 -0.01 × 7.9, pressed into the body',None,src),
+            S('Vorreiber seat','Ø 4.5 ±0.02 to 4.38 (1:70), 8.7',None,src),S('pivot','Ø 2.8 ±0.02 to 2.7 (1:70), 6.5 +0.1',None,src),S('stub','Ø 1.6 +0.1/+0.05, 1:70, drawn 1.675 at its middle',None,src),S('shoulders',f'{F["len"]} apart',None,src)],src),
+         Cut(sq,'Mill the winding square, 1:100',[S('square','3,1 r6 across the flats at its root (3.12), 1:100 to its point',None,src),S('length',f'{F["LS"]} to the tip',None,src)],src,at=(0,0)),
+         TurnAway([(0,yP-0.2),(R0+0.3,yP-0.2),(R0+0.3,yP+(R0+0.3)/tA),(0,yP)],'Turn the point through the square',[S('point',f'a cone of half-angle {F["ang"]}° (scaled on 05 06_15 at 7.0 px/mm: likely)',None,src)],src),
+         Drill(o,u,2*F['VPR'],6,'Drill the cross hole and ream it taper with the Vorreiber\'s pin, at assembly',[S('',f'Ø 1.1, reamed taper (drawn straight Ø {2*F["VPR"]:.2f}), 2 from the dial-side shoulder (17.7 -0.05 from the far one)',None,src)],key='vp')]
+    return Recipe('fuseeArbor','050604-1','Fusee arbor (Schneckenwelle)',src,'Präz. Rundstahl 7,5 (05 06 04-1), polished where marked','hardened (as an arbor; the sheet marks the polished faces)',
+      [Setup('1','between centres; the square and point on the mill, the cross hole at assembly',ops)],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),
+      fits=['the collar Ø 7.04 -0.01 pressed into the fusee body\'s bore','the journal running in the fusee bush, reamed to it'])
+def barrelArbor():
+    X=W();B=X['WD']['BAR'];P=X['BARprof'];q=B['sqr'];BSQ=P[0][1];yL=BSQ-q['L'];yE=yL-q['tl'];R0=q['a']/math.sqrt(2)+0.01;src='05 07 02-1 (020704-1, the first sheet)'
+    Q=[(0,yE),(R0,yE),(R0,BSQ)]+[tuple(p) for p in P[1:]]
+    def sq():
+        body=bd.Solid.make_loft([_square(q['b']/math.sqrt(2),yL),_square(q['a']/math.sqrt(2),BSQ)])+bd.Solid.make_loft([_square(q['tip'],yE),_square(q['b']/math.sqrt(2),yL)])
+        return bd.Cylinder(R0+0.2,BSQ-yE+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,yE-0.01)))-body
+    ops=[Blank(14,yE-0.05,P[-1][1]+0.05,'Cut the blank from Präz. Rundstahl 14 between centres',[S('length',f'{P[-1][1]-yE:.2f}',None,src)],src),
+         TurnProfile(Q,'Turn the core and its journals: the core Ø 13.3 with its chamfered ends, the journals, the shoulders 22.29 apart, the dial end domed',
+           [S('core','Ø 13.3',None,src),S('journals','Ø 4.48 (r 2.24) and Ø 3.88 at the square\'s end (r 1.94)',None,src),S('shoulders',f'{B["BA0"]-B["BA1"]:.2f} apart','22.2 +0.1',src)],src),
+         Cut(sq,'Mill the winding square and its point',[S('square',f'{q["a"]} tapering to {q["b"]} across the flats over {q["L"]}',None,src),S('point',f'to {q["tip"]} over {q["tl"]}',None,src)],src,at=(0,0)),
+         RadialDrill((P[4][1]+P[8][1])/2,0.65,6.65,2.0,"Drill the hook's hole radially into the core's middle",[S('',"Ø 2, 6 deep to r 0.65 (0207's section: the drill's point at r 0.65; the page bores it flat)",None,src+'; fusee.js hookSet')],key='hook')]
+    return Recipe('barrelArbor','050702-1','Barrel arbor (Federkern)',src,'Präz. Rundstahl 14 (05 07 02-1)','hardened (05 07 02-1)',[Setup('1','between centres; the square on the mill',ops)],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),expect=[{'at':(0,0),'r':7,'max':0.03,'why':"tessellation, not a fault: the page's hook hole is a 24-sided bore cut at the hook's turn into its 48-sided lathe; the check fits the hole's free angle to the page's walls"}],fits=['its journals running in the barrel\'s bosses','the hook 05 07 02-2 in the core'])
+
 def secondsArbor():return trainArbor('sw','secondsArbor','050501-2','Seconds pinion and arbor (Sekundentrieb)','05 05 01-2 (kompl. 05 05 01, revised 24.3.48)',3.5,'Präz. Rundstahl 3,5','not given on the sheet',"z 10 from the centre distance (confirmed); tip and root by 05 04_8's proportions (likely)")
 
 RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
   'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
   'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew,
-  'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel}
+  'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel,'fuseeArbor':fuseeArbor,'barrelArbor':barrelArbor}
 for _h,_k,*_r in SMALL:RECIPES[_k]=(lambda h=_h,k=_k,r=tuple(_r):smallTurned(h,k,*r))
 for _b in pinsBought():RECIPES[_b.key]=(lambda b=_b:b)

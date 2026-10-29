@@ -154,6 +154,14 @@ class Drill(Hole):
     def zones(self):
         if not self.thread or not self.axial:return []
         z0,z1=self.span();return [(self.at,self.d/2-0.02,self.d/2+self.thread['H1']+0.05,z0,z1)]
+class RadialDrill(Op):
+    """a radial hole at height z, Ø d from radius r1 in to r0, at an angle about Z that nothing in the part fixes (a hook's hole in a core: free against the square):
+    angle 0 for the STEP, set by the check from the page's own hole walls (free_angle)"""
+    kind='drill';free_angle=True
+    def __init__(self,z,r0,r1,d,text,sizes=(),src='',key=''):super().__init__(text,sizes,src);self.z=z;self.r0=r0;self.r1=r1;self.d=d;self.key=key;self.angle=0.0
+    def apply(self,p):
+        u=(math.cos(self.angle),math.sin(self.angle),0);o=(self.r0*u[0],self.r0*u[1],self.z)
+        return p-bd.Solid.make_cylinder(self.d/2,self.r1-self.r0+0.3,bd.Plane(origin=o,z_dir=u))
 class Cut(Op):
     """mill or cut away any solid (made by make(): a window with curved ends, a slot across): the general case"""
     kind='mill'

@@ -95,6 +95,20 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       boss:[6,7.6],seat:5.206,seatY:12.3,floor:4.596,scr:3.525,h20:2.8,pinD:2.5,pinCs:0.2,scrH:[3.2,3.0,6.2]},
     LC:{bar:[20,8,10],lug:[10,3.22],ctr:[-5,8.2],r5:5,floor:0.5,scr:3.55,pinD:2.5,seat:5.206,scrH:[2.9,1.7,5.0],sink:1.8},
     ZB:{half:17.75,w:10,t:3.8,sink:[2.35,2.0],bush:4.3,mouth:[2.85,0.69],set:5.2,pinD:2.5,scr:[2.1,1.9,4.7],scrY:1.8},
+    /* the fusee arbor (05 06 04-1) and the barrel arbor (05 07 02-1) with the barrel's heights they turn between (fusee.js's comments give each figure's source), here so
+       the recipes read them (29 October 2026); fusee.js reads them too. FA: its shoulders (yD, 19.7 apart), the winding square across the flats at its root (3,1 r6, 1:100),
+       the Vorreiber pin's holes (Ø 1.15), the square's 28.3 to the tip and its point's 38.7° half-angle, the cross hole 2 from the dial-side shoulder at the pin's turn;
+       prof() the arbor's turned profile [r, y]. BAR: the barrel's bottom face, rim height, bottom's inner face, its boss's face, the lid's, the arbor's shoulders and
+       its core's ends 0.05 off the bosses; the square 2.93 past the upper journal, 2.7 tapering to 2.605 over 9.5, its point to 0.3 over 0.5; prof() and bal() */
+    FA:(()=>{const F={yD:-0.025,len:19.7,SQ0:3.12,VPR:0.575,LS:28.3,ang:38.7,hole:{dy:2,a:0.9,from:-3}};
+      F.prof=()=>{const yT=F.yD-F.len,rS=yT+19.7,rU=(/** @type {number} */y)=>0.8375+((rS+6.5+9.85)/2-y)/140;
+        return[[0,yT-8],[2.195,yT-8],[2.25,yT],[3.05,yT],[3.05,yT+3.1],[3.52,yT+3.1],[3.52,yT+11.0],[2.25,yT+11.0],[2.19,rS],[1.4,rS],[1.3536,rS+6.5],[rU(rS+6.5),rS+6.5],[rU(9.85),9.85],[0.6,10.1],[0,10.1]];};
+      return F;})(),
+    BAR:(()=>{const B={BB:-3.65,h:18.08,bi:1.25,bf:3.1,lu:1.2,lf:3.3,BA0:-0.03,BA1:-22.32,e:0.05,sq:2.93,sqr:{a:2.7,b:2.605,L:9.5,tip:0.3,tl:0.5}};
+      B.bal=()=>{const o=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;o.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}return o;};
+      B.prof=()=>{const BB=B.BB,BR=BB-B.h,BBF=BB-B.bf,BLT=BR,BLF=BLT+B.lf,BA0=B.BA0,BA1=B.BA1,BC0=BBF-B.e,BC1=BLF+B.e,BSQ=BA1-B.sq;
+        return[[0,BSQ],[1.94,BSQ],[1.94,BA1],[2.24,BA1],[2.24,BC1],[5.0,BC1],[6.65,BC1+1.65],[6.65,BC0-1.65],[5.0,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...B.bal()];};
+      return B;})(),
     PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
       h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set
