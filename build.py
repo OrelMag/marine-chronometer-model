@@ -161,6 +161,7 @@ def main():
     write(SITE/'index.html',meta(wempe.replace(TO_ESSAY,'href="essay/').replace(WE_HAM,'href="hamilton/').replace(WE_REP,'href="wempe/verification/'),a.site_url,'index.html',img='social-wempe.png',keep=a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
+    if (WEMPE/'parts').is_dir():shutil.copytree(WEMPE/'parts',SITE/'parts')   # the Wempe's parts as recipes: each one's STEP file and operation sheet (tools/recipes_site.py), linked from its card
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)
     pages=['index.html','hamilton/index.html','essay/index.html']+reports(a.site_url,a.keep_html)+[wempe_report(a.site_url,a.keep_html)]
     if a.site_url:   # for search engines: the pages, at the addresses their canonical tags name

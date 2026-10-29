@@ -115,9 +115,12 @@ const MAKER=(()=>{
     for(const o of ms)tris(o,(a,b,c)=>{e1.subVectors(b,a);e2.subVectors(c,a);e1.cross(e2).normalize();for(const v of[e1,a,b,c]){dv.setFloat32(off,v.x,true);dv.setFloat32(off+4,v.y,true);dv.setFloat32(off+8,v.z,true);off+=12;}off+=2;});
     return new Blob([buf],{type:'model/stl'});}
   function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+  /* a model with recipes (C.recipes, tools/recipes_site.py): each of the card's lines' STEP file and operation sheet, or what to buy */
+  function recipesHTML(p){const R=C.recipes;if(!R)return'';const H=hnOf(p),rows=[];for(const h of H)for(const r of R.hn[h]||[])rows.push(r.k?`<li>${esc(r.t)}: <a href="${R.dir}${r.k}.step" download>CAD file (STEP)</a> · <a href="${R.dir}${r.k}.html" target="_blank" rel="noopener">Operation sheet</a></li>`:`<li>${esc(r.t)}: buy ${esc(r.buy)}</li>`);
+    return rows.length?`<ul class="mkr">${rows.join('')}</ul>`:'';}
   /* the card: a sheet below the description, opened on demand */
   function card(p){const info=$('#info');let mk=info.querySelector('.mkc');if(!mk){mk=document.createElement('div');mk.className='mkc';info.appendChild(mk);}
-    mk.innerHTML=`${devsOf(p).map(d=>devHTML(d,true)).join('')}<div class="seg"><button data-a="sheet">Maker's sheet</button>${C.drawings===false?'':'<button data-a="dwg">Drawing</button>'}${C.cardSTL?'<button data-a="stl">STL</button>':''}</div><div class="mkb"></div>`;
+    mk.innerHTML=`${devsOf(p).map(d=>devHTML(d,true)).join('')}<div class="seg"><button data-a="sheet">Maker's sheet</button>${C.drawings===false?'':'<button data-a="dwg">Drawing</button>'}${C.cardSTL?'<button data-a="stl">STL</button>':''}</div>${recipesHTML(p)}<div class="mkb"></div>`;
     for(const b of mk.querySelectorAll('.mkdevb'))b.onclick=()=>{const id=b.dataset.dev;ORIG.has(id)?ORIG.delete(id):ORIG.add(id);const open=mk.querySelector('.mkb').dataset.v==='s';card(p);if(open)mk.querySelector('[data-a=sheet]').click();if(A&&A.changed)A.changed();};
     const body=mk.querySelector('.mkb'),title=(A.INFO[p]||[p])[0];
     mk.querySelector('[data-a=sheet]').onclick=()=>{body.innerHTML=body.dataset.v==='s'?'':sheetHTML(p);body.dataset.v=body.dataset.v==='s'?'':'s';};
