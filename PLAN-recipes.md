@@ -122,9 +122,9 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 (the bush WN-300 goes with batch 6) | done, 29 Oct |
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
 | 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
-| 6 | Small turned parts | bushes WN-300/301/302, settings and caps, studs, collets, the remaining WN screws; jewels (bought) | |
+| 6 | Small turned parts | the bushes WN-301, WN-300 (×3), WN-302 and the hand-setting bush, the seconds jewel's setting, the studs' bushes and both studs, the escape wheel's collet; the seconds jewel (bought) | done, 29 Oct (the balance's and escape wheel's jewel settings, the hairspring's collet and stud moved to batch 8) |
 | 7 | Springs and the detent | the detent and its block, gold spring, clicks and click springs, maintaining spring, stop bar and its spring; mainspring and hairspring strip (bought) | |
-| 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud | |
+| 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | |
 | 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
 | 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
@@ -255,6 +255,26 @@ outline, floor and openings come from `WESC.ewGeo()`.
 
 **Moved, the page unchanged:** the escape wheel's tooth outlines, floor and openings into `WESC.ewGeo()` and `WESC.EWG` at module scope, which `build`
 calls. The 6 lines of the wheels and the escape arbor matched within 1e-5 mm before and after, and the type check is clean.
+
+### Batch 6 (29 October 2026): eleven small turned parts and a bought jewel
+
+| Part | Surface apart (max) |
+|---|---|
+| Bushes WN-301, WN-300 at 38 and 35 (top plate), WN-302 (pillar plate), WN-300 (intermediate bridge) | 0.0046-0.0049 |
+| Seconds jewel's setting 05 05 04-2 | 0.0056 |
+| Stud bush 05 08 02-2, hand-setting bush (hole 18) | 0.0038 |
+| Long and short studs 05 02 00-6, -7 | 0.0064 |
+| Escape wheel collet 05 04 05-3 | 0.0043 |
+| Seconds jewel 05 05 04-1 | bought: a hole jewel Ø 3.6 × 1.1, hole Ø 0.78 olive |
+
+Each is a blank turned, bored and sunk to its profile as the page draws it (a bush's spherical oil cup, a setting's seat, a stud's domed ends). No faults
+in the recipes or the page.
+
+**Moved, the page unchanged:** the small parts' sizes into `WTRAIN.SM` with a pure `WTRAIN.smallProfs()` and `bushProf()`, and the collet's into
+`WESC.EARB.cl` and `earProf().col`. `build` uses them. The 15 lines matched within 1e-5 mm before and after, and the type check is clean.
+
+**Left for batch 8:** the balance's and escape wheel's jewel settings and caps, the hairspring's collet and its stud. They're built from values local to
+`escapement.js`'s balance and escapement code (`JR`, `JT`, `hY`, `eY`, `ER`, `EE`, `ck`), which batch 8 lifts with the balance and rollers.
 
 ## Page faults found (for a later fix on the page)
 

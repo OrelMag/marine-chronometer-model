@@ -17,8 +17,8 @@ def WT():
     """the train's arbors as train.js has them (A: each arbor's turned profile, its pinion and wheel) and each pinion's leaves' outline from its teeth()"""
     js=("const W=require(%r)({train:true}),A=W.WTRAIN.A,o={};for(const k of['cw','tw','sw']){const a=A[k],p=a.pin;"
         "const w=a.wheel;o[k]={at:a.at,ys:a.ys,prof:a.prof,pin:p,xy:W.WTRAIN.teeth(p.z,p.m,p.D,p.dg).xy,wheel:w,wxy:W.WTRAIN.teeth(w.z,w.m,w.D,w.dg,w.mate,w.l).xy};}"
-        "const E=W.WESC.EARB,e=W.WESC.earProf();o.ew={prof:e.ar,pin:{z:E.z,m:E.m,D:E.D,dg:E.dg,u0:e.yP0,u1:e.yP1},xy:W.WTRAIN.teeth(E.z,E.m,E.D,E.dg).xy};"
-        "o.staff=W.WESC.staffProf();o.ewg=W.WESC.ewGeo(true);o.Y=W.WESC.Y;process.stdout.write(JSON.stringify(o))")%str(TOOLS/'wempe_load.js')
+        "const E=W.WESC.EARB,e=W.WESC.earProf();o.small=o.small||{};o.ewcol=e.col;o.ew={prof:e.ar,pin:{z:E.z,m:E.m,D:E.D,dg:E.dg,u0:e.yP0,u1:e.yP1},xy:W.WTRAIN.teeth(E.z,E.m,E.D,E.dg).xy};"
+        "o.small=W.WTRAIN.smallProfs();o.staff=W.WESC.staffProf();o.ewg=W.WESC.ewGeo(true);o.Y=W.WESC.Y;process.stdout.write(JSON.stringify(o))")%str(TOOLS/'wempe_load.js')
     return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
 
 def brg(b):
@@ -251,6 +251,7 @@ def pinsBought():
             Bought('stellstift203uc','WN-203.uc','Steady pins, upper balance cock (holes 6, 9, 50)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM; 127-556.04 U30 (sure for that cock)'),
             Bought('stellstift203lc','WN-203.lc','Steady pins, lower balance cock (holes 22, 37)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM (estimated)'),
             Bought('stellstift203zb','WN-203.zb','Steady pins, intermediate bridge (holes 29, 44)','dowel pin, hardened','Ø 1.6 m6 × 3, 1.3 proud','ISO 8734, or silver steel Ø 1.6','steel','frame.js pinM (estimated)'),
+            Bought("jewel35","050504-1","Seconds arbor's lower jewel (Lagerstein f. Sek.)","hole jewel, synthetic ruby, olived hole, an oil sink in its dial face","Ø 3.6 × 1.1, hole Ø 0.78 (olive) for the pivot's 0.75","a watch jewel to size (Seitz-type stock, or ground to fit)","synthetic corundum (ruby)","train.js: scaled on the coloured section (estimated); its form traced on the section's red (±0.1)"),
             Bought('stellstift202','WN-202','Case pin (Stellstift WN-202)','dowel pin, pressed','Ø 1.6 m6 × 9.45','ISO 8734, or silver steel Ø 1.6','steel','frame.js: Ø 1.61 pressed, 9.45 long, 1.78 out of the flange (05 08 00-3)')]
 
 # ---------------- the barrel bridge (Federhausbrücke, 05 08 05-1) ----------------
@@ -529,10 +530,28 @@ def escapeWheel():
     r=Recipe('escapeWheel','050405-1','Escape wheel (Gangrad)',src,'Messingblech 1,6 Ms 63 federhart','gilt (Wempe 3955)',[Setup('1','on the wheel-cutting engine, then crossed out and recessed',ops,view='bottom')],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,Y['ew0'],0)),faces=("top plate's side","the pinion's side"),fits=["the collet's spigot 1.8 h6 in its 1.8 H7"])
     r.flat=True;return r
+SMALL=[
+  ('050405-3', 'escapeCollet', 'Escape wheel collet (Gangradbutzen)', '05 04 05-3 (05 04 10 on 05 04_7.2)', 'brass (Messing)', "its spigot 1.8 h6 in the wheel's 1.8 H7, the wheel riveted on it; on the arbor's Ø 1.2", "Ø 2.8 for 1.6 over the wheel, then Ø 1.7, each step's top edge chamfered 0.15; 4.7 long (05 04_7.2, scaled ±0.03)"),
+  ('WN-301', 'bush301', 'Brass bush WN-301 (the centre arbor, top plate)', 'WN-301 (Messinglager; its sheet not in the set)', 'brass (Messing)', 'pressed in hole 1 (4.59 +0.012) 0.01 over on the diameter, flush both faces; the oil sink a cup to its rim', 'bored 1.21, 0.02 over the pivot\'s 1.19 ("Enger Laufsitz", 05 05_1)'),
+  ('WN-300.t38', 'bush300t38', 'Brass bush WN-300 (the intermediate arbor, top plate)', 'WN-300 (Messinglager)', 'brass (Messing)', 'pressed in hole 38, flush both faces, the oil sink a cup', "bored 0.845, 0.02 over the pivot's 0.825"),
+  ('WN-300.t35', 'bush300t35', 'Brass bush WN-300 (the seconds arbor, top plate)', 'WN-300 (Messinglager)', 'brass (Messing)', 'pressed in hole 35, flush both faces, the oil sink a cup', "bored 0.83, 0.02 over the pivot's 0.81"),
+  ('WN-302', 'bush302', "Brass bush WN-302 (the centre arbor's journal, pillar plate)", 'WN-302 (05 08 02 Schnitt A-B)', 'brass (Messing)', "pressed in hole 1, its inner face 0.1 +0.02 under the plate's, flush with the dial face; its cup Ø 3.8 × 0.55 (estimated)", "bored to the journal's 1:30 (e8 middle + 0.026, H7: estimated)"),
+  ('WN-300.zb', 'bush300zb', 'Brass bush WN-300 (the intermediate arbor, intermediate bridge)', 'WN-300 (05 08 04)', 'brass (Messing)', "pressed in the bridge's Ø 4.3, its face 0.7 +0.02 in from the plate side; its cup Ø 3.7 × 0.9 (estimated)", 'bored 0.845, 0.02 over the pivot'),
+  ('050504-2', 'setting35', "Seconds jewel's setting (Fassung)", "05 05 04-2 (its sheet not in the set; 05 08 04's section)", 'brass (Messing)', "pressed in the bridge's Ø 5.2, its top 0.2 under the plate side's face; the jewel 05 05 04-1 burnished into its seat Ø 3.6", 'the seat Ø 3.6 × 1.1 for the jewel, its face 1.75 in'),
+  ('050802-2', 'studBush', 'Stud bush (Futter)', '05 08 02-2', 'brass (Messing)', 'pressed into hole 2 (and 19) from the inner face ("Futter an dieser Seite eindrücken"), through the plate', "bored 1.49 for the stud's 1.5, a press"),
+  ('050200-6', 'studLong', 'Long stud (Anrichtstift lg)', '05 02 00-6', 'steel (not given)', "pressed in its bush in hole 2, 12.3 from the plate's inner face", 'Ø 1.5, both ends domed 0.3 (05 02_1)'),
+  ('050200-7', 'studShort', 'Short stud (Anrichtstift kurz)', '05 02 00-7', 'steel (not given)', 'pressed in its bush in hole 19, 6.8 out of the dial face', 'Ø 1.5, both ends domed 0.3 (05 02_1)'),
+  ('WN-hs', 'bushHs', "Hand-setting pinion's bush (hole 18)", '05 08 02 (unnamed; Wempe 3955 has it)', 'brass (Messing)', 'pressed in hole 18, flush both faces; empty, as on Wempe 3955', 'bored 1.3, its sink a 90° cone to Ø 1.64')]
+def smallTurned(hn,key,title,dwg,mat,fit,bore):
+    P=WT()['ewcol'] if hn=='050405-3' else WT()['small'][hn]['prof'];z0=min(z for _,z in P);z1=max(z for _,z in P);ro=max(r for r,_ in P);src=dwg
+    ops=[Blank(2*ro+0.3,z0-0.05,z1+0.05,'Cut the blank from bar',[S('length',f'{z1-z0:.2f}',None,src),S('outside',f'Ø {2*ro:.3f}','0.01 over its hole (a press, estimated)' if mat.startswith('brass') else None,src)],src),
+         TurnProfile(P,'Turn, bore and sink it to its profile',[S('',bore,None,src),S('length',f'{z1-z0:.2f}',None,src)],src)]
+    return Recipe(key,hn,title,dwg,mat,'none',[Setup('1','bar in the collet, parted off',ops)],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),fits=[fit])
 def secondsArbor():return trainArbor('sw','secondsArbor','050501-2','Seconds pinion and arbor (Sekundentrieb)','05 05 01-2 (kompl. 05 05 01, revised 24.3.48)',3.5,'Präz. Rundstahl 3,5','not given on the sheet',"z 10 from the centre distance (confirmed); tip and root by 05 04_8's proportions (likely)")
 
 RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
   'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
   'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew,
   'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel}
+for _h,_k,*_r in SMALL:RECIPES[_k]=(lambda h=_h,k=_k,r=tuple(_r):smallTurned(h,k,*r))
 for _b in pinsBought():RECIPES[_b.key]=(lambda b=_b:b)

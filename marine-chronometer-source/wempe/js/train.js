@@ -57,10 +57,11 @@ const WTRAIN=(()=>{
   const cup=(rb,rs,ds,y,s)=>{const R=(rs*rs+ds*ds)/(2*ds),yc=y+s*(ds-R),a0=Math.asin(rs/R),a1=Math.asin(rb/R),o=[];
     for(let k=0;k<=12;k++){const a=a0+(a1-a0)*k/12;o.push([R*Math.sin(a),yc+s*R*Math.cos(a)]);}return o;};
   /* a bush: Ø 2ro from y0 to y1, bore rb; sk: its sink, {f: +1 in the face at y1, -1 at y0; rs its radius at the face; ds a spherical cup's depth, or cone: a 90 deg cone} */
-  function bushGeo(ro,rb,y0,y1,sk){
-    if(!sk)return ringT([[rb,y0],[ro,y0],[ro,y1],[rb,y1]]);
+  function bushProf(ro,rb,y0,y1,sk){   /* its profile, closed by ringT (the recipes read it: smallProfs, below) */
+    if(!sk)return[[rb,y0],[ro,y0],[ro,y1],[rb,y1]];
     const yf=sk.f>0?y1:y0,s=-sk.f,S=sk.cone?[[sk.rs,yf],[rb,yf+s*(sk.rs-rb)]]:cup(rb,sk.rs,sk.ds,yf,s);   /* from the face's rim in to the bore */
-    return sk.f>0?ringT([[rb,y0],[ro,y0],[ro,y1],...S]):ringT([[ro,y0],[ro,y1],[rb,y1],...S.slice().reverse()]);}
+    return sk.f>0?[[rb,y0],[ro,y0],[ro,y1],...S]:[[ro,y0],[ro,y1],[rb,y1],...S.slice().reverse()];}
+  function bushGeo(ro,rb,y0,y1,sk){return ringT(bushProf(ro,rb,y0,y1,sk));}
 
   /* ================= the arbors, as the sheets give them =================
      Heights: the plates' inner faces 19.0 apart (WD.INNER). Each arbor's train-side shoulder rests on a brass bush flush with the top plate's inner face (05 08 01 draws
@@ -160,6 +161,21 @@ const WTRAIN=(()=>{
       pin:{z:10,m:2.807/10,D:2.807+1.28*2.807/10,dg:2.807-3.93*2.807/10,u0:14.85,u1:24.05-2.2},
       wheel:{z:80,m:21.066/80,D:21.9,dg:20.23,l:0.38,mate:10,rim:[13.85,14.85],spokes:[5,1.2,6.4/2,18.4/2],bore:2.6/2}}};
 
+  /* the small turned parts' sizes (build's comments at each give their sources): the pressed bushes' and settings' interference PZ, the bushes' bores (WN-301 on the centre's
+     1.19, WN-300 on the intermediate's 0.825 and the seconds' 0.81, each 0.02 over), their cups, WN-302's cup and journal bore, the intermediate bridge's WN-300 and the
+     seconds jewel's setting 05 05 04-2, the studs' bushes 05 08 02-2 and the studs 05 02 00-6/-7 with their domes, the hand-setting bush. smallProfs() gives each part's hole
+     and its profile [r, y] as last revised, as build draws it; here so the recipes read them (29 October 2026) */
+  const SM={PZ:0.005,rJ:4.596/2,sk:{e:0.0005,ds:1.2},b301:1.21,b38:0.845,b35:0.83,w302:{y:0.11,s:0.4,cs:3.8,cd:0.55,e:0.013},zb:{y:0.71,r:4.3,rs:1.85,ds:0.9},
+    s35:{y0:0.2,yd:1.75,hj:1.1,rj:3.6,r0:3.7,r1:5.2},st:{r:3.506,d:1.5},studs:[[2,12.3],[19,6.8]],dS:0.3,hs:{b:1.3,rs:1.64}};
+  const smallProfs=()=>{const PZ=SM.PZ,rJ=SM.rJ,sk={f:-1,rs:rJ-SM.sk.e,ds:SM.sk.ds},W=SM.w302,rb=(/** @type {number} */y)=>rCj(y-A.cw.ys)+W.e,Z=SM.zb,Q=SM.s35,yj=PPT+Q.yd;
+    const dS=SM.dS,RS=(0.75*0.75+dS*dS)/(2*dS),dome=(/** @type {number} */y,/** @type {number} */s)=>[...Array(7).keys()].map(k=>{const a=Math.asin(0.75/RS)*k/6;return[RS*Math.sin(a),y+s*RS*(1-Math.cos(a))];});
+    return{'WN-301':{k:1,prof:bushProf(rJ+PZ,SM.b301/2,TT,TI,sk)},'WN-300.t38':{k:38,prof:bushProf(rJ+PZ,SM.b38/2,TT,TI,sk)},'WN-300.t35':{k:35,prof:bushProf(rJ+PZ,SM.b35/2,TT,TI,sk)},
+      'WN-302':{k:1,prof:[[rb(W.y),W.y],[rJ+PZ,W.y],[rJ+PZ,PPT],...cup(rb(PPT-W.s),W.cs/2,W.cd,PPT,-1)]},
+      'WN-300.zb':{k:38,prof:bushProf(Z.r/2+PZ,SM.b38/2,PPT+Z.y,ZB,{f:1,rs:Z.rs,ds:Z.ds})},
+      '050504-2':{k:35,prof:[[Q.r0/2,PPT+Q.y0],[Q.r1/2+PZ,PPT+Q.y0],[Q.r1/2+PZ,ZB],[Q.r0/2,ZB],[Q.r0/2,yj+Q.hj],[Q.rj/2,yj+Q.hj],[Q.rj/2,yj],[Q.r0/2,yj]]},
+      '050802-2':{k:2,prof:bushProf(SM.st.r/2+PZ,SM.st.d/2-PZ,0,PPT)},
+      '050200-6':{k:2,prof:[...dome(0,1),...dome(SM.studs[0][1],-1).reverse()]},'050200-7':{k:19,prof:[...dome(0,1),...dome(PPT+SM.studs[1][1],-1).reverse()]},
+      'WN-hs':{k:18,prof:bushProf(SM.st.r/2+PZ,SM.hs.b/2,0,PPT,{f:1,rs:SM.hs.rs/2,cone:true})}};};
   function build(mv,M,K){const{part}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
     const R={},rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};   /* rv: a group of one version's pieces (movement.js's setRev) */
     for(const[k,name,off,ids]of[['cw','centreWheel',-12,['050503-2','050503-1']],['tw','intermediateWheel',-6,['050502-2','050502-1']],['sw','secondsWheel',-33,['050501-2','050501-1']]]){
@@ -184,7 +200,7 @@ const WTRAIN=(()=>{
        (one standard bush for both, opened to the larger: estimated). The WN sheets aren't in the set: their sizes beyond the hole are estimated. The oil sinks run out to the
        bush's rim, no flat round them: Ø 4.69, 4.46 and 4.60 at 1, 38 and 35 on Wempe 3955's top plate (12_…obere_Platte_oben, 11.52 px/mm by the bushes' places), taken Ø 4.55
        (sure that no flat shows, likely on the size; ±0.15); their depth, 1.2, estimated. Until 18 October 2026 Ø 4.0 with a 0.3 flat round it (estimated) */
-    const rJ=4.596/2,sk={f:-1,rs:rJ-0.0005,ds:1.2};   /* the cup out to the bush's rim (4.55/2 until 26 October 2026 left a 0.023 sliver ring) */
+    const rJ=SM.rJ,sk={f:-1,rs:rJ-SM.sk.e,ds:SM.sk.ds};   /* the cup out to the bush's rim (4.55/2 until 26 October 2026 left a 0.023 sliver ring) */
     /* ================= the Soviet 6MX's electrical seconds contact (WD.CONTACT6: its sources and how sure each is) =================
        Romanov 1975 (p. 105, Figs. 100-101; p. 209): on the pillar plate's inner face a gilt base 58 carries two gilt blocks 52 (+) and 57 (−) on fibre 68 and bushes 67;
        the lever 60 on its jewelled staff 69, a flat spiral 59 (the lead from block 52's stud 53, which also returns it) holding its contact screw 54 on the disc 55 on block 57;
@@ -306,9 +322,9 @@ const WTRAIN=(()=>{
     /* the pressed bushes and settings (WN-300, WN-301, WN-302, 05 08 02-2, WN-hs, 05 05 04-2) and the motion work's studs in their bushes: each sheet hatches them pressed
        (05 08 01, 05 08 02's "Futter an dieser Seite eindrücken", 05 08 04) but sizes no interference: drawn 0.01 over their holes on the diameter (estimated, as the motion
        work's presses; line to line until 28 October 2026, drawing check 2's 9-M7, 8-M11) */
-    const PZ=0.005;   /* the interference on the radius */
-    tag(mesh(P.topPlate,bushGeo(rJ+PZ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
-    for(const[V,b38,b35]of/** @type {[string,number,number][]} */([['last 3955',0.845,0.83],['first 1943 -3955',0.83,0.81]])){const g=rv(P.topPlate,V);g.userData.sub='train';tag(mesh(g,bushGeo(rJ+PZ,b38/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ+PZ,b35/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}   /* each bored 0.02 over its pivot (the intermediate's 0.825, the seconds' 0.81; as first drawn and in 1943 the 1940 pinions' 0.81 and 0.79: above), 05 05_1's "Lagerstellen: Enger Laufsitz", as WN-301's 1.21 on the centre's 1.19; both 0.86 until 25 October 2026 (the seconds pivot 0.05 clear) */
+    const PZ=SM.PZ;   /* the interference on the radius */
+    tag(mesh(P.topPlate,bushGeo(rJ+PZ,SM.b301/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
+    for(const[V,b38,b35]of/** @type {[string,number,number][]} */([['last 3955',SM.b38,SM.b35],['first 1943 -3955',0.83,0.81]])){const g=rv(P.topPlate,V);g.userData.sub='train';tag(mesh(g,bushGeo(rJ+PZ,b38/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ+PZ,b35/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}   /* each bored 0.02 over its pivot (the intermediate's 0.825, the seconds' 0.81; as first drawn and in 1943 the 1940 pinions' 0.81 and 0.79: above), 05 05_1's "Lagerstellen: Enger Laufsitz", as WN-301's 1.21 on the centre's 1.19; both 0.86 until 25 October 2026 (the seconds pivot 0.05 clear) */
     /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen's list: the seconds and intermediate wheels in jewels in chatons, not brass bearings; the TU's 15
        jewels are the drawings' 12 and these three. Kirov No. 247's top plate (2_Kirow_247_A.jpg, 8.97 px/mm) shows at 35 and 38 a flush gilt setting about Ø 4.1 (±0.3), the
        pivot in its middle, no screws; its dial side (3_Kirow_247_uZ.jpg) the same at 38 in the intermediate bridge (the seconds arbor's lower jewel there as drawn). Each chaton
@@ -323,13 +339,13 @@ const WTRAIN=(()=>{
        20×: an arc 20 px across in the bush's 24 between its lines, Ø 4.59, and 3 px deep; the section is schematic, its bore drawn 1.1 for the journal's 2.2, so the cup's
        form is likely and its size estimated; until 15 October 2026 a 90° cone Ø 3.2); bored to the journal's 1:30 (train.js's A.cw: the journal's e8 middle and 0.026,
        H7: estimated; until 15 October 2026 a straight Ø 2.205) */
-    {const rb=y=>rCj(y-A.cw.ys)+0.013,S=cup(rb(PPT-0.4),3.8/2,0.55,PPT,-1);
-      tag(mesh(P.pillarPlate,ringT([[rb(0.11),0.11],[rJ+PZ,0.11],[rJ+PZ,PPT],...S]),M.brass2,H[1][0],0,H[1][1]),'WN-302');}
+    {const W=SM.w302,rb=y=>rCj(y-A.cw.ys)+W.e,S=cup(rb(PPT-W.s),W.cs/2,W.cd,PPT,-1);
+      tag(mesh(P.pillarPlate,ringT([[rb(W.y),W.y],[rJ+PZ,W.y],[rJ+PZ,PPT],...S]),M.brass2,H[1][0],0,H[1][1]),'WN-302');}
     /* the intermediate bridge's bush WN-300 at 38 (05 08 04): in its Ø 4.3 hole, its face 0.71 (0.7 +0.02) in from the plate side under the 0.7 sink (frame.js), through to the
        dial face, a cup there (the section draws it; Wempe 3955's dial side, 3_Wempe_3955_uZ.jpg, shows it Ø 3.7 across, 17.4 px/mm by the bridge's screws 34.13 apart:
        drawn Ø 3.7, 0.9 deep, estimated); bored as the top plate's WN-300 at 38, 0.02 over the pivot (the same norm part, 05 08_10; "Enger Laufsitz" throughout, 05 05_1): Ø 0.845
        on the 0.825, as first drawn and in 1943 0.83 on the 1940 pinion's 0.81 (Ø 0.86 until 28 October 2026, 0.035 over: drawing check 2's 6-M8) */
-    for(const[V,b]of/** @type {[string,number][]} */([['last 3955',0.845],['first 1943 -3955',0.83]]))tag(mesh(rv(P.intermediateBridge,V),bushGeo(4.3/2+PZ,b/2,PPT+0.71,ZB,{f:1,rs:1.85,ds:0.9}),M.brass2,H[38][0],0,H[38][1]),'WN-300.zb');
+    for(const[V,b]of/** @type {[string,number][]} */([['last 3955',SM.b38],['first 1943 -3955',0.83]])){const Z=SM.zb;tag(mesh(rv(P.intermediateBridge,V),bushGeo(Z.r/2+PZ,b/2,PPT+Z.y,ZB,{f:1,rs:Z.rs,ds:Z.ds}),M.brass2,H[38][0],0,H[38][1]),'WN-300.zb');}
     /* the 6MX's chaton there (above): the stone flush with the bush's plate-side face (PPT+0.71), the sink toward the dial face */
     {const g=rv(P.intermediateBridge,'6mx'),y0=PPT+0.71,rw=1.1,hj=0.6;tag(mesh(g,ringT([[rw,y0],[4.3/2,y0],[4.3/2,ZB],[1.7,ZB],[0.6,y0+hj],[rw,y0+hj]]),M.gilt,H[38][0],0,H[38][1]),'6MX.ch38l');
       tag(mesh(g,stoneGeo(rw,(0.825+0.025)/2,hj,'olive'),M.ruby,H[38][0],y0+hj/2,H[38][1]),'6MX.jw38l');}
@@ -343,8 +359,8 @@ const WTRAIN=(()=>{
        its hole Ø 0.78 olive for the pivot's 0.75 at the jewel; the setting's sheets aren't in the set. Its form the section's (traced on its red, 18 October 2026, ±0.1): flat
        on the arbor's side, where the shoulder runs, an oil sink in its dial face, a cone from the hole to Ø 1.7 0.6 deep (until 18 October 2026 a plain disc) */
     /* as first drawn and in 1943 the jewel's face at the sheet's 1.7 itself, with the 1940 arbor's shoulders at 24 (above); as last revised 1.75 with the 1948 arbor's 24.05 */
-    for(const[V,yd]of/** @type {[string,number][]} */([['last 3955 6mx',1.75],['first 1943 -3955',1.7]])){const G=rv(P.intermediateBridge,V),y0=PPT+0.2,yj=PPT+yd,hj=1.1,rjw=3.6/2;
-      tag(mesh(G,ringT([[3.7/2,y0],[5.2/2+PZ,y0],[5.2/2+PZ,ZB],[3.7/2,ZB],[3.7/2,yj+hj],[rjw,yj+hj],[rjw,yj],[3.7/2,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
+    for(const[V,yd]of/** @type {[string,number][]} */([['last 3955 6mx',SM.s35.yd],['first 1943 -3955',1.7]])){const Q=SM.s35,G=rv(P.intermediateBridge,V),y0=PPT+Q.y0,yj=PPT+yd,hj=Q.hj,rjw=Q.rj/2;
+      tag(mesh(G,ringT([[Q.r0/2,y0],[Q.r1/2+PZ,y0],[Q.r1/2+PZ,ZB],[Q.r0/2,ZB],[Q.r0/2,yj+hj],[rjw,yj+hj],[rjw,yj],[Q.r0/2,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
       let q=KIT.jewelPr(rjw,hj,0.78/2,0.001,0.85,0.6,yj,1);if(KIT.area([...q,q[0]])<0)q=q.slice().reverse();   /* flat (domed 0.001) toward the arbor */
       tag(mesh(G,ringT(q,32),M.ruby,H[35][0],0,H[35][1]),'050504-1');}
     /* the pillar plate's bushes for the motion work's studs (05 08 02 Schnitt A-B): 05 08 02-2 pressed into hole 2 (3.50 +0.012) from the inner face ("Futter an dieser Seite
@@ -355,14 +371,14 @@ const WTRAIN=(()=>{
        side shows their rounded ends Ø 1.39-1.44 (3_Wempe_3955_uZ.jpg); 05 08 02 at 2:1 (4.7 px/mm) too coarse to size them: likely (until 15 October 2026 Ø 1.3, scaled on
        05 08 02). Their ends domed, both (05 02_1: each end rounded, rising 3.5 px, 0.3 over the stud's Ø; until 15 October 2026 chamfered): likely. The bushes bored to
        them (a press fit: 0.01 under the studs on the diameter, as the bushes in the plate, above; line to line until 28 October 2026) */
-    const dS=0.3,RS=(0.75*0.75+dS*dS)/(2*dS),dome=(y,s)=>[...Array(7).keys()].map(k=>{const a=Math.asin(0.75/RS)*k/6;return[RS*Math.sin(a),y+s*RS*(1-Math.cos(a))];});
-    for(const[k,len,id]of/** @type {[number,number,string][]} */([[2,12.3,'050200-6'],[19,PPT+6.8,'050200-7']])){
-      tag(mesh(P.pillarPlate,bushGeo(3.506/2+PZ,1.5/2-PZ,0,PPT),M.brass2,H[k][0],0,H[k][1]),'050802-2');
+    const dS=SM.dS,RS=(0.75*0.75+dS*dS)/(2*dS),dome=(y,s)=>[...Array(7).keys()].map(k=>{const a=Math.asin(0.75/RS)*k/6;return[RS*Math.sin(a),y+s*RS*(1-Math.cos(a))];});
+    for(const[k,len,id]of/** @type {[number,number,string][]} */([[2,SM.studs[0][1],'050200-6'],[19,PPT+SM.studs[1][1],'050200-7']])){
+      tag(mesh(P.pillarPlate,bushGeo(SM.st.r/2+PZ,SM.st.d/2-PZ,0,PPT),M.brass2,H[k][0],0,H[k][1]),'050802-2');
       tag(mesh(P.pillarPlate,turned([...dome(0,1),...dome(len,-1).reverse()],24),M.steel,H[k][0],0,H[k][1]),id);}
     /* the hand-setting pinion's bush in 18 (Zeigerstelltrieb, reamed 3.50 +0.012, as 2 and 19): 05 08 02 draws a bush there (a ring and its bore, unnamed); Wempe 3955 has it,
        the only part of the hand-setting work fitted (3_Wempe_3955_uZ.jpg, 8.52 px/mm by the plate's holes: its rim Ø 3.46 flush with the dial face, its bore 1.29 with a bright
        sink to 1.64; flush with the inner face on 6_Wempe_3955_S.jpg): bore and sink as measured, a 90° cone (likely); empty, as on Wempe 3955 */
-    tag(mesh(rv(P.pillarPlate,'last first 1943'),bushGeo(3.506/2+PZ,1.3/2,0,PPT,{f:1,rs:1.64/2,cone:true}),M.brass2,H[18][0],0,H[18][1]),'WN-hs');   /* not in the 6MX (no hand-setting cut: frame.js) */
+    tag(mesh(rv(P.pillarPlate,'last first 1943'),bushGeo(SM.st.r/2+PZ,SM.hs.b/2,0,PPT,{f:1,rs:SM.hs.rs/2,cone:true}),M.brass2,H[18][0],0,H[18][1]),'WN-hs');   /* not in the 6MX (no hand-setting cut: frame.js) */
 
     /* update(s): the escape wheel's place s.E (teeth) turns the train. The escape wheel (15 teeth) and its pinion (10 leaves) drive the seconds wheel (80): the seconds arbor
        turns once in 15 × 8 = 120 teeth, a minute; the seconds pinion (10) is driven by the intermediate wheel (80): 1/8 of the seconds'; the intermediate pinion (12) by the
@@ -371,5 +387,5 @@ const WTRAIN=(()=>{
        in the movement's frame) of the centre (c), intermediate (t) and seconds (s) arbors: c for the motion work and the fusee, s for the seconds hand */
     const update=(/** @type {{E:number}} */s)=>{const a=TAU*s.E/120;R.sw.rotation.y=-a;R.tw.rotation.y=a/8;R.cw.rotation.y=-a/60;R.c6.lever.rotation.y=-R.c6.lift(a/D2R);   /* the 6MX's contact lever, as the contact wheel lifts its stone */return{c:-a/60,t:a/8,s:-a};};
     return{cw:R.cw,tw:R.tw,sw:R.sw,update};}
-  return{build,A,teeth,gear};   /* teeth, gear: the sheets' tooth forms, for the escape pinion (escapement.js) */
+  return{build,A,teeth,gear,SM,smallProfs};   /* teeth, gear: the sheets' tooth forms, for the escape pinion (escapement.js) */
 })();
