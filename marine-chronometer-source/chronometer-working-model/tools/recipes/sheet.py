@@ -24,7 +24,7 @@ def _new(a,b):
 
 def view_of(r,s):
     """the setup's view: (camera direction toward the viewer, up), and whether it is a half section"""
-    turned=any(o.kind in ('turn','bore','thread') for o in r.ops())
+    turned=any(o.kind in ('turn','bore','thread') for o in r.ops()) and not getattr(r,'flat',False)
     if turned:return (0,-1,0),(0,0,1),True
     v=getattr(s,'view',None)
     if v is None:
@@ -33,7 +33,7 @@ def view_of(r,s):
 
 def _cross(a,b):return (a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0])
 
-def _svg(part,cuts,d,up,section,stock=(),W=560,H=420):
+def _svg(part,cuts,d,up,section,stock=(),W=560,H=420,faces=('inner face','outer face')):
     """part: the solid after the setup; cuts: [(n, faces)]; d toward the viewer, up; an SVG string"""
     if section:
         bb=part.bounding_box();half=bd.Box(4*bb.size.X+10,2*bb.size.Y+10,4*bb.size.Z+10,align=(bd.Align.CENTER,bd.Align.MAX,bd.Align.CENTER)).moved(bd.Location((bb.center().X,0,bb.center().Z)))
@@ -62,7 +62,7 @@ def _svg(part,cuts,d,up,section,stock=(),W=560,H=420):
         x,y=T(c)
         while any(math.hypot(x-a,y-b)<14 for a,b in placed):x+=13
         placed.append((x,y));o.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" style="fill:#fff;stroke:#e07000"/><text x="{x:.1f}" y="{y+3.5:.1f}" text-anchor="middle" style="font:9px sans-serif">{n}</text>')
-    o.append(f'<text x="{W-4}" y="{H-4}" text-anchor="end" style="font:9px sans-serif;fill:#777">{"half section" if section else ("seen from the inner face" if d[2]<0 else "seen from the outer face")}, not to scale</text></svg>')
+    o.append(f'<text x="{W-4}" y="{H-4}" text-anchor="end" style="font:9px sans-serif;fill:#777">{"half section" if section else ("seen from the "+(faces[0] if d[2]<0 else faces[1]))}, not to scale</text></svg>')
     return ''.join(o)
 
 CSS=("body{font:14px/1.45 system-ui,sans-serif;max-width:960px;margin:24px auto;padding:0 16px;color:#222}h1{font-size:22px;margin:0}.meta{color:#555;margin:4px 0 16px}"
@@ -90,7 +90,7 @@ def sheet(r,sketch=True):
         n-=len(s.ops)
         h.append(f"<div class=setup><b>Setup {E(s.name)}</b>: {E(s.hold)}</div>")
         if sketch and p is not None:
-            d,up,sec=view_of(r,s);h.append(_svg(p,cuts,d,up,sec,stock))
+            d,up,sec=view_of(r,s);h.append(_svg(p,cuts,d,up,sec,stock,faces=r.faces))
         h.append("<table><tr><th class=n>#</th><th>Operation</th><th>Size</th><th>Tolerance / fit</th><th>Source</th></tr>")
         for o in s.ops:
             n+=1;sz=o.sizes or [{'label':'','value':'','tol':None,'src':o.src}]

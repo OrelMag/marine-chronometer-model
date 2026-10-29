@@ -68,6 +68,16 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       cockFoot:[[30.74,22.7],[21.88,18.28],[17.64,22.18],[26.39,26.61]],cockArm:[[21.88,18.28],[12.74,25.63],[11.5,28.32],[12.55,31.22],[14.8,31.89],[17.76,28.82],[24.17,24.66]],   // the cock: its foot on the base (one screw, two pins), a leg 1.5 × 5, its arm 2.1 thick at −11 to −13.2 over the spiral to the staff (Fig. 100 mapped; 10_Kirow_247 46 px at 22.2 px/mm): estimate
       stud:[[11.55,39.24],[12.42,42.21],[14.25,41.6],[13.52,38.6]],   // the stud 53 on block 52, −5.25 to −9.85, its clamp screw on top (10_Kirow_247: estimate), its outer face at r 44.0 (3.0 deep read: estimated), 0.4 inside the lever's holder as it swings, its outer corner on the lever's side taken in 0.3 so the screw arm clears it at full lift
       wheel:{z:60,tip:20.4,root:18.6,rim:16.8,spokes:8,y:[-6.65,-7.65],collet:2.0,colY:[-6.1,-10.65]}},   // the contact wheel 62 on the seconds arbor under its wheel (Romanov: fixed to it), its collet Ø 2.0 rising 3.0 above it (10_Kirow_247: likely; 3.1 and to -11.2 until 18 October 2026): 60 ratchet teeth, one taken out for the minute (Figs. 100, 101; 6_Kirow_009_S: a sawtooth wheel there): tips likely, depth estimate
+    /* the frame's sizes frame.js draws beside its parts, here so the recipes (tools/recipes/wempe.py) read the page's own (29 October 2026; each with its source in frame.js's comments):
+       the hole radii (tapped at the thread's size + 0.02, reamed and pressed fits drawn at their middles), the pillar plate's ring-pin notch, hole 10, the intermediate wheel's
+       opening and the hand-setting window and bore (05 08 02-1, 05 08_3a/b) */
+    FRAME:{rM26:1.32,rM2:1.02,rM17:0.87,rM14:0.72,rM12:0.62,rCl26:2.8/2,rPinP:1.6025/2,rPinQ:1.5825/2,rPin:1.6/2,rJ:4.596/2,rH35:3.506/2,
+      ringPin:1.0,pp10:2.82,op38:24.5,op35:6.0,hsOut:8.25,hsW:6.5,hsIn:12.1,hsArc:14,hsBore:2.0,hsBoreY:1.68},
+    /* the movement ring (05 08 00-3, revised 6.12.46): y from the pillar plate's inner face (0) toward the dial; its sizes as frame.js's comments read them */
+    RING:{y0:0.35,ySeat:3.35,yCone:5.35,yFl:6.35,yRec:10.35,yTop:11.05,bandD:96,flD:105.90,seatD:85.0175,lipD:83,coneD1:85,coneD2:93,recD:104.05,
+      screwD:89,screws:[340,100,220],dialR:50.5,dialPin:1.1,dialScrews:[354,120,240],casePin:1.6,casePinZ:2.8,casePinR0:43.5,scr:[3.1,3.05,6.3]},
+    /* the cork ring (05 08 01-4, no sheet: scaled on the coloured section): outside and bore radii, its height as drawn (squeezed) and the 6MX's, its seat under the top plate */
+    CORK:{ro:8.05,ri:4.86,h:3.70,h6:2.4,below:[1.5,15.1]},
     PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
       h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set

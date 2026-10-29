@@ -13,6 +13,7 @@ drill), the thread itself a note on the sheet and an attribute of the STEP face.
 import math
 import build123d as bd
 
+BIG=1000.0   # a radius past any part: what a turning op removes outside
 ISOP={1.0:0.25,1.2:0.25,1.4:0.3,1.7:0.35,2.0:0.4,2.3:0.4,2.6:0.45,3.0:0.5,3.5:0.6,4.0:0.7,5.0:0.8,6.0:1.0}   # ISO 261 coarse pitches (KIT's ISOP)
 def iso(d):
     """an ISO metric coarse thread's figures: pitch, minor diameter of the nut (D1 = D - 1.0825 P), basic depth H1 (0.5413 P), the bolt's es at 6g (KIT's isoEs)"""
@@ -41,21 +42,21 @@ class Bar(Op):
     def __init__(self,d,L,text,sizes=(),src=''):super().__init__(text,sizes,src);self.d=d;self.L=L
     def apply(self,p):return bd.Cylinder(self.d/2,self.L,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN))
 class Ring(Op):
-    """stock cut straight to a ring (cork, felt: punched or parted off): outside d, bore db, height h"""
+    """stock cut straight to a ring (cork, felt: punched or parted off; a tube or a ring blank): outside d, bore db, height h, its first face at z0"""
     kind='stock'
-    def __init__(self,d,db,h,text,sizes=(),src=''):super().__init__(text,sizes,src);self.d=d;self.db=db;self.h=h
-    def apply(self,p):return _rev([(self.db/2,0),(self.d/2,0),(self.d/2,self.h),(self.db/2,self.h)])
+    def __init__(self,d,db,h,text,sizes=(),src='',z0=0):super().__init__(text,sizes,src);self.d=d;self.db=db;self.h=h;self.z0=z0
+    def apply(self,p):z=self.z0;return _rev([(self.db/2,z),(self.d/2,z),(self.d/2,z+self.h),(self.db/2,z+self.h)])
 class TurnOD(Op):
     """turn the outside to d from z0 to z1 (everything outside r = d/2 there removed)"""
     kind='turn'
     def __init__(self,d,z0,z1,text,sizes=(),src=''):super().__init__(text,sizes,src);self.d=d;self.z0=z0;self.z1=z1
-    def apply(self,p):return p-_rev([(self.d/2,self.z0),(50,self.z0),(50,self.z1),(self.d/2,self.z1)])
+    def apply(self,p):return p-_rev([(self.d/2,self.z0),(BIG,self.z0),(BIG,self.z1),(self.d/2,self.z1)])
 class TurnCone(Op):
     """turn a cone on the outside: radius r0 at z0 to r1 at z1 (the end's lead, a chamfer)"""
     kind='turn'
     def __init__(self,r0,z0,r1,z1,text,sizes=(),src=''):super().__init__(text,sizes,src);self.a=(r0,z0);self.b=(r1,z1)
     def apply(self,p):
-        (r0,z0),(r1,z1)=self.a,self.b;return p-_rev([(r0,z0),(50,z0),(50,z1),(r1,z1)])
+        (r0,z0),(r1,z1)=self.a,self.b;return p-_rev([(r0,z0),(BIG,z0),(BIG,z1),(r1,z1)])
 class FaceGroove(Op):
     """a half-round (semi-elliptic) groove turned into a face at z, from r0 to r1, depth d into the part (s +1: toward +Z)"""
     kind='turn'
@@ -70,7 +71,12 @@ class Bore(Op):
     kind='bore'
     def __init__(self,d,z0,z1,text,sizes=(),src='',thread=None):super().__init__(text,sizes,src);self.d=d;self.z0=z0;self.z1=z1;self.thread=thread
     def apply(self,p):return p-_rev([(0,self.z0),(self.d/2,self.z0),(self.d/2,self.z1),(0,self.z1)])
-    def zones(self):return [((0,0),self.d/2-0.02,self.d/2+self.thread['H1']+0.03,self.z0,self.z1)] if self.thread else []
+    def zones(self):return [((0,0),self.d/2-0.02,self.d/2+self.thread['H1']+0.05,self.z0,self.z1)] if self.thread else []
+class InnerCone(Op):
+    """turn a cone inside (a bore's taper, a chamfer into a bore): radius r0 at z0 to r1 at z1, everything inside it removed"""
+    kind='bore'
+    def __init__(self,r0,z0,r1,z1,text,sizes=(),src=''):super().__init__(text,sizes,src);self.a=(r0,z0);self.b=(r1,z1)
+    def apply(self,p):(r0,z0),(r1,z1)=self.a,self.b;return p-_rev([(0,z0),(r0,z0),(r1,z1),(0,z1)])
 class Countersink(Op):
     """a countersink on the axis at the face z (s: +1 the cone opens toward +Z), d across at the face, angle included"""
     kind='bore'
@@ -81,7 +87,7 @@ class ThreadOD(Op):
     """an outside thread cut on the turned diameter from z0 to z1 (drawn by convention: the cylinder stays at the major diameter)"""
     kind='thread'
     def __init__(self,th,z0,z1,text,sizes=(),src=''):super().__init__(text,sizes,src);self.th=th;self.z0=z0;self.z1=z1
-    def zones(self):return [((0,0),self.th['d']/2-1.5*self.th['H1']-0.05,self.th['d']/2+0.03,self.z0,self.z1)]   # to the tip's flat (the page runs the thread out to its root, then cones to there)
+    def zones(self):return [((0,0),self.th['d']/2-1.5*self.th['H1']-0.05,self.th['d']/2+0.05,self.z0,self.z1)]   # to the tip's flat (the page runs the thread out to its root, then cones to there)
 class SlotHead(Op):
     """mill a screw slot across the head's top face at z: width w, depth s, along X (the page turns each screw's slot at random)"""
     kind='mill'
@@ -106,7 +112,26 @@ class Hole(Op):
         z0,z1=self.span();e=0.01;z0=z0-e if z0<=0 else z0;z1=z1+e if z1>=self.t else z1
         return p-bd.Cylinder(self.d/2,z1-z0,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((self.at[0],self.at[1],z0)))
     def zones(self):
-        z0,z1=self.span();return [(self.at,self.d/2-0.02,self.d/2+self.thread['H1']+0.03,z0,z1)] if self.thread else []
+        z0,z1=self.span();return [(self.at,self.d/2-0.02,self.d/2+self.thread['H1']+0.05,z0,z1)] if self.thread else []
+class Drill(Hole):
+    """a hole along any direction: from the point o (x, y, z) along the unit vector u, diameter d, length L (a radial hole in a turned part, a hole across a
+    face). One along Z is checked as a Hole (span z0..z1 at (x, y)); one across isn't measured by rays"""
+    kind='drill'
+    def __init__(self,o,u,d,L,text,sizes=(),src='',thread=None,key='',mz=None):
+        self.mz=mz   # the depth (Z) the check measures it at, where it is closed all round (a hole half in a seat's wall below the seat)
+        Op.__init__(self,text,sizes,src);self.o=o;self.u=u;self.d=d;self.L=L;self.thread=thread;self.key=key;self.at=(o[0],o[1]);self.face=None;self.t=None;self.dp=None
+        self.axial=abs(abs(u[2])-1)<1e-9
+    def span(self):z=(self.o[2],self.o[2]+self.u[2]*self.L);return (min(z),max(z))
+    def apply(self,p):
+        return p-bd.Solid.make_cylinder(self.d/2,self.L,bd.Plane(origin=self.o,z_dir=self.u))
+    def zones(self):
+        if not self.thread or not self.axial:return []
+        z0,z1=self.span();return [(self.at,self.d/2-0.02,self.d/2+self.thread['H1']+0.05,z0,z1)]
+class Cut(Op):
+    """mill or cut away any solid (made by make(): a window with curved ends, a slot across): the general case"""
+    kind='mill'
+    def __init__(self,make,text,sizes=(),src='',at=None):super().__init__(text,sizes,src);self.make=make;self.at=at
+    def apply(self,p):return p-self.make()
 class Cone(Op):
     """a conical sink at (x, y) in a face: r0 at the face to r1 at depth dp (a countersink, an oil sink's step, a drill point)"""
     kind='drill'
@@ -133,7 +158,8 @@ class Bought:
         self.key=key;self.hn=hn;self.title=title;self.what=what;self.size=size;self.standard=standard;self.material=material;self.src=src;self.notes=list(notes)
 
 class Recipe:
-    def __init__(self,key,hn,title,drawing,material,treatment,setups,to_page,notes=(),fits=(),expect=()):
+    def __init__(self,key,hn,title,drawing,material,treatment,setups,to_page,notes=(),fits=(),expect=(),faces=('inner face','outer face')):
+        self.faces=faces   # what the faces at Z 0 and Z t are called (a flat part): the sheets' sketches name the face they are seen from
         self.expect=list(expect)   # where the page's mesh is known to depart from the drawing: {'at': (x, y), 'r', 'max', 'why'} in the part's frame (the check reports, not fails, them)
         self.key=key;self.hn=hn;self.title=title;self.drawing=drawing;self.material=material;self.treatment=treatment
         self.setups=setups;self.to_page=to_page;self.notes=list(notes);self.fits=list(fits)

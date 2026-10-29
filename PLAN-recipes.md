@@ -63,7 +63,7 @@ What the check found, each sorted into a fault in the recipe or a fault in the o
 
 ## The format's weak spots (to settle in phase 1)
 
-1. **Numbers in two places.** `frame.js` keeps some sizes as literals beside the part (cork ring, `rM26`, `rPinP`, `rJ`, the tongue's 113.5° and 0.85).
+1. **Numbers in two places** (the frame's moved in batch 1; the rest as each batch reaches its parts). `frame.js` keeps some sizes as literals beside the part (cork ring, `rM26`, `rPinP`, `rJ`, the tongue's 113.5° and 0.85).
    The recipe restates them with the line they come from. Move every such literal into `dims.js` (WD), so the page and the recipe read one value.
 2. **The page and the recipe are still two builders.** Until the page's mesh is made from the recipe (phase 3), a change to one must be checked against the
    other. `recipes.py --check` is that check.
@@ -107,6 +107,60 @@ The PDF book was withdrawn from the site in 3.51.02 (main d35022c4). The `drawbo
 Each setup has a sketch of the part as that setup leaves it, drawn from the B-rep with hidden lines removed (`recipes/sheet.py`). A flat part is shown in
 plan from the face the setup works; a turned part in half section, its axis upright. The faces cut in that setup are orange, and each operation's number
 sits on the feature it cuts, matching the table's rows. A face only pierced by a hole (on a plane the part already had) isn't counted as cut.
+
+## The batches (by kind, across the Wempe's made parts)
+
+Each part's recipe is checked against the page, and each difference is fixed at its source. A fault in the recipe is fixed in the recipe. A fault in the
+page is recorded in the recipe's `expect` (reported, not failed) and listed below for a later fix on the page. No page number is ever moved to suit a
+recipe. A size `frame.js` (or another builder) keeps as a literal moves into `dims.js` before a recipe reads it, with the page's meshes hashed before and
+after (`recipes_pagehash.py`) and `placements.py --diff`.
+
+| # | Batch | Parts | State |
+|---|---|---|---|
+| 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-56, the ring's; pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
+| 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | next |
+| 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 and bush | |
+| 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; fusee arbor; barrel arbor; balance staff | |
+| 5 | Wheels with teeth | train wheels, escape wheel, fusee wheel, click wheel, maintaining ratchet, set-up ratchet, motion work's wheels | |
+| 6 | Small turned parts | bushes WN-300/301/302, settings and caps, studs, collets, the remaining WN screws; jewels (bought) | |
+| 7 | Springs and the detent | the detent and its block, gold spring, clicks and click springs, maintaining spring, stop bar and its spring; mainspring and hairspring strip (bought) | |
+| 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud | |
+| 9 | Fusee and barrel | fusee body, cover plate, Vorreiber, dust plate, barrel drum, lid, hook block, Steg | |
+| 10 | Motion work, hands, dial | | |
+| 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
+
+### Batch 1 (29 October 2026): all 8 made parts pass
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max) | Notes |
+|---|---|---|---|---|
+| Top plate 05 09 01 | 63 | 12960.90 / 12943.83 | 0.047 (expected) | the page's r 4.95 tangent, below |
+| Pillar plate 05 08 02-1 | 41 | 16306.30 / 16298.79 | 0.018 | passed first run, the hand-setting window's Ø 14 arcs and its bore included |
+| Movement ring 05 08 00-3 | 14 | 20467.34 / 20438.62 | 0.014 | two recipe faults fixed (below) |
+| Pillar 05 08 00-1 | 12 | 973.92 / 953.06 (thread) | 0.013 | |
+| Cork ring 05 08 01-4 | 1 | 478.71 / 478.10 | 0.0075 | |
+| Screws WN-57, WN-56, the ring's | 6 each | 133.08 / 124.43, 121.51 / 114.45 (thread) | 0.016 | one screw recipe for all (the page's screw()) |
+| Pins WN-201, WN-202, WN-203 | bought | | | dowel pins, ISO 8734 or silver steel |
+
+**Faults found in the recipe and fixed.**
+- The ring's cone ran on to the face (11.05) where the page and the sheet ("45°, opening to Ø 93 at the dial's recess") stop it at the recess floor
+  (10.35). It's now one 45° cone from under the lip to the recess.
+- An engine bug: `TurnOD` and `TurnCone` cut only out to r 50, short of the ring's flange (r 52.95). They now cut out to r 1000.
+
+**What the check learnt.**
+- One page mesh can hold two bodies touching (a screw's shank run into its head) or joined on a shared face (the ring's band and flange: an internal
+  face, and the mesh not watertight to trimesh). A page face is left out of the surface comparison only where the recipe has metal on both sides of it
+  *and* the page does too: it lies inside another closed piece, or an opposite coincident face of the page sits on it. A hole the page has and the recipe
+  lacks still fails. `--fault` now also drops the top plate's hole 4 from the recipe, and the check fails on it (1.09 mm).
+- The volume test compares exact volumes, with half of each thread's ring allowed. The Monte Carlo of the two solids' difference is reported only where
+  the page's mesh is watertight (ray parity breaks on a shared internal face).
+
+**Sizes moved into `dims.js`** (page unchanged: the 27 frame lines' meshes hashed identical before and after, `placements.py --diff` 0 of 39 parts,
+the type check clean):
+- `WD.FRAME`: the hole radii, the ring pin's notch, hole 10, the intermediate wheel's opening, the hand-setting window and bore.
+- `WD.RING`: the movement ring's every size.
+- `WD.CORK`: the cork ring's sizes.
+
+The recipes now restate none of them.
 
 ## Page faults found (for a later fix on the page)
 

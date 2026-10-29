@@ -6,9 +6,9 @@ solids, written as STEP, written as operation sheets, and checked against the pa
 --step writes KEY.step (and KEY.stl) into DIR (default r_recipes/MODEL/), --sheet KEY.html there. --check opens the model's page (?snap&qa, about a
 minute), takes the first mesh of each recipe's parts-list line as shown in the version as last revised, in that object's own frame, and compares it with
 the recipe's solid put there by its to_page:
-  volume        the recipe's exact volume against the page mesh's, both whole, and the two solids' difference outside the threads (Monte Carlo, 1.5 M points;
-                fails past VOL_TOL of the part's volume or 0.5 mm³, whichever is larger: coarse, since the page's turned faces are polygons (72 a turn);
-                the surface and hole checks are the fine ones)
+  volume        the recipe's exact volume against the page mesh's: fails past VOL_TOL of the part's volume or 0.5 mm³, whichever is larger, plus half of
+                each thread's ring (coarse: the page's turned faces are polygons, 72 a turn; the surface and hole checks are the fine ones); where the page's
+                mesh is watertight, the two solids' difference outside the threads by Monte Carlo (1.5 M points), reported
   bbox          the boxes' corners (fails past BOX_TOL)
   surface       every point sampled on either surface to the other's (outside the threads, which the recipe draws by convention and the page as a helix):
                 the largest and the 99th percentile; fails past SURF_TOL, and lists the five worst places, each with the hole or feature nearest it
@@ -16,7 +16,7 @@ the recipe's solid put there by its to_page:
                 fitted: centre and diameter against the recipe's; fails past HOLE_C, HOLE_D (a tapped hole's rays span a pitch, its centre within 2 HOLE_C: the
                 helix runs out at a face or a floor; its diameter the page's at the thread's size + 0.04, reported)
   expected      a recipe's `expect` names where the page's mesh is known to depart from the drawing, with the bound and why: reported, not failed
-Exit 1 on any failure. --fault plants one in the top plate's recipe (hole 7 0.03 large, hole 13 0.02 off): the check must fail on both. Each difference is for a person to judge: the recipe wrong (a figure misread) or the old mesh (a modelling artifact)."""
+Exit 1 on any failure. --fault plants three in the top plate's recipe (hole 7 0.03 large, hole 13 0.02 off, hole 4 left out): the check must fail on each. Each difference is for a person to judge: the recipe wrong (a figure misread) or the old mesh (a modelling artifact)."""
 import argparse,asyncio,json,math,pathlib,sys,time,base64
 import numpy as np
 import model
@@ -58,7 +58,13 @@ def tm_of(ms):
     parts=[]
     for m in ms:
         v=np.frombuffer(base64.b64decode(m['pos']),np.float32).reshape(-1,3).astype(float);f=np.frombuffer(base64.b64decode(m['idx']),np.uint32).reshape(-1,3)
-        t=trimesh.Trimesh(v,f,process=True);parts.append(t)
+        t=trimesh.Trimesh(v,f,process=True)
+        if t.body_count>1:   # one mesh of several closed bodies (core.js fuse concatenates): each its own, by the vertices they share (trimesh's split by face
+            from scipy.sparse import coo_matrix   # adjacency shatters a thread's walls)
+            from scipy.sparse.csgraph import connected_components
+            e=t.edges;n,lab=connected_components(coo_matrix((np.ones(len(e)),(e[:,0],e[:,1])),shape=(len(t.vertices),)*2),directed=False);fl=lab[t.faces[:,0]]
+            parts+=[t.submesh([np.nonzero(fl==k)[0]],append=True) for k in range(n) if (fl==k).any()]
+        else:parts.append(t)
     return parts
 
 def tess(part,tol=0.0015):
@@ -100,23 +106,34 @@ def check(r,pm):
         a=pm['rotY'];Ry=np.array([[math.cos(a),0,math.sin(a)],[0,1,0],[-math.sin(a),0,math.cos(a)]]);M[:3,:3]=Ry@M[:3,:3];M[:3,3]=Ry@M[:3,3]
     part=r.build();rm=tess(part);rm.vertices=xf(M,rm.vertices);pages=tm_of(pm['meshes']);zones=r.zones()
     vr=part.volume;vp=sum(m.volume for m in pages);res['volume']={'recipe':round(vr,3),'page':round(vp,3),'diff':round(vr-vp,3),'rel':round((vr-vp)/vp,5)}
-    lo=np.minimum(rm.bounds[0],np.min([m.bounds[0] for m in pages],0));hi=np.maximum(rm.bounds[1],np.max([m.bounds[1] for m in pages],0))
-    rng=np.random.default_rng(3955);N=1500000;P=lo+(hi-lo)*rng.random((N,3));ok=~in_zone(ixf(M,P),zones)
-    ir=rm.contains(P);ip=contains(pages,P);bv=np.prod(hi-lo)
-    only_r=(ir&~ip&ok).sum()*bv/N;only_p=(ip&~ir&ok).sum()*bv/N
-    res['symdiff']={'recipe_only':round(only_r,3),'page_only':round(only_p,3),'sd':round(math.sqrt(max(1,(ir!=ip).sum()))*bv/N,3)}
-    vt=max(VOL_TOL*vp,0.5)
-    if only_r+only_p>vt:F.append(f'volume: the solids differ by {only_r+only_p:.3f} mm³ outside the threads (tolerance {vt:.3f})')
+    # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL
+    ta=sum(math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5 for (_,r0,r1,z0,z1) in zones);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)
+    if abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
+    if all(m.is_watertight for m in pages):   # the two solids' difference outside the threads, where ray parity can be trusted on the page's mesh
+        lo=np.minimum(rm.bounds[0],np.min([m.bounds[0] for m in pages],0));hi=np.maximum(rm.bounds[1],np.max([m.bounds[1] for m in pages],0))
+        rng=np.random.default_rng(3955);N=1500000;P=lo+(hi-lo)*rng.random((N,3));ok=~in_zone(ixf(M,P),zones)
+        ir=rm.contains(P);ip=contains(pages,P);bv=np.prod(hi-lo)
+        res['symdiff']={'recipe_only':round((ir&~ip&ok).sum()*bv/N,3),'page_only':round((ip&~ir&ok).sum()*bv/N,3),'sd':round(math.sqrt(max(1,(ir!=ip).sum()))*bv/N,3)}
     bp=np.array([np.min([m.bounds[0] for m in pages],0),np.max([m.bounds[1] for m in pages],0)]);db=np.abs(rm.bounds-bp).max()
     res['bbox']={'recipe':np.round(rm.bounds,3).tolist(),'page':np.round(bp,3).tolist(),'max':round(float(db),4)}
     if db>BOX_TOL:F.append(f'bbox: corners differ by {db:.4f}')
-    n=20000;Pr,_=trimesh.sample.sample_surface(rm,n,seed=1);Pp=np.concatenate([trimesh.sample.sample_surface(m,max(200,int(n*m.area/sum(q.area for q in pages))),seed=2)[0] for m in pages])
+    n=20000;Pr,_=trimesh.sample.sample_surface(rm,n,seed=1);SP=[trimesh.sample.sample_surface(m,max(200,int(n*m.area/sum(q.area for q in pages))),seed=2) for m in pages]
+    Pp=np.concatenate([q[0] for q in SP]);Np=np.concatenate([m.face_normals[q[1]] for m,q in zip(pages,SP)])
     kr=~in_zone(ixf(M,Pr),zones);kp=~in_zone(ixf(M,Pp),zones)
-    if len(pages)>1:   # a page piece's face inside another piece of the same part (a screw's shank run 0.1 into its head) is no surface of the part
-        own=np.concatenate([np.full(max(200,int(n*m.area/sum(q.area for q in pages))),i) for i,m in enumerate(pages)])
-        inner=np.array([any(pages[j].contains(Pp[i:i+1])[0] for j in range(len(pages)) if j!=own[i]) for i in range(len(Pp))]);res['inner_faces']=int(inner.sum());kp&=~inner
+    # a page face inside the part: the recipe's metal on both sides of it, and the page's own too, either because it lies inside another closed piece of the part
+    # (a screw's shank run 0.1 into its head) or because a coincident face of the page faces the other way on it (a ring's band and flange joined, sharing a
+    # face). A hole the page has and the recipe hasn't fails both, so it is still found
+    own=np.concatenate([np.full(len(q[0]),i) for i,q in enumerate(SP)]);fid=np.concatenate([q[1] for q in SP])
+    cand=kp&rm.contains(Pp+0.02*Np)&rm.contains(Pp-0.02*Np);inner=np.zeros(len(Pp),bool)
+    for j,m in enumerate(pages):
+        if m.is_watertight:k=cand&(own!=j);inner[k]|=m.contains(Pp[k])
+    for i in np.nonzero(cand&~inner)[0]:
+        m=pages[own[i]];nf=trimesh.proximity.nearby_faces(m,Pp[i:i+1])[0];n=Np[i]
+        for f in nf:
+            if f!=fid[i] and m.face_normals[f]@n<-0.999 and abs((Pp[i]-m.vertices[m.faces[f][0]])@m.face_normals[f])<1e-4:inner[i]=True;break
+    res['inner_faces']=int(inner.sum());kp&=~inner
     dr=nearest(pages,Pr[kr]);dp=nearest([rm],Pp[kp])
-    feats=[(o.key if hasattr(o,'key') else '',o.at if hasattr(o,'at') else (0,0)) for o in r.ops() if isinstance(o,(Hole,Cone))]
+    feats=[(getattr(o,'key',''),o.at) for o in r.ops() if isinstance(o,(Hole,Cone)) and getattr(o,'at',None) is not None]
     def where(q):
         c=ixf(M,q[None])[0]
         if not feats:return f'r {math.hypot(c[0],c[1]):.2f} z {c[2]:.2f}'
@@ -135,16 +152,16 @@ def check(r,pm):
     if un.max()>SURF_TOL:F.append(f'surface: {un.max():.4f} apart (tolerance {SURF_TOL})')
     for w in worst:w['expected']=bool(exq[np.argmin(np.linalg.norm(allp-np.array(w.pop('_p')),axis=1))])
     holes=[];ops=r.ops()
-    for h in [o for o in ops if isinstance(o,Hole)]:
+    for h in [o for o in ops if isinstance(o,Hole) and getattr(o,'axial',True)]:
         z0,z1=h.span();cov=[]
         for o in ops:
-            if o is h or not hasattr(o,'at') or math.dist(o.at,h.at)>1e-6:continue
+            if o is h or getattr(o,'at',None) is None or math.dist(o.at,h.at)>1e-6:continue
             if isinstance(o,Hole) and o.d>h.d:cov.append(o.span())
             if isinstance(o,Cone):
                 zf=o.z0 if o.z0 is not None else (0 if o.face=='in' else o.t);cov.append((min(zf,zf+(1 if o.face=='in' else -1)*o.dp),max(zf,zf+(1 if o.face=='in' else -1)*o.dp)))
         zs=[z for z in np.linspace(z0,z1,41)[1:-1] if not any(a-0.03<=z<=b+0.03 for a,b in cov)]
         if not zs:continue
-        z=zs[len(zs)//2];th=np.linspace(0,2*math.pi,72,endpoint=False)
+        z=getattr(h,'mz',None) or zs[len(zs)//2];th=np.linspace(0,2*math.pi,72,endpoint=False)
         Zs=[z] if not h.thread else [q for q in z+h.thread['p']*(np.arange(12)/12-0.5) if z0<q<z1]   # a tapped hole: rays over one pitch, so the helix averages out
         O=np.array([[h.at[0],h.at[1],q] for q in Zs for _ in th]);Dd=np.tile(np.c_[np.cos(th),np.sin(th),np.zeros(72)],(len(Zs),1))
         Ow=xf(M,O);Dw=Dd@M[:3,:3].T;hits=[]
@@ -174,6 +191,7 @@ def main():
         for h in R['topPlate'].ops():
             if isinstance(h,Hole) and h.key==7:h.d+=0.03
             if isinstance(h,Hole) and h.key==13:h.at=(h.at[0]+0.02,h.at[1])
+        for st in R['topPlate'].setups:st.ops=[q for q in st.ops if not (isinstance(q,Hole) and q.key==4)]   # and hole 4 left out: a hole the page has and the recipe hasn't
     out=pathlib.Path(o.step or o.sheet or HERE/'r_recipes'/model.NAME) if (o.step or o.sheet) else HERE/'r_recipes'/model.NAME
     if o.step is not None or o.sheet is not None:out.mkdir(parents=True,exist_ok=True)
     for k,r in R.items():
@@ -191,7 +209,7 @@ def main():
     for k,r in R.items():
         t=time.time();res=check(r,pm.get(r.hn));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
-        if v:print(f"  volume  recipe {v['recipe']} page {v['page']} ({v['rel']*100:+.3f} %); differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})")
+        if v:print(f"  volume  recipe {v['recipe']} page {v['page']} ({v['rel']*100:+.3f} %, allowed ±{v['allow']})"+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page mesh not watertight: no Monte Carlo'))
         if 'bbox' in res:print(f"  bbox    corners within {res['bbox']['max']}")
         if s:print(f"  surface recipe→page max {s['recipe_to_page']['max']} p99 {s['recipe_to_page']['p99']}; page→recipe max {s['page_to_recipe']['max']} p99 {s['page_to_recipe']['p99']}")
         for w in s.get('worst',[]):print(f"    {w['d']:.4f} on the {w['from']}'s surface at {w['at']}"+(' (expected)' if w.get('expected') else ''))
