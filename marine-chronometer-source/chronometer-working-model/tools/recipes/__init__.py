@@ -124,8 +124,13 @@ class Pocket(Op):
         z0=-0.01 if self.face=='in' else self.t-self.dp;return p-bd.extrude(self.f.moved(bd.Location((0,0,z0))),self.dp+0.01)
 
 class Setup:
-    """one setup: how the part is held and which face is up, then its operations in order"""
-    def __init__(self,name,hold,ops):self.name=name;self.hold=hold;self.ops=ops
+    """one setup: how the part is held and which face is up, then its operations in order; view the sketch's ('top', 'bottom'; a turned part's is its half section)"""
+    def __init__(self,name,hold,ops,view=None):self.name=name;self.hold=hold;self.ops=ops;self.view=view
+
+class Bought:
+    """a part a maker buys, not makes (the owner's choice, 29 October 2026: jewels, spring strip, standard screws): one line, what to buy, no solid"""
+    def __init__(self,key,hn,title,what,size,standard,material,src,notes=()):
+        self.key=key;self.hn=hn;self.title=title;self.what=what;self.size=size;self.standard=standard;self.material=material;self.src=src;self.notes=list(notes)
 
 class Recipe:
     def __init__(self,key,hn,title,drawing,material,treatment,setups,to_page,notes=(),fits=(),expect=()):

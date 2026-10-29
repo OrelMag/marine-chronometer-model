@@ -92,7 +92,29 @@ What the check found, each sorted into a fault in the recipe or a fault in the o
 4. **The PDF book and `drawbook*.py` retired** once every part has a recipe (the owner took the PDF off the site on 29 October 2026, the day this began).
 5. **The Hamilton**, the same way, from the manual's figures and the measured lines.
 
-## For the owner to decide
+## The owner's choices (29 October 2026)
+
+1. **Two builders.** The page's parts stay as they are. `recipes.py --check` keeps each recipe matched to its part; the page is not made from the recipes
+   (phase 3 below is dropped).
+2. **The setup order is a suggestion.** Every sheet says so at its head: the setups and their order are one workable way, the model's, not Wempe's.
+3. **Bought parts** (jewels, spring strip, standard screws and pins) get a line saying what to buy (size, standard, material), not a recipe or STEP file
+   (`Bought` in `recipes/__init__.py`).
+
+The PDF book was withdrawn from the site in 3.51.02 (main d35022c4). The `drawbook*` tools stay untouched for now.
+
+## The sheets' sketches
+
+Each setup has a sketch of the part as that setup leaves it, drawn from the B-rep with hidden lines removed (`recipes/sheet.py`). A flat part is shown in
+plan from the face the setup works; a turned part in half section, its axis upright. The faces cut in that setup are orange, and each operation's number
+sits on the feature it cuts, matching the table's rows. A face only pierced by a hole (on a plane the part already had) isn't counted as cut.
+
+## Page faults found (for a later fix on the page)
+
+| Part | Where | Size | What |
+|---|---|---|---|
+| Top plate 05 09 01 | the pocket N-O's far side | 0.047 | drawn tangent to r 4.95 about 23 (frame.js, so it crosses the opening cleanly); the sheet's r 5 |
+
+## Decided
 
 - **The setups' order.** The recipes' setups are a plausible shop order, not a source's. Should a sheet say "a suggested order" and leave it to the
   maker, or should each sheet set the order firmly (as a works drawing's Arbeitsplan would)?

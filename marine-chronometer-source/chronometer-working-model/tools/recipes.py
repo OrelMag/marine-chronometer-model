@@ -162,23 +162,8 @@ def check(r,pm):
         holes.append(e)
     res['holes']=holes;return res
 
-SHEET_CSS="body{font:14px/1.45 system-ui,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#222}h1{font-size:22px;margin:0}.meta{color:#555;margin:4px 0 16px}table{border-collapse:collapse;width:100%;margin:6px 0 14px}td,th{border:1px solid #ccc;padding:3px 6px;text-align:left;vertical-align:top}th{background:#f3f1ec}.setup{margin-top:18px;border-top:2px solid #333;padding-top:6px}.n{color:#777;width:2em}.src{color:#777;font-size:12px}"
-def sheet(r):
-    import html
-    E=html.escape;h=[f"<!doctype html><meta charset=utf-8><title>{E(r.title)}</title><style>{SHEET_CSS}</style><h1>{E(r.title)}</h1>",
-      f"<div class=meta>Drawing {E(r.drawing)} · parts-list line {E(r.hn)} · material: {E(r.material)} · treatment: {E(r.treatment)} · solid: {E(r.key)}.step</div>"]
-    if r.fits:h.append('<p><b>Fits.</b> '+'; '.join(E(f) for f in r.fits)+'</p>')
-    n=0
-    for s in r.setups:
-        h.append(f"<div class=setup><b>Setup {E(s.name)}</b>: {E(s.hold)}</div><table><tr><th class=n>#</th><th>Operation</th><th>Size</th><th>Tolerance / fit</th><th>Source</th></tr>")
-        for o in s.ops:
-            n+=1;sz=o.sizes or [{'label':'','value':'','tol':None,'src':o.src}]
-            for i,q in enumerate(sz):
-                h.append('<tr>'+(f"<td class=n rowspan={len(sz)}>{n}</td><td rowspan={len(sz)}>{E(o.text)}</td>" if i==0 else '')+f"<td>{E((q['label']+' ' if q['label'] else '')+str(q['value']))}</td><td>{E(q['tol'] or '')}</td><td class=src>{E(q['src'] or o.src)}</td></tr>")
-        h.append('</table>')
-    if r.notes:h.append('<p><b>Notes.</b> '+' '.join(E(x) for x in r.notes)+'</p>')
-    h.append('<p class=src>Threads drawn by convention (DIN ISO 6410): the STEP solid has an outside thread at its major diameter, an inside one at its minor (tap drill).</p>')
-    return ''.join(h)
+from recipes.sheet import sheet
+from recipes import Bought
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
@@ -192,12 +177,16 @@ def main():
     out=pathlib.Path(o.step or o.sheet or HERE/'r_recipes'/model.NAME) if (o.step or o.sheet) else HERE/'r_recipes'/model.NAME
     if o.step is not None or o.sheet is not None:out.mkdir(parents=True,exist_ok=True)
     for k,r in R.items():
+        if isinstance(r,Bought):
+            if o.sheet is not None:(out/f'{k}.html').write_text(sheet(r),encoding='utf-8')
+            print(f'{k}: {r.title}, bought: {r.what}, {r.size}');continue
         t=time.time();p=r.build()
         p.label=f'{r.title} {r.hn}'
         if o.step is not None:bd.export_step(p,str(out/f'{k}.step'));bd.export_stl(p,str(out/f'{k}.stl'),tolerance=0.002)
         if o.sheet is not None:(out/f'{k}.html').write_text(sheet(r),encoding='utf-8')
         print(f'{k}: {r.title}, {len(r.ops())} operations, volume {p.volume:.3f} mm³ ({time.time()-t:.1f} s)',flush=True)
     if not o.check:return
+    R={k:r for k,r in R.items() if not isinstance(r,Bought)}
     pm=asyncio.run(page_meshes([r.hn for r in R.values()]));bad=0;allres=[]
     for k,r in R.items():
         t=time.time();res=check(r,pm.get(r.hn));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
