@@ -27,7 +27,7 @@ model's settings, the browser and the page's last errors.
 
 | File | What it is |
 |---|---|
-| [`chronometer-working-model.html`](chronometer-working-model.html) | The Hamilton's model as one file: the Model 21 running in real time in its gimballed case and mounting box. It has views (Exploded, Laid out and Contacts among them), an eight-step walkthrough, cross-sections, winding, setting the hands, stopping and starting, the rate and timing weights, and the manual's overhaul operation by operation. Each part's card gives its Hamilton part numbers, its maker's sheet, its drawing and its STL. Its **Essay** tab links to the essay's page |
+| [`chronometer-working-model.html`](chronometer-working-model.html) | The Hamilton's model as one file: the Model 21 running in real time in its gimballed case and mounting box. It has views (Exploded, Laid out and Contacts among them), an eight-step walkthrough, cross-sections, parts to fade, hide or isolate one at a time or as a selection (Ctrl-click, or a lasso by Alt-drag; Select and Lasso on touch), winding, setting the hands, stopping and starting, the rate and timing weights, and the manual's overhaul operation by operation. Each part's card gives its Hamilton part numbers, its maker's sheet, its drawing and its STL. Its **Essay** tab links to the essay's page |
 | [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, a banking screw to turn (Swing and isochronism: the depth of lock it sets, with the swing and whether the escapement still works shown live), Making it (maker's sheets, and the build book as engineering drawings) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
 | [`marine-chronometer-source/essay/dist/the-marine-chronometer.html`](marine-chronometer-source/essay/dist/the-marine-chronometer.html) | The essay: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals, keeping the rate, navigating without radio and making the chronometer. The models' own code computes its live figures |
 
@@ -80,7 +80,7 @@ Contents:
                                  js/hamdata.js (the Model 21's figures it quotes, from tools/essay_hamdata.py), dist/
       shared/                    scripts both models use: escapement.js (the detent escapement's solver, makeEsc), escplan.js (its plan
                                  drawing), almanac.js (the essay's nautical almanac and sight reduction), hairspring.js (the hairspring's design),
-                                 contacts.js (the Contacts view), kit.js (the Wempe's part and screw builders), viewer.js (the Wempe's viewer),
+                                 contacts.js (the Contacts view), select.js (selecting parts: Ctrl-click, the lasso), kit.js (the Wempe's part and screw builders), viewer.js (the Wempe's viewer),
                                  essaykit.js (the essays' machinery)
     References/                  source material: the 1948 manual, photographs, drawings (References/wempe/: the Wempe's works drawings and
                                  their transcriptions); its README lists each file; VIDEOS.md catalogues videos of real chronometers
