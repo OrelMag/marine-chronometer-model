@@ -724,7 +724,7 @@ def _barrel():
 def drum():
     X,B,D,BB,BLT,BLU,LS=_barrel();P=[tuple(q) for q in X['DRUMprof']];src='05 07 01-1 (revised 11.3.48 and 20.4.48)';BLK=B['BLK'];yr=BB-D['rv']['y'];th=iso(2.6);C=D['cs']
     u=(math.cos(BLK),math.sin(BLK),0);sl=_rect(LS,D['sl']['r0'],D['sl']['r1'],D['sl']['w'])
-    cs={'a':BLK-5*math.pi/4,'y':(BB+BLU)/2,'sb':1}   # the chain's slot: 225° behind the rivet hole (0207); its height and lean's sense where the laid chain's hook comes (the page's, set by page_params; the STEP's at the drum's middle)
+    cs={'a':BLK-5*math.pi/4,'y':(BB-B['bi']+BLU)/2,'sb':1}   # the chain's slot: 225° behind the rivet hole (0207); its height and lean's sense where the laid chain's hook comes (the page's, set by page_params; the STEP's at the drum's middle)
     def slot():
         a,y,sb=cs['a'],cs['y'],cs['sb'];rh=(math.cos(a),math.sin(a));th_=(-math.sin(a),math.cos(a));d=((rh[0]-sb*th_[0])*math.sqrt(0.5),(rh[1]-sb*th_[1])*math.sqrt(0.5))
         o=(C['rm']*rh[0]+C['from']*d[0],C['rm']*rh[1]+C['from']*d[1]);sw=C['w']*math.sqrt(0.5)
@@ -742,7 +742,7 @@ def drum():
         s=ud.get('slot_chain')
         if s and len(s)>=5:cs.update(a=s[3],y=s[4],sb=s[2])
     r=Recipe('drum','050701-1','Barrel drum (Federhaustrommel)',src,'Ms (brass), deep-drawn (05 07 01-1)','gilt (Wempe 3955)',[Setup('1','the drawn cup in the chuck, turned and bored; the slots and hole on the mill',ops)],UP(),
-      fits=['the lid sprung into its seat (Ø 39.2 s6)','its bosses running on the arbor\'s journals'],
+      fits=['the lid sprung into its seat (Ø 39.2 s6)','its bosses running on the arbor\'s journals'],notes=["The chain's slot is cut at the fusee's assembly where the laid chain's hook comes to the drum (0207: 225° behind the hook block's hole, 45° to the radius); the STEP file puts it at the middle of the drum's inside, the page near the lid, where the chain's hook lies."],
       expect=[{'at':(20.0*u[0],20.0*u[1]),'r':1.5,'max':0.3,'vol':math.pi*(1.32**2-(th['D1']/2)**2)*(D['R']-D['ri']),'why':"the hook block's M2.6 hole: the page draws it plain at the thread's size and 0.02 (Ø 2.64), the recipe at the tap drill (the threads' convention)"},
               {'at':tuple((q1+q2)/2 for q1,q2 in zip(sl[0],sl[2])),'r':1.2,'max':0.36,'why':"the Steg's slot: the page's pocket runs 1.6 deep, through the bottom's 1.25 into the drum's hollow, and leaves its floor there as a stray face 0.35 under the bottom (facePocket; a page fault, reported)"}])
     r.page_params=pp;return r
