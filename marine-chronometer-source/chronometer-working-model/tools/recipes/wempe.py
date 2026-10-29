@@ -914,9 +914,218 @@ def goldSpring():
     return Recipe('goldSpring','050401-2','Gold spring (Goldfeder)',src,'Goldblech 333 federhart (05 04 01-2)','none (spring hard as rolled)',[Setup('1','sheet on a backing plate, cut; formed at the bench',ops,view='top')],M,
       faces=("the plate's side","the dial's side"),fits=["screwed to the square's face toward the wheel by WN-14 (M0.7)"],
       expect=[{'at':(head-K['gHo'],s*g1),'r':0.55,'max':0.06,'why':"the page's bore across a thin strip (fusee.js's bore, its n-gon cut through by holeCut and closed by capFix) joins its two mouths' vertices with wall triangles that skip round the hole, chords up to 0.048 inside the circle at the head's hole (one triangle across 64° of it): the page's mesh, not the size"}],notes=["Drawn in the detent's frame (its recipe's), as it lies on the detent unbent."])
+def detentBlock():
+    """the detent block 05 04 01-4 as last revised (WESC.DET.BLK): the 1943 block's base, thin part and upright with its cove, the end slit across the plate with its
+    two leaves and the banking screw's hole, the end face's M1 and pin holes; in the detent's frame (its recipe's)"""
+    X=WDET();Bk=X['BLK'];s,M=_detFrame();ROW,nE=X['ROW'],X['BLK_NE'];src='05 04 01-4 (8.7.43; read in first angle: build\'s detent block)';U=Bk['up']
+    tF,tT=ROW+Bk['tF'],ROW+Bk['tT'];tU=tF-Bk['len'];nUl=nE-Bk['nl'];nUr=nUl-Bk['uw'];tE=tU+U['e'];nm=(nUl+nUr)/2
+    A,B,R=Bk['JC']['A'],Bk['JC']['B'],Bk['JC']['R'];m=((A[0]+B[0])/2,(A[1]+B[1])/2);d=(B[0]-A[0],B[1]-A[1]);l=math.hypot(*d);h=math.sqrt(R*R-l*l/4);c=(m[0]-d[1]/l*h,m[1]+d[0]/l*h)
+    a0=math.atan2(A[1]-c[1],A[0]-c[0]);a1=math.atan2(B[1]-c[1],B[0]-c[0]);od=lambda a:(tT-(c[1]+R*math.sin(a)),nUr-(c[0]+R*math.cos(a)))
+    V=lambda t,n,z:bd.Vector(t,s*n,z)
+    def body():
+        ya,yb=U['a'],U['b']
+        cove=bd.Wire([bd.Edge.make_line(V(tT-A[1],nUr,ya),V(*od(a0),ya)),bd.Edge.make_three_point_arc(V(*od(a0),ya),V(*od((a0+a1)/2),ya),V(*od(a1),ya)),
+                      bd.Edge.make_line(V(*od(a1),ya),V(tT,nUr-B[0],ya)),bd.Edge.make_line(V(tT,nUr-B[0],ya),V(tT,nUr,ya)),bd.Edge.make_line(V(tT,nUr,ya),V(tT-A[1],nUr,ya))])
+        return (_box(tT,tF,nE-Bk['bl'],nE,0,Bk['bd'],s)+_box(tT,tF,nE-Bk['tl'],nE-Bk['bl'],0,Bk['td'],s)+_box(tU,tT,nUr,nUl,ya,yb,s)
+                +bd.extrude(bd.Face(cove),yb-ya,dir=(0,0,1)))
+    m17=iso(2*Bk['m17']['rs']);m1=iso(1.0);m12=iso(1.2);h13=X['H13'];zf=2.3;yS=U['s']
+    ops=[Solid(body,'Mill the block from brass: the base 6.5 deep at its end, the thin part 3 deep, the upright 3 × 3 at the free face with its cove r 3 to the base',
+          [S('base',f"{tF-tT:.1f} long, {Bk['bl']} wide, {Bk['bd']} deep; on to {Bk['tl']} at {Bk['td']} deep",'±0.1; "6,5", "3" (sure)',src),
+           S('upright',f"{Bk['uw']} wide, {U['b']-U['a']} thick, {Bk['len']} from the base's foot, {Bk['nl']} in from the end face",'"3", "25", "1,4 +0,1" (sure)',src),
+           S('cove','a step 0.35 at 2.5 over the base, then r 3 to 2.0 out and 0.4 over it','"3 r" (traced at 17.1 px/mm: sure)',src)],src),
+         Cut(lambda:_box(tU-0.1,tU+U['sl'],nm-U['sw'],nm+U['sw'],U['a']-0.1,U['b']+0.1,s),"Saw the upright's end slit across the plate",[S('slit',f"{2*U['sw']:.1f} wide, {U['sl']} from the end",'"0,3", "7" (sure)',src)],src),
+         Drill((ROW+U['tS'],s*(nUr-0.1),yS),(0,s,0),m12['D1'],Bk['uw']+0.2,"Drill and tap the banking screw's M1.2 across both leaves",[S('',f"M1.2, {-U['tS']} from the base's hole row, {yS} under the plate",'"18,8 ±0,03", "M1,2" (sure)',src)],src,thread=m12,key='M1.2'),
+         Drill((ROW+Bk['pin'][0][0],s*(nE+Bk['pin'][0][1]),-0.01),(0,0,1),2*Bk['pr'],Bk['bd']+0.02,'Drill the near steady pin\'s hole through the base',[S('',f"Ø {2*Bk['pr']}, 2 from the row, 2.3 from the end face",'(sure)',src)],src,key='pin1'),
+         Drill((ROW+Bk['pin'][1][0],s*(nE+Bk['pin'][1][1]),-0.01),(0,0,1),2*Bk['pr'],Bk['td']+0.02,'Drill the far steady pin\'s hole through the thin part',[S('',f"Ø {2*Bk['pr']}, 12.3 from the end face",'(sure)',src)],src,key='pin2'),
+         Drill((ROW,s*(nE+Bk['h13']['n']),-0.01),(0,0,1),2*Bk['h13']['r'],Bk['h13']['d']+0.01,'Drill the Ø 1.3 hole from the plate face, 3 deep',[S('',f"Ø {2*Bk['h13']['r']}, {-Bk['h13']['n']} from the end face",'"1,3", "3" (sure)',src)],src,key='h1.3'),
+         Drill((h13[0],s*h13[1],-0.01),(0,0,1),m17['D1'],Bk['td']+0.02,'Drill and tap the fixing M1.7 through the thin part (under hole 13)',[S('',f"M1.7, 7.3 from the end",'"7,3 +0,04" (sure)',src)],src,thread=m17,key='M1.7'),
+         Drill((ROW,s*(nE+Bk['h13']['n']),zf),(0,s,0),m1['D1'],-Bk['h13']['n']+0.02,"Drill and tap the M1 for the detent foot's screw from the end face to the Ø 1.3 hole",[S('',f"M1, {zf} under the plate",'05 04 01-4 (sure)',src)],src,thread=m1,key='M1'),
+         *[Drill((ROW+t,s*(nE+dn),zf),(0,s,0),2*r,-dn+0.02,"Drill a steady pin's hole in the end face for the detent's foot (at assembly, with the foot)",[S('',f"Ø {2*r:.2f}, {-dn} deep, {abs(t)} either side of the M1",'1436\'s pins (estimated)',src)],src,key=f'p{t:+.1f}') for t,dn,r,_ in Bk['endH'][1:]]]
+    L12=Bk['uw'];vol=math.pi*(U['rh']**2-(m12['D1']/2)**2)*(L12-2*U['sw'])
+    return Recipe('detentBlock','050401-4','Detent block (Gangfederkloben)',src,'brass (not read on the sheet)','none',[Setup('1','brass block on the mill; the end holes drilled with the detent\'s foot at assembly',ops,view='top')],M,
+      faces=("the plate's side","the free side"),fits=["screwed to the top plate's inner face by the M1.7 from hole 13, on its two steady pins","the detent's foot clamped to its end face by the M1 WN-gf"],
+      expect=[{'at':(ROW+U['tS'],s*nm),'r':1.8,'max':0.2,'vol':vol,'why':"the banking screw's hole across the leaves: the page draws it plain, a 32-sided bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill (the threads' convention; a hole across has no thread zone)"}],
+      notes=["Drawn in the detent's frame (its recipe's): X along the detent, Y across it, Z under the top plate's inner face.","The version as last revised: the slit across the plate (05 04 01-4's plan), the 1943 block's slit along it."])
+def blockBought():
+    return [Bought('stellstift201gk','WN-201.gk',"Detent block's steady pins (WN-201), two",'dowel pin, pressed in the block, 1.3 into the top plate','Ø 0.9 × 7.8 (near, through the base) and × 4.3 (far, through the thin part)','ISO 8734, or silver steel Ø 0.9','steel','escapement.js (05 04 01-4: the holes Ø 0.9 sure; the lengths from the block and the plate, estimated)'),
+            Bought('stellstiftgf','WN-205.d',"Detent foot's steady pins, two","pin, pressed through the foot into the block's end face",'Ø 0.45 × 3.2','silver steel Ø 0.45','steel',"escapement.js (1436's foot holes; estimated)")]
+def blockScrew():
+    q=WDET()['BLK']['gk'];return screw('blockScrew','WN-gk','Detent block screw (WN-15 by the coloured section)',q[0],q[1],q[2],q[3],'steel (not given)','escapement.js BLK.gk (Wempe 3955 6_S: head Ø 3.0 × 2.4; M1.7 3.0 into the block: estimated)')
 def detentBought():
     return [Bought('lockingStone','050401-3','Locking stone (Ruhestein)',"a ruby pin, ground half away to a flat that faces the oncoming tooth along the line from the wheel's centre, set in the detent's pipe in shellac",
               "Ø 0.75, standing out of the pipe's lower end to 0.06 under the wheel's lower face",'jewel pin (synthetic ruby)','ruby','05 04 01-3; 05 04_1 ("Ruhestein Ø 0,75": sure; its hatched half the ground flat)')]
+# ---------------- batch 8a: the balance's and escape wheel's jewel settings and their screws (WESC.BJ, jewProf); the stones bought ----------------
+# escapement.js draws each setting as a lathe about its arbor (the balance's staff, the escape arbor) in the arbor's frame: its profile [r, y] is the page's own (jewProf),
+# turned here as drawn. No sheet of the settings is in the set: their sizes are the coloured section's and U30's where they say so, else estimated (escapement.js's jewels).
+@functools.lru_cache()
+def WJ():
+    js="const W=require(%r)(),E=W.WESC;process.stdout.write(JSON.stringify({BJ:E.BJ,b:E.jewProf(E.Y).bal,e:E.jewProf(E.Y).esc}))"%str(TOOLS/'wempe_load.js')
+    return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
+JSRC="escapement.js's jewels (no sheet of the settings in the set: the coloured section traced at 9.4 px/mm, U30 127-556.04; Wempe 3955's photographs)"
+def setting(key,hn,title,P,mat,fit,what,notes=()):
+    z0=min(z for _,z in P);z1=max(z for _,z in P);ro=max(r for r,_ in P);ri=min(r for r,_ in P);src=JSRC
+    ops=[Blank(2*ro+0.3,z0-0.05,z1+0.05,'Cut the blank from brass bar',[S('length',f'{z1-z0:.3f}',None,src),S('outside',f'Ø {2*ro:.3f}',"the seat's Ø 5.2 H7, line to line (a press: estimated)" if abs(ro-2.6)<1e-9 else None,src)],src),
+         TurnProfile(P,'Turn, bore and form it to its profile: '+what,[S('bore',f'Ø {2*ri:.3f} at its least',None,src),S('length',f'{z1-z0:.3f}',None,src)],src)]
+    return Recipe(key,hn,title,'05 04 06-2 / 05 04 08-2 (the sheets not in the set)',mat,'none',[Setup('1','bar in the collet, parted off; the stone set by burnishing (closing) the lip over its edge',ops)],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),fits=[fit],notes=list(notes)+["Its profile is the page's own (escapement.js jewProf), turned point by point."])
+def settingBU():return setting('settingBU','050406-2.bu',"Balance's upper jewel setting (Fassung)",WJ()['b']['bu'],'brass (Messing)',"in the upper cock's seat Ø 5.2 H7 on the floor bored Ø 4.59, under the endstone's setting","a lip under the hole jewel's rim (Ø 2.906), the stone 0.03 under its face")
+def settingCU():return setting('settingCU','050408-2.bu',"Balance's upper endstone setting (Fassung)",WJ()['b']['cu'],'brass, gilt (Wempe 3955: gilt)',"in the upper cock's seat Ø 5.2 H7, 0.1 proud of the cock, held by two screws WN-55 over its edge","its mouth a cone from the lip over the endstone's edge to Ø 4.4 at its top (Wempe 3955, 2_Wempe_3955_A.jpg: likely)")
+def settingBL():return setting('settingBL','050406-2.bl',"Balance's lower jewel setting (Fassung)",WJ()['b']['bl'],'brass (Messing)',"in the lower cock's lug from below, under the endstone's setting","a lip under the hole jewel's rim, open Ø 3.0 round the staff (the coloured section)")
+def settingCL():return setting('settingCL','050408-2.bl',"Balance's lower endstone setting (Fassung)",WJ()['b']['cl'],'brass (Messing)',"in the lower cock's lug from below, held by two screws WN-10 over its edge","a lip over the endstone's edge")
+def settingEU():return setting('settingEU','050406-2.eu',"Escape wheel's upper jewel setting (Fassung)",WJ()['e']['ju'],'brass (Messing)',"in the top plate's seat 26 (Ø 5.2 H7), flush with its inner face","a lip under the hole jewel's rim")
+def settingCEU():return setting('settingCEU','050408-2.eu',"Escape wheel's upper endstone setting (Fassung)",WJ()['e']['eu'],'brass, gilt (Wempe 3955)',"from the inside in the top plate's seat 26, its spigot Ø 4.59 through the lip flush with the outer face, held by two screws from outside","its spigot Ø 4.59 (the plate's H7), its mouth a cone from the lip to Ø 3.7 (likely)")
+def settingEL():return setting('settingEL','050406-2.el',"Escape wheel's lower jewel bush (Fassung)",WJ()['e']['jl'],'brass (Messing)',"pressed in the pillar plate's 26, reamed 2.50","a tube Ø 2.5 with a lip over the hole jewel's rim (Ø 1.606)")
+def settingCEL():return setting('settingCEL','050408-2.el',"Escape wheel's lower endstone setting (Fassung)",WJ()['e']['el'],'brass, gilt (Wempe 3955)',"in the pillar plate's 2.50 bore, its flange Ø 4.6 flush in the seat 0.25 deep in the dial face, under the plate's two screws","a tube to the stone, its window Ø 1.9 and a lip over the stone's rim (estimated; Wempe 3955, 3_Wempe_3955_uZ.jpg)")
+def _jscr(key,hn,title,q,mat,src):return screw(key,hn,title,q[0],q[1],q[2],q[3],mat,src)
+def _escU(r):
+    q=WJ()['BJ']['scrEU'];r.expect.append({'at':(0,0),'r':0.45,'max':0.04,'why':f"the page's shank runs 0.1 into the head (screw()), but this head is only {q[1]} high and its slot (KIT headGeo) {max(min(0.55,q[1]*0.45),min(0.35,q[0]*0.14)+0.05):.3f} deep: the shank's end stands 0.032 up into the slot (the page's mesh, not the size)"});return r
+def jewelScrews():
+    B=WJ()['BJ'];s='escapement.js BJ (the coloured section at 9.4 px/mm; Wempe 3955: heads Ø 2.5 sure, heights likely)'
+    return {'settingScrewU':_jscr('settingScrewU','WN-55.ck',"Upper endstone setting's screw (WN-55), two",B['scrU'],'brass (Wempe 3955)',s),
+            'settingScrewL':_jscr('settingScrewL','WN-10.bl',"Lower settings' screw (WN-10), two",B['scrL'],'steel (not given)',s),
+            'escScrewU':_escU(_jscr('escScrewU','WN-es',"Escape wheel's upper endstone screw, two",B['scrEU'],'brass (Wempe 3955: slotted brass)','escapement.js BJ (Wempe 3955, 2_Wempe_3955_A.jpg: heads 2.5 across; estimated)')),
+            'escScrewL':_jscr('escScrewL','WN-ec',"Escape wheel's lower endstone screw, two",B['scrEL'],'brass (Wempe 3955)','escapement.js BJ (Wempe 3955, 3_Wempe_3955_uZ.jpg: heads 2.6; estimated)')}
+def jewelsBought():
+    B=WJ()['BJ'];src='escapement.js BJ: the coloured section traced on its red at 9.4 px/mm (each stone Ø 2.9, ±0.11: likely); no sheet of the stones in the set'
+    hole=f"Ø {2*B['JR']:.1f} × {B['JT']}, the face toward the endstone domed {B['JD']}, an oil sink from the hole to Ø {2*B['JC']:.1f} {B['JH']} deep"
+    end=f"Ø {2*B['ER']:.1f}, its edge {B['EE']} high, domed {B['EH']} on its outside, flat to the pivot"
+    return [*[Bought('jewelBal'+k,'050407-1.'+h,f"Balance's {w} hole jewel (Lagerstein)","hole jewel, synthetic ruby, its hole olived for the staff's pivot Ø 0.21",hole+', hole Ø 0.23','a watch jewel to size','ruby',src) for k,h,w in (('U','bu','upper'),('L','bl','lower'))],
+            Bought('endstoneBalU','050408-1.bu',"Balance's upper endstone (Deckstein)","endstone, drawn white as Wempe 3955's (described as a diamond endstone); a synthetic ruby serves",end,'a watch endstone to size','diamond or ruby',src),
+            Bought('endstoneBalL','050408-1.bl',"Balance's lower endstone (Deckstein)","endstone, synthetic ruby",end,'a watch endstone to size','ruby',src),
+            Bought('jewelEscU','050406-1.eu',"Escape wheel's upper hole jewel (Lagerstein)","hole jewel, synthetic ruby, for the escape arbor's pivot Ø 0.24",hole+', hole Ø 0.26','a watch jewel to size','ruby',src),
+            Bought('endstoneEscU','050408-1.eu',"Escape wheel's upper endstone (Deckstein)","endstone, synthetic ruby, the balance's (the coloured section draws them alike)",end,'a watch endstone to size','ruby',src),
+            Bought('jewelEscL','050406-1.el',"Escape wheel's lower hole jewel (Lagerstein)","hole jewel, synthetic ruby, the balance's form scaled to the 2.50 bore","Ø 1.6 × 0.8, hole Ø 0.26",'a watch jewel to size','ruby','escapement.js (the coloured section 0.6-1.4 over the plate: likely)'),
+            Bought('endstoneEscL','050408-1.el',"Escape wheel's lower endstone (Deckstein)","endstone, synthetic ruby, flat to the pivot, its back chamfered","Ø 2.2 × 0.75",'a watch endstone to size','ruby','escapement.js (the coloured section 1.9-2.6: likely)')]
+
+# ---------------- batch 8b: the balance (WESC.BAL, MS, TSW, HUB, ROLI, ROLD, rolGeo): rim and arm, masses, timing screws and weights, hub, rollers ----------------
+# Each is drawn in the balance's own frame (the staff's axis Z, the page's y; the plan's (x, z) as (X, -Y)), at rest (recipes.py's frozen pose: th 0), as
+# escapement.js builds it as last revised; a part the page builds in a frame of its own (a mass, a timing screw) is put there by to_page.
+@functools.lru_cache()
+def WB():
+    js="const W=require(%r)(),E=W.WESC;process.stdout.write(JSON.stringify({BAL:E.BAL,MS:E.MS,TSW:E.TSW,HUB:E.HUB,ROLI:E.ROLI,ROLD:E.ROLD,g:E.rolGeo(),Y:E.Y,FY:E.FY}))"%str(TOOLS/'wempe_load.js')
+    return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
+def BALM():return page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0))
+def _pl(q):return (q[0],-q[1])   # a plan point (x, z) into the balance's recipe frame
+def _thr(d,pitch):return {'d':d,'p':pitch,'D1':d-1.0825*pitch,'H1':0.5413*pitch,'es':0.015+0.011*pitch}   # a fine thread (iso() gives the coarse)
+def _poly2(P,z):return bd.Face(bd.Wire.make_polygon([bd.Vector(x,y,z) for x,y in P],close=True))
+def _arc_pts(c,r,a0,a1):m=(a0+a1)/2;return [(c[0]+r*math.cos(a),c[1]+r*math.sin(a)) for a in (a0,m,a1)]
+BSRC='05 03 01-1 (31.7.41, N.gepr. 27.4.43); 05 03_4; 05 03_1, 05 03_2'
+def rim():
+    X=WB();B=X['BAL'];Y=X['Y'];FY=X['FY'];r0,r1,r2,g,sw=B['r0'],B['r1'],B['r2'],B['gap'],B['sw'];AT=B['AT'];y0,y1,ya=Y['rimT'],FY,Y['armT'];src=BSRC
+    x0,zc,hc=AT['x0'],AT['zc'],AT['hc']
+    def arm():   # the arm along the page's z (12-6), its flanks straight from 3.2 at the rim to 4 at x0, then arcs r 20 about (±hc, ±zc) meeting in a point 6.5 across at the centre
+        ext=r1;hw_e=2-0.4*(ext-x0)/(sw-x0)   # the flanks run on straight into the rim's metal (the union is the page's arm, whose ends are the rim's inside)
+        P=lambda x,z:bd.Vector(x,-z,ya);hw=lambda z:hc-math.sqrt(400-(abs(z)-zc)**2)
+        E=[]
+        for s in (1,-1):   # the right flank (x > 0) from z -ext to +ext, across the end, the left flank back, across the other end
+            zs=(-ext,-x0,0,x0,ext) if s>0 else (ext,x0,0,-x0,-ext)
+            E.append(bd.Edge.make_line(P(s*hw_e,zs[0]),P(s*2,zs[1])))
+            for za,zb in ((zs[1],zs[2]),(zs[2],zs[3])):E.append(bd.Edge.make_three_point_arc(P(s*hw(za),za),P(s*hw((za+zb)/2),(za+zb)/2),P(s*hw(zb),zb)))
+            E.append(bd.Edge.make_line(P(s*2,zs[3]),P(s*hw_e,zs[4])))
+            E.append(bd.Edge.make_line(P(s*hw_e,zs[4]),P(-s*hw_e,zs[4])))
+        return bd.extrude(bd.Face(bd.Wire(E)),y1-ya,dir=(0,0,1))
+    def ring():
+        R=_rev_at((0,0),[(r0,y0),(r2,y0),(r2,y1),(r0,y1)])
+        for sx in (1,-1):R=R-bd.Box(2,2*g,y1-y0+1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((sx*(r0+r2)/2,0,y0-0.5)))
+        return R
+    th=_thr(0.9,0.16);t=B['tH']
+    ops=[Solid(lambda:ring()+arm(),"Turn the bimetallic blank (nickel steel inside, brass fused outside) to the rim's sizes, then mill the arm across the steel disc's lower part to its outline and cut the rim through at 90° from the arm",
+          [S('rim',f'Ø {2*r2:.2f} outside, the joint Ø {2*r1:.2f}, inside Ø {2*r0:.2f}, {y1-y0:.2f} high','32.32 −0.04; 31.29 −0.04; 30.48 +0.04 (the fits\' middles)',src),
+           S('arm',f'{y1-ya:.2f} thick, 3.2 wide at the rim, 4 at {x0:.2f} from the centre, then hollow arcs r 20 to a point 6.5 across','1,15; 3,2; 4; 20 r; 6,5 (05 03_4, its flanks traced: sure)',src),
+           S('cuts',f'{2*g:.1f} wide, walls parallel, at 3 and 9 o\'clock','1.5 +0.2',src)],src),
+         Drill((0,0,ya-0.01),(0,0,1),2*B['hub'],y1-ya+0.02,"Drill and ream the arm's hole for the hub",[S('',f"Ø {2*B['hub']:.3f}",'2 H7 (its middle)',src)],src,key='hub'),
+         *[Drill((0,-s*B['hs'],ya-0.01),(0,0,1),2*B['hR'],y1-ya+0.02,"Drill a hub screw's hole by the jig",[S('',f"Ø {2*B['hR']:.1f} at {B['hs']} from the centre",'2.14 +0.02 (its middle)',src)],src,key=f'scr{s}') for s in (1,-1)],
+         *[Cone((0,-s*B['hs']),B['kR'],B['hR'],'in',None,B['kD'],"Countersink it 90° in the arm's top",[S('',f"Ø {2*B['kR']:.1f}, {B['kD']} deep",'"0,4", "1,8" (read so: README, Estimated)',src)],src,z0=ya) for s in (1,-1)],
+         *[Drill((0,s*(r0-t['i']),y1-t['dy']),(0,s,0),th['D1'],r2-r0+t['i']+0.2,"Drill and tap a timing screw's hole across the rim at the arm's end",[S('',f"M0.9 × 0.16, {t['dy']} over the rim's lower face",'"0,9", "0,16 Steigung" (sure)',src)],src,thread=th,key=f'T{s}') for s in (1,-1)]]
+    vol=math.pi*(t['r']**2*16*math.tan(math.pi/16)/math.pi-(th['D1']/2)**2)*(r2-r0)
+    return Recipe('rim','050301-1','Balance rim with its arm (Unruhreifen)',src,'"Nickelstahl Sonderlegierung u. Messing" (05 03 01-1): the arm and inner rim nickel steel, the outer brass','not given',
+      [Setup('1','the bimetallic blank on the lathe, then on the mill; the cuts last, once the balance is poised',ops,view='top')],BALM(),faces=("the arm's top","the rim's lower face"),
+      fits=["the hub's hole on the hub's neck (2 H7)","the timing screws in their M0.9 × 0.16"],
+      expect=[{'at':(0,s*(r0+r2)/2),'r':0.8,'max':0.15,'vol':vol,'why':"the timing screw's tapped hole across the rim: the page draws it plain, a 16-sided bore with its flats at 0.46 (the thread's size and 0.02), the recipe at the tap drill (the threads' convention; a radial hole has no thread zone)"} for s in (1,-1)],
+      notes=["Drawn as one solid: the steel and the brass are fused before turning (a bimetallic balance), so the joint Ø 31.27 is a size in the blank, not a face of the part.",
+             "The 32 punch marks (\"8 Körner in 60 Teilung\") and the maker's mark are left to the sheet: 8 a quarter, 6° apart from 6° to 48° off each cut, on the brass half-way up."])
+def masses():
+    X=WB();B=X['BAL'];M=X['MS'];Y=X['Y'];FY=X['FY'];src='05 03 01-4 (05 03_2); 05 03_1 [6,35]'
+    rc=(B['r0']+B['r2'])/2;mr=M['d']/2;y0,y1=FY-M['H1'],FY-M['H0'];ys=Y['rimT']-M['cl'];ri,ro=B['r0']-M['cl'],B['r2']+M['cl'];rOut=rc+mr;a=math.radians(M['A'])
+    u=(math.cos(a),-math.sin(a));c=(rc*u[0],rc*u[1]);C=_pl(c);U=(u[0],-u[1],0);yS=FY-M['hS']
+    import numpy as np
+    Rj=np.array([[u[1],u[0],0],[0,0,-1],[-u[0],u[1],0]]);A=BALM();T=np.eye(4);T[:3,:3]=Rj.T@A[:3,:3];T[:3,3]=-Rj.T@np.array([0,yS,0])   # into the outer jaw's frame (x across, y out along u, z = x × y), where the page builds the mass
+    tap=iso(0.8);top=_thr(1.2,0.25)
+    ops=[Solid(lambda:_rev_at(C,[(0,y0),(mr-M['CH'],y0),(mr,y0+M['CH']),(mr,y1),(0,y1)]),'Turn the mass from brass bar, its top edge chamfered 45°',[S('',f"Ø {M['d']} × {M['H1']-M['H0']}",'05 03_1 [6,35]; 05 03_2 (scaled 6.0-6.46)',src),S('chamfer',f"{M['CH']} × 45°",'05 03_2 (likely)',src)],src),
+         Cut(lambda:_rev_at((0,0),[(ri,ys),(ro,ys),(ro,y1+0.01),(ri,y1+0.01)]),"Mill the slot for the rim from below, on the rim's own circle",[S('',f'{ro-ri:.2f} wide (the rim and 0.02 a side), {y1-ys:.2f} deep','estimated',src)],src),
+         Drill(tuple((rOut-M['cb'])*np.array(U)+np.array([0,0,yS])),U,2*M['CB'],1.5,"Counterbore the outer side for the screw's head",[S('',f"Ø {2*M['CB']:.2f}, {M['cb']} under the round side",'05 03_2 (sinks the head)',src)],src,key='cb'),
+         Drill(tuple((ro-0.01)*np.array(U)+np.array([0,0,yS])),U,tap['D1'],rOut-M['cb']-ro+0.02,"Drill and tap M0.8 through the outer jaw for the screw WN-12",[S('',f"M0.8, {M['hS']} over the rim's lower face",'05 03_2 (sure); the size estimated',src)],src,thread=tap,key='WN-12'),
+         Drill((C[0],C[1],y0-0.01),(0,0,1),top['D1'],M['top']['d']+0.01,'Drill and tap M1.2 in its top, 2.0 deep (for a poising screw)',[S('',f"M1.2, {M['top']['d']} deep",'05 03_2 (sure)',src)],src,thread=top,key='top')]
+    Mt=T
+    return Recipe('masses','050301-4','Compensation mass (Masse), four alike',src,'brass (not given: the coloured section)','none',[Setup('1','bar in the collet; then on the mill for the slot, the counterbore and the holes',ops)],Mt,
+      fits=["the slot over the rim, clamped by its screw WN-12 against the rim's outer face"],
+      expect=[{'at':((rOut-M['cb']+ro)/2*U[0],(rOut-M['cb']+ro)/2*U[1]),'r':(rOut-M['cb']-ro)/2+0.1,'max':0.2,'vol':math.pi*((M['TS']+0.02)**2-(tap['D1']/2)**2)*(rOut-M['cb']-ro),'why':"the M0.8 hole across the outer jaw: the page draws its thread's helix at its size and 0.02, the recipe at the tap drill (a radial hole has no thread zone)"}],
+      notes=["Drawn for the mass at 30° from the cuts' line (the first); the others are the same part.","Its place on the rim (30° from the 3-9 line, Wempe 3955) is set at assembly."])
+def timingScrew():
+    X=WB();T=X['TSW'];B=X['BAL'];rI=B['r0'];src='05 03 01-2 (05 03_2; 05 03 01-1 its thread)';th=_thr(2*T['rs'],T['p'])
+    crest=2*T['rs']-th['es'];ch=min(th['H1'],0.3);root=crest/2-th['H1'];rt=max(root-th['H1']/2,root*0.6)
+    face=lambda:bd.Solid.make_cylinder(rI,10,bd.Plane(origin=(0,-5,0),z_dir=(0,1,0)))
+    ops=[Blank(2*T['hr']+0.3,rI-T['hl'],T['TIP'],'Cut the blank between centres',[S('length',f"{T['TIP']-rI+T['hl']:.2f}",None,src)],src),
+         TurnOD(2*T['hr'],rI-T['hl']-0.1,rI,'Turn the head',[S('head',f"Ø {2*T['hr']:.2f} × {T['hl']}",'05 03_2 (scaled at 12.07 px/mm: likely)',src)],src),
+         TurnOD(crest,rI,T['TIP']+0.1,"Turn the shank to the thread's major diameter",[S('shank',f'Ø {crest:.3f}',None,src)],src),
+         TurnCone(crest/2,T['TIP']-ch,rt,T['TIP'],'Chamfer the tip',[],src),
+         ThreadOD(th,rI,T['TIP'],'Cut the thread M0.9 × 0.16',[S('thread','M0.9 × 0.16','"0,9", "0,16 Steigung" (05 03 01-1: sure)',src)],src),
+         Cut(lambda:bd.Solid.make_box(10,10,T['hl']+0.2).moved(bd.Location((-5,-5,rI-T['hl']-0.2)))-face(),"File the head's face to the rim's inside (r 15.25) so it bears",[S('',f'r {rI} about the staff','the model (its face follows the rim)',src)],src),
+         Cut(lambda:bd.Box(3,0.25,0.38,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,rI-T['hl']-0.1))),'Slot the head across, toward the staff',[S('slot','0.25 wide, 0.28 deep','estimated',src)],src)]
+    r=Recipe('timingScrew','050301-2','Timing screw (Zeitschraube), two',src,'steel (not given)','none',[Setup('1','between centres; the head filed to the rim at the bench',ops)],
+      BALM(),fits=['screwed through the rim at the arm\'s end, its head on the rim\'s inside'],
+      expect=[{'at':(0,0),'r':0.9,'max':0.15,'why':"the head's slot: the page draws it as a solid dark box (1.67 × 0.3 × 0.25, 0.02 out of the head's end) over the head, not cut into it"}])
+    r.near=0.5;return r
+def timingWeight():
+    X=WB();T=X['TSW'];src='05 03 01-3 (05 03_2: Ø 4.21-4.33 × 3.3; two saw cuts)';W1=T['TIP']-T['wo'];W0=W1-T['wl'];R=T['Rw'];th=_thr(2*T['rs'],T['p']);w,dA,dB=T['cut']
+    ops=[Blank(2*R,W0,W1,'Turn the weight from brass bar',[S('',f'Ø {2*R:.2f} × {W1-W0}','05 03_2 (sure)',src)],src),
+         Bore(th['D1'],W0-0.01,W1+0.01,'Drill and tap it M0.9 × 0.16',[S('thread','M0.9 × 0.16 through',None,src)],src,thread=th),
+         Cut(lambda:bd.Box(2*R+1,w,dA+0.1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,W1-dA))),'Saw across its diameter from the outer end',[S('',f'{w} wide, {dA} deep','05 03_2 scaled; the width estimated',src)],src),
+         Cut(lambda:bd.Box(w,2*R+1,dB+0.1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MAX)).moved(bd.Location((0,0,W0+dB))),'Saw across it at right angles from the inner end',[S('',f'{w} wide, {dB} deep','05 03_2 scaled; Wempe 3955',src)],src)]
+    return Recipe('timingWeight','050301-3','Timing weight (Zeitmasse), two',src,'brass (not given)','none',[Setup('1','bar in the collet, parted off; sawn at the bench',ops)],BALM(),
+      fits=['screwed on the timing screw, gripping the thread by its cuts'],notes=["Drawn on its screw's axis, 0.8 short of the screw's tip as the page places it."])
+def hub():
+    X=WB();H=X['HUB'];Y=X['Y'];FY=X['FY'];src='05 04 02-2 (kompl. 05 04 02, 29.5.46)';th=iso(2*H['rs'])
+    fl,hb=Y['flB'],Y['hubB'];b0=H['b']
+    P=[(b0,FY),(H['R'],FY),(H['R'],fl),(H['nR'],fl),(H['nR'],hb),(H['f'],hb),(b0+H['nd']/H['tp'],hb-H['fd'])]
+    ops=[Blank(2*H['R']+0.3,FY-0.05,hb+0.05,'Cut the blank from brass bar',[],src),
+         TurnProfile(P,'Turn the flange and the neck, ream the bore 1:70 to the staff and open its foot',[S('flange',f"Ø {2*H['R']:.2f} × {fl-FY:.1f}",'6.3 −0.1 (its middle)',src),S('neck',f"Ø {2*H['nR']:.2f} to {hb-FY:.1f} under the flange's top",'2.63 −0.06; 4.1 +0.05',src),
+           S('bore',f"1:70 from Ø {2*b0:.3f} at the flange's top",'on the staff\'s 1:70, line to line',src),S('foot',f"Ø {2*H['f']:.2f} over {H['fd']}",'2,14 +0,01',src)],src),
+         *[Drill((0,-s*H['s'],FY-0.01),(0,0,1),th['D1'],fl-FY+0.02,"Drill and tap M1 through the flange for the arm's screw, by the jig",[S('',f"M1 at {H['s']} from the centre",'"nach Bohrlehre 2 x M1" (05 03_3.2)',src)],src,thread=th,key=f'M1{s}') for s in (1,-1)]]
+    return Recipe('hub','050402-2','Balance hub (Unruhbutzen)',src,'brass','none',[Setup('1','bar in the collet, parted off; then the holes by the jig',ops)],BALM(),fits=["pressed on the staff's 1:70, line to line","the arm screwed to its flange by two WN-10"])
+def impulseRoller():
+    X=WB();R=X['ROLI'];g=X['g']['imp'];Y=X['Y'];z0,z1=Y['ir0'],Y['ir1'];src='02 04 02 (11.2.41, revised 10.9.41; 05 04 03-1 by the coloured section)';rr=g['rr']
+    cL,cT,cc=g['cL'],g['cT'],g['cc'];a0=math.atan2(cL[1]-cc[1],cL[0]-cc[0]);a1=math.atan2(cT[1]-cc[1],cT[0]-cc[0]);da=(a1-a0+math.pi)%(2*math.pi)-math.pi
+    def notch():
+        q=lambda p:bd.Vector(*_pl(p),z0-0.1)
+        A,Z=g['rec'][0],g['rec'][-1];mid=(cc[0]+R['R']*math.cos(a0+da/2),cc[1]+R['R']*math.sin(a0+da/2))
+        w=bd.Wire([bd.Edge.make_line(q(A),q(cL)),bd.Edge.make_three_point_arc(q(cL),q(mid),q(cT)),bd.Edge.make_line(q(cT),q(Z)),bd.Edge.make_line(q(Z),q(A))])
+        n=bd.extrude(bd.Face(w),z1-z0+0.2,dir=(0,0,1))
+        return n+bd.extrude(_poly2([_pl(p) for p in g['slot']],z0-0.1),z1-z0+0.2,dir=(0,0,1))
+    m=1/R['tp'];e=0.05
+    ops=[Blank(2*rr,z0,z1,'Turn the roller from beryllium copper bar and part it off',[S('',f'Ø {2*rr:.2f} × {z1-z0:.2f}','6.78 ±0.01; 1.6 +0.1 (its middle)',src)],src),
+         InnerCone(R['bore']+m*e,z0-e,R['bore']-m*(z1-z0+e),z1+e,'Ream the bore 1:70',[S('',f"Ø {2*R['bore']:.3f} at the face toward the hub, 1:70","1,65 −0,03 / 1,627 (\"Kegel 1:70 aufreiben\")",src)],src),
+         Cut(notch,"Mill the hollow for the teeth (r 3.5 between corners 3.5 apart) and the stone's slot",[S('hollow',f"r {R['R']}, its corners {R['t']} and {R['l']} from the stone's face",'sure',src),S('slot',f"{R['sl'][1]-R['sl'][0]} long from {R['sl'][0]}, {R['sl'][3]-R['sl'][2]:.3f} wide",'the stone 0.5 × 1.8',src)],src),
+         Drill((*_pl(g['ph']),z0-0.01),(0,0,1),2*R['phR'],z1-z0+0.02,'Drill the poising hole',[S('',f"Ø {2*R['phR']}, 1.9 below the centre and 0.7 to the stone's side",'sure',src)],src,key='ph')]
+    return Recipe('impulseRoller','050403-1','Impulse roller (Heberolle)',src,'Kupfer Beryllium (02 04 02)','not given',[Setup('1','bar in the collet; then on the mill for the hollow and slot',ops)],BALM(),
+      fits=["pressed on the staff's Ø 1.65 s6","the impulse stone set in its slot in shellac, its face on the roller's centre line"],notes=['Drawn at rest, as the page turns it with the balance (its face 24° before the line of centres).'])
+def dischargeRoller():
+    X=WB();R=X['ROLD'];g=X['g']['dis'];Y=X['Y'];z0,z1=Y['dr0'],Y['dr1'];src='05 04 04-1 (no sheet: 05 04_1 dashed, traced at 24.4 px/mm)'
+    p0,p1=_pl(g['p0']),_pl(g['p1']);r=R['w']/2
+    def body():
+        sk=bd.Cylinder(r,z1-z0,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((*p0,z0)))+bd.Cylinder(r,z1-z0,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((*p1,z0)))
+        d=(p1[0]-p0[0],p1[1]-p0[1]);l=math.hypot(*d);n=(-d[1]/l*r,d[0]/l*r)
+        return sk+bd.extrude(_poly2([(p0[0]+n[0],p0[1]+n[1]),(p1[0]+n[0],p1[1]+n[1]),(p1[0]-n[0],p1[1]-n[1]),(p0[0]-n[0],p0[1]-n[1])],z0),z1-z0,dir=(0,0,1))
+    lt=math.dist(p0,p1)+R['w']
+    ops=[Solid(body,'Cut the block from brass and mill its outline, round at both ends',[S('',f"{lt:.2f} × {R['w']}",'05 04_1 dashed (2.77 × 2.15: likely)',src),S('thickness',f'{z1-z0:.2f}','05 04_1',src)],src),
+         Cut(lambda:bd.extrude(_poly2([_pl(q) for q in g['slot']],z0-0.1),z1-z0+0.2,dir=(0,0,1)),"Mill the stone's slot",[S('',f"{g['DSW']:.2f} wide, from {R['sl'][0]} to its end",'scaled',src)],src),
+         Drill((0,0,z0-0.01),(0,0,1),2*R['bore'],z1-z0+0.02,'Drill and ream the bore',[S('',f"Ø {2*R['bore']:.3f}",'1.2 H7 (estimated)',src)],src,key='bore')]
+    return Recipe('dischargeRoller','050404-1','Discharge roller (Auslöserolle)',src,'brass (Wempe 3955: likely)','none',[Setup('1','strip on the mill',ops,view='top')],BALM(),fits=["pressed on the staff's Ø 1.2 r6"],notes=['Drawn at rest, as the page turns it with the balance.'])
+def balanceBought():
+    src='02 04 02; 05 04_1; escapement.js (the rollers)'
+    return [Bought('impulseStone','050403-2','Impulse stone (Hebestein)','a sapphire pallet, its end bevelled 45°, set in the roller\'s slot in shellac','0.5 × 1.7 × 1.8, the face 1.8 long from 1.55 to 3.35 from the staff, the bevel to 2.85 at its back','a jewel to size','sapphire','02 04 02 (sure)'),
+            Bought('dischargeStone','050404-2','Discharge stone (Auslösestein)','a jewel pallet, its end bevelled back 0.3 from the acting corner, set in the roller\'s slot in shellac','0.4 × 1.7, reaching 1.58 from the staff','a jewel to size','sapphire or ruby (not given)','05 04_1 (1.7 sure; 0.4 scaled; the bevel estimated)')]
+
 def springsBought():
     return [Bought('clickSpringStrip','050602-2',"Click springs' strip (Sperrfeder), two",'phosphor-bronze spring strip, cut 27.0 long, two holes Ø 0.6 +0.02 (the end\'s 5 from the next), formed round two Ø 2.2 formers into its S (05 06 02-2)',
               '1.5 × 0.4, 27.0 stretched ("gestreckt 27,0")','bronze spring strip (Bronzeband federhart)','bronze, spring hard','05 06 02-2',
@@ -943,6 +1152,12 @@ RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarS
   'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel,'fuseeArbor':fuseeArbor,'barrelArbor':barrelArbor,
   'coverPlate':coverPlate,'dustPlate':dustPlate,'vorreiber':vorreiber,'clickWheel':clickWheel,'fuseeWheel':fuseeWheel,'maintRatchet':maintRatchet,'setupRatchet':setupRatchet,
   'drum':drum,'lid':lid,'steg':steg,'hookBlock':hookBlock,
-  'clicks':clicks,'stopBar':stopBar,'maintDetent':maintDetent,'detent':detent,'goldSpring':goldSpring}
+  'clicks':clicks,'stopBar':stopBar,'maintDetent':maintDetent,'detent':detent,'goldSpring':goldSpring,
+  'settingBU':settingBU,'settingCU':settingCU,'settingBL':settingBL,'settingCL':settingCL,'settingEU':settingEU,'settingCEU':settingCEU,'settingEL':settingEL,'settingCEL':settingCEL,
+  'detentBlock':detentBlock,'blockScrew':blockScrew,
+  'rim':rim,'masses':masses,'timingScrew':timingScrew,'timingWeight':timingWeight,'hub':hub,'impulseRoller':impulseRoller,'dischargeRoller':dischargeRoller}
+for _k in ('settingScrewU','settingScrewL','escScrewU','escScrewL'):RECIPES[_k]=(lambda k=_k:jewelScrews()[k])
 for _h,_k,*_r in SMALL:RECIPES[_k]=(lambda h=_h,k=_k,r=tuple(_r):smallTurned(h,k,*r))
 for _b in pinsBought()+springsBought()+detentBought():RECIPES[_b.key]=(lambda b=_b:b)
+for _b in balanceBought()+blockBought():RECIPES[_b.key]=(lambda b=_b:b)
+for _k in ('jewelBalU','jewelBalL','endstoneBalU','endstoneBalL','jewelEscU','endstoneEscU','jewelEscL','endstoneEscL'):RECIPES[_k]=(lambda k=_k:[q for q in jewelsBought() if q.key==k][0])
