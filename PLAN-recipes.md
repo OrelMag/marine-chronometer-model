@@ -418,7 +418,7 @@ inner edge's construction (`w48`, between fusee.js's `MS-W48` markers) is read f
 **Deferred: the screws WN-19, WN-20, WN-21** (batch 8 done, below). The three screws aren't the kit's `screw()`: WN-19 is countersunk in the click wheel's 1:8 holes, WN-20 is countersunk in
 the cover plate, and WN-21 is shouldered. Each has its own literals in fusee.js to lift first.
 
-### Batch 8 and the detent block (29 October 2026): 18 made parts pass, 12 lines bought
+### Batch 8 and the detent block (29 October 2026): 21 made parts pass, 11 lines bought
 
 **The lift, the page unchanged.** `escapement.js`'s balance, jewel and block literals moved to module scope with the same expressions in the same order, and
 `build` reads them: `BJ` (the stones' sizes, `eLip`, the settings' screws) with `jewProf(Q)` (each setting's turned profile, the balance's and the escape
