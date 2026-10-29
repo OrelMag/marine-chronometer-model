@@ -78,6 +78,12 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       screwD:89,screws:[340,100,220],dialR:50.5,dialPin:1.1,dialScrews:[354,120,240],casePin:1.6,casePinZ:2.8,casePinR0:43.5,scr:[3.1,3.05,6.3]},
     /* the cork ring (05 08 01-4, no sheet: scaled on the coloured section): outside and bore radii, its height as drawn (squeezed) and the 6MX's, its seat under the top plate */
     CORK:{ro:8.05,ri:4.86,h:3.70,h6:2.4,below:[1.5,15.1]},
+    /* the barrel bridge (05 08 05-1) and its click (05 08 05-2, revised 25.5.48) with the click's screw (WN-22); the fusee bush (05 08 01-2) with its screws (WN-34) and the
+       dust bush (05 08 01-3, as last revised on 05 08 01): their sizes as frame.js's comments read them, here for the recipes (29 October 2026) */
+    BB:{t:3.32,d45:3.9,c45:7,dc:-0.7,e48:5,a:30,pinD:2.5,cs:0.3,scr:[3.2,3.0,6.2]},
+    CLICK:{d:5.7,c6:[-5.142,-7.212],r6:6,rn:1,ln:7.5,beak:3.5,ang:85,rb:12.5,rb2:11.5,brg:23.3,t:2.56,hole:3.215,scr:{r:2.25,h:2.1,sd:3.19,sl:2.61,t0:2.55,len:3.2}},
+    FB:{r:2.26,spD:7.9905,lo:2.6,upD:8.0235,up:2.9,top:4.4,cs:3.5,fl:6.6,flT:1.5,holeD:1.55,sinkD:2.207,sinkH:0.5,pcd:5.2,taper:140,scr:[1.05,0.45,3.2,0.7],scrY:1.0},
+    DB:{L:18.1,bore:8.0075,taper:140,mouth:1.8,mAng:20,body:6.55,ch:0.3,ring:[6.25,5.75],dish:5,neck:4.85,nkY:15.1,col:15.1,lugY:12.0,flatBrg:255,last:[5.4,6.7,10.5/2,13.0]},
     PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
       h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set

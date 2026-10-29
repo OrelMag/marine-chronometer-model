@@ -118,8 +118,8 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | # | Batch | Parts | State |
 |---|---|---|---|
 | 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-56, the ring's; pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
-| 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | next |
-| 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 and bush | |
+| 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | done, 29 Oct |
+| 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 and bush | next |
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; fusee arbor; barrel arbor; balance staff | |
 | 5 | Wheels with teeth | train wheels, escape wheel, fusee wheel, click wheel, maintaining ratchet, set-up ratchet, motion work's wheels | |
 | 6 | Small turned parts | bushes WN-300/301/302, settings and caps, studs, collets, the remaining WN screws; jewels (bought) | |
@@ -162,11 +162,31 @@ the type check clean):
 
 The recipes now restate none of them.
 
+### Batch 2 (29 October 2026): all 7 made parts pass
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max) |
+|---|---|---|---|
+| Barrel bridge 05 08 05-1 (the chord, short edge and rim from the sheet's figures) | 9 | 4147.18 / 4144.20 | 0.0033 |
+| Click 05 08 05-2 (its six arcs and lines) | 2 | 170.52 / 170.54 | 0.001 |
+| Fusee bush 05 08 01-2 | 13 | 344.89 / 344.62 | 0.0048 |
+| Dust bush 05 08 01-3 (waisted, as last revised) | 9 | 1099.63 / 1098.57 | 0.0061 |
+| Screws WN-55, WN-34, WN-22 (shouldered) | 6-7 | thread allowance | 0.011-0.016 |
+
+**No faults in the recipes.** Two in the engine, fixed:
+- A plate whose outline winds clockwise (the bridge, the click) was extruded downward. Plates and pockets now extrude along +Z.
+- The inner-face test now looks for a coincident opposite face in every piece of the part, not just the piece the point is on. A convex piece that
+  trimesh finds open (a lathe's fan at its axis) is tested by its hull. Vertices are welded at 1 µm, as `solids-check.js` welds them.
+
+**Moved into `dims.js`:** `WD.BB`, `WD.CLICK` (with the screw WN-22), `WD.FB` (with WN-34) and `WD.DB`. The page's 27 frame lines hashed identical
+before and after, and the type check is clean. `placements.py --diff` lists only the barrel, fusee, chain, mainspring, hands and motion work: parts that
+follow the running clock and the wind between runs (the known flake), none of them touched.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
 |---|---|---|---|
 | Top plate 05 09 01 | the pocket N-O's far side | 0.047 | drawn tangent to r 4.95 about 23 (frame.js, so it crosses the opening cleanly); the sheet's r 5 |
+| Barrel bridge, fusee bush, dust bush | thickness 3.32 -0.04; flange Ø 13.2 -0.2; body Ø 13.1 -0.2, collar Ø 15.1 -0.2, neck Ø 9.7 -0.2 | 0.02-0.1 | drawn at the figure's top, where the page's convention (and the plates, the pillar, the bushes' fits) draws a toleranced size at its middle; the dust bush's collar at 15.1 is more than its Rundmessing 15 gives. The recipes follow the page; a fix would move these to their middles on the page and in the recipes together |
 
 ## Decided
 

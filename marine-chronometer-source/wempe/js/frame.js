@@ -305,16 +305,16 @@ const WFRAME=(()=>{
        which put 48 4.5 from the short edge. Holes: 45 the barrel arbor's, 3.9 ±0.01; 46 the click's screw, M2.6; 42, 48 clear 2.8 for its screws; 41, 47
        its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3: in since 16 October 2026). Drawn gilt */
     const bb=part('barrelBridge',-52),BBG=VER.map(([V])=>rv(bb,V));   /* each version's bridge (the 6MX's striped) with its pins in one group */
-    {const dt=(p,q)=>p[0]*q[0]+p[1]*q[1],sc=(p,k)=>[p[0]*k,p[1]*k],v=sub(H[45],H[42]),l=Math.hypot(v[0],v[1]),u=sc(v,1/l),ca=-0.7/l;   /* n·(45 − 42) = 7 − 7.7 */
-      const n=/** @type {number[]} */([-1,1].map(s=>add(sc(u,ca),[-u[1],u[0]],s*Math.sqrt(1-ca*ca))).find(q=>dt(q,H[45])>0)),c=dt(n,H[45])-7,t=(q=>q[1]<0?q:[-q[0],-q[1]])([n[1],-n[0]]);
-      const c30=Math.cos(30*D2R),e=add(sc(t,c30),n,0.5),m=add(sc(t,-0.5),n,c30),kE=dt(m,H[48])-5*Math.sign(dt(m,H[45])-dt(m,H[48]));   /* the short edge: along e, m·p = kE, 5 beyond 48 */
+    {const BD=WD.BB,dt=(p,q)=>p[0]*q[0]+p[1]*q[1],sc=(p,k)=>[p[0]*k,p[1]*k],v=sub(H[45],H[42]),l=Math.hypot(v[0],v[1]),u=sc(v,1/l),ca=BD.dc/l;   /* n·(45 − 42) = 7 − 7.7 */
+      const n=/** @type {number[]} */([-1,1].map(s=>add(sc(u,ca),[-u[1],u[0]],s*Math.sqrt(1-ca*ca))).find(q=>dt(q,H[45])>0)),c=dt(n,H[45])-BD.c45,t=(q=>q[1]<0?q:[-q[0],-q[1]])([n[1],-n[0]]);
+      const c30=Math.cos(BD.a*D2R),e=add(sc(t,c30),n,0.5),m=add(sc(t,-0.5),n,c30),kE=dt(m,H[48])-BD.e48*Math.sign(dt(m,H[45])-dt(m,H[48]));   /* the short edge: along e, m·p = kE, 5 beyond 48 */
       const Bp=add(sc(n,c),t,-Math.sqrt(R*R-c*c)),Tp=[1,-1].map(s=>add(sc(m,kE),e,s*Math.sqrt(R*R-kE*kE))).sort((a,b)=>dt(b,n)-dt(a,n))[0],Cp=add(sc(n,c),t,2*(c30*c-kE));
       const aB=Math.atan2(Bp[1],Bp[0]),aT=Math.atan2(Tp[1],Tp[0]),an=Math.atan2(n[1],n[0]);let da=((aT-aB)%TAU+TAU)%TAU;if(Math.abs(((an-aB)%TAU+TAU)%TAU)>da)da-=TAU;   /* round the rim through n */
       const N=Math.ceil(Math.abs(da)*R/0.1),arc=[...Array(N-1).keys()].map(i=>{const a=aB+da*(i+1)/N;return[R*Math.cos(a),R*Math.sin(a)];});
-      const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),...[41,47].flatMap(k=>[{p:C(H[k],rPinQ,40),a:y1-2.5,b:y1-0.3},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.3,40),a:y1-0.3,b:y1}])];   /* the steady pins' holes' 90° countersink 0.3 (05 08_13) */
+      const y0=TT-BD.t,y1=TT,F=[T(H[45],BD.d45/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),...[41,47].flatMap(k=>[{p:C(H[k],rPinQ,40),a:y1-BD.pinD,b:y1-BD.cs},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+BD.cs,40),a:y1-BD.cs,b:y1}])];   /* the steady pins' holes' 90° countersink 0.3 (05 08_13) */
       const bg=faceUV(solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]));VER.forEach(([,,DR],i)=>tag(mesh(BBG[i],bg,DR?GH:G6T),'050805-1'));PL.bbChord=[Bp,Cp];}
     /* its screws (WN-55 in the coloured section): heads Ø 6.4 × 3.0, brass (Wempe 3955), the shank 6.2, through the bridge and 2.9 into the plate: scaled on the coloured section (estimated) */
-    VER.forEach(([V],i)=>{const six=V==='6mx';for(const k of[42,48])tag(screw(BBG[i],H[k][0],H[k][1],TT-3.32,3.2,six?2.4:3.0,6.2,1.3,six?M.steel:M.brass,six?0.8:0),'WN-55');});   /* the 6MX's steel and domed, as its top plate's (above) */
+    VER.forEach(([V],i)=>{const six=V==='6mx';for(const k of[42,48])tag(screw(BBG[i],H[k][0],H[k][1],TT-WD.BB.t,WD.BB.scr[0],six?2.4:WD.BB.scr[1],WD.BB.scr[2],1.3,six?M.steel:M.brass,six?0.8:0),'WN-55');});   /* the 6MX's steel and domed, as its top plate's (above) */
     /* its steady pins (WN-203, 05 08 05): Ø 1.6, 1.3 proud of its face (sure), 3 long (as the balance cock's on 127-556.04 U30: estimated) */
     for(const g of BBG)for(const k of[41,47])tag(pinM(g,TT-1.7,TT+1.3,H[k][0],H[k][1]),'WN-203.bb');
     /* the click (Sperrkegel, 05 08 05-2, revised 25.5.48): Messingblech 3 Ms 58 federhart, so its own spring (no separate spring is drawn); 2.6 -0.03/-0.05 thick on the bridge's
@@ -326,21 +326,21 @@ const WFRAME=(()=>{
        where the sheet draws it, through the beak's top corner and running tangent into the nose r 1 (1.452 back, 9.347 under, 0.22 from the traced centre: the figures
        fix those two; until 26 October 2026 moved 0.12 along its radius to the corner alone, 0.18 short of tangent, which left a 0.2 nick where it met the nose). Its beak toward the barrel's ratchet: its base line at 23.3° from N toward O, traced on Wempe 3955's
        (2_Wempe_3955_A.jpg, ±3°: the nose's centre lands at 37.3° from the hole, where the photograph has it, 37.5°) */
-    {const yb=-5.7/2,c6=[-5.142,-7.212],cn=[Math.sqrt(7.5**2-(yb+1)**2),yb+1],tB=[c6[0]-Math.sqrt(36-(yb-c6[1])**2),yb],tC=[tB[0]+3.5/Math.tan(85*D2R),yb+3.5],
-      c12=(()=>{const d=Math.hypot(cn[0]-tC[0],cn[1]-tC[1]),u=[(cn[0]-tC[0])/d,(cn[1]-tC[1])/d],a=(12.5**2-11.5**2+d*d)/(2*d),h=Math.sqrt(12.5**2-a*a);return[tC[0]+a*u[0]+h*u[1],tC[1]+a*u[1]-h*u[0]];})();   /* 12.5 from the corner, 11.5 from the nose's centre: the lower of the two */
+    {const K=WD.CLICK,yb=-K.d/2,c6=K.c6,cn=[Math.sqrt(K.ln**2-(yb+K.rn)**2),yb+K.rn],tB=[c6[0]-Math.sqrt(K.r6**2-(yb-c6[1])**2),yb],tC=[tB[0]+K.beak/Math.tan(K.ang*D2R),yb+K.beak],
+      c12=(()=>{const d=Math.hypot(cn[0]-tC[0],cn[1]-tC[1]),u=[(cn[0]-tC[0])/d,(cn[1]-tC[1])/d],a=(K.rb**2-K.rb2**2+d*d)/(2*d),h=Math.sqrt(K.rb**2-a*a);return[tC[0]+a*u[0]+h*u[1],tC[1]+a*u[1]-h*u[0]];})();   /* 12.5 from the corner, 11.5 from the nose's centre: the lower of the two */
       /* the outline walked piece by piece, each corner exact (until 26 October 2026 a 0.02 contour of the pieces' distance field, whose corners came out bevelled: a sliver
          face at the beak's tip): the base from the nose to the hollow, the hollow r 6 to the beak's foot, its end face, the back r 12.5 to where it meets the nose, the nose r 1 down to the base */
       const at=(c,p)=>Math.atan2(p[1]-c[1],p[0]-c[0]),arc=(c,r,a0,a1,o)=>{const n=Math.max(2,Math.ceil(Math.abs(a1-a0)*r/0.05));for(let i=0;i<n;i++){const a=a0+(a1-a0)*i/n;o.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}};   /* its start, not its end */
-      const H1=[c6[0]+Math.sqrt(36-(yb-c6[1])**2),yb],Tn=(d=>[c12[0]+12.5*d[0],c12[1]+12.5*d[1]])((v=>[v[0]/Math.hypot(...v),v[1]/Math.hypot(...v)])([cn[0]-c12[0],cn[1]-c12[1]]));   /* the tangent point */
-      const loc=[[cn[0],yb]];arc(c6,6,at(c6,H1),at(c6,tB),loc);loc.push(tB);arc(c12,12.5,at(c12,tC),at(c12,Tn),loc);arc(cn,1,at(cn,Tn),-Math.PI/2,loc);
-      const ex=brg(23.3),ey=brg(23.3-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);
-      const ck=loose(new THREE.Group(),4);bb.add(ck);const y0=TT-3.32-2.56,y1=TT-3.32;   /* 2.6 -0.03/-0.05 thick, drawn at the middle, 2.56 (2.6 until 26 October 2026) */
-      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.215/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
+      const H1=[c6[0]+Math.sqrt(K.r6**2-(yb-c6[1])**2),yb],Tn=(d=>[c12[0]+K.rb*d[0],c12[1]+K.rb*d[1]])((v=>[v[0]/Math.hypot(...v),v[1]/Math.hypot(...v)])([cn[0]-c12[0],cn[1]-c12[1]]));   /* the tangent point */
+      const loc=[[cn[0],yb]];arc(c6,K.r6,at(c6,H1),at(c6,tB),loc);loc.push(tB);arc(c12,K.rb,at(c12,tC),at(c12,Tn),loc);arc(cn,K.rn,at(cn,Tn),-Math.PI/2,loc);
+      const ex=brg(K.brg),ey=brg(K.brg-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);
+      const ck=loose(new THREE.Group(),4);bb.add(ck);const y0=TT-WD.BB.t-K.t,y1=TT-WD.BB.t;   /* 2.6 -0.03/-0.05 thick, drawn at the middle, 2.56 (2.6 until 26 October 2026) */
+      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],K.hole/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;ck.traverse(o=>{o.userData.devKeep=true;});PL.click={loop:loc.map(pl),y0,y1};}   /* its outline, for the barrel's ratchet (fusee.js) to be turned against */
     /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), the coloured section, scaled (estimated); shoulder Ø 3.19 through the click and 0.05 more, M2.6 through
        the bridge: a close running fit, 0.025 clear in the click's 3.2 +0.03 at its middle, which revision a (25.5.48) held to 0.03 (no WN sheet: estimated; Ø 3.1, 0.13 clear,
        scaled on the coloured section until 28 October 2026: drawing check 2's 8-M8) */
-    {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.61,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.61+3.2;   /* the shoulder the click's 2.56 and 0.05 */   /* its shoulder turned below the head, and the M2.6 thread below it from 0.1 inside the shoulder, as screw() draws its shanks (KIT.threadGeo) */
-      mesh(g,KIT.latheF([V2(0,0),V2(3.19/2,0),V2(3.19/2,2.61),V2(0,2.61)],28),M.steel);mesh(g,KIT.threadGeo(1.3,2.55,L),M.steel).userData.thread={rs:1.3,p:KIT.isoP(1.3)};g.userData.lift=L+2.1+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
+    {const Q=WD.CLICK.scr,g=tag(screw(bb,H[46][0],H[46][1],TT-WD.BB.t-Q.sl,Q.r,Q.h,0,1.3,M.steel),'WN-22'),L=Q.sl+Q.len;   /* the shoulder the click's 2.56 and 0.05 */   /* its shoulder turned below the head, and the M2.6 thread below it from 0.1 inside the shoulder, as screw() draws its shanks (KIT.threadGeo) */
+      mesh(g,KIT.latheF([V2(0,0),V2(Q.sd/2,0),V2(Q.sd/2,Q.sl),V2(0,Q.sl)],28),M.steel);mesh(g,KIT.threadGeo(1.3,Q.t0,L),M.steel).userData.thread={rs:1.3,p:KIT.isoP(1.3)};g.userData.lift=L+Q.h+1.5;g.traverse(o=>{o.userData.devKeep=true;});}   /* devKeep: the click and its screw stay shown laid out, on the barrel bridge's stand-in (movement.js) */
 
     /* ================= the fusee bush (Schneckenfutter, 05 08 01-2) and dust bush (Staubfutter, 05 08 01-3) ================= */
     /* Schneckenfutter: Rundmessing 13,5 Ms 58: a flange Ø 13.2 -0.2 × 1.5 -0.1 on the top plate's outer face, its spigot below it Ø 8 g6 (-0.005/-0.014, drawn at its middle,
@@ -354,14 +354,14 @@ const WFRAME=(()=>{
        shoulder, 4.39 at its end, 1:70), which the sheet's 4.1 +0.2 can't take; and the body below the flange 2.6, not the sheet's 2.7, so its end is 0.05 short of the J-K
        recess's floor: at 2.7 it stood 0.05 proud of it, 19.65 from the pillar plate, and the arbor's 19.7 +0.05 between its shoulders would have had no endshake */
     const fb=part('fuseeBush',-46),F10=H[10];
-    {const r=2.26,lw=[V2(r,TT),V2(7.9905/2,TT),V2(7.9905/2,TT+2.6),V2(r,TT+2.6),V2(r,TT)],up=[V2(3.5,TT-4.4),V2(8.0235/2-2.9/140,TT-4.4),V2(8.0235/2,TT-1.5),V2(r,TT-1.5),V2(r,TT-4.4+3.5-r),V2(3.5,TT-4.4)];
+    {const Q=WD.FB,r=Q.r,lw=[V2(r,TT),V2(Q.spD/2,TT),V2(Q.spD/2,TT+Q.lo),V2(r,TT+Q.lo),V2(r,TT)],up=[V2(Q.cs,TT-Q.top),V2(Q.upD/2-Q.up/Q.taper,TT-Q.top),V2(Q.upD/2,TT-Q.flT),V2(r,TT-Q.flT),V2(r,TT-Q.top+Q.cs-r),V2(Q.cs,TT-Q.top)];
       const g=tag(mesh(fb,KIT.latheF(lw,64),M.brass,F10[0],0,F10[1]),'050801-2'),bu=tag(mesh(fb,KIT.latheF(up,64),M.brass,F10[0],0,F10[1]),'050801-2',1);
-      const y0=TT-1.5,y1=TT,F=[T(F10,r,y0,y1)];for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);F.push(T(q,1.55/2,y0,y1),A(q,2.207/2,y0,0.5));}
-      fuse([g,bu,tag(mesh(fb,solidGeo([{loop:C(F10,6.6,240),y0,y1,F}]),M.brass),'050801-2',1)]);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
+      const y0=TT-Q.flT,y1=TT,F=[T(F10,r,y0,y1)];for(const b of[0,120,240]){const q=add(F10,brg(b),Q.pcd);F.push(T(q,Q.holeD/2,y0,y1),A(q,Q.sinkD/2,y0,Q.sinkH));}
+      fuse([g,bu,tag(mesh(fb,solidGeo([{loop:C(F10,Q.fl,240),y0,y1,F}]),M.brass),'050801-2',1)]);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* its screws: heads Ø 2.1 × 0.45, just under the flange's face in the sinks (the dust bush stands on the flange), M1.4 × 3.2 through the flange into the plate, ending 0.4
        short of the recess's floor, as the coloured section draws them (Wempe_Einheitschronometer.jpg x 741-752: the head's top at y 313.3, the shank's end at 348.3, 2.7-4.5 px
        short of the recess's floor at 351, at 9.37 px/mm: 3.15-3.3 from the seat; likely; 3.6, to the recess, until 17 October 2026) */
-    for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);tag(screw(fb,q[0],q[1],TT-1.0,1.05,0.45,3.2,0.7),'WN-34');}
+    for(const b of[0,120,240]){const Q=WD.FB,q=add(F10,brg(b),Q.pcd);tag(screw(fb,q[0],q[1],TT-Q.scrY,Q.scr[0],Q.scr[1],Q.scr[2],Q.scr[3]),'WN-34');}
     /* Staubfutter: Rundmessing 15 Ms 58, 18.1 -0.2 long on the bush's flange, pressed on its top (bore Ø 8 H7 on the bush's 8 r6, both tapering 1:70: 0.008 interference on
        the radius at the fits' middles; until 15 October 2026 a slide over the bush's g6 as then read; its bore Ø 7.775 at the mouth's foot by its 1:70 (the sheet's reference "(7,62)" there doesn't follow from Ø 8 at 1:70 over the 16.3 below it, which gives 7.767-7.782: drawing check 2's 8-M6; README, Readings corrected) under a 20° mouth
        1.8 +0.2 deep); body Ø 13.1 -0.2 for 15.1, then a neck Ø 9.7 -0.2 (for 05 08 01-4, not in the set); at the body's top a collar 3.1 -0.2 high, Ø 15.1 -0.2 with a flat 14.1
@@ -373,8 +373,8 @@ const WFRAME=(()=>{
        section at 20.6 px/mm by the body's Ø 13.1: the body 5.34 from the flange, a 45° shoulder, the waist Ø 10.5, the collar 2.18 thick: built 5.4, 1.3 × 45°, Ø 10.5, 2.1;
        likely, scaled), as first drawn and in 1943 straight as 05 08 01-3 */
     const db=part('dustBush',-66);
-    {const Yb=TT-1.5,Yt=Yb-18.1,rr=y=>8.0075/2-(Yb-y)/140,rT=rr(Yt+1.8)+1.8*Math.tan(20*D2R),nf=brg(255);
-      const yd=Yb-(5.75-rr(Yb))*Math.tan(5*D2R),bot=[V2(6.55,Yb-0.3),V2(6.25,Yb),V2(5.75,Yb),V2(rr(yd),yd)],lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),...bot,V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
+    {const Q=WD.DB,Yb=TT-WD.FB.flT,Yt=Yb-Q.L,rr=y=>Q.bore/2-(Yb-y)/Q.taper,rT=rr(Yt+Q.mouth)+Q.mouth*Math.tan(Q.mAng*D2R),nf=brg(Q.flatBrg);
+      const yd=Yb-(Q.ring[1]-rr(Yb))*Math.tan(Q.dish*D2R),bot=[V2(Q.body,Yb-Q.ch),V2(Q.ring[0],Yb),V2(Q.ring[1],Yb),V2(rr(yd),yd)],lw=[V2(rr(Yb-Q.lugY),Yb-Q.lugY),V2(Q.body,Yb-Q.lugY),...bot,V2(rr(Yb-Q.lugY),Yb-Q.lugY)],nk=[V2(rT,Yt),V2(Q.neck,Yt),V2(Q.neck,Yb-Q.nkY),V2(rr(Yb-Q.nkY),Yb-Q.nkY),V2(rr(Yt+Q.mouth),Yt+Q.mouth),V2(rT,Yt)];
       const g=tag(mesh(rv(db,'first 1943 -3955'),KIT.latheF(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');
       /* Wempe 3955's (the version as photographed): the body turned down to a waist under the collar (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on the bush,
          its silhouette traced on a 5 px grid): the Ø 13.1 body to a flat shoulder at y -29.0 (±0.3), then Ø 9.0 (±0.4: 93-95 px across) up to the collar; the collar 1.85 thick (±0.2: its lower
@@ -383,10 +383,10 @@ const WFRAME=(()=>{
          (2.7.42) draws the body straight */
       /* Kirov No. 247's (the 6MX), the same in kind (4_Kirow_247_N.jpg, photocompare.py's fit, 10.3 px/mm): the body 4.8 high, a flare, the waist Ø 9.8 ±0.3, the collar
          about 1.2 thick; traced as Wempe 3955's (below) */
-      const WB=/** @type {[string,number,number,number,number][]} */([['last',Yb-5.4,Yb-6.7,10.5/2,Yb-13.0],['3955',-29.0,-29.0,4.5,-37.1],['6mx',Yb-4.8,Yb-6.45,4.9,-37.75]]);   /* [version, the body's shoulder, the waist's foot (a cone between), its radius, the collar's underside] */
-      for(const[V,yS,yW,rW,yC]of WB){const w=[V2(rr(yC),yC),V2(rW,yC),V2(rW,yW),V2(6.55,yS),...bot,V2(rr(yC),yC)].filter((q,i,a)=>!i||q.x!==a[i-1].x||q.y!==a[i-1].y);
+      const WB=/** @type {[string,number,number,number,number][]} */([['last',Yb-Q.last[0],Yb-Q.last[1],Q.last[2],Yb-Q.last[3]],['3955',-29.0,-29.0,4.5,-37.1],['6mx',Yb-4.8,Yb-6.45,4.9,-37.75]]);   /* [version, the body's shoulder, the waist's foot (a cone between), its radius, the collar's underside] */
+      for(const[V,yS,yW,rW,yC]of WB){const w=[V2(rr(yC),yC),V2(rW,yC),V2(rW,yW),V2(Q.body,yS),...bot,V2(rr(yC),yC)].filter((q,i,a)=>!i||q.x!==a[i-1].x||q.y!==a[i-1].y);
         tag(mesh(rv(db,V),KIT.latheF(w,72),M.brass,F10[0],0,F10[1]),'050801-3');}tag(mesh(db,KIT.latheF(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
-      const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
+      const lug=clipPoly(C(F10,Q.col/2,320),p=>Q.body-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-Q.nkY,y1=Yb-Q.lugY;
       tag(mesh(rv(db,'first 1943 -3955'),solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);
       for(const[V,,,,yC]of WB)tag(mesh(rv(db,V),solidGeo([{loop:lug,y0,y1:yC,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(yC),180),a:y0,b:yC}]}]),M.brass),'050801-3',1);}   /* the photographed collars, thinner (WB) */
     /* Korkring 05 08 01-4 (no sheet; 05 08 01 names it on the dust bush, the coloured section "Korkring 05 08 01-4", its "05 06 01-4" in the transcription's list a misreading):

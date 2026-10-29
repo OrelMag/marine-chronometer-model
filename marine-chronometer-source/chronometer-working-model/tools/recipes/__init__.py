@@ -66,6 +66,11 @@ class FaceGroove(Op):
         pts=[(c+a*math.cos(math.pi*(1-i/n)),self.z+self.s*self.d*math.sin(math.pi*i/n)) for i in range(n+1)]   # the half ellipse, as the page draws it (9 points there)
         e=bd.Wire([bd.Edge.make_line((self.r1,0,self.z),(self.r0,0,self.z))]+[bd.Edge.make_spline([bd.Vector(r,0,z) for r,z in pts])])
         return p-bd.revolve(bd.Face(e),bd.Axis.Z,360)
+class TurnAway(Op):
+    """turn away a region given as a closed profile [(r, z) ...] about the axis (a waist, a dished face, an undercut): the general case of turning"""
+    kind='turn'
+    def __init__(self,pts,text,sizes=(),src=''):super().__init__(text,sizes,src);self.pts=pts
+    def apply(self,p):return p-_rev(self.pts)
 class Bore(Op):
     """bore or drill on the axis, diameter d, from z0 to z1"""
     kind='bore'
@@ -99,7 +104,7 @@ class Plate(Op):
     """stock: a blank of thickness t, its outline a build123d face (the contour milled or turned: lines and arcs)"""
     kind='stock'
     def __init__(self,face,t,text,sizes=(),src=''):super().__init__(text,sizes,src);self.face=face;self.t=t
-    def apply(self,p):return bd.extrude(self.face,self.t)
+    def apply(self,p):return bd.extrude(self.face,self.t,dir=(0,0,1))   # up, whichever way the outline winds
 class Hole(Op):
     """a round hole at (x, y): diameter d, from the face ('in' Z 0, 'out' Z t) depth dp (None: through), t the plate's thickness; a thread drawn at its minor"""
     kind='drill'
@@ -145,8 +150,8 @@ class Pocket(Op):
     kind='mill'
     def __init__(self,face2d,face,t,dp,text,sizes=(),src=''):super().__init__(text,sizes,src);self.f=face2d;self.face=face;self.t=t;self.dp=dp
     def apply(self,p):
-        if self.dp is None:return p-bd.extrude(self.f.moved(bd.Location((0,0,-0.01))),self.t+0.02)
-        z0=-0.01 if self.face=='in' else self.t-self.dp;return p-bd.extrude(self.f.moved(bd.Location((0,0,z0))),self.dp+0.01)
+        if self.dp is None:return p-bd.extrude(self.f.moved(bd.Location((0,0,-0.01))),self.t+0.02,dir=(0,0,1))
+        z0=-0.01 if self.face=='in' else self.t-self.dp;return p-bd.extrude(self.f.moved(bd.Location((0,0,z0))),self.dp+0.01,dir=(0,0,1))
 
 class Setup:
     """one setup: how the part is held and which face is up, then its operations in order; view the sketch's ('top', 'bottom'; a turned part's is its half section)"""

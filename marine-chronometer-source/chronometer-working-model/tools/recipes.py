@@ -30,10 +30,11 @@ def recipes():
     sys.exit('recipes.py: no recipes yet for '+model.NAME)
 
 EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last'))return false;return true;};
-  let root=null;mv.traverse(o=>{if(!root&&o.userData.hn===hn&&shows(o))root=o;});if(!root)return null;mv.updateMatrixWorld(true);
+  let root=null;mv.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o))root=o;});if(!root)return null;mv.updateMatrixWorld(true);
+  const subs=[];mv.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
   const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(),out=[],v=new THREE.Vector3();let rotY=null;
   const b64=a=>{const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);};
-  root.traverse(o=>{if(!o.isMesh||!o.geometry||o.userData.decal||o.userData.surface||!shows(o))return;if(o.userData.screw&&rotY===null)rotY=o.rotation.y;
+  const seen=new Set();for(const r of[root,...subs])r.traverse(o=>{if(seen.has(o))return;seen.add(o);if(!o.isMesh||!o.geometry||o.userData.decal||o.userData.surface||!shows(o))return;if(o.userData.screw&&rotY===null)rotY=o.rotation.y;
     const m=inv.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position,n=P.count,pos=new Float32Array(3*n);
     for(let i=0;i<n;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);pos[3*i]=v.x;pos[3*i+1]=v.y;pos[3*i+2]=v.z;}
     const I=o.geometry.index?Uint32Array.from(o.geometry.index.array):Uint32Array.from({length:n},(_,i)=>i);out.push({pos:b64(pos),idx:b64(I)});});
@@ -58,7 +59,7 @@ def tm_of(ms):
     parts=[]
     for m in ms:
         v=np.frombuffer(base64.b64decode(m['pos']),np.float32).reshape(-1,3).astype(float);f=np.frombuffer(base64.b64decode(m['idx']),np.uint32).reshape(-1,3)
-        t=trimesh.Trimesh(v,f,process=True)
+        t=trimesh.Trimesh(v,f,process=True);t.merge_vertices(digits_vertex=6)   # welded at 1 µm, as solids-check.js welds (a lathe's seam)
         if t.body_count>1:   # one mesh of several closed bodies (core.js fuse concatenates): each its own, by the vertices they share (trimesh's split by face
             from scipy.sparse import coo_matrix   # adjacency shatters a thread's walls)
             from scipy.sparse.csgraph import connected_components
@@ -109,11 +110,6 @@ def check(r,pm):
     # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL
     ta=sum(math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5 for (_,r0,r1,z0,z1) in zones);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)
     if abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
-    if all(m.is_watertight for m in pages):   # the two solids' difference outside the threads, where ray parity can be trusted on the page's mesh
-        lo=np.minimum(rm.bounds[0],np.min([m.bounds[0] for m in pages],0));hi=np.maximum(rm.bounds[1],np.max([m.bounds[1] for m in pages],0))
-        rng=np.random.default_rng(3955);N=1500000;P=lo+(hi-lo)*rng.random((N,3));ok=~in_zone(ixf(M,P),zones)
-        ir=rm.contains(P);ip=contains(pages,P);bv=np.prod(hi-lo)
-        res['symdiff']={'recipe_only':round((ir&~ip&ok).sum()*bv/N,3),'page_only':round((ip&~ir&ok).sum()*bv/N,3),'sd':round(math.sqrt(max(1,(ir!=ip).sum()))*bv/N,3)}
     bp=np.array([np.min([m.bounds[0] for m in pages],0),np.max([m.bounds[1] for m in pages],0)]);db=np.abs(rm.bounds-bp).max()
     res['bbox']={'recipe':np.round(rm.bounds,3).tolist(),'page':np.round(bp,3).tolist(),'max':round(float(db),4)}
     if db>BOX_TOL:F.append(f'bbox: corners differ by {db:.4f}')
@@ -125,13 +121,21 @@ def check(r,pm):
     # face). A hole the page has and the recipe hasn't fails both, so it is still found
     own=np.concatenate([np.full(len(q[0]),i) for i,q in enumerate(SP)]);fid=np.concatenate([q[1] for q in SP])
     cand=kp&rm.contains(Pp+0.02*Np)&rm.contains(Pp-0.02*Np);inner=np.zeros(len(Pp),bool)
-    for j,m in enumerate(pages):
-        if m.is_watertight:k=cand&(own!=j);inner[k]|=m.contains(Pp[k])
-    for i in np.nonzero(cand&~inner)[0]:
-        m=pages[own[i]];nf=trimesh.proximity.nearby_faces(m,Pp[i:i+1])[0];n=Np[i]
-        for f in nf:
-            if f!=fid[i] and m.face_normals[f]@n<-0.999 and abs((Pp[i]-m.vertices[m.faces[f][0]])@m.face_normals[f])<1e-4:inner[i]=True;break
+    for j,m in enumerate(pages):   # inside a closed piece, or a convex one (a lathe's fan at the axis can leave it open to trimesh) by its hull
+        k=cand&(own!=j)
+        if m.is_watertight:inner[k]|=m.contains(Pp[k])
+        elif k.any() and abs(m.volume-m.convex_hull.volume)<0.01*m.convex_hull.volume:inner[k]|=m.convex_hull.contains(Pp[k])
+    for i in np.nonzero(cand&~inner)[0]:   # a coincident face of any piece facing the other way
+        n=Np[i]
+        for j,m in enumerate(pages):
+            nf=trimesh.proximity.nearby_faces(m,Pp[i:i+1])[0]
+            if any((j!=own[i] or f!=fid[i]) and m.face_normals[f]@n<-0.999 and abs((Pp[i]-m.vertices[m.faces[f][0]])@m.face_normals[f])<1e-4 for f in nf):inner[i]=True;break
     res['inner_faces']=int(inner.sum());kp&=~inner
+    if len(pages)==1 and pages[0].is_watertight and not inner.any():   # the two solids' difference outside the threads, where ray parity can be trusted (one closed piece, no face inside it)
+        lo=np.minimum(rm.bounds[0],np.min([m.bounds[0] for m in pages],0));hi=np.maximum(rm.bounds[1],np.max([m.bounds[1] for m in pages],0))
+        rng=np.random.default_rng(3955);N=1500000;P=lo+(hi-lo)*rng.random((N,3));ok=~in_zone(ixf(M,P),zones)
+        ir=rm.contains(P);ip=contains(pages,P);bv=np.prod(hi-lo)
+        res['symdiff']={'recipe_only':round((ir&~ip&ok).sum()*bv/N,3),'page_only':round((ip&~ir&ok).sum()*bv/N,3),'sd':round(math.sqrt(max(1,(ir!=ip).sum()))*bv/N,3)}
     dr=nearest(pages,Pr[kr]);dp=nearest([rm],Pp[kp])
     feats=[(getattr(o,'key',''),o.at) for o in r.ops() if isinstance(o,(Hole,Cone)) and getattr(o,'at',None) is not None]
     def where(q):
@@ -209,7 +213,7 @@ def main():
     for k,r in R.items():
         t=time.time();res=check(r,pm.get(r.hn));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
-        if v:print(f"  volume  recipe {v['recipe']} page {v['page']} ({v['rel']*100:+.3f} %, allowed ±{v['allow']})"+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page mesh not watertight: no Monte Carlo'))
+        if v:print(f"  volume  recipe {v['recipe']} page {v['page']} ({v['rel']*100:+.3f} %, allowed ±{v['allow']})"+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page in several pieces, not closed or with faces inside: no Monte Carlo'))
         if 'bbox' in res:print(f"  bbox    corners within {res['bbox']['max']}")
         if s:print(f"  surface recipe→page max {s['recipe_to_page']['max']} p99 {s['recipe_to_page']['p99']}; page→recipe max {s['page_to_recipe']['max']} p99 {s['page_to_recipe']['p99']}")
         for w in s.get('worst',[]):print(f"    {w['d']:.4f} on the {w['from']}'s surface at {w['at']}"+(' (expected)' if w.get('expected') else ''))
