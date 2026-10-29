@@ -119,7 +119,7 @@ const VIEWER={start(cfg){
   const DVS=new Set(MVM.filter(m=>m.userData.devPlate||m.userData.devKeep).map(m=>m.userData.part).filter(Boolean));   /* the parts shown laid out by a stand-in or a piece kept */
   const ghOf=(m,foc)=>{const p=m.userData.part;return (!!m.userData.devPlate&&dvOn()&&!(foc&&inK(foc,m)))||(st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
-  function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
+  function look(){wake();if(SEL)SEL.sync();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
     const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!mOut(m);const lc=ct||gh?null:SEL&&SEL.has(m)?PSEL.COL:cfg.tint?cfg.tint(m):null;m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
     if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
@@ -229,7 +229,7 @@ const VIEWER={start(cfg){
     look();opRender();if(SEL)SEL.sync();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   /* the selection (../shared/select.js): Ctrl-click or Select, Alt-drag or Lasso; its bar and the menu above fade, hide or isolate it together */
-  if(typeof PSEL!=='undefined')SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:MVM,pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
+  if(typeof PSEL!=='undefined')SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:MVM,pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),shows:m=>shown(m)&&!!INFO[m.userData.part],hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
   /* how to use it: stays open while the model is dragged; a tap, × or Esc closes it */
   const help=$('#help'),helpBtn=$('#helpBtn');
   function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}

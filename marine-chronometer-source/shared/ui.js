@@ -5,10 +5,11 @@
 const UI=(()=>{
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],root=document.documentElement,mq=matchMedia('(prefers-color-scheme: dark)');
   const press=(g,v)=>g&&g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));
-  /* ---------- the tools as icons (Select and Lasso come later, from select.js) ---------- */
+  /* ---------- the tools as icons (Select, Lasso and Through come later, from select.js) ---------- */
   const IC={helpBtn:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.3-.9.8-.9 1.4V14"/><path d="M12 17.3v.1"/>',shot:'<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.4"/>',
     link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',reset:'<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/>',
-    fs:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',selMode:'<path d="M6 4l11 6.5-4.6 1.1 2.7 5.2-2 1-2.7-5.2L6 16z"/>',selLasso:'<path d="M12 5c4.4 0 8 2.2 8 5s-3.6 5-8 5c-1.3 0-2.5-.2-3.6-.5"/><path d="M8.4 14.5C5.8 13.6 4 12 4 10c0-2.8 3.6-5 8-5"/><circle cx="7" cy="17" r="1.6"/><path d="M7 18.6c0 1.5.8 2.4 2 2.4"/>'};
+    fs:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',selMode:'<path d="M6 4l11 6.5-4.6 1.1 2.7 5.2-2 1-2.7-5.2L6 16z"/>',selLasso:'<path d="M12 5c4.4 0 8 2.2 8 5s-3.6 5-8 5c-1.3 0-2.5-.2-3.6-.5"/><path d="M8.4 14.5C5.8 13.6 4 12 4 10c0-2.8 3.6-5 8-5"/><circle cx="7" cy="17" r="1.6"/><path d="M7 18.6c0 1.5.8 2.4 2 2.4"/>',
+    selThru:'<path d="M12 5c4.4 0 8 2.2 8 5s-3.6 5-8 5c-1.3 0-2.5-.2-3.6-.5" stroke-dasharray="2.2 2"/><path d="M8.4 14.5C5.8 13.6 4 12 4 10c0-2.8 3.6-5 8-5" stroke-dasharray="2.2 2"/><rect x="8.5" y="8.6" width="4" height="3.4"/><rect x="11.5" y="7.4" width="4" height="3.4"/><circle cx="7" cy="17" r="1.6"/><path d="M7 18.6c0 1.5.8 2.4 2 2.4"/>'};
   function icons(){for(const[id,p]of Object.entries(IC)){const b=document.getElementById(id);if(!b||b.dataset.ic)continue;b.dataset.ic='1';if(!b.getAttribute('aria-label'))b.setAttribute('aria-label',b.title.split(/[:(]/)[0].trim()||b.textContent.trim());
     b.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;b.classList.add('ib');}}
   const tools=$('.tools');if(tools){icons();new MutationObserver(icons).observe(tools,{childList:true});}
