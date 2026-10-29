@@ -195,13 +195,24 @@ No faults in the recipes or the engine. One page fault, recorded in the upper co
 
 **Moved into `dims.js`:** `WD.UC`, `WD.LC` and `WD.ZB`. The 27 frame lines hashed identical before and after, and the type check is clean.
 
+### The owner's corrections (29 October 2026): five sizes at their middles
+
+The owner chose to fix the sizes the recipes' check found drawn at their tolerances' tops, in the page and the recipes together:
+- the barrel bridge's 3.32 −0.04 → 3.30
+- the fusee bush's flange Ø 13.2 −0.2 → 13.1
+- the dust bush's body Ø 13.1 −0.2, collar Ø 15.1 −0.2 and neck Ø 9.7 −0.2 → 13.0, 15.0, 9.6. The collar now fits its Ø 15 Rundmessing.
+
+They changed in `dims.js`, which both read, each with its tolerance cited; the Wempe README's "Readings corrected" has them. The top plate's pocket edge
+was tried at the sheet's r 5. The solid opened (205 open edges: the tangent lies on the opening's edge, which r 4.95 avoids), so it stays at 4.95, an
+expected difference. A fix would cut the opening and the pocket as separate features, which is not a one-number change.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
 |---|---|---|---|
-| Top plate 05 09 01 | the pocket N-O's far side | 0.047 | drawn tangent to r 4.95 about 23 (frame.js, so it crosses the opening cleanly); the sheet's r 5 |
+| Top plate 05 09 01 | the pocket N-O's far side | 0.047 | drawn tangent to r 4.95 about 23 (frame.js, so it crosses the opening cleanly); the sheet's r 5. Tried at r 5 on 29 October 2026: the solid opens; needs the opening and pocket cut as separate features |
 | Upper balance cock 05 08 03-1 | the stud's slot through the boss | 0.13 | the boss draws the slot's end wall upright, 0.02 inside its place at the boss's face, where the arm's wall leans 8° (C-D's 82°); one milled slot is one plane through arm and boss |
-| Barrel bridge, fusee bush, dust bush | thickness 3.32 -0.04; flange Ø 13.2 -0.2; body Ø 13.1 -0.2, collar Ø 15.1 -0.2, neck Ø 9.7 -0.2 | 0.02-0.1 | drawn at the figure's top, where the page's convention (and the plates, the pillar, the bushes' fits) draws a toleranced size at its middle; the dust bush's collar at 15.1 is more than its Rundmessing 15 gives. The recipes follow the page; a fix would move these to their middles on the page and in the recipes together |
+| ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
 
 ## Decided
 

@@ -77,13 +77,17 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     RING:{y0:0.35,ySeat:3.35,yCone:5.35,yFl:6.35,yRec:10.35,yTop:11.05,bandD:96,flD:105.90,seatD:85.0175,lipD:83,coneD1:85,coneD2:93,recD:104.05,
       screwD:89,screws:[340,100,220],dialR:50.5,dialPin:1.1,dialScrews:[354,120,240],casePin:1.6,casePinZ:2.8,casePinR0:43.5,scr:[3.1,3.05,6.3]},
     /* the cork ring (05 08 01-4, no sheet: scaled on the coloured section): outside and bore radii, its height as drawn (squeezed) and the 6MX's, its seat under the top plate */
-    CORK:{ro:8.05,ri:4.86,h:3.70,h6:2.4,below:[1.5,15.1]},
+    CORK:{ro:8.05,ri:4.81,h:3.70,h6:2.4,below:[1.5,15.1]},
     /* the barrel bridge (05 08 05-1) and its click (05 08 05-2, revised 25.5.48) with the click's screw (WN-22); the fusee bush (05 08 01-2) with its screws (WN-34) and the
        dust bush (05 08 01-3, as last revised on 05 08 01): their sizes as frame.js's comments read them, here for the recipes (29 October 2026) */
-    BB:{t:3.32,d45:3.9,c45:7,dc:-0.7,e48:5,a:30,pinD:2.5,cs:0.3,scr:[3.2,3.0,6.2]},
+    /* drawn at the middles of their tolerances since 29 October 2026 (the owner's choice; until then at their figures' tops): the barrel bridge's 3.32 -0.04 (05 08 05-1)
+       3.30, the fusee bush's flange Ø 13.2 -0.2 (05 08 01-2) 13.1, the dust bush's body Ø 13.1 -0.2, collar Ø 15.1 -0.2 and neck Ø 9.7 -0.2 (05 08 01-3) 13.0, 15.0 (from its
+       Rundmessing 15) and 9.6, its bottom keeping the figured 0.5 bearing ring inside the 0.3 × 45° chamfer (estimated) and its collar's flat flush with the body (14.1 -0.2
+       from the far side, at its middle 14.0), and the cork ring's bore the neck's + 0.01 as before */
+    BB:{t:3.30,d45:3.9,c45:7,dc:-0.7,e48:5,a:30,pinD:2.5,cs:0.3,scr:[3.2,3.0,6.2]},
     CLICK:{d:5.7,c6:[-5.142,-7.212],r6:6,rn:1,ln:7.5,beak:3.5,ang:85,rb:12.5,rb2:11.5,brg:23.3,t:2.56,hole:3.215,scr:{r:2.25,h:2.1,sd:3.19,sl:2.61,t0:2.55,len:3.2}},
-    FB:{r:2.26,spD:7.9905,lo:2.6,upD:8.0235,up:2.9,top:4.4,cs:3.5,fl:6.6,flT:1.5,holeD:1.55,sinkD:2.207,sinkH:0.5,pcd:5.2,taper:140,scr:[1.05,0.45,3.2,0.7],scrY:1.0},
-    DB:{L:18.1,bore:8.0075,taper:140,mouth:1.8,mAng:20,body:6.55,ch:0.3,ring:[6.25,5.75],dish:5,neck:4.85,nkY:15.1,col:15.1,lugY:12.0,flatBrg:255,last:[5.4,6.7,10.5/2,13.0]},
+    FB:{r:2.26,spD:7.9905,lo:2.6,upD:8.0235,up:2.9,top:4.4,cs:3.5,fl:6.55,flT:1.5,holeD:1.55,sinkD:2.207,sinkH:0.5,pcd:5.2,taper:140,scr:[1.05,0.45,3.2,0.7],scrY:1.0},
+    DB:{L:18.1,bore:8.0075,taper:140,mouth:1.8,mAng:20,body:6.5,ch:0.3,ring:[6.2,5.7],dish:5,neck:4.8,nkY:15.1,col:15.0,lugY:12.0,flatBrg:255,last:[5.4,6.7,10.5/2,13.0]},
     /* the upper balance cock (05 08 03-1; kompl. 127-556.04 U30), the lower (05 08 00-2, revised 2.12.46) and the intermediate bridge (05 08 04), with their screws (WN-ucs,
        WN-53, WN-52): their sizes as frame.js's comments read them, here for the recipes (29 October 2026). UC: in its own frame, u along its axis from 23 toward 345°, v toward
        75°; heights over the top plate's outer face (the foot's underside) */

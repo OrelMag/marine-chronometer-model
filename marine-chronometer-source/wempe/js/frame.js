@@ -123,7 +123,7 @@ const WFRAME=(()=>{
          Likely (±4° on the axis, ±0.3 on the end). Until 18 October 2026 its root on the opening's edge 50° round from the pocket's line (23 to 51) and its end centre
          r 7.35 toward 112.5°: the axis toward 93°, 2.4 S of the centre, its end r 8.54 (estimated) */
       const tA=add(H[23],brg(203.5),0.85),tg0=add(tA,brg(113.5),4.0),tgE=add(tA,brg(113.5),Math.sqrt(9*9-0.85*0.85)-1.25),tu=unit(sub(tgE,tg0));
-      /* the pocket: the hull of 51's r 4 and the opening's r 5, the far side's tangent drawn from r 4.95 so it crosses the opening's edge cleanly, the tongue's side's the
+      /* the pocket: the hull of 51's r 4 and the opening's r 5, the far side's tangent drawn from r 4.95 so it crosses the opening's edge cleanly (0.047 off the sheet's r 5 there, recipes.py; at r 5 the tangent lies on the opening's edge and the solid opens, 29 October 2026), the tongue's side's the
          tangent to r 5 (below) */
       const a0=add(tg0,tu,-2),key=bool(C(H[23],5,200),stadiumPts(a0,tgE,2.5)).uni[0],ua=unit(sub(H[51],H[23])),va=[-ua[1],ua[0]],dv=q=>(q[0]-H[23][0])*va[0]+(q[1]-H[23][1])*va[1],sT=Math.sign(dv(tgE));
       const D5=Math.hypot(H[51][0]-H[23][0],H[51][1]-H[23][1]),w5=add(ua.map(q=>q/D5),va,sT*Math.sqrt(1-1/D5/D5)),T5=add(H[23],w5,5),ld=[-w5[1],w5[0]],nt=[-tu[1],tu[0]];   /* w5: from 23 to the tangent's point on r 5 (u·w = (5-4)/D) */
