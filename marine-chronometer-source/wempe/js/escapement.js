@@ -382,6 +382,51 @@ const WESC=(()=>{
   const FY1=TI-4.1,Y1={rimT:FY1-3.8,armT:FY1-1.15,col:FY1+4.7,ir0:FY1+4.7,ir1:FY1+6.3,dr0:FY1+6.3,dr1:FY1+7.9,   /* the rollers 1.6 each as 05 04_1 stacks them in the first-drawn layout (02 04 02's 1,6 +0,1 at its lower limit): its middle, 1.65, put the discharge stone 0.0001 under the 6MX's and 1943's gold spring (the last revised detent, 1.9 wide, on this layout: bom.py's balance endshake 0.020, fine.py's detent x rollers 0.004 mm3), 28 October 2026 */ew0:TI+0.5,ew1:TI+1.9,ewWeb:TI+1.2,etU:TI+15.7-17.7,etL:TI+15.7+5.3-0.04,pf:TI+15.7};
   const SH1=FY1-FY;   /* the balance, its arm, rim and hairspring, stand this much higher as first drawn (-0.3) */
 
+  /* the detent block's (05 04 01-4, 8.7.43; build's detent block gives each figure's source): its sizes in the detent's frame (t along it from the stone, ROW the fixing
+     screw's row; n across from BLK_NE, the end face's line; d under the top plate's inner face), shared by every version's block where build reads them: the base's end
+     (tF, tT), the upright (len from tF, nl in from the end face, uw wide; up its heights, the cross screw's place tS and hole rh, the slit sl long and 2 sw wide, its end e),
+     the foot's cove JC, the base bd deep for bl, the thin part td deep to tl, the steady pins' holes (pin, pr), the Ø 1.3 hole h13, the fixing M1.7's (m17), the end face's
+     holes (endH: [t, n, r, sides]) and its M1 (m1, at the minor diameter), the fixing screw gk [r, h, len, thread]. Here so the recipes read them (29 October 2026) */
+  const BLK={tF:3.75,tT:-3.75,len:25,nl:1.4,uw:3,JC:{A:[0.35,2.5],B:[2.0,0.4],R:3},bd:6.5,bl:6.4,td:3,tl:14.6,pin:[[-2,-2.3],[2,-12.3]],pr:0.45,h13:{n:-2.8,r:0.65,d:3.0},m17:{rs:0.85,r:0.87},
+    endH:[[0,-2.8,0.5,16],[-2.1,-1.6,0.225,16],[2.1,-1.6,0.225,16]],m1:0.729/2,up:{a:3.5,b:6.5,s:5.15,tS:-18.8,rh:0.62,hs:0.15,e:7.5,sl:7,sw:0.15},gk:[1.5,2.4,3.35+3.0,0.85]};
+
+  /* the balance's rim, arm and hub, its masses, its timing screws and weights, and its rollers (build's balance and rollers give each figure's source; the drawings check's
+     corrections there): BAL the rim's radii (steel inside r1, brass to r2), the cuts' half width, the arm's flanks (sw: where they meet the rim; AT the arcs r 20's tangent
+     point and centre), the hub's hole and the screws' holes with their countersinks, the timing screws' tapped holes across the rim; MS the masses; TSW the timing screws
+     and weights; ROLI, ROLD the impulse and discharge rollers, rolGeo() their plans at rest. Here so the recipes read them (29 October 2026) */
+  const BAL=(()=>{const r0=30.5/2,r1=31.27/2,r2=32.30/2,gap=0.8,N=720;
+      const sw=Math.sqrt(r0*r0-1.6*1.6),AT=(()=>{const f=(/** @type {number} */x0)=>{const L=Math.hypot(sw-x0,0.4),zc=x0+20*0.4/L,hc=2+20*(sw-x0)/L;return{zc,hc,e:Math.hypot(zc,hc-3.25)-20};};
+        let lo=2,hi=12;for(let i=0;i<60;i++){const m=(lo+hi)/2;f(m).e>0?hi=m:lo=m;}const r=f(lo);return{x0:lo,zc:r.zc,hc:r.hc};})();
+    return{r0,r1,r2,gap,N,sw,AT,hub:2.009/2,hs:2.15,hR:0.5,kR:0.9,kD:0.4,tH:{dy:2.15,i:0.2,r:0.46,n:16}};})();
+  const HUB={R:6.25/2,b:1.0,fl:1.8,tp:140,s:2.15,rs:0.5,r:0.52,nR:2.6/2,f:1.07,fd:0.04,nd:4.06};   /* HUB the hub's (05 04 02-2) */
+  const MS={A:30,H0:0,H1:6.46,d:6.35,CH:0.26,cl:0.02,CB:0.81,TS:0.4,cb:0.57,top:{rs:0.6,r:0.62,d:2.0},hS:1.85,hS3955:2.55};
+  const TSW={dy:2.15,TIP:21.05,wo:0.8,wl:3.3,rs:0.45,ri:0.1,p:0.16,hr:0.825,hl:1.3,Rw:4.25/2,Rw3955:1.9,cut:[0.15,1.3,1.7]};
+  const ROLI={rr:6.78/2,t:2.0,l:1.5,R:3.5,ext:0.8,n:40,sl:[1.5,3.0,-0.003,0.503],ph:[-1.9,0.7],phR:0.65,bore:0.825,tp:140},ROLD={c:[-0.255,0.355],w:2.15,sl:[0.85,2.0],e:0.003,bore:0.6025,bore1:0.6};
+  const rolImp=()=>{const af=aBW-PHI0,u=dir(af),vl=[Math.sin(af*D2R),Math.cos(af*D2R)],rr=ROLI.rr,RF=(/** @type {number} */r,/** @type {number} */w)=>add(add([0,0],u,r),vl,w);   /* vl: toward the leading side (the way it turns in the impulse) */
+    const cT=pol([0,0],rr,af+Math.asin(ROLI.t/rr)/D2R),cL=pol([0,0],rr,af-Math.asin(ROLI.l/rr)/D2R),cm=[(cT[0]+cL[0])/2,(cT[1]+cL[1])/2],ch=hyp(sub(cT,cL)),out=unit(cm),cc=add(cm,out,Math.sqrt(ROLI.R*ROLI.R-ch*ch/4));
+    const a0=Math.atan2(cL[1]-cc[1],cL[0]-cc[0]),a1=Math.atan2(cT[1]-cc[1],cT[0]-cc[0]);let da=a1-a0;while(da>Math.PI)da-=TAU;while(da<-Math.PI)da+=TAU;
+    const rec=[add(cL,unit(cL),ROLI.ext)];for(let i=0;i<=ROLI.n;i++){const a=a0+da*i/ROLI.n;rec.push([cc[0]+ROLI.R*Math.cos(a),cc[1]+ROLI.R*Math.sin(a)]);}rec.push(add(cT,unit(cT),ROLI.ext));
+    const q=ROLI.sl,slot=[RF(q[0],q[2]),RF(q[1],q[2]),RF(q[1],q[3]),RF(q[0],q[3])],ph=add(add([0,0],u,ROLI.ph[0]),vl,ROLI.ph[1]);
+    return{af,u,vl,rr,RF,cT,cL,cc,rec,slot,ph};};
+  const rolDis=()=>{const b=BETA,u=dir(b),pp=[u[1],-u[0]],L=(/** @type {number} */e,/** @type {number} */w)=>add(add([0,0],u,e),pp,w),rf=Math.sqrt(RD*RD-DSW*DSW/4),q=ROLD.sl;
+    return{b,u,pp,L,rf,p0:L(ROLD.c[0],0),p1:L(ROLD.c[1],0),slot:[L(q[0],-DSW/2-ROLD.e),L(q[1],-DSW/2-ROLD.e),L(q[1],DSW/2+ROLD.e),L(q[0],DSW/2+ROLD.e)]};};
+  const rolGeo=()=>{const{RF,...i}=rolImp(),{L,...d}=rolDis();return{imp:i,dis:{...d,DSW,DS,RD}};};
+
+  /* the balance's and escape wheel's jewels (build's jewels give each figure's source): BJ the stones' sizes (the coloured section), eLip the endstone setting's lip over its
+     edge (the face at y, s the way to the dome) and the settings' screws [r, h, len, thread]; jewProf(Q) each setting's turned profile [r, y] about its arbor, as build
+     draws it: bal the balance's, esc the escape wheel's at Q's heights (Y as last revised, Y1 as first drawn). Here so the recipes read them (29 October 2026) */
+  const BJ=(()=>{const JR=1.45,JT=0.8,JD=0.3,JC=0.8,JH=0.55,ER=1.45,EE=0.5,EH=0.4,eLip=(/** @type {number} */y,/** @type {number} */s)=>[1.42,y+s*(EE+KIT.domeAt(ER,EH,1.42)+0.003)];
+    return{JR,JT,JD,JC,JH,ER,EE,EH,eLip,scrU:[1.25,1.3,2.1,0.6],scrL:[1.25,1.4,2.0,0.6],scrEU:[1.3,0.3,3.4,0.6],scrEL:[1.3,0.5,2.5,0.6]};})();
+  const jewProf=(/** @type {any} */Q)=>{const{JR,JT,ER,EE,eLip}=BJ;
+    const ck=TT-15,cT=ck-0.1,eY=Y.tipU-0.02,hY=eY+0.03,lp=eLip(eY,-1),lf=TI+10,lY=Y.tipL+0.02,lH=lY-0.03,lq=eLip(lY,1);
+    const uY=Q.etU-0.03,uH=uY+0.07,ul=eLip(uY,-1),tq=Math.min(JT,TI-uH-0.05),yq=uH+tq,yb=Math.max(TT,ul[1]-0.45),lT=0.8,dY=Q.etL+0.03,dH=dY-0.04,dq=dH-lT;
+    return{bal:{ck,cT,eY,hY,lf,lY,lH,bu:[[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,eY],[2.6,eY],[2.6,ck+2.7],[1.2,ck+2.7]],cu:[[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],
+        bl:[[1.5,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,lY],[JR+0.003,lY],[JR+0.003,lH-JT],[1.2,lH-JT],[1.2,lH-JT-0.07],[1.5,lH-JT-0.37]],cl:[[1.5,lf],[2.6,lf],[2.6,lY],[ER+0.003,lY],[ER+0.003,lY+EE],lq,[1.5,lq[1]+0.08]]},
+      esc:{uY,uH,tq,yq,lT,dY,dH,dq,eu:[[1.85,TT],[2.295,TT],[2.295,TT+0.5],[2.6,TT+0.5],[2.6,uY],[ER+0.003,uY],[ER+0.003,uY-EE],ul,[1.85,yb]],
+        ju:[[2.6,TI],[2.6,uH],[JR+0.003,uH],[JR+0.003,yq],...(TI-yq<0.2?[[1.2,yq],[1.2,TI]]:[[0.85,yq],[0.6,yq+0.2],[0.6,TI]])],
+        jl:[[0.7,dq-0.15],[1.25,dq-0.15],[1.25,dY],[0.803,dY],[0.803,dq],[0.7,dq]],
+        el:[[0.95,dY+0.68],[1.103,dY+0.68],[1.103,dY],[1.25,dY],[1.25,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0.95,PPT]]}};};
+
   function build(mv,M,K){const{part,screw}=K,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),R={};
     const flip=g=>{const f=new THREE.Group();f.rotation.x=Math.PI;g.add(f);return f;};
     /* the versions (movement.js's setRev): rv(par, 'last', 'first 6mx 1943', '6mx 1943' or '1943') a group of the pieces only those versions have; onRev(g) runs g(version) when it changes.
@@ -403,15 +448,14 @@ const WESC=(()=>{
        Drawn at the middle of the fits. The arm along 12-6 with the balance at rest (05 03_1: "Die Zeitschrauben müssen in Ruhestellung die Richtung von 6-12 einnehmen") */
     const balP=part('balance',OFFB,[B[0],B[1],0]),bal=hn(new THREE.Group(),'050402-1');balP.add(bal);R.bal=balP;   /* the staff's line holds the whole balance: its pieces move with it */
     const balL=rv(bal,'last');onRev(v=>{const f=v!=='last';bal.position.y=f?SH1:0;});   /* the 1946 staff, hub and screws; as first drawn the rim and arm stand 0.3 higher (Y1) */
-    {const r0=30.5/2,r1=31.27/2,r2=32.30/2,y0=Y.rimT,y1=FY,gap=0.8,N=720,ya=Y.armT;
+    {const{r0,r1,r2,gap,N}=BAL,y0=Y.rimT,y1=FY,ya=Y.armT;   /* module scope (BAL) */
       /* the arm's outline (05 03_4's plan, its flanks traced at 6.81 px/mm by the rim's Ø 32.32; sure: Wempe 3955's arm, 9_Wempe_3955_Hemmung.jpg, shows the same hollow
          flanks swelling to a point at the hub): straight from 3.2 at the rim's inside ("3,2"; traced 3.2-3.45) widening to 4 ("4", traced 3.8 at 6.6 out), where each flank runs
          on as an arc r 20 ("20 r") curving away from the arm's line, its centre outside the arm (the sheet marks it, 7.2 along and 21.95 across from the centre: here 7.01
          and 21.98), the two arcs meeting in a point at the centre 6.5 across ("6,5"; traced 6.46). The arc tangent to the straight flank where the arm is 4 wide, 6.13 from
          the centre (solved; traced widths 5.29 at 2 out, 4.4-4.6 at 4, 3.6 at 10: the drawn 5.24, 4.42, 3.66). Until 15 October 2026 the flanks were straight 3.2 to 7.53 out and swelled in convex arcs to 6.17 at the
          centre ("6,5" read as where the arm is 4 wide) */
-      const sw=Math.sqrt(r0*r0-1.6*1.6),AT=(()=>{const f=x0=>{const L=Math.hypot(sw-x0,0.4),zc=x0+20*0.4/L,hc=2+20*(sw-x0)/L;return{zc,hc,e:Math.hypot(zc,hc-3.25)-20};};
-        let lo=2,hi=12;for(let i=0;i<60;i++){const m=(lo+hi)/2;f(m).e>0?hi=m:lo=m;}const r=f(lo);return{x0:lo,zc:r.zc,hc:r.hc};})();   /* the arm's flank meets the rim's inside at ±sw; AT the arcs' tangent point x0 and centre (zc, hc) */
+      const{sw,AT}=BAL;   /* the arm's flank meets the rim's inside at ±sw; AT the arcs' tangent point x0 and centre (zc, hc) */
       const hw=z=>{const a=Math.abs(z);return a>=AT.x0?2-0.4*(a-AT.x0)/(sw-AT.x0):AT.hc-Math.sqrt(400-(a-AT.zc)**2);};   /* the arm's half-width at z along it */
       const flank=s=>{const o=[],Z=[-sw,-AT.x0,0,AT.x0,sw],n=[1,24,24,1];for(let j=0;j<4;j++)for(let i=0;i<n[j];i++){const z=Z[j]+(Z[j+1]-Z[j])*i/n[j];o.push([s*hw(z),z]);}o.push([s*1.6,sw]);return o;};   /* local x, z: the arm along z */
       const aIn=Math.asin(1.6/r0)/D2R;   /* the arm's half-width at the rim, as a plan angle */
@@ -427,11 +471,11 @@ const WESC=(()=>{
         const inn2=[];for(let i=0;i<=m;i++)inn2.push(pol([0,0],r0,c-aIn-(c-aIn-b0)*i/m));inn2.shift();
         return[...o,...inn,...e,...inn2];};   /* counterclockwise outside, back round the inside past the arm's end (e, from c+aIn to c−aIn) */
       const brass=(c)=>{const g=gA(r2),gi=gA(r1),a0=c-90+g,a1=c+90-g,b0=c-90+gi,b1=c+90-gi,o=[],n=Math.ceil(N/2);for(let i=0;i<=n;i++)o.push(pol([0,0],r2,a0+(a1-a0)*i/n));for(let i=0;i<=n;i++)o.push(pol([0,0],r1,b1-(b1-b0)*i/n));return o;};
-      const hubF=[{p:C([0,0],2.009/2,64),a:ya,b:y1},...[-1,1].flatMap(s=>[{p:C([0,s*2.15],0.9,40),q:C([0,s*2.15],0.5,40),a:ya,b:ya+0.4},{p:C([0,s*2.15],0.5,40),a:ya+0.4,b:y1}])];   /* the hub's screws' holes at 2.14 +0.02 either side (2.15, its middle; 2.14, its least, until 28 October 2026: drawing check 2's 1-M15), countersunk 90° in the arm's top to Ø 1.8, 0.4 deep (the coloured section's heads conical and sunk flush, sure; 05 03 01-1's hole drawn double-ringed; its "0,4" and "1,8 Ø H7" have no leader to the sink, which the plan rings on the left hole only: read so, possible: README, Estimated) */
+      const hubF=[{p:C([0,0],BAL.hub,64),a:ya,b:y1},...[-1,1].flatMap(s=>[{p:C([0,s*BAL.hs],BAL.kR,40),q:C([0,s*BAL.hs],BAL.hR,40),a:ya,b:ya+BAL.kD},{p:C([0,s*BAL.hs],BAL.hR,40),a:ya+BAL.kD,b:y1}])];   /* the hub's screws' holes at 2.14 +0.02 either side (2.15, its middle; 2.14, its least, until 28 October 2026: drawing check 2's 1-M15), countersunk 90° in the arm's top to Ø 1.8, 0.4 deep (the coloured section's heads conical and sunk flush, sure; 05 03 01-1's hole drawn double-ringed; its "0,4" and "1,8 Ø H7" have no leader to the sink, which the plan rings on the left hole only: read so, possible: README, Estimated) */
       /* the timing screws' tapped holes (05 03 01-1's side view: Ø 0.9, 0.16 pitch, 2.15 over the lower face) across the rim at the arm's ends, steel and brass, cut by fusee.js's
          bore from inside the rim outward (left out until 26 October 2026, the screws in the metal). Drawn plain at the thread's size and 0.02 (Ø 0.92: README, the screws'
          threads), as no tapped hole can be drawn across a rim built as plan cells (KIT's threadWall runs along a solid's own axis): the screws' shanks are threaded (below) */
-      const tH=(g,a)=>{const u=dir(a);return WFUSEE.capFix(WFUSEE.bore(g,[u[0]*(r0-0.2),FY-2.15,u[1]*(r0-0.2)],[u[0],0,u[1]],0.46,0,16),null);};   /* its flats 0.46 out, clear of the thread's crests at 0.442 (its 16 columns' corners); 0.47 until 28 October 2026 */
+      const tH=(g,a)=>{const u=dir(a);return WFUSEE.capFix(WFUSEE.bore(g,[u[0]*(r0-BAL.tH.i),FY-BAL.tH.dy,u[1]*(r0-BAL.tH.i)],[u[0],0,u[1]],BAL.tH.r,0,BAL.tH.n),null);};   /* its flats 0.46 out, clear of the thread's crests at 0.442 (its 16 columns' corners); 0.47 until 28 October 2026 */
       tag(mesh(bal,tH(tH(solidGeo([{loop:ccw(armLoop),y0:ya,y1,F:hubF},{loop:ccw(half(90,eTop)),y0,y1},{loop:ccw(half(270,eBot)),y0,y1}]),90),270),M.steel),'050301-1');
       /* the maker's mark stamped on the arm's top: "RGG" in a triangle (Wempe 3955, 15_Wempe_3955_Logo_plus.jpg, and Christie's "balance signed RGG"), about 2.2 across, 11 out
          along the arm (the photograph oblique: scaled against the escape wheel's endstone screws, 7.0 apart; estimated). A decal, turning with the balance */
@@ -464,8 +508,8 @@ const WESC=(()=>{
        1.24, where the arm's cut section (1.15) hides their foot; Wempe 3955's side view (5_Wempe_3955_O.jpg) measures 6.0-6.3 high against their Ø 6.3 (height/diameter
        0.98-1.00, two masses) and its plan view the masses' faces flush with the rim's (within about 0.3); Lange 5829 (stahl_113510_lange_4.jpg) 5.8 (likely: until
        15 October 2026 1.08 to 6.46, the far pair's outline) */
-    const MASS_A=30,MASS_H0=0,MASS_H1=6.46;
-    {const rc=(30.5/2+32.3/2)/2,mr=6.35/2,CH=0.26,y0=FY-MASS_H1,y1=FY-MASS_H0,ys=Y.rimT-0.02,ri=30.5/2-0.02,ro=32.3/2+0.02,rOut=rc+mr;
+    const MASS_A=MS.A,MASS_H0=MS.H0,MASS_H1=MS.H1;   /* module scope (MS) */
+    {const rc=(30.5/2+32.3/2)/2,mr=MS.d/2,CH=MS.CH,y0=FY-MASS_H1,y1=FY-MASS_H0,ys=Y.rimT-MS.cl,ri=30.5/2-MS.cl,ro=32.3/2+MS.cl,rOut=rc+mr;
       /* the inner jaw: the mass's circle inside the slot's inner arc (r ri about the staff) */
       const cells=c=>{const N=120,L=[];for(let i=0;i<N;i++){const a0=TAU*i/N,a1=TAU*(i+1)/N,p=[c[0]+mr*Math.cos(a0),c[1]+mr*Math.sin(a0)],q=[c[0]+mr*Math.cos(a1),c[1]+mr*Math.sin(a1)];L.push({p});
           for(const r of[ri]){const fp=hyp(p)-r,fq=hyp(q)-r;if(fp*fq<0){let lo=0,hi=1;for(let k=0;k<50;k++){const m=(lo+hi)/2;((hyp([p[0]+(q[0]-p[0])*m,p[1]+(q[1]-p[1])*m])-r)*fp>0)?lo=m:hi=m;}L.push({p:[p[0]+(q[0]-p[0])*lo,p[1]+(q[1]-p[1])*lo],x:r});}}}
@@ -484,8 +528,8 @@ const WESC=(()=>{
          wall is round, the counterbore's cell flat-faced); the counterbore Ø 1.62 for the head's Ø 1.6, its floor 0.55 under the round side, the head seated on it (05 03_2's
          plan sinks the head; the coloured section shows its thread end-on, a third up the mass: drawing check 2's 1-M2 and S-1; until 28 October 2026 no hole was cut, the
          screw in solid brass and its tip 0.03 off the rim, so nothing held a mass: fusee.js's bore along the radius left the round side open, solids.py) */
-      const CB=0.81,TS=0.4,XB=(()=>{let lo=CB,hi=mr;for(let k=0;k<60;k++){const m=(lo+hi)/2;Math.sqrt(ro*ro-m*m)<rc+Math.sqrt(mr*mr-m*m)?lo=m:hi=m;}return lo;})();   /* XB: the jaw's half width, where the wall meets the round side */
-      const jaw=hS=>{const zL=-hS,zH=(FY-hS)-ys,ya=ro,yb=rOut-0.57,J0=p=>Math.sqrt(ro*ro-p[0]*p[0]),J1=p=>rc+Math.sqrt(Math.max(0,mr*mr-p[0]*p[0])),NS=24,NC=32;
+      const CB=MS.CB,TS=MS.TS,XB=(()=>{let lo=CB,hi=mr;for(let k=0;k<60;k++){const m=(lo+hi)/2;Math.sqrt(ro*ro-m*m)<rc+Math.sqrt(mr*mr-m*m)?lo=m:hi=m;}return lo;})();   /* XB: the jaw's half width, where the wall meets the round side */
+      const jaw=hS=>{const zL=-hS,zH=(FY-hS)-ys,ya=ro,yb=rOut-MS.cb,J0=p=>Math.sqrt(ro*ro-p[0]*p[0]),J1=p=>rc+Math.sqrt(Math.max(0,mr*mr-p[0]*p[0])),NS=24,NC=32;
         const xc=[...Array(NS+1).keys()].map(k=>-CB*Math.cos(Math.PI*k/NS)),zc=xc.map((x,k)=>CB*Math.sin(Math.PI*k/NS));zc[0]=0;zc[NS]=0;   /* the counterbore's circle, evenly round, x from -CB to CB */
         const f0=Math.asin(CB/mr),f1=Math.asin(XB/mr),xo=[...Array(NC+1).keys()].map(k=>mr*Math.sin(f0+(f1-f0)*k/NC));xo[0]=CB;xo[NC]=XB;   /* the columns' x out to XB, evenly round the mass's circle */
         const st=(A,B)=>({loop:[...A,...B.slice().reverse()],y0:J0,y1:J1,strip:1});
@@ -509,8 +553,8 @@ const WESC=(()=>{
            empty; the Einheits examples photographed, Wempe 3955 (5_O, 6_S) and Langes 5373, 5499, 5829, plain tops (the drawings' versions build it, Wempe 3955's doesn't).
            It clamps nothing (it stops 0.64 short of the rim). Tapped (KIT's threadWall); no screw goes in, so its record for matchThreads is dropped (the cap is fused into
            the outer jaw's frame, which a tapped piece's helix can't follow: fuse) */
-        const TOP=[{th:{rs:0.6},p:C(c,0.62,32),a:y0,b:y0+2.0}],PF=ph?[{p:C(add(add(c,u0,ph[0]),[-u0[1],u0[0]],ph[1]),0.3,32),a:y1-1.0,b:y1}]:[];
-        for(const[gm,Ft,Fi,hS]of/** @type {[any,any[],any[],number][]} */([[rv(bal,'last first 6mx 1943 -3955'),TOP,[],1.85],[rv(bal,'3955'),[],PF,2.55]])){
+        const TOP=[{th:{rs:MS.top.rs},p:C(c,MS.top.r,32),a:y0,b:y0+MS.top.d}],PF=ph?[{p:C(add(add(c,u0,ph[0]),[-u0[1],u0[0]],ph[1]),0.3,32),a:y1-1.0,b:y1}]:[];
+        for(const[gm,Ft,Fi,hS]of/** @type {[any,any[],any[],number][]} */([[rv(bal,'last first 6mx 1943 -3955'),TOP,[],MS.hS],[rv(bal,'3955'),[],PF,MS.hS3955]])){
         const u=unit(c),yS=FY-hS,q=bas(u),gC=cap(c,Ft);delete gC.userData.threads;
         const jw=tag(mesh(gm,jaw(hS),M.brass,0,yS,0),'050301-4');jw.quaternion.copy(q);
         fuse([jw,tag(mesh(gm,gC,M.brass),'050301-4',1),tag(mesh(gm,solidGeo([{loop:ccw(cI),y0:ys,y1,F:Fi}]),M.brass),'050301-4',1)],jw);   /* one mesh in the jaw's frame (fuse, core.js), its tapped hole's helix kept */
@@ -522,11 +566,11 @@ const WESC=(()=>{
            Its height over the rim's lower face (hS above): 05 03_2's side view puts the slotted head's centre 1.83-1.88 over it (22 px at 12.0 px/mm by the rim's Ø 32.3 and 3.8:
            sure; read 2.83 and drawn 2.45 until 26 October 2026); Wempe 3955's 2.55 (5_Wempe_3955_O.jpg) and Lange 5829's 2.0 (stahl_113510_lange_4.jpg) */
         const gs=new THREE.Group();gs.position.set(0,yS,0);gs.quaternion.copy(q);gm.add(gs);
-        const tA=ro-0.015,tB=rOut-0.57+0.1,tg=KIT.threadGeo(TS,tA,tB,tA+tB).clone();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,tA+tB,0);   /* its tip toward the staff, 0.005 off the rim (16.15) */
+        const tA=ro-0.015,tB=rOut-MS.cb+0.1,tg=KIT.threadGeo(TS,tA,tB,tA+tB).clone();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,tA+tB,0);   /* its tip toward the staff, 0.005 off the rim (16.15) */
         tag(mesh(gs,tg,M.steel),'WN-12').userData.thread={rs:TS,p:KIT.isoP(TS)};
         /* the head's face and the slot's top bent onto the mass's round side (x across) */
         const onMass=(g,yT,dy)=>{const P=g.attributes.position;for(let i=0;i<P.count;i++)if(P.getY(i)>yT){const w=P.getX(i);P.setY(i,rc+Math.sqrt(mr*mr-w*w)+dy);}P.needsUpdate=true;g.computeBoundingBox();return g;};
-        tag(mesh(gs,onMass(lathe([[0,rOut-0.57],[0.8,rOut-0.57],[0.8,rOut-0.02],[0,rOut-0.02]],24),rOut-0.03,-0.02),M.steel),'WN-12',1);   /* its head, sunk in the mass's outer side, on the counterbore's floor */
+        tag(mesh(gs,onMass(lathe([[0,rOut-MS.cb],[0.8,rOut-MS.cb],[0.8,rOut-0.02],[0,rOut-0.02]],24),rOut-0.03,-0.02),M.steel),'WN-12',1);   /* its head, sunk in the mass's outer side, on the counterbore's floor */
         tag(mesh(gs,onMass(new THREE.BoxGeometry(1.6,0.25,0.25,16,1,1).translate(0,rOut-0.02-0.125+0.02,0),rOut-0.03,0),M.steelD),'WN-12',1);   /* its slot across the mass (horizontal), 0.02 out of the head's face as screw() draws them, its top in 16 steps along the round side */
       }}}
     /* the timing screws (Zeitschraube 05 03 01-2) and their weights (Zeitmasse 05 03 01-3, by the coloured section's labels), at the arm's ends: the screw across the rim in its
@@ -538,7 +582,7 @@ const WESC=(()=>{
        weight's size: 05 03_2 scales both Ø 4.21 and 4.33 (their outlines' line centres at 12.0 px/mm by the rim's Ø 32.3; read Ø 3.5 and 4.3 until 26 October 2026) by 3.3
        long: built Ø 4.25 × 3.3 in the drawings' versions (sure); Wempe 3955's measure Ø 3.0-3.9 against the masses, the arm and the rim (perspective and blur, ±0.4), built 3.8 there and in the 6MX's. Until 15 October 2026 the head Ø 1.5 × 0.6 outside the
        weight, the weight Ø 3.0 × 4.0, uncut, from 16.45 */
-    {const yS=FY-2.15,rI=30.5/2,TIP=21.05,W1=TIP-0.8,W0=W1-3.3;
+    {const yS=FY-TSW.dy,rI=30.5/2,TIP=TSW.TIP,W1=TIP-TSW.wo,W0=W1-TSW.wl;   /* module scope (TSW) */
       /* a cylinder r R bored rb along y from y0 to y1, cut across its diameter w wide from y1 dA deep (along x) and from y0 dB deep (along z): its cells */
       const split=(R,rb,y0,y1,w,dA,dB)=>{const h=w/2,xb=Math.sqrt(rb*rb-h*h),xo=Math.sqrt(R*R-h*h),A=(r,a0,a1,n=12)=>{const o=[];for(let i=1;i<n;i++){const t=a0+(a1-a0)*i/n;o.push([r*Math.cos(t),r*Math.sin(t)]);}return o;};
         const cells=[];for(const sx of[1,-1])for(const sz of[1,-1]){const ai=Math.atan2(h,xb),ao=Math.atan2(h,xo),Q=(x,z)=>[sx*x,sz*z];
@@ -547,13 +591,13 @@ const WESC=(()=>{
         for(const sz of[1,-1])cells.push({loop:ccw([[-h,sz*xb],[-h,sz*xo],[h,sz*xo],[h,sz*xb]]),y0:y0+dB,y1});
         return solidGeo(cells);};
       for(const a of[90,270]){const u=dir(a);
-        for(const[gw,Rw]of/** @type {[any,number][]} */([[rv(bal,'last first 1943 -3955'),4.25/2],[rv(bal,'3955 6mx'),1.9]])){   /* each version's screw and weight in one group (fine.py takes pieces fixed to each other by their shared group) */
+        for(const[gw,Rw]of/** @type {[any,number][]} */([[rv(bal,'last first 1943 -3955'),TSW.Rw],[rv(bal,'3955 6mx'),TSW.Rw3955]])){   /* each version's screw and weight in one group (fine.py takes pieces fixed to each other by their shared group) */
         const gT=new THREE.Group();gT.position.set(0,yS,0);gT.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(u[0],0,u[1]));gw.add(gT);   /* its shank M0.9 × 0.16 (05 03 01-1's "0,9", "0,16 Steigung": a fine thread, ISO's M0.9 being 0.225), threaded (KIT.threadGeo) from inside its head to its tip (a plain Ø 0.9 until 28 October 2026: drawing check 2's 1-M4) */
-          tag(mesh(gT,KIT.threadGeo(0.45,rI-0.1,TIP,0,0.16),M.steel),'050301-2').userData.thread={rs:0.45,p:0.16};   /* the screw, its head and its weight in one group on its axis (fine.py takes pieces of one group as fixed to each other) */
-        const hg=lathe([[0,rI-1.3],[0.825,rI-1.3],[0.825,rI],[0,rI]],24),HP=hg.attributes.position;for(let i=0;i<HP.count;i++)if(HP.getY(i)>rI-0.03){const w=HP.getX(i)*u[1]-HP.getZ(i)*u[0];HP.setY(i,Math.sqrt(rI*rI-w*w));}HP.needsUpdate=true;
+          tag(mesh(gT,KIT.threadGeo(TSW.rs,rI-TSW.ri,TIP,0,TSW.p),M.steel),'050301-2').userData.thread={rs:TSW.rs,p:TSW.p};   /* the screw, its head and its weight in one group on its axis (fine.py takes pieces of one group as fixed to each other) */
+        const hg=lathe([[0,rI-TSW.hl],[TSW.hr,rI-TSW.hl],[TSW.hr,rI],[0,rI]],24),HP=hg.attributes.position;for(let i=0;i<HP.count;i++)if(HP.getY(i)>rI-0.03){const w=HP.getX(i)*u[1]-HP.getZ(i)*u[0];HP.setY(i,Math.sqrt(rI*rI-w*w));}HP.needsUpdate=true;
         tag(mesh(gT,hg,M.steel),'050301-2',1);   /* its head, on the rim's inner face: its face following the rim's curve, as a maker files it to bear (flat until 26 October 2026, 0.022 into the rim at its sides) */
         tag(mesh(gT,new THREE.BoxGeometry(1.67,0.3,0.25).translate(0,rI-1.3+0.15-0.02,0),M.steelD),'050301-2',1);   /* its slot, toward the staff */
-        tag(mesh(gT,split(Rw,0.45,W0,W1,0.15,1.3,1.7),M.brass),'050301-3');}}}
+        tag(mesh(gT,split(Rw,TSW.rs,W0,W1,TSW.cut[0],TSW.cut[1],TSW.cut[2]),M.brass),'050301-3');}}}
     /* the balance staff (Unruhwelle 05 04 02-1, kompl. 05 04 02, 29.5.46: hardened, tempered at 240 deg): from its top, the arm Ø 1.2 ±0.02 tapering 1:30 to the pivot's
        shoulder; the hairspring collet's seat 1:70 from Ø 1.58 to Ø 1.65 s6 over the 6.1 above the hub's flange; the arm's seat Ø 2 h6, 1.1 high; inside the brass hub
        (Unruhbutzen 05 04 02-2) on 1:70, its bore's foot Ø 2.14 +0.01; below the hub the impulse roller's seat Ø 1.65 s6 to 5.6 under the flange's top, the discharge roller's Ø 1.2 r6 (the sheet's widths: 28 and 21 px at 17.6 px/mm; read until 27 October 2026 as a collar Ø 2.14 to 5.6 with the impulse roller's seat under it),
@@ -575,9 +619,9 @@ const WESC=(()=>{
     /* its bore on the staff's 1:70, line to line (straight Ø 2.003 in the flange until 28 October 2026, 0.011 into the staff at the flange's underside); its two holes M1 × 0.25
        at 2.15 either side (the arm's, by the jig: "nach Bohrlehre 2 × M1", 05 03_3.2; 2.14 until 28 October 2026), tapped (KIT's threadWall; plain Ø 1.04 until 28 October
        2026, the screws held by nothing in it: drawing check 2's 1-M3, S-6) */
-    {const F=[{p:C([0,0],1.0,64),q:C([0,0],1.0+1.8/140,64),a:FY,b:Y.flB},...[-1,1].map(s=>({th:{rs:0.5},p:C([0,s*2.15],0.52,40),a:FY,b:Y.flB}))];
-      tag(mesh(balL,solidGeo([{loop:C([0,0],6.25/2,160),y0:FY,y1:Y.flB,F}]),M.brass),'050402-2');
-      tag(mesh(balL,lathe([[1.0+1.8/140+0.0001,Y.flB],[2.6/2,Y.flB],[2.6/2,Y.hubB],[1.07,Y.hubB],[1.0+4.06/140,Y.hubB-0.04]],48),M.brass),'050402-2',1);}   /* its bore's foot opened to Ø 2.14 over 0.04 (05 04 02's 2,14 +0.01) */
+    {const F=[{p:C([0,0],HUB.b,64),q:C([0,0],HUB.b+HUB.fl/HUB.tp,64),a:FY,b:Y.flB},...[-1,1].map(s=>({th:{rs:HUB.rs},p:C([0,s*HUB.s],HUB.r,40),a:FY,b:Y.flB}))];   /* module scope (HUB) */
+      tag(mesh(balL,solidGeo([{loop:C([0,0],HUB.R,160),y0:FY,y1:Y.flB,F}]),M.brass),'050402-2');
+      tag(mesh(balL,lathe([[HUB.b+HUB.fl/HUB.tp+0.0001,Y.flB],[HUB.nR,Y.flB],[HUB.nR,Y.hubB],[HUB.f,Y.hubB],[HUB.b+HUB.nd/HUB.tp,Y.hubB-HUB.fd]],48),M.brass),'050402-2',1);}   /* its bore's foot opened to Ø 2.14 over 0.04 (05 04 02's 2,14 +0.01) */
     /* the hub's screws (Schraube WN-10, the coloured section): put in from the arm's top, their 90° countersunk heads flush in its countersinks, through the arm's Ø 1 into the
        flange's M1, their ends at the flange's underside, as the coloured section draws them (Wempe_Einheitschronometer.jpg px 1467.5-1483.8 and 1507.3-1523.5, from 313.8
        to the shanks' ends at 341.3: the heads Ø 1.73 at 9.37 px/mm, the shanks Ø 0.93 down through the arm to the flange's underside, drawn serrated, threaded; sure). The head Ø 1.8 × 0.4, the countersink's: 05 03 01-1's "0,4" (likely).
@@ -734,16 +778,12 @@ const WESC=(()=>{
        the line of centres (PHI0) */
     const rol=part('rollers',OFFB,[B[0],B[1],0]);R.rol=rol;
     /* each state's rollers at its own heights (Y, Y1): the same parts, 05 04_1's plan the same in both */
-    for(const[Q,g]of[[Y,rv(rol,'last')],[Y1,rv(rol,'first 6mx 1943')]]){const af=aBW-PHI0,u=dir(af),vl=[Math.sin(af*D2R),Math.cos(af*D2R)],rr=6.78/2,RF=(r,w)=>add(add([0,0],u,r),vl,w);   /* vl: toward the leading side (the way it turns in the impulse) */
-      const cT=pol([0,0],rr,af+Math.asin(2.0/rr)/D2R),cL=pol([0,0],rr,af-Math.asin(1.5/rr)/D2R),cm=[(cT[0]+cL[0])/2,(cT[1]+cL[1])/2],ch=hyp(sub(cT,cL)),out=unit(cm),cc=add(cm,out,Math.sqrt(3.5*3.5-ch*ch/4));
-      const a0=Math.atan2(cL[1]-cc[1],cL[0]-cc[0]),a1=Math.atan2(cT[1]-cc[1],cT[0]-cc[0]);let da=a1-a0;while(da>Math.PI)da-=TAU;while(da<-Math.PI)da+=TAU;
-      const rec=[add(cL,unit(cL),0.8)];for(let i=0;i<=40;i++){const a=a0+da*i/40;rec.push([cc[0]+3.5*Math.cos(a),cc[1]+3.5*Math.sin(a)]);}rec.push(add(cT,unit(cT),0.8));
-      const slot=[RF(1.5,-0.003),RF(3.0,-0.003),RF(3.0,0.503),RF(1.5,0.503)],notch=bool(rec,slot).uni[0],outl=bool(C([0,0],rr,360),notch).dAB[0];
-      const ph=add(add([0,0],u,-1.9),vl,0.7);   /* 1.9 below the centre, 0.7 to the stone's side (02 04 02's plan, the stone at the top, its face on the right) */
+    for(const[Q,g]of[[Y,rv(rol,'last')],[Y1,rv(rol,'first 6mx 1943')]]){const{af,u,vl,rr,RF,rec,slot,ph}=rolImp();   /* module scope (ROLI, rolImp) */
+      const notch=bool(rec,slot).uni[0],outl=bool(C([0,0],rr,360),notch).dAB[0];
       /* its bore reamed 1:70 ("Kegel 1:70 aufreiben", 02 04 02's edge view: 1,65 −0,03 at one face, 1,627 at the other, 1.6/70 apart): Ø 1.650 at its face toward the hub,
          1.6264 at the other (each part on the staff larger toward the hub, as the collet's and the hub's seats); pressed on the staff's straight 1.65 s6 (above), 0.009-0.021
          tight on the radius as last revised; as first drawn the staff follows it, line to line (straight Ø 1.653, 0.0015 clear, until 28 October 2026: drawing check 2's 1-M7) */
-      const rg=solidGeo([{loop:outl,y0:Q.ir0,y1:Q.ir1,F:[{p:C([0,0],0.825,64),q:C([0,0],0.825-(Q.ir1-Q.ir0)/140,64),a:Q.ir0,b:Q.ir1},{p:C(ph,0.65,48),a:Q.ir0,b:Q.ir1}]}]);
+      const rg=solidGeo([{loop:outl,y0:Q.ir0,y1:Q.ir1,F:[{p:C([0,0],ROLI.bore,64),q:C([0,0],ROLI.bore-(Q.ir1-Q.ir0)/ROLI.tp,64),a:Q.ir0,b:Q.ir1},{p:C(ph,ROLI.phR,48),a:Q.ir0,b:Q.ir1}]}]);
       if(Q===Y)tag(mesh(g,rg,M.copper),'050403-1');
       /* Wempe 3955's (the version as photographed) bright and neutral, as its steel arm: 9_Wempe_3955_Hemmung.jpg's roller face saturation 0.00-0.02 at value 0.93-0.98,
          the drawn beryllium copper's render 0.49-0.81 at the same patches (photocompare.py's w3955_hem_2 camera): steel or a plated roller, drawn steel (likely) */
@@ -760,9 +800,9 @@ const WESC=(()=>{
        (full reach, the side toward the gold spring's tip) to the other, as the layout's corners and makeEsc's BEV take it (until 15 October 2026 drawn square). Measured
        again on 05 04_1 (24.4 px/mm, the dashed outline at (180-198, 453-463) px): the acting corner at the gold spring's tip, the other corner 4-5 px back, 0.15-0.2,
        the stone 8 px across (0.33); ±3 px, the faint dashes and the "1°" figures beside the lower corner: DS's 0.3 is kept (README, Estimated) */
-    for(const[Q,g]of[[Y,rv(rol,'last')],[Y1,rv(rol,'first 6mx 1943')]]){const b=BETA,u=dir(b),pp=[u[1],-u[0]],L=(e,w)=>add(add([0,0],u,e),pp,w),rf=Math.sqrt(RD*RD-DSW*DSW/4);
-      const body=stadiumPts(L(-0.255,0),L(0.355,0),2.15),slot=[L(0.85,-DSW/2-0.003),L(2.0,-DSW/2-0.003),L(2.0,DSW/2+0.003),L(0.85,DSW/2+0.003)],outl=bool(body,slot).dAB[0];
-      tag(mesh(g,solidGeo([{loop:outl,y0:Q.dr0,y1:Q.dr1,F:[{p:C([0,0],Q===Y?0.6025:0.6,48),a:Q.dr0,b:Q.dr1}]}]),M.brass),'050404-1');   /* bored Ø 1.2 H7 at its middle (no sheet: estimated), pressed on the staff's 1.2 r6 (1.2155), 0.005 tight on the radius; as first drawn line to line on its Ø 1.2 (0.0015 clear until 28 October 2026: drawing check 2's 1-M7) */
+    for(const[Q,g]of[[Y,rv(rol,'last')],[Y1,rv(rol,'first 6mx 1943')]]){const{L,rf,p0,p1,slot}=rolDis();   /* module scope (ROLD, rolDis) */
+      const body=stadiumPts(p0,p1,ROLD.w),outl=bool(body,slot).dAB[0];
+      tag(mesh(g,solidGeo([{loop:outl,y0:Q.dr0,y1:Q.dr1,F:[{p:C([0,0],Q===Y?ROLD.bore:ROLD.bore1,48),a:Q.dr0,b:Q.dr1}]}]),M.brass),'050404-1');   /* bored Ø 1.2 H7 at its middle (no sheet: estimated), pressed on the staff's 1.2 r6 (1.2155), 0.005 tight on the radius; as first drawn line to line on its Ø 1.2 (0.0015 clear until 28 October 2026: drawing check 2's 1-M7) */
       tag(mesh(g,solidGeo([{loop:[L(0.9,-DSW/2),L(rf,-DSW/2),L(rf-DS,DSW/2),L(0.9,DSW/2)],y0:Q.dr0+0.05,y1:Q.dr1+0.15}]),M.ruby),'050404-2');}
 
     /* ================= the escape wheel (Gangrad 05 04 05-1, its pinion Gangtrieb 05 04 05-2, collet Gangradbutzen 05 04 05-3) ================= */
@@ -947,22 +987,22 @@ const WESC=(()=>{
        and the escape wheel whose teeth lie 0.05 over the detent's pipe, rises 30.3 and the cock 29.9 (frame.js's 31), which keeps the 0.5 exploded.py asks
        from the block and from the seconds wheel under the cock's lug (33). Until 27 October 2026 the last revised block's upright lay on the plate and they rose 30 and 31 */
     {const P=K.parts;onRev(()=>{P.lowerCock.userData.off=-29.9;for(const k of['detentBlock','detent','escapeWheel'])P[k].userData.off=-30.3;});}
-    {const yP=TI,nE=BLK_NE,L=(t,n)=>D(t,n),tF=ROW+3.75,tT=ROW-3.75,tU=tF-25,nUl=nE-1.4,nUr=nUl-3;
+    {const yP=TI,nE=BLK_NE,L=(t,n)=>D(t,n),tF=ROW+BLK.tF,tT=ROW+BLK.tT,tU=tF-BLK.len,nUl=nE-BLK.nl,nUr=nUl-BLK.uw;   /* module scope (BLK) */
       /* the upright's foot on its far side (05 04 01-4's front view, 17.1 px/mm by its 17,5): its edge down to 15 from its top (2.5 over the base), a step 0.35 out (6 px),
          then a cove "3 r" (its arc's 35 rows fitted with a circle: r 2.96, its centre 3.20 out and 3.09 over the base, in the air, rms 0.3 px: sure) to 2.0 out and 0.4 over the
          base, down 0.4 to it there, flush with the base's 6.5-deep part's end (the front view's hidden line under it): built r 3 through those two ends (its centre then 3.29
          out, 3.11 over). Until 27 October 2026 a cove r 3 tangent to the edge and the base (the last revised block's, now the 1943 block's) or r 2 (1943), the arc read convex in the drawings check */
-      const JC=(()=>{const A=[0.35,2.5],Bq=[2.0,0.4],R=3,m=[(A[0]+Bq[0])/2,(A[1]+Bq[1])/2],d=[Bq[0]-A[0],Bq[1]-A[1]],l=Math.hypot(d[0],d[1]),h=Math.sqrt(R*R-l*l/4),c=[m[0]-d[1]/l*h,m[1]+d[0]/l*h],
+      const JC=(()=>{const A=BLK.JC.A,Bq=BLK.JC.B,R=BLK.JC.R,m=[(A[0]+Bq[0])/2,(A[1]+Bq[1])/2],d=[Bq[0]-A[0],Bq[1]-A[1]],l=Math.hypot(d[0],d[1]),h=Math.sqrt(R*R-l*l/4),c=[m[0]-d[1]/l*h,m[1]+d[0]/l*h],
         a0=Math.atan2(A[1]-c[1],A[0]-c[0]),a1=Math.atan2(Bq[1]-c[1],Bq[0]-c[0]),o=[L(tT-2.5,nUr)];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;o.push(L(tT-(c[1]+R*Math.sin(a)),nUr-(c[0]+R*Math.cos(a))));}return o;})();   /* [o out, d over the base] */
-      const base={loop:[L(tT,nE),L(tT,nUl),L(tT,nE-6.4),L(tF,nE-6.4),L(tF,nE)],y0:yP,y1:yP+6.5,
-        F:[{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP+3.5,b:yP+6.5}]};   /* the boss at the end, 6.5 deep */
-      const thin={loop:[L(tT,nE-6.4),L(tT,nUr-3),L(tT,nE-14.6),L(tF,nE-14.6),L(tF,nE-6.4)],y0:yP,y1:yP+3,
-        F:[{th:{rs:0.85},p:C(H[13],0.87,48),a:yP,b:yP+3},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+3}]};   /* the rest, 3 deep on the plate */
+      const base={loop:[L(tT,nE),L(tT,nUl),L(tT,nE-BLK.bl),L(tF,nE-BLK.bl),L(tF,nE)],y0:yP,y1:yP+BLK.bd,
+        F:[{p:C(L(ROW+BLK.pin[0][0],nE+BLK.pin[0][1]),BLK.pr,32),a:yP,b:yP+BLK.bd},{p:C(L(ROW,nE+BLK.h13.n),BLK.h13.r,32),a:yP+3.5,b:yP+6.5}]};   /* the boss at the end, 6.5 deep */
+      const thin={loop:[L(tT,nE-BLK.bl),L(tT,nUr-3),L(tT,nE-BLK.tl),L(tF,nE-BLK.tl),L(tF,nE-BLK.bl)],y0:yP,y1:yP+BLK.td,
+        F:[{th:{rs:BLK.m17.rs},p:C(H[13],BLK.m17.r,48),a:yP,b:yP+BLK.td},{p:C(L(ROW+BLK.pin[1][0],nE+BLK.pin[1][1]),BLK.pr,32),a:yP,b:yP+BLK.td}]};   /* the rest, 3 deep on the plate */
       base.loop=ccw(base.loop);thin.loop=ccw(thin.loop);
       /* the end face's M1 for the detent's foot screw (WN-gf), along the base to the Ø 1.3 hole 2.8 in (05 04 01-4), and its two steady pins' holes Ø 0.45 1.6 deep, which
          05 04 01-4 doesn't draw: for 1436's pins (its foot's two holes, 4.2 apart) and the GUB's old foot (Ldzmn4kuKMA 3:05.5), drilled at assembly (estimated; credited to
          05 04 01-4 until 28 October 2026: drawing check 2's 2-M8; left out until 26 October 2026, the screw and pins in the metal); every version's block the same (below) */
-      const endH=(g,d0,k=7)=>[[ROW,-2.8,0.5,16],[ROW-2.1,-1.6,0.225,16],[ROW+2.1,-1.6,0.225,16]].filter((_,i)=>k>>i&1).reduce((q,[t,dn,r,m])=>nBore(q,t,nE+dn,yP+d0+1,r,m),g);
+      const endH=(g,d0,k=7)=>BLK.endH.map(([t,dn,r,m])=>[ROW+t,dn,r,m]).filter((_,i)=>k>>i&1).reduce((q,[t,dn,r,m])=>nBore(q,t,nE+dn,yP+d0+1,r,m),g);
       /* The Soviet 6MX's block: 05 04 01-4's form (the base with its fixing screw between two steady pins at opposite corners, the upright with its fillet, the foot clamped
          to the base's end by a screw along it: 8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, sure) read in first angle, as the
          sheet itself reads (DIN's; above): the upright at the free face, 3.5-6.5 under the plate, so the detent's foot lies 1.3-3.3 under it and the cross screw 5.0 under,
@@ -1042,9 +1082,9 @@ const WESC=(()=>{
          At the sheets' heights the head's top is 0.15 under the detent's and gold spring's lower faces (3.3 under the plate); on the photographs that gap is 0.6-1.1 (README,
          Unresolved). The upright is two solids: its slit end, 7.5 long, extruded through its width (the slit and the hole in that profile), and the rest with its fillet in
          plan, as the 6MX's */
-      {const ya=yP+3.5,yb=yP+6.5,yS=yP+5.15,tS=ROW-18.8,rh=0.62,hs=0.15,tE=tU+7.5;
+      {const U=BLK.up,ya=yP+U.a,yb=yP+U.b,yS=yP+U.s,tS=ROW+U.tS,rh=U.rh,hs=U.hs,tE=tU+U.e;
         const up43={loop:ccw([L(tT,nUl),L(tE,nUl),L(tE,nUr),...JC,L(tT,nE-6.4)]),y0:ya,y1:yb};   /* its foot the sheet's, as last revised (above) */
-        const base43={loop:base.loop,y0:base.y0,y1:base.y1,F:[base.F[0],{p:C(L(ROW,nE-2.8),0.65,32),a:yP,b:yP+3.0}]};
+        const base43={loop:base.loop,y0:base.y0,y1:base.y1,F:[base.F[0],{p:C(L(ROW,nE+BLK.h13.n),BLK.h13.r,32),a:yP,b:yP+BLK.h13.d}]};
         /* the slit end: its profile in [t, s·y] (s so the extrusion's frame isn't mirrored), extruded from the far face to the near along n; the two solids made one, the
            faces where they meet (the upright's section at tE) left out, so no seam shows */
         const s=Math.sign(TD.n[0]*TD.t[1]-TD.t[0]*TD.n[1])||1,c=Math.sqrt(rh*rh-hs*hs),f0=Math.asin(hs/rh),arc=(a0,a1)=>{const o=[];for(let i=0;i<=16;i++){const a=a0+(a1-a0)*i/16;o.push([tS+rh*Math.cos(a),yS+rh*Math.sin(a)]);}return o;};
@@ -1068,13 +1108,13 @@ const WESC=(()=>{
         /* as last revised: 05 04 01-4's slit, 0.3 wide and 7 from the upright's end, its plane across the plate (the plan, first angle: two lines along the upright; the right
            view: its floor dashed across the upright's depth, the M1,2 end-on), so the screw runs across it through both leaves; the upright's end built in plan with the slit a
            notch in it, the hole across (the photographs' slit, parallel to the plate, in both until 28 October 2026: drawing check 2's 2-M9; the 1943 block keeps them) */
-        {const nm=(nUl+nUr)/2,geL={loop:ccw([L(tE,nUl),L(tE,nUr),L(tU+7,nUr),L(tU+7,nUl)]),y0:ya,y1:yb},gB=rv(blk,'last');
-          let gL=solidGeo([base43,thin,up43,geL]);const THL=[...(gL.userData.threads||[])];gL=nBore(endH(gL,1.3,6),ROW,nE-2.8,yP+2.3,0.729/2,20);gL.userData.threads=THL;
+        {const nm=(nUl+nUr)/2,geL={loop:ccw([L(tE,nUl),L(tE,nUr),L(tU+U.sl,nUr),L(tU+U.sl,nUl)]),y0:ya,y1:yb},gB=rv(blk,'last');
+          let gL=solidGeo([base43,thin,up43,geL]);const THL=[...(gL.userData.threads||[])];gL=nBore(endH(gL,1.3,6),ROW,nE+BLK.h13.n,yP+2.3,BLK.m1,20);gL.userData.threads=THL;
           const mB=tag(mesh(gB,gL,M.brass),'050401-4');
           /* the slit's two leaves, each from the upright's end to the slit's floor 7 in, the screw's hole through it (its profile [t, s·y] extruded across, as the 1943 block's end) */
-          const lv=(n0,n1)=>{const g=solidGeo([{loop:ccw([[tU,ya],[tU+7,ya],[tU+7,yb],[tU,yb]].map(([t,y])=>[t,s*y])),y0:n0,y1:n1,F:[{p:ccw(C([tS,s*yS],rh,32)),a:n0,b:n1}]}]);
+          const lv=(n0,n1)=>{const g=solidGeo([{loop:ccw([[tU,ya],[tU+U.sl,ya],[tU+U.sl,yb],[tU,yb]].map(([t,y])=>[t,s*y])),y0:n0,y1:n1,F:[{p:ccw(C([tS,s*yS],rh,32)),a:n0,b:n1}]}]);
             g.applyMatrix4(new THREE.Matrix4().set(TD.t[0],TD.n[0],0,P[0], 0,0,s,0, TD.t[1],TD.n[1],0,P[1], 0,0,0,1));return tag(mesh(gB,g,M.brass),'050401-4',1);};
-          fuse([mB,lv(nUr,nm-0.15),lv(nm+0.15,nUl)],mB);}
+          fuse([mB,lv(nUr,nm-U.sw),lv(nm+U.sw,nUl)],mB);}
         /* the banking screw, from its threaded end (0) to the dome's top: the thread's rings as the kit's screws draw them (pitch 0.25, M1.2's), a chamfered end */
         const nH=0.58,lT=8.2,rH=1.7,hc=1.1,hd=0.4,R4=(rH*rH+hd*hd)/(2*hd),rs=0.6,pt=0.25,dt=pt*0.3,zt=r=>lT+hc+Math.sqrt(R4*R4-r*r)-(R4-hd),pf=[[0,0],[rs-dt,0],[rs,dt]];
         for(let y=dt;y+pt<=lT;y+=pt)pf.push([rs-dt,y+pt/2],[rs,y+pt]);
@@ -1086,7 +1126,7 @@ const WESC=(()=>{
       /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 (Wempe 3955's, 11_) × 2.4, a tall cheese head (6_Wempe_3955_S.jpg, photocompare.py's
          fit: its foot and width on the model's, its top 8.8 px higher at 7.5 px a mm of height; 5_ and 7_ the same, 2.5-3; 1.2 read on 11_ until 18 October 2026), M1.7, 3.0
          into the block (estimated) */
-      {const fx=K.headOn(tag(screw(rv(blk,'last first'),H[13][0],H[13][1],TT,1.5,2.4,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;fx.userData.lift=l0-0.3;}
+      {const fx=K.headOn(tag(screw(rv(blk,'last first'),H[13][0],H[13][1],TT,BLK.gk[0],BLK.gk[1],BLK.gk[2],BLK.gk[3]),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;fx.userData.lift=l0-0.3;}
       /* the escapement of 1943's: the 6MX's stud (HOLES.block43), seated on the block's plate face, no slide under it: slotted steel, Ø 3.2-3.4 on the three plans (27-30 px at
          8.4 px/mm), its head's top about as high as the top plate's screws' beside it on 6_Kirow_DEC_422_S.jpg (2.6-3.0 against WN-57's 3.0, ±0.4: possible), drawn as the
          6MX's, 2.5 proud; M1.7 3.0 into the block (estimated) */
@@ -1192,24 +1232,24 @@ const WESC=(()=>{
        its stone by a lip over its edge; the hole jewel's a lip under its rim (Ø 2.4), so its sink is open to the arbor. The pivot ends stay where the staff's sheets put them,
        0.02 off the endstones, the hole jewels 0.03 off them (likely: the section draws each pair a thin white line apart) */
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
-    const JR=1.45,JT=0.8,JD=0.3,JC=0.8,JH=0.55,ER=1.45,EE=0.5,EH=0.4,eLip=(y,s)=>[1.42,y+s*(EE+KIT.domeAt(ER,EH,1.42)+0.003)];   /* the stones (above); eLip: the endstone's setting's lip over its edge, the face at y, s the way to the dome */
-    {const ck=TT-15,cT=ck-0.1,eY=Y.tipU-0.02,hY=eY+0.03,lp=eLip(eY,-1);
-      tag(mesh(bju,lathe([[1.2,hY+JT],[JR+0.003,hY+JT],[JR+0.003,eY],[2.6,eY],[2.6,ck+2.7],[1.2,ck+2.7]],48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim, up to the endstone's setting (U30's two settings filling the seat's 2.8), the stone 0.03 under its face, as the lower; until 18 October 2026 its face was the stone's, 0.03 off the endstone's setting */
+    const{JR,JT,JD,JC,JH,ER,EE,EH}=BJ,JB=jewProf(Y).bal;   /* the stones (above), module scope (BJ, jewProf): JB the balance's settings' profiles */
+    {const{cT,eY,hY}=JB;
+      tag(mesh(bju,lathe(JB.bu,48),M.brass),'050406-2.bu');   /* on the seat's floor, a lip under the stone's rim, up to the endstone's setting (U30's two settings filling the seat's 2.8), the stone 0.03 under its face, as the lower; until 18 October 2026 its face was the stone's, 0.03 off the endstone's setting */
       tag(mesh(bju,lathe(KIT.jewelPr(JR,JT,0.115,JD,JC,JH,hY,1),32),M.ruby),'050407-1.bu');
       for(const[V,mt]of[['last first 1943',M.brass],['6mx',M.steel]]){const g=new THREE.Group();g.userData.rev=V;bju.add(g);   /* the 6MX's steel (2_Kirow_247_A.jpg, photocompare.py: likely) */
         /* the endstone's setting, its mouth a cone from the lip to Ø 4.4 at its top, 0.1 proud of the cock: gilt as drawn; the 6MX's polished steel (2_Kirow_247_A.jpg, photocompare.py's
            k247_A camera: its outline on the model's, the ring bright and neutral as the screws: likely). The stone drawn bright and opaque, as Wempe 3955's white one (a clear
            one would show the ruby under it); the 6MX's a ruby (red through the setting, 2_Kirow_247_A.jpg: likely) */
-        tag(mesh(g,lathe([[2.2,cT],[2.6,cT],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp],48),V==='6mx'?M.steel:M.gilt),'050408-2.bu');
+        tag(mesh(g,lathe(JB.cu,48),V==='6mx'?M.steel:M.gilt),'050408-2.bu');
         tag(mesh(g,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),V==='6mx'?M.ruby:M.steel),'050408-1.bu');
-        for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(g,q[0],q[1],cT,1.25,1.3,2.1,0.6,mt),'WN-55.ck');}}}
-    {const lf=TI+10,eY=Y.tipL+0.02,hY=eY-0.03,lp=eLip(eY,1),o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
-      tag(mesh(bjl,lathe([[1.5,lf-3.22+0.5],[2.6,lf-3.22+0.5],[2.6,eY],[JR+0.003,eY],[JR+0.003,hY-JT],[1.2,hY-JT],[1.2,hY-JT-0.07],[1.5,hY-JT-0.37]],48),M.brass),'050406-2.bl');   /* over the stone, open Ø 3.0 round the staff (the section) */
+        for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(g,q[0],q[1],cT,BJ.scrU[0],BJ.scrU[1],BJ.scrU[2],BJ.scrU[3],mt),'WN-55.ck');}}}
+    {const{lf}=JB,eY=JB.lY,hY=JB.lH,o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(B[0]-o[0])+q[1]*(B[1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]);
+      tag(mesh(bjl,lathe(JB.bl,48),M.brass),'050406-2.bl');   /* over the stone, open Ø 3.0 round the staff (the section) */
       tag(mesh(bjl,lathe(KIT.jewelPr(JR,JT,0.115,JD,JC,JH,hY,-1),32),M.ruby),'050407-1.bl');
-      tag(mesh(bjl,lathe([[1.5,lf],[2.6,lf],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY+EE],lp,[1.5,lp[1]+0.08]],48),M.brass),'050408-2.bl');
+      tag(mesh(bjl,lathe(JB.cl,48),M.brass),'050408-2.bl');
       tag(mesh(bjl,lathe(KIT.endPr(ER,EE,EH,eY,1),32),M.ruby),'050408-1.bl');
       const f=flip(bjl);for(const s of[-1,1]){const q=BL(add(B,nv,3.55*s));   /* at the lug's holes, 3.55 (frame.js; 3.5 until 28 October 2026) */
-        tag(screw(f,q[0],-q[1],-lf,1.25,1.4,2.0,0.6),'WN-10.bl');}}
+        tag(screw(f,q[0],-q[1],-lf,BJ.scrL[0],BJ.scrL[1],BJ.scrL[2],BJ.scrL[3]),'WN-10.bl');}}
     /* ================= jewels: the escape wheel's ================= */
     /* Upper, in the top plate's seat 26 (05 09 01 P-Q: Ø 5.2 H7 from the inner face to 0.5 under the outer, Ø 4.59 H7 through that by revision a): the endstone's setting from the inside,
        its spigot Ø 4.59 through the lip (the H7 is its fit; 4.5 until 27 October 2026, the lip's figure before revision a) flush with the outer face, held by two screws M1.2 from the outside (the plate's two at ±3.5 on the O-W line), their
@@ -1234,20 +1274,20 @@ const WESC=(()=>{
        silvery too): likely */
     /* the hole jewel's height: the arbor's end lies 2.0 into the plate as first drawn and 1.98 as last revised, and the section's 0.8 fits (until 27 October 2026 the last
        revised end 0.49 in, its stone thinned to 0.4) */
-    for(const[Q,v,ms]of/** @type {[any,string,any][]} */([[Y,'last',M.gilt],[Y1,'first 1943',M.gilt],[Y1,'6mx',M.steel]])){const eY=Q.etU-0.03,hY=eY+0.07,ge=rv(eeu,v),gj=rv(eju,v),lp=eLip(eY,-1),
-        tq=Math.min(JT,TI-hY-0.05),k=tq/JT,yq=hY+tq,yb=Math.max(TT,lp[1]-0.45);
-      tag(mesh(ge,lathe([[1.85,TT],[2.295,TT],[2.295,TT+0.5],[2.6,TT+0.5],[2.6,eY],[ER+0.003,eY],[ER+0.003,eY-EE],lp,[1.85,yb]],48),ms),'050408-2.eu');   /* the mouth a cone from the lip to Ø 3.7, then straight to the face */
+    for(const[Q,v,ms]of/** @type {[any,string,any][]} */([[Y,'last',M.gilt],[Y1,'first 1943',M.gilt],[Y1,'6mx',M.steel]])){const JE=jewProf(Q).esc,eY=JE.uY,hY=JE.uH,ge=rv(eeu,v),gj=rv(eju,v),
+        tq=JE.tq,k=tq/JT;
+      tag(mesh(ge,lathe(JE.eu,48),ms),'050408-2.eu');   /* the mouth a cone from the lip to Ø 3.7, then straight to the face */
       tag(mesh(ge,lathe(KIT.endPr(ER,EE,EH,eY,-1),32),M.ruby),'050408-1.eu');
-      tag(mesh(gj,lathe([[2.6,TI],[2.6,hY],[JR+0.003,hY],[JR+0.003,yq],...(TI-yq<0.2?[[1.2,yq],[1.2,TI]]:[[0.85,yq],[0.6,yq+0.2],[0.6,TI]])],48),M.brass),'050406-2.eu');   /* a lip under the stone's rim; as first drawn the seat filled down to the inner face, bored 0.6 for the arbor's cone */
+      tag(mesh(gj,lathe(JE.ju,48),M.brass),'050406-2.eu');   /* a lip under the stone's rim; as first drawn the seat filled down to the inner face, bored 0.6 for the arbor's cone */
       tag(mesh(gj,lathe(KIT.jewelPr(JR,tq,0.13,JD*k,JC,JH*k,hY,1),32),M.ruby),'050406-1.eu');}
-    for(const[v,ms]of/** @type {[string,any][]} */([['last first 1943',M.brass],['6mx',M.steel]])){const g=rv(eeu,v);for(const s of[-1,1])K.headOn(tag(screw(g,3.525*s,0,TT,1.3,0.3,3.4,0.6,ms),'WN-es'),'escEndstoneUp','topPlate');}   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
+    for(const[v,ms]of/** @type {[string,any][]} */([['last first 1943',M.brass],['6mx',M.steel]])){const g=rv(eeu,v);for(const s of[-1,1])K.headOn(tag(screw(g,3.525*s,0,TT,BJ.scrEU[0],BJ.scrEU[1],BJ.scrEU[2],BJ.scrEU[3],ms),'WN-es'),'escEndstoneUp','topPlate');}   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
       /* the lower hole jewel (above) 0.8 thick, as the coloured section draws it (0.6-1.4 over the plate's inner face, the stone's lines at 9.3 px/mm: likely; no sheet sizes it;
          0.45, the balance's form scaled, until 28 October 2026: the second drawing check's 11-M17), its face toward the endstone where it was; as first drawn its endstone in
          the plug Ø 1.6 too, the balance's form scaled (estimated) */
       const lk=0.8/JR,lT=0.8,lD=JD*lk,lE=0.2,lH=0.15;
-      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const eY=Q.etL+0.03,hY=eY-0.04,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last',yq=hY-lT;
-        tag(mesh(gj,lathe([[0.7,yq-0.15],[1.25,yq-0.15],[1.25,eY],[0.803,eY],[0.803,yq],[0.7,yq]],48),M.brass),'050406-2.el');   /* its lip over the stone's rim */
+      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first 6mx 1943']])){const JE=jewProf(Q).esc,eY=JE.dY,hY=JE.dH,gj=rv(ejl,v),ge=rv(eel,v),f1=v!=='last';
+        tag(mesh(gj,lathe(JE.jl,48),M.brass),'050406-2.el');   /* its lip over the stone's rim */
         tag(mesh(gj,lathe(KIT.jewelPr(0.8,lT,0.13,lD,JC*lk*1.03,JH*lk,hY,-1),32),M.ruby),'050406-1.el');
         if(f1){tag(mesh(ge,lathe([[0,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0,PPT]],48),M.gilt),'050408-2.el');   /* as first drawn: the setting plain over the plug (its stone deep in the plate) */
           const pk=[...Array(9).keys()].map(i=>{const r=0.803*i/8;return[r,eY+lE+KIT.domeAt(0.8,lH,Math.min(r,0.8))+0.003];});
@@ -1257,10 +1297,10 @@ const WESC=(()=>{
            a tube in the 2.50 bore from the stone to its flange flush in the seat, its lip over the stone's rim (estimated). Until 27 October 2026 the arbor's end lay at the face and
            the stone in a boss Ø 2.6 standing 0.36 over it */
         /* its endstone 0.75 thick, as the section draws it (1.9-2.6: likely; 0.42 until 28 October 2026, 11-M17), its face on the arbor's end where it was, the setting's lip over it */
-        else{tag(mesh(ge,lathe([[0.95,eY+0.68],[1.103,eY+0.68],[1.103,eY],[1.25,eY],[1.25,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0.95,PPT]],48),M.gilt),'050408-2.el');
+        else{tag(mesh(ge,lathe(JE.el,48),M.gilt),'050408-2.el');
           tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.68],[0.94,eY+0.68],[0.6,eY+0.73],[0,eY+0.75]],32),M.ruby),'050408-1.el');}}
       const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.525*s);   /* at the plate's holes, 3.525 (frame.js; 3.5 until 28 October 2026) */
-        tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* as last revised they lap the setting's rim; as first drawn they hold the cap, through it */
+        tag(screw(f,q[0],-q[1],-PPT,BJ.scrEL[0],BJ.scrEL[1],BJ.scrEL[2],BJ.scrEL[3],M.brass),'WN-ec');}}   /* as last revised they lap the setting's rim; as first drawn they hold the cap, through it */
 
     /* ================= motion ================= */
     let lastTw=null;
@@ -1292,5 +1332,5 @@ const WESC=(()=>{
   const BUILD40={k:1,bend:[3,0.06],set:{tsT:GTEQ},strip:null};
   const SET6={I:2513.3,JW:10.19,ID:7.62};   /* JW 10.21 until 29 October 2026 (the escape pinion 3.77 and the collet's end Ø 1.55, re-read on Kirov 247); I 2521.0, JW 10.45 and ID 8.01 until 28 October 2026 (drawing check 2's batches 1, 2 and 6); ID 7.94 until 27 October 2026, the blade centred (DOFF); I 2524.6, JW 10.90 and ID 7.96 until 26 October 2026 (the drawings check: the escape wheel's web, the seconds wheel's hub, the collet); I 2526.0, JW 10.89 and ID 8.19 until 25 October 2026 (the rim's cut 1.6, the detent at its bracketed heights and its spring tapered: the per-part audit); ID 8.28 until 24 October 2026 (the blade and horn counted twice in the pipe's wall: overlaps.py); ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,EARB,earProf,staffProf,EWG,ewGeo,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DET:{K:DETK,V:DETV,ROW,DOFF,P,TD,RS,GW,GN,TI,SQ0,TP,HORN_L},DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,BJ,jewProf,BAL,HUB,MS,TSW,ROLI,ROLD,rolGeo,EARB,earProf,staffProf,EWG,ewGeo,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DET:{K:DETK,V:DETV,ROW,DOFF,P,TD,RS,GW,GN,TI,SQ0,TP,HORN_L,BLK,BLK_NE,H13:toD(H[13])},DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
 })();
