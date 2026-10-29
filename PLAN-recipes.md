@@ -120,12 +120,12 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-56, the ring's; pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
 | 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | done, 29 Oct |
 | 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 (the bush WN-300 goes with batch 6) | done, 29 Oct |
-| 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; fusee arbor; barrel arbor; balance staff | |
+| 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
 | 5 | Wheels with teeth | train wheels, escape wheel, fusee wheel, click wheel, maintaining ratchet, set-up ratchet, motion work's wheels | |
 | 6 | Small turned parts | bushes WN-300/301/302, settings and caps, studs, collets, the remaining WN screws; jewels (bought) | |
 | 7 | Springs and the detent | the detent and its block, gold spring, clicks and click springs, maintaining spring, stop bar and its spring; mainspring and hairspring strip (bought) | |
 | 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud | |
-| 9 | Fusee and barrel | fusee body, cover plate, Vorreiber, dust plate, barrel drum, lid, hook block, Steg | |
+| 9 | Fusee and barrel | fusee arbor, fusee body, cover plate, Vorreiber, dust plate; barrel arbor, drum, lid, hook block, Steg | |
 | 10 | Motion work, hands, dial | | |
 | 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
 
@@ -205,6 +205,35 @@ The owner chose to fix the sizes the recipes' check found drawn at their toleran
 They changed in `dims.js`, which both read, each with its tolerance cited; the Wempe README's "Readings corrected" has them. The top plate's pocket edge
 was tried at the sheet's r 5. The solid opened (205 open edges: the tangent lies on the opening's edge, which r 4.95 avoids), so it stays at 4.95, an
 expected difference. A fix would cut the opening and the pocket as separate features, which is not a one-number change.
+
+### Batch 4 (29 October 2026): the train's arbors, the escape arbor and the staff pass
+
+| Part | Operations | Surface apart (max) |
+|---|---|---|
+| Centre pinion and arbor 05 05 03-2 (z 14) | 3 | 0.0032 |
+| Intermediate pinion and arbor 05 05 02-2 (z 12) | 3 | 0.0024 |
+| Seconds pinion and arbor 05 05 01-2 (z 10) | 3 | 0.0016 |
+| Escape pinion and arbor 05 04 05-2 (z 10, m 0.263) | 3 | 0.0051 (the page's 24-sided lathe) |
+| Balance staff 05 04 02-1 | 2 | 0.005 (its 32-sided lathe) |
+
+Each arbor is a blank between centres, turned to the page's own profile (pivots, shoulders, seats, collars, its pinion's head at the tip circle), then its
+leaves cut to the page's `teeth()` outline, at the page's phase for the check.
+
+**No faults in the recipes or the page.** Four changes to the check:
+- The exporter takes only meshes whose nearest parts-list line is the part's own (the staff's line sits on the whole balance's group), and returns a
+  pinion's phase, which `CutLeaves` takes.
+- Inside tests use the generalized winding number (a lathe's open fan at its axis defeats ray parity and the hull test).
+- A page part in several pieces has its volume reported, not compared: the page draws a pinion's leaves as a full disc through its arbor, so the pieces'
+  volumes overlap.
+- `recipes_pagehash.py` compares vertices within 1e-5 mm, not bit for bit: a part on a turning arbor multiplies its pieces' matrices out differently in
+  the last bits from load to load (the original page differed from itself).
+
+**Moved, the page unchanged:** the escape arbor's sizes into `WESC.EARB` with `WESC.earProf()`, and the staff's profile into `WESC.staffProf()` (with its
+cone `SCc` and seats `SF`), at `escapement.js`'s module scope, which `build` itself now calls. The escapement's and the train's 7 lines matched within 1e-5
+mm before and after, and the type check is clean. The train's arbors read `train.js`'s exported `A` directly.
+
+**Left for batch 9:** the fusee arbor and the barrel arbor. Their sizes are in `fusee.js`, which `wempe_load.js` doesn't run: it needs a loader, or the
+profiles lifted into a pure export, along with the rest of the fusee and barrel.
 
 ## Page faults found (for a later fix on the page)
 

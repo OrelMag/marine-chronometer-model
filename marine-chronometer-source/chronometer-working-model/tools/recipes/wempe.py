@@ -3,13 +3,22 @@ by wempe_load.js: a size frame.js drew as a literal beside its part is moved int
 meshes hashed before and after (recipes_pagehash.py) so the move changes nothing."""
 import functools,json,math,pathlib,subprocess
 import build123d as bd
-from . import (Recipe,Setup,S,iso,page_matrix,Bar,Ring,TurnOD,TurnCone,TurnAway,FaceGroove,Bore,Countersink,ThreadOD,SlotHead,Plate,Hole,Cone,Pocket,InnerCone,Drill,Cut,Bought)
+from . import (Blank,TurnProfile,CutLeaves,Recipe,Setup,S,iso,page_matrix,Bar,Ring,TurnOD,TurnCone,TurnAway,FaceGroove,Bore,Countersink,ThreadOD,SlotHead,Plate,Hole,Cone,Pocket,InnerCone,Drill,Cut,Bought)
 TOOLS=pathlib.Path(__file__).resolve().parents[1]
 
 @functools.lru_cache()
 def W():
     """WD and WESC.HOLES as the page has them (functions left out)"""
     js="const W=require(%r)();process.stdout.write(JSON.stringify({WD:W.WD,HOLES:W.WESC.HOLES}))"%str(TOOLS/'wempe_load.js')
+    return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
+
+@functools.lru_cache()
+def WT():
+    """the train's arbors as train.js has them (A: each arbor's turned profile, its pinion and wheel) and each pinion's leaves' outline from its teeth()"""
+    js=("const W=require(%r)({train:true}),A=W.WTRAIN.A,o={};for(const k of['cw','tw','sw']){const a=A[k],p=a.pin;"
+        "o[k]={at:a.at,ys:a.ys,prof:a.prof,pin:p,xy:W.WTRAIN.teeth(p.z,p.m,p.D,p.dg).xy};}"
+        "const E=W.WESC.EARB,e=W.WESC.earProf();o.ew={prof:e.ar,pin:{z:E.z,m:E.m,D:E.D,dg:E.dg,u0:e.yP0,u1:e.yP1},xy:W.WTRAIN.teeth(E.z,E.m,E.D,E.dg).xy};"
+        "o.staff=W.WESC.staffProf();process.stdout.write(JSON.stringify(o))")%str(TOOLS/'wempe_load.js')
     return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
 
 def brg(b):
@@ -440,7 +449,52 @@ def intermediateBridge():
 def intermediateBridgeScrew():
     Q=W()['WD']['ZB']['scr'];return screw('intermediateBridgeScrew','WN-52','Intermediate bridge screw (WN-52)',Q[0],Q[1],Q[2],1.3,"brass (Wempe 3955's)",'dims.js ZB.scr (estimated)')
 
+# ---------------- the train's arbors: pinion and arbor in one piece (train.js A) ----------------
+def trainArbor(k,key,hn,title,dwg,stock,material,treat,leaves,notes=()):
+    a=WT()[k];P=a['prof'];p=a['pin'];src=dwg;z0=min(u for _,u in P);z1=max(u for _,u in P)
+    # the profile with the pinion's head left at its tip over the leaves' length (the page draws the arbor under the leaves and the leaves as their own piece)
+    rh=p['D']/2;Q=[];u0,u1=p['u0'],p['u1']
+    for i,(r,u) in enumerate(P):
+        Q.append((r,u))
+        if i+1<len(P):
+            r2,u2=P[i+1]
+            if u<=u0<u2 and r<rh:Q+=[(r,u0),(rh,u0)]
+            if u<u1<=u2 and r2<rh:Q+=[(rh,u1),(r2,u1)]
+    runs=[];j=0
+    while j<len(P)-1:   # the sheet's sizes: each length turned to one diameter (0.05 or longer), from the dial side's end
+        r,u=P[j];e=j
+        while e+1<len(P) and abs(P[e+1][0]-r)<1e-9:e+=1
+        if e>j and P[e][1]-u>=0.05 and r>0:runs.append(S('',f'Ø {2*r:.3f} from {u-z0:.2f} to {P[e][1]-z0:.2f}',None,src))
+        j=e+1 if e>j else j+1
+    ops=[Blank(stock,z0,z1,f'Cut the blank from Präz. Rundstahl {stock:g} between centres',[S('length',f'{z1-z0:.2f} overall',None,src)],src),
+         TurnProfile(Q,'Turn the arbor: pivots (1:90, their ends rounded), shoulders (the train side one 30° cone), seats and collars, the head of the pinion',runs+[S('pinion head',f'Ø {p["D"]:.3f} from {u0-z0:.2f} to {u1-z0:.2f}','the tip circle',src)],src),
+         CutLeaves(a['xy'],rh+0.05,u0,u1,f'Cut the {p["z"]} leaves',[S('leaves',f'z {p["z"]}, m {p["m"]:.4f}, tip Ø {p["D"]:.3f}, root Ø {p["dg"]:.3f}',None,leaves)],src,z=p['z'])]
+    return Recipe(key,hn,title,dwg,material,treat,[Setup('1','bar between centres, then each pivot finished in a pivot polisher (Jacot)',ops)],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),notes=list(notes)+["Pivot ends, the crown and the cone are turned to the page's profile point by point (its quarter-ellipse ends and 30° cone sampled as the page samples them)."],
+      fits=['pivots in their jewels or bushes: a close running fit ("Enger Laufsitz", 05 05_1)',"the wheel's seat n6 in its H7 hole, riveted"])
+def centreArbor():return trainArbor('cw','centreArbor','050503-2','Centre pinion and arbor (Minutentrieb)','05 05 03-2 (kompl. 05 05 03, 22.7.43)',7.2,'Präz. Rundstahl 7,2','hardened, tempered at 295 °C (05 05 03-2)','05 05 03-2: z 14')
+def intermediateArbor():return trainArbor('tw','intermediateArbor','050502-2','Intermediate pinion and arbor (Zwischentrieb)','05 05 02-2 (kompl. 05 05 02, redrawn 6.46)',5.2,'Präz. Rundstahl 5,2','not given on the sheet',"z 12 from the centre distance (the transcription's inference, confirmed); tip and root by 05 04_8's cutter proportions (likely)")
+def escapeArbor():return trainArbor('ew','escapeArbor','050405-2','Escape pinion and arbor (Gangtrieb)','05 04 05-2 (Hz 7.6.40; 05 04_7.2)',3.4,'Präz. Rundstahl 3,4','not given on the sheet','05 04_8: z 10, m 0.263, tips Ø 2.97, roots 1.6 (sure)',
+    notes=["Its shoulders are concave arcs r 3 from each pivot's root (05 04_7.2 draws the Ø 6 circle tangent at the root), turned as the page samples them (escapement.js earProf)."])
+def staff():
+    P=WT()['staff'];z0=min(u for _,u in P);z1=max(u for _,u in P);rmax=max(r for r,_ in P);src='05 04 02-1 (kompl. 05 04 02, 29.5.46)'
+    runs=[];j=0
+    while j<len(P)-1:
+        r,u=P[j];e=j
+        while e+1<len(P) and abs(P[e+1][0]-r)<1e-9:e+=1
+        if e>j and P[e][1]-u>=0.05 and r>0:runs.append(S('',f'Ø {2*r:.4f} from {u-z0:.2f} to {P[e][1]-z0:.2f}',None,src))
+        j=e+1 if e>j else j+1
+    ops=[Blank(2*rmax+0.4,z0,z1,'Cut the blank between centres',[S('length',f'{z1-z0:.2f} overall (05 03_3.2: 25.6 -0.02 for the later staff)',None,src),S('bar',f'Ø {2*rmax+0.4:.1f}','not given (estimated: the arm seat Ø 2 h6 and 0.4)',src)],src),
+         TurnProfile(P,"Turn the staff: the arms 1:30 above and 1:70 below, the collet's seat 1:70, the arm's seat, the hub's seat, the rollers' seats, the pivots' cones hollow on R 6",
+           runs+[S('arm seat','Ø 2 h6, 1.1 high',None,src),S('impulse roller seat','Ø 1.65 s6 (at the middle, 1.6685)',None,src),S('discharge roller seat','Ø 1.2 r6 (at the middle, 1.2155)',None,src),S('pivots','Ø 0.21 × 0.4, "in Lagerstein einpassen"',None,'05 03_3.2')],src)]
+    r=Recipe('staff','050402-1','Balance staff (Unruhwelle)',src,'steel (not given)','hardened, tempered at 240 °C (05 04 02-1)',[Setup('1','between centres; the pivots finished in a Jacot tool',ops)],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),fits=['the hub pressed on its 1:70','the rollers pressed on their s6 and r6 seats','the collet gripping its 1:70 seat by its slit'],
+      notes=["The pivots' cones are concave (05 03_3.2's R 6), turned to the page's profile point by point."])
+    return r
+def secondsArbor():return trainArbor('sw','secondsArbor','050501-2','Seconds pinion and arbor (Sekundentrieb)','05 05 01-2 (kompl. 05 05 01, revised 24.3.48)',3.5,'Präz. Rundstahl 3,5','not given on the sheet',"z 10 from the centre distance (confirmed); tip and root by 05 04_8's proportions (likely)")
+
 RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
   'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
-  'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew}
+  'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew,
+  'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff}
 for _b in pinsBought():RECIPES[_b.key]=(lambda b=_b:b)

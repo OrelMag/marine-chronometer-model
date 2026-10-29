@@ -66,6 +66,28 @@ class FaceGroove(Op):
         pts=[(c+a*math.cos(math.pi*(1-i/n)),self.z+self.s*self.d*math.sin(math.pi*i/n)) for i in range(n+1)]   # the half ellipse, as the page draws it (9 points there)
         e=bd.Wire([bd.Edge.make_line((self.r1,0,self.z),(self.r0,0,self.z))]+[bd.Edge.make_spline([bd.Vector(r,0,z) for r,z in pts])])
         return p-bd.revolve(bd.Face(e),bd.Axis.Z,360)
+class Blank(Op):
+    """stock: a round bar's length from z0 to z1 (a turned part whose frame starts elsewhere than its end)"""
+    kind='stock'
+    def __init__(self,d,z0,z1,text,sizes=(),src=''):super().__init__(text,sizes,src);self.d=d;self.z0=z0;self.z1=z1
+    def apply(self,p):return bd.Cylinder(self.d/2,self.z1-self.z0,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,self.z0)))
+class TurnProfile(Op):
+    """turn to a finished profile [(r, z) ...] from the axis at one end to the axis at the other: everything outside it removed (an arbor's pivots, seats, collars
+    and shoulders in one turning, as the page's own profile lists them)"""
+    kind='turn'
+    def __init__(self,pts,text,sizes=(),src=''):super().__init__(text,sizes,src);self.pts=pts
+    def apply(self,p):return p&_rev(self.pts)
+class CutLeaves(Op):
+    """cut a pinion's leaves (or a wheel's teeth) from its turned head between z0 and z1: the head inside r_cut less the outline's prism; the outline [(x, y) ...] in
+    the part's frame, turned by phase (radians, about +Z: set from the page's mesh by the check, 0 for the STEP)"""
+    kind='mill'
+    def __init__(self,xy,rcut,z0,z1,text,sizes=(),src='',z=0):super().__init__(text,sizes,src);self.xy=xy;self.rcut=rcut;self.z0=z0;self.z1=z1;self.phase=0.0;self.z=z
+    def apply(self,p):
+        c,s_=math.cos(self.phase),math.sin(self.phase);P=[(x*c-y*s_,x*s_+y*c) for x,y in self.xy]
+        f=bd.Face(bd.Wire.make_polygon([bd.Vector(x,y,self.z0-0.01) for x,y in P],close=True))
+        tooth=bd.extrude(f,self.z1-self.z0+0.02,dir=(0,0,1))
+        ring=bd.Cylinder(self.rcut,self.z1-self.z0,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,self.z0)))
+        return p-(ring-tooth)
 class TurnAway(Op):
     """turn away a region given as a closed profile [(r, z) ...] about the axis (a waist, a dished face, an undercut): the general case of turning"""
     kind='turn'
