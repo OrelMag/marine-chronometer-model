@@ -17,14 +17,12 @@
 <link rel="stylesheet" href="css/style.css">
 
 </head>
-<body>
+<body class="mdl">
 <header>
   <h1>The Marine Chronometer, <em>working</em></h1>
-  <div class="hd">
-    <nav class="models" aria-label="The models"><span aria-current="page">Hamilton Model 21</span><a data-m="wempe" href="../wempe/index.html">Wempe Einheits-Chronometer</a></nav>
-    <p>A two-day fusee chronometer with a spring detent escapement, built part by part and running in real time. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
-    <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
-  </div>
+  <nav class="models" aria-label="The models"><span aria-current="page">Hamilton Model 21</span><a data-m="wempe" href="../wempe/index.html">Wempe Einheits-Chronometer</a></nav>
+  <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><a id="tabEssay" href="../essay/index.html" title="The Marine Chronometer: the essay on how a chronometer keeps time at sea, shared by both models, on a page of its own">Essay</a></div>
+  <button class="flip" id="flip" role="switch" aria-checked="false" aria-label="Dark theme" title="Light or dark (it follows the system until you flip it; Display, Follow the system turns that back on)"><span class="fl">Light</span><span class="trk" aria-hidden="true"><span class="st a"></span><span class="st b"></span><span class="knob"></span></span><span class="fd">Dark</span></button>
 </header>
 <div class="wrap">
   <div class="stage" id="stage">
@@ -36,7 +34,7 @@
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
     <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
     <div class="srckey hidden" id="srcKey" aria-label="Colour by source: what each colour means"></div>
-    <div class="hud" id="hud"></div>
+    
     <div class="cu hidden" id="cu" role="region" aria-label="Close-up of the sustaining spring: turn the wheel or pinch to zoom, drag to move, double-click to reset"><div class="cu-t">Sustaining spring<span id="cuX"></span></div>
       <div class="cu-b"><button id="cuIn" title="Zoom in (or turn the mouse wheel over the close-up, or pinch)" aria-label="Zoom in">+</button><button id="cuOut" title="Zoom out" aria-label="Zoom out">−</button><button id="cuBig" aria-pressed="false" title="Enlarge the close-up" aria-label="Enlarge">⤢</button><button id="cuSlow" title="Slow motion while the close-up shows: the key, the train and the spring together. Click for the next speed" aria-label="Slow motion: real speed">1×</button><button id="cuPin" aria-pressed="false" title="Keep the close-up open after the key lets go, to watch the spring under load in running" aria-label="Keep open">⊙</button><button id="cuHelp" aria-pressed="false" title="How the sustaining spring takes the load" aria-label="How it takes the load">?</button></div>
       <div class="cu-g" id="ssGauge"><i><b></b></i><span></span></div></div>
@@ -51,13 +49,20 @@
           <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
           <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Double-tap a part</dt><dd>Zoom in on it; the view then turns about it</dd><dt>Double-tap empty space</dt><dd>Back to the whole view</dd><dt>Long-press a part</dt><dd>Fade, hide or isolate it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
           <dt>Select, then tap parts</dt><dd>A selection to fade, hide or isolate together</dd><dt>Lasso, then draw a loop</dt><dd>Select the parts that show inside it</dd><dt>Tap empty space</dt><dd>Close a card</dd><dt>Turn the phone sideways</dt><dd>A larger model, with the controls beside it</dd></dl></section></div>
-      <p class="note">Reset brings the camera back to the chosen view; ↶ and ↷, under the tabs, go back and forward through the places it has been. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
+      <p class="note">Reset brings the camera back to the chosen view; ↶ and ↷, under the tools, go back and forward through the places it has been. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
     <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="link" title="Copy a link to this view: the view, speed, part and settings">Link</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
-    <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><a id="tabEssay" href="../essay/index.html" title="The Marine Chronometer: the essay on how a chronometer keeps time at sea, shared by both models, on a page of its own">Essay</a></div>
+    
+    <div class="dock" id="dock"><div class="vstrip" id="views">
+          <button data-v="box" title="The instrument in its mounting box">Box</button><button data-v="dial" aria-pressed="true" title="Read the dial through the glass">Dial</button><button data-v="exploded" title="Every part lifted apart along the arbors">Exploded</button>
+          <button data-v="movement" title="The movement lifted out of its case, train side up">Movement</button><button data-v="train" title="The going train, plates see-through">Train</button><button data-v="escapement" title="Close up on the detent escapement">Escapement</button>
+          <button data-v="laidout" title="The train laid out in one line and seen from the side, as textbooks draw it: barrel, fusee, centre, third, fourth, escape wheel and balance, each still in mesh">Laid out</button><button data-v="fusee" title="The mainspring barrel, the chain and the fusee, plates see-through">Fusee</button><button data-v="balance" title="Close up on the balance, its weights and the hairspring">Balance</button></div><div class="play" id="play"><button id="pp" aria-label="Stop" title="Stop or go on (space bar)"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg></button><div class="spw"><button id="spdChip" aria-haspopup="dialog" aria-expanded="false" aria-controls="spMenu" title="Speed"><span>1×</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 7.5 6 4.5l3 3"/></svg></button><div class="spmenu hidden" id="spMenu" role="dialog" aria-label="Speed"><h3 class="sub-h">Speed</h3><div class="seg" id="speeds">
+          <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="0.25" title="A quarter of real time">¼×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div><div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div></div></div><div class="hud" id="hud"></div><button id="windP" title="Wind it fully">Wind</button></div></div>
     <div class="loading" id="loading">Assembling the movement…</div>
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
+    <div class="ptabs" id="ptabs" role="tablist" aria-label="Controls"><button role="tab" data-t="explore" aria-selected="true">Explore</button><button role="tab" data-t="run" aria-selected="false" tabindex="-1">Run</button><button role="tab" data-t="look" aria-selected="false" tabindex="-1">Look</button><button role="tab" data-t="adv" aria-selected="false" tabindex="-1">Advanced</button></div>
+    <div class="tabp" data-tab="explore" role="tabpanel">
     <div class="card tour" id="tourCard">
       <div id="tourIntro">
         <h2>How it works</h2>
@@ -89,29 +94,37 @@
       </div>
     </div>
     <div class="card ctl">
-      <details class="grp more" id="viewDet" open>
-        <summary>View</summary>
-        <div class="seg grid3" id="views">
-          <button data-v="box" title="The instrument in its mounting box">Box</button><button data-v="dial" aria-pressed="true" title="Read the dial through the glass">Dial</button><button data-v="exploded" title="Every part lifted apart along the arbors">Exploded</button>
-          <button data-v="movement" title="The movement lifted out of its case, train side up">Movement</button><button data-v="train" title="The going train, plates see-through">Train</button><button data-v="escapement" title="Close up on the detent escapement">Escapement</button>
-          <button data-v="laidout" title="The train laid out in one line and seen from the side, as textbooks draw it: barrel, fusee, centre, third, fourth, escape wheel and balance, each still in mesh">Laid out</button><button data-v="fusee" title="The mainspring barrel, the chain and the fusee, plates see-through">Fusee</button><button data-v="balance" title="Close up on the balance, its weights and the hairspring">Balance</button></div>
+        <details class="grp more" id="viewDet" open>
+        <summary>Take it apart</summary>
+          <div class="seg full" id="modeSeg" role="group" aria-label="Take it apart"><button data-v="" aria-pressed="true" title="The movement put together, in the view it was in">Assembled</button><button data-v="exploded" aria-pressed="false" title="Every part lifted off along its arbor">Exploded</button><button data-v="laidout" aria-pressed="false" title="The train laid out flat, wheel to wheel">Laid out</button></div>
+        
         <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
         <div class="row hidden" id="expAllWrap"><span class="lab">Take apart</span><div class="seg" id="expAll" role="group" aria-label="What the exploded view takes apart"><button data-v="mv" aria-pressed="true" title="The movement alone, lifted out of its case">Movement</button><button data-v="all" aria-pressed="false" title="Every part: the movement, and its case, gimbals and box taken apart too">All</button></div></div>
         <label class="ck sw" title="Hide the plates, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
         <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
       </details>
-      <details class="grp more" id="timeDet" open>
+        <details class="grp more" id="partsDet">
+        <summary>Parts</summary>
+        <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
+        <input type="search" id="pSearch" placeholder="Find: a name, part number or figure" aria-label="Find a part by name, Hamilton part number or the manual's figure">
+        <p class="note hidden" id="pNone" style="margin:6px 0 0">Nothing matches.</p>
+        <div id="plist"></div>
+        <div class="row" style="margin-top:8px"><span class="lab">Sizes in</span><div class="seg" id="units" role="group" aria-label="Units for the sizes on the part cards"><button data-v="mm" aria-pressed="true">mm</button><button data-v="in" aria-pressed="false" title="Inches, as the manual gives them">inches</button></div></div>
+        <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
+      </details>
+    </div></div>
+    <div class="tabp" data-tab="run" role="tabpanel" hidden><div class="card ctl">
+        <details class="grp more" id="timeDet" open>
         <summary>Time</summary>
-        <div class="seg" id="speeds">
-          <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="0.25" title="A quarter of real time">¼×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
-        <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
+        
+        
         <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
         <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
         <div class="row"><span class="lab">Setting</span><button id="ksBtn" aria-pressed="false" title="Set the hour and minute hands as the manual does while it runs: the key on the square, forward only, the minute hand to its marker as the master's second hand passes 60. The second hand is left alone">With the key</button><button id="ssBtn" title="Set it as the manual does when stopped: stop the balance, wait for the master to overtake a fast dial (or for the second hands to agree on a slow one), and start it with a twist at that instant">Stop to set</button></div>
         <p class="note ind hidden" id="setOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>
         <div class="row"><span class="lab">Sound</span><label class="ck" title="A click at each beat, at up to real time"><input type="checkbox" id="snd"> Tick sound</label></div>
       </details>
-      <details class="grp more" id="windDet" open>
+        <details class="grp more" id="windDet" open>
         <summary>Winding</summary>
         <div class="row pow"><label class="sl"><span class="lab">Since winding</span><input type="range" id="hrs" min="0" max="60" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
         <div class="row"><span class="lab">Key</span><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button></div>
@@ -125,50 +138,21 @@
         <p class="note ind hidden" id="ldOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>
         <div class="row"><span class="lab">Start</span><button id="twist" title="Give the box a quick twist, which sets the balance swinging: how a stopped chronometer is started">Twist to start</button></div>
       </details>
-      <details class="grp more disp" id="dispDet" open>
-        <summary>Display</summary>
-        <div class="dgrid">
-          <span class="lab">Show</span><label class="ck"><input type="checkbox" id="lbls"> Labels</label><label class="ck" title="Outline every part of the movement with the drawing's lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
-          <label class="ck c2"><input type="checkbox" id="colr"> Colour by part</label><label class="ck" title="Colour each part by where its shape and size come from: the manual, measurements, solved to fit, or estimated"><input type="checkbox" id="colrSrc"> Colour by source</label>
-          <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines and the printing alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
-          <label class="ck c2" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
-          <label class="ck c2" title="Draw the parts that don't move against each other as one: about 40% fewer draw calls, the same picture (on by default; turn it off if something looks wrong)"><input type="checkbox" id="merge"> Performance mode</label>
-          <span class="lab g">Motion</span><label class="ck g" title="The ship rolls and pitches: the box rolls and pitches with it, and the case, hanging in its gimbals, stays put"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Lock the gimbals with the latch, as when the box is carried: the case then goes with the box"><input type="checkbox" id="latch"> Gimbals latched</label>
-          <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case's own swing (about 0.7 s, estimated) they can't, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
-          <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
-          <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
-          <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, dial, plate finish, balance, units, rate settings and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
-          <div class="seg c2 span"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div></div>
+        <details class="grp more" id="stopDet">
+        <summary>Stopping and starting</summary>
+        <p class="note" style="margin:0 0 4px">A detent chronometer does not start by itself. Once its balance swings too little to carry the discharge jewel past the trip spring and unlock the wheel, it stops, and it takes a quick twist of the box to set the balance going again (Sec. III).</p>
+        <h3 class="sub-h">Balance locking arm</h3>
+        <div class="seg" id="armSeg"><button data-v="0" aria-pressed="true" title="Clear of the balance, against its stop pin">Unlocked</button><button data-v="1" aria-pressed="false" title="Its finger against a timing weight, holding the balance still, as for shipping (Fig. 9)">Locked</button></div>
+        <h3 class="sub-h">Train-blocking screw</h3>
+        <div class="seg" id="blkSeg"><button data-v="0" aria-pressed="true" title="Screwed up, clear of the train">Raised</button><button data-v="1" aria-pressed="false" title="Screwed down, its dog point between the fourth wheel's spokes: the train stops at the next spoke">Screwed down</button></div>
+        <div class="seg" style="margin-top:8px"><button id="stopLook">Show them</button></div>
+        <h3 class="sub-h">A jolt</h3>
+        <p class="note" style="margin:0 0 4px">Why the detent was kept to chronometers in gimbals: a sharp jolt can upset it. Against the balance's swing it can check the balance below what unlocks the wheel, and the chronometer <em>sets</em> (stops); with the swing it can carry the discharge jewel round to unlock a second time, and the wheel <em>trips</em>, escaping an extra tooth, so the hands jump half a second. An illustration of those faults, not how a sound Model 21 behaves on its gimbals.</p>
+        <div class="seg"><button id="jolt" title="Give the box a sharp knock, turning it about the balance staff: what it does depends on where the balance is in its swing">Jolt the box</button></div>
+        <div class="rate" id="stopOut" aria-live="polite"></div>
+        <p class="note" style="margin:8px 0 0">The arm was fitted from 1947 so a chronometer could be shipped with its balance held; the screw keeps the mainspring's power in while the balance and escapement are out for service. With the screw down the balance swings on, unlocking a wheel that cannot turn, and runs down in a minute or two; raise the screw before then and it carries on. Screw it down or lock the arm, then unlock and twist: the hands will have lost the time it stood.</p>
       </details>
-      <details class="grp more" id="ctDet">
-        <summary>Contacts</summary>
-        <p class="note" style="margin:0 0 6px">A debug view: where the parts touch, come close or pass into each other, found on the model's solids, shown through the parts made faint (the box and case too). Pick a part for its contacts alone; hide parts to leave their contacts out.</p>
-        <label class="ck"><input type="checkbox" id="ctOn"> Show contacts</label>
-        <div id="ctOpts" class="hidden">
-          <div class="seg" id="ctMode" style="margin-top:6px"><button data-v="now" aria-pressed="true" title="The model as it stands: the clock stops, and the contacts are found again once it stands still after it moves">This moment</button><button data-v="sweep" aria-pressed="false" title="The model posed through a beat of the escapement and across the wind, as the interference check poses it: every contact any of those states makes, each pair with the states it meets in">Over a beat and the wind</button></div>
-          <label class="sl" style="margin-top:6px" title="How wide a gap still counts as close (a running clearance: a pivot in its hole, teeth out of action)"><span>Close within</span><select id="ctEps" aria-label="Close within, mm"><option value="0.01">0.01 mm</option><option value="0.03" selected>0.03 mm</option><option value="0.1">0.1 mm</option><option value="0.3">0.3 mm</option><option value="1">1 mm</option></select></label>
-          <label class="ck" title="With a part picked, the contacts between its own pieces too (a wheel on its arbor, the part's screws)"><input type="checkbox" id="ctIn" disabled> Inside the picked part too</label>
-          <p class="note" style="margin:6px 0 0"><span id="ctCount"></span>. A pair shows the worst it does: its overlap, else touching, else its least gap. Click a pair to show it alone; › picks the other part.</p>
-          <div id="ctList"></div>
-        </div>
-      </details>
-      <details class="grp more" id="partsDet">
-        <summary>Parts</summary>
-        <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
-        <input type="search" id="pSearch" placeholder="Find: a name, part number or figure" aria-label="Find a part by name, Hamilton part number or the manual's figure">
-        <p class="note hidden" id="pNone" style="margin:6px 0 0">Nothing matches.</p>
-        <div id="plist"></div>
-        <div class="row" style="margin-top:8px"><span class="lab">Sizes in</span><div class="seg" id="units" role="group" aria-label="Units for the sizes on the part cards"><button data-v="mm" aria-pressed="true">mm</button><button data-v="in" aria-pressed="false" title="Inches, as the manual gives them">inches</button></div></div>
-        <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
-      </details>
-      <details class="grp more" id="makeDet">
-        <summary>Making it</summary>
-        <p class="note" style="margin:0 0 6px">For a maker. Each part's card has its maker's sheet (its lines of the manual's parts list, the fits measured on the model, materials and heat treatment), its drawing to scale (SVG, mm) and its solid (STL). Here: measure between two points on the model, print the whole build book, or take the model's numbers away.</p>
-        <div class="seg"><button id="mkMeasure" aria-pressed="false" title="Click two points on the model">Measure</button><button id="mkOil" aria-pressed="false" title="Colour each part by the oil or grease it takes (Ops. 18-71)">Oil</button><button id="mkBook" title="Every part's sheet and drawing, to print">Build book</button><button id="mkData" title="The train, the fusee's profile, the escapement's cycle, the hairspring's design and the parts list, as JSON">Data</button><button id="mkSTL" title="Every part shown, as one STL in millimetres">STL</button></div>
-        <div class="seg" style="margin-top:6px"><button id="mkGLB" title="The whole instrument for Blender (glTF 2.0): every part a named object in its own hierarchy, in its materials, with every motion the model has as an action">Blender (.glb)</button><button id="mkRig" title="A script for Blender's Text Editor, run after importing the .glb: one set of controls (time, explode, laid out, lift, lids, latch) drives every part at the model's own ratios">Blender rig (.py)</button></div>
-        <div class="rate" id="mkRead" aria-live="polite"></div>
-      </details>
-      <details class="grp more" id="rateDet">
+        <details class="grp more" id="rateDet">
         <summary>Rate and timing weights</summary>
         <p class="note" style="margin:0 0 4px">There is no regulator. The rate is set with the weights on the balance rim, each a nut on a screw: the two timing weights at the arm’s ends, or the small vernier weights inside the rim beside them for fine changes. Both of a pair are turned alike, so the balance stays in poise. Out moves their mass further from the staff, which raises the balance’s moment of inertia and slows it: the hands lose.</p>
         <label class="sl rw"><span>Timing weights</span><input type="range" id="twR" min="-24" max="24" step="1" value="0" aria-label="Timing weights, eighth turns out"><output></output></label>
@@ -185,12 +169,7 @@
         <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
         <p class="note" style="margin:8px 0 0">The manual gives about 40 s a day for a full turn of the timing weights and 2.8 s for the verniers; the model’s thread is set to match, and the moment of inertia comes from the model’s balance and the parts list’s masses. In an overhaul, balance screws and washers bring the rate within 2 minutes a day, then the timing weights within half a second (Ops. 5, 6); a pre-temperature test at 55 and 90 °F follows, and pairs of screws are moved from hole to hole to correct it (Op. 8, Table IV); the verniers make the final changes (Op. 10). The rim has 24 tapped holes, numbered 1 to 13 round each half from the arm’s end, as the adjuster’s numbered balance block numbers them (Fig. 99): the timing weight stands at 1, the vernier at 2, and the screws in 3 to 12, the screws of a pair in the same hole of each half. The standard set is the four pairs a 1941 Model 21 carries; the parts list allows a fifth. Moving a pair along the rim keeps the moment of inertia, so the rate at the mean temperature stays, while the rate in heat changes: the panel gives Table IV’s figure, linear in temperature, and the balance’s own curve on top of it: for the Model 21’s, the small gain in the middle that the factory test card of No. 3390 shows (Sec. IX); for the split bimetallic balance, its middle temperature error, illustrative, the rim’s curl drawn 20 times as far as it goes. The chart gives the Navy test’s three temperature compensation figures and their limits. The model’s clock runs at the new rate, so the hands drift from real time; try 3600×. Zero puts back the weights’ mid-travel, the standard screws and 72.5 °F. The escapement’s settings on the Adjuster’s bench change the rate too, and the panel says by how much; the bench’s own button takes them back. The weights and screws are drawn on the Hamilton balance only.</p>
       </details>
-      <details class="grp more" id="testDet">
-        <summary>30-day performance test</summary>
-        <p class="note" style="margin:0 0 6px">The Navy's test before a chronometer was issued (Sec. IX, Performance Testing): thirty days in six periods of five, at 90, 72½, 55, 55, 72½ and 90 °F, the dial error read daily on Hamilton's comparator to 0.01 s, judged against the Bureau of Ships' limits. Here it is run on the model as it stands (weights, screws, balance, adjuster's bench, mainspring), wound at each daily reading, beside the manual's factory card for chronometer No. 3390. Change something and it is run again. The model has no day-to-day scatter, so its rating and recovery figures come from the comparator's rounding alone.</p>
-        <div id="testOut" aria-live="polite"></div>
-      </details>
-      <details class="grp more" id="bookDet">
+        <details class="grp more" id="bookDet">
         <summary>Rate book</summary>
         <p class="note" style="margin:0 0 6px">The navigator doesn't set the hands: the chronometer's error is compared with a time signal, daily, and recorded with its rate, and applied to every reading (Sec. III, Setting; Sec. IX, Table I). Error and daily rate in seconds: + fast or gaining, − slow or losing. Here the signal is the master time, which runs with the model; the hands step in half seconds, so the error is read to the nearest half second.</p>
         <div id="bookT"></div>
@@ -198,22 +177,45 @@
         <label class="sl rw" style="margin-top:8px"><span>Latitude</span><input type="number" id="lat" min="-89" max="89" step="1" value="30" style="width:64px" aria-label="Latitude, degrees (north positive)"><span>°</span></label>
         <div class="rate" id="bookLon" aria-live="polite"></div>
       </details>
-      <details class="grp more" id="stopDet">
-        <summary>Stopping and starting</summary>
-        <p class="note" style="margin:0 0 4px">A detent chronometer does not start by itself. Once its balance swings too little to carry the discharge jewel past the trip spring and unlock the wheel, it stops, and it takes a quick twist of the box to set the balance going again (Sec. III).</p>
-        <h3 class="sub-h">Balance locking arm</h3>
-        <div class="seg" id="armSeg"><button data-v="0" aria-pressed="true" title="Clear of the balance, against its stop pin">Unlocked</button><button data-v="1" aria-pressed="false" title="Its finger against a timing weight, holding the balance still, as for shipping (Fig. 9)">Locked</button></div>
-        <h3 class="sub-h">Train-blocking screw</h3>
-        <div class="seg" id="blkSeg"><button data-v="0" aria-pressed="true" title="Screwed up, clear of the train">Raised</button><button data-v="1" aria-pressed="false" title="Screwed down, its dog point between the fourth wheel's spokes: the train stops at the next spoke">Screwed down</button></div>
-        <div class="seg" style="margin-top:8px"><button id="stopLook">Show them</button></div>
-        <h3 class="sub-h">A jolt</h3>
-        <p class="note" style="margin:0 0 4px">Why the detent was kept to chronometers in gimbals: a sharp jolt can upset it. Against the balance's swing it can check the balance below what unlocks the wheel, and the chronometer <em>sets</em> (stops); with the swing it can carry the discharge jewel round to unlock a second time, and the wheel <em>trips</em>, escaping an extra tooth, so the hands jump half a second. An illustration of those faults, not how a sound Model 21 behaves on its gimbals.</p>
-        <div class="seg"><button id="jolt" title="Give the box a sharp knock, turning it about the balance staff: what it does depends on where the balance is in its swing">Jolt the box</button></div>
-        <div class="rate" id="stopOut" aria-live="polite"></div>
-        <p class="note" style="margin:8px 0 0">The arm was fitted from 1947 so a chronometer could be shipped with its balance held; the screw keeps the mainspring's power in while the balance and escapement are out for service. With the screw down the balance swings on, unlocking a wheel that cannot turn, and runs down in a minute or two; raise the screw before then and it carries on. Screw it down or lock the arm, then unlock and twist: the hands will have lost the time it stood.</p>
+    </div></div>
+    <div class="tabp" data-tab="look" role="tabpanel" hidden><div class="card ctl">
+        <details class="grp more" id="dispDet" open>
+          <summary>Display</summary>
+          <h3 class="sub-h">Look</h3>
+          <div class="seg full" id="lookSeg" role="group" aria-label="Look"><button data-v="metal" aria-pressed="true" title="The metals as they are">Metal</button><button data-v="tint" aria-pressed="false" title="A drawing, its parts tinted">Tinted</button><button data-v="ink" aria-pressed="false" title="A drawing in ink">Ink</button></div>
+          <div class="row"><span class="lab">Colour by</span><div class="seg" id="colSeg" role="group" aria-label="Colour by"><button data-v="none" aria-pressed="true">Nothing</button><button data-v="part" aria-pressed="false">Part</button><button data-v="src" aria-pressed="false" title="Colour each part by what it was made from: drawing, photograph or estimate">Source</button></div></div>
+          <div class="hidden" aria-hidden="true"><label class="ck"><input type="checkbox" id="colr"> Colour by part</label><label class="ck" title="Colour each part by where its shape and size come from: the manual, measurements, solved to fit, or estimated"><input type="checkbox" id="colrSrc"> Colour by source</label><label class="ck" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines and the printing alone"><input type="checkbox" id="drawInk"> Ink drawing</label></div>
+          <label class="ck" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label>
+          <label class="ck"><input type="checkbox" id="lbls"> Labels</label>
+          <label class="ck" title="Outline every part of the movement with the drawing's lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
+          <label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
+          <h3 class="sub-h">Motion</h3>
+          <label class="ck" title="The ship rolls and pitches: the box rolls and pitches with it, and the case, hanging in its gimbals, stays put"><input type="checkbox" id="rock"> Ship motion</label>
+          <label class="ck" title="Lock the gimbals with the latch, as when the box is carried: the case then goes with the box"><input type="checkbox" id="latch"> Gimbals latched</label>
+          <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case's own swing (about 0.7 s, estimated) they can't, and it swings with the box"><span class="lab">Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
+          <label class="ck" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
+          <h3 class="sub-h">Theme and settings</h3>
+          <label class="ck" title="Light or dark as the system is set; flipping the switch at the top sets one"><input type="checkbox" id="followSys"> Follow the system’s light or dark</label>
+          <div class="hidden seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+          <label class="ck" title="Keep the settings in this browser for the next visit: the view and Display options, theme, dial, plate finish, balance, units, rate settings and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
+          <div class="seg"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div>
+        </details>
+    </div></div>
+    <div class="tabp" data-tab="adv" role="tabpanel" hidden><div class="card ctl adv">
+        <details class="grp more" id="ctDet">
+        <summary>Contacts<small>Where parts touch, come close or overlap</small></summary>
+        <p class="note" style="margin:0 0 6px">A debug view: where the parts touch, come close or pass into each other, found on the model's solids, shown through the parts made faint (the box and case too). Pick a part for its contacts alone; hide parts to leave their contacts out.</p>
+        <label class="ck"><input type="checkbox" id="ctOn"> Show contacts</label>
+        <div id="ctOpts" class="hidden">
+          <div class="seg" id="ctMode" style="margin-top:6px"><button data-v="now" aria-pressed="true" title="The model as it stands: the clock stops, and the contacts are found again once it stands still after it moves">This moment</button><button data-v="sweep" aria-pressed="false" title="The model posed through a beat of the escapement and across the wind, as the interference check poses it: every contact any of those states makes, each pair with the states it meets in">Over a beat and the wind</button></div>
+          <label class="sl" style="margin-top:6px" title="How wide a gap still counts as close (a running clearance: a pivot in its hole, teeth out of action)"><span>Close within</span><select id="ctEps" aria-label="Close within, mm"><option value="0.01">0.01 mm</option><option value="0.03" selected>0.03 mm</option><option value="0.1">0.1 mm</option><option value="0.3">0.3 mm</option><option value="1">1 mm</option></select></label>
+          <label class="ck" title="With a part picked, the contacts between its own pieces too (a wheel on its arbor, the part's screws)"><input type="checkbox" id="ctIn" disabled> Inside the picked part too</label>
+          <p class="note" style="margin:6px 0 0"><span id="ctCount"></span>. A pair shows the worst it does: its overlap, else touching, else its least gap. Click a pair to show it alone; › picks the other part.</p>
+          <div id="ctList"></div>
+        </div>
       </details>
-      <details class="grp more" id="swingDet">
-        <summary>Swing and isochronism</summary>
+        <details class="grp more" id="swingDet">
+        <summary>Swing and isochronism<small>The balance’s swing and rate over a wind</small></summary>
         <p class="note" style="margin:0 0 6px">How far the balance swings is set by the train's torque: each swing the impulse gives it what unlocking, the detent's springs and its own friction take, and it settles where they balance, 1⅜ to 1½ turns of motion (Sec. II), 248° to 270° each way. No balance is quite isochronous: here the escapement, pushing it on either side of its dead point, makes a smaller swing lose (Airy; the hairspring taken as isochronous). The fusee keeps the torque, and so the swing and the rate, nearly the same from full wind to run down; while the key turns, the weaker sustaining spring drives, and the swing dips.</p>
         <div class="seg" id="swK" role="group" aria-label="What the chart shows"><button data-v="t" aria-pressed="true" title="The balance's swing over the last minute">Last minute</button><button data-v="a" aria-pressed="false" title="The rate at each swing, the torque steady">Rate against swing</button><button data-v="w" aria-pressed="false" title="The swing from full wind to run down">Over a wind</button></div>
         <canvas id="swCv" class="mini" aria-label="The balance's swing: over the last minute, the rate against it, or over a wind"></canvas>
@@ -222,8 +224,13 @@
         <div class="rate" id="swOut" aria-live="polite"></div>
         <p class="note" style="margin:8px 0 0">The isochronism check is the manual's (Sec. IX): wound, the gain over the next 12 hours against half the gain over 24; the Navy's tolerance is 0.50 s, and the factory test card of No. 3390 reads 0.00. The mainspring's pull is the solved spring's, from its measured free shape; the sustaining spring's strength is a design (a split ring weaker than the drive, banked in running, as the period's chronometers had it); the balance's free run-down (1/e in <span data-phys="TFm">67</span> s) lies inside what its parts give (<code>tools/physics.js</code>).</p>
       </details>
-      <details class="grp more" id="benchDet">
-        <summary>Adjuster's bench</summary>
+        <details class="grp more" id="testDet">
+        <summary>30-day performance test<small>The Navy’s 30-day test, as the model runs</small></summary>
+        <p class="note" style="margin:0 0 6px">The Navy's test before a chronometer was issued (Sec. IX, Performance Testing): thirty days in six periods of five, at 90, 72½, 55, 55, 72½ and 90 °F, the dial error read daily on Hamilton's comparator to 0.01 s, judged against the Bureau of Ships' limits. Here it is run on the model as it stands (weights, screws, balance, adjuster's bench, mainspring), wound at each daily reading, beside the manual's factory card for chronometer No. 3390. Change something and it is run again. The model has no day-to-day scatter, so its rating and recovery figures come from the comparator's rounding alone.</p>
+        <div id="testOut" aria-live="polite"></div>
+      </details>
+        <details class="grp more" id="benchDet">
+        <summary>Adjuster's bench<small>The escapement’s settings, to adjust by hand</small></summary>
         <p class="note" style="margin:0 0 6px">The escapement's settings, as the repairman adjusts them (Sec. VIII, Ops. 84–88, 97). Move one and the detent, jewels and roller are rebuilt with it, and the figures are measured against the manual's the way <code>tools/escapement.js</code> measures them. The model runs with them: the balance swings as far as the impulse, less what unlocking takes, carries it (Stopping and starting), and the escapement's rate changes with where they push the balance about its dead point (Rate and timing weights). If a setting would stop the escapement working, or leave the balance swinging too little to keep it going, the bench says why and keeps the last one that works. The last slider is the hairspring's own isochronism, the seconds a day it gains for each 10° more swing: the model takes it as 0, but an adjuster can set the spring against the escapement, which loses at a smaller swing, so that the rate hardly follows the swing (Swing and isochronism; about −0.1).</p>
         <div id="benchS"></div>
         <canvas id="benchCv" aria-label="Plan of the escapement at these settings, seen from the balance cock as in the manual's Fig. 90, moving with the model"></canvas>
@@ -231,8 +238,8 @@
         <div class="rate" id="benchOut" aria-live="polite"></div>
         <div class="seg" style="margin-top:8px"><button id="benchReset">The model's settings</button><button id="benchLook">Show the escapement</button></div>
       </details>
-      <details class="grp more" id="secDet">
-        <summary>Cross-section</summary>
+        <details class="grp more" id="secDet">
+        <summary>Cross-section<small>Cut the movement on a plane</small></summary>
         <div class="seg" id="secs">
           <button data-v="off" aria-pressed="true">Off</button><button data-v="x">12–6 plane</button><button data-v="z">3–9 plane</button><button data-v="y">Across the train</button></div>
         <div id="secOpts" class="hidden" style="margin-top:8px"><label class="sl"><span>Position</span><input type="range" id="secOff" min="-55" max="55" step="0.25" value="0"><output></output></label>
@@ -240,8 +247,8 @@
            <label class="ck" style="margin-top:6px" title="With Edges on: the outlines of the faces inside a cut part, seen through its cut face"><input type="checkbox" id="secLines"> Outlines through the cut</label>
           <p class="note" style="margin:6px 0 0">Cut faces are hatched. The plane moves with the movement, so it works in every view, including in the box.</p></div>
       </details>
-      <details class="grp more" id="varDet">
-        <summary>Variants</summary>
+        <details class="grp more" id="varDet">
+        <summary>Variants<small>Plate finish, dial, balance and balance stop</small></summary>
         <h3 class="sub-h">Plate finish</h3>
         <div class="seg" id="finish"><button data-v="nickel" aria-pressed="true">Nickel (Hamilton)</button><button data-v="gilt">Gilt</button><button data-v="un" title="The colours of a Ulysse Nardin deck chronometer, No. 7400 (c. 1955), as photographed: frosted gilt plates and bridges, a gilt bowl and gimbal ring, a redder mahogany box. With it, the Roman, Swiss style dial">Ulysse Nardin (as No. 7400)</button></div>
         <h3 class="sub-h">Dial</h3>
@@ -251,8 +258,22 @@
         <h3 class="sub-h">Balance stop</h3>
         <div class="seg" id="stopV"><button data-v="navy" aria-pressed="true" title="The Navy's balance brake: an arm over the balance, screwed down onto it with an Allen key, as on serial 2E11795; the manual doesn't describe it">Y-arm (as on 2E11795)</button><button data-v="arm" aria-pressed="false" title="The manual's balance locking arm (Fig. 9)">Locking arm (manual)</button></div>
       </details>
-    </div>
-    <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
+        <details class="grp more" id="makeDet">
+        <summary>Making it<small>Maker’s sheets, the build book, STL and Blender</small></summary>
+        <p class="note" style="margin:0 0 6px">For a maker. Each part's card has its maker's sheet (its lines of the manual's parts list, the fits measured on the model, materials and heat treatment), its drawing to scale (SVG, mm) and its solid (STL). Here: measure between two points on the model, print the whole build book, or take the model's numbers away.</p>
+        <div class="seg"><button id="mkMeasure" aria-pressed="false" title="Click two points on the model">Measure</button><button id="mkOil" aria-pressed="false" title="Colour each part by the oil or grease it takes (Ops. 18-71)">Oil</button><button id="mkBook" title="Every part's sheet and drawing, to print">Build book</button><button id="mkData" title="The train, the fusee's profile, the escapement's cycle, the hairspring's design and the parts list, as JSON">Data</button><button id="mkSTL" title="Every part shown, as one STL in millimetres">STL</button></div>
+        <div class="seg" style="margin-top:6px"><button id="mkGLB" title="The whole instrument for Blender (glTF 2.0): every part a named object in its own hierarchy, in its materials, with every motion the model has as an action">Blender (.glb)</button><button id="mkRig" title="A script for Blender's Text Editor, run after importing the .glb: one set of controls (time, explode, laid out, lift, lids, latch) drives every part at the model's own ratios">Blender rig (.py)</button></div>
+        <div class="rate" id="mkRead" aria-live="polite"></div>
+      </details>
+        <details class="grp more" id="perfDet">
+          <summary>Performance<small>Static parts drawn as one, and frames skipped when nothing moves</small></summary>
+          <label class="ck" title="Draw the parts that don't move against each other as one: about 40% fewer draw calls, the same picture (on by default; turn it off if something looks wrong)"><input type="checkbox" id="merge"> Performance mode</label>
+        </details>
+    </div></div>
+
+    
+    
+        <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
     <button class="about-btn" id="reportBtn" data-report title="Something broken, or something that differs from a real Model 21 or the manual: written into an email to the author, with the details that help fix it">Report a bug or inaccuracy</button>
     <div class="card ctl">
       <details class="grp more" id="changesDet">
@@ -344,5 +365,6 @@
 <script src="js/rigpy.js"></script>
 <script src="js/blender.js"></script>
 <script src="js/app.js"></script>
+<script src="../shared/ui.js"></script>
 </body>
 </html>
