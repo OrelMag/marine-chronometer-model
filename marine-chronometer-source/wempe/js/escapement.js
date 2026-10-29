@@ -302,6 +302,24 @@ const WESC=(()=>{
 
   /* ================= heights ================= */
   const FY=-22.8;   /* the balance's seat (the hub's flange top, 05 04 02), above */
+  /* the escape arbor and pinion as last revised (05 04 05-2, 05 04_7.2; the comments at build's escape arbor give each figure's source): its pivots Ø 0.24 (pv the radius),
+     the arbor Ø 1.0 to its top-plate shoulder (r0) and Ø 1.2 (r1), Ø 1.07 between the collet and the pinion (d), the pinion's face 5.3 from the arbor's pinion end (pf),
+     4 long (pl), 10 leaves of m 0.263 on tips Ø 2.97 and roots 1.6, the collet 4.7 long (col); each shoulder a concave arc r 3 (EShd). Here so the recipes read them
+     (tools/recipes/wempe.py, 29 October 2026): earProf() the arbor's turned profile [r, y] in the movement's frame, as build draws it */
+  /* the balance staff as last revised (05 04 02-1; build's staff comment gives each figure's source): SCc a pivot's cone hollow on R 6, SF its seats at their fits (the
+     impulse roller's Ø 1.65 s6 and the discharge roller's Ø 1.2 r6 at their middles, the collet's seat on 1:70 from Ø 1.58), staffProf() its turned profile [r, y], as build
+     draws it; here so the recipes read it (29 October 2026) */
+  const SCc=(a,b)=>{const R=6,m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=[b[0]-a[0],b[1]-a[1]],l=Math.hypot(d[0],d[1]);let q=[-d[1]/l,d[0]/l];if(q[0]<0)q=[-q[0],-q[1]];
+      const h=Math.sqrt(R*R-l*l/4),c=[m[0]+q[0]*h,m[1]+q[1]*h],a0=Math.atan2(a[1]-c[1],a[0]-c[0]),a1=a0+Math.atan2(Math.sin(Math.atan2(b[1]-c[1],b[0]-c[0])-a0),Math.cos(Math.atan2(b[1]-c[1],b[0]-c[0])-a0)),o=[];
+      for(let i=1;i<8;i++){const t=a0+(a1-a0)*i/8;o.push([c[0]+R*Math.cos(t),c[1]+R*Math.sin(t)]);}return[a,...o,b];};
+  const SF={SI:1.6685/2,RD6:1.2155/2,CS:(/** @type {number} */y)=>0.79+(y-(FY-6.1))/140};
+  const staffProf=()=>{const{SI,RD6,CS}=SF,cc=SCc,pv=0.105,rU=0.6-((FY-6.1)-(Y.tipU+2.4))/60,rL=0.6-((Y.tipL-2.4)-Y.dr1)/140;
+    return[[0,Y.tipU],[pv,Y.tipU],...cc([pv,Y.tipU+0.4],[rU,Y.tipU+2.4]),[0.6,FY-6.1],[0.79,FY-6.1],[CS(FY-1.1),FY-1.1],[1.0,FY-1.1],[1.0,FY],
+      [1.0293,Y.hubB],[SI,Y.hubB],[SI,Y.seat],[RD6,Y.seat],[RD6,Y.dr1],[0.6,Y.dr1],...cc([rL,Y.tipL-2.4],[pv,Y.tipL-0.4]),[pv,Y.tipL],[0,Y.tipL]];};
+  const EARB={pv:0.12,r0:0.5,r1:0.6,d:1.07,pf:5.3,pl:4,col:4.7,web:0.002,z:10,m:0.263,D:2.97,dg:1.6};
+  const EShd=(pv,R,y,s)=>{const H=Math.sqrt(9-(3+pv-R)**2),o=[];for(let i=0;i<=10;i++){const h=H*i/10;o.push([pv+3-Math.sqrt(9-h*h),y+s*h]);}return o;};   /* from the root at y outward (s: the way along y), ends included */
+  const earProf=()=>{const E=EARB,pv=E.pv,yP1=Y.etL-E.pf,yP0=yP1-E.pl,c2=Y.ew1+E.col;
+    return{ar:[[0,Y.etU],[pv,Y.etU],...EShd(pv,E.r0,Y.etU+0.5,1),[E.r0,Y.ewWeb-E.web],[E.r1,Y.ewWeb-E.web],[E.r1,c2],[E.d/2,c2],[E.d/2,yP0],[E.r1,yP0],...EShd(pv,E.r1,Y.etL-0.5,-1).reverse(),[pv,Y.etL],[0,Y.etL]],yP0,yP1,c2};};
   const Y={rimT:FY-3.8,armT:FY-1.15,flB:FY+1.8,hubB:FY+4.1,seat:FY+5.6,ir0:FY+4.12,ir1:FY+5.77,dr0:FY+5.77,dr1:FY+7.37,
     tipU:FY-13.0,tipL:FY+12.59,   /* the staff's pivot ends, 0.02 off the endstones (the cock's setting and the lug's: below): 13.0 above the seat and 12.59 below, 05 03_3.2's 25,6 −0,02 overall
       and 12,6 −0,02 below (so 12.98-13.02 above): 25.59, the overall's middle (13.03, 25.62, over its limit, until 28 October 2026: drawing check 2's 1-M6; the upper jewels follow, below)
@@ -504,16 +522,13 @@ const WESC=(()=>{
        one piece with its flange) is the later production staff; 05 04 02 is the one of the drawings' time and the coloured section's (05 04 02-1, -2): built */
     /* cc(a, b): a pivot's cone from [r, y] a to b, hollow on R 6 (05 03_3.2's pivot detail: the flank drawn concave, its "6" with a radius's leader; the chord 2.05, so 0.09
        deep at its middle: likely, the figure read as a radius; straight cones until 27 October 2026) */
-    const cc=(a,b)=>{const R=6,m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=[b[0]-a[0],b[1]-a[1]],l=Math.hypot(d[0],d[1]);let q=[-d[1]/l,d[0]/l];if(q[0]<0)q=[-q[0],-q[1]];
-      const h=Math.sqrt(R*R-l*l/4),c=[m[0]+q[0]*h,m[1]+q[1]*h],a0=Math.atan2(a[1]-c[1],a[0]-c[0]),a1=a0+Math.atan2(Math.sin(Math.atan2(b[1]-c[1],b[0]-c[0])-a0),Math.cos(Math.atan2(b[1]-c[1],b[0]-c[0])-a0)),o=[];
-      for(let i=1;i<8;i++){const t=a0+(a1-a0)*i/8;o.push([c[0]+R*Math.cos(t),c[1]+R*Math.sin(t)]);}return[a,...o,b];};
+    const cc=SCc;   /* module scope (staffProf, below) */
     /* its seats at their fits (05 04 02; drawing check 2's 1-M7, until 28 October 2026 drawn straight at the nominal sizes with every part 0.0015 clear): the collet's on 1:70 from
        Ø 1.58 at its small end, 6.1 over the flange, to 1.6514 at its large end 5.0 lower (1.645, 1:77, until then; the s6 its large end carries, +0.015/+0.022, isn't drawn:
        the collet grips by its slit, line to line); the hub's on 1:70 (the hub line to line on it); the impulse roller's Ø 1.65 s6 at its middle, 1.6685, and the discharge
        roller's Ø 1.2 r6 at its middle, 1.2155, each pressed (the rollers' bores below) */
-    const SI=1.6685/2,RD6=1.2155/2,CS=y=>0.79+(y-(FY-6.1))/140;   /* CS(y): the collet's seat's radius at y */
-    {const pv=0.105,rU=0.6-((FY-6.1)-(Y.tipU+2.4))/60,rL=0.6-((Y.tipL-2.4)-Y.dr1)/140,sh=[[0,Y.tipU],[pv,Y.tipU],...cc([pv,Y.tipU+0.4],[rU,Y.tipU+2.4]),[0.6,FY-6.1],[0.79,FY-6.1],[CS(FY-1.1),FY-1.1],[1.0,FY-1.1],[1.0,FY],
-      [1.0293,Y.hubB],[SI,Y.hubB],[SI,Y.seat],[RD6,Y.seat],[RD6,Y.dr1],[0.6,Y.dr1],...cc([rL,Y.tipL-2.4],[pv,Y.tipL-0.4]),[pv,Y.tipL],[0,Y.tipL]];   /* the arms one taper each, 1:30 above and 1:70 below as 05 04 02 draws them (a 1:30 cone and a Ø 1.2 × 1.53 cylinder above, 1:16 below, until 26 October 2026) */
+    const{SI,RD6,CS}=SF;   /* module scope (staffProf) */
+    {const sh=staffProf();   /* the arms one taper each, 1:30 above and 1:70 below as 05 04 02 draws them (a 1:30 cone and a Ø 1.2 × 1.53 cylinder above, 1:16 below, until 26 October 2026) */
       mesh(balL,lathe(sh,32),M.steel);R.staff=sh;}
     /* the hub (Unruhbutzen 05 04 02-2, brass): its flange Ø 6.3 −0.1 × 1.8 with the arm's screws' two M1 (05 04 02: sure; 05 03_3.2's "nach Bohrlehre 2 x M1"), its neck Ø 2.63 −0.06
        down to 4.1 +0.05 under the flange's top, pressed on the staff's 1:70 */
@@ -751,12 +766,12 @@ const WESC=(()=>{
        spigot Ø 1.7 in the wheel's bore. Until 15 October 2026 a cone Ø 2.6 at the wheel to Ø 1.5 */
     /* each shoulder from the pivot's root to the arbor a concave arc r 3 (05 04_7.2 draws the Ø 6 circle tangent to the arbor at the pivot's root, both ends; 05 04_7.1 the
        same): r = pv + 3 - sqrt(9 - h²) at h from the root, to the arbor's radius (straight cones until 26 October 2026, 0.4 and 1.5 long) */
-    const shd=(pv,R,y,s)=>{const H=Math.sqrt(9-(3+pv-R)**2),o=[];for(let i=0;i<=10;i++){const h=H*i/10;o.push([pv+3-Math.sqrt(9-h*h),y+s*h]);}return o;};   /* from the root at y outward (s: the way along y), ends included */
+    const shd=EShd;   /* module scope (earProf, below) */
     /* as last revised the arbor Ø 1.07 between the collet's end and the pinion (05 04_7.2's lines there 19 px apart at 17.7 px/mm; 1.24-1.28 past the pinion: likely; Ø 1.2,
        05 04_7.1's, until 28 October 2026: drawing check 2's 2-M15); the collet's spigot 1,8 h6 (1.797) in the wheel's 1,8 H7 (2-M5) */
-    {const g=ew.children.find(c=>c.userData.rev==='last'),pv=0.12,yP1=Y.etL-5.3,yP0=yP1-4,c2=Y.ew1+4.7,ar=[[0,Y.etU],[pv,Y.etU],...shd(pv,0.5,Y.etU+0.5,1),[0.5,Y.ewWeb-0.002],[0.6,Y.ewWeb-0.002],[0.6,c2],[1.07/2,c2],[1.07/2,yP0],[0.6,yP0],...shd(pv,0.6,Y.etL-0.5,-1).reverse(),[pv,Y.etL],[0,Y.etL]];
+    {const g=ew.children.find(c=>c.userData.rev==='last'),{ar,yP0,yP1,c2}=earProf(),E=EARB;
       tag(mesh(g,lathe(ar,24),M.steel),'050405-2');
-      const pn=tag(mesh(g,WTRAIN.gear(WTRAIN.teeth(10,0.263,2.97,1.6),4),M.steel,0,(yP0+yP1)/2,0),'050405-2',1);   /* the leaves on the sheet's tip and root, as the train's pinions (train.js) */pn.userData.gear={z:10,m:0.263};R.pinion=pn;
+      const pn=tag(mesh(g,WTRAIN.gear(WTRAIN.teeth(E.z,E.m,E.D,E.dg),E.pl),M.steel,0,(yP0+yP1)/2,0),'050405-2',1);   /* the leaves on the sheet's tip and root, as the train's pinions (train.js) */pn.userData.gear={z:10,m:0.263};R.pinion=pn;
       const c0=Y.ew1,c1=c0+1.6,ch=0.15;
       tag(mesh(g,lathe([[0.6+0.0015,Y.ewWeb],[0.8985,Y.ewWeb],[0.8985,c0],[1.4,c0],[1.4,c1-ch],[1.4-ch,c1],[0.85,c1],[0.85,c2-ch],[0.85-ch,c2],[0.6+0.0015,c2]],40),M.brass),'050405-3');}
     /* As first drawn, the arbor 05 04_7.1 (Gangrad 050408 bis 10, 4.4.41; Y1 above): the pinion's far face 5.3 from the dial end, the leaves as 05 04 05-2's; the arbor Ø 1.2
@@ -1223,5 +1238,5 @@ const WESC=(()=>{
   const BUILD40={k:1,bend:[3,0.06],set:{tsT:GTEQ},strip:null};
   const SET6={I:2513.3,JW:10.21,ID:7.62};   /* I 2521.0, JW 10.45 and ID 8.01 until 28 October 2026 (drawing check 2's batches 1, 2 and 6); ID 7.94 until 27 October 2026, the blade centred (DOFF); I 2524.6, JW 10.90 and ID 7.96 until 26 October 2026 (the drawings check: the escape wheel's web, the seconds wheel's hub, the collet); I 2526.0, JW 10.89 and ID 8.19 until 25 October 2026 (the rim's cut 1.6, the detent at its bracketed heights and its spring tapered: the per-part audit); ID 8.28 until 24 October 2026 (the blade and horn counted twice in the pipe's wall: overlaps.py); ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,EARB,earProf,staffProf,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
 })();

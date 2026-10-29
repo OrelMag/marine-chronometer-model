@@ -6,7 +6,7 @@ solids, written as STEP, written as operation sheets, and checked against the pa
 --step writes KEY.step (and KEY.stl) into DIR (default r_recipes/MODEL/), --sheet KEY.html there. --check opens the model's page (?snap&qa, about a
 minute), takes the first mesh of each recipe's parts-list line as shown in the version as last revised, in that object's own frame, and compares it with
 the recipe's solid put there by its to_page:
-  volume        the recipe's exact volume against the page mesh's: fails past VOL_TOL of the part's volume or 0.5 mm³, whichever is larger, plus half of
+  volume        the recipe's exact volume against the page mesh's (a page part in one piece; several pieces, which may overlap, are reported): fails past VOL_TOL of the part's volume or 0.5 mm³, whichever is larger, plus half of
                 each thread's ring (coarse: the page's turned faces are polygons, 72 a turn; the surface and hole checks are the fine ones); where the page's
                 mesh is watertight, the two solids' difference outside the threads by Monte Carlo (1.5 M points), reported
   bbox          the boxes' corners (fails past BOX_TOL)
@@ -34,11 +34,12 @@ EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.user
   const subs=[];mv.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
   const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(),out=[],v=new THREE.Vector3();let rotY=null;
   const b64=a=>{const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);};
-  const seen=new Set();for(const r of[root,...subs])r.traverse(o=>{if(seen.has(o))return;seen.add(o);if(!o.isMesh||!o.geometry||o.userData.decal||o.userData.surface||!shows(o))return;if(o.userData.screw&&rotY===null)rotY=o.rotation.y;
+  const own=o=>{for(let q=o;q;q=q.parent)if(q.userData.hn)return q.userData.hn;return null;};let gearRot=null;   /* a mesh is the part's only if its nearest line is the part's (the staff's line is on the whole balance's group) */
+  const seen=new Set();for(const r of[root,...subs])r.traverse(o=>{if(seen.has(o))return;seen.add(o);if(!o.isMesh||!o.geometry||o.userData.decal||o.userData.surface||!shows(o)||own(o)!==hn)return;if(o.userData.screw&&rotY===null)rotY=o.rotation.y;if(o.userData.gear&&gearRot===null)gearRot=o.rotation.y;
     const m=inv.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position,n=P.count,pos=new Float32Array(3*n);
     for(let i=0;i<n;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);pos[3*i]=v.x;pos[3*i+1]=v.y;pos[3*i+2]=v.z;}
     const I=o.geometry.index?Uint32Array.from(o.geometry.index.array):Uint32Array.from({length:n},(_,i)=>i);out.push({pos:b64(pos),idx:b64(I)});});
-  return{meshes:out,rotY};}"""
+  return{meshes:out,rotY,gearRot};}"""
 
 async def page_meshes(hns):
     import browser
@@ -94,6 +95,17 @@ def nearest(meshes,P):
         _,dd,_=trimesh.proximity.closest_point(m,P);d=np.minimum(d,dd)
     return d
 
+def winding(m,P,chunk=256):
+    """the generalized winding number of each point against a mesh (Jacobson et al. 2013): about 1 inside, 0 outside, robust to a lathe's open fan at its axis
+    and to faces inside a piece, where ray parity isn't"""
+    V=m.vertices[m.faces];w=np.zeros(len(P))
+    for i in range(0,len(P),chunk):
+        a=V[None,:,0,:]-P[i:i+chunk,None,:];b=V[None,:,1,:]-P[i:i+chunk,None,:];c=V[None,:,2,:]-P[i:i+chunk,None,:]
+        la,lb,lc=(np.linalg.norm(x,axis=2) for x in (a,b,c));det=np.einsum('ijk,ijk->ij',a,np.cross(b,c))
+        den=la*lb*lc+np.einsum('ijk,ijk->ij',a,b)*lc+np.einsum('ijk,ijk->ij',b,c)*la+np.einsum('ijk,ijk->ij',c,a)*lb
+        w[i:i+chunk]=(2*np.arctan2(det,den)).sum(1)/(4*math.pi)
+    return w
+
 def circle_fit(P):
     A=np.c_[2*P[:,0],2*P[:,1],np.ones(len(P))];b=(P**2).sum(1);c=np.linalg.lstsq(A,b,rcond=None)[0];return c[:2],math.sqrt(c[2]+c[0]**2+c[1]**2)
 
@@ -105,11 +117,15 @@ def check(r,pm):
     M=r.to_page.copy()
     if pm.get('rotY'):   # the page turns each screw's slot by its own angle about the axis (page y)
         a=pm['rotY'];Ry=np.array([[math.cos(a),0,math.sin(a)],[0,1,0],[-math.sin(a),0,math.cos(a)]]);M[:3,:3]=Ry@M[:3,:3];M[:3,3]=Ry@M[:3,3]
+    from recipes import CutLeaves
+    for o in r.ops():   # a pinion's leaves at the page's phase (its gear mesh's turn about the arbor)
+        if isinstance(o,CutLeaves) and pm.get('gearRot') is not None:o.phase=pm['gearRot']
     part=r.build();rm=tess(part);rm.vertices=xf(M,rm.vertices);pages=tm_of(pm['meshes']);zones=r.zones()
     vr=part.volume;vp=sum(m.volume for m in pages);res['volume']={'recipe':round(vr,3),'page':round(vp,3),'diff':round(vr-vp,3),'rel':round((vr-vp)/vp,5)}
     # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL
     ta=sum(math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5 for (_,r0,r1,z0,z1) in zones);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)
-    if abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
+    if len(pages)>1:res['volume']['pieces']=len(pages)   # several pieces may overlap (a pinion's leaves drawn as a full disc through its arbor): their sum isn't the part's, so reported only
+    elif abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
     bp=np.array([np.min([m.bounds[0] for m in pages],0),np.max([m.bounds[1] for m in pages],0)]);db=np.abs(rm.bounds-bp).max()
     res['bbox']={'recipe':np.round(rm.bounds,3).tolist(),'page':np.round(bp,3).tolist(),'max':round(float(db),4)}
     if db>BOX_TOL:F.append(f'bbox: corners differ by {db:.4f}')
@@ -121,10 +137,9 @@ def check(r,pm):
     # face). A hole the page has and the recipe hasn't fails both, so it is still found
     own=np.concatenate([np.full(len(q[0]),i) for i,q in enumerate(SP)]);fid=np.concatenate([q[1] for q in SP])
     cand=kp&rm.contains(Pp+0.02*Np)&rm.contains(Pp-0.02*Np);inner=np.zeros(len(Pp),bool)
-    for j,m in enumerate(pages):   # inside a closed piece, or a convex one (a lathe's fan at the axis can leave it open to trimesh) by its hull
+    for j,m in enumerate(pages):   # inside another piece, by its winding number (a lathe's fan at the axis leaves it open to trimesh's ray parity)
         k=cand&(own!=j)
-        if m.is_watertight:inner[k]|=m.contains(Pp[k])
-        elif k.any() and abs(m.volume-m.convex_hull.volume)<0.01*m.convex_hull.volume:inner[k]|=m.convex_hull.contains(Pp[k])
+        if k.any():inner[k]|=winding(m,Pp[k])>0.5
     for i in np.nonzero(cand&~inner)[0]:   # a coincident face of any piece facing the other way
         n=Np[i]
         for j,m in enumerate(pages):
@@ -213,7 +228,7 @@ def main():
     for k,r in R.items():
         t=time.time();res=check(r,pm.get(r.hn));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
-        if v:print(f"  volume  recipe {v['recipe']} page {v['page']} ({v['rel']*100:+.3f} %, allowed ±{v['allow']})"+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page in several pieces, not closed or with faces inside: no Monte Carlo'))
+        if v:print(f"  volume  recipe {v['recipe']} page {v['page']}"+(f" (the page in {v['pieces']} pieces, summed: reported)" if v.get('pieces') else f" ({v['rel']*100:+.3f} %, allowed ±{v['allow']})")+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page in several pieces, not closed or with faces inside: no Monte Carlo'))
         if 'bbox' in res:print(f"  bbox    corners within {res['bbox']['max']}")
         if s:print(f"  surface recipe→page max {s['recipe_to_page']['max']} p99 {s['recipe_to_page']['p99']}; page→recipe max {s['page_to_recipe']['max']} p99 {s['page_to_recipe']['p99']}")
         for w in s.get('worst',[]):print(f"    {w['d']:.4f} on the {w['from']}'s surface at {w['at']}"+(' (expected)' if w.get('expected') else ''))
