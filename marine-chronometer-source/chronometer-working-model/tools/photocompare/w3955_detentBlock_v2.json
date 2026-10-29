@@ -1,0 +1,88 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/11_Wempe_3955_Gangfeder_plus.jpg",
+ "rev": "3955",
+ "hash": "wind=55.9",
+ "only": [
+  "detentBlock",
+  "detent"
+ ],
+ "look": [
+  3.14159,
+  1.5,
+  92,
+  -24,
+  -21,
+  18,
+  15
+ ],
+ "points": {
+  "block screw (WN-gk), head's top": {
+   "xyz": [
+    -34.536,
+    -24.75,
+    16.238
+   ],
+   "uv": [
+    797.8,
+    249
+   ]
+  },
+  "block steady pin at the far corner (WN-201.gk), top": {
+   "xyz": [
+    -38.496,
+    -20.3,
+    12.589
+   ],
+   "uv": [
+    857.5,
+    150
+   ]
+  },
+  "base's plate face, corner D (by the arm's far side, far end)": {
+   "xyz": [
+    -34.227,
+    -19.0,
+    8.037
+   ],
+   "uv": [
+    678,
+    101
+   ]
+  },
+  "base's plate face, corner C (far end, away from the arm)": {
+   "xyz": [
+    -41.023,
+    -19.0,
+    11.211
+   ],
+   "uv": [
+    914,
+    101
+   ]
+  },
+  "base's plate face, corner B (near end, away from the arm)": {
+   "xyz": [
+    -34.855,
+    -19.0,
+    24.416
+   ],
+   "uv": [
+    915,
+    516
+   ]
+  },
+  "block steady pin by the stone's side (WN-201.gk), top": {
+   "xyz": [
+    -30.576,
+    -20.3,
+    19.887
+   ],
+   "uv": [
+    737.5,
+    445
+   ]
+  }
+ },
+ "_note": "v2 (verification, 29 Oct 2026): fitted on the base (05 04 01-4's 14.6 x 7.5, sure), its steady pins and fixing screw only, not on the arm or the detent under question; corners read off saturation-edge profiles (+-2 px; B's lower edge +-4: a chamfer band 513-525); pin tops re-picked at their top faces' centres (8x zoom): the far pin 15 px from w3955_detentBlock's pick",
+ "fix_f": 2700
+}

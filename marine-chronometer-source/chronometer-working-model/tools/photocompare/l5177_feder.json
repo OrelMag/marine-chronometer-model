@@ -1,0 +1,16 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/8_Lange_5177_Feder.jpg",
+ "rev": "1943",
+ "hash": "wind=55.9",
+ "look": [3.441592653589793, 0.03, 100, -11.78, -13, 21.74, 20],
+ "points": {
+  "seconds arbor at the top plate's inner face (050501, (0,23))": {"xyz": [0, -19, 23], "uv": [322, 270]},
+  "escape arbor at the pillar plate's inner face": {"xyz": [-11.783, 0, 21.743], "uv": [530, 641]}
+ },
+ "circles": {
+  "pillar 11 at mid height, silhouettes": {"c": [-36.858, -8, 3.225], "r": 4.0, "uv": [[893, 520], [1008, 520]]},
+  "pillar 11 low, silhouettes": {"c": [-36.858, -2, 3.225], "r": 4.0, "uv": [[893, 610], [1008, 610]]},
+  "seconds arbor's own line, mid": {"c": [0, -9.5, 23], "r": 0.6, "uv": [[313, 460], [333, 460]]},
+  "seconds arbor's own line, low": {"c": [0, -3, 23], "r": 0.6, "uv": [[313, 580], [333, 580]]}
+ }
+}
