@@ -268,7 +268,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* the load path (Load path in colour, Winding): while winding (lpPh 'w') the sustaining spring drives the fusee wheel (rose), pushing off its ratchet, which the sustaining
      pawl holds (teal); for 2 s after the key lets go (lpPh 'r') the drive is the mainspring's again: barrel, chain, fusee, winding pawls, sustaining ratchet, spring, fusee wheel. A tinted copy of what the part shows: its colour drawn
      toward the tint and a little of it lit, so it holds under the drawing (drawOf keeps the colour, not the glow) */
-  let lpPh='',lpEnd=0,mClk=0;const LPC={d:sc('#e0306a'),h:sc('#0e9f92')},TINT=new Map();   /* rose and teal: hues no metal in the movement has */
+  let lpPh='',lpEnd=0,mClk=0;const LPC={d:sc('#e0306a'),h:sc('#0e9f92'),s:sc(PSEL.COL)},TINT=new Map();let SEL=null;   /* s: the selection's tint (SEL, ../shared/select.js, bound below) */   /* rose and teal: hues no metal in the movement has */
   const lpCol=(m,ph=lpPh)=>{const k=m.userData.lpk;if(!st.lp||!ph||!k)return null;return ph==='w'?(k==='s'?'d':k==='h'||k==='r'?'h':null):(k==='h'?null:'d');};   /* ph: the close-up kept open in running colours the mainspring's path ('r') */
   function tintOf(m0,c){if(!m0.color)return m0;const k=m0.uuid+c;let t=TINT.get(k);
     if(!t){t=m0.clone();t.userData={inkDecal:m0.userData.inkDecal};patchSection(t,!!m0.userData.secCap);t.userData.side0=m0.userData.side0??m0.side;t.side=m0.side;t.clippingPlanes=[...(m0.clippingPlanes||[])];TINT.set(k,t);}
@@ -284,8 +284,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       const gh=ghOf(m,foc);
       if(m.userData.noShadow&&gh)vis=false;
       m.visible=vis&&!opHide(m)&&!OVH.hides(m);m.userData.ghHid=!m.visible&&!!(m.userData.noShadow&&gh)&&!opHide(m)&&!OVH.hides(m)&&!((st.drive||dvOn)&&(DRIVE_HIDE.has(p)||m.userData.driveHide))&&!(m.userData.onlyDrive&&!msShown());   /* ghHid: hidden only as a ghosted glass (a click again on what is behind it picks it) */m.userData.ctOff=!!m.userData.devPlate||!m.visible&&!(m.userData.onlyDrive&&!msShown())&&!(m.userData.devPlate&&(!dvOn||st.drive))&&!(m.userData.noShadow&&gh);   /* ctOff: hidden by the visitor, Moving parts only or the overhaul, so Contacts leaves its contacts out */
-      const lc=!gh&&lpCol(m);m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
-    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!OVH.boxOff()&&!((ks||OVH.bezelOff())&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=ct?CT.mat(m):gh?ghostOf(base(m)):fin(m);m.userData.cs=!ct&&!gh&&m.userData.mat0!==M.glass;castOn(m);}
+      const lc=!gh&&(SEL&&SEL.has(m)?'s':lpCol(m));m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
+    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!OVH.boxOff()&&!((ks||OVH.bezelOff())&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;const ls=!gh&&SEL&&SEL.has(m);m.material=ct?CT.mat(m):gh?ghostOf(base(m)):ls?(st.draw?drawOf(tintOf(base(m),'s')):tintOf(base(m),'s')):fin(m);m.userData.cs=!ct&&!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
     /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
        The floor's shadow (sh) is a texture, always there. Turned off, the map (2048 px, 1024 on phones) is freed (three makes it again when it is next needed) */
@@ -436,17 +436,17 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const hintOff=()=>{$('#hint').style.opacity=0;};for(const ev of['pointerdown','wheel','keydown'])cv.addEventListener(ev,hintOff,{once:true,passive:true});
   /* pointer: orbit, pinch, tap to pick; on touch, a long press (500 ms, barely moving) opens the fade/hide menu, since iOS fires no contextmenu */
   const ptrs=new Map();let pinch=0,down=null,rMoved=0,lpT=0,lpAt=-1e9,lastTap=null;const lpStop=()=>{clearTimeout(lpT);lpT=0;};
-  cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button,pan:e.shiftKey||e.button===1};if(e.button===1)e.preventDefault();
+  cv.addEventListener('pointerdown',e=>{if(SEL&&(SEL.busy()||!ptrs.size)&&SEL.down(e))return;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button,pan:e.shiftKey||e.button===1};if(e.button===1)e.preventDefault();
     lpStop();if(e.pointerType!=='mouse'&&ptrs.size===1){const x=e.clientX,y=e.clientY;lpT=setTimeout(()=>{lpT=0;if(!down||down.moved>6||ptrs.size!==1)return;down.lp=true;lpAt=performance.now();openOpm(x,y);if(opm.classList.contains('on')&&navigator.vibrate)navigator.vibrate(10);},500);}});
-  cv.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;
+  cv.addEventListener('pointermove',e=>{if(SEL&&SEL.move(e))return;const p=ptrs.get(e.pointerId);if(!p)return;
     const pdx=e.clientX-p.x,pdy=e.clientY-p.y;
     if(down)down.moved+=Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y);if(lpT&&down&&down.moved>6)lpStop();
     if(ptrs.size===1&&down&&down.moved>4&&down.pan)panBy(e.clientX-p.x,e.clientY-p.y);
     else if(ptrs.size===1&&down&&down.moved>4){camFree=true;C.yaw-=(e.clientX-p.x)*0.008;C.pitch=clamp(C.pitch+(e.clientY-p.y)*0.008,-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}   /* pitch to 87° above or below (1.52 rad): at 90° lookAt has no up and the view spins */
     p.x=e.clientX;p.y=e.clientY;
     if(ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)C.dist=G.dist=clamp(C.dist*pinch/d,30,1500);pinch=d;panBy(pdx/2,pdy/2);if(down)down.moved=99;}});
-  const up=e=>{lpStop();if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&!down.lp&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
-    if(wasTap&&e.type==='pointerup'){const t=e.timeStamp;if(lastTap&&t-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){lastTap=null;dblPick(e);}else{lastTap={t,x:e.clientX,y:e.clientY};pick(e);}}   /* a second tap or click within 0.4 s, in the same place: a double (timed by the events, not by when they are handled: opening the first part's card can keep a slow device busy) */
+  const up=e=>{if(SEL&&SEL.up(e))return;lpStop();if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&!down.lp&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
+    if(wasTap&&e.type==='pointerup'&&SEL&&SEL.tap(e))lastTap=null;else if(wasTap&&e.type==='pointerup'){const t=e.timeStamp;if(lastTap&&t-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){lastTap=null;dblPick(e);}else{lastTap={t,x:e.clientX,y:e.clientY};pick(e);}}   /* a second tap or click within 0.4 s, in the same place: a double (timed by the events, not by when they are handled: opening the first part's card can keep a slow device busy) */
     if(!ptrs.size)down=null;};
   cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
   $('#info').addEventListener('pointerup',e=>{if(e.button===0&&lastTap&&e.timeStamp-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){const t=lastTap;lastTap=null;dblPick({clientX:t.x,clientY:t.y});}});   /* the card the first click opened may lie under the second: still a double on the part */
@@ -477,32 +477,35 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* right-click (or long-press) a part: opacity, hide and isolate. Prefers the nearest solid part, so faded parts in front can be looked through.
      Hidden parts can't be clicked, so the menu lists them for unhiding, and offers the way back from isolation; right-click empty space to reach those alone */
   const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output'),opP=$('#opPart'),opH=$('#opHid'),opI=$('#opIso'),chips=opH.querySelector('.chips');let opPart=null;
+  const opT=()=>opPart?SEL?SEL.targets(opPart):[opPart]:[];   /* the part the menu is on, or the whole selection when it is on a selected part */
   const opShow=()=>{const v=Math.round((st.op[opPart]??1)*100);opIn.value=v;opOut.textContent=v+'%';};
   function opList(){chips.innerHTML='';for(const p of st.hid){const b=document.createElement('button');b.textContent=INFO[p][0];b.title='Show '+INFO[p][0];b.addEventListener('click',()=>{st.hid.delete(p);look();opRender();});chips.appendChild(b);}}
   function opRender(){opP.classList.toggle('hidden',!opPart);opH.classList.toggle('hidden',!st.hid.size);opI.classList.toggle('hidden',!st.iso);opList();
-    if(st.iso)opI.querySelector('.hl').textContent='Showing only '+[...st.iso].map(p=>INFO[p][0]).join(', ');opm.querySelector('[data-a="iso"]').classList.toggle('hidden',!!(st.iso&&st.iso.size===1&&st.iso.has(opPart)));
-    opm.querySelector('h4').textContent=opPart?INFO[opPart][0]:st.hid.size?'Hidden parts':'Isolated';if(opPart)opShow();if(!opPart&&!st.hid.size&&!st.iso)closeOpm();}
+    if(st.iso)opI.querySelector('.hl').textContent='Showing only '+[...st.iso].map(p=>INFO[p][0]).join(', ');const T=opT();opm.querySelector('[data-a="iso"]').classList.toggle('hidden',!!(st.iso&&st.iso.size===T.length&&T.every(k=>st.iso.has(k))));
+    opm.querySelector('h4').textContent=opPart?T.length>1?T.length+' selected parts':INFO[opPart][0]:st.hid.size?'Hidden parts':'Isolated';if(opPart)opShow();if(!opPart&&!st.hid.size&&!st.iso)closeOpm();}
   function closeOpm(){opm.classList.remove('on');opPart=null;}
   /* Android fires its own contextmenu on a long press: whichever comes first opens the menu, once, and the press never picks */
-  cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
+  cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(SEL&&SEL.busy())return;if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
   function openOpm(cx,cy){const rc=cv.getBoundingClientRect();ndc.set((cx-rc.left)/rc.width*2-1,-(cy-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);
     const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>opOf(h.object)!=null);
     if(!hit&&!st.hid.size&&!st.iso){closeOpm();return;}
     opPart=hit?hit.object.userData.pk:null;opm.classList.add('on');opRender();
     const sr=stage.getBoundingClientRect();opm.style.left=clamp(cx-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(cy-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';}
-  opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;if(v>=1)delete st.op[opPart];else st.op[opPart]=v;opOut.textContent=opIn.value+'%';look();});
-  opm.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a;
-    if(a==='hide'){if(opPart){st.hid.add(opPart);isoDrop(opPart);opPart=null;}}else if(a==='iso'){if(opPart){st.iso=new Set([opPart]);st.hid.delete(opPart);delete st.op[opPart];}}else if(a==='uniso')st.iso=null;
-    else if(a==='showall'){st.hid.clear();st.iso=null;}else if(a==='all'){st.op={};st.hid.clear();st.iso=null;}else if(opPart)delete st.op[opPart];
+  opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;for(const k of opT()){if(v>=1)delete st.op[k];else st.op[k]=v;}opOut.textContent=opIn.value+'%';look();if(SEL)SEL.sync();});
+  opm.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a,T=opT();
+    if(a==='hide'){if(opPart){for(const k of T){st.hid.add(k);isoDrop(k);}if(SEL)SEL.drop(T);opPart=null;}}else if(a==='iso'){if(opPart){st.iso=new Set(T);for(const k of T){st.hid.delete(k);delete st.op[k];}}}else if(a==='uniso')st.iso=null;
+    else if(a==='showall'){st.hid.clear();st.iso=null;}else if(a==='all'){st.op={};st.hid.clear();st.iso=null;}else for(const k of T)delete st.op[k];if(SEL)SEL.sync();
     look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
+  /* the selection (../shared/select.js): Ctrl-click or Select, Alt-drag or Lasso; its bar and the menu above fade, hide or isolate it together */
+  SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:[...MVM,...BOXM],pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
   /* how to use it: every control for a mouse and for touch. Stays open while the model is dragged, so the gestures can be tried; a tap, × or Esc closes it */
   const help=$('#help'),helpBtn=$('#helpBtn');
   function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeOpm();showHelp(false);}
+    if(e.key==='Escape'){if(SEL&&!opm.classList.contains('on')&&!help.classList.contains('on'))SEL.esc();closeOpm();showHelp(false);}   /* with no menu or help open: the lasso let go, or the selection cleared */
     if((e.key==='p'||e.key==='P')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open&&panelSide())pnb.click();
     if(e.key==='Backspace'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();if(e.shiftKey)histGo(HF,HB);else histGo(HB,HF);}   /* back and forward through the places the view has been */
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
