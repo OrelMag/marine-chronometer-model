@@ -3,7 +3,7 @@ by wempe_load.js: a size frame.js drew as a literal beside its part is moved int
 meshes hashed before and after (recipes_pagehash.py) so the move changes nothing."""
 import functools,json,math,pathlib,subprocess
 import build123d as bd
-from . import (RadialDrill,Blank,TurnProfile,CutLeaves,Recipe,Setup,S,iso,page_matrix,Bar,Ring,TurnOD,TurnCone,TurnAway,FaceGroove,Bore,Countersink,ThreadOD,SlotHead,Plate,Hole,Cone,Pocket,InnerCone,Drill,Cut,Bought)
+from . import (Op,RadialDrill,Blank,TurnProfile,CutLeaves,Recipe,Setup,S,iso,page_matrix,Bar,Ring,TurnOD,TurnCone,TurnAway,FaceGroove,Bore,Countersink,ThreadOD,SlotHead,Plate,Hole,Cone,Pocket,InnerCone,Drill,Cut,Bought)
 TOOLS=pathlib.Path(__file__).resolve().parents[1]
 
 @functools.lru_cache()
@@ -586,11 +586,277 @@ def barrelArbor():
     return Recipe('barrelArbor','050702-1','Barrel arbor (Federkern)',src,'Präz. Rundstahl 14 (05 07 02-1)','hardened (05 07 02-1)',[Setup('1','between centres; the square on the mill',ops)],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),expect=[{'at':(0,0),'r':7,'max':0.03,'why':"tessellation, not a fault: the page's hook hole is a 24-sided bore cut at the hook's turn into its 48-sided lathe; the check fits the hole's free angle to the page's walls"}],fits=['its journals running in the barrel\'s bosses','the hook 05 07 02-2 in the core'])
 
+# ---------------- batch 9b: the fusee's and barrel's other made parts, from WD.FU (dims.js; fusee.js reads the same) ----------------
+@functools.lru_cache()
+def WF():
+    """WD.FU (the fusee's stack and its parts' tables), its profiles and the fusee wheel's teeth (train.js's teeth(), the same function as fusee.js's copy), WD.FA, WD.BAR"""
+    js=("const W=require(%r)({train:true}),F=W.WD.FU;process.stdout.write(JSON.stringify({FU:F,VRprof:F.VR.prof(),FWprof:F.FW.prof(),FWxy:W.WTRAIN.teeth(...F.FW.teeth).xy,"
+        "FA:W.WD.FA,BAR:W.WD.BAR,BARprof:W.WD.BAR.prof(),DRUMprof:W.WD.BAR.drum(),LIDprof:W.WD.BAR.lidP(),INNER:W.WD.INNER,TOP_T:W.WD.TOP_T,H:W.WD.H}))")%str(TOOLS/'wempe_load.js')
+    return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
+UP=lambda:page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0))   # the part's (X, Y, Z) onto the page's (X, Z, -Y): a shape's (x, y) is the part's, its height the page's y
+def _poly(L,z=0):
+    """a closed polygon's face at height z from a list of points (repeats dropped)"""
+    Q=[q for i,q in enumerate(L) if i==0 or abs(q[0]-L[i-1][0])+abs(q[1]-L[i-1][1])>1e-9]
+    if math.dist(Q[0],Q[-1])<1e-9:Q=Q[:-1]
+    return bd.Face(bd.Wire.make_polygon([bd.Vector(x,y,z) for x,y in Q],close=True))
+def _disc(r,z0,z1):return bd.Cylinder(r,z1-z0,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,z0)))
+def _rev_at(at,pts):
+    from . import _rev
+    return _rev(pts).moved(bd.Location((at[0],at[1],0)))
+def _sink(at,r0,z0,r1,z1):
+    """a cone on its own axis at (x, y): r0 at z0 (the face it is cut from) to r1 at z1, run on 0.01 past z0 along its own slope"""
+    s=(r1-r0)/(z1-z0);e=-0.01 if z1>z0 else 0.01;return _rev_at(at,[(0,z0+e),(r0+s*e,z0+e),(r1,z1),(0,z1)])
+class Solid(Op):
+    """stock already formed to a solid made by make() (a blank turned and cut at once: a cup with its toothed plate)"""
+    kind='stock'
+    def __init__(self,make,text,sizes=(),src=''):super().__init__(text,sizes,src);self.make=make
+    def apply(self,p):return self.make()
+
+def coverPlate():
+    X=WF();U=X['FU'];D=U['DP'];y0,y1=U['DP0'],U['S'];src='05 06 00-4';at=tuple(D['at']);c=D['cl']*math.tan(math.radians(D['ca']))
+    prof=[(D['hb'],y1),(D['R'],y1),(D['R'],y0+D['ch']),(D['R']-D['ch'],y0),(D['hb']+c,y0),(D['hb'],y0+D['cl'])]
+    ops=[Blank(2*D['R']+0.5,y0-0.05,y1+0.05,'Cut the blank from Bandstahl 24 × 1 and face it to 0.8',[S('thickness',f"{D['t']}",'-0.1, drawn 0.8',src)],src),
+         TurnProfile(prof,"Turn the outside, break its outer edge, bore the hole for the arbor's step and open it 60°",
+           [S('outside',f"Ø {2*D['R']:.2f}",'21.1 -0.1, at the middle',src),S('edge',f"{D['ch']} × 45° on the outer face",'scaled 0.6-0.7 (likely)',src),
+            S('hole',f"Ø {2*D['hb']:.3f}",'6.1 H8, at the middle',src),S('land',f"straight {D['t']-D['cl']:.1f} from the face on the body, then 60° from the axis to Ø {2*(D['hb']+c):.2f} at the outer face",'0.4 -0.1',src)],src),
+         Drill((at[0],at[1],y0-0.01),(0,0,1),2*D['sp'],D['t']+0.02,'Drill the screw hole',[S('',f"Ø {2*D['sp']:.2f}",'1.85 -0.1, at the middle',src),S('place',f"{D['scr']['r']} from the centre, {D['scr']['off']} off the line along the stop bar's slot, away from the bar",'±0.05',src+'; 05 06 04-2')],src,key='scr'),
+         Cut(lambda:_sink(at,D['sk'],y0,D['sp'],y0+D['skd']),'Sink it 90° from the outer face',[S('sink',f"Ø {2*D['sk']:.2f}",'3.1 +0.1, at the middle',src)],src,at=at)]
+    ops[2].mz=y0+D['skd']+0.05   # measured under the sink
+    return Recipe('coverPlate','050600-4','Cover plate (Deckplatte)',src,'Bandstahl 24 × 1 (05 06 00-4)','none (05 06 00-4 gives none)',[Setup('1','strip in the chuck, turned and bored; the screw hole on the drill',ops)],UP(),
+      fits=["its hole 6.1 H8 on the arbor's step Ø 6.1 -0.05","held by one countersunk screw M1.7 (WN-20) in the fusee body"])
+
+def dustPlate():
+    X=WF();U=X['FU'];D=U['SP'];F=X['FA'];yT=F['yD']-F['len'];y1=yT-8-D['gap'];y0=y1-D['t'];src='05 06 00-1';yf=y0+D['recd']
+    sq=lambda d:(F['SQ0']-d/100)/math.sqrt(2)-D['cl']   # half the hole's diagonal d from the square's root: line to line with the square, 0.002 on its half-diagonal
+    prof=[(D['rec'],y0),(D['R'],y0),(D['R'],y1-D['ch']),(D['R']-D['ch'],y1),(0,y1),(0,yf),(D['rec'],yf)]
+    dF=(y1-yf)+D['gap']   # the recess's floor from the square's root (3): the drawing's 1:100 runs the hole from there
+    def hole():
+        e=0.02;return bd.Solid.make_loft([_square(sq(dF+e),yf-e),_square(sq(D['gap']-e),y1+e)])
+    ops=[Blank(8,y0-0.05,y1+0.05,'Cut the blank from Rundmessing 8',[S('length',f"{D['t']:.1f}",'3.1 -0.2, drawn 3.0',src)],src),
+         TurnProfile(prof,'Turn the outside, break the edge on the face toward the plates, turn the recess in the face toward the key',
+           [S('outside',f"Ø {2*D['R']:.2f}",'7.6 -0.1, at the middle',src),S('edge',f"{D['ch']} × 45°",'0.5 +0.2',src),S('recess',f"Ø {2*D['rec']:.2f} × {D['recd']}",'6.2 +0.1, at the middle',src)],src),
+         Cut(hole,'Broach the square hole, tapered 1:100 as the square',[S('square',f"3.1 □ H7 +0.012, Kegel 1:100: line to line with the square, {2*sq(D['gap']):.3f} across the corners at its face toward the plates ({D['gap']} from the square's root)",None,src+'; 05 06_1 ("1")')],src,at=(0,0))]
+    return Recipe('dustPlate','050600-1','Dust plate (Staubplatte)',src,'Rundmessing 8 (05 06 00-1)','none',[Setup('1','bar in the collet, turned and parted off; the square broached',ops)],UP(),
+      fits=["pressed down the square's 1:100 taper until it holds, its face 1 from the square's root"],
+      expect=[{'at':(0,0),'r':2.3,'max':0.006,'why':"the page's hole tapers from the square's size 3 from its root at the recess's mouth to 1 at the face (over 3 mm, 1:150), where the drawing's 1:100 runs from the recess's floor: 0.005 larger at the floor (a page fault, reported)"}])
+
+def vorreiber():
+    X=WF();U=X['FU'];V=U['VR'];F=X['FA'];P=[tuple(q) for q in X['VRprof']];src='05 06 00-2';a=U['PHI0']+V['hole']['a'];u=(math.cos(a),math.sin(a),0);y=U['VHF']-V['hole']['dy']
+    ops=[Blank(14,P[3][1]-0.05,P[-1][1]+0.05,'Cut the blank from Präz. Rundstahl 14',[S('length',f"{P[-1][1]-P[3][1]:.2f}","3.1 -0.2: face a re-turned at the fusee's assembly",src)],src),
+         TurnProfile(P,'Turn the flange, hub and bore; the recess in face a after it is re-turned at assembly',
+           [S('flange',f"Ø {2*V['rf']:.3f}",'14 d11, at the middle',src),S('hub',f"Ø {2*V['rh']:.2f}",'7.6 -0.2',src),S('bore',f"Ø {2*(V['rb0']-V['fit']):.3f} at the hub face, 1:70",'4.4 H7, fitted to the arbor\'s seat at assembly',src),
+            S('recess',f"Ø {2*V['r1']:.2f} × {V['rel']}",'9.9 +0.2 × 0.4 +0.05',src),S('chamfer',f"{V['ch']} × 45° on the flange's edge, the hub's side",'0.3 +0.1',src)],src),
+         Drill((-5*u[0],-5*u[1],y),u,2*F['VPR'],10,"Drill the pin's hole across the hub 0.8, then ream it taper with the arbor's at assembly",
+           [S('',f"Ø 0.8 drilled; reamed with the arbor to about Ø {2*F['VPR']:.2f} (a 1:50 reamer)",None,src+'; 05 06 04-1; 05 06_1'),S('place',f"{V['hole']['dy']} from the hub face",'±0.1',src)],src,key='pin')]
+    return Recipe('vorreiber','050600-2','Vorreiber',src,'Präz. Rundstahl 14 (05 06 00-2)','none',[Setup('1','bar in the chuck, turned and parted off; the hole on the drill, reamed at assembly',ops)],UP(),
+      fits=["its bore fitted to the arbor's 1:70 seat at assembly and pinned with the taper pin 05 06 00-5"])
+
+def clickWheel():
+    X=WF();U=X['FU'];C=U['CW'];z0=U['CW0'];t=U['CW1']-C['fl']-z0;src='05 06 04-3 (6.8.47)';rb=C['bore']/2
+    ops=[Plate(_poly(C['o']),t,'Cut the blank from Messingblech 2 (Ms 58 federhart), face it to 1.95 and cut the 35 teeth',
+           [S('thickness',f'{t:.2f}','2 -0.1',src),S('teeth',f"35; tips Ø {C['D']}, roots Ø {C['dg']}",'16.0 -0.05 and 14.5 -0.2, as drawn',src),S('faces',f"undercut {C['ang']}°, the tip overhanging its root",'scaled about 10° (sure)',src)],src),
+         Hole((0,0),C['bore'],'in',t,None,'Bore it',[S('',f"Ø {C['bore']}",'7.5 +0.05, at the middle',src)],src,key='bore'),
+         Cut(lambda:_sink((0,0),rb+C['ch'],0,rb,C['ch']),'Chamfer the bore on the face that lies on the recess floor',[S('chamfer',f"{C['ch']} × 45°",'0.3 +0.2, at the middle',src)],src,at=(0,0))]
+    for i,h in enumerate(C['holes']):
+        h=tuple(h);ops.append(Hole(h,2*C['h0'],'in',t,None,f'Drill screw hole {i+1}',[S('',f"Ø {2*C['h0']:.1f}",None,src),S('place',f"on Ø {2*C['pc']} at 120°, {C['a0']}° from the chain's pin",'Ø 11.5 ±0.05; the angle ±2° (05 06 04-2 C-D)',src)],src,key=f'h{i+1}'))
+        ops[-1].mz=0.02   # measured at the face on the recess floor, where the 1:8 opening is the drill's Ø 2
+        ops.append(Cut((lambda h=h:_sink(h,C['h1'],t,C['h0'],0)),f'Open hole {i+1} 1:8 toward the free face',[S('',f"to Ø {2*C['h1']:.2f} at the free face",None,src)],src,at=h))
+    return Recipe('clickWheel','050604-3','Click wheel (Schneckensperrrad)',src,'Messingblech 2, Ms 58 federhart (05 06 04-3)','none',[Setup('1','on the wheel-cutting engine; the holes on the drill',ops,view='top')],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,z0,0)),faces=('face on the recess floor','free face'),fits=["screwed to the fusee body's recess floor by three M2 (WN-19), their heads in the 1:8 openings"])
+
+def fuseeWheel():
+    X=WF();U=X['FU'];F=U['FW'];P=[tuple(q) for q in X['FWprof']];W_,WT,WL,WW,WTB=U['W'],U['WT'],U['WL'],U['WW'],U['WTB'];src='05 06 00-3';ro=F['teeth'][2]/2
+    env=[P[0],P[1],P[2],P[3],P[4],(F['web'],WW),(F['web'],WT),(F['lip'],WT),(F['lip'],WL),(ro+0.05,WL),(ro+0.05,W_),P[7],P[8],P[9],P[10]]
+    a=-math.pi/2-math.radians(F['pin']['a']);pw=(F['pin']['r']*math.cos(a),F['pin']['r']*math.sin(a))
+    ops=[Blank(2*ro+0.5,WTB-0.05,W_+0.05,'Cut the blank from Messingblech 5,5 (Ms 58 federhart)',[S('thickness',f'{W_-WTB:.1f} over the tube',None,src)],src),
+         TurnProfile(env,"Turn the hub, its tube, the web, the lip, the ledge and the rim; bore it; turn the underside's recess and its 60° mouth",
+           [S('tube',f"Ø {2*F['tube']:.2f}, {W_-WTB:.1f} from the underside",'6.5 g6 (05 06_1), 5 +0.2',src),S('bore',f"Ø {2*F['bore']:.2f}","estimated (README, Estimated): 0.04-0.06 clear on the arbor's 1:70 seat",src),
+            S('hub',f"Ø {2*F['hubD']:.1f} at the web, its face {WW-(W_-2.22):.2f} under the web's top, a 45° flank",'16.6 -0.2',src),S('web',f"{W_-WW:.2f} thick out to Ø {2*F['web']:.1f}",'1.22 -0.04; the recess 32.3 +0.05',src),
+            S('lip',f"Ø {2*F['web']:.1f} to {2*F['lip']:.1f}, {W_-WT:.2f} thick",'2.62 -0.04; 33.8 -0.2',src),S('rim and ledge',f"{W_-WL:.2f} thick",'0.2 +0.02 under the lip',src),
+            S('recess',f"Ø {2*F['rec']:.1f} × 1.3, its mouth 60° from the axis from Ø {2*F['RM']:.1f}",'14 +0.1 × 1.3 -0.1; 17 +0.2',src)],src),
+         CutLeaves(X['FWxy'],ro+0.2,WL,W_,"Cut the 90 teeth (a wheel cutter of the sheet's cycloidal form)",[S('teeth',f"z {F['teeth'][0]}, m {F['teeth'][1]}, tip Ø {F['teeth'][2]} (hobbed), root Ø {F['teeth'][3]}, tooth {F['teeth'][5]} on the pitch circle",None,src),S('form','cycloidal for the centre pinion of 14',None,'train.js teeth()')],src,z=F['teeth'][0]),
+         Drill((pw[0],pw[1],WW-0.01),(0,0,1),2*F['pin']['d'],W_-WW+0.02,"Drill and ream the maintaining spring's pin hole through the web",[S('',f"Ø {2*F['pin']['d']:.3f}",'1.2 H8, at the middle',src),S('place',f"r {F['pin']['r']} at {F['pin']['a']}° (05 06 01-1's angle)",'14.2 -0.02',src)],src,key='pin')]
+    return Recipe('fuseeWheel','050600-3','Fusee wheel (Schneckenrad)',src,'Messingblech 5,5 Ms 58 federhart (05 06 00-3)','gilt (Wempe 3955)',[Setup('1','in the chuck, turned and bored; the teeth on the wheel-cutting engine; the pin hole on the drill',ops)],UP(),
+      fits=["its tube 6.5 g6 in the maintaining ratchet's 6.5 H7","turning on the arbor's 1:70 seat, held from below by the Vorreiber"])
+
+def maintRatchet():
+    X=WF();U=X['FU'];R=U['MR'];G,GT,GP,GC=U['G'],U['GT'],U['GP'],U['GC'];src='05 06 02-1 (revised 11.3.48)';c0,c1,c2=R['cup']
+    bk=lambda ab:-math.pi/2-math.radians(ab)   # fusee.js's bk(ab, 0): an angle in a sheet seen from the back
+    sh=lambda r,a:(r*math.cos(a),r*math.sin(a))
+    ph=sh(R['pin']['r'],bk(0));ck=[sh(R['ck']['r'],bk(a)) for a in R['ck']['a']];spy=GP-R['rv']['dy'];th=iso(1.7)
+    def body():   # the teeth's plate GT..G, the cup's wall GC..G out to r c1 (its chamfer to c2), the floor GP..G inside the cup: one solid
+        from . import _rev
+        plate=bd.extrude(_poly(R['o'],GT),G-GT,dir=(0,0,1))
+        cup=_rev([(0,GC),(c1,GC),(c2,GC+(c2-c1)),(c2,G),(0,G)])
+        return plate+cup-_rev([(0,GC-0.1),(c0,GC-0.1),(c0,GP),(0,GP)])
+    ops=[Solid(body,'Turn the blank from Messingblech 3,5 (Ms 58 federhart): the plate, the cup and its floor; cut the 120 teeth',
+        [S('teeth',f"120; tips Ø {R['D']}, {R['dp']} deep, the steep faces toward the detent",'37.25 -0.1 (revised from 37.5), 0.7 +0.05',src),S('plate',f'{G-GT:.2f} at the teeth','1.02 -0.02',src),
+         S('cup',f"Ø {2*c1:.1f} outside, {2*c0:.2f} inside, {G-GC:.1f} over all, its floor {G-GP:.2f}",'26.1 -0.2, 24.45 +0.1, 3.1 -0.2, 1.3 -0.1',src),S('chamfer',f"{c2-c1:.1f} × 45° on the cup's outer top edge",'0.3 +0.15 (revision a)',src)],src),
+         Drill((0,0,GP-0.01),(0,0,1),2*R['bore'],G-GP+0.02,'Bore it',[S('',f"Ø {2*R['bore']:.4f}",'6.5 H7, at the middle',src)],src,key='bore'),
+         Drill((ph[0],ph[1],GP-0.01),(0,0,1),2*R['pin']['d'],G-GP+0.02,"Drill and ream the maintaining spring's eye pin hole",[S('',f"Ø {2*R['pin']['d']:.3f}",'1.2 H8',src),S('place',f"r {R['pin']['r']}, at 6 o'clock between the clicks",None,src)],src,key='pin')]
+    for i,c in enumerate(ck):ops.append(Drill((c[0],c[1],GP-0.01),(0,0,1),th['D1'],G-GP+0.02,f"Drill and tap M1.7 for click screw {i+1}",[S('',f"M1.7, tap drill Ø {th['D1']:.3f}",None,src),S('place',f"{2*R['ck']['r']:.3f} apart at 9 and 3 o'clock",'19.5 +0.05',src)],src,thread=th,key=f'ck{i+1}'))
+    for k,a in enumerate(R['rv']['a'][:2]):
+        aa=bk(a);u=(-math.cos(aa),-math.sin(aa),0);o=(R['rv']['at']*math.cos(aa),R['rv']['at']*math.sin(aa),spy)
+        ops.append(Drill(o,u,2*R['rv']['r'],2*R['rv']['at'],f"Drill the click springs' rivet holes across the cup ({a}° and {(a+180)%360}°)",[S('',f"Ø {2*R['rv']['r']:.1f}",None,src),S('place',f"{R['rv']['dy']} over the cup's floor, at {a}° and {(a+180)%360}° from 6 o'clock",None,src)],src,key=f'rv{k}'))
+    return Recipe('maintRatchet','050602-1','Maintaining ratchet (Gegensperrrad)',src,'Messingblech 3,5 Ms 58 federhart (05 06 02-1)','gilt (Wempe 3955)',[Setup('1','in the chuck: turned, bored, the teeth on the wheel-cutting engine; the holes on the drill',ops)],UP(),
+      fits=["its bore 6.5 H7 on the fusee wheel's tube 6.5 g6, turning","the clicks' screws M1.7 from under the plate"])
+
+def setupRatchet():
+    X=WF();U=X['FU'];R=U['SR'];B=X['BAR'];TT=-X['INNER']-X['TOP_T'];RS0=TT-R['BB']-R['gap'];RS1=RS0-R['t'];BSQ=B['BA1']-B['sq'];src='05 07 00-3 (revised 24.11.47)'
+    sq=lambda y:(R['sq']-(BSQ-y)*R['tp']+R['cl'])/math.sqrt(2)
+    def hole():
+        e=0.02;return bd.Solid.make_loft([_square(sq(RS1-e),RS1-e),_square(sq(RS0+e),RS0+e)])
+    ops=[Plate(_poly(R['o'],RS1),R['t'],'Cut the blank from Messingblech 3 (Ms 58), face it to 2.65 and cut the 16 teeth',
+           [S('thickness',f"{R['t']}",'2.65 -0.1, drawn 2.6',src),S('teeth',f"16; tips Ø {2*R['rt']:.1f}, roots Ø {2*R['rr']:.1f}; each face on a line {R['off']} off the radius; each back an arc r {R['RBK']} whose centre lies on the Ø 6.4 circle",'14.1 -0.2, 11.1 -0.2 (drawn 14.0, 11.0)',src)],src,spin=True),
+         Cut(hole,"Broach the square hole, tapered 1:100 as the arbor's square",[S('square',"2.7 H7, Kegel 1:100: line to line with the square, 0.002 over it across",None,src)],src,at=(0,0))]
+    r=Recipe('setupRatchet','050700-3','Set-up ratchet (Sperrad)',src,'Messingblech 3 Ms 58 (05 07 00-3)','gilt (Wempe 3955)',[Setup('1','on the wheel-cutting engine; the square broached',ops,view='top')],UP(),
+      fits=["pressed down the arbor's 1:100 square to 0.05 off the barrel bridge"],notes=["Turned on its square to where the click's beak lies against a face: the check fits that turn (the page's search against the frame's click)."])
+    r.free_spin=(2*math.pi/R['z'],2*R['sq']/math.sqrt(2));return r   # the teeth's period; the square hole (inside its own diagonal) stays on the arbor's square
+
+# ---------------- the barrel as last revised (05 07 01, 20.4.48): WD.BAR ----------------
+def _rect(a,r0,r1,w):
+    """fusee.js's rect() (a slot's outline along the plan angle a, from r0 to r1, w wide) in the part's (x, y): the page's plan [x, z] is (x, -y)"""
+    u=(math.cos(a),math.sin(a));v=(math.sin(a),-math.cos(a))
+    return [(u[0]*r+v[0]*t,u[1]*r+v[1]*t) for r,t in ((r0,w/2),(r1,w/2),(r1,-w/2),(r0,-w/2))]
+def _prism(L,z0,z1):return bd.extrude(_poly(L,z0),z1-z0,dir=(0,0,1))
+def _barrel():
+    X=WF();B=X['BAR'];BB=B['BB'];BR=BB-B['h'];BLT=BR;BLU=BLT+B['lu'];return X,B,B['dr'],BB,BLT,BLU,B['BLK']-math.pi/4
+def drum():
+    X,B,D,BB,BLT,BLU,LS=_barrel();P=[tuple(q) for q in X['DRUMprof']];src='05 07 01-1 (revised 11.3.48 and 20.4.48)';BLK=B['BLK'];yr=BB-D['rv']['y'];th=iso(2.6);C=D['cs']
+    u=(math.cos(BLK),math.sin(BLK),0);sl=_rect(LS,D['sl']['r0'],D['sl']['r1'],D['sl']['w'])
+    cs={'a':BLK-5*math.pi/4,'y':(BB+BLU)/2,'sb':1}   # the chain's slot: 225° behind the rivet hole (0207); its height and lean's sense where the laid chain's hook comes (the page's, set by page_params; the STEP's at the drum's middle)
+    def slot():
+        a,y,sb=cs['a'],cs['y'],cs['sb'];rh=(math.cos(a),math.sin(a));th_=(-math.sin(a),math.cos(a));d=((rh[0]-sb*th_[0])*math.sqrt(0.5),(rh[1]-sb*th_[1])*math.sqrt(0.5))
+        o=(C['rm']*rh[0]+C['from']*d[0],C['rm']*rh[1]+C['from']*d[1]);sw=C['w']*math.sqrt(0.5)
+        return bd.Box(8,2*sw,2*C['h'],align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.CENTER)).moved(bd.Location((o[0],o[1],y),(0,0,1),math.degrees(math.atan2(d[1],d[0]))))
+    BR=BLT;ops=[Blank(2*D['R']+0.5,BR-0.05,BB+0.05,'Draw the cup from brass (Ms) and turn it',[S('','drawn from a deep-drawn cup (R 05 07 01-1)',None,src)],src),
+         TurnProfile(P,"Turn the outside, the bottom with its boss, the bore and the lid's seat",
+           [S('outside',f"Ø {2*D['R']}",'41.6 -0.1, as drawn',src),S('inside',f"Ø {2*D['ri']}",'38.5 +0.1',src),S('height',f"{BB-BR:.2f}",'18.1 -0.15, drawn 18.08',src),
+            S('bottom',f"{B['bi']}, its boss's face {B['bf']} from the outside: the land Ø {2*D['land']}, 45° to the face Ø {2*D['boss']}",'1.25 -0.1; 3.1 -0.1',src),S('bore',f"Ø {2*D['bore']}",'4.5 +0.1, drawn 4.55',src),
+            S("lid's seat",f"{B['lu']} deep, Ø {2*D['seat']} at the rim to {2*D['seatU']} at its floor (5°)",'Ø 39.2 s6; 1.2 (bracketed by revision a)',src+'; 05 07 01-2'),S('edge',f"the bottom's outer edge broken {D['chY']}",None,src)],src),
+         Cut(lambda:_prism(sl,BB-D['sl']['d'],BB+0.01),"Mill the Steg's slot through the bottom at the wall",[S('slot',f"{D['sl']['w']} wide, from r {D['sl']['r0']} to {D['sl']['r1']}",'2 +0.05; 0.95 +0.15 from the bore; 0.8 +0.05 across (revision b)',src)],src,at=(0,0)),
+         Drill((D['rv']['from']*u[0],D['rv']['from']*u[1],yr),u,th['D1'],3,'Drill and tap M2.6 through the wall for the hook block',[S('',f"M2.6 at {D['rv']['y']} from the bottom's face, 45° from 9 o'clock",'9.05 ±0.05',src)],src,thread=th,key='rv'),
+         Cut(slot,"Cut the slot for the chain's hook through the wall, at the fusee's assembly where the laid chain's hook comes, 45° to the radius",
+           [S('slot',f"{2*C['w']} round the drum at the rim ({2*C['w']*math.sqrt(0.5):.2f} across), {2*C['h']} along the axis",'0207: 2,5 and 45°',"0207 (127-556.04 U24)"),S('place',"225° behind the hook block's rivet hole (0207), at the hook's height",None,'0207')],src)]
+    def pp(ud):
+        s=ud.get('slot_chain')
+        if s and len(s)>=5:cs.update(a=s[3],y=s[4],sb=s[2])
+    r=Recipe('drum','050701-1','Barrel drum (Federhaustrommel)',src,'Ms (brass), deep-drawn (05 07 01-1)','gilt (Wempe 3955)',[Setup('1','the drawn cup in the chuck, turned and bored; the slots and hole on the mill',ops)],UP(),
+      fits=['the lid sprung into its seat (Ø 39.2 s6)','its bosses running on the arbor\'s journals'],
+      expect=[{'at':(20.0*u[0],20.0*u[1]),'r':1.5,'max':0.3,'vol':math.pi*(1.32**2-(th['D1']/2)**2)*(D['R']-D['ri']),'why':"the hook block's M2.6 hole: the page draws it plain at the thread's size and 0.02 (Ø 2.64), the recipe at the tap drill (the threads' convention)"},
+              {'at':tuple((q1+q2)/2 for q1,q2 in zip(sl[0],sl[2])),'r':1.2,'max':0.36,'why':"the Steg's slot: the page's pocket runs 1.6 deep, through the bottom's 1.25 into the drum's hollow, and leaves its floor there as a stray face 0.35 under the bottom (facePocket; a page fault, reported)"}])
+    r.page_params=pp;return r
+def lid():
+    X,B,D,BB,BLT,BLU,LS=_barrel();P=[tuple(q) for q in X['LIDprof']];L=B['lid'];src='05 07 01-2 (revised 20.4.48)';e=0.01
+    ops=[Blank(2*D['seatU']+0.5,BLT-0.05,BLT+B['lf']+0.05,'Cut the blank from Ms 58 and turn it',[S('','',None,src)],src),
+         TurnProfile(P,"Turn the edge to the seat's 5°, the boss and the bore",
+           [S('thickness',f"{B['lu']:.1f}",'1.3 -0.1 at its least, its face flush with the rim',src+'; 05 07 01'),S('edge',f"5°: Ø {2*D['seat']} at its face to Ø {2*D['seatU']} at its underside",'sprung into the seat Ø 39.2 s6',src),
+            S('boss',f"{B['lf']} from its face: the face Ø {2*D['boss']}, 45° to Ø {2*D['land']}",'3.3 -0.1',src),S('bore',f"Ø {2*D['bore']}",None,src)],src),
+         Cut(lambda:_prism(_rect(LS,L['no']['r0'],23,L['no']['w']),BLT-e,BLU+e),"Mill the Steg's notch at 9 o'clock",[S('notch',f"{L['no']['w']} wide to r {L['no']['r0']}",'2 +0.05; 18.3 ±0.02',src)],src,at=(0,0)),
+         Cut(lambda:_prism(_rect(LS+math.pi,D['seatU']-L['pr']['dr'],23,L['pr']['w']),BLT-e,BLU+e),'Mill the prising notch at 3 o\'clock',[S('notch',f"{L['pr']['w']} wide, {L['pr']['dr']} deep from its Ø {2*D['seatU']}",'2.7 +0.1 × 2 +0.2',src)],src,at=(0,0))]
+    return Recipe('lid','050701-2','Barrel lid (Federhausdeckel)',src,'Ms 58 (05 07 01-2)','gilt (Wempe 3955)',[Setup('1','in the chuck, turned and bored; the notches on the mill',ops)],UP(),fits=['sprung into the drum\'s seat ("eingesprengt")'])
+def steg():
+    X,B,D,BB,BLT,BLU,LS=_barrel();G=B['steg'];src="05 07 00-1 (0207's part 106; 05 07 01-1's slot, 05 07 01-2's notch)"
+    ops=[Plate(_poly(_rect(LS,G['r0'],G['r1'],2*G['w']),BLT),BB-BLT,'Cut the strip to length',[S('section',f"{2*G['w']:.0f} × {G['r1']-G['r0']:.1f}",'0207: 2 and 0,5',src),S('length',f"{BB-BLT:.2f}, its ends flush with the bottom's and the lid's outer faces",'0207 (likely)',src)],src)]
+    return Recipe('steg','050700-1','Steg (spring brace)',src,'steel strip (0207 colours it steel)','none given',[Setup('1','strip cut to length',ops,view='top')],UP(),
+      fits=["its ends in the bottom's slot and the lid's 9 o'clock notch, its inner face on the notch's bottom"])
+def hookBlock():
+    X,B,D,BB,BLT,BLU,LS=_barrel();K=B['hook'];src='05 07 01-3 (05 07 01-1, 0207)';BLK=B['BLK'];yb=BB-D['rv']['y'];th=iso(2.6);ri=D['ri'];ro=ri-K['d']
+    a0=BLK-K['b0']/ri;a1=BLK+K['b1']/ri;u=(math.cos(BLK),math.sin(BLK),0);V=lambda r,a:bd.Vector(r*math.cos(a),r*math.sin(a),yb-K['h'])
+    w=bd.Wire([bd.Edge.make_three_point_arc(V(ri,a0),V(ri,(a0+a1)/2),V(ri,a1)),bd.Edge.make_line(V(ri,a1),V(ro,a1)),bd.Edge.make_three_point_arc(V(ro,a1),V(ro,(a0+a1)/2),V(ro,a0)),bd.Edge.make_line(V(ro,a0),V(ri,a0))])
+    ops=[Plate(bd.Face(w),2*K['h'],'Cut the block from steel and turn its outer face to the bore\'s radius, its inner face concentric',
+           [S('size',f"{K['b0']+K['b1']:.0f} round the bore, {K['d']} deep, {2*K['h']:.2f} high",'0207: "6"; 05 07 01: 0.5; 3.05 -0.1',src),S('place',f"its middle {D['rv']['y']} from the bottom's face; the hole {K['b1']} from its far end",'0207 (likely ±0.5)',src)],src),
+         Drill((K['from']*u[0],K['from']*u[1],yb),u,th['D1'],4,'Drill and tap M2.6 through it',[S('','M2.6, on the drum\'s hole',None,'05 07 01-1')],src,thread=th,key='rv')]
+    r=Recipe('hookBlock','050701-3','Hook block (Federhaushaken)',src,'steel (0207)','none given',[Setup('1','on the mill',ops,view='top')],UP(),
+      fits=["screwed (riveted on the first drawing) inside the drum's wall by an M2.6 through it, its face concentric with the bore"],
+      expect=[{'at':(19.0*u[0],19.0*u[1]),'r':1.5,'max':0.3,'vol':math.pi*(1.32**2-(th['D1']/2)**2)*K['d'],'why':"its M2.6 hole: the page draws it plain at the thread's size and 0.02 (Ø 2.64), the recipe at the tap drill (the threads' convention)"}])
+    r.root_only=True;return r
+
+# ---------------- batch 9c: the clicks, the stop bar, the maintaining detent (WD.FU.CK, SB, DT); the springs' strip and wire bought ----------------
+def _arc3(c,r,a0,a1,P,p0=None,p1=None):
+    """an exact arc about c from angle a0 to a1 (the sheet's frame), each point put through P into the part's frame; p0, p1 its ends where the page's construction
+    puts them a few µm off the circle (the shared corner with the next edge: the arc then through them and its own middle)"""
+    q=lambda a:P((c[0]+r*math.cos(a),c[1]+r*math.sin(a)));A=P(p0) if p0 else q(a0);B=P(p1) if p1 else q(a1)
+    return bd.Edge.make_three_point_arc(bd.Vector(*A,0),bd.Vector(*q((a0+a1)/2),0),bd.Vector(*B,0))
+def _line(p,q,P):return bd.Edge.make_line(bd.Vector(*P(p),0),bd.Vector(*P(q),0))
+def _ang(c,p):return math.atan2(p[1]-c[1],p[0]-c[0])
+def _chain(E):
+    """a closed wire from edges in order, a straight bridge where one ends a few µm from the next's start (the page's arcs drawn from points a hair off their circles: the click's boss, 0.004; the detent's, 0.005)"""
+    o=[]
+    for i,e in enumerate(E):
+        o.append(e);f=E[(i+1)%len(E)];a,b=e.position_at(1),f.position_at(0)
+        if (a-b).length>1e-7:o.append(bd.Edge.make_line(a,b))
+    return bd.Wire(o)
+def clicks():
+    X=WF();U=X['FU'];C=U['CK'];GP=U['GP'];t=C['t'];H=C['hole'];src='05 06 02-3';P=lambda q:(q[0],-q[1])   # the sheet's (x, y) mirrored (seen from the back)
+    N,T,TC,T1,BB,q8=C['N'],C['T'],C['TC'],C['T1'],C['BB'],C['q8'];b0=(TC[0],C['B'])
+    w=_chain([_line(b0,C['h0'],P),_arc3(C['C3'],C['r3'],_ang(C['C3'],C['h0']),_ang(C['C3'],N),P),_line(N,T,P),_arc3(q8,C['r8'],_ang(q8,T),_ang(q8,BB),P),
+               _arc3((0,0),C['rb'],_ang((0,0),BB),C['TB'],P,p0=BB),_line((C['rb']*math.cos(C['TB']),C['rb']*math.sin(C['TB'])),T1,P),_arc3(TC,C['rt'],C['TB'],-math.pi/2,P)])
+    ops=[Plate(bd.Face(w).moved(bd.Location((0,0,GP-t))),t,'Cut the click from Bandstahl 11 × 2 and grind it to 1.82; mill its outline',
+           [S('thickness',f'{t}','1.82 -0.04',src),S('length',"10.01 over all",'10.05 -0.1',src),S('nose',f"2 high, its face at 85° to the base line, its foot 5.2 from the hole",'5.2 -0.1',src),
+            S('base line',f"{-C['B']} under the hole, tangent to the boss Ø {2*C['rb']}",None,src),S('hollow',f"r {C['r3']} about ({C['C3'][0]}, {C['C3'][1]}) from the hole",None,src),S('back',f"r {C['r8']}",None,src),S('tail',f"its top edge tangent to the boss, rounded r {C['rt']}",'scaled',src)],src),
+         Drill((0,0,GP-t-0.01),(0,0,1),2*H['r'],t+0.02,'Drill and ream the pivot hole',[S('',f"Ø {2*H['r']:.3f}",'1.2 H7',src)],src,key='pivot'),
+         Cut(lambda:_sink((0,0),H['cr'],GP-t,H['r'],GP-t+H['cd']),'Open it to Ø 2.2 on the face on the cup\'s floor',[S('',f"Ø {2*H['cr']:.1f}, {H['cd']} deep",'scaled on the edge view (likely)',src)],src,at=(0,0)),
+         Cut(lambda:_sink((0,0),H['sr'],GP,H['r'],GP-H['sd']),'Sink it 45° to Ø 1.7 on the free face',[S('',f"Ø {2*H['sr']:.1f}, {H['sd']} deep",'scaled (likely)',src)],src,at=(0,0))]
+    ops[1].mz=GP-t+H['cd']+0.3
+    return Recipe('clicks','050602-3','Maintaining click (Sperrkegel), two alike',src,'Bandstahl 11 × 2 (05 06 02-3)','hardened, blued at 295° (05 06 02-3)',[Setup('1','strip on the mill, then ground; hardened and blued',ops,view='top')],UP(),
+      fits=["its hole 1.2 H7 turning on its screw's shoulder Ø 1.19 (WN-21)"],notes=['Two are made alike; on the ratchet each lies mirrored from its sheet (the sheet is seen from the fusee\'s small end).'])
+def stopBar():
+    X=WF();U=X['FU'];B=U['SB'];S0=U['S'];src='05 06 03-1 (no sheet: 05 06_4 Schnitt C-D, traced, and the coloured section)';P=lambda q:(q[0],-q[1])   # the bar's (u, v) mirrored, as fusee.js has it
+    c=(B['lo']+B['rt'],B['N']+B['rt']);cu=(B['ru'],B['N']+B['rr']);e=math.asin((B['N']+B['rr']-B['F'])/B['rr']);d=math.radians
+    pA=(c[0]+B['rt']*math.cos(d(150)),c[1]+B['rt']*math.sin(d(150)));pB=(c[0],c[1]-B['rt']);pE=(cu[0]+B['rr']*math.cos(-e),B['F'])
+    w=bd.Wire([_arc3(c,B['rt'],d(150),d(270),P),_line(pB,(B['ru'],B['N']),P),_arc3(cu,B['rr'],-math.pi/2,-e,P),_line(pE,(B['lf'],B['F']),P),_line((B['lf'],B['F']),pA,P)])
+    ops=[Plate(bd.Face(w).moved(bd.Location((0,0,S0))),B['t'],'Cut the bar from steel strip 1.45 thick and mill its outline',
+           [S('thickness',f"{B['t']}",'the coloured section',src),S('width',f"{B['F']-B['N']:.2f}, a sliding fit in the slot's 2 H8",'estimated (g6 class)',src),S('length',f"{B['hi']-B['lo']:.2f}",'22.5, scaled',src),
+            S('ends',f"the lower end's point rounded r {B['rt']}, its upper end's near side rounded r {B['rr']}",'traced on 05 06_4 C-D (12.2 px/mm, scaled 0.989)',src)],src),
+         Cut(lambda:bd.Box(30,30,1,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((B['ub'],0,S0+B['tt']))),'Mill its upper end thinner',[S('',f"{B['tt']} thick from {B['ub']} toward its upper end",'the coloured section 0.70 of its middle (estimated)',src)],src),
+         Drill((B['sp'],-B['pin']['z'],S0+B['pin']['dy']),(0,-1,0),2*B['pin']['r'],4,"Drill its pin's hole across it",[S('',f"Ø {2*B['pin']['r']}",'for the pin 05 06 03-2, pressed',src),S('place',f"{-B['sp']} from the foot of the axis's perpendicular, {B['pin']['dy']} off its face",'05 06_4 C-D (likely ±0.1)',src)],src,key='pin')]
+    return Recipe('stopBar','050603-1','Stop bar (Stellungssteg)',src,'steel (the coloured section)','hardened (as a stop: estimated)',[Setup('1','strip on the mill',ops,view='top')],UP(),
+      fits=["sliding in the fusee's slot 2 H8, its spring 05 06 03-3 holding it out"])
+def maintDetent():
+    X=WF();U=X['FU'];D=U['DT'];DTU,DTL,DTT=U['DTU'],U['DTL'],U['DTT'];src='05 05 05-1 (05 05_12)';A=D['A'];h=D['hole']
+    def P(q):x,y=-q[0],q[1];return (x*math.cos(A)-y*math.sin(A),x*math.sin(A)+y*math.cos(A))   # mirrored and turned onto the fusee, as fusee.js's DTX
+    E,E1,C9,C18,h0=D['E'],D['E1'],D['C9'],D['C18'],D['h0']
+    w=_chain([_arc3(C9,D['r9'],_ang(C9,h0),_ang(C9,E),P,p0=h0,p1=E),_line(E,E1,P),_arc3(C18,D['r18'],_ang(C18,E1),_ang(C18,(0,2.5)),P),_arc3((0,0),D['rb'],math.pi/2,2*math.pi+math.atan2(h0[1],h0[0]),P,p1=h0)])
+    SA=D['SA'];SD=(-math.cos(math.radians(D['sa'])),-math.sin(math.radians(D['sa'])));Sq=(SA[0]-C9[0],SA[1]-C9[1]);Sb=Sq[0]*SD[0]+Sq[1]*SD[1];St=-Sb-math.sqrt(Sb*Sb-(Sq[0]**2+Sq[1]**2-D['r9']**2))
+    S1=P(SA);S2=P((SA[0]+St*SD[0],SA[1]+St*SD[1]))
+    def thin():   # the half-plane beyond the step line, away from the hole, from the tip's lower face DTT to the lower face
+        dx,dy=S2[0]-S1[0],S2[1]-S1[1];L=math.hypot(dx,dy);n=(-dy/L,dx/L);sg=1 if n[0]*(0-S1[0])+n[1]*(0-S1[1])<0 else -1;n=(sg*n[0],sg*n[1])   # n away from the hole
+        m=((S1[0]+S2[0])/2,(S1[1]+S2[1])/2)
+        return bd.Box(60,60,DTL-DTT+0.02,align=(bd.Align.CENTER,bd.Align.MIN,bd.Align.MIN)).moved(bd.Location((m[0],m[1],DTT),(0,0,1),math.degrees(math.atan2(n[1],n[0]))-90))
+    ops=[Plate(bd.Face(w).moved(bd.Location((0,0,DTU))),DTL-DTU,'Cut the click from Bandstahl 2,25 × 18, face it to 2 and mill its outline',
+           [S('thickness',f'{DTL-DTU:.0f}',None,src),S('back',f"r {D['r18']}",None,src),S('hollow',f"r {D['r9']} about ({C9[0]}, {C9[1]}) from the hole, tangent to the boss Ø {2*D['rb']}",None,src),
+            S('tip',"its lower corner on r 12 about the hole, its end 2.6 tall at 80°, leaning back",'r 12 ±0.1; "2,6", "80°" (sure)',src)],src),
+         Cut(thin,'Mill the tip thin from the step: 1 thick at the upper face',[S('tip','1 -0.03 thick',None,src),S('step',f"from the back {SA[0]} from the hole at {D['sa']}° to the line through the boss's underside, down to the hollow",'"8,6", "150°"',src)],src),
+         Cut(lambda:_rev_at((0,0),[(0,DTU-0.01),(h['r']-0.01/h['tp'],DTU-0.01),(h['r']+(DTL-DTU+0.01)/h['tp'],DTL+0.01),(0,DTL+0.01)]),'Drill and ream the hole 1:70',[S('',f"Ø {2*h['r']} at its upper face, opening 1:70 toward the arbor's lower shoulder",'2.25 H7, Kegel 1:70',src)],src,at=(0,0))]
+    return Recipe('maintDetent','050505-1','Maintaining detent (Gegensperrkegel)',src,'Bandstahl 2,25 × 18 (05 05 05-1)','hardened in oil, light blue at 310°, round the hole 400° (05 05 05-1)',[Setup('1','strip on the mill; hardened and blued',ops,view='top')],UP(),
+      fits=["staked on its arbor 05 05 05-2's 1:70 seat, 6.3 ±0.1 from the arbor's lower shoulder to its upper face"])
+def springsBought():
+    return [Bought('clickSpringStrip','050602-2',"Click springs' strip (Sperrfeder), two",'phosphor-bronze spring strip, cut 27.0 long, two holes Ø 0.6 +0.02 (the end\'s 5 from the next), formed round two Ø 2.2 formers into its S (05 06 02-2)',
+              '1.5 × 0.4, 27.0 stretched ("gestreckt 27,0")','bronze spring strip (Bronzeband federhart)','bronze, spring hard','05 06 02-2',
+              notes=["Bought as strip and formed at the bench: its sprung shape follows its click on the page, so it has no recipe of its own (as the detent, step 7b, a frozen pose would be needed to check one)."]),
+            Bought('stopBarSpringStrip','050603-3',"Stop bar's spring strip (Stegfeder)",'hardened steel spring strip, a hole Ø 0.54 for its pin, formed to the recess\'s wall and round the bar (05 06_4 C-D)',
+              '1.0 × 0.10, about 31 long (05 06_4 C-D draws it 30.8-32.1)','hardened strip steel','spring steel, blued','fusee.js (no sheet: the coloured section names it; its section a design value)',
+              notes=["Its sprung shape follows the bar's slide on the page, so it has no recipe of its own."]),
+            Bought('detentWire','050506-1',"Maintaining detent's wire spring (Feder)",'steel spring wire, cut to length, its end held in its stud\'s axial hole 1.5 deep',
+              'Ø 0.25, about 18.3 long (from 1.5 in the stud to 1.8 over the pillar plate)','music wire (DIN EN 10270-1)','spring steel','fusee.js (no sheet: scaled on the photographs and the coloured section, likely)',
+              notes=["Bent by the detent on the page as it rides, so it has no recipe of its own."]),
+            Bought('vorreiberPin','050600-5','Vorreiber pin (Vorreiberstift)','taper pin, driven home in the hole reamed through the Vorreiber\'s hub and the arbor together','Ø 1.16 at its middle, 8.3 long, its ends rounded r 0.25','DIN 1 (ISO 2339) taper pin 1:50, cut and rounded','steel','fusee.js (05 06 00-2, 05 06 04-1, 05 06_1: estimated)'),
+            Bought('chainPin','050600-6',"Chain's pin (Kettenstift)",'pin, pressed across the flange\'s two ribs','Ø 0.567 (a press in the 0.55 +0.01 hole)','silver steel Ø 0.57, ground','steel','fusee.js (the hole 05 06 04-2; the pin\'s figure not in the set: estimated)'),
+            Bought('maintSpringPins','050600-8',"Maintaining spring's pins (Stellstift f. Gegenfeder), two",'pins, pressed in the spring\'s holes, standing 1.2 out','Ø 1.2 (020605: 1.25)','dowel pin ISO 8734, or silver steel Ø 1.2','steel','020605; 05 06_4 A-B'),
+            Bought('clickSpringRivets','050602-4',"Click springs' rivets (Niet), four",'rivets through the spring and the cup\'s wall, a domed head each side','Ø 0.6 shank, heads Ø 1.0 × 0.2','brass rivet wire Ø 0.6, headed at the bench','brass','05 06 02 (heads not sized: estimated)'),
+            Bought('stopBarPin','050603-2',"Stop bar's pin (Stift)",'pin, pressed across the bar, standing 0.9 out of its near side','Ø 0.5 × 2.9','silver steel Ø 0.5, or a dowel pin ISO 8734','steel','05 06_4 C-D (12.2 px/mm, likely)'),
+            Bought('stopSpringPin','050604-4',"Stop bar spring's pin (Stift)",'pin, pressed in the small end\'s 0,5 H7 hole, through the spring','Ø 0.5 +0.022/+0.015','silver steel Ø 0.52, ground, or a dowel pin','steel','05 06 04 (item 5), 05 06 04-2'),
+            Bought('stopPin','050801-5','Stop pin (Anschlagstift)','pin, pressed in the top plate\'s hole 7, flush with its outer face, its inner end domed','Ø 1.615 × 1.85 (1.6 straight, a 0.25 dome)','silver steel Ø 1.6, ground; or a dowel pin ISO 8734 Ø 1.6 m6','steel','05 08 01 (hole reamed 1,6 +0,009); the coloured section (scaled)')]
+
 def secondsArbor():return trainArbor('sw','secondsArbor','050501-2','Seconds pinion and arbor (Sekundentrieb)','05 05 01-2 (kompl. 05 05 01, revised 24.3.48)',3.5,'Präz. Rundstahl 3,5','not given on the sheet',"z 10 from the centre distance (confirmed); tip and root by 05 04_8's proportions (likely)")
 
 RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
   'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
   'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew,
-  'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel,'fuseeArbor':fuseeArbor,'barrelArbor':barrelArbor}
+  'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel,'fuseeArbor':fuseeArbor,'barrelArbor':barrelArbor,
+  'coverPlate':coverPlate,'dustPlate':dustPlate,'vorreiber':vorreiber,'clickWheel':clickWheel,'fuseeWheel':fuseeWheel,'maintRatchet':maintRatchet,'setupRatchet':setupRatchet,
+  'drum':drum,'lid':lid,'steg':steg,'hookBlock':hookBlock,
+  'clicks':clicks,'stopBar':stopBar,'maintDetent':maintDetent}
 for _h,_k,*_r in SMALL:RECIPES[_k]=(lambda h=_h,k=_k,r=tuple(_r):smallTurned(h,k,*r))
-for _b in pinsBought():RECIPES[_b.key]=(lambda b=_b:b)
+for _b in pinsBought()+springsBought():RECIPES[_b.key]=(lambda b=_b:b)

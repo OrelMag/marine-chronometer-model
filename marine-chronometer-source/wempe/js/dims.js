@@ -26,7 +26,108 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
   /* the pillars' fits as the sheets give them, [nominal, lower, upper limit] (mm): the spigots Ø 4.5 f7 (05 08 00-1: -0.010/-0.022, ISO 286's f7 at 4.5) and the plates' holes reamed
      4.50 +0.012 (05 09 01, 05 08 02-1, nos. 11, 39, 49); the model draws each at the middle of its limits (sr, PIL_HOLE) */
   const PSF=[4.5,-0.022,-0.010],PHF=[4.5,0,0.012],mid=(/** @type {number[]} */f)=>f[0]+(f[1]+f[2])/2;
-  return{H,NO,
+  /* the fusee arbor (05 06 04-1) and the barrel arbor (05 07 02-1) with the barrel's heights they turn between (fusee.js's comments give each figure's source), here so
+     the recipes read them (29 October 2026); fusee.js reads them too. FA: its shoulders (yD, 19.7 apart), the winding square across the flats at its root (3,1 r6, 1:100),
+     the Vorreiber pin's holes (Ø 1.15), the square's 28.3 to the tip and its point's 38.7° half-angle, the cross hole 2 from the dial-side shoulder at the pin's turn;
+     prof() the arbor's turned profile [r, y]. BAR: the barrel's bottom face, rim height, bottom's inner face, its boss's face, the lid's, the arbor's shoulders and
+     its core's ends 0.05 off the bosses; the square 2.93 past the upper journal, 2.7 tapering to 2.605 over 9.5, its point to 0.3 over 0.5; prof() and bal() */
+  const FA=(()=>{const F={yD:-0.025,len:19.7,SQ0:3.12,VPR:0.575,LS:28.3,ang:38.7,hole:{dy:2,a:0.9,from:-3}};
+    F.prof=()=>{const yT=F.yD-F.len,rS=yT+19.7,rU=(/** @type {number} */y)=>0.8375+((rS+6.5+9.85)/2-y)/140;
+      return[[0,yT-8],[2.195,yT-8],[2.25,yT],[3.05,yT],[3.05,yT+3.1],[3.52,yT+3.1],[3.52,yT+11.0],[2.25,yT+11.0],[2.19,rS],[1.4,rS],[1.3536,rS+6.5],[rU(rS+6.5),rS+6.5],[rU(9.85),9.85],[0.6,10.1],[0,10.1]];};
+    return F;})(),BAR=(()=>{const B={BB:-3.65,h:18.08,bi:1.25,bf:3.1,lu:1.2,lf:3.3,BA0:-0.03,BA1:-22.32,e:0.05,sq:2.93,sqr:{a:2.7,b:2.605,L:9.5,tip:0.3,tl:0.5}};
+    B.bal=()=>{const o=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;o.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}return o;};
+    B.prof=()=>{const BB=B.BB,BR=BB-B.h,BBF=BB-B.bf,BLT=BR,BLF=BLT+B.lf,BA0=B.BA0,BA1=B.BA1,BC0=BBF-B.e,BC1=BLF+B.e,BSQ=BA1-B.sq;
+      return[[0,BSQ],[1.94,BSQ],[1.94,BA1],[2.24,BA1],[2.24,BC1],[5.0,BC1],[6.65,BC1+1.65],[6.65,BC0-1.65],[5.0,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...B.bal()];};
+    /* the barrel as last revised (05 07 01, 20.4.48), lifted from fusee.js for the recipes (29 October 2026; fusee.js reads them, its comments give each figure's source):
+       BLK the hook block's rivet hole's angle in the drum (the chain's slot + 5π/4, 0207); dr the drum 05 07 01-1 (outside R, its bottom's edge broken to Rb, chY high; the
+       lid's seat from seat at the rim to seatU at the lid's underside; the bore, the boss's face and land, the wall's inside ri; sl the Steg's slot through the bottom, rv
+       the hook block's M2.6 hole, y from the bottom's face, cs the chain's slot, its middle rm, w round the drum, h half its height, from where along its lean it starts);
+       lid 05 07 01-2 (no its 9 o'clock notch, pr the prising notch opposite, e past the lid); steg 05 07 00-1 (r0 to r1, w half its width); hook 05 07 01-3 (b0 back
+       toward the Steg and b1 on from the rivet hole, round the bore; d deep, h half its height, its hole from r from); drum() and lid() the turned profiles [r, y] */
+    B.BLK=3.585;B.dr={R:20.8,Rb:20.6,chY:0.2,seat:19.6,seatU:19.695,bore:2.275,boss:4.0,land:6.0,ri:19.25,sl:{r0:18.3,r1:19.1,w:2.025,d:1.6},rv:{y:9.05,r:1.32,from:18.6},cs:{rm:20.0,w:1.25,h:0.425,from:-1.6}};
+    B.lid={no:{r0:18.3,w:2.025},pr:{dr:2.1,w:2.75},e:0.1};B.steg={r0:18.3,r1:18.8,w:1.0};B.hook={b0:4.6,b1:1.4,d:0.5,h:1.525,from:17};
+    B.drum=()=>{const D=B.dr,BB=B.BB,BR=BB-B.h,BI=BB-B.bi,BBF=BB-B.bf,BLT=BR,BLU=BLT+B.lu;
+      return[[D.seat,BR],[D.R,BR],[D.R,BB-D.chY],[D.Rb,BB],[D.bore,BB],[D.bore,BBF],[D.boss,BBF],[D.land,BI],[D.ri,BI],[D.ri,BLU],[D.seatU,BLU]];};
+    B.lidP=()=>{const D=B.dr,BB=B.BB,BR=BB-B.h,BLT=BR,BLU=BLT+B.lu,BLF=BLT+B.lf;
+      return[[D.bore,BLT],[D.seat,BLT],[D.seatU,BLU],[D.land,BLU],[D.boss,BLF],[D.bore,BLF]];};
+    return B;})();
+  /* the fusee's and the barrel's other made parts (05 06, 05 07), lifted from fusee.js for the recipes (29 October 2026; fusee.js reads them, its comments give each
+     figure's source), written with fusee.js's own expressions in its order: the stack along the fusee arbor (the Vorreiber's hub face VHF, its face a VFA and flange VFB;
+     the fusee wheel W..WTB; the maintaining spring GS0, GS1; the maintaining ratchet G..GC; the body's large end F, its re-turn RT, the blank's face F0, its length LB, the
+     small end S, the recess floor FRC; the click wheel CW0, CW1; the cover plate DP0; the stop bar's slot SLD; the maintaining detent DTU, DTL, DTT); the chain's pin's
+     angle PINA (the stop bar's line) and radius PINR; sh (a shape's point at r, a) and ratchet() (fusee.js's); then each part's sizes: DP the cover plate 05 06 00-4, SP
+     the dust plate 05 06 00-1, VR the Vorreiber 05 06 00-2, CW the click wheel 05 06 04-3, FW the fusee wheel 05 06 00-3, MR the maintaining ratchet 05 06 02-1, SR the
+     set-up ratchet 05 07 00-3 */
+  const FU=(()=>{const yD=FA.yD,sh=(/** @type {number} */r,/** @type {number} */a)=>[r*Math.cos(a),r*Math.sin(a)];
+    const VHF=yD-0.9,VFA=VHF-2.76,VFB=VHF-1.9;
+    const W=VFA+1.3,WT=W-2.62,WW=W-1.22,WL=W-2.42,WTB=W-5.0;
+    const MSt=1.3,GS0=WW,GS1=WW-MSt;   /* the maintaining spring's thickness (05 06 01-1), read by tools/wempe_sustaining.js */
+    const G=WT-0.05,GT=G-1.02,GP=G-1.3,GC=G-3.1;
+    const F=GT-0.05,RT=0.2,F0=F+RT,LB=12.55,S=F0-LB,FRC=F0-2.7;
+    const CW0=FRC,CW1=FRC+2;
+    const DP={t:0.8,R:21.05/2,ch:0.65,hb:6.109/2,cl:0.4,ca:60,sp:0.9,sk:1.575,skd:0.7,scr:{r:6,off:1},at:[0,0]};
+    const DP0=S-DP.t;
+    const SLD=1.5;
+    const DTU=yD-6.2,DTL=DTU+2,DTT=DTU+1;
+    const PHI0=0,PINA=PHI0-0.17,PINR=16.8;
+    DP.at=sh(DP.scr.r,PINA+Math.asin(DP.scr.off/DP.scr.r));
+    /* a ratchet's outline (fusee.js's, its comment there) */
+    function ratchet(/** @type {number} */z,/** @type {number} */rt,/** @type {number} */rr,/** @type {number} */dir,lean=0,nb=6){const P=TAU/z,o=[];
+      for(let k=0;k<z;k++){const a=k*P;
+        if(dir>0){o.push(sh(rt,a));for(let i=1;i<=nb;i++){const f=i/nb,b=a+P*f;o.push(sh(rt+(rr-rt)*f,b-(i===nb?Math.max(0.004,lean):0)));}}
+        else{o.push(sh(rr,a+lean));for(let i=1;i<=nb;i++){const f=i/nb;o.push(sh(rr+(rt-rr)*f,a+lean+(P-lean)*f));}}}
+      return o;}
+    const SP={gap:1.0,t:3.0,R:7.55/2,ch:0.5,rec:3.125,recd:1.0,cl:0.002,d:[3.0,1.0]};
+    const VR={rb0:2.19,tp:0.06/8.7,fit:0.007,rel:0.425,r1:4.975,rf:6.9475,ch:0.35,rh:3.75,hole:{dy:1.1,a:0.9,from:-5},
+      prof:()=>{const rb=(/** @type {number} */y)=>VR.rb0+(yD-y)*VR.tp-VR.fit;
+        return[[rb(VFA+VR.rel),VFA+VR.rel],[VR.r1,VFA+VR.rel],[VR.r1,VFA],[VR.rf,VFA],[VR.rf,VFB-VR.ch],[VR.rf-VR.ch,VFB],[VR.rh,VFB],[VR.rh,VHF],[rb(VHF),VHF]];}};
+    const CW={z:35,D:15.99,dg:14.4,ang:8,nb:5,bore:7.525,ch:0.4,fl:0.05,h0:1.0,h1:1.125,pc:5.75,a0:74,o:/** @type {number[][]} */([]),holes:/** @type {number[][]} */([])};
+    CW.o=ratchet(CW.z,CW.D/2,CW.dg/2,-1,-(CW.D-CW.dg)/2*Math.tan(CW.ang*D2R)/(CW.dg/2),CW.nb);
+    CW.holes=[0,1,2].map(k=>sh(CW.pc,PINA+CW.a0*D2R+k*TAU/3));
+    const FW={RM:17.1/2,RH:8.65,ca:60,bore:2.275,tube:3.245,hubR:7.3,hubD:8.3,rec:7.0,web:16.15,lip:16.9,pin:{r:14.2,a:295,d:0.6035},teeth:[90,0.4356,40.57,37.84,14,0.64],
+      prof:()=>{const ch=(/** @type {number} */r)=>W-(FW.RM-r)/Math.tan(FW.ca*D2R);
+        return[[FW.bore,WTB],[FW.tube,WTB],[FW.tube,W-2.22],[FW.hubR,W-2.22],[FW.hubD,WW],[FW.RH,WW],[FW.RH,W],[FW.RM,W],[FW.rec,ch(FW.rec)],[FW.rec,W-1.3],[FW.bore,W-1.3]];}};
+    const MR={z:120,D:37.2,D1:37.45,dp:0.725,nb:3,bore:6.5075/2,pin:{r:14.2,d:0.6035},ck:{r:9.75+0.0125,a:[270,90],d:0.87},cup:[12.225,12.7,13.0],rv:{r:0.3,at:13.5,dy:0.75,a:[228,210,48,30]},o:/** @type {number[][]} */([]),o1:/** @type {number[][]} */([])};
+    MR.o=ratchet(MR.z,MR.D/2,MR.D/2-MR.dp,1,0,MR.nb);MR.o1=ratchet(MR.z,MR.D1/2,MR.D1/2-MR.dp,1,0,MR.nb);
+    const SR={z:16,rt:7.0,rr:5.5,RBK:12.5/2,off:1.2,nb:8,t:2.65,BB:3.32,gap:0.05,sq:2.7,tp:0.01,cl:0.002,o:/** @type {number[][]} */([])};
+    SR.o=(()=>{const z=SR.z,P=TAU/z,o=[],rt=SR.rt,rr=SR.rr,RBK=SR.RBK,wrap=(/** @type {number} */a)=>Math.atan2(Math.sin(a),Math.cos(a));
+      for(let k=0;k<z;k++){const a=k*P,t=Math.asin(SR.off/rt),u=Math.asin(SR.off/rr);
+        o.push(sh(rt,a+t));const A=sh(rt,a+t),B=sh(rr,a+P+u),m=[(A[0]+B[0])/2,(A[1]+B[1])/2],d=[B[0]-A[0],B[1]-A[1]],l=Math.hypot(d[0],d[1]),h=Math.sqrt(RBK*RBK-l*l/4),c=[m[0]-d[1]/l*h,m[1]+d[0]/l*h];
+        const a0=Math.atan2(A[1]-c[1],A[0]-c[0]),a1=Math.atan2(B[1]-c[1],B[0]-c[0]);for(let i=1;i<=SR.nb;i++){const aa=a0+wrap(a1-a0)*i/SR.nb;o.push([c[0]+RBK*Math.cos(aa),c[1]+RBK*Math.sin(aa)]);}}
+      return o.map(([x,y])=>[x,-y]).reverse();})();
+    /* CK the clicks 05 06 02-3 (their outline o and the lines and arcs it is drawn from: the base line B, the hollow r3 about C3 from h0 to the nose's foot N, the
+       nose's face to its tip T, the back r8 about q8 to the boss's point BB, the boss rb, the top edge to T1, the tail's round rt about TC; t thick; the hole r and its sinks);
+       SB the stop bar 05 06 03-1 (its near and far sides N and F, fusee.js's figures; t thick, its pin's hole; o its outline); DT the maintaining detent 05 05 05-1 (the tip's
+       corners E and E1, the hollow r9 about C9 from the boss's point h0, the back r18 about C18, the boss rb; o its outline in the sheet; A its turn onto the fusee from the
+       sheet's ratchet centre s; the step's point SA and angle; the hole r at DTU, opening 1:tp on the radius) */
+    const CK=(()=>{const CKB=-1.5,CKN=[-2.78-Math.sqrt(9-(3.54+CKB)**2),CKB],CKT=[CKN[0]+2/Math.tan(85*D2R),CKB+2];
+      const o=[],arc=(/** @type {number[]} */c,/** @type {number} */r,/** @type {number} */a0,/** @type {number} */a1,/** @type {number} */n)=>{for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;o.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}};
+      const C3=[-2.78,-3.54],h0=[-2.78+Math.sqrt(9-(3.54+CKB)**2),CKB],q8=(()=>{const A=CKT,B=[-0.4,1.45],m=[(A[0]+B[0])/2,(A[1]+B[1])/2],d=[B[0]-A[0],B[1]-A[1]],l=Math.hypot(d[0],d[1]),h=Math.sqrt(64-l*l/4);return[m[0]+d[1]/l*h,m[1]-d[0]/l*h];})();
+      const TK=(()=>{let a=0.5,b=0.7;for(let i=0;i<50;i++){const k=(a+b)/2,s=Math.hypot(k,1);if(Math.hypot((1.5*s-0.2*s-(CKB+0.2))/k,CKB+0.2)+0.2>5.2)a=k;else b=k;}return(a+b)/2;})();
+      const TL=[TK,1].map(v=>v/Math.hypot(TK,1)),TC=[(1.5*Math.hypot(TK,1)-0.2*Math.hypot(TK,1)-(CKB+0.2))/TK,CKB+0.2],T1=[TC[0]+0.2*TL[0],TC[1]+0.2*TL[1]],TB=Math.atan2(TL[1],TL[0]);
+      o.push([TC[0],CKB]);o.push(h0);
+      arc(C3,3,Math.atan2(h0[1]-C3[1],h0[0]-C3[0]),Math.atan2(CKN[1]-C3[1],CKN[0]-C3[0]),14);
+      o.push(CKT);
+      arc(q8,8,Math.atan2(CKT[1]-q8[1],CKT[0]-q8[0]),Math.atan2(1.45-q8[1],-0.4-q8[0]),12);
+      arc([0,0],1.5,Math.atan2(1.45,-0.4),TB,8);
+      o.push(T1);for(let i=1;i<8;i++){const a=TB+(-Math.PI/2-TB)*i/8;o.push([TC[0]+0.2*Math.cos(a),TC[1]+0.2*Math.sin(a)]);}
+      return{B:CKB,N:CKN,T:CKT,C3,r3:3,h0,q8,r8:8,BB:[-0.4,1.45],rb:1.5,TC,T1,TB,rt:0.2,o,t:1.82,hole:{r:0.6045,cr:1.1,cd:0.42,sr:0.85,sd:0.25}};})();
+    const SB={N:4.01,F:5.99,d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05,t:1.45,pin:{r:0.25,z:3.5,dy:0.5},o:/** @type {number[][]} */([])};
+    SB.o=(()=>{const SBN=SB.N,SBF=SB.F,o=[],c=[SB.lo+SB.rt,SBN+SB.rt],e=Math.asin((SBN+SB.rr-SBF)/SB.rr);
+      for(let i=0;i<=8;i++){const a=Math.PI*(150+120*i/8)/180;o.push([c[0]+SB.rt*Math.cos(a),c[1]+SB.rt*Math.sin(a)]);}
+      for(let i=0;i<=16;i++){const a=-Math.PI/2+(Math.PI/2-e)*i/16;o.push([SB.ru+SB.rr*Math.cos(a),SBN+SB.rr+SB.rr*Math.sin(a)]);}
+      o.push([SB.lf,SBF]);return o.map(([u,v])=>[u,-v]).reverse();})();
+    const DT=(()=>{const DTE=[Math.sqrt(144-2.5*2.5),-2.5],DTE1=[DTE[0]-2.6/Math.tan(80*D2R),DTE[1]+2.6],C9=[6.273,-9.645];
+      const C18=(()=>{const A=[0,2.5],B=DTE1,m=[(A[0]+B[0])/2,(A[1]+B[1])/2],d=[B[0]-A[0],B[1]-A[1]],l=Math.hypot(d[0],d[1]),h=Math.sqrt(324-l*l/4);return[m[0]+d[1]/l*h,m[1]-d[0]/l*h];})();
+      const o=[],arc=(/** @type {number[]} */c,/** @type {number} */r,/** @type {number} */a0,/** @type {number} */a1,/** @type {number} */n)=>{for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;o.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}};
+      arc(C9,9,Math.atan2(-2.1-C9[1],1.366-C9[0]),Math.atan2(DTE[1]-C9[1],DTE[0]-C9[0]),24);
+      for(let i=1;i<4;i++)o.push([DTE[0]+(DTE1[0]-DTE[0])*i/4,DTE[1]+(DTE1[1]-DTE[1])*i/4]);
+      arc(C18,18,Math.atan2(DTE1[1]-C18[1],DTE1[0]-C18[0]),Math.atan2(2.5-C18[1],-C18[0]),24);
+      arc([0,0],2.5,Math.PI/2,TAU+Math.atan2(-2.1,1.366),24);o.pop();
+      const FX=H[10],DX=H[4],A=(()=>{const s=[-10.8,-20.9],w=[FX[0]-DX[0],-(FX[1]-DX[1])];return Math.atan2(w[1],w[0])-Math.atan2(s[1],s[0]);})();
+      return{E:DTE,E1:DTE1,C9,r9:9,h0:[1.366,-2.1],C18,r18:18,rb:2.5,o,A,SA:[8.6,1.403],sa:30,hole:{r:1.125,tp:140}};})();
+    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR};})();
+  return{H,NO,FA,BAR,FU,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
@@ -95,20 +196,6 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       boss:[6,7.6],seat:5.206,seatY:12.3,floor:4.596,scr:3.525,h20:2.8,pinD:2.5,pinCs:0.2,scrH:[3.2,3.0,6.2]},
     LC:{bar:[20,8,10],lug:[10,3.22],ctr:[-5,8.2],r5:5,floor:0.5,scr:3.55,pinD:2.5,seat:5.206,scrH:[2.9,1.7,5.0],sink:1.8},
     ZB:{half:17.75,w:10,t:3.8,sink:[2.35,2.0],bush:4.3,mouth:[2.85,0.69],set:5.2,pinD:2.5,scr:[2.1,1.9,4.7],scrY:1.8},
-    /* the fusee arbor (05 06 04-1) and the barrel arbor (05 07 02-1) with the barrel's heights they turn between (fusee.js's comments give each figure's source), here so
-       the recipes read them (29 October 2026); fusee.js reads them too. FA: its shoulders (yD, 19.7 apart), the winding square across the flats at its root (3,1 r6, 1:100),
-       the Vorreiber pin's holes (Ø 1.15), the square's 28.3 to the tip and its point's 38.7° half-angle, the cross hole 2 from the dial-side shoulder at the pin's turn;
-       prof() the arbor's turned profile [r, y]. BAR: the barrel's bottom face, rim height, bottom's inner face, its boss's face, the lid's, the arbor's shoulders and
-       its core's ends 0.05 off the bosses; the square 2.93 past the upper journal, 2.7 tapering to 2.605 over 9.5, its point to 0.3 over 0.5; prof() and bal() */
-    FA:(()=>{const F={yD:-0.025,len:19.7,SQ0:3.12,VPR:0.575,LS:28.3,ang:38.7,hole:{dy:2,a:0.9,from:-3}};
-      F.prof=()=>{const yT=F.yD-F.len,rS=yT+19.7,rU=(/** @type {number} */y)=>0.8375+((rS+6.5+9.85)/2-y)/140;
-        return[[0,yT-8],[2.195,yT-8],[2.25,yT],[3.05,yT],[3.05,yT+3.1],[3.52,yT+3.1],[3.52,yT+11.0],[2.25,yT+11.0],[2.19,rS],[1.4,rS],[1.3536,rS+6.5],[rU(rS+6.5),rS+6.5],[rU(9.85),9.85],[0.6,10.1],[0,10.1]];};
-      return F;})(),
-    BAR:(()=>{const B={BB:-3.65,h:18.08,bi:1.25,bf:3.1,lu:1.2,lf:3.3,BA0:-0.03,BA1:-22.32,e:0.05,sq:2.93,sqr:{a:2.7,b:2.605,L:9.5,tip:0.3,tl:0.5}};
-      B.bal=()=>{const o=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;o.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}return o;};
-      B.prof=()=>{const BB=B.BB,BR=BB-B.h,BBF=BB-B.bf,BLT=BR,BLF=BLT+B.lf,BA0=B.BA0,BA1=B.BA1,BC0=BBF-B.e,BC1=BLF+B.e,BSQ=BA1-B.sq;
-        return[[0,BSQ],[1.94,BSQ],[1.94,BA1],[2.24,BA1],[2.24,BC1],[5.0,BC1],[6.65,BC1+1.65],[6.65,BC0-1.65],[5.0,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...B.bal()];};
-      return B;})(),
     PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
       h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set

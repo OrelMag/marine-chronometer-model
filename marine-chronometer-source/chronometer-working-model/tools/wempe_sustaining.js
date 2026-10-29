@@ -25,7 +25,7 @@ const say=s=>rows.push('  '+s),chk=(ok,s,soft)=>{if(!ok&&!soft)fail=1;rows.push(
 /* the ring as fusee.js draws it: its widths (05 06 01-1, traced), its outer radius, the eye's offset and radius, the square end, the pin at 295°, its thickness */
 const W48=new Function('D2R',num(/\/\* MS-W48 \*\/([\s\S]*?)\/\* \/MS-W48 \*\//,'the widths (its MS-W48 block)')[0]+';return w48;')(D2R),[RO]=num(/\(([\d.]+)-w\)-r,r-[\d.]+\)/,'the outer radius').map(Number);
 const [EYO]=num(/EYO=([-\d.]+)/,'the eye\'s offset').map(Number),[ER]=num(/Math\.hypot\(x-eye\[0\],y-eye\[1\]\)-([\d.]+)/,'the eye\'s radius').map(Number);
-const [USQ]=num(/if\(u>(\d+)\/360\)return 1/,'the square end').map(Number),[UPIN]=num(/PINS=bk\((\d+),0\)/,'the pin at 295°').map(Number),[TH]=num(/GS1=WW-([\d.]+)/,'the thickness').map(Number);
+const [USQ]=num(/if\(u>(\d+)\/360\)return 1/,'the square end').map(Number),[UPIN]=num(/PINS=bk\((\d+),0\)/,'the pin at 295°').map(Number),[TH]=[W.WD.FU.MSt];   /* the thickness: dims.js WD.FU.MSt (fusee.js's GS1=WW-1.3 until 29 October 2026, read from its source) */
 const wAt=W48;   /* fusee.js's own width function, its MS-W48 block run here (a table read from it until 27 October 2026) */
 /* in the sheet's sense (u from 0° at the eye, the way the widths run; mirrored in the model, the same figures): a point at r, u. The eye's hole EYO toward the square end
    off its 0° line, as fusee.js has it (0: 05 06 01-1, to scale there, draws it on the line; its "0,8" by the eye is tried both ways below) */
