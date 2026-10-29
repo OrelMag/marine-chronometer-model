@@ -1,7 +1,7 @@
 """recipes_pagehash.py: the page's own meshes of the named parts-list lines saved, then compared with a later load, to prove a change (a literal moved from a
 builder into dims.js or an exported constant for a recipe) leaves the page as it was. About a minute (the page's load).
 
-    python recipes_pagehash.py --model wempe OUT.npz hn,hn,...      # writes them, or, if OUT.npz exists, compares (exit 1 on a change)
+    python recipes_pagehash.py --model wempe OUT.npz hn,hn,... [--rev V]   # writes them, or, if OUT.npz exists, compares (exit 1 on a change); V a version (first, 3955, 6mx, 1943)
 
 Each line's meshes are compared vertex for vertex within TOL (1e-5 mm) and their indices exactly: a part on a turning arbor has its pieces' matrices
 multiplied out differently in the last float bits from one load to the next, so a bit-for-bit hash can't be used there."""
@@ -11,7 +11,8 @@ import model
 HERE=pathlib.Path(__file__).resolve().parent;sp=importlib.util.spec_from_file_location('recipes_cli',HERE/'recipes.py');R=importlib.util.module_from_spec(sp);sp.loader.exec_module(R)
 TOL=1e-5
 f=pathlib.Path(sys.argv[1]);hns=sys.argv[2].split(',')
-pm=asyncio.run(R.page_meshes(hns))
+REV=sys.argv[sys.argv.index('--rev')+1] if '--rev' in sys.argv else 'last'   # --rev V: that version's meshes (a lift that changes every version's builder)
+pm=asyncio.run(R.page_meshes(hns,rev=REV))
 cur={}
 for h,v in pm.items():
     for i,m in enumerate((v or {'meshes':[]})['meshes']):

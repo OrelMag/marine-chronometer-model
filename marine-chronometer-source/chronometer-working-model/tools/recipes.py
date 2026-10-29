@@ -1,10 +1,11 @@
 """recipes.py: the parts as recipes (tools/recipes/: each part a list of machining operations, every size the model's own with its drawing), built as exact
 solids, written as STEP, written as operation sheets, and checked against the page's own mesh of each part (PLAN-recipes.md).
 
-    python recipes.py --model wempe [--only a,b] [--step [DIR]] [--sheet [DIR]] [--check] [--json OUT] [--fault]
+    python recipes.py --model wempe [--only a,b] [--step [DIR]] [--sheet [DIR]] [--check] [--json OUT] [--fault] [--pose JS]
 
 --step writes KEY.step (and KEY.stl) into DIR (default r_recipes/MODEL/), --sheet KEY.html there. --check opens the model's page (?snap&qa, about a
-minute), takes the first mesh of each recipe's parts-list line as shown in the version as last revised, in that object's own frame, and compares it with
+minute), freezes it in POSE (below: the escapement locked at rest, the balance at its dead point, the detent home, the gold and maintaining springs free, the
+fusee 2.5 turns from full wind; --pose another state, a planted fault), takes the first mesh of each recipe's parts-list line as shown in the version as last revised, in that object's own frame, and compares it with
 the recipe's solid put there by its to_page:
   volume        the recipe's exact volume against the page mesh's (a page part in one piece; several pieces, which may overlap, are reported): fails past VOL_TOL of the part's volume or 0.5 mm³, whichever is larger, plus half of
                 each thread's ring (coarse: the page's turned faces are polygons, 72 a turn; the surface and hole checks are the fine ones); where the page's
@@ -42,7 +43,20 @@ EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.user
   const pud={};for(let q=root;q;q=q.parent)for(const[k,v]of Object.entries(q.userData||{}))if(!(k in pud)&&(typeof v==='number'||Array.isArray(v)&&v.every(x=>typeof x==='number')))pud[k]=v;   /* its groups' numbers (the drum's chain slot, as the page laid it) */
   return{meshes:out,rotY,gearRot,pud};}"""
 
-async def page_meshes(hns):
+# The pose the check freezes the page in (step 7b, 29 October 2026), as fine.py and audit.py freeze it: the page's own update() replaced by a no-op, then called once
+# with this state, so a part that moves or flexes stands where its recipe is drawn, whatever the clock or the page's last frame left it:
+#   E 1000       the escape wheel a whole number of teeth on, locked on the detent's stone (ESC.state(0)'s prog 0 at the lock), its train with it
+#   th 0         the balance at its dead point (the hairspring unwound, the rollers and the balance at their drawn angle)
+#   lift 0       the detent home on its banking (unlifted), so its turning half lies on the line of its fixed half
+#   psDef 0      the gold spring unbent, on the horn
+#   n 2.5        the fusee 2.5 turns from full wind (audit.py's, placements.py's first state), not winding
+#   ms 0         the maintaining spring free, as blanked (the ratchet's lead over the fusee wheel nil: its eye's pin where the sheet draws it)
+#   slip 0       the cannon pinion unslipped
+# --pose JS replaces the state's object literal (a planted fault: the detent lifted, '{E:1000,th:0,lift:0.02,psDef:0,n:2.5,winding:false,slip:0,ms:0}')
+POSE='{E:1000,th:0,lift:0,psDef:0,n:2.5,winding:false,slip:0,ms:0,springOn:true,msOn:false,arm:0,blk:0}'
+FREEZE="""(s=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}mv.userData._u(s);mv.updateMatrixWorld(true);})"""
+
+async def page_meshes(hns,pose=POSE,rev='last'):   # rev: the version shown and exported (recipes_pagehash.py --rev; the recipes are the version as last revised)
     import browser
     from playwright.async_api import async_playwright
     out={}
@@ -51,7 +65,10 @@ async def page_meshes(hns):
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # a fresh headless Chromium loses its first WebGL context
         pg=await b.new_page();errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
         await pg.goto(model.PAGE+'#merge=0');await pg.wait_for_function("!document.querySelector('#loading')&&window.__V&&window.__mv",timeout=180000);await pg.wait_for_timeout(1500)
-        for h in hns:out[h]=await pg.evaluate(EXPORT,h)
+        await pg.evaluate("""document.querySelector('#speeds button[data-v="0"]')?.click()""")   # stopped, then frozen in POSE (above)
+        await pg.evaluate(FREEZE+'('+pose+')');await pg.wait_for_timeout(300)
+        if rev!='last':await pg.evaluate(f"__mv.userData.setRev('{rev}')");await pg.evaluate(FREEZE+'('+pose+')');await pg.wait_for_timeout(300)
+        for h in hns:out[h]=await pg.evaluate(EXPORT.replace("'last'",repr(rev)),h)
         await b.close()
     if errs:print('page errors:',errs[:3])
     return out
@@ -232,7 +249,7 @@ from recipes import Bought
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
-    a=argparse.ArgumentParser();a.add_argument('--only');a.add_argument('--step',nargs='?',const='');a.add_argument('--sheet',nargs='?',const='');a.add_argument('--check',action='store_true');a.add_argument('--json');a.add_argument('--fault',action='store_true')
+    a=argparse.ArgumentParser();a.add_argument('--only');a.add_argument('--step',nargs='?',const='');a.add_argument('--sheet',nargs='?',const='');a.add_argument('--check',action='store_true');a.add_argument('--json');a.add_argument('--fault',action='store_true');a.add_argument('--pose',default=POSE)
     o=a.parse_args();R={k:f() for k,f in recipes().items() if not o.only or k in o.only.split(',')}
     if o.fault and 'topPlate' in R:   # a planted fault the check must find: hole 7 0.03 large, hole 13 0.02 off its place
         from recipes import Hole
@@ -253,7 +270,7 @@ def main():
         print(f'{k}: {r.title}, {len(r.ops())} operations, volume {p.volume:.3f} mm³ ({time.time()-t:.1f} s)',flush=True)
     if not o.check:return
     R={k:r for k,r in R.items() if not isinstance(r,Bought)}
-    pm=asyncio.run(page_meshes([r.hn for r in R.values()]));bad=0;allres=[]
+    pm=asyncio.run(page_meshes([r.hn for r in R.values()],o.pose));bad=0;allres=[]
     for k,r in R.items():
         t=time.time();res=check(r,pm.get(r.hn));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
