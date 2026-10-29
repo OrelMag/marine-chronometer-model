@@ -41,8 +41,8 @@ const WFUSEE=(()=>{
      Measured on 05 06_3.2 (25 October 2026; line centres on profiles, 12.02 px/mm by the arbor's 19.7 and 7.9 + 3.1): the face 13.61 from the step's end, the click
      wheel 0.60 under it, the small end 1.29 from the step's end, the recess floor 11.24 (here 13.6, 0.5, 1.25, 11.1). Until 25 October 2026 the face 13.46 from the step's
      end, not re-turned, and face a 2.9 */
-  const VPR=0.575;                                          /* the Vorreiber's pin's holes, reamed through hub and arbor together: Ø 1.15 (below) */
-  const yD=-0.025,yT=yD-19.7,SQ0=3.12;                     /* the fusee arbor's shoulders; its winding square across the flats at its root (05 06 04-1: 3,1 r6, 1:100) */
+  const VPR=WD.FA.VPR;                                          /* the Vorreiber's pin's holes, reamed through hub and arbor together: Ø 1.15 (below) */
+  const yD=WD.FA.yD,yT=yD-WD.FA.len,SQ0=WD.FA.SQ0;                     /* the fusee arbor's shoulders; its winding square across the flats at its root (05 06 04-1: 3,1 r6, 1:100) */
   const VHF=yD-0.9,VFA=VHF-2.76,VFB=VHF-1.9;                 /* the Vorreiber's hub face, face a, the flange's lower face */
   const W=VFA+1.3,WT=W-2.62,WW=W-1.22,WL=W-2.42,WTB=W-5.0;   /* the fusee wheel: underside, rim/hub top, web top, ledge top, its tube's top */
   const GS0=WW,GS1=WW-1.3;                                   /* the maintaining spring */
@@ -53,8 +53,8 @@ const WFUSEE=(()=>{
   const DP0=S-0.8;                                           /* the cover plate (Deckplatte), S to DP0 */
   const SLD=1.5;                                             /* the stop bar's slot across the small end: 1.5 +0.05 deep (05 06 04-2) */
   const DTU=yD-6.2,DTL=DTU+2,DTT=DTU+1;                      /* the maintaining detent: upper face, lower face (its thick part), the tip's lower face (thin, 1, at the upper face) */
-  const BB=-3.65,BR=BB-18.08,BI=BB-1.25,BBF=BB-3.1,BLT=BR,BLU=BLT+1.2,BLF=BLT+3.3;   /* the barrel: bottom's outer face, rim, bottom's inner face, its boss's face, the lid's top (flush with the rim: 05 07 01 and the coloured section draw it so, the "0,6" running from the arbor's shoulder to it; 0.6 under the rim until 26 October 2026), underside (the lid 1.2: its 1,3 -0,1 at the drum's 1,2 seat, below), boss face */
-  const BA0=-0.03,BA1=-22.32,BC0=BBF-0.05,BC1=BLF+0.05;       /* the barrel arbor's shoulders (22.29 apart, 22.2 +0.1: 0.06 endshake) and its core's ends, 0.05 off the bosses */
+  const BRD=WD.BAR,BB=BRD.BB,BR=BB-BRD.h,BI=BB-BRD.bi,BBF=BB-BRD.bf,BLT=BR,BLU=BLT+BRD.lu,BLF=BLT+BRD.lf;   /* the barrel: bottom's outer face, rim, bottom's inner face, its boss's face, the lid's top (flush with the rim: 05 07 01 and the coloured section draw it so, the "0,6" running from the arbor's shoulder to it; 0.6 under the rim until 26 October 2026), underside (the lid 1.2: its 1,3 -0,1 at the drum's 1,2 seat, below), boss face */
+  const BA0=WD.BAR.BA0,BA1=WD.BAR.BA1,BC0=BBF-WD.BAR.e,BC1=BLF+WD.BAR.e;       /* the barrel arbor's shoulders (22.29 apart, 22.2 +0.1: 0.06 endshake) and its core's ends, 0.05 off the bosses */
   const RS0=TT-3.32-0.05,RS1=RS0-2.65;                       /* the set-up ratchet, beside the click on the barrel bridge */
   const MS0=(BI+BLU)/2+7.5,MS1=(BI+BLU)/2-7.5;               /* the mainspring's edges, 15 high (05 06_20's "Zugfeder 15 × 0,37"), in the middle of the drum's 15.63 inside (14.8 high until 26 October 2026, under the lid sunk 0.6; 15.53 under a 1.3 seat until 27 October 2026); its middle 0.015 off the hook block's (9,05 from the bottom's face: 05 07 01-1) */
 
@@ -474,13 +474,13 @@ const WFUSEE=(()=>{
       /* its cross hole "1,1 bohren + konisch reiben" (drill 1.1 and ream taper, at assembly with the Vorreiber's pin), 2 from the dial-side shoulder (19.7 less the 17.7 -0.05),
          across the axis at the Vorreiber's pin hole's turn (below): reamed with the Vorreiber's, drawn straight at Ø 1.15 (VPR: the pin's, below; the drill's 1.1 until 28
          October 2026), bored into the lathe (25 October 2026: until then not cut) */
-      tag(mesh(gF,capFix(bore(turned([[0,yT-8],[2.195,yT-8],[2.25,yT],[3.05,yT],[3.05,yT+3.1],[3.52,yT+3.1],[3.52,yT+11.0],[2.25,yT+11.0],[2.19,rS],[1.4,rS],[1.3536,rS+6.5],[rU(rS+6.5),rS+6.5],[rU(9.85),9.85],[0.6,10.1],[0,10.1]],40),
-        [0,yD-2,0],[Math.cos(PHI0+0.9),0,-Math.sin(PHI0+0.9)],VPR,-3,24),null),M.steel),'050604-1');
-      const tA=Math.tan(38.7*D2R);
+      tag(mesh(gF,capFix(bore(turned(WD.FA.prof(),40),
+        [0,yD-WD.FA.hole.dy,0],[Math.cos(PHI0+WD.FA.hole.a),0,-Math.sin(PHI0+WD.FA.hole.a)],VPR,WD.FA.hole.from,24),null),M.steel),'050604-1');
+      const tA=Math.tan(WD.FA.ang*D2R);
       /* Wempe 3955's (the version as photographed) is 4.5 shorter: its pointed end shows inside the dust bush's mouth, its top at y -43.5 ±0.5 (4_Wempe_3955_N.jpg,
          photocompare.py's fit: row 114 on the fusee's axis, 9.65 px/mm along it), not 6 proud of the bush as the sheet's 28.3 puts it (-48.0); the O, S and W views show nothing
          above the mouth. Kirov No. 247's matches the sheet's. The same cone and taper, the square 15.8 */
-      for(const[V,LS]of/** @type {[string,number][]} */([['last first 6mx 1943 -3955',28.3],['3955',23.8]])){const g=rv(gF,V),yP=yT-LS,sB=SQ0-(LS-8-2.6)/100,cB=sB/Math.SQRT2,yB=yP+cB/tA+0.01;   /* the tip; the square where the cone leaves its corners, 2.6 from the tip (1:100 from SQ0 at the root) */
+      for(const[V,LS]of/** @type {[string,number][]} */([['last first 6mx 1943 -3955',WD.FA.LS],['3955',23.8]])){const g=rv(gF,V),yP=yT-LS,sB=SQ0-(LS-8-2.6)/100,cB=sB/Math.SQRT2,yB=yP+cB/tA+0.01;   /* the tip; the square where the cone leaves its corners, 2.6 from the tip (1:100 from SQ0 at the root) */
         const sq=KIT.crease(new THREE.CylinderGeometry(SQ0/Math.SQRT2,cB,yT-8-yB,4,1));sq.translate(0,(yT-8+yB)/2,0);tag(mesh(g,sq,M.steel),'050604-1',1);
         const NP=64,dm=t=>{const r=cB/(Math.abs(Math.cos(t))+Math.abs(Math.sin(t)));return[r*Math.cos(t),r*Math.sin(t)];},cl=[];   /* the square's outline, its corners on x and z as the CylinderGeometry's */
         for(let i=0;i<NP;i++)cl.push({loop:[[0,0],dm(i/NP*TAU),dm((i+1)/NP*TAU)],y0:p=>yP+Math.hypot(p[0],p[1])/tA,y1:yB});
@@ -1079,16 +1079,16 @@ const WFUSEE=(()=>{
        scales 3.3 and 21.96: drawn not to scale). The barrel bridge is 3.32 thick (05 08 05-1), so the square starts 0.42 inside its hole: its diagonal 3.82 in the
        hole's 3.9 ±0.01, and the set-up ratchet, its hole 2,7 H7 1:100 on the square's 1:100, pressed down the taper to 0.05 off the bridge's face, where the square is
        2.696 across (its 2,7 ±0,02 hold anywhere along the first 2 mm). 3.38 (40.65 over all) until 27 October 2026; the 1941 arbor (020704-1's 7 + 22,2 + 15) keeps it */
-    const BSQ=BA1-2.93;
+    const BSQ=BA1-WD.BAR.sq;
     const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]);
-    {const bal=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;bal.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}
+    {const bal=WD.BAR.bal();
       const gAL=rv(gBA,'last 1943'),gAF=rv(gBA,'first 6mx');
-      const aL=tag(mesh(gAL,turned([[0,BSQ],[1.94,BSQ],[1.94,BA1],[2.24,BA1],[2.24,BC1],[5.0,BC1],[6.65,BC1+1.65],[6.65,BC0-1.65],[5.0,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
+      const aL=tag(mesh(gAL,turned(WD.BAR.prof(),48),M.steel),'050702-1');
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
         var aF=tag(mesh(gAF,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,c1],[4.5,c1],[6.65,c1+ch],[6.65,c0-ch],[4.5,c0],[2.24,c0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');}
-      const sq=KIT.crease(new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1));sq.translate(0,BSQ-4.75,0);tag(mesh(rv(gBA,'last 1943'),sq,M.steel),'050702-1',1);
-      const pt=KIT.crease(new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1));pt.translate(0,BSQ-9.5-0.25,0);tag(mesh(rv(gBA,'last 1943'),pt,M.steel),'050702-1',1);
+      const Q=WD.BAR.sqr,sq=KIT.crease(new THREE.CylinderGeometry(Q.a/Math.SQRT2,Q.b/Math.SQRT2,Q.L,4,1));sq.translate(0,BSQ-Q.L/2,0);tag(mesh(rv(gBA,'last 1943'),sq,M.steel),'050702-1',1);
+      const pt=KIT.crease(new THREE.CylinderGeometry(Q.b/Math.SQRT2,Q.tip,Q.tl,4,1));pt.translate(0,BSQ-Q.L-Q.tl/2,0);tag(mesh(rv(gBA,'last 1943'),pt,M.steel),'050702-1',1);
       /* as first drawn (020704-1, 1941): the square end 15 from the upper journal's shoulder (7 + 22.2 + 15 = its 44.2 overall, centres included: sure), so its tip at BA1-15,
          and the turning centre left on it, a cone the sheet draws undimensioned (scaled about 2.5). Wempe 3955's (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on
          the arbor): the square's sides end 13.1 from the shoulder (y -35.4 ±0.3; the model's 1943 square -35.2), the point 2.2 ±0.3 high to its tip at -37.6 ±0.3, the
