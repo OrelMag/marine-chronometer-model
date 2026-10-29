@@ -289,6 +289,28 @@ Not done, and why:
 - **The clicks and their springs, the maintaining spring, the maintaining detent and its wire spring, the stop bar and its spring.** These are built in
   `fusee.js`, which `wempe_load.js` doesn't run. They go with batch 9, after its Node loader for `fusee.js`.
 
+### Batch 9a (29 October 2026): fusee.js's sizes reachable; the fusee and barrel arbors pass
+
+**The loader question, settled without touching `wempe_load.js`.** The sizes the recipes need move from `fusee.js` into `dims.js` (`WD.FA`, the fusee
+arbor; `WD.BAR`, the barrel's heights and the barrel arbor), each with a pure profile function, written with the same expressions in the same order.
+`fusee.js` reads them, including its module constants (`yD`, `yT`, `SQ0`, `VPR`, `BB`, `BR`, `BBF`, `BLF`, `BA0`, `BA1`), which other fusee code shares.
+`dims.js` is already in every Node tool's load, and adding fields there changes nothing those tools compute: `wempe_escapement.js`, `wempe_physics.js`,
+`wempe_mainspring.py --check`, `wempe_ratchets.js` and `wempe_strength.js` gave byte-identical output before and after. The page's 18 fusee-side lines
+matched within 1e-5 mm, and the type check is clean.
+
+| Part | Operations | Surface apart (max) |
+|---|---|---|
+| Fusee arbor 05 06 04-1 (journal, step, collar, seats, pivot, stub; the square 1:100 and its 38.7° point; the Vorreiber pin's cross hole) | 5 | 0.0108 |
+| Barrel arbor 05 07 02-1 (core with chamfered ends, journals, domed end; the square and its point; the hook's radial hole) | 4 | 0.0218 (tessellation, bounded) |
+
+The hook's hole sits at an angle the mainspring's solve sets (where the spring's eye lands), free against the square. The recipe drills it at a free
+angle, `RadialDrill`, and the check fits that angle to the page's own hole walls by least squares, as it reads a pinion's phase.
+
+**Left for 9b and 9c**, each needing its sizes moved the same way: the fusee body (its helical chain groove, a `helixSolid`), the fusee wheel, click wheel,
+maintaining ratchet and set-up ratchet (their teeth), the cover plate, Vorreiber and dust plate, the barrel drum, lid, hook block and Steg; and the
+fusee-side springs (the clicks and their springs, the maintaining spring, the maintaining detent and its wire spring, the stop bar and its spring).
+Pure strip among them is a bought line.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
