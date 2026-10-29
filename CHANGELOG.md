@@ -4,6 +4,12 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.52.00 · 2026-10-29
+- A new layout on both models: the controls in four tabs, Explore, Run, Look and Advanced, in place of seventeen sections in one column
+- Stop and go on, the speed, the time, the power left and Wind in a bar on the model, with the views as a row of buttons above it
+- A light and dark switch at the top, the tools as icons, and the title on one line, so the model starts higher, on a phone too
+- Look: Metal, Tinted or Ink as one choice and Colour by as another; the boxes are switches, and the longer explanations fold away
+
 ## 3.51.02 · 2026-10-29
 - The Wempe's build book of drawings is withdrawn: it was drawn back from the model's surfaces and wasn't fit to make parts from. Its replacement, a CAD file and an operation sheet for each part, is on the way.
 

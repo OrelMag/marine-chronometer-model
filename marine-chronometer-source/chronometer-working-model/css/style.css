@@ -1,7 +1,7 @@
-:root{--bg:#dfe2e3;--panel:#f4f5f5;--card:#ffffff;--ink:#141a20;--muted:#5b656e;--blue:#26479c;--brass:#8a5d10;--rule:#cdd2d5;--hi:#b8860b;
+:root{--bg:#dfe2e3;--panel:#f4f5f5;--card:#ffffff;--ink:#141a20;--muted:#5b656e;--blue:#26479c;--brass:#8a5d10;--rule:#cdd2d5;--hi:#b8860b;--track:#e3e6e8;--glass:rgba(255,255,255,.76);--blue-soft:#e1e7f5;--shadow:0 1px 2px rgba(20,26,32,.06),0 4px 14px rgba(20,26,32,.08);
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0d1115;--panel:#151a1f;--card:#1b2127;--ink:#e4e8eb;--muted:#9aa4ad;--blue:#91adf2;--brass:#d8a94f;--rule:#2a323a;--hi:#e0b44f;}}
-:root[data-theme="dark"]{--bg:#0d1115;--panel:#151a1f;--card:#1b2127;--ink:#e4e8eb;--muted:#9aa4ad;--blue:#91adf2;--brass:#d8a94f;--rule:#2a323a;--hi:#e0b44f;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0d1115;--panel:#151a1f;--card:#1b2127;--ink:#e4e8eb;--muted:#9aa4ad;--blue:#91adf2;--brass:#d8a94f;--rule:#2a323a;--hi:#e0b44f;--track:#242b33;--glass:rgba(24,30,36,.78);--blue-soft:#1f2b45;--shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.28);}}
+:root[data-theme="dark"]{--bg:#0d1115;--panel:#151a1f;--card:#1b2127;--ink:#e4e8eb;--muted:#9aa4ad;--blue:#91adf2;--brass:#d8a94f;--rule:#2a323a;--hi:#e0b44f;--track:#242b33;--glass:rgba(24,30,36,.78);--blue-soft:#1f2b45;--shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.28);}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Instrument Sans",system-ui,sans-serif}
@@ -280,3 +280,90 @@ nav.models{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px;font-size:12.5px}
 nav.models a,nav.models span{padding:2px 10px;border-radius:999px;border:1px solid var(--rule);color:var(--muted);text-decoration:none;white-space:nowrap}
 nav.models a:hover{color:var(--ink);border-color:var(--blue)}
 nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:var(--panel)}
+/* ---------- the layout of 29 October 2026 (../../shared/ui.js), the models' pages only (body.mdl): the header in one line with the light/dark switch,
+   the tools as icons, the views and the play bar along the stage's foot, the panel in four tabs, choices as segmented controls and boxes as switches ---------- */
+.mdl header{align-items:center;justify-content:flex-start;padding:14px 20px 12px;gap:8px 18px}
+.mdl h1{font-size:clamp(1.5rem,2.6vw,2rem);white-space:nowrap}
+.mdl nav.models{margin:0 auto 0 0;padding:3px;gap:2px;border-radius:10px;background:var(--track);font-size:13px}
+.mdl nav.models a,.mdl nav.models span{border:0;border-radius:7px;padding:4px 11px;font-weight:500}
+.mdl nav.models [aria-current]{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}.mdl nav.models a:hover{color:var(--ink)}
+.mdl header .tabs{position:static;padding:0;gap:16px;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.mdl header .tabs button,.mdl header .tabs a{border:0;border-bottom:2px solid transparent;border-radius:0;padding:5px 1px;min-height:0;background:none;font:500 14px "Instrument Sans",system-ui,sans-serif;color:var(--muted)}
+.mdl header .tabs [aria-selected="true"]{color:var(--ink);border-bottom-color:var(--blue);background:none}.mdl header .tabs a:hover,.mdl header .tabs button:hover{color:var(--ink)}
+/* the light/dark switch: the knob a sun by day, a moon at night */
+.flip{display:inline-flex;align-items:center;gap:9px;border:0;background:none;padding:4px 0;border-radius:0;min-height:0;font:600 14px "Instrument Sans",system-ui,sans-serif;color:var(--ink)}
+.flip .fl{color:var(--ink)}.flip .fd{color:var(--muted);opacity:.6;font-weight:500}
+.flip[aria-checked="true"] .fl{color:var(--muted);opacity:.6;font-weight:500}.flip[aria-checked="true"] .fd{color:var(--ink);opacity:1;font-weight:600}
+.flip .trk{position:relative;width:52px;height:28px;border-radius:14px;background:linear-gradient(180deg,#86a7ff,#5f86f0);box-shadow:inset 0 1px 2px rgba(0,0,0,.18);transition:background .35s}
+.flip .knob{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .35s cubic-bezier(.5,1.6,.4,1),box-shadow .35s,background .35s}
+.flip .st{position:absolute;border-radius:50%;background:#fff}.flip .st.a{width:6px;height:6px;right:9px;top:6px}.flip .st.b{width:3px;height:3px;right:17px;top:14px;opacity:.85}
+.flip[aria-checked="true"] .trk{background:linear-gradient(180deg,#26305a,#18203f)}
+.flip[aria-checked="true"] .knob{transform:translateX(24px);background:#f3f1e6;box-shadow:inset -6px -3px 0 0 #c9c4ad,0 1px 3px rgba(0,0,0,.4)}
+.flip[aria-checked="true"] .st.a{right:auto;left:8px}.flip[aria-checked="true"] .st.b{right:auto;left:18px}
+.flip:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:6px}
+/* the stage's corners: the tools (icons) and what sits under them */
+.mdl .tools{top:12px;right:12px;bottom:auto;gap:2px;padding:4px;border-radius:12px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow);align-items:center;max-width:calc(100% - 24px)}
+.mdl .tools>button{position:relative;display:grid;place-items:center;width:34px;height:34px;min-width:0;min-height:0;padding:0;border:0;border-radius:9px;background:none;color:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}
+.mdl .tools>button:hover{background:var(--track)}.mdl .tools>button[aria-pressed="true"],.mdl #helpBtn[aria-expanded="true"]{background:var(--blue-soft);color:var(--blue)}
+.mdl .tools svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.mdl #link[data-say]::after{content:attr(data-say);position:absolute;top:calc(100% + 8px);right:0;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--bg);font:500 12px "Instrument Sans",sans-serif;white-space:nowrap;pointer-events:none}
+.mdl .selbar{padding:2px 2px 4px}.mdl .selbar button{min-height:0;padding:4px 10px;border:0;font-size:12.5px;background:var(--track);color:var(--ink)}
+.mdl .hist{top:calc(var(--th,42px) + 20px);right:12px}.mdl .hist button{border:0;background:var(--glass);color:var(--ink);box-shadow:var(--shadow)}
+.mdl .srckey{top:calc(var(--th,42px) + 20px);right:12px}.mdl .hist:not(.hidden)~.srckey{top:calc(var(--th,42px) + 62px)}
+.mdl .hint{left:14px;top:14px;transform:none;text-align:left;max-width:calc(100% - var(--tw,240px) - 40px);padding:6px 12px;font-size:13px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+/* the views and the play bar */
+.dock{position:absolute;z-index:4;left:12px;right:12px;bottom:12px;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.dock>*{pointer-events:auto;max-width:100%}
+.vstrip{display:flex;gap:6px;overflow-x:auto;padding:2px;scrollbar-width:none;overscroll-behavior-x:contain}.vstrip::-webkit-scrollbar{display:none}
+.mdl .vstrip button{flex:none;min-height:0;padding:6px 13px;border:0;border-radius:999px;font:500 13px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.mdl .vstrip button[aria-pressed="true"]{background:var(--blue);color:var(--card)}.mdl .vstrip [data-v="exploded"],.mdl .vstrip [data-v="laidout"]{display:none}
+.play{display:flex;align-items:center;gap:6px;padding:5px;border-radius:16px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+.mdl #pp{flex:none;display:grid;place-items:center;width:40px;height:40px;min-height:0;padding:0;border:0;border-radius:50%;background:var(--blue);color:var(--card)}
+.mdl #pp svg{width:16px;height:16px;fill:currentColor}
+.spw{position:relative;flex:none}
+.mdl #spdChip{display:flex;align-items:center;justify-content:center;gap:4px;min-width:64px;min-height:0;padding:8px 10px 8px 12px;border:0;border-radius:10px;background:var(--track);color:var(--ink);font:600 14px "Instrument Sans",system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.mdl #spdChip svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .15s}.mdl #spdChip[aria-expanded="true"] svg{transform:rotate(180deg)}
+.spmenu{position:absolute;z-index:8;left:-46px;bottom:calc(100% + 10px);width:272px;padding:12px;border-radius:14px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.spmenu .sub-h{margin:0 0 8px}
+.mdl .spmenu #speeds{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:3px;border-radius:10px;background:var(--track)}
+.mdl .spmenu #speeds button{min-height:0;padding:7px 4px;border:0;border-radius:7px;background:none;color:var(--muted);font-weight:500}
+.mdl .spmenu #speeds button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+.mdl .spmenu .spd{margin-top:10px}.mdl .spmenu .spd .lab{min-width:0}
+.mdl .play .hud{position:static;flex:0 1 auto;min-width:0;padding:0 6px;font-size:13px;line-height:1.3;pointer-events:auto}
+.mdl #windP{flex:none;min-height:0;padding:8px 14px;border:0;border-radius:10px;background:var(--blue-soft);color:var(--blue)}
+.mdl .cu,.mdl .cuh{bottom:calc(var(--dh,100px) + 22px)}.mdl .cu.big{height:min(470px,calc(100% - var(--dh,100px) - 90px))}
+/* the panel: its tabs, kept in sight as it scrolls (on a phone just under the model) */
+.ptabs{position:sticky;z-index:3;top:12px;display:flex;gap:2px;margin:0 0 12px;padding:3px;border-radius:12px;background:var(--track);box-shadow:0 0 0 6px var(--bg)}
+.mdl .panel .ptabs button{flex:1;min-height:0;padding:7px 6px;border:0;border-radius:9px;background:none;color:var(--muted);font:600 13.5px "Instrument Sans",system-ui,sans-serif}
+.mdl .panel .ptabs button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+@media(max-width:959px){.ptabs{top:max(340px,min(56svh,760px))}}
+@media(orientation:landscape) and (max-height:560px){.ptabs{top:0}}
+.mdl #dispDet>summary{display:none}
+/* the panel's controls: actions soft, choices segmented, boxes as switches */
+.mdl .panel button:where(:not(.pn,.pf,.rp-l,.go,.about-btn)){border:0;border-radius:10px;padding:8px 13px;background:var(--blue-soft);color:var(--blue)}
+.mdl .panel button.primary{background:var(--blue);color:var(--card)}
+.mdl .panel .seg:has(>button[aria-pressed]){display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:10px;background:var(--track)}
+.mdl .panel .seg:has(>button[aria-pressed])>button{padding:6px 11px;border-radius:7px;background:none;color:var(--muted);font-weight:500}
+.mdl .panel .seg:has(>button[aria-pressed])>button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+.mdl .panel .seg.full{display:flex}.mdl .panel .seg.full>button{flex:1}
+.mdl .panel .ck:not(.rp-ck){justify-content:space-between;flex-direction:row-reverse;gap:12px;min-height:30px}
+.mdl .panel .ck input[type=checkbox]{appearance:none;-webkit-appearance:none;position:relative;width:38px;height:22px;margin:0;border-radius:11px;background:var(--rule);cursor:pointer;transition:background .2s;flex:none}
+.mdl .panel .ck input[type=checkbox]::after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s}
+.mdl .panel .ck input[type=checkbox]:checked{background:var(--blue)}.mdl .panel .ck input[type=checkbox]:checked::after{transform:translateX(16px)}
+.mdl .panel .ck input[type=checkbox]:disabled{opacity:.4;cursor:default}
+.mdl .panel .kwf{width:auto;max-width:none}.mdl .panel .ck.sw{margin-top:12px}.mdl .panel .ck.sub{margin-left:0}
+.mdl .panel .sub-h{font:600 11.5px "Instrument Sans",sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.mdl .panel #dispDet .sub-h:first-of-type{margin-top:2px}.mdl .panel #dispDet .ck{margin-top:4px}.mdl .panel #dispDet .row{margin-top:8px}
+.mdl .panel details.more>summary{flex-wrap:wrap;font:600 14px "Instrument Sans",sans-serif;color:var(--ink)}
+.mdl .panel details.more>summary small{display:block;flex-basis:100%;margin:1px 0 0 16px;font-weight:400;font-size:12.5px;color:var(--muted)}
+.mdl .panel details.how{margin-top:10px}.mdl .panel details.how>summary{list-style:none;cursor:pointer;font:500 13px "Instrument Sans",sans-serif;color:var(--blue)}
+.mdl .panel details.how>summary::-webkit-details-marker{display:none}.mdl .panel details.how>summary::before{content:"+ "}.mdl .panel details.how[open]>summary::before{content:"− "}
+.mdl .panel details.how>.note{margin-top:6px}
+.mdl .about-btn{border:0;background:none;color:var(--muted);text-align:left;padding:4px 2px;margin:0 0 6px;font-weight:500;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px;min-height:0}
+.mdl .about-btn:hover{color:var(--ink)}
+/* phones */
+@media(min-width:960px){.mdl .stage{height:calc(100vh - 80px);height:calc(100svh - 80px);max-height:960px}}
+@media(max-width:600px){.mdl header{padding:10px 16px 8px;gap:6px 14px}.mdl h1{flex:1 1 0;min-width:0;white-space:normal;font-size:1.4rem}.mdl .flip{order:1}.mdl .flip .fl,.mdl .flip .fd{display:none}.mdl header .tabs{order:2;flex-basis:100%}.mdl nav.models{order:3;margin:0}
+  .mdl .hint{top:calc(var(--th,42px) + 20px);max-width:calc(100% - 28px)}.mdl .tools{left:12px;right:auto}
+  .mdl .play .hud{font-size:12px}.mdl #windP{padding:8px 11px}.dock{left:8px;right:8px;bottom:8px}}
+@media(pointer:coarse){.mdl .tools>button{width:40px;height:40px}.mdl .vstrip button{min-height:36px}.mdl .ptabs button{min-height:40px}}
