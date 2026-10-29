@@ -123,7 +123,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
 | 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
 | 6 | Small turned parts | the bushes WN-301, WN-300 (×3), WN-302 and the hand-setting bush, the seconds jewel's setting, the studs' bushes and both studs, the escape wheel's collet; the seconds jewel (bought) | done, 29 Oct (the balance's and escape wheel's jewel settings, the hairspring's collet and stud moved to batch 8) |
-| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (needs a frozen pose: 7b); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c, 29 Oct) |
+| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (the frozen pose: 7b, done 29 Oct); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c); 7b, the detent and gold spring made, the locking stone bought (29 Oct); the block and the maintaining spring left |
 | 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | |
 | 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | done but the fusee body (9d) and the maintaining spring (7b), 29 Oct |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
@@ -362,6 +362,66 @@ sizes are not yet lifted from `fusee.js` (RFT and the helix stay there; `wempe_t
 its source). Also left: the maintaining spring 05 06 01-1 (blanked from Bandstahl 35 × 1.75; the page draws it bent by the running drive: a frozen pose,
 with the detent's, 7b), the maintaining detent's arbor 05 05 05-2, the fusee wheel's and ratchet's screws WN-19, WN-20, WN-21.
 
+### Step 7b (29 October 2026): the check reads the page in a frozen pose
+
+`recipes.py --check` (and `recipes_pagehash.py`) now freeze the page before reading a mesh, as `fine.py` and `audit.py` do: the page's `update()` is
+replaced by a no-op and called once with `POSE` (recipes.py):
+
+| Input | Value | What it fixes |
+|---|---|---|
+| `E` | 1000 | the escape wheel a whole number of teeth on, locked on the stone (`ESC.state(0)`: prog 0, lift 0), the train with it |
+| `th` | 0 | the balance at its dead point: the rollers at their drawn angle, the hairspring unwound |
+| `lift` | 0 | the detent home on its banking: its turning half on its fixed half's line |
+| `psDef` | 0 | the gold spring unbent, on the horn |
+| `n`, `winding` | 2.5, false | the fusee 2.5 turns from full wind (audit.py's and placements.py's first state) |
+| `ms` | 0 | the maintaining spring free, as blanked (the ratchet's lead over the fusee wheel nil) |
+| `slip` | 0 | the cannon pinion unslipped |
+
+`--pose JS` replaces the state (a planted fault). `recipes_pagehash.py --rev V` reads another version's meshes, for a builder all versions share.
+
+**The proof.** All 57 recipes pass frozen, with the same figures as before. With the detent lifted 0.02 rad, the balance turned 1 rad, the gold spring
+bent 0.05 and the wheel 0.3 of a tooth on (`--pose '{E:1000.3,th:1.0,lift:0.02,psDef:0.05,...}'`), the detent fails (box 0.30, surface 0.34) and so does
+the gold spring (box 0.47, surface 0.53). The escape wheel still passes, since it is exported in its own frame. The top plate's `--fault` still fails on
+its three planted holes (surface 1.09, hole 7, hole 13).
+
+### The detent group (29 October 2026): the detent and the gold spring made, the stone bought; the block deferred
+
+**The lift, the page unchanged.** `escapement.js`'s `dv` drew the detent and gold spring from literals and one option object per version. The literals
+are now `DETK` and the options `DETV` (`last`, `first`, `w3955`, `late` for the 6MX and 1943), at module scope with the same expressions in the same order.
+Both are exported as `WESC.DET` with the detent's frame (`ROW`, `DOFF`, `P`, `TD`, `RS`, `GW`, `GN`, `TI`, `SQ0`, `TP`, `HORN_L`). The horn's line and the
+gold spring's traced points were already exported (`WESC.HORN`, `WESC.GOLD`). The detent group's seven lines (050401-1 to -4, WN-14, WN-gf, WN-205.d)
+matched within 1e-5 mm before and after in all five versions (last, first, 3955, 6mx, 1943), and the Wempe type check is clean. `wempe_escapement.js`,
+`dynamics.js --model wempe --quick`, `tripping.js --model wempe --quick`, `wempe_hairspring.js`, `wempe_physics.js`, `wempe_strength.js` and
+`escgolden.js` gave byte-identical output, apart from the elapsed-time line that `dynamics.js` and `tripping.js` print.
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max) |
+|---|---|---|---|
+| Detent 05 04 01-1 (1436: the foot, the tapered spring, the square, the blade and its thicker part, the pipe, the traced horn with its bevelled back; the foot's screw and pin holes, the square's M0.7, the stone's bore) | 6 | 13.525 / 13.516 (5 pieces) | 0.018; 0.022 expected (below) |
+| Gold spring 05 04 01-2 (the head and arm, the bow formed to its traced line, the head's hole) | 2 | 2.600 / 2.599 | 0.0014 at p99; 0.049 expected (below) |
+| Locking stone 05 04 01-3 | bought | | a ruby pin Ø 0.75, ground half away to its flat |
+
+Each is built in the detent's own frame: X along the blade from the stone toward the foot, Y across it, Z the height under the top plate's inner face,
+with the stone's centre at the origin. `to_page` is the page's `D(t, n)`, turned to be proper. The horn's face and back are B-splines through 401 points
+of `WESC.HORN.line`, split at the bevel's start. The gold spring's bow is a B-spline through `dv`'s Catmull-Rom of `WESC.GOLD`'s points, offset as `dv`
+offsets it. Both curves are the page's own functions, not traces.
+
+**No faults in the recipes.** One page fault, recorded in both recipes' `expect` and listed below: the page's bore across a thin strip (fusee.js's
+`bore`, cut by `holeCut`, closed by `capFix`) joins its two mouths' vertices with wall triangles that skip round the hole. The chords lie 0.025 inside
+the circle at the detent foot's screw hole and 0.048 at the gold spring's head hole. The holes' sizes and places are the page's to 0.002.
+
+**Deferred: the detent block 05 04 01-4.** As last revised, the block is the 1943 block's base with its fillet, the thin part and the upright, plus the
+slit end built across. That is three solid sets fused, an end hole (`endH`), the M1 bore, a tapped fixing hole and the slit's two leaves, with sizes
+spread over about 150 lines of `escapement.js` shared by four versions. It needs its own lift, as large as the detent's, and wasn't started in this
+session's budget.
+
+**Deferred: the maintaining spring 05 06 01-1 (step 3).** The frozen pose makes it reliable (`ms` 0: the page draws the outline unbent). But its
+inner edge's construction (`w48`, between fusee.js's `MS-W48` markers) is read from fusee.js's source by `wempe_sustaining.js`. Lifting it into
+`dims.js` means changing that tool's reader too, and checking `wempe_sustaining.js`'s output byte for byte. Next.
+
+**Deferred: batch 8 (the balance) and the screws WN-19, WN-20, WN-21.** Batch 8 needs the balance's locals (`JR`, `JT`, `hY`, `eY`, `ER`, `EE`, `ck`)
+lifted for about twenty lines. The three screws aren't the kit's `screw()`: WN-19 is countersunk in the click wheel's 1:8 holes, WN-20 is countersunk in
+the cover plate, and WN-21 is shouldered. Each has its own literals in fusee.js to lift first.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
@@ -370,6 +430,7 @@ with the detent's, 7b), the maintaining detent's arbor 05 05 05-2, the fusee whe
 | Upper balance cock 05 08 03-1 | the stud's slot through the boss | 0.13 | the boss draws the slot's end wall upright, 0.02 inside its place at the boss's face, where the arm's wall leans 8° (C-D's 82°); one milled slot is one plane through arm and boss |
 | Dust plate 05 06 00-1 | the square hole at the recess floor | 0.005 | fusee.js tapers the hole from the square's size 3 from its root at the recess's mouth (y0) to 1 at its face, 1:150 over 3 mm; the drawing's 1:100 runs from the floor (y0 + 1): 0.005 large there on the half-diagonal. Within the check |
 | Barrel drum 05 07 01-1 | the Steg's slot | 0.35 | its pocket is 1.6 deep through the 1.25 bottom, and facePocket leaves its floor as a stray face in the drum's hollow 0.35 under the bottom; in the recipe's `expect` |
+| Detent 05 04 01-1, gold spring 05 04 01-2 | the foot's screw hole, the head's hole | 0.025, 0.048 | the bore across a thin strip (fusee.js's `bore` through `holeCut`, closed by `capFix`) joins its two mouths' vertices with wall triangles that skip round the hole, chords inside its circle; in both recipes' `expect` |
 | Set-up ratchet 05 07 00-3 | its height | 0.02 | RS0 counts the barrel bridge 3.32 thick (WD.FU.SR.BB, lifted as fusee.js had it), but the bridge is 3.30 since the owner's correction (WD.BB.t): the ratchet stands 0.07 off the bridge, not the 0.05 its comment says. The recipe and page agree; not changed here |
 | ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
 

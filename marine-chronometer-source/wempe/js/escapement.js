@@ -77,6 +77,15 @@ const WESC=(()=>{
      (8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Its end then lies 1.661 from the staff, 0.083 outside the discharge stone's reach (RD 1.578), and the gold spring's tip
      (1.54) 0.056 past it (likely; 3.5 until 15 October 2026, an estimate kept 1 short of the tip). An unbracketed figure, so the first drawn detent's too */
   const HORN_L=4.4;
+  /* the detent's sizes as dv (below) draws them, lifted to module scope for the recipes (tools/recipes/wempe.py, WESC.DET; 29 October 2026; the page unchanged): DETK
+     the literals dv used, each where its comment there sources it (the foot 6.6 long, its screw's clearance Ø 1.1 and steady pins' Ø 0.45 2.1 either side, bored 0.05
+     outside the foot's face; the spring's half thickness 0.035 at its middle to 0.045 at its ends, 0.01 more over 2.5 from the middle to the bending point; the square's
+     tapped hole 1.0 from its end, r 0.35, 0.42 deep; the blade's thicker part 2.9 long; the blade from 0.4 inside the pipe; the pipe Ø 1.15; the horn from -0.45, 32
+     steps, its bevel's 0.74 and tip's 0.05; the gold spring's head 2.2 past the square's end, 2.4 long, 2 high, its arm 1, its hole 1.2 from the end, r 0.35); DETV each
+     version's dv options */
+  const DETK={foot:6.6,fhR:0.55,pinR:0.225,pinT:2.1,bo:0.05,sp:[0.035,0.01,2.5,0.045],sqT:1.0,sqR:0.35,sqD:0.42,thk:2.9,b0:0.4,pR:1.15/2,hb:-0.45,hN:32,bev:0.74,tip:0.05,gHd:2.2,gL:2.4,gH:2,gA:1,gHo:1.2,gR:0.35};
+  const DETV={last:{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:1.3+2-0.05-0.9,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0},first:{w:2,wb:1,wh:0.8,d0:1.3,pp:2.30,pl:2.0,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025},
+    w3955:{w:2,wb:1,wh:0.8,d0:1.3,pp:1.95,pl:1.7,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025},late:{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:1.3+2-0.05-0.9,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0}};   /* late: the 6MX's and 1943's (as last revised but their own ew0, screw) */
   /* its line in plan: on the blade's line at the pipe, bending steadily toward the block to its end, as Wempe 3955's (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, flattened
      into the detent's frame at 80 px/mm: 20.5 px/mm across by the pipe's Ø 1.15, 23.9 along; E:\mc-video\wempe-detent\detent10_flat.png) traced twice, 18 October 2026: by
      hand in tools/tracer.html (its centre line, tools/traces/wempe_detent10.mm.json) and by its edges (the steel against the gap beside the gold spring, CIELAB L*),
@@ -842,24 +851,24 @@ const WESC=(()=>{
     /* the heights across the detent (1436): the foot, spring and square o.w (1,9), centred in the 2 the block holds them at; the blade o.wb (0,9) flush with their lower edge
        (the right view), the horn o.wh (0,75) at the blade's middle; the gold spring 1 wide (05 04 01-2) flush with the same edge. Until 25 October 2026 the foot 2, the blade 1
        and the horn 0.8 (the unbracketed) as last revised, the spring and square 1.9 */
-    const dv=(sS,sM,o)=>{const yd=d=>TI+d,c=(2-o.w)/2,y0F=yd(o.d0+c),y1F=yd(o.d0+2-c),b1=o.d0+2-c,y0b=yd(b1-o.wb),y1b=yd(b1),hm=b1-o.wb/2,gy0=yd(b1-1),gy1=y1b,rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],fh=o.tf/2;
+    const dv=(sS,sM,o)=>{const K_=DETK,yd=d=>TI+d,c=(2-o.w)/2,y0F=yd(o.d0+c),y1F=yd(o.d0+2-c),b1=o.d0+2-c,y0b=yd(b1-o.wb),y1b=yd(b1),hm=b1-o.wb/2,gy0=yd(b1-DETK.gA),gy1=y1b,rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],fh=o.tf/2;
       const f=DOFF,tz=(t0,t1,h0,h1)=>[D(t0,f-h0),D(t1,f-h1),D(t1,f+h1),D(t0,f+h0)];   /* a spring half, h0 across at t0 to h1 at t1; f: the foot, spring, square and the blade's thicker part centred DOFF off the blade's line (each version's (tq − tb)/2, 0.11), the blade flush with them toward the block (1436: above) */
       /* the foot, with its screw's clearance hole (Ø 1.1 for the M1, WN-gf) and its two steady pins' (Ø 0.45) across it, as 1436 draws them (left out until 26 October 2026) */
-      const yc0=yd(o.d0+1),fg=[[ROW,0.55],[ROW-2.1,0.225],[ROW+2.1,0.225]].reduce((g,[t,r])=>nBore(g,t,f-fh-0.05,yc0,r),solidGeo([{loop:rect(FOOT0,FOOT0+6.6,f-fh,f+fh),y0:y0F,y1:y1F}]));
+      const yc0=yd(o.d0+1),fg=[[ROW,K_.fhR],[ROW-K_.pinT,K_.pinR],[ROW+K_.pinT,K_.pinR]].reduce((g,[t,r])=>nBore(g,t,f-fh-K_.bo,yc0,r),solidGeo([{loop:rect(FOOT0,FOOT0+K_.foot,f-fh,f+fh),y0:y0F,y1:y1F}]));
       const dS=[tag(mesh(sS,fg,M.steel),'050401-1')],dM=[];   /* its pieces, fixed and turning, each set one mesh below (fuse) */
-      const hT=0.035+0.01*Math.abs(TP-SMID)/2.5,sp0=tz(TP,SMID,hT,0.035),sp0b=tz(SMID,FOOT0,0.035,0.045),sp1=tz(SPR0,TP,0.045,hT);   /* 1436's left view: 0,09 at each end, 0,07 at its middle, straight between (until 25 October 2026 0.07 throughout); fixed from the bending point TP, turning short of it */
+      const hT=K_.sp[0]+K_.sp[1]*Math.abs(TP-SMID)/K_.sp[2],sp0=tz(TP,SMID,hT,K_.sp[0]),sp0b=tz(SMID,FOOT0,K_.sp[0],K_.sp[3]),sp1=tz(SPR0,TP,K_.sp[3],hT);   /* 1436's left view: 0,09 at each end, 0,07 at its middle, straight between (until 25 October 2026 0.07 throughout); fixed from the bending point TP, turning short of it */
       dS.push(tag(mesh(sS,solidGeo([{loop:sp0,y0:y0F,y1:y1F},{loop:sp0b,y0:y0F,y1:y1F}]),M.steel),'050401-1',1));
       dM.push(tag(mesh(sM,solidGeo([{loop:sp1,y0:y0F,y1:y1F}]),M.steel),'050401-1',1));
-      dM.push(tag(mesh(sM,nBore(solidGeo([{loop:rect(SQ0,SPR0,f-o.tq/2,f+o.tq/2),y0:y0F,y1:y1F}]),SQ0+1.0,f+o.tq/2-0.42,yc0,0.35),M.steel),'050401-1',1));   /* the square, tapped 0.42 deep for the gold spring's screw WN-14 (M0.7: 05 04_1 draws the screw, the GUB's remade detent shows its hole; place and depth estimated; left out until 26 October 2026): drawn plain at the thread's size, Ø 0.70 (the threaded shank's crests 0.008 inside it), as no tapped thread can be cut across a part built in plan cells (Ø 0.74 leaves fusee.js's bore open there; the shank plain Ø 0.66 until 28 October 2026: 2-M8) */
-      dM.push(tag(mesh(sM,solidGeo([{loop:rect(SQ0-2.9,SQ0,f-o.tq/2,f+o.tq/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
-      const PO=C(P,1.15/2,96),inP=(a0,a1)=>o.pp<=a0+1e-9&&o.pp+o.pl>=a1-1e-9,offP=(L,a0,a1)=>{if(!inP(a0,a1)){console.warn('detent: a piece outside the pipe height');return L;}const c=bool(L,PO).dAB;return c.length===1?c[0]:L;};   /* a piece's end cut to the pipe's outside (its 96 corners), where the pipe covers its height: until 24 October 2026 the blade and horn ran into the pipe's wall, 0.07 mm³ weighed twice (overlaps.py) */
-      dM.push(tag(mesh(sM,solidGeo([{loop:ccw(offP(rect(0.4,SQ0-2.9,-o.tb/2,o.tb/2),b1-o.wb,b1)),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade, to the pipe */
-      dM.push(tag(mesh(sM,solidGeo([{loop:C(P,1.15/2,96),y0:yd(o.pp),y1:yd(o.pp+o.pl),F:[{p:C(P,RS+0.002,64),a:yd(o.pp),b:yd(o.pp+o.pl)}]}]),M.steel),'050401-1',1));   /* the pipe */
+      dM.push(tag(mesh(sM,nBore(solidGeo([{loop:rect(SQ0,SPR0,f-o.tq/2,f+o.tq/2),y0:y0F,y1:y1F}]),SQ0+K_.sqT,f+o.tq/2-K_.sqD,yc0,K_.sqR),M.steel),'050401-1',1));   /* the square, tapped 0.42 deep for the gold spring's screw WN-14 (M0.7: 05 04_1 draws the screw, the GUB's remade detent shows its hole; place and depth estimated; left out until 26 October 2026): drawn plain at the thread's size, Ø 0.70 (the threaded shank's crests 0.008 inside it), as no tapped thread can be cut across a part built in plan cells (Ø 0.74 leaves fusee.js's bore open there; the shank plain Ø 0.66 until 28 October 2026: 2-M8) */
+      dM.push(tag(mesh(sM,solidGeo([{loop:rect(SQ0-K_.thk,SQ0,f-o.tq/2,f+o.tq/2),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
+      const PO=C(P,K_.pR,96),inP=(a0,a1)=>o.pp<=a0+1e-9&&o.pp+o.pl>=a1-1e-9,offP=(L,a0,a1)=>{if(!inP(a0,a1)){console.warn('detent: a piece outside the pipe height');return L;}const c=bool(L,PO).dAB;return c.length===1?c[0]:L;};   /* a piece's end cut to the pipe's outside (its 96 corners), where the pipe covers its height: until 24 October 2026 the blade and horn ran into the pipe's wall, 0.07 mm³ weighed twice (overlaps.py) */
+      dM.push(tag(mesh(sM,solidGeo([{loop:ccw(offP(rect(K_.b0,SQ0-K_.thk,-o.tb/2,o.tb/2),b1-o.wb,b1)),y0:y0b,y1:y1b}]),M.steel),'050401-1',1));   /* the blade, to the pipe */
+      dM.push(tag(mesh(sM,solidGeo([{loop:C(P,K_.pR,96),y0:yd(o.pp),y1:yd(o.pp+o.pl),F:[{p:C(P,RS+0.002,64),a:yd(o.pp),b:yd(o.pp+o.pl)}]}]),M.steel),'050401-1',1));   /* the pipe */
       /* the horn flush with the blade's lower ("oben") edge (1436's right view: its edge on the blade's, 0.08, where centred it would stand 0.075 in: sure; centred on the blade
          until 28 October 2026), its end bevelled in plan over its last 0.74 (the right view's line across it 0.74 from its tip, "Anschrägen" in the left view at its tip: likely),
          its back ground in toward its face, which the gold spring rests on, to 0.05 at the tip (the bevel's form estimated: drawing check 2's 2-M11) */
-      const HL=hornLine(o.th),hts=[];for(let i=0;i<=32;i++)hts.push(-0.45-(HORN_L-0.45)*i/32);hts.splice(hts.findIndex(t=>t<-HORN_L+0.74),0,-HORN_L+0.74);   /* from inside the pipe's wall (r 0.46 at its corners, the bore 0.377) */
-      const HB=t=>{const f=Math.max(0,Math.min(1,(t+HORN_L)/0.74)),w=HL.w(t),b=HL.b(t);return w-(w-b)*(0.05/o.th+(1-0.05/o.th)*f);};
+      const HL=hornLine(o.th),hts=[];for(let i=0;i<=K_.hN;i++)hts.push(K_.hb-(HORN_L+K_.hb)*i/K_.hN);hts.splice(hts.findIndex(t=>t<-HORN_L+K_.bev),0,-HORN_L+K_.bev);   /* from inside the pipe's wall (r 0.46 at its corners, the bore 0.377) */
+      const HB=t=>{const f=Math.max(0,Math.min(1,(t+HORN_L)/K_.bev)),w=HL.w(t),b=HL.b(t);return w-(w-b)*(K_.tip/o.th+(1-K_.tip/o.th)*f);};
       dM.push(tag(mesh(sM,solidGeo([{loop:ccw(offP([...hts.map(t=>D(t,HL.w(t))),...hts.slice().reverse().map(t=>D(t,HB(t)))],b1-o.wh,b1)),y0:yd(b1-o.wh),y1:yd(b1)}]),M.steel),'050401-1',1));fuse(dS);fuse(dM);   /* the horn; the detent's fixed pieces (foot, spring's half) and its turning ones (the spring's other half, the square, the blade, the pipe, the horn) each one mesh (fuse): one steel piece, 05 04 01-1, whose flush faces drew lines in Edges until 21 October 2026 */
       /* the locking stone (Ruhestein 05 04 01-3): Ø 0.75 in the pipe, ground half away below it to its flat, which faces the oncoming tooth along the line from the wheel's
          centre (05 04_1's plan: the hatched half); it stands out of the pipe to 0.1 over the teeth (estimated) */
@@ -880,13 +889,13 @@ const WESC=(()=>{
          2026 the bow traced once on the same photograph (the strip's middle every 20 px from a pipe centre about 0.3 off the blade's line, the tip read at -0.43 and scaled to
          GT), the same round the pipe to 0.03 but crossing -0.14 at t -3.42 instead of -3.7, which would meet the traced horn before its tip; before that a polyline lying 3
          along the horn, cranked out by the pipe */
-      const g1=GB[1]+o.gs,head=SQ0+2.2,cr=(/** @type {number[][]} */Q)=>{const o2=[Q[0]];for(let i=0;i<Q.length-1;i++){const p0=Q[Math.max(0,i-1)],p1=Q[i],p2=Q[i+1],p3=Q[Math.min(Q.length-1,i+2)];
+      const g1=GB[1]+o.gs,head=SQ0+K_.gHd,cr=(/** @type {number[][]} */Q)=>{const o2=[Q[0]];for(let i=0;i<Q.length-1;i++){const p0=Q[Math.max(0,i-1)],p1=Q[i],p2=Q[i+1],p3=Q[Math.min(Q.length-1,i+2)];
           for(let s=1;s<=6;s++){const u=s/6,u2=u*u,u3=u2*u;o2.push([0,1].map(j=>0.5*(2*p1[j]+(-p0[j]+p2[j])*u+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*u2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*u3)));}}return o2;};   /* Catmull-Rom through the points */
       const path=[[head,g1],...cr(goldPath(g1))];
       const offs=(pts,w)=>{const L=[],Rr=[];for(let i=0;i<pts.length;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],u=unit(sub(b,a)),nn=[-u[1],u[0]];L.push(add(pts[i],nn,w/2));Rr.push(add(pts[i],nn,-w/2));}return[...L,...Rr.reverse()];};
       const free=path.slice(1);
-      {const n0=g1-GW/2,n1=g1+GW/2,h0=head-2.4,Q=pts=>ccw(pts.map(([t,n])=>D(t,n)));   /* the head 2 wide, the arm 1 */
-        tag(mesh(sM,nBore(solidGeo([{loop:Q([[GB[0],n0],[h0,n0],[h0,n1],[GB[0],n1]]),y0:gy0,y1:gy1},{loop:Q([[h0,n0],[head,n0],[head,n1],[h0,n1]]),y0:yd(b1-2),y1:gy1}]),head-1.2,n0-0.05,yc0,0.35),M.gilt),'050401-2');}   /* the head 2 high (05 04 01-2's "2"; 1.9 until 26 October 2026) with its hole Ø 0.7 +0.05 1.2 from its end (left out until then) */
+      {const n0=g1-GW/2,n1=g1+GW/2,h0=head-K_.gL,Q=pts=>ccw(pts.map(([t,n])=>D(t,n)));   /* the head 2 wide, the arm 1 */
+        tag(mesh(sM,nBore(solidGeo([{loop:Q([[GB[0],n0],[h0,n0],[h0,n1],[GB[0],n1]]),y0:gy0,y1:gy1},{loop:Q([[h0,n0],[head,n0],[head,n1],[h0,n1]]),y0:yd(b1-K_.gH),y1:gy1}]),head-K_.gHo,n0-K_.bo,yc0,K_.gR),M.gilt),'050401-2');}   /* the head 2 high (05 04 01-2's "2"; 1.9 until 26 October 2026) with its hole Ø 0.7 +0.05 1.2 from its end (left out until then) */
       const gf=new THREE.Group(),bp=D(GB[0],GB[1]);gf.position.set(bp[0],0,bp[1]);sM.add(gf);const gfi=new THREE.Group();gfi.position.set(-bp[0],0,-bp[1]);gf.add(gfi);R.golds.push(gf);
       tag(mesh(gfi,solidGeo([{loop:offs(free,GW).map(([t,n])=>D(t,n)),y0:gy0,y1:gy1}]),M.gilt),'050401-2',1);
       /* its screw (WN-14), across into the square: head Ø 1.4 × 0.4, M0.7 (estimated). The head on photographs, each scaled by a size in the same picture: Wempe 3955 in place
@@ -903,17 +912,17 @@ const WESC=(()=>{
       tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,f+fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,f-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
     R.golds=[];
-    dv(rv(detS,'last'),rv(dm,'last'),{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y.ew0});
-    dv(rv(detS,'first -3955'),rv(dm,'first -3955'),{w:2,wb:1,wh:0.8,d0:1.3,pp:2.30,pl:2.0,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
+    dv(rv(detS,'last'),rv(dm,'last'),{...DETV.last,ew0:Y.ew0});
+    dv(rv(detS,'first -3955'),rv(dm,'first -3955'),{...DETV.first,ew0:Y1.ew0});
     /* Wempe 3955's (as photographed) the same but its pipe 1.95-3.65 (built for every version until 28 October 2026): its block's arm stands flush with the base's edge, as its
        photographs show it (above, the block), where the drawn pipe to 4.30 would run 0.16 into it (bom.py's locking stone); the photographs don't show the pipe's ends (estimated) */
-    dv(rv(detS,'3955'),rv(dm,'3955'),{w:2,wb:1,wh:0.8,d0:1.3,pp:1.95,pl:1.7,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
+    dv(rv(detS,'3955'),rv(dm,'3955'),{...DETV.w3955,ew0:Y1.ew0});
     /* the 6MX's: at the first-drawn heights its block holds it at (the foot 1.3-3.3 under the plate, the pipe at the wheel just under it), with 1436's revised (bracketed)
        sections, as the later sheets the 6MX was copied from give them (likely: its detent's sections aren't measured; its length, 6.4 from the pipe to the square on
        8_Gangfeder_mit_Kloben_Rus_einfach.jpg against 1436's 8.4, isn't taken: README, The Soviet 6MX). The escapement of 1943's the same: the 1943 block (05 04 01-4,
        8.7.43) clamps the foot's face 0.30 off the foot's and spring's centre plane (0.19 off the stone's line since the blade is flush toward the block), the bracketed foot's half (0.60), where the unbracketed 0.65 would stand 0.025 into it, so the bracketed
        sizes came with the block (likely) */
-    for(const V of['6mx','1943'])dv(rv(detS,V),rv(dm,V),{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y1.ew0,scrM:V==='6mx'?M.steel:null});   /* one each: the 6MX's gold spring screw its own (WN-14) */
+    for(const V of['6mx','1943'])dv(rv(detS,V),rv(dm,V),{...DETV.late,ew0:Y1.ew0,scrM:V==='6mx'?M.steel:null});   /* one each: the 6MX's gold spring screw its own (WN-14) */
     R.gold=R.golds[0];
 
     /* ================= the detent block (Gangfederkloben 05 04 01-4, 8.7.43) ================= */
@@ -1283,5 +1292,5 @@ const WESC=(()=>{
   const BUILD40={k:1,bend:[3,0.06],set:{tsT:GTEQ},strip:null};
   const SET6={I:2513.3,JW:10.19,ID:7.62};   /* JW 10.21 until 29 October 2026 (the escape pinion 3.77 and the collet's end Ø 1.55, re-read on Kirov 247); I 2521.0, JW 10.45 and ID 8.01 until 28 October 2026 (drawing check 2's batches 1, 2 and 6); ID 7.94 until 27 October 2026, the blade centred (DOFF); I 2524.6, JW 10.90 and ID 7.96 until 26 October 2026 (the drawings check: the escape wheel's web, the seconds wheel's hub, the collet); I 2526.0, JW 10.89 and ID 8.19 until 25 October 2026 (the rim's cut 1.6, the detent at its bracketed heights and its spring tapered: the per-part audit); ID 8.28 until 24 October 2026 (the blade and horn counted twice in the pipe's wall: overlaps.py); ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,EARB,earProf,staffProf,EWG,ewGeo,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,EARB,earProf,staffProf,EWG,ewGeo,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DET:{K:DETK,V:DETV,ROW,DOFF,P,TD,RS,GW,GN,TI,SQ0,TP,HORN_L},DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
 })();

@@ -831,6 +831,92 @@ def maintDetent():
          Cut(lambda:_rev_at((0,0),[(0,DTU-0.01),(h['r']-0.01/h['tp'],DTU-0.01),(h['r']+(DTL-DTU+0.01)/h['tp'],DTL+0.01),(0,DTL+0.01)]),'Drill and ream the hole 1:70',[S('',f"Ø {2*h['r']} at its upper face, opening 1:70 toward the arbor's lower shoulder",'2.25 H7, Kegel 1:70',src)],src,at=(0,0))]
     return Recipe('maintDetent','050505-1','Maintaining detent (Gegensperrkegel)',src,'Bandstahl 2,25 × 18 (05 05 05-1)','hardened in oil, light blue at 310°, round the hole 400° (05 05 05-1)',[Setup('1','strip on the mill; hardened and blued',ops,view='top')],UP(),
       fits=["staked on its arbor 05 05 05-2's 1:70 seat, 6.3 ±0.1 from the arbor's lower shoulder to its upper face"])
+# ---------------- the detent (Gangfeder 05 04 01-1 = 1436), the gold spring (Goldfeder 05 04 01-2), the locking stone (Ruhestein 05 04 01-3): WESC.DET ----------------
+# The page draws the detent in its own frame, t along the blade from the stone toward the foot and n across toward the wheel (escapement.js's D(t, n), TD), each piece a prism
+# in plan between two heights under the top plate's inner face (yd(d) = TI + d): the recipes' frame is that one, X = t, Y = s n (s so the frame is a proper turn), Z = d.
+# Checked in recipes.py's frozen pose (lift 0, psDef 0: the detent's turning half on its fixed half's line, the gold spring unbent).
+@functools.lru_cache()
+def WDET():
+    """WESC.DET (the detent's literals DETK, each version's options DETV, its frame), the horn's face and back sampled finely from WESC.HORN.line, and the gold spring's
+    traced points (WESC.GOLD) for the version as last revised"""
+    js=("const W=require(%r)(),E=W.WESC,D=E.DET,o=D.V.last,HL=E.HORN.line(o.th),N=400,ts=[];for(let i=0;i<=N;i++)ts.push(D.K.hb-(D.HORN_L+D.K.hb)*i/N);ts.push(-D.HORN_L+D.K.bev);ts.sort((a,b)=>b-a);"
+        "const g1=E.GB[1]+o.gs;process.stdout.write(JSON.stringify({...D,o,GB:E.GB,FOOT0:E.FOOT0,SPR0:E.SPR0,SMID:E.SMID,hw:ts.map(t=>[t,HL.w(t),HL.b(t)]),gold:E.GOLD(g1),g1}))")%str(TOOLS/'wempe_load.js')
+    return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
+def _detFrame():
+    X=WDET();t,n=X['TD']['t'],X['TD']['n'];s=1 if n[0]*t[1]-t[0]*n[1]>0 else -1;P=X['P']
+    return s,page_matrix([[t[0],s*n[0],0],[0,0,1],[t[1],s*n[1],0]],(P[0],X['TI'],P[1]))
+def _tn(L,s):return [(t,s*n) for t,n in L]
+def _box(t0,t1,n0,n1,z0,z1,s):return _prism(_tn([(t0,n0),(t1,n0),(t1,n1),(t0,n1)],s),z0,z1)
+def _crom(Q):
+    """escapement.js dv's cr: Catmull-Rom through the points, six steps a span"""
+    o=[list(Q[0])]
+    for i in range(len(Q)-1):
+        p0,p1,p2,p3=Q[max(0,i-1)],Q[i],Q[i+1],Q[min(len(Q)-1,i+2)]
+        for k in range(1,7):
+            u=k/6;u2=u*u;u3=u2*u;o.append([0.5*(2*p1[j]+(-p0[j]+p2[j])*u+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*u2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*u3) for j in (0,1)])
+    return o
+def _offs(pts,w):
+    """dv's offs: each point moved w/2 either side along the normal of its neighbours' chord"""
+    L,R=[],[]
+    for i in range(len(pts)):
+        a,b=pts[max(0,i-1)],pts[min(len(pts)-1,i+1)];d=math.hypot(b[0]-a[0],b[1]-a[1]);u=((b[0]-a[0])/d,(b[1]-a[1])/d);nn=(-u[1],u[0])
+        L.append((pts[i][0]+nn[0]*w/2,pts[i][1]+nn[1]*w/2));R.append((pts[i][0]-nn[0]*w/2,pts[i][1]-nn[1]*w/2))
+    return L,R
+def _sp(P,z=0):return bd.Edge.make_spline([bd.Vector(x,y,z) for x,y in P])
+def _ln(a,b,z=0):return bd.Edge.make_line(bd.Vector(a[0],a[1],z),bd.Vector(b[0],b[1],z))
+def detent():
+    X=WDET();K=X['K'];o=X['o'];s,M=_detFrame();src='05 04 01-1 (1436, Rud. Grießbach 17.2.43, "Stahl"; 05 04_1)'
+    ROW,DOFF,FOOT0,SPR0,SQ0,SMID,TP,HL=X['ROW'],X['DOFF'],X['FOOT0'],X['SPR0'],X['SQ0'],X['SMID'],X['TP'],X['HORN_L'];f=DOFF
+    c=(2-o['w'])/2;z0F,z1F=o['d0']+c,o['d0']+2-c;b1=o['d0']+2-c;z0b=b1-o['wb'];zc=o['d0']+1;fh=o['tf']/2
+    sp=K['sp'];hT=sp[0]+sp[1]*abs(TP-SMID)/sp[2]
+    spring=[(SPR0,f-sp[3]),(TP,f-hT),(SMID,f-sp[0]),(FOOT0,f-sp[3]),(FOOT0,f+sp[3]),(SMID,f+sp[0]),(TP,f+hT),(SPR0,f+sp[3])]
+    # the horn: its face toward the wheel HL.w, its back HL.b ground in toward the face over its last bev to tip at the end (dv's HB)
+    hw=X['hw'];kink=-HL+K['bev']
+    def HB(t,w,b):fr=max(0,min(1,(t+HL)/K['bev']));return w-(w-b)*(K['tip']/o['th']+(1-K['tip']/o['th'])*fr)
+    face=[(t,w) for t,w,b in hw];back=[(t,HB(t,w,b)) for t,w,b in hw];ik=[i for i,(t,_,_) in enumerate(hw) if abs(t-kink)<1e-12][0]
+    def horn():
+        F=_tn(face,s);B=_tn(back,s);E=[_sp(F),_ln(F[-1],B[-1]),_sp(B[ik:][::-1]),_sp(B[:ik+1][::-1]),_ln(B[0],F[0])]
+        return bd.extrude(bd.Face(bd.Wire(E)).moved(bd.Location((0,0,b1-o['wh']))),o['wh'],dir=(0,0,1))
+    pipe=lambda:_disc(K['pR'],o['pp'],o['pp']+o['pl'])
+    def body():
+        return (_box(FOOT0,FOOT0+K['foot'],f-fh,f+fh,z0F,z1F,s)+_prism(_tn(spring,s),z0F,z1F)+_box(SQ0,SPR0,f-o['tq']/2,f+o['tq']/2,z0F,z1F,s)
+                +_box(SQ0-K['thk'],SQ0,f-o['tq']/2,f+o['tq']/2,z0b,b1,s)+_box(K['b0'],SQ0-K['thk'],-o['tb']/2,o['tb']/2,z0b,b1,s)+pipe()+horn())
+    u=(0,s,0)
+    ops=[Solid(body,"Mill the detent from a steel block in one piece: the foot, the spring and the square at full height, the blade and its thicker part on their lower edge, the pipe on the blade's end, the horn on past it",
+           [S('foot',f"{K['foot']} long, {o['tf']:.2f} thick, {o['w']} high",'1436: 0,65 (0,60), 2 (1,9); the bracketed figures as finished (inferred)',src),
+            S('spring',f"{FOOT0-SPR0:.0f} long, {2*sp[3]:.2f} thick at its ends, {2*sp[0]:.2f} at its middle, straight between; {2*hT:.3f} at the bending point {TP-SPR0:.2f} from the square","1436's left view 0,09 / 0,07 (sure); the bending point 05 04_1 (12.52 from the stone)",src),
+            S('square',f"{SPR0-SQ0:.0f} long, {o['tq']:.2f} thick, {o['w']} high",'1436: Viereck 2; 0,55 (0,50)',src),
+            S("blade's thicker part",f"{K['thk']} long, {o['tq']:.2f} thick, {o['wb']} high, flush with the square toward the block",'1436, scaled',src),
+            S('blade',f"{o['tb']:.2f} thick, {o['wb']} high, its line {DOFF} from the spring's (flush toward the block), to the pipe",'1436: 0,33 (0,28), 1 (0,9)',src),
+            S('pipe',f"Ø {2*K['pR']:.2f}, {o['pl']} long, its top {o['pp']:.2f} under the plate",'1436: 2 (1,9); Ø likely',src),
+            S('horn',f"{o['th']:.2f} thick, {o['wh']} high, {HL} from the stone, bent toward the block as traced; its back ground in over its last {K['bev']} to {K['tip']} at the tip",'1436: 0,25 (0,22), 0,8 (0,75), 4,4; the bend traced on Wempe 3955 (likely)',src)],src),
+         Drill((ROW,s*(f-fh-K['bo']),zc),u,2*K['fhR'],o['tf']+0.15,"Drill the foot for its screw (M1 clearance)",[S('',f"Ø {2*K['fhR']:.1f} across the foot, {ROW-FOOT0:.2f} from its end, at its middle",'1436 (scaled)',src)],src,key='screw'),
+         *[Drill((ROW+q,s*(f-fh-K['bo']),zc),u,2*K['pinR'],o['tf']+0.15,"Drill a steady pin's hole across the foot",[S('',f"Ø {2*K['pinR']:.2f}, {K['pinT']} {'beyond' if q>0 else 'before'} the screw",'1436 (scaled); drilled with the block at assembly',src)],src,key='pin') for q in (-K['pinT'],K['pinT'])],
+         Drill((SQ0+K['sqT'],s*(f+o['tq']/2-K['sqD']),zc),u,2*K['sqR'],K['sqD']+0.05,"Drill and tap the square for the gold spring's screw (M0.7, drawn at its size)",[S('',f"M0.7, {K['sqD']} deep from the face toward the wheel, {K['sqT']} from the square's end",'05 04_1 draws the screw; place and depth estimated',src)],src,key='WN-14'),
+         Cut(lambda:_disc(X['RS']+0.002,o['pp']-0.01,o['pp']+o['pl']+0.01),'Bore the pipe for the locking stone',[S('',f"Ø {2*(X['RS']+0.002):.3f} through",'the stone Ø 0,75 (05 04_1: sure), set in shellac',src)],src,at=(0,0))]
+    return Recipe('detent','050401-1','Detent (Gangfeder)',src,'steel (1436: "Stahl")','hardened and tempered spring hard (not given on the sheet: estimated)',[Setup('1','steel block on the mill; the spring ground to its taper last',ops,view='top')],M,
+      faces=("the plate's side","the dial's side"),fits=["the foot clamped to the block's end by the M1 screw WN-gf and its two steady pins","the locking stone Ø 0.75 in the pipe's Ø 0.754"],
+      expect=[{'at':(ROW,s*f),'r':0.75,'max':0.03,'why':"the page's bore across a thin strip (fusee.js's bore, its n-gon cut through by holeCut and closed by capFix) joins its two mouths' vertices with wall triangles that skip round the hole, chords up to 0.025 inside the circle at the foot's screw hole (a triangle from (−0.19, 37°) to (0.41, −10°)): the page's mesh, not the size"}],
+      notes=["Drawn in its own frame: X along the blade from the stone toward the foot, Y across it, Z its height under the top plate's inner face; the stone's centre at the origin.",
+             "1436 gives each size twice, the bracketed always the smaller: read as the size to grind it to (the model's inference; README)."])
+def goldSpring():
+    X=WDET();K=X['K'];o=X['o'];s,M=_detFrame();src='05 04 01-2 (16.9.42: Goldblech 333 federhart); 05 04_1'
+    SQ0,GB,GW,g1=X['SQ0'],X['GB'],X['GW'],X['g1'];c=(2-o['w'])/2;b1=o['d0']+2-c;zc=o['d0']+1;head=SQ0+K['gHd'];h0=head-K['gL'];n0,n1=g1-GW/2,g1+GW/2
+    free=_crom(X['gold']);L,R=_offs(free,GW)
+    def bow():
+        A,B=_tn(L,s),_tn(R,s);E=[_sp(A),_ln(A[-1],B[-1]),_sp(B[::-1]),_ln(B[0],A[0])]
+        return bd.extrude(bd.Face(bd.Wire(E)).moved(bd.Location((0,0,b1-K['gA']))),K['gA'],dir=(0,0,1))
+    def body():return _box(GB[0],h0,n0,n1,b1-K['gA'],b1,s)+_box(h0,head,n0,n1,b1-K['gH'],b1,s)+bow()
+    ops=[Solid(body,"Cut the blank from gold sheet 0.15 (the head 2 wide, the arm 1), then form the free arm's bow round the pipe to rest on the horn, to the template of its traced line",
+           [S('thickness',f'{GW}',None,src),S('head',f"{K['gL']} long, {K['gH']} wide",None,src),S('arm',f"{K['gA']} wide, flush with the head's edge; its bending point {GB[0]} from the stone",'05 04_1 "Biegungspunkt der Goldfeder" (6.10-6.23)',src),
+            S('overall','15.4',None,src),S('bow','one smooth bow from the bending point round the pipe to the tip, which alone rests on the horn','traced on Wempe 3955 (10_Vergleich_CWW-6MX), pinned at the bending point and the tip (likely ±0.05)',src)],src),
+         Drill((head-K['gHo'],s*(n0-K['bo']),zc),(0,s,0),2*K['gR'],GW+0.1,"Drill the head's hole for its screw WN-14",[S('',f"Ø {2*K['gR']:.1f}, {K['gHo']} from the head's end",'+0.05',src)],src,key='WN-14')]
+    return Recipe('goldSpring','050401-2','Gold spring (Goldfeder)',src,'Goldblech 333 federhart (05 04 01-2)','none (spring hard as rolled)',[Setup('1','sheet on a backing plate, cut; formed at the bench',ops,view='top')],M,
+      faces=("the plate's side","the dial's side"),fits=["screwed to the square's face toward the wheel by WN-14 (M0.7)"],
+      expect=[{'at':(head-K['gHo'],s*g1),'r':0.55,'max':0.06,'why':"the page's bore across a thin strip (fusee.js's bore, its n-gon cut through by holeCut and closed by capFix) joins its two mouths' vertices with wall triangles that skip round the hole, chords up to 0.048 inside the circle at the head's hole (one triangle across 64° of it): the page's mesh, not the size"}],notes=["Drawn in the detent's frame (its recipe's), as it lies on the detent unbent."])
+def detentBought():
+    return [Bought('lockingStone','050401-3','Locking stone (Ruhestein)',"a ruby pin, ground half away to a flat that faces the oncoming tooth along the line from the wheel's centre, set in the detent's pipe in shellac",
+              "Ø 0.75, standing out of the pipe's lower end to 0.06 under the wheel's lower face",'jewel pin (synthetic ruby)','ruby','05 04 01-3; 05 04_1 ("Ruhestein Ø 0,75": sure; its hatched half the ground flat)')]
 def springsBought():
     return [Bought('clickSpringStrip','050602-2',"Click springs' strip (Sperrfeder), two",'phosphor-bronze spring strip, cut 27.0 long, two holes Ø 0.6 +0.02 (the end\'s 5 from the next), formed round two Ø 2.2 formers into its S (05 06 02-2)',
               '1.5 × 0.4, 27.0 stretched ("gestreckt 27,0")','bronze spring strip (Bronzeband federhart)','bronze, spring hard','05 06 02-2',
@@ -857,6 +943,6 @@ RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarS
   'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel,'fuseeArbor':fuseeArbor,'barrelArbor':barrelArbor,
   'coverPlate':coverPlate,'dustPlate':dustPlate,'vorreiber':vorreiber,'clickWheel':clickWheel,'fuseeWheel':fuseeWheel,'maintRatchet':maintRatchet,'setupRatchet':setupRatchet,
   'drum':drum,'lid':lid,'steg':steg,'hookBlock':hookBlock,
-  'clicks':clicks,'stopBar':stopBar,'maintDetent':maintDetent}
+  'clicks':clicks,'stopBar':stopBar,'maintDetent':maintDetent,'detent':detent,'goldSpring':goldSpring}
 for _h,_k,*_r in SMALL:RECIPES[_k]=(lambda h=_h,k=_k,r=tuple(_r):smallTurned(h,k,*r))
-for _b in pinsBought()+springsBought():RECIPES[_b.key]=(lambda b=_b:b)
+for _b in pinsBought()+springsBought()+detentBought():RECIPES[_b.key]=(lambda b=_b:b)
