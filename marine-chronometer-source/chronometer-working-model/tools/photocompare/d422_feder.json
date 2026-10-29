@@ -1,0 +1,16 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-dec/8_Kirow_DEC_422_Feder.jpg",
+ "rev": "1943",
+ "hash": "wind=55.9",
+ "look": [3.441592653589793, 0.03, 100, -11.78, -13, 21.74, 20],
+ "points": {
+  "seconds arbor at the top plate's inner face (050501, (0,23))": {"xyz": [0, -19, 23], "uv": [222, 231]},
+  "seconds arbor at the pillar plate's inner face": {"xyz": [0, 0, 23], "uv": [222, 611]},
+  "escape arbor at the pillar plate's inner face": {"xyz": [-11.783, 0, 21.743], "uv": [458, 609]}
+ },
+ "circles": {
+  "pillar 11 at the pillar plate (r 4.0), its two silhouettes": {"c": [-36.858, 0, 3.225], "r": 4.0, "uv": [[856, 610], [998, 611]]},
+  "pillar 11 at mid height, silhouettes": {"c": [-36.858, -8, 3.225], "r": 4.0, "uv": [[856, 455], [998, 455]]},
+  "seconds arbor's own line, mid": {"c": [0, -9.5, 23], "r": 0.6, "uv": [[211, 420], [235, 420]]}
+ }
+}
