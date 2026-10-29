@@ -58,7 +58,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .selbar{flex-basis:100%;display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px;font-size:12.5px;color:var(--ink)}
 .selbar .sn{max-width:18em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-left:3px solid #2f7fe8}
 .selbar .sl{display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.selbar .sl input{width:90px}.selbar .sl output{min-width:2.8em}
-.selbar.empty button,.selbar.empty .sl{display:none}
+.selbar.empty button:not(.unf),.selbar.empty .sl{display:none}
 .lasso{position:absolute;left:0;top:0;width:100%;height:100%;z-index:4;pointer-events:none;display:none}.lasso.on{display:block}
 .lasso polygon{fill:rgba(47,127,232,.12);stroke:#2f7fe8;stroke-width:1.5;stroke-dasharray:5 4;stroke-linejoin:round}
 .tools button{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}

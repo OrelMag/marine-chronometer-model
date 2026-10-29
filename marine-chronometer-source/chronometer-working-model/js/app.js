@@ -275,7 +275,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}t.color.copy(m0.color).lerp(LPC[c],0.8);if(t.emissive){t.emissive.copy(LPC[c]);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}   /* less metal, so the colour shows rather than the room it reflects */
   /* a movement mesh drawn see-through (a ghost): plates with See-through, the laid-out view's schematic plates, the barrel's wall in drive mode, and whatever is outside the focus foc */
   const ghOf=(m,foc)=>{const p=m.userData.part;return !(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||(m.userData.devPlate&&!(foc&&inK(foc,m)))||(st.drive&&m.userData.driveGhost)||(foc&&!inK(foc,m)&&!(p==='mainspring'&&anyOf(foc,'barrel'))));};
-  function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const ct=!!CT&&CT.on();
+  function look(){wake();if(SEL)SEL.sync();INK.ink.value=st.draw==='ink'?1:0;const ct=!!CT&&CT.on();
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
       if(((st.drive||dvOn)&&DRIVE_HIDE.has(p)&&!m.userData.devPlate&&!(m.userData.devKeep&&dvOn&&!st.drive))||(st.drive&&!st.mwOn&&(p==='motion'||p==='hands')))vis=false;   /* the schematic plates stand in for the frame laid out; a piece of it flagged devKeep (the winding stop) stays */
@@ -499,7 +499,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   /* the selection (../shared/select.js): Ctrl-click or Select, Alt-drag or Lasso; its bar and the menu above fade, hide or isolate it together */
-  SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:[...MVM,...BOXM],pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
+  SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:[...MVM,...BOXM],pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),shows:m=>shown(m)&&!!INFO[m.userData.part],hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
   /* how to use it: every control for a mouse and for touch. Stays open while the model is dragged, so the gestures can be tried; a tap, × or Esc closes it */
   const help=$('#help'),helpBtn=$('#helpBtn');
   function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
