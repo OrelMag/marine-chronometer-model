@@ -123,7 +123,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
 | 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
 | 6 | Small turned parts | the bushes WN-301, WN-300 (×3), WN-302 and the hand-setting bush, the seconds jewel's setting, the studs' bushes and both studs, the escape wheel's collet; the seconds jewel (bought) | done, 29 Oct (the balance's and escape wheel's jewel settings, the hairspring's collet and stud moved to batch 8) |
-| 7 | Springs and the detent | the detent and its block, gold spring, clicks and click springs, maintaining spring, stop bar and its spring; mainspring and hairspring strip (bought) | |
+| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (needs a frozen pose: 7b); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done |
 | 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | |
 | 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
@@ -275,6 +275,19 @@ in the recipes or the page.
 
 **Left for batch 8:** the balance's and escape wheel's jewel settings and caps, the hairspring's collet and its stud. They're built from values local to
 `escapement.js`'s balance and escapement code (`JR`, `JT`, `hY`, `eY`, `ER`, `EE`, `ck`), which batch 8 lifts with the balance and rollers.
+
+### Batch 7 (29 October 2026): the strip as bought lines; the detent and the fusee's springs need two steps first
+
+Done: the hairspring strip 05 03 02-1 (Bandstahl 0.52 × 0.285, 13 turns as fitted) and the mainspring strip (05 06_20's "Zugfeder 15 × 0,37", about
+1.24 m, fitted), each a bought line citing its sheet, with the 1950s build's Nivarox and Nivaflex named.
+
+Not done, and why:
+- **The detent (05 04 01-1), its block (05 04 01-4) and the gold spring (05 04 01-2).** The page draws the detent as a fixed spring foot and a moving
+  blade (`escapement.js`'s `sS`/`sM`), turned by the escapement's lift at the page's current phase, with the gold spring on the moving part. A reliable
+  check needs the page frozen at a stated phase, as `fine.py` freezes it, and the recipe at rest: step 7b, `recipes.py`'s exporter taking a freeze. Then
+  each size gets cited, the code lifted the same way as before, and `wempe_escapement.js` and `dynamics.js --model wempe --quick` run after any move.
+- **The clicks and their springs, the maintaining spring, the maintaining detent and its wire spring, the stop bar and its spring.** These are built in
+  `fusee.js`, which `wempe_load.js` doesn't run. They go with batch 9, after its Node loader for `fusee.js`.
 
 ## Page faults found (for a later fix on the page)
 
