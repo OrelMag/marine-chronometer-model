@@ -125,8 +125,8 @@ class SlotHead(Op):
 class Plate(Op):
     """stock: a blank of thickness t, its outline a build123d face (the contour milled or turned: lines and arcs)"""
     kind='stock'
-    def __init__(self,face,t,text,sizes=(),src=''):super().__init__(text,sizes,src);self.face=face;self.t=t
-    def apply(self,p):return bd.extrude(self.face,self.t,dir=(0,0,1))   # up, whichever way the outline winds
+    def __init__(self,face,t,text,sizes=(),src='',spin=False):super().__init__(text,sizes,src);self.face=face;self.t=t;self.spin=spin;self.angle=0.0   # spin: its outline turned about Z by angle (set by the check, recipes.py's free_spin; 0 for the STEP)
+    def apply(self,p):return bd.extrude(self.face.rotate(bd.Axis.Z,math.degrees(self.angle)) if self.angle else self.face,self.t,dir=(0,0,1))   # up, whichever way the outline winds
 class Hole(Op):
     """a round hole at (x, y): diameter d, from the face ('in' Z 0, 'out' Z t) depth dp (None: through), t the plate's thickness; a thread drawn at its minor"""
     kind='drill'

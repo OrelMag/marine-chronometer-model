@@ -38,8 +38,9 @@ EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.user
   const seen=new Set();for(const r of[root,...subs])r.traverse(o=>{if(seen.has(o))return;seen.add(o);if(!o.isMesh||!o.geometry||o.userData.decal||o.userData.surface||!shows(o)||own(o)!==hn)return;if(o.userData.screw&&rotY===null)rotY=o.rotation.y;if(o!==root&&o.userData.gear&&gearRot===null)gearRot=o.rotation.y;   /* a gear piece's turn about its arbor relative to the part's root (a wheel that is the root itself is exported in its own frame) */
     const m=inv.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position,n=P.count,pos=new Float32Array(3*n);
     for(let i=0;i<n;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);pos[3*i]=v.x;pos[3*i+1]=v.y;pos[3*i+2]=v.z;}
-    const I=o.geometry.index?Uint32Array.from(o.geometry.index.array):Uint32Array.from({length:n},(_,i)=>i);out.push({pos:b64(pos),idx:b64(I)});});
-  return{meshes:out,rotY,gearRot};}"""
+    const I=o.geometry.index?Uint32Array.from(o.geometry.index.array):Uint32Array.from({length:n},(_,i)=>i);out.push({pos:b64(pos),idx:b64(I),thread:!!o.userData.thread});});
+  const pud={};for(let q=root;q;q=q.parent)for(const[k,v]of Object.entries(q.userData||{}))if(!(k in pud)&&(typeof v==='number'||Array.isArray(v)&&v.every(x=>typeof x==='number')))pud[k]=v;   /* its groups' numbers (the drum's chain slot, as the page laid it) */
+  return{meshes:out,rotY,gearRot,pud};}"""
 
 async def page_meshes(hns):
     import browser
@@ -114,6 +115,8 @@ def check(r,pm):
     import trimesh
     res={'part':r.key,'hn':r.hn,'fail':[]};F=res['fail']
     if not pm or not pm['meshes']:F.append('no page mesh for '+r.hn);return res
+    if getattr(r,'root_only',False):pm=dict(pm,meshes=pm['meshes'][:1])   # the part's own mesh, without the other pieces its line carries (the hook block's: the M2.6 screw that fixes it)
+    if getattr(r,'page_params',None):r.page_params(pm.get('pud') or {})   # what the page sets at its build (the drum's chain slot where the laid chain's hook comes)
     M=r.to_page.copy()
     if getattr(r,'spin',False) and pm.get('gearRot') is not None:   # a wheel turned on its arbor by the page's phase: the whole recipe turned about Z by it
         a=pm['gearRot'];Rz=np.eye(4);Rz[:2,:2]=[[math.cos(a),-math.sin(a)],[math.sin(a),math.cos(a)]];M=M@Rz
@@ -132,10 +135,22 @@ def check(r,pm):
                 Q_=S_[k];a0=math.atan2(Q_[:,1].mean(),Q_[:,0].mean())
                 cost=lambda t:np.mean((np.hypot(Q_[:,0]*math.sin(t)-Q_[:,1]*math.cos(t),Q_[:,2]-o.z)-o.d/2)**2)   # each wall point's distance from the hole's axis, against its radius
                 T=np.linspace(a0-0.1,a0+0.1,401);o.angle=float(T[np.argmin([cost(t) for t in T])]);res['free_angle']=round(math.degrees(o.angle),3)
+    fs=getattr(r,'free_spin',None)
+    if fs:   # an outline turned on its arbor to where something else sets it (a ratchet's face against its click): its ops marked spin turned about Z to fit the page's mesh
+        import trimesh as _t   # (fs: the period searched and the radius inside which the part isn't turned, the square hole that stays on the arbor's square)
+        fs,rmin=fs;bm=tess(r.build(),0.004);Q=ixf(M,np.concatenate([_t.sample.sample_surface(m,max(300,int(3000*m.area/sum(q.area for q in tm_of(pm['meshes'])))),seed=7)[0] for m in tm_of(pm['meshes'])]))
+        Q=Q[np.hypot(Q[:,0],Q[:,1])>rmin]
+        def cost(a):
+            c,s_=math.cos(-a),math.sin(-a);P=Q.copy();P[:,0]=Q[:,0]*c-Q[:,1]*s_;P[:,1]=Q[:,0]*s_+Q[:,1]*c;return float(np.mean(_t.proximity.closest_point(bm,P)[1]))
+        T=np.linspace(0,fs,91,endpoint=False);a=float(T[np.argmin([cost(t) for t in T])]);w=fs/90
+        for _ in range(3):T=np.linspace(a-w,a+w,21);a=float(T[np.argmin([cost(t) for t in T])]);w/=10
+        res['free_spin']=round(math.degrees(a),4)
+        for o in r.ops():
+            if getattr(o,'spin',False):o.angle=a
     part=r.build();rm=tess(part);rm.vertices=xf(M,rm.vertices);pages=tm_of(pm['meshes']);zones=r.zones()
     vr=part.volume;vp=sum(m.volume for m in pages);res['volume']={'recipe':round(vr,3),'page':round(vp,3),'diff':round(vr-vp,3),'rel':round((vr-vp)/vp,5)}
     # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL
-    ta=sum(math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5 for (_,r0,r1,z0,z1) in zones);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)
+    ta=sum(math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5 for (_,r0,r1,z0,z1) in zones)+sum(e.get('vol',0) for e in r.expect);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)   # an expect's vol: a known departure's own volume (a radial tapped hole drawn plain at its size)
     if len(pages)>1:res['volume']['pieces']=len(pages)   # several pieces may overlap (a pinion's leaves drawn as a full disc through its arbor): their sum isn't the part's, so reported only
     elif abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
     bp=np.array([np.min([m.bounds[0] for m in pages],0),np.max([m.bounds[1] for m in pages],0)]);db=np.abs(rm.bounds-bp).max()
@@ -152,6 +167,8 @@ def check(r,pm):
     for j,m in enumerate(pages):   # inside another piece, by its winding number (a lathe's fan at the axis leaves it open to trimesh's ray parity)
         k=cand&(own!=j)
         if k.any():inner[k]|=winding(m,Pp[k])>0.5
+        k=cand&~inner   # or the page's metal is on its outer side too, any piece's (its own: two pieces welded at the corners they share, meeting on faces of different facets, a hub in its web's hole)
+        if k.any():inner[k]|=winding(m,Pp[k]+0.02*Np[k])>0.5
     for i in np.nonzero(cand&~inner)[0]:   # a coincident face of any piece facing the other way
         n=Np[i]
         for j,m in enumerate(pages):
@@ -242,6 +259,7 @@ def main():
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
         if v:print(f"  volume  recipe {v['recipe']} page {v['page']}"+(f" (the page in {v['pieces']} pieces, summed: reported)" if v.get('pieces') else f" ({v['rel']*100:+.3f} %, allowed ±{v['allow']})")+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page in several pieces, not closed or with faces inside: no Monte Carlo'))
         if 'bbox' in res:print(f"  bbox    corners within {res['bbox']['max']}")
+        if 'free_spin' in res:print(f"  turned  {res['free_spin']}° about its axis, fitted to the page's mesh (free_spin)")
         if s:print(f"  surface recipe→page max {s['recipe_to_page']['max']} p99 {s['recipe_to_page']['p99']}; page→recipe max {s['page_to_recipe']['max']} p99 {s['page_to_recipe']['p99']}")
         for w in s.get('worst',[]):print(f"    {w['d']:.4f} on the {w['from']}'s surface at {w['at']}"+(' (expected)' if w.get('expected') else ''))
         for e in res.get('expected',[]):print(f"  expected, the old mesh: {e['max']} (bound {e['bound']}): {e['why']}")
