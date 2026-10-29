@@ -278,7 +278,7 @@ const VIEWER={start(cfg){
   $('#shot').addEventListener('click',()=>{paint();const c2=document.createElement('canvas');c2.width=cv.width;c2.height=cv.height;const x=c2.getContext('2d');x.fillStyle=getComputedStyle(document.body).backgroundColor;x.fillRect(0,0,c2.width,c2.height);x.drawImage(cv,0,0);
     c2.toBlob(b=>{if(!b)return;const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(cfg.shot||'chronometer')+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);});});
   /* Link: the page's address with this state in its hash; without the clipboard, it is put in the address bar */
-  $('#link').addEventListener('click',()=>{const b=$('#link'),h=hashOf(),u=location.href.split('#')[0]+(h?'#'+h:''),say=t=>{b.textContent=t;clearTimeout(b.t);b.t=setTimeout(()=>b.textContent='Link',1500);};
+  $('#link').addEventListener('click',()=>{const b=$('#link'),h=hashOf(),u=location.href.split('#')[0]+(h?'#'+h:''),say=t=>{b.dataset.say=t;clearTimeout(b.t);b.t=setTimeout(()=>delete b.dataset.say,1500);};   /* shown beside the icon (style.css) */
     const bar=()=>{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);};
     try{navigator.clipboard.writeText(u).then(()=>{bar();say('Copied');},()=>{bar();say('In address bar');});}catch(_){bar();say('In address bar');}});
   /* Reset display: each Display box back to its default (See-through to the view's own), faded and hidden parts back; the theme stays */

@@ -31,13 +31,26 @@ model's settings, the browser and the page's last errors.
 | [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, a banking screw to turn (Swing and isochronism: the depth of lock it sets, with the swing and whether the escapement still works shown live), Making it (maker's sheets, and the build book as engineering drawings) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
 | [`marine-chronometer-source/essay/dist/the-marine-chronometer.html`](marine-chronometer-source/essay/dist/the-marine-chronometer.html) | The essay: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals, keeping the rate, navigating without radio and making the chronometer. The models' own code computes its live figures |
 
+Both models' pages share one layout (since 3.52.00). The title, the model
+switcher, the page tabs and a light/dark switch sit in one line over the model.
+On the model are the tools as icons (Select, Lasso, help, save a picture, copy a
+link, reset the view, full screen), a row of views, and a play bar: stop and go
+on, the speed (1/20×, ¼×, 1×, 60×, 3600× or any speed), the time, the power left
+and Wind. The panel beside it (under it on a phone) has four tabs: **Explore**
+(the walkthrough, the Hamilton's overhaul, Take it apart: Exploded and Laid out,
+and Parts), **Run** (time, winding, the rate and timing weights, and the
+Hamilton's stopping and starting and rate book), **Look** (Metal, Tinted or Ink,
+Colour by, the display's switches and ship motion) and **Advanced** (Contacts,
+swing, the trial, the escapement's plan or bench, cross-sections, variants,
+Making it, Download and Performance). A link that opens a section opens its tab.
+
 Each is a single self-contained HTML file: download it and open it in any
 modern browser. It works offline and needs no server, because three.js and the
 fonts are built into the file. The pages link to each other, both on the site
 and in the repository.
 
-**In Blender:** each model's panel has **Blender (.glb)** (the Hamilton's under
-Making it, the Wempe's under Download). It saves the whole instrument as a
+**In Blender:** each model's panel has **Blender (.glb)** (under Advanced: the Hamilton's in
+Making it, the Wempe's in Download). It saves the whole instrument as a
 glTF 2.0 file. Every part is a named object in its hierarchy, with its
 materials, and every motion the model has is an action: running, a beat in
 slow motion, run down, winding, setting the hands, stopping and starting,
