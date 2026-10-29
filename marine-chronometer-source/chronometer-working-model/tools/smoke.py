@@ -610,6 +610,10 @@ async def wempe(b,errs,steps):
     bk=await ev("[getComputedStyle(document.querySelector('#mkBook')).display,document.querySelectorAll('.info .mkc [data-a=dwg]').length]")   # the drawings withdrawn (29 October 2026): no Build book, no Drawing on a card
     steps.append(f'the build book and drawings withdrawn: {bk}')
     if not(bk[0]=='none' and bk[1]==0):errs.append(f'the build book or a Drawing still offered: {bk}')
+    await ev("location.hash='#part=topPlate'");await pg.wait_for_timeout(600)   # the parts as recipes (tools/recipes_site.py): the top plate's card links its STEP file and operation sheet
+    rc=await ev("[...document.querySelectorAll('.info .mkc ul.mkr a')].map(a=>a.getAttribute('href'))")
+    steps.append(f"the top plate's recipe links: {rc}")
+    if 'parts/topPlate.step' not in rc or 'parts/topPlate.html' not in rc:errs.append(f"the top plate's card: no STEP file or operation sheet: {rc}")
     await click('#mkData','Data')
     await ev("document.querySelector('#makeDet').open=false")
     # ship motion, the transit lock, the roll period (near the case's own swing and off it)
