@@ -261,7 +261,7 @@ def barrelBridge():
     face=bd.Face(bd.Wire([bd.Edge.make_three_point_arc(bd.Vector(*P[0]),bd.Vector(*P[1]),bd.Vector(*P[2])),bd.Edge.make_line(bd.Vector(*P[2]),bd.Vector(*P[3])),bd.Edge.make_line(bd.Vector(*P[3]),bd.Vector(*P[0]))]))
     ops=[];hl=lambda k,q,d,text,sz,face='in',dp=None,thd=None,s=src:ops.append(Hole(pl(q),d,face,t,dp,text,sz,s,thread=thd,key=k))
     stock=Plate(face,t,'Cut the blank from Messingblech 3,5 Ms 58, face to thickness; its outer edge turned with the top plate ("mit der Oberplatte überdrehen"), the chord and the short edge milled',
-      [S('thickness',f'{t:.2f}','-0.04 (drawn at its top)',src),S('chord','7 from hole 45, 7.7 from hole 42',None,src),S('short edge','150° to the chord, 5 beyond hole 48',None,src+'; Wempe 3955 (likely)'),S('rim','with the top plate, Ø 85',None,src)],src)
+      [S('thickness',f'{t:.2f}','3.32 -0.04, at the middle',src),S('chord','7 from hole 45, 7.7 from hole 42',None,src),S('short edge','150° to the chord, 5 beyond hole 48',None,src+'; Wempe 3955 (likely)'),S('rim','with the top plate, Ø 85',None,src)],src)
     hl(45,H[45],B['d45'],'Hole 45 (barrel arbor): ream',[S('','Ø 3.9','±0.01',src)])
     i=iso(2.6);hl(46,H[46],i['D1'],"Hole 46 (the click's screw): drill and tap M2.6",[S('','M2.6',None,src)],thd=i)
     for k in (42,48):hl(k,H[k],2*FR['rCl26'],f'Hole {k}: drill clear for M2.6',[S('','Ø 2.8',None,src)])
@@ -310,7 +310,7 @@ def fuseeBush():
     return Recipe('fuseeBush','050801-2','Fusee bush (Schneckenfutter)','05 08 01-2','Rundmessing 13,5 Ms 58 (05 08 01-2)','none',[
       Setup('1','bar Ø 13.5 in the collet, the spigot end out',[
         Bar(13.5,z3,'Part off and face to length',[S('overall',f'{z3:.2f}','7.1 -0.2 (the body below the flange 2.6, not 2.7: the fusee arbor\'s endshake, README Unresolved)',src)],src),
-        TurnOD(2*Q['fl'],0,z3,'Turn the flange\'s diameter',[S('flange',f'Ø {2*Q["fl"]:.1f}','-0.2 (drawn at its top)',src)],src),
+        TurnOD(2*Q['fl'],0,z3,'Turn the flange\'s diameter',[S('flange',f'Ø {2*Q["fl"]:.1f}','13.2 -0.2, at the middle',src)],src),
         TurnOD(Q['spD'],0,z1,'Turn the spigot (into the plate\'s hole 10)',[S('spigot',f'Ø {Q["spD"]:.4f} × {z1}','8 g6 (-0.005/-0.014), at the middle',src)],src),
         Bore(2*Q['r'],0,z3,'Bore through, reamed to the fusee arbor\'s journal',[S('bore',f'Ø {2*Q["r"]:.2f}','the sheet\'s 4.1 +0.2 opened to the arbor\'s 4.5 (README, Unresolved)',src)],src)]),
       Setup('2','reversed in a soft collet on the spigot',[
@@ -332,18 +332,18 @@ def dustBush():
         return bd.Box(20,20,Q['nkY']-c13+0.02,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,c13-0.01))).moved(bd.Location((0,0,0),(0,0,math.degrees(math.atan2(nf[1],nf[0]))))).moved(bd.Location((Q['body']*nf[0],Q['body']*nf[1],0)))
     return Recipe('dustBush','050801-3','Dust bush (Staubfutter)','05 08 01-3 (2.7.42), waisted as the assembly 05 08 01 (2.11.46) draws it','Rundmessing 15 Ms 58 (05 08 01-3)','none',[
       Setup('1','bar in the collet, the bottom end out',[
-        Bar(Q['col'],L,'Part off and face to length',[S('overall',f'{L}','-0.2',src)],src),
-        TurnOD(2*Q['body'],0,c13,'Turn the body',[S('body',f'Ø {2*Q["body"]:.1f}','-0.2 (drawn at its top)',src)],src),
+        Bar(Q['col'],L,'Part off from Rundmessing Ø 15 and face to length',[S('overall',f'{L}','-0.2',src),S('collar',f'Ø {Q["col"]:.1f}','15.1 -0.2, at the middle: the bar diameter',src)],src),
+        TurnOD(2*Q['body'],0,c13,'Turn the body',[S('body',f'Ø {2*Q["body"]:.1f}','13.1 -0.2, at the middle',src)],src),
         TurnAway([(Q['body'],s5),(rW,w5),(rW,c13),(1000,c13),(1000,s5)],'Turn the waist under the collar, its shoulder 45°',[S('waist',f'Ø {2*rW} from {w5} to {c13}, the shoulder from {s5}',None,'05 08 01 (2.11.46), scaled at 20.6 px/mm (likely)')],src),
         TurnCone(Q['ring'][0],0,Q['body'],Q['ch'],'Chamfer the bottom\'s outer corner',[S('',f'{Q["ch"]} × 45°',None,'scaled, not figured (estimated)')],src),
         InnerCone(rr(-0.01),-0.01,rr(zm),zm,'Bore and ream the 1:70 taper (pressed on the fusee bush)',[S('bore',f'Ø {Q["bore"]:.4f} at the bottom, 1:70','8 H7, at the middle',src)],src),
         TurnAway([(0,-0.01),(Q['ring'][1],-0.01),(Q['ring'][1],0),(rr(zd),zd),(0,zd)],'Dish the bottom face 5° up to the bore, inside its 0.5 flat ring',[S('',f'5°, the ring {Q["ring"][0]-Q["ring"][1]:.1f} wide',None,src)],src)]),
       Setup('2','reversed in a soft collet on the body',[
-        TurnOD(2*Q['neck'],Q['nkY'],L,'Turn the neck',[S('neck',f'Ø {2*Q["neck"]:.1f}','-0.2 (drawn at its top)',src)],src),
+        TurnOD(2*Q['neck'],Q['nkY'],L,'Turn the neck',[S('neck',f'Ø {2*Q["neck"]:.1f}','9.7 -0.2, at the middle',src)],src),
         InnerCone(rr(zm),zm,rT+0.01*math.tan(math.radians(Q['mAng'])),L+0.01,'Turn the mouth 20°',[S('mouth',f'{Q["mouth"]} deep, 20°','+0.2',src)],src)]),
       Setup('3','on the mill, the collar\'s flat',[Cut(flat,'Mill the flat on the collar, toward the upper balance cock',[S('flat',f'{Q["body"]} from the axis','14.1 from the far side, so flush with the body',src)],src)],view='top')],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,Yb,0)),fits=['bore 8 H7, 1:70, pressed on the fusee bush\'s 8 r6'],
-      notes=['Rundmessing 15 for a collar drawn Ø 15.1 -0.2: the model draws the collar and body at their figures\' tops (15.1, 13.1), which a Ø 15 bar leaves short; the bar\'s size and the collar\'s tolerance agree at 15.0.'])
+      notes=["The collar, body and neck at their tolerances' middles (since 29 October 2026, the owner's choice): the collar's Ø 15.0 is the Rundmessing 15's own diameter."])
 
 # ---------------- the upper balance cock (Unruhkloben oben, 05 08 03-1; kompl. 127-556.04 U30) ----------------
 def upperCock():
