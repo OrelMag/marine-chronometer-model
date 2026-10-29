@@ -123,9 +123,9 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
 | 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
 | 6 | Small turned parts | the bushes WN-301, WN-300 (×3), WN-302 and the hand-setting bush, the seconds jewel's setting, the studs' bushes and both studs, the escape wheel's collet; the seconds jewel (bought) | done, 29 Oct (the balance's and escape wheel's jewel settings, the hairspring's collet and stud moved to batch 8) |
-| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (needs a frozen pose: 7b); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done |
+| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (needs a frozen pose: 7b); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c, 29 Oct) |
 | 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | |
-| 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | |
+| 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | done but the fusee body (9d) and the maintaining spring (7b), 29 Oct |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
 | 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
 
@@ -311,12 +311,66 @@ maintaining ratchet and set-up ratchet (their teeth), the cover plate, Vorreiber
 fusee-side springs (the clicks and their springs, the maintaining spring, the maintaining detent and its wire spring, the stop bar and its spring).
 Pure strip among them is a bought line.
 
+### Batches 9b and 9c (29 October 2026): fourteen more made parts pass; the fusee body deferred
+
+**The lift, the page unchanged.** `fusee.js`'s sizes for these parts moved into `dims.js`, written with its own expressions in its order: `WD.FU` (the
+stack along the fusee arbor, VHF to DTT; the chain's pin's angle; `ratchet()`; the cover plate DP, dust plate SP, Vorreiber VR, click wheel CW, fusee
+wheel FW, maintaining ratchet MR, set-up ratchet SR; the clicks CK, stop bar SB and maintaining detent DT with their outlines' construction) and `WD.BAR`
+(BLK, the drum, lid, Steg, hook block and the chain slot's sizes, `drum()` and `lidP()`). `FA` and `BAR` became locals of WD's builder so `FU` can read
+them. `fusee.js` reads all of it. The page's 36 fusee-side lines matched within 1e-5 mm (`recipes_pagehash.py`) after each lift; the four that differ
+from one load to the next with no change at all (the wire spring, the click springs, the mainspring and the chain, which follow the clock) excepted.
+`wempe_escapement.js`, `wempe_physics.js`, `wempe_mainspring.py --check`, `wempe_ratchets.js` and `wempe_strength.js` gave byte-identical output after
+each lift. `wempe_sustaining.js` read the maintaining spring's thickness out of `fusee.js`'s source (`GS1=WW-1.3`): it now reads `WD.FU.MSt`. The
+Wempe type check is clean.
+
+| Part | Surface apart (max) | Notes |
+|---|---|---|
+| Cover plate 05 06 00-4 | 0.0024 | turned, its 60° hole, the screw's hole and 90° sink |
+| Dust plate 05 06 00-1 | 0.0017 | the square hole broached 1:100 from the recess floor (page fault 1, below) |
+| Vorreiber 05 06 00-2 | 0.0054 | the pin's hole reamed with the arbor's at assembly |
+| Click wheel 05 06 04-3 | 0.0034 | 35 teeth (the page's outline), three holes opened 1:8 |
+| Fusee wheel 05 06 00-3 | 0.0037 | turned, 90 teeth (train.js's teeth(), the same as fusee.js's copy), the spring's pin hole |
+| Maintaining ratchet 05 06 02-1 | 0.0058 | plate, cup and floor, 120 teeth, M1.7 ×2, the rivets' holes across the cup |
+| Set-up ratchet 05 07 00-3 | 0.0 | its outline turned 1.17° on the square (`free_spin`), the 1:100 square hole kept |
+| Barrel drum 05 07 01-1 | 0.0017 at p99; 0.27 and 0.35 expected | the M2.6 hole (convention), the Steg slot's stray floor (page fault 2); the chain's slot as the page laid it (`page_params`) |
+| Barrel lid 05 07 01-2 | 0.0058 | the two notches |
+| Steg 05 07 00-1 | 0.0 | |
+| Hook block 05 07 01-3 | 0.27, expected | its M2.6 hole by convention; the line's screw left out (`root_only`) |
+| Clicks 05 06 02-3 | 0.0053 | exact arcs; two alike |
+| Stop bar 05 06 03-1 | 0.0052 | two thicknesses, the pin's hole across |
+| Maintaining detent 05 05 05-1 | 0.0177 | exact arcs, the thin tip from the step, the 1:70 hole |
+
+Bought lines: the click springs' bronze strip (1.5 × 0.4, 27.0), the stop bar spring's strip (1.0 × 0.10), the detent's wire (Ø 0.25), and seven pins
+(the Vorreiber's taper pin, the chain's pin, the maintaining spring's two pins, the click springs' rivets, the stop bar's pin, its spring's pin, the stop
+pin). The formed springs follow their parts on the page (the clicks' ride, the bar's slide, the detent's), so, like the detent (7b), a solid could only
+be checked against a frozen pose.
+
+**Changes to the check** (`recipes.py`): `free_spin` (an outline turned on its arbor to where the page's search left it, fitted on the page's mesh outside
+a radius, the ops marked `spin` turned); `page_params` (the page's numbers on the part's groups, `pud` in the export: the drum's chain slot, its angle,
+height and lean as the laid chain's hook put it; the STEP file puts the slot at 0207's 225° and the middle of the drum's inside); `root_only` (the line's
+own mesh: the hook block's line carries its screw); an `expect` entry's `vol`; and a page face whose outer side is the page's own metal (two pieces
+welded at shared corners, meeting on faces of different facets: the fusee wheel's hub in its web) is left out as inside. All 57 recipes pass; `--fault`
+still fails on its three holes and the surface. `recipes.py --check` now takes about 4 minutes.
+
+**Deferred: the fusee body 05 06 04-2.** Its groove's floor radius changes with the angle, piecewise linear by quarter turns over 9 turns (05 06_20's
+curve), so the groove is a sweep along a helix of changing radius whose profile must stay in the meridian plane. OpenCascade's sweep with a fixed
+binormal gave a degenerate solid (15 mm³ for a 1,280 mm³ sweep), with an auxiliary spine failed (`MakeSolid`), and the corrected-Frenet sweep turns the
+profile up to about 1.7° in its plane where the radius falls fastest (about 0.02 mm at a rib's top, the check's tolerance). Its lands and ribs also tile
+the pitch exactly, so one turn's sweep touches the next. With the slot's cutter arc, the first 0.15 turn's cubic rise, the uncut end past N, the stop
+bar's slot (two depths) and six holes, it wants a constructed B-rep (ruled patches between meridian sections), not booleans of sweeps: step 9d. Its
+sizes are not yet lifted from `fusee.js` (RFT and the helix stay there; `wempe_transmission.js`, `wempe_wear.js` and `wempe_mainspring.py` read RFT from
+its source). Also left: the maintaining spring 05 06 01-1 (blanked from Bandstahl 35 × 1.75; the page draws it bent by the running drive: a frozen pose,
+with the detent's, 7b), the maintaining detent's arbor 05 05 05-2, the fusee wheel's and ratchet's screws WN-19, WN-20, WN-21.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
 |---|---|---|---|
 | Top plate 05 09 01 | the pocket N-O's far side | 0.047 | drawn tangent to r 4.95 about 23 (frame.js, so it crosses the opening cleanly); the sheet's r 5. Tried at r 5 on 29 October 2026: the solid opens; needs the opening and pocket cut as separate features |
 | Upper balance cock 05 08 03-1 | the stud's slot through the boss | 0.13 | the boss draws the slot's end wall upright, 0.02 inside its place at the boss's face, where the arm's wall leans 8° (C-D's 82°); one milled slot is one plane through arm and boss |
+| Dust plate 05 06 00-1 | the square hole at the recess floor | 0.005 | fusee.js tapers the hole from the square's size 3 from its root at the recess's mouth (y0) to 1 at its face, 1:150 over 3 mm; the drawing's 1:100 runs from the floor (y0 + 1): 0.005 large there on the half-diagonal. Within the check |
+| Barrel drum 05 07 01-1 | the Steg's slot | 0.35 | its pocket is 1.6 deep through the 1.25 bottom, and facePocket leaves its floor as a stray face in the drum's hollow 0.35 under the bottom; in the recipe's `expect` |
+| Set-up ratchet 05 07 00-3 | its height | 0.02 | RS0 counts the barrel bridge 3.32 thick (WD.FU.SR.BB, lifted as fusee.js had it), but the bridge is 3.30 since the owner's correction (WD.BB.t): the ratchet stands 0.07 off the bridge, not the 0.05 its comment says. The recipe and page agree; not changed here |
 | ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
 
 ## Decided
