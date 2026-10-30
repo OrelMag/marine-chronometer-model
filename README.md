@@ -436,7 +436,10 @@ every tool, what it checks and how long it takes. Before committing a change:
      window, text cut off or under WCAG's contrast, a nameless button, a small
      touch target or a squeezed hint; `--jitter` fails on what moves by itself,
      a pressed choice shifting its neighbours, or the selection bar moving under
-     its own slider.
+     its own slider. `--dialogs` opens a part's card, Help, About,
+     Report and the right-click menu at each size and fails on one past the
+     window, cut off without a scroll, without a reachable close, not closed
+     by Escape, or not taking and giving back focus.
    - Timing or physics needs the tools that compute it and their golden files.
    - Geometry needs `python ci.py --full` (with `--views` if anything drawn
      changed).

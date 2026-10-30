@@ -3163,6 +3163,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 - **The essay's "Walk through it" was a blank blue pill** (`uiprobe.py`'s contrast check, 30 October 2026): `#essay a{color:var(--blue)}` outranked `.e-go .seg a.primary`, so its label was blue on its blue fill, in both themes. Keep: a filled link in the essay sets its colour under `#essay` too; `uiprobe.py` finds no text under 4.5:1 (3:1 large) on a solid background, light or dark. `3a99db0d`
 - **Low-contrast text on the Wempe's page**: the link to the 6MX's differences in the browser's own blue (1.9:1 on the dark panel), the green "sure" tags (3.3-3.5:1) and the "bad" figures in `--hi` (3.0:1 in light). Links in the panel's text take `--blue`, the tags a green per theme, bad figures `--brass`. `3a99db0d`
 - **The panel's width handle showed keyboard focus only as a faint line** (45 %): full strength on focus. `3a99db0d`
+- **Escape never closed a part's card** (`uiprobe.py --dialogs`, 30 October 2026, both pages): it closed the menu and Help and cleared the selection, but left the card open. Escape now closes the top one: the menu or Help, else the card, else the lasso or the selection. Keep: each Escape closes one layer, the card before the selection. `98cd8b4b`
+- **Help left the keys where they were**: opening it (?) didn't move focus into it, so Tab went on through the page behind. It takes focus when it opens and gives it back to ? when it closes with focus inside. `98cd8b4b`
+- **Links on a part's card were the browser's own blue** (the Wempe's CAD file and operation sheet links), unreadable on the dark card: they take `--blue`, as the panel's. `98cd8b4b`
 
 ## Build, tools and docs
 
