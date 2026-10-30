@@ -43,7 +43,11 @@ async def browse(base,errs):
             return pg
         for a,path,hsh in NAV:
             pg=await page(a);await pg.goto(base+a);await pg.wait_for_timeout(4000)
-            u=await pg.evaluate("[location.pathname,location.search,location.hash]")
+            for _ in range(20):   # a page that sends an old link on (the Hamilton's #essay=…) may still be navigating: read again once it has loaded
+                try:u=await pg.evaluate("[location.pathname,location.search,location.hash]");break
+                except Exception as e:
+                    if 'context was destroyed' not in str(e):raise
+                    await pg.wait_for_load_state();await pg.wait_for_timeout(1000)
             kv=lambda h:set(h.lstrip('#').split('&'))-{''}   # the hash's settings: the page may add its own (the Hamilton's overhaul adds block=1) and order them its way
             if u[0]!=path or u[1] or not kv(hsh)<=kv(u[2]) or (not hsh and u[2]):errs.append(f'{a} ended at {u[0]}{u[1]}{u[2]}, not {path}{hsh}')
             else:print(f'  ok  {a} -> {path}{hsh}')
