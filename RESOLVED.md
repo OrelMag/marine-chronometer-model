@@ -3160,6 +3160,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 - **The selection bar's opacity slider jumped 106 px under the pointer** (the owner's question about selections, 30 October 2026): Reset opacity, last in the right-aligned bar, appeared as the slider left 100 % and pushed it left (on a phone it made the bar a line taller and the tools under it jumped 29 px). It keeps its place, unseen, while parts are selected. Keep: nothing in the selection bar appears or changes width while its slider is dragged (`uiprobe.py --jitter`). `89212492`
 - **With parts selected the hint was squeezed to 24 px beside the selection bar**, one word a line down the model: Select and Lasso don't touch the canvas, so the hint never faded. It fades while the bar shows. `89212492`
 - **Pressing a choice in the panel shifted its neighbours 0.6-2 px** (every segmented control not drawn full width, both pages, and the speed menu): the pressed button went to font-weight 600, wider. It is bolder by a 0.35 px text shadow, the same width. Keep: a pressed state never changes a label's width. `89212492`
+- **The essay's "Walk through it" was a blank blue pill** (`uiprobe.py`'s contrast check, 30 October 2026): `#essay a{color:var(--blue)}` outranked `.e-go .seg a.primary`, so its label was blue on its blue fill, in both themes. Keep: a filled link in the essay sets its colour under `#essay` too; `uiprobe.py` finds no text under 4.5:1 (3:1 large) on a solid background, light or dark. `3a99db0d`
+- **Low-contrast text on the Wempe's page**: the link to the 6MX's differences in the browser's own blue (1.9:1 on the dark panel), the green "sure" tags (3.3-3.5:1) and the "bad" figures in `--hi` (3.0:1 in light). Links in the panel's text take `--blue`, the tags a green per theme, bad figures `--brass`. `3a99db0d`
+- **The panel's width handle showed keyboard focus only as a faint line** (45 %): full strength on focus. `3a99db0d`
 
 ## Build, tools and docs
 
