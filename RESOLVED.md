@@ -3157,6 +3157,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 - **The Wempe's version-change rows ran 16 px past the panel** (Advanced, the variants' list; `tools/uiprobe.py`, 30 October 2026): `.x6-go` was `width:100%` with padding and a border but no `box-sizing:border-box`. Keep: a full-width button with padding is `border-box`; `uiprobe.py` finds no control past the panel at 1400, 390 and 844×390. `bb87dad1`
 - **On a landscape phone the hint was squeezed to about 70 px beside the tools**, wrapping over the dial in eight lines: its width is the stage less the tools', and the stage there is about 490 px, the eight tools about 380. It goes under the tools there, as on an upright phone. Keep: the hint never under 160 px wide (`uiprobe.py`). `bb87dad1`
 - **The play bar's "h of power left" broke before "left" on a phone**: the phrase is non-breaking, so it wraps whole under the time. `bb87dad1`
+- **The selection bar's opacity slider jumped 106 px under the pointer** (the owner's question about selections, 30 October 2026): Reset opacity, last in the right-aligned bar, appeared as the slider left 100 % and pushed it left (on a phone it made the bar a line taller and the tools under it jumped 29 px). It keeps its place, unseen, while parts are selected. Keep: nothing in the selection bar appears or changes width while its slider is dragged (`uiprobe.py --jitter`). `89212492`
+- **With parts selected the hint was squeezed to 24 px beside the selection bar**, one word a line down the model: Select and Lasso don't touch the canvas, so the hint never faded. It fades while the bar shows. `89212492`
+- **Pressing a choice in the panel shifted its neighbours 0.6-2 px** (every segmented control not drawn full width, both pages, and the speed menu): the pressed button went to font-weight 600, wider. It is bolder by a 0.35 px text shadow, the same width. Keep: a pressed state never changes a label's width. `89212492`
 
 ## Build, tools and docs
 
