@@ -59,6 +59,53 @@ CON=r"""()=>{const P=c=>{const m=c.match(/[\d.]+/g);return m?m.map(Number):null}
   const big=parseFloat(s.fontSize)>=24||(parseFloat(s.fontSize)>=18.66&&+s.fontWeight>=700),need=big?3:4.5;
   if(r<need){const k=(e.id?'#'+e.id:'')+'.'+(typeof e.className==='string'?e.className:'')+' '+s.color+' on rgb('+bg+')';if(!out.has(k))out.set(k,`${r.toFixed(2)} < ${need}: "${t.slice(0,40)}" ${k}`)}}
  return[...out.values()]}"""
+DLG=r"""(sel)=>{const e=document.querySelector(sel),out=[],W=innerWidth,H=innerHeight;if(!e)return['missing'];
+ const shown=x=>x.getClientRects().length&&getComputedStyle(x).visibility!=='hidden'&&+getComputedStyle(x).opacity>0.05;if(!shown(e))return['not shown after opening'];
+ const r=e.getBoundingClientRect();if(r.left<-1||r.top<-1||r.right>W+1||r.bottom>H+1)out.push(`past the window: ${[r.left,r.top,r.right,r.bottom].map(Math.round)} in ${W}x${H}`);
+ const st=document.querySelector('.stage'),sr=st&&st.contains(e)?st.getBoundingClientRect():null;if(sr&&(r.left<sr.left-1||r.top<sr.top-1||r.right>sr.right+1||r.bottom>sr.bottom+1))out.push(`past the stage: ${[r.left,r.top,r.right,r.bottom].map(Math.round)} in ${[sr.left,sr.top,sr.right,sr.bottom].map(Math.round)}`);
+ const sc=[e,...e.querySelectorAll('*')].filter(x=>x.scrollHeight>x.clientHeight+2&&x.clientHeight>40&&getComputedStyle(x).overflowY!=='visible');   /* only a box that clips: a title's descenders past its box show */
+ if(sc.length&&!sc.some(x=>/auto|scroll/.test(getComputedStyle(x).overflowY)))out.push(`content ${sc[0].scrollHeight} px cut at ${sc[0].clientHeight}, no scroll`);
+ const vis=Math.min(r.bottom,H)-Math.max(r.top,0);if(e.scrollHeight>vis+2&&!/auto|scroll/.test(getComputedStyle(e).overflowY)&&!sc.length)out.push(`taller than shown (${e.scrollHeight} > ${Math.round(vis)}), no scroll`);
+ const cl=sel==='#opm'?1:[...e.querySelectorAll('button,[role=button]')].find(b=>/close|done|cancel|×|✕/i.test((b.getAttribute('aria-label')||'')+(b.textContent||'')+(b.title||'')));
+ if(!cl)out.push('no close control');else if(cl!==1&&!(e.scrollHeight>e.clientHeight+2&&/auto|scroll/.test(getComputedStyle(e).overflowY))){const c=cl.getBoundingClientRect();if(!shown(cl)||c.top<0||c.bottom>H||c.left<0||c.right>W)out.push('its close control off screen');}
+ const ov=[...e.querySelectorAll('*')].filter(x=>x.children.length===0&&x.textContent.trim()&&shown(x)&&x.scrollWidth>x.clientWidth+2&&getComputedStyle(x).overflowX==='hidden'&&getComputedStyle(x).textOverflow!=='ellipsis');
+ if(ov.length)out.push(`text cut sideways: "${ov[0].textContent.trim().slice(0,30)}"`);
+ return out}"""
+async def dialogs(pages,sizes,outdir):
+  bad=0;OPEN={'info':None,'help':'#helpBtn','about':'#aboutBtn','report':'#reportBtn','opm':None}
+  async with async_playwright() as p:
+    b=await p.chromium.launch(args=browser.ARGS)
+    for pg in pages:
+      if pg=='essay':continue
+      for sz in sizes:
+        ctx=await b.new_context(**SIZES[sz]);page=await ctx.new_page();log=[]
+        page.on('pageerror',lambda e:log.append(f'page error: {e}'))
+        await page.goto(PAGES[pg].as_uri()+'?snap&qa#view=movement');await page.wait_for_timeout(6000)
+        cv=await page.eval_on_selector('#stage canvas','c=>{const r=c.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]}')
+        for name,opener in OPEN.items():
+          sel={'info':'#info','help':'#help','about':'#about','report':'#report','opm':'#opm'}[name]
+          if name=='opm' and sz!='desk':continue   # touch opens it by a long press
+          await page.evaluate("()=>{const e=document.querySelector('#panel');e&&e.scrollIntoView()}") if opener in('#aboutBtn','#reportBtn') else None
+          if opener:
+            if name in('about','report'):await page.evaluate("t=>{UI.show('adv')}",None) if await page.evaluate("()=>!document.querySelector('#aboutBtn').getClientRects().length") else None
+            await page.click(opener)
+          elif name=='info':await page.evaluate("()=>window.scrollTo(0,0)");await page.mouse.click(*cv)
+          else:await page.evaluate("()=>window.scrollTo(0,0)");await page.mouse.click(*cv,button='right')
+          await page.wait_for_timeout(700)
+          f=await page.evaluate(DLG,sel);inside=await page.evaluate("s=>{const d=document.querySelector(s);return !!d&&d.contains(document.activeElement)}",sel)
+          if name in('about','report','help') and not inside:f.append('focus not moved into it')
+          await page.screenshot(path=str(outdir/f'r_dlg_{pg}_{sz}_{name}.png'))
+          await page.keyboard.press('Escape');await page.wait_for_timeout(500)
+          still=await page.evaluate("s=>{const d=document.querySelector(s);return !!d&&!!d.getClientRects().length&&+getComputedStyle(d).opacity>0.05&&getComputedStyle(d).visibility!=='hidden'}",sel)
+          if still:f.append('Escape left it open')
+          if opener and name in('about','report','help'):
+            back=await page.evaluate("o=>document.activeElement===document.querySelector(o)",opener)
+            if not back:f.append('focus not returned to its button on close')
+          f+=[f'contrast {x}' for x in await page.evaluate(CON)]
+          for x in f:log.append(f'[{name}] {x}')
+        log=list(dict.fromkeys(log));print(f'== {pg} {sz} dialogs: {len(log)}');[print('  '+l) for l in log];bad+=len(log);await ctx.close()
+    await b.close()
+  return bad
 async def jitter(pages,sizes):
   bad=0
   async with async_playwright() as p:
@@ -95,7 +142,8 @@ async def run(pages,sizes,outdir):
     await b.close()
   return bad
 if __name__=='__main__':
-  a=argparse.ArgumentParser();a.add_argument('--page',default='hamilton,wempe,essay');a.add_argument('--size',default='desk,phone,land');a.add_argument('--out',default='.');a.add_argument('--jitter',action='store_true')
+  a=argparse.ArgumentParser();a.add_argument('--page',default='hamilton,wempe,essay');a.add_argument('--size',default='desk,phone,land');a.add_argument('--out',default='.');a.add_argument('--jitter',action='store_true');a.add_argument('--dialogs',action='store_true')
   o=a.parse_args();out=pathlib.Path(o.out);out.mkdir(parents=True,exist_ok=True)
+  if o.dialogs:sys.exit(1 if asyncio.run(dialogs(o.page.split(','),o.size.split(','),out)) else 0)
   if o.jitter:sys.exit(1 if asyncio.run(jitter(o.page.split(','),o.size.split(','))) else 0)
   sys.exit(1 if asyncio.run(run(o.page.split(','),o.size.split(','),out)) else 0)
