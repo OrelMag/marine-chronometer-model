@@ -431,9 +431,12 @@ every tool, what it checks and how long it takes. Before committing a change:
    - A page's strings or controls need the build, the type check and
      `smoke.py` (and `sitecheck.py` if `site/` changed). A change to the
      layout or the CSS also needs `tools/uiprobe.py` (about 2 minutes), which
-     opens the three pages at a desktop's, an upright phone's and a sideways
-     phone's sizes and fails on a control past the panel or the window, text
-     cut off, a nameless button, a small touch target or a squeezed hint.
+     opens the three pages at a desktop's, a phone's and a tablet's sizes, upright
+     and sideways, light and dark, and fails on a control past the panel or the
+     window, text cut off or under WCAG's contrast, a nameless button, a small
+     touch target or a squeezed hint; `--jitter` fails on what moves by itself,
+     a pressed choice shifting its neighbours, or the selection bar moving under
+     its own slider.
    - Timing or physics needs the tools that compute it and their golden files.
    - Geometry needs `python ci.py --full` (with `--views` if anything drawn
      changed).

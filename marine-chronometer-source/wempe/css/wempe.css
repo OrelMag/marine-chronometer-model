@@ -18,5 +18,5 @@
 .x6-go{display:block;width:100%;box-sizing:border-box;text-align:left;font:13px/1.38 "Instrument Sans",system-ui,sans-serif;padding:5px 7px;margin:0 0 3px;border:1px solid transparent;border-radius:6px;background:none;color:var(--ink);cursor:zoom-in}
 .x6-go:hover{background:color-mix(in srgb,var(--blue) 7%,transparent)}.x6-r.on .x6-go{border-color:var(--brass);background:color-mix(in srgb,var(--brass) 9%,transparent)}
 .x6-go span{display:block;margin-top:2px;font-size:12px;color:var(--muted)}.x6-go span i{font-style:normal;font-weight:600;color:var(--ink);margin-right:3px}
-.x6-s{font-style:normal;font-size:11px;padding:0 5px;border-radius:4px;border:1px solid currentColor;vertical-align:1px;color:var(--muted)}.x6-sure{color:#2f8a4a}.x6-likely{color:var(--blue)}.x6-estimated{color:var(--brass)}
+.x6-s{font-style:normal;font-size:11px;padding:0 5px;border-radius:4px;border:1px solid currentColor;vertical-align:1px;color:var(--muted)}.x6-sure{color:var(--sure,#1a6e35)}:root[data-theme="dark"]{--sure:#5fc27a}@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sure:#5fc27a}}   /* 4.5:1 on the rows in both themes (#2f8a4a was 3.3-3.5) */.x6-likely{color:var(--blue)}.x6-estimated{color:var(--brass)}
 #revSub .rs{margin:0 0 8px}#revSub .lab{display:block;min-width:0;white-space:normal;margin:0 0 3px}
