@@ -81,7 +81,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-go{margin:26px 0 8px;padding:16px 18px;border-radius:14px;background:var(--paper);font:14px/1.45 "Instrument Sans",sans-serif}
 .e-go p{margin:0 0 10px!important;color:var(--muted)}
 .e-go .seg a{display:inline-block;font:600 13.5px "Instrument Sans",sans-serif;color:var(--blue);border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;text-decoration:none}
-.e-go .seg a.primary{background:var(--blue);color:var(--panel)}
+.e-go .seg a.primary,#essay .e-go .seg a.primary{background:var(--blue);color:var(--panel)}   /* #essay a outranked it: the label was blue on blue */
 .e-go .seg a:hover{background:color-mix(in srgb,var(--blue) 12%,transparent)}.e-go .seg a.primary:hover{background:var(--blue)}
 .e-refs{font-size:.92em}.e-refs li{margin-bottom:.45em}
 #essay hr{border:0;border-top:1px solid var(--rule);margin:3em 0}

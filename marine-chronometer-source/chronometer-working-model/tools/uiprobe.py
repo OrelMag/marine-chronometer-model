@@ -1,18 +1,20 @@
 """uiprobe.py: the pages' layout probed at a desktop's, a phone's upright and a phone's sideways sizes (30 October 2026). For each page (the Hamilton's, the
 Wempe's, the essay's) and size: console errors and warnings, the page scrolling sideways, and for each panel tab (Explore, Run, Look, Advanced; every group opened)
-the visible controls that run out past the panel or the window, whose text is cut off inside them, buttons without a name, and, on the touch sizes, targets under
+the visible controls that run out past the panel or the window, whose text is cut off inside them, buttons without a name, text under WCAG's contrast (4.5:1, 3:1 large) on a solid background, and, on the touch sizes, targets under
 19 px (the parts list's 22 px boxes and 19 px folds pass WCAG 2.5.8 by its spacing exception: 4-8 px apart, a 24 px circle on each touches no other). Writes r_ui_PAGE_SIZE_TAB.png and prints the findings; exit 1 if any. It reports what a person sees; smoke.py works the controls.
 --jitter instead (about a minute a page and size; the Wempe's variants rebuild the model): what moves over 6 s with the model running, each choice in the panel
 pressed shifting its neighbours, and the selection bar moving under its own opacity slider or squeezing the hint; exit 1 if any.
 
-    python uiprobe.py [--page hamilton,wempe,essay] [--size desk,phone,land] [--jitter]"""
+    python uiprobe.py [--page hamilton,wempe,essay] [--size desk,phone,land,tab,tabland,dark,darkphone] [--jitter]"""
 import asyncio,os,sys,argparse,pathlib
 sys.path.insert(0,os.path.dirname(__file__));import browser
 from playwright.async_api import async_playwright
 SRC=pathlib.Path(__file__).resolve().parents[2]
 PAGES={'hamilton':SRC/'chronometer-working-model/index.html','wempe':SRC/'wempe/index.html','essay':SRC/'essay/index.html'}
 SIZES={'desk':dict(viewport={'width':1400,'height':900}),'phone':dict(viewport={'width':390,'height':844},has_touch=True,is_mobile=True,device_scale_factor=2),
-       'land':dict(viewport={'width':844,'height':390},has_touch=True,is_mobile=True,device_scale_factor=2)}
+       'land':dict(viewport={'width':844,'height':390},has_touch=True,is_mobile=True,device_scale_factor=2),
+       'tab':dict(viewport={'width':768,'height':1024},has_touch=True,is_mobile=True,device_scale_factor=2),'tabland':dict(viewport={'width':1024,'height':768},has_touch=True,is_mobile=True,device_scale_factor=2),
+       'dark':dict(viewport={'width':1400,'height':900},color_scheme='dark'),'darkphone':dict(viewport={'width':390,'height':844},has_touch=True,is_mobile=True,device_scale_factor=2,color_scheme='dark')}
 PROBE=r"""(touch)=>{const out=[],W=innerWidth,de=document.documentElement;
  if(de.scrollWidth>W+1)out.push(`page scrolls sideways: ${de.scrollWidth} > ${W}`);
  const vis=e=>{if(!e.getClientRects().length)return false;const s=getComputedStyle(e);return s.visibility!=='hidden'&&s.display!=='none'&&+s.opacity>0};
@@ -47,6 +49,16 @@ SHIFT=r"""async()=>{const w=ms=>new Promise(r=>setTimeout(r,ms)),out=[],R=e=>e.g
    if(dx>0.5||dy>0.5)out.push(`the selection's opacity slider at ${v} % moves it ${dx.toFixed(0)} px, the tools ${dy.toFixed(0)} px`);}
   const h=document.querySelector('#hint');if(h&&+getComputedStyle(h).opacity>0&&R(h).width<160)out.push('the hint squeezed beside the selection bar');__sel.set([]);document.querySelector('#selBar [data-s=unfade]')?.click();}
  return out}"""
+CON=r"""()=>{const P=c=>{const m=c.match(/[\d.]+/g);return m?m.map(Number):null};
+ const lum=([r,g,b])=>{const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(r)+.7152*f(g)+.0722*f(b)};
+ const bgOf=e=>{for(let a=e;a;a=a.parentElement){const s=getComputedStyle(a);if(a.matches('.stage,canvas'))return null;if(s.backgroundImage!=='none'&&!s.backgroundImage.startsWith('url'))return null;const c=P(s.backgroundColor);if(c&&(c.length<4||c[3]>0.9))return c.slice(0,3);if(c&&c[3]>0)return null;}return P(getComputedStyle(document.body).backgroundColor).slice(0,3)};
+ const out=new Map();const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
+ while(n=tw.nextNode()){const t=n.textContent.trim();if(t.length<2)continue;const e=n.parentElement;if(!e||!e.getClientRects().length||e.closest('[hidden],.hidden,svg,canvas,[aria-hidden=true]'))continue;
+  const s=getComputedStyle(e);if(s.visibility==='hidden'||+s.opacity<.5)continue;let op=1;for(let a=e;a;a=a.parentElement)op*=+getComputedStyle(a).opacity;if(op<.5)continue;
+  const fg=P(s.color);if(!fg||(fg[3]!=null&&fg[3]<1))continue;const bg=bgOf(e);if(!bg)continue;const L1=lum(fg),L2=lum(bg),r=(Math.max(L1,L2)+.05)/(Math.min(L1,L2)+.05);
+  const big=parseFloat(s.fontSize)>=24||(parseFloat(s.fontSize)>=18.66&&+s.fontWeight>=700),need=big?3:4.5;
+  if(r<need){const k=(e.id?'#'+e.id:'')+'.'+(typeof e.className==='string'?e.className:'')+' '+s.color+' on rgb('+bg+')';if(!out.has(k))out.set(k,`${r.toFixed(2)} < ${need}: "${t.slice(0,40)}" ${k}`)}}
+ return[...out.values()]}"""
 async def jitter(pages,sizes):
   bad=0
   async with async_playwright() as p:
@@ -75,7 +87,7 @@ async def run(pages,sizes,outdir):
             await page.evaluate("t=>{UI.show(t);document.querySelectorAll('.tabp:not([hidden]) details').forEach(d=>d.open=true)}",t)
             # the narrow sizes keep the panel below the stage or in a sheet: scroll it in
             await page.evaluate("()=>document.querySelector('#panel')?.scrollIntoView()");await page.wait_for_timeout(600)
-          found=await page.evaluate(PROBE,sz!='desk')
+          found=await page.evaluate(PROBE,sz not in('desk','dark'))+[f'contrast {x}' for x in await page.evaluate(CON)]
           for f in dict.fromkeys(found):log.append(f'[{t}] {f}')
           await page.screenshot(path=str(outdir/f'r_ui_{pg}_{sz}_{t}.png'),full_page=False)
         print(f'== {pg} {sz}: {len(log)} finding(s)');[print('  '+l) for l in dict.fromkeys(log)];bad+=len(log)
