@@ -2,8 +2,10 @@
 Wempe's, the essay's) and size: console errors and warnings, the page scrolling sideways, and for each panel tab (Explore, Run, Look, Advanced; every group opened)
 the visible controls that run out past the panel or the window, whose text is cut off inside them, buttons without a name, and, on the touch sizes, targets under
 19 px (the parts list's 22 px boxes and 19 px folds pass WCAG 2.5.8 by its spacing exception: 4-8 px apart, a 24 px circle on each touches no other). Writes r_ui_PAGE_SIZE_TAB.png and prints the findings; exit 1 if any. It reports what a person sees; smoke.py works the controls.
+--jitter instead (about a minute a page and size; the Wempe's variants rebuild the model): what moves over 6 s with the model running, each choice in the panel
+pressed shifting its neighbours, and the selection bar moving under its own opacity slider or squeezing the hint; exit 1 if any.
 
-    python uiprobe.py [--page hamilton,wempe,essay] [--size desk,phone,land]"""
+    python uiprobe.py [--page hamilton,wempe,essay] [--size desk,phone,land] [--jitter]"""
 import asyncio,os,sys,argparse,pathlib
 sys.path.insert(0,os.path.dirname(__file__));import browser
 from playwright.async_api import async_playwright
@@ -28,6 +30,35 @@ PROBE=r"""(touch)=>{const out=[],W=innerWidth,de=document.documentElement;
   const lb=e.matches('input')&&e.closest('label');if(lb)r=lb.getBoundingClientRect();   /* a box's target is its label */
   if(touch&&e.matches('button,input[type=checkbox],input[type=range]')&&(r.height<19||r.width<19)&&!e.closest('p,li,.help'))out.push(`small target ${Math.round(r.width)}x${Math.round(r.height)}: ${name(e)}`);}
  return out}"""
+JITTER=r"""async()=>{const els=[...document.querySelectorAll('button,.hud,.hud *,#hint,label,.info,.info *,.dock,.play,.vstrip,.selbar,.selbar *,[class*=sel] ')].filter(e=>e.getClientRects().length&&!e.closest('#panel'));
+ const key=e=>(e.id?'#'+e.id:'')+'.'+(typeof e.className==='string'?e.className.trim().replace(/\s+/g,'.'):'')+' "'+(e.getAttribute('aria-label')||e.textContent||'').trim().slice(0,24)+'"';
+ const first=new Map(els.map(e=>{const r=e.getBoundingClientRect();return[e,[r.left,r.width,r.top,r.height]]})),moved=new Map();
+ for(let i=0;i<60;i++){await new Promise(r=>setTimeout(r,100));for(const e of els){if(!e.isConnected)continue;const r=e.getBoundingClientRect(),f=first.get(e),d=Math.max(Math.abs(r.left-f[0]),Math.abs(r.width-f[1]),Math.abs(r.top-f[2]),Math.abs(r.height-f[3]));
+  if(d>0.5){const m=moved.get(e)||{n:0,d:0};m.n++;m.d=Math.max(m.d,d);moved.set(e,m)}}}
+ return[...moved].filter(([e,m])=>m.n>3).map(([e,m])=>`moves (${m.n}/60 samples, up to ${m.d.toFixed(1)} px): ${key(e)}`)}"""
+SHIFT=r"""async()=>{const w=ms=>new Promise(r=>setTimeout(r,ms)),out=[],R=e=>e.getBoundingClientRect();
+ for(const g of [...document.querySelectorAll('.panel .seg')]){const p=g.closest('.tabp');if(p)UI.show(p.dataset.tab);const bs=[...g.querySelectorAll(':scope>button[aria-pressed]')];if(bs.length<2||!g.getClientRects().length)continue;
+  if(bs.some(b=>b.closest('#speeds,#spP')))continue;   /* the speeds stop or run the model */
+  const was=bs.find(b=>b.getAttribute('aria-pressed')==='true');const p0=bs.map(b=>R(b).left);let worst=0,who='';
+  for(const b of bs){b.click();await w(120);if(!g.getClientRects().length)break;const d=Math.max(...bs.map((x,i)=>Math.abs(R(x).left-p0[i])));if(d>worst){worst=d;who=b.textContent.trim()}}
+  if(was&&g.getClientRects().length){was.click();await w(120);}if(worst>0.5&&worst<200)out.push(`pressing "${who}" shifts its group ${worst.toFixed(1)} px: ${g.id||g.className}`);}
+ if(window.__sel&&window.__parts){const K=Object.keys(__parts);__sel.set([K[3],K[5]]);await w(200);const s=document.querySelector('#selBar input'),x0=R(s).left,t0=R(document.querySelector('#selMode')).top;
+  for(const v of[60,0,100]){s.value=v;s.dispatchEvent(new Event('input'));await w(150);const dx=Math.abs(R(s).left-x0),dy=Math.abs(R(document.querySelector('#selMode')).top-t0);
+   if(dx>0.5||dy>0.5)out.push(`the selection's opacity slider at ${v} % moves it ${dx.toFixed(0)} px, the tools ${dy.toFixed(0)} px`);}
+  const h=document.querySelector('#hint');if(h&&+getComputedStyle(h).opacity>0&&R(h).width<160)out.push('the hint squeezed beside the selection bar');__sel.set([]);document.querySelector('#selBar [data-s=unfade]')?.click();}
+ return out}"""
+async def jitter(pages,sizes):
+  bad=0
+  async with async_playwright() as p:
+    b=await p.chromium.launch(args=browser.ARGS)
+    for pg in pages:
+      for sz in sizes:
+        ctx=await b.new_context(**SIZES[sz]);page=await ctx.new_page()
+        await page.goto(PAGES[pg].as_uri()+('?qa' if pg!='essay' else ''));await page.wait_for_timeout(6000)
+        f=await page.evaluate(JITTER)
+        if pg!='essay':f+=await page.evaluate(SHIFT);print(f'== {pg} {sz} jitter: {len(f)}');[print('  '+l) for l in f];bad+=len(f);await ctx.close()
+    await b.close()
+  return bad
 async def run(pages,sizes,outdir):
   bad=0
   async with async_playwright() as p:
@@ -52,6 +83,7 @@ async def run(pages,sizes,outdir):
     await b.close()
   return bad
 if __name__=='__main__':
-  a=argparse.ArgumentParser();a.add_argument('--page',default='hamilton,wempe,essay');a.add_argument('--size',default='desk,phone,land');a.add_argument('--out',default='.')
+  a=argparse.ArgumentParser();a.add_argument('--page',default='hamilton,wempe,essay');a.add_argument('--size',default='desk,phone,land');a.add_argument('--out',default='.');a.add_argument('--jitter',action='store_true')
   o=a.parse_args();out=pathlib.Path(o.out);out.mkdir(parents=True,exist_ok=True)
+  if o.jitter:sys.exit(1 if asyncio.run(jitter(o.page.split(','),o.size.split(','))) else 0)
   sys.exit(1 if asyncio.run(run(o.page.split(','),o.size.split(','),out)) else 0)
