@@ -59,6 +59,8 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .selbar .sn{max-width:18em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-left:3px solid #2f7fe8}
 .selbar .sl{display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.selbar .sl input{width:90px}.selbar .sl output{min-width:2.8em}
 .selbar.empty button:not(.unf),.selbar.empty .sl{display:none}
+.selbar:not(.empty) .unf.hidden{display:inline-block!important;visibility:hidden}.selbar .sl output{font-variant-numeric:tabular-nums}   /* Reset opacity keeps its place while parts are selected: shown as the slider leaves 100 % it had pushed the slider 106 px under the pointer (and the phone's bar a line taller) */
+.stage:has(.selbar:not(.hidden)) .hint{opacity:0!important}   /* beside the bar the hint was squeezed to one word a line; the bar says what to do */
 .lasso{position:absolute;left:0;top:0;width:100%;height:100%;z-index:4;pointer-events:none;display:none}.lasso.on{display:block}
 .lasso polygon{fill:rgba(47,127,232,.12);stroke:#2f7fe8;stroke-width:1.5;stroke-dasharray:5 4;stroke-linejoin:round}
 .tools button{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -327,7 +329,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .spmenu .sub-h{margin:0 0 8px}
 .mdl .spmenu #speeds{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:3px;border-radius:10px;background:var(--track)}
 .mdl .spmenu #speeds button{min-height:0;padding:7px 4px;border:0;border-radius:7px;background:none;color:var(--muted);font-weight:500}
-.mdl .spmenu #speeds button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+.mdl .spmenu #speeds button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);text-shadow:.35px 0 0 currentColor}   /* bolder by a shadow, not font-weight: 600 widened the pressed one and shifted its neighbours 0.6-2 px */
 .mdl .spmenu .spd{margin-top:10px}.mdl .spmenu .spd .lab{min-width:0}
 .mdl .play .hud{position:static;flex:0 1 auto;min-width:0;padding:0 6px;font-size:13px;line-height:1.3;pointer-events:auto}
 .mdl #windP{flex:none;min-height:0;padding:8px 14px;border:0;border-radius:10px;background:var(--blue-soft);color:var(--blue)}
@@ -344,7 +346,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .mdl .panel button.primary{background:var(--blue);color:var(--card)}
 .mdl .panel .seg:has(>button[aria-pressed]){display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:10px;background:var(--track)}
 .mdl .panel .seg:has(>button[aria-pressed])>button{padding:6px 11px;border-radius:7px;background:none;color:var(--muted);font-weight:500}
-.mdl .panel .seg:has(>button[aria-pressed])>button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+.mdl .panel .seg:has(>button[aria-pressed])>button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);text-shadow:.35px 0 0 currentColor}
 .mdl .panel .seg.full{display:flex}.mdl .panel .seg.full>button{flex:1}
 .mdl .panel .ck:not(.rp-ck){justify-content:space-between;flex-direction:row-reverse;gap:12px;min-height:30px}
 .mdl .panel .ck input[type=checkbox]{appearance:none;-webkit-appearance:none;position:relative;width:38px;height:22px;margin:0;border-radius:11px;background:var(--rule);cursor:pointer;transition:background .2s;flex:none}
