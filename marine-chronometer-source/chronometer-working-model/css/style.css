@@ -362,6 +362,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .mdl .about-btn{border:0;background:none;color:var(--muted);text-align:left;padding:4px 2px;margin:0 0 6px;font-weight:500;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px;min-height:0}
 .mdl .about-btn:hover{color:var(--ink)}
 /* phones */
+@media(orientation:landscape) and (max-height:560px){.mdl .hint{top:calc(var(--th,42px) + 20px);max-width:calc(100% - 28px)}}   /* under the tools: beside them it had about 70 px */
 @media(min-width:960px){.mdl .stage{height:calc(100vh - 80px);height:calc(100svh - 80px);max-height:960px}}
 @media(max-width:600px){.mdl header{padding:10px 16px 8px;gap:6px 14px}.mdl h1{flex:1 1 0;min-width:0;white-space:normal;font-size:1.4rem}.mdl .flip{order:1}.mdl .flip .fl,.mdl .flip .fd{display:none}.mdl header .tabs{order:2;flex-basis:100%}.mdl nav.models{order:3;margin:0}
   .mdl .hint{top:calc(var(--th,42px) + 20px);max-width:calc(100% - 28px)}.mdl .tools{left:12px;right:auto}
