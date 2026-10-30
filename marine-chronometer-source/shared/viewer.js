@@ -232,12 +232,12 @@ const VIEWER={start(cfg){
   if(typeof PSEL!=='undefined')SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:MVM,pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),shows:m=>shown(m)&&!!INFO[m.userData.part],hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
   /* how to use it: stays open while the model is dragged; a tap, × or Esc closes it */
   const help=$('#help'),helpBtn=$('#helpBtn');
-  function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
+  function showHelp(on){const was=help.classList.contains('on');help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();if(!was){help.tabIndex=-1;help.focus({preventScroll:true});}}else if(was&&help.contains(document.activeElement))helpBtn.focus();}   /* the keys go into it, and back to ? when it closes */
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   const typing=()=>/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)||$('#about').open;
   const ES=cfg.essay,esOn=()=>!!ES&&ES.on();   /* the essay tab (cfg.essay, ../shared/essaykit.js's api), when the page has one: while it shows, the model keeps its time but isn't drawn, and the keys and the hash are the essay's */
   document.addEventListener('keydown',e=>{if(esOn())return;const mod=e.ctrlKey||e.metaKey||e.altKey;
-    if(e.key==='Escape'){if(SEL&&!opm.classList.contains('on')&&!help.classList.contains('on'))SEL.esc();closeOpm();showHelp(false);}   /* with no menu or help open: the lasso let go, or the selection cleared */
+    if(e.key==='Escape'){const top=opm.classList.contains('on')||help.classList.contains('on');if(!top&&$('#info').classList.contains('on'))closeInfo();else if(SEL&&!top)SEL.esc();closeOpm();showHelp(false);}   /* the top one closed: the menu or help, else the part's card, else the lasso let go or the selection cleared */
     if((e.key==='p'||e.key==='P')&&!mod&&!typing()&&panelSide())pnb.click();
     if(e.key==='Backspace'&&!mod&&!typing()){e.preventDefault();if(e.shiftKey)histGo(HF,HB);else histGo(HB,HF);}
     if(e.key==='?'&&!typing())showHelp(!help.classList.contains('on'));
