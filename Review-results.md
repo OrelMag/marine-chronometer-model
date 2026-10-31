@@ -425,6 +425,7 @@ Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --ch
 - **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it.
 - **Escape wheel's upper endstone screws WN-es:** the shank's end stands 0.032 up into the slot.
 - **The hands (batch 10, 30 October 2026):** each blade's root meets its boss as a separate closed piece (an 8-segment arc against the 72-sided wall, a 0.003 gap; 0.07-0.10 at isolated samples), the hour hand's root wedge lies on a cell-wise triangulation of the bevel's cone (about 0.1), and the seconds hand's tail ramp is sampled 0.027 off the table's rows.
+- **The case (batch 11b, 31 October 2026):** the locking bracket's screw hole (`bore`'s `capFix`) leaves chords up to 0.053 off its circle, the detent's and gold spring's fault again; the closing plate's round r 1.3 between rim and boss is four straight rings (0.025 inside the arc); the kit's 32-sided screw heads depart from their circles by 0.020-0.029 above Ø 8 (WN-79, WN-71.f, WN-80); the case bracket's two Ø 4.5 holes are 24-sided polygons whose flats lie at the radius (0.0195, inside the check). **WN-ro** (the carrying case's eye screws, "3 x 15 DIN 96") is drawn with a head Ø 8.5 × 2.2, the standard's being Ø 5.6 × 2.0: open, for a later pass on the page. No hole is cut in the bowl's wall for the case brackets' WN-78 (the brackets are moved to level the bowl, "Kloben verstellen"), so the recipe notes them as tapped at assembly.
 
 ## Smaller issues
 
