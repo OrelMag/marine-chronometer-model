@@ -3,7 +3,9 @@ parallel walls 4 and 6 from the axis, 1,5 +0,05 deep and 1,1 +0,05 toward the ba
 body's mesh in the end's last 1.5 (and 0.05 under it) must lie on a face the sheet draws: a flat face square to the axis (the end, the slot's floors, the groove's walls), one
 of the slot's two walls (its plane), the shallow part's step across the slot at u 8.0, a turned surface (its normal radial), the radial wall where the groove ends at N,
 the stop bar's spring's pin's hole, or the bores and holes inside r 7.5. A triangle on none of them (a slanted face where a piece ends, a fan) is listed with its place in
-the slot's frame (u along the slot toward the bar's upper end, v across it from the line through the axis, depth under the end). Exit 1 on any over 0.01 mm² (the slivers a few µm across left where a wall meets a step between two close rays can't be seen). About 40 s. Written 31 October
+the slot's frame (u along the slot toward the bar's upper end, v across it from the line through the axis, depth under the end). Then a face of no thickness, which lies on a face
+the sheet draws and so passes that test: each face stepped 5 µm off either way must have metal behind it and none in front (three rays' majority); judged over
+0.01 mm² within 0.5 of the slot's walls (main before 31 October 2026: 254; elsewhere a ray grazing an edge still miscounts now and then, reported). Exit 1 on any over 0.01 mm² (the slivers a few µm across left where a wall meets a step between two close rays can't be seen). About 40 s. Written 31 October
 2026 for the owner's pictures of the slot's ends: a slanted fan where the groove ends at N, twisted strips at the walls' feet (216 triangles, 6.6 mm², before the fix).
 
     python fusee_end.py --model wempe [--dump r_fusee_end.json] [--eval JS] [--page PATH]
@@ -73,7 +75,9 @@ def main():
         return out
     big=np.where(A>1e-4)[0];F=C[big]+5e-3*n[big];B_=C[big]-5e-3*n[big];fi=inside(F);bi=inside(B_)
     sheet=big[(~fi)&(~bi)];inner_=big[fi&bi];nm=list(sheet)+list(inner_)
+    near=(v>3.5)&(v<6.5)&(r>7.6)&(A>0.01);fail=[k for k in nm if near[k]]   # judged only by the slot's walls, where the pieces' rays had no thickness: elsewhere a ray grazing a facet's edge still miscounts now and then (reported)
     print(f'{len(sheet)} faces with no metal behind them (a face of no thickness), {len(inner_)} with metal in front (a face inside the metal), of {len(big)}')
     for k in nm[:60]:print(f'  u {u[k]:7.3f} v {v[k]:6.3f} r {r[k]:6.3f} depth {D[sel][ok][k]:5.3f}  area {A[k]:.4f}  n ({n[k,0]:.2f},{n[k,1]:.2f},{n[k,2]:.2f})')
-    sys.exit(1 if bad.any() or nm else 0)
+    print(f'{len(fail)} of them over 0.01 mm² within 0.5 of the walls of the slot')
+    sys.exit(1 if bad.any() or fail else 0)
 if __name__=='__main__':main()
