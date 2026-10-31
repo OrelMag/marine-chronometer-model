@@ -31,8 +31,9 @@ def recipes():
     sys.exit('recipes.py: no recipes yet for '+model.NAME)
 
 EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last'))return false;return true;};
-  let root=null;mv.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o))root=o;});if(!root)return null;mv.updateMatrixWorld(true);
-  const subs=[];mv.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
+  let sc=mv,root=null;const find=s=>s.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o))root=o;});find(mv);if(!root&&window.__BX&&window.__BX.root){sc=window.__BX.root;find(sc);}   /* the case and its box are not in the movement's group: the box's root (?qa's __BX) */
+  if(!root)return null;sc.updateMatrixWorld(true);
+  const subs=[];sc.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
   const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(),out=[],v=new THREE.Vector3();let rotY=null;
   const b64=a=>{const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);};
   const own=o=>{for(let q=o;q;q=q.parent)if(q.userData.hn)return q.userData.hn;return null;};let gearRot=null;   /* a mesh is the part's only if its nearest line is the part's (the staff's line is on the whole balance's group) */
@@ -177,7 +178,7 @@ def check(r,pm):
     elif abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
     bp=np.array([np.min([m.bounds[0] for m in pages],0),np.max([m.bounds[1] for m in pages],0)]);db=np.abs(rm.bounds-bp).max()
     res['bbox']={'recipe':np.round(rm.bounds,3).tolist(),'page':np.round(bp,3).tolist(),'max':round(float(db),4)}
-    if db>BOX_TOL:F.append(f'bbox: corners differ by {db:.4f}')
+    if db>getattr(r,'box_tol',BOX_TOL):F.append(f'bbox: corners differ by {db:.4f}')   # box_tol: a polygon the page draws for a round that the recipe draws true (a Ø 9 head on 32 sides is 0.022 inside it)
     n=20000;Pr,_=trimesh.sample.sample_surface(rm,n,seed=1);SP=[trimesh.sample.sample_surface(m,max(200,int(n*m.area/sum(q.area for q in pages))),seed=2) for m in pages]
     Pp=np.concatenate([q[0] for q in SP]);Np=np.concatenate([m.face_normals[q[1]] for m,q in zip(pages,SP)])
     kr=~in_zone(ixf(M,Pr),zones);kp=~in_zone(ixf(M,Pp),zones)
