@@ -877,6 +877,13 @@ Contents:
   the end is turned whole (a full-turn band from 2.0 under the face) and the slot milled through it as two facePocket cuts
   meeting on the step's plane, the pin hole bored after. Keep: a slot or flat across a turned part is cut through the turned
   solid, never built as pieces between fixed angles.
+  That too left faces of no thickness where facePocket's sections met (the owner, again: 'a redesign, not a fix'). Now
+  the body is one closed solid made offline by manifold3d's booleans (tools/wempe_fusee_body.py into wempe/js/fuseebody.js):
+  fusee.js's four closed pieces united, the slot cut as one cutter (two cuts meeting on the step's plane left a wall of no
+  thickness there even in manifold3d), the pin's hole drilled; an exact B-rep by OCCT was tried first and its booleans on the
+  helical groove failed. The window where the slot meets the groove and the 1,1 floor stay: Schnitt C-D draws them
+  (re-measured, tools/fusee_sheet.py). Keep: a part whose cuts cross a helical groove is cut by manifold3d, offline, as one
+  cutter per operation; fusee_end.py's faces-of-no-thickness test by the slot's walls must stay at 0.
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
