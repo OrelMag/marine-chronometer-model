@@ -412,6 +412,19 @@ short curve meets Phillips' conditions, which is sharp: the shortest inner curve
 coil's 0.93); both terminal curves meet the conditions (14.8 and 21.8 mm), the pivots carry 2.5e-5 of couple / R. A sharper frame or a measured collet
 would still settle it.*
 
+## The Wempe's page against its recipes (29 October 2026)
+
+Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --check`) compared each one's exact solid with the page's mesh. Eight places where the page departs from its drawing are open; each is in its recipe's `expect` (reported, not failed) and in the plan's table "Page faults found", which has the details:
+
+- **Top plate 05 09 01:** the pocket N-O's far side drawn tangent to r 4.95 where the sheet says r 5 (0.047). At r 5 the solid opens; the opening and the pocket need cutting as separate features.
+- **Upper balance cock 05 08 03-1:** the stud's slot wall drawn upright through the boss where it leans 8° through the arm (0.13 at the boss's top).
+- **Dust plate 05 06 00-1:** the square hole tapers 1:150 from the recess's mouth, not 1:100 from its floor (0.005, within the check).
+- **Barrel drum 05 07 01-1:** the Steg's pocket cut 1.6 deep through the 1.25 bottom, leaving a stray face in the drum's hollow (0.35).
+- **Detent 05 04 01-1, gold spring 05 04 01-2:** bores across thin strips (`fusee.js`'s `bore` through `holeCut`, `capFix`) leave chords inside the circle (0.025, 0.048).
+- **Set-up ratchet 05 07 00-3:** its height still counts the barrel bridge as 3.32 thick (3.30 since the owner's correction), so it stands 0.07 off the bridge, not 0.05.
+- **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it.
+- **Escape wheel's upper endstone screws WN-es:** the shank's end stands 0.032 up into the slot.
+
 ## Smaller issues
 
 - **`facePocket` (core.js) leaves open edges on a many-sided pocket** (found 20 October 2026, the barrel bridge's counterbore): 12, 24 and 48 sides about the same centre leave 5-37 open edges (T-junctions where the pocket's planes cut the same face triangles in turn), 16 closes. Matching its plane tolerance to its weld (1e-7 to 2e-6) changes nothing. The counterbore was drawn with 16 sides (0.027 mm off the circle) until blindHoles took an `inner` radius (20 October 2026): a hole stopped at a depth with a narrower one on through its floor, the floor and far face zipped round the cut rim (in its edges' order) and an inner circle, each triangle wound as the loops run, which cuts the sink round. facePocket itself still can't cut a round pocket: open, for a pocket that isn't a hole's counterbore.
