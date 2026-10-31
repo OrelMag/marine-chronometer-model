@@ -275,7 +275,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}t.color.copy(m0.color).lerp(LPC[c],0.8);if(t.emissive){t.emissive.copy(LPC[c]);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}   /* less metal, so the colour shows rather than the room it reflects */
   /* a movement mesh drawn see-through (a ghost): plates with See-through, the laid-out view's schematic plates, the barrel's wall in drive mode, and whatever is outside the focus foc */
   const ghOf=(m,foc)=>{const p=m.userData.part;return !(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||(m.userData.devPlate&&!(foc&&inK(foc,m)))||(st.drive&&m.userData.driveGhost)||(foc&&!inK(foc,m)&&!(p==='mainspring'&&anyOf(foc,'barrel'))));};
-  function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const ct=!!CT&&CT.on();
+  function look(){wake();if(SEL)SEL.sync();INK.ink.value=st.draw==='ink'?1:0;const ct=!!CT&&CT.on();
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
       if(((st.drive||dvOn)&&DRIVE_HIDE.has(p)&&!m.userData.devPlate&&!(m.userData.devKeep&&dvOn&&!st.drive))||(st.drive&&!st.mwOn&&(p==='motion'||p==='hands')))vis=false;   /* the schematic plates stand in for the frame laid out; a piece of it flagged devKeep (the winding stop) stays */
@@ -499,13 +499,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   /* the selection (../shared/select.js): Ctrl-click or Select, Alt-drag or Lasso; its bar and the menu above fade, hide or isolate it together */
-  SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:[...MVM,...BOXM],pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
+  SEL=PSEL.bind({r,scene,cam,stage,cv,st,INFO,meshes:[...MVM,...BOXM],pickable:m=>shown(m)&&!!INFO[m.userData.part]&&!through(m),shows:m=>shown(m)&&!!INFO[m.userData.part],hitKey:e=>{const h=hitAt(e);return h?h.object.userData.pk:null;},isoDrop,look,changed:()=>{if(opm.classList.contains('on'))opRender();}});
   /* how to use it: every control for a mouse and for touch. Stays open while the model is dragged, so the gestures can be tried; a tap, × or Esc closes it */
   const help=$('#help'),helpBtn=$('#helpBtn');
-  function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
+  function showHelp(on){const was=help.classList.contains('on');help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();if(!was){help.tabIndex=-1;help.focus({preventScroll:true});}}else if(was&&help.contains(document.activeElement))helpBtn.focus();}   /* the keys go into it, and back to ? when it closes */
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){if(SEL&&!opm.classList.contains('on')&&!help.classList.contains('on'))SEL.esc();closeOpm();showHelp(false);}   /* with no menu or help open: the lasso let go, or the selection cleared */
+    if(e.key==='Escape'){const top=opm.classList.contains('on')||help.classList.contains('on');if(!top&&$('#info').classList.contains('on'))closeInfo();else if(SEL&&!top)SEL.esc();closeOpm();showHelp(false);}   /* the top one closed: the menu or help, else the part's card, else the lasso let go or the selection cleared */
     if((e.key==='p'||e.key==='P')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open&&panelSide())pnb.click();
     if(e.key==='Backspace'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();if(e.shiftKey)histGo(HF,HB);else histGo(HB,HF);}   /* back and forward through the places the view has been */
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
@@ -1301,7 +1301,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     placeLabels(now);}
     if(!still){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}swDraw(now);testShow(now);
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):cw.go?'&ensp;<b>Turning it over to wind</b>':''}${sk<1?'&ensp;<b>Slow motion '+CUSN[cuSlowI]+'</b>':''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)}&nbsp;h of&nbsp;power&nbsp;left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):cw.go?'&ensp;<b>Turning it over to wind</b>':''}${sk<1?'&ensp;<b>Slow motion '+CUSN[cuSlowI]+'</b>':''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);

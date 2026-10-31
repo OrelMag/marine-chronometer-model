@@ -4,6 +4,39 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.63.00 · 2026-10-31
+- Wempe: choose which subassemblies the Exploded view takes apart, each on its own or all; the detent and the motion work come apart too
+- Wempe: a Pieces slider sets how far each subassembly's pieces spread, wider than before by default
+- Wempe: with the fusee or barrel apart, the chain comes off too and lies coiled beside the barrel
+
+## 3.62.00 · 2026-10-31
+- Wempe: the Exploded view can take the fusee, the barrel and the balance apart too, each beside the movement with its pieces spread along its arbor (Take it apart, Subassemblies: Apart)
+- Wempe: isolate a subassembly (the fusee, barrel, balance, detent or motion work) from a part's right-click menu or the Parts list; the view closes in on it
+
+## 3.61.04 · 2026-10-30
+- Escape closes a part's card
+- Help takes the keyboard when it opens and gives it back when it closes
+- Links on a part's card are readable in dark mode
+
+## 3.61.03 · 2026-10-30
+- The essay's Walk through it button shows its label again
+- Clearer text where it was faint: the Wempe's sure tags, figures out of range and links in the panel, in light and dark
+- The panel's width handle shows plainly when it has keyboard focus
+
+## 3.61.02 · 2026-10-30
+- Dragging the selection's opacity slider no longer makes it jump away from the pointer
+- The hint gets out of the way of the selection bar instead of squeezing beside it
+- Pressing a choice in the panel no longer nudges the buttons beside it
+
+## 3.61.01 · 2026-10-30
+- On a landscape phone the hint sits under the tools instead of squeezed beside them
+- The Wempe's list of variant changes stays inside the panel
+- The play bar's hours of power left no longer break over two lines
+
+## 3.61.00 · 2026-10-29
+- Selection: Through, beside Lasso (or Shift+Alt-drag), lassos the parts behind others too, every part shown inside the loop
+- Reset opacity on the selection bar brings every faded part back to full opacity, whether it is selected or not
+
 ## 3.60.00 · 2026-10-29
 - The Wempe's balance and detent block as parts to make: the balance's rim with its arm, masses, timing screws and weights, the hub, the rollers, the jewel settings and their screws, the detent block and its screw, each with a CAD file (STEP) and an operation sheet on its card; the jewels and pins as lines saying what to buy.
 

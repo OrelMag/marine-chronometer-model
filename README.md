@@ -27,18 +27,21 @@ model's settings, the browser and the page's last errors.
 
 | File | What it is |
 |---|---|
-| [`chronometer-working-model.html`](chronometer-working-model.html) | The Hamilton's model as one file: the Model 21 running in real time in its gimballed case and mounting box. It has views (Exploded, Laid out and Contacts among them), an eight-step walkthrough, cross-sections, parts to fade, hide or isolate one at a time or as a selection (Ctrl-click, or a lasso by Alt-drag; Select and Lasso on touch), winding, setting the hands, stopping and starting, the rate and timing weights, and the manual's overhaul operation by operation. Each part's card gives its Hamilton part numbers, its maker's sheet, its drawing and its STL. Its **Essay** tab links to the essay's page |
+| [`chronometer-working-model.html`](chronometer-working-model.html) | The Hamilton's model as one file: the Model 21 running in real time in its gimballed case and mounting box. It has views (Exploded, Laid out and Contacts among them), an eight-step walkthrough, cross-sections, parts to fade, hide or isolate one at a time or as a selection (Ctrl-click, or a lasso by Alt-drag, or through to the parts behind by Shift+Alt-drag; Select, Lasso and Through on touch; Reset opacity brings every faded part back), winding, setting the hands, stopping and starting, the rate and timing weights, and the manual's overhaul operation by operation. Each part's card gives its Hamilton part numbers, its maker's sheet, its drawing and its STL. Its **Essay** tab links to the essay's page |
 | [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, a banking screw to turn (Swing and isochronism: the depth of lock it sets, with the swing and whether the escapement still works shown live), Making it (maker's sheets; a CAD file (STEP) and an operation sheet on each frame part's card, the rest of the parts to follow; its build book of drawings was withdrawn on 29 October 2026) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
 | [`marine-chronometer-source/essay/dist/the-marine-chronometer.html`](marine-chronometer-source/essay/dist/the-marine-chronometer.html) | The essay: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals, keeping the rate, navigating without radio and making the chronometer. The models' own code computes its live figures |
 
 Both models' pages share one layout (since 3.52.00). The title, the model
 switcher, the page tabs and a light/dark switch sit in one line over the model.
-On the model are the tools as icons (Select, Lasso, help, save a picture, copy a
+On the model are the tools as icons (Select, Lasso, Through, help, save a picture, copy a
 link, reset the view, full screen), a row of views, and a play bar: stop and go
 on, the speed (1/20×, ¼×, 1×, 60×, 3600× or any speed), the time, the power left
 and Wind. The panel beside it (under it on a phone) has four tabs: **Explore**
 (the walkthrough, the Hamilton's overhaul, Take it apart: Exploded and Laid out,
-and Parts), **Run** (time, winding, the rate and timing weights, and the
+the Wempe's Exploded view taking its fusee, barrel, balance, detent and motion
+work apart beside the movement with Subassemblies (all, or each on its own, the
+chain coiled, a Pieces slider for their spread), and Parts, where the Wempe's
+Isolate row shows one subassembly alone, as right-clicking a part does), **Run** (time, winding, the rate and timing weights, and the
 Hamilton's stopping and starting and rate book), **Look** (Metal, Tinted or Ink,
 Colour by, the display's switches and ship motion) and **Advanced** (Contacts,
 swing, the trial, the escapement's plan or bench, cross-sections, variants,
@@ -429,7 +432,17 @@ every tool, what it checks and how long it takes. Before committing a change:
    - Text no check reads (ledgers, plans, READMEs, comments) needs only the
      build.
    - A page's strings or controls need the build, the type check and
-     `smoke.py` (and `sitecheck.py` if `site/` changed).
+     `smoke.py` (and `sitecheck.py` if `site/` changed). A change to the
+     layout or the CSS also needs `tools/uiprobe.py` (about 2 minutes), which
+     opens the three pages at a desktop's, a phone's and a tablet's sizes, upright
+     and sideways, light and dark, and fails on a control past the panel or the
+     window, text cut off or under WCAG's contrast, a nameless button, a small
+     touch target or a squeezed hint; `--jitter` fails on what moves by itself,
+     a pressed choice shifting its neighbours, or the selection bar moving under
+     its own slider. `--dialogs` opens a part's card, Help, About,
+     Report and the right-click menu at each size and fails on one past the
+     window, cut off without a scroll, without a reachable close, not closed
+     by Escape, or not taking and giving back focus.
    - Timing or physics needs the tools that compute it and their golden files.
    - Geometry needs `python ci.py --full` (with `--views` if anything drawn
      changed).

@@ -58,7 +58,9 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .selbar{flex-basis:100%;display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px;font-size:12.5px;color:var(--ink)}
 .selbar .sn{max-width:18em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-left:3px solid #2f7fe8}
 .selbar .sl{display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.selbar .sl input{width:90px}.selbar .sl output{min-width:2.8em}
-.selbar.empty button,.selbar.empty .sl{display:none}
+.selbar.empty button:not(.unf),.selbar.empty .sl{display:none}
+.selbar:not(.empty) .unf.hidden{display:inline-block!important;visibility:hidden}.selbar .sl output{font-variant-numeric:tabular-nums}   /* Reset opacity keeps its place while parts are selected: shown as the slider leaves 100 % it had pushed the slider 106 px under the pointer (and the phone's bar a line taller) */
+.stage:has(.selbar:not(.hidden)) .hint{opacity:0!important}   /* beside the bar the hint was squeezed to one word a line; the bar says what to do */
 .lasso{position:absolute;left:0;top:0;width:100%;height:100%;z-index:4;pointer-events:none;display:none}.lasso.on{display:block}
 .lasso polygon{fill:rgba(47,127,232,.12);stroke:#2f7fe8;stroke-width:1.5;stroke-dasharray:5 4;stroke-linejoin:round}
 .tools button{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -150,6 +152,7 @@ details.more[open]>summary{margin-bottom:9px}
 .sub-h{font:500 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:10px 0 6px}.sub-h:first-of-type{margin-top:0}
 .about-btn{display:block;width:100%;margin:0 0 12px;border-style:dashed;border-width:1.2px;font-weight:500}
 header .by{margin-top:6px;font-size:12.5px}.by span{white-space:nowrap}.by a{color:inherit;text-underline-offset:2px}
+.panel :is(p,li) a:not([class]),.info a:not([class]){color:var(--blue);text-underline-offset:2px}   /* a link in the panel's text: the browser's own blue was 1.9:1 on the dark panel */
 dialog:is(#about,#report){max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
 dialog:is(#about,#report)::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
 dialog:is(#about,#report) h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
@@ -208,7 +211,7 @@ table.rt th,table.rt td{text-align:left;padding:4px 4px;border-bottom:1px solid 
 table.rt th{color:var(--muted);font-weight:500}
 table.rt td.n{text-align:right}
 /* the adjuster's bench: its plan, and each figure against the manual's */
-#benchCv,canvas.mini{display:block;width:100%;margin-top:6px;border-radius:8px;background:var(--card)}#testOut td.rs{font-size:11px;line-height:1.3}table.rt.bench td.bad,table.rt.book td.bad,#tempOut b.bad,#bankOut b.bad{color:var(--hi);font-weight:600}
+#benchCv,canvas.mini{display:block;width:100%;margin-top:6px;border-radius:8px;background:var(--card)}#testOut td.rs{font-size:11px;line-height:1.3}table.rt.bench td.bad,table.rt.book td.bad,#tempOut b.bad,#bankOut b.bad{color:var(--brass);font-weight:600}   /* --hi was 3.0:1 on the light panel */
 /* the rate book: seconds in the columns, dates on one line */
 table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book td{padding:4px 3px}
 .note{font-size:12.5px;color:var(--muted)}
@@ -249,7 +252,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
 .split{display:none}
 @media(min-width:960px){.panel{position:relative}.split{display:block;position:absolute;left:-18px;top:0;bottom:0;width:18px;cursor:col-resize;touch-action:none}
   .split::after{content:"";position:absolute;left:8px;top:12px;bottom:12px;width:2px;border-radius:1px;background:var(--blue);opacity:0;transition:opacity .2s}
-  .split:hover::after,.split.on::after,.split:focus-visible::after{opacity:.45}.split:focus-visible{outline:none}}
+  .split:hover::after,.split.on::after{opacity:.45}.split:focus-visible::after{opacity:1}.split:focus-visible{outline:none}}
 html.splitting,html.splitting *{cursor:col-resize!important;user-select:none!important;-webkit-user-select:none!important}
 /* Back and Forward through the places the view has been, under the tabs, once there is somewhere to go back to */
 .hist{position:absolute;z-index:5;right:10px;top:50px;display:flex;gap:6px}
@@ -327,7 +330,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .spmenu .sub-h{margin:0 0 8px}
 .mdl .spmenu #speeds{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:3px;border-radius:10px;background:var(--track)}
 .mdl .spmenu #speeds button{min-height:0;padding:7px 4px;border:0;border-radius:7px;background:none;color:var(--muted);font-weight:500}
-.mdl .spmenu #speeds button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+.mdl .spmenu #speeds button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);text-shadow:.35px 0 0 currentColor}   /* bolder by a shadow, not font-weight: 600 widened the pressed one and shifted its neighbours 0.6-2 px */
 .mdl .spmenu .spd{margin-top:10px}.mdl .spmenu .spd .lab{min-width:0}
 .mdl .play .hud{position:static;flex:0 1 auto;min-width:0;padding:0 6px;font-size:13px;line-height:1.3;pointer-events:auto}
 .mdl #windP{flex:none;min-height:0;padding:8px 14px;border:0;border-radius:10px;background:var(--blue-soft);color:var(--blue)}
@@ -344,7 +347,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .mdl .panel button.primary{background:var(--blue);color:var(--card)}
 .mdl .panel .seg:has(>button[aria-pressed]){display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:10px;background:var(--track)}
 .mdl .panel .seg:has(>button[aria-pressed])>button{padding:6px 11px;border-radius:7px;background:none;color:var(--muted);font-weight:500}
-.mdl .panel .seg:has(>button[aria-pressed])>button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+.mdl .panel .seg:has(>button[aria-pressed])>button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);text-shadow:.35px 0 0 currentColor}
 .mdl .panel .seg.full{display:flex}.mdl .panel .seg.full>button{flex:1}
 .mdl .panel .ck:not(.rp-ck){justify-content:space-between;flex-direction:row-reverse;gap:12px;min-height:30px}
 .mdl .panel .ck input[type=checkbox]{appearance:none;-webkit-appearance:none;position:relative;width:38px;height:22px;margin:0;border-radius:11px;background:var(--rule);cursor:pointer;transition:background .2s;flex:none}
@@ -362,6 +365,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .mdl .about-btn{border:0;background:none;color:var(--muted);text-align:left;padding:4px 2px;margin:0 0 6px;font-weight:500;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px;min-height:0}
 .mdl .about-btn:hover{color:var(--ink)}
 /* phones */
+@media(orientation:landscape) and (max-height:560px){.mdl .hint{top:calc(var(--th,42px) + 20px);max-width:calc(100% - 28px)}}   /* under the tools: beside them it had about 70 px */
 @media(min-width:960px){.mdl .stage{height:calc(100vh - 80px);height:calc(100svh - 80px);max-height:960px}}
 @media(max-width:600px){.mdl header{padding:10px 16px 8px;gap:6px 14px}.mdl h1{flex:1 1 0;min-width:0;white-space:normal;font-size:1.4rem}.mdl .flip{order:1}.mdl .flip .fl,.mdl .flip .fd{display:none}.mdl header .tabs{order:2;flex-basis:100%}.mdl nav.models{order:3;margin:0}
   .mdl .hint{top:calc(var(--th,42px) + 20px);max-width:calc(100% - 28px)}.mdl .tools{left:12px;right:auto}

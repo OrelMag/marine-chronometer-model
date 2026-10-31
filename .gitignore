@@ -20,3 +20,6 @@ ci-logs/
 # worktrees of side branches, and folders the tools write (r_ill/, r_esc/ ...)
 .claude/worktrees/
 r_*/
+
+# Hamilton factory drawings from the NAWCC: "not to be reproduced"; the owner's copies, never committed (INVENTORY.md is)
+References/Hamilton-original-drawings/*.pdf
