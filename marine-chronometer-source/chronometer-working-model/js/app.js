@@ -384,17 +384,17 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const mvL=(x,y,z)=>{const v=new THREE.Vector3(x,y,z);return()=>mv.localToWorld(v.clone());};
   const fixed=(x,y,z)=>()=>new THREE.Vector3(x,y,z);
   /* camera targets on the arbors they look at (L, movement.js), so they follow the layout: the escapement views between the balance and the escape arbor */
-  const VIEWS={
-    box:{lidM:0,lidT:0,lift:0,flip:0,explode:0,yaw:0.72,pitch:0.4,dist:640,target:fixed(0,-12,0)},
-    dial:{lidM:1,lidT:1,lift:0,flip:0,explode:0,yaw:0.3,pitch:1.02,dist:330,target:fixed(0,-2,0)},
-    movement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:-0.62,pitch:0.64,dist:235,target:mvL(0,-19,2)},
-    train:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:0.2,pitch:1.05,dist:210,target:mvL(0,-12,8),see:true},
-    escapement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:1.9,pitch:-0.75,dist:78,target:mvL((L.B[0]+L.E[0])/2,-18.5,(L.B[1]+L.E[1])/2),see:true},   /* from the pillar-plate side: the balance is then behind the escapement, not in front of it */
-    exploded:{lidM:1,lidT:1,lift:1,flip:1,explode:1,yaw:0.9,pitch:0.28,dist:520,target:mvL(0,-40,0),all:{dist:1000,target:fixed(0,200,0)}},   /* all: its All, from the box's floor to the movement's top */
+  const VIEWS={   /* distances and targets x1.117 with the movement (31 October 2026), the balance's own close-up kept */
+    box:{lidM:0,lidT:0,lift:0,flip:0,explode:0,yaw:0.72,pitch:0.4,dist:714.88,target:fixed(0,-13.404,0)},
+    dial:{lidM:1,lidT:1,lift:0,flip:0,explode:0,yaw:0.3,pitch:1.02,dist:368.61,target:fixed(0,-2.234,0)},
+    movement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:-0.62,pitch:0.64,dist:262.495,target:mvL(0,-21.223,2.234)},
+    train:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:0.2,pitch:1.05,dist:234.57,target:mvL(0,-13.404,8.936),see:true},
+    escapement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:1.9,pitch:-0.75,dist:87.126,target:mvL((L.B[0]+L.E[0])/2,-20.6645,(L.B[1]+L.E[1])/2),see:true},   /* from the pillar-plate side: the balance is then behind the escapement, not in front of it */
+    exploded:{lidM:1,lidT:1,lift:1,flip:1,explode:1,yaw:0.9,pitch:0.28,dist:580.84,target:mvL(0,-44.68,0),all:{dist:1117,target:fixed(0,223.4,0)}},   /* all: its All, from the box's floor to the movement's top */
     /* the train laid out along the barrel-fusee line (movement.js, DEV), seen square from the side through a narrow field, as the textbooks draw it: barrel left, hands below */
-    laidout:{lidM:1,lidT:1,lift:1,flip:1,explode:0,dev:1,fov:20,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.05,dist:300,target:mvL(mv.userData.DEV.mid[0],-15,mv.userData.DEV.mid[1])},
+    laidout:{lidM:1,lidT:1,lift:1,flip:1,explode:0,dev:1,fov:20,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.05,dist:335.1,target:mvL(mv.userData.DEV.mid[0],-16.755,mv.userData.DEV.mid[1])},
     /* the barrel, chain and fusee, seen across the line joining them */
-    fusee:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.2,dist:105,target:mvL((L.Fu[0]+L.Ba[0])/2,-12,(L.Fu[1]+L.Ba[1])/2),see:true},
+    fusee:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.2,dist:117.285,target:mvL((L.Fu[0]+L.Ba[0])/2,-13.404,(L.Fu[1]+L.Ba[1])/2),see:true},
     /* the balance close up under its cock, with the timing weights (Rate and timing weights' Show the balance comes here too) */
     balance:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:-0.9,pitch:0.35,dist:65,target:mvL(L.B[0],BAL_Y,L.B[1])}};
   const VIEW_DESC={box:'The chronometer in its mahogany box.',dial:'The dial, read through the glass-top cover.',movement:'The movement lifted out of its case, train side up.',
