@@ -51,7 +51,7 @@ const WFUSEE=(()=>{
                                                              of 05 06 04-2's from it), the blank's length, small end face, the large end's recess floor */
   const{CW0,CW1}=WD.FU;                                      /* the click wheel, on the recess floor */
   const{DP0}=WD.FU;                                          /* the cover plate (Deckplatte), S to DP0 */
-  const{SLD}=WD.FU;                                            /* the stop bar's slot across the small end: 1.5 +0.05 deep (05 06 04-2) */
+  const{SLD,SLS}=WD.FU;                                        /* the stop bar's slot across the small end: 1.5 +0.05 deep, 1.1 +0.05 toward the bar's upper end (05 06 04-2) */
   const{DTU,DTL,DTT}=WD.FU;                                 /* the maintaining detent: upper face, lower face (its thick part), the tip's lower face (thin, 1, at the upper face) */
   const BRD=WD.BAR,BB=BRD.BB,BR=BB-BRD.h,BI=BB-BRD.bi,BBF=BB-BRD.bf,BLT=BR,BLU=BLT+BRD.lu,BLF=BLT+BRD.lf;   /* the barrel: bottom's outer face, rim, bottom's inner face, its boss's face, the lid's top (flush with the rim: 05 07 01 and the coloured section draw it so, the "0,6" running from the arbor's shoulder to it; 0.6 under the rim until 26 October 2026), underside (the lid 1.2: its 1,3 -0,1 at the drum's 1,2 seat, below), boss face */
   const BA0=WD.BAR.BA0,BA1=WD.BAR.BA1,BC0=BBF-WD.BAR.e,BC1=BLF+WD.BAR.e;       /* the barrel arbor's shoulders (22.29 apart, 22.2 +0.1: 0.06 endshake) and its core's ends, 0.05 off the bosses */
@@ -454,9 +454,9 @@ const WFUSEE=(()=>{
         bF.push(tag(mesh(gF,capFix(bore(helixSolid(cols(-sA,Math.PI+sA,[...X,...XN]),LB-SLD,LB,()=>[[LB-SLD,7.5],[LB,7.5]],(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),
           [u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],[c,0,-s_],0.25225,0,20),null),M.gilt),'050604-2',1));}
       bF.push(tag(mesh(gF,helixSolid(cols(Math.PI+sC,TAU-sC,[...X,...XN]),LB-SLD,LB,th=>{const r=Math.max(7.5,-6/Math.sin(th-barRot));return[[LB-SLD,r],[LB,r]];},rBody),M.gilt),'050604-2',1));
-      /* and the slot's shallow part toward the bar's upper end: from 1.1 to 1.5 deep, beyond u 8.0, between its walls */
+      /* and the slot's shallow part toward the bar's upper end: from SLS to SLD deep (1.125, 1.525), beyond u 8.0, between its walls */
       const pA=Math.atan2(-6,SB.us),pB=Math.atan2(-4,Math.sqrt(10.6*10.6-16)),c3=[];for(let f=pA;f<=pB+1e-9;f+=0.25*D2R)c3.push(f);   /* with a ray at the step's corner on the wall v 4 (the step across at u 8.0 met it between rays until 31 October 2026) */
-      bF.push(tag(mesh(gF,helixSolid([...new Set([...c3,pB,Math.atan2(-4,SB.us),...wrapIn([...X,...XN],pA,pB)].map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot),LB-SLD,LB-1.1,th=>{const f=th-barRot,r=Math.max(SB.us/Math.cos(f),4/-Math.sin(f));return[[LB-SLD,r],[LB-1.1,r]];},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
+      bF.push(tag(mesh(gF,helixSolid([...new Set([...c3,pB,Math.atan2(-4,SB.us),...wrapIn([...X,...XN],pA,pB)].map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot),LB-SLD,LB-SLS,th=>{const f=th-barRot,r=Math.max(SB.us/Math.cos(f),4/-Math.sin(f));return[[LB-SLD,r],[LB-SLS,r]];},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
     /* the arbor 05 06 04-1 (Schneckenwelle; Präz. Rundstahl 7,5, polished where marked): from the winding end, the square "3,1 r6" (+0.023/+0.015, r6 for 3-6 mm: 3.12 at
        its root, the middle; read 3.17 until 28 October 2026, drawing check 2's 5-M1: the small figure after "3," is this hand's flagged 1, as in "+0,015" beside it) tapering
        1:100 to the sheet's 2,92 at its point (3.12 less 20.3/100: 2.917; 3.17 would give 2.97), 20.3 long, the journal Ø 4.5 ±0.02 at the shoulder to 4.39 (1:70, 8 long) that runs in the fusee bush, the step Ø 6.1 -0.05 (3.1 +0.05) for the
@@ -856,8 +856,8 @@ const WFUSEE=(()=>{
 
     /* =============== the stop work: the bar (Stellungssteg 05 06 03-1, coloured section) in its slot across the fusee's small end, and the stop pin 05 08 01-5 =============== */
     /* 05 06_4 Schnitt C-D: the bar (its outline above) slides in the slot across the small end (05 06 04-2: 2 H8, 1.5 +0.05 deep, cut in the body above), 1.45 thick (the
-       coloured section's), under the cover plate. The chronometer dial up, the small end faces down and the bar lies on the cover plate, its other face 0.05 under the slot's
-       floor: so it reaches through the hub (0.3), the top turn's land (0.82) and its rib (0.33) and no further, 1.45 in all. Running, its spring holds it out toward its lower
+       coloured section's), under the cover plate. The chronometer dial up, the small end faces down and the bar lies on the cover plate, its other face 0.075 under the slot's
+       floor (1.525, the 1,5 +0,05's middle; 0.05 under 1.5 until 31 October 2026): so it reaches through the hub (0.3), the top turn's land (0.82) and its rib (0.33) and no further, 1.45 in all. Running, its spring holds it out toward its lower
        end, which stands out of the hub into the top turn's groove; when the chain winds onto the top turn there it presses that end in, and the upper end comes out past the
        hub, where the stop pin in the top plate ("Anschlagstift unten vorstehend", hole 7, 14.0 from the fusee) meets its far side at full wind ("Stellung im aufgezogenen
        Zustand"). Its slide is the chain's contact (barTravel, below) */

@@ -857,6 +857,21 @@ Contents:
   turn below (why the drawing makes it shallower there). The spring's pin, which ended flush with the old top land, now
   ends with its outer corner 0.02 inside the Ø 21. Keep: a fusee's groove ends where its sheet puts N, and the end past it
   is the uncut blank. `d33de400`
+- **The Wempe's fusee body drawn with a slanted fan where its groove ends at N and twisted strips at the stop bar's
+  slot's walls** (31 October 2026, the owner's three pictures of the slot's ends). The small end's last 1.5 is built ray
+  by ray (`helixSolid`); its rays were the lathe's every 1.67°, with more every 0.15° only near the walls and none at N,
+  so the land's end at N (r 9.34) was joined to the uncut hub (r 10.5) by two triangles across one step, 1.3 mm² leaning
+  beside the slot's far end, and each wall met the hub, land and rib between rays, a strip twisted a few hundredths at its
+  foot. 05 06 04-2's Schnitt C-D draws the slot as two straight parallel walls out through the outside at both ends. Now a
+  ray lies exactly where each wall meets the radius field at each height (solved by bisection, `cross`) with one 3e-4 either
+  side, and a pair either side of N, the one past it 0.01 on: at N the turn below's land ends exactly at the band's floor,
+  1.5 deep, where a ray loses that corner and draws its outline as one slanted line. `fusee_end.py --model wempe` checks
+  every face in the end lies on one the sheet draws (6.6 mm² off it before, none over 0.01 mm² after). Keep: a piece built
+  ray by ray has a ray at every angle where its outline changes regime, not only rays near it. `b1118e63`; and the
+  slot's two depths, 1,5 +0,05 and 1,1 +0,05, drawn at their middles (1.525, 1.125: `SLD`, `SLS`): at 1.5 the floor stood
+  6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick. Checked against
+  Ldzmn4kuKMA 1:14.87 (the bar's end in a straight-walled window through the hub and the top land) and the owner's book's
+  Fig. 2.10 (the small end face-on: the bar across in a straight slot, the spring in the recess).
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The

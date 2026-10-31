@@ -51,7 +51,7 @@ def main():
     step=(np.abs(n@udir)>0.999)&(np.abs(u-d['us'])<0.01)   # the shallow part's step across the slot at u 8.0
     tang=np.stack([C[:,2],np.zeros_like(r),-C[:,0]],1)/r[:,None];tN=d['fN'];endN=(np.abs(np.sum(n*tang,1))>0.99)&(np.abs(np.angle(np.exp(1j*(np.arctan2(-C[:,2],C[:,0])-tN))))<0.0015)   # the groove's end N: a radial wall at its angle
     inner=r<7.6;pin=np.hypot(v-1.5,D[sel][ok]-0.5)<0.3   # the recess, bore and holes; the stop bar's spring's pin's hole along the slot (Ø 0.5 at v 1.5, 0.5 deep)
-    bad=~(flat|wall|turned|step|endN|inner|pin)&(A>0.01)   # slivers under 0.01 mm² (a few µm across, where a wall meets a step between two close rays) unseen
+    bad=~(flat|wall|turned|step|endN|inner|pin)&(A>float(next((a.split("=")[1] for a in sys.argv if a.startswith("--min=")),"0.01")))   # --min=AREA; slivers under 0.01 mm² (a few µm across, where a wall meets a step between two close rays) unseen
     print(f'{sel.sum()} triangles in the end\'s last {SLD}; {int(bad.sum())} on no face the sheet draws (area {A[bad].sum():.4f} mm²)')
     for i in np.argsort(-A[bad])[:40]:
         k=np.where(bad)[0][i];print(f'  u {u[k]:7.3f} v {v[k]:6.3f} r {r[k]:6.3f} depth {D[sel][ok][k]:5.3f}  area {A[k]:.4f}  n ({n[k,0]:.2f},{n[k,1]:.2f},{n[k,2]:.2f})  n.v {n[k]@vdir:+.2f}')
