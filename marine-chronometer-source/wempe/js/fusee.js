@@ -124,7 +124,8 @@ const WFUSEE=(()=>{
      a corner without a step at every angle (the large face's fall's end), a point on every ray */
   function helixSolid(cols,a0,a1,inner,rhi,fixed=/** @type {number[]} */([]),corners=/** @type {number[]} */([])){const e=1e-7,full=Math.abs(cols[cols.length-1]-cols[0]-TAU)<1e-9;
     const loopAt=th=>{const mt=(th-PHI0)/TAU,W=/** @type {[number,string,number,number][]} */([]),c=Math.cos(th),s=Math.sin(th),I=inner(th),rin=a=>{let k=1;while(k<I.length-1&&I[k][0]<a)k++;const[p,q]=[I[k-1],I[k]];return q[0]>p[0]?p[1]+(q[1]-p[1])*(a-p[0])/(q[0]-p[0]):q[1];},rh=a=>Math.max(rin(a),rhi(th,a));   /* never inside the inner line (radialSolid's clamp: the slot's walls cut the hub there) */
-      for(let j=Math.floor((a0-A0)/PAX-mt)-2;j<=Math.ceil((a1-A0)/PAX-mt)+2;j++){const m=mt+j;if(m<0)continue;const q=ac(m);
+      for(let j=Math.floor((a0-A0)/PAX-mt)-2;j<=Math.ceil((a1-A0)/PAX-mt)+2;j++){const m=mt+j;if(m<0||(j<0&&m<1e-9))continue;   /* the turn starting at a sweep's last ray (TAU) is its first ray's: there the ribs' fixed faces stand on its walls, named as on the ray before */
+        const q=ac(m);
         for(const[k,w]of/** @type {[string,number][]} */([['s',q-WLD/2],['e',q+WLD/2]]))if(w>a0+1e-6&&w<a1-1e-6){const r0=rh(w-e),r1=rh(w+e);if(Math.abs(r0-r1)>2e-3)W.push([w,j+k,r0,r1]);}}   /* a step under 2 µm (where a slot's wall or the hub caps both sides) is none */
       fixed.forEach((w,i)=>{if(w>a0+1e-6&&w<a1-1e-6&&!W.some(q=>Math.abs(q[0]-w)<1e-6)){const r0=rh(w-e),r1=rh(w+e);if(Math.abs(r0-r1)>2e-3)W.push([w,'f'+i,r0,r1]);}});   /* a helix wall on it (turn 0's at A) takes its place */
       corners.forEach((w,i)=>{if(w>a0+1e-6&&w<a1-1e-6){const r=rh(w);W.push([w,'c'+i,r,r]);}});
