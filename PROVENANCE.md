@@ -247,7 +247,7 @@ Audited 18 October 2026 on `claude/hamilton-provenance` at `eda059c8` (read only
    - README step 3: `p3map` "under 0.4 mm".
    - VIDEOS.md: 40:08's focal length is "3900" in one row and "f 5100-7000" in another.
    - The `stale-anchor-specs` memory dates `PT` to 12 Oct; `PT` is 2 Oct (`6d1bd378`), and 12 Oct was the escape arbor's move (`8fcc1e55`).
-10. **The plate's absolute scale.** It rests on one number, 87.57 mm (a Cas-Ker new-old-stock listing). The ring's bore and the plate disagree by 4–5 % unless the bore is 38.4–39.8 (VIDEOS "The scale"). The suggested independent check (the balance rim against the impulse roller's 0.249 in, 34:08–34:16) has not been done.
+10. **The plate's absolute scale.** *Settled 31 October 2026 (branch `claude/hamilton-rescale`): every plate-scaled size x1.117*, fitted over the British Museum's measured Model 21 (its pillar plate 97.8, back plate 87.7, dial ring's flange 106.6) and Hamilton's drawings (the fusee wheel to the centre 22.88, the third to the fourth 12.60): 1.1169 +-0.0034 (`tools/rescale_fit.py`; PLAN-hamilton-drawings.md, Phase 0). The rows below keep their readings as made, in the plate's old millimetres; the model draws them x1.117, but for the absolute parts (the balance, its roller and hairspring coil, the escape wheel's plan, the escapement's figures). Until then it rested on one number, 87.57 mm (a Cas-Ker new-old-stock listing). The ring's bore and the plate disagree by 4–5 % unless the bore is 38.4–39.8 (VIDEOS "The scale"). The suggested independent check (the balance rim against the impulse roller's 0.249 in, 34:08–34:16) has not been done.
 
 ### Face-on frames available for a re-datum
 
