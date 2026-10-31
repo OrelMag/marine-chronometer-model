@@ -110,6 +110,28 @@ function buildWempe(M){
     const a=DEV.g*e,c=Math.cos(a),s=Math.sin(a);for(const g of EFP){g.rotation.y=a;g.position.x=E0[0]+dE[0]*e-(E0[0]*c+E0[1]*s);g.position.z=E0[1]+dE[1]*e-(-E0[0]*s+E0[1]*c);}
     for(const q of DPH)q.m.rotation.y=q.r0+q.c*e;};
   mv.userData.DEV=DEV;
+  /* ---------- the subassemblies (31 October 2026, the owner's: the Exploded view's Subassemblies, Apart, and Isolate subassembly): the units the 1958 Soviet repair book
+     takes out whole (checks.py's ASSEMBLY, pp. 59-60: its steps 3, 4, 6, 7 with 9, and 14), each a list of parts (t its name on the page). Those with a place, to [x, z]
+     (mm; the Exploded view's right is (-0.589, 0.808) in mv's frame, its yaw 2.2, the movement turned train side up: barrel 120 to the left, fusee 105 and balance 160 to the right), are taken apart beside the movement: moved there, every part at its anchor's rise (at), then spread
+     along their arbor by sp (mm toward the dial, +y) and pc (pieces inside a part, [part, its line, mm, 1: the part's group that holds it, not the mesh]), in the order
+     they come apart, each about 10 clear of the next: laid out for the view, not measured. The fusee's: the stop work and the cover plate off the cone's top, the click wheel, the
+     maintaining ratchet with its clicks, the wheel with the maintaining spring pinned in it, the Vorreiber; the barrel's: the mainspring, the lid and the set-up ratchet off the
+     bridge's side, the arbor off the dial's; the balance's: the rollers below, the hairspring with its stud above ---------- */
+  const ASM=[{k:'fusee',t:'Fusee',parts:['fusee','fuseeWheel','maintaining','vorreiber','stopWork','coverPlate'],at:'fusee',to:[-62,85],sp:{stopWork:-12,coverPlate:-26,maintaining:20,fuseeWheel:32,vorreiber:44},pc:[['fusee','050604-3',10],['maintaining','050601-1',12,1]]},
+    {k:'barrel',t:'Barrel',parts:['barrel','barrelArbor','mainspring','setupRatchet'],at:'barrel',to:[71,-97],sp:{mainspring:-28,barrelArbor:44,setupRatchet:-46},pc:[['barrel','050701-2',-40]]},
+    {k:'balance',t:'Balance',parts:['balance','hairspring','stud','rollers'],at:'balance',to:[-94,129],sp:{rollers:18,hairspring:-22,stud:-22}},
+    {k:'detent',t:'Detent',parts:['detent','detentBlock']},{k:'motion',t:'Motion work',parts:['hourWheel','changeWheel','cannon','udWheel','udPinion']}];
+  mv.userData.asm=ASM.map(a=>({k:a.k,t:a.t,parts:a.parts.filter(k=>PT[k]),apart:!!a.to}));
+  /* asmx(s, e): s 0 together, 1 apart; e the explode's share. Run after explode(e) and develop (the viewer's loop), which set the parts' groups outright each frame, so it
+     adds to them; the parts develop doesn't move, and the pieces inside parts (which nothing else moves: update() only turns them), it sets outright */
+  {const DS=new Set([...DMV.map(d=>d[0]),...EFP]),AX=/** @type {any[]} */([]);
+    for(const a of ASM){if(!a.to)continue;const oA=PT[a.at].userData.off,sp=/** @type {Record<string,number>} */(a.sp);
+      for(const k of a.parts){const g=PT[k];if(g)AX.push({o:g,d:oA-g.userData.off,dy:sp[k]||0,to:a.to,add:DS.has(g),x0:g.position.x,z0:g.position.z});}
+      for(const[k,h,dy,gp]of/** @type {[string,string,number,number?][]} */(a.pc||[])){const g=PT[k],S=new Set();if(!g)continue;
+        g.traverse(o=>{if(!o.isMesh||!(o.userData.hn||'').split(' ').includes(h))return;let q=o;if(gp)while(q.parent&&q.parent!==g)q=q.parent;S.add(q);});
+        for(const o of S)AX.push({o,dy,y0:o.position.y});}}
+    mv.userData.asmx=(/** @type {number} */s,/** @type {number} */e)=>{for(const q of AX){const o=q.o;if(q.y0!=null){o.position.y=q.y0+q.dy*s;continue;}
+      o.position.y+=s*(q.d*e+q.dy);if(q.add){o.position.x+=q.to[0]*s;o.position.z+=q.to[1]*s;}else{o.position.x=q.x0+q.to[0]*s;o.position.z=q.z0+q.to[1]*s;}}};}
   return mv;
 }
 /* ---------- laid out (the Hamilton's Laid out view, its movement.js's DEV: the textbooks' developed drawing): the barrel and fusee stay, and with them all they carry; each
