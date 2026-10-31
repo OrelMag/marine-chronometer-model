@@ -1,5 +1,7 @@
 # The Marine Chronometer, working
 
+**Work in progress (31 October 2026).** The Hamilton model is built about 12 % too small: every millimetre measured on photographs and videos came from one sale listing's pillar plate (87.57 mm), where the British Museum's example measures 97.8 and Hamilton's factory drawings (`References/Hamilton-original-drawings/`) agree. It is being rescaled and its drawn parts rebuilt from the drawings (`PLAN-hamilton-drawings.md`, `RESCALE-CLASSIFICATION.md`); until Hamilton's drawings of every part are in hand, its sizes and the figures worked from them are provisional. The page says so in its header and About.
+
 Interactive 3D model of a two-day fusee marine chronometer with a spring detent
 escapement, running in real time inside its gimballed case and mounting box.
 Built with three.js r128. There is no bundler and no package manager: the page
