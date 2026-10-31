@@ -28,7 +28,7 @@ const s0=DY.sim({T:60,from:30}),s1=DY.sim({T:60,from:30,J:kJ});
 chk(Math.abs(s1.A-s0.A)<3&&Math.abs(s1.rate-s0.rate)<0.3,`dynamics.js with it: the swing ${f(s0.A,2)}° → ${f(s1.A,2)}°, the escapement's rate ${f(s0.rate,3)} → ${f(s1.rate,3)} s a day: the timing takes it up (the estimate it replaces was close)`);
 out.J={Je,J4,J3,Jc,Jf,JR,JT0,kJ,A0:s0.A,A1:s1.A,r0:s0.rate,r1:s1.rate};
 /* ---------- 2. the train as five bodies ---------- */
-const arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arbor\\((.*?)\\),'`).exec(mv);if(!m)throw Error('arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
+const arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arborH?\\((.*?)\\),'`).exec(mv);if(!m)throw Error('arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
 const fc=(W,P)=>W.wy!=null&&P.py!=null?Math.max(0,Math.min(W.wy+W.w/2,P.py+P.p/2)-Math.max(W.wy-W.w/2,P.py-P.p/2)):Math.min(W.w,P.p);   /* a mesh's face: where the wheel's and the pinion's heights overlap (the fusee wheel's 2.22 on the centre pinion's 1.54 bear over 1.40; min(th) until 18 October 2026) */
 const FW={gw:arb('gw'),cw:arb('cw'),tw:arb('tw'),fw:arb('fw'),esc:arb('esc')};
 /* the meshes, from the fusee wheel down: the driving wheel (z, brass), the driven pinion (z, steel), the module, the face widths; k: a tooth as a cantilever, h

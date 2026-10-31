@@ -19,7 +19,7 @@ def obj(name):   # a one-line JS object literal of numbers and [x, z] pairs, as 
     s=re.search(r'^const '+name+r'=(\{.*?\});',SRC,re.M).group(1)
     return eval(re.sub(r'([{,])(\w+):',r'\1"\2":',s))
 L,TR=obj('L'),obj('TRAIN')
-EB=9.40;FE=10.444   # the escapement's centre distance; the fourth to the escape arbor: the escape arbor's lower setting on the bare plate (KLUwI2UUCMQ 34:30, 14:45, 13:52.0, 40:08: its direction from the balance, the mean of the four; movement.js L), the fourth at 21.6 (11.107 until 12 October 2026, toward the escape jewel seen from above at 10:00; 10.585 until 2 October 2026)
+EB=9.40;FE=11.90   # since 31 October 2026 (the rescale, PLAN-hamilton-drawings.md): 11.90, drawing 42073's 75 : 10 at module 0.28, with the plate x1.117; until then 10.444 # the escapement's centre distance; the fourth to the escape arbor: the escape arbor's lower setting on the bare plate (KLUwI2UUCMQ 34:30, 14:45, 13:52.0, 40:08: its direction from the balance, the mean of the four; movement.js L), the fourth at 21.6 (11.107 until 12 October 2026, toward the escape jewel seen from above at 10:00; 10.585 until 2 October 2026)
 d=lambda a,b:math.hypot(a[0]-b[0],a[1]-b[1])
 def circ(p,q,r1,r2,near):   # the intersection of circles r1 about p and r2 about q nearer `near`
     D=d(p,q);a=(r1*r1-r2*r2+D*D)/(2*D);h=math.sqrt(max(0,r1*r1-a*a));ex,ez=(q[0]-p[0])/D,(q[1]-p[1])/D;mx,mz=p[0]+a*ex,p[1]+a*ez
