@@ -13,28 +13,28 @@
     "42038"
    ],
    "vmat": "Nivaflex 45/5 (Co 45, Ni 21, Cr 18, Fe 5, W 4, Mo 4, Ti 1, Be 0.2 %)",
-   "vtreat": "cold-drawn strip 0.386 mm thick (0.379-0.400 keeps the manual's swing) × 13.55 mm × 1064 mm, aged 2 h at 500 °C to over 3000 N/mm²; coiled; greased",
-   "why": "The same torque from a strip 0.386 mm thick (E 220 GPa against carbon steel's 207), so the fusee, the swing and the rate are unchanged. Fully wound it is stressed 2966 MPa, a margin of 1.01 on Nivaflex's 3000 N/mm² against carbon steel's 0.90-1.00; it doesn't take a set, rust in salt air or magnetize, so its pull, and with it the rate, holds steady over the months a navigator carries it. And it suits the arbor: the barrel arbor is 25.4 times the strip across (the steel's 24.9), where a carbon-steel spring wants 28 or more for its life (Daniels, Watchmaking, 1981, p. 254), and no carbon-steel strip at 28:1 gives the fusee's turns in the measured barrel at this torque (solved, 14 October 2026: 0.36 × 812 mm on r 5.04 has 3.4 turns from slack to coil-bound where the fusee and set-up want about 5.9; 0.385 × 1,064 × 14.3 mm on r 5.39, mainspring.py's variant d28w, leaves 0.10 turn past full wind, its coils' friction then 8 % and the fusee's pull uneven past the bench's band).",
+   "vtreat": "cold-drawn strip 0.431 mm thick (0.423-0.446 keeps the manual's swing) × 15.14 mm × 1188.488 mm, aged 2 h at 500 °C to over 3000 N/mm²; coiled; greased",
+   "why": "The same torque from a strip 0.431 mm thick (E 220 GPa against carbon steel's 207), so the fusee, the swing and the rate are unchanged. Fully wound it is stressed 2966 MPa, a margin of 1.01 on Nivaflex's 3000 N/mm² against carbon steel's 0.90-1.00; it doesn't take a set, rust in salt air or magnetize, so its pull, and with it the rate, holds steady over the months a navigator carries it. And it suits the arbor: the barrel arbor is 25.4 times the strip across (the steel's 24.9), where a carbon-steel spring wants 28 or more for its life (Daniels, Watchmaking, 1981, p. 254), and no carbon-steel strip at 28:1 gives the fusee's turns in the measured barrel at this torque (solved, 14 October 2026: 0.36 × 812 mm on r 5.04 has 3.4 turns from slack to coil-bound where the fusee and set-up want about 5.9; 0.385 × 1,064 × 14.3 mm on r 5.39, mainspring.py's variant d28w, leaves 0.10 turn past full wind, its coils' friction then 8 % and the fusee's pull uneven past the bench's band).",
    "sources": [
     "Jacques Allemann, Nivaflex 45/5 data sheet JAS-014 (2021): composition, E 220 GPa, density 8.50, expansion 11.2 × 10⁻⁶/K, strength over 3000 N/mm², non-magnetic, corrosion",
     "Vacuumschmelze, Nivaflex 45/18 brochure: tensile strength up to 2900 MPa, hardness up to 800 HV, mainsprings among its uses",
     "Nivaflex, Wikipedia; R. Straumann, Grail-Watch wiki: patented 1948, Nivaflex SA, the name registered 1957"
    ],
    "numbers": {
-    "t0": 0.394,
-    "t1": 0.3860813087074577,
+    "t0": 0.440098,
+    "t1": 0.4312528218262302,
     "E0": 207,
     "E1": 220,
-    "s0": 2847.512778750049,
-    "s1": 2965.518051445918,
+    "s0": 2847.7460532798896,
+    "s1": 2965.7609932280766,
     "SN": 3000,
     "SS": [
      2550,
      2850
     ],
     "tb": [
-     0.37922199611620844,
-     0.39979993388995616
+     0.4233175770599536,
+     0.44585531843120113
     ]
    }
   },
@@ -344,7 +344,7 @@
    ],
    "vmat": "brass, as the Model 21's key, made as chronometerbook.com's: the pipe a shaft of 8 mm rod turned to 6, its square drilled 25 deep and filed to the arbor's, its head in the body's 8 mm bore; a helical spring of 0.7 mm steel wire, 6 mm inside and 18 mm free, on the shaft in the bore, one end anchored in the body; the paddle pinned in a 3 mm slot across the body's end",
    "vtreat": "the spring winds tight on the shaft and turns it as the paddle turns the fusee counterclockwise (seen from the key), and opens and slips the other way (its coil wound clockwise for it); the Model 21's plain key kept to set the hands",
-   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.53 N·m bends the fusee wheel's teeth (overwind.js), 69 % of what an average hand gives the key's paddle (0.77 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A spring clutch in the key's body slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 2.2 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
+   "why": "Turned the wrong way, the plain key's torque goes through the winding pawls and the sustaining spring into the train, which the escapement holds still: 0.74 N·m bends the fusee wheel's teeth (overwind.js), 97 % of what an average hand gives the key's paddle (0.77 N·m, Imrhan and Munoz-Vasa 2013). The manual's \"counterclockwise\" is all that prevents it. A spring clutch in the key's body slips the wrong way, so it can't happen; wound the right way the stop takes a strong hand with 2.2 times to spare. The hands still set with the plain key: they go forward clockwise on the dial's side, which a winding-only key would turn back.",
    "sources": [
     "overwind.js (the key forced, both ways)",
     "S. N. Imrhan and M. J. Munoz-Vasa, \"Finger Pinch Loosening and Tightening Torques on Small Cylindrical Handles Among Industrial Workers\", Industrial and Systems Engineering Review 1(2), 2013 (and Swain et al. 1970 there)",
@@ -353,7 +353,7 @@
     "chronometerbook.com, \"8. Making a chronometer key\" (30 July 2013): the key's parts, their drawing (Fig. 2) and the steps to make them"
    ],
    "numbers": {
-    "Ty": 0.5329193408821993,
+    "Ty": 0.7422934222529622,
     "mean": 0.767590485,
     "TH": 1.0592325,
     "TyF": 2.280042284269328

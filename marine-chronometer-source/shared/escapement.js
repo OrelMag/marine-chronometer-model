@@ -79,7 +79,7 @@ function makeEsc(o={},base){
   /* DSC: the detent's scale against its lengths as read (the Hamilton's, at its plate's 87.57 mm: x1.117 since 31 October 2026, PLAN-hamilton-drawings.md, Phase 0; 1 for
      another chronometer, whose base sets it): its length to the locking face, the passing spring's, its spring's length and faces, the trip spring's section and every size
      of its pieces below and its spring's height (ID, its inertia, is the drawn detent's, weighed by tools/dynamics.js); the wheel, the roller, the stones and the escapement's angles keep theirs */
-  const DSC=c.DSC;if(DSC!==1)for(const k of['BL','PSL','PSO','SPL','SN0','SN1','tsT','tsH','hD'])c[k]*=DSC;   /* A0: the reference's swing (with TQ, solved) */
+  const c0={...c},DSC=c.DSC;if(DSC!==1)for(const k of['BL','PSL','PSO','SPL','SN0','SN1','tsT','tsH','hD'])c[k]*=DSC;   /* A0: the reference's swing (with TQ, solved) */
   const NT=c.NT,P=TAU/NT,EX=c.EX,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2+c.LO*D2R,lockA=t0-c.LK*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
@@ -241,7 +241,7 @@ function makeEsc(o={},base){
   const KP=3*c.ET*1e9*(c.tsH*1e-3*(c.tsT*1e-3)**3/12)/(Math.hypot(Pt.x-Ps0.x,Pt.y-Ps0.y)*esm)**3*esm*esm/kB;   /* the trip spring at its tip, a cantilever, over k (its tip's travel in units) */
   /* CAL: the settings a reference is calibrated at; an instance changing others is solved with its reference's torque, the reference being base's settings (the Hamilton's
      without) at this instance's CAL (until 15 October 2026 always the Hamilton's: another chronometer's would have been counted from the Hamilton's escapement) */
-  const CAL=['EX','A','TF','MU','I','JW','W78','G78','hD','EB','ET','tsH','OP78','TQ','DSC'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-(base&&k in base?base[k]:DEF[k]))<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join()+(base?'|'+JSON.stringify(base):'');
+  const CAL=['EX','A','TF','MU','I','JW','W78','G78','hD','EB','ET','tsH','OP78','TQ','DSC'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-(base&&k in base?base[k]:DEF[k]))<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c0[k]).join()+(base?'|'+JSON.stringify(base):'');
   const PA=new Float64Array(NTB);for(let i=0;i<NTB;i++){const b=bite(TH0+i*DT);PA[i]=b>-1e8?b-t0:NaN;}   /* the wheel's angle the impulse jewel holds it at */
   const gP=i=>{const a=PA[i-1],b=PA[i+1],m=PA[i];return!isNaN(a)&&!isNaN(b)?(b-a)/(2*DT):!isNaN(b)&&!isNaN(m)?(b-m)/DT:!isNaN(a)&&!isNaN(m)?(m-a)/DT:0;};
   const iRel=Math.round((thRel-TH0)/DT);
@@ -350,7 +350,7 @@ function makeEsc(o={},base){
     else if(ok){const g=w=>wnK(1,A0,w)-Math.PI*A0*A0/Q;let lo=Math.log(1e-3),hi=Math.log(1e3);if(g(Math.exp(lo))<0&&g(Math.exp(hi))>0){for(let i=0;i<60;i++){const m=(lo+hi)/2;g(Math.exp(m))>0?hi=m:lo=m;}
       cl={w:Math.exp((lo+hi)/2)};br=parts(A0,1,cl.w);ph=br?sumP(br):0;}}
     RF[rk]={cl,ph,A0};CL=cl;PH0=ph;run={A:A0,rate:0,own:day(ph),parts:br,cl};}
-  else{const R0=RF[rk]||(/** @type {any} */(makeEsc)(Object.fromEntries(CAL.map(k=>[k,c[k]])),base),RF[rk]),cl=R0.cl;CL=cl;PH0=R0.ph;A0=R0.A0;
+  else{const R0=RF[rk]||(/** @type {any} */(makeEsc)(Object.fromEntries(CAL.map(k=>[k,c0[k]])),base),RF[rk]),cl=R0.cl;CL=cl;PH0=R0.ph;A0=R0.A0;
     const a=cl?solveA(1,cl.w):0,br=a>0?parts(a,1,cl.w):null;run={A:a,rate:br?day(sumP(br)-R0.ph)+c.HS*(a-A0)/D2R/10:NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
   if(CL)accW=CL.w/JR;
   /* the tooth leaves the impulse jewel at thE (where the jewel's tip passes out of the teeth's path, or the tooth reaches the stone on it), at phE, moving with the jewel

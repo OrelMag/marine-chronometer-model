@@ -808,7 +808,7 @@ function buildMovement(M){
     /* the seal: body, flange and screws as the fusee's (below; its column SL_DZ longer since 20 October 2026, the plunger's head riding on its top raised with it), its chamber closed underneath, slotted through both sides at the lever's height along the lever
        (toward the crossbar and toward the pivot) */
     const SW=2.234,gaps=[loc(0,HA),NPV].map(q=>{const d=sub(q,NP);return Math.atan2(d[1],d[0]);}).sort((a,b)=>a-b);
-    const nvS=[lat(nv,[[0,-30.36006],[7.3722,-30.36006],[7.3722,-31.67812],[6.9254,-32.12492],[6.5903,-32.34832],[6.5903,Y0],[3.351,Y0],[3.351,-31.1643],[0,-31.1643]],M.plateSolid)];   /* the seal's pieces of its body, merged below (fuse) */
+    const nvS=[lat(nv,[[0,-30.35772],[7.3722,-30.35772],[7.3722,-31.67812],[6.9254,-32.12492],[6.5903,-32.34832],[6.5903,Y0],[3.351,Y0],[3.351,-31.1643],[0,-31.1643]],M.plateSolid)];   /* the seal's pieces of its body, merged below (fuse) */
     for(const[A,B]of[[gaps[0],gaps[1]],[gaps[1],gaps[0]+TAU]]){const go=Math.asin(SW/6.5903),gi=Math.asin(SW/3.351),P=[];
       for(let k=0;k<=60;k++){const t=A+go+(B-A-2*go)*k/60;P.push([6.5903*Math.cos(t),6.5903*Math.sin(t)]);}for(let k=60;k>=0;k--){const t=A+gi+(B-A-2*gi)*k/60;P.push([3.351*Math.cos(t),3.351*Math.sin(t)]);}
       nvS.push(mesh(nv,polyGeo(P,Y0-Y1),M.plateSolid,NP[0],Y1,NP[1]));}
@@ -1791,7 +1791,7 @@ function buildMovement(M){
      r 6.5; the two seal screws agree), 6.18 and 6.31, its length over the packing's 1.18-1.31 (the model's 0.69; camera-free along one axis), the square's domed end inside the
      seal's bore as 12:33.0 and 39:08.0 show it; its radius 5.9 (0.90-0.94 of the packing's, no step; 12:33.0's 0.747 was the mat's reflection) as drawn (E:/mc-video/oq/ledger/hub_seal) */
   const wp=part('post',-87.126),SLC=5.41745,SLR=-35.47592;
-  hn(wp,'42051');mesh(wp,new THREE.LatheGeometry([V2(SLC,-30.36006),V2(7.3722,-30.36006),V2(7.3722,-31.67812),V2(6.9254,-32.12492),V2(6.5903,-32.34832),V2(6.5903,-36.36952-SL_DZ),V2(2.1223,-36.36952-SL_DZ),V2(2.1223,SLR),V2(SLC,SLR),V2(SLC,-30.36006)].reverse(),56),M.plateSolid,L.Fu[0],0,L.Fu[1]);
+  hn(wp,'42051');mesh(wp,new THREE.LatheGeometry([V2(SLC,-30.35772),V2(7.3722,-30.35772),V2(7.3722,-31.67812),V2(6.9254,-32.12492),V2(6.5903,-32.34832),V2(6.5903,-36.36952-SL_DZ),V2(2.1223,-36.36952-SL_DZ),V2(2.1223,SLR),V2(SLC,SLR),V2(SLC,-30.35772)].reverse(),56),M.plateSolid,L.Fu[0],0,L.Fu[1]);
   /* under it (parts list 108-41, 108-42), in its chamber, open underneath (SLC r 4.85, its roof SLR 0.8 thick, bored r 1.9 to pass the square): the seal ring, a flat steel
      washer r 4.7 bored r 1.87 on the arbor's shaft, 0.8 thick, pressed against the roof by the helical seal spring, which stands on the barrel bridge round the bushing.
      KLUwI2UUCMQ 12:33.0-12:39.0 (4K): the seal lifted off (12:34.0), the ring on the spring round the arbor; the ring taken off (12:35-12:36.5), then the spring
