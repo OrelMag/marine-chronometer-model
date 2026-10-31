@@ -2,7 +2,7 @@
 masses' screws WN-12, the detent block's other versions and the hairspring's collet and stud. Their numbers are the page's own (escapement.js, through wempe_load.js)."""
 import math
 import build123d as bd
-from . import (Op,Recipe,Setup,S,iso,Bar,TurnOD,TurnCone,Bore,ThreadOD,TurnProfile,Cut,Bought,Blank,page_matrix)
+from . import (Op,Recipe,Setup,S,iso,Bar,TurnOD,TurnCone,Bore,ThreadOD,TurnProfile,Cut,Bought,Blank,page_matrix,Plate,InnerCone,Drill)
 from .wempe import W,WB,BALM,_thr,screw,Solid
 
 RECIPES={}
@@ -102,3 +102,65 @@ def detentBlock1943():
       notes=["Drawn in the detent's frame (its recipe's): X along the detent, Y across it, Z under the top plate's inner face.","The block of the escapement of 1943: the last revised block's form, its slit along the plate through the upright's width, its stud and steady pins where Kirow DEC 479 and Lange 5177 have them."])
     r.rev='1943';return r
 RECIPES['detentBlock.1943']=detentBlock1943
+
+# ---------------- the hairspring's collet (05 03 02-2) and stud (05 03 02-3) (escapement.js COL, STD) ----------------
+import functools,json,subprocess
+from .wempe import TOOLS
+@functools.lru_cache()
+def WE():
+    js="const W=require(%r)(),E=W.WESC;process.stdout.write(JSON.stringify({COL:E.COL,STD:E.STD}))"%str(TOOLS/'wempe_load.js')
+    return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
+
+def collet():
+    C=WE()['COL'];RE,W1,W2,cw,cn,cT,sT,h=C['RE'],C['W1'],C['W2'],C['cw'],C['cn'],C['cT'],C['sT'],C['h'];src='05 03 02-2 (24.2.43); plan traced at 34.5 px/mm (05 03_5); escapement.js COL'
+    P=lambda e,w:bd.Vector(e,-w,0);m=(C['r1']-C['r0'])/h;e0=0.01
+    face=bd.Face(bd.Wire([bd.Edge.make_line(P(-cw,-W1),P(cn,-W2)),bd.Edge.make_three_point_arc(P(cn,-W2),P(RE,0),P(cn,W2)),bd.Edge.make_line(P(cn,W2),P(-cw,W1)),bd.Edge.make_three_point_arc(P(-cw,W1),P(-RE,0),P(-cw,-W1))]))
+    rH=C['hd']/2+(C['ho']-C['hw'])/C['tp'];Lh=C['ho']+C['hw']+0.3;zh=h-C['hy']
+    o=(C['HX']+C['ho']*sT,C['ho']*cT,zh);u=(-sT,-cT,0)
+    def hole():return bd.Solid.make_cone(rH,rH-Lh/C['tp'],Lh,bd.Plane(origin=o,z_dir=u))
+    ops=[Plate(face,h,'Mill the bar from brass sheet: its ends arcs of r %.1f about the bore, %.2f wide at the slit end and %.2f at the other'%(RE,2*W1,2*W2),
+           [S('length',f'{2*RE:.1f}',"9.1 -0.2 on the sheet, drawn at the fits' middles (sure)",src),S('width, slit end',f'{2*W1:.1f}','3.8 -0.2',src),S('width, other end',f'{2*W2:.1f}','2.7 -0.2',src),S('height',f'{h}','3.3',src)],src),
+         InnerCone(C['r0']-e0*m,-e0,C['r1']+e0*m,h+e0,'Bore it at 1:70 for the staff and ream: Ø %.3f at the arm side, Ø %.3f at the other'%(2*C['r0'],2*C['r1']),
+           [S('bore',f'1:70, Ø {2*C["r0"]:.3f} to {2*C["r1"]:.3f}',"1,6 H7 at the face toward the arm, (1,55) at the other, opened to the 1946 staff's seat (sure)",src)],src),
+         Cut(lambda:bd.Box(RE+0.5-C['rb']-C['sl'],2*C['sl'],h+0.2,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((-RE-0.5,0,-0.1))),'Saw the slit from the wide end to short of the bore',
+           [S('slit',f'{2*C["sl"]} wide, ending {C["sl"]} short of the bore',"0,2 +0,1 wide, 0,1 +0,05 short (built at the fits' middles, 0.25 and 0.125)",src)],src),
+         Cut(hole,"Drill the spring's hole across the narrow end (0.7, bei Montage gebohrt), then ream it 1:90 to Ø %.3f where it enters"%C['hd'],
+           [S('hole',f'Ø {C["hd"]} where it enters, 1:90',f'0,8 +0,01 (Kegel 1:90); axis {C["HX"]} from the bore, {C["hy"]} from the face, leaning {math.degrees(C["TH"]):.1f}° off square to the bar, square to the side it enters (90°)',src)],src)]
+    ax=C['ax']
+    return Recipe('collet','050302-2','Hairspring collet (Spiralrolle)',src,'Messingblech Ms 58 (05 03 02-2)','none',[Setup('1','bar on the mill, then bored and reamed at the lathe; the slit sawn and the hole drilled at the fitting',ops,view='top')],
+      page_matrix([[ax[0],ax[1],0],[0,0,1],[ax[1],-ax[0],0]],(0,C['colB']-h,0)),faces=('underside (toward the arm)','top'),fits=["on the staff's 1:70, line to line, gripping by its slit","the hairspring's inner end in its hole, with its pin (05 03 02-4)"])
+RECIPES['collet']=collet
+
+def stud():
+    D=WE()['STD'];AX,VO,o=D['AX'],D['VO'],D['o'];src='05 03 02-3 (6.6.41); 05 03_1, 05 03_5, 05 03_7; escapement.js STD'
+    cr=AX[0]*VO[1]-VO[0]*AX[1];sg=1 if cr<0 else -1   # part Y = sg x v (page_matrix needs a proper turn)
+    uw,c,tn,HU,ck,yB,yE=D['uw'],D['c'],D['tn'],D['HU'],D['ck'],D['yB'],D['yE'];t=ck-yB;dq=yE-ck
+    Ep,Em,Cp,Cm,Ap,Tp=(-uw,c+D['E'][0]),(-uw,c-D['E'][1]),(HU,c+D['Cw']),(HU,c-D['Cw']),(HU+D['Ap'],c),(D['Tp'],c)
+    V=lambda u,v,z:bd.Vector(u,sg*v,z)
+    def facet(q):   # under the plane through (q, 0), (Ap, 0) and (Tp, t - fac): the blank's underside ground up to the point, over the triangle (q, Ap, Tp)
+        pts=[V(*q,0),V(*Ap,0),V(*Tp,t-D['fac'])];n=(pts[1]-pts[0]).cross(pts[2]-pts[0]);n=n if n.Z>0 else -n
+        tri=bd.extrude(bd.Face(bd.Wire.make_polygon([V(*q,-0.5),V(*Ap,-0.5),V(*Tp,-0.5)],close=True)),t+1.0,dir=(0,0,1))
+        return tri&bd.Box(60,60,60,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MAX)).moved(bd.Location(bd.Plane(origin=pts[0],z_dir=n)))
+    def body():
+        bar=bd.extrude(bd.Face(bd.Wire.make_polygon([V(*Em,0),V(*Cm,0),V(*Tp,0),V(*Cp,0),V(*Ep,0)],close=True)),t,dir=(0,0,1))
+        up=bd.extrude(bd.Face(bd.Wire.make_polygon([V(-uw,v,z) for v,z in ((D['v0'],t),(D['v1'],t),(D['v1']-tn*dq,t+dq),(D['v0']-tn*dq,t+dq))],close=True)),2*uw,dir=(1,0,0))
+        return bar-facet(Cp)-facet(Cm)+up
+    ops=[Solid(body,'Mill the stud from Flachmessing 15 × 7: the bar %.1f thick, the upright %.1f over it leaning 8° toward the staff, then grind the two facets under the point'%(t,dq),
+           [S('bar',f'{Tp[0]+uw:.1f} long, {t} thick','14.6 -0.2, 1.6 -0.2 (drawn 1.5, the middle)',src),S('width',f'{D["E"][0]+D["E"][1]:.2f} at the square end (1.2 out, 1.26 in), {2*D["Cw"]:.1f} at the hole','2.5 -0.2, 3.1 -0.2 (1,2 -0,1; 1.26 scaled)',src),
+            S('upright',f'{2*uw:.4f} thick along the bar (1.8 g6), {dq} over the bar, leaning 8°','1.8 g6; 6.0 -0.2 (98° side view)',src),S('facets',f'from the V (apex {D["Ap"]} on from the hole) to the point at {D["Tp"]}, a knife edge {D["fac"]} under the top',"the plan's V, the section (sure)",src)],src),
+         Drill((HU,sg*c,-0.5),(0,0,1),2*D['hr'],t+1.0,"Drill and ream the screw's hole Ø 1.5 H7 through the bar",[S('',f'Ø {2*D["hr"]:.3f}, at {HU} on, {c} across',"1,5 H7; 5 ±0.1 from the square end's hole line (sure)",src)],src,key='screw'),
+         Drill((-uw-0.1,sg*D['SVH'],D['SYH']-yB),(1,0,0),2*D['hh'],2*uw+0.2,"Drill the hairspring's hole Ø 0.7 along the bar through the upright (at the fitting of the spring)",[S('',f'Ø {2*D["hh"]}, {D["SYH"]-ck:.2f} over the bar, {D["SVH"]:.3f} across','bei Montage der Spirale gebohrt; 3.15 (05 03_5, sure)',src)],src,key='spring')]
+    return Recipe('stud','050302-3','Hairspring stud (Klötzchen)',src,'Flachmessing 15 × 7 Ms 58 (05 03 02-3)','none',[Setup('1','flat bar on the mill, ground at the bench, drilled at the fitting of the spring',ops,view='top')],
+      page_matrix([[AX[0],sg*VO[0],0],[0,0,1],[AX[1],sg*VO[1],0]],(o[0],yB,o[1])),faces=('underside','top'),
+      fits=["screwed to the balance cock's top by the WN-11, the upright down through the cock's slot","the spring's outer end in the hole across the upright, with its pin"])
+RECIPES['stud']=stud
+
+def hairspringPins():
+    D=WE();C,S_=D['COL'],D['STD'];Lc=2*(C['hw']/C['cT']+C['pp']);Ls=2*(S_['uw']+S_['pp'])
+    src='escapement.js COL, STD (Spiralstift 05 03 02-4, the stud\'s pin\'s number; brass, Ldzmn4kuKMA 4:32-4:34; sizes estimated)'
+    note='Half round: filed from round wire to the hole\'s round less the spring\'s side, its flat 0.005 off the strip, set at the fitting of the spring.'
+    return [Bought('collet.pin','050302-4.c',"Collet's pin for the hairspring (Spiralstift)",'brass wire, filed half round and driven in the collet\'s Ø 0.8 hole beside the spring\'s inner end',
+              f'Ø {2*C["pr"]:.3f} × {Lc:.2f} (0.45 standing out of each side of the collet)','brass wire','brass',src,[note]),
+            Bought('stud.pin','050302-4.s',"Stud's pin for the hairspring (Spiralstift)",'brass wire, filed half round and driven in the stud\'s Ø 0.7 hole beside the spring\'s outer end',
+              f'Ø {2*S_["pr"]:.3f} × {Ls:.2f} (0.45 standing out of each side of the upright)','brass wire','brass',src,[note])]
+for _b in hairspringPins():RECIPES[_b.key]=(lambda b=_b:b)
