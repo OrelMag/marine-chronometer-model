@@ -195,6 +195,8 @@ STEPS=[('build',build,'quick'),
  ('holecheck',R([PY,'holecheck.py'],TOOLS),'browser'),
  ('wempe-smoke',R([PY,'smoke.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's page: its views, sections, Spread, a pick, the opacity menu, a link; then its Essay tab (about 1½ minutes)
  ('wempe-solids',R([PY,'solids.py','--model','wempe'],TOOLS),'browser'),
+ ('wempe-fusee-body',R([PY,'wempe_fusee_body.py','--check'],TOOLS),'browser'),   # the fusee body's solid (wempe/js/fuseebody.js, manifold3d's booleans on fusee.js's pieces) up to date (about a minute)
+ ('wempe-fusee-end',R([PY,'fusee_end.py','--model','wempe'],TOOLS),'browser'),   # every face of the fusee body's small end one 05 06 04-2's C-D draws, none of no thickness by the slot's walls (about a minute)
  ('wempe-audit',R([PY,'audit.py','--model','wempe'],TOOLS),'browser'),
  ('wempe-exploded',R([PY,'exploded.py','--model','wempe'],TOOLS),'browser'),
  ('wempe-audit-first',R([PY,'audit.py','--model','wempe','--rev','first'],TOOLS),'browser'),   # the same as first drawn (the page's Variants: the sheets of 1940-41), its coplanar faces under movement.first

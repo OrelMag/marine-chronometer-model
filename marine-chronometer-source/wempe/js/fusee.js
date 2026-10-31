@@ -445,11 +445,22 @@ const WFUSEE=(()=>{
          faces where the groove ended at N and where the walls met the outline. Drawn gilt as the body is */
       {const fN=fr((PHI0+fr(MN)*TAU)/TAU)*TAU,XN=[fN-1e-6,fN+1e-3],c=Math.cos(barRot),s_=Math.sin(barRot),u0=Math.sqrt(6.4*6.4-1.5*1.5);   /* the groove's end N: its land on the one, the uncut end on the other, 0.01 on (at N the turn below's land ends at 1.5 under the end, which a ray there would meet at no width) */
         const cl=[...new Set([...[...Array(N+1).keys()].map(k=>k*TAU/N),...XN].map(x=>+x.toFixed(9)))].sort((p,q)=>p-q);
-        let g=helixSolid(cl,AE,LB,()=>[[AE,7.5],[LB,7.5]],rBody);
+        const gBa=helixSolid(cl,AE,LB,()=>[[AE,7.5],[LB,7.5]],rBody),R=(u,v)=>[u*c+v*s_,-u*s_+v*c],pin={o:[u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],d:[c,0,-s_],r:0.25225,n:20};
+        /* the cuts made offline (tools/wempe_fusee_body.py: manifold3d's booleans, which always give a closed manifold solid): the four pieces above, uncut, united, the
+           slot's two pockets and the pin's hole taken from them, into js/fuseebody.js (WFUSEEBODY), which the page draws as the body; its tapped holes' records are the
+           tube's (matchThreads). With window.__FUSEE_RAW (that tool) the pieces and the cuts' figures are handed to it instead; without the file, the cut below (facePocket,
+           a few faces of no thickness where its sections meet: fusee_end.py) */
+        if(typeof window!=='undefined'&&window.__FUSEE_RAW){const ar=g=>{const h=g.index?g:g;return{pos:Array.from(h.attributes.position.array),idx:h.index?Array.from(h.index.array):null};};
+          pF.userData.rawBody={pieces:[gRe,gFl,gTu,gBa].map(ar),c,s:s_,S,SLD,SLS,us:SB.us,v0:4,v1:6,pin};}
+        if(typeof WFUSEEBODY!=='undefined'&&!(typeof window!=='undefined'&&window.__FUSEE_RAW)){bF.forEach(m=>{m.parent.remove(m);m.geometry.dispose();});bF.length=0;
+          const b64=(t,s)=>{const r=atob(s),u=new Uint8Array(r.length);for(let i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return new t(u.buffer);};
+          const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(b64(Float32Array,WFUSEEBODY.pos),3));g.setIndex(new THREE.BufferAttribute(b64(Uint32Array,WFUSEEBODY.idx),1));
+          const gc=KIT.crease(g,35);gc.userData.threads=gTu.userData.threads;bF.push(tag(mesh(gF,gc,M.gilt),'050604-2'));gTu.dispose();}
+        else{let g=gBa;
         /* the slot's two cuts (core.js facePocket: every triangle split on the cut's planes, its walls and floor the band's own sections; bore's holeCut, which splits only
            the triangles near the cut, left this helical band's sections open), each a rectangle in plan between the walls v 4 and 6 (the sheet's 4 and 2 H8: 4.000-6.014,
            drawn 6) */
-        const R=(u,v)=>[u*c+v*s_,-u*s_+v*c],sl=(g0,d,u0_,u1_)=>facePocket(g0,'bottom',[R(u0_,4),R(u1_,4),R(u1_,6),R(u0_,6)],d);
+        const sl=(g0,d,u0_,u1_)=>facePocket(g0,'bottom',[R(u0_,4),R(u1_,4),R(u1_,6),R(u0_,6)],d);
         g=sl(sl(g,SLD,-12,SB.us),SLS,SB.us,12);
         /* the two cuts meet on the step's plane, u 8.0: the deep cut's end wall above the shallow one's floor stands there with nothing either side of it, so it goes (a cut
            reaching back past 8.0 crossed the deep slot's U-shaped section on its end plane, which facePocket clips loop by loop, and spanned the window with a face); and
@@ -458,9 +469,9 @@ const WFUSEE=(()=>{
           if(!(Math.abs(u-SB.us)<1e-5&&y-S<SLS-1e-6&&v>4&&v<6)&&!((Math.abs(y-S-SLD)<1e-6||Math.abs(y-S-SLS)<1e-6)&&Math.hypot(x,z)<7.5-1e-4))K.push(t);}
           const o=new THREE.BufferGeometry();for(const k of['position','normal','uv']){const a=g.attributes[k];if(!a)continue;const w=a.itemSize,arr=new Float32Array(K.length*3*w);K.forEach((t,j)=>arr.set(a.array.subarray(t*w,(t+3)*w),j*3*w));o.setAttribute(k,new THREE.BufferAttribute(arr,w));}
           g.dispose();g=o;}
-        g=bore(g,[u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],[c,0,-s_],0.25225,0,20);
-        bF.push(tag(mesh(gF,capFix(g,null),M.gilt),'050604-2',1));}
-      fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
+        g=bore(g,pin.o,pin.d,pin.r,0,pin.n);
+        bF.push(tag(mesh(gF,capFix(g,null),M.gilt),'050604-2',1));fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}}
+      }   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
     /* the arbor 05 06 04-1 (Schneckenwelle; Präz. Rundstahl 7,5, polished where marked): from the winding end, the square "3,1 r6" (+0.023/+0.015, r6 for 3-6 mm: 3.12 at
        its root, the middle; read 3.17 until 28 October 2026, drawing check 2's 5-M1: the small figure after "3," is this hand's flagged 1, as in "+0,015" beside it) tapering
        1:100 to the sheet's 2,92 at its point (3.12 less 20.3/100: 2.917; 3.17 would give 2.97), 20.3 long, the journal Ø 4.5 ±0.02 at the shoulder to 4.39 (1:70, 8 long) that runs in the fusee bush, the step Ø 6.1 -0.05 (3.1 +0.05) for the

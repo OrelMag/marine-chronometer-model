@@ -6,3 +6,6 @@ declare const L: any, DIAL_R: any, SEC_L: any, UDA: any, UD_SWEEP: any, MSHAPE: 
 declare const checkHoles: any;
 // shared/escapement.js ends with module.exports for Node (tools/wempe_escapement.js), so TypeScript reads it as a module; on the page makeEsc is a global (js/escphys.js uses it).
 declare const makeEsc: typeof import('../../shared/escapement.js').makeEsc;
+// js/fuseebody.js (tools/wempe_fusee_body.py): the fusee body as one closed solid, its corners and triangles base64; not in jsconfig's files (1.7 MB of data). __FUSEE_RAW: that tool's flag
+declare const WFUSEEBODY: {pos: string, idx: string};
+interface Window { __FUSEE_RAW?: boolean }
