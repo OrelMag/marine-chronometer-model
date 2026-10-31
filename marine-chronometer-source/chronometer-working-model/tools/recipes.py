@@ -31,8 +31,9 @@ def recipes():
     sys.exit('recipes.py: no recipes yet for '+model.NAME)
 
 EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last'))return false;return true;};
-  let root=null;mv.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o))root=o;});if(!root)return null;mv.updateMatrixWorld(true);
-  const subs=[];mv.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
+  let sc=mv,root=null;const find=s=>s.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o))root=o;});find(mv);if(!root&&window.__BX&&window.__BX.root){sc=window.__BX.root;find(sc);}   /* the case and its box are not in the movement's group: the box's root (?qa's __BX) */
+  if(!root)return null;sc.updateMatrixWorld(true);
+  const subs=[];sc.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
   const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(),out=[],v=new THREE.Vector3();let rotY=null;
   const b64=a=>{const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);};
   const own=o=>{for(let q=o;q;q=q.parent)if(q.userData.hn)return q.userData.hn;return null;};let gearRot=null;   /* a mesh is the part's only if its nearest line is the part's (the staff's line is on the whole balance's group) */
@@ -41,7 +42,7 @@ EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.user
     for(let i=0;i<n;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);pos[3*i]=v.x;pos[3*i+1]=v.y;pos[3*i+2]=v.z;}
     const I=o.geometry.index?Uint32Array.from(o.geometry.index.array):Uint32Array.from({length:n},(_,i)=>i);out.push({pos:b64(pos),idx:b64(I),thread:!!o.userData.thread});});
   const pud={};for(let q=root;q;q=q.parent)for(const[k,v]of Object.entries(q.userData||{}))if(!(k in pud)&&(typeof v==='number'||Array.isArray(v)&&v.every(x=>typeof x==='number')))pud[k]=v;   /* its groups' numbers (the drum's chain slot, as the page laid it) */
-  return{meshes:out,rotY,gearRot,pud};}"""
+  return{meshes:out,rotY,gearRot,rootRot:root.rotation.y,pud};}"""
 
 # The pose the check freezes the page in (step 7b, 29 October 2026), as fine.py and audit.py freeze it: the page's own update() replaced by a no-op, then called once
 # with this state, so a part that moves or flexes stands where its recipe is drawn, whatever the clock or the page's last frame left it:
@@ -137,11 +138,14 @@ def check(r,pm):
     M=r.to_page.copy()
     if getattr(r,'spin',False) and pm.get('gearRot') is not None:   # a wheel turned on its arbor by the page's phase: the whole recipe turned about Z by it
         a=pm['gearRot'];Rz=np.eye(4);Rz[:2,:2]=[[math.cos(a),-math.sin(a)],[math.sin(a),math.cos(a)]];M=M@Rz
+    if getattr(r,'root_turn',0):   # a part fused into its gear mesh's frame (the cannon tube): the page's mesh is that mesh's own frame, turned by its phase from the group's, in which the recipe is drawn
+        a=r.root_turn*pm.get('rootRot',0.0);Rz=np.eye(4);Rz[:2,:2]=[[math.cos(a),-math.sin(a)],[math.sin(a),math.cos(a)]];M=M@Rz
     if pm.get('rotY'):   # the page turns each screw's slot by its own angle about the axis (page y)
         a=pm['rotY'];Ry=np.array([[math.cos(a),0,math.sin(a)],[0,1,0],[-math.sin(a),0,math.cos(a)]]);M[:3,:3]=Ry@M[:3,:3];M[:3,3]=Ry@M[:3,3]
     from recipes import CutLeaves
     for o in r.ops():   # a pinion's leaves at the page's phase (its gear mesh's turn about the arbor)
-        if isinstance(o,CutLeaves) and pm.get('gearRot') is not None and not getattr(r,'spin',False):o.phase=pm['gearRot']   # a spun recipe turns whole (below)
+        if isinstance(o,CutLeaves) and getattr(r,'root_turn',0):o.phase=pm.get('rootRot',0.0)   # drawn in the group's frame: the leaves at the phase
+        elif isinstance(o,CutLeaves) and pm.get('gearRot') is not None and not getattr(r,'spin',False):o.phase=pm['gearRot']   # a spun recipe turns whole (below)
     fa=[o for o in r.ops() if getattr(o,'free_angle',False)]
     if fa:   # a hole at a free angle: its direction read off the page's own walls (the page surface inside the hole's band, well inside the part's radius)
         import trimesh as _t
@@ -174,7 +178,7 @@ def check(r,pm):
     elif abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
     bp=np.array([np.min([m.bounds[0] for m in pages],0),np.max([m.bounds[1] for m in pages],0)]);db=np.abs(rm.bounds-bp).max()
     res['bbox']={'recipe':np.round(rm.bounds,3).tolist(),'page':np.round(bp,3).tolist(),'max':round(float(db),4)}
-    if db>BOX_TOL:F.append(f'bbox: corners differ by {db:.4f}')
+    if db>getattr(r,'box_tol',BOX_TOL):F.append(f'bbox: corners differ by {db:.4f}')   # box_tol: a polygon the page draws for a round that the recipe draws true (a Ø 9 head on 32 sides is 0.022 inside it)
     n=20000;Pr,_=trimesh.sample.sample_surface(rm,n,seed=1);SP=[trimesh.sample.sample_surface(m,max(200,int(n*m.area/sum(q.area for q in pages))),seed=2) for m in pages]
     Pp=np.concatenate([q[0] for q in SP]);Np=np.concatenate([m.face_normals[q[1]] for m,q in zip(pages,SP)])
     kr=~in_zone(ixf(M,Pr),zones);kp=~in_zone(ixf(M,Pp),zones)
@@ -203,7 +207,7 @@ def check(r,pm):
     feats=[(getattr(o,'key',''),o.at) for o in r.ops() if isinstance(o,(Hole,Cone)) and getattr(o,'at',None) is not None]
     def where(q):
         c=ixf(M,q[None])[0]
-        if not feats:return f'r {math.hypot(c[0],c[1]):.2f} z {c[2]:.2f}'
+        if not feats:return f'r {math.hypot(c[0],c[1]):.2f} at {math.degrees(math.atan2(c[1],c[0])):.0f}° z {c[2]:.2f} (x {c[0]:.3f}, y {c[1]:.3f})'
         k,a=min(feats,key=lambda f:math.dist(f[1],c[:2]));return f'({c[0]:.2f}, {c[1]:.2f}, z {c[2]:.2f}) near hole {k} ({math.dist(a,c[:2]):.2f} off)'
     allp=np.concatenate([Pr[kr],Pp[kp]]);alld=np.concatenate([dr,dp]);o=np.argsort(-alld);worst=[];seen=[]
     exq=np.zeros(len(allp),bool);C=ixf(M,allp);res['expected']=[]
