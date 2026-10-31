@@ -38,7 +38,9 @@ link, reset the view, full screen), a row of views, and a play bar: stop and go
 on, the speed (1/20×, ¼×, 1×, 60×, 3600× or any speed), the time, the power left
 and Wind. The panel beside it (under it on a phone) has four tabs: **Explore**
 (the walkthrough, the Hamilton's overhaul, Take it apart: Exploded and Laid out,
-and Parts), **Run** (time, winding, the rate and timing weights, and the
+the Wempe's Exploded view taking its fusee, barrel and balance apart beside the
+movement with Subassemblies: Apart, and Parts, where the Wempe's Isolate row
+shows one subassembly alone, as right-clicking a part does), **Run** (time, winding, the rate and timing weights, and the
 Hamilton's stopping and starting and rate book), **Look** (Metal, Tinted or Ink,
 Colour by, the display's switches and ship motion) and **Advanced** (Contacts,
 swing, the trial, the escapement's plan or bench, cross-sections, variants,
