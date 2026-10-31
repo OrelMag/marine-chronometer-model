@@ -193,6 +193,7 @@ class Bought:
         self.key=key;self.hn=hn;self.title=title;self.what=what;self.size=size;self.standard=standard;self.material=material;self.src=src;self.notes=list(notes)
 
 class Recipe:
+    rev='last'   # the version of the movement the recipe is drawn for and checked on (the page's setRev: 'last', 'first', '3955', '6mx', '1943'); recipes_site.py gives the card's entry a v, so the card shows the one for the version on show
     def __init__(self,key,hn,title,drawing,material,treatment,setups,to_page,notes=(),fits=(),expect=(),faces=('inner face','outer face')):
         self.faces=faces   # what the faces at Z 0 and Z t are called (a flat part): the sheets' sketches name the face they are seen from
         self.expect=list(expect)   # where the page's mesh is known to depart from the drawing: {'at': (x, y), 'r', 'max', 'why'} in the part's frame (the check reports, not fails, them)

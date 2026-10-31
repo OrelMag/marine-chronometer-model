@@ -398,8 +398,9 @@ const WESC=(()=>{
       const sw=Math.sqrt(r0*r0-1.6*1.6),AT=(()=>{const f=(/** @type {number} */x0)=>{const L=Math.hypot(sw-x0,0.4),zc=x0+20*0.4/L,hc=2+20*(sw-x0)/L;return{zc,hc,e:Math.hypot(zc,hc-3.25)-20};};
         let lo=2,hi=12;for(let i=0;i<60;i++){const m=(lo+hi)/2;f(m).e>0?hi=m:lo=m;}const r=f(lo);return{x0:lo,zc:r.zc,hc:r.hc};})();
     return{r0,r1,r2,gap,N,sw,AT,hub:2.009/2,hs:2.15,hR:0.5,kR:0.9,kD:0.4,tH:{dy:2.15,i:0.2,r:0.46,n:16}};})();
-  const HUB={R:6.25/2,b:1.0,fl:1.8,tp:140,s:2.15,rs:0.5,r:0.52,nR:2.6/2,f:1.07,fd:0.04,nd:4.06};   /* HUB the hub's (05 04 02-2) */
-  const MS={A:30,H0:0,H1:6.46,d:6.35,CH:0.26,cl:0.02,CB:0.81,TS:0.4,cb:0.57,top:{rs:0.6,r:0.62,d:2.0},hS:1.85,hS3955:2.55};
+  const HUB={R:6.25/2,b:1.0,fl:1.8,tp:140,s:2.15,rs:0.5,r:0.52,nR:2.6/2,f:1.07,fd:0.04,nd:4.06,sc:{r1:0.845,r2:0.495,a:0.05,b:0.4,c:0.3,e:0.05,sl:[1.3,0.2,0.25],sy:0.13}};   /* HUB the hub's (05 04 02-2) */
+  const STS={r:1.15,h:1.6,ck:2.4,be:0.6,rs:0.7,bar:1.5};   /* the stud's screw WN-11 (below): head r x h, through the cock's ck, be under it, thread rs, the stud's bar thickness */
+  const MS={A:30,H0:0,H1:6.46,d:6.35,CH:0.26,cl:0.02,CB:0.81,TS:0.4,cb:0.57,top:{rs:0.6,r:0.62,d:2.0},hS:1.85,hS3955:2.55,sc:{hr:0.8,tg:0.015,tp:0.1,hu:0.02,hb:0.03,sl:[1.6,0.25,0.25]}};   /* sc: the mass's screw WN-12 (below): head r, tip off the rim, thread run into the head, head under the mass's side, where the bend starts, slot box */
   const TSW={dy:2.15,TIP:21.05,wo:0.8,wl:3.3,rs:0.45,ri:0.1,p:0.16,hr:0.825,hl:1.3,Rw:4.25/2,Rw3955:1.9,cut:[0.15,1.3,1.7]};
   const ROLI={rr:6.78/2,t:2.0,l:1.5,R:3.5,ext:0.8,n:40,sl:[1.5,3.0,-0.003,0.503],ph:[-1.9,0.7],phR:0.65,bore:0.825,tp:140},ROLD={c:[-0.255,0.355],w:2.15,sl:[0.85,2.0],e:0.003,bore:0.6025,bore1:0.6};
   const rolImp=()=>{const af=aBW-PHI0,u=dir(af),vl=[Math.sin(af*D2R),Math.cos(af*D2R)],rr=ROLI.rr,RF=(/** @type {number} */r,/** @type {number} */w)=>add(add([0,0],u,r),vl,w);   /* vl: toward the leading side (the way it turns in the impulse) */
@@ -566,12 +567,12 @@ const WESC=(()=>{
            Its height over the rim's lower face (hS above): 05 03_2's side view puts the slotted head's centre 1.83-1.88 over it (22 px at 12.0 px/mm by the rim's Ø 32.3 and 3.8:
            sure; read 2.83 and drawn 2.45 until 26 October 2026); Wempe 3955's 2.55 (5_Wempe_3955_O.jpg) and Lange 5829's 2.0 (stahl_113510_lange_4.jpg) */
         const gs=new THREE.Group();gs.position.set(0,yS,0);gs.quaternion.copy(q);gm.add(gs);
-        const tA=ro-0.015,tB=rOut-MS.cb+0.1,tg=KIT.threadGeo(TS,tA,tB,tA+tB).clone();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,tA+tB,0);   /* its tip toward the staff, 0.005 off the rim (16.15) */
+        const SC=MS.sc,tA=ro-SC.tg,tB=rOut-MS.cb+SC.tp,tg=KIT.threadGeo(TS,tA,tB,tA+tB).clone();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,tA+tB,0);   /* its tip toward the staff, 0.005 off the rim (16.15) */
         tag(mesh(gs,tg,M.steel),'WN-12').userData.thread={rs:TS,p:KIT.isoP(TS)};
         /* the head's face and the slot's top bent onto the mass's round side (x across) */
         const onMass=(g,yT,dy)=>{const P=g.attributes.position;for(let i=0;i<P.count;i++)if(P.getY(i)>yT){const w=P.getX(i);P.setY(i,rc+Math.sqrt(mr*mr-w*w)+dy);}P.needsUpdate=true;g.computeBoundingBox();return g;};
-        tag(mesh(gs,onMass(lathe([[0,rOut-MS.cb],[0.8,rOut-MS.cb],[0.8,rOut-0.02],[0,rOut-0.02]],24),rOut-0.03,-0.02),M.steel),'WN-12',1);   /* its head, sunk in the mass's outer side, on the counterbore's floor */
-        tag(mesh(gs,onMass(new THREE.BoxGeometry(1.6,0.25,0.25,16,1,1).translate(0,rOut-0.02-0.125+0.02,0),rOut-0.03,0),M.steelD),'WN-12',1);   /* its slot across the mass (horizontal), 0.02 out of the head's face as screw() draws them, its top in 16 steps along the round side */
+        tag(mesh(gs,onMass(lathe([[0,rOut-MS.cb],[SC.hr,rOut-MS.cb],[SC.hr,rOut-SC.hu],[0,rOut-SC.hu]],24),rOut-SC.hb,-SC.hu),M.steel),'WN-12',1);   /* its head, sunk in the mass's outer side, on the counterbore's floor */
+        tag(mesh(gs,onMass(new THREE.BoxGeometry(SC.sl[0],SC.sl[1],SC.sl[2],16,1,1).translate(0,rOut-SC.hu-SC.sl[1]/2+SC.hu,0),rOut-SC.hb,0),M.steelD),'WN-12',1);   /* its slot across the mass (horizontal), 0.02 out of the head's face as screw() draws them, its top in 16 steps along the round side */
       }}}
     /* the timing screws (Zeitschraube 05 03 01-2) and their weights (Zeitmasse 05 03 01-3, by the coloured section's labels), at the arm's ends: the screw across the rim in its
        tapped hole Ø 0.9, 0.16 pitch, 2.15 over the rim's lower face (05 03 01-1: sure), its slotted head inside the rim on the rim's inner face, the weight on it outside
@@ -628,9 +629,9 @@ const WESC=(()=>{
        Their heads 0.05 under the arm's face and their ends 0.05 short of the flange's underside (so no face lies in another's), their slots within them. Their shanks M1
        (KIT.threadGeo, on the flange's tapped holes' helix: matchThreads; a plain Ø 0.96 until 28 October 2026). They stay in when the balance comes out */
     for(const s of[-1,1]){const g=new THREE.Group();g.position.set(0,0,s*2.15);balL.add(g);tag(g,'WN-10');
-      const hd=mesh(g,lathe([[0,Y.armT+0.05],[0.845,Y.armT+0.05],[0.495,Y.armT+0.4],[0,Y.armT+0.4]],28),M.steel);hd.userData.screw=0.9;
-      mesh(g,KIT.threadGeo(0.5,Y.armT+0.3,Y.flB-0.05),M.steel).userData.thread={rs:0.5,p:KIT.isoP(0.5)};
-      const sl=mesh(g,new THREE.BoxGeometry(1.3,0.2,0.25),M.steelD,0,Y.armT+0.13,0);sl.rotation.y=0.7+s;}
+      const SC=HUB.sc,hd=mesh(g,lathe([[0,Y.armT+SC.a],[SC.r1,Y.armT+SC.a],[SC.r2,Y.armT+SC.b],[0,Y.armT+SC.b]],28),M.steel);hd.userData.screw=0.9;
+      mesh(g,KIT.threadGeo(0.5,Y.armT+SC.c,Y.flB-SC.e),M.steel).userData.thread={rs:0.5,p:KIT.isoP(0.5)};
+      const sl=mesh(g,new THREE.BoxGeometry(SC.sl[0],SC.sl[1],SC.sl[2]),M.steelD,0,Y.armT+SC.sy,0);sl.rotation.y=0.7+s;}
     /* As first drawn: the staff 040401-1 with its brass collar 040401-2 (05 04_5, Unruhwelle, 4.4.41; "05 04 02-1" pencilled on it), the sheet a blank between centres. The
        collar: a neck Ø 2.1 ±0.03 standing 1.3 over the flange, the arm riveted on it (drawn flush with the arm's top, its 0.15 spread into the arm's hole, and turned to the
        arm's 2 H7 of 05 03 01-1: estimated); the flange Ø 6.3, 1.8 thick, its edge straight for 0.4 and then undercut 10° (to Ø 5.81 at its foot); the tube Ø 2.6 ±0.03 to
@@ -745,7 +746,7 @@ const WESC=(()=>{
        2.0 deep, open at the end, until 27 October 2026). The spring's end goes into the hole across its end (below). On the cock's top, the bar
        along the arm toward the foot (Wempe 3955), the upright down through the slot; screwed down through its hole (Schraube WN-11, the coloured section). Until 15 October
        2026 the bar was 1.4 thick and 3.1 wide to its square end, its hole 5.9 from that end, a V cut through its point 2.1 deep, and the upright square to it */
-    {const st=part('stud',OFFB),ck=TT-15,SBT=1.5,yB=ck-SBT,yE=yB+6.0,L=STUD,uw=1.7935/2,c=4.2,tn=Math.tan(8*D2R),HU=4.1;   /* c: the screw's line, 4.2 from 23's (O-8) */
+    {const st=part('stud',OFFB),ck=TT-15,SBT=STS.bar,yB=ck-SBT,yE=yB+6.0,L=STUD,uw=1.7935/2,c=4.2,tn=Math.tan(8*D2R),HU=4.1;   /* c: the screw's line, 4.2 from 23's (O-8) */
       const Ep=L(-uw,c+1.20),Em=L(-uw,c-1.26),Cp=L(HU,c+1.55),Cm=L(HU,c-1.55),Ap=L(HU+6.6,c),Tp=L(13.7,c);
       const plane=(P,Q,S)=>{const u=[Q[0]-P[0],Q[1]-P[1],Q[2]-P[2]],v=[S[0]-P[0],S[1]-P[1],S[2]-P[2]],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
         return p=>P[2]-(n[0]*(p[0]-P[0])+n[1]*(p[1]-P[1]))/n[2];},fac=q=>plane([...q,yB],[...Ap,yB],[...Tp,ck-0.05]);   /* a facet: through the V's arm on the top and the point, 0.05 thick */
@@ -768,7 +769,7 @@ const WESC=(()=>{
       /* its screw (WN-11): head Ø 2.3 × 1.6, M1.4 down through the bar and the cock's 2.4, its end 0.6 under the cock, as the coloured section draws it
          (Wempe_Einheitschronometer.jpg px 1408.4-1429.6 × 156-171.4, the shank's rounded end at 215.6 under the cock's underside at 210, at 9.37 px/mm: Ø 2.26 × 1.64,
          0.6 through; likely: head Ø 2.4 × 0.8 and blind 2.0 in the cock until 17 October 2026) */
-      tag(screw(st,L(HU,c)[0],L(HU,c)[1],yB,1.15,1.6,SBT+2.4+0.6,0.7),'WN-11');R.studL=L;}
+      tag(screw(st,L(HU,c)[0],L(HU,c)[1],yB,STS.r,STS.h,SBT+STS.ck+STS.be,STS.rs),'WN-11');R.studL=L;}
 
     /* ================= the rollers (Heberolle 05 04 03-1 = 02 04 02; Auslöserolle 05 04 04-1) ================= */
     /* The impulse roller (02 04 02, 11.2.41, revised 10.9.41: Kupfer Beryllium, Saphir): Ø 6.78 ±0.01, 1.6 +0.1 thick, bored 1.627/1.65 on 1:70; a hollow in its edge for the
@@ -1332,5 +1333,5 @@ const WESC=(()=>{
   const BUILD40={k:1,bend:[3,0.06],set:{tsT:GTEQ},strip:null};
   const SET6={I:2513.3,JW:10.19,ID:7.62};   /* JW 10.21 until 29 October 2026 (the escape pinion 3.77 and the collet's end Ø 1.55, re-read on Kirov 247); I 2521.0, JW 10.45 and ID 8.01 until 28 October 2026 (drawing check 2's batches 1, 2 and 6); ID 7.94 until 27 October 2026, the blade centred (DOFF); I 2524.6, JW 10.90 and ID 7.96 until 26 October 2026 (the drawings check: the escape wheel's web, the seconds wheel's hub, the collet); I 2526.0, JW 10.89 and ID 8.19 until 25 October 2026 (the rim's cut 1.6, the detent at its bracketed heights and its spring tapered: the per-part audit); ID 8.28 until 24 October 2026 (the blade and horn counted twice in the pipe's wall: overlaps.py); ID 8.13 until 19 October 2026 (the gold spring's density, the stone at 7.14); I 2560.4 until 18 October 2026, with a nut on each mass; ID 8.24 until then too, before the gold spring's bow, and 8.21 before the horn was traced */
     /* JW with the electrical contact's wheel on the seconds arbor (reflected, ÷ 8²) */
-  return{build,ESC,W,B,P,FY,Y,BJ,jewProf,BAL,HUB,MS,TSW,ROLI,ROLD,rolGeo,EARB,earProf,staffProf,EWG,ewGeo,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DET:{K:DETK,V:DETV,ROW,DOFF,P,TD,RS,GW,GN,TI,SQ0,TP,HORN_L,BLK,BLK_NE,H13:toD(H[13])},DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
+  return{build,ESC,W,B,P,FY,Y,BJ,jewProf,BAL,HUB,STS,MS,TSW,ROLI,ROLD,rolGeo,EARB,earProf,staffProf,EWG,ewGeo,HOLES,SET,SET6,BUILD,BUILD40,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,DOFF),HORN:{L:HORN_L,line:hornLine},GOLD:goldPath,GB,FOOT0,SPR0,SMID,DET:{K:DETK,V:DETV,ROW,DOFF,P,TD,RS,GW,GN,TI,SQ0,TP,HORN_L,BLK,BLK_NE,H13:toD(H[13])},DSPH:2-0.1,PIPE0:1.3+2-0.05-0.9};   /* PIPE0: the detent pipe's top under the top plate's inner face (as last revised; the blade's top edge, 2.35); DSPH: the detent spring's height as dv draws it (1436's bracketed 1.9; as first drawn 2 since 25 October 2026): tools/dynamics.js */
 })();

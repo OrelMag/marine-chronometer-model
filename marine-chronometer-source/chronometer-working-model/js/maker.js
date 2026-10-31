@@ -116,7 +116,7 @@ const MAKER=(()=>{
     return new Blob([buf],{type:'model/stl'});}
   function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
   /* a model with recipes (C.recipes, tools/recipes_site.py): each of the card's lines' STEP file and operation sheet, or what to buy */
-  function recipesHTML(p){const R=C.recipes;if(!R)return'';const H=hnOf(p),rows=[];for(const h of H)for(const r of R.hn[h]||[])rows.push(r.k?`<li>${esc(r.t)}: <a href="${R.dir}${r.k}.step" download>CAD file (STEP)</a> · <a href="${R.dir}${r.k}.html" target="_blank" rel="noopener">Operation sheet</a></li>`:`<li>${esc(r.t)}: buy ${esc(r.buy)}</li>`);
+  function recipesHTML(p){const R=C.recipes;if(!R)return'';const H=hnOf(p),rows=[];for(const h of H)for(const r of R.hn[h]||[])if(!r.v||!C.recipesShow||C.recipesShow(r.v))rows.push(r.k?`<li>${esc(r.t)}: <a href="${R.dir}${r.k}.step" download>CAD file (STEP)</a> · <a href="${R.dir}${r.k}.html" target="_blank" rel="noopener">Operation sheet</a></li>`:`<li>${esc(r.t)}: buy ${esc(r.buy)}</li>`);
     return rows.length?`<ul class="mkr">${rows.join('')}</ul>`:'';}
   /* the card: a sheet below the description, opened on demand */
   function card(p){const info=$('#info');let mk=info.querySelector('.mkc');if(!mk){mk=document.createElement('div');mk.className='mkc';info.appendChild(mk);}
