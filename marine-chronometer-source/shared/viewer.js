@@ -87,8 +87,8 @@ const VIEWER={start(cfg){
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});$('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
   $('#secLines').addEventListener('change',e=>{SEC.flat.value=e.target.checked?0:1;});   /* off: Edges draw a cut face flat (core.js, makeInk) */
   /* ---------- state ---------- */
-  const st={opening:true,tour:-1,drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView,all:false,allK:0,asm:false};   /* all: the Exploded view's All (the case and box taken apart too, not the movement alone); allK its eased share, for cfg.tick; asm: its Subassemblies apart (mv.userData.asmx) */
-  const FOV0=cam.fov,cur={explode:0,dev:0,all:0,sub:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the frame stays hidden */
+  const st={opening:true,tour:-1,drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView,all:false,allK:0,asm:new Set()};   /* all: the Exploded view's All (the case and box taken apart too, not the movement alone); allK its eased share, for cfg.tick; asm: its Subassemblies apart, by key (mv.userData.asm, asmx) */
+  const FOV0=cam.fov,cur={explode:0,dev:0,all:0,sub:0,pc:1,fov:FOV0,as:/** @type {Record<string,number>} */({})},tgt={...cur,as:{}};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the frame stays hidden */
   let wakeT=0,hashReady=false,hashT=0,hashSeen='';const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any input keeps the stage drawing for 0.6 s; any change is written to the URL */
   /* colour by part (or by source, SRC); per-part opacity from the right-click menu; see-through (ghost) */
   const COLM=new Map(),FADE=new Map();let SEL=null;   /* SEL: the selection (../shared/select.js), bound below; its parts tinted PSEL.COL */
@@ -138,22 +138,29 @@ const VIEWER={start(cfg){
   function panBy(dx,dy){const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
   const expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
   /* the Exploded view's Movement or All: All spreads the case's parts too (cfg.tick takes st.allK) and stands the camera back to the view's own all ({yaw, pitch, dist, target}) */
-  const allT=vv=>vv.explode&&st.all&&st.tour<0?expV():0,camOf=vv=>vv.all&&st.all&&st.tour<0?{...vv,...vv.all}:vv.sub&&st.asm&&st.tour<0?{...vv,...vv.sub}:vv,allW=$('#expAllWrap');
+  const allT=vv=>vv.explode&&st.all&&st.tour<0?expV():0,camOf=vv=>vv.all&&st.all&&st.tour<0?{...vv,...vv.all}:vv.sub&&st.asm.size&&st.tour<0?{...vv,...vv.sub}:vv,allW=$('#expAllWrap');
   const allSync=()=>document.querySelectorAll('#expAll button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='all')===st.all?'true':'false'));
-  /* the Exploded view's Subassemblies, Together or Apart (mv.userData.asm and asmx, the model's): apart, each subassembly with a place is taken apart beside the movement
-     (tgt.sub its share) and the camera stands back to the view's own sub; Isolate subassembly (the menu and the Parts list) shows one alone, the camera fitted to it */
-  const subT=vv=>vv.explode&&st.asm&&st.tour<0&&mv.userData.asmx?expV():0,subW=$('#expSubWrap');
-  const subSync=()=>document.querySelectorAll('#expSub button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='apart')===st.asm?'true':'false'));
-  function setView(k,keepSee){if(zf){zf=false;st.focus=null;}if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),dev:(vv.dev||0)*expV(),all:allT(vv),sub:subT(vv),fov:vv.fov||FOV0});goCam(camOf(vv));st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode&&!vv.dev);if(allW)allW.classList.toggle('hidden',!vv.explode);if(subW)subW.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);
+  /* the Exploded view's Subassemblies (mv.userData.asm and asmx, the model's): Together, Apart (all of them) or each chosen on its own (its buttons), the ones chosen
+     (st.asm) taken apart beside the movement and the camera standing back to the view's own sub; Pieces, how far each one's pieces spread along its arbor (0-200 %).
+     Each subassembly's share apart is the view's (tgt.sub: the Exploded view at the Spread slider's) times its own (tgt.as[k]: chosen or not), each eased.
+     Isolate subassembly (the menu and the Parts list) shows one alone, the camera fitted to it */
+  const subT=vv=>vv.explode&&st.tour<0&&mv.userData.asmx?expV():0,subW=$('#expSubWrap'),subE=$('#expSubEach'),pcW=$('#asmPWrap'),pcR=$('#asmPR');
+  const subSync=()=>{const n=st.asm.size;document.querySelectorAll('#expSub button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='apart'?n===ASM.length:!n)?'true':'false'));
+    if(subE)subE.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',st.asm.has(b.dataset.v)?'true':'false'));for(const a of ASM)tgt.as[a.k]=st.asm.has(a.k)?1:0;
+    const vv=VIEWS[st.view];if(pcW)pcW.classList.toggle('hidden',!(vv&&vv.explode&&n));};
+  const asmKey=()=>ASM.filter(a=>st.asm.has(a.k)).map(a=>a.k).join(',');
+  /* setAsm(ks): the subassemblies apart, as a choice (jump: the camera's place kept for Back) */
+  function setAsm(ks){const was=st.asm.size;jump(()=>{st.asm=new Set(ks);subSync();const vv=VIEWS[st.view];if(st.tour<0&&vv.explode&&!!was!==!!st.asm.size)goCam(camOf(vv));});look();}
+  function setView(k,keepSee){if(zf){zf=false;st.focus=null;}if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),dev:(vv.dev||0)*expV(),all:allT(vv),sub:subT(vv),fov:vv.fov||FOV0});goCam(camOf(vv));st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode&&!vv.dev);if(allW)allW.classList.toggle('hidden',!vv.explode);if(subW)subW.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(subE)subE.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(pcW)pcW.classList.toggle('hidden',!vv.explode||!st.asm.size);
     expR.setAttribute('aria-label',vv.dev?'How far the train is laid out in a line':'How far apart the exploded parts are');
     if(!keepSee)st.see=!!vv.see;look();if(hashReady)keep('view',k);document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward; jump(f) moves the camera with f and keeps the place it left, unless f didn't move it */
   const HB=[],HF=[],histEl=$('#hist'),hB=$('#hBack'),hF=$('#hFwd');
-  const pose=g=>({view:st.view,all:st.all,asm:st.asm,see:st.see,foc:zf?st.focus:null,yaw:g?G.yaw:C.yaw,pitch:g?G.pitch:C.pitch,dist:g?G.dist:C.dist,follow:G.follow,tgt:G.target.clone(),pan:panO.clone()});
+  const pose=g=>({view:st.view,all:st.all,asm:asmKey(),see:st.see,foc:zf?st.focus:null,yaw:g?G.yaw:C.yaw,pitch:g?G.pitch:C.pitch,dist:g?G.dist:C.dist,follow:G.follow,tgt:G.target.clone(),pan:panO.clone()});
   const same=(a,b)=>!!a&&!!b&&a.view===b.view&&a.all===b.all&&a.asm===b.asm&&a.follow===b.follow&&Math.abs(a.yaw-b.yaw)<0.02&&Math.abs(a.pitch-b.pitch)<0.02&&Math.abs(a.dist/b.dist-1)<0.02&&a.pan.distanceTo(b.pan)<0.5&&(!!a.follow||a.tgt.distanceTo(b.tgt)<0.5);
   function histSync(){hB.disabled=!HB.length;hF.disabled=!HF.length;const on=HB.length||HF.length;if(on&&histEl.classList.contains('hidden'))hintOff();histEl.classList.toggle('hidden',!on);}
   function jump(f){const p=pose();f();if(st.tour>=0||!hashReady||same(p,pose(true)))return;if(!same(p,HB[HB.length-1])){HB.push(p);if(HB.length>30)HB.shift();}HF.length=0;histSync();}
-  function histGo(from,to){if(!from.length)return;to.push(pose());const p=from.pop();st.see=p.see;if(p.all!==st.all){st.all=p.all;allSync();tgt.all=allT(VIEWS[p.view]);}if(p.asm!==st.asm){st.asm=p.asm;subSync();tgt.sub=subT(VIEWS[p.view]);}if(p.view!==st.view)setView(p.view,true);if(st.tour<0){zf=!!p.foc;st.focus=p.foc;}look();
+  function histGo(from,to){if(!from.length)return;to.push(pose());const p=from.pop();st.see=p.see;if(p.all!==st.all){st.all=p.all;allSync();tgt.all=allT(VIEWS[p.view]);}if(p.asm!==asmKey()){st.asm=new Set(p.asm?p.asm.split(','):[]);subSync();}if(p.view!==st.view)setView(p.view,true);if(st.tour<0){zf=!!p.foc;st.focus=p.foc;}look();
     G.yaw=C.yaw+((((p.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=p.pitch;G.dist=p.dist;G.follow=p.follow;if(!p.follow)G.target.copy(p.tgt);panO.copy(p.pan);camFree=false;histSync();}
   hB.addEventListener('click',()=>histGo(HB,HF));hF.addEventListener('click',()=>histGo(HF,HB));
   /* double-click (double-tap) a part: the camera closes in to fit it and turns about it; 0 or Reset gives back the view */
@@ -168,7 +175,7 @@ const VIEWER={start(cfg){
      its explode), o.at [x, y, z] and o.r a place in mv's frame to fit instead of the parts' box, o.yaw, o.pitch the camera's (else it keeps its own), o.k the margin (the
      page's lists of changes: the Wempe's 6MX against the drawings). The point is kept in the frame of what it is on (mv, or the first part's group), so it follows as the view
      lifts the movement out of its case */
-  function focusOn(keys,o){o=o||{};if(st.tour>=0)tourEnd();closeInfo();closeOpm();hintOff();jump(()=>{if(o.view&&o.view!==st.view)setView(o.view);if(Math.abs(cur.explode-tgt.explode)>1e-6){cur.explode=tgt.explode;mv.userData.explode(smooth(cur.explode));}cur.all=tgt.all;st.allK=smooth(cur.all);if(Math.abs(cur.dev-tgt.dev)>1e-6){cur.dev=tgt.dev;if(mv.userData.develop)mv.userData.develop(smooth(cur.dev));devShown=cur.dev>0.02;}cur.sub=tgt.sub;settle();st.drive=!!o.drive&&!!DV;st.focus=new Set(keys);zf=true;look();
+  function focusOn(keys,o){o=o||{};if(st.tour>=0)tourEnd();closeInfo();closeOpm();hintOff();jump(()=>{if(o.view&&o.view!==st.view)setView(o.view);if(Math.abs(cur.explode-tgt.explode)>1e-6){cur.explode=tgt.explode;mv.userData.explode(smooth(cur.explode));}cur.all=tgt.all;st.allK=smooth(cur.all);if(Math.abs(cur.dev-tgt.dev)>1e-6){cur.dev=tgt.dev;if(mv.userData.develop)mv.userData.develop(smooth(cur.dev));devShown=cur.dev>0.02;}cur.sub=tgt.sub;cur.pc=tgt.pc;Object.assign(cur.as,tgt.as);settle();st.drive=!!o.drive&&!!DV;st.focus=new Set(keys);zf=true;look();
     root.updateMatrixWorld(true);let an=null;fb.makeEmpty();const inv=new THREE.Matrix4();
     root.traverse(m=>{if(!m.isMesh||!shown(m)||!m.geometry.attributes.position||!(keys.includes(m.userData.part)||keys.includes(m.userData.pk)))return;
       if(!an){let q=m;while(q&&q!==mv)q=q.parent;an=q||m.parent;while(an!==mv&&an.parent&&!an.userData.partName)an=an.parent;inv.copy(an.matrixWorld).invert();}
@@ -285,7 +292,10 @@ const VIEWER={start(cfg){
   $('#reset').addEventListener('click',()=>jump(()=>setView(st.view,true)));
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();const vv=VIEWS[st.view];if(st.tour>=0)return;if(vv.explode){tgt.explode=expV()*vv.explode;tgt.all=allT(vv);tgt.sub=subT(vv);}if(vv.dev)tgt.dev=expV()*vv.dev;});   /* the Spread slider: how far apart the exploded parts are, or how far the train is laid out */
   document.querySelectorAll('#expAll button').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.v==='all';if(a===st.all)return;jump(()=>{st.all=a;allSync();const vv=VIEWS[st.view];if(st.tour<0&&vv.explode){tgt.all=allT(vv);goCam(camOf(vv));}});}));
-  document.querySelectorAll('#expSub button').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.v==='apart';if(a===st.asm)return;jump(()=>{st.asm=a;subSync();const vv=VIEWS[st.view];if(st.tour<0&&vv.explode){tgt.sub=subT(vv);goCam(camOf(vv));}});look();}));
+  document.querySelectorAll('#expSub button').forEach(b=>b.addEventListener('click',()=>setAsm(b.dataset.v==='apart'?ASM.map(a=>a.k):[])));
+  if(subE)for(const a of ASM){const b=document.createElement('button');b.dataset.v=a.k;b.textContent=a.t;b.setAttribute('aria-pressed','false');b.title='Take the '+a.t.toLowerCase()+' apart beside the movement, or put it back';
+    b.addEventListener('click',()=>{const S=new Set(st.asm);if(S.has(a.k))S.delete(a.k);else S.add(a.k);setAsm(ASM.filter(x=>S.has(x.k)).map(x=>x.k));});subE.appendChild(b);}
+  const showPc=()=>{if(pcR)$('#asmPWrap output').textContent=pcR.value+'%';};if(pcR){showPc();pcR.addEventListener('input',()=>{showPc();tgt.pc=pcR.valueAsNumber/100;writeHash();});}   /* the Pieces slider */
   /* theme: Auto follows the system; a choice is remembered with Remember settings */
   const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));lsSet('theme',v);};
   document.querySelectorAll('#theme button').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.v)));{const v=lsGet('theme');if(v==='light'||v==='dark')setTheme(v);}
@@ -381,7 +391,7 @@ const VIEWER={start(cfg){
   /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f][:o], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
   function hashOf(){if(esOn()){const s=ES.section(),k=ES.key||'essay';return s?k+'='+s:k;}const h=new URLSearchParams();if(st.tour>=0)h.set('tour',st.tour+1);
-    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(st.all)h.set('exp','all');if(st.asm)h.set('subs','apart');if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':'')+(SEC.flat.value?'':':o'));}
+    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(st.all)h.set('exp','all');if(st.asm.size)h.set('subs',st.asm.size===ASM.length?'apart':asmKey());if(tgt.pc!==1)h.set('pcs',Math.round(tgt.pc*100));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':'')+(SEC.flat.value?'':':o'));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);if(CT)CT.hashWrite(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
@@ -394,7 +404,8 @@ const VIEWER={start(cfg){
     const sc=/^([xyz]):(-?[\d.]+)(:f)?(:[po])?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
     if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;SEC.flat.value=sc[4]===':o'?0:1;$('#secLines').checked=sc[4]===':o';applySec();}
     if(DV){const d=g('drive')==='1';if(d!==st.drive){st.drive=d;look();}}   /* drive=1: Moving parts only */
-    st.all=g('exp')==='all';allSync();st.asm=g('subs')==='apart'&&!!mv.userData.asmx;subSync();   /* exp=all: the Exploded view's All; subs=apart: its Subassemblies apart */
+    st.all=g('exp')==='all';allSync();{const v=mv.userData.asmx?g('subs')||'':'',w=v.split(',');st.asm=new Set(ASM.filter(a=>v==='apart'||w.includes(a.k)).map(a=>a.k));subSync();
+      const pc=+(g('pcs')||100);tgt.pc=Number.isFinite(pc)?clamp(pc,0,200)/100:1;if(pcR){pcR.value=Math.round(tgt.pc*100);showPc();}}   /* exp=all: the Exploded view's All; subs=apart or subs=fusee,barrel: its Subassemblies apart, all or those; pcs=150 its Pieces */
     if(cfg.hash)cfg.hash.read(g,first);if(CT)CT.hashRead(g);
     const tr=parseInt(g('tour'));if(TOUR&&tr>=1&&tr<=TOUR.length)tourGo(tr-1);else{if(st.tour>=0)tourEnd();if(!first)setView(v);}   /* tour=3: the walkthrough at its third step */
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
@@ -413,9 +424,9 @@ const VIEWER={start(cfg){
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
   /* the movement as the eased shares put it: explode and develop set the parts outright, then the subassemblies add to them (asmx) */
-  function settle(){mv.userData.explode(smooth(cur.explode));if(mv.userData.develop)mv.userData.develop(smooth(cur.dev));if(mv.userData.asmx)mv.userData.asmx(smooth(cur.sub),smooth(cur.explode));}
+  function settle(){mv.userData.explode(smooth(cur.explode));if(mv.userData.develop)mv.userData.develop(smooth(cur.dev));if(mv.userData.asmx){const S={},v=smooth(cur.sub);for(const q in cur.as)S[q]=v*smooth(cur.as[q]);mv.userData.asmx(S,smooth(cur.explode),cur.pc);}}
   function frame(now){const dt=clamp((now-last)/1000,0,0.05),k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);last=now;
-    for(const q of['explode','dev','all','sub','fov'])cur[q]+=(tgt[q]-cur[q])*k;st.allK=smooth(cur.all);
+    for(const q of['explode','dev','all','sub','pc','fov'])cur[q]+=(tgt[q]-cur[q])*k;for(const q in tgt.as)cur.as[q]=(cur.as[q]||0)+(tgt.as[q]-(cur.as[q]||0))*k;st.allK=smooth(cur.all);
     const xs=cfg.tick?cfg.tick(dt,now,st)||[]:[];
     settle();if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
     if((cur.dev>0.02)!==devShown){devShown=cur.dev>0.02;look();}
@@ -427,7 +438,7 @@ const VIEWER={start(cfg){
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);}
     if(CT)CT.frame(now);
-    const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,cur.dev,cur.all,cur.sub,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs,...(CT?CT.sig():[])];
+    const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,cur.dev,cur.all,cur.sub,cur.pc,...Object.values(cur.as),secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs,...(CT?CT.sig():[])];
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(onScreen&&!still&&!esOn()){paint();if(cfg.overlay)cfg.overlay();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
