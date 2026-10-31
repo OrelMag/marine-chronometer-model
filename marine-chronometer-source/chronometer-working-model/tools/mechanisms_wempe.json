@@ -168,17 +168,17 @@
      5.9072
     ]
    },
-   "height": 2.51,
-   "mass": 1.4394,
-   "I": 35.3121,
+   "height": 2.49,
+   "mass": 1.441,
+   "I": 35.3164,
    "note": "the set-up click (05 08 05-2, hole 46) on the set-up ratchet 05 07 00-3: it holds the mainspring's set-up and its wind on the barrel arbor"
   }
  ],
  "detentE": 1169,
  "arbors": {
   "fusee": {
-   "m": 47.4157,
-   "I": 3963.3854,
+   "m": 47.4001,
+   "I": 3959.7951,
    "missing": {}
   },
   "barrel": {
