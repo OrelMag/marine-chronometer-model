@@ -28,7 +28,7 @@ from scipy.optimize import nnls
 torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent;sys.path.insert(0,str(HERE))
 import mainspring as MS
-E_ST=MS.E_GPA*1e3;B=float(MS.B_MM or 13.55);EI=E_ST*B*MS.t**3/12   # N·mm²: carbon steel (physics.js), the strip 13.55 × 0.394; or a variant's (MC_MS_T, MC_MS_E)
+E_ST=MS.E_GPA*1e3;B=float(MS.B_MM or 15.13535);EI=E_ST*B*MS.t**3/12   # N·mm²: carbon steel (physics.js), the strip 13.55 × 0.394; or a variant's (MC_MS_T, MC_MS_E)
 MUS=[0.08,0.10,0.16];MU0=0.10
 OUT=HERE/('mainspring_friction.json' if not MS.VAR else f'mainspring_friction_{MS.VAR}.json')
 # the fusee as the page builds it (movement.js makeFusee: R.fs.MS.Tup and Tdown, the spring's turns fully wound and run down; and at n fusee turns from full wind, the

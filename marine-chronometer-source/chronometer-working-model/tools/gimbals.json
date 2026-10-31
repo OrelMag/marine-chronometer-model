@@ -1,112 +1,112 @@
 {
  "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
  "bowl": {
-  "m": 1297.316,
+  "m": 1798.241,
   "cg": [
-   0.818,
-   -11.517,
-   -0.996
+   1.01,
+   -12.822,
+   -1.119
   ],
   "I": [
    [
-    2383106.1,
-    116295.7,
-    -8593.6
+    4136840.4,
+    204625.8,
+    -14517.9
    ],
    [
-    116295.7,
-    1527495.3,
-    -98017.0
+    204625.8,
+    2648065.7,
+    -171122.8
    ],
    [
-    -8593.6,
-    -98017.0,
-    2382252.8
+    -14517.9,
+    -171122.8,
+    4132451.1
    ]
   ],
   "byMat": {
-   "brass": 611.18,
-   "plate": 357.45,
-   "brass2": 86.78,
-   "gilt": 63.24,
-   "steel": 60.88,
-   "plateSolid": 33.07,
-   "glass": 17.64,
-   "copper": 12.18,
-   "chain": 2.66,
-   "steelK": 1.86,
-   "blued": 1.35,
-   "chain2": 1.26,
-   "steelD": 0.79,
-   "steelS": 0.7,
-   "fibre": 0.7,
-   "packing": 0.58,
+   "brass": 850.41,
+   "plate": 498.32,
+   "brass2": 120.89,
+   "gilt": 88.12,
+   "steel": 83.08,
+   "plateSolid": 46.09,
+   "glass": 24.58,
+   "copper": 16.98,
+   "chain": 3.73,
+   "steelK": 2.6,
+   "blued": 1.89,
+   "chain2": 1.76,
+   "steelD": 1.05,
+   "fibre": 0.98,
+   "steelS": 0.95,
+   "packing": 0.81,
    "invar": 0.47,
-   "ruby": 0.05,
+   "ruby": 0.07,
    "clear": 0.01
   },
   "byPart": {
-   "bowl": 374.95,
-   "pillar": 295.56,
-   "motion": 84.7,
-   "barrelBridge": 79.37,
-   "sq": 79.1,
-   "cock": 50.24,
-   "trainBridge": 46.9,
-   "barrel": 41.04,
-   "fusee": 36.65,
-   "dial": 36.1,
-   "ratchet": 19.05,
-   "lowerBridge": 15.74,
-   "ltb": 14.08,
-   "pillars": 13.77,
-   "gw": 11.95,
-   "lockArm": 11.18,
-   "bal": 9.36,
-   "sratchet": 8.29,
-   "post": 6.43,
-   "chain": 3.92,
-   "cw": 3.86,
-   "hands": 2.45,
-   "escBridge": 1.65,
-   "tw": 1.38,
-   "sspring": 1.37,
-   "mainspring": 44.46
+   "bowl": 522.55,
+   "pillar": 411.95,
+   "motion": 118.05,
+   "barrelBridge": 110.62,
+   "sq": 110.24,
+   "cock": 70.02,
+   "trainBridge": 65.49,
+   "barrel": 57.2,
+   "fusee": 51.08,
+   "dial": 50.31,
+   "ratchet": 26.54,
+   "lowerBridge": 21.93,
+   "ltb": 19.78,
+   "pillars": 19.19,
+   "gw": 16.65,
+   "lockArm": 15.55,
+   "sratchet": 11.56,
+   "bal": 9.44,
+   "post": 8.96,
+   "chain": 5.49,
+   "cw": 5.38,
+   "hands": 3.44,
+   "escBridge": 2.3,
+   "sspring": 1.91,
+   "tw": 1.9,
+   "mainspring": 55.47
   },
   "missing": {}
  },
  "ring": {
-  "m": 153.855,
+  "m": 214.422,
   "cg": [
-   3.389,
-   -0.098,
-   6.794
+   3.785,
+   -0.109,
+   7.589
   ],
   "I": [
    [
-    424432.8,
-    77.7,
-    3458.5
+    738031.4,
+    135.1,
+    6013.9
    ],
    [
-    77.7,
-    696167.5,
-    767.1
+    135.1,
+    1210541.1,
+    1333.8
    ],
    [
-    3458.5,
-    767.1,
-    277659.5
+    6013.9,
+    1333.8,
+    482812.2
    ]
   ],
   "byMat": {
-   "brass": 98.57,
-   "brass2": 49.95,
-   "steel": 4.95,
-   "steelD": 0.39
+   "brass": 137.37,
+   "brass2": 69.62,
+   "steel": 6.89,
+   "steelD": 0.54
   },
   "byPart": {
-   "ring": 153.85
+   "ring": 214.42
   },
   "missing": {}
  },
@@ -124,7 +124,7 @@
   1.0,
   0.0,
   0.0,
-  1.03,
+  1.15051,
   0.0,
   1.0
  ],
@@ -148,7 +148,7 @@
    }
   ]
  },
- "ringY": -18.889340101522848,
- "RO": 68,
- "CR": 49.5
+ "ringY": -21.099392893401017,
+ "RO": 75.95599999999999,
+ "CR": 55.2915
 }

@@ -51,7 +51,7 @@ function makeEsc(o={},base){
      stiffness at its tip that the 0.06 x 0.3 strip 7.9 long had until 20 October 2026, k as t^3/L^3; 6.45 mm free and 0.37 deep since 25 October 2026 (5.8 and 0.041 for five days, the length to
      where it goes under the horn's tab read as its tip); 0.06 at that length would be 2.4 times as stiff, taking a large share of the impulse's work) */
   const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2884,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.019,DRAW:10,aI:181.3,aD:269.9,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.0456,tsH:0.37,TF:67,MU:0.15,
-    I:578.5,JW:5.65,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.510,eS:0.3,HS:0};
+    I:578.5,JW:7.02,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:4.151,eS:0.3,HS:0};   /* JW, ID: the train at the escape wheel and the detent, weighed on the drawn solids x1.117 (31 October 2026; 5.65 and 2.510 until then: tools/dynamics.js, mechanisms.json) */
   /* the settings a second chronometer needs (makeEsc(o, base)), each the Hamilton's as the code had it until 15 October 2026. NT: the wheel's teeth; ES: its radius (mm), the
      unit; LK: the locked tooth that many pitches before the pair straddling the line of centres, and LO (deg) the wheel's teeth turned so far from straddling it (the locking
      stone's place, lockA, and the teeth's at rest, t0); DA: the detent's angle to the line of centres (deg) and BL its length from Ft to the locking face; PSL: the passing
@@ -78,8 +78,8 @@ function makeEsc(o={},base){
   const c={...DEF,...base,...o};ES=c.ES;let A0=c.A*D2R;
   /* DSC: the detent's scale against its lengths as read (the Hamilton's, at its plate's 87.57 mm: x1.117 since 31 October 2026, PLAN-hamilton-drawings.md, Phase 0; 1 for
      another chronometer, whose base sets it): its length to the locking face, the passing spring's, its spring's length and faces, the trip spring's section and every size
-     of its pieces below, and its inertia (x DSC^5, its heights scaling with the plate); the wheel, the roller, the stones and the escapement's angles keep theirs */
-  const DSC=c.DSC;if(DSC!==1){for(const k of['BL','PSL','PSO','SPL','SN0','SN1','tsT','tsH'])c[k]*=DSC;c.ID*=DSC**5;}   /* A0: the reference's swing (with TQ, solved) */
+     of its pieces below and its spring's height (ID, its inertia, is the drawn detent's, weighed by tools/dynamics.js); the wheel, the roller, the stones and the escapement's angles keep theirs */
+  const DSC=c.DSC;if(DSC!==1)for(const k of['BL','PSL','PSO','SPL','SN0','SN1','tsT','tsH','hD'])c[k]*=DSC;   /* A0: the reference's swing (with TQ, solved) */
   const NT=c.NT,P=TAU/NT,EX=c.EX,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2+c.LO*D2R,lockA=t0-c.LK*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};

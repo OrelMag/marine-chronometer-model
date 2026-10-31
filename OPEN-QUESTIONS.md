@@ -4,6 +4,8 @@
 
 Every design value that rests on an estimate is swept over the range its sources allow, the bench's correction applied as a maker would, by `tools/estimates.js` (the build-verification report, section 12): the chronometer works across all of them.
 
+**Settled 31 October 2026: the plate's absolute scale.** The model's millimetres all came from one sale listing's plate, 87.57 mm. The British Museum's measured Model 21 (its pillar plate 97.8) and Hamilton's factory drawings (the train's centre distances at their drawn modules) put it 1.117 larger, fitted over five places (PLAN-hamilton-drawings.md, Phase 0), and the model is drawn so (branch `claude/hamilton-rescale`). It answers item 1's thickness: the videos' 0.394 pitch is 0.440 in true millimetres, the museum's 0.44, the parts list's 0.419 within 5 %; the width 13.55 is 15.1 (1-WD-265 and the museum: 15.0). The barrel is not answered by scale alone: its inside comes to 36.4 against the drawing's 38.10 (42168), and its arbor's square 2.53 against 2.79, which Phase 2 (the drawn barrel) settles.
+
 How each was closed: **M** settled by a measurement on a source; **D** a design value, checked by the model's tools; **B** a bench test makes the made part right whatever the original was.
 
 | Question | How | The model now | What a maker does | Left open (fidelity only) |
