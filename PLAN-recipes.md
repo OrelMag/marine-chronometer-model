@@ -117,7 +117,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 
 | # | Batch | Parts | State |
 |---|---|---|---|
-| 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-56, the ring's; pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
+| 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-ps, the ring's (WN-56); pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
 | 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | done, 29 Oct |
 | 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 (the bush WN-300 goes with batch 6) | done, 29 Oct |
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
@@ -138,7 +138,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | Movement ring 05 08 00-3 | 14 | 20467.34 / 20438.62 | 0.014 | two recipe faults fixed (below) |
 | Pillar 05 08 00-1 | 12 | 973.92 / 953.06 (thread) | 0.013 | |
 | Cork ring 05 08 01-4 | 1 | 478.71 / 478.10 | 0.0075 | |
-| Screws WN-57, WN-56, the ring's | 6 each | 133.08 / 124.43, 121.51 / 114.45 (thread) | 0.016 | one screw recipe for all (the page's screw()) |
+| Screws WN-57, WN-ps, the ring's (WN-56) | 6 each | 133.08 / 124.43, 121.51 / 114.45 (thread) | 0.016 | one screw recipe for all (the page's screw()) |
 | Pins WN-201, WN-202, WN-203 | bought | | | dowel pins, ISO 8734 or silver steel |
 
 **Faults found in the recipe and fixed.**
@@ -442,7 +442,7 @@ source), which `jewProf` needs; no Node tool read `KIT` before.
 | Impulse roller 02 04 02 (the hollow r 3.5 as an exact arc, the stone's slot, the 1:70 bore, the Ø 1.3 hole) | 4 | 49.297 / 49.307 | 0.0014 |
 | Discharge roller 05 04 04-1 (the stadium, the stone's slot, the bore) | 3 | 5.710 / 5.713 | 0.0013 |
 | The balance's jewel and endstone settings (050406-2.bu, .bl; 050408-2.bu, .bl) and the escape wheel's (050406-2.eu, .el; 050408-2.eu, .el) | 2 each | within 0.29 % (the page's 48-sided lathes) | 0.0027-0.0056 |
-| Their screws WN-55.ck, WN-10.bl, WN-es, WN-ec | 6 each | thread allowance | 0.0118-0.0123; WN-es 0.032 expected (below) |
+| Their screws WN-55.ck, WN-18, WN-es, WN-ec | 6 each | thread allowance | 0.0118-0.0123; WN-es 0.032 expected (below) |
 | Detent block 05 04 01-4 as last revised (base, thin part, upright with its cove r 3 as an exact arc, the slit across, the banking screw's M1.2 across the leaves, the pins' holes, the Ø 1.3, the fixing M1.7, the end face's M1 and two pin holes) | 10 | 638.42 / 635.73 | 0.155 expected (the M1.2 across, below); the rest within 0.02 |
 | Block screw WN-gk | 6 | thread allowance | 0.0102 |
 

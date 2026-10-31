@@ -236,7 +236,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       boss:[6,7.6],seat:5.206,seatY:12.3,floor:4.596,scr:3.525,h20:2.8,pinD:2.5,pinCs:0.2,scrH:[3.2,3.0,6.2]},
     LC:{bar:[20,8,10],lug:[10,3.22],ctr:[-5,8.2],r5:5,floor:0.5,scr:3.55,pinD:2.5,seat:5.206,scrH:[2.9,1.7,5.0],sink:1.8},
     ZB:{half:17.75,w:10,t:3.8,sink:[2.35,2.0],bush:4.3,mouth:[2.85,0.69],set:5.2,pinD:2.5,scr:[2.1,1.9,4.7],scrY:1.8},
-    PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
+    PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, by the coloured section's label; the pillar plate's unlabelled, WN-ps: the section's WN-56 is the movement ring's screw, Klassik Uhren 3/2006's print): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
       h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set
       rs:2.6/2,   // thread M2.6 (05 08 00-1): sure

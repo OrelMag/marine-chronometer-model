@@ -70,11 +70,11 @@
    "figs": "05 08_11"
   },
   {
-   "id": "WN-56",
+   "id": "WN-ps",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Pillar screw, dial side (WN-56, by the coloured section's label)",
+   "name": "Pillar screw, dial side (WN number not read: the section labels none; WN-56 until 31 October 2026, a misreading of the coloured section's leader)",
    "qty": 3,
    "parent": "050800-1",
    "kind": "part",
@@ -137,11 +137,11 @@
    "figs": "05 08_7"
   },
   {
-   "id": "WN-rs",
+   "id": "WN-56",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Movement ring screw (WN number not read)",
+   "name": "Movement ring screw (WN-56, by the general arrangement's label: Klassik Uhren 3/2006's print)",
    "qty": 3,
    "parent": "050800-3",
    "kind": "part",
@@ -2174,11 +2174,11 @@
    }
   },
   {
-   "id": "WN-10.bl",
+   "id": "WN-18",
    "idx": null,
    "no": "",
-   "dwg": "WN-10",
-   "name": "Schraube (WN-10 by the coloured section's label, its last digit 0 or 8: likely 10), the lower settings' screws, M1.2",
+   "dwg": "WN-18",
+   "name": "Schraube (WN-18, by the general arrangement's label: Klassik Uhren 3/2006's print; read WN-10 until 31 October 2026), the lower settings' screws, M1.2",
    "qty": 2,
    "parent": "050408-2.bl",
    "kind": "part",
@@ -4213,12 +4213,12 @@
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Schließblech (keeper, estimated)",
+   "name": "Schließblech (the box's latch plate: Lange 5591's, its sizes not seen estimated)",
    "qty": 1,
    "parent": "Holzkasten",
    "kind": "part",
    "part": "box",
-   "fn": "On the box's front: the latch tongue's end goes under it.",
+   "fn": "An angle on the box's front, its top let into the front wall's top, slotted for the lid's hook; the knob through its face.",
    "rel": [
     [
      "on",
@@ -4226,6 +4226,26 @@
     ]
    ],
    "figs": "51 00_4",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "Hakenblech",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hakenblech (the lid's hook plate: Lange 5591's, its sizes not seen estimated)",
+   "qty": 1,
+   "parent": "Holzkasten.D",
+   "kind": "part",
+   "part": "lid",
+   "fn": "An angle on the lid's front, its top let into the front wall's underside; its hook drops through the latch plate's slot over the bolt.",
+   "rel": [
+    [
+     "on",
+     "Holzkasten.D"
+    ]
+   ],
+   "figs": "",
    "rev": "last first 1943"
   },
   {
@@ -4310,16 +4330,11 @@
    "dwg": "P. 51 00 02-2",
    "name": "Zunge (latch tongue)",
    "qty": 1,
-   "parent": "Holzkasten.D",
+   "parent": "Holzkasten",
    "kind": "part",
-   "part": "lid",
-   "fn": "Turning on its screw on the lid's front, its end under the keeper (its place estimated).",
-   "rel": [
-    [
-     "on",
-     "Holzkasten.D"
-    ]
-   ],
+   "part": "box",
+   "fn": "The latch's bolt, out of view in a mortise in the box's front wall behind the latch plate, turning on its screw (its arrangement unknown).",
+   "rel": [],
    "figs": "51 00_4",
    "rev": "last first 1943"
   },
@@ -4332,8 +4347,8 @@
    "qty": 1,
    "parent": "P510002-2",
    "kind": "part",
-   "part": "lid",
-   "fn": "The screw the tongue turns on.",
+   "part": "box",
+   "fn": "The screw the tongue turns on, put in from inside the box (estimated).",
    "rel": [],
    "figs": "51 00_4",
    "rev": "last first 1943"
@@ -4343,12 +4358,12 @@
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Knopf (the tongue’s knob, estimated)",
+   "name": "Knopf (the latch's knob, Lange 5591's, in the tongue's M3.5)",
    "qty": 1,
    "parent": "P510002-2",
    "kind": "part",
-   "part": "lid",
-   "fn": "In the tongue's M3.5.",
+   "part": "box",
+   "fn": "In the tongue's M3.5, out through the latch plate's face.",
    "rel": [
     [
      "on",
