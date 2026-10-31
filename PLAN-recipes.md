@@ -123,9 +123,9 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
 | 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
 | 6 | Small turned parts | the bushes WN-301, WN-300 (×3), WN-302 and the hand-setting bush, the seconds jewel's setting, the studs' bushes and both studs, the escape wheel's collet; the seconds jewel (bought) | done, 29 Oct (the balance's and escape wheel's jewel settings, the hairspring's collet and stud moved to batch 8) |
-| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (the frozen pose: 7b, done 29 Oct); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c); 7b, the detent and gold spring made, the locking stone bought (29 Oct); the block made (29 Oct); the maintaining spring left |
+| 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (the frozen pose: 7b, done 29 Oct); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c); 7b, the detent and gold spring made, the locking stone bought (29 Oct); the block made (29 Oct); the maintaining spring made 31 Oct (9d) |
 | 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | done, 29 Oct: the collet and the stud (05 03 02-2, -3), the hub and mass screws (WN-10, WN-12) and the stud screw (WN-11) left (below) |
-| 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | done but the fusee body (9d) and the maintaining spring (7b), 29 Oct |
+| 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | done, 29 Oct; the fusee body, the maintaining spring, WN-19/20/21 and the detent's arbor 31 Oct (batch 9d); the arbor hook, chain, band and wire stud left |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
 | 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
 
@@ -526,6 +526,48 @@ each as a sweep that B-rep operations reproduce only by approximating it, and no
 on several sizes or with a tip or knurl of their own, the page's first mesh not the only one; they want a line per size first. The glass (050101-1, the lid glass) would be a
 bought line; the wooden box, its hinges and the maker's plate are made elsewhere (joinery, a stamping), not machined from the model.
 
+### Batch 9d (31 October 2026): the fusee body with its groove as an exact solid; WN-19, WN-20, WN-21, the detent's arbor, the maintaining spring
+
+**The groove, exact.** The body is the turned blank (the lathe profile: flange with its 5° lead-in, hub, large end's recess with its mouth, bore, small end's recess) less, for
+each turn m, a cutter: the section of one pitch (the land cut to the floor radius `rf(m)`, the rib to its right to `rf(m) + 0.6`, everything above them to the blank's radius),
+swept along m. Each cutter piece is a quarter turn (the floor's breaks, 05 06_20's curve) built as ruled B-rep between B-spline curves of the section's six corners, all through
+the same m: the floor and the rib's top are axial ruled surfaces over a spiral, the walls radial ones, so no sweep along a variable helix is needed (OpenCascade's failed there)
+and the solid is exact to the spline's interpolation, about a micron. The pieces overlap by 0.002 of a turn, and the rib runs a hair (0.02) into the next land's void, so no two
+cutters share a face; each cut is checked by probing the groove's floor (a boolean that leaves metal is retried with another overlap). The last turn's section rises to the hub's
+radius and runs on to the end (the page's `rBody`); the flange's slot is cut by the slitting cutter (a cylinder Ø 13.5, axial), the stop bar's slot by three boxes and the circle
+r 9.30 of the page, the holes by drilling. The build takes about 40 s (36 booleans). **The table fallback was not needed.**
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max, p99) |
+|---|---|---|---|
+| Fusee body 05 06 04-2 | 11 | 4022.6 / 4008.7 (the threads) | 0.128 (expected, below), p99 0.026; on the groove itself within 0.002 along the profiles compared at 8 angles |
+| Screws WN-19 (3), WN-20, WN-21 | 4 each | thread and slot-box allowance | 0.048, 0.02, 0.049 |
+| Maintaining detent arbor 05 05 05-2 | 2 | 78.35 / 77.07 (the page's 20 sides) | 0.014 |
+| Maintaining spring 05 06 01-1 | 3 | 270.6 / 270.4 | 0.0155 (eye and pin holes within 0.004 in Ø) |
+
+What the check found, each sorted:
+- The recipe's rib was first 0.33 wide always. Where the land's place is the first 0.15 turn's cubic (not whole pitches), the next land starts earlier, and the page's rib runs to it; the
+  recipe's now runs to the next land's wall (a 0.2 bump at 17.8 otherwise).
+- **Page faults, in the recipe's `expect`** (the check reports, not fails): the flange is a lathe of 216 columns with a row every 0.04 along the axis, so (a) its walls (the first land's run,
+  to 2.1 under the blank's face) stand up to 0.04 off the helix, and (b) the slitting cutter's arc, whose floor climbs 0.4 mm between two columns, is chorded up to 0.18 off the circle
+  (the page rounds a curve through chords of 1.7°); and at the groove's end N the rays (216 and the two at N) join the last land's floor to the hub across a chord up to 0.13 off the wall.
+- The three screws are hand-built in fusee.js: their slots are solid dark boxes lying in the heads (WN-20 and WN-21 stand 0.02 out), not cut; the recipes cut a real slot of the box's size
+  and take the difference in `expect`. WN-19's line is three screws: the check takes only the pieces near the first (`near`).
+- The arbor is turned on 20 sides by the page: 1.3 mm³ (1.6 %) under the circle's volume, in `expect` with its `vol`.
+
+**The check** (`recipes.py`): an `expect` entry may now name a height range of the part's axis (`z`) and an angle range (`th`, degrees), so a turned part's known band is exempt, not the whole of
+its XY circle.
+
+**Sizes lifted into `dims.js`** (the page unchanged: the 37 fusee-side lines hashed within 1e-5 mm in all five versions, before and after; `wempe_sustaining.js`, `wempe_physics.js`,
+`wempe_strength.js`, `wempe_escapement.js`, `wempe_wear.js`, `wempe_mainspring.py --check` and `wempe_transmission.js` printed the same): `WD.FU.GR` (the groove: `RFT`, `rf`, the flange's
+ribs, the pitch, `ac`, `MN`), `WD.FU.BODY` (the lathe's and the holes' sizes), `WD.FU.SCR` (WN-19, WN-20, WN-21), `WD.FU.DTA` (the detent arbor's profile) and `WD.FU.MS` (the maintaining
+spring's outline: `R0`, `RI`, `RP`, `ER`, `U1`, `USQ`, `UPIN`, `EYO`, `HR`, `w48` and the arcs it is made of). `RFT` moved out of fusee.js, so `wempe_transmission.js`, `wempe_wear.js` and
+`wempe_mainspring.py` read it from `dims.js`; `wempe_sustaining.js` reads the ring's sizes from `WD.FU.MS` (it took them from fusee.js's source by regex).
+
+**Left, and why.** The arbor hook 05 07 02-2 (its pin and ramped head are posed at the barrel arbor's angle by `hookSet`, in five versions); the wire spring's stud WN-27 (built with the
+escapement side's `K.headOn`); the chain 05 07 04 (a bought chain of riveted links, its links drawn by an instanced builder) and the band 05 07 03-1, -2, -3 (a variant, not shown by default):
+each a line of its own that this pass did not reach.
+
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
@@ -542,6 +584,9 @@ bought line; the wooden box, its hinges and the maker's plate are made elsewhere
 | Hour hand 05 02 00-2 | the root wedge's underside | about 0.1 | the wedge's underside follows the bevel's cone as flat cells every 0.25 across a blade 1.7 wide, not the cone (likely); in `expect` |
 | Seconds hand 05 02 01-1 | the tail's thickness ramp | 0.027 | the table steps 0.3 to 0.5 between 6.4 and 6.6; the page samples it at 6.35, 6.5, 6.55, 6.6; in `expect` |
 | Case screw heads (WN-zg, Ø 9) | the head's round | 0.0225 | the kit draws a head a 32-sided polygon; a head over about Ø 8.5 is more than 0.02 inside its circle; in WN-zg's `expect` and `box_tol` |
+| Fusee body 05 06 04-2 | the flange's lathe (first land's run, the slot's cutter arc, the groove's end N) | 0.04, 0.18, 0.13 | 216 columns and a row every 0.04: the walls stand up to 0.04 off the helix, the cutter's arc is chorded up to 0.18, the end's rays join the last land's floor to the hub across a chord up to 0.13; in the recipe's `expect` |
+| Screws WN-19, WN-20, WN-21 | the slots | 0.15 | drawn as solid dark boxes lying in the heads (0.02 out on WN-20 and WN-21), not cut; in the recipes' `expect` |
+| Maintaining detent arbor 05 05 05-2 | the turned profile | 1.3 mm³ | the page turns it on 20 sides, 1.6 % under the circle's volume; in `expect` |
 | ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
 
 ## Decided

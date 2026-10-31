@@ -189,4 +189,4 @@ def mspring():
       fits=["the eye's hole on a pin in the maintaining ratchet, the other on a pin in the fusee wheel (05 06 00-8, Ø 1.2)","the ring in the fusee wheel's recess Ø 32.3 +0.05"],
       notes=['Drawn free, as blanked: the page bends it by the running drive (the check freezes it at ms = 0).'])
 
-# RECIPES['mspring']=mspring   # registered with its lift
+RECIPES['mspring']=mspring

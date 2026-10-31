@@ -414,7 +414,7 @@ would still settle it.*
 
 ## The Wempe's page against its recipes (29 October 2026)
 
-Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --check`) compared each one's exact solid with the page's mesh. Eight places where the page departs from its drawing are open; each is in its recipe's `expect` (reported, not failed) and in the plan's table "Page faults found", which has the details:
+Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --check`) compared each one's exact solid with the page's mesh. Eleven places where the page departs from its drawing are open; each is in its recipe's `expect` (reported, not failed) and in the plan's table "Page faults found", which has the details:
 
 - **Top plate 05 09 01:** the pocket N-O's far side drawn tangent to r 4.95 where the sheet says r 5 (0.047). At r 5 the solid opens; the opening and the pocket need cutting as separate features.
 - **Upper balance cock 05 08 03-1:** the stud's slot wall drawn upright through the boss where it leans 8° through the arm (0.13 at the boss's top).
@@ -424,6 +424,8 @@ Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --ch
 - **Set-up ratchet 05 07 00-3:** its height still counts the barrel bridge as 3.32 thick (3.30 since the owner's correction), so it stands 0.07 off the bridge, not 0.05.
 - **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it.
 - **Escape wheel's upper endstone screws WN-es:** the shank's end stands 0.032 up into the slot.
+- **The fusee body 05 06 04-2 (batch 9d, 31 October 2026):** the flange is a lathe of 216 columns with a row every 0.04 along the axis, so the first land's walls stand up to 0.04 off the helix, the slot's cutter arc (a floor that climbs 0.4 between two columns) is chorded up to 0.18 off its circle, and at the groove's end N the rays join the last land's floor to the hub across a chord up to 0.13 off the wall.
+- **Screws WN-19, WN-20, WN-21 (batch 9d):** their slots are solid dark boxes lying in the heads (0.02 out on WN-20 and WN-21), not cut. **Maintaining detent arbor 05 05 05-2:** turned on 20 sides, 1.6 % under the circle's volume.
 - **The hands (batch 10, 30 October 2026):** each blade's root meets its boss as a separate closed piece (an 8-segment arc against the 72-sided wall, a 0.003 gap; 0.07-0.10 at isolated samples), the hour hand's root wedge lies on a cell-wise triangulation of the bevel's cone (about 0.1), and the seconds hand's tail ramp is sampled 0.027 off the table's rows.
 
 ## Smaller issues

@@ -133,6 +133,17 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
        R, its fall at the large end, the hub rh, the large end's recess rRec and its mouth, the bore, the small end's recess rIn, smD), the slitting cutter in the flange's slot
        (cutR, cutD, cutP, RC), the chain's pin's hole (pinR, pinD), the tapped holes (m2, m17), the stop bar's slot (slot) and its spring's pin's hole (spin); SCR the screws WN-19, WN-20,
        WN-21; DTA the maintaining detent's arbor 05 05 05-2's turned profile */
+    /* the maintaining spring 05 06 01-1's outline, lifted from fusee.js for the recipe (31 October 2026; fusee.js and tools/wempe_sustaining.js read it): the ring's outer radius R0
+       and its inner circle RI (Ø 32.3 -0.1 less twice the 2), the pins' circle RP and the eye's round ER, the first blend's angle U1, the square end USQ and the pin's UPIN (degrees
+       from the eye), the eye's hole offset EYO and hole radius HR; w48 the width of the band by degrees from the eye (its inner edge's arcs traced on the sheet, see fusee.js) with
+       the arcs W48 it is made of */
+    const MSR0=16.125,MSRI=14.125;
+    const w48=(()=>{const R0=MSR0,RI=MSRI,t=u=>[Math.sin(u*D2R),Math.cos(u*D2R)],far=(u,c,R)=>{const[x,y]=t(u),d=x*c[0]+y*c[1];return d+Math.sqrt(d*d-c[0]*c[0]-c[1]*c[1]+R*R);};
+        const UA=50.3,RA=10.41,cA=t(UA).map(q=>q*(RI-RA)),c6=t(270).map(q=>q*(RI-6)),RE=13.24,E=t(160.29);
+        let lo=0.5,hi=2;for(let i=0;i<60;i++){const m=(lo+hi)/2;if(far(336,E.map(q=>q*m),RE)>R0-4)lo=m;else hi=m;}const cE=E.map(q=>q*(lo+hi)/2);   /* the end arc's centre on its ray, so it reaches the "4" */
+        let a=285,b=300;for(let i=0;i<60;i++){const m=(a+b)/2;if(far(m,c6,6)>far(m,cE,RE))a=m;else b=m;}const UC=(a+b)/2;   /* the swell's corner */
+        const w=u=>u<UA?R0-far(u,cA,RA):u<270?R0-RI:u<UC?R0-far(u,c6,6):R0-far(u,cE,RE);w.UC=UC;w.UA=UA;w.RA=RA;w.RE=RE;w.cA=cA;w.c6=c6;w.cE=cE;return w;})();
+    const MS={R0:MSR0,RI:MSRI,RP:14.2,ER:1.8,U1:60,USQ:336,UPIN:295,EYO:0,HR:0.6,w48,W48:{UA:w48.UA,RA:w48.RA,RE:w48.RE,cA:w48.cA,c6:w48.c6,cE:w48.cE,UC:w48.UC}};
     const RFT=[17.25,16.465,15.785,15.215,14.75,14.305,13.935,13.585,13.32,12.975,12.685,12.415,12.17,11.915,11.675,11.455,11.24,11.055,10.865,10.705,10.55,10.405,10.275,10.155,
     10.07,9.945,9.855,9.78,9.71,9.635,9.575,9.525,9.47,9.435,9.395,9.355,9.30];
     const rf=(/** @type {number} */m)=>{const u=Math.max(0,Math.min(36,m*4)),i=Math.min(35,Math.floor(u));return RFT[i]+(RFT[i+1]-RFT[i])*(u-i);};
@@ -148,7 +159,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       w21:{yE:GC+0.25,dome:[[0.3,0.03],[0.5,0.09],[0.595,0.15]],rsh:0.595,ysh:GP+0.05,hr:1.3,hh:0.9,rs:0.85,ya:GP-0.1,yb:G,slot:{l:2.4,w:0.3,h:0.25,rot:0.4}}};
     const DTA=(()=>{const dome=(/** @type {number} */y0,/** @type {number} */sg,/** @type {number} */h)=>{const R=(0.44*0.44+h*h)/(2*h),o=[];for(let i=0;i<=8;i++){const a=Math.asin(0.44/R)*(1-i/8);o.push([R*Math.sin(a),y0+sg*(R*Math.cos(a)-(R-h))]);}return o;},rT=(/** @type {number} */y)=>1.125+(y-DTU)/140,ya=DTU-1.2;
       return[...dome(-21.825,-1,0.25).reverse(),[0.44,-18.975],[rT(ya)-0.25,-18.975],[rT(ya),-18.725],[rT(ya),ya],[rT(DTL),DTL],[rT(DTL),yD-0.25],[rT(DTL)-0.25,yD],[0.44,yD],...dome(yD+2.75,1,0.35)];})();
-    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,SLR,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR,GR,BODY,SCR,DTA};})();
+    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,SLR,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR,GR,BODY,SCR,DTA,MS};})();
   /* the motion work, the hands and the dial's sizes (dial.js's comments give each figure's source), here for the recipes (30 October 2026), written with dial.js's own
      expressions in its order: PPT the pillar plate's thickness, yC the centre arbor's journal C, crown the shank's crown radius (train.js), swYs the seconds arbor's shoulder.
      DY0, DT, DY1, DR the dial's disc; CN the cannon tube 05 05 03-3, CHW the change wheel 05 02 02 and HRW the hour wheel 05 02 03 and UDW the up-and-down wheel 05 02 04
