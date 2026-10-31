@@ -884,6 +884,10 @@ Contents:
   helical groove failed. The window where the slot meets the groove and the 1,1 floor stay: Schnitt C-D draws them
   (re-measured, tools/fusee_sheet.py). Keep: a part whose cuts cross a helical groove is cut by manifold3d, offline, as one
   cutter per operation; fusee_end.py's faces-of-no-thickness test by the slot's walls must stay at 0.
+  And the hole under the shallow (1,1) floor (the owner: 'if it's machined or lathed, how can this hole be?'): the step
+  from 1,5 to 1,1 was a straight line at u 8.0, so the 1,5 floor broke 0.1 into the next turn of the groove; C-D draws the
+  step as an arc about the axis, now at r 9.30 (SLR), the deep part inside it: 0.17 of metal over the turn below. Keep: a
+  shallower part of a slot that exists to spare the metal over a groove ends where the groove does, on its arc.
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The

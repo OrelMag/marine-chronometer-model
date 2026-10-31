@@ -4,8 +4,8 @@ body's mesh in the end's last 1.5 (and 0.05 under it) must lie on a face the she
 of the slot's two walls (its plane), the shallow part's step across the slot at u 8.0, a turned surface (its normal radial), the radial wall where the groove ends at N,
 the stop bar's spring's pin's hole, or the bores and holes inside r 7.5. A triangle on none of them (a slanted face where a piece ends, a fan) is listed with its place in
 the slot's frame (u along the slot toward the bar's upper end, v across it from the line through the axis, depth under the end). Then a face of no thickness, which lies on a face
-the sheet draws and so passes that test: each face stepped 5 µm off either way must have metal behind it and none in front (three rays' majority); judged over
-0.01 mm² within 0.5 of the slot's walls (main before 31 October 2026: 254; elsewhere a ray grazing an edge still miscounts now and then, reported). Exit 1 on any over 0.01 mm² (the slivers a few µm across left where a wall meets a step between two close rays can't be seen). About 40 s. Written 31 October
+the sheet draws and so passes that test: each face stepped 5 µm off either way must have metal behind it and none in front (the generalized winding number over the whole body); judged over
+0.01 mm² within 0.5 of the slot's walls (main before 31 October 2026: 254). Exit 1 on any over 0.01 mm² (the slivers a few µm across left where a wall meets a step between two close rays can't be seen). About 40 s. Written 31 October
 2026 for the owner's pictures of the slot's ends: a slanted fan where the groove ends at N, twisted strips at the walls' feet (216 triangles, 6.6 mm², before the fix).
 
     python fusee_end.py --model wempe [--dump r_fusee_end.json] [--eval JS] [--page PATH]
@@ -60,22 +60,17 @@ def main():
     # a face of no thickness (two faces back to back on one plane, as on a wall where a piece's rays had none) lies on a face the sheet draws, so the test above passes it:
     # each face over 1e-4 mm² in the end, stepped 5 µm off it either way, must have metal on its back and none in front (point in the body by a ray's crossings, the body's
     # closed pieces fused into one mesh, touching but not overlapping, so a crossing count stays odd inside)
-    Tw=P[(dep(P[:,:,1]).min(1)<SLD+0.2)];o_=Tw[:,0];e1=Tw[:,1]-o_;e2=Tw[:,2]-o_
-    DR=[np.array(x)/np.linalg.norm(x) for x in([0.5731,0.3112,0.7581],[-0.4417,0.2093,0.8726],[0.6614,-0.1876,-0.7262])]   # three rays; a ray through a shared edge counts it twice, so the answer is the majority's
-    PV=[np.cross(dr,e2) for dr in DR];DT=[(e1*pv).sum(1) for pv in PV]
-    def inside(X):
+    Tw=P   # the whole body: a winding number needs the closed solid
+    def inside(X):   # the generalized winding number (the solid angles of all the faces at the point, Van Oosterom and Strackee): about 1 in the metal, 0 out, whatever edges a ray would cross
         out=np.zeros(len(X),bool)
-        with np.errstate(divide='ignore',invalid='ignore'):
-            for i,x in enumerate(X):
-                tv=x-o_;qv=np.cross(tv,e1);votes=0
-                for dr,pv,det in zip(DR,PV,DT):
-                    uu=(tv*pv).sum(1)/det;vv=(qv*dr).sum(1)/det;tt=(e2*qv).sum(1)/det
-                    votes+=((np.abs(det)>1e-12)&(uu>=0)&(vv>=0)&(uu+vv<=1)&(tt>0)).sum()%2
-                out[i]=votes>=2
+        for i,x in enumerate(X):
+            a_=Tw[:,0]-x;b_=Tw[:,1]-x;c_=Tw[:,2]-x;la,lb,lc=(np.linalg.norm(q,axis=1) for q in(a_,b_,c_))
+            num=(a_*np.cross(b_,c_)).sum(1);den=la*lb*lc+(a_*b_).sum(1)*lc+(a_*c_).sum(1)*lb+(b_*c_).sum(1)*la
+            out[i]=abs(2*np.arctan2(num,den).sum()/(4*np.pi))>0.5
         return out
     big=np.where(A>1e-4)[0];F=C[big]+5e-3*n[big];B_=C[big]-5e-3*n[big];fi=inside(F);bi=inside(B_)
     sheet=big[(~fi)&(~bi)];inner_=big[fi&bi];nm=list(sheet)+list(inner_)
-    near=(v>3.5)&(v<6.5)&(r>7.6)&(A>0.01);fail=[k for k in nm if near[k]]   # judged only by the slot's walls, where the pieces' rays had no thickness: elsewhere a ray grazing a facet's edge still miscounts now and then (reported)
+    near=(v>3.5)&(v<6.5)&(r>7.6)&(A>0.01);fail=[k for k in nm if near[k]]   # judged by the slot's walls, where the pieces' rays had no thickness; the rest reported
     print(f'{len(sheet)} faces with no metal behind them (a face of no thickness), {len(inner_)} with metal in front (a face inside the metal), of {len(big)}')
     for k in nm[:60]:print(f'  u {u[k]:7.3f} v {v[k]:6.3f} r {r[k]:6.3f} depth {D[sel][ok][k]:5.3f}  area {A[k]:.4f}  n ({n[k,0]:.2f},{n[k,1]:.2f},{n[k,2]:.2f})')
     print(f'{len(fail)} of them over 0.01 mm² within 0.5 of the walls of the slot')

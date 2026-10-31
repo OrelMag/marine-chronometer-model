@@ -1,7 +1,7 @@
 """The Wempe fusee body 05 06 04-2 made one closed solid by manifold3d's booleans, which always give a closed, consistently wound manifold: the four pieces the
 page builds (fusee.js: the flange's lathe with the chain's pin's hole, the groove's helix body, the tube with its tapped holes, the small end's band turned
 whole), handed over uncut with window.__FUSEE_RAW, united; then the stop bar's slot milled across the small end as two pockets (05 06 04-2's Schnitt C-D: its
-walls 4 and 6 from the axis, 2 H8; "1,5+0,05 tief" to u 8.0 and "1,1+0,05 tief" beyond, at their middles), and the stop bar's spring's pin's hole drilled
+walls 4 and 6 from the axis, 2 H8; "1,5+0,05 tief", toward the bar's upper end only inside the dashed arc r SLR, "1,1+0,05 tief" outside it, at their middles), and the stop bar's spring's pin's hole drilled
 (Ø 0.5 H7 from the recess out along the slot, a 20-gon as bore drew it), every figure the page's own. Writes marine-chronometer-source/wempe/js/fuseebody.js
 (WFUSEEBODY: positions and indices, base64), which the page draws as the body. Written 31 October 2026, the owner's choice after the in-page cuts (rays,
 facePocket) and OCCT's booleans on the helical groove each failed (README, the fusee body). About a minute.
@@ -47,7 +47,10 @@ def body(d):
     def pocket(depth,u0,u1):   # a box u0..u1, v0..v1, from depth under the small end's face out past it (the face is at y = S, the body toward +y)
         b=mf.Manifold.cube([u1-u0,depth+5,d['v1']-d['v0']]).translate([u0,S-5,d['v0']])
         return b.transform(frame(c,s))
-    t=t-(pocket(d['SLD'],-14,d['us'])+pocket(d['SLS'],d['us']-0.1,14))   # one cutter: the shallow box reaching 0.1 back over the deep one (two cuts meeting on the step's plane left a wall of no thickness there)
+    # one cutter (two cuts meeting on a common face left a wall of no thickness there): the slot 1,1 deep all along it, and 1,5 deep but toward the bar's upper end
+    # (u > 0) only inside the circle r SLR about the axis (Schnitt C-D's dashed arc), so the deep floor never reaches the groove's next turn there
+    disc=mf.Manifold.cylinder(30,d['SLR'],d['SLR'],720).transform([[1,0,0,0],[0,0,1,S-10],[0,-1,0,0]])
+    t=t-(pocket(d['SLS'],-14,14)+pocket(d['SLD'],-14,0.5)+(pocket(d['SLD'],0,14)^disc))
     q=d['pin'];n=q['n'];R=q['r']/math.cos(math.pi/n)   # the hole's flats r from its axis, as bore draws an n-gon
     cyl=mf.Manifold.cylinder(30,R,R,n).rotate([0,0,180/n])   # along +z from the origin
     dx,dy,dz=q['d'];ax=np.array([dx,dy,dz]);z=np.array([0,0,1.0]);v=np.cross(z,ax);sn=np.linalg.norm(v);cs=float(z@ax)

@@ -443,7 +443,7 @@ const WFUSEE=(()=>{
          2026, until then not cut). 31 October 2026 (the owner's pictures): until then the band was three pieces built ray by ray between fixed angles on either side of the
          slot, whose rays out over the groove, where a wall lies outside the turned outline, had no thickness: a sheet of no width standing on the wall's plane, slanted
          faces where the groove ended at N and where the walls met the outline. Drawn gilt as the body is */
-      {const fN=fr((PHI0+fr(MN)*TAU)/TAU)*TAU,XN=[fN-1e-6,fN+1e-3],c=Math.cos(barRot),s_=Math.sin(barRot),u0=Math.sqrt(6.4*6.4-1.5*1.5);   /* the groove's end N: its land on the one, the uncut end on the other, 0.01 on (at N the turn below's land ends at 1.5 under the end, which a ray there would meet at no width) */
+      {const fN=fr((PHI0+fr(MN)*TAU)/TAU)*TAU,XN=[fN-1e-6,fN+1e-6],c=Math.cos(barRot),s_=Math.sin(barRot),u0=Math.sqrt(6.4*6.4-1.5*1.5);   /* the groove's end N: its land on the one, the uncut end on the other (0.01 on until 31 October 2026, while the band's floor fell on the turn below's edge at N: it left a crevice 10 µm wide there) */
         const cl=[...new Set([...[...Array(N+1).keys()].map(k=>k*TAU/N),...XN].map(x=>+x.toFixed(9)))].sort((p,q)=>p-q);
         const gBa=helixSolid(cl,AE,LB,()=>[[AE,7.5],[LB,7.5]],rBody),R=(u,v)=>[u*c+v*s_,-u*s_+v*c],pin={o:[u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],d:[c,0,-s_],r:0.25225,n:20};
         /* the cuts made offline (tools/wempe_fusee_body.py: manifold3d's booleans, which always give a closed manifold solid): the four pieces above, uncut, united, the
@@ -451,7 +451,7 @@ const WFUSEE=(()=>{
            tube's (matchThreads). With window.__FUSEE_RAW (that tool) the pieces and the cuts' figures are handed to it instead; without the file, the cut below (facePocket,
            a few faces of no thickness where its sections meet: fusee_end.py) */
         if(typeof window!=='undefined'&&window.__FUSEE_RAW){const ar=g=>{const h=g.index?g:g;return{pos:Array.from(h.attributes.position.array),idx:h.index?Array.from(h.index.array):null};};
-          pF.userData.rawBody={pieces:[gRe,gFl,gTu,gBa].map(ar),c,s:s_,S,SLD,SLS,us:SB.us,v0:4,v1:6,pin};}
+          pF.userData.rawBody={pieces:[gRe,gFl,gTu,gBa].map(ar),c,s:s_,S,SLD,SLS,SLR:WD.FU.SLR,us:SB.us,v0:4,v1:6,pin};}
         if(typeof WFUSEEBODY!=='undefined'&&!(typeof window!=='undefined'&&window.__FUSEE_RAW)){bF.forEach(m=>{m.parent.remove(m);m.geometry.dispose();});bF.length=0;
           const b64=(t,s)=>{const r=atob(s),u=new Uint8Array(r.length);for(let i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return new t(u.buffer);};
           const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(b64(Float32Array,WFUSEEBODY.pos),3));g.setIndex(new THREE.BufferAttribute(b64(Uint32Array,WFUSEEBODY.idx),1));
