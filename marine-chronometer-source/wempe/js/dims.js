@@ -127,7 +127,47 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       const FX=H[10],DX=H[4],A=(()=>{const s=[-10.8,-20.9],w=[FX[0]-DX[0],-(FX[1]-DX[1])];return Math.atan2(w[1],w[0])-Math.atan2(s[1],s[0]);})();
       return{E:DTE,E1:DTE1,C9,r9:9,h0:[1.366,-2.1],C18,r18:18,rb:2.5,o,A,SA:[8.6,1.403],sa:30,hole:{r:1.125,tp:140}};})();
     return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,SLR,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR};})();
-  return{H,NO,FA,BAR,FU,
+  /* the motion work, the hands and the dial's sizes (dial.js's comments give each figure's source), here for the recipes (30 October 2026), written with dial.js's own
+     expressions in its order: PPT the pillar plate's thickness, yC the centre arbor's journal C, crown the shank's crown radius (train.js), swYs the seconds arbor's shoulder.
+     DY0, DT, DY1, DR the dial's disc; CN the cannon tube 05 05 03-3, CHW the change wheel 05 02 02 and HRW the hour wheel 05 02 03 and UDW the up-and-down wheel 05 02 04
+     with UDP its pinion; MIN, HOUR, UDH and SEC the hands (hw half-widths and t thicknesses along each, bo the boss's figures); the pinions' and wheels' teeth are train.js's
+     teeth(...A) (dial.js calls it; the arguments are here); DL the dial's holes, its pin and its screws */
+  const MW=(/** @type {number} */PPT,/** @type {number} */yC,/** @type {number} */crown,/** @type {number} */swYs)=>{
+    const DY0=PPT+7.0,DT=1.2,DY1=DY0+DT,DR=103.55/2,GLASS=PPT+17.0;
+    const rSh=(/** @type {number} */y)=>(1.795-(y-yC)/80)/2;
+    const pinA=(/** @type {number} */z,/** @type {number} */m,D=/** @type {number|undefined} */(undefined),dg=/** @type {number|undefined} */(undefined))=>[z,m,D??m*z+1.588*m,dg??m*z-4.26*m];
+    const M_CH=20.16/56,M_HR=18.90/54,M_UD=33.454/120;
+    const CN={y0:yC,y1:yC+2.4,yb:yC+10.8,yt:yC+14.3,yg:yC+6.3,r:3.6/2,sq:2.6155/2,sqR:3.45/2,gr:0.4,pinA:pinA(14,M_CH,5.86),cr:crown,yk:yC+14.3-0.6};
+    const CHW={y0:PPT,yw0:PPT+1.0,yw1:PPT+2.0,yc:PPT+2.6,yp1:PPT+5.1,yt:PPT+6.9,r:3.05/2,rs:4.2/2,rc:5.5/2,rb:1.52/2,
+        wheelA:[56,M_CH,21.05,19.03,14,0.555],pinA:[18,M_HR,6.9,5.4,54,0.55]};
+    const HRW={y0:CN.y1+0.15,r:3.62/2,rs:6.0/2,rc:8.0/2,rh:4.419/2,wheelA:[54,M_HR,19.7,17.89,18,0.5]};
+    HRW.yw1=HRW.y0+1.0;HRW.yc=HRW.y0+(DY0-0.3-CN.y1);HRW.yt=HRW.y0+8.2;
+    const UDW={y0:PPT,yw0:PPT+5.2,yw1:PPT+6.2,yf:PPT+6.9,ys:PPT+7.6,yt:PPT+9.0,r:3.4/2,rs:5.2/2,rf:7.7/2,rst:2.8/2,rh:2.2155/2,rb:1.52/2,wheelA:[120,M_UD,34.33,32.57,12,0.40]};
+    const UDP={y1:DY0-0.3,y0:DY0-3.3,rb:y=>0.8375+(8.1625-y)/140-0.026,pinA:pinA(12,M_UD,4.0,2.4)};
+    const MIN={L:46,hw:[[3.0,0.6],[5,0.66],[7,0.74],[9,0.87],[11,0.95],[13,1.0],[15,0.92],[17,0.73],[19,0.52],[21,0.42],[23,0.36],[25,0.35],[27,0.45],[29,0.61],[31,0.78],[33,0.85],
+        [35,0.86],[36,0.85],[38,0.66],[40,0.45],[42,0.3],[44,0.24],[46,0.2]],t:[[3,0.7],[21,0.7],[37,0.6],[46,0.4]],y0:0,rf:3.0,rc:4.2/2};
+    const HOUR={L:35,hw:[[3.6,0.85],[5,0.92],[6.5,1.06],[8,1.18],[9,1.2],[10.5,1.15],[11.5,1.0],[12.7,0.88],[13.9,0.72],[15.1,0.6],[16.5,0.48],[18,0.42],[19.5,0.4],[19.93,0.4],[20.0,0.71],[20.2,1.21],
+        [20.5,1.66],[21.0,2.12],[21.5,2.4],[22.0,2.55],[22.5,2.6],[23.3,2.55],[24,2.38],[24.6,2.18],[25.2,1.94],[25.8,1.67],[26.4,1.43],[27,1.19],[27.6,0.98],[28.2,0.78],[28.8,0.6],
+        [29.4,0.44],[30,0.3],[31.5,0.28],[33,0.26],[35,0.25]],t:[[3.6,0.5],[14.6,0.6],[19.4,0.4],[20.8,0.7],[30,0.6],[34.6,0.3],[35,0.3]],rf:8.2/2,rf1:6.8/2,rp:4.8/2,rb:4.406/2};
+    const UDH={hw:[[2.1,0.45],[9.5,0.17],[9.6,0.125],[10.2,0.125]],t:[[2.1,0.3],[10.2,0.3]],rf:4.4/2,rp:3.0/2,rb:2.2045/2};
+    const SEC={hwP:[[1.5,0.3],[19.5,0.1]],tP:[[1.5,0.4],[19.5,0.3]],hwT:[[1.5,0.15],[6.5,0.15],[6.55,0.35],[6.75,0.62],[7.0,0.78],[7.35,0.85],[8,0.64],[8.6,0.48],[9.2,0.3],[9.7,0.14],[10,0.02]],
+        tT:[[1.5,0.3],[6.4,0.3],[6.6,0.5],[10,0.5]],rb:1.6,rr:2.5/2,rh:1.2/2};
+    CN.dn={s0:6.07,s1:6.73,dp:0.24,ya:6.1,yb:6.5,t:0.05,a:20,k:3,off:10};   /* the punch's dents (05 05 03's "Körner"): from C, the groove's square shoulder 6.07 and its cone's top 6.73, the cone 0.24 deep, each dent 6.1 to 6.5 over C and 0.05 into the tube's wall, 20° round, three, centred 0, 120 and 240 deg (estimated) */
+    const YS0=DY1+0.2,YH1=DY1+2.6,YM0=CN.yb,YU1=UDW.yt;
+    const SK={d:0.4,w:0.4*Math.tan(30*D2R)};   /* the riveting sink in the change, hour and up-and-down wheels' holes: 0.4 deep at 30° */
+    CHW.th=1.0;HRW.th=1.0;UDW.th=1.0;   /* the wheels' thickness (1.0: 05 02 02-1, 05 02 03-1, 05 02 04-1) */
+    UDW.sp=[5,1.6,10.4/2,28.3/2];UDW.sp6=[5,1.82,10.4/2,28.3/2,1.18];   /* the up-and-down wheel's spokes [n, width at the hub, hub radius, rim's inside radius, width at the rim]: the drawings', and the Soviet 6MX's tapering ones */
+    MIN.bo={yf:0.8,y1:2.0,h0:2.6045/2,rd:0.4,dr:0.01,s:140};   /* the minute hand's boss: the flange's underside 0.8 and top 2.0 over the collar's foot, the square hole 2.6045 across flats widening 1:70 (140 on the radius), the flange's edge rounded r 0.4, the corners 0.01 outside the tube's */
+    HOUR.bo={h:3.1,f:0.8,s:140};   /* the hour hand's boss: 3.1 overall, the flange 0.8, its hole on the seat's 1:70 */
+    UDH.bo={f:0.5,h:1.4};   /* the up-and-down hand's boss: 1.4 overall, the flange 0.5 */
+    SEC.bo={b:0.4,e:0.2,c:4.0,pr:0.75,s:90,off:24.05,tight:0.0055};   /* the seconds hand's boss and the collet on the post: the boss 0.4 and its raised end 0.2, the collet 4.0 under the hand, the post's r 0.75, its 1:90 */
+    SEC.post=(/** @type {number} */y)=>(SEC.bo.pr-(y-swYs-SEC.bo.off)/SEC.bo.s)/2-SEC.bo.tight;   /* the post's 1:90 (train.js), carried on past its end, 0.0055 tight on the radius */
+    const DL={RH:50.5,rb:[3.0,1.6,0.85],pin:{a:6,r:0.5},sm:{a:185.7,r:0.5},scr:[354,120,240],sc:{r:0.55,sr:0.9,sd:1.0},ps:{y0:3.7,r:0.555,r1:0.49,t:0.1},ds:{r:0.85,h:0.8,len:2.3,rs:0.5}};
+    return{DY0,DT,DY1,DR,GLASS,rSh,M_CH,M_HR,M_UD,CN,CHW,HRW,UDW,UDP,MIN,HOUR,UDH,SEC,YS0,YH1,YM0,YU1,DL,SK};};
+  /* the case's screws of one size each, [head radius, head height, shank length, thread radius], here for the recipes (30 October 2026; case.js's comments give each one's place):
+     the ring's pivot-bracket screws WN-kr, the hinge screws WN-hg, the key holder's WN-kh, the transit lock's pivot screw WN-zg */
+  const CASE={kr:[2.4,1.6,7.25,1.25],hg:[3,1.6,16.5,1.75],kh:[1.1,1.0,10,0.6],zg:[4.5,2,12,3]};
+  return{H,NO,FA,BAR,FU,MW,CASE,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
