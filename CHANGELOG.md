@@ -7,6 +7,10 @@ Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to ca
 ## 3.64.00 · 2026-10-31
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the motion work, the four hands, the dial and its fittings, and four of the case's screws: 101 made parts and 32 bought lines in all.
 
+## 3.63.02 · 2026-10-31
+- The Wempe's fusee: the stop bar's slot across its small end is now cut cleanly as its drawing gives it, straight walls out through the rim, the groove ending square at its end point N, and no stray faces, slivers or holes where the slot meets the groove.
+- The Wempe's fusee body is drawn as one closed solid, so its faces shade and outline as one machined part.
+
 ## 3.63.01 · 2026-10-31
 - The Hamilton Model 21 is marked work in progress: Hamilton's own factory drawings and the British Museum's measurements show the model is about 12 % too small throughout, and it is being rescaled and rebuilt from the drawings; the page's header and About say so.
 

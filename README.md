@@ -135,7 +135,7 @@ model. They need more software:
   rest), the type check (`npx`) and deploying (`wrangler`).
 - **Python packages**, and a Chromium for Playwright to drive:
 
-      python -m pip install numpy scipy playwright opencv-python matplotlib pillow shapely
+      python -m pip install numpy scipy playwright opencv-python matplotlib pillow shapely manifold3d
       python -m playwright install chromium
 
   A few tools need more: torch for the mainspring's solve, pyamg for `fea.py`,
