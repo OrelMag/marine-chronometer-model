@@ -84,27 +84,27 @@ function decalGeo(poly,uvOf=q=>q){const s=new THREE.Shape();poly.forEach(([x,z],
 /* EW_TH: the escape teeth's thickness along the arbor, 1.1 since 25 October 2026: KLUwI2UUCMQ 42:50.99, 42:51.49, 42:51.99 (4K, the movement side-on), the teeth's top to their
    plate-side face on the escape arbor's own ruler (the teeth's top at h 15.85 to the plate's mirror line; checked by the collet's two steps, 0.93 and 1.44 against 1.0 and 1.45),
    1.11; 1.0-1.15 read before; 1.3 until then, the figure Hamilton's specification gives as quoted in chronometerbook post 30 (the frames decide: the owner's choice) */
-const EW_TH=1.1;
+const EW_TH=1.2287;
 function escapeWheel(parent,M,rt,y,E){
   const R=rt*E.r0,gs=[];
   for(let k=0;k<16;k++){const a=k*E.P,q=E.toothPts(a).slice(0,-1),a0=a+E.settings.B*E.P,a1=a+E.U*E.P;for(let i=1;i<12;i++)q.push([E.r0,a0+(a1-a0)*i/12]);   /* back root to front root along the root circle */
     gs.push([extrude(new THREE.Shape(q.map(([r,b])=>new THREE.Vector2(r*rt*Math.cos(b),-r*rt*Math.sin(b)))),{depth:EW_TH,bevelEnabled:false}),new THREE.Matrix4()]);}
   const tg=mergeGeo(gs);tg.rotateX(-Math.PI/2);tg.translate(0,-EW_TH/2,0);
-  const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.75+EW_TH/2;parent.add(teeth);   /* the teeth's top face kept at y - 0.75 (0.95 under the train bridge: the side photograph), EW_TH thick toward the plate */
+  const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.83775+EW_TH/2;parent.add(teeth);   /* the teeth's top face kept at y - 0.75 (0.95 under the train bridge: the side photograph), EW_TH thick toward the plate */
   /* the rim, spokes and hub as KLUwI2UUCMQ 43:21.1 shows the wheel face up in the staking tool (4K, along the tips' ellipse's long axis, 378 px for the tips' radius): the rim's
      inner edge 0.77 of the tips (290 px), the four spokes 0.105 wide (40 px, on the front spoke, whose width lies along the long axis), the hub r 0.31 (the collet's foot, 116 px)
      with the collet's pipe r 0.20 (74 px) standing about 1.9 toward the pinion (its height off the ellipse's 25 deg tilt: rough). Until 5 October 2026 the rim 0.5 wide,
      the spokes 0.5 and the hub r 1.5, estimated after Fig. 14 */
   const web=new THREE.Shape(),R1=0.77*rt,R0=0.31*rt,sw=0.105*rt;web.absarc(0,0,R,0,TAU,false);
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
-  const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's shaft (r 0.5, movement.js; 0.67 until 20 October 2026) */
-  const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
-  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);fuse([teeth,wm]);   /* the teeth and the web one wheel, one mesh: their top faces flush, a line round the root in Edges until 21 October 2026 */
+  const hb=new THREE.Path();hb.absarc(0,0,0.5585,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's shaft (r 0.5, movement.js; 0.67 until 20 October 2026) */
+  const wg=extrude(web,{depth:0.5585,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.27925,0);
+  const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3351;parent.add(wm);fuse([teeth,wm]);   /* the teeth and the web one wheel, one mesh: their top faces flush, a line round the root in Edges until 21 October 2026 */
   /* the collet, on the web's face toward the pinion, in two steps (KLUwI2UUCMQ 42:51 in the movement and 43:19, the original arbor: mfgfit's edges): a wide part next to
      the wheel D 3.2-3.75, 0.95-1.07 long (0.263 of the tips: r 1.73, 1.0), then a pipe D 2.0-2.4, 1.36-1.54 long (0.167: r 1.1, 1.45), its end 15.1-15.9 from the lower
      pivot's tip. Until 20 October 2026 one pipe r 0.20 of the tips, 1.9 long, read at 43:21.1 on the replacement arbor */
-  const cw=new THREE.Mesh(ringGeo(0.263*rt,0.5,1.0),M.brass);cw.position.y=y+0.55+0.5;parent.add(cw);
-  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5,1.45),M.brass);cl.position.y=y+0.55+1.0+0.725;parent.add(cl);fuse([cw,cl]);   /* the collet's two steps one piece, one mesh (their bores flush) */
+  const cw=new THREE.Mesh(ringGeo(0.263*rt,0.5585,1.117),M.brass);cw.position.y=y+0.61435+0.5585;parent.add(cw);
+  const cl=new THREE.Mesh(ringGeo(0.167*rt,0.5585,1.61965),M.brass);cl.position.y=y+0.61435+1.117+0.809825;parent.add(cl);fuse([cw,cl]);   /* the collet's two steps one piece, one mesh (their bores flush) */
   return teeth;
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
@@ -353,7 +353,7 @@ function drawMerge(scene,meshes){
    it lies in a pack on the wall with loose turns inside; wound, the coils draw in round the arbor, spread across the barrel rather than in two packs, and the pack
    on the wall thins to a turn or two. ey: the eye in its inner end for the arbor's hook, an oblong 7.2 along the strip and 5.2 across from 2.2 off the end
    (KLUwI2UUCMQ 15:54, the innermost turn's front, rough +-20 %): along the strip's centre line on the core, mm */
-const MSPRING={t:0.394,gap:0,ra:4.9,Rw:18.3-2.0-0.26,len:1064,ey:[2.2,9.4,3.9]};   /* ey: the eye's near and far ends along the strip and its width across: 3.9 since 20 October 2026 (KLUwI2UUCMQ 15:54, erf edges, the height corrected for the 41 deg view: 7.25 x 3.9, +-20 %; 5.2 until then); its cap-side edge read 3.6 under the strip's, off its middle, drawn centred (rough) */
+const MSPRING={t:0.440098,gap:0,ra:5.4733,Rw:20.4411-2.234-0.29042,len:1188.488,ey:[2.2,9.4,3.9]};   /* ey: the eye's near and far ends along the strip and its width across: 3.9 since 20 October 2026 (KLUwI2UUCMQ 15:54, erf edges, the height corrected for the 41 deg view: 7.25 x 3.9, +-20 %; 5.2 until then); its cap-side edge read 3.6 under the strip's, off its middle, drawn centred (rough) */
 /* MSHAPE decoded once: the grid along the strip (s, mm) and each state's r there, its theta rebuilt from r (each step's run round the arbor) and spread so it
    ends at TAU T exactly. msShape(T): the state at T, each piece of steel (each s) placed between its places in the two solved states either side */
 let MSD=null;
@@ -513,10 +513,10 @@ function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false)
    hole, drilled 25 to 30 deep), 2.46 across (over the fusee's 2.4 square and the cannon pinion's 2.16; the book's 3 is filed to the arbor's square); the paddle 3 thick, the book's knob.
    Inside (the book's construction, not drawn): the pipe is the shaft, its head and a helical spring in the body's bore, the paddle held in its slot by a pin. Until 26 October 2026 the
    same form 46.6 long, scaled by a pipe r 2.2 (estimated) */
-function windingKey(g,M){const KR=3.0,KP=25.4,KS=25,V=(a,b)=>new THREE.Vector2(a,b);mesh(g,sqRingGeo(KR,2.46,KS),M.brass,0,KS/2,0);   /* KR the pipe's radius, KP the paddle's width (overwind.js reads both) */
-  mesh(g,new THREE.LatheGeometry([V(0,KS),V(KR,KS),V(KR,39),V(4.1,39),V(4.1,42),V(4.6,42),V(8.25,50),V(10.45,62),V(11.4,62),V(11.4,66),V(0,66)],32),M.brass);   /* pipe, neck ring, cone, body, collar */
-  const sh=new THREE.Shape();sh.moveTo(-11.4,0);sh.lineTo(-KP/2,19.3);sh.absarc(0,19.3,KP/2,Math.PI,0,true);sh.lineTo(11.4,0);sh.closePath();
-  const pg=extrude(sh,{depth:3,bevelEnabled:false,curveSegments:32});pg.translate(0,66,-1.5);mesh(g,pg,M.brass);return g;}   /* the paddle on the collar, as wide as it at its foot, widening to its round top, 98 over the pipe's end */
+function windingKey(g,M){const KR=3.351,KP=28.3718,KS=27.925,V=(a,b)=>new THREE.Vector2(a,b);mesh(g,sqRingGeo(KR,2.74782,KS),M.brass,0,KS/2,0);   /* KR the pipe's radius, KP the paddle's width (overwind.js reads both) */
+  mesh(g,new THREE.LatheGeometry([V(0,KS),V(KR,KS),V(KR,43.563),V(4.5797,43.563),V(4.5797,46.914),V(5.1382,46.914),V(9.21525,55.85),V(11.67265,69.254),V(12.7338,69.254),V(12.7338,73.722),V(0,73.722)],32),M.brass);   /* pipe, neck ring, cone, body, collar */
+  const sh=new THREE.Shape();sh.moveTo(-12.7338,0);sh.lineTo(-KP/2,21.5581);sh.absarc(0,21.5581,KP/2,Math.PI,0,true);sh.lineTo(12.7338,0);sh.closePath();
+  const pg=extrude(sh,{depth:3.351,bevelEnabled:false,curveSegments:32});pg.translate(0,73.722,-1.6755);mesh(g,pg,M.brass);return g;}   /* the paddle on the collar, as wide as it at its foot, widening to its round top, 98 over the pipe's end */
 function sqRingGeo(ro,a,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);s.holes.push(sqPath(a));
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 function sqPath(a){const q=a/2,h=new THREE.Path();h.moveTo(q,q);h.lineTo(q,-q);h.lineTo(-q,-q);h.lineTo(-q,q);h.closePath();return h;}   /* clockwise, a hole */
@@ -585,9 +585,9 @@ function gearOutline(n,m,o={}){
   return{xy,ro,ri};}
 function gearGeo(n,m,th,o={}){
   const{xy,ro,ri}=gearOutline(n,m,o),roS=m*n/2+m*0.95,s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();
-  const P=o.prop,R0=o.hub??(P?P[0]*roS:Math.max(1.6,roS*0.18));
-  if(o.spokes){const R1=P?P[1]*roS:ri-(o.rim??Math.max(0.9,roS*0.09)),sw=P?P[2]*roS:o.sw??Math.max(0.9,roS*0.08);
-    if(R1>R0+1)for(let j=0;j<o.spokes;j++){const a0=j/o.spokes*TAU,a1=(j+1)/o.spokes*TAU,d1=Math.asin(Math.min(0.9,sw/2/R1)),d0=Math.asin(Math.min(0.9,sw/2/R0));
+  const P=o.prop,K=o.k||1,R0=o.hub??(P?P[0]*roS:Math.max(1.6*K,roS*0.18));   /* K: a model's scale for these defaults in mm (the Hamilton's HK, movement.js; 1 for the Wempe) */
+  if(o.spokes){const R1=P?P[1]*roS:ri-(o.rim??Math.max(0.9*K,roS*0.09)),sw=P?P[2]*roS:o.sw??Math.max(0.9*K,roS*0.08);
+    if(R1>R0+K)for(let j=0;j<o.spokes;j++){const a0=j/o.spokes*TAU,a1=(j+1)/o.spokes*TAU,d1=Math.asin(Math.min(0.9,sw/2/R1)),d0=Math.asin(Math.min(0.9,sw/2/R0));
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
@@ -631,29 +631,29 @@ function shaftGeo(prof,seg=16){const V2=(a,b)=>new THREE.Vector2(a,b),pr=[V2(0,p
   pr.push(V2(0,prof[prof.length-1][0]));return new THREE.LatheGeometry(pr,seg);}
 /* a jewel stone, centred on y 0, h thick, outside radius ro, hole rb: 'olive' a hole rounded through its thickness (rb at the middle, 0.06 wider at the faces), 'bar' a straight hole
    with an oil sink on its +y face; one closed solid */
-function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y1=h/2,pr=[V2(kind==='olive'?rb+0.06:rb,y0),V2(ro,y0),V2(ro,y1)];
-  if(kind==='olive'){for(let i=0;i<=12;i++){const s=1-i/6;pr.push(V2(rb+0.06*s*s,s*h/2));}}
-  else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
+function stoneGeo(ro,rb,h,kind,k=1){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y1=h/2,pr=[V2(kind==='olive'?rb+0.06*k:rb,y0),V2(ro,y0),V2(ro,y1)];   /* k: a model's scale for the sinks' sizes (the Hamilton's HK) */
+  if(kind==='olive'){for(let i=0;i<=12;i++){const s=1-i/6;pr.push(V2(rb+0.06*k*s*s,s*h/2));}}
+  else{pr.push(V2(rb+0.18*k,y1),V2(rb,y1-0.14*k),V2(rb,y0));}
   return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
 /** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[],ha?:number}} WheelOpts
     n teeth of module m, centred at y, th thick (1); mate: the pinion it drives (its addenda); collet: its radius, 0 for none; cp, cside: below */
 /** @typedef {{n?:number,m:number,y:number,th?:number,bore?:number}} PinionOpts  n leaves (10), th long (2.5), centred at y */
 /** @param {any} parent @param {any} M the materials @param {number} x @param {number} z
-    @param {{wheel?:WheelOpts,pin?:PinionOpts,prof?:number[][],ar?:number[],r?:number}} o  prof: a turned arbor (shaftGeo); ar: [y0, y1], a plain one of radius r (0.55) */
+    @param {{wheel?:WheelOpts,pin?:PinionOpts,prof?:number[][],ar?:number[],r?:number,k?:number}} o  prof: a turned arbor (shaftGeo); ar: [y0, y1], a plain one of radius r (0.55); k: the scale of these defaults in mm (1) */
 function arbor(parent,M,x,z,o){
-  const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
+  const g=new THREE.Group(),K=o.k||1;g.position.set(x,0,z);parent.add(g);
   let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
-  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate,prop:w.prop,ha:w.ha}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
+  if(o.wheel){const w=o.wheel,th=w.th||K;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate,prop:w.prop,ha:w.ha,k:K}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
     const gu=g.userData.wheel.geometry.userData;wy=[w.y-th/2,w.y+th/2,w.spokes===0?gu.ro:gu.hub];
     /* cside ±1: collet on that side of the wheel only, cp proud of it there (0.6) and 0.05 proud of the other face, not flush with it */
-    if(w.collet!==0){const cp=w.cp??0.6,h=w.cside?th+0.05+cp:th+1.2,c=w.y+(w.cside||0)*(cp-0.05)/2;mesh(g,cylY(w.collet||1.6,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6];}}
-  if(o.pin){const p=o.pin,n=p.n||10,th=p.th||2.5;g.userData.pin=mesh(g,gearGeo(n,p.m,th,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=n;g.userData.pin.userData.gear={z:n,m:p.m};
+    if(w.collet!==0){const cp=w.cp??0.6*K,h=w.cside?th+0.05*K+cp:th+1.2*K,c=w.y+(w.cside||0)*(cp-0.05*K)/2;mesh(g,cylY(w.collet||1.6*K,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6*K];}}
+  if(o.pin){const p=o.pin,n=p.n||10,th=p.th||2.5*K;g.userData.pin=mesh(g,gearGeo(n,p.m,th,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=n;g.userData.pin.userData.gear={z:n,m:p.m};
     /* a pinion's leaves must end at its wheel's boss: where the pinion shares heights with the wheel or its collet, its tips must lie inside the hub or the collet */
     const rt=g.userData.pin.geometry.userData.ro,y0=p.y-th/2+1e-6,y1=p.y+th/2-1e-6,over=r=>r&&y0<r[1]&&y1>r[0]&&rt>r[2];
     if(over(wy)||over(cy))console.error('arbor: pinion inside its wheel',{x,z,y:p.y,rt,wheel:wy,collet:cy});}
   if(o.prof)g.userData.ar=mesh(g,shaftGeo(o.prof),M.steel);   /* a turned arbor: pivots and shoulders (shaftGeo) */
-  else if(o.ar){const[a,b]=o.ar;g.userData.ar=cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
+  else if(o.ar){const[a,b]=o.ar;g.userData.ar=cylBetween(g,o.r||0.55*K,a,b,M.steel,0,0,12);}
   return g;
 }
 function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into,lead=0){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end; into: the previous geometry, rewritten in place (reclose); lead: the inner end run on straight that far along its tangent, back past where the curve begins (into the collet's clamp) */
@@ -687,11 +687,11 @@ function ribbonGeo(P,b,t,into){const n=P.length,V=n*8+8,re=!!(into&&into.attribu
    0.95 at 35 and a needle to the minute track's outer line, 42.2. sec: a needle 0.25 to 17.6; its counterpoise a stem 0.38 wide to an arrowhead, its back square at 7.72 (the ramp's middle), 1.15
    wide at 7.95-8.2, its point at 9.55. ud: a needle 0.42 narrowing to 0.25, to 9.8 (VIDEOS.md: 58.5 px). Widths under about 0.3 are at the photograph's blur (about 1.5 px) and may be thinner.
    The minute hand shows a bevel down its length (two tones); drawn flat, as are all four (their side profile, 46:30-46:45, not yet read) */
-const HAND_W={hour:[[3.5,1.3],[5,1.45],[6.5,1.69],[7.5,1.8],[9,1.87],[10.5,1.96],[11.5,1.98],[13,1.95],[14.5,1.87],[15.5,1.78],[16.5,1.71],[17.5,1.56],[18.5,1.42],[19.5,1.26],[20.5,1.04],[21.3,0.9],[21.7,0.95],
-    [22,2.42],[22.5,3.13],[23,3.59],[23.6,3.85],[24,3.75],[24.5,3.3],[25,2.85],[25.5,2.55],[26,2.26],[26.5,1.98],[27,1.7],[27.5,1.46],[28,1.26],[28.5,1.07],[29,0.88],[29.5,0.75],[30,0.61],[30.5,0.49],[31,0.41],[32,0.32],[35,0.28],[35.2,0]],
-  min:[[3.5,1],[5.5,1.02],[7,1.07],[9,1.16],[10,1.22],[11,1.27],[12.5,1.3],[14,1.37],[16.5,1.42],[19,1.49],[20.5,1.58],[23,1.65],[25,1.7],[28,1.85],[29,1.9],[30.5,1.75],[32,1.5],[33,1.34],[34,1.16],[35,0.95],[36,0.79],[37,0.7],[38,0.52],[39,0.44],[40,0.39],[41,0.33],[42,0.3],[42.2,0]],
-  sec:[[-9.55,0],[-9.25,0.3],[-9,0.52],[-8.75,0.75],[-8.5,1],[-8.2,1.15],[-7.95,1.15],[-7.75,1.05],[-7.72,0.38],[0,0.38],[0.9,0.28],[17.4,0.25],[17.6,0]],
-  ud:[[0,0.42],[2,0.42],[4,0.33],[6,0.29],[9.5,0.25],[9.8,0]]};
+const HAND_W={hour:[[3.9095,1.4521],[5.585,1.61965],[7.2605,1.88773],[8.3775,2.0106],[10.053,2.08879],[11.7285,2.18932],[12.8455,2.21166],[14.521,2.17815],[16.1965,2.08879],[17.3135,1.98826],[18.4305,1.91007],[19.5475,1.74252],[20.6645,1.58614],[21.7815,1.40742],[22.8985,1.16168],[23.7921,1.0053],[24.2389,1.06115],
+    [24.574,2.70314],[25.1325,3.49621],[25.691,4.01003],[26.3612,4.30045],[26.808,4.18875],[27.3665,3.6861],[27.925,3.18345],[28.4835,2.84835],[29.042,2.52442],[29.6005,2.21166],[30.159,1.8989],[30.7175,1.63082],[31.276,1.40742],[31.8345,1.19519],[32.393,0.98296],[32.9515,0.83775],[33.51,0.68137],[34.0685,0.54733],[34.627,0.45797],[35.744,0.35744],[39.095,0.31276],[39.3184,0]],
+  min:[[3.9095,1.117],[6.1435,1.13934],[7.819,1.19519],[10.053,1.29572],[11.17,1.36274],[12.287,1.41859],[13.9625,1.4521],[15.638,1.53029],[18.4305,1.58614],[21.223,1.66433],[22.8985,1.76486],[25.691,1.84305],[27.925,1.8989],[31.276,2.06645],[32.393,2.1223],[34.0685,1.95475],[35.744,1.6755],[36.861,1.49678],[37.978,1.29572],[39.095,1.06115],[40.212,0.88243],[41.329,0.7819],[42.446,0.58084],[43.563,0.49148],[44.68,0.43563],[45.797,0.36861],[46.914,0.3351],[47.1374,0]],
+  sec:[[-10.66735,0],[-10.33225,0.3351],[-10.053,0.58084],[-9.77375,0.83775],[-9.4945,1.117],[-9.1594,1.28455],[-8.88015,1.28455],[-8.65675,1.17285],[-8.62324,0.42446],[0,0.42446],[1.0053,0.31276],[19.4358,0.27925],[19.6592,0]],
+  ud:[[0,0.46914],[2.234,0.46914],[4.468,0.36861],[6.702,0.32393],[10.6115,0.27925],[10.9466,0]]};
 function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off).
    kind an array: a measured outline (HAND_W), len, w, tail and at unused */
   const P=Array.isArray(kind)&&kind;if(P)w=P[0][1];
@@ -710,7 +710,7 @@ function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y f
   if(b){s.lineTo(-w/2,yb);s.absarc(0,0,b,Math.PI-ab,tail>yb?Math.PI+ab:TAU+ab,false);if(o.sq)s.holes.push(sqPath(o.sq));else{const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}}
   s.closePath();return s;
 }
-function handGeo(len,w,tail,kind,at,o){const g=extrude(handShape(len,w,tail,kind,at,o),{depth:0.35,bevelEnabled:false,curveSegments:o&&o.boss?32:12});g.rotateX(-Math.PI/2);return g;}
+function handGeo(len,w,tail,kind,at,o){const g=extrude(handShape(len,w,tail,kind,at,o),{depth:0.39095,bevelEnabled:false,curveSegments:o&&o.boss?32:12});g.rotateX(-Math.PI/2);return g;}
 /* silvered dial, 4 inch. Default: the Hamilton Model 21 (below). kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
    large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale is drawn on this movement's sweep (UDA, movement.js).
    'swiss' and 'soviet': the Ulysse Nardin deck chronometers (Roman hours, UP/HAUT–DOWN/BAS) and the First Moscow Watch Factory's copies of them
@@ -782,7 +782,7 @@ function dialCanvas(kind,K=1){   /* K: drawn K times as fine (the export to Blen
   /* its proportions measured on the photograph (face-on, scaled by the seconds' centre, which is on the fourth arbor, 21.6 mm out): the minute track r 40.4-42.2 (0.851-0.888 of the
      dial's radius; it was 0.905-0.955 until 3 October 2026, which with the fourth's measured place left no room for the seconds), the seconds track to r 17.9, 0.9 inside the minute track at 6,
      the UP-DOWN ring r 11.2; the dial shows to r 45.9 inside the bezel, as the photograph's */
-  const r1=c*42.2/DIAL_R,r2=c*40.4/DIAL_R,k=L.F[1]/DIAL_R,sy=c+c*k,uy=c+c*L.Ud[1]/DIAL_R,rs=Math.min(r2-c*k-c*0.9/DIAL_R,(SEC_L+0.27)/DIAL_R*c),ru=c*11.2/DIAL_R;   /* the sub-dials on their arbors (k was a fixed 0.472, the fourth's place on a 50.8 mm dial, until 2 October 2026: 1.5 mm off it on this one); the seconds track to the hand's reach (SEC_L) */
+  const r1=c*47.1374/DIAL_R,r2=c*45.1268/DIAL_R,k=L.F[1]/DIAL_R,sy=c+c*k,uy=c+c*L.Ud[1]/DIAL_R,rs=Math.min(r2-c*k-c*1.0053/DIAL_R,(SEC_L+0.30159)/DIAL_R*c),ru=c*12.5104/DIAL_R;   /* the sub-dials on their arbors (k was a fixed 0.472, the fourth's place on a 50.8 mm dial, until 2 October 2026: 1.5 mm off it on this one); the seconds track to the hand's reach (SEC_L) */
   circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);for(let i=0;i<12;i++)tri(r1,i/12*TAU);
   /* hours, sized so the figures stand 0.18 c tall: each numeral's box just inside the track; the 5 and 7 edged round toward the 4 and 8 until they clear the seconds sub-dial */
   x.font='600 100px Spectral, Georgia, serif';{const m=x.measureText('1234567890');x.font=`600 ${100*c*0.18/(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent)}px Spectral, Georgia, serif`;}

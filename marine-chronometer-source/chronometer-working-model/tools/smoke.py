@@ -106,7 +106,7 @@ async def model(b,errs,steps):
     await pg.evaluate(tick,'Balance staff');await pg.wait_for_timeout(200);steps.append('the staff ticked')
     if not all(await pg.evaluate(vis,'bal.staff')):errs.append('ticking the staff did not show it again')
     await click('#units button[data-v="in"]','sizes in inches');await pg.evaluate("location.hash='#part=pillar'");await pg.wait_for_timeout(400)
-    if '3.448 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
+    if '3.850 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
     await click('#info [data-report]','report from the part card');w=await pg.evaluate("[document.querySelector('#rpWhere').value,document.querySelector('#info h3').textContent]")
     if w[0]!=w[1]:errs.append(f'the part card’s report is about "{w[0]}", not "{w[1]}"')
     await pg.evaluate("document.querySelector('#report').close()")

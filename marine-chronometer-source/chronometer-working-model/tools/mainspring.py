@@ -48,11 +48,11 @@ if '--nivaflex' in sys.argv:   # the build's strip (deviations.json: its thickne
 ENV=lambda k,d:float(os.environ.get(k,d));E_GPA=ENV('MC_MS_E',207)   # a variant: the strip's thickness MC_MS_T and length MC_MS_L (mm), the core MC_MS_RA, the film between packed coils MC_MS_GAP, its modulus (GPa; the bending
 # energy's EI/2 is left out of the solve, so it scales the torque only), named MC_MS_TAG (else t and its thickness): files mainspring_TAG.*
 VAR=os.environ.get('MC_MS_TAG') or (f"t{os.environ['MC_MS_T']}" if os.environ.get('MC_MS_T') else None)
-t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.0);p=t+gap;ra=ENV('MC_MS_RA',4.9);Rw=ENV('MC_MS_RW',18.3-2.0-0.26);L=ENV('MC_MS_L',1064.0);a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
+t=ENV('MC_MS_T',0.440098);gap=ENV('MC_MS_GAP',0.0);p=t+gap;ra=ENV('MC_MS_RA',5.4733);Rw=ENV('MC_MS_RW',20.4411-2.234-0.29042);L=ENV('MC_MS_L',1188.488);a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9 (each x1.117 since 31 October 2026, the plate's scale: 0.394, 1064, 18.3, 2.0, 0.26, 4.9 as read)
 # (a variant's: MC_MS_RW the radius its outer coil lies on, the barrel's inside less any brace; MC_MS_EYE the eye's far end; MC_MS_B its width, mm, which only scales the torque: given,
 # the table also carries its most torque, M1 in N·m, EI from MC_MS_E; MC_MS_SET its free curve's turns' radii scaled. The Wempe's spring: tools/wempe_mainspring.py sets them)
 B_MM=os.environ.get('MC_MS_B');SET=ENV('MC_MS_SET',1.0)
-EYE=ENV('MC_MS_EYE',9.4)   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
+EYE=ENV('MC_MS_EYE',10.4998)   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
 HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
 # a variant's outer end (the Wempe's: tools/wempe_mainspring.py), each unset for the Hamilton, whose outer end lies along its brace: MC_MS_BLOCK="d,l", the strip's last l mm
 # lying on a hook block d deep off the wall (its end held there, as on the brace); MC_MS_STEG="phi,w,ri,ro", a bar standing off the wall phi rad back from the strip's end
@@ -168,7 +168,7 @@ def write(d):
         '   0.05s); r: each state\'s radius at those s (mm, in 0.0005s), little-endian uint16, base64; T0: the turns at which the held spring pulls nothing;\n'
         '   pull: its torque at each state against the most (the energy\'s slope); M1: that most, N·m */\n'
         'const MSHAPE='+json.dumps(dict(T0=round(d['T0'],4),T=T,pull=[round(float(x/tq.max()),4) for x in tq],n=len(g),s=enc(g,0.05),r=enc(rs.ravel(),0.0005),
-          M1=round(float(tq.max())*E_GPA*1e3*float(B_MM or 13.55)*t**3/12/2/(2*math.pi)/1000,6)),separators=(',',':'))+';\n')   # M1: the most torque, N·m (EI/2 times the energy's slope a radian), the width MC_MS_B's or the Hamilton's 13.55
+          M1=round(float(tq.max())*E_GPA*1e3*float(B_MM or 15.13535)*t**3/12/2/(2*math.pi)/1000,6)),separators=(',',':'))+';\n')   # M1: the most torque, N·m (EI/2 times the energy's slope a radian), the width MC_MS_B's or the Hamilton's 13.55
     JS.write_text(js,encoding='utf-8',newline='\n');print(f'{JS.name}: {len(st)} states, {len(g)} points along the strip, {len(js)//1024} KB; theta rebuilt from r misses the end by {err:.4f} rad at most')
 def stored():
     """the table's states (JS) on the solver's grid: (T0, [(T, r at N+1 = 48 T + 1 angles from the inner end)])"""
