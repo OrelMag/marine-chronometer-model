@@ -41,7 +41,7 @@ EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.user
     for(let i=0;i<n;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);pos[3*i]=v.x;pos[3*i+1]=v.y;pos[3*i+2]=v.z;}
     const I=o.geometry.index?Uint32Array.from(o.geometry.index.array):Uint32Array.from({length:n},(_,i)=>i);out.push({pos:b64(pos),idx:b64(I),thread:!!o.userData.thread});});
   const pud={};for(let q=root;q;q=q.parent)for(const[k,v]of Object.entries(q.userData||{}))if(!(k in pud)&&(typeof v==='number'||Array.isArray(v)&&v.every(x=>typeof x==='number')))pud[k]=v;   /* its groups' numbers (the drum's chain slot, as the page laid it) */
-  return{meshes:out,rotY,gearRot,pud};}"""
+  return{meshes:out,rotY,gearRot,rootRot:root.rotation.y,pud};}"""
 
 # The pose the check freezes the page in (step 7b, 29 October 2026), as fine.py and audit.py freeze it: the page's own update() replaced by a no-op, then called once
 # with this state, so a part that moves or flexes stands where its recipe is drawn, whatever the clock or the page's last frame left it:
@@ -137,11 +137,14 @@ def check(r,pm):
     M=r.to_page.copy()
     if getattr(r,'spin',False) and pm.get('gearRot') is not None:   # a wheel turned on its arbor by the page's phase: the whole recipe turned about Z by it
         a=pm['gearRot'];Rz=np.eye(4);Rz[:2,:2]=[[math.cos(a),-math.sin(a)],[math.sin(a),math.cos(a)]];M=M@Rz
+    if getattr(r,'root_turn',0):   # a part fused into its gear mesh's frame (the cannon tube): the page's mesh is that mesh's own frame, turned by its phase from the group's, in which the recipe is drawn
+        a=r.root_turn*pm.get('rootRot',0.0);Rz=np.eye(4);Rz[:2,:2]=[[math.cos(a),-math.sin(a)],[math.sin(a),math.cos(a)]];M=M@Rz
     if pm.get('rotY'):   # the page turns each screw's slot by its own angle about the axis (page y)
         a=pm['rotY'];Ry=np.array([[math.cos(a),0,math.sin(a)],[0,1,0],[-math.sin(a),0,math.cos(a)]]);M[:3,:3]=Ry@M[:3,:3];M[:3,3]=Ry@M[:3,3]
     from recipes import CutLeaves
     for o in r.ops():   # a pinion's leaves at the page's phase (its gear mesh's turn about the arbor)
-        if isinstance(o,CutLeaves) and pm.get('gearRot') is not None and not getattr(r,'spin',False):o.phase=pm['gearRot']   # a spun recipe turns whole (below)
+        if isinstance(o,CutLeaves) and getattr(r,'root_turn',0):o.phase=pm.get('rootRot',0.0)   # drawn in the group's frame: the leaves at the phase
+        elif isinstance(o,CutLeaves) and pm.get('gearRot') is not None and not getattr(r,'spin',False):o.phase=pm['gearRot']   # a spun recipe turns whole (below)
     fa=[o for o in r.ops() if getattr(o,'free_angle',False)]
     if fa:   # a hole at a free angle: its direction read off the page's own walls (the page surface inside the hole's band, well inside the part's radius)
         import trimesh as _t
@@ -203,7 +206,7 @@ def check(r,pm):
     feats=[(getattr(o,'key',''),o.at) for o in r.ops() if isinstance(o,(Hole,Cone)) and getattr(o,'at',None) is not None]
     def where(q):
         c=ixf(M,q[None])[0]
-        if not feats:return f'r {math.hypot(c[0],c[1]):.2f} z {c[2]:.2f}'
+        if not feats:return f'r {math.hypot(c[0],c[1]):.2f} at {math.degrees(math.atan2(c[1],c[0])):.0f}° z {c[2]:.2f} (x {c[0]:.3f}, y {c[1]:.3f})'
         k,a=min(feats,key=lambda f:math.dist(f[1],c[:2]));return f'({c[0]:.2f}, {c[1]:.2f}, z {c[2]:.2f}) near hole {k} ({math.dist(a,c[:2]):.2f} off)'
     allp=np.concatenate([Pr[kr],Pp[kp]]);alld=np.concatenate([dr,dp]);o=np.argsort(-alld);worst=[];seen=[]
     exq=np.zeros(len(allp),bool);C=ixf(M,allp);res['expected']=[]
