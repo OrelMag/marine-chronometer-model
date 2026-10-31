@@ -4,7 +4,7 @@ bar's slot across the small end: ink lines' centres found to a fraction of a pix
 the slot's two walls, where each wall's line ends at either end, and where the hidden arcs cross it, each put in mm from the axis in the slot's frame (u along
 it, v across). About a second. Written 31 October 2026 (the owner's question: where does the slot break into the groove?).
 
-    python fusee_sheet.py [--png OUT.png]
+    python fusee_sheet.py
 """
 import sys,json,math,numpy as np
 from PIL import Image,ImageDraw
@@ -38,41 +38,18 @@ def ring(c0,rlo,rhi,angs):
         if h:r=min(h,key=lambda r:abs(r-(rlo+rhi)/2));P.append((c0[0]+r*math.cos(a),c0[1]-r*math.sin(a)))
     return circfit(P),P
 def main():
-    c0=(287.,296.)   # Schnitt C-D's centre, as first read by eye (the bore's middle)
-    angs=[math.radians(a) for a in range(-30,40,4)]+[math.radians(a) for a in range(300,330,4)]   # the right side, clear of the slot, the dimensions and the break
-    (bx,by,br,bs),Pb=ring(c0,38,50,angs)
-    (rx,ry,rr,rs),Pr=ring((bx,by),85,100,angs)
-    print(f'bore circle   centre ({bx:.2f},{by:.2f}) r {br:.2f} px (rms {bs:.2f}, {len(Pb)} pts)')
-    print(f'recess circle centre ({rx:.2f},{ry:.2f}) r {rr:.2f} px (rms {rs:.2f}, {len(Pr)} pts)')
-    k=rr/7.5;print(f'scale from the recess Ø 15: {k:.3f} px/mm; the bore gives {br/3.5:.3f} (Ø 7 H7)')
-    cx,cy=rx,ry
-    # the slot's walls: vertical lines left of the centre; their x by profiles along rows clear of the text
-    W=[]
-    for y in range(225,330,3):
-        h=[c for c,pk,w in runs(G[y,190:260]) if pk>0.4];W.append([190+c for c in h])
-    xs=np.array([w for w in W if len(w)==2]);xa,xb=xs[:,0].mean(),xs[:,1].mean()
-    print(f'walls at x {xa:.2f} and {xb:.2f} (sd {xs[:,0].std():.2f}, {xs[:,1].std():.2f}, {len(xs)} rows): width {(xb-xa)/k:.3f} mm, near wall {(cx-xb)/k:.3f} from the axis, far wall {(cx-xa)/k:.3f}')
-    # each wall's line along its length: where it is dark (the line drawn) from top to bottom
-    out={}
-    for nm,x in (('far',xa),('near',xb)):
-        col=G[:,int(round(x))-1:int(round(x))+2].max(1);on=col>0.35
-        ys=np.where(on[100:500])[0]+100
-        segs=[];s=ys[0];p=ys[0]
-        for y in ys[1:]:
-            if y>p+2:segs.append((s,p));s=y
-            p=y
-        segs.append((s,p))
-        segs=[(a,b) for a,b in segs if b-a>=3]
-        out[nm]=segs
-        print(f'{nm} wall (v {(cx-x)/k:.2f}) drawn over y: '+', '.join(f'{a}-{b} (u {(cy-a)/k:+.2f} to {(cy-b)/k:+.2f}, r {math.hypot((cy-a)/k,(cx-x)/k):.2f}-{math.hypot((cy-b)/k,(cx-x)/k):.2f})' for a,b in segs))
-    # the arcs that cross the slot between its walls (hidden or drawn): their radius on the slot's middle line
-    xm=(xa+xb)/2;col=G[:,int(round(xm))-1:int(round(xm))+2].mean(1)
-    for c,pk,w in runs(col[100:500],0.25):
-        y=100+c;u=(cy-y)/k;v=(cx-xm)/k;print(f'  across the slot\'s middle at y {y:.1f}: u {u:+.2f} r {math.hypot(u,v):.2f} mm (darkness {pk:.2f}, {w} px)')
-    if '--png' in sys.argv:
-        im=Image.open(IMG).convert('RGB');d=ImageDraw.Draw(im)
-        for P,col_ in((Pb,(255,0,0)),(Pr,(0,160,0))):
-            for x,y in P:d.ellipse([x-1,y-1,x+1,y+1],outline=col_)
-        for x in(xa,xb):d.line([(x,100),(x,500)],fill=(0,0,255))
-        im.crop((120,60,460,560)).resize((1020,1500)).save(sys.argv[sys.argv.index('--png')+1])
+    """the bore's and the recess's crossings on the column and row through Schnitt C-D's centre (x 286, y 295: the centre line and the horizontal axis), each a pair
+    either side of the centre, their spans the circles' diameters; the slot's walls on rows clear of the text and the hatch (y 270-320), nearest the sheet's 4 and 6"""
+    col=G[:,284:289].mean(1);row=G[293:298].mean(0)
+    cy=[180+c for c,pk,w in runs(col[180:420])];cx=[140+c for c,pk,w in runs(row[140:440])]
+    pick=lambda L,lo,hi:[v for v in L if lo<=v<=hi]
+    bt,bb=pick(cy,250,268)[0],pick(cy,325,340)[0];rt,rb=pick(cy,205,222)[0],pick(cy,376,390)[0]
+    print(f'column x 286: bore {bt:.2f}-{bb:.2f} (Ø {bb-bt:.2f} px), recess {rt:.2f}-{rb:.2f} (Ø {rb-rt:.2f} px)')
+    print(f'  scale: the Ø 7 bore {(bb-bt)/7:.2f} px/mm, the Ø 15 recess {(rb-rt)/15:.2f} px/mm; the centre y {(bt+bb)/2:.2f} / {(rt+rb)/2:.2f}')
+    prof=G[270:345,200:250].mean(0)   # the walls run straight down the view: the columns' darkness over these rows, each wall a peak
+    def peak(lo,hi):
+        i=lo-200+int(np.argmax(prof[lo-200:hi-200]));w=prof[i-1:i+2];return 200+i-1+float((w*np.arange(3)).sum()/w.sum())
+    xa,xb=peak(206,220),peak(232,245)
+    print(f'slot walls x {xa:.2f} and {xb:.2f}: {xb-xa:.2f} px for the 2 H8 ({(xb-xa)/2:.2f} px/mm); the near wall {286.1-xb:.2f} px from the centre line (its 4: {(286.1-xb)/4:.2f} px/mm)')
+    print('the drawing is not drawn to one scale: its written figures decide, its lines read to about ±0.5 mm')
 main()
