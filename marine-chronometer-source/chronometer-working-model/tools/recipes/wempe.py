@@ -1413,3 +1413,12 @@ RECIPES.update({'cannon':cannon,'minuteHand':_ex(minuteHand,{'at':(0,3.0),'r':0.
     {'at':(0,1.5),'r':0.6,'max':0.04,'why':_ROOT}),'collet':collet,'dial':dial,'dialScrew':dialScrew,'dialPin':dialPin})
 
 RECIPES.update({'changePipe':changePipe,'hourPipe':hourPipe,'udHub':udHub,'changeWheel':changeWheel,'hourWheel':hourWheel,'udWheel':udWheel,'changePinion':changePinion,'udPinion':udPinion})
+
+# ================= Batch 11, the slice done (30 October 2026): the case's screws of one size each (case.js; dims.js CASE) =================
+def caseScrew(key,hn,title,tag,material,src,notes=()):
+    c=W()['WD']['CASE'][tag];return screw(key,hn,title,c[0],c[1],c[2],c[3],material,src,notes)
+def screwKr():return caseScrew('screwKr','WN-kr','Gimbal ring bracket screw (WN-kr, by the case sheets label)','kr','steel (the case sheets)','dims.js CASE.kr (05 01, the gimbal ring bracket: Ø 4.8 head × 1.6, M2.5 × 7.25, estimated from the elevation)',["Head and shank are read off the case elevation (estimated); the thread is the case's own size."])
+def screwHg():return caseScrew('screwHg','WN-hg','Hinge screw (WN-hg)','hg','steel (the case sheets)','dims.js CASE.hg (51 00 10, the hinge: Ø 6 head × 1.6, M3.5 × 16.5, estimated)',["A wood screw in the box; drawn as the kit's machine screw, so the recipe makes it so."])
+def screwKh():return caseScrew('screwKh','WN-kh','Key holder screw (WN-kh)','kh','steel (the case sheets)','dims.js CASE.kh (51 00 11, the key holder: Ø 2.2 head × 1.0, M1.2 × 10, estimated)',["A wood screw in the box; drawn as the kit's machine screw."])
+def screwZg():return caseScrew('screwZg','WN-zg','Transit lock pivot screw (WN-zg)','zg','steel (the case sheets)','dims.js CASE.zg (05 01, the transit lock: Ø 9 head × 2, M6 × 12, estimated)',['Its head Ø 9 is estimated (case.js).'])
+RECIPES.update({'screwKr':screwKr,'screwHg':screwHg,'screwKh':screwKh,'screwZg':screwZg})

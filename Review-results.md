@@ -424,6 +424,7 @@ Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --ch
 - **Set-up ratchet 05 07 00-3:** its height still counts the barrel bridge as 3.32 thick (3.30 since the owner's correction), so it stands 0.07 off the bridge, not 0.05.
 - **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it.
 - **Escape wheel's upper endstone screws WN-es:** the shank's end stands 0.032 up into the slot.
+- **The hands (batch 10, 30 October 2026):** each blade's root meets its boss as a separate closed piece (an 8-segment arc against the 72-sided wall, a 0.003 gap; 0.07-0.10 at isolated samples), the hour hand's root wedge lies on a cell-wise triangulation of the bevel's cone (about 0.1), and the seconds hand's tail ramp is sampled 0.027 off the table's rows.
 
 ## Smaller issues
 

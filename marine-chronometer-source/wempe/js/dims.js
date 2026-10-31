@@ -164,7 +164,10 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     SEC.post=(/** @type {number} */y)=>(SEC.bo.pr-(y-swYs-SEC.bo.off)/SEC.bo.s)/2-SEC.bo.tight;   /* the post's 1:90 (train.js), carried on past its end, 0.0055 tight on the radius */
     const DL={RH:50.5,rb:[3.0,1.6,0.85],pin:{a:6,r:0.5},sm:{a:185.7,r:0.5},scr:[354,120,240],sc:{r:0.55,sr:0.9,sd:1.0},ps:{y0:3.7,r:0.555,r1:0.49,t:0.1},ds:{r:0.85,h:0.8,len:2.3,rs:0.5}};
     return{DY0,DT,DY1,DR,GLASS,rSh,M_CH,M_HR,M_UD,CN,CHW,HRW,UDW,UDP,MIN,HOUR,UDH,SEC,YS0,YH1,YM0,YU1,DL,SK};};
-  return{H,NO,FA,BAR,FU,MW,
+  /* the case's screws of one size each, [head radius, head height, shank length, thread radius], here for the recipes (30 October 2026; case.js's comments give each one's place):
+     the ring's pivot-bracket screws WN-kr, the hinge screws WN-hg, the key holder's WN-kh, the transit lock's pivot screw WN-zg */
+  const CASE={kr:[2.4,1.6,7.25,1.25],hg:[3,1.6,16.5,1.75],kh:[1.1,1.0,10,0.6],zg:[4.5,2,12,3]};
+  return{H,NO,FA,BAR,FU,MW,CASE,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely

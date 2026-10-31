@@ -576,7 +576,7 @@ const WCASE=(()=>{
       const rs=w=>sweepS([{a0:-0.75*Math.PI,a1:1.25*Math.PI,p:[[RI,yb],[RO,yb],[RO,yt],[RI,yt]]}],[],{holes:RH,win:w,full:true,hs:3.5}),rgG=rs(null),rgS=rs({a0:LKS[0],a1:LKS[1],y0:LKY-0.5,y1:LKY+3});
       const brG=sweepS([{a0:-q,a1:q,p:[[RO,YP-7.7],[RO+1.3,YP-7.7],[RO+3.3,YP-5.7],[RO+3.3,YP+5.7],[RO+1.3,YP+7.7],[RO,YP+7.7]]}],[],{holes:[tp({a:0,ra:RO,rb:RO+3.3}),...[-1,1].map(s=>({a:s*ss,y:YP,r:1.41,ra:RO,rb:RO+3.3}))],hs:2.6});
       for(const[V,mt,G]of[['last first 1943 -3955',CB,rgS],['6mx',M.brass,rgG],['3955',BAK,rgS]]){const g=rv(rgP,V);tag(mesh(g,G,mt),'050100-5');tag(mesh(g,brG,mt),'050100-6');}   /* Wempe 3955's black (above); the 6MX's without the slot: its lever over the ring (below) */
-      for(const s of[-1,1])tag(screw(along(rgP,[77.3*Math.cos(s*ss),YP,77.3*Math.sin(s*ss)],[-Math.cos(s*ss),0,-Math.sin(s*ss)]),0,0,0,2.4,1.6,7.25,1.25,M.steel),'WN-kr');   /* to r 70.05, 0.05 inside the ring's inner face */
+      for(const s of[-1,1])tag(screw(along(rgP,[77.3*Math.cos(s*ss),YP,77.3*Math.sin(s*ss)],[-Math.cos(s*ss),0,-Math.sin(s*ss)]),0,0,0,...WD.CASE.kr,M.steel),'WN-kr');   /* to r 70.05, 0.05 inside the ring's inner face */
       for(const s of[-1,1]){const g=along(rgP,[0,YP,s*RO],[0,0,-s]),sw=tag(screw(g,0,0,0,4.6,2.8,RO-64.4,2.5,M.brass),'WN-79');   /* its head on the ring's outside, the shank to r 64.4 */
         mesh(sw,KIT.latheF([[0,RO-64.5],[1.5,RO-64.5],[1.5,RO-60],[1.3,RO-59.8],[0,RO-59.8]].map(([r,y])=>V2(r,y)),28),M.brass);   /* the tip, from 0.1 in the shank to r 59.8, its end chamfered 0.2 */
         tag(mesh(g,knurl(11,0.35,2.4,120,2.5),M.brass,0,RO-RI+(RI-Math.sqrt(RI*RI-121)),0),'WN-400');   /* its face at r 69.13, where its rim meets the ring's curved inside (70 less the curve's 0.87 over its 11) */}}
@@ -654,7 +654,7 @@ const WCASE=(()=>{
         const st=polyGeo([[0,-50],[6,-50],...SB.map(([z,o])=>[o,-z]),...SB.slice().reverse().map(([z,o])=>[o,z]),[6,50],[0,50],[0,40],...SI.map(([z,o])=>[o,z]),...SI.slice().reverse().map(([z,o])=>[o,-z]),[0,-40]],18);st.translate(0,-9,0);const sm=mesh(g,st,MC.alu);   /* the strip seen from below: [off the side, along it] */
         /* the oval 70 × 30 under the strap is the finger recess in the wall (sideWall, above), 8.5 under the strap's middle: until 25 October 2026 it was drawn as an aluminium
            pressing 3 thick hung 12 under the strap, fused with it */
-        for(const z of[-45,45])tag(screw(along(g,[6,0,z],[-1,0,0]),0,0,0,3,1.6,16.5,1.75,M.steel),'WN-hg');}
+        for(const z of[-45,45])tag(screw(along(g,[6,0,z],[-1,0,0]),0,0,0,...WD.CASE.hg,M.steel),'WN-hg');}
       /* the hinge: one piano hinge across the back (no sheet: every photographed box has it; Lange 1947 from above, drouot_33810142_lange1947_2.jpg, 4.48 px/mm by the box's
          185: 148 long, 664 px, its leaves let into the box's and the lid's parting faces, the box's showing 6.7 over the wall, five screws about 33 apart; Wempe 6161's, Wempe
          5377's and Greenwich's wartime Wempe's the same, brass or black): likely. Its leaves 0.6 thick, 6.5 wide over the walls from the knuckle's tangent at the back's face, the knuckle Ø 5 on the axis
@@ -691,7 +691,7 @@ const WCASE=(()=>{
         const cup=[];for(let i=0;i<96;i++){const a=i/96*TAU;cup.push([KX+9.75*Math.cos(a),KZ+9.75*Math.sin(a)]);}
         tag(mesh(bxW,polyGeo(cup,5,[[KX,KZ,5.5],[sIn[0],sIn[1],0.6],[sOut[0],sOut[1],0.6]]),M.brass,0,KH-5,0),'Schluesselhalter.F');
         const rg=new THREE.Group();rg.rotation.x=Math.PI;bxW.add(rg);
-        tag(screw(rg,sIn[0],-sIn[1],-KH,1.1,1.0,10,0.6,M.steel),'WN-kh');tag(screw(rg,sOut[0],-sOut[1],-KH,1.1,1.0,10,0.6,M.steel),'WN-kh');}}
+        tag(screw(rg,sIn[0],-sIn[1],-KH,...WD.CASE.kh,M.steel),'WN-kh');tag(screw(rg,sOut[0],-sOut[1],-KH,...WD.CASE.kh,M.steel),'WN-kh');}}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
     /* the lid's stay (below, in the lid): the bar on its pivot, turned each frame to lie on its pin in the box's wall (stayAt); the pin a brass stud Ø 2 out of the wall */
     const stayP=new THREE.Group(),stayPin=[YL-STC,-BW+STD];
@@ -743,7 +743,7 @@ const WCASE=(()=>{
       const A=[[-5,ya],[-w32,32],[w32,32],[5,ya],...arc([0,0],6,Math.atan2(ya,5),Math.atan2(ya,-5),24).slice(1,-1)];
       const B=[[-w32,32],[-wE,yE],...arc([0,32],7,Math.atan2(yE-32,-wE),Math.atan2(yE-32,wE),16).slice(1,-1),[wE,yE],[w32,32]];   /* plan [across, along]: the hole at 0; A to 32 along, B its last 7 (thinned 0.2) */
       const geo=solidGeo([{loop:A,y0:0,y1:4,F:[{p:C([0,0],3.1,48),a:0,b:3.5},{p:C([0,0],3.1,48),q:C([0,0],3.6,48),a:3.5,b:4},{p:C([0,14],1.77,32),a:0,b:4}]},{loop:B,y0:0,y1:3.8}]);geo.rotateX(Math.PI/2);tag(mesh(tz,geo,MC.black),'P510002-2');   /* hanging down the lid's front, 4 thick out from it */
-      tag(screw(along(tz,[0,0,4],[0,0,-1]),0,0,0,4.5,2,12,3,M.steel),'WN-zg');   /* its pivot screw, M6 in the Ø 6.2, head Ø 9 (estimated) */
+      tag(screw(along(tz,[0,0,4],[0,0,-1]),0,0,0,...WD.CASE.zg,M.steel),'WN-zg');   /* its pivot screw, M6 in the Ø 6.2, head Ø 9 (estimated) */
       const kn=tag(new THREE.Group(),'WN-zk');kn.position.set(0,-14,4);tz.add(kn);const kg=KIT.latheF([V2(0,0),V2(1.75,0),V2(1.75,1.5),V2(3,1.5),V2(3,6),V2(2.5,7),V2(0,7)],24);kg.rotateX(Math.PI/2);mesh(kn,kg,MC.knob);}   /* its knob in the M3.5 (estimated) */
     /* its keeper on the box's front (estimated): a strap 16 wide, 1.5 thick, 4.4 off the front over the tongue's end */
     {const g=tag(new THREE.Group(),'Schliessblech');bxW.add(g);box(g,18,10,1.5,0,YL-26,BW+5.15,M.steel);for(const s of[-1,1])box(g,3,10,4.4,s*7,YL-26,BW+2.2,M.steel);fuse(g.children.slice());}   /* one bent strap, one mesh (fuse) */
