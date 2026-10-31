@@ -67,7 +67,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     const CW0=FRC,CW1=FRC+2;
     const DP={t:0.8,R:21.05/2,ch:0.65,hb:6.109/2,cl:0.4,ca:60,sp:0.9,sk:1.575,skd:0.7,scr:{r:6,off:1},at:[0,0]};
     const DP0=S-DP.t;
-    const SLD=1.525,SLS=1.125,SLR=9.30;   /* SLR: toward the bar's upper end the slot is 1,5 deep only inside a circle about the axis, 1,1 outside it (05 06 04-2's Schnitt C-D draws the step as a dashed arc, scaled about r 9.45 on a scan whose scale varies ±10 %): taken at the last turn's "Grund" 9,30, so the deep floor stays over the turn below with 0.17 of metal (a straight step at u 8.0 until 31 October 2026 broke into it: the owner's pictures) */   /* the stop bar's slot "1,5+0,05 tief" and toward the bar's upper end "1,1+0,05 tief" (05 06 04-2), drawn at their middles: at 1.5 the floor stood 6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick (31 October 2026) */
+    const SLD=1.525,SLS=1.125;   /* the stop bar's slot "1,5+0,05 tief" on the bar's lower end's side of the small end's recess and "1,1+0,05 tief" on its upper end's (05 06 04-2's Schnitt C-D, each written in its own half; fusee.js, SB), drawn at their middles: at 1.5 the floor stood 6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick (31 October 2026). Until 31 October 2026 the upper side 1.5 deep inside r 9.30 (SLR), the hidden arcs read as the step */
     const DTU=yD-6.2,DTL=DTU+2,DTT=DTU+1;
     const PHI0=0,PINA=PHI0-0.17,PINR=16.8;
     DP.at=sh(DP.scr.r,PINA+Math.asin(DP.scr.off/DP.scr.r));
@@ -112,7 +112,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       arc([0,0],1.5,Math.atan2(1.45,-0.4),TB,8);
       o.push(T1);for(let i=1;i<8;i++){const a=TB+(-Math.PI/2-TB)*i/8;o.push([TC[0]+0.2*Math.cos(a),TC[1]+0.2*Math.sin(a)]);}
       return{B:CKB,N:CKN,T:CKT,C3,r3:3,h0,q8,r8:8,BB:[-0.4,1.45],rb:1.5,TC,T1,TB,rt:0.2,o,t:1.82,hole:{r:0.6045,cr:1.1,cd:0.42,sr:0.85,sd:0.25}};})();
-    const SB={N:4.01,F:5.99,d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05,t:1.45,pin:{r:0.25,z:3.5,dy:0.5},o:/** @type {number[][]} */([])};
+    const SB={N:4.01,F:5.99,d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:0,ub:0.8,tt:1.05,t:1.45,pin:{r:0.25,z:3.5,dy:0.5},o:/** @type {number[][]} */([])};
     SB.o=(()=>{const SBN=SB.N,SBF=SB.F,o=[],c=[SB.lo+SB.rt,SBN+SB.rt],e=Math.asin((SBN+SB.rr-SBF)/SB.rr);
       for(let i=0;i<=8;i++){const a=Math.PI*(150+120*i/8)/180;o.push([c[0]+SB.rt*Math.cos(a),c[1]+SB.rt*Math.sin(a)]);}
       for(let i=0;i<=16;i++){const a=-Math.PI/2+(Math.PI/2-e)*i/16;o.push([SB.ru+SB.rr*Math.cos(a),SBN+SB.rr+SB.rr*Math.sin(a)]);}
@@ -126,7 +126,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       arc([0,0],2.5,Math.PI/2,TAU+Math.atan2(-2.1,1.366),24);o.pop();
       const FX=H[10],DX=H[4],A=(()=>{const s=[-10.8,-20.9],w=[FX[0]-DX[0],-(FX[1]-DX[1])];return Math.atan2(w[1],w[0])-Math.atan2(s[1],s[0]);})();
       return{E:DTE,E1:DTE1,C9,r9:9,h0:[1.366,-2.1],C18,r18:18,rb:2.5,o,A,SA:[8.6,1.403],sa:30,hole:{r:1.125,tp:140}};})();
-    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,SLR,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR};})();
+    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR};})();
   return{H,NO,FA,BAR,FU,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
