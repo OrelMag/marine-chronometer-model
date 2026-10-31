@@ -467,6 +467,65 @@ thread zone, so each is an `expect` with its volume.
 - **The hub's and the masses' screws WN-10 and WN-12.** Not the kit's `screw()`: WN-10's head is a 90° countersunk lathe with a slot box, WN-12's head and slot
   are bent onto the mass's round side (`onMass`). Small, but each needs its own literals lifted.
 
+### Batch 10 (30 October 2026): the motion work, the up-and-down work, the hands and the dial; 17 recipes pass, and four case screws
+
+**The lift, the page unchanged.** `dial.js`'s sizes moved into `dims.js` as `WD.MW(PPT, yC, crown, swYs)`, a pure function written with dial.js's own expressions in its order (the
+centre arbor's journal C, the shank's crown and the seconds arbor's shoulder are train.js's, passed in): the dial's disc, the cannon tube `CN` (with its punch's dents `dn`),
+the change wheel `CHW` and hour wheel `HRW`, the up-and-down wheel `UDW` and its pinion `UDP`, the hands `MIN`, `HOUR`, `UDH`, `SEC` (their half-width and thickness tables, each
+with its boss's figures `bo`), the riveting sink `SK`, the wheels' thickness and spokes, and the dial's holes, pin and screws `DL`. dial.js reads them (`const MWD=WD.MW(...)`);
+the teeth outlines stay train.js's `teeth(...)`, which dial.js and the recipes both call with the argument lists `MW` holds (`wheelA`, `pinA`). `wempe_load.js` is untouched
+(its `{train:true}` already gives `WTRAIN`). Verification of the lift: see the verdicts below.
+
+| Part | Operations | Surface apart (max) |
+|---|---|---|
+| Change wheel pipe 05 02 02-2, hour wheel pipe 05 02 03-2, up-and-down wheel pipe 05 02 04-2 (the foot's riveting flare shown finished) | 3 each | 0.0059, 0.0048, 0.0082 |
+| Change wheel 05 02 02-1 (z 56), hour wheel 05 02 03-1 (z 54), up-and-down wheel 05 02 04-1 (z 120, five spokes) with the 30° riveting sink | 4, 4, 5 | 0.0045, 0.0036, 0.0055 |
+| Change pinion 05 02 02-3 (18 leaves), up-and-down pinion 05 02 00-5 (12 leaves, bore 1:70) | 3 each | 0.0033, 0.0018 |
+| Cannon tube with its pinion 05 05 03-3 (14 leaves, the half-round groove r 0.4, the square 2.6155 with its corners turned Ø 3.45, the sphere crown, the bore on the shank's 1:80, the three punch dents added at assembly) | 10 | 0.0121 |
+| Minute hand 05 02 00-1 (the square hole a ruled loft of the clipped square, 1:70; the flange's r 0.4 edge; the blade as the plan prism cut by a turned profile of its thickness) | 5 | 0.0305 recipe to page; 0.0976 page to recipe at the blade's root corners, expected (below) |
+| Hour hand 05 02 00-2 (pipe, bevelled flange, the blade's root a wedge on the cone) | 4 | 0.0243; 0.0979 expected |
+| Up-and-down hand 05 02 00-3 | 3 | 0.0227; 0.0741 expected |
+| Seconds hand 05 02 01-1 (pointer and tail from their tables) | 5 | 0.0265 (the tail's step); 0.0209 |
+| Seconds hand collet 05 02 01-2 (bore on the post's 1:90) | 3 | 0.0036 |
+| Dial 05 02 00-4 (disc, three holes, the pin's and the Ø 1 under the paint, three screws' holes with 1.8 × 1.0 sinks) | 12 | 0.0065 |
+| Dial screw WN-10.d, dial pin | 6, 2 | 0.0182, 0.0068 |
+
+The hands are one solid in the recipe (a plate milled to the outline of the boss's flange and the blade, the underside relieved, the top turned down by a profile of revolution
+about the arbor: the page's blade top falls with the distance from the arbor, so it is exactly that), where the page fuses separate closed pieces. The printed face is not a
+part: it is the etched printing, `wempe/dials/*.svg`.
+
+**Verdicts (30 October 2026).** `recipes.py --check` on all 101 made parts: every one passes (1,407 s on a machine other sessions were loading). Page hashes (`recipes_pagehash.py`, 17 dial.js
+lines and, for the case, WN-kr, WN-hg, WN-kh, WN-zg), in each of last, first, 3955, 6mx, 1943: the page unchanged within 1e-5 mm. Byte-identical output before and after (the elapsed-time
+lines aside) from `wempe_motionwork.js`, `wempe_transmission.js`, `gearing.js --model wempe --quick`, `wempe_escapement.js` and `wempe_strength.js`; `dialsvg.py` up to date;
+`invariants.py --model wempe` ok; `massprops.py --model wempe` up to date (`gimbals_wempe.json` not stale) and `gimbals.js --model wempe --quick` exit 0; the Wempe type check clean.
+`smoke.py --model wempe` reports problems on this machine under load, the same steps on the unmodified source (4 problems there: the walkthrough left on, the wind from run down
+not finishing, a train still held after winding and twisting, the detent card's gold spring not in the link) and two to five after, varying run to run with the machine's load
+(the extra "Contacts off ... still in the link" was in two runs, not the third); nothing in them touches the dial or the case.
+
+**A gap found and closed in the page hash.** `recipes_pagehash.py` compares only the lines the page's movement group holds; a line the case holds (its meshes are under `__BX.root`, not
+`__mv`) was saved and compared as empty, so a first case verdict of "unchanged" meant nothing. The export now looks in `__BX.root` when a line is not in the movement, and the case
+hashes were taken again from the unmodified source and after.
+
+**Engine changes.** `recipes.py` reads the root mesh's own turn (`rootRot`, in the export) for a recipe flagged `root_turn`: the cannon tube is fused into its pinion's frame, where
+its leaves are unturned and the square is turned by minus the phase, so the recipe is drawn in the group's frame (the square on the axes) and turned into the page's by it.
+The worst places now print the angle and the part-frame x, y. A recipe may set `box_tol` (a round the page draws as a polygon: the Ø 9 head of WN-zg on 32 sides is 0.022 inside its circle).
+
+**Page faults, recorded in `expect`** (also in the table below): the four hands' blade roots against the boss. The page's blade is a closed piece whose root is an 8-segment arc
+at the boss's radius against the boss's 72-sided wall, a hairline gap the check cannot call an internal face (0.07-0.10 at isolated samples); the hour hand's wedge underside is a
+cell-wise triangulation of the cone (about 0.1); the seconds hand's tail ramp from 0.3 to 0.5 is sampled by the page at its stations 6.35 / 6.5 / 6.55 / 6.6, not at the table's
+6.4 and 6.6 (0.027).
+
+**Batch 11, the case: four screws done, the rest deferred.** `case.js` (1,108 lines) is the bowl (cast, with a bayonet-and-thread rim, bored for the brackets by swept holes), the bezel
+(threaded, knurled), the gimbal ring with its swept holes and pivots, the box (birch: joinery), hinges, the maker's plate and the 6MX's fittings, about 30 lines of the parts list.
+Done: the screws of one size each, **WN-kr** (the ring's bracket screws), **WN-hg** (the hinges'), **WN-kh** (the key holder's) and **WN-zg** (the transit lock's pivot screw): their
+sizes moved into `dims.js` as `WD.CASE` (`[head radius, head height, shank length, thread radius]`), `case.js` spreads them into `screw()`, and the four recipes are the kit screw's
+(`screw()` in wempe.py); surface apart (max) 0.012, 0.015, 0.014 and 0.0225 (WN-zg: its Ø 9 head is a 32-sided polygon on the page, 0.0225 inside the circle the
+recipe turns, in `expect` with `box_tol` 0.03). Left, and why: the bowl 050100-1, the bezel 050101-2, the brackets 050100-3/-4, the closing plate 050100-2 and the gimbal ring 050100-5/-6 need a recipe
+vocabulary the engine has not: a helical thread of the case's profile on a cast part (`thread()` in case.js), a knurl, and a curved hole swept through a ring (`sweepS`): the page draws
+each as a sweep that B-rep operations reproduce only by approximating it, and nothing was approximated. WN-79, WN-80, WN-71, WN-72, WN-78, WN-ur, WN-ro and DIN96 are one line each
+on several sizes or with a tip or knurl of their own, the page's first mesh not the only one; they want a line per size first. The glass (050101-1, the lid glass) would be a
+bought line; the wooden box, its hinges and the maker's plate are made elsewhere (joinery, a stamping), not machined from the model.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
@@ -479,6 +538,10 @@ thread zone, so each is an `expect` with its volume.
 | Set-up ratchet 05 07 00-3 | its height | 0.02 | RS0 counts the barrel bridge 3.32 thick (WD.FU.SR.BB, lifted as fusee.js had it), but the bridge is 3.30 since the owner's correction (WD.BB.t): the ratchet stands 0.07 off the bridge, not the 0.05 its comment says. The recipe and page agree; not changed here |
 | Timing screw 05 03 01-2 | its slot | 0.126 | drawn as a solid dark box (1.67 × 0.3 × 0.25) standing 0.02 out of the head's end, not cut into the head; in the recipe's `expect` |
 | Escape wheel's upper endstone screws WN-es | the shank's end in the slot | 0.032 | `screw()` runs the shank 0.1 into the head, but this head is 0.3 high with a 0.232 slot (KIT headGeo): the shank's end stands up into the slot; in the recipe's `expect` |
+| Minute, hour, up-and-down and seconds hands | the blade's root against the boss | 0.07-0.10 | the blade is a separate closed piece with an 8-segment root arc at the boss's radius, against the boss's 72-sided wall: a hairline gap (0.003) at isolated samples; in the recipes' `expect` |
+| Hour hand 05 02 00-2 | the root wedge's underside | about 0.1 | the wedge's underside follows the bevel's cone as flat cells every 0.25 across a blade 1.7 wide, not the cone (likely); in `expect` |
+| Seconds hand 05 02 01-1 | the tail's thickness ramp | 0.027 | the table steps 0.3 to 0.5 between 6.4 and 6.6; the page samples it at 6.35, 6.5, 6.55, 6.6; in `expect` |
+| Case screw heads (WN-zg, Ø 9) | the head's round | 0.0225 | the kit draws a head a 32-sided polygon; a head over about Ø 8.5 is more than 0.02 inside its circle; in WN-zg's `expect` and `box_tol` |
 | ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
 
 ## Decided

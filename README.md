@@ -6,7 +6,10 @@ chronometer keeps time at sea:
 - **The Hamilton Model 21**, a two-day fusee chronometer with a spring detent
   escapement, made for the U.S. Navy from 1941. It is built from the 1948
   overhaul manual (NAVSHIPS 250-624) and from photographs and videos of real
-  ones.
+  ones. **Work in progress since 3.63.01 (31 October 2026):** Hamilton's own
+  factory drawings (from the NAWCC) and the British Museum's measurements show
+  the model is about 12 % too small throughout; it is being rescaled and
+  rebuilt from the drawings (`PLAN-hamilton-drawings.md`), and its page says so.
 - **The Wempe Einheits-Chronometer**, the German standard chronometer (spring
   detent, fusee, three pillars), built from Wempe's works drawings. It comes in
   several versions: as first drawn, the escapement of 1943, Wempe No. 3955 as
@@ -28,7 +31,7 @@ model's settings, the browser and the page's last errors.
 | File | What it is |
 |---|---|
 | [`chronometer-working-model.html`](chronometer-working-model.html) | The Hamilton's model as one file: the Model 21 running in real time in its gimballed case and mounting box. It has views (Exploded, Laid out and Contacts among them), an eight-step walkthrough, cross-sections, parts to fade, hide or isolate one at a time or as a selection (Ctrl-click, or a lasso by Alt-drag, or through to the parts behind by Shift+Alt-drag; Select, Lasso and Through on touch; Reset opacity brings every faded part back), winding, setting the hands, stopping and starting, the rate and timing weights, and the manual's overhaul operation by operation. Each part's card gives its Hamilton part numbers, its maker's sheet, its drawing and its STL. Its **Essay** tab links to the essay's page |
-| [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, a banking screw to turn (Swing and isochronism: the depth of lock it sets, with the swing and whether the escapement still works shown live), Making it (maker's sheets; a CAD file (STEP) and an operation sheet on each frame part's card, the rest of the parts to follow; its build book of drawings was withdrawn on 29 October 2026) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
+| [`marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html`](marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html) | The Wempe's model as one file: the same kind of page, with its own views (Train, Fusee, Balance, Laid out), its versions and variants (dials, cases), the 35-day trial, a banking screw to turn (Swing and isochronism: the depth of lock it sets, with the swing and whether the escapement still works shown live), Making it (maker's sheets; a CAD file (STEP) and an operation sheet on the card of each part made so far as a recipe: the frame, the train's arbors and wheels, the escape wheel, the bushes and studs, the fusee's wheels and ratchets, the barrel, the detent and its block, the balance and its settings, 80 in all, with 32 bought parts as lines saying what to buy; the motion work and the case to follow; its build book of drawings was withdrawn on 29 October 2026) and Download (STL, Blender). It also has an essay of its own on its drawings (the **Its drawings** tab) |
 | [`marine-chronometer-source/essay/dist/the-marine-chronometer.html`](marine-chronometer-source/essay/dist/the-marine-chronometer.html) | The essay: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals, keeping the rate, navigating without radio and making the chronometer. The models' own code computes its live figures |
 
 Both models' pages share one layout (since 3.52.00). The title, the model
@@ -132,7 +135,7 @@ model. They need more software:
   rest), the type check (`npx`) and deploying (`wrangler`).
 - **Python packages**, and a Chromium for Playwright to drive:
 
-      python -m pip install numpy scipy playwright opencv-python matplotlib pillow shapely
+      python -m pip install numpy scipy playwright opencv-python matplotlib pillow shapely manifold3d
       python -m playwright install chromium
 
   A few tools need more: torch for the mainspring's solve, pyamg for `fea.py`,

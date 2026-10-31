@@ -857,6 +857,37 @@ Contents:
   turn below (why the drawing makes it shallower there). The spring's pin, which ended flush with the old top land, now
   ends with its outer corner 0.02 inside the Ø 21. Keep: a fusee's groove ends where its sheet puts N, and the end past it
   is the uncut blank. `d33de400`
+- **The Wempe's fusee body drawn with a slanted fan where its groove ends at N and twisted strips at the stop bar's
+  slot's walls** (31 October 2026, the owner's three pictures of the slot's ends). The small end's last 1.5 is built ray
+  by ray (`helixSolid`); its rays were the lathe's every 1.67°, with more every 0.15° only near the walls and none at N,
+  so the land's end at N (r 9.34) was joined to the uncut hub (r 10.5) by two triangles across one step, 1.3 mm² leaning
+  beside the slot's far end, and each wall met the hub, land and rib between rays, a strip twisted a few hundredths at its
+  foot. 05 06 04-2's Schnitt C-D draws the slot as two straight parallel walls out through the outside at both ends. Now a
+  ray lies exactly where each wall meets the radius field at each height (solved by bisection, `cross`) with one 3e-4 either
+  side, and a pair either side of N, the one past it 0.01 on: at N the turn below's land ends exactly at the band's floor,
+  1.5 deep, where a ray loses that corner and draws its outline as one slanted line. `fusee_end.py --model wempe` checks
+  every face in the end lies on one the sheet draws (6.6 mm² off it before, none over 0.01 mm² after). Keep: a piece built
+  ray by ray has a ray at every angle where its outline changes regime, not only rays near it. `b1118e63`; and the
+  slot's two depths, 1,5 +0,05 and 1,1 +0,05, drawn at their middles (1.525, 1.125: `SLD`, `SLS`): at 1.5 the floor stood
+  6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick. Checked against
+  Ldzmn4kuKMA 1:14.87 (the bar's end in a straight-walled window through the hub and the top land) and the owner's book's
+  Fig. 2.10 (the small end face-on: the bar across in a straight slot, the spring in the recess).
+  Then (the owner's next pictures, the same day) a sheet of no width standing in the slot's window and a wedge at a wall's foot:
+  the end's three ray-built pieces had rays of no thickness wherever a wall lay outside the turned outline at some depths. Now
+  the end is turned whole (a full-turn band from 2.0 under the face) and the slot milled through it as two facePocket cuts
+  meeting on the step's plane, the pin hole bored after. Keep: a slot or flat across a turned part is cut through the turned
+  solid, never built as pieces between fixed angles.
+  That too left faces of no thickness where facePocket's sections met (the owner, again: 'a redesign, not a fix'). Now
+  the body is one closed solid made offline by manifold3d's booleans (tools/wempe_fusee_body.py into wempe/js/fuseebody.js):
+  fusee.js's four closed pieces united, the slot cut as one cutter (two cuts meeting on the step's plane left a wall of no
+  thickness there even in manifold3d), the pin's hole drilled; an exact B-rep by OCCT was tried first and its booleans on the
+  helical groove failed. The window where the slot meets the groove and the 1,1 floor stay: Schnitt C-D draws them
+  (re-measured, tools/fusee_sheet.py). Keep: a part whose cuts cross a helical groove is cut by manifold3d, offline, as one
+  cutter per operation; fusee_end.py's faces-of-no-thickness test by the slot's walls must stay at 0.
+  And the hole under the shallow (1,1) floor (the owner: 'if it's machined or lathed, how can this hole be?'): the step
+  from 1,5 to 1,1 was a straight line at u 8.0, so the 1,5 floor broke 0.1 into the next turn of the groove; C-D draws the
+  step as an arc about the axis, now at r 9.30 (SLR), the deep part inside it: 0.17 of metal over the turn below. Keep: a
+  shallower part of a slot that exists to spare the metal over a groove ends where the groove does, on its arc.
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
