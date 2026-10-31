@@ -209,9 +209,9 @@ const WFRAME=(()=>{
         const eu=unit(H[18]),et=[-eu[1],eu[0]],P=(u,w)=>add(eu.map(q=>q*u),et,w),nt=bool(out,[P(42.16,-4.15),P(44,-4.15),P(44,4.15),P(42.16,4.15)]).dAB[0];
         tag(mesh(rv(pp,'3955'),faceUV(hsb(solidGeo([{loop:nt,y0,y1,F:[...F30,...F.slice(F30.length+1)]}]))),DR?GH:G6D),'050802-1');}
       else tag(mesh(rv(pp,V),faceUV(hsb(solidGeo([{loop:out,y0,y1,F}]))),DR?GH:G6D),'050802-1');}
-    /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
+    /* its pillar screws (no WN number read: WN-ps) from the dial side, in a frame turned over so their heads face +y */
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);   /* the 6MX's polished steel (3_Kirow_247_uZ.jpg, photocompare.py: sure) */
-      for(const[V,P39]of VER)for(const q of[H[11],H[49],P39]){const g=rv(rg,V);tag(screw(g,q[0],-q[1],-PPT,S.r,S.h,S.len,S.rs,V==='6mx'?M.steel:M.brass),'WN-56');}}
+      for(const[V,P39]of VER)for(const q of[H[11],H[49],P39]){const g=rv(rg,V);tag(screw(g,q[0],-q[1],-PPT,S.r,S.h,S.len,S.rs,V==='6mx'?M.steel:M.brass),'WN-ps');}}
 
     /* ================= the pillars (Pfeiler, 05 08 00-1) ================= */
     /* turned brass (Rundmessing 8,5 Ms 58), the body Ø 8.1 for 19.6 between its shoulders, which sit in the plates' seats; a spigot Ø 4.5 f7 at each end, 2.8 long, its last 1.1
@@ -279,10 +279,10 @@ const WFRAME=(()=>{
         fuse([RB['6mx'],RF['6mx']]);fuse([RB['last first 1943'],cp(f)]);fuse([RB['3955'],cp(f)]);f.parent.remove(f);FLG.length=0;FLG.push(RB['last first 1943'].parent,RB['3955'].parent,RB['6mx'].parent); }   /* the pin in each band's group, fixed with its ring (fine.py) */
       /* its three screws (WN number not read): heads Ø 6.2 × 3.05, brass, the shank 6.3, on the coloured section (Wempe_Einheitschronometer.jpg px 1819-1878 × 510-538.5, its
          shank 1837-1862: Ø 6.28 (6.2 kept, within the reading) × 3.07, M2.6, at 9.37 px/mm by the pillar's 178 px for 19; sure on the section, 2.25 high until 17 October 2026); head on the plate's inner face */
-      for(const b of RS['last first 1943']){const q=add([0,0],brg(b),RG.screwD/2);headOn(tag(screw(rv(rg,'last first 1943'),q[0],q[1],0,RG.scr[0],RG.scr[1],RG.scr[2],1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
+      for(const b of RS['last first 1943']){const q=add([0,0],brg(b),RG.screwD/2);headOn(tag(screw(rv(rg,'last first 1943'),q[0],q[1],0,RG.scr[0],RG.scr[1],RG.scr[2],1.3,M.brass),'WN-56'),'ring','pillarPlate');}
       /* the 6MX's: steel, slotted, their heads Ø 6.1 ±0.2 × 2.0 ±0.2 (6_Kiro_247_S.jpg, 7_Kirow_247_W.jpg, scaled by pillar 39: likely), M2.6; drawn Ø 6.2, inside the
          reading, as the drawings' (their heads reach over the plate's rim by 1.1, which the photographs show them doing, bearing on it) */
-      for(const b of RS['6mx']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'6mx'),q[0],q[1],0,3.1,2.0,6.3,1.3,M.steel),'WN-rs'),'ring','pillarPlate');}
+      for(const b of RS['6mx']){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rv(rg,'6mx'),q[0],q[1],0,3.1,2.0,6.3,1.3,M.steel),'WN-56'),'ring','pillarPlate');}
       /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1.01 pressed (0.01 over its Ø 1 hole, drilled at assembly across the plate's rim and the seat's wall:
          estimated; Ø 0.98, 0.02 loose, until 28 October 2026, the second drawing check's 9-M7), its top 0.1 under the plate's face (drawn flush: estimated), its end 5.35 in the
          ring's lip: the coloured section draws it 7.1 long, down the ring's wall, but the ring's own 45° cone from Ø 83 (05 08 00-3) leaves its inner side metal only to 5.8
