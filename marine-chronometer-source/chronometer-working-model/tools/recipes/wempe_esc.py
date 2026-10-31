@@ -127,9 +127,9 @@ def collet():
          Cut(hole,"Drill the spring's hole across the narrow end (0.7, bei Montage gebohrt), then ream it 1:90 to Ø %.3f where it enters"%C['hd'],
            [S('hole',f'Ø {C["hd"]} where it enters, 1:90',f'0,8 +0,01 (Kegel 1:90); axis {C["HX"]} from the bore, {C["hy"]} from the face, leaning {math.degrees(C["TH"]):.1f}° off square to the bar, square to the side it enters (90°)',src)],src)]
     ax=C['ax']
-    return Recipe('collet','050302-2','Hairspring collet (Spiralrolle)',src,'Messingblech Ms 58 (05 03 02-2)','none',[Setup('1','bar on the mill, then bored and reamed at the lathe; the slit sawn and the hole drilled at the fitting',ops,view='top')],
+    return Recipe('hsCollet','050302-2','Hairspring collet (Spiralrolle)',src,'Messingblech Ms 58 (05 03 02-2)','none',[Setup('1','bar on the mill, then bored and reamed at the lathe; the slit sawn and the hole drilled at the fitting',ops,view='top')],
       page_matrix([[ax[0],ax[1],0],[0,0,1],[ax[1],-ax[0],0]],(0,C['colB']-h,0)),faces=('underside (toward the arm)','top'),fits=["on the staff's 1:70, line to line, gripping by its slit","the hairspring's inner end in its hole, with its pin (05 03 02-4)"])
-RECIPES['collet']=collet
+RECIPES['hsCollet']=collet
 
 def stud():
     D=WE()['STD'];AX,VO,o=D['AX'],D['VO'],D['o'];src='05 03 02-3 (6.6.41); 05 03_1, 05 03_5, 05 03_7; escapement.js STD'
@@ -150,17 +150,17 @@ def stud():
             S('upright',f'{2*uw:.4f} thick along the bar (1.8 g6), {dq} over the bar, leaning 8°','1.8 g6; 6.0 -0.2 (98° side view)',src),S('facets',f'from the V (apex {D["Ap"]} on from the hole) to the point at {D["Tp"]}, a knife edge {D["fac"]} under the top',"the plan's V, the section (sure)",src)],src),
          Drill((HU,sg*c,-0.5),(0,0,1),2*D['hr'],t+1.0,"Drill and ream the screw's hole Ø 1.5 H7 through the bar",[S('',f'Ø {2*D["hr"]:.3f}, at {HU} on, {c} across',"1,5 H7; 5 ±0.1 from the square end's hole line (sure)",src)],src,key='screw'),
          Drill((-uw-0.1,sg*D['SVH'],D['SYH']-yB),(1,0,0),2*D['hh'],2*uw+0.2,"Drill the hairspring's hole Ø 0.7 along the bar through the upright (at the fitting of the spring)",[S('',f'Ø {2*D["hh"]}, {D["SYH"]-ck:.2f} over the bar, {D["SVH"]:.3f} across','bei Montage der Spirale gebohrt; 3.15 (05 03_5, sure)',src)],src,key='spring')]
-    return Recipe('stud','050302-3','Hairspring stud (Klötzchen)',src,'Flachmessing 15 × 7 Ms 58 (05 03 02-3)','none',[Setup('1','flat bar on the mill, ground at the bench, drilled at the fitting of the spring',ops,view='top')],
+    return Recipe('hsStud','050302-3','Hairspring stud (Klötzchen)',src,'Flachmessing 15 × 7 Ms 58 (05 03 02-3)','none',[Setup('1','flat bar on the mill, ground at the bench, drilled at the fitting of the spring',ops,view='top')],
       page_matrix([[AX[0],sg*VO[0],0],[0,0,1],[AX[1],sg*VO[1],0]],(o[0],yB,o[1])),faces=('underside','top'),
       fits=["screwed to the balance cock's top by the WN-11, the upright down through the cock's slot","the spring's outer end in the hole across the upright, with its pin"])
-RECIPES['stud']=stud
+RECIPES['hsStud']=stud
 
 def hairspringPins():
     D=WE();C,S_=D['COL'],D['STD'];Lc=2*(C['hw']/C['cT']+C['pp']);Ls=2*(S_['uw']+S_['pp'])
     src='escapement.js COL, STD (Spiralstift 05 03 02-4, the stud\'s pin\'s number; brass, Ldzmn4kuKMA 4:32-4:34; sizes estimated)'
     note='Half round: filed from round wire to the hole\'s round less the spring\'s side, its flat 0.005 off the strip, set at the fitting of the spring.'
-    return [Bought('collet.pin','050302-4.c',"Collet's pin for the hairspring (Spiralstift)",'brass wire, filed half round and driven in the collet\'s Ø 0.8 hole beside the spring\'s inner end',
+    return [Bought('hsCollet.pin','050302-4.c',"Collet's pin for the hairspring (Spiralstift)",'brass wire, filed half round and driven in the collet\'s Ø 0.8 hole beside the spring\'s inner end',
               f'Ø {2*C["pr"]:.3f} × {Lc:.2f} (0.45 standing out of each side of the collet)','brass wire','brass',src,[note]),
-            Bought('stud.pin','050302-4.s',"Stud's pin for the hairspring (Spiralstift)",'brass wire, filed half round and driven in the stud\'s Ø 0.7 hole beside the spring\'s outer end',
+            Bought('hsStud.pin','050302-4.s',"Stud's pin for the hairspring (Spiralstift)",'brass wire, filed half round and driven in the stud\'s Ø 0.7 hole beside the spring\'s outer end',
               f'Ø {2*S_["pr"]:.3f} × {Ls:.2f} (0.45 standing out of each side of the upright)','brass wire','brass',src,[note])]
 for _b in hairspringPins():RECIPES[_b.key]=(lambda b=_b:b)

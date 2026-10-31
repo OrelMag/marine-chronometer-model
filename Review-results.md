@@ -422,7 +422,7 @@ Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --ch
 - **Barrel drum 05 07 01-1:** the Steg's pocket cut 1.6 deep through the 1.25 bottom, leaving a stray face in the drum's hollow (0.35).
 - **Detent 05 04 01-1, gold spring 05 04 01-2:** bores across thin strips (`fusee.js`'s `bore` through `holeCut`, `capFix`) leave chords inside the circle (0.025, 0.048).
 - **Set-up ratchet 05 07 00-3:** its height still counts the barrel bridge as 3.32 thick (3.30 since the owner's correction), so it stands 0.07 off the bridge, not 0.05.
-- **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it.
+- **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it. The arm's screws WN-10 and the masses' screws WN-12 the same (0.126; 31 October 2026), WN-12's head top a fan of 24 triangles up to 0.022 off the mass's round side, and the 1943 block's hole across the leaves a plain bore as the last revised block's (0.155).
 - **Escape wheel's upper endstone screws WN-es:** the shank's end stands 0.032 up into the slot.
 - **The hands (batch 10, 30 October 2026):** each blade's root meets its boss as a separate closed piece (an 8-segment arc against the 72-sided wall, a 0.003 gap; 0.07-0.10 at isolated samples), the hour hand's root wedge lies on a cell-wise triangulation of the bevel's cone (about 0.1), and the seconds hand's tail ramp is sampled 0.027 off the table's rows.
 

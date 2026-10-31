@@ -124,7 +124,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 5 | Wheels with teeth | the centre, intermediate and seconds wheels, the escape wheel | done, 29 Oct (the fusee's wheels and ratchets moved to batch 9, the motion work's to batch 10) |
 | 6 | Small turned parts | the bushes WN-301, WN-300 (×3), WN-302 and the hand-setting bush, the seconds jewel's setting, the studs' bushes and both studs, the escape wheel's collet; the seconds jewel (bought) | done, 29 Oct (the balance's and escape wheel's jewel settings, the hairspring's collet and stud moved to batch 8) |
 | 7 | Springs and the detent | the mainspring and hairspring strip (bought, done 29 Oct); the detent, its block and gold spring (the frozen pose: 7b, done 29 Oct); the clicks and their springs, maintaining spring, maintaining detent and wire spring, stop bar and its spring (fusee.js: with batch 9) | part done: the clicks, stop bar and maintaining detent made, the springs' strip and wire bought (9c); 7b, the detent and gold spring made, the locking stone bought (29 Oct); the block made (29 Oct); the maintaining spring left |
-| 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | done, 29 Oct: the collet and the stud (05 03 02-2, -3), the hub and mass screws (WN-10, WN-12) and the stud screw (WN-11) left (below) |
+| 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | done, 29 Oct; 8c, 31 Oct: the collet and the stud (05 03 02-2, -3) and their two pins (bought), the arm's screws WN-10, the stud's WN-11 and the masses' WN-12 (below) |
 | 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | done but the fusee body (9d) and the maintaining spring (7b), 29 Oct |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
 | 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
@@ -526,6 +526,28 @@ each as a sweep that B-rep operations reproduce only by approximating it, and no
 on several sizes or with a tip or knurl of their own, the page's first mesh not the only one; they want a line per size first. The glass (050101-1, the lid glass) would be a
 bought line; the wooden box, its hinges and the maker's plate are made elsewhere (joinery, a stamping), not machined from the model.
 
+### Batch 8c and the detent block's other versions (31 October 2026, the escapement side)
+
+Recipes of another version of the movement. `Recipe.rev` (default `'last'`) names the version a recipe is drawn for ('first', '3955', '6mx', '1943', the page's `setRev`);
+`recipes.py --check` loads the page once for each version its recipes name and checks each recipe on the page as that version shows it (the page's meshes keyed
+by version and line, since a line like 050401-4 is the block of every version); `recipes_site.py` gives a line's WRECIPES entries a `v` (`'last'` for the ones without a
+`rev`) as soon as one of them has a version of its own, and `maker.js`'s `recipesHTML` shows only the entries whose `v` the Wempe's `cfg.recipesShow(v)` accepts (`app.js`:
+`revShows(v, mix.esc)`, the escapement subassembly's version, so 3955 shows the 'first' ones). No `v` or no function: every entry, as before.
+
+| Part | Operations | Volume, recipe / page (mm³) | Surface apart (max) | Notes |
+|---|---|---|---|---|
+| Stud screw WN-11 | 6 | 12.80 / 11.13 (thread) | 0.0134 | the page's `screw()`: one recipe `screw()` as the others; sizes lifted to `STS` |
+| Arm screws WN-10 | 4 | 2.30 / 1.91 (thread) | 0.0051 (slot box 0.1265, expected) | countersunk head, M1 thread; the slot's heading is the page's random one, found by `free_spin`; sizes in `HUB.sc` |
+| Mass screws WN-12 | 5 | 1.98 / 1.85 (thread) | 0.022 (head top fan, expected) | the head's face turned on the mass's round side, the slot across; sizes in `MS.sc` |
+| Detent block, the escapement of 1943 | 10 | 642.41 / 639.82 | 0.155 (the hole across, expected) | the last revised block's form with the slit along the plate through the upright, the 6MX's stud and pins (`HOLES.block43`); key `detentBlock.1943` |
+| Hairspring collet 05 03 02-2 | 4 | 80.68 / 80.68 | 0.004 | `COL` (escapement.js, module scope; build reads it): ends arcs about the bore, the 1:70 bore, the slit, the spring's hole leaning 3.7° and tapering 1:90 |
+| Hairspring stud 05 03 02-3 | 3 | 51.66 / 51.67 | 0.0017 | `STD`: the bar, the two facets to a knife edge, the upright leaning 8°, the Ø 1.5 and Ø 0.7 holes |
+| Collet's and stud's pins 05 03 02-4 | bought | | | brass wire, filed half round (the page's pins are the hole's round less the strip's side) |
+
+Left for later: the first-drawn block's arm (05 04_1: `armEl`, a slit arm with a cove in plan, 'first' and the photographed '3955' forms) and the Soviet 6MX's block (its taper, adjusting
+slide and stud, one mesh made of three with faces left out, the loose 6MX.gks/gke/WN-gkA screws, many inline literals); each wants its literals lifted into `BLK` (page hashed before
+and after) before a recipe reads them.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
@@ -537,6 +559,9 @@ bought line; the wooden box, its hinges and the maker's plate are made elsewhere
 | Detent 05 04 01-1, gold spring 05 04 01-2 | the foot's screw hole, the head's hole | 0.025, 0.048 | the bore across a thin strip (fusee.js's `bore` through `holeCut`, closed by `capFix`) joins its two mouths' vertices with wall triangles that skip round the hole, chords inside its circle; in both recipes' `expect` |
 | Set-up ratchet 05 07 00-3 | its height | 0.02 | RS0 counts the barrel bridge 3.32 thick (WD.FU.SR.BB, lifted as fusee.js had it), but the bridge is 3.30 since the owner's correction (WD.BB.t): the ratchet stands 0.07 off the bridge, not the 0.05 its comment says. The recipe and page agree; not changed here |
 | Timing screw 05 03 01-2 | its slot | 0.126 | drawn as a solid dark box (1.67 × 0.3 × 0.25) standing 0.02 out of the head's end, not cut into the head; in the recipe's `expect` |
+| Balance arm's screws WN-10, compensation masses' screws WN-12 | the head's slot | 0.126 | each slot is a solid dark box (WN-10 1.3 × 0.25 × 0.2, WN-12 1.6 × 0.25 × 0.25) filling the slot and standing 0.02 out of the head's face, not cut into the head; in both recipes' `expect` and `box_tol` |
+| Compensation masses' screws WN-12 | the head's top | 0.022 | the head's face follows the mass's round side by bending a lathe's top fan (24 triangles from the centre to a rim of 24 points) in x only: the true cylinder is up to 0.022 away between the rim points; in `expect` |
+| Detent block of 1943 (050401-4, 1943) | the banking screw's hole across the leaves | 0.155 | as the last revised block's: a bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill; in `expect` |
 | Escape wheel's upper endstone screws WN-es | the shank's end in the slot | 0.032 | `screw()` runs the shank 0.1 into the head, but this head is 0.3 high with a 0.232 slot (KIT headGeo): the shank's end stands up into the slot; in the recipe's `expect` |
 | Minute, hour, up-and-down and seconds hands | the blade's root against the boss | 0.07-0.10 | the blade is a separate closed piece with an 8-segment root arc at the boss's radius, against the boss's 72-sided wall: a hairline gap (0.003) at isolated samples; in the recipes' `expect` |
 | Hour hand 05 02 00-2 | the root wedge's underside | about 0.1 | the wedge's underside follows the bevel's cone as flat cells every 0.25 across a blade 1.7 wide, not the cone (likely); in `expect` |
