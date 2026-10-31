@@ -52,7 +52,7 @@ def run(L,S,name,args=()):
 WE=HERE.parent.parent/'wempe'/'js'
 def sheet():
     """05 06_20's force (g on the 262 mm lever, by the fusee's turns from the large end) as escphys.js reads it, and the fusee's groove radii at quarter turns (fusee.js RFT)"""
-    kv=re.search(r'const KV=(\[\[.*?\]\]),MF=',(WE/'escphys.js').read_text(encoding='utf-8'),re.S).group(1);rft=re.search(r'const RFT=(\[[\d.,\s]*\]);',(WE/'fusee.js').read_text(encoding='utf-8')).group(1)
+    kv=re.search(r'const KV=(\[\[.*?\]\]),MF=',(WE/'escphys.js').read_text(encoding='utf-8'),re.S).group(1);rft=re.search(r'const RFT=(\[[\d.,\s]*\]);',(WE/'dims.js').read_text(encoding='utf-8')).group(1)
     return np.array(json.loads(kv)),np.array(json.loads(rft))
 KV,RFT=sheet();OF,RB=1.02,41.6/2+1.02   # the chain's pitch line 1.02 out from the groove's floor and the drum's wall (05 07 04: fusee.js CONN); the drum Ø 41.6 (05 07 01-1)
 LEV,G0=262,9.80665e-6   # g on 262 mm in N·m

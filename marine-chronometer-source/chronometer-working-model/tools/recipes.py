@@ -212,7 +212,11 @@ def check(r,pm):
     allp=np.concatenate([Pr[kr],Pp[kp]]);alld=np.concatenate([dr,dp]);o=np.argsort(-alld);worst=[];seen=[]
     exq=np.zeros(len(allp),bool);C=ixf(M,allp);res['expected']=[]
     for e in r.expect:   # the old mesh's known departures, each within its circle and bound: reported, not failed
-        k=(np.hypot(C[:,0]-e['at'][0],C[:,1]-e['at'][1])<=e['r'])&(alld>SURF_TOL);exq|=k&(alld<=e['max'])
+        k=(np.hypot(C[:,0]-e['at'][0],C[:,1]-e['at'][1])<=e['r'])&(alld>SURF_TOL)
+        if 'z' in e:k&=(C[:,2]>=e['z'][0])&(C[:,2]<=e['z'][1])   # optionally only within a height range of the part's axis (a turned part's band) ...
+        if 'th' in e:   # ... and an angle range about it, in degrees (turned: the page's 216 columns round a steep radius, a groove's end)
+            th=np.degrees(np.arctan2(C[:,1],C[:,0]));k&=(th>=e['th'][0])&(th<=e['th'][1])
+        exq|=k&(alld<=e['max'])
         res['expected'].append({'why':e['why'],'max':round(float(alld[k].max()),4) if k.any() else 0,'bound':e['max']})
     for i in o:
         if len(worst)>=5 or alld[i]<SURF_TOL:break

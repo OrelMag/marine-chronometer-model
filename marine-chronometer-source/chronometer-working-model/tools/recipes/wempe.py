@@ -1424,3 +1424,4 @@ def screwZg():return caseScrew('screwZg','WN-zg','Transit lock pivot screw (WN-z
 def screwZgX():
     r=screwZg();r.box_tol=0.03;r.expect.append({'at':(0,0),'r':5.0,'max':0.03,'why':"the kit draws a screw's head a 32-sided polygon: a Ø 9 head's chords lie 0.0225 inside the true circle the recipe turns (the first head large enough to pass the 0.02 of the check)"});return r
 RECIPES.update({'screwKr':screwKr,'screwHg':screwHg,'screwKh':screwKh,'screwZg':screwZgX})
+from . import wempe_fusee as _wf; RECIPES.update(_wf.RECIPES)   # batch 9d (fusee body, the fusee side's screws and arbor): tools/recipes/wempe_fusee.py
