@@ -572,7 +572,7 @@ const VIEWS={
   plan:{yaw:Math.PI,pitch:1.52,dist:270,target:[0,-11,0]},   /* straight down on the top plate, 12 o'clock at the top (so 3 o'clock on the left, as the sheets draw the Oberplatte: their O to the right) */
   dial:{yaw:0.3,pitch:1.02,dist:330,target:[0,12,0],case:{lid:1,lift:0}},   /* the dial in its case, from above and in front, the lid open, 12 o'clock at the top: the Hamilton's Dial view (its yaw and pitch), where both pages open */
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
-  exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1,all:{yaw:0.6,pitch:0.25,dist:950,target:[0,153,0]}},   /* all: its All, the case taken apart under the movement, from the box's floor to the movement's top */
+  exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1,all:{yaw:0.6,pitch:0.25,dist:950,target:[0,153,0]},sub:{dist:600,target:[-12,-34,16]}},   /* all: its All, the case taken apart under the movement, from the box's floor to the movement's top; sub: its Subassemblies apart, stood back to take in the fusee, barrel and balance beside the movement (movement.js's ASM) */
   /* the train laid out along the barrel-fusee line (movement.js, buildWempe.DEV), seen square from the side through a narrow field, as the textbooks draw it (the Hamilton's
      Laid out): barrel left, balance right, hands below */
   laidout:{yaw:Math.atan2(buildWempe.DEV.w[1],buildWempe.DEV.w[0]),pitch:0.05,dist:440,target:[buildWempe.DEV.mid[0],-11,buildWempe.DEV.mid[1]],dev:1,fov:20},
