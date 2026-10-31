@@ -6,7 +6,10 @@ chronometer keeps time at sea:
 - **The Hamilton Model 21**, a two-day fusee chronometer with a spring detent
   escapement, made for the U.S. Navy from 1941. It is built from the 1948
   overhaul manual (NAVSHIPS 250-624) and from photographs and videos of real
-  ones.
+  ones. **Work in progress since 3.63.01 (31 October 2026):** Hamilton's own
+  factory drawings (from the NAWCC) and the British Museum's measurements show
+  the model is about 12 % too small throughout; it is being rescaled and
+  rebuilt from the drawings (`PLAN-hamilton-drawings.md`), and its page says so.
 - **The Wempe Einheits-Chronometer**, the German standard chronometer (spring
   detent, fusee, three pillars), built from Wempe's works drawings. It comes in
   several versions: as first drawn, the escapement of 1943, Wempe No. 3955 as
