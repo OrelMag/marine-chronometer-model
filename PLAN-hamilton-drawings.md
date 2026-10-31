@@ -51,6 +51,14 @@ Tasks:
 - 0.3 Re-read where 87.57 came from, and every size that chains from it (PROVENANCE.md's layout backbone).
 - 0.4 Write the result in OPEN-QUESTIONS.md and PROVENANCE.md. Decide with the owner: rescale the whole Hamilton (explanation 1), or keep the layout and rebuild the parts only.
 
+### What Phase 0 found so far (31 October 2026)
+
+- **Three absolute sources agree with the drawings.** The British Museum's measured Model 21 (Randall and Good 1990, cat. 117A; OPEN-QUESTIONS.md 1) gives the barrel 38 mm inside, 15.3 internal height, the mainspring 15.0 high and the arbor 13 mm. The drawings give 38.10 (42168, 1.500 in), the spring .590 = 14.99 (1-WD-265) and the arbor collar .520 = 13.2 (42170). The manual's parts list gives the mainspring 0.0165 in (0.419) thick, which the videos' coil pitch reads as 0.375-0.394 on the plate's scale: the same 1.06-1.12 ratio. The museum's figures were set aside on 12 October 2026 as "excluded on these 1941 movements" only because the plate-scaled videos disagreed. Now the drawings side with the museum.
+- **Single frames agree with the model, not the drawings.** On 13:52.0 (oq/wheels/NOTES.md, 12 October 2026) the third wheel's tips measure r 10.23 against the plate's face edge (r 43.785). The drawing's 80 teeth at module 0.28 give r ≈ 11.55: 1.13 again, inside one frame with no camera-chain error. So the video ratios are sound. Every plate-scaled size inherits the one absolute in the chain, the plate's 87.57 (a Cas-Ker sale listing; PROVENANCE.md, "The plate's absolute scale"), and that is what the drawings and the museum put in doubt.
+- **The 40.87 mm behind FK is not independent.** It was the model's own fusee wheel in September (96 teeth × 0.4171, commit 7970409d), so its closeness to the drawing's 40.97 is chance.
+- **Leading explanation: 1, the model's plan about 1.13 (1.11-1.15) too small.** That puts the plate near 99 mm, about 3.9 in. Against it: the Cas-Ker listing, and the video's Navy dial read as about 4 in on the 87.57 plate (it would become about 116 mm). Both need re-reading.
+- **Still to do before rescaling:** the balance against the plate in one frame (its rim, 29 mm, is absolute through the manual's 0.249 in impulse roller; PROVENANCE.md's suggested check, 34:08-34:16 or an assembled top view in which both show); the Cas-Ker listing re-read (is 87.57 the pillar plate, or another part?); the dial and case against published sizes; and the factor fitted over every drawn size at once (the train's centre distances, the wheels' tips, the barrel and ratchets), so `L`, `PT` and the heights scale by one number.
+
 Phase 0 decides whether the rest of this plan is "replace the drawn parts" or "rescale the model, then replace the drawn parts". Nothing below starts until it is settled.
 
 ## Phase 1: transcription
@@ -65,7 +73,7 @@ Following the Wempe's practice (`References/wempe/transcriptions/`):
 
 Each part follows the same steps. First, read its PROVENANCE.md row and its RESOLVED.md section. Then build it from `HD`. Isolate it (`isolate.py`) beside a frame of a real Model 21 and the drawing's own plot, and record what agrees and what doesn't. Finally, update the row (source "D", Hamilton's drawing, a new key letter), the README's "Estimated" section (drop what is now drawn) and `bom.json` (material and finish).
 
-When a drawing and a video disagree on a production part, the video shows what was made. Record the disagreement in Review-results.md and ask the owner which one to build.
+When a drawing and a photograph or video disagree on a part the drawing draws, the drawing decides (the owner, 31 October 2026). Record the disagreement in Review-results.md.
 
 Order, from the parts others depend on to the leaves:
 
@@ -92,5 +100,5 @@ Batch by group (memory: batch testing). After each group: `fine.py`, `solids.py`
 ## Decisions for the owner
 
 - Phase 0: rescale the whole Hamilton, or rebuild the drawn parts inside the present layout (after 0.1-0.3 report).
-- Rank: do Hamilton's drawings outrank the photographs and videos for the parts they draw? Or do the videos still decide where production differs (this plan's default)?
+- Rank: decided 31 October 2026. Hamilton's drawings outrank the photographs and videos for the parts they draw (CLAUDE.md, "Source of truth").
 - The detent: rebuild from the blank's sizes now, or wait for 42087-3-01 (worth asking the NAWCC for it, and for the other drawings this set refers to; `REQUESTS.md`).
