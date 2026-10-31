@@ -8,7 +8,7 @@
    Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (ES: 13.16/2 mm, the Hamilton's). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
-/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number,NT?:number,ES?:number,LK?:number,LO?:number,DA?:number,BL?:number,PSL?:number,PSO?:number,fI?:number,rJ?:number,eJ?:number,TBR?:number,TBP?:number,SPL?:number,SN0?:number,SN1?:number,OP78?:number,TQ?:number,BEV?:number,TSQ?:number,TH1?:number,DEP?:number,RW?:number,RWD?:number,RSR?:number,SMW?:number}} EscSettings
+/** @typedef {{DSC?:number,EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number,NT?:number,ES?:number,LK?:number,LO?:number,DA?:number,BL?:number,PSL?:number,PSO?:number,fI?:number,rJ?:number,eJ?:number,TBR?:number,TBP?:number,SPL?:number,SN0?:number,SN1?:number,OP78?:number,TQ?:number,BEV?:number,TSQ?:number,TH1?:number,DEP?:number,RW?:number,RWD?:number,RSR?:number,SMW?:number}} EscSettings
     any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
 /** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean}} EscState
     state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1; a
@@ -73,9 +73,13 @@ function makeEsc(o={},base){
      friction on the wheel, now the balance's work, and the blows on the back as it runs away under the impulse stone) and tables the ride four times finer (the back's end to
      a 1600th of a pitch, as dynamics.js's), 0 as before: since 26 October 2026, when the Wempe's lighter escape wheel had its detent, falling home, catch the tooth's back
      in its last micrometres during the impulse (dynamics.js --model wempe). Unit-frame lengths in units of ES */
-  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.5512,PSL:0.9802,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.5015,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30,DEP:0,RW:0,RWD:0,RSR:4,SMW:0});
+  Object.assign(DEF,{DSC:1.117,NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.5512,PSL:0.9802,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.5015,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30,DEP:0,RW:0,RWD:0,RSR:4,SMW:0});
   for(const k in {...base,...o})if(!(k in DEF))throw Error('makeEsc: no setting '+k);
-  const c={...DEF,...base,...o};ES=c.ES;let A0=c.A*D2R;   /* A0: the reference's swing (with TQ, solved) */
+  const c={...DEF,...base,...o};ES=c.ES;let A0=c.A*D2R;
+  /* DSC: the detent's scale against its lengths as read (the Hamilton's, at its plate's 87.57 mm: x1.117 since 31 October 2026, PLAN-hamilton-drawings.md, Phase 0; 1 for
+     another chronometer, whose base sets it): its length to the locking face, the passing spring's, its spring's length and faces, the trip spring's section and every size
+     of its pieces below, and its inertia (x DSC^5, its heights scaling with the plate); the wheel, the roller, the stones and the escapement's angles keep theirs */
+  const DSC=c.DSC;if(DSC!==1){for(const k of['BL','PSL','PSO','SPL','SN0','SN1','tsT','tsH'])c[k]*=DSC;c.ID*=DSC**5;}   /* A0: the reference's swing (with TQ, solved) */
   const NT=c.NT,P=TAU/NT,EX=c.EX,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2+c.LO*D2R,lockA=t0-c.LK*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
@@ -190,7 +194,7 @@ function makeEsc(o={},base){
      Moving (rotate about Ft by -lift/LEN): two-strip detent spring, cross-piece, blade, jewel block, arm, horn, Z bracket. Fixed: foot, support block (shortened to clear the train pillar behind it) and stop button */
   const rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],tR=(Ps0.x-Ft.x)*dirB.x+(Ps0.y-Ft.y)*dirB.y,nR=(Ps0.x-Ft.x)*nB.x+(Ps0.y-Ft.y)*nB.y;
   const tH=tR+c.PSL-(rd+0.038-rT);   /* horn's inner face: 0.25 mm outside the discharge jewel's reach */
-  const brO=nR+0.015+0.36/ES;   /* the angle bracket's upright leg, 0.36 mm thick (estimated), to take the trip spring's screw: its outer face */
+  const brO=nR+0.015*DSC+0.36*DSC/ES;   /* the angle bracket's upright leg, 0.36 mm thick (estimated), to take the trip spring's screw: its outer face */
   const thick=(pts,w)=>{const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);L2.push({x:p.x-dy/l*w,y:p.y+dx/l*w});R2.push({x:p.x+dy/l*w,y:p.y-dx/l*w});});return L2.concat(R2.reverse());};
   const SPL=c.SPL,SPN=[c.SN0,c.SN1];   /* the detent spring: its length to the cross-piece and its thickness across (unit frame), which set its stiffness below */
   /* measured on KLUwI2UUCMQ 11:10-11:33 (the detent out, held up: a bundle adjustment of four frames on the block's positioning pins, 10.12 mm apart; Fig. 90 scaled by the
@@ -201,11 +205,11 @@ function makeEsc(o={},base){
      to it, the spring leaving it at tR), 0.36 thick to take the trip spring's screw; the bracket placed from the trip spring it carries, whose tip the escapement places.
      Until 20 October 2026 these were Fig. 90 scaled by an 11.3 mm flexure-to-jewel, 12-17 % large: the spring 3.82, the cross-piece 0.66 wide, the bracket's leg on the
      cross-piece's t, the trip spring 7.9 long. brk: the bracket screw's place along the detent and the on-detent leg's outer face (movement.js) */
-  const tX=SPL+0.42/ES,bkN=-0.03+0.3/ES,brk={t:tR-2.04/ES,n:bkN};
+  const tX=SPL+0.42*DSC/ES,bkN=-0.03*DSC+0.3*DSC/ES,brk={t:tR-2.04*DSC/ES,n:bkN};
   const pieces={
-    spring:rect(0,SPL,SPN[0],SPN[1]),cross:rect(SPL,tX,-0.075,0.083),blade:rect(tX-0.02,BL-0.56/ES+0.01,-0.06,-0.03),block:rect(BL-0.56/ES,BL+0.34/ES,-0.08,0.08),
-    arm:thick([D(BL+0.3/ES,0),D(BL+1.15/ES,0),D(tH-0.025,nR+rho-0.03),D(tH-0.025,nR+rho),D(tH-0.025,nR+rho+0.05)],0.025),horn:rect(tH-0.05,tH,nR+rho,nR+rho+0.05),   /* the arm ends square over the horn, their outlines one */
-    bracket:[D(tR-2.64/ES,-0.03),D(tR-1.14/ES,-0.03),D(tR-1.14/ES,nR+0.015),D(tR+0.23/ES,nR+0.015),D(tR+0.23/ES,brO),D(tR-1.44/ES,brO),D(tR-1.44/ES,bkN),D(tR-2.64/ES,bkN)],   /* the Z: on the blade, across, along the trip spring (brO: its outer face) */
+    spring:rect(0,SPL,SPN[0],SPN[1]),cross:rect(SPL,tX,-0.075*DSC,0.083*DSC),blade:rect(tX-0.02*DSC,BL-0.56*DSC/ES+0.01*DSC,-0.06*DSC,-0.03*DSC),block:rect(BL-0.56*DSC/ES,BL+0.34*DSC/ES,-0.08*DSC,0.08*DSC),
+    arm:thick([D(BL+0.3*DSC/ES,0),D(BL+1.15*DSC/ES,0),D(tH-0.025*DSC,nR+rho-0.03*DSC),D(tH-0.025*DSC,nR+rho),D(tH-0.025*DSC,nR+rho+0.05*DSC)],0.025*DSC),horn:rect(tH-0.05*DSC,tH,nR+rho,nR+rho+0.05*DSC),   /* the arm ends square over the horn, their outlines one */
+    bracket:[D(tR-2.64*DSC/ES,-0.03*DSC),D(tR-1.14*DSC/ES,-0.03*DSC),D(tR-1.14*DSC/ES,nR+0.015*DSC),D(tR+0.23*DSC/ES,nR+0.015*DSC),D(tR+0.23*DSC/ES,brO),D(tR-1.44*DSC/ES,brO),D(tR-1.44*DSC/ES,bkN),D(tR-2.64*DSC/ES,bkN)],   /* the Z: on the blade, across, along the trip spring (brO: its outer face) */
     stone
   };
   /* the detent-adjusting screw (Fig. 90; Ops. 84, 93): threaded into the block's end, its head (r 0.9 mm, 0.45 thick, 0.3 mm off the block) standing 0.3 mm deep in a slot
@@ -215,11 +219,11 @@ function makeEsc(o={},base){
      block placed by its pins in the train bridge (movement.js's DBLK), so the detent's own length moved its numbers here, not the block. -10.5 to +3.85 and 3.1 wide
      (the same frames scaled by the pins at 11.45) until 20 October 2026; -15 to +5.92 and 2.74, read from Fig. 90 by another scale, until 5 October 2026. The detent's
      foot and its adjusting screw end with the block's end, as before */
-  const BE=-9.4607/ES,BM=2.9893/ES,aS=BE-0.3/ES,aH=aS-0.45/ES,aN=-0.083+(0.3-0.9)/ES,adj={tS:aS,tH:aH,n:aN,r:0.9,BE},sDp=-0.083+0.35/ES,fE=aH-0.63/ES;
+  const BE=-9.4607*DSC/ES,BM=2.9893*DSC/ES,aS=BE-0.3*DSC/ES,aH=aS-0.45*DSC/ES,aN=-0.083*DSC+(0.3*DSC-0.9*DSC)/ES,adj={tS:aS,tH:aH,n:aN,r:0.9*DSC,BE},sDp=-0.083*DSC+0.35*DSC/ES,fE=aH-0.63*DSC/ES;
   /* blockFront: split along its length by a slot open at the stop button's end (Fig. 90), so the button stands on a strip sprung from the block's root: the lock-adjusting
      screw, threaded in the outer part, bears on the strip and moves the button ("working through the locking jewel button", Sec. IV); the clamp screw, through the outer
      part into the strip, holds it. The slot and strip in Fig. 90's proportions of the front (0.24 and 0.36 mm) */
-  const fixed={foot:[D(fE,-0.083),D(aH-0.03/ES,-0.083),D(aH-0.03/ES,sDp),D(aS,sDp),D(aS,-0.083),D(0,-0.083),D(0,0.083),D(fE,0.083)],blockMain:rect(BE,BM,-0.083-2.75/ES,-0.083),blockFront:[D(BM,-0.3),D(BL-0.1,-0.3),D(BL-0.1,-0.173),D(BM+0.03,-0.173),D(BM+0.03,-0.137),D(BL-0.1,-0.137),D(BL-0.1,-0.083),D(BM,-0.083)],button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
+  const fixed={foot:[D(fE,-0.083*DSC),D(aH-0.03*DSC/ES,-0.083*DSC),D(aH-0.03*DSC/ES,sDp),D(aS,sDp),D(aS,-0.083*DSC),D(0,-0.083*DSC),D(0,0.083*DSC),D(fE,0.083*DSC)],blockMain:rect(BE,BM,-0.083*DSC-2.75*DSC/ES,-0.083*DSC),blockFront:[D(BM,-0.3*DSC),D(BL-0.1*DSC,-0.3*DSC),D(BL-0.1*DSC,-0.173*DSC),D(BM+0.03*DSC,-0.173*DSC),D(BM+0.03*DSC,-0.137*DSC),D(BL-0.1*DSC,-0.137*DSC),D(BL-0.1*DSC,-0.083*DSC),D(BM,-0.083*DSC)],button:rect(BL-0.2*DSC,BL-0.1*DSC,-0.083*DSC,-0.06*DSC)};
   /* the running amplitude A and the escapement's rate (the adjuster's bench changes both), from the work done each oscillation in units of the hairspring's stiffness k (rad²).
      The impulse: released from rest, the wheel and the train behind it (JW) gather speed under the torque w k (w: the torque over k) and chase the impulse jewel, already running
      away from it; the tooth strikes it (plastically: the balance, so much heavier, takes the wheel's surplus momentum, J v_j (v_w - v_j) of energy at the landing, v_w the
@@ -233,11 +237,11 @@ function makeEsc(o={},base){
   let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=TH0+i*DT;break;}                                // unlocking swing: discharge jewel meets the trip spring
   const T=0.5,W0=TAU/T,Q=Math.PI*c.TF/T,kB=c.I*1e-9*W0*W0,JR=c.JW/c.I/(W0*W0),esm=ES/1000;   /* kB: the hairspring (N·m a radian); JR: the wheel's inertia over k (s²), so its energy J v²/2 is JR v²/2 in units of k */
   const MW=c.W78*1e-3*9.80665*Math.hypot(Jc.x-Ft.x,Jc.y-Ft.y)*esm/kB,KD=c.EB*1e9*c.hD*1e-3*((SPN[1]-SPN[0])*esm)**3/12/(SPL*esm)/kB;   /* Op. 78's weight's moment and the detent spring's stiffness about its flexure, over k */
-  const th78=c.OP78?c.G78/((BL-0.15)*ES):0,MP=MW-KD*th78;   /* Op. 78's bend: G78 at the stop button's middle, BL-0.15 along the detent from Ft (the blade's face on the button's turns away from it); the preload what the weight leaves */
+  const th78=c.OP78?c.G78/((BL-0.15*DSC)*ES):0,MP=MW-KD*th78;   /* Op. 78's bend: G78 at the stop button's middle, BL-0.15 along the detent from Ft (the blade's face on the button's turns away from it); the preload what the weight leaves */
   const KP=3*c.ET*1e9*(c.tsH*1e-3*(c.tsT*1e-3)**3/12)/(Math.hypot(Pt.x-Ps0.x,Pt.y-Ps0.y)*esm)**3*esm*esm/kB;   /* the trip spring at its tip, a cantilever, over k (its tip's travel in units) */
   /* CAL: the settings a reference is calibrated at; an instance changing others is solved with its reference's torque, the reference being base's settings (the Hamilton's
      without) at this instance's CAL (until 15 October 2026 always the Hamilton's: another chronometer's would have been counted from the Hamilton's escapement) */
-  const CAL=['EX','A','TF','MU','I','JW','W78','G78','hD','EB','ET','tsH','OP78','TQ'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-(base&&k in base?base[k]:DEF[k]))<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join()+(base?'|'+JSON.stringify(base):'');
+  const CAL=['EX','A','TF','MU','I','JW','W78','G78','hD','EB','ET','tsH','OP78','TQ','DSC'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-(base&&k in base?base[k]:DEF[k]))<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join()+(base?'|'+JSON.stringify(base):'');
   const PA=new Float64Array(NTB);for(let i=0;i<NTB;i++){const b=bite(TH0+i*DT);PA[i]=b>-1e8?b-t0:NaN;}   /* the wheel's angle the impulse jewel holds it at */
   const gP=i=>{const a=PA[i-1],b=PA[i+1],m=PA[i];return!isNaN(a)&&!isNaN(b)?(b-a)/(2*DT):!isNaN(b)&&!isNaN(m)?(b-m)/DT:!isNaN(a)&&!isNaN(m)?(m-a)/DT:0;};
   const iRel=Math.round((thRel-TH0)/DT);
