@@ -33,13 +33,14 @@ MUS=[0.08,0.10,0.16];MU0=0.10
 OUT=HERE/('mainspring_friction.json' if not MS.VAR else f'mainspring_friction_{MS.VAR}.json')
 # the fusee as the page builds it (movement.js makeFusee: R.fs.MS.Tup and Tdown, the spring's turns fully wound and run down; and at n fusee turns from full wind, the
 # barrel's turns Ib(n) and the fusee wheel's torque(n) against fully wound, from the solved spring without friction). tools/invariants.py holds them to the page
-TUP,TDOWN=19.1285,14.40717
-FUSEE=[[0,0,1],[0.25,0.10444,0.99955],[0.5,0.20993,0.99933],[0.75,0.31649,0.9992],[1,0.42416,0.99924],[1.25,0.53299,0.99948],[1.5,0.64302,0.9998],[1.75,0.7543,1.0003],[2,0.86686,1.00088],[2.25,0.98078,1.00163],[2.5,1.0961,1.00247],[2.75,1.21288,1.00349],[3,1.33118,1.00464],[3.25,1.45109,1.00586],[3.5,1.57266,1.00719],[3.75,1.69599,1.00859],[4,1.82116,1.01007],[4.25,1.94826,1.0116],[4.5,2.0774,1.01321],[4.75,2.2087,1.01482],[5,2.34227,1.01651],[5.25,2.47825,1.01808],[5.5,2.6168,1.01973],[5.75,2.75807,1.02102],[6,2.90226,1.02236],[6.25,3.04957,1.02335],[6.5,3.20024,1.02414],[6.75,3.35454,1.02465],[7,3.51275,1.02437],[7.25,3.67522,1.0237],[7.5,3.84236,1.02224],[7.75,4.01462,1.01948],[8,4.19255,1.01565],[8.25,4.3768,1.01046],[8.5,4.56815,1.00236]]
+TUP,TDOWN=19.1085,14.38717
+FUSEE=[[0,0,1],[0.25,0.10444,0.99953],[0.5,0.20993,0.99934],[0.75,0.31649,0.99919],[1,0.42416,0.99926],[1.25,0.53299,0.99948],[1.5,0.64302,0.9998],[1.75,0.7543,1.00029],[2,0.86686,1.00085],[2.25,0.98078,1.00158],[2.5,1.0961,1.0024],[2.75,1.21288,1.00341],[3,1.33118,1.00454],[3.25,1.45109,1.00573],[3.5,1.57266,1.00703],[3.75,1.69599,1.00838],[4,1.82116,1.00983],[4.25,1.94826,1.0113],[4.5,2.0774,1.01287],[4.75,2.2087,1.01441],[5,2.34227,1.01606],[5.25,2.47825,1.01752],[5.5,2.6168,1.01908],[5.75,2.75807,1.02027],[6,2.90226,1.02147],[6.25,3.04957,1.0224],[6.5,3.20024,1.023],[6.75,3.35454,1.02343],[7,3.51275,1.02292],[7.25,3.67522,1.022],[7.5,3.84236,1.02043],[7.75,4.01462,1.01733],[8,4.19255,1.01316],[8.25,4.3768,1.00755],[8.5,4.56815,0.99921]]
 # the page's fusee rule (movement.js, below its makeFusee: read off ?qa, 12 October 2026): INT the barrel's turns while the chain leaves the fusee, IN over the
 # whole wind, RHO0 the chain's lever fully wound against run down, rc(md(0)) / rc(ME); the set-up is where the spring's pull falls by RHO0 over INT turns
 INT,IN,RHO0=4.622065,TUP-TDOWN,0.5264253
 shape=lambda f:json.loads(re.search(r'const MSHAPE=(\{.*?\});',f.read_text(encoding='utf-8')).group(1))
 MSM=shape(MC/'js'/'mainspring.js');MSD=shape(MS.JS)   # the model's spring (the page's), and the one solved here (the same, or a variant)
+SETBK=0.02   # movement.js: the set-up 0.02 turn less since 31 October 2026
 def setup(D):
     """movement.js's bisection on the pull table D: the turns fully wound and run down"""
     pl=lambda T:float(np.interp(T,D['T'],D['pull']));ta,tb=D['T0'],D['T'][-1]-IN
@@ -47,6 +48,7 @@ def setup(D):
         m=(ta+tb)/2
         if pl(m)/pl(m+INT)<RHO0:ta=m
         else:tb=m
+    ta-=SETBK
     return ta+INT,ta+INT-IN
 WEMPE=(MS.VAR or '').startswith('wempe')   # the Wempe's spring (wempe_mainspring.py --friction): its own fusee, set up 3/4 turn past its slack (05 06_20), its barrel's turns over the wind from the drawn
 # fusee and drum (wempe_mainspring.py), the Hamilton's fusee rule and bench band not used

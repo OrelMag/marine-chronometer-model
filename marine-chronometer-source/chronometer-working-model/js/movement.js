@@ -48,7 +48,7 @@ const L={C:[0,0],T:[-9.521308,15.845762],F:[0,24.1272],E:[9.4659,16.9156],B:[1.7
    listing); the British Museum's measured Model 21 (97.8) and Hamilton's drawings put the plate 1.117 larger (1.1169 +-0.0034 fitted over five places). So the code's
    plate-scaled sizes are the readings x1.117 (exact products), while the comments keep the readings as they were made, at the 87.57 plate. The absolute parts keep
    theirs: the balance, its roller, jewels and hairspring, the escape wheel and the escapement's figures (RESCALE-CLASSIFICATION.md) */
-const HK=1.117;
+const HK=1.117,SETBK=0.02;
 /** @param {any} p @param {any} Mm @param {number} x @param {number} z @param {any} o */
 const arborH=(p,Mm,x,z,o)=>arbor(p,Mm,x,z,Object.assign({k:HK},o));   /* core.js's arbor with its defaults in mm at this plate's scale */
 const PHOTO_K=1.160563,PHOTO_TURN=19.42*Math.PI/180,PHOTO_T=[-4.346247,0.981843],PR_TURN=14*Math.PI/180;
@@ -2343,7 +2343,7 @@ function makeFusee(M,c){
      chain's IN turns as the chain's lever on the fusee grows, rho0: its pitch line where it leaves the fusee, fully wound against run down (0.510; the groove's floor,
      rmin / rmax, 0.473 until 11 October 2026): a fusee is cut for its spring. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm
      past the pin, so turning it by rot puts the end there at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
-  const IN=Ib(N),INT=Ib(RT/TAU),MD=msStates(),rho0=rc(md(0))/rc(ME);let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+INT)<rho0)ta=m;else tb=m;}   /* INT: the barrel's turns while the chain leaves the fusee, its lever rising from rc(md(0)) to rc(ME) */
+  const IN=Ib(N),INT=Ib(RT/TAU),MD=msStates(),rho0=rc(md(0))/rc(ME);let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+INT)<rho0)ta=m;else tb=m;}ta-=SETBK;   /* SETBK: the set-up 0.02 turn less since 31 October 2026 (the re-solved spring's stress fully wound 2.853 GPa against the 2.85 limit, physics.js) */   /* INT: the barrel's turns while the chain leaves the fusee, its lever rising from rc(md(0)) to rc(ME) */
   const a0=MSPRING.ra+MSPRING.t/2,y0=MSY0,y1=MSY1,ym=(y0+y1)/2,e0=MSPRING.ey[0]*HK/a0,e1=MSPRING.ey[1]*HK/a0,MS={Tup:ta+INT,y0,y1,ey:[e0,e1,ym-MSPRING.ey[2]*HK/2,ym+MSPRING.ey[2]*HK/2]};   /* MSPRING.ey as read at the 87.57 plate (the Wempe's fusee.js takes them so), here x HK */   /* fully wound: the set-up and the chain's barrel turns past the spring's slack; the eye (MSPRING.ey) along the strip's centre on the core, a0 */
   MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MD.T0;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4468/(MSPRING.Rw-MSPRING.t/2);MS.hookA=e0+0.5585/a0-MS.rot;ms.rotation.y=MS.rot;   /* the hook 0.05 off the eye's end toward the strip's end */
   /* the drive, from the spring drawn: pull(n), the solved spring's pull (msPull, the slope of its energy: tools/mainspring.py) at the barrel's turns Ib(n), n fusee turns

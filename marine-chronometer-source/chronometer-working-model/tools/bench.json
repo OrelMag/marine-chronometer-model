@@ -6,7 +6,7 @@
    "title": "The mainspring's torque",
    "no": "42038",
    "when": "before it goes into the barrel, and again in the barrel",
-   "how": "Hold the barrel and turn its arbor with a lever and weights or a torque gauge: a 3D-printed lever 50 mm long and a hanging weight do (1 kg at 50 mm is 0.49 N·m). Wind it up from let down by its set-up and read the torque each half turn over the 4.62 turns the fusee uses, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, in its barrel, wind it on from let down until its coils lie tight on the arbor and count the turns: from its slack to there it must have the set-up and the fusee's 4.72 turns with half a turn to spare (the model's spring has 0.22: so near coil-bound the coils' friction takes up to 23 % of its pull running, mainspring_friction.py, and the swing falls under the manual's for the first hours after each wind).",
+   "how": "Hold the barrel and turn its arbor with a lever and weights or a torque gauge: a 3D-printed lever 50 mm long and a hanging weight do (1 kg at 50 mm is 0.49 N·m). Wind it up from let down by its set-up and read the torque each half turn over the 4.62 turns the fusee uses, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, in its barrel, wind it on from let down until its coils lie tight on the arbor and count the turns: from its slack to there it must have the set-up and the fusee's 4.72 turns with half a turn to spare (the model's spring has 0.24: so near coil-bound the coils' friction takes up to 22 % of its pull running, mainspring_friction.py, and the swing falls under the manual's for the first hours after each wind).",
    "pass": "Fully wound 1.32-1.54 N·m (the model's 1.39; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 143 mN·m a turn, to about 0.73 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13); this matters most for carbon steel, whose arbor here is 25 times the strip where its life wants 28 (Daniels; no carbon strip at 28:1 fits the barrel's turns: deviations.js), so test it again after a month's running, while Nivaflex, the build's, holds its pull. Unwinding it reads less than winding: the coils' friction gives 4-8 % on the model's spring, mainsprings run 10-20 % under their winding (ICMFF9: 11-22 % read so; the strip's edges and its steel too); over 22 %, clean and grease it."
   },
   {
@@ -15,7 +15,7 @@
    "no": "42015",
    "when": "the chain on, the barrel set up, before the train goes in",
    "how": "With the fusee wheel's arbor on a torque gauge (or the same lever on its square), read the torque each half turn of the fusee, from fully wound (the chain on the fusee's top turn) to run down, 17.5 half turns.",
-   "pass": "Every reading within -5 to +11 % of their mean (the model's even 542 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope."
+   "pass": "Every reading within -5 to +11 % of their mean (the model's even 541 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope."
   },
   {
    "id": "depths",
@@ -116,7 +116,7 @@
  ],
  "lines": {
   "42007": "The pawls' springs, the maintaining work assembled, before the fusee wheel goes on: Each winding pawl's spring set at least 0.00 mm (the aim twice that, and at least 0.15 mm more: a spring is bent to about 0.05): less, and when the key lets go the fusee's teeth can outrun the pawl and catch it part way in (ratchets.js): bend it back to the aim. The sustaining pawl's wire must press the pawl into the teeth (0.12 rad is the aim): from any wire that does, the pawl falls from a tip to the root in 5.3 ms or less, inside the 8.3 ms a tooth takes at a turn a second of the key (ratchets.js); one that leaves the pawl loose in its tooth, bend it in. The pawls drawn in by their load: the winding pawls' faces bear square (a draw of 16.5°), the sustaining pawl's end stoned to bear along its tooth's face, not on its corner.",
-  "42015": "The fusee evens the pull, the chain on, the barrel set up, before the train goes in: Every reading within -5 to +11 % of their mean (the model's even 542 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope.",
+  "42015": "The fusee evens the pull, the chain on, the barrel set up, before the train goes in: Every reading within -5 to +11 % of their mean (the model's even 541 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope.",
   "42016": "The maintaining work drives the train, the movement running, part wound: Running, the ends nearly meet: if they stand open, the spring is stronger than the drive (its band too high) and thins. Held, the chronometer runs on five to ten minutes (Sec. IV; the model's 10.1), its swing falling under a turn within the first minute (0.5): a winding never takes so long. Under five minutes, the band is too low or its gap too small (sustaining.js: banked it pushes 28 % of the drive from a band 1.07232 mm high and 1.38-2.16 wide, its 17.4° gap measured, KLUwI2UUCMQ 27:26).",
   "42024": "The winding stop takes a strong hand, the stop-bar and the winding stop made, then wound to the stop: Nothing moves or marks: hardened, the stop-bar's end yields at 6.10 N·m and the stud's thread at 4.21; left soft the bar bends at 2.16, past half as much again as a strong hand's. The first thing to give is the key's own socket (2.28 N·m). Never turn the key the wrong way: 0.74 N·m clockwise bends the fusee wheel's teeth (the build's key has a spring clutch in its body).",
   "42038": "The mainspring's torque, before it goes into the barrel, and again in the barrel: Fully wound 1.32-1.54 N·m (the model's 1.39; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 143 mN·m a turn, to about 0.73 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13); this matters most for carbon steel, whose arbor here is 25 times the strip where its life wants 28 (Daniels; no carbon strip at 28:1 fits the barrel's turns: deviations.js), so test it again after a month's running, while Nivaflex, the build's, holds its pull. Unwinding it reads less than winding: the coils' friction gives 4-8 % on the model's spring, mainsprings run 10-20 % under their winding (ICMFF9: 11-22 % read so; the strip's edges and its steel too); over 22 %, clean and grease it.",
@@ -131,22 +131,22 @@
   "mainspring": {
    "friction": {
     "coils": [
-     0.0424,
-     0.0848
+     0.0404,
+     0.0809
     ],
     "measured": [
      0.1053,
      0.2222
     ],
-    "room": 0.2215
+    "room": 0.2415
    },
    "full": [
     1.32,
     1.54
    ],
-   "model": 1.394,
-   "down": 0.7342,
-   "perTurn": 0.1428,
+   "model": 1.3913,
+   "down": 0.7304,
+   "perTurn": 0.1431,
    "turns": 4.62,
    "width": 15.1354,
    "length": 1188.488,
@@ -171,7 +171,7 @@
     0.1085
    ],
    "halfTurns": 17.5,
-   "torque": 0.542
+   "torque": 0.541
   },
   "depths": {
    "names": [
