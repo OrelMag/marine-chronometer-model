@@ -167,7 +167,17 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
   /* the case's screws of one size each, [head radius, head height, shank length, thread radius], here for the recipes (30 October 2026; case.js's comments give each one's place):
      the ring's pivot-bracket screws WN-kr, the hinge screws WN-hg, the key holder's WN-kh, the transit lock's pivot screw WN-zg */
   const CASE={kr:[2.4,1.6,7.25,1.25],hg:[3,1.6,16.5,1.75],kh:[1.1,1.0,10,0.6],zg:[4.5,2,12,3]};
-  return{H,NO,FA,BAR,FU,MW,CASE,
+  /* the case's made parts' sizes for the recipes (31 October 2026; case.js's comments give each one's source): Y the seat and rim heights over the pivots' line (YP = YB - YSEAT), RG the gimbal ring (inside RI, outside RO, hh half its height; bs the
+     bracket's screws apart, br their radius; tp the pivot tips' hole radius, tb the 3 o'clock tip's hole floor; m5 and m25 the tapped holes' radii; lk the transit lock's window: dy its underside under the pivots, a its radial planes from 6 o'clock toward 3,
+     y0 and y1 its floor and roof about that; bk the ring's bracket: q its half-width along the ring, sec its section [r over RO, y over YP], cl its screws' clearance radius), NUT the two knurled lock nuts, P79 the inner pivot screw WN-79 */
+  const CASEQ={Y:{YSEAT:5.3,YB:6.35,TC:4.7},RG:{RI:70,RO:74,hh:12,bs:35.5,br:77.3,tp:1.6,tb:72.25,m5:2.52,m25:1.27,lk:{dy:1.7,a:[52.4,20.6],y0:-0.5,y1:3},bk:{q:28.5,sec:[[0,-7.7],[1.3,-7.7],[3.3,-5.7],[3.3,5.7],[1.3,7.7],[0,7.7]],cl:1.41}},
+    BR:{KB:[[53,-20.3],[57.7,-20.3],[64.3,-8.7],[64.3,4.8],[60.3,4.8],[60.3,-5.4],[58.1,-8.3],[57.7,-8.3],[54,-8.3],[54,-13.5],[53,-13.5]],KF:[[53,-20.3],[57.7,-20.3],[57.7,-8.3],[54,-8.3],[54,-13.5],[53,-13.5]],KS:[[57.7,-20.3],[64.3,-8.7],[64.3,4.8],[60.3,4.8],[60.3,-5.4],[58.1,-8.3],[57.7,-8.3]],wl:21.2,bw:4.5,bwr:62.3,pr:1.6,pa:60.3,pb:64.3,sp:15.0,sr:57.7,sdy:-14.3,sd:4.5,s0:52.5,sl:24,sc:[3.5,2.6,8,2]},
+    LB:{rb:53,off:4.2,a:40,tw:7.85,tn:1.75,hy:-20.5,hr0:0.5,hd:2.9,hn:20,sc:[2.4,1.6,7.5,1.25],P:((rb,RF)=>({LO:[[rb,-25.8],[RF,-25.8],[RF,-16.5],[63.2,-8.7],[63.2,-2.6],[59.6,-2.6],[59.6,-9.1],[54.5,-14],[rb,-14]],NK:[[59.6,-2.6],[63.2,-2.6],[63.2,1.6],[59.6,1.6]],HD:[[59.6,1.6],[63.2,1.6],[63.2,5.9],[59.6,5.9]]}))(53,53+4.2)},
+    CP:{y0:-64.5,yr:-61.8,y1:-59.5,q:12.35,tip:0.15,hr:0.6,ang:59,ro:1.3,bo:13.95,R:33.95,g:[5,13,1.5],bore:5.55,cb:[7.55,3.075],cr:[0.03,0.59],w:[22.6,8.1],k:[25,1.32]},
+    TH:{p:0.75,d:0.406,Rm:54.87,Rf:55.306},BW:{rr:34.1,rf:36.25,hh:65,rb:53,ct:50.5,bd:23.5,bk:54,fl:12,rfl:59,rr2:53.03,nf:0.8,bore:49,rc:[42,42,7],fy:59.5,fd:49,ns:0.9,w:8.2,m3:1.52,csi:[6.5,0.6,1.5,25]},
+    BZ:{dh:5.0,RG:55.3,ca:[45.9,7.3],pz:[[46.0,5.0],[null,5.0],[null,0],[56.6,0],[58.05,6.07],[58.9,6.9],[60.2,6.9+(60.2-58.9)*0.6/1.7],[60.2,9.9],[57.2,13.4],[56.2,12.6],[56.2,12.3],[55.3,12.3],[46.0,null]],kn:{r:60.6,d:0.3,n:460,y0:7.5,y1:9.8,bore:60.2,soft:60.3},gl:[[0,12.3],[55.8,12.3],[55.8,14.3],[54.3,15.8],[0,15.8]]},
+    NUT:{a:{r:11,d:0.35,h:2.4,n:120,hr:2.5},w:{r:11.35,d:0.35,h:1.9,n:140,hr:3}},P79:{hr:4.6,hh:2.8,rs:2.5,ex:64.4,tr:1.5,t0:64.5,t1:60,t2:59.8,tc:1.3}};
+  return{H,NO,FA,BAR,FU,MW,CASE,CASEQ,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
