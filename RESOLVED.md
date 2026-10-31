@@ -872,6 +872,11 @@ Contents:
   6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick. Checked against
   Ldzmn4kuKMA 1:14.87 (the bar's end in a straight-walled window through the hub and the top land) and the owner's book's
   Fig. 2.10 (the small end face-on: the bar across in a straight slot, the spring in the recess).
+  Then (the owner's next pictures, the same day) a sheet of no width standing in the slot's window and a wedge at a wall's foot:
+  the end's three ray-built pieces had rays of no thickness wherever a wall lay outside the turned outline at some depths. Now
+  the end is turned whole (a full-turn band from 2.0 under the face) and the slot milled through it as two facePocket cuts
+  meeting on the step's plane, the pin hole bored after. Keep: a slot or flat across a turned part is cut through the turned
+  solid, never built as pieces between fixed angles.
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The

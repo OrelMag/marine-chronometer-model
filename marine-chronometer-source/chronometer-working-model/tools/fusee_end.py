@@ -24,7 +24,7 @@ async def grab():
         b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":900,"height":700});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
-        await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
+        await pg.goto(PAGE,timeout=120000);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
         if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1])
         d=await pg.evaluate(DUMP);await b.close()
         if errs:print('page errors:',errs);sys.exit(1)
@@ -55,5 +55,25 @@ def main():
     print(f'{sel.sum()} triangles in the end\'s last {SLD}; {int(bad.sum())} on no face the sheet draws (area {A[bad].sum():.4f} mm²)')
     for i in np.argsort(-A[bad])[:40]:
         k=np.where(bad)[0][i];print(f'  u {u[k]:7.3f} v {v[k]:6.3f} r {r[k]:6.3f} depth {D[sel][ok][k]:5.3f}  area {A[k]:.4f}  n ({n[k,0]:.2f},{n[k,1]:.2f},{n[k,2]:.2f})  n.v {n[k]@vdir:+.2f}')
-    sys.exit(1 if bad.any() else 0)
+    # a face of no thickness (two faces back to back on one plane, as on a wall where a piece's rays had none) lies on a face the sheet draws, so the test above passes it:
+    # each face over 1e-4 mm² in the end, stepped 5 µm off it either way, must have metal on its back and none in front (point in the body by a ray's crossings, the body's
+    # closed pieces fused into one mesh, touching but not overlapping, so a crossing count stays odd inside)
+    Tw=P[(dep(P[:,:,1]).min(1)<SLD+0.2)];o_=Tw[:,0];e1=Tw[:,1]-o_;e2=Tw[:,2]-o_
+    DR=[np.array(x)/np.linalg.norm(x) for x in([0.5731,0.3112,0.7581],[-0.4417,0.2093,0.8726],[0.6614,-0.1876,-0.7262])]   # three rays; a ray through a shared edge counts it twice, so the answer is the majority's
+    PV=[np.cross(dr,e2) for dr in DR];DT=[(e1*pv).sum(1) for pv in PV]
+    def inside(X):
+        out=np.zeros(len(X),bool)
+        with np.errstate(divide='ignore',invalid='ignore'):
+            for i,x in enumerate(X):
+                tv=x-o_;qv=np.cross(tv,e1);votes=0
+                for dr,pv,det in zip(DR,PV,DT):
+                    uu=(tv*pv).sum(1)/det;vv=(qv*dr).sum(1)/det;tt=(e2*qv).sum(1)/det
+                    votes+=((np.abs(det)>1e-12)&(uu>=0)&(vv>=0)&(uu+vv<=1)&(tt>0)).sum()%2
+                out[i]=votes>=2
+        return out
+    big=np.where(A>1e-4)[0];F=C[big]+5e-3*n[big];B_=C[big]-5e-3*n[big];fi=inside(F);bi=inside(B_)
+    sheet=big[(~fi)&(~bi)];inner_=big[fi&bi];nm=list(sheet)+list(inner_)
+    print(f'{len(sheet)} faces with no metal behind them (a face of no thickness), {len(inner_)} with metal in front (a face inside the metal), of {len(big)}')
+    for k in nm[:60]:print(f'  u {u[k]:7.3f} v {v[k]:6.3f} r {r[k]:6.3f} depth {D[sel][ok][k]:5.3f}  area {A[k]:.4f}  n ({n[k,0]:.2f},{n[k,1]:.2f},{n[k,2]:.2f})')
+    sys.exit(1 if bad.any() or nm else 0)
 if __name__=='__main__':main()

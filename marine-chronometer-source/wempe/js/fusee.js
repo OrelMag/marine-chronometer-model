@@ -430,33 +430,37 @@ const WFUSEE=(()=>{
         for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),r=Math.hypot(x,z);if(r<PH-1)continue;const th=angOf(x,z),R=rBody(th,F0-p.getY(i));p.setX(i,R*Math.cos(th));p.setZ(i,-R*Math.sin(th));}
         return KIT.crease(g);};   /* its faces' own normals at corners (computeVertexNormals until 26 October 2026: the large face shaded as a dish, the small end streaked) */
       const gFl=(()=>{const q=pol(PINR,PINA);return capFix(bore(lathe([[13.15,F0-AS],...col.filter(q=>q[1]>=F0-AS-1e-9),[14.9-RT,F],[13.15,F0-1.75],[13.15,F0-AS]]),[q[0],0,q[1]],[0,1,0],0.2775,F0-2.05),null);})();   /* the chain's pin's hole through rib 1, the slot and rib 2 to the land under it (r 14.8 at the pin, inside the hole's 16.5) */
-      const gRe=helixSolid([...Array(N+1).keys()].map(k=>k*TAU/N),AS,LB-SLD,()=>[[AS,13.15],[2.7,13.15],[2.7,7.5],[LB-SLD,7.5]],rBody);   /* from AS to the stop bar's slot's floor (below), the groove swept (helixSolid; the lathe's 0.04 rows until 27 October 2026), the recess's wall r 13.15 to its floor FRC (2.7) inside */
+      const AE=LB-2.0;   /* the small end's band from 2.0 under its face (below the slot's floor, so the cut's floor runs through metal, not along a seam) */
+      const gRe=helixSolid([...Array(N+1).keys()].map(k=>k*TAU/N),AS,AE,()=>[[AS,13.15],[2.7,13.15],[2.7,7.5],[AE,7.5]],rBody);   /* from AS to the small end's band (below), the groove swept (helixSolid; the lathe's 0.04 rows until 27 October 2026), the recess's wall r 13.15 to its floor FRC (2.7) inside */
       const bo=ring(0,0,7.006/2,216),gTu=solidGeo([{loop:ring(0,0,7.5,216),y0:S+1.6,y1:FRC,F:[{p:bo,a:S+1.6,b:FRC},...CWH.map(c=>({p:ring(c[0],-c[1],1.02,40),a:FRC-6.25,b:FRC,th:{rs:1.0}})),{p:ring(DPS[0],-DPS[1],0.87,36),a:S+1.6,b:S+1.6+6,th:{rs:0.85}}]}]);   /* the M2s from the recess floor, the M1.7 from the small end's, each tapped (KIT's threadWall: their screws' threads matched to them, matchThreads; plain until 28 October 2026, drawing check 2's 5-M11 and S-6) */
       const bF=[tag(mesh(gF,gRe,M.gilt),'050604-2'),tag(mesh(gF,gFl,M.gilt),'050604-2',1),tag(mesh(gF,gTu,M.gilt),'050604-2',1)];   /* the body's pieces, these and those below, merged into one (fuse) */
-      /* the small end's last 1.5, which the stop bar's slot crosses (05 06 04-2's Schnitt C-D: 2 H8 wide, its near edge 4 from the axis, "1,5+0,05 tief", right across the end
-         and out through the hub and the top turn on both sides): the two pieces it leaves between the recess (Ø 15) and the radius field, the large one on the axis's side
-         of the slot and the arch beyond it, each built ray by ray on the lathe's own angles, the groove swept as in the rest (helixSolid), with a ray exactly where each of
-         the slot's walls meets the outside at each height (the hub, the last land, the rib: X) and a pair either side of the groove's end N (XN), so the walls run straight
-         into the turned outline and the groove ends in a wall at N. Until 31 October 2026 the rays near the walls were every 0.15°, only near them, and none at N: a
-         twisted strip at each wall's foot and the groove's end a slanted fan across one 1.67° step (the owner's pictures; fusee_end.py). Pieces of the body: drawn gilt as it is */
-      const wrapIn=(L,p0,p1)=>L.flatMap(f=>[-1,0,1,2].map(k=>f+k*TAU)).filter(f=>f>p0&&f<p1);
-      const cols=(p0,p1,extra)=>{const L=[p0,p1,...wrapIn(extra,p0,p1)];for(let k=0;k<N;k++){const f=p0+fr((k*TAU/N-Math.PI/2-barRot-p0)/TAU)*TAU;if(f>p0+1e-6&&f<p1-1e-6)L.push(f);}
-        return[...new Set(L.map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot);};   /* the angles from the bar's direction, put in the fusee's frame */
-      /* the angles (from the bar's direction) in [f0, f1] where the wall v = c (c / |sin f| from the axis) meets the radius field, one for each height of the band (bisection) */
-      const cross=(c,f0,f1)=>{const o=new Set();for(let i=0;i<=300;i++){const a=Math.min(LB-SLD+i*SLD/300,LB-1e-6),g=f=>c/Math.abs(Math.sin(f))-rBody(f+barRot,a);let p=f0,q=f1,gp=g(p);if(gp*g(q)>0)continue;
-        for(let k=0;k<60;k++){const m=(p+q)/2,gm=g(m);if(gm*gp>0){p=m;gp=gm;}else q=m;}for(const d of[-3e-4,0,3e-4])o.add(+((p+q)/2+d).toFixed(9));}return[...o];};   /* and 3e-4 either side: on the crossing's own ray a step meets the wall at no width, which helixSolid leaves out (under 2 µm), and fans its neighbour's corners to the ray's ends; so the fan is a few µm wide */
-      const sA=Math.asin(4/7.5),sC=Math.asin(6/10.5),s4=Math.asin(4/10.5),s6=Math.asin(6/7.5);
-      const X=[...cross(4,-sA,-s4),...cross(4,Math.PI+s4,Math.PI+sA),...cross(6,Math.PI+sC,Math.PI+s6),...cross(6,TAU-s6,TAU-sC)];
-      const fN=PHI0+fr(MN)*TAU-barRot,XN=[fN-1e-6,fN+1e-3];   /* the groove's end N: its land on the one, the uncut end on the other, 0.01 on (at N the turn below's land ends exactly at the band's floor, 1.5 deep, and a ray there loses that corner) */
-      /* with the stop bar's spring's pin's hole "0,5 H7" (05 06 04-2's C-D, dashed along the slot; drawn Ø 0.5045) from the recess out through the end, on the pin's axis
-         (below: 1.5 from the line through the axis along the slot, at the spring's mid-height, S + 0.5); 25 October 2026, until then not cut */
-      {const c=Math.cos(barRot),s_=Math.sin(barRot),u0=Math.sqrt(6.4*6.4-1.5*1.5);
-        bF.push(tag(mesh(gF,capFix(bore(helixSolid(cols(-sA,Math.PI+sA,[...X,...XN]),LB-SLD,LB,()=>[[LB-SLD,7.5],[LB,7.5]],(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),
-          [u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],[c,0,-s_],0.25225,0,20),null),M.gilt),'050604-2',1));}
-      bF.push(tag(mesh(gF,helixSolid(cols(Math.PI+sC,TAU-sC,[...X,...XN]),LB-SLD,LB,th=>{const r=Math.max(7.5,-6/Math.sin(th-barRot));return[[LB-SLD,r],[LB,r]];},rBody),M.gilt),'050604-2',1));
-      /* and the slot's shallow part toward the bar's upper end: from SLS to SLD deep (1.125, 1.525), beyond u 8.0, between its walls */
-      const pA=Math.atan2(-6,SB.us),pB=Math.atan2(-4,Math.sqrt(10.6*10.6-16)),c3=[];for(let f=pA;f<=pB+1e-9;f+=0.25*D2R)c3.push(f);   /* with a ray at the step's corner on the wall v 4 (the step across at u 8.0 met it between rays until 31 October 2026) */
-      bF.push(tag(mesh(gF,helixSolid([...new Set([...c3,pB,Math.atan2(-4,SB.us),...wrapIn([...X,...XN],pA,pB)].map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot),LB-SLD,LB-SLS,th=>{const f=th-barRot,r=Math.max(SB.us/Math.cos(f),4/-Math.sin(f));return[[LB-SLD,r],[LB-SLS,r]];},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
+      /* the small end's band, turned and then milled as the part is made: the groove swept a whole turn (helixSolid) from AE to the end face, with a ray either side of the
+         groove's end N (a wall there: XN), then the stop bar's slot milled across it (05 06 04-2's Schnitt C-D: 2 H8 wide, its near edge 4 from the axis, "1,5+0,05 tief",
+         "1,1+0,05 tief" toward the bar's upper end beyond u 8.0, right across the end and out through the hub and the top turn on both sides; drawn at the middles, SLD and
+         SLS) as two pockets cut through it (facePocket: each plane's section of the turned solid is the cut's wall or floor), the deep one first to u 8.0, then the shallow one beyond it
+         (the deep cut's end wall under the shallow floor is the step's face); then the stop bar's spring's pin's hole "0,5 H7" (05 06 04-2's C-D, dashed along the slot; drawn
+         Ø 0.5045) from the recess out through the end, on the pin's axis (1.5 from the line through the axis along the slot, at the spring's mid-height, S + 0.5; 25 October
+         2026, until then not cut). 31 October 2026 (the owner's pictures): until then the band was three pieces built ray by ray between fixed angles on either side of the
+         slot, whose rays out over the groove, where a wall lies outside the turned outline, had no thickness: a sheet of no width standing on the wall's plane, slanted
+         faces where the groove ended at N and where the walls met the outline. Drawn gilt as the body is */
+      {const fN=fr((PHI0+fr(MN)*TAU)/TAU)*TAU,XN=[fN-1e-6,fN+1e-3],c=Math.cos(barRot),s_=Math.sin(barRot),u0=Math.sqrt(6.4*6.4-1.5*1.5);   /* the groove's end N: its land on the one, the uncut end on the other, 0.01 on (at N the turn below's land ends at 1.5 under the end, which a ray there would meet at no width) */
+        const cl=[...new Set([...[...Array(N+1).keys()].map(k=>k*TAU/N),...XN].map(x=>+x.toFixed(9)))].sort((p,q)=>p-q);
+        let g=helixSolid(cl,AE,LB,()=>[[AE,7.5],[LB,7.5]],rBody);
+        /* the slot's two cuts (core.js facePocket: every triangle split on the cut's planes, its walls and floor the band's own sections; bore's holeCut, which splits only
+           the triangles near the cut, left this helical band's sections open), each a rectangle in plan between the walls v 4 and 6 (the sheet's 4 and 2 H8: 4.000-6.014,
+           drawn 6) */
+        const R=(u,v)=>[u*c+v*s_,-u*s_+v*c],sl=(g0,d,u0_,u1_)=>facePocket(g0,'bottom',[R(u0_,4),R(u1_,4),R(u1_,6),R(u0_,6)],d);
+        g=sl(sl(g,SLD,-12,SB.us),SLS,SB.us,12);
+        /* the two cuts meet on the step's plane, u 8.0: the deep cut's end wall above the shallow one's floor stands there with nothing either side of it, so it goes (a cut
+           reaching back past 8.0 crossed the deep slot's U-shaped section on its end plane, which facePocket clips loop by loop, and spanned the window with a face); and
+           the floors' faces inside the recess (r 7.5), back to back, where facePocket clipped the floor's outer and inner loops each on its own */
+        {const P=g.attributes.position,K=[];for(let t=0;t<P.count;t+=3){let x=0,y=0,z=0;for(let q=0;q<3;q++){x+=P.getX(t+q)/3;y+=P.getY(t+q)/3;z+=P.getZ(t+q)/3;}const u=x*c-z*s_,v=x*s_+z*c;
+          if(!(Math.abs(u-SB.us)<1e-5&&y-S<SLS-1e-6&&v>4&&v<6)&&!((Math.abs(y-S-SLD)<1e-6||Math.abs(y-S-SLS)<1e-6)&&Math.hypot(x,z)<7.5-1e-4))K.push(t);}
+          const o=new THREE.BufferGeometry();for(const k of['position','normal','uv']){const a=g.attributes[k];if(!a)continue;const w=a.itemSize,arr=new Float32Array(K.length*3*w);K.forEach((t,j)=>arr.set(a.array.subarray(t*w,(t+3)*w),j*3*w));o.setAttribute(k,new THREE.BufferAttribute(arr,w));}
+          g.dispose();g=o;}
+        g=bore(g,[u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],[c,0,-s_],0.25225,0,20);
+        bF.push(tag(mesh(gF,capFix(g,null),M.gilt),'050604-2',1));}
+      fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
     /* the arbor 05 06 04-1 (Schneckenwelle; Präz. Rundstahl 7,5, polished where marked): from the winding end, the square "3,1 r6" (+0.023/+0.015, r6 for 3-6 mm: 3.12 at
        its root, the middle; read 3.17 until 28 October 2026, drawing check 2's 5-M1: the small figure after "3," is this hand's flagged 1, as in "+0,015" beside it) tapering
        1:100 to the sheet's 2,92 at its point (3.12 less 20.3/100: 2.917; 3.17 would give 2.97), 20.3 long, the journal Ø 4.5 ±0.02 at the shoulder to 4.39 (1:70, 8 long) that runs in the fusee bush, the step Ø 6.1 -0.05 (3.1 +0.05) for the
