@@ -1297,6 +1297,22 @@ const WFUSEE=(()=>{
     const setConn=v=>{conn=v==='band'?'band':'chain';pC.visible=conn==='chain';pBd.visible=conn==='band';if(DRUM[conn]){dL.geometry=DRUM[conn][0];dF.geometry=DRUM[conn][1];}last.n=null;};   /* the drum slotted for its connector's hook (DRUM, below) */
     const NRUN=CG.chain.NRUN;   /* run down: the chain's last turn has left the fusee (both connectors end within a hundredth of a turn of each other) */
     const last={n:null,ck:[null,null],conn:null};
+    /* links(J): the chain's links between its joints J (rivets, PC apart), on edge (their plates across y), outer and inner links alternately */
+    const links=(/** @type {any[]} */J)=>{const mtx=new THREE.Matrix4(),t=new THREE.Vector3(),up=new THREE.Vector3(),nn=new THREE.Vector3(),pos=new THREE.Vector3();let ia=0,ib=0;
+      for(let k=0;k+1<J.length;k++){pos.addVectors(J[k],J[k+1]).multiplyScalar(0.5);t.subVectors(J[k+1],J[k]).normalize();up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);
+        mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0){imR.setMatrixAt(ia,mtx);imA.setMatrixAt(ia++,mtx);}else imB.setMatrixAt(ib++,mtx);}
+      imA.count=imR.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=imR.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;};
+    /* the chain laid out on its own (the Exploded view's Subassemblies apart: movement.js's asmx), 31 October 2026: coiled flat on edge as a chain lies on the bench, an
+       Archimedean spiral 2.6 apart from r 8 (a link 2.05 wide; its 375 links about 53 across) about the middle of the fusee's and barrel's arbors at the wound chain's mean height, from its
+       top hook inside to its bottom hook outside; each joint eased from where update() last laid it, each hook kept as it sat on its end link. A view's layout, not measured.
+       chW: the wound joints and hooks update() last laid; lay(s): s 0 as wound, 1 coiled */
+    let chW=/** @type {any} */(null),layS=0;const CC=[(fx+BX[0])/2,(fz+BX[1])/2];
+    const coil=(/** @type {any[]} */J)=>{const PC=CONN.chain.PC,a=2.6/TAU,yy=J.reduce((q,v)=>q+v.y,0)/J.length,C=[];let th=0,r=8,acc=0;C.push(new THREE.Vector3(CC[0]+r,yy,CC[1]));
+      while(C.length<J.length){const dt=0.002;r=8+a*th;acc+=Math.hypot(r,a)*dt;th+=dt;if(acc>=PC){acc-=PC;r=8+a*th;C.push(new THREE.Vector3(CC[0]+r*Math.cos(th),yy,CC[1]-r*Math.sin(th)));}}return C;};
+    const frameAt=(/** @type {any} */e,/** @type {any} */p)=>{const x=e.clone().sub(p).normalize(),y=new THREE.Vector3(0,1,0).addScaledVector(x,-x.y).normalize();return new THREE.Matrix4().makeBasis(x,y,new THREE.Vector3().crossVectors(x,y)).setPosition(e);};
+    const lay=(/** @type {number} */sh)=>{if(!chW||conn!=='chain')return;if(sh===layS&&!chW.dirty)return;const was=layS;layS=sh;chW.dirty=false;if(sh<=0&&was<=0)return;
+      const W=chW.J,n=W.length-1;if(!chW.C)chW.C=coil(W);const J=sh<=0?W:W.map((/** @type {any} */v,/** @type {number} */i)=>v.clone().lerp(chW.C[i],sh));links(J);
+      for(const[h,M0,e,p,e0,p0]of/** @type {[any,any,any,any,any,any][]} */([[cHT,chW.T,J[0],J[1],W[0],W[1]],[cHB,chW.B,J[n],J[n-1],W[n],W[n-1]]]))h.matrix.copy(frameAt(e,p).multiply(frameAt(e0,p0).invert()).multiply(M0));};
     /* the clicks: where the click wheel seats click 0 (its nose at the root against a face), the fusee's angle against the ratchet's; computed once */
     const ck0={P:CKP[0],v:gCK[0].userData.tip};
     const ckAng=(i,rel)=>{const P=CKP[i],v=gCK[i].userData.tip,a0=Math.atan2(P[1],P[0]);   /* rel: the click wheel's turn against the ratchet; its nose toward the wheel and behind its pivot, the click turned about a0 + 1.17 (05 06 02) */
@@ -1335,12 +1351,10 @@ const WFUSEE=(()=>{
         const q=pol(rbp,a);pts.push(new THREE.Vector3(BX[0]+q[0],yy,BX[1]+q[1]));}
       if(conn==='chain'){const PC=CONN.chain.PC,NJ=CONN.chain.NJ,J=[];let acc=0,next=HK0;   /* the first rivet HK0 along the path, where the top hook's seat reaches the pin */
         for(let i=1;i<pts.length&&J.length<=NJ;i++){const seg=pts[i].distanceTo(pts[i-1]);while(acc+seg>=next&&J.length<=NJ){J.push(new THREE.Vector3().lerpVectors(pts[i-1],pts[i],(next-acc)/seg));next+=PC;}acc+=seg;}
-        const mtx=new THREE.Matrix4(),t=new THREE.Vector3(),up=new THREE.Vector3(),nn=new THREE.Vector3(),pos=new THREE.Vector3();let ia=0,ib=0;
-        for(let k=0;k+1<J.length;k++){pos.addVectors(J[k],J[k+1]).multiplyScalar(0.5);t.subVectors(J[k+1],J[k]).normalize();up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);
-          mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0){imR.setMatrixAt(ia,mtx);imA.setMatrixAt(ia++,mtx);}else imB.setMatrixAt(ib++,mtx);}
-        imA.count=imR.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=imR.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
+        links(J);
         /* the hooks: the top one from the first rivet back to the pin, the bottom one on from the last rivet along the drum */
-        const nJ=J.length-1;place(cHT,J[0],PINA,Rf,'top',Math.atan2(HKSEAT[1],HKSEAT[0]),J[1].clone().sub(J[0]).normalize());place(cHB,J[nJ],null,beta,'bot',0,J[nJ].clone().sub(J[nJ-1]).normalize());}
+        const nJ=J.length-1;place(cHT,J[0],PINA,Rf,'top',Math.atan2(HKSEAT[1],HKSEAT[0]),J[1].clone().sub(J[0]).normalize());place(cHB,J[nJ],null,beta,'bot',0,J[nJ].clone().sub(J[nJ-1]).normalize());
+        chW={J,T:cHT.matrix.clone(),B:cHB.matrix.clone(),C:null,dirty:true};}
       else{const q=pol(PINR,PINA+Rf),SD=Math.hypot(...BHK.seat),dh=v=>Math.hypot(v.x-fx-q[0],v.z-fz-q[1]);let i=1;while(i<pts.length-1&&dh(pts[i])<SD)i++;   /* the band from where its round hook's seat, SD from its mouth, lies on the pin */
         const a=pts[i-1],b=pts[i],t=(SD-dh(a))/Math.max(1e-9,dh(b)-dh(a)),p0=dh(a)>=SD?a:a.clone().lerp(b,Math.min(1,Math.max(0,t)));
         place(bHT,p0,PINA,Rf,'top',Math.atan2(BHK.seat[1],BHK.seat[0]));place(bHB,pts[pts.length-1],null,beta,'bot');
@@ -1389,6 +1403,6 @@ const WFUSEE=(()=>{
        stays outside the dust bush, which spreads further than the fusee), and the plate's face toward the key (y0 above: 4 from the square's root, where it is 3.08 across,
        under the key's socket, 3.15: 05 01 02-3's 3.1 +0.05 takes the square anywhere, so the socket's mouth stops on the plate; until 28 October 2026 7 from the root, where
        the square read then was 3.1); the tube's mouth, Ø 5.95, comes over the plate's recess there, Ø 6.2 */
-    return{update,fall,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-12},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,F0,S,DP0,DTU,DTL,BB,BR}};}
+    return{update,lay,chainC:CC,fall,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-12},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,F0,S,DP0,DTU,DTL,BB,BR}};}
   return{build,bore,capFix};   /* bore and capFix lent to frame.js (the movement ring's screw holes through its cone), which builds before this file's build runs */
 })();
