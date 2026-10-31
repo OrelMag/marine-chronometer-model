@@ -435,22 +435,28 @@ const WFUSEE=(()=>{
       const bF=[tag(mesh(gF,gRe,M.gilt),'050604-2'),tag(mesh(gF,gFl,M.gilt),'050604-2',1),tag(mesh(gF,gTu,M.gilt),'050604-2',1)];   /* the body's pieces, these and those below, merged into one (fuse) */
       /* the small end's last 1.5, which the stop bar's slot crosses (05 06 04-2's Schnitt C-D: 2 H8 wide, its near edge 4 from the axis, "1,5+0,05 tief", right across the end
          and out through the hub and the top turn on both sides): the two pieces it leaves between the recess (Ø 15) and the radius field, the large one on the axis's side
-         of the slot and the arch beyond it, each built ray by ray on the lathe's own angles, the groove swept as in the rest (helixSolid), with more rays where the slot's
-         walls meet the outside. Pieces of the body: drawn gilt as it is */
-            const fine=(a0,a1)=>{const o=[];for(let d=a0;d<=a1+1e-9;d+=0.15)o.push(d*D2R);return o;};
-      const cols=(p0,p1,extra)=>{const L=[p0,p1,...extra.filter(f=>f>p0&&f<p1)];for(let k=0;k<N;k++){const f=p0+fr((k*TAU/N-Math.PI/2-barRot-p0)/TAU)*TAU;if(f>p0+1e-6&&f<p1-1e-6)L.push(f);}
+         of the slot and the arch beyond it, each built ray by ray on the lathe's own angles, the groove swept as in the rest (helixSolid), with a ray exactly where each of
+         the slot's walls meets the outside at each height (the hub, the last land, the rib: X) and a pair either side of the groove's end N (XN), so the walls run straight
+         into the turned outline and the groove ends in a wall at N. Until 31 October 2026 the rays near the walls were every 0.15°, only near them, and none at N: a
+         twisted strip at each wall's foot and the groove's end a slanted fan across one 1.67° step (the owner's pictures; fusee_end.py). Pieces of the body: drawn gilt as it is */
+      const wrapIn=(L,p0,p1)=>L.flatMap(f=>[-1,0,1,2].map(k=>f+k*TAU)).filter(f=>f>p0&&f<p1);
+      const cols=(p0,p1,extra)=>{const L=[p0,p1,...wrapIn(extra,p0,p1)];for(let k=0;k<N;k++){const f=p0+fr((k*TAU/N-Math.PI/2-barRot-p0)/TAU)*TAU;if(f>p0+1e-6&&f<p1-1e-6)L.push(f);}
         return[...new Set(L.map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot);};   /* the angles from the bar's direction, put in the fusee's frame */
-      const sA=Math.asin(4/7.5),c1=fine(22.0,26.0),c2=fine(34.3,40.9);   /* the angles (from the bar's direction) where the slot's walls meet the outside */
+      /* the angles (from the bar's direction) in [f0, f1] where the wall v = c (c / |sin f| from the axis) meets the radius field, one for each height of the band (bisection) */
+      const cross=(c,f0,f1)=>{const o=new Set();for(let i=0;i<=300;i++){const a=Math.min(LB-SLD+i*SLD/300,LB-1e-6),g=f=>c/Math.abs(Math.sin(f))-rBody(f+barRot,a);let p=f0,q=f1,gp=g(p);if(gp*g(q)>0)continue;
+        for(let k=0;k<60;k++){const m=(p+q)/2,gm=g(m);if(gm*gp>0){p=m;gp=gm;}else q=m;}for(const d of[-3e-4,0,3e-4])o.add(+((p+q)/2+d).toFixed(9));}return[...o];};   /* and 3e-4 either side: on the crossing's own ray a step meets the wall at no width, which helixSolid leaves out (under 2 µm), and fans its neighbour's corners to the ray's ends; so the fan is a few µm wide */
+      const sA=Math.asin(4/7.5),sC=Math.asin(6/10.5),s4=Math.asin(4/10.5),s6=Math.asin(6/7.5);
+      const X=[...cross(4,-sA,-s4),...cross(4,Math.PI+s4,Math.PI+sA),...cross(6,Math.PI+sC,Math.PI+s6),...cross(6,TAU-s6,TAU-sC)];
+      const fN=PHI0+fr(MN)*TAU-barRot,XN=[fN-1e-6,fN+1e-3];   /* the groove's end N: its land on the one, the uncut end on the other, 0.01 on (at N the turn below's land ends exactly at the band's floor, 1.5 deep, and a ray there loses that corner) */
       /* with the stop bar's spring's pin's hole "0,5 H7" (05 06 04-2's C-D, dashed along the slot; drawn Ø 0.5045) from the recess out through the end, on the pin's axis
          (below: 1.5 from the line through the axis along the slot, at the spring's mid-height, S + 0.5); 25 October 2026, until then not cut */
       {const c=Math.cos(barRot),s_=Math.sin(barRot),u0=Math.sqrt(6.4*6.4-1.5*1.5);
-        bF.push(tag(mesh(gF,capFix(bore(helixSolid(cols(-sA,Math.PI+sA,[...c1.map(f=>-f),...c1.map(f=>Math.PI+f)]),LB-SLD,LB,()=>[[LB-SLD,7.5],[LB,7.5]],(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),
+        bF.push(tag(mesh(gF,capFix(bore(helixSolid(cols(-sA,Math.PI+sA,[...X,...XN]),LB-SLD,LB,()=>[[LB-SLD,7.5],[LB,7.5]],(th,a)=>{const s_=-Math.sin(th-barRot);return Math.min(rBody(th,a),s_>1e-9?4/s_:1e9);}),
           [u0*c+1.5*s_,S+0.5,-u0*s_+1.5*c],[c,0,-s_],0.25225,0,20),null),M.gilt),'050604-2',1));}
-      const sC=Math.asin(6/10.5);
-      bF.push(tag(mesh(gF,helixSolid(cols(Math.PI+sC,TAU-sC,[...c2.map(f=>Math.PI+f),...c2.map(f=>TAU-f)]),LB-SLD,LB,th=>{const r=Math.max(7.5,-6/Math.sin(th-barRot));return[[LB-SLD,r],[LB,r]];},rBody),M.gilt),'050604-2',1));
+      bF.push(tag(mesh(gF,helixSolid(cols(Math.PI+sC,TAU-sC,[...X,...XN]),LB-SLD,LB,th=>{const r=Math.max(7.5,-6/Math.sin(th-barRot));return[[LB-SLD,r],[LB,r]];},rBody),M.gilt),'050604-2',1));
       /* and the slot's shallow part toward the bar's upper end: from 1.1 to 1.5 deep, beyond u 8.0, between its walls */
-      const pA=Math.atan2(-6,SB.us),pB=Math.atan2(-4,Math.sqrt(10.6*10.6-16)),c3=[];for(let f=pA;f<=pB+1e-9;f+=0.25*D2R)c3.push(f);
-      bF.push(tag(mesh(gF,helixSolid([...c3,pB].map(f=>f+barRot),LB-SLD,LB-1.1,th=>{const f=th-barRot,r=Math.max(SB.us/Math.cos(f),4/-Math.sin(f));return[[LB-SLD,r],[LB-1.1,r]];},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
+      const pA=Math.atan2(-6,SB.us),pB=Math.atan2(-4,Math.sqrt(10.6*10.6-16)),c3=[];for(let f=pA;f<=pB+1e-9;f+=0.25*D2R)c3.push(f);   /* with a ray at the step's corner on the wall v 4 (the step across at u 8.0 met it between rays until 31 October 2026) */
+      bF.push(tag(mesh(gF,helixSolid([...new Set([...c3,pB,Math.atan2(-4,SB.us),...wrapIn([...X,...XN],pA,pB)].map(x=>+x.toFixed(9)))].sort((a,b)=>a-b).map(f=>f+barRot),LB-SLD,LB-1.1,th=>{const f=th-barRot,r=Math.max(SB.us/Math.cos(f),4/-Math.sin(f));return[[LB-SLD,r],[LB-1.1,r]];},(th,a)=>{const f=th-barRot;return Math.min(rBody(th,a),6/-Math.sin(f));}),M.gilt),'050604-2',1));fuse(bF);bF[0].geometry.userData.threads=gTu.userData.threads;}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026; the tube's tapped holes' threads carried onto it (fuse keeps only the first piece's userData), for matchThreads */
     /* the arbor 05 06 04-1 (Schneckenwelle; Präz. Rundstahl 7,5, polished where marked): from the winding end, the square "3,1 r6" (+0.023/+0.015, r6 for 3-6 mm: 3.12 at
        its root, the middle; read 3.17 until 28 October 2026, drawing check 2's 5-M1: the small figure after "3," is this hand's flagged 1, as in "+0,015" beside it) tapering
        1:100 to the sheet's 2,92 at its point (3.12 less 20.3/100: 2.917; 3.17 would give 2.97), 20.3 long, the journal Ø 4.5 ±0.02 at the shoulder to 4.39 (1:70, 8 long) that runs in the fusee bush, the step Ø 6.1 -0.05 (3.1 +0.05) for the
