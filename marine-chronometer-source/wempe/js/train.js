@@ -215,7 +215,7 @@ const WTRAIN=(()=>{
     {const B=[...C6.bsP,...C6.bsM];
       /* the base: its screws' clearance, the block screws' M1.4, the staff's setting, the cock's screw M1.4 and pins Ø 0.8 1 deep */
       tag(mesh(g6,SG([{loop:cc(C6.base),y0:K6.base.y[0],y1:K6.base.y[1],F:[...C6.screws56.map(q=>({p:cir(q,K6.base.rS),a:K6.base.y[0],b:K6.base.y[1]})),...B.map(q=>({p:cir(q,K6.base.rB),a:K6.base.y[0],b:K6.base.y[1]})),{p:cir(C6.staff,K6.base.rSt,40),a:K6.base.y[0],b:K6.base.y[1]},{p:cir(fc,K6.base.rF),a:K6.base.y[0],b:K6.base.y[1]},
-        ...[fp,fq].map(q=>({p:cir(q,K6.base.rP,20),a:K6.base.y[0],b:K6.base.pY}))]}]),M.gilt),'6MX.ct');
+        ...[fp,fq].map(q=>({p:cir(q,K6.base.rP,20),a:K6.base.y[0],b:K6.base.pY[1]}))]}]),M.gilt),'6MX.ct');
       for(const[O,BS,id]of/** @type {[number[][],number[][],string][]} */([[C6.blkP,C6.bsP,'6MX.ctbp'],[C6.blkM,C6.bsM,'6MX.ctbm']])){
         tag(mesh(g6,SG([{loop:cc(O),y0:K6.blk.fib[0],y1:K6.blk.fib[1],F:BS.map(q=>({p:cir(q,K6.blk.rh),a:K6.blk.fib[0],b:K6.blk.fib[1]}))}]),M.packing),'6MX.ctf');   /* the fibre under it, black (10_Kirow_247_E-Kontakt_1.jpg) */
         tag(mesh(g6,SG([{loop:cc(O),y0:K6.blk.y[0],y1:K6.blk.y[1],F:BS.map(q=>({p:cir(q,K6.blk.rh),a:K6.blk.y[0],b:K6.blk.y[1]}))}]),M.gilt),id);}
