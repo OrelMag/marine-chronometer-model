@@ -6,6 +6,7 @@ Its parts list is bom.json beside this file, its expected coplanar faces audit-e
 LOOSE=[('ring:Cylinder',(0,8.25,-55.0),0.805,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 1.78 out of the flange in the bowl's notch, inside the bezel's thread (case.js): its end is free"),
   ('stopWork:Cylinder',(-20.31,-17.98,-10.30),0.25925,"the stop bar's spring's pin (05 06 04-4), its inner end standing free 1.3 into the small end's recess through the spring's line (05 06_4's C-D), its outer end in its 0.5 H7 hole through the end (cut 25 October 2026), 0.02 under the hub's face")]
 LOOSE_NAVY=[]
+LOOSE_ARM=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
 # the fifth field, the versions an entry applies to (setRev's names; audit.py judges it only there): the drawn versions' ring screws and the 6MX's (Kirov No. 247's places)
