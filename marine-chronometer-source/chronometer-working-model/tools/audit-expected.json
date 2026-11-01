@@ -41,7 +41,7 @@
   "fusee:Buffer | fusee:Extrude | --6.56": 1,
   "fusee:Buffer | fusee:Lathe | +-10.50": 2,
   "fusee:Buffer | fusee:Lathe | --10.84": 2,
-  "hands:Extrude | fw:Lathe | +8.76": 1,
+  "fw:Extrude | fw:Lathe | +-6.50": 1,
   "hands:Extrude | motion:Buffer | +10.62": 1,
   "hands:Extrude | motion:Cylinder | +8.76": 1,
   "hands:Extrude | motion:Cylinder | -8.32": 1,

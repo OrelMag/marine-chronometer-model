@@ -19,7 +19,9 @@ const P=a=>a.map(x=>x*MPa);
 /* ---------- the going train: tooth forces at full wind (every stage taken as lossless, the worst case), Lewis σ = F / (b m Y) ---------- */
 /* Y 0.20-0.35: cycloidal clock teeth have thinner roots than involute gears (Y 0.3-0.45); the low end is taken */
 say('The going train, fully wound (each stage lossless: the largest forces)');
-const Y=0.2,arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arborH?\\((.*?)\\),'`).exec(mv);if(!m)throw Error('not found: arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
+const Y=0.2,arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arborH?\\((.*?)\\),'`).exec(mv);if(!m)throw Error('not found: arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);if(n==='fw'){const hd=require('fs').readFileSync(__dirname+'/../js/hdims.js','utf8'),I=(o,k)=>{const b=hd.slice(hd.indexOf(o+':{')),t=b.slice(b.indexOf(k+':I(')+k.length+3);return parseFloat(t)*25.4;},S=+/LB_T=(-?[\d.]+)/.exec(mv)[1]+3.378925-I('p4','pivTopLen'),y=q=>S+q;   /* the fourth as drawn (42073, 42072; movement.js F4Y): the wheel on the leaves' top face, the leaves .320 to .505 from the tip */
+  return{w:I('w4','t'),p:(.505-.320)*25.4,wy:y(I('w4','seatS')+I('w4','t')/2),py:y((.505+.320)*25.4/2)};}
+return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
 const fc=(W,P)=>W.wy!=null&&P.py!=null?Math.max(0,Math.min(W.wy+W.w/2,P.py+P.p/2)-Math.max(W.wy-W.w/2,P.py-P.p/2)):Math.min(W.w,P.p);   /* a mesh's face: where the wheel's and the pinion's heights overlap (the fusee wheel's 2.22 on the centre pinion's 1.54 bear over 1.40; min(th) until 18 October 2026) */
 const A={gw:arb('gw'),cw:arb('cw'),tw:arb('tw'),fw:arb('fw'),esc:arb('esc')},M=PH.MODS;
 /* rev a day of each wheel: the centre once an hour */

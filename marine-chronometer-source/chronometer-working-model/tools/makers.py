@@ -29,7 +29,8 @@ MANUAL={'42188':('Elinvar','the manual (Secs. I, II)','as formed and heat-treate
  'trip':('Elinvar','the manual (Sec. II)','as rolled; stoned to adjust (Tool 10)'),
  'detent':('Beryllium copper','the manual (Sec. II)','solution-treated, then age-hardened (about 315 °C, 2-3 h, the alloy’s practice)'),
  'rim':('Stainless steel rim, Invar arm, silver-soldered','the manual (Sec. II, p. 9)','the rim and arm as drawn, joined by silver solder'),
- 'box':('Mahogany','the manual (Sec. I)','')}
+ 'box':('Mahogany','the manual (Sec. I)',''),
+ '42073':('Brass wheel, riveted on a drill-rod pinion','Hamilton drawings 42073-2-01-01 and 42072-1-01-01','24K gold plate on the wheel only; the pinion polished at five places (the sheets give no heat treatment)')}
 KINDS=[  # (pattern in the line's name, material, finish, heat treatment): watchmaking practice (literature)
  (r'Roller','Steel','polished; its jewel set in shellac (Tool 6)','hardened, tempered straw (about 230 °C)'),
  (r'Key','Steel shank, brass or wooden handle','polished','the square hardened, tempered blue'),
