@@ -248,7 +248,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const COLM=new Map();
   const colOf=(p,k)=>{if(st.csrc){const s=PCE[k]&&PCE[k].src||PARTS[p]&&PARTS[p].src;return s&&SRC[s][1];}return PCOL[k]||PCOL[p];};   /* k: the mesh's key, its piece's colour or source where it has one */
   function colourOf(m0,p,pk){const col=p&&colOf(p,pk);if(!col||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+pk+(st.csrc?':s':'');let c=COLM.get(k);
-    if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(col);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.emissive)c.emissive.setRGB(0,0,0);
+    if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(col);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.clearcoat){c.clearcoat=0;c.envMapIntensity=1;}if(c.emissive)c.emissive.setRGB(0,0,0);
       patchSection(c,!!m0.userData.secCap);c.userData.side0=m0.userData.side0??m0.side;c.side=m0.side;c.clippingPlanes=[...(m0.clippingPlanes||[])];COLM.set(k,c);}return c;}
   /* per-part opacity, set from the right-click menu */
   const FADE=new Map();
@@ -453,14 +453,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();ray.layers.enable(2);   /* layer 2: the pieces drawn merged (drawMerge) */
   /* what a click passes through: what is faded below half, glass, or see-through as it would be with nothing picked; so with a part or piece picked, the ghosted rest still takes a click */
-  const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&m0.opacity<0.5)return true;return m.userData.inkBox?!!(st.focus&&!inK(st.focus,m)):!!ghOf(m,st.focus);};
+  const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&opq(m0)<0.5)return true;return m.userData.inkBox?!!(st.focus&&!inK(st.focus,m)):!!ghOf(m,st.focus);};
   function hitAt(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const all=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&INFO[h.object.userData.part]),hits=all.filter(h=>!through(h.object));
     return hits[0]||all.filter(h=>h.object.userData.devPlate).sort((a,b)=>a.object.userData.rad-b.object.userData.rad)[0]||null;}   /* a see-through schematic plate (laid out) is picked only where no part shows through it, the smallest where they overlap */
   /* a glass (see-through by its material: the crystal, the box's glass) passes a click to what is behind it; clicking that again picks the glass in front of it, and again goes back.
      The glass counts where only the pick's ghosting hides it (look hides a ghosted noShadow mesh: ghHid) */
   const glassIn=hit=>{const g=[];for(const h of ray.intersectObjects([BX.root],true)){if(h.distance>=hit.distance)break;const o=h.object,u=o.userData,m0=u.mat0||o.material;
-      if(u.pk&&INFO[u.part]&&m0.transparent&&m0.opacity<0.5&&!u.devPlate&&(shown(o)||u.ghHid&&shown(o.parent))&&!g.includes(u.pk))g.push(u.pk);}return g;};
+      if(u.pk&&INFO[u.part]&&m0.transparent&&opq(m0)<0.5&&!u.devPlate&&(shown(o)||u.ghHid&&shown(o.parent))&&!g.includes(u.pk))g.push(u.pk);}return g;};
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}
     const pk=hit.object.userData.pk,stk=[pk,...glassIn(hit).filter(k=>k!==pk)],i=stk.indexOf(st.pick);showPart(stk[i<0?0:(i+1)%stk.length]);}   /* the piece, where its part has pieces */   /* the piece, where its part has pieces */
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else if(st.tour<0)jump(()=>setView(st.view,true));}
@@ -488,7 +488,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(SEL&&SEL.busy())return;if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
   function openOpm(cx,cy){const rc=cv.getBoundingClientRect();ndc.set((cx-rc.left)/rc.width*2-1,-(cy-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);
-    const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>opOf(h.object)!=null);
+    const hit=hits.find(h=>!(h.object.material.transparent&&opq(h.object.material)<0.5))||hits.find(h=>opOf(h.object)!=null);
     if(!hit&&!st.hid.size&&!st.iso){closeOpm();return;}
     opPart=hit?hit.object.userData.pk:null;opm.classList.add('on');opRender();
     const sr=stage.getBoundingClientRect();opm.style.left=clamp(cx-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(cy-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';}
@@ -1131,7 +1131,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(show&&st.drive&&DRIVE_HIDE.has(l.part))show=false;if(show&&isoOut(l.part))show=false;
       if(!show){l.el.style.opacity=0;continue;}
       const P0=l.fn();
-      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);l.occ=rayBlocked(camP,tmpV.copy(P0).sub(camP).normalize(),d-0.8,BX.root,m=>m.userData.part!==l.part&&!(m.material.transparent&&m.material.opacity<0.5)&&!m.userData.decal);}
+      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);l.occ=rayBlocked(camP,tmpV.copy(P0).sub(camP).normalize(),d-0.8,BX.root,m=>m.userData.part!==l.part&&!(m.material.transparent&&opq(m.material)<0.5)&&!m.userData.decal);}
       if(l.occ){l.el.style.opacity=0;continue;}
       tmpV.copy(P0).project(cam);const px=(tmpV.x+1)/2*W,py=(1-tmpV.y)/2*Hh;
       if(tmpV.z>1||px<4||px>W-4||py<4||py>Hh-40){l.el.style.opacity=0;continue;}

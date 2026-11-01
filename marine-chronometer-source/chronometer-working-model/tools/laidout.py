@@ -74,7 +74,7 @@ JS=r"""((items)=>{const mv=window.__mv,r=window.__r,cv=r.domElement,ci=JSON.pars
   const v=new THREE.Vector3(),box=S=>{const b=new THREE.Box3();S.forEach(m=>b.expandByObject(m));let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
     for(let i=0;i<8;i++){v.set(i&1?b.max.x:b.min.x,i&2?b.max.y:b.min.y,i&4?b.max.z:b.min.z).project(cam);const x=(v.x+1)/2*W,y=(1-v.y)/2*H;x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}return[x0,y0,x1,y1];};
   /* the page's pick (the viewer's hitAt: shared/viewer.js, the Hamilton's app.js): the first hit not see-through (glass, or a schematic plate, drawn see-through laid out), else the smallest schematic plate hit */
-  const thr=m=>{const m0=m.userData.mat0||m.material;return !!m.userData.devPlate||(m0.transparent&&m0.opacity<0.5);};
+  const thr=m=>{const m0=m.userData.mat0||m.material;return !!m.userData.devPlate||(m0.transparent&&opq(m0)<0.5);};
   const rc=new THREE.Raycaster(),pickAt=(x,y)=>{rc.setFromCamera({x:x/W*2-1,y:-(y/H*2-1)},cam);const hs=rc.intersectObjects(M,false);
     const h=hs.find(h=>!thr(h.object))||hs.filter(h=>h.object.userData.devPlate).sort((a,b)=>a.object.userData.rad-b.object.userData.rad)[0];return h?h.object:null;};
   const out={};
