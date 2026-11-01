@@ -7,6 +7,9 @@ Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to ca
 ## 3.68.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the winding keys, the transit lock (each of its pieces), the barrel arbor's hook, the wire spring's stud, the band's hooks, the 6MX's chatons and the detent block of every version with its screws; the chain, the band's strip, the boxes' fittings, jewels and standard parts as parts to buy. 171 made parts and 101 bought lines in all.
 
+## 3.67.01 · 2026-11-01
+- The Wempe's barrel arbor (1943) has its hook's hole drilled right through the core, as its drawing shows.
+
 ## 3.67.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the fusee body with its chain groove as an exact solid, the maintaining spring, the maintaining detent's arbor and its screws; the hairspring's collet and stud, the balance's arm and mass screws and the stud's screw, and the detent block of 1943, each part's card giving the version the page shows. 135 made parts and 39 bought lines in all.
 
