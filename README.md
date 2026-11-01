@@ -365,6 +365,7 @@ every tool, what it checks and how long it takes. Before committing a change:
        python overhaul.py   # every operation of the manual's overhaul takes its parts off, or puts them on, clear of the rest
        python holecheck.py  # every hole has something in it, or a reason it is empty on the real movement
        python seatcheck.py --model wempe  # every pin, screw, stud and pipe held in a hole of another part, not lying in a slot or buried in solid metal
+       python wempe_fusee_check.py        # the Wempe fusee body as built against every written figure of its sheet 05 06 04-2 (no browser; after wempe_fusee_body.py)
        python placements.py dump before   # (before the change) every mesh's place in seven states; after it: dump after, then --diff before after
        python audit.py      # screws, pivots, loose parts in the movement (exit code 1 on anything not expected; --update after an intended change of coplanar faces)
        python audit.py box  # the same for the box and gimbals
