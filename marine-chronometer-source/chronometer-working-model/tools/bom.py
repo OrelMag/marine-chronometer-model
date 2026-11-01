@@ -45,7 +45,7 @@ def qty_ok(q,n):
     if isinstance(q,int):return n==q
     return n==0
 REGISTRY=model.cfg('REGISTRY',True)   # the registry: the Hamilton's catalogue numbers on its cards (below); off for a model whose lines are drawing numbers
-ARM=model.cfg('ARM',"document.querySelector('#stopV button[data-v=\"arm\"]').click()")   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list (its button, so the part's card and numbers are the arm's too)
+ARM=model.cfg('ARM',"document.querySelector('#stopV button[data-v=\"arm\"]').click()")   # the parts list's balance stop, the locking arm (Fig. 9): the page's default since 1 November 2026 (the Navy's Y-arm, which the manual doesn't list, before); its button pressed all the same, so the part's card and numbers are the arm's whatever a visitor last chose
 async def run(evl):
     async with async_playwright() as p:
         b=await p.chromium.launch(args=browser.ARGS)

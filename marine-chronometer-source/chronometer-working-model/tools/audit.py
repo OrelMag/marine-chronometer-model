@@ -1,6 +1,6 @@
 """Geometry audit: screws that overlap or have nothing under their seat, cylinders (arbors, pins) whose ends sit in nothing,
 coplanar overlapping faces (possible z-fighting), and parts that touch nothing (visible ones only). Usage: python audit.py [box] [--eval JS] [--rev first] [--update]
-(--eval runs JS after loading, e.g. "__mv.userData.stop('arm')" to fit the manual's locking arm in place of the Navy's Y-arm, the default)
+(--eval runs JS after loading; --stop navy fits the Navy's Y-arm in place of the manual's locking arm, the default, its coplanar faces under movement.navy)
 
 The model is frozen in one state first (the escapement locked, the fusee 2.5 turns from full wind: placements.py's first state), so a run
 doesn't depend on the time of day. Then every finding is compared with what is expected: no overlapping or floating screw and no isolated
@@ -17,7 +17,8 @@ MODE='box' if 'box' in sys.argv[1:2] else 'movement'
 # --rev first: a model whose drawings have two states (the Wempe's sheets as first drawn: its page's Variants, movement.js's setRev) is audited in that state, its coplanar
 # faces kept under their own key ('movement.first'), so --update records them as it does the default's
 REV=sys.argv[sys.argv.index('--rev')+1] if '--rev' in sys.argv else None
-KEY=MODE+('.'+REV if REV else '')
+STOP=sys.argv[sys.argv.index('--stop')+1] if '--stop' in sys.argv else None   # the Hamilton's balance stop: the manual's locking arm as the page opens (since 1 November 2026), or --stop navy, the Y-arm (its own key, movement.navy)
+KEY=MODE+('.'+REV if REV else '')+('.'+STOP if STOP else '')
 JS='geometry-audit-box.js' if MODE=='box' else 'geometry-audit.js'
 EXP=(HERE if model.HAMILTON else model.DIR)/'audit-expected.json'   # another model's beside its page
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
@@ -29,8 +30,10 @@ LOOSE=model.cfg('LOOSE',[   # places in the movement's frame (mm, x1.117 with th
  ('bal:Cylinder',None,0.25,"a vernier timing weight's screw, its free end past the nut"),
  ('bal:Cylinder',None,0.25,"the other vernier weight's screw"),
  ('spr:Cylinder',(15.09,-37.29,8.02),0.329515,"the hairspring stud's far pin, its end past the stud's block (free since the rescale, 31 October 2026: the stud's sizes x1.117 about the absolute coil, the outer curve re-solved)")])
-# with the Navy's balance brake fitted (the page's default; --eval "__mv.userData.stop('arm')" fits the manual's arm instead), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
+# with the Navy's balance brake fitted (--stop navy; the page fits the manual's arm by default since 1 November 2026), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
 LOOSE_NAVY=model.cfg('LOOSE_NAVY',[('lockArm:Cylinder',(15.19,-31.93,7.78),0.4468,"the Navy brake's pin over the rim, free"),('lockArm:Cylinder',(-11.6,-31.93,15.18),0.4468,"its other pin, the same")])
+# with the manual's locking arm fitted (the page's default since 1 November 2026): its stop pin (42300) pressed into the train bridge, standing up for the arm to come against
+LOOSE_ARM=model.cfg('LOOSE_ARM',[('lockArm:Cylinder',(-8.57,-29.97,32.47),0.4468,"the locking arm's stop pin, standing out of the train bridge for the arm to rest against")])
 FLOAT=model.cfg('FLOAT_BOX' if MODE=='box' else 'FLOAT',[])   # the Hamilton's winding ratchet screws (42014), listed until 31 October 2026: with the rescale the ratchet's lower 0.15 is 0.168, deeper than the probe's 0.15, so their heads read as seated   # screws whose head is meant to bear on a part only at its edge (another model's checks.py lists them, FLOAT_BOX for the box: part:geometry, place, head radius, why); none on the Hamilton
 async def run():
     async with async_playwright() as p:
@@ -40,6 +43,7 @@ async def run():
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         await pg.evaluate(FREEZE);await pg.wait_for_timeout(200)
         if REV:await pg.evaluate(f"__mv.userData.setRev('{REV}')");await pg.wait_for_timeout(300)
+        if STOP:await pg.evaluate(f"__mv.userData.stop('{STOP}')");await pg.wait_for_timeout(300)
         if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1]);await pg.wait_for_timeout(300)
         r=json.loads(await pg.evaluate(open(HERE/JS).read()))
         await b.close();return r,errs
@@ -63,7 +67,7 @@ def main():
         else:bad.append(f'floatScrews: {x}')
     gone+=[f'floatScrews: {e[0]} r{e[2]} at {e[1]} ({e[3]})' for e in fl]
     for k in ('dupScrews','isolated'):bad+=[f'{k}: {x}' for x in r[k]]
-    left=list(LOOSE)+(LOOSE_NAVY if "stop('arm')" not in ' '.join(sys.argv) else []) if MODE=='movement' else []
+    nv=STOP=='navy' or "stop('navy')" in ' '.join(sys.argv);left=list(LOOSE)+(LOOSE_NAVY if nv else LOOSE_ARM) if MODE=='movement' else []
     for x in r['looseEnds']:
         nm,pos,rad=x[0],x[1],float(x[2][1:])
         m=next((e for e in left if e[0]==nm and abs(e[2]-rad)<1e-6 and (e[1] is None or max(abs(a-b) for a,b in zip(pos,e[1]))<=0.3)),None)

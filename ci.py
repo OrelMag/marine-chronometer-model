@@ -191,6 +191,7 @@ STEPS=[('build',build,'quick'),
  ('book',R([PY,'book.py'],TOOLS),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('wempe-book',R([PY,'book.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's build book checked as paper, as the Hamilton's: every shown line on a sheet, each with its drawing's material or why it has none (about 1½ min)
  ('audit',R([PY,'audit.py'],TOOLS),'browser'),
+ ('audit-navy',R([PY,'audit.py','--stop','navy'],TOOLS),'browser'),   # the Navy's Y-arm fitted (Variants, Balance stop; the manual's locking arm is the default since 1 November 2026), its coplanar faces under movement.navy
  ('audit-box',R([PY,'audit.py','box'],TOOLS),'browser'),
  ('holecheck',R([PY,'holecheck.py'],TOOLS),'browser'),
  ('wempe-smoke',R([PY,'smoke.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's page: its views, sections, Spread, a pick, the opacity menu, a link; then its Essay tab (about 1½ minutes)

@@ -1,6 +1,6 @@
 """Every hole populated: each round hole in a flat face of every part of the movement (screw holes, pivot holes and bushings' bores, jewel holes, pin holes,
 gears' bores) is followed along its axis and tested for something in it (a screw's shank, a pivot, an arbor, a pin, a setting), by holecheck.js in the page.
-It runs with each balance stop fitted (the Navy's Y-arm, as the page opens, and the manual's locking arm), since each leaves the other's holes. A hole with
+It runs with each balance stop fitted (the Navy's Y-arm and the manual's locking arm, as the page opens), since each leaves the other's holes. A hole with
 nothing in it fails, unless EXPECTED gives the reason it is empty on the real movement too (a hole a figure or a frame shows open, an access hole, a jewel
 setting's window, the holes of the stop not fitted). Exit code 1 on an empty hole not expected, or an expected one that is no longer empty or no longer there.
 
