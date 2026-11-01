@@ -743,7 +743,7 @@ function buildMovement(M){
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),[...S.tb[2],TB_CB,1],hT(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.lb.map(q=>hT(...q,PSR)),...LBPH,[...S.blk,1.5638,1],...S.dpin.map(q=>[...q,0.474725,1]),hT(...S.cock,CKH_R,CKH_T),...S.ckp.map(q=>[...q,1.19519,1]),...S.bbp.map(q=>[...q,1.06115,1]),[...S.tbx,0.83775,1],
     [...S.tBlock,1.0053,1]],TBG=h=>blindHoles(polyGeo(TBpoly,3.4627,h,0.24574),'top',LBPH,1.3404,0.24574);
   R.tbGeo={navy:TBG(TBH),arm:TBG([...TBH,hT(...S.arm,ARM_S),[...S.armPin,0.3351,1]])};
-  R.trainBridge=mesh(tb,R.tbGeo.arm,M.plate,0,TB_T,0);hn(tb,'42062');   /* the barrel bridge's far pin's hole (S.bbp[1]): KLUwI2UUCMQ 23:30 (face up) and 13:49.5 (underside), countersunk underneath, r 0.82-0.98; its place
+  R.trainBridge=mesh(tb,R.tbGeo.navy,M.plate,0,TB_T,0);hn(tb,'42062');   /* the barrel bridge's far pin's hole (S.bbp[1]): KLUwI2UUCMQ 23:30 (face up) and 13:49.5 (underside), countersunk underneath, r 0.82-0.98; its place
      through the homographies on the holes the bare plate places (S.bbp's comment; until 19 October 2026 by the bridge's rims, the cut round the barrel and the centre bushing, tools/holemap.py) */
   const tbX=[];   /* the pieces of the bridge's own metal drawn apart (the seats' floors, the counterbores' floors, the pawl's pivot hole), merged into its geometry below */
   for(const f of TB_SEAT){const ins=([x,z])=>{let c=false;for(let i=0,j=f.length-1;i<f.length;j=i++){const[a,b]=f[i],[e,d]=f[j];if((b>z)!==(d>z)&&x<(e-a)*(z-b)/(d-b)+a)c=!c;}return c;};   /* each seat's floor, with its screw's tapped hole and its pin's hole */
@@ -760,7 +760,7 @@ function buildMovement(M){
   hn(screw(tb,...S.blk,TB_T+1.117,1.17285,1.117,3.4627-1.117+2.6808,0.50265),'42056.blk');tbX.push(mesh(tb,ringGeo(1.55263,hC(0,0,1.0053)[2],3.4627-1.117),M.plate,S.blk[0],TB_T+1.117+(3.4627-1.117)/2,S.blk[1]));
   /* the bridge one mesh in both its states (R.tbGeo): the floors and rings merged into its geometry, so no line is drawn round them on its faces (Edges outlines each mesh); apart until 21 October 2026 */
   { const I4=new THREE.Matrix4(),X=tbX.map(o=>{tb.remove(o);return[o.geometry,new THREE.Matrix4().makeTranslation(o.position.x,o.position.y-TB_T,o.position.z)];});
-    for(const k of['navy','arm'])R.tbGeo[k]=mergeGeo([[R.tbGeo[k],I4],...X.map(([g,m])=>[g.clone(),m])]);R.trainBridge.geometry=R.tbGeo.arm; }   /* its head flush in a counterbore r 1.4 (KLUwI2UUCMQ 10:46, the screwdriver on it: the head about r 1.0, the counterbore 1.4, against a pillar screw's head, r 2.77, in the same frame; +-0.15; its depth, the head's, estimated); proud, r 0.9, until 4 October 2026. 42056 is also the setup cover's and the dust seal's screws, so one screw: the head r 1.05, 1.0 tall, the thread r 0.45 (not measured: the cover's, which its outline leaves room for)
+    for(const k of['navy','arm'])R.tbGeo[k]=mergeGeo([[R.tbGeo[k],I4],...X.map(([g,m])=>[g.clone(),m])]);R.trainBridge.geometry=R.tbGeo.navy; }   /* its head flush in a counterbore r 1.4 (KLUwI2UUCMQ 10:46, the screwdriver on it: the head about r 1.0, the counterbore 1.4, against a pillar screw's head, r 2.77, in the same frame; +-0.15; its depth, the head's, estimated); proud, r 0.9, until 4 October 2026. 42056 is also the setup cover's and the dust seal's screws, so one screw: the head r 1.05, 1.0 tall, the thread r 0.45 (not measured: the cover's, which its outline leaves room for)
      (the cover's at 6:29, 1.05 of the seal's at the same depth and 0.48 of its own width tall; this one's r 1.0; the seal's about 1.1, rough), until 5 October 2026 r 1.0 and 0.5 tall here, r 0.9 and 0.55 on the cover, r 1.0 and 0.5 on the seal. The floor round the shank */
   /* centre and third upper bushings in the train bridge (42166, 42167); they lie in the opening round the balance, so they can be oiled with the barrel bridge on (Sec. VIII, Op. 46) */
   /* their outsides r 1.95 and 1.9 and their oil sinks, polished cones out to r 1.0-1.15 (KLUwI2UUCMQ 23:30 and 13:44 through the anchored homographies, the rim r 40.5: circles fitted on
@@ -773,7 +773,7 @@ function buildMovement(M){
      against its stop pin (42300), clear of everything the balance carries. Fig. 9 shows the arm curved, its screw outside the rim and its end at a timing weight; the arm's
      sizes, the screw's place and the finger's height (2.4 mm, to 0.56 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
   { const ap=part('lockArm',-69.254),dA=sub(S.armF,S.arm),AL=Math.hypot(...dA),dL=unit(dA),AE=AL+0.50265;R.armL=Math.atan2(-dL[1],dL[0]);
-    const f9=new THREE.Group();ap.add(f9);R.armF9=f9;   /* the manual's arm, its screw, washer and stop pin: hidden together when the Navy's Y-arm is fitted instead (below) */
+    const f9=new THREE.Group();f9.visible=false;ap.add(f9);R.armF9=f9;   /* the manual's arm, its screw, washer and stop pin: hidden together when the Navy's Y-arm is fitted instead (below) */
     R.armU=-ARM_U;R.arm=new THREE.Group();R.arm.position.set(S.arm[0],TB_T,S.arm[1]);f9.add(R.arm);R.arm.rotation.y=R.armL+R.armU;
     const bw=-ARM_BOW*Math.sign((L.B[0]-S.arm[0])*-dL[1]+(L.B[1]-S.arm[1])*dL[0]),cl=t=>[t*AE,bw*Math.sin(Math.PI*t)],N=14,side=k=>[...Array(N+1).keys()].map(i=>{const t=i/N,[x,z]=cl(t);return[x,z+k*0.4468];});   /* a strip 0.8 wide, bowed ARM_BOW away from the staff */
     hn(R.arm,'42299');mesh(R.arm,polyGeo(subtractCircle([...side(1),...side(-1).reverse()],[0,0],1.2287,true),0.50265,[hC(0,0,ARM_S)]),M.blued,0,-0.50265,0);
@@ -1869,7 +1869,7 @@ function buildMovement(M){
     const a=DEV.g*e,c=Math.cos(a),s=Math.sin(a);for(const g of EFP){g.rotation.y=a;g.position.x=L.E[0]+dE[0]*e-(L.E[0]*c+L.E[1]*s);g.position.z=L.E[1]+dE[1]*e-(-L.E[0]*s+L.E[1]*c);}
     for(const q of DPH)q.m.rotation.y=q.r0+q.c*e;};
   mv.userData.balance=kind=>{R.balU.visible=kind!=='split';R.balS.visible=kind==='split';R.balKind=kind==='split'?'split':'uncut';};R.balKind='uncut';
-  mv.userData.stop=kind=>{R.armF9.visible=kind!=='navy';R.trainBridge.geometry=R.tbGeo[kind==='navy'?'navy':'arm'];R.navy.visible=kind==='navy';R.bbScr[R.navyBB].visible=kind!=='navy';};   /* the balance stop fitted: the manual's locking arm (Fig. 9) or the Navy's Y-arm */
+  mv.userData.stop=kind=>{R.armF9.visible=kind==='arm';R.trainBridge.geometry=R.tbGeo[kind==='arm'?'arm':'navy'];R.navy.visible=kind==='navy';R.bbScr[R.navyBB].visible=kind!=='navy';};   /* the balance stop fitted: none (the default since 1 November 2026: the bridge's face plain, the barrel bridge's pillar screw in), the manual's locking arm (Fig. 9) or the Navy's Y-arm */
   /* train-blocking screw: with its dog point down between the fourth wheel's spokes, how many beats (E) the train can still turn before the next spoke meets it (blockRoom),
      and whether a spoke is under the dog point now, so it can't be screwed down (blockClear). The fourth wheel turns with its spokes' angles falling as E rises */
   { const u=R.tbs.userData,q=TAU/FW_SP,sp=E=>[...Array(FW_SP).keys()].map(j=>-(E*ESC.P)/ESC_PER.fw+FW.wheel.rotation.y+j*q-u.sig);
