@@ -1430,3 +1430,7 @@ from .wempe_esc import RECIPES as _ESC; RECIPES.update(_ESC)   # batch 8c (the h
 # ================= Batch 11 (31 October 2026), the case made parts: their own module (wempe_case.py) =================
 from . import wempe_case
 RECIPES.update(wempe_case.RECIPES)
+
+# ================= Batch 12 (1 November 2026): the keys, the transit lock, the barrel hook, the stud, the band hooks and the coverage lines: wempe_rest.py =================
+from . import wempe_rest
+RECIPES.update(wempe_rest.RECIPES)

@@ -40,5 +40,9 @@ def main():
         stale.append(js.name)
         if not check:js.write_bytes(txt.encode('utf-8'))
     print('\n'.join(('stale: ' if check else 'wrote ')+s for s in stale) or 'up to date')
+    try:   # coverage (informational): the parts-list lines (not assemblies) with neither a recipe nor a bought line on a card
+        lines=json.loads((model.DIR/'bom.json').read_text(encoding='utf-8'))['lines'];unc=[l['id'] for l in lines if l.get('kind')!='asm' and l['id'] not in H]
+        print(f'{len(unc)} of {sum(1 for l in lines if l.get("kind")!="asm")} parts-list lines have no recipe or bought line'+(': '+' '.join(unc) if unc else ''))
+    except (OSError,ValueError,KeyError):pass
     sys.exit(1 if check and stale else 0)
 if __name__=='__main__':main()
