@@ -950,7 +950,8 @@ def blockBought():
     return [Bought('stellstift201gk','WN-201.gk',"Detent block's steady pins (WN-201), two",'dowel pin, pressed in the block, 1.3 into the top plate','Ø 0.9 × 7.8 (near, through the base) and × 4.3 (far, through the thin part)','ISO 8734, or silver steel Ø 0.9','steel','escapement.js (05 04 01-4: the holes Ø 0.9 sure; the lengths from the block and the plate, estimated)'),
             Bought('stellstiftgf','WN-205.d',"Detent foot's steady pins, two","pin, pressed through the foot into the block's end face",'Ø 0.45 × 3.2','silver steel Ø 0.45','steel',"escapement.js (1436's foot holes; estimated)")]
 def blockScrew():
-    q=WDET()['BLK']['gk'];return screw('blockScrew','WN-gk','Detent block screw (WN-15 by the coloured section)',q[0],q[1],q[2],q[3],'steel (not given)','escapement.js BLK.gk (Wempe 3955 6_S: head Ø 3.0 × 2.4; M1.7 3.0 into the block: estimated)')
+    q=WDET()['BLK']['gk'];r=screw('blockScrew','WN-gk','Detent block screw (WN-15 by the coloured section)',q[0],q[1],q[2],q[3],'steel (not given)','escapement.js BLK.gk (Wempe 3955 6_S: head Ø 3.0 × 2.4; M1.7 3.0 into the block: estimated)')
+    r.show='last first';return r   # the 6MX's and the escapement of 1943's stud are their own (wempe_esc.py)
 def detentBought():
     return [Bought('lockingStone','050401-3','Locking stone (Ruhestein)',"a ruby pin, ground half away to a flat that faces the oncoming tooth along the line from the wheel's centre, set in the detent's pipe in shellac",
               "Ø 0.75, standing out of the pipe's lower end to 0.06 under the wheel's lower face",'jewel pin (synthetic ruby)','ruby','05 04 01-3; 05 04_1 ("Ruhestein Ø 0,75": sure; its hatched half the ground flat)')]

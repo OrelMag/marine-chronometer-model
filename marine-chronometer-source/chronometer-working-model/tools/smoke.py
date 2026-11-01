@@ -614,6 +614,13 @@ async def wempe(b,errs,steps):
     rc=await ev("[...document.querySelectorAll('.info .mkc ul.mkr a')].map(a=>a.getAttribute('href'))")
     steps.append(f"the top plate's recipe links: {rc}")
     if 'parts/topPlate.step' not in rc or 'parts/topPlate.html' not in rc:errs.append(f"the top plate's card: no STEP file or operation sheet: {rc}")
+    for v,k in [('last','detentBlock'),('first','detentBlock.first'),('3955','detentBlock.3955'),('6mx','detentBlock.6mx'),('1943','detentBlock.1943')]:   # each version's detent block card links its own recipe and no other's (WRECIPES v, maker.js recipesShow)
+        await ev("h=>{location.hash=h}",f'#part=detentBlock&rev={v}');await pg.wait_for_timeout(900)
+        rc=await ev("[...document.querySelectorAll('.info .mkc ul.mkr a')].map(a=>a.getAttribute('href'))")
+        bad=[x for x in('detentBlock','detentBlock.first','detentBlock.3955','detentBlock.6mx','detentBlock.1943') if (f'parts/{x}.step' in rc)!=(x==k)]
+        steps.append(f"the detent block's recipe links in {v}: {[x for x in rc if x.endswith('.step')]}")
+        if bad:errs.append(f"the detent block's card in version {v} links the wrong recipes ({bad}): {rc}")
+    await ev("h=>{location.hash=h}",'#part=topPlate');await pg.wait_for_timeout(600)
     await click('#mkData','Data')
     await ev("document.querySelector('#makeDet').open=false")
     # ship motion, the transit lock, the roll period (near the case's own swing and off it)

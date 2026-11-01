@@ -29,7 +29,7 @@ def main():
     for k,mk in W.RECIPES.items():
         p=mk()
         if hasattr(p,'what'):H.setdefault(p.hn,[]).append({'t':p.title,'buy':f'{p.what}, {p.size}; {p.standard}; {p.material}'})
-        else:H.setdefault(p.hn,[]).append({'t':p.title,'k':k,**({'v':p.rev} if p.rev!='last' else {})})
+        else:H.setdefault(p.hn,[]).append({'t':p.title,'k':k,**({'v':p.show or p.rev} if (p.show or p.rev)!='last' else {})})
     for h,L in H.items():   # a line with a recipe of another version: every entry of it says its own, so the card shows the one for the version on show (maker.js, cfg.recipesShow)
         if any('v' in e for e in L):
             for e in L:e.setdefault('v','last')
