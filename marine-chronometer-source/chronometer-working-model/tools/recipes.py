@@ -32,7 +32,7 @@ def recipes():
         from recipes import wempe;return wempe.RECIPES
     sys.exit('recipes.py: no recipes yet for '+model.NAME)
 
-EXPORT="""hh=>{const [hn,ri]=hh.split('|'),RI=+(ri||0);let nr=0;const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last'))return false;return true;};
+EXPORT="""hh=>{/* shut 'book': the closing plate photographed in The Mariner's Chronometer (Fig. 2.32), a Variant, with its stop peg on the bowl's line; the recipes are the drawings' */const [hn,ri]=hh.split('|'),RI=+(ri||0);let nr=0;const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last')||q.userData.shut==='book')return false;return true;};
   let sc=mv,root=null;const find=s=>s.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o)&&nr++===RI)root=o;});   /* RI: the RI-th such mesh (a line of two springs: the second spring's foot) */find(mv);if(!root&&window.__BX&&window.__BX.root){sc=window.__BX.root;find(sc);}   /* the case and its box are not in the movement's group: the box's root (?qa's __BX) */
   if(!root)return null;sc.updateMatrixWorld(true);
   const subs=[];sc.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
