@@ -4,10 +4,10 @@
  "stages": [
   {
    "stage": "fusee wheel → centre pinion",
-   "lo": -0.06567,
+   "lo": -0.05027859375,
    "hi": 0.21376953125,
-   "phi": 9.23,
-   "tp": 0.027835000000000002
+   "phi": 16.32,
+   "tp": 0.020139296875
   },
   {
    "stage": "centre wheel → third pinion",

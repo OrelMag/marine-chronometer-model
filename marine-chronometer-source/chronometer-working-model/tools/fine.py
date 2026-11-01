@@ -41,7 +41,8 @@ EXPECTED=model.cfg('EXPECTED',{   # the limits (mm³, mm) x1.117³ and x1.117 wi
  ('barrel:Buffer(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.042,0.503),
  ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel (3.0 x 3.1 since 20 October 2026, KLUwI2UUCMQ 15:47.45)",7.665,3.574),
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",9.756,1.34),
- ('fusee:Buffer','fusee:Cylinder'):("the taper pin through the fusee arbor's shoulder under the end plate, its hole not drawn (their own group, which the Exploded view takes off the arbor's end; the shoulder r 2.2 since 15 October 2026, r 1 and 0.25 mm3 before)",0.836,0.503),
+ ('fusee:Buffer','fusee:Buffer'):("the fusee's top layers' bore ring (r 2.945, round the drawn body) against its lathe's face at the hub's edge (r 3.3): a sliver of 0.02 mm3 where the recess's lifted face meets the hub, since the hub grew to r 3.31 round the drawn arbor body (1 November 2026)",0.05,1.8),
+ ('fusee:Buffer','fusee:Cylinder'):("the taper pin through the fusee arbor's shoulder under the end plate, its hole not drawn (their own group, which the Exploded view takes off the arbor's end; the shoulder r 2.2 since 15 October 2026, r 1 and 0.25 mm3 before; 2.67 mm3 since 1 November 2026: the pin r 0.36-0.43 through the drawn body r 2.91 (42022), the cross hole .036 not cut in the arbor's lathe)",3.0,0.9),
 })
 CORE=4.84   # mm: the barrel arbor's core (MSPRING.ra - 0.06, movement.js; 1.74 until 12 October 2026)
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid

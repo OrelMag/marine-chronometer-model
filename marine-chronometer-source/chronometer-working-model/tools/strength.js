@@ -21,6 +21,7 @@ const P=a=>a.map(x=>x*MPa);
 say('The going train, fully wound (each stage lossless: the largest forces)');
 const Y=0.2,arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arborH?\\((.*?)\\),'`).exec(mv);if(!m)throw Error('not found: arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);if(n==='fw'){const hd=require('fs').readFileSync(__dirname+'/../js/hdims.js','utf8'),I=(o,k)=>{const b=hd.slice(hd.indexOf(o+':{')),t=b.slice(b.indexOf(k+':I(')+k.length+3);return parseFloat(t)*25.4;},S=+/LB_T=(-?[\d.]+)/.exec(mv)[1]+3.378925-I('p4','pivTopLen'),y=q=>S+q;   /* the fourth as drawn (42073, 42072; movement.js F4Y): the wheel on the leaves' top face, the leaves .320 to .505 from the tip */
   return{w:I('w4','t'),p:(.505-.320)*25.4,wy:y(I('w4','seatS')+I('w4','t')/2),py:y((.505+.320)*25.4/2)};}
+if(n==='gw'){const hd=require('fs').readFileSync(__dirname+'/../js/hdims.js','utf8'),g=k=>{const b=hd.slice(hd.indexOf('fw:{')),t=b.slice(b.search(new RegExp('[,\\s]'+k+':I\\('))+k.length+4);return parseFloat(t)*25.4;},th=g('t')-g('toothStep');return{w:th,p:null,wy:-6.5903-th/2,py:null};}   /* the fusee wheel as drawn (42015, hdims.js fw): the tooth ring .095 on the left face, GW_B -6.5903 (movement.js) */
 return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
 const fc=(W,P)=>W.wy!=null&&P.py!=null?Math.max(0,Math.min(W.wy+W.w/2,P.py+P.p/2)-Math.max(W.wy-W.w/2,P.py-P.p/2)):Math.min(W.w,P.p);   /* a mesh's face: where the wheel's and the pinion's heights overlap (the fusee wheel's 2.22 on the centre pinion's 1.54 bear over 1.40; min(th) until 18 October 2026) */
 const A={gw:arb('gw'),cw:arb('cw'),tw:arb('tw'),fw:arb('fw'),esc:arb('esc')},M=PH.MODS;
@@ -43,7 +44,7 @@ say(`the pinions are hardened steel, ${f(STEEL_Y[0]/BRASS_Y[1],1)}-${f(STEEL_Y[1
 /* ---------- pivots: bending at the shoulder (σ = 32 F L / π d³, the load at mid-bearing), and the bearing's pressure ---------- */
 say('Pivots and bearings');
 {const pv=re=>{const m=re.exec(mv);if(!m)throw Error('not found: '+re);return m.slice(1).map(Number);};
-  const fu=pv(/bushR\(bb,\.\.\.L\.Fu,BB_T,TB_T,([\d.]+),([\d.]+)\)/),[BB_T]=num(/,BB_T=(-?[\d.]+)/,'BB_T'),[TB_T]=num(/TB_T=(-?[\d.]+)/,'TB_T'),Lb=Math.abs(TB_T-BB_T)/1000;
+  const hdv=(o,k)=>{const h=require('fs').readFileSync(__dirname+'/../js/hdims.js','utf8'),b=h.slice(h.indexOf(o+':{')),t=b.slice(b.indexOf(k+':I(')+k.length+3);return parseFloat(t)*25.4;},fu=[0,hdv('fa','bear')/2],[BB_T]=num(/,BB_T=(-?[\d.]+)/,'BB_T'),[TB_T]=num(/TB_T=(-?[\d.]+)/,'TB_T'),Lb=Math.abs(TB_T-BB_T)/1000;
   const pull=PH.Mup/(PH.rB/1000),Ffu=pull+F.gw,d=2*fu[1]/1000,sig=32*Ffu*(Lb/2)/(Math.PI*d**3),p=Ffu/(d*Lb);
   line(`fusee arbor's pivot (r ${fu[1]}, ${f(Lb*1000,1)} long in its bushing)`,`${f(Ffu,1)} N (chain + wheel)`,sig,P(STEEL_Y),'steel\'s yield');
   line('  its bushing, the pressure (oiled brass, turning once in 6.4 h)',`${f(Ffu,1)} N`,p,P([10,35]),'oiled brass at a crawl, typical');

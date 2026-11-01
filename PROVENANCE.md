@@ -1016,3 +1016,16 @@ The owner's points on KLUwI2UUCMQ 23:30 (the train bridge face up), 9:03 (the pl
 - **14:43.38, the train side: 23 of 27 identified, 1.0 mm rms.** Strongly oblique, the pillar tops 16.8 mm up among the points: good for naming the holes, not for sub-millimetre readings.
 - **The dial feet's radius (45.9) stays open:** found automatically on 9:03, only 4 of the flange's 8 holes match among 39 round features seen through the bore. The owner's task 06 (`E:\mc-video\oq\measure\06_mounting_ring`) traces them.
 
+
+## Group 2: the fusee wheel and arbor from Hamilton's drawings (1 November 2026, key letter D)
+
+Source D (Hamilton's drawing, the owner: the drawings are the source of truth) now stands under these rows; the video readings they replace stay in the older rows above, each marked superseded. How sure: sure for the diameters, lengths and the .053 hole; likely for the left face's step depths, the knurl's place and the square's chamfer (see Review-results.md, "The fusee wheel and arbor against their drawings").
+
+| Part | Reading | Source | Left |
+|---|---|---|---|
+| 42015 wheel, teeth and size | 90 teeth, tips r 20.485 (OD 1.613), rim land r .700-.730 the full .100, tooth ring .095 | D (42015 #1-4, 12, 13) | the module is the layout's 0.4378 against the sheet's .44 (centre distance 22.768 against 22.88: a layout question) |
+| 42015 wheel, recess and hub | recess r .700, web .045, disc r .370 .005 under the rim land, boss .2995 to .150, bore .2300, steps .600/.470/.320 on the left face | D (#5-11, 14-18); depths of the steps likely | the step depths .015/.050/.055 |
+| 42015 hole | .053 at R .6100 | D (#19, 20) | the sustaining spring's pin moved to it (group 3 rebuilds the spring) |
+| 42022 arbor | bearings .1695, body .2295, collar .316 x .045, knurl .2500 x .080, shank .1695, square .110 AF from .145 round, 2.000 overall, lengths from the 42018 end | D (#1-19) | the knurl's place (after the .060 gap) and the body after it at .2295: likely; the chamfer .005-.010 not drawn |
+| 42022 stack | lower shoulder on the plate's train face (bush flush), upper shoulder at the barrel bridge's underside, 0.028 endshake | D + the bushes (42164 not drawn) | the bushes' bore and flange are estimates |
+| 42020 taper pin | at the cross hole, .310 from the collar's right face | D (42022 #7, 21) | the pin's size |

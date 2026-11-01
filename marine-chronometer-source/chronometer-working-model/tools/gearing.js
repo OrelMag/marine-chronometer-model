@@ -27,7 +27,7 @@ const gearOutline=Function('TAU',src+';return gearOutline;')(TAU);
 /* a gear as a star-shaped outline: R(a), the outline's radius at angle a (the outline runs round with its angle never falling: radial flanks are steps) */
 const HDS=WEMPE?'':require('fs').readFileSync(__dirname+'/../js/hdims.js','utf8'),hdv=(o,k)=>{const b=HDS.slice(HDS.indexOf(o+':{')),t=b.slice(b.indexOf(k+':I(')+k.length+3);return parseFloat(t)*25.4;};   /* the Hamilton's drawn sizes (js/hdims.js, 42073 and 42072) */
 /* the fourth wheel at its drawn tip, the escape pinion's root deepened to clear that tip (movement.js) */
-function hopts(z,m,mate,ha){if(z===75)return{mate,ha:(hdv('w4','od')/2-m*z/2)/m};if(z===10)return{dep:1.55};return z>20?{mate,ha}:{};}
+function hopts(z,m,mate,ha){if(z===75)return{mate,ha:(hdv('w4','od')/2-m*z/2)/m};if(z===90&&m>0.4)return{mate,ha:(hdv('fw','od')/2-m*z/2)/m};if(z===10)return{dep:1.55};if(z===14)return{dep:2.05};return z>20?{mate,ha}:{};}
 function gear(z,m,mate,ha){const{xy,ro,ri}=WEMPE?WT.outline(z,m):gearOutline(z,m,hopts(z,m,mate,ha)),n=xy.length,ang=[],P=[];let off=0,prev=-Infinity;
   for(const[x,y]of xy){let a=Math.atan2(y,x)+off;while(a<prev-1e-9){off+=TAU;a+=TAU;}ang.push(a);P.push([x,y]);prev=a;}
   ang.push(ang[0]+TAU);P.push(P[0]);const a0=ang[0];

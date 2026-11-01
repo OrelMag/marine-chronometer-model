@@ -1689,7 +1689,7 @@ function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false)
    hole, drilled 25 to 30 deep), 2.46 across (over the fusee's 2.4 square and the cannon pinion's 2.16; the book's 3 is filed to the arbor's square); the paddle 3 thick, the book's knob.
    Inside (the book's construction, not drawn): the pipe is the shaft, its head and a helical spring in the body's bore, the paddle held in its slot by a pin. Until 26 October 2026 the
    same form 46.6 long, scaled by a pipe r 2.2 (estimated) */
-function windingKey(g,M){const KR=3.351,KP=28.3718,KS=27.925,V=(a,b)=>new THREE.Vector2(a,b);mesh(g,sqRingGeo(KR,2.74782,KS),M.brass,0,KS/2,0);   /* KR the pipe's radius, KP the paddle's width (overwind.js reads both) */
+function windingKey(g,M){const KR=3.351,KP=28.3718,KS=27.925,V=(a,b)=>new THREE.Vector2(a,b);mesh(g,sqRingGeo(KR,2.85,KS),M.brass,0,KS/2,0);   /* KR the pipe's radius, KP the paddle's width (overwind.js reads both) */
   mesh(g,new THREE.LatheGeometry([V(0,KS),V(KR,KS),V(KR,43.563),V(4.5797,43.563),V(4.5797,46.914),V(5.1382,46.914),V(9.21525,55.85),V(11.67265,69.254),V(12.7338,69.254),V(12.7338,73.722),V(0,73.722)],32),M.brass);   /* pipe, neck ring, cone, body, collar */
   const sh=new THREE.Shape();sh.moveTo(-12.7338,0);sh.lineTo(-KP/2,21.5581);sh.absarc(0,21.5581,KP/2,Math.PI,0,true);sh.lineTo(12.7338,0);sh.closePath();
   const pg=extrude(sh,{depth:3.351,bevelEnabled:false,curveSegments:32});pg.translate(0,73.722,-1.6755);mesh(g,pg,M.brass);return g;}   /* the paddle on the collar, as wide as it at its foot, widening to its round top, 98 over the pipe's end */
