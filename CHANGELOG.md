@@ -4,9 +4,8 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
-## 3.65.02 · 2026-11-01
-- The Wempe fusee's flange: its two ribs and the chain's slot between them now square and to the drawing's figures (0,87 slot, 0,37 rib, 2 over both)
-- The Wempe fusee's stop bar slot: 1,1 deep over the whole of the bar's upper end's side, as the drawing writes it; the bar thick only inside the small end's recess
+## 3.66.00 · 2026-11-01
+- The Wempe's Making it: CAD files (STEP) and operation sheets for the case: the bowl, the bezel, the closing plate, the brackets, the gimbal ring, the lock nuts and the case's screws, each size on a line of its own; the glass, the closing spring, the box and its wood screws as parts to buy. 123 made parts and 37 bought lines in all.
 
 ## 3.65.01 · 2026-11-01
 - The Wempe's box latch rebuilt as on Lange No. 5591: a slotted latch plate with its knob on the box's front, and a hook plate on the lid.
