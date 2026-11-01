@@ -161,9 +161,9 @@ def check(r,pm):
         import trimesh as _t
         S_=ixf(M,np.concatenate([_t.sample.sample_surface(m,20000,seed=5)[0] for m in tm_of(pm['meshes'])]))
         for o in fa:
-            rr=np.hypot(S_[:,0],S_[:,1]);k=(np.abs(S_[:,2]-o.z)<o.d)&(rr>o.r0+0.2)&(rr<o.r1-0.5)
+            rr=np.hypot(S_[:,0],S_[:,1]);k=(np.abs(S_[:,2]-o.z)<o.d)&(rr>max(o.r0,0)+0.2+(o.d if o.r0<0 else 0))&(rr<o.r1-0.5)
             if k.any():
-                Q_=S_[k];a0=math.atan2(Q_[:,1].mean(),Q_[:,0].mean())
+                Q_=S_[k];th_=np.arctan2(Q_[:,1],Q_[:,0]);a0=math.atan2(Q_[:,1].mean(),Q_[:,0].mean()) if o.r0>=0 else 0.5*math.atan2(np.sin(2*th_).mean(),np.cos(2*th_).mean())   # a hole right through (r0 < 0): its walls on both sides, so their axial mean (angle mod 180°)
                 cost=lambda t:np.mean((np.hypot(Q_[:,0]*math.sin(t)-Q_[:,1]*math.cos(t),Q_[:,2]-o.z)-o.d/2)**2)   # each wall point's distance from the hole's axis, against its radius
                 T=np.linspace(a0-0.1,a0+0.1,401);o.angle=float(T[np.argmin([cost(t) for t in T])]);res['free_angle']=round(math.degrees(o.angle),3)
     fs=getattr(r,'free_spin',None)
