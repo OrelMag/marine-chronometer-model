@@ -140,6 +140,17 @@ when off) turns it off: every piece then draws itself, as before.
   piece on layer 2 casts nothing and the copy casts for it. Several tools walk the whole scene with `traverse()`
   (`bom-check.js` counted 113 copies belonging to no line), so the copies' group stops `traverse()` at itself.
 
+## Labels' occlusion test (1 November 2026)
+
+With labels on, the Wempe page stalled 1.2 s at every occlusion pass (5 a second), so it ran at under 1 frame a second: each of its 21 labels cast a ray through r128's `Raycaster`, which tests every triangle of each mesh whose bounding box the ray passes and ignores visibility (1.46 million triangles shown, 1.79 million hidden). `rayBlocked` (`core.js`) tests the shown meshes only, through a bounding-volume tree per geometry (built by a median split, quickselect, kept while the positions are unchanged), and stops at the first hit. Measured on the GPU (`MC_GL=gpu`), turning the camera for 4 s:
+
+| | Labels off | Labels on, before | Labels on, after |
+|---|---|---|---|
+| Wempe, median / worst frame | 16.7 / 16.8 ms | 1,233 / 1,267 ms | 16.7 / 16.8 ms (one 0.5 s frame the first time, building the trees: 320 ms) |
+| Hamilton, median / worst frame | 16.7 / 16.8 ms | 16.7 / 33 ms | 16.7 / 16.8 ms (one 0.18 s frame the first time) |
+
+300 random rays (random lengths, 158 blocked) gave the same answer as the raycaster; they took 148 ms against 19.2 s. With labels on, the Wempe's largest JavaScript cost is now the fusee chain's `seat` (`fusee.js`) each frame, labels or not.
+
 ## What's next
 
 In order of what they would save for the effort.

@@ -275,7 +275,10 @@ const WCASE=(()=>{
     /* in two solids: the bottom inside the recess's wall (r 34.1), cut by its two holes, and the rest turned from its profile (the foot, the cone, the body, band and flange, the
        bore and the round inside), which nothing crosses. Until 15 October 2026 the whole was plan cells of rings, whose narrow sloped rings under the round left cracks along
        the cone, seen through once the bowl is turned over to wind. CSI: the closing spring's inner end, in a hole Ø 1.2, 1.5 deep, in the recess's floor (the closing plate, below) */
-    const CSI=[BWQ.csi[0],Math.atan2(H[10][1],H[10][0])+Math.PI/2-BWQ.csi[3]*D2R];   /* the knob's side of the window: 90° clockwise from it seen on the plate's inner face (05 01 00-2's plan, below; the other side until 28 October 2026) */   /* [r, angle]: its outer end's place in the plate shut (the plate's 25°, CPS below) */
+    const t8b=Math.atan2(H[10][1],H[10][0]),BSP=WD.CASEQ.BK.sp,CSI=[BWQ.csi[0],t8b+Math.PI/2-BWQ.csi[3]*D2R],CSB=[BSP.ri,t8b+(BSP.a0-WD.CASEQ.BK.sh)*D2R];   /* [r, angle]: the closing spring's inner end in the bowl,
+       the drawings' plate's wire (CSI: the knob's side of the window, 90° clockwise from it seen on the plate's inner face (05 01 00-2's plan, below; the other side until 28 October 2026),
+       less the plate's 25° shut (CPS below): estimated) and The Mariner's Chronometer's Fig. 2.32's strip (CSB, 1 November 2026: r 4.2, 103.5° from the window with that plate
+       shut 24° the other way: the closing plate, below). Each hole is in every drawn bowl, the other plate's empty under its plate */
     /* Since 24 October 2026 the drawn bowl's casting stands TC (4.7) higher on the movement: its rim round the movement ring's flange, flush with the flange's top, as the
        6MX's (below), the threaded rim the bezel screws onto (TH, above) turned from the top of the 12 high flange, a rebate in it to the seat at YB (Ø 106.06, the flange's
        105.95 −0.1 in it 0.05 clear), and a notch cut through it for the ring's radial pin. So the inside bottom lies 48.3 under the seat as cast (53 less 4.7), faced to 49:
@@ -283,11 +286,11 @@ const WCASE=(()=>{
        top was the seat, the bezel lay over a plain flange, and the bottom 53 under the seat had a raised ring round the winding hole (estimated) to meet the cork. The rest of
        the casting as drawn, 65 overall from the rim's top; its closing plate and spring with it (CPY) */
     const YC=YB+TC,CPY=TC;
-    {const F0=[{p:C(H[10],BWQ.w/2,72),a:YB-BWQ.fy,b:YB-53},{p:C([0,0],BWQ.m3,40),a:YB-BWQ.fy,b:YB-53},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],BWQ.csi[1],24),a:YB-BWQ.fy,b:YB-58}];
+    {const F0=[{p:C(H[10],BWQ.w/2,72),a:YB-BWQ.fy,b:YB-53},{p:C([0,0],BWQ.m3,40),a:YB-BWQ.fy,b:YB-53},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],BWQ.csi[1],24),a:YB-BWQ.fy,b:YB-58},{p:C([CSB[0]*Math.cos(CSB[1]),CSB[0]*Math.sin(CSB[1])],BWQ.csi[1],24),a:YB-BWQ.fy,b:YB-58}];
       /* the bottom and the winding hole's seat in the bowl's own stuff: brass as drawn, Wempe 3955's moulded Bakelite with the rest of it (its plate's Ø 8 shows the bottom dark
          through it: 16_Wempe_3955_Gehäusetopf_Kardan.jpg) */
       const G1=rv(bowl,'last first 1943 -3955'),G6=rv(bowl,'6mx'),G3=rv(bowl,'3955'),BW=/** @type {[any,any][]} */([[G1,CB],[G3,BAK]]);   /* each version's bowl in its own group, one mesh (fuse, below) */
-      const yd=YC-BWQ.fy,F1=[{p:C(H[10],BWQ.w/2,72),a:yd,b:YB-BWQ.fd},{p:C([0,0],BWQ.m3,40),a:yd,b:YB-BWQ.fd},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],BWQ.csi[1],24),a:yd,b:yd+BWQ.csi[2]}];
+      const yd=YC-BWQ.fy,F1=[{p:C(H[10],BWQ.w/2,72),a:yd,b:YB-BWQ.fd},{p:C([0,0],BWQ.m3,40),a:yd,b:YB-BWQ.fd},{p:C([CSI[0]*Math.cos(CSI[1]),CSI[0]*Math.sin(CSI[1])],BWQ.csi[1],24),a:yd,b:yd+BWQ.csi[2]},{p:C([CSB[0]*Math.cos(CSB[1]),CSB[0]*Math.sin(CSB[1])],BWQ.csi[1],24),a:yd,b:yd+BWQ.csi[2]}];
       /* the bottom on the turned part's own 360 corners at its wall r 34.1 (circT), the two faces where they meet taken out once fused (bowlJoin, below), so the bowl is one
          closed solid with no wall inside it. Until 27 October 2026 the bottom stood 0.01 inside the wall (r 34.09: two walls face to face crossed bom.py's rays), and that
          0.01 slot 10 deep, seen into now and then between pixels, drew a dotted ring round the floor in Edges (batch 10, A1); 240 facets before 26 October 2026 */
@@ -357,12 +360,12 @@ const WCASE=(()=>{
            socket Ø 6.4 with a 3.0 hole standing 2 proud, each on a black fibre washer, all at y −27.5: A's at 178.4°, 189.3° and its + socket 200.6°, B's at 215.7°, 225.2° and
            − 235.9° (±1-3°, the case bracket's pivot taken as 180°): likely in kind and place; the springs' sizes estimated (±15 %). Bearings as frame.js's brg */
         {const gC=new THREE.Group();gC.userData.rev='6mx';gC.userData.sub='case';gC.userData.contact=true;bowl.add(gC);const pol=(t,r,y)=>[-r*Math.sin(t*D2R),y,-r*Math.cos(t*D2R)],inw=t=>[Math.sin(t*D2R),0,Math.cos(t*D2R)];
-          const yF=-27.5,rI=49,arcB=(t0,t1,r0,r1,y0,y1)=>{const n=Math.max(4,Math.ceil(Math.abs(t1-t0)/2)),A=[],B=[];for(let i=0;i<=n;i++){const t=(t0+(t1-t0)*i/n)*D2R;A.push([-r1*Math.sin(t),-r1*Math.cos(t)]);B.push([-r0*Math.sin(t),-r0*Math.cos(t)]);}return{loop:[...A,...B.reverse()],y0,y1};};
-          for(const[F0,F1,T0,T1,S1,S2,SK,id]of/** @type {[number,number,number,number,number,number,number,string][]} */([[174.4,203.6,176,195,178.4,189.3,200.6,'+'],[211.7,238.9,212,231,215.7,225.2,235.9,'−']])){
-            const c1=arcB(F0,F1,rI-1,rI,yF-2.75,yF+2.75);c1.loop=KIT.area(c1.loop)>0?c1.loop:c1.loop.slice().reverse();tag(mesh(gC,solidGeo([c1]),M.packing),'6MX.cfi');   /* the insulating strip on the bore */
-            const c2=arcB(F0,F1,rI-1.5,rI-1,yF-2.75,yF+2.75);c2.loop=KIT.area(c2.loop)>0?c2.loop:c2.loop.slice().reverse();tag(mesh(gC,solidGeo([c2]),M.brass),'6MX.cf');   /* the spring's foot */
-            const tw=(T1-T0)/3,gap=0.8/(rI-1.5)/D2R;for(let k=0;k<3;k++){const tm=T0+tw*(k+0.5),y0=yF+2.75,y1=-4.5,r0=rI-1.25,r1=45.4+0.15,len=Math.hypot(y1-y0,r0-r1),lean=Math.atan2(r0-r1,y1-y0),wd=(tw-gap)*D2R*(rI-1.25);
-              const b=tag(mesh(gC,new THREE.BoxGeometry(wd,len,0.3),M.brass,...pol(tm,(r0+r1)/2,(y0+y1)/2)),'6MX.cf',1);b.rotation.order="YXZ";b.rotation.y=tm*D2R+Math.PI;b.rotation.x=-lean;}   /* a tine, leaning in from the foot to the block's end */
+          const KCF=WD.CT6.cf,yF=KCF.yF,rI=KCF.rI,arcB=(t0,t1,r0,r1,y0,y1)=>{const n=Math.max(4,Math.ceil(Math.abs(t1-t0)/2)),A=[],B=[];for(let i=0;i<=n;i++){const t=(t0+(t1-t0)*i/n)*D2R;A.push([-r1*Math.sin(t),-r1*Math.cos(t)]);B.push([-r0*Math.sin(t),-r0*Math.cos(t)]);}return{loop:[...A,...B.reverse()],y0,y1};};
+          for(const[F0,F1,T0,T1,S1,S2,SK,id]of/** @type {[number,number,number,number,number,number,number,string][]} */(KCF.sp)){
+            const c1=arcB(F0,F1,rI-KCF.ins,rI,yF-KCF.h,yF+KCF.h);c1.loop=KIT.area(c1.loop)>0?c1.loop:c1.loop.slice().reverse();tag(mesh(gC,solidGeo([c1]),M.packing),'6MX.cfi');   /* the insulating strip on the bore */
+            const c2=arcB(F0,F1,rI-KCF.fi,rI-KCF.ins,yF-KCF.h,yF+KCF.h);c2.loop=KIT.area(c2.loop)>0?c2.loop:c2.loop.slice().reverse();tag(mesh(gC,solidGeo([c2]),M.brass),'6MX.cf');   /* the spring's foot */
+            const tw=(T1-T0)/KCF.n,gap=KCF.gap/(rI-KCF.fi)/D2R;for(let k=0;k<KCF.n;k++){const tm=T0+tw*(k+0.5),y0=yF+KCF.h,y1=KCF.y1,r0=rI-KCF.tm,r1=KCF.r1+KCF.r1e,len=Math.hypot(y1-y0,r0-r1),lean=Math.atan2(r0-r1,y1-y0),wd=(tw-gap)*D2R*(rI-KCF.tm);
+              const b=tag(mesh(gC,new THREE.BoxGeometry(wd,len,KCF.tt),M.brass,...pol(tm,(r0+r1)/2,(y0+y1)/2)),'6MX.cf',1);b.rotation.order="YXZ";b.rotation.y=tm*D2R+Math.PI;b.rotation.x=-lean;}   /* a tine, leaning in from the foot to the block's end */
             for(const t of[S1,S2]){const g=along(gC,pol(t,52.4,yF),inw(t));tag(mesh(g,cylY(4.25,1,40),M.packing,0,-0.5,0),'6MX.cfw');tag(screw(g,0,0,-1,2.8,3.0,5.9,1.0,M.brass),'6MX.cfs');}   /* a screw 65 on its washer, through the wall into the foot */
             {const g=along(gC,pol(SK,52.4,yF),inw(SK));tag(mesh(g,cylY(4.0,1,40),M.packing,0,-0.5,0),'6MX.cfw');tag(mesh(g,KIT.latheF([[1.5,-3],[3.2,-3],[3.2,-1],[1.5,-1],[1.5,-3]].map(([r,y])=>V2(r,y)),40),M.brass),'6MX.cfk').userData.mark=id;}}}}
     /* the two case brackets (Gehäusekloben 05 01 00-3), on the bowl's side at 12 and 6 o'clock, carrying the inner pivots b: no sheet of their own; measured on 05 01
@@ -452,7 +455,7 @@ const WCASE=(()=>{
        that holds it, in the groove with its end in the Ø 1.2, has no sheet: estimated (below). Its turn: built open, the Ø 8 over hole 10; at rest the spring holds it shut, turned
        CPS (25°: no sheet, photograph or video gives it; its Ø 8.1 clears the Ø 8.2 hole from 20.8° on, so 1.7 of metal over the hole's edge: estimated), and winding in the case
        opens it (shutter, app.js), as the 6MX's shutter is opened for the key (Uy8A88_j-cA 5:21-5:25; the 6MX's own is a pin in a slot) */
-    const cp=prt(bowlS,'closingPlate',-YP),CPS=25*D2R;cp.rotation.y=CPS;
+    const cp=prt(bowlS,'closingPlate',-YP),CPS=25*D2R,BKQ=WD.CASEQ.BK,BKS=BKQ.sh*D2R;let cps=CPS;cp.rotation.y=CPS;   /* cps: the turn shut of the plate shown (the drawings' CPS, or Fig. 2.32's BKS: setShut, below) */
     /* the knob and the Ø 1.2 lie 90° clockwise from the window on the inner face, which the sheet's plan shows (its circles the groove's Ø 26 and Ø 10 and the bore's Ø 5.5,
        not the boss's Ø 28 or the counterbore's): as Wempe 3955's plate seen from below, its knob about 80° counterclockwise from its window (16_Wempe_3955_Gehäusetopf_Kardan.jpg).
        Mirrored, 90° counterclockwise, in every version until 28 October 2026 (the second drawing check's 10-M1: sure). The counterbore 3.075 deep, so the web under it is
@@ -468,13 +471,33 @@ const WCASE=(()=>{
          drilled through, not blind) and Ø 1 at 10.6 opposite (likely) */
       const F3=F.map((f,i)=>i===1?[{p:C(q12,0.6,24),a:y0,b:y1-1.5},{p:C(P(10.6,tk+Math.PI),0.5,24),a:y0,b:y1-1.5}]:f);
       const CPG=new THREE.MeshStandardMaterial({color:sc(0x3a3b3e),metalness:0.3,roughness:0.7});
-      for(const[V,mt,FF]of/** @type {[string,any,any][]} */([['last first 1943 -3955',M.brass,F],['3955',CPG,F3]])){const cpW=rv(cp,V);cpW.position.y=CPY;tag(mesh(cpW,smoothRev(solidGeo(cells(rs,ys,FF,s0))),mt),'050100-2');
+      /* The Mariner's Chronometer's Fig. 2.32 (a page photographed by the user, 1 November 2026, not kept; a Wempe, the user's word): a bowl turned over with its closing plate
+         lifted off, its inner face up (the slot on the bowl's stop peg lets the window reach the winding hole only that way round). The plate rectified on its rim taken as
+         Ø 68 (its window came out at r 22.46, the sheet's 22.6; Ø 8 read 6.5, the hole's dark core): the sheet's plate (the Variants' Closing plate, Fig. 2.32: shut flag 'book')
+         but no knob or M2.6: a slot through it at r 24.9, 1.8 wide (the dark core 1.73), 42.5° long, from 53.4° to 96° clockwise of the window on the inner face (the knob's
+         side, the sheet's M2.6 at 90°), which the stop peg in the bowl's foot rides; no Ø 1.2 at 12.4 to be seen, the spring's end at r 10.5, 158° clockwise of the window,
+         drawn in a blind hole Ø 1.2 as the sheet's (its hole hidden under the end: estimated). Every reading likely, ±0.5 mm and ±3°. The peg (below): 79.4° from the winding
+         hole (the bowl's floor: the hole and peg mapped by the plate's homography, their chord 30.4 with the peg at the slot's radius), so the plate turns from 24° shut, its
+         peg at the slot's near end, the other way from the drawings' 25° (BKS), to 14.8° past open at its far end; the spring holds it shut against the peg */
+      const slot=(r,w,b0,b1)=>{const o=[],n=48,e=12;for(let i=0;i<=n;i++){const t=b0+(b1-b0)*i/n;o.push([(r+w/2)*Math.cos(t),(r+w/2)*Math.sin(t)]);}   /* an arc slot, its ends round, counterclockwise as ring() */
+        for(let i=1;i<e;i++){const t=b1+Math.PI*i/e;o.push([r*Math.cos(b1)+w/2*Math.cos(t),r*Math.sin(b1)+w/2*Math.sin(t)]);}
+        for(let i=n;i>=0;i--){const t=b0+(b1-b0)*i/n;o.push([(r-w/2)*Math.cos(t),(r-w/2)*Math.sin(t)]);}
+        for(let i=1;i<e;i++){const t=b0+Math.PI+Math.PI*i/e;o.push([r*Math.cos(b0)+w/2*Math.cos(t),r*Math.sin(b0)+w/2*Math.sin(t)]);}return o;};
+      const qB=P(BKQ.end[0],t8+BKQ.end[1]*D2R),FB=F.map((f,i)=>i===1?[{p:C(qB,CP.hr,24),a:yh,b:y1-CP.g[2]},{p:C(qB,CP.cr[0],24),q:C(qB,CP.cr[1],24),a:yt,b:yh}]:
+        i===7?[f[0],{p:slot(BKQ.sl[0],BKQ.sl[1],t8+BKQ.sl[2]*D2R,t8+BKQ.sl[3]*D2R),a:yr,b:y1}]:f);
+      const rsB=[BKQ.sp.g0,...rs.slice(1)];   /* Fig. 2.32's groove from r 3.9: the spring's first coil hugs the hole at r 4.2 (its dark ring at r 4.0-4.5 on the rectified page), so the land round the bore is about 1 wide, not the sheet's Ø 10 (estimated) */
+      for(const[V,mt,FF,sh,RS]of/** @type {[string,any,any,string,number[]][]} */([['last first 1943 -3955',M.brass,F,'drawn',rs],['3955',CPG,F3,'drawn',rs],['last first 1943 3955',M.brass,FB,'book',rsB]])){const cpW=rv(cp,V);cpW.userData.shut=sh;cpW.position.y=CPY;tag(mesh(cpW,smoothRev(solidGeo(cells(RS,ys,FF,s0))),mt),'050100-2');
         /* its screw, a shoulder screw (10-M3: the Ø 5.5 +0.1 bore under a Ø 7.5 counterbore over a web held to 1.90-1.95 is a shoulder's seat; a plain M3 left the plate 1.27
            of play until 28 October 2026): head Ø 7.2 × 2.5, its shoulder Ø 5.45 × 1.95 through the web (0.05 clear on the bore) to the bowl's bottom, which it bears on, the
            head 0.025 over the counterbore's floor (the plate's endshake), M3 on into the bottom (no WN sheet: estimated) */
         {const S71=WD.CASEQ.S71.a,sw=tag(screw(cpW,0,0,y0+S71.dy,S71.r,S71.h,0,S71.rs,M.steel),'WN-71');mesh(sw,KIT.latheF([V2(0,0),V2(S71.sd/2,0),V2(S71.sd/2,S71.sl),V2(0,S71.sl)],40),M.steel);
           mesh(sw,KIT.threadGeo(S71.rs,S71.t0,S71.t1),M.steel).userData.thread={rs:S71.rs,p:KIT.isoP(S71.rs)};}
-        const kq=P(25,tk);tag(screw(cpW,kq[0],kq[1],yr,...WD.CASEQ.S72.a,M.brass),'WN-72');}   /* the knob: a brass head Ø 5.2 × 2.4 (Wempe 3955's), M2.6 (estimated) */
+        if(sh==='book')continue;const kq=P(25,tk);tag(screw(cpW,kq[0],kq[1],yr,...WD.CASEQ.S72.a,M.brass),'WN-72');}   /* the knob: a brass head Ø 5.2 × 2.4 (Wempe 3955's), M2.6 (estimated) */
+      /* Fig. 2.32's stop peg in the bowl's foot (the bowl's piece, under its line): Ø 1.6 (the slot's 1.8 less play; it reads about 2 across its blur), 2.0 into the bottom and
+         standing 2.0 into the slot (the plate's 2.3 rim), its top domed r 0.5 as photographed; at the slot's radius, 79.4° clockwise of the winding hole seen on the plate's inner face */
+      {const pg=rv(bowl,'last first 1943 3955');pg.userData.shut='book';const[pr,pa,pd,pi,po]=BKQ.peg,q=P(pr,t8+pa*D2R),yf=y1+CPY,rd=pd/2,dm=0.5;
+        const L=[V2(0,yf+pi),V2(rd,yf+pi),V2(rd,yf-po+dm)];for(let j=1;j<=6;j++){const t=j/6*Math.PI/2;L.push(V2(rd-dm+dm*Math.cos(t),yf-po+dm-dm*Math.sin(t)));}L.push(V2(0,yf-po));
+        const pm=tag(mesh(pg,KIT.latheF(L.reverse(),24),M.steel),'050100-1',1);pm.position.set(q[0],0,q[1]);}
       /* the Soviet 6MX's: a flat disc, no boss (Kirov 14917's foot, rAw2zmulpk8 0:11.75, square on: no boss edge round the screw; Kirow 422's, 11_Kirow_DEC_422_Gehäuse.jpg,
          a flat plate recessed inside the foot's lip, a central dome about Ø 7; moMvyx8eXfo 7:20, a modern one, flat: likely), its slotted screw's head about Ø 8 on its face, the
          domed knob about Ø 6.5 at r 19 ±2 (25 on 05 01 00-2): 14917's, scaled by the recess's Ø 68.2 (likely). The plate the drawings' 2.3 at its rim throughout, its groove,
@@ -491,18 +514,42 @@ const WCASE=(()=>{
          steel wire Ø 1.0 (the Ø 1.2's), a flat spiral of two turns across the chamber from r 12.35 to 6.5, at its mid depth (0.25 clear of the groove's floor and of the bowl),
          its outer end turned down 2 into the plate's hole and its inner end up 1.2 into a hole Ø 1.2, 1.5 deep, in the bowl's bottom (CSI, above: not on the casting's sheet,
          which draws nothing machined); each turn on a bend r 0.8. Unloaded with the plate shut, so nothing need stop it there; opened 25° it winds up (README, the case). It is
-         built in the plate's frame for the plate's turn and rebuilt in place (reclose) as it turns (cp.userData.turn, from shutter), the inner end staying in the bowl's hole */
-      let spEnd=YB-63;const NT=2,RI=CSI[0],RO=12.35,ym=y1-0.75,rb=0.8,WR=0.5,V=(r,a,y)=>new THREE.Vector3(r*Math.cos(a),y,r*Math.sin(a));
+         built in the plate's frame for the plate's turn and rebuilt in place (reclose) as it turns (cp.userData.turn, from shutter), the inner end staying in the bowl's hole.
+         The default, the owner's choice (1 November 2026): Fig. 2.32's strip (below) only with its own plate */
+      let spEnd=YB-63;const NT=2,RO=12.35,ym=y1-0.75,rb=0.8,WR=0.5,V=(r,a,y)=>new THREE.Vector3(r*Math.cos(a),y,r*Math.sin(a)),RI=CSI[0];
       const spGeo=(rot,old)=>{const ai=CSI[1]+rot-NT*TAU,a0=ai+rb/RI,a1=tk-rb/RO,Q=[V(RI,ai,YB-58.3)];   /* the inner end's angle in the plate's frame (the bowl's turned back by the plate's turn) */
         for(let j=0;j<=6;j++){const t=j/6*Math.PI/2;Q.push(V(RI,ai+(rb-rb*Math.cos(t))/RI,ym+rb-rb*Math.sin(t)));}   /* the turn from the bowl's hole into the spiral */
         const n=Math.ceil((a1-a0)/0.05);for(let i=1;i<n;i++){const u=i/n;Q.push(V(RI+(RO-RI)*u,a0+(a1-a0)*u,ym));}
         for(let j=6;j>=0;j--){const t=j/6*Math.PI/2;Q.push(V(RO,tk-(rb-rb*Math.cos(t))/RO,ym-rb+rb*Math.sin(t)));}   /* and out of it, down into the plate's hole */
         Q.push(V(RO,tk,spEnd));return reclose(old,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(Q,false,'centripetal'),Q.length*3,WR,8,false));};
-      const sp=tag(mesh(cp,spGeo(CPS,null),M.steel),'050100-7');sp.position.y=CPY;let last=CPS;
-      cp.userData.turn=()=>{const r=cp.rotation.y;if(Math.abs(r-last)>1e-4){last=r;sp.geometry=spGeo(r,sp.geometry);}};
+      /* Fig. 2.32's (above), with its own plate: a thin flat spiral in its groove, its line about 0.5 wide on the page (the blur's; a Ø 1 wire would show twice that, with a
+         highlight). Its inner end by the hole at r 4.2, 103.5° clockwise of the window (seen on the inner face); from there its first coil hugs the hole, r 4.2 to 4.5, for about
+         250° (the dark ring round the bore, 4.0-4.5 on the rectified page, which the user's own trace follows: 1 November 2026), then it bends out and spirals over the top, r 7.55
+         about 70° on, to its end at r 10.5, 158° clockwise of the window a turn on: 415°, 1.15 turns. So a steel strip 0.3 thick (estimated: under the line's 0.5) and 1.0 high
+         (the groove's 1.5 less 0.25 each side), at the groove's mid depth, each end turned 90° into a hole: the inner up into the bowl's Ø 1.2 × 1.5 (CSB, above: estimated),
+         the outer down into the plate's blind Ø 1.2 (the turned ends drawn as tabs 0.34 × 0.8, square, which a Ø 1.2 takes) */
+      const SP=WD.CASEQ.SP,yms=y1-CP.g[2]/2,NS=161;
+      const tabG=(r,a,ya,yb,old)=>{const ux=Math.cos(a),uz=Math.sin(a),h=(SP.t+0.04)/2,w=SP.tw/2,pos=[];   /* a turned end: a box 0.34 × tw about (r, a), ya to yb, facing out */
+        for(const y of[ya,yb])for(const[i,j]of[[-1,-1],[1,-1],[1,1],[-1,1]])pos.push((r+i*h)*ux-j*w*uz,y,(r+i*h)*uz+j*w*ux);
+        const re=!!(old&&old.index),g=re?old:new THREE.BufferGeometry();if(re){g.attributes.position.array.set(pos);g.attributes.position.needsUpdate=true;}else g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+        if(!re){const I=[0,1,2,0,2,3,4,6,5,4,7,6,0,4,5,0,5,1,1,5,6,1,6,2,2,6,7,2,7,3,3,7,4,3,4,0];g.setIndex(I);}
+        g.computeVertexNormals();g.computeBoundingSphere();g.computeBoundingBox();return g;};
+      /* the strip from the bowl's hole I ([r, angle]; its angle in the plate's frame the bowl's turned back by the plate's turn) round the hole for hug (degrees, shut: 0.3 out
+         over it) and out to (ro, ao) in the plate nt turns on, its outer end down to spEnd; its radius the hug's slow rise and a softplus over w on into the outward run, so the
+         strip bends out of the coil without a corner (a kink until the user's word, 1 November 2026) */
+      const mkSp=(par,I,ro,ao,nt,hug,rot0)=>{const s=tag(mesh(par,new THREE.BufferGeometry(),M.steel),'050100-7'),ti=tag(mesh(par,new THREE.BufferGeometry(),M.steel),'050100-7',1),to=tag(mesh(par,new THREE.BufferGeometry(),M.steel),'050100-7',1);
+        const ri=I[0],f=hug*D2R/(ao+nt*TAU-I[1]-rot0),w=0.08,sp=u=>w*Math.log1p(Math.exp((u-f)/w)),k1=0.3/f,k2=(ro-ri-k1)/(sp(1)-sp(0)),R=u=>ri+k1*u+k2*(sp(u)-sp(0));
+        return rot=>{const a0=I[1]+rot,a1=ao+nt*TAU,Q=[];for(let i=0;i<NS;i++){const u=i/(NS-1),r=R(u),a=a0+(a1-a0)*u;Q.push([r*Math.cos(a),yms,r*Math.sin(a)]);}
+          s.geometry=ribbonGeo(Q,SP.b,SP.t,s.geometry.attributes.position?s.geometry:undefined);ti.geometry=tabG(ri,a0,yms-SP.b/2-0.02,YB-58.3,ti.geometry);to.geometry=tabG(ro,ao,spEnd,yms+SP.b/2+0.02,to.geometry);};};
+      const gD=rv(cp,'last first 1943 3955 6mx'),gB=rv(cp,'last first 1943 3955');gD.userData.shut='drawn';gB.userData.shut='book';gD.position.y=gB.position.y=CPY;
+      const sp=tag(mesh(gD,spGeo(CPS,null),M.steel),'050100-7'),spB=mkSp(gB,CSB,BKQ.end[0],t8+BKQ.end[1]*D2R,1,BKQ.sp.hug,BKS);let last=NaN;
+      const spD=r=>{sp.geometry=spGeo(r,sp.geometry);};
+      cp.userData.turn=()=>{const r=cp.rotation.y;if(!(Math.abs(r-last)<=1e-4)){last=r;spD(r);spB(r);}};cp.userData.turn();
       /* its outer end's depth in the plate's blind hole: into the drawings' boss, to the top of the drill point in the 6MX's flat plate (YB − 61.3; its tip 0.15 over the plate's outer face);
          dy: the spring raised with the drawn bowl's plate (CPY) */
-      cp.userData.spEnd=(y,dy)=>{sp.position.y=dy;if(y!==spEnd){spEnd=y;sp.geometry=spGeo(cp.rotation.y,sp.geometry);}};}
+      cp.userData.spEnd=(y,dy)=>{gD.position.y=gB.position.y=dy;if(y!==spEnd){spEnd=y;last=NaN;cp.userData.turn();}};
+      /* setShut(v): the Variants' closing plate, the drawings' ('drawn') or Fig. 2.32's ('book'), turned shut as it is (the groups' visibility is the page's: app.js) */
+      cp.userData.setShut=v=>{cps=v==='book'?BKS:CPS;cp.rotation.y=cps;last=NaN;cp.userData.turn();};}
 
     /* ================= the bezel (Glasrand kompl. 05 01 01: the ring 05 01 01-2 and its glass 05 01 01-1) ================= */
     /* The ring finished, as Glasrand kompl. (05 01 01, 27.11.41, 1:1) draws it in section: machined from its casting, R-05 01 01-2 (6.3.42, Ms, Kokillenguß: Ø 125 for its
@@ -1123,7 +1170,7 @@ const WCASE=(()=>{
     let woodK=null;const C0=[CB].map(m=>m.userData.c0||(m.userData.c0={c:m.color.clone(),m:m.metalness,r:m.roughness})),woodB=MC.mah.map;
     const setCase=v=>{const b=v==='black';[CB].forEach((m,i)=>{const o=C0[i];m.color.copy(b?sc(0x141416):o.c);m.metalness=b?0.1:o.m;m.roughness=b?0.36:o.r;});
       if(b&&!woodK)woodK=woodTex(false,false,true);MC.mah.map=b?woodK:woodB;MC.mah.needsUpdate=true;};
-    const out={setCase,stay:stayAt,root,ring:ringG,bowl:bowlG,inner:bowlS,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);cp.userData.turn();},lock:k=>{for(const t of LKT)t.rotation.y=-69.7*D2R*k;},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
+    const out={setCase,stay:stayAt,root,ring:ringG,bowl:bowlG,inner:bowlS,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=cps*(1-q);cp.userData.turn();},setShut:v=>cp.userData.setShut(v),lock:k=>{for(const t of LKT)t.rotation.y=-69.7*D2R*k;},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
     /* rev(v): the lids the page turns are the version's (app.js's onRev) */
     out.rev=v=>{const s=v==='6mx';out.lid=s?lid6G:lidG;out.tongue=s?tg6:tgG;out.overLid=s?ol6G:olG;bowlS.position.y=s?-DY6:0;cp.userData.spEnd(s?YB-61.3:YB-63,s?0:CPY);};
     /* the Exploded view's All (app.js, the viewer's st.allK, e 0 to 1): the case taken apart up the bowl's axis, under the movement lifted out of it: the gimbal ring 50 over

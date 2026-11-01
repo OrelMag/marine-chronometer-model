@@ -372,13 +372,12 @@ const VIEWER={start(cfg){
   const addL=(t,sub,part,fn)=>{const el=document.createElement('div');el.className='lbl';if(PCOL[part])el.style.setProperty('--pc',PCOL[part]);if(PARTS[part]&&PARTS[part].src)el.style.setProperty('--ps',SRC[PARTS[part].src][1]);el.innerHTML='<span>'+t+(sub?'<i>'+sub+'</i>':'')+'</span>';lab.appendChild(el);labels.push({el,sp:el.firstChild,fn,part,w:0,h:0,occ:false});};
   const pw=(g,x,y,z)=>{const v=new THREE.Vector3(x,y,z);return()=>g.localToWorld(v.clone());};
   if(cfg.labels)cfg.labels(addL,pw);
-  const ray2=new THREE.Raycaster(),tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0,LS=null;ray2.layers.enable(2);
+  const tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0,LS=null;   /* what covers a label: rayBlocked (core.js), the shown meshes' triangles in trees */
   function placeLabels(now){if(!LS)LS=labels.slice().sort((p,q)=>(PRI[q.part]||1)-(PRI[p.part]||1));
     const foc=st.pick?new Set([st.pick]):st.focus,doOcc=now-lastOcc>200,placed=[],pad=3;if(doOcc)lastOcc=now;
     for(const l of LS){let sh=(st.labels||st.tour>=0)&&!(foc&&!anyOf(foc,l.part))&&!isoOut(l.part)&&!st.hid.has(l.part)&&!dvOut(l.part);if(!sh){l.el.style.opacity=0;continue;}
       const P0=l.fn();
-      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);ray2.set(camP,tmpV.copy(P0).sub(camP).normalize());ray2.far=d-0.8;
-        l.occ=ray2.intersectObject(root,true).some(h=>shown(h.object)&&h.object.userData.part!==l.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5)&&!h.object.userData.decal);}
+      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);l.occ=rayBlocked(camP,tmpV.copy(P0).sub(camP).normalize(),d-0.8,root,m=>m.userData.part!==l.part&&!(m.material.transparent&&m.material.opacity<0.5)&&!m.userData.decal);}
       if(l.occ){l.el.style.opacity=0;continue;}
       tmpV.copy(P0).project(cam);const px=(tmpV.x+1)/2*W,py=(1-tmpV.y)/2*Hh;if(tmpV.z>1||px<4||px>W-4||py<4||py>Hh-40){l.el.style.opacity=0;continue;}
       if(!l.w){l.w=l.sp.offsetWidth;l.h=l.sp.offsetHeight;}
