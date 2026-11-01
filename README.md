@@ -418,8 +418,9 @@ every tool, what it checks and how long it takes. Before committing a change:
    address, which fails if building changes a built copy (commit what it
    writes). The options:
    - `--quick` runs the steps without a browser.
-   - `--full` adds the slow ones (`fine.py`, `bom.py`, the full physics runs,
-     `fea.py`, the Blender export).
+   - `--full` adds the slow ones (`fine.py`, the Wempe's on each version and
+     with the band, `bom.py`, the full physics runs, `fea.py`, the Blender
+     export).
    - `--views` renders every view before and after the branch and prints the
      changed pixels.
    - `--only a,b` runs those steps.
