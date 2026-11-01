@@ -29,7 +29,7 @@ const WFRAME=(()=>{
      section draw it: the angle not figured, the drill's own, as pinBore's; dp = r / tan 59° = 0.475; flat until 1 November 2026, the owner's choice of 118°); s 'A' opened
      from y on the y0 face, 'B' on the y1 face, cs a 90° sink cs deep at its mouth; one ring for the hole, its point and its sink (solidGeo's tip: 1, kit.js) */
   const pinPt=(q,y,d,s,cs=0,n=0)=>{const R=C(q,rPinQ,n),X=R.map(()=>[q[0],q[1]]),dp=rPinQ/Math.tan(59*D2R);
-    return s==='A'?[{p:R,a:y,b:y+d},{p:R,q:X,a:y+d,b:y+d+dp,tip:1}]:[{p:R,a:y-d,b:y-cs},...(cs?[{p:R,q:C(q,rPinQ+cs,n),a:y-cs,b:y}]:[]),{p:X,q:R,a:y-d-dp,b:y-d,tip:1}];};
+    return /** @type {any[]} */(s==='A'?[{p:R,a:y,b:y+d},{p:R,q:X,a:y+d,b:y+d+dp,tip:1}]:[{p:R,a:y-d,b:y-cs},...(cs?[{p:R,q:C(q,rPinQ+cs,n),a:y-cs,b:y}]:[]),{p:X,q:R,a:y-d-dp,b:y-d,tip:1}]);};
 
   function build(mv,M,K){const{part,screw,loose,headOn}=K,V2=(a,b)=>new THREE.Vector2(a,b),tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
     /* a steady pin (WN-203), Ø 1.6, both ends chamfered as 05 08 05 and 05 08 04 draw them (0.1 × 45°: not figured, estimated; plain cylinders until 26 October 2026) */
