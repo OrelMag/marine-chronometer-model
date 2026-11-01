@@ -3256,19 +3256,7 @@
     ]
    ],
    "figs": "13, 110",
-   "check": "invariants.py: second hand",
-   "dev": [
-    {
-     "rel": [
-      "endshake",
-      "42161.fu"
-     ],
-     "inst": [
-      0
-     ],
-     "why": "the drawn arbor (42072-1-01-01) has its shoulders .520 (13.21 mm) apart, the model's upper jewel face and the plate's lower jewel face stand 15.76 apart (the plate-to-lower-bridge height was read on the side photograph and scaled by HK): stood on its upper shoulder, the lower shoulder falls 2.55 short of the plate's jewel (Review-results.md, the fourth wheel and pinion against their drawings)"
-    }
-   ]
+   "check": "invariants.py: second hand"
   },
   {
    "id": "42068",
