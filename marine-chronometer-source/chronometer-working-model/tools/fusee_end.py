@@ -1,7 +1,7 @@
 """The Wempe fusee body's small end (05 06 04-2, Schnitt C-D) checked face by face: the stop bar's slot runs straight across the end, 2 H8 wide between two
-parallel walls 4 and 6 from the axis, 1,5 +0,05 deep and 1,1 +0,05 toward the bar's upper end, out through the hub and the top turn on both sides. Every triangle of the
+parallel walls 4 and 6 from the axis, 1,5 +0,05 deep on the bar's lower end's side of the recess and 1,1 +0,05 on its upper end's, out through the hub and the top turn on both sides. Every triangle of the
 body's mesh in the end's last 1.5 (and 0.05 under it) must lie on a face the sheet draws: a flat face square to the axis (the end, the slot's floors, the groove's walls), one
-of the slot's two walls (its plane), the shallow part's step across the slot at u 8.0, a turned surface (its normal radial), the radial wall where the groove ends at N,
+of the slot's two walls (its plane), the shallow part's step across the slot at us (u 0 since 31 October 2026, in the recess: none in metal), a turned surface (its normal radial), the radial wall where the groove ends at N,
 the stop bar's spring's pin's hole, or the bores and holes inside r 7.5. A triangle on none of them (a slanted face where a piece ends, a fan) is listed with its place in
 the slot's frame (u along the slot toward the bar's upper end, v across it from the line through the axis, depth under the end). Then a face of no thickness, which lies on a face
 the sheet draws and so passes that test: each face stepped 5 µm off either way must have metal behind it and none in front (the generalized winding number over the whole body); judged over
@@ -50,7 +50,7 @@ def main():
     wall=(np.abs(n@vdir)>0.999)
     udir=np.array([ex[0,0],0,ez[0,0]]);udir/=np.linalg.norm(udir)
     rad=np.stack([C[:,0],np.zeros_like(r),C[:,2]],1)/r[:,None];turned=(np.abs(np.sum(n*rad,1))>0.97)&(np.abs(n[:,1])<0.05)
-    step=(np.abs(n@udir)>0.999)&(np.abs(u-d['us'])<0.01)   # the shallow part's step across the slot at u 8.0
+    step=(np.abs(n@udir)>0.999)&(np.abs(u-d['us'])<0.01)   # the shallow part's step across the slot at us (u 0: in the recess, so none)
     tang=np.stack([C[:,2],np.zeros_like(r),-C[:,0]],1)/r[:,None];tN=d['fN'];endN=(np.abs(np.sum(n*tang,1))>0.99)&(np.abs(np.angle(np.exp(1j*(np.arctan2(-C[:,2],C[:,0])-tN))))<0.0015)   # the groove's end N: a radial wall at its angle
     inner=r<7.6;pin=np.hypot(v-1.5,D[sel][ok]-0.5)<0.3   # the recess, bore and holes; the stop bar's spring's pin's hole along the slot (Ø 0.5 at v 1.5, 0.5 deep)
     bad=~(flat|wall|turned|step|endN|inner|pin)&(A>float(next((a.split("=")[1] for a in sys.argv if a.startswith("--min=")),"0.01")))   # --min=AREA; slivers under 0.01 mm² (a few µm across, where a wall meets a step between two close rays) unseen

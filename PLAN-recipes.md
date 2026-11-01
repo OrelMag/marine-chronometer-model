@@ -548,7 +548,7 @@ What the check found, each sorted:
 - The recipe's rib was first 0.33 wide always. Where the land's place is the first 0.15 turn's cubic (not whole pitches), the next land starts earlier, and the page's rib runs to it; the
   recipe's now runs to the next land's wall (a 0.2 bump at 17.8 otherwise).
 - **Page faults, in the recipe's `expect`** (the check reports, not fails): the flange is a lathe of 216 columns with a row every 0.04 along the axis, so (a) its walls (the first land's run,
-  to 2.1 under the blank's face) stand up to 0.04 off the helix, and (b) the slitting cutter's arc, whose floor climbs 0.4 mm between two columns, is chorded up to 0.18 off the circle
+  to 2.1 under the blank's face) stand up to 0.04 off the helix [fixed on main in 3.66.01, after this batch: the flange is swept with helixSolid, its ribs square, and the recipe's gap there is now 0.002 at p99], and (b) the slitting cutter's arc, whose floor climbs 0.4 mm between two columns, is chorded up to 0.1 off the circle
   (the page rounds a curve through chords of 1.7°); and at the groove's end N the rays (216 and the two at N) join the last land's floor to the hub across a chord up to 0.13 off the wall.
 - The three screws are hand-built in fusee.js: their slots are solid dark boxes lying in the heads (WN-20 and WN-21 stand 0.02 out), not cut; the recipes cut a real slot of the box's size
   and take the difference in `expect`. WN-19's line is three screws: the check takes only the pieces near the first (`near`).
@@ -704,7 +704,7 @@ the page draws through it; the lever has none for the arbor and the grip; the gr
 | Case screw heads (WN-79 Ø 9.2, WN-71.f Ø 8, WN-80 Ø 12 and Ø 9) | the head's round | 0.023, 0.020, 0.029, 0.022 | the kit's 32-sided polygon head, as WN-zg's; in the recipes' `expect` and `box_tol` |
 | WN-ro (the carrying case's eye screws) | the head | 0.5 on the radius | the parts list says "3 x 15 DIN 96" (head Ø 5.6 × 2.0); the page draws Ø 8.5 × 2.2 on a 15 mm M3 shank; the recipe is a bought line, the page not changed |
 | Case screw heads (WN-zg, Ø 9) | the head's round | 0.0225 | the kit draws a head a 32-sided polygon; a head over about Ø 8.5 is more than 0.02 inside its circle; in WN-zg's `expect` and `box_tol` |
-| Fusee body 05 06 04-2 | the flange's lathe (first land's run, the slot's cutter arc, the groove's end N) | 0.04, 0.18, 0.13 | 216 columns and a row every 0.04: the walls stand up to 0.04 off the helix, the cutter's arc is chorded up to 0.18, the end's rays join the last land's floor to the hub across a chord up to 0.13; in the recipe's `expect` |
+| Fusee body 05 06 04-2 | ~~the flange's lathe rows (walls up to 0.04 off the helix)~~; the slot's cutter arc and the groove's end N | 0.1, 0.13 | the row fault fixed in 3.66.01 (the flange swept with helixSolid, ribs square). Left: the 216 rays chord the cutter arc (floor climbing 0.4 between rays) up to 0.1 off the circle, and the end's rays join the last land's floor to the hub across a chord up to 0.13; the seam at 0° leaves internal end caps (a check artefact). In the recipe's `expect` |
 | Screws WN-19, WN-20, WN-21 | the slots | 0.15 | drawn as solid dark boxes lying in the heads (0.02 out on WN-20 and WN-21), not cut; in the recipes' `expect` |
 | Maintaining detent arbor 05 05 05-2 | the turned profile | 1.3 mm³ | the page turns it on 20 sides, 1.6 % under the circle's volume; in `expect` |
 | Winding key body 05 01 02-2 (batch 12) | the top chamfer's cone; the spring's Ø 0.9 hole | 0.03; 0.04 | the 1.5 × 45° chamfer is cut in four steps up the jaws' columns; the hole is slanted to the drill point's foot and upright above it; in the recipe's `expect` |
@@ -720,3 +720,6 @@ the page draws through it; the lever has none for the arbor and the grip; the gr
 - **Bought parts.** Jewels, the mainspring and hairspring strip, standard screws: a recipe that makes them, or a line saying what to buy and its size?
 - **Phase 3, the page built from the recipes.** It ends two builders drifting apart, but it's the largest step (every part's mesh replaced). Do it, or
   keep the page's builders and the recipes side by side with `recipes.py --check` keeping them in step?
+
+### Batch 9d after main's 3.66.01 (1 November 2026)
+Merged main's flange (helixSolid, ribs square) and stop bar slot (1,1 deep over the whole upper end's side, 1,5 on the lower end's side of the recess, `SLR` gone). The fusee recipe's slot is now the shallow box over all of u and the deep one for u up to `SB.us`; the body's surface is 0.0019 apart at p99 (was 0.026), 0.13 at most at the groove's end N. The row-quantisation `expect` is dropped; one is added for the page's end caps at the 0° seam. The page was proved main's by `recipes_pagehash.py` (38 fusee-side lines, five versions, against a baseline taken on origin/main's own worktree) and the byte-identity tools.
