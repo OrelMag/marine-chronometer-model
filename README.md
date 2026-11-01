@@ -11,7 +11,8 @@ chronometer keeps time at sea:
   the model was about 12 % too small throughout. Since 3.65.00 (1 November
   2026) it is rescaled by 1.117 (the plate 97.8 mm), the balance and escapement
   kept at their measured sizes, and its drawn parts are being rebuilt from the
-  drawings (`PLAN-hamilton-drawings.md`); its page says so.
+  drawings (`PLAN-hamilton-drawings.md`) with the help of the NAWCC (special
+  thanks to Thomas Stocker); its page says so.
 - **The Wempe Einheits-Chronometer**, the German standard chronometer (spring
   detent, fusee, three pillars), built from Wempe's works drawings. It comes in
   several versions: as first drawn, the escapement of 1943, Wempe No. 3955 as
