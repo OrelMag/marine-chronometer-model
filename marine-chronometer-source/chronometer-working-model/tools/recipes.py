@@ -32,7 +32,7 @@ def recipes():
         from recipes import wempe;return wempe.RECIPES
     sys.exit('recipes.py: no recipes yet for '+model.NAME)
 
-EXPORT="""hh=>{const [hn,ri]=hh.split('|'),RI=+(ri||0);let nr=0;const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last'))return false;return true;};
+EXPORT="""hh=>{/* shut 'book': the closing plate photographed in The Mariner's Chronometer (Fig. 2.32), a Variant, with its stop peg on the bowl's line; the recipes are the drawings' */const [hn,ri]=hh.split('|'),RI=+(ri||0);let nr=0;const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last')||q.userData.shut==='book')return false;return true;};
   let sc=mv,root=null;const find=s=>s.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o)&&nr++===RI)root=o;});   /* RI: the RI-th such mesh (a line of two springs: the second spring's foot) */find(mv);if(!root&&window.__BX&&window.__BX.root){sc=window.__BX.root;find(sc);}   /* the case and its box are not in the movement's group: the box's root (?qa's __BX) */
   if(!root)return null;sc.updateMatrixWorld(true);
   const subs=[];sc.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
@@ -67,7 +67,7 @@ async def page_meshes(hns,pose=POSE,rev='last'):   # rev: the version shown and 
         b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # a fresh headless Chromium loses its first WebGL context
         pg=await b.new_page();errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
-        await pg.goto(model.PAGE+'#merge=0');await pg.wait_for_function("!document.querySelector('#loading')&&window.__V&&window.__mv",timeout=180000);await pg.wait_for_timeout(1500)
+        await pg.goto(model.PAGE+'#merge=0',timeout=120000);await pg.wait_for_function("!document.querySelector('#loading')&&window.__V&&window.__mv",timeout=180000);await pg.wait_for_timeout(1500)
         await pg.evaluate("""document.querySelector('#speeds button[data-v="0"]')?.click()""")   # stopped, then frozen in POSE (above)
         await pg.evaluate(FREEZE+'('+pose+')');await pg.wait_for_timeout(300)
         if rev!='last':await pg.evaluate(f"__mv.userData.setRev('{rev}')");await pg.evaluate(FREEZE+'('+pose+')');await pg.wait_for_timeout(300)

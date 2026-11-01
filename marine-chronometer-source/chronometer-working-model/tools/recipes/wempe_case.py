@@ -89,10 +89,7 @@ def screwT(key,hn,title,r,h,ln,rs,material,src,tip,notes=()):
         SlotHead(h+Lt,w,s_,'Mill the slot across the head',[S('slot',f'{w:.2f} wide × {s_:.2f} deep',None,'KIT headGeo')],src)])],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,Lt,0)),notes=list(notes)+["The slot's width and depth are the model's convention (KIT headGeo), no drawing's."])
 def _hd(f,r,bound):
-    """a screw whose head the kit draws a 32-sided polygon: its chords lie r(1 - cos(pi/32)) inside the true circle the recipe turns (a head over about Ø 8 passes 0.02)"""
-    def g():
-        x=f();x.box_tol=bound;x.expect.append({'at':(0,0),'r':r+0.5,'max':bound,'why':f"the kit draws a screw's head a 32-sided polygon: a Ø {2*r:g} head's chords lie {r*(1-math.cos(math.pi/32)):.3f} inside the true circle the recipe turns"});return x
-    return g
+    return f   # the kit's heads over r 2 are on more segments since 1 November 2026 (chords under 0.004 inside the circle): no exception, no box allowance
 _x79=lambda f:_hd(f,Q()['P79']['hr'],0.03)
 def screw79():
     P=Q()['P79'];R=Q()['RG'];RO=R['RO'];ln=RO-P['ex']
@@ -116,7 +113,6 @@ def closingPlate():
       Point((q12[0],q12[1],zb),(0,0,1),C['hr'],2*C['ang'],'Its drill point (118°), the tip 0.15 short of the boss\'s face',[S('point','118°',None,src)],src,tipr=0.0)]
     return Recipe('closingPlate','050100-2','Closing plate (Verschlußplatte)',src,'brass (Ms)','none',[Setup('1','plate in the chuck, then on the drill',ops,view='top')],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,YB+C['y1'],0)),faces=('inner face (on the bowl)','outer face (boss)'),
-      expect=[{'at':(0,0),'r':fc+0.2,'max':0.03,'why':'the page draws the round r 1.3 between rim and boss in four straight rings (22.5° of the arc each): its chords lie up to 0.025 inside the true arc the recipe turns'}],
       notes=['Turns on its screw WN-71 (a shoulder screw) in the bowl\'s bottom, by the knob WN-72; the closing spring (05 01 00-7) holds it. Wempe 3955\'s plate has two small holes through its boss: not in this version.'])
 
 # ---------------- the bowl (Gehäusetopf R-05 01 00-1, 6.3.42) ----------------
@@ -131,7 +127,7 @@ def bowl():
     # the threaded rim: the flange turned down to the thread, its crest envelope the cone 0.5 long at each end (the page's run-out and lead chamfer)
     outside=[(T['Rm'],Z(YB)),(Rmaj,Z(YB)+0.5),(Rmaj,Z(YC)-0.5),(T['Rm'],Z(YC)),(T['Rm'],Z(YC)+1),(B['rfl']+1,Z(YC)+1),(B['rfl']+1,Z(YB))]
     notch=lambda:bd.Box(2*B['ns'],10,Z(YC)+1-Z(YB)-B['nf'],align=(bd.Align.CENTER,bd.Align.MIN,bd.Align.MIN)).moved(bd.Location((0,B['rr2']-1,Z(YB)+B['nf'])))
-    csx=B['csi'][0]*math.cos(-ca);csy=B['csi'][0]*math.sin(-ca);hy=-hz;m3=iso(3.0)
+    csx=B['csi'][0]*math.cos(-ca);csy=B['csi'][0]*math.sin(-ca);BK=Qc['BK'];cb=math.atan2(hz,hx)+math.radians(BK['sp']['a0']-BK['sh']);cbx=BK['sp']['ri']*math.cos(-cb);cby=BK['sp']['ri']*math.sin(-cb);hy=-hz;m3=iso(3.0)
     ops=[Revolve(cast,'Cast the bowl in brass (Kokillenguß): the flange Ø 118 for 12, the band Ø 108 to 23.5, the body Ø 106, the cone to the foot Ø 72.5, 65 overall; the bore Ø 98, 53 deep, with a round r 7 at its floor; the recess Ø 64 × 5.5 under the bottom',
         [S('overall height',f'{B["hh"]:g}',None,src),S('flange',f'Ø {2*B["rfl"]:g} for {B["fl"]:g} from the top',None,src),S('band',f'Ø {2*B["bk"]:g} to {B["bd"]:g}',None,src),S('body',f'Ø {2*B["rb"]:g}',None,src),S('foot',f'Ø {2*B["rf"]:g}',None,src),S('bore',f'Ø {2*B["bore"]:g}, 53 deep',None,src),S('round at the floor',f'r {rr:g}','drawn without a figure, scaled 6-8: likely',src),S('recess',f'Ø {2*rcast:g} × 5.5',None,src)],src),
       TurnIn([(rcast-1,-0.5),(B['rr'],-0.5),(B['rr'],zy),(rcast-1,zy)],"Open the recess to Ø 68.2 for the closing plate (Ø 68 −0.2)",[S('recess',f'Ø {2*B["rr"]:g}',None,'case.js: the plate Ø 68 −0.2 with its play (estimated)')],src),
@@ -142,7 +138,8 @@ def bowl():
       Cut(notch,"Mill the notch through the threaded rim at 12 o'clock for the movement ring's radial pin, down to 0.8 over the seat",[S('notch',f'{2*B["ns"]:g} wide, floor {B["nf"]:g} over the seat','the pin Ø 1.6 0.1 clear each side; its depth estimated',src)],src),
       Drill((hx,hy,zy-0.5),(0,0,1),B['w'],zf-zy+1,"Drill the winding hole through the bottom over the fusee's square",[S('hole',f'Ø {B["w"]:g} at {math.hypot(hx,hz):.2f} from the centre',None,src+' / hole 10')],src,key='wind'),
       DrillT((0,0,zy-0.5),(0,0,1),m3['D1'],zf-zy+1,"Drill and tap M3 through the bottom for the closing plate's screw (WN-71)",[S('tap drill',f'Ø {m3["D1"]:.3f}',None,'ISO 261'),S('thread','M3',None,'case.js: estimated')],src,thread=m3,key='m3'),
-      Drill((csx,csy,zy-0.5),(0,0,1),2*B['csi'][1],B['csi'][2]+0.5,"Drill the closing spring's inner end's hole, blind from the recess",[S('hole',f'Ø {2*B["csi"][1]:g} × {B["csi"][2]:g} deep, at r {B["csi"][0]:g}','not on the sheet: estimated',src)],src,key='csi')]
+      Drill((csx,csy,zy-0.5),(0,0,1),2*B['csi'][1],B['csi'][2]+0.5,"Drill the closing spring's inner end's hole, blind from the recess",[S('hole',f'Ø {2*B["csi"][1]:g} × {B["csi"][2]:g} deep, at r {B["csi"][0]:g}','not on the sheet: estimated',src)],src,key='csi'),
+      Drill((cbx,cby,zy-0.5),(0,0,1),2*B['csi'][1],B['csi'][2]+0.5,"Drill the other closing plate's spring hole, blind from the recess: the strip spring's inner end of the plate photographed in The Mariner's Chronometer (Fig. 2.32), the page's Variant; every bowl the page draws has both, the other plate's empty under its plate",[S('hole',f'Ø {2*B["csi"][1]:g} × {B["csi"][2]:g} deep, at r {BK["sp"]["ri"]:g}','Fig. 2.32: estimated','case.js (CSB)')],src,key='csb')]
     return Recipe('bowl','050100-1','Bowl (Gehäusetopf)',src,'brass (Ms; the sheet\'s "Ms-Sandguß (Kokillenguß)")','none given',[Setup('1','casting held by its flange, turned and bored, then on the drill and mill',ops)],UP(y0),
       notes=['The sheet is a casting\'s: nothing machined is drawn but the recess for the closing plate and the holes; the rim\'s thread, rebate, notch and the faced floor are the model\'s (case.js, from 05 01 01 and the 6MX\'s bowls). The case brackets\' screws (WN-78) are tapped into the wall at assembly, where the brackets are moved to level the bowl ("Kloben verstellen"); the page draws no hole for them.',
         'The sheet gives the weight as 350 g, light for brass.'])

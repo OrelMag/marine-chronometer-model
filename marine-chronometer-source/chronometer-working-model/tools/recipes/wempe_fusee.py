@@ -98,8 +98,8 @@ RECIPES={'fusee':fusee}
 
 # ---------------- the fusee side's three hand-built screws (WN-19, WN-20, WN-21) and the maintaining detent's arbor 05 05 05-2 ----------------
 def _slot(l,w,h,top,rot):
-    """the slot the page draws as a dark box (l long, w wide, h high, standing 0.02 out of the head's face): cut here as a real slot of the box's size, turned by the page's angle"""
-    def mk():return bd.Box(l+1,w,h+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,top-h)))
+    """the slot the page cuts (fusee.js slotted: l+1 long across the whole head, w wide, h-0.02 deep from the face at `top`, the box reaching 0.02 past the face), turned by the page's angle"""
+    def mk():return bd.Box(l+1,w,h,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,top-h+0.02)))
     return lambda:mk().moved(bd.Location((0,0,0),(0,0,1),math.degrees(rot)))
 
 def fscrew(key,hn,title,drawing,prof,rs,y0,y1,top,slot,rot,note,src,expect_r,notes=()):
@@ -110,8 +110,8 @@ def fscrew(key,hn,title,drawing,prof,rs,y0,y1,top,slot,rot,note,src,expect_r,not
          ThreadOD(th,y0,y1,f'Cut the thread M{2*rs:g} (die or single point)',[S('thread',f"M{2*rs:g} × {th['p']}",'6g','ISO 261')],src),
          Cut(_slot(*slot,top,rot),'Mill the slot across the head',[S('slot',f"{slot[1]:.2f} wide × {slot[2]:.2f} deep, turned {math.degrees(rot):.0f}° (the page's)",None,src)],src,at=(0,0))]
     R_=Recipe(key,hn,title,drawing,'steel (the coloured section)','none',[Setup('1','bar in the collet, turned and parted off; the slot on the mill',ops)],_w.UP(),
-      notes=list(notes)+[note],expect=[{'at':(0,0),'r':expect_r,'max':0.4,'why':"the page draws the slot as a solid dark box lying in the head (standing 0.02 out of its face for WN-20 and WN-21), not cut; the recipe cuts a slot of the box's size"}])
-    R_.near=2.0;R_.box_tol=0.03   # only the page's pieces at this screw (WN-19's line is three); the slot's box stands 0.02 out of the face
+      notes=list(notes)+[note],expect=[] if key=='w20' else [{'at':(0,0),'r':expect_r,'max':0.13,'why':"the slot's floor where it meets the head's cone at the slot's ends: facePocket's cut there leaves a ramp up to 0.12 (p99 0.014 over the screw)"}])
+    R_.near=2.0   # only the page's pieces at this screw (WN-19's line is three)
     return R_
 
 def _tipcone(rs):
@@ -125,7 +125,7 @@ def w19():
 def w20():
     U=WFB();Q=U['SCR']['w20'];rs=Q['rs'];crest,rt=_tipcone(rs);yt=Q['yb'];ya=Q['ya'];ch=min(iso(2*rs)['H1'],(yt-ya)*0.3)
     prof=[(0,Q['y0']),(Q['r0'],Q['y0']),(Q['r1'],Q['y0']+Q['hh']),(crest,ya),(crest,yt-ch),(rt,yt),(0,yt)]
-    return fscrew('w20','WN-20','Cover plate screw (WN-20)','WN-20 (coloured section 05 06_8; its sheet is not in the set)',prof,rs,ya,yt-0.0,Q['y0'],(Q['slot']['l'],Q['slot']['w'],Q['slot']['h']),Q['slot']['rot'],
+    return fscrew('w20','WN-20','Cover plate screw (WN-20)','WN-20 (coloured section 05 06_8; its sheet is not in the set)',prof,rs,ya,yt-0.0,Q['y0']+Q['slot']['h']-0.04,(Q['slot']['l'],Q['slot']['w'],Q['slot']['h']),Q['slot']['rot'],
       "A 90° countersunk head Ø 3.1 seated in the cover plate's sink, M1.7 across the small end's recess and into the body's M1.7.",'dims.js FU.SCR.w20 (fusee.js; estimated)',1.7)
 def w21():
     U=WFB();Q=U['SCR']['w21'];rs=Q['rs'];crest,rt=_tipcone(rs)
@@ -139,7 +139,7 @@ def dtArbor():
          TurnProfile(P,"Turn the arbor: the pivots Ø 0.88 with their domed ends, the shoulders chamfered 0.25 × 45°, the seat for the detent tapered 1:70",[S('pivots','Ø 0.88',None,src),S('seat','Ø 2.25 between its shoulders, 1:70 under the detent','line to line with the detent\'s 2.25 H7 hole',src)],src)]
     return Recipe('dtArbor','050505-2','Maintaining detent arbor (Gegensperrwelle)',src,'Präz. Rundstahl (not given)','hardened (as an arbor: estimated)',[Setup('1','between centres',ops)],_w.UP(),
       fits=["the detent 05 05 05-1 staked on its 1:70 seat","its pivots in the plates' drilled Ø 0.9"],
-      expect=[{'at':(0,0),'r':3,'max':0.02,'vol':1.5,'why':"the page turns the arbor on 20 sides (a polygon's area is 1.6 % under the circle's): 1.3 mm³"}])
+      )
 
 RECIPES.update({'w19':w19,'w20':w20,'w21':w21,'dtArbor':dtArbor})
 

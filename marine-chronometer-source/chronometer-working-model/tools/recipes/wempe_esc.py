@@ -34,12 +34,12 @@ def armScrew():
          TurnProfile(prof,"Turn the countersunk head (wide at its face), the shank to the thread's major diameter and the tip",
            [S('head',f"Ø {2*SC['r1']:.2f} at the face, Ø {2*SC['r2']:.2f} {hh:.2f} up",None,src),S('shank',f'Ø {crest:.3f}','6g (es %.3f)'%th['es'],'ISO 965')],src),
          ThreadOD(th,z0,Lt,f'Cut the thread M{2*rs:g} (die)',[S('thread',f'M{2*rs:g} × {th["p"]}','6g','ISO 261')],src),
-         SpinCut(lambda a:bd.Box(sl[0],sl[2],zs1-max(zs0,-0.01),align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).rotate(bd.Axis.Z,math.degrees(a)).moved(bd.Location((0,0,max(zs0,-0.01)))),
-           'Slot the head across its face',[S('slot',f'{sl[0]} long × {sl[2]} wide, {zs1:.3f} deep','estimated',src)],src)]
+         SpinCut(lambda a:bd.Box(2*SC['r1']+0.4,sl[2],zs1-max(zs0,-0.01),align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).rotate(bd.Axis.Z,math.degrees(a)).moved(bd.Location((0,0,max(zs0,-0.01)))),
+           'Slot the head across its face',[S('slot',f'across the whole head (a saw cut), {sl[2]} wide, {zs1:.3f} deep','estimated',src)],src)]
     r=Recipe('armScrew','WN-10','Balance arm screw (WN-10, by the coloured section), two',src,'steel (not given)','none',[Setup('1','bar in the collet, the head end out; slotted at the bench',ops)],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,Y['armT']+SC['a'],0)),
       fits=["through the arm into the balance flange's tapped holes (2 × M1), the heads sunk in the arm's face"],
-      expect=[{'at':(0,0),'r':0.9,'max':0.14,'why':"the head's slot: the page draws it as a solid dark box (1.3 × 0.25 across × 0.2 deep) filling the slot and standing 0.02 out of the head's face, not cut into it: its top is 0.125 from the recipe's slot walls"}])
+      )
     r.near=0.5;r.free_spin=(math.pi,0.0);r.box_tol=0.03;return r
 RECIPES['armScrew']=armScrew
 
@@ -60,7 +60,7 @@ def massScrew():
          Cut(lambda:bd.Box(sl[0],sl[2],sl[1]+1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,zbot))),'Slot the head across the mass (horizontal)',[S('slot',f"{sl[0]} long × {sl[2]} wide, {sl[1]} under the mass's side",'estimated',src)],src)]
     r=Recipe('massScrew','WN-12','Compensation mass screw (WN-12, by the coloured section), four',src,'steel (not given)','none',[Setup('1','bar in the collet; faced and slotted at the bench',ops)],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,tA,0)),fits=["through the mass's outer jaw to the rim's outer face, the head sunk in the mass's counterbore"],
-      expect=[{'at':(0,0),'r':1.0,'max':0.14,'why':"the head's slot: the page draws it as a solid dark box (1.6 × 0.25 across × 0.25 deep) filling the slot and standing 0.02 out of the head's face, not cut into it: its top is 0.125 from the recipe's slot walls; and the page's head top is a fan of 24 triangles from its centre to a rim bent onto the mass's side, up to 0.022 off the true cylinder the recipe turns"}])
+      )
     r.near=0.5;r.box_tol=0.03;return r
 RECIPES['massScrew']=massScrew
 
@@ -204,7 +204,7 @@ def _bankingScrew(key,hn,title,L,items,rs,rH,top,sd,sw,src,sizes,notes,expect_wh
            'Slot the dome across (a saw)',[S('slot',f'{2*sw:.2f} wide × {sd} deep','estimated',src)],src)]
     r=Recipe(key,hn,title,src,'brass (the photographs: likely)','none',[Setup('1','bar in the collet, the head end out; slotted at the bench',ops)],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),fits=notes[0],notes=notes[1:],
-      expect=[{'at':(0,0),'r':rH+0.1,'max':sd+sz+0.1,'why':expect_why}])
+      expect=[{'at':(0,0),'r':rH+0.1,'max':sd+sz+0.1,'why':expect_why}] if expect_why else [])
     r.near=1.0;r.free_spin=(math.pi,0.0);r.box_tol=0.03;return r
 
 def bankScrew6mx():
@@ -214,7 +214,7 @@ def bankScrew6mx():
       lambda crest:[S('shank',f'Ø {crest:.3f}','6g',src),S('head',f'Ø {2*rH:.1f} across, a dome {hH} high on the underside at {lS:.2f}',"Kirov 247's: Ø 3.4 (3.45 ±0.1, 3.43 on 24020) (likely)",src)],
       [["through the upright's slit and both leaves, its thread tapped in the leaves; its dome on the wheel's side of the pipe, which rests on it"],
        "The banking screw of the 6MX's block: the pipe's flat face rests on its dome, turning it sets the depth of lock."],
-      "the dome's slot: the page draws it as a solid dark bar standing 0.01 out of the dome (0.34 wide, 0.45 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.45 under the top; and the bar follows the curve 0.45 down, so at the rim it hangs 0.45 under the head's underside (0.4487), in the air")
+      None)   # the slot is cut into the head on the page since 1 November 2026 (KIT.slotHeadGeo); a dark bar before
 def _bs6():
     r=bankScrew6mx();r.rev='6mx';return r
 RECIPES['bankScrew6']=_bs6
@@ -226,7 +226,7 @@ def bankScrew1943():
       lambda crest:[S('shank',f'Ø {crest:.3f}, {lT} long','6g; 8.2 as the 6MX loose block\'s screw (estimated)',src),S('head',f'Ø {2*rH:.1f}, {hc} long under a dome {hd} high',"the photographs: Ø 3.15-3.6 (likely); the dome's rise estimated",src)],
       [["through the slit upright's two leaves, its thread tapped in them; the pipe rests on the head's side"],
        "The banking screw of the escapement of 1943's block; its slit is along the plate, so its two leaves grip the thread from above and below."],
-      "the head's slot: the page draws it as a solid dark bar standing 0.01 out of the dome (0.4 wide, 0.5 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.5 under the top")
+      None)
     r.rev='1943';r.show='last 1943';return r   # the last revised block's slit upright carries the same screw (WN-gkA43 is in both versions)
 RECIPES['bankScrew43']=bankScrew1943
 
@@ -248,7 +248,7 @@ def _cone41(ver):
       'brass, gilt (the photographs: likely)','none',[Setup('1','bar in the collet, the tail end out; slotted at the bench',ops)],page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,ytip,0)),
       fits=["through the arm's slit end, its thread in the arm; the pipe banks on its dome (the detent's spring presses it there)"],
       notes=["Turning the screw sets the depth of lock, 0.25 mm a turn."],
-      expect=[{'at':(0,0),'r':rh+0.1,'max':CN['sd']+CN['sz']+0.1,'why':"the dome's slot: the page draws it as a solid dark band standing 0.01 out of the dome (0.3 wide, 0.45 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.45 under the top"}])
+      )
     r.near=1.0;r.free_spin=(math.pi,0.0);r.box_tol=0.03;r.rev=ver;r.show='first -3955' if ver=='first' else None;return r
 RECIPES['cone41']=lambda:_cone41('first')
 RECIPES['cone41.3955']=lambda:_cone41('3955')
@@ -285,7 +285,7 @@ def goldScrew():
            'Slot the head across (a saw)',[S('slot',f"{2*G['sw']} wide × {G['sd']} deep",'estimated',src)],src)]
     r=Recipe('goldScrew','WN-14',"Gold spring's screw (WN-14), across into the square",src,'steel, polished (the photographs: likely)','none',[Setup('1','bar in the collet, the thread end out; slotted at the bench',ops)],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,L,0)),fits=["through the gold spring's head into the detent's square, tapped there"],
-      expect=[{'at':(0,0),'r':r_+0.1,'max':G['sd']+G['sz']+0.1,'why':"the head's slot: the page draws it as a solid dark bar standing 0.01 out of the rounded top, not cut into it: the recipe cuts it flat-floored 0.15 under the top"}])
+      )
     r.near=0.6;r.free_spin=(math.pi,0.0);r.box_tol=0.03;return r
 RECIPES['goldScrew']=goldScrew
 

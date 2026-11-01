@@ -130,7 +130,7 @@ const WFRAME=(()=>{
          Likely (±4° on the axis, ±0.3 on the end). Until 18 October 2026 its root on the opening's edge 50° round from the pocket's line (23 to 51) and its end centre
          r 7.35 toward 112.5°: the axis toward 93°, 2.4 S of the centre, its end r 8.54 (estimated) */
       const tA=add(H[23],brg(203.5),0.85),tg0=add(tA,brg(113.5),4.0),tgE=add(tA,brg(113.5),Math.sqrt(9*9-0.85*0.85)-1.25),tu=unit(sub(tgE,tg0));
-      /* the pocket: the hull of 51's r 4 and the opening's r 5, the far side's tangent drawn from r 4.95 so it crosses the opening's edge cleanly (0.047 off the sheet's r 5 there, recipes.py; at r 5 the tangent lies on the opening's edge and the solid opens, 29 October 2026), the tongue's side's the
+      /* the pocket: the hull of 51's r 4 and the opening's r 5, the far side's tangent to the opening's r 5 as the sheet draws it, to the circle's tangent point 0.01 inside it (P5, r 4.99: the line crosses the opening's edge there, 0.01 off the sheet's r 5, 0.047 until 1 November 2026 when it ran to the r 4.95 half circle kept in the hull, inside the opening; at r 5 the hull's arc lay on the opening's edge and the solid opened; r 4.95, 0.047 off, until 1 November 2026), the tongue's side's the
          tangent to r 5 (below) */
       const a0=add(tg0,tu,-2),key=bool(C(H[23],5,200),stadiumPts(a0,tgE,2.5)).uni[0],ua=unit(sub(H[51],H[23])),va=[-ua[1],ua[0]],dv=q=>(q[0]-H[23][0])*va[0]+(q[1]-H[23][1])*va[1],sT=Math.sign(dv(tgE));
       const D5=Math.hypot(H[51][0]-H[23][0],H[51][1]-H[23][1]),w5=add(ua.map(q=>q/D5),va,sT*Math.sqrt(1-1/D5/D5)),T5=add(H[23],w5,5),ld=[-w5[1],w5[0]],nt=[-tu[1],tu[0]];   /* w5: from 23 to the tangent's point on r 5 (u·w = (5-4)/D) */
@@ -140,7 +140,7 @@ const WFRAME=(()=>{
       const L0=Math.hypot(...sub(tgE,a0)),XS=[-1,1].map(s=>{const p=add(a0,nt,1.25*s),r=sub(T5,p),k=(r[0]*ld[1]-r[1]*ld[0])/(tu[0]*ld[1]-tu[1]*ld[0]);return{s,p,k,x:add(p,tu,k)};}).filter(o=>o.k>0&&o.k<L0);
       const Xo=XS.reduce((a,o)=>Math.hypot(...sub(o.x,T5))>Math.hypot(...sub(a.x,T5))?o:a),X=Xo.x,ps=add(a0,nt,-1.25*Xo.s);
       const Pc=(()=>{const d=sub(ps,H[23]),b=d[0]*tu[0]+d[1]*tu[1],c=d[0]*d[0]+d[1]*d[1]-4.99*4.99;return add(add(ps,tu,-b+Math.sqrt(b*b-c)),nt,0.01*Xo.s);})();
-      const pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),Pc,X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
+      const P5=add(H[23],add(ua.map(q=>q/D5),va,-sT*Math.sqrt(1-1/D5/D5)),4.99),pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),P5,Pc,X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
       if(pk.uni.length!==1||fl.length!==1)console.warn('topPlate: the pocket and the balance opening cross in',pk.uni.length,'and',fl.length,'loops');
       F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.325,b:y1,floorOut:fl[0]});   /* N-O's 1.35 -0.05, drawn at the middle (1.35 until 26 October 2026) */
       /* the horns' tips (the owner's choice, 26 October 2026, a version to each): sharp as 05 09 01 (1943) draws them, r 1 as the assembly 05 08 01 (2.11.46, scaled at 2:1)
