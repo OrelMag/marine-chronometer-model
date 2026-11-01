@@ -1,6 +1,6 @@
 """Every hole populated: each round hole in a flat face of every part of the movement (screw holes, pivot holes and bushings' bores, jewel holes, pin holes,
 gears' bores) is followed along its axis and tested for something in it (a screw's shank, a pivot, an arbor, a pin, a setting), by holecheck.js in the page.
-It runs with each balance stop fitted (the Navy's Y-arm and the manual's locking arm, as the page opens), since each leaves the other's holes. A hole with
+It runs with each balance stop fitted (none, as the page opens since 1 November 2026, the Navy's Y-arm and the manual's locking arm), since each leaves the other's holes. A hole with
 nothing in it fails, unless EXPECTED gives the reason it is empty on the real movement too (a hole a figure or a frame shows open, an access hole, a jewel
 setting's window, the holes of the stop not fitted). Exit code 1 on an empty hole not expected, or an expected one that is no longer empty or no longer there.
 
@@ -23,7 +23,7 @@ FREEZE = """(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.use
   const s=ESC.state(0),E=1000+s.prog;mv.userData._u({E,th:s.th,lift:s.lift,psDef:s.psDef,n:2.5,winding:false,springOn:true,msOn:false,arm:0,blk:0});})()"""   # audit.py's: placements.py's first state
 # (part, line or '' for any, centre (movement frame, mm) within 0.4 mm or None for any, the stop fitted or None for both, why it is empty)
 # the states the movement is checked in: (name, JS that sets it); the Hamilton's two balance stops, another model's from its checks.py (HOLE_STATES)
-STOPS = model.cfg('HOLE_STATES', [(st, "document.querySelector('#stopV button[data-v=\"%s\"]').click()" % st) for st in ('navy', 'arm')])
+STOPS = model.cfg('HOLE_STATES', [(st, "document.querySelector('#stopV button[data-v=\"%s\"]').click()" % st) for st in ('none', 'navy', 'arm')])
 EXPECTED = model.cfg('HOLE_EXPECTED', [
     ('bal', '42263', None, None, "the impulse roller's three holes, a quarter turn apart from the jewel, open (Figs. 14, 61, 90); the balance turns, so anywhere"),
     ('barrelBridge', '42061', [38.17906, -30.33772, -3.80897], None, "an opening over the train bridge's third pillar screw, its head sunk in a counterbore (23:30): KLUwI2UUCMQ 37:59 has it, about r 3.2 at (35.2, -3.2) through the bushings' similarity"),
@@ -35,8 +35,8 @@ EXPECTED = model.cfg('HOLE_EXPECTED', [
     ('pillar', '42060', [20.38525, -4.31162, 13.23645], None, "the plate's access hole to the balance lower bridge's screw, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial; under the screw where the owner's 36:01 trace puts it since 18 October 2026"),
     ('sspring', '42016', None, None, "the second hole in the sustaining spring's fixed end, the pin in the first (video 27:26; which one has the pin estimated)"),
     # ('lockArm', '', [-6.96, -30.65, -19.69], 'navy', "the Navy's second dust seal's chamber, closed underneath, the lever through its slot above (illustrative: its inside not seen)"),   # populated since 21 October 2026: the part one mesh (fuse), the hole is read through its whole depth, to what is set in it below (the endstone, the setting, the lever)
-    ('barrelBridge', '42061', [-15.59332, -30.33772, -25.81387], 'arm', "the Navy seal's screw hole (13:04.4): the movement drawn is fitted for the Navy's Y-arm, and the manual's arm leaves it empty"),
-    ('barrelBridge', '42061', [0.05585, -30.33772, -18.17359], 'arm', "the Navy seal's other screw hole (13:04.4), empty with the manual's arm fitted"),
+    ('barrelBridge', '42061', [-15.59332, -30.33772, -25.81387], 'arm none', "the Navy seal's screw hole (13:04.4): the bridge is drilled for the Navy's Y-arm, and the manual's arm or no stop leaves it empty"),
+    ('barrelBridge', '42061', [0.05585, -30.33772, -18.17359], 'arm none', "the Navy seal's other screw hole (13:04.4), empty with the manual's arm or no stop fitted"),
     ('trainBridge', '42062', [-8.85781, -26.53992, 24.88676], None, "a plain hole through the upper train bridge 4 mm beyond the train-blocking screw's (KLUwI2UUCMQ 23:30 and 13:44 through the plate-placed holes, within 0.4 mm), its use not given by any source"),
     ('pillar', '42060', [-0.6702, -4.31162, -35.9674], None, "a hole at 12 o'clock past the wind indicator's post, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
     ('pillar', '42060', [29.7122, -4.31162, 21.223], None, "a hole past the access hole at 4 o'clock, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
