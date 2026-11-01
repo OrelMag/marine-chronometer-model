@@ -439,6 +439,11 @@ const WFUSEE=(()=>{
       /* the flange swept in two pieces, split at the angle where turn 0's near wall crosses the second rib's face FS1 (m 0.69: helixSolid joins rays by their walls' order),
          the chain's pin's hole through rib 1, the slot and rib 2 to the land under it (r 14.8 at the pin, inside the hole's 16.5) in the second; inside, the 45° chamfer
          from Ø 29.8 at the blank's face to the recess's Ø 26.3 */
+      /* and rays where the chain's cutter's floor crosses the ribs' tops (17.8) and turn 0's floor (rf): there a wall passes from the rib's face to turn 0's, and with no
+         ray where its step is nothing helixSolid fanned a ridge across the slot between the two rays (to r 17.41 at 6.3°, in the chain's first link: fine.py) */
+      const cut=(()=>{const o=[],g=[t=>rCut(t)-17.8,t=>rCut(t)-rf(fr((t-PHI0)/TAU))],n=3600;for(const f of g)for(let i=0;i<n;i++){let x0=i*TAU/n,x1=(i+1)*TAU/n,f0=f(x0),f1=f(x1);
+        if(f0*f1>=0||Math.abs(f0)>50||Math.abs(f1)>50)continue;for(let k=0;k<60;k++){const xm=(x0+x1)/2,fm=f(xm);if(fm*f0>0){x0=xm;f0=fm;}else x1=xm;}o.push((x0+x1)/2);}return o;})();
+      for(const t of cut)cols.push(t-1e-5,t,t+1e-5);cols.sort((p,q)=>p-q);
       const thC=PHI0+(FS1+WLD/2-A0)/PAX*TAU,fl=c=>helixSolid(c,RT,AS,()=>[[RT,14.9-RT],[1.75,13.15],[AS,13.15]],rBody,[FR1,FS1],[RT+1.3*T5]);
       const gFl=fl([...cols.filter(t=>t<thC-1e-9),thC]),gFl2=(()=>{const q=pol(PINR,PINA);return capFix(bore(fl([thC,...cols.filter(t=>t>thC+1e-9)]),[q[0],0,q[1]],[0,1,0],0.2775,F0-2.05),null);})();
       const AE=LB-2.0;   /* the small end's band from 2.0 under its face (below the slot's floor, so the cut's floor runs through metal, not along a seam) */
