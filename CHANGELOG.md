@@ -7,6 +7,9 @@ Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to ca
 ## 3.69.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the 6MX's contact (sizes estimated from photographs, as each sheet says), so that every line of the Wempe's parts list now has a recipe or says what to buy: 187 made parts and 106 bought lines.
 
+## 3.68.01 · 2026-11-01
+- The Hamilton's work-in-progress note: its parts are being recreated from Hamilton's drawings with the help of the NAWCC, with special thanks to Thomas Stocker
+
 ## 3.68.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the winding keys, the transit lock (each of its pieces), the barrel arbor's hook, the wire spring's stud, the band's hooks, the 6MX's chatons and the detent block of every version with its screws; the chain, the band's strip, the boxes' fittings, jewels and standard parts as parts to buy. 171 made parts and 101 bought lines in all.
 
