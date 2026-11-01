@@ -714,6 +714,31 @@ the page draws through it; the lever has none for the arbor and the grip; the gr
 
 **Deferred.** The 6MX's contact (above); `6MX.jw38u`, `.jw35u`, `.jw38l` and the contact's jewels are bought lines with the page's sizes where `train.js` has them.
 
+### Batch 13 (1 November 2026): the 6MX's electrical contact; 16 recipes pass, five lines bought, the parts list covered
+
+`tools/recipes/wempe_ct6.py` (imported by the last line of `wempe.py`). All of it was hand-built in `train.js` (and `case.js` for the springs) from Kirov No. 247's photographs and Romanov's figures, with no works drawing: **every size is an estimate**, and every sheet carries a note saying so, with the sources (Kirov No. 247 by Altmeppen, Romanov 1975 Figs. 100-101 and p. 105). Made (16 recipes, all `rev='6mx'`): the base `6MX.ct` (`ct6Base`), the blocks 52 and 57 (`ct6BlockP`, `ct6BlockM`), the spiral stud (`ct6Stud`), the staff (`ct6Staff`) and its upper jewel setting (`ct6Setting`), the cock and its cap plate (`ct6Cock`, `ct6Cap`), the lever (`ct6Lever`: boss, two sheared arms and the holder, one soldered piece), the contact screw (`ct6Screw`), the disc and its bracket (`ct6Disc`, `ct6DiscBracket`), the contact wheel and its collet (`ct6Wheel`, `ct6Collet`), and the two springs in the bowl (`ct6SpringA`, `ct6SpringB`: a milled foot and three soldered tines each).
+
+| Recipe | Worst surface gap, recipe to page / page to recipe | Notes |
+|---|---|---|
+| `ct6Base` | 0.0049 / 0.0049 | the five tapped M1.4 holes in `expect` (drawn plain at the thread's size + 0.02) |
+| `ct6BlockP`, `ct6BlockM` | 0.0055 | |
+| `ct6Stud` | 0.0 | the clamp screw's M1.2 hole in `expect` |
+| `ct6Staff`, `ct6Setting` | 0.0043, 0.0046 | the page's 24- and 40-sided lathes |
+| `ct6Cock`, `ct6Cap` | 0.0049, 0.0062 | the cock's foot, leg and arm one fused mesh; the cap plate a union of true circles |
+| `ct6Lever` | under 0.02 outside the holder's bore (0.135 there, in `expect`) | the holder's bore drawn at the screw's major diameter; the arms solid through the staff's seat |
+| `ct6Screw` | 0.0062 | the page's thread is grooves 0.06 deep; the recipe a plain cylinder with the thread named |
+| `ct6Disc`, `ct6DiscBracket` | 0.0064, 0.0 | the knurl's chords |
+| `ct6Wheel`, `ct6Collet` | 0.0015, 0.0021 | the ratchet teeth as splines and arcs against the page's chords |
+| `ct6SpringA`, `ct6SpringB` | 0.0068 | the foot's chords every 2 degrees |
+
+**Three new check options (`recipes.py`)**, for lines that hold several pieces: `pieces` (indices into the line's meshes in the export's order, root first: the disc is mesh 0 of `6MX.ctd`, its axle screw 1 and its bracket 2; the wheel 0 and its collet 1), `root_i` (the line's second root: `6MX.cf` is two springs, the second's foot a root of its own, not a sub) and, with it, `near` to keep each spring's tines. The export takes `hn|i` for the i-th root. The bracket's recipe carries the matrix from its own frame into the disc's mesh frame (the box's turn about the disc's axis, and the shortest turn that stands the disc's axis along its direction in the plan), since the export puts every piece in the root's frame.
+
+**Sizes moved into `dims.js`** (`WD.CT6`, read back by the page with the same expressions in the same order): the base's holes, the foot's screw and pins, the fibre and blocks, the disc (teeth, recess, bracket, axle head), the staff's profile, the cock and its cap plate, the stud, the lever, the contact screw's thread, the wheel's ratchet and spokes, and the springs' (`CT6.cf`). The page's meshes before and after, every mesh of the box and the movement in all five versions (`last`, `first`, `3955`, `6mx`, `1943`, with the contact shown): identical within 1e-5 mm and their indices exactly, **compared NaN-aware** (a first comparison passed because `np.abs(nan) > 1e-5` is false: one lifted token read `b:K6.base.pY` for `K6.base.pY[1]` and made the base's blind pin holes' floors NaN; the recipe's check found it, the comparison was made to fail on NaN, and the lift fixed). `wempe_escapement.js`, `wempe_6mx.js`, `gearing.js --model wempe --quick`, `wempe_motionwork.js`, `invariants.py --model wempe`, `wempe_inertia.py`, `wempe_inertia.py --rev 6mx` and the Wempe type check print the same before and after (signed zeros in two inertia lines left out).
+
+**Bought lines (5).** The spiral stud's clamp screw `6MX.ctqs`; the lock nut `6MX.ctn`; the spiral `6MX.cth` with its small collet (a strip wound on a former and a turned ring, whose collet turns with the lever while the spiral is fixed to the stud, a pair no recipe can check on one frame); the disc's axle screw (a `6MX.ctd` line); and `WN-12a`, the poising screw for the masses' empty tapped tops (not fitted: the owner's choice of 28 October 2026; the sources show a cheese head and a thread 1.17 wide and 1.9-2.0 deep but size no head, so none is given).
+
+**Page faults, recorded in `expect` or the table below.** The contact's tapped holes are drawn plain at the thread's size + 0.02 (the base's five, the stud's, the lever's holder). The lock nut `6MX.ctn` is a hex 1.1 across the corners (0.95 across the flats) with a Ø 1.0 bore drawn through it, which breaks through all six flats: six slivers of 0.0135 mm³ in all, no nut at all. The springs' feet have no holes for the screws that hold them; the tines are separate pieces overlapping the foot by 0.016.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
@@ -748,6 +773,11 @@ the page draws through it; the lever has none for the arbor and the grip; the gr
 | Transit lock (bracket, arbor, hub, grip, knob; case.js) | the rounds | 0.025-0.038 | the seat's round end 16 chords, cylBetween prisms of 20, 32 and 16 sides, the knob on 40; in the recipes' `expect` |
 | Transit lock | the holes a maker bores | none drawn | no clearance holes for the two wood screws through the wall leg; none in the lever for the arbor and the grip, in the hub and knob for their fits; the sheets say so |
 | ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
+| Contact nut 6MX.ctn | the hex and its bore | whole | 1.1 across the corners (0.95 across the flats, the flats 0.476 from the axis) with a Ø 1.0 bore drawn through: six slivers (0.0135 mm³), 6 bodies; bought here, the page not changed |
+| 6MX contact (base, stud, lever's holder) | the tapped holes | 0.18, 0.14, 0.14 | drawn plain at the thread's size + 0.02, not the tap drill and a thread; in the recipes' `expect` with the volume left over |
+| 6MX contact's lever 6MX.ctl | the arms through the staff's seat | whole | the two arms start at the staff's axis and fill the boss's bore; the recipe follows the page |
+| 6MX contact springs 6MX.cf | the feet's screws, the tines | whole, 0.016 | no holes in the feet for the screws that pass through the bowl's wall; the tines are separate boxes overlapping the foot by 0.016 |
+| 6MX contact disc 6MX.ctd | the axle screw and bracket | whole | the screw is a head only (no shank into the bracket), the bracket a plain block with no hole |
 
 ## Decided
 
