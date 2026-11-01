@@ -33,6 +33,9 @@ ST=[('fusee','Fu',TR['fu'],'C',TR['cp']),('centre','C',TR['cw'],'T',TR['tp']),('
 tips={}
 for n,a,z,b,p in ST:
     m=2*d(L[a],L[b])/(z+p);tips[a]=m*(z/2+1.15)
+    if a=='F':   # the fourth wheel's tips are drawn (42073-2-01 #4, js/hdims.js w4.od), and its module is the sheet's .2800 mm (#2): the centre distances must give it
+        hd=(pathlib.Path(__file__).resolve().parent.parent/'js'/'hdims.js').read_text();od=float(re.search(r'w4:\{[^}]*?od:I\(([.\d]+)\)',hd).group(1))*25.4/2;mod=float(re.search(r'w4:\{[^}]*?m:([.\d]+)',hd).group(1))
+        ok(abs(m-mod)<0.0005,f"the fourth's module {m:.4f} is the drawn {mod} (42073 #2)");tips[a]=od
     print(f"{n:7s} {a:>2s}-{b:<2s} {d(L[a],L[b]):7.3f} mm  {z}:{p}  module {m:.4f}  wheel tips r {tips[a]:.2f}")
 mesh={('Fu','C'),('C','T'),('T','F'),('F','E')}
 for w,rt in tips.items():
