@@ -77,7 +77,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
         if(dir>0){o.push(sh(rt,a));for(let i=1;i<=nb;i++){const f=i/nb,b=a+P*f;o.push(sh(rt+(rr-rt)*f,b-(i===nb?Math.max(0.004,lean):0)));}}
         else{o.push(sh(rr,a+lean));for(let i=1;i<=nb;i++){const f=i/nb;o.push(sh(rr+(rt-rr)*f,a+lean+(P-lean)*f));}}}
       return o;}
-    const SP={gap:1.0,t:3.0,R:7.55/2,ch:0.5,rec:3.125,recd:1.0,cl:0.002,d:[3.0,1.0]};
+    const SP={gap:1.0,t:3.0,R:7.55/2,ch:0.5,rec:3.125,recd:1.0,cl:0.002,d:[4.0,1.0]};   /* d: the square hole's distance from the square's root at the recess's mouth (y0) and at the face (y1): 1:100 from the face (1 from the root) through the 3 thick, 4 at the mouth (3 at the recess's floor, where the sheet's taper runs from; 3.0 and 1:150 until 1 November 2026) */
     const VR={rb0:2.19,tp:0.06/8.7,fit:0.007,rel:0.425,r1:4.975,rf:6.9475,ch:0.35,rh:3.75,hole:{dy:1.1,a:0.9,from:-5},
       prof:()=>{const rb=(/** @type {number} */y)=>VR.rb0+(yD-y)*VR.tp-VR.fit;
         return[[rb(VFA+VR.rel),VFA+VR.rel],[VR.r1,VFA+VR.rel],[VR.r1,VFA],[VR.rf,VFA],[VR.rf,VFB-VR.ch],[VR.rf-VR.ch,VFB],[VR.rh,VFB],[VR.rh,VHF],[rb(VHF),VHF]];}};
@@ -89,7 +89,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
         return[[FW.bore,WTB],[FW.tube,WTB],[FW.tube,W-2.22],[FW.hubR,W-2.22],[FW.hubD,WW],[FW.RH,WW],[FW.RH,W],[FW.RM,W],[FW.rec,ch(FW.rec)],[FW.rec,W-1.3],[FW.bore,W-1.3]];}};
     const MR={z:120,D:37.2,D1:37.45,dp:0.725,nb:3,bore:6.5075/2,pin:{r:14.2,d:0.6035},ck:{r:9.75+0.0125,a:[270,90],d:0.87},cup:[12.225,12.7,13.0],rv:{r:0.3,at:13.5,dy:0.75,a:[228,210,48,30]},o:/** @type {number[][]} */([]),o1:/** @type {number[][]} */([])};
     MR.o=ratchet(MR.z,MR.D/2,MR.D/2-MR.dp,1,0,MR.nb);MR.o1=ratchet(MR.z,MR.D1/2,MR.D1/2-MR.dp,1,0,MR.nb);
-    const SR={z:16,rt:7.0,rr:5.5,RBK:12.5/2,off:1.2,nb:8,t:2.65,BB:3.32,gap:0.05,sq:2.7,tp:0.01,cl:0.002,o:/** @type {number[][]} */([])};
+    const SR={z:16,rt:7.0,rr:5.5,RBK:12.5/2,off:1.2,nb:8,t:2.65,BB:3.30,gap:0.05,sq:2.7,tp:0.01,cl:0.002,o:/** @type {number[][]} */([])};   /* BB: the barrel bridge's thickness, = BB.t below (3.30; 3.32 until 1 November 2026, the ratchet standing 0.07 off the bridge, not gap) */
     SR.o=(()=>{const z=SR.z,P=TAU/z,o=[],rt=SR.rt,rr=SR.rr,RBK=SR.RBK,wrap=(/** @type {number} */a)=>Math.atan2(Math.sin(a),Math.cos(a));
       for(let k=0;k<z;k++){const a=k*P,t=Math.asin(SR.off/rt),u=Math.asin(SR.off/rr);
         o.push(sh(rt,a+t));const A=sh(rt,a+t),B=sh(rr,a+P+u),m=[(A[0]+B[0])/2,(A[1]+B[1])/2],d=[B[0]-A[0],B[1]-A[1]],l=Math.hypot(d[0],d[1]),h=Math.sqrt(RBK*RBK-l*l/4),c=[m[0]-d[1]/l*h,m[1]+d[0]/l*h];

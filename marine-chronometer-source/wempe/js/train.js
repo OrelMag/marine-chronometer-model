@@ -283,7 +283,7 @@ const WTRAIN=(()=>{
       tag(K.screw(g6,st[0],st[1],-9.85,1.1,1.0,2.0,0.6,M.steel),'6MX.ctqs');}
     /* the lever 60 pressed on the staff (its boss Ø 3, arms 1.1 wide, −6.1 to −7.4), its stone 61 (0.8 × 1.0 × 3, its acting corner 9.7 from the seconds arbor), the screw 54
        in the holder at its other end with a lock nut: in a group about the staff, which update() turns (C6L) */
-    {const S=C6.staff,loc=q=>[q[0]-S[0],q[1]-S[1]],arm=(e,w)=>{const l=Math.hypot(e[0],e[1]),n=[-e[1]/l*w/2,e[0]/l*w/2];return cc([[n[0],n[1]],[e[0]+n[0],e[1]+n[1]],[e[0]-n[0],e[1]-n[1]],[-n[0],-n[1]]]);};
+    {const S=C6.staff,loc=q=>[q[0]-S[0],q[1]-S[1]],arm=(e,w)=>{const l=Math.hypot(e[0],e[1]),n=[-e[1]/l*w/2,e[0]/l*w/2],s0=(K6.lv.rb[0]+K6.lv.rb[1])/2,b=[e[0]/l*s0,e[1]/l*s0];return cc([[b[0]+n[0],b[1]+n[1]],[e[0]+n[0],e[1]+n[1]],[e[0]-n[0],e[1]-n[1]],[b[0]-n[0],b[1]-n[1]]]);};   /* each arm starts in the middle of the boss's wall (r 1.0 of 0.5-1.5), not at the staff's axis, so it leaves the staff's seat (bore r 0.5) empty; until 1 November 2026 it ran in from the axis and filled it */
       const eS=loc(C6.stone),eH=loc(C6.screw54.h),eT=loc(C6.screw54.tip);
       tag(mesh(C6L,ringT([[K6.lv.rb[0],C6LB[1]],[K6.lv.rb[1],C6LB[1]],[K6.lv.rb[1],C6LB[0]],[K6.lv.rb[0],C6LB[0]]],40),M.steel),'6MX.ctl');
       const SA=K6.lv.sa,sl0=Math.hypot(C6.stone[0]-SA[0],C6.stone[1]-SA[1]),rd=[(C6.stone[0]-SA[0])/sl0,(C6.stone[1]-SA[1])/sl0],sc=loc([SA[0]+rd[0]*K6.lv.rs,SA[1]+rd[1]*K6.lv.rs]);

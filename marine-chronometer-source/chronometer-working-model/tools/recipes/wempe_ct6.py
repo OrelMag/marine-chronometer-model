@@ -128,7 +128,8 @@ def ctLever():
     def boss():return _rev([(lv['rb'][0],0),(lv['rb'][1],0),(lv['rb'][1],Z(lb[0])),(lv['rb'][0],Z(lb[0]))])
     def arm(e):
         e=P(e);l=math.hypot(*e);u=(e[0]/l,e[1]/l);n=(u[1],-u[0],0);V=lambda t,z:bd.Vector(u[0]*t,u[1]*t,z)
-        f=bd.Face(bd.Wire.make_polygon([V(0,Z(y0+kk/2)),V(l,Z(y0)),V(l,Z(y1)),V(0,Z(y1+kk/2))],close=True))
+        s0=(lv['rb'][0]+lv['rb'][1])/2;k0=kk/2*(1-s0/l)   # the arm starts in the middle of the boss's wall (r 1.0), the page's, not at the staff's axis
+        f=bd.Face(bd.Wire.make_polygon([V(s0,Z(y0+k0)),V(l,Z(y0)),V(l,Z(y1)),V(s0,Z(y1+k0))],close=True))
         return bd.extrude(f.moved(bd.Location((-n[0]*w/2,-n[1]*w/2,0))),w,dir=n)
     d=(s54['tip'][0]-s54['h'][0],s54['tip'][1]-s54['h'][1]);dl=math.hypot(*d);dd=(d[0]/dl,-d[1]/dl,0);hy=lv['hy'];hz=lv['hz'];hl=hz[1]-hz[0];hw=2*lv['hw'];hh=hy[1]-hy[0];eh=P(eH);ang=math.degrees(math.atan2(dd[1],dd[0]));zc=Z((hy[0]+hy[1])/2)
     def holder():return bd.Box(hl,hw,hh).rotate(bd.Axis.Z,ang).moved(bd.Location((eh[0],eh[1],zc)))
@@ -142,7 +143,7 @@ def ctLever():
          Cut(bore,"Drill and tap M1.0 along the holder for the contact screw",[S('thread',f'M{s54["d"]:g}',None,SRC),S('axis',f'{s54["y"]:g} on the page\'s height',None,SRC)],SRC)]
     return rec('ct6Lever','6MX.ctl','Contact lever (6MX, 60)','steel (boss); brass, gilt (arms and holder)','gilt',[Setup('1','the boss turned, the arms and the holder milled and soldered, the holder tapped',ops)],page_matrix(RX,(0,ym,0)),
       expect=[{'at':eh,'r':1.6,'z':(zb-0.6,zb+0.6),'max':0.2,'why':"the page bores the holder at the screw's thread diameter (r 0.5, plain), the recipe at the tap drill",'vol':max(math.pi*(0.25-(th['D1']/2)**2)*hl-0.5*math.pi*((th['D1']/2+th['H1']+0.05)**2-(th['D1']/2-0.02)**2)*hl,0)}],
-      notes=["The page draws the arms solid through the staff's seat, and the boss ring bored for the staff; the arms start at the staff's axis. The recipe follows it (the staff's seat is a maker's reaming of the pressed boss).",
+      notes=["The arms start in the middle of the boss's wall, leaving the staff's seat (the boss ring's bore) empty (the page drew them in from the staff's axis, through the seat, until 1 November 2026).",
              "The contact stone 61 (a bought line) is set in the stone arm's end."])
 
 # ---------------- the contact disc 55 and its bracket ----------------

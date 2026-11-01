@@ -105,6 +105,8 @@ const WFUSEE=(()=>{
 
   /* ---------- helpers ---------- */
   const turned=(P,seg=32)=>KIT.crease(new THREE.LatheGeometry(P.map(([r,y])=>V2(r,y)),seg));   /* listed from one end on the axis to the other, y rising */
+  /* slotted(g, face, S): a screw head's slot cut into it (facePocket), as the recipes cut it: a real slot S.l+1 long across the whole head, S.w wide, S.h-0.02 deep from the face, turned S.rot about y as the dark boxes it replaces were (WN-19, WN-20, WN-21: boxes lying in the heads until 1 November 2026) */
+  const slotted=(g,face,S)=>{const c=Math.cos(S.rot),s=Math.sin(S.rot),L=S.l/2+0.5,w=S.w/2;return facePocket(g,face,[[-L,-w],[L,-w],[L,w],[-L,w]].map(([x,z])=>[x*c+z*s,-x*s+z*c]),S.h-0.02);};
   const ringT=(P,seg=48)=>KIT.crease(new THREE.LatheGeometry([...P,P[0]].map(([r,y])=>V2(r,y)),seg));   /* both shaded by their own faces at corners (KIT.crease) */   /* a closed loop counterclockwise in r, y */
   const shapeOf=(xy,holes=[])=>{const s=new THREE.Shape();s.moveTo(xy[0][0],xy[0][1]);for(let i=1;i<xy.length;i++)s.lineTo(xy[i][0],xy[i][1]);s.closePath();
     for(const h of holes){const p=new THREE.Path();if(h.c){p.absarc(h.c[0],h.c[1],h.r,0,TAU,true);}else{p.moveTo(h[0][0],h[0][1]);for(let i=1;i<h.length;i++)p.lineTo(h[i][0],h[i][1]);p.closePath();}s.holes.push(p);}return s;};
@@ -528,10 +530,10 @@ const WFUSEE=(()=>{
        clicks' WN-21: a plain Ø 2.0 shank until 28 October 2026, drawing check 2's 5-M11), from the head's foot to its chamfered tip, turned onto its hole's helix (matchThreads);
        the heads' slots */
     const SC19=WD.FU.SCR.w19;
-    for(const c of CWH){tag(mesh(gF,turned([[0,SC19.y0],[SC19.r0,SC19.y0],[SC19.r1,SC19.y1],[0,SC19.y1]],20),M.steel,c[0],0,-c[1]),'WN-19');   /* in the fusee's own group, as its body: fixed to it */
+    for(const c of CWH){tag(mesh(gF,slotted(turned([[0,SC19.y0],[SC19.r0,SC19.y0],[SC19.r1,SC19.y1],[0,SC19.y1]],20),'top',SC19.slot),M.steel,c[0],0,-c[1]),'WN-19');   /* in the fusee's own group, as its body: fixed to it */
       {const a=SC19.y0-SC19.t,b=SC19.y0,tg=KIT.threadGeo(SC19.rs,a,b,a+b).clone(),gt=new THREE.Group();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,a+b,0);   /* its tip toward -y, into the body */
         gt.position.set(c[0],0,-c[1]);gF.add(gt);tag(mesh(gt,tg,M.steel),'WN-19',1).userData.thread={rs:SC19.rs,p:KIT.isoP(SC19.rs)};}   /* in a group on its own axis, which matchThreads turns it about */
-      const sl=tag(mesh(gF,new THREE.BoxGeometry(SC19.slot.l,SC19.slot.h,SC19.slot.w),M.steelD,c[0],SC19.y1+0.02-SC19.slot.h/2,-c[1]),'WN-19',1);sl.rotation.y=SC19.slot.rot;}
+}
     /* the cover plate 05 06 00-4 (Deckplatte; Bandstahl 24 × 1): Ø 21.1 -0.1, 0.8 -0.1 thick (drawn 0.8), its hole 6.1 H8 on the arbor's step, straight for 0.4 -0.1 from the
        face on the body (the section's "0,4 -0,1" spans that land: sure) and opened by a 60° chamfer to the outer face, the 60° taken from the axis as on the fusee wheel (drawn
        0.36 deep, 0.57 out: likely), so Ø 7.49 at that face; one screw hole Ø 1.85 -0.1 at 6 ±0.05 from the centre sunk 90° to Ø 3.1 +0.1, both from the outer face, as the
@@ -547,7 +549,7 @@ const WFUSEE=(()=>{
        under its face, M1.7 across the small end's recess and 3.5 into the body (its M1.7 6 deep): estimated. Until 18 October 2026 the head was drawn flush, 0.025 off the
        sink all round, holding nothing (the Contacts view, Inside the part) */
     {const g=new THREE.Group();const SC20=WD.FU.SCR.w20;g.position.set(DPS[0],SC20.dy,-DPS[1]);gDP.add(g);tag(g,'WN-20');
-      mesh(g,turned([[0,SC20.y0],[SC20.r0,SC20.y0],[SC20.r1,SC20.y0+SC20.hh],[0,SC20.y0+SC20.hh]],20),M.steel);mesh(g,KIT.threadGeo(SC20.rs,SC20.ya,SC20.yb),M.steel).userData.thread={rs:SC20.rs,p:KIT.isoP(SC20.rs)};const sl=mesh(g,new THREE.BoxGeometry(SC20.slot.l,SC20.slot.h,SC20.slot.w),M.steelD,0,DP0+0.125-0.02,0);sl.rotation.y=SC20.slot.rot;}   /* the slot, standing 0.02 out of the head's face as screw() draws them */
+      mesh(g,slotted(turned([[0,SC20.y0],[SC20.r0,SC20.y0],[SC20.r1,SC20.y0+SC20.hh],[0,SC20.y0+SC20.hh]],20),'bottom',SC20.slot),M.steel);mesh(g,KIT.threadGeo(SC20.rs,SC20.ya,SC20.yb),M.steel).userData.thread={rs:SC20.rs,p:KIT.isoP(SC20.rs)};}   /* the slot, standing 0.02 out of the head's face as screw() draws them */
     /* the chain's pin 05 06 00-6 (Kettenstift, coloured section; the hole "0,55∅ +0,01" through the flange's ribs, 05 06 04-2): Ø 0.55 across the slot, near the ribs' tops,
        where the chain's (or the band's) hook takes it */
     {const q=pol(PINR,PINA);tag(cylBetween(gF,0.2835,F,F0-2.0,M.steel,q[0],q[1],24),'050600-6');}   /* pressed: Ø 0.567 on 24 sides in the hole's Ø 0.555 (24 sides), 0.001-0.006 tight on the radius,
@@ -684,9 +686,9 @@ const WFUSEE=(()=>{
     /* their screws (WN-21, coloured section): put in from under the ratchet's plate, the head under it, the thread in the plate's M1.7, a shoulder Ø 1.19 above it for the
        click (its hole 1.2 H7), 0.1 past it; head Ø 2.6 × 0.5, the slot in it: estimated */
     for(const c of CKP){const g=new THREE.Group();g.position.set(c[0],0,-c[1]);gMW.add(g);tag(g,'WN-21');
-      const SC21=WD.FU.SCR.w21,yE=SC21.yE;mesh(g,turned([[0,yE],...SC21.dome.map(([r,d])=>[r,yE+d]),[SC21.rsh,SC21.ysh],[0,SC21.ysh]],20),M.steel);mesh(g,turned([[0,G],[SC21.hr,G],[SC21.hr,G+SC21.hh],[0,G+SC21.hh]],20),M.steel);   /* the head 0.9 high and the end domed 0.25 inside the cup's rim, as 05 06 02's section draws them (until 26 October 2026 0.5 and flat, 0.12 past the rim: estimated) */
+      const SC21=WD.FU.SCR.w21,yE=SC21.yE;mesh(g,turned([[0,yE],...SC21.dome.map(([r,d])=>[r,yE+d]),[SC21.rsh,SC21.ysh],[0,SC21.ysh]],20),M.steel);mesh(g,slotted(turned([[0,G],[SC21.hr,G],[SC21.hr,G+SC21.hh],[0,G+SC21.hh]],20),'top',SC21.slot),M.steel);   /* the head 0.9 high and the end domed 0.25 inside the cup's rim, as 05 06 02's section draws them (until 26 October 2026 0.5 and flat, 0.12 past the rim: estimated) */
       {const tg=KIT.threadGeo(SC21.rs,SC21.ya,SC21.yb,G+GP).clone();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,G+GP,0);mesh(g,tg,M.steel).userData.thread={rs:SC21.rs,p:KIT.isoP(SC21.rs)};}   /* the M1.7 through the plate, from 0.1 in the head to the cup's floor, an ISO thread on the plate's (matchThreads; a plain Ø 1.7 until 27 October 2026): built tip up and turned over about y (G + GP)/2, its helix's phase (yr G + GP) still 0 at the screw's origin, so matchThreads turns it as any shank (the profile is even in u) */
-      const sl=mesh(g,new THREE.BoxGeometry(SC21.slot.l,SC21.slot.h,SC21.slot.w),M.steelD,0,G+0.9+0.02-0.125,0);sl.rotation.y=SC21.slot.rot;}
+}
     /* the clicks' springs 05 06 02-2 (Sperrfeder; Bronzeband 1.5 × 0.4 federhart, "gestreckt 27,0"): along the cup's wall from their end, through the pin hole
        0.6 5 from it, 5 more to the S (05 06 02-2: sure; at 17.1 px/mm the end and the bend scale 23.5° and 22.1° from the hole, 4.9 and 4.6), the S round two Ø 2.2
        formers (02-2 draws both circles, the strip on the inside one then the outside one) in 1.6 to the long arm (the "12,0" and "10,4" to the outer face, as 05 06_4's
@@ -835,7 +837,7 @@ const WFUSEE=(()=>{
        by the lower shoulder (yD, the 6,3's) rising 0.35 and the other 0.25 over the pivot's 0.44 (scaled ±0.06: likely); its seat on the detent tapered 1:70 as the detent's hole
        (05 05_12's "Kegel 1:70"), line to line with it across the detent and on over the 1.2 it was knocked along (7,5 to 6,3), the body straight either side at the taper's end
        diameters, 2.233 and 2.279 (no sheet sizes the body: estimated). Square shoulders, flat ends and a straight Ø 2.25 until 28 October 2026 (the second drawing check, 3-M14, 3-M16) */
-    {tag(mesh(gD,turned(WD.FU.DTA,20),M.steel),'050505-2');}
+    {tag(mesh(gD,turned(WD.FU.DTA,96),M.steel),'050505-2');}
     /* its wire spring (Feder 05 05 06-1: the coloured section's #24; no sheet) in its stud, at the top plate's hole 5 ("Drahtfeder", 05 08_1a: N 38.507 O 10.684, Körner 1.3,
        M 1.7, 4.73 from hole 4; 05 06_4's A-B marks the "Drahtfedermitte" beside the detent's arbor). Sizes off the photographs, each scaled by the hole table's own spacing (holes
        49, 3, 4 and 5 on the top plate: 8.8 px/mm from above, 11-12 from the north) and checked on the coloured section (9.37 px/mm by the plates' 19):
@@ -1001,7 +1003,7 @@ const WFUSEE=(()=>{
     /* the hook block's rivet hole M2.6 through the wall (05 07 01-1; drawn at its thread's size and 0.02, Ø 2.64, as the frame's tapped holes), bored into the lathe (25 October
        2026: until then not cut, the rivet in the metal); the slot for the chain's (or the band's) hook, below, cut once the connector is laid (slotCut) */
     const YRV=BB-DR.rv.y,YRV41=(-3.7-1.2-21.7+1.0)/2,RVD=[Math.cos(BLK),0,-Math.sin(BLK)];   /* YRV41: as first drawn (below) */
-    const dL=tag(mesh(gBL,bore(facePocket(ringT(WD.BAR.drum(),240),'top',rect(LS,DR.sl.r0,DR.sl.r1,DR.sl.w),DR.sl.d),[0,YRV,0],RVD,DR.rv.r,DR.rv.from),M.gilt),'050701-1');
+    const dL=tag(mesh(gBL,bore(capFix(facePocket(ringT(WD.BAR.drum(),240),'top',rect(LS,DR.sl.r0,DR.sl.r1,DR.sl.w),DR.sl.d),BB-DR.sl.d),[0,YRV,0],RVD,DR.rv.r,DR.rv.from),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face flush with the rim (05 07 01's section, the lid's face on the rim's line at
        both walls, its "0,6 -0,1" the arbor's shoulder over it; until 26 October 2026 read as 0.6 under the rim); 1.3 -0.1 thick, drawn 1.2, its edge one 5° face from Ø 39.2 at its face
        to Ø 39.39 at its underside (05 07 01-2), sprung into the drum's seat cut to match, 1.2 deep: 05 07 01-1's (1,2), bracketed by its revision a (11.3.48: "Maß 1,2 -0,1 in

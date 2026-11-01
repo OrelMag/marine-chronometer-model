@@ -638,7 +638,7 @@ def dustPlate():
          Cut(hole,'Broach the square hole, tapered 1:100 as the square',[S('square',f"3.1 □ H7 +0.012, Kegel 1:100: line to line with the square, {2*sq(D['gap']):.3f} across the corners at its face toward the plates ({D['gap']} from the square's root)",None,src+'; 05 06_1 ("1")')],src,at=(0,0))]
     return Recipe('dustPlate','050600-1','Dust plate (Staubplatte)',src,'Rundmessing 8 (05 06 00-1)','none',[Setup('1','bar in the collet, turned and parted off; the square broached',ops)],UP(),
       fits=["pressed down the square's 1:100 taper until it holds, its face 1 from the square's root"],
-      expect=[{'at':(0,0),'r':2.3,'max':0.006,'why':"the page's hole tapers from the square's size 3 from its root at the recess's mouth to 1 at the face (over 3 mm, 1:150), where the drawing's 1:100 runs from the recess's floor: 0.005 larger at the floor (a page fault, reported)"}])
+      expect=[])
 
 def vorreiber():
     X=WF();U=X['FU'];V=U['VR'];F=X['FA'];P=[tuple(q) for q in X['VRprof']];src='05 06 00-2';a=U['PHI0']+V['hole']['a'];u=(math.cos(a),math.sin(a),0);y=U['VHF']-V['hole']['dy']
@@ -743,8 +743,7 @@ def drum():
         if s and len(s)>=5:cs.update(a=s[3],y=s[4],sb=s[2])
     r=Recipe('drum','050701-1','Barrel drum (Federhaustrommel)',src,'Ms (brass), deep-drawn (05 07 01-1)','gilt (Wempe 3955)',[Setup('1','the drawn cup in the chuck, turned and bored; the slots and hole on the mill',ops)],UP(),
       fits=['the lid sprung into its seat (Ø 39.2 s6)','its bosses running on the arbor\'s journals'],notes=["The chain's slot is cut at the fusee's assembly where the laid chain's hook comes to the drum (0207: 225° behind the hook block's hole, 45° to the radius); the STEP file puts it at the middle of the drum's inside, the page near the lid, where the chain's hook lies."],
-      expect=[{'at':(20.0*u[0],20.0*u[1]),'r':1.5,'max':0.3,'vol':math.pi*(1.32**2-(th['D1']/2)**2)*(D['R']-D['ri']),'why':"the hook block's M2.6 hole: the page draws it plain at the thread's size and 0.02 (Ø 2.64), the recipe at the tap drill (the threads' convention)"},
-              {'at':tuple((q1+q2)/2 for q1,q2 in zip(sl[0],sl[2])),'r':1.2,'max':0.36,'why':"the Steg's slot: the page's pocket runs 1.6 deep, through the bottom's 1.25 into the drum's hollow, and leaves its floor there as a stray face 0.35 under the bottom (facePocket; a page fault, reported)"}])
+      expect=[{'at':(20.0*u[0],20.0*u[1]),'r':1.5,'max':0.3,'vol':math.pi*(1.32**2-(th['D1']/2)**2)*(D['R']-D['ri']),'why':"the hook block's M2.6 hole: the page draws it plain at the thread's size and 0.02 (Ø 2.64), the recipe at the tap drill (the threads' convention)"}])
     r.page_params=pp;return r
 def lid():
     X,B,D,BB,BLT,BLU,LS=_barrel();P=[tuple(q) for q in X['LIDprof']];L=B['lid'];src='05 07 01-2 (revised 20.4.48)';e=0.01
