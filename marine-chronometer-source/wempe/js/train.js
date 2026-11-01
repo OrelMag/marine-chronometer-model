@@ -207,18 +207,18 @@ const WTRAIN=(()=>{
        the contact wheel 62, 60 ratchet teeth less one, fixed on the seconds arbor, lifts the lever's corundum stone 61 off its rest on every other beat, so the circuit opens
        for half a second each second and stays closed a second and a half at the missing tooth, at the minute. The two springs 66 in the bowl (case.js) bear on the blocks'
        outer ends. The 6MX's (Kirov No. 247's) only: the pillar plate's pieces, its wheel the seconds wheel's, its lever turned by update() */
-    const C6=WD.CONTACT6,cc=Q=>KIT.area(Q)>0?Q:Q.slice().reverse(),cir=(c,r,n=32)=>cc([...Array(n).keys()].map(i=>[c[0]+r*Math.cos(i/n*TAU),c[1]+r*Math.sin(i/n*TAU)]));
+    const C6=WD.CONTACT6,K6=WD.CT6,cc=Q=>KIT.area(Q)>0?Q:Q.slice().reverse(),cir=(c,r,n=32)=>cc([...Array(n).keys()].map(i=>[c[0]+r*Math.cos(i/n*TAU),c[1]+r*Math.sin(i/n*TAU)]));
     const SG=KIT.solidGeo,g6=rv(P.pillarPlate,'6mx'),_c6=(g6.userData.contact=true,g6.userData.sub='train'),cen=Q=>[Q.reduce((a,q)=>a+q[0],0)/Q.length,Q.reduce((a,q)=>a+q[1],0)/Q.length],brg2=(t,r)=>[-r*Math.sin(t*D2R),-r*Math.cos(t*D2R)];
     const yAx=new THREE.Vector3(0,1,0),hor=(m,d)=>{m.quaternion.setFromUnitVectors(yAx,new THREE.Vector3(d[0],0,d[1]).normalize());return m;};
     /* the cock's foot: its screw 2 past its middle toward its far end, clear of the leg at the arm's root, its pins 2.2 either side across it (estimated) */
-    const fs=cen(C6.cockFoot),fA=C6.cockFoot[1],fB=C6.cockFoot[0],fl=Math.hypot(fB[0]-fA[0],fB[1]-fA[1]),fu=[(fB[0]-fA[0])/fl,(fB[1]-fA[1])/fl],fv=[-fu[1],fu[0]],fc=[fs[0]+2*fu[0],fs[1]+2*fu[1]],fp=[fc[0]+2.2*fv[0],fc[1]+2.2*fv[1]],fq=[fc[0]-2.2*fv[0],fc[1]-2.2*fv[1]];
+    const fs=cen(C6.cockFoot),fA=C6.cockFoot[1],fB=C6.cockFoot[0],fl=Math.hypot(fB[0]-fA[0],fB[1]-fA[1]),fu=[(fB[0]-fA[0])/fl,(fB[1]-fA[1])/fl],fv=[-fu[1],fu[0]],fc=[fs[0]+K6.foot.s*fu[0],fs[1]+K6.foot.s*fu[1]],fp=[fc[0]+K6.foot.p*fv[0],fc[1]+K6.foot.p*fv[1]],fq=[fc[0]-K6.foot.p*fv[0],fc[1]-K6.foot.p*fv[1]];
     {const B=[...C6.bsP,...C6.bsM];
       /* the base: its screws' clearance, the block screws' M1.4, the staff's setting, the cock's screw M1.4 and pins Ø 0.8 1 deep */
-      tag(mesh(g6,SG([{loop:cc(C6.base),y0:-2,y1:0,F:[...C6.screws56.map(q=>({p:cir(q,0.95),a:-2,b:0})),...B.map(q=>({p:cir(q,0.72),a:-2,b:0})),{p:cir(C6.staff,1.5,40),a:-2,b:0},{p:cir(fc,0.72),a:-2,b:0},
-        ...[fp,fq].map(q=>({p:cir(q,0.4,20),a:-2,b:-1}))]}]),M.gilt),'6MX.ct');
+      tag(mesh(g6,SG([{loop:cc(C6.base),y0:K6.base.y[0],y1:K6.base.y[1],F:[...C6.screws56.map(q=>({p:cir(q,K6.base.rS),a:K6.base.y[0],b:K6.base.y[1]})),...B.map(q=>({p:cir(q,K6.base.rB),a:K6.base.y[0],b:K6.base.y[1]})),{p:cir(C6.staff,K6.base.rSt,40),a:K6.base.y[0],b:K6.base.y[1]},{p:cir(fc,K6.base.rF),a:K6.base.y[0],b:K6.base.y[1]},
+        ...[fp,fq].map(q=>({p:cir(q,K6.base.rP,20),a:K6.base.y[0],b:K6.base.pY}))]}]),M.gilt),'6MX.ct');
       for(const[O,BS,id]of/** @type {[number[][],number[][],string][]} */([[C6.blkP,C6.bsP,'6MX.ctbp'],[C6.blkM,C6.bsM,'6MX.ctbm']])){
-        tag(mesh(g6,SG([{loop:cc(O),y0:-3.8,y1:-2,F:BS.map(q=>({p:cir(q,1.15),a:-3.8,b:-2}))}]),M.packing),'6MX.ctf');   /* the fibre under it, black (10_Kirow_247_E-Kontakt_1.jpg) */
-        tag(mesh(g6,SG([{loop:cc(O),y0:-5.25,y1:-3.8,F:BS.map(q=>({p:cir(q,1.15),a:-5.25,b:-3.8}))}]),M.gilt),id);}
+        tag(mesh(g6,SG([{loop:cc(O),y0:K6.blk.fib[0],y1:K6.blk.fib[1],F:BS.map(q=>({p:cir(q,K6.blk.rh),a:K6.blk.fib[0],b:K6.blk.fib[1]}))}]),M.packing),'6MX.ctf');   /* the fibre under it, black (10_Kirow_247_E-Kontakt_1.jpg) */
+        tag(mesh(g6,SG([{loop:cc(O),y0:K6.blk.y[0],y1:K6.blk.y[1],F:BS.map(q=>({p:cir(q,K6.blk.rh),a:K6.blk.y[0],b:K6.blk.y[1]}))}]),M.gilt),id);}
       for(const q of B){tag(mesh(g6,ringT([[0.75,-6.2],[2.3,-6.2],[2.3,-5.25],[1.15,-5.25],[1.15,-2],[0.75,-2]]),M.packing,q[0],0,q[1]),'6MX.ctu');   /* the insulating bush 67, its flange black */
         tag(K.screw(g6,q[0],q[1],-6.2,1.55,2.6,6.2,0.7,M.steel),'6MX.cts');}   /* a block screw, into the base */
       for(const q of C6.screws56)tag(K.screw(g6,q[0],q[1],-2,1.5,1.2,2+PPT,0.85,M.steel),'6MX.ctm');}   /* the base's screws 56, through the pillar plate, their ends flush on the dial side */
@@ -226,18 +226,18 @@ const WTRAIN=(()=>{
        depth estimated), its face on the low side recessed Ø 6.0 (the photograph's 6.1 at the disc's 11.9) 0.3 deep (estimated), a slotted steel axle screw in it, head
        Ø 2.6 (the photograph, through the m6_contact camera: likely); until 18 October 2026 a sawtooth knurl and a raised brass boss Ø 5.4. Its bracket on block 57 (Romanov:
        the disc fixed to block 57); the contact screw 54 brass, as there */
-    {const D=C6.disc,t=[-Math.cos(D.th*D2R),Math.sin(D.th*D2R)],c=brg2(D.th,D.r),at=k=>[c[0]+t[0]*k,c[1]+t[1]*k],RC=3.0,RD=0.3;
-      const dk=hor(tag(mesh(g6,gear({xy:[...Array(192).keys()].map(i=>{const n=Math.floor(i/4),k=i%4,r=k<2?D.d/2:D.d/2-0.25,f=(n+(k===1||k===2?0.5:k===3?1:0))/48*TAU-(k===3?1e-4:0);return[r*Math.cos(f),r*Math.sin(f)];}),ro:D.d/2,ri:D.d/2-0.25},D.t,{bore:RC}),M.gilt,c[0],D.y,c[1]),'6MX.ctd'),t);
+    {const D=C6.disc,t=[-Math.cos(D.th*D2R),Math.sin(D.th*D2R)],c=brg2(D.th,D.r),at=k=>[c[0]+t[0]*k,c[1]+t[1]*k],RC=K6.disc.rc,RD=K6.disc.rd;
+      const dk=hor(tag(mesh(g6,gear({xy:[...Array(K6.disc.n*4).keys()].map(i=>{const n=Math.floor(i/4),k=i%4,r=k<2?D.d/2:D.d/2-K6.disc.td,f=(n+(k===1||k===2?0.5:k===3?1:0))/K6.disc.n*TAU-(k===3?K6.disc.eps:0);return[r*Math.cos(f),r*Math.sin(f)];}),ro:D.d/2,ri:D.d/2-K6.disc.td},D.t,{bore:RC}),M.gilt,c[0],D.y,c[1]),'6MX.ctd'),t);
       let q=at(RD/2);fuse([dk,hor(tag(mesh(g6,new THREE.CylinderGeometry(RC,RC,D.t-RD,48),M.gilt,q[0],D.y,q[1]),'6MX.ctd',1),t)]);   /* the disc and its centre one mesh (fuse, core.js): their faces ran flush, a ring in Edges until 21 October 2026. The centre fills the bore's own 48 corners (r RC: 0.002 over it until 24 October 2026, 0.035 mm³ weighed twice, overlaps.py) */   /* the centre, its face RD under the rim's */
-      q=at(-D.t/2+RD);const sh=new THREE.Group();sh.position.set(q[0],D.y,q[1]);hor(sh,t);g6.add(sh);tag(K.screw(sh,0,0,0,1.3,0.8,0,0.5,M.steel),'6MX.ctd',1).userData.lift=0;
-      q=at(D.t/2+0.5);const br=tag(mesh(g6,new THREE.BoxGeometry(1.0,5.05,4.0),M.gilt,q[0],(-5.25-10.3)/2,q[1]),'6MX.ctd',1);br.rotation.y=Math.atan2(-t[1],t[0]);}
+      q=at(-D.t/2+RD);const sh=new THREE.Group();sh.position.set(q[0],D.y,q[1]);hor(sh,t);g6.add(sh);tag(K.screw(sh,0,0,0,K6.disc.ax[0],K6.disc.ax[1],K6.disc.ax[2],K6.disc.ax[3],M.steel),'6MX.ctd',1).userData.lift=0;
+      q=at(D.t/2+K6.disc.bk);const br=tag(mesh(g6,new THREE.BoxGeometry(K6.disc.br[0],K6.disc.br[1],K6.disc.br[2]),M.gilt,q[0],(K6.disc.by[0]+K6.disc.by[1])/2,q[1]),'6MX.ctd',1);br.rotation.y=Math.atan2(-t[1],t[0]);}
     /* the staff 69 (steel, its pivots Ø 0.4) in its jewels: the upper in a gilt setting in the base, the lower in the cock's arm under a cap plate, each a hole jewel and a cap
        jewel (the TU's 20 jewels with the contact, 15 without: these four and the stone) */
     /* C6LB: the lever's boss on the staff, just under the spiral's collet: on Kirov 2973 (14_E-Kontakt1.jpg) and 24020 (12_KirPol_24020_E-Kontakt2.jpg) the boss sits on the
        staff right under the collet (0.1-0.3 of gap at the scale of the cock's arm, 16.7 px a mm on 24020), the staff bare under it, and its arm runs down from it to the screw's
        holder on block 52 (likely; Kirov 247's own is hidden behind the stud and holder on 10_Kirow_247_E-Kontakt_1.jpg). The stone arm runs down the same way to the contact
        wheel (estimated: no photograph shows it). Until 24 October 2026 the boss and both arms flat at -6.1 to -7.4, 4.5 under the spiral */
-    const C6LB=[-10.2,-11.5];
+    const C6LB=K6.lb;
     const C6L=new THREE.Group();C6L.position.set(C6.staff[0],0,C6.staff[1]);g6.add(C6L);   /* the lever, staff and spiral's collet turn together (update(): C6L) */
     /* in the Exploded view the lever (its stone level with the contact wheel's teeth), its staff and spiral leave before the seconds wheel, 38 up, and the cock over them
        first, 43.5 with its cap plate's screws in it (1.0 under the top plate at full spread); the base, blocks and disc stay on the pillar plate under the train */
@@ -248,8 +248,8 @@ const WTRAIN=(()=>{
     /* the staff: Ø 1.0 from the cock down to the lever's boss, Ø 0.6 under it to the base (12_KirPol_24020_E-Kontakt2.jpg and 14_E-Kontakt1.jpg, Kirov 2973: bare steel under the
        boss, 8-11 px across against the block screws' Ø 3.1 at 23-26 px a mm, a little further off, so Ø 0.4-0.6, and about 0.8 above it: likely; Ø 1.0 the whole way until
        24 October 2026) */
-    {const S=C6.staff,CA=[-12.9,-14.2],CP=-14.7;tag(mesh(C6L,turned([[0,CA[1]+0.02],[0.2,CA[1]+0.02],[0.2,CA[1]+0.6],[0.5,CA[1]+0.8],[0.5,C6LB[0]],[0.3,C6LB[0]],[0.3,-2.6],[0.2,-2.4],[0.2,-1.42],[0,-1.42]],24),M.steel),'6MX.ctst');   /* its upper pivot through its hole jewel to 0.02 off the cap jewel, as the lower (until 24 October 2026 it ended at -1.9, 0.1 into the stone, the staff 0.52 loose between its cap jewels) */
-      tag(mesh(g6,ringT([[0.9,-2],[1.5,-2],[1.5,0],[0.9,0]],40),M.gilt,S[0],0,S[1]),'6MX.ctjs');   /* the upper jewels' setting in the base */
+    {const S=C6.staff,CA=K6.ck.ca,CP=K6.ck.cp;tag(mesh(C6L,turned([[0,CA[1]+K6.st.t0],[K6.st.r0,CA[1]+K6.st.t0],[K6.st.r0,CA[1]+K6.st.t1],[K6.st.r1,CA[1]+K6.st.t2],[K6.st.r1,C6LB[0]],[K6.st.r2,C6LB[0]],[K6.st.r2,K6.st.y0],[K6.st.r0,K6.st.y1],[K6.st.r0,K6.st.y2],[0,K6.st.y2]],24),M.steel),'6MX.ctst');   /* its upper pivot through its hole jewel to 0.02 off the cap jewel, as the lower (until 24 October 2026 it ended at -1.9, 0.1 into the stone, the staff 0.52 loose between its cap jewels) */
+      tag(mesh(g6,ringT([[K6.js.ri,K6.js.y[0]],[K6.js.ro,K6.js.y[0]],[K6.js.ro,K6.js.y[1]],[K6.js.ri,K6.js.y[1]]],40),M.gilt,S[0],0,S[1]),'6MX.ctjs');   /* the upper jewels' setting in the base */
       tag(mesh(g6,ringT([[0.21,-2],[0.9,-2],[0.9,-1.4],[0.21,-1.4]],32),M.ruby,S[0],0,S[1]),'6MX.ctju');
       tag(mesh(g6,turned([[0,-1.4],[0.9,-1.4],[0.9,-1.0],[0,-1.0]],32),M.ruby,S[0],0,S[1]),'6MX.ctjeu');
       tag(mesh(gCk,ringT([[0.21,CA[1]],[0.9,CA[1]],[0.9,CA[1]+0.6],[0.21,CA[1]+0.6]],32),M.ruby,S[0],0,S[1]),'6MX.ctjl');
@@ -260,12 +260,12 @@ const WTRAIN=(()=>{
          that screw across the view), the cap plate the screws' and the jewel's lobes (r 1.25, 1.5) joined. Until 18 October 2026 the screws 75° either side of the arm's axis
          on a round cap plate Ø 6 */
       const A0=C6.cockArm[0],A1=C6.cockArm[C6.cockArm.length-1],al=Math.hypot(A1[0]-A0[0],A1[1]-A0[1]),u=[(A1[0]-A0[0])/al,(A1[1]-A0[1])/al],nv=[-u[1],u[0]],cA=cen(C6.cockArm),sg=Math.sign((cA[0]-A0[0])*nv[0]+(cA[1]-A0[1])*nv[1]),
-        P4=(a,b)=>[A0[0]+u[0]*a+nv[0]*sg*b,A0[1]+u[1]*a+nv[1]*sg*b],leg=cc([P4(0.5,0),P4(5.5,0),P4(5.5,1.5),P4(0.5,1.5)]),su=[-0.972,0.236],cs=[-2.1,2.1].map(k=>[S[0]+su[0]*k,S[1]+su[1]*k]);
-      const armL=KIT.bool(cc(C6.cockArm),cir(cs[1],1.6,40)).uni[0],capL=KIT.bool(KIT.bool(cir(S,1.5,40),cir(cs[0],1.25,32)).uni[0],cir(cs[1],1.25,32)).uni[0];
-      fuse([tag(mesh(gCk,SG([{loop:cc(C6.cockFoot),y0:-3.5,y1:-2,F:[{p:cir(fc,0.72),a:-3.5,b:-2},...[fp,fq].map(q=>({p:cir(q,0.4,20),a:-3.5,b:-2}))]}]),M.gilt),'6MX.ctc'),
-      tag(mesh(gCk,SG([{loop:leg,y0:CA[0],y1:-3.5}]),M.gilt),'6MX.ctc',1),
-      tag(mesh(gCk,SG([{loop:cc(armL),y0:CA[1],y1:CA[0],F:[{p:cir(S,0.9,40),a:CA[1],b:CA[0]},...cs.map(q=>({th:{rs:0.45},p:cir(q,0.47,32),a:CA[1],b:CA[1]+1.1}))]}]),M.gilt),'6MX.ctc',1)]);   /* the cock's foot, leg and arm one piece, one mesh (fuse); the cap plate's screws tapped M0.9 into the arm (bom.json's "tap"), 0.02 over the thread as the Wempe's other tapped holes (until 27 October 2026 plain Ø 1.0, the screws loose in both: seatcheck.py) */
-      tag(mesh(gCk,SG([{loop:cc(capL),y0:CP,y1:CA[1],F:[{p:cir(S,0.9,40),a:CP,b:CA[1]},...cs.map(q=>({p:cir(q,0.5,20),a:CP,b:CA[1]}))]}]),M.gilt),'6MX.ctcc');
+        P4=(a,b)=>[A0[0]+u[0]*a+nv[0]*sg*b,A0[1]+u[1]*a+nv[1]*sg*b],leg=cc([P4(K6.ck.lg[0],0),P4(K6.ck.lg[1],0),P4(K6.ck.lg[1],K6.ck.lg[2]),P4(K6.ck.lg[0],K6.ck.lg[2])]),su=K6.ck.su,cs=K6.ck.cs.map(k=>[S[0]+su[0]*k,S[1]+su[1]*k]);
+      const armL=KIT.bool(cc(C6.cockArm),cir(cs[1],K6.ck.ra,40)).uni[0],capL=KIT.bool(KIT.bool(cir(S,K6.ck.rc,40),cir(cs[0],K6.ck.rl,32)).uni[0],cir(cs[1],K6.ck.rl,32)).uni[0];
+      fuse([tag(mesh(gCk,SG([{loop:cc(C6.cockFoot),y0:K6.ck.fy[0],y1:K6.ck.fy[1],F:[{p:cir(fc,K6.base.rF),a:K6.ck.fy[0],b:K6.ck.fy[1]},...[fp,fq].map(q=>({p:cir(q,K6.base.rP,20),a:K6.ck.fy[0],b:K6.ck.fy[1]}))]}]),M.gilt),'6MX.ctc'),
+      tag(mesh(gCk,SG([{loop:leg,y0:CA[0],y1:K6.ck.fy[0]}]),M.gilt),'6MX.ctc',1),
+      tag(mesh(gCk,SG([{loop:cc(armL),y0:CA[1],y1:CA[0],F:[{p:cir(S,K6.ck.rb,40),a:CA[1],b:CA[0]},...cs.map(q=>({th:{rs:K6.ck.tp},p:cir(q,K6.ck.rt,32),a:CA[1],b:CA[1]+K6.ck.td}))]}]),M.gilt),'6MX.ctc',1)]);   /* the cock's foot, leg and arm one piece, one mesh (fuse); the cap plate's screws tapped M0.9 into the arm (bom.json's "tap"), 0.02 over the thread as the Wempe's other tapped holes (until 27 October 2026 plain Ø 1.0, the screws loose in both: seatcheck.py) */
+      tag(mesh(gCk,SG([{loop:cc(capL),y0:CP,y1:CA[1],F:[{p:cir(S,K6.ck.rb,40),a:CP,b:CA[1]},...cs.map(q=>({p:cir(q,K6.ck.rch,20),a:CP,b:CA[1]}))]}]),M.gilt),'6MX.ctcc');
       for(const q of cs)tag(K.screw(gCk,q[0],q[1],CP,1.2,0.8,1.6,0.45,M.steel),'6MX.ctccs').userData.lift=0;
       tag(K.screw(gCk,fc[0],fc[1],-3.5,1.4,1.0,3.0,0.7,M.steel),'6MX.ctcs');
       for(const q of[fp,fq])tag(cylBetween(gCk,0.4,-3.5,-1.0,M.steel,q[0],q[1],16),'6MX.ctcp');
@@ -279,43 +279,43 @@ const WTRAIN=(()=>{
       fuse([tag(mesh(gSp,SG([{loop:cc([...cl.map((_,i)=>off(i,1)),...cl.map((_,i)=>off(i,-1)).reverse()]),y0:SY[0],y1:SY[1]}]),M.copper),'6MX.cth'),
       tag(mesh(gSp,SG([{loop:cc([[eP[0]+eN[0]-eT[0]*0.3,eP[1]+eN[1]-eT[1]*0.3],[eP[0]+eN[0],eP[1]+eN[1]],[eP[0]-eN[0],eP[1]-eN[1]],[eP[0]-eN[0]-eT[0]*0.3,eP[1]-eN[1]-eT[1]*0.3]]),y0:SY[1],y1:-9.87}]),M.copper),'6MX.cth',1)]);   /* its end bent down onto the stud's top (clamped there: drawn 0.02 clear) */
       tag(mesh(C6L,ringT([[0.5,SY[0]-0.1],[1.9,SY[0]-0.1],[1.9,SY[1]+0.1],[0.5,SY[1]+0.1]],40),M.brass),'6MX.cth',1);
-      tag(mesh(g6,SG([{loop:cc(C6.stud),y0:-9.85,y1:-5.25,F:[{p:cir(st,0.6),a:-9.85,b:-7.85}]}]),M.gilt),'6MX.ctq');
+      tag(mesh(g6,SG([{loop:cc(C6.stud),y0:K6.sd.y[0],y1:K6.sd.y[1],F:[{p:cir(st,K6.sd.r),a:K6.sd.hy[0],b:K6.sd.hy[1]}]}]),M.gilt),'6MX.ctq');
       tag(K.screw(g6,st[0],st[1],-9.85,1.1,1.0,2.0,0.6,M.steel),'6MX.ctqs');}
     /* the lever 60 pressed on the staff (its boss Ø 3, arms 1.1 wide, −6.1 to −7.4), its stone 61 (0.8 × 1.0 × 3, its acting corner 9.7 from the seconds arbor), the screw 54
        in the holder at its other end with a lock nut: in a group about the staff, which update() turns (C6L) */
     {const S=C6.staff,loc=q=>[q[0]-S[0],q[1]-S[1]],arm=(e,w)=>{const l=Math.hypot(e[0],e[1]),n=[-e[1]/l*w/2,e[0]/l*w/2];return cc([[n[0],n[1]],[e[0]+n[0],e[1]+n[1]],[e[0]-n[0],e[1]-n[1]],[-n[0],-n[1]]]);};
       const eS=loc(C6.stone),eH=loc(C6.screw54.h),eT=loc(C6.screw54.tip);
-      tag(mesh(C6L,ringT([[0.5,C6LB[1]],[1.5,C6LB[1]],[1.5,C6LB[0]],[0.5,C6LB[0]]],40),M.steel),'6MX.ctl');
-      const SA=[0,23],sl0=Math.hypot(C6.stone[0]-SA[0],C6.stone[1]-SA[1]),rd=[(C6.stone[0]-SA[0])/sl0,(C6.stone[1]-SA[1])/sl0],sc=loc([SA[0]+rd[0]*11.2,SA[1]+rd[1]*11.2]);
-      const eA=[sc[0]-rd[1]*0.5,sc[1]+rd[0]*0.5];   /* the stone arm ends against the stone's side, at its middle, outside the wheel's tips: the stone set in the lever's end */
+      tag(mesh(C6L,ringT([[K6.lv.rb[0],C6LB[1]],[K6.lv.rb[1],C6LB[1]],[K6.lv.rb[1],C6LB[0]],[K6.lv.rb[0],C6LB[0]]],40),M.steel),'6MX.ctl');
+      const SA=K6.lv.sa,sl0=Math.hypot(C6.stone[0]-SA[0],C6.stone[1]-SA[1]),rd=[(C6.stone[0]-SA[0])/sl0,(C6.stone[1]-SA[1])/sl0],sc=loc([SA[0]+rd[0]*K6.lv.rs,SA[1]+rd[1]*K6.lv.rs]);
+      const eA=[sc[0]-rd[1]*K6.lv.so,sc[1]+rd[0]*K6.lv.so];   /* the stone arm ends against the stone's side, at its middle, outside the wheel's tips: the stone set in the lever's end */
       /* each arm drawn flat at its end's height (-7.4 to -6.1), then sheared so it rises along its length to the boss's (C6LB): a linear shear, so its faces stay planar and the
          solid closed */
-      const shear=(g,e)=>{const l=Math.hypot(e[0],e[1]),u=[e[0]/l,e[1]/l],k=C6LB[0]+C6LB[1]-(-7.4-6.1),ps=g.attributes.position;
+      const shear=(g,e)=>{const l=Math.hypot(e[0],e[1]),u=[e[0]/l,e[1]/l],k=C6LB[0]+C6LB[1]-(K6.lv.y[0]+K6.lv.y[1]),ps=g.attributes.position;
         for(let i=0;i<ps.count;i++){const t=Math.max(0,Math.min(1,(ps.getX(i)*u[0]+ps.getZ(i)*u[1])/l));ps.setY(i,ps.getY(i)+k/2*(1-t));}ps.needsUpdate=true;g.computeVertexNormals();g.computeBoundingBox();g.computeBoundingSphere();return g;};
-      const lvA=[eA,eH].map(e=>tag(mesh(C6L,shear(SG([{loop:arm(e,1.1),y0:-7.4,y1:-6.1}]),e),M.gilt),'6MX.ctl',1));   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
+      const lvA=[eA,eH].map(e=>tag(mesh(C6L,shear(SG([{loop:arm(e,K6.lv.w),y0:K6.lv.y[0],y1:K6.lv.y[1]}]),e),M.gilt),'6MX.ctl',1));   /* gilt (14_E-Kontakt1.jpg: likely; steel until 18 October 2026) */
       /* the screw's holder: a gilt block under the lever's end, down past the screw's axis (-5.2: dims.js), 1.6 along the screw and 1.8 across (14_E-Kontakt1.jpg: about
          1.0 × 1.4 by its rough camera: estimated), its foot 0.05 over block 52's top; until 18 October 2026 a steel collar at the lever's height */
-      {const d=[C6.screw54.tip[0]-C6.screw54.h[0],C6.screw54.tip[1]-C6.screw54.h[1]],y0=-7.4,y1=-5.3,hb=tag(mesh(C6L,(()=>{const h=(y1-y0)/2,g=SG([{loop:cc([[-h,-0.9],[h,-0.9],[h,0.9],[-h,0.9]]),y0:-0.8,y1:0.8,F:[{p:cir([C6.screw54.y-(y0+y1)/2,0],C6.screw54.d/2,20),a:-0.8,b:0.8}]}]);g.applyMatrix4(new THREE.Matrix4().set(0,1,0,0,1,0,0,0,0,0,-1,0,0,0,0,1));return g;})(),M.gilt,eH[0],(y0+y1)/2,eH[1]),'6MX.ctl',1);   /* tapped M1.0 along the screw (drawn at the thread's size; solid until 28 October 2026, the second drawing check's 11-M11, S-5) */hb.rotation.y=-Math.atan2(d[1],d[0]);fuse([...lvA]);}   /* the lever's two arms one gilt piece, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026; the holder, bored for the screw since 28 October 2026, a mesh of its own on them (fused with its hole it folded 12 edges) */
+      {const d=[C6.screw54.tip[0]-C6.screw54.h[0],C6.screw54.tip[1]-C6.screw54.h[1]],y0=K6.lv.hy[0],y1=K6.lv.hy[1],hb=tag(mesh(C6L,(()=>{const h=(y1-y0)/2,g=SG([{loop:cc([[-h,-K6.lv.hw],[h,-K6.lv.hw],[h,K6.lv.hw],[-h,K6.lv.hw]]),y0:K6.lv.hz[0],y1:K6.lv.hz[1],F:[{p:cir([C6.screw54.y-(y0+y1)/2,0],C6.screw54.d/2,20),a:K6.lv.hz[0],b:K6.lv.hz[1]}]}]);g.applyMatrix4(new THREE.Matrix4().set(0,1,0,0,1,0,0,0,0,0,-1,0,0,0,0,1));return g;})(),M.gilt,eH[0],(y0+y1)/2,eH[1]),'6MX.ctl',1);   /* tapped M1.0 along the screw (drawn at the thread's size; solid until 28 October 2026, the second drawing check's 11-M11, S-5) */hb.rotation.y=-Math.atan2(d[1],d[0]);fuse([...lvA]);}   /* the lever's two arms one gilt piece, one mesh (fuse): flush faces drew lines in Edges until 21 October 2026; the holder, bored for the screw since 28 October 2026, a mesh of its own on them (fused with its hole it folded 12 edges) */
       {const tn=[-rd[1],rd[0]],R0=9.7-11.2,Q=(a,b)=>[sc[0]+rd[0]*a+tn[0]*b,sc[1]+rd[1]*a+tn[1]*b];   /* the stone along the radius from the arbor, 0.8 wide, its end chamfered to 0.3 over 0.6 (Romanov: 'the bevel of stone 61') */
         tag(mesh(C6L,SG([{loop:cc([Q(R0,-0.15),Q(R0,0.15),Q(R0+0.6,0.4),Q(1.5,0.4),Q(1.5,-0.4),Q(R0+0.6,-0.4)]),y0:-7.4,y1:-6.4}]),M.ruby),'6MX.ctp');}
       const sd=[eT[0]-eH[0],eT[1]-eH[1]],sl=Math.hypot(sd[0],sd[1]),su=[sd[0]/sl,sd[1]/sl],sp=k=>[eH[0]+su[0]*k,eH[1]+su[1]*k];
       /* the screw threaded along its length (turned grooves, pitch 0.25: 10_Kirow_247_E-Kontakt_1.jpg's thread, its pitch estimated), its point coned; the lock nut brass (the photographs) */
-      const rS=C6.screw54.d/2,pt=0.25,dp=0.06,pr=[[0,-sl/2],[rS-dp,-sl/2]];for(let y=-sl/2+pt/2;y<sl/2-0.6;y+=pt)pr.push([rS,y],[rS-dp,y+pt/2]);pr.push([rS,sl/2-0.6],[rS,sl/2-0.3],[0.08,sl/2],[0,sl/2]);
+      const rS=C6.screw54.d/2,pt=K6.sk.pt,dp=K6.sk.dp,pr=[[0,-sl/2],[rS-dp,-sl/2]];for(let y=-sl/2+pt/2;y<sl/2-K6.sk.l0;y+=pt)pr.push([rS,y],[rS-dp,y+pt/2]);pr.push([rS,sl/2-K6.sk.l0],[rS,sl/2-K6.sk.l1],[K6.sk.tip,sl/2],[0,sl/2]);
       let q=sp(sl/2);hor(tag(mesh(C6L,turned(pr,20),M.brass,q[0],C6.screw54.y,q[1]),'6MX.ctk'),su);
       q=sp(1.1);hor(tag(mesh(C6L,WFUSEE.capFix(WFUSEE.bore(new THREE.CylinderGeometry(0.55,0.55,0.5,6),[0,-0.5,0],[0,1,0],C6.screw54.d/2,0,20,null,[1,0,0.3]),null),M.brass,q[0],C6.screw54.y,q[1]),'6MX.ctn'),su);}   /* the nut tapped M1.0 too (solid until 28 October 2026: 11-M11) */   /* the nut 1.1 across corners, 0.5 long (14_E-Kontakt1.jpg: 0.5-0.8 across by its rough camera: estimated), 0.05 over block 52 */
     /* its turn: the stone's lift off its rest as the wheel carries a tooth's slope under it (the stone's place on the wheel's teeth, s = a + c0 in degrees: the slope from the
        root, r 9.3, at 0 to the tip, 10.2, at 55 % of the 6° pitch, then the radial face), less the 0.4 it rests above the root while the screw is on the disc; the missing
        tooth (59) lifts nothing. The stone moves out from the arbor by C6K a radian of the lever; the teeth under its whole 0.3-wide end count */
     const C6K=(()=>{const a=[C6.stone[0]-C6.staff[0],C6.stone[1]-C6.staff[1]],l=Math.hypot(a[0],a[1]),q=[C6.stone[0],C6.stone[1]-23],r=Math.hypot(q[0],q[1]);return Math.abs((-a[1]*q[0]+a[0]*q[1])/(l*r))*l;})();   /* the stone's move out from the arbor for a radian of the lever (its arm's length times its arc's share along the radius) */
-    const C6T=n=>n!==59,c6r=aD=>{const s2=((aD%360)+360)%360,n=Math.floor(s2/6),f=(s2-6*n)/6;return C6T(n)&&f<0.55?9.3+0.9*f/0.55:9.3;},
+    const C6T=n=>n!==K6.wh.miss,c6r=aD=>{const s2=((aD%360)+360)%360,n=Math.floor(s2/6),f=(s2-6*n)/6;return C6T(n)&&f<0.55?9.3+0.9*f/0.55:9.3;},
       c6lift=aD=>{let L=0;for(let k=-30;k<=30;k++){const w=0.4*k/30,sf=9.7+2.4*Math.max(0,Math.abs(w)-0.15);L=Math.max(L,c6r(aD+w/9.7/D2R)-sf+0.08);}return L/C6K;};   /* the teeth under the stone's whole end (0.3 wide, its chamfers rising 0.6 over 0.25 each side) kept 0.08 clear (the train's mesh play moves the wheel a little off the escape wheel's ratio) */
     /* the contact wheel 62: in the seconds arbor's frame (u from its shoulder), riveted on its gilt collet; its teeth's slopes rise the way the stone runs along them (s up) */
-    {const W6=C6.wheel,rt=W6.tip/2,rr=W6.root/2,c0=10.6,xy=[],P2=(r,d)=>[r*Math.cos(d*D2R),r*Math.sin(d*D2R)];
-      for(let n=0;n<60;n++){const c=c0+6*n;if(C6T(n)){xy.push(P2(rr,c));for(let k=1;k<=6;k++)xy.push(P2(rr+(rt-rr)*k/6,c+3.3*k/6));xy.push(P2(rr,c+3.3+0.02));for(let k=1;k<4;k++)xy.push(P2(rr,c+3.3+2.7*k/4));}
-        else for(let k=0;k<8;k++)xy.push(P2(rr,c+6*k/8));}
+    {const W6=C6.wheel,rt=W6.tip/2,rr=W6.root/2,c0=K6.wh.c0,xy=[],P2=(r,d)=>[r*Math.cos(d*D2R),r*Math.sin(d*D2R)];
+      for(let n=0;n<60;n++){const c=c0+K6.wh.p*n;if(C6T(n)){xy.push(P2(rr,c));for(let k=1;k<=K6.wh.sn;k++)xy.push(P2(rr+(rt-rr)*k/K6.wh.sn,c+K6.wh.a*k/K6.wh.sn));xy.push(P2(rr,c+K6.wh.a+K6.wh.e));for(let k=1;k<K6.wh.rn;k++)xy.push(P2(rr,c+K6.wh.a+K6.wh.ra*k/K6.wh.rn));}
+        else for(let k=0;k<K6.wh.mn;k++)xy.push(P2(rr,c+K6.wh.p*k/K6.wh.mn));}
       const yu=y=>y-(TI+0.025),u0=yu(W6.y[1]),u1=yu(W6.y[0]),cu0=yu(W6.colY[1]),cu1=yu(W6.colY[0]),g=rv(R.sw,'6mx');g.userData.contact=true;
-      tag(mesh(g,gear({xy,ro:rt,ri:rr},u1-u0,{spokes:[W6.spokes,1.0,2.3,W6.rim/2],bore:W6.collet/2}),M.gilt,0,(u0+u1)/2,0),'6MX.cw');
-      tag(mesh(g,ringT([[1.5/2+0.001,cu0],[W6.collet/2,cu0],[W6.collet/2,cu1],[1.5/2+0.001,cu1]]),M.gilt),'6MX.cw',1);}
+      tag(mesh(g,gear({xy,ro:rt,ri:rr},u1-u0,{spokes:[W6.spokes,K6.wh.sw,K6.wh.hub,W6.rim/2],bore:W6.collet/2}),M.gilt,0,(u0+u1)/2,0),'6MX.cw');
+      tag(mesh(g,ringT([[K6.wh.cb/2+K6.wh.ce,cu0],[W6.collet/2,cu0],[W6.collet/2,cu1],[K6.wh.cb/2+K6.wh.ce,cu1]]),M.gilt),'6MX.cw',1);}
     R.c6={lever:C6L,lift:c6lift};
     /* the 6MX's seconds wheel rises 30.6, not 33: its contact wheel stands 1.35 under the lower cock's deep part and lug, which rise 29.9 (exploded.py's 0.5 kept) */
     mv.userData.onRev.push(Object.assign(v=>{P.secondsWheel.userData.off=v==='6mx'?-30.6:-33;P.intermediateWheel.userData.off=v==='6mx'?9:-6;},{sub:'train'}));   /* and its intermediate wheel leaves toward the dial after its bridge (+18), as a watchmaker takes it out, since the contact's base overhangs the plate's window it would rise through */
