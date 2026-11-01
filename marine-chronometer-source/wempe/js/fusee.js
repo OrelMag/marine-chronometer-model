@@ -1003,7 +1003,7 @@ const WFUSEE=(()=>{
     /* the hook block's rivet hole M2.6 through the wall (05 07 01-1; drawn at its thread's size and 0.02, Ø 2.64, as the frame's tapped holes), bored into the lathe (25 October
        2026: until then not cut, the rivet in the metal); the slot for the chain's (or the band's) hook, below, cut once the connector is laid (slotCut) */
     const YRV=BB-DR.rv.y,YRV41=(-3.7-1.2-21.7+1.0)/2,RVD=[Math.cos(BLK),0,-Math.sin(BLK)];   /* YRV41: as first drawn (below) */
-    const dL=tag(mesh(gBL,bore(capFix(facePocket(ringT(WD.BAR.drum(),240),'top',rect(LS,DR.sl.r0,DR.sl.r1,DR.sl.w),DR.sl.d),BB-DR.sl.d),[0,YRV,0],RVD,DR.rv.r,DR.rv.from),M.gilt),'050701-1');
+    const dL=tag(mesh(gBL,bore(capFix(bore(ringT(WD.BAR.drum(),240),[0,BB-DR.sl.d,0],[0,1,0],0,0,0,rect(LS,DR.sl.r0,DR.sl.r1,DR.sl.w)),BB-DR.sl.d),[0,YRV,0],RVD,DR.rv.r,DR.rv.from),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face flush with the rim (05 07 01's section, the lid's face on the rim's line at
        both walls, its "0,6 -0,1" the arbor's shoulder over it; until 26 October 2026 read as 0.6 under the rim); 1.3 -0.1 thick, drawn 1.2, its edge one 5° face from Ø 39.2 at its face
        to Ø 39.39 at its underside (05 07 01-2), sprung into the drum's seat cut to match, 1.2 deep: 05 07 01-1's (1,2), bracketed by its revision a (11.3.48: "Maß 1,2 -0,1 in
