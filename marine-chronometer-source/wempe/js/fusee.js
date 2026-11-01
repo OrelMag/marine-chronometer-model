@@ -348,9 +348,9 @@ const WFUSEE=(()=>{
      both ends, each hook riveted between its two plates; the bottom hook's barb 5 past the last rivet. The band 05 07 03: 0.22 +0.03 thick
      (drawn 0.22), 0.78 wide (no figure: its hooks' strip is 10 × 0.8, and it runs in the groove's 0.82 land: estimated), its middle 0.12 out; 730 ±3 from the round
      hook's shoulder to the drum hook's barb, the round hook 3 long from the fusee's pin to where the band starts */
-  const CONN={chain:{of:1.02,ob:1.02,PC:2.05,NJ:375,barb:5.0},band:{of:0.12,ob:0.12,len:727}};
+  const CONN={chain:{of:1.02,ob:1.02,PC:2.05,NJ:375,barb:5.0},band:{of:0.12,ob:WD.FU.BHK.ob,len:727}};
   CONN.chain.len=CONN.chain.NJ*CONN.chain.PC+CONN.chain.barb;
-  const RB=20.8,DFB=Math.hypot(BX[0]-FX[0],BX[1]-FX[1]),PSID=angOf(BX[0]-FX[0],BX[1]-FX[1]);   /* the drum's outside radius (Ø 41.6 -0.1, 05 07 01-1); the drums' centres apart; the line between them */
+  const RB=WD.FU.BHK.RB,DFB=Math.hypot(BX[0]-FX[0],BX[1]-FX[1]),PSID=angOf(BX[0]-FX[0],BX[1]-FX[1]);   /* the drum's outside radius (Ø 41.6 -0.1, 05 07 01-1); the drums' centres apart; the line between them */
   /* The chain runs from the fusee's south side to the barrel's north side, across between the drums (their inner common tangent), so the barrel turns against the fusee:
      running, the fusee turns anticlockwise from the dial (its wheel drives the centre pinion, clockwise) and the barrel clockwise. Three things say so (README): the set-up
      ratchet and click on Wempe 3955 and Lange 5177 (2_Wempe_3955_A.jpg, 2_Lange_5177_A.jpg) hold the barrel arbor against turning anticlockwise from the dial, which is how a
@@ -850,14 +850,14 @@ const WFUSEE=(()=>{
        from the stud's end loaded at the arm's upper corner, 12.3 below, where alone it bears, pressing the detent onto the ratchet (as the teeth lift the detent, more). Upright
        across that, as the section draws it: the photographs lean it 1.8° (Wempe 3955) and 2.9° (Kirow 247) toward the arbor, 4.9° away (Lange 5177), each against the arbor's own
        lean in the frame, a set given by hand. Rebuilt in update() as the detent rides */
-    const WR=TI+0.4,WH=1.5,WE=-1.8,WRW=0.125,WA=DTU-WR,WP=[H[5][0]-DX[0],-(H[5][1]-DX[1])];   /* the stud's end, the hole's depth, the wire's end, its radius, its arm to the corner, its axis (shape coordinates about hole 4) */
+    const WSQ=WD.FU.WS,WR=TI+WSQ.out,WH=WSQ.wh,WE=-1.8,WRW=WSQ.wr,WA=DTU-WR,WP=[H[5][0]-DX[0],-(H[5][1]-DX[1])];   /* the stud's end, the hole's depth, the wire's end, its radius, its arm to the corner, its axis (shape coordinates about hole 4) */
     const gWS=tag(K.headOn(loose(grp(gD,H[5][0]-DX[0],H[5][1]-DX[1]),0),'maintDetent','topPlate'),'wireStud');   /* in the Exploded view it stays in the top plate */
-    {const r=1.5,hb=TT-1.2,w=0.225,v=[Math.sin(10*D2R),-Math.cos(10*D2R)],u=[-v[1],v[0]],t0=Math.acos(w/r),pt=t=>[r*Math.cos(t)*u[0]+r*Math.sin(t)*v[0],r*Math.cos(t)*u[1]+r*Math.sin(t)*v[1]];   /* plan: v along the slot (10° off N toward 3 o'clock, +x), u across it */
+    {const r=WSQ.r,hb=TT-WSQ.sd,w=WSQ.w,v=[Math.sin(WSQ.rot*D2R),-Math.cos(WSQ.rot*D2R)],u=[-v[1],v[0]],t0=Math.acos(w/r),pt=t=>[r*Math.cos(t)*u[0]+r*Math.sin(t)*v[0],r*Math.cos(t)*u[1]+r*Math.sin(t)*v[1]];   /* plan: v along the slot (10° off N toward 3 o'clock, +x), u across it */
       const arc=(a,b,n)=>Array.from({length:n+1},(_,i)=>pt(a+(b-a)*i/n)),A=arc(-t0,t0,14),B=arc(Math.PI-t0,Math.PI+t0,14),C=[...arc(t0,Math.PI-t0,2),...arc(Math.PI+t0,TAU-t0,2)];   /* the slot's ends: the circle's short arcs, through the halves' chord ends */
       /* steel, as drawn; Wempe 3955's (the version as photographed) brass, head and all (2_Wempe_3955_A.jpg from above and 5_Wempe_3955_O.jpg from the side: brass coloured,
          slotted, beside the steel pivot in hole 4's sink; photocompare.py: likely), in its own group (a version that differs only in metal gets its own copy) */
-      const hd=solidGeo([{loop:A,y0:TT-1.9,y1:TT},{loop:B,y0:TT-1.9,y1:TT},{loop:C,y0:hb,y1:TT}]),Rr=0.85-KIT.isoEs(0.35)-KIT.isoD(0.35),sk=KIT.lathThread([[0,TT-0.3],[Rr,TT-0.3],[Rr,WR-0.25],...[1,2,3,4,5].map(i=>{const a=i/6*Math.PI/2;return[Rr-0.25+0.25*Math.cos(a),WR-0.25+0.25*Math.sin(a)];}),[Rr-0.25,WR],[WRW,WR],[WRW,WR-WH],[0,WR-WH]],1,{rs:0.85,out:true},24);   /* the shank an M1.7 thread (ISO, KIT's lathThread: tapped hole 5 is threaded, 26 October 2026), its end rounded from the thread's root */
-      for(const[V,mt]of/** @type {[string,any][]} */([['last first 6mx 1943 -3955',M.steel],['3955',M.brass]])){const g=rv(gWS,V);mesh(g,hd,mt);mesh(g,sk,mt).userData.thread={rs:0.85,p:KIT.isoP(0.85)};}}   /* the head (its two halves, the slot's floor between them) and the shank, from inside the head */
+      const hd=solidGeo([{loop:A,y0:TT-WSQ.h,y1:TT},{loop:B,y0:TT-WSQ.h,y1:TT},{loop:C,y0:hb,y1:TT}]),Rr=WSQ.rs-KIT.isoEs(WSQ.p)-KIT.isoD(WSQ.p),sk=KIT.lathThread([[0,TT-WSQ.tm],[Rr,TT-WSQ.tm],[Rr,WR-WSQ.rd],...[1,2,3,4,5].map(i=>{const a=i/6*Math.PI/2;return[Rr-WSQ.rd+WSQ.rd*Math.cos(a),WR-WSQ.rd+WSQ.rd*Math.sin(a)];}),[Rr-WSQ.rd,WR],[WRW,WR],[WRW,WR-WH],[0,WR-WH]],1,{rs:WSQ.rs,out:true},24);   /* the shank an M1.7 thread (ISO, KIT's lathThread: tapped hole 5 is threaded, 26 October 2026), its end rounded from the thread's root */
+      for(const[V,mt]of/** @type {[string,any][]} */([['last first 6mx 1943 -3955',M.steel],['3955',M.brass]])){const g=rv(gWS,V);mesh(g,hd,mt);mesh(g,sk,mt).userData.thread={rs:WSQ.rs,p:KIT.isoP(WSQ.rs)};}}   /* the head (its two halves, the slot's floor between them) and the shank, from inside the head */
     /* the wire's deflection: the least that puts its section (WRW) clear of the detent's outline at the arm's upper face, its click turned g; along the outline's normal there */
     const wireDef=g=>{const c=Math.cos(g),s=Math.sin(g),Q=DTX.map(([x,y])=>[x*c-y*s,x*s+y*c]),pt=[WP[0],WP[1]];let dx=0,dy=0;
       for(let it=0;it<4;it++){let best=9,q=null;for(let i=0;i<Q.length;i++){const a=Q[i],b=Q[(i+1)%Q.length],ex=b[0]-a[0],ey=b[1]-a[1],t=Math.max(0,Math.min(1,((pt[0]-a[0])*ex+(pt[1]-a[1])*ey)/(ex*ex+ey*ey))),X=[a[0]+ex*t,a[1]+ey*t],d=Math.hypot(pt[0]-X[0],pt[1]-X[1]);if(d<best){best=d;q=X;}}
@@ -1119,14 +1119,14 @@ const WFUSEE=(()=>{
          hook's turn (25 October 2026: until then the pin stood 0.55 into the unholed core); the pin pressed to its foot, 0.005 off the hole's floor */
       /* the head in the pin's frame (its y the radius, +z the face's side, x along the arbor): a slab 2 along the arbor, its outline about the core's axis from HFT (flush)
          to HFA (the face), its top r 6.65 + 0.475 at the face falling evenly to 6.65, its underside r 6.64 on the core's facets, the face radial */
-      const HFA=15*D2R,HFT=-5*D2R,hd=[];for(let i=0;i<=20;i++){const f=HFT+(HFA-HFT)*i/20,r=6.65+0.475*i/20;hd.push([r*Math.sin(f),-r*Math.cos(f)]);}
-      for(let i=20;i>=0;i--){const f=HFT+(HFA-HFT)*i/20;hd.push([6.64*Math.sin(f),-6.64*Math.cos(f)]);}
+      const HKQ=WD.FU.HK,HFA=HKQ.fa*D2R,HFT=HKQ.ft*D2R,hd=[];for(let i=0;i<=20;i++){const f=HFT+(HFA-HFT)*i/20,r=HKQ.Rc+HKQ.rise*i/20;hd.push([r*Math.sin(f),-r*Math.cos(f)]);}
+      for(let i=20;i>=0;i--){const f=HFT+(HFA-HFT)*i/20;hd.push([HKQ.ru*Math.sin(f),-HKQ.ru*Math.cos(f)]);}
       /* as first drawn the head 3 along the arbor: 0207's section dimensions it "3" (its arrows on its ends) and 0,5 high over the Ø 2 pin, its far edge 9,4 from the bottom's
          inside (centred on the core's middle); 020704-1 draws the arbor without its hook. Its end-view form as revised (no 1941 end view). 2 until 28 October 2026 (drawing
          check 2, 4-M4) */
-      const hdT=new THREE.Matrix4().makeBasis(new THREE.Vector3(0,0,1),new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0)),hdG=slab(hd,[],-1.0,1.0),hdG41=slab(hd,[],-1.5,1.5);hdG.applyMatrix4(hdT);hdG41.applyMatrix4(hdT);   /* the slab's (x, thickness, -y) onto the pin's (z, x, y): a turn */
+      const hdT=new THREE.Matrix4().makeBasis(new THREE.Vector3(0,0,1),new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0)),hdG=slab(hd,[],-HKQ.t[0]/2,HKQ.t[0]/2),hdG41=slab(hd,[],-HKQ.t[1]/2,HKQ.t[1]/2);hdG.applyMatrix4(hdT);hdG41.applyMatrix4(hdT);   /* the slab's (x, thickness, -y) onto the pin's (z, x, y): a turn */
       var hookSet=a=>{for(const[hk,y,arb,hh,g0]of HKS){const st=TAU/48;arb.geometry.rotateY(a-st/2-Math.floor((a-st/2)/st)*st);{const d=[Math.cos(a),0,-Math.sin(a)];const G=capFix(bore(arb.geometry,[0,y,0],d,1.0,arb===aL?-7.2:0.65,24),null);arb.geometry=arb===aL?fillOpen(G):G;}   /* 05 07 02's hole right through the core (fillOpen closing the three edges its far mouth leaves open); 0207's 6 deep */
-        const g=new THREE.CylinderGeometry(1.0,1.0,1.0,24,1),p=g.attributes.position;for(let i=0;i<p.count;i++){const z=p.getZ(i),c=Math.sqrt(6.65*6.65-z*z);p.setY(i,p.getY(i)>0?c:0.655);}
+        const g=new THREE.CylinderGeometry(HKQ.r,HKQ.r,1.0,24,1),p=g.attributes.position;for(let i=0;i<p.count;i++){const z=p.getZ(i),c=Math.sqrt(HKQ.Rc*HKQ.Rc-z*z);p.setY(i,p.getY(i)>0?c:HKQ.z0);}
         g.computeVertexNormals();hk.geometry.dispose();   /* its top on the core's round, its foot 0.005 off the hole's floor */
         hk.geometry=g;hk.position.set(0,y,0);hk.rotation.set(0,a,-Math.PI/2);hh.geometry=g0===gAF?hdG41:hdG;hh.position.set(0,y,0);hh.rotation.set(0,a,-Math.PI/2);}};}   /* built along its own y, turned onto the hook's radius: the pin's axis is its mesh's (bom.py reads a part's axis so; built in the arbor's frame until 25 October 2026, its axis read upright through its box's middle, which an oblique pin's ramped end puts off the pin) */
     /* the set-up ratchet 05 07 00-3 (Sperrad; Messingblech 3 Ms 58, revised 24.11.47): 16 teeth, tips Ø 14.1 -0.2, roots 11.1 -0.2 (drawn 14.0, 11.0), each face along a line 1.2
@@ -1285,7 +1285,7 @@ const WFUSEE=(()=>{
        slot (DRUM, below), the band rising off the drum into it.
        Until 27 October 2026 both were placeholders: 12- and 10-point outlines about half the size, no throat, slot, crown, barb or notch */
     const pBd=part('band',-33),gBd=new THREE.Group();pBd.add(gBd);const bdM=tag(mesh(gBd,new THREE.BufferGeometry(),M.steel),'050703-1');
-    const BHK=(()=>{const V=(a,b)=>[a[0]-b[0],a[1]-b[1]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1],ang=(c,p)=>Math.atan2(p[1]-c[1],p[0]-c[0]),pt=(c,r,a)=>[c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)];
+    const BHK=(()=>{const BQ=WD.FU.BHK,V=(a,b)=>[a[0]-b[0],a[1]-b[1]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1],ang=(c,p)=>Math.atan2(p[1]-c[1],p[0]-c[0]),pt=(c,r,a)=>[c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)];
       const tg=(c1,r1,s1,c2,r2,s2)=>{const D=V(c2,c1),L=Math.hypot(...D),th=Math.atan2(D[1],D[0])-Math.asin((s2*r2-s1*r1)/L),n=[-Math.sin(th),Math.cos(th)];   /* the line tangent to both, directed c1 to c2, circle i on its left (s +1) or right (-1) */
         return[[c1[0]-s1*r1*n[0],c1[1]-s1*r1*n[1]],[c2[0]-s2*r2*n[0],c2[1]-s2*r2*n[1]]];};
       const arc=(o,c,r,a0,a1,ccw)=>{let d=a1-a0;if(ccw)while(d<=0)d+=TAU;else while(d>=0)d-=TAU;const n=Math.max(2,Math.ceil(Math.abs(d)/(6*D2R)));for(let i=0;i<=n;i++)o.push(pt(c,r,a0+d*i/n));return o;};
@@ -1295,29 +1295,29 @@ const WFUSEE=(()=>{
          the round hook's through the seat's centre, the drum hook's along the barb's line; "hart gelötet", 11): cut 0.235 wide (the 0,22 +0,03's middle) about the band's
          faces, its end square to the band where its right face reaches the line yt; its mouth's edges broken 0.1 ("Kante brechen"). Until 28 October 2026 only the 0.1 break
          was cut and the band butted on it (drawing check 2, 4-M8) */
-      const notch=(B,p,d,w,yt)=>{const nl=[-d[1],d[0]],e=(0.235-w)/2,off=(q,k)=>[q[0]+nl[0]*k,q[1]+nl[1]*k],pR=off(p,e),pL=off(p,-w-e),xR=lc(pR,d,B,1)[1],xL=lc(pL,d,B,1)[1];   /* the slot's faces (p on the band's right face, d down it, w across) out through the bottom circle B (r 1) */
-        const up=(q,y)=>{const t=(y-q[1])/-d[1];return[q[0]-d[0]*t,q[1]-d[1]*t];},tR=up(pR,yt),tL=off(tR,-0.235),bR=lc(p,d,B,1)[1],bL=lc(off(p,-w),d,B,1)[1],tM=off(up(p,yt),-w/2);
-        return{aL:ang(B,xL),aR:ang(B,xR),put:o=>{o.push([xL[0]-d[0]*0.1,xL[1]-d[1]*0.1],tL,tR,[xR[0]-d[0]*0.1,xR[1]-d[1]*0.1]);},mouth:[(bL[0]+bR[0])/2,(bL[1]+bR[1])/2],top:[tM[0]+d[0]*0.01,tM[1]+d[1]*0.01]};};   /* top: the band's end, its middle 0.01 short of the slot's end */
+      const notch=(B,p,d,w,yt)=>{const nl=[-d[1],d[0]],e=(BQ.slot-w)/2,off=(q,k)=>[q[0]+nl[0]*k,q[1]+nl[1]*k],pR=off(p,e),pL=off(p,-w-e),xR=lc(pR,d,B,1)[1],xL=lc(pL,d,B,1)[1];   /* the slot's faces (p on the band's right face, d down it, w across) out through the bottom circle B (r 1) */
+        const up=(q,y)=>{const t=(y-q[1])/-d[1];return[q[0]-d[0]*t,q[1]-d[1]*t];},tR=up(pR,yt),tL=off(tR,-BQ.slot),bR=lc(p,d,B,1)[1],bL=lc(off(p,-w),d,B,1)[1],tM=off(up(p,yt),-w/2);
+        return{aL:ang(B,xL),aR:ang(B,xR),put:o=>{o.push([xL[0]-d[0]*BQ.brk,xL[1]-d[1]*BQ.brk],tL,tR,[xR[0]-d[0]*BQ.brk,xR[1]-d[1]*BQ.brk]);},mouth:[(bL[0]+bR[0])/2,(bL[1]+bR[1])/2],top:[tM[0]+d[0]*0.01,tM[1]+d[1]*0.01]};};   /* top: the band's end, its middle 0.01 short of the slot's end */
       /* the round hook, walked round anticlockwise from the bottom circle's tangent with the right wall */
-      const S=[0,0],N=[-1.25,-0.5],B=[1.4,-2.5],K=[0.165,-0.343],RK=2.076,F=[-3.465,-1.700],RF=Math.hypot(...V(B,F))+1,b5=5*D2R,dB=[Math.sin(b5),-Math.cos(b5)];
-      const nb=notch(B,B,dB,0.22,0),[lw0,lw1]=tg(N,0.4,1,S,0.4,-1),b7=7.9*D2R,dk=[-Math.sin(b7),-Math.cos(b7)],nk=[-dk[1],dk[0]],pN=[N[0]-0.4*nk[0],N[1]-0.4*nk[1]];
+      const{S,N,B,K,RK,F}=BQ.T,RF=Math.hypot(...V(B,F))+1,b5=BQ.T.b5*D2R,dB=[Math.sin(b5),-Math.cos(b5)];
+      const nb=notch(B,B,dB,BQ.T.w,0),[lw0,lw1]=tg(N,BQ.T.rn,1,S,BQ.T.rn,-1),b7=BQ.T.b7*D2R,dk=[-Math.sin(b7),-Math.cos(b7)],nk=[-dk[1],dk[0]],pN=[N[0]-BQ.T.rn*nk[0],N[1]-BQ.T.rn*nk[1]];
       const X1=cc(F,RF,K,RK).sort((a,b)=>b[1]-a[1])[0],X2=lc(pN,dk,K,RK)[0];
-      const T=[];arc(T,B,1,Math.PI,nb.aL-0.1,true);nb.put(T);arc(T,B,1,nb.aR+0.1,ang(F,B),true);arc(T,F,RF,ang(F,B),ang(F,X1),true);arc(T,K,RK,ang(K,X1),ang(K,X2),true);
-      arc(T,N,0.4,ang(N,pN),ang(N,lw0),true);arc(T,S,0.4,ang(S,lw1),0,false);
+      const T=[];arc(T,B,1,Math.PI,nb.aL-BQ.brk,true);nb.put(T);arc(T,B,1,nb.aR+BQ.brk,ang(F,B),true);arc(T,F,RF,ang(F,B),ang(F,X1),true);arc(T,K,RK,ang(K,X1),ang(K,X2),true);
+      arc(T,N,BQ.T.rn,ang(N,pN),ang(N,lw0),true);arc(T,S,BQ.T.rn,ang(S,lw1),0,false);
       /* the drum hook, from the tip */
-      const Tp=[0,4.5],CR=[-7.972,-1.2],B3=[1.0,-2.5],Q=[0,0],BT=[-1.0,-0.3],A4=[2.8,-0.35],b10=10*D2R,dB3=[-Math.sin(b10),-Math.cos(b10)],b75=7.5*D2R,df=[Math.sin(b75),-Math.cos(b75)],nf=[-df[1],df[0]];
-      const pT=[Tp[0]-0.2*nf[0],Tp[1]-0.2*nf[1]],Xa=lc(pT,df,A4,4)[0],tA=pt(A4,4,ang(A4,BT)),[bl0,bl1]=tg(BT,0.2,1,Q,0.2,-1),[wl0,wl1]=tg(Q,0.2,-1,B3,1,1);
-      const n3=notch(B3,[0.8,-2.5],dB3,0.22,0),XB=cc(B3,1,CR,10).sort((a,b)=>a[1]-b[1])[0],tT=pt(CR,10,ang(CR,Tp));
-      const D=[];arc(D,Tp,0.2,ang(Tp,tT),ang(Tp,pT),true);D.push(Xa);arc(D,A4,4,ang(A4,Xa),ang(A4,tA),true);arc(D,BT,0.2,ang(BT,tA),ang(BT,bl0),true);arc(D,Q,0.2,ang(Q,bl1),ang(Q,wl0),false);
-      arc(D,B3,1,ang(B3,wl1),n3.aL-0.1,true);n3.put(D);arc(D,B3,1,n3.aR+0.1,ang(B3,XB),true);arc(D,CR,10,ang(CR,XB),ang(CR,tT),true);
+      const{Tp,CR,B3,Q,BT,A4}=BQ.D,b10=BQ.D.b10*D2R,dB3=[-Math.sin(b10),-Math.cos(b10)],b75=BQ.D.b75*D2R,df=[Math.sin(b75),-Math.cos(b75)],nf=[-df[1],df[0]];
+      const pT=[Tp[0]-BQ.D.rt*nf[0],Tp[1]-BQ.D.rt*nf[1]],Xa=lc(pT,df,A4,BQ.D.rA)[0],tA=pt(A4,BQ.D.rA,ang(A4,BT)),[bl0,bl1]=tg(BT,BQ.D.rt,1,Q,BQ.D.rt,-1),[wl0,wl1]=tg(Q,BQ.D.rt,-1,B3,BQ.D.rB,1);
+      const n3=notch(B3,BQ.D.p,dB3,BQ.D.w,0),XB=cc(B3,BQ.D.rB,CR,BQ.D.rC).sort((a,b)=>a[1]-b[1])[0],tT=pt(CR,BQ.D.rC,ang(CR,Tp));
+      const D=[];arc(D,Tp,BQ.D.rt,ang(Tp,tT),ang(Tp,pT),true);D.push(Xa);arc(D,A4,BQ.D.rA,ang(A4,Xa),ang(A4,tA),true);arc(D,BT,BQ.D.rt,ang(BT,tA),ang(BT,bl0),true);arc(D,Q,BQ.D.rt,ang(Q,bl1),ang(Q,wl0),false);
+      arc(D,B3,BQ.D.rB,ang(B3,wl1),n3.aL-BQ.brk,true);n3.put(D);arc(D,B3,BQ.D.rB,n3.aR+BQ.brk,ang(B3,XB),true);arc(D,CR,BQ.D.rC,ang(CR,XB),ang(CR,tT),true);
       /* into the chain's hooks' frames: the round hook's x up the band from its mouth (the band's middle where it leaves), y to its left; the drum hook's x up its left
          wall from 1.5 behind the mouth (where the band, laid on the drum, ends), y out from the wall (the barb on -y): turned over, so its order reversed */
       const dedup=o=>o.filter((p,i)=>Math.hypot(...V(p,o[(i+1)%o.length]))>1e-4);
       const u5=[-dB[0],-dB[1]],v5=[-u5[1],u5[0]],M5=nb.mouth,top=dedup(T).map(p=>{const q=V(p,M5);return[dot(q,u5),dot(q,v5)];});
       const uw=V(wl0,wl1),lw=Math.hypot(...uw),uW=[uw[0]/lw,uw[1]/lw],mW=[uW[1],-uW[0]],bot=dedup(D).map(p=>[dot(V(p,n3.mouth),uW)+1.5,dot(V(p,wl1),mW)]).reverse();
       return{top,bot,seat:[dot(V(S,M5),u5),dot(V(S,M5),v5)],mouth:[1.5,dot(V(n3.mouth,wl1),mW)],endT:[dot(V(nb.top,M5),u5),dot(V(nb.top,M5),v5)],endB:[dot(V(n3.top,n3.mouth),uW)+1.5,dot(V(n3.top,wl1),mW)]};})();   /* endT, endB: the band's ends in the slots, in each hook's frame */
-    const hkB=(o,id)=>{const g=new THREE.Group();gBd.add(g);tag(mesh(g,slab(o,[],-0.39,0.39),M.chain),id);return g;};
-    const BYW=20.81-CG.band.rbp,bHT=hkB(BHK.top,'050703-2'),bHB=hkB(BHK.bot.map(([x,y])=>[x,y+BYW]),'050703-3');   /* the drum hook's wall 0.01 off the drum */
+    const hkB=(o,id)=>{const g=new THREE.Group();gBd.add(g);tag(mesh(g,slab(o,[],-WD.FU.BHK.t,WD.FU.BHK.t),M.chain),id);return g;};
+    const BYW=WD.FU.BHK.y-CG.band.rbp,bHT=hkB(BHK.top,'050703-2'),bHB=hkB(BHK.bot.map(([x,y])=>[x,y+BYW]),'050703-3');   /* the drum hook's wall 0.01 off the drum */
 
     /* the chain's first rivet: where along the chain's path (from its start, m 0) the top hook's seat, 3.70 from its rivet, reaches the pin (about 0.4: the path starts at
        the flange's slot on the chain's pitch line, which the hook's real run into the deepened slot below it shortens) */

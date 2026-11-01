@@ -585,9 +585,42 @@ by version and line, since a line like 050401-4 is the block of every version); 
 | Hairspring stud 05 03 02-3 | 3 | 51.66 / 51.67 | 0.0017 | `STD`: the bar, the two facets to a knife edge, the upright leaning 8°, the Ø 1.5 and Ø 0.7 holes |
 | Collet's and stud's pins 05 03 02-4 | bought | | | brass wire, filed half round (the page's pins are the hole's round less the strip's side) |
 
-Left for later: the first-drawn block's arm (05 04_1: `armEl`, a slit arm with a cove in plan, 'first' and the photographed '3955' forms) and the Soviet 6MX's block (its taper, adjusting
-slide and stud, one mesh made of three with faces left out, the loose 6MX.gks/gke/WN-gkA screws, many inline literals); each wants its literals lifted into `BLK` (page hashed before
-and after) before a recipe reads them.
+(The first-drawn block's arm and the Soviet 6MX's block, left here on 31 October 2026, are batch 8d below.)
+
+### Batch 8d (1 November 2026): the detent block in every version, the banking screws and studs; 13 recipes pass
+
+The literals of the first-drawn block (`armEl`), the 6MX's block and the 1943 block's screws were lifted into `BLK` (`BLK.first`, `BLK.m6`, `BLK.s43`) and the detent's two screws into `DETK.gs`
+and `DETK.gf` (escapement.js), each step with `recipes_pagehash.py` in all five versions (last, first, 3955, 6mx, 1943) over the twelve lines the block touches (050401-4, WN-gk, WN-gkA,
+WN-gkA43, cone41, 6MX.gke, 6MX.gks, WN-201.gk, WN-gf, WN-14): the page unchanged within 1e-5 mm. `Recipe.show` (new) is the revision list the card shows a recipe under where it
+differs from `rev` (revShows: the drawn first block is `'first -3955'`, since rev `'first'` would also show on Wempe 3955's card); `recipes_site.py` writes it as the entry's `v`. `TurnArcs`
+(wempe_esc.py) turns a profile with arcs (a dome, a ball end) exactly. Every version of the detent block now has its recipe, and the cards link the right one (`smoke.py --model wempe` asserts
+it for all five versions).
+
+| Part | Key | Volume, recipe / page (mm³) | Surface apart (max) | Notes |
+|---|---|---|---|---|
+| Detent block as first drawn (05 04_1) | `detentBlock.first` (`v` `first -3955`) | 815.08 / 811.33 | 0.1553 (the hole across, expected) | the long arm with the cove r 1.82 (an exact arc where the page has 16 chords), the slit 0.2 × 6.1 and the screw's hole |
+| Detent block as Wempe 3955 photographs it | `detentBlock.3955` | 867.71 / 863.40 | 0.1553 (the hole across, expected) | the arm flush with the base's edge, 3.56 wide, the slit 0.14 × 5.1 |
+| Detent block, the Soviet 6MX's | `detentBlock.6mx` | 604.19 / 598.66 | 0.1684 (three holes at the thread's major diameter, expected) | the base, thin part and notch as the page's four cells, the taper, the slit end, the stud's M1.7, the stop screw's M1.4 |
+| Adjusting slide 6MX.gks | `adjSlide6` | 30.91 / 30.93 | 0.0019 | a key 3.2 wide, 2.5 deep, the stud's clearance hole |
+| Banking screw WN-gkA (6MX) | `bankScrew6` | 13.84 / 13.90 | 0.1578 (the slot bar, 0.4487 where it hangs under the rim, expected) | M1.2 thread, the dome rH 1.7 × 1.4 as an exact cap |
+| Banking screw WN-gkA43 (1943) | `bankScrew43` | 20.29 / 20.54 | 0.1986 (the slot bar, expected) | the head 1.1 long under a dome 0.4 |
+| Banking screw cone41 (first; Wempe 3955 0.55 longer) | `cone41`, `cone41.3955` | 13.86 / 14.40; 14.48 / 15.02 | 0.1503 (the slot band, expected) | the pointed tail (a cone to a point), the dome R 1.8 |
+| Block studs WN-gk (6MX, 1943) | `studScrew6`, `studScrew43` | 63.41 / 60.32; 57.86 / 56.15 | 0.0185 (the kit's 24-sided head) | Ø 3.4 × 5.85, the slot 0.5 × 0.9 at the page's heading; `blockScrew` now `v` `last first` |
+| Foot stop screw 6MX.gke | `stopScrew6` | 18.84 / 17.92 | 0.0105 | `screw()` Ø 4.2 × 1.2, M1.4 × 2.5 |
+| Gold spring's screw WN-14 | `goldScrew` | 0.69 / 0.74 | 0.1205 (the slot, expected) | Ø 1.4, the head's top rounded 0.1 at the rim (an arc through the page's parabola), M0.7 × 0.175 |
+| Foot screw WN-gf | `footScrew` | 3.575 / 3.517 | 0.0098 | the page draws it plain: head Ø 1.6 × 0.45, shank Ø 1 × 3.4 |
+
+**Coverage of the escapement side** (a sweep of every part-line the page shows in the five versions against `WRECIPES`): before the batch, 050401-4 (last, 1943), WN-gk (last/first only; the
+6MX's and 1943's studs are other solids under the same line), and no recipe or bought line for WN-gkA, WN-gkA43, cone41, 6MX.gks, 6MX.gke, WN-14, WN-gf; after it, every line escapement.js draws has one
+(or a bought line: WN-201.gk, WN-205.d, the stones). Lines the sweep still finds without one are not escapement.js's: the fusee side's 050702-2, 050703-1/-2/-3, 050704 (fusee.js) and the 6MX's
+contact set 6MX.ct*, 6MX.cw, 6MX.ch*, 6MX.jw* (train.js and its siblings).
+
+**Page faults, recorded in `expect`** (and in the table below): the slot bars of the dome-headed screws are solid dark bars following the curve 0.45 deep (the 6MX's banking screw's hangs 0.45 under the head's underside at the
+rim, in the air), not cut into the head; the 6MX block's M1 and stop-screw holes are drawn at the thread's major diameter (r 0.5, r 0.70), the 1943 block's M1 at the minor; and the 6MX block's notch
+for the slide: the thin part's corner stops at the notch's near wall (0.35 beyond the base's side, nE - 6.4), so a strip 0.35 wide stands from 2.5 to 3 under the plate beside the thick part, with nothing at 3-6.5 over it.
+
+Left for later: the bought line WN-201.gk (the steady pins) gives the last revised block's lengths (7.8 and 4.3) for every version; the first-drawn block's are 6.5 through, the 6MX's and 1943's 1.2 into the block
+and 3 through the thin part (a bought line has no version).
 
 ### Batch 11b (31 October 2026): the case; 23 recipes pass, five lines bought
 
@@ -631,10 +664,55 @@ stay and maker's plate are fitted to it and made elsewhere), DIN96 (the transit 
 **Page faults, recorded in `expect`** (and in the table below): the locking bracket's screw hole (0.05 chords: `bore`'s `capFix`, the detent's and gold spring's fault again); the closing plate's round in four chords (0.025); the kit's 32-sided screw heads above Ø 8
 (WN-79 Ø 9.2 0.023, WN-71.f Ø 8 0.020, WN-80 Ø 9 and Ø 12 0.022 and 0.029). Not in an `expect`, to be judged on the page: **WN-ro** is drawn with a head Ø 8.5 × 2.2 on the shank of a "3 x 15 DIN 96" (the standard's head is Ø 5.6 × 2.0).
 
-**Deferred, and why.** (1) The transit lock `050101.F`: one parts-list line on six pieces (bracket, lever, arbor, hub, pin, knob), whose sizes are mostly estimated; it wants its line split by piece first (as the screws) and the bracket's bent leg, the lever's stadium,
+**Deferred, and why** ((1) and (2) done in batch 12, 1 November 2026). (1) The transit lock `050101.F`: one parts-list line on six pieces (bracket, lever, arbor, hub, pin, knob), whose sizes are mostly estimated; it wants its line split by piece first (as the screws) and the bracket's bent leg, the lever's stadium,
 the knurled knob and the pin's head made exact. (2) The key: the body 05 01 02-2 and the tube 05 01 02-3 are every-figure turned parts (the likeliest next candidates), the paddle 51 00 11-1, the grooved pin and the coil spring a disc, a pin and a wound spring; the key
 stands in the box or on the fusee's square, so the check needs its pose frozen. (3) The box's fittings (hinges with leaf and knuckle, handles, the lid stay, the key holder's cup, the latch strap, the maker's plate, the carrying case's strap, eyes and cushions) and the 6MX's own
 (strips, caps, hasp, badge): brass and steel pieces, each a plate bent and riveted to wood, estimated, with no dimension a maker needs from this model.
+
+### Batch 12 (1 November 2026): the keys, the transit lock, the hook, the stud, the band's hooks, three chatons; 23 recipes pass, 62 lines bought, the parts list covered but for the 6MX's contact and the escapement side's eight
+
+`tools/recipes/wempe_rest.py` (imported by the last line of `wempe.py`). Made (23): the 1943 key's body 05 01 02-2 (`keyBody`), tube 05 01 02-3 (`keyTube`) and paddle 51 00 11-1 (`keyPaddle`); the 1940 key's pipe, body and cap with its handle's blade
+(`key40Pipe`, `key40Body`, `key40Cap`, `rev='first'`); the transit lock's bracket, lever, arbor, hub, grip and knob (`lockBr`, `lockLever`, `lockArbor`, `lockHub`, `lockPin`, `lockKnob`, with `lockBr6`, `lockLever6`, `lockPin6` for the 6MX's `rev='6mx'`); the barrel
+arbor's hook 05 07 02-2 (`hook`, `hook41` as first drawn, 3 along the arbor); the maintaining detent's wire stud (`wireStud`); the band's round and drum hooks (`bandHookRound`, `bandHookDrum`: fusee.js's BHK walked as exact arcs and tangent lines, the page's polyline
+arcs 0.007 and 0.0125 off); and the 6MX's three chatons (`chaton38u`, `chaton35u`, `chaton38l`).
+
+| Recipe | Worst surface gap, recipe to page / page to recipe | Notes |
+|---|---|---|
+| `keyTube` | 0.012 / 0.022 | the sink's cone from strips along 1.5° sectors; in `expect` |
+| `keyBody` | 0.036 / 0.040 | the spring's hole upright above the drill point's foot on the page; the top chamfer's cone in four steps (0.03); in `expect` |
+| `keyPaddle` | 0.004 / 0.004 | |
+| `key40Pipe`, `key40Body`, `key40Cap` | 0.010 / 0.010, 0.008 / 0.008, 0.009 / 0.009 | the cap and the handle's blade are one parts-list line on the page: the cap turned, the blade let into its slot and soldered |
+| `lockBr`, `lockBr6` | 0.029 / 0.029 | the seat's round end is 16 chords; in `expect` |
+| `lockLever`, `lockLever6` | 0.0003 | the lever is a stadium of true arcs on the page |
+| `lockArbor`, `lockHub`, `lockPin`, `lockPin6`, `lockKnob` | 0.025, 0.024, 0.038, 0.038, 0.028 | 20-, 32-, 16- and 40-sided prisms (cylBetween, latheF); in `expect`, with the prisms' volume where the page is one piece |
+| `hook`, `hook41` | 0.017 / 0.020, 0.018 / 0.019 | a 24-gon pin and 20 chords of the ramp |
+| `wireStud` | 0.028 / 0.030 | the slot is the head's two halves with the floor between them; in `expect` |
+| `bandHookRound`, `bandHookDrum` | 0.007, 0.0125 | |
+| `chaton38u`, `chaton35u`, `chaton38l` | 0.005 | the 6MX's estimated chatons (`rev='6mx'`) |
+
+**The key needs no frozen pose.** `recipes.py`'s export takes each mesh in its own frame, so the key's place in the holder or on the fusee's square doesn't matter; the check passes without a change to `POSE`. Which versions have which key: `last`, `6mx`, `1943` the one key
+(51 00 11), `first` and `3955` the 1940's (127-556.02); each key's pieces are `rev` `first` for the 1940 and the default for the other.
+
+**The transit lock split.** `050101.F` is now an assembly line (`"kind": "asm"`, not tagged on the page) with six piece lines, `050101.F.b` bracket, `.a` arbor, `.h` hub, `.l` lever, `.p` grip, `.k` knob, in `bom.json`, `case.js`'s `tag()` calls, `app.js`'s `PIECES.caseLock` (the card's
+pieces), `BOM.md` and `makers.js`. The names avoid the words `bom.json`'s seat check keys on (pin, screw, stud, hook). The lock's sizes are all estimated (case.js: the owner's case design, Wempe 5377 and 3044's photographs, Romanov for the 6MX); the sheets say so.
+
+**Sizes moved into `dims.js`**, read back by the page with the same expressions in the same order: `KEYQ` (the 1943 key's tube, body, paddle, pin and spring; the 1940 key's body, pipe, cap, handle outline, screws and spring), `LOCKQ`, `FU.HK` (the hook), `FU.WS` (the stud),
+`FU.BHK` (the band hooks' circles and the drum's radius), `SM6` (the 6MX's chatons). The page's meshes before and after, every mesh of the box and the movement in all five versions (`last`, `first`, `3955`, `6mx`, `1943`): identical within 1e-5 mm and their indices exactly; only the lock's
+tags changed. `wempe_sustaining.js`, `wempe_physics.js`, `wempe_strength.js`, `wempe_overwind.js` and `wempe_escapement.js` print byte-identical output from before and after (elapsed-time lines left out); `wempe_transmission.js` and `maintaining.py --model wempe`: see the report.
+
+**Bought lines (62 new).** The key's grooved pin and coil spring, the 1940 key's click spring and two countersunk screws; the chain `050704` (375 links, the drawing's whole specification: made by a chain maker, 1,500 plates and 750 rivets are not a CNC job; its two hooks are flat parts a maker can
+cut from the strip to 05 07 04's outlines) and the band `050703-1` (strip 727 × 0.22, its width not given: taken as the hooks' 0.8, estimated); the box and outer box (joinery and hardware: hinges, handles, latch, stay, key holder, felt, strap, glass, plates: every size the page's, estimated where case.js
+says so), the 6MX's box and its hardware, its three hole jewels and the contact's four jewels and pallet stone, its fibre insulation, washers and bushes, its standard screws, pin and terminals. A line the owner would call joinery says so (`JOIN`). `recipes_site.py` now prints the parts-list lines that have neither a recipe nor a bought line on a card
+(informational, it never fails).
+
+**Coverage.** Before this batch 113 parts-list lines of 286 had no recipe or bought line (13 of them assemblies, which need none). After: 24 of 278 non-assembly lines: the escapement side's eight (`WN-12a`, `WN-14`, `WN-gf`, `WN-gkA`, `WN-gkA43`, `cone41`, `6MX.gks`, `6MX.gke`: `escapement.js`, the detent
+blocks' batch) and the 6MX's electrical contact's made parts (16: `6MX.ct` base, `.ctbp`, `.ctbm` blocks, `.ctd` disc, `.ctst` staff, `.ctjs` jewel setting, `.ctc` cock, `.ctcc` cap plate, `.ctl` lever, `.ctk` screw, `.ctn` nut, `.cth` spiral, `.ctq` stud, `.ctqs` clamp screw, `.cw` contact wheel, `.cf` bowl spring),
+all hand-built in `train.js` from Kirov 247's photographs and Romanov's figures with their sizes local literals and every one estimated; each wants its literals lifted into `dims.js` first.
+
+**Page faults, recorded in `expect`** (and in the table below): the lock's prisms and the seat's round end; the key's top chamfer cone and sink strips; the key body's spring hole; the stud's slot as a stepped head. Not in an `expect`: the lock bracket's wall leg has no holes for the two wood screws
+the page draws through it; the lever has none for the arbor and the grip; the grip, hub and knob have none for their fits. A maker bores them; the sheets say so.
+
+**Deferred.** The 6MX's contact (above); `6MX.jw38u`, `.jw35u`, `.jw38l` and the contact's jewels are bought lines with the page's sizes where `train.js` has them.
 
 ## Page faults found (for a later fix on the page)
 
@@ -650,6 +728,9 @@ stands in the box or on the fusee's square, so the check needs its pose frozen. 
 | Balance arm's screws WN-10, compensation masses' screws WN-12 | the head's slot | 0.126 | each slot is a solid dark box (WN-10 1.3 × 0.25 × 0.2, WN-12 1.6 × 0.25 × 0.25) filling the slot and standing 0.02 out of the head's face, not cut into the head; in both recipes' `expect` and `box_tol` |
 | Compensation masses' screws WN-12 | the head's top | 0.022 | the head's face follows the mass's round side by bending a lathe's top fan (24 triangles from the centre to a rim of 24 points) in x only: the true cylinder is up to 0.022 away between the rim points; in `expect` |
 | Detent block of 1943 (050401-4, 1943) | the banking screw's hole across the leaves | 0.155 | as the last revised block's: a bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill; in `expect` |
+| Dome-headed screws WN-gkA, WN-gkA43, cone41, WN-14 | the head's slot | 0.12-0.45 | each slot is a solid dark bar following the dome 0.15-0.5 deep and standing 0.01 out of it, not cut into the head; the 6MX's banking screw's bar (WN-gkA) hangs 0.45 under the head's underside at the rim; in the recipes' `expect` |
+| Detent block of the 6MX (050401-4, 6mx) | the end face's M1, the stop screw's M1.4 | 0.17 | drawn at the thread's major diameter (r 0.5 and r 0.70 polygons), the 1943 block's M1 at the minor; in `expect` |
+| Detent block of the 6MX (050401-4, 6mx) | the notch for the adjusting slide | 0.35 wide strip | the thin part's cell stops at the notch's near wall (nS0 = nE - 6.94), 0.35 beyond the base's side (nE - 6.59), so a strip from 2.5 to 3 under the plate stands beside the thick part with an empty gap over it (3 to 6.5); the recipe follows the page's cells |
 | Escape wheel's upper endstone screws WN-es | the shank's end in the slot | 0.032 | `screw()` runs the shank 0.1 into the head, but this head is 0.3 high with a 0.232 slot (KIT headGeo): the shank's end stands up into the slot; in the recipe's `expect` |
 | Minute, hour, up-and-down and seconds hands | the blade's root against the boss | 0.07-0.10 | the blade is a separate closed piece with an 8-segment root arc at the boss's radius, against the boss's 72-sided wall: a hairline gap (0.003) at isolated samples; in the recipes' `expect` |
 | Hour hand 05 02 00-2 | the root wedge's underside | about 0.1 | the wedge's underside follows the bevel's cone as flat cells every 0.25 across a blade 1.7 wide, not the cone (likely); in `expect` |
@@ -662,6 +743,10 @@ stands in the box or on the fusee's square, so the check needs its pose frozen. 
 | Fusee body 05 06 04-2 | ~~the flange's lathe rows (walls up to 0.04 off the helix)~~; the slot's cutter arc and the groove's end N | 0.1, 0.13 | the row fault fixed in 3.66.01 (the flange swept with helixSolid, ribs square). Left: the 216 rays chord the cutter arc (floor climbing 0.4 between rays) up to 0.1 off the circle, and the end's rays join the last land's floor to the hub across a chord up to 0.13; the seam at 0° leaves internal end caps (a check artefact). In the recipe's `expect` |
 | Screws WN-19, WN-20, WN-21 | the slots | 0.15 | drawn as solid dark boxes lying in the heads (0.02 out on WN-20 and WN-21), not cut; in the recipes' `expect` |
 | Maintaining detent arbor 05 05 05-2 | the turned profile | 1.3 mm³ | the page turns it on 20 sides, 1.6 % under the circle's volume; in `expect` |
+| Winding key body 05 01 02-2 (batch 12) | the top chamfer's cone; the spring's Ø 0.9 hole | 0.03; 0.04 | the 1.5 × 45° chamfer is cut in four steps up the jaws' columns; the hole is slanted to the drill point's foot and upright above it; in the recipe's `expect` |
+| Key tube 05 01 02-3 | the 60° sink | 0.022 | strips along 1.5° sectors, a chord off the cone at the end face; in `expect` |
+| Transit lock (bracket, arbor, hub, grip, knob; case.js) | the rounds | 0.025-0.038 | the seat's round end 16 chords, cylBetween prisms of 20, 32 and 16 sides, the knob on 40; in the recipes' `expect` |
+| Transit lock | the holes a maker bores | none drawn | no clearance holes for the two wood screws through the wall leg; none in the lever for the arbor and the grip, in the hub and knob for their fits; the sheets say so |
 | ~~Barrel bridge, fusee bush, dust bush~~ | ~~five sizes at their tolerances' tops~~ | | fixed 29 October 2026, the owner's choice (above) |
 
 ## Decided
