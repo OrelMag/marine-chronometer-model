@@ -65,7 +65,7 @@ def massScrew():
 RECIPES['massScrew']=massScrew
 
 # ---------------- the detent block as the escapement of 1943 has it (escapement.js, the '1943' group of the block) ----------------
-from .wempe import WDET,_detFrame,_box,Drill
+from .wempe import WDET,_detFrame,_box,Drill,_prism,_tn
 def detentBlock1943():
     """the block of 05 04 01-4 as last revised, but its steady pins, its fixing stud and its slit as the German movements with this block have them (HOLES.block43; the slit
     along the plate through the upright's width, 8_Kirow_DEC_479_Feder.jpg, 8_Lange_5177_Feder.jpg, 8_Kirow_DEC_422_Feder.jpg): in the detent's frame (its recipe's)"""
@@ -214,7 +214,7 @@ def bankScrew6mx():
       lambda crest:[S('shank',f'Ø {crest:.3f}','6g',src),S('head',f'Ø {2*rH:.1f} across, a dome {hH} high on the underside at {lS:.2f}',"Kirov 247's: Ø 3.4 (3.45 ±0.1, 3.43 on 24020) (likely)",src)],
       [["through the upright's slit and both leaves, its thread tapped in the leaves; its dome on the wheel's side of the pipe, which rests on it"],
        "The banking screw of the 6MX's block: the pipe's flat face rests on its dome, turning it sets the depth of lock."],
-      "the dome's slot: the page draws it as a solid dark bar standing 0.01 out of the dome (0.34 wide, 0.45 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.45 under the top")
+      "the dome's slot: the page draws it as a solid dark bar standing 0.01 out of the dome (0.34 wide, 0.45 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.45 under the top; and the bar follows the curve 0.45 down, so at the rim it hangs 0.45 under the head's underside (0.4487), in the air")
 def _bs6():
     r=bankScrew6mx();r.rev='6mx';return r
 RECIPES['bankScrew6']=_bs6
@@ -329,7 +329,7 @@ def _blockFirst(ver):
     r=Recipe('detentBlock.first' if not p3 else 'detentBlock.3955','050401-4','Detent block (Gangfederkloben), '+('as first drawn' if not p3 else "as Wempe 3955's is photographed"),src,'brass (not read: 05 04_1 gives no material)','none',
       [Setup('1','brass block on the mill; the end holes drilled with the detent\'s foot at assembly',ops,view='top')],M,faces=("the plate's side","the free side"),
       fits=["screwed to the top plate's inner face by the M1.7 from hole 13, on its two steady pins","the detent's foot clamped to its end face by the M1 WN-gf","the banking screw across the arm's slit end"],
-      expect=[{'at':(0.0,s*(nA1+nA0)/2),'r':1.8,'max':0.2,'vol':vol,'why':"the banking screw's hole across the arm: the page draws it plain, a bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill (the threads' convention; a hole across has no thread zone)"}],
+      expect=[{'at':(0.0,s*(nA1+nA0)/2),'r':wA/2+0.3,'max':0.2,'vol':vol,'why':"the banking screw's hole across the arm: the page draws it plain, a bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill (the threads' convention; a hole across has no thread zone)"}],
       notes=["Drawn in the detent's frame (its recipe's): X along the detent, Y across it, Z under the top plate's inner face.",
              "The version as first drawn: a long arm toward the stone in place of the upright, the base's end face %s in from the sheet's line for 1436's thicker foot."%FD['dF']])
     r.rev=ver;r.show='first -3955' if not p3 else None;return r
@@ -349,8 +349,10 @@ def blockSix():
     src="05 04 01-4's form read in first angle as the 6MX has it (8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, 8_Kirow_247_F.jpg, 9_KirPol_24020_Feder2.jpg; escapement.js BLK.m6)"
     V=lambda t,n,z:bd.Vector(t,s*n,z);tp=M6['tp'];zf=2.3
     def body():
-        thin=_box(tT,tF,nE-tl,nE-bl,0,td,s)+_box(tS6,tF,nE-bl,nS0,0,td,s)
-        base=_box(tT,tS6,nE-bl,nE,0,bd_,s)+_box(tS6,tF,nS1,nE,0,bd_,s)+_box(tS6,tF,nE-bl,nS1,yN,bd_,s)
+        # the page's four cells (escapement.js: base6, thin6, nb6, nt6, the stud's notch between them), as it draws them: the thin part's corner stops at the notch's near wall nS0, which lies 0.35
+        # beyond the base's side (nE - 6.4), so a strip of the notch's wall 0.35 wide stands only from yN to the thin part's top
+        thin=_prism(_tn([(tT,nE-bl),(tT,nE-tl),(tF,nE-tl),(tF,nS0),(tS6,nS0),(tS6,nE-bl)],s),0,td)+_box(tS6,tF,nS0,nE-bl,yN,td,s)
+        base=_prism(_tn([(tT,nE),(tT,nE-bl),(tS6,nE-bl),(tS6,nS1),(tF,nS1),(tF,nE)],s),0,bd_)+_box(tS6,tF,nE-bl,nS1,yN,bd_,s)
         up=bd.extrude(bd.Face(bd.Wire.make_polygon([V(tT,nUl,ya),V(tE6,nUl,ya),V(tE6,nUr,ya),V(tT-tp[0],nUr,ya),V(tT,nUr-tp[1],ya)],close=True)),yb-ya,dir=(0,0,1))
         end=_box(tU,tE6,nUr,nUl,ya,yb,s)
         return thin+base+up+end
