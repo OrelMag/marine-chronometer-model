@@ -978,8 +978,7 @@ def settingCEU():return setting('settingCEU','050408-2.eu',"Escape wheel's upper
 def settingEL():return setting('settingEL','050406-2.el',"Escape wheel's lower jewel bush (Fassung)",WJ()['e']['jl'],'brass (Messing)',"pressed in the pillar plate's 26, reamed 2.50","a tube Ø 2.5 with a lip over the hole jewel's rim (Ø 1.606)")
 def settingCEL():return setting('settingCEL','050408-2.el',"Escape wheel's lower endstone setting (Fassung)",WJ()['e']['el'],'brass, gilt (Wempe 3955)',"in the pillar plate's 2.50 bore, its flange Ø 4.6 flush in the seat 0.25 deep in the dial face, under the plate's two screws","a tube to the stone, its window Ø 1.9 and a lip over the stone's rim (estimated; Wempe 3955, 3_Wempe_3955_uZ.jpg)")
 def _jscr(key,hn,title,q,mat,src):return screw(key,hn,title,q[0],q[1],q[2],q[3],mat,src)
-def _escU(r):
-    q=WJ()['BJ']['scrEU'];r.expect.append({'at':(0,0),'r':q[3]+0.1,'max':0.04,'why':f"the page's shank runs 0.1 into the head (screw()), but this head is only {q[1]} high and its slot (KIT headGeo) {max(min(0.55,q[1]*0.45),min(0.35,q[0]*0.14)+0.05):.3f} deep: the shank's end stands 0.032 up into the slot (the page's mesh, not the size)"});return r
+def _escU(r):return r   # the shank's end stood 0.032 up into the slot until 1 November 2026 (an expect entry); the kit's screw() now runs the shank only as far into a thin head as its slot's floor allows
 def jewelScrews():
     B=WJ()['BJ'];s='escapement.js BJ (the coloured section at 9.4 px/mm; Wempe 3955: heads Ø 2.5 sure, heights likely)'
     return {'settingScrewU':_jscr('settingScrewU','WN-55.ck',"Upper endstone setting's screw (WN-55), two",B['scrU'],'brass (Wempe 3955)',s),
@@ -1075,7 +1074,7 @@ def timingScrew():
          Cut(lambda:bd.Box(3,0.25,0.38,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,rI-T['hl']-0.1))),'Slot the head across, toward the staff',[S('slot','0.25 wide, 0.28 deep','estimated',src)],src)]
     r=Recipe('timingScrew','050301-2','Timing screw (Zeitschraube), two',src,'steel (not given)','none',[Setup('1','between centres; the head filed to the rim at the bench',ops)],
       BALM(),fits=['screwed through the rim at the arm\'s end, its head on the rim\'s inside'],
-      expect=[{'at':(0,0),'r':0.9,'max':0.15,'why':"the head's slot: the page draws it as a solid dark box (1.67 × 0.3 × 0.25, 0.02 out of the head's end) over the head, not cut into it"}])
+      )
     r.near=0.5;return r
 def timingWeight():
     X=WB();T=X['TSW'];src='05 03 01-3 (05 03_2: Ø 4.21-4.33 × 3.3; two saw cuts)';W1=T['TIP']-T['wo'];W0=W1-T['wl'];R=T['Rw'];th=_thr(2*T['rs'],T['p']);w,dA,dB=T['cut']
@@ -1408,10 +1407,9 @@ def _ex(f,*ex):
         r=f();r.expect+=list(ex);return r
     return g
 _ROOT="the page's blade is a separate closed piece whose root is an 8-segment arc on the boss's radius, against the boss's 72-sided wall: a hairline gap (0.003) the check reads as a face with metal both sides of it, not a hole the page has and the recipe hasn't; the recipe joins them in one solid"
-RECIPES.update({'cannon':cannon,'minuteHand':_ex(minuteHand,{'at':(0,3.0),'r':0.9,'max':0.12,'why':_ROOT}),
-  'hourHand':_ex(hourHand,{'at':(0,3.9),'r':1.3,'max':0.12,'why':"the blade's root is a wedge whose underside follows the bevel's cone as cells of one flat triangle pair each every 0.25, across a blade 1.7 wide: the page's underside there likely departs from the true cone by up to 0.1 where the wedge lies on it; the recipe has the exact cone and the wedge fused to it"}),
-  'udHand':_ex(udHand,{'at':(0,2.2),'r':0.6,'max':0.1,'why':_ROOT}),'secondsHand':_ex(secondsHand,{'at':(0,-6.5),'r':0.6,'max':0.04,'why':"the tail's thickness steps from 0.3 to 0.5 between 6.4 and 6.6 (the table's rows), but the page samples it at its stations 6.35, 6.5, 6.55 and 6.6: it reads the ramp 0.027 off the table; the recipe is the table"},
-    {'at':(0,1.5),'r':0.6,'max':0.04,'why':_ROOT}),'collet':collet,'dial':dial,'dialScrew':dialScrew,'dialPin':dialPin})
+RECIPES.update({'cannon':cannon,'minuteHand':minuteHand,
+  'hourHand':hourHand,
+  'udHand':udHand,'secondsHand':secondsHand,'collet':collet,'dial':dial,'dialScrew':dialScrew,'dialPin':dialPin})
 
 RECIPES.update({'changePipe':changePipe,'hourPipe':hourPipe,'udHub':udHub,'changeWheel':changeWheel,'hourWheel':hourWheel,'udWheel':udWheel,'changePinion':changePinion,'udPinion':udPinion})
 
@@ -1422,8 +1420,7 @@ def screwKr():return caseScrew('screwKr','WN-kr','Gimbal ring bracket screw (WN-
 def screwHg():return caseScrew('screwHg','WN-hg','Hinge screw (WN-hg)','hg','steel (the case sheets)','dims.js CASE.hg (51 00 10, the hinge: Ø 6 head × 1.6, M3.5 × 16.5, estimated)',["A wood screw in the box; drawn as the kit's machine screw, so the recipe makes it so."])
 def screwKh():return caseScrew('screwKh','WN-kh','Key holder screw (WN-kh)','kh','steel (the case sheets)','dims.js CASE.kh (51 00 11, the key holder: Ø 2.2 head × 1.0, M1.2 × 10, estimated)',["A wood screw in the box; drawn as the kit's machine screw."])
 def screwZg():return caseScrew('screwZg','WN-zg','Transit lock pivot screw (WN-zg)','zg','steel (the case sheets)','dims.js CASE.zg (05 01, the transit lock: Ø 9 head × 2, M6 × 12, estimated)',['Its head Ø 9 is estimated (case.js).'])
-def screwZgX():
-    r=screwZg();r.box_tol=0.03;r.expect.append({'at':(0,0),'r':5.0,'max':0.03,'why':"the kit draws a screw's head a 32-sided polygon: a Ø 9 head's chords lie 0.0225 inside the true circle the recipe turns (the first head large enough to pass the 0.02 of the check)"});return r
+def screwZgX():return screwZg()   # the kit's head over r 2 on more segments since 1 November 2026: no exception
 RECIPES.update({'screwKr':screwKr,'screwHg':screwHg,'screwKh':screwKh,'screwZg':screwZgX})
 from . import wempe_fusee as _wf; RECIPES.update(_wf.RECIPES)   # batch 9d (fusee body, the fusee side's screws and arbor): tools/recipes/wempe_fusee.py
 from .wempe_esc import RECIPES as _ESC; RECIPES.update(_ESC)   # batch 8c (the hairspring collet and stud, WN-10/11/12, the 1943 detent block): tools/recipes/wempe_esc.py

@@ -89,10 +89,7 @@ def screwT(key,hn,title,r,h,ln,rs,material,src,tip,notes=()):
         SlotHead(h+Lt,w,s_,'Mill the slot across the head',[S('slot',f'{w:.2f} wide × {s_:.2f} deep',None,'KIT headGeo')],src)])],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,Lt,0)),notes=list(notes)+["The slot's width and depth are the model's convention (KIT headGeo), no drawing's."])
 def _hd(f,r,bound):
-    """a screw whose head the kit draws a 32-sided polygon: its chords lie r(1 - cos(pi/32)) inside the true circle the recipe turns (a head over about Ø 8 passes 0.02)"""
-    def g():
-        x=f();x.box_tol=bound;x.expect.append({'at':(0,0),'r':r+0.5,'max':bound,'why':f"the kit draws a screw's head a 32-sided polygon: a Ø {2*r:g} head's chords lie {r*(1-math.cos(math.pi/32)):.3f} inside the true circle the recipe turns"});return x
-    return g
+    return f   # the kit's heads over r 2 are on more segments since 1 November 2026 (chords under 0.004 inside the circle): no exception, no box allowance
 _x79=lambda f:_hd(f,Q()['P79']['hr'],0.03)
 def screw79():
     P=Q()['P79'];R=Q()['RG'];RO=R['RO'];ln=RO-P['ex']
@@ -116,7 +113,6 @@ def closingPlate():
       Point((q12[0],q12[1],zb),(0,0,1),C['hr'],2*C['ang'],'Its drill point (118°), the tip 0.15 short of the boss\'s face',[S('point','118°',None,src)],src,tipr=0.0)]
     return Recipe('closingPlate','050100-2','Closing plate (Verschlußplatte)',src,'brass (Ms)','none',[Setup('1','plate in the chuck, then on the drill',ops,view='top')],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,YB+C['y1'],0)),faces=('inner face (on the bowl)','outer face (boss)'),
-      expect=[{'at':(0,0),'r':fc+0.2,'max':0.03,'why':'the page draws the round r 1.3 between rim and boss in four straight rings (22.5° of the arc each): its chords lie up to 0.025 inside the true arc the recipe turns'}],
       notes=['Turns on its screw WN-71 (a shoulder screw) in the bowl\'s bottom, by the knob WN-72; the closing spring (05 01 00-7) holds it. Wempe 3955\'s plate has two small holes through its boss: not in this version.'])
 
 # ---------------- the bowl (Gehäusetopf R-05 01 00-1, 6.3.42) ----------------

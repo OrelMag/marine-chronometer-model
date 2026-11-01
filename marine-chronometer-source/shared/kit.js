@@ -379,7 +379,8 @@ const KIT=(()=>{
         cells.push({loop:ccw(ARC[0]),y0:dome>0?yD:-h,y1:0});   /* the middle: the first arc closed by the slot's edge */
         for(let i=1;i<A.length;i++)cells.push({loop:ccw([...ARC[i],...ARC[i-1].slice().reverse()]),y0:top,y1:0,strip:1});}   /* the rings, open at the slot: strips (their arcs paired point for point), so a chamfer or the dome's ring is straight across, not faceted along chords (earcut's until 26 October 2026) */
       const X=A.map(a=>Math.sqrt(a*a-hw*hw));
-      cells.push({loop:ccw([...X.slice().reverse().map(x=>[x,-hw]).reverse(),...X.slice().reverse().map(x=>[x,hw]),...X.map(x=>[-x,hw]),...X.slice().reverse().map(x=>[-x,-hw])]),y0:-h+s,y1:0});   /* the slot's strip, its ends on the rim */
+      const t0=Math.asin(hw/r),EA=[1,2,3].map(k=>-t0+2*t0*k/4),eR=EA.map(t=>[r*Math.cos(t),r*Math.sin(t)]),eL=EA.map(t=>[-r*Math.cos(t),-r*Math.sin(t)]);   /* the slot's mouth on the rim: points on the circle between its two edges, so the end wall is the rim's arc, not a chord 0.0225 inside it at a Ø 9 head */
+      cells.push({loop:ccw([...X.slice().reverse().map(x=>[x,-hw]).reverse(),...eR,...X.slice().reverse().map(x=>[x,hw]),...X.map(x=>[-x,hw]),...eL,...X.slice().reverse().map(x=>[-x,-hw])]),y0:-h+s,y1:0});   /* the slot's strip, its ends on the rim */
       const G=solidGeo(cells),P=G.attributes.position.array,N=G.attributes.normal.array;   /* the cap's, the chamfer's and the rim's triangles shaded round (their own normals), not faceted */
       for(let t=0;t<P.length;t+=9){const nx=N[t],ny=N[t+1],nz=N[t+2],cx=(P[t]+P[t+3]+P[t+6])/3,cz=(P[t+2]+P[t+5]+P[t+8])/3,cr=Math.hypot(cx,cz)||1,rim=Math.abs(ny)<0.05&&(nx*cx+nz*cz)/cr>0.9;
         const cap=dome>0&&ny<0&&[0,3,6].every(o=>Math.abs(P[t+o+1]-yD([P[t+o],P[t+o+2]]))<1e-4),cone=!dome&&Math.abs(ny)>0.05&&Math.abs(ny)<0.95;
@@ -390,7 +391,8 @@ const KIT=(()=>{
     const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null,dome=0,sl=null)=>{
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
       const hd=mesh(g,headGeo(r,h,dome,sl?sl.w:0,sl?sl.s:0),mt||M.steel);hd.userData.screw=r;hd.rotation.y=sl&&sl.a!=null?sl.a:(x*7+z*3)%3;   /* the slot's heading: arbitrary, as before, unless given */
-      if(len>0){const sh=mesh(g,threadGeo(rs,-0.1,len),mt||M.steel);sh.userData.thread={rs,p:isoP(rs)};g.userData.sc.p=isoP(rs);}   /* the shank from 0.1 inside the head: an ISO thread, its phase whole pitches from the seat, a chamfered tip */
+      if(len>0){const em=dome>0?0.1:Math.max(0.02,Math.min(0.1,h-(sl&&sl.s?sl.s:Math.max(Math.min(0.55,h*0.45),Math.min(0.35,r*0.14)+0.05))-0.005)),sh=mesh(g,threadGeo(rs,-em,len),mt||M.steel);   /* em: how far the shank runs into the head, 0.1, less where the head is so thin that the slot's floor is nearer (the escape wheel's endstone screws: 0.3 high, the slot 0.232 deep; the shank's end stood up into the slot until 1 November 2026) */
+        sh.userData.thread={rs,p:isoP(rs)};g.userData.sc.p=isoP(rs);}   /* the shank from 0.1 inside the head: an ISO thread, its phase whole pitches from the seat, a chamfered tip */
       return g;};
     /* the API the page and the tools read: the parts, the screws and loose pieces (exploded.py), explode(e) (0 as built, 1 spread) */
     const done=()=>{mv.userData.parts=P;mv.userData.lifted=SCREWS;
@@ -410,7 +412,7 @@ const KIT=(()=>{
   const slotHeadGeo=o=>{const{r,hw,yF,flip=false,n=24,m=4}=o,fn=f=>typeof f==='function'?f:()=>f,T0=fn(o.top),B0=fn(o.bot||0),e=1e-9,sn=f=>q=>{const v=f(q);return Math.abs(v-yF)<1e-7?yF:v;},T=sn(T0),B=sn(B0);   /* heights within 1e-7 of the floor are the floor's (the circle where face and floor meet carries no sliver) */
     const out=rho=>T([rho,0])<=yF+e||B([rho,0])>=yF-e;let lo=hw,hi=r;if(out(r)){for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(out(mid))hi=mid;else lo=mid;}}const rf=out(r)?hi:r,s2=T([r,0])<yF-1e-7&&rf<r-1e-7;
     const a1=hw+Math.min(0.1,(r-hw)/3),A=[a1];let br=[...(o.bp||[]).filter(v=>v>a1+1e-6&&v<r-1e-6)];if(rf<r-1e-6&&rf>a1+1e-6)br.push(rf);br.push(r);br.sort((u,w)=>u-w);
-    for(const v of br){const u=A[A.length-1],k=Math.max(1,Math.ceil((v-u)/0.2-1e-9));for(let i=1;i<=k;i++)A.push(u+(v-u)*i/k);A[A.length-1]=v;}
+    for(const v of br){const u=A[A.length-1],ds=Math.hypot(v-u,T([v,0])-T([u,0]),B([v,0])-B([u,0])),k=Math.max(1,Math.ceil((v-u)/0.2-1e-9),Math.ceil(ds/0.1-1e-9));   /* rails at most 0.2 apart in plan and 0.1 along the surface (a dome's steep rim) */for(let i=1;i<=k;i++)A.push(u+(v-u)*i/k);A[A.length-1]=v;}
     const J=rf>=r-1e-6?A.length-1:A.findIndex(v=>Math.abs(v-rf)<1e-6),sgs=[1,-1];
     const ccw=L=>area(L)<0?L.slice().reverse():L,cells=[],strip=typeof o.top==='function'||typeof o.bot==='function';
     const arc=(a,sg)=>{const t0=Math.asin(hw/a);return[...Array(n+1).keys()].map(i=>{const t=t0+(Math.PI-2*t0)*i/n;return[a*Math.cos(t),sg*a*Math.sin(t)];});};
@@ -422,8 +424,10 @@ const KIT=(()=>{
     const sm=a=>{const t0=Math.asin(hw/a);return[...Array(m+1).keys()].map(i=>{const t=-t0+2*t0*i/m;return[a*Math.cos(t),a*Math.sin(t)];});};
     const SM={};for(let j=J;j<A.length;j++)SM[j]=sm(A[j]);
     const sT=side(1),sB=side(-1).slice().reverse(),ends=SM[J];   /* the slot's floor: along z −hw with x rising, round the right end (z −hw to +hw), back along z +hw, round the left */
-    const rt=ends.map((q,i)=>i===0?sB[sB.length-1]:i===m?sT[0]:q),lf=ends.map((q,i)=>[-q[0],-q[1]]).map((q,i,a)=>i===0?sT[sT.length-1]:i===m?sB[0]:[-ends[m-i][0],ends[m-i][1]]);
-    cells.push({loop:ccw([...sB,...rt.slice(1,m),...sT,...lf.slice(1,m)]),y0:B,y1:yF});
+    const rt=ends.map((q,k)=>k===0?sB[sB.length-1]:k===m?sT[0]:q),lf=ends.map((q,k)=>k===0?sT[sT.length-1]:k===m?sB[0]:[-ends[m-k][0],ends[m-k][1]]),sTa=sT.slice().reverse(),Mx=sB.map(q=>[q[0],0]);
+    /* the slot's floor in slices between the columns on its walls (the cone's kink and every rail fall on a slice's edge), each cut in two along the slot's middle so the face under it (a cone) is met near enough there too, and the two ends the circle's segments */
+    for(let k=0;k+1<sB.length;k++){cells.push({loop:ccw([sB[k],sB[k+1],Mx[k+1],Mx[k]]),y0:B,y1:yF},{loop:ccw([Mx[k],Mx[k+1],sTa[k+1],sTa[k]]),y0:B,y1:yF});}
+    cells.push({loop:ccw([...rt,Mx[Mx.length-1]]),y0:B,y1:yF},{loop:ccw([...lf,Mx[0]]),y0:B,y1:yF});
     if(s2)for(let j=J;j<A.length-1;j++)for(const sx of[1,-1]){const q0=SM[j].map(q=>[sx*q[0],q[1]]),q1=SM[j+1].map(q=>[sx*q[0],q[1]]);
       const fix=(q,j)=>q.map((p,i)=>{const sg=i===0?-1:i===m?1:0;return sg?(sx>0?P[sg][j][0]:P[sg][j][n]):p;});
       cells.push({loop:ccw([...fix(q1,j+1),...fix(q0,j).slice().reverse()]),y0:B,y1:T,strip:strip?1:0});}

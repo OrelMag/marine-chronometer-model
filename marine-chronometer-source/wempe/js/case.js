@@ -459,8 +459,9 @@ const WCASE=(()=>{
        2 −0.05/−0.1 at its middle, 1.925 (2.00 until then: 10-M2); the plate turns on WN-71's shoulder (below) */
     {const t8=Math.atan2(H[10][1],H[10][0]),tk=t8+Math.PI/2,s0=t8-Math.PI/4,P=(r,t)=>[r*Math.cos(t),r*Math.sin(t)],CP=WD.CASEQ.CP,y0=YB+CP.y0,yr=YB+CP.yr,y1=YB+CP.y1;
       const q12=P(CP.q,tk),yt=y0+CP.tip,yh=yt+CP.hr/Math.tan(CP.ang*D2R),ro=CP.ro,fc=CP.bo+ro,fy=p=>yr-ro+Math.sqrt(Math.max(0,ro*ro-(rr(p)-fc)**2));   /* the blind hole's point (yt its tip, yh its top); the round about (fc, yr − ro) */
-      const rs=[CP.g[0],CP.g[1],CP.bo,...[1,2,3].map(i=>fc-ro*Math.cos(i*Math.PI/8)),fc,CP.R],ys=[[y0,y1],[y0,y1-CP.g[2]],[y0,y1],[fy,y1],[fy,y1],[fy,y1],[fy,y1],[yr,y1]];   /* the round in four rings, 22.5° of it each */
-      const F=[[{p:C([0,0],CP.bore/2,48),a:y0,b:y1},{p:C([0,0],CP.cb[0]/2,60),a:y0,b:y0+CP.cb[1]}],[{p:C(q12,CP.hr,24),a:yh,b:y1-CP.g[2]},{p:C(q12,CP.cr[0],24),q:C(q12,CP.cr[1],24),a:yt,b:yh}],[],[],[],[],[],
+      const NR=16,pad=n=>[...Array(n)].map(()=>[]),mid=[...Array(NR-1).keys()].map(i=>fc-ro*Math.cos((i+1)*Math.PI/(2*NR)));
+      const rs=[CP.g[0],CP.g[1],CP.bo,...mid,fc,CP.R],ys=[[y0,y1],[y0,y1-CP.g[2]],[y0,y1],...mid.map(()=>[fy,y1]),[fy,y1],[yr,y1]];   /* the round in sixteen rings, 5.6° of it each (four of 22.5° until 1 November 2026: the chords lay 0.025 inside the arc) */
+      const F=[[{p:C([0,0],CP.bore/2,48),a:y0,b:y1},{p:C([0,0],CP.cb[0]/2,60),a:y0,b:y0+CP.cb[1]}],[{p:C(q12,CP.hr,24),a:yh,b:y1-CP.g[2]},{p:C(q12,CP.cr[0],24),q:C(q12,CP.cr[1],24),a:yt,b:yh}],...pad(NR+1),
         [{p:C(P(CP.w[0],t8),CP.w[1]/2,72),a:yr,b:y1},{p:C(P(CP.k[0],tk),CP.k[1],32),a:yr,b:y1}]];
       /* Wempe 3955's (the version as photographed: 16_Wempe_3955_Gehäusetopf_Kardan.jpg, its plate's ellipse 0.80 and Ø 68 scaling it at 6.65 px/mm, which puts the Ø 8 at
          23.7 from the centre, the knob at 25.3 and the boss at Ø 31: the sheet's plate): its face a matte neutral grey (saturation 0.03, value 0.49 against the background's
@@ -480,7 +481,7 @@ const WCASE=(()=>{
          domed knob about Ø 6.5 at r 19 ±2 (25 on 05 01 00-2): 14917's, scaled by the recess's Ø 68.2 (likely). The plate the drawings' 2.3 at its rim throughout, its groove,
          holes and spring as theirs; the Ø 8 over the winding hole as drawn (Kirow 422's reads 6.7: a German-made bowl) */
       {const c6=rv(cp,'6mx'),ys6=ys.map((q,i)=>[yr,i===1?y1-1.5:y1]),yt6=yr+0.15,yh6=yt6+0.6/Math.tan(59*D2R),k6=P(19,tk);
-        const F6=[[{p:C([0,0],3.2/2,48),a:yr,b:y1}],[{p:C(q12,0.6,24),a:yh6,b:y1-1.5},{p:C(q12,0.03,24),q:C(q12,0.59,24),a:yt6,b:yh6}],[],[],[],[],[],
+        const F6=[[{p:C([0,0],3.2/2,48),a:yr,b:y1}],[{p:C(q12,0.6,24),a:yh6,b:y1-1.5},{p:C(q12,0.03,24),q:C(q12,0.59,24),a:yt6,b:yh6}],...pad(NR+1),
           [{p:C(P(22.6,t8),8.1/2,72),a:yr,b:y1},{p:C(k6,1.32,32),a:yr,b:y1}]];
         tag(mesh(c6,smoothRev(solidGeo(cells(rs,ys6,F6,s0))),M.brass),'050100-2');
         tag(screw(c6,0,0,yr,WD.CASEQ.S71.f.r,WD.CASEQ.S71.f.h,WD.CASEQ.S71.f.len,WD.CASEQ.S71.f.rs,M.steel),'WN-71.f');   /* the head Ø 8 on the plate's face (2.4 high estimated), M3 through its Ø 3.2 into the bottom */
@@ -946,22 +947,22 @@ const WCASE=(()=>{
          leg 3 thick and 12 wide against the right wall, from the seat's top 22 down, its lower corners rounded r 3, two round-headed wood screws (DIN 96, 3 × 15: head Ø 5.6,
          2.1 high) 7 and 16 under the seat's top; the seat 4 thick under the lever, from the wall to the pivot, its end round about it (r 6, the same 12 wide), bored Ø 4.1
          for the lever's arbor. Its sizes estimated, fitted to the drawn lever and pivot (the seat's top the lever's underside) */
-      {const LS=V==='6mx'?M.steel:CB,W0=LQ.br.W0,W1=LQ.br.W1,yt=ly,yb=ly-LQ.br.h,rc=LQ.br.rc,arc=(cx,cy,a0,a1)=>[...Array(9).keys()].map(k=>{const t=a0+(a1-a0)*k/8;return[cx+rc*Math.cos(t),cy+rc*Math.sin(t)];});
+      {const LS=V==='6mx'?M.steel:CB,W0=LQ.br.W0,W1=LQ.br.W1,yt=ly,yb=ly-LQ.br.h,rc=LQ.br.rc,arc=(cx,cy,a0,a1)=>[...Array(33).keys()].map(k=>{const t=a0+(a1-a0)*k/32;return[cx+rc*Math.cos(t),cy+rc*Math.sin(t)];});
         const wl=[[W0,yt],...arc(W0+rc,yb+rc,Math.PI,1.5*Math.PI),...arc(W1-rc,yb+rc,1.5*Math.PI,2*Math.PI),[W1,yt]];   /* [z, y] round the wall leg */
         const wg=polyGeo(wl.map(([u,v])=>[-v,u]),LQ.br.tw);wg.rotateZ(-Math.PI/2);wg.translate(Wx-LQ.br.tw,0,0);tag(mesh(g,wg,LS),'050101.F.b');   /* plan [−y, z] extruded 3 along +y, turned so the extrusion runs along +x */
-        const sp=[[Wx-LQ.br.tw,W0],[Wx-LQ.br.tw,W1],...[...Array(17).keys()].map(k=>{const t=Math.PI/2+Math.PI*k/16;return[c[0]+LQ.br.sr*Math.cos(t),c[1]+LQ.br.sr*Math.sin(t)];})];
+        const sp=[[Wx-LQ.br.tw,W0],[Wx-LQ.br.tw,W1],...[...Array(65).keys()].map(k=>{const t=Math.PI/2+Math.PI*k/64;return[c[0]+LQ.br.sr*Math.cos(t),c[1]+LQ.br.sr*Math.sin(t)];})];
         const sg=polyGeo(sp,LQ.br.ts,[[c[0],c[1],LQ.br.hr]]);sg.translate(0,ly-LQ.br.ts,0);tag(mesh(g,sg,LS),'050101.F.b',1);
         for(const yy of LQ.br.sy.map(d=>yt-d))tag(screw(along(g,[Wx-LQ.br.tw,yy,(W0+W1)/2],[1,0,0]),0,0,0,...LQ.br.sc,M.steel),'DIN96');}
-      tag(cylBetween(g,LQ.ar.r,ly-LQ.ar.y0,lt+LQ.ar.y1,M.steel,c[0],c[1],20),'050101.F.a');tag(cylBetween(tq,LQ.hub.r,lt-LQ.hub.y0,lt+LQ.hub.y1,LB,c[0],c[1],32),'050101.F.h');   /* the lever's arbor through the seat, its riveted end 0.3 proud under it (estimated; flush, its end and the seat's underside one face), and the hub (Ø 9.8) to the knob */
-      const lv=polyGeo(stadiumPts(c,e,LQ.lw),LQ.lt);lv.translate(0,ly,0);tag(mesh(tq,lv,LB),'050101.F.l');const pf=L6?LQ.pf[1]:PF,pp=[c[0]+(e[0]-c[0])*pf,c[1]+(e[1]-c[1])*pf];tag(cylBetween(tq,LQ.pin.r,ly+LQ.pin.y0,V==='6mx'?lt+LQ.pin.t[1]:lt+LQ.pin.t[0],LB,pp[0],pp[1],16),'050101.F.p');   /* under a head, its end inside it */
+      tag(cylBetween(g,LQ.ar.r,ly-LQ.ar.y0,lt+LQ.ar.y1,M.steel,c[0],c[1],64),'050101.F.a');tag(cylBetween(tq,LQ.hub.r,lt-LQ.hub.y0,lt+LQ.hub.y1,LB,c[0],c[1],120),'050101.F.h');   /* (the arbor, hub, pin, head and knob on 64 to 120 sides, the seat's round end and the wall leg's corners on 64 and 32 chords: 20, 32, 16, 40, 16 and 8 until 1 November 2026, their chords 0.025-0.038 inside the circles) the lever's arbor through the seat, its riveted end 0.3 proud under it (estimated; flush, its end and the seat's underside one face), and the hub (Ø 9.8) to the knob */
+      const lv=polyGeo(stadiumPts(c,e,LQ.lw),LQ.lt);lv.translate(0,ly,0);tag(mesh(tq,lv,LB),'050101.F.l');const pf=L6?LQ.pf[1]:PF,pp=[c[0]+(e[0]-c[0])*pf,c[1]+(e[1]-c[1])*pf];tag(cylBetween(tq,LQ.pin.r,ly+LQ.pin.y0,V==='6mx'?lt+LQ.pin.t[1]:lt+LQ.pin.t[0],LB,pp[0],pp[1],64),'050101.F.p');   /* under a head, its end inside it */
       /* the pin's round head (the drawings' case): Wempe No. 3044's (milivault_529241_wempe3044_screen.png, from above, 4.8 px/mm by the knob's Ø 19.6) Ø 8.7 ±1, brass, slotted,
          its shank about Ø 4 under it; Greenwich's wartime Wempe's round too (5377's plain: the 6MX's kept so). Its height not seen: 2.5 thick, its top the pin's (estimated) */
-      if(V!=='6mx'){const hd=KIT.latheF([V2(0,0),V2(LQ.hd.r,0),V2(LQ.hd.r,LQ.hd.h),V2(LQ.hd.r-LQ.hd.c,LQ.hd.h+LQ.hd.c),V2(0,LQ.hd.h+LQ.hd.c)],40);tag(mesh(tq,hd,LB,pp[0],lt+LQ.hd.y,pp[1]),'050101.F.p',1);}   /* its slot not drawn */
+      if(V!=='6mx'){const hd=KIT.latheF([V2(0,0),V2(LQ.hd.r,0),V2(LQ.hd.r,LQ.hd.h),V2(LQ.hd.r-LQ.hd.c,LQ.hd.h+LQ.hd.c),V2(0,LQ.hd.h+LQ.hd.c)],120);tag(mesh(tq,hd,LB,pp[0],lt+LQ.hd.y,pp[1]),'050101.F.p',1);}   /* its slot not drawn */
       /* the knob knurled round its side (Greenwich's wartime Wempe, black; Wempe 6161 and 5377, brass: every photographed one): the band 0.5 to 4.0, 0.35 deep (estimated).
          Brass with its hub, lever and pin on the drawings' brass case, as on Wempe No. 6161's (antiquorum_208-4_wempe6161.jpg: the knurled knob, the hub and the lever brass; one
          photograph: likely; the knob black and the rest steel until 18 October 2026); the 6MX's black on steel (Wempe 5377's and 4585's black) */
-      tag(mesh(tq,KIT.latheF([V2(0,0),V2(LQ.kn.r,0),V2(LQ.kn.r1,LQ.kn.t0),V2(0,LQ.kn.t0)],40),LK,c[0],lt+LQ.kn.y,c[1]),'050101.F.k');tag(mesh(tq,knurl(LQ.kn.rk,LQ.kn.d,LQ.kn.h,LQ.kn.n),LK,c[0],lt+LQ.kn.y1,c[1]),'050101.F.k',1);
-      tag(mesh(tq,KIT.latheF([V2(0,LQ.kn.top),V2(LQ.kn.r1,LQ.kn.top),V2(LQ.kn.r,LQ.kn.y2),V2(0,LQ.kn.y2)],40),LK,c[0],lt+LQ.kn.y,c[1]),'050101.F.k',1);}
+      tag(mesh(tq,KIT.latheF([V2(0,0),V2(LQ.kn.r,0),V2(LQ.kn.r1,LQ.kn.t0),V2(0,LQ.kn.t0)],120),LK,c[0],lt+LQ.kn.y,c[1]),'050101.F.k');tag(mesh(tq,knurl(LQ.kn.rk,LQ.kn.d,LQ.kn.h,LQ.kn.n),LK,c[0],lt+LQ.kn.y1,c[1]),'050101.F.k',1);
+      tag(mesh(tq,KIT.latheF([V2(0,LQ.kn.top),V2(LQ.kn.r1,LQ.kn.top),V2(LQ.kn.r,LQ.kn.y2),V2(0,LQ.kn.y2)],120),LK,c[0],lt+LQ.kn.y,c[1]),'050101.F.k',1);}
 
     /* ================= the winding key (Chronometerschlüssel 51 00 11, 16.7.43: one way) ================= */
     /* "Linksaufzug b. Rechtsdrehung entspannt sich die Feder": a coil spring round the tube grips it as the key winds and slips the other way, so the key can't be forced
