@@ -257,7 +257,8 @@ const KIT=(()=>{
   /* solidGeo(cells): one closed solid, facing out, from plan cells, each {loop, y0, y1, F}: the cell's outline (cells that touch share their points along the boundary,
      each listing it the other way round), the depths it fills (y0 < y1; either may be a function of the plan point, for a sloped face) and its features F, which take metal
      away inside it: {p, a, b, q?, floorOut?, anchor?}: the plan outline p cut from depth a to b (one end on the cell's face y0 or y1, or both: a hole through); q an outline of as
-     many points as p where the cut's wall ends (a cone: p where it starts, q where it ends); floorOut the outline of its floor where p shares part of its edge with a feature
+     many points as p where the cut's wall ends (a cone: p where it starts, q where it ends); tip: 1 a cone to a point (a drill's point: p or q the apex, its one point
+     repeated; no floor, the anchor the apex; 1 November 2026); floorOut the outline of its floor where p shares part of its edge with a feature
      inside it (the floor is p less the features under it otherwise). Features are nested or apart, never crossing (cross them first with bool, and give the floor). A feature's wall
      runs from the floor of the feature it's in (or the face) to its own floor; cells with features have flat faces. Where two cells touch, the one that reaches further gets the wall
      between their depths. Walls are split where another wall at the same corner ends, so no edge has a vertex in its middle. A sloped cell with strip: 1 has its sloped face
@@ -292,24 +293,24 @@ const KIT=(()=>{
         if(o==null){wall(p,q,a0,b0,a1,b1,n);continue;}const d=cells[o],[c0,d0,c1,d1]=[yv(d.y0,p),yv(d.y1,p),yv(d.y0,q),yv(d.y1,q)];
         if(c0>a0+e||c1>a1+e)wall(p,q,a0,Math.min(b0,c0),a1,Math.min(b1,c1),n);if(d0<b0-e||d1<b1-e)wall(p,q,Math.max(a0,d0),b0,Math.max(a1,d1),b1,n);}
       const F=c.F||[],y0=c.y0,y1=c.y1;if(F.length&&(typeof y0==='function'||typeof y1==='function'))throw new Error('solidGeo: features in a sloped cell');
-      for(const f of F){f.a=Math.max(f.a,y0);f.b=Math.min(f.b,y1);f.A=f.a<=y0+e;f.B=f.b>=y1-e;f.ar=Math.abs(area(f.p));f.an=f.anchor||cen(f.p);}
+      for(const f of F){f.a=Math.max(f.a,y0);f.b=Math.min(f.b,y1);f.A=f.a<=y0+e;f.B=f.b>=y1-e;f.ar=Math.abs(area(f.p));f.an=f.anchor||(f.tip&&!f.ar?f.p[0]:cen(f.p));}
       const inF=(f,g)=>f!==g&&(f.ar>g.ar+e||f.p===g.p&&!(f.A&&f.B)&&g.A&&g.B)&&pip(g.an,f.p);   /* g inside f; a hole through and a cut sharing its outline (where a cone starts): the cut holds the hole */
       for(const g of F){const ps=F.filter(f=>inF(f,g)&&!(f.A&&f.B));   /* the features g is in (a hole through holds nothing) */
         g.lo=g.A?Math.max(y0,...ps.filter(f=>f.A&&!f.B).map(f=>f.b)):g.a;g.hi=g.B?Math.min(y1,...ps.filter(f=>f.B&&!f.A).map(f=>f.a)):g.b;}
       const at=(f,y)=>f.q&&Math.abs(y-f.hi)<e?f.q:f.p;
       const maxi=S=>S.filter(g=>!S.some(f=>inF(f,g)));
-      for(const g of F){if(g.hi-g.lo<e)continue;const sg=Math.sign(area(g.p));
+      for(const g of F){if(g.hi-g.lo<e)continue;const sg=Math.sign(area(g.p))||(g.tip?Math.sign(area(g.q)):0);
         if(g.th){threadWall(g.p,g.th,g.lo,g.hi,tri);TH.push({c:cen(g.p),rs:g.th.rs,p:g.th.p||isoP(g.th.rs),yr:g.th.yr||0,lo:g.lo,hi:g.hi});continue;}   /* a tapped hole: its wall the inside thread (threadWall) */
         if(g.q){cone.push([g.p,g.q,g.lo,g.hi,sg]);continue;}for(let i=0;i<g.p.length;i++){const p=g.p[i],q=g.p[(i+1)%g.p.length];wall(p,q,g.lo,g.hi,g.lo,g.hi,nOut(p,q,-sg));}}
       /* floors: an A feature's (open on y0) at its b facing -y, none where it opens into a B feature round it; a B feature's at its a facing +y */
-      for(const g of F){if(g.A&&g.B)continue;const y=g.A?g.b:g.a;if(g.A&&F.some(f=>f.B&&!f.A&&inF(f,g)&&f.a<=y+e))continue;if(g.B&&F.some(f=>f.A&&!f.B&&inF(f,g)&&f.b>=y-e))continue;
+      for(const g of F){if(g.A&&g.B||g.tip)continue;const y=g.A?g.b:g.a;if(g.A&&F.some(f=>f.B&&!f.A&&inF(f,g)&&f.a<=y+e))continue;if(g.B&&F.some(f=>f.A&&!f.B&&inF(f,g)&&f.b>=y-e))continue;
         const out=g.floorOut||(g.A?at(g,g.b):g.p),hs=maxi(F.filter(f=>f!==g&&f.a<=y+e&&f.b>=y-e&&(g.A?f.b>y+e:f.a<y-e)&&pip(f.an,out))).map(f=>at(f,y));
         if(hs.some(h=>h===out))continue;face(out,hs,y,g.A?-1:1);}
       if(typeof y0==='number')face(L,maxi(F.filter(f=>f.A)).map(f=>at(f,y0)),y0,-1);else if(c.strip)strip(L,y0,-1);else face(L,[],y0,-1);
       if(typeof y1==='number')face(L,maxi(F.filter(f=>f.B)).map(f=>at(f,y1)),y1,1);else if(c.strip)strip(L,y1,1);else face(L,[],y1,1);});
     for(const[p,q,a0,b0,a1,b1,n]of W){const ls=(x,a,b)=>[a,...(LV.get(K(x))||[]).filter(v=>v>a+e&&v<b-e).sort((u,w)=>u-w),b],L0=ls(p,a0,b0),L1=ls(q,a1,b1);let i=0,j=0;   /* a ladder up the two edges, a rung wherever either edge has a depth */
       while(i<L0.length-1||j<L1.length-1){if(j>=L1.length-1||(i<L0.length-1&&L0[i+1]<=L1[j+1])){tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[p[0],L0[i+1],p[1]],n);i++;}else{tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[q[0],L1[j+1],q[1]],n);j++;}}}
-    for(const[A,B,lo,hi,s]of cone)for(let i=0;i<A.length;i++){const j=(i+1)%A.length,a=A[i],b=A[j],c=B[j],d=B[i],n=nOut(a,b,-s);
+    for(const[A,B,lo,hi,s]of cone)for(let i=0;i<A.length;i++){const j=(i+1)%A.length,a=A[i],b=A[j],c=B[j],d=B[i],n=a[0]===b[0]&&a[1]===b[1]?nOut(d,c,-s):nOut(a,b,-s);
       tri([a[0],lo,a[1]],[b[0],lo,b[1]],[c[0],hi,c[1]],n);tri([a[0],lo,a[1]],[c[0],hi,c[1]],[d[0],hi,d[1]],n);}
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));if(TH.length)g.userData.threads=TH;return g;}
   /* a tapped hole's wall (a solidGeo feature's th: {rs, p?, yr?}): the inside thread of ISO 68-1's basic profile at 6H's minimum, its root at rs and its crest at rs − d (isoD),
