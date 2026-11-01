@@ -250,6 +250,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-maintaining',R([PY,'maintaining.py','--model','wempe'],TOOLS),'full'),   # the Wempe's maintaining work: its clicks, ratchet, detent and wire on the solids through run and wind; the page's own loop through two winds (the maintaining spring's drive); the stop work (1½-2¾ minutes)
  ('bom',R([PY,'bom.py'],TOOLS),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
  ('wempe-fine',R([PY,'fine.py','--model','wempe'],TOOLS),'full'),   # the Wempe's 0.05 mm interference over its escapement's phases, train and wind, against checks.py's EXPECTED (about 1¾ minutes)
+ ('wempe-fine-band',R([PY,'fine.py','--model','wempe','--eval',"document.querySelector('#conn button[data-v=band]').click()"],TOOLS),'full'),   # with the band in place of the chain: its hooks, and the drum cut for its own hook (the band's drum hook stood 0.037 mm³ in the drum unseen for want of it, 28 October to 1 November 2026)
  ('wempe-bom',R([PY,'bom.py','--model','wempe'],TOOLS),'full'),   # every Wempe part against its drawing list (wempe/bom.json) and its relations (about 4 minutes)
  ('wempe-fine-first',R([PY,'fine.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS),'full'),   # as first drawn (the first-drawn stud pin stood 0.05 off the stud unseen on main for want of it)
  ('wempe-bom-first',R([PY,'bom.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS),'full'),
