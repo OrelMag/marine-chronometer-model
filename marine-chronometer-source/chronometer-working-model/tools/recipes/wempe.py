@@ -840,7 +840,7 @@ def WDET():
     """WESC.DET (the detent's literals DETK, each version's options DETV, its frame), the horn's face and back sampled finely from WESC.HORN.line, and the gold spring's
     traced points (WESC.GOLD) for the version as last revised"""
     js=("const W=require(%r)(),E=W.WESC,D=E.DET,o=D.V.last,HL=E.HORN.line(o.th),N=400,ts=[];for(let i=0;i<=N;i++)ts.push(D.K.hb-(D.HORN_L+D.K.hb)*i/N);ts.push(-D.HORN_L+D.K.bev);ts.sort((a,b)=>b-a);"
-        "const g1=E.GB[1]+o.gs;process.stdout.write(JSON.stringify({...D,o,GB:E.GB,FOOT0:E.FOOT0,SPR0:E.SPR0,SMID:E.SMID,hw:ts.map(t=>[t,HL.w(t),HL.b(t)]),gold:E.GOLD(g1),g1}))")%str(TOOLS/'wempe_load.js')
+        "const g1=E.GB[1]+o.gs;process.stdout.write(JSON.stringify({...D,o,GB:E.GB,FOOT0:E.FOOT0,SPR0:E.SPR0,SMID:E.SMID,HOLES:E.HOLES,hw:ts.map(t=>[t,HL.w(t),HL.b(t)]),gold:E.GOLD(g1),g1}))")%str(TOOLS/'wempe_load.js')
     return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
 def _detFrame():
     X=WDET();t,n=X['TD']['t'],X['TD']['n'];s=1 if n[0]*t[1]-t[0]*n[1]>0 else -1;P=X['P']
@@ -1002,7 +1002,7 @@ def jewelsBought():
 # escapement.js builds it as last revised; a part the page builds in a frame of its own (a mass, a timing screw) is put there by to_page.
 @functools.lru_cache()
 def WB():
-    js="const W=require(%r)(),E=W.WESC;process.stdout.write(JSON.stringify({BAL:E.BAL,MS:E.MS,TSW:E.TSW,HUB:E.HUB,ROLI:E.ROLI,ROLD:E.ROLD,g:E.rolGeo(),Y:E.Y,FY:E.FY}))"%str(TOOLS/'wempe_load.js')
+    js="const W=require(%r)(),E=W.WESC;process.stdout.write(JSON.stringify({BAL:E.BAL,MS:E.MS,TSW:E.TSW,HUB:E.HUB,STS:E.STS,ROLI:E.ROLI,ROLD:E.ROLD,g:E.rolGeo(),Y:E.Y,FY:E.FY}))"%str(TOOLS/'wempe_load.js')
     return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
 def BALM():return page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0))
 def _pl(q):return (q[0],-q[1])   # a plan point (x, z) into the balance's recipe frame
@@ -1425,3 +1425,4 @@ def screwZgX():
     r=screwZg();r.box_tol=0.03;r.expect.append({'at':(0,0),'r':5.0,'max':0.03,'why':"the kit draws a screw's head a 32-sided polygon: a Ø 9 head's chords lie 0.0225 inside the true circle the recipe turns (the first head large enough to pass the 0.02 of the check)"});return r
 RECIPES.update({'screwKr':screwKr,'screwHg':screwHg,'screwKh':screwKh,'screwZg':screwZgX})
 from . import wempe_fusee as _wf; RECIPES.update(_wf.RECIPES)   # batch 9d (fusee body, the fusee side's screws and arbor): tools/recipes/wempe_fusee.py
+from .wempe_esc import RECIPES as _ESC; RECIPES.update(_ESC)   # batch 8c (the hairspring collet and stud, WN-10/11/12, the 1943 detent block): tools/recipes/wempe_esc.py

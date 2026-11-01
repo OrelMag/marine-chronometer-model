@@ -280,9 +280,12 @@ def main():
         print(f'{k}: {r.title}, {len(r.ops())} operations, volume {p.volume:.3f} mm³ ({time.time()-t:.1f} s)',flush=True)
     if not o.check:return
     R={k:r for k,r in R.items() if not isinstance(r,Bought)}
-    pm=asyncio.run(page_meshes([r.hn for r in R.values()],o.pose));bad=0;allres=[]
+    pm={}   # the page's meshes by (version, line): a recipe of another version of the Wempe (Recipe.rev: '1943', '6mx', 'first') is checked on the page as that version shows it, one page load a version
+    for rv in sorted({getattr(r,'rev','last') for r in R.values()}):
+        for h,m in asyncio.run(page_meshes(sorted({r.hn for r in R.values() if getattr(r,'rev','last')==rv}),o.pose,rv)).items():pm[(rv,h)]=m
+    bad=0;allres=[]
     for k,r in R.items():
-        t=time.time();res=check(r,pm.get(r.hn));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
+        t=time.time();res=check(r,pm.get((getattr(r,'rev','last'),r.hn)));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
         if v:print(f"  volume  recipe {v['recipe']} page {v['page']}"+(f" (the page in {v['pieces']} pieces, summed: reported)" if v.get('pieces') else f" ({v['rel']*100:+.3f} %, allowed ±{v['allow']})")+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page in several pieces, not closed or with faces inside: no Monte Carlo'))
         if 'bbox' in res:print(f"  bbox    corners within {res['bbox']['max']}")

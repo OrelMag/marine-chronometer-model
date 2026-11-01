@@ -422,7 +422,7 @@ Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --ch
 - **Barrel drum 05 07 01-1:** the Steg's pocket cut 1.6 deep through the 1.25 bottom, leaving a stray face in the drum's hollow (0.35).
 - **Detent 05 04 01-1, gold spring 05 04 01-2:** bores across thin strips (`fusee.js`'s `bore` through `holeCut`, `capFix`) leave chords inside the circle (0.025, 0.048).
 - **Set-up ratchet 05 07 00-3:** its height still counts the barrel bridge as 3.32 thick (3.30 since the owner's correction), so it stands 0.07 off the bridge, not 0.05.
-- **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it.
+- **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it. The arm's screws WN-10 and the masses' screws WN-12 the same (0.126; 31 October 2026), WN-12's head top a fan of 24 triangles up to 0.022 off the mass's round side, and the 1943 block's hole across the leaves a plain bore as the last revised block's (0.155).
 - **Escape wheel's upper endstone screws WN-es:** the shank's end stands 0.032 up into the slot.
 - **The fusee body 05 06 04-2 (batch 9d, 31 October 2026):** the flange is a lathe of 216 columns with a row every 0.04 along the axis, so the first land's walls stand up to 0.04 off the helix, the slot's cutter arc (a floor that climbs 0.4 between two columns) is chorded up to 0.18 off its circle, and at the groove's end N the rays join the last land's floor to the hub across a chord up to 0.13 off the wall.
 - **Screws WN-19, WN-20, WN-21 (batch 9d):** their slots are solid dark boxes lying in the heads (0.02 out on WN-20 and WN-21), not cut. **Maintaining detent arbor 05 05 05-2:** turned on 20 sides, 1.6 % under the circle's volume.
