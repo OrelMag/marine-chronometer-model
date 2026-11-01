@@ -125,6 +125,7 @@ SPECIAL={'050301-1':("by hand and special supply","the cut bimetallic rim: 05 03
  '050401-2':("special supply and hand work","05 04 01-2's „Goldblech 333 federhart“: 8 ct gold sheet rolled spring-hard, from a bullion or jewellery supplier; cut, thinned at its bend (the build) and stoned"),
  '050401-1':("by hand","the spring detent (1436, „Stahl“): one piece of steel, its spring (Federung) 0.07 thick (0.09 at its ends) and 5.0 long filed and stoned to its ring (the bench's test), the locking stone set in its pipe (Röhrchen); 1436 gives no hardening"),
  '050700-6':("special supply","the mainspring: 05 07 00-6's strip, or the build's Nivaflex 45/5 (Straumann's, from a mainspring supplier) cut to 1240 mm, its ends formed, set"),
+ '050703-1':("special supply","the fusee band (05 07 03, 0.22 +0.03 thick, 730 ±3 between its hooks; no width or material on its sheet): a rolled steel strip from a strip supplier, its hooks brazed on (1.3.43); a post-war GUB Glashütte's band was Sandvik's, 730 mm between its hooks and about 0.2 mm² across (chronometerbook.com, post 35, 10 January 2019). Fitting it (the same post): too springy to lay on the fusee beforehand, it is hooked to the fusee in place and wound on under tension, then hooked to the barrel"),
  '050704':("special supply or by hand","the fusee chain (05 07 04): links blanked from thin steel strip and riveted on pins; a chain from a watch-parts supplier, or blanked with a press tool"),}
 def proc(l,m):
     if l['id'] in SPECIAL:return SPECIAL[l['id']]
