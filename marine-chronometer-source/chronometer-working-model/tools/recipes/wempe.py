@@ -582,7 +582,7 @@ def barrelArbor():
          TurnProfile(Q,'Turn the core and its journals: the core Ø 13.3 with its chamfered ends, the journals, the shoulders 22.29 apart, the dial end domed',
            [S('core','Ø 13.3',None,src),S('journals','Ø 4.48 (r 2.24) and Ø 3.88 at the square\'s end (r 1.94)',None,src),S('shoulders',f'{B["BA0"]-B["BA1"]:.2f} apart','22.2 +0.1',src)],src),
          Cut(sq,'Mill the winding square and its point',[S('square',f'{q["a"]} tapering to {q["b"]} across the flats over {q["L"]}',None,src),S('point',f'to {q["tip"]} over {q["tl"]}',None,src)],src,at=(0,0)),
-         RadialDrill((P[4][1]+P[8][1])/2,0.65,6.65,2.0,"Drill the hook's hole radially into the core's middle",[S('',"Ø 2, 6 deep to r 0.65 (0207's section: the drill's point at r 0.65; the page bores it flat)",None,src+'; fusee.js hookSet')],key='hook')]
+         RadialDrill((P[4][1]+P[8][1])/2,-6.95,6.65,2.0,"Drill the hook's hole radially right through the core's middle",[S('',"Ø 2 through (05 07 02 dashes it to the far side; 0207's, the 1941 arbor's, 6 deep with its point)",None,'05 07 02; fusee.js hookSet')],key='hook')]
     return Recipe('barrelArbor','050702-1','Barrel arbor (Federkern)',src,'Präz. Rundstahl 14 (05 07 02-1)','hardened (05 07 02-1)',[Setup('1','between centres; the square on the mill',ops)],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),expect=[{'at':(0,0),'r':7,'max':0.03,'why':"tessellation, not a fault: the page's hook hole is a 24-sided bore cut at the hook's turn into its 48-sided lathe; the check fits the hole's free angle to the page's walls"}],fits=['its journals running in the barrel\'s bosses','the hook 05 07 02-2 in the core'])
 
