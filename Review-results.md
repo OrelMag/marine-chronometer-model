@@ -414,6 +414,8 @@ would still settle it.*
 
 ## The Wempe's page against its recipes (29 October 2026)
 
+**Fixed on the page, 1 November 2026 (branch `claude/wempe-faults-a`, to be released):** the top plate's pocket far side (0.047 to 0.01 off r 5: its hull's tangent runs to the circle's point at r 4.99 so it crosses the opening's edge; at exactly r 5 the solid opens), the dust plate's square hole (1:100 from the face), the barrel drum's Steg slot (`capFix` at its floor plane), the set-up ratchet's height (the bridge 3.30), WN-19, WN-20 and WN-21 (slots cut across the heads, `slotted` in `fusee.js`; the recipes cut them as the page does, 0.02 shallower than the old box's nominal height), the maintaining detent's arbor (96 sides), the 6MX contact lever's arms (they start in the boss's wall, leaving the staff's seat empty); each one's recipe `expect` removed or tightened. Their bullets below describe the faults as found.
+
 Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --check`) compared each one's exact solid with the page's mesh. Eleven places where the page departs from its drawing are open; each is in its recipe's `expect` (reported, not failed) and in the plan's table "Page faults found", which has the details:
 
 - **Top plate 05 09 01:** the pocket N-O's far side drawn tangent to r 4.95 where the sheet says r 5 (0.047). At r 5 the solid opens; the opening and the pocket need cutting as separate features.
