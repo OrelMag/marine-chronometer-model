@@ -414,7 +414,7 @@ would still settle it.*
 
 ## The Wempe's page against its recipes (29 October 2026)
 
-Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --check`) compared each one's exact solid with the page's mesh. Eight places where the page departs from its drawing are open; each is in its recipe's `expect` (reported, not failed) and in the plan's table "Page faults found", which has the details:
+Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --check`) compared each one's exact solid with the page's mesh. Eleven places where the page departs from its drawing are open; each is in its recipe's `expect` (reported, not failed) and in the plan's table "Page faults found", which has the details:
 
 - **Top plate 05 09 01:** the pocket N-O's far side drawn tangent to r 4.95 where the sheet says r 5 (0.047). At r 5 the solid opens; the opening and the pocket need cutting as separate features.
 - **Upper balance cock 05 08 03-1:** the stud's slot wall drawn upright through the boss where it leans 8° through the arm (0.13 at the boss's top).
@@ -422,8 +422,10 @@ Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --ch
 - **Barrel drum 05 07 01-1:** the Steg's pocket cut 1.6 deep through the 1.25 bottom, leaving a stray face in the drum's hollow (0.35).
 - **Detent 05 04 01-1, gold spring 05 04 01-2:** bores across thin strips (`fusee.js`'s `bore` through `holeCut`, `capFix`) leave chords inside the circle (0.025, 0.048).
 - **Set-up ratchet 05 07 00-3:** its height still counts the barrel bridge as 3.32 thick (3.30 since the owner's correction), so it stands 0.07 off the bridge, not 0.05.
-- **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it.
+- **Timing screw 05 03 01-2:** its slot drawn as a box standing 0.02 out of the head, not cut into it. The arm's screws WN-10 and the masses' screws WN-12 the same (0.126; 31 October 2026), WN-12's head top a fan of 24 triangles up to 0.022 off the mass's round side, and the 1943 block's hole across the leaves a plain bore as the last revised block's (0.155).
 - **Escape wheel's upper endstone screws WN-es:** the shank's end stands 0.032 up into the slot.
+- **The fusee body 05 06 04-2 (batch 9d, 31 October 2026):** the flange's lathe rows (walls 0.04 off the helix) were fixed on main in 3.66.01; left: the slot's cutter arc (a floor that climbs 0.4 between two of the 216 rays) is chorded up to 0.1 off its circle, and at the groove's end N the rays join the last land's floor to the hub across a chord up to 0.13 off the wall.
+- **Screws WN-19, WN-20, WN-21 (batch 9d):** their slots are solid dark boxes lying in the heads (0.02 out on WN-20 and WN-21), not cut. **Maintaining detent arbor 05 05 05-2:** turned on 20 sides, 1.6 % under the circle's volume.
 - **The hands (batch 10, 30 October 2026):** each blade's root meets its boss as a separate closed piece (an 8-segment arc against the 72-sided wall, a 0.003 gap; 0.07-0.10 at isolated samples), the hour hand's root wedge lies on a cell-wise triangulation of the bevel's cone (about 0.1), and the seconds hand's tail ramp is sampled 0.027 off the table's rows.
 - **The case (batch 11b, 31 October 2026):** the locking bracket's screw hole (`bore`'s `capFix`) leaves chords up to 0.053 off its circle, the detent's and gold spring's fault again; the closing plate's round r 1.3 between rim and boss is four straight rings (0.025 inside the arc); the kit's 32-sided screw heads depart from their circles by 0.020-0.029 above Ø 8 (WN-79, WN-71.f, WN-80); the case bracket's two Ø 4.5 holes are 24-sided polygons whose flats lie at the radius (0.0195, inside the check). **WN-ro** (the carrying case's eye screws, "3 x 15 DIN 96") is drawn with a head Ø 8.5 × 2.2, the standard's being Ø 5.6 × 2.0: open, for a later pass on the page. No hole is cut in the bowl's wall for the case brackets' WN-78 (the brackets are moved to level the bowl, "Kloben verstellen"), so the recipe notes them as tapped at assembly.
 

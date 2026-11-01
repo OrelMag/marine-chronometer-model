@@ -219,7 +219,11 @@ def check(r,pm):
     allp=np.concatenate([Pr[kr],Pp[kp]]);alld=np.concatenate([dr,dp]);o=np.argsort(-alld);worst=[];seen=[]
     exq=np.zeros(len(allp),bool);C=ixf(M,allp);res['expected']=[]
     for e in r.expect:   # the old mesh's known departures, each within its circle and bound: reported, not failed
-        k=(np.hypot(C[:,0]-e['at'][0],C[:,1]-e['at'][1])<=e['r'])&(alld>SURF_TOL);exq|=k&(alld<=e['max'])
+        k=(np.hypot(C[:,0]-e['at'][0],C[:,1]-e['at'][1])<=e['r'])&(alld>SURF_TOL)
+        if 'z' in e:k&=(C[:,2]>=e['z'][0])&(C[:,2]<=e['z'][1])   # optionally only within a height range of the part's axis (a turned part's band) ...
+        if 'th' in e:   # ... and an angle range about it, in degrees (turned: the page's 216 columns round a steep radius, a groove's end)
+            th=np.degrees(np.arctan2(C[:,1],C[:,0]));k&=(th>=e['th'][0])&(th<=e['th'][1])
+        exq|=k&(alld<=e['max'])
         res['expected'].append({'why':e['why'],'max':round(float(alld[k].max()),4) if k.any() else 0,'bound':e['max']})
     for i in o:
         if len(worst)>=5 or alld[i]<SURF_TOL:break
@@ -283,9 +287,9 @@ def main():
         print(f'{k}: {r.title}, {len(r.ops())} operations, volume {p.volume:.3f} mm³ ({time.time()-t:.1f} s)',flush=True)
     if not o.check:return
     R={k:r for k,r in R.items() if not isinstance(r,Bought)}
-    pm={}
-    for rv in sorted({getattr(r,'rev','last') for r in R.values()}):   # a recipe of a part only another version has (the 6MX's closing plate screw) is checked against that version (Recipe.rev, default 'last')
-        got=asyncio.run(page_meshes([r.hn for r in R.values() if getattr(r,'rev','last')==rv],o.pose,rv));pm.update({(rv,h):v for h,v in got.items()})
+    pm={}   # the page's meshes by (version, line): a recipe of another version of the Wempe (Recipe.rev: '1943', '6mx', 'first') is checked on the page as that version shows it, one page load a version
+    for rv in sorted({getattr(r,'rev','last') for r in R.values()}):
+        for h,m in asyncio.run(page_meshes(sorted({r.hn for r in R.values() if getattr(r,'rev','last')==rv}),o.pose,rv)).items():pm[(rv,h)]=m
     bad=0;allres=[]
     for k,r in R.items():
         t=time.time();res=check(r,pm.get((getattr(r,'rev','last'),r.hn)));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})

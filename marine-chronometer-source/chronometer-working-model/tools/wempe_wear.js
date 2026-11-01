@@ -28,7 +28,7 @@ const Ffu=pv("the fusee arbor's pivot (Ø 2.8"),Fbr=pv("the barrel's drum on its
 /* turns a day: the fusee one in 90/14 h (HPT), wound back once a day, so its arbor and the barrel's drum turn twice their running turns; the train from the centre's 24 */
 const fud=24/P.HPT,day={fusee:2*fud,centre:24,inter:24*90/12,seconds:24*90/12*80/10,escape:24*90/12*80/10*80/10};
 /* the chain a day: the fusee's turns over its groove's mean pitch radius (fusee.js's RFT, the groove's floor, and the pitch line 1.02 out), onto the barrel's drum (r 20.8 + 1.02) */
-const fsrc=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','fusee.js'),'utf8'),RFT=JSON.parse(/const RFT=(\[[\d.,\s]+\])/.exec(fsrc)[1]),rfm=RFT.reduce((a,b)=>a+b,0)/RFT.length+1.02,RB=41.6/2+1.02;
+const fsrc=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','fusee.js'),'utf8'),RFT=JSON.parse(/const RFT=(\[[\d.,\s]+\])/.exec(fs.readFileSync(path.join(__dirname,'..','..','wempe','js','dims.js'),'utf8'))[1]),rfm=RFT.reduce((a,b)=>a+b,0)/RFT.length+1.02,RB=41.6/2+1.02;
 const chain=fud*2*Math.PI*rfm,brd=2*chain/(2*Math.PI*RB);   /* mm a day running; the drum's turns a day, running and winding */
 /* each mesh's room: its close side less the hole tolerance and the shake (gearing_wempe.json) */
 const R=GJ.stages.map(s=>-s.lo-s.tp-s.sh);
