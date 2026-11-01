@@ -29,7 +29,10 @@ def main():
     for k,mk in W.RECIPES.items():
         p=mk()
         if hasattr(p,'what'):H.setdefault(p.hn,[]).append({'t':p.title,'buy':f'{p.what}, {p.size}; {p.standard}; {p.material}'})
-        else:H.setdefault(p.hn,[]).append({'t':p.title,'k':k})
+        else:H.setdefault(p.hn,[]).append({'t':p.title,'k':k,**({'v':p.rev} if p.rev!='last' else {})})
+    for h,L in H.items():   # a line with a recipe of another version: every entry of it says its own, so the card shows the one for the version on show (maker.js, cfg.recipesShow)
+        if any('v' in e for e in L):
+            for e in L:e.setdefault('v','last')
     txt=('/* recipes.js: each parts-list line\'s recipes (a STEP file and an operation sheet in parts/) and bought lines, for the part cards (maker.js).\n'
          '   Written by tools/recipes_site.py; do not edit by hand. Declares only WRECIPES */\n"use strict";\n'
          'const WRECIPES='+json.dumps({'dir':'parts/','hn':H},separators=(',',':'),ensure_ascii=False)+';\n')

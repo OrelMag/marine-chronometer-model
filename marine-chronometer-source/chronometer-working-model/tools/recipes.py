@@ -98,9 +98,16 @@ def ixf(M,P):return (P-M[:3,3])@M[:3,:3]
 def in_zone(Q,zones):
     """points (the recipe's frame) inside a thread's allowance"""
     k=np.zeros(len(Q),bool)
-    for (c,r0,r1,z0,z1) in zones:
+    for z in zones:
+        if z[0]=='ax':   # a hole along its own axis (a radial tapped hole): ('ax', origin, unit direction, r0, r1, l0, l1)
+            _,o,u,r0,r1,l0,l1=z;d=Q-np.array(o);l=d@np.array(u);rr=np.linalg.norm(d-np.outer(l,u),axis=1);k|=(rr>=r0)&(rr<=r1)&(l>=l0-0.05)&(l<=l1+0.05);continue
+        c,r0,r1,z0,z1=z
         rr=np.hypot(Q[:,0]-c[0],Q[:,1]-c[1]);k|=(rr>=r0)&(rr<=r1)&(Q[:,2]>=z0-0.05)&(Q[:,2]<=z1+0.05)
     return k
+
+def zvol(z):
+    """half of a thread zone's ring (the page's helix against the recipe's convention)"""
+    r0,r1,z0,z1=z[3:] if z[0]=='ax' else z[1:];return math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5
 
 def contains(meshes,P):
     k=np.zeros(len(P),bool)
@@ -114,10 +121,10 @@ def nearest(meshes,P):
         _,dd,_=trimesh.proximity.closest_point(m,P);d=np.minimum(d,dd)
     return d
 
-def winding(m,P,chunk=256):
+def winding(m,P,chunk=None):
     """the generalized winding number of each point against a mesh (Jacobson et al. 2013): about 1 inside, 0 outside, robust to a lathe's open fan at its axis
     and to faces inside a piece, where ray parity isn't"""
-    V=m.vertices[m.faces];w=np.zeros(len(P))
+    V=m.vertices[m.faces];w=np.zeros(len(P));chunk=chunk or max(1,min(256,int(3e6/len(V))))   # a chunk's temporaries (chunk x faces x 3 doubles) bounded: a part of 300,000 faces (the bowl's thread) at 256 would need gigabytes
     for i in range(0,len(P),chunk):
         a=V[None,:,0,:]-P[i:i+chunk,None,:];b=V[None,:,1,:]-P[i:i+chunk,None,:];c=V[None,:,2,:]-P[i:i+chunk,None,:]
         la,lb,lc=(np.linalg.norm(x,axis=2) for x in (a,b,c));det=np.einsum('ijk,ijk->ij',a,np.cross(b,c))
@@ -173,7 +180,7 @@ def check(r,pm):
         lo,hi=rm.bounds[0]-r.near,rm.bounds[1]+r.near;pages=[m for m in pages if (m.bounds[0]<=hi).all() and (m.bounds[1]>=lo).all()]
     vr=part.volume;vp=sum(m.volume for m in pages);res['volume']={'recipe':round(vr,3),'page':round(vp,3),'diff':round(vr-vp,3),'rel':round((vr-vp)/vp,5)}
     # the exact volumes against each other, the threads' allowance (half of each thread zone's ring: the page's helix against the recipe's convention) and VOL_TOL
-    ta=sum(math.pi*(r1*r1-r0*r0)*(z1-z0)*0.5 for (_,r0,r1,z0,z1) in zones)+sum(e.get('vol',0) for e in r.expect);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)   # an expect's vol: a known departure's own volume (a radial tapped hole drawn plain at its size)
+    ta=sum(zvol(z) for z in zones)+sum(e.get('vol',0) for e in r.expect);vt=max(VOL_TOL*vp,0.5)+ta;res['volume']['allow']=round(vt,3)   # an expect's vol: a known departure's own volume (a radial tapped hole drawn plain at its size)
     if len(pages)>1:res['volume']['pieces']=len(pages)   # several pieces may overlap (a pinion's leaves drawn as a full disc through its arbor): their sum isn't the part's, so reported only
     elif abs(vr-vp)>vt:F.append(f'volume: {vr-vp:+.3f} mm³ (allowed {vt:.3f}, the threads {ta:.3f})')
     bp=np.array([np.min([m.bounds[0] for m in pages],0),np.max([m.bounds[1] for m in pages],0)]);db=np.abs(rm.bounds-bp).max()
@@ -212,7 +219,11 @@ def check(r,pm):
     allp=np.concatenate([Pr[kr],Pp[kp]]);alld=np.concatenate([dr,dp]);o=np.argsort(-alld);worst=[];seen=[]
     exq=np.zeros(len(allp),bool);C=ixf(M,allp);res['expected']=[]
     for e in r.expect:   # the old mesh's known departures, each within its circle and bound: reported, not failed
-        k=(np.hypot(C[:,0]-e['at'][0],C[:,1]-e['at'][1])<=e['r'])&(alld>SURF_TOL);exq|=k&(alld<=e['max'])
+        k=(np.hypot(C[:,0]-e['at'][0],C[:,1]-e['at'][1])<=e['r'])&(alld>SURF_TOL)
+        if 'z' in e:k&=(C[:,2]>=e['z'][0])&(C[:,2]<=e['z'][1])   # optionally only within a height range of the part's axis (a turned part's band) ...
+        if 'th' in e:   # ... and an angle range about it, in degrees (turned: the page's 216 columns round a steep radius, a groove's end)
+            th=np.degrees(np.arctan2(C[:,1],C[:,0]));k&=(th>=e['th'][0])&(th<=e['th'][1])
+        exq|=k&(alld<=e['max'])
         res['expected'].append({'why':e['why'],'max':round(float(alld[k].max()),4) if k.any() else 0,'bound':e['max']})
     for i in o:
         if len(worst)>=5 or alld[i]<SURF_TOL:break
@@ -276,9 +287,12 @@ def main():
         print(f'{k}: {r.title}, {len(r.ops())} operations, volume {p.volume:.3f} mm³ ({time.time()-t:.1f} s)',flush=True)
     if not o.check:return
     R={k:r for k,r in R.items() if not isinstance(r,Bought)}
-    pm=asyncio.run(page_meshes([r.hn for r in R.values()],o.pose));bad=0;allres=[]
+    pm={}   # the page's meshes by (version, line): a recipe of another version of the Wempe (Recipe.rev: '1943', '6mx', 'first') is checked on the page as that version shows it, one page load a version
+    for rv in sorted({getattr(r,'rev','last') for r in R.values()}):
+        for h,m in asyncio.run(page_meshes(sorted({r.hn for r in R.values() if getattr(r,'rev','last')==rv}),o.pose,rv)).items():pm[(rv,h)]=m
+    bad=0;allres=[]
     for k,r in R.items():
-        t=time.time();res=check(r,pm.get(r.hn));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
+        t=time.time();res=check(r,pm.get((getattr(r,'rev','last'),r.hn)));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
         if v:print(f"  volume  recipe {v['recipe']} page {v['page']}"+(f" (the page in {v['pieces']} pieces, summed: reported)" if v.get('pieces') else f" ({v['rel']*100:+.3f} %, allowed ±{v['allow']})")+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page in several pieces, not closed or with faces inside: no Monte Carlo'))
         if 'bbox' in res:print(f"  bbox    corners within {res['bbox']['max']}")

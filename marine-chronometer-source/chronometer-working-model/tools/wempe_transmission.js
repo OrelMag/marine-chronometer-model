@@ -60,13 +60,13 @@ const quiet=f=>{const o=console.log;console.log=()=>{};try{return f();}finally{c
 const WP=quiet(()=>require('./wempe_physics.js')),DY=require('./dynamics.js'),WJ=require('./wempe_inertia.json'),MJ=require(process.env.MC_MECH_WEMPE||'./mechanisms_wempe.json'),MF=require('./mainspring_friction_wempe.json');
 const D=Math.PI/180,TAU=2*Math.PI,G0=9.80665,f=(x,n=0)=>Number.isFinite(+x)?(+x).toFixed(n):'-',rows=[],out={};let fail=0;
 const say=s=>rows.push('  '+s),head=s=>rows.push('\n'+s),chk=(ok,s,soft)=>{if(!ok&&!soft)fail=1;rows.push(`${ok?'  ok ':soft?'  ~~ ':'  !! '} ${s}`);};
-const FUS=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','fusee.js'),'utf8'),T0=Date.now();
+const FUS=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','fusee.js'),'utf8'),DIMS=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','dims.js'),'utf8'),T0=Date.now();
 const num=(re,s,what)=>{const m=re.exec(s);if(!m)throw Error('wempe_transmission: not found: '+what);return m;};
 
 /* ===================== 1. the bodies and the elements ===================== */
 /* the chain's lever on the fusee: the groove's floor radius where the chain lies (fusee.js RFT, 05 06_20's, by quarter turns from the large end), the pitch line 1.02 out;
    n turns from full wind the chain is on the curve's turn MF - n (WPHYS.MF); on the drum 41.6 / 2 + 1.02 (05 07 01-1, 05 07 04) */
-const RFT=JSON.parse('['+num(/const RFT=\[([\d.,\s]+)\]/,FUS,'RFT')[1].replace(/\s/g,'')+']'),rfOf=m=>{const u=Math.max(0,Math.min(RFT.length-1,m*4)),i=Math.min(RFT.length-2,Math.floor(u));return RFT[i]+(RFT[i+1]-RFT[i])*(u-i);};
+const RFT=JSON.parse('['+num(/const RFT=\[([\d.,\s]+)\]/,DIMS,'RFT')[1].replace(/\s/g,'')+']'),rfOf=m=>{const u=Math.max(0,Math.min(RFT.length-1,m*4)),i=Math.min(RFT.length-2,Math.floor(u));return RFT[i]+(RFT[i+1]-RFT[i])*(u-i);};
 const RB=41.6/2+1.02,rho=n=>rfOf(P.MF-n)+1.02,NRUN=P.MF,HPT=P.HPT;   /* mm; NRUN: the fusee's turns, full wind to run down (05 06_20's curve) */
 const fusT=n=>P.fusT(Math.max(0,Math.min(NRUN,n)));   /* the fusee arbor's torque n turns from full wind, measured running (N·m): the spring's, chain's and barrel's losses in it */
 /* the drum's turn from full wind for the fusee's n (the chain's length off the fusee onto the drum: ∫ ρ dφ / RB), tabled; and back */

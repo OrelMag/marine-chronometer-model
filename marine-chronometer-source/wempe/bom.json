@@ -3800,16 +3800,37 @@
    "figs": "05 01_1"
   },
   {
-   "id": "WN-78",
+   "id": "WN-78.m4",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Schraube WN-78 (13 on 05 01): the brackets’ screws",
-   "qty": 5,
+   "name": "Schraube WN-78 (13 on 05 01): the case brackets’ screws, M4",
+   "qty": 4,
    "parent": "050100-1",
    "kind": "part",
    "part": "bowl",
-   "fn": "Hold the case brackets and the locking bracket to the bowl, M4 (the case brackets', heads Ø 7) and M2.5, 3.3 into its 4 wall (length estimated); through clearance holes in the brackets' feet (Ø 4.5 and Ø 2.9, round: estimated; cut since 28 October 2026, 10-M10); their tapped holes across the turned bowl not cut (embed: the thread measured inside the bowl's metal).",
+   "fn": "Hold the two case brackets to the bowl, two each, M4 (heads Ø 7, a DIN 84 cheese head), 3.3 into its 4 wall (length estimated); through clearance holes Ø 4.5 in the brackets' feet (round: estimated; cut since 28 October 2026, 10-M10); their tapped holes across the turned bowl not cut (embed: the thread measured inside the bowl's metal).",
+   "rel": [
+    [
+     "in",
+     "050100-1",
+     "embed"
+    ]
+   ],
+   "figs": "05 01_1",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "WN-78.m25",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-78 (13 on 05 01): the locking bracket’s screw, M2.5",
+   "qty": 1,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Holds the locking bracket to the bowl, M2.5, 3.3 into its 4 wall (length estimated); through a clearance hole Ø 2.9 in the bracket's foot (round: estimated; cut since 28 October 2026, 10-M10); its tapped hole across the turned bowl not cut (embed).",
    "rel": [
     [
      "in",
@@ -3872,7 +3893,29 @@
      "tap"
     ]
    ],
-   "figs": "05 01_1, 05 01_3"
+   "figs": "05 01_1, 05 01_3",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "WN-71.f",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-71 (7 on 05 01, the number unsure): the 6MX’s closing plate screw",
+   "qty": 1,
+   "parent": "050100-2",
+   "kind": "part",
+   "part": "closingPlate",
+   "fn": "A plain M3 screw, head Ø 8, through the 6MX's flat closing plate into the bowl's bottom (Kirov 14917: no boss; the plate turns on it).",
+   "rel": [
+    [
+     "in",
+     "050100-1",
+     "tap"
+    ]
+   ],
+   "figs": "05 01_1, 05 01_3",
+   "rev": "6mx"
   },
   {
    "id": "WN-72",
@@ -3892,7 +3935,29 @@
      "tap"
     ]
    ],
-   "figs": "05 01_1, 05 01_3"
+   "figs": "05 01_1, 05 01_3",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "WN-72.6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-72: the 6MX’s closing plate knob, Ø 6.5",
+   "qty": 1,
+   "parent": "050100-2",
+   "kind": "part",
+   "part": "closingPlate",
+   "fn": "The domed knob in the 6MX's closing plate, to turn it (Kirov 14917: about Ø 6.5 at r 19).",
+   "rel": [
+    [
+     "in",
+     "050100-2",
+     "tap"
+    ]
+   ],
+   "figs": "05 01_1, 05 01_3",
+   "rev": "6mx"
   },
   {
    "id": "050100-7",
@@ -4042,18 +4107,64 @@
    "rev": "last first 1943"
   },
   {
-   "id": "WN-80",
+   "id": "WN-80.3",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Schraube WN-80 (11 on 05 01): the outer pivots, M6",
-   "qty": 2,
+   "name": "Schraube WN-80 (11 on 05 01): the outer pivot at 3 o'clock, M6",
+   "qty": 1,
    "parent": "Holzkasten",
    "kind": "part",
    "part": "box",
-   "fn": "Through the box's side walls, their tips the gimbal ring's pivots: through the ring at 9 o'clock, through its bracket into the ring at 3 (05 01's elevation).",
+   "fn": "Through the box's 3 o'clock side wall, its tip through the ring's bracket into the ring (05 01's elevation): 15.1 of thread, the tip 5.1 beyond.",
    "rel": [],
-   "figs": "05 01_1, 51 00_2"
+   "figs": "05 01_1, 51 00_2",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "WN-80.9",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-80 (11 on 05 01): the outer pivot at 9 o'clock, M6",
+   "qty": 1,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Through the box's 9 o'clock side wall, its tip through the ring (05 01's elevation): 18.4 of thread, the tip 4.1 beyond.",
+   "rel": [],
+   "figs": "05 01_1, 51 00_2",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "WN-80.3m",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-80 (11 on 05 01): the outer pivot at 3 o'clock, M6, the 6MX box's",
+   "qty": 1,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Through the 6MX box's 3 o'clock side wall (95 from the centre), as the drawings' on the wider box: 17.6 of thread, the tip 5.1 beyond; head Ø 9.",
+   "rel": [],
+   "figs": "05 01_1, 51 00_2",
+   "rev": "6mx"
+  },
+  {
+   "id": "WN-80.9m",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-80 (11 on 05 01): the outer pivot at 9 o'clock, M6, the 6MX box's",
+   "qty": 1,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Through the 6MX box's 9 o'clock side wall: 20.9 of thread, the tip 4.1 beyond; head Ø 9.",
+   "rel": [],
+   "figs": "05 01_1, 51 00_2",
+   "rev": "6mx"
   },
   {
    "id": "WN-400.w",
@@ -4474,7 +4585,23 @@
    "part": "overBox",
    "fn": "Two on each end wall, 80 apart.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first 1943"
+  },
+  {
+   "id": "WN-ur.6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube f. Riemenbef. (the 6MX carrying case’s strap screws, 15 long)",
+   "qty": 4,
+   "parent": "Riemen",
+   "kind": "part",
+   "part": "overBox",
+   "fn": "Two on each end wall, 80 apart.",
+   "rel": [],
+   "figs": "51 00_5",
+   "rev": "6mx"
   },
   {
    "id": "Riemenoese",

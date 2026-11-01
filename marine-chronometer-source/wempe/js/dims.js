@@ -67,7 +67,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     const CW0=FRC,CW1=FRC+2;
     const DP={t:0.8,R:21.05/2,ch:0.65,hb:6.109/2,cl:0.4,ca:60,sp:0.9,sk:1.575,skd:0.7,scr:{r:6,off:1},at:[0,0]};
     const DP0=S-DP.t;
-    const SLD=1.525,SLS=1.125,SLR=9.30;   /* SLR: toward the bar's upper end the slot is 1,5 deep only inside a circle about the axis, 1,1 outside it (05 06 04-2's Schnitt C-D draws the step as a dashed arc, scaled about r 9.45 on a scan whose scale varies ±10 %): taken at the last turn's "Grund" 9,30, so the deep floor stays over the turn below with 0.17 of metal (a straight step at u 8.0 until 31 October 2026 broke into it: the owner's pictures) */   /* the stop bar's slot "1,5+0,05 tief" and toward the bar's upper end "1,1+0,05 tief" (05 06 04-2), drawn at their middles: at 1.5 the floor stood 6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick (31 October 2026) */
+    const SLD=1.525,SLS=1.125;   /* the stop bar's slot "1,5+0,05 tief" on the bar's lower end's side of the small end's recess and "1,1+0,05 tief" on its upper end's (05 06 04-2's Schnitt C-D, each written in its own half; fusee.js, SB), drawn at their middles: at 1.5 the floor stood 6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick (31 October 2026). Until 31 October 2026 the upper side 1.5 deep inside r 9.30 (SLR), the hidden arcs read as the step */
     const DTU=yD-6.2,DTL=DTU+2,DTT=DTU+1;
     const PHI0=0,PINA=PHI0-0.17,PINR=16.8;
     DP.at=sh(DP.scr.r,PINA+Math.asin(DP.scr.off/DP.scr.r));
@@ -112,7 +112,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       arc([0,0],1.5,Math.atan2(1.45,-0.4),TB,8);
       o.push(T1);for(let i=1;i<8;i++){const a=TB+(-Math.PI/2-TB)*i/8;o.push([TC[0]+0.2*Math.cos(a),TC[1]+0.2*Math.sin(a)]);}
       return{B:CKB,N:CKN,T:CKT,C3,r3:3,h0,q8,r8:8,BB:[-0.4,1.45],rb:1.5,TC,T1,TB,rt:0.2,o,t:1.82,hole:{r:0.6045,cr:1.1,cd:0.42,sr:0.85,sd:0.25}};})();
-    const SB={N:4.01,F:5.99,d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05,t:1.45,pin:{r:0.25,z:3.5,dy:0.5},o:/** @type {number[][]} */([])};
+    const SB={N:4.01,F:5.99,d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:0,ub:0.8,tt:1.05,t:1.45,pin:{r:0.25,z:3.5,dy:0.5},o:/** @type {number[][]} */([])};
     SB.o=(()=>{const SBN=SB.N,SBF=SB.F,o=[],c=[SB.lo+SB.rt,SBN+SB.rt],e=Math.asin((SBN+SB.rr-SBF)/SB.rr);
       for(let i=0;i<=8;i++){const a=Math.PI*(150+120*i/8)/180;o.push([c[0]+SB.rt*Math.cos(a),c[1]+SB.rt*Math.sin(a)]);}
       for(let i=0;i<=16;i++){const a=-Math.PI/2+(Math.PI/2-e)*i/16;o.push([SB.ru+SB.rr*Math.cos(a),SBN+SB.rr+SB.rr*Math.sin(a)]);}
@@ -126,7 +126,40 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       arc([0,0],2.5,Math.PI/2,TAU+Math.atan2(-2.1,1.366),24);o.pop();
       const FX=H[10],DX=H[4],A=(()=>{const s=[-10.8,-20.9],w=[FX[0]-DX[0],-(FX[1]-DX[1])];return Math.atan2(w[1],w[0])-Math.atan2(s[1],s[0]);})();
       return{E:DTE,E1:DTE1,C9,r9:9,h0:[1.366,-2.1],C18,r18:18,rb:2.5,o,A,SA:[8.6,1.403],sa:30,hole:{r:1.125,tp:140}};})();
-    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,SLR,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR};})();
+
+    /* the fusee body's groove and its sizes, lifted from fusee.js for the recipe (31 October 2026; fusee.js reads them, its comments give each figure's source), written with its
+       own expressions in its order: GR the groove's floor radius by turns from the large end (RFT, rf: 05 06 04-2's "Grund" radii, 05 06_20's curve), the flange's ribs (FR1, FS1,
+       FR2, FSC), the pitch PAX, the land WLD, the rib RIB and its height RIBH, the land's place ac(m) from the blank's face, the groove's end MN; BODY the lathe's sizes (the flange
+       R, its fall at the large end, the hub rh, the large end's recess rRec and its mouth, the bore, the small end's recess rIn, smD), the slitting cutter in the flange's slot
+       (cutR, cutD, cutP, RC), the chain's pin's hole (pinR, pinD), the tapped holes (m2, m17), the stop bar's slot (slot) and its spring's pin's hole (spin); SCR the screws WN-19, WN-20,
+       WN-21; DTA the maintaining detent's arbor 05 05 05-2's turned profile */
+    /* the maintaining spring 05 06 01-1's outline, lifted from fusee.js for the recipe (31 October 2026; fusee.js and tools/wempe_sustaining.js read it): the ring's outer radius R0
+       and its inner circle RI (Ø 32.3 -0.1 less twice the 2), the pins' circle RP and the eye's round ER, the first blend's angle U1, the square end USQ and the pin's UPIN (degrees
+       from the eye), the eye's hole offset EYO and hole radius HR; w48 the width of the band by degrees from the eye (its inner edge's arcs traced on the sheet, see fusee.js) with
+       the arcs W48 it is made of */
+    const MSR0=16.125,MSRI=14.125;
+    const w48=(()=>{const R0=MSR0,RI=MSRI,t=u=>[Math.sin(u*D2R),Math.cos(u*D2R)],far=(u,c,R)=>{const[x,y]=t(u),d=x*c[0]+y*c[1];return d+Math.sqrt(d*d-c[0]*c[0]-c[1]*c[1]+R*R);};
+        const UA=50.3,RA=10.41,cA=t(UA).map(q=>q*(RI-RA)),c6=t(270).map(q=>q*(RI-6)),RE=13.24,E=t(160.29);
+        let lo=0.5,hi=2;for(let i=0;i<60;i++){const m=(lo+hi)/2;if(far(336,E.map(q=>q*m),RE)>R0-4)lo=m;else hi=m;}const cE=E.map(q=>q*(lo+hi)/2);   /* the end arc's centre on its ray, so it reaches the "4" */
+        let a=285,b=300;for(let i=0;i<60;i++){const m=(a+b)/2;if(far(m,c6,6)>far(m,cE,RE))a=m;else b=m;}const UC=(a+b)/2;   /* the swell's corner */
+        const w=u=>u<UA?R0-far(u,cA,RA):u<270?R0-RI:u<UC?R0-far(u,c6,6):R0-far(u,cE,RE);w.UC=UC;w.UA=UA;w.RA=RA;w.RE=RE;w.cA=cA;w.c6=c6;w.cE=cE;return w;})();
+    const MS={R0:MSR0,RI:MSRI,RP:14.2,ER:1.8,U1:60,USQ:336,UPIN:295,EYO:0,HR:0.6,w48,W48:{UA:w48.UA,RA:w48.RA,RE:w48.RE,cA:w48.cA,c6:w48.c6,cE:w48.cE,UC:w48.UC}};
+    const RFT=[17.25,16.465,15.785,15.215,14.75,14.305,13.935,13.585,13.32,12.975,12.685,12.415,12.17,11.915,11.675,11.455,11.24,11.055,10.865,10.705,10.55,10.405,10.275,10.155,
+    10.07,9.945,9.855,9.78,9.71,9.635,9.575,9.525,9.47,9.435,9.395,9.355,9.30];
+    const rf=(/** @type {number} */m)=>{const u=Math.max(0,Math.min(36,m*4)),i=Math.min(35,Math.floor(u));return RFT[i]+(RFT[i+1]-RFT[i])*(u-i);};
+    const FR1=0.76,FS1=0.76+0.87,FR2=2.0,FSC=(FR1+FS1)/2;
+    const PAX=1.2,WLD=0.87,RIB=0.33,RIBH=0.6,A0=FR2+WLD/2-PAX,M_FULL=8.75;
+    const ac=(/** @type {number} */m)=>{if(m>=0.15)return A0+PAX*m;const t=Math.max(0,m)/0.15,d=A0+PAX*0.15-FSC;return FSC+d*(3*t*t-2*t*t*t)+PAX*0.15*(t*t*t-t*t);};
+    const MN=(LB-0.3-WLD/2-A0)/PAX;
+    const GR={RFT,rf,FR1,FS1,FR2,FSC,PAX,WLD,RIB,RIBH,A0,M_FULL,ac,MN};
+    const BODY={R:17.8,rT:16.5,fall:5,rh:10.5,hubT:0.3,rRec:13.15,chR:14.9,chD:1.75,bore:7.006,rIn:7.5,smD:1.6,cutR:6.75,cutD:2.9,cutP:0.2,RC:17.8-2.9-0.2+6.75,pinR:0.2775,pinD:2.05,
+      m2:{r:1.02,d:6.25},m17:{r:0.87,d:6},slot:{v0:4,v1:6},spin:{r:0.25225,a:6.4,b:1.5,dy:0.5}};
+    const SCR={w19:{r0:1.0,r1:1.125,y0:CW0,y1:CW1-0.05,rs:1.0,t:3.8,slot:{l:2.0,w:0.3,h:0.35,rot:0.7}},
+      w20:{r0:1.55,r1:0.85,y0:DP0,hh:0.7,rs:0.85,ya:DP0+0.6,yb:S+1.6+3.5,dy:0.025,slot:{l:2.3,w:0.28,h:0.25,rot:1.1}},
+      w21:{yE:GC+0.25,dome:[[0.3,0.03],[0.5,0.09],[0.595,0.15]],rsh:0.595,ysh:GP+0.05,hr:1.3,hh:0.9,rs:0.85,ya:GP-0.1,yb:G,slot:{l:2.4,w:0.3,h:0.25,rot:0.4}}};
+    const DTA=(()=>{const dome=(/** @type {number} */y0,/** @type {number} */sg,/** @type {number} */h)=>{const R=(0.44*0.44+h*h)/(2*h),o=[];for(let i=0;i<=8;i++){const a=Math.asin(0.44/R)*(1-i/8);o.push([R*Math.sin(a),y0+sg*(R*Math.cos(a)-(R-h))]);}return o;},rT=(/** @type {number} */y)=>1.125+(y-DTU)/140,ya=DTU-1.2;
+      return[...dome(-21.825,-1,0.25).reverse(),[0.44,-18.975],[rT(ya)-0.25,-18.975],[rT(ya),-18.725],[rT(ya),ya],[rT(DTL),DTL],[rT(DTL),yD-0.25],[rT(DTL)-0.25,yD],[0.44,yD],...dome(yD+2.75,1,0.35)];})();
+    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR,GR,BODY,SCR,DTA,MS};})();
   /* the motion work, the hands and the dial's sizes (dial.js's comments give each figure's source), here for the recipes (30 October 2026), written with dial.js's own
      expressions in its order: PPT the pillar plate's thickness, yC the centre arbor's journal C, crown the shank's crown radius (train.js), swYs the seconds arbor's shoulder.
      DY0, DT, DY1, DR the dial's disc; CN the cannon tube 05 05 03-3, CHW the change wheel 05 02 02 and HRW the hour wheel 05 02 03 and UDW the up-and-down wheel 05 02 04
@@ -167,7 +200,18 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
   /* the case's screws of one size each, [head radius, head height, shank length, thread radius], here for the recipes (30 October 2026; case.js's comments give each one's place):
      the ring's pivot-bracket screws WN-kr, the hinge screws WN-hg, the key holder's WN-kh, the transit lock's pivot screw WN-zg */
   const CASE={kr:[2.4,1.6,7.25,1.25],hg:[3,1.6,16.5,1.75],kh:[1.1,1.0,10,0.6],zg:[4.5,2,12,3]};
-  return{H,NO,FA,BAR,FU,MW,CASE,
+  /* the case's made parts' sizes for the recipes (31 October 2026; case.js's comments give each one's source): Y the seat and rim heights over the pivots' line (YP = YB - YSEAT), RG the gimbal ring (inside RI, outside RO, hh half its height; bs the
+     bracket's screws apart, br their radius; tp the pivot tips' hole radius, tb the 3 o'clock tip's hole floor; m5 and m25 the tapped holes' radii; lk the transit lock's window: dy its underside under the pivots, a its radial planes from 6 o'clock toward 3,
+     y0 and y1 its floor and roof about that; bk the ring's bracket: q its half-width along the ring, sec its section [r over RO, y over YP], cl its screws' clearance radius), NUT the two knurled lock nuts, P79 the inner pivot screw WN-79 */
+  const CASEQ={Y:{YSEAT:5.3,YB:6.35,TC:4.7},RG:{RI:70,RO:74,hh:12,bs:35.5,br:77.3,tp:1.6,tb:72.25,m5:2.52,m25:1.27,lk:{dy:1.7,a:[52.4,20.6],y0:-0.5,y1:3},bk:{q:28.5,sec:[[0,-7.7],[1.3,-7.7],[3.3,-5.7],[3.3,5.7],[1.3,7.7],[0,7.7]],cl:1.41}},
+    BR:{KB:[[53,-20.3],[57.7,-20.3],[64.3,-8.7],[64.3,4.8],[60.3,4.8],[60.3,-5.4],[58.1,-8.3],[57.7,-8.3],[54,-8.3],[54,-13.5],[53,-13.5]],KF:[[53,-20.3],[57.7,-20.3],[57.7,-8.3],[54,-8.3],[54,-13.5],[53,-13.5]],KS:[[57.7,-20.3],[64.3,-8.7],[64.3,4.8],[60.3,4.8],[60.3,-5.4],[58.1,-8.3],[57.7,-8.3]],wl:21.2,bw:4.5,bwr:62.3,pr:1.6,pa:60.3,pb:64.3,sp:15.0,sr:57.7,sdy:-14.3,sd:4.5,s0:52.5,sl:24,sc:[3.5,2.6,8,2]},
+    LB:{rb:53,off:4.2,a:40,tw:7.85,tn:1.75,hy:-20.5,hr0:0.5,hd:2.9,hn:20,sc:[2.4,1.6,7.5,1.25],P:((rb,RF)=>({LO:[[rb,-25.8],[RF,-25.8],[RF,-16.5],[63.2,-8.7],[63.2,-2.6],[59.6,-2.6],[59.6,-9.1],[54.5,-14],[rb,-14]],NK:[[59.6,-2.6],[63.2,-2.6],[63.2,1.6],[59.6,1.6]],HD:[[59.6,1.6],[63.2,1.6],[63.2,5.9],[59.6,5.9]]}))(53,53+4.2)},
+    CP:{y0:-64.5,yr:-61.8,y1:-59.5,q:12.35,tip:0.15,hr:0.6,ang:59,ro:1.3,bo:13.95,R:33.95,g:[5,13,1.5],bore:5.55,cb:[7.55,3.075],cr:[0.03,0.59],w:[22.6,8.1],k:[25,1.32]},
+    TH:{p:0.75,d:0.406,Rm:54.87,Rf:55.306},BW:{rr:34.1,rf:36.25,hh:65,rb:53,ct:50.5,bd:23.5,bk:54,fl:12,rfl:59,rr2:53.03,nf:0.8,bore:49,rc:[42,42,7],fy:59.5,fd:49,ns:0.9,w:8.2,m3:1.52,csi:[6.5,0.6,1.5,25]},
+    BZ:{dh:5.0,RG:55.3,ca:[45.9,7.3],pz:[[46.0,5.0],[null,5.0],[null,0],[56.6,0],[58.05,6.07],[58.9,6.9],[60.2,6.9+(60.2-58.9)*0.6/1.7],[60.2,9.9],[57.2,13.4],[56.2,12.6],[56.2,12.3],[55.3,12.3],[46.0,null]],kn:{r:60.6,d:0.3,n:460,y0:7.5,y1:9.8,bore:60.2,soft:60.3},gl:[[0,12.3],[55.8,12.3],[55.8,14.3],[54.3,15.8],[0,15.8]]},
+    S71:{a:{r:3.6,h:2.5,dy:3.05,sd:5.45,sl:1.95,rs:1.5,t0:1.9,t1:7.45},f:{r:4.0,h:2.4,len:7.5,rs:1.5}},S72:{a:[2.6,2.4,2.2,1.3],f:[3.25,2.6,2.2,1.3]},S80:{B:[185/2,95],sh:[77.4,74.1],te:[72.3,70],r:6,r6:4.5,h:3.8,rs:3,tr:1.55,tc:1.35,ov:0.1,ch:0.2},SUR:{a:[3.5,2.6,25,2],f:[3.5,2.6,15,2]},
+    NUT:{a:{r:11,d:0.35,h:2.4,n:120,hr:2.5},w:{r:11.35,d:0.35,h:1.9,n:140,hr:3}},P79:{hr:4.6,hh:2.8,rs:2.5,ex:64.4,tr:1.5,t0:64.5,t1:60,t2:59.8,tc:1.3}};
+  return{H,NO,FA,BAR,FU,MW,CASE,CASEQ,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
