@@ -227,7 +227,7 @@ def bankScrew1943():
       [["through the slit upright's two leaves, its thread tapped in them; the pipe rests on the head's side"],
        "The banking screw of the escapement of 1943's block; its slit is along the plate, so its two leaves grip the thread from above and below."],
       "the head's slot: the page draws it as a solid dark bar standing 0.01 out of the dome (0.4 wide, 0.5 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.5 under the top")
-    r.rev='1943';return r
+    r.rev='1943';r.show='last 1943';return r   # the last revised block's slit upright carries the same screw (WN-gkA43 is in both versions)
 RECIPES['bankScrew43']=bankScrew1943
 
 def _cone41(ver):
@@ -254,16 +254,16 @@ RECIPES['cone41']=lambda:_cone41('first')
 RECIPES['cone41.3955']=lambda:_cone41('3955')
 
 # ---------------- the block's stud as the 6MX's and the escapement of 1943's have it (WN-gk), the 6MX's stop screw (6MX.gke) ----------------
-def _studScrew(key,v,q,src,notes):
+def _studScrew(key,v,q,sl,src,notes):
     """the stud: a slotted cylinder head Ø 3.4 x 5.85 standing out of the plate's outer face, M1.7 into the block; the slot 0.5 wide, 0.9 deep at the heading the page gives it"""
-    r_,h_,ln,rs,sl=q;r=screw(key,'WN-gk','Block stud (WN-gk, the '+v+'\'s)',r_,h_,ln,rs,'steel, polished (the photographs: likely)',src,notes)
+    r_,h_,ln,rs=q;r=screw(key,'WN-gk','Block stud (WN-gk, the '+v+'\'s)',r_,h_,ln,rs,'steel, polished (the photographs: likely)',src,notes)
     r.setups[1].ops[-1]=SlotHead(h_+ln,sl['w'],sl['s'],'Mill the slot across the head',[S('slot',f"{sl['w']} wide × {sl['s']} deep",'estimated',src)],src);r.box_tol=0.03;return r
 def studScrew43():
-    X,Bk,ROW,nE=_blk();r=_studScrew('studScrew43','escapement of 1943',Bk['s43']['stud'],"escapement.js BLK.s43.stud (HOLES.block43; 2_Kirow_DEC_479_A.jpg, 2_Lange_5177_A.jpg, 6_Kirow_DEC_422_S.jpg: Ø 3.2-3.4, slotted steel: likely)",
+    X,Bk,ROW,nE=_blk();r=_studScrew('studScrew43','escapement of 1943',Bk['s43']['stud'],Bk['s43']['slot'],"escapement.js BLK.s43.stud (HOLES.block43; 2_Kirow_DEC_479_A.jpg, 2_Lange_5177_A.jpg, 6_Kirow_DEC_422_S.jpg: Ø 3.2-3.4, slotted steel: likely)",
       ['Seated on the block\'s plate face, no slide under it; M1.7 3.0 into the block (estimated).']);r.rev='1943';return r
 RECIPES['studScrew43']=studScrew43
 def studScrew6mx():
-    X,Bk,ROW,nE=_blk();r=_studScrew('studScrew6','6MX',Bk['m6']['stud'],"escapement.js BLK.m6.stud (HOLES.block6; 2_Kirow_247_A.jpg, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg: Ø 3.3-3.55, slotted, standing proud of the plate's outer face: likely)",
+    X,Bk,ROW,nE=_blk();r=_studScrew('studScrew6','6MX',Bk['m6']['stud'],Bk['m6']['slot'],"escapement.js BLK.m6.stud (HOLES.block6; 2_Kirow_247_A.jpg, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg: Ø 3.3-3.55, slotted, standing proud of the plate's outer face: likely)",
       ['Through the adjusting slide (2.5) and 3.0 into the block (estimated); it stands 2.5 proud of the plate\'s outer face.']);r.rev='6mx';return r
 RECIPES['studScrew6']=studScrew6mx
 def stopScrew6mx():

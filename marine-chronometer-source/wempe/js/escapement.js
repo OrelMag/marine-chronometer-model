@@ -393,8 +393,8 @@ const WESC=(()=>{
     first:{dF:0.025,tE:-2.9,w:3.56,rc:1.82,tC:2.6,nA:1.08,rt:0.5,da:3.7,yc:5.1,r:0.62,sl:[[6.1,0.2],[5.1,0.14]],   /* as first drawn (05 04_1, Wempe 3955): the base's end face dF in from BLK_NE, the arm from t tE, w wide to its cove rc (centre tC in from the base's foot), the near face nA back from the end (Wempe 3955: flush), rt of the arm's root in the base, the arm from da to the base's bd deep, the banking screw's axis yc deep, its hole r, the slit [length from the end, width] (05 04_1's, Wempe 3955's) */
       cone:{nP:0.575,hh:1.5,R:1.8,rh:1.65,ed:0.42,rs:0.6,ins:0.85,tip:3.32,xl:[0,0.55],sw:0.15,sd:0.45,sz:0.01}},   /* its banking screw (cone41): the head's face at nP, 1.5 high, a dome R across rh, an edge ed, the shank rs, started ins inside the arm's far face, the cone to tip, 0.55 longer on Wempe 3955 (xl); the slot sw half-wide, sd deep, sz out */
     m6:{s:5.0,e:3.5,tp:[0.9,0.46],hs:0.06,hw:1.6,yN:2.5,p0:1.2,sd:3.0,sq:[2.6,0.9,3.3,0.70],   /* the 6MX's block: the upright's slit end e long, its far side's taper [length, widening], the slit half-wide, the adjusting slide hw either side of the stud and yN deep, the near pin's depth p0, the stud's tapped depth sd, the stop screw's hole [in from the foot, in from the end face, deep, r] */
-      bk:{nB:0.6,nH:0.575+0.005,rH:1.7,hH:1.4,rs:0.6,pt:0.25,sw:0.17,sd:0.45,sz:0.01,ang:0.6},gke:[2.1,1.2,2.5,0.7],stud:[1.7,3.35+2.5,5.5,0.85,{w:0.5,s:0.9}]},   /* its banking screw WN-gkA (the dome rH across, hH high; the slot sw half-wide, sd deep, sz out, ang its turn), the stop screw 6MX.gke [r, h, len, rs], the stud WN-gk [r, h, len, rs, slot] */
-    s43:{nH:0.58,lT:8.2,rH:1.7,hc:1.1,hd:0.4,rs:0.6,pt:0.25,sw:0.2,sd:0.5,sz:0.01,stud:[1.7,3.35+2.5,3.0,0.85,{w:0.5,s:0.9}]}};   /* the escapement of 1943's: its banking screw WN-gkA43 (the head hc long under a dome hd high, the slot sw half-wide) and its stud WN-gk */
+      bk:{nB:0.6,nH:0.575+0.005,rH:1.7,hH:1.4,rs:0.6,pt:0.25,sw:0.17,sd:0.45,sz:0.01,ang:0.6},gke:[2.1,1.2,2.5,0.7],stud:[1.7,3.35+2.5,5.5,0.85],slot:{w:0.5,s:0.9}},   /* its banking screw WN-gkA (the dome rH across, hH high; the slot sw half-wide, sd deep, sz out, ang its turn), the stop screw 6MX.gke [r, h, len, rs], the stud WN-gk [r, h, len, rs] and its slot */
+    s43:{nH:0.58,lT:8.2,rH:1.7,hc:1.1,hd:0.4,rs:0.6,pt:0.25,sw:0.2,sd:0.5,sz:0.01,stud:[1.7,3.35+2.5,3.0,0.85],slot:{w:0.5,s:0.9}}};   /* the escapement of 1943's: its banking screw WN-gkA43 (the head hc long under a dome hd high, the slot sw half-wide) and its stud WN-gk */
 
   /* the balance's rim, arm and hub, its masses, its timing screws and weights, and its rollers (build's balance and rollers give each figure's source; the drawings check's
      corrections there): BAL the rim's radii (steel inside r1, brass to r2), the cuts' half width, the arm's flanks (sw: where they meet the rim; AT the arcs r 20's tangent
@@ -1148,7 +1148,7 @@ const WESC=(()=>{
       /* the escapement of 1943's: the 6MX's stud (HOLES.block43), seated on the block's plate face, no slide under it: slotted steel, Ø 3.2-3.4 on the three plans (27-30 px at
          8.4 px/mm), its head's top about as high as the top plate's screws' beside it on 6_Kirow_DEC_422_S.jpg (2.6-3.0 against WN-57's 3.0, ±0.4: possible), drawn as the
          6MX's, 2.5 proud; M1.7 3.0 into the block (estimated) */
-      tag(screw(rv(blk,'1943'),HOLES.block43.stud[0],HOLES.block43.stud[1],TI,...BLK.s43.stud.slice(0,4),null,0,{...BLK.s43.stud[4],a:Math.atan2(-TD.t[1],TD.t[0])}),'WN-gk');
+      tag(screw(rv(blk,'1943'),HOLES.block43.stud[0],HOLES.block43.stud[1],TI,...BLK.s43.stud,null,0,{...BLK.s43.slot,a:Math.atan2(-TD.t[1],TD.t[0])}),'WN-gk');
       /* the 6MX's: a slotted steel stud Ø 3.4 seated on the block's plate face and standing through the plate's Ø 3.5 to flush with its outer face (2_Kirow_247_A.jpg: dark,
          flush, slotted, Ø 3.3-3.5 at 8.99 px/mm; 2_Kirow_009_A.jpg bright; the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg at 30.3 px/mm across: Ø 3.55, standing
          about 2 proud of the face, 3.3 if the view is tilted only 20°: likely), screwed into the block M1.7 3.0 (estimated). What clamps the block to the plate isn't seen: the
@@ -1156,7 +1156,7 @@ const WESC=(()=>{
       /* its slot cut 0.5 wide and 0.9 deep, across the base (the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg at 30.3 px a mm by the stud's Ø 3.55: 15-17 px across,
          running down the stud's side 12 px at that side's 13-15 px a mm of height, square to the base's long edges within 15°: likely; the kit's 0.35 × 0.55 at an
          arbitrary heading until 24 October 2026) */
-      tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,...BLK.m6.stud.slice(0,4),null,0,{...BLK.m6.stud[4],a:Math.atan2(-TD.t[1],TD.t[0])}),'WN-gk');   /* through the slide (2.5) and 3.0 into the block; its head standing 2.5 (±0.7) proud of the
+      tag(screw(blk6,HOLES.block6.stud[0],HOLES.block6.stud[1],TI,...BLK.m6.stud,null,0,{...BLK.m6.slot,a:Math.atan2(-TD.t[1],TD.t[0])}),'WN-gk');   /* through the slide (2.5) and 3.0 into the block; its head standing 2.5 (±0.7) proud of the
          plate's outer face, polished steel (6_Kirow_247_S.jpg, photocompare.py's fit; 7_ the same); flush until 18 October 2026 */   /* its lift through the plate follows the block's (above) */
       /* its steady pins Ø 0.9 through the block, 1.3 into the plate: in 05 04 01-4's block the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
       for(const[g,e2]of[[blkF,6.5],[rv(blk,'last'),3]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-201.gk');

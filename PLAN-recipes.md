@@ -585,9 +585,42 @@ by version and line, since a line like 050401-4 is the block of every version); 
 | Hairspring stud 05 03 02-3 | 3 | 51.66 / 51.67 | 0.0017 | `STD`: the bar, the two facets to a knife edge, the upright leaning 8°, the Ø 1.5 and Ø 0.7 holes |
 | Collet's and stud's pins 05 03 02-4 | bought | | | brass wire, filed half round (the page's pins are the hole's round less the strip's side) |
 
-Left for later: the first-drawn block's arm (05 04_1: `armEl`, a slit arm with a cove in plan, 'first' and the photographed '3955' forms) and the Soviet 6MX's block (its taper, adjusting
-slide and stud, one mesh made of three with faces left out, the loose 6MX.gks/gke/WN-gkA screws, many inline literals); each wants its literals lifted into `BLK` (page hashed before
-and after) before a recipe reads them.
+(The first-drawn block's arm and the Soviet 6MX's block, left here on 31 October 2026, are batch 8d below.)
+
+### Batch 8d (1 November 2026): the detent block in every version, the banking screws and studs; 13 recipes pass
+
+The literals of the first-drawn block (`armEl`), the 6MX's block and the 1943 block's screws were lifted into `BLK` (`BLK.first`, `BLK.m6`, `BLK.s43`) and the detent's two screws into `DETK.gs`
+and `DETK.gf` (escapement.js), each step with `recipes_pagehash.py` in all five versions (last, first, 3955, 6mx, 1943) over the twelve lines the block touches (050401-4, WN-gk, WN-gkA,
+WN-gkA43, cone41, 6MX.gke, 6MX.gks, WN-201.gk, WN-gf, WN-14): the page unchanged within 1e-5 mm. `Recipe.show` (new) is the revision list the card shows a recipe under where it
+differs from `rev` (revShows: the drawn first block is `'first -3955'`, since rev `'first'` would also show on Wempe 3955's card); `recipes_site.py` writes it as the entry's `v`. `TurnArcs`
+(wempe_esc.py) turns a profile with arcs (a dome, a ball end) exactly. Every version of the detent block now has its recipe, and the cards link the right one (`smoke.py --model wempe` asserts
+it for all five versions).
+
+| Part | Key | Volume, recipe / page (mm³) | Surface apart (max) | Notes |
+|---|---|---|---|---|
+| Detent block as first drawn (05 04_1) | `detentBlock.first` (`v` `first -3955`) | 815.08 / 811.33 | 0.1553 (the hole across, expected) | the long arm with the cove r 1.82 (an exact arc where the page has 16 chords), the slit 0.2 × 6.1 and the screw's hole |
+| Detent block as Wempe 3955 photographs it | `detentBlock.3955` | 867.71 / 863.40 | 0.1553 (the hole across, expected) | the arm flush with the base's edge, 3.56 wide, the slit 0.14 × 5.1 |
+| Detent block, the Soviet 6MX's | `detentBlock.6mx` | 604.19 / 598.66 | 0.1684 (three holes at the thread's major diameter, expected) | the base, thin part and notch as the page's four cells, the taper, the slit end, the stud's M1.7, the stop screw's M1.4 |
+| Adjusting slide 6MX.gks | `adjSlide6` | 30.91 / 30.93 | 0.0019 | a key 3.2 wide, 2.5 deep, the stud's clearance hole |
+| Banking screw WN-gkA (6MX) | `bankScrew6` | 13.84 / 13.90 | 0.1578 (the slot bar, 0.4487 where it hangs under the rim, expected) | M1.2 thread, the dome rH 1.7 × 1.4 as an exact cap |
+| Banking screw WN-gkA43 (1943) | `bankScrew43` | 20.29 / 20.54 | 0.1986 (the slot bar, expected) | the head 1.1 long under a dome 0.4 |
+| Banking screw cone41 (first; Wempe 3955 0.55 longer) | `cone41`, `cone41.3955` | 13.86 / 14.40; 14.48 / 15.02 | 0.1503 (the slot band, expected) | the pointed tail (a cone to a point), the dome R 1.8 |
+| Block studs WN-gk (6MX, 1943) | `studScrew6`, `studScrew43` | 63.41 / 60.32; 57.86 / 56.15 | 0.0185 (the kit's 24-sided head) | Ø 3.4 × 5.85, the slot 0.5 × 0.9 at the page's heading; `blockScrew` now `v` `last first` |
+| Foot stop screw 6MX.gke | `stopScrew6` | 18.84 / 17.92 | 0.0105 | `screw()` Ø 4.2 × 1.2, M1.4 × 2.5 |
+| Gold spring's screw WN-14 | `goldScrew` | 0.69 / 0.74 | 0.1205 (the slot, expected) | Ø 1.4, the head's top rounded 0.1 at the rim (an arc through the page's parabola), M0.7 × 0.175 |
+| Foot screw WN-gf | `footScrew` | 3.575 / 3.517 | 0.0098 | the page draws it plain: head Ø 1.6 × 0.45, shank Ø 1 × 3.4 |
+
+**Coverage of the escapement side** (a sweep of every part-line the page shows in the five versions against `WRECIPES`): before the batch, 050401-4 (last, 1943), WN-gk (last/first only; the
+6MX's and 1943's studs are other solids under the same line), and no recipe or bought line for WN-gkA, WN-gkA43, cone41, 6MX.gks, 6MX.gke, WN-14, WN-gf; after it, every line escapement.js draws has one
+(or a bought line: WN-201.gk, WN-205.d, the stones). Lines the sweep still finds without one are not escapement.js's: the fusee side's 050702-2, 050703-1/-2/-3, 050704 (fusee.js) and the 6MX's
+contact set 6MX.ct*, 6MX.cw, 6MX.ch*, 6MX.jw* (train.js and its siblings).
+
+**Page faults, recorded in `expect`** (and in the table below): the slot bars of the dome-headed screws are solid dark bars following the curve 0.45 deep (the 6MX's banking screw's hangs 0.45 under the head's underside at the
+rim, in the air), not cut into the head; the 6MX block's M1 and stop-screw holes are drawn at the thread's major diameter (r 0.5, r 0.70), the 1943 block's M1 at the minor; and the 6MX block's notch
+for the slide: the thin part's corner stops at the notch's near wall (0.35 beyond the base's side, nE - 6.4), so a strip 0.35 wide stands from 2.5 to 3 under the plate beside the thick part, with nothing at 3-6.5 over it.
+
+Left for later: the bought line WN-201.gk (the steady pins) gives the last revised block's lengths (7.8 and 4.3) for every version; the first-drawn block's are 6.5 through, the 6MX's and 1943's 1.2 into the block
+and 3 through the thin part (a bought line has no version).
 
 ### Batch 11b (31 October 2026): the case; 23 recipes pass, five lines bought
 
@@ -650,6 +683,9 @@ stands in the box or on the fusee's square, so the check needs its pose frozen. 
 | Balance arm's screws WN-10, compensation masses' screws WN-12 | the head's slot | 0.126 | each slot is a solid dark box (WN-10 1.3 × 0.25 × 0.2, WN-12 1.6 × 0.25 × 0.25) filling the slot and standing 0.02 out of the head's face, not cut into the head; in both recipes' `expect` and `box_tol` |
 | Compensation masses' screws WN-12 | the head's top | 0.022 | the head's face follows the mass's round side by bending a lathe's top fan (24 triangles from the centre to a rim of 24 points) in x only: the true cylinder is up to 0.022 away between the rim points; in `expect` |
 | Detent block of 1943 (050401-4, 1943) | the banking screw's hole across the leaves | 0.155 | as the last revised block's: a bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill; in `expect` |
+| Dome-headed screws WN-gkA, WN-gkA43, cone41, WN-14 | the head's slot | 0.12-0.45 | each slot is a solid dark bar following the dome 0.15-0.5 deep and standing 0.01 out of it, not cut into the head; the 6MX's banking screw's bar (WN-gkA) hangs 0.45 under the head's underside at the rim; in the recipes' `expect` |
+| Detent block of the 6MX (050401-4, 6mx) | the end face's M1, the stop screw's M1.4 | 0.17 | drawn at the thread's major diameter (r 0.5 and r 0.70 polygons), the 1943 block's M1 at the minor; in `expect` |
+| Detent block of the 6MX (050401-4, 6mx) | the notch for the adjusting slide | 0.35 wide strip | the thin part's cell stops at the notch's near wall (nS0 = nE - 6.94), 0.35 beyond the base's side (nE - 6.59), so a strip from 2.5 to 3 under the plate stands beside the thick part with an empty gap over it (3 to 6.5); the recipe follows the page's cells |
 | Escape wheel's upper endstone screws WN-es | the shank's end in the slot | 0.032 | `screw()` runs the shank 0.1 into the head, but this head is 0.3 high with a 0.232 slot (KIT headGeo): the shank's end stands up into the slot; in the recipe's `expect` |
 | Minute, hour, up-and-down and seconds hands | the blade's root against the boss | 0.07-0.10 | the blade is a separate closed piece with an 8-segment root arc at the boss's radius, against the boss's 72-sided wall: a hairline gap (0.003) at isolated samples; in the recipes' `expect` |
 | Hour hand 05 02 00-2 | the root wedge's underside | about 0.1 | the wedge's underside follows the bevel's cone as flat cells every 0.25 across a blade 1.7 wide, not the cone (likely); in `expect` |
