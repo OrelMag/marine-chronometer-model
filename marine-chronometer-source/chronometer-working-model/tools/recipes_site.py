@@ -9,7 +9,7 @@ is otherwise the same keeps the one committed, so a rerun changes only what chan
 import json,pathlib,re,shutil,subprocess,sys,tempfile
 import model
 HERE=pathlib.Path(__file__).resolve().parent
-def norm(b):return re.sub(rb"'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d'",b"''",b,count=1)   # the header's time written
+def norm(b):return re.sub(rb"[-+]?\d\.\d+E-(?:1[3-9]|[2-9]\d)",b"0.",re.sub(rb"'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d'",b"''",b,count=1))   # the header's time written; a float of rounding noise (1e-13 and smaller: a rotation's 2.8e-17 for a 0) read as 0, as OpenCascade's results vary in them from run to run
 def main():
     check='--check' in sys.argv;from recipes import wempe as W
     out=model.DIR/'parts';js=model.DIR/'js'/'recipes.js';stale=[]
@@ -29,7 +29,7 @@ def main():
     for k,mk in W.RECIPES.items():
         p=mk()
         if hasattr(p,'what'):H.setdefault(p.hn,[]).append({'t':p.title,'buy':f'{p.what}, {p.size}; {p.standard}; {p.material}'})
-        else:H.setdefault(p.hn,[]).append({'t':p.title,'k':k,**({'v':p.rev} if p.rev!='last' else {})})
+        else:H.setdefault(p.hn,[]).append({'t':p.title,'k':k,**({'v':p.show or p.rev} if (p.show or p.rev)!='last' else {})})
     for h,L in H.items():   # a line with a recipe of another version: every entry of it says its own, so the card shows the one for the version on show (maker.js, cfg.recipesShow)
         if any('v' in e for e in L):
             for e in L:e.setdefault('v','last')
@@ -40,5 +40,9 @@ def main():
         stale.append(js.name)
         if not check:js.write_bytes(txt.encode('utf-8'))
     print('\n'.join(('stale: ' if check else 'wrote ')+s for s in stale) or 'up to date')
+    try:   # coverage (informational): the parts-list lines (not assemblies) with neither a recipe nor a bought line on a card
+        lines=json.loads((model.DIR/'bom.json').read_text(encoding='utf-8'))['lines'];unc=[l['id'] for l in lines if l.get('kind')!='asm' and l['id'] not in H]
+        print(f'{len(unc)} of {sum(1 for l in lines if l.get("kind")!="asm")} parts-list lines have no recipe or bought line'+(': '+' '.join(unc) if unc else ''))
+    except (OSError,ValueError,KeyError):pass
     sys.exit(1 if check and stale else 0)
 if __name__=='__main__':main()
