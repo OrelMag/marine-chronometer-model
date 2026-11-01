@@ -9,7 +9,7 @@ is otherwise the same keeps the one committed, so a rerun changes only what chan
 import json,pathlib,re,shutil,subprocess,sys,tempfile
 import model
 HERE=pathlib.Path(__file__).resolve().parent
-def norm(b):return re.sub(rb"'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d'",b"''",b,count=1)   # the header's time written
+def norm(b):return re.sub(rb"[-+]?\d\.\d+E-(?:1[3-9]|[2-9]\d)",b"0.",re.sub(rb"'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d'",b"''",b,count=1))   # the header's time written; a float of rounding noise (1e-13 and smaller: a rotation's 2.8e-17 for a 0) read as 0, as OpenCascade's results vary in them from run to run
 def main():
     check='--check' in sys.argv;from recipes import wempe as W
     out=model.DIR/'parts';js=model.DIR/'js'/'recipes.js';stale=[]

@@ -381,3 +381,17 @@ def chainBand():
         ['The hooks are small flat parts (the page draws them as slabs 0.8 thick); a maker can cut them from the strip to the sheet\'s outlines. The links are not made by this book: a chain of 375 links, 1,500 plates and 750 rivets is bought from a chain maker.']),
       Bought('band','050703-1','Band (Schneckenband)','steel band, its two ends let into the notches of the hooks (05 07 03-2, -3) and hard-soldered ("hart gelötet")','727 long × 0.22 +0,03 thick × 0.8 wide (the width is not on the sheet: taken as the hooks\' 0.8, estimated)','steel strip (Bandstahl), cut to length','spring steel','05 07 03, 05 07_11 (thickness and length); width estimated')]
 for _b in chainBand():RECIPES[_b.key]=(lambda b=_b:b)
+
+# ---------------- the Soviet 6MX's chatons (6MX.ch38u, .ch35u in the top plate, .ch38l in the intermediate bridge): train.js, estimated from Kirov 247's photographs ----------------
+def chaton(key,hn,title,lower):
+    q=W()['WD']['SM6'];d=W()['WD'];TOPT=d['TOP_T'];y0=d['PP_T']+q['y0'];ZB=d['PP_T']+3.8;INNER=d['INNER'];src="train.js (the Soviet 6MX's jewels in chatons: Kirov No. 247's photographs; no sheet), estimated";rw,hj,rl,rs=q['rw'],q['hj'],q['rl'],q['rs']
+    if lower:L=ZB-y0;prof=[(rw,0),(q['rb'],0),(q['rb'],L),(rs,L),(rl,hj),(rw,hj)];sh=y0
+    else:L=TOPT;prof=[(rs,0),(q['rJ'],0),(q['rJ'],L),(rw,L),(rw,L-hj),(rl,L-hj)];sh=-INNER-TOPT
+    ops=[Bar(2*max(r for r,_ in prof),L,'Part off brass bar and face to length',[S('overall',f'{L:g}',None,src)],src),
+         TurnProfile(prof,"Turn the chaton: its outside to fit the bearing's hole, the oil sink from Ø 3.4 at the outer face to the lip Ø 1.2 over the stone, the stone's seat Ø 2.2 × 0.6 in its inner end"+(" (the stone toward the plate)" if lower else ""),
+           [S('outside',f'Ø {2*max(r for r,_ in prof):.3f}',None,src+': fills the bush\'s hole'),S('stone seat',f'Ø {2*rw:g} × {hj:g}',None,src),S('lip',f'Ø {2*rl:g}',None,src),S('oil sink',f'Ø {2*rs:g} at the outer face to the lip',None,src)],src)]
+    r=Recipe(key,hn,title,src,'brass, gilt','gilt',[Setup('1','bar in the collet, turned; the stone pressed into its seat and the lip burnished over it',ops)],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,sh,0)),
+      notes=["The jewel is a bought hole jewel Ø 2.2 × 0.6 (its hole olived), pressed in flush with the face the arbor's shoulder bears on."])
+    r.rev='6mx';return r
+CHAT={'chaton38u':lambda:chaton('chaton38u','6MX.ch38u',"Chaton (6MX), intermediate arbor's upper jewel",False),'chaton35u':lambda:chaton('chaton35u','6MX.ch35u',"Chaton (6MX), seconds arbor's upper jewel",False),'chaton38l':lambda:chaton('chaton38l','6MX.ch38l',"Chaton (6MX), intermediate arbor's lower jewel",True)}
+for _k,_f in CHAT.items():RECIPES[_k]=_f

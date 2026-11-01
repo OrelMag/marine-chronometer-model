@@ -165,7 +165,7 @@ const WTRAIN=(()=>{
      1.19, WN-300 on the intermediate's 0.825 and the seconds' 0.81, each 0.02 over), their cups, WN-302's cup and journal bore, the intermediate bridge's WN-300 and the
      seconds jewel's setting 05 05 04-2, the studs' bushes 05 08 02-2 and the studs 05 02 00-6/-7 with their domes, the hand-setting bush. smallProfs() gives each part's hole
      and its profile [r, y] as last revised, as build draws it; here so the recipes read them (29 October 2026) */
-  const SM={PZ:0.005,rJ:4.596/2,sk:{e:0.0005,ds:1.2},b301:1.21,b38:0.845,b35:0.83,w302:{y:0.11,s:0.4,cs:3.8,cd:0.55,e:0.013},zb:{y:0.71,r:4.3,rs:1.85,ds:0.9},
+  const SM={PZ:0.005,rJ:WD.SM6.rJ,sk:{e:0.0005,ds:1.2},b301:1.21,b38:0.845,b35:0.83,w302:{y:0.11,s:0.4,cs:3.8,cd:0.55,e:0.013},zb:{y:0.71,r:4.3,rs:1.85,ds:0.9},
     s35:{y0:0.2,yd:1.75,hj:1.1,rj:3.6,r0:3.7,r1:5.2},st:{r:3.506,d:1.5},studs:[[2,12.3],[19,6.8]],dS:0.3,hs:{b:1.3,rs:1.64}};
   const smallProfs=()=>{const PZ=SM.PZ,rJ=SM.rJ,sk={f:-1,rs:rJ-SM.sk.e,ds:SM.sk.ds},W=SM.w302,rb=(/** @type {number} */y)=>rCj(y-A.cw.ys)+W.e,Z=SM.zb,Q=SM.s35,yj=PPT+Q.yd;
     const dS=SM.dS,RS=(0.75*0.75+dS*dS)/(2*dS),dome=(/** @type {number} */y,/** @type {number} */s)=>[...Array(7).keys()].map(k=>{const a=Math.asin(0.75/RS)*k/6;return[RS*Math.sin(a),y+s*RS*(1-Math.cos(a))];});
@@ -331,7 +331,7 @@ const WTRAIN=(()=>{
        is taken to fill the bush's hole (4.59 in the plate, 4.3 in the bridge: likely), the stone flush with the face the arbor's shoulder bears on, as the bush's face is, so the
        endshake stays the drawings' (likely); the stone Ø 2.2 × 0.6, its hole olive, the pivot's and 0.025, and the oil sink a cone from Ø 3.4 at the outer face to the lip
        over the stone, Ø 1.2 (estimated: the photographs show the settings' faces only) */
-    {const g=rv(P.topPlate,'6mx'),_s=(g.userData.sub='train'),rw=1.1,hj=0.6,rl=0.6,rs=1.7,ch=ringT([[rs,TT],[rJ,TT],[rJ,TI],[rw,TI],[rw,TI-hj],[rl,TI-hj]]);   /* the chaton from the outer face (TT) to the inner (TI), the stone in its inner end */
+    {const g=rv(P.topPlate,'6mx'),_s=(g.userData.sub='train'),{rw,hj,rl,rs}=WD.SM6,ch=ringT([[rs,TT],[rJ,TT],[rJ,TI],[rw,TI],[rw,TI-hj],[rl,TI-hj]]);   /* the chaton from the outer face (TT) to the inner (TI), the stone in its inner end */
       for(const[k,pv,u]of/** @type {[number,number,string][]} */([[38,0.825,'38u'],[35,0.81,'35u']])){tag(mesh(g,ch,M.gilt,H[k][0],0,H[k][1]),'6MX.ch'+u);
         tag(mesh(g,stoneGeo(rw,(pv+0.025)/2,hj,'olive'),M.ruby,H[k][0],TI-hj/2,H[k][1]),'6MX.jw'+u);}}
     /* the pillar plate's bush for the centre arbor's journal (WN-302, 05 08 02 Schnitt A-B; Messinglager in the coloured section): in hole 1 (4.59 +0.012), its inner face
@@ -347,7 +347,7 @@ const WTRAIN=(()=>{
        on the 0.825, as first drawn and in 1943 0.83 on the 1940 pinion's 0.81 (Ø 0.86 until 28 October 2026, 0.035 over: drawing check 2's 6-M8) */
     for(const[V,b]of/** @type {[string,number][]} */([['last 3955',SM.b38],['first 1943 -3955',0.83]])){const Z=SM.zb;tag(mesh(rv(P.intermediateBridge,V),bushGeo(Z.r/2+PZ,b/2,PPT+Z.y,ZB,{f:1,rs:Z.rs,ds:Z.ds}),M.brass2,H[38][0],0,H[38][1]),'WN-300.zb');}
     /* the 6MX's chaton there (above): the stone flush with the bush's plate-side face (PPT+0.71), the sink toward the dial face */
-    {const g=rv(P.intermediateBridge,'6mx'),y0=PPT+0.71,rw=1.1,hj=0.6;tag(mesh(g,ringT([[rw,y0],[4.3/2,y0],[4.3/2,ZB],[1.7,ZB],[0.6,y0+hj],[rw,y0+hj]]),M.gilt,H[38][0],0,H[38][1]),'6MX.ch38l');
+    {const g=rv(P.intermediateBridge,'6mx'),y0=PPT+WD.SM6.y0,{rw,hj}=WD.SM6;tag(mesh(g,ringT([[rw,y0],[WD.SM6.rb,y0],[WD.SM6.rb,ZB],[WD.SM6.rs,ZB],[WD.SM6.rl,y0+hj],[rw,y0+hj]]),M.gilt,H[38][0],0,H[38][1]),'6MX.ch38l');
       tag(mesh(g,stoneGeo(rw,(0.825+0.025)/2,hj,'olive'),M.ruby,H[38][0],y0+hj/2,H[38][1]),'6MX.jw38l');}
     /* the seconds wheel's jewel at 35 in the bridge: the setting 05 05 04-2 (Fassung) in the bridge's Ø 5.2 hole (frame.js), a tube the bridge's full thickness but its top 0.2
        under the plate side's face, its bore Ø 3.7 open from there down to the jewel 05 05 04-1 (Lagerstein f. Sek.), whose face is 1.75 in (the sheet's 1.7), and under the jewel

@@ -2,7 +2,7 @@ ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('Open CASCADE Model'),'2;1');
 FILE_NAME('Wire stud (Schraube WN-27, likely) wireStud',
-  '2026-11-01T04:12:15',('Author'),('Open CASCADE'),
+  '2026-11-01T04:40:32',('Author'),('Open CASCADE'),
   'Open CASCADE STEP processor 8.0','build123d','Unknown');
 FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'));
 ENDSEC;
@@ -33,11 +33,11 @@ DATA;
 #20 = ORIENTED_EDGE('',*,*,#21,.F.);
 #21 = EDGE_CURVE('',#22,#22,#24,.T.);
 #22 = VERTEX_POINT('',#23);
-#23 = CARTESIAN_POINT('',(0.58115,0.,2.775557561563E-17));
+#23 = CARTESIAN_POINT('',(0.58115,0.,0.));
 #24 = SURFACE_CURVE('',#25,(#30,#42),.PCURVE_S1.);
 #25 = CIRCLE('',#26,0.58115);
 #26 = AXIS2_PLACEMENT_3D('',#27,#28,#29);
-#27 = CARTESIAN_POINT('',(0.,0.,2.775557561563E-17));
+#27 = CARTESIAN_POINT('',(0.,0.,0.));
 #28 = DIRECTION('',(0.,0.,1.));
 #29 = DIRECTION('',(1.,0.,-0.));
 #30 = PCURVE('',#31,#36);

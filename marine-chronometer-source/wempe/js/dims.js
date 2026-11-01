@@ -230,7 +230,9 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
      (the 6MX's second); br the bracket (W0, W1 the wall leg's ends across, h its height, rc its lower corners, tw the leg's thickness, ts the seat's, sr the seat's round end, hr the arbor's hole, sc the wood screws [head r, head h, length, thread r] at sy under the seat's top); ar the arbor, hub, pin (to t over the lever, the 6MX's second) and its head, kn the knob */
   const LOCKQ={c:[65.1,62.9],e:[39.92,72.64],e6:[39,73],W:[80,85],dy6:12.5,lt:2.5,lw:8,pf:[0.52,0.55],br:{W0:56.9,W1:68.9,h:22,rc:3,tw:3,ts:4,sr:6,hr:2.05,sc:[2.8,2.1,15,1.5],sy:[7,16]},ar:{r:2,y0:4.3,y1:0.5},hub:{r:4.9,y0:0.5,y1:11},pin:{r:2,y0:0.5,t:[15.5,16.7]},hd:{r:4.35,h:2.0,c:0.5,y:14.2},
     kn:{y:10.8,r:9.3,r1:9.45,t0:0.5,y1:11.3,rk:9.8,d:0.35,h:3.5,n:90,top:4.0,y2:4.5}};
-  return{H,NO,FA,BAR,FU,MW,CASE,CASEQ,KEYQ,LOCKQ,
+  /* the Soviet 6MX's chatons (train.js; Kirov 247's photographs, all estimated): rw the stone's radius and hj its thickness, rl the lip over it, rs the oil sink's radius at the outer face, rJ the top plate's bush hole's radius that the chaton fills (SM.rJ: 4.596 across), rb the intermediate bridge's chaton's radius, y0 where its stone's face stands over the pillar plate's face */
+  const SM6={rJ:4.596/2,rw:1.1,hj:0.6,rl:0.6,rs:1.7,rb:2.15,y0:0.71};
+  return{H,NO,FA,BAR,FU,MW,CASE,CASEQ,KEYQ,LOCKQ,SM6,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
