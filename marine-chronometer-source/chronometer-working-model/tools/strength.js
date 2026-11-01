@@ -19,7 +19,7 @@ const P=a=>a.map(x=>x*MPa);
 /* ---------- the going train: tooth forces at full wind (every stage taken as lossless, the worst case), Lewis σ = F / (b m Y) ---------- */
 /* Y 0.20-0.35: cycloidal clock teeth have thinner roots than involute gears (Y 0.3-0.45); the low end is taken */
 say('The going train, fully wound (each stage lossless: the largest forces)');
-const Y=0.2,arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arbor\\((.*?)\\),'`).exec(mv);if(!m)throw Error('not found: arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
+const Y=0.2,arb=n=>{const m=new RegExp(`R\\.${n}=hn\\(arborH?\\((.*?)\\),'`).exec(mv);if(!m)throw Error('not found: arbor '+n);const s=m[1],w=/wheel:\{[^}]*?th:([\d.]+)/.exec(s),p=/pin:\{[^}]*?th:([\d.]+)/.exec(s),wy=/wheel:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s),py=/pin:\{[^}]*?\by:([-\d.]+)[,}]/.exec(s);return{w:w&&+w[1],p:p&&+p[1],wy:wy&&+wy[1],py:py&&+py[1]};};
 const fc=(W,P)=>W.wy!=null&&P.py!=null?Math.max(0,Math.min(W.wy+W.w/2,P.py+P.p/2)-Math.max(W.wy-W.w/2,P.py-P.p/2)):Math.min(W.w,P.p);   /* a mesh's face: where the wheel's and the pinion's heights overlap (the fusee wheel's 2.22 on the centre pinion's 1.54 bear over 1.40; min(th) until 18 October 2026) */
 const A={gw:arb('gw'),cw:arb('cw'),tw:arb('tw'),fw:arb('fw'),esc:arb('esc')},M=PH.MODS;
 /* rev a day of each wheel: the centre once an hour */
@@ -50,7 +50,7 @@ say('Pivots and bearings');
 
 /* ---------- the chain and its ends, fully wound ---------- */
 say('The fusee chain, fully wound');
-{const pull=PH.Mup/(PH.rB/1000),[H,TK,PC]=num(/const H=([\d.]+),TK=([\d.]+),PC=([\d.]+)/,'the chain'),[rR]=num(/cylY\(([\d.]+),3\*TK\+0\.08/,'its rivets'),[wT,wN,vN]=num(/const CRK_TH=([\d.]+),CRK_NR=([\d.]+),CRK_V=([\d.]+)/,'the fusee end\'s crook'),[rN,lN]=num(/hkN=endM\(new THREE\.Mesh\(cylY\(([\d.]+),([\d.]+)/,'the hook\'s nose');
+{const pull=PH.Mup/(PH.rB/1000),[H,TK,PC]=num(/const H=([\d.]+),TK=([\d.]+),PC=([\d.]+)/,'the chain'),[rR]=num(/cylY\(([\d.]+),3\*TK\+[\d.]+/,'its rivets'),[wT,wN,vN]=num(/const CRK_TH=([\d.]+),CRK_NR=([\d.]+),CRK_V=([\d.]+)/,'the fusee end\'s crook'),[rN,lN]=num(/hkN=endM\(new THREE\.Mesh\(cylY\(([\d.]+),([\d.]+)/,'the hook\'s nose');
   const mm2=x=>x*1e-6;
   say(`pull ${f(pull,1)} N (the spring's ${f(PH.Mup,2)} N·m on the barrel's chain radius ${f(PH.rB,2)} mm, physics.js); plates ${H} × ${TK} mm, rivets r ${rR}, pitch ${PC}`);
   line('an inner link: its one plate across the rivet hole',`${f(pull,1)} N`,pull/mm2((H-2*rR)*TK),P(STEEL_UTS),'steel\'s strength');

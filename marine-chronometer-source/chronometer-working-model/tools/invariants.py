@@ -85,7 +85,7 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   /* the fusee (makeFusee pull, lever, torque): the solved spring's pull falls from 1 to the chain's lever ratio, fully wound against run down, where the set-up puts it; the
      torque on the fusee wheel, pull times the chain's pitch radius, keeps within its residual of about 2 % (the solved spring's curve against the profile) */
   const F=R.fs,N=FUSEE_TURNS;let tq=[1e9,-1e9],tm=0;for(let i=0;i<=100;i++){const v=F.torque(F.nT*i/100);tq=[Math.min(tq[0],v),Math.max(tq[1],v)];tm+=v/101;}
-  chk('fusee: the spring pulls 1 fully wound',F.pull(0),1,1e-12,'');chk('fusee: and the lever ratio as the chain leaves it (the set-up)',F.pull(F.nT),F.lever(0)/F.lever(F.nT),1e-6,'');
+  chk('fusee: the spring pulls 1 fully wound',F.pull(0),1,1e-12,'');chk('fusee: and the lever ratio as the chain leaves it (the set-up)',F.pull(F.nT),F.lever(0)/F.lever(F.nT),2.5e-3,'');   /* was 1e-6 until 31 October 2026: the set-up is 0.02 turn less (SETBK), the pull there 0.0018 under the lever ratio */
   chk('fusee: its torque gone at run down (the chain’s line through the arbor)',F.torque(N),0,1e-9,'');
   chk('fusee: torque on the fusee wheel within 2% of its mean, while the chain leaves the fusee',(tq[1]-tq[0])/2/tm,0.012,0.003,'');   /* 1.2 % since the chain was measured (20 October 2026: plates 1.95 on 2.19, its pitch line 1.0 off the floor), 1.7 % before */
   /* temperature (core.js MTE): the Model 21's curvature against the test card of No. 3390 (90 F -0.02, 72.5 +0.06, 55 0.00 s a day: 72.5 above the ends' mean by 0.07) */

@@ -117,7 +117,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 
 | # | Batch | Parts | State |
 |---|---|---|---|
-| 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-56, the ring's; pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
+| 1 | Frame I: plates, pillars, ring and their fittings | top plate, pillar plate, pillars, movement ring, cork ring; screws WN-57, WN-ps, the ring's (WN-56); pins WN-201, WN-202, WN-203 (bought) | done, 29 Oct |
 | 2 | Frame II: barrel bridge, bushes | barrel bridge, its click and click screw WN-22, screws WN-55; fusee bush and screws WN-34; dust bush | done, 29 Oct |
 | 3 | Frame III: cocks and the intermediate bridge | upper and lower balance cocks and their screws; intermediate bridge, its screws WN-52 (the bush WN-300 goes with batch 6) | done, 29 Oct |
 | 4 | Arbors and pinions | centre, intermediate, seconds and escape pinions with their arbors; balance staff | done, 29 Oct (the fusee and barrel arbors moved to batch 9) |
@@ -127,7 +127,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | 8 | Balance and rollers | rim, masses, timing screws and weights, hub, impulse and discharge rollers, hairspring collet and stud; the balance's and escape wheel's jewel settings and caps, their jewels (bought) | done, 29 Oct; 8c, 31 Oct: the collet and the stud (05 03 02-2, -3) and their two pins (bought), the arm's screws WN-10, the stud's WN-11 and the masses' WN-12 (below) |
 | 9 | Fusee and barrel | fusee arbor, body, cover plate, Vorreiber, dust plate, fusee wheel, click wheel, maintaining ratchet; barrel arbor, drum, lid, hook block, Steg, set-up ratchet (fusee.js: needs a Node loader) | done, 29 Oct; the fusee body, the maintaining spring, WN-19/20/21 and the detent's arbor 31 Oct (batch 9d); the arbor hook, chain, band and wire stud left |
 | 10 | Motion work, hands, dial | the motion work's wheels and pinions, hands, dial (dial.js: needs a Node loader) | |
-| 11 | Case parts | bowl, bezel, gimbal ring, box fittings | |
+| 11 | Case parts | bowl, bezel, gimbal ring, box fittings | part done: the four one-size screws (30 Oct); 31 Oct: the bowl, bezel, closing plate, both brackets' kinds, gimbal ring and its bracket, lock nuts and eight screw lines made, the glass, closing spring, box and two wood-screw lines bought; the transit lock, the key, the box's fittings and the 6MX's left (below) |
 
 ### Batch 1 (29 October 2026): all 8 made parts pass
 
@@ -138,7 +138,7 @@ after (`recipes_pagehash.py`) and `placements.py --diff`.
 | Movement ring 05 08 00-3 | 14 | 20467.34 / 20438.62 | 0.014 | two recipe faults fixed (below) |
 | Pillar 05 08 00-1 | 12 | 973.92 / 953.06 (thread) | 0.013 | |
 | Cork ring 05 08 01-4 | 1 | 478.71 / 478.10 | 0.0075 | |
-| Screws WN-57, WN-56, the ring's | 6 each | 133.08 / 124.43, 121.51 / 114.45 (thread) | 0.016 | one screw recipe for all (the page's screw()) |
+| Screws WN-57, WN-ps, the ring's (WN-56) | 6 each | 133.08 / 124.43, 121.51 / 114.45 (thread) | 0.016 | one screw recipe for all (the page's screw()) |
 | Pins WN-201, WN-202, WN-203 | bought | | | dowel pins, ISO 8734 or silver steel |
 
 **Faults found in the recipe and fixed.**
@@ -442,7 +442,7 @@ source), which `jewProf` needs; no Node tool read `KIT` before.
 | Impulse roller 02 04 02 (the hollow r 3.5 as an exact arc, the stone's slot, the 1:70 bore, the Ø 1.3 hole) | 4 | 49.297 / 49.307 | 0.0014 |
 | Discharge roller 05 04 04-1 (the stadium, the stone's slot, the bore) | 3 | 5.710 / 5.713 | 0.0013 |
 | The balance's jewel and endstone settings (050406-2.bu, .bl; 050408-2.bu, .bl) and the escape wheel's (050406-2.eu, .el; 050408-2.eu, .el) | 2 each | within 0.29 % (the page's 48-sided lathes) | 0.0027-0.0056 |
-| Their screws WN-55.ck, WN-10.bl, WN-es, WN-ec | 6 each | thread allowance | 0.0118-0.0123; WN-es 0.032 expected (below) |
+| Their screws WN-55.ck, WN-18, WN-es, WN-ec | 6 each | thread allowance | 0.0118-0.0123; WN-es 0.032 expected (below) |
 | Detent block 05 04 01-4 as last revised (base, thin part, upright with its cove r 3 as an exact arc, the slit across, the banking screw's M1.2 across the leaves, the pins' holes, the Ø 1.3, the fixing M1.7, the end face's M1 and two pin holes) | 10 | 638.42 / 635.73 | 0.155 expected (the M1.2 across, below); the rest within 0.02 |
 | Block screw WN-gk | 6 | thread allowance | 0.0102 |
 
@@ -515,7 +515,7 @@ at the boss's radius against the boss's 72-sided wall, a hairline gap the check 
 cell-wise triangulation of the cone (about 0.1); the seconds hand's tail ramp from 0.3 to 0.5 is sampled by the page at its stations 6.35 / 6.5 / 6.55 / 6.6, not at the table's
 6.4 and 6.6 (0.027).
 
-**Batch 11, the case: four screws done, the rest deferred.** `case.js` (1,108 lines) is the bowl (cast, with a bayonet-and-thread rim, bored for the brackets by swept holes), the bezel
+**Batch 11, the case: four screws done, the rest deferred (30 October; the rest is done in Batch 11b below, except the transit lock, the key and the box's fittings).** `case.js` (1,108 lines) is the bowl (cast, with a bayonet-and-thread rim, bored for the brackets by swept holes), the bezel
 (threaded, knurled), the gimbal ring with its swept holes and pivots, the box (birch: joinery), hinges, the maker's plate and the 6MX's fittings, about 30 lines of the parts list.
 Done: the screws of one size each, **WN-kr** (the ring's bracket screws), **WN-hg** (the hinges'), **WN-kh** (the key holder's) and **WN-zg** (the transit lock's pivot screw): their
 sizes moved into `dims.js` as `WD.CASE` (`[head radius, head height, shank length, thread radius]`), `case.js` spreads them into `screw()`, and the four recipes are the kit screw's
@@ -589,6 +589,53 @@ Left for later: the first-drawn block's arm (05 04_1: `armEl`, a slit arm with a
 slide and stud, one mesh made of three with faces left out, the loose 6MX.gks/gke/WN-gkA screws, many inline literals); each wants its literals lifted into `BLK` (page hashed before
 and after) before a recipe reads them.
 
+### Batch 11b (31 October 2026): the case; 23 recipes pass, five lines bought
+
+The page's literals moved into `dims.js` first (`WD.CASEQ`, beside `WD.CASE`), `case.js` reading them back in the same places: the gimbal ring `RG` (its bracket `bk`, the lock's window `lk`), the knurled lock nuts `NUT`,
+the inner pivot screw `P79`, the case brackets `BR`, the locking bracket `LB` (its section `P`), the closing plate `CP`, the bowl `BW` and `TH` (the thread), the bezel `BZ` (its section `pz`, the knurl `kn`, the glass `gl`), and the screws `S71`, `S72`, `S80`,
+`SUR`. **Proof, stronger than `recipes_pagehash.py`** (which takes a line's first object only): a dump of every mesh under the box (`__BX.root`: the movement and the case) in each of the five versions, each in its local frame (its matrix up to its
+`partName` group, so the gimbals' and the shutter's motion does not show), compared vertex for vertex within 1e-5 mm and index for index with the unmodified tree's: identical in all five after the lifts, and again after the retag (only the tags
+differ). The scratch script was `casedump.py`; its idea belongs in `recipes_pagehash.py`, which reads the first object only (batch 10's gap, again).
+
+**The case's holes are not curved.** The brief expected torus segments for `sweepS`'s swept holes. They are straight cylinders along a radius (the sections are revolved, the holes bored along a radius at one turn `a`), so an exact `Drill`;
+the brackets' sections are exact revolutions (`Sector`: a profile turned through part of a turn). The same for the ring's transit-lock window (a rectangle revolved between two radial planes). No torus segment was needed or cut.
+
+**Engine** (`tools/recipes/ops_case.py`; the case's recipes in `tools/recipes/wempe_case.py`, which `wempe.py` imports in its last three lines): `Revolve` (a profile turned with exact arcs: the bowl's round r 7, the closing plate's r 1.3), `Sector`
+(stock, add, cut), `TurnIn`, `DrillT` (a tapped hole along any axis: its thread zone `('ax', origin, direction, r0, r1, l0, l1)`, which `recipes.py`'s `in_zone` and its volume allowance now take), `Point` (a drill's point), `Note` (a zone only: a fine thread on
+a cast part and a straight knurl, DIN 82, each drawn as its nominal cylinder with the designation on the sheet). `recipes.py`: a recipe's `rev` (`'6mx'`) checks it against that version's page (parts the 6MX alone has: its flat closing plate's screw and
+knob, its box's pivot screws, its carrying case's strap screws); `winding()`'s chunk follows the face count (the bowl's thread band is 300,000 faces; 256 at once would need gigabytes).
+
+| Part | Operations | Surface apart (max, recipe to page / page to recipe) |
+|---|---|---|
+| Gimbal ring 050100-5 (Ø 140 / 148, 24 high; two Ø 3.2 pivot holes, one blind; M5 and M2.5 tapped radial holes; the transit lock's window) | 8 | 0.0130 / 0.0119 |
+| Ring bracket 050100-6 (a sector 44° round the ring, bevelled 2 × 2, three holes) | 4 | 0.0123 / 0.0123 |
+| Lock nuts WN-400, WN-400.w (a ring, knurled: Ø 22 / Ø 22.7 at the tips, 120 / 140 teeth, DIN 82 RAA 0.6 / 0.5) | 2 each | 0.0030; 0.0036 |
+| Case bracket 050100-3 (foot sector 42.4° + boss 9 wide, pivot hole, two Ø 4.5 screw holes) | 5 | 0.0193 / 0.0195 (the holes are 24-sided polygons whose flats lie at the radius) |
+| Locking bracket 050100-4 (a profile extruded 15.7 across, the neck from 1.75, a Ø 2.9 hole) | 2 | 0.0450 / 0.0526, expected (below) |
+| Closing plate 050100-2 (turned, the round r 1.3, the groove, five holes, a blind Ø 1.2 with its 118° point) | 8 | 0.0258 / 0.0256, expected (the round in four chords) |
+| Bowl 050100-1 (cast, recess opened, floor faced, thread rim, rebate, notch, three holes; the fine thread M110.55 × 0.75 by convention) | 10 | 0.0157 / 0.0163 |
+| Bezel 050101-2 (turned section, the thread M110.61 × 0.75 inside by convention, the 460-tooth knurl Ø 121.2, DIN 82 RAA 0.8) | 3 | 0.0173 / 0.0173 |
+| WN-79 (M5 × 9.6, a Ø 3.0 tip 4.6 beyond) | 8 | 0.0229 / 0.0230, expected (head Ø 9.2) |
+| WN-78.m4, WN-78.m25 | 6 each | 0.0174; 0.0120 |
+| WN-71 (shoulder), WN-71.f (6MX) | 7; 6 | 0.0180; 0.0200, expected |
+| WN-72, WN-72.6 (6MX) | 6 each | 0.0130; 0.0163 |
+| WN-80.3, WN-80.9 (M6, Ø 12 head, tips 5.1 / 4.1 beyond), WN-80.3m, WN-80.9m (6MX box, Ø 9 head) | 8 each | 0.0300, 0.0300, 0.0225, 0.0225, expected (the heads' 32 sides) |
+| WN-ur, WN-ur.6 (6MX) | 6 each | 0.0174; 0.0175 |
+
+Bought lines: the bezel's glass 050101-1 (Ø 111.6 × 3.5, its top edge chamfered), the closing spring 050100-7 (Ø 1.0 wire, a flat spiral: its sprung shape follows the plate's turn), the wooden box (joinery; its hinges, handles, latch tongue, key holder, lid
+stay and maker's plate are fitted to it and made elsewhere), DIN96 (the transit lock bracket's wood screws, DIN 96 3 × 15) and WN-ro (the eyes' screws, "3 x 15 DIN 96").
+
+**Splits.** `WN-78` (four M4 on the case brackets, one M2.5 on the locking bracket), `WN-71`, `WN-72`, `WN-80` (two sides, two boxes) and `WN-ur` are now one line a size, in `bom.json`, `case.js`, `BOM.md`, `makers.js` and the cards' lines in
+`app.js`. `WN-79`, `WN-ro` and `DIN96` are one size each and were not split (WN-ro and DIN96 became bought lines). A line of a part only the 6MX has carries `"rev": "6mx"`, the drawings' `"rev": "last first 1943"`.
+
+**Page faults, recorded in `expect`** (and in the table below): the locking bracket's screw hole (0.05 chords: `bore`'s `capFix`, the detent's and gold spring's fault again); the closing plate's round in four chords (0.025); the kit's 32-sided screw heads above Ø 8
+(WN-79 Ø 9.2 0.023, WN-71.f Ø 8 0.020, WN-80 Ø 9 and Ø 12 0.022 and 0.029). Not in an `expect`, to be judged on the page: **WN-ro** is drawn with a head Ø 8.5 × 2.2 on the shank of a "3 x 15 DIN 96" (the standard's head is Ø 5.6 × 2.0).
+
+**Deferred, and why.** (1) The transit lock `050101.F`: one parts-list line on six pieces (bracket, lever, arbor, hub, pin, knob), whose sizes are mostly estimated; it wants its line split by piece first (as the screws) and the bracket's bent leg, the lever's stadium,
+the knurled knob and the pin's head made exact. (2) The key: the body 05 01 02-2 and the tube 05 01 02-3 are every-figure turned parts (the likeliest next candidates), the paddle 51 00 11-1, the grooved pin and the coil spring a disc, a pin and a wound spring; the key
+stands in the box or on the fusee's square, so the check needs its pose frozen. (3) The box's fittings (hinges with leaf and knuckle, handles, the lid stay, the key holder's cup, the latch strap, the maker's plate, the carrying case's strap, eyes and cushions) and the 6MX's own
+(strips, caps, hasp, badge): brass and steel pieces, each a plate bent and riveted to wood, estimated, with no dimension a maker needs from this model.
+
 ## Page faults found (for a later fix on the page)
 
 | Part | Where | Size | What |
@@ -607,6 +654,10 @@ and after) before a recipe reads them.
 | Minute, hour, up-and-down and seconds hands | the blade's root against the boss | 0.07-0.10 | the blade is a separate closed piece with an 8-segment root arc at the boss's radius, against the boss's 72-sided wall: a hairline gap (0.003) at isolated samples; in the recipes' `expect` |
 | Hour hand 05 02 00-2 | the root wedge's underside | about 0.1 | the wedge's underside follows the bevel's cone as flat cells every 0.25 across a blade 1.7 wide, not the cone (likely); in `expect` |
 | Seconds hand 05 02 01-1 | the tail's thickness ramp | 0.027 | the table steps 0.3 to 0.5 between 6.4 and 6.6; the page samples it at 6.35, 6.5, 6.55, 6.6; in `expect` |
+| Locking bracket 050100-4 | the screw's hole through the foot | 0.053 | `bore` through `holeCut`, closed by `capFix`, joins the hole's mouths with triangles that skip round it (the detent's and the gold spring's fault again); in its `expect` |
+| Closing plate 050100-2 | the round r 1.3 between rim and boss | 0.026 | case.js draws the quarter circle in four straight rings of 22.5°; its chords lie 0.025 inside the arc; in the plate's `expect` |
+| Case screw heads (WN-79 Ø 9.2, WN-71.f Ø 8, WN-80 Ø 12 and Ø 9) | the head's round | 0.023, 0.020, 0.029, 0.022 | the kit's 32-sided polygon head, as WN-zg's; in the recipes' `expect` and `box_tol` |
+| WN-ro (the carrying case's eye screws) | the head | 0.5 on the radius | the parts list says "3 x 15 DIN 96" (head Ø 5.6 × 2.0); the page draws Ø 8.5 × 2.2 on a 15 mm M3 shank; the recipe is a bought line, the page not changed |
 | Case screw heads (WN-zg, Ø 9) | the head's round | 0.0225 | the kit draws a head a 32-sided polygon; a head over about Ø 8.5 is more than 0.02 inside its circle; in WN-zg's `expect` and `box_tol` |
 | Fusee body 05 06 04-2 | the flange's lathe (first land's run, the slot's cutter arc, the groove's end N) | 0.04, 0.18, 0.13 | 216 columns and a row every 0.04: the walls stand up to 0.04 off the helix, the cutter's arc is chorded up to 0.18, the end's rays join the last land's floor to the hub across a chord up to 0.13; in the recipe's `expect` |
 | Screws WN-19, WN-20, WN-21 | the slots | 0.15 | drawn as solid dark boxes lying in the heads (0.02 out on WN-20 and WN-21), not cut; in the recipes' `expect` |

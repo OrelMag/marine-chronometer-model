@@ -407,7 +407,7 @@ const WDIAL=(()=>{
          seconds hole 2.2) isn't built, its 0.2 more thickness meeting the up-and-down hand's flange and the bezel's step, Lange's heights for which no sheet gives (README, The Lange dial) */
       R.setDial=(/** @type {string} */d)=>{const dd=d==='lange'||d==='kirov'?d:'wempe',t=texOf(dd);for(const f of FMS){const m=f.userData.mat0||f.material;for(const q of new Set([m,f.material]))if(q.map!==undefined&&q.map!==null){q.map=t;q.needsUpdate=true;}}R.dial=dd;};R.dial='wempe';
 }
-    /* its three screws (WN-10 by the coloured section's label, "10" or "18": likely): M1 through its Ø 1.1 holes into the ring's flange (tapped M1 through it: frame.js), the
+    /* its three screws (WN-10 by the general arrangement's label: "10" on the coloured section's scan, legible on Klassik Uhren 3/2006's print, 31 October 2026: sure): M1 through its Ø 1.1 holes into the ring's flange (tapped M1 through it: frame.js), the
        heads Ø 1.7 × 0.8 in the sinks, 0.1 under the face (estimated); from the dial side, so in a frame turned over */
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;gV.add(rg);for(const p of SCR)tag(screw(rg,p[0],-p[1],-(DY1-DL.sc.sd),DL.ds.r,DL.ds.h,DL.ds.len,DL.ds.rs,M.steel),'WN-10.d');}}
     /* its pin at 6 deg: Ø 1.1 in the ring's hole (05 08 00-3's "1,1 Ø"; Ø 1.6 until 15 October 2026, the ring's radial hole's figure) 3.7 deep, its top 0.3 under the

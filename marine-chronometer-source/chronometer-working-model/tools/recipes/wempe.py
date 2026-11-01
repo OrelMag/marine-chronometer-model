@@ -80,11 +80,11 @@ def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None):
 def pillarScrew():
     Q=W()['WD']['PSCR'];return screw('pillarScrew','WN-57','Pillar screw, top plate (WN-57)',Q['r'],Q['h'],Q['len'],Q['rs'],"brass (Wempe 3955's; no drawing gives it)",
       'dims.js PSCR (the coloured section, Wempe 3955; WN sheet not in the set: estimated)',['Head and shank read off the coloured section and Wempe 3955 (estimated ±0.2).'])
-def pillarScrew56():
-    Q=W()['WD']['PSCR'];return screw('pillarScrew56','WN-56','Pillar screw, pillar plate (WN-56)',Q['r'],Q['h'],Q['len'],Q['rs'],"brass (Wempe 3955's; no drawing gives it)",
+def pillarScrewD():
+    Q=W()['WD']['PSCR'];return screw('pillarScrewD','WN-ps','Pillar screw, pillar plate (WN number not read)',Q['r'],Q['h'],Q['len'],Q['rs'],"brass (Wempe 3955's; no drawing gives it)",
       'dims.js PSCR (the coloured section: estimated)',['The same screw as WN-57 in the model (the coloured section reads them alike).'])
 def ringScrew():
-    G=W()['WD']['RING'];return screw('ringScrew','WN-rs','Movement ring screw (WN number not read)',G['scr'][0],G['scr'][1],G['scr'][2],1.3,"brass (Wempe 3955's)",
+    G=W()['WD']['RING'];return screw('ringScrew','WN-56','Movement ring screw (WN-56)',G['scr'][0],G['scr'][1],G['scr'][2],1.3,"brass (Wempe 3955's)",
       'dims.js RING.scr (the coloured section at 9.37 px/mm: sure on the section)')
 
 # ---------------- the top plate (Oberplatte, 05 09 01) ----------------
@@ -982,7 +982,7 @@ def _escU(r):
 def jewelScrews():
     B=WJ()['BJ'];s='escapement.js BJ (the coloured section at 9.4 px/mm; Wempe 3955: heads Ø 2.5 sure, heights likely)'
     return {'settingScrewU':_jscr('settingScrewU','WN-55.ck',"Upper endstone setting's screw (WN-55), two",B['scrU'],'brass (Wempe 3955)',s),
-            'settingScrewL':_jscr('settingScrewL','WN-10.bl',"Lower settings' screw (WN-10), two",B['scrL'],'steel (not given)',s),
+            'settingScrewL':_jscr('settingScrewL','WN-18',"Lower settings' screw (WN-18), two",B['scrL'],'steel (not given)',s),
             'escScrewU':_escU(_jscr('escScrewU','WN-es',"Escape wheel's upper endstone screw, two",B['scrEU'],'brass (Wempe 3955: slotted brass)','escapement.js BJ (Wempe 3955, 2_Wempe_3955_A.jpg: heads 2.5 across; estimated)')),
             'escScrewL':_jscr('escScrewL','WN-ec',"Escape wheel's lower endstone screw, two",B['scrEL'],'brass (Wempe 3955)','escapement.js BJ (Wempe 3955, 3_Wempe_3955_uZ.jpg: heads 2.6; estimated)')}
 def jewelsBought():
@@ -1146,7 +1146,7 @@ def springsBought():
 
 def secondsArbor():return trainArbor('sw','secondsArbor','050501-2','Seconds pinion and arbor (Sekundentrieb)','05 05 01-2 (kompl. 05 05 01, revised 24.3.48)',3.5,'Präz. Rundstahl 3,5','not given on the sheet',"z 10 from the centre distance (confirmed); tip and root by 05 04_8's proportions (likely)")
 
-RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
+RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrewD':pillarScrewD,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
   'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
   'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew,
   'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel,'fuseeArbor':fuseeArbor,'barrelArbor':barrelArbor,
@@ -1426,3 +1426,7 @@ def screwZgX():
 RECIPES.update({'screwKr':screwKr,'screwHg':screwHg,'screwKh':screwKh,'screwZg':screwZgX})
 from . import wempe_fusee as _wf; RECIPES.update(_wf.RECIPES)   # batch 9d (fusee body, the fusee side's screws and arbor): tools/recipes/wempe_fusee.py
 from .wempe_esc import RECIPES as _ESC; RECIPES.update(_ESC)   # batch 8c (the hairspring collet and stud, WN-10/11/12, the 1943 detent block): tools/recipes/wempe_esc.py
+
+# ================= Batch 11 (31 October 2026), the case made parts: their own module (wempe_case.py) =================
+from . import wempe_case
+RECIPES.update(wempe_case.RECIPES)
