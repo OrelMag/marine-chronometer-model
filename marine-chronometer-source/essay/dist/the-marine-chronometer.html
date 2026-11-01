@@ -1139,14 +1139,23 @@ const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
 const UN_FIT={plate:[0xebaf5f,0.45],brass:[0xd4af63,0.45],brass2:[0xb8963f,0.5],wood:0x9c7466,woodBase:'#7c6662'};
 const SERIAL='2E12055';   /* the photographed movement's serial: engraved on the plates, printed on the Hamilton dial */
 const NAVY={no:'7832',yr:'1941'};   /* the Navy dial's number and year, as photographed on 2E7832's (dialCanvas('usn')) */
+/* The jewels and glass (IDEAS 4.1, 1 November 2026): r128's MeshPhysicalMaterial, its clearcoat a polished face's sharp reflection over the body. Its transmission
+   only lets the background through by alpha, kept where light reflected at a grazing angle hides it (opacity 1 - transmission + the reflection's luminance),
+   which is what a glass does: the crystals and the clear jewel, at the opacity they had (0.12, 0.6) seen square on. A ruby let through so reads pink against
+   the pale background (tried 1 November 2026), so the jewels are opaque: a dark ruby body, the environment's light on it cut to a quarter (its pale studio
+   washed every flat face pink), a red glow for the light a stone gives back from inside, under a clearcoat. reflectivity: F0 = 0.16 reflectivity²,
+   so 0.69 for corundum's index 1.77 and 0.52 for glass's 1.52. Shown, not measured: the export to Blender gives them real transmission (blender.js) */
+const RUBY={clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69,envMapIntensity:0.25,emissive:sc(0xb0102a),emissiveIntensity:0.6};
+/* how opaque a material draws, its transmission counted: under 0.5 the tools take it for glass or a ghost (makeInk, the viewers' ghost tests) */
+const opq=m=>(m.opacity??1)*(1-(m.transmission||0));
 function mats(){
-  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
+  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x)),P=(c,m,r,x={})=>new THREE.MeshPhysicalMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
   const stx=stripeTex(),st=stx.map,wt=woodTex();let wtU=null;   /* wtU: the Ulysse Nardin's wood, drawn when first chosen */
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
-    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),steelK:S(0x4a5058,1,0.32),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),clear:S(0xdfe5ea,0.1,0.08,{transparent:true,opacity:0.6}),
+    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),steelK:S(0x4a5058,1,0.32),ruby:P(0x5a0212,0,0.08,RUBY),clear:P(0xdfe5ea,0,0.04,{transmission:0.4,transparent:true,clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69}),
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
-    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),fibre:S(0x2a2e34,0,0.85),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
+    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),fibre:S(0x2a2e34,0,0.85),glass:P(0xffffff,0,0.02,{transmission:0.88,transparent:true,depthWrite:false,reflectivity:0.52}),
     invar:S(0xa7aaa6,1,0.28)};   /* fibre: the dust seal's packing rings (42054), dark slate and matt as photographed: black on 2E11795, slate blue-grey on 2E12055, stained olive on the oblique photograph (brown until 18 October 2026) */
   /* plateCrest: a uv on one of the damascening's ridge crests (row 29.6 of the tile at its left edge, where the map is brightest and its normal flat), through the
      map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
@@ -1191,7 +1200,7 @@ const GHOST=new Map();
 /* a derived copy (see-through, faded) takes its source's current texture and colour, so a dial style or plate finish chosen while it is shown carries over */
 function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);
   if(d.isMeshStandardMaterial&&s.isMeshStandardMaterial){if(d.normalMap!==s.normalMap){d.normalMap=s.normalMap;d.needsUpdate=true;}d.roughness=s.roughness;}return d;}   /* the finish's frosting (setPlateFinish) */
-function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,m.opacity??1);g.depthWrite=false;g.userData={};patchSection(g,false);
+function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,opq(m));if(g.transmission)g.transmission=0;g.depthWrite=false;g.userData={};patchSection(g,false);
   if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
 /* ---------- drawing: the model drawn live as a pen-and-wash drawing, tinted or in ink ----------
    drawOf(m): m's wash. A Phong copy (per-pixel diffuse under the scene's lights and shadows, no specular) whose output is the drawing's colour: the albedo in
@@ -1291,7 +1300,7 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
      Leaves the ghosts hidden and the line pass's uniforms set */
   function ids(scene,cam,meshes,mv,hide){
     const pr=r.inkPR||r.getPixelRatio(),gh=[],so=[];   /* r.inkPR, r.inkBS: a frame drawn into a corner of a larger buffer (the essay's figures share one renderer): its pixel ratio and size */
-    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;inkTag(o);}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
+    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;inkTag(o);}const m=o.material;(m.transparent&&opq(m)<0.5?gh:so).push(o);}
     /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while the drawing draws.
        Each is 4 bytes a pixel, 8 with a depth texture: Edges without ghosts keeps 12 a pixel, not 28 */
     if(r.inkBS)bs.copy(r.inkBS);else r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
@@ -7958,7 +7967,7 @@ const WCASE=(()=>{
     const bz=prt(bowlS,'bezel',-YP),bW=rv(bz,'last first 1943');
     /* the bezel's glass, a little greener and less clear than the box's (M.glass, 0.12): a plain glass reads as nothing at 0.12, so the case view and a section showed the
        bezel open (21 October 2026). Its edge green, as Wempe 6161's (antiquorum_208-4_wempe6161.jpg: a green ring round the dial where the glass's edge shows) */
-    const GLW=M.glassW=M.glassW||new THREE.MeshStandardMaterial({color:sc(0xd8efe4),metalness:0,roughness:0.02,transparent:true,opacity:0.3,depthWrite:false});
+    const GLW=M.glassW=M.glassW||new THREE.MeshPhysicalMaterial({color:sc(0xd8efe4),metalness:0,roughness:0.02,transmission:0.7,transparent:true,depthWrite:false,reflectivity:0.52});
     /* 26 October 2026, the drawings check (drawing-check/batch10.md, re-measured on the sheet at 6× zoom): the glass lies ON the ring, a flat disc Ø 111.6 (r 55.8) from 12.3 to
        15.8 over the underside, its top edge chamfered to r 54.3, standing about 2.4 proud of the ring's lip, which is only 13.4 high at r 57.2 (pixel scans at 4.78 px/mm,
        the right-hand section: likely ±0.2); the ring's bevel runs from the widest band (r 60.2 at 9.9) up to the lip, the lip's inside falls to r 56.2 at 12.6 and the seat

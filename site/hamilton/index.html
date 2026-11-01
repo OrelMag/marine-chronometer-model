@@ -972,14 +972,23 @@ const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74,un:0xe0bd74};
 const UN_FIT={plate:[0xebaf5f,0.45],brass:[0xd4af63,0.45],brass2:[0xb8963f,0.5],wood:0x9c7466,woodBase:'#7c6662'};
 const SERIAL='2E12055';   /* the photographed movement's serial: engraved on the plates, printed on the Hamilton dial */
 const NAVY={no:'7832',yr:'1941'};   /* the Navy dial's number and year, as photographed on 2E7832's (dialCanvas('usn')) */
+/* The jewels and glass (IDEAS 4.1, 1 November 2026): r128's MeshPhysicalMaterial, its clearcoat a polished face's sharp reflection over the body. Its transmission
+   only lets the background through by alpha, kept where light reflected at a grazing angle hides it (opacity 1 - transmission + the reflection's luminance),
+   which is what a glass does: the crystals and the clear jewel, at the opacity they had (0.12, 0.6) seen square on. A ruby let through so reads pink against
+   the pale background (tried 1 November 2026), so the jewels are opaque: a dark ruby body, the environment's light on it cut to a quarter (its pale studio
+   washed every flat face pink), a red glow for the light a stone gives back from inside, under a clearcoat. reflectivity: F0 = 0.16 reflectivity²,
+   so 0.69 for corundum's index 1.77 and 0.52 for glass's 1.52. Shown, not measured: the export to Blender gives them real transmission (blender.js) */
+const RUBY={clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69,envMapIntensity:0.25,emissive:sc(0xb0102a),emissiveIntensity:0.6};
+/* how opaque a material draws, its transmission counted: under 0.5 the tools take it for glass or a ghost (makeInk, the viewers' ghost tests) */
+const opq=m=>(m.opacity??1)*(1-(m.transmission||0));
 function mats(){
-  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
+  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x)),P=(c,m,r,x={})=>new THREE.MeshPhysicalMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
   const stx=stripeTex(),st=stx.map,wt=woodTex();let wtU=null;   /* wtU: the Ulysse Nardin's wood, drawn when first chosen */
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
-    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),steelK:S(0x4a5058,1,0.32),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),clear:S(0xdfe5ea,0.1,0.08,{transparent:true,opacity:0.6}),
+    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),steelK:S(0x4a5058,1,0.32),ruby:P(0x5a0212,0,0.08,RUBY),clear:P(0xdfe5ea,0,0.04,{transmission:0.4,transparent:true,clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69}),
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
-    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),fibre:S(0x2a2e34,0,0.85),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
+    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),fibre:S(0x2a2e34,0,0.85),glass:P(0xffffff,0,0.02,{transmission:0.88,transparent:true,depthWrite:false,reflectivity:0.52}),
     invar:S(0xa7aaa6,1,0.28)};   /* fibre: the dust seal's packing rings (42054), dark slate and matt as photographed: black on 2E11795, slate blue-grey on 2E12055, stained olive on the oblique photograph (brown until 18 October 2026) */
   /* plateCrest: a uv on one of the damascening's ridge crests (row 29.6 of the tile at its left edge, where the map is brightest and its normal flat), through the
      map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
@@ -1024,7 +1033,7 @@ const GHOST=new Map();
 /* a derived copy (see-through, faded) takes its source's current texture and colour, so a dial style or plate finish chosen while it is shown carries over */
 function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);
   if(d.isMeshStandardMaterial&&s.isMeshStandardMaterial){if(d.normalMap!==s.normalMap){d.normalMap=s.normalMap;d.needsUpdate=true;}d.roughness=s.roughness;}return d;}   /* the finish's frosting (setPlateFinish) */
-function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,m.opacity??1);g.depthWrite=false;g.userData={};patchSection(g,false);
+function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,opq(m));if(g.transmission)g.transmission=0;g.depthWrite=false;g.userData={};patchSection(g,false);
   if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
 /* ---------- drawing: the model drawn live as a pen-and-wash drawing, tinted or in ink ----------
    drawOf(m): m's wash. A Phong copy (per-pixel diffuse under the scene's lights and shadows, no specular) whose output is the drawing's colour: the albedo in
@@ -1124,7 +1133,7 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
      Leaves the ghosts hidden and the line pass's uniforms set */
   function ids(scene,cam,meshes,mv,hide){
     const pr=r.inkPR||r.getPixelRatio(),gh=[],so=[];   /* r.inkPR, r.inkBS: a frame drawn into a corner of a larger buffer (the essay's figures share one renderer): its pixel ratio and size */
-    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;inkTag(o);}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
+    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;inkTag(o);}const m=o.material;(m.transparent&&opq(m)<0.5?gh:so).push(o);}
     /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while the drawing draws.
        Each is 4 bytes a pixel, 8 with a depth texture: Edges without ghosts keeps 12 a pixel, not 28 */
     if(r.inkBS)bs.copy(r.inkBS);else r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
@@ -6499,7 +6508,7 @@ const BLENDER=(()=>{
       const mo=/** @type {any} */({name:MN.get(m)||m.name||'material '+materials.length,color:[c.r,c.g,c.b,m.transparent&&!gl?m.opacity:1],metal:m.metalness??0,rough:m.roughness??1,emissive:jw||!e?null:[e.r,e.g,e.b],double:m.side===THREE.DoubleSide,blend:m.transparent&&!gl});
       if(m.map){const ti=tex(m.map,false,m.userData.inkDecal?ENGK:0);if(ti!=null){mo.map=ti;mo.xf=xfOf(m.map);}}
       if(m.normalMap){const ti=tex(m.normalMap,true);if(ti!=null){mo.nmap=ti;mo.nscale=m.normalScale?m.normalScale.x:1;mo.xf=mo.xf||xfOf(m.normalMap);}}
-      if(gl){mo.trans=1;mo.ior=m===M.clear?1.77:1.52;mo.rough=Math.min(mo.rough,0.05);mo.metal=0;}if(jw){mo.trans=0.85;mo.ior=1.77;mo.metal=0;}
+      if(gl){mo.trans=1;mo.ior=m===M.clear?1.77:1.52;mo.rough=Math.min(mo.rough,0.05);mo.metal=0;}if(jw){mo.trans=0.85;mo.ior=1.77;mo.metal=0;const r=sc(0xc8163c);mo.color=[r.r,r.g,r.b,1];}   /* the stone's own red: the page's ruby is darker, its body under a glow (core.js, RUBY) */
       materials.push(mo);MI.set(m,materials.length-1);return materials.length-1;};
     const meshOf=(g,m,s,name,share)=>{const k=g.uuid+'|'+(Array.isArray(m)?m.map(x=>x.uuid).join():m.uuid);if(share&&GI.has(k))return GI.get(k);
       const prims=Array.isArray(m)&&g.groups.length?g.groups.map(gr=>({...s,idx:s.idx?s.idx.slice(gr.start,gr.start+gr.count):Uint32Array.from({length:gr.count},(_,i)=>gr.start+i),mat:matOf(m[gr.materialIndex])})):[{...s,mat:matOf(Array.isArray(m)?m[0]:m)}];
@@ -6807,7 +6816,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const COLM=new Map();
   const colOf=(p,k)=>{if(st.csrc){const s=PCE[k]&&PCE[k].src||PARTS[p]&&PARTS[p].src;return s&&SRC[s][1];}return PCOL[k]||PCOL[p];};   /* k: the mesh's key, its piece's colour or source where it has one */
   function colourOf(m0,p,pk){const col=p&&colOf(p,pk);if(!col||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+pk+(st.csrc?':s':'');let c=COLM.get(k);
-    if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(col);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.emissive)c.emissive.setRGB(0,0,0);
+    if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(col);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.clearcoat){c.clearcoat=0;c.envMapIntensity=1;}if(c.emissive)c.emissive.setRGB(0,0,0);
       patchSection(c,!!m0.userData.secCap);c.userData.side0=m0.userData.side0??m0.side;c.side=m0.side;c.clippingPlanes=[...(m0.clippingPlanes||[])];COLM.set(k,c);}return c;}
   /* per-part opacity, set from the right-click menu */
   const FADE=new Map();
@@ -7012,14 +7021,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();ray.layers.enable(2);   /* layer 2: the pieces drawn merged (drawMerge) */
   /* what a click passes through: what is faded below half, glass, or see-through as it would be with nothing picked; so with a part or piece picked, the ghosted rest still takes a click */
-  const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&m0.opacity<0.5)return true;return m.userData.inkBox?!!(st.focus&&!inK(st.focus,m)):!!ghOf(m,st.focus);};
+  const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&opq(m0)<0.5)return true;return m.userData.inkBox?!!(st.focus&&!inK(st.focus,m)):!!ghOf(m,st.focus);};
   function hitAt(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const all=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&INFO[h.object.userData.part]),hits=all.filter(h=>!through(h.object));
     return hits[0]||all.filter(h=>h.object.userData.devPlate).sort((a,b)=>a.object.userData.rad-b.object.userData.rad)[0]||null;}   /* a see-through schematic plate (laid out) is picked only where no part shows through it, the smallest where they overlap */
   /* a glass (see-through by its material: the crystal, the box's glass) passes a click to what is behind it; clicking that again picks the glass in front of it, and again goes back.
      The glass counts where only the pick's ghosting hides it (look hides a ghosted noShadow mesh: ghHid) */
   const glassIn=hit=>{const g=[];for(const h of ray.intersectObjects([BX.root],true)){if(h.distance>=hit.distance)break;const o=h.object,u=o.userData,m0=u.mat0||o.material;
-      if(u.pk&&INFO[u.part]&&m0.transparent&&m0.opacity<0.5&&!u.devPlate&&(shown(o)||u.ghHid&&shown(o.parent))&&!g.includes(u.pk))g.push(u.pk);}return g;};
+      if(u.pk&&INFO[u.part]&&m0.transparent&&opq(m0)<0.5&&!u.devPlate&&(shown(o)||u.ghHid&&shown(o.parent))&&!g.includes(u.pk))g.push(u.pk);}return g;};
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}
     const pk=hit.object.userData.pk,stk=[pk,...glassIn(hit).filter(k=>k!==pk)],i=stk.indexOf(st.pick);showPart(stk[i<0?0:(i+1)%stk.length]);}   /* the piece, where its part has pieces */   /* the piece, where its part has pieces */
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,fAnchor(hit.object));}else if(st.tour<0)jump(()=>setView(st.view,true));}
@@ -7047,7 +7056,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(SEL&&SEL.busy())return;if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
   function openOpm(cx,cy){const rc=cv.getBoundingClientRect();ndc.set((cx-rc.left)/rc.width*2-1,-(cy-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);
-    const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>opOf(h.object)!=null);
+    const hit=hits.find(h=>!(h.object.material.transparent&&opq(h.object.material)<0.5))||hits.find(h=>opOf(h.object)!=null);
     if(!hit&&!st.hid.size&&!st.iso){closeOpm();return;}
     opPart=hit?hit.object.userData.pk:null;opm.classList.add('on');opRender();
     const sr=stage.getBoundingClientRect();opm.style.left=clamp(cx-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(cy-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';}
@@ -7690,7 +7699,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(show&&st.drive&&DRIVE_HIDE.has(l.part))show=false;if(show&&isoOut(l.part))show=false;
       if(!show){l.el.style.opacity=0;continue;}
       const P0=l.fn();
-      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);l.occ=rayBlocked(camP,tmpV.copy(P0).sub(camP).normalize(),d-0.8,BX.root,m=>m.userData.part!==l.part&&!(m.material.transparent&&m.material.opacity<0.5)&&!m.userData.decal);}
+      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);l.occ=rayBlocked(camP,tmpV.copy(P0).sub(camP).normalize(),d-0.8,BX.root,m=>m.userData.part!==l.part&&!(m.material.transparent&&opq(m.material)<0.5)&&!m.userData.decal);}
       if(l.occ){l.el.style.opacity=0;continue;}
       tmpV.copy(P0).project(cam);const px=(tmpV.x+1)/2*W,py=(1-tmpV.y)/2*Hh;
       if(tmpV.z>1||px<4||px>W-4||py<4||py>Hh-40){l.el.style.opacity=0;continue;}
