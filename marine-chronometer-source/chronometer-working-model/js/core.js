@@ -341,6 +341,48 @@ function drawMerge(scene,meshes){
         if(on!==b.on){for(const o of b.list)lay(o,on);b.on=on;}
         if(b.mesh){const vis=on&&shown(b.parent);b.mesh.visible=vis;if(vis){b.mesh.matrix.copy(b.parent.matrixWorld);b.mesh.matrixWorld.copy(b.parent.matrixWorld);b.mesh.castShadow=b.list.some(o=>o.castShadow);}}}
       if(re)relist();}};}
+/* rayBlocked(o, d, far, root, keep): whether a mesh shown under root (on layer 0 or 2, the pieces drawn merged; the merged copies left out, their pieces tested) that
+   keep(m) accepts has a triangle nearer than far along the ray from o in the unit direction d (world), faces culled by their material's side as Mesh.raycast culls them.
+   The labels' test of what covers them, 5 times a second: r128's raycaster tries every triangle of every mesh whose box the ray passes, hidden ones too, which on the
+   Wempe (1.5 million triangles shown, 1.8 million hidden) stalled the page 1.2 s a test (1 November 2026). Here each geometry's triangles are in a bounding-volume tree
+   (tools/bom-check.js's), built when first needed and kept while its positions are unchanged, and the first hit ends it */
+const RAYBV=new WeakMap(),RB={s:new THREE.Sphere(),m:new THREE.Matrix4(),r:new THREE.Ray(),a:new THREE.Vector3(),b:new THREE.Vector3(),c:new THREE.Vector3(),p:new THREE.Vector3(),rc:new THREE.Raycaster()};
+/** @param {any} g */
+function rayTree(g){const P=g.attributes.position,I=g.index,key=P.version+'/'+(I?I.version:-1)+'/'+P.count+'/'+(I?I.count:-1);let e=RAYBV.get(g);if(e&&e.key===key)return e;
+  const n=Math.floor((I?I.count:P.count)/3),V=new Int32Array(3*n),TB=new Float32Array(6*n),C=new Float32Array(3*n),ord=new Int32Array(n),M=2*Math.ceil(n/4)+2;
+  const X=new Float32Array(3*P.count);for(let v=0;v<P.count;v++){X[3*v]=P.getX(v);X[3*v+1]=P.getY(v);X[3*v+2]=P.getZ(v);}
+  for(let t=0;t<n;t++){ord[t]=t;for(let j=0;j<3;j++)V[3*t+j]=I?I.getX(3*t+j):3*t+j;
+    for(let k=0;k<3;k++){const x=X[3*V[3*t]+k],y=X[3*V[3*t+1]+k],z=X[3*V[3*t+2]+k],lo=Math.min(x,y,z),hi=Math.max(x,y,z),ep=1e-6*(Math.abs(lo)+Math.abs(hi))+1e-6;TB[6*t+k]=lo-ep;TB[6*t+3+k]=hi+ep;C[3*t+k]=lo+hi;}}
+  const NB=new Float32Array(6*M),NL=new Int32Array(M).fill(-1),NR=new Int32Array(M),NS=new Int32Array(M),NC=new Int32Array(M),q=[0,0,n];let nn=n?1:0;NS[0]=0;NC[0]=n;
+  while(q.length){const c=/** @type {number} */(q.pop()),s=/** @type {number} */(q.pop()),i=/** @type {number} */(q.pop()),k6=6*i;
+    for(let k=0;k<3;k++){NB[k6+k]=1e30;NB[k6+3+k]=-1e30;}
+    for(let j=s;j<s+c;j++){const t=6*ord[j];for(let k=0;k<3;k++){if(TB[t+k]<NB[k6+k])NB[k6+k]=TB[t+k];if(TB[t+3+k]>NB[k6+3+k])NB[k6+3+k]=TB[t+3+k];}}
+    if(c<=8)continue;let ax=0,ex=-1;for(let k=0;k<3;k++)if(NB[k6+3+k]-NB[k6+k]>ex){ex=NB[k6+3+k]-NB[k6+k];ax=k;}
+    const h=c>>1;let lo=s,hi=s+c-1;while(lo<hi){const pv=C[3*ord[(lo+hi)>>1]+ax];let u=lo,w=hi;   /* the median along the longest side, by quickselect */
+      while(u<=w){while(C[3*ord[u]+ax]<pv)u++;while(C[3*ord[w]+ax]>pv)w--;if(u<=w){const z=ord[u];ord[u]=ord[w];ord[w]=z;u++;w--;}}
+      if(s+h<=w)hi=w;else if(s+h>=u)lo=u;else break;}
+    const L=nn++,R=nn++;NL[i]=L;NR[i]=R;NS[L]=s;NC[L]=h;NS[R]=s+h;NC[R]=c-h;q.push(L,s,h,R,s+h,c-h);}
+  e={key,V,X,ord,NB,NL,NR,NS,NC,nn};RAYBV.set(g,e);return e;}
+/** @param {any} o @param {any} d @param {number} far @param {any} root @param {(m:any)=>boolean} keep */
+function rayBlocked(o,d,far,root,keep){const R=RB.r,F=THREE.FrontSide,B=THREE.BackSide;
+  /** @param {any} m */
+  const hit=m=>{const g=m.geometry,mat=m.material;if(!g||!g.isBufferGeometry||!g.attributes.position||mat===undefined)return false;
+    if(m.isInstancedMesh||m.isSkinnedMesh||(g.morphAttributes.position&&m.morphTargetInfluences)){const h=[];RB.rc.set(o,d);RB.rc.far=far;m.raycast(RB.rc,h);return h.length>0;}
+    if(g.boundingSphere===null)g.computeBoundingSphere();RB.s.copy(g.boundingSphere).applyMatrix4(m.matrixWorld);if(RB.s.center.distanceTo(o)-RB.s.radius>far)return false;R.set(o,d);if(!R.intersectsSphere(RB.s))return false;
+    RB.m.copy(m.matrixWorld).invert();R.applyMatrix4(RB.m);if(g.boundingBox===null)g.computeBoundingBox();if(!R.intersectsBox(g.boundingBox))return false;
+    const ms=[].concat(mat),cull=ms.every(q=>q.side===F)?1:ms.every(q=>q.side===B)?-1:0,e=rayTree(g),V=e.V,X=e.X,NB=e.NB,st=[0],O=R.origin,D=R.direction;
+    if(!e.nn)return false;
+    while(st.length){const i=/** @type {number} */(st.pop()),k=6*i;let t0=0,t1=Infinity,ok=true;
+      for(let a=0;a<3&&ok;a++){const Oa=a?a>1?O.z:O.y:O.x,Da=a?a>1?D.z:D.y:D.x,lo=NB[k+a],hi=NB[k+3+a];
+        if(Da===0){if(Oa<lo||Oa>hi)ok=false;continue;}let u=(lo-Oa)/Da,v=(hi-Oa)/Da;if(u>v){const w=u;u=v;v=w;}if(u>t0)t0=u;if(v<t1)t1=v;if(t0>t1)ok=false;}
+      if(!ok)continue;if(e.NL[i]>=0){st.push(e.NL[i],e.NR[i]);continue;}
+      for(let j=e.NS[i];j<e.NS[i]+e.NC[i];j++){const t=e.ord[j];RB.a.fromArray(X,3*V[3*t]);RB.b.fromArray(X,3*V[3*t+1]);RB.c.fromArray(X,3*V[3*t+2]);
+        const x=cull<0?R.intersectTriangle(RB.c,RB.b,RB.a,true,RB.p):R.intersectTriangle(RB.a,RB.b,RB.c,cull>0,RB.p);
+        if(x&&RB.p.applyMatrix4(m.matrixWorld).distanceTo(o)<far)return true;}}
+    return false;};
+  /** @param {any} n @returns {boolean} */
+  const walk=n=>{if(!n.visible)return false;if(n.isMesh&&!n.userData.merged&&(n.layers.mask&5)&&keep(n)&&hit(n))return true;for(const c of n.children)if(walk(c))return true;return false;};
+  return walk(root);}
 /* mainspring: a strip t thick and len long, as the videos give it (12 October 2026, the owner's decision: References/VIDEOS.md, Measurements): the coils' pitch read
    round the whole turn on KLUwI2UUCMQ's let-down spring is 1/41.0-1/41.8 of the measured barrel's inside radius (15:54, 33:06), so at most 0.394 mm in the r 18.3 barrel
    (0.38-0.41 over r 17.8-18.8); the length over the thickness, the pack's area over the pitch squared, about 2,700 without a scale (2,630-2,790 on two movements),

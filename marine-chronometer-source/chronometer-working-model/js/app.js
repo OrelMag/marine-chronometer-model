@@ -1118,7 +1118,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   }
 
   /* ---------- label placement ---------- */
-  const ray2=new THREE.Raycaster(),tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0;ray2.layers.enable(2);
+  const tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0;   /* what covers a label: rayBlocked (core.js), the shown meshes' triangles in trees */
   const lsorted=()=>labels.slice().sort((p,q)=>(PRI[q.part]||1)-(PRI[p.part]||1));let LS=null;
   function placeLabels(now){
     if(!LS)LS=lsorted();
@@ -1131,8 +1131,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(show&&st.drive&&DRIVE_HIDE.has(l.part))show=false;if(show&&isoOut(l.part))show=false;
       if(!show){l.el.style.opacity=0;continue;}
       const P0=l.fn();
-      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);ray2.set(camP,tmpV.copy(P0).sub(camP).normalize());ray2.far=d-0.8;
-        const hits=ray2.intersectObject(BX.root,true);l.occ=hits.some(h=>shown(h.object)&&h.object.userData.part!==l.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5)&&!h.object.userData.decal);}
+      if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);l.occ=rayBlocked(camP,tmpV.copy(P0).sub(camP).normalize(),d-0.8,BX.root,m=>m.userData.part!==l.part&&!(m.material.transparent&&m.material.opacity<0.5)&&!m.userData.decal);}
       if(l.occ){l.el.style.opacity=0;continue;}
       tmpV.copy(P0).project(cam);const px=(tmpV.x+1)/2*W,py=(1-tmpV.y)/2*Hh;
       if(tmpV.z>1||px<4||px>W-4||py<4||py>Hh-40){l.el.style.opacity=0;continue;}
