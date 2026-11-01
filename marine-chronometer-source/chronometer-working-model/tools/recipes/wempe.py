@@ -27,6 +27,9 @@ def brg(b):
 def add(p,u,k=1):return (p[0]+u[0]*k,p[1]+u[1]*k)
 
 # ---------------- the cork ring (Korkring, 05 08 01-4) ----------------
+def pinPoint(at,r,dp,src):
+    """a steady pin's blind hole's 118° drill point beyond its depth dp, opened from the 'in' face (frame.js pinPt: the sheets draw the point, its angle not figured)"""
+    return Cone(at,r,0,'in',None,r/math.tan(math.radians(59)),"and the drill's 118° point beyond it",[S('',f'118°, {r/math.tan(math.radians(59)):.2f} beyond the {dp}',None,src+" draws it; the drill's angle")],z0=dp)
 def corkRing():
     D=W()['WD'];K=D['CORK'];TT=-D['INNER']-D['TOP_T'];yb=TT-K['below'][0]-K['below'][1]   # its underside on the dust bush's collar
     ro,ri,h=K['ro'],K['ri'],K['h']   # dims.js CORK: Ø 16.1 × 3.86 scaled on the coloured section at 9.32 px/mm, the bore the dust bush's neck Ø 9.7 + 0.02, drawn 3.70 squeezed
@@ -278,6 +281,7 @@ def barrelBridge():
     for k in (42,48):hl(k,H[k],2*FR['rCl26'],f'Hole {k}: drill clear for M2.6',[S('','Ø 2.8',None,src)])
     for k in (41,47):
         hl(k,H[k],2*FR['rPinQ'],f'Hole {k} (steady pin): drill and ream blind from the underside, pressed',[S('',f'Ø 1.585 -0.005 × {B["pinD"]}',None,src)],dp=B['pinD'])
+        ops.append(pinPoint(pl(H[k]),FR['rPinQ'],B['pinD'],src+"'s side view"))
         ops.append(Cone(pl(H[k]),FR['rPinQ']+B['cs'],FR['rPinQ'],'in',t,B['cs'],f'Hole {k}: countersink 90°',[S('',f'{B["cs"]} × 90°',None,'05 08_13')]))
     return Recipe('barrelBridge','050805-1','Barrel bridge (Federhausbrücke)','05 08 05-1 (kompl. 05 08 05)','Messingblech 3,5 Ms 58 (05 08 05-1)','gilt (Wempe 3955)',[
         Setup('1','blank on the top plate, its rim turned with it',[stock]),Setup('2','on the mill, underside up',ops,view='bottom')],
@@ -390,6 +394,7 @@ def upperCock():
     ops4=[Hole(loc(H[8]),2*FR['rCl26'],'in',top,ft,'Hole 8 (its screw): drill clear for M2.6',[S('','Ø 2.8',None,src)],src,key='8')]
     for k in (6,50,9):
         ops4.append(Hole(loc(H[k]),2*FR['rPinQ'],'in',top,U['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {U["pinD"]}',None,src)],src,key=str(k)))
+        ops4.append(pinPoint(loc(H[k]),FR['rPinQ'],U['pinD'],src+' A-B'))
         ops4.append(Cone(loc(H[k]),FR['rPinQ']+U['pinCs'],FR['rPinQ'],'in',top,U['pinCs'],'and sink it 90°',[S('',f'{U["pinCs"]} × 90°',None,'05 08_05')]))
     r=Recipe('upperCock','050803-1','Upper balance cock (Unruhkloben oben)','05 08 03-1 (kompl. 127-556.04 U30)','Profilmessing Ms 58 (05 08 03-1)','gilt (Wempe 3955)',[
         Setup('1','profile bar on the mill, top up',ops1,view='top'),Setup('2','underside up, on the mill and the faceplate',ops2,view='bottom'),
@@ -418,7 +423,7 @@ def lowerCock():
     ops=[Plate(bd.Face(out),t,'Cut the blank from Profilmessing 20×10×8×3,3 Ms 58 to length',[S('bar',f'{bl} × {bw} × {bd_}','10 -0.1 deep',src),S('lug',f'{lw} wide, r {r5} round 23, {lt} thick at the far face','3.22 -0.04 (drawn at its top)',src)],src),
          Pocket(lugF,'in',t,t-lt,'Mill the lug down to its thickness from the plate side',[S('lug',f'{lt} thick',None,src)]),
          Hole(loc(o),i26['D1'],'in',t,None,'Hole 36: drill and tap M2.6 through (the screw from the top plate)',[S('','M2.6',None,src+' G-H')],src,thread=i26,key='36')]
-    for k in (22,37):ops.append(Hole(loc(H[k]),2*FR['rPinQ'],'in',t,Q['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {Q["pinD"]}',None,src)],src,key=str(k)))
+    for k in (22,37):ops+=[Hole(loc(H[k]),2*FR['rPinQ'],'in',t,Q['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {Q["pinD"]}',None,src)],src,key=str(k)),pinPoint(loc(H[k]),FR['rPinQ'],Q['pinD'],src+' A-B')]
     ops2=[Hole(c23,2*FR['rJ'],'out',t,lt,'Hole 23: ream through the lug',[S('','Ø 4.59','+0.012',src)],src,key='23'),
           Hole(c23,Q['seat'],'out',t,lt-Q['floor'],'Bore the setting\'s seat from the far face',[S('',f'Ø {Q["seat"]:.3f} to {Q["floor"]} from the near face','5.2 H7; 0.5 +0.03',src)],src,key='23')]
     for sx in (1,-1):ops2.append(Hole((c23[0]+nvl[0]*Q['scr']*sx,c23[1]+nvl[1]*Q['scr']*sx),i12['D1'],'out',t,lt,'Its screw: drill and tap M1.2',[S('',f'M1.2, {Q["scr"]} from 23 across the axis','3.5 +0.1 (revision a), at the middle',src)],src,thread=i12,key='s12'))
@@ -440,7 +445,7 @@ def intermediateBridge():
     for k in (28,43):
         ops.append(Hole(pl(H[k]),2*FR['rCl26'],'in',t,None,f'Hole {k}: drill clear for M2.6',[S('','Ø 2.8',None,src)],src,key=str(k)))
         ops.append(Hole(pl(H[k]),2*Z['sink'][0],'out',t,Z['sink'][1],'and sink it for the screw\'s head',[S('',f'Ø {2*Z["sink"][0]} × {Z["sink"][1]}',None,'Wempe 3955 (likely); depth estimated')],src,key=str(k)))
-    for k in (29,44):ops.append(Hole(pl(H[k]),2*FR['rPinQ'],'in',t,Z['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {Z["pinD"]}',None,src)],src,key=str(k)))
+    for k in (29,44):ops+=[Hole(pl(H[k]),2*FR['rPinQ'],'in',t,Z['pinD'],f'Hole {k} (steady pin): drill and ream, pressed',[S('',f'Ø 1.585 -0.005 × {Z["pinD"]}',None,src)],src,key=str(k)),pinPoint(pl(H[k]),FR['rPinQ'],Z['pinD'],'05 08 04')]
     ops.append(Hole(pl(H[38]),Z['bush'],'in',t,None,'Hole 38: bore for the bush WN-300',[S('',f'Ø {Z["bush"]}',None,src)],src,key='38'))
     ops.append(Cone(pl(H[38]),Z['mouth'][0],Z['bush']/2,'in',t,Z['mouth'][1],'and its 45° mouth on the plate side',[S('','Ø 5.7 at the face, 45°',None,src+' section (likely)')]))
     ops.append(Hole(pl(H[35]),Z['set'],'in',t,None,'Hole 35: bore for the seconds jewel\'s setting',[S('',f'Ø {Z["set"]}',None,src)],src,key='35'))
