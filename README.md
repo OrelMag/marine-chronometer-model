@@ -361,6 +361,7 @@ every tool, what it checks and how long it takes. Before committing a change:
        python fine.py --hold    # the same with the balance locking arm locked and the train-blocking screw down
        python maintaining.py    # the fusee's maintaining work over run and wind cycles (exit code 1 on a failure)
        python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after
+       python beforeafter.py --model wempe --before OTHER/index.html SPEC.json   # each changed part alone, before (another worktree's page) and after, from the angle where they differ most, the change boxed and close up (tools/beforeafter/)
        python solids.py     # every part a closed solid, facing out (exit code 1 on a failure)
        python exploded.py   # no two parts meet in the Exploded view, at any spread (exit code 1 on a failure)
        python overhaul.py   # every operation of the manual's overhaul takes its parts off, or puts them on, clear of the rest
