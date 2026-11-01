@@ -83,7 +83,8 @@ const WESC=(()=>{
      tapped hole 1.0 from its end, r 0.35, 0.42 deep; the blade's thicker part 2.9 long; the blade from 0.4 inside the pipe; the pipe Ø 1.15; the horn from -0.45, 32
      steps, its bevel's 0.74 and tip's 0.05; the gold spring's head 2.2 past the square's end, 2.4 long, 2 high, its arm 1, its hole 1.2 from the end, r 0.35); DETV each
      version's dv options */
-  const DETK={foot:6.6,fhR:0.55,pinR:0.225,pinT:2.1,bo:0.05,sp:[0.035,0.01,2.5,0.045],sqT:1.0,sqR:0.35,sqD:0.42,thk:2.9,b0:0.4,pR:1.15/2,hb:-0.45,hN:32,bev:0.74,tip:0.05,gHd:2.2,gL:2.4,gH:2,gA:1,gHo:1.2,gR:0.35};
+  const DETK={foot:6.6,fhR:0.55,pinR:0.225,pinT:2.1,bo:0.05,sp:[0.035,0.01,2.5,0.045],sqT:1.0,sqR:0.35,sqD:0.42,thk:2.9,b0:0.4,pR:1.15/2,hb:-0.45,hN:32,bev:0.74,tip:0.05,gHd:2.2,gL:2.4,gH:2,gA:1,gHo:1.2,gR:0.35,
+    gs:{r:0.7,hd:0.4,dr:0.1,rs:0.35,t0:0.3,t1:0.95,sw:0.12,sd:0.15,sz:0.01,ang:0.7,hl:1.2,hu:0.4},gf:{r:0.8,hh:0.45,rs:0.5,l:3.4}};   /* the gold spring's screw WN-14 (head r, 0.4 high, its top rising dr at the rim; the M0.7 shank from t0 to t1; the slot sw half-wide, sd deep, sz out, turned ang; hl in from the head, hu over the spring) and the foot's screw WN-gf (head r, hh high, the shank rs, l long) */
   const DETV={last:{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:1.3+2-0.05-0.9,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0},first:{w:2,wb:1,wh:0.8,d0:1.3,pp:2.30,pl:2.0,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025},
     w3955:{w:2,wb:1,wh:0.8,d0:1.3,pp:1.95,pl:1.7,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025},late:{w:1.9,wb:0.9,wh:0.75,d0:1.3,pp:1.3+2-0.05-0.9,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0}};   /* late: the 6MX's and 1943's (as last revised but their own ew0, screw) */
   /* its line in plan: on the blade's line at the pipe, bending steadily toward the block to its end, as Wempe 3955's (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, flattened
@@ -960,13 +961,13 @@ const WESC=(()=>{
          photocompare.py's w3955_detentBlock camera), Lange 5177 (8_Lange_5177_Feder.jpg, against the square) 1.53-1.67: about 1.43 (likely, ±0.15); the coloured section's Ø 1.97
          is the strip's 2 drawn whole (Ø 1.2 until 17 October 2026). Bright polished steel, slotted, its head rounded (Wempe 3955's, 11_ and 10_; no sheet of it in the set, so the
          drawings' versions take it too: likely; blued and plain until 18 October 2026); the 6MX's polished steel too (8_Kirow_247_F.jpg and Kirova 14100's, photocompare.py: likely) */
-      {const at=D(head-1.2,g1+GW/2+0.4),dn=TD.n.map(v=>-v),yc=yd(o.d0+1),yt=(/** @type {number} */r)=>0.1*(r/0.7)**2;   /* in the detent's own group, as the square and spring it holds (fine.py) */
-        tag(across(sM,lathe([[0,0],[0.35,yt(0.35)],[0.6,yt(0.6)],[0.7,0.1],[0.7,0.4],[0,0.4]],24),o.scrM||M.steel,at,dn,yc),'WN-14');
-        tag(across(sM,KIT.threadGeo(0.35,0.3,0.95),o.scrM||M.steel,at,dn,yc),'WN-14',1);   /* its shank M0.7, threaded (KIT.threadGeo; a plain Ø 0.66 until 28 October 2026) */
-        const xs=[];for(let k=0;k<=16;k++)xs.push(-0.7+1.4*k/16);const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,yt(Math.abs(x))+0.15]),...xs.slice().reverse().map(x=>[x,yt(Math.abs(x))-0.01])]),y0:-0.12,y1:0.12}]);
-        sg.rotateX(-Math.PI/2);sg.rotateY(0.7);tag(across(sM,sg,M.steelD,at,dn,yc),'WN-14',1);}   /* its slot, 0.15 deep under the rounded top, its face 0.01 over it */
+      {const G=K_.gs,at=D(head-G.hl,g1+GW/2+G.hu),dn=TD.n.map(v=>-v),yc=yd(o.d0+1),yt=(/** @type {number} */r)=>G.dr*(r/G.r)**2;   /* in the detent's own group, as the square and spring it holds (fine.py) */
+        tag(across(sM,lathe([[0,0],[G.rs,yt(G.rs)],[0.6,yt(0.6)],[G.r,G.dr],[G.r,G.hd],[0,G.hd]],24),o.scrM||M.steel,at,dn,yc),'WN-14');
+        tag(across(sM,KIT.threadGeo(G.rs,G.t0,G.t1),o.scrM||M.steel,at,dn,yc),'WN-14',1);   /* its shank M0.7, threaded (KIT.threadGeo; a plain Ø 0.66 until 28 October 2026) */
+        const xs=[];for(let k=0;k<=16;k++)xs.push(-G.r+2*G.r*k/16);const sg=solidGeo([{loop:ccw([...xs.map(x=>[x,yt(Math.abs(x))+G.sd]),...xs.slice().reverse().map(x=>[x,yt(Math.abs(x))-G.sz])]),y0:-G.sw,y1:G.sw}]);
+        sg.rotateX(-Math.PI/2);sg.rotateY(G.ang);tag(across(sM,sg,M.steelD,at,dn,yc),'WN-14',1);}   /* its slot, 0.15 deep under the rounded top, its face 0.01 over it */
       /* the foot's screw M1 along it into the block (number not read) and its two steady pins (Stellstift 2, WN-201 in the coloured section), drawn without holes across */
-      tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,f+fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
+      tag(across(sS,lathe([[0,0],[K_.gf.r,0],[K_.gf.r,K_.gf.hh],[K_.gf.rs,K_.gf.hh],[K_.gf.rs,K_.gf.hh+K_.gf.l],[0,3.85]],20),M.steel,D(ROW,f+fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,f-fh),TD.n,yd(o.d0+1)),'WN-205.d');};
     R.golds=[];
     dv(rv(detS,'last'),rv(dm,'last'),{...DETV.last,ew0:Y.ew0});

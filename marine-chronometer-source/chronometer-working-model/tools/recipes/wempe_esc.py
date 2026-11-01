@@ -164,3 +164,232 @@ def hairspringPins():
             Bought('hsStud.pin','050302-4.s',"Stud's pin for the hairspring (Spiralstift)",'brass wire, filed half round and driven in the stud\'s Ø 0.7 hole beside the spring\'s outer end',
               f'Ø {2*S_["pr"]:.3f} × {Ls:.2f} (0.45 standing out of each side of the upright)','brass wire','brass',src,[note])]
 for _b in hairspringPins():RECIPES[_b.key]=(lambda b=_b:b)
+
+
+# ================= batch 8d (1 November 2026): the detent block's other versions, the banking screws, the studs and the detent's two screws =================
+# The first-drawn block (05 04_1; Wempe 3955 as photographed), the Soviet 6MX's (with its adjusting slide and stop screw), the escapement of 1943's and the 6MX's studs and
+# banking screws, the first-drawn block's banking screw, and the detent's WN-14 and WN-gf. Their numbers are the page's (escapement.js BLK.first, BLK.m6, BLK.s43, DETK.gs, DETK.gf).
+from . import SlotHead
+
+class TurnArcs(Op):
+    """turn to a finished profile with arcs, from the axis at one end to the axis at the other: items (r, z) a straight run to there, ((r, z) mid, (r, z) end) an arc through
+    the middle point to the end (a dome, a ball end): everything outside it removed"""
+    kind='turn'
+    def __init__(self,items,text,sizes=(),src=''):super().__init__(text,sizes,src);self.items=items
+    def apply(self,p):
+        P=lambda q:bd.Vector(q[0],0,q[1]);E=[];cur=self.items[0]
+        for it in self.items[1:]:
+            if isinstance(it[0],tuple):E.append(bd.Edge.make_three_point_arc(P(cur),P(it[0]),P(it[1])));cur=it[1]
+            elif math.dist(it,cur)>1e-9:E.append(bd.Edge.make_line(P(cur),P(it)));cur=it
+        E.append(bd.Edge.make_line(P(cur),P(self.items[0])))
+        return p&bd.revolve(bd.Face(bd.Wire(E)),bd.Axis.Z,360)
+
+def _cap(rH,hH,z0):
+    """a spherical cap of height hH over a rim of radius rH at z0: the arc's (middle, end) items from the rim to the apex, and the sphere's radius"""
+    R=(rH*rH+hH*hH)/(2*hH);a0=math.asin(rH/R);c=z0+hH-R;return ((R*math.sin(a0/2),c+R*math.cos(a0/2)),(0.0,z0+hH)),R
+
+def _blk():
+    X=WDET();return X,X['BLK'],X['ROW'],X['BLK_NE']
+def _toD(X):
+    P,TD=X['P'],X['TD'];return lambda q:((q[0]-P[0])*TD['t'][0]+(q[1]-P[1])*TD['t'][1],(q[0]-P[0])*TD['n'][0]+(q[1]-P[1])*TD['n'][1])
+
+def _bankingScrew(key,hn,title,L,items,rs,rH,top,sd,sw,src,sizes,notes,expect_why,sz=0.01):
+    """a banking screw M1.2 as the page draws it: a lathe about its axis from the thread's end (z 0) to the dome's top; its slot a dark bar across the head along a heading the page
+    sets (SpinCut), cut here to sd under the top; the thread by convention (the page draws its rings)"""
+    th,crest,ch,rt=_thread(rs,L,0)
+    ops=[Bar(2*rH,top,'Cut and face a bar to the overall length, the thread end out',[S('overall',f'{top:.2f}',None,src)],src),
+         TurnArcs(items(crest/2,ch,rt),"Turn the thread's blank (the tip chamfered), the head's underside and the dome",sizes(crest),src),
+         ThreadOD(th,0,L,f'Cut the thread M{2*rs:g} (die)',[S('thread',f'M{2*rs:g} × {th["p"]}','6g','ISO 261')],src),
+         SpinCut(lambda a:bd.Box(2*rH+0.4,2*sw,sd+1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).rotate(bd.Axis.Z,math.degrees(a)).moved(bd.Location((0,0,top-sd))),
+           'Slot the dome across (a saw)',[S('slot',f'{2*sw:.2f} wide × {sd} deep','estimated',src)],src)]
+    r=Recipe(key,hn,title,src,'brass (the photographs: likely)','none',[Setup('1','bar in the collet, the head end out; slotted at the bench',ops)],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),fits=notes[0],notes=notes[1:],
+      expect=[{'at':(0,0),'r':rH+0.1,'max':sd+sz+0.1,'why':expect_why}])
+    r.near=1.0;r.free_spin=(math.pi,0.0);r.box_tol=0.03;return r
+
+def bankScrew6mx():
+    X,Bk,ROW,nE=_blk();m=Bk['m6']['bk'];nUr=nE-Bk['nl']-Bk['uw'];lS=m['nH']-(nUr-m['nB']);rH,hH,rs=m['rH'],m['hH'],m['rs'];arc,R3=_cap(rH,hH,lS);top=lS+hH
+    src="escapement.js BLK.m6.bk (the Soviet 6MX's block, Kirov 247: 8_Kirow_247_F.jpg, 9_KirPol_24020_Feder2.jpg; the slotted dome, the thread showing past the upright: likely)"
+    return _bankingScrew('bankScrew6','WN-gkA',"Banking screw M1.2 across the 6MX block's upright (its WN number not read)",lS,lambda c,ch,rt:[(0.0,0.0),(rt,0.0),(c,ch),(c,lS),(rH,lS),arc],rs,rH,top,m['sd'],m['sw'],src,
+      lambda crest:[S('shank',f'Ø {crest:.3f}','6g',src),S('head',f'Ø {2*rH:.1f} across, a dome {hH} high on the underside at {lS:.2f}',"Kirov 247's: Ø 3.4 (3.45 ±0.1, 3.43 on 24020) (likely)",src)],
+      [["through the upright's slit and both leaves, its thread tapped in the leaves; its dome on the wheel's side of the pipe, which rests on it"],
+       "The banking screw of the 6MX's block: the pipe's flat face rests on its dome, turning it sets the depth of lock."],
+      "the dome's slot: the page draws it as a solid dark bar standing 0.01 out of the dome (0.34 wide, 0.45 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.45 under the top")
+def _bs6():
+    r=bankScrew6mx();r.rev='6mx';return r
+RECIPES['bankScrew6']=_bs6
+
+def bankScrew1943():
+    X,Bk,ROW,nE=_blk();m=Bk['s43'];lT,rH,hc,hd,rs=m['lT'],m['rH'],m['hc'],m['hd'],m['rs'];arc,R4=_cap(rH,hd,lT+hc);top=lT+hc+hd
+    src="escapement.js BLK.s43 (the escapement of 1943's block: 8_Kirow_DEC_479_Feder.jpg, 8_Lange_5177_Feder.jpg, 8_Kirow_DEC_422_Feder.jpg; the length from the 6MX's loose block: estimated)"
+    r=_bankingScrew('bankScrew43','WN-gkA43',"Banking screw M1.2 along the 1943 block's slit upright, its domed slotted head (its WN number not read)",lT,lambda c,ch,rt:[(0.0,0.0),(rt,0.0),(c,ch),(c,lT),(rH,lT),(rH,lT+hc),arc],rs,rH,top,m['sd'],m['sw'],src,
+      lambda crest:[S('shank',f'Ø {crest:.3f}, {lT} long','6g; 8.2 as the 6MX loose block\'s screw (estimated)',src),S('head',f'Ø {2*rH:.1f}, {hc} long under a dome {hd} high',"the photographs: Ø 3.15-3.6 (likely); the dome's rise estimated",src)],
+      [["through the slit upright's two leaves, its thread tapped in them; the pipe rests on the head's side"],
+       "The banking screw of the escapement of 1943's block; its slit is along the plate, so its two leaves grip the thread from above and below."],
+      "the head's slot: the page draws it as a solid dark bar standing 0.01 out of the dome (0.4 wide, 0.5 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.5 under the top")
+    r.rev='1943';return r
+RECIPES['bankScrew43']=bankScrew1943
+
+def _cone41(ver):
+    X,Bk,ROW,nE=_blk();FD=Bk['first'];CN=FD['cone'];nF=nE-FD['dF'];nA1=nF-FD['w'];nA0=nF if ver=='3955' else nE-FD['nA'];xl=CN['xl'][1 if ver=='3955' else 0]
+    u1=nA0-nA1;hF=nA0-CN['nP'];R=CN['R'];c0=hF-CN['hh']+R;rh,rs=CN['rh'],CN['rs'];ytip=u1-CN['ins']+xl+CN['tip'];a1=math.asin(rh/R)
+    Z=lambda y:ytip-y   # the lathe's y from the head's apex toward the tail, turned over: the tail's point at z 0, the head up
+    top=Z(c0-R);zs=Z(hF);zk=Z(u1-CN['ins']+xl);ang=math.degrees(math.atan2(rs,CN['tip']))
+    # from the tail's point up the cone to the shank, the shank, the head's underside, its edge, the dome to its apex
+    prof=[(0.0,0.0),(rs,zk),(rs,zs),(rh,zs),(rh,Z(hF-CN['ed'])),((R*math.sin(a1/2),Z(c0-R*math.cos(a1/2))),(0.0,top))]
+    th=iso(2*rs);src="escapement.js BLK.first.cone (05 04_1's plan and coloured section; Wempe 3955, 11_Wempe_3955_Gangfeder_plus.jpg, 10_Vergleich_CWW-6MX: head Ø 3.3, a dome R 1.8, 1.5 in all: likely)"
+    ops=[Bar(2*rh,top,'Cut and face a bar to the overall length, the point end out',[S('overall',f'{top:.2f}',None,src)],src),
+         TurnArcs(prof,"Turn the pointed tail (a cone %.1f° to the shank), the shank Ø %.1f, the head's underside, its edge and the dome R %.1f"%(ang,2*rs,R),
+           [S('tail',f'a cone to a point, {CN["tip"]} long','12° written, 10.8° scaled (05 04_1; likely)',src),S('shank',f'Ø {2*rs:.1f}','M1.2',src),S('head',f'Ø {2*rh:.1f}, {CN["ed"]} edge, a dome R {R} rising {CN["hh"]-CN["ed"]:.2f}','plan: 3.29; section 3.31-3.36 (likely)',src)],src),
+         ThreadOD(th,zk,zs,f'Cut the thread M{2*rs:g} (die)',[S('thread',f'M{2*rs:g} × {th["p"]}','6g','ISO 261')],src),
+         SpinCut(lambda a:bd.Box(2*rh+0.4,2*CN['sw'],CN['sd']+1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).rotate(bd.Axis.Z,math.degrees(a)).moved(bd.Location((0,0,top-CN['sd']))),
+           'Slot the dome across (a saw)',[S('slot',f'{2*CN["sw"]:.2f} wide × {CN["sd"]} deep','the section, the photograph; the slot estimated',src)],src)]
+    r=Recipe('cone41' if ver=='first' else 'cone41.3955','cone41',"Banking screw M1.2 of the first-drawn block, domed head and pointed tail (WN-16 by the coloured section)"+(", as Wempe 3955's (0.55 longer)" if ver=='3955' else ''),src,
+      'brass, gilt (the photographs: likely)','none',[Setup('1','bar in the collet, the tail end out; slotted at the bench',ops)],page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,ytip,0)),
+      fits=["through the arm's slit end, its thread in the arm; the pipe banks on its dome (the detent's spring presses it there)"],
+      notes=["Turning the screw sets the depth of lock, 0.25 mm a turn."],
+      expect=[{'at':(0,0),'r':rh+0.1,'max':CN['sd']+CN['sz']+0.1,'why':"the dome's slot: the page draws it as a solid dark band standing 0.01 out of the dome (0.3 wide, 0.45 deep, following the curve), not cut into it: the recipe cuts it flat-floored 0.45 under the top"}])
+    r.near=1.0;r.free_spin=(math.pi,0.0);r.box_tol=0.03;r.rev=ver;r.show='first -3955' if ver=='first' else None;return r
+RECIPES['cone41']=lambda:_cone41('first')
+RECIPES['cone41.3955']=lambda:_cone41('3955')
+
+# ---------------- the block's stud as the 6MX's and the escapement of 1943's have it (WN-gk), the 6MX's stop screw (6MX.gke) ----------------
+def _studScrew(key,v,q,src,notes):
+    """the stud: a slotted cylinder head Ø 3.4 x 5.85 standing out of the plate's outer face, M1.7 into the block; the slot 0.5 wide, 0.9 deep at the heading the page gives it"""
+    r_,h_,ln,rs,sl=q;r=screw(key,'WN-gk','Block stud (WN-gk, the '+v+'\'s)',r_,h_,ln,rs,'steel, polished (the photographs: likely)',src,notes)
+    r.setups[1].ops[-1]=SlotHead(h_+ln,sl['w'],sl['s'],'Mill the slot across the head',[S('slot',f"{sl['w']} wide × {sl['s']} deep",'estimated',src)],src);r.box_tol=0.03;return r
+def studScrew43():
+    X,Bk,ROW,nE=_blk();r=_studScrew('studScrew43','escapement of 1943',Bk['s43']['stud'],"escapement.js BLK.s43.stud (HOLES.block43; 2_Kirow_DEC_479_A.jpg, 2_Lange_5177_A.jpg, 6_Kirow_DEC_422_S.jpg: Ø 3.2-3.4, slotted steel: likely)",
+      ['Seated on the block\'s plate face, no slide under it; M1.7 3.0 into the block (estimated).']);r.rev='1943';return r
+RECIPES['studScrew43']=studScrew43
+def studScrew6mx():
+    X,Bk,ROW,nE=_blk();r=_studScrew('studScrew6','6MX',Bk['m6']['stud'],"escapement.js BLK.m6.stud (HOLES.block6; 2_Kirow_247_A.jpg, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg: Ø 3.3-3.55, slotted, standing proud of the plate's outer face: likely)",
+      ['Through the adjusting slide (2.5) and 3.0 into the block (estimated); it stands 2.5 proud of the plate\'s outer face.']);r.rev='6mx';return r
+RECIPES['studScrew6']=studScrew6mx
+def stopScrew6mx():
+    X,Bk,ROW,nE=_blk();q=Bk['m6']['gke'];r=screw('stopScrew6','6MX.gke',"Detent foot's stop screw (6MX), in the block's side",q[0],q[1],q[2],q[3],'steel (the photographs: likely)',
+      "escapement.js BLK.m6.gke (the loose block, 8_Gangfeder_mit_Kloben_Rus_einfach.jpg: a large slotted screw in the base's free side face beside the foot's tail, head Ø 4.0-4.4; its head's height and the thread estimated)",
+      ['A stop for the detent foot\'s place along it (README, The Soviet 6MX).']);r.rev='6mx';return r
+RECIPES['stopScrew6']=stopScrew6mx
+
+# ---------------- the detent's gold spring screw WN-14 and foot screw WN-gf (escapement.js DETK.gs, DETK.gf; the same in every version) ----------------
+def goldScrew():
+    K=WDET()['K'];G=K['gs'];r_,hd,dr,rs,t0,t1=G['r'],G['hd'],G['dr'],G['rs'],G['t0'],G['t1'];L=t1;th=dict(d=2*rs,p=0.175,D1=2*rs-1.0825*0.175,H1=0.5413*0.175,es=0.015+0.011*0.175);crest=2*rs-th['es'];ch=min(th['H1'],(L-hd)*0.3);rt=max(crest/2-th['H1']-th['H1']/2,(crest/2-th['H1'])*0.6)
+    Z=lambda y:L-y;src="escapement.js DETK.gs (05 04 01-2's head Ø 1.4 estimated; photographs: 10_Wempe_3955_Feder_plus.jpg, 10_Vergleich_CWW-6MX: Ø 1.2-1.6; M0.7: estimated)"
+    R=(r_*r_+dr*dr)/(2*dr);a1=math.asin(r_/R)   # the page's parabola dr (r/R0)^2 for the head's top, a circle of the same rise at the rim
+    ops=[Bar(2*r_,L,'Cut and face a bar to the overall length, the thread end out',[S('overall',f'{L:.2f}',None,src)],src),
+         TurnArcs([(0.0,0.0),(rt,0.0),(crest/2,ch),(crest/2,Z(hd)),(r_,Z(hd)),(r_,Z(dr)),((R*math.sin(a1/2),Z(R-R*math.cos(a1/2))),(0.0,Z(0)))],
+           "Turn the shank to the thread's major diameter, the tip, the head and its rounded top",[S('head',f'Ø {2*r_} × {hd}, rounded {dr} at the rim',None,src),S('shank',f'Ø {crest:.3f}','6g',src)],src),
+         ThreadOD(th,0,Z(hd),f'Cut the thread M{2*rs:g} (die)',[S('thread',f'M{2*rs:g} × {th["p"]}','6g','ISO 261')],src),
+         SpinCut(lambda a:bd.Box(2*r_+0.4,2*G['sw'],G['sd']+1,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).rotate(bd.Axis.Z,math.degrees(a)).moved(bd.Location((0,0,L-G['sd']))),
+           'Slot the head across (a saw)',[S('slot',f"{2*G['sw']} wide × {G['sd']} deep",'estimated',src)],src)]
+    r=Recipe('goldScrew','WN-14',"Gold spring's screw (WN-14), across into the square",src,'steel, polished (the photographs: likely)','none',[Setup('1','bar in the collet, the thread end out; slotted at the bench',ops)],
+      page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,L,0)),fits=["through the gold spring's head into the detent's square, tapped there"],
+      expect=[{'at':(0,0),'r':r_+0.1,'max':G['sd']+G['sz']+0.1,'why':"the head's slot: the page draws it as a solid dark bar standing 0.01 out of the rounded top, not cut into it: the recipe cuts it flat-floored 0.15 under the top"}])
+    r.near=0.6;r.free_spin=(math.pi,0.0);r.box_tol=0.03;return r
+RECIPES['goldScrew']=goldScrew
+
+def footScrew():
+    G=WDET()['K']['gf'];r_,hh,rs,l=G['r'],G['hh'],G['rs'],G['l'];L=hh+l;th=iso(2*rs);src="escapement.js DETK.gf (05 04 01-1's foot screw M1; the number not read; the head's size estimated)"
+    Z=lambda y:L-y
+    ops=[Bar(2*r_,L,'Cut and face a bar to the overall length, the thread end out',[S('overall',f'{L:.2f}',None,src)],src),
+         TurnProfile([(0.0,0.0),(rs,0.0),(rs,Z(hh)),(r_,Z(hh)),(r_,L),(0.0,L)],"Turn the shank to the thread's major diameter and the head",[S('head',f'Ø {2*r_} × {hh}','estimated',src),S('shank',f'Ø {2*rs}, {l} long','6g',src)],src),
+         ThreadOD(th,0,l,f'Cut the thread M{2*rs:g} (die)',[S('thread',f'M{2*rs:g} × {th["p"]}','6g','ISO 261')],src)]
+    return Recipe('footScrew','WN-gf',"Detent foot's screw M1 (WN-13 by the coloured section's label, likely)",src,'steel (not given)','none',[Setup('1','bar in the collet, the thread end out',ops)],
+      page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,L,0)),fits=["through the foot's Ø 1.1 hole along it, into the block's end face (M1)"],
+      notes=["The page draws the head plain (no slot) and the shank at the thread's major diameter; the recipe follows it."])
+RECIPES['footScrew']=footScrew
+
+# ---------------- the detent block as first drawn (05 04_1; Wempe 3955 as photographed): the base with a long arm toward the stone (escapement.js BLK.first) ----------------
+def _blockFirst(ver):
+    X,Bk,ROW,nE=_blk();s,M=_detFrame();FD=Bk['first'];h13=X['H13'];bd_,tl=Bk['bd'],Bk['tl']
+    tF,tT=ROW+Bk['tF'],ROW+Bk['tT'];nF=nE-FD['dF'];nA1=nF-FD['w'];rc=FD['rc'];nC=nA1-rc;tC=tT-FD['tC'];tE=FD['tE'];z0=FD['da']
+    p3=ver=='3955';nA0=nF if p3 else nE-FD['nA'];sl=FD['sl'][1 if p3 else 0];h=sl[1]/2;yc=FD['yc'];rh=FD['r'];wA=nA0-nA1
+    src="05 04_1 (as first drawn: no sheet of its own, the plan at 10:1, 24.4 px/mm) and Wempe 3955 as photographed (11_Wempe_3955_Gangfeder_plus.jpg, 10_Vergleich_CWW-6MX; escapement.js BLK.first)"
+    V=lambda t,n,z:bd.Vector(t,s*n,z);c45=math.sqrt(0.5)
+    def body():
+        w=bd.Wire([bd.Edge.make_line(V(tE,nA0,z0),V(tT,nA0,z0)),bd.Edge.make_line(V(tT,nA0,z0),V(tT,nC,z0)),bd.Edge.make_line(V(tT,nC,z0),V(tC+rc,nC,z0)),
+                   bd.Edge.make_three_point_arc(V(tC+rc,nC,z0),V(tC+rc*c45,nC+rc*c45,z0),V(tC,nA1,z0)),bd.Edge.make_line(V(tC,nA1,z0),V(tE,nA1,z0)),bd.Edge.make_line(V(tE,nA1,z0),V(tE,nA0,z0))])
+        return _box(tT,tF,nE-tl,nF,0,bd_,s)+bd.extrude(bd.Face(w),bd_-z0,dir=(0,0,1))
+    m17=iso(2*Bk['m17']['rs']);m1=iso(1.0);m12=iso(1.2);zf=2.3
+    ops=[Solid(body,'Mill the block from brass: the base 6.5 deep all its length, the arm on its free side from 3.7 to 6.5 under the plate, a cove r %.2f to the base'%rc,
+          [S('base',f"{tF-tT:.1f} long, {tl} wide, {bd_} deep",'"6,5" (sure)',src),S('arm',f"{wA:.2f} wide, from {z0} to {bd_} under the plate, {tT-FD['rt']-tE:.1f} from its end to the base"+('' if p3 else f", set back {FD['nA']} from the base's end face"),
+            "\"2,8\", \"6,5\" (sure); "+("flush with the base's edge as photographed" if p3 else "2.5 wide on the plan, its far face where the photographs have it (scaled)"),src),
+           S('cove',f"r {rc}, centred {FD['tC']} from the base",'scaled (the photographs show the cove)',src)],src),
+         Cut(lambda:_box(tE-0.1,tE+sl[0],nA1-0.1,nA0+0.1,yc-h,yc+h,s),"Saw the arm's end slit along the banking screw, through the arm's width",
+           [S('slit',f"{2*h:.2f} wide, {sl[0]} from the end, {yc} under the plate",'05 04_1 elevation: 0.2 wide, 6.1 long (sure)' if not p3 else 'Wempe 3955: 5.0-5.3 long, 0.07-0.14 wide (likely)',src)],src),
+         Drill((0.0,s*(nA1-0.1),yc),(0,s,0),m12['D1'],wA+0.2,"Drill and tap the banking screw's M1.2 across the arm",[S('',f"M1.2, on the stone's line, {yc} under the plate",'05 04_1 (sure)',src)],src,thread=m12,key='M1.2'),
+         Drill((ROW+Bk['pin'][0][0],s*(nE+Bk['pin'][0][1]),-0.01),(0,0,1),2*Bk['pr'],bd_+0.02,"Drill the near steady pin's hole through the base",[S('',f"Ø {2*Bk['pr']}",'(sure)',src)],src,key='pin1'),
+         Drill((ROW+Bk['pin'][1][0],s*(nE+Bk['pin'][1][1]),-0.01),(0,0,1),2*Bk['pr'],bd_+0.02,"Drill the far steady pin's hole through the base",[S('',f"Ø {2*Bk['pr']}",'(sure)',src)],src,key='pin2'),
+         Drill((ROW,s*(nE+Bk['h13']['n']),-0.01),(0,0,1),2*Bk['h13']['r'],Bk['h13']['d']+0.01,'Drill the Ø 1.3 hole from the plate face, 3 deep',[S('',f"Ø {2*Bk['h13']['r']}, {-Bk['h13']['n']} from the end face",'05 04 01-4 "1,3", "3" (sure)',src)],src,key='h1.3'),
+         Drill((h13[0],s*h13[1],-0.01),(0,0,1),m17['D1'],bd_+0.02,'Drill and tap the fixing M1.7 through the base (under hole 13)',[S('',"M1.7",'05 04_1 (the plate\'s hole 13; the photograph puts it further out: README)',src)],src,thread=m17,key='M1.7'),
+         Drill((ROW,s*(nE+Bk['h13']['n']),zf),(0,s,0),m1['D1'],-Bk['h13']['n']+0.02,"Drill and tap the M1 for the detent foot's screw from the end face to the Ø 1.3 hole",[S('',f"M1, {zf} under the plate",'05 04 01-4 (sure)',src)],src,thread=m1,key='M1'),
+         *[Drill((ROW+t,s*(nE+dn),zf),(0,s,0),2*r,-dn+0.02,"Drill a steady pin's hole in the end face for the detent's foot (at assembly, with the foot)",[S('',f"Ø {2*r:.2f}, {-dn} deep, {abs(t)} either side of the M1",'1436\'s pins (estimated)',src)],src,key=f'p{t:+.1f}') for t,dn,r,_ in Bk['endH'][1:]]]
+    vol=math.pi*(rh**2-(m12['D1']/2)**2)*wA
+    r=Recipe('detentBlock.first' if not p3 else 'detentBlock.3955','050401-4','Detent block (Gangfederkloben), '+('as first drawn' if not p3 else "as Wempe 3955's is photographed"),src,'brass (not read: 05 04_1 gives no material)','none',
+      [Setup('1','brass block on the mill; the end holes drilled with the detent\'s foot at assembly',ops,view='top')],M,faces=("the plate's side","the free side"),
+      fits=["screwed to the top plate's inner face by the M1.7 from hole 13, on its two steady pins","the detent's foot clamped to its end face by the M1 WN-gf","the banking screw across the arm's slit end"],
+      expect=[{'at':(0.0,s*(nA1+nA0)/2),'r':1.8,'max':0.2,'vol':vol,'why':"the banking screw's hole across the arm: the page draws it plain, a bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill (the threads' convention; a hole across has no thread zone)"}],
+      notes=["Drawn in the detent's frame (its recipe's): X along the detent, Y across it, Z under the top plate's inner face.",
+             "The version as first drawn: a long arm toward the stone in place of the upright, the base's end face %s in from the sheet's line for 1436's thicker foot."%FD['dF']])
+    r.rev=ver;r.show='first -3955' if not p3 else None;return r
+RECIPES['detentBlock.first']=lambda:_blockFirst('first')
+RECIPES['detentBlock.3955']=lambda:_blockFirst('3955')
+
+# ---------------- the Soviet 6MX's detent block (Kirov 247; escapement.js BLK.m6) and its adjusting slide ----------------
+def _six():
+    X,Bk,ROW,nE=_blk();s,M=_detFrame();U=Bk['up'];M6=Bk['m6'];toD=_toD(X);B6=X['HOLES']['block6'];bl,tl,bd_,td=Bk['bl'],Bk['tl'],Bk['bd'],Bk['td'];ya,yb=U['a'],U['b'];yS=M6['s']
+    tF,tT=ROW+Bk['tF'],ROW+Bk['tT'];tU=tF-Bk['len'];nUl=nE-Bk['nl'];nUr=nUl-Bk['uw'];tE6=tU+M6['e'];tS=ROW+U['tS'];rh=U['rh'];hs=M6['hs']
+    st=toD(B6['stud']);nS0=st[1]-M6['hw'];nS1=st[1]+M6['hw'];tS6=st[0]-M6['hw'];yN=M6['yN']
+    return dict(X=X,Bk=Bk,ROW=ROW,nE=nE,s=s,M=M,U=U,M6=M6,toD=toD,B6=B6,bl=bl,tl=tl,bd=bd_,td=td,ya=ya,yb=yb,yS=yS,tF=tF,tT=tT,tU=tU,nUl=nUl,nUr=nUr,tE6=tE6,tS=tS,rh=rh,hs=hs,st=st,nS0=nS0,nS1=nS1,tS6=tS6,yN=yN)
+
+def blockSix():
+    Q=_six();X,Bk,ROW,nE,s,M,U,M6,toD,B6=(Q[k] for k in 'X Bk ROW nE s M U M6 toD B6'.split())
+    bl,tl,bd_,td,ya,yb,yS,tF,tT,tU,nUl,nUr,tE6,tS,rh,hs,st,nS0,nS1,tS6,yN=(Q[k] for k in 'bl tl bd td ya yb yS tF tT tU nUl nUr tE6 tS rh hs st nS0 nS1 tS6 yN'.split())
+    src="05 04 01-4's form read in first angle as the 6MX has it (8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, 8_Kirow_247_F.jpg, 9_KirPol_24020_Feder2.jpg; escapement.js BLK.m6)"
+    V=lambda t,n,z:bd.Vector(t,s*n,z);tp=M6['tp'];zf=2.3
+    def body():
+        thin=_box(tT,tF,nE-tl,nE-bl,0,td,s)+_box(tS6,tF,nE-bl,nS0,0,td,s)
+        base=_box(tT,tS6,nE-bl,nE,0,bd_,s)+_box(tS6,tF,nS1,nE,0,bd_,s)+_box(tS6,tF,nE-bl,nS1,yN,bd_,s)
+        up=bd.extrude(bd.Face(bd.Wire.make_polygon([V(tT,nUl,ya),V(tE6,nUl,ya),V(tE6,nUr,ya),V(tT-tp[0],nUr,ya),V(tT,nUr-tp[1],ya)],close=True)),yb-ya,dir=(0,0,1))
+        end=_box(tU,tE6,nUr,nUl,ya,yb,s)
+        return thin+base+up+end
+    m17=iso(2*Bk['m17']['rs']);m1=iso(1.0);m12=iso(1.2);m14=iso(1.4);sq=M6['sq']
+    p0,p1=toD(B6['pins'][0]),toD(B6['pins'][1])
+    ops=[Solid(body,"Mill the block from brass: the base 6.5 deep at its end, the thin part 3 deep, a notch across the free corner for the slide, the upright 3 × 3 with a short taper into the base",
+          [S('base',f"{tF-tT:.1f} long, {bl} wide, {bd_} deep; on to {tl} at {td} deep",'05 04 01-4\'s sizes read in the Soviet block (likely)',src),
+           S('upright',f"{Bk['uw']} wide, {yb-ya} thick, {Bk['len']} from the base's foot, {Bk['nl']} in from the end face",'05 04 01-4\'s (likely)',src),
+           S('taper',f"{tp[0]} long, widening {tp[1]} into the base (about 27°)",'8_Gangfeder_..., 30.3 px/mm: estimated',src),
+           S('notch',f"{2*M6['hw']} wide across the corner of the plate face and the free side, {yN} deep, from the stud to the edge",'the loose block, 8_Gangfeder_...: likely in kind',src)],src),
+         Cut(lambda:_box(tU-0.1,tS,nUr-0.1,nUl+0.1,yS-hs,yS+hs,s),"Saw the upright's end slit along the plate, into the screw's hole",[S('slit',f"{2*hs:.2f} wide, ending in the hole",'8_Kirow_247_F.jpg, 9_KirPol_24020_Feder2.jpg: about 0.1 wide, 2.8-2.9 from the end (sure, two chronometers)',src)],src),
+         Drill((tS,s*(nUr-0.1),yS),(0,s,0),m12['D1'],Bk['uw']+0.2,"Drill and tap the banking screw's M1.2 across both leaves",[S('',f"M1.2, {-U['tS']} from the base's hole row, {yS} under the plate",'(the screw seen on both Kirov 247 and 24020: likely)',src)],src,thread=m12,key='M1.2'),
+         Drill((p0[0],s*p0[1],-0.01),(0,0,1),2*Bk['pr'],M6['p0']+0.01,"Drill the near steady pin's hole 1.2 into the base",[S('',f"Ø {2*Bk['pr']}, {M6['p0']} deep",'(estimated)',src)],src,key='pin1'),
+         Drill((p1[0],s*p1[1],-0.01),(0,0,1),2*Bk['pr'],td+0.02,"Drill the far steady pin's hole through the thin part",[S('',f"Ø {2*Bk['pr']}",'(estimated)',src)],src,key='pin2'),
+         Drill((st[0],s*st[1],yN),(0,0,1),m17['D1'],M6['sd'],"Drill and tap the stud's M1.7 into the block under the slide",[S('',f"M1.7, {M6['sd']} deep from the notch's floor",'estimated',src)],src,thread=m17,key='M1.7'),
+         Drill((tF-sq[0],s*(nE-sq[1]),sq[2]),(1,0,0),m14['D1'],sq[0]+0.1,"Drill and tap the foot's stop screw M1.4 in the free side",[S('',f"M1.4, {sq[0]} deep, {sq[1]} from the end face, {sq[2]} under the plate",'8_Gangfeder_...: estimated',src)],src,thread=m14,key='M1.4'),
+         Drill((ROW,s*(nE+Bk['h13']['n']),zf),(0,s,0),m1['D1'],-Bk['h13']['n']+0.02,"Drill and tap the M1 for the detent foot's screw from the end face",[S('',f"M1, {-Bk['h13']['n']} deep, {zf} under the plate",'05 04 01-4 (sure)',src)],src,thread=m1,key='M1'),
+         *[Drill((ROW+t,s*(nE+dn),zf),(0,s,0),2*r,-dn+0.02,"Drill a steady pin's hole in the end face for the detent's foot (at assembly, with the foot)",[S('',f"Ø {2*r:.2f}, {-dn} deep, {abs(t)} either side of the M1",'1436\'s pins (estimated)',src)],src,key=f'p{t:+.1f}') for t,dn,r,_ in Bk['endH'][1:]]]
+    vol12=math.pi*(rh**2-(m12['D1']/2)**2)*(Bk['uw']-2*hs);vol1=math.pi*(0.5**2-(m1['D1']/2)**2)*(-Bk['h13']['n']);vol14=math.pi*(sq[3]**2-(m14['D1']/2)**2)*sq[0]
+    r=Recipe('detentBlock.6mx','050401-4','Detent block (Gangfederkloben), the Soviet 6MX\'s',src,'brass (the photographs)','none',[Setup('1','brass block on the mill; the end holes drilled with the detent\'s foot at assembly',ops,view='top')],M,
+      faces=("the plate's side","the free side"),fits=["clamped to the top plate by the stud (M1.7 into the block, through the adjusting slide) on its two steady pins","the detent's foot clamped to its end face by the M1 WN-gf","the adjusting slide in the notch across the corner, under the stud"],
+      expect=[{'at':(tS,s*(nUr+nUl)/2),'r':1.8,'max':0.2,'vol':vol12,'why':"the banking screw's hole across the leaves: the page draws it plain, a bore r 0.62 round the shank's 0.6, the recipe tapped M1.2 at the tap drill (the threads' convention; a hole across has no thread zone)"},
+              {'at':(ROW,s*(nE+Bk['h13']['n']/2)),'r':1.7,'max':0.2,'vol':vol1,'why':"the end face's M1: the page draws the 6MX's hole at the thread's major diameter (r 0.5, a polygon), where the 1943 block's is at the minor (0.729): the recipe taps it M1 at the tap drill"},
+              {'at':(tF-sq[0]/2,s*(nE-sq[1])),'r':1.8,'max':0.2,'vol':vol14,'why':"the stop screw's hole: the page draws a polygon bore of r 0.70 (the thread's major), the recipe taps it M1.4 at the tap drill (a hole across has no thread zone)"}],
+      notes=["Drawn in the detent's frame (its recipe's): X along the detent, Y across it, Z under the top plate's inner face.",
+             "The Soviet 6MX's block: 05 04 01-4's form (its base, thin part, upright), read in first angle; the upright's end slit along the plate as the German blocks' (Kirov 247, 24020); what clamps it to the plate is not seen (README, Unresolved)."])
+    r.rev='6mx';return r
+RECIPES['detentBlock.6mx']=blockSix
+
+def slide6mx():
+    Q=_six();X,Bk,s,M,B6,st,tS6,tF,nS0,nS1,yN,M6=(Q[k] for k in 'X Bk s M B6 st tS6 tF nS0 nS1 yN M6'.split())
+    src="the loose 6MX block (8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, 30.3 px/mm across the block; the view tilted 30-36°: likely in kind; escapement.js BLK.m6.hw/yN)"
+    hole=2*Bk['m17']['r']
+    ops=[Solid(lambda:_box(tS6,tF,nS0,nS1,0,yN,s),"Mill the slide from brass: a key %.1f wide, centred on the stud, from the stud to the block's edge, %.1f deep"%(2*M6['hw'],yN),
+          [S('width',f"{2*M6['hw']}",'30.3 px/mm (estimated)',src),S('depth',f"{yN}",'estimated',src),S('length',f"{tF-tS6:.1f}",'from the stud to the edge',src)],src),
+         Drill((st[0],s*st[1],-0.01),(0,0,1),hole,yN+0.02,"Drill the stud's clearance hole Ø %.2f through the slide"%hole,[S('',f"Ø {hole}",'the stud M1.7 passes (estimated)',src)],src,key='stud')]
+    return Recipe('adjSlide6','6MX.gks',"Adjusting slide (6MX), the detent block's",src,'brass, gilt (the photographs)','none',[Setup('1','brass on the mill',ops,view='top')],M,faces=("the plate's side","the block's side"),
+      fits=["flush in the notch across the block's corner, under the stud","how it fits the plate's hole 13 isn't seen (README, Unresolved)"],
+      notes=["Altmeppen names it, a gilt piece in a notch across the base's plate face under a slotted cylinder; the stud is the cylinder."])
+def _sl6():
+    r=slide6mx();r.rev='6mx';return r
+RECIPES['adjSlide6']=_sl6
