@@ -4,6 +4,17 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.70.04 · 2026-11-01
+- The jewels look like rubies: a deep red stone with a polished face's sharp reflection, where they were flat pink
+- The glass over the dial reflects more at a slant and stays clear seen square on, as glass does; the Wempe's bezel glass too
+- Clicking through the glass still picks the dial and hands behind it
+
+## 3.70.03 · 2026-11-01
+- The Hamilton now opens with no balance stop fitted; the manual's locking arm and the Navy's Y-arm brake are under Variants, Balance stop, and locking the balance under Stopping and starting fits the arm
+
+## 3.70.02 · 2026-11-01
+- The Hamilton now shows the manual's balance locking arm by default; the Navy's Y-arm brake, with its seal, plunger and lever, is under Variants, Balance stop
+
 ## 3.70.01 · 2026-11-01
 - The Wempe: the blind holes for the steady pins in its cocks and bridges now end in the drill's 118° point, as their drawings show them, on the page and in the parts' CAD files and operation sheets
 

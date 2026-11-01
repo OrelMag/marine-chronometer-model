@@ -191,6 +191,8 @@ STEPS=[('build',build,'quick'),
  ('book',R([PY,'book.py'],TOOLS),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('wempe-book',R([PY,'book.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's build book checked as paper, as the Hamilton's: every shown line on a sheet, each with its drawing's material or why it has none (about 1½ min)
  ('audit',R([PY,'audit.py'],TOOLS),'browser'),
+ ('audit-arm',R([PY,'audit.py','--stop','arm'],TOOLS),'browser'),   # the manual's locking arm fitted (Variants, Balance stop; none is fitted as the page opens since 1 November 2026), its coplanar faces under movement.arm
+ ('audit-navy',R([PY,'audit.py','--stop','navy'],TOOLS),'browser'),   # the Navy's Y-arm fitted, its coplanar faces under movement.navy
  ('audit-box',R([PY,'audit.py','box'],TOOLS),'browser'),
  ('holecheck',R([PY,'holecheck.py'],TOOLS),'browser'),
  ('wempe-smoke',R([PY,'smoke.py','--model','wempe'],TOOLS),'browser'),   # the Wempe's page: its views, sections, Spread, a pick, the opacity menu, a link; then its Essay tab (about 1½ minutes)
@@ -242,6 +244,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-fea',R([PY,'fea.py','--model','wempe'],TOOLS),'full'),   # the Wempe's plates, barrel bridge, fusee bush and intermediate bridge under load (checks.py's FEA; about 5 minutes)
  ('wempe-dfm',R([PY,'dfm.py','--model','wempe'],TOOLS),'full'),   # each machined piece of the Wempe against the machine: walls, slots, corners, holes, undercuts, sealed voids (fails only on a sealed void)
  ('fine',R([PY,'fine.py'],TOOLS),'full'),
+ ('fine-arm',R([PY,'fine.py','--stop','arm'],TOOLS),'full'),   # the manual's locking arm fitted (none as the page opens since 1 November 2026)
+ ('fine-navy',R([PY,'fine.py','--stop','navy'],TOOLS),'full'),   # the Navy's Y-arm fitted
  ('maintaining',R([PY,'maintaining.py'],TOOLS),'full'),
  ('wempe-maintaining',R([PY,'maintaining.py','--model','wempe'],TOOLS),'full'),   # the Wempe's maintaining work: its clicks, ratchet, detent and wire on the solids through run and wind; the page's own loop through two winds (the maintaining spring's drive); the stop work (1½-2¾ minutes)
  ('bom',R([PY,'bom.py'],TOOLS),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
