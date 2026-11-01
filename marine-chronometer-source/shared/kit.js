@@ -369,7 +369,7 @@ const KIT=(()=>{
        across the head (photocompare.py, Wempe 3955's N view). Cached by size */
     const HG={};
     /* domed (dome > 0, its rise over the rim): the top a spherical cap from the rim (no chamfer), built of rings so the cap is a surface, not a fan; the slot cut under it */
-    const headGeo=(r,h,dome=0,sw=0,ss=0)=>{const k=r+'_'+h+'_'+dome+'_'+sw+'_'+ss;if(HG[k])return HG[k];const c=dome>0?0:Math.min(0.35,r*0.14),w=sw||Math.max(0.35,r*0.2),s=ss||Math.max(Math.min(0.55,h*0.45),c+0.05,dome>0?dome+0.3:0),hw=w/2,n=24;   /* sw, ss: a slot of another width and depth (the 6MX's block stud) */
+    const headGeo=(r,h,dome=0,sw=0,ss=0)=>{const k=r+'_'+h+'_'+dome+'_'+sw+'_'+ss;if(HG[k])return HG[k];const c=dome>0?0:Math.min(0.35,r*0.14),w=sw||Math.max(0.35,r*0.2),s=ss||Math.max(Math.min(0.55,h*0.45),c+0.05,dome>0?dome+0.3:0),hw=w/2,n=Math.max(24,Math.ceil(r*12));   /* n: 24 segments a half rim, more on a big head (r over 2: its chords lie within 0.004 of the circle; 0.009 at r 4.5 with 24; 1 November 2026) */ /* sw, ss: a slot of another width and depth (the 6MX's block stud) */
       const RD=dome>0?(r*r+dome*dome)/(2*dome):0,yD=q=>-h+RD-Math.sqrt(Math.max(0,RD*RD-q[0]*q[0]-q[1]*q[1]));   /* the cap: -h at the middle, -h+dome at the rim */
       const arc=(rr,sg,a0,a1)=>[...Array(n+1).keys()].map(i=>{const t=a0+(a1-a0)*i/n;return[rr*Math.cos(t),sg*rr*Math.sin(t)];});
       const ccw=L=>area(L)<0?L.slice().reverse():L,cells=[];
@@ -401,6 +401,40 @@ const KIT=(()=>{
      face toward the arbor (T from the crown), an oil sink opening into that face as a cone from the hole to rc, hc deep, and the hole between, rb at its middle and
      0.03 wider at its two ends (olive). endPr: an endstone, flat on the pivot's side (y0), its edge e high, then domed h to its crown; domeAt its dome's height over
      the edge at r */
+  /* slotHeadGeo(o): a round head with a flat-floored slot cut across it, one closed solid, for the heads headGeo doesn't draw (a countersunk head, a dome whose slot ends where its floor meets the
+     dome, a head following a round side). The head stands on its seat y 0 (or its cone, bot) up to its free face (top), both functions of the plan point [x, z] (or numbers), radius r; the slot
+     runs along x, hw half-wide, its floor yF; flip puts the head toward -y (seat at 0, face below), as headGeo has it. Where the face is below the floor (a dome's rim) the slot ends on the
+     circle where face and floor meet (rf, found here) and the head goes on across it; where the cone is above the floor the slot is through, and the metal ends on that circle. Built of
+     rails on arcs (strips across them, every corner on the surface, as headGeo): the two halves beside the slot, the slot's floor, and where the head goes on past the slot's end the cells
+     across it (1 November 2026: the slot of the timing-screw-like screws, drawn as a dark bar standing out of the head until then) */
+  const slotHeadGeo=o=>{const{r,hw,yF,flip=false,n=24,m=4}=o,fn=f=>typeof f==='function'?f:()=>f,T0=fn(o.top),B0=fn(o.bot||0),e=1e-9,sn=f=>q=>{const v=f(q);return Math.abs(v-yF)<1e-7?yF:v;},T=sn(T0),B=sn(B0);   /* heights within 1e-7 of the floor are the floor's (the circle where face and floor meet carries no sliver) */
+    const out=rho=>T([rho,0])<=yF+e||B([rho,0])>=yF-e;let lo=hw,hi=r;if(out(r)){for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(out(mid))hi=mid;else lo=mid;}}const rf=out(r)?hi:r,s2=T([r,0])<yF-1e-7&&rf<r-1e-7;
+    const a1=hw+Math.min(0.1,(r-hw)/3),A=[a1];let br=[...(o.bp||[]).filter(v=>v>a1+1e-6&&v<r-1e-6)];if(rf<r-1e-6&&rf>a1+1e-6)br.push(rf);br.push(r);br.sort((u,w)=>u-w);
+    for(const v of br){const u=A[A.length-1],k=Math.max(1,Math.ceil((v-u)/0.2-1e-9));for(let i=1;i<=k;i++)A.push(u+(v-u)*i/k);A[A.length-1]=v;}
+    const J=rf>=r-1e-6?A.length-1:A.findIndex(v=>Math.abs(v-rf)<1e-6),sgs=[1,-1];
+    const ccw=L=>area(L)<0?L.slice().reverse():L,cells=[],strip=typeof o.top==='function'||typeof o.bot==='function';
+    const arc=(a,sg)=>{const t0=Math.asin(hw/a);return[...Array(n+1).keys()].map(i=>{const t=t0+(Math.PI-2*t0)*i/n;return[a*Math.cos(t),sg*a*Math.sin(t)];});};
+    const E={},P={};
+    for(const sg of sgs){P[sg]=A.map(a=>arc(a,sg));E[sg]=P[sg][0].map(q=>[q[0],sg*hw]);E[sg][0]=P[sg][0][0];E[sg][n]=P[sg][0][n];
+      cells.push({loop:ccw([...P[sg][0],...E[sg].slice(1,n).reverse()]),y0:B,y1:T});
+      for(let k=1;k<A.length;k++)cells.push({loop:ccw([...P[sg][k],...P[sg][k-1].slice().reverse()]),y0:B,y1:T,strip:strip?1:0});}
+    const side=sg=>[...P[sg].slice(1,J+1).map(q=>q[0]).reverse(),...E[sg],...P[sg].slice(1,J+1).map(q=>q[n])];   /* the slot's wall on one side, x falling */
+    const sm=a=>{const t0=Math.asin(hw/a);return[...Array(m+1).keys()].map(i=>{const t=-t0+2*t0*i/m;return[a*Math.cos(t),a*Math.sin(t)];});};
+    const SM={};for(let j=J;j<A.length;j++)SM[j]=sm(A[j]);
+    const sT=side(1),sB=side(-1).slice().reverse(),ends=SM[J];   /* the slot's floor: along z −hw with x rising, round the right end (z −hw to +hw), back along z +hw, round the left */
+    const rt=ends.map((q,i)=>i===0?sB[sB.length-1]:i===m?sT[0]:q),lf=ends.map((q,i)=>[-q[0],-q[1]]).map((q,i,a)=>i===0?sT[sT.length-1]:i===m?sB[0]:[-ends[m-i][0],ends[m-i][1]]);
+    cells.push({loop:ccw([...sB,...rt.slice(1,m),...sT,...lf.slice(1,m)]),y0:B,y1:yF});
+    if(s2)for(let j=J;j<A.length-1;j++)for(const sx of[1,-1]){const q0=SM[j].map(q=>[sx*q[0],q[1]]),q1=SM[j+1].map(q=>[sx*q[0],q[1]]);
+      const fix=(q,j)=>q.map((p,i)=>{const sg=i===0?-1:i===m?1:0;return sg?(sx>0?P[sg][j][0]:P[sg][j][n]):p;});
+      cells.push({loop:ccw([...fix(q1,j+1),...fix(q0,j).slice().reverse()]),y0:B,y1:T,strip:strip?1:0});}
+    const G=solidGeo(cells),Pp=G.attributes.position.array,N=G.attributes.normal.array,gr=(f,x,z)=>{const d=1e-4;return[(f([x+d,z])-f([x-d,z]))/(2*d),(f([x,z+d])-f([x,z-d]))/(2*d)];};
+    for(let t=0;t<Pp.length;t+=9){const v=[0,3,6].map(k=>[Pp[t+k],Pp[t+k+1],Pp[t+k+2]]),onT=v.every(q=>Math.abs(q[1]-T([q[0],q[2]]))<1e-5),onB=v.every(q=>Math.abs(q[1]-B([q[0],q[2]]))<1e-5&&q[1]>1e-5)&&Math.abs(N[t+1])<0.999,rim=Math.abs(N[t+1])<0.05&&v.every(q=>Math.abs(Math.hypot(q[0],q[2])-r)<1e-4);
+      if(onT&&N[t+1]>0.05&&v.every(q=>q[1]>yF+1e-6||true)){v.forEach((q,i)=>{const g=gr(T,q[0],q[2]),l=Math.hypot(g[0],1,g[1]);N[t+3*i]=-g[0]/l;N[t+3*i+1]=1/l;N[t+3*i+2]=-g[1]/l;});}
+      else if(onB&&N[t+1]<-0.05){v.forEach((q,i)=>{const g=gr(B,q[0],q[2]),l=Math.hypot(g[0],1,g[1]);N[t+3*i]=g[0]/l;N[t+3*i+1]=-1/l;N[t+3*i+2]=g[1]/l;});}
+      else if(rim){v.forEach((q,i)=>{const l=Math.hypot(q[0],q[2])||1;N[t+3*i]=q[0]/l;N[t+3*i+1]=0;N[t+3*i+2]=q[2]/l;});}}
+    if(flip){const U=G.attributes.uv.array;for(let i=1;i<Pp.length;i+=3){Pp[i]=-Pp[i];N[i]=-N[i];}
+      for(let t=0;t<Pp.length;t+=9){for(let k=0;k<3;k++){let a=Pp[t+3+k];Pp[t+3+k]=Pp[t+6+k];Pp[t+6+k]=a;a=N[t+3+k];N[t+3+k]=N[t+6+k];N[t+6+k]=a;}const u=t/9*6;for(let k=0;k<2;k++){const a=U[u+2+k];U[u+2+k]=U[u+4+k];U[u+4+k]=a;}}}
+    G.attributes.normal.needsUpdate=true;G.attributes.position.needsUpdate=true;return G;};
   /** @type {(R:number,h:number,r:number)=>number} */
   const domeAt=(R,h,r)=>{const Rs=(R*R+h*h)/(2*h);return Math.sqrt(Rs*Rs-r*r)-(Rs-h);};
   /** @type {(R:number,T:number,rb:number,d:number,rc:number,hc:number,y0:number,s:number)=>number[][]} */
@@ -410,5 +444,5 @@ const KIT=(()=>{
     return pr.map(([r,y])=>[r,y0+s*y]);};
   /** @type {(R:number,e:number,h:number,y0:number,s:number)=>number[][]} */
   const endPr=(R,e,h,y0,s)=>{const pr=[[0,0],[R,0],[R,e]];for(let i=1;i<=8;i++){const r=R*(1-i/8);pr.push([r,e+domeAt(R,h,r)]);}return pr.map(([r,y])=>[r,y0+s*y]);};
-  return{crease,latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  return{crease,latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,slotHeadGeo,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();
