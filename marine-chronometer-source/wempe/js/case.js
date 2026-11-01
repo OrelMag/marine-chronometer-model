@@ -918,7 +918,7 @@ const WCASE=(()=>{
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'Riemen');overW.add(g);box(g,3,OT-(OP+50),30,s*(OX+1.5),(OT+OP+50)/2,0,MC.leather);
         for(const h of[60,140])tag(screw(along(overW,[s*(OX+3),OP+h,0],[-s,0,0]),0,0,0,...WD.CASEQ.SUR.a,M.steel),'WN-ur');
         /* the eyes on the plate's ends: a disc Ø 23 × 2 and its screw (3 × 15 DIN 96, the parts list: its round head Ø 5.6 × 2.0 by the standard, drawn Ø 8.5 × 2.2 until 1 November 2026, the PLAN-recipes.md fault) */
-        const ex=s*(OX+25);tag(mesh(overW,cylY(11.5,2,48),M.steel,ex,OB+OW+1,0),'Riemenoese');tag(screw(along(overW,[ex,OB+OW+2,0],[0,-1,0]),0,0,0,2.8,2.0,15,1.5,M.steel),'WN-ro');}
+        const ex=s*(OX+25);tag(mesh(overW,cylY(11.5,2,48),M.steel,ex,OB+OW+1,0),'Riemenoese');tag(screw(along(overW,[ex,OB+OW+2,0],[0,-1,0]),0,0,0,2.8,2.0,15,1.5,M.steel,1.8,{w:0.8,s:1.4}),'WN-ro');}   /* DIN 96's half-round head: a cap 1.8 high over a 0.2 rim (the standard draws the head a half round; its rim estimated), its slot DIN 96's for 3: n 0.8, t 1.4 */
       /* the hinges (7) at the back: the body's leaves 32 × 12 × 1, the knuckle Ø 5 on the parting line (estimated but their length and place) */
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier.U');overW.add(g);hinge(g,32,s*84,[OT,-OZ-2.5],[[OT-12,OT,-OZ-1,-OZ]],M.brass);}
       /* the eye of the hook and eye (9): a screw eye on the front, 9 under the rim (commercial, estimated: a ring Ø 9 of 1.6 wire on a shank) */
