@@ -110,7 +110,7 @@ def fscrew(key,hn,title,drawing,prof,rs,y0,y1,top,slot,rot,note,src,expect_r,not
          ThreadOD(th,y0,y1,f'Cut the thread M{2*rs:g} (die or single point)',[S('thread',f"M{2*rs:g} × {th['p']}",'6g','ISO 261')],src),
          Cut(_slot(*slot,top,rot),'Mill the slot across the head',[S('slot',f"{slot[1]:.2f} wide × {slot[2]:.2f} deep, turned {math.degrees(rot):.0f}° (the page's)",None,src)],src,at=(0,0))]
     R_=Recipe(key,hn,title,drawing,'steel (the coloured section)','none',[Setup('1','bar in the collet, turned and parted off; the slot on the mill',ops)],_w.UP(),
-      notes=list(notes)+[note])
+      notes=list(notes)+[note],expect=[] if key=='w20' else [{'at':(0,0),'r':expect_r,'max':0.13,'why':"the slot's floor where it meets the head's cone at the slot's ends: facePocket's cut there leaves a ramp up to 0.12 (p99 0.014 over the screw)"}])
     R_.near=2.0   # only the page's pieces at this screw (WN-19's line is three)
     return R_
 

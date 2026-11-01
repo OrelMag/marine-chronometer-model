@@ -105,7 +105,7 @@ const WFUSEE=(()=>{
 
   /* ---------- helpers ---------- */
   const turned=(P,seg=32)=>KIT.crease(new THREE.LatheGeometry(P.map(([r,y])=>V2(r,y)),seg));   /* listed from one end on the axis to the other, y rising */
-  /* slotted(g, face, S): a screw head's slot cut into it (facePocket), as the recipes cut it: a real slot S.l+1 long across the whole head, S.w wide, S.h-0.02 deep from the face, turned S.rot about y as the dark boxes it replaces were (WN-19, WN-20, WN-21: boxes lying in the heads until 1 November 2026) */
+  /* slotted(g, face, S): a screw head's slot cut into it (facePocket), as the recipes cut it: a real slot S.l+1 long across the whole head, S.w wide, S.h-0.02 deep from the face, turned S.rot about y as the dark boxes it replaces were (WN-19, WN-20, WN-21: boxes lying in the heads until 1 November 2026); the heads' profiles carry a ring at r 0.07 on the slotted face, so the lathe's apex fan lies wholly inside the slot (cut through the apex, facePocket left a sloped floor there) */
   const slotted=(g,face,S)=>{const c=Math.cos(S.rot),s=Math.sin(S.rot),L=S.l/2+0.5,w=S.w/2;return capFix(facePocket(g,face,[[-L,-w],[L,-w],[L,w],[-L,w]].map(([x,z])=>[x*c+z*s,-x*s+z*c]),S.h-0.02),null);};
   const ringT=(P,seg=48)=>KIT.crease(new THREE.LatheGeometry([...P,P[0]].map(([r,y])=>V2(r,y)),seg));   /* both shaded by their own faces at corners (KIT.crease) */   /* a closed loop counterclockwise in r, y */
   const shapeOf=(xy,holes=[])=>{const s=new THREE.Shape();s.moveTo(xy[0][0],xy[0][1]);for(let i=1;i<xy.length;i++)s.lineTo(xy[i][0],xy[i][1]);s.closePath();
@@ -530,7 +530,7 @@ const WFUSEE=(()=>{
        clicks' WN-21: a plain Ø 2.0 shank until 28 October 2026, drawing check 2's 5-M11), from the head's foot to its chamfered tip, turned onto its hole's helix (matchThreads);
        the heads' slots */
     const SC19=WD.FU.SCR.w19;
-    for(const c of CWH){tag(mesh(gF,slotted(turned([[0,SC19.y0],[SC19.r0,SC19.y0],[SC19.r1,SC19.y1],[0,SC19.y1]],20),'top',SC19.slot),M.steel,c[0],0,-c[1]),'WN-19');   /* in the fusee's own group, as its body: fixed to it */
+    for(const c of CWH){tag(mesh(gF,slotted(turned([[0,SC19.y0],[SC19.r0,SC19.y0],[SC19.r1,SC19.y1],[0.07,SC19.y1],[0,SC19.y1]],20),'top',SC19.slot),M.steel,c[0],0,-c[1]),'WN-19');   /* in the fusee's own group, as its body: fixed to it */
       {const a=SC19.y0-SC19.t,b=SC19.y0,tg=KIT.threadGeo(SC19.rs,a,b,a+b).clone(),gt=new THREE.Group();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,a+b,0);   /* its tip toward -y, into the body */
         gt.position.set(c[0],0,-c[1]);gF.add(gt);tag(mesh(gt,tg,M.steel),'WN-19',1).userData.thread={rs:SC19.rs,p:KIT.isoP(SC19.rs)};}   /* in a group on its own axis, which matchThreads turns it about */
 }
@@ -549,7 +549,7 @@ const WFUSEE=(()=>{
        under its face, M1.7 across the small end's recess and 3.5 into the body (its M1.7 6 deep): estimated. Until 18 October 2026 the head was drawn flush, 0.025 off the
        sink all round, holding nothing (the Contacts view, Inside the part) */
     {const g=new THREE.Group();const SC20=WD.FU.SCR.w20;g.position.set(DPS[0],SC20.dy,-DPS[1]);gDP.add(g);tag(g,'WN-20');
-      mesh(g,slotted(turned([[0,SC20.y0],[SC20.r0,SC20.y0],[SC20.r1,SC20.y0+SC20.hh],[0,SC20.y0+SC20.hh]],20),'bottom',SC20.slot),M.steel);mesh(g,KIT.threadGeo(SC20.rs,SC20.ya,SC20.yb),M.steel).userData.thread={rs:SC20.rs,p:KIT.isoP(SC20.rs)};}   /* the slot, standing 0.02 out of the head's face as screw() draws them */
+      mesh(g,slotted(turned([[0,SC20.y0],[0.07,SC20.y0],[SC20.r0,SC20.y0],[SC20.r1,SC20.y0+SC20.hh],[0,SC20.y0+SC20.hh]],20),'bottom',SC20.slot),M.steel);mesh(g,KIT.threadGeo(SC20.rs,SC20.ya,SC20.yb),M.steel).userData.thread={rs:SC20.rs,p:KIT.isoP(SC20.rs)};}   /* the slot, standing 0.02 out of the head's face as screw() draws them */
     /* the chain's pin 05 06 00-6 (Kettenstift, coloured section; the hole "0,55∅ +0,01" through the flange's ribs, 05 06 04-2): Ø 0.55 across the slot, near the ribs' tops,
        where the chain's (or the band's) hook takes it */
     {const q=pol(PINR,PINA);tag(cylBetween(gF,0.2835,F,F0-2.0,M.steel,q[0],q[1],24),'050600-6');}   /* pressed: Ø 0.567 on 24 sides in the hole's Ø 0.555 (24 sides), 0.001-0.006 tight on the radius,
@@ -686,7 +686,7 @@ const WFUSEE=(()=>{
     /* their screws (WN-21, coloured section): put in from under the ratchet's plate, the head under it, the thread in the plate's M1.7, a shoulder Ø 1.19 above it for the
        click (its hole 1.2 H7), 0.1 past it; head Ø 2.6 × 0.5, the slot in it: estimated */
     for(const c of CKP){const g=new THREE.Group();g.position.set(c[0],0,-c[1]);gMW.add(g);tag(g,'WN-21');
-      const SC21=WD.FU.SCR.w21,yE=SC21.yE;mesh(g,turned([[0,yE],...SC21.dome.map(([r,d])=>[r,yE+d]),[SC21.rsh,SC21.ysh],[0,SC21.ysh]],20),M.steel);mesh(g,slotted(turned([[0,G],[SC21.hr,G],[SC21.hr,G+SC21.hh],[0,G+SC21.hh]],20),'top',SC21.slot),M.steel);   /* the head 0.9 high and the end domed 0.25 inside the cup's rim, as 05 06 02's section draws them (until 26 October 2026 0.5 and flat, 0.12 past the rim: estimated) */
+      const SC21=WD.FU.SCR.w21,yE=SC21.yE;mesh(g,turned([[0,yE],...SC21.dome.map(([r,d])=>[r,yE+d]),[SC21.rsh,SC21.ysh],[0,SC21.ysh]],20),M.steel);mesh(g,slotted(turned([[0,G],[SC21.hr,G],[SC21.hr,G+SC21.hh],[0.07,G+SC21.hh],[0,G+SC21.hh]],20),'top',SC21.slot),M.steel);   /* the head 0.9 high and the end domed 0.25 inside the cup's rim, as 05 06 02's section draws them (until 26 October 2026 0.5 and flat, 0.12 past the rim: estimated) */
       {const tg=KIT.threadGeo(SC21.rs,SC21.ya,SC21.yb,G+GP).clone();tg.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));tg.translate(0,G+GP,0);mesh(g,tg,M.steel).userData.thread={rs:SC21.rs,p:KIT.isoP(SC21.rs)};}   /* the M1.7 through the plate, from 0.1 in the head to the cup's floor, an ISO thread on the plate's (matchThreads; a plain Ø 1.7 until 27 October 2026): built tip up and turned over about y (G + GP)/2, its helix's phase (yr G + GP) still 0 at the screw's origin, so matchThreads turns it as any shank (the profile is even in u) */
 }
     /* the clicks' springs 05 06 02-2 (Sperrfeder; Bronzeband 1.5 × 0.4 federhart, "gestreckt 27,0"): along the cup's wall from their end, through the pin hole
