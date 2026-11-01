@@ -7,6 +7,10 @@ Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to ca
 ## 3.67.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the fusee body with its chain groove as an exact solid, the maintaining spring, the maintaining detent's arbor and its screws; the hairspring's collet and stud, the balance's arm and mass screws and the stud's screw, and the detent block of 1943, each part's card giving the version the page shows. 135 made parts and 39 bought lines in all.
 
+## 3.66.01 · 2026-11-01
+- The Wempe fusee's flange: its two ribs and the chain's slot between them now square and to the drawing's figures (0,87 slot, 0,37 rib, 2 over both)
+- The Wempe fusee's stop bar slot: 1,1 deep over the whole of the bar's upper end's side, as the drawing writes it; the bar thick only inside the small end's recess
+
 ## 3.66.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the case: the bowl, the bezel, the closing plate, the brackets, the gimbal ring, the lock nuts and the case's screws, each size on a line of its own; the glass, the closing spring, the box and its wood screws as parts to buy. 123 made parts and 37 bought lines in all.
 

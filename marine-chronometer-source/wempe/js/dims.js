@@ -67,7 +67,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     const CW0=FRC,CW1=FRC+2;
     const DP={t:0.8,R:21.05/2,ch:0.65,hb:6.109/2,cl:0.4,ca:60,sp:0.9,sk:1.575,skd:0.7,scr:{r:6,off:1},at:[0,0]};
     const DP0=S-DP.t;
-    const SLD=1.525,SLS=1.125,SLR=9.30;   /* SLR: toward the bar's upper end the slot is 1,5 deep only inside a circle about the axis, 1,1 outside it (05 06 04-2's Schnitt C-D draws the step as a dashed arc, scaled about r 9.45 on a scan whose scale varies ±10 %): taken at the last turn's "Grund" 9,30, so the deep floor stays over the turn below with 0.17 of metal (a straight step at u 8.0 until 31 October 2026 broke into it: the owner's pictures) */   /* the stop bar's slot "1,5+0,05 tief" and toward the bar's upper end "1,1+0,05 tief" (05 06 04-2), drawn at their middles: at 1.5 the floor stood 6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick (31 October 2026) */
+    const SLD=1.525,SLS=1.125;   /* the stop bar's slot "1,5+0,05 tief" on the bar's lower end's side of the small end's recess and "1,1+0,05 tief" on its upper end's (05 06 04-2's Schnitt C-D, each written in its own half; fusee.js, SB), drawn at their middles: at 1.5 the floor stood 6-17 µm over the next turn's rib where the slot's lower end breaks into it, a step Edges drew as a tick (31 October 2026). Until 31 October 2026 the upper side 1.5 deep inside r 9.30 (SLR), the hidden arcs read as the step */
     const DTU=yD-6.2,DTL=DTU+2,DTT=DTU+1;
     const PHI0=0,PINA=PHI0-0.17,PINR=16.8;
     DP.at=sh(DP.scr.r,PINA+Math.asin(DP.scr.off/DP.scr.r));
@@ -112,7 +112,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       arc([0,0],1.5,Math.atan2(1.45,-0.4),TB,8);
       o.push(T1);for(let i=1;i<8;i++){const a=TB+(-Math.PI/2-TB)*i/8;o.push([TC[0]+0.2*Math.cos(a),TC[1]+0.2*Math.sin(a)]);}
       return{B:CKB,N:CKN,T:CKT,C3,r3:3,h0,q8,r8:8,BB:[-0.4,1.45],rb:1.5,TC,T1,TB,rt:0.2,o,t:1.82,hole:{r:0.6045,cr:1.1,cd:0.42,sr:0.85,sd:0.25}};})();
-    const SB={N:4.01,F:5.99,d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05,t:1.45,pin:{r:0.25,z:3.5,dy:0.5},o:/** @type {number[][]} */([])};
+    const SB={N:4.01,F:5.99,d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:0,ub:0.8,tt:1.05,t:1.45,pin:{r:0.25,z:3.5,dy:0.5},o:/** @type {number[][]} */([])};
     SB.o=(()=>{const SBN=SB.N,SBF=SB.F,o=[],c=[SB.lo+SB.rt,SBN+SB.rt],e=Math.asin((SBN+SB.rr-SBF)/SB.rr);
       for(let i=0;i<=8;i++){const a=Math.PI*(150+120*i/8)/180;o.push([c[0]+SB.rt*Math.cos(a),c[1]+SB.rt*Math.sin(a)]);}
       for(let i=0;i<=16;i++){const a=-Math.PI/2+(Math.PI/2-e)*i/16;o.push([SB.ru+SB.rr*Math.cos(a),SBN+SB.rr+SB.rr*Math.sin(a)]);}
@@ -159,7 +159,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       w21:{yE:GC+0.25,dome:[[0.3,0.03],[0.5,0.09],[0.595,0.15]],rsh:0.595,ysh:GP+0.05,hr:1.3,hh:0.9,rs:0.85,ya:GP-0.1,yb:G,slot:{l:2.4,w:0.3,h:0.25,rot:0.4}}};
     const DTA=(()=>{const dome=(/** @type {number} */y0,/** @type {number} */sg,/** @type {number} */h)=>{const R=(0.44*0.44+h*h)/(2*h),o=[];for(let i=0;i<=8;i++){const a=Math.asin(0.44/R)*(1-i/8);o.push([R*Math.sin(a),y0+sg*(R*Math.cos(a)-(R-h))]);}return o;},rT=(/** @type {number} */y)=>1.125+(y-DTU)/140,ya=DTU-1.2;
       return[...dome(-21.825,-1,0.25).reverse(),[0.44,-18.975],[rT(ya)-0.25,-18.975],[rT(ya),-18.725],[rT(ya),ya],[rT(DTL),DTL],[rT(DTL),yD-0.25],[rT(DTL)-0.25,yD],[0.44,yD],...dome(yD+2.75,1,0.35)];})();
-    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,SLR,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR,GR,BODY,SCR,DTA,MS};})();
+    return{CK,SB,DT,VHF,VFA,VFB,W,WT,WW,WL,WTB,MSt,GS0,GS1,G,GT,GP,GC,F,RT,F0,LB,S,FRC,CW0,CW1,DP0,SLD,SLS,DTU,DTL,DTT,PHI0,PINA,PINR,sh,ratchet,DP,SP,VR,CW,FW,MR,SR,GR,BODY,SCR,DTA,MS};})();
   /* the motion work, the hands and the dial's sizes (dial.js's comments give each figure's source), here for the recipes (30 October 2026), written with dial.js's own
      expressions in its order: PPT the pillar plate's thickness, yC the centre arbor's journal C, crown the shank's crown radius (train.js), swYs the seconds arbor's shoulder.
      DY0, DT, DY1, DR the dial's disc; CN the cannon tube 05 05 03-3, CHW the change wheel 05 02 02 and HRW the hour wheel 05 02 03 and UDW the up-and-down wheel 05 02 04

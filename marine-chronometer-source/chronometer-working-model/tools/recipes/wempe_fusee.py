@@ -69,8 +69,7 @@ def fusee():
         v0,v1=sl['v0'],sl['v1'];b=bd.Box(u1-u0,v1-v0,depth+5,align=(bd.Align.MIN,bd.Align.MIN,bd.Align.MIN)).moved(bd.Location((u0,-v1,S0-5)))   # v' = -v: the page's z runs the other way
         return b.moved(bd.Location((0,0,0),(0,0,1),ang))
     def slot():
-        disc=bd.Cylinder(U['SLR'],30,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,S0-10)))
-        return pocket(U['SLS'],-14,14)+pocket(U['SLD'],-14,0.5)+(pocket(U['SLD'],0,14)&disc)
+        return pocket(U['SLS'],-14,14)+pocket(U['SLD'],-14,U['SB']['us'])   # 1.1 deep all along, 1.5 deep on the bar's lower end's side of the recess (u up to us)
     u0=math.sqrt(sp['a']**2-sp['b']**2);po=(u0*ca+sp['b']*sa,u0*sa-sp['b']*ca,S0+sp['dy'])
     ops=[Blank(36,S0-0.1,F+0.1,'Cut the blank from Rundmessing 36 (Ms 58) and chuck it',[S('blank','Ø 36',None,src)],src),
          TurnProfile(env,"Turn the flange (Ø 35.6) with its lead-in, the hub, the large end's recess with its 45° mouth, the bore and the small end's recess",
@@ -85,13 +84,13 @@ def fusee():
     for i,c in enumerate(U['CW']['holes']):
         ops.append(Drill((c[0],c[1],FRC-B['m2']['d']),(0,0,1),m2['D1'],B['m2']['d']+0.1,f'Drill and tap M2 for the click wheel\'s screw {i+1} from the recess floor',[S('',f"M2, {B['m2']['d']-0.25:.2f} to the full thread",'6 +0.5 deep',src),S('place','on Ø 11.5 at 120°, 74° from the chain\'s pin','Ø 11.5 ±0.05',src)],src,thread=m2,key=f'm2.{i+1}'))
     ops.append(Drill((U['DP']['at'][0],U['DP']['at'][1],S0+B['smD']-0.1),(0,0,1),m17['D1'],B['m17']['d']+0.1,'Drill and tap M1.7 for the cover plate\'s screw from the small end\'s recess floor',[S('','M1.7, 6 deep','6',src)],src,thread=m17,key='m17'))
-    ops.append(Cut(slot,"Mill the stop bar's slot across the small end: 2 H8 wide, 1.5 deep inside r 9.3 toward the bar's upper end, 1.1 deep outside it",
-        [S('slot',f"{sl['v1']-sl['v0']} wide, its near edge {sl['v0']} from the axis",'2 H8',src),S('deep',f"{U['SLD']}",'1,5 +0,05 (drawn at the middle)',src),S('shallow',f"{U['SLS']}",'1,1 +0,05',src),S('step',f"on r {U['SLR']}",'Schnitt C-D\'s dashed arc',src)],src))
+    ops.append(Cut(slot,"Mill the stop bar's slot across the small end: 2 H8 wide, 1.5 deep on the bar's lower end's side of the recess, 1.1 deep on its upper end's",
+        [S('slot',f"{sl['v1']-sl['v0']} wide, its near edge {sl['v0']} from the axis",'2 H8',src),S('deep',f"{U['SLD']}",'1,5 +0,05 (drawn at the middle)',src),S('shallow',f"{U['SLS']}",'1,1 +0,05',src),S('step',f"at u {U['SB']['us']}, the recess's middle",'Schnitt C-D\'s dashed arc',src)],src))
     ops.append(Drill(po,(ca,sa,0),2*sp['r'],30,"Drill and ream the stop bar spring's pin's hole along the slot",[S('',f"Ø {2*sp['r']:.4f}",'0,5 H7',src),S('place',f"{sp['b']} from the line through the axis along the slot, {sp['dy']} above the end face",None,src)],src,key='sp'))
     R_=Recipe('fusee','050604-2','Fusee body (Schneckenkörper)',src,'Rundmessing 36, Ms 58 (05 06 04-2)','gilt (Wempe 3955)',[Setup('1','in the chuck, turned; the groove cut on the lathe; the slots and holes on the mill and drill',ops)],_w.UP(),
       fits=['the arbor 05 06 04-1\'s collar Ø 7.04 -0.01 pressed in the bore 7 H7','the cover plate on the arbor\'s step; the click wheel in the large end\'s recess'],
-      expect=[{'at':(0,0),'r':18,'z':(F0-2.15,F+0.1),'max':0.05,'why':"the page turns the flange as a lathe with a row every 0.04 along the axis, so each wall of the first land's run (to 2.1 under the blank's face) stands up to 0.04 off the helix it is drawn on"},
-              {'at':(0,0),'r':18,'z':(F0-1.8,F0-0.6),'th':(-30,10),'max':0.2,'why':"the page's flange is a lathe of 216 columns round the slot's cutter arc, whose floor climbs 0.4 mm between two columns (1.7°): the chord stands up to 0.18 off the arc, and its rows every 0.04 put the slot's walls (a 0.76 and 1.63) up to 0.04 off the drawing"},
+      expect=[{'at':(0,0),'r':18,'z':(F0-2.2,F+0.1),'th':(-0.4,0.4),'max':0.5,'why':"the page sweeps the flange as two closed pieces and the band round the whole turn, meeting on the seam at 0°: their end caps are faces inside the metal, which the check cannot always tell from a surface"},
+              {'at':(0,0),'r':18,'z':(F0-1.8,F0-0.6),'th':(-30,10),'max':0.2,'why':"the page's 216 rays round the slot's cutter arc, whose floor climbs 0.4 mm between two rays (1.7°), chord it up to 0.1 off the circle"},
               {'at':(0,0),'r':11,'z':(S0-0.1,S0+1.6),'th':(-72,-58),'max':0.2,'why':"at the groove's end N the page's rays (216 and the two at N) join the last land's floor to the hub across a chord up to 0.13 off the wall"}],
       notes=['The groove is built as ruled surfaces over splines through the 05 06_20 curve (about a micron from it); a CNC lathe cuts it as a screw thread of changing core radius, the floor radius at each quarter turn as listed.']);return R_
 
