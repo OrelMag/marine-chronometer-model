@@ -160,7 +160,7 @@ def topPlate():
         Setup('2','on the mill, inner face up, located on holes 1 and 45\'s cut (the hole table\'s origin hole 1)',mills+[o for o in drills if o.face=='in']),
         Setup('3','turned over, outer face up, on the same two locations',[o for o in drills if o.face=='out'])],
       page_matrix([[-1,0,0],[0,0,-1],[0,-1,0]],(0,-D['INNER'],0)),
-      expect=[{'at':((c23[0]+c51[0])/2,(c23[1]+c51[1])/2),'r':Dd/2+5,'max':0.055,'why':"the page draws the pocket's far side tangent to r 4.95 about 23, so it crosses the opening's edge cleanly (frame.js); the sheet's r 5: the old mesh"}],
+      expect=[{'at':((c23[0]+c51[0])/2,(c23[1]+c51[1])/2),'r':Dd/2+5,'max':0.012,'why':"the page draws the pocket's far side tangent to the r 5 circle's point 0.01 inside it (r 4.99 about 23: the line must cross the opening's edge, frame.js P5; at r 5 the solid opens): 0.01 off the sheet's r 5"}],
       fits=['pillar holes 4.50 +0.012 on the pillars\' 4.5 f7','settings 1, 35, 38 4.59 +0.012 for WN-300/301 pressed'])
 
 # ---------------- the pillar plate (Unterplatte, 05 08 02-1) ----------------
