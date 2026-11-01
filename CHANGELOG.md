@@ -7,6 +7,9 @@ Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to ca
 ## 3.70.00 · 2026-11-01
 - The Wempe: a second closing plate under Variants, as a Wempe's is photographed in The Mariner's Chronometer (Fig. 2.32): no knob, but a slot riding a stop peg in the bowl's foot, and its spring a flat steel strip coiled round the hole. The drawings' plate, with its knob and wire spring, stays the default.
 
+## 3.69.03 · 2026-11-01
+- Labels no longer slow the Wempe page to a crawl: what covers each label is now worked out about a hundred times faster, on both models
+
 ## 3.69.02 · 2026-11-01
 - The Wempe's sources: what Klassik Uhren 3/2006 says of the chain and band, the dial, the features and the serial numbers, recorded beside the drawings.
 
