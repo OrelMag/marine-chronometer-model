@@ -14,8 +14,8 @@
   "seconds arbor's jewel on the intermediate bridge": {"xyz": [0, 7.0, 23], "uv": [499.5, 720]},
   "intermediate arbor's jewel on the bridge": {"xyz": [9.91, 7.0, 15.17], "uv": [586.5, 652.6]},
   "escape arbor's lower jewel (red)": {"xyz": [-11.783, 4.35, 21.743], "uv": [399.4, 709.3]},
-  "pillar screw at 9 (WN-56)": {"xyz": [-36.858, 6.35, 3.225], "uv": [181.7, 549.2]},
-  "pillar screw by 6 (WN-56)": {"xyz": [6.477, 6.35, 36.733], "uv": [558.7, 831.3]}
+  "pillar screw at 9 (WN-ps)": {"xyz": [-36.858, 6.35, 3.225], "uv": [181.7, 549.2]},
+  "pillar screw by 6 (WN-ps)": {"xyz": [6.477, 6.35, 36.733], "uv": [558.7, 831.3]}
  },
  "circles": {
   "pillar plate rim, dial face": {"c": [0, 3.35, 0], "r": 42.494, "snap": {"arcs": [[0, 360]], "win": 10}}

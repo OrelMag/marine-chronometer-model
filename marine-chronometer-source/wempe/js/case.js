@@ -31,6 +31,16 @@ const WCASE=(()=>{
      parting line (YL) 11.5 over them. That is 05 01's "11,5" too: its upper extension line (y 114.9 px) is the box wall's top in the elevation's section (115.1 px; 116.3 on
      the right), 0.9 under the ring's top (112.7), not the ring's: the ring's top stands 0.5 over the parting line, as 05 01 draws it (about 1 over: sure) */
   const{YSEAT,YB}=WD.CASEQ.Y,YP=YB-YSEAT,YF=YP-93.5,YT=YF+180,YL=YF+105,BW=WD.CASEQ.S80.B[0],WT=12.5;
+
+  /* the box's latch (Lange 5591's, Angerland lot 576, References/wempe/photos/auctions-museums/angerland_576_lange5591.jpg, 4000 px from above; 31 October 2026):
+     an angle plate on the body's front, centred, 43.9 ±0.5 long (scaled on the body's 185 at its top edge, 10.3 px/mm), its top let into the front wall's top with two slots,
+     8.1 wide 6.6 left of its middle and 3.4 wide 11.7 right of it, its face with two screws 14.8 left and 15.7 right and a round knob about Ø 9 at its middle (likely); and on
+     the lid a plate with three screws (-18.4, 0, 18.6) and a hook about 5.9 wide at 6.4 left, into the large slot (taken the same length; likely). Not seen (estimated): the
+     plates' 1.2 thickness, the top's depth 8, the face's height 7 (the knob's centre at its lower edge, as 5591's), the slots' 2.4 along the wall and their place, how far the hook reaches. The Zunge (P. 51 00 02-2) as
+     the bolt behind the plate, out of view in a mortise in the front wall, turning on its screw put in from inside the box, its knob in its M3.5 the plate's knob (14 from
+     the pivot: the knob at the middle puts the pivot 14 right); its arrangement unknown (the owner's choice: its 45 can't lie inside the 43.9 plate) */
+  const LT={L:43.9/2,t:1.2,fd:8,fh:7,sz:[-6.2,-3.8],sB:[-10.65,-2.55],sS:[9.99,13.41],fs:[-14.8,15.7],ls:[-18.4,0,18.6],hk:[-9.35,-3.45],hz:[-5.6,-4.4],hd:2.0,lh:7,
+    piv:14,yZ:-7,zZ:-7,mx:[-25.4,20.4],mz:[-7.2,-2.8],md:12.5,kw:2.2};
   /* DY6: how much lower the Soviet 6MX's bowl hangs in the gimbals: its case brackets' pivot holes 3.0 under the threaded rim's top (YB + 1.7: Kirov No. 247's bowl,
      12_Kirow_247_E-Kontakt_3.jpg and 11_Kirow247_E-Kontakt_2.jpg, a camera fitted in the meridian plane, ±2; Kirov 2973's 3.7 under), where the drawings' are 5.3 under the
      seat (YB − 5.3): likely. Kirov-Poljot 24020, later, has them about 10.8 under: the 1950s bowls' are the higher */
@@ -614,7 +624,15 @@ const WCASE=(()=>{
         C.push({loop:ccw(top),y0:-WT/2,y1:WT/2,F:[{p:ring(-(YP-(YF+WT+hh/2)),0,3.02,48),a:-WT/2,b:WT/2}]},{loop:ccw(bot),y0:-WT/2,y1:WT/2});
         const g=solidGeo(C),P=g.attributes.position,U=g.attributes.uv;for(let i=0;i<P.count;i++)U.setXY(i,(P.getZ(i)+Zm)/(2*Zm),(-P.getX(i)+hh/2)/hh);
         g.rotateZ(-Math.PI/2);if(s<0)g.rotateY(Math.PI);g.translate(s*(BW-WT/2),YF+WT+hh/2,0);return g;};
-      box(B,2*BW,WT,2*BW,0,YF+WT/2,0,MC.mah);for(const s of[-1,1]){if(s>0)box(B,2*BW,hh,WT,0,YF+WT+hh/2,s*(BW-WT/2),MC.mah);mesh(B,sideWall(s),MC.mah);}
+      /* the front wall, in blocks round the latch (LT): the plate's top let into its top edge, the tongue's mortise from its top behind it, the knob's neck from its face
+         through to the mortise; one mesh (fuse) */
+      const frontWall=()=>{const g=new THREE.Group(),y0=YF+WT,T=YL,yR=T-LT.t,yM=T-LT.md,yk=T+LT.yZ,w=LT.kw,F=BW,z1=F-LT.fd,z2=F+LT.mz[0],z3=F+LT.mz[1],xA=LT.mx[0],xB=-LT.L,xC=LT.mx[1],xD=LT.L,
+          b=(x0,x1,ya,yb,za,zb)=>box(g,x1-x0,yb-ya,zb-za,(x0+x1)/2,(ya+yb)/2,(za+zb)/2,MC.mah);
+        b(-BW,xA,y0,T,F-WT,F);b(xD,BW,y0,T,F-WT,F);b(xA,xD,y0,yM,F-WT,F);b(xA,xD,yM,T,F-WT,z1);   /* round the latch: either side, under the mortise, behind it */
+        b(xA,xB,yM,T,z1,z2);b(xA,xB,yM,T,z3,F);b(xB,xC,yM,yR,z1,z2);b(xC,xD,yM,yR,z1,F);   /* beside the plate's end (the mortise open over it there), under the plate's top */
+        b(xB,-w,yM,yR,z3,F);b(w,xC,yM,yR,z3,F);b(-w,w,yM,yk-w,z3,F);b(-w,w,yk+w,yR,z3,F);   /* in front of the mortise, round the knob's neck */
+        fuse(g.children.slice());return g;};
+      box(B,2*BW,WT,2*BW,0,YF+WT/2,0,MC.mah);for(const s of[-1,1]){if(s>0)B.add(frontWall());mesh(B,sideWall(s),MC.mah);}
       /* the back wall, its top let in 0.6 for the hinge's leaf over the hinge's length (below) */
       for(const s of[-1,1])box(B,BW-HGL/2,hh,WT,s*(BW+HGL/2)/2,YF+WT+hh/2,-(BW-WT/2),MC.mah);box(B,HGL,hh-HGT,WT,0,YF+WT+(hh-HGT)/2,-(BW-WT/2),MC.mah);
       /* the outer pivots a (11: WN-80): M6 through the side walls (51 00 10: "Verbohren 4,8 mm Gew. M 6", 93.5 over the bottom), tipped as pivots in the ring's holes;
@@ -708,7 +726,8 @@ const WCASE=(()=>{
          the box's face, so a closed lid must take it); its wood mapped as box()'s side faces */
       const lidSide=s=>{const x0=s*(BW-WT),x1=s*BW,z0=o-(BW-WT),z1=o+(BW-WT),g=blindHoles(polyGeo([[x0,z0],[x1,z0],[x1,z1],[x0,z1]],h,[[s*(BW-WT/2),o,PIN.r+0.1]]),'bottom',[[s*(BW-WT/2),o,PIN.r+0.1]],PIN.up+0.3),P=g.attributes.position,U=g.attributes.uv;
         for(let i=0;i<P.count;i++)U.setXY(i,(P.getZ(i)-z0)/(z1-z0),P.getY(i)/h);return g;};
-      for(const s of[-1,1]){if(s>0)box(B,2*BW,h,WT,0,h/2,o+s*(BW-WT/2),MC.mah);mesh(B,lidSide(s),MC.mah);
+      for(const s of[-1,1]){if(s>0)mesh(B,facePocket(new THREE.BoxGeometry(2*BW,h,WT),'bottom',[[-LT.L,WT/2-LT.fd],[LT.L,WT/2-LT.fd],[LT.L,WT/2+1],[-LT.L,WT/2+1]],LT.t),MC.mah,0,h/2,o+BW-WT/2);   /* the front wall, the hook plate's top let into its underside (LT) */
+        mesh(B,lidSide(s),MC.mah);
         box(B,2*BW,WT,20,0,h+WT/2,o+s*(BW-10),MC.mah);box(B,20,WT,2*BW-40,s*(BW-10),h+WT/2,o,MC.mah);}
       const g=tag(box(ldW,151,3,151,0,h-1.5,o,M.glass),'Deckelglas');g.userData.noShadow=g.userData.inkBox=1;   /* no Edges lines, as the bezel's glass */
       for(const s of[-1,1])box(B,BW-HGL/2,h,WT,s*(BW+HGL/2)/2,h/2,WT/2,MC.mah);box(B,HGL,h-HGT,WT,0,HGT+(h-HGT)/2,WT/2,MC.mah);   /* the lid's back wall, let in for the hinge's leaf */
@@ -732,8 +751,10 @@ const WCASE=(()=>{
        on the section's upper face (its 0,5 × 45° on the hole's upper edge, the far end's step "0,2" over "7" on the same face: sure), here its outer face, under the pivot
        screw's head and toward the keeper (which face faces out isn't drawn: estimated); both built since 27 October 2026 (batch 10, M3). Where it goes isn't
        drawn: taken as the lid's latch, turning on a screw in its Ø 6.2 on the lid's front over the parting line, its end under a keeper on the box's front, a knob in its M3.5
-       (Greenwich's wartime Wempe has a latch there): estimated */
-    const tgG=new THREE.Group();tgG.position.set(0,12,2*BW);ldW.add(tgG);const tz=prt(tgG,'lid');
+       (Greenwich's wartime Wempe has a latch there): estimated. Since 31 October 2026 the bolt of Lange 5591's latch (LT, above), out of view in the front wall's mortise,
+       its narrow end to the left and its thinned face toward the box (estimated) */
+    const tgG=new THREE.Group();   /* CS.tongue, which the page turns with the lid: a still group (the tongue stays in the box) */
+    const tgB=new THREE.Group();tgB.position.set(LT.piv,YL+LT.yZ,BW+LT.zZ);tgB.rotation.z=-Math.PI/2;bxW.add(tgB);const tz=prt(tgB,'box');
     {const arc=(c,r,t0,t1,n)=>[...Array(n+1).keys()].map(i=>{const t=t0+(t1-t0)*i/n;return[c[0]+r*Math.cos(t),c[1]+r*Math.sin(t)];});
       /* its outline (the second drawing check's 10-M9, likely; 51-00_4 at 6.76 px/mm: until 28 October 2026 one edge straight and the other tapering 3.2°, the narrow end a
          semicircle r 4 1.0 off the holes' line and the round end r 5 centred 1 beyond the hole): the round end an arc R 6 about the hole (its "6" a radius), meeting the edges
@@ -743,10 +764,18 @@ const WCASE=(()=>{
       const A=[[-5,ya],[-w32,32],[w32,32],[5,ya],...arc([0,0],6,Math.atan2(ya,5),Math.atan2(ya,-5),24).slice(1,-1)];
       const B=[[-w32,32],[-wE,yE],...arc([0,32],7,Math.atan2(yE-32,-wE),Math.atan2(yE-32,wE),16).slice(1,-1),[wE,yE],[w32,32]];   /* plan [across, along]: the hole at 0; A to 32 along, B its last 7 (thinned 0.2) */
       const geo=solidGeo([{loop:A,y0:0,y1:4,F:[{p:C([0,0],3.1,48),a:0,b:3.5},{p:C([0,0],3.1,48),q:C([0,0],3.6,48),a:3.5,b:4},{p:C([0,14],1.77,32),a:0,b:4}]},{loop:B,y0:0,y1:3.8}]);geo.rotateX(Math.PI/2);tag(mesh(tz,geo,MC.black),'P510002-2');   /* hanging down the lid's front, 4 thick out from it */
-      tag(screw(along(tz,[0,0,4],[0,0,-1]),0,0,0,...WD.CASE.zg,M.steel),'WN-zg');   /* its pivot screw, M6 in the Ø 6.2, head Ø 9 (estimated) */
-      const kn=tag(new THREE.Group(),'WN-zk');kn.position.set(0,-14,4);tz.add(kn);const kg=KIT.latheF([V2(0,0),V2(1.75,0),V2(1.75,1.5),V2(3,1.5),V2(3,6),V2(2.5,7),V2(0,7)],24);kg.rotateX(Math.PI/2);mesh(kn,kg,MC.knob);}   /* its knob in the M3.5 (estimated) */
-    /* its keeper on the box's front (estimated): a strap 16 wide, 1.5 thick, 4.4 off the front over the tongue's end */
-    {const g=tag(new THREE.Group(),'Schliessblech');bxW.add(g);box(g,18,10,1.5,0,YL-26,BW+5.15,M.steel);for(const s of[-1,1])box(g,3,10,4.4,s*7,YL-26,BW+2.2,M.steel);fuse(g.children.slice());}   /* one bent strap, one mesh (fuse) */
+      tag(screw(along(tz,[0,0,-WT-LT.zZ],[0,0,1]),0,0,0,...WD.CASE.zg,M.steel),'WN-zg');   /* its pivot screw, M6 in the Ø 6.2, head Ø 9, put in from inside the box (estimated) */
+      const kn=tag(new THREE.Group(),'WN-zk');kn.position.set(0,-14,4);tz.add(kn);
+      const kg=KIT.latheF([V2(0,0),V2(1.75,0),V2(1.75,4.4),V2(4.5,4.4),V2(4.5,6.2),V2(4.1,6.5),V2(4.1,6.9),V2(4.5,7.2),V2(4.5,9),V2(4.2,9.4),V2(0,9.4)],32);kg.rotateX(Math.PI/2);mesh(kn,kg,M.steel);}
+      /* its knob in the M3.5: its neck through the wall and the plate's window, its head Ø 9 with a groove (Lange 5591's: likely; its height estimated) */
+    /* the latch plate on the box's front and the hook plate on the lid's (LT): bright steel, each one bent plate, one mesh (fuse); the screws' heads on their faces */
+    {const g=tag(new THREE.Group(),'Schliessblech');bxW.add(g);const L=LT.L,t=LT.t,b=(x0,x1,y0,y1,z0,z1)=>box(g,x1-x0,y1-y0,z1-z0,(x0+x1)/2,(y0+y1)/2,(z0+z1)/2,M.steel),y0=YL-t,s0=BW+LT.sz[0],s1=BW+LT.sz[1];
+      b(-L,L,y0,YL,BW-LT.fd,s0);b(-L,LT.sB[0],y0,YL,s0,s1);b(LT.sB[1],LT.sS[0],y0,YL,s0,s1);b(LT.sS[1],L,y0,YL,s0,s1);b(-L,L,y0,YL,s1,BW+t);   /* its top, round the slots */
+      const yk=YL+LT.yZ,w=LT.kw;b(-L,-w,YL-LT.fh,y0,BW,BW+t);b(w,L,YL-LT.fh,y0,BW,BW+t);b(-w,w,yk+w,y0,BW,BW+t);if(yk-w>YL-LT.fh)b(-w,w,YL-LT.fh,yk-w,BW,BW+t);   /* its face, round the knob's window (a notch in its lower edge: the knob at the edge, as on 5591) */
+      for(const x of LT.fs){const h=mesh(g,cylY(1.4,0.4,16),M.steel,x,YL-LT.fh+2.5,BW+t+0.2);h.rotation.x=Math.PI/2;}fuse(g.children.slice());}
+    {const g=tag(new THREE.Group(),'Hakenblech');ldW.add(g);const L=LT.L,t=LT.t,F=2*BW,b=(x0,x1,y0,y1,z0,z1)=>box(g,x1-x0,y1-y0,z1-z0,(x0+x1)/2,(y0+y1)/2,(z0+z1)/2,M.steel);
+      b(-L,L,0,t,F-LT.fd,F+t);b(-L,L,t,LT.lh,F,F+t);b(LT.hk[0],LT.hk[1],-LT.hd,0,F+LT.hz[0],F+LT.hz[1]);   /* its top let into the lid's front wall, its face, the hook down through the large slot */
+      for(const x of LT.ls){const h=mesh(g,cylY(1.4,0.4,16),M.steel,x,(t+LT.lh)/2,F+t+0.2);h.rotation.x=Math.PI/2;}fuse(g.children.slice());}
 
     /* ================= the 6MX's box (Kirov No. 247's, '6mx') ================= */
     /* A box in three tiers, the body, a glazed lid and a top lid, two hasps with knurled screws across the parting lines, brass corner strips, a ring handle on each side

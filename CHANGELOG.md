@@ -7,6 +7,11 @@ Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to ca
 ## 3.66.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the case: the bowl, the bezel, the closing plate, the brackets, the gimbal ring, the lock nuts and the case's screws, each size on a line of its own; the glass, the closing spring, the box and its wood screws as parts to buy. 123 made parts and 37 bought lines in all.
 
+## 3.65.01 · 2026-11-01
+- The Wempe's box latch rebuilt as on Lange No. 5591: a slotted latch plate with its knob on the box's front, and a hook plate on the lid.
+- The Wempe's screw numbers corrected from its general arrangement: the movement ring's screws are WN-56, the lower balance settings' WN-18.
+- New sources for the Wempe: two wartime Langes in their boxes (Nos. 5395 and 5591) and the article "Das Einheitschronometer" (Klassik Uhren 3/2006).
+
 ## 3.65.00 · 2026-11-01
 - The Hamilton Model 21 is rescaled to Hamilton's own factory drawings: every plate, bridge, wheel, screw and the case are 1.117 times larger (the pillar plate now 97.8 mm across), the balance and escapement kept at the sizes measured on them
 - The Hamilton's escape arbor stands where the drawings put it, 11.90 mm from the fourth wheel, and its detent, mainspring and train figures are worked out again at the new size
