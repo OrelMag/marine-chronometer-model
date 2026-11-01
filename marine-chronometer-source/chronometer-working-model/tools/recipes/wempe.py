@@ -1435,3 +1435,7 @@ RECIPES.update(wempe_case.RECIPES)
 # ================= Batch 12 (1 November 2026): the keys, the transit lock, the barrel hook, the stud, the band hooks and the coverage lines: wempe_rest.py =================
 from . import wempe_rest
 RECIPES.update(wempe_rest.RECIPES)
+
+# ================= Batch 13 (1 November 2026): the 6MX's electrical contact: wempe_ct6.py =================
+from . import wempe_ct6
+RECIPES.update(wempe_ct6.RECIPES)

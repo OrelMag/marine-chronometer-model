@@ -25,13 +25,15 @@ import build123d as bd
 HERE=pathlib.Path(__file__).resolve().parent
 VOL_TOL=0.005;BOX_TOL=0.02;SURF_TOL=0.02;HOLE_C=0.01;HOLE_D=0.01
 
+def pkey(r):return r.hn+('|%d'%r.root_i if getattr(r,'root_i',0) else '')   # the page's mesh a recipe is checked against: its line, or the line's root_i-th root (two springs on one line)
+
 def recipes():
     if model.NAME=='wempe':
         from recipes import wempe;return wempe.RECIPES
     sys.exit('recipes.py: no recipes yet for '+model.NAME)
 
-EXPORT="""hn=>{const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last'))return false;return true;};
-  let sc=mv,root=null;const find=s=>s.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o))root=o;});find(mv);if(!root&&window.__BX&&window.__BX.root){sc=window.__BX.root;find(sc);}   /* the case and its box are not in the movement's group: the box's root (?qa's __BX) */
+EXPORT="""hh=>{const [hn,ri]=hh.split('|'),RI=+(ri||0);let nr=0;const mv=window.__mv,shows=o=>{for(let q=o;q;q=q.parent)if(q.userData.rev&&mv.userData.revShows&&!mv.userData.revShows(q.userData.rev,'last'))return false;return true;};
+  let sc=mv,root=null;const find=s=>s.traverse(o=>{if(!root&&o.userData.hn===hn&&!o.userData.sub&&shows(o)&&nr++===RI)root=o;});   /* RI: the RI-th such mesh (a line of two springs: the second spring's foot) */find(mv);if(!root&&window.__BX&&window.__BX.root){sc=window.__BX.root;find(sc);}   /* the case and its box are not in the movement's group: the box's root (?qa's __BX) */
   if(!root)return null;sc.updateMatrixWorld(true);
   const subs=[];sc.traverse(o=>{if(o!==root&&o.userData.hn===hn&&o.userData.sub&&shows(o))subs.push(o);});   /* the part's other pieces (tag(o,id,1): a bush's neck and collar), into root's frame */
   const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(),out=[],v=new THREE.Vector3();let rotY=null;
@@ -140,6 +142,7 @@ def check(r,pm):
     import trimesh
     res={'part':r.key,'hn':r.hn,'fail':[]};F=res['fail']
     if not pm or not pm['meshes']:F.append('no page mesh for '+r.hn);return res
+    if getattr(r,'pieces',None) is not None:pm=dict(pm,meshes=[pm['meshes'][i] for i in r.pieces if i<len(pm['meshes'])])   # only these of the line's meshes (root first, then its other pieces in the scene's order): a disc and its bracket, a wheel and its collet
     if getattr(r,'root_only',False):pm=dict(pm,meshes=pm['meshes'][:1])   # the part's own mesh, without the other pieces its line carries (the hook block's: the M2.6 screw that fixes it)
     if getattr(r,'page_params',None):r.page_params(pm.get('pud') or {})   # what the page sets at its build (the drum's chain slot where the laid chain's hook comes)
     M=r.to_page.copy()
@@ -289,10 +292,10 @@ def main():
     R={k:r for k,r in R.items() if not isinstance(r,Bought)}
     pm={}   # the page's meshes by (version, line): a recipe of another version of the Wempe (Recipe.rev: '1943', '6mx', 'first') is checked on the page as that version shows it, one page load a version
     for rv in sorted({getattr(r,'rev','last') for r in R.values()}):
-        for h,m in asyncio.run(page_meshes(sorted({r.hn for r in R.values() if getattr(r,'rev','last')==rv}),o.pose,rv)).items():pm[(rv,h)]=m
+        for h,m in asyncio.run(page_meshes(sorted({pkey(r) for r in R.values() if getattr(r,'rev','last')==rv}),o.pose,rv)).items():pm[(rv,h)]=m
     bad=0;allres=[]
     for k,r in R.items():
-        t=time.time();res=check(r,pm.get((getattr(r,'rev','last'),r.hn)));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
+        t=time.time();res=check(r,pm.get((getattr(r,'rev','last'),pkey(r))));allres.append(res);v=res.get('volume',{});s=res.get('surface',{})
         print(f"\n== {k} ({r.hn}) {'FAIL' if res['fail'] else 'ok'} ({time.time()-t:.0f} s)")
         if v:print(f"  volume  recipe {v['recipe']} page {v['page']}"+(f" (the page in {v['pieces']} pieces, summed: reported)" if v.get('pieces') else f" ({v['rel']*100:+.3f} %, allowed ±{v['allow']})")+(f"; differ outside threads: recipe only {res['symdiff']['recipe_only']}, page only {res['symdiff']['page_only']} mm³ (±{res['symdiff']['sd']})" if 'symdiff' in res else '; the page in several pieces, not closed or with faces inside: no Monte Carlo'))
         if 'bbox' in res:print(f"  bbox    corners within {res['bbox']['max']}")
