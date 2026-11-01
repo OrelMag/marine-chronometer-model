@@ -106,7 +106,7 @@ const WFUSEE=(()=>{
   /* ---------- helpers ---------- */
   const turned=(P,seg=32)=>KIT.crease(new THREE.LatheGeometry(P.map(([r,y])=>V2(r,y)),seg));   /* listed from one end on the axis to the other, y rising */
   /* slotted(g, face, S): a screw head's slot cut into it (facePocket), as the recipes cut it: a real slot S.l+1 long across the whole head, S.w wide, S.h-0.02 deep from the face, turned S.rot about y as the dark boxes it replaces were (WN-19, WN-20, WN-21: boxes lying in the heads until 1 November 2026) */
-  const slotted=(g,face,S)=>{const c=Math.cos(S.rot),s=Math.sin(S.rot),L=S.l/2+0.5,w=S.w/2;return facePocket(g,face,[[-L,-w],[L,-w],[L,w],[-L,w]].map(([x,z])=>[x*c+z*s,-x*s+z*c]),S.h-0.02);};
+  const slotted=(g,face,S)=>{const c=Math.cos(S.rot),s=Math.sin(S.rot),L=S.l/2+0.5,w=S.w/2;return capFix(facePocket(g,face,[[-L,-w],[L,-w],[L,w],[-L,w]].map(([x,z])=>[x*c+z*s,-x*s+z*c]),S.h-0.02),null);};
   const ringT=(P,seg=48)=>KIT.crease(new THREE.LatheGeometry([...P,P[0]].map(([r,y])=>V2(r,y)),seg));   /* both shaded by their own faces at corners (KIT.crease) */   /* a closed loop counterclockwise in r, y */
   const shapeOf=(xy,holes=[])=>{const s=new THREE.Shape();s.moveTo(xy[0][0],xy[0][1]);for(let i=1;i<xy.length;i++)s.lineTo(xy[i][0],xy[i][1]);s.closePath();
     for(const h of holes){const p=new THREE.Path();if(h.c){p.absarc(h.c[0],h.c[1],h.r,0,TAU,true);}else{p.moveTo(h[0][0],h[0][1]);for(let i=1;i<h.length;i++)p.lineTo(h[i][0],h[i][1]);p.closePath();}s.holes.push(p);}return s;};
