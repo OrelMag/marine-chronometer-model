@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.68.00 · 2026-11-01
+- The Wempe's Making it: CAD files (STEP) and operation sheets for the winding keys, the transit lock (each of its pieces), the barrel arbor's hook, the wire spring's stud, the band's hooks, the 6MX's chatons and the detent block of every version with its screws; the chain, the band's strip, the boxes' fittings, jewels and standard parts as parts to buy. 171 made parts and 101 bought lines in all.
+
 ## 3.67.00 · 2026-11-01
 - The Wempe's Making it: CAD files (STEP) and operation sheets for the fusee body with its chain groove as an exact solid, the maintaining spring, the maintaining detent's arbor and its screws; the hairspring's collet and stud, the balance's arm and mass screws and the stud's screw, and the detent block of 1943, each part's card giving the version the page shows. 135 made parts and 39 bought lines in all.
 
