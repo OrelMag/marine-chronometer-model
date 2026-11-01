@@ -63,7 +63,10 @@
   "udWheel:Buffer | hands:Buffer | +12.36": 1,
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
- "box": {},
+ "box": {
+  "box:Buffer | lid:Buffer | +12.54": 1,
+  "lid:Buffer | lid:Buffer | -12.54": 1
+ },
  "movement.first": {
   "balance:Buffer | balance:Buffer | +-23.10": 6,
   "balance:Buffer | balance:Buffer | --24.26": 1,
@@ -279,8 +282,8 @@
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box.1943": {
-  "bezel:Buffer | bezel:Buffer | +22.36": 1,
-  "bowl:Buffer | gimbalRing:Buffer | +6.34": 1
+  "box:Buffer | lid:Buffer | +12.54": 1,
+  "lid:Buffer | lid:Buffer | -12.54": 1
  },
  "movement.3955": {
   "balance:Buffer | balance:Buffer | +-23.10": 6,

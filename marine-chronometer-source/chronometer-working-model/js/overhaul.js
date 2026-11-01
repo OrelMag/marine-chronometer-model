@@ -207,7 +207,7 @@ const OVH=(()=>{
      screws' heads are on that side (further out than the cap, which they go on with); the balance lower endstone cap comes out of the lower bridge's underside. The winding ratchet wheel, screwed to the fusee's large end, comes off the arbor's lower end once the stack under it is off, over the collar's step, the
      shoulder and the pinion (Op. 43; Fig. 28), 16 mm, past the pinion, and its two screws (42014), whose heads are on that side, ahead of it. The seal ring and its spring, built in the dust seal's group (they rise with it in the Exploded view), stand on the barrel bridge (KLUwI2UUCMQ 12:34-12:38.5), so it carries them here.
      The fusee goes well clear (90 mm), so what comes off it on the bench (Ops. 39-45) lands above the movement, not in the upper train bridge still on it */
-  const UP={'42013':16,'42014':20,'42099':6,'42169':6,'42170':8,'42038':8,'42037':8,'37023':8,'42159.bl':4,'J.ble':4,'42021':-90};
+  const UP={'42013':17.872,'42014':22.34,'42099':6.702,'42169':6.702,'42170':8.936,'42038':8.936,'42037':8.936,'37023':8.936,'42159.bl':4.468,'J.ble':4.468,'42021':-100.53};   /* mm, x1.117 with the movement since 31 October 2026 (16, 20, 6, 8, 4, -90 until then) */
   function setup(){if(MV.length)return;const mv=A.mv,ids=new Set(Object.keys(HOST));for(const q of[DIS,RE])for(const s of q)for(const k of['out','in','ls'])for(const id of s[k]||[])ids.add(id);
     for(const id of ids)for(const o of find(id)){if(!MVS.has(o)){MV.push(o);MVS.add(o);}o.userData.ovId=id;}
     EX=new Set([...Object.values(mv.userData.parts),...mv.userData.lifted]);
@@ -226,7 +226,7 @@ const OVH=(()=>{
     const hr=o=>{const h=host.get(o);return h?r1.get(h):0;};
     for(const o of MV){const r=r1.get(o)-hr(o),id=o.userData.ovId,sg=side.get(o)==='d'?1:-1;
       if(UP[id]!=null)R.set(o,UP[id]);
-      else if(Math.abs(r)<0.5){const sc=(mates.get(o)||[]).filter(x=>x!==o&&host.get(x)===host.get(o)&&(r1.get(x)-hr(x))*sg>=0.5).map(x=>Math.abs(r1.get(x)-hr(x)));R.set(o,sg*(sc.length?Math.min(...sc)*0.45:6));}
+      else if(Math.abs(r)<0.5585){const sc=(mates.get(o)||[]).filter(x=>x!==o&&host.get(x)===host.get(o)&&(r1.get(x)-hr(x))*sg>=0.5585).map(x=>Math.abs(r1.get(x)-hr(x)));R.set(o,sg*(sc.length?Math.min(...sc)*0.45:6.702));}
       else R.set(o,r);}
     mv.traverse(m=>{if(!m.isMesh)return;for(let p=m;p&&p!==mv;p=p.parent)if(MVS.has(p)){M2M.set(m,p);return;}});}
   /* the state after step k: each mover in (0), off (1) or loosened (0.2); a disassembly starts with all in, a reassembly with all it puts in off */

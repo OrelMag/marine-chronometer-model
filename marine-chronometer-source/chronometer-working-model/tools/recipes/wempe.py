@@ -80,11 +80,11 @@ def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None):
 def pillarScrew():
     Q=W()['WD']['PSCR'];return screw('pillarScrew','WN-57','Pillar screw, top plate (WN-57)',Q['r'],Q['h'],Q['len'],Q['rs'],"brass (Wempe 3955's; no drawing gives it)",
       'dims.js PSCR (the coloured section, Wempe 3955; WN sheet not in the set: estimated)',['Head and shank read off the coloured section and Wempe 3955 (estimated ±0.2).'])
-def pillarScrew56():
-    Q=W()['WD']['PSCR'];return screw('pillarScrew56','WN-56','Pillar screw, pillar plate (WN-56)',Q['r'],Q['h'],Q['len'],Q['rs'],"brass (Wempe 3955's; no drawing gives it)",
+def pillarScrewD():
+    Q=W()['WD']['PSCR'];return screw('pillarScrewD','WN-ps','Pillar screw, pillar plate (WN number not read)',Q['r'],Q['h'],Q['len'],Q['rs'],"brass (Wempe 3955's; no drawing gives it)",
       'dims.js PSCR (the coloured section: estimated)',['The same screw as WN-57 in the model (the coloured section reads them alike).'])
 def ringScrew():
-    G=W()['WD']['RING'];return screw('ringScrew','WN-rs','Movement ring screw (WN number not read)',G['scr'][0],G['scr'][1],G['scr'][2],1.3,"brass (Wempe 3955's)",
+    G=W()['WD']['RING'];return screw('ringScrew','WN-56','Movement ring screw (WN-56)',G['scr'][0],G['scr'][1],G['scr'][2],1.3,"brass (Wempe 3955's)",
       'dims.js RING.scr (the coloured section at 9.37 px/mm: sure on the section)')
 
 # ---------------- the top plate (Oberplatte, 05 09 01) ----------------
@@ -982,7 +982,7 @@ def _escU(r):
 def jewelScrews():
     B=WJ()['BJ'];s='escapement.js BJ (the coloured section at 9.4 px/mm; Wempe 3955: heads Ø 2.5 sure, heights likely)'
     return {'settingScrewU':_jscr('settingScrewU','WN-55.ck',"Upper endstone setting's screw (WN-55), two",B['scrU'],'brass (Wempe 3955)',s),
-            'settingScrewL':_jscr('settingScrewL','WN-10.bl',"Lower settings' screw (WN-10), two",B['scrL'],'steel (not given)',s),
+            'settingScrewL':_jscr('settingScrewL','WN-18',"Lower settings' screw (WN-18), two",B['scrL'],'steel (not given)',s),
             'escScrewU':_escU(_jscr('escScrewU','WN-es',"Escape wheel's upper endstone screw, two",B['scrEU'],'brass (Wempe 3955: slotted brass)','escapement.js BJ (Wempe 3955, 2_Wempe_3955_A.jpg: heads 2.5 across; estimated)')),
             'escScrewL':_jscr('escScrewL','WN-ec',"Escape wheel's lower endstone screw, two",B['scrEL'],'brass (Wempe 3955)','escapement.js BJ (Wempe 3955, 3_Wempe_3955_uZ.jpg: heads 2.6; estimated)')}
 def jewelsBought():
@@ -1146,7 +1146,7 @@ def springsBought():
 
 def secondsArbor():return trainArbor('sw','secondsArbor','050501-2','Seconds pinion and arbor (Sekundentrieb)','05 05 01-2 (kompl. 05 05 01, revised 24.3.48)',3.5,'Präz. Rundstahl 3,5','not given on the sheet',"z 10 from the centre distance (confirmed); tip and root by 05 04_8's proportions (likely)")
 
-RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrew56':pillarScrew56,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
+RECIPES={'corkRing':corkRing,'pillars':pillar,'pillarScrew':pillarScrew,'pillarScrewD':pillarScrewD,'topPlate':topPlate,'pillarPlate':pillarPlate,'ring':ring,'ringScrew':ringScrew,
   'barrelBridge':barrelBridge,'click':click,'clickScrew':clickScrew,'bridgeScrew':bridgeScrew,'fuseeBush':fuseeBush,'fuseeBushScrew':fuseeBushScrew,'dustBush':dustBush,
   'upperCock':upperCock,'upperCockScrew':upperCockScrew,'lowerCock':lowerCock,'lowerCockScrew':lowerCockScrew,'intermediateBridge':intermediateBridge,'intermediateBridgeScrew':intermediateBridgeScrew,
   'centreArbor':centreArbor,'intermediateArbor':intermediateArbor,'secondsArbor':secondsArbor,'escapeArbor':escapeArbor,'staff':staff,'centreWheel':centreWheel,'intermediateWheel':intermediateWheel,'secondsWheel':secondsWheel,'escapeWheel':escapeWheel,'fuseeArbor':fuseeArbor,'barrelArbor':barrelArbor,
@@ -1161,3 +1161,266 @@ for _h,_k,*_r in SMALL:RECIPES[_k]=(lambda h=_h,k=_k,r=tuple(_r):smallTurned(h,k
 for _b in pinsBought()+springsBought()+detentBought():RECIPES[_b.key]=(lambda b=_b:b)
 for _b in balanceBought()+blockBought():RECIPES[_b.key]=(lambda b=_b:b)
 for _k in ('jewelBalU','jewelBalL','endstoneBalU','endstoneBalL','jewelEscU','endstoneEscU','jewelEscL','endstoneEscL'):RECIPES[_k]=(lambda k=_k:[q for q in jewelsBought() if q.key==k][0])
+
+# ================= Batch 10 (30 October 2026): the motion work, the up-and-down work, the hands and the dial (dial.js; dims.js MW) =================
+@functools.lru_cache()
+def WMW():
+    """dims.js's MW (the motion work's, hands' and dial's sizes, built as dial.js builds it) with the teeth outlines train.js cuts from its argument lists"""
+    js=("const W=require(%r)({train:true}),cw=W.WTRAIN.A.cw,M=W.WD.MW(W.WD.PP_T,cw.ys+23.03,cw.crown,W.WTRAIN.A.sw.ys),T=a=>W.WTRAIN.teeth(...a).xy;"
+        "M.xy={cn:T(M.CN.pinA),chw:T(M.CHW.wheelA),chp:T(M.CHW.pinA),hrw:T(M.HRW.wheelA),udw:T(M.UDW.wheelA),udp:T(M.UDP.pinA)};M.yC=cw.ys+23.03;M.swYs=W.WTRAIN.A.sw.ys;M.H=W.WD.H;"
+        "M.udpRb=[M.UDP.y0,M.UDP.y1].map(M.UDP.rb);process.stdout.write(JSON.stringify(M))")%str(TOOLS/'wempe_load.js')
+    return json.loads(subprocess.run(['node','-e',js],capture_output=True,text=True,check=True).stdout)
+
+def pipe(key,hn,title,dwg,mat,prof,y0,note_fit,fits=(),notes=(),sizes=()):
+    """a pipe or hub as dial.js's lathe lists it: a closed [r, y] profile whose first and last points are the bore's; turned in one setup from a bar, the foot's
+    riveting flare (the wheel's sink) shown as finished"""
+    rb=prof[0][0];yt=prof[-1][1];assert abs(prof[-1][0]-rb)<1e-12
+    outer=[(0.0,0.0)]+[(r,y-y0) for r,y in prof[1:-1]]+[(0.0,yt-y0)];L=yt-y0;rmax=max(r for r,_ in outer)
+    runs=[];P=outer
+    for i in range(1,len(P)-2):
+        (r1,z1),(r2,z2)=P[i],P[i+1]
+        if abs(r1-r2)<1e-9 and z2-z1>=0.05:runs.append(S('',f'Ø {2*r1:.3f} from {z1:.2f} to {z2:.2f}',None,dwg))
+    ops=[Blank(2*rmax+0.4,0,L,'Part off from brass bar and face to length',[S('overall',f'{L:.2f}',None,dwg)],dwg),
+         TurnProfile(outer,"Turn the pipe: the foot, the flare for the wheel's sink (riveted over at assembly: shown finished), the wheel's seat, the collar, the top",list(sizes)+runs,dwg),
+         Bore(2*rb,-0.01,L+0.01,'Drill and ream the bore',[S('bore',f'Ø {2*rb:.3f}',note_fit,dwg)],dwg)]
+    return Recipe(key,hn,title,dwg,mat,'none',[Setup('1','bar in the collet, parted off',ops)],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,y0,0)),fits=list(fits),notes=list(notes))
+def changePipe():
+    M=WMW();c=M['CHW'];K=M['SK']
+    prof=[[c['rb'],c['y0']],[c['r'],c['y0']],[c['r'],c['yw0']],[c['rs']+K['w'],c['yw0']],[c['rs'],c['yw0']+K['d']],[c['rs'],c['yw1']],[c['rc'],c['yw1']],[c['rc'],c['yc']],[c['r'],c['yc']],[c['r'],c['yt']],[c['rb'],c['yt']]]
+    return pipe('changePipe','050202-2','Change wheel pipe (Wechselbutzen)','05 02 02-2 (kompl. 05 02 02)','brass (Messing)',prof,c['y0'],'runs on the short stud Ø 1.5, 0.01 clear',
+      ["its foot on the stud bush's face, the wheel riveted on its seat Ø 4.2 and the pinion knocked on its top"],sizes=[S('foot and top',f'Ø {2*c["r"]:.2f}','3.05 -0.04','05 02 02-2'),S('seat',f'Ø {2*c["rs"]:.1f}',"the wheel's hole",'05 02 02'),S('collar',f'Ø {2*c["rc"]:.1f} × {c["yc"]-c["yw1"]:.1f}',None,'05 02 02 (scaled at 5:1)')])
+def hourPipe():
+    M=WMW();c=M['HRW'];K=M['SK']
+    prof=[[c['r'],c['y0']],[c['rs']+K['w'],c['y0']],[c['rs'],c['y0']+K['d']],[c['rs'],c['yw1']],[c['rc'],c['yw1']],[c['rc'],c['yc']],[c['rh']+(c['yt']-c['yc'])/140,c['yc']],[c['rh'],c['yt']],[c['r'],c['yt']]]
+    return pipe('hourPipe','050203-2','Hour wheel pipe (Stundenbutzen)','05 02 03-2 (kompl. 05 02 03)','brass (Messing)',prof,c['y0'],"runs on the cannon tube Ø 3.6, 0.01 clear",
+      ["the wheel riveted on its seat Ø 6.0; the hour hand pressed on the top seat's 1:70"],sizes=[S('hand seat',f'Ø {2*c["rh"]:.3f} at the top, 1:70',"4.4 r6 at its middle",'05 02 03-2'),S('collar',f'Ø {2*c["rc"]:.1f}','8.0 (scaled)','05 02 03'),S('overall',f'{c["yt"]-c["y0"]:.1f}','8.2 -0.1','05 02 03')])
+def udHub():
+    M=WMW();c=M['UDW'];K=M['SK']
+    prof=[[c['rb'],c['y0']],[c['r'],c['y0']],[c['r'],c['yw0']],[c['rs']+K['w'],c['yw0']],[c['rs'],c['yw0']+K['d']],[c['rs'],c['yw1']],[c['rf'],c['yw1']],[c['rf'],c['yf']],[c['rst'],c['yf']],[c['rst'],c['ys']],[c['rh'],c['ys']],[c['rh'],c['yt']],[c['rb'],c['yt']]]
+    return pipe('udHub','050204-2','Up-and-down wheel pipe (Auf u. Abbutzen)','05 02 04-2 (kompl. 05 02 04)','brass (Messing)',prof,c['y0'],'runs on the long stud Ø 1.5, 0.01 clear',
+      ["the wheel riveted on its seat Ø 5.2; the up-and-down hand pressed on the top seat"],sizes=[S('flange',f'Ø {2*c["rf"]:.1f} × {c["yf"]-c["yw1"]:.1f}','7.4 scaled; 7.7 on Wempe 3955','05 02 04'),S('hand seat',f'Ø {2*c["rh"]:.4f}',"2.2 r6 at its middle",'05 02 04')])
+
+def motionWheel(key,hn,title,dwg,stock,xy,th,rs,mate,sp=None,fits=()):
+    M=WMW();K=M['SK'];ro=max(math.hypot(x,y) for x,y in xy)
+    with bd.BuildSketch() as sk:bd.Circle(ro+0.1)
+    def spokes():
+        n,sw,R0,R1=sp[:4];sw1=sp[4] if len(sp)>4 else sw;d1=math.asin(sw1/2/R1);d0=math.asin(sw/2/R0);sol=None
+        for j in range(n):
+            a0=j/n*2*math.pi;a1=(j+1)/n*2*math.pi;P=lambda r,t:bd.Vector(r*math.cos(t),r*math.sin(t),-0.01)
+            e=[bd.Edge.make_three_point_arc(P(R1,a0+d1),P(R1,(a0+a1)/2),P(R1,a1-d1)),bd.Edge.make_line(P(R1,a1-d1),P(R0,a1-d0)),
+               bd.Edge.make_three_point_arc(P(R0,a1-d0),P(R0,(a0+a1)/2),P(R0,a0+d0)),bd.Edge.make_line(P(R0,a0+d0),P(R1,a0+d1))]
+            x=bd.extrude(bd.Face(bd.Wire(e)),th+0.02,dir=(0,0,1));sol=x if sol is None else sol+x
+        return sol
+    ops=[Plate(sk.sketch.faces()[0],th,f'Cut the blank from {stock}',[S('thickness',f'{th:.2f}',None,dwg)],dwg),
+         CutLeaves(xy,ro+0.2,0,th,"Cut the teeth (a wheel cutter of the sheet's form)",[S('teeth',f'z {mate[0]}, m {mate[1]:.5f}, tip Ø {mate[2]}, root Ø {mate[3]}, tooth {mate[5]} on the pitch circle',None,dwg),S('form',mate[6],None,"train.js teeth(): the sheets' rounded ogives")],dwg,z=mate[0])]
+    if sp:ops.append(Cut(spokes,f'Cross it out: {sp[0]} spokes',[S('spokes',f'{sp[0]}, {sp[1]} wide at the hub',None,dwg),S('hub',f'Ø {2*sp[2]:.2f}',None,dwg),S("rim's inside",f'Ø {2*sp[3]:.2f}',None,dwg)],dwg,at=(0,0)))
+    ops+=[Hole((0,0),2*rs,'in',th,None,"Bore the hole for the pipe's seat",[S('',f'Ø {2*rs:.2f}','H7',dwg)],dwg,key='bore'),
+          Cone((0,0),rs+K['w'],rs,'in',th,K['d'],"Sink the bore's lower mouth 30° for the pipe's riveted foot",[S('sink',f'{K["d"]} deep at 30°','040204-1 "0,4", "30°"',dwg)])]
+    r=Recipe(key,hn,title,dwg,stock,'none',[Setup('1','on the wheel-cutting engine, crossed out, then bored',ops,view='top')],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,-th/2,0)),faces=('lower face (riveted)','upper face'),fits=list(fits))
+    r.flat=True;r.spin=True;return r
+def changeWheel():
+    M=WMW();c=M['CHW'];a=c['wheelA']
+    return motionWheel('changeWheel','050202-1','Change wheel (Wechselrad)','05 02 02-1 (kompl. 05 02 02)','Messingblech 1,2 Ms 58 federhart',M['xy']['chw'],c['th'],c['rs'],a+['cycloidal for the cannon pinion of 14'],fits=["riveted on the pipe's seat Ø 4.2"])
+def hourWheel():
+    M=WMW();c=M['HRW'];a=c['wheelA']
+    return motionWheel('hourWheel','050203-1','Hour wheel (Stundenrad)','05 02 03-1 (kompl. 05 02 03)','Messingblech 1,2 Ms 58 federhart',M['xy']['hrw'],c['th'],c['rs'],a+['cycloidal for the change pinion of 18'],fits=["riveted on the pipe's seat Ø 6.0"])
+def udWheel():
+    M=WMW();c=M['UDW'];a=c['wheelA']
+    return motionWheel('udWheel','050204-1','Up-and-down wheel (Auf u. Abrad)','05 02 04-1 (kompl. 05 02 04)','Messingblech 1,2 Ms 58 federhart',M['xy']['udw'],c['th'],c['rs'],a+["cycloidal for the pinion of 12"],sp=c['sp'],fits=["riveted on the pipe's seat Ø 5.2"])
+
+def motionPinion(key,hn,title,dwg,mat,xy,A,th,bore_ops,notes=(),fits=()):
+    rh=A[2]/2;ops=[Blank(A[2],0,th,'Part off from bar and face to length',[S('length',f'{th:.2f}',None,dwg)],dwg)]+bore_ops(th)+[
+      CutLeaves(xy,rh+0.05,0,th,f'Cut the {A[0]} leaves',[S('leaves',f'z {A[0]}, m {A[1]:.4f}, tip Ø {A[2]:.3f}, root Ø {A[3]:.3f}',None,dwg)],dwg,z=A[0])]
+    r=Recipe(key,hn,title,dwg,mat,'none',[Setup('1','bar in the collet, bored, parted off; the leaves on the wheel-cutting engine',ops)],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,-th/2,0)),fits=list(fits),notes=list(notes))
+    r.flat=True;r.spin=True;return r
+def changePinion():
+    M=WMW();c=M['CHW'];th=c['yp1']-c['yc']
+    return motionPinion('changePinion','050202-3','Change pinion (Wechseltrieb)','05 02 02-3 (kompl. 05 02 02; the sheet scales its outside 7.3)','brass (yellow in the coloured section)',M['xy']['chp'],c['pinA'],th,
+      lambda th:[Bore(2*c['r'],-0.01,th+0.01,'Drill and ream the bore for a press fit on the pipe',[S('bore',f'Ø {2*c["r"]:.2f}','press fit on Ø 3.05',"05 02_1")],"05 02_1")],
+      fits=["knocked on to the pipe's top, 4.3 under it"],notes=['Its 18 leaves, tip Ø 6.9 and root Ø 5.4, are measured on Wempe 3955 (likely); the sheet scales 7.3 for its outside, which would touch the hour wheel.'])
+def udPinion():
+    M=WMW();c=M['UDP'];th=c['y1']-c['y0'];r0,r1=M['udpRb']
+    return motionPinion('udPinion','050200-5','Up-and-down pinion (Auf u. Abtrieb)','05 02 00-5 (no sheet; 05 02_1 and the coloured section)','steel (Wempe 3955: the photograph shows steel)',M['xy']['udp'],c['pinA'],th,
+      lambda th:[InnerCone(r0,-0.01,r1,th+0.01,"Ream the bore 1:70 for the fusee arbor's stub",[S('bore',f'Ø {2*r0:.3f} at the lower face, 1:70','0.026 under the stub on the radius (Festsitz)',"05 02_1")],"05 02_1")],
+      fits=["pressed on the fusee arbor's end stub Ø 1.6 (Festsitz), 3 long, its top 0.3 under the dial"],notes=['No sheet: its tip Ø 4.0 and root Ø 2.4 leave the wheel its room (likely).'])
+
+# ---- the cannon tube (Minutenrohr 05 05 03-3) ----
+class Add(Op):
+    """add material made by make() (a punch's dents, driven in at assembly)"""
+    kind='mill'
+    def __init__(self,make,text,sizes=(),src=''):super().__init__(text,sizes,src);self.make=make
+    def apply(self,p):return p+self.make()
+def _sqwire(h,R,s,z):
+    """the square 2h across flats with its corners on the circle R (all scaled by s), a wire at height z: four lines, four arcs"""
+    yc=math.sqrt(R*R-h*h);V=lambda x,y:bd.Vector(s*x,s*y,z);c=R*math.cos(math.pi/4)
+    E=[bd.Edge.make_line(V(h,-yc),V(h,yc)),bd.Edge.make_three_point_arc(V(h,yc),V(c,c),V(yc,h)),bd.Edge.make_line(V(yc,h),V(-yc,h)),bd.Edge.make_three_point_arc(V(-yc,h),V(-c,c),V(-h,yc)),
+       bd.Edge.make_line(V(-h,yc),V(-h,-yc)),bd.Edge.make_three_point_arc(V(-h,-yc),V(-c,-c),V(-yc,-h)),bd.Edge.make_line(V(-yc,-h),V(yc,-h)),bd.Edge.make_three_point_arc(V(yc,-h),V(c,-c),V(h,-yc))]
+    return bd.Wire(E)
+def _sqtube(h,R,z0,z1,s0,s1):
+    """the clipped square tapering from scale s0 at z0 to s1 at z1 (a hand's square hole, 1:70)"""
+    return bd.loft([bd.Face(_sqwire(h,R,s0,z0)),bd.Face(_sqwire(h,R,s1,z1))],ruled=True)
+def cannon():
+    from . import _rev
+    M=WMW();C=M['CN'];y0=C['y0'];rSh=lambda y:(1.795-(y-M['yC'])/80)/2;rb=lambda y:rSh(y)+0.01;Z=lambda y:y-y0
+    zt,zb,zg,zk,z1=Z(C['yt']),Z(C['yb']),Z(C['yg']),Z(C['yk']),Z(C['y1']);rt=C['pinA'][2]/2;src='05 05 03 (kompl., 22.7.43), 05 05 03-3'
+    dn=C['dn'];s0,s1=M['yC']+dn['s0'],M['yC']+dn['s1'];g0=rSh(s0)-dn['dp'];gr=lambda y:g0+(rSh(s1)-g0)*(y-s0)/(s1-s0);ya,yb=M['yC']+dn['ya'],M['yC']+dn['yb']
+    def groove():
+        w=bd.Wire([bd.Edge.make_circle(C['gr'],bd.Plane(origin=(C['r'],0,zg),z_dir=(0,1,0)))]);return bd.revolve(bd.Face(w),bd.Axis.Z,360)
+    def flats():
+        return _rev([(0,zb),(3,zb),(3,zt+1),(0,zt+1)])-bd.extrude(bd.Face(_sqwire(C['sq'],C['sqR'],1,zb-0.1)),zt-zb+1.2,dir=(0,0,1))
+    def crown():
+        cyl=_rev([(0,zk),(3,zk),(3,zt+1),(0,zt+1)]);sph=bd.Solid.make_sphere(C['cr']).moved(bd.Location((0,0,zt-C['cr'])));return cyl-sph
+    def dent(k):
+        a0=(k/dn['k']*360-dn['off']);P=[(gr(ya),Z(ya)),(rb(ya)+dn['t'],Z(ya)),(rb(yb)+dn['t'],Z(yb)),(gr(yb),Z(yb))]
+        f=bd.Face(bd.Wire.make_polygon([bd.Vector(r,0,z) for r,z in P],close=True));s=bd.revolve(f,bd.Axis.Z,dn['a'])
+        return s.rotate(bd.Axis.Z,a0-90)   # the page's lathe starts at phi 0 along +z of the page, which is -Y of the part
+    def dents():
+        d=dent(0)
+        for k in range(1,dn['k']):d=d+dent(k)
+        return d
+    ops=[Blank(2*rt,0,zt,'Cut the blank from Präz. Rundstahl (steel) and face both ends to length',[S('overall',f'{zt:.1f}','14.3 over C (05 05 03)',src)],src),
+         TurnProfile([(0,0),(rt,0),(rt,z1),(C['r'],z1),(C['r'],zb),(C['sqR'],zb),(C['sqR'],zt),(0,zt)],'Turn the pinion block Ø 5.86 × 2.4, the tube Ø 3.6 to the square, the corners of the square Ø 3.45 to the top',
+           [S('pinion block',f'Ø {2*rt:.2f} × {z1:.1f}','Ø 5.86 scaled at 5:1',src),S('tube',f'Ø {2*C["r"]:.1f} to {zb:.1f} over C','10.8 -0.1',src),S('square corners',f'Ø {2*C["sqR"]:.2f}','Wempe 3955 (likely)',src)],src),
+         CutLeaves(M['xy']['cn'],rt+0.05,0,z1,f'Cut the {C["pinA"][0]} leaves',[S('leaves',f'z {C["pinA"][0]}, m {C["pinA"][1]:.4f}, tip Ø {C["pinA"][2]}, root Ø {C["pinA"][3]:.3f}',None,src)],src,z=C['pinA'][0]),
+         Cut(groove,"Turn the groove for the centre punch, a half-round r 0.4 at 6.3",[S('groove',f'r {C["gr"]} at {zg:.1f} over C','05 05 03 (the "Körner")',src)],src),
+         Cut(flats,'Mill the square 2.6155 across flats to the top, straight (05 05 03: two parallel lines)',[S('square',f'{2*C["sq"]:.4f} across flats','2.6 r6 at its middle, +0.019/+0.012 (05 05 03)',src)],src),
+         Cut(crown,"Turn the crown on the square's last 0.6, one sphere with the shank's end",[S('crown',f'r {C["cr"]} sphere, 0.35 high over the 2.86 it shows','05 05 03: one arc across the tube and the shank (likely)',src)],src),
+         Bore(2*rb(y0),-0.01,z1,"Bore the pinion block for the centre arbor's shank",[S('bore',f'Ø {2*rb(y0):.4f}','0.01 over the shank on the radius',src)],src),
+         InnerCone(rb(C['y1']),z1,rb(C['yk']),zk,"Bore the tube on the shank's 1:80 taper, drawn 0.01 clear",[S('taper','1:80 on the diameter','the shank Ø 1.795 at C, 1:80 (05 05 03-2)',src)],src),
+         Bore(2*rb(C['yk']),zk-0.01,zt+0.01,"Bore the crown's last 0.6 straight",[S('bore',f'Ø {2*rb(C["yk"]):.4f}',None,src)],src),
+         Add(dents,'Drive the punch in three places 120° apart round the groove (at assembly): the wall dents into the groove of the shank',[S('dents',f'{dn["k"]}, each {dn["a"]}° round, 6.1 to 6.5 over C','estimated (drawing check 2, 6-M6)',src)],src)]
+    r=Recipe('cannon','050503-3','Cannon tube with its pinion (Minutenrohr)',src,'Präz. Rundstahl, steel (blue in the coloured section)','hardened? not given on the sheet (steel, blued)',[Setup('1','bar in the collet, turned and bored; the pinion on the wheel-cutting engine, the square on the mill; punched at assembly',ops)],
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,-(C['y1']-y0)/2,0)),fits=["slips on the centre arbor's 1:80 shank, held by the punch's three dents: the hands are set by it","the hour wheel's pipe runs on it, Ø 3.6"])
+    r.root_turn=-1;return r
+
+# ---- the hands (05 02 00-1, -2, -3, 05 02 01-1) and the seconds hand's collet (05 02 01-2) ----
+def _hwf(T,r):
+    """dial.js's hwAt: a table [[r, value], ...] read at r, linearly between its rows, held outside them"""
+    if r<=T[0][0]:return T[0][1]
+    for i in range(1,len(T)):
+        if r<=T[i][0]:
+            a,b=T[i-1],T[i];return a[1]+(b[1]-a[1])*(r-a[0])/(b[0]-a[0])
+    return T[-1][1]
+def _plan(T,r_in,tip,sgn):
+    """a blade's plan from axial distance r_in (inside its boss) to tip, half-width hw(r) either side of the line, along +Y (sgn 1) or -Y: a closed polygon of the table's own stations"""
+    rs=sorted({r_in,tip}|{r for r,_ in T if r_in<r<tip});return [(-_hwf(T,r),sgn*r) for r in rs]+[(_hwf(T,r),sgn*r) for r in reversed(rs)]
+def _prism(P,z0,z1):return bd.extrude(_poly2(P,z0),z1-z0,dir=(0,0,1))
+def _above(T,z0,r0,r1,ztop,hmax=None):
+    """the region above a blade's top, which falls with the distance from the arbor as the table T gives its thickness: a solid of revolution from r0 to r1 (turned about the arbor)"""
+    from . import _rev
+    P=[(r0,z0+_hwf(T,r0))]+[(r,z0+t) for r,t in T if r0<r<r1]+[(r1,z0+_hwf(T,r1)),(r1,ztop),(r0,ztop)];return _rev(P)
+def _handUP(yref):return page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,yref,0))
+
+def minuteHand():
+    from . import _rev
+    M=WMW();m=M['MIN'];b=m['bo'];C=M['CN'];Zf,Zt=b['yf'],b['y1'];rf,rc=m['rf'],m['rc'];L=m['L'];r1=rf-b['rd'];src='05 02 00-1 (18.9.42, Goldin, polished)'
+    plan=_plan(m['hw'],2.0,L,1);h0=b['h0'];R=C['sqR']+b['dr']
+    def stock():return _prism(plan,0,Zt)+_disc(rf,0,Zt)
+    def relief():return _disc(60,-0.1,Zf)-_disc(rc,-0.2,Zf+0.1)
+    def round_():
+        c=(r1,Zt-b['rd']);mid=(c[0]+b['rd']*math.sin(math.pi/4),c[1]+b['rd']*math.cos(math.pi/4));V=lambda p:bd.Vector(p[0],0,p[1])
+        w=bd.Wire([bd.Edge.make_line(V((rf,c[1])),V((rf+0.1,c[1]))),bd.Edge.make_line(V((rf+0.1,c[1])),V((rf+0.1,Zt+0.1))),bd.Edge.make_line(V((rf+0.1,Zt+0.1)),V((r1,Zt+0.1))),bd.Edge.make_line(V((r1,Zt+0.1)),V((r1,Zt))),
+                   bd.Edge.make_three_point_arc(V((r1,Zt)),V(mid),V((rf,c[1])))]);return bd.revolve(bd.Face(w),bd.Axis.Z,360)
+    def thin():return _above(m['t'],Zf,rf,L+0.5,Zt+0.3)
+    def hole():
+        sc=lambda z:1+(Zt-z)/b['s']/h0;return _sqtube(h0,R,-0.01,Zt+0.01,sc(-0.01),sc(Zt+0.01))
+    ops=[Solid(stock,'Cut the blank from Goldin plate 2 thick: mill the outline (the flange Ø 6 and the blade)',[S('flange',f'Ø {2*rf:.1f}','05 02 00-1 (sure)',src),S('length',f'{L} to the tip','46 (sure)',src)],src),
+         Cut(relief,'Mill the underside back 0.8 outside the collar Ø 4.2, leaving the collar',[S('collar',f'Ø {2*rc:.1f} × {Zf:.1f}','2 overall, 1.2 from the top to the flange\'s underside (sure)',src)],src),
+         Cut(round_,'Round the flange\'s top edge r 0.4',[S('edge',f'r {b["rd"]}','side view at 7.24 px/mm (likely)',src)],src),
+         Cut(thin,'Mill the blade down: 0.7 near the boss, 0.6 at about 37, 0.4 at the tip',[S('blade',' / '.join(f'{t:.1f} at {r}' for r,t in m['t']),'0.7 near the boss, 0.4 at the tip (sure)',src)],src),
+         Cut(hole,'Broach the square hole 2.6 □ H7, 1:70 ("Kegel 1:70"), the corners on a circle 0.01 outside the tube\'s',[S('square',f'{2*h0:.4f} across flats at the top',"2.6 H7 at its middle, +0.009; widening 1:70 downward",src)],src)]
+    return Recipe('minuteHand','050200-1','Minute hand (Minutenzeiger)',src,'Goldin (gold-coloured brass)','polished',[Setup('1','plate on the mill, face up; then turned over for the underside',ops,view='top')],_handUP(C['yb']),
+      fits=["pressed on the cannon tube's square (2.6155 across flats), its underside on the square's shoulder"],notes=["The outline's stations are the sheet's figures and the traced plan between them (dial.js)."])
+
+def hourHand():
+    from . import _rev
+    M=WMW();h=M['HOUR'];b=h['bo'];HR=M['HRW'];y1=M['YH1'];y0=y1-b['h'];Zf,Zt=b['h']-b['f'],b['h'];rp,rf,rf1=h['rp'],h['rf'],h['rf1'];L=h['L'];src='05 02 00-2 (14.6.40, Goldin, high-gloss polished)'
+    rb=lambda z:h['rb']+(HR['yt']-(y0+z))/b['s'];r0=rf-h['t'][0][1]*(rf-rf1)/(y1-(y1-b['f']))
+    plan=_plan(h['hw'],2.0,L,1)
+    def reg():return _prism(plan,Zf-0.1,Zt+0.1)-_disc(r0,Zf-0.2,Zt+0.2)
+    def stock():return _prism(plan,Zf,Zt)+_disc(rf,Zf,Zt)+_disc(rp,0,Zf+0.01)
+    def bevel():
+        k=(rf1-rf)/(Zt-Zf);return _rev([(rf,Zf-0.05),(rf,Zf),(rf1+k*0.05,Zt+0.05),(rf+0.5,Zt+0.05),(rf+0.5,Zf-0.05)])-reg()
+    def thin():return _above(h['t'],Zf,r0,L+0.5,Zt+0.3)&reg()
+    ops=[Solid(stock,'Cut the blank from Goldin plate: mill the outline (the flange Ø 8.2 and the blade) and turn the pipe Ø 4.8 under it',[S('flange',f'Ø {2*rf:.1f}',"05 02 00-2",src),S('pipe',f'Ø {2*rp:.1f} × {Zf:.1f}','5 -0.2 (sure)',src),S('overall',f'{Zt:.1f} to the flange\'s top',"3.1 (sure)",src)],src),
+         Cut(bevel,f'Turn the flange\'s bevel from Ø {2*rf:.1f} to Ø {2*rf1:.1f}, round the boss only',[S('bevel',f'{rf-rf1:.1f} on the radius over {b["f"]}',"the plan's inner circle Ø 6.8 (likely)",src)],src),
+         Cut(thin,'Mill the blade down to its thickness: 0.5 at the root, 0.6, 0.4, 0.7, 0.6, 0.3 at 14.6, 19.4, 20.8, 30.0, 34.6 (the root a wedge on the bevel)',[S('blade',' / '.join(f'{t:.1f} at {r}' for r,t in h['t']),"the side view's figures (sure)",src)],src),
+         InnerCone(rb(-0.01),-0.01,rb(Zt+0.01),Zt+0.01,'Ream the hole 1:70 ("Kegel 1:70") for the hour wheel pipe\'s seat',[S('hole',f'Ø {2*rb(Zt):.3f} at the top, 1:70',"4.4 H7 at its middle, 4.406; 0.013 tight on the seat",src)],src)]
+    return Recipe('hourHand','050200-2','Hour hand (Stundenzeiger)',src,'Goldin (gold-coloured brass)','high-gloss polished',[Setup('1','plate on the mill; the pipe and bevel turned in the lathe on a mandrel',ops,view='top')],_handUP(y0),
+      fits=["pressed on the hour wheel pipe's seat (1:70), its top 2.6 over the dial"],notes=["The blade's root is a wedge on the bevel's cone; its underside follows the cone inside Ø 8.2 (dial.js)."])
+
+def udHand():
+    M=WMW();u=M['UDH'];b=u['bo'];y1=M['YU1'];y0=y1-b['h'];Zf,Zt=b['h']-b['f'],b['h'];rp,rf=u['rp'],u['rf'];src='05 02 00-3 (16.1.41, Bandstahl 0.6, hardened, polished, tempered blue)'
+    plan=_plan(u['hw'],1.0,10.2,1)
+    ops=[Solid(lambda:_prism(plan,Zf,Zt)+_disc(rf,Zf,Zt)+_disc(rp,0,Zf+0.01),'Cut the blank from Bandstahl: the outline (the boss Ø 4.4 and the blade) and the pipe Ø 3.0 under it',[S('boss',f'Ø {2*rf:.1f}','05 02 00-3 (sure)',src),S('pipe',f'Ø {2*rp:.1f}',"the plan's middle circle, scaled (likely)",src),S('overall',f'{Zt:.1f}','1.4 (sure)',src)],src),
+         Cut(lambda:_above(u['t'],Zf,rf,10.7,Zt+0.3),'Mill the blade down to 0.3',[S('blade',f'{u["t"][0][1]} thick',"0.3 along its length (likely)",src),S('tip',f'0.25 wide beyond 9.5, to 10.2','measured on Wempe 3955 (likely)',src)],src),
+         Bore(2*u['rb'],-0.01,Zt+0.01,'Drill and ream the hole 2.2 H7',[S('hole',f'Ø {2*u["rb"]:.4f}','2.2 H7 at its middle, +0.009; 0.011 tight on the seat',src)],src)]
+    return Recipe('udHand','050200-3','Up-and-down hand (Auf u. Abzeiger)',src,'Bandstahl 0.6, hardened','polished, tempered blue',[Setup('1','plate on the mill; the pipe turned',ops,view='top')],_handUP(y0),
+      fits=["pressed on the up-and-down wheel pipe's seat Ø 2.2, down on its shoulder"],notes=["The sheet's collar is drawn up from the 0.6 strip; the page models it as a Ø 3.0 pipe, and so does this recipe (estimated, README)."])
+
+def secondsHand():
+    M=WMW();s=M['SEC'];b=s['bo'];y0=M['YS0'];zb,z1=b['b'],b['b']+b['e'];rb,rr,rh=s['rb'],s['rr'],s['rh'];src='05 02 01-1 (14.6.40, Bandstahl 0.6, hardened, lapped, tempered blue)'
+    pP=_plan(s['hwP'],1.0,19.5,1);pT=_plan(s['hwT'],1.0,10.0,-1);half=lambda sg:_prism([(-60,0),(60,0),(60,sg*60),(-60,sg*60)],-0.5,2)
+    ops=[Solid(lambda:_prism(pP,0,z1)+_prism(pT,0,z1)+_disc(rb,0,z1),'Cut the blank from Bandstahl: the pointer to 19.5, the tail to 10 and the boss Ø 3.2',[S('pointer',f'19.5 to the tip, {2*s["hwP"][0][1]:.1f} wide at the boss, {2*s["hwP"][-1][1]:.1f} at the tip','05 02 01-1 (sure)',src),S('boss',f'Ø {2*rb:.1f}',None,src)],src),
+         Cut(lambda:_above(s['tP'],0,rb,20,z1+0.3)&half(1),'Grind the pointer to 0.4 at the boss, 0.3 at the tip',[S('thickness',f'{s["tP"][0][1]} to {s["tP"][-1][1]}','05 02 01-1 (sure)',src)],src),
+         Cut(lambda:_above(s['tT'],0,rb,10.5,z1+0.3)&half(-1),'Grind the tail: the arm 0.3 to 6.4, the drop 0.5 from 6.6 to its end',[S('arm',f'{s["tT"][0][1]} thick',None,src),S('drop',f'{s["tT"][-1][1]} thick, 6.5 to 10','05 02 01-1 (sure)',src)],src),
+         Cut(lambda:_disc(rb+0.1,zb,z1+0.3)-_disc(rr,zb-0.1,z1+0.4),'Turn the boss down to 0.4 leaving the raised Ø 2.5',[S('boss',f'{zb:.1f} thick, the raised part Ø {2*rr:.1f} × {b["e"]}','the side view: 2,5∅, 0.5 + 0.1 (scaled)',src)],src),
+         Bore(2*rh,-0.01,z1+0.01,'Drill and ream the hole 1.2 +0.05',[S('hole',f'Ø {2*rh:.1f}','1.2 +0.05 (sure)',src)],src)]
+    return Recipe('secondsHand','050201-1','Seconds hand (Sekundenzeiger)',src,'Bandstahl 0.6, hardened','lapped, tempered blue',[Setup('1','strip on the mill; the boss turned on a mandrel',ops,view='top')],_handUP(y0),
+      fits=["riveted on the collet Ø 1.2 (05 02 01-2), its boss's top 0.075 over the post's end"])
+
+def collet():
+    M=WMW();s=M['SEC'];b=s['bo'];y0=M['YS0'];yc=y0-b['c'];ytop=y0+b['b']+b['e'];L=ytop-yc;post=lambda y:(b['pr']-(y-M['swYs']-b['off'])/b['s'])/2-b['tight'];src='05 02 01-2 (no sheet; Zeigerfutter, the coloured section)'
+    outer=[(0,0),(b['pr'],0),(b['pr'],b['c']),(s['rh'],b['c']),(s['rh'],L),(0,L)]
+    ops=[Blank(2*b['pr']+0.3,0,L,'Part off from brass bar and face to length',[S('overall',f'{L:.1f}','4.6 scaled (pictorial)',src)],src),
+         TurnProfile(outer,'Turn the collet Ø 1.5 and its neck Ø 1.2 through the hand',[S('collet',f'Ø {2*b["pr"]} × {b["c"]}',"1.5 (the coloured section's; 1.6 scaled)",src),S('neck',f'Ø {2*s["rh"]:.1f}','through the hand, flush with its top',src)],src),
+         InnerCone(post(yc),-0.01,post(ytop),L+0.01,"Ream the bore on the seconds post's 1:90",[S('bore',f'Ø {2*post(yc):.4f} at the foot, 1:90','0.011 tight on the diameter (the sheets\' small H7/r6; estimated)',src)],src)]
+    return Recipe('collet','050201-2','Seconds hand collet (Zeigerfutter)',src,'brass (Messing)','none',[Setup('1','bar in the collet, parted off',ops)],_handUP(yc),fits=["pressed on the seconds post's 1:90 taper","the seconds hand riveted on its neck"])
+
+# ---- the dial (Zifferblatt 05 02 00-4): the disc and its holes; the printing is not machined (wempe/dials/*.svg) ----
+def dial():
+    M=WMW();D=M['DL'];H=M['H'];DR,DT=M['DR'],M['DT'];RH=D['RH'];src='05 02 00-4';at=lambda a:(RH*math.sin(math.radians(a)),RH*math.cos(math.radians(a)))
+    with bd.BuildSketch() as sk:bd.Circle(DR)
+    P=lambda q:(q[0],-q[1]);ops=[Plate(sk.sketch.faces()[0],DT,'Cut the blank from Messingblech 1,3 × 110 × 110, plane-clamped, face to 1.2 and turn to Ø 103.55',[S('diameter',f'Ø {2*DR:.2f}','103.6 -0.1',src),S('thickness',f'{DT}','1.2 (1,3 struck through)',src)],src),
+        Hole((0,0),2*D['rb'][0],'in',DT,None,'Bore the centre hole for the hour wheel\'s pipe',[S('',f'Ø {2*D["rb"][0]:.1f}',None,src)],src,key='c'),
+        Hole(P(H['2']),2*D['rb'][1],'in',DT,None,'Bore the up-and-down hole',[S('',f'Ø {2*D["rb"][1]:.1f}',None,src)],src,key='ud'),
+        Hole(P(H['35']),2*D['rb'][2],'in',DT,None,'Bore the seconds hole',[S('',f'Ø {2*D["rb"][2]:.1f}',None,src)],src,key='s'),
+        Hole(at(D['pin']['a']),2*D['pin']['r'],'in',DT,None,'Drill the pin\'s hole at 6°',[S('',f'Ø {2*D["pin"]["r"]:.1f}',None,src+' (the 6° on the sheet)')],src,key='pin'),
+        Hole(at(D['sm']['a']),2*D['sm']['r'],'in',DT,None,'Drill the hole at 185.7° (under the paint, nothing in it)',[S('',f'Ø {2*D["sm"]["r"]:.1f}','scaled',src)],src,key='sm')]
+    for a in D['scr']:
+        ops.append(Hole(at(a),2*D['sc']['r'],'in',DT,None,f'Drill the screw hole at {a}°',[S('',f'Ø {2*D["sc"]["r"]:.1f}','1,1 Ø',src)],src,key=f's{a}'))
+        ops.append(Hole(at(a),2*D['sc']['sr'],'out',DT,D['sc']['sd'],f'Sink it Ø 1.8 × 1.0 ("Senkung 1,0 tief")',[S('',f'Ø {2*D["sc"]["sr"]:.1f} × {D["sc"]["sd"]}','H7',src)],src,key=f'k{a}'))
+    return Recipe('dial','050200-4','Dial (Zifferblatt)',src,'Messingblech 1,2 (the sheet: "Stärke 1,3" struck through)','the printing etched 0.2 deep and filled black on white lacquer (wempe/dials/wempe.svg: not machined here)',[Setup('1','blank on the lathe, then the holes on the drill',ops,view='top')],
+      _handUP(M['DY0']),faces=('underside','printed face'),fits=["on the movement ring's recess floor, screwed by three WN-10.d at 354°, 120° and 240°","located by the pin at 6°"])
+def dialScrew():
+    D=WMW()['DL']['ds']
+    return screw('dialScrew','WN-10.d','Dial screw (WN-10, by the coloured section)',D['r'],D['h'],D['len'],D['rs'],'steel (the coloured section)','dial.js (the coloured section\'s label "10" or "18": likely)',['Head and shank are estimated from the coloured section.'])
+def dialPin():
+    M=WMW();D=M['DL']['ps'];DY0,DY1=M['DY0'],M['DY1'];z0=DY0-D['y0'];L=DY1-D['t']-z0;src='05 08 00-3 (the ring\'s "1,1 Ø"), 05 02 00-4'
+    outer=[(0,0),(D['r'],0),(D['r'],D['y0']),(D['r1'],D['y0']),(D['r1'],L),(0,L)]
+    ops=[Blank(2*D['r'],0,L,'Cut from silver steel and face',[S('overall',f'{L:.1f}',None,src)],src),
+         TurnProfile(outer,'Turn the pin: Ø 1.11 for the ring, stepped to Ø 0.98 for the dial',[S('in the ring',f'Ø {2*D["r"]:.2f} × {D["y0"]}','pressed in the ring\'s Ø 1.1 (0.01 over: estimated)',src),S('through the dial',f'Ø {2*D["r1"]:.2f}','0.02 clear in the dial\'s Ø 1.0',src)],src)]
+    return Recipe('dialPin','dialPin','Dial pin (located at 6°)',src,'steel','none',[Setup('1','bar in the collet, parted off',ops)],_handUP(z0),fits=["pressed in the movement ring, locating the dial in its Ø 1.0 at 6°"])
+
+def _ex(f,*ex):
+    def g():
+        r=f();r.expect+=list(ex);return r
+    return g
+_ROOT="the page's blade is a separate closed piece whose root is an 8-segment arc on the boss's radius, against the boss's 72-sided wall: a hairline gap (0.003) the check reads as a face with metal both sides of it, not a hole the page has and the recipe hasn't; the recipe joins them in one solid"
+RECIPES.update({'cannon':cannon,'minuteHand':_ex(minuteHand,{'at':(0,3.0),'r':0.9,'max':0.12,'why':_ROOT}),
+  'hourHand':_ex(hourHand,{'at':(0,3.9),'r':1.3,'max':0.12,'why':"the blade's root is a wedge whose underside follows the bevel's cone as cells of one flat triangle pair each every 0.25, across a blade 1.7 wide: the page's underside there likely departs from the true cone by up to 0.1 where the wedge lies on it; the recipe has the exact cone and the wedge fused to it"}),
+  'udHand':_ex(udHand,{'at':(0,2.2),'r':0.6,'max':0.1,'why':_ROOT}),'secondsHand':_ex(secondsHand,{'at':(0,-6.5),'r':0.6,'max':0.04,'why':"the tail's thickness steps from 0.3 to 0.5 between 6.4 and 6.6 (the table's rows), but the page samples it at its stations 6.35, 6.5, 6.55 and 6.6: it reads the ramp 0.027 off the table; the recipe is the table"},
+    {'at':(0,1.5),'r':0.6,'max':0.04,'why':_ROOT}),'collet':collet,'dial':dial,'dialScrew':dialScrew,'dialPin':dialPin})
+
+RECIPES.update({'changePipe':changePipe,'hourPipe':hourPipe,'udHub':udHub,'changeWheel':changeWheel,'hourWheel':hourWheel,'udWheel':udWheel,'changePinion':changePinion,'udPinion':udPinion})
+
+# ================= Batch 11, the slice done (30 October 2026): the case's screws of one size each (case.js; dims.js CASE) =================
+def caseScrew(key,hn,title,tag,material,src,notes=()):
+    c=W()['WD']['CASE'][tag];return screw(key,hn,title,c[0],c[1],c[2],c[3],material,src,notes)
+def screwKr():return caseScrew('screwKr','WN-kr','Gimbal ring bracket screw (WN-kr, by the case sheets label)','kr','steel (the case sheets)','dims.js CASE.kr (05 01, the gimbal ring bracket: Ø 4.8 head × 1.6, M2.5 × 7.25, estimated from the elevation)',["Head and shank are read off the case elevation (estimated); the thread is the case's own size."])
+def screwHg():return caseScrew('screwHg','WN-hg','Hinge screw (WN-hg)','hg','steel (the case sheets)','dims.js CASE.hg (51 00 10, the hinge: Ø 6 head × 1.6, M3.5 × 16.5, estimated)',["A wood screw in the box; drawn as the kit's machine screw, so the recipe makes it so."])
+def screwKh():return caseScrew('screwKh','WN-kh','Key holder screw (WN-kh)','kh','steel (the case sheets)','dims.js CASE.kh (51 00 11, the key holder: Ø 2.2 head × 1.0, M1.2 × 10, estimated)',["A wood screw in the box; drawn as the kit's machine screw."])
+def screwZg():return caseScrew('screwZg','WN-zg','Transit lock pivot screw (WN-zg)','zg','steel (the case sheets)','dims.js CASE.zg (05 01, the transit lock: Ø 9 head × 2, M6 × 12, estimated)',['Its head Ø 9 is estimated (case.js).'])
+def screwZgX():
+    r=screwZg();r.box_tol=0.03;r.expect.append({'at':(0,0),'r':5.0,'max':0.03,'why':"the kit draws a screw's head a 32-sided polygon: a Ø 9 head's chords lie 0.0225 inside the true circle the recipe turns (the first head large enough to pass the 0.02 of the check)"});return r
+RECIPES.update({'screwKr':screwKr,'screwHg':screwHg,'screwKh':screwKh,'screwZg':screwZgX})

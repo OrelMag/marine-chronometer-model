@@ -52,16 +52,16 @@ function frame(o={}){
   const b0=nd(X.cross.t1,nBl,'slave',F1),Kt=ESC.BL*ESC.ES/1000,K=nd(Kt,0),b1=nd(X.block.t0,nBl,'slave',K);   /* K: the block's own node, at the locking face's middle S */
   /* the bracket's leg on the detent lies on the blade from its start to its leg across (X.bracket.t0 to tBk; shared/escapement.js, measured since 20 October 2026), screwed to it: the
      blade's nodes along it go with the node at its start (Bn), which carries the bracket and the trip spring's root (until then the bracket stood on the cross-piece, F1) */
-  const tBk=(ESC.tR-1.14/ESC.ES)*ES,fb=t=>(t-X.cross.t1)/(X.block.t0-X.cross.t1);
+  const DSC=ESC.settings.DSC||1,tBk=(ESC.tR-1.14*DSC/ESC.ES)*ES,fb=t=>(t-X.cross.t1)/(X.block.t0-X.cross.t1);
   const bt=X.button,bl=line(b0,b1,10,EBC*(o.eiB??1),wB,hB,RHO.Cu,'blade',[fb(bt.t0),fb(bt.t1),fb(X.bracket.t0),fb(tBk)]);
   const Bn=bl.find(i=>Math.abs(N[i].t-X.bracket.t0)<1e-12);for(const i of bl)if(N[i].t>X.bracket.t0+1e-12&&N[i].t<=tBk+1e-12)N[i].k='slave',N[i].m=Bn;
   const nb=[bl.find(i=>Math.abs(N[i].t-bt.t0)<1e-9),bl.find(i=>Math.abs(N[i].t-bt.t1)<1e-9)];   /* the blade's nodes over the button's ends */
   /* the arm: thick(centre line, 0.025) in escapement.js, 0.33 mm wide, from inside the block out to the horn; the horn a rigid end piece */
-  const rho=ESC.rho,cl=[ESC.D(ESC.BL+0.06,0),ESC.D(ESC.BL+0.2,0),ESC.D(ESC.tH-0.025,ESC.nR+rho-0.03),ESC.D(ESC.tH-0.025,ESC.nR+rho)].map(tn),wA=2*0.025*ESC.ES/1000,hA=hOf('arm');
+  const rho=ESC.rho,cl=[ESC.D(ESC.BL+0.06*DSC,0),ESC.D(ESC.BL+0.2*DSC,0),ESC.D(ESC.tH-0.025*DSC,ESC.nR+rho-0.03*DSC),ESC.D(ESC.tH-0.025*DSC,ESC.nR+rho)].map(tn),wA=2*0.025*DSC*ESC.ES/1000,hA=hOf('arm');
   let pa=nd(cl[0].t,cl[0].n,'slave',K);const arm=[pa];for(let k=1;k<cl.length;k++){const q=nd(cl[k].t,cl[k].n);arm.push(...line(pa,q,k===2?4:2,EBC,wA,hA,RHO.Cu,'arm').slice(1));pa=q;}
   const Hn=pa;   /* the horn's lower face, middle */
   /* the trip spring: Ps0 to Pt on the line n = nR, tsT x tsH, its root screwed to the bracket (rigid with the cross-piece) */
-  const ts0=tn(ESC.Ps0),ts1=tn(ESC.Pt),hTs=S.tsH/1000,tT=S.tsT/1000,hornT=[ESC.tH-0.05,ESC.tH-0.025,ESC.tH].map(t=>t*ESC.ES/1000);
+  const ts0=tn(ESC.Ps0),ts1=tn(ESC.Pt),hTs=S.tsH/1000,tT=S.tsT/1000,hornT=[ESC.tH-0.05*DSC,ESC.tH-0.025*DSC,ESC.tH].map(t=>t*ESC.ES/1000);
   const r0=nd(ts0.t,ts0.n,'slave',Bn),r1=nd(ts1.t,ts1.n);
   const tsN=line(r0,r1,10,ETS*(o.tsK??1),tT,hTs,RHO.El,'trip',hornT.map(t=>(t-ts0.t)/(ts1.t-ts0.t)));
   const nh=hornT.map(t=>tsN.find(i=>Math.abs(N[i].t-t)<1e-9));
@@ -297,7 +297,7 @@ if(DY.WEMPE){require('./wempe_tripping.js').main();return;}   /* --model wempe: 
    Each setting runs in a process of its own (MC_ESC: makeEsc's settings through dynamics.js; MC_TRIP: the frame's), many at once. For each: the frame as drawn and
    with every contact 4× stiffer (the worst of section 2's estimates) running 10 s (20 beats), a held tooth's stone's highest lift; for the depths of lock also the 3 ms blow
    across the plate that lets a tooth go (as section 4); for the springs the detent's first mode, its foot clamped and its blade free: the pitch it rings at */
-const FIG=path.join(__dirname,'tripping.json'),DEPTHS=[0.017,0.0152,0.013,0.011,0.009,0.007,0.005],THICK=[0.05,0.06,0.07,0.072,0.075,0.079,0.085,0.09,0.095,0.10,0.105,0.11,0.12,0.15];   /* every 0.005 mm round the band since 14 October 2026 (estimates.js): its edges are sharp */
+const FIG=path.join(__dirname,'tripping.json'),DEPTHS=[0.017,0.0152,0.013,0.011,0.009,0.007,0.005],THICK=[0.05585,0.06702,0.07819,0.080424,0.083775,0.088243,0.094945,0.10053,0.106115,0.1117,0.117285,0.12287,0.13404,0.16755];   /* THICK x1.117 with the detent since 31 October 2026 (the lock's depths, on the wheel, kept) */   /* every 0.005 mm round the band since 14 October 2026 (estimates.js): its edges are sharp */
 const blowAt=(M,dur)=>{const A0=255,ang=Math.atan2(DY.DM.my,DY.DM.mx)+Math.PI/2,ux=Math.cos(ang),uy=Math.sin(ang),B={};
   const base=p=>B[p]??=run(M,{A:A0,T:0.3+p*T0+0.55,from:0.2});
   const mk=(g,p)=>{const t1=0.3+p*T0,a=g*G0;return run(M,{A:A0,T:t1+0.55,from:0.2,ext:tt=>{const u=(tt-t1)/dur,x=u>0&&u<1?Math.sin(Math.PI*u):0;return{al:0,ax:a*x*ux,ay:a*x*uy};},extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});};
@@ -306,7 +306,7 @@ const blowAt=(M,dur)=>{const A0=255,ang=Math.atan2(DY.DM.my,DY.DM.mx)+Math.PI/2,
 if(process.argv.includes('--child')){
   const c=JSON.parse(process.env.MC_TRIP||'{}'),o=c.tS?{tS:c.tS}:{},M=model(o),r=run(M,{T:10,from:5}),rs=run(model({...o,kB:4e6,kT:4e6,kJ:8e5,kH:8e4,kR:2e3}),{T:10,from:5}),m=ESC.measure();
   const depth=lPk*ESC.ES*BLu/LEN*1000;   /* µm at the stone */
-  process.stdout.write(JSON.stringify({dL:S.dL,t:+(c.tS?c.tS*(X.spring.n1-X.spring.n0)*1000:(X.spring.n1-X.spring.n0)*1000).toFixed(4),lock:+m.lock.toFixed(3),drop:+m.drop.toFixed(3),depth:+depth.toFixed(1),
+  process.stdout.write(JSON.stringify({dL:S.dL,t:+(c.tS?c.tS*(X.spring.n1-X.spring.n0)*1000:(X.spring.n1-X.spring.n0)*1000).toFixed(6),lock:+m.lock.toFixed(3),drop:+m.drop.toFixed(3),depth:+depth.toFixed(1),
     ...(()=>{const md=modal(detent(o),30000);return{f1:+md[0].f.toFixed(1),f2:+md[1].f.toFixed(1)};})(),A:+r.A.toFixed(2),trips:r.trips+rs.trips,lift:+Math.max(r.maxL,rs.maxL).toFixed(4),liftUm:+(Math.max(r.maxL,rs.maxL)*depth).toFixed(2),blow:c.blow?+blowAt(M,0.003).toFixed(1):null})+'\n');
   return;}
 const benchFigs=async()=>{const{spawn}=require('child_process'),jobs=[...DEPTHS.map(dL=>[{dL},{blow:true}]),...THICK.map(t=>[{},{tS:t/((X.spring.n1-X.spring.n0)*1000)}])],out=new Array(jobs.length);

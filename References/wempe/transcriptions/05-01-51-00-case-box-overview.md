@@ -144,7 +144,7 @@ Each label is a part name over its number (drawing number "05 xx yy-n" or Wempe 
 | 126 | (1890, 310) | Schraube | WN-57 | sure | pillar screw (top) |
 | 127 | (1890, 330) | Oberplatte | 05 08 01-1 | sure | top plate |
 | 128 | (1890, 350) | Pfeiler | 05 08 00-1 | sure | pillar |
-| 129 | (1890, 420) | Schraube | WN-56 | sure | pillar screw (bottom, into the pillar from the pillar plate) |
+| 129 | (1890, 420) | Schraube | WN-56 | sure | the movement ring's screw (its leader ends in that head: corrected 31 October 2026 on Klassik Uhren 3/2006's print; read as the pillar screw under the pillar plate until then, which the section leaves unlabelled) |
 | 130 | (1890, 460) | Unterplatte | 05 08 02-1 | sure | pillar plate |
 | 131 | (1890, 498) | Zifferblatt | 05 02 00-4 | sure | dial |
 | 132 | (1890, 535) | Werkring | 05 08 00-3 | sure | movement ring |

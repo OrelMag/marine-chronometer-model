@@ -227,7 +227,7 @@ const WESC=(()=>{
   const ES_=RT,MK=q=>{const v=sub(q,B),f=(180+aBW-al(v))*D2R,r=hyp(v)/ES_;return{x:r*Math.cos(f),y:r*Math.sin(f)};},dt=(a,b)=>a.x*b.x+a.y*b.y,DST=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   const SET=(()=>{const S=MK(pol(W,RT,P_A)),F=MK(D(TP,DOFF)),BL=DST(S,F),dB={x:(S.x-F.x)/BL,y:(S.y-F.y)/BL},nB={x:dB.y,y:-dB.x};   /* the locked tooth's tip on the stone's flat (the 0.01 the drawing leaves is for the tools); the detent's flexure, its spring's middle */
     const Wm=MK(W),Pc=MK(P),fl=Math.hypot(Wm.x-Pc.x,Wm.y-Pc.y),fF={x:(Wm.x-Pc.x)/fl,y:(Wm.y-Pc.y)/fl},rho=GW/2/ES_,Pt=MK(D(GT,GN)),Gb=MK(D(GB[0],GB[1]));   /* the flat along the wheel's radius; the gold spring's square end's middle (TSQ), its bending point */
-    return{NT:15,ES:ES_,EX:Wm.x,LK:2,LO:-(P_A-aB)+1.5*24,   /* 15 teeth (24 deg), the locked tooth two pitches on from the pair across the line of centres, at 37.0 deg (makeEsc's lockA = t0 - 2 P) */
+    return{DSC:1,NT:15,ES:ES_,EX:Wm.x,LK:2,LO:-(P_A-aB)+1.5*24,   /* 15 teeth (24 deg), the locked tooth two pitches on from the pair across the line of centres, at 37.0 deg (makeEsc's lockA = t0 - 2 P) */
       DA:Math.atan2(dB.y,dB.x)/D2R,BL,DRAW:Math.atan2(dt(fF,dB),-dt(fF,nB))/D2R,   /* the detent's line from its flexure (the spring's middle, TP) to the locked tip; the flat's draw against it */
       dL:DEPTH/ES_,rJ:RS/ES_,eJ:0,   /* the lock 0.235 deep; the stone Ø 0.75 half round, its flat through its centre */
       rT:-dt(Pt,dB),PSO:dt(Pt,nB),PSL:DST(Pt,Gb),TSQ:1,tsT:GW,tsH:1.0,ET:98,   /* the gold spring: its square end 1.54 from the staff, free from its bending point (6.15 from the stone); 0.15 × 1 (05 04 01-2); 333 gold's modulus about 98 GPa (96-101: Au/Ag/Cu 333-333, the alloy Poljot 20027's passport gives the 6MX's, "Сплав Зл СрМ 333-333"; the Wempe's sheet says only "Goldblech 333": likely; 90 until 19 October 2026) */
@@ -1217,8 +1217,8 @@ const WESC=(()=>{
        over it standing 0.1 proud of the cock, held by two screws (WN-55 by the coloured section's label, M1.2, at the cock's two tapped holes) over its edge (127-556.04 U30:
        0.1 + 1.4 + 1.4 + 0.5; sure). U30 draws the two settings 1.4 each, their joint 1.3 under the cock's top; the staff (05 03_3.2's 13.0) puts the pivot's end 1.52 under it,
        so the joint is drawn at the endstone's face, the endstone's setting 1.6 and the hole jewel's 1.2 (estimated). Until 17 October 2026 the hole jewel's setting came from
-       below with a flange Ø 6 in a sink in the cock. Lower: in the lug, both from below, held by two screws (WN-10 by the
-       coloured section's label at px 1503-1525, 500-506, its last digit 0 or 8: likely 10; WN-16, which the model gave them until 17 October 2026, is the banking screw's label). The screws' heads Ø 2.5: the
+       below with a flange Ø 6 in a sink in the cock. Lower: in the lug, both from below, held by two screws (WN-18: the general arrangement's label, legible on Klassik Uhren 3/2006's print, 31 October 2026; read WN-10 on the
+       coloured section's label at px 1503-1525, 500-506, its last digit 0 or 8, until then; WN-16, which the model gave them until 17 October 2026, is the banking screw's label). The screws' heads Ø 2.5: the
        coloured section draws both pairs Ø 2.5, the upper 1.3 high, the lower 1.4 (px 1453-1476 and 1518-1542 × 175-188; 1450-1474 and 1515-1539 × 455-469; at 9.4 px/mm Ø 2.45-2.53, their shanks 1.2), and Wempe 3955's cock
        (2_Wempe_3955_A.jpg) gives the upper ones Ø 2.5 (sure); their heights the section's alone (likely).
        Wempe 3955's cock (2_Wempe_3955_A.jpg, 8.81 px/mm by the top plate's 85) shows the upper endstone in its setting, a clear domed stone (a Wempe's is described as
@@ -1249,7 +1249,7 @@ const WESC=(()=>{
       tag(mesh(bjl,lathe(JB.cl,48),M.brass),'050408-2.bl');
       tag(mesh(bjl,lathe(KIT.endPr(ER,EE,EH,eY,1),32),M.ruby),'050408-1.bl');
       const f=flip(bjl);for(const s of[-1,1]){const q=BL(add(B,nv,3.55*s));   /* at the lug's holes, 3.55 (frame.js; 3.5 until 28 October 2026) */
-        tag(screw(f,q[0],-q[1],-lf,BJ.scrL[0],BJ.scrL[1],BJ.scrL[2],BJ.scrL[3]),'WN-10.bl');}}
+        tag(screw(f,q[0],-q[1],-lf,BJ.scrL[0],BJ.scrL[1],BJ.scrL[2],BJ.scrL[3]),'WN-18');}}
     /* ================= jewels: the escape wheel's ================= */
     /* Upper, in the top plate's seat 26 (05 09 01 P-Q: Ø 5.2 H7 from the inner face to 0.5 under the outer, Ø 4.59 H7 through that by revision a): the endstone's setting from the inside,
        its spigot Ø 4.59 through the lip (the H7 is its fit; 4.5 until 27 October 2026, the lip's figure before revision a) flush with the outer face, held by two screws M1.2 from the outside (the plate's two at ±3.5 on the O-W line), their

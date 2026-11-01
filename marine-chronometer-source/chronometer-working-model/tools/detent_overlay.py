@@ -19,7 +19,7 @@ M = json.loads(subprocess.run(['node', '-e', JS, str(HERE / 'escapement.js')], c
 mv = (HERE.parent / 'js' / 'movement.js').read_text(encoding='utf-8'); ES = M['ES']
 DB = json.loads(re.search(r'const DBLK=(\{s:\[[^;]*?\]\]\});', mv).group(1).replace('s:', '"s":').replace('p:', '"p":'))
 pins = np.array(DB['p']) * ES
-tCS = float(re.search(r'const tCS=(-?[\d.]+)/ES', mv).group(1)); sp = [float(v) for v in re.search(r'for\(const t of\[(-?[\d.]+)/ES,(-?[\d.]+)/ES\]\)hn\(across\(dd,t,-0\.2', mv).groups()]
+tCS = float(re.search(r'const tCS=(-?[\d.]+)/ES', mv).group(1)); sp = [float(v) for v in re.search(r'for\(const t of\[(-?[\d.]+)/ES,(-?[\d.]+)/ES\]\)hn\(across\(dd,t,-[0-9.]+', mv).groups()]
 pL0, pR0 = np.array([-7.212, -1.612]), np.array([2.908, -1.737])   # the measurement's frame: the pins where the model drew them until 20 October 2026
 off = (pL0 + pR0) / 2 - pins.mean(0)   # the model as drawn now, moved onto the pins
 X = lambda P: np.array(P) + off
