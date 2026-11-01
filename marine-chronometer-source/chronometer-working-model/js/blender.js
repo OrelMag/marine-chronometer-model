@@ -206,7 +206,7 @@ const BLENDER=(()=>{
       const mo=/** @type {any} */({name:MN.get(m)||m.name||'material '+materials.length,color:[c.r,c.g,c.b,m.transparent&&!gl?m.opacity:1],metal:m.metalness??0,rough:m.roughness??1,emissive:jw||!e?null:[e.r,e.g,e.b],double:m.side===THREE.DoubleSide,blend:m.transparent&&!gl});
       if(m.map){const ti=tex(m.map,false,m.userData.inkDecal?ENGK:0);if(ti!=null){mo.map=ti;mo.xf=xfOf(m.map);}}
       if(m.normalMap){const ti=tex(m.normalMap,true);if(ti!=null){mo.nmap=ti;mo.nscale=m.normalScale?m.normalScale.x:1;mo.xf=mo.xf||xfOf(m.normalMap);}}
-      if(gl){mo.trans=1;mo.ior=m===M.clear?1.77:1.52;mo.rough=Math.min(mo.rough,0.05);mo.metal=0;}if(jw){mo.trans=0.85;mo.ior=1.77;mo.metal=0;}
+      if(gl){mo.trans=1;mo.ior=m===M.clear?1.77:1.52;mo.rough=Math.min(mo.rough,0.05);mo.metal=0;}if(jw){mo.trans=0.85;mo.ior=1.77;mo.metal=0;const r=sc(0xc8163c);mo.color=[r.r,r.g,r.b,1];}   /* the stone's own red: the page's ruby is darker, its body under a glow (core.js, RUBY) */
       materials.push(mo);MI.set(m,materials.length-1);return materials.length-1;};
     const meshOf=(g,m,s,name,share)=>{const k=g.uuid+'|'+(Array.isArray(m)?m.map(x=>x.uuid).join():m.uuid);if(share&&GI.has(k))return GI.get(k);
       const prims=Array.isArray(m)&&g.groups.length?g.groups.map(gr=>({...s,idx:s.idx?s.idx.slice(gr.start,gr.start+gr.count):Uint32Array.from({length:gr.count},(_,i)=>gr.start+i),mat:matOf(m[gr.materialIndex])})):[{...s,mat:matOf(Array.isArray(m)?m[0]:m)}];
