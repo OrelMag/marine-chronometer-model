@@ -148,6 +148,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-essaydata',R(['node',TOOLS/'wempe_essaydata.js'],ROOT),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
  ('wempe-banking',R(['node',TOOLS/'wempe_banking.js'],ROOT),'quick'),   # the Wempe's banking screw turned: js/bankdata.js (the escapement rebuilt at each depth of lock) against what makeEsc gives (about 1 min)
  ('almanac',R(['node',TOOLS/'almanac.js'],ROOT),'quick'),
+ ('hdraw',R([sys.executable,TOOLS/'hdraw.py'],ROOT),'quick'),   # the Hamilton drawings' outlines in js/hdims.js: closed, arcs on their radii, tangent where flagged (no scans, no browser; about 1 s)
  ('mfgfit',R([PY,TOOLS/'mfgfit.py','demo'],ROOT),'quick'),   # the measure-trace skill's fitter on a synthetic plate, pin, collar and pillar, hand-traced and rendered: lines, arcs, fillets, notch, drills, pin stock, turned groups, the side profile (about 11 s)
  ('hairspring',R(['node',TOOLS/'hairspring.js'],ROOT),'quick'),
  ('hairspring-fe',R(['node',TOOLS/'hairspring-fe.js'],ROOT),'quick'),   # the hairspring at large swings by co-rotational beam elements, against hairspring.js's elastica (about 20 s)
