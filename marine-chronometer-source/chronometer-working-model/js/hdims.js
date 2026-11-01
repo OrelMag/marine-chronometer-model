@@ -35,7 +35,7 @@ return {
  I,
  /* ---- 42073-2-01 fourth wheel, brass, 24K gold plate wheel only; five spokes; riveted on the pinion (42072) ---- */
  w4:{z:75/* #1 */,m:0.28/* #2 module mm, as written */,od:I(.8566)/* #4 +.0010/-.0020 */,rimId:I(.700)/* #5 */,hubD:I(.290)/* #6 */,spokeRim:I(.037)/* #7 sure: the spoke tapers, .037 at the rim */,spokeHub:I(.048)/* #8 .048 at the hub */,
-  gapUp:75/* #9 deg, spoke centre lines from the horizontal spoke, upper */,gapDn:72/* #10 lower; the two spokes of the undrawn half are not dimensioned */,t:I(.035)/* #11 +0/-.002 */,hubUp:I(.100)/* #12 likely */,runout:I(.001)/* #14 */,
+  gapUp:75/* #9 deg, spoke centre lines from the horizontal spoke, upper */,gapDn:72/* #10 lower; the two spokes of the undrawn half are not dimensioned */,t:I(.035)/* #11 +0/-.002 */,hubUp:I(.100)/* #12: the collar's diameter through the wheel's bore, not a height (re-read 1 November 2026) */,runout:I(.001)/* #14 */,
   gapRest:(360-75-72)/3/* the 213 deg of the half the sheet doesn't draw, by symmetry: not dimensioned, unsure */,seatS:I(.285)/* the wheel's tip-side face, from the pinion's tip: it lies on the leaves' top face (.320) .035 thick with the collar (.040, .1000, the bore) through it .005 proud: the section in 42073's side view (likely; the sheet's .100 is the collar's diameter, not a length) */},
  /* ---- 42072-1-01 fourth pinion, drill rod, polish; z (top) y along the arbor from the top tip down ---- */
  p4:{leaves:10/* #1 */,m:0.28/* #2 */,pivTop:I(.0311)/* #3 +0/-.0002 */,pivTopLen:I(.060)/* #16 tip to the shoulder's start */,shTop:I(.0565)/* #4 +-.0003, unsure which stem diameter sits where */,stem:I(.0445)/* #5 +-.0005 */,stemAbove:I(.0583)/* #6 +-.0003 */,
