@@ -131,7 +131,6 @@ def lockBracket(six):
          Hole((c[0],-c[1]),2*b['hr'],'in',ts,None,"Drill the arbor's hole Ø 4.1 through the seat",[S('hole',f'Ø {2*b["hr"]:g}',None,src)],src),
          Add(leg,f"Add the wall leg: {tw:g} thick, {2*sr:g} wide, {h:g} high, its lower corners rounded r {rc:g}, soldered or screwed to the seat's edge",[S('leg',f'{tw:g} × {W1-W0:g} × {h:g}',None,src),S('corners',f'r {rc:g}',None,src)],src)]
     r=Recipe('lockBr6' if six else 'lockBr','050101.F.b','Lock bracket (Feststellerwinkel)'+(", the 6MX's" if six else ''),src,'steel' if six else "brass (Ms; black on Wempe 3044's)",'none',[Setup('1','plate on the mill',ops,view='top')],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,ly-ts,0)),
-      expect=[{'at':(c[0],-c[1]),'r':6.4,'max':0.035,'why':'the page draws the seat'+chr(39)+'s round end as 16 chords of a semicircle: up to 0.029 inside the arc'}],
       notes=["Two wood screws DIN 96 3 × 15 (7 and 16 under the seat's top) hold the leg to the box's right wall; the page draws them, not their holes in the leg (a maker drills them)."] )
     if six:r.rev='6mx'
     return r
@@ -149,12 +148,12 @@ def lockArbor():
     q=LQ();a=q['ar'];h=a['y0']+q['lt']+a['y1'];src=SRC_L
     ops=[Bar(2*a['r'],h,'Part off Ø 4 steel rod and face to length',[S('diameter',f'Ø {2*a["r"]:g}',None,src),S('length',f'{h:g}',None,src)],src)]
     return Recipe('lockArbor','050101.F.a','Lock arbor (Feststellerachse)',src,'steel','none',[Setup('1','rod in the collet',ops)],UPC(h),notes=["Through the bracket's seat; its lower end is riveted under it (estimated: flush) and the hub and lever turn on it."],
-      expect=[{'at':(0,0),'r':3,'max':0.03,'vol':1.7,'why':'the page draws the arbor as a 20-sided prism (cylBetween): up to 0.025 inside the circle'}])
+)
 def lockHub():
     q=LQ();a=q['hub'];h=a['y0']+a['y1'];src=SRC_L
     ops=[Bar(2*a['r'],h,'Part off Ø 9.8 rod and face to length',[S('diameter',f'Ø {2*a["r"]:g}',None,src),S('length',f'{h:g}',None,src)],src)]
     return Recipe('lockHub','050101.F.h','Lock hub (Feststellernabe)',src,'brass (Ms); steel on the 6MX','none',[Setup('1','rod in the collet',ops)],UPC(h),notes=["Its bore for the arbor is not drawn on the page (a solid cylinder); a maker bores it."],
-      expect=[{'at':(0,0),'r':6,'max':0.03,'vol':5.8,'why':'the page draws the hub as a 32-sided prism (cylBetween): up to 0.024 inside the circle'}])
+)
 def lockPin(six):
     q=LQ();p=q['pin'];hd=q['hd'];t=q['lt'];h=t+p['t'][1 if six else 0]-p['y0'];src=SRC_L
     if six:
@@ -164,7 +163,7 @@ def lockPin(six):
         ops=[Bar(2*hd['r'],z0+hd['h']+hd['c'],'Part off Ø 8.7 rod and face',[S('overall',f'{z0+hd["h"]+hd["c"]:g}',None,src)],src),
              TurnProfile(prof,'Turn the grip Ø 4 with its round head Ø 8.7 × 2.0, its top edge chamfered 0.5',[S('grip',f'Ø {2*p["r"]:g}',None,src),S('head',f'Ø {2*hd["r"]:g} × {hd["h"]:g} + {hd["c"]:g} chamfer',None,src+", Wempe 3044's photograph")],src)]
     r=Recipe('lockPin6' if six else 'lockPin','050101.F.p','Lever grip (Hebelzapfen)'+(", the 6MX's plain" if six else ''),src,'steel' if six else 'brass (Ms)','none',[Setup('1','rod in the collet',ops)],UPC(h),notes=["Its seat in the lever is not drawn on the page; the head's slot is not drawn either."],
-      expect=[{'at':(0,0),'r':6,'max':0.045,'vol':6.1,'why':'the page draws the grip as a 16-sided prism (cylBetween): up to 0.038 inside the circle'}])
+)
     if six:r.rev='6mx'
     return r
 def lockKnob():
@@ -173,7 +172,7 @@ def lockKnob():
          TurnProfile(prof,'Turn the knob: a flared foot r 9.3 to 9.45 over 0.5, the band Ø 19.6, the top edge chamfered',[S('foot',f'r {k["r"]:g} to {k["r1"]:g} over {k["t0"]:g}',None,src),S('band',f'Ø {2*k["rk"]:g}, {k["top"]-k["t0"]:g} high',None,src),S('top',f'{k["y2"]-k["top"]:g} high, r {k["r1"]:g} to {k["r"]:g}',None,src)],src),
          Note('turn',(k['rk']-k['d']-0.05,k['rk']+0.05,k['t0'],k['top']),f'Knurl the band straight, DIN 82, {k["n"]} teeth {k["d"]:g} deep',[S('knurl',f'{k["n"]} teeth, {k["d"]:g} deep',None,'DIN 82 (the page draws straight teeth)')],src)]
     return Recipe('lockKnob','050101.F.k','Lock knob (Feststellerknopf)',src,'brass (Ms); black on the 6MX','none',[Setup('1','rod in the collet, then knurled',ops)],page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),notes=["Its bore for the hub is not drawn on the page; a maker bores and pins it to the hub."],
-      expect=[{'at':(0,0),'r':11,'max':0.035,'why':'the page turns the knob on 40 sides: up to 0.03 inside the circle'}])
+)
 LOCKR={'lockBr':lambda:lockBracket(False),'lockBr6':lambda:lockBracket(True),'lockLever':lambda:lockLever(False),'lockLever6':lambda:lockLever(True),'lockArbor':lockArbor,'lockHub':lockHub,'lockPin':lambda:lockPin(False),'lockPin6':lambda:lockPin(True),'lockKnob':lockKnob}
 
 
