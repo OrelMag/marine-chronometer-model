@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.79.00 · 2026-11-02
+- The Wempe's export to Blender now has the Laid out motion, the train laid out along the barrel-fusee line, and the rig a laid_out control to pose it
+
 ## 3.78.01 · 2026-11-02
 - Beat Error Meter: while it listens, a strip shows what the microphone hears with each click marked, and says whether ticks are reaching it and where to hold the watch. A recording that gives no reading now says why: no ticking in it, or ticks too faint.
 - Beat Error Meter: a Long listening time (up to 2 minutes, in Settings) for faint watches, and knocks and rustles are cut out before the beats are averaged. When the usual frequency range gives no reading, others are tried, and a reading found only there is shown as Uncertain.

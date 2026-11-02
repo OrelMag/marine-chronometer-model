@@ -134,16 +134,16 @@ HOLE_EXPECTED=[('topPlate','050901',[-34.54,-22.35,16.24],'1943',"13 (drilled 1.
   ('dial','050200-4',[-5.02,10.35,50.25],None,"the dial's Ø 1 at 185.7° on Ø 101 (05 02 00-4, scaled), opposite its pin's at 6°, under the printed face (no Wempe or 6MX dial photographed shows it): nothing under it in the movement ring (05 08 00-3), its use not given"),
   *[('pillarPlate','050802-1',c,None,"the hand-setting work's bore Ø 2 (05 08 02-1's Schnitt C-D, 1.68 from the dial face) from the cut's window out through the rim (frame.js): "
    "empty on the clock too, the hand setting not fitted (05 33 isn't built: README); Wempe 3955's mouth in its rim's notch") for c in([-29.66,1.66,17.12],[-29.66,1.68,17.12],[-36.53,1.64,21.05])]]   # the ring's M2.6 above their screws in the flange were read at the bore's 5 µm step until 26 October 2026; bored without the step, holecheck finds no face there to read them
-# gltf_check.py and blender_check.py (the export to Blender, js/blender.js): its clips (the Hamilton's but Laid out, Stop and start and Latch, which the Wempe has no
-# counterpart for; Lids is its one Lid) and the parts each a node "... (key)"; the file it writes. blender_check.py: the parts it looks for, the controls set to 1 against
+# gltf_check.py and blender_check.py (the export to Blender, js/blender.js): its clips (the Hamilton's but Stop and start and Latch, which the Wempe has no
+# counterpart for; Lids is its one Lid; Laid out since 2 November 2026) and the parts each a node "... (key)"; the file it writes. blender_check.py: the parts it looks for, the controls set to 1 against
 # their clip's end, and the parts that follow the wind against the Winding clip (each with the bounds the rig was found to leave: it has no clicks' catch, the
 # maintaining spring's travel or the up-and-down wheel's backlash)
 GLTF={'glb':'r_wempe.glb','stl':['fusee','balance','topPlate','escapeWheel','chain','bowl'],
-  'clips':['Running','Beat (slow motion)','Run down','Winding','Setting the hands','Exploded','Lift out','Lid','At sea','Rig · beat','Rig · ratchet','Rig · explode','Rig · lift','Rig · lids'],
+  'clips':['Running','Beat (slow motion)','Run down','Winding','Setting the hands','Exploded','Laid out','Lift out','Lid','At sea','Rig · beat','Rig · ratchet','Rig · explode','Rig · laid out','Rig · lift','Rig · lids'],
   'parts':['escapeWheel','fuseeWheel','centreWheel','intermediateWheel','secondsWheel','balance','hairspring','detent','fusee','barrel','chain','maintaining','hands','cannon',
            'pillarPlate','topPlate','pillars','barrelBridge','upperCock','dial','bowl','gimbalRing','box','lid','key']}
 BLENDER={'prefix':'r_blender_wempe_','windRel':True,'parts':['escapeWheel','balance','detent','fusee','centreWheel','hands','topPlate'],
-  'rigs':[['Rig · explode','explode'],['Rig · lift','lift'],['Rig · lids','lids']],
+  'rigs':[['Rig · explode','explode'],['Rig · laid out','laid_out'],['Rig · lift','lift'],['Rig · lids','lids']],
   # the rig has no catch of the fusee on its click wheel's teeth (running, the clicks carry it forward up to a tooth, 360/35 = 10.3 deg; winding, the key turns it
   # directly), so the fusee stands up to a tooth off the clip, and the chain and barrel by as much through it (16 October 2026, exported at 20.0 h: fusee 3.2 deg,
   # barrel 1.6 deg and 0.008 mm, chain 1.03 mm, the up-and-down hand 0.014 mm); the bounds the tooth's whole: the fusee 10.3 deg, the barrel and chain in proportion

@@ -662,9 +662,7 @@ for narrow screens is taken out).
 - Every line is the model's. Nothing is simplified or left out the way an
   illustrator would, which is the main difference from a hand-drawn picture.
 
-**Limits.** The Wempe has no laid-out still: its Blender export has no Laid out
-motion (`wempe/js/blender.js`), so the tool leaves that view off its list. The
-walkthrough's steps and the essay's sections aren't views and can't be drawn.
+**Limits.** The walkthrough's steps and the essay's sections aren't views and can't be drawn.
 The model's parts are drawn as built; a part the page builds only when shown
 (the mainspring, the hairspring) is drawn when the view shows it.
 

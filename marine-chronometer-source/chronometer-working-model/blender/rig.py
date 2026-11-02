@@ -7,7 +7,7 @@ properties, Custom Properties) for the rest:
     hours        hours since full wind at frame 0; the fusee, chain, barrel, mainspring and the up-down hand follow it, and the time as it runs
     hands_set_s  how far the hand-setting key has set the hands on (seconds)
     explode, laid_out, lift, lids, latch    0 to 1: the parts apart, the train laid out, out of the case and turned over, the lids closed, the gimbals latched
-                 (each only where the export has it: the Wempe's has no laid out or latch)
+                 (each only where the export has it: the Wempe's has no latch)
     roll, pitch  the box tilted (the gimbals keep the case level)
     seconds      the model's time (read only: frame / fps)
 How: the escape wheel, train, hands and motion work turn by drivers in step with the escape wheel's place, E = beats run + the export's helper ("Rig · escape
@@ -86,7 +86,7 @@ def controls(R):
        ('hands_set_s',0.0,None,None,'the hands set on by the key (s)'),('explode',0.0,0.0,1.0,'the parts apart'),('laid_out',0.0,0.0,1.0,'the train laid out'),
        ('lift',0.0,0.0,1.0,'out of the case and turned over'),('lids',0.0,0.0,1.0,'the lids, 0 open, 1 closed'),('latch',0.0,0.0,1.0,'the gimbals latched'),
        ('roll',0.0,-0.6,0.6,'the box rolled'),('pitch',0.0,-0.6,0.6,'the box pitched')]
-    have={as_dict(x).get('rig',{}).get('p') for x in R['clips']}   # a control only for a rig clip the file has (the Wempe has no laid out or latch)
+    have={as_dict(x).get('rig',{}).get('p') for x in R['clips']}   # a control only for a rig clip the file has (the Wempe has no latch)
     P=[q for q in P if q[0] not in('explode','laid_out','lift','lids','latch') or q[0] in have]
     for k,v,lo,hi,d in P:
         if k not in c.keys():c[k]=v
