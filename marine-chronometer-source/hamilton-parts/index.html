@@ -62,7 +62,7 @@ p{margin:6px 0}
 <main>
 <nav id="list" aria-label="Parts"></nav>
 <div id="view"><div id="tools">
-<button data-v="iso">3D</button><button data-v="top">Plan</button><button data-v="side">Side</button>
+<button data-v="iso">3D</button><button data-v="top">Plan</button><button data-v="side">Side</button><button data-v="under">Under</button>
 <button id="edges" aria-pressed="true">Edges</button><button id="section" aria-pressed="false" title="Cut through the axis (a turned part) or the middle">Section</button><button id="spin" aria-pressed="false">Turn</button><label id="exw" hidden class="btn">Apart <input id="ex" type="range" min="0" max="1" step="0.01" value="0" aria-label="Take the subassembly apart"></label>
 </div><div id="dims"></div></div>
 <aside id="info"></aside>
@@ -102,7 +102,7 @@ let explode=0;
 function setExplode(){if(!grp)return;for(const s of grp.userData.subs)if(s.userData.base)s.position.copy(s.userData.base).addScaledVector(s.userData.ex,explode);}
 function centre(p){const b=p.box;return new THREE.Vector3((b[0]+b[3])/2,(b[1]+b[4])/2,(b[2]+b[5])/2);}
 function size(p){const b=p.box;return Math.max(b[3]-b[0],b[4]-b[1],b[5]-b[2]);}
-function look(v){if(!cur)return;const c=centre(cur),d=size(cur)*2.6;const dir={iso:[1,-1.25,0.9],top:[0,-0.0001,1],side:[0,-1,0.0001]}[v];
+function look(v){if(!cur)return;const c=centre(cur),d=size(cur)*2.6;const dir={iso:[1,-1.25,0.9],top:[0,-0.0001,1],side:[0,-1,0.0001],under:[0,0.0001,-1]}[v];
   cam.position.set(c.x+dir[0]*d/Math.hypot(...dir),c.y+dir[1]*d/Math.hypot(...dir),c.z+dir[2]*d/Math.hypot(...dir));ctl.target.copy(c);cam.near=d/200;cam.far=d*20;cam.updateProjectionMatrix();ctl.update();}
 function setClip(){if(!cur)return;const c=centre(cur);clip.constant=c.y;for(const s of grp.userData.subs){const u=s.userData;u.mesh.clippingPlanes=secOn?[clip]:[];u.lm.clippingPlanes=secOn?[clip]:[];u.mesh.needsUpdate=true;u.lm.needsUpdate=true;}}
 function show(k,keepView){

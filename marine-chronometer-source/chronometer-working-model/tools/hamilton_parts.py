@@ -66,18 +66,20 @@ def mat(L):
 def H_drawing(r):return r.drawing.split(' ')[0]
 built_r={}
 def check_asm(A,built):
-    """every pair of members: the volume they share (none unless a press fit) and, for those meant to clear, the gap between them; returns fails, notes and the members' boxes"""
-    F=[];N=[];P={m.key:built[m.key].moved(m.loc()) for m in A.members};fit={frozenset((a,b)):(k,w) for a,b,k,w in A.fits};B=[]
-    for m in A.members:bb=P[m.key].bounding_box();B.append([bb.min.X,bb.min.Y,bb.min.Z,bb.max.X,bb.max.Y,bb.max.Z])
-    K=[m.key for m in A.members]
-    for i in range(len(K)):
-        for j in range(i+1,len(K)):
-            a,b=K[i],K[j];k,w=fit.get(frozenset((a,b)),(None,''));v=(P[a]&P[b]).volume if P[a].bounding_box().overlaps(P[b].bounding_box()) else 0.0
-            g=P[a].distance_to(P[b]) if v<1e-6 else 0.0
-            lim=1e-3 if k=='press' else 1e-5
-            if v>lim:F.append(f'{a} and {b} overlap by {v:.5f} mm³'+(f' ({k}: {w})' if k else ''))
-            elif k:N.append(f'{a} and {b}: {k}, '+(f'gap {g:.4f} mm' if g>1e-6 else 'in contact')+f' ({w})')
-            elif g<1e-6:N.append(f'{a} and {b}: in contact (no fit listed)')
+    """every pair of members: the volume they share (none unless a press fit) and, for those meant to clear, the gap between them; returns fails, notes
+    and the members' boxes. A fit names its parts by key: it applies to every pair of members of those parts"""
+    F=[];N=[];P=[built[m.key].moved(m.loc()) for m in A.members];nm=[m.label or m.key for m in A.members];fit={frozenset((a,b)):(k,w) for a,b,k,w in A.fits}
+    BB=[q.bounding_box() for q in P];B=[[b.min.X,b.min.Y,b.min.Z,b.max.X,b.max.Y,b.max.Z] for b in BB];touch=0
+    for i in range(len(P)):
+        for j in range(i+1,len(P)):
+            if any(B[i][k]>B[j][k+3]+0.01 or B[j][k]>B[i][k+3]+0.01 for k in range(3)):continue   # boxes apart by more than 0.01 mm (faces that touch are still checked)
+            k,w=fit.get(frozenset((A.members[i].key,A.members[j].key)),(None,''));v=(P[i]&P[j]).volume;g=P[i].distance_to(P[j]) if v<1e-6 else 0.0
+            lim={'press':1e-3,'tangent':0.2}.get(k,1e-5)   # tangent: two drawn arcs of one radius, the table's rounding leaving a sliver of a few µm
+            if k=='preload':N.append(f'{nm[i]} and {nm[j]}: preload, drawn free they overlap {v:.4f} mm³ ({w})');continue
+            if v>lim:F.append(f'{nm[i]} and {nm[j]} overlap by {v:.5f} mm³'+(f' ({k}: {w})' if k else ''))
+            elif k:N.append(f'{nm[i]} and {nm[j]}: {k}, '+(f'gap {g:.4f} mm' if g>1e-6 else f'a sliver of {v:.4f} mm³' if v>1e-6 else 'in contact')+f' ({w})')
+            elif g<1e-6:touch+=1
+    if touch:N.append(f'{touch} pairs of members in contact, face to face, none overlapping')
     return F,N,B
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
