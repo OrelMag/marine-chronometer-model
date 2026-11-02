@@ -84,14 +84,7 @@ views, links or cameras as an ink-and-watercolour illustration in Blender 5:
 pen lines (Blender's Freestyle and Line Art) over a light wash on cream paper,
 the parts the page shows see-through drawn as a faint cutaway. It opens the
 page headless to read the camera, so each still is framed as the page frames
-it. About 5 minutes a still (plus about 3 the first time, to export the model):
-
-    cd marine-chronometer-source/chronometer-working-model/tools
-    python penrender.py --list                          # the views
-    python penrender.py --view train,laidout            # any of them (--model wempe for the Wempe)
-    python penrender.py --link "https://www.marinechronometermodel.com/hamilton/#view=movement&cam=..."
-
-The stills go into `tools/r_pen/`, which isn't committed.
+it. [Making illustrations](#making-illustrations) says how.
 
 Contents:
 [Repository layout](#repository-layout) ·
@@ -100,6 +93,7 @@ Contents:
 [Changing things](#changing-things) ·
 [Checking your changes](#checking-your-changes) ·
 [Publishing the website](#publishing-the-website) ·
+[Making illustrations](#making-illustrations) ·
 [Licence](#licence)
 
 ## Repository layout
@@ -599,6 +593,116 @@ It should show the Wempe in its box, with the page's title and description.
 The single `chronometer-working-model.html` file also works on its own. You can
 email it, put it on a USB stick or attach it to a course page; it runs from the
 file with no connection.
+
+## Making illustrations
+
+The models can be drawn as pictures for their own sake: ink-and-watercolour
+stills, a series of them compiled into a gallery, and the lettered Laid out
+sheet. None of this is part of the build or the checks, and the pictures stay
+out of the repository (`tools/r_*/` is ignored) unless you put them somewhere
+on purpose.
+
+### What you need
+
+- Python with the packages in [Setting up](#setting-up) (Playwright with Chromium, numpy, scipy, Pillow).
+- **Blender 5**, installed in the usual place (`C:\Program Files\Blender Foundation\Blender 5.x\blender.exe`),
+  or its path in the `MC_BLENDER` environment variable.
+- About 2 GB free for a model's export (`r_model21.glb` about 150 MB, `r_wempe.glb` about 180 MB) and the stills.
+
+### Ink-and-watercolour stills (`penrender.py`)
+
+Run it in `marine-chronometer-source/chronometer-working-model/tools`:
+
+    python penrender.py --list                                   # the Hamilton's views
+    python penrender.py --model wempe --list                     # the Wempe's
+    python penrender.py --view dial,movement,exploded            # the default set, the Hamilton
+    python penrender.py --model wempe --view plan,side,case      # any views, comma-separated
+    python penrender.py --link "https://www.marinechronometermodel.com/hamilton/#view=train&cam=0.4,1.1,240,0,-13,9"
+    python penrender.py --view escapement --cam 1.9,-0.75,80     # a view's camera turned: yaw, pitch (radians), distance (mm)[, target x,y,z]
+    python penrender.py --model wempe --glb r_pen/r_wempe.glb    # reuse an export made earlier (saves about 3 minutes)
+
+The first run without `--glb` exports the model through the page
+(`gltf_check.py`, about 2½ minutes, 3½ for the Wempe) into the output folder;
+pass that file to `--glb` next time, and export again after the model's
+geometry changes. Each still then takes about 1-5 minutes (the Wempe's eleven
+views took 10½ minutes together). Stills are written as
+`pen_MODEL_VIEW.png` (`pen_MODEL_link.png` for a link) into `tools/r_pen/`,
+or `--out DIR`; `--size 1600x1150` sets their size.
+
+**Choosing the view on the page.** The easiest way to get a particular picture
+is to set it up on the page: pick a view, turn, zoom and pan the model, pick a
+part if you want the others faded, set the Exploded spread. Then use **copy a
+link** (or the address bar) and pass that to `--link`. The link carries the
+view, the explode spread, the picked part and, since 3.77.00, the camera
+(`cam=`). The tool opens the page on that link in a headless browser at the
+still's size, reads its camera, and draws the same camera in Blender, so the
+still is framed as the page shows it (on a wider frame, the page's pull-back
+for narrow screens is taken out).
+
+**What the drawing is.**
+
+- Lines: a heavy outer contour round each part and fine crease lines
+  (Blender's Freestyle), and the contours where surfaces turn away (Line Art,
+  which works out hidden lines exactly; Freestyle broke them into dashes on
+  curved walls). `--lines freestyle` uses Freestyle alone: faster, but expect
+  those dashes.
+- Colour: each material painted as a wash, its own colour in the light and a
+  warm or cool shade of itself in the shadow (brass into amber, steel into
+  blue-grey), darker where a surface turns away, a white glint on metal, under
+  a key and a rim light, on cream paper with a faint grain.
+- See-through: the parts the page shows see-through (the plates in the train,
+  fusee and escapement views, every part but the picked one) are drawn as a
+  second layer alone and laid over at a third, a cutaway's ghost, so they hide
+  no line behind them.
+- Every line is the model's. Nothing is simplified or left out the way an
+  illustrator would, which is the main difference from a hand-drawn picture.
+
+**Limits.** The Wempe has no laid-out still: its Blender export has no Laid out
+motion (`wempe/js/blender.js`), so the tool leaves that view off its list. The
+walkthrough's steps and the essay's sections aren't views and can't be drawn.
+The model's parts are drawn as built; a part the page builds only when shown
+(the mainspring, the hairspring) is drawn when the view shows it.
+
+**If a still looks wrong.** Lines across flat plates or rings drawn as dashes
+were both fixed in the tool (re-triangulated faces; Line Art contours); if they
+come back, `penrender.py`'s comments say what caused them. A box drawn in dark
+photographic wood means a wood material the tool didn't recognise (`PAL`,
+`texwood` in the tool). A still framed wrongly usually means the export is
+older than the page: export again.
+
+### A series as a gallery
+
+To compile a set of stills into one page to look through or share, as was done
+for the Wempe's eleven plates (2 November 2026):
+
+1. Draw the views into one folder:
+   `python penrender.py --model wempe --view box,case,dial,movement,plan,side,exploded,train,fusee,escapement,balance --glb r_pen/r_wempe.glb --out r_pen/wempe_series`
+2. Look at them together before going on (a contact sheet: Pillow, a few lines).
+3. Convert them to WebP (Pillow, quality about 86: eleven plates came to 1.3 MB).
+4. Make a page that shows them in order with each view's own one-line
+   description (the page's `VIEW_DESC` in each model's `app.js`), each opening
+   full size. Ask Claude for it: it publishes such a page as a private
+   claude.ai artifact, which you share from its Share menu.
+
+### The lettered Laid out sheet (`laidout.py`)
+
+The Laid out view, the train in one line as the textbooks draw it, rendered on
+one sheet against a textbook's developed drawing ("Modern chronometer
+movement", Figs. 83 and 84): elevation, plan and an isometric view with
+close-ups, every element lettered as the drawing letters it, and a key saying
+what each part does. It checks every lettered element is shown and opens its
+own card when clicked.
+
+    python laidout.py                          # the Hamilton: r_laidout_sheet.png in the current folder
+    python laidout.py --model wempe            # the Wempe
+    python laidout.py --model wempe --write    # into the Wempe's page (renders/laidout_sheet.webp), if its checks pass
+
+The sheet is rendered by the page itself (not by Blender), so it has the page's
+look, not the ink-and-wash one. About a minute.
+
+`PLAN-illustrations.md` is the plan for what comes next: this sheet drawn in
+ink and wash, and a poster explaining what makes a chronometer precise, both
+from the model's own geometry.
 
 ## Licence
 
