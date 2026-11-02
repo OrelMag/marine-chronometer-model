@@ -703,9 +703,30 @@ own card when clicked.
 The sheet is rendered by the page itself (not by Blender), so it has the page's
 look, not the ink-and-wash one. About a minute.
 
-`PLAN-illustrations.md` is the plan for what comes next: this sheet drawn in
-ink and wash, and a poster explaining what makes a chronometer precise, both
-from the model's own geometry.
+**In ink and wash** (the Wempe; `--pen`): the same sheet with every view and
+close-up drawn by `penrender.py`, lettered from the same anchors and checked the
+same way.
+
+    python laidout.py --model wempe --pen --glb r_wempe.glb r_lo_pen                    # r_lo_pen/r_laidout_sheet_pen.png
+    python laidout.py --model wempe --pen --pen-scale 0.5 --glb r_wempe.glb r_lo_pen    # drawn at half size first, for a quicker look
+
+The page is frozen as the export's rig stands at rest, each view's and
+close-up's camera is read off it, and Blender draws that camera at the page
+canvas's size (3600 x 2000), so each letter falls on its part as in the page's
+sheet. The close-ups draw their own parts alone (the barrel faded so the
+mainspring shows). The sheet goes on the drawings' paper with its grain laid
+over the whole. Export the model first (`gltf_check.py --model wempe`) and again
+after its geometry changes. At half size it took about 25 minutes, mostly
+Blender.
+
+`penrender.py --shots FILE` is how the sheet drives it: a JSON list of shots,
+each a page camera (`page`), the rig's controls (`ctl`), and which parts to
+draw (`show`), fade (`ghost`) or leave out (`hide`), by part key, parts-list
+line (`hns`) or the stand-in plate's part (`devOf`). `--flat` leaves out the
+paper's grain.
+
+`PLAN-illustrations.md` is the plan for what comes next: a poster explaining
+what makes a chronometer precise, from the model's own geometry.
 
 ## Licence
 
