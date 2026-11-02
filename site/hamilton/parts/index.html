@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hamilton Drawn Parts</title>
+<!-- The Hamilton Model 21's parts as Hamilton Watch Co. drew them (the NAWCC's sheets, by their numbers only), built by tools/hamilton_parts.py from
+     js/hdims.js, apart from the model. Open this file directly. No scan of a sheet is on this page or in its data. -->
+<style>
+@font-face{font-family:'Instrument Sans';src:url(vendor/fonts/InstrumentSans-normal-400.woff2) format('woff2');font-weight:400 700}
+:root{--bg:#f4f2ee;--panel:#fffdf9;--ink:#1d1c1a;--mute:#6a665f;--line:#ddd8cf;--accent:#1f5fa8;--warn:#9a5b00;--warnbg:#fbefd9;--bad:#a3271d;--ok:#2e6b34;--sel:#e7eef8;--canvas:#ece9e3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151514;--panel:#1d1d1b;--ink:#ecebe7;--mute:#a19d95;--line:#34332f;--accent:#7fb2ee;--warn:#f0b35a;--warnbg:#3a2c14;--bad:#ef8a7f;--ok:#8fcf95;--sel:#23303f;--canvas:#20201e}}
+:root[data-theme="dark"]{--bg:#151514;--panel:#1d1d1b;--ink:#ecebe7;--mute:#a19d95;--line:#34332f;--accent:#7fb2ee;--warn:#f0b35a;--warnbg:#3a2c14;--bad:#ef8a7f;--ok:#8fcf95;--sel:#23303f;--canvas:#20201e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.45 'Instrument Sans',system-ui,sans-serif}
+header{display:flex;align-items:baseline;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:16px;margin:0;font-weight:600}
+header .sub{color:var(--mute);font-size:13px}
+header .sp{flex:1}
+button,.btn{font:inherit;font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer;text-decoration:none}
+button[aria-pressed="true"]{background:var(--sel);border-color:var(--accent)}
+button:focus-visible,.btn:focus-visible,li:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+main{display:grid;grid-template-columns:230px 1fr 430px;height:calc(100% - 46px)}
+nav{border-right:1px solid var(--line);overflow:auto;background:var(--panel)}
+nav h2{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin:14px 14px 4px}
+nav ul{list-style:none;margin:0;padding:0}
+nav li{padding:6px 14px;cursor:pointer;display:flex;gap:8px;align-items:baseline}
+nav li:hover{background:var(--sel)}
+nav li[aria-selected="true"]{background:var(--sel);box-shadow:inset 3px 0 var(--accent)}
+nav li .no{color:var(--mute);font-size:12px;font-variant-numeric:tabular-nums}
+nav li .dot{width:7px;height:7px;border-radius:50%;background:var(--warn);flex:none;align-self:center}
+nav li .dot.bad{background:var(--bad)}
+#view{position:relative;background:var(--canvas);min-width:0}
+#view canvas{display:block;width:100%;height:100%}
+#tools{position:absolute;left:12px;top:12px;display:flex;gap:6px;flex-wrap:wrap}
+#dims{position:absolute;left:12px;bottom:12px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;background:color-mix(in srgb,var(--panel) 85%,transparent);padding:4px 8px;border-radius:6px}
+aside{border-left:1px solid var(--line);overflow:auto;background:var(--panel);padding:14px 16px 30px}
+aside h2{font-size:18px;margin:0 0 2px}
+.meta{color:var(--mute);font-size:13px}
+.meta b{color:var(--ink);font-weight:600}
+.chips{display:flex;flex-direction:column;gap:4px;margin:10px 0}
+.chip{background:var(--warnbg);color:var(--warn);border-radius:6px;padding:3px 8px;font-size:12.5px}
+.chip.bad{background:none;border:1px solid var(--bad);color:var(--bad)}
+.tabs{display:flex;gap:4px;margin:12px 0 8px;border-bottom:1px solid var(--line)}
+.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;background:none;padding:6px 8px;color:var(--mute)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+td,th{border-bottom:1px solid var(--line);padding:4px 4px;vertical-align:top;text-align:left}
+th{color:var(--mute);font-weight:500}
+td.n{color:var(--mute);width:18px}
+td.src{color:var(--mute)}
+.op{font-weight:600;padding-top:10px}
+mark{background:var(--warnbg);color:var(--warn);border-radius:3px}
+iframe{width:100%;height:70vh;border:1px solid var(--line);border-radius:6px;background:#fff}
+p{margin:6px 0}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+@media (max-width:900px){main{grid-template-columns:1fr;grid-template-rows:auto 55vh auto;height:auto}nav{border-right:none;border-bottom:1px solid var(--line);max-height:30vh}aside{border-left:none}header{flex-wrap:wrap;padding:10px 16px}}
+</style>
+<link rel="canonical" href="https://www.marinechronometermodel.com/hamilton/parts/">
+<meta property="og:url" content="https://www.marinechronometermodel.com/hamilton/parts/">
+<meta property="og:image" content="https://www.marinechronometermodel.com/social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<header><h1>Hamilton Model 21: parts as drawn</h1><span class="sub">Built from Hamilton Watch Co.'s factory drawings (NAWCC set), apart from the 3D model. Sizes in mm, inches on each line.</span><span class="sp"></span><a class="btn" href="../">The Hamilton model</a><button id="theme" title="Light or dark">Theme</button></header>
+<main>
+<nav id="list" aria-label="Parts"></nav>
+<div id="view"><div id="tools">
+<button data-v="iso">3D</button><button data-v="top">Plan</button><button data-v="side">Side</button>
+<button id="edges" aria-pressed="true">Edges</button><button id="section" aria-pressed="false" title="Cut through the axis (a turned part) or the middle">Section</button><button id="spin" aria-pressed="false">Turn</button>
+</div><div id="dims"></div></div>
+<aside id="info"></aside>
+</main>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="js/hparts.js"></script>
+<script>
+"use strict";
+(()=>{
+const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dec=(s,T)=>{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new T(u.buffer);};
+const q16=(s,b)=>{const u=dec(s,Uint16Array),f=new Float32Array(u.length);for(let i=0;i<u.length;i++){const k=i%3;f[i]=b[k]+u[i]/65535*(b[k+3]-b[k]);}return f;};
+const mark=s=>E(s).replace(/\b(unsure|likely|estimated|not given|not dimensioned|not printed|not built|not in the set|inferred)\b/gi,'<mark>$1</mark>');
+const view=$('#view'),R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(2,devicePixelRatio));R.localClippingEnabled=true;view.prepend(R.domElement);
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(30,1,0.01,2000);cam.up.set(0,0,1);
+const ctl=new THREE.OrbitControls(cam,R.domElement);ctl.enableDamping=true;
+scene.add(new THREE.HemisphereLight(0xffffff,0x6b6455,0.75));const key=new THREE.DirectionalLight(0xffffff,0.75);key.position.set(3,-4,6);scene.add(key);const fill=new THREE.DirectionalLight(0xffffff,0.3);fill.position.set(-5,3,-2);scene.add(fill);
+const clip=new THREE.Plane(new THREE.Vector3(0,-1,0),0);
+const MAT={brass:0xc9a54d,steel:0x8d949c,blued:0x4a5568};
+let cur=null,grp=null,edgesOn=true,secOn=false,spin=false;
+function matOf(p){const m=(p.material+' '+p.treatment).toLowerCase();return /oxidi[sz]e black|blue/.test(m)?MAT.blued:/brass|gold|bronze|copper/.test(m)&&!/steel/.test(p.material.toLowerCase())?MAT.brass:MAT.steel;}
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function build(p){
+  const g=new THREE.Group(),geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(q16(p.v,p.box),3));geo.setIndex(new THREE.BufferAttribute(dec(p.i,p.i32?Uint32Array:Uint16Array),1));geo.computeVertexNormals();
+  const c=matOf(p),m=new THREE.MeshStandardMaterial({color:c,metalness:0.35,roughness:0.45,side:THREE.DoubleSide,clippingPlanes:secOn?[clip]:[],polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1});
+  g.add(new THREE.Mesh(geo,m));
+  const eg=new THREE.BufferGeometry();eg.setAttribute('position',new THREE.BufferAttribute(q16(p.e,p.box),3));
+  const lm=new THREE.LineBasicMaterial({color:0x1b1a18,clippingPlanes:secOn?[clip]:[]});const L=new THREE.LineSegments(eg,lm);L.visible=edgesOn;g.add(L);g.userData={mesh:m,lines:L,lm};return g;}
+function centre(p){const b=p.box;return new THREE.Vector3((b[0]+b[3])/2,(b[1]+b[4])/2,(b[2]+b[5])/2);}
+function size(p){const b=p.box;return Math.max(b[3]-b[0],b[4]-b[1],b[5]-b[2]);}
+function look(v){if(!cur)return;const c=centre(cur),d=size(cur)*2.6;const dir={iso:[1,-1.25,0.9],top:[0,-0.0001,1],side:[0,-1,0.0001]}[v];
+  cam.position.set(c.x+dir[0]*d/Math.hypot(...dir),c.y+dir[1]*d/Math.hypot(...dir),c.z+dir[2]*d/Math.hypot(...dir));ctl.target.copy(c);cam.near=d/200;cam.far=d*20;cam.updateProjectionMatrix();ctl.update();}
+function setClip(){if(!cur)return;const c=centre(cur);clip.constant=c.y;grp.userData.mesh.clippingPlanes=secOn?[clip]:[];grp.userData.lm.clippingPlanes=secOn?[clip]:[];grp.userData.mesh.needsUpdate=true;grp.userData.lm.needsUpdate=true;}
+function show(k,keepView){
+  const p=HPARTS.find(q=>q.key===k)||HPARTS[0];cur=p;if(grp){scene.remove(grp);grp.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
+  grp=build(p);scene.add(grp);setClip();if(!keepView)look(p.flat?'iso':'iso');
+  document.querySelectorAll('nav li').forEach(li=>li.setAttribute('aria-selected',li.dataset.k===p.key));
+  const b=p.box,w=[b[3]-b[0],b[4]-b[1],b[5]-b[2]];$('#dims').textContent=`${w.map(x=>x.toFixed(3)).join(' × ')} mm  (${w.map(x=>(x/25.4).toFixed(4)).join(' × ')} in)  ·  ${p.volume.toFixed(3)} mm³`;
+  info(p);history.replaceState(null,'','#part='+p.key);}
+let tab='sizes';
+function info(p){
+  const t={sizes:'Sizes',sheet:'Operation sheet',notes:'Notes and fits',checks:'Checks'};
+  let h=`<h2>${E(p.title)}</h2><div class="meta">Hamilton part <b>${E(p.hn)}</b> · drawing ${E(p.drawing)}</div><div class="meta">Material: <b>${E(p.material)}</b><br>Finish: ${E(p.treatment)}</div>`;
+  h+='<div class="chips">'+p.fails.map(f=>`<span class="chip bad">Check failed: ${E(f)}</span>`).join('')+p.flags.map(f=>`<span class="chip">${mark(f)}</span>`).join('')+'</div>';
+  h+=`<p><a class="btn" href="${E(p.step)}" download>Download STEP</a></p>`;
+  h+='<div class="tabs" role="tablist">'+Object.entries(t).map(([k,v])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${v}</button>`).join('')+'</div><div id="tb"></div>';
+  $('#info').innerHTML=h;$('#info').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;info(p);});
+  const tb=$('#tb');
+  if(tab==='sizes'){let s='<table><tr><th></th><th>Size</th><th>Tolerance</th><th>Source</th></tr>';
+    for(const o of p.ops){s+=`<tr><td class="n op">${o.n}</td><td class="op" colspan="3">${E(o.text)}</td></tr>`;for(const z of o.sizes)s+=`<tr><td></td><td>${mark((z.label?z.label+': ':'')+z.value)}</td><td>${mark(z.tol||'')}</td><td class="src">${E(z.src||'')}</td></tr>`;}
+    tb.innerHTML=s+'</table>';}
+  else if(tab==='sheet'){const f=document.createElement('iframe');f.title='Operation sheet';f.srcdoc=p.sheet;tb.appendChild(f);}
+  else if(tab==='notes')tb.innerHTML=(p.fits.length?'<p><b>Fits</b></p>'+p.fits.map(x=>`<p>${mark(x)}</p>`).join(''):'')+(p.notes.length?'<p><b>Notes</b></p>'+p.notes.map(x=>`<p>${mark(x)}</p>`).join(''):'');
+  else tb.innerHTML=p.checks.map(x=>`<p class="ok">✓ ${E(x)}</p>`).join('')+p.fails.map(x=>`<p class="bad">✗ ${E(x)}</p>`).join('')+'<p class="meta">Every part: one closed, valid solid of positive volume (hamilton_parts.py).</p>';}
+function list(){const G={};for(const p of HPARTS)(G[p.group]=G[p.group]||[]).push(p);
+  $('#list').innerHTML=Object.entries(G).map(([g,L])=>`<h2>${E(g)}</h2><ul>`+L.map(p=>`<li tabindex="0" role="option" data-k="${p.key}"><span>${E(p.title)}</span><span class="no">${E(p.hn)}</span>${p.fails.length?'<span class="dot bad" title="a check failed"></span>':p.flags.length?'<span class="dot" title="has estimated or unsure readings"></span>':''}</li>`).join('')+'</ul>').join('');
+  $('#list').querySelectorAll('li').forEach(li=>{li.onclick=()=>show(li.dataset.k);li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(li.dataset.k);}
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const A=[...document.querySelectorAll('nav li')],i=A.indexOf(li)+(e.key==='ArrowDown'?1:-1);if(A[i]){A[i].focus();show(A[i].dataset.k);}}};});}
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>look(b.dataset.v));
+$('#edges').onclick=e=>{edgesOn=!edgesOn;e.target.setAttribute('aria-pressed',edgesOn);if(grp)grp.userData.lines.visible=edgesOn;};
+$('#section').onclick=e=>{secOn=!secOn;e.target.setAttribute('aria-pressed',secOn);setClip();};
+$('#spin').onclick=e=>{spin=!spin;e.target.setAttribute('aria-pressed',spin);ctl.autoRotate=spin;};
+$('#theme').onclick=()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;d.dataset.theme=dark?'light':'dark';};
+function resize(){const w=view.clientWidth,h=view.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(view);
+(function loop(){requestAnimationFrame(loop);ctl.update();scene.background=new THREE.Color(cssv('--canvas')||'#ece9e3');R.render(scene,cam);})();
+list();const m=/part=([\w-]+)/.exec(location.hash);resize();show(m?m[1]:HPARTS[0].key);
+window.addEventListener('hashchange',()=>{const m=/part=([\w-]+)/.exec(location.hash);if(m&&(!cur||m[1]!==cur.key))show(m[1]);});
+})();
+</script>
+</body>
+</html>
