@@ -25,15 +25,16 @@ def q16(P,lo,hi):
     return b64(np.round((P-lo)/sp*65535).clip(0,65535),'<u2')
 
 def tess(p):
-    """the solid's triangles; face by face where a sewn mesh's sliver face won't mesh (skipped: a placeholder taken from the 3D model's triangles)"""
-    try:return p.tessellate(0.003,0.2)
-    except AttributeError:
-        v=[];t=[]
-        for f in p.faces():
-            try:fv,ft=f.tessellate(0.003,0.2)
-            except AttributeError:continue
-            n=len(v);v+=fv;t+=[(a+n,b+n,c+n) for a,b,c in ft]
-        return v,t
+    """the solid's triangles, those of no area dropped (a dome's pole leaves one, two of its corners on the axis: the arbors' meshes weren't closed
+    without, HAMILTON-PARTS-LEDGER.md S-5)"""
+    v,t=p.tessellate(0.003,0.2);P=np.array([[q.X,q.Y,q.Z] for q in v]);T=np.array(t).reshape(-1,3)
+    A=np.linalg.norm(np.cross(P[T[:,1]]-P[T[:,0]],P[T[:,2]]-P[T[:,0]]),axis=1);T=T[A>1e-12]
+    return v,[tuple(x) for x in T.tolist()]
+def mesh_closed(v,t):
+    """the shipped mesh closed: its corners welded (to 1e-6 mm), every edge in exactly two triangles"""
+    P=np.round(np.array([[q.X,q.Y,q.Z] for q in v]),6);_,w=np.unique(P,axis=0,return_inverse=True);T=w.reshape(-1)[np.array(t)]
+    E=np.sort(np.concatenate([T[:,[0,1]],T[:,[1,2]],T[:,[2,0]]]),axis=1);_,c=np.unique(E,axis=0,return_counts=True)
+    return int((c!=2).sum())
 def edges_of(p):
     """the solid's B-rep edges as line segments: a line its two ends, a curve sampled to 0.01 mm of chord height"""
     S=[]
@@ -52,6 +53,10 @@ def check(r,p):
     """the part's own checks; returns (fails, notes)"""
     F=[];N=[]
     if not p.is_valid:F.append('not a valid solid')
+    from OCP.BRepAlgoAPI import BRepAlgoAPI_Check
+    if not BRepAlgoAPI_Check(p.wrapped,True,True).IsValid():F.append('cuts itself or has too small an edge (the check OCP runs before a boolean)')
+    n=mesh_closed(*tess(p))
+    if n:F.append(f'the mesh for the page is open: {n} edges not in two triangles')
     if len(p.solids())!=1:F.append(f'{len(p.solids())} solids, not one')
     if not p.volume>0:F.append(f'volume {p.volume}')
     cyl=[f for f in p.faces() if f.geom_type==bd.GeomType.CYLINDER]
@@ -115,7 +120,13 @@ def main():
           'checks':N,'fails':F,'ops':[{'n':i+1,'text':q.text,'sizes':q.sizes} for i,q in enumerate(r.ops())],'sheet':sheet(r),
           'v':q16(V,lo,hi),'i':b64(T,'<u2' if len(v)<65536 else '<u4'),'i32':len(v)>=65536,'e':q16(edges_of(p),lo,hi),'step':f'step/{r.key}.step'})
         with tempfile.TemporaryDirectory() as tmp:
-            f=pathlib.Path(tmp)/'x.step';bd.export_step(p,str(f));b=f.read_bytes()
+            f=pathlib.Path(tmp)/'x.step';bd.export_step(p,str(f));b=f.read_bytes();q=bd.import_step(str(f)).solids()   # the STEP read back: one solid, facing out, its volume
+            from OCP.BRepGProp import BRepGProp
+            from OCP.GProp import GProp_GProps
+            def vol(x):g=GProp_GProps();BRepGProp.VolumeProperties_s(x.wrapped,g,1e-9);return g.Mass()   # signed, integrated finely (the default's error on the barrel is 0.14 mm³)
+            vs=vol(q[0]) if len(q)==1 else 0;vp=vol(p)
+            if len(q)!=1 or abs(vs-vp)>1e-6*max(1,vp):
+                bad+=1;print(f"  !!   its STEP reads back as {len(q)} solids, {vs:.4f} mm³ (signed) against {vp:.4f}")
         s=sd/f'{r.key}.step'
         if not(s.exists() and norm(s.read_bytes())==norm(b)):
             stale.append(s.name)

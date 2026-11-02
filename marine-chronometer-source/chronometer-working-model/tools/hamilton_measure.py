@@ -79,6 +79,7 @@ def teeth(p,zmid,rmin):
 def profile(p):
     """the section through the axis (the XZ plane, x >= 0): its corners (r, z) in inches, in order round each loop"""
     f=bd.Face.make_rect(400,400,bd.Plane.XZ);s=p&f;out=[]
+    if s is None:return out   # a part off the XZ plane (a placeholder in the detent's frame)
     for fc in s.faces():
         for w in fc.wires():
             pts=[]
@@ -96,9 +97,9 @@ def draw(key,p,info,png):
         n=max(24,int(e.length/0.05)) if e.geom_type!=bd.GeomType.LINE else 1;P=[e.position_at(i/n) for i in range(n+1)];ax[0].plot([q.X/IN for q in P],[q.Y/IN for q in P],'k-',lw=0.5)
     ax[0].set_title(f'{key}: plan (inches, the part\'s frame)');ax[0].set_aspect('equal');ax[0].grid(True,lw=0.3);ax[0].minorticks_on();ax[0].grid(True,which='minor',lw=0.1)
     f=bd.Face.make_rect(400,400,bd.Plane.XZ);s=p&f
-    for e in s.edges():
+    for e in (s.edges() if s is not None else []):
         n=24 if e.geom_type!=bd.GeomType.LINE else 1;P=[e.position_at(i/n) for i in range(n+1)];ax[1].plot([q.X/IN for q in P],[q.Z/IN for q in P],'k-',lw=0.8)
-    for fc in s.faces():
+    for fc in (s.faces() if s is not None else []):
         v,t=fc.tessellate(0.002);V=np.array([[q.X/IN,q.Z/IN] for q in v])
         if len(t):ax[1].tripcolor(V[:,0],V[:,1],np.array(t),np.zeros(len(t)),cmap='Greys',vmin=-1,vmax=3,alpha=0.5)
     ax[1].set_title('section through the axis, the XZ plane (x right, z up; inches)');ax[1].set_aspect('equal');ax[1].grid(True,lw=0.3);ax[1].minorticks_on();ax[1].grid(True,which='minor',lw=0.1)

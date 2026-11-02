@@ -525,7 +525,7 @@ def detentBlank():
 # clamp screw driven across the foot into the block, movement.js); the 3D model's detent (shared/escapement.js's pieces, measured on KLUwI2UUCMQ 11:10-11:33 and
 # Fig. 90, x1.117) gives only what the blank can't: the thicknesses in plan, which face they are thinned from, and the stone. Read, not changed, from the model.
 DET_MODEL={   # escapement.js's pieces in its unit frame (x ES 6.58 mm, the detent's DSC 1.117 applied), t along the detent from the point of flexure, n across in plan
- 'n':(-0.0927,0.0927),'spring':(-0.0648,-0.0514),'blade':(-0.0670,-0.0335),'arm':(-0.0280,0.0280),'stone_t':1.7166,'rJ':0.046,'ES':6.58,
+ 'n':(-0.0927,0.0927),'spring':(-0.0648,-0.0514),'blade':(-0.0670,-0.0335),'arm':(-0.0280,0.0280),'stone_t':1.7166,'stone_n':0.0229,'rJ':0.046,'ES':6.58,
  'spring_h':0.95*1.117,'spring_L':0.5602*6.58,'spring_t':(0.0648-0.0514)*6.58}
 def detentFinished():
     H=HD()['dt'];I=lambda x:x*25.4;M=DET_MODEL;ES=M['ES'];z0,z1=(H['t']-H['tFin'])/2,(H['t']+H['tFin'])/2;T=z1-z0;W=H['w']
@@ -536,7 +536,7 @@ def detentFinished():
     def band(xa,xb,za,zb):   # everything across the bar between xa and xb outside the plan band za..zb
         bx=lambda zl,zh:bd.Box(xb-xa,10,zh-zl,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((xa,W/2,zl)))
         return bx(z0-1,za)+bx(zb,z1+1)
-    xj=x0+M['stone_t']*ES;rj=M['rJ']*ES
+    xj=x0+M['stone_t']*ES;rj=M['rJ']*ES;zj=z0+f(M['stone_n'])*T   # the stone where the model has it across the detent, 0.15 mm off its middle toward the arm's side (makeEsc's Jc: its flat's offset eJ)
     r=detentBlank()
     ops=[Cut(lambda:band(x0,xs,zs-tS/2,zs+tS/2),'Thin the window\'s two webs to the detent spring',
            [S('spring',f"two strips {fx(I(.0315),4)} and {fx(I(.0275),4)} high (the webs), {fx(wi['l'],3)} long, {tS:.4f} mm = {inch(tS):.4f} in thick in plan",'the thickness derived: the 3D model\'s spring stiffness at the drawn heights (estimated)','42087-2-51A, -1-52; shared/escapement.js'),
@@ -545,13 +545,13 @@ def detentFinished():
            [S('blade',f"{(f(M['blade'][1])-f(M['blade'][0]))*T:.3f} mm thick in plan",'the model\'s (video and Fig. 90): estimated','shared/escapement.js'),S('cross-piece','the .040 full section after the window, left full','42087-2-51A #12','42087-2-51A')],'reconstructed'),
          Cut(lambda:band(bp['x1'],tn['x1'],z0+f(M['arm'][0])*T,z0+f(M['arm'][1])*T),'Thin the arm past the jewel block',
            [S('arm',f"{(f(M['arm'][1])-f(M['arm'][0]))*T:.3f} mm thick in plan, centred",'the model\'s: estimated','shared/escapement.js')],'reconstructed'),
-         Drill((xj,-0.01,z0+T/2),(0,1,0),2*rj,bp['h']+0.02,'Bore the locking stone\'s seat upright through the jewel block',
+         Drill((xj,-0.01,zj),(0,1,0),2*rj,bp['h']+0.02,'Bore the locking stone\'s seat upright through the jewel block',
            [S('',f"Ø {2*rj:.3f} mm for the stone (bought)",'the model\'s stone: estimated','shared/escapement.js'),
-            S('place',f"{fx(xj,4)} from the foot end: the model's flexure-to-stone {M['stone_t']*ES:.2f} mm from the window's start, inside the drawn step {fx(bp['x0'],4)}-{fx(bp['x1'],4)}",None,'42087-2-51A #14; shared/escapement.js')],'reconstructed',key='stone')]
+            S('place',f"{fx(xj,4)} from the foot end: the model's flexure-to-stone {M['stone_t']*ES:.2f} mm from the window's start, inside the drawn step {fx(bp['x0'],4)}-{fx(bp['x1'],4)}; across, {zj-(z0+T/2):+.3f} mm off the middle as the model's (its wall {T/2-abs(zj-(z0+T/2))-rj:.3f} mm)",None,'42087-2-51A #14; shared/escapement.js')],'reconstructed',key='stone')]
     r.setups.append(Setup('3','finishing (reconstructed: the finished drawing 42087-3-01 is not in the set)',ops,view='top'))
     r.key='detentFinished';r.title='Detent, finished (reconstructed)';r.drawing='42087-3-01 not in the set: reconstructed from 42087-2-51A, -1-52, 42093 and the 3D model'
     r.notes=r.notes[:1]+[f"Reconstructed. Every length is the blank's. The detent stands on edge in the movement (42093; movement.js drives the clamp screw across the foot), so the window's two webs, {fx(I(.0315),4)} and {fx(I(.0275),4)} high, are the two-strip spring (escapement.js: the model's {M['spring_L']:.2f} mm long against the window's {wi['l']:.2f}).",
-        f"The spring's thickness in plan is derived, not drawn: the model's {M['spring_t']:.4f} mm at its estimated 1.06 mm of height, held to the same stiffness at the drawn 1.50 mm, gives {tS:.4f} mm (tripping.json's band for the detent's ring 0.072-0.110).",
+        f"The spring's thickness in plan is derived, not drawn: the model's {M['spring_t']:.4f} mm at its estimated 1.06 mm of height, held to the same stiffness at the drawn 1.50 mm, gives {tS:.4f} mm. Both are beryllium copper (the blank's, escapement.js's EB 128 GPa), and the model's stiffness is KD = E h t³/12/L, so h t³/L held is the stiffness held. tripping.json's map of the detent's ring (0.0559-0.1173 mm at the model's height, its pitch 70.5-212.5 Hz) is 0.0495-0.1040 mm at the drawn heights and length: the spring is inside it.",
         f"Cross-check: the model's stone, {M['stone_t']*ES:.2f} mm from the point of flexure, lands {xj/25.4:.4f} in from the foot end, inside the drawn step for the jewel block ({bp['x0']/25.4:.4f}-{bp['x1']/25.4:.4f}), {(xj-(bp['x0']+bp['x1'])/2):+.2f} mm from its middle.",
         'Not formed: the horn and the end of the arm (the model bends them across in plan, beyond the bar; the end land and its .050 slot are left as the blank has them: what the slot is for is not known), the foot\'s second locating pin and notch that 42093 shows, the stone itself (bought), the trip spring 42088 and its bracket 42092.']
     r.flags=['Reconstructed: 42087-3-01 is not in the set',f'The spring {inch(tS):.4f} in thick: derived from the model\'s stiffness (estimated)','The blade and arm thicknesses and which face: the model\'s (estimated)','The horn not formed (beyond the bar in plan)']
@@ -578,52 +578,95 @@ def _det_map():
         z=z0+(n+nF) if n<-nF else z1+(n-nF) if n>nF else z0+(n+nF)/(2*nF)*T
         return (x0+t,yC+(h-hC),z)
     return f
-def _mesh_solid(V,I):
-    """a closed triangle mesh as one B-rep solid: its triangles sewn (OCP), shared corners welded first"""
-    from OCP.BRepBuilderAPI import BRepBuilderAPI_Sewing,BRepBuilderAPI_MakeSolid
-    from OCP.TopoDS import TopoDS
+# What the placeholders need that the 3D model leaves out (it can't hole a piece across an extrusion: fine.py's det:Cylinder/det:Extrude): each screw's hole cut
+# in the parts it passes into, as its shank (a tapped hole drawn at the thread's outside); the model's washer is a solid disc spanning the clamp screw's head.
+DET_HOLES={'42086':['37024','20756','42091.lk','42091.cl'],'42092':['1770.br','1770.ts'],'42088':['1770.ts']}
+def _subs(hn):
+    """the 3D model's meshes of line hn on the drawn detent, each (vertices, triangles): its corners welded and its zero-area slivers dropped (the trip
+    spring's 58, HAMILTON-PARTS-LEDGER.md S-3), its triangles turned over, since the map (t, n, h) -> (x, y, z) = (t, h, n) is a reflection (it left every
+    mapped mesh inside out, S-1)"""
     import numpy as np
-    P=np.round(np.array(V),6);key={};W=[];idx=[]
-    for q in P:
-        k=tuple(q)
-        if k not in key:key[k]=len(W);W.append(k)
-        idx.append(key[k])
-    sew=BRepBuilderAPI_Sewing(1e-5)
-    for a,b,c in zip(I[0::3],I[1::3],I[2::3]):
-        a,b,c=idx[a],idx[b],idx[c]
-        if len({a,b,c})<3:continue
-        try:sew.Add(bd.Face(bd.Wire.make_polygon([bd.Vector(*W[a]),bd.Vector(*W[b]),bd.Vector(*W[c])],close=True)).wrapped)
-        except Exception:pass
-    sew.Perform();sh=sew.SewedShape()
-    from OCP.ShapeFix import ShapeFix_Solid,ShapeFix_Shell
+    f=_det_map();out=[]
+    for m in DM()['meshes']:
+        if m['hn']!=hn:continue
+        v=m['v'];V=np.array([f(v[i],v[i+1],v[i+2]) for i in range(0,len(v),3)],dtype=np.float64);T=np.array(m['i'],dtype=np.int64).reshape(-1,3)[:,::-1]
+        k,inv=np.unique(np.round(V,6),axis=0,return_inverse=True);T=inv.reshape(-1)[T]
+        out.append((k,T[(T[:,0]!=T[:,1])&(T[:,1]!=T[:,2])&(T[:,0]!=T[:,2])]))
+    return out
+def _manifold(V,T,hn=''):
+    import numpy as np,manifold3d as m3
+    q=m3.Manifold(m3.Mesh(vert_properties=np.asarray(V,dtype=np.float32),tri_verts=np.asarray(T,dtype=np.uint32)))
+    if q.status().name!='NoError' or q.volume()<=0:raise ValueError(f'{hn}: a mesh is not a closed solid ({q.status()})')
+    return q
+def _washer_seat():
+    """the clamp screw (37024) and its washer (42251.det) as the model draws them: the washer, 0.28 thick, lies inside the head's first 0.28 (both start on
+    the foot's face); returns the head's and shank's meshes, the washer's, and the washer's two faces (z, the screw's axis across)"""
+    import numpy as np
+    S=sorted(_subs('37024'),key=lambda vt:np.ptp(vt[0][:,1]));W=_subs('42251.det')[0];return S[1],S[0],W,(W[0][:,2].min(),W[0][:,2].max())
+def _model_manifold(hn):
+    """the 3D model's part as one closed manifold (manifold3d), its meshes united (the block's pins and button inside it, the screw's head on its shank).
+    The clamp screw's head is seated on the washer instead of round it: the head's inner face moved out to the washer's outer face, the shank run up to it
+    (vertices moved, nothing cut: a cut leaves needle triangles)"""
+    import numpy as np
+    if hn=='37024':
+        (Vh,Th),(Vs,Ts),_,(z0,z1)=_washer_seat();Vh=Vh.copy();Vs=Vs.copy()
+        Vh[np.abs(Vh[:,2]-z0)<1e-5,2]=z1;Vs[np.abs(Vs[:,2]-z0)<1e-5,2]=z1+1e-3
+        return _manifold(Vh,Th,hn)+_manifold(Vs,Ts,hn)
+    out=None
+    for i,(V,T) in enumerate(_subs(hn)):
+        if hn=='42086' and i>=2:   # its pins fill the block's holes exactly: grown 0.001 across (a press fit) so the union leaves no coincident walls
+            V=V.copy();c=(V.max(0)+V.min(0))/2;ax=int(np.argmax(np.ptp(V,0)));k=[j for j in range(3) if j!=ax];g=1+0.002/min(np.ptp(V[:,j]) for j in k)
+            for j in k:V[:,j]=c[j]+(V[:,j]-c[j])*g
+        q=_manifold(V,T,hn);out=q if out is None else out+q
+    return out
+@functools.lru_cache()
+def _placeholder_manifold(hn):
+    """a placeholder as made: the model's part with its screws' holes cut (S-2); the washer bored to the clamp screw's shank (its own polygon, 0.005 over)"""
+    import numpy as np
+    q=_model_manifold(hn)
+    for g in DET_HOLES.get(hn,[]):q=q-_model_manifold(g)
+    if hn=='42251.det':
+        _,(Vs,Ts),_,(z0,z1)=_washer_seat();c=(Vs.max(0)+Vs.min(0))/2;V=Vs.copy();r=np.hypot(V[:,0]-c[0],V[:,1]-c[1]);k=(r.max()+0.005)/r.max()
+        V[:,0]=c[0]+(V[:,0]-c[0])*k;V[:,1]=c[1]+(V[:,1]-c[1])*k;V[:,2]=np.where(V[:,2]>(V[:,2].min()+V[:,2].max())/2,z1+1,V[:,2])
+        q=q-_manifold(V,Ts,'bore')
+    return q
+def _mesh_solid(q):
+    """a closed manifold mesh (manifold3d) as one B-rep solid: each of its bodies' triangles sewn (OCP) into a shell, made a solid facing out, the bodies then
+    fused (the model's block is two extrusions meeting face to face, which a mesh union leaves two bodies and one sewn shell would leave inside faces, S-1)"""
+    import numpy as np
+    from OCP.BRepBuilderAPI import BRepBuilderAPI_Sewing
+    from OCP.ShapeFix import ShapeFix_Solid
     from OCP.TopAbs import TopAbs_SHELL
     from OCP.TopExp import TopExp_Explorer
-    ex=TopExp_Explorer(sh,TopAbs_SHELL);shells=[]
-    while ex.More():shells.append(TopoDS.Shell(ex.Current()) if hasattr(TopoDS,"Shell") else TopoDS.Shell_s(ex.Current()));ex.Next()
-    out=[]
-    for shl in shells:
-        fs=ShapeFix_Shell(shl);fs.Perform();sv=ShapeFix_Solid();so=sv.SolidFromShell(fs.Shell())
-        q=bd.Solid(so)
-        if q.volume<0:q=bd.Solid(so.Reversed())   # a shell the fixer left inside out
-        if not q.is_valid:
-            from OCP.ShapeFix import ShapeFix_Shape
-            fx=ShapeFix_Shape(q.wrapped);fx.Perform();q=bd.Solid(fx.Shape()) if fx.Shape().ShapeType().name=='TopAbs_SOLID' else q
-        out.append(q)
-    res=out[0]
-    for q in out[1:]:res=res.fuse(q)
-    return res
+    from OCP.TopoDS import TopoDS
+    out=None
+    for b in q.decompose():
+        M=b.to_mesh64();V=np.asarray(M.vert_properties,dtype=np.float64)[:,:3];T=np.asarray(M.tri_verts)
+        for flip in (False,True):   # the triangles as manifold3d winds them (outward); turned over if OCP's solid comes out inside out
+            sew=BRepBuilderAPI_Sewing(1e-6,True,True,False,False)   # free edges not cut: cutting them split the block's hole walls and grew it 0.54 mm³
+            for a,b2,c in (T[:,::-1] if flip else T):sew.Add(bd.Face(bd.Wire.make_polygon([bd.Vector(*V[a]),bd.Vector(*V[b2]),bd.Vector(*V[c])],close=True)).wrapped)
+            sew.Perform();ex=TopExp_Explorer(sew.SewedShape(),TopAbs_SHELL);sh=[]
+            while ex.More():sh.append(TopoDS.Shell(ex.Current()));ex.Next()
+            if len(sh)!=1 or sew.NbFreeEdges():raise ValueError(f'a body sewn into {len(sh)} shells, {sew.NbFreeEdges()} free edges')
+            so=bd.Solid(ShapeFix_Solid().SolidFromShell(sh[0]))
+            from OCP.BRepGProp import BRepGProp
+            from OCP.GProp import GProp_GProps
+            g=GProp_GProps();BRepGProp.VolumeProperties_s(so.wrapped,g)   # signed: a solid whose faces point in has a negative volume
+            if g.Mass()>0:break
+        out=so if out is None else out.fuse(so).clean()
+    if abs(out.volume-q.volume())>1e-4*max(1,q.volume()):raise ValueError(f'sewn solid {out.volume:.5f} mm³ against the mesh\'s {q.volume():.5f}')
+    return out
 class FromModel(Op):
     """stock: a part taken from the 3D model's solid (a placeholder for a part whose sheet is not in the set)"""
     kind='stock'
     def __init__(self,hn,text,sizes=(),src=''):super().__init__(text,sizes,src);self.hn=hn
     def apply(self,p):
-        f=_det_map();parts=[]
-        for m in DM()['meshes']:
-            if m['hn']!=self.hn:continue
-            v=m['v'];V=[f(v[i],v[i+1],v[i+2]) for i in range(0,len(v),3)];parts.append(_mesh_solid(V,m['i']))
-        out=parts[0]
-        for q in parts[1:]:out=out.fuse(q)
-        return out
+        from OCP.BRepAlgoAPI import BRepAlgoAPI_Check
+        q=_placeholder_manifold(self.hn);s=_mesh_solid(q)
+        if s.is_valid and BRepAlgoAPI_Check(s.wrapped,True,True).IsValid():return s
+        s=_mesh_solid(q.simplify(1e-5))   # flat triangles collapsed: the trip spring screw's two edges OCP's check calls too small
+        if not(s.is_valid and BRepAlgoAPI_Check(s.wrapped,True,True).IsValid()):raise ValueError(f'{self.hn}: no valid solid from the model mesh')
+        return s
 def _placeholder(hn,title):
     def mk():
         import numpy as np
@@ -631,7 +674,10 @@ def _placeholder(hn,title):
         r=Recipe('det_'+hn.replace('.','_'),hn,title+' (placeholder)',f'{hn}: not in the set (42093 lists it, without sizes)','as the 3D model (not given here)','',
             [Setup('1','placeholder: the 3D model\'s solid',[FromModel(hn,"The 3D model's solid, placed on the drawn detent",
               [S('extent',f"{hi[0]-lo[0]:.2f} along × {hi[1]-lo[1]:.2f} across × {hi[2]-lo[2]:.2f} high (mm)",'measured: the 3D model (KLUwI2UUCMQ 11:10-11:33, Fig. 90, x1.117)','shared/escapement.js; js/movement.js')],'3D model')])],ID,
-            notes=['A placeholder: its sheet is not in the NAWCC set. Its shape and sizes are the 3D model\'s, measured on video; only its place comes from the drawn detent.'])
+            notes=['A placeholder: its sheet is not in the NAWCC set. Its shape and sizes are the 3D model\'s, measured on video; only its place comes from the drawn detent.']
+              +([f"Holed for {', '.join(DET_HOLES[hn])} (each hole its screw's shank: the 3D model draws them through it unholed)."] if hn in DET_HOLES else [])
+              +(["Bored for the clamp screw's shank (0.005 mm over): the 3D model draws it a solid disc inside the screw's head."] if hn=='42251.det' else [])
+              +(["Its head seated on the washer: the 3D model starts head and washer together on the foot's face, so here the head's first 0.28 mm (the washer's thickness) is the shank, the screw as long."] if hn=='37024' else []))
         return _flags(r,['Placeholder: the 3D model\'s part (measured on video), not a drawing'])
     mk.__name__='det_'+hn.replace('.','_');return mk
 def lockingStone():
@@ -643,7 +689,8 @@ def lockingStone():
 def asmDetent():
     H=HD()['dt'];M=DET_MODEL;xj=H['window']['x0']+M['stone_t']*M['ES'];z0,z1=(H['t']-H['tFin'])/2,(H['t']+H['tFin'])/2
     mem=[Member('detentFinished',why='42087 reconstructed: the frame')]
-    mem.append(Member('lockingStone',rot=[('x',-90)],t=(xj,I_(.0045),(z0+z1)/2),ex=(0,6,0),why='in its seat, upright through the jewel block'))
+    zj=z0+(M['stone_n']-M['n'][0])/(M['n'][1]-M['n'][0])*(z1-z0)   # across, as the model has it (detentFinished's seat)
+    mem.append(Member('lockingStone',rot=[('x',-90)],t=(xj,I_(.0045),zj),ex=(0,6,0),why='in its seat, upright through the jewel block'))
     ex={'42086':(0,0,-6),'20756':(-6,0,-3),'37024':(0,0,6),'42251.det':(0,0,4),'42091.lk':(0,0,-10),'42091.cl':(0,0,-10),'42088':(0,0,8),'42092':(0,0,5),'1770.br':(0,0,7),'1770.ts':(0,0,10),'42089':(0,5,0)}
     for hn,t in DET_PARTS:mem.append(Member('det_'+hn.replace('.','_'),ex=ex.get(hn,(0,0,0)),why='the 3D model\'s part, placed on the drawn detent (placeholder)',label=t))
     up=bd.Location((0,0,0),(1,0,0),90)   # the detent stands on edge in the movement: its height (the blank's y) shown up
@@ -658,17 +705,18 @@ def asmDetent():
 # ======================= 42050 helical spring, 1-WD-265 mainspring inner end =======================
 def helicalSpring():
     H=HD();src='42050-1-01';I=lambda x:x*25.4;d=I(.025);D=I(.290)-d;L=I(.550);n=6;nc=1
-    pa=(L-2*nc*d)/(n-2*nc)   # the open turns' pitch: one closed turn at each end (pitch = the wire), the free length over the four open
+    pc=d+0.01   # the closed turns' pitch: the wire and 0.01 mm (closed turns touch, but turns that touch make no single valid solid: their sweep cut itself, HAMILTON-PARTS-LEDGER.md S-4)
+    pa=(L-2*nc*pc)/(n-2*nc)   # the open turns' pitch: one closed turn at each end, the free length over the four open
     def spring():
         pts=[];N=48*n
         for i in range(N+1):
-            u=i/N*n;z=(d*u if u<=nc else d*nc+pa*(u-nc) if u<=n-nc else d*nc+pa*(n-2*nc)+d*(u-(n-nc)))
+            u=i/N*n;z=(pc*u if u<=nc else pc*nc+pa*(u-nc) if u<=n-nc else pc*nc+pa*(n-2*nc)+pc*(u-(n-nc)))
             a=2*math.pi*u;pts.append(bd.Vector(D/2*math.cos(a),D/2*math.sin(a),z+d/2*0))
         path=bd.Wire([bd.Edge.make_spline(pts)]);t0=path.tangent_at(0)
         prof=bd.Wire([bd.Edge.make_circle(d/2,bd.Plane(origin=pts[0],z_dir=t0))])
         s=bd.Solid.sweep(bd.Face(prof),path,is_frenet=True)
         return s&bd.Box(20,20,L,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN))   # the ends ground flat to the free length
-    ops=[Solid(spring,'Coil the wire',[S('wire',f'Ø {fx(d,3)}','±.001 in',src+' #3'),S('outside',f'Ø {fx(I(.290),3)}','±.005 in',src+' #2'),S('turns','6 in all, 1 closed at each end','±1/4; +1/4/-0 closed',src+' #5, #7'),
+    ops=[Solid(spring,'Coil the wire',[S('wire',f'Ø {fx(d,3)}','±.001 in',src+' #3'),S('outside',f'Ø {fx(I(.290),3)}','±.005 in',src+' #2'),S('turns','6 in all, 1 closed at each end','±1/4; +1/4/-0 closed; drawn 0.01 mm apart (touching turns make no single solid)',src+' #5, #7'),
         S('free length',fx(L,3),'+.050/-0 in',src+' #1'),S('solid length','.185 the most',None,src+' #6'),S('coiling','either hand ("OPTIONAL")',None,src+' #4')],src)]
     r=Recipe('helicalSpring','42050','Helical spring',src,'beryllium copper wire','nickel plate',[Setup('1','coiled on a mandrel, the ends ground square',ops)],ID,
         notes=['Where it goes in the chronometer is not known yet (PLAN-hamilton-drawings.md, step 8).','The ends ground flat to the free length: the sheet\'s solid length .185 (6 × .025 = .150 and grinding) implies ground ends (likely).'])
@@ -680,12 +728,15 @@ def mainspringEnd():
         e=[bd.Edge.make_three_point_arc(P(r0,-r0),P(0,0),P(r0,r0)),bd.Edge.make_line(P(r0,r0),P(H['taper'],w/2)),bd.Edge.make_line(P(H['taper'],w/2),P(L,w/2)),bd.Edge.make_line(P(L,w/2),P(L,-w/2)),
            bd.Edge.make_line(P(L,-w/2),P(H['taper'],-w/2)),bd.Edge.make_line(P(H['taper'],-w/2),P(r0,-r0))]
         return bd.Face(bd.Wire(e))
+    bc=I(.025)   # the slot's square end's corners broken 45°: drawn, not dimensioned (about .025 on the sheet's scale, against the slot's .200: HAMILTON-PARTS-LEDGER.md R-1)
     def slot():
-        rr=sw/2;x1=s0+sl-rr
-        return bd.Box(x1-s0,sw,th+0.02,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((s0,0,-0.01)))+bd.Cylinder(rr,th+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((x1,0,-0.01)))
+        rr=sw/2;x1=s0+sl-rr;P=lambda x,y:bd.Vector(x,y,-0.01)
+        e=[bd.Edge.make_line(P(s0,-rr+bc),P(s0,rr-bc)),bd.Edge.make_line(P(s0,rr-bc),P(s0+bc,rr)),bd.Edge.make_line(P(s0+bc,rr),P(x1,rr)),
+           bd.Edge.make_three_point_arc(P(x1,rr),P(x1+rr,0),P(x1,-rr)),bd.Edge.make_line(P(x1,-rr),P(s0+bc,-rr)),bd.Edge.make_line(P(s0+bc,-rr),P(s0,-rr+bc))]
+        return bd.extrude(bd.Face(bd.Wire(e)),th+0.02,dir=(0,0,1))
     ops=[Plate(planform(),th,'The strip\'s inner end: round the tip, taper it',[S('width',fx(w,3),'±.001 in',src+' #1'),S('tip',f'a full round R {fx(r0,3)} (.500 wide there)',None,src+' #2'),S('taper',f'to the full width {fx(H["taper"],2)} from the tip',None,src+' #3'),
            S('thickness',f'{fx(th,4)}','from the manual\'s parts list (0.0165 in), not this sheet',"NAVSHIPS 250-624 Sec. XI"),S('length shown','2.000 in of the strip','not the spring\'s length (42037-42041, not in the set)','')],src),
-         Cut(slot,'Punch the slot for the arbor\'s hook',[S('',f'{fx(sw,3)} wide × {fx(sl,3)} long, its tip end square (a broken corner), its far end round R .100','±.003 in',src+' #4, #6'),
+         Cut(slot,'Punch the slot for the arbor\'s hook',[S('',f'{fx(sw,3)} wide × {fx(sl,3)} long, its tip end square with its corners broken 45° (about .025: drawn, not dimensioned), its far end round R .100','±.003 in; the break estimated',src+' #4, #6 and BREAK CORNER'),
             S('start',f'{fx(s0,3)} from the tip (.200 printed, .180 by hand 6-7-43: the later)','likely the one in force',src+' #5')],src)]
     r=Recipe('mainspringEnd','1-WD-265','Mainspring, inner end',src+' (5-20-43; revised 6-7-43)','spring steel strip (the mainspring 42037-42041: not in the set)','as the mainspring',[Setup('1','the strip\'s end formed and punched',ops,view='top')],ID,
         notes=['The sheet draws the inner terminal only: the strip\'s length, its outer end and its brace are other sheets (not in the set).'],fits=['its slot over the barrel arbor\'s hook (42170) (inferred)'])
