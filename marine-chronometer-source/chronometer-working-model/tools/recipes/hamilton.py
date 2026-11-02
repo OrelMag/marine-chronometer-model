@@ -527,6 +527,20 @@ def detentBlank():
 DET_MODEL={   # escapement.js's pieces in its unit frame (x ES 6.58 mm, the detent's DSC 1.117 applied), t along the detent from the point of flexure, n across in plan
  'n':(-0.0927,0.0927),'spring':(-0.0648,-0.0514),'blade':(-0.0670,-0.0335),'arm':(-0.0280,0.0280),'stone_t':1.7166,'stone_n':0.0229,'rJ':0.046,'ES':6.58,
  'spring_h':0.95*1.117,'spring_L':0.5602*6.58,'spring_t':(0.0648-0.0514)*6.58}
+# What the video measured that the blank leaves larger (the blank only loses metal in finishing, so it is a ceiling; HAMILTON-PARTS-LEDGER.md "The detent
+# assembly measured"), read off the 3D model's solids on the drawn detent (tools/hamilton_detent_compare.py; recipes/hamilton_detent_model.json), the model's
+# sizes measured on KLUwI2UUCMQ 11:10-11:33 by bundle adjustment (PROVENANCE 110-7a, 110-13a), x1.117. x along from the window's start (the point of flexure),
+# y on edge from the slot's centre line, toward the pillar plate.
+DET_VIDEO={'cross':4.16,   # the cross-piece ends 4.16 past the flexure (0.50 wide after the window; 110-7a: 0.42 old = 0.47); the blank's runs to 4.65
+ 'jb':(10.76,11.81),'jby':(-0.08,1.32),   # the jewel block 1.05 long and 1.40 high (110-7a: 0.9 and 1.26 old: 1.01, 1.41); the blank's step 1.65 by 1.90
+ 'pins':(-9.28,-1.69),'pinD':0.49,   # the two steady pins through the foot (110-7c: roots 6.8 apart about the clamp screw; r 0.22 E old); the blank has no holes for them
+ 'wedge':(10.957,0.903,0.20),   # the wedge pin 42089 beside the stone, upright: t, z across (the drawn frame), its diameter (110-8: 0.2 E)
+ 'brs':(4.882,0.726,0.16)}   # the bracket's screw 1770 across the blade: t, y, the shank's diameter (110-11: r 0.08 E)
+class Turn(Op):
+    """the part turned over top to bottom (mirrored about its centre line y = c): the sheet doesn't say which edge is up"""
+    kind='op'
+    def __init__(self,c,text,sizes=(),src=''):super().__init__(text,sizes,src);self.c=c
+    def apply(self,p):return p.mirror(bd.Plane(origin=(0,self.c,0),z_dir=(0,1,0)))
 def detentFinished():
     H=HD()['dt'];I=lambda x:x*25.4;M=DET_MODEL;ES=M['ES'];z0,z1=(H['t']-H['tFin'])/2,(H['t']+H['tFin'])/2;T=z1-z0;W=H['w']
     f=lambda n:(n-M['n'][0])/(M['n'][1]-M['n'][0])   # a place across the model's foot as a share of the ground thickness
@@ -537,24 +551,38 @@ def detentFinished():
         bx=lambda zl,zh:bd.Box(xb-xa,10,zh-zl,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((xa,W/2,zl)))
         return bx(z0-1,za)+bx(zb,z1+1)
     xj=x0+M['stone_t']*ES;rj=M['rJ']*ES;zj=z0+f(M['stone_n'])*T   # the stone where the model has it across the detent, 0.15 mm off its middle toward the arm's side (makeEsc's Jc: its flat's offset eJ)
+    Vd=DET_VIDEO;yc=H['slot']['y'];xc=x0+Vd['cross'];xb0,xb1=x0+Vd['jb'][0],x0+Vd['jb'][1];yb0,yb1=W-tn['floor'],W-H['botCuts'][0]['depth']   # the blade on edge, turned over
+    def box(xa,xb,ya,yb):return bd.Box(xb-xa,yb-ya,T+2,align=(bd.Align.MIN,bd.Align.MIN,bd.Align.MIN)).moved(bd.Location((xa,ya,z0-1)))
+    def blade(xa,xb):return box(xa,xb,-1,yb0)+box(xa,xb,yb1,W+1)
     r=detentBlank()
-    ops=[Cut(lambda:band(x0,xs,zs-tS/2,zs+tS/2),'Thin the window\'s two webs to the detent spring',
+    ops=[Turn(W/2,'Turn the blank over: the blade toward the pillar plate',
+           [S('which edge up',f"the top notch's floor and the jewel step toward the pillar plate: so the blade stands {yb0-yc:+.2f} to {yb1-yc:+.2f} mm from the slot's centre line, the 3D model's +0.12 to +1.02, at the escape wheel's level",'the sheet doesn\'t say; KLUwI2UUCMQ 11:10-11:33 (the model\'s jewel block, measured): as the blank is drawn it stood 1.2 mm off','42087-2-51A; PROVENANCE 110-7a')],'reconstructed'),
+         Cut(lambda:box(H['hole']['x']-H['hole']['d']/2,H['hole']['x']+H['hole']['d']/2,-1,H['hole']['y']),'Corner the foot hole (operation 63): open it to the edge toward the train bridge, a notch for the adjusting screw\'s head',
+           [S('',f"{fx(H['hole']['d'],4)} wide, from the hole to the edge",'the notch\'s width the hole\'s; its edge 42093\'s (the notch open at the top, the block\'s pins\' side): inferred','42087-2-51A operation 63; 42093')],'reconstructed'),
+         Cut(lambda:box(xc,tn['x0'],-1,yb0),'Mill the cross-piece back to its measured width',
+           [S('cross-piece',f"{xc-wi['x1']:.2f} mm wide after the window (the blank's .040 full section {tn['x0']-wi['x1']:.2f}); past it the section the blank has next (the top notch's floor)",'measured: KLUwI2UUCMQ 11:10-11:33 (0.42 old = 0.47); the blank a ceiling','PROVENANCE 110-7a')],'video'),
+         Cut(lambda:blade(bp['x0'],xb0)+blade(xb1,bp['x1'])+box(xb0,xb1,-1,yc+Vd['jby'][0])+box(xb0,xb1,yc+Vd['jby'][1],W+1),'Mill the jewel block to its measured size',
+           [S('jewel block',f"{xb1-xb0:.2f} long × {Vd['jby'][1]-Vd['jby'][0]:.2f} high (the blank's step {bp['x1']-bp['x0']:.2f} × {bp['h']-I(.0045):.2f}), {xb0:.2f}-{xb1:.2f} from the foot end",'measured: KLUwI2UUCMQ 11:10-11:33 (0.9 × 1.26 old = 1.01 × 1.41); the blank a ceiling','PROVENANCE 110-7a')],'video'),
+         Cut(lambda:band(x0,xs,zs-tS/2,zs+tS/2),'Thin the window\'s two webs to the detent spring',
            [S('spring',f"two strips {fx(I(.0315),4)} and {fx(I(.0275),4)} high (the webs), {fx(wi['l'],3)} long, {tS:.4f} mm = {inch(tS):.4f} in thick in plan",'the thickness derived: the 3D model\'s spring stiffness at the drawn heights (estimated)','42087-2-51A, -1-52; shared/escapement.js'),
             S('which face',f"{fs*100:.0f} % of the way across from the first face, as the model's",'estimated','shared/escapement.js')],'reconstructed'),
-         Cut(lambda:band(tn['x0'],bp['x0'],z0+f(M['blade'][0])*T,z0+f(M['blade'][1])*T),'Thin the blade, from the cross-piece to the jewel block',
-           [S('blade',f"{(f(M['blade'][1])-f(M['blade'][0]))*T:.3f} mm thick in plan",'the model\'s (video and Fig. 90): estimated','shared/escapement.js'),S('cross-piece','the .040 full section after the window, left full','42087-2-51A #12','42087-2-51A')],'reconstructed'),
-         Cut(lambda:band(bp['x1'],tn['x1'],z0+f(M['arm'][0])*T,z0+f(M['arm'][1])*T),'Thin the arm past the jewel block',
+         Cut(lambda:band(xc,xb0,z0+f(M['blade'][0])*T,z0+f(M['blade'][1])*T),'Thin the blade, from the cross-piece to the jewel block',
+           [S('blade',f"{(f(M['blade'][1])-f(M['blade'][0]))*T:.3f} mm thick in plan",'the model\'s (video and Fig. 90): estimated','shared/escapement.js'),S('cross-piece',f"left full, {xc-wi['x1']:.2f} wide after the window",'measured (above)','PROVENANCE 110-7a')],'reconstructed'),
+         Cut(lambda:band(xb1,tn['x1'],z0+f(M['arm'][0])*T,z0+f(M['arm'][1])*T),'Thin the arm past the jewel block',
            [S('arm',f"{(f(M['arm'][1])-f(M['arm'][0]))*T:.3f} mm thick in plan, centred",'the model\'s: estimated','shared/escapement.js')],'reconstructed'),
-         Drill((xj,-0.01,zj),(0,1,0),2*rj,bp['h']+0.02,'Bore the locking stone\'s seat upright through the jewel block',
+         Drill((xj,-0.01,zj),(0,1,0),2*rj,W+0.02,'Bore the locking stone\'s seat upright through the jewel block',
            [S('',f"Ø {2*rj:.3f} mm for the stone (bought)",'the model\'s stone: estimated','shared/escapement.js'),
-            S('place',f"{fx(xj,4)} from the foot end: the model's flexure-to-stone {M['stone_t']*ES:.2f} mm from the window's start, inside the drawn step {fx(bp['x0'],4)}-{fx(bp['x1'],4)}; across, {zj-(z0+T/2):+.3f} mm off the middle as the model's (its wall {T/2-abs(zj-(z0+T/2))-rj:.3f} mm)",None,'42087-2-51A #14; shared/escapement.js')],'reconstructed',key='stone')]
+            S('place',f"{fx(xj,4)} from the foot end: the model's flexure-to-stone {M['stone_t']*ES:.2f} mm from the window's start, inside the jewel block {fx(xb0,4)}-{fx(xb1,4)} (the drawn step {fx(bp['x0'],4)}-{fx(bp['x1'],4)}); across, {zj-(z0+T/2):+.3f} mm off the middle as the model's (its wall {T/2-abs(zj-(z0+T/2))-rj:.3f} mm)",None,'42087-2-51A #14; shared/escapement.js')],'reconstructed',key='stone'),
+         *[Drill((x0+t,yc,z0-0.01),(0,0,1),Vd['pinD'],T+0.02,f'Drill the {k} steady pin\'s hole across the foot',[S('',f"Ø {Vd['pinD']:.2f} mm, {t:+.2f} from the point of flexure ({x0+t:.2f} from the foot end) on the centre line",'measured: KLUwI2UUCMQ 11:10-11:33 (the pins\' roots 6.8 apart about the clamp screw, old mm); the diameter estimated (r 0.22 old)','PROVENANCE 110-7c')],'video',key='pin'+k[0]) for k,t in zip(('first','second'),Vd['pins'])],
+         Drill((x0+Vd['wedge'][0],-0.01,Vd['wedge'][1]),(0,1,0),Vd['wedge'][2],W+0.02,'Drill the wedge pin\'s hole upright beside the stone',[S('',f"Ø {Vd['wedge'][2]:.2f} mm, {Vd['wedge'][0]:.2f} past the flexure, its wall against the stone (the wedge bears on it)",'the model\'s pin: estimated (0.2 across, hidden on every frame)','PROVENANCE 110-8')],'3D model',key='wedge'),
+         Drill((x0+Vd['brs'][0],yc+Vd['brs'][1],z0-0.01),(0,0,1),Vd['brs'][2],T+0.02,'Drill and tap the trip spring bracket\'s screw hole across the blade',[S('',f"Ø {Vd['brs'][2]:.2f} mm (the screw 1770's shank), {Vd['brs'][0]:.2f} past the flexure",'its place measured (the bracket\'s leg in its middle, KLUwI2UUCMQ 11:10-11:33); the shank estimated','PROVENANCE 110-10, 110-11')],'video',key='brs')]
     r.setups.append(Setup('3','finishing (reconstructed: the finished drawing 42087-3-01 is not in the set)',ops,view='top'))
     r.key='detentFinished';r.title='Detent, finished (reconstructed)';r.drawing='42087-3-01 not in the set: reconstructed from 42087-2-51A, -1-52, 42093 and the 3D model'
-    r.notes=r.notes[:1]+[f"Reconstructed. Every length is the blank's. The detent stands on edge in the movement (42093; movement.js drives the clamp screw across the foot), so the window's two webs, {fx(I(.0315),4)} and {fx(I(.0275),4)} high, are the two-strip spring (escapement.js: the model's {M['spring_L']:.2f} mm long against the window's {wi['l']:.2f}).",
+    r.notes=r.notes[:1]+[f"Reconstructed. Every length is the blank's but where the video measured the finished part smaller: the cross-piece and the jewel block (finishing only removes metal, so the blank is a ceiling). The foot keeps the blank's length (the owner's choice, 2 November 2026: on the video the finished foot ends about 12 mm from the flexure, the blank's 15.37). The blank is turned over: the sheet doesn't say which edge is up, and only this way does the blade stand at the escape wheel's level (the 3D model's, measured). The detent stands on edge in the movement (42093; movement.js drives the clamp screw across the foot), so the window's two webs, {fx(I(.0315),4)} and {fx(I(.0275),4)} high, are the two-strip spring (escapement.js: the model's {M['spring_L']:.2f} mm long against the window's {wi['l']:.2f}).",
         f"The spring's thickness in plan is derived, not drawn: the model's {M['spring_t']:.4f} mm at its estimated 1.06 mm of height, held to the same stiffness at the drawn 1.50 mm, gives {tS:.4f} mm. Both are beryllium copper (the blank's, escapement.js's EB 128 GPa), and the model's stiffness is KD = E h t³/12/L, so h t³/L held is the stiffness held. tripping.json's map of the detent's ring (0.0559-0.1173 mm at the model's height, its pitch 70.5-212.5 Hz) is 0.0495-0.1040 mm at the drawn heights and length: the spring is inside it.",
         f"Cross-check: the model's stone, {M['stone_t']*ES:.2f} mm from the point of flexure, lands {xj/25.4:.4f} in from the foot end, inside the drawn step for the jewel block ({bp['x0']/25.4:.4f}-{bp['x1']/25.4:.4f}), {(xj-(bp['x0']+bp['x1'])/2):+.2f} mm from its middle.",
-        'Not formed: the horn and the end of the arm (the model bends them across in plan, beyond the bar; the end land and its .050 slot are left as the blank has them: what the slot is for is not known), the foot\'s second locating pin and notch that 42093 shows, the stone itself (bought), the trip spring 42088 and its bracket 42092.']
-    r.flags=['Reconstructed: 42087-3-01 is not in the set',f'The spring {inch(tS):.4f} in thick: derived from the model\'s stiffness (estimated)','The blade and arm thicknesses and which face: the model\'s (estimated)','The horn not formed (beyond the bar in plan)']
+        'Not formed: the horn and the end of the arm (the model bends them across in plan, beyond the bar; the end land and its .050 slot are left as the blank has them: what the slot is for is not known), the stone itself (bought), the trip spring 42088 and its bracket 42092.']
+    r.flags=['Reconstructed: 42087-3-01 is not in the set','Turned over, and the cross-piece and jewel block trimmed to the video; the foot the blank\'s length (the owner\'s choice)','The notch for the adjusting screw: the foot hole opened to the edge (inferred from 42093 and operation 63)',f'The spring {inch(tS):.4f} in thick: derived from the model\'s stiffness (estimated)','The blade and arm thicknesses and which face: the model\'s (estimated)','The horn not formed (beyond the bar in plan)']
     return r
 
 # ======================= the whole detent (42093): placeholders from the 3D model for the parts not in the set =======================
@@ -592,6 +620,11 @@ def _subs(hn):
         v=m['v'];V=np.array([f(v[i],v[i+1],v[i+2]) for i in range(0,len(v),3)],dtype=np.float64);T=np.array(m['i'],dtype=np.int64).reshape(-1,3)[:,::-1]
         k,inv=np.unique(np.round(V,6),axis=0,return_inverse=True);T=inv.reshape(-1)[T]
         out.append((k,T[(T[:,0]!=T[:,1])&(T[:,1]!=T[:,2])&(T[:,0]!=T[:,2])]))
+    if hn=='20756':   # the adjusting screw refitted to the drawn foot (the owner's choice: the blank's length): its head moved along into the foot's notch (the foot
+        # hole opened to the edge, detentFinished), its neck run back from the head to where the model has it; the model's head sat in a notch of its own 2.44 nearer the block
+        H=HD()['dt'];(Vh,Th),(Vs,Ts)=sorted(out,key=lambda vt:-np.ptp(vt[0][:,1]));d=H['hole']['x']-(Vh[:,0].min()+Vh[:,0].max())/2
+        Vh=Vh.copy();Vh[:,0]+=d;Vs=Vs.copy();x1=Vh[:,0].max();e=np.isclose(Vs[:,0],Vs[:,0].min());Vs[e,0]=x1
+        out=[(Vh,Th),(Vs,Ts)]
     return out
 def _manifold(V,T,hn=''):
     import numpy as np,manifold3d as m3
@@ -686,7 +719,8 @@ def _placeholder(hn,title):
     mk.__name__='det_'+hn.replace('.','_');return mk
 def lockingStone():
     I=lambda x:x*25.4;H=HD()['dt'];M=DET_MODEL;rj=M['rJ']*M['ES'];bp=H['topNotch']['bump']
-    ops=[Blank(2*rj,0,bp['h']-I(.0045),'The locking stone, bought (a ruby or sapphire pallet)',[S('',f"Ø {2*rj:.3f} mm, {bp['h']-I(.0045):.2f} long (the jewel block's height)",'the 3D model\'s stone: estimated','shared/escapement.js')],'3D model')]
+    hj=DET_VIDEO['jby'][1]-DET_VIDEO['jby'][0]
+    ops=[Blank(2*rj,0,hj,'The locking stone, bought (a ruby or sapphire pallet)',[S('',f"Ø {2*rj:.3f} mm, {hj:.2f} long (the jewel block's height, measured)",'the 3D model\'s stone: estimated','shared/escapement.js')],'3D model')]
     r=Recipe('lockingStone','42087.j','Locking stone (in 42087, "complete with jewel")','42087: complete with jewel (not in the set)','jewel (ruby or sapphire)','',[Setup('1','bought',ops)],ID,
         notes=['Its locking face (a flat on the stone) is not formed here: the 3D model\'s flat (eJ) is part of the escapement\'s geometry.'])
     return _flags(r,['Placeholder: the 3D model\'s stone (estimated)'])
@@ -694,14 +728,14 @@ def asmDetent():
     H=HD()['dt'];M=DET_MODEL;xj=H['window']['x0']+M['stone_t']*M['ES'];z0,z1=(H['t']-H['tFin'])/2,(H['t']+H['tFin'])/2
     mem=[Member('detentFinished',why='42087 reconstructed: the frame')]
     zj=z0+(M['stone_n']-M['n'][0])/(M['n'][1]-M['n'][0])*(z1-z0)   # across, as the model has it (detentFinished's seat)
-    mem.append(Member('lockingStone',rot=[('x',-90)],t=(xj,I_(.0045),zj),ex=(0,6,0),why='in its seat, upright through the jewel block'))
+    mem.append(Member('lockingStone',rot=[('x',-90)],t=(xj,H['slot']['y']+DET_VIDEO['jby'][0],zj),ex=(0,6,0),why='in its seat, upright through the jewel block'))
     ex={'42086':(0,0,-6),'20756':(-6,0,-3),'37024':(0,0,6),'42251.det':(0,0,4),'42091.lk':(0,0,-10),'42091.cl':(0,0,-10),'42088':(0,0,8),'42092':(0,0,5),'1770.br':(0,0,7),'1770.ts':(0,0,10),'42089':(0,5,0)}
     for hn,t in DET_PARTS:mem.append(Member('det_'+hn.replace('.','_'),ex=ex.get(hn,(0,0,0)),why='the 3D model\'s part, placed on the drawn detent (placeholder)',label=t))
     up=bd.Location((0,0,0),(1,0,0),90)   # the detent stands on edge in the movement: its height (the blank's y) shown up
     for m in mem:L=m.loc();m.L=up*L;m.ex=(m.ex[0],-m.ex[2],m.ex[1])
     a=Assembly('asmDetent','Detent assembly (42093): the drawn detent with placeholders','Detent',mem,
         notes=['42093 lists the parts without sizes; only the detent itself is drawn here (reconstructed). The rest are the 3D model\'s solids, measured on video (KLUwI2UUCMQ 11:10-11:33, Fig. 90) and scaled x1.117, put on the drawn detent along it from the point of flexure, in height by the clamp screw\'s axis on the slot\'s centre line, and across by the foot\'s faces.',
-               'Where they disagree the overlaps are listed under Checks, not hidden: the drawn detent is larger than the model\'s (its foot 15.37 long and 3.33 high against 12.11 and 2.12), so the model\'s block and adjusting screw, made for the shorter foot, meet it.',
+               'Fitted to the drawn detent (2 November 2026): the detent turned over and trimmed where the video measured it smaller, holed for the steady pins, the wedge pin and the bracket\'s screw; the adjusting screw\'s head in the foot\'s notch at the blank\'s length (the owner\'s choice), its neck run back to the block. What is left of the overlaps (thousandths of a mm³) is the placeholders\' polygon pins in round holes; they are listed under Checks.',
                'The parts list (NAVSHIPS 250-624) numbers the clamp screw 37024; 42093 names it 37204.'],
         flags=['Placeholders: every part but the detent is the 3D model\'s (video), not a drawing'])
     a.placeholder=True;a.drawing='the detent reconstructed from 42087-2-51A and -1-52, the parts named by 42093-2-01; every other part a placeholder from the 3D model, placed on the drawn detent'

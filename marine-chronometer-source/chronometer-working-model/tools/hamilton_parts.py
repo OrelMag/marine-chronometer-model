@@ -68,6 +68,12 @@ def check(r,p):
             for f in cyl:
                 try:
                     rad=f.radius;ax=f.axis_of_rotation
+                    if rad is None:   # a trimmed cylinder (two holes breaking into each other: the wedge pin's into the stone's seat): its basis surface's
+                        from OCP.BRep import BRep_Tool
+                        from OCP.Geom import Geom_CylindricalSurface
+                        s=BRep_Tool.Surface_s(f.wrapped);s=s.BasisSurface() if hasattr(s,'BasisSurface') else s
+                        if not isinstance(s,Geom_CylindricalSurface):continue
+                        a=s.Axis();rad=s.Radius();ax=bd.Axis((a.Location().X(),a.Location().Y(),a.Location().Z()),(a.Direction().X(),a.Direction().Y(),a.Direction().Z()))
                 except Exception:continue
                 d=ax.direction;q=ax.position;w=(q.X-q0[0],q.Y-q0[1],q.Z-q0[2]);c=(w[1]*u[2]-w[2]*u[1],w[2]*u[0]-w[0]*u[2],w[0]*u[1]-w[1]*u[0])
                 if abs(abs(d.X*u[0]+d.Y*u[1]+d.Z*u[2])-1)<1e-6 and abs(rad-o.d/2)<1e-4 and math.sqrt(sum(x*x for x in c))<1e-4:ok=True;break

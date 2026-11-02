@@ -167,6 +167,29 @@ The assembly stands on edge, as in the movement. `hamilton_parts.py` reports eve
 
 Until the second pass the list also had the model's parts among themselves (the screws through the block, the washer round the clamp screw's head, the bracket's screws) and the bracket wholly inside the block. The first were the model's unholed parts, the second an inside-out block; both are fixed (S-1, S-2).
 
+The table above is the state before the measured pass below, which removed every overlap but faceting slivers.
+
+## The detent assembly measured (2 November 2026)
+
+The owner asked to see the rescaled model's detent beside the drawn one, then to measure the whole assembly and correct what the drawings don't give. `tools/hamilton_detent_compare.py` draws the two over each other (elevation, plan, height and thickness along them, a table of sizes); `tools/hamilton_detent_footend.py` triangulates the foot's end. The notes and picks are in `$MC_VIDEO/oq/ledger/detent2/REPORT.md`.
+
+**The rule.** Finishing only removes metal, so the blank (42087-2-51A, -1-52) is a ceiling in every direction. The video (KLUwI2UUCMQ 11:10-11:33, the 20 October bundle adjustment, ×1.117) decides wherever it measured the finished part, and the blank's number stands where the video can't see.
+
+| Reading | Video (model) | Blank | Taken |
+|---|---|---|---|
+| The foot, flexure to its end | about 12.0 (11.7-12.3 over f 7000-30000; the pins and clamp screw at the model's ratios along it, camera-free; background where the blank's extra length would lie) | 15.37 | **15.37, the owner's choice** (the drawings outrank the video for what they draw; the video's chronometer may be other production) |
+| The foot, on edge | at least 2.8 (the end edge's visible length) | 3.33 | 3.33 |
+| Which edge is up | the blade 1.90-2.80 from the slot's centre line toward the plate, at the escape wheel's level | not given | **turned over**: as built before, the blade stood 1.2 mm off; turned, the drawn blade is 1.91-2.88 |
+| The cross-piece | 0.50 wide (110-7a: 0.42 old) | 1.02 (.040 full section) | 0.50; past it the section the blank has next |
+| The jewel block | 1.05 long × 1.40 high (0.9 × 1.26 old) | 1.65 × 1.90 (the step) | 1.05 × 1.40, its place the model's (the stone 0.55 from its start) |
+| The blade on edge | 0.93 | 0.97 | 0.97 (agree) |
+| The spring's length; the clamp screw before the flexure | 3.69; 5.59 | 3.63; 5.35 | the blank's (agree) |
+| The clamp screw's head | Ø 2.09 on 11:32.5 (local scale from the block's pins) | — | the model's Ø 2.12 (agree) |
+
+**What else was fitted.** The two steady pins through the foot get holes at the video's places (−9.28 and −1.69 from the flexure, Ø 0.49 estimated); the blank has none. The wedge pin gets a hole beside the stone, and the bracket's screw 1770 a tapped hole across the blade. The foot hole is opened to the edge toward the train bridge (operation 63, "corner the foot hole"; 42093 shows the notch open at the top), and the adjusting screw's head sits in it: the model's screw, its head moved 2.44 mm along and its neck run back to the block. How the notch drives the screw is inferred from 42093's isometric, which is not to scale.
+
+**Left.** The overlaps listed under Checks are thousandths of a mm³: the placeholders' polygon pins and screws in the recipes' round holes. The clamp screw's height, the washer, the lock-adjusting screws, the trip spring and the bracket keep the model's sizes; on these frames they are the same readings the model was built from, so re-picking them by eye adds nothing. 42086 or 42087-3-01 would settle the foot.
+
 ## Second pass (2 November 2026): solids and the sheets again
 
 Every part's solid checked by a script, not by eye: OCP's validity and its check before a boolean (self-intersections, edges too small), free edges, the faces' and edges' sizes, the page's mesh (welded: every edge in two triangles, its volume against the B-rep's), and the STEP file read back (one solid, its signed volume). Every sheet compared again beside its part (`hamilton_visual.py`), the section of each turned part station by station against the sheet's lengths. `hamilton_parts.py` now runs the solid checks itself, so these can't come back silently: the check before a boolean, the page's mesh closed, the STEP read back as one solid of the same signed volume (integrated to 1e-9: the default integration is 0.14 mm³ out on the barrel). Planted faults fail: the helical spring's turns touching again, and the barrel's mesh with a triangle taken out.
