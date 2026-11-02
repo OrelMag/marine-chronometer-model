@@ -139,6 +139,31 @@ Not formed:
 
 For `claude/hamilton-drawn-parts`, the detent in the model: its spring's strips are drawn 0.50 + 0.45 high (estimated), against the blank's 0.80 + 0.70. At the drawn heights the same stiffness needs a strip of 0.078 mm, not 0.088.
 
+## The whole detent, with placeholders (2 November 2026)
+
+42093 (detent assembly) lists twelve parts and gives no sizes for any of them. Only the detent itself is drawn in this set, and it is built here reconstructed. The others are placeholders: the 3D model's own solids, read off the page by `tools/hamilton_detent_export.py` into `tools/recipes/hamilton_detent_model.json`. Their sizes are the model's, measured on KLUwI2UUCMQ 11:10-11:33 and Fig. 90 and scaled × 1.117. Each is sewn into a closed B-rep solid, so it has a STEP file too. They are:
+- the support block 42086, with its button and pins
+- the adjusting screw 20756
+- the clamp screw (37024 in the parts list, 37204 on 42093) and its washer 42251
+- the lock-adjusting screw and its clamp screw (both 42091)
+- the trip spring 42088 and its bracket 42092
+- the screws 1770 (one for the bracket, one for the trip spring)
+- the wedge pin 42089
+- the locking stone
+
+They are placed on the drawn detent, which the model's detent doesn't match in size:
+- **Along it:** from the point of flexure, the window's start.
+- **In height:** by the clamp screw's axis on the slot's centre line. Both detents are centred on it.
+- **Across it in plan:** by each side's face. The detent's own thickness is scaled from the model's 1.22 mm to the drawn 1.04 mm.
+
+The assembly stands on edge, as in the movement. `hamilton_parts.py` reports every overlap in it rather than failing on them:
+
+| Overlap | Why |
+|---|---|
+| The drawn detent with the support block (0.39 mm³) and the adjusting screw (0.14) | The drawn foot is 15.37 mm long and 3.33 high, against the model's 12.11 and 2.12. The model's block, steady pins and adjusting screw were measured to fit the shorter foot. The blank's foot hole (.070 from its end) is not where the model's pins are (t −9.29 and −1.69 mm). Settling it needs the block's drawing (42086) or 42087-3-01. |
+| The drawn detent with the bracket (0.15) and the wedge pin (0.01) | The blade's plan thickness is the model's estimate; the drawn jewel block is .065 long against the model's 1.01 mm block. |
+| The model's own parts among themselves (screws in their tapped holes, the washer round the clamp screw's shank, the bracket's screws) | The model draws them so; fine.py lists them as expected contacts. |
+
 ## Subassemblies
 
 Each subassembly is placed only by the sheets' numbers. `hamilton_parts.py` checks every pair of members for overlap: none may overlap unless the pair is a listed fit (press, tangent, or a spring's drawn preload). It reports each listed pair's contact or gap. All five pass.

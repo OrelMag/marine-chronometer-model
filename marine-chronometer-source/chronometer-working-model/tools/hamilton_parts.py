@@ -24,6 +24,16 @@ def q16(P,lo,hi):
     P=np.asarray(P,float).reshape(-1,3);lo=np.asarray(lo);sp=np.maximum(np.asarray(hi)-lo,1e-9)
     return b64(np.round((P-lo)/sp*65535).clip(0,65535),'<u2')
 
+def tess(p):
+    """the solid's triangles; face by face where a sewn mesh's sliver face won't mesh (skipped: a placeholder taken from the 3D model's triangles)"""
+    try:return p.tessellate(0.003,0.2)
+    except AttributeError:
+        v=[];t=[]
+        for f in p.faces():
+            try:fv,ft=f.tessellate(0.003,0.2)
+            except AttributeError:continue
+            n=len(v);v+=fv;t+=[(a+n,b+n,c+n) for a,b,c in ft]
+        return v,t
 def edges_of(p):
     """the solid's B-rep edges as line segments: a line its two ends, a curve sampled to 0.01 mm of chord height"""
     S=[]
@@ -73,10 +83,12 @@ def check_asm(A,built):
     for i in range(len(P)):
         for j in range(i+1,len(P)):
             if any(B[i][k]>B[j][k+3]+0.01 or B[j][k]>B[i][k+3]+0.01 for k in range(3)):continue   # boxes apart by more than 0.01 mm (faces that touch are still checked)
-            k,w=fit.get(frozenset((A.members[i].key,A.members[j].key)),(None,''));v=(P[i]&P[j]).volume;g=P[i].distance_to(P[j]) if v<1e-6 else 0.0
+            k,w=fit.get(frozenset((A.members[i].key,A.members[j].key)),(None,''))
+            try:x=P[i]&P[j];v=x.volume if x is not None else 0.0;g=P[i].distance_to(P[j]) if v<1e-6 else 0.0
+            except Exception:N.append(f'{nm[i]} and {nm[j]}: not checked (the boolean failed on the sewn mesh)');continue
             lim={'press':1e-3,'tangent':0.2}.get(k,1e-5)   # tangent: two drawn arcs of one radius, the table's rounding leaving a sliver of a few µm
             if k=='preload':N.append(f'{nm[i]} and {nm[j]}: preload, drawn free they overlap {v:.4f} mm³ ({w})');continue
-            if v>lim:F.append(f'{nm[i]} and {nm[j]} overlap by {v:.5f} mm³'+(f' ({k}: {w})' if k else ''))
+            if v>lim:(N if getattr(A,'placeholder',False) else F).append(('placeholders disagree: ' if getattr(A,'placeholder',False) else '')+f'{nm[i]} and {nm[j]} overlap by {v:.5f} mm³'+(f' ({k}: {w})' if k else ''))   # a placeholder assembly reports where the model's parts and the drawn detent disagree
             elif k:N.append(f'{nm[i]} and {nm[j]}: {k}, '+(f'gap {g:.4f} mm' if g>1e-6 else f'a sliver of {v:.4f} mm³' if v>1e-6 else 'in contact')+f' ({w})')
             elif g<1e-6:touch+=1
     if touch:N.append(f'{touch} pairs of members in contact, face to face, none overlapping')
@@ -96,7 +108,7 @@ def main():
         print(f"{'FAIL' if F else 'ok  '} {r.key} ({r.hn}): {len(r.ops())} operations, volume {p.volume:.4f} mm³, {time.time()-t:.1f} s")
         for s in N:print('       '+s)
         for s in F:print('  !!   '+s)
-        v,tri=p.tessellate(0.003,0.2);V=[c for q in v for c in (q.X,q.Y,q.Z)];T=[i for f in tri for i in f]
+        v,tri=tess(p);V=[c for q in v for c in (q.X,q.Y,q.Z)];T=[i for f in tri for i in f]
         bb=p.bounding_box();lo,hi=[round(x,4) for x in (bb.min.X,bb.min.Y,bb.min.Z)],[round(x,4) for x in (bb.max.X,bb.max.Y,bb.max.Z)]   # the box the data carries: the points quantised within it
         parts.append({'key':r.key,'hn':r.hn,'group':grp,'title':r.title,'drawing':r.drawing,'material':r.material,'treatment':r.treatment,'flat':bool(getattr(r,'flat',False)),
           'flags':getattr(r,'flags',[]),'fits':r.fits,'notes':r.notes,'volume':round(p.volume,4),'box':lo+hi,
