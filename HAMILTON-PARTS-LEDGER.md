@@ -38,7 +38,7 @@ Verdict before → now. "Match" means every printed size within its tolerance (0
 | 42027-1-01 | Set-up pawl | 42010's outline unmirrored; a countersink copied from 42010; material "not given" | mirrored as drawn; a plain bore; 1.00 carbon steel (its title block) | — |
 | 42028-2-01 | Set-up pawl spring | hole 17 at the screw's .044; gold plate | both holes at the pin's .0498; nickel plate, #1 emery | — |
 | 42050-1-01 | Helical spring | match | — | where it goes |
-| 42087-2-51A, -1-52 | Detent blank | the window .036 high at .032-.068 | .072 high from .036 to .108 above the bottom edge | the step in the top notch (.079 printed, .075 on the scale) |
+| 42087-2-51A, -1-52 | Detent blank (and the finished detent, reconstructed: below) | the window .036 high at .032-.068 | .072 high from .036 to .108 above the bottom edge | the step in the top notch (.079 printed, .075 on the scale) |
 | 42002-1-01 | Hook, barrel end | the step's .003 × 45° not cut | cut on both faces | — |
 | 42003-1-01 | Hook, fusee end | as 42002 | as 42002; the outline from 42002 confirmed | — |
 | 42004-1-01 | Link pin | match | — | — |
@@ -118,6 +118,26 @@ Verdict before → now. "Match" means every printed size within its tolerance (0
 Matching by eye, with nothing to change: the barrel and cap, the fusee arbor and wheel, the fourth wheel, the sustaining wheel and spring, the winding and sustaining pawls, the winding and set-up ratchets, the set-up pawl and spring, both hooks, the centre link, the link pin, the detent blank, the helical spring and the mainspring's end.
 
 For `claude/hamilton-drawn-parts` (HD): the barrel arbor's `slot` is the hook band; the body is .498, and the .520 is over the hook (V-1). The pinion's `st` should place .0565, .0445 and .0583 as in V-2. HD.wps's screw holes are tapped (V-3).
+
+## The finished detent, reconstructed (2 November 2026)
+
+The finished drawing 42087-3-01 is not in the set. The page has carried the blank (42087-2-51A, -1-52) since 3.72.00. `detentFinished` reconstructs the finished part from that blank, so every length is still the blank's. The rest comes from three places:
+- **The blank's orientation.** The detent stands on edge, its .131 width upright and its .041 thickness across in plan. 42093's isometric shows it, and so does the model, whose clamp screw is driven across the foot into the block (movement.js).
+- **The spring.** The blank's window and its two webs, .0315 and .0275 high, are the two-strip detent spring: 3.63 mm long against the model's 3.69 mm.
+- **What the blank can't give** comes from the 3D model's detent (shared/escapement.js, measured on KLUwI2UUCMQ 11:10-11:33 and Fig. 90, × 1.117): the plan thicknesses (blade 0.22 mm, arm 0.37 mm), the face they're thinned from, and the stone (Ø 0.61 mm). These are read from the model, not changed in it.
+
+| Check | Result |
+|---|---|
+| The spring's thickness in plan | 0.0782 mm (.0031 in). This is derived: the model's 0.0882 mm at its estimated 1.06 mm of strip height, held to the same stiffness (∝ h t³ / L) at the drawn 1.50 mm and .143 length. It sits inside `tripping.json`'s band for the detent's ring, 0.072-0.110 mm. |
+| The stone's place | The model's 11.30 mm from the point of flexure, measured from the window's start, lands at 1.0499 in from the foot end. That is inside the drawn step for the jewel block (1.0082-1.0732), +0.23 mm from its middle. |
+| The clamp screw | The model has it 5.54 mm before the point of flexure; the blank's slot is 5.35 mm before the window. |
+
+Not formed:
+- the horn and the arm's end, which the model bends across in plan, beyond the bar. The end land and its .050 slot are left as the blank has them; what the slot is for is not known.
+- the second locating pin and the notch on the foot that 42093 shows.
+- the stone itself (bought), the trip spring 42088 and its bracket 42092.
+
+For `claude/hamilton-drawn-parts`, the detent in the model: its spring's strips are drawn 0.50 + 0.45 high (estimated), against the blank's 0.80 + 0.70. At the drawn heights the same stiffness needs a strip of 0.078 mm, not 0.088.
 
 ## Subassemblies
 
