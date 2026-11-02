@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.73.00 · 2026-11-02
+- Hamilton parts as drawn: every part audited against Hamilton's drawings and corrected (among them the barrel's outside, the fusee arbor and wheel, the detent's window and the ratchets' teeth)
+- New subassemblies put together from the drawings alone: the fourth wheel and pinion, the barrel with its cap and arbor, the sustaining wheel with its pawls and springs, the whole fusee with its maintaining work, and a run of chain; each can be taken apart with a slider
+
 ## 3.72.00 · 2026-11-02
 - New page: the Hamilton Model 21's parts as Hamilton Watch Co. drew them (hamilton/parts/): 23 parts in 3D from the factory drawings, each with its drawn sizes, the readings still unsure, an operation sheet and a STEP file
 
