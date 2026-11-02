@@ -1,5 +1,5 @@
 """penrender.py: stills of a model drawn as an ink-and-watercolour illustration, in Blender: EEVEE with Freestyle's pen lines (a heavy contour round each
-part's outline, thinner lines at its edges, fine ones at its creases) over each material painted as a wash (its own colour in the light, shading into a warm
+part's outline, thinner lines at its silhouettes, fine ones at its creases) over each material painted as a wash (its own colour in the light, shading into a warm
 or a cool shade of itself, darker where a surface turns away, a white glint on metal), under a key and a rim light, on cream paper (a faint tooth laid over
 afterwards, the drawing centred on the sheet). The model is the page's own export to Blender (gltf_check.py's), posed by the rig (blender/rig.py): the
 movement out of its case, the chronometer in its box, the movement taken apart. An illustration for its own sake: every line is the model's, nothing is
@@ -69,6 +69,18 @@ A=json.load(open(sys.argv[sys.argv.index('--')+1],encoding='utf-8'))
 bpy.ops.wm.read_factory_settings(use_empty=True);bpy.ops.import_scene.gltf(filepath=A['glb'])
 exec(compile(open(A['rig'],encoding='utf-8').read(),A['rig'],'exec'),{'__name__':'__main__','__file__':A['rig']})
 sc=bpy.context.scene;ctl=bpy.data.objects.get('Chronometer controls');PAPER=tuple(A['paper']);INK=(0.10,0.065,0.04)
+# the export's meshes come in as separate triangles (every vertex its own, every edge open), and a flat face with holes as long thin triangles fanning
+# from hole to hole: Freestyle found no creases, and drew those fans across the plates as silhouettes (its test is unsteady on slivers; the owner saw
+# them on the Wempe's pillar plate). Each mesh welded (to 1e-6 of its units), each flat region merged and triangulated again
+# without slivers (beauty), its normals then from its faces, sharp past 40 degrees. Its faces keep their winding: turned "outward", the dial's printed
+# face (an open surface over its disc) faced down and the import's back-face culling hid it
+import bmesh
+for me in {o.data for o in bpy.data.objects if o.type=='MESH'}:
+    bm=bmesh.new();bm.from_mesh(me);bmesh.ops.remove_doubles(bm,verts=bm.verts,dist=1e-6)
+    bmesh.ops.dissolve_limit(bm,angle_limit=math.radians(0.5),verts=bm.verts,edges=bm.edges);bmesh.ops.triangulate(bm,faces=bm.faces,quad_method='BEAUTY',ngon_method='BEAUTY');bm.to_mesh(me);bm.free()
+    if 'custom_normal' in me.attributes:me.attributes.remove(me.attributes['custom_normal'])
+    me.set_sharp_from_angle(angle=math.radians(40))
+print('MC welded',flush=True)
 
 # each material's watercolour by name (the Hamilton's export); another is placed by its colour. TEX: how much of a material's map shows (the dial's
 # printing whole, the wood's grain a hint, the plates' damascening none: it read as stripes)
@@ -88,6 +100,14 @@ def wash(m,c):
     if 0.55<h<0.75:return PAL['blued']
     return colorsys.hsv_to_rgb(h,min(0.45,s*0.7),0.72+0.28*v)
 
+def texwood(n):
+    """whether an image texture's mean colour is a dark red-brown: a wood"""
+    im=getattr(n,'image',None)
+    if not im:return False
+    c=im.copy();c.scale(16,16);px=list(c.pixels);bpy.data.images.remove(c);k=len(px)//4
+    h,s,v=colorsys.rgb_to_hsv(*(sum(px[i::4])/k for i in range(3)))
+    return (h<0.1 or h>0.95) and s>0.35 and v<0.6
+
 def restyle(m):
     if not m.use_nodes:return
     nt=m.node_tree;P=next((n for n in nt.nodes if n.type=='BSDF_PRINCIPLED'),None)
@@ -95,6 +115,7 @@ def restyle(m):
     out=next(n for n in nt.nodes if n.type=='OUTPUT_MATERIAL');L=nt.links.new;N=nt.nodes.new
     if P.inputs['Transmission Weight'].default_value>0.5:L(N('ShaderNodeBsdfTransparent').outputs[0],out.inputs['Surface']);return   # glass, crystal: Freestyle's outline only
     base=P.inputs['Base Color'];tex=base.links[0].from_socket if base.is_linked else None;metal=P.inputs['Metallic'].default_value
+    if tex and m.name not in PAL and texwood(base.links[0].from_node):PAL[m.name]=PAL['wood'];TEX[m.name]=TEX['wood']   # a wood unnamed in the export (the Wempe's)
     def mix(kind,fac,a,b):
         x=N('ShaderNodeMix');x.data_type='RGBA';x.blend_type=kind
         for i,v in ((0,fac),(6,a),(7,b)):
@@ -133,7 +154,8 @@ for e in('BLENDER_EEVEE','BLENDER_EEVEE_NEXT'):
     try:sc.render.engine=e;break
     except TypeError:pass
 
-# the pen: Freestyle line sets (a heavy contour, outlines, creases), each a calligraphic pen tapered at its ends, short strokes dropped
+# the pen: Freestyle line sets (a heavy contour, outlines, creases), each a calligraphic pen tapered at its ends, short strokes dropped. No border edges:
+# every part is a closed solid, and the glTF import splits its meshes at their seams, so a border was a flat face's triangle fan drawn across it
 sc.render.use_freestyle=True;sc.render.line_thickness_mode='ABSOLUTE';fs=sc.view_layers[0].freestyle_settings;fs.crease_angle=math.radians(118)
 def pen(name,colour,thick,lo,hi,stretch,edges,minlen):
     ls=fs.linesets.new(name);ls.select_by_visibility=True;ls.visibility='VISIBLE';ls.select_by_edge_types=True
@@ -143,7 +165,7 @@ def pen(name,colour,thick,lo,hi,stretch,edges,minlen):
     c=st.thickness_modifiers.new('pen','CALLIGRAPHY');c.orientation=35;c.thickness_min=lo;c.thickness_max=hi
     t=st.thickness_modifiers.new('taper','ALONG_STROKE');t.blend='MULTIPLY';t.mapping='CURVE';cv=t.curve;p=cv.curves[0].points
     p[0].location=(0,0.3);p[1].location=(1,0.3);p.new(0.15,1.0);p.new(0.85,1.0);cv.update()
-pen('contour',INK,5.0,3.4,6.4,1.5,('external_contour',),3);pen('outline',INK,2.6,1.6,3.4,1.0,('silhouette','border'),3);pen('inner',(0.36,0.26,0.18),1.1,0.8,1.4,0,('crease',),30)
+pen('contour',INK,5.0,3.4,6.4,1.5,('external_contour',),3);pen('outline',INK,2.6,1.6,3.4,1.0,('silhouette',),3);pen('inner',(0.36,0.26,0.18),1.1,0.8,1.4,0,('crease',),30)
 
 cam=bpy.data.objects.new('cam',bpy.data.cameras.new('cam'));sc.collection.objects.link(cam);sc.camera=cam;cam.data.lens=50;cam.data.clip_start=0.001
 sc.render.resolution_x,sc.render.resolution_y=A['size']
