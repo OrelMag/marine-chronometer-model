@@ -45,7 +45,10 @@ link, reset the view, full screen), a row of views, and a play bar: stop and go
 on, the speed (1/20×, ¼×, 1×, 60×, 3600× or any speed), the time, the power left
 and Wind. The panel beside it (under it on a phone) has four tabs: **Explore**
 (the walkthrough, the Hamilton's overhaul, Take it apart: Exploded and Laid out,
-the Wempe's Exploded view taking its fusee, barrel, balance, detent and motion
+the Wempe's Laid out with its lettered sheet (a thumbnail that opens it large: the
+train in elevation, plan and isometric with numbered close-ups of the mainspring and
+fusee, maintaining power, escapement and balance, lettered as a textbook's developed
+drawing), the Wempe's Exploded view taking its fusee, barrel, balance, detent and motion
 work apart beside the movement with Subassemblies (all, or each on its own, the
 chain coiled, a Pieces slider for their spread), and Parts, where the Wempe's
 Isolate row shows one subassembly alone, as right-clicking a part does), **Run** (time, winding, the rate and timing weights, and the
@@ -349,7 +352,9 @@ every tool, what it checks and how long it takes. Before committing a change:
 1. **Past fixes.** Look up the part, control or build step in
    [RESOLVED.md](RESOLVED.md), so an old bug doesn't come back.
 2. **Build.** `python build.py --site-url https://www.marinechronometermodel.com`
-   at the root must finish without errors.
+   at the root must finish without errors. When a file the Wempe's page loads has
+   changed, it first renders the Laid out sheet again (`laidout.py --model wempe
+   --write`, a few minutes in a browser) into `wempe/renders/`; commit what it writes.
 3. **Console and arithmetic.** Run these two; both print `ok`:
    - `python smoke.py` clicks through every control of the model, then opens
      the essay's page, scrolls it and works every control in it. It fails on
