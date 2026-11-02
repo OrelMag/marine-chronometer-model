@@ -794,6 +794,16 @@ def asmBarrel():
         notes=[f"Inside, the barrel's and cap's boss faces are {inch(ins):.4f} in apart; the arbor's bosses span .530 +0/-.002: endshake {inch(es):.4f} in ({es:.3f} mm) as drawn.",
                "Which end of the arbor the square goes out at is not on these sheets: built out through the barrel's floor (assumed)."],
         flags=['Which way the arbor faces: not on the sheets (assumed)'])
+def asmSetup():
+    """asmBarrel with the set-up ratchet 42026 on the arbor's square: its .115 square (+.001/-0) on the arbor's .110 (+.004/-0), both diamonds with their
+    corners on the centre lines; along the square, its inner face at the square's inner end, on the pivot's shoulder (estimated: the barrel bridge between is not in the set)"""
+    A=asmBarrel();S=HD()['bs'];t=HD()['sr']['t'];za=[m for m in A.members if m.key=='barrelArbor'][0].t[2]
+    A.members.append(Member('setupRatchet',t=(0,0,za+S['sq']-t),ex=(0,0,-42),why=f"42026 on 42170's square: its .115 square on the .110 (clearance .001 to .006 across the flats), its face at the square's inner end, against the .1695 pivot's shoulder ({inch(S['sq']):.3f} from the arbor's end; estimated)"))
+    A.fits.append(('setupRatchet','barrelArbor','clear',"the ratchet's .115 square on the arbor's .110 square"))
+    A.key='asmSetup';A.title='Barrel, cap, arbor and set-up ratchet'
+    A.notes.append("The set-up ratchet's place along the square is estimated: in the movement the barrel bridge (not in the set) stands between the barrel and the ratchet, the arbor's .1695 pivot in it.")
+    A.flags.append("The set-up ratchet's place along the square: estimated")
+    return A
 
 def asmChain(spaces=9):
     """a short run of the fusee chain as 42001 lays it out: joint k at x = k × .0940; odd spaces a pair of outer plates (42246) at z 0-.0095 and .019-.0285,
@@ -877,6 +887,6 @@ def _ratchet_phase(Lsw,swing=16.0):
             if best is None or g<best[1]:best=(a,g)
     return best[0] if best else 0.0
 
-ASSEMBLIES=[asmFourth,asmBarrel,asmChain,asm42009,asmFusee,asmDetent]
+ASSEMBLIES=[asmFourth,asmBarrel,asmSetup,asmChain,asm42009,asmFusee,asmDetent]
 
 RECIPES+=[('Detent assembly (placeholders)',_placeholder(h,t)) for h,t in DET_PARTS]

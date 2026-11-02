@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.75.00 · 2026-11-02
+- The Hamilton's drawn parts page has renders: every part with a factory drawing, and every subassembly made of drawn parts only, rendered in Blender, on each part's card and in a new Renders gallery.
+- A new subassembly from the drawings: the barrel with the set-up ratchet on its arbor's square.
+
 ## 3.74.01 · 2026-11-02
 - The Hamilton's drawn parts page: the detent's placeholder parts rebuilt as sound solids (they were inside out), holed for their screws, the clamp screw seated on its washer
 - The drawn helical spring's closed turns no longer touch, the mainspring end's slot has its drawn broken corners, and the detent's locking stone sits where the model has it

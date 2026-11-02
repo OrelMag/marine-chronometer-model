@@ -164,7 +164,9 @@ def main():
     if (WEMPE/'parts').is_dir():shutil.copytree(WEMPE/'parts',SITE/'parts')   # the Wempe's parts as recipes: each one's STEP file and operation sheet (tools/recipes_site.py), linked from its card
     # the Hamilton's parts as Hamilton drew them (tools/hamilton_parts.py), at hamilton/parts/: its three.js, controls and font beside it
     HP=ROOT/'marine-chronometer-source/hamilton-parts';hp=SITE/'hamilton/parts'
-    shutil.copytree(HP/'js',hp/'js');shutil.copytree(HP/'step',hp/'step');(hp/'vendor/fonts').mkdir(parents=True)
+    shutil.copytree(HP/'js',hp/'js');shutil.copytree(HP/'step',hp/'step')
+    if (HP/'renders').is_dir():shutil.copytree(HP/'renders',hp/'renders')   # the still renders (tools/hamilton_render.py), on the cards and in the gallery
+    (hp/'vendor/fonts').mkdir(parents=True)
     for f in('three.min.js','OrbitControls.js','fonts/InstrumentSans-normal-400.woff2'):shutil.copy(ROOT/'vendor'/f,hp/'vendor'/f)
     write(hp/'index.html',meta((HP/'index.html').read_text(encoding='utf-8').replace('../../vendor/','vendor/').replace('href="../chronometer-working-model/index.html"','href="../"'),a.site_url,'hamilton/parts/index.html',keep=a.keep_html))
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)

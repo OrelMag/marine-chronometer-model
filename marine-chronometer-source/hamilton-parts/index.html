@@ -54,6 +54,23 @@ mark{background:var(--warnbg);color:var(--warn);border-radius:3px}
 iframe{width:100%;height:70vh;border:1px solid var(--line);border-radius:6px;background:#fff}
 p{margin:6px 0}
 .ok{color:var(--ok)}.bad{color:var(--bad)}
+.render{margin:10px 0 4px;display:grid;grid-template-columns:1fr;gap:6px}
+.render.two{grid-template-columns:1fr 1fr}
+.render figure{margin:0}
+.render img,#gallery img{display:block;width:100%;height:auto;aspect-ratio:4/3;background:var(--canvas);border-radius:6px;cursor:zoom-in}
+.render figcaption{font-size:12px;color:var(--mute);margin-top:2px}
+#gallery{position:absolute;inset:0;overflow:auto;background:var(--bg);padding:56px 16px 24px;z-index:2}
+#gallery h2{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin:14px 0 6px}
+#gallery .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+#gallery button.card{display:block;text-align:left;padding:0;border:1px solid var(--line);background:var(--panel);border-radius:8px;overflow:hidden;cursor:pointer}
+#gallery button.card img{border-radius:0;cursor:pointer}
+#gallery .cap{padding:6px 8px 8px;font-size:12.5px}
+#gallery .cap span{color:var(--mute)}
+#gallery .about{color:var(--mute);font-size:12.5px;max-width:70ch;margin:0}
+#tools{z-index:3}
+dialog#zoom{padding:0;border:none;background:var(--canvas);border-radius:8px;max-width:min(96vw,1200px)}
+dialog#zoom::backdrop{background:rgba(0,0,0,.6)}
+dialog#zoom img{display:block;max-width:100%;max-height:90vh}
 @media (max-width:900px){main{grid-template-columns:1fr;grid-template-rows:auto 55vh auto;height:auto}nav{border-right:none;border-bottom:1px solid var(--line);max-height:30vh}aside{border-left:none}header{flex-wrap:wrap;padding:10px 16px}}
 </style>
 </head>
@@ -63,13 +80,15 @@ p{margin:6px 0}
 <nav id="list" aria-label="Parts"></nav>
 <div id="view"><div id="tools">
 <button data-v="iso">3D</button><button data-v="top">Plan</button><button data-v="side">Side</button><button data-v="under">Under</button>
-<button id="edges" aria-pressed="true">Edges</button><button id="section" aria-pressed="false" title="Cut through the axis (a turned part) or the middle">Section</button><button id="spin" aria-pressed="false">Turn</button><label id="exw" hidden class="btn">Apart <input id="ex" type="range" min="0" max="1" step="0.01" value="0" aria-label="Take the subassembly apart"></label>
-</div><div id="dims"></div></div>
+<button id="edges" aria-pressed="true">Edges</button><button id="section" aria-pressed="false" title="Cut through the axis (a turned part) or the middle">Section</button><button id="spin" aria-pressed="false">Turn</button><button id="gal" aria-pressed="false" title="Still renders of every drawn part and subassembly">Renders</button><label id="exw" hidden class="btn">Apart <input id="ex" type="range" min="0" max="1" step="0.01" value="0" aria-label="Take the subassembly apart"></label>
+</div><div id="dims"></div><div id="gallery" hidden></div></div>
 <aside id="info"></aside>
+<dialog id="zoom" aria-label="Render, full size"><img alt=""></dialog>
 </main>
 <script src="../../vendor/three.min.js"></script>
 <script src="../../vendor/OrbitControls.js"></script>
 <script src="js/hparts.js"></script>
+<script src="js/hrenders.js"></script>
 <script>
 "use strict";
 (()=>{
@@ -106,6 +125,7 @@ function look(v){if(!cur)return;const c=centre(cur),d=size(cur)*2.6;const dir={i
   cam.position.set(c.x+dir[0]*d/Math.hypot(...dir),c.y+dir[1]*d/Math.hypot(...dir),c.z+dir[2]*d/Math.hypot(...dir));ctl.target.copy(c);cam.near=d/200;cam.far=d*20;cam.updateProjectionMatrix();ctl.update();}
 function setClip(){if(!cur)return;const c=centre(cur);clip.constant=c.y;for(const s of grp.userData.subs){const u=s.userData;u.mesh.clippingPlanes=secOn?[clip]:[];u.lm.clippingPlanes=secOn?[clip]:[];u.mesh.needsUpdate=true;u.lm.needsUpdate=true;}}
 function show(k,keepView){
+  if(!$('#gallery').hidden)gallery(false);
   const p=HPARTS.find(q=>q.key===k)||HPARTS[0];cur=p;if(grp){scene.remove(grp);grp.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
   grp=build(p);scene.add(grp);setClip();setExplode();$('#exw').hidden=!p.assembly;if(!keepView)look(p.flat?'iso':'iso');
   document.querySelectorAll('nav li').forEach(li=>li.setAttribute('aria-selected',li.dataset.k===p.key));
@@ -116,9 +136,11 @@ function info(p){
   const t=p.assembly?{members:'Parts',notes:'Notes and fits',checks:'Checks'}:{sizes:'Sizes',sheet:'Operation sheet',notes:'Notes and fits',checks:'Checks'};if(!t[tab])tab=Object.keys(t)[0];
   let h=p.assembly?`<h2>${E(p.title)}</h2><div class="meta">${p.placeholder?`Subassembly: ${E(p.drawing)}`:`Subassembly from drawings ${E(p.drawing)}: every place from the sheets' own numbers`}</div>`:`<h2>${E(p.title)}</h2><div class="meta">Hamilton part <b>${E(p.hn)}</b> · drawing ${E(p.drawing)}</div><div class="meta">Material: <b>${E(p.material)}</b><br>Finish: ${E(p.treatment)}</div>`;
   h+='<div class="chips">'+p.fails.map(f=>`<span class="chip bad">Check failed: ${E(f)}</span>`).join('')+p.flags.map(f=>`<span class="chip">${mark(f)}</span>`).join('')+'</div>';
+  const rd=RND[p.key];
+  if(rd)h+=`<div class="render${rd.exploded?' two':''}"><figure><img src="${E(rd.image)}" alt="${E(p.title)}, rendered" loading="lazy">${rd.exploded?'<figcaption>Assembled</figcaption>':''}</figure>`+(rd.exploded?`<figure><img src="${E(rd.exploded)}" alt="${E(p.title)}, taken apart, rendered" loading="lazy"><figcaption>Apart</figcaption></figure>`:'')+'</div>';
   if(!p.assembly)h+=`<p><a class="btn" href="${E(p.step)}" download>Download STEP</a></p>`;
   h+='<div class="tabs" role="tablist">'+Object.entries(t).map(([k,v])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${v}</button>`).join('')+'</div><div id="tb"></div>';
-  $('#info').innerHTML=h;$('#info').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;info(p);});
+  $('#info').innerHTML=h;$('#info').querySelectorAll('.render img').forEach(zoomable);$('#info').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;info(p);});
   const tb=$('#tb');
   if(tab==='members')tb.innerHTML='<table><tr><th>Part</th><th>Placed by</th></tr>'+p.members.map(m=>`<tr><td><a href="#part=${E(m.key)}">${E(m.label)}</a></td><td>${mark(m.why)}</td></tr>`).join('')+'</table>';
   else if(tab==='sizes'){let s='<table><tr><th></th><th>Size</th><th>Tolerance</th><th>Source</th></tr>';
@@ -127,6 +149,16 @@ function info(p){
   else if(tab==='sheet'){const f=document.createElement('iframe');f.title='Operation sheet';f.srcdoc=p.sheet;tb.appendChild(f);}
   else if(tab==='notes')tb.innerHTML=(p.fits.length?'<p><b>Fits</b></p>'+p.fits.map(x=>`<p>${mark(x)}</p>`).join(''):'')+(p.notes.length?'<p><b>Notes</b></p>'+p.notes.map(x=>`<p>${mark(x)}</p>`).join(''):'');
   else tb.innerHTML=p.checks.map(x=>`<p class="ok">✓ ${E(x)}</p>`).join('')+p.fails.map(x=>`<p class="bad">✗ ${E(x)}</p>`).join('')+'<p class="meta">Every part: one closed, valid solid of positive volume (hamilton_parts.py).</p>';}
+const RND={};if(typeof HRENDERS!=='undefined')for(const r of HRENDERS)RND[r.key]=r;
+function zoomable(im){im.onclick=e=>{e.stopPropagation();const d=$('#zoom');d.querySelector('img').src=im.src;d.querySelector('img').alt=im.alt;d.showModal();};}
+$('#zoom').onclick=()=>$('#zoom').close();
+function gallery(on){const g=$('#gallery');g.hidden=!on;$('#gal').setAttribute('aria-pressed',on);
+  if(on&&!g.firstChild){const G={};for(const r of Object.values(RND))(G[r.assembly?'Subassemblies, drawn parts only':r.group]=G[r.assembly?'Subassemblies, drawn parts only':r.group]||[]).push(r);
+    g.innerHTML='<p class="about">Every part with a factory drawing, and every subassembly made of drawn parts only, rendered in Blender (Cycles) from the same solids as the 3D view. Each surface follows the material and finish its drawing gives. Choose one to open it.</p>'+
+      Object.entries(G).map(([k,L])=>`<h2>${E(k)}</h2><div class="grid">`+L.map(r=>`<button class="card" data-k="${E(r.key)}"><img src="${E(r.image)}" alt="" loading="lazy"><div class="cap">${E(r.title)}<br><span>${r.assembly?E(r.members.length+' drawn parts'):E(r.hn+(r.reconstructed?' · reconstructed':''))}</span></div></button>`).join('')+'</div>').join('');
+    g.querySelectorAll('button.card').forEach(b=>b.onclick=()=>{gallery(false);show(b.dataset.k);});}
+  history.replaceState(null,'',on?'#renders':'#part='+(cur?cur.key:''));}
+$('#gal').onclick=()=>gallery($('#gallery').hidden);
 function list(){const G={};for(const p of HPARTS)(G[p.group]=G[p.group]||[]).push(p);
   $('#list').innerHTML=Object.entries(G).map(([g,L])=>`<h2>${E(g)}</h2><ul>`+L.map(p=>`<li tabindex="0" role="option" data-k="${p.key}"><span>${E(p.title)}</span><span class="no">${p.assembly?'assembly':E(p.hn)}</span>${p.fails.length?'<span class="dot bad" title="a check failed"></span>':p.flags.length?'<span class="dot" title="has estimated or unsure readings"></span>':''}</li>`).join('')+'</ul>').join('');
   $('#list').querySelectorAll('li').forEach(li=>{li.onclick=()=>show(li.dataset.k);li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(li.dataset.k);}
@@ -140,7 +172,8 @@ $('#theme').onclick=()=>{const d=document.documentElement,dark=d.dataset.theme?d
 function resize(){const w=view.clientWidth,h=view.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}
 new ResizeObserver(resize).observe(view);
 (function loop(){requestAnimationFrame(loop);ctl.update();scene.background=new THREE.Color(cssv('--canvas')||'#ece9e3');R.render(scene,cam);})();
-list();const m=/part=([\w-]+)/.exec(location.hash);resize();show(m?m[1]:HPARTS[0].key);
+list();const m=/part=([\w-]+)/.exec(location.hash),rh=/renders/.test(location.hash);resize();show(m?m[1]:HPARTS[0].key);if(rh)gallery(true);
+$('#gal').hidden=!Object.keys(RND).length;
 window.addEventListener('hashchange',()=>{const m=/part=([\w-]+)/.exec(location.hash);if(m&&(!cur||m[1]!==cur.key))show(m[1]);});
 })();
 </script>
