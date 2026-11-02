@@ -58,8 +58,11 @@ const VIEWER={start(cfg){
     window.__unproj=(pts,yaw,pitch,dist,fov)=>{const c2=cam2(yaw,pitch,dist,fov),inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();return pts.map(([sx,sy,h])=>{const ndc=new THREE.Vector2(sx/W*2-1,-(sy/Hh*2-1)),rc=new THREE.Raycaster();rc.setFromCamera(ndc,c2);
       const o=rc.ray.origin.clone().applyMatrix4(inv),dd=rc.ray.direction.clone().transformDirection(inv),tt=(h-o.y)/dd.y;return[o.x+dd.x*tt,o.z+dd.z*tt];});};
     window.__camInfo=()=>JSON.stringify({fov:cam.fov,aspect:cam.aspect,pos:cam.position.toArray().map(v=>+v.toFixed(2)),tgt:C.target.toArray().map(v=>+v.toFixed(2)),C:{yaw:C.yaw,pitch:C.pitch,dist:C.dist},W,Hh});
-    window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=cur.fov=tgt.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:QT});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=camMine=false;};
-    window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:[x,y,z]});};}
+    /* near (optional): the near plane, the far 600 beyond the target, for a far camera through a narrow lens (laidout.py's isometric: at 1 mm the depth buffer can't part faces a hundredth apart 2 m off) */
+    window.__cam=(yaw,pitch,dist,fov,near)=>{cam.fov=cur.fov=tgt.fov=fov;cam.near=near||1;cam.far=near?dist+600:6000;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:QT});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=camMine=false;};
+    window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:[x,y,z]});};
+    /* laid out, the schematic plates standing in for these parts (devOf) hidden, the pieces kept shown (devKeep) left: laidout.py's isometric view */
+    window.__devHide=ks=>{for(const m of MVM)if(m.userData.devPlate){let o=m;while(o&&!o.userData.devOf)o=o.parent;m.userData.qaOff=!!o&&ks.includes(o.userData.devOf);}look();};}
   const sk=$('#srcKey');if(sk)sk.innerHTML=Object.values(SRC).map(([t,c,d])=>`<span title="${t}: ${d}"><i style="--ps:${c}"></i>${t}</span>`).join('');
   const partOf=o=>{while(o){if(o.userData&&(o.userData.partName||o.userData.devOf))return o.userData.partName||o.userData.devOf;o=o.parent;}return null;};   /* devOf: a laid-out view's schematic plate (devPlate), standing in for its part */
   /* a mesh's key: its piece (part.k) where its part has pieces: the nearest pc tag up to the part, else the piece listing the nearest parts-list line; its part's otherwise */
@@ -117,7 +120,7 @@ const VIEWER={start(cfg){
   const dvOut=p=>!!DV&&((st.drive||dvOn())&&DV.hide.has(p)||st.drive&&!st.mwOn&&DV.mw.has(p));   /* hidden by Moving parts only (the frame, dial and case, and the motion work unless it is included) and laid out (the frame, dial and case) */
   /* a mesh hidden by Moving parts only or laid out: the schematic plates shown only laid out (not with Moving parts only), the frame's pieces flagged devKeep (the set-up click
      and its screw, the stop pin) kept shown laid out where the parts they work with stay */
-  const mOut=m=>{const u=m.userData;return u.devPlate?!dvOn()||st.drive:dvOut(u.part)&&!(u.devKeep&&dvOn()&&!st.drive);};
+  const mOut=m=>{const u=m.userData;return u.devPlate?!dvOn()||st.drive||!!u.qaOff:dvOut(u.part)&&!(u.devKeep&&dvOn()&&!st.drive);};
   const DVS=new Set(MVM.filter(m=>m.userData.devPlate||m.userData.devKeep).map(m=>m.userData.part).filter(Boolean));   /* the parts shown laid out by a stand-in or a piece kept */
   const ghOf=(m,foc)=>{const p=m.userData.part;return (!!m.userData.devPlate&&dvOn()&&!(foc&&inK(foc,m)))||(st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
@@ -136,7 +139,7 @@ const VIEWER={start(cfg){
   function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK();G.follow=mvL(...v.target);panO.set(0,0,0);camFree=camMine=false;}
   let camFree=false,camMine=false,camLink=null,zf=false;   /* camMine: the camera moved by hand since a view, step or zoom set it (cam= in the link); camLink: a link's, applied after the opening move */const panO=new THREE.Vector3(),pv=new THREE.Vector3();
   function panBy(dx,dy){camMine=true;const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
-  const expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
+  const dsh=$('#devSheet'),dsd=$('#sheet'),expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
   /* the Exploded view's Movement or All: All spreads the case's parts too (cfg.tick takes st.allK) and stands the camera back to the view's own all ({yaw, pitch, dist, target}) */
   const allT=vv=>vv.explode&&st.all&&st.tour<0?expV():0,camOf=vv=>vv.all&&st.all&&st.tour<0?{...vv,...vv.all}:vv.sub&&st.asm.size&&st.tour<0?{...vv,...vv.sub}:vv,allW=$('#expAllWrap');
   const allSync=()=>document.querySelectorAll('#expAll button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='all')===st.all?'true':'false'));
@@ -151,7 +154,7 @@ const VIEWER={start(cfg){
   const asmKey=()=>ASM.filter(a=>st.asm.has(a.k)).map(a=>a.k).join(',');
   /* setAsm(ks): the subassemblies apart, as a choice (jump: the camera's place kept for Back) */
   function setAsm(ks){const was=st.asm.size;jump(()=>{st.asm=new Set(ks);subSync();const vv=VIEWS[st.view];if(st.tour<0&&vv.explode&&!!was!==!!st.asm.size)goCam(camOf(vv));});look();}
-  function setView(k,keepSee){if(zf){zf=false;st.focus=null;}if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),dev:(vv.dev||0)*expV(),all:allT(vv),sub:subT(vv),fov:vv.fov||FOV0});goCam(camOf(vv));st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode&&!vv.dev);if(allW)allW.classList.toggle('hidden',!vv.explode);if(subW)subW.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(subE)subE.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(pcW)pcW.classList.toggle('hidden',!vv.explode||!st.asm.size);
+  function setView(k,keepSee){if(zf){zf=false;st.focus=null;}if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),dev:(vv.dev||0)*expV(),all:allT(vv),sub:subT(vv),fov:vv.fov||FOV0});goCam(camOf(vv));st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode&&!vv.dev);if(dsh)dsh.classList.toggle('hidden',!vv.dev);if(allW)allW.classList.toggle('hidden',!vv.explode);if(subW)subW.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(subE)subE.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(pcW)pcW.classList.toggle('hidden',!vv.explode||!st.asm.size);
     expR.setAttribute('aria-label',vv.dev?'How far the train is laid out in a line':'How far apart the exploded parts are');
     if(!keepSee)st.see=!!vv.see;look();if(hashReady)keep('view',k);document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward; jump(f) moves the camera with f and keeps the place it left, unless f didn't move it */
@@ -277,6 +280,8 @@ const VIEWER={start(cfg){
   if(spdN)spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
   document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();if(st.tour>=0)tourEnd();jump(()=>setView(b.dataset.v));}));   /* a view chosen ends the walkthrough */
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
+  /* the lettered sheet of the Laid out view (#devSheet, its thumbnail shown laid out; laidout.py --write renders it), opened large in #sheet, which takes the thumbnail's image (inlined once) */
+  if(dsh&&dsd){dsh.addEventListener('click',()=>{const i=dsd.querySelector('img');if(!i.getAttribute('src'))i.src=dsh.querySelector('img').src;if(dsd.showModal)dsd.showModal();else dsd.setAttribute('open','');});dsd.addEventListener('click',e=>{if(e.target===dsd)dsd.close();});}
   const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});about.addEventListener('click',e=>{if(e.target===about)about.close();});
   /* Remember settings: only with it on does this browser keep anything (under cfg.store's prefix, apart from the other models'); off, what was is cleared at load */
   const SP=(cfg.store||'mdl')+'-',RK=['set','theme','open','state'].map(k=>SP+k);let REM=false;try{REM=localStorage.getItem(SP+'remember')==='1';if(!REM)RK.forEach(k=>localStorage.removeItem(k));}catch(_){}
@@ -357,7 +362,7 @@ const VIEWER={start(cfg){
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');$('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     if(tDots)[...tDots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
     st.drive=!!s.drive;st.mwOn=!!s.mw;setView(s.view||cfg.startView);st.see=!!s.see;st.focus=s.focus?new Set(s.focus):null;setSpeed(s.speed??1);if(s.v)goCam(s.v);look();
-    document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');if(allW)allW.classList.add('hidden');
+    document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');if(dsh)dsh.classList.add('hidden');if(allW)allW.classList.add('hidden');
     if(cfg.tourStep)cfg.tourStep(s);const ins=$('#tInset');if(ins){ins.innerHTML='';if(cfg.tourInset)cfg.tourInset(s.inset||null,ins);}
     /* bring the card into view: below the stage when the stage sits above the panel (phones in portrait), else beside it (RESOLVED.md: test the layout, not the width) */
     if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
