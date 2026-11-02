@@ -557,6 +557,104 @@ def detentFinished():
     r.flags=['Reconstructed: 42087-3-01 is not in the set',f'The spring {inch(tS):.4f} in thick: derived from the model\'s stiffness (estimated)','The blade and arm thicknesses and which face: the model\'s (estimated)','The horn not formed (beyond the bar in plan)']
     return r
 
+# ======================= the whole detent (42093): placeholders from the 3D model for the parts not in the set =======================
+# 42093 lists the detent assembly's parts without sizes; of them only the detent (42087) is drawn here. The rest are the 3D model's own solids, read off the page
+# (tools/hamilton_detent_export.py -> recipes/hamilton_detent_model.json: its measured sizes, KLUwI2UUCMQ 11:10-11:33 and Fig. 90, x1.117) and put on the drawn
+# detent: along it from the point of flexure (the window's start), in height by the clamp screw's axis on the blank's slot (the model's detent and the blank are
+# both centred on it), across it in plan by each side's face (the model's detent 1.22 thick, the drawn .041: inside it, scaled; outside, as measured).
+DET_PARTS=[('42086','Detent support block, with its button and pins'),('20756','Detent adjusting screw'),('37024','Detent clamp screw (42093: 37204)'),('42251.det','Washer, detent clamp screw'),
+           ('42091.lk','Detent lock adjusting screw'),('42091.cl','Detent lock adjusting clamp screw'),('42088','Detent trip spring'),('42092','Trip spring support bracket'),
+           ('1770.br','Support bracket screw'),('1770.ts','Trip spring screw'),('42089','Locking jewel wedge pin')]
+@functools.lru_cache()
+def DM():return json.loads((TOOLS/'recipes'/'hamilton_detent_model.json').read_text(encoding='utf-8'))
+def _det_map():
+    """the model's (t, n, h) in mm onto the drawn detent's frame (x along from the foot end, y up its .131 width, z across its .041 in plan)"""
+    H=HD()['dt'];x0=H['window']['x0'];nF=0.0927*6.58;z0,z1=(H['t']-H['tFin'])/2,(H['t']+H['tFin'])/2;T=z1-z0
+    M=[m for m in DM()['meshes'] if m['hn']=='37024']
+    import numpy as np
+    hc=min((np.array(m['v']).reshape(-1,3) for m in M),key=lambda V:V[:,1].max()-V[:,1].min())   # the clamp screw's shank (the longer across)
+    hC=(hc[:,2].min()+hc[:,2].max())/2;yC=H['hole']['y']   # its axis's height; the slot's centre line (.070 up the blank)
+    def f(t,n,h):
+        z=z0+(n+nF) if n<-nF else z1+(n-nF) if n>nF else z0+(n+nF)/(2*nF)*T
+        return (x0+t,yC+(h-hC),z)
+    return f
+def _mesh_solid(V,I):
+    """a closed triangle mesh as one B-rep solid: its triangles sewn (OCP), shared corners welded first"""
+    from OCP.BRepBuilderAPI import BRepBuilderAPI_Sewing,BRepBuilderAPI_MakeSolid
+    from OCP.TopoDS import TopoDS
+    import numpy as np
+    P=np.round(np.array(V),6);key={};W=[];idx=[]
+    for q in P:
+        k=tuple(q)
+        if k not in key:key[k]=len(W);W.append(k)
+        idx.append(key[k])
+    sew=BRepBuilderAPI_Sewing(1e-5)
+    for a,b,c in zip(I[0::3],I[1::3],I[2::3]):
+        a,b,c=idx[a],idx[b],idx[c]
+        if len({a,b,c})<3:continue
+        try:sew.Add(bd.Face(bd.Wire.make_polygon([bd.Vector(*W[a]),bd.Vector(*W[b]),bd.Vector(*W[c])],close=True)).wrapped)
+        except Exception:pass
+    sew.Perform();sh=sew.SewedShape()
+    from OCP.ShapeFix import ShapeFix_Solid,ShapeFix_Shell
+    from OCP.TopAbs import TopAbs_SHELL
+    from OCP.TopExp import TopExp_Explorer
+    ex=TopExp_Explorer(sh,TopAbs_SHELL);shells=[]
+    while ex.More():shells.append(TopoDS.Shell(ex.Current()) if hasattr(TopoDS,"Shell") else TopoDS.Shell_s(ex.Current()));ex.Next()
+    out=[]
+    for shl in shells:
+        fs=ShapeFix_Shell(shl);fs.Perform();sv=ShapeFix_Solid();so=sv.SolidFromShell(fs.Shell())
+        q=bd.Solid(so)
+        if q.volume<0:q=bd.Solid(so.Reversed())   # a shell the fixer left inside out
+        if not q.is_valid:
+            from OCP.ShapeFix import ShapeFix_Shape
+            fx=ShapeFix_Shape(q.wrapped);fx.Perform();q=bd.Solid(fx.Shape()) if fx.Shape().ShapeType().name=='TopAbs_SOLID' else q
+        out.append(q)
+    res=out[0]
+    for q in out[1:]:res=res.fuse(q)
+    return res
+class FromModel(Op):
+    """stock: a part taken from the 3D model's solid (a placeholder for a part whose sheet is not in the set)"""
+    kind='stock'
+    def __init__(self,hn,text,sizes=(),src=''):super().__init__(text,sizes,src);self.hn=hn
+    def apply(self,p):
+        f=_det_map();parts=[]
+        for m in DM()['meshes']:
+            if m['hn']!=self.hn:continue
+            v=m['v'];V=[f(v[i],v[i+1],v[i+2]) for i in range(0,len(v),3)];parts.append(_mesh_solid(V,m['i']))
+        out=parts[0]
+        for q in parts[1:]:out=out.fuse(q)
+        return out
+def _placeholder(hn,title):
+    def mk():
+        import numpy as np
+        V=np.concatenate([np.array(m['v']).reshape(-1,3) for m in DM()['meshes'] if m['hn']==hn]);lo,hi=V.min(0),V.max(0)
+        r=Recipe('det_'+hn.replace('.','_'),hn,title+' (placeholder)',f'{hn}: not in the set (42093 lists it, without sizes)','as the 3D model (not given here)','',
+            [Setup('1','placeholder: the 3D model\'s solid',[FromModel(hn,"The 3D model's solid, placed on the drawn detent",
+              [S('extent',f"{hi[0]-lo[0]:.2f} along × {hi[1]-lo[1]:.2f} across × {hi[2]-lo[2]:.2f} high (mm)",'measured: the 3D model (KLUwI2UUCMQ 11:10-11:33, Fig. 90, x1.117)','shared/escapement.js; js/movement.js')],'3D model')])],ID,
+            notes=['A placeholder: its sheet is not in the NAWCC set. Its shape and sizes are the 3D model\'s, measured on video; only its place comes from the drawn detent.'])
+        return _flags(r,['Placeholder: the 3D model\'s part (measured on video), not a drawing'])
+    mk.__name__='det_'+hn.replace('.','_');return mk
+def lockingStone():
+    I=lambda x:x*25.4;H=HD()['dt'];M=DET_MODEL;rj=M['rJ']*M['ES'];bp=H['topNotch']['bump']
+    ops=[Blank(2*rj,0,bp['h']-I(.0045),'The locking stone, bought (a ruby or sapphire pallet)',[S('',f"Ø {2*rj:.3f} mm, {bp['h']-I(.0045):.2f} long (the jewel block's height)",'the 3D model\'s stone: estimated','shared/escapement.js')],'3D model')]
+    r=Recipe('lockingStone','42087.j','Locking stone (in 42087, "complete with jewel")','42087: complete with jewel (not in the set)','jewel (ruby or sapphire)','',[Setup('1','bought',ops)],ID,
+        notes=['Its locking face (a flat on the stone) is not formed here: the 3D model\'s flat (eJ) is part of the escapement\'s geometry.'])
+    return _flags(r,['Placeholder: the 3D model\'s stone (estimated)'])
+def asmDetent():
+    H=HD()['dt'];M=DET_MODEL;xj=H['window']['x0']+M['stone_t']*M['ES'];z0,z1=(H['t']-H['tFin'])/2,(H['t']+H['tFin'])/2
+    mem=[Member('detentFinished',why='42087 reconstructed: the frame')]
+    mem.append(Member('lockingStone',rot=[('x',-90)],t=(xj,I_(.0045),(z0+z1)/2),ex=(0,6,0),why='in its seat, upright through the jewel block'))
+    ex={'42086':(0,0,-6),'20756':(-6,0,-3),'37024':(0,0,6),'42251.det':(0,0,4),'42091.lk':(0,0,-10),'42091.cl':(0,0,-10),'42088':(0,0,8),'42092':(0,0,5),'1770.br':(0,0,7),'1770.ts':(0,0,10),'42089':(0,5,0)}
+    for hn,t in DET_PARTS:mem.append(Member('det_'+hn.replace('.','_'),ex=ex.get(hn,(0,0,0)),why='the 3D model\'s part, placed on the drawn detent (placeholder)',label=t))
+    up=bd.Location((0,0,0),(1,0,0),90)   # the detent stands on edge in the movement: its height (the blank's y) shown up
+    for m in mem:L=m.loc();m.L=up*L;m.ex=(m.ex[0],-m.ex[2],m.ex[1])
+    a=Assembly('asmDetent','Detent assembly (42093): the drawn detent with placeholders','Detent',mem,
+        notes=['42093 lists the parts without sizes; only the detent itself is drawn here (reconstructed). The rest are the 3D model\'s solids, measured on video (KLUwI2UUCMQ 11:10-11:33, Fig. 90) and scaled x1.117, put on the drawn detent along it from the point of flexure, in height by the clamp screw\'s axis on the slot\'s centre line, and across by the foot\'s faces.',
+               'Where they disagree the overlaps are listed under Checks, not hidden: the drawn detent is larger than the model\'s (its foot 15.37 long and 3.33 high against 12.11 and 2.12), so the model\'s block and adjusting screw, made for the shorter foot, meet it.',
+               'The parts list (NAVSHIPS 250-624) numbers the clamp screw 37024; 42093 names it 37204.'],
+        flags=['Placeholders: every part but the detent is the 3D model\'s (video), not a drawing'])
+    a.placeholder=True;return a
+
 # ======================= 42050 helical spring, 1-WD-265 mainspring inner end =======================
 def helicalSpring():
     H=HD();src='42050-1-01';I=lambda x:x*25.4;d=I(.025);D=I(.290)-d;L=I(.550);n=6;nc=1
@@ -593,6 +691,7 @@ def mainspringEnd():
         notes=['The sheet draws the inner terminal only: the strip\'s length, its outer end and its brace are other sheets (not in the set).'],fits=['its slot over the barrel arbor\'s hook (42170) (inferred)'])
     r.flat=True;return _flags(r,['Only the inner end: the rest of the spring is not in the set','Thickness from the manual, not this sheet','The slot\'s start: .180 (by hand) taken, .200 printed'])
 
+def I_(x):return x*25.4
 RECIPES=[('Going train',fourthWheel),('Going train',fourthPinion),
          ('Fusee',fuseeWheel),('Fusee',fuseeArbor),
          ('Maintaining and winding work',sustainingWheel),('Maintaining and winding work',windingPawl),('Maintaining and winding work',windingPawlSpring),('Maintaining and winding work',windingRatchet),
@@ -600,7 +699,8 @@ RECIPES=[('Going train',fourthWheel),('Going train',fourthPinion),
          ('Barrel and mainspring',barrel),('Barrel and mainspring',barrelCap),('Barrel and mainspring',barrelArbor),('Barrel and mainspring',mainspringEnd),
          ('Set-up',setupRatchet),('Set-up',setupPawl),('Set-up',setupPawlSpring),
          ('Fusee chain',centreLink),('Fusee chain',outerLink),('Fusee chain',linkPin),('Fusee chain',barrelHook),('Fusee chain',fuseeHook),
-         ('Detent',detentBlank),('Detent',detentFinished),('Not yet placed',helicalSpring)]
+         ('Detent',detentBlank),('Detent',detentFinished),('Detent assembly (placeholders)',lockingStone),
+('Not yet placed',helicalSpring)]
 
 # ======================= subassemblies: the drawn parts put together by the sheets' own numbers =======================
 class Member:
@@ -721,4 +821,6 @@ def _ratchet_phase(Lsw,swing=16.0):
             if best is None or g<best[1]:best=(a,g)
     return best[0] if best else 0.0
 
-ASSEMBLIES=[asmFourth,asmBarrel,asmChain,asm42009,asmFusee]
+ASSEMBLIES=[asmFourth,asmBarrel,asmChain,asm42009,asmFusee,asmDetent]
+
+RECIPES+=[('Detent assembly (placeholders)',_placeholder(h,t)) for h,t in DET_PARTS]
