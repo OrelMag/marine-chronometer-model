@@ -17,7 +17,7 @@ from recipes.sheet import sheet
 from recipes import hamilton as H
 HERE=pathlib.Path(__file__).resolve().parent
 OUT=HERE.parents[1]/'hamilton-parts'
-def norm(b):return re.sub(rb"[-+]?\d\.\d+E-(?:1[3-9]|[2-9]\d)",b"0.",re.sub(rb"'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d'",b"''",b,count=1))   # recipes_site.py's: the header's time and rounding noise
+def norm(b):b=b.replace(bytes([13,10]),bytes([10]));return re.sub(rb"[-+]?\d\.\d+E-(?:1[3-9]|[2-9]\d)",b"0.",re.sub(rb"'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d'",b"''",b,count=1))   # recipes_site.py's: the header's time and rounding noise
 def b64(a,t):return base64.b64encode(np.asarray(a,t).tobytes()).decode()
 def q16(P,lo,hi):
     """points (flat xyz) as uint16 steps within the part's box (lo, hi): about 0.0007 mm on the largest part, far below any drawn size"""

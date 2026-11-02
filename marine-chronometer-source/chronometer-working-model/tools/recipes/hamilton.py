@@ -247,7 +247,7 @@ def windingRatchet():
         from . import Cone
         ops.append(Cone((x,0),H['csk']/2,H['hole']/2,'out',t,cb,'',[],src,z0=t-cbd))
     rc=Recipe('windingRatchet','42013','Winding ratchet',src,'1.00 carbon steel','harden and draw; #00 crocus finish; oxidize black all over',[Setup('1','on the wheel-cutting engine; bored, drilled, counterbored',ops,view='top')],ID,
-        fits=['on the fusee arbor (42022): .230 +.001/-0 over its .2295 bearing','two screws through the counterbored holes'])
+        fits=['on the fusee arbor (42022): .230 +.001/-0 over its .2295 body (inferred)','two screws through the counterbored holes (inferred)'])
     rc.flat=True;rc.od={'d':H['od'],'tol':[-.002*25.4,.002*25.4]};return _flags(rc,["Which way the teeth face: not dimensioned (estimated)","The counterbore's straight wall depth: derived from the .060 and a 90° cone (likely)"])
 def setupRatchet():
     H=HD()['sr'];src='42026-1-01';f,land=ratchet_face(H['z'],H['od']/2,H['root']/2,H['offset'],H['ramp']);t=H['t'];a=H['sqAF']/2
@@ -255,7 +255,7 @@ def setupRatchet():
     ops=[Plate(f,t,'Cut the blank from steel SAE 1095 and cut the 40 teeth',[S('thickness',fx(t,3),'+0/-.002 in',src+' #10')]+_ratchet_sizes(src,H['z'],H['od']/2,H['root']/2,H['offset'],H['ramp'],land,(1,3,4,9,2)),src),
          Cut(sq,'Broach the square hole, turned 45° (a diamond as drawn)',[S('',f"{fx(H['sqAF'],3)} across the flats",'+.001/-0 in',src+' #5'),S('across the corners',f"{fx(H['sqAF']*math.sqrt(2),4)} sharp",f"≥ .155 MINIMUM (#6)",src+' #6')],src,at=(0,0))]
     rc=Recipe('setupRatchet','42026','Set-up ratchet',src,'steel, SAE 1095','nickel plate; a ray (finish-line) pattern on the face',[Setup('1','on the wheel-cutting engine; the square broached',ops,view='top')],ID,
-        fits=["on the barrel arbor's square (42170: .110 +.004/-0 across the flats)"],notes=['The finish lines (.220 R, .235) are surface marks: not cut.'])
+        fits=["on the barrel arbor's square (42170: .110 +.004/-0 across the flats) (inferred)"],notes=['The finish lines (.220 R, .235) are surface marks: not cut.'])
     rc.flat=True;rc.od={'d':H['od'],'tol':[-.002*25.4,.002*25.4]};return _flags(rc,["Which way the teeth face: not dimensioned (estimated)","Its 40 teeth against the 42 counted on videos: the sheet's"])
 def sustainingWheel():
     H=HD()['sw'];src='42009-2-01';f,land=ratchet_face(H['z'],H['od']/2,H['root']/2,H['offset'],H['ramp']);t=H['t']
@@ -271,7 +271,7 @@ def sustainingWheel():
         if n in(3,4,8,9):ops.append(Cone((x,y),H['csk']/2,h['d']/2,'out',t,(H['csk']-h['d'])/2,f'Countersink hole {n}',[S('',f"Ø {fx(H['csk'],3)} at the face, 45°",None,src+' #10')],src))
     rc=Recipe('sustainingWheel','42009','Sustaining ratchet wheel',src+' (6-18-41; revised 7-31-41; memos to 4-2-43)','brass','24K gold plate (the wheel only); X-fine circular line finish',
         [Setup('1','on the wheel-cutting engine; the holes on a jig borer by the table',ops,view='top')],ID,
-        fits=['the winding pawls (42010) riveted on studs 42011 in holes 2 and 7: free to turn, about .002 endshake (#7)','on the fusee wheel\'s hub: .3000 +.0003/-0'],
+        fits=['the winding pawls (42010) riveted on studs 42011 in holes 2 and 7: free to turn, about .002 endshake (#7)','on the fusee wheel\'s hub (its boss .2995): .3000 +.0003/-0 (inferred)'],
         notes=['The holes are by the sheet\'s table: every one but hole 5 has its image across the centre.','Which face the countersinks are on: not dimensioned (built on the outer face).'])
     rc.flat=True;rc.od={'d':H['od'],'tol':[0,.003*25.4]};return _flags(rc,["Which way the teeth face: not dimensioned (estimated)","Hole 5's size: likely (.060 read at the section's right hole)"])
 
@@ -296,7 +296,7 @@ def fuseeWheel():
          Bore(H['bore'],-0.01,H['bossLen']+0.01,'Bore it; break the corners both sides',[S('',f"Ø {fx(H['bore'])}",'+.0003/-0 in',src+' #11'),S('corners','broken both sides','the amount not given',src+' #21')],src),
          Hole((hx,hy),H['hole']['d'],'in',wb,None,'Drill the hole in the web',[S('',f"Ø {fx(H['hole']['d'],3)} at r {fx(H['hole']['r'])}",'±.001 in',src+' #19, #20'),S('angle','above the centre as drawn','its angle against the teeth not given',src)],src,key='web')]
     rc=Recipe('fuseeWheel','42015','Fusee wheel',src,'brass','24K gold plate',[Setup('1','in the chuck: both faces turned, then the teeth on the wheel-cutting engine; the hole drilled',ops)],ID,
-        fits=['on the fusee arbor\'s .2295 body: .2300 +.0003/-0'],notes=[f"Tip reached by the tooth form: Ø {2*ro:.4f} mm against the drawn {H['od']:.4f}; the form's addendum is {ha:.3f} m.",
+        fits=['on the fusee arbor\'s .2295 body (inferred): .2300 +.0003/-0'],notes=[f"Tip reached by the tooth form: Ø {2*ro:.4f} mm against the drawn {H['od']:.4f}; the form's addendum is {ha:.3f} m.",
         "The .053 hole at r .610 (in the web) is likely the sustaining spring's pin's (42016)."])
     rc.od={'d':H['od'],'tol':[-.002*25.4,.001*25.4]};return _flags(rc,['Tooth form: estimated (BS 978 cycloidal; the sheet gives none)',"The left face's step depths: read off the scale ±.004 (likely)",'Which .005 belongs to which face: likely'])
 def fuseeArbor():
@@ -317,7 +317,7 @@ def fuseeArbor():
          Drill((-5,0,xc),(1,0,0),H['cross'],10,'Drill and taper broach the cross hole for the taper pin 42020',[S('',f"Ø {fx(H['cross'],3)}",'+0/-.001 in',src+' #21'),S('place',f"{fx(H['holeToCollar'],3)} from the collar's right face",'±.001 in',src+' #7')],src,key='cross')]
     rc=Recipe('fuseeArbor','42022','Fusee arbor',src,'drill rod','polish the bearings and the shank; straight knurl, about 100 teeth an inch, on the .2500 band',
         [Setup('1','between centres; the square milled and the cross hole drilled in a fixture; the knurl rolled',ops)],ID,
-        fits=['the fusee wheel (42015) on the .2295 body','42018 pressed on the .0500 spigot','the winding ratchet (42013) on the .1695 bearing'],
+        fits=['the fusee wheel (42015) on the .2295 body (inferred)','42018 pressed on the .0500 spigot (likely)','the winding ratchet (42013, its bore .230) on the .2295 body (inferred)'],
         notes=['The knurl (straight, about 100 a inch) is a note, not cut in the solid: the band is turned to its .2500.'])
     return _flags(rc,['The left end: a .0500 spigot that 42018 presses on (likely)','Knurl: not modelled (a note)'])
 
@@ -392,7 +392,7 @@ def setupPawl():
         if isinstance(o,Plate):o.t=I(.048);o.sizes[0]=S('thickness','0.048 in = 1.219 mm','+0/-.002 in','42027 #2')
         if isinstance(o,Hole):o.t=I(.048)
         if isinstance(o,Countersink):o.z=I(.048)
-    r.notes=['"For other dimensions see part #42010": the winding pawl\'s outline, hole and countersink, at .048 thick.'];r.fits=['on its stud in the barrel bridge (not in the set)']
+    r.notes=['"For other dimensions see part #42010": the winding pawl\'s outline, hole and countersink, at .048 thick.'];r.fits=['on its stud in the barrel bridge, not in the set (inferred)']
     return _flags(r,['Material: not on its sheet (42010\'s taken)','The countersunk face: not dimensioned (estimated)'])
 def sustainingSpring():
     H=HD()['ss'];src='42016-2-01';hs={h['n']:h for h in H['holes']};I=lambda x:x*25.4
@@ -497,7 +497,7 @@ def mainspringEnd():
          Cut(slot,'Punch the slot for the arbor\'s hook',[S('',f'{fx(sw,3)} wide × {fx(sl,3)} long, its tip end square (a broken corner), its far end round R .100','±.003 in',src+' #4, #6'),
             S('start',f'{fx(s0,3)} from the tip (.200 printed, .180 by hand 6-7-43: the later)','likely the one in force',src+' #5')],src)]
     r=Recipe('mainspringEnd','1-WD-265','Mainspring, inner end',src+' (5-20-43; revised 6-7-43)','spring steel strip (the mainspring 42037-42041: not in the set)','as the mainspring',[Setup('1','the strip\'s end formed and punched',ops,view='top')],ID,
-        notes=['The sheet draws the inner terminal only: the strip\'s length, its outer end and its brace are other sheets (not in the set).'],fits=['its slot over the barrel arbor\'s hook (42170)'])
+        notes=['The sheet draws the inner terminal only: the strip\'s length, its outer end and its brace are other sheets (not in the set).'],fits=['its slot over the barrel arbor\'s hook (42170) (inferred)'])
     r.flat=True;return _flags(r,['Only the inner end: the rest of the spring is not in the set','Thickness from the manual, not this sheet','The slot\'s start: .180 (by hand) taken, .200 printed'])
 
 RECIPES=[('Going train',fourthWheel),('Going train',fourthPinion),
