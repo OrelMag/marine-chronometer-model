@@ -238,7 +238,7 @@ const BLENDER=(()=>{
     const ROLE=new Map([[C.CS.root,'box'],[C.CS.ring,'ring'],[C.CS.bowl,'bowl'],[C.mv,'movement'],[C.CS.lid,'lid']]);   /* for the rig: the nodes it turns itself */
     keep.forEach((r,i)=>{const v=r.restV,o=r.o,par=r.par&&r.par.name,mn=o&&o.isMesh&&!Array.isArray(o.material)?MN.get(o.material):'',nm=uniq(r.name||(o&&o.isMesh?(par||'piece')+(mn?' · '+mn:' · piece'):(par?par+' · frame':'frame')));
       const n=/** @type {any} */({name:nm,t:[v[0],v[1],v[2]],r:[v[3],v[4],v[5],v[6]],s:[v[7],v[8],v[9]],children:r.kids.filter(k=>idx.has(k)).map(k=>idx.get(k))}),x={};
-      const ro=o&&ROLE.get(o);if(ro)x.role=ro;if(o&&o.userData.part)x.part=o.userData.part;if(moves.has(r))x.rest=Array.from(v,q=>+q.toFixed(7));if(o&&o.userData.hn)x.hn=o.userData.hn;const L=lin.get(r);if(L)x.rig=L;
+      const ro=o&&ROLE.get(o);if(ro)x.role=ro;if(o&&o.userData.part)x.part=o.userData.part;if(moves.has(r))x.rest=Array.from(v,q=>+q.toFixed(7));if(o&&o.userData.hn)x.hn=o.userData.hn;if(o&&o.userData.devOf)x.devOf=o.userData.devOf;const L=lin.get(r);if(L)x.rig=L;
       const d=defs.get(r);
       if(r.im){const g=r.im.geometry;n.mesh=meshOf(g,r.im.material,snap(g),r.im.material===M.steel?'chain rivets':'chain link '+(r.im.material===M.chain2?'B':'A'),true);}
       else if(r.rest){if(!d)n.mesh=meshOf(o.geometry,o.material,r.rest,nm,true);

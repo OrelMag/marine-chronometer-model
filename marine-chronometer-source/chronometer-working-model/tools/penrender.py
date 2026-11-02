@@ -30,7 +30,7 @@ POSE={'hamilton':{'box':dict(box=1,lids=1),'dial':dict(box=1),'movement':{},'tra
                'escapement':{},'train':{},'fusee':{},'balance':{}}}
 PAPER=(0.965,0.945,0.9)
 
-def paper(src,dst,centre=False,ghost=None):
+def paper(src,dst,centre=False,ghost=None,tooth=True):
     """the render laid on drawing paper (ghost: the faded parts' layer laid over it; centre: a drawing that stands clear of the sheet's edges centred at 88 % of it), then a faint tooth and fibre that the
     colour takes up most in its mid washes"""
     import numpy as np
@@ -43,6 +43,7 @@ def paper(src,dst,centre=False,ghost=None):
         im=np.ones_like(im)*bg;y0=(H-c.shape[0])//2;x0=(W-c.shape[1])//2;im[y0:y0+c.shape[0],x0:x0+c.shape[1]]=c
     if ghost and pathlib.Path(ghost).exists():   # the faded parts, drawn alone on a clear film, laid over at a third: a cutaway's ghost
         gi=np.asarray(Image.open(ghost).convert('RGBA')).astype(np.float32)/255;a=gi[...,3:]*0.35;im=im*(1-a)+gi[...,:3]*a;pathlib.Path(ghost).unlink()
+    if not tooth:Image.fromarray((np.clip(im,0,1)*255).astype(np.uint8)).save(dst);return   # flat: a sheet that lays its own paper over all (laidout.py --pen)
     rng=np.random.default_rng(7);n=lambda s:(lambda a:a/a.std())(gaussian_filter(rng.standard_normal((H,W)),s))
     tooth,fibre,mottle=n(1.2),n((0.8,6)),n(40);ink=1-im.mean(2);take=np.clip(ink*2.2,0,1)*np.clip((1-ink)*2.5,0,1)
     g=1-0.014*tooth*(0.2+take)-0.004*fibre-0.004*mottle
@@ -79,9 +80,11 @@ if bpy is None:   # outside Blender: read each view's camera off the page, expor
     sys.stdout.reconfigure(encoding='utf-8')
     a=argparse.ArgumentParser();a.add_argument('--view',default='dial,movement,exploded');a.add_argument('--link',action='append',default=[]);a.add_argument('--cam')
     a.add_argument('--list',action='store_true');a.add_argument('--glb');a.add_argument('--lines',default='lineart',choices=['lineart','freestyle'])
+    a.add_argument('--shots',help='a JSON list of shots made elsewhere (laidout.py --pen), each with its page camera (page), rig controls (ctl), alone, and show, ghost, hide: {parts, hns, devOf}')
+    a.add_argument('--flat',action='store_true',help='no paper grain: for a sheet that adds its own over the whole')
     a.add_argument('--size',default='1600x1150');a.add_argument('--out',default=str(HERE/'r_pen'));o=a.parse_args();PZ=POSE[model.NAME]
     if o.list:print(model.NAME+':',', '.join(PZ));sys.exit(0)
-    W,H=(int(x) for x in o.size.split('x'));shots=[]
+    W,H=(int(x) for x in o.size.split('x'));shots=json.loads(pathlib.Path(o.shots).read_text(encoding='utf-8')) if o.shots else []
     def pose(h):
         q=dict(urllib.parse.parse_qsl(h));v=q.get('view','dial')
         if v not in PZ:sys.exit(f'{model.NAME} has no view {v!r} to draw (its views: {", ".join(PZ)}); a walkthrough step or an essay section is not one')
@@ -91,11 +94,11 @@ if bpy is None:   # outside Blender: read each view's camera off the page, expor
         return dict(ctl=c,alone=not box)
     for i,L in enumerate(o.link):
         h=L.split('#',1)[1] if '#' in L else L;shots.append(dict(name='link'+(f'_{i+1}' if i else ''),hash=h,**pose(h)))
-    if not o.link:
+    if not o.link and not o.shots:
         for v in o.view.split(','):shots.append(dict(name=v,hash='view='+v,**pose('view='+v)))
     if o.cam:
         for S in shots:S['cam']=[float(x) for x in o.cam.split(',')]
-    print('reading',len(shots),'cameras off the page',flush=True);pagecams(shots,W,H)
+    if not o.shots:print('reading',len(shots),'cameras off the page',flush=True);pagecams(shots,W,H)
     out=pathlib.Path(o.out).resolve();out.mkdir(parents=True,exist_ok=True)
     if o.glb:glb=pathlib.Path(o.glb).resolve()
     else:
@@ -110,7 +113,7 @@ if bpy is None:   # outside Blender: read each view's camera off the page, expor
     if r.returncode:print(r.stderr[-3000:]);sys.exit('Blender failed')
     for S in shots:
         f=out/f"pen_{model.NAME}_{S['name']}.png"
-        if f.exists():paper(f,f,ghost=out/f"pen_{model.NAME}_{S['name']}_ghost.png");print('wrote',f)
+        if f.exists():paper(f,f,ghost=out/f"pen_{model.NAME}_{S['name']}_ghost.png",tooth=not o.flat);print('wrote',f)
         else:sys.exit(f"no still for {S['name']}")
     sys.exit(0)
 
@@ -255,13 +258,25 @@ def key(o):   # every part key along its ancestry ("... (dial)"), so a hand's me
 K={o:key(o) for o in bpy.data.objects if o.type in('MESH','CURVE')}
 # the laid out view's schematic plates (the export's "laid out stand-in: ..." nodes): the page draws them see-through, so they go to the faded layer
 S0=[q for q in bpy.data.objects if q.name.startswith('laid out stand-in')];STAND={o for o in K if any(under(o,q) for q in S0)}
+def prop(o,k,stop=None):   # a custom property (the export's node extras: part, hn, devOf) on the object or the nearest above it that has it
+    while o:
+        if k in o.keys():return o[k]
+        if stop and stop in o.keys():return None
+        o=o.parent
+    return None
+HNO={o:prop(o,'hn','part') or prop(o,'hn') for o in K};DEVO={o:prop(o,'devOf') for o in K}
+def picks(o,sel):   # a shot's selection (laidout.py's close-ups): parts by key, pieces by their parts-list line, stand-ins by what they stand in for
+    return bool(sel) and (bool(K[o]&set(sel.get('parts',[]))) or HNO[o] in set(sel.get('hns',[])) or (DEVO[o] is not None and DEVO[o] in set(sel.get('devOf',[]))))
 from mathutils import Matrix
 # the page's world (mm, y up) is Blender's (m, z up) as (x, -z, y) / 1000: the export's clips put every part where the page does (blender_check.py holds the
 # rig to them), so the page's camera is the camera. The page pulls its camera back on a canvas narrower than 3:2 (aspectK); the still's own aspect is put back
 B=lambda v:Vector((v[0],-v[2],v[1]))/1000;AK=lambda a:min(max(1.25/a,1),2.2)
 cam.data.sensor_fit='VERTICAL'
 for S in A['shots']:
-    shown={o for o in K if not(S['alone'] and o not in inmv)};gh={o for o in shown if K[o]&set(S['page'].get('ghosts',[])) or o in STAND}
+    shown={o for o in K if not(S['alone'] and o not in inmv)}
+    if S.get('show'):shown={o for o in shown if picks(o,S['show']) and o not in STAND}   # these parts alone
+    if S.get('hide'):shown={o for o in shown if not picks(o,S['hide'])}
+    gh={o for o in shown if K[o]&set(S['page'].get('ghosts',[])) or o in STAND or picks(o,S.get('ghost'))}
     for o in K:o.hide_render=o not in shown or o in gh   # the faded parts left out: drawn, they would hide the lines behind them
     for k,v in S['ctl'].items():ctl[k]=float(v)
     ctl.update_tag();sc.frame_set(0);bpy.context.view_layer.update()

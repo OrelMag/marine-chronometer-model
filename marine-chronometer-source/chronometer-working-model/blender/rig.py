@@ -61,6 +61,7 @@ def clear():
         if isinstance(i,bpy.types.Object):
             for c in list(i.constraints):
                 if c.name.startswith(MC):i.constraints.remove(c)
+            if 'mc_shown_by' in i.keys():del i['mc_shown_by']
             if 'rest' in i.keys():
                 l,q,s=rest_of(i);i.rotation_mode='QUATERNION';i.location=l;i.rotation_quaternion=q;i.scale=s
     for k in bpy.data.shape_keys:
@@ -181,6 +182,9 @@ def rig(R,c):
         for o,s in slots.items():
             if o.rotation_mode=='QUATERNION':   # an Action constraint reads an object's rotation channels only in Euler, on an object turned in Euler (Blender 5.2)
                 q=o.rotation_quaternion.copy();o.rotation_mode='XYZ';o.rotation_euler=q.to_euler('XYZ')
+            if all(abs(v)<1e-9 for v in o.scale):   # hidden at rest (scale 0) and shown by this control (the laid out view's stand-in plates): its delta runs from scale 0 to 1 (deltas), so the
+                o.scale=(1,1,1);o['mc_shown_by']=name   # object itself is put at scale 1 for the constraint to scale; until 3 November 2026 it stayed 0 and never showed
+            elif o.get('mc_shown_by') and o['mc_shown_by']!=name:print('Marine Chronometer rig: %s is shown by %s and also moved by %s: the second hides it'%(o.name,o['mc_shown_by'],name))
             k=o.constraints.new('ACTION');k.name=MC+name;k.action=na;k.action_slot=s;k.use_eval_time=True;k.frame_start=int(a.frame_range[0]);k.frame_end=int(math.ceil(a.frame_range[1]))
             k.mix_mode='BEFORE_FULL'
             d=o.driver_add('constraints["%s"].eval_time'%k.name).driver;d.type='SCRIPTED'
