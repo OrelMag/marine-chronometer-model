@@ -51,6 +51,7 @@ def main():
     for grp,mk in H.RECIPES:
         r=mk()
         if o.only and r.key not in o.only.split(','):continue
+        if r.key not in SHEET:continue   # no sheet of its own: the locking stone and the detent's placeholders (the 3D model's parts)
         p=r.build();fig=plt.figure(figsize=(24,11))
         sh=pathlib.Path(o.sheets)/f'{SHEET[r.key]}.png'
         a0=fig.add_axes([0.0,0.0,0.5,1.0]);a0.axis('off')

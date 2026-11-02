@@ -439,6 +439,8 @@ Making the Wempe's parts into recipes (`PLAN-recipes.md`, `tools/recipes.py --ch
 
 ## Smaller issues
 
+- **The detent's clamp screw head and its washer drawn in the same place; the across-screws through unholed pieces** (open; found 2 November 2026 by the drawn parts' second pass, HAMILTON-PARTS-LEDGER.md S-2): movement.js 1245 starts the washer `42251.det` (0.28 thick) and the head of `37024` together on the foot's face, so the washer is a solid disc inside the head; the head should start on the washer's outer face and the washer have a bore. The clamp, detent-adjusting and lock-adjusting screws pass through the foot and block with no holes (fine.py's det:Cylinder/det:Extrude, "can't be holed across"). The drawn parts page cuts both on its placeholders; the model is unchanged.
+
 - **`facePocket` (core.js) leaves open edges on a many-sided pocket** (found 20 October 2026, the barrel bridge's counterbore): 12, 24 and 48 sides about the same centre leave 5-37 open edges (T-junctions where the pocket's planes cut the same face triangles in turn), 16 closes. Matching its plane tolerance to its weld (1e-7 to 2e-6) changes nothing. The counterbore was drawn with 16 sides (0.027 mm off the circle) until blindHoles took an `inner` radius (20 October 2026): a hole stopped at a depth with a narrower one on through its floor, the floor and far face zipped round the cut rim (in its edges' order) and an inner circle, each triangle wound as the loops run, which cuts the sink round. facePocket itself still can't cut a round pocket: open, for a pocket that isn't a hole's counterbore.
 
 - **The balance's moment of inertia (open, 3 October 2026).** The restoration
