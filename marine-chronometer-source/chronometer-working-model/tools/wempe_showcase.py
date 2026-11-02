@@ -7,7 +7,7 @@ Not run by build.py or ci.py.
     python wempe_showcase.py [--only box,dial] [--samples 256] [--size 2000x1333] [--out DIR] [--work DIR] [--reuse]
         (the export about 1-2 min, each still about 30-90 s on this machine's GPU; --reuse keeps the export in --work)
 
-Writes showcase_NAME.webp into --out, default marine-chronometer-source/wempe/renders/."""
+--set movement renders MOVE instead: the movement alone from all round. Writes SET_NAME.webp (showcase_NAME, movement_NAME) into --out, default marine-chronometer-source/wempe/renders/."""
 import argparse,asyncio,json,pathlib,subprocess,sys,tempfile,time
 HERE=pathlib.Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE));import browser
@@ -26,6 +26,16 @@ SHOTS=[
  dict(name='balance',show='mv',up=-1,dir=(-0.55,-0.75,0.55),frame=['balance','upperCock','detent'],fill=0.82,lens=105,f=4),
  dict(name='fusee',show='mv',up=-1,dir='out',rise=0.15,frame=['fusee','chain'],fill=0.85,lens=105,f=14),
  dict(name='train',show='mv',up=1,hide=['dial','hands'],dir=(0.45,1.0,0.35),frame=None,fill=0.82,lens=90,f=8)]
+
+# --set movement: the movement alone from all round, the top plate up (the dial side last), each side seen at a low angle (12 o'clock -z, 3 o'clock +x)
+MOVE=[dict(name='top',show='mv',up=-1,dir=(0,-1,0.06),frame=None,fill=0.86,lens=90,f=16,trim=0),
+ dict(name='three_quarter',show='mv',up=-1,dir=(0.62,-0.75,-0.62),frame=None,fill=0.84,lens=90,f=13,trim=0),
+ dict(name='side_12',show='mv',up=-1,dir=(0,-0.32,-1),frame=None,fill=0.86,lens=90,f=13,trim=0),
+ dict(name='side_3',show='mv',up=-1,dir=(1,-0.32,0),frame=None,fill=0.86,lens=90,f=13,trim=0),
+ dict(name='side_6',show='mv',up=-1,dir=(0,-0.32,1),frame=None,fill=0.86,lens=90,f=13,trim=0),
+ dict(name='side_9',show='mv',up=-1,dir=(-1,-0.32,0),frame=None,fill=0.86,lens=90,f=13,trim=0),
+ dict(name='dial_side',show='mv',up=1,dir=(0.45,1,0.6),frame=None,fill=0.84,lens=90,f=13,trim=0)]
+SETS={'showcase':SHOTS,'movement':MOVE}
 
 async def export(out):
     from playwright.async_api import async_playwright
@@ -125,10 +135,10 @@ for S in A['shots']:
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
     a=argparse.ArgumentParser();a.add_argument('--only');a.add_argument('--samples',type=int,default=256);a.add_argument('--size',default='2000x1333')
-    a.add_argument('--out',default=str(OUT));a.add_argument('--work');a.add_argument('--reuse',action='store_true');o=a.parse_args()
+    a.add_argument('--out',default=str(OUT));a.add_argument('--work');a.add_argument('--reuse',action='store_true');a.add_argument('--set',default='showcase',choices=list(SETS));o=a.parse_args()
     out=pathlib.Path(o.out);out.mkdir(parents=True,exist_ok=True);t0=time.time()
     work=pathlib.Path(o.work) if o.work else pathlib.Path(tempfile.mkdtemp(prefix='wshow_'));work.mkdir(parents=True,exist_ok=True)
-    shots=[dict(S,png=str(work/f"showcase_{S['name']}.png")) for S in SHOTS if not o.only or S['name'] in o.only.split(',')]
+    shots=[dict(S,png=str(work/f"{o.set}_{S['name']}.png")) for S in SETS[o.set] if not o.only or S['name'] in o.only.split(',')]
     glb=work/'wempe3955_ex.glb'
     if not(o.reuse and glb.exists()):asyncio.run(export(glb))
     hdri=str(next(pathlib.Path(blender()).parent.glob('*/datafiles/studiolights/world/studio.exr')))
@@ -139,6 +149,6 @@ def main():
         if l.startswith(('rendered','device')) or 'Error' in l:print(' ',l)
     if r.returncode:print(r.stderr[-3000:]);sys.exit('Blender failed')
     from PIL import Image
-    for S in shots:Image.open(S['png']).convert('RGB').save(out/f"showcase_{S['name']}.webp",'WEBP',quality=90,method=6)
+    for S in shots:Image.open(S['png']).convert('RGB').save(out/(pathlib.Path(S['png']).stem+'.webp'),'WEBP',quality=90,method=6)
     print(f'wrote {len(shots)} stills into {out} in {time.time()-t0:.0f} s')
 if __name__=='__main__':main()
