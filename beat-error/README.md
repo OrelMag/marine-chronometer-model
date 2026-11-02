@@ -21,7 +21,8 @@ what reaches the microphone with each click marked, and says whether it hears st
 (then where the microphone is: on most phones the grille on the bottom edge). A recording that gives no reading is told apart
 the same way: no ticking in it at all, or ticks too faint to time. `BEAT.clicks` is that detector: clicks 3 times over the
 floor and over the level just before them, steady when most gaps are the typical gap (or twice it) and that gap is at least 40 ms. **Analyse a recording** takes a sound file instead (WAV is
-best; a phone recorder's compressed files blur the clicks). **Settings** can fix the beat rate if Auto reads a wrong one.
+best; a phone recorder's compressed files blur the clicks). **Settings** can fix the beat rate if Auto reads a wrong one, and set **Listening time** to Long (up to 2 minutes, at
+least 30 s) for a faint watch: the folded sound's contrast grows with the square root of the beats averaged.
 
 ## Method
 
@@ -34,6 +35,12 @@ best; a phone recorder's compressed files blur the clicks). **Settings** can fix
 4. Each parity's beats folded on its line in power, the noise floor's power taken off, so a faint first click rises out of the
    floor as more beats are folded. The onset (first sub-click) by the rise rule of the model's `tools/acoustic.py`, timed where
    that sub-click's own rise is 10 dB under its own first peak, so a loud and a quiet click are timed at the same point.
+Handling noise is cut out first: in each band's envelope, 100 ms windows louder than 5 times the typical window within a
+second either side (a knock, a rustle, a word; ticks are in every window alike) and their neighbours are set to the typical
+level, which adds nothing to the autocorrelation or the folds. The band is 1.5-10 kHz; only when it gives no reading are
+3-12, 1-4 and 5-16 kHz tried, and a reading found only there is shown as Uncertain, never as Measured (on synthetic watches,
+letting other bands replace a reading made more readings confidently wrong than right).
+
 5. Beat error = |d − P/2|, d tick onset to tock onset, P the full period: half the difference of the two intervals, as a
    timegrapher gives it.
 6. Checks: the tick and tock level curves matched as patterns must agree with the onsets within 0.6 ms (else the pattern's

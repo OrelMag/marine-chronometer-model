@@ -109,6 +109,9 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
       <div class="row"><label for="rateSel">Beat rate</label>
         <select id="rateSel"><option value="0">Auto</option></select></div>
       <p class="msg">Auto picks from the usual rates. Choose one only if Auto reads a wrong rate.</p>
+      <div class="row"><label for="lenSel">Listening time</label>
+        <select id="lenSel"><option value="30">Normal (up to 30 s)</option><option value="120">Long (up to 2 minutes)</option></select></div>
+      <p class="msg">Long is for a faint watch: the longer it listens, the more beats it averages and the clearer faint ticks become.</p>
     </details>
   </section>
 
@@ -118,7 +121,7 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
       <ol>
         <li>Quiet room. Wind the watch.</li>
         <li>Lay the phone down and set the watch on it, case back on the microphone (usually at the bottom edge). Or hold it there firmly.</li>
-        <li>Tap Listen and keep still. It stops by itself when the reading settles, within about 20 seconds.</li>
+        <li>Tap Listen and keep still. It stops by itself when the reading settles, within about 20 seconds. For a faint watch, set Listening time to Long in Settings.</li>
         <li>For a full check, measure dial up and crown down too.</li>
       </ol>
     </details>
@@ -139,7 +142,8 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   var $ = function (id) { return document.getElementById(id); };
   var last = null, example = true;
   BEAT.RATES.forEach(function (b) { var o = document.createElement('option'); o.value = b; o.textContent = b + ' bph (' + (b / 7200).toFixed(1).replace('.0', '') + ' Hz)'; $('rateSel').appendChild(o); });
-  try { var sv = localStorage.getItem('beat.rate'); if (sv) $('rateSel').value = sv; } catch (e) {}
+  try { var sv = localStorage.getItem('beat.rate'); if (sv) $('rateSel').value = sv; var sl = localStorage.getItem('beat.len'); if (sl) $('lenSel').value = sl; } catch (e) {}
+  $('lenSel').addEventListener('change', function () { try { localStorage.setItem('beat.len', $('lenSel').value); } catch (e) {} });
   $('rateSel').addEventListener('change', function () { try { localStorage.setItem('beat.rate', $('rateSel').value); } catch (e) {} });
   function forced() { return +$('rateSel').value || 0; }
 
@@ -268,7 +272,7 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   // listening: raw samples (echo cancelling, noise suppression and gain control off: they gate and smear the clicks), analysed
   // every 2 s; stops when three readings in a row agree, or at 30 s
   var ctx = null, stream = null, node = null, src2 = null, chunks = [], got = 0, timer = null, busy = false, hist = [], wake = null, listening = false;
-  var MAXS = 30, MINS = 8;
+  var MAXS = 30, MINS = 8;   // set from Listening time when Listen is tapped: Long listens up to 2 minutes and at least 30 s
   function stop(final) {
     listening = false; clearInterval(timer); timer = null;
     try { node && node.disconnect(); src2 && src2.disconnect(); } catch (e) {}
@@ -299,7 +303,7 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   }
   function start() {
     if (listening) { stop(true); return; }
-    example = false;
+    example = false; MAXS = +$('lenSel').value || 30; MINS = MAXS > 30 ? 30 : 8;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { noMic(); return; }
     var AC = window.AudioContext || window.webkitAudioContext;
     ctx = ctx || new AC(); try { ctx.resume(); } catch (e) {}
@@ -340,7 +344,7 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
     f.arrayBuffer().then(function (ab) {
       return new Promise(function (ok, no) { var p = ctx.decodeAudioData(ab, ok, no); if (p && p.then) p.then(ok, no); });
     }).then(function (buf) {
-      var x = buf.getChannelData(0), fs = buf.sampleRate, cap = Math.min(x.length, Math.round(60 * fs));
+      var x = buf.getChannelData(0), fs = buf.sampleRate, cap = Math.min(x.length, Math.round(180 * fs));
       if (buf.numberOfChannels > 1) { var y = buf.getChannelData(1), m = new Float32Array(cap); for (var i = 0; i < cap; i++) m[i] = 0.5 * (x[i] + y[i]); x = m; } else x = x.slice(0, cap);
       chip('Analysing', 'live');
       analyze(x, fs, function (r) {
