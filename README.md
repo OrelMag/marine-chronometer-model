@@ -74,6 +74,25 @@ on the timeline at its own ratios, with controls for the wind, the hands,
 explode, laid out, lift, lids, latch, roll and pitch. The Hamilton's README,
 "The model in Blender", has the details.
 
+**Links keep the camera** (since 3.77.00): turn, zoom or pan the model and the
+page's address gains `cam=` (where the camera looks from, how far, and at
+what), so a copied link opens on exactly that view, on either model. A view
+button, a walkthrough step or zooming to a part takes it out again.
+
+**Drawn as an illustration:** `tools/penrender.py` draws any of the page's
+views, links or cameras as an ink-and-watercolour illustration in Blender 5:
+pen lines (Blender's Freestyle and Line Art) over a light wash on cream paper,
+the parts the page shows see-through drawn as a faint cutaway. It opens the
+page headless to read the camera, so each still is framed as the page frames
+it. About 5 minutes a still (plus about 3 the first time, to export the model):
+
+    cd marine-chronometer-source/chronometer-working-model/tools
+    python penrender.py --list                          # the views
+    python penrender.py --view train,laidout            # any of them (--model wempe for the Wempe)
+    python penrender.py --link "https://www.marinechronometermodel.com/hamilton/#view=movement&cam=..."
+
+The stills go into `tools/r_pen/`, which isn't committed.
+
 Contents:
 [Repository layout](#repository-layout) ·
 [Setting up](#setting-up) ·
@@ -382,6 +401,7 @@ every tool, what it checks and how long it takes. Before committing a change:
        python contacts.py --write   # after changing fine.py's tables: the Contacts view's data
        python gltf_check.py     # the export to Blender, written and read back
        python blender_check.py  # that file in Blender 5 headless (skipped without one): the rig against the export's own clips
+       python penrender.py      # stills as an ink-and-watercolour illustration (any view, link or camera; not a check)
        npx -p typescript@5.9.3 tsc -p ../jsconfig.json   # the types of the files that start with // @ts-check
 
    What each should print:
