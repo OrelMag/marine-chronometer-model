@@ -217,6 +217,28 @@ var BEAT = (function () {
     for (var i = 0; i < n; i++) { hum = 0.995 * hum + 0.1 * gauss(); x[i] += nz * gauss() + 0.02 * hum * (o.hum || 0); }
     return { x: x, fs: fs, P: P, d: d };
   }
-  return { analyze: analyze, synth: synth, RATES: RATES };
+  // what reaches the microphone, for guiding the user: the level above 2 kHz in 1 ms blocks, clicks as peaks 3 times over the
+  // floor 30 ms apart (noise's 1 ms peaks sit near 2.3 sigma, so 3 times them is past chance), counted in each second (the
+  // median second, so a knock or a word doesn't count as ticking); regular: the share of gaps between clicks within 15 % of the
+  // typical gap or twice it (a missed tick). Ticking is several clicks a second, most of them regular; crackle and handling aren't
+  function clicks(x, fs) {
+    var y = biquad(biquad(x, fs, 2000, 'hp'), fs, 2000, 'hp'), B = Math.max(1, Math.round(fs / 1000)), n = Math.floor(y.length / B), e = new Float32Array(n), i, k;
+    for (i = 0; i < n; i++) { var m = 0; for (k = 0; k < B; k++) m = Math.max(m, Math.abs(y[i * B + k])); e[i] = m; }
+    var skip = Math.min(n, 30), fl = median(e.subarray(skip)) || 1e-12, at = [], last = -99;   // the filters' first 30 ms left out
+    for (i = Math.max(40, skip); i < n - 1; i++) {
+      if (!(e[i] > 3 * fl && e[i] >= e[i - 1] && e[i] >= e[i + 1] && i - last >= 30)) continue;
+      var pre = 0; for (k = i - 40; k < i - 15; k++) pre += e[k]; pre /= 25;   // and 3 times the level 15-40 ms before: a click, not the middle of a rustle
+      if (e[i] > 3 * pre) { at.push(i); last = i; }
+    }
+    var secs = Math.floor(n / 1000), per = []; for (k = 0; k < secs; k++) per.push(0);
+    at.forEach(function (t) { var s = Math.floor(t / 1000); if (s < secs) per[s]++; });
+    var pk = at.map(function (t) { return e[t] / fl; });
+    var gaps = []; for (i = 1; i < at.length; i++) gaps.push(at[i] - at[i - 1]);
+    var g0 = gaps.length ? median(gaps) : 0, reg = gaps.length < 4 ? 0 : gaps.filter(function (g) { return Math.abs(g - g0) < 0.15 * g0 || Math.abs(g - 2 * g0) < 0.15 * g0; }).length / gaps.length;
+    var perSec = secs ? median(per) : at.length / Math.max(n / 1000, 1e-3);
+    return { perSec: perSec, regular: reg, ticking: perSec >= 3 && reg >= 0.5 && g0 >= 40,   // the fastest beat, 43200 bph, is 42 ms
+      contrast: pk.length ? median(pk) : 0, env: e, floor: fl, at: at };
+  }
+  return { analyze: analyze, synth: synth, clicks: clicks, RATES: RATES };
 })();
 if (typeof module !== 'undefined') module.exports = BEAT;

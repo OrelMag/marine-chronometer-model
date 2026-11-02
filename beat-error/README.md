@@ -16,7 +16,11 @@ It is a side tool, not part of the chronometer models.
 ## Using it
 
 Tap **Listen** with the watch's case back on the phone's microphone, in a quiet room. It reads every 2 seconds and stops on its
-own when three readings agree (0.1 ms, 3 s/d), at most after 30 s. **Analyse a recording** takes a sound file instead (WAV is
+own when three readings agree (0.1 ms, 3 s/d), at most after 30 s. While it listens, a strip shows the last 3 seconds of
+what reaches the microphone with each click marked, and says whether it hears steady ticking, scattered clicks or nothing
+(then where the microphone is: on most phones the grille on the bottom edge). A recording that gives no reading is told apart
+the same way: no ticking in it at all, or ticks too faint to time. `BEAT.clicks` is that detector: clicks 3 times over the
+floor and over the level just before them, steady when most gaps are the typical gap (or twice it) and that gap is at least 40 ms. **Analyse a recording** takes a sound file instead (WAV is
 best; a phone recorder's compressed files blur the clicks). **Settings** can fix the beat rate if Auto reads a wrong one.
 
 ## Method
@@ -42,4 +46,6 @@ best; a phone recorder's compressed files blur the clicks). **Settings** can fix
 On the synthetic sweep: all 96 clean recordings read right; with some noise 87 of 96 read right (2 wrong, the rest flagged or
 refused); with heavy noise and a tock much quieter than its tick, about a quarter are wrong, because a first click lost in the
 noise can't be told from the next one. The page says so (Uncertain) in most of those cases but not all, so hold the microphone against the case back and
-compare a second reading. Not yet tried on real watch recordings.
+compare a second reading. The first real recording sent (an iPhone's Voice Memos, 2 November 2026) had no ticks in it at all: no click stood
+above the hiss and nothing repeated at any beat rate, most likely the watch away from the bottom-edge microphone or Enhance
+Recording on. That is why the live guide exists. Not yet tried on a real recording with ticks.

@@ -14,4 +14,8 @@ for (const c of cases) {
 // silence and noise only must not give a result
 const n = new Float32Array(44100 * 10).map(() => (Math.random() - 0.5) * 0.1), rn = B.analyze(n, 44100);
 console.log(rn.ok ? 'FAIL noise gave a reading' : 'ok   noise rejected (' + rn.reason + ')'); if (rn.ok) fails++;
+// the live guide's click detector: a clean watch at every rate is ticking, noise and scattered crackle are not
+for (const bph of [18000, 21600, 28800, 36000, 43200]) { const s = B.synth({ bph, dur: 3, seed: 3 }), c = B.clicks(s.x, s.fs); const ok = c.ticking && Math.abs(c.perSec - bph / 3600) <= 1; if (!ok) fails++; console.log((ok ? 'ok  ' : 'FAIL') + ' clicks ' + bph + ': ' + c.perSec + ' a second'); }
+const cr = new Float32Array(44100 * 3).map(() => (Math.random() - 0.5) * 0.01); for (let k = 0; k < 12; k++) { const i = Math.floor(Math.random() * cr.length - 500); for (let j = 0; j < 400; j++) cr[i + j] += (Math.random() - 0.5) * 0.3 * Math.exp(-j / 80); }
+const cc = B.clicks(cr, 44100); console.log((cc.ticking ? 'FAIL' : 'ok  ') + ' clicks: noise with 12 random crackles is not ticking'); if (cc.ticking) fails++;
 process.exit(fails ? 1 : 0);
