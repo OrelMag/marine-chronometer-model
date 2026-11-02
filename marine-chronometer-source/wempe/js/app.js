@@ -707,6 +707,8 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   const LP={ph:'',end:0,on:true},LPC={d:'#e0306a',h:'#0e9f92'};let mClk=0;   /* mClk: the key's and the load path's clock (ms), slowed only by the close-up's slow motion */
   const LPK={fuseeWheel:'w','maintaining.spring':'s','maintaining.springPinsG':'s','maintaining.ratchet':'r',maintDetent:'h',maintaining:'m',fusee:'m',chain:'m',band:'m',barrel:'m',mainspring:'m'};
   const lpCol=(m,ph=LP.ph)=>{const u=m.userData,k=u.lpk??(u.lpk=LPK[u.pk]??LPK[u.part]??'');if(!LP.on||!ph||!k)return null;return ph==='w'?(k==='s'?'d':k==='h'||k==='r'?'h':null):(k==='h'?null:'d');};
+  const DRV_HIDE=['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge','balanceJewelsUp','balanceJewelsLow','escEndstoneUp','escJewelUp','escJewelLow','escEndstoneLow','dial',
+      'bowl','closingPlate','bezel','gimbalRing','box','lid','overBox','overLid','caseLock','key'];   /* hidden by Moving parts only and laid out (the frame, dial and case): the viewer's drive.hide, and the export's Laid out (blender.js) */
   const V=VIEWER.start({essay:ES,away,tint:m=>{const c=lpCol(m);return c?LPC[c]:null;},overlay:()=>cuDraw(),name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:Q0||'dial',openCam:Q0?null:{yaw:0.75,pitch:0.42,dist:640,target:[0,-20,0]},   /* opening as the Hamilton's: the box shut, seen from the front right (its camera), then the lid opening onto the dial */
     SECDEF,
     pick:hit=>typeof MAKER!=='undefined'&&MAKER.measuring()?(MAKER.measureHit(hit),true):false,card:p=>{if(typeof MAKER!=='undefined')MAKER.card(p);},   /* Making it: Measure takes a click on the model; each card has its maker's sheet and drawing (../chronometer-working-model/js/maker.js) */
@@ -716,8 +718,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);if(Math.abs(PH.MF-fu.MW)>0.002)console.warn('escphys.js MF '+PH.MF+' is not the fusee’s full wind '+fu.MW.toFixed(4));H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
     /* Moving parts only (the Hamilton's st.drive): the frame, its jewels and bushes, the dial and the case hidden, the barrel see-through so the mainspring shows; the motion work and
        hands only with Include motion work; the views in the case give way to the Movement view */
-    drive:{hide:['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge','balanceJewelsUp','balanceJewelsLow','escEndstoneUp','escJewelUp','escJewelLow','escEndstoneLow','dial',
-      'bowl','closingPlate','bezel','gimbalRing','box','lid','overBox','overLid','caseLock','key'],ghost:['barrel'],mw:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands'],off:['dial','box','case','transport'],to:'movement'},
+    drive:{hide:DRV_HIDE,ghost:['barrel'],mw:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands'],off:['dial','box','case','transport'],to:'movement'},
     TOUR:WTOUR,tourInset:(k,el)=>tourInset(k,el),tourStep:s=>tourStep(s),
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* the Contacts view (../shared/contacts.js): fine.py's expected overlaps and states (js/contactdata.js, from checks.py: contacts.py --write); a state posed as fine.py's FREEZE poses
@@ -1208,7 +1209,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
   if(V){VV=V;setDial(dial);}
   /* the downloads (js/blender.js): the movement or a part as STL, the whole instrument for Blender. copy(M) builds the case and movement again as build() does, set as the
      page shows them (the sheets' state, the connector, the dial, the timing weights), for the export to play its clips through; gim() the gimbals' pendulum (gwSea, gwStep) */
-  if(V&&typeof BLENDER!=='undefined')BLENDER.bind({M:V.M,INFO:V.INFO,PIECES,get PH(){return{...PH,...PR};},HPT,HRUN,drvF:h=>PH.drv(h/HPT)*(1-MSET),hrs:()=>hrs,rollP:()=>+document.getElementById('rollP').value||7,
+  if(V&&typeof BLENDER!=='undefined')BLENDER.bind({M:V.M,INFO:V.INFO,PIECES,DRIVE_HIDE:new Set(DRV_HIDE),get PH(){return{...PH,...PR};},HPT,HRUN,drvF:h=>PH.drv(h/HPT)*(1-MSET),hrs:()=>hrs,rollP:()=>+document.getElementById('rollP').value||7,
     mv:()=>mv,root:()=>CS.root,pick:()=>V.st.pick,state:()=>({rev,mix,conn,dial,fin,cs,tw:RW.tw,mset:MSET}),
     gim:()=>{const G={p:[0,0],r:[0,0],lp:0,lr:0};return{M:G,sea:gwSea,step:(dt,ph,rl,sea)=>gwStep(G,dt,ph,rl,sea,1)};},
     copy:M=>{const C2=WCASE.build(M);C2.setCase(cs);const m2=buildWempe(M);m2.userData.R.dl.setDial(dial);m2.userData.onRev.push(Object.assign(m=>{C2.root.traverse(o=>{if(o.userData.rev&&o!==m2)o.visible=m2.userData.shows(o,m)&&shutShows(o,m);});C2.rev(m.case);C2.setShut(shutOn(m));C2.parts.key.userData.first=m.key==='first'||m.key==='3955';C2.keyRest();},{sub:'*'}));

@@ -6,8 +6,9 @@
    through the copy in time order, from the same equations as app.js's tick. What moves is read back off the copy's nodes: a node that changes gets a track
    (translation, rotation, scale; hidden is scale 0); a piece rebuilt as it moves (the hairspring, the mainspring, the clicks' springs, the stop work's) shape keys
    while its vertices and triangles stay the same, else a flipbook of its shapes; the chain one node a link. The Hamilton's clips the Wempe has no counterpart for are
-   left out (Laid out, Stop and start, Latch: it has no laid-out view, locking arm, train-blocking screw or latch lever); Winding is done in the case, as the page does
-   it. STL: a binary STL of meshes in the movement's frame (mm), as the Hamilton's maker.js writes it. One IIFE; the page sees only BLENDER. app.js calls
+   left out (Stop and start, Latch: it has no locking arm, train-blocking screw or latch lever); Winding is done in the case, as the page does it. Laid out (since
+   2 November 2026; the page's view since 3.76.00): the movement's develop(e), the frame, dial and case hidden and the schematic plates shown in their place, as the
+   viewer's laid out. STL: a binary STL of meshes in the movement's frame (mm), as the Hamilton's maker.js writes it. One IIFE; the page sees only BLENDER. app.js calls
    BLENDER.bind() once the model is built */
 const BLENDER=(()=>{
   let A=null;const TEXK=2,ENGK=4,FPS=30,TOLP=0.0005,TOLQ=0.00005,TOLS=0.004,FLIPS=48;   /* tolerances: translation (mm), rotation (quaternion), a shape's vertices (mm); FLIPS: the most shapes a flipbook takes in a clip */
@@ -38,13 +39,17 @@ const BLENDER=(()=>{
   function copy(){const{CS,mv}=A.copy(A.M),R=mv.userData.R,ms=[],inM=new Set();mv.traverse(o=>inM.add(o));
     const partOf=o=>{for(;o;o=o.parent)if(o.userData&&o.userData.partName)return o.userData.partName;return null;};
     CS.root.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);ms.push(o);}});
-    return{CS,mv,R,ms,key:false};}
+    return{CS,mv,R,ms,key:false,dv:false};}
+  /* laid out (dv), as the viewer's (mOut): the schematic plates (devPlate) shown, the frame, dial and case (the page's DRV_HIDE, and all outside the movement) hidden but
+     the pieces kept shown laid out (devKeep); set only as dv changes, each mesh's own visibility put back after, since other clips change some (the key, the versions) */
+  function look(C,dv){if(dv===C.dv)return;C.dv=dv;const inM=new Set();C.mv.traverse(o=>inM.add(o));
+    for(const m of C.ms){const u=m.userData;if(dv){u.vLo=m.visible;if(u.devPlate)m.visible=true;else if(!inM.has(m)||A.DRIVE_HIDE.has(u.part)&&!u.devKeep)m.visible=false;}else m.visible=u.vLo;}}
   /* a state: the movement's (MoveState: E, th, lift, psDef, n, winding, slip), the views' (lid open, lift out of the bowl and turn over, explode), the case turned over to
      wind (cw 0-3: the bowl turned over, the closing plate opened, the key onto the square; app.js's tick), the box's (pitch, roll, the case's angles in the gimbals) */
-  const REST=()=>({E:0,th:0,lift:0,psDef:0,n:0,winding:false,slip:0,lid:1,up:0,ex:0,cw:0,keyOn:false,pitch:0,roll:0,gp:0,gr:0,teeth:null});
+  const REST=()=>({E:0,th:0,lift:0,psDef:0,n:0,winding:false,slip:0,lid:1,up:0,ex:0,dev:0,cw:0,keyOn:false,pitch:0,roll:0,gp:0,gr:0,teeth:null});
   function apply(C,s){const{CS,mv}=C;
     mv.userData.update({E:s.E,th:s.th,lift:s.lift,psDef:s.psDef,n:s.n,winding:s.winding,slip:s.slip});
-    mv.userData.explode(smooth(s.ex));
+    mv.userData.explode(smooth(s.ex));mv.userData.develop(smooth(s.dev));look(C,s.dev>0.02);
     const L1=smooth(s.up/0.55),L2=smooth((s.up-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;   /* as app.js's tick */
     CS.lid.rotation.x=-s.lid*1.75;CS.stay();CS.tongue.rotation.z=-Math.min(1,s.lid*4)*Math.PI/2;
     CS.bowl.rotation.z=-Math.PI*smooth(clamp(s.cw,0,1));CS.shutter(smooth(clamp(s.cw-1,0,1)));
@@ -91,6 +96,7 @@ const BLENDER=(()=>{
             const o=S.step(dt);if(i%15===0)HS.push([+t.toFixed(3),+S.hrs.toFixed(5)]);emit(t,st(Object.assign(o,{cw})));if(ph===2&&cw<=0&&t>tE+3*WT+1)break;}}},
       {name:'Setting the hands',len:10,d:'the hands set an hour on (the cannon tube slipping on the centre arbor), the train going',run:emit=>runFor(sim(C,h0),20,emit,t=>({slip:3600*smooth(ramp(t,1.5,8.5))}))},
       {name:'Exploded',len:11,d:'lifted out of its case, turned over, the parts and screws apart along their arbors, and back',run:emit=>uni(11,t=>st({up:out(t,0,2.5,8.5,11),ex:out(t,2.5,5,6,8.5)}),emit)},
+      {name:'Laid out',len:11,d:'lifted out of its case, the train laid out along the barrel-fusee line, as the textbooks draw it, and back',run:emit=>uni(11,t=>st({up:out(t,0,2.5,8.5,11),dev:out(t,2.5,5,6,8.5)}),emit)},
       {name:'Lift out',len:7,d:'the movement lifted out of its bowl and turned over, and back',run:emit=>uni(7,t=>st({up:out(t,0,3,4,7)}),emit)},
       {name:'Lid',len:7,d:'the box\'s lid closed and opened again',run:emit=>uni(7,t=>st({lid:1-out(t,0,3,4,7)}),emit)},
       {name:'At sea',len:6*per,d:'the ship rolling 14 degrees and pitching, drawn with the apparent vertical up: the case hangs still in its gimbals and the box rolls and pitches round it; it loops',run:emit=>{const wR=TAU/per,G2=A.gim(),T0=3*per*Math.ceil(30/(3*per)),n0=Math.round(T0*FPS);   /* the pitch at 2/3 the roll's rate, so the motion repeats every three rolls and the clip's six loop; the case's swing settled first over whole repeats */
@@ -107,13 +113,14 @@ const BLENDER=(()=>{
           let a0=ang(0);for(let i=1;i<=n;i++){const e0=PR*(i-1)/n,e1=PR*i/n,a1=ang(e1);es.push(e0);if(a1.some((v,j)=>Math.abs(v-a0[j])>0.003))for(let k=1;k<120;k++)es.push(e0+(e1-e0)*k/120);a0=a1;}es.push(PR);
           apply(C,at(0));for(const e of es)emit(e*0.5,at(e));}},
       {name:'Rig · explode',len:2,d:'for the rig: the parts apart',rig:{p:'explode',a:0,b:1},run:emit=>uni(2,t=>st({ex:t/2}),emit)},
+      {name:'Rig · laid out',len:2,d:'for the rig: the train laid out',rig:{p:'laid_out',a:0,b:1},run:emit=>uni(2,t=>st({dev:t/2}),emit)},
       {name:'Rig · lift',len:3,d:'for the rig: out of the bowl and turned over',rig:{p:'lift',a:0,b:1},run:emit=>uni(3,t=>st({up:t/3}),emit)},
       {name:'Rig · lids',len:2,d:'for the rig: the lid, 0 open to 1 closed',rig:{p:'lids',a:0,b:1},run:emit=>uni(2,t=>st({lid:1-t/2}),emit)}];}
   /* ---------- the node table: every object under the box; the chain's links nodes of their own (as many as the chain ever has) ---------- */
   function table(C,nMax){const recs=[],RN=new Map();for(const g of[C.R.esc,C.R.dl])for(const k in g){const o=g[k];if(o&&o.isObject3D&&!RN.has(o))RN.set(o,k);}
     const PN=new Map(Object.entries(C.mv.userData.parts).map(([k,g])=>[g,k])),CN=new Map(Object.entries(C.CS.parts).map(([k,g])=>[g,k])),INFO=A.INFO,HN=new Map();
     for(const p in A.PIECES)for(const q of A.PIECES[p])for(const h of String(q.h||'').split(' '))if(h&&!HN.has(h))HN.set(h,q.t);
-    const title=p=>(INFO[p]||[p])[0],label=o=>{const p=PN.get(o)||CN.get(o);if(p)return title(p)+' ('+p+')';if(o===C.CS.root)return title('box');if(o===C.mv)return 'Movement';const r=RN.get(o);if(r)return r;
+    const title=p=>(INFO[p]||[p])[0],label=o=>{const p=PN.get(o)||CN.get(o);if(p)return title(p)+' ('+p+')';if(o===C.CS.root)return title('box');if(o===C.mv)return 'Movement';if(o.userData.devOf)return 'laid out stand-in: '+title(o.userData.devOf);const r=RN.get(o);if(r)return r;
       if(o.userData.hn&&!o.userData.sub){const t=HN.get(o.userData.hn);if(t)return o.userData.hn+' '+t;}if(o.userData.partName&&!(o.parent&&o.parent.userData.partName===o.userData.partName))return title(o.userData.partName);return '';};
     const partOf=o=>{for(;o;o=o.parent)if(o.userData&&o.userData.partName)return o.userData.partName;return null;};
     const walk=(o,par)=>{if(o.isLight||o.isCamera)return;const r={o,par,p0:o.parent,kids:[],name:label(o),part:partOf(o)};recs.push(r);if(par)par.kids.push(r);

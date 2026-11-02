@@ -22,11 +22,11 @@ except ImportError:
     bpy=None
 HERE=pathlib.Path(__file__).resolve().parent;RIG=HERE.parent/'blender'/'rig.py'
 # each model's views (the page's VIEWS) and how the rig poses them: the box shown (its lid shut: lids), exploded, laid out; any other the movement lifted
-# out of its case alone. The camera is the page's. Not listed: the Wempe's transport view (an outer box) and its laid out view, which no export has (its
-# blender.js writes no Laid out clip, so the rig has no laid_out control: drawn, it showed the movement whole)
+# out of its case alone. The camera is the page's. Not listed: the Wempe's transport view (an outer box). The Wempe's laid out since 2 November 2026, when its
+# blender.js got the Laid out clip and the rig its laid_out control
 POSE={'hamilton':{'box':dict(box=1,lids=1),'dial':dict(box=1),'movement':{},'train':{},'escapement':{},'exploded':dict(explode=1),'laidout':dict(laid_out=1),
                   'fusee':{},'balance':{}},
-      'wempe':{'dial':dict(box=1),'box':dict(box=1,lids=1),'case':dict(box=1),'movement':{},'plan':{},'side':{},'exploded':dict(explode=1),
+      'wempe':{'dial':dict(box=1),'box':dict(box=1,lids=1),'case':dict(box=1),'movement':{},'plan':{},'side':{},'exploded':dict(explode=1),'laidout':dict(laid_out=1),
                'escapement':{},'train':{},'fusee':{},'balance':{}}}
 PAPER=(0.965,0.945,0.9)
 
@@ -253,13 +253,15 @@ def key(o):   # every part key along its ancestry ("... (dial)"), so a hand's me
         o=o.parent
     return k
 K={o:key(o) for o in bpy.data.objects if o.type in('MESH','CURVE')}
+# the laid out view's schematic plates (the export's "laid out stand-in: ..." nodes): the page draws them see-through, so they go to the faded layer
+S0=[q for q in bpy.data.objects if q.name.startswith('laid out stand-in')];STAND={o for o in K if any(under(o,q) for q in S0)}
 from mathutils import Matrix
 # the page's world (mm, y up) is Blender's (m, z up) as (x, -z, y) / 1000: the export's clips put every part where the page does (blender_check.py holds the
 # rig to them), so the page's camera is the camera. The page pulls its camera back on a canvas narrower than 3:2 (aspectK); the still's own aspect is put back
 B=lambda v:Vector((v[0],-v[2],v[1]))/1000;AK=lambda a:min(max(1.25/a,1),2.2)
 cam.data.sensor_fit='VERTICAL'
 for S in A['shots']:
-    shown={o for o in K if not(S['alone'] and o not in inmv)};gh={o for o in shown if K[o]&set(S['page'].get('ghosts',[]))}
+    shown={o for o in K if not(S['alone'] and o not in inmv)};gh={o for o in shown if K[o]&set(S['page'].get('ghosts',[])) or o in STAND}
     for o in K:o.hide_render=o not in shown or o in gh   # the faded parts left out: drawn, they would hide the lines behind them
     for k,v in S['ctl'].items():ctl[k]=float(v)
     ctl.update_tag();sc.frame_set(0);bpy.context.view_layer.update()
