@@ -35,7 +35,16 @@ MOVE=[dict(name='top',show='mv',up=-1,dir=(0,-1,0.06),frame=None,fill=0.86,lens=
  dict(name='side_6',show='mv',up=-1,dir=(0,-0.32,1),frame=None,fill=0.86,lens=90,f=13,trim=0),
  dict(name='side_9',show='mv',up=-1,dir=(-1,-0.32,0),frame=None,fill=0.86,lens=90,f=13,trim=0),
  dict(name='dial_side',show='mv',up=1,dir=(0.45,1,0.6),frame=None,fill=0.84,lens=90,f=13,trim=0)]
-SETS={'showcase':SHOTS,'movement':MOVE}
+# --set low: the movement all round at a low angle (10 degrees over the floor, every 360/7 degrees from 12 o'clock); --set bowl: in its bowl with its bezel and
+# closing plate (show 'mv' plus those parts' keys), the dial up; --set box: the whole, its lid open
+import math as _m
+LOW=[dict(name=f'{i+1}_{round(a)}deg',show='mv',up=-1,dir=(_m.sin(_m.radians(a)),-0.18,-_m.cos(_m.radians(a))),frame=None,fill=0.88,lens=90,f=13,trim=0) for i,a in enumerate(k*360/7 for k in range(7))]
+BOWL=[dict(name='high',show='mv',plus=['bowl','bezel','closingPlate'],up=1,dir=(0.55,1,0.7),frame=None,fill=0.84,lens=90,f=11,trim=0),
+ dict(name='low',show='mv',plus=['bowl','bezel','closingPlate'],up=1,dir=(0.9,0.36,0.55),frame=None,fill=0.86,lens=90,f=11,trim=0),
+ dict(name='three_quarter',show='mv',plus=['bowl','bezel','closingPlate'],up=1,dir=(-0.7,0.5,0.8),frame=None,fill=0.86,lens=90,f=11,trim=0)]
+BOX=[dict(name='low',show='all',up=1,dir=(0.8,0.32,0.9),frame=None,fill=0.86,lens=70,f=11,trim=0),
+ dict(name='front',show='all',up=1,dir=(0.15,0.55,1.0),frame=None,fill=0.86,lens=70,f=11,trim=0)]
+SETS={'showcase':SHOTS,'movement':MOVE,'low':LOW,'bowl':BOWL,'box':BOX}
 
 async def export(out):
     from playwright.async_api import async_playwright
@@ -105,7 +114,7 @@ for S in A['shots']:
     for k,o in hands.items():
         ax=Rw@Vector((0,-1,0));p=o.matrix_world.translation.copy();o.matrix_world=Matrix.Translation(p)@Matrix.Rotation(math.radians(A['hands'][k]),4,ax)@Matrix.Translation(-p)@o.matrix_world
     bpy.context.view_layer.update()
-    vis=[o for o in meshes if o.matrix_world.to_scale().length>1e-9 and (S['show']=='all' or o in inmv) and not K[o]&set(S.get('hide',[]))]
+    vis=[o for o in meshes if o.matrix_world.to_scale().length>1e-9 and (S['show']=='all' or o in inmv or K[o]&set(S.get('plus',[]))) and not K[o]&set(S.get('hide',[]))]
     for o in meshes:o.hide_render=o not in vis
     def pts(L):return [o.matrix_world@v.co for o in L for v in list(o.data.vertices)[::5]]
     up=(Rw@Vector((0,S['up'],0))).normalized();P=pts(vis);FP=pts([o for o in vis if K[o]&set(S['frame'])]) if S['frame'] else P
