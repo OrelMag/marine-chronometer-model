@@ -16,7 +16,7 @@ IN=25.4
 SHEET={'fourthWheel':'42073-2-01','fourthPinion':'42072-1-01','fuseeWheel':'42015-2-01','fuseeArbor':'42022-2-01','sustainingWheel':'42009-2-01','windingPawl':'42010-1-01',
        'windingPawlSpring':'42007-2-01','windingRatchet':'42013-1-01','sustainingSpring':'42016-2-01','sustainingPawl':'42096-2-01','barrel':'42168-2-01','barrelCap':'42169-2-01',
        'barrelArbor':'42170-2-01','mainspringEnd':'1-WD-265','setupRatchet':'42026-1-01','setupPawl':'42027-1-01','setupPawlSpring':'42028-2-01','centreLink':'42005-1-01',
-       'outerLink':'42001-2-01','linkPin':'42004-1-01','barrelHook':'42002-1-01','fuseeHook':'42003-1-01','detentBlank':'42087-2-51A','helicalSpring':'42050-1-01'}
+       'outerLink':'42001-2-01','linkPin':'42004-1-01','barrelHook':'42002-1-01','fuseeHook':'42003-1-01','detentBlank':'42087-2-51A','detentFinished':'42093-2-01_(c.2)','helicalSpring':'42050-1-01'}
 def seg(e,n=None):
     n=n or (1 if e.geom_type==bd.GeomType.LINE else max(16,int(e.length/0.02)))
     return [e.position_at(i/n) for i in range(n+1)]

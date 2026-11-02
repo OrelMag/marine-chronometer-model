@@ -8,7 +8,7 @@ y up the sheet, its datum 2.0000, 2.0000 at 0, 0), its first face at Z 0. Where 
 the teeth are core.js gearOutline's cycloidal form (BS 978 Part 2's proportions), its addendum run out to the drawn tips: an estimate, said on each part."""
 import functools,json,math,pathlib,subprocess
 import build123d as bd
-from . import (Op,Recipe,Setup,S,page_matrix,Blank,TurnProfile,TurnCone,TurnAway,CutLeaves,Plate,Hole,Countersink,Cut,Bore)
+from . import (Op,Recipe,Setup,S,page_matrix,Blank,TurnProfile,TurnCone,TurnAway,CutLeaves,Plate,Hole,Countersink,Cut,Bore,Drill)
 TOOLS=pathlib.Path(__file__).resolve().parents[1]
 HDIMS=TOOLS.parent/'js'/'hdims.js'
 ID=page_matrix([[1,0,0],[0,1,0],[0,0,1]])   # these parts aren't in the page: their frame is their own
@@ -519,6 +519,44 @@ def detentBlank():
         notes=['The finished detent 42087-3-01 is not in the set: this is the part as far as these two sheets take it, before its blade, spring and horn are finished.','The block, trip spring, screws and bracket (42086, 42088, 42091, 42092) are not in the set.'],fits=[])
     r.flat=True;return _flags(r,['Not the finished detent: 42087-3-01 is not in the set','The step in the top notch: .079 printed, .075 on the scale (unsure)','The edges milled evenly from both sides: likely'])
 
+# ======================= 42087 detent, finished: reconstructed (42087-3-01 is not in the set) =======================
+# The blank (detentBlank) as the two operation sheets leave it, then the finishing the missing finished drawing would give, each size from the nearest source:
+# the blank fixes every length and the heights of the strips (it stands on edge in the movement: its .131 width upright, its .041 thickness across in plan, the
+# clamp screw driven across the foot into the block, movement.js); the 3D model's detent (shared/escapement.js's pieces, measured on KLUwI2UUCMQ 11:10-11:33 and
+# Fig. 90, x1.117) gives only what the blank can't: the thicknesses in plan, which face they are thinned from, and the stone. Read, not changed, from the model.
+DET_MODEL={   # escapement.js's pieces in its unit frame (x ES 6.58 mm, the detent's DSC 1.117 applied), t along the detent from the point of flexure, n across in plan
+ 'n':(-0.0927,0.0927),'spring':(-0.0648,-0.0514),'blade':(-0.0670,-0.0335),'arm':(-0.0280,0.0280),'stone_t':1.7166,'rJ':0.046,'ES':6.58,
+ 'spring_h':0.95*1.117,'spring_L':0.5602*6.58,'spring_t':(0.0648-0.0514)*6.58}
+def detentFinished():
+    H=HD()['dt'];I=lambda x:x*25.4;M=DET_MODEL;ES=M['ES'];z0,z1=(H['t']-H['tFin'])/2,(H['t']+H['tFin'])/2;T=z1-z0;W=H['w']
+    f=lambda n:(n-M['n'][0])/(M['n'][1]-M['n'][0])   # a place across the model's foot as a share of the ground thickness
+    wi=H['window'];tn=H['topNotch'];bp=tn['bump'];x0=wi['x0'];xs=wi['x1']
+    hS=I(.0315+.0275);tS=M['spring_t']*((M['spring_h']/hS)*(wi['l']/M['spring_L']))**(1/3)   # the model's stiffness (∝ h t³ / L) at the drawn heights and length
+    fs=(f(M['spring'][0])+f(M['spring'][1]))/2;zs=z0+fs*T
+    def band(xa,xb,za,zb):   # everything across the bar between xa and xb outside the plan band za..zb
+        bx=lambda zl,zh:bd.Box(xb-xa,10,zh-zl,align=(bd.Align.MIN,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((xa,W/2,zl)))
+        return bx(z0-1,za)+bx(zb,z1+1)
+    xj=x0+M['stone_t']*ES;rj=M['rJ']*ES
+    r=detentBlank()
+    ops=[Cut(lambda:band(x0,xs,zs-tS/2,zs+tS/2),'Thin the window\'s two webs to the detent spring',
+           [S('spring',f"two strips {fx(I(.0315),4)} and {fx(I(.0275),4)} high (the webs), {fx(wi['l'],3)} long, {tS:.4f} mm = {inch(tS):.4f} in thick in plan",'the thickness derived: the 3D model\'s spring stiffness at the drawn heights (estimated)','42087-2-51A, -1-52; shared/escapement.js'),
+            S('which face',f"{fs*100:.0f} % of the way across from the first face, as the model's",'estimated','shared/escapement.js')],'reconstructed'),
+         Cut(lambda:band(tn['x0'],bp['x0'],z0+f(M['blade'][0])*T,z0+f(M['blade'][1])*T),'Thin the blade, from the cross-piece to the jewel block',
+           [S('blade',f"{(f(M['blade'][1])-f(M['blade'][0]))*T:.3f} mm thick in plan",'the model\'s (video and Fig. 90): estimated','shared/escapement.js'),S('cross-piece','the .040 full section after the window, left full','42087-2-51A #12','42087-2-51A')],'reconstructed'),
+         Cut(lambda:band(bp['x1'],tn['x1'],z0+f(M['arm'][0])*T,z0+f(M['arm'][1])*T),'Thin the arm past the jewel block',
+           [S('arm',f"{(f(M['arm'][1])-f(M['arm'][0]))*T:.3f} mm thick in plan, centred",'the model\'s: estimated','shared/escapement.js')],'reconstructed'),
+         Drill((xj,-0.01,z0+T/2),(0,1,0),2*rj,bp['h']+0.02,'Bore the locking stone\'s seat upright through the jewel block',
+           [S('',f"Ø {2*rj:.3f} mm for the stone (bought)",'the model\'s stone: estimated','shared/escapement.js'),
+            S('place',f"{fx(xj,4)} from the foot end: the model's flexure-to-stone {M['stone_t']*ES:.2f} mm from the window's start, inside the drawn step {fx(bp['x0'],4)}-{fx(bp['x1'],4)}",None,'42087-2-51A #14; shared/escapement.js')],'reconstructed',key='stone')]
+    r.setups.append(Setup('3','finishing (reconstructed: the finished drawing 42087-3-01 is not in the set)',ops,view='top'))
+    r.key='detentFinished';r.title='Detent, finished (reconstructed)';r.drawing='42087-3-01 not in the set: reconstructed from 42087-2-51A, -1-52, 42093 and the 3D model'
+    r.notes=r.notes[:1]+[f"Reconstructed. Every length is the blank's. The detent stands on edge in the movement (42093; movement.js drives the clamp screw across the foot), so the window's two webs, {fx(I(.0315),4)} and {fx(I(.0275),4)} high, are the two-strip spring (escapement.js: the model's {M['spring_L']:.2f} mm long against the window's {wi['l']:.2f}).",
+        f"The spring's thickness in plan is derived, not drawn: the model's {M['spring_t']:.4f} mm at its estimated 1.06 mm of height, held to the same stiffness at the drawn 1.50 mm, gives {tS:.4f} mm (tripping.json's band for the detent's ring 0.072-0.110).",
+        f"Cross-check: the model's stone, {M['stone_t']*ES:.2f} mm from the point of flexure, lands {xj/25.4:.4f} in from the foot end, inside the drawn step for the jewel block ({bp['x0']/25.4:.4f}-{bp['x1']/25.4:.4f}), {(xj-(bp['x0']+bp['x1'])/2):+.2f} mm from its middle.",
+        'Not formed: the horn and the end of the arm (the model bends them across in plan, beyond the bar; the end land and its .050 slot are left as the blank has them: what the slot is for is not known), the foot\'s second locating pin and notch that 42093 shows, the stone itself (bought), the trip spring 42088 and its bracket 42092.']
+    r.flags=['Reconstructed: 42087-3-01 is not in the set',f'The spring {inch(tS):.4f} in thick: derived from the model\'s stiffness (estimated)','The blade and arm thicknesses and which face: the model\'s (estimated)','The horn not formed (beyond the bar in plan)']
+    return r
+
 # ======================= 42050 helical spring, 1-WD-265 mainspring inner end =======================
 def helicalSpring():
     H=HD();src='42050-1-01';I=lambda x:x*25.4;d=I(.025);D=I(.290)-d;L=I(.550);n=6;nc=1
@@ -562,7 +600,7 @@ RECIPES=[('Going train',fourthWheel),('Going train',fourthPinion),
          ('Barrel and mainspring',barrel),('Barrel and mainspring',barrelCap),('Barrel and mainspring',barrelArbor),('Barrel and mainspring',mainspringEnd),
          ('Set-up',setupRatchet),('Set-up',setupPawl),('Set-up',setupPawlSpring),
          ('Fusee chain',centreLink),('Fusee chain',outerLink),('Fusee chain',linkPin),('Fusee chain',barrelHook),('Fusee chain',fuseeHook),
-         ('Detent',detentBlank),('Not yet placed',helicalSpring)]
+         ('Detent',detentBlank),('Detent',detentFinished),('Not yet placed',helicalSpring)]
 
 # ======================= subassemblies: the drawn parts put together by the sheets' own numbers =======================
 class Member:
