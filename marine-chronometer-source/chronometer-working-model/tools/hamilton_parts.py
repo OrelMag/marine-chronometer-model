@@ -61,18 +61,36 @@ def check(r,p):
         (N if lo-1e-4<=R<=hi+1e-4 else F).append(f"tips Ø {R:.4f} against the drawn {od['d']:.4f} ({od['tol'][0]:+.4f}/{od['tol'][1]:+.4f})")
     return F,N
 
+def mat(L):
+    t=L.wrapped.Transformation();return [round(t.Value(i,j),9) for i in range(1,4) for j in range(1,5)]
+def H_drawing(r):return r.drawing.split(' ')[0]
+built_r={}
+def check_asm(A,built):
+    """every pair of members: the volume they share (none unless a press fit) and, for those meant to clear, the gap between them; returns fails, notes and the members' boxes"""
+    F=[];N=[];P={m.key:built[m.key].moved(m.loc()) for m in A.members};fit={frozenset((a,b)):(k,w) for a,b,k,w in A.fits};B=[]
+    for m in A.members:bb=P[m.key].bounding_box();B.append([bb.min.X,bb.min.Y,bb.min.Z,bb.max.X,bb.max.Y,bb.max.Z])
+    K=[m.key for m in A.members]
+    for i in range(len(K)):
+        for j in range(i+1,len(K)):
+            a,b=K[i],K[j];k,w=fit.get(frozenset((a,b)),(None,''));v=(P[a]&P[b]).volume if P[a].bounding_box().overlaps(P[b].bounding_box()) else 0.0
+            g=P[a].distance_to(P[b]) if v<1e-6 else 0.0
+            lim=1e-3 if k=='press' else 1e-5
+            if v>lim:F.append(f'{a} and {b} overlap by {v:.5f} mm³'+(f' ({k}: {w})' if k else ''))
+            elif k:N.append(f'{a} and {b}: {k}, '+(f'gap {g:.4f} mm' if g>1e-6 else 'in contact')+f' ({w})')
+            elif g<1e-6:N.append(f'{a} and {b}: in contact (no fit listed)')
+    return F,N,B
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
     a=argparse.ArgumentParser();a.add_argument('--only');a.add_argument('--check',action='store_true');o=a.parse_args()
     hd=subprocess.run([sys.executable,str(HERE/'hdraw.py')],capture_output=True,text=True)
     print(hd.stdout.strip().splitlines()[-1] if hd.stdout.strip() else hd.stderr)
     if hd.returncode:sys.exit('hamilton_parts.py: hdraw.py failed')
-    bad=0;parts=[];stale=[];sd=OUT/'step'
+    bad=0;parts=[];stale=[];sd=OUT/'step';built={}
     if not o.check:sd.mkdir(parents=True,exist_ok=True)
     for grp,mk in H.RECIPES:
-        r=mk()
+        r=mk();built_r[r.key]=r
         if o.only and r.key not in o.only.split(','):continue
-        t=time.time();p=r.build();p.label=f'{r.title} {r.hn}';F,N=check(r,p);bad+=bool(F)
+        t=time.time();p=r.build();p.label=f'{r.title} {r.hn}';built[r.key]=p;F,N=check(r,p);bad+=bool(F)
         print(f"{'FAIL' if F else 'ok  '} {r.key} ({r.hn}): {len(r.ops())} operations, volume {p.volume:.4f} mm³, {time.time()-t:.1f} s")
         for s in N:print('       '+s)
         for s in F:print('  !!   '+s)
@@ -88,6 +106,17 @@ def main():
         if not(s.exists() and norm(s.read_bytes())==norm(b)):
             stale.append(s.name)
             if not o.check:s.write_bytes(b)
+    for mk in H.ASSEMBLIES:   # the subassemblies: their members placed, every pair checked
+        A=mk()
+        if o.only and not all(m.key in built for m in A.members):continue
+        F,N,M=check_asm(A,built);bad+=bool(F)
+        print(f"{'FAIL' if F else 'ok  '} {A.key}: {len(A.members)} members")
+        for x in N:print('       '+x)
+        for x in F:print('  !!   '+x)
+        lo=np.min([b[:3] for b in M],axis=0);hi=np.max([b[3:] for b in M],axis=0)
+        parts.append({'key':A.key,'hn':'','group':A.group,'title':A.title,'assembly':True,'drawing':', '.join(sorted({H_drawing(built_r[m.key]) for m in A.members})),
+          'material':'','treatment':'','flat':False,'flags':A.flags,'fits':[f'{a} with {b} ({k}): {w}' for a,b,k,w in A.fits],'notes':A.notes,'volume':0,'box':[round(x,4) for x in [*lo,*hi]],
+          'checks':N,'fails':F,'ops':[],'sheet':'','members':[{'key':m.key,'label':m.label or built_r[m.key].title,'m':mat(m.loc()),'ex':list(m.ex),'why':m.why} for m in A.members]})
     if o.only:print('--only: hparts.js left as it is');sys.exit(1 if bad else 0)
     txt=('/* hparts.js: the Hamilton Model 21\'s parts as Hamilton drew them (tools/recipes/hamilton.py, from js/hdims.js), for index.html beside it.\n'
          '   Written by tools/hamilton_parts.py; do not edit by hand. Declares only HPARTS. Meshes base64: v uint16 xyz steps within box (lo..hi, mm), i uint16 triangles (uint32 where i32), e uint16 edge segments as v */\n'

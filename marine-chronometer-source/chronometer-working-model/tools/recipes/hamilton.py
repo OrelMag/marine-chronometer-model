@@ -508,3 +508,41 @@ RECIPES=[('Going train',fourthWheel),('Going train',fourthPinion),
          ('Set-up',setupRatchet),('Set-up',setupPawl),('Set-up',setupPawlSpring),
          ('Fusee chain',centreLink),('Fusee chain',linkPin),('Fusee chain',barrelHook),('Fusee chain',fuseeHook),
          ('Detent',detentBlank),('Not yet placed',helicalSpring)]
+
+# ======================= subassemblies: the drawn parts put together by the sheets' own numbers =======================
+class Member:
+    """a part in a subassembly: its recipe's key, where it goes (turned about axes through its own origin in order, then moved; mm, degrees), the way it
+    comes off in the exploded view (mm), and what the sheets say places it"""
+    def __init__(self,key,rot=(),t=(0,0,0),ex=(0,0,0),why='',label=None):self.key=key;self.rot=list(rot);self.t=t;self.ex=ex;self.why=why;self.label=label
+    def loc(self):
+        L=bd.Location(self.t)
+        for ax,deg in reversed(self.rot):L=L*bd.Location((0,0,0),{'x':(1,0,0),'y':(0,1,0),'z':(0,0,1)}[ax],deg)
+        return L
+class Assembly:
+    """a subassembly: its members, the pairs meant to touch or press (fits: (a, b, kind, why); kind 'press' allows an overlap up to vol mm³, 'touch' and
+    'clear' none) and its notes; hamilton_parts.py checks every pair of members for overlap"""
+    def __init__(self,key,title,group,members,fits=(),notes=(),flags=()):self.key=key;self.title=title;self.group=group;self.members=members;self.fits=list(fits);self.notes=list(notes);self.flags=list(flags)
+
+def asmFourth():
+    """42073 riveted on 42072: the wheel on the leaves' top face (.320 from the pinion's tip), its bore round the collar (.280 to .320), the collar .005 proud"""
+    T=HD()['p4']['st'];w=HD()['w4']['t']
+    return Assembly('asmFourth','Fourth wheel and pinion (42073 complete)','Going train',
+        [Member('fourthPinion',why='42072: the frame'),Member('fourthWheel',t=(0,0,T['collarEnd']-w),ex=(0,0,-6),why=f"42073's side view: on the leaves' top face ({inch(T['collarEnd']):.3f} from the tip), the collar through its bore")],
+        fits=[('fourthWheel','fourthPinion','press',"the wheel's .100 bore on the collar .1000 ±.0003, riveted (42073 #13)")],
+        notes=["The collar (.040 long) stands .005 proud of the wheel's face, as 42073's side view shows."])
+def asmBarrel():
+    """42168, 42169, 42170: the cap's flange on the barrel's open end, its spigot in the bore; the arbor's left boss on the barrel's boss"""
+    B=HD()['ba'];C=HD()['cp'];A=HD()['bs'];I=lambda x:x*25.4
+    zc=B['h']+C['flangeT']   # the cap's outer face: its flange (r .750 to .825) lying on the barrel's end
+    ins=(zc-C['bossH'])-B['bossH'];es=ins-A['overBosses']
+    xb=I(.410)+A['span1000']-A['span720']   # the arbor's left boss face from its square end
+    za=B['bossH']+es/2-xb   # the arbor's frame: its square end out through the floor, the endshake shared
+    return Assembly('asmBarrel','Barrel, cap and arbor','Barrel and mainspring',
+        [Member('barrel',why='42168: the frame'),Member('barrelCap',rot=[('x',180)],t=(0,0,zc),ex=(0,0,14),why="42169: its flange on the barrel's end, the spigot in the 1.500 bore"),
+         Member('barrelArbor',t=(0,0,za),ex=(0,0,-30),why=f"42170: its .2295 bearings in the two .2300 bores, its bosses between the two boss faces ({inch(ins):.4f} apart against .530 over the bosses: endshake {inch(es):.4f} in)")],
+        fits=[('barrelCap','barrel','touch',"the cap's spigot 1.500 +0/-.001 in the bore 1.500 +.002/-0, its flange on the end"),('barrelArbor','barrel','clear','the .2295 bearing in the .2300 bore'),('barrelArbor','barrelCap','clear','the .2295 bearing in the .2300 bore')],
+        notes=[f"Inside, the barrel's and cap's boss faces are {inch(ins):.4f} in apart; the arbor's bosses span .530 +0/-.002: endshake {inch(es):.4f} in ({es:.3f} mm) as drawn.",
+               "Which end of the arbor the square goes out at is not on these sheets: built out through the barrel's floor (assumed)."],
+        flags=['Which way the arbor faces: not on the sheets (assumed)'])
+
+ASSEMBLIES=[asmFourth,asmBarrel]
