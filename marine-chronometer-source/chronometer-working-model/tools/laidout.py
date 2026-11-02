@@ -1,9 +1,14 @@
 """A model's Laid out view against a textbook's developed drawing of a fusee chronometer ("Modern chronometer movement", Figs. 83 (elevation) and 84 (plan),
 its letters of reference): every element the drawing letters is in the view, shown, on screen, and opens its own card when clicked (the schematic plates too, which
-stand in for the frame laid out); then both views rendered on one sheet with the drawing's letters as callouts and a key.
+stand in for the frame laid out); then both views rendered on one sheet with the drawing's letters as callouts and a key, and a third the drawing hasn't: the train
+laid out seen isometrically (the line's yaw turned 45°, 35.26° down from the train side, through a 4° lens from far off, near parallel), the schematic plates, bridges,
+cocks and pillars hidden (the page's ?qa __devHide; the frame's pieces kept shown laid out, the set-up click and the stop pin, stay).
 
-    python laidout.py [OUTDIR]                  # the Hamilton: r_laidout_sheet.png (both views and the key) and r_laidout_checks.json in OUTDIR, default the current directory
+    python laidout.py [OUTDIR]                  # the Hamilton: r_laidout_sheet.png (the three views and the key) and r_laidout_checks.json in OUTDIR, default the current directory
     python laidout.py --model wempe [OUTDIR]    # the Wempe
+    python laidout.py --model wempe --write     # and the sheet into the page: renders/laidout_sheet.webp beside its index.html (shown under Take it apart while Laid out is on),
+                                                # with renders/laidout_sheet.json, the sha256 of every file the page loaded and of this tool; only if the checks pass
+    python laidout.py --model wempe --check     # no browser, a second: exit 1 if any of those files changed since (the sheet stale); the root build then rewrites it
 
 Where a model is made otherwise than the drawing (FIGS, each model's table): neither has B' (the stud carrying the stop work), their stop-bars sliding in a slot across
 the fusee's top or small end; S' (the snail the stopping arm meets) is the stop the bar meets in their frames (the stop work turned round: the arm in the fusee, its stop
@@ -12,14 +17,24 @@ upper train bridge and the barrel bridge. Both stop-bars' springs are enclosed (
 round the hub on the fusee's top under its top plate), in the view but out of sight from any side (HIDDEN; their letter in brackets). Each element is clicked where the view shows it (the elevation, else the plan, as the drawing's two figures share their letters),
 the page's own pick: a real click, its anchor a pixel where the page's rule (the first part not see-through, else the smallest schematic plate) finds it. Exits 1 if an
 element is missing from the view, out of sight in both views (HIDDEN apart), or a click on it opens another part's card. About 1 minute."""
-import asyncio,browser,json,math,pathlib,sys
+import asyncio,browser,hashlib,json,math,pathlib,sys,urllib.parse,urllib.request
 import model
 from playwright.async_api import async_playwright
 from PIL import Image,ImageChops,ImageDraw,ImageFont
 sys.stdout.reconfigure(encoding='utf-8')
 PAGE=model.PAGE+'#merge=0'
-OUT=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else '.')
-CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading,#info{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
+WRITE,CHECK='--write' in sys.argv,'--check' in sys.argv;_A=[a for a in sys.argv[1:] if not a.startswith('--')]
+OUT=pathlib.Path(_A[0] if _A else '.')
+ROOT=model.DIR.parents[1];IMG=model.DIR/'renders/laidout_sheet.webp';STAMP=IMG.with_suffix('.json');SELF=pathlib.Path(__file__).resolve()
+sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+def stale():
+    """the files of the stamp that changed since the sheet was written (all of them if it never was)"""
+    if not IMG.exists() or not STAMP.exists():return ['(no sheet)']
+    F=json.loads(STAMP.read_text(encoding='utf-8'))['files']
+    return [k for k,h in F.items() if not (ROOT/k).exists() or sha(ROOT/k)!=h]
+if CHECK:
+    st=stale();print(('stale: '+', '.join(st)+f' changed; run python laidout.py --model {model.NAME} --write') if st else f'ok: {IMG.relative_to(ROOT).as_posix()} is up to date with the page');sys.exit(1 if st else 0)
+CSS=("header,.panel,.hud,.tools,.hint,.labels,.dock,.hist,.split,.loading,#info{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
      ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const s=ESC.state(0.4),u=(n,w)=>mv.userData._u({E:1000+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:false});u(0,true);u(2.5,false);})()"""   # views.py's
@@ -41,7 +56,15 @@ FIGS={'wempe':dict(title='Wempe Einheits-Chronometer',target=-11,hidden={'s':'in
   ('Motion work and hands',[('V','The cannon pinion','cannon:gear'),('V′','The minute wheel','changeWheel.wheel'),('X','The minute pinion','changeWheel.pinion'),('X′','The hour wheel','hourWheel.wheel'),
     ('Y','The minute hand','hands.minute'),('Z','The hour hand','hands.hour')]),
   ('Drawn, not lettered',[('1','Balance (under the cock Z of Fig. 84)','balance.rim'),('2','Hairspring','hairspring.spring'),('3','Detent','detent.detent'),('4','Upper balance cock','upperCock'),
-    ('5','Lower balance cock','lowerCock'),('6','Intermediate bridge','intermediateBridge'),('7','Barrel bridge','barrelBridge.bridge'),('8','Seconds hand','hands.seconds'),('9','Up-and-down hand','hands.ud')])]),
+    ('5','Lower balance cock','lowerCock'),('6','Intermediate bridge','intermediateBridge'),('7','Barrel bridge','barrelBridge.bridge'),('8','Seconds hand','hands.seconds'),('9','Up-and-down hand','hands.ud')])],
+  insets=[('Mainspring and fusee','The barrel, drawn see-through, holds the mainspring; its chain winds onto the fusee’s cone, whose radius grows as the spring runs down, so the pull reaching the train stays even.',
+     ['barrel','barrelArbor','setupRatchet','mainspring','chain','fusee','fuseeWheel','stopWork'],['barrel'],['barrel']),
+    ('Maintaining power','Harrison’s maintaining work, under the fusee (left out here): a steel ring spring in the fusee wheel’s recess carries the drive. While the key turns the fusee back to wind it, the maintaining detent holds the ratchet and the spring alone drives the train. The ratchet and wheel are drawn see-through.',
+     ['fuseeWheel','maintaining','maintDetent'],['fuseeWheel','maintaining.ratchet'],['maintaining','maintDetent']),
+    ('Spring detent escapement','The detent locks the escape wheel. Every other swing the discharge stone on the balance’s roller unlocks it through the gold spring, a tooth pushes the impulse roller, and the balance swings on free.',
+     ['escapeWheel','detent','rollers'],[],['escapeWheel','detent']),
+    ('Balance and hairspring','The balance and its helical hairspring set the beat: their period is the chronometer’s half second. The cut bimetallic rim and the masses on it compensate for temperature.',
+     ['balance','hairspring','stud','rollers'],[],['balance','hairspring'])]),
  'hamilton':dict(title='Hamilton Model 21',target=-15,hidden={'s':'in the recess round the hub on the fusee’s top, under the fusee’s top plate'},fig=[
   ('Framework',[('A','The pillar plate','pillar'),('A′','The top-plate','trainBridge','made as bridges: the upper train bridge, and the barrel bridge (7)'),('B','The pillars','pillars')]),
   ('Driving power',[('C','The mainspring barrel','barrel.drum'),('c','The barrel arbor, squared for setting up','ratchet.arbor'),('r','Ratchet (set-up)','ratchet.wheel'),
@@ -58,8 +81,9 @@ FIGS={'wempe':dict(title='Wempe Einheits-Chronometer',target=-11,hidden={'s':'in
     ('Y','The minute hand','hands.minute'),('Z','The hour hand','hands.hour')]),
   ('Drawn, not lettered',[('1','Balance (under the cock Z of Fig. 84)','bal.wheel'),('2','Hairspring','spr.spring'),('3','Detent','det.detent'),('4','Balance cock','cock'),
     ('5','Sustaining spring','sspring'),('6','Seconds hand','hands.seconds'),('7','Barrel bridge','barrelBridge.bridge'),('8','Wind indicator hand','hands.wind')])])}
-FM=FIGS[model.NAME];FIG=FM['fig'];HIDDEN=FM['hidden']
+FM=FIGS[model.NAME];FIG=FM['fig'];HIDDEN=FM['hidden'];INSETS=FM.get('insets',[])   # (title, caption, the parts shown, those of them (or pieces) drawn see-through, those the numbered badge on the isometric view marks): close-ups ringed on the isometric view
 ITEMS=[(L,n,k,(x[0] if x else '')) for _,g in FIG for (L,n,k,*x) in g]
+ISO=['pillarPlate','topPlate','pillars','intermediateBridge','barrelBridge','lowerCock','upperCock','trainBridge','pillar','cock']   # the schematic plates hidden in the isometric view (devOf: each model's own; a name it hasn't is passed over)
 JS=r"""((items)=>{const mv=window.__mv,r=window.__r,cv=r.domElement,ci=JSON.parse(__camInfo()),W=cv.clientWidth,H=cv.clientHeight;
   const cam=new THREE.PerspectiveCamera(ci.fov,W/H,1,6000);cam.position.set(...ci.pos);cam.lookAt(new THREE.Vector3(...ci.tgt));cam.updateMatrixWorld();cam.updateProjectionMatrix();
   const sh=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;},M=[];mv.traverse(o=>{if(o.isMesh&&sh(o))M.push(o);});
@@ -84,6 +108,19 @@ JS=r"""((items)=>{const mv=window.__mv,r=window.__r,cv=r.domElement,ci=JSON.pars
     let a=null;if(hs.length){const cx=hs.reduce((s,h)=>s+h[0],0)/hs.length,cy=hs.reduce((s,h)=>s+h[1],0)/hs.length;a=hs.reduce((p,h)=>Math.hypot(h[0]-cx,h[1]-cy)<Math.hypot(p[0]-cx,p[1]-cy)?h:p);}
     const pk=a?a[2]:S[0].userData.pk;out[L]={n:S.length,hits:hs.length,at:a?[a[0],a[1]]:[(x0+x1)/2,(y0+y1)/2],pk,title:title(pk),plate:S.some(m=>m.userData.devPlate)};}
   return {W,H,out};})"""
+RING=r"""((sets)=>{const mv=window.__mv,ci=JSON.parse(__camInfo()),W=ci.W,H=ci.Hh,cam=new THREE.PerspectiveCamera(ci.fov,W/H,1,6000);cam.position.set(...ci.pos);cam.lookAt(new THREE.Vector3(...ci.tgt));cam.updateMatrixWorld();cam.updateProjectionMatrix();
+  const sh=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;},v=new THREE.Vector3();
+  /* the parts' own vertices projected (a 3D box's corners overstate a part seen obliquely): the middle of what they draw, where the badge goes */
+  return sets.map(S=>{let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;mv.traverse(o=>{if(!(o.isMesh&&sh(o)&&S.includes(o.userData.part)))return;const P=o.geometry.attributes.position,st=Math.max(1,Math.floor(P.count/400));
+      for(let i=0;i<P.count;i+=st){v.fromBufferAttribute(P,i).applyMatrix4(o.matrixWorld).project(cam);const x=(v.x+1)/2*W,y=(1-v.y)/2*H;x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}});
+    return[(x0+x1)/2,(y0+y1)/2,(x1-x0)*0.6,(y1-y0)*0.6];});})"""
+# an inset's parts alone (their hidden pieces and groups shown: the mainspring in its barrel), those in ghost see-through; null puts the page back. Gives the parts' centre in mv's frame and radius
+ISOL=r"""((show,ghost)=>{const mv=window.__mv,L=window.__lo||[];for(const[o,vis,mat]of L){o.visible=vis;if(mat)o.material=mat;}window.__lo=[];if(!show)return null;const lo=window.__lo,seen=new Set(),keep=o=>{if(!seen.has(o)){seen.add(o);lo.push([o,o.visible,null]);}};
+  const M=[];mv.traverse(o=>{if(o.isMesh)M.push(o);});const b=new THREE.Box3();
+  for(const m of M){keep(m);const p=m.userData.part,on=show.includes(p)&&!m.userData.devPlate&&!m.userData.decal;m.visible=on;if(!on)continue;
+    for(let o=m.parent;o&&o!==mv;o=o.parent){keep(o);o.visible=true;}
+    if(ghost.includes(p)||ghost.includes(m.userData.pk)){lo.find(x=>x[0]===m)[2]=m.material;const g=m.material.clone();g.transparent=true;g.opacity=0.28;g.depthWrite=false;m.material=g;}else b.expandByObject(m);}
+  const c=b.getCenter(new THREE.Vector3()),r=b.getSize(new THREE.Vector3()).length()/2;mv.worldToLocal(c);return{c:c.toArray(),r};})"""
 def font(names,size):
     for n in names:
         try:return ImageFont.truetype(n,size)
@@ -117,9 +154,11 @@ def panel(shot,bg,res,sub,dpr):
     A=[(L,(res[L]['at'][0]*dpr-bx0,res[L]['at'][1]*dpr-by0),res[L]['hits']==0) for L,_,k,_ in ITEMS if k and res.get(L,{}).get('n')]
     A=[a for a in A if not a[2] or a[0] in HIDDEN]   # out of sight in this view: lettered in the other (HIDDEN in both, dashed)
     band=F(62);top=F(34);C=Image.new('RGB',(W,top+band+H+band),'white');oy=top+band;C.paste(im,(0,oy));d=ImageDraw.Draw(C);d.text((F(4),F(4)),sub,font=T['SUB'],fill=INK)
-    mid=sorted(a[1][1] for a in A)[len(A)//2]   # the anchors shared evenly between the rows above and below
+    # the anchors shared between the rows above and below by the line fitted through them (level for the elevation and plan; along the train seen isometrically), so leaders stay short
+    n=len(A);mx=sum(a[1][0] for a in A)/n;my=sum(a[1][1] for a in A)/n;sxx=sum((a[1][0]-mx)**2 for a in A) or 1;m=sum((a[1][0]-mx)*(a[1][1]-my) for a in A)/sxx
+    m=m if abs(m)>0.15 else 0;r=sorted(a[1][1]-my-m*(a[1][0]-mx) for a in A);mid=r[n//2]
     for up in (True,False):
-        S=sorted([a for a in A if (a[1][1]<mid)==up],key=lambda a:a[1][0])
+        S=sorted([a for a in A if (a[1][1]-my-m*(a[1][0]-mx)<mid)==up],key=lambda a:a[1][0])
         if not S:continue
         xs=spread([a[1][0] for a in S],F(30),F(14),W-F(14));ly=oy-band*0.5 if up else oy+H+band*0.5
         for (L,p,hid),lx in zip(S,xs):
@@ -129,6 +168,27 @@ def panel(shot,bg,res,sub,dpr):
                 for i in range(0,n,2):d.line([(lx+(px-lx)*i/n,ey+(py-ey)*i/n),(lx+(px-lx)*(i+1)/n,ey+(py-ey)*(i+1)/n)],fill=RED,width=max(1,F(1)))
             else:d.line([(lx,ey),(px,py)],fill=RED,width=max(1,F(1)))
             d.ellipse([px-F(2.5),py-F(2.5),px+F(2.5),py+F(2.5)],fill=RED);d.text((lx-tw/2,ly-F(13)),t,font=T['LET'],fill=RED)
+    return C,(bx0,by0,oy)
+def crop(shot,bg,pad):
+    """a render cropped to what the movement draws (against the same frame without it)"""
+    im=Image.open(shot).convert('RGB');bb=ImageChops.difference(im,Image.open(bg).convert('RGB')).convert('L').point(lambda v:255 if v>10 else 0).getbbox()
+    return im.crop((max(0,bb[0]-pad),max(0,bb[1]-pad),min(im.size[0],bb[2]+pad),min(im.size[1],bb[3]+pad)))
+def isofig(P,off,rings,shots,dpr):
+    """the isometric view with its close-ups: each marked on the view by a small numbered badge, its box beside it (number, title, caption, the parts alone) and a thin leader from badge to box, in the same order down"""
+    F=lambda s:int(s*dpr);T=FONTS(F);bx0,by0,oy=off;IW=F(470);pad=F(12);meas=ImageDraw.Draw(Image.new('RGB',(10,10)));B=[]
+    for i in sorted(range(len(shots)),key=lambda i:rings[i][1]):
+        (tt,cap,*_),im=INSETS[i],shots[i];ln=wrap(meas,cap,T['TXT'],IW-2*pad);iw=IW-2*pad;ih=round(im.size[1]*iw/im.size[0])
+        if ih>F(220):iw=round(iw*F(220)/ih);ih=F(220)
+        B.append((i,tt,ln,im.resize((iw,ih),Image.LANCZOS),pad+F(24)+len(ln)*F(17)+F(8)+ih+pad))
+    gap=F(16);th=sum(b[4] for b in B)+gap*(len(B)-1);H=max(P.size[1],oy+th);x0=P.size[0]+F(70)
+    C=Image.new('RGB',(x0+IW+F(4),H),'white');C.paste(P,(0,0));d=ImageDraw.Draw(C);y=min(oy,H-th);RIM=(70,70,70);LEAD=(140,140,140);br=F(11)
+    def badge(x,y,n):d.ellipse([x-br,y-br,x+br,y+br],fill=INK,outline='white',width=F(1.5));d.text((x,y),str(n),font=T['HD'],fill='white',anchor='mm')
+    for n,(i,tt,ln,im,h) in enumerate(B,1):
+        cx,cy=rings[i][0]*dpr-bx0,rings[i][1]*dpr-by0+oy;ty=y+pad+F(8);a=math.atan2(ty-cy,x0-cx)
+        d.line([(cx+br*math.cos(a),cy+br*math.sin(a)),(x0,ty)],fill=LEAD,width=F(1));badge(cx,cy,n)
+        d.rectangle([x0,y,x0+IW,y+h],outline=RIM,width=F(1.5));badge(x0+pad+br,y+pad+F(8),n);d.text((x0+pad+2*br+F(8),y+pad),tt.upper(),font=T['HD'],fill=INK);yy=y+pad+F(24)
+        for l in ln:d.text((x0+pad,yy),l,font=T['TXT'],fill=INK);yy+=F(17)
+        C.paste(im,(int(x0+(IW-im.size[0])/2),int(yy+F(8))));y+=h+gap
     return C
 def key(views,dpr,hmax):
     """the key: each group of the drawing's letters with its names and the model's part (the card's title) under it, in as many columns as keep it within hmax"""
@@ -157,10 +217,11 @@ def key(views,dpr,hmax):
             y+=hh
     return C
 def sheet(panels,views,path,dpr):
-    """the two views one above the other, the key beside them, under one title (as the drawing's Figs. 83 and 84 share their letters)"""
+    """the views one above the other, the key beside them, under one title (as the drawing's Figs. 83 and 84 share their letters)"""
     F=lambda s:int(s*dpr);T=FONTS(F);g=F(24);top=F(70);pw=max(p.size[0] for p in panels);ph=sum(p.size[1] for p in panels)+g*(len(panels)-1)
-    K=key(views,dpr,ph);C=Image.new('RGB',(F(20)+pw+F(40)+K.size[0]+F(20),top+max(ph,K.size[1])+F(40)),'white');d=ImageDraw.Draw(C)
-    d.text((F(20),F(18)),FM['title']+', laid out, against a textbook’s developed drawing (“Modern chronometer movement”, Figs. 83 and 84) and its letters of reference',font=T['TT'],fill=INK)
+    K=key(views,dpr,ph);tt=FM['title']+', laid out, against a textbook’s developed drawing (“Modern chronometer movement”, Figs. 83 and 84) and its letters of reference'
+    tw=ImageDraw.Draw(Image.new('RGB',(10,10))).textlength(tt,font=T['TT']);C=Image.new('RGB',(max(F(20)+pw+F(40)+K.size[0],int(F(20)+tw))+F(20),top+max(ph,K.size[1])+F(40)),'white');d=ImageDraw.Draw(C)
+    d.text((F(20),F(18)),tt,font=T['TT'],fill=INK)
     y=top
     for p in panels:C.paste(p,(F(20),y));y+=p.size[1]+g
     C.paste(K,(F(20)+pw+F(40),top+F(6)));C.save(path)
@@ -170,18 +231,34 @@ async def main():
         b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(2000);await w.close()
         pg=await b.new_page(viewport={"width":1800,"height":1000},device_scale_factor=dpr,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
+        reqs=set();pg.on("request",lambda q:reqs.add(q.url))   # what the page loads: the sheet's stamp
         await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.id='shotcss';s.textContent=%r;document.head.appendChild(s);});"%CSS)
-        await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
+        await pg.goto(PAGE,wait_until='domcontentloaded',timeout=180000);await pg.wait_for_function("!document.querySelector('#loading')",timeout=300000);await pg.wait_for_timeout(1500)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(FREEZE)
         await pg.evaluate("document.querySelector('#views button[data-v=\"laidout\"]').click()");await pg.wait_for_timeout(3000)
         DEV=json.loads(await pg.evaluate("JSON.stringify(window.__mv.userData.DEV)"));yaw=math.atan2(DEV['w'][1],DEV['w'][0])
         views={};clicked={};panels=[];css=lambda a,b2:pg.evaluate("((a,b)=>{const s=document.getElementById('shotcss');s.textContent=s.textContent.replace(a,b);})(%s,%s)"%(json.dumps(a),json.dumps(b2)))
-        for name,pitch in (('elevation',0.05),('plan',1.5)):
-            await pg.evaluate(f"window.__look({yaw},{pitch},420,{DEV['mid'][0]},{FM['target']},{DEV['mid'][1]})");await pg.wait_for_timeout(2500)
+        for name,pitch in (('elevation',0.05),('plan',1.5),('iso',math.atan(1/math.sqrt(2)))):
+            if name=='iso':   # near parallel: a 4° lens framing what the 20° lens at 420 mm did; the schematic frame hidden
+                d=420*math.tan(math.radians(10))/math.tan(math.radians(2));await pg.evaluate(f"window.__devHide({json.dumps(ISO)});window.__cam({yaw+math.pi/4},{pitch},{d},4)")
+                await pg.evaluate(f"window.__look({yaw+math.pi/4},{pitch},{d},{DEV['mid'][0]},{FM['target']},{DEV['mid'][1]})");await pg.wait_for_timeout(3000)
+            else:await pg.evaluate(f"window.__look({yaw},{pitch},420,{DEV['mid'][0]},{FM['target']},{DEV['mid'][1]})");await pg.wait_for_timeout(2500)
             shot=OUT/f'r_laidout_{name}_raw.png';await pg.screenshot(path=str(shot));bg=OUT/f'r_laidout_{name}_bg.png'
             await pg.evaluate("window.__mv.visible=false");await pg.wait_for_timeout(500);await pg.screenshot(path=str(bg));await pg.evaluate("window.__mv.visible=true");await pg.wait_for_timeout(500)
             R=await pg.evaluate(JS+"(%s)"%json.dumps([[L,n,k] for L,n,k,_ in ITEMS]));views[name]=R['out']
-            panels.append(panel(shot,bg,R['out'],'Elevation, from the side (cf. Fig. 83)' if name=='elevation' else 'Plan, from the train side (cf. Fig. 84)',dpr));shot.unlink();bg.unlink()
+            pc,off=panel(shot,bg,R['out'],{'elevation':'Elevation, from the side (cf. Fig. 83)','plan':'Plan, from the train side (cf. Fig. 84)',
+              'iso':'Isometric, from the train side, the plates, bridges, cocks and pillars hidden (not in the drawing), with close-ups'}[name],dpr);panels.append(pc);shot.unlink();bg.unlink()
+            if name=='iso':   # every element is clicked in the other two (the plates hidden here would not be); the close-ups, each through a 20° lens on the same line of sight
+                if INSETS:
+                    rings=await pg.evaluate(RING+"(%s)"%json.dumps([x[4] for x in INSETS]));shots=[]
+                    for j,(tt,cap,show,ghost,_) in enumerate(INSETS):
+                        q=await pg.evaluate(ISOL+"(%s,%s)"%(json.dumps(show),json.dumps(ghost)));dd=q['r']/math.sin(math.radians(10))*1.08
+                        await pg.evaluate(f"window.__cam({yaw+math.pi/4},{pitch},{dd},20);window.__look({yaw+math.pi/4},{pitch},{dd},{q['c'][0]},{q['c'][1]},{q['c'][2]})");await pg.wait_for_timeout(2500)
+                        s1=OUT/f'r_laidout_in{j}_raw.png';s0=OUT/f'r_laidout_in{j}_bg.png';await pg.screenshot(path=str(s1))
+                        await pg.evaluate("window.__mv.visible=false");await pg.wait_for_timeout(400);await pg.screenshot(path=str(s0));await pg.evaluate("window.__mv.visible=true")
+                        shots.append(crop(s1,s0,dpr*10));s1.unlink();s0.unlink()
+                    await pg.evaluate(ISOL+"(null,null)");panels[-1]=isofig(pc,off,rings,shots,dpr)
+                continue
             # a real click at each element's anchor not clicked yet (pointerdown and up; 0.55 s apart, so no two make a double), its card's title against the element's
             await css(',#info{','{')
             for L,nm,k,_ in ITEMS:
@@ -202,5 +279,17 @@ async def main():
         print(f"{'  ' if ok else 'XX'} {L:3} {nm:42} {k:30} meshes {e.get('n',0):3}  seen {e.get('hits',0):4} / plan {pl.get('hits',0):4}  "+(f"clicked in the {c[0]}: {c[1]}" if c else 'not clicked: '+HIDDEN.get(L,'out of sight')))
     (OUT/'r_laidout_checks.json').write_text(json.dumps({'views':views,'clicked':clicked},indent=1,ensure_ascii=False),encoding='utf-8')
     if errs:fails.append('page errors')
+    if WRITE and not fails:
+        im=Image.open(OUT/'r_laidout_sheet.png').convert('RGB');w=min(im.size[0],3200);im=im.resize((w,round(im.size[1]*w/im.size[0])),Image.LANCZOS)
+        IMG.parent.mkdir(exist_ok=True);im.save(IMG,'WEBP',quality=84,method=6)
+        F=set()
+        for u in reqs:
+            if u.startswith('file:'):
+                f=pathlib.Path(urllib.request.url2pathname(urllib.parse.urlparse(u).path)).resolve()
+                if f.is_file() and f!=IMG and f.is_relative_to(ROOT):F.add(f)
+        F.add(SELF);F.add(SELF.parent/'model.py')
+        STAMP.write_text(json.dumps({'sheet':IMG.name,'files':{f.relative_to(ROOT).as_posix():sha(f) for f in sorted(F)}},indent=1)+'\n',encoding='utf-8',newline='\n')
+        print(f'wrote {IMG.relative_to(ROOT).as_posix()} ({IMG.stat().st_size//1024} KB, {w} px) and its stamp ({len(F)} files)')
+    elif WRITE:print('the sheet not written: the checks failed')
     print('FAIL: '+', '.join(fails) if fails else f'ok: every lettered element of Figs. 83-84 shown laid out and clickable ({sum(1 for i in ITEMS if i[2])} checked)');sys.exit(1 if fails else 0)
 asyncio.run(main())
