@@ -115,11 +115,16 @@ RING=r"""((sets)=>{const mv=window.__mv,ci=JSON.parse(__camInfo()),W=ci.W,H=ci.H
       for(let i=0;i<P.count;i+=st){v.fromBufferAttribute(P,i).applyMatrix4(o.matrixWorld).project(cam);const x=(v.x+1)/2*W,y=(1-v.y)/2*H;x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}});
     return[(x0+x1)/2,(y0+y1)/2,(x1-x0)*0.6,(y1-y0)*0.6];});})"""
 # an inset's parts alone (their hidden pieces and groups shown: the mainspring in its barrel), those in ghost see-through; null puts the page back. Gives the parts' centre in mv's frame and radius
-ISOL=r"""((show,ghost)=>{const mv=window.__mv,L=window.__lo||[];for(const[o,vis,mat]of L){o.visible=vis;if(mat)o.material=mat;}window.__lo=[];if(!show)return null;const lo=window.__lo,seen=new Set(),keep=o=>{if(!seen.has(o)){seen.add(o);lo.push([o,o.visible,null]);}};
-  const M=[];mv.traverse(o=>{if(o.isMesh)M.push(o);});const b=new THREE.Box3();
-  for(const m of M){keep(m);const p=m.userData.part,on=show.includes(p)&&!m.userData.devPlate&&!m.userData.decal;m.visible=on;if(!on)continue;
+ISOL=r"""((show,ghost)=>{const mv=window.__mv,L=window.__lo||[];for(const[o,vis,mat,cs,rs]of L){o.visible=vis;if(mat){o.material=mat;o.castShadow=cs;o.receiveShadow=rs;o.renderOrder=0;}}for(const d of window.__lod||[])d.parent.remove(d);window.__lo=[];window.__lod=[];if(!show)return null;const lo=window.__lo,seen=new Set(),keep=o=>{if(!seen.has(o)){seen.add(o);lo.push([o,o.visible,null,o.castShadow,o.receiveShadow]);}};
+  /* a piece of another version (under a hidden group with userData.rev: movement.js's setRev) stays hidden; the rest of the parts shown, hidden or not (the mainspring) */
+  const offRev=m=>{for(let o=m;o&&o!==mv;o=o.parent)if(o.userData.rev&&!o.visible)return true;return false;};
+  const M=[];mv.traverse(o=>{if(o.isMesh)M.push([o,offRev(o)]);});const b=new THREE.Box3();
+  for(const[m,off]of M){keep(m);const p=m.userData.part,on=show.includes(p)&&!m.userData.devPlate&&!m.userData.decal&&!off;m.visible=on;if(!on)continue;
     for(let o=m.parent;o&&o!==mv;o=o.parent){keep(o);o.visible=true;}
-    if(ghost.includes(p)||ghost.includes(m.userData.pk)){lo.find(x=>x[0]===m)[2]=m.material;const g=m.material.clone();g.transparent=true;g.opacity=0.28;g.depthWrite=false;m.material=g;}else b.expandByObject(m);}
+    /* see-through, its nearest surface only: a depth-only copy drawn first among the transparent (renderOrder 1), its colour after (2), so the parts behind show through it
+       but its own faces behind don't (the maintaining ratchet's 120 teeth stacked into a grey mottle: 2 November 2026); out of the shadow pass both ways */
+    if(ghost.includes(p)||ghost.includes(m.userData.pk)){lo.find(x=>x[0]===m)[2]=m.material;const g=m.material.clone();g.transparent=true;g.opacity=0.3;g.depthWrite=false;m.material=g;m.castShadow=false;m.receiveShadow=false;m.renderOrder=2;
+      const dm=new THREE.Mesh(m.geometry,new THREE.MeshBasicMaterial({colorWrite:false,transparent:true,depthWrite:true}));dm.renderOrder=1;m.add(dm);window.__lod.push(dm);}else b.expandByObject(m);}
   const c=b.getCenter(new THREE.Vector3()),r=b.getSize(new THREE.Vector3()).length()/2;mv.worldToLocal(c);return{c:c.toArray(),r};})"""
 def font(names,size):
     for n in names:

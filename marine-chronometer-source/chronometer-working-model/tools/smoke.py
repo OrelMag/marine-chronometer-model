@@ -19,6 +19,11 @@ card, a piece's card and its link to its part, the parts' pieces (every mesh in 
 the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero), the 35-day trial's tables, and Escapement in plan (drawn, its figures, Show the escapement), and the walkthrough (every step and its inset, tour=N both ways, Finish and End)."""
 import asyncio,browser,pathlib,sys
 from playwright.async_api import async_playwright
+from playwright.async_api import Browser
+_np=Browser.new_page
+async def _new_page(self,*a,**k):   # every page's load given 3 minutes, not Playwright's 30 s: under other sessions' checks the Wempe's page took 33-38 s to its load event (2 November 2026)
+    pg=await _np(self,*a,**k);pg.set_default_navigation_timeout(180000);return pg
+Browser.new_page=_new_page
 HERE=pathlib.Path(__file__).resolve().parent
 import model as mdl;PAGE=mdl.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py); a bare --model is this tool's own (the Hamilton's model without the essay)
 ARGS=browser.ARGS
@@ -601,7 +606,7 @@ async def wempe(b,errs,steps):
     await ev("document.querySelector('#makeDet').open=true");await click('.info .mkc [data-a=sheet]',"the fusee's maker's sheet",600)
     ms=await ev("[document.querySelectorAll('.info .mkc table.mk tbody tr').length,document.querySelector('.info .mkc').textContent.includes('Rundmessing')]")
     if not(ms[0]>=3 and ms[1]):errs.append(f"the fusee's maker's sheet: {ms}")
-    await ev("location.hash='#part=detent'");await pg.wait_for_timeout(600);await click('.info .mkc .mkdevb[data-dev=gold]','the gold spring shown as drawn',500)
+    await ev("location.hash='#part=detent'");await pg.wait_for_selector('.info .mkc .mkdevb[data-dev=gold]',timeout=30000);await click('.info .mkc .mkdevb[data-dev=gold]','the gold spring shown as drawn',500)   # the card's maker's part comes later than 0.6 s under load
     if 'orig=gold' not in await ev("location.hash"):errs.append("the detent's card: the gold spring as drawn isn't in the link")
     await click('.info .mkc .mkdevb[data-dev=gold]',"the gold spring shown as the build's",500)
     await click('#mkMeasure','Measure on',300)
