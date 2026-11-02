@@ -105,6 +105,20 @@ Verdict before → now. "Match" means every printed size within its tolerance (0
 - **42027, 42028:** 42027 is mirrored, with a plain bore (D-3). 42028's hole 17 is .0498 and it is nickel plated (D-4).
 - **42001 transcription:** .030 is the stack (E-3), and four joints are drawn at each end (E-4). **42004:** clearance .0002 to .0013 (E-5).
 
+## Visual check (2 November 2026)
+
+`tools/hamilton_visual.py` draws each built part the way its sheet does, beside the sheet. Flat parts are drawn in plan with a cut through their thickness; turned parts as the section through the axis, lying along the page, with every edge seen across it. The pictures go to `$MC_VIDEO/hd-audit/visual/`, never into the repository. All 23 parts were compared by eye, and the 3D page re-rendered shaded. Three things were wrong and are now fixed:
+
+| # | Sheet | What the eye found | Fix |
+|---|---|---|---|
+| V-1 | 42170 barrel arbor | The side view draws the .120 band standing *out* below the body's lower edge, not cut into it. The end view's START SPIRAL shows why. The body is a circle (Ø .498: the .520 is measured over the tip) whose bottom, on the centre line, steps out .022 to a tip. An arc of 1.00 R runs from the tip back onto the circle .150 from the centre line. This lobe, only over the .120 band, is the hook the mainspring's .200 slot goes over. The build had a slot cut .070 into the body instead (C-6's "relief" was this). | The body is milled to the circle and the hook. The end view's 45° notch and the .010 × 45° detail are not cut (unsure). |
+| V-2 | 42072 fourth pinion | Each of the stem's three printed diameters has its own arrows at its own height: .0565 under the top cone, .0445 at the UNDERTURN, .0583 above the collar. Under the leaves there is a .0445 neck before the .060 shoulder. The drawing keeps one width throughout, and the build had a single taper (A-5). | Each diameter where its arrows stand. Where each begins is not dimensioned: .110 is estimated, and .250 is the line the drawn-parts branch read. The neck is .015 long (estimated). |
+| V-3 | 42007 winding pawl spring | Holes 16 and 17 are "TAP FOR .0440-130 SCREW": the screws come up from the back through 42009's countersunk holes and thread into the spring. The build had them plain at .0440. | Tapped .0440-130, drawn at the tap drill (.0357); the thread is a note. |
+
+Matching by eye, with nothing to change: the barrel and cap, the fusee arbor and wheel, the fourth wheel, the sustaining wheel and spring, the winding and sustaining pawls, the winding and set-up ratchets, the set-up pawl and spring, both hooks, the centre link, the link pin, the detent blank, the helical spring and the mainspring's end.
+
+For `claude/hamilton-drawn-parts` (HD): the barrel arbor's `slot` is the hook band; the body is .498, and the .520 is over the hook (V-1). The pinion's `st` should place .0565, .0445 and .0583 as in V-2. HD.wps's screw holes are tapped (V-3).
+
 ## Subassemblies
 
 Each subassembly is placed only by the sheets' numbers. `hamilton_parts.py` checks every pair of members for overlap: none may overlap unless the pair is a listed fit (press, tangent, or a spring's drawn preload). It reports each listed pair's contact or gap. All five pass.
