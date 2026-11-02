@@ -1,35 +1,41 @@
-"""penrender.py: stills of a model drawn as an ink-and-watercolour illustration, in Blender: EEVEE with Freestyle's pen lines (a heavy contour round each
-part's outline, thinner lines at its silhouettes, fine ones at its creases) over each material painted as a wash (its own colour in the light, shading into a warm
-or a cool shade of itself, darker where a surface turns away, a white glint on metal), under a key and a rim light, on cream paper (a faint tooth laid over
-afterwards, the drawing centred on the sheet). The model is the page's own export to Blender (gltf_check.py's), posed by the rig (blender/rig.py): the
-movement out of its case, the chronometer in its box, the movement taken apart. An illustration for its own sake: every line is the model's, nothing is
-simplified or left out as an illustrator would. Not run by build.py or ci.py.
+"""penrender.py: stills of a model drawn as an ink-and-watercolour illustration, in Blender: EEVEE with Blender's Line Art pen lines (a heavy line round
+each part's own outline, every contour, the creases in a lighter ink) over each material painted as a wash (its own colour in the light, shading into a warm
+or a cool shade of itself, darker where a surface turns away, a white glint on metal), under a key and a rim light, on cream paper with a faint tooth. The
+model is the page's own export to Blender (gltf_check.py's), posed by the rig (blender/rig.py). Each still is one of the page's views, seen as the page sees
+it: the tool opens the page (headless, at the still's size) on that view or link, reads its camera (?qa's __camInfo) and carries it into the movement's own
+frame, so any view, link or camera on the page can be drawn. An illustration for its own sake: every line is the model's, nothing is simplified or left out
+as an illustrator would. Not run by build.py or ci.py.
 
-    python penrender.py [--model wempe] [--glb FILE] [--only box,movement,exploded] [--size 1600x1150] [--out DIR]
-        (without --glb, gltf_check.py exports and checks the model first, about 2.5 min, 3.5 for the Wempe; then about 3 min a still)
+    python penrender.py [--model wempe] [--view dial,movement,exploded] [--glb FILE] [--size 1600x1150] [--out DIR]
+    python penrender.py --link "https://.../hamilton/#view=train&part=fs"    # a page link (its hash: the view, the explode share, a camera when it has one)
+    python penrender.py --view escapement --cam 1.9,-0.75,80                 # the page's camera turned: yaw, pitch, distance (mm)[, target x,y,z in the movement]
+    python penrender.py --list                                                # the model's views
+        (without --glb, gltf_check.py exports and checks the model first, about 2.5 min, 3.5 for the Wempe; then about 3-10 min a still;
+         --lines freestyle the first lines, faster, which break into dashes on curved walls)
 
-Writes pen_MODEL_VIEW.png into --out, default tools/r_pen/ (ignored)."""
+Writes pen_MODEL_VIEW.png (pen_MODEL_link.png, link_2, ...) into --out, default tools/r_pen/ (ignored)."""
 import json,os,pathlib,subprocess,sys
 try:
     import bpy
 except ImportError:
     bpy=None
 HERE=pathlib.Path(__file__).resolve().parent;RIG=HERE.parent/'blender'/'rig.py'
-# each view: the rig's controls set to 1 (lift: out of its case and turned over), the camera's direction from the movement (Blender's axes, z up), and
-# whether it shows the movement alone, fitted to the frame, or the whole at a set distance (m)
-VIEWS={'movement':dict(ctl=['lift'],dir=(0.55,-0.75,0.55),alone=True),
-       'box':dict(ctl=[],dir=(0.45,-0.8,0.75),alone=False,dist=0.36),
-       'exploded':dict(ctl=['lift','explode'],dir=(0.55,-0.75,0.55),alone=True)}
+# each model's views (the page's VIEWS) and how the rig poses them: the box shown (its lid shut: lids), exploded, laid out; any other the movement lifted
+# out of its case alone. The camera is the page's. The Wempe's transport view (an outer box) is in no export, and isn't listed
+POSE={'hamilton':{'box':dict(box=1,lids=1),'dial':dict(box=1),'movement':{},'train':{},'escapement':{},'exploded':dict(explode=1),'laidout':dict(laid_out=1),
+                  'fusee':{},'balance':{}},
+      'wempe':{'dial':dict(box=1),'box':dict(box=1,lids=1),'case':dict(box=1),'movement':{},'plan':{},'side':{},'exploded':dict(explode=1),'laidout':dict(laid_out=1),
+               'escapement':{},'train':{},'fusee':{},'balance':{}}}
 PAPER=(0.965,0.945,0.9)
 
-def paper(src,dst):
-    """the render laid on drawing paper: a drawing that stands clear of the sheet's edges centred at 88 % of it, then a faint tooth and fibre that the
+def paper(src,dst,centre=False):
+    """the render laid on drawing paper (centre: a drawing that stands clear of the sheet's edges centred at 88 % of it), then a faint tooth and fibre that the
     colour takes up most in its mid washes"""
     import numpy as np
     from PIL import Image
     from scipy.ndimage import gaussian_filter
     im=np.asarray(Image.open(src).convert('RGB')).astype(np.float32)/255;H,W,_=im.shape;bg=im[2,2].copy();ys,xs=np.nonzero(np.abs(im-bg).max(2)>0.04)
-    if len(xs) and not(xs.min()<3 or ys.min()<3 or xs.max()>W-4 or ys.max()>H-4):
+    if centre and len(xs) and not(xs.min()<3 or ys.min()<3 or xs.max()>W-4 or ys.max()>H-4):
         c=im[ys.min():ys.max()+1,xs.min():xs.max()+1];k=min(0.88*W/c.shape[1],0.88*H/c.shape[0])
         c=np.asarray(Image.fromarray((c*255).astype(np.uint8)).resize((int(c.shape[1]*k),int(c.shape[0]*k)),Image.LANCZOS)).astype(np.float32)/255
         im=np.ones_like(im)*bg;y0=(H-c.shape[0])//2;x0=(W-c.shape[1])//2;im[y0:y0+c.shape[0],x0:x0+c.shape[1]]=c
@@ -38,28 +44,67 @@ def paper(src,dst):
     g=1-0.014*tooth*(0.2+take)-0.004*fibre-0.004*mottle
     Image.fromarray((np.clip(im*g[...,None]*np.array([1.0,0.985,0.95]),0,1)*255).astype(np.uint8)).save(dst)
 
-if bpy is None:   # outside Blender: export if asked, run this file in Blender, lay each still on paper
-    import argparse,model
+def pagecams(shots,W,H):
+    """each shot's camera on the page: opened at W x H on its hash (a hand-set camera through __look), its position and target in the page's world (mm, y
+    up), its vertical field and its canvas's aspect"""
+    import asyncio,browser,model
+    from playwright.async_api import async_playwright
+    READ="""()=>{const i=JSON.parse(__camInfo());return {pos:i.pos,tgt:i.tgt,fov:i.fov,aspect:i.aspect}}"""   # in the page's world (mm, y up)
+    TURN="""(c)=>{const m=__mv;m.updateMatrixWorld(true);const t=c.length>=6?c.slice(3,6):m.worldToLocal(m.position.clone().set(...JSON.parse(__camInfo()).tgt)).toArray();
+      __look(c[0],c[1],c[2],...t)}"""
+    async def go():
+        async with async_playwright() as p:
+            b=await p.chromium.launch(args=browser.ARGS);w=await b.new_page();await w.set_content('<canvas></canvas>')
+            await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
+            pg=await b.new_page(viewport={'width':W,'height':H},device_scale_factor=1);errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
+            for S in shots:
+                await pg.goto('about:blank');await pg.goto(model.PAGE.split('#')[0]+'#'+S['hash'])
+                await pg.wait_for_function("!document.querySelector('#loading')",timeout=180000);await pg.wait_for_timeout(2500)
+                if S.get('cam'):await pg.evaluate(TURN,S['cam']);await pg.wait_for_timeout(1500)
+                S['page']=await pg.evaluate(READ)
+            await b.close()
+            if errs:sys.exit('page errors: '+'; '.join(errs))
+    asyncio.run(go())
+
+if bpy is None:   # outside Blender: read each view's camera off the page, export if asked, run this file in Blender, lay each still on paper
+    import argparse,urllib.parse,model
     from hamilton_render import blender
     sys.stdout.reconfigure(encoding='utf-8')
-    a=argparse.ArgumentParser();a.add_argument('--glb');a.add_argument('--only');a.add_argument('--size',default='1600x1150');a.add_argument('--out',default=str(HERE/'r_pen'));o=a.parse_args()
+    a=argparse.ArgumentParser();a.add_argument('--view',default='dial,movement,exploded');a.add_argument('--link',action='append',default=[]);a.add_argument('--cam')
+    a.add_argument('--list',action='store_true');a.add_argument('--glb');a.add_argument('--lines',default='lineart',choices=['lineart','freestyle'])
+    a.add_argument('--size',default='1600x1150');a.add_argument('--out',default=str(HERE/'r_pen'));o=a.parse_args();PZ=POSE[model.NAME]
+    if o.list:print(model.NAME+':',', '.join(PZ));sys.exit(0)
+    W,H=(int(x) for x in o.size.split('x'));shots=[]
+    def pose(h):
+        q=dict(urllib.parse.parse_qsl(h));v=q.get('view','dial')
+        if v not in PZ:sys.exit(f'{model.NAME} has no view {v!r} to draw (its views: {", ".join(PZ)}); a walkthrough step or an essay section is not one')
+        c=dict(PZ[v]);box=c.pop('box',0)
+        if 'explode' in c and 'pcs' in q:c['explode']=int(q['pcs'])/100
+        if not box:c['lift']=1
+        return dict(ctl=c,alone=not box)
+    for i,L in enumerate(o.link):
+        h=L.split('#',1)[1] if '#' in L else L;shots.append(dict(name='link'+(f'_{i+1}' if i else ''),hash=h,**pose(h)))
+    if not o.link:
+        for v in o.view.split(','):shots.append(dict(name=v,hash='view='+v,**pose('view='+v)))
+    if o.cam:
+        for S in shots:S['cam']=[float(x) for x in o.cam.split(',')]
+    print('reading',len(shots),'cameras off the page',flush=True);pagecams(shots,W,H)
     out=pathlib.Path(o.out).resolve();out.mkdir(parents=True,exist_ok=True)
     if o.glb:glb=pathlib.Path(o.glb).resolve()
     else:
         glb=(out/model.cfg('GLTF',{}).get('glb','r_model21.glb')).resolve();print('exporting',glb.name,'(gltf_check.py)',flush=True)
         r=subprocess.run([sys.executable,str(HERE/'gltf_check.py')]+([] if model.HAMILTON else ['--model',model.NAME]),cwd=out)
         if r.returncode or not glb.exists():sys.exit('the export failed')
-    views=[v for v in VIEWS if not o.only or v in o.only.split(',')];W,H=(int(x) for x in o.size.split('x'))
-    js=out/'pen.json';js.write_text(json.dumps({'glb':str(glb),'rig':str(RIG),'out':str(out),'model':model.NAME,'views':{v:VIEWS[v] for v in views},'size':[W,H],'paper':PAPER}),encoding='utf-8')
-    print(f'rendering {len(views)} stills in Blender',flush=True)
+    js=out/'pen.json';js.write_text(json.dumps({'glb':str(glb),'rig':str(RIG),'out':str(out),'model':model.NAME,'shots':shots,'size':[W,H],'paper':PAPER,'lines':o.lines}),encoding='utf-8')
+    print(f'rendering {len(shots)} stills in Blender',flush=True)
     r=subprocess.run([blender(),'-b','--factory-startup','--python',str(pathlib.Path(__file__).resolve()),'--',str(js)],capture_output=True,text=True,encoding='utf-8',errors='replace')
     for l in r.stdout.splitlines():
         if l.startswith(('MC ','Traceback','  File')) or 'Error' in l:print(' ',l)
     if r.returncode:print(r.stderr[-3000:]);sys.exit('Blender failed')
-    for v in views:
-        f=out/f'pen_{model.NAME}_{v}.png'
+    for S in shots:
+        f=out/f"pen_{model.NAME}_{S['name']}.png"
         if f.exists():paper(f,f);print('wrote',f)
-        else:sys.exit(f'no still for {v}')
+        else:sys.exit(f"no still for {S['name']}")
     sys.exit(0)
 
 # ---- inside Blender ----
@@ -156,7 +201,7 @@ for e in('BLENDER_EEVEE','BLENDER_EEVEE_NEXT'):
 
 # the pen: Freestyle line sets (a heavy contour, outlines, creases), each a calligraphic pen tapered at its ends, short strokes dropped. No border edges:
 # every part is a closed solid, and the glTF import splits its meshes at their seams, so a border was a flat face's triangle fan drawn across it
-sc.render.use_freestyle=True;sc.render.line_thickness_mode='ABSOLUTE';fs=sc.view_layers[0].freestyle_settings;fs.crease_angle=math.radians(118)
+sc.render.use_freestyle=True;sc.render.line_thickness_mode='ABSOLUTE';fs=sc.view_layers[0].freestyle_settings;fs.crease_angle=math.radians(140);fs.use_smoothness=True
 def pen(name,colour,thick,lo,hi,stretch,edges,minlen):
     ls=fs.linesets.new(name);ls.select_by_visibility=True;ls.visibility='VISIBLE';ls.select_by_edge_types=True
     for k in('silhouette','border','crease','external_contour'):setattr(ls,'select_'+k,k in edges)
@@ -165,7 +210,24 @@ def pen(name,colour,thick,lo,hi,stretch,edges,minlen):
     c=st.thickness_modifiers.new('pen','CALLIGRAPHY');c.orientation=35;c.thickness_min=lo;c.thickness_max=hi
     t=st.thickness_modifiers.new('taper','ALONG_STROKE');t.blend='MULTIPLY';t.mapping='CURVE';cv=t.curve;p=cv.curves[0].points
     p[0].location=(0,0.3);p[1].location=(1,0.3);p.new(0.15,1.0);p.new(0.85,1.0);cv.update()
-pen('contour',INK,5.0,3.4,6.4,1.5,('external_contour',),3);pen('outline',INK,2.6,1.6,3.4,1.0,('silhouette',),3);pen('inner',(0.36,0.26,0.18),1.1,0.8,1.4,0,('crease',),30)
+pen('contour',INK,5.0,3.4,6.4,1.5,('external_contour',),3);pen('inner',(0.36,0.26,0.18),1.1,0.8,1.4,0,('crease',),6)
+if A['lines']=='freestyle':pen('outline',INK,2.6,1.6,3.4,1.0,('silhouette',),3)
+# or Line Art (the default): its hidden lines worked out exactly on the triangles. Freestyle's ray test broke a curved wall's silhouette into dashes
+# (the rings in the Wempe's exploded view; the owner, 2 November 2026). One pass, the contours: Freestyle keeps the heavy outer outline and the creases,
+# which never broke (Line Art's three passes, a heavy outline, the contours and the creases, took 35 minutes a still against Freestyle's 2)
+# A stroke's radius is in the world's units, so each view sets it from its camera's distance (PX: a pixel's size there)
+LA=[]
+if A['lines']=='lineart':
+    def gpmat(name,c):
+        m=bpy.data.materials.new(name);bpy.data.materials.create_gpencil_data(m);m.grease_pencil.color=(*c,1);return m
+    bpy.ops.object.grease_pencil_add(type='LINEART_SCENE');gp=bpy.context.active_object;gp.modifiers.clear();gp.data.materials.clear()
+    mi,mc=gpmat('ink',INK),gpmat('crease',(0.36,0.26,0.18));gp.data.materials.append(mi);gp.data.materials.append(mc);lay=gp.data.layers[0].name
+    def art(name,mat,k,contour,crease,sil='NONE'):
+        m=gp.modifiers.new(name,'LINEART');m.source_type='SCENE';m.target_layer=lay;m.target_material=mat;m.use_contour=contour;m.use_crease=crease
+        m.use_intersection=False;m.use_loose=False;m.use_material=False;m.use_edge_mark=False;m.silhouette_filtering=sil;m.crease_threshold=math.radians(140);m.smooth_tolerance=0.1
+        LA.append((m,k))
+    art('contour',mi,2.6,True,False)
+    gp.hide_render=False
 
 cam=bpy.data.objects.new('cam',bpy.data.cameras.new('cam'));sc.collection.objects.link(cam);sc.camera=cam;cam.data.lens=50;cam.data.clip_start=0.001
 sc.render.resolution_x,sc.render.resolution_y=A['size']
@@ -176,15 +238,21 @@ def under(o,a):
         o=o.parent
     return False
 inmv={o for o in bpy.data.objects if under(o,mv)}
-for name,V in A['views'].items():
+from mathutils import Matrix
+# the page's world (mm, y up) is Blender's (m, z up) as (x, -z, y) / 1000: the export's clips put every part where the page does (blender_check.py holds the
+# rig to them), so the page's camera is the camera. The page pulls its camera back on a canvas narrower than 3:2 (aspectK); the still's own aspect is put back
+B=lambda v:Vector((v[0],-v[2],v[1]))/1000;AK=lambda a:min(max(1.25/a,1),2.2)
+cam.data.sensor_fit='VERTICAL'
+for S in A['shots']:
     for o in bpy.data.objects:
-        if o.type in('MESH','CURVE'):o.hide_render=V['alone'] and o not in inmv
-    for k in V['ctl']:ctl[k]=1.0
+        if o.type in('MESH','CURVE'):o.hide_render=S['alone'] and o not in inmv
+    for k,v in S['ctl'].items():ctl[k]=float(v)
     ctl.update_tag();sc.frame_set(0);bpy.context.view_layer.update()
-    cc=mv.matrix_world.translation.copy();d=Vector(V['dir']);cam.location=cc+d*V.get('dist',0.2);cam.rotation_euler=(cc-cam.location).to_track_quat('-Z','Y').to_euler()
-    if V['alone']:   # fitted to what is shown, a little back
-        bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get()
-        vs=[o.matrix_world@Vector(b) for o in inmv if o.type=='MESH' and o.visible_get() for b in o.bound_box]
-        loc,_=cam.camera_fit_coords(dg,[x for v in vs for x in v]);cam.location=loc+d.normalized()*0.012
-    sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{name}.png");bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath,flush=True)
-    for k in V['ctl']:ctl[k]=0.0
+    P=S['page'];tgt=B(P['tgt']);pos=tgt+(B(P['pos'])-tgt)*AK(A['size'][0]/A['size'][1])/AK(P['aspect']);up=Vector((0,0,1))
+    f=(tgt-pos).normalized();r=f.cross(up).normalized();u=r.cross(f)
+    cam.matrix_world=Matrix.Translation(pos)@Matrix((r,u,-f)).transposed().to_4x4();cam.data.angle_y=math.radians(P['fov'])
+    d=(tgt-pos).length;cam.data.clip_start=d/200;cam.data.clip_end=d*60
+    PX=2*d*math.tan(math.radians(P['fov'])/2)/A['size'][1]   # a pixel's size at the target
+    for m,k in LA:m.radius=k*PX
+    sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{S['name']}.png");bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath,flush=True)
+    for k in S['ctl']:ctl[k]=0.0
