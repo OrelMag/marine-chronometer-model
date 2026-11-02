@@ -68,8 +68,8 @@ p{margin:6px 0}
 <main>
 <nav id="list" aria-label="Parts"></nav>
 <div id="view"><div id="tools">
-<button data-v="iso">3D</button><button data-v="top">Plan</button><button data-v="side">Side</button>
-<button id="edges" aria-pressed="true">Edges</button><button id="section" aria-pressed="false" title="Cut through the axis (a turned part) or the middle">Section</button><button id="spin" aria-pressed="false">Turn</button>
+<button data-v="iso">3D</button><button data-v="top">Plan</button><button data-v="side">Side</button><button data-v="under">Under</button>
+<button id="edges" aria-pressed="true">Edges</button><button id="section" aria-pressed="false" title="Cut through the axis (a turned part) or the middle">Section</button><button id="spin" aria-pressed="false">Turn</button><label id="exw" hidden class="btn">Apart <input id="ex" type="range" min="0" max="1" step="0.01" value="0" aria-label="Take the subassembly apart"></label>
 </div><div id="dims"></div></div>
 <aside id="info"></aside>
 </main>
@@ -92,45 +92,55 @@ const MAT={brass:0xc9a54d,steel:0x8d949c,blued:0x4a5568};
 let cur=null,grp=null,edgesOn=true,secOn=false,spin=false;
 function matOf(p){const m=(p.material+' '+p.treatment).toLowerCase();return /oxidi[sz]e black|blue/.test(m)?MAT.blued:/brass|gold|bronze|copper/.test(m)&&!/steel/.test(p.material.toLowerCase())?MAT.brass:MAT.steel;}
 function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
-function build(p){
+function buildOne(p){
   const g=new THREE.Group(),geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(q16(p.v,p.box),3));geo.setIndex(new THREE.BufferAttribute(dec(p.i,p.i32?Uint32Array:Uint16Array),1));geo.computeVertexNormals();
   const c=matOf(p),m=new THREE.MeshStandardMaterial({color:c,metalness:0.35,roughness:0.45,side:THREE.DoubleSide,clippingPlanes:secOn?[clip]:[],polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1});
   g.add(new THREE.Mesh(geo,m));
   const eg=new THREE.BufferGeometry();eg.setAttribute('position',new THREE.BufferAttribute(q16(p.e,p.box),3));
   const lm=new THREE.LineBasicMaterial({color:0x1b1a18,clippingPlanes:secOn?[clip]:[]});const L=new THREE.LineSegments(eg,lm);L.visible=edgesOn;g.add(L);g.userData={mesh:m,lines:L,lm};return g;}
+function build(p){   /* a part, or a subassembly's members (their parts' meshes, each placed by its matrix and taken off along ex in the exploded view) */
+  if(!p.assembly){const g=buildOne(p);return Object.assign(new THREE.Group().add(g),{userData:{subs:[g]}});}
+  const g=new THREE.Group(),subs=[];
+  for(const m of p.members){const q=HPARTS.find(x=>x.key===m.key);if(!q)continue;const s=buildOne(q),a=m.m,M=new THREE.Matrix4().set(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],0,0,0,1);
+    s.applyMatrix4(M);s.userData.base=s.position.clone();s.userData.ex=new THREE.Vector3(...m.ex);subs.push(s);g.add(s);}
+  g.userData={subs};return g;}
+let explode=0;
+function setExplode(){if(!grp)return;for(const s of grp.userData.subs)if(s.userData.base)s.position.copy(s.userData.base).addScaledVector(s.userData.ex,explode);}
 function centre(p){const b=p.box;return new THREE.Vector3((b[0]+b[3])/2,(b[1]+b[4])/2,(b[2]+b[5])/2);}
 function size(p){const b=p.box;return Math.max(b[3]-b[0],b[4]-b[1],b[5]-b[2]);}
-function look(v){if(!cur)return;const c=centre(cur),d=size(cur)*2.6;const dir={iso:[1,-1.25,0.9],top:[0,-0.0001,1],side:[0,-1,0.0001]}[v];
+function look(v){if(!cur)return;const c=centre(cur),d=size(cur)*2.6;const dir={iso:[1,-1.25,0.9],top:[0,-0.0001,1],side:[0,-1,0.0001],under:[0,0.0001,-1]}[v];
   cam.position.set(c.x+dir[0]*d/Math.hypot(...dir),c.y+dir[1]*d/Math.hypot(...dir),c.z+dir[2]*d/Math.hypot(...dir));ctl.target.copy(c);cam.near=d/200;cam.far=d*20;cam.updateProjectionMatrix();ctl.update();}
-function setClip(){if(!cur)return;const c=centre(cur);clip.constant=c.y;grp.userData.mesh.clippingPlanes=secOn?[clip]:[];grp.userData.lm.clippingPlanes=secOn?[clip]:[];grp.userData.mesh.needsUpdate=true;grp.userData.lm.needsUpdate=true;}
+function setClip(){if(!cur)return;const c=centre(cur);clip.constant=c.y;for(const s of grp.userData.subs){const u=s.userData;u.mesh.clippingPlanes=secOn?[clip]:[];u.lm.clippingPlanes=secOn?[clip]:[];u.mesh.needsUpdate=true;u.lm.needsUpdate=true;}}
 function show(k,keepView){
   const p=HPARTS.find(q=>q.key===k)||HPARTS[0];cur=p;if(grp){scene.remove(grp);grp.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
-  grp=build(p);scene.add(grp);setClip();if(!keepView)look(p.flat?'iso':'iso');
+  grp=build(p);scene.add(grp);setClip();setExplode();$('#exw').hidden=!p.assembly;if(!keepView)look(p.flat?'iso':'iso');
   document.querySelectorAll('nav li').forEach(li=>li.setAttribute('aria-selected',li.dataset.k===p.key));
-  const b=p.box,w=[b[3]-b[0],b[4]-b[1],b[5]-b[2]];$('#dims').textContent=`${w.map(x=>x.toFixed(3)).join(' × ')} mm  (${w.map(x=>(x/25.4).toFixed(4)).join(' × ')} in)  ·  ${p.volume.toFixed(3)} mm³`;
+  const b=p.box,w=[b[3]-b[0],b[4]-b[1],b[5]-b[2]];$('#dims').textContent=`${w.map(x=>x.toFixed(3)).join(' × ')} mm  (${w.map(x=>(x/25.4).toFixed(4)).join(' × ')} in)`+(p.assembly?`  ·  ${p.members.length} parts`:`  ·  ${p.volume.toFixed(3)} mm³`);
   info(p);history.replaceState(null,'','#part='+p.key);}
 let tab='sizes';
 function info(p){
-  const t={sizes:'Sizes',sheet:'Operation sheet',notes:'Notes and fits',checks:'Checks'};
-  let h=`<h2>${E(p.title)}</h2><div class="meta">Hamilton part <b>${E(p.hn)}</b> · drawing ${E(p.drawing)}</div><div class="meta">Material: <b>${E(p.material)}</b><br>Finish: ${E(p.treatment)}</div>`;
+  const t=p.assembly?{members:'Parts',notes:'Notes and fits',checks:'Checks'}:{sizes:'Sizes',sheet:'Operation sheet',notes:'Notes and fits',checks:'Checks'};if(!t[tab])tab=Object.keys(t)[0];
+  let h=p.assembly?`<h2>${E(p.title)}</h2><div class="meta">Subassembly from drawings ${E(p.drawing)}: every place from the sheets' own numbers</div>`:`<h2>${E(p.title)}</h2><div class="meta">Hamilton part <b>${E(p.hn)}</b> · drawing ${E(p.drawing)}</div><div class="meta">Material: <b>${E(p.material)}</b><br>Finish: ${E(p.treatment)}</div>`;
   h+='<div class="chips">'+p.fails.map(f=>`<span class="chip bad">Check failed: ${E(f)}</span>`).join('')+p.flags.map(f=>`<span class="chip">${mark(f)}</span>`).join('')+'</div>';
-  h+=`<p><a class="btn" href="${E(p.step)}" download>Download STEP</a></p>`;
+  if(!p.assembly)h+=`<p><a class="btn" href="${E(p.step)}" download>Download STEP</a></p>`;
   h+='<div class="tabs" role="tablist">'+Object.entries(t).map(([k,v])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${v}</button>`).join('')+'</div><div id="tb"></div>';
   $('#info').innerHTML=h;$('#info').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;info(p);});
   const tb=$('#tb');
-  if(tab==='sizes'){let s='<table><tr><th></th><th>Size</th><th>Tolerance</th><th>Source</th></tr>';
+  if(tab==='members')tb.innerHTML='<table><tr><th>Part</th><th>Placed by</th></tr>'+p.members.map(m=>`<tr><td><a href="#part=${E(m.key)}">${E(m.label)}</a></td><td>${mark(m.why)}</td></tr>`).join('')+'</table>';
+  else if(tab==='sizes'){let s='<table><tr><th></th><th>Size</th><th>Tolerance</th><th>Source</th></tr>';
     for(const o of p.ops){s+=`<tr><td class="n op">${o.n}</td><td class="op" colspan="3">${E(o.text)}</td></tr>`;for(const z of o.sizes)s+=`<tr><td></td><td>${mark((z.label?z.label+': ':'')+z.value)}</td><td>${mark(z.tol||'')}</td><td class="src">${E(z.src||'')}</td></tr>`;}
     tb.innerHTML=s+'</table>';}
   else if(tab==='sheet'){const f=document.createElement('iframe');f.title='Operation sheet';f.srcdoc=p.sheet;tb.appendChild(f);}
   else if(tab==='notes')tb.innerHTML=(p.fits.length?'<p><b>Fits</b></p>'+p.fits.map(x=>`<p>${mark(x)}</p>`).join(''):'')+(p.notes.length?'<p><b>Notes</b></p>'+p.notes.map(x=>`<p>${mark(x)}</p>`).join(''):'');
   else tb.innerHTML=p.checks.map(x=>`<p class="ok">✓ ${E(x)}</p>`).join('')+p.fails.map(x=>`<p class="bad">✗ ${E(x)}</p>`).join('')+'<p class="meta">Every part: one closed, valid solid of positive volume (hamilton_parts.py).</p>';}
 function list(){const G={};for(const p of HPARTS)(G[p.group]=G[p.group]||[]).push(p);
-  $('#list').innerHTML=Object.entries(G).map(([g,L])=>`<h2>${E(g)}</h2><ul>`+L.map(p=>`<li tabindex="0" role="option" data-k="${p.key}"><span>${E(p.title)}</span><span class="no">${E(p.hn)}</span>${p.fails.length?'<span class="dot bad" title="a check failed"></span>':p.flags.length?'<span class="dot" title="has estimated or unsure readings"></span>':''}</li>`).join('')+'</ul>').join('');
+  $('#list').innerHTML=Object.entries(G).map(([g,L])=>`<h2>${E(g)}</h2><ul>`+L.map(p=>`<li tabindex="0" role="option" data-k="${p.key}"><span>${E(p.title)}</span><span class="no">${p.assembly?'assembly':E(p.hn)}</span>${p.fails.length?'<span class="dot bad" title="a check failed"></span>':p.flags.length?'<span class="dot" title="has estimated or unsure readings"></span>':''}</li>`).join('')+'</ul>').join('');
   $('#list').querySelectorAll('li').forEach(li=>{li.onclick=()=>show(li.dataset.k);li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(li.dataset.k);}
     if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const A=[...document.querySelectorAll('nav li')],i=A.indexOf(li)+(e.key==='ArrowDown'?1:-1);if(A[i]){A[i].focus();show(A[i].dataset.k);}}};});}
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>look(b.dataset.v));
-$('#edges').onclick=e=>{edgesOn=!edgesOn;e.target.setAttribute('aria-pressed',edgesOn);if(grp)grp.userData.lines.visible=edgesOn;};
+$('#edges').onclick=e=>{edgesOn=!edgesOn;e.target.setAttribute('aria-pressed',edgesOn);if(grp)for(const g of grp.userData.subs)g.userData.lines.visible=edgesOn;};
 $('#section').onclick=e=>{secOn=!secOn;e.target.setAttribute('aria-pressed',secOn);setClip();};
+$('#ex').oninput=e=>{explode=+e.target.value;setExplode();};
 $('#spin').onclick=e=>{spin=!spin;e.target.setAttribute('aria-pressed',spin);ctl.autoRotate=spin;};
 $('#theme').onclick=()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;d.dataset.theme=dark?'light':'dark';};
 function resize(){const w=view.clientWidth,h=view.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}

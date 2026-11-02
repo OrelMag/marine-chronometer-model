@@ -61,18 +61,38 @@ def check(r,p):
         (N if lo-1e-4<=R<=hi+1e-4 else F).append(f"tips Ø {R:.4f} against the drawn {od['d']:.4f} ({od['tol'][0]:+.4f}/{od['tol'][1]:+.4f})")
     return F,N
 
+def mat(L):
+    t=L.wrapped.Transformation();return [round(t.Value(i,j),9) for i in range(1,4) for j in range(1,5)]
+def H_drawing(r):return r.drawing.split(' ')[0]
+built_r={}
+def check_asm(A,built):
+    """every pair of members: the volume they share (none unless a press fit) and, for those meant to clear, the gap between them; returns fails, notes
+    and the members' boxes. A fit names its parts by key: it applies to every pair of members of those parts"""
+    F=[];N=[];P=[built[m.key].moved(m.loc()) for m in A.members];nm=[m.label or m.key for m in A.members];fit={frozenset((a,b)):(k,w) for a,b,k,w in A.fits}
+    BB=[q.bounding_box() for q in P];B=[[b.min.X,b.min.Y,b.min.Z,b.max.X,b.max.Y,b.max.Z] for b in BB];touch=0
+    for i in range(len(P)):
+        for j in range(i+1,len(P)):
+            if any(B[i][k]>B[j][k+3]+0.01 or B[j][k]>B[i][k+3]+0.01 for k in range(3)):continue   # boxes apart by more than 0.01 mm (faces that touch are still checked)
+            k,w=fit.get(frozenset((A.members[i].key,A.members[j].key)),(None,''));v=(P[i]&P[j]).volume;g=P[i].distance_to(P[j]) if v<1e-6 else 0.0
+            lim={'press':1e-3,'tangent':0.2}.get(k,1e-5)   # tangent: two drawn arcs of one radius, the table's rounding leaving a sliver of a few µm
+            if k=='preload':N.append(f'{nm[i]} and {nm[j]}: preload, drawn free they overlap {v:.4f} mm³ ({w})');continue
+            if v>lim:F.append(f'{nm[i]} and {nm[j]} overlap by {v:.5f} mm³'+(f' ({k}: {w})' if k else ''))
+            elif k:N.append(f'{nm[i]} and {nm[j]}: {k}, '+(f'gap {g:.4f} mm' if g>1e-6 else f'a sliver of {v:.4f} mm³' if v>1e-6 else 'in contact')+f' ({w})')
+            elif g<1e-6:touch+=1
+    if touch:N.append(f'{touch} pairs of members in contact, face to face, none overlapping')
+    return F,N,B
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
     a=argparse.ArgumentParser();a.add_argument('--only');a.add_argument('--check',action='store_true');o=a.parse_args()
     hd=subprocess.run([sys.executable,str(HERE/'hdraw.py')],capture_output=True,text=True)
     print(hd.stdout.strip().splitlines()[-1] if hd.stdout.strip() else hd.stderr)
     if hd.returncode:sys.exit('hamilton_parts.py: hdraw.py failed')
-    bad=0;parts=[];stale=[];sd=OUT/'step'
+    bad=0;parts=[];stale=[];sd=OUT/'step';built={}
     if not o.check:sd.mkdir(parents=True,exist_ok=True)
     for grp,mk in H.RECIPES:
-        r=mk()
+        r=mk();built_r[r.key]=r
         if o.only and r.key not in o.only.split(','):continue
-        t=time.time();p=r.build();p.label=f'{r.title} {r.hn}';F,N=check(r,p);bad+=bool(F)
+        t=time.time();p=r.build();p.label=f'{r.title} {r.hn}';built[r.key]=p;F,N=check(r,p);bad+=bool(F)
         print(f"{'FAIL' if F else 'ok  '} {r.key} ({r.hn}): {len(r.ops())} operations, volume {p.volume:.4f} mm³, {time.time()-t:.1f} s")
         for s in N:print('       '+s)
         for s in F:print('  !!   '+s)
@@ -88,6 +108,17 @@ def main():
         if not(s.exists() and norm(s.read_bytes())==norm(b)):
             stale.append(s.name)
             if not o.check:s.write_bytes(b)
+    for mk in H.ASSEMBLIES:   # the subassemblies: their members placed, every pair checked
+        A=mk()
+        if o.only and not all(m.key in built for m in A.members):continue
+        F,N,M=check_asm(A,built);bad+=bool(F)
+        print(f"{'FAIL' if F else 'ok  '} {A.key}: {len(A.members)} members")
+        for x in N:print('       '+x)
+        for x in F:print('  !!   '+x)
+        lo=np.min([b[:3] for b in M],axis=0);hi=np.max([b[3:] for b in M],axis=0)
+        parts.append({'key':A.key,'hn':'','group':A.group,'title':A.title,'assembly':True,'drawing':', '.join(sorted({H_drawing(built_r[m.key]) for m in A.members})),
+          'material':'','treatment':'','flat':False,'flags':A.flags,'fits':[f'{a} with {b} ({k}): {w}' for a,b,k,w in A.fits],'notes':A.notes,'volume':0,'box':[round(x,4) for x in [*lo,*hi]],
+          'checks':N,'fails':F,'ops':[],'sheet':'','members':[{'key':m.key,'label':m.label or built_r[m.key].title,'m':mat(m.loc()),'ex':list(m.ex),'why':m.why} for m in A.members]})
     if o.only:print('--only: hparts.js left as it is');sys.exit(1 if bad else 0)
     txt=('/* hparts.js: the Hamilton Model 21\'s parts as Hamilton drew them (tools/recipes/hamilton.py, from js/hdims.js), for index.html beside it.\n'
          '   Written by tools/hamilton_parts.py; do not edit by hand. Declares only HPARTS. Meshes base64: v uint16 xyz steps within box (lo..hi, mm), i uint16 triangles (uint32 where i32), e uint16 edge segments as v */\n'
