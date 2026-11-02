@@ -134,6 +134,11 @@ def main():
     if HAM_WE not in model:sys.exit(f'the working model has no {HAM_WE}: its link to the Wempe (its build.py), which the root copy and the site point at their own places')
     if TO_ESSAY not in model:sys.exit(f'the working model has no {TO_ESSAY}: its Essay tab (its build.py)')
     write(ROOT/'chronometer-working-model.html',model.replace(HAM_WE,'href="marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html"').replace(TO_ESSAY,'href="marine-chronometer-source/essay/dist/the-marine-chronometer.html'))
+    # the Wempe's lettered Laid out sheet (wempe/renders/laidout_sheet.webp, which its page shows), rendered again when a file the page loads changed since (laidout.py --check;
+    # --write about a minute in a browser, into the tools' r_laidout/; it fails, and the build with it, if a lettered element is out of the view or opens another's card)
+    LT=MODEL/'tools/laidout.py'
+    if subprocess.run([sys.executable,str(LT),'--model','wempe','--check'],cwd=LT.parent).returncode:
+        subprocess.run([sys.executable,str(LT),'--model','wempe','--write','r_laidout'],cwd=LT.parent,check=True)
     # the Wempe: its own build script writes its dist/ (no root copy)
     subprocess.run([sys.executable,str(WEMPE/'build.py')],check=True)
     wempe=(WEMPE/'dist/wempe-einheitschronometer.html').read_text(encoding='utf-8');check('wempe',wempe);sizes('wempe',wempe)

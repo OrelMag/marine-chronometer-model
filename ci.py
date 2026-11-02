@@ -177,6 +177,7 @@ STEPS=[('build',build,'quick'),
  ('types',TSC(MC/'jsconfig.json'),'quick'),
  ('wempe-dialtrace',R([PY,'dialtrace.py'],TOOLS),'quick'),   # the Wempe dial's printing traced off Wempe 3955's photograph, against js/dialface.js (about 13 s)
  ('wempe-dialtrace-lange',R([PY,'dialtrace.py','--dial','lange'],TOOLS),'quick'),   # the Lange dial's, against js/dialface_lange.js (about 20 s)
+ ('wempe-laidout',R([PY,'laidout.py','--model','wempe','--check'],TOOLS),'quick'),   # the Laid out view's lettered sheet the Wempe page shows (wempe/renders/laidout_sheet.webp) up to date with every file the page loads (a second; the root build renders it again)
  ('wempe-dialsvg',R([PY,'dialsvg.py'],TOOLS),'quick'),   # the three dials' SVGs (wempe/dials/) against dial.js's face() as it draws them now (about 2 s)
  ('wempe-types',TSC(WE/'jsconfig.json'),'quick'),   # the Wempe's scripts, core.js and the shared kit among them (about 10 s)
  ('smoke',R([PY,'smoke.py'],TOOLS),'browser'),   # the Hamilton's page, then the essay's own (../essay/)
