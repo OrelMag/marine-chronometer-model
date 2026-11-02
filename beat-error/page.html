@@ -41,6 +41,8 @@ button, .filebtn { font: inherit; font-weight: 600; border-radius: 10px; padding
 button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-size: 1.1rem }
 button:focus-visible, .filebtn:focus-within, select:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px }
 .filebtn input { position: absolute; opacity: 0; width: 1px; height: 1px }
+.guide { display: grid; gap: 8px; padding: 12px }
+.guidemsg { margin: 0; font-weight: 600 } .guidemsg.good { color: var(--good) } .guidemsg.warn { color: var(--warn) } .guidemsg.bad { color: var(--bad) }
 .bar { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden }
 .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.3s linear }
 figure { margin: 0; display: grid; gap: 6px }
@@ -79,6 +81,10 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   <section class="controls">
     <button id="listen" class="primary" type="button">Listen</button>
     <div class="bar" aria-hidden="true"><i id="prog"></i></div>
+    <div id="guide" class="panel guide" hidden>
+      <canvas id="mic" height="56" aria-label="What the microphone hears, the last 3 seconds"></canvas>
+      <p id="guideMsg" class="guidemsg" aria-live="polite">Listening…</p>
+    </div>
     <label class="filebtn" for="file">Analyse a recording<input id="file" type="file" accept="audio/*,.wav,.m4a,.mp3,.aac,.ogg,.webm"></label>
   </section>
 
@@ -103,6 +109,9 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
       <div class="row"><label for="rateSel">Beat rate</label>
         <select id="rateSel"><option value="0">Auto</option></select></div>
       <p class="msg">Auto picks from the usual rates. Choose one only if Auto reads a wrong rate.</p>
+      <div class="row"><label for="lenSel">Listening time</label>
+        <select id="lenSel"><option value="30">Normal (up to 30 s)</option><option value="120">Long (up to 2 minutes)</option></select></div>
+      <p class="msg">Long is for a faint watch: the longer it listens, the more beats it averages and the clearer faint ticks become.</p>
     </details>
   </section>
 
@@ -112,7 +121,7 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
       <ol>
         <li>Quiet room. Wind the watch.</li>
         <li>Lay the phone down and set the watch on it, case back on the microphone (usually at the bottom edge). Or hold it there firmly.</li>
-        <li>Tap Listen and keep still. It stops by itself when the reading settles, within about 20 seconds.</li>
+        <li>Tap Listen and keep still. It stops by itself when the reading settles, within about 20 seconds. For a faint watch, set Listening time to Long in Settings.</li>
         <li>For a full check, measure dial up and crown down too.</li>
       </ol>
     </details>
@@ -133,7 +142,8 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   var $ = function (id) { return document.getElementById(id); };
   var last = null, example = true;
   BEAT.RATES.forEach(function (b) { var o = document.createElement('option'); o.value = b; o.textContent = b + ' bph (' + (b / 7200).toFixed(1).replace('.0', '') + ' Hz)'; $('rateSel').appendChild(o); });
-  try { var sv = localStorage.getItem('beat.rate'); if (sv) $('rateSel').value = sv; } catch (e) {}
+  try { var sv = localStorage.getItem('beat.rate'); if (sv) $('rateSel').value = sv; var sl = localStorage.getItem('beat.len'); if (sl) $('lenSel').value = sl; } catch (e) {}
+  $('lenSel').addEventListener('change', function () { try { localStorage.setItem('beat.len', $('lenSel').value); } catch (e) {} });
   $('rateSel').addEventListener('change', function () { try { localStorage.setItem('beat.rate', $('rateSel').value); } catch (e) {} });
   function forced() { return +$('rateSel').value || 0; }
 
@@ -158,7 +168,7 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
     $('be').textContent = has ? r.beatError.toFixed(1) : '—'; $('unit').textContent = has ? 'ms' : '';
     $('pm').textContent = has ? '± ' + Math.max(0.1, r.pm).toFixed(1) : '';
     $('rate').textContent = has ? fmt(r.rate, Math.abs(r.rate) < 100 ? 1 : 0) + ' s/d' : '—';
-    $('bph').textContent = r && r.bph ? r.bph + ' bph' : '—';
+    $('bph').textContent = has ? r.bph + ' bph' : '—';
     $('iv').textContent = has ? r.intervals[0].toFixed(1) + ' / ' + r.intervals[1].toFixed(1) : '—';
     var v = $('verdict');
     if (has && r.ok) { var b = r.beatError; v.textContent = b < 0.5 ? 'Good' : b <= 1.0 ? 'Acceptable' : 'Wants adjusting'; v.className = 'verdict ' + (b < 0.5 ? 'good' : b <= 1.0 ? 'warn' : 'bad'); }
@@ -224,10 +234,45 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw); } catch (e) {}
   new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  // the live guide: the last 3 s of what reaches the microphone above 2 kHz, each click marked, and whether it is ticking
+  var MIC = 'On most phones the microphone is the small grille on the bottom edge (on an iPhone, beside the charging port).';
+  function guideText(c, secs) {
+    if (secs < 1.5) return ['Listening…', ''];
+    if (c.ticking) return ['Ticks heard: ' + Math.round(c.perSec) + ' a second. Keep still.', 'good'];
+    if (c.perSec >= 1) return ['Clicks heard, but not steady ticking. Keep the watch and phone still, away from other sounds. ' + MIC, 'warn'];
+    return ['No ticks reaching the microphone. Press the watch’s case back against it. ' + MIC, 'bad'];
+  }
+  function drawMic(c) {
+    var S = setupCanvas($('mic')), g = S.g, W = S.w, H = S.h, e = c.env, n = e.length, tk = css('--accent'), ln = css('--line'), ink = css('--muted');
+    if (!n) return;
+    var top = Math.log(Math.max(30, e.reduce(function (a, b) { return Math.max(a, b); }, 0) / c.floor));
+    g.strokeStyle = ink; g.lineWidth = 1; g.beginPath();
+    for (var i = 0; i < n; i += 2) { var v = Math.log(Math.max(1, e[i] / c.floor)) / top, x = i / n * W, y = H - 3 - v * (H - 8); if (i) g.lineTo(x, y); else g.moveTo(x, y); }
+    g.stroke(); g.fillStyle = tk;
+    c.at.forEach(function (t) { g.fillRect(t / n * W - 1, 0, 2, 6); });
+    g.strokeStyle = ln; g.beginPath(); g.moveTo(0, H - 2.5); g.lineTo(W, H - 2.5); g.stroke();
+  }
+  function tail(secs, fs) {
+    var want = Math.round(secs * fs), out = new Float32Array(Math.min(want, got)), o = out.length;
+    for (var i = chunks.length - 1; i >= 0 && o > 0; i--) { var a = chunks[i], m = Math.min(a.length, o); out.set(a.subarray(a.length - m), o - m); o -= m; }
+    return out;
+  }
+  var guideT = 0;
+  function guide() {
+    if (!listening) return;
+    var now = performance.now();
+    if (now - guideT > 300 && ctx && got) {
+      guideT = now; var c = BEAT.clicks(tail(3, ctx.sampleRate), ctx.sampleRate), gt = guideText(c, got / ctx.sampleRate);
+      drawMic(c); $('guideMsg').textContent = gt[0]; $('guideMsg').className = 'guidemsg' + (gt[1] ? ' ' + gt[1] : ''); lastGuide = gt;
+    }
+    requestAnimationFrame(guide);
+  }
+  var lastGuide = null;
+
   // listening: raw samples (echo cancelling, noise suppression and gain control off: they gate and smear the clicks), analysed
   // every 2 s; stops when three readings in a row agree, or at 30 s
   var ctx = null, stream = null, node = null, src2 = null, chunks = [], got = 0, timer = null, busy = false, hist = [], wake = null, listening = false;
-  var MAXS = 30, MINS = 8;
+  var MAXS = 30, MINS = 8;   // set from Listening time when Listen is tapped: Long listens up to 2 minutes and at least 30 s
   function stop(final) {
     listening = false; clearInterval(timer); timer = null;
     try { node && node.disconnect(); src2 && src2.disconnect(); } catch (e) {}
@@ -236,6 +281,7 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
     try { wake && wake.release(); } catch (e) {} wake = null;
     $('listen').textContent = 'Listen';
     if (final && last) show(last, 'done');
+    if (final && lastGuide && (!last || !last.profiles || last.reason === 'weak' || last.reason === 'few') && lastGuide[1] !== 'good') $('msg').textContent = lastGuide[0];
   }
   function samples() {
     var n = 0, i; for (i = 0; i < chunks.length; i++) n += chunks[i].length;
@@ -257,13 +303,15 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   }
   function start() {
     if (listening) { stop(true); return; }
-    example = false;
+    example = false; MAXS = +$('lenSel').value || 30; MINS = MAXS > 30 ? 30 : 8;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { noMic(); return; }
     var AC = window.AudioContext || window.webkitAudioContext;
     ctx = ctx || new AC(); try { ctx.resume(); } catch (e) {}
     navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } }).then(function (s) {
       stream = s; chunks = []; got = 0; hist = []; listening = true; $('listen').textContent = 'Stop';
       chip('Listening', 'live'); $('msg').textContent = 'Listening… keep the watch still on the microphone.'; $('prog').style.width = '0%';
+      $('guide').hidden = false; lastGuide = null; requestAnimationFrame(guide);
+      last = null; ['be', 'unit', 'pm', 'verdict'].forEach(function (k) { $(k).textContent = k === 'be' ? '—' : ''; }); ['rate', 'bph', 'iv'].forEach(function (k) { $(k).textContent = '—'; }); draw();
       try { navigator.wakeLock && navigator.wakeLock.request('screen').then(function (w) { wake = w; }, function () {}); } catch (e) {}
       src2 = ctx.createMediaStreamSource(s);
       var take = function (a) { if (!listening) return; chunks.push(a); got += a.length; while (got > (MAXS + 2) * ctx.sampleRate && chunks.length > 1) got -= chunks.shift().length; };
@@ -291,15 +339,22 @@ ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px }
   $('file').addEventListener('change', function () {
     var f = this.files && this.files[0]; if (!f) return;
     if (listening) stop(false);
-    example = false; chip('Reading file', 'live'); $('msg').textContent = 'Reading ' + f.name + '…';
+    $('guide').hidden = true; example = false; chip('Reading file', 'live'); $('msg').textContent = 'Reading ' + f.name + '…';
     var AC = window.AudioContext || window.webkitAudioContext; ctx = ctx || new AC();
     f.arrayBuffer().then(function (ab) {
       return new Promise(function (ok, no) { var p = ctx.decodeAudioData(ab, ok, no); if (p && p.then) p.then(ok, no); });
     }).then(function (buf) {
-      var x = buf.getChannelData(0), fs = buf.sampleRate, cap = Math.min(x.length, Math.round(60 * fs));
+      var x = buf.getChannelData(0), fs = buf.sampleRate, cap = Math.min(x.length, Math.round(180 * fs));
       if (buf.numberOfChannels > 1) { var y = buf.getChannelData(1), m = new Float32Array(cap); for (var i = 0; i < cap; i++) m[i] = 0.5 * (x[i] + y[i]); x = m; } else x = x.slice(0, cap);
       chip('Analysing', 'live');
-      analyze(x, fs, function (r) { show(r, 'file'); });
+      analyze(x, fs, function (r) {
+        show(r, 'file');
+        if (!r.profiles || r.reason === 'weak' || r.reason === 'few') {
+          var c = BEAT.clicks(x, fs);
+          $('msg').textContent = c.ticking ? 'Ticks are in this recording but too faint or uneven to time. Record again with the case back pressed to the microphone. ' + MIC
+            : 'No ticking in this recording. Record again with the watch’s case back pressed to the microphone, and turn off any noise reduction (Voice Memos’ Enhance Recording removes the ticks). ' + MIC;
+        }
+      });
     }, function () { chip('Unreadable file', 'bad'); $('msg').textContent = 'That file couldn\'t be read as audio. Try a WAV, M4A or MP3 recording.'; });
     this.value = '';
   });

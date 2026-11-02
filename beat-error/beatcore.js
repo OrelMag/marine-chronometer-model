@@ -7,6 +7,7 @@
 var BEAT = (function () {
   var RATES = [14400, 18000, 19800, 21600, 25200, 28800, 36000, 43200];
   var DLO = 2, DHI = 4;
+  var BANDS = [[1500, 10000], [3000, 12000], [1000, 4000], [5000, 16000]];   // Hz: where a watch's clicks may stand clearest over a phone's hiss
 
   function biquad(x, fs, f, type) {
     var w = 2 * Math.PI * f / fs, c = Math.cos(w), s = Math.sin(w), al = s / (2 * Math.SQRT1_2), b0, b1, b2;
@@ -22,12 +23,22 @@ var BEAT = (function () {
     v = y[y.length - 1]; for (i = y.length - 1; i >= 0; i--) { v = a * v + (1 - a) * y[i]; y[i] = v; }
     return y;
   }
-  function envelope(x, fs) {
-    var y = biquad(biquad(x, fs, 1500, 'hp'), fs, 1500, 'hp');
-    if (fs > 24000) y = biquad(biquad(y, fs, 10000, 'lp'), fs, 10000, 'lp');
+  function envelope(x, fs, band) {
+    var lo = band ? band[0] : 1500, hi = Math.min(band ? band[1] : 10000, 0.45 * fs);
+    var y = biquad(biquad(x, fs, lo, 'hp'), fs, lo, 'hp');
+    if (hi < 0.44 * fs) y = biquad(biquad(y, fs, hi, 'lp'), fs, hi, 'lp');
     var D = Math.max(1, Math.round(fs / 8000)), n = Math.floor(y.length / D), e = new Float32Array(n);
     for (var i = 0; i < n; i++) { var s = 0; for (var k = 0; k < D; k++) s += Math.abs(y[i * D + k]); e[i] = s / D; }
-    return { e: onePoleZP(e, fs / D, 3000), fe: fs / D };
+    e = onePoleZP(e, fs / D, 3000);
+    // handling noise cut out: 100 ms windows louder than 5 times the typical window within a second either side (a knock, a
+    // rustle, a word; a tick is in every window alike), and their neighbours, set to the recording's typical level, which adds
+    // nothing to the autocorrelation or the folds. One loud bump would otherwise outweigh many faint beats
+    var fe = fs / D, W = Math.round(0.1 * fe), nw = Math.floor(n / W), we = new Float32Array(nw), cut = new Uint8Array(nw), j;
+    for (j = 0; j < nw; j++) { var t = 0; for (k = 0; k < W; k++) t += e[j * W + k]; we[j] = t / W; }
+    for (j = 0; j < nw; j++) { var loc = median(we.subarray(Math.max(0, j - 10), Math.min(nw, j + 11))); if (we[j] > 5 * loc) { cut[j] = 1; if (j) cut[j - 1] = 1; if (j + 1 < nw) cut[j + 1] = 2; } }
+    var mid = median(e.subarray(0, Math.min(n, 200000))), nc = 0;
+    for (j = 0; j < nw; j++) if (cut[j]) { nc++; for (k = 0; k < W; k++) e[j * W + k] = mid; }
+    return { e: e, fe: fe, cut: nw ? nc / nw : 0, band: [lo, hi] };
   }
   function median(a) { var b = Array.prototype.slice.call(a).sort(function (p, q) { return p - q; }); var n = b.length; return n ? (n % 2 ? b[(n - 1) / 2] : (b[n / 2 - 1] + b[n / 2]) / 2) : NaN; }
   function pct(a, p) { var b = Array.prototype.slice.call(a).sort(function (u, v) { return u - v; }); return b[Math.min(b.length - 1, Math.floor(p * b.length))]; }
@@ -53,19 +64,33 @@ var BEAT = (function () {
 
   function analyze(x, fs, opts) {
     opts = opts || {};
-    var r = analyzeAt(x, fs, opts);
+    // the default band first, kept when it gives any reading; only when it gives none, the other bands (where a watch's clicks
+    // stand clearest over the hiss differs from watch to watch and phone to phone), the best of them: clean, then uncertain,
+    // then the steadiest, and marked uncertain. Searching the bands to replace an uncertain reading, or trusting what only a
+    // narrower band shows, made readings confidently wrong (cmp on synthetic watches, 2 November 2026)
+    var rank = function (r) { return r.ok ? 0 : r.reason === 'uncertain' ? 1 : 2; }, best = inBand(x, fs, opts, BANDS[0]);
+    if (rank(best) < 2) return best;
+    for (var b = 1; b < BANDS.length; b++) {
+      var r = inBand(x, fs, opts, BANDS[b]);
+      if (rank(r) < rank(best) || (rank(r) === rank(best) && rank(r) < 2 && r.jitter < best.jitter)) best = r;
+    }
+    if (best.ok) { best.ok = false; best.reason = 'uncertain'; best.why = 'band'; }   // found only in a narrower band: shown, never as Measured
+    return best;
+  }
+  function inBand(x, fs, opts, band) {
+    var o = { bph: opts.bph, band: band }, r = analyzeAt(x, fs, o);
     // an uneven or unequal tick and tock score well at half the rate: try double the rate, and keep it when both its parities
     // carry sound (at a true slow beat every other one of them is silence)
     if (!opts.bph && r.bph && RATES.indexOf(2 * r.bph) >= 0) {
-      var r2 = analyzeAt(x, fs, { bph: 2 * r.bph });
+      var r2 = analyzeAt(x, fs, { bph: 2 * r.bph, band: band });
       if (r2.profiles && r2.reason !== 'weak') return r2;   // a clean fit at double the rate (weak includes parities collapsed onto one beat train)
     }
     return r;
   }
   function analyzeAt(x, fs, opts) {
-    var E = envelope(x, fs), e = E.e, fe = E.fe, ms = fe / 1000;
-    if (e.length < fe * 3) return { ok: false, reason: 'short' };
-    var rc = chooseRate(e, fe, opts.bph), bph = rc.bph, Pn = 7200 / bph;
+    if (x.length < fs * 3) return { ok: false, reason: 'short' };
+    var E = envelope(x, fs, opts.band), rc = chooseRate(E.e, E.fe, opts.bph);
+    var e = E.e, fe = E.fe, ms = fe / 1000, bph = rc.bph, Pn = 7200 / bph;
     // the full period, near 2T, from the fine envelope's autocorrelation
     var mean = 0, i, j; for (i = 0; i < e.length; i++) mean += e[i]; mean /= e.length;
     var c2 = Pn * fe, lo = Math.floor(c2 * 0.985), hi = Math.ceil(c2 * 1.015), acs = [], bl = lo;
@@ -188,7 +213,7 @@ var BEAT = (function () {
     var beats = []; for (j = 0; j < nb; j++) beats.push({ t: T[j] / fe, par: j % 2, res: res[j] / fe * 1000, keep: keep[j] });
     return {
       ok: !weak && !uncertain, reason: weak ? 'weak' : uncertain ? 'uncertain' : '', method: M.agree ? "onset" : "pattern", why: why, gap: M.gap, match: M.match,
-      bph: bph, rateScore: rc.score, beatError: be, pm: pm, rate: rate, period: Ps,
+      bph: bph, rateScore: rc.score, band: E.band, cut: E.cut, beatError: be, pm: pm, rate: rate, period: Ps,
       intervals: [d / fe * 1000, (P - d) / fe * 1000], beats: beats, kept: kept, total: nb, jitter: rsd, snr: snr,
       profiles: prof.map(function (p) { return { L: p.L, dt: 1000 / fe, t0: -F0 * 1000 / fe, onset: p.on.t * 1000 / fe, peakAt: p.peakAt * 1000 / fe, n: p.n }; }),
       seconds: x.length / fs
@@ -215,8 +240,34 @@ var BEAT = (function () {
     }
     var nz = o.noise == null ? 0.01 : o.noise, hum = 0;
     for (var i = 0; i < n; i++) { hum = 0.995 * hum + 0.1 * gauss(); x[i] += nz * gauss() + 0.02 * hum * (o.hum || 0); }
+    for (var b = 0; b < (o.bursts || 0); b++) {   // handling: rustles and knocks, 150-400 ms, loud
+      var bs = Math.floor(rnd() * (n - fs)), bl = Math.floor((0.15 + 0.25 * rnd()) * fs), ba = (o.burstAmp || 0.3) * (0.5 + rnd());
+      for (i = bs; i < bs + bl; i++) x[i] += ba * gauss() * Math.sin(Math.PI * (i - bs) / bl);
+    }
     return { x: x, fs: fs, P: P, d: d };
   }
-  return { analyze: analyze, synth: synth, RATES: RATES };
+  // what reaches the microphone, for guiding the user: the level above 2 kHz in 1 ms blocks, clicks as peaks 3 times over the
+  // floor 30 ms apart (noise's 1 ms peaks sit near 2.3 sigma, so 3 times them is past chance), counted in each second (the
+  // median second, so a knock or a word doesn't count as ticking); regular: the share of gaps between clicks within 15 % of the
+  // typical gap or twice it (a missed tick). Ticking is several clicks a second, most of them regular; crackle and handling aren't
+  function clicks(x, fs) {
+    var y = biquad(biquad(x, fs, 2000, 'hp'), fs, 2000, 'hp'), B = Math.max(1, Math.round(fs / 1000)), n = Math.floor(y.length / B), e = new Float32Array(n), i, k;
+    for (i = 0; i < n; i++) { var m = 0; for (k = 0; k < B; k++) m = Math.max(m, Math.abs(y[i * B + k])); e[i] = m; }
+    var skip = Math.min(n, 30), fl = median(e.subarray(skip)) || 1e-12, at = [], last = -99;   // the filters' first 30 ms left out
+    for (i = Math.max(40, skip); i < n - 1; i++) {
+      if (!(e[i] > 3 * fl && e[i] >= e[i - 1] && e[i] >= e[i + 1] && i - last >= 30)) continue;
+      var pre = 0; for (k = i - 40; k < i - 15; k++) pre += e[k]; pre /= 25;   // and 3 times the level 15-40 ms before: a click, not the middle of a rustle
+      if (e[i] > 3 * pre) { at.push(i); last = i; }
+    }
+    var secs = Math.floor(n / 1000), per = []; for (k = 0; k < secs; k++) per.push(0);
+    at.forEach(function (t) { var s = Math.floor(t / 1000); if (s < secs) per[s]++; });
+    var pk = at.map(function (t) { return e[t] / fl; });
+    var gaps = []; for (i = 1; i < at.length; i++) gaps.push(at[i] - at[i - 1]);
+    var g0 = gaps.length ? median(gaps) : 0, reg = gaps.length < 4 ? 0 : gaps.filter(function (g) { return Math.abs(g - g0) < 0.15 * g0 || Math.abs(g - 2 * g0) < 0.15 * g0; }).length / gaps.length;
+    var perSec = secs ? median(per) : at.length / Math.max(n / 1000, 1e-3);
+    return { perSec: perSec, regular: reg, ticking: perSec >= 3 && reg >= 0.5 && g0 >= 40,   // the fastest beat, 43200 bph, is 42 ms
+      contrast: pk.length ? median(pk) : 0, env: e, floor: fl, at: at };
+  }
+  return { analyze: analyze, synth: synth, clicks: clicks, RATES: RATES };
 })();
 if (typeof module !== 'undefined') module.exports = BEAT;
