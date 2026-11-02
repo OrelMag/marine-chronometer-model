@@ -58,7 +58,7 @@ const VIEWER={start(cfg){
     window.__unproj=(pts,yaw,pitch,dist,fov)=>{const c2=cam2(yaw,pitch,dist,fov),inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();return pts.map(([sx,sy,h])=>{const ndc=new THREE.Vector2(sx/W*2-1,-(sy/Hh*2-1)),rc=new THREE.Raycaster();rc.setFromCamera(ndc,c2);
       const o=rc.ray.origin.clone().applyMatrix4(inv),dd=rc.ray.direction.clone().transformDirection(inv),tt=(h-o.y)/dd.y;return[o.x+dd.x*tt,o.z+dd.z*tt];});};
     window.__camInfo=()=>JSON.stringify({fov:cam.fov,aspect:cam.aspect,pos:cam.position.toArray().map(v=>+v.toFixed(2)),tgt:C.target.toArray().map(v=>+v.toFixed(2)),C:{yaw:C.yaw,pitch:C.pitch,dist:C.dist},W,Hh});
-    window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=cur.fov=tgt.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:QT});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=false;};
+    window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=cur.fov=tgt.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:QT});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=camMine=false;};
     window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:[x,y,z]});};}
   const sk=$('#srcKey');if(sk)sk.innerHTML=Object.values(SRC).map(([t,c,d])=>`<span title="${t}: ${d}"><i style="--ps:${c}"></i>${t}</span>`).join('');
   const partOf=o=>{while(o){if(o.userData&&(o.userData.partName||o.userData.devOf))return o.userData.partName||o.userData.devOf;o=o.parent;}return null;};   /* devOf: a laid-out view's schematic plate (devPlate), standing in for its part */
@@ -133,9 +133,9 @@ const VIEWER={start(cfg){
   let W=1,Hh=1;const resize=()=>{W=stage.clientWidth;Hh=stage.clientHeight;r.setSize(W,Hh,false);cam.aspect=W/Hh;cam.updateProjectionMatrix();};new ResizeObserver(resize).observe(stage);resize();
   const mvL=(x,y,z)=>{const v=new THREE.Vector3(x,y,z);return()=>mv.localToWorld(v.clone());};
   const aspectK=()=>clamp(1.25/(W/Hh),1,2.2);   /* the same horizontal coverage on narrow screens */
-  function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK();G.follow=mvL(...v.target);panO.set(0,0,0);camFree=false;}
-  let camFree=false,zf=false;const panO=new THREE.Vector3(),pv=new THREE.Vector3();
-  function panBy(dx,dy){const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
+  function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK();G.follow=mvL(...v.target);panO.set(0,0,0);camFree=camMine=false;}
+  let camFree=false,camMine=false,camLink=null,zf=false;   /* camMine: the camera moved by hand since a view, step or zoom set it (cam= in the link); camLink: a link's, applied after the opening move */const panO=new THREE.Vector3(),pv=new THREE.Vector3();
+  function panBy(dx,dy){camMine=true;const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
   const expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
   /* the Exploded view's Movement or All: All spreads the case's parts too (cfg.tick takes st.allK) and stands the camera back to the view's own all ({yaw, pitch, dist, target}) */
   const allT=vv=>vv.explode&&st.all&&st.tour<0?expV():0,camOf=vv=>vv.all&&st.all&&st.tour<0?{...vv,...vv.all}:vv.sub&&st.asm.size&&st.tour<0?{...vv,...vv.sub}:vv,allW=$('#expAllWrap');
@@ -161,7 +161,7 @@ const VIEWER={start(cfg){
   function histSync(){hB.disabled=!HB.length;hF.disabled=!HF.length;const on=HB.length||HF.length;if(on&&histEl.classList.contains('hidden'))hintOff();histEl.classList.toggle('hidden',!on);}
   function jump(f){const p=pose();f();if(st.tour>=0||!hashReady||same(p,pose(true)))return;if(!same(p,HB[HB.length-1])){HB.push(p);if(HB.length>30)HB.shift();}HF.length=0;histSync();}
   function histGo(from,to){if(!from.length)return;to.push(pose());const p=from.pop();st.see=p.see;if(p.all!==st.all){st.all=p.all;allSync();tgt.all=allT(VIEWS[p.view]);}if(p.asm!==asmKey()){st.asm=new Set(p.asm?p.asm.split(','):[]);subSync();}if(p.view!==st.view)setView(p.view,true);if(st.tour<0){zf=!!p.foc;st.focus=p.foc;}look();
-    G.yaw=C.yaw+((((p.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=p.pitch;G.dist=p.dist;G.follow=p.follow;if(!p.follow)G.target.copy(p.tgt);panO.copy(p.pan);camFree=false;histSync();}
+    G.yaw=C.yaw+((((p.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=p.pitch;G.dist=p.dist;G.follow=p.follow;if(!p.follow)G.target.copy(p.tgt);panO.copy(p.pan);camFree=camMine=false;histSync();}
   hB.addEventListener('click',()=>histGo(HB,HF));hF.addEventListener('click',()=>histGo(HF,HB));
   /* double-click (double-tap) a part: the camera closes in to fit it and turns about it; 0 or Reset gives back the view */
   const fb=new THREE.Box3(),fbb=new THREE.Box3();
@@ -170,7 +170,7 @@ const VIEWER={start(cfg){
   const fAnchor=h=>{for(let q=h;q;q=q.parent)if(q===mv)return mv;let q=h;while(q.parent&&!q.userData.partName)q=q.parent;return q.userData.partName?q:h;};
   function focusPart(p,o){fb.makeEmpty();root.updateMatrixWorld();root.traverse(m=>{if(m.isMesh&&m.userData.part===p&&shown(m)&&m.geometry.attributes.position){if(!m.geometry.boundingBox)m.geometry.computeBoundingBox();fbb.copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld);fb.union(fbb);}});
     if(fb.isEmpty())return;const c=fb.getCenter(new THREE.Vector3()),rr=Math.max(fb.getSize(new THREE.Vector3()).length()/2,1),lc=o.worldToLocal(c.clone()),v=cam.fov*Math.PI/360,hv=Math.atan(Math.tan(v)*cam.aspect);
-    jump(()=>{G.follow=()=>o.localToWorld(lc.clone());panO.set(0,0,0);G.yaw=C.yaw;G.pitch=C.pitch;G.dist=clamp(Math.min(rr/Math.tan(Math.min(v,hv))*1.05,C.dist),30,1500);camFree=false;});}
+    jump(()=>{G.follow=()=>o.localToWorld(lc.clone());panO.set(0,0,0);G.yaw=C.yaw;G.pitch=C.pitch;G.dist=clamp(Math.min(rr/Math.tan(Math.min(v,hv))*1.05,C.dist),30,1500);camFree=camMine=false;});}
   /* focusOn(keys, o): the camera closes in on parts or pieces (keys), the rest see-through until a view is chosen, Reset or unfocus(); o.view a view to stand in first (its case,
      its explode), o.at [x, y, z] and o.r a place in mv's frame to fit instead of the parts' box, o.yaw, o.pitch the camera's (else it keeps its own), o.k the margin (the
      page's lists of changes: the Wempe's 6MX against the drawings). The point is kept in the frame of what it is on (mv, or the first part's group), so it follows as the view
@@ -183,7 +183,7 @@ const VIEWER={start(cfg){
     if(o.at){an=mv;fb.setFromCenterAndSize(new THREE.Vector3(...o.at),new THREE.Vector3(1,1,1).multiplyScalar(2*(o.r||10)/Math.sqrt(3)));}
     if(!an||fb.isEmpty())return;const lc=fb.getCenter(new THREE.Vector3()),rr=Math.max(fb.getSize(new THREE.Vector3()).length()/2,1),v=cam.fov*Math.PI/360,hv=Math.atan(Math.tan(v)*cam.aspect),A=an;
     G.follow=()=>A.localToWorld(lc.clone());panO.set(0,0,0);if(o.yaw!=null)G.yaw=C.yaw+((((o.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);if(o.pitch!=null)G.pitch=o.pitch;
-    G.dist=clamp(rr/Math.tan(Math.min(v,hv))*(o.k||1.15),30,1500);camFree=false;});}
+    G.dist=clamp(rr/Math.tan(Math.min(v,hv))*(o.k||1.15),30,1500);camFree=camMine=false;});}
   function unfocus(){if(!zf)return;zf=false;st.focus=null;look();}
   const hintOff=()=>{const h=$('#hint');if(h)h.style.opacity=0;};for(const ev of['pointerdown','wheel','keydown'])cv.addEventListener(ev,hintOff,{once:true,passive:true});
   /* pointer: orbit, pinch, tap to pick; on touch, a long press (500 ms, barely moving) opens the fade/hide menu, since iOS fires no contextmenu */
@@ -193,15 +193,15 @@ const VIEWER={start(cfg){
   cv.addEventListener('pointermove',e=>{if(SEL&&SEL.move(e))return;const p=ptrs.get(e.pointerId);if(!p)return;const pdx=e.clientX-p.x,pdy=e.clientY-p.y;
     if(down)down.moved+=Math.abs(pdx)+Math.abs(pdy);if(lpT&&down&&down.moved>6)lpStop();
     if(ptrs.size===1&&down&&down.moved>4&&down.pan)panBy(pdx,pdy);
-    else if(ptrs.size===1&&down&&down.moved>4){camFree=true;C.yaw-=pdx*0.008;C.pitch=clamp(C.pitch+pdy*0.008,-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}   /* pitch to 87° above or below: at 90° lookAt has no up */
+    else if(ptrs.size===1&&down&&down.moved>4){camFree=camMine=true;C.yaw-=pdx*0.008;C.pitch=clamp(C.pitch+pdy*0.008,-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}   /* pitch to 87° above or below: at 90° lookAt has no up */
     p.x=e.clientX;p.y=e.clientY;
-    if(ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)C.dist=G.dist=clamp(C.dist*pinch/d,30,1500);pinch=d;panBy(pdx/2,pdy/2);if(down)down.moved=99;}});
-  const up=e=>{if(SEL&&SEL.up(e))return;lpStop();if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&!down.lp&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size)stage.classList.remove('grab');
+    if(ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)camMine=true,C.dist=G.dist=clamp(C.dist*pinch/d,30,1500);pinch=d;panBy(pdx/2,pdy/2);if(down)down.moved=99;}});
+  const up=e=>{if(SEL&&SEL.up(e))return;lpStop();if(camMine)writeHash();if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&!down.lp&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size)stage.classList.remove('grab');
     if(wasTap&&e.type==='pointerup'&&SEL&&SEL.tap(e))lastTap=null;else if(wasTap&&e.type==='pointerup'){const t=e.timeStamp;if(lastTap&&t-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){lastTap=null;dblPick(e);}else{lastTap={t,x:e.clientX,y:e.clientY};pick(e);}}   /* a second tap within 0.4 s in the same place: a double */
     if(!ptrs.size)down=null;};
   cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
   $('#info').addEventListener('pointerup',e=>{if(e.button===0&&lastTap&&e.timeStamp-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){const t=lastTap;lastTap=null;dblPick({clientX:t.x,clientY:t.y});}});
-  cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
+  cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);camMine=true;writeHash();},{passive:false});
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();ray.layers.enable(2);   /* layer 2: the pieces drawn merged */
   const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&opq(m0)<0.5)return true;return !!ghOf(m,st.focus);};   /* faded below half, glass, or see-through: a click passes */
   const rayAt=(x,y)=>{const rc=cv.getBoundingClientRect();ndc.set((x-rc.left)/rc.width*2-1,-(y-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);return ray.intersectObjects([root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);};
@@ -265,7 +265,7 @@ const VIEWER={start(cfg){
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}   /* space: stop and restart */
     if(/^[1-9]$/.test(e.key)&&!mod&&!typing()){const b=document.querySelectorAll('#views button')[+e.key-1];if(b&&!b.disabled)b.click();}   /* 1 to 9: the views, in their buttons' order */
     if(document.activeElement===cv&&!mod){const a={ArrowLeft:[0.08,0],ArrowRight:[-0.08,0],ArrowUp:[0,-0.06],ArrowDown:[0,0.06]}[e.key];   /* the model focused: arrows turn, + and − zoom, 0 resets */
-      if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
+      if(a){e.preventDefault();camFree=camMine=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;writeHash();}
       else if(/^[-+=_]$/.test(e.key)){e.preventDefault();C.dist=G.dist=clamp(C.dist*(/^[-_]$/.test(e.key)?1.12:1/1.12),30,1500);}
       else if(e.key==='0'){e.preventDefault();jump(()=>setView(st.view,true));}}});
   /* ---------- controls ---------- */
@@ -390,11 +390,12 @@ const VIEWER={start(cfg){
   /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f][:o], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
   function hashOf(){if(esOn()){const s=ES.section(),k=ES.key||'essay';return s?k+'='+s:k;}const h=new URLSearchParams();if(st.tour>=0)h.set('tour',st.tour+1);
-    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(st.all)h.set('exp','all');if(st.asm.size)h.set('subs',st.asm.size===ASM.length?'apart':asmKey());if(tgt.pc!==1)h.set('pcs',Math.round(tgt.pc*100));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':'')+(SEC.flat.value?'':':o'));}
+    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(st.all)h.set('exp','all');if(st.asm.size)h.set('subs',st.asm.size===ASM.length?'apart':asmKey());if(tgt.pc!==1)h.set('pcs',Math.round(tgt.pc*100));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':'')+(SEC.flat.value?'':':o'));if(camMine){const t=mv.worldToLocal(G.target.clone());h.set('cam',[((G.yaw%TAU)+TAU)%TAU,G.pitch,G.dist/aspectK(),t.x,t.y,t.z].map(x=>+x.toFixed(3)).join(','));}   /* cam=yaw,pitch,dist,x,y,z: a camera turned, zoomed or panned by hand, where it is going (G: written mid-move, C put the link half way), its target in the movement's frame, its distance without the narrow screen's pull-back */}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);if(CT)CT.hashWrite(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&own(VIEWS,SET.view)?SET.view:cfg.startView;
+    const cm=(g('cam')||'').split(',').map(Number),camL=cm.length===6&&cm.every(Number.isFinite)?{yaw:cm[0],pitch:clamp(cm[1],-1.52,1.52),dist:clamp(cm[2],30,1500),target:cm.slice(3)}:null;   /* cam=: hashOf's */
     if(ES){const k=ES.key||'essay';if(h.has(k)){ES.show(true,g(k));return v;}ES.show(false);}   /* the essay (its key, ES.key): the model underneath is left as it is */
     if(first&&hashURL&&cfg.away&&cfg.away(h,{part:own(INFO,g('part')),view:own(VIEWS,g('view')),open:DET.some(d=>d.id===g('open')),tour:!!TOUR&&+g('tour')>=1&&+g('tour')<=TOUR.length}))return v;   /* cfg.away: a link meant for another page (the Wempe's at the site's root: an old link to the Hamilton, a part, view, panel or step this page hasn't), sent on there */
     const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0',dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
@@ -406,7 +407,7 @@ const VIEWER={start(cfg){
     st.all=g('exp')==='all';allSync();{const v=mv.userData.asmx?g('subs')||'':'',w=v.split(',');st.asm=new Set(ASM.filter(a=>v==='apart'||w.includes(a.k)).map(a=>a.k));subSync();
       const pc=+(g('pcs')||100);tgt.pc=Number.isFinite(pc)?clamp(pc,0,200)/100:1;if(pcR){pcR.value=Math.round(tgt.pc*100);showPc();}}   /* exp=all: the Exploded view's All; subs=apart or subs=fusee,barrel: its Subassemblies apart, all or those; pcs=150 its Pieces */
     if(cfg.hash)cfg.hash.read(g,first);if(CT)CT.hashRead(g);
-    const tr=parseInt(g('tour'));if(TOUR&&tr>=1&&tr<=TOUR.length)tourGo(tr-1);else{if(st.tour>=0)tourEnd();if(!first)setView(v);}   /* tour=3: the walkthrough at its third step */
+    const tr=parseInt(g('tour'));if(TOUR&&tr>=1&&tr<=TOUR.length)tourGo(tr-1);else{if(st.tour>=0)tourEnd();if(!first)setView(v);if(first)camLink=camL;else if(camL){goCam(camL);camMine=true;}}   /* tour=3: the walkthrough at its third step */
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
     const od=DET.find(d=>d.id===g('open'));if(od){panelOn(true);od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}
     return v;}
@@ -441,7 +442,7 @@ const VIEWER={start(cfg){
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(onScreen&&!still&&!esOn()){paint();if(cfg.overlay)cfg.overlay();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
-    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{st.opening=false;if(st.tour>=0)tourGo(st.tour);else if(!camFree)setView(startView);hashReady=true;writeHash();},1100);}
+    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{st.opening=false;if(st.tour>=0)tourGo(st.tour);else if(!camFree){setView(startView);if(camLink){goCam(camLink);camMine=true;camLink=null;}}hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);}
   look();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===startView?'true':'false'));
   requestAnimationFrame(frame);

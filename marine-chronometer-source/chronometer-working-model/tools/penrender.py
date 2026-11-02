@@ -3,11 +3,12 @@ each part's own outline, every contour, the creases in a lighter ink) over each 
 or a cool shade of itself, darker where a surface turns away, a white glint on metal), under a key and a rim light, on cream paper with a faint tooth. The
 model is the page's own export to Blender (gltf_check.py's), posed by the rig (blender/rig.py). Each still is one of the page's views, seen as the page sees
 it: the tool opens the page (headless, at the still's size) on that view or link, reads its camera (?qa's __camInfo) and carries it into the movement's own
-frame, so any view, link or camera on the page can be drawn. An illustration for its own sake: every line is the model's, nothing is simplified or left out
+frame, so any view, link or camera on the page can be drawn (a camera turned by hand on the page is in its link as cam=). The parts the page has faded
+(a see-through view's plates, the parts away from a picked one) are drawn as a layer of their own laid over at a third, a cutaway's ghost. An illustration for its own sake: every line is the model's, nothing is simplified or left out
 as an illustrator would. Not run by build.py or ci.py.
 
     python penrender.py [--model wempe] [--view dial,movement,exploded] [--glb FILE] [--size 1600x1150] [--out DIR]
-    python penrender.py --link "https://.../hamilton/#view=train&part=fs"    # a page link (its hash: the view, the explode share, a camera when it has one)
+    python penrender.py --link "https://.../hamilton/#view=train&part=fs"    # a page link (its hash: the view, the explode share, a camera moved by hand)
     python penrender.py --view escapement --cam 1.9,-0.75,80                 # the page's camera turned: yaw, pitch, distance (mm)[, target x,y,z in the movement]
     python penrender.py --list                                                # the model's views
         (without --glb, gltf_check.py exports and checks the model first, about 2.5 min, 3.5 for the Wempe; then about 3-10 min a still;
@@ -28,8 +29,8 @@ POSE={'hamilton':{'box':dict(box=1,lids=1),'dial':dict(box=1),'movement':{},'tra
                'escapement':{},'train':{},'fusee':{},'balance':{}}}
 PAPER=(0.965,0.945,0.9)
 
-def paper(src,dst,centre=False):
-    """the render laid on drawing paper (centre: a drawing that stands clear of the sheet's edges centred at 88 % of it), then a faint tooth and fibre that the
+def paper(src,dst,centre=False,ghost=None):
+    """the render laid on drawing paper (ghost: the faded parts' layer laid over it; centre: a drawing that stands clear of the sheet's edges centred at 88 % of it), then a faint tooth and fibre that the
     colour takes up most in its mid washes"""
     import numpy as np
     from PIL import Image
@@ -39,6 +40,8 @@ def paper(src,dst,centre=False):
         c=im[ys.min():ys.max()+1,xs.min():xs.max()+1];k=min(0.88*W/c.shape[1],0.88*H/c.shape[0])
         c=np.asarray(Image.fromarray((c*255).astype(np.uint8)).resize((int(c.shape[1]*k),int(c.shape[0]*k)),Image.LANCZOS)).astype(np.float32)/255
         im=np.ones_like(im)*bg;y0=(H-c.shape[0])//2;x0=(W-c.shape[1])//2;im[y0:y0+c.shape[0],x0:x0+c.shape[1]]=c
+    if ghost and pathlib.Path(ghost).exists():   # the faded parts, drawn alone on a clear film, laid over at a third: a cutaway's ghost
+        gi=np.asarray(Image.open(ghost).convert('RGBA')).astype(np.float32)/255;a=gi[...,3:]*0.35;im=im*(1-a)+gi[...,:3]*a;pathlib.Path(ghost).unlink()
     rng=np.random.default_rng(7);n=lambda s:(lambda a:a/a.std())(gaussian_filter(rng.standard_normal((H,W)),s))
     tooth,fibre,mottle=n(1.2),n((0.8,6)),n(40);ink=1-im.mean(2);take=np.clip(ink*2.2,0,1)*np.clip((1-ink)*2.5,0,1)
     g=1-0.014*tooth*(0.2+take)-0.004*fibre-0.004*mottle
@@ -49,7 +52,10 @@ def pagecams(shots,W,H):
     up), its vertical field and its canvas's aspect"""
     import asyncio,browser,model
     from playwright.async_api import async_playwright
-    READ="""()=>{const i=JSON.parse(__camInfo());return {pos:i.pos,tgt:i.tgt,fov:i.fov,aspect:i.aspect}}"""   # in the page's world (mm, y up)
+    # its camera in the page's world (mm, y up), and the parts it has faded: a mesh wearing a see-through copy of its material (look(): a see-through view's
+    # plates, the parts away from a picked one)
+    READ="""()=>{const i=JSON.parse(__camInfo()),g=new Set();__mv.traverse(o=>{const m=o.material;if(o.isMesh&&m&&m.transparent&&(m.opacity??1)<0.5&&o.userData.part)g.add(o.userData.part)});
+      return {pos:i.pos,tgt:i.tgt,fov:i.fov,aspect:i.aspect,ghosts:[...g]}}"""
     TURN="""(c)=>{const m=__mv;m.updateMatrixWorld(true);const t=c.length>=6?c.slice(3,6):m.worldToLocal(m.position.clone().set(...JSON.parse(__camInfo()).tgt)).toArray();
       __look(c[0],c[1],c[2],...t)}"""
     async def go():
@@ -103,7 +109,7 @@ if bpy is None:   # outside Blender: read each view's camera off the page, expor
     if r.returncode:print(r.stderr[-3000:]);sys.exit('Blender failed')
     for S in shots:
         f=out/f"pen_{model.NAME}_{S['name']}.png"
-        if f.exists():paper(f,f);print('wrote',f)
+        if f.exists():paper(f,f,ghost=out/f"pen_{model.NAME}_{S['name']}_ghost.png");print('wrote',f)
         else:sys.exit(f"no still for {S['name']}")
     sys.exit(0)
 
@@ -238,14 +244,22 @@ def under(o,a):
         o=o.parent
     return False
 inmv={o for o in bpy.data.objects if under(o,mv)}
+def key(o):   # every part key along its ancestry ("... (dial)"), so a hand's mesh is under "hands" (wempe_showcase.py's)
+    k=set()
+    while o:
+        n=o.name.split('.')[0]
+        if n.endswith(')') and '(' in n:k.add(n[n.rindex('(')+1:-1])
+        o=o.parent
+    return k
+K={o:key(o) for o in bpy.data.objects if o.type in('MESH','CURVE')}
 from mathutils import Matrix
 # the page's world (mm, y up) is Blender's (m, z up) as (x, -z, y) / 1000: the export's clips put every part where the page does (blender_check.py holds the
 # rig to them), so the page's camera is the camera. The page pulls its camera back on a canvas narrower than 3:2 (aspectK); the still's own aspect is put back
 B=lambda v:Vector((v[0],-v[2],v[1]))/1000;AK=lambda a:min(max(1.25/a,1),2.2)
 cam.data.sensor_fit='VERTICAL'
 for S in A['shots']:
-    for o in bpy.data.objects:
-        if o.type in('MESH','CURVE'):o.hide_render=S['alone'] and o not in inmv
+    shown={o for o in K if not(S['alone'] and o not in inmv)};gh={o for o in shown if K[o]&set(S['page'].get('ghosts',[]))}
+    for o in K:o.hide_render=o not in shown or o in gh   # the faded parts left out: drawn, they would hide the lines behind them
     for k,v in S['ctl'].items():ctl[k]=float(v)
     ctl.update_tag();sc.frame_set(0);bpy.context.view_layer.update()
     P=S['page'];tgt=B(P['tgt']);pos=tgt+(B(P['pos'])-tgt)*AK(A['size'][0]/A['size'][1])/AK(P['aspect']);up=Vector((0,0,1))
@@ -255,4 +269,9 @@ for S in A['shots']:
     PX=2*d*math.tan(math.radians(P['fov'])/2)/A['size'][1]   # a pixel's size at the target
     for m,k in LA:m.radius=k*PX
     sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{S['name']}.png");bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath,flush=True)
+    if gh:   # then the faded parts alone on a clear film, which the paper lays over the drawing at a third
+        for o in K:o.hide_render=o not in gh
+        sc.render.film_transparent=True;sc.render.image_settings.color_mode='RGBA'
+        sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{S['name']}_ghost.png");bpy.ops.render.render(write_still=True)
+        sc.render.film_transparent=False;sc.render.image_settings.color_mode='RGB';print('MC rendered its faded parts:',len(gh),'meshes',flush=True)
     for k in S['ctl']:ctl[k]=0.0
