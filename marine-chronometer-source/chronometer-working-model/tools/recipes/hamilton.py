@@ -125,33 +125,45 @@ def barrelArbor():
     xs=I(.410)+H['span1000'];xb=xs-H['span720'];xr=xb+H['overBosses']
     r=lambda d:d/2
     P=[(0,0),(r(H['sqAC']),0),(r(H['sqAC']),H['sq']),(r(H['piv']),H['sq']),(r(H['piv']),H['sq']+H['pivL']),(r(H['bear']),H['sq']+H['pivL']),(r(H['bear']),xb),
-       (r(H['boss']['d']),xb),(r(H['boss']['d']),xb+H['boss']['t']),(r(H['bodyD']),xb+H['boss']['t']),(r(H['bodyD']),xr-H['boss']['t']),(r(H['boss']['d']),xr-H['boss']['t']),
+       (r(H['boss']['d']),xb),(r(H['boss']['d']),xb+H['boss']['t']),(I(.271),xb+H['boss']['t']),(I(.271),xr-H['boss']['t']),(r(H['boss']['d']),xr-H['boss']['t']),
        (r(H['boss']['d']),xr),(r(H['bear']),xr),(r(H['bear']),xs),(r(H['piv']),xs),(r(H['piv']),H['len']),(0,H['len'])]
-    s0,s1=xb+I(.325)-H['slot']['w'],xb+I(.325);sd=I(.070)
-    def slot():   # the hook's slot: .120 wide along the arbor in the .520 body, cut flat to a depth the sheet doesn't print (about .070 on its scale)
-        return bd.Box(20,20,s1-s0,align=(bd.Align.CENTER,bd.Align.MAX,bd.Align.MIN)).moved(bd.Location((0,-r(H['bodyD'])+sd,s0)))   # at the bottom, as the sheet's end view (audit C-6)
+    # the body as 42170's end and side views draw it (the visual check, 2 November 2026): a circle whose bottom on the centre line steps out .022 to a tip (the .520 is
+    # over that tip: the circle .498), an arc of 1.00 R from the tip back onto the circle .150 from the centre line; that lobe, the hook the mainspring's eye
+    # catches on, only over the .120 band (its far edge .325 from the left boss's outer face), the rest of the body the plain circle. Seen from the square's
+    # end (the sheet's end view) the arc runs to the right: -X in this frame
+    s0,s1=xb+I(.325)-H['slot']['w'],xb+I(.325);rb=I(.249);rt=I(.271);xp=I(.150);yp=-math.sqrt(rb*rb-xp*xp)
+    def spiral():
+        z0,z1=xb+H['boss']['t'],xr-H['boss']['t'];P=lambda x,y,z=-0.01:bd.Vector(x,y,z)
+        q0,q1=(0,-rt),(-xp,yp);mx,my=(q0[0]+q1[0])/2,(q0[1]+q1[1])/2;h=math.dist(q0,q1)/2;d=math.sqrt(1*25.4**2-h*h);nx,ny=-(q1[1]-q0[1])/(2*h),(q1[0]-q0[0])/(2*h)
+        if nx*mx+ny*my>0:nx,ny=-nx,-ny   # the 1.00 R arc's centre inward, so the arc bulges out
+        cx,cy=mx+nx*d,my+ny*d;am=math.atan2(my-cy,mx-cx);m=(cx+25.4*math.cos(am),cy+25.4*math.sin(am));ab=(math.atan2(yp,-xp)+math.atan2(-rb,0))/2
+        ri=rb-0.05   # the lobe's inner side reaches into the circle (no faces shared)
+        lobe=bd.Face(bd.Wire([bd.Edge.make_line(P(0,-ri,s0),P(0,-rt,s0)),bd.Edge.make_three_point_arc(P(0,-rt,s0),P(*m,s0),P(-xp,yp,s0)),bd.Edge.make_line(P(-xp,yp,s0),P(-xp*ri/rb,yp*ri/rb,s0)),bd.Edge.make_three_point_arc(P(-xp*ri/rb,yp*ri/rb,s0),P(ri*math.cos(ab),ri*math.sin(ab),s0),P(0,-ri,s0))]))
+        keep=bd.Cylinder(rb,z1-z0+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,z0-0.01)))+bd.extrude(lobe,s1-s0,dir=(0,0,1))
+        return bd.Cylinder(20,z1-z0,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,z0)))-keep
     ops=[Blank(H['bodyD']+0.4,0,H['len'],'Cut the blank from steel bar between centres',[S('length',fx(H['len'],2),'±.01 in',src+' #1'),S('bar','Ø about 13.6','not given: the .520 body and 0.2',src)],src),
          TurnProfile(P,'Turn the arbor: the square end as a round of the corners, the pivots, the bearings, the bosses and the body',
            [S('square end',f"Ø {fx(H['sqAC'],3)} (over the corners) for {fx(H['sq'],3)}",'+.005/-0 in',src+' #2'),
             S('left pivot',f"Ø {fx(H['piv'])} for {fx(H['pivL'],3)}",'+0/-.0003 in; polish',src+' #3'),
             S('bearings',f"Ø {fx(H['bear'])}, the left to the boss, the right {fx(xs-xr,3)} long",'+0/-.0003 in; polish',src+' #4'),
             S('bosses',f"Ø {fx(H['boss']['d'],3)} × {fx(H['boss']['t'],3)} each side of the body; {fx(H['overBosses'],3)} over both",'+0/-.002 in',src+' #6'),
-            S('body (the spring collar)',f"Ø {fx(H['bodyD'],3)}",'the coils seat on it',src+' #9'),
+            S('body (the spring collar)',f"turned Ø .542 for the hook, then milled (below)",'the .520 over the hook',src+' #9'),
             S('spans',f"{fx(H['span720'],3)} left boss face to the right shoulder; {fx(H['span870'],3)} from .540; {fx(H['span1000'],3)} from .410",'±.001, ±.002, ±.003 in',src+' #5, #6'),
             S('right pivot',f"Ø {fx(H['piv'])} for {fx(H['len']-xs,3)}",'+0/-.0003 in; polish',src+' #8')],src),
          TurnCone(r(H['piv'])-I(.005),H['sq'],r(H['piv']),H['sq']+I(.005),'Chamfer the left pivot at the shoulder',[S('','.005 × 45°',None,src+' #2')],src),
          Dome(0,H['sqAC'],-1,"Dome the square's end",[S('end','domed, polished','its radius not given: R .145 (estimated)',src+' #2')],src),
          Dome(H['len'],H['piv'],1,"Dome the right pivot's end",[S('end','domed, polished','its radius not given: R .1695 (estimated)',src+' #8')],src),
          MillSquare(H['sqAF'],0,H['sq'],'Mill the square',[S('',f"{fx(H['sqAF'],3)} across the flats",'+.004/-0 in',src+' #2'),S('length',fx(H['sq'],3),None,src+' #2')],src),
-         Cut(slot,"Mill the hook's slot in the body",[S('width',fx(H['slot']['w'],3),'±.002 in',src+' #7'),S('place',f"its far edge {fx(I(.325),3)} from the left boss's outer face",None,src+' #7 (re-read 1 Nov 2026)'),
-            S('depth',fx(sd,3),'not printed: about .070 on the scale (unsure)',src)],src)]
+         Cut(spiral,"Mill the body: the circle Ø .498, and over the .120 band the hook: the .022 step on the centre line and the 1.00 R arc from its tip onto the circle",[S('over the hook',f"{fx(H['bodyD'],3)} (the circle .498 and the .022 step)",None,src+' #9, end view'),
+            S('hook band',f"{fx(H['slot']['w'],3)} wide, its far edge {fx(I(.325),3)} from the left boss's outer face",'±.002 in',src+' #7'),S('arc','1.00 R from the tip to the circle .150 from the centre line',None,src+' end view: START SPIRAL'),
+            S('','the 45° notch and the .010 × 45° of the end view and its detail: not cut','unsure what they are',src)],src)]
     rc=Recipe('barrelArbor','42170','Barrel arbor',src+' (memos 10-22-43, 4-29-44)','steel, "S.A.E. 10120" as written (probably 1020 or 10L20)','polish the pivots and bearings',
-        [Setup('1','between centres; the square and the slot milled in a dividing head',ops)],ID,
-        notes=["The end view's \"START SPIRAL\" ramp on the body (a 1.00 R arc, a step of .022, 30° and 45°, .090, .150, .210) is not built: which number is which of the ramp's lengths is unsure (42170 transcription, item 9).",
+        [Setup('1','between centres; the square and the hook milled in a dividing head',ops)],ID,
+        notes=["The hook is the end view's START SPIRAL: a .022 step and a 1.00 R arc standing out of the .498 circle over the .120 band, which the side view draws standing below the body's edge (the visual check). The mainspring's eye (1-WD-265's .200 slot) goes over it.",
                'The coils seat on the .520 body: a core radius of .260 in = 6.604 mm.'],
         fits=['the pivots .1695 +0/-.0003 in the barrel bridge and pillar plate','the barrel (42168) and its cap (42169) turn on the .2295 bearings: their bores .2300 +.0003/-0'])
-    rc.notes.append("Not built (the audit, C-6, C-8): the body's relief along its underside (about .022, the start spiral's) and the 45° chamfers at the bearings' outer ends (about .012-.019, not dimensioned).")
-    return _flags(rc,['Hook slot depth: not printed (unsure, about .070)','Domed ends: radius not given (estimated)','Start-spiral ramp and the body relief: not built (unsure readings)',"The slot at the bottom; the sheet's about 20° off the vertical (unsure)"])
+    rc.notes.append("Not built: the 45° chamfers at the bearings' outer ends (about .012-.019, not dimensioned); the end view's 45° notch and the .010 × 45° its detail shows (the .090 and .210 lines are that detail's projection).")
+    return _flags(rc,['Domed ends: radius not given (estimated)','The hook: the circle taken as .498 (the .520 over the tip), its arc meeting the circle at .150 (likely)','The 45° notch and the .010 detail: not cut (unsure)'])
 
 # ======================= 42073-2-01 fourth wheel, 42072-1-01 fourth pinion =======================
 def _spoke_windows(angles,R0,R1,wh,wr,t):
@@ -193,18 +205,21 @@ def fourthPinion():
     R=lambda d:d/2
     # the turned profile from the top pivot's tip (z 0) down, as the drawn-parts branch read the sheet (movement.js there, F4P's turn list): the stem's
     # diameters' places are its likely reading (the transcription's Verification: .0565 under the top cone, .0583 above the collar)
-    # the turned profile from the top pivot's tip (z 0) down, as 42072 draws it (the audit, A-4, A-5): the stem tapering from .0565 under the top cone to .0583 at the
-    # collar (the silhouette parallel-sided, no step), the lower shoulder's 60° cone running to the pivot, the lower pivot tapering .0311 to .0280 over its .360
-    P=[(0,0),(R(H['pivTop']),0),(R(H['pivTop']),H['pivTopLen']),(R(H['stem']),H['pivTopLen']),(R(H['shTop']),T['coneEnd']),(R(H['stemAbove']),T['collarTop']),
+    # the turned profile from the top pivot's tip (z 0) down, as 42072 draws it (the visual check, 2 November 2026): each printed diameter where its arrows
+    # stand, though the drawing keeps one width: .0565 under the top cone, the stem UNDERTURN to .0445, .0583 just above the collar (from .250, the line the
+    # drawn-parts branch read); under the leaves a .0445 neck, the .060 shoulder, its 60° cone to the pivot; the lower pivot tapering .0311 to .0280 (A-4)
+    I=lambda x:x*25.4;sh1=I(.110);nk=T['leavesEnd']+I(.015);cn=(R(H['lowSh'])-R(H['pivLow']))*math.sqrt(3)
+    P=[(0,0),(R(H['pivTop']),0),(R(H['pivTop']),H['pivTopLen']),(R(H['stem']),H['pivTopLen']),(R(H['shTop']),T['coneEnd']),(R(H['shTop']),sh1),(R(H['stem']),sh1),(R(H['stem']),T['stemAbove']),
+       (R(H['stemAbove']),T['stemAbove']),(R(H['stemAbove']),T['collarTop']),
        (R(H['collar'])-T['chamf'],T['collarTop']),(R(H['collar']),T['collarTop']+T['chamf']),(R(H['collar']),T['collarEnd']),(ro+0.02,T['collarEnd']),
-       (ro+0.02,T['leavesEnd']),(R(H['lowSh']),T['leavesEnd']),(R(H['lowSh']),T['lowEnd']-(R(H['lowSh'])-R(H['pivLow']))*math.sqrt(3)),(R(H['pivLow']),T['lowEnd']),(R(H['pivTail']),H['len']),(0,H['len'])]
+       (ro+0.02,T['leavesEnd']),(R(H['lowStem']),T['leavesEnd']),(R(H['lowStem']),nk),(R(H['lowSh']),nk),(R(H['lowSh']),T['lowEnd']-cn),(R(H['pivLow']),T['lowEnd']),(R(H['pivTail']),H['len']),(0,H['len'])]
     ops=[Blank(H['tip']+0.3,0,H['len'],'Cut the blank from drill rod between centres',[S('length',fx(H['len'],3),None,src+' #17')],src),
          TurnProfile(P,'Turn the arbor: the pivots, the top shoulder with its 60° cone, the stem, the collar, the head of the pinion, the lower shoulder and cone',
            [S('top pivot',f"Ø {fx(H['pivTop'])} for {fx(H['pivTopLen'],3)}",'+0/-.0002 in; polish',src+' #3, #16'),S('top shoulder',f"Ø {fx(H['stem'])} flat, a 60° cone to Ø {fx(H['shTop'])}",'±.0005, ±.0003 in',src+' #4, #5, #14'),
-            S('stem',f"tapering from Ø {fx(H['shTop'])} under the top cone to Ø {fx(H['stemAbove'])} at the collar",'the silhouette parallel, no step (likely); the UNDERTURN not settled',src+' #4, #6'),
+            S('stem',f"Ø {fx(H['shTop'])} under the top cone to {fx(sh1,3)}, UNDERTURN to Ø {fx(H['stem'])}, Ø {fx(H['stemAbove'])} from {fx(T['stemAbove'],3)} to the collar",'±.0003, ±.0005, ±.0003 in; where each begins not dimensioned (estimated from the arrows)',src+' #4, #5, #6'),
             S('collar',f"Ø {fx(H['collar'])}, {fx(T['collarEnd']-T['collarTop'],3)} long, its top chamfered to a Ø .0990 flat",'±.0003 in; the chamfer likely',src+' #7, #8, #21'),
             S('leaves',f"{fx(T['leavesEnd']-T['collarEnd'],3)} long, from {fx(T['collarEnd'],3)} to {fx(T['leavesEnd'],3)} from the tip",None,src+' #18, #20 (lengths re-read 1 Nov 2026)'),
-            S('lower shoulder',f"Ø {fx(H['lowSh'],3)}, its 60° cone to the pivot at {fx(T['lowEnd'],3)}",'±.002 in',src+' #10, #11, #15, #19'),
+            S('lower shoulder',f"a Ø {fx(H['lowStem'])} neck under the leaves, the Ø {fx(H['lowSh'],3)} shoulder, its 60° cone to the pivot at {fx(T['lowEnd'],3)}",'±.0005, ±.002 in; the neck .015 long (estimated)',src+' #10, #11, #15, #19'),
             S('lower pivot',f"tapering from Ø {fx(H['pivLow'])} to Ø {fx(H['pivTail'])} at its end over {fx(H['len']-T['lowEnd'],3)}",'+0/-.0002, +0/-.0005 in; a taper, not a step (likely)',src+' #12, #13, #22')],src),
          CutLeaves(xy,ro+0.05,T['collarEnd'],T['leavesEnd'],f'Cut the {z} leaves and polish them',[S('leaves',f'{z}, module {m:.4f} mm',None,src+' #1, #2'),S('over the tips',f"Ø {fx(H['tip'])}",'+.0005/-.0010 in',src+' #9'),
             S('leaf form',f"round-tipped cycloidal leaf 1.05 m thick, its flanks run straight {ext:.3f} mm past the pitch circle to reach the drawn tips",'estimated: the sheet gives no form',"core.js gearOutline's o.ext (the drawn-parts branch)")],src,z=z)]
@@ -213,7 +228,7 @@ def fourthPinion():
         fits=['the fourth wheel 42073 riveted on the collar (#13 of 42073)','meshes with the third wheel (THIRD WHEEL on the sheet)'],
         notes=["The drawn-parts branch found the drawn tips (.1290) mesh badly with the third wheel's generic teeth when the leaf is run out straight (91 % approach, a ripple 0.80-1.07): the model keeps the stock leaf there; built here as drawn (Review-results.md on that branch).",
                'UNDERTURN on the sheet: which stem diameter is the undercut is unsure (42072 transcription).'])
-    rc.od={'d':H['tip'],'tol':[-.0010*25.4,.0005*25.4]};return _flags(rc,['Leaf form: estimated (the drawn tips need a leaf run out 0.09 mm)','The stem a taper with no step: likely; the UNDERTURN unsettled',"The collar's top chamfer: its size unsure (.009 built; the sheet looks .017 by .011)"])
+    rc.od={'d':H['tip'],'tol':[-.0010*25.4,.0005*25.4]};return _flags(rc,['Leaf form: estimated (the drawn tips need a leaf run out 0.09 mm)','Where the stem diameters change: not dimensioned (estimated from the arrows)',"The collar's top chamfer: its size unsure (.009 built; the sheet looks .017 by .011)"])
 
 # ======================= ratchets: 42013 winding ratchet, 42026 set-up ratchet, 42009 sustaining ratchet wheel =======================
 def ratchet_face(z,Ro,Ri,off,ang,hand=1):
@@ -392,12 +407,16 @@ def _flat(key,hn,title,src,mat,treat,H,t,holes,notes=(),fits=(),flags=(),mirror=
     r=Recipe(key,hn,title,src,mat,treat,[Setup('1','flat in a fixture on its holes; the outline milled to the table',ops,view='top')],ID,notes=list(notes),fits=list(fits))
     r.flat=True;return _flags(r,flags)
 def windingPawlSpring():
-    H=HD()['wps'];src='42007-2-01';hs=H['holes']
-    return _flat('windingPawlSpring','42007','Winding pawl spring',src,'beryllium copper','24K gold plate',H,H['t'],
-        [(tuple(hs[0]['c']),H['pin'],'hole for the pin 35794 (.0498)',src+' #10'),(tuple(hs[1]['c']),H['screw'],'screw hole (.0440-130)',src+' #11'),(tuple(hs[2]['c']),H['screw'],'second screw hole',src+' #11')],
+    H=HD()['wps'];src='42007-2-01';hs=H['holes'];TAP=H['screw']-1.0825*25.4/130   # the screws come up from the wheel's back (42009's countersinks 3, 4, 8, 9) into these tapped holes
+    r=_flat('windingPawlSpring','42007','Winding pawl spring',src,'beryllium copper','24K gold plate',H,H['t'],
+        [(tuple(hs[0]['c']),H['pin'],'hole for the pin 35794 (.0498)',src+' #10'),(tuple(hs[1]['c']),TAP,"hole 16, tapped .0440-130 (tap drill: the thread's minor diameter)",src+' #11: TAP FOR .0440-130 SCREW (the visual check)'),(tuple(hs[2]['c']),TAP,'hole 17, tapped .0440-130',src+' #11')],
         notes=[f"The blade is {fx(H['blade'],3)} wide (±.001): the two .4700 and .4550 R arcs about one centre (#2, #3) leave it.",'Holes 1, 16, 17 land on the sustaining wheel\'s holes 10, 9, 8 (or 6, 4, 3): the .4150 circle.'],
         fits=['screwed to the sustaining ratchet wheel (42009) by two .0440-130 screws, located by the pin 35794 pressed in it'],
-        flags=["The holes' sizes are the pin's and screw's (the hole's own fit not printed)"],arcs={0:'outer edge (#2)',1:'tip (#9)',2:'#8',3:'inner edge (#3)',4:'#5',5:'#4',6:'corner (#7)',7:'#5'})
+        flags=["Holes 16 and 17 tapped .0440-130: drawn at the tap drill (the thread a note)"],arcs={0:'outer edge (#2)',1:'tip (#9)',2:'#8',3:'inner edge (#3)',4:'#5',5:'#4',6:'corner (#7)',7:'#5'})
+    for o in r.ops():
+        if isinstance(o,Hole) and o.key in ('h1','h2'):o.thread={'d':H['screw'],'p':25.4/130,'D1':TAP,'H1':0.5413*25.4/130}
+    return r
+
 def setupPawlSpring():
     H=HD()['wps'];src='42028-2-01';hs=H['holes']
     return _flat('setupPawlSpring','42028','Set-up pawl spring',src,'beryllium copper (as 42007)','nickel plate; #1 emery finish',H,H['t'],
