@@ -57,8 +57,50 @@ FIGS={'wempe':dict(title='Wempe Einheits-Chronometer',target=-11,hidden={'s':'in
     ('Y','The minute hand','hands.minute'),('Z','The hour hand','hands.hour')]),
   ('Drawn, not lettered',[('1','Balance (under the cock Z of Fig. 84)','balance.rim'),('2','Hairspring','hairspring.spring'),('3','Detent','detent.detent'),('4','Upper balance cock','upperCock'),
     ('5','Lower balance cock','lowerCock'),('6','Intermediate bridge','intermediateBridge'),('7','Barrel bridge','barrelBridge.bridge'),('8','Seconds hand','hands.seconds'),('9','Up-and-down hand','hands.ud')])],
+  func={'A':'The base of the frame: it carries the arbors’ lower pivots, and the motion work and dial on its other face.',
+    'A′':'The frame’s upper plate, held off the pillar plate by the pillars; it carries the arbors’ upper pivots.',
+    'B':'Hold the two plates parallel at their fixed distance apart.',
+    'C':'Houses the mainspring; turned by the spring as it unwinds, it pulls the chain off its rim.',
+    'c':'Holds the mainspring’s inner end; turned by its square to set up the spring’s starting tension.',
+    'r':'On the barrel arbor: with its click it keeps the set-up tension.',
+    'r′':'Holds the set-up ratchet against the mainspring’s pull.',
+    'f':'Carries the mainspring’s pull from the barrel to the fusee.',
+    'D':'A spiral cone the chain winds onto: its radius grows as the spring runs down, so the torque reaching the train stays even.',
+    'd':'Turned by the key on its square to wind; carries the fusee and, through the maintaining work, the great wheel.',
+    'D′':'Held by the maintaining detent while the key winds, so the maintaining spring can keep the great wheel driving.',
+    'd′':'Stops the maintaining ratchet turning back when winding takes the drive off.',
+    'B′':'In the drawing, carries the stopping-arm.',
+    'S':'Pushed out by the chain as it reaches the fusee’s small end at full wind, it meets the stop and ends the winding.',
+    'S′':'The stop the stop bar meets at full wind.',
+    's':'Holds the stop bar back, out of the stop’s way, until the chain pushes it out.',
+    'D″':'On the fusee arbor: takes the fusee’s torque into the train and drives the centre pinion.',
+    'E':'Turns once an hour; drives the third wheel’s pinion.',
+    'e':'Carries the centre wheel and its pinion; its end, through the cannon pinion, carries the minute hand.',
+    'E′':'Driven by the great wheel.',
+    'G':'Drives the fourth wheel’s pinion.',
+    'g':'Carries the third wheel and its pinion.',
+    'G′':'Driven by the centre wheel.',
+    'H':'Turns once a minute; drives the escape pinion.',
+    'h':'Carries the fourth wheel and its pinion, and the seconds hand at its end.',
+    'H′':'Driven by the third wheel.',
+    'K':'Held locked by the detent; let go once each oscillation, a tooth gives the balance its impulse.',
+    'k':'Carries the escape wheel and its pinion.',
+    'K′':'Driven by the fourth wheel.',
+    'P':'On the fusee arbor: turns with the fusee as it winds and runs down.',
+    'p':'Driven by P; carries the up-and-down hand.',
+    'V':'A friction fit on the centre arbor: carries the minute hand and drives the minute wheel, and slips when the hands are set.',
+    'V′':'Driven by the cannon pinion: the first step from minutes to hours.',
+    'X':'On the minute wheel: drives the hour wheel.',
+    'X′':'Turns once in twelve hours; carries the hour hand.',
+    'Y':'Shows the minutes.','Z':'Shows the hours.',
+    '1':'Swings to and fro in a fixed time, the timekeeper itself; its cut bimetallic rim compensates for temperature.',
+    '2':'Its elasticity returns the balance and sets the period of its swing.',
+    '3':'Locks the escape wheel; the balance’s discharge stone unlocks it once each oscillation.',
+    '4':'Holds the balance’s upper pivot.','5':'Holds the balance’s lower pivot.',
+    '6':'Holds the third and fourth arbors’ pivots on the dial side.','7':'Holds the barrel arbor’s upper pivot, and the set-up click.',
+    '8':'Shows the seconds, stepping each half second.','9':'Shows how many hours of running the mainspring has left.'},
   insets=[('Mainspring and fusee','The barrel, drawn see-through, holds the mainspring; its chain winds onto the fusee’s cone, whose radius grows as the spring runs down, so the pull reaching the train stays even.',
-     ['barrel','barrelArbor','setupRatchet','mainspring','chain','fusee','fuseeWheel','stopWork'],['barrel'],['barrel']),
+     ['barrel','barrelArbor','setupRatchet','mainspring','chain','fusee','fuseeWheel','stopWork'],['barrel'],['barrel'],{'edges':False}),   # no Edges: the packed coils' gaps, under a pixel, dotted the strip's edge with depth lines
     ('Maintaining power','Harrison’s maintaining work, under the fusee (left out here): a steel ring spring in the fusee wheel’s recess carries the drive. While the key turns the fusee back to wind it, the maintaining detent holds the ratchet and the spring alone drives the train. The ratchet and wheel are drawn see-through.',
      ['fuseeWheel','maintaining','maintDetent'],['fuseeWheel','maintaining.ratchet'],['maintaining','maintDetent']),
     ('Spring detent escapement','The detent locks the escape wheel. Every other swing the discharge stone on the balance’s roller unlocks it through the gold spring, a tooth pushes the impulse roller, and the balance swings on free.',
@@ -81,7 +123,7 @@ FIGS={'wempe':dict(title='Wempe Einheits-Chronometer',target=-11,hidden={'s':'in
     ('Y','The minute hand','hands.minute'),('Z','The hour hand','hands.hour')]),
   ('Drawn, not lettered',[('1','Balance (under the cock Z of Fig. 84)','bal.wheel'),('2','Hairspring','spr.spring'),('3','Detent','det.detent'),('4','Balance cock','cock'),
     ('5','Sustaining spring','sspring'),('6','Seconds hand','hands.seconds'),('7','Barrel bridge','barrelBridge.bridge'),('8','Wind indicator hand','hands.wind')])])}
-FM=FIGS[model.NAME];FIG=FM['fig'];HIDDEN=FM['hidden'];INSETS=FM.get('insets',[])   # (title, caption, the parts shown, those of them (or pieces) drawn see-through, those the numbered badge on the isometric view marks): close-ups ringed on the isometric view
+FM=FIGS[model.NAME];FIG=FM['fig'];HIDDEN=FM['hidden'];FUNC=FM.get('func',{});INSETS=FM.get('insets',[])   # (title, caption, the parts shown, those of them (or pieces) drawn see-through, those the numbered badge on the isometric view marks[, options: edges False]): close-ups ringed on the isometric view
 ITEMS=[(L,n,k,(x[0] if x else '')) for _,g in FIG for (L,n,k,*x) in g]
 ISO=['pillarPlate','topPlate','pillars','intermediateBridge','barrelBridge','lowerCock','upperCock','trainBridge','pillar','cock']   # the schematic plates hidden in the isometric view (devOf: each model's own; a name it hasn't is passed over)
 JS=r"""((items)=>{const mv=window.__mv,r=window.__r,cv=r.domElement,ci=JSON.parse(__camInfo()),W=cv.clientWidth,H=cv.clientHeight;
@@ -178,41 +220,44 @@ def crop(shot,bg,pad):
     """a render cropped to what the movement draws (against the same frame without it)"""
     im=Image.open(shot).convert('RGB');bb=ImageChops.difference(im,Image.open(bg).convert('RGB')).convert('L').point(lambda v:255 if v>10 else 0).getbbox()
     return im.crop((max(0,bb[0]-pad),max(0,bb[1]-pad),min(im.size[0],bb[2]+pad),min(im.size[1],bb[3]+pad)))
-def isofig(P,off,rings,shots,dpr):
-    """the isometric view with its close-ups: each marked on the view by a small numbered badge, its box beside it (number, title, caption, the parts alone) and a thin leader from badge to box, in the same order down"""
-    F=lambda s:int(s*dpr);T=FONTS(F);bx0,by0,oy=off;IW=F(470);pad=F(12);meas=ImageDraw.Draw(Image.new('RGB',(10,10)));B=[]
-    for i in sorted(range(len(shots)),key=lambda i:rings[i][1]):
+def callouts(P,off,rings,shots,dpr,W):
+    """the close-ups' boxes (number, title, caption, the parts alone) in a grid two wide and W across, numbered left to right by where each badge stands on the isometric view;
+    gives the grid, each badge's place on the view and each box's badge place in the grid, by number"""
+    F=lambda s:int(s*dpr);T=FONTS(F);bx0,by0,oy=off;nc=2;gap=F(18);IW=(W-gap*(nc-1))//nc;pad=F(12);meas=ImageDraw.Draw(Image.new('RGB',(10,10)));B=[]
+    for i in sorted(range(len(shots)),key=lambda i:rings[i][0]):
         (tt,cap,*_),im=INSETS[i],shots[i];ln=wrap(meas,cap,T['TXT'],IW-2*pad);iw=IW-2*pad;ih=round(im.size[1]*iw/im.size[0])
-        if ih>F(220):iw=round(iw*F(220)/ih);ih=F(220)
+        if ih>F(250):iw=round(iw*F(250)/ih);ih=F(250)
         B.append((i,tt,ln,im.resize((iw,ih),Image.LANCZOS),pad+F(24)+len(ln)*F(17)+F(8)+ih+pad))
-    gap=F(16);th=sum(b[4] for b in B)+gap*(len(B)-1);H=max(P.size[1],oy+th);x0=P.size[0]+F(70)
-    C=Image.new('RGB',(x0+IW+F(4),H),'white');C.paste(P,(0,0));d=ImageDraw.Draw(C);y=min(oy,H-th);RIM=(70,70,70);LEAD=(140,140,140);br=F(11)
-    def badge(x,y,n):d.ellipse([x-br,y-br,x+br,y+br],fill=INK,outline='white',width=F(1.5));d.text((x,y),str(n),font=T['HD'],fill='white',anchor='mm')
-    for n,(i,tt,ln,im,h) in enumerate(B,1):
-        cx,cy=rings[i][0]*dpr-bx0,rings[i][1]*dpr-by0+oy;ty=y+pad+F(8);a=math.atan2(ty-cy,x0-cx)
-        d.line([(cx+br*math.cos(a),cy+br*math.sin(a)),(x0,ty)],fill=LEAD,width=F(1));badge(cx,cy,n)
-        d.rectangle([x0,y,x0+IW,y+h],outline=RIM,width=F(1.5));badge(x0+pad+br,y+pad+F(8),n);d.text((x0+pad+2*br+F(8),y+pad),tt.upper(),font=T['HD'],fill=INK);yy=y+pad+F(24)
-        for l in ln:d.text((x0+pad,yy),l,font=T['TXT'],fill=INK);yy+=F(17)
-        C.paste(im,(int(x0+(IW-im.size[0])/2),int(yy+F(8))));y+=h+gap
-    return C
-def key(views,dpr,hmax):
-    """the key: each group of the drawing's letters with its names and the model's part (the card's title) under it, in as many columns as keep it within hmax"""
-    F=lambda s:int(s*dpr);T=FONTS(F);KW=F(450);meas=ImageDraw.Draw(Image.new('RGB',(10,10)));blocks=[]
+    rows=[B[k:k+nc] for k in range(0,len(B),nc)];RH=[max(b[4] for b in r) for r in rows]
+    G=Image.new('RGB',(W,sum(RH)+gap*(len(rows)-1)),'white');d=ImageDraw.Draw(G);at,bat=[],[];y=0
+    for r,rh in zip(rows,RH):
+        for c,(i,tt,ln,im,h) in enumerate(r):
+            x0=c*(IW+gap);d.rectangle([x0,y,x0+IW,y+rh],outline=(70,70,70),width=F(1.5));d.text((x0+pad+F(30),y+pad),tt.upper(),font=T['HD'],fill=INK);yy=y+pad+F(24)
+            for l in ln:d.text((x0+pad,yy),l,font=T['TXT'],fill=INK);yy+=F(17)
+            G.paste(im,(int(x0+(IW-im.size[0])/2),int(yy+F(8))))
+            at.append((rings[i][0]*dpr-bx0,rings[i][1]*dpr-by0+oy));bat.append((x0+pad+F(11),y+pad+F(8)))
+        y+=rh+gap
+    return G,at,bat
+def badge(d,x,y,n,dpr):
+    F=lambda s:int(s*dpr);br=F(11);d.ellipse([x-br,y-br,x+br,y+br],fill=INK,outline='white',width=F(1.5));d.text((x,y),str(n),font=FONTS(F)['HD'],fill='white',anchor='mm')
+def key(views,dpr,W):
+    """the key: each group of the drawing's letters with its names and, under each, what it does (FUNC; else the model's part, its card's title), in as many columns as fit W,
+    balanced, a column breaking between letters"""
+    F=lambda s:int(s*dpr);T=FONTS(F);KW=F(470);nc=max(1,W//KW);KW=W//nc;meas=ImageDraw.Draw(Image.new('RGB',(10,10)));items=[]
     for g,its in FIG:
-        b=[('h',g.upper(),F(20))]
-        for L,nm,k,*why in its:
-            t=next((v[L]['title'] for v in views if v.get(L,{}).get('title')),'') if k else '— '+why[0]
-            if k and why:t+=': '+why[0]
-            if L in HIDDEN:t+=' ('+HIDDEN[L]+')'
-            b.append(('L',(('('+L+')') if L in HIDDEN else L,nm),F(17)))
-            b+=[('w',ln,F(17)) for ln in wrap(meas,t,T['TXT'],KW-F(70))]
-        blocks.append(b+[('s','',F(8))])
-    cols=[[]];h=0
-    for b in blocks:
+        for j,(L,nm,k,*why) in enumerate(its):
+            t=FUNC.get(L) or (next((v[L]['title'] for v in views if v.get(L,{}).get('title')),'') if k else '')
+            if why:t=(t+' ' if t else '')+'— '+why[0][0].upper()+why[0][1:]+'.'
+            if L in HIDDEN:t+=' ('+HIDDEN[L][0].upper()+HIDDEN[L][1:]+'.)'
+            b=([('s','',F(10)),('h',g.upper(),F(20))] if j==0 else [])+[('L',(('('+L+')') if L in HIDDEN else L,nm),F(17))]+[('w',ln,F(17)) for ln in wrap(meas,t,T['TXT'],KW-F(80))]+[('s','',F(4))]
+            items.append(b)
+    tot=sum(x[2] for b in items for x in b);tgt=tot/nc;cols=[[]];h=0
+    for b in items:
         bh=sum(x[2] for x in b)
-        if h+bh>hmax and cols[-1]:cols.append([]);h=0
-        cols[-1]+=b;h+=bh
-    C=Image.new('RGB',(KW*len(cols),max(sum(x[2] for x in c) for c in cols)),'white');d=ImageDraw.Draw(C)
+        if cols[-1] and h+bh/2>tgt and len(cols)<nc:cols.append([]);h=0
+        if not cols[-1] and b[0][0]=='s':b=b[1:]
+        cols[-1]+=b;h+=sum(x[2] for x in b)
+    C=Image.new('RGB',(W,max(sum(x[2] for x in c) for c in cols)),'white');d=ImageDraw.Draw(C)
     for ci,c in enumerate(cols):
         x=ci*KW;y=0
         for kind,v,hh in c:
@@ -221,15 +266,38 @@ def key(views,dpr,hmax):
             elif kind=='w':d.text((x+F(52),y),v,font=T['TXT'],fill=BLUE)
             y+=hh
     return C
-def sheet(panels,views,path,dpr):
-    """the views one above the other, the key beside them, under one title (as the drawing's Figs. 83 and 84 share their letters)"""
-    F=lambda s:int(s*dpr);T=FONTS(F);g=F(24);top=F(70);pw=max(p.size[0] for p in panels);ph=sum(p.size[1] for p in panels)+g*(len(panels)-1)
-    K=key(views,dpr,ph);tt=FM['title']+', laid out, against a textbook’s developed drawing (“Modern chronometer movement”, Figs. 83 and 84) and its letters of reference'
-    tw=ImageDraw.Draw(Image.new('RGB',(10,10))).textlength(tt,font=T['TT']);C=Image.new('RGB',(max(F(20)+pw+F(40)+K.size[0],int(F(20)+tw))+F(20),top+max(ph,K.size[1])+F(40)),'white');d=ImageDraw.Draw(C)
-    d.text((F(20),F(18)),tt,font=T['TT'],fill=INK)
+def sheet(left,iso,views,path,dpr):
+    """left, the elevation over the plan; right, the isometric view over its close-ups, each badge on the view numbered as its box (no leaders: they crossed the boxes); the key across the bottom;
+    under one title (as the drawing's Figs. 83 and 84 share their letters)"""
+    F=lambda s:int(s*dpr);T=FONTS(F);g=F(24);top=F(70);m=F(20);cg=F(50)
+    lw=max(p.size[0] for p in left);lh=sum(p.size[1] for p in left)+g*(len(left)-1)
+    V,off,rings,shots=iso;rw=V.size[0];G,at,bat=callouts(V,off,rings,shots,dpr,rw) if shots else (Image.new('RGB',(rw,1),'white'),[],[])
+    rh=V.size[1]+g+G.size[1];up=max(lh,rh);tt=FM['title']+', laid out, against a textbook’s developed drawing (“Modern chronometer movement”, Figs. 83 and 84) and its letters of reference'
+    tw=ImageDraw.Draw(Image.new('RGB',(10,10))).textlength(tt,font=T['TT']);W=max(m+lw+cg+rw+m,int(m+tw+m));K=key(views,dpr,W-2*m)
+    C=Image.new('RGB',(W,top+up+F(36)+K.size[1]+F(30)),'white');d=ImageDraw.Draw(C);d.text((m,F(18)),tt,font=T['TT'],fill=INK)
     y=top
-    for p in panels:C.paste(p,(F(20),y));y+=p.size[1]+g
-    C.paste(K,(F(20)+pw+F(40),top+F(6)));C.save(path)
+    for p in left:C.paste(p,(m,y));y+=p.size[1]+g
+    rx=m+lw+cg;C.paste(V,(rx,top));gy=top+V.size[1]+g;C.paste(G,(rx,gy))
+    for n,((ax,ay),(bx,by)) in enumerate(zip(at,bat),1):badge(d,rx+ax,top+ay,n,dpr);badge(d,rx+bx,gy+by,n,dpr)
+    ky=top+up+F(18);d.line([(m,ky),(W-m,ky)],fill=(200,200,200),width=F(1));C.paste(K,(m,ky+F(14)));C.save(path)
+def save_parts(left,iso,views):
+    """what the sheet is made of, for --relayout"""
+    D=OUT/'r_laidout_parts';D.mkdir(exist_ok=True);V,off,rings,shots=iso
+    for k,p in enumerate(left):p.save(D/f'left{k}.png')
+    V.save(D/'iso.png')
+    for k,p in enumerate(shots):p.save(D/f'shot{k}.png')
+    (D/'meta.json').write_text(json.dumps({'left':len(left),'shots':len(shots),'off':off,'rings':rings,'views':views},ensure_ascii=False),encoding='utf-8')
+if '--relayout' in sys.argv:   # the sheet again from the last run's parts, no browser: for its layout and the key's text
+    D=OUT/'r_laidout_parts';J=json.loads((D/'meta.json').read_text(encoding='utf-8'))
+    sheet([Image.open(D/f'left{k}.png').convert('RGB') for k in range(J['left'])],(Image.open(D/'iso.png').convert('RGB'),J['off'],J['rings'],[Image.open(D/f'shot{k}.png').convert('RGB') for k in range(J['shots'])]),
+      list(J['views'].values()),OUT/'r_laidout_sheet.png',2);print('wrote',OUT/'r_laidout_sheet.png')
+    if WRITE:   # the page's image, and its stamp over the same files hashed again (the page unchanged since the parts were rendered: --check must pass first, the tool apart)
+        st=[k for k in stale() if not k.endswith('/laidout.py')]
+        if st:sys.exit('the page changed since the parts were rendered ('+', '.join(st)+'): run --write in full')
+        im=Image.open(OUT/'r_laidout_sheet.png').convert('RGB');w=min(im.size[0],3200);im.resize((w,round(im.size[1]*w/im.size[0])),Image.LANCZOS).save(IMG,'WEBP',quality=84,method=6)
+        F0=json.loads(STAMP.read_text(encoding='utf-8'))['files'];STAMP.write_text(json.dumps({'sheet':IMG.name,'files':{k:sha(ROOT/k) for k in F0}},indent=1)+'\n',encoding='utf-8',newline='\n')
+        print(f'wrote {IMG.relative_to(ROOT).as_posix()} ({IMG.stat().st_size//1024} KB) and its stamp')
+    sys.exit(0)
 async def main():
     OUT.mkdir(parents=True,exist_ok=True);dpr=2;fails=[]
     async with async_playwright() as p:
@@ -245,7 +313,7 @@ async def main():
         views={};clicked={};panels=[];css=lambda a,b2:pg.evaluate("((a,b)=>{const s=document.getElementById('shotcss');s.textContent=s.textContent.replace(a,b);})(%s,%s)"%(json.dumps(a),json.dumps(b2)))
         for name,pitch in (('elevation',0.05),('plan',1.5),('iso',math.atan(1/math.sqrt(2)))):
             if name=='iso':   # near parallel: a 4° lens framing what the 20° lens at 420 mm did; the schematic frame hidden
-                d=420*math.tan(math.radians(10))/math.tan(math.radians(2));await pg.evaluate(f"window.__devHide({json.dumps(ISO)});window.__cam({yaw+math.pi/4},{pitch},{d},4)")
+                d=420*math.tan(math.radians(10))/math.tan(math.radians(2));await pg.evaluate(f"window.__devHide({json.dumps(ISO)});window.__cam({yaw+math.pi/4},{pitch},{d},4,{d-400})")   # its near plane 400 short of the target: z-fighting on the balance's masses and rim at 1
                 await pg.evaluate(f"window.__look({yaw+math.pi/4},{pitch},{d},{DEV['mid'][0]},{FM['target']},{DEV['mid'][1]})");await pg.wait_for_timeout(3000)
             else:await pg.evaluate(f"window.__look({yaw},{pitch},420,{DEV['mid'][0]},{FM['target']},{DEV['mid'][1]})");await pg.wait_for_timeout(2500)
             shot=OUT/f'r_laidout_{name}_raw.png';await pg.screenshot(path=str(shot));bg=OUT/f'r_laidout_{name}_bg.png'
@@ -256,14 +324,19 @@ async def main():
             if name=='iso':   # every element is clicked in the other two (the plates hidden here would not be); the close-ups, each through a 20° lens on the same line of sight
                 if INSETS:
                     rings=await pg.evaluate(RING+"(%s)"%json.dumps([x[4] for x in INSETS]));shots=[]
-                    for j,(tt,cap,show,ghost,_) in enumerate(INSETS):
+                    ED="(v=>{const c=document.getElementById('edges');if(c&&c.checked!==v){c.checked=v;c.dispatchEvent(new Event('change'));}})"
+                    for j,(tt,cap,show,ghost,_,*o) in enumerate(INSETS):
+                        noed=bool(o) and o[0].get('edges') is False
+                        if noed:await pg.evaluate(ED+"(false)");await pg.wait_for_timeout(300)   # before the parts are set apart: the switch's look() puts every part back
                         q=await pg.evaluate(ISOL+"(%s,%s)"%(json.dumps(show),json.dumps(ghost)));dd=q['r']/math.sin(math.radians(10))*1.08
                         await pg.evaluate(f"window.__cam({yaw+math.pi/4},{pitch},{dd},20);window.__look({yaw+math.pi/4},{pitch},{dd},{q['c'][0]},{q['c'][1]},{q['c'][2]})");await pg.wait_for_timeout(2500)
                         s1=OUT/f'r_laidout_in{j}_raw.png';s0=OUT/f'r_laidout_in{j}_bg.png';await pg.screenshot(path=str(s1))
                         await pg.evaluate("window.__mv.visible=false");await pg.wait_for_timeout(400);await pg.screenshot(path=str(s0));await pg.evaluate("window.__mv.visible=true")
                         shots.append(crop(s1,s0,dpr*10));s1.unlink();s0.unlink()
-                    await pg.evaluate(ISOL+"(null,null)");panels[-1]=isofig(pc,off,rings,shots,dpr)
-                continue
+                        if noed:await pg.evaluate(ISOL+"(null,null)");await pg.evaluate(ED+"(true)");await pg.wait_for_timeout(300)
+                    await pg.evaluate(ISOL+"(null,null)")
+                else:rings,shots=[],[]
+                iso=(panels.pop(),off,rings,shots);continue
             # a real click at each element's anchor not clicked yet (pointerdown and up; 0.55 s apart, so no two make a double), its card's title against the element's
             await css(',#info{','{')
             for L,nm,k,_ in ITEMS:
@@ -273,7 +346,7 @@ async def main():
                 got=await pg.evaluate("(()=>{const i=document.getElementById('info');return i.classList.contains('on')?i.querySelector('h3').textContent:null})()")
                 clicked[L]=(name,got,q['title']);await pg.evaluate("document.querySelector('#info .x').click()");await pg.wait_for_timeout(200)
             await css('.loading{','.loading,#info{')
-        sheet(panels,list(views.values()),OUT/'r_laidout_sheet.png',dpr)
+        save_parts(panels,iso,views);sheet(panels,iso,list(views.values()),OUT/'r_laidout_sheet.png',dpr)
         print('page errors:',errs);await b.close()
     E,Pl=views['elevation'],views['plan']
     for L,nm,k,why in ITEMS:
