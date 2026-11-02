@@ -36,9 +36,11 @@ def mesh_closed(v,t):
     E=np.sort(np.concatenate([T[:,[0,1]],T[:,[1,2]],T[:,[2,0]]]),axis=1);_,c=np.unique(E,axis=0,return_counts=True)
     return int((c!=2).sum())
 def edges_of(p):
-    """the solid's B-rep edges as line segments: a line its two ends, a curve sampled to 0.01 mm of chord height"""
-    S=[]
+    """the solid's B-rep edges as line segments (its round faces' seams left out): a line its two ends, a curve sampled to 0.01 mm of chord height"""
+    S=[];from OCP.BRep import BRep_Tool
+    seam={hash(e) for f in p.faces() for e in f.edges() if BRep_Tool.IsClosed_s(e.wrapped,f.wrapped)}   # a round face's seam is no edge of the part: drawn, it was a tick across every hole, countersink and boss
     for e in p.edges():
+        if hash(e) in seam:continue
         if e.geom_type==bd.GeomType.LINE:pts=[e.position_at(0),e.position_at(1)]
         else:
             L=e.length;n=8
@@ -78,7 +80,7 @@ def check(r,p):
 
 def mat(L):
     t=L.wrapped.Transformation();return [round(t.Value(i,j),9) for i in range(1,4) for j in range(1,5)]
-def H_drawing(r):return r.drawing.split(' ')[0]
+def H_drawing(r):return r.drawing.split(' ')[0].rstrip(':')
 built_r={}
 def check_asm(A,built):
     """every pair of members: the volume they share (none unless a press fit) and, for those meant to clear, the gap between them; returns fails, notes
@@ -139,7 +141,8 @@ def main():
         for x in N:print('       '+x)
         for x in F:print('  !!   '+x)
         lo=np.min([b[:3] for b in M],axis=0);hi=np.max([b[3:] for b in M],axis=0)
-        parts.append({'key':A.key,'hn':'','group':A.group,'title':A.title,'assembly':True,'drawing':', '.join(sorted({H_drawing(built_r[m.key]) for m in A.members})),
+        parts.append({'key':A.key,'hn':'','group':A.group,'title':A.title,'assembly':True,'placeholder':bool(getattr(A,'placeholder',False)),
+          'drawing':getattr(A,'drawing',None) or ', '.join(sorted({H_drawing(built_r[m.key]) for m in A.members})),
           'material':'','treatment':'','flat':False,'flags':A.flags,'fits':[f'{a} with {b} ({k}): {w}' for a,b,k,w in A.fits],'notes':A.notes,'volume':0,'box':[round(x,4) for x in [*lo,*hi]],
           'checks':N,'fails':F,'ops':[],'sheet':'','members':[{'key':m.key,'label':m.label or built_r[m.key].title,'m':mat(m.loc()),'ex':list(m.ex),'why':m.why} for m in A.members]})
     if o.only:print('--only: hparts.js left as it is');sys.exit(1 if bad else 0)

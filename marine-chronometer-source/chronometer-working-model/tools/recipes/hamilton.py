@@ -662,9 +662,13 @@ class FromModel(Op):
     def __init__(self,hn,text,sizes=(),src=''):super().__init__(text,sizes,src);self.hn=hn
     def apply(self,p):
         from OCP.BRepAlgoAPI import BRepAlgoAPI_Check
-        q=_placeholder_manifold(self.hn);s=_mesh_solid(q)
+        from OCP.ShapeUpgrade import ShapeUpgrade_UnifySameDomain
+        def unify(s):   # the coplanar triangles merged into the model's faces (the page draws every face's edges: otherwise a diagonal across each flat face)
+            u=ShapeUpgrade_UnifySameDomain(s.wrapped,True,True,True);u.SetLinearTolerance(1e-5);u.SetAngularTolerance(1e-5);u.Build()
+            return bd.Solid(u.Shape()) if u.Shape().ShapeType().name=='TopAbs_SOLID' else s
+        q=_placeholder_manifold(self.hn);s=unify(_mesh_solid(q))
         if s.is_valid and BRepAlgoAPI_Check(s.wrapped,True,True).IsValid():return s
-        s=_mesh_solid(q.simplify(1e-5))   # flat triangles collapsed: the trip spring screw's two edges OCP's check calls too small
+        s=unify(_mesh_solid(q.simplify(1e-5)))   # flat triangles collapsed: the trip spring screw's two edges OCP's check calls too small
         if not(s.is_valid and BRepAlgoAPI_Check(s.wrapped,True,True).IsValid()):raise ValueError(f'{self.hn}: no valid solid from the model mesh')
         return s
 def _placeholder(hn,title):
@@ -700,7 +704,8 @@ def asmDetent():
                'Where they disagree the overlaps are listed under Checks, not hidden: the drawn detent is larger than the model\'s (its foot 15.37 long and 3.33 high against 12.11 and 2.12), so the model\'s block and adjusting screw, made for the shorter foot, meet it.',
                'The parts list (NAVSHIPS 250-624) numbers the clamp screw 37024; 42093 names it 37204.'],
         flags=['Placeholders: every part but the detent is the 3D model\'s (video), not a drawing'])
-    a.placeholder=True;return a
+    a.placeholder=True;a.drawing='the detent reconstructed from 42087-2-51A and -1-52, the parts named by 42093-2-01; every other part a placeholder from the 3D model, placed on the drawn detent'
+    return a
 
 # ======================= 42050 helical spring, 1-WD-265 mainspring inner end =======================
 def helicalSpring():

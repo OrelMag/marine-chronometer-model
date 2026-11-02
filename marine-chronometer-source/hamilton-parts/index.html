@@ -114,7 +114,7 @@ function show(k,keepView){
 let tab='sizes';
 function info(p){
   const t=p.assembly?{members:'Parts',notes:'Notes and fits',checks:'Checks'}:{sizes:'Sizes',sheet:'Operation sheet',notes:'Notes and fits',checks:'Checks'};if(!t[tab])tab=Object.keys(t)[0];
-  let h=p.assembly?`<h2>${E(p.title)}</h2><div class="meta">Subassembly from drawings ${E(p.drawing)}: every place from the sheets' own numbers</div>`:`<h2>${E(p.title)}</h2><div class="meta">Hamilton part <b>${E(p.hn)}</b> · drawing ${E(p.drawing)}</div><div class="meta">Material: <b>${E(p.material)}</b><br>Finish: ${E(p.treatment)}</div>`;
+  let h=p.assembly?`<h2>${E(p.title)}</h2><div class="meta">${p.placeholder?`Subassembly: ${E(p.drawing)}`:`Subassembly from drawings ${E(p.drawing)}: every place from the sheets' own numbers`}</div>`:`<h2>${E(p.title)}</h2><div class="meta">Hamilton part <b>${E(p.hn)}</b> · drawing ${E(p.drawing)}</div><div class="meta">Material: <b>${E(p.material)}</b><br>Finish: ${E(p.treatment)}</div>`;
   h+='<div class="chips">'+p.fails.map(f=>`<span class="chip bad">Check failed: ${E(f)}</span>`).join('')+p.flags.map(f=>`<span class="chip">${mark(f)}</span>`).join('')+'</div>';
   if(!p.assembly)h+=`<p><a class="btn" href="${E(p.step)}" download>Download STEP</a></p>`;
   h+='<div class="tabs" role="tablist">'+Object.entries(t).map(([k,v])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${v}</button>`).join('')+'</div><div id="tb"></div>';
