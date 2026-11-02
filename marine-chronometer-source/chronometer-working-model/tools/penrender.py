@@ -22,10 +22,11 @@ except ImportError:
     bpy=None
 HERE=pathlib.Path(__file__).resolve().parent;RIG=HERE.parent/'blender'/'rig.py'
 # each model's views (the page's VIEWS) and how the rig poses them: the box shown (its lid shut: lids), exploded, laid out; any other the movement lifted
-# out of its case alone. The camera is the page's. The Wempe's transport view (an outer box) is in no export, and isn't listed
+# out of its case alone. The camera is the page's. Not listed: the Wempe's transport view (an outer box) and its laid out view, which no export has (its
+# blender.js writes no Laid out clip, so the rig has no laid_out control: drawn, it showed the movement whole)
 POSE={'hamilton':{'box':dict(box=1,lids=1),'dial':dict(box=1),'movement':{},'train':{},'escapement':{},'exploded':dict(explode=1),'laidout':dict(laid_out=1),
                   'fusee':{},'balance':{}},
-      'wempe':{'dial':dict(box=1),'box':dict(box=1,lids=1),'case':dict(box=1),'movement':{},'plan':{},'side':{},'exploded':dict(explode=1),'laidout':dict(laid_out=1),
+      'wempe':{'dial':dict(box=1),'box':dict(box=1,lids=1),'case':dict(box=1),'movement':{},'plan':{},'side':{},'exploded':dict(explode=1),
                'escapement':{},'train':{},'fusee':{},'balance':{}}}
 PAPER=(0.965,0.945,0.9)
 
