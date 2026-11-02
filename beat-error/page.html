@@ -1,15 +1,14 @@
 <title>Beat Error Meter</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Martian+Mono:wght@400;600&display=swap">
 <style>
+/*FONTFACE*/
 /* Layout: one narrow column like a bench instrument: the reading on top, the controls under the thumb, the paper strip and the sound below */
 :root {
   --bg: #eef2f0; --panel: #ffffff; --ink: #14201b; --muted: #56655e; --line: #d3dcd8;
   --tick: #0e6a86; --tock: #b8520a; --accent: #0e6a86; --accent-ink: #ffffff;
   --good: #1d7438; --warn: #9a5c00; --bad: #b02a21; --chip: #e3ebe7;
-  --display: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "Martian Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --display: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0e1412; --panel: #161f1c; --ink: #e4ece8; --muted: #92a39b; --line: #2a3632;

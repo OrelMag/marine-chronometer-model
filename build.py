@@ -24,6 +24,7 @@ Writes:
      verification/build-verification/   the checks' report "Would a chronometer made to the model run and keep time?" (its build_report.py, committed)
      verification/real-chronometers/    the report "Does the model behave like a real Hamilton Model 21?", with its plots
      wempe/verification/                the Wempe's report "The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?" (wempe/verification/build_report.py)
+     beat/index.html       the Beat Error Meter (beat-error/, a side tool: a wristwatch's beat error by listening; its build.js, run here)
      sitemap.xml, robots.txt   for search engines (with --site-url only)
   The reports and the manual keep their addresses, their links to the pages pointed at the pages' new places; worker.js redirects /wempe/ to the home page (/?from=wempe)
   and the essay's old address to /essay/.
@@ -175,7 +176,11 @@ def main():
     for f in('three.min.js','OrbitControls.js','fonts/InstrumentSans-normal-400.woff2'):shutil.copy(ROOT/'vendor'/f,hp/'vendor'/f)
     write(hp/'index.html',meta((HP/'index.html').read_text(encoding='utf-8').replace('../../vendor/','vendor/').replace('href="../chronometer-working-model/index.html"','href="../"'),a.site_url,'hamilton/parts/index.html',keep=a.keep_html))
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)
-    pages=['index.html','hamilton/index.html','hamilton/parts/index.html','essay/index.html']+reports(a.site_url,a.keep_html)+[wempe_report(a.site_url,a.keep_html)]
+    # the Beat Error Meter (beat-error/): its build.js inlines its engine and font into one file, served at beat/ (https lets it use the microphone)
+    subprocess.run(['node',str(ROOT/'beat-error/build.js')],check=True,capture_output=True)
+    beat=(ROOT/'beat-error/beat-error.html').read_text(encoding='utf-8');check('beat/index.html',beat)
+    (SITE/'beat').mkdir();write(SITE/'beat/index.html',meta(beat,a.site_url,'beat/index.html',keep=a.keep_html))
+    pages=['index.html','hamilton/index.html','hamilton/parts/index.html','essay/index.html','beat/index.html']+reports(a.site_url,a.keep_html)+[wempe_report(a.site_url,a.keep_html)]
     if a.site_url:   # for search engines: the pages, at the addresses their canonical tags name
         write(SITE/'sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
               ''.join(f'<url><loc>{address(a.site_url,p,a.keep_html)}</loc></url>\n' for p in pages)+'</urlset>\n')
