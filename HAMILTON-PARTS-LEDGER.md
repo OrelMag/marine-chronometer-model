@@ -194,12 +194,13 @@ Matching, with nothing to change (each picture opened beside its sheet in this p
 
 ## Subassemblies
 
-Each subassembly is placed only by the sheets' numbers. `hamilton_parts.py` checks every pair of members for overlap: none may overlap unless the pair is a listed fit (press, tangent, or a spring's drawn preload). It reports each listed pair's contact or gap. All five pass.
+Each subassembly is placed only by the sheets' numbers. `hamilton_parts.py` checks every pair of members for overlap: none may overlap unless the pair is a listed fit (press, tangent, or a spring's drawn preload). It reports each listed pair's contact or gap. All six pass.
 
 | Subassembly | Members | Placed by | What the check shows |
 |---|---|---|---|
 | Fourth wheel and pinion (42073 complete) | 42072, 42073 | the wheel on the leaves' top face (.320 from the tip), its .100 bore on the collar .1000, the collar .005 proud | the rivet fit in contact |
 | Barrel, cap and arbor | 42168, 42169, 42170 | the cap's step on the barrel's end, its spigot in the 1.500 bore, its holes turned to the barrel's (the cap's at 9 o'clock, the barrel's at 12); the arbor's bosses between the two boss faces | the boss faces .530 apart inside against .530 over the arbor's bosses: endshake 0 as drawn (the tolerances span −.006 to +.005); the bearings .0005 to .0011 in the bores; inside height .610 for the spring's .590 |
+| Barrel, cap, arbor and set-up ratchet (2 November 2026) | 42168, 42169, 42170, 42026 | the barrel group as above; 42026's .115 square (+.001/-0) on 42170's .110 (+.004/-0), both diamonds with their corners on the centre lines; its inner face on the .1695 pivot's shoulder at the square's inner end (*estimated*: in the movement the barrel bridge, not in the set, stands between) | the square clear across the flats (.001 to .006 in), the ratchet's face on the shoulder |
 | Sustaining ratchet wheel complete with pawls (42009 complete) | 42009, 2 × 42010, 2 × 42007 | the pawls on holes 2 and 7 (the second the 180° image), swung 16° toward the ratchet; each spring's row 3 on the wheel's centre, its pin in hole 10 (6) and its screws over 9, 8 (4, 3) | each spring overlaps its own pawl by 0.114 mm³ as drawn free: the preload |
 | Fusee arbor, wheel and maintaining work | 42022, 42015, 42016, 42009 complete, 42013 | see below | every listed fit in contact or clear; the spring's R .7000 edge in the R .700 recess a few µm over (tangent) |
 | Fusee chain, a run of 9 spaces | 10 × 42004, 10 × 42246 (assumed), 4 × 42005, 42002, 42003 | as 42001: three plates at each joint, outer pairs on the odd spaces, centre links on the even, the hooks' thin ends the middle layer at the end joints (the barrel hook turned 180° about the axis, the fusee hook turned over), each pin centred on the .0285 stack | no overlaps; the pins clear their holes |
