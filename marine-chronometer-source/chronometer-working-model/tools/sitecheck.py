@@ -28,7 +28,7 @@ HTTP=[('/',200,None),('/hamilton/',200,None),('/essay/',200,None),('/hamilton',3
       ('/marine-chronometer',301,'/essay/'),('/marine-chronometer.html',301,'/essay/'),('/marine-chronometer/',301,'/essay/'),
       ('/navships-250-624-1948.pdf',200,None),('/social.png',200,None),('/social-wempe.png',200,None),('/social-movement.png',200,None),('/sitemap.xml',200,None),('/robots.txt',200,None)]
 # in the browser: address -> where it ends up (path and hash), the page that loads there
-NAV=[('/','/',''),('/hamilton/parts/#part=barrel','/hamilton/parts/','#part=barrel'),('/hamilton/','/hamilton/',''),('/essay/','/essay/',''),('/essay/#detent','/essay/','#detent'),
+NAV=[('/','/',''),('/beat/','/beat/',''),('/hamilton/parts/#part=barrel','/hamilton/parts/','#part=barrel'),('/hamilton/','/hamilton/',''),('/essay/','/essay/',''),('/essay/#detent','/essay/','#detent'),
      ('/#essay','/essay/',''),('/#essay=detent','/essay/','#detent'),('/#part=det&view=escapement','/hamilton/','#part=det&view=escapement'),('/#ovh=r46','/hamilton/','#ovh=r46'),
      ('/hamilton/#essay=gimbals','/essay/','#gimbals'),('/wempe/#essay=detent','/','#drawings=detent'),('/wempe/#view=train','/','#view=train'),('/wempe/','/',''),
      ('/marine-chronometer','/essay/',''),('/marine-chronometer#detent','/essay/','#detent')]

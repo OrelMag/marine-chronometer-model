@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.78.00 · 2026-11-02
+- New: the Beat Error Meter at /beat/. Hold a mechanical wristwatch against your phone's microphone and tap Listen: it finds the beat, then gives the beat error, the rate in seconds a day and both intervals, with the beats drawn as a timegrapher draws them.
+
 ## 3.77.00 · 2026-11-02
 - A link now keeps the camera: turn, zoom or pan the model and the page's address carries that view, so a shared link opens exactly where you left it, on both chronometers.
 
