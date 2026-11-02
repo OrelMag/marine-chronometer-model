@@ -100,7 +100,7 @@ FIGS={'wempe':dict(title='Wempe Einheits-Chronometer',target=-11,hidden={'s':'in
     '6':'Holds the third and fourth arbors’ pivots on the dial side.','7':'Holds the barrel arbor’s upper pivot, and the set-up click.',
     '8':'Shows the seconds, stepping each half second.','9':'Shows how many hours of running the mainspring has left.'},
   insets=[('Mainspring and fusee','The barrel, drawn see-through, holds the mainspring; its chain winds onto the fusee’s cone, whose radius grows as the spring runs down, so the pull reaching the train stays even.',
-     ['barrel','barrelArbor','setupRatchet','mainspring','chain','fusee','fuseeWheel','stopWork'],['barrel'],['barrel']),
+     ['barrel','barrelArbor','setupRatchet','mainspring','chain','fusee','fuseeWheel','stopWork'],['barrel'],['barrel'],{'edges':False}),   # no Edges: the packed coils' gaps, under a pixel, dotted the strip's edge with depth lines
     ('Maintaining power','Harrison’s maintaining work, under the fusee (left out here): a steel ring spring in the fusee wheel’s recess carries the drive. While the key turns the fusee back to wind it, the maintaining detent holds the ratchet and the spring alone drives the train. The ratchet and wheel are drawn see-through.',
      ['fuseeWheel','maintaining','maintDetent'],['fuseeWheel','maintaining.ratchet'],['maintaining','maintDetent']),
     ('Spring detent escapement','The detent locks the escape wheel. Every other swing the discharge stone on the balance’s roller unlocks it through the gold spring, a tooth pushes the impulse roller, and the balance swings on free.',
@@ -123,7 +123,7 @@ FIGS={'wempe':dict(title='Wempe Einheits-Chronometer',target=-11,hidden={'s':'in
     ('Y','The minute hand','hands.minute'),('Z','The hour hand','hands.hour')]),
   ('Drawn, not lettered',[('1','Balance (under the cock Z of Fig. 84)','bal.wheel'),('2','Hairspring','spr.spring'),('3','Detent','det.detent'),('4','Balance cock','cock'),
     ('5','Sustaining spring','sspring'),('6','Seconds hand','hands.seconds'),('7','Barrel bridge','barrelBridge.bridge'),('8','Wind indicator hand','hands.wind')])])}
-FM=FIGS[model.NAME];FIG=FM['fig'];HIDDEN=FM['hidden'];FUNC=FM.get('func',{});INSETS=FM.get('insets',[])   # (title, caption, the parts shown, those of them (or pieces) drawn see-through, those the numbered badge on the isometric view marks): close-ups ringed on the isometric view
+FM=FIGS[model.NAME];FIG=FM['fig'];HIDDEN=FM['hidden'];FUNC=FM.get('func',{});INSETS=FM.get('insets',[])   # (title, caption, the parts shown, those of them (or pieces) drawn see-through, those the numbered badge on the isometric view marks[, options: edges False]): close-ups ringed on the isometric view
 ITEMS=[(L,n,k,(x[0] if x else '')) for _,g in FIG for (L,n,k,*x) in g]
 ISO=['pillarPlate','topPlate','pillars','intermediateBridge','barrelBridge','lowerCock','upperCock','trainBridge','pillar','cock']   # the schematic plates hidden in the isometric view (devOf: each model's own; a name it hasn't is passed over)
 JS=r"""((items)=>{const mv=window.__mv,r=window.__r,cv=r.domElement,ci=JSON.parse(__camInfo()),W=cv.clientWidth,H=cv.clientHeight;
@@ -313,7 +313,7 @@ async def main():
         views={};clicked={};panels=[];css=lambda a,b2:pg.evaluate("((a,b)=>{const s=document.getElementById('shotcss');s.textContent=s.textContent.replace(a,b);})(%s,%s)"%(json.dumps(a),json.dumps(b2)))
         for name,pitch in (('elevation',0.05),('plan',1.5),('iso',math.atan(1/math.sqrt(2)))):
             if name=='iso':   # near parallel: a 4° lens framing what the 20° lens at 420 mm did; the schematic frame hidden
-                d=420*math.tan(math.radians(10))/math.tan(math.radians(2));await pg.evaluate(f"window.__devHide({json.dumps(ISO)});window.__cam({yaw+math.pi/4},{pitch},{d},4)")
+                d=420*math.tan(math.radians(10))/math.tan(math.radians(2));await pg.evaluate(f"window.__devHide({json.dumps(ISO)});window.__cam({yaw+math.pi/4},{pitch},{d},4,{d-400})")   # its near plane 400 short of the target: z-fighting on the balance's masses and rim at 1
                 await pg.evaluate(f"window.__look({yaw+math.pi/4},{pitch},{d},{DEV['mid'][0]},{FM['target']},{DEV['mid'][1]})");await pg.wait_for_timeout(3000)
             else:await pg.evaluate(f"window.__look({yaw},{pitch},420,{DEV['mid'][0]},{FM['target']},{DEV['mid'][1]})");await pg.wait_for_timeout(2500)
             shot=OUT/f'r_laidout_{name}_raw.png';await pg.screenshot(path=str(shot));bg=OUT/f'r_laidout_{name}_bg.png'
@@ -324,12 +324,16 @@ async def main():
             if name=='iso':   # every element is clicked in the other two (the plates hidden here would not be); the close-ups, each through a 20° lens on the same line of sight
                 if INSETS:
                     rings=await pg.evaluate(RING+"(%s)"%json.dumps([x[4] for x in INSETS]));shots=[]
-                    for j,(tt,cap,show,ghost,_) in enumerate(INSETS):
+                    ED="(v=>{const c=document.getElementById('edges');if(c&&c.checked!==v){c.checked=v;c.dispatchEvent(new Event('change'));}})"
+                    for j,(tt,cap,show,ghost,_,*o) in enumerate(INSETS):
+                        noed=bool(o) and o[0].get('edges') is False
+                        if noed:await pg.evaluate(ED+"(false)");await pg.wait_for_timeout(300)   # before the parts are set apart: the switch's look() puts every part back
                         q=await pg.evaluate(ISOL+"(%s,%s)"%(json.dumps(show),json.dumps(ghost)));dd=q['r']/math.sin(math.radians(10))*1.08
                         await pg.evaluate(f"window.__cam({yaw+math.pi/4},{pitch},{dd},20);window.__look({yaw+math.pi/4},{pitch},{dd},{q['c'][0]},{q['c'][1]},{q['c'][2]})");await pg.wait_for_timeout(2500)
                         s1=OUT/f'r_laidout_in{j}_raw.png';s0=OUT/f'r_laidout_in{j}_bg.png';await pg.screenshot(path=str(s1))
                         await pg.evaluate("window.__mv.visible=false");await pg.wait_for_timeout(400);await pg.screenshot(path=str(s0));await pg.evaluate("window.__mv.visible=true")
                         shots.append(crop(s1,s0,dpr*10));s1.unlink();s0.unlink()
+                        if noed:await pg.evaluate(ISOL+"(null,null)");await pg.evaluate(ED+"(true)");await pg.wait_for_timeout(300)
                     await pg.evaluate(ISOL+"(null,null)")
                 else:rings,shots=[],[]
                 iso=(panels.pop(),off,rings,shots);continue

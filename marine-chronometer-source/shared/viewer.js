@@ -58,7 +58,8 @@ const VIEWER={start(cfg){
     window.__unproj=(pts,yaw,pitch,dist,fov)=>{const c2=cam2(yaw,pitch,dist,fov),inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();return pts.map(([sx,sy,h])=>{const ndc=new THREE.Vector2(sx/W*2-1,-(sy/Hh*2-1)),rc=new THREE.Raycaster();rc.setFromCamera(ndc,c2);
       const o=rc.ray.origin.clone().applyMatrix4(inv),dd=rc.ray.direction.clone().transformDirection(inv),tt=(h-o.y)/dd.y;return[o.x+dd.x*tt,o.z+dd.z*tt];});};
     window.__camInfo=()=>JSON.stringify({fov:cam.fov,aspect:cam.aspect,pos:cam.position.toArray().map(v=>+v.toFixed(2)),tgt:C.target.toArray().map(v=>+v.toFixed(2)),C:{yaw:C.yaw,pitch:C.pitch,dist:C.dist},W,Hh});
-    window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=cur.fov=tgt.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:QT});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=false;};
+    /* near (optional): the near plane, the far 600 beyond the target, for a far camera through a narrow lens (laidout.py's isometric: at 1 mm the depth buffer can't part faces a hundredth apart 2 m off) */
+    window.__cam=(yaw,pitch,dist,fov,near)=>{cam.fov=cur.fov=tgt.fov=fov;cam.near=near||1;cam.far=near?dist+600:6000;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:QT});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=false;};
     window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:[x,y,z]});};
     /* laid out, the schematic plates standing in for these parts (devOf) hidden, the pieces kept shown (devKeep) left: laidout.py's isometric view */
     window.__devHide=ks=>{for(const m of MVM)if(m.userData.devPlate){let o=m;while(o&&!o.userData.devOf)o=o.parent;m.userData.qaOff=!!o&&ks.includes(o.userData.devOf);}look();};}
