@@ -320,7 +320,9 @@ def compose(work,tag,outp):
         if not ttf.exists():f=TTFont(str(ROOT/'vendor'/'fonts'/src));f.flavor=None;f.save(str(ttf))
         fonts[nm]=str(ttf)
     F=lambda nm,px:ImageFont.truetype(fonts[nm],int(px))
-    cap1,cap2,ttl1,ttl2=F('sans',H*0.034),F('sans',H*0.028),F('serifL',H*0.072),F('serif',H*0.036)
+    cap1,cap2,ttl1,ttl2=F('sans',H*0.043),F('sans',H*0.036),F('serifL',H*0.075),F('serif',H*0.038)
+    band=Image.new('RGBA',(W,H),(0,0,0,0));bd=np.zeros((H,1),np.uint8);y0=int(H*0.62);bd[y0:,0]=(np.linspace(0,1,H-y0)**0.8*150).astype(np.uint8)   # a soft dark band behind the captions
+    band=Image.new('RGBA',(W,H),(2,2,3,255));bandA=Image.fromarray(np.repeat(bd,W,1),'L')
     def text(img,lines,y,fonts_,alpha):
         if alpha<=0:return img
         L=Image.new('RGBA',img.size,(0,0,0,0));d=ImageDraw.Draw(L);yy=y
@@ -353,7 +355,9 @@ def compose(work,tag,outp):
             img=Image.open(pth).convert('RGBA') if pth.exists() else black.copy()
             if 'title' in S:
                 a=fade(t,0.6,S['dur']-(3.8 if S['name']=='open' else 0.2),0.8);img=text(img,S['title'],H*0.40,[ttl1,ttl2],a)
-            for c in S.get('caps',[]):img=text(img,[c[2],c[3]],H*0.80,[cap1,cap1],fade(t,c[0],c[1]))
+            ca=max([fade(t,c[0],c[1]) for c in S.get('caps',[])]+[0])
+            if ca>0:b_=band.copy();b_.putalpha(bandA.point(lambda v:int(v*ca)));img=Image.alpha_composite(img,b_)
+            for c in S.get('caps',[]):img=text(img,[c[2],c[3]],H*0.795,[cap1,cap1],fade(t,c[0],c[1]))
             dip=min(1,(t+0.5/fps)/0.4 if k else (t+0.5/fps)/1.0,(S['dur']-t-0.5/fps)/0.4 if k<len(SHOTS)-1 else (S['dur']-t)/1.5)   # a dip to black between shots
             if dip<1:img=Image.blend(black,img,max(0,dip))
             p.stdin.write(img.convert('RGB').tobytes())
