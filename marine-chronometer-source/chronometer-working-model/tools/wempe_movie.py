@@ -46,16 +46,24 @@ SHOTS=[
   cams=[C(0,(-0.30,1.0,0.55),['dial'],0.92,105,5.6),C(6,(0.0,1.0,0.25),['dial'],0.96,105,5.6),C(12,(0.25,1.0,0.45),['dial'],0.88,105,5.6)],
   caps=[[0.6,5.8,'The seconds hand steps every half second:','7,200 beats an hour'],   # README: 120 beats a minute, the centre once in 7,200
         [6.2,11.6,'The up-and-down hand shows how far it has run down:','56 hours from full wind']]),   # README: the up-and-down hand, 0 to 56 h
+ dict(name='face',dur=12,show='mv',up=1,hide=['dial'],layers=[R(34,12)],tick='run',   # the dial side with the dial left out (the owner, 3 November 2026)
+  cams=[C(0,(0.35,1.0,0.60),['cannon','hourWheel','changeWheel','udWheel','udPinion'],0.84,90,16),C(6,(0.05,1.0,0.45),['cannon','hourWheel','changeWheel','udWheel','udPinion'],0.88,90,16),C(12,(-0.30,1.0,0.55),['cannon','hourWheel','changeWheel','udWheel','udPinion'],0.84,90,16)],
+  caps=[[0.6,5.8,'Under the dial, the motion work: the cannon tube turns once an hour','with the minute hand, the hour wheel twelve times slower'],   # README P1e Motion: an hour a turn, the hour wheel at a twelfth
+        [6.2,11.6,'The up-and-down wheel, turned by the fusee,','carries the hand that shows the hours run']]),   # README P1e Motion: the up-and-down pinion with the fusee, the wheel back at a tenth
  dict(name='wind',dur=14,show='all',up=1,layers=[['Winding',[[0,0],[12.1167,12.1167]]],R(34,14)],tick='run',
   cams=[C(0,(0.55,0.95,0.75),None,0.82,60),C(7,(0.25,1.0,0.55),['bowl'],0.80,60),C(14,(0.10,1.0,0.65),None,0.80,60)],
   caps=[[0.6,6.6,'It is wound with a key:','the bowl turned over in its gimbals, the key turned to the stop'],   # Winding's clip, after the 6MX's instruction (README)
         [7.0,13.4,'Wound to the stop, it runs 56 hours:','the bowl is turned back and the key taken off']]),   # Winding's clip; README: 55.9 h from full wind to run down
- dict(name='maint',dur=12,show='mv',up=-1,hide=['dial','hands','cannon','hourWheel','changeWheel','udWheel','udPinion'],see=SEE+['fuseeWheel'],layers=[['Winding',[[0,2.6],[12,8.1]]]],tick='run',
+ dict(name='maint',dur=12,show='mv',up=-1,hide=['dial','hands','cannon','hourWheel','changeWheel','udWheel','udPinion'],see=SEE+['fuseeWheel','Schneckensperrrad'],layers=[['Winding',[[0,2.6],[12,8.1]]]],tick='run',
   # the bowl turned over to be wound: the fusee's large end, its wheel and the maintaining work, at the pillar plate, face down; seen from under it, the dial and motion work left out
-  cams=[C(0,(0.55,-1.0,0.65),['fuseeWheel','maintaining','maintDetent'],0.86,90,22),C(6,(0.20,-1.0,0.55),['fuseeWheel','maintaining','maintDetent'],0.90,90,22),
+  cams=[C(0,(0.55,-1.0,0.65),['fuseeWheel','maintaining','maintDetent'],0.86,90,22),C(6,(0.20,-1.0,0.55),['Sperrfeder','maintDetent'],0.88,105,22),
         C(12,(-0.25,-1.0,0.60),['fuseeWheel','maintaining','maintDetent'],0.86,90,22)],
-  caps=[[0.6,5.8,"Harrison's maintaining work: as the key turns the fusee back,",'the maintaining detent holds the ratchet'],   # README: Harrison's maintaining work (ratchet, clicks, maintaining spring, maintaining detent)
+  caps=[[0.6,5.8,"Harrison's maintaining work: as the key turns the fusee back,","its two clicks ride over the click wheel and the maintaining detent holds the ratchet"],   # README: Harrison's maintaining work (ratchet, clicks, maintaining spring, maintaining detent)
         [6.2,11.6,'and the maintaining spring drives the fusee wheel and the train,','so it keeps time while it is wound']]),   # README: the maintaining spring driving the train while the key turns
+ dict(name='stop',dur=12,show='mv',up=1,hide=['upperCock','balance','hairspring','rollers'],see=SEE+['fuseeBush','dustBush'],layers=[['Winding',[[0,4.0],[12,10.2]]]],tick='run',
+  cams=[C(0,(-0.45,1.0,0.40),['stopWork','Anschlagstift'],0.55,90,22),C(8,(-0.30,1.0,0.30),['stopWork','Anschlagstift'],0.60,90,22),C(12,(-0.20,1.0,0.45),['stopWork','setupRatchet'],0.75,90,22)],   # the stop work at the fusee's small end (the owner, 3 November 2026), the balance left out of the way
+  caps=[[0.6,5.8,"As the chain comes onto the fusee's top turn it presses the stop bar out:",'at full wind its end meets the stop pin and the key can turn no further'],   # app.js stopWork's description; README, the stop work
+        [6.2,11.6,'Beside it, the set-up ratchet and its click on the barrel arbor','keep the mainspring set up']]),   # app.js setupRatchet: the bridge's click holds it, the mainspring set up
  dict(name='apart',dur=12,show='mv',up=1,layers=[['Exploded',[[0,2.5],[8,5.5],[12,6]]]],tick=None,
   cams=[C(0,(0.95,0.55,0.55),None,0.88,90,16),C(6,(0.95,0.40,0.30),None,0.90,90,16),C(12,(0.80,0.35,0.05),None,0.92,90,16)],
   caps=[[1.0,11.4,'Inside: the power, a train of wheels,','the escapement and the balance']]),
@@ -73,7 +81,7 @@ SHOTS=[
         [5.2,9.6,'the seconds wheel turns once a minute,','the centre wheel, with the minute hand, once an hour']]),   # README: the seconds arbor once in 120 teeth, the centre once in 7,200
  dict(name='beat',dur=20,show='mv',up=-1,see=SEE+['upperCock','balance','hairspring'],layers=[['Beat (slow motion)',[[0,0],[1,0],[5,2.3],[14,3.1],[19,10],[20,10]]]],tick='slow',   # the wheel moves at clip 2.54-2.94 s: those spread over 9 s (shot 7.7-12.2)
   cams=[C(0,(-0.30,-1.0,0.30),['balance','escapeWheel','detent'],0.88,105,32),C(5,(-0.25,-1.0,0.40),['detent','rollers'],0.92,135,32),
-        C(14,(-0.10,-1.0,0.50),['detent','rollers'],0.94,135,32),C(20,(0.05,-1.0,0.45),['detent','rollers'],0.92,135,32)],   # close on the detent and rollers (the owner, 3 November 2026)
+        C(14,(-0.10,-1.0,0.50),['detent','rollers'],0.94,135,32),C(20,(-0.02,-1.0,0.48),['detent','rollers'],0.92,135,32)],   # the last key near the 14 s one: at (0.05,-1,0.45) the see-through balance rim came before the lens, all blurred   # close on the detent and rollers (the owner, 3 November 2026)
   caps=[[0.5,5.8,'One beat, slowed down: the spring detent escapement.',"The escape wheel is held on the detent's locking stone"],   # README: the detent with its gold spring and locking stone
         [6.0,9.2,"The balance's discharge jewel pushes the gold spring","and lifts the detent: the wheel is unlocked"],   # the wheel starts at shot 7.7 s
         [9.4,12.2,'A tooth drives the impulse roller:','the balance gets its push'],   # the tooth's fall, the tick, at 10.0 s
