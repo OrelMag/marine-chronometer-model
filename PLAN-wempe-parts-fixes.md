@@ -167,4 +167,4 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
     - set the physics' set-up to it (`wempe_mainspring.py`'s `setup` 0.75, and wherever the drive's set-up is taken), then the mainspring, drive and escapement chain;
     - recipes, solids, `fine.py`, `maintaining.py --model wempe`;
     - isolate.
-  - Its stand-out (0.475 at the face, the ramp's top) is as drawn; the audit's 0.25 was read part-way down the ramp, so it is not a difference.
+  - **Its stand-out is not a difference.** It is 0.475 from the core's r 6.65 at the face, radially from the arbor's axis, inside 05 07 02's "0,5 −0,05" (drawn radially at the hook's tip). The audit's 0.25 is the head's extent along the pin's own axis (6.90), which runs 15° off the face (7.125 × cos 15° ≈ 6.88).
