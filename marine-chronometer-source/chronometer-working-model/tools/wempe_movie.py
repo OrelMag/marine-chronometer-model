@@ -315,20 +315,21 @@ def base(work,size,engine='eevee',samples=64):
 def pick(only):return [S for S in SHOTS if not only or S['name'] in only.split(',')]
 
 # ---- the narration (the owner's choice, 3 November 2026: an English voice, British, male; the captions kept): Kokoro, offline, its voice VOICE; each line [shot s, text],
-# spoken shorter than its caption (about 2.6 words a second), the same facts and sources as the captions beside each shot. [word](/phonemes/) spells a German word out
+# spoken shorter than its caption (about 2.6 words a second), the same facts and sources as the captions beside each shot. [word](/phonemes/) spells a word out: the German
+# ones, and those Kokoro reads as their other word (minute as tiny, wound as hurt, wind as the weather: checked on each line's phonemes, both voices)
 VOICE='bm_george';VSPEED=1.0
 WEMPE='[Wempe](/vˈɛmpə/) [Einheits](/ˈInhIts/)-Chronometer'
 SAY={'open':[[0.6,f"This is the {WEMPE}: Germany's standard marine chronometer, designed in Hamburg in the early nineteen-forties."]],
  'sea':[[0.6,'At sea, the bowl hangs level in its gimbals.'],[4.2,'Longitude comes from Greenwich time: four seconds of error is a nautical mile at the equator.']],
  'dial':[[0.5,'The seconds hand steps every half second: seventy-two hundred beats an hour.'],[6.6,'The small hand above shows how far it has run down.']],
- 'face':[[0.6,'Under the dial, the motion work turns the hands: the minute hand once an hour, and the hour hand twelve times slower.']],
- 'wind':[[0.6,'It is wound with a key, the bowl turned over in its gimbals.'],[7.0,'Wound to the stop, it runs fifty-six hours.']],
- 'maint':[[0.6,"While it is wound, Harrison's maintaining work keeps it going."],[5.6,'A detent holds the ratchet, and a spring drives the train.']],
- 'stop':[[0.5,'At full wind, the chain presses the stop bar against its pin, and the key turns no further.'],[7.2,'Beside it, a ratchet and click keep the mainspring set up.']],
+ 'face':[[0.6,'Under the dial, the motion work turns the hands: the [minute](/mˈɪnɪt/) hand once an hour, and the hour hand twelve times slower.']],
+ 'wind':[[0.6,'It is wound with a key, the bowl turned over in its gimbals.'],[7.0,'[Wound](/wˈWnd/) to the stop, it runs fifty-six hours.']],
+ 'maint':[[0.6,"While it is [wound](/wˈWnd/), Harrison's maintaining work keeps it going."],[5.6,'A detent holds the ratchet, and a spring drives the train.']],
+ 'stop':[[0.5,'At full [wind](/wˈInd/), the chain presses the stop bar against its pin, and the key turns no further.'],[7.2,'Beside it, a ratchet and click keep the mainspring set up.']],
  'apart':[[1.0,'Inside are the power, a train of wheels, the escapement, and the balance.']],
  'fusee':[[0.6,'The mainspring in its barrel pulls a chain off the cone-shaped fusee.'],[6.6,'A short lever for the strong spring, a long one for the weak: the drive stays even.']],
  'train':[[0.8,'The fusee drives the centre, intermediate and seconds wheels, and they the escape wheel.']],
- 'train2':[[0.6,'The escape wheel moves one tooth a beat. The seconds wheel turns once a minute; the centre wheel once an hour.']],
+ 'train2':[[0.6,'The escape wheel moves one tooth a beat. The seconds wheel turns once a [minute](/mˈɪnɪt/); the centre wheel once an hour.']],
  'beat':[[0.4,"One beat, slowed right down. The detent's stone holds the escape wheel."],[5.2,"The balance's jewel pushes the gold spring, and lifts the detent."],   # the wheel free at 7.7 s
          [9.8,'A tooth gives the balance its push.'],[12.5,'The detent falls back and locks the next tooth. Swinging back, the jewel passes freely.']],   # the tick at 10.0, locked at 12.2
  'balance':[[0.6,'The balance and its hairspring set the rate.'],[4.6,'Its cut bimetallic rim opens and closes with the heat, to keep that rate the same.']],
