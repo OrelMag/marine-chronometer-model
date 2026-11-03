@@ -106,3 +106,8 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
   - Centred, the estimated Ø 3.4 head would reach the detent's and gold spring's lower faces. The head is now Ø 3.15 (`BLK.s43.rH` 1.575), Lange 5177's reading and the photographs' smallest, so it keeps 0.125 under them.
   - Applies to the block as last revised and the 1943 block.
   - Pending: isolate, `fine.py` and the escapement chain (the banking contact on the dome moves slightly; the depth of lock is set by turning this screw).
+- **T4, the staff: checked, nothing to correct.**
+  - **The version check: 05 03_3.2 is not Wempe's.** It has no Gerhard D. Wempe title block. Its format (Stückzahl, Teil, Werkstoff und Rohmaße, surface symbols) and date (12.3.65) are the post-war Glashütte production's. It tempers at 210° against 05 04_4's 240° and is numbered 050401. So under the owner's rule it doesn't count as a later revision of this chronometer, and its pivots 1,25 and collar 2,40 are no correction. The model keeps 05 04_4's (1946) diameters.
+  - **Lengths.** The model's lengths (25.6, the pivots 6.9 and 6.1) come from it only because 05 04_4's top is cut off and no Wempe sheet gives them. They are recorded as an estimate.
+  - **The 1.65 s6 seat** that "misses its limits" is the collet's 1:70 taper from Ø 1.58 over 5.0. That reaches 1.651, so 05 04_4's own figures can't give 1.665-1.672 there. Drawing check 2 kept the taper and the small end (the collet grips by its slit). It is a conflict inside the sheet, already settled with its reason.
+  - The impulse roller's 1.65 s6 is built at 1.6685, the middle of its fit, so it matches.
