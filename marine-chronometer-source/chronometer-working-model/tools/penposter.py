@@ -41,7 +41,7 @@ PIECES=[
        leaders=[('1','fusee'),('2','escapeWheel'),('3','balance'),('4','gimbalRing')]),
   dict(name='fusee',view='movement',size=(1500,980),cam=(0.95,0.42,None,None),fov=20,show=['barrel','barrelArbor','mainspring','chain','fusee','setupRatchet','fuseeWheel'],
        ghost=['barrel'],ctl={'lift':1},alone=True,
-       labels=[('barrel','barrel.drum','l'),('mainspring','mainspring','t'),('chain','chain','b'),('fusee','fusee.body','r')]),
+       labels=[('barrel','barrel.drum','r'),('mainspring','mainspring','t'),('chain','chain','b'),('fusee','fusee.body','l')]),
   dict(name='escapement',view='movement',size=(1500,980),cam=(2.75,0.55,None,None),fov=20,show=['escapeWheel','detent','rollers'],ghost=[],ctl={'lift':1},alone=True,
        labels=[('escape wheel','escapeWheel.wheel','t'),('detent','detent.detent','b'),('gold spring','detent.gold','r'),('impulse roller','rollers.impulse','l')]),
   dict(name='balance',view='movement',size=(1500,980),cam=(-2.3,0.5,None,None),fov=20,show=['balance','hairspring','stud'],ghost=[],ctl={'lift':1},alone=True,
