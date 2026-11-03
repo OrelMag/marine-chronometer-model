@@ -18,9 +18,10 @@ sys.path.insert(0,str(HERE));import browser
 from hamilton_render import blender
 ROOT=HERE.parents[2];WEMPE=HERE.parents[1]/'wempe'
 WORK=pathlib.Path(r'E:\mc-video\movie\work')
-STATE='rev=3955&wind=6'   # 6 h from full wind: at wempe_showcase.py's 55.9 the train runs down 36 s into Running
+STATE='rev='+','.join(k+(':last' if k=='case' else ':3955') for k in ['esc','fusee','barrel','train','dial','frame','case','key'])+'&wind=6'   # as photographed, but the drawings' brass bowl (the owner's choice, 3 November 2026)   # 6 h from full wind: at wempe_showcase.py's 55.9 the train runs down 36 s into Running
 CLIPS=['Lid','At sea','Running','Beat (slow motion)','Winding','Exploded','Run down','Lift out']
 BAND=0.2   # the share of the frame's height at its foot kept for the captions: the cameras frame the parts above it
+SLIP=-6630   # the hands set 1 h 50 min 30 s back from the export's 12:00 (a slip forward turns them back): 10:09:30 at clip 0, 10:10 through the dial shot (the owner's choice)
 CFPS=30   # the scene's fps when the glb is imported: a clip's second is CFPS frames of its action
 
 # The shots, in order. dur: seconds. layers: [clip, [[shot s, clip s], ...]] played at once, piecewise linear between the keys and held outside them (a later layer wins
@@ -70,13 +71,13 @@ SHOTS=[
   cams=[C(0,(-1.0,-0.25,-0.35),['fuseeWheel','centreWheel','intermediateWheel'],0.86,90,32),C(10,(-0.35,-0.25,-1.0),['intermediateWheel','secondsWheel','escapeWheel'],0.82,90,32)],
   caps=[[0.6,4.8,'The going train between the plates:','the escape wheel moves one tooth a beat'],   # README: a beat each half second, 24 degrees of the escape wheel's 15 teeth
         [5.2,9.6,'the seconds wheel turns once a minute,','the centre wheel, with the minute hand, once an hour']]),   # README: the seconds arbor once in 120 teeth, the centre once in 7,200
- dict(name='beat',dur=16,show='mv',up=-1,see=SEE+['upperCock','balance','hairspring'],layers=[['Beat (slow motion)',[[0,0],[1,0],[4,2.3],[11,3.1],[15,10],[16,10]]]],tick='slow',   # the wheel moves at clip 2.54-2.94 s: those spread over 7 s
-  cams=[C(0,(-0.30,-1.0,0.30),['balance','escapeWheel','detent'],0.88,105,32),C(5,(-0.25,-1.0,0.35),['escapeWheel','detent','rollers'],0.86,105,32),
-        C(16,(-0.05,-1.0,0.45),['escapeWheel','detent','rollers'],0.84,105,32)],
-  caps=[[0.5,5.0,'One beat, slowed down: the spring detent escapement.',"The escape wheel is held on the detent's locking stone"],   # README: the detent with its gold spring and locking stone
-        [5.2,7.6,"The balance's discharge jewel pushes the gold spring","and lifts the detent: the wheel is unlocked"],   # the wheel starts at shot 6.1 s (plan's E)
-        [7.8,10.4,'A tooth drives the impulse roller:','the balance gets its push'],   # the tooth's fall, the tick, at 7.9 s
-        [10.6,15.6,'The detent falls back and locks the next tooth;','on the way back the jewel passes the gold spring freely']]),   # locked at 9.6 s
+ dict(name='beat',dur=20,show='mv',up=-1,see=SEE+['upperCock','balance','hairspring'],layers=[['Beat (slow motion)',[[0,0],[1,0],[5,2.3],[14,3.1],[19,10],[20,10]]]],tick='slow',   # the wheel moves at clip 2.54-2.94 s: those spread over 9 s (shot 7.7-12.2)
+  cams=[C(0,(-0.30,-1.0,0.30),['balance','escapeWheel','detent'],0.88,105,32),C(5,(-0.25,-1.0,0.40),['detent','rollers'],0.92,135,32),
+        C(14,(-0.10,-1.0,0.50),['detent','rollers'],0.94,135,32),C(20,(0.05,-1.0,0.45),['detent','rollers'],0.92,135,32)],   # close on the detent and rollers (the owner, 3 November 2026)
+  caps=[[0.5,5.8,'One beat, slowed down: the spring detent escapement.',"The escape wheel is held on the detent's locking stone"],   # README: the detent with its gold spring and locking stone
+        [6.0,9.2,"The balance's discharge jewel pushes the gold spring","and lifts the detent: the wheel is unlocked"],   # the wheel starts at shot 7.7 s
+        [9.4,12.2,'A tooth drives the impulse roller:','the balance gets its push'],   # the tooth's fall, the tick, at 10.0 s
+        [12.4,19.6,'The detent falls back and locks the next tooth;','on the way back the jewel passes the gold spring freely']]),   # locked at 12.2 s
  dict(name='balance',dur=12,show='mv',up=-1,layers=[R(40,12)],tick='run',
   cams=[C(0,(-0.55,-0.75,0.55),['balance','upperCock','detent'],0.86,105,4),C(12,(-0.85,-0.55,0.20),['balance','upperCock','detent'],0.90,105,4)],
   caps=[[0.6,5.8,'The balance and its hairspring swing at a steady rate:','every swing lets one tooth go'],
@@ -92,7 +93,7 @@ async def export(out):
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto((WEMPE/'index.html').as_uri()+'?qa&start=movement#'+STATE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=180000);await pg.wait_for_timeout(2500)
-        async with pg.expect_download(timeout=3600000) as d:await pg.evaluate("c=>{window.__msK=241;return __glb(c);}",CLIPS)   # the mainspring's shapes over the run: 241 (the page's 24 jump every 0.6 s in the fusee shot)
+        async with pg.expect_download(timeout=3600000) as d:await pg.evaluate("c=>{window.__msK=241;window.__msSlip=SLIP;return __glb(c);}".replace("SLIP",str(SLIP)),CLIPS)   # the mainspring's shapes over the run: 241 (the page's 24 jump every 0.6 s in the fusee shot)
         await (await d.value).save_as(out);await b.close()
     if errs:sys.exit('page errors: '+'; '.join(errs))
     print('exported',out.name,'%.1f MB'%(out.stat().st_size/1048576),flush=True)

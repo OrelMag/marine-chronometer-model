@@ -46,7 +46,8 @@ const BLENDER=(()=>{
     for(const m of C.ms){const u=m.userData;if(dv){u.vLo=m.visible;if(u.devPlate)m.visible=true;else if(!inM.has(m)||A.DRIVE_HIDE.has(u.part)&&!u.devKeep)m.visible=false;}else m.visible=u.vLo;}}
   /* a state: the movement's (MoveState: E, th, lift, psDef, n, winding, slip), the views' (lid open, lift out of the bowl and turn over, explode), the case turned over to
      wind (cw 0-3: the bowl turned over, the closing plate opened, the key onto the square; app.js's tick), the box's (pitch, roll, the case's angles in the gimbals) */
-  const REST=()=>({E:0,th:0,lift:0,psDef:0,n:0,winding:false,slip:0,lid:1,up:0,ex:0,dev:0,cw:0,keyOn:false,pitch:0,roll:0,gp:0,gr:0,teeth:null});
+  const REST=()=>({E:0,th:0,lift:0,psDef:0,n:0,winding:false,slip:window.__msSlip||0,   /* the hands set on: window.__msSlip s (tools/wempe_movie.py's film, 10:10) */
+    lid:1,up:0,ex:0,dev:0,cw:0,keyOn:false,pitch:0,roll:0,gp:0,gr:0,teeth:null});
   function apply(C,s){const{CS,mv}=C;
     mv.userData.update({E:s.E,th:s.th,lift:s.lift,psDef:s.psDef,n:s.n,winding:s.winding,slip:s.slip});
     mv.userData.explode(smooth(s.ex));mv.userData.develop(smooth(s.dev));look(C,s.dev>0.02);
