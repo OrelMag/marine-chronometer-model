@@ -1092,23 +1092,23 @@ const WFUSEE=(()=>{
        hole's 3.9 ±0.01, and the set-up ratchet, its hole 2,7 H7 1:100 on the square's 1:100, pressed down the taper to 0.05 off the bridge's face, where the square is
        2.696 across (its 2,7 ±0,02 hold anywhere along the first 2 mm). 3.38 (40.65 over all) until 27 October 2026; the 1941 arbor (020704-1's 7 + 22,2 + 15) keeps it */
     const BSQ=BA1-WD.BAR.sq;
-    const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]);
+    const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]),SQM=[],SRM=[];   /* SQM: the arbor's squares, SRM: the set-up ratchets, turned with the hook once the set-up is settled (below, at HKA) */
     {const bal=WD.BAR.bal();
       const gAL=rv(gBA,'last 1943'),gAF=rv(gBA,'first 6mx');
       const aL=tag(mesh(gAL,turned(WD.BAR.prof(),48),M.steel),'050702-1');
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
         var aF=tag(mesh(gAF,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,c1],[4.5,c1],[6.65,c1+ch],[6.65,c0-ch],[4.5,c0],[2.24,c0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');}
-      const Q=WD.BAR.sqr,sq=KIT.crease(new THREE.CylinderGeometry(Q.a/Math.SQRT2,Q.b/Math.SQRT2,Q.L,4,1));sq.translate(0,BSQ-Q.L/2,0);tag(mesh(rv(gBA,'last 1943'),sq,M.steel),'050702-1',1);
-      const pt=KIT.crease(new THREE.CylinderGeometry(Q.b/Math.SQRT2,Q.tip,Q.tl,4,1));pt.translate(0,BSQ-Q.L-Q.tl/2,0);tag(mesh(rv(gBA,'last 1943'),pt,M.steel),'050702-1',1);
+      const Q=WD.BAR.sqr,sq=KIT.crease(new THREE.CylinderGeometry(Q.a/Math.SQRT2,Q.b/Math.SQRT2,Q.L,4,1));sq.translate(0,BSQ-Q.L/2,0);SQM.push(tag(mesh(rv(gBA,'last 1943'),sq,M.steel),'050702-1',1));
+      const pt=KIT.crease(new THREE.CylinderGeometry(Q.b/Math.SQRT2,Q.tip,Q.tl,4,1));pt.translate(0,BSQ-Q.L-Q.tl/2,0);SQM.push(tag(mesh(rv(gBA,'last 1943'),pt,M.steel),'050702-1',1));
       /* as first drawn (020704-1, 1941): the square end 15 from the upper journal's shoulder (7 + 22.2 + 15 = its 44.2 overall, centres included: sure), so its tip at BA1-15,
          and the turning centre left on it, a cone the sheet draws undimensioned (scaled about 2.5). Wempe 3955's (4_Wempe_3955_N.jpg, photocompare.py's fit, 10.6 px/mm on
          the arbor): the square's sides end 13.1 from the shoulder (y -35.4 ±0.3; the model's 1943 square -35.2), the point 2.2 ±0.3 high to its tip at -37.6 ±0.3, the
          sheet's -37.32 within its reading; four-sided, its tip about 0.4 across. Until 18 October 2026 every version had the 1943 arbor's 10 and a 0.5 point */
       /* Kirov No. 247's (the 6MX) longer still: its sides end at y -36.6 and its point at -38.5 (±0.4: 4_Kirow_247_N.jpg, photocompare.py's fit, about 9 px a mm of height, the sides
          1.4 and the tip 3.0 above the 1943 square's), pointed as the 1941 one */
-      for(const[V,yS,yT]of/** @type {[string,number,number][]} */([['first',-35.4,BA1-15],['6mx',-36.6,-38.5]])){const s1=2.7-(yS+25.70)*-0.01,sq1=KIT.crease(new THREE.CylinderGeometry(2.7/Math.SQRT2,s1/Math.SQRT2,-25.70-yS,4,1));sq1.translate(0,(-25.70+yS)/2,0);tag(mesh(rv(gBA,V),sq1,M.steel),'050702-1',1);
-        const pt1=KIT.crease(new THREE.CylinderGeometry(s1/Math.SQRT2,0.2/Math.SQRT2*2,yS-yT,4,1));pt1.translate(0,(yS+yT)/2,0);tag(mesh(rv(gBA,V),pt1,M.steel),'050702-1',1);}
+      for(const[V,yS,yT]of/** @type {[string,number,number][]} */([['first',-35.4,BA1-15],['6mx',-36.6,-38.5]])){const s1=2.7-(yS+25.70)*-0.01,sq1=KIT.crease(new THREE.CylinderGeometry(2.7/Math.SQRT2,s1/Math.SQRT2,-25.70-yS,4,1));sq1.translate(0,(-25.70+yS)/2,0);SQM.push(tag(mesh(rv(gBA,V),sq1,M.steel),'050702-1',1));
+        const pt1=KIT.crease(new THREE.CylinderGeometry(s1/Math.SQRT2,0.2/Math.SQRT2*2,yS-yT,4,1));pt1.translate(0,(yS+yT)/2,0);SQM.push(tag(mesh(rv(gBA,V),pt1,M.steel),'050702-1',1));}
       /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core: the pin and its head */
       const HKS=[[gAL,(BC0+BC1)/2,aL],[gAF,(-3.7-3.1-21.7+2.9)/2,aF]].map(([g,y,a])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y,a,tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2',1),g]);
       /* the pin along +x from 6.1 into the core; its end over the core (r 6.65) by 0.475 at its face (+z, the side rotation.y falls toward) down to 0 at its back (-z).
@@ -1136,7 +1136,7 @@ const WFUSEE=(()=>{
        it, scaled 12.7 at 16.9 px/mm), its centre 3.24 from the axis (scaled), on the "6,4" circle (r 3.2): sure. Each back's centre falls 3.12 from the axis with the drawn tips and
        roots. Until 15 October 2026 the backs were arcs r 12.5 (read as a radius), nearly flat. 2.65 -0.1 thick (drawn 2.6); its square hole 2.7 H7 (1:100) on the arbor's square;
        turned so the click's beak lies against a face (the click and its place are the frame's, 05 08 05-2). Gilt */
-    const SRO=WD.FU.SR.o;   /* the outline, in dims.js (WD.FU.SR, for the recipes): z 16, the faces from the root to the tip along the line 1.2 off the radius, the backs r 6.25 from each tip to the next root; mirrored: its faces then fit the click as the frame has it (traced on Wempe 3955), facing the way rotation.y rises (README, Unresolved) */
+    const SRO=WD.FU.SR.o,SR_T0=-Math.asin(WD.FU.SR.off/WD.FU.SR.rt);let SR_RHO=0,SR_G=null;   /* SR_T0: a tooth's tip in the outline (dims.js: the face on the line off the radius, the tip at -9.87° here) */   /* the outline, in dims.js (WD.FU.SR, for the recipes): z 16, the faces from the root to the tip along the line 1.2 off the radius, the backs r 6.25 from each tip to the next root; mirrored: its faces then fit the click as the frame has it (traced on Wempe 3955), facing the way rotation.y rises (README, Unresolved) */
     {const sr=polarMax(SRO),q=FRP.click,b=[BX[0],BX[1]],pts=q.loop.map(([x,z])=>[x-b[0],-(z-b[1])]);
       let best=null;for(let i=0;i<2000;i++){const rho=i/2000*TAU/16;let pen=-9;for(const p of pts){const r=Math.hypot(p[0],p[1]);if(r>7.2)continue;pen=Math.max(pen,sr(Math.atan2(p[1],p[0])-rho)-r);}if(!best||pen<best.pen)best={rho,pen};}
       /* then turned on until a face meets the beak */
@@ -1147,14 +1147,14 @@ const WFUSEE=(()=>{
          at the ratchet's bridge-side face and 2.6688 at its outer face as last revised, its 2.7 at BSQ; 2.6998 and 2.6733 on the 1941 arbor's, its 2.7 at -25.70). Until 28
          October 2026 straight, 2.714 across (2.7/√2 + 0.01 at the corners): 0.019-0.045 loose on the square, nothing holding it (drawing check 2, 4-M7). yS: where that
          version's square is 2.7 across; turned back by what rotateY(rho) turns it on, so it stays on the arbor's square */
-      const sqH=(yS,y)=>{const a=(WD.FU.SR.sq-(yS-y)*WD.FU.SR.tp+WD.FU.SR.cl)/Math.SQRT2;return[[0,a],[a,0],[0,-a],[-a,0]].map(([x,z])=>[x*Math.cos(rho)-z*Math.sin(rho),x*Math.sin(rho)+z*Math.cos(rho)]);};
+      const fL=SR_T0-Math.PI/4,sqH=(yS,y)=>{const a=(WD.FU.SR.sq-(yS-y)*WD.FU.SR.tp+WD.FU.SR.cl)/Math.SQRT2;return[[0,a],[a,0],[0,-a],[-a,0]].map(([x,z])=>[x*Math.cos(fL)+z*Math.sin(fL),-x*Math.sin(fL)+z*Math.cos(fL)]);};   /* a flat's normal through the tooth's tip at SR_T0 (05 07 00-3: a tip on the normal to the square's top flat, sure; the parts audit, 3 November 2026: until then the hole turned back by rho to stay on the arbor's square, the teeth anywhere about it) */
       const pSR=part('setupRatchet',-60),gSR=grp(pSR,BX[0],BX[1]);
-      for(const[V,yS]of/** @type {[string,number][]} */([['last 1943',BSQ],['first -3955',-25.70]])){const rgg=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:sqH(yS,RS1),q:sqH(yS,RS0),a:RS1,b:RS0}]}]);rgg.rotateY(rho);tag(mesh(rv(gSR,V),rgg,M.gilt),'050700-3');}   /* a part of its own: it comes off the square before the bridge (the Exploded view) */pBA.userData.ratchetPen=pen(rho);
+      for(const[V,yS]of/** @type {[string,number][]} */([['last 1943',BSQ],['first -3955',-25.70]])){const rgg=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:sqH(yS,RS1),q:sqH(yS,RS0),a:RS1,b:RS0}]}]);SRM.push(tag(mesh(rv(gSR,V),rgg,M.gilt),'050700-3'));}   /* a part of its own: it comes off the square before the bridge (the Exploded view) */pBA.userData.ratchetPen=pen(rho);
       /* Wempe 3955's (the version as photographed): a turned recess round the square in its outer face, Ø 8.7 at the face to Ø 7.3 at its floor (2_Wempe_3955_A.jpg square-on,
          0.111 mm/px: the cone's two edges, 78 and 66 px across, ±0.2), its wall seen lit on the far side in 4_Wempe_3955_N.jpg; 0.7 deep, the wall taken at 45° (estimated).
          05 07 00-3 (revised 24.11.47) draws the face flat; the earlier issue (05 05 00-1) isn't in the set */
       const C=(r,n=96)=>[...Array(n).keys()].map(i=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]),rg3=solidGeo([{loop:SRO.map(([x,y])=>[x,-y]),y0:RS1,y1:RS0,F:[{p:C(8.7/2),q:C(7.3/2),a:RS1,b:RS1+0.7},{p:sqH(-25.70,RS1+0.7),q:sqH(-25.70,RS0),a:RS1,b:RS0}]}]);   /* the square's hole from the recess's floor, on the 1941 arbor's square */
-      rg3.rotateY(rho);tag(mesh(rv(gSR,'3955 6mx'),rg3,M.gilt),'050700-3');}   /* Kirov No. 247's has it too (4_Kirow_247_N.jpg) */
+      SRM.push(tag(mesh(rv(gSR,'3955 6mx'),rg3,M.gilt),'050700-3'));SR_RHO=rho;SR_G=gSR;}   /* Kirov No. 247's has it too (4_Kirow_247_N.jpg) */
 
     /* =============== the mainspring 05 07 00-6 (Zugfeder) =============== */
     /* "Zugfeder 15 × 0,37" (05 06_20; 0207: "Zugfeder 15", its space 15.8 ±0.1 framed): drawn 15 high in the 1948 drum's 15.63 inside (its lid flush, 1.2 thick in its 1.2 seat; 15.53 under a 1.3 seat until 27 October 2026; 14.8 in a 14.95 until 26 October 2026, the lid read as sunk 0.6)
@@ -1179,7 +1179,12 @@ const WFUSEE=(()=>{
        end lying on the hook block, 0.3 short of its far end (MSE past the rivet hole, estimated: the hook's form isn't drawn); set up 0.75 turn past lying all on the wall
        at run down (with the chain: the band turns the drum a little less, so its set-up there is a little more), which sets the hook's angle. Until 18 October 2026 the end
        stood 0.08 rad short of the hole, against the old 3-long block */
-    const MSE=(HB1-0.3)/19.25,MST0=msT+0.75,HKA=wrap(BLK+BETA_RUN.chain+TIP+MSE-MST0*TAU);hookSet(HKA);const msK=Math.round(MST0-(BLK+BETA_RUN.chain+TIP+MSE-HKA)/TAU),msTurns=beta=>(BLK+beta+TIP+MSE-HKA)/TAU+msK;
+    /* the set-up: 05 06_20's "3/4 Umgang gespannt", twelve of the ratchet's sixteen teeth, from the spring lying on the wall; the arbor, its square, the ratchet and the hook
+       turn as one (the ratchet's tip on the square's flat, 05 07 00-3; the hook 15° from that flat's normal, counterclockwise seen from the square's end, 05 07 02's end view:
+       likely), so the click holds a face only at sixteen places a turn: let go, the arbor falls back to the first, the set-up short of 3/4 by SU_S (under a tooth). The parts
+       audit, 3 November 2026: until then the hook, the square and the ratchet's teeth were each at their own angle */
+    const MSE=(HB1-0.3)/19.25,MST0=msT+0.75,HKA0=wrap(BLK+BETA_RUN.chain+TIP+MSE-MST0*TAU),PT=TAU/WD.FU.SR.z,H15=15*D2R,SU_S=((SR_RHO+SR_T0-H15-HKA0)%PT+PT)%PT,HKA=HKA0+SU_S;hookSet(HKA);
+    {const R=HKA+H15-SR_T0,Sq=HKA+H15-Math.PI/4;for(const m of SRM)m.geometry.rotateY(R);for(const m of SQM)m.geometry.rotateY(Sq);if(SR_G)SR_G.userData.srTurn=wrap(R);gBA.userData.sqTurn=wrap(Sq);}   /* srTurn, sqTurn: for the recipes (page_params) */const msK=Math.round(MST0-(BLK+BETA_RUN.chain+TIP+MSE-HKA)/TAU),msTurns=beta=>(BLK+beta+TIP+MSE-HKA)/TAU+msK;
     /* the outer end as the solve holds it (tools/wempe_mainspring.py): reckoned back from the end, psi round the drum, each turn's radius held under what is outside it.
        The end's last 5.7 on the block (r 19.25 - 0.5 less half the strip), then rising to the wall over 0.25 rad; the outer coil passes the Steg near the wall (between it
        and the wall, held on the wall there, 0.035 clear of its outer face as first drawn, 0.085 as last revised); every coil inside it bends under the Steg (0.005 clear of its inner face, over 0.3 rad either side) and under the strip's
@@ -1440,6 +1445,6 @@ const WFUSEE=(()=>{
        stays outside the dust bush, which spreads further than the fusee), and the plate's face toward the key (y0 above: 4 from the square's root, where it is 3.08 across,
        under the key's socket, 3.15: 05 01 02-3's 3.1 +0.05 takes the square anywhere, so the socket's mouth stops on the plate; until 28 October 2026 7 from the root, where
        the square read then was 3.1); the tube's mouth, Ø 5.95, comes over the plate's recess there, Ø 6.2 */
-    return{update,lay,chainC:CC,fall,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-12},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,F0,S,DP0,DTU,DTL,BB,BR}};}
+    return{update,lay,chainC:CC,fall,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-12},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,SU:0.75-SU_S/TAU,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,F0,S,DP0,DTU,DTL,BB,BR}};}
   return{build,bore,capFix};   /* bore and capFix lent to frame.js (the movement ring's screw holes through its cone), which builds before this file's build runs */
 })();

@@ -579,16 +579,21 @@ def fuseeArbor():
 def barrelArbor():
     X=W();B=X['WD']['BAR'];P=X['BARprof'];q=B['sqr'];BSQ=P[0][1];yL=BSQ-q['L'];yE=yL-q['tl'];R0=q['a']/math.sqrt(2)+0.01;src='05 07 02-1 (020704-1, the first sheet)'
     Q=[(0,yE),(R0,yE),(R0,BSQ)]+[tuple(p) for p in P[1:]]
+    turn={'S':0.0}   # the square's turn on the page (sqTurn: its flat 15° from the hook, 05 07 02; fusee.js, 3 November 2026)
     def sq():
         body=bd.Solid.make_loft([_square(q['b']/math.sqrt(2),yL),_square(q['a']/math.sqrt(2),BSQ)])+bd.Solid.make_loft([_square(q['tip'],yE),_square(q['b']/math.sqrt(2),yL)])
-        return bd.Cylinder(R0+0.2,BSQ-yE+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,yE-0.01)))-body
+        return bd.Cylinder(R0+0.2,BSQ-yE+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,yE-0.01)))-body.rotate(bd.Axis.Z,math.degrees(turn['S']))
     ops=[Blank(14,yE-0.05,P[-1][1]+0.05,'Cut the blank from Präz. Rundstahl 14 between centres',[S('length',f'{P[-1][1]-yE:.2f}',None,src)],src),
          TurnProfile(Q,'Turn the core and its journals: the core Ø 13.3 with its chamfered ends, the journals, the shoulders 22.29 apart, the dial end domed',
            [S('core','Ø 13.3',None,src),S('journals','Ø 4.48 (r 2.24) and Ø 3.88 at the square\'s end (r 1.94)',None,src),S('shoulders',f'{B["BA0"]-B["BA1"]:.2f} apart','22.2 +0.1',src)],src),
          Cut(sq,'Mill the winding square and its point',[S('square',f'{q["a"]} tapering to {q["b"]} across the flats over {q["L"]}',None,src),S('point',f'to {q["tip"]} over {q["tl"]}',None,src)],src,at=(0,0)),
          RadialDrill((P[4][1]+P[8][1])/2,-6.95,6.65,2.0,"Drill the hook's hole radially right through the core's middle",[S('',"Ø 2 through (05 07 02 dashes it to the far side; 0207's, the 1941 arbor's, 6 deep with its point)",None,'05 07 02; fusee.js hookSet')],key='hook')]
-    return Recipe('barrelArbor','050702-1','Barrel arbor (Federkern)',src,'Präz. Rundstahl 14 (05 07 02-1)','hardened (05 07 02-1)',[Setup('1','between centres; the square on the mill',ops)],
+    def pp(ud):
+        a=ud.get('sqTurn')
+        if a is not None:turn['S']=float(a)
+    r=Recipe('barrelArbor','050702-1','Barrel arbor (Federkern)',src,'Präz. Rundstahl 14 (05 07 02-1)','hardened (05 07 02-1)',[Setup('1','between centres; the square on the mill',ops)],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),expect=[{'at':(0,0),'r':7,'max':0.03,'why':"tessellation, not a fault: the page's hook hole is a 24-sided bore cut at the hook's turn into its 48-sided lathe; the check fits the hole's free angle to the page's walls"}],fits=['its journals running in the barrel\'s bosses','the hook 05 07 02-2 in the core'])
+    r.page_params=pp;return r
 
 # ---------------- batch 9b: the fusee's and barrel's other made parts, from WD.FU (dims.js; fusee.js reads the same) ----------------
 @functools.lru_cache()
@@ -708,14 +713,19 @@ def maintRatchet():
 def setupRatchet():
     X=WF();U=X['FU'];R=U['SR'];B=X['BAR'];TT=-X['INNER']-X['TOP_T'];RS0=TT-R['BB']-R['gap'];RS1=RS0-R['t'];BSQ=B['BA1']-B['sq'];src='05 07 00-3 (revised 24.11.47)'
     sq=lambda y:(R['sq']-(BSQ-y)*R['tp']+R['cl'])/math.sqrt(2)
+    T0=-math.asin(R['off']/R['rt']);turn={'R':0.0}   # a tooth's tip in the outline (fusee.js's SR_T0); R: the page's turn of the whole ratchet (srTurn), so its face lies on the click
     def hole():
-        e=0.02;return bd.Solid.make_loft([_square(sq(RS1-e),RS1-e),_square(sq(RS0+e),RS0+e)])
-    ops=[Plate(_poly(R['o'],RS1),R['t'],'Cut the blank from Messingblech 3 (Ms 58), face it to 2.65 and cut the 16 teeth',
-           [S('thickness',f"{R['t']}",'2.65 -0.1, drawn 2.6',src),S('teeth',f"16; tips Ø {2*R['rt']:.1f}, roots Ø {2*R['rr']:.1f}; each face on a line {R['off']} off the radius; each back an arc r {R['RBK']} whose centre lies on the Ø 6.4 circle",'14.1 -0.2, 11.1 -0.2 (drawn 14.0, 11.0)',src)],src,spin=True),
-         Cut(hole,"Broach the square hole, tapered 1:100 as the arbor's square",[S('square',"2.7 H7, Kegel 1:100: line to line with the square, 0.002 over it across",None,src)],src,at=(0,0))]
+        e=0.02;return bd.Solid.make_loft([_square(sq(RS1-e),RS1-e),_square(sq(RS0+e),RS0+e)]).rotate(bd.Axis.Z,math.degrees(T0-math.pi/4+turn['R']))
+    plate=Plate(_poly(R['o'],RS1),R['t'],'Cut the blank from Messingblech 3 (Ms 58), face it to 2.65 and cut the 16 teeth',
+           [S('thickness',f"{R['t']}",'2.65 -0.1, drawn 2.6',src),S('teeth',f"16; tips Ø {2*R['rt']:.1f}, roots Ø {2*R['rr']:.1f}; each face on a line {R['off']} off the radius; each back an arc r {R['RBK']} whose centre lies on the Ø 6.4 circle",'14.1 -0.2, 11.1 -0.2; 1.2; 12.5 on 6.4',src)],src)
+    ops=[plate,
+         Cut(hole,"Broach the square hole, tapered 1:100 as the arbor's square, a flat's normal through a tooth's tip",[S('square',"2.7 H7, Kegel 1:100: line to line with the square, 0.002 over it across",None,src),S('place',"a tooth's tip on the normal to the square's top flat",'the plan (sure)',src)],src,at=(0,0))]
     r=Recipe('setupRatchet','050700-3','Set-up ratchet (Sperrad)',src,'Messingblech 3 Ms 58 (05 07 00-3)','gilt (Wempe 3955)',[Setup('1','on the wheel-cutting engine; the square broached',ops,view='top')],UP(),
-      fits=["pressed down the arbor's 1:100 square to 0.05 off the barrel bridge"],notes=["Turned on its square to where the click's beak lies against a face: the check fits that turn (the page's search against the frame's click)."])
-    r.free_spin=(2*math.pi/R['z'],2*R['sq']/math.sqrt(2));return r   # the teeth's period; the square hole (inside its own diagonal) stays on the arbor's square
+      fits=["pressed down the arbor's 1:100 square to 0.05 off the barrel bridge"],notes=["On the arbor's square, which stands 15° from the hook (05 07 02): the set-up then puts a face on the click at whole teeth (fusee.js, 3 November 2026; the teeth's turn about the square fitted to the page until then)."])
+    def pp(ud):
+        a=ud.get('srTurn')
+        if a is not None:turn['R']=float(a);plate.angle=float(a)
+    r.page_params=pp;return r
 
 # ---------------- the barrel as last revised (05 07 01, 20.4.48): WD.BAR ----------------
 def _rect(a,r0,r1,w):

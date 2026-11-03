@@ -155,3 +155,16 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
   - On 05 08_6, enlarged, the "5" runs from the hole's centre to the slot's far edge and the "4,2" to the arm's centre line.
   - The model has the hole 4.1 from the slot's centre plus its half-width 0.9, so 5.0 from that edge and 4.2 across: the printed figures. That is the stud's own "5 ±0.1 from the end" (05 03_9) with its upright flush in the slot.
   - The sheet's lines aren't to scale there: the hole is drawn about 6.3 from the edge. The verifier's 5.1 from the axis was scaled.
+- **F1+F2, the set-up ratchet, the arbor's square and its hook: corrected (not yet checked).**
+  - **The relations, as drawn:**
+    - The ratchet's square hole has a flat's normal through a tooth's tip (05 07 00-3).
+    - The arbor's square has its flat's normal 15° from the hook, counterclockwise seen from the square's end (05 07 02's end view, first-angle, likely); in the page's angles the normal is at HKA + 15°.
+    - These make the arbor, square, ratchet and hook one unit.
+  - **The set-up snaps.** 05 06_20's "3/4 Umgang gespannt" (12 teeth) from the spring lying on the wall now falls back to the first place where the click holds a face. HKA rises by `SU_S` (under a tooth), so the set-up is `SU` = 0.75 − SU_S/2π turns (`fusee.js`, exported as `SU`).
+  - **Where it changed:** `fusee.js` (the hole's fixed turn `fL`, the squares `SQM` and ratchets `SRM` turned at HKA, `srTurn`/`sqTurn` in userData). The recipes `setupRatchet` (the hole on the tip's normal, the whole turned by `srTurn`; no `free_spin`) and `barrelArbor` (the square turned by `sqTurn`).
+  - **Pending, at the runs:**
+    - read `SU` off the page;
+    - set the physics' set-up to it (`wempe_mainspring.py`'s `setup` 0.75, and wherever the drive's set-up is taken), then the mainspring, drive and escapement chain;
+    - recipes, solids, `fine.py`, `maintaining.py --model wempe`;
+    - isolate.
+  - Its stand-out (0.475 at the face, the ramp's top) is as drawn; the audit's 0.25 was read part-way down the ramp, so it is not a difference.
