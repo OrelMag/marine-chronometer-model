@@ -13,7 +13,9 @@ the long way (one dragged along the other). Putting it back together is the same
 A step whose way is {'path': [[x, y, z], ...]} (mm, movement frame, each waypoint from where its parts stand assembled) draws them along those straight legs
 instead, sideways too: their columns shifted along it every R in plan and every T in height, a pair failing where they go deeper into a part still in than they
 stood assembled (by T). The sequence's 'split' {part: y} makes that part's screws seated past y their own body, NAME.screws, to be taken out first.
-Pairs in the sequence's EXPECTED (step, one part, the other, why) are parts a real movement takes off another way (tilted, unhooked, unwound) and print ~~."""
+Pairs in the sequence's EXPECTED (step, one part, the other, why) are parts a real movement takes off another way (tilted, unhooked, unwound) and print 
+The page's own overhaul, if it has one (the Wempe's js/overhaul.js, OVH), must take the parts off in this order: each step's parts at its steps (OVH.offAt: a part's
+own step, or the step of the part it rides on), none before a part of an earlier step here, none never; a difference fails (the planted fault: --eval "OVH.DIS.reverse()")."""
 import asyncio,browser,json,re,sys
 import model
 from playwright.async_api import async_playwright
@@ -38,8 +40,19 @@ async def main():
             xs=[c[0] for c in w];zs=[c[1] for c in w];print(len(w),'columns; x',min(xs),max(xs),'z',min(zs),max(zs));[print(c) for c in w[::max(1,len(w)//25)]];await b.close();return
         paths=any(isinstance(s[3],dict) for s in SEQ['steps'])
         r=json.loads(await pg.evaluate(JS,{'r':R,'split':SEQ.get('split',{}),'cols':paths}))
+        # the page's overhaul (js/overhaul.js, OVH) takes the parts off in this order: each ASSEMBLY step's parts at the page's steps, never before an earlier step's
+        ovh=await pg.evaluate("typeof OVH==='undefined'?null:"+json.dumps([[p.split('.')[0] for p in s[2]] for s in SEQ['steps']])+".map(ps=>ps.map(n=>OVH.offAt(n)))")
         await b.close()
     if errs:print('page errors:',errs)
+    odrift=[]
+    if ovh is not None:   # the overhaul's order against this one: a part the page never takes off, or one it takes off before a part of an earlier step here
+        hi=-1
+        for s,js in zip(SEQ['steps'],ovh):
+            for p,j in zip(s[2],js):
+                if j<0:odrift.append(f'step {s[0]}: the overhaul never takes {p} off')
+                elif j<hi:odrift.append(f'step {s[0]}: the overhaul takes {p} off at its step {j+1}, before step {hi+1}, where an earlier part here comes off')
+            hi=max([hi]+[j for j in js if j>=0])
+        print("the page's overhaul against this order:",'agrees' if not odrift else 'DIFFERS');[print('  '+x) for x in odrift]
     bodies=[x['name'] for x in r['bodies']];ix={n:i for i,n in enumerate(bodies)}
     named={p for s in SEQ['steps'] for p in s[2]}|set(SEQ['static'])
     miss=[p for p in named if p not in ix];left=[n for n in bodies if n not in named]
@@ -94,5 +107,5 @@ async def main():
     print(f"{len(bodies)} parts, {len(r['pairs'])} pairs sharing a column, {len(SEQ['steps'])} steps ({SEQ['source']}), {len(known)} expected, {len(fails)} failing")
     if '--json' in sys.argv:
         out=sys.argv[sys.argv.index('--json')+1];json.dump(dict(source=SEQ['source'],steps=rows,static=SEQ['static'],parts=len(bodies),pairs=len(r['pairs']),expected=len(known),fails=len(fails),left=left),open(out,'w',encoding='utf-8',newline='\n'),indent=1);print('wrote',out)
-    sys.exit(1 if fails or errs or miss else 0)
+    sys.exit(1 if fails or errs or miss or odrift else 0)
 asyncio.run(main())
