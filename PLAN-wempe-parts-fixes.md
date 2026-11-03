@@ -201,10 +201,11 @@ T2 (the horn), T3 (the banking screw's hole and head), R2 (the pillar's lead), F
 ## Resume note (3 November 2026, mid-run)
 
 - **Side by side:** the before/after page for the owner, https://claude.ai/artifact/DzdgDEA5zgJ6WRmBK3xVwt (built by the scratchpad's figs.py and mkpage.py).
-- **To fix in the docs:** F2's hook was already 15.3° from the square on the page before the fix; the audit had measured the relation in the recipe's frame. So the real change is F1 (the teeth against the square), and the set-up snap is what keeps a face on the click. Correct that wording in RESOLVED.md, the ledger's "What became of each finding" and here.
+- **F2 reworded (done):** the hook was already 15.3° from the square on the page before the fix; the audit had measured the relation in the recipe's frame. The real change is F1 (the teeth against the square), and the set-up snap is what keeps a face on the click. RESOLVED.md and the ledger's "What became of each finding" now say so.
+- **The strap screws' heads (found by the recipe check):** `slotHeadGeo` was called without `flip`, so the page drew the countersunk head on the shank's side of its seat, 2 mm into the wood; now `flip:true`, and `screwUr` matches its recipe to 0.007.
 - **The physics chain:** the scratchpad's chain.sh, logged in tools/r_fix_chain/chain.log (ignored).
   - Passed so far: the inertias, wempe_escapement.js, wempe_1943.js --write, mechanisms.py --model wempe --write, wempe_ratchets.js, escgolden.js, wempe_banking.js --write, wempe_build.js --write, and the tolerances/bench/montecarlo --write for the drawn version and build40's tolerances and bench.
-  - Still to run: build40's montecarlo; all three for build; wempe_essaydata.js --write; recipes.py --check --only on the changed parts.
+  - Then passed too: build40's montecarlo, all three for build, wempe_essaydata.js --write, and recipes.py --check --only on the changed parts (screwUr after the flip above).
 - **Then:**
   1. commit the regenerated JSONs;
   2. fine.py, solids, holecheck, seatcheck, audit (movement and box), maintaining.py and bom, all --model wempe; contacts.py --write if fine.py's tables change;

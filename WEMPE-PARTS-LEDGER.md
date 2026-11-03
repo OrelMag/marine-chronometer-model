@@ -145,7 +145,7 @@ The owner asked for every finding to be corrected once shown real and needed, an
 - the detent's horn, its full 0,22 to its tip (06-5-4);
 - the detent block's banking-screw hole, centred on the upright, with its estimated head Ø 3.15 to keep clear of the detent (06-3-13);
 - the pillar's lead at 5° (02-6-7);
-- the set-up ratchet's tip on its square's flat and the arbor's square 15° from its hook (12-2-8, 12-7-5), with the set-up snapped to whole teeth: 0.7125 turn;
+- the set-up ratchet's tip on its square's flat (12-2-8), with the set-up snapped to whole teeth, so a face stays on the click: 0.7125 turn. The arbor's square was already 15.3° from its hook on the page (12-1-18, 12-7-5: the audit's 45° was the recipe's frame, not a difference);
 - the strap screws, countersunk DIN 97 (16-9-17).
 
 **Not differences.** On a closer look the audit had measured or read something else:
