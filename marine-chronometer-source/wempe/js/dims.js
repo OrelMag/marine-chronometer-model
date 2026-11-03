@@ -44,7 +44,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
        the hook block's M2.6 hole, y from the bottom's face, cs the chain's slot, its middle rm, w round the drum, h half its height, from where along its lean it starts);
        lid 05 07 01-2 (no its 9 o'clock notch, pr the prising notch opposite, e past the lid); steg 05 07 00-1 (r0 to r1, w half its width); hook 05 07 01-3 (b0 back
        toward the Steg and b1 on from the rivet hole, round the bore; d deep, h half its height, its hole from r from); drum() and lid() the turned profiles [r, y] */
-    B.BLK=3.585;B.SU=0.7333;   /* SU: the set-up in barrel turns as fusee.js snaps it (3/4 turn fallen back to the first face on the click: the parts audit, 3 November 2026), for the physics (wempe_mainspring.py SETUP); fusee.js warns if its snap differs */
+    B.BLK=3.585;B.SU=0.7125;   /* SU: the set-up in barrel turns as fusee.js snaps it (3/4 turn fallen back to the first face on the click: the parts audit, 3 November 2026), for the physics (wempe_mainspring.py SETUP); fusee.js warns if its snap differs */
     B.dr={R:20.8,Rb:20.6,chY:0.2,seat:19.6,seatU:19.695,bore:2.275,boss:4.0,land:6.0,ri:19.25,sl:{r0:18.3,r1:19.1,w:2.025,d:1.6},rv:{y:9.05,r:1.32,from:18.6},cs:{rm:20.0,w:1.25,h:0.425,from:-1.6}};
     B.lid={no:{r0:18.3,w:2.025},pr:{dr:2.1,w:2.75},e:0.1};B.steg={r0:18.3,r1:18.8,w:1.0};B.hook={b0:4.6,b1:1.4,d:0.5,h:1.525,from:17};
     B.drum=()=>{const D=B.dr,BB=B.BB,BR=BB-B.h,BI=BB-B.bi,BBF=BB-B.bf,BLT=BR,BLU=BLT+B.lu;

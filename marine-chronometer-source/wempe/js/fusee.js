@@ -1181,9 +1181,9 @@ const WFUSEE=(()=>{
        stood 0.08 rad short of the hole, against the old 3-long block */
     /* the set-up: 05 06_20's "3/4 Umgang gespannt", twelve of the ratchet's sixteen teeth, from the spring lying on the wall; the arbor, its square, the ratchet and the hook
        turn as one (the ratchet's tip on the square's flat, 05 07 00-3; the hook 15° from that flat's normal, counterclockwise seen from the square's end, 05 07 02's end view:
-       likely), so the click holds a face only at sixteen places a turn: let go, the arbor falls back to the first, the set-up short of 3/4 by SU_S (under a tooth). The parts
+       likely: the barrel's group stands turned over in the movement, so in its own angles the normal is 15° behind the hook, H15 −15°; measured on the page, 3 November 2026), so the click holds a face only at sixteen places a turn: let go, the arbor falls back to the first, the set-up short of 3/4 by SU_S (under a tooth). The parts
        audit, 3 November 2026: until then the hook, the square and the ratchet's teeth were each at their own angle */
-    const MSE=(HB1-0.3)/19.25,MST0=msT+0.75,HKA0=wrap(BLK+BETA_RUN.chain+TIP+MSE-MST0*TAU),PT=TAU/WD.FU.SR.z,H15=15*D2R,SU_S=((SR_RHO+SR_T0-H15-HKA0)%PT+PT)%PT,HKA=HKA0+SU_S;hookSet(HKA);
+    const MSE=(HB1-0.3)/19.25,MST0=msT+0.75,HKA0=wrap(BLK+BETA_RUN.chain+TIP+MSE-MST0*TAU),PT=TAU/WD.FU.SR.z,H15=-15*D2R,SU_S=((SR_RHO+SR_T0-H15-HKA0)%PT+PT)%PT,HKA=HKA0+SU_S;hookSet(HKA);
     {const R=HKA+H15-SR_T0,Sq=HKA+H15-Math.PI/4;for(const m of SRM)m.geometry.rotateY(R);for(const m of SQM)m.geometry.rotateY(Sq);if(SR_G)SR_G.userData.srTurn=wrap(R);gBA.userData.sqTurn=wrap(Sq);if(Math.abs(0.75-SU_S/TAU-WD.BAR.SU)>2e-4)console.warn('fusee: the set-up snapped to '+(0.75-SU_S/TAU).toFixed(4)+', dims.js WD.BAR.SU '+WD.BAR.SU+' (the physics), set it and rerun wempe_mainspring.py');}   /* srTurn, sqTurn: for the recipes (page_params) */const msK=Math.round(MST0-(BLK+BETA_RUN.chain+TIP+MSE-HKA)/TAU),msTurns=beta=>(BLK+beta+TIP+MSE-HKA)/TAU+msK;
     /* the outer end as the solve holds it (tools/wempe_mainspring.py): reckoned back from the end, psi round the drum, each turn's radius held under what is outside it.
        The end's last 5.7 on the block (r 19.25 - 0.5 less half the strip), then rising to the wall over 0.25 rad; the outer coil passes the Steg near the wall (between it

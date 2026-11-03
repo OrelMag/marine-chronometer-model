@@ -29,7 +29,7 @@ T_,RA,RW,B,E,EYE=0.37,6.65,19.25,15.0,207.0,9.4   # the strip, the core, the wal
 # from the rivet (05 07 01-1, 0207), 2 wide, its faces at r 18.3 (05 07 01-2's notch, 05 07 01-1's slot) and 18.8 (0.5 thick: 0207): the outer coil between it and the wall
 BLOCK=(0.5,5.7);STEG=(math.pi/4+(1.4-0.3)/RW,1.0,18.3,18.8)   # with them the two neighbour passes leave states near full wind on a higher branch than their neighbours (18 October 2026): passes until none improves
 OUT=HERE/'wempe_mainspring.json'
-SETUP=0.7333   # the set-up in barrel turns: 05 06_20's "3/4 Umgang gespannt" fallen back to the first face on the set-up click (fusee.js's SU, dims.js WD.BAR.SU; the parts audit, 3 November 2026: 0.75 until then)
+SETUP=0.7125   # the set-up in barrel turns: 05 06_20's "3/4 Umgang gespannt" fallen back to the first face on the set-up click (fusee.js's SU, dims.js WD.BAR.SU; the parts audit, 3 November 2026: 0.75 until then)
 FINAL=(1240.0,0.75)   # the spring the model takes (26 October 2026): the try whose shape fits 05 06_20 best with its coils' friction counted (1.83 % rms at mu 0.10; ×0.6 3.24 %, ×0.8 2.31 %), its level closing at the losses' middle with the drawn 0.37 (README); 1240 mm ×0.6, the best frictionless fit, until then
 WD=os.path.join(tempfile.gettempdir(),'mc-mainspring')   # the solved states (mainspring.py's json, not committed)
 def env(L,S,tag):
