@@ -55,7 +55,9 @@ def measure(hn,ms):
        'box':[r4(x) for x in bb.ravel()],'size':[r4(x) for x in bb[1]-bb[0]],'volume_mm3':r4(sum(abs(p.volume) for p in parts)) if all(p.is_watertight for p in parts) else None}
     n=T.face_normals;cy=T.triangles_center[:,1];lv={}
     for i in np.nonzero(np.abs(n[:,1])>0.999)[0]:k=round(float(cy[i]),3);lv[k]=lv.get(k,0)+float(T.area_faces[i])
-    ys=sorted(k for k,a in lv.items() if a>1e-3);J['y_levels']=ys
+    ys=sorted(k for k,a in lv.items() if a>1e-3)
+    if len(ys)>60:ys=sorted(sorted(ys,key=lambda k:-lv[k])[:20])   # a helix's countless slivers: the 20 largest faces' levels
+    J['y_levels']=ys
     S=[];yy=sorted(set(ys)|{bb[0][1],bb[1][1]})
     mids=[(a+b)/2 for a,b in zip(yy,yy[1:]) if b-a>0.01] or [(bb[0][1]+bb[1][1])/2]
     for y in mids[:12]:
@@ -78,6 +80,16 @@ def measure(hn,ms):
         th=[r4(t[i+1]-t[i]) for i in range(0,len(t)-1,2)];pitch=[r4(t[i+2]-t[i]) for i in range(0,len(t)-2,2)]
         rays.append({'deg_from_x_toward_minus_z':k*45,'hits':t,'strip_thickness':th,'coil_pitch':pitch})
     J['rays_from_axis_at_mid_height']=rays
+    ax=[]   # rays parallel to Y at the radius where the radial rays first met the part: a helix's or a stack's turns, and their pitch along Y
+    for k in range(4):
+        a=k*math.pi/2;h=rays[2*k]['hits']
+        if len(h)<2:continue
+        r=(h[0]+h[1])/2;o=np.array([r*math.cos(a),bb[0][1]-1,-r*math.sin(a)])
+        try:loc,_,_=T.ray.intersects_location([o],[[0,1,0]])
+        except Exception:loc=np.zeros((0,3))
+        t=sorted(round(float(p[1]),4) for p in loc);w=[r4(t[i+1]-t[i]) for i in range(0,len(t)-1,2)];c=[(t[i]+t[i+1])/2 for i in range(0,len(t)-1,2)]
+        ax.append({'deg_from_x_toward_minus_z':k*90,'radius':r4(r),'turns_crossed':len(w),'strip_heights':w,'pitch_along_Y':[r4(c[i+1]-c[i]) for i in range(len(c)-1)],'y_of_turns':[r4(x) for x in c]})
+    J['rays_along_Y_at_the_strip']=ax
     return J,T
 
 def draw(hn,T,png):
