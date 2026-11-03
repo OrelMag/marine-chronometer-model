@@ -12,6 +12,7 @@ the Wempe). Fails (exit 1) if a label's part isn't hit where its leader ends, or
 
     python penposter.py --glb r_wempe.glb --preview            # the page's own renders in place of the drawings: the layout in a few minutes
     python penposter.py --glb r_wempe.glb [--scale 0.5] [OUT]  # the poster: OUT/penposter.png (default r_poster/), A2 at 300 dpi; --scale draws the pieces smaller first
+    python penposter.py --recompose [OUT]                      # the last run's drawings laid out again (the text or layout changed), a few seconds
 
 Export the model first (gltf_check.py --model wempe). About 1-2 minutes on the page, then Blender: about an hour at full size."""
 import ast,asyncio,json,math,pathlib,subprocess,sys
@@ -21,10 +22,10 @@ from playwright.async_api import async_playwright
 from PIL import Image,ImageDraw,ImageFont
 sys.stdout.reconfigure(encoding='utf-8')
 HERE=pathlib.Path(__file__).resolve().parent;ROOT=model.DIR.parents[1]
-_O={k:sys.argv[sys.argv.index(k)+1] for k in('--glb','--scale','--model') if k in sys.argv};PREVIEW='--preview' in sys.argv
+_O={k:sys.argv[sys.argv.index(k)+1] for k in('--glb','--scale','--model') if k in sys.argv};PREVIEW,RECOMP='--preview' in sys.argv,'--recompose' in sys.argv
 _A=[a for a in sys.argv[1:] if not a.startswith('--') and a not in _O.values()];OUT=pathlib.Path(_A[0] if _A else HERE/'r_poster').resolve()
 GLB=pathlib.Path(_O.get('--glb',HERE/'r_wempe.glb')).resolve();K=float(_O.get('--scale',1))
-FONT=ROOT/'vendor/fonts/Caveat-wght.ttf';MINIOU=0.85
+FONT=ROOT/'vendor/fonts/Caveat-wght.ttf';MINIOU=0.9
 # laidout.py's page set-up, taken from its source (importing it would run it): the page's chrome hidden, the rest state of the export, a part set alone
 _L={n.targets[0].id:n for n in ast.parse((HERE/'laidout.py').read_text(encoding='utf-8')).body if isinstance(n,ast.Assign) and isinstance(n.targets[0],ast.Name)}
 _F={n.name:n for n in ast.parse((HERE/'laidout.py').read_text(encoding='utf-8')).body if isinstance(n,ast.FunctionDef)}
@@ -62,8 +63,8 @@ TEXT={   # number: (heading, sentences, sources)
       'Warmed, a steel spring weakens and a balance grows, and both slow the clock. The Wempe’s rim is nickel steel and brass, cut through at 90° from the arm: brass expands more, so each quarter’s free end curls inward, drawing mass toward the axis. The brass masses’ place on the rim sets how much.',
       'essay, "Heat"; Wempe README (05 03 01-1: nickel steel and brass, the cuts at 90° from the arm, four brass masses)'),
  '4':('Level on a rolling ship',
-      'The brass case hangs in a ring pivoted in the box, the ring on pivots at right angles to the case’s. Its weight low, 14 mm under the pivots, it stays level while the box rolls and pitches round it: its own swing takes under a second, a ship’s roll ten or more.',
-      'essay, "Level on a moving ship"; Wempe README (massprops: centre of gravity 14.27 mm under the pivots, the case\'s period 0.665-0.85 s with the bowl\'s material); gimbals.js (merchant ships\' roll 10-30 s)')}
+      'The case hangs in a ring pivoted in the box, the ring on pivots at right angles to the case’s. Its weight hangs low under the pivots, so it stays level while the box rolls and pitches round it: its own swing takes under a second, a ship’s roll ten or more.',
+      'essay, "Level on a moving ship"; Wempe README (massprops: the centre of gravity 7-14 mm under the pivots and the case\'s period 0.665-0.85 s, as the bowl\'s material is read); gimbals.js (merchant ships\' roll 10-30 s)')}
 FOOT='Sources: Wempe’s works drawings (dg-chrono.de) and the working model at marinechronometermodel.com, where each part can be turned, taken apart and set running.'
 
 def font(sz,w=400):
@@ -117,8 +118,10 @@ async def page(shots):
                 await pg.evaluate("(g=>{__mv.traverse(o=>{if(!o.isMesh)return;let q=o;while(q&&!q.userData.partName)q=q.parent;if(q&&g.includes(q.userData.partName)){o.userData._m=o.material;o.material=o.material.clone();o.material.transparent=true;o.material.opacity=0.3;o.material.depthWrite=false;}});})(%s)"%json.dumps(S['ghost']))
                 await pg.wait_for_timeout(800)
             S['page']=json.loads(await pg.evaluate("__camInfo()"))
-            raw=OUT/f"pg_{S['name']}.png";bg=OUT/f"pg_{S['name']}_bg.png";await pg.screenshot(path=str(raw))
-            await pg.evaluate("__BX.root.visible=false");await pg.wait_for_timeout(500);await pg.screenshot(path=str(bg));await pg.evaluate("__BX.root.visible=true")
+            # the canvas itself (the page keeps its stage within its aspects: the centre's 1450 x 1350 viewport drew 1450 x 960), its size the drawing's
+            cr=await pg.evaluate("(()=>{const r=__r.domElement.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}})()");S['size']=[round(2*cr['width']),round(2*cr['height'])]
+            raw=OUT/f"pg_{S['name']}.png";bg=OUT/f"pg_{S['name']}_bg.png";await pg.screenshot(path=str(raw),clip=cr)
+            await pg.evaluate("__BX.root.visible=false");await pg.wait_for_timeout(500);await pg.screenshot(path=str(bg),clip=cr);await pg.evaluate("__BX.root.visible=true")
             keys=[k for _,k in S.get('leaders',[])]+[k for _,k,_ in S.get('labels',[])]
             S['anch']=await pg.evaluate(ANCH+"(%s,%s)"%(json.dumps(keys),json.dumps(S.get('ghost',[]))))
             for a in S['anch'].values():   # the page's anchors are in CSS pixels, its screenshots at twice that
@@ -154,8 +157,12 @@ def compose(shots,fails):
         if PREVIEW:im=pg;mi=mp
         else:
             im=Image.open(S['pen']).convert('RGB').resize(pg.size,Image.LANCZOS);mi=mask(im,im.getpixel((3,3)))
-            iou=(mi&mp).sum()/max(1,(mi|mp).sum());S['iou']=float(iou);print(f"  {S['name']:11} IoU against the page {iou:.3f}")
-            if iou<MINIOU:fails.append(f"{S['name']}: the drawing parts from the page's render (IoU {iou:.2f})")
+            # each outline within a pen stroke of the other (the ink's heavy contour, about 0.5 % of the width, widens what it draws): the share of the drawing
+            # on the page's render grown by that, and of the page's on the drawing's
+            from scipy.ndimage import binary_dilation
+            r=max(3,round(0.006*pg.width));st=np.ones((2*r+1,2*r+1),bool);a=(mi&binary_dilation(mp,st)).sum()/max(1,mi.sum());c=(mp&binary_dilation(mi,st)).sum()/max(1,mp.sum())
+            iou=min(a,c);S['iou']=float(iou);print(f"  {S['name']:11} the drawing on the page's outline {a:.3f}, the page's on the drawing's {c:.3f} (within {r} px)")
+            if iou<MINIOU:fails.append(f"{S['name']}: the drawing parts from the page's render ({iou:.2f} within a stroke)")
         ys,xs=np.nonzero(mp|mi);pad=30;x0,y0,x1,y1=max(0,xs.min()-pad),max(0,ys.min()-pad),min(pg.width,xs.max()+pad),min(pg.height,ys.max()+pad)
         face[S['name']]=(im.crop((x0,y0,x1,y1)),(x0,y0))
     BG=Image.open(shots[0]['pen']).convert('RGB').getpixel((3,3)) if not PREVIEW else (246,241,230)
@@ -201,7 +208,7 @@ def compose(shots,fails):
                 if side in 'lr':ex=bb[2]+10 if side=='l' else bb[0]-10;ey=ty
                 d.line([(ex,ey),q],fill=RED,width=4);d.ellipse([q[0]-9,q[1]-9,q[0]+9,q[1]+9],fill=RED);d.text((tx,ty),t,font=lf,fill=RED,anchor=an)
         if n in DR:
-            S=P[DR[n]];im,off=face[S['name']];sd={l[2] for l in S['labels']};mL=300 if 'l' in sd else 0;mR=300 if 'r' in sd else 0;mT=90 if 't' in sd else 0;mB=90 if 'b' in sd else 0
+            S=P[DR[n]];im,off=face[S['name']];sd={l[2] for l in S['labels']};wl=lambda s:max([d.textlength(t,font=lf) for t,_,q in S['labels'] if q==s]+[0]);mL=round(wl('l')+90) if 'l' in sd else 0;mR=round(wl('r')+90) if 'r' in sd else 0;mT=90 if 't' in sd else 0;mB=90 if 'b' in sd else 0
             rw,rh=room[2]-room[0]-mL-mR,room[3]-room[1]-mT-mB;k=min(rw/im.width,rh/im.height);im2=im.resize((round(im.width*k),round(im.height*k)),Image.LANCZOS)
             ox,oy=room[0]+mL+(rw-im2.width)//2,room[1]+mT+(rh-im2.height)//2;C.paste(im2,(ox,oy));labels(S,im2,ox,oy,k,off,lf,mL)
         else:   # the gimbals: the box rolled each way, the case level, an arrow about the case's pivots
@@ -230,11 +237,17 @@ def compose(shots,fails):
     return C
 
 def main():
-    OUT.mkdir(parents=True,exist_ok=True);fails=[];shots=[dict(S) for S in PIECES]
-    asyncio.run(page(shots))
+    OUT.mkdir(parents=True,exist_ok=True);fails=[];shots=[dict(S) for S in PIECES];ST=OUT/'penposter_state.json'
+    if RECOMP:   # the last run's pieces again (the page's set-up and the drawings kept), the text and layout laid out anew
+        if ST.exists():old={S['name']:S for S in json.loads(ST.read_text(encoding='utf-8'))}
+        else:old={S['name']:dict(S,src=[str(OUT/f"pg_{S['name']}.png"),str(OUT/f"pg_{S['name']}_bg.png")],pen=str(OUT/f"pen_wempe_{S['name']}.png"))   # a run before the state was kept: its checks and files
+                  for S in json.loads((OUT/'penposter_checks.json').read_text(encoding='utf-8'))}
+        for S in shots:S.update({k:old[S['name']][k] for k in('page','anch','gim','src','pen') if k in old[S['name']]})
+    else:asyncio.run(page(shots))
     for S in shots:
         for key,a in S['anch'].items():print(f"  {S['name']:11} {key:22} meshes {a['n']:3}  hits {a['hits']:4}"+('' if a.get('at') else '  XX not hit; in front: '+', '.join(f'{p} {n}' for p,n in a.get('blocked',[]))))
-    if not PREVIEW:draw(shots)
+    if not PREVIEW and not RECOMP:draw(shots)
+    if not PREVIEW:ST.write_text(json.dumps(shots),encoding='utf-8')
     C=compose(shots,fails);f=OUT/('penposter_preview.png' if PREVIEW else 'penposter.png')
     if not PREVIEW:
         sys.path.insert(0,str(HERE));fn=next(n for n in ast.parse((HERE/'penrender.py').read_text(encoding='utf-8')).body if isinstance(n,ast.FunctionDef) and n.name=='paper')
