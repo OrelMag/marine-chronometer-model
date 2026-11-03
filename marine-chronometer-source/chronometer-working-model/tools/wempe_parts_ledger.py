@@ -165,12 +165,21 @@ def batch(n):
         if s[5]:print('  parts (exact solids, r_wpa/measure/KEY.json and KEY.png): '+', '.join(s[5]))
         if s[6]:print('  page lines (page meshes, r_wpa/page/HN.json and HN.png): '+', '.join(s[6]))
 
-VERD=[('not applicable','n/a'),('n/a','n/a'),('superseded','n/a'),('not built','not built'),('mismatch','mismatch'),("can't tell",'cant'),('cant tell','cant'),("can’t tell",'cant'),('extra','extra'),('match','match')]
+VERD=[('not applicable','n/a'),('not in this version','n/a'),('n/a','n/a'),('superseded','n/a'),('not built','not built'),('mismatch','mismatch'),("can't tell",'cant'),('cant tell','cant'),("can’t tell",'cant'),('extra','extra'),('match','match')]
 def norm(v):
     v=(v or '').lower()
     for k,n in VERD:
         if k in v:return n
     return '?'
+def vnorm(c,rv):
+    """the verifier's verdict from its row: its verdict column; 'accepted' (not re-read) keeps the reader's; else a verdict word in its other columns"""
+    if 'accepted' in c[4].lower() and rv:return rv
+    n=norm(c[4])
+    if n!='?':return n
+    for x in c[5:]+[c[2]]:
+        n=norm(x)
+        if n!='?':return n
+    return rv or '?'
 def cells(line):return [c.strip() for c in line.strip().strip('|').split('|')]
 def items(b):
     """the batch's items: the reader's rows (batchNN.items.tsv) with the verifier's verdict (verifyNN.md), and the verifier's own new items"""
@@ -181,14 +190,14 @@ def items(b):
     if vf.exists():
         for l in vf.read_text(encoding='utf-8').splitlines():
             c=cells(l)
-            if len(c)>=5 and re.match(r'\d{2}-',c[0]):v[c[0]]=c
+            if len(c)>=5 and re.match(r'\d{2}-',c[0]) and c[0] not in v:v[c[0]]=c   # the first row of an id: the main table's (later tables list missed items in other columns)
     for r in R:
         r['rv']=norm(r.get('verdict'));c=v.get(r['id'])
-        r['vv']=norm(c[4]) if c else None;r['vwhy']=c[6] if c and len(c)>6 else '';r['vread']=c[2] if c else ''
+        r['vv']=vnorm(c,r['rv']) if c else None;r['vwhy']=c[6] if c and len(c)>6 else '';r['vread']=c[2] if c else ''
         r['final']=r['vv'] if r['vv'] and r['vv']!='?' else r['rv']
     ids={r['id'] for r in R}
     for k,c in v.items():
-        if k not in ids:R.append({'id':k,'sheet':'','item':c[2],'drawn':c[2],'built':c[3],'field':'','delta':'','rv':None,'vv':norm(c[4]),'final':norm(c[4]),'vwhy':c[6] if len(c)>6 else '','vread':c[2],'new':1})
+        if k not in ids and not re.search(r'[,*]|\.\.',k):vn=vnorm(c,None);vn='note' if vn=='?' else vn;R.append({'id':k,'sheet':'','item':c[2],'drawn':c[2],'built':c[3],'field':'','delta':'','rv':None,'vv':vn,'final':vn,'vwhy':c[6] if len(c)>6 else '','vread':c[2],'new':1})
     return R
 def esc(x):return (x or '').replace('|','/').replace('\n',' ')
 def build():

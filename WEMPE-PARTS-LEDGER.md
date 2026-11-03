@@ -1,6 +1,176 @@
 # Wempe parts against their drawings: audit ledger
 
-(head to be written)
+This ledger compares every part of the Wempe model with Wempe's works drawings, sheet by sheet. It is for anyone deciding what to correct in the model, or checking what a part rests on.
+
+- **Started:** 3 November 2026.
+- **Model audited:** `main` at c63141ba (version 3.79.02), the model as last revised.
+- **Done afresh:** the agents worked blind to the two earlier drawing checks (`WEMPE-DRAWING-LEDGER.md`, 26-27 October; `WEMPE-DRAWING-LEDGER-2.md`, 27-28 October). The new pass was compared with those only after every verdict was written; see "Against the earlier passes".
+- **Nothing in the model was changed** (the owner's choice: an audit and a ledger only). The owner decides each correction.
+
+The sheets are © Johannes Altmeppen and not licensed. No scan or crop of one is in this ledger or its reports, only their figures and words.
+
+## How it was done
+
+The method is the one used for the Hamilton's drawn parts (`HAMILTON-PARTS-LEDGER.md`), with each batch's results checked by a second agent.
+
+1. **Each part measured, not read from the code.**
+   - `tools/wempe_measure.py` measures the exact solid each recipe builds (`tools/recipes/wempe*.py`), 187 parts in mm:
+     - the faces' levels;
+     - every cylinder (holes, bores, pins, turned diameters) and cone;
+     - the outline's arcs and lines;
+     - the section through the axis;
+     - the teeth at every level.
+   - `tools/wempe_pagemeasure.py` measures the parts no recipe builds from the page's own meshes (the hairspring and mainspring, the chain, the band, the jewels, bought and box parts): sections, coil and turn counts by rays. It also records where every part-list line stands in the movement, for the assembly sheets.
+   - Outputs are in `tools/r_wpa/` (ignored).
+2. **The recipes stand for the page.** `recipes.py --model wempe --check` compares each of the 187 recipes' solids with the page's own mesh of its line (volume, box, both surfaces sampled to each other, every round hole measured on the page). All 187 passed; the run is below.
+3. **Every sheet covered.** `tools/wempe_parts_ledger.py` holds a row for each of the 125 images in `References/wempe/drawings/`:
+   - 111 sheets were audited in 17 batches;
+   - 14 were listed but not audited (below);
+   - its `--check` fails if an image has no row or a report leaves a sheet out.
+4. **Read blind, then compared.** For each batch, a reader agent did the following (the brief is `marine-chronometer-source/wempe/parts-audit/BRIEF.md`):
+   - read the sheets without the model's code, the transcriptions, the README or the earlier ledgers, inventorying every view, dimension (and what its extension lines attach to), hole, note and title block;
+   - checked the views against each other;
+   - then compared each item with the measured part: match, mismatch, not built, extra or can't tell.
+   - **"Match" means** inside the printed tolerance. Where none is printed, it means inside the sheet's own general tolerance. Failing both, ±0.05 mm to 6, ±0.1 to 30, ±0.15 to 120 and ±0.2 above. A scaled size counts within what the scan resolves.
+   - **Hand is judged as assembled:** the part's frame is mapped into the movement, and the sheet's view side is fixed first.
+   - The reader's report is `batchNN.md`, its items `batchNN.items.tsv`.
+5. **Checked by a second agent.** A verifier saw only the sheets, the measurements and the reader's item list (not its reasoning), and tried to refute:
+   - every mismatch, not built and can't tell;
+   - every match on a hole, fit, joint, spring, tooth or timing size;
+   - one in five of the plain outline matches.
+
+   It also added the items the reader missed (`verifyNN.md`). The **final verdict** below is the verifier's where it gave one, else the reader's. Both are kept in the batch tables.
+6. **The largest claims checked by eye** (below).
+7. **Compared with the earlier passes** last (`earlier-passes.md`).
+
+The tables after the marker below are written by `python tools/wempe_parts_ledger.py --build` from the reports. Don't edit them by hand.
+
+## Totals
+
+There are 1,670 items over the 111 audited sheets. By final verdict:
+
+| Verdict | Items |
+|---|---|
+| match | 1,224 |
+| mismatch | 150 |
+| not built | 22 |
+| extra | 12 |
+| can't tell | 216 |
+| not applicable | 24 |
+| notes | 22 |
+
+"Not applicable" covers a casting's blank sizes, another maker's dial and parts not in this version. "Notes" are title blocks, tolerances and revision marks.
+
+**Can't tell.** About one item in eight is "can't tell". The scans are about 1,024 px across, so many small figures are illegible, and the assembly sheets print few sizes.
+
+**Hand.** No part was found built mirrored once hand was judged as assembled. Two claims of a mirrored part were refuted: the escape wheel and the maintaining detent (batch 5). Hand was confirmed for the detent, the ratchets, the set-up ratchet, the maintaining spring, the plates, the ring and the dial.
+
+The click wheel's hand can't be fixed from its sheets alone, which draw it from opposite faces. On the model it is right in function: `maintaining.py --model wempe` checks on the built solids that both clicks sit on its teeth and catch it.
+
+## The main findings
+
+Items are by final verdict, with the batch item ids in brackets. "Sheet against sheet" means two sheets disagree and the model follows one of them; that is for the owner to settle, not an error.
+
+**The escapement (timing):**
+- **The escape wheel's place against the detent** (06-1-7, 06-1-12, 06-1-13; checked by eye).
+  - The layout 05 04_1 (3.2.40) draws the wheel's centre under the locking stone, the line to it square to the detent, and prints 23.8 from the wheel to the block's M1.7 hole.
+  - The model has the balance-to-wheel distance exactly (10.00). But the wheel stands 0.45-0.7 mm along the detent, with the detent turned 4-5.5° about its pipe, and 23.41 to the hole.
+  - No later sheet places the wheel.
+- **The gold spring's bending point** is 4.43 from its end, against 6.2 on the layout (06-1-15).
+- **The detent's tail tip** is 0.054 wide, against 0.22-0.25 on 05 04_10.1 (06-5-4).
+- **The block's** M1.2 cross hole is 0.15 off centre (06-3-13).
+- **Superseded, not mismatches:** the layout's stud circle, chamfer and arm thickness are replaced by the later block sheet 05 04_3, which the model follows.
+
+**The balance and hairspring (timing):**
+- **The hairspring's pitch** is 0.80, against 0.73 drawn (0.52 strip + 0.21 gap, 15 turns over 11.5 on 05 03_6; checked by eye). The built helix is therefore 9.97 tall against 9.5, and the strip stands 0.25 past the drawn ends at the stud and the collet (08-1-x, 08-1-v1).
+- **The hairspring collet's bore** is 0.05 large all along, its taper right.
+- **The stud's spring hole** is 1.35 from the leg's end, against about 0.69 drawn. The sheet says it is drilled at assembly.
+- **The stud's nose** is sharp; the sheet draws a 0.8 round.
+- **The terminal curve can't be compared:** the sheet's angle origin can't be fixed. Its end radius agrees.
+- **The staff** follows the 1946 sheet's diameters and the 1965 sheet's length (batch 7).
+  - Against the latest sheet (05 03_3.2, 12.3.65) it differs on the pivot (1.2 against 1.25 −0.02), the collars (2.0 against 2.10, 1.5 against 1.6) and the lower shaft.
+  - The 1.65 s6 seat is built 0.013 under its limit.
+  - Two sheets draw the flange's 10° taper, which is not built.
+- **The rim** is one solid. Its nickel-steel and brass layers (Ø 31.29) and the eight "Körner" marks are not drawn.
+- **One hub hole** is counterbored Ø 1.8 × 0.4 on 05 03_4, against a countersink at both holes in the model.
+
+**The jewel settings:** the balance's jewel stacks are printed 1.4 + 1.4 on the cock assemblies, built 1.63 + 1.17 (upper) and 1.53 + 1.19 (lower). The lower is printed 0.1 proud, built flush (03-3-18, 03-8-6, 03-8-8).
+
+**The going train:**
+- **Pivots (sheet against sheet).** The seconds and intermediate pinions' part sheets (rev. 6.6.46) print pivots of 9.2/4.5 and 4.6/4.6. Their assemblies print 7.2/3 and 3/3. The model follows the assemblies, and only those fit between the plates (batch 4).
+- **The centre arbor (sheet against sheet).** The model follows its later assembly 05 05_8 against the part sheet 05 05_10 (batch 5).
+- **The escape arbor** follows the later assembly 05 04_7.2 against 05 04_8 (batch 5).
+- **The n6 seats** are built at nominal, 6-16 µm under their limits. The tips are domes where the part sheets draw points.
+
+**The fusee and its parts:**
+- **The fusee arbor** is 58.125 long against 60.6 on 05 06_15. Its left pivot is 3.6 long against about 6.1, and its tip is flat against a point. The winding square is about 0.07 under at the shoulder, and its taper is 1:110 against 1:100 (09-6-x; confirmed again on the section in batch 17).
+- **The groove** matches the 1948 body and the curve sheet 05 06_20 in floor radii, pitch, width and depth.
+- **The body's 12.6** on 05 06_2.2 is a stale figure: its own revised sizes and the later 05 06_3.2 give 12.3. The chamfer is 29.4 against 29.8 +0.2.
+- **The fusee wheel's hub bore** is 4.55 against 4.0 +0.1. The arbor there is 4.38-4.50, so 4.0 can't fit it.
+- **The Vorreiber's** flange is 0.86 against 1.2 −0.2 and its length 2.76 against 3.1 −0.2.
+- **The cross pin's** hole in the Vorreiber, the arbor's hole and the pin agree at 1.15-1.16, against the sheet's 0.8 (batch 10).
+- **The click spring's arm** drifts up to 0.4 mm off its drawn constant R10.4 (11-3-v1).
+
+**The barrel:**
+- **The barrel arbor's necks and ball pivot** are 4.48, 3.88 and 2.88, against 5, 4 and 3 drawn on 05 07_9 and repeated on the later 05 07_8. Its chamfer is 45° × 1.65 against about 22.5° × 0.8.
+- **The arbor's hook** stands out 0.25 against 0.5 −0.05, its hole at 45° to the square against 15°.
+- **Sheet against sheet:** the body length (12 against 11.58) and the spring space (15.8 against 15.63) are 1941-43 sizes. The 1948 drum and lid give the built ones (batch 12).
+
+**The motion work and hands:**
+- **The hour wheel's pipe collar** is 3.585 high against 5.2 −0.1 on 05 02_8. As drawn it would reach into the dial, so the model's height is a fit to the dial: a conflict for the owner (14-3-2).
+- **The hour hand's bore** is 3.5 µm over H7.
+- **The hand stack's gaps** differ by 0.2-0.3 from the hand-annotated assembly (13-1-10, 13-1-11).
+
+**The frame:**
+- **Holes and bores:**
+  - pillar plate hole 10 is 2.82 against 2.70 ±0.009;
+  - hole 30's land is on the wrong face;
+  - hole 30 is named "Ankerrad", a lever escapement's wheel, so its jewelled bore may be a leftover of the lever chronometer's plate;
+  - the top plate's hole 4 has a countersink not drawn;
+  - pillar plate holes 56 and 57 ("nur bei Bedarf") are not built;
+  - the barrel bridge's end screw holes are 2.8 against about 3.5.
+- **The dust bush:** its flange is 2.1 against 3.1 −0.2, and its neck is waisted where 05 08_9 draws it straight. The waist follows a later assembly sheet.
+- **The pillar:** its lead is 6° against 5°; its countersink is 0.01 deep against about 0.35; the relief groove in its shoulder is not built.
+- **Holes on no sheet:** three Ø 0.73 holes in the ring, and a Ø 1.075 hole in the upper cock.
+
+**The case:** the bowl's and bezel's sheets (R-…) draw castings, so their blank sizes don't bind the finished parts. The finished bezel on the assembly matches.
+
+**The keys and box:** the 1943 key matches its latest revisions (the socket 19 deep by rev. a, 1947), and its square fits the fusee's. The box's height is 180 on 51 00_1 and 185 on 51 00_2 (sheet against sheet). The cross pin is drawn grooved (Kerbstift), built plain. The DIN 97 wood screws are drawn countersunk, built with cylinder heads.
+
+## Sheets read as something else than first mapped
+
+- **05 08_33 (Unruhkloben unten kompl., 1941)** draws an earlier lower cock: an arm of another shape, holes not built. The model follows the 1946 revision 05 08_4, which matches.
+- **05 07_10 (Federhausring, 1941)** is the ring of the earlier barrel. No built part corresponds.
+- **05 02_13** is an A. Lange & Söhne iron dial (1453/A, 1944), not Wempe's. It is not applicable to the built dial.
+- **The coloured section "Federchronometer 05"** is a wall drawing, not a works sheet. Where a printed detail sheet gives a size, that decides (batch 17's verifier). Its labels name some parts under other numbers than the model's, for example the mainspring as 05 07 00-2 and the drum's hook as 05 07 06-3. WN-16 and WN-27 could not be matched to built lines.
+
+## The recipe check (what stands behind the measurements)
+
+`recipes.py --model wempe --check` was run on 3 November 2026 (two runs, 71 and 116 recipes; results in `tools/r_wpa/recipes_check*.txt`). It found every one of the 187 solids within its tolerances of the page's mesh.
+
+Its "expected" departures are the page's way of drawing a detail, never a different shape:
+- tapped holes the page draws plain at the thread's size, where the recipe draws the tap drill (the drum's and hook block's M2.6, the rim's timing-screw holes, the masses' M0.8, the detent block's banking-screw hole);
+- polygon bores across thin strips (the detent, the gold spring, the lock bracket);
+- facets of the fusee's sweep, up to 0.39 mm at its flange seam and slot floor;
+- the slot floors of WN-19 and WN-21;
+- the key's cones built in steps;
+- the hook's 24-gon pin;
+- the upper cock's slot end wall, 0.13.
+
+So a size measured on a recipe's solid is the page's size, except at those named places.
+
+## Against the earlier passes
+
+(The comparison, `marine-chronometer-source/wempe/parts-audit/earlier-passes.md`, is summarised here when it is done.)
+
+## Sheets not audited, and why
+
+These are listed at the end of the generated part:
+- earlier revisions of sheets audited here;
+- another calibre's staff;
+- the lever chronometer's sheets (002, 05 04_20, 05 04_21);
+- the hand setting (05 33), balance holding device (05 36) and seconds contact (05 38), which are not in the model;
+- the second print of the coloured section, read with batch 17.
 
 <!-- generated by wempe_parts_ledger.py --build: do not edit below -->
 
@@ -13,7 +183,7 @@ Each part with the sheets it was compared against, the count of its items by fin
 | 000101-9 | 51 00_3 | 4 | 0 | 0 | 0 | 2 |  |
 | 050100-7 | 05 01_1, 05 01_3 | 1 | 0 | 0 | 0 | 0 |  |
 | 050101-1 | 05 01_4 | 0 | 0 | 0 | 0 | 2 |  |
-| 050302-1 | 51 03_5, 05 03_6, 05 03_7 | 10 | 4 | 0 | 0 | 2 | 08-1-2: stud arm inner face to top of spring (3.15) (3.15 (extension line at the terminal cur / 2.89); 08-1-3: collet face to the spring face nearest it (0.75) (0.75 / 0.49); 08-1-4: spring height overall (9.5 = 13.4 - 3.15 - 0.75) (9.5 / 9.97); 08-2-5: coil pitch (0.52 strip + 0.21 gap) (0.73 (0.52+0.21; 15 turns in 11.5 high) / 0.8003 (gap 0.280)) |
+| 050302-1 | 51 03_5, 05 03_6, 05 03_7 | 10 | 4 | 0 | 0 | 3 | 08-1-2: stud arm inner face to top of spring (3.15) (3.15 (extension line at the terminal cur / 2.89); 08-1-3: collet face to the spring face nearest it (0.75) (0.75 / 0.49); 08-1-4: spring height overall (9.5 = 13.4 - 3.15 - 0.75) (9.5 / 9.97); 08-2-5: coil pitch (0.52 strip + 0.21 gap) (0.73 (0.52+0.21; 15 turns in 11.5 high) / 0.8003 (gap 0.280)) |
 | 050302-4.c | 51 03_5, 05 03_8 | 1 | 0 | 0 | 0 | 0 |  |
 | 050302-4.s | 51 03_5, 05 03_9 | 1 | 0 | 0 | 0 | 0 |  |
 | 050401-3 | 05 04_1 | 2 | 0 | 0 | 0 | 0 |  |
@@ -32,14 +202,14 @@ Each part with the sheets it was compared against, the count of its items by fin
 | 050600-5 | 05 06_15, 05 06_6 | 0 | 0 | 0 | 1 | 0 | 10-2-14: pin 050600-5 on this sheet (not drawn here / 1.16 x 8.3 pin for a 0.8 drawn hole) |
 | 050600-6 | 05 06_2.2 | 0 | 0 | 0 | 0 | 0 |  |
 | 050600-8 | 05 06_9 | 0 | 1 | 0 | 0 | 0 | 10-5-4: two pins 71: dia 1.25, 2.5 long, one 1.2 out of each face (1.25 dia (unsure), 2.5 long / 1.16 x 2.48, one out each face) |
-| 050602-2 | 05 06_11, 05 06_13 | 11 | 0 | 0 | 0 | 3 |  |
+| 050602-2 | 05 06_11, 05 06_13 | 11 | 1 | 0 | 0 | 3 | 11-3-v1: The long arm is one arc about the ratchet axis (the 10,4r, from the kink to its end at 7 d (The long arm is one arc about the ratche / the arm's inner and outer edges are at c) |
 | 050602-4 | 05 06_11, 05 06_12 | 0 | 0 | 0 | 0 | 0 |  |
 | 050603-2 | 05 06_2.2, 51 06_4 | 0 | 0 | 0 | 0 | 0 |  |
 | 050603-3 | 51 06_4 | 0 | 0 | 0 | 0 | 0 |  |
 | 050604-4 | 05 06_2.2, 51 06_4 | 0 | 0 | 0 | 0 | 0 |  |
 | 050700-6 | 05 06_20, 05 07_1 | 1 | 0 | 0 | 0 | 1 |  |
 | 050703-1 | 05 07_11 | 3 | 0 | 0 | 0 | 2 |  |
-| 050704 | 05 07_14 | 7 | 0 | 0 | 0 | 4 |  |
+| 050704 | 05 07_14 | 8 | 0 | 0 | 0 | 4 |  |
 | 050801-5 | 05 08_2, 51 06_4 | 1 | 0 | 0 | 0 | 1 |  |
 | 127556.02-04 | 51 01_6 | 0 | 0 | 0 | 0 | 0 |  |
 | 127556.02-05 | 51 01_6 | 0 | 0 | 0 | 0 | 0 |  |
@@ -47,9 +217,9 @@ Each part with the sheets it was compared against, the count of its items by fin
 | 510011-4 | 05 01_7 | 4 | 1 | 0 | 0 | 1 | 16-2-12: tube protruding below the body (scaled) (30.0 (likely) / 33.0) |
 | 510011-6 | 05 01_7, 05 01_8 | 3 | 1 | 0 | 0 | 0 | 16-2-v1: likely (likely / 510011-6 a plain 2.5 x 15.3) |
 | armScrew | 05 04_4, 05 03_1 | 0 | 0 | 0 | 0 | 0 |  |
-| bandHookDrum | 05 07_11, 05 07_13 | 11 | 0 | 0 | 0 | 2 |  |
-| bandHookRound | 05 07_11, 05 07_12 | 10 | 2 | 0 | 0 | 3 | 11-6-8: Notch flank 30 deg to the tongue edge (30 / 31.7 deg); 11-6-9: Body arc R6, centre 3.55 across and 2.8 along (printed) (R6, (3.55, 2.8); sure (figures) / R5.93, (3.47, 1.70)) |
-| barrelArbor | 05 07_1, 05 07_8, 05 07_9, Federchronometer 05 | 17 | 19 | 0 | 0 | 1 | 12-1-11: arbor body (with chamfers) length "12" (12 / 11.58); 12-1-18: hook on the arbor (05 07 02-2) at 15 deg to the square's flat normal (end view) (15 deg / hole axis along the square diagonal = 45); 12-7-5: hook at 15 deg to the square flat normal (15 deg / 45 deg); 12-7-7: hook pin / hole dia, depth (2 dia, 6 deep (sheet 09) / 2.0, hole through); 12-8-3: body length incl. chamfers (12 / 11.58); 12-8-4: chamfer end dia (9 / 10.0); 12-8-5: chamfer angle and length ("22 1/2 deg", "0,8") (22.5 deg to the end face, 0.8-0.9 axial / 45 deg, 1.65); 12-8-6: cross hole 2 dia x 6 deep, centred (2 x 6 blind, centred / through, centred); 12-8-7: neck dia (ball side), 1:70 polished (5 (tolerance illegible) / 4.48); 12-8-8: neck length (ball side) (6.7 (+-0.05) / 6.77); 12-8-9: ball pivot dia (3 (tolerance illegible) / 2.88); 12-8-11: square-end neck dia and length "3,5" (5 dia, 3.5 long / 4.48, 3.94); 12-8-12: square-end small neck "4" (4 (tolerance illegible), about 3.1 long  / 3.88, 2.92); 17-1-22: barrel arbor: core's cylindrical length, y (-17.70 to -7.76 (+-0.15) / -16.73..-8.45); 17-1-23: barrel arbor: core's end chamfers (1.05 axial by about 2.1 radial (to about / 1.65 x 1.65); 17-1-24: barrel arbor: neck above the core (inside the cover's boss) (D 5.13, y -22.2 to -18.75 (+-0.12) / 4.48); 17-1-25: barrel arbor: neck below the core, down to the pillar plate (D 4.93, y -6.66 to -0.04 / 4.48); 17-1-28: barrel arbor: dial-side end (a drawn bullet point) (y +6.3 (dome starts 4.6) / 4.95); 17-1-29: barrel arbor: top end above the bridge (domed) (y -36.45 (dome from -35.0) / -35.25) |
+| bandHookDrum | 05 07_11, 05 07_13 | 12 | 0 | 0 | 0 | 2 |  |
+| bandHookRound | 05 07_11, 05 07_12 | 10 | 2 | 0 | 0 | 4 | 11-6-8: Notch flank 30 deg to the tongue edge (30 / 31.7 deg); 11-6-9: Body arc R6, centre 3.55 across and 2.8 along (printed) (R6, (3.55, 2.8); sure (figures) / R5.93, (3.47, 1.70)) |
+| barrelArbor | 05 07_1, 05 07_8, 05 07_9, Federchronometer 05 | 20 | 17 | 0 | 0 | 2 | 12-1-11: arbor body (with chamfers) length "12" (12 / 11.58); 12-1-18: hook on the arbor (05 07 02-2) at 15 deg to the square's flat normal (end view) (15 deg / hole axis along the square diagonal = 45); 12-7-5: hook at 15 deg to the square flat normal (15 deg / 45 deg); 12-7-7: hook pin / hole dia, depth (2 dia, 6 deep (sheet 09) / 2.0, hole through); 12-8-3: body length incl. chamfers (12 / 11.58); 12-8-4: chamfer end dia (9 / 10.0); 12-8-5: chamfer angle and length ("22 1/2 deg", "0,8") (22.5 deg to the end face, 0.8-0.9 axial / 45 deg, 1.65); 12-8-6: cross hole 2 dia x 6 deep, centred (2 x 6 blind, centred / through, centred); 12-8-7: neck dia (ball side), 1:70 polished (5 (tolerance illegible) / 4.48); 12-8-8: neck length (ball side) (6.7 (+-0.05) / 6.77); 12-8-9: ball pivot dia (3 (tolerance illegible) / 2.88); 12-8-11: square-end neck dia and length "3,5" (5 dia, 3.5 long / 4.48, 3.94); 12-8-12: square-end small neck "4" (4 (tolerance illegible), about 3.1 long  / 3.88, 2.92); 17-1-22: barrel arbor: core's cylindrical length, y (-17.70 to -7.76 (+-0.15) / -16.73..-8.45); 17-1-23: barrel arbor: core's end chamfers (1.05 axial by about 2.1 radial (to about / 1.65 x 1.65); 17-1-24: barrel arbor: neck above the core (inside the cover's boss) (D 5.13, y -22.2 to -18.75 (+-0.12) / 4.48); 17-1-25: barrel arbor: neck below the core, down to the pillar plate (D 4.93, y -6.66 to -0.04 / 4.48) |
 | barrelBridge | 05 08_13, 05 08_12, Federchronometer 05 | 24 | 2 | 0 | 0 | 1 | 02-7-20: straight edge's chord 73.5 (arrows parallel to the edge, from the upper arc corner to the  (73.5 / projection of (-14.1814,40.0583)-(-27.72); 03-5-7: screw holes at the bridge ends (top and bottom) (Ø 3.4-3.5 scaled (about as big as 0.8 of / barrelBridge cylinders[2.8 inside] at (-) |
 | bezel | 05 01_4, 05 01_5 | 3 | 0 | 0 | 0 | 0 |  |
 | blockScrew | 05 08_1.a, 05 04_3 | 0 | 0 | 0 | 0 | 0 |  |
@@ -67,7 +237,7 @@ Each part with the sheets it was compared against, the count of its items by fin
 | centreWheel | 05 05_1, 05 05_8, 05 05_9 | 10 | 0 | 0 | 0 | 2 |  |
 | changePinion | 05 02_1, 51 02_6 | 2 | 1 | 0 | 0 | 0 | 14-1-13: pinion outside Ø (tips), scaled; no number on this sheet (about 7.2 (outer lines 123 px at 17.05 p / changePinion teeth[0].tips_d 6.8997) |
 | changePipe | 05 02_1, 51 02_6 | 11 | 0 | 0 | 0 | 0 |  |
-| changeWheel | 05 02_1, 51 02_6, 05 02_7 | 13 | 0 | 0 | 1 | 2 | 14-2-10: countersink at the bore on one face (sheet 06 shows the flare; this sheet none) (not drawn / changeWheel cones[0] d 4.2..4.66, z 0..0) |
+| changeWheel | 05 02_1, 51 02_6, 05 02_7 | 13 | 0 | 0 | 1 | 3 | 14-2-10: countersink at the bore on one face (sheet 06 shows the flare; this sheet none) (not drawn / changeWheel cones[0] d 4.2..4.66, z 0..0) |
 | click | 05 08_14, 05 08_12 | 14 | 1 | 0 | 0 | 2 | 02-8-10: overall length 17.4 (left corner to nose end) (17.4 / 17.5301 (box x -9.2618..8.2683)) |
 | clicks | 05 06_1, 51 06_4, 05 06_11, 05 06_14 | 13 | 0 | 0 | 0 | 2 |  |
 | clickScrew | 05 08_12 | 1 | 0 | 0 | 0 | 0 |  |
@@ -78,27 +248,27 @@ Each part with the sheets it was compared against, the count of its items by fin
 | corkRing | 05 08_2 | 1 | 0 | 0 | 0 | 0 |  |
 | coverPlate | 05 06_1, 05 06_8 | 9 | 0 | 0 | 0 | 0 |  |
 | Deckelglas | 51 00_1 | 0 | 0 | 0 | 0 | 1 |  |
-| detent | 05 04_1, 05 04_10.1, 05 04_10.2 | 39 | 5 | 0 | 0 | 5 | 06-1-7: escape wheel centre to M1.7 clamp-hole centre (v. Gangradmitte) (23.8 / 23.41); 06-1-12: escape wheel centre along the detent from the pipe (drawn directly under the pipe) (0 (+-0.1, scaled) / +0.447); 06-1-13: angle at the pipe between detent axis and the balance-to-wheel line (53.6 deg (scaled +-1) / 49.4 deg); 06-1-14: angle labelled 15 deg near the foot/centre line (what it attaches to is unclear) (15 deg / 15.8 deg); 06-5-4: tail width at the tip (0.25 (0.22) (top callout) / 0.054) |
+| detent | 05 04_1, 05 04_10.1, 05 04_10.2 | 43 | 5 | 0 | 0 | 6 | 06-1-7: escape wheel centre to M1.7 clamp-hole centre (v. Gangradmitte) (23.8 / 23.41); 06-1-12: escape wheel centre along the detent from the pipe (drawn directly under the pipe) (0 (+-0.1, scaled) / +0.447); 06-1-13: angle at the pipe between detent axis and the balance-to-wheel line (53.6 deg (scaled +-1) / 49.4 deg); 06-1-14: angle labelled 15 deg near the foot/centre line (what it attaches to is unclear) (15 deg / 15.8 deg); 06-5-4: tail width at the tip (0.25 (0.22) (top callout) / 0.054) |
 | detentBlock | 05 04_1, 05 04_3 | 37 | 1 | 0 | 1 | 1 | 06-3-13: M1.2 hole across the arm thickness (centred, scaled +-0.06) (centre of the 3 (z 5.0) / 5.15); 06-3-28: two d0.45 blind holes 1.6 deep in the foot face at x 16.63 and 20.83 (steady pins) (not on this sheet / present) |
-| dial | 05 02_1, 05 02_12, 05 02_13, Federchronometer 05 | 22 | 5 | 1 | 1 | 5 | 13-1-10: Gap dial top to hour-hand blade underside: dimension "2" (scaled 1.6) (2 (scaled 1.64) / 1.78); 13-1-v1: a part in the dial's underside, 0,1 clear (unsure which: the up-and-down wheel hub or the  (a part in the dial's underside, 0,1 clea / udWheel top y 9.55 (0.8 under the dial 1); 13-6-14: Dial feet / posts (assembly: block on a post, "Festsitz") (none on the dial (separate posts) / -); 13-7-1: Outside Ø103 (103 / 103.55); 13-7-2: Material thickness 1,5 (1.5 / 1.2); 13-7-5: Seconds hole Ø2,2 (1,5 struck out) (2.2 / 1.7); 13-7-8: This variant as a solid of its own (iron, 1.5, Ø103, 2.2) (a second dial / -) |
+| dial | 05 02_1, 05 02_12, 05 02_13, Federchronometer 05 | 21 | 5 | 1 | 1 | 5 | 13-1-10: Gap dial top to hour-hand blade underside: dimension "2" (scaled 1.6) (2 (scaled 1.64) / 1.78); 13-1-v1: a part in the dial's underside, 0,1 clear (unsure which: the up-and-down wheel hub or the  (a part in the dial's underside, 0,1 clea / udWheel top y 9.55 (0.8 under the dial 1); 13-6-14: Dial feet / posts (assembly: block on a post, "Festsitz") (none on the dial (separate posts) / -); 13-7-1: Outside Ø103 (103 / 103.55); 13-7-2: Material thickness 1,5 (1.5 / 1.2); 13-7-5: Seconds hole Ø2,2 (1,5 struck out) (2.2 / 1.7); 13-7-8: This variant as a solid of its own (iron, 1.5, Ø103, 2.2) (a second dial / -) |
 | dialPin | 05 08_7, 05 02_12 | 0 | 0 | 0 | 1 | 1 | 13-6-14: Dial feet / posts (assembly: block on a post, "Festsitz") (none on the dial (separate posts) / -) |
 | dialScrew | 05 02_12 | 0 | 0 | 0 | 1 | 0 | 13-6-14: Dial feet / posts (assembly: block on a post, "Festsitz") (none on the dial (separate posts) / -) |
 | dischargeRoller | 05 04_1 | 1 | 0 | 0 | 0 | 0 |  |
-| drum | 05 07_1, 05 07_4, 05 07_5, 51 07_6, Federchronometer 05 | 35 | 2 | 0 | 0 | 4 | 12-5-2: lid seat (rim bore) 39.2 s6 (39.2 s6 (+0.043..+0.059) / 39.2); 12-5-18: slot reach "0,95 +0,15" (new; 18.3 struck) (0.95 +0.15 / 0.92) |
+| drum | 05 07_1, 05 07_4, 05 07_5, 51 07_6, Federchronometer 05 | 37 | 2 | 0 | 0 | 5 | 12-5-2: lid seat (rim bore) 39.2 s6 (39.2 s6 (+0.043..+0.059) / 39.2); 12-5-18: slot reach "0,95 +0,15" (new; 18.3 struck) (0.95 +0.15 / 0.92) |
 | dtArbor | 05 05_11 | 2 | 0 | 0 | 0 | 0 |  |
 | dustBush | 05 08_9, 05 08_2 | 14 | 3 | 1 | 0 | 0 | 02-5-4: flange thickness 3.1 -0.2 (arrows span the flange; measured 3.06) (3.1 -0.2 (2.9..3.1) / 13.0..15.1 = 2.1); 02-5-9: body straight at Ø13.1 from the flange's underside down to the foot (straight, no neck / 45° step Ø13.0 to Ø10.5 at z 5.4..6.7, c); 02-5-12: (7.62) reference: bore at the top of the 20° cone ((7.62) / 7.7746 at z 16.3); 02-5-17: small rounds at the flange's outer edges and the boss's top edge (drawn, not dimensioned (about 0.2) / none in the file) |
 | dustPlate | 05 06_1, 05 06_5 | 9 | 0 | 0 | 0 | 1 |  |
-| escapeArbor | 05 05_1, 05 04_7.2, 05 04_8, Federchronometer 05 | 8 | 6 | 0 | 0 | 2 | 05-7-5: 6.5 -0.2 (upper tip to the pinion top) (6.3..6.5 (sure) / 5.3); 05-7-6: 26.5 -0.2 (overall) (26.3..26.5 (sure) / 22.78); 05-7-7: 1.6 -0.2 (arbor above and below the pinion) (1.4..1.6 (sure) / 1.2); 17-1-58: escape arbor (Gangtrieb 05 04 05-2): shaft diameter between the wheel's hub and the pinion (1.38 (63 px at 45.6; +-0.1) / 1.2 / 1.07); 17-1-59: escape pinion y span (tips D 2.85 drawn) (-6.4 to -2.35 (+-0.15) / -7.5..-3.5); 17-1-60: escape arbor: top pivot tip, in the jewel (-19.9 (+-0.15) / -20.98) |
+| escapeArbor | 05 05_1, 05 04_7.2, 05 04_8, Federchronometer 05 | 10 | 4 | 0 | 0 | 2 | 05-7-5: 6.5 -0.2 (upper tip to the pinion top) (6.3..6.5 (sure) / 5.3); 05-7-6: 26.5 -0.2 (overall) (26.3..26.5 (sure) / 22.78); 05-7-7: 1.6 -0.2 (arbor above and below the pinion) (1.4..1.6 (sure) / 1.2); 17-1-60: escape arbor: top pivot tip, in the jewel (-19.9 (+-0.15) / -20.98) |
 | escapeCollet | 05 04_7.2 | 1 | 0 | 0 | 0 | 2 |  |
 | escapeWheel | 05 05_1, 05 04_7.2, 05 04_23, 05 04_1 | 18 | 0 | 0 | 0 | 6 |  |
 | escScrewL | 05 08_3.b | 1 | 0 | 0 | 0 | 0 |  |
 | escScrewU | 05 08_1.b | 1 | 0 | 0 | 0 | 0 |  |
 | footScrew | 05 04_1, 05 04_3 | 0 | 0 | 0 | 0 | 0 |  |
-| fusee | 05 06_1, 05 06_2.2, 05 06_3.1, 05 06_3.2, 51 06_4, 05 06_20, Federchronometer 05 | 32 | 2 | 0 | 0 | 16 | 09-2-3: 45 deg chamfer from recess to face; chamfer outer dia (29.8 +0.2 (dia) at 45 deg / 29.4); 17-1-38: fusee arbor: top end (square then dome) (dome top y -46.45 (dome from -44.76) / -48.025) |
-| fuseeArbor | 05 06_1, 05 06_3.1, 05 06_3.2, 05 06_15, Federchronometer 05 | 17 | 4 | 0 | 0 | 2 | 09-6-1: overall length (60.6 -0.2 / 58.125); 09-6-3: left pivot length, tip to the 2.7 shoulder (60.6 - 19.7 - 28.3 - 6.5) (about 6.1 (derived; scaled about 6.6) / 3.625); 09-6-10: right pivot section: 3.17 +0.023/+0.015 tapering 1:100 to 2.92 at the tip, 20.3 long (3.17 to 2.92 / 4.41..4.16); 17-1-38: fusee arbor: top end (square then dome) (dome top y -46.45 (dome from -44.76) / -48.025) |
+| fusee | 05 06_1, 05 06_2.2, 05 06_3.1, 05 06_3.2, 51 06_4, 05 06_20, Federchronometer 05 | 33 | 2 | 0 | 0 | 15 | 09-2-3: 45 deg chamfer from recess to face; chamfer outer dia (29.8 +0.2 (dia) at 45 deg / 29.4); 17-1-39: fusee arbor: dial-side end (about 9.7, hidden in a hub / 10.1) |
+| fuseeArbor | 05 06_1, 05 06_3.1, 05 06_3.2, 05 06_15, Federchronometer 05 | 18 | 4 | 0 | 0 | 1 | 09-6-1: overall length (60.6 -0.2 / 58.125); 09-6-3: left pivot length, tip to the 2.7 shoulder (60.6 - 19.7 - 28.3 - 6.5) (about 6.1 (derived; scaled about 6.6) / 3.625); 09-6-10: right pivot section: 3.17 +0.023/+0.015 tapering 1:100 to 2.92 at the tip, 20.3 long (3.17 to 2.92 / 4.41..4.16); 17-1-39: fusee arbor: dial-side end (about 9.7, hidden in a hub / 10.1) |
 | fuseeBush | 05 08_8, 05 08_2 | 17 | 1 | 1 | 0 | 2 | 02-4-10: bore Ø4.1 +0.2 (4.1 +0.2 (4.1..4.3) / 4.52 inside z 0..5.76); 02-4-19: small edge breaks at the outer top and bottom corners (drawn, size not printed (about 0.1..0.15 / no edge cone on the outside (cones[0] is) |
 | fuseeBushScrew | 05 08_2 | 0 | 0 | 0 | 0 | 1 |  |
-| fuseeWheel | 05 06_1, 51 06_4, 05 06_7 | 20 | 2 | 1 | 0 | 4 | 10-3-7: rim outer dia in section (leader 'gedreht 41,1') (40.65 -0.05 (40.60-40.65); unsure / 40.569); 10-3-17: bore dia (section 3.95, plan circle 4.04) (4 dia +0.1 / 4.55); 10-3-24: 'Kante leicht brechen' on boss top edge (edge break, no size / sharp corner) |
+| fuseeWheel | 05 06_1, 51 06_4, 05 06_7 | 18 | 2 | 1 | 0 | 4 | 10-3-7: rim outer dia in section (leader 'gedreht 41,1') (40.65 -0.05 (40.60-40.65); unsure / 40.569); 10-3-17: bore dia (section 3.95, plan circle 4.04) (4 dia +0.1 / 4.55); 10-3-24: 'Kante leicht brechen' on boss top edge (edge break, no size / sharp corner) |
 | gimbalRing | 05 01_1 | 4 | 0 | 0 | 0 | 1 |  |
 | goldScrew | 05 04_1 | 0 | 0 | 0 | 0 | 0 |  |
 | goldSpring | 05 04_1, 05 04_2 | 9 | 2 | 0 | 0 | 1 | 06-1-15: gold spring: bend point (Biegungspunkt der Goldfeder), distance from the spring end (about 6.3 (scaled) / 4.43); 06-2-9: blank drawn straight; the built spring is bent in plan (BSPLINE, sag 0.9) (straight / bent) |
@@ -108,24 +278,24 @@ Each part with the sheets it was compared against, the count of its items by fin
 | Holzkasten.D | 51 00_1 | 1 | 0 | 0 | 0 | 0 |  |
 | hook | 05 07_1, 05 07_8 | 1 | 2 | 0 | 0 | 1 | 12-7-4: hook 05 07 02-2 stands out of the body "0,5 -0,05" (0.5 -0.05 (0.45..0.5) / 0.25); 12-7-7: hook pin / hole dia, depth (2 dia, 6 deep (sheet 09) / 2.0, hole through) |
 | hookBlock | 05 07_1, 05 07_4 | 4 | 0 | 0 | 0 | 0 |  |
-| hourHand | 05 02_1, 05 02_3 | 18 | 3 | 0 | 0 | 0 | 13-1-10: Gap dial top to hour-hand blade underside: dimension "2" (scaled 1.6) (2 (scaled 1.64) / 1.78); 13-1-11: Minute-hand boss bottom to hour-hand flange top (label "0,2" near the hands) (0.2? / 0.72); 13-3-5: Bore Ø4,4 H7 +0,012 (4.4 (+0.012) / 4.4155 narrow end) |
+| hourHand | 05 02_1, 05 02_3 | 16 | 3 | 0 | 0 | 0 | 13-1-10: Gap dial top to hour-hand blade underside: dimension "2" (scaled 1.6) (2 (scaled 1.64) / 1.78); 13-1-11: Minute-hand boss bottom to hour-hand flange top (label "0,2" near the hands) (0.2? / 0.72); 13-3-5: Bore Ø4,4 H7 +0,012 (4.4 (+0.012) / 4.4155 narrow end) |
 | hourPipe | 05 02_1, 05 02_8 | 8 | 1 | 0 | 0 | 0 | 14-3-2: collar top height above the foot (wheel underside) (5.2 -0.1 (sure; measured 5.1 on the scan / hourPipe cylinders[1] z 1.0..3.585 (coll) |
-| hourWheel | 05 02_1, 05 02_8, 05 02_9, Federchronometer 05 | 12 | 0 | 1 | 0 | 0 | 14-4-v1: blank 20.2 -0.1 gedreht, 1.05 +-0.03 gedreht (blank 20.2 -0.1 gedreht, 1.05 +-0.03 ged / likely) |
-| hsCollet | 51 03_5, 05 03_8 | 12 | 3 | 1 | 0 | 1 | 08-4-5: bore 1.6 H7 +0.009 (1.6..1.609 / 1.6029); 08-4-7: bore diameter at the other face (1.55), bracketed reference ((1.55): 1.6 H7 at one face, 1.55 at the  / 1.65); 08-4-11: cross hole diameter 0.8 +0.01 at the entry, (0.77) at the other, Kegel 1:90, drilled 0.7 (0.8..0.81 tapering to 0.77 / 0.805 straight); 08-4-14: Koerner anbringen (centre-punch mark at the hole) (a punch mark where the hole goes / none) |
-| hsStud | 51 03_5, 05 03_9 | 19 | 2 | 1 | 0 | 1 | 08-1-2: stud arm inner face to top of spring (3.15) (3.15 (extension line at the terminal cur / 2.89); 08-5-13: spring hole distance from the leg end (scaled off the side view, no printed dimension; hol (about 0.68 centre to end / 1.35); 08-5-15: point rounded (a 0.8 mark at the tip; Phi or R illegible) (small rounding at the tip / sharp point) |
+| hourWheel | 05 02_1, 05 02_8, 05 02_9, Federchronometer 05 | 12 | 0 | 1 | 0 | 1 | 14-4-v1: blank 20.2 -0.1 gedreht, 1.05 +-0.03 gedreht (blank 20.2 -0.1 gedreht, 1.05 +-0.03 ged / likely) |
+| hsCollet | 51 03_5, 05 03_8 | 13 | 4 | 2 | 0 | 2 | 08-1-v1: the three heights are one chain: 3.15 + 9.5 + 0.75 = 13.4, and the built chain 2.89 + 9.97 (the three heights are one chain: 3.15 +  / by the pitch cause: built 0.80 against 0); 08-4-5: bore 1.6 H7 +0.009 (1.6..1.609 / 1.6029); 08-4-7: bore diameter at the other face (1.55), bracketed reference ((1.55): 1.6 H7 at one face, 1.55 at the  / 1.65); 08-4-11: cross hole diameter 0.8 +0.01 at the entry, (0.77) at the other, Kegel 1:90, drilled 0.7 (0.8..0.81 tapering to 0.77 / 0.805 straight); 08-4-14: Koerner anbringen (centre-punch mark at the hole) (a punch mark where the hole goes / none); 08-4-v2: "0.7 bohren": the hole is drilled 0.7 first, then 0.8 phi +0.01 with the Kegel 1:90 ("0.7 bohren": the hole is drilled 0.7 fi / ) |
+| hsStud | 51 03_5, 05 03_9 | 19 | 2 | 2 | 0 | 1 | 08-1-2: stud arm inner face to top of spring (3.15) (3.15 (extension line at the terminal cur / 2.89); 08-5-13: spring hole distance from the leg end (scaled off the side view, no printed dimension; hol (about 0.68 centre to end / 1.35); 08-5-15: point rounded (a 0.8 mark at the tip; Phi or R illegible) (small rounding at the tip / sharp point); 08-5-v2: 3.1 -0.2 and the V's opening: the notch (V cut) apex also rounds (small radius at the apex (3.1 -0.2 and the V's opening: the notch  / the V's inner end drawn rounded (enlarge) |
 | hub | 05 04_4, 05 04_5, 05 03_1 | 10 | 1 | 1 | 0 | 1 | 07-2-5: 4,7 -0,05 (framed): flange top to the sleeve end (4.7 (sure) / 4.1); 07-2-8: 10 deg taper on the flange edge (10 deg (sure) / 0 deg) |
 | impulseRoller | 05 04_1, 51 04_6 | 16 | 0 | 0 | 1 | 3 | 06-4-15: cut centre distance 5.927 from the axis (not printed) (not printed / 5.927) |
-| intermediateArbor | 05 05_1, 05 05_5, 05 05_7, Federchronometer 05 | 11 | 4 | 0 | 0 | 4 | 04-7-3: Seat dia (4.0 n6 (+0.008..+0.016) / 4.0); 04-7-9: Upper pivot length (4.6 -0.2 / 2.95); 04-7-10: Lower pivot length (4.6 -0.2 / 2.95); 17-1-50: intermediate arbor: pinion y span (tips D 4.8 drawn) (-2.95 to -0.3 / -3.02..0.23) |
-| intermediateBridge | 05 08_10, 05 08_32.1, 05 08_32.2, Federchronometer 05 | 9 | 0 | 0 | 0 | 2 |  |
+| intermediateArbor | 05 05_1, 05 05_5, 05 05_7, Federchronometer 05 | 12 | 4 | 0 | 0 | 4 | 04-7-3: Seat dia (4.0 n6 (+0.008..+0.016) / 4.0); 04-7-9: Upper pivot length (4.6 -0.2 / 2.95); 04-7-10: Lower pivot length (4.6 -0.2 / 2.95); 04-7-v1: both tips pointed cones (sure) (both tips pointed cones (sure) / ) |
+| intermediateBridge | 05 08_10, 05 08_32.1, 05 08_32.2, Federchronometer 05 | 8 | 0 | 0 | 0 | 2 |  |
 | intermediateBridgeScrew | 05 08_10, 05 08_32.2 | 0 | 0 | 0 | 0 | 0 |  |
-| intermediateWheel | 05 05_1, 05 05_5, 05 05_6 | 13 | 1 | 0 | 0 | 4 | 04-5-4: Pivot dia (both) (0.82 -0.02 (0.80..0.82) / 0.825) |
+| intermediateWheel | 05 05_1, 05 05_5, 05 05_6 | 14 | 1 | 0 | 0 | 4 | 04-5-4: Pivot dia (both) (0.82 -0.02 (0.80..0.82) / 0.825) |
 | key40Body | 51 01_6 | 6 | 0 | 0 | 0 | 0 |  |
 | key40Cap | 51 01_6 | 8 | 0 | 0 | 0 | 0 |  |
-| key40Pipe | 51 01_6 | 5 | 0 | 1 | 0 | 1 | 16-1-18, 16-1-19: parts 4 and 5 drawn (sure) (parts 4 and 5 drawn (sure) / no page file) |
-| keyBody | 05 01_7, 05 01_8 | 27 | 0 | 0 | 0 | 0 |  |
-| keyPaddle | 51 01_6, 05 01_7 | 2 | 2 | 0 | 0 | 1 | 16-2-4: paddle disc diameter (scaled) (33.8 (likely) / 34.5); 16-2-13: overall length, tube end to paddle top (scaled) (79.9 (likely) / 84.7) |
-| keyTube | 05 01_7, 05 01_9 | 16 | 1 | 0 | 0 | 1 | 16-4-5: head-to-shank 0.3 r (a radius) (0.3 r (likely) / 0.3 chamfer) |
-| lid | 05 07_1, 05 07_4, 05 07_7 | 15 | 3 | 0 | 0 | 3 | 12-1-13: lid outer face to arbor body "2,9" (2.9 / 3.35); 12-6-1: lid dia at the face, r6 (39.2 r6 (+0.034..+0.050) / 39.2); 12-6-11: narrow notch bottom from the centre (18.3 +-0.02 / 18.328) |
+| key40Pipe | 51 01_6 | 5 | 0 | 0 | 0 | 1 |  |
+| keyBody | 05 01_7, 05 01_8 | 23 | 0 | 0 | 0 | 0 |  |
+| keyPaddle | 51 01_6, 05 01_7 | 1 | 2 | 0 | 0 | 1 | 16-2-4: paddle disc diameter (scaled) (33.8 (likely) / 34.5); 16-2-13: overall length, tube end to paddle top (scaled) (79.9 (likely) / 84.7) |
+| keyTube | 05 01_7, 05 01_9 | 14 | 1 | 0 | 0 | 1 | 16-4-5: head-to-shank 0.3 r (a radius) (0.3 r (likely) / 0.3 chamfer) |
+| lid | 05 07_1, 05 07_4, 05 07_7 | 15 | 3 | 0 | 0 | 4 | 12-1-13: lid outer face to arbor body "2,9" (2.9 / 3.35); 12-6-1: lid dia at the face, r6 (39.2 r6 (+0.034..+0.050) / 39.2); 12-6-11: narrow notch bottom from the centre (18.3 +-0.02 / 18.328) |
 | lockArbor | 05 01_1 | 0 | 0 | 0 | 0 | 0 |  |
 | lockBr | 05 01_1 | 2 | 0 | 0 | 0 | 0 |  |
 | lockBracket | 05 01_1 | 2 | 0 | 0 | 0 | 0 |  |
@@ -139,8 +309,8 @@ Each part with the sheets it was compared against, the count of its items by fin
 | maintRatchet | 05 06_1, 51 06_4, 05 06_11, 05 06_12 | 23 | 0 | 0 | 0 | 3 |  |
 | masses | 05 03_1, 05 03_2 | 4 | 0 | 0 | 0 | 0 |  |
 | massScrew | 05 03_1, 05 03_2 | 0 | 0 | 0 | 0 | 1 |  |
-| minuteHand | 05 02_1, 05 02_2 | 14 | 1 | 0 | 0 | 0 | 13-1-11: Minute-hand boss bottom to hour-hand flange top (label "0,2" near the hands) (0.2? / 0.72) |
-| mspring | 05 06_1, 51 06_4, 05 06_9, 05 06_10 | 13 | 0 | 0 | 0 | 7 |  |
+| minuteHand | 05 02_1, 05 02_2 | 13 | 1 | 0 | 0 | 0 | 13-1-11: Minute-hand boss bottom to hour-hand flange top (label "0,2" near the hands) (0.2? / 0.72) |
+| mspring | 05 06_1, 51 06_4, 05 06_9, 05 06_10 | 13 | 0 | 0 | 0 | 6 |  |
 | nutA | 05 01_1 | 1 | 0 | 0 | 0 | 0 |  |
 | nutW | 05 01_1 | 1 | 0 | 0 | 0 | 0 |  |
 | P510002-2 | 51 00_4 | 7 | 0 | 1 | 0 | 0 | 16-8-10: chamfer 0.5 x 45 deg at the M3.5 hole (0.5 (likely) / -) |
@@ -155,12 +325,12 @@ Each part with the sheets it was compared against, the count of its items by fin
 | Randleiste | 51 00_5 | 2 | 0 | 0 | 0 | 0 |  |
 | Riemen | 51 00_5 | 2 | 0 | 0 | 0 | 0 |  |
 | Riemenoese | 51 00_5 | 1 | 0 | 0 | 0 | 0 |  |
-| rim | 05 03_1, 05 03_2, 05 03_4 | 19 | 2 | 2 | 0 | 3 | 07-5-11: 39 (unclear: angle or length) (39 (sure on the figure) / -); 07-6-2: layer boundary Ø (31,29 -0,04): nickel steel against brass (31.29 -0.04 (sure) / -); 07-6-10: 1,8 H7 +0,009 and 0,4: the hole's top form (countersink or counterbore; which hole is unsu (1.8 H7, 0.4 deep (unsure) / 1.8 x 0.4, countersink); 07-6-17: 8 Koerner in 60 Teilung (eight punch marks, 60 divisions) (8 marks (sure) / 0) |
+| rim | 05 03_1, 05 03_2, 05 03_4 | 20 | 2 | 2 | 0 | 5 | 07-5-11: 39 (unclear: angle or length) (39 (sure on the figure) / -); 07-6-2: layer boundary Ø (31,29 -0,04): nickel steel against brass (31.29 -0.04 (sure) / -); 07-6-10: 1,8 H7 +0,009 and 0,4: the hole's top form (countersink or counterbore; which hole is unsu (1.8 H7, 0.4 deep (unsure) / 1.8 x 0.4, countersink); 07-6-17: 8 Koerner in 60 Teilung (eight punch marks, 60 divisions) (8 marks (sure) / 0) |
 | ring | 05 08_7 | 20 | 0 | 0 | 0 | 4 |  |
 | ringBracket | 05 01_1 | 1 | 0 | 0 | 0 | 0 |  |
 | ringScrew | 05 08_7 | 0 | 0 | 0 | 0 | 1 |  |
 | Scharnier | 51 00_1 | 0 | 0 | 0 | 0 | 2 |  |
-| Scharnier.U | 51 00_5 | 0 | 0 | 0 | 0 | 1 |  |
+| Scharnier.U | 51 00_5 | 1 | 0 | 0 | 0 | 0 |  |
 | Schliessblech | 51 00_4 | 0 | 0 | 0 | 0 | 0 |  |
 | Schluesselhalter | 51 00_1 | 2 | 1 | 0 | 0 | 0 | 16-5-6: corner bracket (Schlüsselhalter), leg of the triangle (scaled) (about 24 (likely) / 59.5) |
 | Schluesselhalter.F | 51 00_1 | 1 | 0 | 0 | 0 | 0 |  |
@@ -173,15 +343,15 @@ Each part with the sheets it was compared against, the count of its items by fin
 | screw79 | 05 01_1 | 1 | 0 | 0 | 0 | 0 |  |
 | screw80_3 | 05 01_1, 51 00_2 | 3 | 1 | 0 | 0 | 0 | 16-6-17: M6 screw length, head top to pivot tip (scaled) (27.9 +-1 (unsure) / 24.0 / 26.3) |
 | screw80_9 | 05 01_1, 51 00_2 | 1 | 1 | 0 | 0 | 0 | 16-6-17: M6 screw length, head top to pivot tip (scaled) (27.9 +-1 (unsure) / 24.0 / 26.3) |
-| screwHg | 51 00_2 | 4 | 1 | 0 | 0 | 2 | 16-6-12: panel total height 185 (105 + lid part 80) (185 (sure) / 180) |
+| screwHg | 51 00_2 | 3 | 1 | 0 | 0 | 2 | 16-6-12: panel total height 185 (105 + lid part 80) (185 (sure) / 180) |
 | screwKh | 51 00_1 | 1 | 0 | 0 | 0 | 0 |  |
 | screwKr | 05 01_1 | 0 | 0 | 0 | 0 | 0 |  |
-| screwUr | 51 00_5 | 1 | 1 | 0 | 0 | 4 | 16-9-17: screw 5, 4 x 25 DIN 97 (strap screw) (4 x 25 (sure) / 3.977 / 25.0 / 27.6) |
+| screwUr | 51 00_5 | 1 | 1 | 0 | 0 | 3 | 16-9-17: screw 5, 4 x 25 DIN 97 (strap screw) (4 x 25 (sure) / 3.977 / 25.0 / 27.6) |
 | screwUr6 | 51 00_5 | 0 | 0 | 0 | 0 | 0 |  |
 | screwZg | 51 00_4 | 5 | 0 | 0 | 0 | 1 |  |
-| secondsArbor | 05 05_1, 05 05_2, 05 05_4, Federchronometer 05 | 15 | 7 | 0 | 0 | 2 | 04-4-1: Upper pivot length, tip to collar top (9.2 / 7.2); 04-4-10: Seat under the leaves, dia (2.6 n6 (+0.013/+0.006) / 2.6); 04-4-15: Lower pivot length (4.5 / 3.0); 04-4-18: Upper tip form (pointed cone about 0.5 long, scaled) (pointed cone / flat 0.47); 04-4-v3: `nicht eingetr. Toleranz ±0,1`: general tolerance on the 7, the 4,5 and others (sure) (`nicht eingetr. Toleranz ±0,1`: general  / ); 17-1-53: seconds arbor (Sekundentrieb 05 05 01-2): top pivot tip (-21.5 (+-0.2) / -21.98); 17-1-57: seconds arbor: dial-side end (inside the hand's collar) (13.0 (+-0.25) / 12.28) |
-| secondsHand | 05 02_1, 05 02_5 | 14 | 0 | 0 | 0 | 1 |  |
-| secondsWheel | 05 05_1, 05 05_2, 05 05_3 | 15 | 3 | 0 | 0 | 2 | 04-2-5: Lower pivot dia (0.8 -0.02 (0.78..0.80) / 0.81 at shoulder); 04-2-7: Taper Kegel 1:90 (both pivots) (1:90 / 1:90 / 1:83); 04-2-8: Hub dia of the wheel (arrows each side of the wheel) (6 / 6.4) |
+| secondsArbor | 05 05_1, 05 05_2, 05 05_4, Federchronometer 05 | 16 | 7 | 0 | 0 | 3 | 04-4-1: Upper pivot length, tip to collar top (9.2 / 7.2); 04-4-10: Seat under the leaves, dia (2.6 n6 (+0.013/+0.006) / 2.6); 04-4-15: Lower pivot length (4.5 / 3.0); 04-4-18: Upper tip form (pointed cone about 0.5 long, scaled) (pointed cone / flat 0.47); 04-4-v1: upper tip: a pointed cone, base 0.65, about 0.46 long (scaled, likely) (upper tip: a pointed cone, base 0.65, ab / ); 04-4-v2: lower tip: a pointed cone, base 0.82, about 0.4 long (likely) (lower tip: a pointed cone, base 0.82, ab / ); 04-4-v3: `nicht eingetr. Toleranz ±0,1`: general tolerance on the 7, the 4,5 and others (sure) (`nicht eingetr. Toleranz ±0,1`: general  / ) |
+| secondsHand | 05 02_1, 05 02_5 | 11 | 0 | 0 | 0 | 1 |  |
+| secondsWheel | 05 05_1, 05 05_2, 05 05_3 | 15 | 4 | 0 | 0 | 2 | 04-2-5: Lower pivot dia (0.8 -0.02 (0.78..0.80) / 0.81 at shoulder); 04-2-7: Taper Kegel 1:90 (both pivots) (1:90 / 1:90 / 1:83); 04-2-8: Hub dia of the wheel (arrows each side of the wheel) (6 / 6.4); 04-2-v1: tip forms of the seconds arbor (tip forms of the seconds arbor / both ends rounded (a dome), sure) |
 | setting35 | 05 08_10 | 0 | 0 | 0 | 0 | 1 |  |
 | settingBL | 05 08_4, 05 08_33 | 2 | 1 | 0 | 0 | 2 | 03-8-6: jewel halves 1.4 + 1.4 (2.8 stack) (1.4 / 1.4 / settingBL size z 1.53, settingCL 1.19 (2) |
 | settingBU | 05 08_5, 05 08_6 | 1 | 1 | 0 | 0 | 1 | 03-3-18: jewel stack: two halves 1.4 + 1.4 (hatched blocks, split at 1.4 from the top) (1.4 / 1.4 / settingCU size z 1.63, settingBU 1.17: s) |
@@ -193,8 +363,8 @@ Each part with the sheets it was compared against, the count of its items by fin
 | settingEU | 05 08_1.b | 1 | 0 | 0 | 0 | 0 |  |
 | settingScrewL | 05 08_4, 05 08_33 | 2 | 0 | 0 | 0 | 1 |  |
 | settingScrewU | 05 08_5, 05 08_6 | 0 | 0 | 0 | 0 | 1 |  |
-| setupRatchet | 05 07_1, 05 07_3 | 7 | 2 | 0 | 0 | 1 | 12-2-7: square hole 2.7 H7 (+0.009), taper 1:100 (2.700..2.709, taper 1:100 / 2.6975 at the large end; taper 1:100); 12-2-8: square orientation to the tooth tip: tip on the axis, along a flat normal (0 deg / 9.9 or 12.6 deg off a flat normal) |
-| staff | 05 04_1, 05 04_4, 05 04_5, 05 03_3.2, 05 03_1, Federchronometer 05 | 26 | 13 | 1 | 0 | 9 | 07-1-4: shaft Ø at the hub end of the taper (1,65 s6: +0.015..+0.022 -> 1.665..1.672) (1.65 s6 (sure) / 1.6514); 07-1-16: 14,03 -0,06: hub top face to the lower pivot tip (14.03 -0.06 (sure) / 12.59); 07-2-2: collar above the flange Ø (2,1 ±0,03 -> 2.07..2.13) (2.1 ±0.03 (likely) / 2.0); 07-2-3: length of that collar above the flange (1,3) (1.3 (likely) / 1.1); 07-2-7: 14 ±0,03 (framed): flange top to the lower tip (14 (sure) / 12.59); 07-3-1: upper pivot Ø at its shoulder (1,25 -0,02 -> 1.23..1.25) (1.25 -0.02 (likely) / 1.2); 07-3-3: collar above the hub Ø (2,40 or 2,10, -0,02; digit unsure) (2.40 or 2.10 (unsure) / 2.0); 07-3-5: lower 1,65 collar length (1,6) (1.6 (likely) / 1.5); 07-3-6: 5,7: hub top face to the end of the collar (5.7 (likely) / 5.6); 07-3-10: lower pivot length, collar end to tip (6,9) (6.9 (likely) / 6.99); 07-3-13: lower pivot shaft Ø (1,25 -0,02) (1.25 -0.02 (likely) / 1.2155); 07-3-14: lower collar Ø (1,65 -0,02 -> 1.63..1.65) (1.65 -0.02 (likely) / 1.6685); 07-3-19: 10 deg taper on the hub flange (drawn as a trapezoid, wide at the top) (about 10 deg (likely) / 0 deg); 17-1-66: balance staff: where the thin section widens (y -29.9 (+-0.2) / -28.9) |
+| setupRatchet | 05 07_1, 05 07_3 | 7 | 2 | 0 | 0 | 2 | 12-2-7: square hole 2.7 H7 (+0.009), taper 1:100 (2.700..2.709, taper 1:100 / 2.6975 at the large end; taper 1:100); 12-2-8: square orientation to the tooth tip: tip on the axis, along a flat normal (0 deg / 9.9 or 12.6 deg off a flat normal) |
+| staff | 05 04_1, 05 04_4, 05 04_5, 05 03_3.2, 05 03_1, Federchronometer 05 | 26 | 13 | 1 | 0 | 10 | 07-1-4: shaft Ø at the hub end of the taper (1,65 s6: +0.015..+0.022 -> 1.665..1.672) (1.65 s6 (sure) / 1.6514); 07-1-16: 14,03 -0,06: hub top face to the lower pivot tip (14.03 -0.06 (sure) / 12.59); 07-2-2: collar above the flange Ø (2,1 ±0,03 -> 2.07..2.13) (2.1 ±0.03 (likely) / 2.0); 07-2-3: length of that collar above the flange (1,3) (1.3 (likely) / 1.1); 07-2-7: 14 ±0,03 (framed): flange top to the lower tip (14 (sure) / 12.59); 07-3-1: upper pivot Ø at its shoulder (1,25 -0,02 -> 1.23..1.25) (1.25 -0.02 (likely) / 1.2); 07-3-3: collar above the hub Ø (2,40 or 2,10, -0,02; digit unsure) (2.40 or 2.10 (unsure) / 2.0); 07-3-5: lower 1,65 collar length (1,6) (1.6 (likely) / 1.5); 07-3-6: 5,7: hub top face to the end of the collar (5.7 (likely) / 5.6); 07-3-10: lower pivot length, collar end to tip (6,9) (6.9 (likely) / 6.99); 07-3-13: lower pivot shaft Ø (1,25 -0,02) (1.25 -0.02 (likely) / 1.2155); 07-3-14: lower collar Ø (1,65 -0,02 -> 1.63..1.65) (1.65 -0.02 (likely) / 1.6685); 07-3-19: 10 deg taper on the hub flange (drawn as a trapezoid, wide at the top) (about 10 deg (likely) / 0 deg); 17-1-66: balance staff: where the thin section widens (y -29.9 (+-0.2) / -28.9) |
 | steg | 05 07_1, 51 07_6, 05 07_7 | 0 | 0 | 0 | 0 | 1 |  |
 | stopBar | 05 06_1, 05 06_2.2, 51 06_4 | 2 | 0 | 0 | 0 | 0 |  |
 | studBush | 05 08_32.1, 05 08_32.2 | 1 | 0 | 0 | 0 | 0 |  |
@@ -203,14 +373,14 @@ Each part with the sheets it was compared against, the count of its items by fin
 | studShort | 05 08_32.1, 05 08_32.2, 05 02_1 | 2 | 0 | 0 | 0 | 0 |  |
 | timingScrew | 05 03_1, 05 03_2, 05 03_4 | 1 | 0 | 0 | 0 | 1 |  |
 | timingWeight | 05 03_1, 05 03_2 | 3 | 0 | 0 | 0 | 0 |  |
-| topPlate | 05 08_1.a, 05 08_1.b, 001, 05 08_2, Federchronometer 05 | 69 | 7 | 3 | 3 | 8 | 01-2-2: hole 4 on plan: plain small circle, no countersink drawn (0.9 only / countersink d 0.9..2.4 and 2.4..4.3 at z); 01-2-7: hole 26 section P-Q: upper 4.5 H7 step (4.5 H7 (+0.012); read "4,5" with no 9 (c / d 4.596 z[2.85,3.35]); 01-2-26: EXTRA top plate: 0.9 hole 4 countersink d 4.3 (and the 0.9..2.4 dimple cone) (none on sheet / d 0.9..2.4 z[2.4,2.8]; 2.4..4.3 z[2.8,3.); 01-2-27: EXTRA top plate: two blind 0.925 holes with countersinks 0.925..1.4, z[0,3.11] (not on the visible sheet (the right part / at [30.6081,-19.922] and [38.4639,-12.55); 01-2-28: EXTRA top plate: two r1.0 rounds at the crescent tips (tips drawn pointed, no radius dimensione / d 2.0 outside arcs at [-40.2797,-9.9671]); 17-1-10: upper cock (Unruhkloben oben 05 08 03-1) top face (hatched cut, over the balance) (-37.74 (+-0.2); an unhatched outline bey / -37.35); 17-1-14: label of the top plate (Oberplatte 05 08 01-1 (sure, hi-res prin / 050901); 17-1-18: label Zugfeder (mainspring) (Zugfeder 05 07 00-2 (sure) / none under that number); 17-1-19: label Bandhaken f. Trommel (05 07 06-3 (likely) / none under that number); 17-1-20: labels of screws WN-27 (fusee, left), WN-13, WN-15, WN-16 (Schrb. WN-27; Schraube WN-13; Schrb. WN- / none); 17-1-69: escape top jewel: hole stone (top plate) (y -19.9 to -18.8, flush with the plate's / -20.94..-20.14); 17-1-70: escape top jewel: cap stone (convex) (y -21.27 to -20.15 / -21.91..-21.01); 17-1-72: escape lower jewel: cap stone (y 2.05 to 3.15 / 1.83..2.58) |
-| udHand | 05 02_1, 05 02_4 | 8 | 0 | 0 | 0 | 2 |  |
+| topPlate | 05 08_1.a, 05 08_1.b, 001, 05 08_2, Federchronometer 05 | 71 | 4 | 2 | 3 | 10 | 01-2-2: hole 4 on plan: plain small circle, no countersink drawn (0.9 only / countersink d 0.9..2.4 and 2.4..4.3 at z); 01-2-7: hole 26 section P-Q: upper 4.5 H7 step (4.5 H7 (+0.012); read "4,5" with no 9 (c / d 4.596 z[2.85,3.35]); 01-2-26: EXTRA top plate: 0.9 hole 4 countersink d 4.3 (and the 0.9..2.4 dimple cone) (none on sheet / d 0.9..2.4 z[2.4,2.8]; 2.4..4.3 z[2.8,3.); 01-2-27: EXTRA top plate: two blind 0.925 holes with countersinks 0.925..1.4, z[0,3.11] (not on the visible sheet (the right part / at [30.6081,-19.922] and [38.4639,-12.55); 01-2-28: EXTRA top plate: two r1.0 rounds at the crescent tips (tips drawn pointed, no radius dimensione / d 2.0 outside arcs at [-40.2797,-9.9671]); 17-1-18: label Zugfeder (mainspring) (Zugfeder 05 07 00-2 (sure) / none under that number); 17-1-19: label Bandhaken f. Trommel (05 07 06-3 (likely) / none under that number); 17-1-69: escape top jewel: hole stone (top plate) (y -19.9 to -18.8, flush with the plate's / -20.94..-20.14); 17-1-70: escape top jewel: cap stone (convex) (y -21.27 to -20.15 / -21.91..-21.01) |
+| udHand | 05 02_1, 05 02_4 | 7 | 0 | 0 | 0 | 2 |  |
 | udHub | 05 02_1, 05 02_10 | 13 | 0 | 0 | 0 | 1 |  |
 | udPinion | 05 02_1 | 1 | 1 | 0 | 0 | 1 | 13-1-v1: a part in the dial's underside, 0,1 clear (unsure which: the up-and-down wheel hub or the  (a part in the dial's underside, 0,1 clea / udWheel top y 9.55 (0.8 under the dial 1) |
-| udWheel | 05 02_1, 05 02_10, 05 02_11 | 14 | 1 | 0 | 1 | 1 | 13-1-v1: a part in the dial's underside, 0,1 clear (unsure which: the up-and-down wheel hub or the  (a part in the dial's underside, 0,1 clea / udWheel top y 9.55 (0.8 under the dial 1); 14-6-13: countersink on the bore (shown on sheet 05 02_10) (not drawn on this sheet / udWheel cones[0] d 5.2..5.66 z 0..0.4) |
+| udWheel | 05 02_1, 05 02_10, 05 02_11 | 15 | 1 | 0 | 1 | 2 | 13-1-v1: a part in the dial's underside, 0,1 clear (unsure which: the up-and-down wheel hub or the  (a part in the dial's underside, 0,1 clea / udWheel top y 9.55 (0.8 under the dial 1); 14-6-13: countersink on the bore (shown on sheet 05 02_10) (not drawn on this sheet / udWheel cones[0] d 5.2..5.66 z 0..0.4) |
 | Ueberkasten | 51 00_1, 51 00_5 | 11 | 0 | 0 | 0 | 0 |  |
 | Ueberkasten.D | 51 00_5 | 4 | 0 | 0 | 0 | 0 |  |
-| upperCock | 05 08_5, 05 08_6, Federchronometer 05 | 48 | 1 | 0 | 0 | 5 | 03-3-13: pin hole along the arm from the axis (5) (5 printed; scaled 5.08 / circles r 0.5376 at (4.1,-4.2): x 4.1) |
+| upperCock | 05 08_5, 05 08_6, Federchronometer 05 | 47 | 1 | 0 | 0 | 5 | 03-3-13: pin hole along the arm from the axis (5) (5 printed; scaled 5.08 / circles r 0.5376 at (4.1,-4.2): x 4.1) |
 | upperCockScrew | 05 08_5 | 1 | 0 | 0 | 0 | 1 |  |
 | vorreiber | 05 06_1, 05 06_6 | 11 | 3 | 0 | 0 | 1 | 10-2-1: overall length (3.1 -0.2 (2.9-3.1) / 2.76); 10-2-2: flange thickness incl 0.3 chamfer (scaled 1.16) (1.2 -0.2 (1.0-1.2) / 0.86); 10-2-11: cross hole dia (0.8 (width scaled 0.78) / 1.15) |
 | w19 | 05 06_1, 05 06_3.1, 05 06_3.2 | 1 | 0 | 0 | 0 | 0 |  |
@@ -290,14 +460,14 @@ Reader: 137 match, 10 mismatch, 3 not built, 0 extra, 15 can't tell. After the v
 
 ### Batch 3
 
-Reader: 62 match, 10 mismatch, 1 not built, 0 extra, 15 can't tell. After the verifier: 67 match, 7 mismatch, 0 not built, 0 extra, 16 can't tell, 0 not applicable (reports: `batch03.md`, `verify03.md`).
+Reader: 62 match, 10 mismatch, 1 not built, 0 extra, 15 can't tell. After the verifier: 65 match, 7 mismatch, 0 not built, 0 extra, 16 can't tell, 0 not applicable (reports: `batch03.md`, `verify03.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
 | 001 | Federchronometer (plan of both plates with their parts) | 7 | 5 | 0 | 0 | 0 | 2 |
 | 05 08_2 | Oberplatte kompl. 05 08 01 (rev. 8.11.46) | 12 | 9 | 0 | 0 | 0 | 3 |
-| 05 08_6 | Unruhkloben oben kompl. (U 30) | 24 | 19 | 2 | 0 | 0 | 2 |
-| 05 08_10 | Zwischenbrücke kompl. 05 08 04 | 12 | 8 | 0 | 0 | 0 | 4 |
+| 05 08_6 | Unruhkloben oben kompl. (U 30) | 22 | 18 | 2 | 0 | 0 | 2 |
+| 05 08_10 | Zwischenbrücke kompl. 05 08 04 | 11 | 7 | 0 | 0 | 0 | 4 |
 | 05 08_12 | Federhausbrücke kompl. 05 08 05 | 11 | 9 | 1 | 0 | 0 | 1 |
 | 05 08_32.1 | Unterplatte kompl. (U 36, 23.10.41) | 4 | 4 | 0 | 0 | 0 | 0 |
 | 05 08_32.2 | Unterplatte kompl. 05 08 02 (23.10.41) | 10 | 8 | 0 | 0 | 0 | 2 |
@@ -320,17 +490,17 @@ Reader: 62 match, 10 mismatch, 1 not built, 0 extra, 15 can't tell. After the ve
 
 ### Batch 4
 
-Reader: 59 match, 13 mismatch, 0 not built, 0 extra, 14 can't tell. After the verifier: 60 match, 16 mismatch, 0 not built, 0 extra, 12 can't tell, 0 not applicable (reports: `batch04.md`, `verify04.md`).
+Reader: 59 match, 13 mismatch, 0 not built, 0 extra, 14 can't tell. After the verifier: 61 match, 20 mismatch, 0 not built, 0 extra, 12 can't tell, 0 not applicable (reports: `batch04.md`, `verify04.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
 | 05 05_1 | Laufwerk (the going train) | 16 | 10 | 4 | 0 | 0 | 2 |
-| 05 05_2 | Sekundenrad kompl. 05 05 01 | 11 | 6 | 3 | 0 | 0 | 0 |
+| 05 05_2 | Sekundenrad kompl. 05 05 01 | 11 | 6 | 4 | 0 | 0 | 0 |
 | 05 05_3 | Sekundenrad 05 05 01-1 | 13 | 10 | 0 | 0 | 0 | 2 |
-| 05 05_4 | Sekundentrieb 05 05 01-2 (rev. 6.6.46) | 22 | 12 | 5 | 0 | 0 | 2 |
-| 05 05_5 | Zwischenrad kompl. 05 05 02 | 8 | 4 | 1 | 0 | 0 | 2 |
+| 05 05_4 | Sekundentrieb 05 05 01-2 (rev. 6.6.46) | 22 | 12 | 7 | 0 | 0 | 2 |
+| 05 05_5 | Zwischenrad kompl. 05 05 02 | 8 | 5 | 1 | 0 | 0 | 2 |
 | 05 05_6 | Zwischenrad 05 05 02-1 | 13 | 10 | 0 | 0 | 0 | 2 |
-| 05 05_7 | Zwischentrieb 05 05 02-2 (rev. 6.6.46) | 14 | 8 | 3 | 0 | 0 | 2 |
+| 05 05_7 | Zwischentrieb 05 05 02-2 (rev. 6.6.46) | 14 | 8 | 4 | 0 | 0 | 2 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
@@ -351,6 +521,10 @@ Reader: 59 match, 13 mismatch, 0 not built, 0 extra, 14 can't tell. After the ve
 | 04-7-3 | Seat dia | 4.0 n6 (+0.008..+0.016) | 4.0 | mismatch | mismatch | built 8 to 16 µm under. ISO 286 n6 for 3..6 mm is +0.016/+0.008, the same as printed |
 | 04-7-9 | Upper pivot length | 4.6 -0.2 | 2.95 | mismatch | mismatch | see "The pivot lengths" |
 | 04-7-10 | Lower pivot length | 4.6 -0.2 | 2.95 | mismatch | mismatch | same |
+| 04-2-v1 | tip forms of the seconds arbor | tip forms of the seconds arbor | both ends rounded (a dome), sure | (new) | mismatch |  |
+| 04-4-v1 | upper tip: a pointed cone, base 0.65, about 0.46 long (scaled, likely) | upper tip: a pointed cone, base 0.65, about 0.46 long (scale |  | (new) | mismatch |  |
+| 04-4-v2 | lower tip: a pointed cone, base 0.82, about 0.4 long (likely) | lower tip: a pointed cone, base 0.82, about 0.4 long (likely |  | (new) | mismatch |  |
+| 04-7-v1 | both tips pointed cones (sure) | both tips pointed cones (sure) |  | (new) | mismatch |  |
 | 04-4-v3 | `nicht eingetr. Toleranz ±0,1`: general tolerance on the 7, the 4,5 and others (sure) | `nicht eingetr. Toleranz ±0,1`: general tolerance on the 7,  |  | (new) | mismatch |  |
 
 ### Batch 5
@@ -372,38 +546,33 @@ Reader: 68 match, 15 mismatch, 0 not built, 0 extra, 16 can't tell. After the ve
 |---|---|---|---|---|---|---|
 | 05-1-7 | 14.3 (cannon overall length, foot to top) | 14.3 (sure) | 14.19 | mismatch | mismatch | 0.11 against a fallback 0.1; tolerance unreadable |
 | 05-1-10 | Koerner groove "4 r" (notch both sides of the section at the groove) | notch both sides, radius figure illegible (unsure) | three cone dimples (cones d 1.26..1.55, 19.7 deg); no groove | cant | mismatch | the 4 r figure is legible; the section shows a half-round notch both sides at the 6.3 level; built has none in the y=0 section; not a can't tell. Likely |
-| 05-1-12 | pinion block under the wheel (4 long by scale) | about 4.5 (scaled, unsure) | 3.95 | match | ? |  |
 | 05-3-6 | 5.4 n6 (collar, wheel seat; ISO n6 on 5.4: +0.016/+0.008) | 5.408..5.416 (likely) | 5.4 | mismatch | mismatch | n6 on 5.4 is +0.016/+0.008, built nominal; a press fit to the wheel's 5.4 H7 |
 | 05-3-9 | 3.6 dia (rivet lip maximum diameter) | 3.6 (likely) | 3.2 | mismatch | mismatch | likely the riveted flare; the unriveted lip is not dimensioned |
 | 05-3-14 | 16.7 -0.2 (top of cone C, z 23, to the upper tip) | 16.7 -0.2 (sure) | 14.3 above z 23.03 | mismatch | mismatch | but the later assembly (05 05_8) shows the arbor ending at the cannon's top, as built (section 3) |
 | 05-3-15 | 39.65 -0.1 (shoulder to the upper tip) | 39.65 -0.1 (sure) | 37.33 | mismatch | mismatch | same |
 | 05-3-18 | 5.1 -0.2 (lower pivot length, tip to the chamfer line) | 5.1 -0.2 (likely; assembly gives 3) | 3.0 | mismatch | mismatch | later assembly gives 3 (section 3) |
 | 05-4-3 | plan hand: hub left, tip right, lower edge concave, thin step near the tip | hub left, tip right (sure) | mirrored in x relative to the sheet | mismatch | match | the sheet is drawn from the train side (section 1) |
-| 05-4-4 | arbor body and pivots (not dimensioned; scaled) | body about 2.3..2.7, pivot about 0.9 (unsure) | 2.23..2.28 / 0.88 | match | ? |  |
 | 05-5-6 | 9.645 (hole axis to the R9 centre line, vertical) | 9.645 (sure) | 9.781 | mismatch | mismatch | +0.136 over +-0.1 |
 | 05-5-7 | 6.273 (hole axis to the R9 centre, horizontal) | 6.273 (sure) | 6.033 | mismatch | mismatch | the figure is inconsistent with the drawing's scale and with R9 through the tip and the 2.6 end height (which gives about 6.07); the model sits near the geometr |
 | 05-5-15 | hand of the part (plan and notch side) | tip right, concave edge below, thin zone at the tip, notch o | mirror image about the vertical axis (hub at +x) | mismatch | match | train-side view; section 1; thin zone placement agrees |
 | 05-6-7 | 1.8 dia H7/h6 (wheel bore on the collet spigot; table says 1.7, H7 +0.009, h6 -0.007) | 1.8 H7/h6 by the label (likely); table 1.7 | 1.808 / 1.797 | match | cant | two figures on the sheet; model follows 1.8; section 4 |
-| 05-6-8 | wheel thickness (scaled, no figure) | about 1.4 (scaled; unsure) | 1.4 | match | ? |  |
-| 05-6-9 | recess under the wheel (dashed, lower half) | dashed inner rectangle, about 0.7 deep (likely) | 0.7 deep | match | ? |  |
 | 05-7-4 | 5 -0.2 (pinion length) | 4.8..5.0 (sure) | 4.0 | mismatch | n/a | assembly 19.7.43 is later, model follows it (section 2) |
-| 05-7-5 | 6.5 -0.2 (upper tip to the pinion top) | 6.3..6.5 (sure) | 5.3 | mismatch | ? |  |
-| 05-7-6 | 26.5 -0.2 (overall) | 26.3..26.5 (sure) | 22.78 | mismatch | ? |  |
-| 05-7-7 | 1.6 -0.2 (arbor above and below the pinion) | 1.4..1.6 (sure) | 1.2 | mismatch | ? | assembly scales 1.1-1.2 |
-| 05-8-9 | tip lead beyond the face foot (5.6 deg by pixel scale) | about 5.6 (unsure) | 5.37 | match | ? |  |
+| 05-7-5 | 6.5 -0.2 (upper tip to the pinion top) | 6.3..6.5 (sure) | 5.3 | mismatch | mismatch |  |
+| 05-7-6 | 26.5 -0.2 (overall) | 26.3..26.5 (sure) | 22.78 | mismatch | mismatch |  |
+| 05-7-7 | 1.6 -0.2 (arbor above and below the pinion) | 1.4..1.6 (sure) | 1.2 | mismatch | mismatch | assembly scales 1.1-1.2 |
 | 05-8-12 | hand of the teeth (face and overhanging tip on the clockwise side as drawn) | face on the clockwise side, tip leaning clockwise (likely; t | mirror image of the drawing if both are seen from the same f | mismatch | match | train-side view, correct for the train (section 1) |
 
 ### Batch 6
 
-Reader: 81 match, 8 mismatch, 1 not built, 3 extra, 14 can't tell. After the verifier: 101 match, 8 mismatch, 0 not built, 2 extra, 11 can't tell, 3 not applicable (reports: `batch06.md`, `verify06.md`).
+Reader: 81 match, 8 mismatch, 1 not built, 3 extra, 14 can't tell. After the verifier: 105 match, 8 mismatch, 0 not built, 2 extra, 12 can't tell, 3 not applicable (reports: `batch06.md`, `verify06.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
-| 05 04_1 | Hemmung für Feder-Chronometer, Kaliber 020 (3.2.40) | 33 | 19 | 5 | 0 | 0 | 2 |
+| 05 04_1 | Hemmung für Feder-Chronometer, Kaliber 020 (3.2.40) | 33 | 22 | 5 | 0 | 0 | 2 |
 | 05 04_2 | Goldfeder 05 04 01-2 (16.9.42) | 10 | 8 | 1 | 0 | 0 | 1 |
 | 05 04_3 | Gangfederkloben 05 04 01-4 (8.7.43) | 36 | 32 | 1 | 0 | 1 | 1 |
 | 51 04_6 | Heberolle 02 04 02 (11.2.41) | 20 | 15 | 0 | 0 | 1 | 4 |
-| 05 04_10.1 | Gangfeder, Rud. Grießbach 1436 (17.2.43), sheet 1 | 30 | 25 | 1 | 0 | 0 | 2 |
+| 05 04_10.1 | Gangfeder, Rud. Grießbach 1436 (17.2.43), sheet 1 | 30 | 26 | 1 | 0 | 0 | 3 |
 | 05 04_10.2 | Gangfeder, Rud. Grießbach 1436 (17.2.43), sheet 2 | 3 | 2 | 0 | 0 | 0 | 1 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
@@ -427,16 +596,16 @@ Reader: 81 match, 8 mismatch, 1 not built, 3 extra, 14 can't tell. After the ver
 
 ### Batch 7
 
-Reader: 61 match, 15 mismatch, 5 not built, 0 extra, 10 can't tell. After the verifier: 59 match, 15 mismatch, 4 not built, 0 extra, 13 can't tell, 0 not applicable (reports: `batch07.md`, `verify07.md`).
+Reader: 61 match, 15 mismatch, 5 not built, 0 extra, 10 can't tell. After the verifier: 60 match, 15 mismatch, 4 not built, 0 extra, 16 can't tell, 0 not applicable (reports: `batch07.md`, `verify07.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
 | 05 04_4 | Unruhwelle kompl. 05 04 02 | 25 | 17 | 2 | 0 | 0 | 4 |
 | 05 04_5 | Unruhwelle 05 04 01-1 (4.4.41) | 9 | 3 | 4 | 1 | 0 | 1 |
-| 05 03_3.2 | Unruhwelle 05 04 01 (12.3.65) | 23 | 11 | 7 | 1 | 0 | 2 |
-| 05 03_1 | Unruh kompl. (U 09, 20.5.41) | 10 | 4 | 0 | 0 | 0 | 4 |
+| 05 03_3.2 | Unruhwelle 05 04 01 (12.3.65) | 23 | 11 | 7 | 1 | 0 | 3 |
+| 05 03_1 | Unruh kompl. (U 09, 20.5.41) | 10 | 5 | 0 | 0 | 0 | 5 |
 | 05 03_2 | Unruh (kompl.) 05 03 01 (23.6.41) | 13 | 9 | 1 | 0 | 0 | 2 |
-| 05 03_4 | Unruhreifen 05 03 01-1 (31.7.41) | 21 | 15 | 1 | 2 | 0 | 0 |
+| 05 03_4 | Unruhreifen 05 03 01-1 (31.7.41) | 21 | 15 | 1 | 2 | 0 | 1 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
@@ -467,15 +636,15 @@ Reader: 61 match, 15 mismatch, 5 not built, 0 extra, 10 can't tell. After the ve
 
 ### Batch 8
 
-Reader: 37 match, 8 mismatch, 2 not built, 0 extra, 10 can't tell. After the verifier: 42 match, 8 mismatch, 2 not built, 0 extra, 5 can't tell, 0 not applicable (reports: `batch08.md`, `verify08.md`).
+Reader: 37 match, 8 mismatch, 2 not built, 0 extra, 10 can't tell. After the verifier: 43 match, 9 mismatch, 4 not built, 0 extra, 7 can't tell, 0 not applicable (reports: `batch08.md`, `verify08.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
-| 51 03_5 | Spiralfeder kompl. (29.10.41) | 11 | 5 | 3 | 0 | 0 | 1 |
-| 05 03_6 | Spiralfeder 05 03 02-1 (26.6.41) | 8 | 6 | 1 | 0 | 0 | 0 |
+| 51 03_5 | Spiralfeder kompl. (29.10.41) | 11 | 5 | 4 | 0 | 0 | 2 |
+| 05 03_6 | Spiralfeder 05 03 02-1 (26.6.41) | 8 | 6 | 1 | 0 | 0 | 1 |
 | 05 03_7 | Spiralkurve (6.5.41) | 5 | 3 | 0 | 0 | 0 | 2 |
-| 05 03_8 | Spiralrolle 05 03 02-2 (24.2.43) | 18 | 11 | 3 | 1 | 0 | 1 |
-| 05 03_9 | Klötzchen 05 03 02-3 (6.6.41) | 22 | 17 | 1 | 1 | 0 | 1 |
+| 05 03_8 | Spiralrolle 05 03 02-2 (24.2.43) | 18 | 12 | 3 | 2 | 0 | 1 |
+| 05 03_9 | Klötzchen 05 03 02-3 (6.6.41) | 22 | 17 | 1 | 2 | 0 | 1 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
@@ -495,6 +664,9 @@ Reader: 37 match, 8 mismatch, 2 not built, 0 extra, 10 can't tell. After the ver
 | 08-5-13 | spring hole distance from the leg end (scaled off the side view, no printed dimension; hole drilled at assembly) | about 0.68 centre to end | 1.35 | mismatch | mismatch | the built hole is where the page's strip passes (the strip's centre at 3.15 from the arm's inner face); the drawn hole is 0.66 nearer the end |
 | 08-5-15 | point rounded (a 0.8 mark at the tip; Phi or R illegible) | small rounding at the tip | sharp point | not built | not built | raised to likely: the arc is plain on the crop |
 | 08-5-18 | plan end dims 1.2 -0.1 and 1.6 -0.2 (attachment unclear) | 1.2 -0.1; 1.6 -0.2 |  | cant | match | the dimensions attach to the centre line, so the reader's "attachment unclear" was resolvable |
+| 08-1-v1 | the three heights are one chain: 3.15 + 9.5 + 0.75 = 13.4, and the built chain 2.89 + 9.97 + 0.49 = 13.35 | the three heights are one chain: 3.15 + 9.5 + 0.75 = 13.4, a | by the pitch cause: built 0.80 against 0.73-0.74 | (new) | mismatch |  |
+| 08-4-v2 | "0.7 bohren": the hole is drilled 0.7 first, then 0.8 phi +0.01 with the Kegel 1:90 | "0.7 bohren": the hole is drilled 0.7 first, then 0.8 phi +0 |  | (new) | not built |  |
+| 08-5-v2 | 3.1 -0.2 and the V's opening: the notch (V cut) apex also rounds (small radius at the apex) | 3.1 -0.2 and the V's opening: the notch (V cut) apex also ro | the V's inner end drawn rounded (enlarged) | (new) | not built |  |
 
 ### Batch 9
 
@@ -515,26 +687,23 @@ Reader: 43 match, 5 mismatch, 0 not built, 0 extra, 17 can't tell. After the ver
 |---|---|---|---|---|---|---|
 | 09-2-3 | 45 deg chamfer from recess to face; chamfer outer dia | 29.8 +0.2 (dia) at 45 deg | 29.4 | mismatch | mismatch | -0.4 under 29.8 (limits 29.8-30.0). Also built has a 0.95 straight wall where the drawing shows none (likely, scan). Note the sheet disagrees with itself: 45° f |
 | 09-2-5 | overall length face to end of 21 dia boss | 12.6 -0.1 | 12.35 | mismatch | cant | The 12.6 is a stale figure that was never updated, so "mismatch 0.25" is the wrong call. Against the newest figure, 12.35 is 0.05 over the 12.3 limit: report as |
-| 09-4-1 | overall length (a), rev. 31.3.1948 | 12.3 -0.1 (parenthesised, control) | 12.35 | match | ? | reader called 0.05 over a match; I record it as just out. This is the newest figure |
 | 09-4-2 | large flange and recess dia (a) | 35.6; 33 +0.1 read here | 33.0..35.6 | cant | match | the 5° and 33 are both on the sheet and both built |
 | 09-4-3 | 13.7 (a) dimension | 13.7 (a) | - | cant | match | resolvable |
-| 09-5-2 | stop bar length (C-D, Stegstellung) | 22.5 | 22.496 | match | ? |  |
-| 09-5-3 | stop bar width | 2 | 1.98 | match | ? |  |
 | 09-6-1 | overall length | 60.6 -0.2 | 58.125 | mismatch | mismatch | -2.475. The lathe-centre explanation fails: the line goes to the pointed pivot end. Check: 60.6 - 19.7 - 28.3 = 12.6 from the 4.38 shoulder to the left tip; bui |
 | 09-6-3 | left pivot length, tip to the 2.7 shoulder (60.6 - 19.7 - 28.3 - 6.5) | about 6.1 (derived; scaled about 6.6) | 3.625 | mismatch | mismatch | -1.4 to -3.0 depending on the reading; the 2.5 (reader) is the derived one. Direction certain, size not |
 | 09-6-10 | right pivot section: 3.17 +0.023/+0.015 tapering 1:100 to 2.92 at the tip, 20.3 long | 3.17 to 2.92 | 4.41..4.16 | mismatch | mismatch | reader's +1.24 is a corner-versus-flat error. Real difference is -0.07 at the shoulder (likely; the corners may be broken, so the flat may be a little larger th |
 
 ### Batch 10
 
-Reader: 61 match, 6 mismatch, 1 not built, 2 extra, 10 can't tell. After the verifier: 62 match, 6 mismatch, 1 not built, 2 extra, 12 can't tell, 0 not applicable (reports: `batch10.md`, `verify10.md`).
+Reader: 61 match, 6 mismatch, 1 not built, 2 extra, 10 can't tell. After the verifier: 60 match, 6 mismatch, 1 not built, 2 extra, 11 can't tell, 0 not applicable (reports: `batch10.md`, `verify10.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
 | 05 06_5 | Staubplatte 05 06 00-1 | 10 | 9 | 0 | 0 | 0 | 1 |
 | 05 06_6 | Vorreiber 05 06 00-2 | 16 | 11 | 3 | 0 | 1 | 1 |
-| 05 06_7 | Schneckenrad 05 06 00-3 | 27 | 20 | 2 | 1 | 0 | 4 |
+| 05 06_7 | Schneckenrad 05 06 00-3 | 25 | 18 | 2 | 1 | 0 | 4 |
 | 05 06_8 | Deckplatte 05 06 00-4 | 10 | 9 | 0 | 0 | 1 | 0 |
-| 05 06_9 | Gegenfeder kompl. (U 18) | 7 | 2 | 1 | 0 | 0 | 4 |
+| 05 06_9 | Gegenfeder kompl. (U 18) | 6 | 2 | 1 | 0 | 0 | 3 |
 | 05 06_10 | Gegenfeder 05 06 01-1 | 13 | 11 | 0 | 0 | 0 | 2 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
@@ -552,18 +721,18 @@ Reader: 61 match, 6 mismatch, 1 not built, 2 extra, 10 can't tell. After the ver
 
 ### Batch 11
 
-Reader: 73 match, 5 mismatch, 0 not built, 0 extra, 17 can't tell. After the verifier: 77 match, 2 mismatch, 0 not built, 0 extra, 16 can't tell, 0 not applicable (reports: `batch11.md`, `verify11.md`).
+Reader: 73 match, 5 mismatch, 0 not built, 0 extra, 17 can't tell. After the verifier: 79 match, 3 mismatch, 0 not built, 0 extra, 17 can't tell, 0 not applicable (reports: `batch11.md`, `verify11.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
 | 05 06_11 | Gegensperrrad kompl. 05 06 02 | 7 | 6 | 0 | 0 | 0 | 1 |
 | 05 06_12 | Gegensperrrad 05 06 02-1 | 20 | 19 | 0 | 0 | 0 | 1 |
-| 05 06_13 | Sperrfeder 05 06 02-2 | 15 | 10 | 0 | 0 | 0 | 3 |
+| 05 06_13 | Sperrfeder 05 06 02-2 | 15 | 10 | 1 | 0 | 0 | 3 |
 | 05 06_14 | Sperrkegel 05 06 02-3 | 13 | 13 | 0 | 0 | 0 | 0 |
 | 05 07_11 | Schneckenband 05 07 03 (1.3.43) | 7 | 3 | 0 | 0 | 0 | 3 |
-| 05 07_12 | Schneckenhaken rund 05 07 03-2 (18.3.43) | 14 | 9 | 2 | 0 | 0 | 2 |
-| 05 07_13 | Bandhaken f. Trommel 05 07 03-3 (9.6.44) | 13 | 10 | 0 | 0 | 0 | 2 |
-| 05 07_14 | Kette 05 07 04 (16.7.41) | 12 | 7 | 0 | 0 | 0 | 4 |
+| 05 07_12 | Schneckenhaken rund 05 07 03-2 (18.3.43) | 14 | 9 | 2 | 0 | 0 | 3 |
+| 05 07_13 | Bandhaken f. Trommel 05 07 03-3 (9.6.44) | 13 | 11 | 0 | 0 | 0 | 2 |
+| 05 07_14 | Kette 05 07 04 (16.7.41) | 12 | 8 | 0 | 0 | 0 | 4 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
@@ -575,21 +744,22 @@ Reader: 73 match, 5 mismatch, 0 not built, 0 extra, 17 can't tell. After the ver
 | 11-7-3 | Slot tilt 10 deg to the straight edge | 10 (scaled 10.6-13) | 5.3 deg | mismatch | match | The built plan is the sheet's rotated 5 deg. The sheet's cap offsets are 1.0 across and 0.3 along (the "1,0" and "0,3"); the built caps differ by (0.38, 0.97),  |
 | 11-8-7 | Pin dia (Praez. Rundstahl 0.6; no finished pin size) | 0.6 | 0.54-0.56 | mismatch | match | The 0.55 was missed: two horizontal lines tangent to a pin, 46 px apart where the 2.05 pitch is 173 px, i.e. 0.55. The built 0.55 (hook-end pin 0.559) is inside |
 | 11-8-8 | Plates per layer and layer count (riveted loose) | layered stack in the side view | 3 layers | cant | match | the side view shows three strips and the page three layers (-0.4..-0.14, -0.13..0.13, 0.14..0.4) |
+| 11-3-v1 | The long arm is one arc about the ratchet axis (the 10,4r, from the kink to its end at 7 deg above the horizontal) | The long arm is one arc about the ratchet axis (the 10,4r, f | the arm's inner and outer edges are at constant radius to wi | (new) | mismatch |  |
 
 ### Batch 12
 
-Reader: 69 match, 23 mismatch, 3 not built, 0 extra, 11 can't tell. After the verifier: 71 match, 21 mismatch, 3 not built, 0 extra, 10 can't tell, 1 not applicable (reports: `batch12.md`, `verify12.md`).
+Reader: 69 match, 23 mismatch, 3 not built, 0 extra, 11 can't tell. After the verifier: 74 match, 21 mismatch, 3 not built, 0 extra, 14 can't tell, 1 not applicable (reports: `batch12.md`, `verify12.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
-| 05 07_1 | Federhaus kompl. (U 24, 13.4.41) | 24 | 13 | 3 | 0 | 0 | 4 |
-| 05 07_3 | Sperrrad (rev. 14.11.47) | 11 | 7 | 2 | 0 | 0 | 1 |
+| 05 07_1 | Federhaus kompl. (U 24, 13.4.41) | 24 | 15 | 3 | 0 | 0 | 5 |
+| 05 07_3 | Sperrrad (rev. 14.11.47) | 11 | 7 | 2 | 0 | 0 | 2 |
 | 05 07_4 | Federhaus mit Deckel 05 07 01 (2.8.44, rev. 20.4.48) | 9 | 7 | 0 | 0 | 0 | 2 |
 | 05 07_5 | Federhausrohling R 05 07 01-1 (29.8.44, rev. 20.4.48) | 5 | 5 | 0 | 0 | 0 | 0 |
 | 51 07_6 | Federhaustrommel 05 07 01-1 (28.2.41) | 18 | 16 | 2 | 0 | 0 | 0 |
-| 05 07_7 | Federhausdeckel 05 07 01-2 (rev. 20.4.48) | 16 | 12 | 2 | 0 | 0 | 1 |
+| 05 07_7 | Federhausdeckel 05 07 01-2 (rev. 20.4.48) | 16 | 12 | 2 | 0 | 0 | 2 |
 | 05 07_8 | Federkern kompl. 05 07 02 (28.1.43) | 8 | 4 | 3 | 0 | 0 | 1 |
-| 05 07_9 | Federkern 02 07 04-1 (4.7.41) | 19 | 7 | 9 | 0 | 0 | 1 |
+| 05 07_9 | Federkern 02 07 04-1 (4.7.41) | 19 | 8 | 9 | 0 | 0 | 2 |
 | 05 07_10 | Federhausring 02 07 01-3 (7.4.41): the 1941 barrel ring, superseded by the drawn drum 05 07 01-1 (batch 12 found no built part it draws) | 3 | 0 | 0 | 3 | 0 | 0 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
@@ -598,7 +768,6 @@ Reader: 69 match, 23 mismatch, 3 not built, 0 extra, 11 can't tell. After the ve
 | 12-1-11 | arbor body (with chamfers) length "12" | 12 | 11.58 | mismatch | mismatch | but see the later-sheet finding above |
 | 12-1-13 | lid outer face to arbor body "2,9" | 2.9 | 3.35 | mismatch | mismatch | same cause as 12-1-11; the 1948 lid boss 3.3 + gap 0.05 gives 3.35 |
 | 12-1-18 | hook on the arbor (05 07 02-2) at 15 deg to the square's flat normal (end view) | 15 deg | hole axis along the square diagonal = 45 deg to a flat norma | mismatch | mismatch | 15 or 30 deg, never 45 |
-| 12-1-19 | stack: ball end beyond the plate "5", square end "10", gap "0,6", gap "0,1" | 5 / 10 / 0.6 / 0.1 | lid face to bridge 0.62 (ok); ball end 1.6 beyond 050802-1;  | cant | ? | see below |
 | 12-2-7 | square hole 2.7 H7 (+0.009), taper 1:100 | 2.700..2.709, taper 1:100 | 2.6975 at the large end; taper 1:100 | mismatch | mismatch | 2.5 micron under the lower limit at the large end: a miss on the printed fit, of no consequence; the arbor's square is 2.700 +-0.002 |
 | 12-2-8 | square orientation to the tooth tip: tip on the axis, along a flat normal | 0 deg | 9.9 or 12.6 deg off a flat normal | mismatch | mismatch | no tip lies on a flat normal; the nearest is 9.87 deg away. Tooth pitch 22.5 x 4 = 90, so every tip has the same offset |
 | 12-2-9 | tooth hand as assembled (teeth face the set-up click) | sheet view side not fixable; its face root is CCW of the tip | the click locks CCW rotation and rides the ramp CW: the teet | cant | match | see below |
@@ -625,17 +794,17 @@ Reader: 69 match, 23 mismatch, 3 not built, 0 extra, 11 can't tell. After the ve
 
 ### Batch 13
 
-Reader: 72 match, 4 mismatch, 1 not built, 1 extra, 7 can't tell. After the verifier: 78 match, 9 mismatch, 1 not built, 1 extra, 11 can't tell, 1 not applicable (reports: `batch13.md`, `verify13.md`).
+Reader: 72 match, 4 mismatch, 1 not built, 1 extra, 7 can't tell. After the verifier: 70 match, 9 mismatch, 1 not built, 1 extra, 11 can't tell, 0 not applicable (reports: `batch13.md`, `verify13.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
 | 05 02_1 | Zeigerwerk, Auf u. Ab. gesamt (28.3.41) | 21 | 10 | 5 | 0 | 0 | 6 |
-| 05 02_2 | Minutenzeiger 05 02 00-1 (18.9.42) | 15 | 14 | 0 | 0 | 0 | 0 |
-| 05 02_3 | Stundenzeiger 05 02 00-2 (14.6.40) | 19 | 17 | 1 | 0 | 0 | 0 |
-| 05 02_4 | Auf- u. Abzeiger 05 02 00-3 (16.1.41) | 10 | 8 | 0 | 0 | 0 | 2 |
-| 05 02_5 | Sekundenzeiger 05 02 01-1 (14.6.40) | 15 | 13 | 0 | 0 | 0 | 1 |
-| 05 02_12 | Zifferblatt 05 02 00-1 (2.7.40) | 15 | 14 | 0 | 0 | 1 | 0 |
-| 05 02_13 | (B-) Chronometerzifferblatt ALS-1453/A (9.6.44) | 9 | 2 | 3 | 1 | 0 | 2 |
+| 05 02_2 | Minutenzeiger 05 02 00-1 (18.9.42) | 13 | 13 | 0 | 0 | 0 | 0 |
+| 05 02_3 | Stundenzeiger 05 02 00-2 (14.6.40) | 16 | 15 | 1 | 0 | 0 | 0 |
+| 05 02_4 | Auf- u. Abzeiger 05 02 00-3 (16.1.41) | 9 | 7 | 0 | 0 | 0 | 2 |
+| 05 02_5 | Sekundenzeiger 05 02 01-1 (14.6.40) | 11 | 10 | 0 | 0 | 0 | 1 |
+| 05 02_12 | Zifferblatt 05 02 00-1 (2.7.40) | 14 | 13 | 0 | 0 | 1 | 0 |
+| 05 02_13 | (B-) Chronometerzifferblatt ALS-1453/A (9.6.44) | 8 | 2 | 3 | 1 | 0 | 2 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
@@ -659,16 +828,16 @@ Reader: 72 match, 4 mismatch, 1 not built, 1 extra, 7 can't tell. After the veri
 
 ### Batch 14
 
-Reader: 59 match, 2 mismatch, 1 not built, 2 extra, 6 can't tell. After the verifier: 63 match, 2 mismatch, 1 not built, 2 extra, 3 can't tell, 0 not applicable (reports: `batch14.md`, `verify14.md`).
+Reader: 59 match, 2 mismatch, 1 not built, 2 extra, 6 can't tell. After the verifier: 64 match, 2 mismatch, 1 not built, 2 extra, 6 can't tell, 0 not applicable (reports: `batch14.md`, `verify14.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
 | 51 02_6 | Wechselrad kompl. 05 02 02 (28.2.41) | 16 | 14 | 1 | 0 | 0 | 1 |
-| 05 02_7 | Wechselrad 05 02 02-1 (19.8.40) | 12 | 8 | 0 | 0 | 1 | 1 |
-| 05 02_8 | Stundenrad kompl. 05 02 03 (20.7.40) | 10 | 8 | 1 | 0 | 0 | 0 |
+| 05 02_7 | Wechselrad 05 02 02-1 (19.8.40) | 12 | 8 | 0 | 0 | 1 | 2 |
+| 05 02_8 | Stundenrad kompl. 05 02 03 (20.7.40) | 10 | 8 | 1 | 0 | 0 | 1 |
 | 05 02_9 | Stundenrad 05 02 04-1 (19.8.40) | 11 | 9 | 0 | 1 | 0 | 0 |
-| 05 02_10 | Auf u. Abrad kompl. 05 02 04 (27.2.41) | 14 | 13 | 0 | 0 | 0 | 0 |
-| 05 02_11 | Auf u. Abrad 05 02 04-1 (26.2.41) | 15 | 11 | 0 | 0 | 1 | 1 |
+| 05 02_10 | Auf u. Abrad kompl. 05 02 04 (27.2.41) | 14 | 13 | 0 | 0 | 0 | 1 |
+| 05 02_11 | Auf u. Abrad 05 02 04-1 (26.2.41) | 15 | 12 | 0 | 0 | 1 | 1 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
@@ -720,19 +889,19 @@ Reader: 30 match, 11 mismatch, 0 not built, 5 extra, 10 can't tell. After the ve
 
 ### Batch 16
 
-Reader: 109 match, 7 mismatch, 1 not built, 0 extra, 18 can't tell. After the verifier: 120 match, 9 mismatch, 2 not built, 0 extra, 18 can't tell, 0 not applicable (reports: `batch16.md`, `verify16.md`).
+Reader: 109 match, 7 mismatch, 1 not built, 0 extra, 18 can't tell. After the verifier: 113 match, 9 mismatch, 1 not built, 0 extra, 16 can't tell, 2 not applicable (reports: `batch16.md`, `verify16.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
-| 51 01_6 | Aufzugschlüssel (U 01, 51 00 11; 12.12.40) | 21 | 16 | 0 | 1 | 0 | 1 |
-| 05 01_7 | Chronometerschlüssel 51 00 11 / 51 01 02 (16.7.43) | 21 | 14 | 4 | 0 | 0 | 2 |
-| 05 01_8 | Schlüsselmittelteil 05 01 02-2 (16.7.43) | 24 | 24 | 0 | 0 | 0 | 0 |
-| 05 01_9 | Schlüsselrohr 05 01 02-3 (16.7.43) | 15 | 13 | 1 | 0 | 0 | 1 |
-| 51 00_1 | Boden-Chronometer (the box; 4.3.42) | 14 | 7 | 1 | 0 | 0 | 4 |
-| 51 00_2 | Griff f. Chronometerkasten 51 00 10 (14.7.42) | 20 | 15 | 2 | 0 | 0 | 2 |
-| 51 00_3 | Firmenschild (22.3.43) | 7 | 4 | 0 | 0 | 0 | 2 |
+| 51 01_6 | Aufzugschlüssel (U 01, 51 00 11; 12.12.40) | 19 | 16 | 0 | 0 | 0 | 1 |
+| 05 01_7 | Chronometerschlüssel 51 00 11 / 51 01 02 (16.7.43) | 19 | 13 | 4 | 0 | 0 | 2 |
+| 05 01_8 | Schlüsselmittelteil 05 01 02-2 (16.7.43) | 20 | 20 | 0 | 0 | 0 | 0 |
+| 05 01_9 | Schlüsselrohr 05 01 02-3 (16.7.43) | 13 | 11 | 1 | 0 | 0 | 1 |
+| 51 00_1 | Boden-Chronometer (the box; 4.3.42) | 12 | 7 | 1 | 0 | 0 | 4 |
+| 51 00_2 | Griff f. Chronometerkasten 51 00 10 (14.7.42) | 18 | 14 | 2 | 0 | 0 | 2 |
+| 51 00_3 | Firmenschild (22.3.43) | 6 | 4 | 0 | 0 | 0 | 2 |
 | 51 00_4 | Zunge P.51 00 02-2 (18.9.42) | 14 | 12 | 0 | 1 | 0 | 1 |
-| 51 00_5 | Überkasten (28.2.42) | 22 | 15 | 1 | 0 | 0 | 5 |
+| 51 00_5 | Überkasten (28.2.42) | 20 | 16 | 1 | 0 | 0 | 3 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
@@ -748,43 +917,43 @@ Reader: 109 match, 7 mismatch, 1 not built, 0 extra, 18 can't tell. After the ve
 | 16-6-12 | panel total height 185 (105 + lid part 80) | 185 (sure) | 180 | mismatch | mismatch | the split line scales at 100.8 (not 105): the sheet's drawing is not exact. Sheet 51 00_1's scale gives 179, so the sheets disagree with each other; the model f |
 | 16-6-17 | M6 screw length, head top to pivot tip (scaled) | 27.9 +-1 (unsure) | 24.0 / 26.3 | mismatch | mismatch | the two built screws also differ from each other by 2.3 mm; the sheet draws one |
 | 16-8-10 | chamfer 0.5 x 45 deg at the M3.5 hole | 0.5 (likely) | - | not built | not built | and the big hole's drawn ring is about 0.3, built 0.5 (16-8-9 match to a small tolerance) |
-| 16-9-16 | hinge length (the 100 and 32 at the top: 200 total?) | 100 + 32 (unsure what they attach to) | 200 | cant | ? | **match** |
+| 16-9-16 | hinge length (the 100 and 32 at the top: 200 total?) | 100 + 32 (unsure what they attach to) | 200 | cant | match | **match** |
 | 16-9-17 | screw 5, 4 x 25 DIN 97 (strap screw) | 4 x 25 (sure) | 3.977 / 25.0 / 27.6 | cant | mismatch | thread and length match; the head is not a countersunk one. Reader had no ground to judge; the DIN number does |
-| 16-1-18, 16-1-19 | parts 4 and 5 drawn (sure) | parts 4 and 5 drawn (sure) | no page file | (new) | not built |  |
 | 16-2-v1 | likely | likely | 510011-6 a plain 2.5 x 15.3 | (new) | mismatch |  |
 
 ### Batch 17
 
-Reader: 41 match, 19 mismatch, 3 not built, 0 extra, 10 can't tell. After the verifier: 41 match, 19 mismatch, 3 not built, 0 extra, 10 can't tell, 0 not applicable (reports: `batch17.md`, `verify17.md`).
+Reader: 41 match, 19 mismatch, 3 not built, 0 extra, 10 can't tell. After the verifier: 50 match, 9 mismatch, 2 not built, 0 extra, 12 can't tell, 0 not applicable (reports: `batch17.md`, `verify17.md`).
 
 | Sheet | Title | Items | match | mismatch | not built | extra | can't tell |
 |---|---|---|---|---|---|---|---|
-| Federchronometer 05 | the coloured section of the whole movement (Wempe Observatory; Altmeppen 2017) | 73 | 41 | 19 | 3 | 0 | 10 |
+| Federchronometer 05 | the coloured section of the whole movement (Wempe Observatory; Altmeppen 2017) | 73 | 50 | 9 | 2 | 0 | 12 |
 
 | id | item | drawn (reader) | built | reader | verifier | verifier's reason |
 |---|---|---|---|---|---|---|
-| 17-1-10 | upper cock (Unruhkloben oben 05 08 03-1) top face (hatched cut, over the balance) | -37.74 (+-0.2); an unhatched outline beyond the cut reaches  | -37.35 | mismatch | - |  |
-| 17-1-14 | label of the top plate | Oberplatte 05 08 01-1 (sure, hi-res print) | 050901 | mismatch | - |  |
-| 17-1-18 | label Zugfeder (mainspring) | Zugfeder 05 07 00-2 (sure) | none under that number | not built | - |  |
-| 17-1-19 | label Bandhaken f. Trommel | 05 07 06-3 (likely) | none under that number | not built | - |  |
-| 17-1-20 | labels of screws WN-27 (fusee, left), WN-13, WN-15, WN-16 | Schrb. WN-27; Schraube WN-13; Schrb. WN-15; Schrb. WN-16 (su | none | not built | - |  |
-| 17-1-22 | barrel arbor: core's cylindrical length, y | -17.70 to -7.76 (+-0.15) | -16.73..-8.45 | mismatch | - |  |
-| 17-1-23 | barrel arbor: core's end chamfers | 1.05 axial by about 2.1 radial (to about D 9.3 at the face); | 1.65 x 1.65 | mismatch | - |  |
-| 17-1-24 | barrel arbor: neck above the core (inside the cover's boss) | D 5.13, y -22.2 to -18.75 (+-0.12) | 4.48 | mismatch | - |  |
-| 17-1-25 | barrel arbor: neck below the core, down to the pillar plate | D 4.93, y -6.66 to -0.04 | 4.48 | mismatch | - |  |
-| 17-1-28 | barrel arbor: dial-side end (a drawn bullet point) | y +6.3 (dome starts 4.6) | 4.95 | mismatch | - |  |
-| 17-1-29 | barrel arbor: top end above the bridge (domed) | y -36.45 (dome from -35.0) | -35.25 | mismatch | - |  |
-| 17-1-38 | fusee arbor: top end (square then dome) | dome top y -46.45 (dome from -44.76) | -48.025 | mismatch | - |  |
-| 17-1-50 | intermediate arbor: pinion y span (tips D 4.8 drawn) | -2.95 to -0.3 | -3.02..0.23 | mismatch | - |  |
-| 17-1-53 | seconds arbor (Sekundentrieb 05 05 01-2): top pivot tip | -21.5 (+-0.2) | -21.98 | mismatch | - |  |
-| 17-1-57 | seconds arbor: dial-side end (inside the hand's collar) | 13.0 (+-0.25) | 12.28 | mismatch | - |  |
-| 17-1-58 | escape arbor (Gangtrieb 05 04 05-2): shaft diameter between the wheel's hub and the pinion | 1.38 (63 px at 45.6; +-0.1) | 1.2 / 1.07 | mismatch | - |  |
-| 17-1-59 | escape pinion y span (tips D 2.85 drawn) | -6.4 to -2.35 (+-0.15) | -7.5..-3.5 | mismatch | - |  |
-| 17-1-60 | escape arbor: top pivot tip, in the jewel | -19.9 (+-0.15) | -20.98 | mismatch | - |  |
-| 17-1-66 | balance staff: where the thin section widens | y -29.9 (+-0.2) | -28.9 | mismatch | - |  |
-| 17-1-69 | escape top jewel: hole stone (top plate) | y -19.9 to -18.8, flush with the plate's underside (+-0.15) | -20.94..-20.14 | mismatch | - |  |
-| 17-1-70 | escape top jewel: cap stone (convex) | y -21.27 to -20.15 | -21.91..-21.01 | mismatch | - |  |
-| 17-1-72 | escape lower jewel: cap stone | y 2.05 to 3.15 | 1.83..2.58 | mismatch | - |  |
+| 17-1-10 | upper cock (Unruhkloben oben 05 08 03-1) top face (hatched cut, over the balance) | -37.74 (+-0.2); an unhatched outline beyond the cut reaches  | -37.35 | mismatch | match | the reader's -37.74 comes from his zero 4.5 px (0.2 mm) too high plus reading; against the true zero it is +0.15, inside the spread |
+| 17-1-14 | label of the top plate | Oberplatte 05 08 01-1 (sure, hi-res print) | 050901 | mismatch | match | the sheet's number agrees with the sheet; "050901" is the model's own line number, not a size or shape mismatch |
+| 17-1-18 | label Zugfeder (mainspring) | Zugfeder 05 07 00-2 (sure) | none under that number | not built | not built | a mainspring in the drum, same width as the sheet's 15; label difference, not "not built" |
+| 17-1-19 | label Bandhaken f. Trommel | 05 07 06-3 (likely) | none under that number | not built | not built | the section's "06-3" differs from the sheet's own 03-3; the part is built |
+| 17-1-20 | labels of screws WN-27 (fusee, left), WN-13, WN-15, WN-16 | Schrb. WN-27; Schraube WN-13; Schrb. WN-15; Schrb. WN-16 (su | none | not built | cant | the model's own titles carry the labels. WN-16 points at a slotted round head D about 3.3 mm in the detent block (the blockScrew head is 3.0, so WN-16 may be th |
+| 17-1-22 | barrel arbor: core's cylindrical length, y | -17.70 to -7.76 (+-0.15) | -16.73..-8.45 | mismatch | mismatch | the sheet backs the section; the 1.65 chamfer takes the length |
+| 17-1-23 | barrel arbor: core's end chamfers | 1.05 axial by about 2.1 radial (to about D 9.3 at the face); | 1.65 x 1.65 | mismatch | mismatch |  |
+| 17-1-24 | barrel arbor: neck above the core (inside the cover's boss) | D 5.13, y -22.2 to -18.75 (+-0.12) | 4.48 | mismatch | mismatch | backed by the detail sheet |
+| 17-1-25 | barrel arbor: neck below the core, down to the pillar plate | D 4.93, y -6.66 to -0.04 | 4.48 | mismatch | mismatch |  |
+| 17-1-28 | barrel arbor: dial-side end (a drawn bullet point) | y +6.3 (dome starts 4.6) | 4.95 | mismatch | match | the model equals the printed dimension; the section is loose (section 2) |
+| 17-1-29 | barrel arbor: top end above the bridge (domed) | y -36.45 (dome from -35.0) | -35.25 | mismatch | match | same as 17-1-28. Separate point: the model's end is flat with a 0.5 chamfer where the section shows a 1.5 mm dome; the sheet shows only a slightly rounded edge  |
+| 17-1-38 | fusee arbor: top end (square then dome) | dome top y -46.45 (dome from -44.76) | -48.025 | mismatch | match | the model equals the printed length |
+| 17-1-39 | fusee arbor: dial-side end | about 9.7, hidden in a hub | 10.1 | cant | mismatch | see new item 17-1-v1 |
+| 17-1-50 | intermediate arbor: pinion y span (tips D 4.8 drawn) | -2.95 to -0.3 | -3.02..0.23 | mismatch | match | +0.2 at each end, inside the spread; the reader's right-half zero is 0.2 high |
+| 17-1-53 | seconds arbor (Sekundentrieb 05 05 01-2): top pivot tip | -21.5 (+-0.2) | -21.98 | mismatch | match | -0.14 on the section; the reader's -21.5 is not reproduced (and is 0.2 off from his zero) |
+| 17-1-57 | seconds arbor: dial-side end (inside the hand's collar) | 13.0 (+-0.25) | 12.28 | mismatch | cant | +0.4 at most and the drawn end belongs to the collar |
+| 17-1-58 | escape arbor (Gangtrieb 05 04 05-2): shaft diameter between the wheel's hub and the pinion | 1.38 (63 px at 45.6; +-0.1) | 1.2 / 1.07 | mismatch | match | hatching and line weight inflate the section's width; the sheet is printed and agrees with 1.07 |
+| 17-1-59 | escape pinion y span (tips D 2.85 drawn) | -6.4 to -2.35 (+-0.15) | -7.5..-3.5 | mismatch | match | the section arbor measures 22.1 against the sheet's 22.8 |
+| 17-1-60 | escape arbor: top pivot tip, in the jewel | -19.9 (+-0.15) | -20.98 | mismatch | mismatch | not from the scale: the lower tip agrees (1.9 against 1.8), so the section arbor is 0.7 short; the arbor length 22.78 equals the sheet's 22.8 |
+| 17-1-66 | balance staff: where the thin section widens | y -29.9 (+-0.2) | -28.9 | mismatch | mismatch | the staff's own detail sheet (05 04 02-1) was not found among the sheets I opened (05-04_05 is the lever-escapement staff), so it is not settled against a print |
+| 17-1-69 | escape top jewel: hole stone (top plate) | y -19.9 to -18.8, flush with the plate's underside (+-0.15) | -20.94..-20.14 | mismatch | mismatch | outside the spread; the stone is not flush with the underside on the sheet, it is about 0.2 above it |
+| 17-1-70 | escape top jewel: cap stone (convex) | y -21.27 to -20.15 | -21.91..-21.01 | mismatch | mismatch |  |
+| 17-1-72 | escape lower jewel: cap stone | y 2.05 to 3.15 | 1.83..2.58 | mismatch | cant | the lower tip, the plate faces and the hole stone all agree, so a 0.4 difference on a domed cap is not a finding |
 
 ## Sheets not audited
 
