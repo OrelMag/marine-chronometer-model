@@ -1,0 +1,92 @@
+id	sheet	item	drawn	certainty	field	built	delta	verdict
+07-1-1	05 04_4	top pivot Ø at the shoulder (1,2 ±0,02, Kegel 1:30)	1.2 ±0.02 (likely)	likely	staff.cones[8].d [1.05,1.2] at z -28.9	1.2	0	match
+07-1-2	05 04_4	top pivot Ø where the cone starts (1,11 Ø, no tolerance: ±0.05)	1.11 (sure on the figure; which place it attaches to: unsure)	sure	staff.cones[8].d[0] 1.05 at z -33.4	1.05	-0.06	mismatch
+07-1-3	05 04_4	shaft Ø at the top of its 1:70 taper above the hub (1,58)	1.58 (likely)	likely	staff.cones[9].d[0] 1.58 at z -28.9	1.58	0	match
+07-1-4	05 04_4	shaft Ø at the hub end of the taper (1,65 s6: +0.015..+0.022 -> 1.665..1.672)	1.65 s6 (sure)	sure	staff.cones[9].d[1] 1.6514 at z -23.9	1.6514	-0.0136 (below the lower limit)	mismatch
+07-1-5	05 04_4	staff collar above the hub flange (2 h6 -0.007 -> 1.993..2.000)	2 h6 (sure)	sure	staff.cylinders[0].d 2.0	2.0	0	match
+07-1-6	05 04_4	length of that collar (1,1)	1.1 (likely)	likely	staff.cylinders[0].z [-23.9,-22.8]	1.1	0	match
+07-1-7	05 04_4	6,1: top shoulder of the shaft to the hub top face	6.1 (sure)	sure	staff.cones[9].z[0] -28.9 to hub.z_levels[0] -22.8	6.1	0	match
+07-1-8	05 04_4	hub flange thickness (1,8)	1.8 (sure)	sure	hub.cylinders[2].z [-22.8,-21.0]	1.8	0	match
+07-1-9	05 04_4	hub overall thickness (4,1 +0,05)	4.1 +0.05 (sure)	sure	hub.size z 4.1 (z -22.8..-18.7)	4.1	0	match
+07-1-10	05 04_4	5,6: hub top face to the end of the lower collar	5.6 (likely)	likely	staff.cylinders[1].z[1] -17.2 against hub top -22.8	5.6	0	match
+07-1-11	05 04_4	length of the lower 1,65 collar (1,5, faint)	1.5 (unsure)	unsure	staff.cylinders[1].z [-18.7,-17.2]	1.5	0	match
+07-1-12	05 04_4	staff Ø at the hub underside (2,14 +0,01)	2.14 (likely)	likely	staff.section_y0 r 1.07 at z -18.7 (cones[10]: 2.058 -> 2.14 chamfer)	2.14	0	match
+07-1-13	05 04_4	hub sleeve Ø (2,63 -0,06 -> 2.57..2.63)	2.63 -0.06 (likely)	likely	hub.cylinders[3].d 2.6	2.6	-0.03 (inside)	match
+07-1-14	05 04_4	hub flange Ø (6,3 -0,1 -> 6.2..6.3)	6.3 -0.1 (sure)	sure	hub.cylinders[2].d 6.25	6.25	-0.05 (inside)	match
+07-1-15	05 04_4	hub's two tapped holes (M1)	M1, two (likely); position not dimensioned here	likely	hub.cylinders[0,1].d 0.7294 at (0,±2.15) (M1 core)	0.7294 at ±2.15	core of M1	match
+07-1-16	05 04_4	14,03 -0,06: hub top face to the lower pivot tip	14.03 -0.06 (sure)	sure	staff z -22.8 to -10.21 (cylinders[4].z[1])	12.59	-1.44	mismatch
+07-1-17	05 04_4	taper of the top pivot (Kegel 1:30)	1:30 (likely)	likely	staff.cones[8].half_angle 1.0 deg (0.15 over 4.5 = 1:30)	1:30	0	match
+07-1-18	05 04_4	taper of the shaft, hub seat and lower pivot (Kegel 1:70)	1:70 (likely)	likely	staff.cones[9,10,11] 0.4 deg (1:71)	1:71	0	match
+07-1-19	05 04_4	lower shaft Ø (1,2 r6: +0.012..+0.019 -> 1.212..1.219)	1.2 r6 (sure)	sure	staff.cylinders[2].d 1.2155	1.2155	0 (inside)	match
+07-1-20	05 04_4	lower collar Ø (1,65 s6 -> 1.665..1.672)	1.65 s6 (sure)	sure	staff.cylinders[1].d 1.6685	1.6685	0 (inside)	match
+07-1-21	05 04_4	lower pivot Ø at the cone start (1,11)	1.11 (sure on figure)	sure	staff.cones[11].d [1.1597,1.2], 1.1597 at z -12.61	1.16	+0.05 (at the limit of ±0.05)	match
+07-1-22	05 04_4	top pivot length, shoulder to tip (not dimensioned; scaled 7.5 ±0.3)	7.5 scaled (unsure)	scaled (unsure)	staff z -35.8 to -28.9	6.9	-0.6	mismatch
+07-1-23	05 04_4	material / treatment (hub Ms. brass; staff hardened, tempered 240 deg)	as read	unsure	not a geometric field	-	-	can't tell
+07-2-1	05 04_5	hub flange Ø (6,3 across the flange)	6.3 (likely)	likely	hub.cylinders[2].d 6.25	6.25	-0.05 (at the limit)	match
+07-2-2	05 04_5	collar above the flange Ø (2,1 ±0,03 -> 2.07..2.13)	2.1 ±0.03 (likely)	likely	staff.cylinders[0].d 2.0	2.0	-0.1	mismatch
+07-2-3	05 04_5	length of that collar above the flange (1,3)	1.3 (likely)	likely	staff.cylinders[0].z [-23.9,-22.8]	1.1	-0.2	mismatch
+07-2-4	05 04_5	flange thickness (1,8)	1.8 (sure)	sure	hub.cylinders[2].z [-22.8,-21.0]	1.8	0	match
+07-2-5	05 04_5	4,7 -0,05 (framed): flange top to the sleeve end	4.7 (sure)	sure	hub z_levels -22.8..-18.7	4.1	-0.6	mismatch
+07-2-6	05 04_5	sleeve Ø (2,6 ±0,03)	2.6 ±0.03 (likely)	likely	hub.cylinders[3].d 2.6	2.6	0	match
+07-2-7	05 04_5	14 ±0,03 (framed): flange top to the lower tip	14 (sure)	sure	staff z -22.8 to -10.21	12.59	-1.41	mismatch
+07-2-8	05 04_5	10 deg taper on the flange edge	10 deg (sure)	sure	hub.section_y0: flange wall vertical at r 3.125 from z -22.8 to -21.0; hub.cones has none	0 deg	-10 deg	not built
+07-2-9	05 04_5	0,4 at the flange (a step or recess; what it attaches to is unclear)	0.4 (unsure)	unsure	-	-	-	can't tell
+07-3-1	05 03_3.2	upper pivot Ø at its shoulder (1,25 -0,02 -> 1.23..1.25)	1.25 -0.02 (likely)	likely	staff.cones[8].d[1] 1.2 at z -28.9	1.2	-0.03 (below the lower limit)	mismatch
+07-3-2	05 03_3.2	upper shaft Ø (1,65 -0,02 -> 1.63..1.65)	1.65 -0.02 (likely)	likely	staff.cones[9].d[1] 1.6514 (a 72-gon reads up to 0.1 % small)	1.6514	+0.0014 (at the limit)	match
+07-3-3	05 03_3.2	collar above the hub Ø (2,40 or 2,10, -0,02; digit unsure)	2.40 or 2.10 (unsure)	unsure	staff.cylinders[0].d 2.0	2.0	-0.1 (if 2.10) or -0.4	mismatch
+07-3-4	05 03_3.2	hub thickness (4,1 -0,05)	4.1 (likely)	likely	hub z_levels -22.8..-18.7	4.1	0	match
+07-3-5	05 03_3.2	lower 1,65 collar length (1,6)	1.6 (likely)	likely	staff.cylinders[1].z [-18.7,-17.2]	1.5	-0.1	mismatch
+07-3-6	05 03_3.2	5,7: hub top face to the end of the collar	5.7 (likely)	likely	staff z -22.8 to -17.2	5.6	-0.1	mismatch
+07-3-7	05 03_3.2	upper pivot length, shoulder to tip (6,9)	6.9 (likely)	likely	staff z -28.9 to -35.8	6.9	0	match
+07-3-8	05 03_3.2	6,1: shoulder to the hub top face	6.1 (likely)	likely	staff z -28.9 to -22.8	6.1	0	match
+07-3-9	05 03_3.2	13,0: top tip to the hub top face	13.0 (likely)	likely	staff z -35.8 to -22.8	13.0	0	match
+07-3-10	05 03_3.2	lower pivot length, collar end to tip (6,9)	6.9 (likely)	likely	staff z -17.2 to -10.21	6.99	+0.09	mismatch
+07-3-11	05 03_3.2	12,6 -0,02: hub top face to the lower tip	12.6 (likely)	likely	staff z -22.8 to -10.21	12.59	-0.01 (inside 12.58..12.6)	match
+07-3-12	05 03_3.2	25,6 -0,02: overall length	25.6 (sure)	sure	staff.size z 25.59	25.59	-0.01 (inside)	match
+07-3-13	05 03_3.2	lower pivot shaft Ø (1,25 -0,02)	1.25 -0.02 (likely)	likely	staff.cylinders[2].d 1.2155	1.2155	-0.0145 (below 1.23)	mismatch
+07-3-14	05 03_3.2	lower collar Ø (1,65 -0,02 -> 1.63..1.65)	1.65 -0.02 (likely)	likely	staff.cylinders[1].d 1.6685	1.6685	+0.0185 (above 1.65)	mismatch
+07-3-15	05 03_3.2	pivot tip Ø (0,21, in Lagerstein einpassen)	0.21 (sure)	sure	staff.cylinders[3,4].d 0.21	0.21	0	match
+07-3-16	05 03_3.2	pivot tip cylinder length (0,4)	0.4 (likely)	likely	staff.cylinders[3].z [-35.8,-35.4]	0.4	0	match
+07-3-17	05 03_3.2	pivot flare length (2,4)	2.4 (likely)	likely	staff.cones chain z -35.4 to -33.4 plus the 0.4 tip cylinder	2.4	0	match
+07-3-18	05 03_3.2	two M1 holes in the hub (nach Bohrlehre)	2 x M1 (sure)	sure	hub.cylinders[0,1].d 0.7294 at (0,±2.15)	2 x 0.7294	M1 core	match
+07-3-19	05 03_3.2	10 deg taper on the hub flange (drawn as a trapezoid, wide at the top)	about 10 deg (likely)	likely	hub.section_y0 wall vertical, no cone	0 deg	-10 deg	not built
+07-3-20	05 03_3.2	taper '1:70' on the upper pivot region	1:70 (unsure what it attaches to)	unsure	staff.cones[8] 1:30	1:30	-	can't tell
+07-3-21	05 03_3.2	cone angle of the pivot (an unreadable figure near 64)	illegible	unsure	-	-	-	can't tell
+07-4-1	05 03_1	Laenge der Unruhwelle 25,6	25.6 (sure)	sure	staff.size z 25.59	25.59	-0.01	match
+07-4-2	05 03_1	mass Ø (6,35, vertical dimension at the left lower circle)	6.35 (likely)	likely	masses.cylinders[5].d 6.35	6.35	0	match
+07-4-3	05 03_1	10 deg taper at the hub flange (section)	10 deg (likely)	likely	hub.cones: none (straight wall)	0 deg	-10 deg	not built
+07-4-4	05 03_1	3,8 (circled): rim height	3.8 (likely)	likely	rim.size z 3.8	3.8	0	match
+07-4-5	05 03_1	21,05: radius to the timing screws' ends along the arm	21.05 (likely)	likely	timingScrew.box z 13.95..21.05; placements 050301-2 box span 42.1	21.05	0	match
+07-4-6	05 03_1	angles 15, 20, 15 deg and sizes 22, 5, 1,8, 42 round the lever and wedge (parts 33/34, not in this batch)	as read	unsure	-	-	-	can't tell
+07-4-7	05 03_1	stack dimensions 12,4 / 10 / 4,5 / 3,3 / 0,4 / 0,75 / 0,8 / 12 / 11 / 2,4 / 3,5 / 16 / 6	as read	unsure	-	-	-	can't tell
+07-4-8	05 03_1	note: timing screws point 6-12 at rest	note (sure)	sure	timing screws on the arm axis (placements 050301-2)	-	-	can't tell
+07-5-1	05 03_2	42,1: end to end of the two timing screws	42.1 (likely)	likely	placements 050301-2 box z -8.94..33.16	42.1	0	match
+07-5-2	05 03_2	timing weight Ø (scaled 4.3)	4.3 ±0.2 (scaled)	likely (scaled)	timingWeight.cylinders[1].d 4.25	4.25	0	match
+07-5-3	05 03_2	timing weight height (scaled 3.5)	3.5 ±0.2 (scaled)	likely (scaled)	timingWeight.size z 3.3	3.3	-0.2 (at the scan accuracy)	match
+07-5-4	05 03_2	weight radial place, inner to outer (scaled 16.8..20.3)	16.8..20.3 (scaled)	likely (scaled)	timingWeight.z_levels 16.95..20.25	16.95..20.25	within 0.15	match
+07-5-5	05 03_2	timing screw head Ø (scaled 1.6) and its place (r 13.7)	1.6 at r 13.7 (scaled)	likely (scaled)	timingScrew.cylinders[1].d 1.65, z 13.95..15.25	1.65 at 13.95	within 0.25	match
+07-5-6	05 03_2	mass centres (scaled 13.5 and 7.9 from the centre; about 32 deg from the cut axis)	13.5, 7.9 ±0.3 (scaled)	likely (scaled)	masses.cylinders[5].at (13.5966, 7.85)	13.5966, 7.85	within 0.1	match
+07-5-7	05 03_2	mass circle Ø (scaled 6.2)	6.2 ±0.2 (scaled)	likely (scaled)	masses.cylinders[5].d 6.35	6.35	+0.15 (at accuracy)	match
+07-5-8	05 03_2	mass height beyond the arm face (side view, scaled 6.35)	6.35 ±0.2 (scaled)	likely (scaled)	masses.size z 6.46	6.46	+0.11	match
+07-5-9	05 03_2	arm thickness (side view, scaled about 1.0)	1.0 ±0.2 (scaled)	likely (scaled)	rim.z_levels -23.95..-22.8	1.15	+0.15	match
+07-5-10	05 03_2	three holes along the arm axis at the hub (one central, one each side, about 2 apart)	3 holes (sure); spacing about 2 (scaled)	likely (scaled)	rim.cylinders[5,6,7]: 2.009, 1.0 at ±2.15	3 holes	-	match
+07-5-11	05 03_2	39 (unclear: angle or length)	39 (sure on the figure)	sure	-	-	-	can't tell
+07-5-12	05 03_2	screws WN-12 / WN-12a in the masses (no size printed)	no size	unsure	massScrew.cylinders[3].d 0.7823, length 2.0, head 1.6	-	-	can't tell
+07-6-1	05 03_4	outer Ø (32,32 -0,04 -> 32.28..32.32)	32.32 -0.04 (sure)	sure	rim.cylinders[10].d 32.3	32.3	-0.02 (inside)	match
+07-6-2	05 03_4	layer boundary Ø (31,29 -0,04): nickel steel against brass	31.29 -0.04 (sure)	sure	rim.outlines_by_level: only arcs r 16.15 and r 15.25; one solid, no boundary	-	-	not built
+07-6-3	05 03_4	inner Ø (30,48 +0,04 -> 30.48..30.52)	30.48 +0.04 (sure)	sure	rim.cylinders[4].d 30.5	30.5	+0.02 (inside)	match
+07-6-4	05 03_4	rim total height (3,8)	3.8 (sure)	sure	rim.size z 3.8 (z -26.6..-22.8)	3.8	0	match
+07-6-5	05 03_4	arm thickness (1,15)	1.15 (likely)	likely	rim.z_levels -23.95..-22.8	1.15	0	match
+07-6-6	05 03_4	cut width (1,5 +0,2 -> 1.5..1.7)	1.5 +0.2 (sure)	sure	rim.outlines_by_level[-26.6] slit ends y ±0.8	1.6	+0.1 (inside)	match
+07-6-7	05 03_4	centre hole (2 H7 +0,009)	2 H7 (sure)	sure	rim.cylinders[5].d 2.009	2.009	0	match
+07-6-8	05 03_4	the two hub screw holes (Ø 1)	1 (likely)	likely	rim.cylinders[6,7].d 1.0	1.0	0	match
+07-6-9	05 03_4	screw holes' distance from the centre (2,14 +0,02 -> 2.14..2.16)	2.14 +0.02 (likely)	likely	rim.cylinders[6,7].at (0,∓2.15)	2.15	+0.01 (inside)	match
+07-6-10	05 03_4	1,8 H7 +0,009 and 0,4: the hole's top form (countersink or counterbore; which hole is unsure; the plan shows a ring round the left hole only)	1.8 H7, 0.4 deep (unsure)	unsure	rim.cones d 1.0 -> 1.8, z -23.95..-23.55, 45 deg, both holes	1.8 x 0.4, countersink	form unknown	can't tell
+07-6-11	05 03_4	arm width at the ends (3,2)	3.2 (sure)	sure	rim.outlines[-23.95] lines x ±1.6 at y 15.17	3.2	0	match
+07-6-12	05 03_4	arm width at the start of the waist (4; scaled 6.7 from the centre)	4 (sure) at 6.7 (scaled)	likely (scaled)	rim.outlines[-23.95] lines reach x ±2.0 at y 6.13	4.0 at 6.13	width 0; place -0.57 (scale accuracy ±0.4)	match
+07-6-13	05 03_4	arm waist width (6,5)	6.5 (sure)	sure	rim.outlines[-23.95] arcs reach x ±3.25 at y 0	6.5	0	match
+07-6-14	05 03_4	waist arc radius (a figure read as 20 with a degree-like mark; R20 likely)	R20 (unsure)	unsure	rim.outlines[-23.95] arcs r 20.0	20	0	match
+07-6-15	05 03_4	radial hole axis, from the arm face (2,15)	2.15 (sure)	sure	rim.cylinders[8,9] z -24.95 (from -22.8)	2.15	0	match
+07-6-16	05 03_4	radial hole size (0,9, Steigung 0,16: M0.9 x 0.16)	0.9 x 0.16 (likely)	likely	rim.cylinders[8,9].d 0.7268 (0.9 - 1.0825 x 0.16 = 0.7268)	0.7268	core of M0.9 x 0.16	match
+07-6-17	05 03_4	8 Koerner in 60 Teilung (eight punch marks, 60 divisions)	8 marks (sure)	sure	rim: no mark features in cylinders or outlines	0	-	not built
+07-6-18	05 03_4	cut position: across the arm	perpendicular (sure)	sure	rim: slit at y ±0.8, x ±16; arm along y	perpendicular	0	match

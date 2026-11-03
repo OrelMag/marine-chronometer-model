@@ -1,0 +1,81 @@
+id	sheet	item	drawn	certainty	field	built	delta	verdict
+10-1-1	05 06_5	outer dia	7.6 -0.1 (7.5-7.6)	sure	cylinders[1].d	7.55	in tol	match
+10-1-2	05 06_5	recess dia (open face)	6.2 +0.1 (6.2-6.3)	sure	cylinders[0].d	6.25	in tol	match
+10-1-3	05 06_5	overall length	3.1 -0.2 (2.9-3.1)	sure	size[2]	3.0	in tol	match
+10-1-4	05 06_5	length of the square-hole side	2.1 -0.2 (1.9-2.1)	sure	z_levels -30.725..-28.725	2.0	in tol	match
+10-1-5	05 06_5	recess depth (3.1-2.1, scaled 1.0)	1.0 (derived)	likely	cylinders[0].z	1.0	0	match
+10-1-6	05 06_5	chamfer 0.5 +0.2 at 45deg on the square-hole end	0.5 +0.2, 45deg	sure	cones[0] d 6.55-7.55, z -29.225..-28.725, half 45	0.5 x 45deg	0	match
+10-1-7	05 06_5	square across flats	3.1	sure	outlines -30.725 vertex 2.183; -28.725 vertex 2.1971	3.087 (recess end) to 3.107 (chamfer end)	-0.013..+0.007	match
+10-1-8	05 06_5	square taper	Kegel 1:100, arrow from chamfer end toward recess	likely	outlines -30.725 vs -28.725	0.020 over 2.0 mm = 1:100, larger at chamfer end	0	match
+10-1-9	05 06_5	rotated dimension 'dia 4,7 (or 4,4) +0.012' at left	illegible; attaches to nothing clear (maybe the square's diagonal 4.38)	unsure	vertices 2.183/2.1971 (diagonal 4.37-4.39)	diagonal 4.37-4.39	ok if 4.4; -0.3 if 4.7	can't tell
+10-1-10	05 06_5	title block	Rundmessing 8 Din 1758 Ms58; 5:1, M 1:1; gez 7.5.41, gepr 12.5.41, N.gepr 30.4.43	sure	-	-	-	match
+10-2-1	05 06_6	overall length	3.1 -0.2 (2.9-3.1)	sure	size[2]	2.76	-0.14 below low limit	mismatch
+10-2-2	05 06_6	flange thickness incl 0.3 chamfer (scaled 1.16)	1.2 -0.2 (1.0-1.2)	likely	z_levels -3.685..-2.825	0.86	-0.14 below low limit	mismatch
+10-2-3	05 06_6	boss length beyond flange (3.1-1.2)	1.9 (scaled)	likely	z -2.825..-0.925	1.9	0	match
+10-2-4	05 06_6	boss dia	7.6 -0.2 (7.4-7.6)	sure	cylinders[4].d	7.5	in tol	match
+10-2-5	05 06_6	flange dia	14 d11 (13.84-13.95)	sure	cylinders[3].d	13.895	in tol	match
+10-2-6	05 06_6	recess dia on flange face	9.9 +0.2	sure	cylinders[0].d	9.95	in tol	match
+10-2-7	05 06_6	recess depth	0.4 +0.05	likely	cylinders[0].z -3.685..-3.26	0.425	in tol	match
+10-2-8	05 06_6	bore dia at flange end	4.4 H7 (4.400-4.412)	sure	cones[0].d[1]	4.4106	in tol	match
+10-2-9	05 06_6	bore taper and boss-end size	Kegel 1:70, (4.36) in brackets at boss end	likely	cones[0] d 4.3784-4.4106 over 2.335	about 1:72; 4.378	+0.018 on a reference size	match
+10-2-10	05 06_6	flange outer chamfer	45deg, 0.3 +0.1	likely	cones[1] d 13.195-13.895, z -3.175..-2.825	0.35 x 45deg	in tol	match
+10-2-11	05 06_6	cross hole dia	0.8 (width scaled 0.78)	likely	cylinders[1,2].d	1.15	+0.35	mismatch
+10-2-12	05 06_6	cross hole height from boss end	1.1 +-0.1	sure	cylinders[1].at z -2.025 vs boss end -0.925	1.10	0	match
+10-2-13	05 06_6	cross hole through both walls, free angle	through	likely	cylinders[1,2] 346 deg each side	through	-	match
+10-2-14	05 06_6	pin 050600-5 on this sheet	not drawn here	unsure	page 050600-5 d 1.1588 x 8.3	1.16 x 8.3 pin for a 0.8 drawn hole	does not fit 0.8	extra
+10-2-15	05 06_6	note: at fusee assembly fit the hole to the shaft, re-turn face a	process note	likely	-	-	-	can't tell
+10-2-16	05 06_6	title block	Praez. Rundstahl 14 Din 175; gez 15.4.41	sure	-	-	-	match
+10-3-1	05 06_7	tooth count	Z=90	sure	teeth[0].count	90	0	match
+10-3-2	05 06_7	module / pitch	M 0.4356, t 1.368	sure	pitch 2*pi*19.605/90	1.3687	0	match
+10-3-3	05 06_7	tip dia D	40.57	sure	teeth[0].tips_d	40.5691	-0.001	match
+10-3-4	05 06_7	root dia dg	37.84	sure	teeth[0].roots_d	37.8393	0	match
+10-3-5	05 06_7	pitch dia / tooth thickness l at pitch	d 39.21; l 0.64	likely	outline level -2.385 at r 19.605	tooth 0.640, gap 0.729	0	match
+10-3-6	05 06_7	tooth form	Zykloidenverzahnung, five teeth sketched	likely	outlines_by_level -2.385 (polyline)	thickness at pitch right; form not fitted to a cycloid	-	can't tell
+10-3-7	05 06_7	rim outer dia in section (leader 'gedreht 41,1')	40.65 -0.05 (40.60-40.65); unsure	unsure	teeth[0].tips_d	40.569	-0.03 to -0.08 under the low limit (likely the blank; table D 40.57 matches)	mismatch
+10-3-8	05 06_7	raised ring dia	33.8 -0.2	sure	cylinders[4].d	33.8	in tol	match
+10-3-9	05 06_7	pocket dia	32.3 +0.05	sure	cylinders[0].d	32.3	in tol	match
+10-3-10	05 06_7	raised ring height	0.2 +0.02	likely	z -5.005..-4.805	0.2	0	match
+10-3-11	05 06_7	rim thickness, ring top to bottom	2.62 -0.04	sure	z -5.005..-2.385	2.62	0	match
+10-3-12	05 06_7	web thickness, pocket floor to bottom	1.22 -0.04	likely	z -3.605..-2.385	1.22	0	match
+10-3-13	05 06_7	overall height	5 +0.2	sure	size[2]	5.0	in tol	match
+10-3-14	05 06_7	hub shoulder below ring top	0.4 -0.05	unsure	z -5.005 vs -4.605	0.4	0	match
+10-3-15	05 06_7	hub cone top dia	16.6 -0.2, 45deg	sure	cones[1] d 14.6-16.6	16.6, 45deg	0	match
+10-3-16	05 06_7	boss OD (text reads 4,6 +0.1; arrows on boss walls scale to 6.4)	text 4,6 unsure; extents 6.3-6.5	unsure	cylinders[5].d	6.49	extents ok; text disagrees	can't tell
+10-3-17	05 06_7	bore dia (section 3.95, plan circle 4.04)	4 dia +0.1	sure	cylinders[2].d	4.55	+0.45 over high limit 4.1	mismatch
+10-3-18	05 06_7	bottom recess dia at face	17 +0.2	sure	cones[0].d[1]	17.1	in tol	match
+10-3-19	05 06_7	bottom recess cylinder dia	14 +0.1	sure	cylinders[1].d	14.0	in tol	match
+10-3-20	05 06_7	bottom recess depth and cone	1.3 -0.1; 60deg	sure	z -3.685..-2.385; cones[0] half 60	1.3; 60deg from axis	0	match
+10-3-21	05 06_7	pin hole dia in web	1.2 H8 (+0.014)	likely	cylinders[3].d	1.207	in tol	match
+10-3-22	05 06_7	pin hole radius	14.2 +-0.02	sure	cylinders[3].from_origin	14.2	0	match
+10-3-23	05 06_7	pin hole angle against teeth	no angle printed	unsure	cylinders[3].at (12.87,-6.00) = -25 deg	-	-	can't tell
+10-3-24	05 06_7	'Kante leicht brechen' on boss top edge	edge break, no size	likely	section_y0 corner (3.245,-7.385)	sharp corner	-	not built
+10-3-25	05 06_7	title block	Messingblech 5.5 Din 1751 Ms58 federhart; 2:1; gez 29.11.40	sure	-	-	-	match
+10-4-1	05 06_8	outer dia	21.1 -0.1	sure	cylinders[2].d	21.05	in tol	match
+10-4-2	05 06_8	thickness	0.8 -0.1	sure	size[2]	0.8	0	match
+10-4-3	05 06_8	centre bore	6.1 H8 (+0.018)	sure	cylinders[0].d	6.109	in tol	match
+10-4-4	05 06_8	bore countersink 60deg, 0.4 -0.1 deep	60deg, 0.4	likely	cones[2] d 6.109-7.4946, z span 0.4, half 60	0.4, 60deg from axis	0	match
+10-4-5	05 06_8	screw hole dia	1.85 -0.1	likely	cylinders[1].d	1.8	in tol	match
+10-4-6	05 06_8	screw hole countersink dia, 90deg	3.1 +0.1	sure	cones[1] d 1.8-3.15, half 44	3.15	in tol	match
+10-4-7	05 06_8	screw hole distance from centre	6 +-0.05	sure	cylinders[1].from_origin	6.0	0	match
+10-4-8	05 06_8	outer edge chamfer 45deg (unlabelled)	45deg, scaled about 0.7	unsure	cones[0] d 19.75-21.05, z span 0.65	0.65 x 45deg	<=0.1	match
+10-4-9	05 06_8	screw WN-20 (w20)	not drawn; M 1:1 view shows the plate only	-	w20 head 3.1, shank 1.68, length 5.9	fits the 3.1 countersink and 1.8 hole	-	extra
+10-4-10	05 06_8	title block	Bandstahl 24x1 Din 1016; gez 15.4.41	sure	-	-	-	match
+10-5-1	05 06_9	outer dia (Vordrehen)	32.45 +-0.02, pre-turned before opening	likely	cylinders outside d	32.25	-0.20	can't tell
+10-5-2	05 06_9	thickness (Staerke, pre-turned)	1.4 +-0.01	likely	size[2]	1.3	-0.10	can't tell
+10-5-3	05 06_9	radial widths at 40/100/150/195/240/270 deg	1.8/1.9/2/2/2.5/3.5, inner circle eccentric (state before opening)	unsure	rays of mspring outline at those angles	2.0 from 65 to 270 deg	3.5 drawn vs 2.0 at 270	can't tell
+10-5-4	05 06_9	two pins 71: dia 1.25, 2.5 long, one 1.2 out of each face	1.25 dia (unsure), 2.5 long	unsure	page 050600-8 d 1.1588, y -1.24..1.24	1.16 x 2.48, one out each face	-0.09 on dia	mismatch
+10-5-5	05 06_9	hole chord	15.25	likely	hole centres (0,-14.2),(12.87,-6.00)	15.26	0	match
+10-5-6	05 06_9	hand as assembled	drawn from the pocket's open side (-y); second hole 65deg clockwise of the eye	likely	placements 050601-1, 050600-3; plan from +Z	65deg ccw in +Z view = cw in -Z view	-	match
+10-6-1	05 06_10	outer dia	32.3 -0.1	sure	cylinders outside d	32.25	in tol	match
+10-6-2	05 06_10	radial width	2 at five places	sure	outline rays 65-270deg	2.0	0	match
+10-6-3	05 06_10	thickness (side view)	1.35 -0.1	sure	size[2]	1.3	in tol	match
+10-6-4	05 06_10	eye hole dia	1.2 H? +0.009	likely	cylinders[4].d	1.2	in tol	match
+10-6-5	05 06_10	eye hole radius	14.2 r	sure	cylinders[4].from_origin	14.2	0	match
+10-6-6	05 06_10	eye outer radius	1.8 r	sure	cylinders[8] d 3.6	r 1.8	0	match
+10-6-7	05 06_10	second hole dia, radius, angle from eye	1.2, 14.2, 65deg	sure	cylinders[5]	1.2, 14.2, 65deg	0	match
+10-6-8	05 06_10	hole chord	15.25	likely	hole centres	15.26	0	match
+10-6-9	05 06_10	end rounding	R 6, centre on horizontal	likely	outline arc r 6.0 c (8.125,0)	R 6	0	match
+10-6-10	05 06_10	cut-end width	4	likely	outline line len 4.0	4.0	0	match
+10-6-11	05 06_10	inner end arcs (r 13.24, r 10.41) and offset outer r 15.88	curves, no radii printed	unsure	outline arcs	as listed	-	can't tell
+10-6-12	05 06_10	0.8 at eye and bottom 6	unclear	unsure	-	-	-	can't tell
+10-6-13	05 06_10	title block and notes	Bandstahl 35x1.75 Din 1016; haerten in Oel, 310 blau anlassen; nicht eingetr. Toleranz +-0.05	sure	-	-	-	match
