@@ -10,7 +10,8 @@ tick (app.js's tickSnd: a 30 ms noise burst through a 3.4 kHz band-pass) on each
     python wempe_movie.py stills [--only a,b] [--at 0.5]   one EEVEE frame of each shot at that share of it (framing), WORK/stills/
     python wempe_movie.py render --engine eevee|cycles [--size 1280x720] [--fps 30] [--samples N] [--only a,b]
                                                        every frame, into WORK/frames/TAG/SHOT/00000.png; frames already there are kept (resumable)
-    python wempe_movie.py compose --tag TAG [--out FILE]   captions, fades and ticks over the frames: the MP4, its .srt and the tick track
+    python wempe_movie.py compose --tag TAG [--out FILE] [--no-voice]   captions, fades, ticks and the narration over the frames: the MP4, its .srt and the sound track
+    python wempe_movie.py say   the narration (SAY) spoken by Kokoro into WORK/voice, each line's length against its room
   --work DIR (default E:\\mc-video\\movie\\work)."""
 import argparse,asyncio,json,math,pathlib,subprocess,sys,time,wave
 HERE=pathlib.Path(__file__).resolve().parent
@@ -313,6 +314,42 @@ def base(work,size,engine='eevee',samples=64):
 
 def pick(only):return [S for S in SHOTS if not only or S['name'] in only.split(',')]
 
+# ---- the narration (the owner's choice, 3 November 2026: an English voice, British, male; the captions kept): Kokoro, offline, its voice VOICE; each line [shot s, text],
+# spoken shorter than its caption (about 2.6 words a second), the same facts and sources as the captions beside each shot. [word](/phonemes/) spells a German word out
+VOICE='bm_george';VSPEED=1.0
+WEMPE='[Wempe](/vˈɛmpə/) [Einheits](/ˈInhIts/)-Chronometer'
+SAY={'open':[[0.6,f"This is the {WEMPE}: Germany's standard marine chronometer, designed in Hamburg in the early nineteen-forties."]],
+ 'sea':[[0.6,'At sea, the bowl hangs level in its gimbals.'],[4.2,'Longitude comes from Greenwich time: four seconds of error is a nautical mile at the equator.']],
+ 'dial':[[0.5,'The seconds hand steps every half second: seventy-two hundred beats an hour.'],[6.6,'The small hand above shows how far it has run down.']],
+ 'face':[[0.6,'Under the dial, the motion work turns the hands: the minute hand once an hour, and the hour hand twelve times slower.']],
+ 'wind':[[0.6,'It is wound with a key, the bowl turned over in its gimbals.'],[7.0,'Wound to the stop, it runs fifty-six hours.']],
+ 'maint':[[0.6,"While it is wound, Harrison's maintaining work keeps it going."],[5.6,'A detent holds the ratchet, and a spring drives the train.']],
+ 'stop':[[0.5,'At full wind, the chain presses the stop bar against its pin, and the key turns no further.'],[7.2,'Beside it, a ratchet and click keep the mainspring set up.']],
+ 'apart':[[1.0,'Inside are the power, a train of wheels, the escapement, and the balance.']],
+ 'fusee':[[0.6,'The mainspring in its barrel pulls a chain off the cone-shaped fusee.'],[6.6,'A short lever for the strong spring, a long one for the weak: the drive stays even.']],
+ 'train':[[0.8,'The fusee drives the centre, intermediate and seconds wheels, and they the escape wheel.']],
+ 'train2':[[0.6,'The escape wheel moves one tooth a beat. The seconds wheel turns once a minute; the centre wheel once an hour.']],
+ 'beat':[[0.4,"One beat, slowed right down. The detent's stone holds the escape wheel."],[5.2,"The balance's jewel pushes the gold spring, and lifts the detent."],   # the wheel free at 7.7 s
+         [9.8,'A tooth gives the balance its push.'],[12.5,'The detent falls back and locks the next tooth. Swinging back, the jewel passes freely.']],   # the tick at 10.0, locked at 12.2
+ 'balance':[[0.6,'The balance and its hairspring set the rate.'],[4.6,'Its cut bimetallic rim opens and closes with the heat, to keep that rate the same.']],
+ 'end':[[0.8,'Explore it in 3D, at marine chronometer model dot com.']]}
+def voice(work,name=VOICE):
+    """each line of SAY spoken (cached by its text and voice in WORK/voice), at SR; prints each line's length against the room before the next"""
+    import numpy as np,hashlib,soundfile as sf;from scipy.signal import resample_poly
+    vd=work/'voice';vd.mkdir(exist_ok=True);pipe=None;out={};T0=0
+    for S in SHOTS:
+        L=SAY.get(S['name'],[])
+        for j,(t0,txt) in enumerate(L):
+            f=vd/(hashlib.sha1(f'{name} {VSPEED} {txt}'.encode()).hexdigest()[:16]+'.wav')
+            if not f.exists():
+                if pipe is None:
+                    from kokoro import KPipeline;pipe=KPipeline(lang_code='b')
+                a=np.concatenate([np.asarray(x[2]) for x in pipe(txt,voice=name,speed=VSPEED)]);sf.write(str(f),a,24000)
+            a,_=sf.read(str(f));a=resample_poly(a,SR,24000);nz=np.nonzero(np.abs(a)>0.01*np.abs(a).max())[0];a=a[max(0,nz[0]-int(0.03*SR)):nz[-1]+int(0.08*SR)];out[(S['name'],j)]=a   # Kokoro's silence at either end cut
+            room=(L[j+1][0] if j+1<len(L) else S['dur']-0.3)-t0;d=len(a)/SR
+            print(f"  {S['name']:8s} {t0:5.1f} s  {d:4.1f} s of {room:4.1f}  {'OVER ' if d>room else ''}{txt[:60]}")
+        T0+=S['dur']
+    return out
 # ---- the sound: app.js's tickSnd (white noise, exp decay 1.8 ms, 30 ms, band-pass 3.4 kHz Q 2.2, gain 0.5), each where the escape wheel passes half a tooth ----
 SR=48000
 def tick(slow=False):
@@ -329,7 +366,7 @@ def ticks(S,E):
         if math.floor(U[i]-0.5)>math.floor(U[i-1]-0.5):out.append(i/240)
     return out
 
-def compose(work,tag,outp):
+def compose(work,tag,outp,narrate=True):
     import numpy as np;from PIL import Image,ImageDraw,ImageFont,ImageFilter
     from fontTools.ttLib import TTFont
     import imageio_ffmpeg
@@ -361,6 +398,13 @@ def compose(work,tag,outp):
         for c in S.get('caps',[]):
             srt.append(f"{n}\n{ts(T0+c[0])} --> {ts(T0+c[1])}\n{c[2]}"+(f"\n{c[3]}" if c[3] else '')+'\n');n+=1
         T0+=S['dur']
+    if narrate:   # the voice over the ticks, which duck to a third under it (0.15 s ramps)
+        vo=np.zeros_like(aud);T0=0;V=voice(work)
+        for S in SHOTS:
+            for j,(t0,_) in enumerate(SAY.get(S['name'],[])):a=V[(S['name'],j)];i=int((T0+t0)*SR);vo[i:i+len(a)]+=a[:len(vo)-i]
+            T0+=S['dur']
+        on=(np.abs(vo)>1e-3).astype(float);k=int(0.4*SR);on=np.convolve(on,np.ones(k),'same')>0;r=int(0.15*SR);g=np.convolve(on.astype(float),np.ones(r)/r,'same')
+        aud=aud*(1-0.67*g)+0.9*vo/max(1e-9,np.abs(vo).max())
     aud=np.clip(aud,-1,1);wav=outp.with_suffix('.wav')
     with wave.open(str(wav),'wb') as wf:wf.setnchannels(1);wf.setsampwidth(2);wf.setframerate(SR);wf.writeframes((aud*32767).astype('<i2').tobytes())
     outp.with_suffix('.srt').write_text('\n'.join(srt),encoding='utf-8')
@@ -387,9 +431,9 @@ def ts(t):h=int(t//3600);m=int(t%3600//60);s_=t%60;return f'{h:02d}:{m:02d}:{int
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
-    a=argparse.ArgumentParser();a.add_argument('job',choices=['export','plan','stills','render','compose']);a.add_argument('--work',default=str(WORK));a.add_argument('--only')
+    a=argparse.ArgumentParser();a.add_argument('job',choices=['export','plan','stills','render','compose','say']);a.add_argument('--work',default=str(WORK));a.add_argument('--only')
     a.add_argument('--at',default='0.5');a.add_argument('--engine',default='eevee');a.add_argument('--size',default='1280x720');a.add_argument('--fps',type=int,default=30)
-    a.add_argument('--samples',type=int);a.add_argument('--tag');a.add_argument('--out');o=a.parse_args()
+    a.add_argument('--samples',type=int);a.add_argument('--tag');a.add_argument('--out');a.add_argument('--no-voice',action='store_true');o=a.parse_args()
     work=pathlib.Path(o.work);work.mkdir(parents=True,exist_ok=True);t0=time.time();size=[int(x) for x in o.size.split('x')]
     samples=o.samples or (64 if o.engine=='eevee' else 128)
     if o.job=='export':asyncio.run(export(work/'wempe_movie.glb'))
@@ -413,6 +457,7 @@ def main():
         sh=[dict(S,frames=[[i/o.fps,f'{i:05d}.png'] for i in range(int(round(S['dur']*o.fps)))]) for S in pick(o.only)]
         run_blender(work,dict(base(work,size,o.engine,samples),job='frames',shots=sh,plan=pl,dir=str(dr)),log=dr/'render.log')
     elif o.job=='compose':
-        tag=o.tag;outp=pathlib.Path(o.out) if o.out else work.parent/f'wempe_movie_{tag}.mp4';compose(work,tag,outp)
+        tag=o.tag;outp=pathlib.Path(o.out) if o.out else work.parent/f'wempe_movie_{tag}.mp4';compose(work,tag,outp,not o.no_voice)
+    elif o.job=='say':voice(work)   # the narration spoken and timed, without the frames
     print(f'{o.job} done in {time.time()-t0:.0f} s')
 if __name__=='__main__':main()
