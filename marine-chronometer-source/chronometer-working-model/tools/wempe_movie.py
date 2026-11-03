@@ -20,6 +20,7 @@ ROOT=HERE.parents[2];WEMPE=HERE.parents[1]/'wempe'
 WORK=pathlib.Path(r'E:\mc-video\movie\work')
 STATE='rev=3955&wind=6'   # 6 h from full wind: at wempe_showcase.py's 55.9 the train runs down 36 s into Running
 CLIPS=['Lid','At sea','Running','Beat (slow motion)','Winding','Exploded','Run down','Lift out']
+BAND=0.2   # the share of the frame's height at its foot kept for the captions: the cameras frame the parts above it
 CFPS=30   # the scene's fps when the glb is imported: a clip's second is CFPS frames of its action
 
 # The shots, in order. dur: seconds. layers: [clip, [[shot s, clip s], ...]] played at once, piecewise linear between the keys and held outside them (a later layer wins
@@ -47,7 +48,13 @@ SHOTS=[
  dict(name='wind',dur=14,show='all',up=1,layers=[['Winding',[[0,0],[12.1167,12.1167]]],R(34,14)],tick='run',
   cams=[C(0,(0.55,0.95,0.75),None,0.82,60),C(7,(0.25,1.0,0.55),['bowl'],0.80,60),C(14,(0.10,1.0,0.65),None,0.80,60)],
   caps=[[0.6,6.6,'It is wound with a key:','the bowl turned over in its gimbals, the key turned to the stop'],   # Winding's clip, after the 6MX's instruction (README)
-        [7.0,13.4,'A maintaining spring keeps the train going','while it is wound']]),   # README: the maintaining spring keeping the train going
+        [7.0,13.4,'Wound to the stop, it runs 56 hours:','the bowl is turned back and the key taken off']]),   # Winding's clip; README: 55.9 h from full wind to run down
+ dict(name='maint',dur=12,show='mv',up=-1,hide=['dial','hands','cannon','hourWheel','changeWheel','udWheel','udPinion'],see=SEE+['fuseeWheel'],layers=[['Winding',[[0,2.6],[12,8.1]]]],tick='run',
+  # the bowl turned over to be wound: the fusee's large end, its wheel and the maintaining work, at the pillar plate, face down; seen from under it, the dial and motion work left out
+  cams=[C(0,(0.55,-1.0,0.65),['fuseeWheel','maintaining','maintDetent'],0.86,90,22),C(6,(0.20,-1.0,0.55),['fuseeWheel','maintaining','maintDetent'],0.90,90,22),
+        C(12,(-0.25,-1.0,0.60),['fuseeWheel','maintaining','maintDetent'],0.86,90,22)],
+  caps=[[0.6,5.8,"Harrison's maintaining work: as the key turns the fusee back,",'the maintaining detent holds the ratchet'],   # README: Harrison's maintaining work (ratchet, clicks, maintaining spring, maintaining detent)
+        [6.2,11.6,'and the maintaining spring drives the fusee wheel and the train,','so it keeps time while it is wound']]),   # README: the maintaining spring driving the train while the key turns
  dict(name='apart',dur=12,show='mv',up=1,layers=[['Exploded',[[0,2.5],[8,5.5],[12,6]]]],tick=None,
   cams=[C(0,(0.95,0.55,0.55),None,0.88,90,16),C(6,(0.95,0.40,0.30),None,0.90,90,16),C(12,(0.80,0.35,0.05),None,0.92,90,16)],
   caps=[[1.0,11.4,'Inside: the power, a train of wheels,','the escapement and the balance']]),
@@ -59,6 +66,10 @@ SHOTS=[
   cams=[C(0,(0.40,-1.0,0.55),['fusee','fuseeWheel','centreWheel'],0.88,90,22),C(6,(0.15,-1.0,0.60),['centreWheel','intermediateWheel','secondsWheel'],0.88,90,22),
         C(12,(-0.20,-1.0,0.55),['secondsWheel','escapeWheel','balance'],0.88,90,22)],
   caps=[[0.6,11.4,'Through the plates: the fusee turns the centre, intermediate','and seconds wheels, and they the escape wheel']]),   # README: the train (centre, intermediate, seconds, escape)
+ dict(name='train2',dur=10,show='mv',up=-1,see=SEE+['barrel'],layers=[R(24,10)],tick='run',
+  cams=[C(0,(-1.0,-0.25,-0.35),['fuseeWheel','centreWheel','intermediateWheel'],0.86,90,32),C(10,(-0.35,-0.25,-1.0),['intermediateWheel','secondsWheel','escapeWheel'],0.82,90,32)],
+  caps=[[0.6,4.8,'The going train between the plates:','the escape wheel moves one tooth a beat'],   # README: a beat each half second, 24 degrees of the escape wheel's 15 teeth
+        [5.2,9.6,'the seconds wheel turns once a minute,','the centre wheel, with the minute hand, once an hour']]),   # README: the seconds arbor once in 120 teeth, the centre once in 7,200
  dict(name='beat',dur=16,show='mv',up=-1,see=SEE+['upperCock','balance','hairspring'],layers=[['Beat (slow motion)',[[0,0],[1,0],[4,2.3],[11,3.1],[15,10],[16,10]]]],tick='slow',   # the wheel moves at clip 2.54-2.94 s: those spread over 7 s
   cams=[C(0,(-0.30,-1.0,0.30),['balance','escapeWheel','detent'],0.88,105,32),C(5,(-0.25,-1.0,0.35),['escapeWheel','detent','rollers'],0.86,105,32),
         C(16,(-0.05,-1.0,0.45),['escapeWheel','detent','rollers'],0.84,105,32)],
@@ -81,7 +92,7 @@ async def export(out):
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto((WEMPE/'index.html').as_uri()+'?qa&start=movement#'+STATE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=180000);await pg.wait_for_timeout(2500)
-        async with pg.expect_download(timeout=3600000) as d:await pg.evaluate("c=>__glb(c)",CLIPS)
+        async with pg.expect_download(timeout=3600000) as d:await pg.evaluate("c=>{window.__msK=241;return __glb(c);}",CLIPS)   # the mainspring's shapes over the run: 241 (the page's 24 jump every 0.6 s in the fusee shot)
         await (await d.value).save_as(out);await b.close()
     if errs:sys.exit('page errors: '+'; '.join(errs))
     print('exported',out.name,'%.1f MB'%(out.stat().st_size/1048576),flush=True)
@@ -197,7 +208,7 @@ def see(S):
         o.visible_shadow=not g
 fl=bpy.data.materials.new('floor');fl.use_nodes=True;b=fl.node_tree.nodes['Principled BSDF'];b.inputs['Base Color'].default_value=(0.018,0.019,0.022,1);b.inputs['Roughness'].default_value=0.38
 cd=bpy.data.cameras.new('cam');cam=bpy.data.objects.new('cam',cd);s.collection.objects.link(cam);s.camera=cam;cd.sensor_fit='HORIZONTAL';cd.sensor_width=36
-asp=A['size'][0]/A['size'][1];made=[]
+asp=A['size'][0]/A['size'][1];made=[];cd.shift_y=-A['band']/(2*asp)   # the aim at the middle of the frame above the band
 def light(name,loc,size,energy,at,shadow=True):
     d=bpy.data.lights.new(name,'AREA');d.size=size;d.energy=energy;d.use_shadow=shadow;o=bpy.data.objects.new(name,d);s.collection.objects.link(o);o.location=loc
     o.rotation_euler=(at-loc).to_track_quat('-Z','Y').to_euler();made.append(o);return o
@@ -215,7 +226,7 @@ def fit(S,C,vis,up,P):
     for _ in range(6):
         loc=ctr+d*dist;f=-d;r=f.cross(up).normalized();u=r.cross(f);W=Matrix((r,u,-f)).transposed().to_4x4();W.translation=loc;W=W.inverted()
         Q=[W@p for p in FP];uu=[v.x/-v.z for v in Q];vv=[v.y/-v.z for v in Q]
-        k=max(max(abs(q(uu,0.005)),abs(q(uu,0.995)))/(C['fill']*th),max(abs(q(vv,0.005)),abs(q(vv,0.995)))/(C['fill']*th/asp));dist*=k
+        k=max(max(abs(q(uu,0.005)),abs(q(uu,0.995)))/(C['fill']*th),max(abs(q(vv,0.005)),abs(q(vv,0.995)))/(C['fill']*th/asp*(1-A['band'])));dist*=k
     return dict(ctr=list(ctr),d=list(d),dist=dist,lens=lens,f=C['f'])
 def plan(S):
     vis=shown(S);up=(Rw@Vector((0,S['up'],0))).normalized();P=[];lo=[];R=[]
@@ -289,7 +300,7 @@ def run_blender(work,args,log=None):
 
 def base(work,size,engine='eevee',samples=64):
     hdri=str(next(pathlib.Path(blender()).parent.glob('*/datafiles/studiolights/world/studio.exr')))
-    return dict(glb=str(work/'wempe_movie.glb'),hdri=hdri,cfps=CFPS,size=list(size),engine=engine,samples=samples)
+    return dict(glb=str(work/'wempe_movie.glb'),hdri=hdri,cfps=CFPS,size=list(size),engine=engine,samples=samples,band=BAND)
 
 def pick(only):return [S for S in SHOTS if not only or S['name'] in only.split(',')]
 
@@ -321,7 +332,7 @@ def compose(work,tag,outp):
         fonts[nm]=str(ttf)
     F=lambda nm,px:ImageFont.truetype(fonts[nm],int(px))
     cap1,cap2,ttl1,ttl2=F('sans',H*0.043),F('sans',H*0.036),F('serifL',H*0.075),F('serif',H*0.038)
-    band=Image.new('RGBA',(W,H),(0,0,0,0));bd=np.zeros((H,1),np.uint8);y0=int(H*0.62);bd[y0:,0]=(np.linspace(0,1,H-y0)**0.8*150).astype(np.uint8)   # a soft dark band behind the captions
+    band=Image.new('RGBA',(W,H),(0,0,0,0));bd=np.zeros((H,1),np.uint8);y0=int(H*0.70);bd[y0:,0]=(np.linspace(0,1,H-y0)**0.8*150).astype(np.uint8)   # a soft dark band behind the captions
     band=Image.new('RGBA',(W,H),(2,2,3,255));bandA=Image.fromarray(np.repeat(bd,W,1),'L')
     def text(img,lines,y,fonts_,alpha):
         if alpha<=0:return img
@@ -354,10 +365,10 @@ def compose(work,tag,outp):
             t=i/fps;pth=fr/S['name']/f'{i:05d}.png'
             img=Image.open(pth).convert('RGBA') if pth.exists() else black.copy()
             if 'title' in S:
-                a=fade(t,0.6,S['dur']-(3.8 if S['name']=='open' else 0.2),0.8);img=text(img,S['title'],H*0.40,[ttl1,ttl2],a)
-            ca=max([fade(t,c[0],c[1]) for c in S.get('caps',[])]+[0])
+                a=fade(t,0.6,S['dur']-(3.8 if S['name']=='open' else 0.2),0.8);img=text(img,S['title'],H*0.815,[ttl1,ttl2],a)
+            ca=max([fade(t,c[0],c[1]) for c in S.get('caps',[])]+([fade(t,0.6,S['dur']-(3.8 if S['name']=='open' else 0.2),0.8)] if 'title' in S else [])+[0])
             if ca>0:b_=band.copy();b_.putalpha(bandA.point(lambda v:int(v*ca)));img=Image.alpha_composite(img,b_)
-            for c in S.get('caps',[]):img=text(img,[c[2],c[3]],H*0.795,[cap1,cap1],fade(t,c[0],c[1]))
+            for c in S.get('caps',[]):img=text(img,[c[2],c[3]],H*0.835,[cap1,cap1],fade(t,c[0],c[1]))
             dip=min(1,(t+0.5/fps)/0.4 if k else (t+0.5/fps)/1.0,(S['dur']-t-0.5/fps)/0.4 if k<len(SHOTS)-1 else (S['dur']-t)/1.5)   # a dip to black between shots
             if dip<1:img=Image.blend(black,img,max(0,dip))
             p.stdin.write(img.convert('RGB').tobytes())

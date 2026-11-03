@@ -201,10 +201,10 @@ const BLENDER=(()=>{
     { const sr=recs.find(r=>r.o===C.R.esc.spring);if(sr&&sr.rest){const TH=1.1*Math.max(...[0,0.25,0.5,0.75,0.99].map(f=>PE.ampAt(A.drvF(f*HRUN))),160*D2R),K=Math.ceil(2*TH/0.15)+1,keys=[sr.rest];
         for(let j=0;j<K;j++){apply(C,Object.assign({},rest,{th:-TH+2*TH*j/(K-1)}));keys.push(snap(C.R.esc.spring.geometry));}apply(C,rest);apply(C,rest);
         const u=(clamp(rest.th,-TH,TH)+TH)/(2*TH)*(K-1),j=Math.min(K-2,Math.floor(u));defs.set(sr,{mode:'morph',keys,shapes:null,tl:{},added:{},ok:new Map(),last:null,gap:0,theta:{TH,K},rest0:[1+j,2+j,u-j]});} }
-    /* the mainspring, whose shape is the fusee's turn's alone (its vertices change with it, so a flipbook): 24 shapes over the whole run, the fusee turned with the train,
+    /* the mainspring, whose shape is the fusee's turn's alone (its vertices change with it, so a flipbook): 24 shapes over the whole run (window.__msK more: tools/wempe_movie.py's film), the fusee turned with the train,
        each moment the nearest; inside the barrel, it is seen only with the barrel opened up */
     { const pm=C.mv.userData.parts.mainspring;let msM=null;if(pm)pm.traverse(o=>{if(o.isMesh&&!msM)msM=o;});const mr=msM&&recs.find(r=>r.o===msM);
-      if(mr&&mr.rest){const K=24,shapes=[],rots=[],sg=C.R.fu.keySeat.g,q0=sg.rotation.y;
+      if(mr&&mr.rest){const K=window.__msK||24,shapes=[],rots=[],sg=C.R.fu.keySeat.g,q0=sg.rotation.y;
         for(let j=0;j<K;j++){const h=HRUN*j/(K-1);apply(C,Object.assign({},rest,{n:h/HPT,E:rest.E+(h-h0)*7200}));shapes.push(snap(msM.geometry));rots.push(sg.rotation.y);}apply(C,rest);apply(C,rest);
         let rj=0;rots.forEach((q,j)=>{if(Math.abs(q-q0)<Math.abs(rots[rj]-q0))rj=j;});
         defs.set(mr,{mode:'flip',keys:shapes,shapes,tl:{},added:{},ok:new Map(),last:null,gap:0,rots,restJ:rj,rest0:[rj]});} }
