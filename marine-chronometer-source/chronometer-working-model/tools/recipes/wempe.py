@@ -875,7 +875,8 @@ def detent():
     spring=[(SPR0,f-sp[3]),(TP,f-hT),(SMID,f-sp[0]),(FOOT0,f-sp[3]),(FOOT0,f+sp[3]),(SMID,f+sp[0]),(TP,f+hT),(SPR0,f+sp[3])]
     # the horn: its face toward the wheel HL.w, its back HL.b ground in toward the face over its last bev to tip at the end (dv's HB)
     hw=X['hw'];kink=-HL+K['bev']
-    def HB(t,w,b):fr=max(0,min(1,(t+HL)/K['bev']));return w-(w-b)*(K['tip']/o['th']+(1-K['tip']/o['th'])*fr)
+    tR=1 if K['tip'] is None else K['tip']/o['th']
+    def HB(t,w,b):fr=max(0,min(1,(t+HL)/K['bev']));return w-(w-b)*(tR+(1-tR)*fr)
     face=[(t,w) for t,w,b in hw];back=[(t,HB(t,w,b)) for t,w,b in hw];ik=[i for i,(t,_,_) in enumerate(hw) if abs(t-kink)<1e-12][0]
     def horn():
         F=_tn(face,s);B=_tn(back,s);E=[_sp(F),_ln(F[-1],B[-1]),_sp(B[ik:][::-1]),_sp(B[:ik+1][::-1]),_ln(B[0],F[0])]
@@ -892,7 +893,7 @@ def detent():
             S("blade's thicker part",f"{K['thk']} long, {o['tq']:.2f} thick, {o['wb']} high, flush with the square toward the block",'1436, scaled',src),
             S('blade',f"{o['tb']:.2f} thick, {o['wb']} high, its line {DOFF} from the spring's (flush toward the block), to the pipe",'1436: 0,33 (0,28), 1 (0,9)',src),
             S('pipe',f"Ø {2*K['pR']:.2f}, {o['pl']} long, its top {o['pp']:.2f} under the plate",'1436: 2 (1,9); Ø likely',src),
-            S('horn',f"{o['th']:.2f} thick, {o['wh']} high, {HL} from the stone, bent toward the block as traced; its back ground in over its last {K['bev']} to {K['tip']} at the tip",'1436: 0,25 (0,22), 0,8 (0,75), 4,4; the bend traced on Wempe 3955 (likely)',src)],src),
+            S('horn',f"{o['th']:.2f} thick, {o['wh']} high, {HL} from the stone, bent toward the block as traced; its tip bevelled in plan over its last {K['bev']}, the back {o['th']:.2f} to the end",'1436: 0,25 (0,22), 0,8 (0,75), 4,4; the bend traced on Wempe 3955 (likely)',src)],src),
          Drill((ROW,s*(f-fh-K['bo']),zc),u,2*K['fhR'],o['tf']+0.15,"Drill the foot for its screw (M1 clearance)",[S('',f"Ø {2*K['fhR']:.1f} across the foot, {ROW-FOOT0:.2f} from its end, at its middle",'1436 (scaled)',src)],src,key='screw'),
          *[Drill((ROW+q,s*(f-fh-K['bo']),zc),u,2*K['pinR'],o['tf']+0.15,"Drill a steady pin's hole across the foot",[S('',f"Ø {2*K['pinR']:.2f}, {K['pinT']} {'beyond' if q>0 else 'before'} the screw",'1436 (scaled); drilled with the block at assembly',src)],src,key='pin') for q in (-K['pinT'],K['pinT'])],
          Drill((SQ0+K['sqT'],s*(f+o['tq']/2-K['sqD']),zc),u,2*K['sqR'],K['sqD']+0.05,"Drill and tap the square for the gold spring's screw (M0.7, drawn at its size)",[S('',f"M0.7, {K['sqD']} deep from the face toward the wheel, {K['sqT']} from the square's end",'05 04_1 draws the screw; place and depth estimated',src)],src,key='WN-14'),

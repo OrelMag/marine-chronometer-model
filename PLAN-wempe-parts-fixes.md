@@ -88,3 +88,21 @@ Unsure readings stay as they are and are recorded.
 ## Progress
 
 (Updated as each correction is made: re-checked, corrected, checks run, documented, released.)
+
+The owner, 3 November 2026: apply every correction first, then run the checks and physics once at the end.
+
+- **T1, the hairspring: checked, not a difference; nothing changed.**
+  - The owner chose 11.8 turns: the plan of 05 03_5 draws the two pinning points together, which needs a fraction of .8 turn.
+  - 05 03_5's 3.15, 9.5 and 0.75 run to the strip's centrelines, not its faces. The collet's sheet 05 03_8 (24.2.43, later) prints its pin hole 0.75 from the face, and the built hole's centre is 0.75 from it (z 2.15-2.95 of 3.3). The spring's end runs in that hole.
+  - So the ends are as drawn, and the pitch is 9.5/11.8 = 0.80 as built.
+  - The audit's 08-1-2 to 08-1-4, 08-1-v1 and 08-2-5 (and my own check of the 0.73) took the arrows to the faces.
+- **T2, the detent's horn tip: corrected (not yet checked).**
+  - 1436 (17.2.43) prints 0,25 (0,22) at the tail's tip itself.
+  - The horn was ground in to 0.05 at the tip, drawing check 2's estimate of the bevel (2-M11). It now keeps its full thickness to the end, bevelled in plan over its last 0.74 as before.
+  - Changed in `escapement.js` (`DETK.tip` null, `HB`) and the recipe (`wempe.py`'s detent). The gold spring rests on the horn's face, not its back, so no contact moves.
+  - Pending: isolate and compare, then the escapement chain.
+- **T3, the detent block's banking-screw hole: corrected (not yet checked).**
+  - 05 04 01-4 (8.7.43) draws it centred on the upright's 3. It was 0.15 under, after photographs of Kirov and Lange blocks that disagree among themselves (0 to 0.25). It is now `BLK.up.s` 5.0.
+  - Centred, the estimated Ø 3.4 head would reach the detent's and gold spring's lower faces. The head is now Ø 3.15 (`BLK.s43.rH` 1.575), Lange 5177's reading and the photographs' smallest, so it keeps 0.125 under them.
+  - Applies to the block as last revised and the 1943 block.
+  - Pending: isolate, `fine.py` and the escapement chain (the banking contact on the dome moves slightly; the depth of lock is set by turning this screw).
