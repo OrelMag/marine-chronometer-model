@@ -197,3 +197,18 @@ T2 (the horn), T3 (the banking screw's hole and head), R2 (the pillar's lead), F
   - Now −15° locally (`H15`). Measured on the page: the hook at 16.2°, the normal at 31°, 14.8° counterclockwise from the square's end, as drawn.
   - The set-up snaps to 0.7125 (13.5° back from 3/4). The mainspring's fit holds (1.97 % with friction against 1.83 % at 3/4) and the budget closes.
   - The detent's inertia moved with the horn: `SET.ID` 7.74, `SET6.ID` 7.72.
+
+## Resume note (3 November 2026, mid-run)
+
+- **Side by side:** the before/after page for the owner, https://claude.ai/artifact/DzdgDEA5zgJ6WRmBK3xVwt (built by the scratchpad's figs.py and mkpage.py).
+- **To fix in the docs:** F2's hook was already 15.3° from the square on the page before the fix; the audit had measured the relation in the recipe's frame. So the real change is F1 (the teeth against the square), and the set-up snap is what keeps a face on the click. Correct that wording in RESOLVED.md, the ledger's "What became of each finding" and here.
+- **The physics chain:** the scratchpad's chain.sh, logged in tools/r_fix_chain/chain.log (ignored).
+  - Passed so far: the inertias, wempe_escapement.js, wempe_1943.js --write, mechanisms.py --model wempe --write, wempe_ratchets.js, escgolden.js, wempe_banking.js --write, wempe_build.js --write, and the tolerances/bench/montecarlo --write for the drawn version and build40's tolerances and bench.
+  - Still to run: build40's montecarlo; all three for build; wempe_essaydata.js --write; recipes.py --check --only on the changed parts.
+- **Then:**
+  1. commit the regenerated JSONs;
+  2. fine.py, solids, holecheck, seatcheck, audit (movement and box), maintaining.py and bom, all --model wempe; contacts.py --write if fine.py's tables change;
+  3. recipes_site.py; the Wempe report's reportdata.js and build_report.py;
+  4. ci.py --full;
+  5. merge to main (--no-ff, from a detached worktree), release (patch or minor) and deploy, then update the root README.
+- **Not safe to close** until all of that is done.

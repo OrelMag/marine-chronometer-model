@@ -7,7 +7,7 @@
    "sheet": "05 06_20, 05 07 03-2",
    "when": "before it goes into the barrel, and again in its barrel",
    "how": "In its barrel, the arbor held by a lever (a 3D-printed arm 50 mm long and a hanging weight do: 1 kg at 50 mm is 0.49 N·m) or a torque gauge: wind it from slack and read the torque each half turn, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, wind it on until its coils lie tight on the arbor and count the turns from slack.",
-   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 427 to 839 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.896-1.194 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 0.93 past full wind). Unwinding reads less than winding: the coils' friction gives 1-3 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
+   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 424 to 839 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.896-1.193 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 0.96 past full wind). Unwinding reads less than winding: the coils' friction gives 1-3 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
   },
   {
    "id": "fusee",
@@ -15,7 +15,7 @@
    "sheet": "05 06_20",
    "when": "the chain on, the barrel set up ¾ turn, before the train goes in",
    "how": "As Herb. Müller did in 1941 (05 06_20: \"Hebellänge 262 m/m\", the mean of two runs): a lever 262 mm long on the fusee arbor, and the weight (g) that holds it level read at each half turn running down from full wind (8.75 turns of the fusee, the curve's 0.05 to 8.74), twice; or a torque gauge (1 g on 262 mm is 2.57 mN·m).",
-   "pass": "Each reading within ×0.896-1.194 of the sheet's at the same turn (its readings' mean 132.7 g: 119.0-158.5 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 2.10 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 177.1 g mean (×1.334): open (README, Unresolved)."
+   "pass": "Each reading within ×0.896-1.193 of the sheet's at the same turn (its readings' mean 132.7 g: 118.9-158.3 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 2.25 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 177.1 g mean (×1.334): open (README, Unresolved)."
   },
   {
    "id": "depths",
@@ -47,7 +47,7 @@
    "sheet": "05 03, 05 04",
    "when": "the balance, hairspring and detent in, the train held still at a lock; before the mainspring is chosen",
    "how": "Give the balance a full swing (a twist of the movement) and let it run down, the train held. Film it from above at 30 frames a second, a card marked every 30° under it, and read the swing every few seconds (python wempe_swing.py reads a video so); time how long it takes to halve from about 207°.",
-   "pass": "The model's balance halves its swing in 43 s (its TF 111 s, set from an earlier fit of a running 6MX on video, moMvyx8eXfo, which now gives TF 133-154 s at it: wempe_startup.js). Halving in 35, 40, 43, 46, 52, 57 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 175, 195, 196, 204, 218, 236° at 12 h; the guard's 180° at the wind's lowest wants ×1.097, 0.925, 0.896, 0.854, 0.793, 0.722 of it, the sources' 225° ×1.583, 1.367, 1.334, 1.255, 1.099, 0.979 (the strip as the drive's cube root). Shorter than 35 s, look for a pivot, the endstone or the detent's springs dragging."
+   "pass": "The model's balance halves its swing in 43 s (its TF 111 s, set from an earlier fit of a running 6MX on video, moMvyx8eXfo, which now gives TF 133-154 s at it: wempe_startup.js). Halving in 35, 40, 43, 46, 52, 57 s (TF 80, 100, 111, 125, 160, 200): 05 06_20's drive swings it 175, 195, 196, 204, 218, 236° at 12 h; the guard's 180° at the wind's lowest wants ×1.097, 0.925, 0.896, 0.854, 0.794, 0.723 of it, the sources' 225° ×1.583, 1.367, 1.334, 1.261, 1.098, 0.979 (the strip as the drive's cube root). Shorter than 35 s, look for a pivot, the endstone or the detent's springs dragging."
   },
   {
    "id": "detent",
@@ -71,7 +71,7 @@
    "sheet": "—",
    "when": "the movement running, fully wound, at 24 h and near run-down",
    "how": "Read the balance's swing against marks under it, from a phone's slow-motion video (python wempe_swing.py reads the arm's sweep), or from a recording of the beat (python acoustic.py --model wempe FILE fits its clicks to the escapement in time).",
-   "pass": "In the guard band, 180-270° each way, over the whole wind (the model 191.1-200.6°, 196.1° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
+   "pass": "In the guard band, 180-270° each way, over the whole wind (the model 191.2-200.4°, 196.0° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
   },
   {
    "id": "maintaining",
@@ -79,7 +79,7 @@
    "sheet": "05 06 01-1, 05 06_4 (A-B)",
    "when": "the movement running, part wound",
    "how": "First, assembling: the spring's eye pin up into the ratchet (05 06_4 A-B: \"Stift nach oben\"), its other pin down into the fusee wheel; the ring lies free in the wheel's recess, its eye a gap short of its square end. Running, the ratchet stands ahead of the wheel as the drive closes the ring: see its ends nearly meet, not touch. Then turn the key back a little (winding) and hold it still, the fusee off the train: time how long the balance keeps going.",
-   "pass": "Running, the ring closed 14.4-15.6° by the drive, its ends 0.27-0.58 mm apart at the eye (they would meet after 16.7°; wempe_sustaining.js); the key held, the balance keeps going 9.3-12.5 minutes (the detent catching a whole tooth late or at once), its swing falling; the 1954 instruction gives 1-2 minutes for chronometers in general; a wind takes 10-30 s. Under 5 minutes (estimated): the ring is open (the pins the wrong way round: it bears on the recess's wall and barely gives), weak, or has taken a set; its ends touching in running: weak or set."
+   "pass": "Running, the ring closed 14.4-15.6° by the drive, its ends 0.27-0.58 mm apart at the eye (they would meet after 16.7°; wempe_sustaining.js); the key held, the balance keeps going 9.0-12.2 minutes (the detent catching a whole tooth late or at once), its swing falling; the 1954 instruction gives 1-2 minutes for chronometers in general; a wind takes 10-30 s. Under 5 minutes (estimated): the ring is open (the pins the wrong way round: it bears on the recess's wall and barely gives), weak, or has taken a set; its ends touching in running: weak or set."
   },
   {
    "id": "stopwork",
@@ -117,14 +117,14 @@
  "criteria": {
   "mainspring": {
    "s": [
-    0.8965,
-    1.1943
+    0.896,
+    1.193
    ],
-   "Mdown": 0.4265,
-   "Mfull": 0.8387,
+   "Mdown": 0.4239,
+   "Mfull": 0.839,
    "setup": 0.75,
    "barrelTurns": 5.079,
-   "room": 0.927,
+   "room": 0.9645,
    "friction": {
     "coils": [
      0.0135,
@@ -138,27 +138,27 @@
   },
   "fusee": {
    "s": [
-    0.8965,
-    1.1943
+    0.896,
+    1.193
    ],
    "g262": {
     "mean": 132.7375,
     "full": 138.4,
     "low": 126.5,
     "band": [
-     119.0036,
-     158.5338
+     118.9341,
+     158.3493
     ]
    },
    "shape": [
     -0.047,
     0.0427
    ],
-   "rms": 0.02105,
+   "rms": 0.0225,
    "sources": {
-    "s": 1.3341,
+    "s": 1.3342,
     "t_mm": 0.4073,
-    "g262": 177.0901
+    "g262": 177.104
    }
   },
   "depths": {
@@ -586,43 +586,43 @@
     [
      80,
      35,
-     174.8289,
+     174.8326,
      1.0968,
      1.5831
     ],
     [
      100,
      40,
-     194.8191,
+     194.507,
      0.9248,
      1.3665
     ],
     [
      111,
      42.5,
-     196.0821,
-     0.8965,
+     196.0068,
+     0.8961,
      1.3341
     ],
     [
      125,
      45.5,
-     204.4832,
+     204.3967,
      0.8544,
-     1.2546
+     1.2605
     ],
     [
      160,
      51.5,
-     217.9814,
-     0.7932,
-     1.0985
+     217.9749,
+     0.7939,
+     1.0982
     ],
     [
      200,
      57,
-     235.8607,
-     0.7221,
+     235.8538,
+     0.7231,
      0.9787
     ]
    ]
@@ -686,11 +686,11 @@
     "dip": 0.3903
    },
    "depth": {
-    "aim": 0.2371,
+    "aim": 0.2373,
     "drawn": 0.235,
     "window": [
      0.2317,
-     0.2372
+     0.2374
     ],
     "tip": 0.25
    },
@@ -713,8 +713,8 @@
     270
    ],
    "model": [
-    191.1347,
-    200.5947
+    191.2382,
+    200.406
    ]
   },
   "maintaining": {
@@ -724,8 +724,8 @@
     0.5786
    ],
    "s": [
-    557.5,
-    750
+    540.5,
+    733
    ],
    "min": 300
   },
@@ -735,14 +735,14 @@
    "pin": 9.8702,
    "softBar": 1.3091,
    "wire": 0.6784,
-   "wrong": 0.7191
+   "wrong": 0.7189
   },
   "cannon": {
    "r": 30,
    "g": [
     10.314,
-    294.2726,
-    55.0921
+    294.3406,
+    55.0984
    ],
    "T": [
     0.003,
