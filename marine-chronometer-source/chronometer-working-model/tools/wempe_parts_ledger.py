@@ -103,7 +103,7 @@ S=[
 ('05-07/Wempe_05-07_07','05 07_7','Federhausdeckel 05 07 01-2 (rev. 20.4.48)','part',12,['lid','steg'],[]),
 ('05-07/Wempe_05-07_08','05 07_8','Federkern kompl. 05 07 02 (28.1.43)','asm',12,['barrelArbor','hook'],[]),
 ('05-07/Wempe_05-07_09','05 07_9','Federkern 02 07 04-1 (4.7.41)','part',12,['barrelArbor'],[]),
-('05-07/Wempe_05-07_10','05 07_10','Federhausring 02 07 01-3 (7.4.41)','part',12,['hookBlock'],[]),
+('05-07/Wempe_05-07_10','05 07_10','Federhausring 02 07 01-3 (7.4.41): the 1941 barrel ring, superseded by the drawn drum 05 07 01-1 (batch 12 found no built part it draws)','part',12,[],[]),
 ('05-07/Wempe_05-07_02','05 07_2','Federhaus 02 07 01 (U 22, 16.7.41)','superseded',0,[],[]),
 ('05-02/Wempe_05-02_01','05 02_1','Zeigerwerk, Auf u. Ab. gesamt (28.3.41)','asm',13,['cannon','changeWheel','changePinion','changePipe','hourWheel','hourPipe','udWheel','udHub','udPinion','studLong','studShort','minuteHand','hourHand','udHand','secondsHand','collet','dial'],[]),
 ('05-02/Wempe_05-02_02','05 02_2','Minutenzeiger 05 02 00-1 (18.9.42)','part',13,['minuteHand'],[]),
@@ -153,8 +153,8 @@ def check():
             f=REP/name
             if not f.exists():continue
             t=f.read_text(encoding='utf-8')
-            for s in S:
-                if s[4]==b and s[1] not in t:bad.append(f'{name} does not mention sheet {s[1]}')
+            for s in S:   # (the catalogue's 51 for a sheet that prints 05)
+                if s[4]==b and s[1] not in t and s[1].replace('51 ','05 ',1) not in t:bad.append(f'{name} does not mention sheet {s[1]}')
     print(f'{len(S)} rows, {len(have)} images, {sum(1 for s in S if s[4])} audited in {len({s[4] for s in S if s[4]})} batches');[print(' ',x) for x in bad]
     return not bad
 

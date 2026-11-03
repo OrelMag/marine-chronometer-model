@@ -1,0 +1,86 @@
+id	sheet	item	drawn	certainty	field	built	delta	verdict
+13-1-1	05 02_1	UD axis from centre arbor: caption "23" (Minuten ... Auf u.Ab)	23	likely	placements udHub 050204-2 origin (0,0,-23)	23.000	0	match
+13-1-2	05 02_1	Change wheel axis from centre arbor: caption 12,6 (Wechselrad ... Minuten)	12.6	likely	placements changeWheel 050202-1 origin (-10.912, 6.3): hypot	12.598	-0.002	match
+13-1-3	05 02_1	UD axis to up-and-down pinion axis: caption 18,4	18.4	unsure (the caption sits between Auf u.Ab and Federhaus; the pair is not marked)	placements udPinion 050200-5 (-16.708,-15.292) to udHub (0,-23): hypot	18.40	0	match
+13-1-4	05 02_1	Zeigerstelltrieb to Wechselrad: caption 12,96	12.96	likely	the hand-setting pinion is not a batch 13 part	-	-	can't tell
+13-1-5	05 02_1	Dial underside above pillar-plate top: dimension 7	7	likely (scaled 6.6-7.0)	dial box y 10.35 minus plate top y 3.35 (the plate top taken from udHub / changePipe lowest y 3.35: inferred)	7.00	0	match
+13-1-6	05 02_1	Dial thickness (assembly 1,3; sheet 12 has 1,2 written over 1,3)	1.3 / 1.2	likely	dial size[2]	1.2	-0.1 vs 1.3	match
+13-1-7	05 02_1	Dial centre hole "Loch 6,0"	6.0	sure	dial cylinders[0].d 6.0 inside at (0,0)	6.0	0	match
+13-1-8	05 02_1	Dial up-and-down hole "Loch 3,2"	3.2	sure	dial cylinders[1].d 3.2 at (0,23)	3.2	0	match
+13-1-9	05 02_1	Hour hand bore on the hour pipe (hand sits on the pipe)	pipe about 4.4	unsure	hourPipe section_y0 r 2.2425->2.2095 (OD 4.485->4.419); hourHand bore 4.4155->4.4598	fits	-	match
+13-1-10	05 02_1	Gap dial top to hour-hand blade underside: dimension "2" (scaled 1.6)	2 (scaled 1.64)	unsure (the arrows sit between the dial top and the hour-hand blade underside)	dial ymax 11.57; hourHand box y0 11.05, blade underside at local z 2.3 -> y 13.35	1.78	-0.22 vs 2; +0.14 vs scaled	mismatch
+13-1-11	05 02_1	Minute-hand boss bottom to hour-hand flange top (label "0,2" near the hands)	0.2?	unsure (label may belong to another step)	minuteHand box y0 14.87, hourHand box ymax 14.15	0.72	+0.5	can't tell
+13-1-12	05 02_1	UD arbor stud: label 12,7 along the stud (length or a diameter?)	12.7	unsure	studLong 050200-6 size[2] 12.3 (cylinders[0].d 1.5, z 0.3-12.0)	12.3	-0.4 if a length	can't tell
+13-1-13	05 02_1	Stud diameter at the UD arbor (scaled about 1.5)	1.5 (scaled)	unsure	studLong cylinders[0].d 1.5	1.5	0	match
+13-1-14	05 02_1	Seconds axis 23 from the centre (assembly plan not shown; sheet 12 gives 23)	23	likely	placements secondsHand 050201-1 and collet origin (0,0,23)	23.000	0	match
+13-1-15	05 02_1	Dial post screw "16" in the block	1.6	unsure	dialScrew WN-10.d head 1.7, shank 0.982; dialPin 1.11/0.98	1.7 / 0.98	+0.1	can't tell
+13-2-1	05 02_2	Length centre to tip (46)	46	sure	box ymax 46.0	46.0	0	match
+13-2-2	05 02_2	Tail behind the centre: none drawn (boss only)	none	sure	box ymin -3.0 (boss radius)	-3.0	0	match
+13-2-3	05 02_2	Boss outer Ø6	6	sure	cylinders[0].d 6.0 outside z 0.8-1.6	6.0	0	match
+13-2-4	05 02_2	Collar Ø4,2 below the flange	4.2	sure	cylinders[1].d 4.2 z 0-0.8	4.2	0	match
+13-2-5	05 02_2	Square bore 2,6 H7 +0,009	2.6 (+0.009)	likely	section_y0 flats x 1.3165 at z0 -> 2.633; 1.3022 at z2 -> 2.604	2.604 narrow end	+0.004	match
+13-2-6	05 02_2	Taper Kegel 1:70 on the bore	1:70	likely	flat change 0.0286 over z 2.0	1:70	0	match
+13-2-7	05 02_2	Overall height 2; flange 1,2	2 ; 1.2	likely	box z 2.0; flange z 0.8-2.0 (section_y0)	2.0 ; 1.2	0	match
+13-2-8	05 02_2	Blade width at the boss 1,2	1.2	likely	outlines_by_level[0.8] line x +-0.6 at y=3	1.2	0	match
+13-2-9	05 02_2	Blade width at 13	2	sure	x +-1.0 at y=13	2.0	0	match
+13-2-10	05 02_2	Blade width at 25	0.7	sure	x +-0.35 at y=25	0.7	0	match
+13-2-11	05 02_2	Blade width at 36	1.7	sure	x +-0.85 at y=36	1.7	0	match
+13-2-12	05 02_2	Blade width at 46 (tip)	0.4	sure	x +-0.2 at y=46	0.4	0	match
+13-2-13	05 02_2	Blade thickness 0,7 / 0,6 / 0,4 at 25 / 36 / 46	0.7 / 0.6 / 0.4	likely	underside z 0.8; top cones d42-74 z1.5->1.4, d74-92 z1.4->1.2: about 0.68 / 0.6 / 0.4	0.68 / 0.6 / 0.4	<=0.02	match
+13-3-1	05 02_3	Length centre to tip (35)	35	sure	box ymax 35.0	35.0	0	match
+13-3-2	05 02_3	Boss outer Ø8,2 (plan)	8.2	sure	box x +-4.1; cones d 6.8, 7.325, 8.2 z 2.3-3.1	8.2	0	match
+13-3-3	05 02_3	Inner ring Ø6,8 (plan)	6.8	likely	cones[0].d 6.8	6.8	0	match
+13-3-4	05 02_3	Tube outer Ø5 -0,2 below the flange	5 -0.2 (4.8-5.0)	likely	cylinders[1].d 4.8 outside z 0-2.3	4.8	0 (at the lower limit)	match
+13-3-5	05 02_3	Bore Ø4,4 H7 +0,012	4.4 (+0.012)	likely (the plane on the taper where the Ø is taken is not marked)	cones[6].d 4.4155 -> 4.4598 over z 3.1	4.4155 narrow end	+0.0035 over the limit; mean 4.4377	match
+13-3-6	05 02_3	Taper Kegel 1:70	1:70	likely	(4.4598-4.4155)/3.1 = 0.0143	1:70	0	match
+13-3-7	05 02_3	Overall height 3,1	3.1	sure	box z 3.1	3.1	0	match
+13-3-8	05 02_3	Flange thickness 0,8	0.8	likely	section_y0 flange z 2.3-3.1	0.8	0	match
+13-3-9	05 02_3	Blade width 1,7 at the root	1.7	unsure (where the dimension sits at the boss edge)	outline x +-0.87 at y 4.0 to +-0.92 at y 5.0	1.74-1.84	+0.04 to +0.14	match
+13-3-10	05 02_3	Blade width 2,4 at 9	2.4	sure	x +-1.2 at y 9.0	2.4	0	match
+13-3-11	05 02_3	Blade width 0,8 at 19,5	0.8	sure	x +-0.4 at y 19.5	0.8	0	match
+13-3-12	05 02_3	Drop Ø5,2 at 22,5	5.2	sure	x +-2.6 at y 22.5	5.2	0	match
+13-3-13	05 02_3	Blade width 0,6 at 30	0.6	sure	x +-0.3 at y 30	0.6	0	match
+13-3-14	05 02_3	Tip width 0,5 at 35	0.5	sure	x +-0.25 at y 35	0.5	0	match
+13-3-15	05 02_3	Blade thickness (labels 0,5 root, 0,6 / 0,7 mid, 0,6, 0,3 tip)	0.5 ... 0.3	unsure (stations of the labels not marked)	top faces z 2.8 (root), 2.9-3.0 (mid), sloping to 2.6 at the tip over underside 2.3	0.5 / 0.6-0.7 / 0.3	<=0.05	match
+13-4-1	05 02_4	Boss Ø4,4 (plan)	4.4	sure	cylinders[2].d 4.4 outside z 0.9-1.4	4.4	0	match
+13-4-2	05 02_4	Bore Ø2,2 H7 +0,009	2.2 (+0.009)	likely	cylinders[0].d 2.204 inside	2.204	+0.004	match
+13-4-3	05 02_4	Inner ring of the boss (about Ø3.2 scaled)	3.2 (scaled, +-0.2)	unsure	cylinders[1].d 3.0 outside z 0-0.9	3.0	-0.2	match
+13-4-4	05 02_4	Total height 1,4; boss 0,5	1.4 ; 0.5	likely	box z 1.4; ring z 0.9-1.4	1.4 ; 0.5	0	match
+13-4-5	05 02_4	Blade width 0,9 at the boss	0.9	sure	x +-0.448 at r 2.2	0.9	0	match
+13-4-6	05 02_4	Blade length 9,5 from the centre (11,7 = 9,5 + 2,2 from the boss edge)	9.5	likely	outline vertex at y=9.5 (x +-0.17), taper ends there	9.5	0	match
+13-4-7	05 02_4	Overall length to the tip	not dimensioned (thin part runs on)	unsure	box ymax 10.2 (tip x +-0.125 at 10.2)	10.2	-	can't tell
+13-4-8	05 02_4	Tip width 0,25	0.25	likely	x +-0.125 at y 9.6-10.2	0.25	0	match
+13-4-9	05 02_4	Blade thickness 0,3	0.3	likely	blade z 0.9-1.2	0.3	0	match
+13-5-1	05 02_5	Overall length 29,5	29.5	sure	size[1] 29.5; box y -10..19.5	29.5	0	match
+13-5-2	05 02_5	Tail 10 (tip to centre)	10	sure	box ymin -10.0	10.0	0	match
+13-5-3	05 02_5	Teardrop end at 6,5	6.5	likely	outline line from (0.15,-6.5)	6.5	0	match
+13-5-4	05 02_5	Teardrop width 1,7	1.7	likely	x +-0.85 at y -7.35	1.7	0	match
+13-5-5	05 02_5	Neck width 0,3	0.3	likely	x +-0.15 at y -6.5	0.3	0	match
+13-5-6	05 02_5	Boss Ø3,2	3.2	sure	cylinders[1].d 3.2 outside z 0-0.4	3.2	0	match
+13-5-7	05 02_5	Raised boss Ø2,5	2.5	sure	cylinders[2].d 2.5 z 0.4-0.6	2.5	0	match
+13-5-8	05 02_5	Bore 1,2 +0,05	1.2 (+0.05)	sure	cylinders[0].d 1.2 inside	1.2	0 (at the lower limit)	match
+13-5-9	05 02_5	Width 0,6 beside the boss	0.6	likely	x +-0.3 at y 1.57	0.6	0	match
+13-5-10	05 02_5	Tip width 0,2	0.2	sure	x +-0.1 at y 19.5	0.2	0	match
+13-5-11	05 02_5	Thickness labels 0,5 / 0,3 / 0,4 / 0,1 / 0,3 along the section	0.3-0.5	unsure (stations not marked)	z levels 0.3, 0.4, 0.5, 0.6; boss 0.4 + raised 0.2	-	-	can't tell
+13-6-1	05 02_12	Outside diameter (fertig 103,6 -0,1)	103.6 -0.1 (103.5-103.6)	sure	cylinders[11].d 103.55 outside	103.55	-0.05	match
+13-6-2	05 02_12	Thickness (Staerke 1,3, 1,2 handwritten over it)	1.3 / 1.2	sure	size[2] 1.2	1.2	0 vs 1.2; -0.1 vs 1.3	match
+13-6-3	05 02_12	Centre hole Ø6	6.0	likely (printed 6 at the centre circle; assembly: Loch 6,0)	cylinders[0].d 6.0 at (0,0)	6.0	0	match
+13-6-4	05 02_12	Up-and-down hole Ø3,2, 23 +-0,03 above the centre	3.2 ; 23	sure	cylinders[1].d 3.2 at (0,23)	3.2 ; 23.0	0	match
+13-6-5	05 02_12	Seconds hole Ø1,7, 23 +-0,03 below the centre	1.7 ; 23	likely	cylinders[5].d 1.7 at (0,-23)	1.7 ; 23.0	0	match
+13-6-6	05 02_12	Screw hole Ø1,8 H7 +0,009, Senkung 1,0 deep, 6 deg left of 12 on the Ø101 circle	1.8 ; 1.0 deep	likely	cylinders d1.8 z0.2-1.2 at (-5.279, 50.223): r 50.50, 6.0 deg	1.8 ; 1.0 deep	0	match
+13-6-7	05 02_12	Screw hole at 4 o'clock (120 deg from 12)	1.8 H7, Senkung 1.0	likely	d1.8 at (43.734,-25.25): r 50.5, 120.0 deg	1.8	0	match
+13-6-8	05 02_12	Screw hole at 8 o'clock	1.8 H7, Senkung 1.0	likely	d1.8 at (-43.734,-25.25)	1.8	0	match
+13-6-9	05 02_12	Through hole inside the countersink (inner ring, "1,1")	1.1	unsure	cylinders d1.1 z0-0.2 at each screw hole	1.1	0	match
+13-6-10	05 02_12	Small pin hole 6 deg right of 12 (position)	x +5.3, y 50.2 (scaled +-0.3)	likely	cylinders d1.0 at (5.279,50.223)	(5.28,50.22)	0	match
+13-6-11	05 02_12	Small pin hole 6 deg left of 6 (position)	x -5.3, y -50.2 (scaled +-0.3)	likely	cylinders d1.0 at (-5.016,-50.250)	(-5.02,-50.25)	0.27 in x (within scan)	match
+13-6-12	05 02_12	Small pin holes diameter	illegible (1,1 or 1?)	unsure	cylinders d1.0	1.0	-	can't tell
+13-6-13	05 02_12	Hand of the pattern (plan from +Z is the dial face, 12 up, 3 right)	screws left of 12; pins right of 12 and left of 6	likely	x -> movement x, y -> -z, Z -> +y; built holes on the same sides	same	0	match
+13-6-14	05 02_12	Dial feet / posts (assembly: block on a post, "Festsitz")	none on the dial (separate posts)	likely	dial has no feet; dialScrew / dialPin separate	-	-	extra
+13-7-1	05 02_13	Outside Ø103	103	sure	cylinders[11].d 103.55 (05 02_12's dial)	103.55	+0.55	mismatch
+13-7-2	05 02_13	Material thickness 1,5	1.5	sure	size[2] 1.2	1.2	-0.3	mismatch
+13-7-3	05 02_13	Up-and-down hole Ø3,2	3.2	sure	cylinders[1].d 3.2	3.2	0	match
+13-7-4	05 02_13	Centre hole Ø6,0 (4,5 struck out)	6.0	sure	cylinders[0].d 6.0	6.0	0	match
+13-7-5	05 02_13	Seconds hole Ø2,2 (1,5 struck out)	2.2	sure	cylinders[5].d 1.7	1.7	-0.5	mismatch
+13-7-6	05 02_13	Mitte-Auf und Ab 23 (23,5 struck out)	23	likely	cylinder at (0,23)	23.0	0	match
+13-7-7	05 02_13	Mitte-Sekunde 23 +-0,05	23 +-0.05	sure	cylinder at (0,-23)	23.0	0	match
+13-7-8	05 02_13	This variant as a solid of its own (iron, 1.5, Ø103, 2.2)	a second dial	sure	only the Wempe dial 050200-4 is measured under key dial	-	-	not built
