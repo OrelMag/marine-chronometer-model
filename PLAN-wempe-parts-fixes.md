@@ -134,3 +134,19 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
   - 05 06_13 draws the spring free, its arm on R10.4. On the page it is sprung onto the click's back and rebuilt as the click rides (`fusee.js`, 692-704), as the assembly 05 06_11 draws it reaching the click.
   - The audit's 10.0-10.8 is the arm under load.
 - **F3, the fusee body's chamfer: checked, not a difference.** `wempe_fusee_check.py` (5 s, the body's own check against 05 06 04-2) measures the 45° from Ø 29.8 at the blank's face exactly: r 14.6 at 0.3 under, 13.9 at 1.0 and 13.3 at 1.6, each within 0.001. The audit read the outline at another level.
+- **R1, hole 30's land: checked, kept.**
+  - 05 08_3.b contradicts itself. Its section G-H draws the land at the bottom; its plan, which shows the inner face, draws the 4.59 solid and the 5.2 dashed, so the land is on the inner face.
+  - 05 08 02 (32-2) dashes the setting's screws to match. Drawing check 2 (9-M2) settled it by the plan and the assembly, which the model follows (`frame.js`, 178-186). The audit's agents read the section alone.
+- **R2, the pillar: lead corrected to 5° (not yet checked); the rest not differences.**
+  - 05 08_11 prints "5°". The audit's reader and verifier and my crop all read it, and it is the only angle that agrees with the lead's 1,1 −0,2 and the end's Ø 4,3 −0,2 (4.484 to 4.3 over 1.1 is 4.8°).
+  - Drawing check 2's "6°" (9-M8) over-determined them. Now `dims.js` `PIL.tip`/`ta`, which the page and the recipe both read: the end Ø 4.29.
+  - **The relief groove is built** (`grv` [3.25, 0.35], the recipe's `FaceGroove`); the audit's measurement missed it.
+  - **The countersink's Ø 2.6** was scaled at 2.59 on the sheet, so it stays.
+- **R4, the lower cock's 19.75 and 3.3: not differences.** Both were read on 05 08_33, the 1941 assembly that draws an earlier cock. The model follows the 1946 revision 05 08_4, which matched.
+- **R3, the barrel bridge's end screw holes: not a difference.** The bridge's own sheet 05 08_13 (checked again 31.4.43, later than the assembly 05 08_12 of 21.7.41) prints holes 42 and 48 at Ø 2.8, as built, and batch 2 matched them. The 3.4-3.5 was scaled off circles on the assembly.
+- **R5, hole 26's step: kept, unsure.** Drawing check 1 read "4,59"; this pass's reader and verifier read "4,5", not excluding a digit lost in the scan. The escape wheel's setting fits the built 4.596.
+- **R6, the undrawn holes: needed, kept.**
+  - **The ring's three Ø 0.729 holes** at r 50.5, 120° apart, are M1 tapped holes for the dial's three screws. The dial's sheet 05 02_12 places its Ø 1.8 holes there (batch 13 matched them); the ring's own sheet omits them.
+  - **The upper cock's Ø 1.075 hole** is the M1.4 tapped hole for the hairspring stud's screw (WN-11, M1.4).
+  - **Its place goes to the owner.** The hole is 4.1 along the arm; the cock's assembly 05 08_6 (18.7.41) dimensions the screw at 5 (batch 3, confirmed). Moving it would move the stud, which holds the spring's outer end where 05 03_7's curve and 05 03_9 put it, so this is a clash between a later assembly and unrevised parts.
+- **R7, the box's strap screws: real, with the small forms.** 51 00_5 prints "4 x 25 Din 97" (sure), a slotted countersunk wood screw; the model draws a cylinder head. It needs a countersink in the strap eye (a plain bought disc on the page). The M6 screws' lengths and the tongue's chamfer rest on unsure readings and stay.
