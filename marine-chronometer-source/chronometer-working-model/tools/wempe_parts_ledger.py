@@ -165,8 +165,78 @@ def batch(n):
         if s[5]:print('  parts (exact solids, r_wpa/measure/KEY.json and KEY.png): '+', '.join(s[5]))
         if s[6]:print('  page lines (page meshes, r_wpa/page/HN.json and HN.png): '+', '.join(s[6]))
 
+VERD=[('not applicable','n/a'),('n/a','n/a'),('superseded','n/a'),('not built','not built'),('mismatch','mismatch'),("can't tell",'cant'),('cant tell','cant'),("can’t tell",'cant'),('extra','extra'),('match','match')]
+def norm(v):
+    v=(v or '').lower()
+    for k,n in VERD:
+        if k in v:return n
+    return '?'
+def cells(line):return [c.strip() for c in line.strip().strip('|').split('|')]
+def items(b):
+    """the batch's items: the reader's rows (batchNN.items.tsv) with the verifier's verdict (verifyNN.md), and the verifier's own new items"""
+    f=REP/f'batch{b:02d}.items.tsv'
+    if not f.exists():return []
+    L=f.read_text(encoding='utf-8').splitlines();H=L[0].split('\t');R=[dict(zip(H,l.split('\t'))) for l in L[1:] if l.strip()]
+    v={};vf=REP/f'verify{b:02d}.md'
+    if vf.exists():
+        for l in vf.read_text(encoding='utf-8').splitlines():
+            c=cells(l)
+            if len(c)>=5 and re.match(r'\d{2}-',c[0]):v[c[0]]=c
+    for r in R:
+        r['rv']=norm(r.get('verdict'));c=v.get(r['id'])
+        r['vv']=norm(c[4]) if c else None;r['vwhy']=c[6] if c and len(c)>6 else '';r['vread']=c[2] if c else ''
+        r['final']=r['vv'] if r['vv'] and r['vv']!='?' else r['rv']
+    ids={r['id'] for r in R}
+    for k,c in v.items():
+        if k not in ids:R.append({'id':k,'sheet':'','item':c[2],'drawn':c[2],'built':c[3],'field':'','delta':'','rv':None,'vv':norm(c[4]),'final':norm(c[4]),'vwhy':c[6] if len(c)>6 else '','vread':c[2],'new':1})
+    return R
+def esc(x):return (x or '').replace('|','/').replace('\n',' ')
+def build():
+    out=[];allR=[];byPart={}
+    for b in sorted({s[4] for s in S if s[4]}):
+        R=items(b)
+        for r in R:r['batch']=b
+        allR+=R
+        rows=[s for s in S if s[4]==b]
+        for i,s in enumerate(rows):
+            sR=[r for r in R if r['id'].startswith(f'{b:02d}-{i+1}-')]
+            K=s[5]+s[6];named=lambda r,k:k in (r.get('field') or '') or k in (r.get('built') or '')
+            for k in K:   # an item naming none of the sheet's parts counts for its main part (the first listed)
+                pr=[r for r in sR if named(r,k) or (k==K[0] and not any(named(r,q) for q in K))]
+                d=byPart.setdefault(k,{'sheets':[],'items':[]});d['sheets'].append(s[1]);d['items']+=[r for r in pr if r not in d['items']]
+    C=lambda R,key:{n:sum(1 for r in R if r[key]==n) for n in ('match','mismatch','not built','extra','cant','n/a')}
+    out.append("## Results by part\n\nEach part with the sheets it was compared against, the count of its items by final verdict (the verifier's where it gave one, else the reader's), and every item whose final verdict is mismatch, not built or extra. An item is counted for a part when its measured field names the part; items about a sheet as a whole are in the batch tables below.\n")
+    out.append("| Part | Sheets | match | mismatch | not built | extra | can't tell | Findings (id: item (drawn / built)) |\n|---|---|---|---|---|---|---|---|")
+    for k,d in sorted(byPart.items(),key=lambda kv:kv[0].lower()):
+        c=C(d['items'],'final');f=[r for r in d['items'] if r['final'] in ('mismatch','not built','extra')]
+        out.append(f"| {k} | {', '.join(dict.fromkeys(d['sheets']))} | {c['match']} | {c['mismatch']} | {c['not built']} | {c['extra']} | {c['cant']} | "+'; '.join(f"{r['id']}: {esc(r['item'])[:90]} ({esc(r.get('drawn'))[:40]} / {esc(r.get('built'))[:40]})" for r in f)+' |')
+    out.append('\n## Results by batch and sheet\n')
+    for b in sorted({s[4] for s in S if s[4]}):
+        R=[r for r in allR if r['batch']==b]
+        if not R:out.append(f'### Batch {b}: not yet read\n');continue
+        cr=C([r for r in R if r['rv']],'rv');cf=C(R,'final')
+        out.append(f"### Batch {b}\n\nReader: {cr['match']} match, {cr['mismatch']} mismatch, {cr['not built']} not built, {cr['extra']} extra, {cr['cant']} can't tell. After the verifier: {cf['match']} match, {cf['mismatch']} mismatch, {cf['not built']} not built, {cf['extra']} extra, {cf['cant']} can't tell, {cf['n/a']} not applicable (reports: `batch{b:02d}.md`, `verify{b:02d}.md`).\n")
+        out.append("| Sheet | Title | Items | match | mismatch | not built | extra | can't tell |\n|---|---|---|---|---|---|---|---|")
+        rows=[s for s in S if s[4]==b]
+        for i,s in enumerate(rows):
+            sR=[r for r in R if r['id'].startswith(f'{b:02d}-{i+1}-')];c=C(sR,'final')
+            out.append(f"| {s[1]} | {esc(s[2])} | {len(sR)} | {c['match']} | {c['mismatch']} | {c['not built']} | {c['extra']} | {c['cant']} |")
+        F=[r for r in R if r['final'] in ('mismatch','not built','extra') or (r['vv'] and r['rv'] and r['vv']!=r['rv'])]
+        if F:
+            out.append("\n| id | item | drawn (reader) | built | reader | verifier | verifier's reason |\n|---|---|---|---|---|---|---|")
+            for r in F:out.append(f"| {r['id']} | {esc(r['item'])[:120]} | {esc(r.get('drawn'))[:60]} | {esc(r.get('built'))[:60]} | {r['rv'] or '(new)'} | {r['vv'] or '-'} | {esc(r['vwhy'])[:160]} |")
+        out.append('')
+    out.append('## Sheets not audited\n\n| Sheet | Title | Why |\n|---|---|---|')
+    why={'superseded':'an earlier revision of a sheet audited here','other':"another calibre's sheet",'notbuilt':'not in the model','copy':'another print of a sheet read with batch 17'}
+    for s in S:
+        if not s[4]:out.append(f"| {s[1]} | {esc(s[2])} | {why.get(s[3],s[3])} |")
+    return '\n'.join(out)+'\n'
+
 if __name__=='__main__':
     sys.stdout.reconfigure(encoding='utf-8')
-    a=argparse.ArgumentParser();a.add_argument('--check',action='store_true');a.add_argument('--batch',type=int);o=a.parse_args()
+    a=argparse.ArgumentParser();a.add_argument('--check',action='store_true');a.add_argument('--batch',type=int);a.add_argument('--build',action='store_true');o=a.parse_args()
+    if o.build:
+        L=ROOT/'WEMPE-PARTS-LEDGER.md';t=L.read_text(encoding='utf-8');a0='<!-- generated by wempe_parts_ledger.py --build: do not edit below -->'
+        L.write_text(t.split(a0)[0]+a0+'\n\n'+build(),encoding='utf-8',newline='\n');print('written',L);sys.exit(0 if check() else 1)
     if o.batch:batch(o.batch)
     else:sys.exit(0 if check() else 1)
