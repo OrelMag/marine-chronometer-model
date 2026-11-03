@@ -76,7 +76,7 @@ Items are by final verdict, with the batch item ids in brackets. "Sheet against 
   - The layout 05 04_1 (3.2.40) draws the wheel's centre under the locking stone, the line to it square to the detent, and prints 23.8 from the wheel to the block's M1.7 hole.
   - The model has the balance-to-wheel distance exactly (10.00). But the wheel stands 0.45-0.7 mm along the detent, with the detent turned 4-5.5° about its pipe, and 23.41 to the hole.
   - No later sheet places the wheel.
-- **The gold spring's bending point** is 4.43 from its end, against 6.2 on the layout (06-1-15).
+- **The gold spring's bending point** is 4.43 from its end in the model. The layout puts it about 6.3 from the fixed end and 4.4 from the stone's pipe, so the datum decides; it is left open (06-1-15, "Against the earlier passes").
 - **The detent's tail tip** is 0.054 wide, against 0.22-0.25 on 05 04_10.1 (06-5-4).
 - **The block's** M1.2 cross hole is 0.15 off centre (06-3-13).
 - **Superseded, not mismatches:** the layout's stud circle, chamfer and arm thickness are replaced by the later block sheet 05 04_3, which the model follows.
@@ -161,7 +161,48 @@ So a size measured on a recipe's solid is the page's size, except at those named
 
 ## Against the earlier passes
 
-(The comparison, `marine-chronometer-source/wempe/parts-audit/earlier-passes.md`, is summarised here when it is done.)
+This comparison was made after every verdict was written, by an agent reading the earlier ledgers, `drawing-check/`, pass 2's ledger on `claude/wempe-drawing-check-2` and the README's open lists. It read no sheet. The full table, row by row, is `marine-chronometer-source/wempe/parts-audit/earlier-passes.md`.
+
+**How the counts differ.** The comparison groups 207 findings, which is more than the totals above (150 + 22 + 12). It counted from the batch tables, where some items appear under both the reader's and the verifier's ids. Its grouping of the "found by neither pass" items also rests on a keyword search of the earlier ledgers, so a few may have been found after all.
+
+**What the earlier passes did with the new findings:**
+- 16 were corrected by an earlier pass; the new pass still finds 1 of these clearly off (12-7-4, the arbor's hook stands out 0.25 against 0.5) and 3 partly off;
+- 92 were kept or recorded as departures, each with its reason: blank against finished sizes, 1941 parts against the 1948 build, the R- casting sheets, fits built at the middle of their range, the coloured section's heights;
+- 23 were recorded as open;
+- 24 were read differently;
+- about 52 were found by neither pass.
+
+**New findings that matter, found by neither pass:**
+- the detent's tail tip, 0.054 wide against 0.25 (06-5-4);
+- the escape wheel 0.45 off the pipe's line and turned about 4° from the layout (06-1-12, 06-1-13);
+- the hairspring's pitch, 0.80 against 0.73 (08-2-5);
+- the set-up ratchet's square turned 10-13° against its tooth tip (12-2-8);
+- the dust bush's flange thickness (02-5-4).
+
+**Corrections that may not have taken:**
+- the round hook's arc, its "along" figure still 1.1 off (11-6-9);
+- the barrel arbor's hook (12-7-4);
+- the hand stack's gaps (13-1-10, 13-1-11);
+- possibly the maintaining detent's hollow, matched by pass 1 and now 0.14 and 0.24 off after pass 2 reshaped the detent (05-5-6, 05-5-7).
+
+**Where an earlier pass reads better.** The new pass is weaker on these:
+- the escape wheel's bore (05-6-7): pass 2 chose 1.8 where this pass found two figures;
+- the chain slot (12-1-17).
+- pass 2's joint findings ("nothing holds it", S-1 to S-7): the new pass has no joint test, so it can neither confirm nor refute them;
+- the steel and brass boundary in the rim (07-6-2): the comparison thinks the new pass is wrong.
+
+**Where pass 1 matched and the new pass differs:**
+- the pillar's relief groove (02-6-12);
+- the staff's flange taper (07-2-8, 07-3-19);
+- the pillar plate's rim notch (01-4-18).
+
+**The gold spring's bending point** (06-1-15) is a dispute about the datum.
+- Pass 2 and the owner's adoption on 28 October put it 6.15 from the stone.
+- The new reader reads 6.2 from the spring's end.
+- On the layout 05 04_1, at 10:1 (24.6 px/mm), I find the arrow meets the spring about 4.4 mm from the stone's pipe and about 6.3 mm from the spring's fixed (right-hand) end.
+- So the reader's reading fits the sheet, and "6.15 from the stone" does not. Whether the built 4.43 is a mismatch depends on the end the build measures from. Left open.
+
+**Version scope.** This pass measured the version as last revised, so first-drawn parts appear as mismatches where the earlier passes built them as separate versions: the 1941 barrel ring, the 1941 arbor sheet and the 1940 layout's figures.
 
 ## Sheets not audited, and why
 
