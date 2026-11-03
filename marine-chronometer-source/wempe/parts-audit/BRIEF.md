@@ -129,7 +129,7 @@ Try hardest to refute:
 - every **mismatch** and **not built**;
 - every **match** on a hole, a pin's fit, a joint, a spring, a tooth count or tooth form, an angle that sets timing, and the escapement's and balance's sizes.
 
-Check simple outline matches by sampling at least one in five. Then look at each sheet for any size the reader missed, and add those items as `NN-S-vK`.
+Re-read every item in those classes on an enlarged crop. You may not mark one "accepted" unread. Check simple outline matches by sampling at least one in five (re-read enlarged), and mark the others "accepted, not re-read". Then look at each sheet for any size the reader missed, and add those items as `NN-S-vK`.
 
 Write `verifyNN.md`. It has one table per sheet: `| id | reader's verdict | your reading of the sheet (certainty) | the built value you found | your verdict | agree? | why |`, then the items the reader missed, then a summary of the disagreements.
 
