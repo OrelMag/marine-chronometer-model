@@ -1,0 +1,90 @@
+# Correcting the Wempe parts found to differ from their drawings
+
+The owner's instruction, 3 November 2026: correct every difference that the parts audit (`WEMPE-PARTS-LEDGER.md`, explained in `marine-chronometer-source/wempe/parts-audit/FINDINGS-EXPLAINED.md`) found, once each is shown to be real and needed. Each correction is documented afterwards. The four clashes keep their fits and are recorded as departures.
+
+## The rules for each correction
+
+1. **Real.** The figure is re-read on the sheet (a crop enlarged 4x, kept outside the repository in `E:/mc-video/wpa-audit/crops/`) and what its extension lines attach to is confirmed. The model's value is re-measured on the solid (`wempe_measure.py`), not taken from the report.
+2. **Needed.** The corrected size is checked against every part it meets: its fit, its clearance, and its hole or pin. It must break no sheet that is later than the one it follows (the owner's rule, the later-dated sheet decides), and it must contradict no earlier decision of the owner. A correction that would clash goes back to the owner instead.
+3. **Corrected** in the place the model takes the size from (`wempe/js/dims.js`, the part's builder, and its recipe in `tools/recipes/wempe*.py`), never as a patch on the mesh.
+4. **Checked.** These run for every correction:
+   - `recipes.py --model wempe --check --only KEY`;
+   - `isolate.py` against the sheet and photographs;
+   - `solids.py`, `fine.py`, `holecheck.py` and `seatcheck.py --model wempe` for geometry;
+   - `bom.py --model wempe` per batch;
+   - the physics tools for any part that sets timing or carries load (the escapement chain: `wempe_escapement.js`, `dynamics.js` and `tripping.js --model wempe`, `wempe_banking.js`, the build tools, `wempe_essaydata.js`; the hairspring: `wempe_hairspring.js`).
+5. **Documented.**
+   - The ledger's row is marked "corrected".
+   - The README's "Readings corrected against the sheets" gets an entry with the sheet, the figure and the commit.
+   - `RESOLVED.md` gets an entry where a correction fixes a bug.
+   - `WEMPE-PROVENANCE.md` updates the part's row.
+6. **Released** once per batch, after its checks pass (the owner's rule: release and deploy each finished change).
+
+## Kept by the owner's decisions (recorded, not changed)
+
+- **A1, the escape wheel's place:** the plate table's 23.41, which Wempe 3955 confirms, against the 1940 layout's 23.8. The wheel is 0.447 along the detent.
+- **B1, the 1946 pinion pivots:** 9.2/4.5 and 4.6/4.6 would stand out of the plates. The model keeps the assemblies' 7.2/3 and 3/3.
+- **C2, the fusee arbor's journals:** the arbor's 2.8 and 4.5 against the plate's, bush's and wheel's 2.70, 4.1 and 4.0.
+- **E1, the hour wheel's collar:** 5.2 would reach into the dial. The model keeps 3.585.
+- **Earlier decisions:**
+  - holes 56 and 57 are not built (28 October);
+  - the top plate's horn tips are a version each (26 October);
+  - the box is 180 high (the 1946/47 reissue of 05 01);
+  - the oil sink on hole 4 (Wempe 3955);
+  - the Vorreiber's 2.76 (its sheet's own note);
+  - fits are drawn at the middle of their range.
+
+## The corrections, by batch
+
+### Batch 1: timing (the escapement and hairspring)
+
+| # | Part | Correction | Re-check first |
+|---|---|---|---|
+| T1 | Hairspring | pitch 0.73, height 9.5, ends 3.15 under the stud's arm and 0.75 over the collet; settle the turn count against 05 03_5, 05 03_6 and 05 03_7 | the sheets' turn counts; the terminal curves' join |
+| T2 | Detent | the tail 0.22 wide to its tip (05 04_10.1) | what the callout attaches to; the tail's contact with the gold spring |
+| T3 | Detent block | the M1.2 cross hole centred on the 3 mm arm (z 5.0) | the banking screw's line against the detent |
+| T4 | Staff | the version check of 05 03_3.2 (1965); the s6 seat 1.665-1.672 and the lower collar within its limits | which sheet governs; jewel and roller fits |
+
+### Batch 2: the fusee and barrel
+
+| # | Part | Correction |
+|---|---|---|
+| F1 | Set-up ratchet | its square turned so a tooth tip lies on a flat's normal (05 07_3) |
+| F2 | Barrel arbor's hook | re-measure (0.25 or 0.475; 15° or 45°); stand-out 0.5 −0.05, face at 15° |
+| F3 | Fusee body | the chamfer to Ø 29.8 +0.2, with no straight wall (05 06_2.2) |
+| F4 | Maintaining detent | the R9 hollow's centre 9.645 / 6.273 (05 05_12), checked against the sheet's own scale |
+| F5 | Fusee arbor | the square's taper 1:100 (05 06_15) |
+| F6 | Click spring | the arm one arc R10.4 about the ratchet's axis (05 06_13) |
+| F7 | Round band hook | the body arc R6 at 3.55 across; 2.8 or 1.7 along, settled on the sheet (05 07_12) |
+| F8 | Cannon pinion | length 14.3 (05 05_8) |
+| F9 | Drum | the slot's reach 0.95 +0.15 (05 07_6) |
+
+### Batch 3: the frame and case
+
+| # | Part | Correction |
+|---|---|---|
+| R1 | Pillar plate | hole 30's land on the drawn face (05 08_3.b) |
+| R2 | Pillar | lead 5° over 1.4, the step 1.4 −0.2, the shoulder's relief groove, the countersink's depth (05 08_11) |
+| R3 | Barrel bridge | the end screw holes about Ø 3.5 (05 08_12/13), with their screws |
+| R4 | Lower cock | width 19.75, arm 3.3 (05 08_33 against 05 08_4: check which applies) |
+| R5 | Plates | hole 26's step 4.5 or 4.59 (05 08_1.b), and the pillar plate's undrawn recess at hole 26 |
+| R6 | Ring and upper cock | the three Ø 0.73 holes in the ring and the Ø 1.075 hole in the upper cock that no sheet draws: find their source, or remove them |
+| R7 | Box screws | the DIN 97 wood screws countersunk; the M6 pivot screws one length |
+
+### Batch 4: small forms, each checked as real first
+
+These are each item in `FINDINGS-EXPLAINED.md` marked "correct" or "optional" that a sheet draws clearly:
+- the balance hub's counterbore 1.8 × 0.4 at one hole;
+- pivot tips as cones where the later sheet draws them;
+- the cannon's Körner groove;
+- the drawn edge breaks;
+- the key's grooved pin;
+- the collet's 1:90 cross-hole taper and its punch mark;
+- the stud's notch round;
+- the tongue's chamfer.
+
+Unsure readings stay as they are and are recorded.
+
+## Progress
+
+(Updated as each correction is made: re-checked, corrected, checks run, documented, released.)
