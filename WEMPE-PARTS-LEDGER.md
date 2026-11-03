@@ -139,7 +139,12 @@ Items are by final verdict, with the batch item ids in brackets. "Sheet against 
 
 ## The owner's rule for sheets that disagree
 
-Where two sheets give different sizes for the same feature, **the later-dated sheet decides**: a sheet's revision date counts as its date (the owner, 3 November 2026). Where the later sheet's size cannot be built as drawn (it clashes with a part it meets), that case goes to the owner. `parts-audit/FINDINGS-EXPLAINED.md` applies the rule finding by finding.
+Where two sheets give different sizes for the same feature, **the later-dated sheet decides**: a sheet's revision date counts as its date (the owner, 3 November 2026). Where the later sheet's size cannot be built as drawn (it clashes with a part it meets), that case goes to the owner. Two further rules apply (the owner, 3 November 2026):
+
+- **A later sheet clashes with an unrevised part.** If the later sheet's size, as drawn, clashes with a mating part whose sheet is older or absent, and no later assembly sheet or photograph settles the pair, each case goes to the owner. The model keeps its present fit meanwhile. Examples: the hour pipe's collar against the dial; the 1946 pinion pivots against the plates.
+- **Sheets dated after Wempe's war-time production** (05 03_3.2, the staff of 1965) count as later only once a check shows they revise this chronometer, not another version (the 6MX, a later calibre).
+
+`parts-audit/FINDINGS-EXPLAINED.md` applies the rule finding by finding.
 
 ## Verdicts I changed after checking
 
