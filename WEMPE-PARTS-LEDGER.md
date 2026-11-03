@@ -137,6 +137,51 @@ Items are by final verdict, with the batch item ids in brackets. "Sheet against 
 
 **The keys and box:** the 1943 key matches its latest revisions (the socket 19 deep by rev. a, 1947), and its square fits the fusee's. The box's height is 180 on 51 00_1 and 185 on 51 00_2 (sheet against sheet). The cross pin is drawn grooved (Kerbstift), built plain. The DIN 97 wood screws are drawn countersunk, built with cylinder heads.
 
+## What became of each finding (3 November 2026)
+
+The owner asked for every finding to be corrected once shown real and needed, and documented. Each was re-read on the sheet, re-measured on the solid and checked against the parts it meets: `PLAN-wempe-parts-fixes.md` has every case with its reasons.
+
+**Corrected** (branch `claude/wempe-parts-fixes`):
+- the detent's horn, its full 0,22 to its tip (06-5-4);
+- the detent block's banking-screw hole, centred on the upright, with its estimated head Ø 3.15 to keep clear of the detent (06-3-13);
+- the pillar's lead at 5° (02-6-7);
+- the set-up ratchet's tip on its square's flat (12-2-8), with the set-up snapped to whole teeth, so a face stays on the click: 0.7125 turn. The arbor's square was already 15.3° from its hook on the page (12-1-18, 12-7-5: the audit's 45° was the recipe's frame, not a difference);
+- the strap screws, countersunk DIN 97 (16-9-17).
+
+**Not differences.** On a closer look the audit had measured or read something else:
+- **The hairspring's ends and pitch:** its figures run to the centrelines (above).
+- **The gold spring's bend:** 6.15 from the stone, the sheet's dashed mark.
+- **The cannon's 14.3:** the crown's apex, on the arbor's end.
+- **The drum's slot reach:** the audit read the flat end's corner.
+- **The maintaining detent's hollow:** the same point, turned with the part's frame.
+- **The fusee arbor's square taper:** read short of its point.
+- **The click spring's arm:** sprung onto its click.
+- **The fusee's chamfer:** `wempe_fusee_check.py` measures it exactly.
+- **The pillar's groove:** built, and missed by the measurement.
+- **The barrel bridge's end holes:** Ø 2.8 on the bridge's own sheet; the 3.5 was scaled on the assembly.
+- **The lower cock's 19.75 and 3.3:** read on the 1941 assembly.
+- **The stud's screw:** 05 08_6's 5 runs to the slot's far edge.
+- **The hook's stand-out:** 0.475 radially; the 0.25 was measured along the pin.
+- **The pinions' pointed tips:** the blanks' lathe centres.
+- **The ring's and the upper cock's undrawn holes:** the dial's screws' M1 holes and the stud screw's M1.4 hole.
+
+**Kept as they are:**
+- **By the owner's choice:** the four clashes (A1, B1, C2, E1 in `parts-audit/FINDINGS-EXPLAINED.md`; the Wempe README, "Kept, the parts audit's four clashes").
+- **Settled earlier with reasons:**
+  - hole 30's land (its sheet's plan and assembly against its section);
+  - the staff's s6 seat (a conflict inside 05 04_4);
+  - hole 26's step (unsure: 4,5 or 4,59).
+- **Unsure readings:**
+  - the round hook's 2,8;
+  - the rim's counterbore;
+  - the cannon's "Körner";
+  - the edge breaks without figures.
+- **The staff's 1965 sheet:** found to be the post-war Glashütte production's, not a revision of this chronometer.
+- **Below what the tools build:** the collet's 1:90 cross-hole taper.
+- **Bought and drawn plain:** the key's grooved pin.
+
+The tables below keep the agents' verdicts as written. This section and `PLAN-wempe-parts-fixes.md` say what each one came to.
+
 ## The owner's rule for sheets that disagree
 
 Where two sheets give different sizes for the same feature, **the later-dated sheet decides**: a sheet's revision date counts as its date (the owner, 3 November 2026). Where the later sheet's size cannot be built as drawn (it clashes with a part it meets), that case goes to the owner. Two further rules apply (the owner, 3 November 2026):
@@ -155,7 +200,7 @@ The tables below the marker keep the agents' verdicts as they wrote them. These 
   - **On the model.** The gold spring's solid shares the detent's frame, whose origin is the pipe: Ø 1.15 outside, with the stone's hole Ø 0.754, both at (0, 0) in `detent.json`. Its bend is at x 6.15, so 6.15 mm from the stone.
   - **Why the batch called it a mismatch.** Its "4.43 from the end" is the straight piece from the bend to the fixed foot (6.15 to 10.58), a different datum.
 - **06-1-7, 06-1-12, 06-1-13, the escape wheel against the detent: mismatch, confirmed** by my own estimate, above.
-- **The hairspring's pitch, 08-2-5: mismatch, confirmed** on 05 03_6 by eye. 15 turns of 0.52 + 0.21 over 11.5 gives a pitch of 0.73; the model's is 0.80.
+- **The hairspring's pitch, 08-2-5: not a difference** (corrected 3 November 2026; I had first called it confirmed). 05 03_6 does print 0.52 + 0.21, a pitch of 0.73. But 05 03_5's 3,15, 9,5 and 0,75 run to the strip's centrelines: the collet's own sheet 05 03_8 (later) puts its pin hole 0.75 from the face, and the spring's end runs in it. The model, with the 11.8 turns the owner chose (the plan draws the two pinning points together), has the ends there and the pitch 9.5/11.8 = 0.80.
 
 ## Sheets read as something else than first mapped
 

@@ -132,7 +132,9 @@
   "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box.first": {
-  "key:Buffer | key:Buffer | +5.62": 2
+  "box:Buffer | lid:Buffer | +12.54": 1,
+  "key:Buffer | key:Buffer | +5.62": 2,
+  "lid:Buffer | lid:Buffer | -12.54": 1
  },
  "movement.6mx": {
   "balance:Buffer | balance:Buffer | +-23.10": 6,

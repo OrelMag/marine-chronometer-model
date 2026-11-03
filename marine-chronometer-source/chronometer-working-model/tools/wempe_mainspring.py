@@ -29,6 +29,7 @@ T_,RA,RW,B,E,EYE=0.37,6.65,19.25,15.0,207.0,9.4   # the strip, the core, the wal
 # from the rivet (05 07 01-1, 0207), 2 wide, its faces at r 18.3 (05 07 01-2's notch, 05 07 01-1's slot) and 18.8 (0.5 thick: 0207): the outer coil between it and the wall
 BLOCK=(0.5,5.7);STEG=(math.pi/4+(1.4-0.3)/RW,1.0,18.3,18.8)   # with them the two neighbour passes leave states near full wind on a higher branch than their neighbours (18 October 2026): passes until none improves
 OUT=HERE/'wempe_mainspring.json'
+SETUP=0.7125   # the set-up in barrel turns: 05 06_20's "3/4 Umgang gespannt" fallen back to the first face on the set-up click (fusee.js's SU, dims.js WD.BAR.SU; the parts audit, 3 November 2026: 0.75 until then)
 FINAL=(1240.0,0.75)   # the spring the model takes (26 October 2026): the try whose shape fits 05 06_20 best with its coils' friction counted (1.83 % rms at mu 0.10; ×0.6 3.24 %, ×0.8 2.31 %), its level closing at the losses' middle with the drawn 0.37 (README); 1240 mm ×0.6, the best frictionless fit, until then
 WD=os.path.join(tempfile.gettempdir(),'mc-mainspring')   # the solved states (mainspring.py's json, not committed)
 def env(L,S,tag):
@@ -63,7 +64,7 @@ def table(f):
     d=json.loads(re.search(r'const MSHAPE=(\{.*?\});',f.read_text(encoding='utf-8')).group(1));T=np.array(d['T']);P=np.array(d['pull'])
     k=np.where((P[:-1]<=0)&(P[1:]>0))[0];sl=float(T[k[-1]]-P[k[-1]]*(T[k[-1]+1]-T[k[-1]])/(P[k[-1]+1]-P[k[-1]])) if len(k) else float(d['T0'])   # slack: where the pull crosses nothing
     return dict(T=T,P=P,T0=float(d['T0']),slack=sl,M1=d['M1'])
-def profile(tb,su=0.75,fr=None):
+def profile(tb,su=SETUP,fr=None):
     """the fusee arbor's torque (N·m, frictionless or less the coils' running loss fr(T)) at fusee turn x: the spring's at the barrel's turns, times the chain's lever on
     the fusee over its lever on the drum"""
     def tq(x):
@@ -71,7 +72,7 @@ def profile(tb,su=0.75,fr=None):
         return M*(1-(fr(T) if fr else 0))*(rf(x)+OF)/RB
     return tq
 USE=KV[:,0]>=0.29   # the first 0.29 turn left out: the chain rises from the flange's slot onto the groove (05 06_4; fusee.js ac), its lever not the groove's
-def score(tb,su=0.75,fr=None):
+def score(tb,su=SETUP,fr=None):
     q=profile(tb,su,fr);x,g=KV[USE,0],KV[USE,1];m=q(x);r=np.log(g)-np.log(m);c=r.mean();e=np.exp(r-c)-1
     return dict(rms=float(np.sqrt((e**2).mean())),max=float(np.abs(e).max()),eta=float(np.mean(g)*LEV*G0/np.mean(m)),
                 fit=[[float(a),float(b),round(float(mm*np.exp(c)),2)] for a,b,mm in zip(x,g,m)])
@@ -82,11 +83,11 @@ def frc():
     return lambda T:np.interp(T,Ts,v)
 def fit(check=False):
     out=dict(note='tools/wempe_mainspring.py: the Wempe\'s mainspring solved (mainspring.py) at each length tried, its fusee arbor\'s torque against 05 06_20\'s measured force (each scaled to its mean, from turn 0.29): the shape\'s rms and worst, the measured over the solved (eta: the losses on the way), the fitted length; fit: [fusee turn, g measured, g solved and scaled]; tq: [fusee turn, the fusee arbor torque from the solved spring frictionless and less the coil friction at 0.10 (N·m)]',
-             strip=dict(t=T_,b=B,ra=RA,Rw=RW,E=E,eye=EYE),setup=0.75,barrelTurns=round(float(IB[-1]),4),marks=[[x,n,round(float(IB[-1]-ib(x)),3)] for x,n in ((0,5),(1.35,4),(2.87,3),(4.62,2),(6.59,1),(8.74,0))],tries=[])
+             strip=dict(t=T_,b=B,ra=RA,Rw=RW,E=E,eye=EYE),setup=SETUP,barrelTurns=round(float(IB[-1]),4),marks=[[x,n,round(float(IB[-1]-ib(x)),3)] for x,n in ((0,5),(1.35,4),(2.87,3),(4.62,2),(6.59,1),(8.74,0))],tries=[])
     for f in sorted(HERE.glob('mainspring_wempe_L*.js')):
         m=re.match(r'mainspring_wempe_L([\d.]+)(?:_s([\d.]+))?\.js',f.name);tb=table(f);s=score(tb)
         out['tries'].append(dict(file=f.name,L=float(m.group(1)),set=float(m.group(2) or 1),slack=round(tb['slack'],4),T0=tb['T0'],rms=round(s['rms'],5),max=round(s['max'],5),eta=round(s['eta'],4),
-                                 su=[round(score(tb,u)['rms'],5) for u in (0.65,0.85)],top=round(float(tb['T'][-1]),2),full=round(tb['slack']+0.75+float(IB[-1]),3)))
+                                 su=[round(score(tb,u)['rms'],5) for u in (0.65,0.85)],top=round(float(tb['T'][-1]),2),full=round(tb['slack']+SETUP+float(IB[-1]),3)))
     tr=[t for t in out['tries'] if 0.55<=t['set']<=0.9]   # near the least (the sets solved either side of it fit far worse)
     if len(tr)>=6 and len({t['L'] for t in tr})>=3 and len({t['set'] for t in tr})>=3:
         # the shape's rms as a quadratic in the length and the set over the tries near it, its least; the level (eta) linear in both there
@@ -100,10 +101,10 @@ def fit(check=False):
                        surf=round(float(np.sqrt(np.mean((X@c-np.array([t['rms'] for t in tr]))**2))),5))
     fm=HERE/'mainspring_wempe.js'
     if fm.exists():
-        tb=table(fm);s=score(tb);F=frc();sf=score(tb,0.75,F) if F else None;Td,Tu=tb['slack']+0.75,tb['slack']+0.75+float(IB[-1]);Mt=lambda T:float(np.interp(T,tb['T'],tb['P'])*tb['M1'])
+        tb=table(fm);s=score(tb);F=frc();sf=score(tb,SETUP,F) if F else None;Td,Tu=tb['slack']+SETUP,tb['slack']+SETUP+float(IB[-1]);Mt=lambda T:float(np.interp(T,tb['T'],tb['P'])*tb['M1'])
         out['final']=dict(L=FINAL[0],set=FINAL[1],slack=round(tb['slack'],4),T0=tb['T0'],M1=tb['M1'],top=round(float(tb['T'][-1]),2),Tdown=round(Td,4),Tup=round(Tu,4),Mdown=round(Mt(Td),5),Mfull=round(Mt(Tu),5),
             rms=round(s['rms'],5),max=round(s['max'],5),eta=round(s['eta'],4),su=[round(score(tb,u)['rms'],5) for u in (0.65,0.85)],fit=s['fit'],
-            tq=[[float(x),round(float(profile(tb)(x)),5),round(float(profile(tb,0.75,F)(x)),5) if F else None] for x in np.arange(0,8.751,0.25)],
+            tq=[[float(x),round(float(profile(tb)(x)),5),round(float(profile(tb,SETUP,F)(x)),5) if F else None] for x in np.arange(0,8.751,0.25)],
             friction=sf and dict(rms=round(sf['rms'],5),max=round(sf['max'],5),eta=round(sf['eta'],4),fit=sf['fit']))
     txt=json.dumps(out,indent=1)+'\n'
     print(f"  the drawn fusee and drum take {IB[-1]:.3f} barrel turns over the fusee's 8.75 (05 06_20 marks 5): its marks at fusee turns 0, 1.35, 2.87, 4.62, 6.59, 8.74 are {', '.join(str(m[2]) for m in out['marks'])} barrel turns from full wind here (the sheet's 5, 4, 3, 2, 1, 0)")

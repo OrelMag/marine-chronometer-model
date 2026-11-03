@@ -1,0 +1,1675 @@
+{
+ "views": {
+  "elevation": {
+   "1": {
+    "n": 36,
+    "hits": 339,
+    "at": [
+     1314.291019608369,
+     392.09622939109397
+    ],
+    "pk": "balance.rim",
+    "title": "Balance rim and arm",
+    "plate": false
+   },
+   "2": {
+    "n": 1,
+    "hits": 510,
+    "at": [
+     1282.3979431650919,
+     350.1121035858809
+    ],
+    "pk": "hairspring.spring",
+    "title": "Hairspring",
+    "plate": false
+   },
+   "3": {
+    "n": 4,
+    "hits": 1,
+    "at": [
+     1258.2545828327416,
+     432.0001308797807
+    ],
+    "pk": "detent.detent",
+    "title": "Detent with its locking stone",
+    "plate": false
+   },
+   "4": {
+    "n": 2,
+    "hits": 289,
+    "at": [
+     1379.7647333908126,
+     339.2721219007268
+    ],
+    "pk": "upperCock.cock",
+    "title": "Upper balance cock",
+    "plate": true
+   },
+   "5": {
+    "n": 2,
+    "hits": 526,
+    "at": [
+     1337.004600038079,
+     471.91572587665496
+    ],
+    "pk": "lowerCock.cock",
+    "title": "Lower balance cock",
+    "plate": true
+   },
+   "6": {
+    "n": 1,
+    "hits": 569,
+    "at": [
+     1118.3822895173178,
+     584.304560302681
+    ],
+    "pk": "intermediateBridge.bridge",
+    "title": "Intermediate bridge",
+    "plate": true
+   },
+   "7": {
+    "n": 1,
+    "hits": 335,
+    "at": [
+     501.8502381249143,
+     395.730876023629
+    ],
+    "pk": "barrelBridge.bridge",
+    "title": "Barrel bridge",
+    "plate": true
+   },
+   "8": {
+    "n": 2,
+    "hits": 78,
+    "at": [
+     1121.8468299129227,
+     627.5831909743526
+    ],
+    "pk": "hands.seconds",
+    "title": "Seconds hand (Sekundenzeiger) and collet",
+    "plate": false
+   },
+   "9": {
+    "n": 1,
+    "hits": 209,
+    "at": [
+     691.377388259356,
+     620.9899855605512
+    ],
+    "pk": "hands.ud",
+    "title": "Up-and-down hand (Auf- und Abzeiger)",
+    "plate": false
+   },
+   "A": {
+    "n": 1,
+    "hits": 370,
+    "at": [
+     875.4731917136492,
+     564.4806543236344
+    ],
+    "pk": "pillarPlate.plate",
+    "title": "Pillar plate",
+    "plate": true
+   },
+   "A′": {
+    "n": 2,
+    "hits": 301,
+    "at": [
+     982.0817313988535,
+     416.5008320569178
+    ],
+    "pk": "topPlate.plate",
+    "title": "Top plate",
+    "plate": true
+   },
+   "B": {
+    "n": 3,
+    "hits": 72,
+    "at": [
+     686.4208497403591,
+     496.75641316899606
+    ],
+    "pk": "pillars",
+    "title": "Pillars (Pfeiler)",
+    "plate": true
+   },
+   "C": {
+    "n": 1,
+    "hits": 587,
+    "at": [
+     521.9183660094056,
+     477.82066643206485
+    ],
+    "pk": "barrel.drum",
+    "title": "Barrel drum (Federhaustrommel)",
+    "plate": false
+   },
+   "c": {
+    "n": 3,
+    "hits": 86,
+    "at": [
+     517.3190763877392,
+     405.1229921966134
+    ],
+    "pk": "barrelArbor.arbor",
+    "title": "Barrel arbor (Federkern)",
+    "plate": false
+   },
+   "r": {
+    "n": 1,
+    "hits": 771,
+    "at": [
+     516.8556909785493,
+     376.2478113375453
+    ],
+    "pk": "setupRatchet",
+    "title": "Set-up ratchet (Sperrad)",
+    "plate": false
+   },
+   "r′": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     513.8053937164962,
+     376.0778572300248
+    ],
+    "pk": "barrelBridge.click",
+    "title": "Click (Sperrkegel)",
+    "plate": false
+   },
+   "f": {
+    "n": 9,
+    "hits": 148,
+    "at": [
+     698.5017530024613,
+     486.3575242066627
+    ],
+    "pk": "chain.links",
+    "title": "Chain links",
+    "plate": false
+   },
+   "D": {
+    "n": 1,
+    "hits": 220,
+    "at": [
+     797.9221617694445,
+     474.4163339324
+    ],
+    "pk": "fusee.body",
+    "title": "Fusee body (Schneckenkörper)",
+    "plate": false
+   },
+   "d": {
+    "n": 3,
+    "hits": 224,
+    "at": [
+     793.4440524675229,
+     381.0681907850376
+    ],
+    "pk": "fusee.arbor",
+    "title": "Fusee arbor (Schneckenwelle)",
+    "plate": false
+   },
+   "D′": {
+    "n": 1,
+    "hits": 165,
+    "at": [
+     798.1894205499503,
+     520.2965852692155
+    ],
+    "pk": "maintaining.ratchet",
+    "title": "Maintaining ratchet (Gegensperrrad)",
+    "plate": false
+   },
+   "d′": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     793.1500196396498,
+     508.8968168587704
+    ],
+    "pk": "maintDetent.click",
+    "title": "Detent click",
+    "plate": false
+   },
+   "S": {
+    "n": 1,
+    "hits": 64,
+    "at": [
+     833.8604146584374,
+     436.6904627368049
+    ],
+    "pk": "stopWork.bar",
+    "title": "Stop bar (Stellungssteg)",
+    "plate": false
+   },
+   "S′": {
+    "n": 1,
+    "hits": 484,
+    "at": [
+     740.2787604457187,
+     415.1039188372791
+    ],
+    "pk": "topPlate.stopPin",
+    "title": "Stop pin (Anschlagstift)",
+    "plate": false
+   },
+   "s": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     781.4129333538513,
+     435.0617470711325
+    ],
+    "pk": "stopWork.spring",
+    "title": "Stop bar spring (Stegfeder)",
+    "plate": false
+   },
+   "D″": {
+    "n": 1,
+    "hits": 214,
+    "at": [
+     797.3117556737304,
+     534.3629901162503
+    ],
+    "pk": "fuseeWheel",
+    "title": "Fusee wheel (Schneckenrad)",
+    "plate": false
+   },
+   "E": {
+    "n": 1,
+    "hits": 328,
+    "at": [
+     954.6913375344343,
+     545.8588277875637
+    ],
+    "pk": "centreWheel.wheel",
+    "title": "Centre wheel (Minutenrad)",
+    "plate": false
+   },
+   "e": {
+    "n": 1,
+    "hits": 120,
+    "at": [
+     940.5398804274478,
+     482.6888877839829
+    ],
+    "pk": "centreWheel.arbor",
+    "title": "Centre pinion and arbor (Minutentrieb)",
+    "plate": false
+   },
+   "E′": {
+    "n": 1,
+    "hits": 504,
+    "at": [
+     942.6014678252301,
+     527.3116926743062
+    ],
+    "pk": "centreWheel.arbor",
+    "title": "Centre pinion and arbor (Minutentrieb)",
+    "plate": false
+   },
+   "G": {
+    "n": 1,
+    "hits": 283,
+    "at": [
+     1069.6029770229989,
+     557.0727253286371
+    ],
+    "pk": "intermediateWheel.wheel",
+    "title": "Intermediate wheel (Zwischenrad)",
+    "plate": false
+   },
+   "g": {
+    "n": 1,
+    "hits": 228,
+    "at": [
+     1058.0414351189402,
+     485.6065869565457
+    ],
+    "pk": "intermediateWheel.arbor",
+    "title": "Intermediate pinion and arbor (Zwischentrieb)",
+    "plate": false
+   },
+   "G′": {
+    "n": 1,
+    "hits": 704,
+    "at": [
+     1059.0714399881674,
+     542.1885459957527
+    ],
+    "pk": "intermediateWheel.arbor",
+    "title": "Intermediate pinion and arbor (Zwischentrieb)",
+    "plate": false
+   },
+   "H": {
+    "n": 1,
+    "hits": 371,
+    "at": [
+     1136.7091364088838,
+     521.7188731145368
+    ],
+    "pk": "secondsWheel.wheel",
+    "title": "Seconds wheel (Sekundenrad)",
+    "plate": false
+   },
+   "h": {
+    "n": 1,
+    "hits": 194,
+    "at": [
+     1139.826712396647,
+     485.25170747307345
+    ],
+    "pk": "secondsWheel.arbor",
+    "title": "Seconds pinion and arbor (Sekundentrieb)",
+    "plate": false
+   },
+   "H′": {
+    "n": 1,
+    "hits": 624,
+    "at": [
+     1139.6823026421607,
+     548.6733416393315
+    ],
+    "pk": "secondsWheel.arbor",
+    "title": "Seconds pinion and arbor (Sekundentrieb)",
+    "plate": false
+   },
+   "K": {
+    "n": 1,
+    "hits": 90,
+    "at": [
+     1196.9395726117007,
+     431.397580847071
+    ],
+    "pk": "escapeWheel.wheel",
+    "title": "Escape wheel",
+    "plate": false
+   },
+   "k": {
+    "n": 1,
+    "hits": 293,
+    "at": [
+     1216.7704370487418,
+     498.4044043144479
+    ],
+    "pk": "escapeWheel.pinion",
+    "title": "Escape pinion and arbor",
+    "plate": false
+   },
+   "K′": {
+    "n": 1,
+    "hits": 595,
+    "at": [
+     1217.4903659595063,
+     515.6582138610208
+    ],
+    "pk": "escapeWheel.pinion",
+    "title": "Escape pinion and arbor",
+    "plate": false
+   },
+   "P": {
+    "n": 1,
+    "hits": 751,
+    "at": [
+     794.0986795937076,
+     606.3218054421623
+    ],
+    "pk": "udPinion",
+    "title": "Up-and-down pinion (Auf- und Abtrieb)",
+    "plate": false
+   },
+   "p": {
+    "n": 1,
+    "hits": 309,
+    "at": [
+     697.9717880569531,
+     603.7934949384655
+    ],
+    "pk": "udWheel.wheel",
+    "title": "Up-and-down wheel",
+    "plate": false
+   },
+   "V": {
+    "n": 1,
+    "hits": 77,
+    "at": [
+     934.7299334678618,
+     593.0589283007176
+    ],
+    "pk": "cannon",
+    "title": "Cannon tube (Minutenrohr)",
+    "plate": false
+   },
+   "V′": {
+    "n": 1,
+    "hits": 348,
+    "at": [
+     1006.7277740034474,
+     587.923649202256
+    ],
+    "pk": "changeWheel.wheel",
+    "title": "Change wheel",
+    "plate": false
+   },
+   "X": {
+    "n": 1,
+    "hits": 410,
+    "at": [
+     1002.3479455883985,
+     604.4441413041217
+    ],
+    "pk": "changeWheel.pinion",
+    "title": "Change pinion (Wechseltrieb)",
+    "plate": false
+   },
+   "X′": {
+    "n": 1,
+    "hits": 264,
+    "at": [
+     920.3001985185289,
+     598.9903901308719
+    ],
+    "pk": "hourWheel.wheel",
+    "title": "Hour wheel",
+    "plate": false
+   },
+   "Y": {
+    "n": 1,
+    "hits": 104,
+    "at": [
+     881.7356137260849,
+     646.3592090412744
+    ],
+    "pk": "hands.minute",
+    "title": "Minute hand (Minutenzeiger)",
+    "plate": false
+   },
+   "Z": {
+    "n": 1,
+    "hits": 188,
+    "at": [
+     943.6285272166965,
+     633.2729559978239
+    ],
+    "pk": "hands.hour",
+    "title": "Hour hand (Stundenzeiger)",
+    "plate": false
+   }
+  },
+  "plan": {
+   "1": {
+    "n": 36,
+    "hits": 67,
+    "at": [
+     1284.0521533752128,
+     452.0166764334549
+    ],
+    "pk": "balance.rim",
+    "title": "Balance rim and arm",
+    "plate": false
+   },
+   "2": {
+    "n": 1,
+    "hits": 161,
+    "at": [
+     1311.037719943352,
+     453.23739377525726
+    ],
+    "pk": "hairspring.spring",
+    "title": "Hairspring",
+    "plate": false
+   },
+   "3": {
+    "n": 4,
+    "hits": 20,
+    "at": [
+     1211.2877900313792,
+     560.6312783861837
+    ],
+    "pk": "detent.detent",
+    "title": "Detent with its locking stone",
+    "plate": false
+   },
+   "4": {
+    "n": 2,
+    "hits": 165,
+    "at": [
+     1408.82037523303,
+     461.5361571402545
+    ],
+    "pk": "upperCock.cock",
+    "title": "Upper balance cock",
+    "plate": true
+   },
+   "5": {
+    "n": 2,
+    "hits": 134,
+    "at": [
+     1352.6061742276725,
+     474.9232330644963
+    ],
+    "pk": "lowerCock.cock",
+    "title": "Lower balance cock",
+    "plate": true
+   },
+   "6": {
+    "n": 1,
+    "hits": 134,
+    "at": [
+     1112.457325915726,
+     482.73748109037035
+    ],
+    "pk": "intermediateBridge.bridge",
+    "title": "Intermediate bridge",
+    "plate": true
+   },
+   "7": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     501.6061052428847,
+     450.79984054920897
+    ],
+    "pk": "barrelBridge.bridge",
+    "title": "Barrel bridge",
+    "plate": true
+   },
+   "8": {
+    "n": 2,
+    "hits": 9,
+    "at": [
+     1113.210639864526,
+     494.4320397558165
+    ],
+    "pk": "hands.seconds",
+    "title": "Seconds hand (Sekundenzeiger) and collet",
+    "plate": false
+   },
+   "9": {
+    "n": 1,
+    "hits": 6,
+    "at": [
+     671.1477274663893,
+     427.8215903795173
+    ],
+    "pk": "hands.ud",
+    "title": "Up-and-down hand (Auf- und Abzeiger)",
+    "plate": false
+   },
+   "A": {
+    "n": 1,
+    "hits": 21,
+    "at": [
+     863.7678747282296,
+     636.1712186146902
+    ],
+    "pk": "pillarPlate.plate",
+    "title": "Pillar plate",
+    "plate": true
+   },
+   "A′": {
+    "n": 2,
+    "hits": 160,
+    "at": [
+     1043.9342220497015,
+     433.32589467520927
+    ],
+    "pk": "topPlate.plate",
+    "title": "Top plate",
+    "plate": true
+   },
+   "B": {
+    "n": 3,
+    "hits": 23,
+    "at": [
+     676.7843800088493,
+     387.470462625937
+    ],
+    "pk": "pillars",
+    "title": "Pillars (Pfeiler)",
+    "plate": true
+   },
+   "C": {
+    "n": 1,
+    "hits": 53,
+    "at": [
+     598.1292552726286,
+     571.676784239512
+    ],
+    "pk": "barrel.drum",
+    "title": "Barrel drum (Federhaustrommel)",
+    "plate": false
+   },
+   "c": {
+    "n": 3,
+    "hits": 30,
+    "at": [
+     497.73080236900614,
+     471.4094192990836
+    ],
+    "pk": "barrelArbor.arbor",
+    "title": "Barrel arbor (Federkern)",
+    "plate": false
+   },
+   "r": {
+    "n": 1,
+    "hits": 435,
+    "at": [
+     510.1504672780781,
+     479.3198534935974
+    ],
+    "pk": "setupRatchet",
+    "title": "Set-up ratchet (Sperrad)",
+    "plate": false
+   },
+   "r′": {
+    "n": 1,
+    "hits": 260,
+    "at": [
+     482.05455551840805,
+     406.6875465917855
+    ],
+    "pk": "barrelBridge.click",
+    "title": "Click (Sperrkegel)",
+    "plate": false
+   },
+   "f": {
+    "n": 9,
+    "hits": 160,
+    "at": [
+     706.4899427994308,
+     564.4870042353556
+    ],
+    "pk": "chain.links",
+    "title": "Chain links",
+    "plate": false
+   },
+   "D": {
+    "n": 1,
+    "hits": 42,
+    "at": [
+     822.7911840053239,
+     540.0742776544212
+    ],
+    "pk": "fusee.body",
+    "title": "Fusee body (Schneckenkörper)",
+    "plate": false
+   },
+   "d": {
+    "n": 3,
+    "hits": 90,
+    "at": [
+     786.4235719240992,
+     467.1677784226134
+    ],
+    "pk": "fusee.arbor",
+    "title": "Fusee arbor (Schneckenwelle)",
+    "plate": false
+   },
+   "D′": {
+    "n": 1,
+    "hits": 10,
+    "at": [
+     906.9698067549693,
+     453.9553582991383
+    ],
+    "pk": "maintaining.ratchet",
+    "title": "Maintaining ratchet (Gegensperrrad)",
+    "plate": false
+   },
+   "d′": {
+    "n": 1,
+    "hits": 324,
+    "at": [
+     786.4510738477287,
+     342.59364346912423
+    ],
+    "pk": "maintDetent.click",
+    "title": "Detent click",
+    "plate": false
+   },
+   "S": {
+    "n": 1,
+    "hits": 18,
+    "at": [
+     821.2374663416825,
+     412.19380074170556
+    ],
+    "pk": "stopWork.bar",
+    "title": "Stop bar (Stellungssteg)",
+    "plate": false
+   },
+   "S′": {
+    "n": 1,
+    "hits": 547,
+    "at": [
+     733.1304199118101,
+     404.5656866087663
+    ],
+    "pk": "topPlate.stopPin",
+    "title": "Stop pin (Anschlagstift)",
+    "plate": false
+   },
+   "s": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     780.5918059550638,
+     480.2727433407778
+    ],
+    "pk": "stopWork.spring",
+    "title": "Stop bar spring (Stegfeder)",
+    "plate": false
+   },
+   "D″": {
+    "n": 1,
+    "hits": 36,
+    "at": [
+     745.097463526889,
+     592.6410225145124
+    ],
+    "pk": "fuseeWheel",
+    "title": "Fusee wheel (Schneckenrad)",
+    "plate": false
+   },
+   "E": {
+    "n": 1,
+    "hits": 86,
+    "at": [
+     969.1208701631199,
+     484.8526420542021
+    ],
+    "pk": "centreWheel.wheel",
+    "title": "Centre wheel (Minutenrad)",
+    "plate": false
+   },
+   "e": {
+    "n": 1,
+    "hits": 98,
+    "at": [
+     941.2693815584444,
+     482.39390592134635
+    ],
+    "pk": "centreWheel.arbor",
+    "title": "Centre pinion and arbor (Minutentrieb)",
+    "plate": false
+   },
+   "E′": {
+    "n": 1,
+    "hits": 142,
+    "at": [
+     935.7647302920435,
+     489.8575592438308
+    ],
+    "pk": "centreWheel.arbor",
+    "title": "Centre pinion and arbor (Minutentrieb)",
+    "plate": false
+   },
+   "G": {
+    "n": 1,
+    "hits": 86,
+    "at": [
+     1069.1558079128333,
+     485.4759794551888
+    ],
+    "pk": "intermediateWheel.wheel",
+    "title": "Intermediate wheel (Zwischenrad)",
+    "plate": false
+   },
+   "g": {
+    "n": 1,
+    "hits": 125,
+    "at": [
+     1057.659298972005,
+     482.3351598367876
+    ],
+    "pk": "intermediateWheel.arbor",
+    "title": "Intermediate pinion and arbor (Zwischentrieb)",
+    "plate": false
+   },
+   "G′": {
+    "n": 1,
+    "hits": 204,
+    "at": [
+     1052.2471497308104,
+     489.17255296178183
+    ],
+    "pk": "intermediateWheel.arbor",
+    "title": "Intermediate pinion and arbor (Zwischentrieb)",
+    "plate": false
+   },
+   "H": {
+    "n": 1,
+    "hits": 108,
+    "at": [
+     1129.0036261095531,
+     475.73845623079694
+    ],
+    "pk": "secondsWheel.wheel",
+    "title": "Seconds wheel (Sekundenrad)",
+    "plate": false
+   },
+   "h": {
+    "n": 1,
+    "hits": 146,
+    "at": [
+     1138.937024700123,
+     480.58632988789617
+    ],
+    "pk": "secondsWheel.arbor",
+    "title": "Seconds pinion and arbor (Sekundentrieb)",
+    "plate": false
+   },
+   "H′": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     1134.3735703192383,
+     484.5112157320623
+    ],
+    "pk": "secondsWheel.arbor",
+    "title": "Seconds pinion and arbor (Sekundentrieb)",
+    "plate": false
+   },
+   "K": {
+    "n": 1,
+    "hits": 94,
+    "at": [
+     1222.4213047268154,
+     483.837050143623
+    ],
+    "pk": "escapeWheel.wheel",
+    "title": "Escape wheel",
+    "plate": false
+   },
+   "k": {
+    "n": 1,
+    "hits": 100,
+    "at": [
+     1221.1375146349133,
+     477.21741765323833
+    ],
+    "pk": "escapeWheel.pinion",
+    "title": "Escape pinion and arbor",
+    "plate": false
+   },
+   "K′": {
+    "n": 1,
+    "hits": 65,
+    "at": [
+     1211.744704999961,
+     487.5728019215692
+    ],
+    "pk": "escapeWheel.pinion",
+    "title": "Escape pinion and arbor",
+    "plate": false
+   },
+   "P": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     798.5642118797809,
+     488.5323343807897
+    ],
+    "pk": "udPinion",
+    "title": "Up-and-down pinion (Auf- und Abtrieb)",
+    "plate": false
+   },
+   "p": {
+    "n": 1,
+    "hits": 37,
+    "at": [
+     697.6878846008091,
+     369.2939699655459
+    ],
+    "pk": "udWheel.wheel",
+    "title": "Up-and-down wheel",
+    "plate": false
+   },
+   "V": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     939.1404610963443,
+     489.16600359992003
+    ],
+    "pk": "cannon",
+    "title": "Cannon tube (Minutenrohr)",
+    "plate": false
+   },
+   "V′": {
+    "n": 1,
+    "hits": 177,
+    "at": [
+     990.3333247969383,
+     554.1838014402249
+    ],
+    "pk": "changeWheel.wheel",
+    "title": "Change wheel",
+    "plate": false
+   },
+   "X": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     996.84843515229,
+     540.8903193288739
+    ],
+    "pk": "changeWheel.pinion",
+    "title": "Change pinion (Wechseltrieb)",
+    "plate": false
+   },
+   "X′": {
+    "n": 1,
+    "hits": 66,
+    "at": [
+     962.383466004737,
+     458.7886893628366
+    ],
+    "pk": "hourWheel.wheel",
+    "title": "Hour wheel",
+    "plate": false
+   },
+   "Y": {
+    "n": 1,
+    "hits": 9,
+    "at": [
+     812.3879743794224,
+     321.04850967309176
+    ],
+    "pk": "hands.minute",
+    "title": "Minute hand (Minutenzeiger)",
+    "plate": false
+   },
+   "Z": {
+    "n": 1,
+    "hits": 57,
+    "at": [
+     956.0835164876934,
+     357.4833482767552
+    ],
+    "pk": "hands.hour",
+    "title": "Hour hand (Stundenzeiger)",
+    "plate": false
+   }
+  },
+  "iso": {
+   "1": {
+    "n": 36,
+    "hits": 65,
+    "at": [
+     1188.147797187742,
+     589.5668539076287
+    ],
+    "pk": "balance.rim",
+    "title": "Balance rim and arm",
+    "plate": false
+   },
+   "2": {
+    "n": 1,
+    "hits": 363,
+    "at": [
+     1176.0756368657856,
+     543.4661012343774
+    ],
+    "pk": "hairspring.spring",
+    "title": "Hairspring",
+    "plate": false
+   },
+   "3": {
+    "n": 4,
+    "hits": 24,
+    "at": [
+     1071.3958532984998,
+     611.361192113593
+    ],
+    "pk": "detent.detent",
+    "title": "Detent with its locking stone",
+    "plate": false
+   },
+   "4": {
+    "n": 0,
+    "hits": 0
+   },
+   "5": {
+    "n": 0,
+    "hits": 0
+   },
+   "6": {
+    "n": 0,
+    "hits": 0
+   },
+   "7": {
+    "n": 0,
+    "hits": 0
+   },
+   "8": {
+    "n": 2,
+    "hits": 40,
+    "at": [
+     1054.7905169498224,
+     697.0434691170382
+    ],
+    "pk": "hands.seconds",
+    "title": "Seconds hand (Sekundenzeiger) and collet",
+    "plate": false
+   },
+   "9": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     790.0619705328336,
+     479.7960090874666
+    ],
+    "pk": "hands.ud",
+    "title": "Up-and-down hand (Auf- und Abzeiger)",
+    "plate": false
+   },
+   "A": {
+    "n": 0,
+    "hits": 0
+   },
+   "A′": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     834.3530347480706,
+     339.2929884602627
+    ],
+    "pk": "topPlate.stopPin",
+    "title": "Stop pin (Anschlagstift)",
+    "plate": false
+   },
+   "B": {
+    "n": 0,
+    "hits": 0
+   },
+   "C": {
+    "n": 1,
+    "hits": 166,
+    "at": [
+     634.331148422857,
+     382.5268712748923
+    ],
+    "pk": "barrel.drum",
+    "title": "Barrel drum (Federhaustrommel)",
+    "plate": false
+   },
+   "c": {
+    "n": 3,
+    "hits": 30,
+    "at": [
+     633.7946834882083,
+     217.73723156604632
+    ],
+    "pk": "barrelArbor.arbor",
+    "title": "Barrel arbor (Federkern)",
+    "plate": false
+   },
+   "r": {
+    "n": 1,
+    "hits": 370,
+    "at": [
+     633.2484023906131,
+     244.882134389292
+    ],
+    "pk": "setupRatchet",
+    "title": "Set-up ratchet (Sperrad)",
+    "plate": false
+   },
+   "r′": {
+    "n": 1,
+    "hits": 218,
+    "at": [
+     687.7137160281187,
+     209.11785600309844
+    ],
+    "pk": "barrelBridge.click",
+    "title": "Click (Sperrkegel)",
+    "plate": false
+   },
+   "f": {
+    "n": 9,
+    "hits": 125,
+    "at": [
+     719.1180940359966,
+     432.8579856353498
+    ],
+    "pk": "chain.links",
+    "title": "Chain links",
+    "plate": false
+   },
+   "D": {
+    "n": 1,
+    "hits": 62,
+    "at": [
+     825.632324797841,
+     484.1047535583847
+    ],
+    "pk": "fusee.body",
+    "title": "Fusee body (Schneckenkörper)",
+    "plate": false
+   },
+   "d": {
+    "n": 3,
+    "hits": 137,
+    "at": [
+     824.8709947076757,
+     327.9586110055529
+    ],
+    "pk": "fusee.arbor",
+    "title": "Fusee arbor (Schneckenwelle)",
+    "plate": false
+   },
+   "D′": {
+    "n": 1,
+    "hits": 24,
+    "at": [
+     836.6110779839289,
+     528.7393568499461
+    ],
+    "pk": "maintaining.ratchet",
+    "title": "Maintaining ratchet (Gegensperrrad)",
+    "plate": false
+   },
+   "d′": {
+    "n": 1,
+    "hits": 237,
+    "at": [
+     920.1179917721863,
+     404.0254806256156
+    ],
+    "pk": "maintDetent.click",
+    "title": "Detent click",
+    "plate": false
+   },
+   "S": {
+    "n": 1,
+    "hits": 23,
+    "at": [
+     890.6788534919397,
+     385.5821811584315
+    ],
+    "pk": "stopWork.bar",
+    "title": "Stop bar (Stellungssteg)",
+    "plate": false
+   },
+   "S′": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     834.3530347480706,
+     339.2929884602627
+    ],
+    "pk": "topPlate.stopPin",
+    "title": "Stop pin (Anschlagstift)",
+    "plate": false
+   },
+   "s": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     814.9481470957703,
+     397.04508026998724
+    ],
+    "pk": "stopWork.spring",
+    "title": "Stop bar spring (Stegfeder)",
+    "plate": false
+   },
+   "D″": {
+    "n": 1,
+    "hits": 44,
+    "at": [
+     811.8854434095679,
+     543.02306733934
+    ],
+    "pk": "fuseeWheel",
+    "title": "Fusee wheel (Schneckenrad)",
+    "plate": false
+   },
+   "E": {
+    "n": 1,
+    "hits": 88,
+    "at": [
+     940.9183793019006,
+     564.0962800209394
+    ],
+    "pk": "centreWheel.wheel",
+    "title": "Centre wheel (Minutenrad)",
+    "plate": false
+   },
+   "e": {
+    "n": 1,
+    "hits": 79,
+    "at": [
+     928.9359529792791,
+     497.5609403045777
+    ],
+    "pk": "centreWheel.arbor",
+    "title": "Centre pinion and arbor (Minutentrieb)",
+    "plate": false
+   },
+   "E′": {
+    "n": 1,
+    "hits": 245,
+    "at": [
+     928.8149233300767,
+     537.3718878932062
+    ],
+    "pk": "centreWheel.arbor",
+    "title": "Centre pinion and arbor (Minutentrieb)",
+    "plate": false
+   },
+   "G": {
+    "n": 1,
+    "hits": 44,
+    "at": [
+     984.9321350144871,
+     607.7137077749069
+    ],
+    "pk": "intermediateWheel.wheel",
+    "title": "Intermediate wheel (Zwischenrad)",
+    "plate": false
+   },
+   "g": {
+    "n": 1,
+    "hits": 147,
+    "at": [
+     1012.565780663952,
+     541.1269812895612
+    ],
+    "pk": "intermediateWheel.arbor",
+    "title": "Intermediate pinion and arbor (Zwischentrieb)",
+    "plate": false
+   },
+   "G′": {
+    "n": 1,
+    "hits": 78,
+    "at": [
+     1002.3582210222821,
+     591.7982913912814
+    ],
+    "pk": "intermediateWheel.arbor",
+    "title": "Intermediate pinion and arbor (Zwischentrieb)",
+    "plate": false
+   },
+   "H": {
+    "n": 1,
+    "hits": 29,
+    "at": [
+     1053.9750089012812,
+     603.0029320395079
+    ],
+    "pk": "secondsWheel.wheel",
+    "title": "Seconds wheel (Sekundenrad)",
+    "plate": false
+   },
+   "h": {
+    "n": 1,
+    "hits": 41,
+    "at": [
+     1070.1715758263347,
+     598.734641111158
+    ],
+    "pk": "secondsWheel.arbor",
+    "title": "Seconds pinion and arbor (Sekundentrieb)",
+    "plate": false
+   },
+   "H′": {
+    "n": 1,
+    "hits": 11,
+    "at": [
+     1069.9108335773547,
+     655.3286320472139
+    ],
+    "pk": "secondsWheel.arbor",
+    "title": "Seconds pinion and arbor (Sekundentrieb)",
+    "plate": false
+   },
+   "K": {
+    "n": 1,
+    "hits": 93,
+    "at": [
+     1123.6803865452596,
+     577.1317247544325
+    ],
+    "pk": "escapeWheel.wheel",
+    "title": "Escape wheel",
+    "plate": false
+   },
+   "k": {
+    "n": 1,
+    "hits": 147,
+    "at": [
+     1127.7843559065411,
+     654.4080114504407
+    ],
+    "pk": "escapeWheel.pinion",
+    "title": "Escape pinion and arbor",
+    "plate": false
+   },
+   "K′": {
+    "n": 1,
+    "hits": 67,
+    "at": [
+     1126.716675626235,
+     651.1288577170985
+    ],
+    "pk": "escapeWheel.pinion",
+    "title": "Escape pinion and arbor",
+    "plate": false
+   },
+   "P": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     825.7029747073299,
+     539.5828763649695
+    ],
+    "pk": "udPinion",
+    "title": "Up-and-down pinion (Auf- und Abtrieb)",
+    "plate": false
+   },
+   "p": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     811.1920527348441,
+     475.96986465787353
+    ],
+    "pk": "udWheel.wheel",
+    "title": "Up-and-down wheel",
+    "plate": false
+   },
+   "V": {
+    "n": 1,
+    "hits": 63,
+    "at": [
+     928.732488918973,
+     580.8234611831247
+    ],
+    "pk": "cannon",
+    "title": "Cannon tube (Minutenrohr)",
+    "plate": false
+   },
+   "V′": {
+    "n": 1,
+    "hits": 142,
+    "at": [
+     924.2309156830383,
+     633.5587527958598
+    ],
+    "pk": "changeWheel.wheel",
+    "title": "Change wheel",
+    "plate": false
+   },
+   "X": {
+    "n": 1,
+    "hits": 0,
+    "at": [
+     932.2595261712474,
+     640.3774723995097
+    ],
+    "pk": "changeWheel.pinion",
+    "title": "Change pinion (Wechseltrieb)",
+    "plate": false
+   },
+   "X′": {
+    "n": 1,
+    "hits": 31,
+    "at": [
+     907.734588395643,
+     579.7523250860951
+    ],
+    "pk": "hourWheel.wheel",
+    "title": "Hour wheel",
+    "plate": false
+   },
+   "Y": {
+    "n": 1,
+    "hits": 4,
+    "at": [
+     957.5478816904058,
+     512.567879939297
+    ],
+    "pk": "hands.minute",
+    "title": "Minute hand (Minutenzeiger)",
+    "plate": false
+   },
+   "Z": {
+    "n": 1,
+    "hits": 10,
+    "at": [
+     1055.4407334909665,
+     566.1499485920914
+    ],
+    "pk": "hands.hour",
+    "title": "Hour hand (Stundenzeiger)",
+    "plate": false
+   }
+  }
+ },
+ "clicked": {
+  "A": [
+   "elevation",
+   "Pillar plate",
+   "Pillar plate"
+  ],
+  "A′": [
+   "elevation",
+   "Top plate",
+   "Top plate"
+  ],
+  "B": [
+   "elevation",
+   "Pillars (Pfeiler)",
+   "Pillars (Pfeiler)"
+  ],
+  "C": [
+   "elevation",
+   "Barrel drum (Federhaustrommel)",
+   "Barrel drum (Federhaustrommel)"
+  ],
+  "c": [
+   "elevation",
+   "Barrel arbor (Federkern)",
+   "Barrel arbor (Federkern)"
+  ],
+  "r": [
+   "elevation",
+   "Set-up ratchet (Sperrad)",
+   "Set-up ratchet (Sperrad)"
+  ],
+  "f": [
+   "elevation",
+   "Chain links",
+   "Chain links"
+  ],
+  "D": [
+   "elevation",
+   "Fusee body (Schneckenkörper)",
+   "Fusee body (Schneckenkörper)"
+  ],
+  "d": [
+   "elevation",
+   "Fusee arbor (Schneckenwelle)",
+   "Fusee arbor (Schneckenwelle)"
+  ],
+  "D′": [
+   "elevation",
+   "Maintaining ratchet (Gegensperrrad)",
+   "Maintaining ratchet (Gegensperrrad)"
+  ],
+  "S": [
+   "elevation",
+   "Stop bar (Stellungssteg)",
+   "Stop bar (Stellungssteg)"
+  ],
+  "S′": [
+   "elevation",
+   "Stop pin (Anschlagstift)",
+   "Stop pin (Anschlagstift)"
+  ],
+  "D″": [
+   "elevation",
+   "Fusee wheel (Schneckenrad)",
+   "Fusee wheel (Schneckenrad)"
+  ],
+  "E": [
+   "elevation",
+   "Centre wheel (Minutenrad)",
+   "Centre wheel (Minutenrad)"
+  ],
+  "e": [
+   "elevation",
+   "Centre pinion and arbor (Minutentrieb)",
+   "Centre pinion and arbor (Minutentrieb)"
+  ],
+  "E′": [
+   "elevation",
+   "Centre pinion and arbor (Minutentrieb)",
+   "Centre pinion and arbor (Minutentrieb)"
+  ],
+  "G": [
+   "elevation",
+   "Intermediate wheel (Zwischenrad)",
+   "Intermediate wheel (Zwischenrad)"
+  ],
+  "g": [
+   "elevation",
+   "Intermediate pinion and arbor (Zwischentrieb)",
+   "Intermediate pinion and arbor (Zwischentrieb)"
+  ],
+  "G′": [
+   "elevation",
+   "Intermediate pinion and arbor (Zwischentrieb)",
+   "Intermediate pinion and arbor (Zwischentrieb)"
+  ],
+  "H": [
+   "elevation",
+   "Seconds wheel (Sekundenrad)",
+   "Seconds wheel (Sekundenrad)"
+  ],
+  "h": [
+   "elevation",
+   "Seconds pinion and arbor (Sekundentrieb)",
+   "Seconds pinion and arbor (Sekundentrieb)"
+  ],
+  "H′": [
+   "elevation",
+   "Seconds pinion and arbor (Sekundentrieb)",
+   "Seconds pinion and arbor (Sekundentrieb)"
+  ],
+  "K": [
+   "elevation",
+   "Escape wheel",
+   "Escape wheel"
+  ],
+  "k": [
+   "elevation",
+   "Escape pinion and arbor",
+   "Escape pinion and arbor"
+  ],
+  "K′": [
+   "elevation",
+   "Escape pinion and arbor",
+   "Escape pinion and arbor"
+  ],
+  "P": [
+   "elevation",
+   "Up-and-down pinion (Auf- und Abtrieb)",
+   "Up-and-down pinion (Auf- und Abtrieb)"
+  ],
+  "p": [
+   "elevation",
+   "Up-and-down wheel",
+   "Up-and-down wheel"
+  ],
+  "V": [
+   "elevation",
+   "Cannon tube (Minutenrohr)",
+   "Cannon tube (Minutenrohr)"
+  ],
+  "V′": [
+   "elevation",
+   "Change wheel",
+   "Change wheel"
+  ],
+  "X": [
+   "elevation",
+   "Change pinion (Wechseltrieb)",
+   "Change pinion (Wechseltrieb)"
+  ],
+  "X′": [
+   "elevation",
+   "Hour wheel",
+   "Hour wheel"
+  ],
+  "Y": [
+   "elevation",
+   "Minute hand (Minutenzeiger)",
+   "Minute hand (Minutenzeiger)"
+  ],
+  "Z": [
+   "elevation",
+   "Hour hand (Stundenzeiger)",
+   "Hour hand (Stundenzeiger)"
+  ],
+  "1": [
+   "elevation",
+   "Balance rim and arm",
+   "Balance rim and arm"
+  ],
+  "2": [
+   "elevation",
+   "Hairspring",
+   "Hairspring"
+  ],
+  "3": [
+   "elevation",
+   "Detent with its locking stone",
+   "Detent with its locking stone"
+  ],
+  "4": [
+   "elevation",
+   "Upper balance cock",
+   "Upper balance cock"
+  ],
+  "5": [
+   "elevation",
+   "Lower balance cock",
+   "Lower balance cock"
+  ],
+  "6": [
+   "elevation",
+   "Intermediate bridge",
+   "Intermediate bridge"
+  ],
+  "7": [
+   "elevation",
+   "Barrel bridge",
+   "Barrel bridge"
+  ],
+  "8": [
+   "elevation",
+   "Seconds hand (Sekundenzeiger) and collet",
+   "Seconds hand (Sekundenzeiger) and collet"
+  ],
+  "9": [
+   "elevation",
+   "Up-and-down hand (Auf- und Abzeiger)",
+   "Up-and-down hand (Auf- und Abzeiger)"
+  ],
+  "r′": [
+   "plan",
+   "Click (Sperrkegel)",
+   "Click (Sperrkegel)"
+  ],
+  "d′": [
+   "plan",
+   "Detent click",
+   "Detent click"
+  ]
+ }
+}
