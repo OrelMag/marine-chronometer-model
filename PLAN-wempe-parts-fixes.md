@@ -133,3 +133,4 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
 - **F6, the click spring's arm: checked, not a difference.**
   - 05 06_13 draws the spring free, its arm on R10.4. On the page it is sprung onto the click's back and rebuilt as the click rides (`fusee.js`, 692-704), as the assembly 05 06_11 draws it reaching the click.
   - The audit's 10.0-10.8 is the arm under load.
+- **F3, the fusee body's chamfer: checked, not a difference.** `wempe_fusee_check.py` (5 s, the body's own check against 05 06 04-2) measures the 45° from Ø 29.8 at the blank's face exactly: r 14.6 at 0.3 under, 13.9 at 1.0 and 13.3 at 1.6, each within 0.001. The audit read the outline at another level.
