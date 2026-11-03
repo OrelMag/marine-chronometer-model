@@ -115,3 +115,21 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
   - **The ratchet (05 07_3).** It draws a tooth's tip on the normal to the square's top flat. The page turns the teeth (`rho`, `fusee.js` 1134-1152) to meet the click and turns the square back by `rho`, so the part's own tooth-to-square relation is arbitrary: 9.9° or 12.6° off.
   - **The hook.** The arbor's hook angle `HKA` (`fusee.js` 1182) follows from the mainspring's set-up, and the hook's relation to the square is F2 (drawn 15°, built 45°).
   - **So the correction is one.** With the tooth fixed to the square and the square to the hook as drawn, the click meets a face only when the set-up falls on a whole tooth, which is how a set-up is made. The set-up then moves by at most half a tooth (1/32 turn), and the physics rerun at the end takes it.
+- **F8, the cannon pinion's length: checked, not a difference.**
+  - The 14.3 (05 05_8) runs to the crown's apex. 05 05 03 draws one arc across the cannon's end and the centre arbor's end inside it, and that apex lies on the arbor's end.
+  - The cannon is a tube, so its highest metal is the crown at the bore's edge, 14.17-14.19. The recipe faces the blank to 14.3 and turns the crown about R 3.1 from there.
+- **F9, the drum's slot: checked, not a difference.**
+  - The slot ends in a flat at r 18.3 on its centreline (`dims.js` `dr.sl.r0`): 0.95 from the wall's 19.25, the revised "0,95 +0,15" (05 07 01-1).
+  - The audit's 18.33 is the flat's corner across the slot's 2.025.
+  - 18.3 is also the lid's notch (05 07 01-2, 18.3 ±0.02), which 05 07 01 draws as one with the slot, with the Steg bearing on both, so it stays.
+- **F7, the round band hook: checked, kept.**
+  - The flank is traced on 05 07_12 at 10:1 (r 5.90 ±0.07 about (−3.47, −1.70), 0.007 rms).
+  - The printed "2,8" puts its centre 1.1 lower, 11 mm on the paper, which is not a drafting slip. Both arcs are tangent to the bottom circle.
+  - The figure's attachment is unsure, so the drawn line stays (as `fusee.js` records). Not built in the version as last revised (the band is a variant).
+- **F4, the maintaining detent's hollow: checked, not a difference.**
+  - `dims.js`' DT has the R9 hollow's centre at exactly the sheet's 6.273 and 9.645 from the hole (05 05_12), in the sheet's frame.
+  - The audit's 6.033 and 9.781 are the same point, 11.49 from the hole against 11.51, turned 1.6° with the part's frame onto the fusee.
+- **F5, the fusee arbor's square: checked, not a difference.** `fusee.js` (492) builds it at 3.12, tapering 1:100 to the sheet's 2.92 over 20.3. The audit's "1:110" was read short of the end: the last 0.5 is the square's point.
+- **F6, the click spring's arm: checked, not a difference.**
+  - 05 06_13 draws the spring free, its arm on R10.4. On the page it is sprung onto the click's back and rebuilt as the click rides (`fusee.js`, 692-704), as the assembly 05 06_11 draws it reaching the click.
+  - The audit's 10.0-10.8 is the arm under load.
