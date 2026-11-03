@@ -314,10 +314,10 @@ def base(work,size,engine='eevee',samples=64):
 
 def pick(only):return [S for S in SHOTS if not only or S['name'] in only.split(',')]
 
-# ---- the narration (the owner's choice, 3 November 2026: an English voice, British, male; the captions kept): Kokoro, offline, its voice VOICE; each line [shot s, text],
+# ---- the narration (the owner's choice, 3 November 2026: an English voice, the captions kept): Kokoro, offline, its voice VOICE; each line [shot s, text],
 # spoken shorter than its caption (about 2.6 words a second), the same facts and sources as the captions beside each shot. [word](/phonemes/) spells a word out: the German
 # ones, and those Kokoro reads as their other word (minute as tiny, wound as hurt, wind as the weather: checked on each line's phonemes, both voices)
-VOICE='bm_george';VSPEED=1.0
+VOICE='af_heart';VSPEED=1.0   # American female (the owner's choice, 3 November 2026; bm_george the British male tried first)
 WEMPE='[Wempe](/vˈɛmpə/) [Einheits](/ˈInhIts/)-Chronometer'
 SAY={'open':[[0.6,f"This is the {WEMPE}: Germany's standard marine chronometer, designed in Hamburg in the early nineteen-forties."]],
  'sea':[[0.6,'At sea, the bowl hangs level in its gimbals.'],[4.2,'Longitude comes from Greenwich time: four seconds of error is a nautical mile at the equator.']],
