@@ -144,7 +144,7 @@ Where two sheets give different sizes for the same feature, **the later-dated sh
 - **A later sheet clashes with an unrevised part.** If the later sheet's size, as drawn, clashes with a mating part whose sheet is older or absent, and no later assembly sheet or photograph settles the pair, each case goes to the owner. The model keeps its present fit meanwhile. Examples: the hour pipe's collar against the dial; the 1946 pinion pivots against the plates.
 - **Sheets dated after Wempe's war-time production** (05 03_3.2, the staff of 1965) count as later only once a check shows they revise this chronometer, not another version (the 6MX, a later calibre).
 
-`parts-audit/FINDINGS-EXPLAINED.md` applies the rule finding by finding.
+`marine-chronometer-source/wempe/parts-audit/FINDINGS-EXPLAINED.md` explains every difference and applies these rules finding by finding.
 
 ## Verdicts I changed after checking
 
