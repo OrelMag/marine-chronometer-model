@@ -203,6 +203,37 @@ def wrap(d,s,f,w):
 FONTS=lambda F:dict(LET=font(['georgiai.ttf','cambriai.ttf'],F(21)),LK=font(['georgiai.ttf','cambriai.ttf'],F(15)),TXT=font(['georgia.ttf','cambria.ttc'],F(14)),
   HD=font(['georgiab.ttf','georgia.ttf'],F(13)),SUB=font(['georgia.ttf'],F(17)),TT=font(['georgia.ttf'],F(24)))
 INK,RED,BLUE=(40,40,40),(150,30,30),(60,85,140);BG=(246,241,230) if PEN else (255,255,255)   # --pen: on the drawing paper (penrender.py's PAPER)
+def _cross(a,b,c,e):
+    """segments ab and ce cross (sharing an end not counted)"""
+    o=lambda p,q,r:(q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]);d1,d2,d3,d4=o(c,e,a),o(c,e,b),o(a,b,c),o(a,b,e);return d1*d2<0 and d3*d4<0
+def uncross(rows,place,rowy,oy):
+    """the letters' rows (above: True, below: False; each in order along it) changed until no two leaders cross, or no change lessens their crossings:
+    two letters of a row swapped, or a letter moved to the other row (put in order by its anchor); the change taken that lessens them most (the owner,
+    3 November 2026: labels not crossing each other)"""
+    def segs(R):
+        o=[]
+        for up,S in R.items():
+            for (L,p,hid),lx in zip(S,place(up,S)):o.append(((lx,rowy(up)),(p[0],p[1]+oy)))
+        return o
+    def count(R):
+        s=segs(R);return sum(_cross(*s[i],*s[j]) for i in range(len(s)) for j in range(i+1,len(s)))
+    R={k:list(v) for k,v in rows.items()};c=c0=count(R)
+    for _ in range(300):
+        if not c:break
+        best=(c,None)
+        for up in (True,False):
+            S=R[up]
+            for i in range(len(S)):
+                for j in range(i+1,len(S)):   # two of a row swapped
+                    T=dict(R);T[up]=S[:i]+[S[j]]+S[i+1:j]+[S[i]]+S[j+1:];n=count(T)
+                    if n<best[0]:best=(n,T)
+                T=dict(R);a=S[i];T[up]=S[:i]+S[i+1:];T[not up]=sorted(R[not up]+[a],key=lambda q:q[1][0]);n=count(T)   # moved to the other row
+                if n<best[0]:best=(n,T)
+        if best[1] is None:break
+        c,R=best
+    print(f'   leaders crossing: {c0} as placed, {c} after');UNC.append(c)
+    return R
+UNC=[]   # the crossings left in each view, the last run's
 def panel(shot,bg,res,sub,dpr,face=None):
     """one view: the render cropped to what the movement draws, its letters in a row above and one below, leaders to their anchors (dashed for HIDDEN)"""
     im=Image.open(shot).convert('RGB');F=lambda s:int(s*dpr);T=FONTS(F)
@@ -216,8 +247,10 @@ def panel(shot,bg,res,sub,dpr,face=None):
     # the anchors shared between the rows above and below by the line fitted through them (level for the elevation and plan; along the train seen isometrically), so leaders stay short
     n=len(A);mx=sum(a[1][0] for a in A)/n;my=sum(a[1][1] for a in A)/n;sxx=sum((a[1][0]-mx)**2 for a in A) or 1;m=sum((a[1][0]-mx)*(a[1][1]-my) for a in A)/sxx
     m=m if abs(m)>0.15 else 0;r=sorted(a[1][1]-my-m*(a[1][0]-mx) for a in A);mid=r[n//2]
+    rows={up:sorted([a for a in A if (a[1][1]-my-m*(a[1][0]-mx)<mid)==up],key=lambda a:a[1][0]) for up in (True,False)}
+    rows=uncross(rows,lambda up,S:spread([a[1][0] for a in S],F(30),F(14),W-F(14)),lambda up:oy-band*0.5+F(12) if up else oy+H+band*0.5-F(12),oy)
     for up in (True,False):
-        S=sorted([a for a in A if (a[1][1]-my-m*(a[1][0]-mx)<mid)==up],key=lambda a:a[1][0])
+        S=rows[up]
         if not S:continue
         xs=spread([a[1][0] for a in S],F(30),F(14),W-F(14));ly=oy-band*0.5 if up else oy+H+band*0.5
         for (L,p,hid),lx in zip(S,xs):
@@ -300,7 +333,7 @@ def save_parts(left,iso,views):
     V.save(D/'iso.png')
     for k,p in enumerate(shots):p.save(D/f'shot{k}.png')
     (D/'meta.json').write_text(json.dumps({'left':len(left),'shots':len(shots),'off':off,'rings':rings,'views':views},ensure_ascii=False),encoding='utf-8')
-if '--relayout' in sys.argv:   # the sheet again from the last run's parts, no browser: for its layout and the key's text
+if '--relayout' in sys.argv and not PEN:   # the sheet again from the last run's parts, no browser: for its layout and the key's text
     D=OUT/'r_laidout_parts';J=json.loads((D/'meta.json').read_text(encoding='utf-8'))
     sheet([Image.open(D/f'left{k}.png').convert('RGB') for k in range(J['left'])],(Image.open(D/'iso.png').convert('RGB'),J['off'],J['rings'],[Image.open(D/f'shot{k}.png').convert('RGB') for k in range(J['shots'])]),
       list(J['views'].values()),OUT/'r_laidout_sheet.png',2);print('wrote',OUT/'r_laidout_sheet.png')
@@ -311,13 +344,14 @@ if '--relayout' in sys.argv:   # the sheet again from the last run's parts, no b
         F0=json.loads(STAMP.read_text(encoding='utf-8'))['files'];STAMP.write_text(json.dumps({'sheet':IMG.name,'files':{k:sha(ROOT/k) for k in F0}},indent=1)+'\n',encoding='utf-8',newline='\n')
         print(f'wrote {IMG.relative_to(ROOT).as_posix()} ({IMG.stat().st_size//1024} KB) and its stamp')
     sys.exit(0)
-def pensheet(PS,iso,views,dpr):
+def pensheet(PS,iso,views,dpr,render=True):
     """--pen: each view and close-up drawn by penrender.py with the page's own camera at the canvas's size (or --pen-scale of it, then scaled back), cropped as the
     page's render was, lettered from the same anchors; the sheet on drawing paper, its grain laid over the whole at the end"""
     import subprocess
     sz=Image.open(PS[0]['src'][0]).size;k=float(_O.get('--pen-scale',1));js=OUT/'r_laidout_pen.json';js.write_text(json.dumps(PS),encoding='utf-8')
-    r=subprocess.run([sys.executable,str(HERE/'penrender.py'),'--model',model.NAME,'--glb',str(GLB),'--shots',str(js),'--flat','--size',f'{round(sz[0]*k)}x{round(sz[1]*k)}','--out',str(OUT)])
-    if r.returncode:sys.exit('penrender.py failed')
+    if render:
+        r=subprocess.run([sys.executable,str(HERE/'penrender.py'),'--model',model.NAME,'--glb',str(GLB),'--shots',str(js),'--flat','--size',f'{round(sz[0]*k)}x{round(sz[1]*k)}','--out',str(OUT)])
+        if r.returncode:sys.exit('penrender.py failed')
     face=lambda S:OUT/f"pen_{model.NAME}_{S['name']}.png"
     global BG;BG=Image.open(face(PS[0])).convert('RGB').getpixel((2,2))   # the sheet in the renders' own paper, so no drawing sits on a lighter patch
     left,PV,shots=[],None,[]
@@ -416,4 +450,7 @@ async def main():
         print(f'wrote {IMG.relative_to(ROOT).as_posix()} ({IMG.stat().st_size//1024} KB, {w} px) and its stamp ({len(F)} files)')
     elif WRITE:print('the sheet not written: the checks failed')
     print('FAIL: '+', '.join(fails) if fails else f'ok: every lettered element of Figs. 83-84 shown laid out and clickable ({sum(1 for i in ITEMS if i[2])} checked)');sys.exit(1 if fails else 0)
+if PEN and '--relayout' in sys.argv:   # the pen sheet again from the last --pen run's drawings and anchors, no browser or Blender: for its layout
+    pensheet(json.loads((OUT/'r_laidout_pen.json').read_text(encoding='utf-8')),(None,None,json.loads((OUT/'r_laidout_parts/meta.json').read_text(encoding='utf-8'))['rings'],None),
+             json.loads((OUT/'r_laidout_checks.json').read_text(encoding='utf-8'))['views'],2,render=False);sys.exit(0)
 asyncio.run(main())

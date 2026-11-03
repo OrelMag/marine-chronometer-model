@@ -279,12 +279,16 @@ for S in A['shots']:
     gh={o for o in shown if K[o]&set(S['page'].get('ghosts',[])) or o in STAND or picks(o,S.get('ghost'))}
     for o in K:o.hide_render=o not in shown or o in gh   # the faded parts left out: drawn, they would hide the lines behind them
     for k,v in S['ctl'].items():ctl[k]=float(v)
+    SZ=S.get('size') or A['size'];sc.render.resolution_x,sc.render.resolution_y=SZ   # a shot may have a size of its own (penposter.py's pieces)
     ctl.update_tag();sc.frame_set(0);bpy.context.view_layer.update()
-    P=S['page'];tgt=B(P['tgt']);pos=tgt+(B(P['pos'])-tgt)*AK(A['size'][0]/A['size'][1])/AK(P['aspect']);up=Vector((0,0,1))
+    up0=None
+    if S.get('mvup'):   # the movement raised (mm, the world's up: the box upright) out of its bowl as it stands, not turned over (penposter.py's centre)
+        up0=mv.location.copy();mv.location=mv.location+mv.parent.matrix_world.inverted().to_3x3()@Vector((0,0,S['mvup']/1000));bpy.context.view_layer.update()
+    P=S['page'];tgt=B(P['tgt']);pos=tgt+(B(P['pos'])-tgt)*AK(SZ[0]/SZ[1])/AK(P['aspect']);up=Vector((0,0,1))
     f=(tgt-pos).normalized();r=f.cross(up).normalized();u=r.cross(f)
     cam.matrix_world=Matrix.Translation(pos)@Matrix((r,u,-f)).transposed().to_4x4();cam.data.angle_y=math.radians(P['fov'])
     d=(tgt-pos).length;cam.data.clip_start=d/200;cam.data.clip_end=d*60
-    PX=2*d*math.tan(math.radians(P['fov'])/2)/A['size'][1]   # a pixel's size at the target
+    PX=2*d*math.tan(math.radians(P['fov'])/2)/SZ[1]   # a pixel's size at the target
     for m,k in LA:m.radius=k*PX
     sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{S['name']}.png");bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath,flush=True)
     if gh:   # then the faded parts alone on a clear film, which the paper lays over the drawing at a third
@@ -293,3 +297,4 @@ for S in A['shots']:
         sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{S['name']}_ghost.png");bpy.ops.render.render(write_still=True)
         sc.render.film_transparent=False;sc.render.image_settings.color_mode='RGB';print('MC rendered its faded parts:',len(gh),'meshes',flush=True)
     for k in S['ctl']:ctl[k]=0.0
+    if up0 is not None:mv.location=up0

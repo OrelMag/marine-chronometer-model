@@ -4,6 +4,19 @@ Written 2 November 2026 by the session that built `tools/penrender.py` (releases
 "Making illustrations", then `penrender.py`'s comments. Work in your own branch and worktree (CLAUDE.md), and ask the owner the decisions in section 5 first
 (AskUserQuestion, recommended option first).
 
+## Status (3 November 2026)
+
+The owner's choices (section 5): the poster is the Wempe's; both pictures are for print, committed in `illustrations/` (not on the site); an
+A2 poster and an A3 sheet; Caveat for the lettering; no ship. Done on branch `claude/illustrations`:
+- 3.1: the Wempe's export has the Laid out clip and the rig's `laid_out` (3.79.00); the rig now shows a part hidden at rest that a control shows (the
+  stand-in plates never showed, on both models: 3.79.01, RESOLVED.md "Rendering").
+- 3.2, 3.3: `laidout.py --pen` (sheet A) and `penposter.py` (the poster), on `penrender.py --shots` (a page camera, size, parts alone, faded or
+  hidden, the movement raised); their checks: each label on the page's own pick, each drawing on the page's outline.
+- A: `illustrations/wempe-laidout-sheet-ink.jpg` and its A3 PDF.
+- 3.4-3.6: the poster's centre (a cutaway: the dial, plates, lower cock and ring faded, so the leaders end on the fusee, escape wheel and balance),
+  the gimbals panel (the box rolled 15° each way, the case level, the arrows the way the page turns the box) and the text (`TEXT` in the tool, each
+  sentence with its sources).
+
 ## 1. The goal
 
 The owner wants very accurate versions of two pictures:

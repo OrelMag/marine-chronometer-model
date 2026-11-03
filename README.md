@@ -725,8 +725,30 @@ draw (`show`), fade (`ghost`) or leave out (`hide`), by part key, parts-list
 line (`hns`) or the stand-in plate's part (`devOf`). `--flat` leaves out the
 paper's grain.
 
-`PLAN-illustrations.md` is the plan for what comes next: a poster explaining
-what makes a chronometer precise, from the model's own geometry.
+### The poster (`penposter.py`)
+
+*What makes a marine chronometer precise*: the Wempe drawn in ink and wash and
+lettered by hand (Caveat, `vendor/fonts`), A2 landscape at 300 dpi, for print.
+In the middle the box open, the case in its gimbals and the movement raised dial
+up above its bowl, its dial, plates, lower cock and ring drawn faded so what lies
+under them shows; round it four callouts, each a heading, a few sentences and a
+lettered drawing of the parts alone: the mainspring, chain and fusee; the spring
+detent escapement; the balance and hairspring; the box rolled each way with the
+case level.
+
+    python penposter.py --glb r_wempe.glb --preview      # the layout with the page's own renders, a few minutes
+    python penposter.py --glb r_wempe.glb --scale 0.5    # the drawings at half size first (about 25 minutes)
+    python penposter.py --glb r_wempe.glb                # the poster: r_poster/penposter.png (about an hour, mostly Blender)
+    python penposter.py --recompose                      # the last drawings laid out again after a change of text or layout
+
+Each piece is set up on the page (the view, the parts alone or faded, the
+movement raised, the box rolled), its camera read off the page's canvas and
+drawn by `penrender.py` with that camera at the canvas's size. Every label and
+leader ends on a point the page's own pick finds on the part it names, through
+the faded parts only, and each drawing must lie on the page's own outline within
+a pen stroke; the tool fails otherwise. The sentences and their sources are in
+its `TEXT` table (the Wempe README, its drawings, and the essay where it speaks
+of the Wempe). The finished poster is in `illustrations/`.
 
 ## Licence
 
