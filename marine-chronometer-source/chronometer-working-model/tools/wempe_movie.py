@@ -343,7 +343,7 @@ def voice(work,name=VOICE):
             f=vd/(hashlib.sha1(f'{name} {VSPEED} {txt}'.encode()).hexdigest()[:16]+'.wav')
             if not f.exists():
                 if pipe is None:
-                    from kokoro import KPipeline;pipe=KPipeline(lang_code='b')
+                    from kokoro import KPipeline;pipe=KPipeline(lang_code=name[0])   # a: American, b: British (the voice's first letter)
                 a=np.concatenate([np.asarray(x[2]) for x in pipe(txt,voice=name,speed=VSPEED)]);sf.write(str(f),a,24000)
             a,_=sf.read(str(f));a=resample_poly(a,SR,24000);nz=np.nonzero(np.abs(a)>0.01*np.abs(a).max())[0];a=a[max(0,nz[0]-int(0.03*SR)):nz[-1]+int(0.08*SR)];out[(S['name'],j)]=a   # Kokoro's silence at either end cut
             room=(L[j+1][0] if j+1<len(L) else S['dur']-0.3)-t0;d=len(a)/SR
@@ -371,7 +371,7 @@ def ticks(S,E):
         if math.floor(U[i]-0.5)>math.floor(U[i-1]-0.5):out.append(i/240)
     return out
 
-def compose(work,tag,outp,narrate=True):
+def compose(work,tag,outp,narrate=True,vname=VOICE):
     import numpy as np;from PIL import Image,ImageDraw,ImageFont,ImageFilter
     from fontTools.ttLib import TTFont
     import imageio_ffmpeg
@@ -404,7 +404,7 @@ def compose(work,tag,outp,narrate=True):
             srt.append(f"{n}\n{ts(T0+c[0])} --> {ts(T0+c[1])}\n{c[2]}"+(f"\n{c[3]}" if c[3] else '')+'\n');n+=1
         T0+=S['dur']
     if narrate:   # the voice over the ticks, which duck to a third under it (0.15 s ramps)
-        vo=np.zeros_like(aud);T0=0;V=voice(work)
+        vo=np.zeros_like(aud);T0=0;V=voice(work,vname)
         for S in SHOTS:
             for j,(t0,_) in enumerate(SAY.get(S['name'],[])):a=V[(S['name'],j)];i=int((T0+t0)*SR);vo[i:i+len(a)]+=a[:len(vo)-i]
             T0+=S['dur']
@@ -437,7 +437,7 @@ def main():
     sys.stdout.reconfigure(encoding='utf-8')
     a=argparse.ArgumentParser();a.add_argument('job',choices=['export','plan','stills','render','compose','say']);a.add_argument('--work',default=str(WORK));a.add_argument('--only')
     a.add_argument('--at',default='0.5');a.add_argument('--engine',default='eevee');a.add_argument('--size',default='1280x720');a.add_argument('--fps',type=int,default=30)
-    a.add_argument('--samples',type=int);a.add_argument('--tag');a.add_argument('--out');a.add_argument('--no-voice',action='store_true');o=a.parse_args()
+    a.add_argument('--samples',type=int);a.add_argument('--tag');a.add_argument('--out');a.add_argument('--no-voice',action='store_true');a.add_argument('--voice',default=VOICE);o=a.parse_args()   # --voice: Kokoro's, bm_george, af_heart ...
     work=pathlib.Path(o.work);work.mkdir(parents=True,exist_ok=True);t0=time.time();size=[int(x) for x in o.size.split('x')]
     samples=o.samples or (64 if o.engine=='eevee' else 128)
     if o.job=='export':asyncio.run(export(work/'wempe_movie.glb'))
@@ -461,7 +461,7 @@ def main():
         sh=[dict(S,frames=[[i/o.fps,f'{i:05d}.png'] for i in range(int(round(S['dur']*o.fps)))]) for S in pick(o.only)]
         run_blender(work,dict(base(work,size,o.engine,samples),job='frames',shots=sh,plan=pl,dir=str(dr)),log=dr/'render.log')
     elif o.job=='compose':
-        tag=o.tag;outp=pathlib.Path(o.out) if o.out else work.parent/f'wempe_movie_{tag}.mp4';compose(work,tag,outp,not o.no_voice)
-    elif o.job=='say':voice(work)   # the narration spoken and timed, without the frames
+        tag=o.tag;outp=pathlib.Path(o.out) if o.out else work.parent/f'wempe_movie_{tag}.mp4';compose(work,tag,outp,not o.no_voice,o.voice)
+    elif o.job=='say':voice(work,o.voice)   # the narration spoken and timed, without the frames
     print(f'{o.job} done in {time.time()-t0:.0f} s')
 if __name__=='__main__':main()
