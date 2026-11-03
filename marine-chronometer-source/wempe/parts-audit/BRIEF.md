@@ -46,6 +46,10 @@ You may read:
     - `teeth`: count, tips, roots and depth at each level.
   - **Orientation.** The part's frame need not be the sheet's. A sheet may draw the part from its other face, mirrored, or turned. Establish the correspondence first, from the datums: the centre, two holes or a straight edge. Say which face you take as which. **A part built mirrored is a finding**: check the hand of every asymmetric feature (teeth, ratchets, slots, cranked arms, hole patterns).
 
+  Judge hand only as assembled. The part's own frame may stand turned over in the movement, so the plan seen from +Z can be the part seen from either side. Find the part's `hn` in `placements.json` and its local axes in the movement frame. Work out which side of the movement +Z looks from. Work out which face the sheet draws: use its sections, a hub's or collet's side, a shoulder. Compare the two from the same side.
+
+  Where the sheet's view side can't be fixed, say "hand: can't tell". Where the part's function fixes it, say so: a ratchet's teeth face the click that holds them, and an escape wheel's locking faces lead in the direction the train turns it.
+
 - **Parts with no exact solid** (strips, the chain, the band, bought and box parts): `TOOLS/r_wpa/page/HN.json` and `HN.png`, written by `wempe_pagemeasure.py`. These are the page's own meshes in the part's root frame on the page, with Y as its axis.
   - **Fields:**
     - `box`, `size`, `volume_mm3`;
