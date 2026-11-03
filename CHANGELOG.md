@@ -4,9 +4,16 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.81.01 · 2026-11-04
+- The Wempe's shading fixes of 3.80.01 (the hour hand's root, the cannon tube end, the fusee bush flange) together with 3.81.00's corrected parts
+
 ## 3.81.00 · 2026-11-03
 - The Wempe's parts checked a third time against their drawings: the detent's horn keeps its thickness to the tip, the banking screw's hole is centred in the detent block, the pillars' lead is 5°, the set-up ratchet, its square and the mainspring's hook are set together as drawn (the set-up 0.7125 turn), and the box's strap screws are countersunk
 - Each part's CAD file and operation sheet rebuilt for those changes
+
+## 3.80.01 · 2026-11-03
+- The Wempe's hour hand no longer shows stripes down the root of its blade
+- The Wempe's cannon tube end and fusee bush flange shade smoothly, without facets or bands
 
 ## 3.80.00 · 2026-11-03
 - Wempe: Overhaul, under How it works: take the movement down and put it back together, part by part, in the order the Soviet Navy's 1958 repair book gives for the MX, with its checks of the escapement and its oils
