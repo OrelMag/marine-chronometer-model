@@ -594,6 +594,10 @@ The Variants' fifth version, *Wempe 3955 (as photographed)* (`rev=3955`; `moveme
 
 ## Estimated, not from the drawings
 
+- **From the parts audit** (3 November 2026):
+  - *The staff's lengths* (25.6 overall, the pivots 6.9 and 6.1) are taken from 05 03_3.2. That sheet is the post-war Glashütte production's (12.3.65, no Wempe title block, tempered 210° against 05 04_4's 240°), not a revision of this chronometer. No Wempe sheet gives them, since 05 04_4's top is cut off.
+  - *The banking screw's head* is Ø 3.15 (Lange 5177's, the smallest of the photographs' 3.15-3.6), to clear the detent with its hole centred.
+  - *The strap screws' head*, Ø 8 × 2.0, is DIN 97's proportion for 4 (the standard isn't in the set).
 - **The fusee's pins** (28 October 2026, the second drawing check's batch 5): the Vorreiber's pin (05 06 00-5, no sheet) Ø 1.16 in its holes reamed together Ø 1.15, its size reconciled from the hub's 0.8, the arbor's 1.1 taper-reamed and 05 06_1's 1.2 (the arbor, above), its 1:50 taper not drawn, its 8.3 length scaled on the coloured section (±0.15); the chain's pin (05 06 00-6, no sheet) pressed Ø 0.567 in the ribs' 0.555; the fusee wheel's bore 4.55, 0.04-0.06 clear on the 1:70 seat, which neither its "4 +0,1" nor 05 06_1's straight 4,45 H7/g6 can be. The dust plate 1.0 from the square's root as 05 06_1 figures it, its hole at 3.110 there (within its H7); at the fits' middles it would sit 1.3 off, and the coloured section draws it on the root.
 
 - **The navigator's voyage** (Navigating by it, `wempe_navigation.js`): the route, from 45° N in port to 15° N by day 20 where the box reaches 85 °F, is estimated (no source gives one; the latitude only scales miles of longitude by its cosine, and the equator's figures are given beside it). Bowditch's probable error of a fix (±2 miles) is taken as a circular normal whose median radius is 2 miles (σ 1.70 a side); Bowditch gives the figure, not its distribution.
