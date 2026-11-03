@@ -193,3 +193,7 @@ T2 (the horn), T3 (the banking screw's hole and head), R2 (the pillar's lead), F
    - `solids.py`, `fine.py` (and `contacts.py --write`), `holecheck.py`, `seatcheck.py`, `audit.py` (movement and box), `maintaining.py`, `bom.py`, all `--model wempe`.
    - `isolate.py` on each changed part against its sheet.
 4. **Then:** `ci.py --full`, the documentation (ledger, README, RESOLVED.md, WEMPE-PROVENANCE.md), and the release.
+- **F2's sense, found by measuring (isolate and the page, 3 November 2026).** The barrel's group stands turned over in the movement, so its own angles run the other way. With the hook first set at +15° in them, the page put it clockwise of its flat's normal seen from the square's end, against 05 07 02.
+  - Now −15° locally (`H15`). Measured on the page: the hook at 16.2°, the normal at 31°, 14.8° counterclockwise from the square's end, as drawn.
+  - The set-up snaps to 0.7125 (13.5° back from 3/4). The mainspring's fit holds (1.97 % with friction against 1.83 % at 3/4) and the budget closes.
+  - The detent's inertia moved with the horn: `SET.ID` 7.74, `SET6.ID` 7.72.
