@@ -165,7 +165,8 @@ const WDIAL=(()=>{
     if(ns){const st=TAU/ns,K=Math.floor((a0-1e-4)/st);for(let k=-K;k<=K;k++){const a=k*st;arc.push([r0*Math.sin(a),dir*r0*Math.cos(a)]);}}else for(let k=1;k<8;k++){const a=-a0+2*a0*k/8;arc.push([r0*Math.sin(a),dir*r0*Math.cos(a)]);}   /* ns: the boss's sides, the root's points on its vertices (the root an 8-gon against the boss's 72 left a hairline gap of 0.003 until 1 November 2026) */
     const inB=p=>Math.hypot(p[0],p[1])<rb-1e-6,yb=cone?(p=>{const r=Math.hypot(p[0],p[1]);return r<cone[0]?Math.min(tf(p),y0+(cone[0]-r)*cone[2]/(cone[0]-cone[1])):y0;}):p=>y0+(inB(p)?0.02:0),tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1]))-(tp&&inB(p)?0.02:0),cells=[];
     const mid=r=>cone&&r<cone[0]-1e-9?[-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7].map(k=>[k/8*w(r),dir*r]):[];   /* inside the bevel the stations' lines cut in eighths, so the underside's faces follow the cone across the blade */
-    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),...mid(R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?mid(R[i]).reverse():arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf});}
+    for(let i=0;i+1<R.length;i++){const ma=i?mid(R[i]):[],mb=mid(R[i+1]);if(ma.length&&mb.length){const L=[P(-1,R[i]),...ma,P(1,R[i]),P(1,R[i+1]),...mb.slice().reverse(),P(-1,R[i+1])];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf,strip:1});continue;}
+      const L=[P(-1,R[i]),P(-1,R[i+1]),...mb,P(1,R[i+1]),P(1,R[i]),...(i?ma.slice().reverse():arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf});}   /* inside the bevel a cell's two stations are paired rails (strip, kit.js), its faces quads straight across: earcut joined points far along each 0.02 strip, slivers that shaded as stripes down the hour hand's root (899 of its 3,484 triangles under 1°; 3 November 2026) */
     return solidGeo(cells);}
   /* the minute hand's square hole and the tube's square: 2.6 across flats, the corners on a circle r (the tube's 1.6) */
   const sqLoop=(h,r,n=96)=>{let L=C([0,0],r,n);for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])L=clipPoly(L,p=>h-(p[0]*a+p[1]*b));return L;};
@@ -294,7 +295,9 @@ const WDIAL=(()=>{
       cnM.push(tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1));
       /* its crown, the square's last 0.5: the annuli from the bore out through circles 1.05 and 1.25 to the square (so the sphere is sampled across it) */
       const cr=p=>CN.yt-(CN.cr-Math.sqrt(CN.cr*CN.cr-p[0]*p[0]-p[1]*p[1]));
-      cnM.push(tag(mesh(cn,solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),M.steel),'050503-3',1));
+      {const cg=solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),P=cg.attributes.position,Nm=cg.attributes.normal,yc=CN.yt-CN.cr;   /* the crown shaded as its sphere: each sector's two flat triangles alternated in the highlight, a fan round the arbor (3 November 2026) */
+        for(let t=0;t<P.count;t+=3)if(Nm.getY(t)>0.5)for(let k=t;k<t+3;k++){const x=P.getX(k),y=P.getY(k)-yc,z=P.getZ(k),l=Math.hypot(x,y,z);Nm.setXYZ(k,x/l,y/l,z/l);}Nm.needsUpdate=true;
+        cnM.push(tag(mesh(cn,cg,M.steel),'050503-3',1));}
       /* the punch's dents ("Körner", 05 05 03): the tube's wall driven in at its groove into the shank's groove under it (train.js: its square shoulder 6.07 over C, its cone
          0.24 deep rising to the shank at 6.73), which holds the tube on the shank by friction and keeps it from rising; the sheet draws the groove and the mark, not the dents:
          three, 120° apart, each 20° round and 0.4 high at the groove's middle (6.1 to 6.5 over C, clear of the shank's square shoulder, so the tube still slips round

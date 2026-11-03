@@ -449,5 +449,10 @@ const KIT=(()=>{
     return pr.map(([r,y])=>[r,y0+s*y]);};
   /** @type {(R:number,e:number,h:number,y0:number,s:number)=>number[][]} */
   const endPr=(R,e,h,y0,s)=>{const pr=[[0,0],[R,0],[R,e]];for(let i=1;i<=8;i++){const r=R*(1-i/8);pr.push([r,e+domeAt(R,h,r)]);}return pr.map(([r,y])=>[r,y0+s*y]);};
-  return{crease,latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,slotHeadGeo,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  /* turned faces shaded smooth: each face of g whose normal leans along the radius from the axis through c (a cone, a round, a turned wall) takes at each corner that normal turned to the
+     corner's azimuth, so the revolution reads round and not as facets (solidGeo's normals are each face's own; lifted from case.js, 3 November 2026, with its centre) */
+  function smoothRev(g,c=[0,0]){const P=g.attributes.position,Nm=g.attributes.normal,ox=c[0],oz=c[1];for(let t=0;t<P.count;t+=3){const cx=(P.getX(t)+P.getX(t+1)+P.getX(t+2))/3-ox,cz=(P.getZ(t)+P.getZ(t+1)+P.getZ(t+2))/3-oz,cr=Math.hypot(cx,cz);if(cr<1e-6)continue;
+    const nx=Nm.getX(t),ny=Nm.getY(t),nz=Nm.getZ(t),h=Math.hypot(nx,nz);if(h<0.05||Math.abs(nx*cz-nz*cx)/(h*cr)>0.05)continue;const sg=Math.sign(nx*cx+nz*cz);
+    for(let k=t;k<t+3;k++){const x=P.getX(k)-ox,z=P.getZ(k)-oz,r=Math.hypot(x,z)||1;Nm.setXYZ(k,sg*h*x/r,ny,sg*h*z/r);}}Nm.needsUpdate=true;return g;}
+  return{smoothRev,crease,latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,slotHeadGeo,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();
