@@ -199,6 +199,32 @@ def items(b):
     for k,c in v.items():
         if k not in ids and not re.search(r'[,*]|\.\.',k):vn=vnorm(c,None);vn='note' if vn=='?' else vn;R.append({'id':k,'sheet':'','item':c[2],'drawn':c[2],'built':c[3],'field':'','delta':'','rv':None,'vv':vn,'final':vn,'vwhy':c[6] if len(c)>6 else '','vread':c[2],'new':1})
     return R
+PARTS_INTRO=("## Results by part\n\nEvery parts-list line the recipes cover (made and bought), whether it is shown in the version as last revised by default or only in a variant "
+  "(the outer box, the 1940 key, the band, the 6MX's parts), with the sheets it was compared against, the count of its items by final verdict (the verifier's where "
+  "it gave one, else the reader's), and every item whose final verdict is mismatch, not built or extra. An item counts for a part when its text names the part's "
+  "key or line (on a detail sheet, the items naming no part are its subject's, the first part it lists); items about an assembly as a whole are in the batch tables below. A part with no sheet says so.\n")
+_HN={}
+def hn_of(k):
+    if not _HN:
+        import os;sys.path.insert(0,str(HERE));os.environ.setdefault('MC_MODEL','wempe')
+        import model
+        from recipes import wempe as W
+        for kk,mk in W.RECIPES.items():
+            r=mk() if callable(mk) else mk;_HN[kk]=(r.hn,getattr(r,'title',''),type(r).__name__)
+    return _HN.get(k,(k,'',''))
+def named(r,k):
+    t=' '.join(str(r.get(x) or '') for x in ('field','built','item'))
+    hn=hn_of(k)[0]
+    return bool(re.search(r'(?<![A-Za-z0-9])'+re.escape(k)+r'(?![A-Za-z0-9])',t)) or (len(hn)>5 and hn in t)
+def all_parts():
+    import json
+    hn_of('x');P={p['hn'] for p in json.loads((HERE/'r_wpa'/'page'/'placements.json').read_text(encoding='utf-8'))}
+    out=[(k,h,t,'yes' if h in P else 'variant',kind) for k,(h,t,kind) in _HN.items()]
+    seen={h for _,h,_,_,_ in out}
+    for row in S:
+        for h in row[6]:
+            if h not in seen:seen.add(h);out.append((h,h,'',('yes' if h in P else 'variant'),'page'))
+    return sorted(out,key=lambda x:x[0].lower())
 def esc(x):return (x or '').replace('|','/').replace('\n',' ')
 def build():
     out=[];allR=[];byPart={}
@@ -209,16 +235,22 @@ def build():
         rows=[s for s in S if s[4]==b]
         for i,s in enumerate(rows):
             sR=[r for r in R if r['id'].startswith(f'{b:02d}-{i+1}-')]
-            K=s[5]+s[6];named=lambda r,k:k in (r.get('field') or '') or k in (r.get('built') or '')
-            for k in K:   # an item naming none of the sheet's parts counts for its main part (the first listed)
-                pr=[r for r in sR if named(r,k) or (k==K[0] and not any(named(r,q) for q in K))]
+            K=s[5]+s[6]
+            for k in K:   # an item counts for a part when its text names the part's key or line; on a detail sheet the rest are its subject's (the first part listed); on an assembly or layout they stay the sheet's
+                pr=[r for r in sR if named(r,k) or (k==K[0] and s[3]=='part' and not any(named(r,q) for q in K))]
                 d=byPart.setdefault(k,{'sheets':[],'items':[]});d['sheets'].append(s[1]);d['items']+=[r for r in pr if r not in d['items']]
     C=lambda R,key:{n:sum(1 for r in R if r[key]==n) for n in ('match','mismatch','not built','extra','cant','n/a')}
-    out.append("## Results by part\n\nEach part with the sheets it was compared against, the count of its items by final verdict (the verifier's where it gave one, else the reader's), and every item whose final verdict is mismatch, not built or extra. An item is counted for a part when its measured field names the part; items about a sheet as a whole are in the batch tables below.\n")
-    out.append("| Part | Sheets | match | mismatch | not built | extra | can't tell | Findings (id: item (drawn / built)) |\n|---|---|---|---|---|---|---|---|")
-    for k,d in sorted(byPart.items(),key=lambda kv:kv[0].lower()):
+    out.append(PARTS_INTRO)
+    out.append("| Part | Line | Shown | Sheets compared | match | mismatch | not built | extra | can't tell | Findings (id: item (drawn / built)) or why not compared |\n|---|---|---|---|---|---|---|---|---|---|")
+    for k,hn,title,shown,kind in all_parts():
+        d=byPart.get(k)
+        if not d:
+            why='bought: no drawing in the set' if kind=='Bought' else 'no drawing of its own in the set'
+            out.append(f"| {k} | {hn} | {shown} | none | | | | | | {why}: {esc(title)[:80]} |");continue
         c=C(d['items'],'final');f=[r for r in d['items'] if r['final'] in ('mismatch','not built','extra')]
-        out.append(f"| {k} | {', '.join(dict.fromkeys(d['sheets']))} | {c['match']} | {c['mismatch']} | {c['not built']} | {c['extra']} | {c['cant']} | "+'; '.join(f"{r['id']}: {esc(r['item'])[:90]} ({esc(r.get('drawn'))[:40]} / {esc(r.get('built'))[:40]})" for r in f)+' |')
+        txt='; '.join(f"{r['id']}: {esc(r['item'])[:90]} ({esc(r.get('drawn'))[:40]} / {esc(r.get('built'))[:40]})" for r in f)
+        if not d['items']:txt='compared only as part of its sheet (no item names it; see the batch tables)'
+        out.append(f"| {k} | {hn} | {shown} | {', '.join(dict.fromkeys(d['sheets']))} | {c['match']} | {c['mismatch']} | {c['not built']} | {c['extra']} | {c['cant']} | {txt} |")
     out.append('\n## Results by batch and sheet\n')
     for b in sorted({s[4] for s in S if s[4]}):
         R=[r for r in allR if r['batch']==b]
