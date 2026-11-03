@@ -350,6 +350,11 @@ def voice(work,name=VOICE):
             print(f"  {S['name']:8s} {t0:5.1f} s  {d:4.1f} s of {room:4.1f}  {'OVER ' if d>room else ''}{txt[:60]}")
         T0+=S['dur']
     return out
+def duck(aud,vo):
+    """the voice over the ticks, which duck to a third under it: the voice's span widened 0.2 s each side, eased over 0.15 s (running filters, not convolutions)"""
+    import numpy as np;from scipy.ndimage import maximum_filter1d,uniform_filter1d
+    g=uniform_filter1d(maximum_filter1d((np.abs(vo)>1e-3).astype(float),int(0.4*SR)),int(0.15*SR))
+    return aud*(1-0.67*g)+0.9*vo/max(1e-9,np.abs(vo).max())
 # ---- the sound: app.js's tickSnd (white noise, exp decay 1.8 ms, 30 ms, band-pass 3.4 kHz Q 2.2, gain 0.5), each where the escape wheel passes half a tooth ----
 SR=48000
 def tick(slow=False):
@@ -403,8 +408,7 @@ def compose(work,tag,outp,narrate=True):
         for S in SHOTS:
             for j,(t0,_) in enumerate(SAY.get(S['name'],[])):a=V[(S['name'],j)];i=int((T0+t0)*SR);vo[i:i+len(a)]+=a[:len(vo)-i]
             T0+=S['dur']
-        on=(np.abs(vo)>1e-3).astype(float);k=int(0.4*SR);on=np.convolve(on,np.ones(k),'same')>0;r=int(0.15*SR);g=np.convolve(on.astype(float),np.ones(r)/r,'same')
-        aud=aud*(1-0.67*g)+0.9*vo/max(1e-9,np.abs(vo).max())
+        aud=duck(aud,vo)
     aud=np.clip(aud,-1,1);wav=outp.with_suffix('.wav')
     with wave.open(str(wav),'wb') as wf:wf.setnchannels(1);wf.setsampwidth(2);wf.setframerate(SR);wf.writeframes((aud*32767).astype('<i2').tobytes())
     outp.with_suffix('.srt').write_text('\n'.join(srt),encoding='utf-8')
