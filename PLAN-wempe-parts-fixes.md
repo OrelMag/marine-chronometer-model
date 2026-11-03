@@ -168,3 +168,28 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
     - recipes, solids, `fine.py`, `maintaining.py --model wempe`;
     - isolate.
   - **Its stand-out is not a difference.** It is 0.475 from the core's r 6.65 at the face, radially from the arbor's axis, inside 05 07 02's "0,5 −0,05" (drawn radially at the hook's tip). The audit's 0.25 is the head's extent along the pin's own axis (6.90), which runs 15° off the face (7.125 × cos 15° ≈ 6.88).
+- **R7, the strap screws: corrected (not yet checked).**
+  - 51 00_5's "4 x 25 Din 97" is a slotted countersunk wood screw. It is now drawn so, head Ø 8 × 2.0 at 90° (DIN 97's proportion for 4: estimated), its face flush with the strap.
+  - Changed in `dims.js` `CASEQ.SUR.a`, `case.js` (the head swapped for `KIT.slotHeadGeo` with a cone underside, the seat 2.0 into the leather), and the recipe builder `screw(..., csk=True)` via `wempe_case.py`'s `_cs`.
+- **Batch 4, the small forms: checked.**
+  - **Pivot tips drawn as cones** on the 1946 pinion sheets: the turned blanks' lathe centres (the assemblies draw them cut and rounded), not a difference.
+  - **The cannon's "Körner":** punch marks into the centre arbor's groove (dial.js, train.js), unsure, kept.
+  - **The collet's 1:90 cross hole** (0.03 over 2.6): real, but below what `bore()` and `Drill` cut (straight holes). It goes on the README's "built short of the sheet, the tools' limits".
+  - **The rim's counterbore 1.8 × 0.4 at one hole** (likely; which hole isn't fixed, and it would change the arm screws' heads): kept, recorded.
+  - **The key's grooved pin (Kerbstift):** a bought pin, drawn plain as every bought pin is, recorded.
+  - **The edge breaks without a figure, the stud's apex and the tongue's chamfer:** unsure, kept.
+
+## All corrections applied (3 November 2026): the runs
+
+T2 (the horn), T3 (the banking screw's hole and head), R2 (the pillar's lead), F1+F2 (the ratchet, square and hook as one unit, the set-up snapped) and R7 (the strap screws). In order:
+
+1. **The set-up.**
+   - Load the page and read `SU` (`fusee.js`'s export).
+   - Put it into the physics' set-up (`wempe_mainspring.py` `setup`, and wherever the drive takes the set-up).
+   - Then `wempe_mainspring.py` (the fit to 05 06_20) and `--friction`, and `wempe_physics.js`.
+2. **The escapement chain** (the horn, the banking screw): `wempe_escapement.js`, `dynamics.js` and `tripping.js --model wempe`, `wempe_banking.js --write`, `wempe_tolerances.js`/`wempe_bench.js`/`wempe_montecarlo.js` and `wempe_build.js` (`--write`, each build), `wempe_inertia.py --write`, `wempe_essaydata.js --write`, `wempe_transmission.js`, `escgolden.js` (the Hamilton unchanged).
+3. **Geometry.**
+   - `recipes.py --check --only` the changed parts (detent, detentBlock(.1943), bankScrew43, pillars, setupRatchet, barrelArbor, hook, screwUr), then `recipes_site.py`.
+   - `solids.py`, `fine.py` (and `contacts.py --write`), `holecheck.py`, `seatcheck.py`, `audit.py` (movement and box), `maintaining.py`, `bom.py`, all `--model wempe`.
+   - `isolate.py` on each changed part against its sheet.
+4. **Then:** `ci.py --full`, the documentation (ledger, README, RESOLVED.md, WEMPE-PROVENANCE.md), and the release.

@@ -63,7 +63,7 @@ def pillar():
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,e1,0)),fits=['spigots Ø 4.5 f7 in the plates\' holes 4.50 +0.012 (sliding)','shoulders seat in the plates\' Ø 8.6 × 0.3 recesses'])
 
 # ---------------- screws (Wempe's own norm, WN: special heads, so made, not bought) ----------------
-def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None):
+def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None,csk=False):
     """a slotted cheese-head screw as the page's screw() draws it (KIT headGeo, threadGeo): head r x h with its 45° chamfer and slot, shank ln long, thread rs;
     shoulder (d, l): a plain shoulder l long under the head and the thread below it (the click's screw, WN-22), ln then the thread's length"""
     th=iso(2*rs);c=min(0.35,r*0.14);w=max(0.35,r*0.2);s_=max(min(0.55,h*0.45),c+0.05);sd,sl=shoulder or (0,0);L=ln+sl
@@ -77,7 +77,8 @@ def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None):
         TurnCone(rt,0,crest/2,min(th['H1'],ln0*0.3),'Chamfer the tip',[S('tip',f'Ø {2*rt:.2f}',None,'KIT threadGeo')],src),
         ThreadOD(th,0,ln0,f'Cut the thread M{2*rs:g} (die or single point)',[S('thread',f'M{2*rs:g} × {th["p"]}','6g','ISO 261')],src)]),
       Setup('2','reversed, held on the thread in a split bush',[
-        TurnCone(r-c,h+ln,r,h+ln-c,"Chamfer the head's top 45°",[S('head',f'Ø {2*r:.2f} × {h:.2f}',None,src),S('chamfer',f'{c:.2f} × 45°',None,'KIT headGeo')],src),
+        (TurnCone(rs,ln,r,ln+h,"Turn the countersunk head's underside 90°",[S('head',f'Ø {2*r:.2f}, 90°, {h:.2f} high',None,src)],src) if csk else
+         TurnCone(r-c,h+ln,r,h+ln-c,"Chamfer the head's top 45°",[S('head',f'Ø {2*r:.2f} × {h:.2f}',None,src),S('chamfer',f'{c:.2f} × 45°',None,'KIT headGeo')],src)),
         SlotHead(h+ln,w,s_,'Mill the slot across the head',[S('slot',f'{w:.2f} wide × {s_:.2f} deep',None,'KIT headGeo')],src)])],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,ln,0)),notes=list(notes)+["The slot's width and depth are the model's convention (KIT headGeo), no drawing's."])
 def pillarScrew():
