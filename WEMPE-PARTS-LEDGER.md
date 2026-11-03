@@ -137,6 +137,15 @@ Items are by final verdict, with the batch item ids in brackets. "Sheet against 
 
 **The keys and box:** the 1943 key matches its latest revisions (the socket 19 deep by rev. a, 1947), and its square fits the fusee's. The box's height is 180 on 51 00_1 and 185 on 51 00_2 (sheet against sheet). The cross pin is drawn grooved (Kerbstift), built plain. The DIN 97 wood screws are drawn countersunk, built with cylinder heads.
 
+## The owner's rule for sheets that disagree
+
+Where two sheets give different sizes for the same feature, **the later-dated sheet decides**: a sheet's revision date counts as its date (the owner, 3 November 2026). Where the later sheet's size cannot be built as drawn (it clashes with a part it meets), that case goes to the owner. Two further rules apply (the owner, 3 November 2026):
+
+- **A later sheet clashes with an unrevised part.** If the later sheet's size, as drawn, clashes with a mating part whose sheet is older or absent, and no later assembly sheet or photograph settles the pair, each case goes to the owner. The model keeps its present fit meanwhile. Examples: the hour pipe's collar against the dial; the 1946 pinion pivots against the plates.
+- **Sheets dated after Wempe's war-time production** (05 03_3.2, the staff of 1965) count as later only once a check shows they revise this chronometer, not another version (the 6MX, a later calibre).
+
+`marine-chronometer-source/wempe/parts-audit/FINDINGS-EXPLAINED.md` explains every difference and applies these rules finding by finding.
+
 ## Verdicts I changed after checking
 
 The tables below the marker keep the agents' verdicts as they wrote them. These checks of mine override them:
