@@ -111,3 +111,7 @@ The owner, 3 November 2026: apply every correction first, then run the checks an
   - **Lengths.** The model's lengths (25.6, the pivots 6.9 and 6.1) come from it only because 05 04_4's top is cut off and no Wempe sheet gives them. They are recorded as an estimate.
   - **The 1.65 s6 seat** that "misses its limits" is the collet's 1:70 taper from Ø 1.58 over 5.0. That reaches 1.651, so 05 04_4's own figures can't give 1.665-1.672 there. Drawing check 2 kept the taper and the small end (the collet grips by its slit). It is a conflict inside the sheet, already settled with its reason.
   - The impulse roller's 1.65 s6 is built at 1.6685, the middle of its fit, so it matches.
+- **F1 and F2, the set-up ratchet and the barrel arbor's hook: real, done together last in batch 2.**
+  - **The ratchet (05 07_3).** It draws a tooth's tip on the normal to the square's top flat. The page turns the teeth (`rho`, `fusee.js` 1134-1152) to meet the click and turns the square back by `rho`, so the part's own tooth-to-square relation is arbitrary: 9.9° or 12.6° off.
+  - **The hook.** The arbor's hook angle `HKA` (`fusee.js` 1182) follows from the mainspring's set-up, and the hook's relation to the square is F2 (drawn 15°, built 45°).
+  - **So the correction is one.** With the tooth fixed to the square and the square to the hook as drawn, the click meets a face only when the set-up falls on a whole tooth, which is how a set-up is made. The set-up then moves by at most half a tooth (1/32 turn), and the physics rerun at the end takes it.
