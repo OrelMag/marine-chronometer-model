@@ -48,7 +48,8 @@ On the model are the tools as icons (Select, Lasso, Through, help, save a pictur
 link, reset the view, full screen), a row of views, and a play bar: stop and go
 on, the speed (1/20×, ¼×, 1×, 60×, 3600× or any speed), the time, the power left
 and Wind. The panel beside it (under it on a phone) has four tabs: **Explore**
-(the walkthrough, the Hamilton's overhaul, Take it apart: Exploded and Laid out,
+(the walkthrough, the overhaul (the Hamilton's in its manual's order, the Wempe's in
+the 1958 Soviet repair book's order for the MX), Take it apart: Exploded and Laid out,
 the Wempe's Laid out with its lettered sheet (a thumbnail that opens it large: the
 train in elevation, plan and isometric with numbered close-ups of the mainspring and
 fusee, maintaining power, escapement and balance, lettered as a textbook's developed
@@ -390,6 +391,7 @@ every tool, what it checks and how long it takes. Before committing a change:
        python solids.py     # every part a closed solid, facing out (exit code 1 on a failure)
        python exploded.py   # no two parts meet in the Exploded view, at any spread (exit code 1 on a failure)
        python overhaul.py   # every operation of the manual's overhaul takes its parts off, or puts them on, clear of the rest
+       python assembly.py --model wempe   # the Wempe's order of taking apart, clear of the rest, and its page's overhaul in the same order
        python holecheck.py  # every hole has something in it, or a reason it is empty on the real movement
        python seatcheck.py --model wempe  # every pin, screw, stud and pipe held in a hole of another part, not lying in a slot or buried in solid metal
        python wempe_fusee_check.py        # the Wempe fusee body as built against every written figure of its sheet 05 06 04-2 (no browser; after wempe_fusee_body.py)
