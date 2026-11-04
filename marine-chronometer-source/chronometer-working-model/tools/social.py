@@ -15,12 +15,12 @@ PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 PAGE_WE=(HERE.parents[1]/'wempe'/'index.html').as_uri()+'?snap&qa'   # the Wempe's page, for its preset
 OUTDIR=HERE.parents[2]/'site-assets'
 PRESETS={
- 'dial':dict(out='social.png',view='dial',drive=False,cam=[0.3,1.0,390,32],tod='10:09:36',
+ 'dial':dict(out='social.png',view='dial',drive=False,cam=[0.3,1.0,436,32],tod='10:09:36',
    text=dict(kicker='Hamilton Model 21 · 1941',title='The Marine<br>Chronometer, <em>working</em>',
              sub='An interactive 3D model of a two-day fusee chronometer, running in real time in your browser.',
              tags=['Fusee and chain','Detent escapement','From the 1948 Navy manual'])),
  # the moving parts only: fusee, chain, barrel, train and balance, from low on the train side
- 'movement':dict(out='social-movement.png',view='movement',drive=True,cam=[-0.5,0.55,182,24],tod=None,
+ 'movement':dict(out='social-movement.png',view='movement',drive=True,cam=[-0.5,0.55,240,24],tod=None,
    text=dict(kicker='An interactive essay',title='The Marine<br>Chronometer',
              sub='Longitude, the balance, the fusee and the detent escapement, with live diagrams and a working model.',
              tags=['Longitude','The fusee','The detent'])),
@@ -32,7 +32,7 @@ PRESETS={
 }
 BG='radial-gradient(ellipse 58% 85% at 70% 52%,#1f2a35 0%,#121920 48%,#07090c 100%)'
 # the stage alone, no labels, hints, cards or buttons, over a dark page; with a title, the stage keeps to the right of the text column
-HIDE="header,#panelBtn,#hist,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.info,.opm,#essay{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
+HIDE="header,.dock,#panelBtn,#hist,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.info,.opm,#essay{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
 def css(text):
     left='400px' if text else '0'
     return (HIDE+f"html,body{{background:{BG}!important;min-height:100vh}}"
@@ -41,7 +41,7 @@ def css(text):
       "#soc{position:fixed;left:0;top:0;bottom:0;width:430px;padding:0 0 0 64px;display:flex;flex-direction:column;justify-content:center;color:#eef1f3;font-family:'Instrument Sans',system-ui,sans-serif}"
       "#soc .k{font-weight:600;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:#e0b44f;display:flex;align-items:center;gap:12px}"
       "#soc .k::before{content:'';width:28px;height:1.5px;background:#e0b44f}"
-      "#soc h1{font:300 60px/1.02 Spectral,Georgia,serif;letter-spacing:-.015em;margin:22px 0 20px}#soc h1 em{font-style:italic;font-weight:400;color:#e8c77a}"
+      "#soc h1{font:300 60px/1.02 Spectral,Georgia,serif;white-space:normal;letter-spacing:-.015em;margin:22px 0 20px}#soc h1 em{font-style:italic;font-weight:400;color:#e8c77a}"
       "#soc p{margin:0;max-width:330px;font-size:18px;line-height:1.5;color:#9fa9b2}"
       "#soc .t{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px;max-width:340px}"
       "#soc .t span{font-weight:500;font-size:13px;color:#cfd6dc;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);border-radius:999px;padding:6px 12px}")
