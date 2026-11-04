@@ -30,7 +30,13 @@ CFG={'wempe':{'name':'Wempe Einheits-Chronometer','chans':{'fuseeWheel':'mesh:fu
   'names':{'fuseeWheel':'Fusee wheel','centreWheel':'Centre wheel and pinion','intermediateWheel':'Intermediate wheel and pinion','secondsWheel':'Seconds wheel and pinion','escapeWheel':'Escape wheel and pinion','fusee':'Fusee and click wheel',
   'maintaining.clicks':'Maintaining clicks','maintaining.ratchet':'Maintaining ratchet','maintDetent':'Maintaining detent','barrel':'Barrel','barrelArbor':'Barrel arbor','setupRatchet':'Set-up ratchet','stopWork.bar':'Stop bar','topPlate.stopPin':'Stop pin','balance':'Balance','rollers':'Rollers'},
   'body':{'fuseeWheel':'fw','centreWheel':'centre','intermediateWheel':'inter','secondsWheel':'sec','escapeWheel':'esc','fusee':'fusee','maintaining.clicks':'click 1','maintaining.ratchet':'ratchet','maintDetent':'maintaining detent','barrel':'barrel','balance':'balance'},
-  'chart':[['chain','Chain pull (N)','--brass'],['click1','Click (N·m)','--steel'],['detent','Maintaining detent (N·m)','--bad'],['mesh:fusee wheel → centre pinion','Fusee wheel → centre (N·m ×100)','--good']]},
+  'chart':[['chain','Chain pull (N)','--brass'],['click1','Click (N·m)','--steel'],['detent','Maintaining detent (N·m)','--bad'],['mesh:fusee wheel → centre pinion','Fusee wheel → centre (N·m ×100)','--good']],
+  # the transmission's colouring, as its plan (wempe/verification/assets/transmission/): each part (its piece's key or its part's, the first that matches) by the load it carries,
+  # against that load in running; mN the trace's mesh N (MS[N]): each arbor by the mesh that drives it, the motion work against its run's peak (it carries none in running)
+  'load':[['fusee.clickWheel','click'],['maintaining.clicks','click'],['maintaining.clickScrews','click'],['maintaining.ratchet','spring'],['maintaining','spring'],['maintDetent','detent'],
+   ['barrel','chain'],['chain','chain'],['barrelArbor','chain'],['setupRatchet','chain'],['mainspring','chain'],['stopWork','stop'],['topPlate.stopPin','stop'],['udPinion','m6'],
+   ['fusee','chain'],['coverPlate','chain'],['vorreiber','chain'],['dustPlate','chain'],['fuseeWheel','m0'],['centreWheel','m0'],['intermediateWheel','m1'],['secondsWheel','m2'],['hands.seconds','m2'],
+   ['escapeWheel','m3'],['detent','stone'],['cannon','m4'],['hands.minute','m4'],['changeWheel','m4'],['hourWheel','m5'],['hands.hour','m5'],['udWheel','m6'],['hands.ud','m6']]},
  'hamilton':{'name':'Hamilton Model 21','chans':{'gw':'mesh:fusee wheel → centre pinion','cw':'mesh:centre wheel → third pinion','tw':'mesh:third wheel → fourth pinion','fw':'mesh:fourth wheel → escape pinion','escW':'mesh:fourth wheel → escape pinion',
   'fusee':'chain','barrel':'chain','sratchet.pawls':'click1','sratchet.wheel':'detent','spawl':'detent','ratchet.wheel':'spring','ratchet.click':'spring','fusee.stop':'stop','barrelBridge.stop':'stop','bal.impulse':'mesh:fourth wheel → escape pinion'},
   'names':{'gw':'Fusee wheel (great wheel)','cw':'Centre wheel and pinion','tw':'Third wheel and pinion','fw':'Fourth wheel and pinion','escW':'Escape wheel and pinion','fusee':'Fusee and winding ratchet','sratchet.pawls':'Winding pawls',
@@ -74,7 +80,8 @@ for v in ('last','build'):
         while len(buf)%4:buf+=bytes(2)
     s=(D/f'trace_{v}.js').read_text(encoding='utf-8');T=json.loads(s[s.index('{'):s.rstrip().rindex('}')+1]);runs=[]
     for r in T['S']:
-        n=int(r['n']);j=np.unique(np.linspace(0,n-1,min(NF,n)).round().astype(int));t=(dec(r['t'])+r.get('t0',0))[j]
+        n=int(r['n']);j=np.linspace(0,n-1,min(NF,n)).round().astype(int)
+        j=np.unique(np.r_[j,[int(np.argmax(np.abs(dec(b)))) for b in r['forces'].values()]]);t=(dec(r['t'])+r.get('t0',0))[j]   # each load's peak kept, which thinning could step over
         ch={'t':None};o=len(buf);buf+=np.asarray(t,'<f4').tobytes();ch['t']=[o,len(j)]
         bodies={}
         for nm,bd in r['bodies'].items():
@@ -82,7 +89,7 @@ for v in ('last','build'):
         forces={}
         for nm,b in r['forces'].items():
             a=dec(b)[j];o=len(buf);buf+=np.asarray(a,'<f4').tobytes();forces[nm]=[o,len(j)]
-        runs.append({'name':r['name'],'kind':r['kind'],'n':len(j),'t':ch['t'],'bodies':bodies,'forces':forces})
+        runs.append({'name':r['name'],'kind':r['kind'],'n':len(j),'t':ch['t'],'bodies':bodies,'forces':forces,'t0':r.get('t0',0),'tHit':r.get('tHit'),'mag':r.get('mag')})   # t0, tHit: the run's clock (letting go at 0, the stop's blow at tHit); mag: the bodies held elastically, whose deviations the viewer magnifies
     (P/f'v_{v}.bin').write_bytes(bytes(buf))
     spr=json.loads((D/f'springs_{v}.json').read_text())
     # the mainspring's drawn line turned and mirrored onto the page's own mesh at the base state (the fusee 4 turns from full wind): the solved states are in the arbor's frame
@@ -111,7 +118,8 @@ for v in ('last','build'):
     if let:F_.append(['over','The parts past their limits are all at the key let go outright: the fusee runs back onto its click (or pawl) and the blow passes to the maintaining work and the train. Easing the key back keeps them within their limits.'])
     rt=KI['ratios'];ok=[k for k,x in rt.items() if x.get('ok')];F_.append(['ok',f"The model’s own mechanism turns {len(ok)} arbors of the train at their tooth counts’ ratio, to 0.1 %."])
     vers_findings=F_
-    vers[v]={'findings':vers_findings,'stress':sv,'parts':st['parts'],'runs':runs,'springs':spr,'kin':json.loads((D/f'kin_{v}.json').read_text()),'ref':T['meta']['ref']}
+    vers[v]={'findings':vers_findings,'stress':sv,'parts':st['parts'],'runs':runs,'springs':spr,'kin':json.loads((D/f'kin_{v}.json').read_text()),'ref':T['meta']['ref'],
+             'tm':{k:T['meta'][k] for k in ('MS','CK','DT','MSB') if k in T['meta']}}   # the transmission's own tables (the meshes' teeth and modules, the clicks' and detent's levers, the spring's bank), for the loads in newtons
 meta={'model':M,'cfg':CFG,'meshes':meshes,'samples':samp,'versions':vers,'geo':json.loads(json.dumps(T['meta']['geo'])),'made':__import__('datetime').date.today().isoformat()}
 # the binaries as base64 text in chunks under 8 MB (artifacts serve text, not raw bytes): name.0.txt, name.1.txt... the viewer joins them
 import base64 as _b64
