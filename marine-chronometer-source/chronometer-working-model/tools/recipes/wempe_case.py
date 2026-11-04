@@ -168,9 +168,9 @@ def boxBought():
       ['Its hinges, handles, latch tongue, key holder, the lid\'s stay and the maker\'s plate (00 01 01-9, "Type 3371", 26 × 52) are fitted to it; the page draws them, a recipe does not (made elsewhere: joinery and stampings).'])
 
 # ---------------- the case's screws, a line to each size (31 October 2026: WN-78, WN-71, WN-72, WN-80 and WN-ur were each one line on two or four sizes) ----------------
-def _cs(key,hn,title,c,material,src,notes=(),rev=None):
+def _cs(key,hn,title,c,material,src,notes=(),rev=None,csk=False):
     from .wempe import screw
-    r=screw(key,hn,title,c[0],c[1],c[2],c[3],material,src,notes)
+    r=screw(key,hn,title,c[0],c[1],c[2],c[3],material,src,notes,csk=csk)
     if rev:r.rev=rev
     return r
 def screw78m4():
@@ -196,7 +196,7 @@ def _s80(side,six):
     if six:rec.rev='6mx'
     return rec
 def screwUr():
-    return _cs('screwUr','WN-ur',"Strap screw (WN-ur), the carrying case's",Q()['SUR']['a'],'steel','dims.js CASEQ.SUR.a (51 00_5 "Schraube f. Riemenbef."; size estimated)',[])
+    return _cs('screwUr','WN-ur',"Strap screw (WN-ur), the carrying case's: 4 × 25 DIN 97, countersunk",Q()['SUR']['a'],'steel','dims.js CASEQ.SUR.a (51 00_5 "4 x 25 Din 97": sure; the head by the DIN 97 proportion, estimated)',['A slotted countersunk wood screw (DIN 97), its face flush with the strap (the model draws it with a metric thread).'],csk=True)
 def screwUr6():
     return _cs('screwUr6','WN-ur.6',"Strap screw (WN-ur), the 6MX carrying case's",Q()['SUR']['f'],'steel','dims.js CASEQ.SUR.f (estimated)',[],rev='6mx')
 def din96():

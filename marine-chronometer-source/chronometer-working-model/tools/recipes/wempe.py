@@ -50,20 +50,20 @@ def pillar():
         Bar(8.5,L,'Part off from Rundmessing Ø 8.5 and face both ends to the overall length',[S('overall length',f'{L:.2f}','-0.2 (25.3 -0.2)',src)],src),
         TurnOD(2*P['r'],sL,z2,'Turn the body',[S('body',f'Ø {2*P["r"]:.2f}','8.1 -0.2, drawn at the middle',src),S('between shoulders',f'{z2-sL:.2f}',f'±{P["LT"]}',src)],src),
         TurnOD(2*sr,0,sL,'Turn the first spigot to the shoulder',[S('spigot',f'Ø {2*sr:.3f}','4.5 f7 (-0.010/-0.022)',src),S('length',f'{sL:.2f}','-0.1',src)],src),
-        TurnCone(t0,0,sr,t1,'Turn the spigot end at 6° (the lead into the plate)',[S('end',f'Ø {2*t0:.2f} at the face','4.3 -0.2',src),S('lead length',f'{t1:.2f}','-0.2',src),S('angle','6°',None,src)],src),
+        TurnCone(t0,0,sr,t1,f'Turn the spigot end at {P["ta"]}° (the lead into the plate)',[S('end',f'Ø {2*t0:.2f} at the face','4.3 -0.2',src),S('lead length',f'{t1:.2f}','-0.2',src),S('angle',f'{P["ta"]}°',None,src)],src),
         FaceGroove(sL,sr,gr,gd,1,'Turn the relief groove into the shoulder face round the spigot',[S('groove',f'to r {gr:.2f}, {gd:.2f} deep',None,'05 08 00-1, drawn at 5:1 without figures (estimated)')],src),
         Bore(th['D1'],0,L,'Drill through for M2.6 (tap drill)',[S('tap drill',f'Ø {th["D1"]:.2f}',None,'ISO 261: D1 for M2.6')],src,thread=th),
         Countersink(0,2*P['cs'],90,1,'Countersink the end 90°',[S('countersink',f'Ø {2*P["cs"]:.2f} × 90°',None,src+' scaled at 5:1 (likely)')],src)]),
       Setup('2','turned end for end in a soft collet on the body',[
         TurnOD(2*sr,z2,L,'Turn the second spigot',[S('spigot',f'Ø {2*sr:.3f}','4.5 f7',src),S('length',f'{sL:.2f}','-0.1',src)],src),
-        TurnCone(sr,L-t1,t0,L,'Turn its end at 6°',[S('end',f'Ø {2*t0:.2f}','4.3 -0.2',src)],src),
+        TurnCone(sr,L-t1,t0,L,f'Turn its end at {P["ta"]}°',[S('end',f'Ø {2*t0:.2f}','4.3 -0.2',src)],src),
         FaceGroove(z2,sr,gr,gd,-1,'Turn the relief groove into this shoulder',[S('groove',f'to r {gr:.2f}, {gd:.2f} deep',None,'estimated')],src),
         Countersink(L,2*P['cs'],90,-1,'Countersink this end 90°',[S('countersink',f'Ø {2*P["cs"]:.2f} × 90°',None,src)],src),
         Bore(th['D1'],0,L,'Tap M2.6 from both ends ("Gewinde von beiden Seiten einschneiden")',[S('thread','M2.6 through',None,src)],src,thread=th)])],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,e1,0)),fits=['spigots Ø 4.5 f7 in the plates\' holes 4.50 +0.012 (sliding)','shoulders seat in the plates\' Ø 8.6 × 0.3 recesses'])
 
 # ---------------- screws (Wempe's own norm, WN: special heads, so made, not bought) ----------------
-def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None):
+def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None,csk=False):
     """a slotted cheese-head screw as the page's screw() draws it (KIT headGeo, threadGeo): head r x h with its 45° chamfer and slot, shank ln long, thread rs;
     shoulder (d, l): a plain shoulder l long under the head and the thread below it (the click's screw, WN-22), ln then the thread's length"""
     th=iso(2*rs);c=min(0.35,r*0.14);w=max(0.35,r*0.2);s_=max(min(0.55,h*0.45),c+0.05);sd,sl=shoulder or (0,0);L=ln+sl
@@ -77,7 +77,8 @@ def screw(key,hn,title,r,h,ln,rs,material,src,notes=(),shoulder=None):
         TurnCone(rt,0,crest/2,min(th['H1'],ln0*0.3),'Chamfer the tip',[S('tip',f'Ø {2*rt:.2f}',None,'KIT threadGeo')],src),
         ThreadOD(th,0,ln0,f'Cut the thread M{2*rs:g} (die or single point)',[S('thread',f'M{2*rs:g} × {th["p"]}','6g','ISO 261')],src)]),
       Setup('2','reversed, held on the thread in a split bush',[
-        TurnCone(r-c,h+ln,r,h+ln-c,"Chamfer the head's top 45°",[S('head',f'Ø {2*r:.2f} × {h:.2f}',None,src),S('chamfer',f'{c:.2f} × 45°',None,'KIT headGeo')],src),
+        (TurnCone(rs,ln,r,ln+h,"Turn the countersunk head's underside 90°",[S('head',f'Ø {2*r:.2f}, 90°, {h:.2f} high',None,src)],src) if csk else
+         TurnCone(r-c,h+ln,r,h+ln-c,"Chamfer the head's top 45°",[S('head',f'Ø {2*r:.2f} × {h:.2f}',None,src),S('chamfer',f'{c:.2f} × 45°',None,'KIT headGeo')],src)),
         SlotHead(h+ln,w,s_,'Mill the slot across the head',[S('slot',f'{w:.2f} wide × {s_:.2f} deep',None,'KIT headGeo')],src)])],
       page_matrix([[1,0,0],[0,0,-1],[0,1,0]],(0,ln,0)),notes=list(notes)+["The slot's width and depth are the model's convention (KIT headGeo), no drawing's."])
 def pillarScrew():
@@ -579,16 +580,21 @@ def fuseeArbor():
 def barrelArbor():
     X=W();B=X['WD']['BAR'];P=X['BARprof'];q=B['sqr'];BSQ=P[0][1];yL=BSQ-q['L'];yE=yL-q['tl'];R0=q['a']/math.sqrt(2)+0.01;src='05 07 02-1 (020704-1, the first sheet)'
     Q=[(0,yE),(R0,yE),(R0,BSQ)]+[tuple(p) for p in P[1:]]
+    turn={'S':0.0}   # the square's turn on the page (sqTurn: its flat 15° from the hook, 05 07 02; fusee.js, 3 November 2026)
     def sq():
         body=bd.Solid.make_loft([_square(q['b']/math.sqrt(2),yL),_square(q['a']/math.sqrt(2),BSQ)])+bd.Solid.make_loft([_square(q['tip'],yE),_square(q['b']/math.sqrt(2),yL)])
-        return bd.Cylinder(R0+0.2,BSQ-yE+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,yE-0.01)))-body
+        return bd.Cylinder(R0+0.2,BSQ-yE+0.02,align=(bd.Align.CENTER,bd.Align.CENTER,bd.Align.MIN)).moved(bd.Location((0,0,yE-0.01)))-body.rotate(bd.Axis.Z,math.degrees(turn['S']))
     ops=[Blank(14,yE-0.05,P[-1][1]+0.05,'Cut the blank from Präz. Rundstahl 14 between centres',[S('length',f'{P[-1][1]-yE:.2f}',None,src)],src),
          TurnProfile(Q,'Turn the core and its journals: the core Ø 13.3 with its chamfered ends, the journals, the shoulders 22.29 apart, the dial end domed',
            [S('core','Ø 13.3',None,src),S('journals','Ø 4.48 (r 2.24) and Ø 3.88 at the square\'s end (r 1.94)',None,src),S('shoulders',f'{B["BA0"]-B["BA1"]:.2f} apart','22.2 +0.1',src)],src),
          Cut(sq,'Mill the winding square and its point',[S('square',f'{q["a"]} tapering to {q["b"]} across the flats over {q["L"]}',None,src),S('point',f'to {q["tip"]} over {q["tl"]}',None,src)],src,at=(0,0)),
          RadialDrill((P[4][1]+P[8][1])/2,-6.95,6.65,2.0,"Drill the hook's hole radially right through the core's middle",[S('',"Ø 2 through (05 07 02 dashes it to the far side; 0207's, the 1941 arbor's, 6 deep with its point)",None,'05 07 02; fusee.js hookSet')],key='hook')]
-    return Recipe('barrelArbor','050702-1','Barrel arbor (Federkern)',src,'Präz. Rundstahl 14 (05 07 02-1)','hardened (05 07 02-1)',[Setup('1','between centres; the square on the mill',ops)],
+    def pp(ud):
+        a=ud.get('sqTurn')
+        if a is not None:turn['S']=float(a)
+    r=Recipe('barrelArbor','050702-1','Barrel arbor (Federkern)',src,'Präz. Rundstahl 14 (05 07 02-1)','hardened (05 07 02-1)',[Setup('1','between centres; the square on the mill',ops)],
       page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),expect=[{'at':(0,0),'r':7,'max':0.03,'why':"tessellation, not a fault: the page's hook hole is a 24-sided bore cut at the hook's turn into its 48-sided lathe; the check fits the hole's free angle to the page's walls"}],fits=['its journals running in the barrel\'s bosses','the hook 05 07 02-2 in the core'])
+    r.page_params=pp;return r
 
 # ---------------- batch 9b: the fusee's and barrel's other made parts, from WD.FU (dims.js; fusee.js reads the same) ----------------
 @functools.lru_cache()
@@ -708,14 +714,19 @@ def maintRatchet():
 def setupRatchet():
     X=WF();U=X['FU'];R=U['SR'];B=X['BAR'];TT=-X['INNER']-X['TOP_T'];RS0=TT-R['BB']-R['gap'];RS1=RS0-R['t'];BSQ=B['BA1']-B['sq'];src='05 07 00-3 (revised 24.11.47)'
     sq=lambda y:(R['sq']-(BSQ-y)*R['tp']+R['cl'])/math.sqrt(2)
+    T0=-math.asin(R['off']/R['rt']);turn={'R':0.0}   # a tooth's tip in the outline (fusee.js's SR_T0); R: the page's turn of the whole ratchet (srTurn), so its face lies on the click
     def hole():
-        e=0.02;return bd.Solid.make_loft([_square(sq(RS1-e),RS1-e),_square(sq(RS0+e),RS0+e)])
-    ops=[Plate(_poly(R['o'],RS1),R['t'],'Cut the blank from Messingblech 3 (Ms 58), face it to 2.65 and cut the 16 teeth',
-           [S('thickness',f"{R['t']}",'2.65 -0.1, drawn 2.6',src),S('teeth',f"16; tips Ø {2*R['rt']:.1f}, roots Ø {2*R['rr']:.1f}; each face on a line {R['off']} off the radius; each back an arc r {R['RBK']} whose centre lies on the Ø 6.4 circle",'14.1 -0.2, 11.1 -0.2 (drawn 14.0, 11.0)',src)],src,spin=True),
-         Cut(hole,"Broach the square hole, tapered 1:100 as the arbor's square",[S('square',"2.7 H7, Kegel 1:100: line to line with the square, 0.002 over it across",None,src)],src,at=(0,0))]
+        e=0.02;return bd.Solid.make_loft([_square(sq(RS1-e),RS1-e),_square(sq(RS0+e),RS0+e)]).rotate(bd.Axis.Z,math.degrees(T0-math.pi/4+turn['R']))
+    plate=Plate(_poly(R['o'],RS1),R['t'],'Cut the blank from Messingblech 3 (Ms 58), face it to 2.65 and cut the 16 teeth',
+           [S('thickness',f"{R['t']}",'2.65 -0.1, drawn 2.6',src),S('teeth',f"16; tips Ø {2*R['rt']:.1f}, roots Ø {2*R['rr']:.1f}; each face on a line {R['off']} off the radius; each back an arc r {R['RBK']} whose centre lies on the Ø 6.4 circle",'14.1 -0.2, 11.1 -0.2; 1.2; 12.5 on 6.4',src)],src)
+    ops=[plate,
+         Cut(hole,"Broach the square hole, tapered 1:100 as the arbor's square, a flat's normal through a tooth's tip",[S('square',"2.7 H7, Kegel 1:100: line to line with the square, 0.002 over it across",None,src),S('place',"a tooth's tip on the normal to the square's top flat",'the plan (sure)',src)],src,at=(0,0))]
     r=Recipe('setupRatchet','050700-3','Set-up ratchet (Sperrad)',src,'Messingblech 3 Ms 58 (05 07 00-3)','gilt (Wempe 3955)',[Setup('1','on the wheel-cutting engine; the square broached',ops,view='top')],UP(),
-      fits=["pressed down the arbor's 1:100 square to 0.05 off the barrel bridge"],notes=["Turned on its square to where the click's beak lies against a face: the check fits that turn (the page's search against the frame's click)."])
-    r.free_spin=(2*math.pi/R['z'],2*R['sq']/math.sqrt(2));return r   # the teeth's period; the square hole (inside its own diagonal) stays on the arbor's square
+      fits=["pressed down the arbor's 1:100 square to 0.05 off the barrel bridge"],notes=["On the arbor's square, which stands 15° from the hook (05 07 02): the set-up then puts a face on the click at whole teeth (fusee.js, 3 November 2026; the teeth's turn about the square fitted to the page until then)."])
+    def pp(ud):
+        a=ud.get('srTurn')
+        if a is not None:turn['R']=float(a);plate.angle=float(a)
+    r.page_params=pp;return r
 
 # ---------------- the barrel as last revised (05 07 01, 20.4.48): WD.BAR ----------------
 def _rect(a,r0,r1,w):
@@ -875,7 +886,8 @@ def detent():
     spring=[(SPR0,f-sp[3]),(TP,f-hT),(SMID,f-sp[0]),(FOOT0,f-sp[3]),(FOOT0,f+sp[3]),(SMID,f+sp[0]),(TP,f+hT),(SPR0,f+sp[3])]
     # the horn: its face toward the wheel HL.w, its back HL.b ground in toward the face over its last bev to tip at the end (dv's HB)
     hw=X['hw'];kink=-HL+K['bev']
-    def HB(t,w,b):fr=max(0,min(1,(t+HL)/K['bev']));return w-(w-b)*(K['tip']/o['th']+(1-K['tip']/o['th'])*fr)
+    tR=1 if K['tip'] is None else K['tip']/o['th']
+    def HB(t,w,b):fr=max(0,min(1,(t+HL)/K['bev']));return w-(w-b)*(tR+(1-tR)*fr)
     face=[(t,w) for t,w,b in hw];back=[(t,HB(t,w,b)) for t,w,b in hw];ik=[i for i,(t,_,_) in enumerate(hw) if abs(t-kink)<1e-12][0]
     def horn():
         F=_tn(face,s);B=_tn(back,s);E=[_sp(F),_ln(F[-1],B[-1]),_sp(B[ik:][::-1]),_sp(B[:ik+1][::-1]),_ln(B[0],F[0])]
@@ -892,7 +904,7 @@ def detent():
             S("blade's thicker part",f"{K['thk']} long, {o['tq']:.2f} thick, {o['wb']} high, flush with the square toward the block",'1436, scaled',src),
             S('blade',f"{o['tb']:.2f} thick, {o['wb']} high, its line {DOFF} from the spring's (flush toward the block), to the pipe",'1436: 0,33 (0,28), 1 (0,9)',src),
             S('pipe',f"Ø {2*K['pR']:.2f}, {o['pl']} long, its top {o['pp']:.2f} under the plate",'1436: 2 (1,9); Ø likely',src),
-            S('horn',f"{o['th']:.2f} thick, {o['wh']} high, {HL} from the stone, bent toward the block as traced; its back ground in over its last {K['bev']} to {K['tip']} at the tip",'1436: 0,25 (0,22), 0,8 (0,75), 4,4; the bend traced on Wempe 3955 (likely)',src)],src),
+            S('horn',f"{o['th']:.2f} thick, {o['wh']} high, {HL} from the stone, bent toward the block as traced; its tip bevelled in plan over its last {K['bev']}, the back {o['th']:.2f} to the end",'1436: 0,25 (0,22), 0,8 (0,75), 4,4; the bend traced on Wempe 3955 (likely)',src)],src),
          Drill((ROW,s*(f-fh-K['bo']),zc),u,2*K['fhR'],o['tf']+0.15,"Drill the foot for its screw (M1 clearance)",[S('',f"Ø {2*K['fhR']:.1f} across the foot, {ROW-FOOT0:.2f} from its end, at its middle",'1436 (scaled)',src)],src,key='screw'),
          *[Drill((ROW+q,s*(f-fh-K['bo']),zc),u,2*K['pinR'],o['tf']+0.15,"Drill a steady pin's hole across the foot",[S('',f"Ø {2*K['pinR']:.2f}, {K['pinT']} {'beyond' if q>0 else 'before'} the screw",'1436 (scaled); drilled with the block at assembly',src)],src,key='pin') for q in (-K['pinT'],K['pinT'])],
          Drill((SQ0+K['sqT'],s*(f+o['tq']/2-K['sqD']),zc),u,2*K['sqR'],K['sqD']+0.05,"Drill and tap the square for the gold spring's screw (M0.7, drawn at its size)",[S('',f"M0.7, {K['sqD']} deep from the face toward the wheel, {K['sqT']} from the square's end",'05 04_1 draws the screw; place and depth estimated',src)],src,key='WN-14'),

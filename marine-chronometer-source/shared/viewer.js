@@ -13,7 +13,7 @@
      openCam {yaw, pitch, dist, target [x, y, z] in mv's frame as built}: where the camera stands as the page opens, before it eases to the start view (the Hamilton's: its box
      shut, from the front right); without it, turned from the start view and farther out. st.opening is true until then (a model can hold its case shut meanwhile),
      labels: (add, pw) => ...: add(text, sub, part, fn) a label at fn() (world), pw(group, x, y, z) a point in a group,
-     qaTarget [x, y, z] (mv's frame: what __proj, __unproj and __cam aim at), tick: (dt, now, st) => [values]: the model's own motion each frame, the values it shows (a change draws a frame),
+     qaTarget [x, y, z] (mv's frame: what __proj, __unproj and __cam aim at), tick: (dt, now, st) => [values]: the model's own motion each frame, the values it shows (a change draws a frame), after: (dt) => [values]: run after the Exploded view's offsets are set each frame (settle), its values added the same way, hides: m => true: a mesh the page hides for its own reasons (the overhaul's tray), leave: () => {}: a view chosen or the walkthrough begun (the page ends a mode of its own: the overhaul),
      hud: st => html, hash: {write(h), read(get, first)}, store: the prefix of what Remember settings keeps, name (the canvas's label), shot (the PNG's name).
      drive: Moving parts only (#driveOn, its #mwOn and #mwWrap; the Hamilton's st.drive), if the page has it: {hide: the parts it hides, ghost: those it draws see-through, mw: the motion
      work and hands, hidden unless #mwOn is ticked, off: the views it can't show, to: the view it shows instead}; the hash keeps drive=1.
@@ -125,7 +125,7 @@ const VIEWER={start(cfg){
   const ghOf=(m,foc)=>{const p=m.userData.part;return (!!m.userData.devPlate&&dvOn()&&!(foc&&inK(foc,m)))||(st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
   function look(){wake();if(SEL)SEL.sync();asmPress();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
-    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!mOut(m);const lc=ct||gh?null:SEL&&SEL.has(m)?PSEL.COL:cfg.tint?cfg.tint(m):null;m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
+    const ct=!!CT&&CT.on();for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!mOut(m)&&!(cfg.hides&&cfg.hides(m));const lc=ct||gh?null:SEL&&SEL.has(m)?PSEL.COL:cfg.tint?cfg.tint(m):null;m.material=ct?CT.mat(m):gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!ct&&!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
     if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
     cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${st.tour>=0&&TOUR?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
@@ -278,7 +278,7 @@ const VIEWER={start(cfg){
     if(spdR&&from!=='r'&&v)spdR.value=Math.round((Math.log10(v)-Math.log10(SMIN))/(Math.log10(SMAX)-Math.log10(SMIN))*1000);if(spdN&&from!=='n')spdN.value=v?+v.toPrecision(3):0;wake();};
   if(spdR)spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN))),snap=[0.05,0.1,0.25,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
   if(spdN)spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
-  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();if(st.tour>=0)tourEnd();jump(()=>setView(b.dataset.v));}));   /* a view chosen ends the walkthrough */
+  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();if(st.tour>=0)tourEnd();if(cfg.leave)cfg.leave();jump(()=>setView(b.dataset.v));}));   /* a view chosen ends the walkthrough */
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   /* the lettered sheet of the Laid out view (#devSheet, its thumbnail shown laid out; laidout.py --write renders it), opened large in #sheet, which takes the thumbnail's image (inlined once) */
   if(dsh&&dsd){dsh.addEventListener('click',()=>{const i=dsd.querySelector('img');if(!i.getAttribute('src'))i.src=dsh.querySelector('img').src;if(dsd.showModal)dsd.showModal();else dsd.setAttribute('open','');});dsd.addEventListener('click',e=>{if(e.target===dsd)dsd.close();});}
@@ -358,7 +358,7 @@ const VIEWER={start(cfg){
   /* ---------- the walkthrough (cfg.TOUR; the Hamilton's How it works): each step a view, a camera, the parts it singles out (the rest see-through), Moving parts only or not, a speed and
      an inset the page fills (cfg.tourInset); the viewer's settings kept when it starts and given back when it ends ---------- */
   let preTour=null;const tDots=$('#tDots');if(tDots&&TOUR)tDots.innerHTML=TOUR.map(()=>'<i></i>').join('');
-  function tourGo(i){if(!TOUR)return;panelOn(true);if(st.tour<0)preTour={view:st.view,see:st.see,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+  function tourGo(i){if(!TOUR)return;if(cfg.leave)cfg.leave();panelOn(true);if(st.tour<0)preTour={view:st.view,see:st.see,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');$('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     if(tDots)[...tDots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
     st.drive=!!s.drive;st.mwOn=!!s.mw;setView(s.view||cfg.startView);st.see=!!s.see;st.focus=s.focus?new Set(s.focus):null;setSpeed(s.speed??1);if(s.v)goCam(s.v);look();
@@ -433,7 +433,8 @@ const VIEWER={start(cfg){
   function frame(now){const dt=clamp((now-last)/1000,0,0.05),k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);last=now;
     for(const q of['explode','dev','all','sub','pc','fov'])cur[q]+=(tgt[q]-cur[q])*k;for(const q in tgt.as)cur.as[q]=(cur.as[q]||0)+(tgt.as[q]-(cur.as[q]||0))*k;st.allK=smooth(cur.all);
     const xs=cfg.tick?cfg.tick(dt,now,st)||[]:[];
-    settle();if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
+    settle();const xa=cfg.after?cfg.after(dt)||[]:[];   /* cfg.after: run after the Exploded view's offsets (settle) each frame, its signature added to the frame's (the overhaul, js/overhaul.js) */
+    if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
     if((cur.dev>0.02)!==devShown){devShown=cur.dev>0.02;look();}
     root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow()).add(panO);
@@ -443,7 +444,7 @@ const VIEWER={start(cfg){
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);}
     if(CT)CT.frame(now);
-    const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,cur.dev,cur.all,cur.sub,cur.pc,...Object.values(cur.as),secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs,...(CT?CT.sig():[])];
+    const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,cur.dev,cur.all,cur.sub,cur.pc,...Object.values(cur.as),secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs,...xa,...(CT?CT.sig():[])];
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(onScreen&&!still&&!esOn()){paint();if(cfg.overlay)cfg.overlay();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */

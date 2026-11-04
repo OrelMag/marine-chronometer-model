@@ -1,0 +1,166 @@
+id	sheet	item	drawn	certainty	field	built	delta	verdict
+02-1-1	05 08_4	arm length 20 (plan; arm end to end)	20	sure	size[0]	20.0	0	match
+02-1-2	05 08_4	arm width 8.0 (section C-D)	8.0	sure	outlines_by_level[10.0]	lines len 8.0	0	match
+02-1-3	05 08_4	arm height 10 -0.1 (section C-D, both ends of the arm)	10 -0.1 (9.9..10)	sure	z_levels	0.0..10.0	0	match
+02-1-4	05 08_4	overall width 17.2 (C-D, arm edge to far side of lobe)	17.2	sure	size[1]	17.2 (box y -13.2..4.0)	0	match
+02-1-5	05 08_4	lobe thickness 3.22 -0.04 (C-D)	3.22 -0.04	sure	z_levels	6.78..10.0 = 3.22	0	match
+02-1-6	05 08_4	lobe plan: width 10, end radius 5r, straight sides flush with the arm's end	10 / 5r	sure	cylinders[7]	d 10.0 outside arc 180; outlines_by_level[6.78] arc r 5.0 c (-5,-8.2)	0	match
+02-1-7	05 08_4	lobe centre: 5 along the arm axis from hole 36, 8.2 across (9.604 from 36 by the table)	5 / 8.2 / 9.604	sure	cylinders[0].at	(-5.0003,-8.1994), from_origin 9.6038	0.000	match
+02-1-8	05 08_4	hole 36: M2.6, drill 2.1, through the arm, on the arm axis	M2.6, bohren 2.1	sure	cylinders[2].d	2.1129 z 0..10 at (0,0)	+0.013 (thread core; polygon)	match
+02-1-9	05 08_4	pin holes 22 and 37: 7 each side of hole 36 on the arm axis	7 and 7	sure	cylinders[3],[4].at	(+-7.0002,0)	0.000	match
+02-1-10	05 08_4	pin hole diameter: calibr 1.585 -0.005 (bored 1.45)	1.585 -0.005	likely (the minus figure may be -0.0005)	cylinders[3].d	1.5825	-0.0025 (inside -0.005; polygon reads small)	match
+02-1-11	05 08_4	pin hole depth 2.5 (section A-B), drill point at the end	2.5	sure	cylinders[3].z	0..2.5, cone to 2.9754 (118 deg point)	0	match
+02-1-12	05 08_4	pin holes open on the face seen in the plan, same face as the lobe's lip recess	viewed face	likely	(see built)	pin holes open at z=0, lip recess at z 6.78 (same side)	same side	match
+02-1-13	05 08_4	bore for the setting 5.2 H7 (+0.012), open at the flush face	5.2 H7 (5.200..5.212)	sure	cylinders[0].d	5.206 z 7.28..10	+0.006 (mid-tolerance)	match
+02-1-14	05 08_4	hole 23 Unruh calibr 4.59 +0.012 (the lip's hole)	4.59 +0.012	sure	cylinders[1].d	4.596 z 6.78..7.28	+0.006 (mid-tolerance)	match
+02-1-15	05 08_4	lip thickness 0.5 +0.03 (C-D, marked (a))	0.5 +0.03	sure	(see built)	z 6.78..7.28 = 0.5	0	match
+02-1-16	05 08_4	M1.2 tapped holes (2), 3.5 +0.1 from the bore axis, through the lobe	M1.2, 3.5 +0.1	sure	cylinders[5],[6].d	0.9294 at (-5.0003,-11.7494) and (-5.0003,-4.6494) z 6.78..10	3.55 from the bore axis (inside 3.5..3.6); core of M1.2	match
+02-1-17	05 08_4	M1.2 holes lie on the C-D line through the bore centre, across the arm axis	on C-D	likely	(see built)	both at x=-5.0003 (the bore's x), y=-8.1994 +-3.55	0	match
+02-1-18	05 08_4	hand: the lobe lies toward the end of pin 22 (the 5 offset is toward 22)	lobe toward 22	likely	(see built)	lobe x=-5 on the side of the pin at x=-7	none (no mirror)	match
+02-1-19	05 08_4	seat for settings (050406-2.bl, 050408-2.bl): OD 5.2 in the 5.2 H7 bore	fit	likely	settingBL	cylinders[3].d 5.2 outside; settingCL cylinders[2].d 5.2 outside	0 to 0.012 clearance (setting tolerance not on this sheet)	match
+02-1-20	05 08_4	setting stack height against the bore depth 2.72 (10 - 7.28)	2.72 by derivation	likely	settingBL	z -11.72..-10.19 (1.53) + settingCL -10.19..-9.0 (1.19) = 2.72; placements: stack top y -9.0 = cock flush face	0.00 (flush)	match
+02-1-21	05 08_4	setting screws (WN-18, two) M1.2; seat 3.55 from the bore centre	M1.2 only	sure that it is M1.2	settingScrewL	cylinders[1].d 1.1823; placements WN-18 origin (-6.1059,-9,10.2027) is 3.550 from the bore (-9.1,12.11)	-0.018 (M1.2 major 1.2; inside 6g)	match
+02-1-22	05 08_4	setting screw length and head size (WN-18: shank 2.0, head 2.5 x 1.4)	not on the sheet		settingScrewL	z 0..3.4	n/a	can't tell
+02-1-23	05 08_4	jewel hole stone 050407-1.bl (2.9 x 0.8) and endstone 050408-1.bl (2.9 x 0.9)	not on the sheet		(see built)	page json: 050407-1.bl d 2.8956 h 0.797; 050408-1.bl d 2.8974 h 0.9	n/a	can't tell
+02-1-24	05 08_4	setting inner bores (3.0, 2.906, 2.4, cones) of settingBL and settingCL	not on the sheet		settingBL	cylinders[0..2]	n/a	can't tell
+02-2-1	05 08_5	overall length 49 (A end to the lobe's r6 edge)	49	sure	size[0]	49.0 (box x -6..43)	0	match
+02-2-2	05 08_5	foot length 16.5 (A end to the wall)	16.5	sure	(see built)	step plane x=26.5, end x=43	0	match
+02-2-3	05 08_5	wall plane to lobe centre 26.5	26.5	sure	outlines_by_level[15.0]	line x=26.5	0	match
+02-2-4	05 08_5	foot width at A 17	17	sure	outlines_by_level[0.0]	line (43,-8.5)-(43,8.5) 17.0	0	match
+02-2-5	05 08_5	lobe end radius 6r, about the bore centre	6r	sure	cylinders[10].d	12.0 outside; arc r 6.0 at (0,0)	0	match
+02-2-6	05 08_5	tapered sides, straight, tangent to r6 and meeting the 17 width	straight taper; likely (not dimensioned	scale read half-width at the wall 7.3..7.4 +-0.2)	outlines_by_level[15.0]	lines (43,+-8.5) to (26.5,+-7.5446) to the r6 tangent	built 7.54 at the wall (inside the scan's +-0.2)	match
+02-2-7	05 08_5	total height 15 -0.1	15 -0.1	sure	z_levels	0..15.0	0	match
+02-2-8	05 08_5	foot thickness 3.2	3.2	sure	z_levels	0..3.2	0	match
+02-2-9	05 08_5	lobe thickness 3.2 ±0.02	3.2 ±0.02	sure	z_levels	11.8..15.0	0	match
+02-2-10	05 08_5	wall face: arc radius 22 ±0.1 about the lobe centre	22 ±0.1 (decimal lost)	likely	outlines_by_level[11.8]	arc r 22.0 c (0,0)	0	match
+02-2-11	05 08_5	wall thickness 4.5 (wall plane to the arc)	4.5	sure	(see built)	26.5 - 22.0	0	match
+02-2-12	05 08_5	wall's width at the arc's ends ≈5.5	≈5.5	sure	(see built)	26.5 - 20.7838	+0.22 (approximate dimension)	match
+02-2-13	05 08_5	bore for the settings 5.2 H7 (+0.012)	5.2 H7	sure	cylinders[0].d	5.206 z 12.3..15	+0.006	match
+02-2-14	05 08_5	hole 23 Unruh 4.59 +0.012 (the lip's hole)	4.59 +0.012	sure	cylinders[1].d	4.596 z 11.8..12.3	+0.006	match
+02-2-15	05 08_5	lip thickness 0.5 (its tolerance illegible)	0.5	likely	(see built)	z 11.8..12.3	0	match
+02-2-16	05 08_5	boss under the lobe Ø6, standing 0.8 below the recess floor	6 Ø	sure	outlines_by_level[11.8]	arc r 3.0 at (0,0); cones[4] d 6.0..7.6 z 11.8..12.6	0	match
+02-2-17	05 08_5	recess under the arm, radius 12 about the lobe centre, depth 0.8	12r, 0.8	likely	outlines_by_level[11.8]	arc r 12.0; floor level 12.6	0	match
+02-2-18	05 08_5	45° chamfer at the recess rim	45°	likely	cones[0]	d 22.4..24.0 z 11.8..12.6 half 45°	0	match
+02-2-19	05 08_5	hole 8 Ø2.8 through the foot, 33 from the lobe centre (10 from A)	bohren 2,8	sure	cylinders[2].d	2.8 at (32.9995,0.0001) z 0..3.2	0	match
+02-2-20	05 08_5	hole 20 Hilfsloch Ø2.8, 10 from the lobe centre on the axis, through the arm	bohren 2,8, 10	sure	cylinders[3].d	2.8 at (9.9997,-0.0001) z 12.4..15 (to the chamfer)	0	match
+02-2-21	05 08_5	pin holes 6 and 50: 40.31 from the lobe centre, 5 either side of the axis, in the foot	Körner, 1,45, 2,5 tief	sure	cylinders[5],[6].at	(40.0,-5.0),(40.0,5.0) from_origin 40.311, z 0.2..2.5	0	match
+02-2-22	05 08_5	pin hole 9 (in the wall), 24.5 from the lobe centre on the axis	24.5	sure	cylinders[4].at	(24.4995,-0.001), z 0.2..2.5	0	match
+02-2-23	05 08_5	pin hole diameter calibr 1.585 -0.0005	1.585 -0.0005 (or -0.005)	likely	cylinders[4].d	1.5825	-0.0025 (polygon reads up to 0.1% small)	match
+02-2-24	05 08_5	pin holes: 90° mouth 0.2 deep, 2.5 deep, drill point (A-B)	0.2, 90°, 2.5	sure	cones[1..3]	d 1.5825..1.9825 z 0..0.2; z to 2.5, point to 2.9754	0	match
+02-2-25	05 08_5	slit width 1.8 H7 (+0.009), centred on the axis (0.9 each side)	1.8 H7, 0.9	likely	outlines_by_level[15.0]	slit lines x=+-0.9022, end line y=-3.4 len 1.8045	+0.0045 (inside H7)	match
+02-2-26	05 08_5	slit end 3.4 from the lobe centre (at the top face)	3.4	likely	outlines_by_level[15.0]	line at y=-3.4	0	match
+02-2-27	05 08_5	the 82° (section C-D) on the slit's end wall	82°	unsure what it attaches to	(see built)	slit end is y=-3.4 at z=15 and r3.8 at z=12.6 (outlines_by_level[12.6] arc r 3.8), which implies about 80.5° (no face angle in the file)	not determinable	can't tell
+02-2-28	05 08_5	M1.2 tapped holes (2), 3.5 +0.05 from the lobe centre, M12 marked at the left one	M1.2, 3.5 +0.05	likely	cylinders[8],[9].d	0.9294 at (+-3.525,0) z 11.86..15	3.525 (inside 3.5..3.55)	match
+02-2-29	05 08_5	orientation: foot at A, slit toward C (up), seen from the z=15 face	slit up with foot left	likely	(see built)	slit at y=-3.4..-6 with the foot at +x: sheet = built seen from +z, turned 180°	no mirror	match
+02-2-30	05 08_5	hole 8 clearance for the cock screw (WN-ucs, M2.6)	bohren 2,8	sure	upperCockScrew	cylinders[1].d 2.5801 in a 2.8 hole	0.22 clearance	match
+02-2-31	05 08_5	setting stack against the bore depth 2.7 (3.2 - 0.5)	2.7 by derivation	likely	(see built)	settingBU (1.17) + settingCU (1.63) = 2.8; placements: stack y -37.45..-34.65 against the flush face y -37.35	stack stands 0.10 proud of the face (the settings' own sheets are not in this batch)	can't tell
+02-2-32	05 08_5	setting screws WN-55.ck (M1.2) and cock screw head sizes	not on the sheet		upperCockScrew	cylinders[0].d 6.4; settingScrewU cylinders[0].d 2.5	n/a	can't tell
+02-2-33	05 08_5	jewel hole stone 050407-1.bu and endstone 050408-1.bu	not on the sheet		(see built)	page json 050407-1.bu, 050408-1.bu	n/a	can't tell
+02-3-1	05 08_7	flange OD 105.95 -0.1 (a)	105.95 -0.1	sure	cylinders[12].d	105.9 outside z 6.35..11.05	-0.05 (inside 105.85..105.95)	match
+02-3-2	05 08_7	body OD 96 (tolerance -0.3?)	96, tolerance unsure	likely	cylinders[13].d	96.0 outside z 0.35..6.35	0	match
+02-3-3	05 08_7	top rebate Ø104 +0.1	104 +0.1	sure	cylinders[0].d	104.05 inside z 10.35..11.05	+0.05 (mid)	match
+02-3-4	05 08_7	rebate depth 0.7 +0.1 (a)	0.7 +0.1	likely (attachment read from arrows)	(see built)	z 10.35..11.05	0	match
+02-3-5	05 08_7	cone mouth Ø93 (tolerance unclear: '+1,3' or '+0,3')	93	likely	cones[0].d	83..93 at z 10.35	0	match
+02-3-6	05 08_7	cone angle 45°	45°	likely	cones[0].half_angle_deg	45, 5.0 high for 5.0 radial	0	match
+02-3-7	05 08_7	Ø83 +0.1 (the middle bore)	83 +0.1	sure	cylinders[2].d	83.0 z 3.35..5.35	0 (at the low limit)	match
+02-3-8	05 08_7	Ø85 H7 (+0.035) (the lip's bore)	85 H7 (85..85.035)	likely	cylinders[1].d	85.0175 z 0.35..3.35	+0.0175 (mid)	match
+02-3-9	05 08_7	overall height 10.7 -0.1 (a)	10.7 -0.1	sure	size[2]	10.7 (z 0.35..11.05)	0	match
+02-3-10	05 08_7	flange thickness 4.7	4.7	likely	(see built)	z 6.35..11.05	0	match
+02-3-11	05 08_7	lip height 3 +0.1 (a) (leader to the lower lip)	3 +0.1	likely	(see built)	z 0.35..3.35	0	match
+02-3-12	05 08_7	'7 -0,1 (a)' vertical dimension (levels it spans unclear)	7 -0.1	unsure	(see built)	candidate: rebate floor 10.35 to lip top 3.35 = 7.0	not determinable from the sheet	can't tell
+02-3-13	05 08_7	three M2.6 on Ø89 (r 44.5) at 120°	M2.6, 89 Ø, 120°	sure	cylinders[3..5].d	2.1129 at r 44.5	0	match
+02-3-14	05 08_7	angle of the first M2.6 hole: 20° from 12 o'clock (and the 6°/20° at the top)	20°	likely (measured 20.9° on the scan)	cylinders[5].at	(15.2199,41.8163): 70.0° = 20° from vertical	0	match
+02-3-15	05 08_7	M2.6 hole depth (not drawn in the section)	not drawn		cylinders[3..5].z	0.35..9.4064 (open into the cone)	n/a	can't tell
+02-3-16	05 08_7	dial hole Ø1.1, drilled when the dial is fitted	1.1 Ø	sure	cylinders[7].d	1.1 at (5.2787,50.2234)	0	match
+02-3-17	05 08_7	dial hole radius 50.5 and angle 6° from 12 o'clock	50.5, 6°	sure	cylinders[7].from_origin	50.5; atan(5.2787/50.2234) = 6.0°	0	match
+02-3-18	05 08_7	radial hole Ø1.6 at 12 o'clock through the flange	1.6	likely	cylinders[6].d	1.6 at x=0, +y, z 8.25	0	match
+02-3-19	05 08_7	radial hole axis 2.8 below the top face	2.8	likely	cylinders[6]	at z 8.25: 11.05 - 8.25 = 2.80	0	match
+02-3-20	05 08_7	Ø1 hole on the bore at 6 o'clock, drilled with the lower plate	1	likely	cylinders[8].d	1.0 at (0,-42.4945) arc 250°	0	match
+02-3-21	05 08_7	Ø1 hole depth (not drawn)	not drawn		cylinders[8].z	0.35..5.35	n/a	can't tell
+02-3-22	05 08_7	second '20°' at lower left: from the 190° hole to a line at about 210-215° (ticks across the rim)	20°	unsure	(see built)	no feature near 210° in the file	not determinable	can't tell
+02-3-23	05 08_7	120° spacing of the three M2.6 holes	120°	sure	cylinders[3..5].at	angles 70°, 190°, -50°	0	match
+02-3-24	05 08_7	dial pin (dialPin) in the Ø1.1 hole	not on the sheet		dialPin	cylinders[0].d 1.11 z 0..3.7, cylinders[1].d 0.98 z 3.7..4.8	n/a	can't tell
+02-3-25	05 08_7	ring screws WN-56 (M2.6, head 6.2)	not on the sheet except M2.6		ringScrew	cylinders[1].d 2.5801; placement (15.2199,0,-41.8163) on hole cylinders[5]	n/a	can't tell
+02-4-1	05 08_8	total height 7.1 -0.2	7.1 -0.2	sure	size[2]	7.0 (z 0..7.0)	-0.1 (inside 6.9..7.1)	match
+02-4-2	05 08_8	flange thickness 1.5 -0.1	1.5 -0.1	sure	z_levels	2.6..4.1	0	match
+02-4-3	05 08_8	upper part above the flange 2.9 +0.2	2.9 +0.2	sure	z_levels	4.1..7.0	0	match
+02-4-4	05 08_8	lower shank length (derived 7.1-2.9-1.5 = 2.7)	2.7 derived	likely	z_levels	0..2.6	-0.1 (derived chain, inside +-0.3)	match
+02-4-5	05 08_8	flange OD 13.2 -0.2	13.2 -0.2	sure	cylinders[7].d	13.1 outside z 2.6..4.1	-0.1 (inside 13.0..13.2)	match
+02-4-6	05 08_8	lower shank Ø8 g6 (-0.005/-0.014)	8 g6	sure	cylinders[8].d	7.9905 z 0..2.6	-0.0095 (inside 7.986..7.995)	match
+02-4-7	05 08_8	upper cylinder big end Ø8 r6 (+0.028/+0.019)	8 r6	likely (leader to the upper part)	cones[0].d	8.0235 at the flange (section_y0 r 4.0118)	+0.0235 (inside 8.019..8.028)	match
+02-4-8	05 08_8	taper 1:70 on the upper cylinder	1:70	sure	cones[0].d	7.9821..8.0235 over 2.9 = 1:70.0, half angle 0.4°	0	match
+02-4-9	05 08_8	(7.96) reference small end	(7.96)	sure	cones[0].d	7.9821 at z 7.0	+0.022 (reference size; fallback +-0.1)	match
+02-4-10	05 08_8	bore Ø4.1 +0.2	4.1 +0.2 (4.1..4.3)	sure (scaled 4.05 on the drawing)	cylinders[0].d	4.52 inside z 0..5.76	+0.42 (0.22 above the limit)	mismatch
+02-4-11	05 08_8	top chamfer Ø7 ±0.1 at the face	7 ±0.1	sure	cones[1].d	4.52..7.0 at z 7.0	0	match
+02-4-12	05 08_8	chamfer angle 45°	45°	sure	cones[1].half_angle_deg	45	0	match
+02-4-13	05 08_8	bolt circle Ø10.4 ±0.05 for the three holes	10.4 ±0.05	sure	cylinders[1..3].from_origin	5.2	0	match
+02-4-14	05 08_8	three holes at 120°	120°	sure	cylinders[1..3].at	angles 270°, 30°, 150°	0 (turn about the axis is not datumed on the sheet)	match
+02-4-15	05 08_8	counterbore Ø2.2 H8 (+0.014)	2.2 H8	sure	cylinders[1..3].d	2.207 z 3.6..4.1	+0.007	match
+02-4-16	05 08_8	counterbore depth 0.5 +0.05	0.5 +0.05	sure	(see built)	z 3.6..4.1	0	match
+02-4-17	05 08_8	hole Ø1.5 +0.1 through the rest of the flange	1.5 +0.1	sure	cylinders[4..6].d	1.55 z 2.6..3.6	+0.05	match
+02-4-18	05 08_8	counterbore on the flange's upper face (the face the cone side is on)	upper face	likely	(see built)	counterbore on the z=4.1 face, the same side as the z 4.1..7 cone	none	match
+02-4-19	05 08_8	small edge breaks at the outer top and bottom corners	drawn, size not printed (about 0.1..0.15)	unsure	(see built)	no edge cone on the outside (cones[0] is the taper)	not determinable	not built
+02-5-1	05 08_9	total height 18.1 -0.2	18.1 -0.2	sure	size[2]	18.1	0	match
+02-5-2	05 08_9	flange's top face 15.1 -0.2 above the foot	15.1 -0.2	sure	z_levels	15.1	0	match
+02-5-3	05 08_9	top boss height (18.1 - 15.1)	3.0 derived	likely	z_levels	15.1..18.1	0	match
+02-5-4	05 08_9	flange thickness 3.1 -0.2 (arrows span the flange; measured 3.06)	3.1 -0.2 (2.9..3.1)	sure	cylinders[0].z	13.0..15.1 = 2.1	-1.0 (0.8 under the lower limit)	mismatch
+02-5-5	05 08_9	top boss Ø9.7 -0.2	9.7 -0.2	sure	cylinders[3].d	9.6 outside z 15.1..18.1	-0.1 (inside 9.5..9.7)	match
+02-5-6	05 08_9	flange Ø15.1 -0.2	15.1 -0.2	sure	cylinders[0].d	15.0 outside, arc 300°	-0.1 (inside 14.9..15.1)	match
+02-5-7	05 08_9	flat on the flange, width across 14.1 -0.2	14.1 -0.2	sure	outlines_by_level[13.0]	line (5.3101,5.2965)-(7.2469,-1.9318): chord 6.5 from the axis, 7.5+6.5 = 14.0	-0.1 (inside 13.9..14.1)	match
+02-5-8	05 08_9	body Ø13.1 -0.2 (horizontal arrows at the foot)	13.1 -0.2	sure	cylinders[1].d	13.0 outside z 0.3..5.4	-0.1 (inside 12.9..13.1)	match
+02-5-9	05 08_9	body straight at Ø13.1 from the flange's underside down to the foot	straight, no neck	sure	cones[0]	45° step Ø13.0 to Ø10.5 at z 5.4..6.7, cylinders[2].d 10.5 neck z 6.7..13.0	neck Ø10.5 over 6.3 mm (Ø13.0 only to z 5.4) where the sheet is Ø13.1 throughout	mismatch
+02-5-10	05 08_9	bore Ø8 H7 (+0.015) at the foot	8 H7	sure	cones[2].d	8.0054 at z 0.1484	+0.0054 (inside)	match
+02-5-11	05 08_9	bore taper Kegel 1:70	1:70	sure	cones[2].d	8.0054..7.7746 over 16.15 = 1:70, half angle 0.4°	0	match
+02-5-12	05 08_9	(7.62) reference: bore at the top of the 20° cone	(7.62)	likely	cones[2].d	7.7746 at z 16.3	+0.155 (reference; fallback +-0.1; the sheet's own 1:70 gives 7.77)	mismatch
+02-5-13	05 08_9	20° entry cone at the top	20°	sure	cones[1].half_angle_deg	20, d 7.7746..9.0849	0	match
+02-5-14	05 08_9	entry cone depth 1.8 +0.2	1.8 +0.2	sure	cones[1].z	16.3..18.1	0	match
+02-5-15	05 08_9	foot's end face conical, 5°	5°	likely	cones[4].half_angle_deg	85 (5° slope) d 8.0054..11.4, 0.1484 high	0 (extent past Ø11.4 not readable)	match
+02-5-16	05 08_9	outer chamfer at the foot 0.5	0.5	likely	cones[3].d	12.4..13.0 z 0..0.3 (0.3 x 45°)	-0.2	mismatch
+02-5-17	05 08_9	small rounds at the flange's outer edges and the boss's top edge	drawn, not dimensioned (about 0.2)	unsure	(see built)	none in the file	not determinable	not built
+02-6-1	05 08_11	body Ø8.1 -0.2	8.1 -0.2	sure	cylinders[1].d	8.0 z 2.8..22.4	-0.1 (inside 7.9..8.1)	match
+02-6-2	05 08_11	body length 19.6 ±0.04 (between shoulders)	19.6 ±0.04	sure	z_levels	2.8..22.4	0.00	match
+02-6-3	05 08_11	spigot length 2.8 -0.1 each end	2.8 -0.1	sure	z_levels	22.4..25.2 and 0..2.8	0	match
+02-6-4	05 08_11	overall length 25.3 -0.2	25.3 -0.2	sure	size[2]	25.2	-0.1 (inside 25.1..25.3)	match
+02-6-5	05 08_11	spigot Ø4.5 f7 (-0.010/-0.022)	4.5 f7 (4.478..4.490)	sure	cylinders[2],[3].d	4.484	-0.016 from nominal (mid f7)	match
+02-6-6	05 08_11	spigot end Ø4.3 -0.2	4.3 -0.2	sure	cones[0].d	4.2528 at z 25.2	-0.0472 (inside 4.1..4.3)	match
+02-6-7	05 08_11	taper angle 5°	5°	sure	cones[0],[1].half_angle_deg	6.0	+1.0°	mismatch
+02-6-8	05 08_11	cylindrical part of the spigot 1.4 -0.2 (the taper is the rest)	1.4 -0.2	likely (narrow arrows, measured 1.24)	cylinders[2].z	22.4..24.1 = 1.7; cones[0].z 24.1..25.2 = 1.1	+0.3 (cylinder), -0.3 (taper)	mismatch
+02-6-9	05 08_11	M2.6 thread through the pillar, cut from both ends	M2.6	sure	cylinders[0].d	2.1129 z 0.01..25.19 through	+0.013 (core)	match
+02-6-10	05 08_11	90° countersink at each end of the hole	90°	sure	cones[2],[3].half_angle_deg	45	0	match
+02-6-11	05 08_11	countersink width at the face (scaled; not printed)	about Ø2.9	unsure (+-0.15)	cones[2].d	2.6..2.62 at the face	-0.3 (scaled)	mismatch
+02-6-12	05 08_11	relief groove in the shoulder face around the spigot	oval groove r 2.5..3.5, depth about 0.4	unsure	outlines_by_level[22.4]	only a vertex at r 3.25 on the shoulder level, no groove in section_y0	not built (size not printed)	not built
+02-6-13	05 08_11	both ends alike ('wie oben')	alike	sure	(see built)	symmetric about z=12.6: z_levels 0, 0.01, 2.8, 22.4, 25.19, 25.2	0	match
+02-7-1	05 08_13	thickness 3.32 -0.04	3.32 -0.04 (3.28..3.32)	likely	z_levels	0..3.3	-0.02 (inside)	match
+02-7-2	05 08_13	hole 45 Federhaus Ø3.9 ±0.01 at N6.0 W24.784	3.9 ±0.01	sure	cylinders[0].d	3.9 at (-24.784,6.0)	0	match
+02-7-3	05 08_13	hole 46 Sperrkegel M2.6 (drill 2.1) at N17.046 W29.474	M2.6 / 2.1	sure	cylinders[3].d	2.1129 at (-29.474,17.046)	+0.013 (core)	match
+02-7-4	05 08_13	hole 42 Ø2.8 at S18.50 W32.043	2.8	sure	cylinders[1].d	2.8 at (-32.043,-18.5)	0	match
+02-7-5	05 08_13	hole 48 Ø2.8 at N32.668 W17.370	2.8	sure	cylinders[2].d	2.8 at (-17.37,32.668)	0	match
+02-7-6	05 08_13	pin hole 41 Ø1.585 (drill 1.45) at S24.01 W30.732, 2.5 deep	1.585, 2.5	sure	cylinders[4].d	1.5825 at (-30.732,-24.01) z 0.3..2.5 + point to 2.9754	-0.0025 (polygon)	match
+02-7-7	05 08_13	pin hole 47 Ø1.585 at N31.551 W22.924, 2.5 deep	1.585, 2.5	sure	cylinders[5].d	1.5825 at (-22.924,31.551)	-0.0025 (polygon)	match
+02-7-8	05 08_13	countersink 0.3 deep, 90° on the pin holes	0.3, 90°	likely	cones[0],[1].d	1.5825..2.1825 z 0..0.3, half angle 45	0	match
+02-7-9	05 08_13	pin holes enter from the face away from the plan's viewer (first-angle reading)	left face of the side view	unsure (depends on the projection convention)	(see built)	chamfers and holes at z=0, plan seen from +z	consistent	match
+02-7-10	05 08_13	outer arc r42.5 about the movement centre	42.5r	sure	cylinders[6].d	84.989 outside, outlines_by_level[0.0] arc r 42.4945 at (0,0), 119.8°	-0.0055	match
+02-7-11	05 08_13	screw holes 42 and 48 on a circle r37	37r	sure	cylinders[1],[2].from_origin	37.0001 and 36.9989	0	match
+02-7-12	05 08_13	pin holes on r39	39r	sure	cylinders[4],[5].from_origin	38.9992, 38.9997	-0.001	match
+02-7-13	05 08_13	angles 62° (hole 48), 54° (hole 47), 30° (hole 42), 38° (hole 41) from the W axis	62, 54, 30, 38	sure	(see built)	atan2 of the hole centres in cylinders[]: 61.99°, 54.00°, 30.00°, 38.00°	0	match
+02-7-14	05 08_13	width 24 (outer arc's farthest point to the straight edge)	24	sure	(see built)	42.4945 - 18.49 = 24.00 (edge distance from the origin by the outline lines)	0	match
+02-7-15	05 08_13	hole 45 to the straight edge 7	7	sure	(see built)	7.00 (cross product with the edge line)	0	match
+02-7-16	05 08_13	hole 42 to the straight edge 7.7	7.7	sure	(see built)	7.70	0	match
+02-7-17	05 08_13	hole 48 to the upper end line 5	5	sure	(see built)	5.00	0	match
+02-7-18	05 08_13	corner angle 150° (upper end)	150°	sure	(see built)	angle between the end line and the straight edge 150.0°	0	match
+02-7-19	05 08_13	holes 45 and 46 apart 12	12	sure	(see built)	12.00	0	match
+02-7-20	05 08_13	straight edge's chord 73.5 (arrows parallel to the edge, from the upper arc corner to the lower tip)	73.5	sure	(see built)	projection of (-14.1814,40.0583)-(-27.7282,-32.2014) on the edge = 73.31 (corner to corner 73.52)	-0.19 (limit +-0.1)	mismatch
+02-7-21	05 08_13	bridge screws WN-55 (M2.6) through Ø2.8 holes	not on the sheet		bridgeScrew	cylinders[1].d 2.5801; placement (32.043,-25.65,18.5) on hole 42	n/a	can't tell
+02-8-1	05 08_14	thickness 2.6 -0.03/-0.05	2.6 -0.03/-0.05 (2.55..2.57)	sure	z_levels	0..2.56	-0.04 (inside)	match
+02-8-2	05 08_14	bore Ø3.2 +0.03 (a)	3.2 +0.03	sure	cylinders[1].d	3.215	+0.015	match
+02-8-3	05 08_14	left face height 3.5	3.5	sure	outlines_by_level[0.0]	line (-8.9556,0.65)-(-9.2618,-2.85)	0.00	match
+02-8-4	05 08_14	left face lean: 85° to the baseline	85°	likely	(see built)	atan(3.5/0.3062) = 85.0° from that line	0	match
+02-8-5	05 08_14	top arc 12.5r (centre about 1.45 left, 9.35 below the bore)	12.5r	sure (centre scaled -1.46,-9.46)	cylinders[2].d	25.0 outside, at (-1.4519,-9.3472), 86.2°	0 (centre inside the scan)	match
+02-8-6	05 08_14	hill arc 6r about a centre 5.142 left and 7.212 below the bore	6r, 5.142, 7.212	sure	cylinders[0].d	12.0 inside at (-5.142,-7.212)	0.000	match
+02-8-7	05 08_14	left bottom corner 9.7 from the bore centre	9.7	sure	(see built)	hypot(9.2618,2.85) = 9.69	-0.01	match
+02-8-8	05 08_14	nose centre 7.5 from the bore centre	7.5	sure	(see built)	hypot(7.2683,1.85) = 7.50	0	match
+02-8-9	05 08_14	nose radius 1r	1r	sure	cylinders[3].d	2.0 outside at (7.2683,-1.85)	0	match
+02-8-10	05 08_14	overall length 17.4 (left corner to nose end)	17.4	sure	size[0]	17.5301 (box x -9.2618..8.2683)	+0.13 (limit +-0.1; the sheet's 9.7, 7.5, 1r give 17.53)	mismatch
+02-8-11	05 08_14	baseline 2.85 below the bore centre (nose tangent to it)	2.85 (scaled 2.9)	likely	outlines_by_level[0.0]	line y=-2.85 from x -1.0222 to 7.2683	0	match
+02-8-12	05 08_14	thin circle about the bore, about Ø5.7	5,7 (a thin circle)	unsure	(see built)	no feature (clickScrew head is 4.5, shoulder 3.19)	not determinable	can't tell
+02-8-13	05 08_14	plan hand: nose at right, hill at lower left, baseline down	as sheet	likely	(see built)	built seen from +z agrees (the click is the same on both faces)	no mirror	match

@@ -69,11 +69,7 @@ const WCASE=(()=>{
       for(let h=0;h<M;h++){const ix=[...Array(N/M+1).keys()].map(k=>(k+h*N/M)%N);
         const f=(F[i]||[]).filter(q=>{const c=KIT.cen(q.p),t=((Math.atan2(c[1],c[0])-s0)%TAU+TAU)%TAU;return Math.floor(t/(TAU/M))===h;});
         out.push({loop:[...ix.map(k=>b[k]),...ix.slice().reverse().map(k=>a[k])],y0:ys[i][0],y1:ys[i][1],F:f});}}return out;};
-  /* turned faces shaded smooth: each face of g whose normal leans along the radius from the axis (a cone, a round, a turned wall) takes at each corner that normal turned to the
-     corner's azimuth, so the revolution reads round and not as facets (solidGeo's normals are each face's own) */
-  const smoothRev=g=>{const P=g.attributes.position,Nm=g.attributes.normal;for(let t=0;t<P.count;t+=3){const cx=(P.getX(t)+P.getX(t+1)+P.getX(t+2))/3,cz=(P.getZ(t)+P.getZ(t+1)+P.getZ(t+2))/3,cr=Math.hypot(cx,cz);if(cr<1e-6)continue;
-    const nx=Nm.getX(t),ny=Nm.getY(t),nz=Nm.getZ(t),h=Math.hypot(nx,nz);if(h<0.05||Math.abs(nx*cz-nz*cx)/(h*cr)>0.05)continue;const sg=Math.sign(nx*cx+nz*cz);
-    for(let k=t;k<t+3;k++){const x=P.getX(k),z=P.getZ(k),r=Math.hypot(x,z)||1;Nm.setXYZ(k,sg*h*x/r,ny,sg*h*z/r);}}Nm.needsUpdate=true;return g;};
+  const smoothRev=KIT.smoothRev;   /* turned faces shaded smooth (kit.js) */
   const rr=p=>Math.hypot(p[0],p[1]),C=(p,r,n=0)=>ring(p[0],p[1],r,n);
   /* a sector [r0, r1] × [a0, a1] (rad, atan2(z, x)) in cells joined along their arcs: arcs cut at the given angles so neighbours share their points */
   const arcP=(r,as)=>{const o=[];for(let j=0;j<as.length-1;j++){const n=Math.max(2,Math.ceil(Math.abs(as[j+1]-as[j])*r/0.4));for(let i=j?1:0;i<=n;i++){const t=as[j]+(as[j+1]-as[j])*i/n;o.push([r*Math.cos(t),r*Math.sin(t)]);}}return o;};
@@ -916,7 +912,8 @@ const WCASE=(()=>{
       tag(mesh(overW,pillow(2*IX-2,2*IZ-2,20),MC.felt,0,OP,0),'Polster.B');
       /* the strap's ends on the end walls (10): 30 wide, from 10 under its lower screw to the rim, each held by its two screws, 60 and 140 over the floor */
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'Riemen');overW.add(g);box(g,3,OT-(OP+50),30,s*(OX+1.5),(OT+OP+50)/2,0,MC.leather);
-        for(const h of[60,140])tag(screw(along(overW,[s*(OX+3),OP+h,0],[-s,0,0]),0,0,0,...WD.CASEQ.SUR.a,M.steel),'WN-ur');
+        for(const h of[60,140]){const SA=WD.CASEQ.SUR.a,[sr,sh,,ss]=SA,g=tag(screw(along(overW,[s*(OX+3-sh),OP+h,0],[-s,0,0]),0,0,0,...SA,M.steel),'WN-ur'),hd=g.children[0];   /* DIN 97: countersunk, its face flush with the strap's (sunk sh into the leather) */
+          hd.geometry.dispose();hd.geometry=KIT.slotHeadGeo({r:sr,hw:Math.max(0.35,sr*0.2)/2,top:sh,bot:p=>Math.max(0,Math.hypot(p[0],p[1])-ss)*sh/(sr-ss),yF:sh-Math.max(Math.min(0.55,sh*0.45),Math.min(0.35,sr*0.14)+0.05),bp:[ss],flip:true});}
         /* the eyes on the plate's ends: a disc Ø 23 × 2 and its screw (3 × 15 DIN 96, the parts list: its round head Ø 5.6 × 2.0 by the standard, drawn Ø 8.5 × 2.2 until 1 November 2026, the PLAN-recipes.md fault) */
         const ex=s*(OX+25);tag(mesh(overW,cylY(11.5,2,48),M.steel,ex,OB+OW+1,0),'Riemenoese');tag(screw(along(overW,[ex,OB+OW+2,0],[0,-1,0]),0,0,0,2.8,2.0,15,1.5,M.steel,1.4,{w:0.8,s:1.7}),'WN-ro');}   /* DIN 96's round head: a cap 1.4 high over a 0.6 rim, its slot n 0.8 (DIN 96 for 3) and 1.7 deep (over DIN's least t 1.4): KIT's domed head closes only with the slot's floor under the rim, so a little flatter than the standard's half round (estimated) */
       /* the hinges (7) at the back: the body's leaves 32 × 12 × 1, the knuckle Ø 5 on the parting line (estimated but their length and place) */

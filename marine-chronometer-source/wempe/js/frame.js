@@ -367,7 +367,7 @@ const WFRAME=(()=>{
     {const Q=WD.FB,r=Q.r,lw=[V2(r,TT),V2(Q.spD/2,TT),V2(Q.spD/2,TT+Q.lo),V2(r,TT+Q.lo),V2(r,TT)],up=[V2(Q.cs,TT-Q.top),V2(Q.upD/2-Q.up/Q.taper,TT-Q.top),V2(Q.upD/2,TT-Q.flT),V2(r,TT-Q.flT),V2(r,TT-Q.top+Q.cs-r),V2(Q.cs,TT-Q.top)];
       const g=tag(mesh(fb,KIT.latheF(lw,64),M.brass,F10[0],0,F10[1]),'050801-2'),bu=tag(mesh(fb,KIT.latheF(up,64),M.brass,F10[0],0,F10[1]),'050801-2',1);
       const y0=TT-Q.flT,y1=TT,F=[T(F10,r,y0,y1)];for(const b of[0,120,240]){const q=add(F10,brg(b),Q.pcd);F.push(T(q,Q.holeD/2,y0,y1),A(q,Q.sinkD/2,y0,Q.sinkH));}
-      fuse([g,bu,tag(mesh(fb,solidGeo([{loop:C(F10,Q.fl,240),y0,y1,F}]),M.brass),'050801-2',1)]);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
+      fuse([g,bu,tag(mesh(fb,KIT.smoothRev(solidGeo([{loop:C(F10,Q.fl,240),y0,y1,F}]),F10),M.brass),'050801-2',1)]);}   /* the flange's wall shaded round (smoothRev): its 240 faces' own normals banded the highlight (3 November 2026) */   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* its screws: heads Ø 2.1 × 0.45, just under the flange's face in the sinks (the dust bush stands on the flange), M1.4 × 3.2 through the flange into the plate, ending 0.4
        short of the recess's floor, as the coloured section draws them (Wempe_Einheitschronometer.jpg x 741-752: the head's top at y 313.3, the shank's end at 348.3, 2.7-4.5 px
        short of the recess's floor at 351, at 9.37 px/mm: 3.15-3.3 from the seat; likely; 3.6, to the recess, until 17 October 2026) */

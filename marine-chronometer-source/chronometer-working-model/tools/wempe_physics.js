@@ -63,7 +63,7 @@ const LV=(()=>{const kE=[200/EGPa*(0.365/0.37)**3,210/EGPa*(0.375/0.37)**3],kW=2
 const BS=W.WESC.BSEL&&W.WESC.BSEL.strip?(()=>{const B=W.WESC.BSEL.strip,d=JSON.parse(/const MSHAPE=(\{.*?\});/s.exec(fs.readFileSync(path.join(__dirname,B.table),'utf8'))[1]),kE=B.E/207;
   const ip=(T)=>{const q=d.T;let i=0;while(i<q.length-2&&q[i+1]<T)i++;const w=(T-q[i])/(q[i+1]-q[i]);return(d.pull[i]*(1-w)+d.pull[i+1]*w)*d.M1*kE;};
   let sl=d.T0;for(let i=0;i+1<d.T.length;i++)if(d.pull[i]<=0&&d.pull[i+1]>0)sl=d.T[i]-d.pull[i]*(d.T[i+1]-d.T[i])/(d.pull[i+1]-d.pull[i]);
-  const Td=sl+0.75,Tu=Td+MSJ.barrelTurns,Md=ip(Td),Mu=ip(Tu),want=FN.Mfull*LV.Kl*W.WESC.KB,s=6*Mu/(b*(B.t/1000)**2);
+  const Td=sl+(MSJ.setup!=null?MSJ.setup:0.75),Tu=Td+MSJ.barrelTurns,Md=ip(Td),Mu=ip(Tu),want=FN.Mfull*LV.Kl*W.WESC.KB,s=6*Mu/(b*(B.t/1000)**2);
   head(`The build's mainspring: ${B.name} ${B.t} × ${MSJ.strip.b} × ${FN.L} mm (WESC.BUILD.strip)`);
   say(`solved (${B.table}) at ${B.E} GPa: ${f(Md*1000,0)} mN·m run down to ${f(Mu*1000,0)} fully wound (${f(Mu/Md,2)}:1); fully wound at the turn ${f(Tu,2)} of a table solved to ${d.T[d.T.length-1]} (coil-bound past it)`);
   chk(Math.abs(Mu/want-1)<0.04,`it gives the build's drive: fully wound ${f(Mu*1000,0)} mN·m against ${f(want*1000,0)} (the drawn spring's at the measured level, ${f(FN.Mfull*LV.Kl*1000,0)}, times ${W.WESC.KB}), within 4 % (3 % until 19 October 2026: the 0.393 strip's 3.5 % is what its own thickness's ±0.005 mm moves its torque, ±3.8 %; its drive turn by turn is the escapement's, WESC.KBN)`);

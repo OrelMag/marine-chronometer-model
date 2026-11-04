@@ -1,0 +1,71 @@
+id	sheet	item	drawn	certainty	field	built	delta	verdict
+14-1-1	05 02_6	pipe overall length (top to foot)	7 -0.1 (sure)	sure	changePipe box z 0..6.9	changePipe box z 0..6.9; size[2] 6.9	0 (in 6.9..7.0)	match
+14-1-2	05 02_6	pipe upper seat Ø, pinion press fit	3.05 -0.04 (sure)	sure	changePipe cylinders[4].d 3.05, z 2.6..6.9	changePipe cylinders[4].d 3.05, z 2.6..6.9	0 (limit 3.01..3.05; at top limit)	match
+14-1-3	05 02_6	pipe top to collar top (pinion underside)	4.3 +0.1 (sure)	sure	changePipe 6.9 - cylinders[2] z top 2.6 = 4.3	changePipe 6.9 - cylinders[2] z top 2.6 = 4.3	0	match
+14-1-4	05 02_6	wheel thickness	1 (sure)	sure	changeWheel z_levels [0.0,1.0]	changeWheel z_levels [0.0,1.0]	0	match
+14-1-5	05 02_6	pipe stub below the wheel (foot to wheel underside)	0.9 +0.2 (likely; the other limit illegible)	likely	changePipe cylinders[3] z 0..1.0	changePipe cylinders[3] z 0..1.0; placements 050202-1 box y 4.35 vs 050202-2 box y 3.35	+0.1 (in 0.9..1.1)	match
+14-1-6	05 02_6	foot Ø (scaled)	about 3.1 (unsure; pipe 52 px for 3.05 above)	unsure	changePipe cylinders[3].d 3.05	changePipe cylinders[3].d 3.05	~0	match
+14-1-7	05 02_6	collar Ø above the wheel (scaled)	about 5.5, height about 0.6 (likely; scan +-0.2)	likely	changePipe cylinders[1].d 5.5, z 2.0..2.6	changePipe cylinders[1].d 5.5, z 2.0..2.6	~0	match
+14-1-8	05 02_6	seat in the wheel (Ø of the wheel hole, scaled)	about 4.2 (likely)	likely	changePipe cylinders[2].d 4.2, z 1.4..2.0	changePipe cylinders[2].d 4.2, z 1.4..2.0; changeWheel cylinders[0].d 4.2	~0	match
+14-1-9	05 02_6	riveting flare on the foot side, wheel countersunk on the same face (vernietet)	a flare at the wheel underside (likely; size not printed)	likely	changePipe cones[0] d 4.2..4.66 z 1.0..1.4 (30 deg)	changePipe cones[0] d 4.2..4.66 z 1.0..1.4 (30 deg); changeWheel cones[0] z 0..0.4	form agrees; size can not be read	match
+14-1-10	05 02_6	pipe bore (scaled)	about 1.5 (likely)	likely	changePipe cylinders[0].d 1.52	changePipe cylinders[0].d 1.52	~0	match
+14-1-11	05 02_6	pinion bore, press fit on the pipe	3.05 (same as the pipe seat; likely)	likely	changePinion cylinders[0].d 3.05	changePinion cylinders[0].d 3.05	0	match
+14-1-12	05 02_6	pinion height (scaled)	about 2.6 (likely; 43 px)	likely	changePinion box z 0..2.5	changePinion box z 0..2.5	-0.1 (within the scan)	match
+14-1-13	05 02_6	pinion outside Ø (tips), scaled; no number on this sheet	about 7.2 (outer lines 123 px at 17.05 px/mm; 7.1..7.4 by the pipe or the length; unsure)	unsure	changePinion teeth[0].tips_d 6.8997	changePinion teeth[0].tips_d 6.8997	about -0.3 (unsure; the pinion count and tooth form are not printed here)	mismatch
+14-1-14	05 02_6	stack: wheel on the pipe at the foot side, pinion on the collar top	wheel 1 above the foot, pinion from the collar top 2.6 up		placements: 050202-2 box y 3.35..10.25	placements: 050202-2 box y 3.35..10.25; 050202-1 y 4.35..5.35 (pipe z 1.0..2.0); 050202-3 y 5.95..8.45 (pipe z 2.6..5.1)	0	match
+14-1-15	05 02_6	small outer chamfer on the pipe top edge	a bevelled top corner, about 0.1 to 0.2 (unsure)	unsure	changePipe section_y0 top corner square at (1.525, 6.9)	changePipe section_y0 top corner square at (1.525, 6.9)		not built
+14-1-16	05 02_6	pinion press fit (aufschlagen zum Festsitz) and wheel running fit	fits, no sizes beyond 3.05 -0.04		bore equals the pipe seat in both	bore equals the pipe seat in both; no interference solid		can't tell
+14-2-1	05 02_7	tooth count (Zykloidenverzahnung)	Z = 56 (sure)	sure	changeWheel teeth[0].count 56	changeWheel teeth[0].count 56	0	match
+14-2-2	05 02_7	tip Ø D (hand-corrected; printed 21.30 +-0.02 crossed out)	21.05 +-0.02 (sure)	sure	changeWheel teeth[0].tips_d 21.0496	changeWheel teeth[0].tips_d 21.0496	-0.0004	match
+14-2-3	05 02_7	pitch circle d	20.16 (sure)	sure	not a field	not a field; the tooth thickness below is sampled at r 10.08		can't tell
+14-2-4	05 02_7	root Ø dg	19.03 (sure)	sure	changeWheel teeth[0].roots_d 19.0291	changeWheel teeth[0].roots_d 19.0291	-0.0009	match
+14-2-5	05 02_7	pitch t	1.131 (sure)	sure	pi x 20.16 / 56 = 1.1310 with 56 teeth (teeth[0].count 56)	pi x 20.16 / 56 = 1.1310 with 56 teeth (teeth[0].count 56)	0	match
+14-2-6	05 02_7	tooth thickness at the pitch circle (Zahnstärke, hand)	0.55-0.56 (likely)	likely	outlines_by_level[0.0] lines near (10.08, 0.147) and (10.07, -0.429): gap arc 0.576, tooth 1.131 - 0.576 = 0.555	outlines_by_level[0.0] lines near (10.08, 0.147) and (10.07, -0.429): gap arc 0.576, tooth 1.131 - 0.576 = 0.555	inside	match
+14-2-7	05 02_7	tooth flank form (cycloidal; f = 0.52)	cycloidal; f = 0.52 (f not explained; unsure)	unsure	gap flanks are radial lines 0.565 long below the pitch circle (outlines_by_level[0.0].lines)	gap flanks are radial lines 0.565 long below the pitch circle (outlines_by_level[0.0].lines)		can't tell
+14-2-8	05 02_7	bore Ø (dimension bubble)	4.2 +0,0 / -0,1 (sure)	sure	changeWheel cylinders[0].d 4.2, z 0.4..1.0	changeWheel cylinders[0].d 4.2, z 0.4..1.0	0 (at the upper limit)	match
+14-2-9	05 02_7	thickness	fertig 1.0 (blank 1.2 ref) (sure)	sure	changeWheel z_levels [0.0,1.0]	changeWheel z_levels [0.0,1.0]	0	match
+14-2-10	05 02_7	countersink at the bore on one face (sheet 06 shows the flare; this sheet none)	not drawn		changeWheel cones[0] d 4.2..4.66, z 0..0.4, 30 deg	changeWheel cones[0] d 4.2..4.66, z 0..0.4, 30 deg		extra
+14-3-1	05 02_8	pipe overall length (foot to top)	8.2 -0.1 (sure)	sure	hourPipe box z 0..8.2	hourPipe box z 0..8.2	0 (at the upper limit)	match
+14-3-2	05 02_8	collar top height above the foot (wheel underside)	5.2 -0.1 (sure; measured 5.1 on the scan)	sure	hourPipe cylinders[1] z 1.0..3.585 (collar top 3.585)	hourPipe cylinders[1] z 1.0..3.585 (collar top 3.585)	-1.615 (sheet 5.1..5.2 vs 3.585)	mismatch
+14-3-3	05 02_8	wheel thickness	1 -0.1 (sure)	sure	hourWheel z_levels [0.0,1.0]	hourWheel z_levels [0.0,1.0]; placements 050203-1 y 6.615..7.615	0	match
+14-3-4	05 02_8	tube outside Ø, r6, with taper 1:70	4.4 r6: 4.415..4.423 (likely: where it is measured on the taper is not marked)	likely	hourPipe cones[1] d 4.419 (top) to 4.4849 (collar), half_angle_deg 0.4	hourPipe cones[1] d 4.419 (top) to 4.4849 (collar), half_angle_deg 0.4	top end 4.419 inside r6; taper 0.066 over 4.615 = 1:70	match
+14-3-5	05 02_8	collar Ø (scaled)	about 8.2 on the scan, 8.07 after the 4.4 tube reads 4.56 (likely)	likely	hourPipe cylinders[1].d 8.0	hourPipe cylinders[1].d 8.0	-0.07 (within the scan)	match
+14-3-6	05 02_8	pipe bore Ø (scaled, no number)	about 3.6 (likely)	likely	hourPipe cylinders[0].d 3.62	hourPipe cylinders[0].d 3.62	~0	match
+14-3-7	05 02_8	spigot through the wheel (wheel hole Ø6.0, from sheet 05 02_9)	through the wheel, flush at the foot (likely)	likely	hourPipe cylinders[2].d 6.0 z 0.4..1.0	hourPipe cylinders[2].d 6.0 z 0.4..1.0; placements: pipe y 6.615, wheel y 6.615	0	match
+14-3-8	05 02_8	riveting flare at the foot	vernietet at the foot side (likely; no size)	likely	hourPipe cones[0] d 6.0..6.46 z 0..0.4 with hourWheel cones[0] z 0..0.4	hourPipe cones[0] d 6.0..6.46 z 0..0.4 with hourWheel cones[0] z 0..0.4	form agrees	match
+14-3-9	05 02_8	pipe top face	plain, a roughness mark on the top (likely)	likely	hourPipe top z 8.2 square	hourPipe top z 8.2 square		match
+14-4-1	05 02_9	tooth count	Z = 54 (sure)	sure	hourWheel teeth[0].count 54	hourWheel teeth[0].count 54	0	match
+14-4-2	05 02_9	tip Ø D (hand 19.7 over printed 20.0 +-0.02)	19.7 (sure)	sure	hourWheel teeth[0].tips_d 19.6987	hourWheel teeth[0].tips_d 19.6987	-0.0013	match
+14-4-3	05 02_9	root Ø dg	17.89 (sure)	sure	hourWheel teeth[0].roots_d 17.889	hourWheel teeth[0].roots_d 17.889	-0.001	match
+14-4-4	05 02_9	pitch d and t	d = 18.90, t = 1.099 (sure)	sure	pi x 18.90 / 54 = 1.0995 for 54 teeth	pi x 18.90 / 54 = 1.0995 for 54 teeth; teeth[0].depth 0.9048 = (19.6987-17.889)/2	0	match
+14-4-5	05 02_9	f = 0.5 (tooth form)	f = 0.5, meaning not stated (unsure)	unsure	no field	no field		can't tell
+14-4-6	05 02_9	bore Ø (dimension bubble)	6 with a tolerance of the form +0/-0.1 (value likely; the upper figure is blurred)	likely	hourWheel cylinders[0].d 6.0, z 0.4..1.0	hourWheel cylinders[0].d 6.0, z 0.4..1.0	0	match
+14-4-7	05 02_9	thickness	fertig 1.0 (turned 1.05 +-0.03) (sure)	sure	hourWheel z_levels [0.0,1.0]	hourWheel z_levels [0.0,1.0]	0	match
+14-4-8	05 02_9	countersink at the bore on one face	0.4 deep at 30 degrees (likely; the angle figure is blurred)	likely	hourWheel cones[0] d 6.0..6.46, z 0..0.4, half_angle_deg 30	hourWheel cones[0] d 6.0..6.46, z 0..0.4, half_angle_deg 30	0	match
+14-4-9	05 02_9	hand of the part	teeth and bore symmetric; no asymmetric feature (likely)	likely	nothing to compare	nothing to compare		match
+14-5-1	05 02_10	top spigot Ø (r6)	2.2 +0.019/+0.012 = 2.212..2.219 (sure)	sure	udHub cylinders[5].d 2.2155, z 7.6..9.0	udHub cylinders[5].d 2.2155, z 7.6..9.0	0 (inside)	match
+14-5-2	05 02_10	top spigot length	1.4 (sure)	sure	udHub z 7.6..9.0	udHub z 7.6..9.0	0	match
+14-5-3	05 02_10	hub top above the wheel top	2.8 (sure)	sure	udHub 9.0 - wheel top 6.2	udHub 9.0 - wheel top 6.2; placements: 050204-1 y 9.55 and 050204-2 y 12.35	0	match
+14-5-4	05 02_10	step below the spigot (Ø2.8) height	0.7 (likely)	likely	udHub cylinders[4].d 2.8, z 6.9..7.6	udHub cylinders[4].d 2.8, z 6.9..7.6	0	match
+14-5-5	05 02_10	collar thickness above the wheel	about 0.77 on the scan (likely; no number)	likely	udHub cylinders[1].d 7.7, z 6.2..6.9	udHub cylinders[1].d 7.7, z 6.2..6.9	-0.07 (within the scan)	match
+14-5-6	05 02_10	hub length below the wheel	5.2 (sure)	sure	udHub cylinders[3] z 0..5.2	udHub cylinders[3] z 0..5.2; placements 050204-2 y 3.35..8.55 under the wheel at y 8.55	0	match
+14-5-7	05 02_10	wheel thickness	1 -0.1 (sure)	sure	udWheel z_levels [0.0,1.0]	udWheel z_levels [0.0,1.0]	0	match
+14-5-8	05 02_10	hub tube Ø below the wheel (scaled)	about 3.47 (likely)	likely	udHub cylinders[3].d 3.4	udHub cylinders[3].d 3.4	-0.07	match
+14-5-9	05 02_10	collar Ø (scaled)	about 7.5 (likely; scan +-0.2)	likely	udHub cylinders[1].d 7.7	udHub cylinders[1].d 7.7	+0.2 (at the scan limit)	match
+14-5-10	05 02_10	Ø2.8 step (scaled)	about 2.9 (likely)	likely	udHub cylinders[4].d 2.8	udHub cylinders[4].d 2.8	-0.1	match
+14-5-11	05 02_10	hub bore (scaled, no number)	about 1.5 (likely)	likely	udHub cylinders[0].d 1.52	udHub cylinders[0].d 1.52	~0	match
+14-5-12	05 02_10	wheel hole Ø5.2 H7 and the riveted flare at the foot side, wheel countersunk	through the wheel, flared at the wheel underside (likely; sizes from sheet 05 02_11)	likely	udHub cylinders[2] d 5.2 z 5.6..6.2, cones[0] 5.2..5.66 z 5.2..5.6	udHub cylinders[2] d 5.2 z 5.6..6.2, cones[0] 5.2..5.66 z 5.2..5.6; udWheel cylinders[1].d 5.2, cones[0] z 0..0.4	form agrees	match
+14-5-13	05 02_10	spokes (plan)	five (sure)	sure	udWheel outlines: five spokes at 72 deg	udWheel outlines: five spokes at 72 deg	0	match
+14-6-1	05 02_11	tooth count	Z = 120 (sure)	sure	udWheel teeth[0].count 120	udWheel teeth[0].count 120	0	match
+14-6-2	05 02_11	tip Ø D	34.33 (sure)	sure	udWheel teeth[0].tips_d 34.3281	udWheel teeth[0].tips_d 34.3281	-0.002	match
+14-6-3	05 02_11	pitch d and t	d = 33.454, t = 0.878 (sure); pi x 33.454 / 120 = 0.8758	sure	120 teeth	120 teeth; teeth[0].depth 0.8792	sheet t differs from pi x d / Z by 0.002 (the sheet)	match
+14-6-4	05 02_11	root Ø dg	32.57 (sure)	sure	udWheel teeth[0].roots_d 32.5696	udWheel teeth[0].roots_d 32.5696	-0.0004	match
+14-6-5	05 02_11	l = 0.40	0.40, meaning not stated (unsure)	unsure	no field	no field		can't tell
+14-6-6	05 02_11	spokes: number and spacing	five, 72 deg (sure)	sure	udWheel outlines_by_level[0.0]: five spokes, direction steps of 72 deg	udWheel outlines_by_level[0.0]: five spokes, direction steps of 72 deg	0	match
+14-6-7	05 02_11	spoke width	1.7 -0.2 = 1.5..1.7 (sure)	sure	udWheel spoke edge lines at y = +-0.8: width 1.6	udWheel spoke edge lines at y = +-0.8: width 1.6	-0.1 (inside)	match
+14-6-8	05 02_11	window outer arc Ø (across the centre)	28.2 +0.2 = 28.2..28.4 (likely)	likely	udWheel cylinders[0].d 28.3 (arc_deg 327.6) r 14.15	udWheel cylinders[0].d 28.3 (arc_deg 327.6) r 14.15	+0.1 (inside)	match
+14-6-9	05 02_11	hub Ø	10.5 -0.2 = 10.3..10.5 (likely)	likely	udWheel cylinders[2].d 10.4 (arc_deg 271.5)	udWheel cylinders[2].d 10.4 (arc_deg 271.5)	-0.1 (inside)	match
+14-6-10	05 02_11	bore Ø H7	5.2 H7 = 5.200..5.212 (sure)	sure	udWheel cylinders[1].d 5.2, z 0.4..1.0	udWheel cylinders[1].d 5.2, z 0.4..1.0	0 (at the lower limit)	match
+14-6-11	05 02_11	rim diameter across the whole wheel	35.3 -0.2 (the blank; unsure)	unsure	udWheel teeth[0].tips_d 34.3281	udWheel teeth[0].tips_d 34.3281; no 35.3 feature		can't tell
+14-6-12	05 02_11	thickness	Radstärke 1.0 (sure)	sure	udWheel z_levels [0.0,1.0]	udWheel z_levels [0.0,1.0]	0	match
+14-6-13	05 02_11	countersink on the bore (shown on sheet 05 02_10)	not drawn on this sheet		udWheel cones[0] d 5.2..5.66 z 0..0.4	udWheel cones[0] d 5.2..5.66 z 0..0.4		extra
