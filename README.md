@@ -754,6 +754,28 @@ a pen stroke; the tool fails otherwise. The sentences and their sources are in
 its `TEXT` table (the Wempe README, its drawings, and the essay where it speaks
 of the Wempe). The finished poster is in `illustrations/`.
 
+### The film (`wempe_movie.py`)
+
+*How a marine chronometer keeps time at sea*: a film of just under three minutes
+of the Wempe at work, for YouTube. Each shot plays the page's own clips (Running,
+Beat (slow motion), Winding, Exploded, Run down, Lid, At sea) from the export to
+Blender, through cameras fitted to what the shot frames, with the frame drawn
+see-through where the parts inside matter. Over it go captions, the page's tick
+on each tooth's fall and an English narration (Kokoro, offline; `pip install
+kokoro soundfile`). The shots, captions and narration are tables in the tool,
+each line with its source (the Wempe README, the essay).
+
+    python wempe_movie.py export          # the glb with its clips (about 4 min)
+    python wempe_movie.py plan            # each shot's cameras and ticks (Blender, about 5 min)
+    python wempe_movie.py stills          # one frame a shot, to check framing
+    python wempe_movie.py say             # the narration spoken, each line's length against its room
+    python wempe_movie.py render --engine eevee --size 960x540 --tag draft                       # about 2 s a frame
+    python wempe_movie.py render --engine cycles --size 1920x1080 --fps 24 --samples 64 --tag final   # 13-18 s a frame, about 16 h
+    python wempe_movie.py compose --tag final --out E:/mc-video/movie/wempe_movie.mp4         # a few minutes
+
+Rendering is resumable: frames already written are kept. The film, its frames and
+its work folder stay outside the repository (`E:\mc-video\movie`).
+
 ## Licence
 
 - **Code:** MIT; see [`LICENSE`](LICENSE).
