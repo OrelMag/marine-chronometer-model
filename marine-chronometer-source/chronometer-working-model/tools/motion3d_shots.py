@@ -17,7 +17,7 @@ def arg(k,d=None):return sys.argv[sys.argv.index(k)+1] if k in sys.argv else d
 M=model.NAME
 SITE={'wempe':HERE.parents[1]/'wempe'/'verification'/'assets'/'motion3d','hamilton':HERE.parent/'verification'/'build-verification'/'assets'/'motion3d'}[M]
 DIR=pathlib.Path(arg('--dir',str(SITE))).resolve();OUT=pathlib.Path(arg('--out',str(HERE/'r_motion3d'/M/'shots')));CHECK='--check' in sys.argv
-# the stills: name, version, run (0 a beat, 1 the key let go outright, 2 eased, 3 the stop), mode (mat: material; mpa: stress; use: against its limit; speed), the channel
+# the stills: name, version, run (0 a beat, 1 the key let go outright, 2 eased, 3 the stop), mode (load: against running; mat: material; mpa: stress; use: against its limit; speed), the channel
 # whose peak sets the moment, the camera (its place, what it looks at; mm in the movement's frame, dial side +y), the parts shown (None: all), the part picked
 if M=='wempe':
     F=[-16.71,-6.5,-15.29];TR=['fuseeWheel','centreWheel','intermediateWheel','secondsWheel','escapeWheel']
@@ -27,7 +27,8 @@ if M=='wempe':
            ('4_beat_drawn_speed','last',0,'speed','mesh:seconds wheel → escape pinion',([12,-70,60],[-5,-14,14]),TR+['balance','rollers','hairspring','detent'],'escapeWheel'),
            ('5_mainspring_build','build',3,'mpa','stop',([54.8,-40,22],[24.8,-12,-6]),['mainspring','barrelArbor','setupRatchet'],'mainspring'),
            ('6_letgo_drawn_train','last',1,'mpa','mesh:fusee wheel → centre pinion',([30,8,48],[0,-10,8]),TR,'fuseeWheel'),
-           ('7_letgo_drawn_limit','last',1,'use','click1',([80,-165,130],[2,-14,2]),None,'maintaining.ratchet')]
+           ('7_letgo_drawn_limit','last',1,'use','click1',([80,-165,130],[2,-14,2]),None,'maintaining.ratchet'),
+           ('8_letgo_drawn_load','last',1,'load','click1',([F[0]+22,10,F[2]+30],F),['maintaining','maintDetent','fusee'],'maintaining.clicks')]
     VERS=['last','build']
 else:
     F=[14.31,-12,-14.52];TR=['gw','cw','tw','fw','escW']

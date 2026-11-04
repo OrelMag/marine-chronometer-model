@@ -29,6 +29,7 @@ COL={'934008':'brass','a76517':'brass','7a470c':'brass','904208':'brass','b0711c
      '43547a':'steel','262a31':'steel','424851':'steel','93020b':'ruby','ffffff':'ruby','d5dad1':'steel'}
 COL.update({'965e1a':'brass','111418':'steel','626661':'steel'})   # the Hamilton's gilt brass, blued steel, the balance's rim
 if M=='hamilton':COL['944315']='brass'   # the Hamilton's fusee wheel (the Wempe's impulse roller, beryllium copper, wears this colour too)
+COL['1a0001']='ruby';RUBY={'93020b','1a0001'}   # the jewels' colour since the materials pass (3.70.04, 1 November 2026; 93020b before), by which the stones are found
 
 def load_dump():
     J=json.loads((D/'meshes.json').read_text());G=(D/'geom.bin').read_bytes();out=[]
@@ -102,7 +103,7 @@ class Part:
             x0,x1,z0,z1=win;s.g.update(x0=x0,z0=z0,nx=int(math.ceil((x1-x0)/s.h)),nz=int(math.ceil((z1-z0)/s.h)))
         S=np.zeros((s.g['nx'],s.g['ny'],s.g['nz']),np.int16)-1;mat=['steel']
         for k,m in enumerate(meshes):
-            nm=COL.get(m['mat0'] or '','steel');nm='gold' if (m['pk'] or '').endswith('.gold') else nm
+            nm=COL.get(m['mat0'] or '','steel');nm='gold' if (m['pk'] or '').endswith('.gold') else 'brass' if m['pk']=='balance.rim' and m['mat0']=='ffffff' else nm   # the cut bimetallic rim's brass, white under its texture since the materials pass
             if nm not in mat:mat.append(nm)
             S[vox(m['V'][m['F']],s.g)&(S<0)]=mat.index(nm)
         import scipy.ndimage as _nd
@@ -263,7 +264,7 @@ def main():
             if k!='esc':
                 Po,FB,lam,rn=contact(i);m=P.patch(Po,0.6*MESH[i]['m'],face(i));F[m]+=(-FB/m.sum() if m.any() else 0);q=MESH[i];yw=face(i);info['face']=[float(yw[0]),float(yw[1])];info['hertz']=hertz(float(np.linalg.norm(FB)),q['m']*q['zA']/2*0.342,q['m']*q['zB']/2*0.342,yw[1]-yw[0],100e3,207e3);info.update(load=f"{abs(lam):.3g} N·m on the next pinion, {np.linalg.norm(FB):.1f} N at its pitch point ({rn})",out={'at':Po.tolist(),'F':(-FB).tolist(),'run':rn,'m':MESH[i]['m']})
             else:   # the escape wheel: the tooth on the locking stone (the detent's stone: the ruby nearest the wheel's tips), the whole escape torque at the tip
-                rt0=max(np.hypot(*(m['V']-c)[:,[0,2]].T).max() for m in byp(TP['esc']));rub=[m for m in byp('detent' if M=='wempe' else 'det') if m['mat0']=='93020b'];cen=[m['V'].mean(0) for m in rub];j=int(np.argmin([abs(np.hypot(*(x-c)[[0,2]])-rt0) for x in cen]));S=cen[j]
+                rt0=max(np.hypot(*(m['V']-c)[:,[0,2]].T).max() for m in byp(TP['esc']));rub=[m for m in byp('detent' if M=='wempe' else 'det') if m['mat0'] in RUBY];cen=[m['V'].mean(0) for m in rub];j=int(np.argmin([abs(np.hypot(*(x-c)[[0,2]])-rt0) for x in cen]));S=cen[j]
                 lam,rn=pk('mesh:'+MESH[3]['nm']);r=S-c;r[1]=0;rt=r/np.linalg.norm(r)*rt0;tau=np.array([0,AX['esc'][1]*abs(lam)*1e3,0]);Ft=-np.cross(tau,rt)/(rt@rt)
                 m=P.patch(c+rt,0.15,wheel_y('esc'));F[m]+=(Ft/m.sum() if m.any() else 0);info.update(load=f"{abs(lam):.3g} N·m held at a tooth's tip on the locking stone, {np.linalg.norm(Ft):.2f} N ({rn})",out={'at':(c+rt).tolist(),'F':Ft.tolist(),'run':rn,'m':MESH[3]['m']})
             return info
@@ -351,7 +352,7 @@ def main():
             f=(rho*vol)[:,None]*(alpha*np.cross([0,1,0],r)+Wb**2*r)   # N (t/mm^3 x mm^3 x mm/s^2): the turn's tangential and the spin's radial acceleration at once
             np.add.at(F,P.conn.ravel(),np.repeat(f/8,8,axis=0));return {'body':True,'load':f"swinging to {np.degrees(abs(Ab)):.0f}°: {abs(alpha):.0f} rad/s² at the turn, {abs(Wb):.1f} rad/s at the centre ({rb}); held at the hairspring’s collet"}
         run('balance',byp('balance'),s_bal,'the balance (rim, arm, masses, timing weights, staff): its own inertia, the hairspring holding it')
-        Te,re_=pk('mesh:'+MESH[3]['nm']);imp=[q for q in byp('rollers',['impulse']) if q['mat0']=='93020b'][0]['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/7.0*np.linalg.norm(ri),0],ri)/(ri@ri)
+        Te,re_=pk('mesh:'+MESH[3]['nm']);imp=[q for q in byp('rollers',['impulse']) if q['mat0'] in RUBY][0]['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/7.0*np.linalg.norm(ri),0],ri)/(ri@ri)
         def s_rol(P,fix,F):
             fix[P.near_axis(cBa,0.9)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse stone ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
         run('rollers',byp('rollers'),s_rol,'the rollers (impulse and discharge, with their stones): the escape wheel’s tooth on the impulse stone')
@@ -428,7 +429,7 @@ def main():
             return {'body':True,'load':f"swinging to {np.degrees(abs(Ab)):.0f}°: {abs(alpha):.0f} rad/s² at the turn, {abs(Wb):.1f} rad/s at the centre ({rb}); held at the hairspring’s collet"}
         run('bal',[m for m in byp('bal') if (m['pk'] or '') not in ('bal.impulse','bal.unlock')],s_bal,'the balance (rim, arm, screws, timing weights, staff): its own inertia, the hairspring holding it')
         Te,re_=pk('mesh:'+MESH[3]['nm']);rt0=max(np.hypot(*(m['V']-AX['esc'][0])[:,[0,2]].T).max() for m in byp(TP['esc']))
-        imp=[q for q in byp('bal',['impulse']) if q['mat0']=='93020b'];imp=(imp[0] if imp else byp('bal',['impulse'])[0])['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/rt0*np.linalg.norm(ri),0],ri)/(ri@ri)
+        imp=[q for q in byp('bal',['impulse']) if q['mat0'] in RUBY];imp=(imp[0] if imp else byp('bal',['impulse'])[0])['V'].mean(0);ri=imp-cBa;ri[1]=0;fi=np.cross([0,abs(Te)*1e3/rt0*np.linalg.norm(ri),0],ri)/(ri@ri)
         def s_rol(P,fix,F):
             fix[ball(P,cBa,0.3)]=True;push(P,F,imp,fi,0.35);return {'load':f"the escape tooth’s {np.linalg.norm(fi):.2f} N on the impulse jewel ({re_}); held on the staff",'out':{'at':imp.tolist(),'m':0.2}}
         run('bal.impulse',byp('bal',['impulse']),s_rol,'the rollers (impulse and unlocking, with their jewels): the escape wheel’s tooth on the impulse jewel')

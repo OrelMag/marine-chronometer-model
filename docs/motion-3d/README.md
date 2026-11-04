@@ -142,11 +142,12 @@ The viewer draws the mainspring as a ribbon through its solved states. It is pla
 
 ## 5. The viewer
 
-`motion3d_pack.py` packs the geometry, each version's per-vertex stress (16-bit MPa), the runs' frames (every body's angle and every element's load, up to 2,500 frames a run) and the springs' states. `--site DIR` writes them for the site: gzipped binaries (unpacked in the browser), with three.js r128 and its OrbitControls from `vendor/` and the site's fonts beside them, so the page loads nothing from the network. `build.py` copies the folder with its report.
+`motion3d_pack.py` packs the geometry, each version's per-vertex stress (16-bit MPa), the runs' frames (every body's angle and every element's load, up to 2,500 frames a run, with the frame of each load's peak kept) and the springs' states, and from the trace each run's clock (letting go at 0, the stop's blow), the bodies it holds elastically and the transmission's tables (the meshes' teeth and modules, the clicks' and detent's levers, the maintaining spring's bank). `--site DIR` writes them for the site: gzipped binaries (unpacked in the browser), with three.js r128 and its OrbitControls from `vendor/` and the site's fonts beside them, so the page loads nothing from the network. `build.py` copies the folder with its report.
 
 The viewer (`motion3d_viewer.html`):
-- **Motion.** It plays each run in slow motion. Every body turns about its measured axis by the run's angle, and the departures from rigid motion can be magnified.
-- **Colours.** It colours the parts by material, by stress (MPa on a log scale), by stress against the part's limit, or by speed.
+- **Motion.** It plays each run in slow motion. Every body turns about its measured axis by the run's angle, and the departures from rigid motion of the bodies the run holds elastically can be magnified (the rest's departures are real motion, a fusee running back when the key is let go: shown as they are).
+- **Colours.** It colours the parts by the load each carries against its load in running (the Wempe; its packs carry the transmission's tables), by material, by stress (MPa on a log scale), by stress against the part's limit, or by speed. The load is the transmission's plan's (`wempe/verification/assets/transmission/`) in 3D: each arbor by the mesh that drives it, the barrel, chain and fusee by the chain's pull, the click wheel and clicks by the clicks', the maintaining ratchet and spring by the spring's, the maintaining detent by its own, the detent by the locking stone's, the stop work by the stop's, the motion work against its run's peak (it carries nothing in running); on a log scale from 0.1 to 10 times, blue through yellow (as in running) to red. A part whose joint carries nothing at that moment (a slack chain, a click off its tooth) is grey and see-through; one the run doesn't load (the balance, the frame) is paled.
+- **The moments and the probe.** Buttons jump to each run's moments (a beat's releases, impulses and locks; letting go, the click catching, the peak blow and the spring banking; the stop's blow), the time is read as the plan reads it (from letting go, from the blow), and *Loads at this moment* lists every joint's force in newtons against its force in running, as the plan's probe does, with a badge when the maintaining spring is banked.
 - **Click a part** for its load, its peak, its limit, its bricks and its fastest speed.
 
 `motion3d_shots.py` opens a viewer folder on a local port and checks that it loads clean: its data read, its parts table filled, no page error and nothing fetched off the folder. It then renders these stills through the viewer's own hooks (`window.__m3`).
@@ -155,23 +156,24 @@ The viewer (`motion3d_viewer.html`):
 |---|---|
 | ![The Wempe as drawn: the maintaining work at the let-go blow, by stress](img/wempe/2_letgo_drawn_maintaining.png) | ![The 1950s build: the same moment](img/wempe/3_letgo_build_maintaining.png) |
 | ![The Wempe's train at the let-go blow, by stress](img/wempe/6_letgo_drawn_train.png) | ![The whole Wempe against each part's limit](img/wempe/7_letgo_drawn_limit.png) |
+| ![The Wempe as drawn: the maintaining work at the let-go blow, each part by its load against its load in running (the clicks red, 6.4 times)](img/wempe/8_letgo_drawn_load.png) | |
 | ![The Hamilton's winding work at the let-go blow](img/hamilton/2_letgo_winding.png) | ![The Hamilton's train at the let-go blow](img/hamilton/3_letgo_train.png) |
 | ![The Hamilton's mainspring at the stop](img/hamilton/4_mainspring_stop.png) | ![The Hamilton against each part's limit](img/hamilton/6_letgo_limit.png) |
 
 ## 6. Cross-checks, and what they leave open
 
-Each stress the finite elements give per newton of load, against the formula the model's strength tools use for the same part (the FE solved again on 26 October 2026; the pinion's leaf as before):
+Each stress the finite elements give per newton of load, against the formula the model's strength tools use for the same part (the Wempe's FE solved again on 4 November 2026 on the transmission traced that day, the Hamilton's on 26 October 2026; the pinion's leaf as before):
 
 | Part, its load | FE (MPa per N) | Formula (MPa per N) | Reading |
 |---|---|---|---|
-| Wempe: fusee wheel to centre pinion, the wheel's tooth | 5.06 (400 at 79.1 N) | 4.37, Lewis in `wempe_strength.js` (87 at 19.9 N) | agree within 16 % |
+| Wempe: fusee wheel to centre pinion, the wheel's tooth | 4.49 (357 at 79.4 N; 5.06 until 4 November 2026) | 4.37, Lewis in `wempe_strength.js` (87 at 19.9 N) | agree within 3 % |
 | the same mesh, the centre pinion's leaf | 4.51 (368 at 81.6 N) | 4.37 | agree within 3 % |
 | Hamilton: fusee wheel to centre pinion, the wheel's tooth | 4.60 (382 at 83.1 N; 5.43 until 26 October 2026) | 9.13, `strength.js` over the 1.40 mm bearing band (199 at 21.8 N); 5.75, Lewis over the tooth's whole 2.22 mm | 20 % under Lewis over the whole tooth (6 % before); `strength.js`, over the bearing band, the cautious side |
 | Hamilton: set-up ratchet's tooth | 2.43 (502 at 206.2 N) | 2.16, `ratchets.js`'s tooth root (313 at 145.1 N) | agree within 13 % |
-| Wempe: set-up ratchet's tooth | 0.70 (177 at 252.4 N) | 0.40, `wempe_ratchets.js` (57 at 141.7 N) | FE 1.8× the formula |
-| Wempe: click wheel's tooth, under the click | 0.49 (145 at 297.1 N) | 1.16, `wempe_ratchets.js` (57 at 49.1 N); 2.05, `wempe_strength.js` (105 at 51.2 N) | **the formulas differ from each other and from the FE**; open |
+| Wempe: set-up ratchet's tooth | 0.58 (149 at 254.3 N; 0.70 until 4 November 2026) | 0.40, `wempe_ratchets.js` (57 at 141.7 N) | FE 1.5× the formula |
+| Wempe: click wheel's tooth, under the click | 0.46 (138 at 301.2 N) | 1.16, `wempe_ratchets.js` (57 at 49.1 N); 2.05, `wempe_strength.js` (105 at 51.2 N) | **the formulas differ from each other and from the FE**; open |
 | Hamilton: winding ratchet's tooth, under a pawl | 0.46 (106 at 231.8 N) | 3.73, `ratchets.js` (110 at 29.5 N) | the formula is 8× the FE (3.9× before 26 October 2026) |
-| Wempe: maintaining ratchet's tooth, under the detent | 7.85 (1,545 at 196.7 N) | 2.60, `wempe_ratchets.js` (50 at 19.2 N) | **the FE is 3× the formula**; open |
+| Wempe: maintaining ratchet's tooth, under the detent | 3.03 (472 at 155.7 N; 7.85 until 4 November 2026) | 2.60, `wempe_ratchets.js` (50 at 19.2 N) | agree within 17 % since the ratchet was rebuilt as one solid (31da1e90, 28 October 2026): the three solids fused before it left faces through the part, which the bricks read as a cut |
 | Hamilton: set-up click, on its nose | 14.2 (2,933 at 206.2 N), at the contact itself | 3.71, `ratchets.js`'s arm in bending (539 at 145.1 N) | the FE's peak is the contact's, not the arm's |
 
 What this means:
@@ -193,7 +195,7 @@ The principle: a part's own stress, such as a tooth's root or a pawl's arm in be
 
 ![The Hamilton's contact study](img/contact_hamilton.png)
 
-0.3 mm from the load, at the finer window, with the patch at ×0.5 and at ×2 (MPa; solved again on 26 October 2026, after the Wempe's per-part audit, its threads, and the Hamilton's batch of that day):
+0.3 mm from the load, at the finer window, with the patch at ×0.5 and at ×2 (MPa; solved again on 26 October 2026, after the Wempe's per-part audit, its threads, and the Hamilton's batch of that day; not rerun on 4 November 2026, so the Wempe maintaining ratchet's row is the three-solid ratchet's, before 31da1e90):
 
 | Part | Patch ×0.5 | Patch ×2 | Reading |
 |---|---|---|---|

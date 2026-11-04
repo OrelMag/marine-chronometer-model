@@ -81,10 +81,7 @@ out['mainspring']={'table':tab,'t':t,'E':E,'level':k_lvl,'L':L,'states':states,'
 
 # ---- the hairspring, the maintaining spring, the detent and gold springs, the chain ----
 b,h=W['HB']*1e-3,W['HT']*1e-3;out['hairspring']={'k':W['k'],'b':W['HB'],'h':W['HT'],'MPaPerRad':6*W['k']/(b*h*h)/1e6,'note':'even along the strip (Phillips’ terminal curves)'}
-sus=json.loads(subprocess.run(['node','wempe_sustaining.js','--json','-'],cwd=HERE,capture_output=True,text=True,encoding='utf-8',env={**__import__('os').environ,**env}).stdout or 'null') if False else None
-SUS=json.loads((pathlib.Path(__import__('tempfile').gettempdir())/'sus.json').read_text(encoding='utf-8')) if VER=='last' else None
-if SUS is None:
-    import tempfile,os;p=pathlib.Path(tempfile.gettempdir())/f'sus_{VER}.json';subprocess.run(['node','wempe_sustaining.js','--json',str(p)],cwd=HERE,capture_output=True,env={**os.environ,**env});SUS=json.loads(p.read_text(encoding='utf-8'))
+import tempfile,os;p=pathlib.Path(tempfile.gettempdir())/f'sus_{VER}.json';subprocess.run(['node','wempe_sustaining.js','--json',str(p)],cwd=HERE,capture_output=True,env={**os.environ,**env});SUS=json.loads(p.read_text(encoding='utf-8'))
 out['maintaining']={'peak':SUS['spring']['sig'],'banked':SUS['spring']['banked'],'law':'(1 - cos phi) / 2 from the eye','t':SUS['spring']['t']}
 lift=0.025;out['detentSpring']={'t':0.07,'L':5.0,'MPaPerRad':207e3*0.07/(2*5.0),'note':'bent evenly by the lift'}
 Lg=11.41;dl=W['PS'];bend=W['bend'];E_g=W['ET']*1e3
