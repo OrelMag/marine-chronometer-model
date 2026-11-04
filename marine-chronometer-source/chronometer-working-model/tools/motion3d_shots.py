@@ -28,7 +28,7 @@ if M=='wempe':
            ('5_mainspring_build','build',3,'mpa','stop',([54.8,-40,22],[24.8,-12,-6]),['mainspring','barrelArbor','setupRatchet'],'mainspring'),
            ('6_letgo_drawn_train','last',1,'mpa','mesh:fusee wheel → centre pinion',([30,8,48],[0,-10,8]),TR,'fuseeWheel'),
            ('7_letgo_drawn_limit','last',1,'use','click1',([80,-165,130],[2,-14,2]),None,'maintaining.ratchet'),
-           ('8_letgo_drawn_load','last',1,'load','click1',([80,-165,130],[2,-14,2]),None,'maintaining.ratchet')]
+           ('8_letgo_drawn_load','last',1,'load','click1',([F[0]+22,10,F[2]+30],F),['maintaining','maintDetent','fusee'],'maintaining.clicks')]
     VERS=['last','build']
 else:
     F=[14.31,-12,-14.52];TR=['gw','cw','tw','fw','escW']
