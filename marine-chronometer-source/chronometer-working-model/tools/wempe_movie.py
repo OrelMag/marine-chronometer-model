@@ -1,6 +1,6 @@
-"""wempe_movie.py: a two-minute film of the Wempe Einheits-Chronometer at work, for posting (YouTube): the page's own export to Blender (wempe/js/blender.js, ?qa's
-__glb, the version as photographed, rev=3955) with its clips (Running, Beat (slow motion), Winding, Exploded, Laid out, Run down, Lift out, Lid, At sea) played shot by
-shot through cameras fitted to what each shot frames, in wempe_showcase.py's studio (the same lights, floor, world and lens), captions burned in and the page's own
+"""wempe_movie.py: a three-minute film (2:52) of the Wempe Einheits-Chronometer at work, for posting (YouTube): the page's own export to Blender (wempe/js/blender.js, ?qa's
+__glb, the version as photographed, rev=3955) with its clips (Running, Beat (slow motion), Winding, Exploded, Run down, Lift out, Lid, At sea) played shot by
+shot through cameras fitted to what each shot frames, in wempe_showcase.py's studio (the same lights, floor, world and lens), captions burned in, an English narration (Kokoro, offline: pip kokoro soundfile; the American voice af_heart, the owner's choice) and the page's own
 tick (app.js's tickSnd: a 30 ms noise burst through a 3.4 kHz band-pass) on each tooth's fall (the escape wheel past half a tooth, as the page ticks). One shot table
 (SHOTS) drives the draft (EEVEE) and the final (Cycles): only the engine, size, fps and samples differ. Facts in the captions come from the Wempe README and the essay
 (each line's source beside it). Not run by build.py or ci.py; the film and its frames stay outside the repository (default E:\\mc-video\\movie).
@@ -8,9 +8,10 @@ tick (app.js's tickSnd: a 30 ms noise burst through a 3.4 kHz band-pass) on each
     python wempe_movie.py export                       the glb with the clips (about 3 min), into WORK
     python wempe_movie.py plan                         each shot's camera and its ticks (Blender, no render; about 2 min): WORK/plan.json
     python wempe_movie.py stills [--only a,b] [--at 0.5]   one EEVEE frame of each shot at that share of it (framing), WORK/stills/
+    python wempe_movie.py render --engine eevee|cycles   (the draft: eevee 960x540, about 2 s a frame; the final: cycles 1920x1080 --fps 24 --samples 64, about 13-18 s a frame, 15-16 h)
     python wempe_movie.py render --engine eevee|cycles [--size 1280x720] [--fps 30] [--samples N] [--only a,b]
                                                        every frame, into WORK/frames/TAG/SHOT/00000.png; frames already there are kept (resumable)
-    python wempe_movie.py compose --tag TAG [--out FILE] [--no-voice]   captions, fades, ticks and the narration over the frames: the MP4, its .srt and the sound track
+    python wempe_movie.py compose --tag TAG [--out FILE] [--no-voice]   captions, fades, ticks and the narration over the frames: the MP4, its .srt and the sound track (3-6 min)
     python wempe_movie.py say   the narration (SAY) spoken by Kokoro into WORK/voice, each line's length against its room
   --work DIR (default E:\\mc-video\\movie\\work)."""
 import argparse,asyncio,json,math,pathlib,subprocess,sys,time,wave
