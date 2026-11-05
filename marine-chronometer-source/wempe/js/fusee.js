@@ -443,7 +443,7 @@ const WFUSEE=(()=>{
          ray where its step is nothing helixSolid fanned a ridge across the slot between the two rays (to r 17.41 at 6.3°, in the chain's first link: fine.py). Not the last interval, up to TAU: fr wraps there, so rf jumps from turn 1's floor to turn 0's and the search took that for a crossing; its rays at TAU ± 1e-5 left a slit 0.18 µm wide right through the flange, r 13.15 to 17.8, a line across the slot (until 5 November 2026) */
       const cut=(()=>{const o=[],g=[t=>rCut(t)-BD.R,t=>rCut(t)-rf(fr((t-PHI0)/TAU))],n=3600;for(const f of g)for(let i=0;i<n-1;i++){let x0=i*TAU/n,x1=(i+1)*TAU/n,f0=f(x0),f1=f(x1);
         if(f0*f1>=0||Math.abs(f0)>50||Math.abs(f1)>50)continue;for(let k=0;k<60;k++){const xm=(x0+x1)/2,fm=f(xm);if(fm*f0>0){x0=xm;f0=fm;}else x1=xm;}o.push((x0+x1)/2);}return o;})();
-      for(const t of cut)cols.push(t-1e-5,t,t+1e-5);cols.sort((p,q)=>p-q);
+      for(const t of cut)cols.push(t-1e-4,t,t+1e-4);cols.sort((p,q)=>p-q);   /* 1e-4 either side: the floor climbs about 40 mm a radian there, so 4 µm of wall, past helixSolid's 2 µm; at 1e-5 (0.4 µm, until 5 November 2026) no wall stood on the ray and the next ray's fan cut a slanted facet 0.2 deep into the first rib at the slot's far end */
       const thC=PHI0+(FS1+WLD/2-A0)/PAX*TAU,fl=c=>helixSolid(c,RT,AS,()=>[[RT,BD.chR-RT],[BD.chD,BD.rRec],[AS,BD.rRec]],rBody,[FR1,FS1],[RT+1.3*T5]);
       const gFl=fl([...cols.filter(t=>t<thC-1e-9),thC]),gFl2=(()=>{const q=pol(PINR,PINA);return capFix(bore(fl([thC,...cols.filter(t=>t>thC+1e-9)]),[q[0],0,q[1]],[0,1,0],BD.pinR,F0-BD.pinD),null);})();
       const AE=LB-2.0;   /* the small end's band from 2.0 under its face (below the slot's floor, so the cut's floor runs through metal, not along a seam) */
