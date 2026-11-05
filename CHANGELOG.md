@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.82.01 · 2026-11-05
+- Fixed: the Wempe fusee's flange had a line across the chain's slot, a sheet of no width left where its two sweeps met.
+- Fixed: a slanted facet cut into the fusee's first rib at the far end of that slot; the pocket now ends square, as drawn.
+
 ## 3.82.00 · 2026-11-04
 - The Wempe's 3D moving parts (beside its report, section 13) colour each part by its load against its load in running, with buttons to jump to each run's moments (let go, the clicks catching, the blow, the stop) and a table of every joint's load at the moment shown.
 - The 3D viewer worked out again on today's Wempe: its stresses, the let-go study and the report's section 13; the maintaining ratchet's tooth now agrees with its formula.
