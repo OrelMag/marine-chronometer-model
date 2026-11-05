@@ -41,9 +41,25 @@ def piece(p):
 def frame(c,s,o=(0,0,0)):
     """a 3x4 matrix taking (u, y, v) to the page's (x, y, z): u along the bar, x = u c + v s, z = -u s + v c"""
     return [[c,0,s,o[0]],[0,1,0,o[1]],[-s,0,c,o[2]]]
+def flange(d):
+    """the flange's two sweeps (pieces 1, 2) one mesh: they meet on the rays at 0 (TAU) and thC, each a closed solid with its end caps there. United, those caps stayed back to back, a sheet of no width
+    through the flange (the owner's picture, 5 November 2026: the union keeps two faces in one plane), so the caps are taken off and the rays welded"""
+    Vs,Ts,n=[],[],0
+    for p in d['pieces'][1:3]:
+        P=np.array(p['pos'],np.float64).reshape(-1,3);I=np.array(p['idx'],np.int64).reshape(-1,3) if p['idx'] else np.arange(len(P)).reshape(-1,3)
+        Vs.append(P);Ts.append(I+n);n+=len(P)
+    V=np.vstack(Vs);T=np.vstack(Ts);keep=np.ones(len(T),bool)
+    for th in(0,d['thC']):
+        c,s=math.cos(th),math.sin(th);on=(np.abs(V[:,0]*s+V[:,2]*c)<1e-6)&(V[:,0]*c-V[:,2]*s>0);keep&=~on[T].all(1)
+    key=np.round(V*1e5).astype(np.int64);u,inv=np.unique(key,axis=0,return_inverse=True);inv=inv.reshape(-1)
+    W=np.zeros((len(u),3));W[inv]=V;T=inv[T[keep]];T=T[(T[:,0]!=T[:,1])&(T[:,1]!=T[:,2])&(T[:,2]!=T[:,0])]
+    m=mf.Manifold(mf.Mesh(vert_properties=W.astype(np.float32),tri_verts=T.astype(np.uint32)))
+    if m.status()!=mf.Error.NoError:raise SystemExit(f"the flange's sweeps don't weld into a closed manifold: {m.status()}")
+    return m
 def body(d):
-    t=None
-    for p in d['pieces']:t=piece(p) if t is None else t+piece(p)
+    t=flange(d)
+    for i,p in enumerate(d['pieces']):
+        if i not in(1,2):t=t+piece(p)
     c,s,S=d['c'],d['s'],d['S']
     def pocket(depth,u0,u1):   # a box u0..u1, v0..v1, from depth under the small end's face out past it (the face is at y = S, the body toward +y)
         b=mf.Manifold.cube([u1-u0,depth+5,d['v1']-d['v0']]).translate([u0,S-5,d['v0']])
