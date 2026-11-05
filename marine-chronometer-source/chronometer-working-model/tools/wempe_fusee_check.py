@@ -173,8 +173,7 @@ def main():
     print(f"\nthe window (the slot's floor open into the groove inside the hub's rim, at v 5): on the lower end's side u {min(wb) if wb else 0:.2f} to {max(wb) if wb else 0:.2f}, on the upper end's {len(wa)} samples")
     if not wb or wa:FAIL.append("the window: open on the lower end's side only (C-D: solid arcs and no hatching there, dashed arcs on the other)")
     A_=sheets()
-    print(f"
-faces lying back to back (a sheet of no width): {A_:.3f} mm²")
+    print(f"faces lying back to back (a sheet of no width): {A_:.3f} mm²")
     if A_>0.01:FAIL.append(f"{A_:.3f} mm² of faces back to back: a sheet of no width in the metal")
     print('\nthe groove floor against 05 06_20 and the sheet\'s "Grund": wempe_fusee_profile.py; the faces at the end against the sheet: fusee_end.py --model wempe')
     if '--json' in sys.argv:Path(sys.argv[sys.argv.index('--json')+1]).write_text(json.dumps(ROWS,indent=1),encoding='utf-8')
