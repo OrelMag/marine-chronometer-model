@@ -1176,6 +1176,7 @@ const WCASE=(()=>{
        Each moved from where it was built (ex0); the key, which keyAt moves, only while it stands in its holder (called each frame) */
     out.explode=e=>{const at=(g,dx,dy,dz)=>{const p=g.userData.ex0||(g.userData.ex0=g.position.clone());g.position.set(p.x+dx*e,p.y+dy*e,p.z+dz*e);};
       at(rgP,0,50,0);at(cp,0,128,0);at(bowl,0,150,0);at(bz,0,195,0);at(lk,90,0,0);at(lidG,0,0,-45);at(lid6G,0,0,-45);if(key.parent===root){KEYREST();key.position.x+=110*e;key.position.y+=40*e;}};
+    KIT.capsOff(root);
     return out;}
   return{build,YP,YB};
 })();
