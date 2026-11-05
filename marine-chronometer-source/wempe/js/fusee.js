@@ -440,8 +440,8 @@ const WFUSEE=(()=>{
          the chain's pin's hole through rib 1, the slot and rib 2 to the land under it (r 14.8 at the pin, inside the hole's 16.5) in the second; inside, the 45° chamfer
          from Ø 29.8 at the blank's face to the recess's Ø 26.3 */
       /* and rays where the chain's cutter's floor crosses the ribs' tops (17.8) and turn 0's floor (rf): there a wall passes from the rib's face to turn 0's, and with no
-         ray where its step is nothing helixSolid fanned a ridge across the slot between the two rays (to r 17.41 at 6.3°, in the chain's first link: fine.py) */
-      const cut=(()=>{const o=[],g=[t=>rCut(t)-BD.R,t=>rCut(t)-rf(fr((t-PHI0)/TAU))],n=3600;for(const f of g)for(let i=0;i<n;i++){let x0=i*TAU/n,x1=(i+1)*TAU/n,f0=f(x0),f1=f(x1);
+         ray where its step is nothing helixSolid fanned a ridge across the slot between the two rays (to r 17.41 at 6.3°, in the chain's first link: fine.py). Not the last interval, up to TAU: fr wraps there, so rf jumps from turn 1's floor to turn 0's and the search took that for a crossing; its rays at TAU ± 1e-5 left a slit 0.18 µm wide right through the flange, r 13.15 to 17.8, a line across the slot (until 5 November 2026) */
+      const cut=(()=>{const o=[],g=[t=>rCut(t)-BD.R,t=>rCut(t)-rf(fr((t-PHI0)/TAU))],n=3600;for(const f of g)for(let i=0;i<n-1;i++){let x0=i*TAU/n,x1=(i+1)*TAU/n,f0=f(x0),f1=f(x1);
         if(f0*f1>=0||Math.abs(f0)>50||Math.abs(f1)>50)continue;for(let k=0;k<60;k++){const xm=(x0+x1)/2,fm=f(xm);if(fm*f0>0){x0=xm;f0=fm;}else x1=xm;}o.push((x0+x1)/2);}return o;})();
       for(const t of cut)cols.push(t-1e-5,t,t+1e-5);cols.sort((p,q)=>p-q);
       const thC=PHI0+(FS1+WLD/2-A0)/PAX*TAU,fl=c=>helixSolid(c,RT,AS,()=>[[RT,BD.chR-RT],[BD.chD,BD.rRec],[AS,BD.rRec]],rBody,[FR1,FS1],[RT+1.3*T5]);
@@ -467,7 +467,7 @@ const WFUSEE=(()=>{
            tube's (matchThreads). With window.__FUSEE_RAW (that tool) the pieces and the cuts' figures are handed to it instead; without the file, the cut below (facePocket,
            a few faces of no thickness where its sections meet: fusee_end.py) */
         if(typeof window!=='undefined'&&window.__FUSEE_RAW){const ar=g=>{const h=g.index?g:g;return{pos:Array.from(h.attributes.position.array),idx:h.index?Array.from(h.index.array):null};};
-          pF.userData.rawBody={pieces:[gRe,gFl,gFl2,gTu,gBa].map(ar),c,s:s_,S,SLD,SLS,us:SB.us,v0:BD.slot.v0,v1:BD.slot.v1,pin};}
+          pF.userData.rawBody={pieces:[gRe,gFl,gFl2,gTu,gBa].map(ar),thC,c,s:s_,S,SLD,SLS,us:SB.us,v0:BD.slot.v0,v1:BD.slot.v1,pin};}
         if(typeof WFUSEEBODY!=='undefined'&&!(typeof window!=='undefined'&&window.__FUSEE_RAW)){bF.forEach(m=>{m.parent.remove(m);m.geometry.dispose();});bF.length=0;
           const b64=(t,s)=>{const r=atob(s),u=new Uint8Array(r.length);for(let i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return new t(u.buffer);};
           const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(b64(Float32Array,WFUSEEBODY.pos),3));g.setIndex(new THREE.BufferAttribute(b64(Uint32Array,WFUSEEBODY.idx),1));

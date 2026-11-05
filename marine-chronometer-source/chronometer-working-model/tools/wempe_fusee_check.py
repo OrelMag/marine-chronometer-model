@@ -65,6 +65,11 @@ def row(feat,sheet,lo,hi,model,meas,sure,note='',dev=False):
     st='~~' if dev else ('ok' if ok else 'FAIL')
     if not ok and not dev:FAIL.append(feat)
     ROWS.append(dict(feature=feat,sheet=sheet,lo=lo,hi=hi,model=model,measured=round(meas,4),sure=sure,status=st,note=note))
+def sheets():
+    """the area of faces lying on each other, a sheet of no width (two solids' ends left back to back: the flange's seams at 0 and thC, 8.4 mm² until 5 November 2026, a line on the part). Corners to 1 µm; the cutter's rays 1e-5 apart leave only specks"""
+    V,T=np.asarray(M.vertices),np.asarray(M.faces);a,b,c=V[T[:,0]],V[T[:,1]],V[T[:,2]];Ar=np.linalg.norm(np.cross(b-a,c-a),axis=1)/2
+    K=np.round(V*1e3).astype(np.int64)[T];K=np.array([sorted(map(tuple,t)) for t in K]).reshape(len(T),9)
+    _,inv,n=np.unique(K,axis=0,return_inverse=True,return_counts=True);return float(Ar[(n[inv.reshape(-1)]>1)&(Ar>1e-7)].sum()/2)
 def main():
     nb=len(M.split(only_watertight=False))
     if nb!=1 or not M.is_watertight:FAIL.append('the body is not one closed solid')
@@ -167,6 +172,10 @@ def main():
     wb=opened(-1);wa=opened(1)
     print(f"\nthe window (the slot's floor open into the groove inside the hub's rim, at v 5): on the lower end's side u {min(wb) if wb else 0:.2f} to {max(wb) if wb else 0:.2f}, on the upper end's {len(wa)} samples")
     if not wb or wa:FAIL.append("the window: open on the lower end's side only (C-D: solid arcs and no hatching there, dashed arcs on the other)")
+    A_=sheets()
+    print(f"
+faces lying back to back (a sheet of no width): {A_:.3f} mm²")
+    if A_>0.01:FAIL.append(f"{A_:.3f} mm² of faces back to back: a sheet of no width in the metal")
     print('\nthe groove floor against 05 06_20 and the sheet\'s "Grund": wempe_fusee_profile.py; the faces at the end against the sheet: fusee_end.py --model wempe')
     if '--json' in sys.argv:Path(sys.argv[sys.argv.index('--json')+1]).write_text(json.dumps(ROWS,indent=1),encoding='utf-8')
     if FAIL:print(f'\n{len(FAIL)} out of the sheet\'s figures: '+'; '.join(FAIL));sys.exit(1)
