@@ -120,7 +120,7 @@ def nearest(meshes,P):
     import trimesh
     d=np.full(len(P),np.inf)
     for m in meshes:
-        _,dd,_=trimesh.proximity.closest_point(m,P);d=np.minimum(d,dd)
+        dd=np.concatenate([trimesh.proximity.closest_point(m,P[i:i+500])[1] for i in range(0,len(P),500)]);d=np.minimum(d,dd)   # in batches: a mesh with few corners near a point has many triangles to search (130 million pairs on the pillars)
     return d
 
 def winding(m,P,chunk=None):

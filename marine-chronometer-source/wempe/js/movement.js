@@ -141,6 +141,7 @@ function buildWempe(M){
     mv.userData.asmx=(/** @type {Record<string,number>} */S,/** @type {number} */e,/** @type {number} */P)=>{for(const q of AX){const s=S[q.k]||0,o=q.o;if(q.y0!=null){o.position.y=q.y0+q.dy*P*s;continue;}
         o.position.y+=s*(q.d*e+q.dy*P+q.yo);if(q.add){o.position.x+=q.to[0]*s;o.position.z+=q.to[1]*s;}else{o.position.x=q.x0+q.to[0]*s;o.position.z=q.z0+q.to[1]*s;}}
       const c=Math.max(S.fusee||0,S.barrel||0);if(ch){ch.position.x=chT[0]*c;ch.position.z=chT[1]*c;ch.position.y+=chY*c;}FU.lay(c);};}
+  KIT.capsOff(mv);   /* the merged pieces' buried ends off, no line across a part where they met */
   return mv;
 }
 /* ---------- laid out (the Hamilton's Laid out view, its movement.js's DEV: the textbooks' developed drawing): the barrel and fusee stay, and with them all they carry; each

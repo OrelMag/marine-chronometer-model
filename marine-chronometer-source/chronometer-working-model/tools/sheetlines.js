@@ -1,0 +1,14 @@
+/* sheets.py --lines: where a sheet of no width comes to the surface as a line. An edge of one mesh (corners welded to 1 µm) that four triangles share: two facing each other back to back (the sheet) and two running on as one wall across it (their normals within WALL of each other, and square enough to the sheet that they are a wall, not more of it). The Edges pass and the eye find a line there, and the metal has none. Reports each mesh's length of such line, by part, with where it lies. Each mesh once by its geometry (window.__LINESEEN) */
+(()=>{const WALL=Math.cos(10*Math.PI/180),seen=window.__LINESEEN||(window.__LINESEEN=new Set()),mv=window.__mv;let root=mv;while(root.parent)root=root.parent;root.updateMatrixWorld(true);
+const pn=o=>{for(let p=o;p;p=p.parent)if(p.userData&&p.userData.partName)return p.userData.partName;return null;},out=[];let nm=0;
+root.traverse(o=>{if(!o.isMesh||!o.geometry||!o.geometry.attributes.position||o.userData.decal||o.userData.surface)return;const k=pn(o);if(!k||seen.has(o.geometry.uuid))return;seen.add(o.geometry.uuid);nm++;
+  const g=o.geometry,P=g.attributes.position,I=g.index,n=I?I.count/3:P.count/3,ids=new Map(),VX=[],vid=i=>{const x=P.getX(i),y=P.getY(i),z=P.getZ(i),s=Math.round(x*1e3)+','+Math.round(y*1e3)+','+Math.round(z*1e3);let v=ids.get(s);if(v===undefined){v=VX.length;ids.set(s,v);VX.push([x,y,z]);}return v;};
+  const E=new Map(),TN=[];
+  for(let t=0;t<n;t++){const q=[vid(I?I.getX(3*t):3*t),vid(I?I.getX(3*t+1):3*t+1),vid(I?I.getX(3*t+2):3*t+2)];if(q[0]===q[1]||q[1]===q[2]||q[2]===q[0]){TN.push(null);continue;}const[a,b,c]=q.map(v=>VX[v]),u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],w=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0]],l=Math.hypot(...x);if(l<1e-10){TN.push(null);continue;}TN.push(x.map(v=>v/l));
+    for(let e=0;e<3;e++){const p=q[e],r=q[(e+1)%3],ek=p<r?p+'_'+r:r+'_'+p;let L=E.get(ek);if(!L)E.set(ek,L=[]);L.push(t);}}
+  let len=0,cx=[0,0,0];const e=o.matrixWorld.elements,W=v=>[e[0]*v[0]+e[4]*v[1]+e[8]*v[2]+e[12],e[1]*v[0]+e[5]*v[1]+e[9]*v[2]+e[13],e[2]*v[0]+e[6]*v[1]+e[10]*v[2]+e[14]];
+  for(const[ek,L]of E){if(L.length!==4)continue;const N=L.map(t=>TN[t]);if(N.some(q=>!q))continue;const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];let hit=false;
+    for(let i=0;i<4&&!hit;i++)for(let j=i+1;j<4&&!hit;j++){if(dot(N[i],N[j])>-0.999)continue;const w=[0,1,2,3].filter(q=>q!==i&&q!==j);if(dot(N[w[0]],N[w[1]])>WALL&&Math.abs(dot(N[w[0]],N[i]))<0.5)hit=true;}
+    if(hit){const[a,b]=ek.split('_').map(Number),A=VX[a],B=VX[b],l=Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2]);len+=l;const m=W([(A[0]+B[0])/2,(A[1]+B[1])/2,(A[2]+B[2])/2]);for(let c=0;c<3;c++)cx[c]+=l*m[c];}}
+  if(len>0)out.push({part:k,hn:o.userData.hn||'',type:g.type,vis:o.visible,len:+len.toFixed(3),at:cx.map(v=>+(v/len).toFixed(2))});});
+return JSON.stringify({meshes:nm,hits:out});})()

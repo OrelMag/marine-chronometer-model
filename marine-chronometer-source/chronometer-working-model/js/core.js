@@ -585,9 +585,10 @@ const hn=(o,id,x)=>{o.userData.hn=id;if(x)Object.assign(o.userData,x);return o;}
 const pc=(o,k)=>{o.userData.pc=k;return o;};
 function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 /* several geometries as one mesh's, each placed by its matrix ([[geometry, Matrix4], ...]): one draw call (and one shadow-pass call) instead of many */
+const MERGED=new WeakSet();   /* the geometries mergeGeo made (the Wempe's KIT.capsOff takes the buried ends off them) */
 function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonIndexed():g.clone()).applyMatrix4(m);g.dispose();return q;}),out=new THREE.BufferGeometry();
   for(const[k,n]of[['position',3],['normal',3],['uv',2]]){if(!gs.every(g=>g.attributes[k]))continue;const a=new Float32Array(gs.reduce((t,g)=>t+g.attributes[k].array.length,0));let o=0;for(const g of gs){a.set(g.attributes[k].array,o);o+=g.attributes[k].array.length;}out.setAttribute(k,new THREE.BufferAttribute(a,n));}
-  gs.forEach(g=>g.dispose());return out;}
+  gs.forEach(g=>g.dispose());MERGED.add(out);return out;}
 /* fuse(ms, k): the meshes ms, pieces of one solid (a machined part drawn as several extrusions or lathes), made one mesh: their geometries merged into k's (by default
    the piece without {sub:1}, else the first), each placed by its transform relative to k as built, the others taken out. Edges outlines each mesh, so pieces of one part
    sharing a visible face, or with walls running flush, drew a line across the part where the real one has none (the seam sweep, 21 October 2026). k keeps its userData,
