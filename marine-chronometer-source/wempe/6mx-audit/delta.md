@@ -119,3 +119,42 @@ The last revised version has no banking drawn: README, Unresolved. The physics p
 - a turn moves the stone 0.25, the 6MX screw's own pitch (M1.2, `bk.pt` 0.25).
 
 So the table follows the head. Its bench window is the drawings' (`tolerances_wempe.json`: no tolerances run is made for the 6MX). Step 2 supports that: the 6MX's frame rings to 53.1 % of the depth of lock against the drawings' 53.9 %, and its ringing floor is the same 0.40 g.
+
+## 4. The contact's drag on the train (gap 13)
+
+**Method.** `node wempe_6mx_contact.js [--json OUT]` (new; under a second; reports, never fails) works the load from the page's own geometry through the 6MX's own makeEsc:
+- **The geometry** (`WD.CONTACT6`, train.js's `c6r` and `C6K`): the contact wheel's teeth rise r 9.3 to 10.2 over 55 % of the 6° pitch. The stone rests 0.4 over the root and is carried 0.58 out (0.08 clear at the tip). The lever turns 4.6° (C6K 7.25 mm a radian) against the spiral 59, its screw's point 14.4 from the staff.
+- **The friction:** the flank stands 58° to the tangent, so the stone's friction (μ 0.15, estimated) adds 44 % to the work.
+- **When the load acts:** the seconds arbor moves only with the escape wheel (80/10), so a lift takes its work out of one impulse in two. Its share of that beat's work (86.1 µN·m over a tooth's 24°, 36.1 µJ) lowers that beat's drive. The swing is makeEsc's `ampAt` at the two beats' mean drive; the rate is the mean of their `rateAt`.
+
+**The unknown.** No source gives the spiral's section or the contact's force:
+- Romanov 1975, p. 208, says only that the spiral (волосок, "hairspring") makes the contact and returns the lever.
+- The TU and the user instruction give the current only: at most 5 mA at 1.5-6 V, normally 2-3 mA.
+
+So the force at the screw is swept. It is bracketed by hairspring-like copper-alloy spirals of the measured size (7 turns, Ø 8.9, 120 mm of strip, E 120 GPa), sections 0.03 × 0.2 to 0.08 × 0.5, preloaded half a turn to one and a half: 0.01-1.4 gf, the middle one (0.05 × 0.3, one turn) 0.14 gf.
+
+**Figures** (at the reference drive, 12 h; the spiral's stiffness over the lift 3.1 µN·m a radian):
+
+| Force at the screw | Share of a lift beat's drive | Escape torque at the slope's steepest | Swing | Rate |
+|---|---|---|---|---|
+| 0.05 gf | 2.3 % | −3.3 % | 194.4° (−1.4°) | −0.01 s a day |
+| 0.1 gf | 4.6 % | −6.5 % | 193.0° (−2.8°) | +0.08 |
+| 0.2 gf | 9.1 % | −12.9 % | 190.2° (−5.6°) | −0.02 |
+| 0.5 gf | 22.7 % | −32 % | 181.4° (−14.4°) | −0.55 |
+| 1 gf | 45 % | −64 % | 165.7° (−30.1°) | −1.6 |
+| 2 gf and up | over 90 % | more than the drive | a lift beat under the least drive (26 %): it stops | |
+
+The rate's scatter up to 0.2 gf (±0.1 s a day) is `rateAt`'s own at different drives.
+
+**Verdict: doubtful, for the owner.** The contact is not a negligible load. A beat brings the escape wheel only 36 µJ, and the lever must be turned 4.6° up a 58° flank against the contact's force on a 14.4 mm arm.
+- **The middle spiral** (about 0.14 gf) costs about 4° of swing: the 6MX with its contact would swing about 186-196° over the wind, not the page's 190-200°.
+- **The light end of the bracket** (0.01-0.05 gf) costs under 1.4°.
+- **The stiff end** (about 1.4 gf) costs over 30°, and from about 2 gf a chronometer would stop on the lift beats.
+
+The rate hardly moves (under 0.1 s a day to 0.2 gf). So the effect is on the swing, the margin to the sources' 225-270° band, which the model is already under, and the least drive.
+
+A made 6MX must have a contact well under 1 gf: Romanov's "hairspring" is consistent with that.
+
+The page's physics (`WPHYS.rev('6mx')`) leaves the drag out. Whether to put it in, and at what force, is the owner's choice, since no source gives the force. **Recommended:** keep the page as it is and record the drag in the README's "Estimated" and in the Wempe report's 6MX section, as a range: about −4° at the middle spiral, −1.4° to −30° over the bracket.
+
+**A note for Beta and Gamma (no action here).** Romanov's worked example 5 (p. 209) gives the escape wheel 16 teeth "for the contact chronometer" and 15 without. `References/wempe/documents/6MX-figures.md` already records the 16-tooth wheel and its 75/10 seconds stage as the later, redesigned 6MX (Tarasov 1976), not Kirov 247's first generation. Romanov's line ties the 16 teeth to the contact version too, so it is worth a glance when Kirov 247's own count is next checked.
