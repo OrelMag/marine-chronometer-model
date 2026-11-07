@@ -112,6 +112,7 @@ Auf https://www.marinechronometermodel.com/wempe/ ist der 6MX jetzt eine dritte 
 4. **Der Topf, leer, von unten und im Schnitt oder von innen:** die Höhe des Fußes, die Innenform unter dem Werk, und die Verschlussfeder unter der Verschlussplatte.
 5. **Die Unruh von der Seite oder die Welle allein:** Messingbuchse wie 05 04_5 oder Nabe mit Schrauben wie 05 04 02.
 6. **Das Federhaus, herausgenommen:** dreiteilig (Ring mit zwei Deckeln) oder eine Trommel mit Deckel unten.
+7a. **Pfeiler 39 am Fuß, von der Seite, mit dem Sekundenrad:** ob der Pfeiler über dem Sekundenrad abgesetzt ist, oder der Durchmesser des Sekundenrads (Spitzen). Auf Ihren Aufnahmen und zwei weiteren 6MX steht seine Schraube etwa auf r 36,8 statt der gebauten 37,3; dort würde ein Pfeiler Ø 8,1 die Spitzen eines Sekundenrads Ø 21,9 um etwa 0,2 mm berühren.
 7. **Ihre Liste im Wortlaut:** was mit den "drei kleinen Fenstern an den Pfeilerschrauben" gemeint ist, die dem 6MX fehlen (Kirow 247 hat die Hilfslöcher 3, 12 und 40).
 
 Vielen Dank!
@@ -126,6 +127,7 @@ Vielen Dank!
 4. **The bowl, empty, from below and from inside:** the foot's height, the inside under the movement, and the closing spring under the closing plate.
 5. **The balance from the side, or its staff alone:** a brass collar as 05 04_5, or a hub with screws as 05 04 02.
 6. **The barrel, out:** three pieces (a ring with two lids) or a drum with its lid underneath.
+7a. **Pillar 39 at its foot, side on, with the seconds wheel:** whether the pillar is stepped down over the seconds wheel, or the seconds wheel's tip diameter. On your photographs and two other 6MXs its screw stands at about r 36.8 rather than the 37.3 built; there a Ø 8.1 pillar would touch a Ø 21.9 seconds wheel's tips by about 0.2 mm.
 7. **Your list's own words:** what the "three small windows by the pillar screws" that the 6MX lacks are (Kirov 247 has the auxiliary holes 3, 12 and 40).
 
 Thank you!
