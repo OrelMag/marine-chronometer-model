@@ -826,6 +826,19 @@ Fail the build if `chronometer-working-model.html` grows past a set size, say 1.
 - **Why it's cheap:** the files are self-contained, so the service worker is a few lines.
 - **Where:** `site/` only. The single-file copies stay as they are.
 
+### 9.2a The Wempe as an iOS app (plan, 7 November 2026; nothing built)
+The owner asked how to have the Wempe model and its variants as an iOS app, and chose a plan first. Every variant (As last revised, As first drawn, Wempe 3955, the 6MX, the escapement of 1943, the Lange and Kirov dials, the subassembly mixes, `rev=`/`dial=` in the link) is already in the one self-contained page `site/index.html` (about 3 MB, three.js and the fonts inlined), so every route below carries that page and none duplicates the model.
+
+0. **First, the page on an iPhone (an hour).** Open the live site in Safari on an older and a newer iPhone: frame rate and memory with Performance mode on and off, each version switched in turn (the 6MX and the mixes rebuild groups), touch on the panel tabs, the play bar, Lasso/Select, the cards and the essay. A WebGL context lost under memory pressure must come back (`webglcontextrestored`, as app.js handles for the Hamilton). Fix what fails here first: every route inherits it.
+1. **Installable web app (9.2; a few hours, no Apple account).** A manifest (name, icons from `site-assets/`, `display: standalone`), `apple-touch-icon` and `apple-mobile-web-app-*` meta in the Wempe page's head, and a service worker caching `index.html` (and the essay's page) by the release's version so a new release replaces the cache. Built into `site/` by `build.py`; `sitecheck.py` checks the manifest and worker answer and the page opens offline. Installed from Safari's Share → Add to Home Screen; not in the App Store. Released and deployed as a minor.
+2. **App Store wrapper (a few days, then review).** A Capacitor project (or a small SwiftUI app with a `WKWebView`) bundling the built page offline, in its own folder (`ios/`), copied from `site/` by a build step so the app is always a released page. Needs: a Mac or a cloud macOS build (GitHub Actions macOS runner, Codemagic; this machine is Windows), the Apple Developer Program ($99 a year), TestFlight for testing, a privacy statement (the page collects nothing; Report a bug leaves only through the visitor's own email), the fonts' and three.js's licences in the app's About. No drawing scan or photograph goes in it, as on the page (© Altmeppen). Review's risk is guideline 4.2 (a website in a wrapper): offline use and something only an app does reduce it:
+   - **AR:** the Wempe in AR Quick Look on the desk, a USDZ converted from the Wempe's glTF export (`wempe/js/blender.js`; one per version, or the version shown);
+   - haptics on the beat, the tick sound through the device;
+   - a widget or lock-screen face showing the Wempe's hands.
+3. **Native rewrite (SceneKit/RealityKit): not recommended.** A second copy of every part and motion, outside every check `ci.py` runs, would drift from the drawings.
+
+Recommended order: 0, then 1, then 2 only if an App Store listing is wanted.
+
 ### 9.3 Smaller downloads for the website (S–M)
 - *Dropped:* **Illustration:** load the Illustration tab's drawings on demand. The tab and its images are gone (the Essay tab replaced it), which took the page from 1.33 MB to 1.21 MB.
 - **Fonts:** check that every font weight is used. Spectral 300 might not be; if so, drop it (22 KB).
