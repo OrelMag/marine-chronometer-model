@@ -1,0 +1,6 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx/2_Kirow_247_A.jpg", "features": {
+ "intermediate chaton, outer ring": {"uv": [425, 647], "rpx": 19.5, "y": -22.35, "mode": "rim", "band": 0.12},
+ "intermediate chaton, inner ring (sink)": {"uv": [425, 647], "rpx": 15, "y": -22.35, "mode": "rim", "band": 0.12},
+ "seconds chaton, outer ring": {"uv": [513, 716], "rpx": 20, "y": -22.35, "mode": "rim", "band": 0.12},
+ "seconds chaton, inner ring (sink)": {"uv": [513, 716], "rpx": 16, "y": -22.35, "mode": "rim", "band": 0.12}
+}}
