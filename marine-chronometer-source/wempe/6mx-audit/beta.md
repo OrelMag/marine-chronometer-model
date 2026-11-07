@@ -62,14 +62,17 @@ on the photograph first, and the model's figure was looked up only after the rea
 | Lower cock screw (WN-53) | A247 | A camera | (0.56, 12.00) ±0.15; rim Ø 5.74 (head or its Ø 6 sink: can't tell which edge) | (0.502, 11.922), head Ø 5.4 in a Ø 6 sink | place matches; Ø can't tell | — |
 | Lower cock's plan and step | — | — | not shown on any 247 photograph (it hangs under the top plate; S, W and N don't show it clearly) | estimated | can't tell | stays an estimate |
 | Intermediate chaton, second photograph | A1564 | A1564 camera | rings Ø 5.15, 4.05 and 3.36, their centres scattered 0.3-0.5 | Ø 4.596, sink 3.4 | can't tell (247 read 4.41 and 3.42); the seconds chaton on 1564 lies under a timing weight | — |
-| The near pin against the block's end face, on the loose 6MX block | 8_Gangfeder_mit_Kloben_Rus_einfach.jpg | the stud's top, Ø 3.38, 112.5 px across: 33.3 px/mm across the block | near pin centre **2.25 inside the end face**; pins 9.5 across, about 2.6 along | 247's model 0.57 inside; read on 247's plate 0.26 | **can't settle 247's**: the loose block has the drawn pattern (2.3 inside), as the model's comment suspected. **The pin was reverted to (−30.0, 21.55)** and the reading recorded in the README's Unresolved (Alpha's option c) | — |
-## Still to read (this session)
+| The near pin against the block's end face, on the loose 6MX block | 8_Gangfeder_mit_Kloben_Rus_einfach.jpg | two rulers that disagree: the steel cylinder taken as the stud (Ø 3.38) spans 112.5 px across (33.3 px/mm), the upright (drawn 3.0) 68 px (22.7 px/mm). By the upright the cylinder would be Ø 5.0, too big for the plate's Ø 3.5 | near pin centre **2.25 inside the end face (by the cylinder) or 3.3 (by the upright)**; pins 9.5 or 13.9 across, 2.6 along | 247's model 0.57 inside; read on 247's plate 0.26 | **can't settle 247's**: the loose block has the drawn pattern (2.3 inside), as the model's comment suspected. **The pin was reverted to (−30.0, 21.55)** and the reading recorded in the README's Unresolved (Alpha's option c) | — |
+| The loose block's base, upright, slit and slide | 8_Gangfeder_mit_Kloben_Rus_einfach.jpg | the two rulers above disagree by 1.47 | upright 68 px across, widening to 77 px over its last 60 px (about 2.4 along); the slit is not on the face shown | m6: upright 3.0, taper 0.9 long widening 0.46, slit 0.3, slide hw 1.6 | can't tell: this photograph has no ruler it agrees with | — |
+| Barrel and lid (6MX: the first-drawn drum) | O247, N247 | — | the drum's height is hidden under the top plate's edge on every side view; first drawn 1.2 + 15.8 + 1.0 = 18.0 against the revised 18.08 overall, so the photographs can't tell the two drums apart | first-drawn drum | can't tell | — |
+| Barrel arbor's square over the set-up ratchet | S247 (and A247 for its place) | its own apparent width, 33 px, which is 2.7 across the flats or 3.8 across the corners as it is turned | the tip about 90 px over where it enters the hub: 7.4-10.4 long. Its axis in plan (24.6-24.8, −6.05), hole 45 (24.784, −6.0) | the 6MX's square up to y −38.5 (first drawn −35.4) | can't tell (the square's turn is unknown) | place: match |
+| Seconds arbor's pinion (Romanov's z = 16 with the contact, 15 without) | F247 | about 18.5-19 px/mm | silhouette 59 px (Ø 3.1-3.2); 8-9 flank highlights over the near half | — | can't count: 14-16 fit equally | — |
+| The detent's heights and sections | F247 | 18.3 px/mm | the blade, horn and gold spring blur together at v 255-300; no edge can be followed | — | can't tell | — |
+## Left open (no photograph shows it well enough)
 
-- The detent block on the loose block photograph (`8_Gangfeder_mit_Kloben_Rus_einfach.jpg`): the pins' layout against the stud, the base, the upright and its slit, the
-  banking screw head (Ø 3.4; does 3.81.00's centring or Ø 3.15 reach the 6MX?), the adjusting slide and the stop screw.
-- The detent's heights and sections, and the lower cock's step, from the side views (`8_Kirow_247_F.jpg`, `4-7_Kirow_247_N/O/S/W`).
-- The lower cock's plan, the barrel and its cap.
-- The seconds chaton on a second photograph.
+- The detent's heights and sections; the lower cock's plan and step; the barrel's drum and lid; the loose block's sizes; the seconds pinion's count; the seconds chaton's Ø.
+  Each wants a sharper or squarer photograph: the block out of the plate with a scale on it, the detent side-on, the lower cock off the plate.
+- Pillar 39: r 36.8 read on two photographs, the model kept at 37.3 by the owner's choice while Delta searches further sources.
 
 ## How blind
 
