@@ -62,3 +62,44 @@ Leads passed on:
 | Block 52's screw heads miss by 0.63-0.66 mm, block 57's by 0.31 and 0.67 | `m6_contact` | Gamma |
 | The hands lack edges along 24 % of their outline | `k247_Z` | Gamma |
 | The cannon square misses by 0.44 mm | `k247_uZ` | Gamma |
+
+## Outcome (7 November 2026)
+
+**Fixed for the 6MX only.** The drawings' versions are untouched. Each change was re-read before it was made.
+- **The contact's access hole at 180°:** it moves from (−0.61, 38.6) to (−0.12, 38.72). Kirov 247 and Kirov 1564 agree on the new place.
+- **The dial screws' sinks:** each opens in a chamfer to Ø 2.3 at the dial's face. The heads (Ø 1.7) and their seats are as drawn. Kirov 247 and Kirov 2973 show it; the chamfer's form is estimated.
+- **The cannon tube's square and the minute hand's square hole:** both are turned 45°, so a diagonal of the square lies along the hand. Kirov 247 and Kirov 2973 show it.
+- **The box's badge:** it is centred in its tier, 1.4 mm higher. Kirov 247 and Kirov 2973 show it.
+- **The outer box's catch:** it is Ø 26, as its comment intended (the code drew Ø 20).
+
+**The physics** (`delta.md`):
+- **The gimbals:** the case swings at 0.578 s and the ring at 0.661 s; every gimbal check passes.
+- **The escapement in time and the detent as a frame:** both pass, with no tooth lost.
+- **The banking head Ø 3.4:** the pipe banks at the drawn gap of 0.005 mm.
+- **The contact's drag:** about −4°, anywhere from −1.4° to −30°. It is recorded as a range, and the page is unchanged (the owner's choice).
+- **Tool fixes:**
+  - `wempe_gimbals.js` used the old 15 % clearance from the beat; it now uses 10 %, as `gimbals.js` has since 25 October.
+  - The 6MX's frosted plates had no density, so they went unweighed; they are now weighed.
+  - `dynamics.js` now takes the 6MX's own bodies.
+
+**Kept, as the owner chose:**
+- **Pillar 39:** it reads r 36.8 on three chronometers. The model keeps r 37.3, recorded in the README's Unresolved section with an ask in REQUESTS.md.
+- **The ring screw:** 246.4°, which lies inside the three chronometers' scatter.
+
+**Withdrawn on re-reading:**
+- the contact block screws' heads (the first pass caught their slots, not their edges);
+- the shape of the hour hand's pear (a shading line on the render);
+- the near steady pin of the detent block. Two photographs put it at (−29.98, 21.88), but there it would break out of the block's end face. It stays where it was, and the conflict is in Unresolved. The README's old "small hole at S 20.6 O 30.2" is this pin's hole.
+
+**Can't tell, so the model keeps its present reading:**
+- the bezel and glass;
+- the lower cock's plan and step;
+- the detent's sections;
+- the loose block's slide;
+- the barrel's top;
+- the chatons' outer rings;
+- the seconds pinion's count;
+- the locking bracket's screws;
+- the hour hand's stem.
+
+Each of these says, in its ledger row, what photograph would settle it.
