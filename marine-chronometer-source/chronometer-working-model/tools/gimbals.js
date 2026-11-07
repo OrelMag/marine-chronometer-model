@@ -7,13 +7,15 @@
 //   node gimbals.js --quick     (the bodies, their periods and the resonance only, about 20 s)
 //   node gimbals.js --json OUT  (also writes the figures for the build-verification report)
 //   node gimbals.js --model wempe [--quick] [--json OUT]   (the Wempe's: tools/gimbals_wempe.json, massprops.py --model wempe; its report is tools/wempe_gimbals.js's)
+//   MC_WREV=6mx node gimbals.js --model wempe ...   (the Soviet 6MX's: tools/gimbals_wempe_6mx.json, massprops.py --model wempe --rev 6mx; its escapement and bodies, WESC.SET6, wempe_inertia_6mx.json)
 // The manual (Sec. II, p. 13): "The chronometer is leveled when originally inserted in the gimbals by adjusting the position of the case brackets and gimbal support
 // straps": each pair of pivots is set over its centre of gravity. The model's are drawn, not levelled (the case's centre of gravity lies 7.8 mm to one side of its pivots'
 // line), so the bodies are taken levelled: the case moved along x until its centre of gravity is under the case pivots' axis, the ring and case together along z under
 // the ring's. The ship's motion is narrow-band random about each motion's period, with published periods and levels where there are any (named below), estimated where not.
 const fs=require('fs'),path=require('path');
 const WEMPE=process.argv[process.argv.indexOf('--model')+1]==='wempe'&&process.argv.includes('--model');   /* --model wempe: the Wempe's bodies, its balance's place from gimbals_wempe.json (PB) */
-const GJ=JSON.parse(fs.readFileSync(path.join(__dirname,WEMPE?'gimbals_wempe.json':'gimbals.json'),'utf8'));
+const REV6=WEMPE&&process.env.MC_WREV==='6mx';   /* MC_WREV=6mx: the Soviet 6MX's bowl and ring (massprops.py --model wempe --rev 6mx), its escapement through wempe_load.js */
+const GJ=JSON.parse(fs.readFileSync(path.join(__dirname,WEMPE?(REV6?'gimbals_wempe_6mx.json':'gimbals_wempe.json'):'gimbals.json'),'utf8'));
 const mvSrc=WEMPE?'':fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8');
 const D=Math.PI/180,G0=9.80665,TAU=2*Math.PI;
 /* ---------- small vector and matrix helpers (3-vectors as arrays, 3×3 as arrays of rows) ---------- */
