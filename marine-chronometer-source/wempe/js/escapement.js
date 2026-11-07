@@ -165,7 +165,13 @@ const WESC=(()=>{
        pins 10.0 apart, measured on 2_Kirow_247_A.jpg (holemap.py --model wempe, six seeds, 8.993 px/mm, every residual under 0.57) and 2_Kirow_009_A.jpg (by hand), each
        corrected by hole 12's offset (0.4): the two agree to 0.3 (sure to ±0.4). In the block's frame the pins stand 1.9 nearer its end than 05 04 01-4 draws them and the
        stud 2.1 nearer and 0.8 across from hole 13; a loose 6MX block (8_Gangfeder_mit_Kloben_Rus_einfach.jpg) has the drawn pattern, so 247's block is drilled otherwise
-       or the loose one is another issue (README, Unresolved). The block itself stands where the escapement has it */
+       or the loose one is another issue (README, Unresolved). The block itself stands where the escapement has it. The near pin re-read blind (7 November 2026, the 6MX
+       audit's Beta, 6mx-audit/beta.md): m6cam.py's camera on the top plate's rim and screws, m6meas.py's rim fit at the plate's face, held to a local similarity on holes
+       11, 12 and the escape arbor (hole 12 reads 0.3 out on both): (-29.92, 21.88) on 2_Kirow_247_A.jpg (its brass end) and (-30.05, 21.88) on Kirov 1564's (an open
+       hole), so (-29.98, 21.88), 10.23 from the far pin, which both put within 0.25 of its place (likely). Not built there: in the block's frame that is 0.26 inside the
+       end face, where the r 0.45 hole would break out of it, and the loose 6MX block (8_Gangfeder_..., by its stud's Ø 3.38, 33 px/mm across) has its near pin 2.25
+       inside, the drawn pattern, so it can't say where 247's end face stands (README, Unresolved). Kept at (-30.0, 21.55), 0.57 inside. It is the README's "small hole
+       at S 20.6 O 30.2", read 1.4 off */
     block6:{stud:[-34.3,18.5],pins:[[-30.0,21.55],[-36.7,14.15]]},
     /* the escapement of 1943's (Kirow DEC 422, DEC 479, Lange 5177): fixed as the 6MX's, by a slotted stud beside hole 13, which stands open (all three plans, 2_*_A.jpg,
        through photocompare.py's d422_A, d479_A, l5177_A cameras, 0.2-0.9 px rms on six screw heads, the holes' centroids unprojected onto the plate's face: hole 13 at
