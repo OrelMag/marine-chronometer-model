@@ -12,7 +12,7 @@
 const fs=require('fs'),path=require('path');
 module.exports=G=>{
 const{bodies,run,ship,GJ,PB}=G,D=Math.PI/180,G0=9.80665,TAU=2*Math.PI,W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,S=P.SET;
-const IJ=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8'));
+const IJ=JSON.parse(fs.readFileSync(path.join(__dirname,process.env.MC_WREV==='6mx'?'wempe_inertia_6mx.json':'wempe_inertia.json'),'utf8'));   /* MC_WREV=6mx: the 6MX's bodies (gimbals.js reads its bowl, gimbals_wempe_6mx.json) */
 const ji=process.argv.indexOf('--json'),JOUT=ji>0?process.argv[ji+1]:null,RW=[],J={made:new Date().toISOString().slice(0,10)};let fail=0;
 const say=s=>RW.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;RW.push(`${ok?'  ok ':'  !! '} ${s}`);},head=s=>RW.push('\n'+s);
 const f=(x,n=2)=>Number.isFinite(+x)?(+x).toFixed(n):'-',sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),t0=Date.now(),flush=()=>{console.log(RW.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,0)} s)`);};
