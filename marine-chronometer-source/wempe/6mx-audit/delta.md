@@ -87,8 +87,8 @@ Runs, both exit 0. The drawings' `dynamics.js --model wempe --quick` is unchange
 
 **Verdict.** The 6MX's escapement runs in time as makeEsc has it, and its detent holds every tooth at the model's settings. The heavier seconds arbor (the contact's cam: 135 g·mm² against 77) makes the tooth land 1.2° later and the rate 0.24 s a day slower than the drawings' escapement.
 
-The two `~~` lines are not the 6MX's own: its frame is the drawings' frame. Both are the frame's known sensitivities, on the same frame in every Wempe version:
-- the gold spring's blow taking the held stone to 53 % on the return swing;
+The two `~~` lines are not the 6MX's own: its frame is the drawings' frame. Both are the frame's known sensitivities, and the Wempe report's run on the drawings' escapement prints both:
+- the gold spring's blow takes the held stone to 53.1 % on the return swing (the drawings' 53.9 %); over the other estimates at most 68.1 % (the drawings' 77.9 %);
 - the penalties' stiffness.
 
-The preload floors are the same as the drawings': 0.40 g for the ringing, 0.64 g for knocks. The 6MX, like the drawings' detent, has no source for its preload (0.8 g, estimated).
+The ringing floor is 0.40 g, the drawings' too (0.5×). The knock floor is 0.64 g; the report's data doesn't print the drawings' for comparison. The 6MX, like the drawings' detent, has no source for its preload (0.8 g, estimated).
