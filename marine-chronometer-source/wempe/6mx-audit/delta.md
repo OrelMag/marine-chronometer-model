@@ -18,23 +18,24 @@ Session Delta, 7 November 2026, for Session Alpha's audit of the 6MX (the owner'
   - the rate moves at most 0.0095 s a day.
 - **Beyond the working seas:** a storm (fore and aft) takes the case onto the pad once, passing on 0.0 g. A small vessel in a rough sea gives 100 mg across the staff and 0.088 s a day.
 
-**Criteria and verdict.** Every gimbals.js criterion passes (exit 0), but the first only just:
+**Criteria and verdict.** Every gimbals.js criterion passes (exit 0):
 
 | Criterion | 6MX | Pass |
 |---|---|---|
-| own periods clear of the beat and a ship's roll: 0.575-1.5 s | 0.578, 0.661 s | **ok, by 0.5 %** |
+| own periods clear of the beat (by 10 %) and a ship's roll: 0.55-1.5 s | 0.578, 0.661 s | ok, by 5 % (15.6 % over the beat) |
 | limiting sea is NORDFORSK's (0.12 g) | 0.117 g | ok |
 | working sea within 2° of the apparent vertical | 0.31° | ok |
 | working sea meets neither pad nor box | clear | ok |
 | what reaches the escapement under half its trip | 3.4 mg against 13.8 g | ok |
 | rate moved under 0.05 s a day | 0.0095 | ok |
 
-**Doubtful: for the owner.** The case's period passes by 0.003 s. The sweep puts the line at pivots 0.4 mm higher on the bowl than `DY6` (Kirov 247's brackets, measured ±2 mm on two photographs):
+**The pivots' height.** `DY6` rests on Kirov 247's brackets, measured ±2 mm on two photographs. The sweep shows the verdict holds over that whole range:
 
 | Pivots higher on the bowl | −2 | −0.7 (Kirov 2973's 3.7 under) | 0 (Kirov 247) | +0.5 | +1 | +2 mm |
 |---|---|---|---|---|---|---|
 | case period, s | 0.593 | 0.583 | 0.578 | 0.575 | 0.572 | 0.567 |
+| against 0.55 s | ok | ok | ok | ok | ok | ok |
 
-So within the measurement's own uncertainty the 6MX's case may fall under gimbals.js's 15 % clearance from the beat.
+The ring's period is 0.683 s at −2 mm and 0.644 s at +2 mm. The beat itself moves the case 0.54″ at 2 Hz.
 
-The clearance is gimbals.js's own criterion, not a source's. Physically what it guards against is small: the balance's beat (out of poise by 2 µm, estimated) swings the case only 0.54″ at 2 Hz, and 0.16° per degree of roll at 0.5 s. So this is a margin question, not a fault in a made 6MX. Kirov-Poljot 24020's later bowl, with pivots about 10.8 under the rim, hangs higher and would be clear.
+**The criterion corrected.** gimbals.js has judged the beat clearance at 10 % since 25 October 2026: the owner lowered it from 15 % when the Hamilton's measured pivots put its case at 0.575 s. `wempe_gimbals.js`, the Wempe's report that `gimbals.js --model wempe` runs, still tested 15 % while citing gimbals.js's criterion. It now tests 10 % (0.55 s). Both versions pass under either limit except the 6MX's case: under the old 15 % it would have failed from +0.4 mm up. The drawings' case is 0.67 s and 0.76 s. Not doubtful, nothing for the owner.
