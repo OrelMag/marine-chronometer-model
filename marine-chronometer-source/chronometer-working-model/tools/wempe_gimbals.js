@@ -6,13 +6,13 @@
 // isn't merged), so its rate response alone: (1) the specific force across the staff loads the balance's pivots sideways, a friction torque mu m g f r on the pivot's journal
 // (as the endstone's, wempe_escapement.js), whose extra damping lowers the swing (makeEsc solved at the lower TF) and moves the rate (ESC.rateAt); (2) the case turned about
 // the staff (its angular acceleration a) sets the balance's centre of swing off its spring's rest by -a/w^2, slowly against its 0.5 s beat: a beat error, worked by makeEsc
-// with the rollers turned on the staff by it (aI, aD), averaged over the sea. Exits 1 on gimbals.js's criteria: an own period among a ship's roll or the beat (0.575-1.5 s),
+// with the rollers turned on the staff by it (aI, aD), averaged over the sea. Exits 1 on gimbals.js's criteria: an own period among a ship's roll or the beat (outside 0.55-1.5 s),
 // the NORDFORSK sea not NORDFORSK's, a working sea taking the case 2 degrees from the apparent vertical or onto a stop, the rate moved 0.05 s a day, or what reaches the
 // escapement within half of what trips it (here the detent's preload against its own weight, a static estimate: no tripping.js for the Wempe yet). About 2 minutes.
 const fs=require('fs'),path=require('path');
 module.exports=G=>{
 const{bodies,run,ship,GJ,PB}=G,D=Math.PI/180,G0=9.80665,TAU=2*Math.PI,W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,S=P.SET;
-const IJ=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8'));
+const IJ=JSON.parse(fs.readFileSync(path.join(__dirname,process.env.MC_WREV==='6mx'?'wempe_inertia_6mx.json':'wempe_inertia.json'),'utf8'));   /* MC_WREV=6mx: the 6MX's bodies (gimbals.js reads its bowl, gimbals_wempe_6mx.json) */
 const ji=process.argv.indexOf('--json'),JOUT=ji>0?process.argv[ji+1]:null,RW=[],J={made:new Date().toISOString().slice(0,10)};let fail=0;
 const say=s=>RW.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;RW.push(`${ok?'  ok ':'  !! '} ${s}`);},head=s=>RW.push('\n'+s);
 const f=(x,n=2)=>Number.isFinite(+x)?(+x).toFixed(n):'-',sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),t0=Date.now(),flush=()=>{console.log(RW.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,0)} s)`);};
@@ -40,7 +40,8 @@ say(`levelled, the case swings on its pivots (12-6) with a period of ${f(Tz,3)} 
   J.alt=rows.map(([k,a])=>({k,rho:a.rho,m:a.m,cg:a.cg,T:per(a)}));}
 say(`the stops: the box stops neither gimbal within ${FREE}° either way (GJ.stops: ${JSON.stringify(GJ.stops.bowl.map(q=>q.deg))}, the ring ${JSON.stringify(GJ.stops.ring.map(q=>q.deg))}; the ring and case reach ${f(GJ.reach.aboutX,1)} mm from the ring's axis in a box 160 inside). In the ring the bowl (its brackets, bezel and locking bracket; the band's slot for the transit lock not counted) ${PAD.some(x=>x!=null)?`meets the ring when the case turns ${PAD.map((x,i)=>x!=null?f(x,1)+'° '+(i?'the other way':'one way'):'').filter(Boolean).join(' and ')}`:`never meets it: the bowl's farthest point is ${f(GJ.reach.bowl,2)} mm from the gimbal centre, inside the ring's ${f(GJ.reach.ringIn,1)}, so the case turns in its ring to any angle`}`);
 J.bodies={Tz,Tx,Iz:Bd.Iz,Ix:Bd.Ix,cg:Bd.bw.c,stops:GJ.stops,reach:GJ.reach,pad:PAD};
-chk(Tz<0.5*3&&Tx<0.5*3&&Tz>0.5*1.15&&Tx>0.5*1.15,`its own periods (${f(Tz,2)}, ${f(Tx,2)} s) lie far below a ship's roll (10-30 s for merchant ships: MARIN, Jachowski; a small craft's 3-6 s, estimated) and clear of the balance's beat (0.5 s) by ${f(100*(Math.min(Tz,Tx)/0.5-1),0)} % (gimbals.js's criterion: 0.575-1.5 s)`);
+/* clear of the beat by 10 %, gimbals.js's (15 % until 25 October 2026 there, the owner's choice for the Hamilton's case; this report kept 15 % until 7 November 2026) */
+chk(Tz<0.5*3&&Tx<0.5*3&&Tz>0.5*1.10&&Tx>0.5*1.10,`its own periods (${f(Tz,2)}, ${f(Tx,2)} s) lie far below a ship's roll (10-30 s for merchant ships: MARIN, Jachowski; a small craft's 3-6 s, estimated) and clear of the balance's beat (0.5 s) by ${f(100*(Math.min(Tz,Tx)/0.5-1),0)} % (gimbals.js's criterion: 0.55-1.5 s)`);
 flush();
 
 head('2. Resonance: the case driven by a regular roll of 2° about the box itself, at periods from a quarter of a second to twenty');

@@ -19,7 +19,7 @@
 //                               square end, and the stone riding the tooth it has just let go (the Wempe's detent falls back before that tooth has passed: below). The Hamilton's runs
 //                               are as they were, figure for figure (about 2½ minutes; --quick about 70 s)
 const fs=require('fs'),path=require('path');
-const WEMPE=(i=>i>=0&&process.argv[i+1]==='wempe')(process.argv.indexOf('--model')),WL=WEMPE?require('./wempe_load.js')():null,WJ=WEMPE?require('./wempe_inertia.json'):null;   /* the Wempe: its page's scripts, its bodies weighed */
+const WEMPE=(i=>i>=0&&process.argv[i+1]==='wempe')(process.argv.indexOf('--model')),WL=WEMPE?require('./wempe_load.js')():null,WJ=WEMPE?require(process.env.MC_WREV==='6mx'?'./wempe_inertia_6mx.json':'./wempe_inertia.json'):null;   /* the Wempe: its page's scripts, its bodies weighed (MC_WREV=6mx: the Soviet 6MX's, wempe_load.js its escapement WESC.SET6) */
 const {build}=require('./escapement.js'),ESC=WEMPE?(process.env.MC_ESC?WL.makeEsc({...WL.WPHYS.SET,...JSON.parse(process.env.MC_ESC)},WL.WPHYS.SET):WL.WPHYS.ESC):build(process.env.MC_ESC?JSON.parse(process.env.MC_ESC):{}).ESC;   /* MC_ESC: makeEsc's settings overridden, as JSON (tripping.js runs the escapement at other depths of lock so) */
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8'),mv=WEMPE?'':rd('../js/movement.js'),phys=WEMPE?'':rd('physics.js');
 const num=(re,s,what)=>{const m=re.exec(s);if(!m)throw Error('not found: '+what);return+m[1];};
