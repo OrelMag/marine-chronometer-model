@@ -1,0 +1,25 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx-gallery/bilder-zum-6mx/2_Kirow_1564_A.jpg",
+ "features": {
+  "near hole (775,706)": {
+   "uv": [
+    775,
+    706
+   ],
+   "rpx": 5.5,
+   "y": -22.35,
+   "mode": "rim",
+   "band": 0.35
+  },
+  "far hole (836,640)": {
+   "uv": [
+    836,
+    640
+   ],
+   "rpx": 5.5,
+   "y": -22.35,
+   "mode": "rim",
+   "band": 0.35
+  }
+ }
+}

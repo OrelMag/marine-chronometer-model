@@ -47,7 +47,7 @@ Nothing here had been run or changed when it was written. Gaps 3, 6, 8, 11 and 1
 
    Each version's own escapement and detent never pass through them.
 10. **The 6MX's adjusting slide and stud, and the 1943 block's stud.** How each clamps the block isn't known (README, Unresolved), so nothing tests the block's hold against a knock.
-11. **The 6MX's case** hangs 13.2 lower in the gimbals. `massprops.py` and `gimbals.js --model wempe` weigh only the drawings' bowl, so its gimbal periods and stops are unchecked (README, Unresolved).
+11. **The 6MX's case** hangs 7.0 lower in the gimbals (13.2 before 25 October 2026). `massprops.py` and `gimbals.js --model wempe` weigh only the drawings' bowl, so its gimbal periods and stops are unchecked (README, Unresolved).
    - **Run 7 November 2026** (delta.md §1): `massprops.py --model wempe --rev 6mx` writes `gimbals_wempe_6mx.json`, and `MC_WREV=6mx gimbals.js --model wempe` passes. The case's period is 0.578 s against 0.55; the 6MX hangs 7.0 lower, not 13.2. `wempe_gimbals.js` now uses gimbals.js's 10 % beat clearance.
 12. **The 6MX's mainspring.** No 1950s source gives its strip; the drawings' is used (README, Unresolved).
 13. **The 6MX's electrical contact's load** on the seconds arbor is in its weighed body, but the contact's drag on the train (the stone lifting the lever every second beat) isn't modelled in the drive.

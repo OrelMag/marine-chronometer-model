@@ -1,0 +1,6 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx/2_Kirow_247_A.jpg", "features": {
+ "detent block fixing screw head (815,679)": {"uv": [815, 679], "rpx": 16, "y": -24.6, "mode": "rim", "band": 0.25},
+ "hole above it (828,600)": {"uv": [828, 600], "rpx": 16, "y": -22.35, "mode": "rim", "band": 0.25},
+ "brass dot (830,640)": {"uv": [830, 640], "rpx": 5, "y": -22.35, "mode": "rim", "band": 0.4},
+ "brass dot (768,708)": {"uv": [768, 708], "rpx": 5, "y": -22.35, "mode": "rim", "band": 0.4}
+}}

@@ -169,6 +169,7 @@ const WDIAL=(()=>{
       const L=[P(-1,R[i]),P(-1,R[i+1]),...mb,P(1,R[i+1]),P(1,R[i]),...(i?ma.slice().reverse():arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0:rb?yb:y0,y1:tf});}   /* inside the bevel a cell's two stations are paired rails (strip, kit.js), its faces quads straight across: earcut joined points far along each 0.02 strip, slivers that shaded as stripes down the hour hand's root (899 of its 3,484 triangles under 1°; 3 November 2026) */
     return solidGeo(cells);}
   /* the minute hand's square hole and the tube's square: 2.6 across flats, the corners on a circle r (the tube's 1.6) */
+  const turnL=(L,a)=>{const c=Math.cos(a*D2R),q=Math.sin(a*D2R);return L.map(([x,z])=>[x*c-z*q,x*q+z*c]);};   /* a plan loop turned a degrees about the arbor (the 6MX's square, below) */
   const sqLoop=(h,r,n=96)=>{let L=C([0,0],r,n);for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])L=clipPoly(L,p=>h-(p[0]*a+p[1]*b));return L;};
   /* a crowned or rounded top over a hole: solidGeo's cells for the annuli between closed loops Ls (round the centre, the innermost round the hole first), y0 their flat
      underside and y1(p) their top; a cell with a feature has flat faces, so the annuli carry none. Each annulus is cut into a cell per step of one set of angles (every
@@ -288,24 +289,29 @@ const WDIAL=(()=>{
 
     /* ---------- the cannon tube on the centre arbor (turns with it) ---------- */
     const cnP=part('cannon',22),cn=grp(cnP,H[1]);R.cn=cn;
-    {const rb=y=>rSh(y)+0.01,cnM=[],pm=tag(mesh(cn,gear(CN.pin,CN.y1-CN.y0,{bore:rb(CN.y0)}),M.steel,0,(CN.y0+CN.y1)/2,0),'050503-3');pm.userData.gear={z:14,m:M_CH};R.cnPin=pm;cnM.push(pm);
+    /* the Soviet 6MX's tube (TW 45): its square turned 45° about the arbor against the drawings', so the minute hand (its hole turned with it, below) sits with the
+       square's diagonal along its blade: Kirov No. 247's and No. 2973's dials (1_Kirow_247_Z.jpg, bilder-zum-6mx/1_Kirow_2973_Z.jpg, each laid out in the minute hand's
+       frame at its arbors' scale: 6mx-audit/gamma.md, r_square.png; the square's diagonal 3.2-3.4 there, the drawings' corners turned to Ø 3.45: its size kept): likely,
+       two chronometers. Each version's tube whole in its own group (its pieces fused in one mesh, as the drawings'), in the dial's subassembly with the hands */
+    for(const[V,TW]of/** @type {[string,number][]} */([['last first 1943',0],['6mx',45]])){const cv=new THREE.Group();cv.userData.rev=V;cv.userData.sub='dial';cn.add(cv);
+    {const rb=y=>rSh(y)+0.01,cnM=[],pm=tag(mesh(cv,gear(CN.pin,CN.y1-CN.y0,{bore:rb(CN.y0)}),M.steel,0,(CN.y0+CN.y1)/2,0),'050503-3');pm.userData.gear={z:14,m:M_CH};if(TW)R.cnPin6=pm;else R.cnPin=pm;cnM.push(pm);
       const g=[];for(let k=0;k<=10;k++){const t=Math.PI*k/10;g.push([CN.r-CN.gr*Math.sin(t),CN.yg-CN.gr*Math.cos(t)]);}   /* the groove, a half-round r 0.4 */
-      cnM.push(tag(mesh(cn,lathe([[rb(CN.y1),CN.y1],[CN.r,CN.y1],...g,[CN.r,CN.yb],[rb(CN.yb),CN.yb]],48),M.steel),'050503-3',1));
-      const sqL=sqLoop(CN.sq,CN.sqR),F=[{p:C([0,0],rb(CN.yb),48),q:C([0,0],rb(CN.yk),48),a:CN.yb,b:CN.yk}];
-      cnM.push(tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1));
+      cnM.push(tag(mesh(cv,lathe([[rb(CN.y1),CN.y1],[CN.r,CN.y1],...g,[CN.r,CN.yb],[rb(CN.yb),CN.yb]],48),M.steel),'050503-3',1));
+      const sqL=turnL(sqLoop(CN.sq,CN.sqR),TW),F=[{p:C([0,0],rb(CN.yb),48),q:C([0,0],rb(CN.yk),48),a:CN.yb,b:CN.yk}];
+      cnM.push(tag(mesh(cv,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yk,F}]),M.steel),'050503-3',1));
       /* its crown, the square's last 0.5: the annuli from the bore out through circles 1.05 and 1.25 to the square (so the sphere is sampled across it) */
       const cr=p=>CN.yt-(CN.cr-Math.sqrt(CN.cr*CN.cr-p[0]*p[0]-p[1]*p[1]));
       {const cg=solidGeo(sectors([C([0,0],rb(CN.yk),48),C([0,0],1.05,48),C([0,0],1.25,48),sqL],CN.yk,cr)),P=cg.attributes.position,Nm=cg.attributes.normal,yc=CN.yt-CN.cr;   /* the crown shaded as its sphere: each sector's two flat triangles alternated in the highlight, a fan round the arbor (3 November 2026) */
         for(let t=0;t<P.count;t+=3)if(Nm.getY(t)>0.5)for(let k=t;k<t+3;k++){const x=P.getX(k),y=P.getY(k)-yc,z=P.getZ(k),l=Math.hypot(x,y,z);Nm.setXYZ(k,x/l,y/l,z/l);}Nm.needsUpdate=true;
-        cnM.push(tag(mesh(cn,cg,M.steel),'050503-3',1));}
+        cnM.push(tag(mesh(cv,cg,M.steel),'050503-3',1));}
       /* the punch's dents ("Körner", 05 05 03): the tube's wall driven in at its groove into the shank's groove under it (train.js: its square shoulder 6.07 over C, its cone
          0.24 deep rising to the shank at 6.73), which holds the tube on the shank by friction and keeps it from rising; the sheet draws the groove and the mark, not the dents:
          three, 120° apart, each 20° round and 0.4 high at the groove's middle (6.1 to 6.5 over C, clear of the shank's square shoulder, so the tube still slips round
          when the hands are set), their inner faces on the shank's cone, line to line, as the model draws a press (estimated: drawing check 2's 6-M6; until 28 October 2026
          none, the tube 0.01 clear of the shank all along, held by nothing) */
       {const dn=CN.dn,s0=yC+dn.s0,s1=yC+dn.s1,g0=rSh(s0)-dn.dp,gr=y=>g0+(rSh(s1)-g0)*(y-s0)/(s1-s0),ya=yC+dn.ya,yb=yC+dn.yb,P=[[gr(ya),ya],[rb(ya)+dn.t,ya],[rb(yb)+dn.t,yb],[gr(yb),yb],[gr(ya),ya]].map(([r,y])=>new THREE.Vector2(r,y));
-        for(let k=0;k<dn.k;k++)cnM.push(tag(mesh(cn,closeGeo(new THREE.LatheGeometry(P,6,(k/dn.k-dn.off/360)*TAU,dn.a/360*TAU)),M.steel),'050503-3',1));}
-      R.cnM=cnM;}   /* the tube one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
+        for(let k=0;k<dn.k;k++)cnM.push(tag(mesh(cv,closeGeo(new THREE.LatheGeometry(P,6,(k/dn.k-dn.off/360)*TAU,dn.a/360*TAU)),M.steel),'050503-3',1));}
+      if(TW)R.cnM6=cnM;else R.cnM=cnM;}}   /* the tube one piece, one mesh, merged once its leaves are phased (below; fuse, the leaves' box kept, gear.box): its pieces' walls ran flush, lines in Edges until 21 October 2026 */
 
     /* the riveting sink in the change and hour wheels' holes, on their lower faces, the pipe's foot flared into it ("vernietet"): 0.4 deep at 30° (040204-1's edge view,
        "0,4" from the face to the line its end circle draws across the hole, "30°" at the corner: sure; the 30° read to the axis, its leader on the corner's short chamfer,
@@ -349,20 +355,21 @@ const WDIAL=(()=>{
     /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
        change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
     const ph=(A,pa,B,pb,s)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b;};
-    ph(R.cnPin,H[1],R.chW,H[19],-1);fuse(R.cnM);   /* the tube's pieces merged where they stand, its leaves phased */ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
+    ph(R.cnPin,H[1],R.chW,H[19],-1);fuse(R.cnM);ph(R.cnPin6,H[1],R.chW,H[19],-1);fuse(R.cnM6);   /* the tube's pieces merged where they stand, its leaves phased */ph(R.chP,H[19],R.hwW,H[1],1);ph(R.chP6,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);ph(R.upP,H[10],R.udW6,H[2],1);
 
     /* ---------- the hands ---------- */
     const hdP=part('hands',56);
     /* the minute hand, on the tube's square (turns with the centre arbor) */
     const mh=grp(hdP,H[1]);R.mh=mh;
-    {const y0=YM0,yf=y0+MIN.bo.yf,y1=y0+MIN.bo.y1,h0=MIN.bo.h0,sq=sqLoop(h0,CN.sqR+MIN.bo.dr),hole=y=>sq.map(p=>p.map(v=>v*(1+(y1-y)/MIN.bo.s/h0)));   /* the square hole, widening 1:70 down from its top */
-      const mM=[tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1')];
+    for(const[V,TW]of/** @type {[string,number][]} */([['last first 1943',0],['6mx',45]])){const hv=new THREE.Group();hv.userData.rev=V;hv.userData.sub='dial';mh.add(hv);   /* each version's hand, its hole on its tube's square (the 6MX's turned 45°: above) */
+    {const y0=YM0,yf=y0+MIN.bo.yf,y1=y0+MIN.bo.y1,h0=MIN.bo.h0,sq=turnL(sqLoop(h0,CN.sqR+MIN.bo.dr),TW),hole=y=>sq.map(p=>p.map(v=>v*(1+(y1-y)/MIN.bo.s/h0)));   /* the square hole, widening 1:70 down from its top */
+      const mM=[tag(mesh(hv,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole(y0),q:hole(yf),a:y0,b:yf}]}]),goldin),'050200-1')];
       /* the flange: flat inside Ø 5.2 round the square hole, and outside it a turned ring, its edge rounded r 0.4 (smooth: until 17 October 2026 annuli of solidGeo's
          cells, whose flat-shaded facets showed on the round and the rim); the ring's 72 sides fall on the flat part's 72 points */
       const r1=MIN.rf-MIN.bo.rd,rnd=[...Array(11).keys()].map(k=>{const a=(10-k)/10*Math.PI/2;return[r1+MIN.bo.rd*Math.sin(a),y1-MIN.bo.rd+MIN.bo.rd*Math.cos(a)];});
-      mM.push(tag(mesh(mh,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1),
-      tag(mesh(mh,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1),
-      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf,MIN.L,-1,0.25,MIN.rf,false,null,72),goldin),'050200-1',1));fuse(mM);}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
+      mM.push(tag(mesh(hv,solidGeo([{loop:C([0,0],r1,72),y0:yf,y1,F:[{p:hole(yf),q:hole(y1),a:yf,b:y1}]}]),goldin),'050200-1',1),
+      tag(mesh(hv,lathe([[r1,yf],[MIN.rf,yf],...rnd],72),goldin),'050200-1',1),
+      tag(mesh(hv,blade(MIN.hw,MIN.t,yf,MIN.rf,MIN.L,-1,0.25,MIN.rf,false,null,72),goldin),'050200-1',1));fuse(mM);}}   /* one solid, one mesh (fuse, core.js): flush faces drew lines on it in Edges until 21 October 2026 */
     /* the hour hand, on the hour wheel's pipe */
     const hh=grp(hdP,H[1]);R.hh=hh;
     {const y1=YH1,y0=y1-HOUR.bo.h,yf=y1-HOUR.bo.f,rb=y=>HOUR.rb+(HRW.yt-y)/HOUR.bo.s;   /* its hole on the seat's 1:70, 0.0065 tight on the radius (above) */
@@ -395,9 +402,13 @@ const WDIAL=(()=>{
        353.1 deg (1_Kirow_247_Z.jpg, ±1 for the view's tilt): 114, 234 and 354 deg. The disc, its printed face and its screws are built for each (rv) */
     const DL=MWD.DL,RH=DL.RH,PINa=at(DL.pin.a,RH),SMa=at(DL.sm.a,RH),rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},FMS=[],TX={};
     for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',DL.scr],['6mx',[354,114,234]]])){const gV=rv(dlP,V),SCR=AS.map(a=>at(a,V==='6mx'?49.9:RH));   /* the 6MX's on r 49.9: all three of Kirov No. 247's 0.6 nearer the centre (1_Kirow_247_Z.jpg, photocompare.py's fit: likely) */
-    const holes=[[0,0,DL.rb[0]],[H[2][0],H[2][1],DL.rb[1]],[H[35][0],H[35][1],DL.rb[2]],...SCR.map(p=>[p[0],p[1],DL.sc.sr])];   /* the printed face's: the two small holes under its paint (above) */
+    /* the 6MX's sinks open at the face to Ø 2.3 (MX6): Kirov No. 247's and No. 2973's dials (1_Kirow_247_Z.jpg at its arbors' 8.796 px/mm, bilder-zum-6mx/1_Kirow_2973_Z.jpg at
+       8.310) show a dark ring round each head, its inner edge the head's Ø 1.64-1.88 (the slot runs across it) and its outer edge onto the paint Ø 2.21-2.43 (6mx-audit/gamma.md,
+       dhead.py: likely, two chronometers). Its form isn't seen: built as a 45° chamfer from the drawings' Ø 1.8 sink to Ø 2.3 at the face, 0.25 deep (estimated); the drawings' sink stays */
+    const MX6=V==='6mx'?{mr:2.3/2}:null,sR=MX6?MX6.mr:DL.sc.sr;
+    const holes=[[0,0,DL.rb[0]],[H[2][0],H[2][1],DL.rb[1]],[H[35][0],H[35][1],DL.rb[2]],...SCR.map(p=>[p[0],p[1],sR])];   /* the printed face's: the two small holes under its paint (above) */
     {const F=[{p:C([0,0],DL.rb[0],72),a:DY0,b:DY1},{p:C(H[2],DL.rb[1],40),a:DY0,b:DY1},{p:C(H[35],DL.rb[2],32),a:DY0,b:DY1},{p:C(PINa,DL.pin.r,20),a:DY0,b:DY1},{p:C(SMa,DL.sm.r,20),a:DY0,b:DY1}];
-      for(const p of SCR)F.push({p:C(p,DL.sc.r,20),a:DY0,b:DY1},{p:C(p,DL.sc.sr,28),a:DY1-DL.sc.sd,b:DY1});
+      for(const p of SCR){const ch=MX6?MX6.mr-DL.sc.sr:0;F.push({p:C(p,DL.sc.r,20),a:DY0,b:DY1},{p:C(p,DL.sc.sr,28),a:DY1-DL.sc.sd,b:DY1});if(MX6)F.push({p:C(p,DL.sc.sr+0.005,28),q:C(p,MX6.mr,28),a:DY1-ch,b:DY1});}   /* the chamfer holds the sink (solidGeo's features nest by area, each reaching a face): it starts 5 µm wider, a step 0.25 down */
       tag(mesh(gV,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
     /* the printed face: a surface 0.02 over the disc, holed as it is, its texture the canvas (face()) */
     {const s=new THREE.Shape();s.absarc(0,0,DR,0,TAU,false);for(const[hx,hz,hr]of holes){const p=new THREE.Path();p.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(p);}

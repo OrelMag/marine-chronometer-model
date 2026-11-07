@@ -1,0 +1,8 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx/2_Kirow_247_A.jpg", "features": {
+ "access hole with screw inside (302,770)": {"uv": [302, 770], "rpx": 15.5, "y": -22.35, "mode": "rim", "band": 0.25},
+ "hole half under bridge (283,743)": {"uv": [283, 743], "rpx": 13, "y": -22.35, "mode": "rim", "band": 0.3},
+ "access hole at 6 (510,855)": {"uv": [510, 855], "rpx": 15.5, "y": -22.35, "mode": "rim", "band": 0.25},
+ "hole 3 (512,183)": {"uv": [512, 183], "rpx": 16, "y": -22.35, "mode": "rim", "band": 0.25},
+ "intermediate chaton (428,645)": {"uv": [428, 645], "rpx": 16, "y": -22.6, "mode": "rim", "band": 0.3},
+ "seconds chaton (513,707)": {"uv": [513, 707], "rpx": 16, "y": -22.6, "mode": "rim", "band": 0.3}
+}}

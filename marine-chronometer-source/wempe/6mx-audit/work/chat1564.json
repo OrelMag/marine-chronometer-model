@@ -1,0 +1,4 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx-gallery/bilder-zum-6mx/2_Kirow_1564_A.jpg", "features": {
+ "intermediate chaton, outer ring": {"uv": [423.5, 650], "rpx": 22, "y": -22.35, "mode": "rim", "band": 0.12},
+ "intermediate chaton, middle ring": {"uv": [423.5, 650], "rpx": 18, "y": -22.35, "mode": "rim", "band": 0.1},
+ "intermediate chaton, sink": {"uv": [423.5, 650], "rpx": 14, "y": -22.35, "mode": "rim", "band": 0.15}}}
