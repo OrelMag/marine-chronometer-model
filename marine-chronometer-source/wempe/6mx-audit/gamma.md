@@ -40,7 +40,7 @@ Angles: "cw" is clockwise from 12 seen from the dial (the dial screws' conventio
 | the case brackets' pivot holes, height under the rim's top | 12_, 13_2973 | — | the rim's near top edge can't be told from its far edge beside the bracket on these views | 3.0 under (DY6 7.0, Alpha confirms with Delta's weighing) | can't tell (no better than the model's own ±2) | — |
 | the boxes and outer box | 13_, 14_ (247) | ratios; mm only through the TU's 190 | the fork's rows: gamma/box_rows.md (likely: middle tier 72.8 against 68; the badge 0.779 of the hasp's width against 0.728, and centred in its tier; the outer lid's front 0.466 of its width against 0.536; the catch drawn Ø 20 against its own comment's 26 and the photograph's about 29) | case.js | see box_rows.md | see box_rows.md |
 | the ring screws' heads | 2_Kirow_247_A (two heads cleanly fitted on their visible arcs) | the A camera's scale at the top plate (8.866 px/mm at y -22), the heads about 20 mm deeper at about 630 mm: 3 % more | Ø 6.04, 6.14 at the plate's scale, so about Ø 6.2-6.3 | Ø 6.2 (frame.js, the 6MX's WN-56, head r 3.1) | match | likely (one photograph; uZ shows only their holes) |
-| the locking bracket's two screws: spacing over head width | 12_ (247), 13_2973_E-Kontakt4 | ratio at one depth, no camera; the heads' faces 0.92 round (cos of the view's tilt) for the vertical spacing | 247: 63 px apart, heads 62 wide: 1.10 corrected; 2973: 67 and 62: 1.17 corrected; the two heads nearly touch on both | 7.4 apart (h -20.0, -27.4), heads Ø 4.8: 1.54 | mismatch: the screws closer together for their heads (or the heads larger), about 1.1-1.2 | likely on the ratio (two chronometers); which of spacing and head size can't be told without a scale at the bracket |
+| the locking bracket's two screws: spacing over head width | 12_ (247), 13_2973_E-Kontakt4 | ratio at one depth, no camera; the heads' faces 0.92 round (cos of the view's tilt) for the vertical spacing | 247: 63 px apart, heads 62 wide: 1.10 corrected; 2973: 67 and 62: 1.17 corrected; the two heads nearly touch on both | 7.4 apart (h -20.0, -27.4), heads Ø 4.8: 1.54 | mismatch: the screws closer together for their heads (or the heads larger), about 1.1-1.2 | likely on the ratio (two chronometers); which of spacing and head size can't be told without a scale at the bracket. Alpha (7 November 2026): recorded as can't tell, not fixed |
 | the bowl's outside contact fittings (each spring's two screws 65 and its socket) | 12_ (247), 13_2973_E-Kontakt4 | their image x fitted as points round a cylinder seen from afar (sockets.py: the view's centre and scale free) | arrangement: on each side two slotted screws on dark washers and a socket; 2973's sockets carry knurled caps, 247's are open. Bearings read 179.0, 188.4, 200.6, 216.1, 225.5, 235.5 (247) and 178.7, 188.7, 200.8, 216.0, 225.1, 235.9 (2973), within 1 deg of the model's (leaving one out of the fit: within 2.5 deg) | 178.4, 189.3, 200.6; 215.7, 225.2, 235.9 (case.js) | match | likely |
 | the bowl springs 66 inside (feet on insulating strips, three tines each) | 11_ (247) | - | two springs, each three tines rising from a curved foot held by two screws on a dark strip, leaning in | the same (case.js 6MX.cf) | match in arrangement; sizes not measured | likely (arrangement only) |
 | the bowl's cone and foot | 13_2973_E-Kontakt4 rows 556-640 | ratios of width | the body's silhouette narrows from row about 560 (948 px) to 842 px at row 640, where the frame ends | a shallow cone from r 52.4 at h -46.7 to the foot r 36.7 at -55.3 | can't tell (the foot and the cone's end are out of frame) | - |
@@ -66,3 +66,20 @@ need a scale (px off the gridded frame, ±5 px):
 | the outer lid's front, its tab, the catch (B12, B14, B16) | 13_ only | not checked | - | as box_rows.md, downgraded to doubtful | the catch's code (cylY(10,2,40): cylY takes a radius, core.js:586, so Ø 20) disagrees with its own comment (Ø 26) for sure, whatever the photographs say |
 
 The fork's body-tier row (B1) was not blind (a grep had shown the model's 97); its other rows were.
+
+## Alpha's rulings and the fixes made (7 November 2026)
+
+- **Dial screws' sinks: fixed**, the 6MX only (dial.js, `MX6`): the drawings' Ø 1.8 sink 1.0 deep, opening in a 45° chamfer to Ø 2.3 at the face,
+  0.25 deep (the form estimated, as the more conservative reading; the Wempe README's "Estimated"). The drawings' DL.sc and DL.ds are unchanged.
+  The printed face's holes round the 6MX's screws follow at Ø 2.3.
+- **The box's badge: fixed**, centred in the glazed lid's tier (case.js: 34 over the lower line, 30.4 until now).
+- **The outer box's catch: fixed** to its comment's Ø 26 (cylY radius 13; Ø 20 until now). Kirov 247's single oblique frame reads about 29: doubtful, recorded.
+- **Contact block screws' heads:** the direction accepted (under 3.1 on two chronometers). The value is held until Beta's pillar 39 diameter is settled (the scale here
+  leans on it); then set from it, cross-checked on 2973's own scale.
+- **Locking bracket:** can't tell; not fixed.
+- **Ring screw at 246.4:** to the owner, recommended kept (inside three chronometers' scatter). **Box middle tier:** kept (inside the scatter).
+
+Checks after the fixes: `solids.py --model wempe` (0 not solid, both states), `audit.py box --model wempe --rev 6mx` (nothing new), `holecheck.py --model wempe`
+(1,633 holes over five versions, 0 failing), `photocompare.py k247_Z` (the dial screws' crops: the chamfer's ring the photograph's size, lighter than its dark
+crevice: lighting and material on an estimated form), `isolate.py` of the box with the lid and of the outer box beside 13_ and 14_ (the badge centred between the hasps
+as on 247; the catch Ø 26), `smoke.py --model wempe`.
