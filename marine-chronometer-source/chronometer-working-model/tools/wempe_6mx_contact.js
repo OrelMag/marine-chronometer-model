@@ -24,6 +24,7 @@ const RS=Math.hypot(C.screw54.tip[0]-C.staff[0],C.screw54.tip[1]-C.staff[1])*1e-
 const LSP=2*Math.PI*((4.45+1.0)/2)*7*1e-3,kSp=(t,b)=>120e9*b*1e-3*(t*1e-3)**3/12/LSP;
 console.log(`\nThe 6MX's contact as a load on its train (the page's geometry, the 6MX's makeEsc)`);
 console.log(`  the escape wheel's torque at the reference drive ${f(TE*1e6,1)} µN·m, a beat's turn ${f(DTH_E/D,0)}°: ${f(TE*DTH_E*1e6,1)} µJ a beat`);
+console.log(`  the screw's travel off the disc ${f(RS*1e3*THL,2)} mm (unmeasured: the load scales with it; each row an upper bound for its force)`);
 console.log(`  the lever: C6K ${f(C6K,2)} mm a radian (its stone arm ${f(la,2)}); the stone lifted ${f(LIFT,2)} mm (tip r ${RT}, rest r ${f(RR+0.4,1)}, 0.08 clear): the lever turns ${f(THL/D,1)}°`);
 console.log(`  on the slope it turns ${f(GL,2)} rad for the seconds arbor's radian, ${f(GL/8,3)} for the escape wheel's (80/10); the flank ${f(PSI/D,1)}° to the tangent, so the stone's friction (mu ${MU}) adds ${f((FF-1)*100,0)} % to the work; the screw's point ${f(RS*1e3,1)} mm from the staff`);
 J.geo={TE,C6K,LIFT,THL,GL,PSI,FF,RS,LSP};
@@ -33,11 +34,13 @@ console.log(`  hairspring-like spirals 7 turns Ø 8.9 (${f(LSP*1e3,0)} mm of str
 const band=[];for(const[t,b]of SPS){const k=kSp(t,b),Fs=PRE.map(p=>k*p*2*Math.PI/RS/G0*1e3);band.push(...Fs);console.log(`    ${t} × ${b} mm: k ${f(k*1e6,2)} µN·m a radian; ${Fs.map(x=>f(x,3)+' gf').join(', ')}`);}
 J.spirals={SPS,PRE,band};
 /* the load: on a lift beat the lever's moment M0 + k th over THL, times FF, out of the escape wheel's work that beat: the drive that beat 1 - d; the swing from makeEsc at the
-   mean of the two beats' drives (the balance's energy averaged over its TF, 111 s, against a pair of beats), the rate the mean of the two beats' (rateAt at that swing) */
+   mean of the two beats' drives (the balance's energy averaged over its TF, 111 s, against a pair of beats), the escapement's rate makeEsc's at that mean drive. Each row is an
+   upper bound for its force (the force's arm taken whole), and the load scales with the screw's travel off the disc (the arm times the lever's turn, about 1.15 mm), itself
+   from three estimates: the contact wheel's root (Ø 18.6), the stone's rest 0.4 over it, and Fig. 100's arms */
 const kMid=kSp(0.05,0.3),A0=E.ampAt(1),rows=[];
 console.log(`  the drive taken by a lift, and the swing and rate (the drive the reference's, 12 h; 0.95-1.04 over the wind), the spiral's stiffness ${f(kMid*1e6,2)} µN·m a radian over the lift:`);
 for(const gf of[0.05,0.1,0.2,0.5,1,2,3,5,10]){const M0=gf*1e-3*G0*RS,Wl=(M0*THL+kMid*THL*THL/2)*FF,d=Wl/(TE*DTH_E),pk=(M0+kMid*THL)*GL/8*FF/TE;
-  const res=[0.95,1,1.04].map(s=>{const s2=s*(1-d/s),A=E.ampAt((s+Math.max(0,s2))/2),r=s2>0.26*s&&A>=E.AMIN?(E.rateAt(A,s)+E.rateAt(A,s2))/2-E.rateAt(E.ampAt(s),s):null;return{s,A,dA:A-E.ampAt(s),dr:r,stall:s*(1-pk/s)<0.26};});
+  const res=[0.95,1,1.04].map(s=>{const s2=s*(1-d/s),A=E.ampAt((s+Math.max(0,s2))/2),r=s2>0.26*s&&A>=E.AMIN?E.rateAt(A,(s+s2)/2)-E.rateAt(E.ampAt(s),s):null;   /* the escapement's rate steady at the mean drive (pairing rateAt(A, s) with a swing A not s's own scatters ±0.1 s a day) */return{s,A,dA:A-E.ampAt(s),dr:r,stall:s*(1-pk/s)<0.26};});
   const m=res[1];rows.push({gf,M0,W:Wl,d,pk,res});
   console.log(`    ${f(gf,2).padStart(5)} gf  M0 ${f(M0*1e6,2).padStart(7)} µN·m, ${f(Wl*1e9,2).padStart(7)} nJ a lift: ${f(d*100,2).padStart(6)} % of that beat's drive (the escape torque ${f(pk*100,1)} % less at the slope's steepest); the swing ${f(m.A/D,2)}° (${(m.dA>=0?'+':'')+f(m.dA/D,2)}°), the rate ${m.dr==null?'(none: a lift beat under the least drive)':(m.dr>=0?'+':'')+f(m.dr,3)+' s a day'}${res.some(x=>x.stall)?'; under the least drive (26 %) on a lift beat at '+res.filter(x=>x.stall).map(x=>x.s).join(', '):''}`);}
 J.rows=rows;

@@ -137,23 +137,29 @@ So the force at the screw is swept. It is bracketed by hairspring-like copper-al
 
 | Force at the screw | Share of a lift beat's drive | Escape torque at the slope's steepest | Swing | Rate |
 |---|---|---|---|---|
-| 0.05 gf | 2.3 % | −3.3 % | 194.4° (−1.4°) | −0.01 s a day |
-| 0.1 gf | 4.6 % | −6.5 % | 193.0° (−2.8°) | +0.08 |
-| 0.2 gf | 9.1 % | −12.9 % | 190.2° (−5.6°) | −0.02 |
-| 0.5 gf | 22.7 % | −32 % | 181.4° (−14.4°) | −0.55 |
-| 1 gf | 45 % | −64 % | 165.7° (−30.1°) | −1.6 |
+| 0.05 gf | 2.3 % | −3.3 % | 194.4° (−1.4°) | −0.04 s a day |
+| 0.1 gf | 4.6 % | −6.5 % | 193.0° (−2.8°) | −0.10 |
+| 0.2 gf | 9.1 % | −12.9 % | 190.2° (−5.6°) | −0.22 |
+| 0.5 gf | 22.7 % | −32 % | 181.4° (−14.4°) | −0.66 |
+| 1 gf | 45 % | −64 % | 165.7° (−30.1°) | −1.8 |
 | 2 gf and up | over 90 % | more than the drive | a lift beat under the least drive (26 %): it stops | |
 
-The rate's scatter up to 0.2 gf (±0.1 s a day) is `rateAt`'s own at different drives.
+The rate is the escapement's, makeEsc's steady at the mean drive. A first version paired `rateAt(A, s)` with a swing that wasn't drive s's own, which scattered it ±0.1 s a day. It leaves out the hairspring's isochronism.
 
-**Verdict: doubtful, for the owner.** The contact is not a negligible load. A beat brings the escape wheel only 36 µJ, and the lever must be turned 4.6° up a 58° flank against the contact's force on a 14.4 mm arm.
-- **The middle spiral** (about 0.14 gf) costs about 4° of swing: the 6MX with its contact would swing about 186-196° over the wind, not the page's 190-200°.
-- **The light end of the bracket** (0.01-0.05 gf) costs under 1.4°.
-- **The stiff end** (about 1.4 gf) costs over 30°, and from about 2 gf a chronometer would stop on the lift beats.
+**Two estimates under every row.**
+- **The force's arm** is taken whole, the screw's point 14.4 from the staff: each row is an upper bound for its force.
+- **The screw's travel off the disc** (14.4 × the lever's 4.6°, about 1.15 mm) is unmeasured. The work, and so every figure, scales linearly with it. It rests on three estimates: the contact wheel's root (Ø 18.6), the stone's 0.4 rest over it, and Fig. 100's arms, put on photographs that don't show the stone. A smaller open gap on a photograph would shrink every row with it.
 
-The rate hardly moves (under 0.1 s a day to 0.2 gf). So the effect is on the swing, the margin to the sources' 225-270° band, which the model is already under, and the least drive.
+**A bound from the sources.** The TU makes the contact 6MX and the contactless one alike but for the jewels (20 against 15, Table 1) and the contact's rating (1.2.10). Both are held to the same metrological requirements and 35-day trial, and the 1954 instruction gives one swing band, 225-270°, for both. A contact that took 30° of swing, or stopped the chronometer on its lift beats, couldn't pass them. So the stiff end of the bracket (about 1 gf and up) is ruled out, and a real contact costs a few degrees at most.
 
-A made 6MX must have a contact well under 1 gf: Romanov's "hairspring" is consistent with that.
+**Verdict: doubtful, for the owner.** The contact is not a negligible load. A beat brings the escape wheel only 36 µJ, and the lever must be turned 4.6° up a 58° flank against the contact's force.
+- **The middle spiral** (about 0.14 gf) costs about 4° of swing as bounded above: the 6MX with its contact would swing about 186-196° over the wind, not the page's 190-200°.
+- **The light end** (0.01-0.05 gf) costs under 1.4°.
+- **The rate** moves under 0.25 s a day to 0.2 gf.
+
+So the effect is on the swing, the margin to the 225-270° band (which the model is already under) and the least drive. Romanov's "hairspring" is consistent with a contact well under 1 gf.
+
+What would settle it is either of two measurements, neither in any source we hold: the spiral's section and preload, or the screw's open gap on a photograph.
 
 The page's physics (`WPHYS.rev('6mx')`) leaves the drag out. Whether to put it in, and at what force, is the owner's choice, since no source gives the force. **Recommended:** keep the page as it is and record the drag in the README's "Estimated" and in the Wempe report's 6MX section, as a range: about −4° at the middle spiral, −1.4° to −30° over the bracket.
 
