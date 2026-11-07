@@ -828,7 +828,7 @@ const WCASE=(()=>{
        (bilder-zum-6mx/10_Kirow_22823_Kasten.jpg: its height 785 px at the near edge, 765 at the far, its width 773), as parts of 190: the body 97 (0.506, 0.514), the
        glazed lid 68 (0.354, 0.360), the top lid 25 (0.140, 0.127); Kirov 247's own front puts its parting lines 450 px apart at 53/330 mm a px, 72 (by the hasp's width,
        below). The hasps: 53 wide (22823's 215 of 773 px), each leaf 13 high with a peak 3 more at its middle, two screws a leaf, the knurled head Ø 11 × 5 on the lower leaf
-       6.4 under the line (Kirov 247's: 330 px wide, the head 70 px). On the glazed lid's front the factory's diamond badge, 38.6 × 24, its centre 37.6 under the upper line;
+       6.4 under the line (Kirov 247's: 330 px wide, the head 70 px). On the glazed lid's front the factory's diamond badge, 38.6 × 24, centred in its tier, 34 under the upper line (Kirov 247's 14_ at 0.511 of the tier down, Kirov 2973's front, bilder-zum-6mx/14_Kirow_2973_Kasten.jpg, at 0.50: likely, two boxes; 30.4 over the lower line, 37.6 under the upper, until 7 November 2026, 6mx-audit/gamma.md);
        on the body's the number plate, Ø 31, 40 under the lower (14_: by the hasp). The corner strips 27 × 12 wrapping each vertical corner: at the bottom, 27 under the lower
        line, 25 under the upper, and capping the top (22823's, at 2.46 px/mm). The ring handles (22823's left side, folded down): a ring Ø 34 of 6 wire from a lug under
        the lower line (estimated). Not on any photograph, estimated: the walls 10 thick; the glass in the glazed lid's top under a frame 20 wide (as the drawings' box); both
@@ -869,9 +869,9 @@ const WCASE=(()=>{
         hinge(q,30,s*55,[68,-2.5],[[57,67,-1.2,0],[69,79,-1.2,0]],M.brass);}   /* the upper hinge's leaves on its one knuckle, one solid (hinge) */
       const g=tag(new THREE.Group(),'Beschlag6',1);ld6.add(g);strips(g,43,o);const tc=strips(g,87,o);let ci=0;for(const sx of[-1,1])for(const sz of[-1,1])fuse([tc[ci++],box(g,26,1,26,sx*(B6-13),93.5,o+sz*(B6-13),M.brass)]);   /* the top's caps with their angles, one mesh each */
       leaf(ld6,0,2*B6,true,false);leaf(ld6,68,2*B6,false,true);leaf(ld6,68,2*B6,true,false);
-      const bg=tag(new THREE.Group(),'Firmenschild6');ld6.add(bg);const DM=[[19.3,0],[0,12],[-19.3,0],[0,-12]];plate(bg,DM,0.8,0,30.4,2*B6,M.steel);
+      const bg=tag(new THREE.Group(),'Firmenschild6');ld6.add(bg);const DM=[[19.3,0],[0,12],[-19.3,0],[0,-12]];plate(bg,DM,0.8,0,34,2*B6,M.steel);
       const sg=new THREE.ShapeGeometry(new THREE.Shape(DM.map(([a,b])=>V2(a,b)))),uv=sg.attributes.uv,ps=sg.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,(ps.getX(i)+19.3)/38.6,(ps.getY(i)+12)/24);
-      const dc=mesh(bg,sg,MC.badge,0,30.4,2*B6+0.82);dc.userData.decal=1;}
+      const dc=mesh(bg,sg,MC.badge,0,34,2*B6+0.82);dc.userData.decal=1;}
 
     /* ================= the outer box (Überkasten 127-556.01, renumbered 52 00 16, 28.2.42; 1 on Boden-Chronometer 127-556. A-1, 4.3.42) ================= */
     /* "gebleichte Birke", "gezinkt, geleimt" (bleached birch, dovetailed and glued), 1:2 (the scan 1.195 px/mm, by the plan's 370; its 225 and 270 measure the same).
@@ -954,7 +954,7 @@ const WCASE=(()=>{
       tag(box(g,2*FI,OT6-ND-4-(OP6+18),8,0,(OT6-ND-4+OP6+18)/2,FI-4,MC.felt),'Polster6');   /* the front's, under the notch */
       for(const s of[-1,1]){const q=tag(new THREE.Group(),'Riemen');g.add(q);box(q,3,OT6-(OP6+40),30,s*(OX6+1.5),(OT6+OP6+40)/2,0,MC.leather);
         for(const h of[50,100])tag(screw(along(g,[s*(OX6+3),OP6+h,0],[-s,0,0]),0,0,0,...WD.CASEQ.SUR.f,M.steel),'WN-ur.6');}
-      {const q=tag(new THREE.Group(),'Hakenoese');g.add(q);const d=mesh(q,cylY(10,2,40),M.brass,0,OT6-51,OX6+1);d.rotation.x=Math.PI/2;const pn=mesh(q,cylY(1.5,5,16),M.steel,0,OT6-51,OX6+4.5);pn.rotation.x=Math.PI/2;}
+      {const q=tag(new THREE.Group(),'Hakenoese');g.add(q);const d=mesh(q,cylY(13,2,40),M.brass,0,OT6-51,OX6+1);   /* the catch's disc Ø 26 (radius 13), as read above; drawn Ø 20 until 7 November 2026 (6mx-audit/gamma.md: Kirov 247's 13_ alone reads about 29, 0.125 of the front, one oblique frame: doubtful) */d.rotation.x=Math.PI/2;const pn=mesh(q,cylY(1.5,5,16),M.steel,0,OT6-51,OX6+4.5);pn.rotation.x=Math.PI/2;}
       for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier.U');g.add(q);hinge(q,32,s*70,[OT6,-OX6-2.5],[[OT6-12,OT6,-OX6-1,-OX6]],M.brass);}}
     {const o=OX6,h=125-OW6,D=tag(new THREE.Group(),'Ueberkasten6.D');ol6.add(D);
       box(D,2*OX6,h,OW6,0,h/2,o-(OX6-OW6/2),MC.kir);for(const s of[-1,1])box(D,OW6,h,2*OX6-2*OW6,s*(OX6-OW6/2),h/2,o,MC.kir);box(D,2*OX6,OW6,2*OX6,0,h+OW6/2,o,MC.kir);

@@ -395,9 +395,13 @@ const WDIAL=(()=>{
        353.1 deg (1_Kirow_247_Z.jpg, ±1 for the view's tilt): 114, 234 and 354 deg. The disc, its printed face and its screws are built for each (rv) */
     const DL=MWD.DL,RH=DL.RH,PINa=at(DL.pin.a,RH),SMa=at(DL.sm.a,RH),rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},FMS=[],TX={};
     for(const[V,AS]of/** @type {[string,number[]][]} */([['last first 1943',DL.scr],['6mx',[354,114,234]]])){const gV=rv(dlP,V),SCR=AS.map(a=>at(a,V==='6mx'?49.9:RH));   /* the 6MX's on r 49.9: all three of Kirov No. 247's 0.6 nearer the centre (1_Kirow_247_Z.jpg, photocompare.py's fit: likely) */
-    const holes=[[0,0,DL.rb[0]],[H[2][0],H[2][1],DL.rb[1]],[H[35][0],H[35][1],DL.rb[2]],...SCR.map(p=>[p[0],p[1],DL.sc.sr])];   /* the printed face's: the two small holes under its paint (above) */
+    /* the 6MX's sinks open at the face to Ø 2.3 (MX6): Kirov No. 247's and No. 2973's dials (1_Kirow_247_Z.jpg at its arbors' 8.796 px/mm, bilder-zum-6mx/1_Kirow_2973_Z.jpg at
+       8.310) show a dark ring round each head, its inner edge the head's Ø 1.64-1.88 (the slot runs across it) and its outer edge onto the paint Ø 2.21-2.43 (6mx-audit/gamma.md,
+       dhead.py: likely, two chronometers). Its form isn't seen: built as a 45° chamfer from the drawings' Ø 1.8 sink to Ø 2.3 at the face, 0.25 deep (estimated); the drawings' sink stays */
+    const MX6=V==='6mx'?{mr:2.3/2}:null,sR=MX6?MX6.mr:DL.sc.sr;
+    const holes=[[0,0,DL.rb[0]],[H[2][0],H[2][1],DL.rb[1]],[H[35][0],H[35][1],DL.rb[2]],...SCR.map(p=>[p[0],p[1],sR])];   /* the printed face's: the two small holes under its paint (above) */
     {const F=[{p:C([0,0],DL.rb[0],72),a:DY0,b:DY1},{p:C(H[2],DL.rb[1],40),a:DY0,b:DY1},{p:C(H[35],DL.rb[2],32),a:DY0,b:DY1},{p:C(PINa,DL.pin.r,20),a:DY0,b:DY1},{p:C(SMa,DL.sm.r,20),a:DY0,b:DY1}];
-      for(const p of SCR)F.push({p:C(p,DL.sc.r,20),a:DY0,b:DY1},{p:C(p,DL.sc.sr,28),a:DY1-DL.sc.sd,b:DY1});
+      for(const p of SCR){const ch=MX6?MX6.mr-DL.sc.sr:0;F.push({p:C(p,DL.sc.r,20),a:DY0,b:DY1},{p:C(p,DL.sc.sr,28),a:DY1-DL.sc.sd,b:DY1});if(MX6)F.push({p:C(p,DL.sc.sr+0.005,28),q:C(p,MX6.mr,28),a:DY1-ch,b:DY1});}   /* the chamfer holds the sink (solidGeo's features nest by area, each reaching a face): it starts 5 µm wider, a step 0.25 down */
       tag(mesh(gV,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
     /* the printed face: a surface 0.02 over the disc, holed as it is, its texture the canvas (face()) */
     {const s=new THREE.Shape();s.absarc(0,0,DR,0,TAU,false);for(const[hx,hz,hr]of holes){const p=new THREE.Path();p.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(p);}
