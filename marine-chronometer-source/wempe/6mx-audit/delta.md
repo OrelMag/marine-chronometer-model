@@ -92,3 +92,30 @@ The two `~~` lines are not the 6MX's own: its frame is the drawings' frame. Both
 - the penalties' stiffness.
 
 The ringing floor is 0.40 g, the drawings' too (0.5×). The knock floor is 0.64 g; the report's data doesn't print the drawings' for comparison. The 6MX, like the drawings' detent, has no source for its preload (0.8 g, estimated).
+
+## 3. The 6MX's banking head and the banking table (gap 3)
+
+**Question.** The physics banks the detent where it is drawn: the pipe's side on the banking, 0.8 g of preload as a moment. The 6MX's banking is the domed brass head of the cross screw WN-gkA, Ø 3.4 and 1.4 high. A dome recedes fast off its apex: 0.07 mm at 0.5 off, against a 0.236 depth of lock. If the pipe met it off the apex, the 6MX would bank somewhere the physics doesn't put it.
+
+**Method.** `wempe_banking_gap.py --model wempe --rev last,6mx,1943,first,3955` (new; about a minute) works on the page's own solids, the detent at rest as drawn. Rays go out from the pipe's axis every 1° at 41 heights over its length, against every shown solid within 1.5 mm that isn't the detent's. The pipe's axis is taken from the locking stone, since the pipe is fused with the blade and horn into one mesh. The least hit less the pipe's 0.575 radius is the gap, with the solid, the band of contact and the normal.
+
+**Figures.**
+
+| Version | Banks on | Gap | Contact band (pipe height from its foot; round it) | Normal in plan |
+|---|---|---|---|---|
+| 6MX | its head WN-gkA (Ø 3.4) | 0.005 | 0-0.9 mm of 1.9; 288-302° | (−0.423, 0, 0.906), 295° |
+| 1943 | its head WN-gkA43 | 0.005 | 0-0.81; 288-302° | the same |
+| first drawn | cone41 | 0 | 0-0.8; 288-302° | the same |
+| Wempe 3955 | cone41 | 0 | 0-0.17; 288-302° | the same |
+| last revised | nothing within 0.05 (nearest 0.22) | | | |
+
+The last revised version has no banking drawn: README, Unresolved. The physics puts one where the detent is drawn.
+
+**Verdict: closed.** The 6MX's head stands at the drawn gap, 0.005 (escapement.js's `bk.nH` 0.575 + 0.005). It meets the pipe over its lower half, with the same normal as every other version's banking. So the Ø 3.4 head doesn't move where the pipe banks: the detent rests where makeEsc, dynamics.js and tripping.js take it.
+
+`wempe_banking.js` (about 5 min) is up to date (exit 0). Its 6MX table is built as follows:
+- makeEsc for the 6MX (`MC_WREV=6mx`), rebuilt at each depth of lock 0.150-0.250, zeroed at the drawn 0.235;
+- 195.78° at the reference drive, falling away from 0.244, no unlocking from 0.248;
+- a turn moves the stone 0.25, the 6MX screw's own pitch (M1.2, `bk.pt` 0.25).
+
+So the table follows the head. Its bench window is the drawings' (`tolerances_wempe.json`: no tolerances run is made for the 6MX). Step 2 supports that: the 6MX's frame rings to 53.1 % of the depth of lock against the drawings' 53.9 %, and its ringing floor is the same 0.40 g.
