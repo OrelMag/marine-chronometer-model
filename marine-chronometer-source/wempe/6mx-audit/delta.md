@@ -39,3 +39,56 @@ Session Delta, 7 November 2026, for Session Alpha's audit of the 6MX (the owner'
 The ring's period is 0.683 s at −2 mm and 0.644 s at +2 mm. The beat itself moves the case 0.54″ at 2 Hz.
 
 **The criterion corrected.** gimbals.js has judged the beat clearance at 10 % since 25 October 2026: the owner lowered it from 15 % when the Hamilton's measured pivots put its case at 0.575 s. `wempe_gimbals.js`, the Wempe's report that `gimbals.js --model wempe` runs, still tested 15 % while citing gimbals.js's criterion. It now tests 10 % (0.55 s). Both versions pass under either limit except the 6MX's case: under the old 15 % it would have failed from +0.4 mm up. The drawings' case is 0.67 s and 0.76 s. Not doubtful, nothing for the owner.
+
+## 2. The escapement in time and the detent as a frame (gaps 8 and 6)
+
+**Method.** Both tools already took the 6MX's escapement through `wempe_load.js` (`MC_WREV=6mx`: `WESC.SET` with `WESC.SET6`'s I 2513.3, JW 10.19, ID 7.72), but `dynamics.js` read the drawings' bodies always. Now `MC_WREV=6mx` reads `wempe_inertia_6mx.json` (it changes `dynamics.js`'s `WJ`; `wempe_tripping.js` takes it from there).
+
+The 6MX's detent needs no pieces of its own in the frame:
+- The page draws it with `escapement.js`'s `DETV.late`, whose sections are `DETV.last`'s exactly: the spring 1.9 wide, blade 0.50 then 0.28 × 0.9, horn 0.22 × 0.75, pipe Ø 1.15. Only its heights (`ew0`) and its gold spring's screw (WN-14, steel) differ, and a plan frame sees neither.
+- Its weighed detent is 90.4 mg and 7.72 g·mm² (the drawings' 7.74).
+
+Runs, both exit 0. The drawings' `dynamics.js --model wempe --quick` is unchanged (exit 0, its swing 196.0° as before).
+- `MC_WREV=6mx node dynamics.js --model wempe`: about 4 min.
+- `MC_WREV=6mx MC_PROCS=6 node tripping.js --model wempe`: about 5 min.
+
+**Figures: `dynamics.js` (in time against makeEsc).**
+
+| Check | 6MX | Criterion | |
+|---|---|---|---|
+| bodies are makeEsc's | balance 2511 g·mm², train at the escape wheel 10.218 (JW 10.19 + 0.028), detent 7.720 | as weighed | ok |
+| swing, beat by beat | 195.8° (makeEsc 195.8°) | within 3° | ok |
+| own rate | −11.81 s a day (makeEsc −11.85; the drawings' −11.57) | Airy's within 0.3 | ok |
+| tooth lands | 10.2° after release (the drawings' 9.0°: the heavier train) | within 1.5° | ok |
+| detent's fall | off the stone 2.74°, onto the escaping tooth 4.48°, home 13.48° | within 0.5-1° of makeEsc | ok |
+| 300 beats | no tooth lost or gained; detent home 16.6 ms before the next tooth | | ok |
+| over spring, preload, inertia, stop and train ×1.5 varied | home every time | | ok |
+| isochronism over the wind | 190 → 201°, +0.90 s a day (makeEsc +0.75) | within 0.2 of makeEsc; under 0.5 per 10° | ok |
+| least drive | 26 % of the calibrated torque (about 49°) | | |
+| driven to 334° / 363° | one unlocking a swing / trips past TRIP 349° | | ok |
+| blows across the plate | 109 g (0.5 ms), 30 g (3 ms); no preload 55 g, 11 g | | |
+| at sea (yaw ±10°, 0.3 g sideways) | under 0.012 s a day, no trips | under 0.2 | ok |
+
+**Figures: `tripping.js` (the detent as a frame).**
+
+| Check | 6MX | Criterion | |
+|---|---|---|---|
+| frame weighed | 92.58 mg, 7.814 g·mm² (solids 90.40, 7.720) | within 3 % | ok |
+| rigid on a hinge against `dynamics.js` | 195.45° against 196.04°, rate −11.91 against −11.79, release 2.13°, home 13.72° against 13.48° | 1.25°, 0.3 s a day, 0.2°, 0.3°, 0.6° | ok |
+| first mode, clamped | 98 Hz (the spring); the gold spring 698 Hz | | |
+| as drawn, running | no tooth past in 12 beats | | ok |
+| a held tooth's stone | at most 53.1 % of the 236 µm depth of lock (125 µm), at −22° on the return swing: the gold spring slamming back onto the horn | under half | `~~` |
+| over the other estimates (Q, restitutions, gold spring 83-110 GPa, μ, spring 0.09) | no tooth past, at most 68.1 % | | ok |
+| contact stiffness 4× (penalties) | 6 teeth past | | `~~` |
+| preload floor, ringing | 0.5× (0.40 g) and up no tooth past; 0.2× and under, 6 past | | |
+| pushed by the drive | no trip to 360° | none under 300° | ok |
+| blows, the frame against the rigid detent | 76 g against 107 g (0.5 ms), 27 g against 30 g (3 ms), twist 4.5 rad/s both | preloaded ≥ 20 g | ok |
+| preload floor, knocks | 20 g needs 0.64 g (0.80×) or more | | |
+
+**Verdict.** The 6MX's escapement runs in time as makeEsc has it, and its detent holds every tooth at the model's settings. The heavier seconds arbor (the contact's cam: 135 g·mm² against 77) makes the tooth land 1.2° later and the rate 0.24 s a day slower than the drawings' escapement.
+
+The two `~~` lines are not the 6MX's own: its frame is the drawings' frame. Both are the frame's known sensitivities, on the same frame in every Wempe version:
+- the gold spring's blow taking the held stone to 53 % on the return swing;
+- the penalties' stiffness.
+
+The preload floors are the same as the drawings': 0.40 g for the ringing, 0.64 g for knocks. The 6MX, like the drawings' detent, has no source for its preload (0.8 g, estimated).
