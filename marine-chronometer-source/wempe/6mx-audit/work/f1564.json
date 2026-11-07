@@ -1,0 +1,8 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx-gallery/bilder-zum-6mx/2_Kirow_1564_A.jpg", "features": {
+ "pillar screw at 6 (pillar 39)": {"uv": [451, 830], "rpx": 28, "y": -25.2, "mode": "rim"},
+ "pillar screw at 12 (hole 49), check": {"uv": [456, 187], "rpx": 28, "y": -25.2, "mode": "rim"},
+ "access hole at 6 (open)": {"uv": [512, 851], "rpx": 15.5, "y": -22.35, "mode": "rim", "band": 0.25},
+ "detent block screw": {"uv": [815, 677], "rpx": 15, "y": -24.6, "mode": "rim", "band": 0.25},
+ "dark dot near (775,705)": {"uv": [774, 705], "rpx": 5, "y": -22.35, "mode": "rim", "band": 0.4},
+ "dark dot (836,638)": {"uv": [836, 638], "rpx": 5, "y": -22.35, "mode": "rim", "band": 0.4}
+}}

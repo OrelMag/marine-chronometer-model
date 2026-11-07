@@ -1,0 +1,19 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx/2_Kirow_247_A.jpg", "features": {
+ "hole near 12 (open, 512,183)": {"uv": [512, 183], "rpx": 16, "y": -22.35},
+ "brass pin near 12 (568,188)": {"uv": [568, 188], "rpx": 13, "y": -22.35},
+ "hole with screw (610,175)": {"uv": [610, 175], "rpx": 13, "y": -22.35},
+ "pillar screw at 6 (452,830)": {"uv": [452, 830], "rpx": 28, "y": -25.2},
+ "pillar screw at 12 (455,187), check": {"uv": [455, 187], "rpx": 28, "y": -25.2},
+ "pillar screw at 9 (838,540), check": {"uv": [838, 540], "rpx": 28, "y": -25.2},
+ "open brass hole at 6 (510,855)": {"uv": [510, 855], "rpx": 15, "y": -22.35},
+ "dark hole (350,770)": {"uv": [350, 770], "rpx": 16, "y": -22.35},
+ "dark hole under bridge edge (325,745)": {"uv": [325, 745], "rpx": 16, "y": -22.35, "search": 6},
+ "open hole right (848,600)": {"uv": [848, 600], "rpx": 17, "y": -22.35},
+ "small hole right (873,636)": {"uv": [873, 636], "rpx": 5, "y": -22.35, "search": 3},
+ "small pin (750,720)": {"uv": [750, 720], "rpx": 5, "y": -22.35, "search": 3},
+ "detent block screw (829,690)": {"uv": [829, 690], "rpx": 14, "y": -24.6},
+ "intermediate chaton (428,645)": {"uv": [428, 645], "rpx": 16, "y": -22.6},
+ "seconds chaton (513,707)": {"uv": [513, 707], "rpx": 16, "y": -22.6},
+ "escape endstone setting (611,705)": {"uv": [611, 705], "rpx": 22, "y": -22.65},
+ "small hole by ring (906,770)": {"uv": [906, 770], "rpx": 6, "y": -22.35, "search": 3}
+}}

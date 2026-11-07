@@ -1,0 +1,10 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx/3_Kirow_247_uZ.jpg", "features": {
+ "pillar screw at 6, dial side (560,830)": {"uv": [560, 830], "rpx": 27, "y": 6.2},
+ "pillar screw at 9, dial side, check": {"uv": [183, 550], "rpx": 27, "y": 6.2},
+ "brass-ringed hole (727,742)": {"uv": [727, 742], "rpx": 15, "y": 3.35},
+ "small hole by it (708,768)": {"uv": [708, 768], "rpx": 5, "y": 3.35, "search": 3},
+ "hole (193,600)": {"uv": [193, 600], "rpx": 15, "y": 3.35},
+ "small hole at 6 (500,850)": {"uv": [500, 850], "rpx": 4, "y": 3.35, "search": 3},
+ "dark hole near 12 (500,195)": {"uv": [500, 195], "rpx": 13, "y": 3.35},
+ "escape lower jewel setting (400,707)": {"uv": [400, 707], "rpx": 14, "y": 6.5}
+}}

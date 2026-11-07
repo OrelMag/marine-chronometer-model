@@ -1,0 +1,132 @@
+{
+ "photo": "References/wempe/photos/dg-chrono-6mx/3_Kirow_247_uZ.jpg",
+ "f0": 3000,
+ "eye": [
+  0,
+  340,
+  0
+ ],
+ "look": [
+  0,
+  5,
+  0
+ ],
+ "xdir": [
+  1,
+  0,
+  0
+ ],
+ "points": {
+  "centre arbor": {
+   "xyz": [
+    0,
+    12,
+    0
+   ],
+   "uv": [
+    499.5,
+    519.0
+   ]
+  },
+  "up-and-down arbor": {
+   "xyz": [
+    0,
+    10,
+    -23
+   ],
+   "uv": [
+    499.5,
+    315.5
+   ]
+  },
+  "change wheel arbor": {
+   "xyz": [
+    -10.91,
+    8.5,
+    6.3
+   ],
+   "uv": [
+    401,
+    577
+   ]
+  },
+  "fusee axis, up-and-down pinion end": {
+   "xyz": [
+    -16.71,
+    10.05,
+    -15.29
+   ],
+   "uv": [
+    349.5,
+    387.5
+   ]
+  },
+  "hole 45 screw (centre)": {
+   "xyz": [
+    24.784,
+    4.0,
+    -6.0
+   ],
+   "uv": [
+    714.5,
+    469
+   ]
+  },
+  "intermediate arbor jewel": {
+   "xyz": [
+    9.91,
+    7.0,
+    15.17
+   ],
+   "uv": [
+    586,
+    652
+   ]
+  },
+  "seconds arbor jewel": {
+   "xyz": [
+    0,
+    7.0,
+    23
+   ],
+   "uv": [
+    500,
+    719
+   ]
+  }
+ },
+ "circles": {
+  "WN-ps pillar 11 head": {
+   "c": [
+    -36.858,
+    6.2,
+    3.225
+   ],
+   "r": 3.2,
+   "uv": [
+    183,
+    550
+   ],
+   "rpx": 28
+  },
+  "up-and-down wheel tips (r 17.16)": {
+   "c": [
+    0,
+    9.05,
+    -23
+   ],
+   "r": 17.16,
+   "uv": [
+    499.5,
+    315.5
+   ],
+   "rpx": 152,
+   "arc": [
+    100,
+    260
+   ],
+   "w": 0
+  }
+ },
+ "dist": 600
+}

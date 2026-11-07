@@ -1,0 +1,3 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx/2_Kirow_247_A.jpg", "features": {
+ "near pin (776,707)": {"uv": [776, 707], "rpx": 5.5, "y": -22.35, "mode": "rim", "band": 0.35},
+ "far pin (837,640)": {"uv": [837, 640], "rpx": 5.5, "y": -22.35, "mode": "rim", "band": 0.35}}}

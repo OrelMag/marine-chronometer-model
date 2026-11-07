@@ -1,0 +1,7 @@
+{"photo": "References/wempe/photos/dg-chrono-6mx/2_Kirow_247_A.jpg", "features": {
+ "pillar screw at 6 (WN-57, pillar 39)": {"uv": [452, 830], "rpx": 28, "y": -25.2, "mode": "rim"},
+ "pillar screw at 12 (hole 49), check": {"uv": [455, 187], "rpx": 28, "y": -25.2, "mode": "rim"},
+ "pillar screw at 9 (hole 11), check": {"uv": [838, 540], "rpx": 28, "y": -25.2, "mode": "rim"},
+ "detent block fixing screw head": {"uv": [829, 690], "rpx": 14, "y": -24.6, "mode": "rim", "band": 0.3},
+ "upper cock screw (hole 8), check": {"uv": [514, 335], "rpx": 28, "y": -28.4, "mode": "rim"}
+}}
