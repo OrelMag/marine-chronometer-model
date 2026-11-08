@@ -1,22 +1,115 @@
 # The 6MX's case, reviewed (8 November 2026)
 
-DRAFT: in progress. The blind readings (`blind-bowl-bezel.md`, `blind-gimbals-box.md`) are still being made.
-
 The owner asked for a thorough review of everything outside the movement on the Wempe page's Soviet 6MX version (`rev=6mx`):
-the bowl, the bezel (its thread and its shape), the brackets, the gimbal ring and its pivots, the transit lock, the closing plate,
-the key and the boxes. The review is to be audited afterwards, so each row says where its reading came from and how sure it is.
-Nothing in the model has been changed.
+- the bowl;
+- the bezel, its thread and its shape;
+- the brackets;
+- the gimbal ring and its pivots;
+- the transit lock;
+- the closing plate;
+- the key;
+- the boxes.
+
+The review is to be audited afterwards, so each row says where its reading came from and how sure it is.
+
+**Nothing in the model has been changed.** The fixes wait for the owner's choice.
 
 ## How it was done
 
-- **Blind readings.** Two agents read the photographs and videos without seeing the model's numbers: `blind-bowl-bezel.md` and
-  `blind-gimbals-box.md`. They were given only the scale features (the movement ring's flange Ø 105.95, the sub-dials 23 either
-  side, the TU's 190 box), the photograph list and the source ranking.
-- **Not blind.** The reviewer (Session Alpha) had read `case.js` before looking at any photograph. Every row marked
-  "known beforehand" comes from that side: renders of the model beside the photographs, and the code checked against itself and
-  against the project's own tools' output.
-- **Ranking.** Kirov No. 247 decides, then the 1950s Kirovs (009, 91, 92, 308, 707, 1564, 2973), then the later Kirov-Poljots
-  and Poljots. Kirow "DEC" 422 and 479 come from dg-chrono's *Geburt des 6MX*: a Lange rough movement finished by NII Chasprom,
-  with a German base. They rank last.
-- **Renders.** `caserender.py` draws the Wempe page's case parts alone in any version. The renders and frames stay outside the
-  repository, in `E:\mc-video\oq\6mx-case\`.
+- **Blind readings.** Two agents read the photographs and videos without seeing the model's numbers. Their ledgers, with every reading, its frame, its scale and its ±, are `blind-bowl-bezel.md` and `blind-gimbals-box.md`. Their scripts are in this folder; their frames are in `E:\mc-video\oq\6mx-case\`. They were given only:
+  - the scale features: the movement ring's flange Ø 105.95, the sub-dials 23 either side of the centre, and the TU's 190 box;
+  - the photograph list;
+  - the source ranking.
+- **Not blind.** The reviewer (Session Alpha) had read `case.js` before looking at any photograph. Rows marked **(known)** come from that side:
+  - the code checked against itself and against the project's own tools' output;
+  - renders of the model's case beside the photographs (`caserender.py`).
+- **The comparison.** The model's value in each row below is read from `case.js` as of `origin/main` adcb0c8d (release 3.83.02).
+- **Ranking.**
+  1. Kirov No. 247 decides.
+  2. Then the 1950s Kirovs (009, 91, 92, 308, 707, 1564, 2973).
+  3. Then the later Kirov-Poljots and Poljots, and Kirova No. 14100 (`References/wempe/photos/chasy-ru-9985-kirova-14100/`, opened for the first time here).
+  4. Kirow "DEC" 422 and 479 rank last. They come from dg-chrono's *Geburt des 6MX*: a Lange rough movement finished by NII Chasprom, on a German base.
+- **The weak link.** No photograph carries a ruler.
+  - **Sure:** absolute sizes on the bowl's rim rest on Kirov 247's dial photograph (the flange and the rim fitted as ellipses, 0.2 px rms).
+  - **±6-8 % and doubtful:** sizes read off side photographs through a chain of ratios.
+  - **Doubtful even where they agree with each other:** DEC 422's heights, which rest on a scale set by its own collar.
+
+### Verdicts
+
+- **sure:** the code's own numbers, or two or more chronometers that agree.
+- **likely:** two chronometers, or one clear photograph with a scale at the same depth.
+- **doubtful:** a single photograph, or a chained scale.
+- **can't tell:** no photograph decides it.
+
+## Findings, most important first
+
+### A. Faults in the model, sure
+
+| # | What | Evidence | Model |
+|---|---|---|---|
+| A1 | **The 6MX bowl can't turn over in its gimbal ring to be wound.** The page's Wind turns it 180° about its case pivots, and in the 6MX version it passes through the ring at 52.5° and through the box at 60°. | (known) The project's own `massprops.py --model wempe` output, `tools/gimbals_wempe_6mx.json`: `bowlInRing: [52.5, 52.5]`, `stops.bowl: 60.5 / 59.5 against box`. The drawings' version: `bowlInRing: [null, null]`. `app.js:776` turns `CS.bowl.rotation.z` to −π in every version. Real 6MXs are turned over in their ring to wind: DIxob2Rl4dc 7:05-7:07, Uy8A88_j-cA 5:16-5:18, the 6MX instruction pp. 3-4 (cited in `app.js`). | The 6MX bowl hangs `DY6` = 7.0 lower in the gimbals than the drawings' bowl (`case.js:37`). It keeps the drawings' ring, Ø 140 inside. Its foot's edge (r 36.7 at YB − 65) is then 76.1 from the gimbal centre, against the ring's 70. |
+| A2 | **The 6MX transit lock can't reach the hook it locks on.** | (known) The 6MX lever lies over the ring, its underside YP + 12.5 (`dims.js` `LOCKQ.dy6`), and it never turns (`if(!L6)LKT.push(tn)`). The locking bracket's hook top is at YB + 8.5 on the bowl, which hangs DY6 lower: YP + 6.8, inside the ring's height. The ring has no slot in the 6MX version (`case.js` "the 6MX's without the slot"). The code's own source says the opposite: Romanov 1975 p. 204, quoted for the 6MX, "the locking plate ... passes through the slot of the outer ring". The blind reader found no lever on any 6MX bowl or ring photographed (B4 below). | Lever, knob and bracket built as the drawings' lock with a steel lever and black knob, laid over the ring. |
+| A3 | **The engraved + and − by the contact sockets aren't drawn.** | blind-bowl-bezel (247, 2973): a `+` over the left group's third bush and a `−` over the right group's, both sure. | (known) `case.js:366` sets `userData.mark` on each socket, and nothing reads it. |
+| A4 | **The bracket screws pass through solid brass.** | (known) The 6MX case brackets' and locking bracket's `sweepS` cut only the pivot hole (`case.js:421-431`). The six `6MX.bks` screws stand through solid metal. Their `bom.json` line says "in slots" but has `rel: []`, so `bom.py` never measures them. The drawings' brackets had their holes cut on 28 October 2026 (10-M10). | No hole and no slot (see B2 for the slots the photographs show). |
+
+### B. Model against the photographs: mismatches, likely
+
+| # | Part | Photographs say (blind) | Model (known) | How sure |
+|---|---|---|---|---|
+| B1 | **Bezel knurl** | A diamond knurl, its grooves ±28° ±3° to the axis, pitch about 1.2 across the grooves (DEC 422; 14100 and 09777 the same, by eye). | 360 straight teeth, 0.4 deep; the comment admits "diamond on the photographs". | sure that it is diamond; the pitch doubtful |
+| B2 | **Case brackets' screw slots** | Each strap's two screws sit in horizontal (circumferential) slots about 5 high, so the bracket slides round the bowl. Seen on 247, 2973 and 422. | No slots, no holes (A4). | sure (three chronometers) |
+| B3 | **Locking bracket's hook** | The plate bends out into a hook with a horizontal slot, about 3.5 × 9, open toward the case bracket. Its two screws are one above the other in one vertical slot. Seen on 247 and 2973; DEC 422 has a shorter L. | A plain block, sector r 62-67.5, with no slot and no vertical slot for the screws. | likely (two chronometers) |
+| B4 | **Bracket screw heads** | Case brackets Ø 9.6-10.1; locking bracket Ø 6.8 (247, 2973, 422; ±6-8 %). The reviewer's own check on 247's 12_ against its rim: about Ø 9. | All six Ø 4.8 (`screw(...,2.4,...)`). | likely (three chronometers on a chained scale; the factor of two is far outside its ±) |
+| B5 | **Glass height** | The glass sits at or a little under the bezel's front lip, not proud (DEC 422, 09777; 14100 by the reviewer, flush with a narrow lip). | It stands 2.5 proud of the lip: its top at YB + 16.0, the lip at YB + 13.5. The comment calls it "estimated: the photographs give no height". | likely |
+| B6 | **6MX closing plate / shutter** | No turning plate with a knob. On the Poljot (Uy8A88_j-cA 5:19-5:27) a pin slides in a short slot to open the hole; on 14100 the hole is open. | The drawings' turning plate, flat, with a domed knob at r 19 and the drawings' spiral closing spring. The comment says "the 6MX's own is a pin in a slot". | likely (one video and one photograph; the code agrees) |
+| B7 | **Key** | Brass or gilt, a small round bow Ø 17-22 on a short grip, the tube with its square socket (doubtful on size). DIxob2Rl4dc 6:57-7:00 (VIDEOS.md): "a flat round brass paddle on a short tube". | The 1943 one-way key: a black phosphated body and a Ø 34.5 paddle (`rev 'last 6mx 1943'`). | likely in colour; doubtful in size |
+
+### C. Readings that differ but can't decide yet (doubtful)
+
+| # | Part | Blind reading | Model (known) | Note |
+|---|---|---|---|---|
+| C1 | Bezel profile | A bell R 58.2 → 60.5 over 4.8, a plain band of about 10, the diamond knurl 5.6 at the glass end. Widest Ø 120.8 ±1.5; height about 21 ±3, the photo cut short at its bottom edge (DEC 422 only). 14100 looks knurled over more of its face. | A bell r 56.1 → 57.9, the knurl r 58.3 (Ø 116.6) 5.55 long at the glass end, a plain lip; 12.95 high from its lower edge to the lip. Traced on DEC 422 through `Y6`, a row-to-mm map whose two anchors are the bowl's foot at the drawn YB − 65 and "the glass 0.65 over the hands". The bowl itself left that map on 18 October 2026. | The order (bell, band, knurl, lip) agrees. The sizes rest on DEC 422, the lowest-ranked source, on both sides. No 1950s Kirov's bezel is photographed side on. |
+| C2 | Bezel's lower edge to the collar | A dark gap of about 1.5 ±0.5, the thread showing as fine lines (DEC 422, 09777). | 1.4 (YB + 0.55 to the collar at YB − 0.85). | match |
+| C3 | Thread pitch | 1.0 ±0.25: 5-7 ridges over about 5.2 (247, 2973). | 0.75, from Kirov-Poljot 24020 by a row spectrum. | within the blind ±; can't tell |
+| C4 | Thread hand | can't tell (the helix's lead is invisible on every frame). | Right-hand (estimated). | can't tell |
+| C5 | Rim (thread) Ø | 110.1 ±0.4 (247's dial photograph; sure). | Crests Ø 110.55. | 0.45 over: at the edge of the ±. The model's 110.5 came from the same photograph through dialtrace's fit. |
+| C6 | Neck and collar | The thread runs about 5.2 down from the rim's top, then a plain neck about 2.8, then the collar Ø 113.6 ±1 with a straight wall about 7.5 and a rounded shoulder 3.5 (2973, 422). | Thread 5.55 to the collar, an undercut at its root, the collar r 56.6 (Ø 113.2) only 2.2 high (h −5.55 to −7.76). | The collar's Ø matches. Its height and the neck are a likely mismatch on two photographs, but on a chained scale. |
+| C7 | Body Ø | 107-108 (2973's ratio to the collar, 0.946). | 104.8 (r 52.4; Gamma's ratio on the same photograph, 0.93). | Two readers part on one photograph by 2 %. Can't tell. |
+| C8 | Body, cone and foot heights | Body about 36.7; the cone 61° from the axis, R 52 → 38.3 over 8.4; the foot a lip ring Ø about 76, about 5.5 tall; about 70 overall. | Body to h −46.7; the cone 8.6 tall to r 36.7; the foot on to YB − 65 (14.4 tall, "its end isn't seen"); 69.7 overall. | The cone agrees. The foot's 5.5 against 14.4 matters for A1: a shorter foot is the likeliest way the real bowl clears its ring. Doubtful (one chained scale). |
+| C9 | Notch through the rim | 1.5 wide, its floor flat, through the top 4 of about 7 ridges, just beside the case bracket's upright: 24020 only, hidden on 247 and 2973. | 1.8 wide at 12 o'clock, under the case bracket's block; its depth estimated. | can't tell (a later chronometer only) |
+| C10 | Case bracket | A T: a strap 65-75 long and 11-14 high round the bowl, an upright 12 ±1 wide carrying a plain hole Ø 4.5 ±0.6 about 3 under the rim's top (247; doubtful). | Wings about 64 long and 9.7 high, a block 8.7 wide, the hole Ø 3.2, 4.8 under the block's top: YB + 1.7, 3.0 under the rim's top. | The form matches. The width, hole and strap height read larger on a ±6-8 % scale. Doubtful. |
+| C11 | Locking bracket's place | 55 ±5° round from the case bracket (247 56.7°, 2973 60.4°, 422 52.5°). | 50° (kept from the drawings; the comment says 247 reads 35-43°, and Gamma's 7 November reading agreed). | The readers disagree. Can't tell without a camera fitted on the bowl. |
+| C12 | Gimbal ring | Outside about 130 ±9, a band 9-11 high and 2.5 thick; each pivot on a rectangular pad about 40 × 12 outside the ring, one with three screws; a long thin slot (about 30 × 2) beside one pad; no knurled lock nuts seen (14100). | The drawings' ring: Ø 140 inside × 4 × 24 high, brass, its bracket at 3 o'clock, knurled lock nuts Ø 22 inside at the case pivots (in every version), no slot in the 6MX's. | The reviewer looked at 14100's 9C22A7DC: the ring lies under the bowl, so perspective makes it read small, and 130 is impossible (the brackets reach r 64.3). The band's height and the pads are worth a camera fit. The slot may be the transit lock's (A2). Can't tell on sizes. |
+| C13 | Box tiers | Seen from the top down, about 24, 60 and 105 (the closed front, the face taken as 190). | 25, 68 and 97. | 247 read 73 and 2973 63 for the middle tier (Gamma, 7 November); the owner kept 68. No change. |
+| C14 | Box badge | About 47 × 27, against the hasp's 53. | 38.6 × 24. | Gamma read the badge at 0.78 of the hasp on 247 and 0.75 on 2973; this reader 0.89. Doubtful. |
+| C15 | Glass's white ring | A white annulus about 8 wide inside the glass's edge: paint, a gasket, or the dial seen through it. | None. | can't tell |
+
+### D. Matches
+
+The model agrees with the blind readings on:
+- the bezel screwed on, coming off with its glass as one ring (14917, rAw2zmulpk8 0:23-0:28);
+- the knurl band at the glass end and the bell at the bowl's end;
+- the collar's Ø;
+- the cone's angle and run;
+- the case brackets as a symmetric strap with an upright carrying the pivot hole;
+- the locking bracket as an upright plate with a hook at the rim;
+- the six contact sockets in two groups of three on fibre washers;
+- the box's three tiers, its two hasps with knurled knobs, its corner straps, side ring handles, lacquered red wood and the outer box with its scalloped front;
+- the bowl and bezel in plain brushed brass on the 1950s Kirovs.
+
+## What the owner is asked
+
+The fixes are not made. The findings in A and B are proposed for fixing in the 6MX version only, as the owner chose for the 7 November audit: where the 6MX's photographs differ from a shared part, the 6MX version is built as photographed.
+
+Each fix to the bowl, bezel or gimbals then needs the following checks:
+- `massprops.py --model wempe` for the 6MX, then `wempe_gimbals.js`;
+- `solids.py` and `audit.py box`;
+- `bom.py` in the 6MX state;
+- `isolate.py` beside the photographs.
+
+A1 needs a decision on what changes. The choices are:
+- the foot shortened, as C8 reads it;
+- `DY6` reduced;
+- a larger 6MX ring.
+
+No photograph yet decides between them. A camera fitted on 14100's ring photograph, or on moMvyx8eXfo 3:09-3:37 (the bowl lifted out of the ring), would.
