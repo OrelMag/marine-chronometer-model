@@ -10,6 +10,7 @@ from inline import inline,remote_refs
 from changelog import stamp
 html,ver=stamp(inline((root/'index.html').read_text(encoding='utf-8'),root))
 html=html.replace('href="../chronometer-working-model/index.html','href="../../chronometer-working-model/dist/chronometer-working-model.html')   # the links to the Hamilton, from dist/ to its built page, by prefix, so its essay's sections (#essay=detent) keep their hashes (the root build points them at the site's home page)
+html=html.replace('data-noinline src="renders/','data-noinline src="../renders/')   # the assembled sheet, served beside the page, not inlined: from dist/ to renders/ (the root build puts it in site/renders/)
 html=html.replace('href="verification/','href="../verification/')   # the links to its report (verification/index.html beside the page), from dist/ (the root build points them at site/wempe/verification/)
 html=html.replace('href="../essay/index.html','href="../../essay/dist/the-marine-chronometer.html')   # its Essay tab and links to the essay, the essay's own page (../essay/), from dist/ to its built page (the root build points them at the site's)
 (root/'dist').mkdir(exist_ok=True)

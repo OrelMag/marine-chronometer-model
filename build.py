@@ -169,6 +169,11 @@ def main():
     # the Wempe, the home page
     if WE_REP not in wempe:sys.exit(f'the Wempe page has no {WE_REP}: its link to its report (wempe/build.py), which the site points at site/wempe/verification/')
     write(SITE/'index.html',meta(wempe.replace(TO_ESSAY,'href="essay/').replace(WE_HAM,'href="hamilton/').replace(WE_REP,'href="wempe/verification/'),a.site_url,'index.html',img='social-wempe.png',keep=a.keep_html))
+    NI=re.findall(r'data-noinline src="\.\./(renders/[^"]+)"',wempe)   # the Wempe's images served beside the page (inline.py's data-noinline: the assembled sheet, 2 MB, kept out of the home page)
+    if NI:
+        h=(SITE/'index.html').read_text(encoding='utf-8')
+        for r in NI:(SITE/r).parent.mkdir(parents=True,exist_ok=True);shutil.copy(WEMPE/r,SITE/r);h=h.replace(f'data-noinline src="../{r}"',f'data-noinline src="{r}"')
+        write(SITE/'index.html',h)
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     if (WEMPE/'parts').is_dir():shutil.copytree(WEMPE/'parts',SITE/'parts')   # the Wempe's parts as recipes: each one's STEP file and operation sheet (tools/recipes_site.py), linked from its card

@@ -722,7 +722,9 @@ Every element is then clicked on the page in a view that isn't cut. The stills
 are `penrender.py --photo` (the export's own materials, a studio light; a
 shot's `cut` plane cuts the solids crossing it with exact booleans). Being a
 GPU render, the root build never renders it again: it only notes when the sheet
-is older than the page. Not run by `ci.py`.
+is older than the page. The image (about 2 MB) is served beside the page
+(`site/renders/`), not inlined into it (`inline.py`'s `data-noinline`), so the
+home page stays its size. Not run by `ci.py`.
 
 ### The lettered Laid out sheet (`laidout.py`)
 
