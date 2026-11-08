@@ -509,7 +509,8 @@ The site is live at https://www.marinechronometermodel.com, a Cloudflare Worker
 that serves `site/` as static files. `wrangler.jsonc` at the root describes it,
 with its custom domains; `worker.js` redirects every other address
 (https://marinechronometermodel.com, https://marinechronometer.orelmac.workers.dev
-and plain `http://`) to the main one, keeping the path. To update it (Node.js provides `npx`; the first run opens a
+and plain `http://`) to the main one, keeping the path, and marks every 404 `no-store`, so a file
+asked for before a release finished going up isn't kept missing. To update it (Node.js provides `npx`; the first run opens a
 browser window to log in to Cloudflare):
 
     python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com
