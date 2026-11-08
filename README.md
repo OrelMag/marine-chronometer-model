@@ -695,6 +695,35 @@ for the Wempe's eleven plates (2 November 2026):
    full size. Ask Claude for it: it publishes such a page as a private
    claude.ai artifact, which you share from its Share menu.
 
+### The assembled sheet, photographed (`assembled.py`)
+
+The Wempe put together, not laid out, rendered photographically in Blender's
+Cycles and lettered: the train side, the dial side with the dial and hands
+off, the side between the plates, and three sections cut through the arbors
+(the barrel and fusee, the centre and seconds, the balance and escape wheel),
+then eight close-ups of the mechanisms, some cut open, and the key. Every
+element of the textbook's drawing keeps its letter, as on the Laid out sheet,
+and the parts the drawing doesn't letter are numbered on from 10, each with
+what it does (condensed from its card). Each cut face is hatched and outlined
+in a thin line of its own, so parts cut side by side read apart. The Wempe page
+shows it under Take it apart while neither Exploded nor Laid out is on.
+
+    python assembled.py --only-checks          # the page's half alone: every letter placed and clicked (about 3 minutes)
+    python assembled.py --scale 0.5 --samples 64   # a draft: the stills at half size (about 15 minutes)
+    python assembled.py --scale 0.75 --samples 96 --write   # into the page: renders/assembled_sheet.webp and its stamp (about 15 minutes)
+    python assembled.py --relayout             # the sheet again from the last stills, no browser or Blender
+    python assembled.py --check                # exit 1 if the page changed since the sheet was written
+
+Each letter is placed by the page's own pick on the page's camera: every mesh
+drawn once in a colour of its own (in a section under the same clipping plane,
+both sides, so a cut solid's inside counts as its cut face) and read back; the
+anchor is the point deepest inside the part where the page's own ray names it.
+Every element is then clicked on the page in a view that isn't cut. The stills
+are `penrender.py --photo` (the export's own materials, a studio light; a
+shot's `cut` plane cuts the solids crossing it with exact booleans). Being a
+GPU render, the root build never renders it again: it only notes when the sheet
+is older than the page. Not run by `ci.py`.
+
 ### The lettered Laid out sheet (`laidout.py`)
 
 The Laid out view, the train in one line as the textbooks draw it, rendered on

@@ -60,33 +60,33 @@ MORE=[('Not in the drawing: frame and bearings',[
   ('22','Spring hook block','barrel.hook','Riveted inside the drum’s wall: it takes the mainspring’s outer end.'),
   ('23','Steg (spring brace)','barrel.steg','A steel bar inside the drum’s wall, 45° back from the hook block: the outer coil is threaded between it and the wall.'),
   ('24','Arbor hook','barrelArbor.hook','The pin in the arbor’s core that takes the mainspring’s inner end.'),
-  ('26','Click wheel','fusee.clickWheel','A 35-tooth ratchet screwed to the fusee’s large end: running, it pushes the maintaining clicks forward; winding, they ride over its backs.'),
-  ('27','Maintaining clicks','maintaining.clicks','Two blued steel clicks on screws in the maintaining ratchet’s cup, pressed onto the click wheel by their springs.'),
-  ('28','Click springs','maintaining.springs','Two bronze strips pinned inside the cup’s wall, each pressing a click onto the click wheel.'),
-  ('29','Maintaining spring','maintaining.spring','An open steel ring, its eye pinned to the fusee wheel and its other end to the ratchet: it carries the whole drive, and drives the train alone while the key turns.'),
-  ('30','Maintaining detent’s spring','maintDetent.spring','A straight steel wire in a stud in the top plate: bent out by the detent’s back, it presses the detent onto the ratchet’s teeth.'),
-  ('31','Cover plate','coverPlate.plate','A steel disc screwed on the fusee’s small end over the stop bar’s slot: it keeps the bar in.'),
-  ('32','Vorreiber','vorreiber.collar','A steel collar pinned to the fusee arbor under the fusee wheel: it keeps the wheel and the maintaining work on the arbor.'),
-  ('33','Dust plate','dustPlate','A brass disc on the winding square, turning with it inside the dust bush.')]),
+  ('25','Click wheel','fusee.clickWheel','A 35-tooth ratchet screwed to the fusee’s large end: running, it pushes the maintaining clicks forward; winding, they ride over its backs.'),
+  ('26','Maintaining clicks','maintaining.clicks','Two blued steel clicks on screws in the maintaining ratchet’s cup, pressed onto the click wheel by their springs.'),
+  ('27','Click springs','maintaining.springs','Two bronze strips pinned inside the cup’s wall, each pressing a click onto the click wheel.'),
+  ('28','Maintaining spring','maintaining.spring','An open steel ring, its eye pinned to the fusee wheel and its other end to the ratchet: it carries the whole drive, and drives the train alone while the key turns.'),
+  ('29','Maintaining detent’s spring','maintDetent.spring','A straight steel wire in a stud in the top plate: bent out by the detent’s back, it presses the detent onto the ratchet’s teeth.'),
+  ('30','Cover plate','coverPlate.plate','A steel disc screwed on the fusee’s small end over the stop bar’s slot: it keeps the bar in.'),
+  ('31','Vorreiber','vorreiber.collar','A steel collar pinned to the fusee arbor under the fusee wheel: it keeps the wheel and the maintaining work on the arbor.'),
+  ('32','Dust plate','dustPlate','A brass disc on the winding square, turning with it inside the dust bush.')]),
  ('Not in the drawing: balance and escapement',[
-  ('34','Balance staff','balance.staff','The hardened steel staff: its pivots run in the jewels in the two cocks; it carries the collet, the arm on its hub and the rollers.'),
-  ('35','Compensation masses','balance.masses','Four brass masses on the rim, each held by a screw through its jaw: their place on the cut rim sets the temperature compensation.'),
-  ('36','Timing screws and weights','balance.timing','A timing screw across the rim at each end of the arm, carrying a brass weight: turned in or out, they set the rate.'),
-  ('37','Hairspring collet','hairspring.collet','The split collet on the staff that holds the hairspring’s inner end.'),
-  ('38','Hairspring stud','stud.stud','A small brass L on the balance cock that holds the hairspring’s outer end; slid along the cock’s slot it sets the pinning point.'),
-  ('39','Impulse roller','rollers.impulse','The impulse roller and its sapphire stone, which the escape wheel’s tooth pushes.'),
-  ('40','Discharge roller','rollers.discharge','The small collar and its discharge stone that work the gold spring.'),
-  ('41','Gold spring','detent.gold','The gold passing spring on the detent, resting on its horn: the discharge stone lifts the detent through it one way and passes it the other.'),
-  ('42','Detent block','detentBlock.block','The brass L under the top plate that carries the detent, its foot clamped to its base.'),
-  ('43','Balance jewels, upper','balanceJewelsUp.jewel','The upper hole jewel and its setting, with the endstone over it, in the upper cock.'),
-  ('44','Balance jewels, lower','balanceJewelsLow.jewel','The lower hole jewel and its setting, with its endstone, in the lower cock.'),
-  ('45','Escape wheel’s upper jewel','escJewelUp','The escape arbor’s upper hole jewel, in its setting flush with the top plate’s inner face.'),
-  ('46','Escape wheel’s upper endstone','escEndstoneUp.setting','The endstone over the escape arbor’s upper pivot, in a gilt setting in the top plate.'),
-  ('47','Escape wheel collet','escapeWheel.collet','The brass collet the escape wheel is pressed on.')]),
+  ('33','Balance staff','balance.staff','The hardened steel staff: its pivots run in the jewels in the two cocks; it carries the collet, the arm on its hub and the rollers.'),
+  ('34','Compensation masses','balance.masses','Four brass masses on the rim, each held by a screw through its jaw: their place on the cut rim sets the temperature compensation.'),
+  ('35','Timing screws and weights','balance.timing','A timing screw across the rim at each end of the arm, carrying a brass weight: turned in or out, they set the rate.'),
+  ('36','Hairspring collet','hairspring.collet','The split collet on the staff that holds the hairspring’s inner end.'),
+  ('37','Hairspring stud','stud.stud','A small brass L on the balance cock that holds the hairspring’s outer end; slid along the cock’s slot it sets the pinning point.'),
+  ('38','Impulse roller','rollers.impulse','The impulse roller and its sapphire stone, which the escape wheel’s tooth pushes.'),
+  ('39','Discharge roller','rollers.discharge','The small collar and its discharge stone that work the gold spring.'),
+  ('40','Gold spring','detent.gold','The gold passing spring on the detent, resting on its horn: the discharge stone lifts the detent through it one way and passes it the other.'),
+  ('41','Detent block','detentBlock.block','The brass L under the top plate that carries the detent, its foot clamped to its base.'),
+  ('42','Balance jewels, upper','balanceJewelsUp.jewel','The upper hole jewel and its setting, with the endstone over it, in the upper cock.'),
+  ('43','Balance jewels, lower','balanceJewelsLow.jewel','The lower hole jewel and its setting, with its endstone, in the lower cock.'),
+  ('44','Escape wheel’s upper jewel','escJewelUp','The escape arbor’s upper hole jewel, in its setting flush with the top plate’s inner face.'),
+  ('45','Escape wheel’s upper endstone','escEndstoneUp.setting','The endstone over the escape arbor’s upper pivot, in a gilt setting in the top plate.'),
+  ('46','Escape wheel collet','escapeWheel.collet','The brass collet the escape wheel is pressed on.')]),
  ('Not in the drawing: motion work',[
-  ('48','Change wheel pipe','changeWheel.pipe','The pipe the change wheel and its pinion are fixed on, running on the short stud.'),
-  ('49','Hour wheel pipe','hourWheel.pipe','The pipe the hour wheel is riveted on: it runs on the cannon tube and carries the hour hand through the dial.'),
-  ('50','Up-and-down wheel pipe','udWheel.pipe','The pipe the up-and-down wheel is riveted on, running on the long stud, the hand’s seat at its top.')])]
+  ('47','Change wheel pipe','changeWheel.pipe','The pipe the change wheel and its pinion are fixed on, running on the short stud.'),
+  ('48','Hour wheel pipe','hourWheel.pipe','The pipe the hour wheel is riveted on: it runs on the cannon tube and carries the hour hand through the dial.'),
+  ('49','Up-and-down wheel pipe','udWheel.pipe','The pipe the up-and-down wheel is riveted on, running on the long stud, the hand’s seat at its top.')])]
 FM=LO.FIGS['wempe'];FIG=FM['fig']+[(g,[(L,n,k) for L,n,k,_ in its]) for g,its in MORE]
 FUNC=dict(FM['func']);FUNC.update({L:t for _,its in MORE for L,_,_,t in its})
 ITEMS=[(L,n,k,(x[0] if x else '')) for _,g in FIG for (L,n,k,*x) in g]
@@ -102,11 +102,11 @@ VIEWS=[dict(name='train',sub='The train side, the top plate up',cam=(math.pi-0.4
   dict(name='sec_fusee',sub='Cut through the barrel and fusee arbors',cut=('barrel','fusee',1),pitch=0.16,dist=330,y=-11),
   dict(name='sec_centre',sub='Cut through the centre and seconds arbors',cut=('centre','seconds',-1),pitch=0.16,dist=330,y=-8),
   dict(name='sec_balance',sub='Cut through the balance and escape wheel arbors',cut=('balance','escape',-1),pitch=0.16,dist=330,y=-12)]
-PREF={}   # a letter's view where more than one shows it and the most-seen isn't the clearest (letter: view)
+PREF={'D':'sec_fusee','f':'sec_fusee','D′':'sec_fusee'}   # a letter's view where more than one shows it and the most-seen isn't the clearest (letter: view)
 # ---- the close-ups: (title, caption (from the parts' cards and the Laid out sheet's), the parts shown, those see-through, the camera's yaw and pitch, a cut (two arbors' centres or one and an angle, side)) ----
 INSETS=[
  dict(t='The barrel cut open',c='The mainspring coiled in its barrel, its outer end on the hook block behind the Steg, its inner end on the arbor’s hook; the set-up ratchet and its click on the arbor’s square above.',
-      show=['barrel','barrelArbor','mainspring','setupRatchet'],ghost=[],yaw=2.2,pitch=0.35,cut=('barrel',0.5,1)),
+      show=['barrel','barrelArbor','mainspring','setupRatchet','barrelBridge'],ghost=[],yaw=2.2,pitch=0.35,cut=('barrel',0.5,1)),
  dict(t='The fusee cut open',c='The chain on the fusee’s spiral; inside the small end the stop bar in its slot under the cover plate, and below the large end the click wheel, the maintaining ratchet with its clicks and spring, and the fusee wheel, kept on the arbor by the Vorreiber.',
       show=['fusee','fuseeWheel','maintaining','stopWork','coverPlate','vorreiber','chain'],ghost=[],yaw=2.2,pitch=0.3,cut=('fusee',0.5,1)),
  dict(t='Maintaining power',c='Harrison’s maintaining work, under the fusee (left out here): a steel ring spring in the fusee wheel’s recess carries the drive. While the key turns the fusee back to wind it, the maintaining detent holds the ratchet and the spring alone drives the train. The ratchet and wheel are drawn see-through.',
@@ -119,7 +119,7 @@ INSETS=[
       show=['balance','hairspring','stud','rollers','upperCock','lowerCock','balanceJewelsUp','balanceJewelsLow'],ghost=[],yaw=1.2,pitch=0.15,cut=('balance',1.2,1)),
  dict(t='Motion work and up-and-down work',c='Under the dial: the cannon pinion on the centre arbor drives the change wheel and pinion, which turn the hour wheel on the cannon tube; the pinion on the fusee arbor turns the up-and-down wheel on its stud, which shows the hours of running left.',
       show=['cannon','changeWheel','hourWheel','udWheel','udPinion'],ghost=[],yaw=0.5,pitch=-0.75),
- dict(t='The set-up and the stop work',c='On the barrel arbor the set-up ratchet and its click on the barrel bridge hold the mainspring’s starting tension; at full wind the stop bar, pushed out of the fusee’s small end by the chain, meets the stop pin in the top plate.',
+ dict(t='The set-up and the stop work',c='On the barrel arbor the set-up ratchet and its click on the barrel bridge hold the mainspring’s starting tension; at full wind the stop bar, pushed out of the fusee’s small end by the chain, meets the stop pin in the top plate (with the plate, not shown here).',
       show=['setupRatchet','barrelBridge','barrelArbor','fusee','stopWork','coverPlate','chain'],ghost=['coverPlate'],yaw=2.6,pitch=0.75)]
 
 # ---- the page's side: the cut plane and a camera square on to it, both from the movement's frame ----
@@ -155,7 +155,7 @@ def anchors(R):
     import base64,numpy as np
     from scipy.ndimage import distance_transform_edt
     W,Hh=R['W'],R['H'];a=np.frombuffer(base64.b64decode(R['px']),np.uint8).reshape(Hh,W,4)[::-1];idx=(a[...,0].astype(np.int32)<<16)|(a[...,1].astype(np.int32)<<8)|a[...,2]
-    out={}
+    out={'_mask':idx>0}
     for L,ks in R['items'].items():
         ks=[k for k in ks if k]
         if not R['items'][L]:out[L]={'n':0,'hits':0};continue
@@ -169,6 +169,21 @@ def anchors(R):
             pk,t=R['meshes'][idx[y0+y,x0+x]-1];C.append({'at':[float(x0+x+0.5),float(y0+y+0.5)],'depth':float(d[y,x]),'pk':pk,'title':t});sc[np.hypot(Y-y,X-x)<6]=-1
         out[L]=dict(n=len(R['items'][L]),hits=n,cands=C,**C[0])
     return out
+
+def stills_check(J):
+    """each view's Blender still against the page's drawing of it (the GPU pick's mask): their overlap, the offset of their middles, and the still opaque under every anchor
+    (the letters are placed on the page; the sheet shows Blender's still: this is what ties them). Gives the failures"""
+    import numpy as np
+    bad=[]
+    for V in VIEWS:
+        m=np.load(OUT/f"r_asm_{V['name']}_mask.npy");H0,W0=m.shape
+        a=np.asarray(Image.open(OUT/f"pen_wempe_{V['name']}.png").convert('RGBA').getchannel('A').resize((W0,H0),Image.BILINEAR))>128
+        iou=(m&a).sum()/max(1,(m|a).sum());c=lambda k:np.array(np.nonzero(k)).mean(1);off=float(np.hypot(*(c(m)-c(a))))
+        miss=[L for L,v in J['assign'].items() if v==V['name'] and not a[min(H0-1,int(J['views'][v][L]['at'][1])),min(W0-1,int(J['views'][v][L]['at'][0]))]]
+        cut=bool(V.get('cut'));ok=iou>=(0.93 if cut else 0.98) and off<=(8 if cut else 2) and not miss   # a section: the page draws a cut solid uncapped, its far inside showing where Blender's cut leaves the solid's far half hidden (the ring's flange under the plate: about 5 % of the drawing, none of it lettered)
+        print(f"{'  ' if ok else 'XX'} still {V['name']:12} overlap {iou:.3f}, middles {off:.1f} px apart"+(f", anchors off the still: {miss}" if miss else ''))
+        if not ok:bad.append(V['name'])
+    return bad
 
 def flat(src,dst,size,bg):
     """a Blender still on its transparent film laid on the sheet's ground, at the page's screenshot size"""
@@ -239,8 +254,10 @@ async def main():
                 cut={'p':q['p'],'n':q['n']}
             else:
                 yw,pt,dd,fov=V['cam'];await pg.evaluate(f"window.__cam({yw},{pt},{dd},{fov})");await pg.evaluate(f"window.__look({yw},{pt},{dd},{V['tgt'][0]},{V['tgt'][1]},{V['tgt'][2]})")
-            await pg.wait_for_timeout(2500);shot=OUT/f"r_asm_{V['name']}_page.png";await pg.screenshot(path=str(shot));size=Image.open(shot).size
-            vw=anchors(await pg.evaluate(PICK+"(%s)"%json.dumps(items)));vw={L:q for L,q in vw.items() if q.get('hits')} | {L:{'n':q.get('n',0),'hits':0} for L,q in vw.items() if not q.get('hits')}
+            await pg.wait_for_timeout(2500);shot=OUT/f"r_asm_{V['name']}_page.png";await pg.screenshot(path=str(shot))
+            vw=anchors(await pg.evaluate(PICK+"(%s)"%json.dumps(items)));import numpy as np;mk=vw.pop('_mask');np.save(OUT/f"r_asm_{V['name']}_mask.npy",mk)
+            size=(mk.shape[1]*dpr,mk.shape[0]*dpr)   # the stills at the canvas's own size (the play bar under it is no part of the view): the page's camera, aspect and all
+            vw={L:q for L,q in vw.items() if q.get('hits')} | {L:{'n':q.get('n',0),'hits':0} for L,q in vw.items() if not q.get('hits')}
             ok=await pg.evaluate(VERIFY+"(%s)"%json.dumps([[L,'',next(k for l,_,k,_ in ITEMS if l==L),[c['at'] for c in q['cands']]] for L,q in vw.items() if q.get('hits')]))
             for L,i in ok.items():
                 q=vw[L]
@@ -300,7 +317,9 @@ async def main():
     (OUT/'r_asm_checks.json').write_text(json.dumps(J,indent=1,ensure_ascii=False),encoding='utf-8')
     if fails:print('FAIL: '+', '.join(fails));sys.exit(1)
     if '--only-checks' in sys.argv:print('ok: the checks (no stills)');sys.exit(0)
-    render(PS,size);compose(J);return J
+    render(PS,size);bad=stills_check(J)
+    if bad:print('FAIL: the stills part from the page in '+', '.join(bad));sys.exit(1)
+    compose(J);return J
 
 def write(J):
     im=Image.open(OUT/'r_asm_sheet.png').convert('RGB');w=min(im.size[0],3600);im=im.resize((w,round(im.size[1]*w/im.size[0])),Image.LANCZOS);IMG.parent.mkdir(exist_ok=True);im.save(IMG,'WEBP',quality=86,method=6)
@@ -314,7 +333,12 @@ def write(J):
     print(f'wrote {IMG.relative_to(ROOT).as_posix()} ({IMG.stat().st_size//1024} KB, {w} px) and its stamp ({len(F)} files)')
 
 if __name__=='__main__':
-    if RELAY:J=json.loads((OUT/'r_asm_checks.json').read_text(encoding='utf-8'));compose(J)
+    if RELAY:
+        J=json.loads((OUT/'r_asm_checks.json').read_text(encoding='utf-8'))
+        for L,v in PREF.items():
+            if J['views'].get(v,{}).get(L,{}).get('hits'):J['assign'][L]=v
+        if stills_check(J):sys.exit('FAIL: the stills part from the page')
+        compose(J)
     else:
         if not GLB.exists():
             print('exporting',GLB.name,'(gltf_check.py --model wempe)',flush=True);OUT.mkdir(parents=True,exist_ok=True)

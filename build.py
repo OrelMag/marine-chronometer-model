@@ -141,7 +141,7 @@ def main():
     if subprocess.run([sys.executable,str(LT),'--model','wempe','--check'],cwd=LT.parent).returncode:
         subprocess.run([sys.executable,str(LT),'--model','wempe','--write','r_laidout'],cwd=LT.parent,check=True)
     # the Wempe's assembled sheet (wempe/renders/assembled_sheet.webp): photographed in Blender's Cycles on the GPU, so the build never renders it again, only says when a file
-    # the page loads changed since (assembled.py --check); rendered again by hand, python assembled.py --write (about 20-40 minutes)
+    # the page loads changed since (assembled.py --check); rendered again by hand, python assembled.py --write (about 15 minutes on the GPU)
     AT=MODEL/'tools/assembled.py'
     if subprocess.run([sys.executable,str(AT),'--check'],cwd=AT.parent,capture_output=True).returncode:print('note: the Wempe's assembled sheet is older than the page (python tools/assembled.py --write renders it again)')
     # the Wempe: its own build script writes its dist/ (no root copy)

@@ -356,10 +356,10 @@ for S in A['shots']:
             ln=mth('LESS_THAN',mth('FRACT',mth('ADD',t,ph)),0.22)
             mx=N('ShaderNodeMix');mx.data_type='RGBA';L(ln,mx.inputs[0]);mx.inputs[6].default_value=(*[c*0.78 for c in col],1);mx.inputs[7].default_value=(*[c*0.32 for c in col],1)
             L(mx.outputs[2],Pb.inputs['Base Color']);made_m.append(m);return m
-        made_m=[];cme.materials.append(None);bpy.context.view_layer.update();n=0
+        made_m=[];cme.materials.append(None);bpy.context.view_layer.update();n=0;dg0=bpy.context.evaluated_depsgraph_get()
         for o in K:
             if o.hide_render or o.type!='MESH':continue
-            mw=o.matrix_world;sd=[(mw@v.co-cp).dot(cn) for v in o.data.vertices]
+            mw=o.matrix_world;sd=[(mw@v.co-cp).dot(cn) for v in o.evaluated_get(dg0).data.vertices]
             if not sd:continue
             if max(sd)<=0:o.hide_render=True;cut.append((o,None))
             elif min(sd)<0:
@@ -383,6 +383,36 @@ for S in A['shots']:
             if m and grew(o):
                 m.solver='FLOAT';bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get()
                 if grew(o):o.hide_render=True;bad.append(o.name)
+        bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get();clip=[]
+        for i,(o,m) in enumerate(cut):
+            if not m or o.hide_render:continue
+            mw=o.matrix_world;EV=[mw@v.co for v in o.evaluated_get(dg).data.vertices]
+            P0=[mw@v.co for v in o.evaluated_get(dg0).data.vertices];K0=[q for q in P0 if (q-cp).dot(cn)>0]   # the posed solid's kept half, before the cut
+            lo=lambda Q,k:min(q[k] for q in Q);hi=lambda Q,k:max(q[k] for q in Q)
+            short=not EV or (bool(K0) and any(lo(K0,k)<lo(EV,k)-2e-4 or hi(K0,k)>hi(EV,k)+2e-4 for k in range(3)))
+            if not short:   # and its surface: every face wholly on the kept side must outlive the cut (the ring's far half once lost its faces but kept its extent)
+                def area(me,keep=False):
+                    W=[mw@v.co for v in me.vertices];s=0.0
+                    for f in me.polygons:
+                        Q=[W[i] for i in f.vertices]
+                        if keep and any((q-cp).dot(cn)<-1e-7 for q in Q):continue
+                        s+=sum(((Q[i]-Q[0]).cross(Q[i+1]-Q[0])).length/2 for i in range(1,len(Q)-1))
+                    return s
+                a0=area(o.evaluated_get(dg0).data,True);short=a0>0 and area(o.evaluated_get(dg).data)<0.98*a0
+            if not short and max(((q-cp).dot(-cn) for q in EV),default=0)<1e-5:continue   # cut right: nothing past the plane, and its kept half whole (the boolean once ate the ring's far half)
+            cm=m.object.material_slots[0].material;o.modifiers.remove(m);bpy.context.view_layer.update();ev=o.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            me=bpy.data.meshes.new_from_object(ev);bm=bmesh.new();bm.from_mesh(me);inv=mw.inverted();co=inv@cp;no=(inv.to_3x3().transposed().inverted()@(-cn)).normalized()
+            r0=bmesh.ops.bisect_plane(bm,geom=bm.verts[:]+bm.edges[:]+bm.faces[:],plane_co=co,plane_no=no,clear_outer=True,dist=1e-7)
+            ce=[x for x in r0['geom_cut'] if isinstance(x,bmesh.types.BMEdge)]
+            try:
+                f0=bmesh.ops.triangle_fill(bm,use_beauty=True,use_dissolve=False,edges=ce)['geom'];me.materials.append(cm);mi=len(me.materials)-1
+                for f in f0:
+                    if isinstance(f,bmesh.types.BMFace):f.material_index=mi
+            except Exception:pass
+            bm.to_mesh(me);bm.free();old=o.data;o.data=me;sk=[(k,k.show_viewport,k.show_render) for k in o.modifiers]
+            for k,_,_ in sk:k.show_viewport=k.show_render=False   # the copy is already posed
+            clip.append((o,old,me,sk));cut[i]=(o,None);o.hide_render=False
+        if clip:print('MC clipped by bisect (the boolean left them whole):',', '.join(o.name for o,*_ in clip)[:300],flush=True)
         print('MC cut',sum(1 for _,m in cut if m),'solids across the plane,',sum(1 for _,m in cut if not m),'beyond it'+(f'; {len(bad)} left out, their cut failed: '+', '.join(bad[:12]) if bad else ''),flush=True)
     sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{S['name']}.png");bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath,flush=True)
     if gh:   # then the faded parts alone on a clear film, which the paper lays over the drawing at a third
@@ -396,6 +426,9 @@ for S in A['shots']:
         else:o.hide_render=False
     for o in made:bpy.data.objects.remove(o,do_unlink=True)
     if S.get('cut'):
+        for o,old,me,sk in clip:
+            o.data=old;bpy.data.meshes.remove(me)
+            for k,v,r in sk:k.show_viewport,k.show_render=v,r
         for m in made_m:bpy.data.materials.remove(m)
         for me in made_me:bpy.data.meshes.remove(me)
         if fsl:fs.linesets.remove(fsl);sc.render.use_freestyle=not PHOTO
