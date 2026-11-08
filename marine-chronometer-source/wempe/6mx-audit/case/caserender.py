@@ -1,6 +1,6 @@
 """caserender.py: the Wempe page's 6MX case (or another version's) rendered alone, for comparing with the photographs (6MX case review, 8 November 2026).
 
-    python caserender.py OUT.png [--rev 6mx] [--parts bowl,bezel] [--look yaw pitch dist x y z] ... [--hide-contact]
+    python caserender.py OUT.png [--rev 6mx] [--parts bowl,bezel] [--look yaw pitch dist x y z] ... [--hide-contact] [--eval JS]
 
 Opens the Wempe page (?snap&qa, #rev=REV), the Case view, freezes the model as isolate.py does, shows only the named case parts (partName, case.js's prt():
 bowl, bezel, gimbalRing, box, overBox, lock, key ...; 'movement' keeps the movement), and renders each --look (movement mm, as isolate.py) side by side.
@@ -32,6 +32,7 @@ async def main():
         await pg.evaluate("(()=>{const b=document.querySelector('#speeds button[data-v=\"0\"]');if(b)b.click();})()")
         await pg.evaluate("(()=>{const b=document.querySelector('#views button[data-v=\"case\"]');if(b)b.click();})()");await pg.wait_for_timeout(3000)
         n=await pg.evaluate(KEEP+"(%s)"%json.dumps(parts));print('meshes kept',n)
+        for e in opt('--eval',1):await pg.evaluate(e[0]);await pg.wait_for_timeout(300)   # e.g. --eval "__BX.lock(1)" (the transit lock turned in)
         shots=[]
         for i,l in enumerate(looks):
             await pg.evaluate(f"window.__look({','.join(l)})")

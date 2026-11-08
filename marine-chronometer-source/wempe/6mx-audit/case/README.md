@@ -12,7 +12,7 @@ The owner asked for a thorough review of everything outside the movement on the 
 
 The review is to be audited afterwards, so each row says where its reading came from and how sure it is.
 
-**Fixed on 8 November 2026** (the owner's choice: the sure and likely fixes, in the 6MX version only), listed in "What was fixed" at the end. The turn-over fault (A1) and the transit lock's reach (A2) are open, for the owner.
+**Fixed on 8 November 2026** (the owner's choice: the sure and likely fixes, in the 6MX version only), listed in "What was fixed" at the end. The transit lock (A2) was fixed the same day at the owner's choice. The turn-over fault (A1) is being measured (the ring's inside and the bowl's depth), at the owner's choice.
 
 ## The short answer on the bezel
 
@@ -166,3 +166,9 @@ The owner chose to make the sure and likely fixes, in the 6MX version only, and 
 - `smoke.py --model wempe`: 242 steps, ok.
 - `holecheck.py --model wempe`: see the commit.
 - Renders beside Kirov 247's 12_ (`caserender.py`): the brackets, slots, hook and marks as photographed. The heights differ by the view: 247 is seen from a little under the rim, the render from over it.
+
+**The transit lock (A2), fixed 8 November 2026** (the owner's choice: as the drawings'):
+- The 6MX's lever now lies at the pivots' height and turns in through the ring's slot (the 6MX's ring now has the drawings' slot) into the locking bracket's hook.
+- The lever's end, 28.0 from the knob's axis, enters the hook from its open side and meets the closed column after 49.0°. The page turns it 48.8°. The sweep is a stadium 8 wide in 0.5° steps, tested against the column and the ring's band outside its window: clear.
+- The grip moved to the drawings' 0.52 of the lever, because at 0.55 its edge passed 0.14 inside the ring's outside.
+- Checks: `massprops.py --model wempe --rev 6mx --write`, `gimbals.js --model wempe --quick` (`MC_WREV=6mx`, ok), `audit.py box --model wempe --rev 6mx` (nothing new), `solids.py --model wempe` (0), `holecheck.py --model wempe` (1,633 holes over five versions, 0 failing), `smoke.py --model wempe` (ok).
