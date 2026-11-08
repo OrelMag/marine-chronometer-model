@@ -458,7 +458,9 @@ const WCASE=(()=>{
        Ø 6.8, M4 in a vertical slot 4.5 wide (its ends hidden under the heads: estimated); over a crank out to r 59 (3 thick, estimated) its block to r 67.5 (8 out, ±2), up to
        +2.4 (247; 2973 −0.5), a horizontal slot through it from −6.8 to −2.0, open toward the case bracket at 6 o'clock and 10 deep, leaving a column 4.5 on its far side: the slot
        the transit lock's lever turns into (the drawings' bracket's neck), at the pivots' height as the drawn one's. Until then the brackets had no slots or holes (their screws in
-       solid brass), heads Ø 4.8, the strap 9.7 high, the hook a plain block */
+       solid brass), heads Ø 4.8, the strap 9.7 high, the hook a plain block. Its place: centred between the − spring's two screws (215.7° and 225.2°, frame.js's brg),
+       as on 247's and 2973's bowls, where the plate stands over those two and the − socket and its mark are beside it: brg 220.5, atan2 49.5° (sure on two chronometers, ±2°;
+       230 until then, the drawings' 50° from the case bracket kept) */
     {const bv=rv(brk,'6mx'),rb=52.4,rp=rb+3,hY=h=>YB+4.7+h,w4=5.75;
       for(const ph of[90,-90]){const g=tag(new THREE.Group(),'050100-3');bv.add(g);const a=ang(ph),ws=w4/rp,wo=w4/62,wl=(w4+27.5)/rp;
         const y0=hY(-25.4),y1=hY(-14.0),yt=hY(2.3),Pw=[[rb,y0],[rp,y0],[rp,y1],[rb,y1]],Pm=[[rb,y0],[rp,y0],[59.7,y0],[59.7,y1],[rp,y1],[rb,y1]],Pb=[[rb,y0],[rp,y0],[59.7,y0],[64.3,y0],[64.3,yt],[59.7,yt],[59.7,y1],[rp,y1],[rb,y1]];
@@ -467,7 +469,7 @@ const WCASE=(()=>{
         mesh(g,sweepS([{a0:a-wl,a1:a-ws,p:Pw},{a0:a-ws,a1:a-wo,p:Pm},{a0:a-wo,a1:a+wo,p:Pb},{a0:a+wo,a1:a+ws,p:Pm},{a0:a+ws,a1:a+wl,p:Pw}],[{p:Sw,m:-1},{p:Sb,m:-1},{p:Sb,m:1},{p:Sw,m:1}],
           {holes:[{a,y:YB+1.7,r:1.6,ra:59.7,rb:64.3}],hs:2.6,win:[sl(-1),sl(1)]}),M.brass);   /* the block r 59.7-64.3 (61.9-66.5 until 25 October 2026), the ring's inner pivots' tips through its hole */
         for(const s2 of[-1,1]){const b=a+s2*16.8/rp,u=[-Math.cos(b),0,-Math.sin(b)];tag(screw(along(bv,[rp*Math.cos(b),hY(-19.1),rp*Math.sin(b)],u),0,0,0,5.0,3.0,6.4,2.0,M.steel),'6MX.bks');}}
-      const g=tag(new THREE.Group(),'050100-4');bv.add(g);const a=ang(40),w=7/rp,cw=4.5/63,ss=2.25/rp,A=[a-w,a-w+cw,a-ss,a+ss,a+w],L=A.slice(0,3),R=A.slice(3),C=A.slice(0,2);
+      const g=tag(new THREE.Group(),'050100-4');bv.add(g);const a=ang(49.5),w=7/rp,cw=4.5/63,ss=2.25/rp,A=[a-w,a-w+cw,a-ss,a+ss,a+w],L=A.slice(0,3),R=A.slice(3),C=A.slice(0,2);
       mesh(g,solidGeo([{loop:sector(rb,rp,A,A),y0:hY(-34.8),y1:hY(-30.4)},{loop:sector(rb,rp,L,L),y0:hY(-30.4),y1:hY(-16.8)},{loop:sector(rb,rp,R,R),y0:hY(-30.4),y1:hY(-16.8)},
         {loop:sector(rb,rp,A,A),y0:hY(-16.8),y1:hY(-12.1)},{loop:sector(rp,67.5,A,A),y0:hY(-15.1),y1:hY(-12.1)},{loop:sector(59,67.5,A,A),y0:hY(-12.1),y1:hY(-6.8)},
         {loop:sector(59,67.5,C,C),y0:hY(-6.8),y1:hY(-2.0)},{loop:sector(59,67.5,A,A),y0:hY(-2.0),y1:hY(2.4)}]),M.brass);
