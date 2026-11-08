@@ -19,7 +19,7 @@ site serves it (`.gitattributes`: `-text`).
 
 `fetch` finds the files from the page itself (its markup, then the stylesheets'
 `url()` and the scripts' `/models/`, `/images/` paths), so a file the article gains is
-caught and reported as new. The page's paths start at the site's root (`/css/…`,
+caught and reported as new. The copy we improve is `marine-chronometer-source/mechanical-watch/` (its README), made from this one by `tools/mechanical_watch.py init`; this folder stays as fetched. The page's paths start at the site's root (`/css/…`,
 `/js/…`, `/models/…`), so it doesn't run opened as a file: serve the folder as a site's
 root (`python -m http.server 8765` in it, after checking the port is free) and open
 `http://localhost:8765/`.
