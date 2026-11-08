@@ -34,7 +34,8 @@ def stale():
     if not IMG.exists() or not STAMP.exists():return ['(no sheet)']
     F=json.loads(STAMP.read_text(encoding='utf-8'))['files']
     return [k for k,h in F.items() if not (ROOT/k).exists() or sha(ROOT/k)!=h]
-if CHECK:
+_MAIN=__name__=='__main__'   # imported (assembled.py: its pick, leaders, key), nothing runs
+if CHECK and _MAIN:
     st=stale();print(('stale: '+', '.join(st)+f' changed; run python laidout.py --model {model.NAME} --write') if st else f'ok: {IMG.relative_to(ROOT).as_posix()} is up to date with the page');sys.exit(1 if st else 0)
 CSS=("header,.panel,.hud,.tools,.hint,.labels,.dock,.hist,.split,.loading,#info{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
      ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
@@ -333,7 +334,7 @@ def save_parts(left,iso,views):
     V.save(D/'iso.png')
     for k,p in enumerate(shots):p.save(D/f'shot{k}.png')
     (D/'meta.json').write_text(json.dumps({'left':len(left),'shots':len(shots),'off':off,'rings':rings,'views':views},ensure_ascii=False),encoding='utf-8')
-if '--relayout' in sys.argv and not PEN:   # the sheet again from the last run's parts, no browser: for its layout and the key's text
+if '--relayout' in sys.argv and not PEN and _MAIN:   # the sheet again from the last run's parts, no browser: for its layout and the key's text
     D=OUT/'r_laidout_parts';J=json.loads((D/'meta.json').read_text(encoding='utf-8'))
     sheet([Image.open(D/f'left{k}.png').convert('RGB') for k in range(J['left'])],(Image.open(D/'iso.png').convert('RGB'),J['off'],J['rings'],[Image.open(D/f'shot{k}.png').convert('RGB') for k in range(J['shots'])]),
       list(J['views'].values()),OUT/'r_laidout_sheet.png',2);print('wrote',OUT/'r_laidout_sheet.png')
@@ -450,7 +451,7 @@ async def main():
         print(f'wrote {IMG.relative_to(ROOT).as_posix()} ({IMG.stat().st_size//1024} KB, {w} px) and its stamp ({len(F)} files)')
     elif WRITE:print('the sheet not written: the checks failed')
     print('FAIL: '+', '.join(fails) if fails else f'ok: every lettered element of Figs. 83-84 shown laid out and clickable ({sum(1 for i in ITEMS if i[2])} checked)');sys.exit(1 if fails else 0)
-if PEN and '--relayout' in sys.argv:   # the pen sheet again from the last --pen run's drawings and anchors, no browser or Blender: for its layout
+if PEN and '--relayout' in sys.argv and _MAIN:   # the pen sheet again from the last --pen run's drawings and anchors, no browser or Blender: for its layout
     pensheet(json.loads((OUT/'r_laidout_pen.json').read_text(encoding='utf-8')),(None,None,json.loads((OUT/'r_laidout_parts/meta.json').read_text(encoding='utf-8'))['rings'],None),
              json.loads((OUT/'r_laidout_checks.json').read_text(encoding='utf-8'))['views'],2,render=False);sys.exit(0)
-asyncio.run(main())
+if _MAIN:asyncio.run(main())
