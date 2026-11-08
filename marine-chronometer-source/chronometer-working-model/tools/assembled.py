@@ -96,12 +96,12 @@ LO.FIG,LO.FUNC,LO.HIDDEN,LO.ITEMS=FIG,FUNC,{},ITEMS   # laidout.py's key and lea
 # The movement stands lifted out of its case train side up (the page's Movement view), so the world's y is the frame's -y. A cut is a vertical plane (square
 # to the plates) through two arbors' centres (x, z in the frame: dims.js's WD.H, WESC), seen square on from the side cut away (side: +1 or -1)
 H=dict(barrel=(24.784,-6),fusee=(-16.708,-15.292),centre=(0,0),seconds=(0,23),escape=(-11.783,21.743),balance=(-9.1,12.11))
-VIEWS=[dict(name='train',sub='The train side, the top plate up',cam=(math.pi-0.42,1.02,390,20),tgt=(0,-11,0)),
-  dict(name='dial',sub='The dial side, the dial and hands taken off: the motion work and the up-and-down work',cam=(0.42,-1.02,390,20),tgt=(0,4,0),hide=['dial','hands']),
-  dict(name='side',sub='From the side, between the plates',cam=(math.pi/2+0.55,0.14,400,20),tgt=(0,-12,0)),
-  dict(name='sec_fusee',sub='Cut through the barrel and fusee arbors',cut=('barrel','fusee',1),pitch=0.16,dist=380,y=-11),
-  dict(name='sec_centre',sub='Cut through the centre and seconds arbors',cut=('centre','seconds',-1),pitch=0.16,dist=380,y=-8),
-  dict(name='sec_balance',sub='Cut through the balance and escape wheel arbors',cut=('balance','escape',-1),pitch=0.16,dist=380,y=-12)]
+VIEWS=[dict(name='train',sub='The train side, the top plate up',cam=(math.pi-0.42,1.02,330,20),tgt=(0,-11,0)),
+  dict(name='dial',sub='The dial side, the dial and hands taken off: the motion work and the up-and-down work',cam=(0.42,-1.02,330,20),tgt=(0,4,0),hide=['dial','hands']),
+  dict(name='side',sub='From the side, between the plates',cam=(math.pi/2+0.55,0.14,360,20),tgt=(0,-12,0)),
+  dict(name='sec_fusee',sub='Cut through the barrel and fusee arbors',cut=('barrel','fusee',1),pitch=0.16,dist=330,y=-11),
+  dict(name='sec_centre',sub='Cut through the centre and seconds arbors',cut=('centre','seconds',-1),pitch=0.16,dist=330,y=-8),
+  dict(name='sec_balance',sub='Cut through the balance and escape wheel arbors',cut=('balance','escape',-1),pitch=0.16,dist=330,y=-12)]
 PREF={}   # a letter's view where more than one shows it and the most-seen isn't the clearest (letter: view)
 # ---- the close-ups: (title, caption (from the parts' cards and the Laid out sheet's), the parts shown, those see-through, the camera's yaw and pitch, a cut (two arbors' centres or one and an angle, side)) ----
 INSETS=[
@@ -221,7 +221,7 @@ async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(2000);await w.close()
-        pg=await b.new_page(viewport={"width":1800,"height":1000},device_scale_factor=dpr,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
+        pg=await b.new_page(viewport={"width":1400,"height":1200},device_scale_factor=dpr,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         reqs=set();pg.on("request",lambda q:reqs.add(q.url))
         await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.id='shotcss';s.textContent=%r;document.head.appendChild(s);});"%LO.CSS)
         await pg.goto(LO.PAGE,wait_until='domcontentloaded',timeout=180000);await pg.wait_for_function("!document.querySelector('#loading')",timeout=300000);await pg.wait_for_timeout(1500)

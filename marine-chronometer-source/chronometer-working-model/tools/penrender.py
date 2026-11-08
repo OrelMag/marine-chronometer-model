@@ -306,6 +306,7 @@ for S in A['shots']:
     shown={o for o in K if not(S['alone'] and o not in inmv)}
     if S.get('show'):shown={o for o in shown if picks(o,S['show']) and o not in STAND}   # these parts alone
     if S.get('hide'):shown={o for o in shown if not picks(o,S['hide'])}
+    if not S['ctl'].get('laid_out'):shown-=STAND   # the laid out view's stand-in plates belong to it alone (assembled.py's stills)
     gh={o for o in shown if K[o]&set(S['page'].get('ghosts',[])) or o in STAND or picks(o,S.get('ghost'))}
     for o in K:o.hide_render=o not in shown or o in gh   # the faded parts left out: drawn, they would hide the lines behind them
     for k,v in S['ctl'].items():ctl[k]=float(v)
@@ -324,23 +325,65 @@ for S in A['shots']:
     if PHOTO:   # the lights placed about the view as wempe_showcase.py places them about its shot: a key, a fill, a rim, and a softbox at the camera's mirror image in the plates
         def light(name,loc,size,energy,at):
             l=bpy.data.lights.new(name,'AREA');l.size=size;l.energy=energy;o=bpy.data.objects.new(name,l);sc.collection.objects.link(o);o.location=loc
-            o.rotation_euler=(at-loc).to_track_quat('-Z','Y').to_euler();made.append(o)
+            o.rotation_euler=(at-loc).to_track_quat('-Z','Y').to_euler();o.visible_camera=False;made.append(o)   # never in the picture: seen from behind, an area light is a black card
         R=d*math.tan(math.radians(P['fov'])/2)*1.3;dv=(pos-tgt).normalized();side=dv.cross(up);side=side.normalized() if side.length>1e-6 else r
         bk=(dv-dv.dot(up)*up);bk=bk.normalized() if bk.length>1e-6 else -u
         light('key',tgt+(side*-0.8+bk*0.5+up*1.1).normalized()*R*7,R*4,90*R*R,tgt);light('fill',tgt+(side*1.0+bk*0.7+up*0.4).normalized()*R*7,R*5,22*R*R,tgt)
         light('rim',tgt+(side*0.3-bk*1.0+up*0.7).normalized()*R*6,R*3,110*R*R,tgt);mir=-(dv-2*dv.dot(up)*up);light('softbox',tgt+mir*d*0.6,d*0.45,1.6*(d*0.6)**2,tgt)
     cut=[]
     if S.get('cut'):   # a section: the plane through p (the page's world, mm), its normal n toward the half kept; a solid wholly beyond it hidden, one across it cut by an exact boolean (its cut face in its own first material)
-        cp=B(S['cut']['p']);cn=Vector((S['cut']['n'][0],-S['cut']['n'][2],S['cut']['n'][1])).normalized();hh=2.0
-        bpy.ops.mesh.primitive_cube_add(size=2*hh,location=cp-cn*hh);cu=bpy.context.active_object;cu.rotation_euler=cn.to_track_quat('Z','Y').to_euler();cu.hide_render=True;cu.data.materials.clear();made.append(cu)
-        bpy.context.view_layer.update()
+        cp=B(S['cut']['p']);cn=Vector((S['cut']['n'][0],-S['cut']['n'][2],S['cut']['n'][1])).normalized();hh=0.2
+        # each solid cut by a cutter of its own carrying a cut face of its own (the boolean's material transfer): its metal darkened and hatched in the picture's plane,
+        # 45 or 135 degrees, its pitch and phase its own, so two parts cut side by side read apart, as a drawn section hatches them; Freestyle draws each cut face's
+        # outline (its material's boundary) in a thin dark line (the owner, 8 November 2026: the cut parts' edges were invisible, the section a monolith)
+        bm0=bmesh.new();bmesh.ops.create_cube(bm0,size=2*hh);cme=bpy.data.meshes.new('cutter');bm0.to_mesh(cme);bm0.free()
+        rot=cn.to_track_quat('Z','Y').to_matrix().to_4x4();CM=Matrix.Translation(cp-cn*hh)@rot
+        def cutmat(o,i):
+            m0=next((s.material for s in o.material_slots if s.material),None);P0=m0 and m0.use_nodes and next((n for n in m0.node_tree.nodes if n.type=='BSDF_PRINCIPLED'),None)
+            col=tuple(P0.inputs['Base Color'].default_value)[:3] if P0 else (0.7,0.7,0.7);met=P0.inputs['Metallic'].default_value if P0 else 0.5
+            m=bpy.data.materials.new(f'cut {i}');m.use_nodes=True;nt=m.node_tree;N=nt.nodes.new;L=nt.links.new;Pb=nt.nodes['Principled BSDF']
+            Pb.inputs['Metallic'].default_value=met*0.6;Pb.inputs['Roughness'].default_value=0.5
+            tc=N('ShaderNodeTexCoord');sx=N('ShaderNodeSeparateXYZ');L(tc.outputs['Window'],sx.inputs[0])
+            h=(hash(o.name)&0xffff)/65535;ang=math.radians((45,135,60,120)[(hash(o.name)>>17)&3]);pitch=SZ[1]/(95 if h<0.5 else 70);ph=h*7.3
+            def mth(op,a,c=None):
+                x=N('ShaderNodeMath');x.operation=op
+                for k,v in enumerate((a,c)):
+                    if v is None:continue
+                    if isinstance(v,(int,float)):x.inputs[k].default_value=v
+                    else:L(v,x.inputs[k])
+                return x.outputs[0]
+            t=mth('ADD',mth('MULTIPLY',sx.outputs[0],SZ[0]*math.cos(ang)/pitch),mth('MULTIPLY',sx.outputs[1],SZ[1]*math.sin(ang)/pitch))
+            ln=mth('LESS_THAN',mth('FRACT',mth('ADD',t,ph)),0.22)
+            mx=N('ShaderNodeMix');mx.data_type='RGBA';L(ln,mx.inputs[0]);mx.inputs[6].default_value=(*[c*0.78 for c in col],1);mx.inputs[7].default_value=(*[c*0.32 for c in col],1)
+            L(mx.outputs[2],Pb.inputs['Base Color']);made_m.append(m);return m
+        made_m=[];cme.materials.append(None);bpy.context.view_layer.update();n=0
         for o in K:
             if o.hide_render or o.type!='MESH':continue
             mw=o.matrix_world;sd=[(mw@v.co-cp).dot(cn) for v in o.data.vertices]
             if not sd:continue
             if max(sd)<=0:o.hide_render=True;cut.append((o,None))
-            elif min(sd)<0:m=o.modifiers.new('cut','BOOLEAN');m.operation='DIFFERENCE';m.object=cu;m.solver='EXACT';m.material_mode='INDEX';cut.append((o,m))
-        print('MC cut',sum(1 for _,m in cut if m),'solids across the plane,',sum(1 for _,m in cut if not m),'beyond it',flush=True)
+            elif min(sd)<0:
+                cu=bpy.data.objects.new('cutter',cme);sc.collection.objects.link(cu);cu.matrix_world=CM;cu.hide_render=True;cu.display_type='WIRE'
+                for k in ('visible_camera','visible_diffuse','visible_glossy','visible_transmission','visible_volume_scatter','visible_shadow'):setattr(cu,k,False)   # never drawn: the camera stands inside it
+                cu.material_slots[0].link='OBJECT';cu.material_slots[0].material=cutmat(o,n);made.append(cu);n+=1
+                m=o.modifiers.new('cut','BOOLEAN');m.operation='DIFFERENCE';m.object=cu;m.solver='EXACT';m.material_mode='TRANSFER';cut.append((o,m))
+        made_me=[cme]
+        fsl=None
+        if PHOTO:   # the cut faces' outlines
+            sc.render.use_freestyle=True;sc.render.line_thickness_mode='ABSOLUTE';fsl=fs.linesets.new('cut outline');fsl.select_by_visibility=True;fsl.visibility='VISIBLE';fsl.select_by_edge_types=True
+            for k in('silhouette','border','crease','external_contour','material_boundary'):setattr(fsl,'select_'+k,k=='material_boundary')
+            st=bpy.data.linestyles.new('cut outline');fsl.linestyle=st;st.color=(0.05,0.04,0.03);st.thickness=max(1.0,SZ[1]/800);st.chaining='PLAIN'
+        # a boolean that fails on a solid can hand back the cutter or an inside-out shell: any result reaching past the solid's own box is tried again with the float
+        # solver, then left out (named) if that fails too
+        bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get();bad=[]
+        def grew(o):
+            e=o.evaluated_get(dg);b1=[Vector(c) for c in e.bound_box];V0=[v.co for v in o.data.vertices];lo0=Vector([min(c[i] for c in V0) for i in range(3)]);hi0=Vector([max(c[i] for c in V0) for i in range(3)])   # the mesh's own vertices: an object's bound_box is already the cut one's
+            return any(min(c[i] for c in b1)<lo0[i]-1e-5 or max(c[i] for c in b1)>hi0[i]+1e-5 for i in range(3))
+        for o,m in cut:
+            if m and grew(o):
+                m.solver='FLOAT';bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get()
+                if grew(o):o.hide_render=True;bad.append(o.name)
+        print('MC cut',sum(1 for _,m in cut if m),'solids across the plane,',sum(1 for _,m in cut if not m),'beyond it'+(f'; {len(bad)} left out, their cut failed: '+', '.join(bad[:12]) if bad else ''),flush=True)
     sc.render.filepath=str(pathlib.Path(A['out'])/f"pen_{A['model']}_{S['name']}.png");bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath,flush=True)
     if gh:   # then the faded parts alone on a clear film, which the paper lays over the drawing at a third
         for o in K:o.hide_render=o not in gh
@@ -352,4 +395,8 @@ for S in A['shots']:
         if m:o.modifiers.remove(m)
         else:o.hide_render=False
     for o in made:bpy.data.objects.remove(o,do_unlink=True)
+    if S.get('cut'):
+        for m in made_m:bpy.data.materials.remove(m)
+        for me in made_me:bpy.data.meshes.remove(me)
+        if fsl:fs.linesets.remove(fsl);sc.render.use_freestyle=not PHOTO
     if up0 is not None:mv.location=up0
