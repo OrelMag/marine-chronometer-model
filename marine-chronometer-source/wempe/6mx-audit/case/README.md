@@ -12,7 +12,7 @@ The owner asked for a thorough review of everything outside the movement on the 
 
 The review is to be audited afterwards, so each row says where its reading came from and how sure it is.
 
-**Nothing in the model has been changed.** The fixes wait for the owner's choice.
+**Fixed on 8 November 2026** (the owner's choice: the sure and likely fixes, in the 6MX version only), listed in "What was fixed" at the end. The turn-over fault (A1) and the transit lock's reach (A2) are open, for the owner.
 
 ## The short answer on the bezel
 
@@ -136,3 +136,33 @@ A1 needs a decision on what changes. What decides the clearance is the bowl's bo
 - **a larger 6MX ring**: inside Ø 154 or more. On 09777's frame the ring's inside reads about 1.15 of the bezel's Ø, so about Ø 139 (doubtful: one frame, no camera), which argues against it.
 
 The deciding measurement is the pivot hole's height on Kirov 247 and 2973 against the rim. The 7 November reading (3.0 under, ±2) and the blind reader's 3 both rest on judging where "the rim's top" is behind the bracket's upright. Next best is a camera fitted on 09777's frame at Uy8A88_j-cA 2:06 or on moMvyx8eXfo 1:48-2:48, the bowl in its ring seen from above, scaled by the rim's sure Ø 110.1. Both videos are later Poljots and rank below 247.
+
+## What was fixed (8 November 2026)
+
+The owner chose to make the sure and likely fixes, in the 6MX version only, and to measure the pivots' height before settling A1. The drawings' versions are untouched.
+
+| Row | Change in `case.js` (6MX only) | Source |
+|---|---|---|
+| A3 | A `+` and a `−` engraved over the + and − sockets (decals), 5.7 over each socket's centre. | 247, 2973 |
+| A4, B2 | The case brackets' straps carry slots 18 × 5 round their screws; the locking bracket's plate carries a vertical slot 4.5 wide for its two screws. The screws stand in the slots, not in solid brass. | 247, 2973, 422; `blind-pivot-height.md` |
+| B3 | The locking bracket rebuilt: a plate 14 wide from 34.8 to 12.1 under the rim's top, a crank, and a block to r 67.5 up to 2.4 over the rim, with a horizontal slot 4.8 high (6.8 to 2.0 under the rim) open toward the 6 o'clock case bracket, 10 deep. Its place moved to brg 220.5, centred over the − spring's two screws, as both bowls show (it stood at 230, over the − socket). | 247, 2973 |
+| B4 | The case brackets' screw heads Ø 10, the locking bracket's Ø 6.8 (M4); the straps 11.4 high and the uprights 11.5 wide, their tops 5.3 over the pivot hole. | three chronometers |
+| B1, B5 | The bezel's knurl a diamond (a new closed solid, `diamondKnurl`, stitched onto the turned ring); the glass 3.0 thick and flush with the lip, the bezel 14.5 high (a plain band 1.5 added between the bell and the knurl). | DEC 422, 14100, Poljot 09777 |
+| B7 | The 6MX's thread `TH6`: pitch 1.0, its ISO depth 0.5413; the crests and roots where the bowl's and bezel's were. | 247 |
+| B6 | The key's body and paddle brass in the 6MX version (its form the key of 1943's, unmeasured). | Poljot 09777, DIxob2Rl4dc |
+
+`sweepS` takes a list of windows. The page's cards for the 6MX bezel and key say what changed.
+
+**The pivots' height, measured blind** (`blind-pivot-height.md`): the pivot hole's centre 0 ±1.7 under the rim's top on Kirov 247 and 2.5 ±1.5 on 2973. The model's 3.0 stands. So the pivots are not what keeps the bowl from turning over in its ring (A1). The ring's size or the bowl's depth must differ from the model, and neither is measured on any photograph. The hook's slot lies at the pivots' height, as the drawings' neck does, and Kirova 14100's ring has a long thin slot beside a pivot. So the 6MX's transit lock most likely works as the drawings' does, through a slot in the ring (A2). Both are in the Wempe README's Unresolved section.
+
+**Checks after the fixes:**
+- `solids.py --model wempe`: 0 not solid.
+- `audit.py box --model wempe --rev 6mx`: nothing new. The six slotted screws were added to `checks.py`'s `FLOAT_BOX`: the probe samples sideways round a head, and these radial screws' heads bear above and below their slots. The glass's top lying flush with the lip was added to `audit-expected.json`.
+- `audit.py --model wempe --rev 6mx`: nothing new.
+- `fine.py --model wempe` in the 6MX state: 68 states, 0 new or grown.
+- `bom.py --model wempe` in the 6MX state: 278 lines, 310 relations, 20 jewels, ok.
+- `massprops.py --model wempe --rev 6mx --write`, then `gimbals.js --model wempe --quick` with `MC_WREV=6mx`: the periods 0.58 and 0.66 s, ok. The bowl still meets the ring at 52.5° (A1).
+- The Wempe type check: ok.
+- `smoke.py --model wempe`: 242 steps, ok.
+- `holecheck.py --model wempe`: see the commit.
+- Renders beside Kirov 247's 12_ (`caserender.py`): the brackets, slots, hook and marks as photographed. The heights differ by the view: 247 is seen from a little under the rim, the render from over it.

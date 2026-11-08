@@ -395,7 +395,7 @@ const WCASE=(()=>{
               /* its polarity engraved over it (the 6MX case review, 8 November 2026, A3: Kirov 247's and 2973's bowls, 12_Kirow_247_E-Kontakt_3.jpg and 13_Kirow_2973_E-Kontakt4.jpg,
                  a + over the + socket and a short − over the −, their centres 5.0 and 6.4 over the socket's (by its Ø 6.4 head), the + about 2.4 across, the − about 1.8 long: sure in
                  kind, their sizes and heights likely ±0.5). Engraved lines as decals, 0.3 wide, 0.01 off the bowl's face */
-              for(const[w,h]of id==='+'?[[2.4,0.3],[0.3,2.4]]:[[1.8,0.3]]){const e=mesh(gC,new THREE.PlaneGeometry(w,h),MC.engr,...pol(SK,52.41,yF+5.7));e.rotation.y=SK*D2R+Math.PI;e.userData.decal=1;e.userData.noShadow=1;}}}}}
+              for(const[w,h]of id==='+'?[[2.4,0.3],[0.3,2.4]]:[[1.8,0.3]]){const e=tag(mesh(gC,new THREE.PlaneGeometry(w,h),MC.engr,...pol(SK,52.41,yF+5.7)),'6MX.cfk',1);e.rotation.y=SK*D2R+Math.PI;e.userData.decal=1;e.userData.noShadow=1;}}}}}
     /* the two case brackets (Gehäusekloben 05 01 00-3), on the bowl's side at 12 and 6 o'clock, carrying the inner pivots b: no sheet of their own; measured on 05 01
        (25 October 2026: line centres read on the scan's pixel profiles, 2.45 px/mm, heights from the pivots' line, y 146.7 in Schnitt C-D, 143.5 in the elevation;
        tools/wempe_lock.py's crops). Schnitt C-D, cut through them: a cranked bracket, its foot flat on the bowl's side from 20.3 to 8.3 under the pivots, 3.7 thick at its
