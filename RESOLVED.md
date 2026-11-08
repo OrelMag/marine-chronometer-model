@@ -3215,6 +3215,7 @@ An arbor needs pivots and shoulders; a stone its seat.
 - **The lettered sheets' thumbnails ran out of the panel** (the Wempe's Assembled and Laid out, 3.83.00; `uiprobe.py`): `.sheetT` was `width:100%` with its padding and border outside, 14 px past the panel's edge, and the assembled sheet's thumbnail stood about 600 px tall, pushing Moving parts only and the parts list a screen down. It is `border-box`, its image cropped to the sheet's top 200 px (the whole sheet a click away). `4b374681`
 - **Buttons in the panel were 60 px tall on a touch screen**, meant to be 44 (both pages): `min-height:44px` on a `content-box` button added its 8 px padding top and bottom. Panel buttons are `border-box` under a coarse pointer. `4b374681`
 - **A section scrolled to landed behind the tabs** (the Wempe's Variants, Each subassembly; on a phone behind the stage too): the panel's sections and cards have a `scroll-margin-top` of the sticky tabs (on a phone, the stage and the tabs). `4b374681`
+- **The walkthrough's Back and Next half under the tabs on a phone** (both pages): starting it scrolls its card to just under the stage, measured before the panel's tabs stuck beneath the stage; it now leaves room for the tabs too. Keep: what scrolls the page on a phone allows for the stage and the tabs. `HASH`
 
 ## Build, tools and docs
 

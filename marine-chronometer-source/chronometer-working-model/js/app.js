@@ -1070,7 +1070,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     setInset(s.inset||null);
     /* bring the card into view: below the stage when the stage sits above the panel (phones in portrait), else beside it (landscape phones) */
     if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
-      if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
+      if(cr.left<stage.getBoundingClientRect().right){const tb=$('#ptabs'),th=tb&&tb.getClientRects().length?tb.offsetHeight+12:0,y=cr.top+scrollY-stage.offsetHeight-th-8;   /* under the tabs too: they stick beneath the stage */
+      if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
       else card.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'});}}
   function tourEnd(){const u=preTour||{view:'dial',see:false,rock:false,latch:st.latch,speed:1,drive:false,mwOn:false};preTour=null;
     st.tour=-1;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;st.rock=u.rock;st.latch=u.latch;st.see=u.see;for(const k of['driveOn','mwOn','rock','latch'])$('#'+k).checked=st[k==='driveOn'?'drive':k];setSpeed(u.speed);setInset(null);
