@@ -1,4 +1,4 @@
-"""thread_rows.py: the bowl rim's thread ridges on Kirov 247's side photograph (6MX case review, 8 November 2026).
+r"""thread_rows.py: the bowl rim's thread ridges on Kirov 247's side photograph (6MX case review, 8 November 2026).
 
     python thread_rows.py   # prints the mean grey of each row over x 380-470, rows 60-180, of 12_Kirow_247_E-Kontakt_3.jpg, and writes band_247.png (5x) to E:\mc-video\oq\6mx-case
 
