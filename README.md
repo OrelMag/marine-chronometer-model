@@ -51,12 +51,16 @@ on, the speed (1/20×, ¼×, 1×, 60×, 3600× or any speed), the time, the powe
 and Wind. The panel beside it (under it on a phone) has four tabs: **Explore**
 (the walkthrough, the overhaul (the Hamilton's in its manual's order, the Wempe's in
 the 1958 Soviet repair book's order for the MX), Take it apart: Exploded and Laid out,
-the Wempe's Laid out with its lettered sheet (a thumbnail that opens it large: the
+the Wempe's Assembled with its assembled sheet (the movement photographed from three
+sides and cut open, lettered) and its Laid out with its lettered sheet (each a thumbnail
+of the sheet's top inside the panel that opens it large; the Laid out sheet: the
 train in elevation, plan and isometric with numbered close-ups of the mainspring and
 fusee, maintaining power, escapement and balance, lettered as a textbook's developed
 drawing), the Wempe's Exploded view taking its fusee, barrel, balance, detent and motion
 work apart beside the movement with Subassemblies (all, or each on its own, the
-chain coiled, a Pieces slider for their spread), and Parts, where the Wempe's
+chain coiled, a Pieces slider for their spread), and Parts (the Wempe's under frame,
+going train, balance, escapement, fusee and barrel, motion work and dial, and case and
+box), where the Wempe's
 Isolate row shows one subassembly alone, as right-clicking a part does), **Run** (time, winding, the rate and timing weights, and the
 Hamilton's stopping and starting and rate book), **Look** (Metal, Tinted or Ink,
 Colour by, the display's switches and ship motion) and **Advanced** (Contacts,
