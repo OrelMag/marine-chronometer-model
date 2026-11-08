@@ -140,6 +140,10 @@ def main():
     LT=MODEL/'tools/laidout.py'
     if subprocess.run([sys.executable,str(LT),'--model','wempe','--check'],cwd=LT.parent).returncode:
         subprocess.run([sys.executable,str(LT),'--model','wempe','--write','r_laidout'],cwd=LT.parent,check=True)
+    # the Wempe's assembled sheet (wempe/renders/assembled_sheet.webp): photographed in Blender's Cycles on the GPU, so the build never renders it again, only says when a file
+    # the page loads changed since (assembled.py --check); rendered again by hand, python assembled.py --write (about 15 minutes on the GPU)
+    AT=MODEL/'tools/assembled.py'
+    if subprocess.run([sys.executable,str(AT),'--check'],cwd=AT.parent,capture_output=True).returncode:print('note: the Wempe’s assembled sheet is older than the page (python tools/assembled.py --write renders it again)')
     # the Wempe: its own build script writes its dist/ (no root copy)
     subprocess.run([sys.executable,str(WEMPE/'build.py')],check=True)
     wempe=(WEMPE/'dist/wempe-einheitschronometer.html').read_text(encoding='utf-8');check('wempe',wempe);sizes('wempe',wempe)
@@ -165,6 +169,11 @@ def main():
     # the Wempe, the home page
     if WE_REP not in wempe:sys.exit(f'the Wempe page has no {WE_REP}: its link to its report (wempe/build.py), which the site points at site/wempe/verification/')
     write(SITE/'index.html',meta(wempe.replace(TO_ESSAY,'href="essay/').replace(WE_HAM,'href="hamilton/').replace(WE_REP,'href="wempe/verification/'),a.site_url,'index.html',img='social-wempe.png',keep=a.keep_html))
+    NI=re.findall(r'data-noinline src="\.\./(renders/[^"]+)"',wempe)   # the Wempe's images served beside the page (inline.py's data-noinline: the assembled sheet, 2 MB, kept out of the home page)
+    if NI:
+        h=(SITE/'index.html').read_text(encoding='utf-8')
+        for r in NI:(SITE/r).parent.mkdir(parents=True,exist_ok=True);shutil.copy(WEMPE/r,SITE/r);h=h.replace(f'data-noinline src="../{r}"',f'data-noinline src="{r}"')
+        write(SITE/'index.html',h)
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     if (WEMPE/'parts').is_dir():shutil.copytree(WEMPE/'parts',SITE/'parts')   # the Wempe's parts as recipes: each one's STEP file and operation sheet (tools/recipes_site.py), linked from its card

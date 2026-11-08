@@ -1,7 +1,7 @@
 """Turn an HTML page that loads local files into one self-contained file.
 
 Every <script src="..."> and <link rel="stylesheet" href="..."> that points at a local file is replaced by the file's
-contents, and every url(...) inside those stylesheets (the fonts) and every local <img src="..."> becomes a data: URI. Remote URLs are left alone, so
+contents, and every url(...) inside those stylesheets (the fonts) and every local <img src="..."> becomes a data: URI (but an <img data-noinline>, left a link). Remote URLs are left alone, so
 anything still loaded from the network shows up in `remote_refs()`.
 """
 import base64,mimetypes,pathlib,re
@@ -37,7 +37,7 @@ def inline(html,base):
         return '<style>\n'+_css((base/ref).resolve())+'</style>'
     def img(m):
         ref=m.group(2)
-        return m.group(0) if not _local(ref) else m.group(1)+_data((base/ref).resolve())+'"'
+        return m.group(0) if not _local(ref) or 'data-noinline' in m.group(1) else m.group(1)+_data((base/ref).resolve())+'"'   # data-noinline: a large image served beside the page, not carried in it (the Wempe's assembled sheet)
     html=re.sub(r'(<img[^>]*?\ssrc=")([^"]+)"',img,html)   # before the scripts go in, so their text is never rewritten
     html=re.sub(r'<script src="([^"]+)"></script>',script,html)
     html=re.sub(r'<link rel="stylesheet" href="([^"]+)">',style,html)

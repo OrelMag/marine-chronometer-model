@@ -139,7 +139,7 @@ const VIEWER={start(cfg){
   function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK();G.follow=mvL(...v.target);panO.set(0,0,0);camFree=camMine=false;}
   let camFree=false,camMine=false,camLink=null,zf=false;   /* camMine: the camera moved by hand since a view, step or zoom set it (cam= in the link); camLink: a link's, applied after the opening move */const panO=new THREE.Vector3(),pv=new THREE.Vector3();
   function panBy(dx,dy){camMine=true;const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
-  const dsh=$('#devSheet'),dsd=$('#sheet'),expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
+  const dsh=$('#devSheet'),dsd=$('#sheet'),ash=$('#asmSheet'),asd=$('#sheetA'),expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
   /* the Exploded view's Movement or All: All spreads the case's parts too (cfg.tick takes st.allK) and stands the camera back to the view's own all ({yaw, pitch, dist, target}) */
   const allT=vv=>vv.explode&&st.all&&st.tour<0?expV():0,camOf=vv=>vv.all&&st.all&&st.tour<0?{...vv,...vv.all}:vv.sub&&st.asm.size&&st.tour<0?{...vv,...vv.sub}:vv,allW=$('#expAllWrap');
   const allSync=()=>document.querySelectorAll('#expAll button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='all')===st.all?'true':'false'));
@@ -154,7 +154,7 @@ const VIEWER={start(cfg){
   const asmKey=()=>ASM.filter(a=>st.asm.has(a.k)).map(a=>a.k).join(',');
   /* setAsm(ks): the subassemblies apart, as a choice (jump: the camera's place kept for Back) */
   function setAsm(ks){const was=st.asm.size;jump(()=>{st.asm=new Set(ks);subSync();const vv=VIEWS[st.view];if(st.tour<0&&vv.explode&&!!was!==!!st.asm.size)goCam(camOf(vv));});look();}
-  function setView(k,keepSee){if(zf){zf=false;st.focus=null;}if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),dev:(vv.dev||0)*expV(),all:allT(vv),sub:subT(vv),fov:vv.fov||FOV0});goCam(camOf(vv));st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode&&!vv.dev);if(dsh)dsh.classList.toggle('hidden',!vv.dev);if(allW)allW.classList.toggle('hidden',!vv.explode);if(subW)subW.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(subE)subE.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(pcW)pcW.classList.toggle('hidden',!vv.explode||!st.asm.size);
+  function setView(k,keepSee){if(zf){zf=false;st.focus=null;}if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),dev:(vv.dev||0)*expV(),all:allT(vv),sub:subT(vv),fov:vv.fov||FOV0});goCam(camOf(vv));st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode&&!vv.dev);if(dsh)dsh.classList.toggle('hidden',!vv.dev);if(ash)ash.classList.toggle('hidden',!!(vv.dev||vv.explode));if(allW)allW.classList.toggle('hidden',!vv.explode);if(subW)subW.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(subE)subE.classList.toggle('hidden',!vv.explode||!mv.userData.asmx);if(pcW)pcW.classList.toggle('hidden',!vv.explode||!st.asm.size);
     expR.setAttribute('aria-label',vv.dev?'How far the train is laid out in a line':'How far apart the exploded parts are');
     if(!keepSee)st.see=!!vv.see;look();if(hashReady)keep('view',k);document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward; jump(f) moves the camera with f and keeps the place it left, unless f didn't move it */
@@ -281,7 +281,8 @@ const VIEWER={start(cfg){
   document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();if(st.tour>=0)tourEnd();if(cfg.leave)cfg.leave();jump(()=>setView(b.dataset.v));}));   /* a view chosen ends the walkthrough */
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   /* the lettered sheet of the Laid out view (#devSheet, its thumbnail shown laid out; laidout.py --write renders it), opened large in #sheet, which takes the thumbnail's image (inlined once) */
-  if(dsh&&dsd){dsh.addEventListener('click',()=>{const i=dsd.querySelector('img');if(!i.getAttribute('src'))i.src=dsh.querySelector('img').src;if(dsd.showModal)dsd.showModal();else dsd.setAttribute('open','');});dsd.addEventListener('click',e=>{if(e.target===dsd)dsd.close();});}
+  /* and the assembled sheet (#asmSheet, shown while neither Exploded nor Laid out is on; assembled.py --write renders it), opened in #sheetA the same way */
+  for(const[bt,dl]of[[dsh,dsd],[ash,asd]])if(bt&&dl){bt.addEventListener('click',()=>{const i=dl.querySelector('img');if(!i.getAttribute('src'))i.src=bt.querySelector('img').src;if(dl.showModal)dl.showModal();else dl.setAttribute('open','');});dl.addEventListener('click',e=>{if(e.target===dl)dl.close();});}
   const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});about.addEventListener('click',e=>{if(e.target===about)about.close();});
   /* Remember settings: only with it on does this browser keep anything (under cfg.store's prefix, apart from the other models'); off, what was is cleared at load */
   const SP=(cfg.store||'mdl')+'-',RK=['set','theme','open','state'].map(k=>SP+k);let REM=false;try{REM=localStorage.getItem(SP+'remember')==='1';if(!REM)RK.forEach(k=>localStorage.removeItem(k));}catch(_){}
@@ -362,7 +363,7 @@ const VIEWER={start(cfg){
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');$('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     if(tDots)[...tDots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
     st.drive=!!s.drive;st.mwOn=!!s.mw;setView(s.view||cfg.startView);st.see=!!s.see;st.focus=s.focus?new Set(s.focus):null;setSpeed(s.speed??1);if(s.v)goCam(s.v);look();
-    document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');if(dsh)dsh.classList.add('hidden');if(allW)allW.classList.add('hidden');
+    document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');if(dsh)dsh.classList.add('hidden');if(ash)ash.classList.add('hidden');if(allW)allW.classList.add('hidden');
     if(cfg.tourStep)cfg.tourStep(s);const ins=$('#tInset');if(ins){ins.innerHTML='';if(cfg.tourInset)cfg.tourInset(s.inset||null,ins);}
     /* bring the card into view: below the stage when the stage sits above the panel (phones in portrait), else beside it (RESOLVED.md: test the layout, not the width) */
     if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
