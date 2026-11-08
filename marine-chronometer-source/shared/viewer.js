@@ -367,7 +367,8 @@ const VIEWER={start(cfg){
     if(cfg.tourStep)cfg.tourStep(s);const ins=$('#tInset');if(ins){ins.innerHTML='';if(cfg.tourInset)cfg.tourInset(s.inset||null,ins);}
     /* bring the card into view: below the stage when the stage sits above the panel (phones in portrait), else beside it (RESOLVED.md: test the layout, not the width) */
     if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
-      if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
+      if(cr.left<stage.getBoundingClientRect().right){const tb=$('#ptabs'),th=tb&&tb.getClientRects().length?tb.offsetHeight+12:0,y=cr.top+scrollY-stage.offsetHeight-th-8;   /* under the tabs too: they stick beneath the stage */
+      if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
       else card.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'});}}
   function tourEnd(){if(st.tour<0)return;const u=preTour||{view:cfg.startView,see:false,speed:1,drive:false,mwOn:false};preTour=null;st.tour=-1;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;setSpeed(u.speed);
     if(cfg.tourStep)cfg.tourStep(null);if(cfg.tourInset)cfg.tourInset(null,$('#tInset'));$('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView(u.view,true);st.see=u.see;look();}

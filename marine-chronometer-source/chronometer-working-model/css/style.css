@@ -340,7 +340,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .ptabs{position:sticky;z-index:3;top:12px;display:flex;gap:2px;margin:0 0 12px;padding:3px;border-radius:12px;background:var(--track);box-shadow:0 0 0 6px var(--bg)}
 .mdl .panel .ptabs button{flex:1;min-height:0;padding:7px 6px;border:0;border-radius:9px;background:none;color:var(--muted);font:600 13.5px "Instrument Sans",system-ui,sans-serif}
 .mdl .panel .ptabs button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
-@media(max-width:959px){.ptabs{top:max(340px,min(56svh,760px))}}
+.mdl .panel details,.mdl .panel .card{scroll-margin-top:64px}@media(max-width:959px){.ptabs{top:max(340px,min(56svh,760px))}.mdl .panel details,.mdl .panel .card{scroll-margin-top:calc(max(340px,min(56svh,760px)) + 64px)}}   /* a section scrolled to lands under the tabs (on a phone, the stage and tabs), not behind them */
 @media(orientation:landscape) and (max-height:560px){.ptabs{top:0}}
 .mdl #dispDet>summary{display:none}
 /* the panel's controls: actions soft, choices segmented, boxes as switches */
@@ -371,4 +371,5 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 @media(max-width:600px){.mdl header{padding:10px 16px 8px;gap:6px 14px}.mdl h1{flex:1 1 0;min-width:0;white-space:normal;font-size:1.4rem}.mdl .flip{order:1}.mdl .flip .fl,.mdl .flip .fd{display:none}.mdl header .tabs{order:2;flex-basis:100%}.mdl nav.models{order:3;margin:0}
   .mdl .hint{top:calc(var(--th,42px) + 20px);max-width:calc(100% - 28px)}.mdl .tools{left:12px;right:auto}
   .mdl .play .hud{font-size:12px}.mdl #windP{padding:8px 11px}.dock{left:8px;right:8px;bottom:8px}}
-@media(pointer:coarse){.mdl .tools>button{width:40px;height:40px}.mdl .vstrip button{min-height:36px}.mdl .ptabs button{min-height:40px}}
+@media(pointer:coarse){.mdl .panel button{box-sizing:border-box}   /* min-height 44 is the whole button, its padding inside: content-box made them 60 */
+  .mdl .tools>button{width:40px;height:40px}.mdl .vstrip button{min-height:36px}.mdl .ptabs button{min-height:40px}}
