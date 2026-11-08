@@ -21,6 +21,11 @@ export default{
     if(m){u.pathname=m.path;u.search=m.search;}
     if(!LOCAL.has(u.hostname)&&(u.hostname!==MAIN||u.protocol!=='https:')){u.hostname=MAIN;u.protocol='https:';u.port='';go=true;}
     if(go)return Response.redirect(u.toString(),301);
-    return env.ASSETS.fetch(req);
+    const r=await env.ASSETS.fetch(req);
+    if(r.status!==404)return r;
+    /* a 404 is never kept (_headers gives every response max-age=600): asked for while a release was still going up, a new file (the Wempe's assembled sheet,
+       3.83.00) stayed broken in the browser and at the edge for ten minutes after it arrived */
+    const h=new Headers(r.headers);h.set('Cache-Control','no-store');
+    return new Response(r.body,{status:404,statusText:r.statusText,headers:h});
   }
 };
