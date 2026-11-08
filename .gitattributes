@@ -8,3 +8,5 @@
 *.pdf binary
 *.djvu binary
 *.npy binary
+# Ciechanowski's Mechanical Watch is kept byte for byte as the site serves it (its manifest's sha256).
+References/ciechanowski-mechanical-watch/** -text
