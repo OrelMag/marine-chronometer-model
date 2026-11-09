@@ -1100,8 +1100,11 @@ const WCASE=(()=>{
        middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
     /* KBLK: the key of 1943's black pieces (its body and paddle). The Soviet 6MX's key is brass (the 6MX case review, 8 November 2026, B6: Poljot 09777's, Uy8A88_j-cA
        5:20-5:26, all brass; DIxob2Rl4dc 6:57-7:00 "a flat round brass paddle on a short tube"; the blind reader's brass or gilt: likely in colour). Its form and size as the
-       key of 1943's, which no 6MX photograph measures (estimated): only its colour follows the version (rev) */
-    const KBLK=[];
+       key of 1943's, which no 6MX photograph measures (estimated): only its colour follows the version (rev). The Variants' Key (setKey, app.js's kf): brass by default, as
+       The Mariner's Chronometer's Fig. 2.35 has a key of 1943 taken apart (its body bare brass; the paddle brass with it: estimated), or black as 05 01 02-2's note gives the
+       body ("sandeln, phosphatieren, schwarz spritzen") and the Greenwich wartime Wempe's key is photographed (the owner's choice, 9 November 2026) */
+    const KBLK=[];let KFIN='brass',K6=false;
+    const paintKey=()=>{const mt=K6||KFIN!=='black'?M.brass:MC.black;for(const m of KBLK){m.material=mt;if(m.userData.mat0)m.userData.mat0=mt;}};   /* mat0 too: the viewer paints each mesh from it */
     const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:36.47),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
     {const g=new THREE.Group();g.userData.rev='last 6mx 1943';g.userData.sub='key';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return KIT.latheF(q.map(([r,y])=>V2(r,y)),n);};
@@ -1180,6 +1183,7 @@ const WCASE=(()=>{
       cv.getPoint=s=>{if(s<=2/N)return Pc.clone().lerp(Pb,s*N/2);if(s<=4/N)return Pb.clone().lerp(Pa,(s-2/N)*N/2);const t=(s-4/N)/(1-4/N),a=Math.PI/2+t*nT*TAU;return V3(rs*Math.cos(a),y0+(y1-y0)*t,rs*Math.sin(a));};
       cv.getPointAt=cv.getPoint;cv.getTangentAt=cv.getTangent;
       tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,N,KS.w/2,6,false)),M.steel),'510011-4');}
+    paintKey();   /* brass until setKey or rev says otherwise (a page that builds the case without either: the essay, the tools) */
     /* As first drawn (the page's Variants), the key of 1940 (Aufzugschlüssel 127-556.02 U 01 = 51 00 11, 12.12.40, 2:1), which the key of 1943 replaced under the same
        number: 84 overall and the pipe 32 out of the body (sure); the rest traced on the sheet at 6.79 px/mm (by its 84): the handle a flat pear-shaped plate (the tang, part 1:
        the side view draws it 3.2 thick and no bulb), widest Ø 34.8 about 9 from its top, its neck Ø 16.5; the body (2) a cone Ø 17.9 to 10.3 over 19.3. Like the 1943 key a
@@ -1236,9 +1240,10 @@ const WCASE=(()=>{
     let woodK=null;const C0=[CB].map(m=>m.userData.c0||(m.userData.c0={c:m.color.clone(),m:m.metalness,r:m.roughness})),woodB=MC.mah.map;
     const setCase=v=>{const b=v==='black';[CB].forEach((m,i)=>{const o=C0[i];m.color.copy(b?sc(0x141416):o.c);m.metalness=b?0.1:o.m;m.roughness=b?0.36:o.r;});
       if(b&&!woodK)woodK=woodTex(false,false,true);MC.mah.map=b?woodK:woodB;MC.mah.needsUpdate=true;};
-    const out={setCase,stay:stayAt,root,ring:ringG,bowl:bowlG,inner:bowlS,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=cps*(1-q);cp.userData.turn();},setShut:v=>cp.userData.setShut(v),lock:k=>{for(const t of LKT)t.rotation.y=-t.userData.turn*D2R*k;},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
+    const setKey=v=>{KFIN=v==='black'?v:'brass';paintKey();};
+    const out={setCase,setKey,stay:stayAt,root,ring:ringG,bowl:bowlG,inner:bowlS,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=cps*(1-q);cp.userData.turn();},setShut:v=>cp.userData.setShut(v),lock:k=>{for(const t of LKT)t.rotation.y=-t.userData.turn*D2R*k;},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
     /* rev(v): the lids the page turns are the version's (app.js's onRev) */
-    out.rev=v=>{const s=v==='6mx';for(const m of KBLK){m.material=s?M.brass:MC.black;if(m.userData.mat0)m.userData.mat0=m.material;}   /* mat0 too: the viewer paints each mesh from it */out.lid=s?lid6G:lidG;out.tongue=s?tg6:tgG;out.overLid=s?ol6G:olG;bowlS.position.y=s?-DY6:0;cp.userData.spEnd(s?YB-61.3:YB-63,s?0:CPY);};
+    out.rev=v=>{const s=v==='6mx';K6=s;paintKey();out.lid=s?lid6G:lidG;out.tongue=s?tg6:tgG;out.overLid=s?ol6G:olG;bowlS.position.y=s?-DY6:0;cp.userData.spEnd(s?YB-61.3:YB-63,s?0:CPY);};
     /* the Exploded view's All (app.js, the viewer's st.allK, e 0 to 1): the case taken apart up the bowl's axis, under the movement lifted out of it: the gimbal ring 50 over
        the box, the closing plate 128, the bowl with its brackets 150, the bezel with its glass 195; the transit lock and the key out to the right, the lid back off its hinges.
        Each moved from where it was built (ex0); the key, which keyAt moves, only while it stands in its holder (called each frame) */
