@@ -473,6 +473,9 @@ Object.assign(REV6,{
   bowl:{src:'scaled',sn:'Its rim on Kirov 247’s dial photograph (in its bowl); its outside with a camera fitted in the meridian plane on Kirov 2973’s and 247’s bowls; its brackets on 247’s; its inside, which no photograph shows, follows its outside (estimated)',
     d:'The Soviet 6MX’s bowl: brass, turned to its own profile, no flange: a threaded rim, Ø 110.5, stands round the movement ring’s flange and the knurled bezel screws onto it, a collar under it, then the body and a shallow cone to the foot, the inside shaped to match. Its case brackets are high, their pivot holes 3 mm under the rim’s top, so it hangs 13 mm lower in the gimbals than the drawings’ bowl; the locking bracket ends in a hook over the rim, which the transit lock stops against. The contact’s springs are inside and its terminals, + and −, outside. The closing plate in its foot is a flat disc.',
     sp:'6MX (no sheet) · rim Ø 110.5, threaded · collar Ø 113.2 · body Ø 104.8 to 46.7 under the rim · foot Ø 73.4 from 55.3 · brackets’ pivots 3.0 under the rim · bore Ø 98'},
+  gimbalRing:{t:'Gimbal ring (6MX)',src:'scaled',sn:'Its inside, Ø 133 ±3, read on the 6MX’s photographs (the 6MX case review, 9 November 2026: one blind reading, no camera); its thickness, bracket, pivots and slot the drawings’ ring’s',
+    d:'The 6MX’s gimbal ring, smaller than the drawings’: Ø 133 inside, so the bowl, its pivots near its rim, can’t turn over inside it. To be wound, the ring turns over with the bowl in it about the box’s pivots (estimated: no source shows how a Kirov of the 1950s was turned). Its inner pivots run in the bowl’s brackets, its outer pivots are screws through the box’s walls, and the transit lock’s lever passes through the slot in its band.',
+    sp:'6MX (no sheet) · Ø 133 × 3.7 inside and thick · the bowl swings ±28.5° in it'},
   closingPlate:{src:'scaled',sn:'Its form on Kirov 14917’s foot (rAw2zmulpk8 0:11.75) and Kirow 422’s: no boss; its knob’s place there (±2); its groove, holes and spring the drawings’ (no 6MX photograph shows the spring)',
     d:'The 6MX’s closing plate: a flat disc in the bowl’s foot, without the drawings’ raised boss, turned on its centre screw by a domed knob to uncover the winding hole.',
     sp:'6MX (no sheet) · Ø 68 × 2.3 · screw head Ø 8 · knob Ø 6.5 at r 19'},
@@ -511,7 +514,7 @@ const REVP={
 /* Wempe 3955 as photographed (the Variants' "Wempe 3955 (as photographed)", rev=3955): the cards as first drawn, but for the parts its photographs show in another form
    (References/wempe/photos/dg-chrono-dec, fitted and compared by tools/photocompare.py; Review-results.md, "Photographs against the model"), each with what the sheet draws */
 const REV3955={},REVP3955={};
-const REVP6={barrel:REVP.barrel,balance:REVP.balance,escapeWheel:REVP.escapeWheel,topPlate:{bushes:{t:'Centre arbor’s bush (Messinglager WN-301)',d:'The brass bush pressed into the top plate in which the centre arbor’s upper pivot runs, an oil sink in its outer face; the 6MX keeps it, its intermediate and seconds arbors running in jewels instead.',sp:'In the plate’s hole Ø 4.59 · bore Ø 1.21'}}};
+const REVP6={gimbalRing:{ring:{t:'Gimbal ring (6MX)',sp:'6MX (no sheet) · Ø 133 inside × 3.7 (read on the 6MX’s photographs) · pivots at its middle'}},barrel:REVP.barrel,balance:REVP.balance,escapeWheel:REVP.escapeWheel,topPlate:{bushes:{t:'Centre arbor’s bush (Messinglager WN-301)',d:'The brass bush pressed into the top plate in which the centre arbor’s upper pivot runs, an oil sink in its outer face; the 6MX keeps it, its intermediate and seconds arbors running in jewels instead.',sp:'In the plate’s hole Ø 4.59 · bore Ø 1.21'}}};
 /* the Soviet 6MX against the drawings (the panel's sheet, #x6Det): each difference the 6MX version builds (the Wempe README's "The Soviet 6MX", its readings and how sure each is;
    REV6's cards), what the drawings have and what the 6MX has, and where to look: f the parts or pieces singled out (both versions' pieces, so either shows as the sheet flips),
    o the viewer's focusOn options (a view to stand in; at, r a place in the movement's frame, mm, from WD and DIMS; yaw, pitch where the view's own doesn't show it) */
@@ -556,6 +559,8 @@ const X6=(()=>{const H=WD.H,TY=-WD.INNER-WD.TOP_T/2,PY=WD.PP_T/2,mid=(...p)=>[0,
     f:['bowl.bowl','bowl.brackets','bowl.lockBracket'],o:{view:'case',pitch:0.35}},
   {g:'Case and boxes',t:'The bezel',s:'likely',w:'A cast bezel with a knurled band, screwed onto the bowl’s rim, its step on the dial.',x:'A brass ring with a diamond knurl, screwed onto the bowl’s rim on a thread of pitch 1.0, its shoulder holding the ring’s flange down, a thick bevelled glass flush with its lip (Kirow 422’s, Kirova 14100’s and Poljot 09777’s; the pitch Kirov 247’s).',
     f:['bezel'],o:{view:'case',pitch:0.5}},
+  {g:'Case and boxes',t:'The gimbal ring',s:'likely',w:'The drawings’ ring, Ø 140 inside, the bowl turned over inside it to be wound.',x:'A smaller ring, Ø 133 inside, turned over with the bowl in it to be wound (its size read on the photographs; how it turned estimated).',
+    f:['gimbalRing'],o:{view:'case',pitch:0.5}},
   {g:'Case and boxes',t:'The closing plate',s:'likely',w:'A closing plate with a raised boss in the bowl’s foot (05 01 00-2).',x:'A flat disc, no boss, its domed knob at r 19 (Kirov 14917’s foot, rAw2zmulpk8 0:11.75, and Kirow 422’s). Its spring is the drawings’ (estimated).',
     f:['closingPlate'],o:{view:'case',pitch:-0.75,k:1.8}},
   {g:'Case and boxes',t:'The box',s:'likely',w:'The drawings’ wooden box (05 01_1, 51 00_1) with one glazed lid on a piano hinge.',x:'Orange lacquered wood, 190 each way (the TU’s), in three tiers: the body, a glazed lid and a top lid, two hasps with knurled screws, the factory’s diamond badge and the number plate 247 (Kirov No. 247’s and 22823’s). Its walls are estimated.',
@@ -635,7 +640,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
   /* ct: the 6MX's electrical contact shown (setCt): hidden unless asked for (the owner's choice, 24 October 2026), but shown under ?qa so the tools weigh and check it */
   const CT0=/[?&]qa\b/.test(location.search);let ct=CT0;
-  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',mix=null,revReq='last',RSO=null,dial='wempe',fin='plain',cs='brass',shut='drawn',MAT=null,HPT=90/14,HRUN=55.9;
+  let CW6=0,hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',mix=null,revReq='last',RSO=null,dial='wempe',fin='plain',cs='brass',shut='drawn',MAT=null,HPT=90/14,HRUN=55.9;
   /* the Variants' dial: Wempe 3955's printing (the default) or Lange 5177's, both traced on their photographs (dial.js's face, dialface.js and dialface_lange.js): the
      face's texture (dial.js's R.setDial) and the dial's card (its text, and the viewer's copy of it, VV.INFO, once it has started: the link's state is read while it starts) follow */
   let VV=null;const DIALC={wempe:null,kirov:{d:'The dial, white with its figures etched and filled black, printed as on Kirov No. 247’s, the Soviet 6MX’s of 1952: the minute track and the hours, the up-and-down sub-dial at 12, open at the top for СПУСК (run down) and ЗАВОД (wound), 0 to 56 hours, the seconds sub-dial at 6, the factory’s mark 1МЧЗ and ИМЕНИ КИРОВА (the 1st Moscow Watch Factory named after Kirov) across the centre, and the number, 247, written in red ink. Its layout is the drawings’: its six printed circles measure the sheet’s figures within 0.1 mm. On the 6MX its three screws are at the 19, 39 and 59 minute marks.',
@@ -775,7 +780,10 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
          square, CW_T s each (estimated); the fusee turns once it is on, and when it is wound it all goes back */
       {const CW_T=0.8;if(cw.go&&cw.on&&!winding)cw.go=false;const t=cw.go?3:0;if(!cw.go)cw.on=false;
         if(!(t>cw.u&&GW.levK>0))cw.u=SNAPC||RMC.matches?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dw/CW_T);   /* the bowl turns over only once the transit lock's lever is out of its bracket */if(cw.go&&!cw.on&&cw.u>=3){cw.on=true;wind0();}   /* once: wind0 starts the maintaining spring's clock (until 15 October 2026 it ran each frame and held it at the start) */
-        CS.bowl.rotation.z=-Math.PI*smooth(clamp(cw.u,0,1));CS.shutter(smooth(clamp(cw.u-1,0,1)));}
+        /* the Soviet 6MX's (the 6MX case review, 9 November 2026, the owner's choice): its bowl, hung high in a ring Ø 133 inside (pivots 0-3 under its rim, its foot 76 from
+           them: Kirov 247's and 2973's bowls, Kirov 14917's ring, read blind), can't turn over inside its ring, so the ring turns over with it about the box's pivots (inferred:
+           the Poljots filmed turning the bowl in the ring hang it lower); CW6, the ring's turn, added to the ship's below */
+        {const cT=Math.PI*smooth(clamp(cw.u,0,1)),c6=!!mix&&mix.case==='6mx';CS.bowl.rotation.z=c6?0:-cT;CW6=c6?cT:0;CS.ring.rotation.x=CW6;}CS.shutter(smooth(clamp(cw.u-1,0,1)));}
       /* the ship's motion (GW above), on the wall clock: eased in and out; the transit lock brings the gimbals level with the box over about a second; ?snap and reduced
          motion keep the case exactly level */
       {const fix=SNAPC||RMC.matches,wR=TAU/(+document.getElementById('rollP').value||7),kr=fix?1:1-Math.exp(-dw*1.5);GW.rockW+=((GW.rock&&!fix?1:0)-GW.rockW)*kr;if(!GW.rock&&GW.rockW<1e-4)GW.rockW=0;
@@ -787,7 +795,7 @@ const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H
         /* drawn with the apparent vertical up (18 October 2026; the Hamilton's the same), as a plumb line hung beside the box would show down: the bowl, hanging along it, stays
            put and the box rolls and pitches round it, the ring and bowl against the box as the gimbals take it; locked, the bowl goes with the box. Until 16 October the box rolled
            in the true vertical's frame and the bowl leaned in it toward the apparent vertical, so both seemed to move; then until 18 October the box stood still and the bowl swung */
-        CS.root.rotation.set(GW.pitch-(G.ap||0),0,GW.roll-(G.ar||0),'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
+        CS.root.rotation.set(GW.pitch-(G.ap||0),0,GW.roll-(G.ar||0),'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr+CW6;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
          square; else standing in its holder in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}

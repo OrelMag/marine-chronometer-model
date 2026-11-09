@@ -53,9 +53,9 @@ const BLENDER=(()=>{
     mv.userData.explode(smooth(s.ex));mv.userData.develop(smooth(s.dev));look(C,s.dev>0.02);
     const L1=smooth(s.up/0.55),L2=smooth((s.up-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;   /* as app.js's tick */
     CS.lid.rotation.x=-s.lid*1.75;CS.stay();CS.tongue.rotation.z=-Math.min(1,s.lid*4)*Math.PI/2;
-    CS.bowl.rotation.z=-Math.PI*smooth(clamp(s.cw,0,1));CS.shutter(smooth(clamp(s.cw-1,0,1)));
+    const cT=Math.PI*smooth(clamp(s.cw,0,1)),c6=(mv.userData.mix||{}).case==='6mx';CS.bowl.rotation.z=c6?0:-cT;CS.shutter(smooth(clamp(s.cw-1,0,1)));   /* the 6MX's ring turns over with its bowl (app.js's CW6) */
     const kc=s.cw>2,kd=kc?(1-smooth(clamp(s.cw-2,0,1)))*60:0,ko=s.keyOn||kc;if(ko||C.key){CS.keyAt(ko?C.R.fu.keySeat:null,kd);C.key=ko;}   /* the key on the fusee's square (the keySeat's group), or back in its holder */
-    CS.root.rotation.set(s.pitch,0,s.roll,'ZYX');CS.ring.rotation.x=s.gp-s.pitch;CS.bowl.rotation.z+=s.gr-s.roll;}   /* the box rolled and pitched, the ring and bowl in their gimbals (At sea: drawn with the apparent vertical up, as the page draws it) */
+    CS.root.rotation.set(s.pitch,0,s.roll,'ZYX');CS.ring.rotation.x=s.gp-s.pitch+(c6?cT:0);CS.bowl.rotation.z+=s.gr-s.roll;}   /* the box rolled and pitched, the ring and bowl in their gimbals (At sea: drawn with the apparent vertical up, as the page draws it) */
   /* ---------- the train and balance through time: app.js's tick (drive, swing, stopping at a locked beat and going again), at speed 1, without its twist ---------- */
   function sim(C,hrs){const PH=A.PH,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:1,Eh:0,tSim:0,hrs,winding:false,w0:0,wT:0};   /* eOff 1: at 0 s the escape wheel at E 0, ESC.state(0)'s, the rest pose */
     H.drv=()=>H.winding?(H.w0>0?PH.susDrv(H.m0,H.wT):0):H.hrs<A.HRUN-1e-6?A.drvF(H.hrs):0;H.amp=PE.ampAt(H.drv());

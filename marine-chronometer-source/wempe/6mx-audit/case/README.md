@@ -12,7 +12,7 @@ The owner asked for a thorough review of everything outside the movement on the 
 
 The review is to be audited afterwards, so each row says where its reading came from and how sure it is.
 
-**Fixed on 8 November 2026** (the owner's choice: the sure and likely fixes, in the 6MX version only), listed in "What was fixed" at the end. The transit lock (A2) was fixed the same day at the owner's choice. The turn-over fault (A1) is being measured (the ring's inside and the bowl's depth), at the owner's choice.
+**Fixed on 8 November 2026** (the owner's choice: the sure and likely fixes, in the 6MX version only), listed in "What was fixed" at the end. The transit lock (A2) was fixed the same day at the owner's choice. The turn-over fault (A1) was measured (the ring's inside and the bowl's depth, `blind-ring-foot.md`) and settled on 9 November 2026 at the owner's choice: the 6MX's ring is made Ø 133 inside, and its Wind turns the ring and the bowl together ("A1 settled" at the end).
 
 ## The short answer on the bezel
 
@@ -172,3 +172,11 @@ The owner chose to make the sure and likely fixes, in the 6MX version only, and 
 - The lever's end, 28.0 from the knob's axis, enters the hook from its open side and meets the closed column after 49.0°. The page turns it 48.8°. The sweep is a stadium 8 wide in 0.5° steps, tested against the column and the ring's band outside its window: clear.
 - The grip moved to the drawings' 0.52 of the lever, because at 0.55 its edge passed 0.14 inside the ring's outside.
 - Checks: `massprops.py --model wempe --rev 6mx --write`, `gimbals.js --model wempe --quick` (`MC_WREV=6mx`, ok), `audit.py box --model wempe --rev 6mx` (nothing new), `solids.py --model wempe` (0), `holecheck.py --model wempe` (1,633 holes over five versions, 0 failing), `smoke.py --model wempe` (ok).
+
+**A1 settled, 9 November 2026** (the owner's choices: "Turn ring and bowl together", "Make it 133"):
+- The ring and the foot read blind (`blind-ring-foot.md`): the 6MX ring Ø 133 ±3 inside, the bowl 67.5 overall. With pivots 0-3 under the rim, a 1950s Kirov's bowl can't turn over inside its own ring; only the later Poljots, whose pivots stand lower, do.
+- So the 6MX's ring is made 133 inside and 3.7 thick (`gring` in `case.js` builds every version's ring; the drawings' versions keep Ø 140 × 4 with its nuts). The 6MX's ring has no lock nuts (WN-400, its `bom.json` line now in the drawings' versions only): none shows on Kirova 14100's ring (C12), and the ring's inside stands 2.2 off the bowl's brackets, with no room for them. The inner pivots (WN-79) and the box's outer pivots (WN-80) move in with it, and the outer pivots reach in further to meet it.
+- The page's Wind turns the ring with the bowl in it about the box's pivots in the 6MX version (`app.js`'s `CW6`, and the export's `apply()` in `blender.js`). The drawings' versions still turn the bowl in its ring.
+- The locking bracket's hook was trimmed from r 67.5 to r 64 to clear the smaller ring. The lever now meets the column at 51.5°; the page turns it 51.3°.
+- In the 133 ring the 6MX bowl can swing about ±28.5-30° before it meets the ring or the inner pivots' tips (`tools/gimbals_wempe_6mx.json`: `bowlInRing` [28.5, 30], the box's stops [59, 39]). The full `gimbals.js --model wempe` with `MC_WREV=6mx` passes: in the seas a ship works, the case meets neither the ring nor the box. Only a rough small vessel or a storm swings it onto that limit, passing at most 0.6 g to the balance.
+- Checks: `solids.py --model wempe` 0 not solid; `audit.py box --model wempe --rev 6mx` nothing new once the ring's four radial screws were listed in `FLOAT_BOX`, as the drawings' ring's are; `audit.py box --model wempe` nothing new; `holecheck.py --model wempe` 1,633 holes over five versions, 0 failing; the Wempe type check ok. The rest are in the commit.
