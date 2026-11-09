@@ -4,6 +4,12 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.84.00 · 2026-11-09
+- Soviet 6MX case: bracket screws in slots, the locking bracket's hook with its slot, the + and − marks, a diamond-knurled bezel with its glass flush, a 1.0 mm thread and a brass key, as photographed
+- Soviet 6MX: the transit lock's lever turns through the gimbal ring's slot into the hook, as on the drawings
+- Soviet 6MX: a smaller gimbal ring, 133 mm inside, without lock nuts; Wind turns the ring and the case over together
+- Fixed: the 6MX's key showed black after the page repainted it
+
 ## 3.83.02 · 2026-11-08
 - The Wempe's parts list sorts each part under its own heading (the balance, escapement, fusee and motion work had been listed one heading out)
 - The Wempe's lettered sheets show as a compact thumbnail inside the panel

@@ -56,6 +56,12 @@ const WCASE=(()=>{
      when it is screwed down), its roots r 54.87 and crests r 55.276, Ø 110.55 (the 6MX's rim Ø 110.5 measured on Kirov 247's dial photograph: below). Right-hand (estimated),
      the bowl's and the bezel's on one helix (TH.yr). TC: the bowl's rim over the seat, the flange's 4.7 */
   const TC=WD.CASEQ.Y.TC,TH={...WD.CASEQ.TH,yr:YB},BWQ=WD.CASEQ.BW;
+  /* TH6: the Soviet 6MX's thread, pitch 1.0 (the 6MX case review, 8 November 2026, 6mx-audit/case/README.md B7: Kirov No. 247's rim thread, 12_Kirow_247_E-Kontakt_3.jpg,
+     five ridges 7.8 px apart where its scale is at most 8.5 px/mm: 0.9-1.2; the blind reader 1.0 ±0.25 on 247 and 2973; likely. 0.75 until then, Kirov-Poljot 24020's), the
+     ISO basic profile's depth for it (0.5413 p); the bowl's crests and the bezel's roots where TH has them (the rim's Ø 110.55; 247's dial photograph reads 110.1 ±0.4), the
+     bowl's roots and the bezel's crests 0.5413 in from them (the movement ring's radial pin, its end at r 54.75, 0.015 inside the bezel's crests). Its hand can't be told
+     on any photograph or frame: right-hand, as TH (estimated) */
+  const TH6={...TH,p:1.0,d:0.5413,Rm:TH.Rm+TH.d-0.5413};
   const PIN={r:1.25,up:2.3,dn:3.3};   /* the box's pins over the outer pivots: radius, standing over the parting face, into the wall (05 01's elevation: below) */
   const HGL=148,HGT=0.6,STA=5,STB=40,STC=20,STD=45,STL=91,SS0=23.5,SS1=86.5;   /* the hinge's length and leaf, the lid stay's pivot (over the parting line, from the back's outside), its pin (under it, from the back) and the bar, its slot from the pivot */
   const KX=BW-WT-14,KZ=-(BW-WT-14),KH=YF+WT+65;   /* the key's holder: its fitting's centre (back right, 14 from each wall: 51-00_1, the box, below) and the fitting's top, where the key's cone seats */
@@ -80,7 +86,7 @@ const WCASE=(()=>{
      the case brackets): S the segments [{a0, a1, p}] in turn (atan2(z, x)), contiguous, each sweeping its section p ([r, y], anticlockwise with r across and y up) from a0
      to a1; J[i] the step between S[i] and S[i + 1], the larger section less the smaller ({p, m}: m +1 with the metal on the lower turn's side); full: one segment the whole
      turn round, without ends. holes [{a, y, r, ra, rb}]: a hole r at turn a and height y from ra out to rb, open where a face of constant r ends it, floored where none does;
-     win {a0, a1, y0, y1}: a window through a rectangular section. The faces of constant r on one grid, each segment's columns (240 to the turn, the holes' and the window's
+     win {a0, a1, y0, y1}: a window through a rectangular section (or a list of them, each inside one segment: the 6MX's case brackets' two slots, 8 November 2026). The faces of constant r on one grid, each segment's columns (240 to the turn, the holes' and the window's
      lines put in) by the rows (the holes' and the window's), the cells within hs of a hole a fan from the square's edge to the hole; the ends ear-clipped keeping every
      point on their edges (earcut drops a point in line with its neighbours, which leaves a T-junction against the faces). One closed solid, every edge shared by two faces;
      the turned faces and the holes' walls shaded round */
@@ -88,7 +94,7 @@ const WCASE=(()=>{
     const tri=(a,b,c,na,nb,nc,f)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
       if(Math.hypot(x[0],x[1],x[2])<1e-12)return;if(x[0]*f[0]+x[1]*f[1]+x[2]*f[2]<0){[b,c]=[c,b];[nb,nc]=[nc,nb];}for(const[q,n]of[[a,na],[b,nb],[c,nc]]){P.push(...q);Nm.push(...n);U.push(q[0],-q[2]);}};
     const quad=(A,B,C,D,n,f)=>{tri(A,B,C,n[0],n[1],n[2],f);tri(A,C,D,n[0],n[2],n[3],f);};
-    const HL=holes.map(o=>({...o,al:hs/Math.min(o.ra,o.rb)})),RW=[...new Set([...HL.flatMap(o=>[...Array(9).keys()].map(i=>+(o.y+hs*(i/4-1)).toFixed(6))),...(win?[win.y0,win.y1]:[])])].sort((p,q)=>p-q);
+    const WS=win?(Array.isArray(win)?win:[win]):[],HL=holes.map(o=>({...o,al:hs/Math.min(o.ra,o.rb)})),RW=[...new Set([...HL.flatMap(o=>[...Array(9).keys()].map(i=>+(o.y+hs*(i/4-1)).toFixed(6))),...WS.flatMap(w=>[w.y0,w.y1])])].sort((p,q)=>p-q);
     const hv=(lo,hi)=>[lo,...RW.filter(v=>v>lo+1e-6&&v<hi-1e-6),hi];   /* a face's rows, lo to hi */
     const vert=p=>p.map((q,i)=>[q,p[(i+1)%p.length]]).filter(([q,e])=>Math.abs(e[0]-q[0])<1e-9&&e[1]!==q[1]).map(([q,e])=>({r:q[0],lo:Math.min(q[1],e[1]),hi:Math.max(q[1],e[1]),s:e[1]>q[1]?1:-1}));   /* its faces of constant r, s +1 facing out */
     const opens=(o,f)=>(Math.abs(o.ra-f.r)<1e-6||Math.abs(o.rb-f.r)<1e-6)&&f.lo<=o.y-hs+1e-6&&f.hi>=o.y+hs-1e-6;
@@ -100,7 +106,7 @@ const WCASE=(()=>{
           if(I.every(j=>{const d=q[j];return d===a||d===b||d===c||!(ar*cr(a,b,d)>=-1e-12&&ar*cr(b,c,d)>=-1e-12&&ar*cr(c,a,d)>=-1e-12);}))k=i;}
         if(k<0){console.error('sweepS: an end left untriangulated');break;}const a=V(k-1),b=V(k),c=V(k+1);tri(pt(a[0],t,a[1]),pt(b[0],t,b[1]),pt(c[0],t,c[1]),n,n,n,n);I.splice(k,1);}
       if(I.length===3)tri(...I.map(j=>pt(q[j][0],t,q[j][1])),n,n,n,n);};
-    S.forEach((sg,si)=>{const{a0,a1,p}=sg,n=Math.ceil((a1-a0)/(TAU/240)-1e-9),Hs=HL.filter(o=>o.a>a0&&o.a<a1),W=win&&win.a0>a0&&win.a1<a1?win:null,ex=[];
+    S.forEach((sg,si)=>{const{a0,a1,p}=sg,n=Math.ceil((a1-a0)/(TAU/240)-1e-9),Hs=HL.filter(o=>o.a>a0&&o.a<a1),W=WS.find(w=>w.a0>a0&&w.a1<a1)||null,ex=[];
       for(const o of Hs)for(let i=0;i<9;i++)ex.push(o.a+o.al*(i/4-1));if(W)ex.push(W.a0,W.a1);
       const C=[...[...Array(n+1).keys()].map(k=>a0+(a1-a0)*k/n).filter((t,k)=>k===0||k===n||ex.every(e=>Math.abs(t-e)>1e-3)&&Hs.every(o=>Math.abs(t-o.a)>o.al)),...ex].sort((u,v)=>u-v);
       if(full)C.pop();const nc=C.length,F=vert(p),r0=Math.min(...p.map(q=>q[0])),r1=Math.max(...p.map(q=>q[0]));   /* full: the turn's last column is its first */
@@ -162,6 +168,28 @@ const WCASE=(()=>{
   /* a turned part with a thread on it, as one solid: the closed profile pr ([r, y], either way round) turned about the axis, its edge from pr[k] to pr[k + 1] (k = th.k)
      threaded as thread() threads a band (th: R, d, p, yr, s0, s1, e0, e1, inside; the edge's ends, where s is 0, at R whatever pr gives them) */
   const circT=r=>[...Array(360).keys()].map(i=>{const t=i/360*TAU;return[r*Math.cos(t),r*Math.sin(t)];});   /* lathT's 360 corners at r, in plan */
+  /* a diamond knurl (the 6MX's bezel, 8 November 2026): a band round the axis from y0 to y1, its bore on lathT's 360 corners at r0 (circT), its outside n rows of pyramids
+     round, d high over r0 (their grooves' floor 0.02 over it, so no outside point falls on the bore's corners), their two sets of grooves at ±ang to the axis; 4 columns a pyramid (4n a multiple of 360), rows a quarter of the axial pitch. One closed solid; its
+     facets shaded leaning 15° off the radius, as softKnurl's flanks (Edges draws no crease between them). bore false: no bore, the band open there, to be stitched onto a lathe's
+     face at r0 whose own faces between y0 and y1 are taken off (dropOn) */
+  const dropOn=(g,r,ya,yb)=>{const P=g.attributes.position,keep=[];for(let t=0;t<P.count;t+=3){let on=true;for(let k=t;k<t+3&&on;k++){const y=P.getY(k);on=Math.abs(Math.hypot(P.getX(k),P.getZ(k))-r)<1e-3&&y>ya-1e-3&&y<yb+1e-3;}if(!on)keep.push(t);}
+    const o=new THREE.BufferGeometry();for(const nm of Object.keys(g.attributes)){const a=g.attributes[nm],sz=a.itemSize,q=new Float32Array(keep.length*3*sz);keep.forEach((t,i)=>q.set(a.array.subarray(t*sz,(t+3)*sz),i*3*sz));o.setAttribute(nm,new THREE.BufferAttribute(q,sz));}o.userData=g.userData;g.dispose();return o;};
+  const diamondKnurl=(r0,d,y0,y1,n,ang,bore=true)=>{const NC=4*n,P=TAU*r0/n,Py=P/Math.tan(ang*D2R),NR=Math.max(2,Math.round((y1-y0)/(Py/4))),fr=x=>1-Math.abs(2*(x-Math.floor(x))-1),pos=[],nor=[],uv=[];
+    const O=[...Array(NR+1).keys()].map(k=>{const y=y0+(y1-y0)*k/NR,w=(y-y0)/Py;return[...Array(NC).keys()].map(j=>{const t=j/NC*TAU,r=r0+0.02+(d-0.02)*Math.min(fr(j/4+w),fr(j/4-w));return[r*Math.cos(t),y,r*Math.sin(t)];});});
+    const I=[y0,y1].map(y=>circT(r0).map(([x,z])=>[x,y,z])),c15=Math.cos(15*D2R),s15=Math.sin(15*D2R);
+    const T=(a,b,c,f,soft)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];let x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];const l=Math.hypot(...x);if(l<1e-12)return;
+      if(x[0]*f[0]+x[1]*f[1]+x[2]*f[2]<0){[b,c]=[c,b];x=x.map(q=>-q);}x=x.map(q=>q/l);
+      if(soft){const e=Math.hypot(f[0],f[2]),er=[f[0]/e,0,f[2]/e],dn=x[0]*er[0]+x[2]*er[2],t=[x[0]-dn*er[0],x[1],x[2]-dn*er[2]],tl=Math.hypot(...t);x=tl<1e-9?er:er.map((q,i)=>q*c15+t[i]/tl*s15);}
+      for(const q of[a,b,c]){pos.push(...q);nor.push(...x);uv.push(q[0],-q[2]);}};
+    for(let k=0;k<NR;k++)for(let j=0;j<NC;j++){const j1=(j+1)%NC,A=O[k][j],B=O[k][j1],C2=O[k+1][j1],D=O[k+1][j],f=[(A[0]+C2[0])/2,0,(A[2]+C2[2])/2];T(A,B,C2,f,1);T(A,C2,D,f,1);}
+    for(let m=0;m<360;m++){const m1=(m+1)%360,a=I[0][m],b=I[0][m1],c=I[1][m1],e=I[1][m],f=[-(a[0]+b[0]),0,-(a[2]+b[2])];if(bore){T(a,b,c,f,0);T(a,c,e,f,0);}
+}
+    /* each end the ring between the outside's zigzag and the bore's 360 corners, ear-clipped (three.js's earcut) on every point: the zigzag swings 0.4 across in 0.34 along,
+       so a fan or a zipper from the bore's corners folds over it */
+    for(const[k,s]of[[0,-1],[NR,1]]){const Q=O[k],J=k?I[1]:I[0],g=[0,s,0],c2=Q.map(q=>new THREE.Vector2(q[0],q[2])),h2=J.map(q=>new THREE.Vector2(q[0],q[2]));
+      const cw=THREE.ShapeUtils.isClockWise(c2),hw=THREE.ShapeUtils.isClockWise(h2),C=cw?c2.slice().reverse():c2,Hh=hw?h2:h2.slice().reverse(),Qa=cw?Q.slice().reverse():Q,Ja=hw?J:J.slice().reverse(),V=[...Qa,...Ja];
+      for(const[x,y,z]of THREE.ShapeUtils.triangulateShape(C,[Hh]))T(V[x],V[y],V[z],g,0);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return g;};
   const lathT=(pr,th)=>{const NT=360,{R,d,p,yr,k,inside=false,e0=0.5,e1=0.5}=th,q=inside?1:0,s0=th.s0??Math.min(pr[k][1],pr[(k+1)%pr.length][1]),s1=th.s1??Math.max(pr[k][1],pr[(k+1)%pr.length][1]);
     const s=y=>Math.min(1,(y-s0)/e0,(s1-y)/e1),rf=(t,y)=>R+d*Math.max(0,s(y))*(iso((y-yr)/p+t/TAU)-q);
     const n=pr.length,k1=(k+1)%n,rg=[];   /* the rings: each a profile point, r a function of the turn on the threaded edge */
@@ -241,7 +269,7 @@ const WCASE=(()=>{
 
   function build(M){
     const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
-    const MC={mah:S(0xffffff,0,0.42,{map:woodTex()}),black:S(0x18181a,0.25,0.42),knob:S(0x111112,0.1,0.35),white:S(0xf2f1ec,0.1,0.5),
+    const MC={mah:S(0xffffff,0,0.42,{map:woodTex()}),black:S(0x18181a,0.25,0.42),engr:S(0x3a2c18,0.3,0.7),knob:S(0x111112,0.1,0.35),white:S(0xf2f1ec,0.1,0.5),
       label:new THREE.MeshStandardMaterial({map:plateTex(),metalness:0.1,roughness:0.5}),alu:S(0xc9ccd0,1,0.35),
       birch:S(0xffffff,0,0.6,{map:woodTex(true)}),kir:S(0xffffff,0,0.38,{map:woodTex(false,true)}),badge:new THREE.MeshStandardMaterial({map:kirovTex('badge'),metalness:0.5,roughness:0.45}),
       num:new THREE.MeshStandardMaterial({map:kirovTex('num'),metalness:0.5,roughness:0.45}),felt:S(0x5b5f55,0,0.95),leather:S(0x5a3a22,0,0.7)};   /* the outer box's bleached birch; its cushions' cover and the strap: not given (estimated) */
@@ -311,8 +339,8 @@ const WCASE=(()=>{
          shoulder and a lead chamfer 0.5 to the top; the notch through it at 12 o'clock, 1.8 wide (the pin's Ø 1.6 0.1 clear each side), down to 0.8 over the seat (the pin's
          underside 1.1: the pin 2.8 under the flange's top, 05 08 00-3): the 6MX's, as 24020's photograph shows it cut (its depth not seen: estimated). The rim to the notch's
          floor turned with the casting, one solid with it (lathT, its thread the profile's edge k); above it, the rim less the notch (rim) */
-      const ko=pr.findIndex(q=>q[0]===TH.Rm),tho=k=>({R:TH.Rm,d:TH.d,p:TH.p,yr:TH.yr,k,s0:YB,s1:YC});
-      const rim=(g,mt,rp)=>tag(mesh(g,thread({R:TH.Rm,rp,d:TH.d,p:TH.p,yr:TH.yr,s0:YB,s1:YC,y0:YB+BWQ.nf,y1:YC,slot:BWQ.ns,a:-Math.PI/2}),mt),'050100-1',1);
+      const ko=pr.findIndex(q=>q[0]===TH.Rm),tho=(k,T=TH)=>({R:T.Rm,d:T.d,p:T.p,yr:T.yr,k,s0:YB,s1:YC});
+      const rim=(g,mt,rp,T=TH)=>tag(mesh(g,thread({R:T.Rm,rp,d:T.d,p:T.p,yr:T.yr,s0:YB,s1:YC,y0:YB+BWQ.nf,y1:YC,slot:BWQ.ns,a:-Math.PI/2}),mt),'050100-1',1);
       tag(mesh(G1,lathT(pr,tho(ko)),CB),'050100-1',1);rim(G1,CB,BWQ.rr2);
       /* Wempe 3955's (the version as photographed: 16_Wempe_3955_Gehäusetopf_Kardan.jpg, photocompare.py) black Bakelite, as the wartime Glashütte and Wempe bowls were, the
          gimbal ring too; their pivot screws and knurled lock wheels brass (sure). Its profile (by eye: a narrower drum to the bottom, a rounded shoulder) not measured: the
@@ -343,11 +371,11 @@ const WCASE=(()=>{
          inside is photographed; the movement's lowest parts, the cork ring at r 30.7, clear it by 3.4 and more) */
       {const hY=h=>YB+4.7+h,B6=52.4;
         const cn=[[50.6,hY(-47)],[47.0,hY(-49)],[43.7,hY(-51)],[40.3,hY(-53)],[37.1,hY(-55)],[36.7,hY(-55.3)]].reverse();
-        const sh=[[B6,hY(-7.76)],[56.6,hY(-7.76)],[56.6,hY(-5.55)],[TH.Rm,hY(-5.55)]];   /* under the thread to the collar at its root: the undercut */
+        const sh=[[B6,hY(-7.76)],[56.6,hY(-7.76)],[56.6,hY(-5.55)],[TH6.Rm,hY(-5.55)]];   /* under the thread to the collar at its root: the undercut */
         const ci=[[49,hY(-44.69)],[34.1,hY(-52.84)]];   /* the inner cone: the outer's line (52.4, −46.7)-(36.7, −55.3) moved 3.4 across it, cut by the bore and the recess's wall */
-        const p6=[[34.1,YB-65],[36.7,YB-65],...cn,[B6,hY(-46.7)],...sh,[TH.Rm,YB+0.8],[53.05,YB+0.8],[53.05,YB],[49,YB],...ci,[34.1,YB-53],[34.1,YB-59.5]];
-        const g6=G6;tag(mesh(g6,lathT(p6,tho(p6.findIndex(q=>q[0]===TH.Rm))),M.brass),'050100-1',1);
-        rim(g6,M.brass,53.05);}   /* the rim, threaded (TH: until 24 October 2026 a plain ring r 55.25), its notch: the drawn bowl's */
+        const p6=[[34.1,YB-65],[36.7,YB-65],...cn,[B6,hY(-46.7)],...sh,[TH6.Rm,YB+0.8],[53.05,YB+0.8],[53.05,YB],[49,YB],...ci,[34.1,YB-53],[34.1,YB-59.5]];
+        const g6=G6;tag(mesh(g6,lathT(p6,tho(p6.findIndex(q=>q[0]===TH6.Rm),TH6)),M.brass),'050100-1',1);
+        rim(g6,M.brass,53.05,TH6);}   /* the rim, threaded (TH: until 24 October 2026 a plain ring r 55.25), its notch: the drawn bowl's */
       for(const g of[G1,G6,G3]){const f=fuse(g.children.filter(o=>o.isMesh&&o.userData.hn==='050100-1'));bowlJoin(f,g===G6?YB-59.5:yd,g===G6?YB-53:YB-49);}   /* the bowl one casting, one mesh in each version (fuse, core.js): its bottom, seat, body and rim's flush faces drew rings in Edges until 21 October 2026 */
         /* the electrical contact's parts in the bowl (Kirov No. 247: 11_Kirow247_E-Kontakt_2.jpg inside, 12_Kirow_247_E-Kontakt_3.jpg outside, a camera fitted on the
            bowl's band; Kirov 2973's the same; Romanov 1975, Fig. 95, 101 and p. 105's parts 63-66): two flat brass springs 66 inside, each a foot 5.5 high curved to the bore
@@ -363,7 +391,11 @@ const WCASE=(()=>{
             const tw=(T1-T0)/KCF.n,gap=KCF.gap/(rI-KCF.fi)/D2R;for(let k=0;k<KCF.n;k++){const tm=T0+tw*(k+0.5),y0=yF+KCF.h,y1=KCF.y1,r0=rI-KCF.tm,r1=KCF.r1+KCF.r1e,len=Math.hypot(y1-y0,r0-r1),lean=Math.atan2(r0-r1,y1-y0),wd=(tw-gap)*D2R*(rI-KCF.tm);
               const b=tag(mesh(gC,new THREE.BoxGeometry(wd,len,KCF.tt),M.brass,...pol(tm,(r0+r1)/2,(y0+y1)/2)),'6MX.cf',1);b.rotation.order="YXZ";b.rotation.y=tm*D2R+Math.PI;b.rotation.x=-lean;}   /* a tine, leaning in from the foot to the block's end */
             for(const t of[S1,S2]){const g=along(gC,pol(t,52.4,yF),inw(t));tag(mesh(g,cylY(4.25,1,40),M.packing,0,-0.5,0),'6MX.cfw');tag(screw(g,0,0,-1,2.8,3.0,5.9,1.0,M.brass),'6MX.cfs');}   /* a screw 65 on its washer, through the wall into the foot */
-            {const g=along(gC,pol(SK,52.4,yF),inw(SK));tag(mesh(g,cylY(4.0,1,40),M.packing,0,-0.5,0),'6MX.cfw');tag(mesh(g,KIT.latheF([[1.5,-3],[3.2,-3],[3.2,-1],[1.5,-1],[1.5,-3]].map(([r,y])=>V2(r,y)),40),M.brass),'6MX.cfk').userData.mark=id;}}}}
+            {const g=along(gC,pol(SK,52.4,yF),inw(SK));tag(mesh(g,cylY(4.0,1,40),M.packing,0,-0.5,0),'6MX.cfw');tag(mesh(g,KIT.latheF([[1.5,-3],[3.2,-3],[3.2,-1],[1.5,-1],[1.5,-3]].map(([r,y])=>V2(r,y)),40),M.brass),'6MX.cfk').userData.mark=id;
+              /* its polarity engraved over it (the 6MX case review, 8 November 2026, A3: Kirov 247's and 2973's bowls, 12_Kirow_247_E-Kontakt_3.jpg and 13_Kirow_2973_E-Kontakt4.jpg,
+                 a + over the + socket and a short − over the −, their centres 5.0 and 6.4 over the socket's (by its Ø 6.4 head), the + about 2.4 across, the − about 1.8 long: sure in
+                 kind, their sizes and heights likely ±0.5). Engraved lines as decals, 0.3 wide, 0.01 off the bowl's face */
+              for(const[w,h]of id==='+'?[[2.4,0.3],[0.3,2.4]]:[[1.8,0.3]]){const e=tag(mesh(gC,new THREE.PlaneGeometry(w,h),MC.engr,...pol(SK,52.41,yF+5.7)),'6MX.cfk',1);e.rotation.y=SK*D2R+Math.PI;e.userData.decal=1;e.userData.noShadow=1;}}}}}
     /* the two case brackets (Gehäusekloben 05 01 00-3), on the bowl's side at 12 and 6 o'clock, carrying the inner pivots b: no sheet of their own; measured on 05 01
        (25 October 2026: line centres read on the scan's pixel profiles, 2.45 px/mm, heights from the pivots' line, y 146.7 in Schnitt C-D, 143.5 in the elevation;
        tools/wempe_lock.py's crops). Schnitt C-D, cut through them: a cranked bracket, its foot flat on the bowl's side from 20.3 to 8.3 under the pivots, 3.7 thick at its
@@ -418,17 +450,30 @@ const WCASE=(()=>{
        out past the collar and the bezel to an L hook whose top is 3.8 over the rim's top: the pad the transit lock stops against at the pivots' height, as the drawings'
        (Romanov 1975, p. 204: the lock plate swings through the ring's slot until it stops against the bowl's hook). Its bearing kept the drawings' 50° from the case bracket
        (Kirov 247's reads 35-43°, 24020's 51°: the transit lock on the ring keeps its place); the plates' and web's thicknesses estimated */
-    {const bv=rv(brk,'6mx'),rb=52.4,rp=rb+3,hY=h=>YB+4.7+h,w4=4.35;
+    /* Since 8 November 2026 (the 6MX case review, 6mx-audit/case/README.md A4, B2-B4; heights read blind on Kirov 247's 12_ and 2973's 13_E-Kontakt4, the rim's top fitted as an
+       ellipse and the brackets' stand-off corrected: blind-pivot-height.md, ±1-2, 247's taken where they part by 2-3; head sizes blind-gimbals-box.md, three chronometers):
+       each case bracket's strap 11.4 high (h −14.0 to −25.4), its two screws at −19.1, heads Ø 10 (Ø 9.6-11), in slots 18 long and 5 high along the strap (247 18, 2973 15:
+       sure that they are slots, their sizes likely), M4 (the slot's 5: estimated); the upright 11.5 wide (11-12), its top 5.3 over the hole (both chronometers), the hole kept
+       at 3.0 under the rim's top (DY6: 247 reads 0 ±1.7, 2973 2.5 ±1.5). The locking bracket 14 wide: its plate from −34.8 up to −12.1, its two screws at −19.0 and −28.2, heads
+       Ø 6.8, M4 in a vertical slot 4.5 wide (its ends hidden under the heads: estimated); over a crank out to r 59 (3 thick, estimated) its block to r 64 (8.6 out of the plate: the reading 8 ±2; to 67.5 until the 6MX's ring came to Ø 133, 9 November 2026, which it would meet), up to
+       +2.4 (247; 2973 −0.5), a horizontal slot through it from −6.8 to −2.0, open toward the case bracket at 6 o'clock and 10 deep, leaving a column 4.5 on its far side: the slot
+       the transit lock's lever turns into (the drawings' bracket's neck), at the pivots' height as the drawn one's. Until then the brackets had no slots or holes (their screws in
+       solid brass), heads Ø 4.8, the strap 9.7 high, the hook a plain block. Its place: centred between the − spring's two screws (215.7° and 225.2°, frame.js's brg),
+       as on 247's and 2973's bowls, where the plate stands over those two and the − socket and its mark are beside it: brg 220.5, atan2 49.5° (sure on two chronometers, ±2°;
+       230 until then, the drawings' 50° from the case bracket kept) */
+    {const bv=rv(brk,'6mx'),rb=52.4,rp=rb+3,hY=h=>YB+4.7+h,w4=5.75;
       for(const ph of[90,-90]){const g=tag(new THREE.Group(),'050100-3');bv.add(g);const a=ang(ph),ws=w4/rp,wo=w4/62,wl=(w4+27.5)/rp;
-        const y0=hY(-22.4),y1=hY(-12.8),yt=hY(1.8),Pw=[[rb,y0],[rp,y0],[rp,y1],[rb,y1]],Pm=[[rb,y0],[rp,y0],[59.7,y0],[59.7,y1],[rp,y1],[rb,y1]],Pb=[[rb,y0],[rp,y0],[59.7,y0],[64.3,y0],[64.3,yt],[59.7,yt],[59.7,y1],[rp,y1],[rb,y1]];
+        const y0=hY(-25.4),y1=hY(-14.0),yt=hY(2.3),Pw=[[rb,y0],[rp,y0],[rp,y1],[rb,y1]],Pm=[[rb,y0],[rp,y0],[59.7,y0],[59.7,y1],[rp,y1],[rb,y1]],Pb=[[rb,y0],[rp,y0],[59.7,y0],[64.3,y0],[64.3,yt],[59.7,yt],[59.7,y1],[rp,y1],[rb,y1]];
         const Sw=[[rp,y0],[59.7,y0],[59.7,y1],[rp,y1]],Sb=[[59.7,y0],[64.3,y0],[64.3,yt],[59.7,yt],[59.7,y1]];   /* the steps: the web less the wing, the block less the web */
+        const sl=s2=>{const c=a+s2*16.8/rp,h=9/rp;return{a0:c-h,a1:c+h,y0:hY(-21.6),y1:hY(-16.6)};};   /* a strap's slot, 18 × 5 about its screw (square-ended: sweepS's window) */
         mesh(g,sweepS([{a0:a-wl,a1:a-ws,p:Pw},{a0:a-ws,a1:a-wo,p:Pm},{a0:a-wo,a1:a+wo,p:Pb},{a0:a+wo,a1:a+ws,p:Pm},{a0:a+ws,a1:a+wl,p:Pw}],[{p:Sw,m:-1},{p:Sb,m:-1},{p:Sb,m:1},{p:Sw,m:1}],
-          {holes:[{a,y:YB+1.7,r:1.6,ra:59.7,rb:64.3}],hs:2.6}),M.brass);   /* the block r 59.7-64.3 (61.9-66.5 until 25 October 2026), the ring's inner pivots' tips through its hole */
-        for(const s2 of[-1,1]){const b=a+s2*16.8/rp,u=[-Math.cos(b),0,-Math.sin(b)];tag(screw(along(bv,[rp*Math.cos(b),hY(-17.4),rp*Math.sin(b)],u),0,0,0,2.4,1.6,6.4,1.25,M.steel),'6MX.bks');}}
-      const g=tag(new THREE.Group(),'050100-4');bv.add(g);const a=ang(40),w=5.85/60,sp=()=>[a-w,a+w];
-      mesh(g,solidGeo([{loop:sector(rb,rp,sp(),sp()),y0:hY(-30.5),y1:hY(-16.5)},{loop:sector(rp,59,sp(),sp()),y0:hY(-19.5),y1:hY(-16.5)},{loop:sector(59,62,sp(),sp()),y0:hY(-19.5),y1:hY(3.8)},
-        {loop:sector(62,67.5,sp(),sp()),y0:hY(-2.0),y1:hY(3.8)}]),M.brass);
-      for(const h of[-20.0,-27.4])tag(screw(along(bv,[rp*Math.cos(a),hY(h),rp*Math.sin(a)],[-Math.cos(a),0,-Math.sin(a)]),0,0,0,2.4,1.6,6,1.25,M.steel),'6MX.bks');}
+          {holes:[{a,y:YB+1.7,r:1.6,ra:59.7,rb:64.3}],hs:2.6,win:[sl(-1),sl(1)]}),M.brass);   /* the block r 59.7-64.3 (61.9-66.5 until 25 October 2026), the ring's inner pivots' tips through its hole */
+        for(const s2 of[-1,1]){const b=a+s2*16.8/rp,u=[-Math.cos(b),0,-Math.sin(b)];tag(screw(along(bv,[rp*Math.cos(b),hY(-19.1),rp*Math.sin(b)],u),0,0,0,5.0,3.0,6.4,2.0,M.steel),'6MX.bks');}}
+      const g=tag(new THREE.Group(),'050100-4');bv.add(g);const a=ang(49.5),w=7/rp,cw=4.5/63,ss=2.25/rp,A=[a-w,a-w+cw,a-ss,a+ss,a+w],L=A.slice(0,3),R=A.slice(3),C=A.slice(0,2);
+      mesh(g,solidGeo([{loop:sector(rb,rp,A,A),y0:hY(-34.8),y1:hY(-30.4)},{loop:sector(rb,rp,L,L),y0:hY(-30.4),y1:hY(-16.8)},{loop:sector(rb,rp,R,R),y0:hY(-30.4),y1:hY(-16.8)},
+        {loop:sector(rb,rp,A,A),y0:hY(-16.8),y1:hY(-12.1)},{loop:sector(rp,64,A,A),y0:hY(-15.1),y1:hY(-12.1)},{loop:sector(59,64,A,A),y0:hY(-12.1),y1:hY(-6.8)},
+        {loop:sector(59,64,C,C),y0:hY(-6.8),y1:hY(-2.0)},{loop:sector(59,64,A,A),y0:hY(-2.0),y1:hY(2.4)}]),M.brass);
+      for(const h of[-19.0,-28.2])tag(screw(along(bv,[rp*Math.cos(a),hY(h),rp*Math.sin(a)],[-Math.cos(a),0,-Math.sin(a)]),0,0,0,3.4,2.4,6,2.0,M.steel),'6MX.bks');}
     const LB=WD.CASEQ.LB;
     for(const[bv,rb]of[[rv(brk,'last first 1943'),LB.rb]]){const g=tag(new THREE.Group(),'050100-4');bv.add(g);const a=ang(LB.a),RF=rb+LB.off,ca=Math.cos(a),sa=Math.sin(a);
       /* its profile [r, h] (h over the pivots, YP) in cells extruded across it (t, −7.85 to +7.85; the neck's from +1.75), then stood on its radius at 50°: below the slot,
@@ -589,15 +634,20 @@ const WCASE=(()=>{
        into the top face at row 650 (YB + 13.5). Inside (not on any photograph: estimated): the glass in a seat 1.5 deep to r 53.6, the sight bore r 52.1 (the dial's edge 51.8
        under it), the shoulder at the rim's top (YB + 4.7) bearing on the ring's flange and the rim, which holds the movement down as the drawn bezel's recess does, the thread
        to its edge (TH; its bore r 55.3 plain until 24 October 2026). The glass: Ø 107 × 4.0, its top edge chamfered 0.8, its underside YB + 12.0, 0.1 over the cannon tube's crown (18.25 in the movement's frame; 0.65 over the minute hand's boss at 17.70 until 28 October 2026, when the hands came down
-       to 05 02_1's boxed heights), its top YB + 16.0, where the drawn bezel's top is (estimated: the photographs give no height) */
-    {const b6=rv(bz,'6mx'),yj=Y6(552),yk0=Y6(598),yk1=Y6(640),top=Y6(650),gu=YB+12.0;
+       to 05 02_1's boxed heights), its top YB + 16.0, where the drawn bezel's top is (estimated: the photographs give no height). The glass, knurl and thread as these were until 8 November 2026: below */
+    /* Since 8 November 2026 (the 6MX case review, 6mx-audit/case/README.md B1, B5, B7): the thread TH6 (pitch 1.0); the knurl a diamond, its grooves ±28° to the axis
+       about 1.2 apart across them (DEC 422's, blind-bowl-bezel.md; Kirova 14100's and Poljot 09777's crossed too: sure that it is a diamond, the pitch doubtful), 270 round;
+       the glass flush with the lip (DEC 422, Poljot 09777 in Uy8A88_j-cA 2:06, Kirova 14100: at or a little under the lip, never 2.5 proud as drawn until then: likely), so
+       the bezel taller: the glass 3.0 thick (the blind reading about 3, doubtful) on its seat at YB + 12.0 as before (0.1 over the cannon tube's crown), its top and the lip's
+       YB + 15.0, the knurl's 5.55 and the lip's rounding 1.32 over it as traced, and a plain band at the bell's r 57.9 from the bell's top (row 598) up to the knurl, as DEC 422
+       shows one between them (its length there about 10, on a scale set by its collar: the model's 1.5 comes from the glass's height, estimated). The bell as traced */
+    {const b6=rv(bz,'6mx'),gu=YB+12.0,gt=gu+3.0,yj=Y6(552),yk1=gt-(Y6(650)-Y6(640)),yk0=yk1-(Y6(640)-Y6(598)),top=gt,dl=Y6(650)-gt;
       const bell=[[56.1,552],[56.5,556],[56.73,560],[57.09,564],[57.32,568],[57.56,572],[57.68,576],[57.82,580],[57.9,588],[57.9,598]].map(([r,w])=>[r,Y6(w)]);
-      const pr=[[TH.Rf,yj],...bell,[57.9,yk1],[58.0,yk1],[58.0,Y6(646)],[57.6,Y6(649)],[57.2,top],[53.6,top],[53.6,gu],[52.1,gu],[52.1,YB+4.7],[TH.Rf,YB+4.7]];
-      /* its bore threaded (TH, the profile's last edge) from its edge to the shoulder on the rim's top (until 24 October 2026 plain, r 55.3) */
-      const b6m=tag(mesh(b6,lathT(pr,{R:TH.Rf,d:TH.d,p:TH.p,yr:TH.yr,k:pr.length-1,inside:true}),M.brass),'050101-2');
-      const NK=360,kn=[];for(let i=0;i<NK;i++){const t=i/NK*TAU,u=t+Math.PI/NK;kn.push([58.3*Math.cos(t),58.3*Math.sin(t)],[57.9*Math.cos(u),57.9*Math.sin(u)]);}
-      fuse([b6m,tag(mesh(b6,softKnurl(solidGeo([{loop:kn,y0:yk0,y1:yk1,F:[{p:circT(57.9),a:yk0,b:yk1}]}]),57.9),M.brass),'050101-2',1)]);   /* one mesh (fuse): the knurl's bore on the lathe's own 360 corners at its r 57.9 (circT; it was 57.85, 0.05 into the lathe: 100 mm³ weighed twice until 24 October 2026, overlaps.py) */
-      const gq=[[0,gu],[53.5,gu],[53.5,gu+3.2],[52.7,gu+4.0],[0,gu+4.0]],gg=new THREE.LatheGeometry([...gq,gq[0]].map(([r,y])=>V2(r,y)),N);
+      const pr=[[TH.Rf,yj],...bell,[57.9,yk0],[57.9,yk1],[58.0,yk1],[58.0,Y6(646)-dl],[57.6,Y6(649)-dl],[57.2,top],[53.6,top],[53.6,gu],[52.1,gu],[52.1,YB+4.7],[TH.Rf,YB+4.7]];
+      /* its bore threaded (TH6, the profile's last edge) from its edge to the shoulder on the rim's top (until 24 October 2026 plain, r 55.3) */
+      const b6m=tag(mesh(b6,lathT(pr,{R:TH6.Rf,d:TH6.d,p:TH6.p,yr:TH6.yr,k:pr.length-1,inside:true}),M.brass),'050101-2');
+      b6m.geometry=dropOn(b6m.geometry.index?b6m.geometry.toNonIndexed():b6m.geometry,57.9,yk0,yk1);fuse([b6m,tag(mesh(b6,diamondKnurl(57.9,0.4,yk0,yk1,270,28,false),M.brass),'050101-2',1)]);   /* one mesh (fuse), one closed surface: the lathe's face at r 57.9 under the knurl taken off (dropOn) and the knurl's ends stitched to its 360 corners there (circT) */
+      const gq=[[0,gu],[53.5,gu],[53.5,gt-0.5],[53.0,gt],[0,gt]],gg=new THREE.LatheGeometry([...gq,gq[0]].map(([r,y])=>V2(r,y)),N);
       const gl=tag(mesh(b6,gg,GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
 
     /* ================= the gimbal ring (Kardanring 05 01 00-5) and its bracket (Kardanringkloben 05 01 00-6) ================= */
@@ -625,15 +675,24 @@ const WCASE=(()=>{
     /* RI, RO: the ring's inside and outside; ss: the bracket's screws' turn from 3 o'clock, on its outside (r 77.3). The holes along the radius (sweepS): the outer pivots'
        tips Ø 3.2 ("leicht spielend" on their Ø 3.1), through the ring at 9 o'clock and 1.75 into it under the bracket at 3 o'clock (the elevation: the tip's end 1.6 into the
        ring there); the inner pivot screws' M5 tapped through it at 12 and 6; the bracket's screws' M2.5 tapped through it, as A-B draws their shanks to its inside (27 October 2026; 2.75 into it until then) */
-    {const{RI,RO}=RGQ,yb=YP-RGQ.hh,yt=YP+RGQ.hh,ss=Math.asin(RGQ.bs/2/RGQ.br),q=RGQ.bk.q/RO,tp=r=>({y:YP,r:RGQ.tp,...r});
-      const RH=[tp({a:0,ra:RGQ.tb,rb:RO}),tp({a:Math.PI,ra:RI,rb:RO}),...[-1,1].map(s=>({a:s*Math.PI/2,y:YP,r:RGQ.m5,ra:RI,rb:RO})),...[-1,1].map(s=>({a:s*ss,y:YP,r:RGQ.m25,ra:RI,rb:RO}))];
-      const rs=w=>sweepS([{a0:-0.75*Math.PI,a1:1.25*Math.PI,p:[[RI,yb],[RO,yb],[RO,yt],[RI,yt]]}],[],{holes:RH,win:w,full:true,hs:3.5}),rgG=rs(null),rgS=rs({a0:LKS[0],a1:LKS[1],y0:LKY+RGQ.lk.y0,y1:LKY+RGQ.lk.y1});
-      const brG=sweepS([{a0:-q,a1:q,p:RGQ.bk.sec.map(([dr,dy])=>[RO+dr,YP+dy])}],[],{holes:[tp({a:0,ra:RO,rb:RO+RGQ.bk.sec[2][0]}),...[-1,1].map(s=>({a:s*ss,y:YP,r:RGQ.bk.cl,ra:RO,rb:RO+RGQ.bk.sec[2][0]}))],hs:2.6});
-      for(const[V,mt,G]of[['last first 1943 -3955',CB,rgS],['6mx',M.brass,rgG],['3955',BAK,rgS]]){const g=rv(rgP,V);tag(mesh(g,G,mt),'050100-5');tag(mesh(g,brG,mt),'050100-6');}   /* Wempe 3955's black (above); the 6MX's without the slot: its lever over the ring (below) */
-      for(const s of[-1,1])tag(screw(along(rgP,[77.3*Math.cos(s*ss),YP,77.3*Math.sin(s*ss)],[-Math.cos(s*ss),0,-Math.sin(s*ss)]),0,0,0,...WD.CASE.kr,M.steel),'WN-kr');   /* to r 70.05, 0.05 inside the ring's inner face */
-      for(const s of[-1,1]){const g=along(rgP,[0,YP,s*RO],[0,0,-s]),sw=tag(screw(g,0,0,0,P79.hr,P79.hh,RO-P79.ex,P79.rs,M.brass),'WN-79');   /* its head on the ring's outside, the shank to r 64.4 */
+    /* gring(RI, RO, VS, nuts): a ring of inside RI and outside RO, its bracket at 3 o'clock, their screws, the inner pivot screws and (nuts) their knurled lock nuts, built in
+       each version's group of VS ([versions, material]). The drawings' Ø 140 × 4 (RGQ) for every version but the Soviet 6MX's, whose ring is Ø 133 ±3 inside and 3.7 ±0.5 thick
+       (the 6MX case review, 9 November 2026, the owner's choice: Kirov 14917's ring read blind on rAw2zmulpk8 0:01 and 0:29.25 by its dial's sub-dials, 46 apart, and as the rim's
+       Ø 110.1 and the gaps either side, 133.2 and 133.3; Poljot DIxob2Rl4dc 7:08 136 ±5, a check: 6mx-audit/case/blind-ring-foot.md, likely), its band's height kept (it reads
+       about 15, 8-19: doubtful), its slot the drawings' (the transit lock, A2), its bracket and screws as the drawings' moved in with its outside (the pads Kirova 14100 shows,
+       about 40 × 12 at each pivot, not built: one photograph), and no lock nuts: none is seen on a 6MX, and the ring's inside stands only 2.2 off the case brackets' blocks */
+    const gring=(RI,RO,VS,nuts)=>{const yb=YP-RGQ.hh,yt=YP+RGQ.hh,br=RO+RGQ.bk.sec[2][0],ss=Math.asin(RGQ.bs/2/br),q=RGQ.bk.q/RO,tp=r=>({y:YP,r:RGQ.tp,...r});
+      const RH=[tp({a:0,ra:RO-(RGQ.RO-RGQ.tb),rb:RO}),tp({a:Math.PI,ra:RI,rb:RO}),...[-1,1].map(s=>({a:s*Math.PI/2,y:YP,r:RGQ.m5,ra:RI,rb:RO})),...[-1,1].map(s=>({a:s*ss,y:YP,r:RGQ.m25,ra:RI,rb:RO}))];
+      const rgS=sweepS([{a0:-0.75*Math.PI,a1:1.25*Math.PI,p:[[RI,yb],[RO,yb],[RO,yt],[RI,yt]]}],[],{holes:RH,win:{a0:LKS[0],a1:LKS[1],y0:LKY+RGQ.lk.y0,y1:LKY+RGQ.lk.y1},full:true,hs:3.5});
+      const brG=sweepS([{a0:-q,a1:q,p:RGQ.bk.sec.map(([dr,dy])=>[RO+dr,YP+dy])}],[],{holes:[tp({a:0,ra:RO,rb:br}),...[-1,1].map(s=>({a:s*ss,y:YP,r:RGQ.bk.cl,ra:RO,rb:br}))],hs:2.6});
+      for(const[V,mt]of VS){const g=rv(rgP,V);tag(mesh(g,rgS,mt),'050100-5');tag(mesh(g,brG,mt),'050100-6');}   /* Wempe 3955's black (above) */
+      const gs=rv(rgP,VS.map(v=>v[0]).join(' ').replace(/ ?-3955/,''));
+      for(const s of[-1,1])tag(screw(along(gs,[br*Math.cos(s*ss),YP,br*Math.sin(s*ss)],[-Math.cos(s*ss),0,-Math.sin(s*ss)]),0,0,0,WD.CASE.kr[0],WD.CASE.kr[1],br-RI-0.05,WD.CASE.kr[3],M.steel),'WN-kr');   /* to 0.05 short of the ring's inner face (the drawings' r 70.05) */
+      for(const s of[-1,1]){const g=along(gs,[0,YP,s*RO],[0,0,-s]),sw=tag(screw(g,0,0,0,P79.hr,P79.hh,RO-P79.ex,P79.rs,M.brass),'WN-79');   /* its head on the ring's outside, the shank to r 64.4 */
         mesh(sw,KIT.latheF([[0,RO-P79.t0],[P79.tr,RO-P79.t0],[P79.tr,RO-P79.t1],[P79.tc,RO-P79.t2],[0,RO-P79.t2]].map(([r,y])=>V2(r,y)),28),M.brass);   /* the tip, from 0.1 in the shank to r 59.8, its end chamfered 0.2 */
-        tag(mesh(g,knurl(NQ.a.r,NQ.a.d,NQ.a.h,NQ.a.n,NQ.a.hr),M.brass,0,RO-RI+(RI-Math.sqrt(RI*RI-NQ.a.r*NQ.a.r)),0),'WN-400');   /* its face at r 69.13, where its rim meets the ring's curved inside (70 less the curve's 0.87 over its 11) */}}
+        if(nuts)tag(mesh(g,knurl(NQ.a.r,NQ.a.d,NQ.a.h,NQ.a.n,NQ.a.hr),M.brass,0,RO-RI+(RI-Math.sqrt(RI*RI-NQ.a.r*NQ.a.r)),0),'WN-400');}};   /* its face at r 69.13, where its rim meets the ring's curved inside (70 less the curve's 0.87 over its 11) */
+    gring(RGQ.RI,RGQ.RO,[['last first 1943 -3955',CB],['3955',BAK]],true);
+    const RI6=133/2,RO6=RI6+3.7;gring(RI6,RO6,[['6mx',M.brass]],false);
 
     /* ================= the wooden box (Holzkasten, 127-556.02) ================= */
     /* "Holzgehäuse 185 × 185 × 180 mm außen" (05 01, sure); its walls 12.5 (51 00 10's section, sure; 05 01 draws the walls 12.6 and their inside 160, its "160 Ø"); the line
@@ -644,7 +703,7 @@ const WCASE=(()=>{
     const bx=prt(root,'box');const bxW=rv(bx,'last first 1943');   /* the drawings' box; the 6MX's (Kirov 247's) below */
     /* an outer pivot (WN-80) through a side wall whose outside is B from the centre, s +1 at 3 o'clock: head r × h, the M6 to 0.1 off the ring's bracket (r 77.3) or the ring
        (74), the tip Ø 3.1 on to r 72.3 (1.7 into the ring) or 70 (the ring's inside), its end chamfered 0.2; the tip one piece with the screw, from 0.1 inside its shank */
-    const S80=WD.CASEQ.S80,WN80=(par,B,s,r,h,sfx)=>{const sh=s>0?S80.sh[0]:S80.sh[1],te=s>0?S80.te[0]:S80.te[1],sw=tag(screw(along(par,[s*B,YP,0],[-s,0,0]),0,0,0,r,h,B-sh,S80.rs,M.steel),'WN-80.'+(s>0?'3':'9')+sfx);
+    const S80=WD.CASEQ.S80,WN80=(par,B,s,r,h,sfx,dR=0,dI=0)=>{const sh=(s>0?S80.sh[0]:S80.sh[1])-dR,te=s>0?S80.te[0]-dR:S80.te[1]-dI,sw=tag(screw(along(par,[s*B,YP,0],[-s,0,0]),0,0,0,r,h,B-sh,S80.rs,M.steel),'WN-80.'+(s>0?'3':'9')+sfx);
       mesh(sw,KIT.latheF([[0,B-sh-S80.ov],[S80.tr,B-sh-S80.ov],[S80.tr,B-te-S80.ch],[S80.tc,B-te],[0,B-te]].map(([a,b])=>V2(a,b)),28),M.steel);};
     {const B=tag(new THREE.Group(),'Holzkasten');bxW.add(B);const hh=YL-YF-WT;
       /* the side walls (12.5, between the front and back walls), each with the handle's finger recess in its outside behind the strap and the outer pivot's M6 through it.
@@ -847,7 +906,7 @@ const WCASE=(()=>{
     {const g6=rv(bx,'6mx'),Bk=tag(new THREE.Group(),'Kasten6');g6.add(Bk);rv(root,'6mx').add(lid6G);const hb=P2-YF-W6;
       box(Bk,2*B6,W6,2*B6,0,YF+W6/2,0,MC.kir);
       for(const s of[-1,1]){box(Bk,2*B6,hb,W6,0,YF+W6+hb/2,s*(B6-W6/2),MC.kir);box(Bk,W6,hb,2*B6-2*W6,s*(B6-W6/2),YF+W6+hb/2,0,MC.kir);}
-      for(const s of[-1,1]){WN80(g6,B6,s,S80.r6,S80.h,'m');
+      for(const s of[-1,1]){WN80(g6,B6,s,S80.r6,S80.h,'m',RGQ.RO-RO6,RGQ.RI-RI6);   /* to the 6MX's ring (Ø 133 × 3.7), its bracket's outside and the tip's hole moved in with it */
         const d=tag(mesh(g6,new THREE.CylinderGeometry(11.5,11.5,2.4,48),M.brass,s*(B6-W6-1.2),YP,0),'WN-400.w');d.rotation.z=Math.PI/2;}
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'Griff6');g6.add(g);const yh=P2-12;box(g,1.5,10,34,s*(B6+0.75),yh,0,M.brass);box(g,6,8,10,s*(B6+4.5),yh,0,M.brass);
         const r=mesh(g,new THREE.TorusGeometry(17,3,12,48),M.brass,s*(B6+6),yh-17,0);r.rotation.y=Math.PI/2;}
@@ -982,10 +1041,15 @@ const WCASE=(()=>{
        (wempe_lock.py sweep; at 0.55 until 25 October 2026, 0.37 clear of the ring's outside as it was, r 73.3, and 0.33 into it at 05 01's r 74: the photograph's
        "about halfway" allows either). The 6MX's kept over the ring, turned off (its hook over the bowl's rim, the
        pad it stops against there: Romanov's figure 95; how far it turns not read), its underside 0.5 over the ring's top (YP + 12.5, estimated; YL + 0.5 until 25 October 2026,
-       when the ring's top was taken at the parting line) */
+       when the ring's top was taken at the parting line). Since 8 November 2026 (the 6MX case review, A2, the owner's choice) the 6MX's works as the drawings': its lever at the pivots' height (LKY), turning in
+       through the ring's slot (the 6MX's ring has it: Kirova 14100's, a long thin slot beside a pivot; Romanov 1975, p. 204) into the locking bracket's hook, whose slot stands at
+       that height on Kirov 247's and 2973's bowls (6mx-audit/case/README.md B3). The bracket at brg 220.5 (atan2 49.5°), the lever's end (28.0 from the knob's axis) enters the
+       hook from its open side and meets its closed column after 51.5° (the lever as a stadium 8 wide swept in 0.5° steps against the column, r 59-64, and the 6MX's ring's band,
+       r 66.5-70.2, outside its window: clear; 49.0° with the hook to r 67.5 and the drawings' ring, 8 November 2026); the page turns it 51.3. Its grip at the drawings' 0.52 (0.55 until then clipped the ring's outside by 0.14 over the turn). Until then it lay over the ring's
+       top, its underside YP + 12.5, never turning, the 6MX's ring without the slot */
     const LQ=WD.LOCKQ,lk=prt(root,'caseLock'),LKT=[],PF=LQ.pf[0];   /* LKT: the drawn lock's turning group (lock(k), below) */
-    for(const[V,Wx]of/** @type {[string,number][]} */([['last first 1943',LQ.W[0]],['6mx',LQ.W[1]]])){const L6=V==='6mx',c=LQ.c,e=L6?LQ.e6:LQ.e,ly=L6?YP+LQ.dy6:LKY,lt=ly+LQ.lt;const g=new THREE.Group();rv(lk,V).add(g);   /* the lock's pieces carry their own lines (050101.F.b bracket, .a arbor, .h hub, .l lever, .p pin, .k knob), 050101.F the assembly */
-      const tn=new THREE.Group();tn.position.set(c[0],0,c[1]);g.add(tn);const tq=new THREE.Group();tq.position.set(-c[0],0,-c[1]);tn.add(tq);if(!L6)LKT.push(tn);   /* tq: what turns about the knob's axis, built in place (the arbor stays) */const LB=V==='6mx'?M.steel:M.brass,LK=V==='6mx'?MC.knob:M.brass;   /* ly, lt: the lever's underside and top; Wx: the right wall's inside (the 6MX's box 5 wider each side, its lock at the same height over the ring: estimated) */
+    for(const[V,Wx]of/** @type {[string,number][]} */([['last first 1943',LQ.W[0]],['6mx',LQ.W[1]]])){const L6=V==='6mx',c=LQ.c,e=L6?LQ.e6:LQ.e,ly=LKY,lt=ly+LQ.lt;const g=new THREE.Group();rv(lk,V).add(g);   /* the lock's pieces carry their own lines (050101.F.b bracket, .a arbor, .h hub, .l lever, .p pin, .k knob), 050101.F the assembly */
+      const tn=new THREE.Group();tn.position.set(c[0],0,c[1]);g.add(tn);const tq=new THREE.Group();tq.position.set(-c[0],0,-c[1]);tn.add(tq);tn.userData.turn=L6?51.3:69.7;LKT.push(tn);   /* tq: what turns about the knob's axis, built in place (the arbor stays) */const LB=V==='6mx'?M.steel:M.brass,LK=V==='6mx'?MC.knob:M.brass;   /* ly, lt: the lever's underside and top; Wx: the right wall's inside (the 6MX's box 5 wider each side, its lock at the same height over the ring: estimated) */
       /* the bracket (no sheet): a milled angle, as the owner's case design has it ("Ms angle in the front-right corner", 2 wood screws 3 × 15 DIN 96: CAD Model Case.md, §10),
          brass as Wempe 6161's (antiquorum_208-4_wempe6161.jpg: a brass seat under the lever, its end round about the hub), black as Wempe 3044's with the black case: the wall
          leg 3 thick and 12 wide against the right wall, from the seat's top 22 down, its lower corners rounded r 3, two round-headed wood screws (DIN 96, 3 × 15: head Ø 5.6,
@@ -998,7 +1062,7 @@ const WCASE=(()=>{
         const sg=polyGeo(sp,LQ.br.ts,[[c[0],c[1],LQ.br.hr]]);sg.translate(0,ly-LQ.br.ts,0);tag(mesh(g,sg,LS),'050101.F.b',1);
         for(const yy of LQ.br.sy.map(d=>yt-d))tag(screw(along(g,[Wx-LQ.br.tw,yy,(W0+W1)/2],[1,0,0]),0,0,0,...LQ.br.sc,M.steel),'DIN96');}
       tag(cylBetween(g,LQ.ar.r,ly-LQ.ar.y0,lt+LQ.ar.y1,M.steel,c[0],c[1],64),'050101.F.a');tag(cylBetween(tq,LQ.hub.r,lt-LQ.hub.y0,lt+LQ.hub.y1,LB,c[0],c[1],120),'050101.F.h');   /* (the arbor, hub, pin, head and knob on 64 to 120 sides, the seat's round end and the wall leg's corners on 64 and 32 chords: 20, 32, 16, 40, 16 and 8 until 1 November 2026, their chords 0.025-0.038 inside the circles) the lever's arbor through the seat, its riveted end 0.3 proud under it (estimated; flush, its end and the seat's underside one face), and the hub (Ø 9.8) to the knob */
-      const lv=polyGeo(stadiumPts(c,e,LQ.lw),LQ.lt);lv.translate(0,ly,0);tag(mesh(tq,lv,LB),'050101.F.l');const pf=L6?LQ.pf[1]:PF,pp=[c[0]+(e[0]-c[0])*pf,c[1]+(e[1]-c[1])*pf];tag(cylBetween(tq,LQ.pin.r,ly+LQ.pin.y0,V==='6mx'?lt+LQ.pin.t[1]:lt+LQ.pin.t[0],LB,pp[0],pp[1],64),'050101.F.p');   /* under a head, its end inside it */
+      const lv=polyGeo(stadiumPts(c,e,LQ.lw),LQ.lt);lv.translate(0,ly,0);tag(mesh(tq,lv,LB),'050101.F.l');const pf=PF,pp=[c[0]+(e[0]-c[0])*pf,c[1]+(e[1]-c[1])*pf];tag(cylBetween(tq,LQ.pin.r,ly+LQ.pin.y0,V==='6mx'?lt+LQ.pin.t[1]:lt+LQ.pin.t[0],LB,pp[0],pp[1],64),'050101.F.p');   /* under a head, its end inside it */
       /* the pin's round head (the drawings' case): Wempe No. 3044's (milivault_529241_wempe3044_screen.png, from above, 4.8 px/mm by the knob's Ø 19.6) Ø 8.7 ±1, brass, slotted,
          its shank about Ø 4 under it; Greenwich's wartime Wempe's round too (5377's plain: the 6MX's kept so). Its height not seen: 2.5 thick, its top the pin's (estimated) */
       if(V!=='6mx'){const hd=KIT.latheF([V2(0,0),V2(LQ.hd.r,0),V2(LQ.hd.r,LQ.hd.h),V2(LQ.hd.r-LQ.hd.c,LQ.hd.h+LQ.hd.c),V2(0,LQ.hd.h+LQ.hd.c)],120);tag(mesh(tq,hd,LB,pp[0],lt+LQ.hd.y,pp[1]),'050101.F.p',1);}   /* its slot not drawn */
@@ -1034,6 +1098,10 @@ const WCASE=(()=>{
     /* at rest the key stands in its holder (above), its axis up, its tube's mouth under the shelf where its body's cone is Ø 11, the hole's: 36.47 over the mouth (the cone
        Ø 9.14 to 14.5 over 10, from 33.0); as first drawn the 1940 key's cone (its traced line Ø 10.32 to 17.9 over 19.3 from 31.7, begun at the figured 32, Ø 10.44) at 33.43. The paddle (and the 1940 handle) faces the box's
        middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
+    /* KBLK: the key of 1943's black pieces (its body and paddle). The Soviet 6MX's key is brass (the 6MX case review, 8 November 2026, B6: Poljot 09777's, Uy8A88_j-cA
+       5:20-5:26, all brass; DIxob2Rl4dc 6:57-7:00 "a flat round brass paddle on a short tube"; the blind reader's brass or gilt: likely in colour). Its form and size as the
+       key of 1943's, which no 6MX photograph measures (estimated): only its colour follows the version (rev) */
+    const KBLK=[];
     const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:36.47),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
     {const g=new THREE.Group();g.userData.rev='last 6mx 1943';g.userData.sub='key';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return KIT.latheF(q.map(([r,y])=>V2(r,y)),n);};
@@ -1098,10 +1166,10 @@ const WCASE=(()=>{
         for(const q of BG){const a=q.attributes.position.array,n=q.attributes.normal.array,u=q.attributes.uv.array;
           for(let i=0;i<a.length;i+=9){if(on(a,i,1,YA)||on(a,i,1,YS)||on(a,i,2,0)||wl(a,i))continue;P.push(...a.slice(i,i+9));Nn.push(...n.slice(i,i+9));U.push(...u.slice(i/3*2,i/3*2+6));}}
         const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(P,3));bg.setAttribute('normal',new THREE.Float32BufferAttribute(Nn,3));bg.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));
-        tag(mesh(g,smoothRev(bg),MC.black),'050102-2');}
+        KBLK.push(tag(mesh(g,smoothRev(bg),MC.black),'050102-2'));}
       /* the paddle with the pin's hole (Ø 2.525), its centre on the slot's floor at the bore's edge */
       const PY=BT+KP.u+Math.sqrt(KP.R**2-RB*RB)-(Math.sqrt(KB.fr**2-RB*RB)-(YC-BT)),ds=new THREE.Shape();ds.absarc(0,0,KP.R,0,TAU,false);{const h=new THREE.Path();h.absarc(0,YH-PY,RH,0,TAU,true);ds.holes.push(h);}
-      const dg=extrude(ds,{depth:KP.t,bevelEnabled:false,curveSegments:72});dg.translate(0,PY,-KP.t/2);tag(mesh(g,dg,MC.black),'510011-1');
+      const dg=extrude(ds,{depth:KP.t,bevelEnabled:false,curveSegments:72});dg.translate(0,PY,-KP.t/2);KBLK.push(tag(mesh(g,dg,MC.black),'510011-1'));
       const pe=[...Array(4).keys()].map(k=>[KN.r0+KN.re*Math.sin(k*Math.PI/6),KN.L/2-KN.re*(1-Math.cos(k*Math.PI/6))]);   /* the pin's rounded end, r 0.45 */
       const pn=tag(mesh(g,lathe([[0,-KN.L/2],...pe.map(([r,y])=>[r,-y]),...pe.slice().reverse(),[0,KN.L/2]],16),M.steel,0,BT-4,0),'510011-6');pn.rotation.x=Math.PI/2;
       /* the spring: 0.6 wire on the tube (its coils' centres r 3.285), pitch 0.95, from the bore's floor (its lowest coil 0.02 over the drill point) to 0.01 under the tube's head;
@@ -1168,9 +1236,9 @@ const WCASE=(()=>{
     let woodK=null;const C0=[CB].map(m=>m.userData.c0||(m.userData.c0={c:m.color.clone(),m:m.metalness,r:m.roughness})),woodB=MC.mah.map;
     const setCase=v=>{const b=v==='black';[CB].forEach((m,i)=>{const o=C0[i];m.color.copy(b?sc(0x141416):o.c);m.metalness=b?0.1:o.m;m.roughness=b?0.36:o.r;});
       if(b&&!woodK)woodK=woodTex(false,false,true);MC.mah.map=b?woodK:woodB;MC.mah.needsUpdate=true;};
-    const out={setCase,stay:stayAt,root,ring:ringG,bowl:bowlG,inner:bowlS,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=cps*(1-q);cp.userData.turn();},setShut:v=>cp.userData.setShut(v),lock:k=>{for(const t of LKT)t.rotation.y=-69.7*D2R*k;},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
+    const out={setCase,stay:stayAt,root,ring:ringG,bowl:bowlG,inner:bowlS,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=cps*(1-q);cp.userData.turn();},setShut:v=>cp.userData.setShut(v),lock:k=>{for(const t of LKT)t.rotation.y=-t.userData.turn*D2R*k;},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};
     /* rev(v): the lids the page turns are the version's (app.js's onRev) */
-    out.rev=v=>{const s=v==='6mx';out.lid=s?lid6G:lidG;out.tongue=s?tg6:tgG;out.overLid=s?ol6G:olG;bowlS.position.y=s?-DY6:0;cp.userData.spEnd(s?YB-61.3:YB-63,s?0:CPY);};
+    out.rev=v=>{const s=v==='6mx';for(const m of KBLK){m.material=s?M.brass:MC.black;if(m.userData.mat0)m.userData.mat0=m.material;}   /* mat0 too: the viewer paints each mesh from it */out.lid=s?lid6G:lidG;out.tongue=s?tg6:tgG;out.overLid=s?ol6G:olG;bowlS.position.y=s?-DY6:0;cp.userData.spEnd(s?YB-61.3:YB-63,s?0:CPY);};
     /* the Exploded view's All (app.js, the viewer's st.allK, e 0 to 1): the case taken apart up the bowl's axis, under the movement lifted out of it: the gimbal ring 50 over
        the box, the closing plate 128, the bowl with its brackets 150, the bezel with its glass 195; the transit lock and the key out to the right, the lid back off its hinges.
        Each moved from where it was built (ex0); the key, which keyAt moves, only while it stands in its holder (called each frame) */
