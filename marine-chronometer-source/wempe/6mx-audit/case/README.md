@@ -92,7 +92,7 @@ The review is to be audited afterwards, so each row says where its reading came 
 | C13 | Box tiers | Seen from the top down, about 24, 60 and 105 (the closed front, the face taken as 190). | 25, 68 and 97. | 247 read 73 and 2973 63 for the middle tier (Gamma, 7 November); Alpha's ruling then kept 68 as inside the scatter. No change proposed. |
 | C14 | Box badge | About 47 × 27, against the hasp's 53. | 38.6 × 24. | Gamma read the badge at 0.78 of the hasp on 247 and 0.75 on 2973; this reader 0.89. Doubtful. |
 | C16 | Closing plate / shutter | No turning plate with a knob: on Poljot 09777 (Uy8A88_j-cA 5:19-5:27) a pin slides in a short slot to open the hole; on 14100 the hole is open. | The drawings' turning plate, flat, with a domed knob at r 19 and the drawings' spiral closing spring. The comment says "the 6MX's own is a pin in a slot". | The chronometers differ. Kirov 14917's foot (rAw2zmulpk8 0:11.75, the source of the model's knob, checked by the reviewer) shows a flat disc in a lip with a slotted screw and a domed knob, both off the disc's centre on one line: a turning plate is possible there. 14917 outranks the Poljot, so no change is proposed; the Poljot's slot is recorded. |
-| C15 | Glass's white ring | A white annulus about 8 wide inside the glass's edge: paint, a gasket, or the dial seen through it. | None. | can't tell |
+| C15 | Glass's white ring | A white annulus about 8 wide inside the glass's edge: paint, a gasket, or the dial seen through it. | None. | can't tell. **Settled 10 November 2026:** a white sight cone in the bezel, built (below, "The sight cone") |
 
 ### D. Matches
 
@@ -180,3 +180,14 @@ The owner chose to make the sure and likely fixes, in the 6MX version only, and 
 - The locking bracket's hook was trimmed from r 67.5 to r 64 to clear the smaller ring. The lever now meets the column at 51.5°; the page turns it 51.3°.
 - In the 133 ring the 6MX bowl can swing about ±28.5-30° before it meets the ring or the inner pivots' tips (`tools/gimbals_wempe_6mx.json`: `bowlInRing` [28.5, 30], the box's stops [59, 39]). The full `gimbals.js --model wempe` with `MC_WREV=6mx` passes: in the seas a ship works, the case meets neither the ring nor the box. Only a rough small vessel or a storm swings it onto that limit, passing at most 0.6 g to the balance.
 - Checks: `solids.py --model wempe` 0 not solid; `audit.py box --model wempe --rev 6mx` nothing new once the ring's four radial screws were listed in `FLOAT_BOX`, as the drawings' ring's are; `audit.py box --model wempe` nothing new; `holecheck.py --model wempe` 1,633 holes over five versions, 0 failing; the Wempe type check ok. The rest are in the commit.
+
+## The sight cone (10 November 2026)
+
+The owner asked whether the 6MX's bezel should slope inside, as the drawings' bezel's sight cone does. Measured on two 6MXs with the bezel on; each frame's camera is an ellipse fitted to the minute track's outer line, its r 45.13 taken from Kirov 247's dial (`dialtrace.py`), so the scale is borrowed (±1 mm):
+
+- **Poljot 09777** (Uy8A88_j-cA 2:08, 48° off the axis): on the far side a white surface starts at r 46.0 in the dial's plane and runs on without a step past the dial's edge (r 51.8), brightest on the far side (+50 grey levels over the dial at 12 o'clock, +25 at 1 and 11, none at 3 and 9): a cone facing the camera, not a flat ring. Its top lands at r 58.8-61 on the far side and 51.4 at the sides, which with the glass's underside 6.8 over the dial puts it at r 52.3.
+- **Kirov 14917** (rAw2zmulpk8 0:22, 29° off): the same, its foot at r 45.5-45.8. With the bezel off (0:28.6) its dial's cream margin shows outside the track; with it on, a whiter band starts at the track. The bezel lifted off carries the white ring (0:28.6; 14100's too, blind-bowl-bezel.md row 6).
+- **Kirov DEC 422** (`1_Kirow_DEC_422_Z.jpg`, head-on): white to r 51.0 and its three dial screws at r 49.3-50.2 show with the bezel on, so its bezel has no cone over the dial. A bezel without it was made too.
+
+Built in the 6MX version (`case.js`, `CN6`): the cone from r 52.3 under the glass to r 46.0 (Ø 92) 0.1 over the dial, a land 0.2 at its foot, about 44° to the axis (the drawings' 52°), its face painted white (a surface 0.02 off it). It hides the dial's screws, as on 14917. Likely.
+

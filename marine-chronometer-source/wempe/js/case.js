@@ -643,10 +643,25 @@ const WCASE=(()=>{
        shows one between them (its length there about 10, on a scale set by its collar: the model's 1.5 comes from the glass's height, estimated). The bell as traced */
     {const b6=rv(bz,'6mx'),gu=YB+12.0,gt=gu+3.0,yj=Y6(552),yk1=gt-(Y6(650)-Y6(640)),yk0=yk1-(Y6(640)-Y6(598)),top=gt,dl=Y6(650)-gt;
       const bell=[[56.1,552],[56.5,556],[56.73,560],[57.09,564],[57.32,568],[57.56,572],[57.68,576],[57.82,580],[57.9,588],[57.9,598]].map(([r,w])=>[r,Y6(w)]);
-      const pr=[[TH.Rf,yj],...bell,[57.9,yk0],[57.9,yk1],[58.0,yk1],[58.0,Y6(646)-dl],[57.6,Y6(649)-dl],[57.2,top],[53.6,top],[53.6,gu],[52.1,gu],[52.1,YB+4.7],[TH.Rf,YB+4.7]];
+      /* Since 10 November 2026 the sight cone (CN6): inside the glass's seat a cone from r 52.3 under the glass down to r 46.0 (Ø 92, just outside the minute track's
+         Ø 90.3) at the dial, 0.1 over its face, a land 0.2 at its foot; its face painted white (below). Measured on two 6MXs with the bezel on, each frame's camera an
+         ellipse fitted to the minute track's outer line (r 45.13, Kirov 247's dial: dialtrace.py), so the scale is borrowed: Poljot 09777 (Uy8A88_j-cA 2:08, 48° off
+         the axis) and Kirov 14917 (rAw2zmulpk8 0:22, 29° off). On the far side of both a white surface starts at r 45.5-46.0 in the dial's plane, where the dial's own margin
+         (to r 51.8) shows with the bezel off (rAw2zmulpk8 0:28.6, Kirov 247's photograph), and runs on without a step past r 51.8; it is brightest where it faces the
+         camera and plain at the sides, as a cone, not a flat ring, is lit. Its top lands at r 58.8-61 on 09777's far side, 52.3 at the glass's underside 6.8 over the dial
+         (±1). 14917's bezel off (0:28.6) and 14100's carry the white ring, about 8 wide, in the bezel. About 44° to the axis, the drawings' bezel's 52° (05 01 01).
+         Likely, ±1 mm. Kirov DEC 422 has none (its three dial screws at r 49.9 show with its bezel on: 1_Kirow_DEC_422_Z.jpg), so a bezel without it was made too;
+         the model follows the two. Until then a plain bore r 52.1 (estimated) */
+      const DF=WDIAL.DY1,CN6={rt:52.3,rf:46.0,yf:DF+0.3,yl:DF+0.1};
+      const pr=[[TH.Rf,yj],...bell,[57.9,yk0],[57.9,yk1],[58.0,yk1],[58.0,Y6(646)-dl],[57.6,Y6(649)-dl],[57.2,top],[53.6,top],[53.6,gu],[CN6.rt,gu],[CN6.rf,CN6.yf],[CN6.rf,CN6.yl],[52.1,CN6.yl],[52.1,YB+4.7],[TH.Rf,YB+4.7]];
       /* its bore threaded (TH6, the profile's last edge) from its edge to the shoulder on the rim's top (until 24 October 2026 plain, r 55.3) */
       const b6m=tag(mesh(b6,lathT(pr,{R:TH6.Rf,d:TH6.d,p:TH6.p,yr:TH6.yr,k:pr.length-1,inside:true}),M.brass),'050101-2');
       b6m.geometry=dropOn(b6m.geometry.index?b6m.geometry.toNonIndexed():b6m.geometry,57.9,yk0,yk1);fuse([b6m,tag(mesh(b6,diamondKnurl(57.9,0.4,yk0,yk1,270,28,false),M.brass),'050101-2',1)]);   /* one mesh (fuse), one closed surface: the lathe's face at r 57.9 under the knurl taken off (dropOn) and the knurl's ends stitched to its 360 corners there (circT) */
+      /* the cone's white paint (14917's and 09777's: a matt white, whiter than the dial's paper): a surface 0.02 off the cone's face, as the dial's printed face lies on its disc,
+         its edges 0.05 in from the cone's, from the glass's ledge down to the land */
+      {const dr=CN6.rt-CN6.rf,dy=gu-CN6.yf,l=Math.hypot(dr,dy),nr=-dy/l*0.02,ny=dr/l*0.02,sr=dr/l*0.05,sy=dy/l*0.05;
+        const wp=M.white6=M.white6||new THREE.MeshStandardMaterial({color:sc(0xf4f3ee),metalness:0,roughness:0.7});
+        const pm=mesh(b6,new THREE.LatheGeometry([V2(CN6.rt+nr-sr,gu+ny-sy),V2(CN6.rf+nr+sr,CN6.yf+ny+sy)],N),wp);Object.assign(pm.userData,{surface:true,noCap:true,noShadow:1,hn:'050101-2',sub:1});}
       const gq=[[0,gu],[53.5,gu],[53.5,gt-0.5],[53.0,gt],[0,gt]],gg=new THREE.LatheGeometry([...gq,gq[0]].map(([r,y])=>V2(r,y)),N);
       const gl=tag(mesh(b6,gg,GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
 
