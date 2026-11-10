@@ -658,10 +658,10 @@ const WCASE=(()=>{
       const b6m=tag(mesh(b6,lathT(pr,{R:TH6.Rf,d:TH6.d,p:TH6.p,yr:TH6.yr,k:pr.length-1,inside:true}),M.brass),'050101-2');
       b6m.geometry=dropOn(b6m.geometry.index?b6m.geometry.toNonIndexed():b6m.geometry,57.9,yk0,yk1);fuse([b6m,tag(mesh(b6,diamondKnurl(57.9,0.4,yk0,yk1,270,28,false),M.brass),'050101-2',1)]);   /* one mesh (fuse), one closed surface: the lathe's face at r 57.9 under the knurl taken off (dropOn) and the knurl's ends stitched to its 360 corners there (circT) */
       /* the cone's white paint (14917's and 09777's: a matt white, whiter than the dial's paper): a surface 0.02 off the cone's face, as the dial's printed face lies on its disc,
-         its edges 0.05 in from the cone's, from the glass's ledge down to the land */
+         its edges 0.05 in from the cone's, from the glass's ledge down to the land, on the bezel's own 360 facets */
       {const dr=CN6.rt-CN6.rf,dy=gu-CN6.yf,l=Math.hypot(dr,dy),nr=-dy/l*0.02,ny=dr/l*0.02,sr=dr/l*0.05,sy=dy/l*0.05;
-        const wp=M.white6=M.white6||new THREE.MeshStandardMaterial({color:sc(0xf4f3ee),metalness:0,roughness:0.7});
-        const pm=mesh(b6,new THREE.LatheGeometry([V2(CN6.rt+nr-sr,gu+ny-sy),V2(CN6.rf+nr+sr,CN6.yf+ny+sy)],N),wp);Object.assign(pm.userData,{surface:true,noCap:true,noShadow:1,hn:'050101-2',sub:1});}
+        const wp=M.white6=M.white6||new THREE.MeshStandardMaterial({color:sc(0xf4f3ee),metalness:0,roughness:0.7,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});   /* drawn in front of the cone's face as the dial's printed face is: without it the two fought in depth, facet by facet, and Edges drew a tick at each (3.85.01) */
+        const pm=mesh(b6,new THREE.LatheGeometry([V2(CN6.rt+nr-sr,gu+ny-sy),V2(CN6.rf+nr+sr,CN6.yf+ny+sy)],360),wp);Object.assign(pm.userData,{surface:true,noCap:true,noShadow:1,hn:'050101-2',sub:1});}
       const gq=[[0,gu],[53.5,gu],[53.5,gt-0.5],[53.0,gt],[0,gt]],gg=new THREE.LatheGeometry([...gq,gq[0]].map(([r,y])=>V2(r,y)),N);
       const gl=tag(mesh(b6,gg,GLW),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
 
