@@ -18,7 +18,8 @@ chronometer keeps time at sea:
   several versions: as first drawn, the escapement of 1943, Wempe No. 3955 as
   photographed, and the Soviet 6MX (audited again against its photographs in
   3.82.03; its case, bezel, transit lock and smaller gimbal ring, which Wind
-  turns over with the case, reviewed in 3.84.00).
+  turns over with the case, reviewed in 3.84.00; the bezel's white sight
+  cone, measured on two 6MXs, added in 3.85.01).
 - **The Marine Chronometer**, a long-form interactive essay shared by both
   models. Its text follows the Model 21; its 3D figures and dial are drawn
   from the Wempe's model.
