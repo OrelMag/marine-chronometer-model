@@ -104,6 +104,22 @@ Every video above that shows a German Einheits-Chronometer (GUB 1956, Ldzmn4kuKM
 
 Not read, and why: the hands' heights (no side view of the hands in any video: Unresolved stays); the fusee's turns and the groove's end N (the fusee seen from one side only); the mainspring's length (UG44DSWMv3o never takes it out: the README's rough reading from 0:26 and 5:56 stands); the stud's slot in the cock's underside (pbL64JZ-LGM 2:29: the arm's edge under the glove); the 6MX's adjusting slide (no frame shows it worked); the oiling (5eOap3PJb8Y 5:02-5:57: eight touches, none placeable on a named hole). Catalogue entries corrected: UG44DSWMv3o 1:58-6:46, Ldzmn4kuKMA 4:11-4:30, pbL64JZ-LGM 2:09-2:35 (above).
 
+### Robin Nance's 6MX No. 06508 against the 6MX version (10 November 2026)
+
+jZn0YuMoW8c (above) fetched at 1080p, sheeted, and its frames picked by `wempe_vidreview.py sharp`. The escapement close-up, 12:51.6, was compared with the page's 6MX version (Kirov No. 247, `rev=6mx`) by `photocompare.py --model wempe`. The camera was fitted on seven picks: the upper cock's screw, the balance endstone's two screws, the escape endstone's two, the top plate's screw at 6 (WN-57) and the set-up ratchet's centre. The rms is 5.4 px, about 0.2 mm; the picks were read by eye, not snapped. The spec and sheets are in `$MC_VIDEO/nance-review/` (`n_1251.json`, `n_1251_nb.json` with the balance hidden). This is one 6MX, and a late one (ГОСТ 8916-77). Kirov 247 outranks it, so where they differ the difference is this clock's.
+
+| What | Where | Result | Verdict |
+|---|---|---|---|
+| The upper cock, its foot and screw, the arm over the balance; the balance endstone between two screws; the escape endstone with a screw above and below; the set-up click's pear outline and its screw; the fusee bush; the small holes and screws along the plate's edge on the barrel side | 12:51.6 | the model's outlines lie on the photographed edges within the fit's scatter | verified (likely; one view, picks by eye) |
+| An open hole in the top plate, between the jewelled hole `6MX.ch38u` and the screw at 6 (WN-57), about the screw head's diameter across (a ratio along one line: 1.02 ±0.05 of the head, so about Ø 6.5 ±0.4); a lit surface shows inside it | 12:51.6, 12:38.0 | the model has plain plate there (`--what` 1360,870: topPlate); Kirov 247's plan view (`k247_A`, refitted at 2.0 px) has plain plate between those two as well, with only the small hole beside the screw, which the model has | this clock's (sure that it is there; likely a later production change; not built) |
+| The screws | throughout | blued (the top plate's at 6, the escape endstone's, the lower cock's, the set-up click's); Kirov 247's are bright | this clock's (sure) |
+| The two steel rods in front of the fusee, a thick one with a collar at the wheel's level and a thin one beside it | 6:38.3, 7:02.5 | read as the maintaining detent's arbor and its wire spring, which the model has; no camera fitted, so not checked in place | consistent (likely) |
+| The dial | 3:31 | ПОЛЕТ, СПУСК/ЗАВОД 0-56, СДЕЛАНО В СССР, red serial 06508, gilt hands; the Poljot dial, not the Kirov one the 6MX version draws | this clock's (sure) |
+| Moving parts | 12:30-12:55 | the balance is running, but the camera is hand-held and close, and the stretch is short; no swing read | not read |
+| Not read | | the set-up ratchet's teeth (cut off by the frame's edge in every sharp frame); the hand arbor's square (it turns with the hands, and no frame gives a fixed reference); the gimbal ring and pivots (1:00-1:30) and the bowl's back with its shutter (9:20-10:50) were seen on the contact sheets only, not measured | |
+
+No model change.
+
 ## Text sources (German and English web)
 
 - watch-wiki "Einheitschronometer" (https://watch-wiki.org/index.php?title=Einheitschronometer) and Knirim / Christian Schmiedchen "Marine-Chronometer aus Glashütte" (http://www.knirim.de/schmied.htm): the list of Glashütte Einheits features against Lange's earlier Kal. 100 (quoted in the report).
