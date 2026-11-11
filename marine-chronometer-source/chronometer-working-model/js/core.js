@@ -148,7 +148,7 @@ const RUBY={clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69,envMapIntensit
      that photograph on 11 November 2026, not measured: estimates. */
 const LOOK3=T3&&!/[?&]look=128\b/.test(location.search);
 function look3(M){
-  Object.assign(M.glass,{transmission:1,thickness:0,ior:1.52,roughness:0.03,specularIntensity:0.25});
+  Object.assign(M.glass,{transmission:1,thickness:0,ior:1.52,roughness:0,specularIntensity:0.25});   /* roughness 0: any at all reads the scene behind from a coarser copy, and the dial's fine print went pale at a distance */
   Object.assign(M.clear,{transmission:1,thickness:0.4,ior:1.77,clearcoat:0});
   Object.assign(M.ruby,{color:sc(0xffd9dc),transmission:1,thickness:0.5,ior:1.77,attenuationColor:sc(0xc4001c),attenuationDistance:0.16,roughness:0.05,clearcoat:0,emissiveIntensity:0,envMapIntensity:1});
   M.blued=new THREE.MeshPhysicalMaterial({color:sc(0x9aa3b0),metalness:1,roughness:0.25,iridescence:1,iridescenceIOR:2.4,iridescenceThicknessMaximum:80});   /* tried on the seconds hand: 55-62 nm straw to violet, 72 brown-grey, 80 the photograph's blue: the order of the temper colours; a blue base under the film came out straw */
@@ -198,7 +198,7 @@ function patchSection(m,cap){
   if(!m||m.userData.secPatched)return;m.userData.secPatched=true;m.userData.secCap=cap;m.userData.side0=m.side;m.clipShadows=true;if(!m.clippingPlanes)m.clippingPlanes=[];SEC.mats.add(m);
   if(cap)m.extensions={fragDepth:true};
   m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);
-    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
+    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp&&!(T3&&m.transmission>0)?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace(   /* three r187 declares projectionMatrix itself in a transmissive material's fragment shader (transmission_pars_fragment): twice is an error */'#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
       'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':'')+(dp?SEC_DEPTH:''));};
   m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0);
   m.needsUpdate=true;

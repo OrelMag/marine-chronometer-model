@@ -52,6 +52,7 @@ Each was found by running the Wempe's page on r187, or by reading the guide. "Do
 | `LatheGeometry` gives each quad's second triangle as (c, d, b), not (b, c, d) (after r128; not listed) | Every cutter that clips a turned solid cut after cut (`facePocket`, the bores) | Done: `core.js` restores r128's order under r187. Without it 35 meshes were the same solids with other vertices. Better later: make the cutters independent of triangle order. |
 | The triangulator (Earcut) is a newer version | `solidGeo`, `polyGeo` and everything through `ShapeUtils.triangulateShape` | Open: only the movement ring came out differently (0.05 mm³, 213 fewer unique vertices). Either accept it and regenerate what is derived from that mesh, or keep r128's Earcut in `kit.js`. |
 | `transmission` refracts and draws a second pass (r131 on) | `M.glass`, `M.clear`, `M.ruby` (`core.js`), `M.glassW` (`case.js`) | Done as the new look (`look3`). With r128's values the glass is a milky veil: 12 % of a white diffuse surface, which r128 hid in its alpha. |
+| A transmissive material's fragment shader declares `projectionMatrix` itself (with real transmission, r131 on) | `patchSection` in `core.js`, which declares it for a cut face's depth | Done: not declared again for a transmissive material on r187. `smoke.py --model wempe` found it: every section failed to compile on the glass and the jewels (259 console errors). |
 | `envMapIntensity` no longer dims `scene.environment` (r163) | `RUBY` in `core.js` (0.25) | Done by the new look, which doesn't need it. With `look=128` the ruby is brighter than on r128. |
 | `PCFSoftShadowMap` is deprecated; `PCFShadowMap` is soft (r182) | `viewer.js`, `app.js` | Done: `SHADOW_SOFT`. Shadows (Display) not compared yet. |
 | `iridescenceThicknessRange` is `iridescenceThicknessMaximum` (r187 warns) | new code only | Done. |
@@ -61,13 +62,14 @@ Each was found by running the Wempe's page on r187, or by reading the guide. "Do
 | `OrbitControls` is a module only (r148) | `hamilton-parts/index.html`, the two motion-3d viewers | Not done. They keep their own r128 files until wrapped as an addon. |
 | PMREM and indirect specular were improved (r181, r187) | every metal | Accepted: upward flat faces differ by 3 to 20 levels of 255. Retune if wanted. |
 
-Checked and unaffected: the shadow pass still tests layers against the main camera (`drawMerge`'s layer 2); raycasts all pass `recursive`; `onBeforeCompile` patches (`#include <dithering_fragment>`, `diffuseColor`, `outgoingLight`, `vClipPosition`) compile; an override material skips the transmission pass, so the Edges pass's ids cost nothing more; `webglcontextrestored` rebuilds the environment as before (not exercised).
+Checked and unaffected: the shadow pass still tests layers against the main camera (`drawMerge`'s layer 2); raycasts all pass `recursive`; the other `onBeforeCompile` patches (`#include <dithering_fragment>`, `diffuseColor`, `outgoingLight`, `vClipPosition`, `gl_FragDepthEXT`) compile; an override material skips the transmission pass, so the Edges pass's ids cost nothing more; `webglcontextrestored` rebuilds the environment as before (not exercised).
 
 ## The pilot's new look
 
 In `core.js`'s `look3`, on r187 only, and off with `look=128` in the address. All values are estimates set by eye on 11 November 2026.
 
-- **Glass:** all of the light through, index 1.52, its reflection at a quarter strength. No thickness: with one, what lies under the glass is drawn shifted by refraction and off its own Edges lines.
+- **Glass:** all of the light through, index 1.52, its reflection at a quarter strength, perfectly smooth. No thickness: with one, what lies under the glass is drawn shifted by refraction and off its own Edges lines.
+  - **A fault to settle before stage 6:** in the Dial and Box views the fine print of the sub-dials and the thin hands read paler than on r128. Close up they are crisper and blacker. three reads the scene behind a transmissive surface from a copy through a smoothing filter, which softens lines a pixel wide. A flat crystal gains nothing from refraction, so it should stay drawn by alpha, as r128's stand-in does (a small shader patch: opacity plus the reflection's brightness), and transmission be kept for the jewels. Not built.
 - **Ruby:** clear corundum, index 1.77, red by absorption over 0.5 mm. No glow of its own.
 - **Blued steel:** steel under an oxide film, index 2.4, 80 nm, matched to the seconds hand of Wempe 3955 (`1_Wempe_3955_Z.jpg`). On that photograph the seconds and up-and-down hands are blued; the hour and minute hands are gilt. The pale steel tempered at 310° (`M.blue310`) keeps its photographed grey.
 - **Contact shading** (`ao=1` in the address): worked out on the Edges pass's own normals and depths, so it costs one full-screen pass and no pass over the model. It does not need the upgrade; it would run on r128 too. It is not light transport: it darkens lit and shaded alike.
