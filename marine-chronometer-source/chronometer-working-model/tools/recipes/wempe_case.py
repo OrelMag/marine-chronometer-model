@@ -190,6 +190,8 @@ def screw72f():
     return _cs('screw72f','WN-72.6',"Closing plate knob, the 6MX's (WN-72)",Q()['S72']['f'],'brass','dims.js CASEQ.S72.f (Kirov 14917: the domed knob about Ø 6.5 at r 19 ±2)',[],rev='6mx')
 def _s80(side,six):
     S=Q()['S80'];B=S['B'][1 if six else 0];i=0 if side>0 else 1;sh,te=S['sh'][i],S['te'][i];r=S['r6'] if six else S['r']
+    if six:   # to the 6MX's ring, Ø 133 inside and 3.7 thick (case.js's RI6, RO6, since 9 November 2026): the shoulder and the bracket's side moved in by the outsides' difference, the tip at 9 by the insides'
+        RG=Q()['RG'];dR=RG['RO']-(133/2+3.7);dI=RG['RI']-133/2;sh-=dR;te-=dR if side>0 else dI
     rec=screwT(f"screw80_{'3' if side>0 else '9'}{'m' if six else ''}",f"WN-80.{'3' if side>0 else '9'}{'m' if six else ''}",f"Outer pivot screw, {'3' if side>0 else '9'} o'clock{', the 6MX box' if six else ''} (WN-80, 11 on 05 01), M6",
       r,S['h'],B-sh,S['rs'],'steel','51 00 10 ("Verbohren 4,8 mm, Gew. M 6"), 05 01 elevation (the length by the box\'s wall; case.js)',(S['tr'],sh-te,S['ch']),
       [f"Through the box's {'3' if side>0 else '9'} o'clock side wall; its tip the gimbal ring's pivot, {"through the ring's bracket into the ring" if side>0 else "through the ring"}. Locked by the knurled nut WN-400.w against the wall's inside."])

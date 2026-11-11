@@ -115,7 +115,7 @@ def key40Bought():
 # ---------------- the transit lock (Feststeller 05 01 01; no sheet of its own: case.js, all of it estimated), six pieces ----------------
 def LQ():return W()['WD']['LOCKQ']
 def YPL(six):
-    q=W()['WD']['CASEQ'];yp=q['Y']['YB']-q['Y']['YSEAT'];return yp+LQ()['dy6'] if six else yp-q['RG']['lk']['dy']   # the lever's underside
+    q=W()['WD']['CASEQ'];yp=q['Y']['YB']-q['Y']['YSEAT'];return yp-q['RG']['lk']['dy']   # the lever's underside: case.js's LKY, the 6MX's too since 8 November 2026 (its lever at the pivots' height, the 6MX case review's A2; 12.5 over the pivots, LOCKQ.dy6, until then)
 SRC_L="case.js (the case's assembly 05 01 Schnitt A-B, Romanov 1975 for the 6MX; no sheet of its own), estimated"
 def _arc3(a,m,b):return bd.Edge.make_three_point_arc(bd.Vector(*a),bd.Vector(*m),bd.Vector(*b))
 def _ln(a,b):return bd.Edge.make_line(bd.Vector(*a),bd.Vector(*b))

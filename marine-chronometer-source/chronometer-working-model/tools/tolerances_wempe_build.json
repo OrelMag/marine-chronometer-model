@@ -90,6 +90,8 @@
    "back": 0.8,
    "swing": 3.9999,
    "margin": 0.4,
+   "rule": "half",
+   "half": null,
    "knock": 0.64,
    "rows": [
     {
@@ -148,8 +150,11 @@
   "deep20": 0.28,
   "hot": 0.2748,
   "aim": 0.1881,
-  "shallow": 0.1015,
-  "ring": 0.0508,
+  "shallow": 0.1013,
+  "rule": "half",
+  "past": null,
+  "ring": 0.0507,
+  "ringShare": 0.2156,
   "tip": 0.25,
   "liftMax": 0.3045,
   "at": {
@@ -165,9 +170,9 @@
     "Amin": 190.4143
    },
    "shallow": {
-    "lock": 6.24,
-    "A": 224.506,
-    "Amin": 217.8441
+    "lock": 6.22,
+    "A": 224.5701,
+    "Amin": 217.9047
    }
   }
  },

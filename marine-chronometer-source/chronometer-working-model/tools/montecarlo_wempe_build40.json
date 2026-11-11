@@ -87,42 +87,42 @@
   "unlocks": 0.997,
   "lock": 0.85,
   "runs": 0.183,
-  "band": 0.007,
+  "band": 0.997,
   "sources": 0,
   "times": 0.141,
-  "works": 0
+  "works": 0.156
  },
  "after": {
   "turns": 1,
   "free": 1,
-  "band": 0.9735,
+  "band": 1,
   "sources": 0,
   "lock": 1,
-  "works": 0.9735
+  "works": 1
  },
  "swing": {
   "asMade": {
    "lo": [
-    165.0997,
+    165.0936,
     171.2551,
     177.2512
    ],
    "hi": [
     174.4372,
-    180.6462,
+    180.6436,
     186.6079
    ]
   },
   "after": {
    "lo": [
-    180.1025,
-    181.5552,
-    185.2877
+    177.4718,
+    181.3704,
+    185.4075
    ],
    "hi": [
-    189.487,
-    191.0375,
-    194.9234
+    186.4578,
+    190.8261,
+    195.0405
    ]
   },
   "hist": [
@@ -148,11 +148,11 @@
    ],
    [
     170,
-    515
+    516
    ],
    [
     172.5,
-    470
+    469
    ],
    [
     175,
@@ -191,11 +191,11 @@
    "caught": 0
   },
   "setup": {
-   "caught": 571,
-   "mended": 518
+   "caught": 0,
+   "mended": 0
   },
   "swing": {
-   "caught": 53
+   "caught": 0
   },
   "vibrated": {
    "caught": 1718
@@ -203,79 +203,79 @@
  },
  "uncaught": 0,
  "why": {},
- "failAfter": 53,
+ "failAfter": 0,
  "alone": {
   "holes": {
-   "asMade": 0,
-   "works": 0.99,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "endshake": {
-   "asMade": 0,
-   "works": 0.992,
-   "band": 0,
+   "asMade": 0.184,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "friction": {
-   "asMade": 0,
-   "works": 0.996,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "mainspring": {
-   "asMade": 0,
-   "works": 0.992,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "detent": {
-   "asMade": 0,
-   "works": 0.976,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "gold": {
-   "asMade": 0,
-   "works": 0.988,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "tip": {
-   "asMade": 0,
-   "works": 0.986,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "banking": {
-   "asMade": 0,
-   "works": 0.99,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "preload": {
-   "asMade": 0,
-   "works": 0.986,
-   "band": 0,
+   "asMade": 0.846,
+   "works": 1,
+   "band": 1,
    "times": 0
   },
   "hairspring": {
-   "asMade": 0,
-   "works": 0.986,
-   "band": 0,
+   "asMade": 1,
+   "works": 1,
+   "band": 1,
    "times": 0.132
   }
  },
- "worst": "holes",
+ "worst": "endshake",
  "holes": {
   "holes25": {
-   "asMade": 0,
-   "works": 0.98,
+   "asMade": 1,
+   "works": 1,
    "jam": 0
   },
   "holes50": {
-   "asMade": 0,
-   "works": 0.988,
+   "asMade": 0.998,
+   "works": 1,
    "jam": 0.002
   }
  },
