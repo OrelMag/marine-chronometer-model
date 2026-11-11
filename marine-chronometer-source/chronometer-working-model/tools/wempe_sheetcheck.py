@@ -3,12 +3,16 @@ works drawing against the parts and wrote 1,670 verdicts as text; `recipes.py --
 wempe/js/dims.js, so a number there drifting from its sheet passed everything until the next audit. This tool holds the audited figures in a ledger,
 marine-chronometer-source/wempe/parts-audit/sheetcheck.json, and measures them again on the recipes' exact solids (wempe_measure.py's reader, no browser).
 
-    python wempe_sheetcheck.py [--jobs N] [--only part,...] [--measured DIR] [-v]     the check (about 2 minutes on 8 processes; exit 1 on a failure)
+    python wempe_sheetcheck.py [--jobs N] [--only part,...] [--measured DIR] [-v]     the check (about 2 minutes on 6 processes; exit 1 on a failure; --jobs default MC_PROCS or 8;
+                                                   -v lists every item with what it measures; --measured: wempe_measure.py's KEY.json files in place of building)
     python wempe_sheetcheck.py --update            after an intended change: rewrite each moved item's `was` (never its limits) and say what moved
     python wempe_sheetcheck.py --fault [move]      the planted fault, which must fail: the pillars' body (dims.js PIL r, 05 08 00-1's 8,1 -0,2, drawn 8.0) 0.3 large,
                                                    outside its limits; `move`: 0.06 large, inside them and no longer where the audit found it
-    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--json OUT]   the coverage sweep (slow: about an hour; not run by ci.py)
-    python wempe_sheetcheck.py --derive [OUT]      the ledger made again from the audit's batchNN.items.tsv (how it was first made; hand entries kept)
+    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--limit N] [--json OUT]   the coverage sweep (slow: about an hour on 10 processes; not run by ci.py)
+    python wempe_sheetcheck.py --derive [OUT] [--measured DIR] [--why ID]   the ledger made again from the audit's batchNN.items.tsv (how it was first made, below),
+                                                   into OUT (default tools/r_wpa/sheetcheck.derived.json, ignored), to compare with the ledger before anything
+                                                   replaces it; entries marked "by": "hand" are kept; --why ID traces one row: its figure, the candidates and
+                                                   their scores; about 3 minutes, every solid measured at every level
     python wempe_sheetcheck.py --stats             the ledger's counts: checked, by how; not checked, by reason
 
 The ledger. `items`: one entry per audited item that a machine can measure: its id in the audit (batch-sheet-item), sheet, what the size attaches to, the
@@ -25,6 +29,9 @@ figure as read (`drawn`), `nom`, `lo` and `hi` (the printed tolerance: `lim` pri
   {"m":"size","part":K,"i":0|1|2}, {"m":"box","part":K,"i":0..5}       the solid's box
   {"m":"dz","part":K,"z":[a,b]}, {"m":"level","part":K,"z":a}          the distance between the faces at the levels nearest a and b; a face's level
   {"m":"arc","part":K,"level":z,"c":[x,y],"r":r,"q":"r|cx|cy|cr"}      the outline's arc on that level's face nearest that centre and radius
+  {"m":"line","part":K,"level":z,"mid":[x,y],"ax":"x|y","q":"len|x|y"}  the straight edge on that level's face whose middle is nearest mid: its length, or
+        (an edge of constant x or y) where it stands
+  {"m":"gap","part":K,"level":z,"ax":"x|y","mids":[[x,y],[x,y]]}       the distance between two such edges (a slot's or an arm's width)
 An item with several features (four equal holes) lists them all in `how`; each must pass.
 `status` match: the measurement must stay inside lo..hi (FAIL outside) and where it was (MOVED: a change of more than 0.002 mm inside the limits is
 still a drift from the audited part; --update accepts it after it is looked at). `status` departure: the audit found the part outside the sheet and the
@@ -41,23 +48,71 @@ The sweep. Every numeric literal of dims.js (--scope esc: of the tables escapeme
 Node reads it (wempe_nudge.js preloaded: the file on disk is never touched), every recipe made again, and each whose operations changed built and
 measured: `limits` an item left its limits, `moved` an item moved inside them (the check fails either way), `unguarded` a solid changed and no item
 noticed, `breaks` the recipe no longer builds, `nosolid` the recipes read it but no solid changed (a placement, a sheet's text), `unread` no recipe
-reads it. Writes tools/r_wpa/sweep.json (ignored) and prints the unguarded numbers with their line in dims.js."""
+reads it. Subscripts, exponents, loop bounds and the small whole factors of a product (2*r) are left out. Which recipes to build is found by making
+every recipe again and comparing its operations (sizes, closures and solids walked: _sig) with the base's; a recipe that reads its numbers only as it
+builds is built whenever any reader's answer changed (none does today). For speed the readers run without the escapement in time (wempe_nudge.js's
+MC_WNUDGE_NOPHYS; the sweep first checks they answer the same with it). Writes tools/r_wpa/sweep.json (ignored) and prints the unguarded numbers with
+their line in dims.js.
+
+How the ledger was first made (--derive, 11 November 2026). Each audit row (batchNN.items.tsv: item, drawn, field, built, delta, the verifier's verdict
+where it gave one) is read so: the drawn figure and its tolerance are parsed (an explicit range, +a/-b, a fit's ISO 286 limits, else the fallback); the
+built value is looked for among every scalar of the measured part (quantities()), and the candidates of that value are scored by the row's own words: the
+kind of feature it names, its place in the list (a hint only: lists shift), the attribute, inside or outside, and the other numbers in the row that
+describe the candidate (its centre, its span). One candidate must lead, or the equal ones be the same feature named together; else the row stays
+unchecked (ambiguous). A plate hole's row, "hole 47 ... (N31.551 W22.924)", gives its place along O and N as tabulated (+-0.005) and each diameter it
+prints. A match whose solid is outside the parsed limits, or a mismatch inside them, stays unchecked and is printed for a look. The pairing is by value
+and words, so a few entries hold a feature of the right value under the wrong item's name (4 found among 139 read by eye and their rules tightened,
+none among 40 more); DROP lists rows paired wrongly that no rule catches."""
 import argparse,collections,json,math,os,pathlib,re,subprocess,sys,time
 HERE=pathlib.Path(__file__).resolve().parent;ROOT=HERE.parents[2];WE=ROOT/'marine-chronometer-source'/'wempe';REP=WE/'parts-audit';LED=REP/'sheetcheck.json'
 TOL=0.002   # mm (and degrees, and teeth): a measurement farther than this from `was` has moved
 def r4(x):return round(float(x),4)
 
 # ---------------------------------------------------------------- measuring
+def teeth_at(p,z):
+    """wempe_measure.py's teeth_at (a toothed rim in the section at z: count, tips, roots, depth), its outline walked through OpenCascade's own curves: the
+    same points, a few hundred times faster than an edge's position_at() called 70,000 times (a wheel's section took minutes; the two agree to 0.0005)"""
+    import build123d as bd,numpy as np
+    from OCP.BRepAdaptor import BRepAdaptor_Curve
+    try:sec=p&bd.Face.make_rect(400,400,bd.Plane.XY.offset(z))
+    except Exception:return None
+    if sec is None or not sec.faces():return None
+    out=[]
+    for f in sorted(sec.faces(),key=lambda f:-f.area)[:2]:
+        E=[]
+        for e in f.outer_wire().edges():
+            c=BRepAdaptor_Curve(e.wrapped);a,b=c.FirstParameter(),c.LastParameter();A=c.Value(a);B=c.Value(b);E.append((c,a,b,(A.X(),A.Y()),(B.X(),B.Y()),e.length))
+        if len(E)<18:continue
+        cur=E.pop(0);seq=[(cur,False)];end=cur[4]
+        while E:
+            k=min(range(len(E)),key=lambda i:min(math.dist(E[i][3],end),math.dist(E[i][4],end)));e=E.pop(k);rev=math.dist(e[4],end)<math.dist(e[3],end);seq.append((e,rev));end=e[3] if rev else e[4]
+        P=[]
+        for (c,a,b,_,_,ln),rev in seq:
+            n=max(2,int(ln/0.005))
+            for t in range(n):
+                q=c.Value(a+(b-a)*((1-t/n) if rev else t/n));P.append((q.X(),q.Y()))
+        P=np.array(P);c0=P.mean(0) if np.hypot(*P.mean(0))>0.5 else np.zeros(2);R=np.hypot(P[:,0]-c0[0],P[:,1]-c0[1]);ro,ri=R.max(),R.min()
+        if ro-ri<0.05:continue
+        lo,hi=ri+0.3*(ro-ri),ri+0.7*(ro-ri);st=None;n=0
+        for x in np.concatenate([R,R]):
+            if x<lo:st=0
+            elif x>hi and st==0:n+=1;st=1
+        n//=2
+        if n>=6:out.append({'z':r4(z),'count':n,'centre':[r4(c0[0]),r4(c0[1])],'tips_d':r4(2*ro),'roots_d':r4(2*ri),'depth':r4(ro-ri)})
+    return out
 def lite(M,r,p,need):
-    """wempe_measure.py's measurement of a built solid, with only what the ledger's items on it read: the outlines and the teeth (the slow parts) when asked"""
+    """wempe_measure.py's measurement of a built solid, with only what the ledger's items on it read: the faces always; the outlines and the teeth (the slow
+    parts: a wheel's rim sectioned and walked at every level took minutes) only at the levels asked, need {'outline': [z...], 'teeth': [z...]}, or at
+    every level, need {'all': 1} (--derive)"""
     bb=p.bounding_box();cyl,cone,tor,planes=M.faces_info(p)
     J={'key':r.key,'box':[r4(bb.min.X),r4(bb.min.Y),r4(bb.min.Z),r4(bb.max.X),r4(bb.max.Y),r4(bb.max.Z)],'size':[r4(bb.size.X),r4(bb.size.Y),r4(bb.size.Z)],'volume_mm3':r4(p.volume),
        'z_levels':planes,'cylinders':cyl,'cones':cone,'outlines_by_level':{},'teeth':[],'section_y0':[]}
-    if 'outline' in need:J['outlines_by_level']={str(z):M.outline(p,z) for z in planes}
-    if 'teeth' in need:
-        zs=sorted(set(planes)|{bb.min.Z,bb.max.Z})
-        for a,b in zip(zs,zs[1:]):
-            if b-a>0.02:J['teeth']+=M.teeth_at(p,(a+b)/2) or []
+    for z in (planes if need.get('all') else sorted({_near(planes,z,0.2) for z in need.get('outline',())}-{None})):J['outlines_by_level'][str(z)]=M.outline(p,z)
+    zs=sorted(set(planes)|{bb.min.Z,bb.max.Z});I=[(a,b) for a,b in zip(zs,zs[1:]) if b-a>0.02];done=set()
+    for z in ([(a+b)/2 for a,b in I] if need.get('all') else need.get('teeth',())):   # the interval between faces that holds z (wempe_measure.py sections each at its middle), else the nearest
+        if not I:break
+        a,b=min(I,key=lambda ab:0 if ab[0]<=z<=ab[1] else min(abs(z-ab[0]),abs(z-ab[1])))
+        if (a,b) not in done:done.add((a,b));J['teeth']+=teeth_at(p,(a+b)/2) or []
     return J
 def _measure_one(a):
     """one recipe built and measured (no picture): (key, the measurement or None for a bought line, the error)"""
@@ -81,10 +136,13 @@ def _measure_one(a):
         return k,J,None
     except Exception as e:return k,None,f'{type(e).__name__}: {e}'
 def needs(L):
-    """{part: what its items read beyond the faces}: 'outline' (arcs, lines, gaps), 'teeth'"""
-    N=collections.defaultdict(set)
+    """{part: what its items read beyond the faces}: {'outline': the levels whose outlines (arcs, edges, slots) they read, 'teeth': the levels of their toothed rims}"""
+    N={}
     for e in L['items']:
-        for h in hows(e):N[h['part']]|={'arc':{'outline'},'line':{'outline'},'gap':{'outline'},'teeth':{'teeth'}}.get(h['m'],set())
+        for h in hows(e):
+            d=N.setdefault(h['part'],{})
+            if h['m'] in ('arc','line','gap'):d.setdefault('outline',set()).add(h['level'])
+            if h['m']=='teeth':d.setdefault('teeth',set()).add(h['z'])
     return N
 def measure(keys,jobs=1,src=None,need=None):
     """{key: measurement}, {key: error}: read from src (wempe_measure.py's KEY.json files) or built now (need: {key: what to measure}, see lite; all of it without)"""
@@ -95,7 +153,7 @@ def measure(keys,jobs=1,src=None,need=None):
             if f.exists():J[k]=json.loads(f.read_text(encoding='utf-8'))
             else:bad[k]='no measurement file'
         return J,bad
-    if need is not None:keys=[(k,need.get(k,set())) for k in keys]
+    if need is not None:keys=[(k,need.get(k,{})) for k in keys]
     if jobs>1:
         from concurrent.futures import ProcessPoolExecutor
         with ProcessPoolExecutor(jobs) as ex:res=list(ex.map(_measure_one,keys,chunksize=1))
@@ -641,7 +699,7 @@ def _sweep_worker(nud):
         except Exception as e:err[k]=f'{type(e).__name__}: {str(e)[-120:]}'
     out={'changed':[k for k,_ in ch],'limits':[],'moved':[],'solid':[],'err':err}
     for k,r in ch:
-        try:J=lite(Mz,r,r.build(),_SW['need'].get(k,set()))
+        try:J=lite(Mz,r,r.build(),_SW['need'].get(k,{}))
         except Exception as e:err[k]=f'{type(e).__name__}: {str(e)[-120:]}';continue
         B=_SW['M'][k]
         if any(J[f]!=B[f] for f in ('box','z_levels','cylinders','cones','teeth','outlines_by_level')) or abs(J['volume_mm3']-B['volume_mm3'])>1e-4:out['solid'].append(k)
@@ -696,7 +754,7 @@ def sweep(o):
     for k in loose:del base_sig[k]
     if base_lh!=lh2:print('  the readers answer differently without the escapement in time (wempe_nudge.js, MC_WNUDGE_NOPHYS):',[k for k in base_lh if base_lh[k]!=lh2.get(k)]);return 1
     os.environ['MC_WNUDGE_NOPHYS']='1';os.environ.update({k:v for k,v in nudge_env([]).items() if k in ('MC_WNUDGE','NODE_OPTIONS')})
-    need=needs(L);baseM,bad=measure(sorted(base_sig),o.jobs,None,{k:need.get(k,set())|{'probe'} for k in base_sig})
+    need=needs(L);baseM,bad=measure(sorted(base_sig),o.jobs,None,{k:{**need.get(k,{}),'probe':1} for k in base_sig})
     if bad:print('  the base does not build:',bad);return 1
     opaque={k for k,j in baseM.items() if j.get('reads')}
     byPart=collections.defaultdict(list)
@@ -709,7 +767,7 @@ def sweep(o):
         up=[]
         for i,r in enumerate(ex.map(_sweep_worker,[nd(l,0) for l in todo],chunksize=1)):
             up.append(r)
-            if (i+1)%100==0:print(f"  {i+1}/{len(todo)} up, {time.time()-t0:.0f} s",flush=True)
+            if (i+1)%100==0:print(f"  {i+1}/{len(todo)} up, {time.time()-t0:.0f} s",flush=True);out.with_suffix('.part.json').write_text(json.dumps([{**l,'up':r} for l,r in zip(todo,up)]),encoding='utf-8')   # kept as it goes: an hour's run shouldn't be lost whole
         again=[i for i,r in enumerate(up) if r['state'] not in ('limits','unread')]
         print(f"  up: {time.time()-t0:.0f} s; {len(again)} nudged the other way too",flush=True)
         dn=dict(zip(again,ex.map(_sweep_worker,[nd(todo[i],1) for i in again],chunksize=1)))
@@ -729,17 +787,18 @@ def main():
     sys.stdout.reconfigure(encoding='utf-8')
     a=argparse.ArgumentParser();a.add_argument('--model',default='wempe');a.add_argument('--jobs',type=int,default=int(os.environ.get('MC_PROCS') or 8));a.add_argument('--only');a.add_argument('--measured')
     a.add_argument('-v',action='store_true');a.add_argument('--update',action='store_true');a.add_argument('--fault',nargs='?',const='out');a.add_argument('--stats',action='store_true')
-    a.add_argument('--derive',nargs='?',const=str(LED));a.add_argument('--sweep',action='store_true');a.add_argument('--scope',default='dims');a.add_argument('--grep');a.add_argument('--json');a.add_argument('--why');a.add_argument('--limit',type=int);o=a.parse_args()
+    a.add_argument('--derive',nargs='?',const=str(HERE/'r_wpa'/'sheetcheck.derived.json'));a.add_argument('--sweep',action='store_true');a.add_argument('--scope',default='dims');a.add_argument('--grep');a.add_argument('--json');a.add_argument('--why');a.add_argument('--limit',type=int);o=a.parse_args()
     if o.stats:stats(load());return 0
     if o.sweep:return sweep(o)
     if o.derive:
         os.environ.setdefault('MC_MODEL','wempe');sys.path.insert(0,str(HERE))
         from recipes import wempe as W
-        keys=[k for k in W.RECIPES];M,bad=measure(keys,o.jobs,o.measured)
+        keys=[k for k in W.RECIPES];M,bad=measure(keys,o.jobs,o.measured,{k:{'all':1} for k in keys})
         keep={e['id']:e for e in load()['items'] if e.get('by')=='hand'} if LED.exists() else {}
         items,un,review=derive(M,keep,o.why);L={'about':ABOUT,'items':items,'unchecked':un}
         if o.why:return 0
-        dump(L,pathlib.Path(o.derive));stats(L)
+        out=pathlib.Path(o.derive);out.parent.mkdir(parents=True,exist_ok=True);dump(L,out);stats(L)
+        if out.resolve()!=LED.resolve():print(f'written {out}: compare it with the ledger ({LED.name}) entry by entry before it replaces it')
         if review:
             print(f'{len(review)} rows whose verdict the solid does not bear out today (left unchecked; look at each):')
             for e in review:print(f"  {e['id']:10s} {e['status']:9s} {e['item'][:60]} | drawn {e['drawn'][:40]} -> {e['lo']}..{e['hi']} | now {e['was']} | {json.dumps(e['how'])[:150]}")
