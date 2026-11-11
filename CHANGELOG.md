@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.85.05 · 2026-11-11
+- Essay: the oil table lists every point the manual oils or greases (the winding pawls' posts, the stop-bar, the barrel arbor), and the order of work puts the winding stop where the manual does
+- Essay: two of the Model 21's escapement figures brought up to date: how far the wheel drives the impulse jewel, and the hairspring setting that cancels the escapement's error
+- Essay: the lunar distance is taken at 20:30 GMT, in twilight with the horizon still in sight
+- Essay: chart labels are no longer struck through by their lines, the model names in the top bar are single buttons again, and the workbook waits for an altitude before working a sight
+- Essay: small corrections to wording and punctuation
+
 ## 3.85.04 · 2026-11-11
 - The row of views under the model shows an arrow where it runs past the edge (phones and tablets), scrolls sideways with a mouse wheel, and fits whole on a desktop: the Wempe's Transport box was cut off
 - A long part card stops above the views and the play bar and scrolls, instead of running under them
