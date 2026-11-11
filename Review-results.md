@@ -412,6 +412,36 @@ short curve meets Phillips' conditions, which is sharp: the shortest inner curve
 coil's 0.93); both terminal curves meet the conditions (14.8 and 21.8 mm), the pivots carry 2.5e-5 of couple / R. A sharper frame or a measured collet
 would still settle it.*
 
+## The Wempe's discharge stone, and a swing solve that gave up (11 November 2026)
+
+Found while reading sheet 05 04_1 again for its unexplained figures. Nothing in the model is changed yet: both points below wait on the owner. The figures are `tools/wempe_discharge.js`'s (about 15 minutes; it changes no file).
+
+**1. The swing solve gave up where the escapement runs (a fault, sure).** `makeEsc`'s `solveA` (`shared/escapement.js`) starts its search at the least swing that passes the gold spring on the return. If the work there is finite and under the loss, it returns 0, "doesn't run". That is the case whenever the release comes after rest and after that swing: no tooth has been let go yet, so nothing is gained. A few degrees higher the work is over the loss, and the search never looks.
+- With the search carried on, the Wempe as built changes at two drives only, 0.25 and 0.275 of the reference (0° to 58° and 67°); every other drive agrees to 1e-9°. The Hamilton releases before rest and is untouched.
+- The discharge stone's place was chosen on this fault. The comment beside `DSB` in `wempe/js/escapement.js` and the README say that from 8° later "it doesn't run". It does: 171°, 168° and 162° at 12 h with the stone 11°, 12° and 13.9° later.
+- `dynamics.js --model wempe`, which integrates in time, agrees: 161.4° against 161.6° with the stone 13.9° later, 300 beats, no tooth lost.
+
+**2. The discharge stone stands about 9° too early against the sheet (likely).** The model lets the tooth go 2.1° after rest, 4.2° *before* the impulse stone is in the teeth's path, so the tooth runs free to it. That place was an estimate ("the scan can't give it").
+- *05 04_1's "5°"* is on the balance's arc beside the 6° and the 22°10' (r 7.0 mm from the balance; the arrows read 82.0°, 75.7° and 70.8° about it, the line of centres 53.5°). It runs from where the impulse stone's corner enters the teeth's path, 22°10' before the line of centres, on toward the line. That is the period rule: the impulse stone 5° inside the wheel when the tooth is let go (*Watch and Clock Escapements*, 1904, Fig. 141, which `keystone.js` already quotes and reports the Wempe as "the other way"). Likely.
+- *The drawn discharge stone* (about 10 px, so only moderately sure): its flat face lies on the gold spring's tip, its body behind it, on the side it comes from. The sheet draws the start of the unlocking, not its end, which the model assumed until 16 October.
+- *The Navy's 1958 repair book, p. 60*, for the MX (read on the scan): «конец золотой пружины при равновесии не доходил до спускового камня на 0,10-0,15 мм». With the balance at rest the gold spring's end is 0.10-0.15 mm from the discharge stone, 3.6-5.4° at the stone's end. The text is sure. It doesn't say on which side. The README set it against the spring's reach past the horn, which is another measure.
+- *What it does to the swing* (12 h from full wind; over the wind in the tool's table):
+
+| The discharge stone | Released | Impulse stone inside the path | Swing, drawn drive | Swing, 1950s build's drive |
+|---|---|---|---|---|
+| as built (estimated) | +2.1° | 4.2° short | 196° | 223° |
+| the sheet's 5° | +11.4° | 5.0° | 161° | 189° |
+| 1958 book, the stone coming, 0.10-0.15 mm | +16.5° to +18.3° | 10-12° | 138-144° | 165-171° |
+
+With the damping at the 6MX video's own fit (TF 141 s, not the model's 111 s) the sheet's row reads 177° and 208°. A running 6MX on video swings 110-185° part wound (References/wempe/VIDEOS.md); the model's 196° was above it.
+- The 1958 book's other side (the stone already past the spring at rest) would let the tooth go 11-13° before the impulse stone comes in. On a real escapement that tooth gets no impulse, so that reading doesn't fit this layout.
+
+**What is not settled.** Whether the sheet's drawn position is the balance's rest (the model takes it so; the sheet doesn't say). With the stone at the sheet's place the escapement's own rate change is +2.1 s a day for each 10° of swing, which fails `dynamics.js`'s "small" check: the impulse then comes late after rest, a hint that rest lies nearer the line of centres than drawn. The lock's arc (12.9° of the balance) rests on the discharge stone's estimated reach.
+
+**What moving it would touch.** Every Wempe physics figure: the swing and rate tables, the banking table, tolerances, bench, Monte Carlo and navigation, the two builds (their swing criterion, 180-270°, would fail for the 1940s build), the essay's data and the report. So it is the owner's choice.
+
+**Also read again, no better.** The pillar plate's pencilled replacement thickness on 05 08_03a: the scan has lost the pencil's digits ("3,? ±0,0?"); still illegible.
+
 ## The Wempe's page against its recipes (29 October 2026)
 
 **Fixed on the page, 1 November 2026 (branch `claude/wempe-faults-a`, to be released):** the top plate's pocket far side (0.047 to 0.0098 off r 5: its hull's tangent runs to the circle's point at r 4.99 so it crosses the opening's edge; with the hull's arc at exactly r 5 the solid opens), the dust plate's square hole (1:100 from the face), the barrel drum's Steg slot (`capFix` at its floor plane), the set-up ratchet's height (the bridge 3.30), WN-19, WN-20 and WN-21 (slots cut across the heads, `slotted` in `fusee.js`; the recipes cut them as the page does, 0.02 shallower than the old box's nominal height), the maintaining detent's arbor (96 sides), the 6MX contact lever's arms (they start in the boss's wall, leaving the staff's seat empty); each one's recipe `expect` removed (WN-19 and WN-21 keep 0.13 at the slot floor's ends). Left, with reasons in `PLAN-recipes.md`'s table: the upper cock's slot wall, the fusee body's chorded arc and end N, the 6MX contact's nut, tapped holes and disc (the springs and the detent's and gold spring's bores are in the sibling's files). Their bullets below describe the faults as found.
