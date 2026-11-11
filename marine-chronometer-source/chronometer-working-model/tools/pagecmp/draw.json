@@ -1,0 +1,10 @@
+[
+ {"name":"last_mv","view":"movement"},
+ {"name":"tint","eval":"document.querySelector('#draw').click()","wait":2500},
+ {"name":"tint_dial","view":"dial"},
+ {"name":"tint_esc","view":"escapement"},
+ {"name":"ink","eval":"document.querySelector('#drawInk').click()","view":"movement","wait":2500},
+ {"name":"ink_dial","view":"dial"},
+ {"name":"ink_box","view":"box"},
+ {"name":"ink_esc","view":"escapement"}
+]
