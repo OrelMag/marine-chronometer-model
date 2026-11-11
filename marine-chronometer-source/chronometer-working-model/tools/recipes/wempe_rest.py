@@ -35,8 +35,7 @@ def keyTube():
          InnerCone(k['dr'],k['d1'],0,k['d2'],"Drill point",[S('point',f'to {k["d2"]} from the mouth',None,src)],src),
          Square(2*rs,0,k['sD'],k['sink'],k['sa'],'Broach the square 3.1 +0,05 (drawn 3.15), 19 +2 deep, its mouth sunk 60° to the flats 1 deep',[S('square',f'{2*rs:g} across the flats, 19 deep','+0,05; 19 +2',src),S('sink',f'60°, {k["sink"]} deep on the flats',None,src)],src)]
     return Recipe('keyTube','050102-3','Key tube (Schlüsselrohr)',src,'Ms 58','none',[Setup('1','Ø 8 bar in the collet, turned; the square broached on the drill press or mill',ops)],
-      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),notes=['The square is drawn 3.15 across the flats (3,1 +0,05 on the sheet); the page and the recipe cut it at the drawn figure.'],
-      expect=[{'at':(0,0),'r':2.6,'z':(0,1.5),'max':0.03,'why':'the page builds the sink'+chr(39)+'s cone from strips along the radii of 1.5'+chr(176)+' sectors: 0.02 off the cone at the end face'}])
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,0,0)),notes=['The square is drawn 3.15 across the flats (3,1 +0,05 on the sheet); the page and the recipe cut it at the drawn figure.'])   # no expect: the page draws this solid (js/solids.js, recipe_solids.py); until 11 November 2026 the page's own sink, in strips, was allowed 0.03 off the cone
 
 def keyBody():
     k=KQ()['K43']['body'];BL=k['BL'];src='05 01 02-2 (rev. a 15.7.48)';BT=BL;RO=k['RO'];YC=BT-k['fd']+math.sqrt(k['fr']**2-RO**2);YD=BT-k['dd']
@@ -52,9 +51,7 @@ def keyBody():
          Drill((0,-10,BT-k['yh']),(0,1,0),2*k['RH'],20,'Drill and ream the cross hole Ø 2.5 for the grooved pin across both jaws, 4 under the top',[S('hole',f'Ø {2*k["RH"]:g}','+0,05 (drawn 2.525)',src),S('place',f'{k["yh"]} under the top',None,src)],src),
          Drill((0,-k['hz']-0.5*math.tan(math.radians(k['ha'])),-0.5),(0,math.sin(math.radians(k['ha'])),math.cos(math.radians(k['ha']))),2*k['hr'],YD+1.5,'Drill Ø 0.9 at 5° from the foot into the bore for the spring\'s end',[S('hole',f'Ø {2*k["hr"]:g}, {k["hz"]} off the axis at the foot, 5° toward it',None,src)],src)]
     return Recipe('keyBody','050102-2','Key body (Schlüsselmittelteil)',src,'St. Az DIN 668','sand-blasted, phosphated, sprayed black',[Setup('1','chucked and turned; the slot and holes on the mill',ops)],
-      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,KQ()['K43']['tube']['T']+KQ()['K43']['tube']['hd']-k['BL'],0)),notes=['The key stands in the page in its own frame (its tube mouth at 0, the body\'s foot 17.0 higher).'],
-      expect=[{'at':(0,-k['hz']),'r':0.9,'z':(2.0,3.8),'max':0.06,'why':'the page cuts the spring'+chr(39)+'s hole slanted to the drill point'+chr(39)+'s foot and upright above it, to come out in the cone; the recipe drills it slanted the whole way'},
-              {'at':(0,0),'r':8,'z':(BT-1.6,BT),'max':0.04,'why':'the page builds the top chamfer'+chr(39)+'s cone in four steps up the jaws'+chr(39)+' columns: up to 0.03 off the true cone'}])
+      page_matrix([[1,0,0],[0,0,1],[0,-1,0]],(0,KQ()['K43']['tube']['T']+KQ()['K43']['tube']['hd']-k['BL'],0)),notes=['The key stands in the page in its own frame (its tube mouth at 0, the body\'s foot 17.0 higher).'])   # no expect: the page draws this solid (js/solids.js); until 11 November 2026 the page's own spring hole (upright through the drill point) and stepped chamfer were allowed 0.06 and 0.04
 
 def keyPaddle():
     K=KQ()['K43'];k=K['paddle'];b=K['body'];BL=b['BL'];RO=b['RO'];t=K['tube'];B0=t['T']+t['hd']-BL;BT=B0+BL;src='51 00 11-1 (scaled on the key\'s assembly)'

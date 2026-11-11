@@ -69,8 +69,7 @@ def lockBracket():
       DrillT((r0*u[0],r0*u[1],L['hy']-hmin),u,L['hd'],L['rb']+L['off']+0.5-r0,"Drill the screw's clearance hole through the foot",[S('hole',f'Ø {L["hd"]:g}','clear for the M2.5 (estimated)',src)],src)]
     ax=math.hypot(L['rb']+L['off']/2,0);bx=(ax*math.cos(a),ax*math.sin(a))
     return Recipe('lockBracket','050100-4','Locking bracket (Feststellkloben)','05 01 (no sheet of its own)','brass (Ms)','none',[Setup('1','on the mill',ops,view='top')],UP(YP+hmin),
-      notes=["At 50° from 6 o'clock toward 3; the transit lock's lever turns in through the ring's window and stops against its neck. The page cuts the hole as a 20-sided polygon whose flats lie at the radius."],
-      expect=[{'at':bx,'r':5.0,'max':0.06,'why':"the screw's hole through the foot (fusee.js's bore through holeCut, closed by capFix) joins its two mouths with wall triangles that skip round the hole: chords up to 0.05 off its circle; the fault of the detent's and the gold spring's holes"}])
+      notes=["At 50° from 6 o'clock toward 3; the transit lock's lever turns in through the ring's window and stops against its neck. The page cuts the hole as a 20-sided polygon whose flats lie at the radius."])   # no expect: the page draws this solid (js/solids.js); until 11 November 2026 the page's own hole, its mouths joined by triangles skipping round it, was allowed 0.06
 
 # ---------------- a screw with a plain tip beyond its thread (WN-79, WN-80) ----------------
 def screwT(key,hn,title,r,h,ln,rs,material,src,tip,notes=()):

@@ -476,5 +476,13 @@ const KIT=(()=>{
     for(const k of Object.keys(g.attributes)){const A=g.attributes[k],d=A.itemSize,a=new Float32Array(N*3*d);keep.forEach((t,i)=>{for(let j=0;j<3*d;j++)a[3*i*d+j]=A.array[3*t*d+j];});
       add.forEach((r,i)=>{for(let j=0;j<3*d;j++)a[3*(keep.length+i)*d+j]=A.array[3*r.t*d+j];if(k==='position')for(let j=0;j<3;j++){const y=A.array[3*r.t*3+3*j+1];a[3*(keep.length+i)*3+3*j+1]=y-r.lo<(r.hi-r.lo)/2?r.yl:r.yh;}});g.setAttribute(k,new THREE.BufferAttribute(a,d));}
     g.computeBoundingSphere();g.computeBoundingBox();});}
-  return{capsOff,smoothRev,crease,latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,slotHeadGeo,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
+  /* brep(d): a part drawn from its recipe's exact solid (js/solids.js, WSOLIDS: tools/recipe_solids.py): each B-rep face's own corners with the exact surface's normal
+     at each, so turned faces shade smooth and the Edges pass's creases fall on the solid's own edges. Unindexed, with a uv of zeros, as solidGeo's: its pieces merge with
+     their neighbours' (drawMerge) and the tools read it as any other part's */
+  function brep(d){const b64=(t,s)=>{const r=atob(s),u=new Uint8Array(r.length);for(let i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return new t(u.buffer);};
+    const P=b64(Float32Array,d.pos),Nq=b64(Int16Array,d.nrm),I=b64(d.n<65536?Uint16Array:Uint32Array,d.idx),n=I.length,p=new Float32Array(3*n),nm=new Float32Array(3*n);
+    for(let i=0;i<n;i++){const k=3*I[i];p[3*i]=P[k];p[3*i+1]=P[k+1];p[3*i+2]=P[k+2];nm[3*i]=Nq[k]/32767;nm[3*i+1]=Nq[k+1]/32767;nm[3*i+2]=Nq[k+2]/32767;}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('normal',new THREE.BufferAttribute(nm,3));g.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(2*n),2));
+    g.computeBoundingSphere();g.computeBoundingBox();g.userData.brep=true;return g;}
+  return{brep,capsOff,smoothRev,crease,latheF,isoP,isoEs,isoD,isoU,helixSide,triOut,bufGeo,threadGeo,lathThread,matchThreads,domeAt,jewelPr,endPr,parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,slotHeadGeo,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();

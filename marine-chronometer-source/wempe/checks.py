@@ -213,3 +213,7 @@ ASSEMBLY={'source':'the 1958 Soviet repair book\'s order for the MX, pp. 59-60',
 # dfm.py --model wempe: how a finding on a piece is cut, where its sections mislead (a helix sectioned level by level shows slivers no mill cuts)
 DFM={'notes':{'050405-1':"the web's recess, 0.7 deep, runs over the whole rim to the gaps' floor, Ø 11.7 (02 04 08 a's 11,7; the owner's choice, O-7, 28 October 2026: until then Ø 11.62, which left a ring of brass about 0.04 wide standing 0.7 high in each gap): the teeth stand full on the web, the floor one surface with the recess's; a maker cuts it with the gaps or turns the recess first",
   '050604-2':"the chain's groove is cut on a fusee engine (05 06 04-2: a helix of pitch 1.2, square-cut lands 0.87): its sections' thin slivers are the helix, not slots for a mill"}}
+
+# recipe_solids.py: the parts the page draws from their recipes' exact solids (js/solids.js, WSOLIDS; the one-geometry pilot, 11 November 2026): case.js draws each in place
+# of its own builder's mesh where the version shares the last revised part
+SOLIDS=['keyBody','keyTube','lockBracket']
