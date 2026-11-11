@@ -26,15 +26,18 @@ FLOAT_BOX=[('closingPlate:Buffer',(0,-50.45,0),3.6,"the closing plate's shoulder
   *[('gimbalRing:Buffer',(0,1.05,s*70.2),4.6,"a 6MX inner pivot screw (WN-79 on the 6MX's ring, 133 inside and 3.7 thick: the 6MX case review, 9 November 2026; along the radius, the probes stand off it in x and z): its head bears on the ring's outside round its M5 hole",'6mx') for s in(-1,1)],
   *[('box:Buffer',(s*92.5,1.05,0),6,"an outer pivot's screw (WN-80, put in along the radius: the probes stand off it in y and z): its head bears on the side wall's outside round its M6 hole (51 00 10's \"Gew. M 6\", cut since 25 October 2026), the middle probe and one along its axis in the hole",'last first 1943 3955') for s in(-1,1)]]
 # fine.py: the states checked (balance phase, escape teeth, fusee turns from full wind, winding): the escapement's phases as makeEsc solves them (js/escapement.js's
-# ESC.state, at the reference's swing, 207 deg, and drive): the discharge stone meets the gold spring 0.2406 (-12.3 deg), unlocking to the release 0.2482 (-2.4 deg); the
-# detent flung off the stone's corner 0.2487 (-1.8 deg), falling back onto the tooth it let go 0.2507 (0.8 deg) and riding it, the escaping tooth's tip passing under the stone,
-# to its banking 0.2578 (10.0 deg), the impulse stone in the teeth's path from 0.2518; the wheel's chase from rest to its strike on the impulse stone 0.2606 (13.7 deg), the
-# drive to 0.2856 (45.8 deg), the run on to the next lock 0.2883 (49.2 deg); the far turn 0.5; the return swing's pass of the gold spring 0.7546-0.7637 (-5.9 to -17.6 deg);
+# ESC.state, at the reference's swing, 160.7 deg, and drive; tools/wempe_escapement.js prints them), since 11 November 2026 with the discharge stone at 05 04_1's 5 deg:
+# the discharge stone meets the gold spring 0.2484 (-1.7 deg), the impulse stone comes into the teeth's path 0.2563 (6.4 deg), unlocking to the release 0.2614 (11.3 deg);
+# the detent flung off the stone's corner 0.2616 (11.6 deg), falling back onto the tooth it let go 0.2633 (13.3 deg) and riding it, the escaping tooth's tip passing under
+# the stone, to its banking 0.2699 (19.9 deg); the wheel's chase from rest to its strike on the impulse stone 0.2733 (23.2 deg), the drive to 0.3005 (49.9 deg), the run on
+# to the next lock 0.3041 (53.4 deg); the far turn 0.5; the return swing's pass of the gold spring 0.7447-0.7612 (5.6 to -11.1 deg);
 # then the train at 97 teeth apart (the centre wheel 1.2 teeth on each time, so its meshes are seen at many phases), with the fusee across its wind: fully wound (n 0) running
 # and with the key on, the stop bar's travel (the chain coming onto its end about 0.17 turn before full wind), mid-wind running and winding, near and at run down (N_RUN 8.78).
-# Until 15 October 2026 the layout's kinematic phases (the tooth on the impulse stone at once)
-PH=[0.0,0.2406,0.243,0.246,0.2475,0.2482,0.2485,0.2487,0.249,0.2495,0.25,0.2507,0.251,0.2515,0.2518,0.252,0.253,0.254,0.255,0.256,0.257,0.2578,0.259,0.26,0.2606,0.2608,
-  0.261,0.262,0.265,0.27,0.275,0.28,0.284,0.2856,0.2865,0.2875,0.2883,0.29,0.3,0.4,0.5,0.6,0.75,0.7546,0.756,0.758,0.76,0.762,0.7637,0.765,0.9]
+# Until 11 November 2026 the stone 9.2 deg earlier on the staff (met 0.2406, the release 0.2482, the strike 0.2606, locked 0.2883, at 207 deg);
+# until 15 October 2026 the layout's kinematic phases (the tooth on the impulse stone at once)
+PH=[0.0,0.247,0.2484,0.25,0.2515,0.253,0.2545,0.2556,0.2563,0.257,0.2585,0.26,0.2608,0.2612,0.2614,0.2616,0.2618,0.2622,0.2628,0.2633,0.2638,0.2645,0.2655,0.2665,0.2675,0.2685,
+  0.2693,0.2699,0.2705,0.2715,0.2725,0.273,0.2733,0.2736,0.274,0.276,0.28,0.285,0.29,0.295,0.299,0.3005,0.3012,0.3022,0.3032,0.3041,0.305,0.32,0.4,0.5,0.6,0.74,0.7447,0.747,
+  0.75,0.753,0.756,0.759,0.7612,0.763,0.9]
 STATES=[(ph,0,2.5,False) for ph in PH]+[(0.0,97*k,n,w) for k,(n,w) in enumerate([(2.5,False),(0,False),(0,True),(0.05,False),(0.12,False),(0.17,True),(0.3,False),(1.2,True),(3.1,False),(4.4,True),
   (5.7,False),(7.0,False),(8.2,False),(8.7,False),(8.78,False),(6.3,True),(2.0,False)])]
 EXPECTED={('detent:Buffer','detent:Buffer'):("the gold spring's free bow (05 04 01-2, its own group turning about the bending point) at its root, lying on the square's face toward the wheel where the arm is screwed (05 04_1's \"Biegungspunkt der Goldfeder\" on that face): its inner edge on the face to 0.4 µm, which the grid reads in two columns at a few lifts as first drawn and in 3955 (28 October 2026, 0.005)",0.01,1.0),

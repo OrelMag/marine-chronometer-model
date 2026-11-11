@@ -4,7 +4,7 @@
 // cross-checks between makeEsc, dynamics.js and the tripping frame are calibrated on the drawn detent and stay its own; these are what decide whether a made one works:
 //   node wempe_build.js [--write] [--json OUT]   (about 5 minutes, its runs in child processes, MC_PROCS; exits 1 if either build fails a check or tools/wempe_build.json is stale)
 // Each build (MC_WREV=build40, build, which wempe_load.js applies and every child inherits):
-//   the swing over the whole wind (makeEsc at the fusee's drive each quarter turn): inside the guard band, 180-270°; the sources' 225-270° reported;
+//   the swing over the whole wind (makeEsc at the fusee's drive each quarter turn): inside the builds' guard band, 150-270° (180-270° until 11 November 2026: with the discharge stone at 05 04_1's 5° the 1940s build swings 172-182°, and the owner chose to judge the builds on what follows); the sources' 225-270° reported;
 //   the depth of lock's window (wempe_detent_study.js's method: the deepest the discharge stone unlocks, and twice the lift a held tooth's stone rings to in the frame):
 //     the drawn 0.235 inside it with room for a maker's setting, 50 µm or more;
 //   running in time (dynamics.js, 600 beats; the frame as drawn): no tooth past, the detent home before the next tooth;
@@ -40,7 +40,7 @@ Promise.all([...Array(N)].map(async()=>{while(next<jobs.length)await jobs[next++
   for(const[r,nm]of REVS){const x=R[r],e=x.esc,ring=x.run.maxL*e.d0,floor=2*ring,win=e.deep-floor;
     const line=(t,re)=>{const m=re.exec(x[t].out);return m?m[1]:null;},sus=line('wempe_sustaining.js',/keeps the train going ([\d.]+) min/),eb=line('wempe_errorbudget.js',/the build, its masses set to [^,]+, carries ([\d.]+) s/),str=/!!/.test(x['wempe_strength.js'].out);
     rows.push(`\n${nm} (MC_WREV=${r})`);
-    chk(e.Amin>=180&&e.Amax<=270,`the swing over the whole wind ${f(e.Amin,1)}-${f(e.Amax,1)}° (${f(e.A12,1)}° at 12 h): inside the guard band, 180-270°; the sources' 225-270° ${e.Amin>=225?'held':`not reached at the wind's lowest (${f(225-e.Amin,1)}° under)`}`);
+    chk(e.Amin>=150&&e.Amax<=270,`the swing over the whole wind ${f(e.Amin,1)}-${f(e.Amax,1)}° (${f(e.A12,1)}° at 12 h): inside the builds' guard band, 150-270°; the sources' 225-270° ${e.Amin>=225?'held':`not reached at the wind's lowest (${f(225-e.Amin,1)}° under)`}`);
     chk(win>=0.05&&e.d0>floor+0.01&&e.d0<e.deep-0.01,`the depth of lock's window ${f(floor,3)}-${f(e.deep,3)} mm (${f(win*1000,0)} µm: a held tooth's stone rings ${f(ring*1000,0)} µm; the discharge stone lifts it ${f(e.lift,3)}), the drawn ${f(e.d0,3)} inside it`);
     chk(x.dyn.trips===0&&x.dyn.margin>0,`in time (dynamics.js, ${x.dyn.beats} beats at ${f(x.dyn.A,1)}°): no tooth past, the detent home ${f(x.dyn.margin*1000,1)} ms before the next tooth`);
     chk(x.run.trips===0,`the frame as drawn: no tooth past, a held tooth's stone at most ${f(100*x.run.maxL,1)} % of the depth of lock`);

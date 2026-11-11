@@ -12,7 +12,7 @@
 //   the hairspring: its strip 0.285 ±0.003 (boxed, no tolerance: estimated), its coil Ø 12.8 ±0.05 (boxed, drawn), its cut length ±0.3 mm (estimated), the steel's
 //     modulus 200-210 GPa (published).
 // Judged: the train turns (each mesh in its depthing window, gearing_wempe.json; every arbor free, its endshake at least 0.01 mm at 20 °C); the
-// escapement unlocks and holds (the lock between its window's ends, tolerances_wempe.json); the swing in the guard band, 180-270°, over the whole wind (makeEsc's atK
+// escapement unlocks and holds (the lock between its window's ends, tolerances_wempe.json); the swing in the guard band (tolerances_wempe.json's: 147-270°, a build's 150-270°) over the whole wind (makeEsc's atK
 // at the drive and the springs' stiffness, the preload and the lock rebuilt; the sources' 225-270° reported); and, apart, whether it times (the period within the
 // timing weights' reach) and the temperature (the masses at their drawn place fail the TU's C in every one: the trial moves them). The bench, in its order: the depths
 // (a close mesh re-bushed on the drawn centre), endshake (an arbor out of its band, bench_wempe.json's from the 1958 MX repair book, set again to its middle), the detent's ring (its spring out of the band replaced), the escapement (the
