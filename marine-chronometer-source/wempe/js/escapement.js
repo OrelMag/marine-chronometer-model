@@ -140,9 +140,10 @@ const WESC=(()=>{
      run": that was makeEsc's swing solve giving up, not the escapement (shared/escapement.js, solveA). The owner's choice, 11 November 2026 */
   const DSB=14.2;
   {const slip=()=>{let last=null;for(let th=-40;th<=40;th+=0.005)if(unlockAt(th)>0)last=th;return last;};BETA=al(sub(D(GT,GN),B));const s0=slip();if(s0===null)console.error('WESC: the discharge stone misses the gold spring');else BETA-=s0-DSB;}
-  const TH_REL=(()=>{for(let th=-40;th<=40;th+=0.005)if(unlockAt(th)*TP>=DEPTH+0.01)return th;return 0;})(),PHI_REL=TH_REL+PHI0;   /* the locked tooth is free */
+  const TH_REL=(()=>{for(let th=-40;th<=40;th+=0.005)if(unlockAt(th)*TP>=DEPTH+0.01)return th;return 0;})(),PHI_REL=TH_REL+PHI0,PHI_ON=Math.max(PHI_C,PHI_REL+1),PROG_ON=(psiOf(PHI_ON)-PSI0)/24;   /* the locked tooth is free; the layout's tooth on the impulse stone */
   const A0=225*D2R,AMIN=(PHI_E-PHI0+RUN+1)*D2R;   /* the swing the drawing takes by default: 225 deg each side until js/escphys.js sets ESC.A to the swing the measured drive keeps (no Wempe sheet gives it; README, Physics) */
-  /* the layout's own motion (kinematic, timed from 05 04_1: the tooth on the impulse stone at once, PHI_C), the page's until 15 October 2026; since then ESC.layout, the
+  /* the layout's own motion (kinematic, timed from 05 04_1: the tooth on the impulse stone at once: at PHI_C while the release came before it, and since 11 November 2026,
+     the tooth let go 5° after the impulse begins, within 1° of the balance after the release, PHI_ON), the page's until 15 October 2026; since then ESC.layout, the
      page moving as makeEsc solves it (adapt, below) */
   /** @param {number} p @param {number} [amp] @returns {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean,p:number}} */
   function state(p,amp=ESC.layout.A){
@@ -150,7 +151,7 @@ const WESC=(()=>{
     if(amp<AMIN)return{th,ccw,lift:0,psDef:ccw?0:passAt(thd),prog:ccw?0:1,drop,run,p};
     if(ccw){
       if(f<PHI_REL)prog=0;
-      else if(f<PHI_C){prog=PROG_C*smooth01((f-PHI_REL)/(PHI_C-PHI_REL))**1.5;drop=true;}   /* released, the wheel gathers speed toward the impulse stone */
+      else if(f<PHI_ON){prog=PROG_ON*smooth01((f-PHI_REL)/(PHI_ON-PHI_REL))**1.5;drop=true;}   /* released, the wheel gathers speed toward the impulse stone */
       else if(f<PHI_E)prog=(psiOf(f)-PSI0)/24;
       else{const x=clamp((f-PHI_E)/RUN,0,1);prog=PROG_E+(1-PROG_E)*x*x;run=x<1;}   /* off the stone, on to the next tooth's lock */
       const ride=prog>0&&prog<1?rideNeed(prog*24-D0)/TP:0;lift=Math.max(unlockAt(thd),ride);}
@@ -183,7 +184,7 @@ const WESC=(()=>{
        through 13 and 05 04 01-4's pins) */
     block43:{stud:[-34.13,18.88],pins:[[-30.0,21.55],[-38.26,15.41]]}};
   /** @type {any} */
-  const ESC={A:A0,AMIN,state,PHI0,PHI_REL,PHI_C,PHI_E,PROG_C,PROG_E,RD,BETA:()=>BETA,TP,LOCK:DEPTH,layout:{A:A0,AMIN,state},at:null,beat:null,E:null};
+  const ESC={A:A0,AMIN,state,PHI0,PHI_REL,PHI_C,PHI_ON,PHI_E,PROG_C,PROG_E,DSB,RD,BETA:()=>BETA,TP,LOCK:DEPTH,layout:{A:A0,AMIN,state},at:null,beat:null,E:null};
   /* the hairspring's strip and coil (05 03_6, 05 03_7: below, where it is built): the terminal curves' radii to the strip's inside every 10 deg from where each leaves the coil,
      pinned at 220 deg; the strip 0.285 thick (radial: the coil bends it in that direction) and 0.52 high; the coil's middle radius RC; TURNS of helix between the curves;
      the outer curve the same as the inner (kU 1), pinned as far from the staff in the stud as the inner is in the collet; each end runs on past its pinning point into the

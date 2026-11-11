@@ -92,7 +92,7 @@ const phys={msL:th(FN.L)+' mm',msT:fx(MSJ.strip.t,2)+' mm',msRms:pc(FN.rms,2),ms
   gDy:fx(-GW.drawn.bowl[1],2)+' mm',gDx:fx(Math.abs(GW.drawn.bowl[0]),2)+' mm',gLean:fx(Math.atan2(Math.abs(GW.drawn.bowl[0]),-GW.drawn.bowl[1])/D,1)+'°',
   gTz:fx(GW.Tz,2)+' s',gTx:fx(GW.Tx,2)+' s',hTz:fx(GH.Tz,2)+' s',hTx:fx(GH.Tx,2)+' s',gH:fx(GW.h,1)+' mm',hH:fx(GH.h,1)+' mm',
   /* the Soviet 6MX against the drawings (wempe_6mx.js) */
-  x6Tol0:'±'+Math.round(X6.train[3].tp*1000)+' µm',x6Tol:'±'+Math.round(X6.train[3].tp6*1000)+' µm',x6Swing:fx(X6.swing6[0],0)+'–'+fx(X6.swing6[1],0)+'°',x6Rate:fx(X6.rateBeforeTiming,1)+' s'};
+  x6Tol0:'±'+Math.round(X6.train[3].tp*1000)+' µm',x6Tol:'±'+Math.round(X6.train[3].tp6*1000)+' µm',x6Swing:fx(X6.swing6[0],0)+'–'+fx(X6.swing6[1],0)+'°',x6Less:fx(Math.max(...X6.wind.map(w=>w.a-w.a6)),1)+'°',x6Rate:fx(X6.rateBeforeTiming,1)+' s'};
 
 const js=`/* essaydata.js: the Wempe essay's figures and numbers that only Node works out, written by marine-chronometer-source/chronometer-working-model/tools/wempe_essaydata.js
    --write: generated, don't edit (rerun the tool; without --write it checks this file). Part of the Wempe model; declares only WEDATA (the tool's header says what each is). */

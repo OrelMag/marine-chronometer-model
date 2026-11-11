@@ -78,6 +78,10 @@ head(`The depth of lock (05 04_1: the tips ${f(S.dL*S.ES,3)} into the stone's fl
    stone at once and the detent leaving the discharge stone early, on main's escape wheel as on the drawn one; makeEsc follows it since its ride carries through the impulse, RWD),
    and the shallowest that keeps a held tooth's stone ringing under half the depth (wempe_tripping.js as drawn, 19 October 2026: 49 % of 235 µm, 116 µm, at the 0.8 g preload, the longer discharge reach bending the gold spring 0.39 on the return: twice it; 44 % of 175 µm, 77 µm, until the lock was re-laid, and 41 % before the horn was traced) */
 const lockAt=d=>{const e=W.makeEsc({...S,dL:d/S.ES},S),m=e.measure();return m.runs?{A:e.A*D,Amin:e.ampAt(dmin)*D,lock:m.lock,letoff:m.letoff,lRel:e.lRel*e.BL/e.LEN*e.ES}:null;};
+/* the frame run again with the discharge stone at 05 04_1's 5° (tripping.js --model wempe, 11 November 2026): what it reads against the figures transcribed here on
+   19 October 2026 (RING, wTrip, wKnock above). Not carried: with them the floor passes the deepest lock that unlocks and the preload's floor its cap, no window, which
+   no decision of the owner's covers yet (README, Unresolved; Review-results.md, "The Wempe's discharge stone") */
+const RERUN={ring:0.539,um:126.9,margin:0.93,knock:0.64,g3:26.8};
 const d0=S.dL*S.ES;let dDeep=(()=>{let a=d0,b=d0+(BREV?0.08:0.03);for(let i=0;i<14;i++){const m=(a+b)/2,L=lockAt(m);L&&L.Amin>=GUARD[0]?a=m:b=m;}return a;})();const RING=BJ?BJ.window.ring:0.493*0.235,dShal=2*RING,dTip=d0+0.015;
 /* in heat (wempe_thermal_frame.js; the owner's choice, 27 October 2026: the window over the TU's 4-36 °C is the window): the steel detent draws the gold spring's tip from the
    staff as the brass frame grows, taking let-off, so the deepest lock set at 20 °C that keeps the swing in the guard band at the wind's lowest at 36 °C (wempe_escheat.js, the
@@ -93,6 +97,7 @@ say(`deepest that unlocks with the swing in the guard band: ${f(dDeep20,4)} mm a
 say(`at ${f(dDeep,4)} mm (the discharge stone lifts the stone at most ${f(liftMax,3)} mm); there lock ${f(LD.lock,1)}°, let-off ${f(LD.letoff,1)}°, ${f(LD.Amin,1)}° at the wind's lowest`);
 say(`shallowest with a held tooth's stone ringing under half the depth (wempe_tripping.js: ${f(RING*1000,0)} µm as drawn): ${f(dShal,3)} mm; there lock ${f(LS.lock,1)}°, ${f(LS.Amin,1)}-${f(LS.A,1)}° (a shallower lock gives the swing back: the unlocking costs less)`);
 say(`the wheel's tips Ø 14 +0.03: with the banking left where the drawn wheel puts it, a wheel at the top of its tolerance locks ${f(dTip,3)} deep, ${dTip>dDeep?`past ${f(dDeep,3)}: it would not unlock. The banking is set to the wheel as made`:'inside the window'}`);
+if(!BJ)say(`~~ not carried here: tripping.js --model wempe run again with the discharge stone at 05 04_1's 5° (11 November 2026) reads a held tooth's stone ringing ${RERUN.um} µm as drawn, ${f(100*RERUN.ring,1)} % of the depth (116 µm, 49 %, as transcribed above on 19 October 2026), under half only from a preload of ${RERUN.margin} g (0.78 above; its cap ${f(wHi,2)} g), a 3 ms blow letting a tooth go at ${RERUN.g3} g (25.6): with those the shallowest lock would be ${f(2*RERUN.um/1000,3)} mm, ${2*RERUN.um/1000>dDeep20?`past the ${f(dDeep20,4)} that unlocks, no window`:'inside the window'}. The figures here keep the reading of 19 October 2026 until the owner decides (README, Unresolved)`);
 
 /* ---------- the hairspring and the period ---------- */
 head('The hairspring (05 03_6: strip 0.285 × 0.52, boxed, no tolerance; coil Ø 12.8 ±0.05, boxed; cut to 13 turns less 3.5 mm, 05 03_7) against the period');
