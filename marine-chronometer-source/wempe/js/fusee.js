@@ -1350,7 +1350,7 @@ const WFUSEE=(()=>{
     const frameAt=(/** @type {any} */e,/** @type {any} */p)=>{const x=e.clone().sub(p).normalize(),y=new THREE.Vector3(0,1,0).addScaledVector(x,-x.y).normalize();return new THREE.Matrix4().makeBasis(x,y,new THREE.Vector3().crossVectors(x,y)).setPosition(e);};
     const lay=(/** @type {number} */sh)=>{if(!chW||conn!=='chain')return;if(sh===layS&&!chW.dirty)return;const was=layS;layS=sh;chW.dirty=false;if(sh<=0&&was<=0)return;
       const W=chW.J,n=W.length-1;if(!chW.C)chW.C=coil(W);const J=sh<=0?W:W.map((/** @type {any} */v,/** @type {number} */i)=>v.clone().lerp(chW.C[i],sh));links(J);
-      for(const[h,M0,e,p,e0,p0]of/** @type {[any,any,any,any,any,any][]} */([[cHT,chW.T,J[0],J[1],W[0],W[1]],[cHB,chW.B,J[n],J[n-1],W[n],W[n-1]]]))h.matrix.copy(frameAt(e,p).multiply(frameAt(e0,p0).invert()).multiply(M0));};
+      for(const[h,M0,e,p,e0,p0]of/** @type {[any,any,any,any,any,any][]} */([[cHT,chW.T,J[0],J[1],W[0],W[1]],[cHB,chW.B,J[n],J[n-1],W[n],W[n-1]]])){h.matrix.copy(frameAt(e,p).multiply(frameAt(e0,p0).invert()).multiply(M0));h.matrixWorldNeedsUpdate=true;}};
     /* the clicks: where the click wheel seats click 0 (its nose at the root against a face), the fusee's angle against the ratchet's; computed once */
     const ck0={P:CKP[0],v:gCK[0].userData.tip};
     const ckAng=(i,rel)=>{const P=CKP[i],v=gCK[i].userData.tip,a0=Math.atan2(P[1],P[0]);   /* rel: the click wheel's turn against the ratchet; its nose toward the wheel and behind its pivot, the click turned about a0 + 1.17 (05 06 02) */
@@ -1412,9 +1412,9 @@ const WFUSEE=(()=>{
        turning about its rivet as the chain leaves the slot (until 16 October 2026 tilted with that link, which put its crown 0.03 into the first rib at run down) */
     function place(g,p,pa,rot,which,phi=0,t=null){const up=new THREE.Vector3(0,1,0);if(t&&which!=='top')up.addScaledVector(t,-t.y).normalize();
       if(which==='top'){const q=pol(PINR,pa+rot),P=new THREE.Vector3(fx+q[0],p.y,fz+q[1]),d=new THREE.Vector3().subVectors(P,p);d.addScaledVector(up,-d.dot(up));const L=d.length();d.normalize().applyAxisAngle(up,-phi);const n=new THREE.Vector3().crossVectors(d,up);
-        const m=new THREE.Matrix4().makeBasis(d,up,n).setPosition(p);g.matrixAutoUpdate=false;g.matrix.copy(m);g.userData.span=L;}
+        const m=new THREE.Matrix4().makeBasis(d,up,n).setPosition(p);g.matrixAutoUpdate=false;g.matrix.copy(m);g.matrixWorldNeedsUpdate=true;g.userData.span=L;}   /* matrixWorldNeedsUpdate: since three r185 updateWorldMatrix() leaves a hand-set matrix's world matrix alone without it (the drum's slot was cut where the hook was built, not where it lies) */
       else{const v=new THREE.Vector3(p.x-BX[0],0,p.z-BX[1]).normalize(),d=new THREE.Vector3().crossVectors(v,up).normalize(),n=new THREE.Vector3().crossVectors(d,up);
-        const m=new THREE.Matrix4().makeBasis(d,up,n).setPosition(p);g.matrixAutoUpdate=false;g.matrix.copy(m);}}
+        const m=new THREE.Matrix4().makeBasis(d,up,n).setPosition(p);g.matrixAutoUpdate=false;g.matrix.copy(m);g.matrixWorldNeedsUpdate=true;}}
     pB.userData.blk=BLK;
     /* the slot for the connector's drum hook (0207: "Schlitz für Kette erst bei Schneckenmontage einsetzen", 2.5 wide round the drum in its plan, its section 0.85 across
        the wall's height, through the wall: sure; 0207 draws it on the drum of 1941, and the later sheets keep its note's practice), cut where the hook's barb comes to the

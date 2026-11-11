@@ -233,7 +233,7 @@ const WCASE=(()=>{
     else{for(let xx=-8;xx<264;){const w=8+rnd()*30,lt=rnd()<0.5;line(xx+w/2,2+rnd()*3,rnd()*6,w,lt?`rgba(140,84,60,${0.18+rnd()*0.22})`:`rgba(58,20,9,${0.15+rnd()*0.25})`);xx+=w;}   /* the ribbon: bands toward the sampled light and dark */
       for(let i=0;i<90;i++){const a=0.05+rnd()*0.15;line(rnd()*256,1+rnd()*4,rnd()*6,0.4+rnd()*1.4,rnd()<0.7?`rgba(40,14,6,${a})`:`rgba(150,90,62,${a})`);}
       for(let i=0;i<900;i++){x.fillStyle=`rgba(40,14,6,${0.25+rnd()*0.35})`;x.fillRect(rnd()*256,rnd()*512,0.8,2+rnd()*5);}}   /* the pores, short dark dashes along the grain */
-    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;}
+    const t=new THREE.CanvasTexture(c);srgbTex(t);t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;}
   /* a cushion (the outer box's Polster, 51 00_5): w × h on a board, standing out along its own +y from 0, t0 thick at its rim rising as (1 − u²)(1 − v²) (u, v −1 to 1 across it)
      to T in its middle, as 51 00_5's sections draw each one, a lens thickest at its middle; one closed solid, its face shaded smooth */
   function pillow(w,h,T,t0=1,n=32){const th=(u,v)=>t0+(T-t0)*(1-u*u)*(1-v*v),P=[],Nm=[],put=(p,q)=>{P.push(...p);Nm.push(...q);};
@@ -253,7 +253,7 @@ const WCASE=(()=>{
     x.beginPath();x.moveTo(26*k,9*k);x.lineTo(26*k,18*k);x.moveTo(24.4*k,16*k);x.lineTo(27.6*k,16*k);x.stroke();
     x.font=`600 ${2.6*k*1.36}px "Instrument Sans", Arial, sans-serif`;x.fillText('Type',13.5*k,20.6*k);x.font=`700 ${3.7*k*1.36}px "Instrument Sans", Arial, sans-serif`;x.fillText('3371',38.5*k,20.6*k);
     for(const[u,v]of[[2,2],[50,2],[2,24],[50,24]]){x.beginPath();x.arc(u*k,v*k,0.6*k,0,TAU);x.fill();}
-    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t;}
+    const t=new THREE.CanvasTexture(c);srgbTex(t);t.anisotropy=8;return t;}
   /* Kirov 247's box plates (14_Kirow_247_Kasten_2.jpg): the factory's diamond badge, a light metal rhombus 38.6 × 24 lettered black "1 / МЧЗ / им. Кирова" (the 1 over
      the Ч), two pins at its side corners; the number plate, a disc Ø 31 of the same metal with a darker rim, "247", a screw over and under the figures. Sizes by the hasp's
      width (53, below): ±1. The lettering's form is the photograph's by eye, drawn in the page's sans-serif */
@@ -265,7 +265,7 @@ const WCASE=(()=>{
       for(const u of[3.5,W-3.5]){x.beginPath();x.arc(u*k,H/2*k,0.7*k,0,TAU);x.fillStyle='#6f6857';x.fill();}}
     else{x.strokeStyle='#4d4a44';x.lineWidth=1.2*k;x.beginPath();x.arc(W/2*k,H/2*k,(W/2-0.6)*k,0,TAU);x.stroke();x.font=F(6.8,500);x.fillText('247',W/2*k,H/2*k);
       for(const v of[3.2,H-3.2]){x.beginPath();x.arc(W/2*k,v*k,0.8*k,0,TAU);x.fillStyle='#8d877a';x.fill();}}
-    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t;}
+    const t=new THREE.CanvasTexture(c);srgbTex(t);t.anisotropy=8;return t;}
 
   function build(M){
     const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
@@ -615,6 +615,7 @@ const WCASE=(()=>{
     /* the bezel's glass, a little greener and less clear than the box's (M.glass, 0.12): a plain glass reads as nothing at 0.12, so the case view and a section showed the
        bezel open (21 October 2026). Its edge green, as Wempe 6161's (antiquorum_208-4_wempe6161.jpg: a green ring round the dial where the glass's edge shows) */
     const GLW=M.glassW=M.glassW||new THREE.MeshPhysicalMaterial({color:sc(0xd8efe4),metalness:0,roughness:0.02,transmission:0.7,transparent:true,depthWrite:false,reflectivity:0.52});
+    if(LOOK3&&!GLW.thickness)Object.assign(GLW,{transmission:1,thickness:0,ior:1.52,roughness:0.03,specularIntensity:0.25});   /* three r187 (core.js's look3): all of the light through, tinted by its colour; no thickness, so nothing under it is shifted off its Edges lines */
     /* 26 October 2026, the drawings check (drawing-check/batch10.md, re-measured on the sheet at 6× zoom): the glass lies ON the ring, a flat disc Ø 111.6 (r 55.8) from 12.3 to
        15.8 over the underside, its top edge chamfered to r 54.3, standing about 2.4 proud of the ring's lip, which is only 13.4 high at r 57.2 (pixel scans at 4.78 px/mm,
        the right-hand section: likely ±0.2); the ring's bevel runs from the widest band (r 60.2 at 9.9) up to the lip, the lip's inside falls to r 56.2 at 12.6 and the seat

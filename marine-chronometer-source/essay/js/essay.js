@@ -81,7 +81,7 @@ const ESSAY=(()=>{
   const EDGES=!/[?&]edges=0\b/.test(location.search);
   let G=null;
   function gl(){if(G)return G;const cv=document.createElement('canvas'),r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
-    r.setPixelRatio(1);r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.05;r.setClearColor(0x000000,0);r.setScissorTest(true);
+    r.setPixelRatio(1);outSRGB(r);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.05;r.setClearColor(0x000000,0);r.setScissorTest(true);
     G={r,cv,w:1,h:1,env:envTex(r),M:mats(),scenes:new Set(),ink:null,bs:new THREE.Vector2()};
     /* a lost context comes back without the environment map that lights the metals (as the model's, app.js) */
     cv.addEventListener('webglcontextlost',e=>e.preventDefault());cv.addEventListener('webglcontextrestored',()=>{G.env=envTex(r);G.scenes.forEach(s=>s.environment=G.env);FIGS.forEach(f=>f.dirty=true);});
@@ -89,7 +89,7 @@ const ESSAY=(()=>{
   class View3D{
     constructor(st,f,o){this.st=st;this.f=f;this.cv=st.querySelector('canvas');this.x=this.cv.getContext('2d');const a0=o.aspect;this.ca=0;this.fit=o.fit!==false;this.box=null;   /* fit: the camera framed on what shows (frame()); ca: its height over its width, which sets a narrow figure's aspect */
       this.aspect=w=>w<520&&this.ca?clamp(this.ca*1.12+0.04,0.5,1.15):typeof a0==='function'?a0(w):a0;const g=gl();
-      const s=this.scene=new THREE.Scene();s.environment=g.env;g.scenes.add(s);s.add(new THREE.HemisphereLight(0xffffff,0x3a3a3a,0.35));const dl=new THREE.DirectionalLight(0xffffff,1);dl.position.set(3,6,4);s.add(dl);
+      const s=this.scene=new THREE.Scene();s.environment=g.env;g.scenes.add(s);s.add(new THREE.HemisphereLight(0xffffff,0x3a3a3a,0.35*LK));const dl=new THREE.DirectionalLight(0xffffff,LK);dl.position.set(3,6,4);s.add(dl);
       this.cam=new THREE.PerspectiveCamera(o.fov||30,1,o.near||1,o.far||4000);this.yaw=o.yaw??0.6;this.pitch=o.pitch??0.5;this.dist=o.dist??100;this.target=new THREE.Vector3(...(o.target||[0,0,0]));
       this.minP=o.minPitch??-1.2;this.maxP=o.maxPitch??1.5;this.labels=[];this.lb=st.querySelector('.e-labels');
       let pid=null,lx=0,ly=0;const cv=this.cv;
@@ -448,7 +448,7 @@ const ESSAY=(()=>{
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.75,pitch:0.62,dist:600,target:[0,-10,0],near:20,far:5000}),M=gl().M,S=V.scene;
     const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.stay();CS.tongue.rotation.z=-Math.PI/2;CS.over.visible=false;   /* the outer transport box left out, as the Wempe page's views but Transport box leave it */
     CS.root.traverse(o=>{if(o.userData.rev&&!o.userData.rev.split(' ').includes('last'))o.visible=false;});   /* as last revised */
-    const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
+    const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);srgbTex(tex);
     const yD=WDIAL.DY1-CS.YP;mesh(CS.bowl,cylY(WDIAL.DR,WDIAL.DY1-WDIAL.DY0,96),M.brass2,0,yD-(WDIAL.DY1-WDIAL.DY0)/2,0);
     mesh(CS.bowl,new THREE.CircleGeometry(WDIAL.DR,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.3,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,yD+0.05,0);
     {const c=document.createElement('canvas');c.width=c.height=128;const g2=c.getContext('2d'),gr=g2.createRadialGradient(64,64,6,64,64,64);gr.addColorStop(0,'rgba(0,0,0,0.55)');gr.addColorStop(1,'rgba(0,0,0,0)');g2.fillStyle=gr;g2.fillRect(0,0,128,128);

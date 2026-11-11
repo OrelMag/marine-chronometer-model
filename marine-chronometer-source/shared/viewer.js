@@ -34,11 +34,11 @@ const VIEWER={start(cfg){
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return null;}
   const PHONE=matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<600,RM=matchMedia('(prefers-reduced-motion: reduce)');   /* phones: a lower pixel ratio and shadow map; reduced motion: moves are instant, as with ?snap */
   let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return null;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,PHONE?1.5:2));
-  r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
+  outSRGB(r);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;r.shadowMap.enabled=true;r.shadowMap.type=SHADOW_SOFT;
   const scene=new THREE.Scene();scene.environment=envTex(r);
   cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});   /* a restored context comes back without the environment map that lights the metals: rebuild it */
-  scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28));
-  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=false;key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;   /* casts only with Shadows on: look() */
+  scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28*LK));
+  const key=new THREE.DirectionalLight(0xfff4e6,1.0*LK);key.castShadow=false;key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;   /* casts only with Shadows on: look() */
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
   const cam=new THREE.PerspectiveCamera(32,1,1,6000);
   const M=mats(),{root,mv}=cfg.build(M);scene.add(root);
@@ -97,7 +97,7 @@ const VIEWER={start(cfg){
   const COLM=new Map(),FADE=new Map();let SEL=null;   /* SEL: the selection (../shared/select.js), bound below; its parts tinted PSEL.COL */
   const colOf=(p,k)=>{if(st.csrc){const s=PCE[k]&&PCE[k].src||PARTS[p]&&PARTS[p].src;return s&&SRC[s][1];}return PCOL[k]||PCOL[p];};
   function colourOf(m0,p,pk){const col=p&&colOf(p,pk);if(!col||m0.transparent||!m0.color)return m0;const k=m0.uuid+pk+(st.csrc?':s':'');let c=COLM.get(k);
-    if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(col);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.clearcoat){c.clearcoat=0;c.envMapIntensity=1;}if(c.emissive)c.emissive.setRGB(0,0,0);
+    if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(col);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.clearcoat){c.clearcoat=0;c.envMapIntensity=1;}if(c.emissive)c.emissive.setRGB(0,0,0);if(c.transmission&&c.attenuationDistance<1)c.transmission=0;if(c.iridescence)c.iridescence=0;   /* three r187's look (core.js's look3): a jewel coloured by its source is a solid colour, not a stone seen through; blued steel without its film */
       patchSection(c,!!m0.userData.secCap);c.userData.side0=m0.userData.side0??m0.side;c.side=m0.side;c.clippingPlanes=[...(m0.clippingPlanes||[])];COLM.set(k,c);}return c;}
   function fadeOf(m0,p,op){const k=m0.uuid+p;let f=FADE.get(k);
     if(!f){f=m0.clone();f.userData={inkDecal:m0.userData.inkDecal};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}

@@ -10,3 +10,5 @@
 *.npy binary
 # Ciechanowski's Mechanical Watch is kept byte for byte as the site serves it (its manifest's sha256).
 References/ciechanowski-mechanical-watch/** -text
+# three.js r187's two modules are kept byte for byte as cdnjs serves them (vendor_three.py checks their SHA-512).
+vendor/three-r187/** -text

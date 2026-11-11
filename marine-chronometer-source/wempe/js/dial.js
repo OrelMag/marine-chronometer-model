@@ -413,7 +413,7 @@ const WDIAL=(()=>{
     /* the printed face: a surface 0.02 over the disc, holed as it is, its texture the canvas (face()) */
     {const s=new THREE.Shape();s.absarc(0,0,DR,0,TAU,false);for(const[hx,hz,hr]of holes){const p=new THREE.Path();p.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(p);}
       const g=new THREE.ShapeGeometry(s,64),uv=g.attributes.uv,pos=g.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,(pos.getX(i)+DR)/(2*DR),(pos.getY(i)+DR)/(2*DR));g.rotateX(-Math.PI/2);
-      const texOf=(/** @type {string} */d)=>{if(!TX[d]){const t=TX[d]=new THREE.CanvasTexture(face(1,d));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>face(k,d);}return TX[d];};
+      const texOf=(/** @type {string} */d)=>{if(!TX[d]){const t=TX[d]=new THREE.CanvasTexture(face(1,d));srgbTex(t);t.anisotropy=8;t.redraw=k=>face(k,d);}return TX[d];};
       const fm=mesh(gV,g,new THREE.MeshStandardMaterial({map:texOf('wempe'),metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
       Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=R.face||fm;FMS.push(fm);
       /* R.setDial(d): the printing shown, 'wempe', 'lange' or 'kirov' (app.js's Variants), each texture drawn when first asked for: on the face's own material (the viewer may be

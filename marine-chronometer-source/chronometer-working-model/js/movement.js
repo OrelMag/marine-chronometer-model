@@ -944,7 +944,7 @@ function buildMovement(M){
   /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */
   const dl=part('dial',35.744);
   hn(dl,'42030');mesh(dl,discGeo(DIAL_R,DIAL_T,[[...L.C,2.7925],[...L.F,1.3404],[...L.Ud,1.3404]]),M.brass2,0,MR_Y,0);
-  const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;dtex.redraw=k=>dialCanvas(undefined,k);   /* redraw: finer, for the export to Blender */
+  const dtex=new THREE.CanvasTexture(dialCanvas());srgbTex(dtex);dtex.anisotropy=8;dtex.redraw=k=>dialCanvas(undefined,k);   /* redraw: finer, for the export to Blender */
   /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
   const dface=mesh(dl,new THREE.RingGeometry(2.7925,DIAL_R,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,MR_Y+DIAL_T+0.02234,0);dface.userData.noCap=true;dface.userData.surface=true;
   /* four feet down into the ring's flange, each held by a dial screw (35756, Fig. 107) from the flange's train side into its tapped end */
@@ -963,7 +963,7 @@ function buildMovement(M){
   for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31*DK,1.5638,6.702,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5*DK,1.0053,8.936,'pear',0,MO),m),k,mcol(m));
     dk(mesh(R.sec,handGeo(19*DK,0.50265,-8.936,'plain'),M.blued,0,0.27925,0),k);dk(mesh(R.ud,handGeo((k==='swiss'?11.5:8.5)*DK,0.6702,2.7925,'plain'),M.blued,0,0.27925,0),k);}
   const DTEX={hamilton:dtex};hd.traverse(o=>{if(o.userData.dk&&o.userData.dk!=='hamilton')o.visible=false;});
-  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>dialCanvas(kind,k);}
+  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));srgbTex(t);t.anisotropy=8;t.redraw=k=>dialCanvas(kind,k);}
     const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===(kind==='usn'?'hamilton':kind);});};   /* the Navy's dial wears the Hamilton hands */   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',17.872);
   /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the

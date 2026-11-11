@@ -7,6 +7,18 @@ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t;
 const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const $=s=>document.querySelector(s);
 const sc=h=>new THREE.Color(h).convertSRGBToLinear();
+/* three.js r128 and r187 side by side while the pages move from one to the other (PLAN-three-upgrade.md). T3: the page loaded the newer one (vendor/three.r187.js).
+   Colours stay as this code has always held them, an sRGB hex made linear by hand (sc), so three's own colour management (on by default since r152) is off;
+   a texture says it is sRGB by colorSpace (encoding until r152: srgbTex), the renderer writes sRGB by outputColorSpace (outputEncoding: outSRGB); the lights
+   are in r155's units, pi times the old intensity for the same light on a surface (LK: directional and hemisphere lights; the environment map is unchanged);
+   PCFSoftShadowMap is PCFShadowMap since r182 (SHADOW_SOFT) */
+const T3=+THREE.REVISION>=152,LK=T3?Math.PI:1,SHADOW_SOFT=T3?THREE.PCFShadowMap:THREE.PCFSoftShadowMap;if(T3)THREE.ColorManagement.enabled=false;
+const srgbTex=t=>{if(T3)t.colorSpace=THREE.SRGBColorSpace;else t.encoding=THREE.sRGBEncoding;return t;},isSrgbTex=t=>T3?t.colorSpace===THREE.SRGBColorSpace:t.encoding===THREE.sRGBEncoding;
+const outSRGB=r=>{if(T3)r.outputColorSpace=THREE.SRGBColorSpace;else r.outputEncoding=THREE.sRGBEncoding;};
+/* A lathe's triangles in r128's order. r187 gives each quad's second triangle as (c, d, b) where r128 gave (b, c, d): the same triangle, but the cutters here that clip a
+   solid cut after cut (facePocket's screw slots, the bores and radial holes) fan each clipped triangle from its first vertex, so the next cut met other edges and 35 of the
+   Wempe's 1,582 meshes came out as the same solids with other vertices (volumes within 1e-4 mm³; 11 November 2026). Kept as r128 had it, so every mesh-derived file stays as it is */
+if(T3){const L0=THREE.LatheGeometry;THREE.LatheGeometry=class extends L0{constructor(...a){super(...a);const ix=this.index.array;for(let i=3;i<ix.length;i+=6){const c=ix[i],d=ix[i+1],b=ix[i+2];ix[i]=b;ix[i+1]=c;ix[i+2]=d;}}};}
 /* the balances' rate against temperature beyond what the screws make linear (Table IV, app.js), s a day at t °F, 0 at 72½ °F where the model is regulated: uncut, the Model 21's,
    the curvature of the factory test card of No. 3390 (Sec. IX, p. 68; period means 90 °F -0.02, 72½ +0.06, 55 0.00 s a day), its second difference alone, the linear part being
    that chronometer's own screws: a gain in the middle, 0.07 s a day against both ends. split: the bimetallic balance's middle temperature error, illustrative, compensated near
@@ -49,7 +61,7 @@ function stripeTex(K=1){
       dn[k]=Math.round((nx*0.5+0.5)*255);dn[k+1]=Math.round((ny*0.5+0.5)*255);dn[k+2]=Math.round((nz*0.5+0.5)*255);dn[k+3]=255;}
     const t=r0;r0=r1;r1=r2;r2=t;}
   xm.putImageData(im,0,0);xn.putImageData(inn,0,0);
-  const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)t.encoding=THREE.sRGBEncoding;return t;};
+  const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)srgbTex(t);return t;};
   const out={map:mk(cm,true),normal:mk(cn,false)};let re=null;const at=k=>re&&re.k===k?re:(re={k,...stripeTex(k)});
   out.map.redraw=k=>at(k).map.image;out.normal.redraw=k=>at(k).normal.image;return out;
 }
@@ -61,12 +73,12 @@ function woodTex(K=1,base='#5a2413'){   /* K: drawn K times as fine (redraw, for
   for(let i=0;i<260;i++){const xx=rnd()*512,w=0.6+rnd()*2.6,a=0.05+rnd()*0.14,ph=rnd()*6,amp=2+rnd()*9;
     x.strokeStyle=rnd()<0.5?`rgba(20,6,2,${a})`:`rgba(150,70,35,${a*0.8})`;x.lineWidth=w;x.beginPath();
     for(let y=0;y<=1024;y+=16){const px=xx+Math.sin(y/140+ph)*amp+Math.sin(y/37+ph*2)*amp*0.25;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
-  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k,base).image;return t;
+  const t=new THREE.CanvasTexture(c);srgbTex(t);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k,base).image;return t;
 }
 /* Engraving textures are mapped to the movement: canvas centre = movement centre, 96 mm across,
    canvas up = 6 o'clock (+z), so text reads upright when the movement is viewed from the bridge side. */
 function engraveCanvas(draw,K=1){const S=1024,c=document.createElement('canvas');c.width=c.height=S*K;const x=c.getContext('2d');x.scale(K,K);const k=S/96;   /* K: drawn K times as fine (redraw, for the export to Blender) */
-  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=q=>engraveCanvas(draw,q).image;return t;}
+  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);srgbTex(t);t.anisotropy=8;t.redraw=q=>engraveCanvas(draw,q).image;return t;}
 function engraveArc(x,S,k,txt,r,psiDeg,spreadDeg,size){x.font=`600 ${size*k}px Spectral, Georgia, serif`;const ch=[...txt],n=ch.length,phi0=-psiDeg*D2R,sp=spreadDeg*D2R;
   ch.forEach((q,i)=>{const phi=phi0+((n-1)/2-i)*sp;x.save();x.translate(S/2+r*k*Math.cos(phi),S/2+r*k*Math.sin(phi));x.rotate(phi-Math.PI/2);x.fillText(q,0,0);x.restore();});}
 /* letters of t spread (or squeezed) to width w, centred on the origin; gx narrows each letter first, as on the engraved plates */
@@ -124,6 +136,23 @@ const NAVY={no:'7832',yr:'1941'};   /* the Navy dial's number and year, as photo
    washed every flat face pink), a red glow for the light a stone gives back from inside, under a clearcoat. reflectivity: F0 = 0.16 reflectivity²,
    so 0.69 for corundum's index 1.77 and 0.52 for glass's 1.52. Shown, not measured: the export to Blender gives them real transmission (blender.js) */
 const RUBY={clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69,envMapIntensity:0.25,emissive:sc(0xb0102a),emissiveIntensity:0.6};
+/* The pilot's look on three r187 (PLAN-three-upgrade.md; off with look=128 in the address, which keeps r128's stand-ins above for a before and after). r187 refracts:
+   a transmissive material is drawn over a copy of the opaque scene behind it, bent by its index and thickness and coloured by what it absorbs. So:
+   glass: all of the light through (r128's 0.88 left 12% of a white diffuse surface, which r128 hid in its alpha and r187 shows as a milky veil), index 1.52, the
+     reflection of the studio's lamps at a quarter of glass's own 4% (specularIntensity 0.25: at full strength the lamp's panel veiled the dial at a slant);
+   ruby: clear red corundum, index 1.77, red by absorption over its depth (attenuationColor at attenuationDistance), no glow of its own, so a jewel shows the pivot
+     and the setting through it; the clear jewel the same uncoloured;
+   glass has no thickness here: with one, what lies under it is drawn shifted by the refraction and no longer under its own Edges lines (tried, 2 and 2.4 mm);
+   blued steel: steel under a thin film (iridescence: its oxide, index about 2.4 for magnetite, 80 nm for the blue that Wempe 3955's seconds hand shows,
+     1_Wempe_3955_Z.jpg), which gives the blue and its turn at a glancing angle from the film instead of a blue paint. Values set by eye against
+     that photograph on 11 November 2026, not measured: estimates. */
+const LOOK3=T3&&!/[?&]look=128\b/.test(location.search);
+function look3(M){
+  Object.assign(M.glass,{transmission:1,thickness:0,ior:1.52,roughness:0.03,specularIntensity:0.25});
+  Object.assign(M.clear,{transmission:1,thickness:0.4,ior:1.77,clearcoat:0});
+  Object.assign(M.ruby,{color:sc(0xffd9dc),transmission:1,thickness:0.5,ior:1.77,attenuationColor:sc(0xc4001c),attenuationDistance:0.16,roughness:0.05,clearcoat:0,emissiveIntensity:0,envMapIntensity:1});
+  M.blued=new THREE.MeshPhysicalMaterial({color:sc(0x9aa3b0),metalness:1,roughness:0.25,iridescence:1,iridescenceIOR:2.4,iridescenceThicknessMaximum:80});   /* tried on the seconds hand: 55-62 nm straw to violet, 72 brown-grey, 80 the photograph's blue: the order of the temper colours; a blue base under the film came out straw */
+}
 /* how opaque a material draws, its transmission counted: under 0.5 the tools take it for glass or a ghost (makeInk, the viewers' ghost tests) */
 const opq=m=>(m.opacity??1)*(1-(m.transmission||0));
 function mats(){
@@ -139,6 +168,7 @@ function mats(){
      map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
   M.plateCrest=(()=>{st.updateMatrix();const v=new THREE.Vector3(0.5/1024,1-30.1/1024,1).applyMatrix3(st.matrix.clone().invert());return[v.x,v.y];})();
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
+  if(LOOK3)look3(M);
   /* the finish: the plates' colour, and for the Ulysse Nardin the frosting (no damascening, rougher), the bowl's and ring's brass and the box's wood (UN_FIT); see-through and
      faded copies follow on the next look() (syncMat) */
   const F0=[M.plate.roughness,M.plateSolid.roughness,M.brass.color.clone(),M.brass.roughness,M.brass2.color.clone(),M.brass2.roughness,M.wood.color.clone()];
@@ -186,7 +216,7 @@ function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.o
    In ink (INK.ink 1) it is paper, inked only where the albedo is printed: under 55% of the material's median (uRef, inkRef), as the dial's figures; an
    engraving (userData.inkDecal) is ink under its own alpha, and any other transparent source (a faded part) paper at its opacity. Alpha carries the band (0.45 band; 1 is bare paper, cleared to white: a clear colour is
    premultiplied), which tells the sheet the drawing from the paper; a transparent source keeps the alpha beneath it */
-const DRAW=new Map(),INK={shMax:{value:1.1},wash:{value:0.75},ink:{value:0}};   /* wash: pigment density, light enough that the live model reads through it */
+const DRAW=new Map(),INK={shMax:{value:1.1},wash:{value:0.75},ink:{value:0},ao:{value:/[?&]ao=1(&|$)/.test(location.search)?0.8:0}};   /* ao: contact shading under the Edges lines, a pilot (makeInk) */   /* wash: pigment density, light enough that the live model reads through it */
 const WASH=(tr,dec)=>'float dL=dot(diffuseColor.rgb,vec3(0.3,0.55,0.15)),shd=dot(outgoingLight,vec3(0.3,0.55,0.15))/max(dL,1e-4);diffuseColor.rgb=mix(diffuse,diffuseColor.rgb,uTex);vec3 alb=pow(clamp(diffuseColor.rgb,0.0,1.0),vec3(1.0/2.2));'+
   'float aL=dot(alb,vec3(0.3,0.55,0.15));vec3 chr=(alb-aL)*1.6;chr*=min(1.0,0.3/max(length(chr),1e-6));vec3 wc=clamp(0.45+0.5225*aL+chr,0.0,1.0);'+
   'float bd=clamp((pow(clamp(shd/uShMax,0.0,1.0),1.0/2.2)-0.25)/0.7,0.0,1.0),bq=bd*3.0;bd=0.5*bd+0.5*(floor(bq)+smoothstep(0.3,0.7,fract(bq)))/3.0;'+
@@ -199,7 +229,7 @@ const INKREF=new WeakMap();
 function inkRef(d,tx){const c=d.color||new THREE.Color(1,1,1),t=d.map,cs=[c.r,c.g,c.b],w=[0.3,0.55,0.15],L=f=>w.reduce((a,wc,i)=>a+wc*Math.pow(Math.max(f(i),0),1/2.2),0);
   if(!t||!t.image)return L(i=>cs[i]);let e=INKREF.get(t);
   if(!e){e={k:new Map(),px:null};INKREF.set(t,e);try{const cv=document.createElement('canvas');cv.width=cv.height=48;const x=cv.getContext('2d');x.drawImage(t.image,0,0,48,48);
-    const a=x.getImageData(0,0,48,48).data,s=t.encoding===THREE.sRGBEncoding;e.px=new Float32Array(48*48*3);for(let i=0;i<48*48;i++)for(let j=0;j<3;j++){const v=a[i*4+j]/255;e.px[i*3+j]=s?Math.pow(v,2.2):v;}}catch(_){}}
+    const a=x.getImageData(0,0,48,48).data,s=isSrgbTex(t);e.px=new Float32Array(48*48*3);for(let i=0;i<48*48;i++)for(let j=0;j<3;j++){const v=a[i*4+j]/255;e.px[i*3+j]=s?Math.pow(v,2.2):v;}}catch(_){}}
   if(!e.px)return L(i=>cs[i]);const key=c.getHex()+':'+tx;if(!e.k.has(key)){const v=[];for(let i=0;i<e.px.length;i+=3)v.push(L(j=>cs[j]*(tx*e.px[i+j]+1-tx)));v.sort((p,q)=>p-q);e.k.set(key,v[v.length>>1]);}
   return e.k.get(key);}
 function drawOf(m){let d=DRAW.get(m);
@@ -271,7 +301,23 @@ void main(){vec2 p=gl_FragCoord.xy/uPr;
   const over=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,transparent:true,vertexShader:VS,uniforms:U({tE:{value:rtE.texture},uInk:{value:new T.Color(0x1c1a18)}}),
     fragmentShader:`uniform sampler2D tE;uniform vec2 uPx;uniform vec3 uInk;varying vec2 vUv;
 void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+texture2D(tE,vUv+vec2(h.x,-h.y))+texture2D(tE,vUv-vec2(h.x,-h.y)));
-  gl_FragColor=vec4(uInk,0.8*max(max(e.r,e.g*0.8),e.b*0.45));}`});
+  float la=0.8*max(max(e.r,e.g*0.8),e.b*0.45),aa=0.0;
+  {float oc=0.0;for(int i=0;i<4;i++)for(int j=0;j<4;j++)oc+=texture2D(tA,vUv+(vec2(float(i),float(j))-1.5)*uPx).r;aa=uAo*(1.0-oc/16.0);}   /* not inside an if: ANGLE warns of a texture read in a loop under a condition; off, tA is one pixel and uAo 0 */
+  gl_FragColor=vec4(uInk,1.0-(1.0-la)*(1.0-aa));}`});
+  /* Contact shading, a pilot (ao=1 in the address; PLAN-three-upgrade.md): how much of the half-space over each point of a solid its neighbours within uR mm close off,
+     worked out on the Edges pass's own normals and depths (no further pass over the model): 12 points on a spiral about the pixel, each turned by a noise of the
+     pixel's place, the cover summed as the Alchemy estimator does (McGuire et al. 2011: the points' height over the surface against their distance), then smoothed
+     over 4 x 4 pixels by the sheet's pass, which lays it under the lines as a darkening. Not light transport: it darkens the lit and the shaded alike */
+  const rtA=rt(0,0);rtA.depthBuffer=false;over.uniforms.tA={value:rtA.texture};over.uniforms.uAo={value:0};over.fragmentShader='uniform sampler2D tA;uniform float uAo;\n'+over.fragmentShader;
+  const aoM=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tN:{value:rtN.texture},tD:{value:rtN.depthTexture},uNF:{value:new T.Vector2()},uPj:{value:new T.Vector2()},uR:{value:1.8},uH:{value:1.1}}),
+    fragmentShader:`#include <packing>
+uniform sampler2D tN,tD;uniform vec2 uPx,uNF,uPj;uniform float uR,uH;varying vec2 vUv;
+vec3 P(vec2 u){float z=-perspectiveDepthToViewZ(texture2D(tD,u).x,uNF.x,uNF.y);vec2 n=u*2.0-1.0;return vec3(n.x*z/uPj.x,n.y*z/uPj.y,-z);}
+void main(){float d=texture2D(tD,vUv).x;vec4 nn=texture2D(tN,vUv);if(d>0.999999||dot(nn.rgb,vec3(1.0))<0.003){gl_FragColor=vec4(1.0);return;}
+  vec3 p=P(vUv),n=normalize(nn.rgb*2.0-1.0);float rp=uR*uPj.y*0.5/(-p.z),a0=6.2831853*fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(0.06711056,0.00583715)))),s=0.0;
+  for(int i=0;i<12;i++){float t=(float(i)+0.5)/12.0,a=a0+t*15.08;vec2 o=vec2(cos(a)*uPx.x/uPx.y,sin(a))*sqrt(t)*rp;vec3 v=P(vUv+o)-p;float vv=dot(v,v);
+    s+=max(0.0,dot(v,n)-0.04-0.0004*(-p.z))/(vv+0.05)*step(vv,4.0*uR*uR);}
+  gl_FragColor=vec4(vec3(clamp(1.0-uH*2.0*uR*s/12.0,0.0,1.0)),1.0);}`});
   const qs=new T.Scene(),q=new T.Mesh(new T.PlaneGeometry(2,2),edge),qc=new T.OrthographicCamera(-1,1,1,-1,0,1);q.frustumCulled=false;qs.add(q);
   const bs=new T.Vector2(),cc=new T.Color();
   /* normals and ids: the solids, then the ghosts alone (for Edges, mv: mesh ids, the box masked, hide left out); no shadow map is drawn for these.
@@ -304,7 +350,10 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
   lines(scene,cam,meshes,hide){
     const{gh,ca,au}=ids(scene,cam,meshes,true,hide);gh.forEach(o=>o.visible=true);
     r.shadowMap.needsUpdate=true;r.setRenderTarget(null);r.setClearColor(cc,ca);r.clear();r.render(scene,cam);r.shadowMap.autoUpdate=au;
-    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
+    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);
+    const on=INK.ao.value>0&&cam.isPerspectiveCamera;over.uniforms.uAo.value=on?INK.ao.value:0;
+    if(on){if(rtA.width!==bs.x||rtA.height!==bs.y)rtA.setSize(bs.x,bs.y);const u=aoM.uniforms,pe=cam.projectionMatrix.elements;u.uNF.value.set(cam.near,cam.far);u.uPj.value.set(pe[0],pe[5]);u.uPx.value.set(1/bs.x,1/bs.y);q.material=aoM;r.setRenderTarget(rtA);r.render(qs,qc);}
+    q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
 }
 /* draw calls (PERFORMANCE.md, What's next 1): the static pieces under one group that share a material, drawn as one merged copy. The pieces stay where they are, for the
    tools, picking, shadows and every display mode. A batch is drawn merged only while each of its pieces is shown and wears its own material (mat0); otherwise its pieces
@@ -441,7 +490,10 @@ function mainspringGeo(T,y0,y1,ey,o=MSPRING){
 /* extrude(s,o): ExtrudeGeometry with every hole's wall facing into the hole. r128 turns the holes only when it reverses a counterclockwise outline, so with a
    clockwise outline a clockwise hole got its wall wound into the metal: culled, the plate looked a hollow shell round its holes and cut-outs, and a section
    showed that wall's face instead of the hatched cut. Its triangles are turned over; the shape is unchanged (a clockwise hole's bevel still narrows it) */
-function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,p=s.extractPoints(o.curveSegments??12),dd=v=>{if(v.length>2&&v[v.length-1].equals(v[0]))v.pop();return v;},sh=dd(p.shape),hs=p.holes.map(dd);
+function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,p=s.extractPoints(o.curveSegments??12),
+  /* the points three extrudes: r128 dropped a last point equal to the first; r187 drops every point within 1e-10 (scaled) of the one before it, round the loop (its mergeOverlappingPoints) */
+  dd=T3?v=>{let q=v[0];for(let i=1;i<=v.length;i++){const k=i%v.length,c=v[k],dx=c.x-q.x,dy=c.y-q.y,m=Math.max(Math.abs(c.x),Math.abs(c.y),Math.abs(q.x),Math.abs(q.y));if(dx*dx+dy*dy<=1e-20*m*m){v.splice(k,1);i--;continue;}q=c;}return v;}
+    :v=>{if(v.length>2&&v[v.length-1].equals(v[0]))v.pop();return v;},sh=dd(p.shape),hs=p.holes.map(dd);
   if(!U.isClockWise(sh)||!hs.length)return g;const sl=6*((o.steps??1)+(o.bevelEnabled?2*(o.bevelSegments??3):0)),side=g.groups[1];let i=side.start+sh.length*sl,f=0;   /* the side walls: the outline's, then each hole's, 6·sl vertices a point */
   if(side.start+side.count!==i+hs.reduce((a,h)=>a+h.length*sl,0)){console.error('extrude: side walls not as counted');return g;}
   for(const h of hs){const e=i+h.length*sl;if(U.isClockWise(h)){f=1;for(const a of Object.values(g.attributes))for(let v=i;v<e;v+=3)for(let c=0;c<a.itemSize;c++){const k=(v+1)*a.itemSize+c,m=(v+2)*a.itemSize+c,t=a.array[k];a.array[k]=a.array[m];a.array[m]=t;}}i=e;}

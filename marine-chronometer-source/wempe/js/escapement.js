@@ -506,7 +506,7 @@ const WESC=(()=>{
       {const k=200,S=2.4,c=document.createElement('canvas');c.width=c.height=S*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
         x.strokeStyle=x.fillStyle='rgba(40,44,50,0.85)';x.lineWidth=0.12*k;x.beginPath();x.moveTo(1.2*k,0.15*k);x.lineTo(2.3*k,2.1*k);x.lineTo(0.1*k,2.1*k);x.closePath();x.stroke();
         x.font=`700 ${0.62*k}px "Instrument Sans", Arial, sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText('RGG',1.2*k,1.55*k);
-        const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
+        const t=new THREE.CanvasTexture(c);srgbTex(t);t.anisotropy=8;
         const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
         const g=new THREE.PlaneGeometry(S,S);g.rotateX(Math.PI/2);const e=mesh(bal,g,m,0,ya-0.01,11);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050301-1',1);}
       for(const c of[90,270])tag(mesh(bal,tH(solidGeo([{loop:brass(c),y0,y1}]),c),M.brass),'050301-1',1);
@@ -516,7 +516,7 @@ const WESC=(()=>{
          likely) show them as centre-punch dimples on the rim's outer face, the brass, about half-way up it, on both ends of each cut. 32 dots Ø 0.3 there (decals, turning with
          the balance). Eight on the rim's top from one cut until the owner's question, 28 October 2026 (drawing check 2's 1-M16); left out until 28 October 2026 (1-M11) */
       {const k=64,c=document.createElement('canvas');c.width=c.height=k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));x.fillStyle='rgba(30,26,20,0.85)';x.beginPath();x.arc(k/2,k/2,k*0.36,0,TAU);x.fill();
-        const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
+        const t=new THREE.CanvasTexture(c);srgbTex(t);const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
         for(const a0 of[0,180])for(const sg of[-1,1])for(let i=1;i<=8;i++){const a=a0+sg*6*i,u=dir(a),e=mesh(bal,new THREE.PlaneGeometry(0.42,0.42),m,u[0]*(r2+0.005),(y0+y1)/2,u[1]*(r2+0.005));
           e.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(u[0],0,u[1]));e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050301-1',1);}}}
     /* the compensation masses (Masse 05 03 01-4; 05 03_2, a poor copy): round brass, Ø 6.35 (05 03_1's boxed [6,35], an inspection figure; its balance proper is this one,
