@@ -14,7 +14,8 @@ files can be fully self-contained (`build.py` inlines them). Do not edit them.
 | `fonts/Caveat-wght.ttf` | Caveat, variable weight 400–700, the full font as a TTF: the hand lettering of the illustrations for print (`tools/penposter.py`), drawn with Pillow; not used by the pages | https://github.com/google/fonts/raw/main/ofl/caveat/Caveat%5Bwght%5D.ttf (2 November 2026; sha256 0bdb6b66…7988) | SIL Open Font License 1.1, `fonts/OFL-Caveat.txt` |
 | `fonts/fonts.css` | `@font-face` rules for the files above | derived from the Google Fonts stylesheet | as the fonts |
 
-r128 (`three.min.js`) is the version the pages are written against. Releases since
-r161 ship ES modules only; `PLAN-three-upgrade.md` at the root is the plan for
-moving to r187 through `vendor_three.py`, with what breaks and how each page is
-checked.
+The Wempe's page loads r187 (`three.r187.js`) since 11 November 2026; the Hamilton's
+page, the essay and the smaller viewers still load r128 (`three.min.js`). Releases
+since r161 ship ES modules only, so `vendor_three.py` wraps them as one classic
+script. `PLAN-three-upgrade.md` at the root has the plan, what each release broke,
+how `core.js` runs on both and how each page is checked.

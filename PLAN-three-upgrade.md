@@ -1,6 +1,6 @@
 # Moving the pages off three.js r128
 
-Written 11 November 2026 on `claude/three-upgrade`, with a working pilot on the Wempe's page. The owner chose "plan and pilot the three.js upgrade" that day (Wempe first). Nothing here is merged or released.
+Written 11 November 2026 on `claude/three-upgrade`, with a working pilot on the Wempe's page. The owner chose "plan and pilot the three.js upgrade" that day (Wempe first), then decided the rollout from the pilot's report (below). Stage 1, the Wempe's page on r187 with the present look, is prepared on the branch for landing. The sections down to "Later" are the pilot's record; where stage 1 changed something, the row or line says so.
 
 The aim is what r128 cannot draw: jewels and glass that let light through and bend it, blued steel coloured by its oxide film, and shading where parts meet. IDEAS.md 4.1-4.3 has the background.
 
@@ -50,23 +50,25 @@ Each was found by running the Wempe's page on r187, or by reading the guide. "Do
 | `updateWorldMatrix()` skips an object whose matrix was set by hand unless `matrixWorldNeedsUpdate` is set (r185) | The Wempe's `fusee.js`: the chain's hooks (`place`, and the laid chain's `h.matrix.copy`) | Done: the flag is set. Without it the drum's chain slot was cut 60° away and the barrel's volume was 3.2 mm³ out. `movement.js` (the Hamilton's crook and hook) decomposes its matrix, so it is unaffected; check it at stage 3. |
 | `ExtrudeGeometry` drops points within 1e-10 of their neighbour (after r128; the guide does not list it) | `extrude()` in `core.js`, which counts the side walls to turn the holes' walls | Done: `extrude()` drops the same points before counting. Without it it printed "side walls not as counted" and left 6 extrusions with a hole's wall wound into the metal (the gimbal ring's and the box's `WN-400` pieces, the lid's stay, a chain link). |
 | `LatheGeometry` gives each quad's second triangle as (c, d, b), not (b, c, d) (after r128; not listed) | Every cutter that clips a turned solid cut after cut (`facePocket`, the bores) | Done: `core.js` restores r128's order under r187. Without it 35 meshes were the same solids with other vertices. Better later: make the cutters independent of triangle order. |
-| The triangulator (Earcut) is a newer version | `solidGeo`, `polyGeo` and everything through `ShapeUtils.triangulateShape` | Open: only the movement ring came out differently (0.05 mm³, 213 fewer unique vertices). Either accept it and regenerate what is derived from that mesh, or keep r128's Earcut in `kit.js`. |
-| `transmission` refracts and draws a second pass (r131 on) | `M.glass`, `M.clear`, `M.ruby` (`core.js`), `M.glassW` (`case.js`) | Done as the new look (`look3`). With r128's values the glass is a milky veil: 12 % of a white diffuse surface, which r128 hid in its alpha. |
+| The triangulator (Earcut) is a newer version | `solidGeo`, `polyGeo` and everything through `ShapeUtils.triangulateShape` | Accepted by the owner (11 November 2026): only the movement ring came out differently (0.05 mm³ in 20,438, 213 fewer unique vertices). No check's stored figure moved with it at stage 1. |
+| `transmission` refracts and draws a second pass (r131 on) | `M.glass`, `M.clear`, `M.ruby` (`core.js`), `M.glassW` (`case.js`) | Stage 1: a material made with transmission is a `GlassA` on r187, which draws r128's alpha and no second pass. With r128's values real transmission makes the glass a milky veil: 12 % of a white diffuse surface, which r128 hid in its alpha. Real transmission is kept for the new look's jewels (`look3`). |
 | A transmissive material's fragment shader declares `projectionMatrix` itself (with real transmission, r131 on) | `patchSection` in `core.js`, which declares it for a cut face's depth | Done: not declared again for a transmissive material on r187. `smoke.py --model wempe` found it: every section failed to compile on the glass and the jewels (259 console errors). |
-| `envMapIntensity` no longer dims `scene.environment` (r163) | `RUBY` in `core.js` (0.25) | Done by the new look, which doesn't need it. With `look=128` the ruby is brighter than on r128. |
-| `PCFSoftShadowMap` is deprecated; `PCFShadowMap` is soft (r182) | `viewer.js`, `app.js` | Done: `SHADOW_SOFT`. Shadows (Display) not compared yet. |
+| `envMapIntensity` no longer dims `scene.environment` (r163) | `RUBY` in `core.js` (0.25) | Done at stage 1: `envOwn` gives a material that dims its environment the scene's map as its own. A tinted or faded copy of the ruby keeps the map it was cloned with, so after a lost context it reflects the old one until it is next made. |
+| `PCFSoftShadowMap` is deprecated; `PCFShadowMap` is soft (r182) | `viewer.js`, `app.js` | Done: `SHADOW_SOFT`. Compared at stage 1 with Shadows on: the same picture. |
 | `iridescenceThicknessRange` is `iridescenceThicknessMaximum` (r187 warns) | new code only | Done. |
 | WebGL 1 is gone (r163) | `SEC_DEPTH` tests `GL_EXT_frag_depth`; `extensions:{fragDepth:true}` | Works as it is (`gl_FragDepthEXT` is still defined). The WebGL 1 branches can go at stage 5. Chromium's SwiftShader has WebGL 2, so the tools run. |
 | Default radial segments rose (r148) | every `CylinderGeometry`, `CircleGeometry`, `TorusGeometry`, `RingGeometry` call | Nothing found: the mesh comparison shows no solid changed, so each call gives its segments. Check the Hamilton the same way. |
 | `setViewport` and `setScissor` no longer scale by pixel ratio with a render target bound (r187) | the essay's shared renderer (`r.inkPR`, `r.inkBS`), `select.js` | Not checked. The Wempe's essay tab loads and smoke passes; compare its figures' pixels at stage 2. |
 | `OrbitControls` is a module only (r148) | `hamilton-parts/index.html`, the two motion-3d viewers | Not done. They keep their own r128 files until wrapped as an addon. |
-| PMREM and indirect specular were improved (r181, r187) | every metal | Accepted: upward flat faces differ by 3 to 20 levels of 255. Retune if wanted. |
+| A rough surface's reflection is bent toward its normal by roughness⁴, not roughness² (after r128; not listed). PMREM and indirect specular were also improved (r181, r187) | every metal | Done at stage 1: the bend was what made the plates' flat tops 3 to 20 levels darker and yellower. `core.js` puts r128's bend back in three's shader chunk, at ^1.7 (fitted). The filter's own shape is left as r187 has it. |
+| A Phong or Lambert material is lit by `scene.environment` too (after r128; not listed) | `drawOf` in `core.js`: the tinted and the ink drawing | Done at stage 1: the drawing's material leaves three's `lights_fragment_maps` out on r187. With it the wash's bands were 20 levels lighter on 48,849 pixels of the Movement view. |
+| An sRGB texture is decoded by the GPU before it is filtered (r152 on); r128's shader decoded the filtered sample | every `srgbTex` texture: the dial's print, the engraving | Done at stage 1: `SRGB_LATE` has three decode in the shader, as it does for a video's texture. Without it fine black print came out thinner and paler (10,549 pixels of the Dial view; 651 with it). |
 
-Checked and unaffected: the shadow pass still tests layers against the main camera (`drawMerge`'s layer 2); raycasts all pass `recursive`; the other `onBeforeCompile` patches (`#include <dithering_fragment>`, `diffuseColor`, `outgoingLight`, `vClipPosition`, `gl_FragDepthEXT`) compile; an override material skips the transmission pass, so the Edges pass's ids cost nothing more; `webglcontextrestored` rebuilds the environment as before (not exercised).
+Checked and unaffected: the shadow pass still tests layers against the main camera (`drawMerge`'s layer 2); raycasts all pass `recursive`; the other `onBeforeCompile` patches (`#include <dithering_fragment>`, `diffuseColor`, `outgoingLight`, `vClipPosition`, `gl_FragDepthEXT`) compile; an override material skips the transmission pass, so the Edges pass's ids cost nothing more; `webglcontextrestored` rebuilds the environment as before (exercised at stage 1: lost and restored once, the picture the same to the pixel).
 
 ## The pilot's new look
 
-In `core.js`'s `look3`, on r187 only, and off with `look=128` in the address. All values are estimates set by eye on 11 November 2026.
+In `core.js`'s `look3`, on r187 only. Since stage 1 it is off, on with `look=187` in the address, and holds the ruby and the blued steel only: the glass stays drawn by alpha and contact shading is out of the code until its own release (commit `65b8e86f` has it), as the owner decided. All values are estimates set by eye on 11 November 2026.
 
 - **Glass:** all of the light through, index 1.52, its reflection at a quarter strength, perfectly smooth. No thickness: with one, what lies under the glass is drawn shifted by refraction and off its own Edges lines.
   - **A fault to settle before stage 6:** in the Dial and Box views the fine print of the sub-dials and the thin hands read paler than on r128. Close up they are crisper and blacker. three reads the scene behind a transmissive surface from a copy through a smoothing filter, which softens lines a pixel wide. A flat crystal gains nothing from refraction, so it should stay drawn by alpha, as r128's stand-in does (a small shader patch: opacity plus the reflection's brightness), and transmission be kept for the jewels. Not built.
@@ -76,7 +78,7 @@ In `core.js`'s `look3`, on r187 only, and off with `look=128` in the address. Al
 
 ## Numbers
 
-Measured on this machine (RX 7800 XT), 1440 × 900, `perf.py --model wempe`.
+Measured on this machine (RX 7800 XT), 1440 × 900, `perf.py --model wempe`. These are the pilot's, with its new look on; stage 1 draws no transmission pass (its own figures are in its section below).
 
 | View, as opened | r128 | r187 pilot | Draw calls | Triangles |
 |---|---:|---:|---|---|
@@ -87,7 +89,7 @@ Measured on this machine (RX 7800 XT), 1440 × 900, `perf.py --model wempe`.
 
 - The added draw calls and triangles are the transmission pass: the opaque scene drawn once more whenever glass or a jewel is on screen. r187 without it was not measured apart.
 - First frame: 24.8 s and 25.0 s (the build of the model, not three). Programs compiled: 13 and 21. JS heap: 462 MB both.
-- The built Wempe page (`site/index.html`): 5,706,658 bytes to 5,868,472; compressed (gzip -9) 2,463,091 to 2,507,280, 44 KB more to download. `build.py`'s size line still counts three.js as `three.min.js`'s size; correct it at stage 1.
+- The built Wempe page (`site/index.html`): 5,706,658 bytes to 5,868,472; compressed (gzip -9) 2,463,091 to 2,507,280, 44 KB more to download. `build.py`'s size line counted three.js as `three.min.js`'s size; corrected at stage 1.
 - The root build passes on the pilot: nothing loaded from the network, and `laidout.py --write` drew the lettered sheet on r187 with every element in view and opening its own card. The built copies and `site/` are not committed on the branch.
 - Left alone, the page draws 57 and 62 frames a second on r128, 50 and 51 on the pilot.
 - three.js in the page: 603,445 bytes to 756,979 (gzip -9: 148,739 to 188,313).
@@ -95,6 +97,8 @@ Measured on this machine (RX 7800 XT), 1440 × 900, `perf.py --model wempe`.
 ## Order of work
 
 Each stage ends with its checks passing and can be released on its own.
+
+The owner's rollout (below) takes stages 1 to 3 together as the first release, for the Wempe's page ("Stage 1 as prepared for landing"). Then stage 4, then 5. Then stage 6 a piece a release: the jewels, the blued steel, and contact shading as a Display option that is off by default. The glass stays as it is.
 
 1. **Vendoring.** Merge `vendor_three.py`, the upstream files and `three.r187.js`. Add `vendor_three.py --check` to `ci.py` and `selfcontained.py`. No page loads it yet. *Checks: the build, `ci.py --quick`.*
 2. **The shared code on both releases.** Merge the two-release helpers in `core.js` and the fixes that are right on r128 too (`matrixWorldNeedsUpdate`, `extrude()`). The pages still load r128. *Checks: `ci.py` in full, `--views`: every view must diff to 0 px, since r128 is still what draws.*
@@ -110,7 +114,7 @@ Each stage ends with its checks passing and can be released on its own.
 - **Other sessions.** `core.js` and `viewer.js` change often on `main`. Stages 1 and 2 are small and should land soon after they start; a long-lived branch will conflict.
 - **The look drifting.** Stage 3 keeps the old look so that one release changes the library and another the look. A single release doing both could not be checked.
 - **Blender.** The export has its own materials (`blender.js`), so the new look does not reach it. Its geometry goes through the same solids, which the mesh comparison covers.
-- **Not exercised in the pilot:** Shadows on, the section's cut faces, the drawing (ink) mode, the essay's figures, a lost WebGL context, the export, the versions (first drawn, 3955, 6MX, 1943), dark mode. `smoke.py --model wempe` clicks through most of them for errors, not for looks.
+- **Not exercised in the pilot, exercised at stage 1:** Shadows on, the tinted and ink drawing, the essay's figures (on r128), a lost WebGL context, the export, the versions (first drawn, 3955, 6MX, 1943), dark mode, see-through. The section's cut faces were only clicked through by `smoke.py --model wempe`, for errors, not compared for looks.
 
 ## Later
 
@@ -135,15 +139,81 @@ From the pilot's report and stills:
 
 The owner's rollout joins the plan's stages 1 to 3 for the Wempe: the vendored library, the shared code on both releases, and the Wempe's page on r187 with the present look. The Hamilton's page and the essay stay on r128.
 
-What "the present look" took beyond the pilot:
+### What "the present look" took beyond the pilot
 
-- **Glass by alpha on r187** (`GlassA`, `physMat` in `core.js`). r128's transmission was a stub: alpha = 1 - transmission + the reflection's luminance. On r187 a material made with transmission is a `GlassA`: three sees transmission 0, so there is no transmission pass, and the shader applies r128's alpha. `opq()` counts its `trA`. This is also the owner's choice for the glass, so it stays.
-- **sRGB textures decoded after filtering** (`SRGB_LATE`). r128 decoded each sample in the shader; r187 has the GPU decode before filtering, which draws fine black print thinner and paler when small. That, not transmission alone, was most of the pale print the pilot reported. The setting leans on three's video-texture path; check it at each upgrade.
+All of it is in `core.js` and runs on r187 only (`T3`).
+
+- **Glass by alpha** (`GlassA`, `physMat`). r128's transmission was a stub: alpha = 1 - transmission + the reflection's luminance. On r187 a material made with transmission is a `GlassA`: three sees transmission 0, so there is no transmission pass, and the shader applies r128's alpha. `opq()` counts its `trA`. This is also the owner's choice for the glass, so it stays.
+- **sRGB textures decoded after filtering** (`SRGB_LATE`). r128 decoded each sample in the shader. r187 has the GPU decode before filtering, which draws fine black print thinner and paler when small. That, not transmission alone, was most of the pale print the pilot reported. The setting leans on three's video-texture path (`isVideoTexture`, an empty `update`); check it at each upgrade.
+- **The reflection's bend** (`envmap_physical_pars_fragment`, patched as text). Before it reads the environment, three bends a rough surface's reflection toward its normal: by roughness² in r128, by roughness⁴ in r187. On a gilt plate (roughness 0.35 to 0.42) that moved the studio's top lamp off the flat tops, which came out darker and yellower, and flattened the 6MX's stripes. `core.js` puts the bend back at roughness^1.7. The exponent is fitted on four views (Movement, Side, Escapement, the 6MX's Movement): pixels past 16 levels, of their 3.84 million, 24,111 at ^2 and 9,649 at ^1.7; past 24 levels 323 and 263. The first try, the top lamp 1.3 times brighter with r187's own bend, left 91,177 and 28,739; it is gone, and the lamps are r128's. If three's chunk no longer holds the text patched, the page logs an error, which `smoke.py` fails on.
 - **The ruby's dimmed environment** (`envOwn`): r187's `envMapIntensity` dims only a material's own map, so the ruby is given the scene's.
-- **The studio's top lamp at 1.3** (`ENV3`). r187 spreads the environment wider on a rough metal. This brings the plates' flat tops back to r128's level. The spread itself cannot be matched: about 3 levels of 255 of mean difference stay on a plate seen close.
-- **A texture's `encoding`** still works on r187 (a shim on `Texture.prototype`), so a script not yet moved to `srgbTex` needs no edit. The Wempe's `escapement.js` is left as `main` has it for that reason.
+- **The tinted and ink drawing lit by the lamps alone** (`drawOf`): r187 lights a Phong material from the scene's environment too, which washed the bands out. Its material leaves three's `lights_fragment_maps` out.
+- **A texture's `encoding`** still works on r187 (a shim on `Texture.prototype`), so a script not yet moved to `srgbTex` needs no edit. The Wempe's `escapement.js` is as `main` has it for that reason.
 - **Left out of stage 1:** contact shading (it changed the Edges pass's shader on every page; it is in commit `65b8e86f`, for its own release). The new look (`look3`: jewels, blued steel) stays in `core.js` behind `look=187` in the address, off.
 
-With these the frame cost of r187 is r128's but for three itself: no transmission pass is drawn.
+### The look against r128
 
-The checks run and what each printed are in the stage's commit message and the report to the coordinator.
+`views.py --model wempe`, r128 (`main`) against the branch, pixels past 24 levels of 255 in each view's 960,000:
+
+| View | Whole movement | Moving parts only |
+|---|---:|---:|
+| Box | 25 | 89 |
+| Dial | 11 | 9 |
+| Movement | 11 | 0 |
+| Escapement | 196 | 89 |
+| Plan | 1 | 1 |
+| Side | 57 | 9 |
+| Case | 2 | 89 |
+| Transport box | 28 | 89 |
+| Exploded | 1 | 1 |
+| Laid out | 51 | 51 |
+
+811 pixels in the 20 views' 19.2 million. With the pilot's look off it was 12,000 to 28,000 a view for the whole movement. The four 89s are one picture (a view whose button is off in Moving parts only keeps the Escapement's).
+
+- **Escapement, 196:** the hairspring's coils, a patch 17 by 16 pixels. Its top edges catch the lamp a few levels bluer (blue +3 on average). The cause is in the environment's reflection, not the lamps (it stays with the lamps off and goes with the environment off). It is not the mip the environment is read at, nor the bend (both tried). Not pinned down further.
+- **Laid out, 51:** one column of pixels on the barrel's outline, an Edges line a pixel over.
+- **Side, 57:** a pillar's highlight a touch brighter.
+- The rest are single pixels on outlines.
+
+Looked at in the same way, r128 against the branch (pixels past 24 levels, a 1200 × 800 still):
+
+| State | Pixels |
+|---|---:|
+| Shadows on, Movement and Dial | 9, 11 |
+| Dark mode, Movement and Dial | 11, 11 |
+| Coloured by source, Movement and Dial | 0, 3 |
+| See-through | 101 (the hairspring's glints, as above) |
+| As first drawn, Movement and Escapement | 5, 196 |
+| Wempe 3955, Movement and Dial | 9, 11 |
+| The 6MX, Movement, Dial and Box | 10, 6, 0 |
+| 1943, Movement and Escapement | 6, 196 |
+| After a lost and restored WebGL context, Movement and Dial | 11, 11 |
+| Tinted drawing, Movement, Dial, Escapement | 4,092, 8,128, 9,288 |
+| Ink drawing, Movement, Dial, Box, Escapement | 5,903, 10,572, 2,986, 13,806 |
+
+- The context was lost and restored once (counted by the canvas's two events); the picture after is the picture before to the pixel.
+- The tinted and ink drawings differ by the pen's own noise and no more: its pressure is random at each load. r128 loaded twice differs from itself by 3,954, 7,762 and 11,215 (tinted) and 5,832, 10,490, 2,861 and 16,090 (ink).
+- The section's cut faces were clicked through by `smoke.py`, not compared for looks.
+
+### The meshes
+
+1,582 meshes on the page. 1,548 are the same vertex for vertex. 24 are the same solid with 4 fewer triangles (r187's `ExtrudeGeometry` drops a repeated point). 6 differ in the last digit of a rounding. 4 are the movement ring's (two versions, seen twice): 0.05 mm³ in 20,438, the newer triangulator, accepted by the owner.
+
+The same triangulator reaches one generated file. **`wempe/js/fuseebody.js` was made again** (`wempe_fusee_body.py`, whose `--check` failed on r187): the fusee body's tube has two flat end faces with holes, split into triangles otherwise now. The new file has the same 25,398 corners, each bit for bit, and 50,632 of its 50,808 triangles. The other 176 lie in those two faces (y −16.875 and −8.625) and cover the same 66.137145 and 44.8396 mm². Volume 4011.054 mm³, as before. No other stored figure moved.
+
+### The essay's page, still on r128
+
+It loads `report.js`, `vendor/three.min.js` (r128), `core.js`, `shared/kit.js`, the Wempe's `dims.js`, `frame.js`, `train.js`, `escapement.js`, `shared/escapement.js`, `escphys.js`, `fuseebody.js`, `fusee.js`, `dialface.js`, `dial.js`, `case.js`, `movement.js`, `essaydata.js`, `shared/escplan.js`, `shared/almanac.js`, its own `hamdata.js` and `essay.js`.
+
+Of these the branch changes `core.js`, the Wempe's `frame.js`, `fusee.js`, `dial.js`, `case.js` and `movement.js`, `essay.js` and `fuseebody.js`. On r128 every change is the same call under another name (`srgbTex`, `outSRGB`, `SHADOW_SOFT`, `physMat`, a light times 1), a branch not taken (`T3`), or a flag r128 already honours (`matrixWorldNeedsUpdate`).
+
+Proved by pixels: `main`'s essay and the branch's, each under a paused clock and a seeded `Math.random`, each of the 17 figures photographed (9.27 million pixels).
+
+- Before the fusee body was made again (two runs of `main`, three of the branch): every figure the same to the pixel in at least one pair of a `main` run and a branch run. 13 are the same in every pair. Four change between two runs of the same page too, by their animations' timing, which the harness doesn't pin.
+- With the new fusee body (two more runs of the branch): the same, but for the maintaining work's figure, which looks through the fusee: 73 pixels differ, none by more than 3 levels of 255. (A fifth figure, the escapement in plan, a 2D drawing, was caught at another moment in one run and matched in the other.)
+- `smoke.py` works every control of it.
+
+### Frame cost
+
+No transmission pass is drawn, so the cost over r128 is three's own.
+
