@@ -48,7 +48,9 @@ model's settings, the browser and the page's last errors.
 Both models' pages share one layout (since 3.52.00). The title, the model
 switcher, the page tabs and a light/dark switch sit in one line over the model.
 On the model are the tools as icons (Select, Lasso, Through, help, save a picture, copy a
-link, reset the view, full screen), a row of views, and a play bar: stop and go
+link, reset the view, full screen), a row of views (where it runs past the model's
+edge, on a phone or tablet, an arrow at that end scrolls it, as a mouse wheel over it does;
+since 3.85.04), and a play bar: stop and go
 on, the speed (1/20×, ¼×, 1×, 60×, 3600× or any speed), the time, the power left
 and Wind. The panel beside it (under it on a phone) has four tabs: **Explore**
 (the walkthrough, the overhaul (the Hamilton's in its manual's order, the Wempe's in
