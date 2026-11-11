@@ -234,3 +234,20 @@ Passed on the stage's code with the new fusee body:
 Still to run, or to run again, when this was written: `wempe-audit` with its versions and boxes, `wempe-exploded-first`, `-3955`, `-6mx`, `-1943`, `wempe-fine-3955`, `wempe-fine-band`, `wempe-bom-3955`, `wempe-bom-1943`, `wempe-inertia`, `wempe-inertia-6mx`, `wempe-massprops`, `wempe-invariants`, `wempe-mechanisms`, `wempe-assembly`, `wempe-stopwork`, `wempe-recipes`; then the build, `wempe-laidout` and `sitecheck`. `wempe-audit` passed before the fusee body was made again.
 
 Every failure so far was one thing: `Page.goto: Timeout 30000ms exceeded`. The Wempe's page took 26 s to load on the loaded machine, on r128 and on r187 alike (measured back to back, 26.2 s each), and the tools wait 30 s. Each such step passed when run again.
+
+### Paused here (11 November 2026, the owner's word): what remains before stage 1 can land
+
+The check run was stopped; nothing is running. The steps that passed are in `ci.py`'s shared cache and are skipped while their inputs stay the same.
+
+1. **Checks not yet passed, by name** (`python ci.py --browsers 2 --only` with the list):
+   - `wempe-audit`, `wempe-audit-first`, `wempe-audit-3955`, `wempe-audit-6mx`, `wempe-audit-1943`, `wempe-audit-box`, `wempe-audit-box-first`, `wempe-audit-box-1943`. (`wempe-audit` passed before the fusee body was made again; since then it has failed once, on the page's load passing 30 s.)
+   - `wempe-exploded-first`, `wempe-exploded-3955`, `wempe-exploded-6mx`, `wempe-exploded-1943`.
+   - `wempe-fine-3955`, `wempe-fine-band`, `wempe-bom-3955`, `wempe-bom-1943` (`wempe-bom-1943` failed three times on the load's 30 s, never on a finding).
+   - `wempe-inertia`, `wempe-inertia-6mx`, `wempe-massprops`, `wempe-invariants`, `wempe-mechanisms`: these will say whether a stored figure moves with the meshes. None has run on r187 yet.
+   - `wempe-assembly`, `wempe-stopwork`, `wempe-recipes`.
+2. **Merge `origin/main`** once the Wempe's discharge-stone change is on it (`claude/wempe-reread`: `wempe/js/escapement.js`, `shared/escapement.js`, `wempe/checks.py` and the generated Wempe tables, none of which this branch changes). Run again whatever that merge leaves uncached.
+3. **The build:** `python build.py --site-url https://www.marinechronometermodel.com`, the built copies, `site/` and `wempe/renders/laidout_sheet.*` committed. It renders the lettered Laid out sheet on r187 (about 20 minutes on the loaded machine) and will note that the assembled sheet is older than the page. The pilot's build passed; stage 1's has not been run.
+4. **`wempe-laidout` and `sitecheck`**, after the build.
+5. **`perf.py --model wempe`**, r128 against stage 1, on a quiet machine. Stage 1 draws no transmission pass, so the pilot's 2.5 to 4.5 ms more a frame should not stand; this is not measured.
+6. **The section's cut faces**, looked at against r128 (`tools/pagecmp.py shots` with a section on, then `pixels`). `smoke.py` clicks through them for errors only.
+7. The release, the root README's last touches and the deploy are the coordinator's, after landing.
