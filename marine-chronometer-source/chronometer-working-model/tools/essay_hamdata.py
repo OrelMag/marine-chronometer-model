@@ -20,7 +20,7 @@ JS="""(()=>{const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),R=__mv.userDa
   const V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
     roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
     gwT:(T.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),I0:Math.round(I0/10)*10,
-    hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1),isoLo:r(247.5),isoHi:r(270)};
+    hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1),isoLo:r(247.5),isoHi:r(270),impW:f1(ESC.run.drive/D2R,1)+'°'};
   V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
   return{V,BAL_R};})()"""
 

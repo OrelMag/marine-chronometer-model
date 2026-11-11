@@ -15,7 +15,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-bar .e-t span{color:var(--muted)}
 .e-bar .tabs{position:static;flex-shrink:0;box-shadow:none;background:color-mix(in srgb,var(--card) 70%,transparent)}
 /* the essay's own page: the models' links in the bar (essay.js), their names shortened on a narrow screen */
-.e-bar nav.models{margin:0;flex-wrap:nowrap;flex-shrink:0}
+.e-bar nav.models{margin:0;flex-wrap:nowrap;flex-shrink:0}.e-bar nav.models .nl{padding:0;border:0;border-radius:0}   /* the names' second halves: style.css's nav.models span made each a pill inside its link's */
 @media (max-width:760px){.e-bar nav.models .nl{display:none}}
 /* the essay's page: its version and what's new, at the end */
 .e-foot{margin:3em 0 0;font:14px/1.5 "Instrument Sans",system-ui,sans-serif;color:var(--muted)}.e-foot summary{cursor:pointer}
