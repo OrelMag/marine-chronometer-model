@@ -130,14 +130,15 @@ const WESC=(()=>{
   /* the active swing: how far the stone pushes the gold spring's face toward the block, and the detent's turn (rad) it makes; the return: how far it bends the spring the other way */
   const unlockAt=th=>{let l=0;for(const[t,n]of corners(th))if(t>=GT&&n<GNF+0.01)l=Math.max(l,(GNF+0.01-n)/(TP-t));return l;};   /* 0.01 kept between them */
   const passAt=th=>{let l=0;for(const[t,n]of corners(th))if(t>=GT-0.05&&n>GNB-0.01)l=Math.max(l,(n-GNB+0.01)/(GB[0]-t));return l;};
-  /* BETA: the discharge stone's place on the staff, set by where it leaves the gold spring's tip: DSB after the balance passes rest (estimated, 16 October 2026). 05 04_1
-     draws the discharge stone under its roller, dashed, about 10 px across at 24.4 px/mm, too small to place against the gold spring's tip; the model took it leaving the tip at
-     rest until then. With the impulse face where the sheet draws it (28°10' at rest, PHI0) the stone comes into the teeth's path at +6.1°, and a stone leaving the gold spring
-     at rest lets the wheel go at −2.4°, so a tooth chased from rest gets to the stone's path first (makeEsc and dynamics.js put it onto the stone's corner there; a tooth ahead
-     of the stone gets no impulse). The tooth lands on the face, after the stone has come in, from 4° later (the release at +1.6°); from 8° later (+6°, the impulse's start,
-     where the sheet's 1° drop would put it) it doesn't run, the unlocking taking more than the impulse gives. 5° keeps a margin over the wind and the drive: the release
-     +2.6°, the tooth on the face 7.6° after the stone comes in (README, Estimated) */
-  const DSB=5;
+  /* BETA: the discharge stone's place on the staff, set by where it leaves the gold spring's tip, DSB after the balance passes rest. 05 04_1 gives it (read 11 November 2026;
+     Review-results.md, "The Wempe's discharge stone"): its "5°", on the balance's arc beside the 6° and the 22°10' (r 7.0 from the balance; the arrows at 82.0°, 75.7° and
+     70.8° about it, the line of centres 53.5°), runs from where the impulse stone's corner enters the teeth's path, 22°10' before the line of centres, on toward the line:
+     the impulse stone 5° inside the teeth's path when the tooth is let go (the period rule: Watch and Clock Escapements, 1904, Fig. 141; likely). 14.2 puts makeEsc's
+     release there (measure()'s drop 5.0°, which tools/wempe_escapement.js checks): the gold spring met 1.6° before rest, the release at +11.4°. The sheet draws the stone
+     itself, dashed and about 10 px, with its flat face on the gold spring's tip and its body behind it: the start of the unlocking (moderately sure). Until then 5,
+     estimated (16 October 2026: the release at +2.1°, 4.2° before the stone was in the path, the tooth running free to it), chosen because from 8° later "it doesn't
+     run": that was makeEsc's swing solve giving up, not the escapement (shared/escapement.js, solveA). The owner's choice, 11 November 2026 */
+  const DSB=14.2;
   {const slip=()=>{let last=null;for(let th=-40;th<=40;th+=0.005)if(unlockAt(th)>0)last=th;return last;};BETA=al(sub(D(GT,GN),B));const s0=slip();if(s0===null)console.error('WESC: the discharge stone misses the gold spring');else BETA-=s0-DSB;}
   const TH_REL=(()=>{for(let th=-40;th<=40;th+=0.005)if(unlockAt(th)*TP>=DEPTH+0.01)return th;return 0;})(),PHI_REL=TH_REL+PHI0;   /* the locked tooth is free */
   const A0=225*D2R,AMIN=(PHI_E-PHI0+RUN+1)*D2R;   /* the swing the drawing takes by default: 225 deg each side until js/escphys.js sets ESC.A to the swing the measured drive keeps (no Wempe sheet gives it; README, Physics) */
