@@ -12,7 +12,7 @@ The Wempe's page runs on three.js r187 with no console error or warning. Three t
 2. **What isn't meant to change, doesn't.** Of the Wempe's 1,582 meshes, 1,548 are the same solids vertex for vertex. 24 are the same solids with 4 fewer triangles each. 6 differ in the last digit of a rounding. 4 (the movement ring's two versions, seen twice) differ by 0.05 mm³ in 20,438. The views with Moving parts only differ from r128's by 4 to 615 pixels in 960,000 (one view 6,648), each a tone on an upward flat face. The whole movement's views differ by 12,000 to 28,000 pixels for the same reason, the plates' flat tops a few levels yellower (no pixel in the Movement view is more than 48 levels of 255 away but 56). The views through glass differ by 58,000 and 74,000: the glass, which is meant to change (below). `views.py` counts a pixel as changed past 24 levels.
 3. **The gains are real.** Glass is clear and its print reads black, not grey. A jewel is a red stone you see the pivot hole through. Blued steel takes its blue from a film 80 nm thick, and thinner films give violet and straw, the order of the temper colours. Contact shading sets the pillars and cocks on their plate.
 
-The cost: 2.5 to 4.5 ms more a frame on this machine's GPU, and 136 KB more of three.js in the page.
+The cost: 2.5 to 4.5 ms more a frame on this machine's GPU, and 150 KB more of three.js in the page (before compression).
 
 ## The target release
 
@@ -25,7 +25,7 @@ The cost: 2.5 to 4.5 ms more a frame on this machine's GPU, and 136 KB more of t
 ## How it is vendored and loaded
 
 - `vendor/three-r187/three.core.min.js` and `three.module.min.js` are cdnjs's files, byte for byte. `vendor_three.py` checks them against cdnjs's SHA-512 integrity hashes, as `three.min.js` was checked. cdnjs's unminified files are the npm tarball's, hash for hash.
-- `python vendor_three.py` writes `vendor/three.r187.js` (739 KB; r128's `three.min.js` is 603 KB). Each module's body goes unchanged into a function of its own. Its import list becomes a destructuring of the core's exports. Its export list becomes the object returned. The result is assigned to `globalThis.THREE`, as the old UMD build did.
+- `python vendor_three.py` writes `vendor/three.r187.js` (756,979 bytes; r128's `three.min.js` is 603,445). Each module's body goes unchanged into a function of its own. Its import list becomes a destructuring of the core's exports. Its export list becomes the object returned. The result is assigned to `globalThis.THREE`, as the old UMD build did.
 - `python vendor_three.py --check` fails if a hash is wrong or the written file is stale. It belongs in `ci.py` and `selfcontained.py` at stage 1.
 - A page loads it with `<script src="../../vendor/three.r187.js"></script>`. `inline.py` and `build.py` need no change: the built page carries it inline and loads nothing from the network.
 - The script refuses a release whose files have another shape (an import or export it does not know), so a later release fails loudly, not silently.
@@ -88,7 +88,7 @@ Measured on this machine (RX 7800 XT), 1440 × 900, `perf.py --model wempe`.
 - The added draw calls and triangles are the transmission pass: the opaque scene drawn once more whenever glass or a jewel is on screen. r187 without it was not measured apart.
 - First frame: 24.8 s and 25.0 s (the build of the model, not three). Programs compiled: 13 and 21. JS heap: 462 MB both.
 - Left alone, the page draws 57 and 62 frames a second on r128, 50 and 51 on the pilot.
-- three.js in the page: 603 KB to 739 KB (about 150 KB to 190 KB compressed, estimated from the ratio; the build prints the real figure).
+- three.js in the page: 603,445 bytes to 756,979 (gzip -9: 148,739 to 188,313).
 
 ## Order of work
 
