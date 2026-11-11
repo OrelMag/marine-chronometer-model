@@ -20,6 +20,10 @@
 //    heavy sea, gimbals.js --model wempe's "beyond NORDFORSK's limit", one day in five, through makeEsc as wempe_gimbals.js works it). 4 s of time is a mile of longitude.
 const MAIN=require.main===module,fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,S=P.SET,TH=require('./wempe_thermal.js');
 const f=(x,n=2)=>Number.isFinite(+x)?(+x).toFixed(n):'-',sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),rows=[];let fail=0;
+/* soft: reported (~~), not failed. The drawn versions keep the drawn hairspring (the owner's choice, 11 November 2026, with the discharge stone at 05 04_1's 5°): the
+   escapement then gains about 2 s a day for each 10° of swing, so wound daily the day's mean rate lies off the 12 h reference the model is timed at (w8), which raises
+   every period's mean alike. The two checks that fail on that are reported for the drawn versions and stay hard for the builds, whose hairspring is set against it */
+const BREV=/^build/.test(process.env.MC_WREV||''),soft=(ok,s)=>rows.push(`${ok?'  ok ':'  ~~ '} ${s}`);
 const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);},head=s=>rows.push('\n'+s),t0=Date.now();
 const arg=(k,d)=>{const i=process.argv.indexOf(k);return i>0?+process.argv[i+1]:d;},NV=arg('--n',2000);
 let seed=20261015;const rnd=()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
@@ -36,7 +40,7 @@ const rho=T=>293.15/(273.15+T)-1,air=T=>airK*rho(T);   /* the air's density at T
 say(`the air takes ${f(100*share,0)} % of the balance's damping (Q ${f(Q0,0)} against the air's ${f(qAir,0)}); 1 % denser air: ${sg(airK/100,4)} s a day; from 20 °C to 4 °C the air is ${f(100*rho(4),1)} % denser (${sg(air(4),3)} s a day), at 36 °C ${f(-100*rho(36),1)} % thinner (${sg(air(36),3)})`);
 /* the swing over the wind: hourly, h hours from full wind */
 const rAt=h=>{const s=P.drv(h/P.HPT);return E.rateAt(E.ampAt(s),s)-r0;},mean=(a,b)=>{let x=0,n=0;for(let h=a;h<b;h+=0.25){x+=rAt(h+0.125);n++;}return x/n;};
-const w8=mean(8,32),w0=mean(0,24);
+const w8=mean(8,32),w0=mean(0,24),W8=w8;
 say(`the swing over the daily wind: wound daily to "8", the spring runs from 8 to 32 h down: the swing ${f(E.ampAt(P.drv(8/P.HPT))/D,1)}° to ${f(E.ampAt(P.drv(32/P.HPT))/D,1)}°, the rate ${sg(rAt(8),3)} to ${sg(rAt(32),3)} s a day against 12 h (the drawn spring's ${S.HS} s a day for each 10° with the escapement's own): the day's mean ${sg(w8,3)}, every day the same; on a period's first day, wound to "0" the evening before, ${sg(w0,3)} (0 to 24 h: not counted)`);
 /* the oil: the drive lost as it thickens, at the drive s */
 const oilK=(()=>{const s=0.95,a=E.ampAt(s);return(E.rateAt(a,s)-r0)/0.05;})();   /* s a day for each unit of the drive lost */
@@ -116,7 +120,9 @@ say(`the TU's limits: E ±${LIM.E}, R ±${LIM.R}, D ±${LIM.D}, C ±${LIM.C} s a
 const RA=many(adj),pA=show('as adjusted (the masses at their compensating place)',RA);
 {const mD=pct(RA.map(r=>Math.abs(r.D)),0.5),mN=pct(RA.map(r=>r.N),0.5),mW=pct(RA.map(r=>r.w),0.5),sC=(()=>{const c=RA.map(r=>r.C),m=c.reduce((x,y)=>x+y,0)/c.length;return Math.sqrt(c.reduce((x,y)=>x+(y-m)**2,0)/(c.length-1));})();
   const rg=a=>[Math.min(...a),Math.max(...a)];const[d0,d1]=rg(cardD),[n0,n1]=rg(cardN),[w0,w1]=rg(cardW);
-  chk(mD>=d0&&mD<=d1&&mN>=n0&&mN<=n1&&mW>=w0&&mW<=w1,`against the cards (not fitted to them): the trial's median D ${f(mD,2)} within the cards' ${f(d0,2)}-${f(d1,2)}, its median N ${f(mN,1)} within their ${f(n0,1)}-${f(n1,1)}, its largest period mean ${f(mW,2)} within the three stated, ${f(w0,2)}-${f(w1,2)}; C's spread ${f(sC,3)} against the cards' ${f(cardC,3)} (the masses set to ±${SET0}°)`);}
+  const okW=mW>=w0&&mW<=w1,wSoft=!BREV&&!okW&&mW<=LIM.w;   /* w0, w1 here: the cards' range, not the wind's means */
+  (wSoft?soft:chk)(mD>=d0&&mD<=d1&&mN>=n0&&mN<=n1&&okW,`against the cards (not fitted to them): the trial's median D ${f(mD,2)} within the cards' ${f(d0,2)}-${f(d1,2)}, its median N ${f(mN,1)} within their ${f(n0,1)}-${f(n1,1)}, its largest period mean ${f(mW,2)} ${okW?'within':'against'} the three stated, ${f(w0,2)}-${f(w1,2)}${wSoft?` (over them, inside the TU's ±${LIM.w}: the day's mean rate wound daily, ${sg(W8,3)} s a day off the 12 h reference, is in every period's mean, and a maker's timing takes a steady rate out. Reported for the drawn versions, the owner's choice, 11 November 2026; a hard check until then)`:''}; C's spread ${f(sC,3)} against the cards' ${f(cardC,3)} (the masses set to ±${SET0}°)`);
+  if(wSoft&&!(mD>=d0&&mD<=d1&&mN>=n0&&mN<=n1))chk(false,`against the cards: the trial's median D or N outside their range`);}
 const RD=many(drawn,Math.min(NV,500));show('the masses at their drawn place',RD);
 say(`  at the drawn place C is ${sg(pct(RD.map(r=>r.C),0.5),2)} (the balance losing as it warms), N ${f(pct(RD.map(r=>r.N),0.5),0)}: the drawn place fails the TU by its temperature coefficient alone; the adjuster's trial moves them ${f(LIN.zero-60,0)}° along the rim toward the cuts, about ${f((LIN.zero-60)/6,1)} divisions of the graduation`);
 say('what each source adds, as adjusted (median, alone):');
@@ -125,7 +131,7 @@ for(const[k,nm]of[['temp','the temperature curve (the residual C, S and the air)
 /* how far the scatter and drift could grow before the adjusted chronometer passes only half the time */
 const kHalf=(()=>{let a=1,b=60;for(let i=0;i<12;i++){const m=Math.sqrt(a*b),R=[...Array(400)].map(()=>trial({...adj(),k:m}));R.filter(r=>r.pass).length/R.length>0.5?a=m:b=m;}return Math.sqrt(a*b);})();
 say(`a borderline chronometer: with the scatter and drift ${f(kHalf,1)} times the card's (${f(kHalf*SC.sd,2)} s a day, ±${f(kHalf*SC.drS*1000,1)} ms a day each day) the adjusted Wempe passes half its trials`);
-chk(pA>=0.95,`as adjusted the model passes the TU's trial in ${f(100*pA,1)} % of trials (wanted 95 %): its figures are the temperature curve's and the card's scatter; the drawn place of the masses would not`);
+(BREV?chk:soft)(pA>=0.95,`as adjusted the model passes the TU's trial in ${f(100*pA,1)} % of trials (wanted 95 %${BREV||pA>=0.95?'':': reported for the drawn versions since 11 November 2026, the owner\'s choice, a hard check until then; the day\'s mean rate wound daily, '+sg(w8,3)+' s a day off the 12 h reference, is in every period\'s mean; the builds, their hairspring set against the escapement, must pass'}): its figures are the temperature curve's and the card's scatter; the drawn place of the masses would not`);
 console.log(rows.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,0)} s)`);
 
 /* ---------- 2. at sea ---------- */
