@@ -8,7 +8,7 @@ marine-chronometer-source/wempe/parts-audit/sheetcheck.json, and measures them a
     python wempe_sheetcheck.py --update            after an intended change: rewrite each moved item's `was` (never its limits) and say what moved
     python wempe_sheetcheck.py --fault [move]      the planted fault, which must fail: the pillars' body (dims.js PIL r, 05 08 00-1's 8,1 -0,2, drawn 8.0) 0.3 large,
                                                    outside its limits; `move`: 0.06 large, inside them and no longer where the audit found it
-    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--limit N] [--json OUT]   the coverage sweep (slow: about an hour on 10 processes; not run by ci.py)
+    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--limit N] [--json OUT] [--resume FILE]   the coverage sweep (slow: about an hour on 10 processes; not run by ci.py)
     python wempe_sheetcheck.py --derive [OUT] [--measured DIR] [--why ID]   the ledger made again from the audit's batchNN.items.tsv (how it was first made, below),
                                                    into OUT (default tools/r_wpa/sheetcheck.derived.json, ignored), to compare with the ledger before anything
                                                    replaces it; entries marked "by": "hand" are kept; --why ID traces one row: its figure, the candidates and
@@ -44,13 +44,15 @@ several figures in one item that don't divide; ambiguous: more than one feature 
 and by the limits read here it is not one; not-built, extra, n/a: nothing to hold).
 
 The sweep. Every numeric literal of dims.js (--scope esc: of the tables escapement.js gives the recipes too) is nudged in turn by about a tolerance
-(0.06 to 6 mm, 0.12 to 30, 0.18 to 120, 0.25 above, a fifth of a value under 0.3, a count by one; the other way too if nothing notices), in the source as
+(0.06 to 6 mm, 0.12 to 30, 0.18 to 120, 0.25 above, a fifth of a value under 0.3, a count by one; the other way too where an item only moved or a
+recipe broke), in the source as
 Node reads it (wempe_nudge.js preloaded: the file on disk is never touched), every recipe made again, and each whose operations changed built and
 measured: `limits` an item left its limits, `moved` an item moved inside them (the check fails either way), `unguarded` a solid changed and no item
 noticed, `breaks` the recipe no longer builds, `nosolid` the recipes read it but no solid changed (a placement, a sheet's text), `unread` no recipe
-reads it. Subscripts, exponents, loop bounds and the small whole factors of a product (2*r) are left out. Which recipes to build is found by making
-every recipe again and comparing its operations (sizes, closures and solids walked: _sig) with the base's; a recipe that reads its numbers only as it
-builds is built whenever any reader's answer changed (none does today). For speed the readers run without the escapement in time (wempe_nudge.js's
+reads it. Subscripts, numbered keys, exponents, loop bounds and the small whole factors of a product (2*r) are left out. Which recipes to build is
+found by making every recipe again and comparing its operations (what each cuts: numbers, closures and solids walked, _sig; not its place on the page or
+its sheet's words) with the base's; a recipe that reads its numbers only as it builds is built whenever any reader's answer changed (none does today).
+--resume FILE takes an earlier run's results (its .part.json, written every 100 literals, or its sweep.json) for the literals it settled. For speed the readers run without the escapement in time (wempe_nudge.js's
 MC_WNUDGE_NOPHYS; the sweep first checks they answer the same with it). Writes tools/r_wpa/sweep.json (ignored) and prints the unguarded numbers with
 their line in dims.js.
 
@@ -489,7 +491,7 @@ def _keys(T,s,solid):
     return named or [k for k in (s[5] if s else []) if k in solid]
 def hole_rows(r,base,s,M):
     """a plate's table row, 'hole 47 ... (N31.551 W22.924)': its place as tabulated and each diameter the row gives, on the cylinders there"""
-    m=re.search(r'\(\s*([NS])\s*(\d+(?:\.\d+)?)\s+([EOW])\s*(\d+(?:\.\d+)?)\s*\)',base['item'])
+    m=re.search(r'\(\s*([NS])\s*(\d+(?:\.\d+)?)\s+([EOW])\s*(\d+(?:\.\d+)?)\s*[;,)]',base['item'])
     if not m:return None
     y=float(m.group(2))*(1 if m.group(1)=='N' else -1);x=float(m.group(4))*(-1 if m.group(3)=='W' else 1)
     T=(r.get('field') or '')+' '+(r.get('built') or '');out=[]
@@ -619,6 +621,7 @@ def skip_literal(text,before,after):
     """literals that are not sizes: a subscript, an exponent, a loop's bound or step"""
     b=before.rstrip();a=after.lstrip()
     if re.search(r'[\w\)\]]\[$',b) and a.startswith(']'):return 'subscript'
+    if a.startswith(':') and b[-1:] in ('{',','):return 'key'   # an object's numbered key (the hole table's hole numbers)
     if b.endswith('**') or re.search(r'toFixed\($|Math\.pow\([^,]*,$|slice\($',b):return 'exponent'
     if re.search(r'\bfor\s*\([^)]*$',before):return 'loop'
     if re.fullmatch(r'\d+',text) and int(text)<=4 and (b.endswith(('*','/')) or a[:1] in ('*','/')):return 'factor'   # 2*r, /2: arithmetic, not a size
@@ -657,8 +660,12 @@ def _sig(o,seen=None,depth=0):
         except Exception:
             try:return ['bd',type(o).__name__,[round(x,9) for x in tuple(o)]]
             except Exception:return ['bd',type(o).__name__]
-    if hasattr(o,'__dict__'):return [type(o).__name__,_sig({k:v for k,v in vars(o).items()},seen,depth+1)]
+    if hasattr(o,'__dict__'):return [type(o).__name__,_sig({k:v for k,v in vars(o).items() if not (hasattr(o,'apply') and k in ('text','sizes','src'))},seen,depth+1)]   # an operation: what it cuts, not what its sheet says
     return repr(type(o))
+def rsig(r):
+    """a recipe's operations hashed (not its place on the page, its notes or its sheet's words): two makings with the same hash build the same solid"""
+    import hashlib
+    return hashlib.sha1(json.dumps(_sig(r.ops()),sort_keys=True,default=str).encode()).hexdigest()
 def _cell_ok(c):
     try:c.cell_contents;return True
     except ValueError:return False
@@ -695,7 +702,7 @@ def _sweep_worker(nud):
         if k not in _SW['sig']:continue
         try:
             r=mk() if callable(mk) else mk
-            if hasattr(r,'build') and (hashlib.sha1(json.dumps(_sig(r),sort_keys=True,default=str).encode()).hexdigest()!=_SW['sig'][k] or (read and k in _SW['opaque'])):ch.append((k,r))   # a recipe that reads its numbers only as it builds is built whenever any reader's answer changed
+            if hasattr(r,'build') and (rsig(r)!=_SW['sig'][k] or (read and k in _SW['opaque'])):ch.append((k,r))   # a recipe that reads its numbers only as it builds is built whenever any reader's answer changed
         except Exception as e:err[k]=f'{type(e).__name__}: {str(e)[-120:]}'
     out={'changed':[k for k,_ in ch],'limits':[],'moved':[],'solid':[],'err':err}
     for k,r in ch:
@@ -708,7 +715,7 @@ def _sweep_worker(nud):
             st,V,_=judge(e,{k:J})
             if st in ('FAIL','GONE'):out['limits'].append(e['id'])
             elif st=='MOVED':out['moved'].append(e['id'])
-    out['state']='limits' if out['limits'] else 'moved' if out['moved'] else 'breaks' if err else 'unguarded' if out['solid'] else 'nosolid' if (ch or read) else 'unread'
+    out['state']='limits' if out['limits'] else 'moved' if out['moved'] else 'breaks' if err else 'unguarded' if out['solid'] else 'nosolid' if (ch or read) else 'unread'   # nosolid: the readers' answers changed (a placement, a sheet's words) and no operation did, or one did and its solid came out the same
     return out
 def _base_worker(nophys):
     import hashlib
@@ -718,7 +725,7 @@ def _base_worker(nophys):
     S={}
     for k,mk in W.RECIPES.items():
         r=mk() if callable(mk) else mk
-        if hasattr(r,'build'):S[k]=hashlib.sha1(json.dumps(_sig(r),sort_keys=True,default=str).encode()).hexdigest()
+        if hasattr(r,'build'):S[k]=rsig(r)
     return S,_loader_hash()
 ESC_TABLES=['BJ','BAL','HUB','MS','TSW','ROLI','ROLD','BLK','DETK','DETV','COL','STD','EARB','HOLES']   # escapement.js's tables the recipes read (their declarations' literals)
 def esc_ranges(f):
@@ -748,7 +755,7 @@ def sweep(o):
             lits.append({'file':f.name,'off':off,'text':text,'line':line,'before':before[-40:],'skip':skip_literal(text,before,s[off+len(text):off+len(text)+10])})
     todo=[l for l in lits if not l['skip']]
     if o.limit:todo=todo[:o.limit]
-    print(f"{len(lits)} numeric literals ({len(lits)-len(todo)} subscripts, exponents, loop bounds and factors left out): {len(todo)} to nudge; the base first (every solid built and measured)",flush=True)
+    print(f"{len(lits)} numeric literals ({len(lits)-len(todo)} subscripts, keys, exponents, loop bounds and factors left out): {len(todo)} to nudge; the base first (every solid built and measured)",flush=True)
     with ProcessPoolExecutor(2,max_tasks_per_child=1) as ex:(base_sig,base_lh),(again,lh2)=list(ex.map(_base_worker,[1,0]))   # once as the sweep runs (wempe_nudge.js's MC_WNUDGE_NOPHYS), once as every other tool does
     loose=[k for k in base_sig if base_sig[k]!=again[k]]   # a recipe whose making does not repeat can't be compared: left out, and said
     for k in loose:del base_sig[k]
@@ -762,18 +769,25 @@ def sweep(o):
         for k in {h['part'] for h in hows(e)}:byPart[k].append(e)
     print(f"  the base: {len(base_sig)} solids in {time.time()-t0:.0f} s, {len(base_lh)} readers ({', '.join(sorted(base_lh))}); {len(opaque)} recipes read their numbers as they build ({', '.join(sorted(opaque)[:8])}{' ...' if len(opaque)>8 else ''})"+(f"; left out (their making does not repeat): {', '.join(loose)}" if loose else ''),flush=True)
     nd=lambda l,i:[[l['file'],l['off'],l['text'],nudged(l['text'])[i]]]
+    old={}
+    if o.resume:   # an earlier run's results kept (its .part.json or its sweep.json), all but 'unguarded' (the ledger may hold more now) and what was made by other rules
+        R=json.loads(pathlib.Path(o.resume).read_text(encoding='utf-8'));R=R['literals'] if isinstance(R,dict) else R
+        for x in R:
+            u=x.get('up') if isinstance(x.get('up'),dict) else None
+            if u and u.get('state') in ('limits','moved','breaks','unread'):old[(x['file'],x['off'],x['text'])]=u
+        print(f"  {sum(1 for l in todo if (l['file'],l['off'],l['text']) in old)} literals' results taken from {o.resume}",flush=True)
     out=pathlib.Path(o.json) if o.json else HERE/'r_wpa'/'sweep.json';out.parent.mkdir(parents=True,exist_ok=True)
     with ProcessPoolExecutor(o.jobs,initializer=_sweep_init,initargs=(base_sig,dict(byPart),baseM,dict(need),base_lh,opaque),max_tasks_per_child=60) as ex:
-        up=[]
-        for i,r in enumerate(ex.map(_sweep_worker,[nd(l,0) for l in todo],chunksize=1)):
-            up.append(r)
-            if (i+1)%100==0:print(f"  {i+1}/{len(todo)} up, {time.time()-t0:.0f} s",flush=True);out.with_suffix('.part.json').write_text(json.dumps([{**l,'up':r} for l,r in zip(todo,up)]),encoding='utf-8')   # kept as it goes: an hour's run shouldn't be lost whole
-        again=[i for i,r in enumerate(up) if r['state'] not in ('limits','unread')]
+        up=[];new=[l for l in todo if (l['file'],l['off'],l['text']) not in old];it=iter(ex.map(_sweep_worker,[nd(l,0) for l in new],chunksize=1))
+        for i,l in enumerate(todo):
+            r=old.get((l['file'],l['off'],l['text'])) or next(it);up.append(r);l['upr']=r
+            if (i+1)%100==0:print(f"  {i+1}/{len(todo)} up, {time.time()-t0:.0f} s",flush=True);out.with_suffix('.part.json').write_text(json.dumps([{**{k:v for k,v in l.items() if k!='upr'},'up':r} for l,r in zip(todo,up)]),encoding='utf-8')   # kept as it goes: an hour's run shouldn't be lost whole
+        again=[i for i,r in enumerate(up) if r['state'] in ('moved','breaks')]   # the other way where it can tell more: a one-sided tolerance (7 -0.1 at 6.95: up moves inside it, down leaves it), a recipe that broke
         print(f"  up: {time.time()-t0:.0f} s; {len(again)} nudged the other way too",flush=True)
         dn=dict(zip(again,ex.map(_sweep_worker,[nd(todo[i],1) for i in again],chunksize=1)))
     for i,l in enumerate(todo):
         a=up[i];b=dn.get(i) or {};best=min([a]+([b] if b else []),key=lambda r:RANK.index(r['state']))
-        l.update({'state':best['state'],'up':a['state'],'down':b.get('state'),'parts':sorted(set(a.get('changed',[]))|set(b.get('changed',[]))),'solids':sorted(set(a.get('solid',[]))|set(b.get('solid',[]))),
+        l.pop('upr',None);l.update({'state':best['state'],'up':a,'down':b.get('state'),'parts':sorted(set(a.get('changed',[]))|set(b.get('changed',[]))),'solids':sorted(set(a.get('solid',[]))|set(b.get('solid',[]))),
                   'items':sorted(set(a.get('limits',[])+a.get('moved',[])+b.get('limits',[])+b.get('moved',[])))[:12],'err':a.get('err') or b.get('err') or None,'nudge':list(nudged(l['text']))})
     c=collections.Counter(l['state'] for l in todo)
     out.write_text(json.dumps({'when':time.strftime('%Y-%m-%d'),'scope':o.scope,'counts':dict(c),'left_out':loose,'literals':lits},indent=0),encoding='utf-8')
@@ -787,7 +801,7 @@ def main():
     sys.stdout.reconfigure(encoding='utf-8')
     a=argparse.ArgumentParser();a.add_argument('--model',default='wempe');a.add_argument('--jobs',type=int,default=int(os.environ.get('MC_PROCS') or 8));a.add_argument('--only');a.add_argument('--measured')
     a.add_argument('-v',action='store_true');a.add_argument('--update',action='store_true');a.add_argument('--fault',nargs='?',const='out');a.add_argument('--stats',action='store_true')
-    a.add_argument('--derive',nargs='?',const=str(HERE/'r_wpa'/'sheetcheck.derived.json'));a.add_argument('--sweep',action='store_true');a.add_argument('--scope',default='dims');a.add_argument('--grep');a.add_argument('--json');a.add_argument('--why');a.add_argument('--limit',type=int);o=a.parse_args()
+    a.add_argument('--derive',nargs='?',const=str(HERE/'r_wpa'/'sheetcheck.derived.json'));a.add_argument('--sweep',action='store_true');a.add_argument('--scope',default='dims');a.add_argument('--grep');a.add_argument('--json');a.add_argument('--why');a.add_argument('--limit',type=int);a.add_argument('--resume');o=a.parse_args()
     if o.stats:stats(load());return 0
     if o.sweep:return sweep(o)
     if o.derive:
