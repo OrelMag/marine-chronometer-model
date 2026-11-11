@@ -87,6 +87,8 @@ Measured on this machine (RX 7800 XT), 1440 × 900, `perf.py --model wempe`.
 
 - The added draw calls and triangles are the transmission pass: the opaque scene drawn once more whenever glass or a jewel is on screen. r187 without it was not measured apart.
 - First frame: 24.8 s and 25.0 s (the build of the model, not three). Programs compiled: 13 and 21. JS heap: 462 MB both.
+- The built Wempe page (`site/index.html`): 5,706,658 bytes to 5,868,472; compressed (gzip -9) 2,463,091 to 2,507,280, 44 KB more to download. `build.py`'s size line still counts three.js as `three.min.js`'s size; correct it at stage 1.
+- The root build passes on the pilot: nothing loaded from the network, and `laidout.py --write` drew the lettered sheet on r187 with every element in view and opening its own card. The built copies and `site/` are not committed on the branch.
 - Left alone, the page draws 57 and 62 frames a second on r128, 50 and 51 on the pilot.
 - three.js in the page: 603,445 bytes to 756,979 (gzip -9: 148,739 to 188,313).
 
