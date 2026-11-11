@@ -89,7 +89,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 @media (max-width:520px){#essay{font-size:18px}.e-lbl{font-size:11px}.e-bar .e-t span{display:none}}
 @media(pointer:coarse){.e-ck{min-height:44px}.e-ck input{width:22px;height:22px}.e-go .seg a{min-height:44px;display:inline-flex;align-items:center}}
 /* the sky sections: equations, the hand rules' box, the inputs, the almanac's pages and the workbook (js/essay.js, eEqual … eWork) */
-.e-eq{text-align:center;font-size:.95em;overflow-x:auto;white-space:nowrap}
+.e-eq{text-align:center;font-size:.95em;overflow-x:auto}.e-eq>span{display:inline-block;white-space:nowrap;margin:0 1em}   /* each equation whole, the two on lines of their own on a phone */
 .e-box{margin:0 0 1.2em;padding:12px 18px;border-radius:12px;background:var(--paper);font-size:.9em;line-height:1.5}.e-box p{margin:0 0 .5em!important}.e-box p:last-child{margin:0!important}
 .e-book tr.e-sep td{border-bottom:0;padding:3px}
 .e-in{display:flex;flex-direction:column;gap:3px;font:13px/1.2 "Instrument Sans",system-ui,sans-serif;color:var(--muted)}
@@ -110,4 +110,4 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-stars td:nth-child(2),.e-stars th:nth-child(2){text-align:left}
 @media print{#almPrint .e-stars{break-inside:auto;page-break-inside:auto}#almPrint .e-stars td:nth-child(2),#almPrint .e-stars th:nth-child(2){text-align:left}}
 .e-steps{padding-left:1.3em}.e-steps li{margin:0 0 .5em}
-#essay .e-tbl th,#essay .e-tbl td{text-align:left;vertical-align:top}#essay .e-tbl td:first-child{white-space:nowrap}
+#essay .e-tbl th,#essay .e-tbl td{text-align:left;vertical-align:top}#essay .e-tbl td:first-child{white-space:nowrap}#essay .e-tbl.e-wrap1 td:first-child{white-space:normal;min-width:9em}   /* the maker's limits: its first column is prose, which nowrap kept on one line, crushing the manual's figures on a phone */

@@ -217,7 +217,7 @@ const ESSAY=(()=>{
       ctx.fillStyle=PAL.blue;ctx.globalAlpha=0.1;ctx.fillRect(0,y-h*0.32,w,h*0.64);ctx.fillStyle=PAL.brass;ctx.globalAlpha=0.2;ctx.fillRect(X(30),y-h*0.32,60*k,h*0.64);ctx.globalAlpha=1;
       ctx.strokeStyle=PAL.muted;ctx.lineWidth=1;ctx.font='12px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='center';const step=span>150?50:span>70?20:10;
       for(let d=-Math.floor(span/step)*step;d<=span;d+=step){const x=X(d);if(x<4||x>w-4)continue;ctx.beginPath();ctx.moveTo(x,y+h*0.32);ctx.lineTo(x,y+h*0.32-6);ctx.stroke();ctx.fillText(Math.abs(d)+'',x,y+h*0.32+14);}
-      ctx.textAlign='left';ctx.fillText('nautical miles west →',4,y+h*0.32+14);ctx.textAlign='center';ctx.fillStyle=PAL.brass;ctx.fillText('half a degree',X(0),y-h*0.32+14);
+      ctx.textAlign='center';ctx.fillText('← west · nautical miles · east →',X(0),y+h*0.32+30);   /* its own line under the ticks (it overprinted the 40 there), west to the left as X draws it */ctx.fillStyle=PAL.brass;ctx.fillText('half a degree',X(0),y-h*0.32+14);
       const ship=(x,col,label,dy)=>{ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(x-12,y-4);ctx.lineTo(x+12,y-4);ctx.lineTo(x+8,y+5);ctx.lineTo(x-8,y+5);ctx.closePath();ctx.fill();ctx.fillRect(x-1,y-20,2,16);ctx.beginPath();ctx.moveTo(x+1,y-20);ctx.lineTo(x+10,y-9);ctx.lineTo(x+1,y-9);ctx.fill();ctx.textAlign='center';ctx.fillText(label,x,y+dy);};
       ship(X(0),PAL.ink,'True position',24);
       if(nm>0.3){ctx.strokeStyle=PAL.red;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(X(0),y-26);ctx.lineTo(X(nm),y-26);ctx.stroke();ctx.setLineDash([]);ship(X(nm),PAL.red,'Believed position',-30);}};});
