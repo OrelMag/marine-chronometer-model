@@ -217,3 +217,20 @@ Proved by pixels: `main`'s essay and the branch's, each under a paused clock and
 
 No transmission pass is drawn, so the cost over r128 is three's own.
 
+Not measured again: `perf.py` (the machine was running three other check runs; the pilot's table above is with its transmission pass).
+
+### Checks, as printed (11 November 2026, through `ci.py --only`, the machine loaded)
+
+Passed on the stage's code with the new fusee body:
+
+- `vendor-three`, `selfcontained` (ok), `types`, `wempe-types` (no error), `wempe-sheetcheck` (712 sheet figures on 77 parts: 658 inside their limits and where the audit found them, 54 kept departures, 0 outside, 0 moved, 0 not found).
+- `smoke` (ok; it includes the essay's page), `wempe-smoke` (ok).
+- `wempe-solids` (0 not solid), `wempe-exploded` (81 bodies, 658 pairs, 0 failing), `wempe-holecheck` (1630 holes over 5 states, 1481 populated, 33 expected empty, 0 failing), `wempe-seatcheck` (508 pieces over 5 states, 501 seated, 3 expected, 0 failing).
+- `wempe-fine`, `-first`, `-6mx`, `-1943` (ok; the dial's face 0.180 mm clear), `wempe-bom` (278 lines, 302 relations, 12 jewels: ok), `-first` (300 relations), `-6mx` (308 relations, 20 jewels), `wempe-maintaining` (ok).
+- `wempe-gltf` (0 failures), `wempe-blender` (passed).
+- `wempe-fusee-body` (up to date, the new file), `wempe-fusee-end` (0 over 0.01 mm²), `wempe-fusee-check` (every figure within the sheet's tolerance), `wempe-book` (236 sections, 0 findings), `wempe-dialsvg`, `wempe-recipes-site`.
+- The Hamilton's page, on r128 with the shared code: `solids` (0 not solid), `audit`, `audit-box` (nothing new), `exploded` (84 bodies, 0 failing), `invariants` (ok), `holecheck` (942 holes, 0 failing), `essay-hamdata` (up to date).
+
+Still to run, or to run again, when this was written: `wempe-audit` with its versions and boxes, `wempe-exploded-first`, `-3955`, `-6mx`, `-1943`, `wempe-fine-3955`, `wempe-fine-band`, `wempe-bom-3955`, `wempe-bom-1943`, `wempe-inertia`, `wempe-inertia-6mx`, `wempe-massprops`, `wempe-invariants`, `wempe-mechanisms`, `wempe-assembly`, `wempe-stopwork`, `wempe-recipes`; then the build, `wempe-laidout` and `sitecheck`. `wempe-audit` passed before the fusee body was made again.
+
+Every failure so far was one thing: `Page.goto: Timeout 30000ms exceeded`. The Wempe's page took 26 s to load on the loaded machine, on r128 and on r187 alike (measured back to back, 26.2 s each), and the tools wait 30 s. Each such step passed when run again.
