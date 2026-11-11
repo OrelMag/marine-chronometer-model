@@ -8,7 +8,7 @@ marine-chronometer-source/wempe/parts-audit/sheetcheck.json, and measures them a
     python wempe_sheetcheck.py --update            after an intended change: rewrite each moved item's `was` (never its limits) and say what moved
     python wempe_sheetcheck.py --fault [move]      the planted fault, which must fail: the pillars' body (dims.js PIL r, 05 08 00-1's 8,1 -0,2, drawn 8.0) 0.3 large,
                                                    outside its limits; `move`: 0.06 large, inside them and no longer where the audit found it
-    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--limit N] [--json OUT] [--resume FILE]   the coverage sweep (slow: about an hour on 10 processes; not run by ci.py)
+    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--limit N] [--json OUT] [--resume FILE]   the coverage sweep (slow: hours, the first 800 of dims.js's 2,219 literals 52 minutes on 12 processes of a loaded machine; not run by ci.py)
     python wempe_sheetcheck.py --derive [OUT] [--measured DIR] [--why ID]   the ledger made again from the audit's batchNN.items.tsv (how it was first made, below),
                                                    into OUT (default tools/r_wpa/sheetcheck.derived.json, ignored), to compare with the ledger before anything
                                                    replaces it; entries marked "by": "hand" are kept; --why ID traces one row: its figure, the candidates and
@@ -770,21 +770,23 @@ def sweep(o):
     print(f"  the base: {len(base_sig)} solids in {time.time()-t0:.0f} s, {len(base_lh)} readers ({', '.join(sorted(base_lh))}); {len(opaque)} recipes read their numbers as they build ({', '.join(sorted(opaque)[:8])}{' ...' if len(opaque)>8 else ''})"+(f"; left out (their making does not repeat): {', '.join(loose)}" if loose else ''),flush=True)
     nd=lambda l,i:[[l['file'],l['off'],l['text'],nudged(l['text'])[i]]]
     old={}
-    if o.resume:   # an earlier run's results kept (its .part.json or its sweep.json), all but 'unguarded' (the ledger may hold more now) and what was made by other rules
-        R=json.loads(pathlib.Path(o.resume).read_text(encoding='utf-8'));R=R['literals'] if isinstance(R,dict) else R
+    if o.resume:   # an earlier run's results kept (its .part.json or its sweep.json): all of them if the ledger hasn't changed since, else all but 'unguarded' and 'nosolid' (the ledger may hold more now)
+        R=json.loads(pathlib.Path(o.resume).read_text(encoding='utf-8'));R=R['literals'] if isinstance(R,dict) else R;keep=('limits','moved','breaks','unread')+(('unguarded','nosolid') if pathlib.Path(o.resume).stat().st_mtime>LED.stat().st_mtime else ())
         for x in R:
             u=x.get('up') if isinstance(x.get('up'),dict) else None
-            if u and u.get('state') in ('limits','moved','breaks','unread'):old[(x['file'],x['off'],x['text'])]=u
+            if u and u.get('state') in keep:old[(x['file'],x['off'],x['text'])]=u
         print(f"  {sum(1 for l in todo if (l['file'],l['off'],l['text']) in old)} literals' results taken from {o.resume}",flush=True)
     out=pathlib.Path(o.json) if o.json else HERE/'r_wpa'/'sweep.json';out.parent.mkdir(parents=True,exist_ok=True)
-    with ProcessPoolExecutor(o.jobs,initializer=_sweep_init,initargs=(base_sig,dict(byPart),baseM,dict(need),base_lh,opaque),max_tasks_per_child=60) as ex:
-        up=[];new=[l for l in todo if (l['file'],l['off'],l['text']) not in old];it=iter(ex.map(_sweep_worker,[nd(l,0) for l in new],chunksize=1))
-        for i,l in enumerate(todo):
-            r=old.get((l['file'],l['off'],l['text'])) or next(it);up.append(r);l['upr']=r
-            if (i+1)%100==0:print(f"  {i+1}/{len(todo)} up, {time.time()-t0:.0f} s",flush=True);out.with_suffix('.part.json').write_text(json.dumps([{**{k:v for k,v in l.items() if k!='upr'},'up':r} for l,r in zip(todo,up)]),encoding='utf-8')   # kept as it goes: an hour's run shouldn't be lost whole
-        again=[i for i,r in enumerate(up) if r['state'] in ('moved','breaks')]   # the other way where it can tell more: a one-sided tolerance (7 -0.1 at 6.95: up moves inside it, down leaves it), a recipe that broke
-        print(f"  up: {time.time()-t0:.0f} s; {len(again)} nudged the other way too",flush=True)
-        dn=dict(zip(again,ex.map(_sweep_worker,[nd(todo[i],1) for i in again],chunksize=1)))
+    def run(args):   # a new pool every 30 tasks a worker, so OpenCascade's memory goes back: with max_tasks_per_child Python 3.13's pool was left without workers, waiting (800 literals in, 11 November 2026)
+        for j in range(0,len(args),o.jobs*30):
+            with ProcessPoolExecutor(o.jobs,initializer=_sweep_init,initargs=(base_sig,dict(byPart),baseM,dict(need),base_lh,opaque)) as ex:yield from ex.map(_sweep_worker,args[j:j+o.jobs*30],chunksize=1)
+    up=[];new=[l for l in todo if (l['file'],l['off'],l['text']) not in old];it=run([nd(l,0) for l in new])
+    for i,l in enumerate(todo):
+        r=old.get((l['file'],l['off'],l['text'])) or next(it);up.append(r);l['upr']=r
+        if (i+1)%100==0:print(f"  {i+1}/{len(todo)} up, {time.time()-t0:.0f} s",flush=True);out.with_suffix('.part.json').write_text(json.dumps([{**{k:v for k,v in l.items() if k!='upr'},'up':r} for l,r in zip(todo,up)]),encoding='utf-8')   # kept as it goes: an hour's run shouldn't be lost whole
+    again=[i for i,r in enumerate(up) if r['state'] in ('moved','breaks')]   # the other way where it can tell more: a one-sided tolerance (7 -0.1 at 6.95: up moves inside it, down leaves it), a recipe that broke
+    print(f"  up: {time.time()-t0:.0f} s; {len(again)} nudged the other way too",flush=True)
+    dn=dict(zip(again,run([nd(todo[i],1) for i in again])))
     for i,l in enumerate(todo):
         a=up[i];b=dn.get(i) or {};best=min([a]+([b] if b else []),key=lambda r:RANK.index(r['state']))
         l.pop('upr',None);l.update({'state':best['state'],'up':a,'down':b.get('state'),'parts':sorted(set(a.get('changed',[]))|set(b.get('changed',[]))),'solids':sorted(set(a.get('solid',[]))|set(b.get('solid',[]))),
