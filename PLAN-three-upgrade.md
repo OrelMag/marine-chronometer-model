@@ -119,10 +119,31 @@ Each stage ends with its checks passing and can be released on its own.
 - Colour management on, if a wide-gamut display is ever a target.
 - WebGPU: not before the shader patches are rewritten as nodes.
 
-## Decisions for the owner
+## The owner's decisions (11 November 2026)
 
-1. All pages at once, or the Wempe first (stages 3 then 4)? The pilot ran the Hamilton's page and the essay on r187 from temporary copies with no console error, so both are close.
-2. How far may the new look depart from the present one? The glass and blued steel change what a visitor sees first.
-3. Contact shading: on by default, a Display option, or left out?
-4. The movement ring's mesh: accept the new triangulation, or keep r128's triangulator?
-5. The 2.5 to 4.5 ms a frame: acceptable on desktop; on phones the jewels may need to stay as they are.
+From the pilot's report and stills:
+
+1. **Rollout.** The library first, with the present look, on the Wempe's page. Then the essay and the Hamilton. The new look afterwards, one piece a release.
+2. **The new look, once the library is in.**
+   - Refracting jewels: yes. Off on phones if the frame cost needs it.
+   - Blued steel by its oxide film: yes.
+   - Glass: kept as it is now. The flat crystal is drawn by alpha, with no transmission on it.
+   - Contact shading: a Display option, off by default.
+3. **The movement ring's mesh:** the new triangulation is accepted.
+
+## Stage 1 as prepared for landing (11 November 2026)
+
+The owner's rollout joins the plan's stages 1 to 3 for the Wempe: the vendored library, the shared code on both releases, and the Wempe's page on r187 with the present look. The Hamilton's page and the essay stay on r128.
+
+What "the present look" took beyond the pilot:
+
+- **Glass by alpha on r187** (`GlassA`, `physMat` in `core.js`). r128's transmission was a stub: alpha = 1 - transmission + the reflection's luminance. On r187 a material made with transmission is a `GlassA`: three sees transmission 0, so there is no transmission pass, and the shader applies r128's alpha. `opq()` counts its `trA`. This is also the owner's choice for the glass, so it stays.
+- **sRGB textures decoded after filtering** (`SRGB_LATE`). r128 decoded each sample in the shader; r187 has the GPU decode before filtering, which draws fine black print thinner and paler when small. That, not transmission alone, was most of the pale print the pilot reported. The setting leans on three's video-texture path; check it at each upgrade.
+- **The ruby's dimmed environment** (`envOwn`): r187's `envMapIntensity` dims only a material's own map, so the ruby is given the scene's.
+- **The studio's top lamp at 1.3** (`ENV3`). r187 spreads the environment wider on a rough metal. This brings the plates' flat tops back to r128's level. The spread itself cannot be matched: about 3 levels of 255 of mean difference stay on a plate seen close.
+- **A texture's `encoding`** still works on r187 (a shim on `Texture.prototype`), so a script not yet moved to `srgbTex` needs no edit. The Wempe's `escapement.js` is left as `main` has it for that reason.
+- **Left out of stage 1:** contact shading (it changed the Edges pass's shader on every page; it is in commit `65b8e86f`, for its own release). The new look (`look3`: jewels, blued steel) stays in `core.js` behind `look=187` in the address, off.
+
+With these the frame cost of r187 is r128's but for three itself: no transmission pass is drawn.
+
+The checks run and what each printed are in the stage's commit message and the report to the coordinator.

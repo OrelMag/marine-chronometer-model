@@ -36,12 +36,12 @@ const VIEWER={start(cfg){
   let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return null;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,PHONE?1.5:2));
   outSRGB(r);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;r.shadowMap.enabled=true;r.shadowMap.type=SHADOW_SOFT;
   const scene=new THREE.Scene();scene.environment=envTex(r);
-  cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});   /* a restored context comes back without the environment map that lights the metals: rebuild it */
+  cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);envOwn(M,scene.environment);});   /* a restored context comes back without the environment map that lights the metals: rebuild it */
   scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28*LK));
   const key=new THREE.DirectionalLight(0xfff4e6,1.0*LK);key.castShadow=false;key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;   /* casts only with Shadows on: look() */
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
   const cam=new THREE.PerspectiveCamera(32,1,1,6000);
-  const M=mats(),{root,mv}=cfg.build(M);scene.add(root);
+  const M=mats(),{root,mv}=cfg.build(M);scene.add(root);envOwn(M,scene.environment);   /* three r187: a material that dims the environment (the ruby) takes it as its own (core.js) */
   /* ---------- the parts registry: a part's card, colour, label priority and group; its pieces' (part.k), their colours a shade of their part's ---------- */
   const PARTS=cfg.PARTS,PIECES=cfg.PIECES||{},SRC=cfg.SRC,PG=cfg.PG||['Parts'],FL=cfg.figLabel||'Figs.';
   const INFO={},PCOL={},PRI={},PCE={},PHN={},PGRP=PG.map(g=>[g,[]]),kp=k=>k.split('.')[0];

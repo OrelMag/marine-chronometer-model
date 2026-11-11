@@ -12,9 +12,29 @@ const sc=h=>new THREE.Color(h).convertSRGBToLinear();
    a texture says it is sRGB by colorSpace (encoding until r152: srgbTex), the renderer writes sRGB by outputColorSpace (outputEncoding: outSRGB); the lights
    are in r155's units, pi times the old intensity for the same light on a surface (LK: directional and hemisphere lights; the environment map is unchanged);
    PCFSoftShadowMap is PCFShadowMap since r182 (SHADOW_SOFT) */
+/* SRGB_LATE: an sRGB texture decoded after it is filtered, as r128 did it (its shader decoded each sample; r187 has the GPU decode each texel before filtering,
+   which is the more correct and draws a dial's fine black print thinner and paler when it is drawn small: 10,549 pixels of the Dial view past 24 levels, 651 with
+   this). r187 keeps that path only for video textures (map_fragment's DECODE_VIDEO_TEXTURE, WebGLTextures' forceLinearTransfer), so srgbTex marks the texture as
+   one and gives it the update() three calls on one each frame, here nothing. It leans on three's internals: check it at each upgrade, and drop it when the look
+   may change (stage 6) */
+const SRGB_LATE=true;
 const T3=+THREE.REVISION>=152,LK=T3?Math.PI:1,SHADOW_SOFT=T3?THREE.PCFShadowMap:THREE.PCFSoftShadowMap;if(T3)THREE.ColorManagement.enabled=false;
-const srgbTex=t=>{if(T3)t.colorSpace=THREE.SRGBColorSpace;else t.encoding=THREE.sRGBEncoding;return t;},isSrgbTex=t=>T3?t.colorSpace===THREE.SRGBColorSpace:t.encoding===THREE.sRGBEncoding;
+const srgbTex=t=>{if(T3){t.colorSpace=THREE.SRGBColorSpace;if(SRGB_LATE){t.isVideoTexture=true;t.update=()=>{};}}else t.encoding=THREE.sRGBEncoding;return t;},isSrgbTex=t=>T3?t.colorSpace===THREE.SRGBColorSpace:t.encoding===THREE.sRGBEncoding;
 const outSRGB=r=>{if(T3)r.outputColorSpace=THREE.SRGBColorSpace;else r.outputEncoding=THREE.sRGBEncoding;};
+/* a texture's encoding as r128 named it, read and written through colorSpace: for a script not yet moved to srgbTex (the Wempe's escapement.js) */
+if(T3){THREE.sRGBEncoding=3001;THREE.LinearEncoding=3000;Object.defineProperty(THREE.Texture.prototype,'encoding',{get(){return this.colorSpace===THREE.SRGBColorSpace?3001:3000;},set(v){if(v===3001)srgbTex(this);else this.colorSpace=THREE.NoColorSpace;},configurable:true});}
+/* Glass on three r187, drawn as r128 drew it (the owner, 11 November 2026: the flat crystal by alpha, no transmission on it). r128's transmission bent nothing: it let
+   the background through by alpha, 1 - transmission + the reflection's luminance (its meshphysical_frag's stub). r187's draws the surface over a copy of the scene
+   behind it, read through a smoothing filter, which pales the fine print under a crystal and draws the opaque scene once more. So on r187 a material made with
+   transmission is a GlassA: three sees transmission 0, the share let through is trA, which patchSection's shader turns into r128's alpha and opq() counts; a clone
+   keeps it (copy). physMat(p): a MeshPhysicalMaterial, a GlassA where p.transmission is set on r187 */
+const GlassA=T3?class extends THREE.MeshPhysicalMaterial{constructor(p={}){const{transmission=0,...q}=p;super(q);this.trA=transmission;}copy(s){super.copy(s);this.trA=s.trA||0;return this;}
+  onBeforeCompile(sh){if(!(this.trA>0))return;sh.uniforms.uTrA={value:this.trA};sh.fragmentShader='uniform float uTrA;\n'+sh.fragmentShader.replace('#include <opaque_fragment>','diffuseColor.a*=mix(saturate(1.0-uTrA+luminance(reflectedLight.directSpecular+reflectedLight.indirectSpecular)),1.0,metalnessFactor);\n#include <opaque_fragment>');}
+  customProgramCacheKey(){return this.trA>0?'glassA':'';}}:null;
+const physMat=p=>GlassA&&p.transmission?new GlassA(p):new THREE.MeshPhysicalMaterial(p);
+/* r187's envMapIntensity dims only a material's own envMap, no longer the scene's environment (r163): a material that dims it (the ruby's 0.25) is given the scene's
+   environment as its own. envOwn(M, t): after the materials are made, and again with the new map when a lost context comes back */
+function envOwn(M,t){if(T3)for(const m of Object.values(M))if(m&&m.isMaterial&&m.envMapIntensity!==undefined&&(m.envMapIntensity!==1||m.envMap)){m.envMap=t;m.needsUpdate=true;}}
 /* A lathe's triangles in r128's order. r187 gives each quad's second triangle as (c, d, b) where r128 gave (b, c, d): the same triangle, but the cutters here that clip a
    solid cut after cut (facePocket's screw slots, the bores and radial holes) fan each clipped triangle from its first vertex, so the next cut met other edges and 35 of the
    Wempe's 1,582 meshes came out as the same solids with other vertices (volumes within 1e-4 mm³; 11 November 2026). Kept as r128 had it, so every mesh-derived file stays as it is */
@@ -25,6 +45,13 @@ if(T3){const L0=THREE.LatheGeometry;THREE.LatheGeometry=class extends L0{constru
    45 and 90 °F and gaining up to 1.5 s a day between (splitC, in °C: the essay's curve) */
 const MTE={splitC:c=>1.5*(1-((c-19.5)/12.5)**2),uncut:t=>-0.000229*(t-72.5)**2,split:t=>MTE.splitC((t-32)/1.8)-MTE.splitC((72.5-32)/1.8)};
 
+/* a rough surface's reflection is bent toward its normal before the environment is read: by roughness^2 in r128, by roughness^4 in r187 (three's chunk
+   envmap_physical_pars_fragment), which threw the studio's top lamp off the plates' flat tops: they came out 6-18 levels of 255 darker and yellower, the 6MX's
+   stripes flatter. r128's bend is put back, at ^1.7: fitted on the Movement, Side and Escapement views and the 6MX's, where r187's filter (GGX since r181, a cube
+   map with mips since r187; r128's a Gaussian) leaves the least (pixels past 16 levels, of the four views' 3.84 million: 24,111 at ^2, 9,649 at ^1.7; past 24 levels 323 and 263;
+   with r187's own bend and the top lamp 1.3 times brighter instead, the first try, 91,177 and 28,739). The lamps are r128's. Checked at each upgrade: the chunk's text must still hold the bend, or the page says so */
+if(T3){const C=THREE.ShaderChunk,a='pow4( roughness )';if(!C.envmap_physical_pars_fragment.includes(a))console.error('core.js: three\'s envmap_physical_pars_fragment has no "'+a+'": the reflection\'s bend is three\'s own');
+  C.envmap_physical_pars_fragment=C.envmap_physical_pars_fragment.replace(a,'pow( roughness, 1.7 )');}
 function envTex(r){
   const pm=new THREE.PMREMGenerator(r),s=new THREE.Scene();
   const g=new THREE.SphereGeometry(20,48,24),pos=g.attributes.position,col=[];
@@ -136,7 +163,7 @@ const NAVY={no:'7832',yr:'1941'};   /* the Navy dial's number and year, as photo
    washed every flat face pink), a red glow for the light a stone gives back from inside, under a clearcoat. reflectivity: F0 = 0.16 reflectivity²,
    so 0.69 for corundum's index 1.77 and 0.52 for glass's 1.52. Shown, not measured: the export to Blender gives them real transmission (blender.js) */
 const RUBY={clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69,envMapIntensity:0.25,emissive:sc(0xb0102a),emissiveIntensity:0.6};
-/* The pilot's look on three r187 (PLAN-three-upgrade.md; off with look=128 in the address, which keeps r128's stand-ins above for a before and after). r187 refracts:
+/* The new look on three r187, not on yet (PLAN-three-upgrade.md, stage 6: each piece its own release; look=187 in the address shows it, for the before and after). r187 refracts:
    a transmissive material is drawn over a copy of the opaque scene behind it, bent by its index and thickness and coloured by what it absorbs. So:
    glass: all of the light through (r128's 0.88 left 12% of a white diffuse surface, which r128 hid in its alpha and r187 shows as a milky veil), index 1.52, the
      reflection of the studio's lamps at a quarter of glass's own 4% (specularIntensity 0.25: at full strength the lamp's panel veiled the dial at a slant);
@@ -146,17 +173,15 @@ const RUBY={clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69,envMapIntensit
    blued steel: steel under a thin film (iridescence: its oxide, index about 2.4 for magnetite, 80 nm for the blue that Wempe 3955's seconds hand shows,
      1_Wempe_3955_Z.jpg), which gives the blue and its turn at a glancing angle from the film instead of a blue paint. Values set by eye against
      that photograph on 11 November 2026, not measured: estimates. */
-const LOOK3=T3&&!/[?&]look=128\b/.test(location.search);
+const LOOK3=T3&&/[?&]look=187\b/.test(location.search);
 function look3(M){
-  Object.assign(M.glass,{transmission:1,thickness:0,ior:1.52,roughness:0,specularIntensity:0.25});   /* roughness 0: any at all reads the scene behind from a coarser copy, and the dial's fine print went pale at a distance */
-  Object.assign(M.clear,{transmission:1,thickness:0.4,ior:1.77,clearcoat:0});
   Object.assign(M.ruby,{color:sc(0xffd9dc),transmission:1,thickness:0.5,ior:1.77,attenuationColor:sc(0xc4001c),attenuationDistance:0.16,roughness:0.05,clearcoat:0,emissiveIntensity:0,envMapIntensity:1});
   M.blued=new THREE.MeshPhysicalMaterial({color:sc(0x9aa3b0),metalness:1,roughness:0.25,iridescence:1,iridescenceIOR:2.4,iridescenceThicknessMaximum:80});   /* tried on the seconds hand: 55-62 nm straw to violet, 72 brown-grey, 80 the photograph's blue: the order of the temper colours; a blue base under the film came out straw */
 }
 /* how opaque a material draws, its transmission counted: under 0.5 the tools take it for glass or a ghost (makeInk, the viewers' ghost tests) */
-const opq=m=>(m.opacity??1)*(1-(m.transmission||0));
+const opq=m=>(m.opacity??1)*(1-(m.trA||m.transmission||0));
 function mats(){
-  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x)),P=(c,m,r,x={})=>new THREE.MeshPhysicalMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
+  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x)),P=(c,m,r,x={})=>physMat(Object.assign({color:sc(c),metalness:m,roughness:r},x));
   const stx=stripeTex(),st=stx.map,wt=woodTex();let wtU=null;   /* wtU: the Ulysse Nardin's wood, drawn when first chosen */
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
@@ -197,10 +222,10 @@ const SEC_DEPTH='\n#if NUM_CLIPPING_PLANES>0&&(__VERSION__>=300||defined(GL_EXT_
 function patchSection(m,cap){
   if(!m||m.userData.secPatched)return;m.userData.secPatched=true;m.userData.secCap=cap;m.userData.side0=m.side;m.clipShadows=true;if(!m.clippingPlanes)m.clippingPlanes=[];SEC.mats.add(m);
   if(cap)m.extensions={fragDepth:true};
-  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);
+  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);if(GlassA&&m instanceof GlassA)GlassA.prototype.onBeforeCompile.call(m,sh);   /* a GlassA's alpha first (this hook stands in place of its own) */
     sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp&&!(T3&&m.transmission>0)?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace(   /* three r187 declares projectionMatrix itself in a transmissive material's fragment shader (transmission_pars_fragment): twice is an error */'#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
       'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':'')+(dp?SEC_DEPTH:''));};
-  m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0);
+  m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0)+(T3&&m.trA>0?'g':'');
   m.needsUpdate=true;
 }
 function setSection(on,plane){SEC.on.value=on?1:0;SEC.plane=plane;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
@@ -208,7 +233,7 @@ const GHOST=new Map();
 /* a derived copy (see-through, faded) takes its source's current texture and colour, so a dial style or plate finish chosen while it is shown carries over */
 function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);
   if(d.isMeshStandardMaterial&&s.isMeshStandardMaterial){if(d.normalMap!==s.normalMap){d.normalMap=s.normalMap;d.needsUpdate=true;}d.roughness=s.roughness;}return d;}   /* the finish's frosting (setPlateFinish) */
-function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,opq(m));if(g.transmission)g.transmission=0;g.depthWrite=false;g.userData={};patchSection(g,false);
+function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,opq(m));if(g.transmission)g.transmission=0;if(g.trA)g.trA=0;g.depthWrite=false;g.userData={};patchSection(g,false);
   if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
 /* ---------- drawing: the model drawn live as a pen-and-wash drawing, tinted or in ink ----------
    drawOf(m): m's wash. A Phong copy (per-pixel diffuse under the scene's lights and shadows, no specular) whose output is the drawing's colour: the albedo in
@@ -216,7 +241,7 @@ function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.o
    In ink (INK.ink 1) it is paper, inked only where the albedo is printed: under 55% of the material's median (uRef, inkRef), as the dial's figures; an
    engraving (userData.inkDecal) is ink under its own alpha, and any other transparent source (a faded part) paper at its opacity. Alpha carries the band (0.45 band; 1 is bare paper, cleared to white: a clear colour is
    premultiplied), which tells the sheet the drawing from the paper; a transparent source keeps the alpha beneath it */
-const DRAW=new Map(),INK={shMax:{value:1.1},wash:{value:0.75},ink:{value:0},ao:{value:/[?&]ao=1(&|$)/.test(location.search)?0.8:0}};   /* ao: contact shading under the Edges lines, a pilot (makeInk) */   /* wash: pigment density, light enough that the live model reads through it */
+const DRAW=new Map(),INK={shMax:{value:1.1},wash:{value:0.75},ink:{value:0}};   /* wash: pigment density, light enough that the live model reads through it */
 const WASH=(tr,dec)=>'float dL=dot(diffuseColor.rgb,vec3(0.3,0.55,0.15)),shd=dot(outgoingLight,vec3(0.3,0.55,0.15))/max(dL,1e-4);diffuseColor.rgb=mix(diffuse,diffuseColor.rgb,uTex);vec3 alb=pow(clamp(diffuseColor.rgb,0.0,1.0),vec3(1.0/2.2));'+
   'float aL=dot(alb,vec3(0.3,0.55,0.15));vec3 chr=(alb-aL)*1.6;chr*=min(1.0,0.3/max(length(chr),1e-6));vec3 wc=clamp(0.45+0.5225*aL+chr,0.0,1.0);'+
   'float bd=clamp((pow(clamp(shd/uShMax,0.0,1.0),1.0/2.2)-0.25)/0.7,0.0,1.0),bq=bd*3.0;bd=0.5*bd+0.5*(floor(bq)+smoothstep(0.3,0.7,fract(bq)))/3.0;'+
@@ -239,7 +264,8 @@ function drawOf(m){let d=DRAW.get(m);
     if(tr)Object.assign(d,{blending:THREE.CustomBlending,blendSrc:THREE.SrcAlphaFactor,blendDst:THREE.OneMinusSrcAlphaFactor,blendSrcAlpha:THREE.ZeroFactor,blendDstAlpha:THREE.OneFactor});
     patchSection(d,cap);d.userData.side0=m.userData.side0??m.side;d.side=m.side;d.clippingPlanes=[...(m.clippingPlanes||[])];
     const ref=d.userData.ref={value:1};d.userData.tx=tx.value;
-    const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;sh.uniforms.uInkOn=INK.ink;sh.uniforms.uRef=ref;
+    const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{if(T3)sh.fragmentShader=sh.fragmentShader.replace('#include <lights_fragment_maps>','');   /* r187 lights a Phong material from the scene's environment too (r128: the lamps alone), which washed the bands out */
+      sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;sh.uniforms.uInkOn=INK.ink;sh.uniforms.uRef=ref;
       sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\nuniform float uWash;\nuniform float uInkOn;\nuniform float uRef;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr,dec)+'\n#include <dithering_fragment>');sec(sh);
       sh.fragmentShader=sh.fragmentShader.replace('vec3(1.0/2.2)),1.0);','vec3(1.0/2.2)),0.45);');};   /* a cut face (patchSection) is drawing, not paper */
     d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0)+(dec?1:0)+(secDepth(d)?1:0);DRAW.set(m,d);}
@@ -301,23 +327,7 @@ void main(){vec2 p=gl_FragCoord.xy/uPr;
   const over=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,transparent:true,vertexShader:VS,uniforms:U({tE:{value:rtE.texture},uInk:{value:new T.Color(0x1c1a18)}}),
     fragmentShader:`uniform sampler2D tE;uniform vec2 uPx;uniform vec3 uInk;varying vec2 vUv;
 void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+texture2D(tE,vUv+vec2(h.x,-h.y))+texture2D(tE,vUv-vec2(h.x,-h.y)));
-  float la=0.8*max(max(e.r,e.g*0.8),e.b*0.45),aa=0.0;
-  {float oc=0.0;for(int i=0;i<4;i++)for(int j=0;j<4;j++)oc+=texture2D(tA,vUv+(vec2(float(i),float(j))-1.5)*uPx).r;aa=uAo*(1.0-oc/16.0);}   /* not inside an if: ANGLE warns of a texture read in a loop under a condition; off, tA is one pixel and uAo 0 */
-  gl_FragColor=vec4(uInk,1.0-(1.0-la)*(1.0-aa));}`});
-  /* Contact shading, a pilot (ao=1 in the address; PLAN-three-upgrade.md): how much of the half-space over each point of a solid its neighbours within uR mm close off,
-     worked out on the Edges pass's own normals and depths (no further pass over the model): 12 points on a spiral about the pixel, each turned by a noise of the
-     pixel's place, the cover summed as the Alchemy estimator does (McGuire et al. 2011: the points' height over the surface against their distance), then smoothed
-     over 4 x 4 pixels by the sheet's pass, which lays it under the lines as a darkening. Not light transport: it darkens the lit and the shaded alike */
-  const rtA=rt(0,0);rtA.depthBuffer=false;over.uniforms.tA={value:rtA.texture};over.uniforms.uAo={value:0};over.fragmentShader='uniform sampler2D tA;uniform float uAo;\n'+over.fragmentShader;
-  const aoM=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tN:{value:rtN.texture},tD:{value:rtN.depthTexture},uNF:{value:new T.Vector2()},uPj:{value:new T.Vector2()},uR:{value:1.8},uH:{value:1.1}}),
-    fragmentShader:`#include <packing>
-uniform sampler2D tN,tD;uniform vec2 uPx,uNF,uPj;uniform float uR,uH;varying vec2 vUv;
-vec3 P(vec2 u){float z=-perspectiveDepthToViewZ(texture2D(tD,u).x,uNF.x,uNF.y);vec2 n=u*2.0-1.0;return vec3(n.x*z/uPj.x,n.y*z/uPj.y,-z);}
-void main(){float d=texture2D(tD,vUv).x;vec4 nn=texture2D(tN,vUv);if(d>0.999999||dot(nn.rgb,vec3(1.0))<0.003){gl_FragColor=vec4(1.0);return;}
-  vec3 p=P(vUv),n=normalize(nn.rgb*2.0-1.0);float rp=uR*uPj.y*0.5/(-p.z),a0=6.2831853*fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(0.06711056,0.00583715)))),s=0.0;
-  for(int i=0;i<12;i++){float t=(float(i)+0.5)/12.0,a=a0+t*15.08;vec2 o=vec2(cos(a)*uPx.x/uPx.y,sin(a))*sqrt(t)*rp;vec3 v=P(vUv+o)-p;float vv=dot(v,v);
-    s+=max(0.0,dot(v,n)-0.04-0.0004*(-p.z))/(vv+0.05)*step(vv,4.0*uR*uR);}
-  gl_FragColor=vec4(vec3(clamp(1.0-uH*2.0*uR*s/12.0,0.0,1.0)),1.0);}`});
+  gl_FragColor=vec4(uInk,0.8*max(max(e.r,e.g*0.8),e.b*0.45));}`});
   const qs=new T.Scene(),q=new T.Mesh(new T.PlaneGeometry(2,2),edge),qc=new T.OrthographicCamera(-1,1,1,-1,0,1);q.frustumCulled=false;qs.add(q);
   const bs=new T.Vector2(),cc=new T.Color();
   /* normals and ids: the solids, then the ghosts alone (for Edges, mv: mesh ids, the box masked, hide left out); no shadow map is drawn for these.
@@ -350,10 +360,7 @@ void main(){float d=texture2D(tD,vUv).x;vec4 nn=texture2D(tN,vUv);if(d>0.999999|
   lines(scene,cam,meshes,hide){
     const{gh,ca,au}=ids(scene,cam,meshes,true,hide);gh.forEach(o=>o.visible=true);
     r.shadowMap.needsUpdate=true;r.setRenderTarget(null);r.setClearColor(cc,ca);r.clear();r.render(scene,cam);r.shadowMap.autoUpdate=au;
-    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);
-    const on=INK.ao.value>0&&cam.isPerspectiveCamera;over.uniforms.uAo.value=on?INK.ao.value:0;
-    if(on){if(rtA.width!==bs.x||rtA.height!==bs.y)rtA.setSize(bs.x,bs.y);const u=aoM.uniforms,pe=cam.projectionMatrix.elements;u.uNF.value.set(cam.near,cam.far);u.uPj.value.set(pe[0],pe[5]);u.uPx.value.set(1/bs.x,1/bs.y);q.material=aoM;r.setRenderTarget(rtA);r.render(qs,qc);}
-    q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
+    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
 }
 /* draw calls (PERFORMANCE.md, What's next 1): the static pieces under one group that share a material, drawn as one merged copy. The pieces stay where they are, for the
    tools, picking, shadows and every display mode. A batch is drawn merged only while each of its pieces is shown and wears its own material (mat0); otherwise its pieces

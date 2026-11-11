@@ -614,8 +614,7 @@ const WCASE=(()=>{
     const bz=prt(bowlS,'bezel',-YP),bW=rv(bz,'last first 1943');
     /* the bezel's glass, a little greener and less clear than the box's (M.glass, 0.12): a plain glass reads as nothing at 0.12, so the case view and a section showed the
        bezel open (21 October 2026). Its edge green, as Wempe 6161's (antiquorum_208-4_wempe6161.jpg: a green ring round the dial where the glass's edge shows) */
-    const GLW=M.glassW=M.glassW||new THREE.MeshPhysicalMaterial({color:sc(0xd8efe4),metalness:0,roughness:0.02,transmission:0.7,transparent:true,depthWrite:false,reflectivity:0.52});
-    if(LOOK3&&!GLW.thickness)Object.assign(GLW,{transmission:1,thickness:0,ior:1.52,roughness:0,specularIntensity:0.25});   /* three r187 (core.js's look3): all of the light through, tinted by its colour; no thickness, so nothing under it is shifted off its Edges lines */
+    const GLW=M.glassW=M.glassW||physMat({color:sc(0xd8efe4),metalness:0,roughness:0.02,transmission:0.7,transparent:true,depthWrite:false,reflectivity:0.52});
     /* 26 October 2026, the drawings check (drawing-check/batch10.md, re-measured on the sheet at 6× zoom): the glass lies ON the ring, a flat disc Ø 111.6 (r 55.8) from 12.3 to
        15.8 over the underside, its top edge chamfered to r 54.3, standing about 2.4 proud of the ring's lip, which is only 13.4 high at r 57.2 (pixel scans at 4.78 px/mm,
        the right-hand section: likely ±0.2); the ring's bevel runs from the widest band (r 60.2 at 9.9) up to the lip, the lip's inside falls to r 56.2 at 12.6 and the seat
