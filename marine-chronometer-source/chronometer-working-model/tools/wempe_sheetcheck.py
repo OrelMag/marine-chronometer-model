@@ -8,7 +8,7 @@ marine-chronometer-source/wempe/parts-audit/sheetcheck.json, and measures them a
     python wempe_sheetcheck.py --update            after an intended change: rewrite each moved item's `was` (never its limits) and say what moved
     python wempe_sheetcheck.py --fault [move]      the planted fault, which must fail: the pillars' body (dims.js PIL r, 05 08 00-1's 8,1 -0,2, drawn 8.0) 0.3 large,
                                                    outside its limits; `move`: 0.06 large, inside them and no longer where the audit found it
-    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--limit N] [--json OUT] [--resume FILE]   the coverage sweep (slow: hours, the first 800 of dims.js's 2,219 literals 52 minutes on 12 processes of a loaded machine; not run by ci.py)
+    python wempe_sheetcheck.py --sweep [--jobs N] [--scope dims|esc|all] [--grep RE] [--limit N] [--json OUT] [--resume FILE]   the coverage sweep (slow: about 75 minutes for dims.js's 2,219 literals on 12 processes of a loaded machine; not run by ci.py)
     python wempe_sheetcheck.py --derive [OUT] [--measured DIR] [--why ID]   the ledger made again from the audit's batchNN.items.tsv (how it was first made, below),
                                                    into OUT (default tools/r_wpa/sheetcheck.derived.json, ignored), to compare with the ledger before anything
                                                    replaces it; entries marked "by": "hand" are kept; --why ID traces one row: its figure, the candidates and
