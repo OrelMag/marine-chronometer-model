@@ -73,7 +73,8 @@ const ESSAY=(()=>{
     if(o.cursor!=null){ctx.strokeStyle=PAL.muted;ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(X(o.cursor),T);ctx.lineTo(X(o.cursor),T+ph);ctx.stroke();ctx.setLineDash([]);}
     for(const m of o.marks||[]){ctx.fillStyle=m.color;ctx.strokeStyle=PAL.paper;ctx.lineWidth=2;ctx.beginPath();ctx.arc(X(m.x),Y(clamp(m.y,o.y0,o.y1)),5,0,TAU);ctx.fill();ctx.stroke();}
     ctx.restore();ctx.textBaseline='middle';
-    for(const s of o.series){if(!s.label)continue;ctx.fillStyle=s.color;ctx.textAlign=s.la||'left';ctx.fillText(s.label,X(s.lx)+(s.dx||0),Y(clamp(s.f(s.lx),o.y0,o.y1))+(s.dy??-12));}
+    ctx.lineJoin='round';ctx.lineWidth=4;ctx.strokeStyle=PAL.paper;   /* a halo of the paper under each label, so a line crossing it doesn't strike it through */
+    for(const s of o.series){if(!s.label)continue;ctx.fillStyle=s.color;ctx.textAlign=s.la||'left';const lx=X(s.lx)+(s.dx||0),ly=Y(clamp(s.f(s.lx),o.y0,o.y1))+(s.dy??-12);ctx.strokeText(s.label,lx,ly);ctx.fillText(s.label,lx,ly);}
     return{X,Y};}
 
   /* ---------- 3D: one renderer for every figure, its figures drawn with the models' Edges (makeInk's lines, core.js) unless the model the reader came from had them off
@@ -204,8 +205,8 @@ const ESSAY=(()=>{
       const[sx,sy]=Pt(lam,R);ctx.strokeStyle=PAL.blue;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(sx,sy);ctx.stroke();
       ctx.fillStyle=PAL.blue;ctx.beginPath();ctx.moveTo(sx+10,sy);ctx.lineTo(sx-6,sy-7);ctx.lineTo(sx-6,sy+7);ctx.closePath();ctx.fill();
       ctx.fillStyle=PAL.ink;ctx.beginPath();ctx.arc(cx,cy,3,0,TAU);ctx.fill();
-      ctx.font='13px "Instrument Sans",sans-serif';ctx.textAlign='center';ctx.fillStyle=PAL.red;const[lx,ly]=Pt(0,R+16);ctx.fillText('Greenwich',lx,ly+4);
-      ctx.fillStyle=PAL.blue;ctx.fillText('Ship',sx+10,sy-12);ctx.fillStyle=PAL.muted;ctx.fillText('North Pole',cx,cy+18);
+      ctx.font='13px "Instrument Sans",sans-serif';ctx.textAlign='center';ctx.fillStyle=PAL.red;const[lx,ly]=Pt(0,R+26);ctx.lineJoin='round';ctx.lineWidth=4;ctx.strokeStyle=PAL.paper;ctx.strokeText('Greenwich',lx,ly+4);ctx.fillText('Greenwich',lx,ly+4);
+      ctx.fillStyle=PAL.blue;ctx.strokeText('Ship',sx+10,sy-16);ctx.fillText('Ship',sx+10,sy-16);ctx.fillStyle=PAL.muted;ctx.fillText('North Pole',cx,cy+18);
       ctx.strokeStyle=PAL.muted;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(cx,cy,R+26,-2.3,-1.7);ctx.stroke();
       const ex=cx+(R+26)*Math.cos(-2.3),ey=cy+(R+26)*Math.sin(-2.3);ctx.fillStyle=PAL.muted;ctx.beginPath();ctx.moveTo(ex-2,ey-7);ctx.lineTo(ex+6,ey+4);ctx.lineTo(ex-9,ey+3);ctx.closePath();ctx.fill();};});
 
@@ -305,7 +306,7 @@ const ESSAY=(()=>{
       if(cf.dirty){cf.dirty=false;const t55=F2C(55),t90=F2C(90);
         chart(C,{x0:-5,x1:45,y0:-8,y1:8,xt:[0,10,20,30,40],yt:[-8,-4,0,4,8],xf:x=>x+' °C',yf:y=>(y>0?'+':'')+y,xl:'Temperature',yl:'Rate, s a day',cursor:T,
           bands:kind==='m21'?[{x0:t55,x1:t90,y0:-0.6,y1:0.6,color:PAL.blue,label:'the Navy’s limit, 55–90 °F'}]:[],
-          series:[{f:plain,color:PAL.red,label:'plain: −11 s a day per °C',lx:19.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:kind==='m21'?-28:-14,la:'center',width:kind==='split'?2.6:1.4}].concat(kind==='m21'?[{f:m21,color:PAL.blue,label:'Model 21, its test card',lx:34,dy:14,la:'center',width:2.6}]:[]),
+          series:[{f:plain,color:PAL.red,label:'plain: −11 s a day per °C',lx:19.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:9,dy:kind==='m21'?-28:-14,la:'right',width:kind==='split'?2.6:1.4}].concat(kind==='m21'?[{f:m21,color:PAL.blue,label:'Model 21, its test card',lx:34,dy:14,la:'center',width:2.6}]:[]),
           marks:[{x:T,y:kind==='split'?comp(T):kind==='plain'?plain(T):m21(T),color:kind==='split'?PAL.brass:kind==='plain'?PAL.red:PAL.blue}]});
         const{x:ctx}=C;ctx.font='11px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='center';const pw=C.w-62;
         for(const[tf,lab]of[[55,'55 °F'],[72.5,'72½'],[90,'90 °F']]){const x=46+(F2C(tf)+5)/50*pw;ctx.fillRect(x-0.5,C.h-40,1,5);ctx.fillText(lab,x,C.h-46);}}};},'model');
@@ -331,7 +332,7 @@ const ESSAY=(()=>{
       const m=FU.CG.chain.m0Of(FU.CG.chain.RF0+TAU*clamp(n,0,FU.NRUN)),yc=FU.yc(m);Lc.pos=at(o,mid[0],yc,mid[1]);f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
     return()=>{if(f.dirty){f.dirty=false;lend(V,o,keep,{n:nOf(hrs)});}
       if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:HR,y0:0,y1:1.6,xt:[0,8,16,24,32,40,48,56],yt:[0,0.5,1,1.5],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
-        series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'center'},{f:tq,color:PAL.blue,label:'pull × lever: the force on the train, measured',lx:26,dy:-12,la:'center'},{f:gb,color:PAL.muted,width:1.4,dash:[5,4],label:'a going barrel',lx:10,dy:-12,la:'center'}],
+        series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'right'},{f:tq,color:PAL.blue,label:(C.w<520?'':'pull × lever: ')+'the force on the train, measured',lx:55,dy:-16,la:'right'},{f:gb,color:PAL.muted,width:1.4,dash:[5,4],label:'a going barrel',lx:8,dy:-12,la:'left'}],   /* each label on the side its line falls away from */
         marks:[{x:hrs,y:pull(hrs),color:PAL.red},{x:hrs,y:tq(hrs),color:PAL.blue}]});
         const{x:ctx}=C;ctx.strokeStyle=PAL.muted;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(X(56),Y(0));ctx.lineTo(X(56),Y(1.1));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=PAL.muted;ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='right';ctx.fillText('the dial’s 56 h',X(56)-4,Y(0.08));}};},'model');
 
@@ -369,8 +370,8 @@ const ESSAY=(()=>{
       out.textContent=tm.toFixed(1)+' min';f.dirty=true;}
     inp.max=TM.toFixed(1);range(inp,v=>{if(kw)return;set(v);return v.toFixed(1)+' min';});
     btn.addEventListener('click',()=>{if(!kw)kw={t:0};});
-    V.label('Maintaining spring','drives while the key turns',at(o,(bS.min.x+bS.max.x)/2,bS.max.y,bS.max.z));V.label('Maintaining ratchet','',at(o,bR.min.x,bR.max.y,(bR.min.z+bR.max.z)/2));
-    V.label('Maintaining detent','holds the ratchet',at(o,(bD.min.x+bD.max.x)/2,bD.max.y,(bD.min.z+bD.max.z)/2));V.label('Fusee wheel','to the train',at(o,bW.max.x,(bW.min.y+bW.max.y)/2,Fx[1]));
+    V.label('Maintaining spring','drives while the key turns',at(o,(bS.min.x+bS.max.x)/2,bS.max.y,bS.max.z));V.label('Maintaining ratchet','',at(o,Fx[0]-WD.FU.MR.D/2,bR.max.y,Fx[1]));   /* on its rim and the wheel's tips (05 06 02-1's Ø, 05 06 00-3's): the boxes' sides take in the other versions' hidden pieces */
+    V.label('Maintaining detent','holds the ratchet',at(o,(bD.min.x+bD.max.x)/2,bD.max.y,(bD.min.z+bD.max.z)/2));V.label('Fusee wheel','to the train',at(o,Fx[0]+WD.FU.FW.teeth[2]/2,(bW.min.y+bW.max.y)/2,Fx[1]));
     set(0);
     return dt=>{if(kw){kw.t+=dt/(RM?4:1);const T1=4,T2=4.6,T3=5.2;   /* the key turns 3 minutes' worth in 4 s, rests, lets go, and the mainspring closes the spring again */
         if(kw.t<T1)set(3*smooth(kw.t/T1),'turn');else if(kw.t<T2)set(3,'turn');else if(kw.t<T3){const u=smooth((kw.t-T2)/(T3-T2)),s3=WPHYS.susPhi(m0,180);ms=s3+(m0-s3)*u;set(3*(1-u),'run');}else{kw=null;set(0,'run');}inp.value=tm;}
@@ -534,7 +535,7 @@ const ESSAY=(()=>{
 
   /* the lunar distance */
   fig('eLunar',f=>{const st=f.el,P=figOf(st);if(!AL)return noAlm(st);const C=c2d(st,f,w=>w<520?0.62:0.36),[oi,di]=qa('input[type=range]',P),tb=q('.e-book',P),ro=q('.e-ro',P);
-    const la=35,lo=-40,t=Date.UTC(2026,9,18,21),O={eye:6,ic:-1.4,T:18,P:1008,limbM:'L'};let k='Markab',off=17,dd=0,run=null;
+    const la=35,lo=-40,t=Date.UTC(2026,9,18,20,30),O={eye:6,ic:-1.4,T:18,P:1008,limbM:'L'};   /* dusk: the Sun 6.6° down there (12.7° at 21:00, the horizon gone) */let k='Markab',off=17,dd=0,run=null;
     const upd=()=>{const S=AL.sextantLunar(k,t,la,lo,O),t0=t+off*6e4,r=AL.clear(S.ds+dd/60,S.hm,S.hb,k,t0,{...O,lat:la+0.3,dr:{lat:la+0.3,lon:lo-0.4}});run={S,t0,r};
       tb.innerHTML=table([['The chronometer reads',tod(t0,0),'GMT, it is thought'],['Distance, the Moon’s near limb to '+k,FM.dm(S.ds+dd/60),dd?sgn(dd,2)+' misread':'sextant'],['The Moon’s lower limb',FM.dm(S.hm),'sextant'],[k,FM.dm(S.hb),'sextant'],null,
         ['The Moon’s centre, apparent',FM.dm(r.am),'index, dip, semi-diameter'],[k+', apparent',FM.dm(r.ab),'index, dip'],['Apparent distance of the centres',FM.dm(r.d),'index, semi-diameter'],
@@ -574,7 +575,8 @@ const ESSAY=(()=>{
 
   /* the workbook: one's own sights */
   fig('eWork',f=>{const box=f.el,P=figOf(box);if(!AL)return noAlm(box);const out=q('.e-out',P);let mode='sight';
-    const ang=s=>{s=String(s).trim().replace(/[°′'NnEe]/g,' ').replace(/,/g,'.');let neg=/[SsWw]|^-|^−/.test(s);s=s.replace(/[SsWw−-]/g,' ').trim();const p=s.split(/\s+/).map(Number);if(!p.length||p.some(x=>!Number.isFinite(x)))return NaN;const v=p[0]+(p[1]||0)/60+(p[2]||0)/3600;return neg?-v:v;};
+    const ang=s=>{s=String(s).trim().replace(/[°′'NnEe]/g,' ').replace(/,/g,'.');if(!s.trim())return NaN;   /* an empty field is no angle (it read as 0) */
+      let neg=/[SsWw]|^-|^−/.test(s);s=s.replace(/[SsWw−-]/g,' ').trim();const p=s.split(/\s+/).map(Number);if(!p.length||p.some(x=>!Number.isFinite(x)))return NaN;const v=p[0]+(p[1]||0)/60+(p[2]||0)/3600;return neg?-v:v;};
     const names=['Sun','Moon',...AL.PLANETS,...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
       F0={date:'2026-10-18',time:'10:15:00',err:'0',eye:'6',ic:'-1.4',T:'18',P:'1008',lat:'35 00.0 N',lon:'40 00.0 W',body:'Sun',limb:'Lower',hs:'',how:'Meridian, bearing south',
         bodyL:'Markab',ds:'',hm:'',hb:'',far:'Near',r1:'2026-10-15 16:51',e1:'23.5',r2:'2026-10-20 16:50',e2:'29.0',now:'2026-11-02 12:00'};let V={...F0};
@@ -609,7 +611,7 @@ const ESSAY=(()=>{
     q('.ex',P).addEventListener('click',()=>{const la=35,lo=-40,O={eye:6,ic:-1.4,T:18,P:1008},g=a=>FM.dm(a).replace('°',' ').replace('′','');V={...F0};
       if(mode==='sight')V.hs=g(AL.sextant('Sun',Date.UTC(2026,9,18,10,15),la,lo,{...O,limb:'L'}));
       else if(mode==='lat'){const tN=Math.round(AL.noon(lo,Date.UTC(2026,9,18,14,40))/1000)*1000;Object.assign(V,{time:tod(tN,0),hs:g(AL.sextant('Sun',tN,la,lo,{...O,limb:'L'}))});}
-      else if(mode==='lunar'){const t=Date.UTC(2026,9,18,21),S=AL.sextantLunar('Markab',t,la,lo,{...O,limbM:'L'});Object.assign(V,{time:'21:17:00',ds:g(S.ds),hm:g(S.hm),hb:g(S.hb)});}
+      else if(mode==='lunar'){const t=Date.UTC(2026,9,18,20,30),S=AL.sextantLunar('Markab',t,la,lo,{...O,limbM:'L'});Object.assign(V,{time:'20:47:00',ds:g(S.ds),hm:g(S.hm),hb:g(S.hb)});}
       form();});
     form();return()=>{};});
 
