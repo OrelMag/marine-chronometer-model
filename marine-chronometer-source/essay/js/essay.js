@@ -370,8 +370,8 @@ const ESSAY=(()=>{
       out.textContent=tm.toFixed(1)+' min';f.dirty=true;}
     inp.max=TM.toFixed(1);range(inp,v=>{if(kw)return;set(v);return v.toFixed(1)+' min';});
     btn.addEventListener('click',()=>{if(!kw)kw={t:0};});
-    V.label('Maintaining spring','drives while the key turns',at(o,(bS.min.x+bS.max.x)/2,bS.max.y,bS.max.z));V.label('Maintaining ratchet','',at(o,bR.min.x,bR.max.y,(bR.min.z+bR.max.z)/2));
-    V.label('Maintaining detent','holds the ratchet',at(o,(bD.min.x+bD.max.x)/2,bD.max.y,(bD.min.z+bD.max.z)/2));V.label('Fusee wheel','to the train',at(o,bW.max.x,(bW.min.y+bW.max.y)/2,Fx[1]));
+    V.label('Maintaining spring','drives while the key turns',at(o,(bS.min.x+bS.max.x)/2,bS.max.y,bS.max.z));V.label('Maintaining ratchet','',at(o,Fx[0]-WD.FU.MR.D/2,bR.max.y,Fx[1]));   /* on its rim and the wheel's tips (05 06 02-1's Ø, 05 06 00-3's): the boxes' sides take in the other versions' hidden pieces */
+    V.label('Maintaining detent','holds the ratchet',at(o,(bD.min.x+bD.max.x)/2,bD.max.y,(bD.min.z+bD.max.z)/2));V.label('Fusee wheel','to the train',at(o,Fx[0]+WD.FU.FW.teeth[2]/2,(bW.min.y+bW.max.y)/2,Fx[1]));
     set(0);
     return dt=>{if(kw){kw.t+=dt/(RM?4:1);const T1=4,T2=4.6,T3=5.2;   /* the key turns 3 minutes' worth in 4 s, rests, lets go, and the mainspring closes the spring again */
         if(kw.t<T1)set(3*smooth(kw.t/T1),'turn');else if(kw.t<T2)set(3,'turn');else if(kw.t<T3){const u=smooth((kw.t-T2)/(T3-T2)),s3=WPHYS.susPhi(m0,180);ms=s3+(m0-s3)*u;set(3*(1-u),'run');}else{kw=null;set(0,'run');}inp.value=tm;}
