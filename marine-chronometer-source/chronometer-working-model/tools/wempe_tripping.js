@@ -158,7 +158,11 @@ function run(M,o={}){
     let Mth=-KB*th-CB*om-I*al,Mph=-tauE-JT*al;let fS_v=0,fS_u=0,fT_u=0,fT_v=0;const fb=[0,0],fh=[0,0,0];
     const l=vS*LV,dl=vSd*LV,Rr=rec(l),Rd=recD(l),dph=Rr+kU*uS-(held?ph:ph+P),dphd=Rd*dl+kU*uSd-pv;let Ft_=0;
     if(qD&&held){Ft_=tauE;Mph=0;if(l>0)fS_v-=mDq/(BLu*ES);}
-    else if(dph>0&&(held||l<(M.o.relRel?lRel:lFr))){Ft_=Math.max(0,kT*cT*cT*dph+M.C.L*cT*cT*dphd);Mph+=Ft_;fS_v-=Ft_*Rd*LV;fS_u-=Ft_*kU;const fn=Ft_/cT;fS_v-=mu*fn*Math.tanh(vSd/VF);}
+    /* the tooth on the stone only while the stone is in its way (l under lFr), held or not: until 12 November 2026 a held tooth was pressed on through the step in which l passed
+       lFr (held is cleared after the step), where rec(l) has just dropped to 0 and the Wempe's tooth, standing RSL·lFr = -0.0017 forward of its locked place (its recoil
+       is forward; the Hamilton's is back, so its tripping.js's same line gives no force there), read as that far into the stone: for up to one step of 1 µs the penalty
+       threw the wheel back at up to 11 rad/s, and in about 1 beat of 100 of the 1940s build it came back onto the returning stone (a late lock, a tooth past) */
+    else if(dph>0&&(M.o.relRel?(held||l<lRel):l<lFr)){Ft_=Math.max(0,kT*cT*cT*dph+M.C.L*cT*cT*dphd);Mph+=Ft_;fS_v-=Ft_*Rd*LV;fS_u-=Ft_*kU;const fn=Ft_/cT;fS_v-=mu*fn*Math.tanh(vSd/VF);}
     /* the stone on the tooth it let go: its lift held at least the ride's (dynamics.js's RDT) while that tooth is under it */
     let Fr=0;if(!held&&ph<0&&ph>-P){const rr=rdA(ph)*LEN;if(rr>0){const pn=(rr-l)/LV;if(pn>0){const r1=rd1(ph)*LEN/LV,pnd=r1*pv-vSd;Fr=Math.max(0,kT*pn+C.Rd*pnd);fS_v+=Fr;Mph+=-Fr*r1+mu*Fr*ES*Math.tanh(-pv/0.05);}}}
     let Fi=0,g1S=0;if(!held){const g=at(Gt,th);if(!isNaN(g)){const g1=at(G1t,th)||0,d=g-ph;if(d>0){g1S=g1;Fi=Math.max(0,kT*ES*ES*d+C.I*ES*ES*(g1*om-pv));Mph+=Fi;Mth-=Fi*g1;}}}
@@ -278,10 +282,13 @@ const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[[`preloaded (${S.W78} g
 /* the knock's floor (18 October 2026): the 3 ms blow on the frame at preloads either side of the estimate, for the least preload that takes 20 g (the bench's other floor).
    Not 1.5×: there alone the run's first drop from rest is slow (268 ms against 20, the stone riding the tooth it let go), and the search's first blows, in it, stall the wheel at 2.4 g */
 const KF=[0.8,1.2];
+/* the depth of lock made shallower (12 November 2026; the owner's choice for the drawn versions: their lock's floor is where a tooth first gets past, the ring reported): the frame
+   as drawn with makeEsc's dL less (the banking set in), each in a child built at that depth (MC_ESC) */
+const LK=[0.22,0.205,0.19,0.175,0.16,0.15,0.14,0.13,0.12,0.11];
 const jobs=[...R2K.map(([,o])=>({k:'run',mo:o,ro:{T:6,from:3}})),...SW.map(([,o])=>({k:'run',mo:o,ro:{T:3,from:1.5}})),...PUSH.map(A=>({k:'push',A})),
-  ...KN.flatMap(([,pre])=>KK.slice(0,pre?3:2).flatMap(([,kind,lo,hi])=>[false,true].map(rigid=>({k:'knock',pre,kind,lo,hi,rigid})))),...KF.map(pre=>({k:'knock',pre,kind:'b3',lo:1,hi:400,rigid:false}))];
+  ...KN.flatMap(([,pre])=>KK.slice(0,pre?3:2).flatMap(([,kind,lo,hi])=>[false,true].map(rigid=>({k:'knock',pre,kind,lo,hi,rigid})))),...KF.map(pre=>({k:'knock',pre,kind:'b3',lo:1,hi:400,rigid:false})),...LK.map(d=>({k:'run',mo:{},ro:{T:10,from:5},esc:{dL:d/S.ES}}))];
 const pool=async()=>{const{spawn}=require('child_process'),out=new Array(jobs.length),N=Math.max(1,Math.min(jobs.length,+process.env.MC_PROCS||require('os').cpus().length-4));let next=0;
-  const kid=spec=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_WJOB:JSON.stringify(spec)}});let s='';
+  const kid=spec=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_WJOB:JSON.stringify(spec),...(spec.esc?{MC_ESC:JSON.stringify({...JSON.parse(process.env.MC_ESC||'{}'),...spec.esc})}:{})}});let s='';
     p.stdout.on('data',d=>s+=d);p.stderr.on('data',d=>process.stderr.write(d));p.on('close',code=>code?rej(Error('wempe_tripping.js --child '+JSON.stringify(spec)+' exited '+code)):res(JSON.parse(s.trim().split('\n').pop())));});
   await Promise.all([...Array(N)].map(async()=>{while(next<jobs.length){const i=next++;out[i]=await kid(jobs[i]);}}));return out;};
 pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;};
@@ -326,6 +333,21 @@ pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;
     say(`the 3 ms blow's least on the frame against the preload (× the estimate, ${S.W78} g): ${kr.map(([m,g])=>`${m}× ${f(g,1)} g`).join(', ')}; it takes 20 g from ${mK==null?`past ${KF[KF.length-1]}×`:`${ik===0?'under ':'about '}${f(mK,2)}× (${f(mK*S.W78,2)} g)`}: the knock's floor, the bench's other least`);
     J.knocks={rows:K4,gS,floor:{rows:kr,m:mK,g:mK==null?null:mK*S.W78}};}
   flush();
+  say('5. The depth of lock made shallower (the banking set in): where a tooth first gets past');
+  {const d0=S.dL*S.ES,L5=take(LK.length),rows=[[d0,dr],...LK.map((d,i)=>[d,L5[i]])].map(([d,r])=>({d:+f(d,3),beats:r.beats,trips:r.trips,maxL:r.maxL,um:+f(r.maxL*d*LR/d0*1000,1)}));
+    for(const r of rows)say(`  ${f(r.d,3)} mm: ${r.beats} beats, ${r.trips?r.trips+' teeth past':'none past'}, a held tooth's stone at most ${pc(r.maxL)} of the depth (${f(r.um,0)} µm)`);
+    const ib=rows.findIndex(r=>r.trips>0),ok=ib<0?rows:rows.slice(0,ib),noPast=ok.length?ok[ok.length-1].d:null,past=ib<0?null:rows[ib].d,ringMax=Math.max(...ok.map(r=>r.um));
+    say(`no tooth gets past down to ${noPast==null?'(none)':f(noPast,3)+' mm'}${past==null?'':`, one does at ${f(past,3)}`}: the stone's ring, ${f(Math.min(...ok.map(r=>r.um)),0)}-${f(ringMax,0)} µm, is the gold spring's blow on the return and doesn't go with the lock, so a tooth is let go where the lock is no deeper than it. The drawn versions' lock's floor (wempe_tolerances.js; the owner's choice, 12 November 2026); the builds keep twice their ring (wempe_build.js)`);
+    chk(noPast!=null&&noPast<d0-0.02,`the drawn ${f(d0,3)} mm is ${noPast==null?'not':f((d0-noPast)*1000,0)+' µm'} over the shallowest lock that lets no tooth past`);
+    J.lock={rows,noPast,past,ringMax};}
+  flush();
+  /* tools/tripping_wempe.json (--write): the frame's figures wempe_tolerances.js takes for the drawn version (its ring, the preload's floors, the lock's floor); typed into it
+     until 12 November 2026, where they went stale unseen. Without --write, a full run fails if the file isn't what it finds. The last revised version only (the builds: wempe_build.json) */
+  if((process.env.MC_WREV||'last')==='last'&&!process.env.MC_ESC){const OUT=path.join(__dirname,'tripping_wempe.json'),k3=J.knocks.rows.find(k=>k.preload===KN[0][0]&&k.name===KK[1][0]).frame,
+      T_={ring:+f(dr.maxL,4),ringUm:+f(dr.maxL*LR*1000,1),lock:+f(LR,4),preload:{w:S.W78,noPast:+f(J.floor.held,3),half:J.floor.half==null?null:+f(J.floor.half,3),rows:J.floor.rows.map(([m,x,t])=>[m,+f(x,4),t])},
+        knock:{g3:k3,floor:J.knocks.floor.g==null?null:+f(J.knocks.floor.g,3),rows:J.knocks.floor.rows},lockFloor:{noPast:J.lock.noPast,past:J.lock.past,ringMaxUm:J.lock.ringMax,rows:J.lock.rows.map(r=>[r.d,r.trips,+f(r.maxL,4)])}},txt=JSON.stringify(T_,null,1)+'\n';
+    if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log('  wrote tools/tripping_wempe.json');}
+    else{const ok=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8').replace(/\r/g,'')===txt;console.log(ok?'  ok  tools/tripping_wempe.json is what this finds':'  !!  tools/tripping_wempe.json is not what this finds: node tripping.js --model wempe --write');if(!ok)fail=1;}}
   J.time=(Date.now()-t0)/1000;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));if(fail)process.exitCode=1;}).catch(e=>{console.error(e);process.exitCode=1;});
 }
 /* a job, in a child process (MC_WJOB): a run of the frame (pick), a pushed swing (the frame and dynamics.js), or a knock's least size (the frame or the rigid detent) */
