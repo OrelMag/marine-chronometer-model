@@ -4,6 +4,12 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.85.04 · 2026-11-11
+- The row of views under the model shows an arrow where it runs past the edge (phones and tablets), scrolls sideways with a mouse wheel, and fits whole on a desktop: the Wempe's Transport box was cut off
+- A long part card stops above the views and the play bar and scrolls, instead of running under them
+- The play bar keeps 'h of power left' together on a phone
+- The Essay link in the Wempe's Its drawings bar matches the tabs beside it
+
 ## 3.85.03 · 2026-11-11
 - Essay: the Model 21's mainspring, train counts and sources brought up to date with Hamilton's factory drawings and the model's true size
 - Essay: the lunar distance's equations and the maker's table of limits read properly on a phone

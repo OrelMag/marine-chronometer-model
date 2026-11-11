@@ -65,7 +65,8 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .lasso polygon{fill:rgba(47,127,232,.12);stroke:#2f7fe8;stroke-width:1.5;stroke-dasharray:5 4;stroke-linejoin:round}
 .tools button{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .info{position:absolute;left:12px;top:12px;max-width:min(340px,calc(100% - 24px));background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  border-radius:12px;padding:12px 14px 12px;box-shadow:0 6px 24px rgba(0,0,0,.14);display:none}
+  border-radius:12px;padding:12px 14px 12px;box-shadow:0 6px 24px rgba(0,0,0,.14);display:none;
+  max-height:calc(100% - var(--dh,100px) - 36px);overflow:auto;overscroll-behavior:contain}   /* clear of the views and play bar (ui.js's --dh), which drew over a long card's foot */
 .info.on{display:block}
 .info h3{font:600 18px/1.2 Spectral,Georgia,serif;margin:0 26px 4px 0}
 .info p{margin:0;font-size:13.5px;color:var(--ink)}
@@ -292,6 +293,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 .mdl nav.models a,.mdl nav.models span{border:0;border-radius:7px;padding:4px 11px;font-weight:500}
 .mdl nav.models [aria-current]{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}.mdl nav.models a:hover{color:var(--ink)}
 .mdl header .tabs{position:static;padding:0;gap:16px;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.tabs a{font-family:"Instrument Sans",system-ui,sans-serif;font-weight:600}   /* a link among the tabs in the buttons' face: the essay's bar drew it in the page's serif */
 .mdl header .tabs button,.mdl header .tabs a{border:0;border-bottom:2px solid transparent;border-radius:0;padding:5px 1px;min-height:0;background:none;font:500 14px "Instrument Sans",system-ui,sans-serif;color:var(--muted)}
 .mdl header .tabs [aria-selected="true"]{color:var(--ink);border-bottom-color:var(--blue);background:none}.mdl header .tabs a:hover,.mdl header .tabs button:hover{color:var(--ink)}
 /* the light/dark switch: the knob a sun by day, a moon at night */
@@ -318,8 +320,11 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
 /* the views and the play bar */
 .dock{position:absolute;z-index:4;left:12px;right:12px;bottom:12px;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
 .dock>*{pointer-events:auto;max-width:100%}
-.vstrip{display:flex;gap:6px;overflow-x:auto;padding:2px;scrollbar-width:none;overscroll-behavior-x:contain}.vstrip::-webkit-scrollbar{display:none}
-.mdl .vstrip button{flex:none;min-height:0;padding:6px 13px;border:0;border-radius:999px;font:500 13px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.vstrip{display:flex;gap:5px;overflow-x:auto;padding:2px;scrollbar-width:none;overscroll-behavior-x:contain}.vstrip::-webkit-scrollbar{display:none}
+.vsw{position:relative;display:flex;min-width:0}.vsw>.vstrip{min-width:0}   /* ui.js's wrapper, for the arrows where the strip runs past the stage */
+.vsa{position:absolute;top:50%;z-index:1;transform:translateY(-50%);width:30px;height:30px;min-height:0;padding:0 0 2px;border:0;border-radius:50%;font:600 20px/1 "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);box-shadow:var(--shadow)}
+.vsa.l{left:-2px}.vsa.r{right:-2px}.vsa[hidden]{display:none}
+.mdl .vstrip button{flex:none;min-height:0;padding:6px 12px;border:0;border-radius:999px;font:500 13px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow)}
 .mdl .vstrip button[aria-pressed="true"]{background:var(--blue);color:var(--card)}.mdl .vstrip [data-v="exploded"],.mdl .vstrip [data-v="laidout"]{display:none}
 .play{display:flex;align-items:center;gap:6px;padding:5px;border-radius:16px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow)}
 .mdl #pp{flex:none;display:grid;place-items:center;width:40px;height:40px;min-height:0;padding:0;border:0;border-radius:50%;background:var(--blue);color:var(--card)}

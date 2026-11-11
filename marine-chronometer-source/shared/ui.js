@@ -34,7 +34,16 @@ const UI=(()=>{
   menu?.addEventListener('click',e=>{e.stopPropagation();if(e.target.closest('#speeds button'))setTimeout(()=>open(false),120);});
   document.addEventListener('click',()=>open(false));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu&&!menu.classList.contains('hidden')){open(false);chip.focus();}});
   $('#windP')?.addEventListener('click',()=>$('#wind')?.click());
-  const dock=$('#dock'),stage=$('#stage');if(dock&&stage&&typeof ResizeObserver!=='undefined')new ResizeObserver(()=>stage.style.setProperty('--dh',dock.offsetHeight+'px')).observe(dock);   /* the close-up keeps clear of it (style.css) */
+  const dock=$('#dock'),stage=$('#stage');if(dock&&stage&&typeof ResizeObserver!=='undefined')new ResizeObserver(()=>stage.style.setProperty('--dh',dock.offsetHeight+'px')).observe(dock);   /* the close-up and the part card keep clear of it (style.css) */
+  /* ---------- the views' strip: where it runs past the stage (a phone, a tablet), an arrow at each end it runs past says there are more and scrolls on; a mouse wheel over it
+     scrolls it sideways (only while it runs past, so the wheel still zooms the model otherwise). Its scrollbar is hidden, so nothing showed the views beyond the edge ---------- */
+  const vs=$('#views');if(vs){const w=document.createElement('div');w.className='vsw';vs.before(w);w.append(vs);const red=matchMedia('(prefers-reduced-motion: reduce)');
+    const mk=(d,l)=>{const b=document.createElement('button');b.type='button';b.className='vsa '+d;b.tabIndex=-1;b.setAttribute('aria-label',l);b.textContent=d==='l'?'‹':'›';
+      b.addEventListener('click',()=>vs.scrollBy({left:(d==='l'?-.7:.7)*vs.clientWidth,behavior:red.matches?'auto':'smooth'}));w.append(b);return b;};
+    const L=mk('l','More views, to the left'),R=mk('r','More views, to the right'),upd=()=>{const m=vs.scrollWidth-vs.clientWidth;L.hidden=vs.scrollLeft<=2;R.hidden=vs.scrollLeft>=m-2;};
+    vs.addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);if(typeof ResizeObserver!=='undefined')new ResizeObserver(upd).observe(vs);upd();
+    vs.addEventListener('wheel',e=>{if(vs.scrollWidth<=vs.clientWidth+1||Math.abs(e.deltaX)>=Math.abs(e.deltaY))return;e.preventDefault();vs.scrollLeft+=e.deltaY;},{passive:false});
+    vs.addEventListener('click',e=>{const b=e.target.closest('button');if(b)b.scrollIntoView({block:'nearest',inline:'nearest',behavior:red.matches?'auto':'smooth'});});}
   /* ---------- Take it apart: Assembled (the place the view was), Exploded, Laid out: the views' own buttons ---------- */
   const MODES=['exploded','laidout'],modeSeg=$('#modeSeg');let place='movement';
   modeSeg?.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$(`#views [data-v="${b.dataset.v||place}"]`)?.click();});
