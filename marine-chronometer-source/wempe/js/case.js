@@ -76,9 +76,9 @@ const WCASE=(()=>{
         const f=(F[i]||[]).filter(q=>{const c=KIT.cen(q.p),t=((Math.atan2(c[1],c[0])-s0)%TAU+TAU)%TAU;return Math.floor(t/(TAU/M))===h;});
         out.push({loop:[...ix.map(k=>b[k]),...ix.slice().reverse().map(k=>a[k])],y0:ys[i][0],y1:ys[i][1],F:f});}}return out;};
   const smoothRev=KIT.smoothRev;   /* turned faces shaded smooth (kit.js) */
-/* SOL(key): the part's recipe's exact solid (js/solids.js, tools/recipe_solids.py: the one-geometry pilot, 11 November 2026), which the page then draws in place of the
-   mesh built here; null without the file (the essay's page, which loads this script without it) or with window.__SOLIDS_RAW (the builders' own meshes, for a comparison) */
-const SOL=(/** @type {string} */k)=>typeof WSOLIDS!=='undefined'&&WSOLIDS[k]&&!(typeof window!=='undefined'&&/** @type {any} */(window).__SOLIDS_RAW)?KIT.brep(WSOLIDS[k]):null;
+/* SOL(key): the part's recipe's exact solid (js/solids.js, written by tools/recipe_solids.py for the parts in checks.py's SOLIDS; one geometry, 11 November 2026): the
+   part's only mesh, the same solid as its STEP file. A page that builds the case loads js/solids.js before this script (the Wempe's, the essay's) */
+const SOL=(/** @type {string} */k)=>KIT.brep(WSOLIDS[k]);
   const rr=p=>Math.hypot(p[0],p[1]),C=(p,r,n=0)=>ring(p[0],p[1],r,n);
   /* a sector [r0, r1] × [a0, a1] (rad, atan2(z, x)) in cells joined along their arcs: arcs cut at the given angles so neighbours share their points */
   const arcP=(r,as)=>{const o=[];for(let j=0;j<as.length-1;j++){const n=Math.max(2,Math.ceil(Math.abs(as[j+1]-as[j])*r/0.4));for(let i=j?1:0;i<=n;i++){const t=as[j]+(as[j+1]-as[j])*i/n;o.push([r*Math.cos(t),r*Math.sin(t)]);}}return o;};
@@ -479,13 +479,10 @@ const SOL=(/** @type {string} */k)=>typeof WSOLIDS!=='undefined'&&WSOLIDS[k]&&!(
       for(const h of[-19.0,-28.2])tag(screw(along(bv,[rp*Math.cos(a),hY(h),rp*Math.sin(a)],[-Math.cos(a),0,-Math.sin(a)]),0,0,0,3.4,2.4,6,2.0,M.steel),'6MX.bks');}
     const LB=WD.CASEQ.LB;
     for(const[bv,rb]of[[rv(brk,'last first 1943'),LB.rb]]){const g=tag(new THREE.Group(),'050100-4');bv.add(g);const a=ang(LB.a),RF=rb+LB.off,ca=Math.cos(a),sa=Math.sin(a);
-      /* its profile [r, h] (h over the pivots, YP) in cells extruded across it (t, −7.85 to +7.85; the neck's from +1.75), then stood on its radius at 50°: below the slot,
-         the neck, the head */
-      const{LO,NK,HD}=LB.P;
-      const sg=SOL('lockBracket');   /* its recipe's solid (tools/recipes/wempe_case.py lockBracket), the hole a true cylinder: the builder's (below) joined the hole's mouths with triangles that skipped round it, chords up to 0.05 off its circle */
-      if(sg)mesh(g,sg,M.brass);else{const bg=solidGeo([{loop:LO,y0:-LB.tw,y1:LB.tw},{loop:NK,y0:LB.tn,y1:LB.tw},{loop:HD,y0:-LB.tw,y1:LB.tw}]);
-      bg.applyMatrix4(new THREE.Matrix4().set(ca,sa,0,0, 0,0,1,YP, sa,-ca,0,0, 0,0,0,1));   /* x: r along the radius (cos a, sin a), y: t across it toward 3 o'clock, z: h up */
-      mesh(g,WFUSEE.capFix(WFUSEE.bore(bg,[(rb-LB.hr0)*ca,YP+LB.hy,(rb-LB.hr0)*sa],[ca,0,sa],LB.hd/2,0,LB.hn,null,[0,1,0.29]),null),M.brass);}   /* its screw's hole Ø 2.9 clear for the M2.5 (estimated; not cut until 28 October 2026: 10-M10) */
+      /* its recipe's solid (tools/recipes/wempe_case.py lockBracket, from LB; SOL), in this group's frame: its profile [r, h] (h over the pivots, YP; LB.P: below the slot,
+         the neck, the head) across it (t, −7.85 to +7.85; the neck's from +1.75), stood on its radius at 50°; its screw's hole Ø 2.9 clear for the M2.5 (estimated; not cut
+         until 28 October 2026: 10-M10) a true cylinder (until 11 November 2026 a mesh built here, whose hole's mouths were joined by triangles that skipped round it) */
+      mesh(g,SOL('lockBracket'),M.brass);
       tag(screw(along(bv,[RF*ca,YP+LB.hy,RF*sa],[-ca,0,-sa]),0,0,0,...LB.sc,M.steel),'WN-78.m25');}   /* to r 49.7, as the case brackets' (6 long until 27 October 2026) */
 
     /* ================= the closing plate (Verschlußplatte 05 01 00-2, rev. a 14.4.48) ================= */
@@ -1131,68 +1128,16 @@ const SOL=(/** @type {string} */k)=>typeof WSOLIDS!=='undefined'&&WSOLIDS[k]&&!(
       /* the socket end: the square 3.15 across (its corners at r 2.227 on x and z), its mouth sunk 60° (05 01 02-3: "60°" and "1 +0,2" at the end; the sink's edge drawn
          nearly at the end's rim and the curve where the cone meets the square's flats ending at the 1, so the 1 is to the flats: the cone 1.1 deep, its tolerance's middle,
          from r 1.575 + 1.1 tan 30° = 2.21 on the end face; left out until 27 October 2026), the relief outside (2.5 +0.3 long from Ø 5.95 to Ø 4.6 at the end: the sheet's
-         end 47 px across at 9.72 px/mm, 4.8; estimated 4.6). Inside r 2.3: each flat's sector, the cone's strip from the flat to r RC (quads along the radii, on which the
-         cone is straight) and the end face's land outside it to r 2.3; outside, the relief's ring on the same 240 points (circ) */
-      const kt=SOL('keyTube');   /* its recipe's solid (tools/recipes/wempe_rest.py keyTube): one piece, the sink a true cone (the builder's, below, in strips 0.02 off it at the end face, and in two pieces) */
-      if(kt)tag(mesh(g,kt,M.brass),'050102-3');else{
-      {const RC=KT.rs+KT.sink*Math.tan(KT.sa*D2R),C2=circ(KT.r2),cn=p=>(RC-rr(p))/Math.tan(KT.sa*D2R),CL=[];
-        for(let q=0;q<4;q++){const f0=q*Math.PI/2,fm=f0+Math.PI/4,at=(k,r)=>{const t=f0+k*1.5*D2R;return[r*Math.cos(t),r*Math.sin(t)];},fl=k=>at(k,KT.rs/Math.cos((k*1.5-45)*D2R));
-          const K=[...Array(61).keys()].filter(k=>KT.rs/Math.cos((k*1.5-45)*D2R)<RC-1e-6),Af=K.map(fl),Bc=K.map(k=>at(k,RC)),Co=[...Array(61).keys()].map(k=>C2[(q*60+k)%240]);
-          CL.push({loop:[...Bc,...Af.slice().reverse()],y0:cn,y1:KT.sD,strip:1},{loop:[fl(60),Af[Af.length-1],...Bc.slice().reverse(),Af[0],fl(0),...Co],y0:0,y1:KT.sD});}
-        tag(mesh(g,smoothRev(solidGeo([...CL,...cells([KT.r2,KT.R],[[0,KT.sD],[p=>(rr(p)-KT.r2)*KT.rel/(KT.R-KT.r2),KT.sD]]).slice(1)])),M.brass),'050102-3');}
-      tag(mesh(g,lathe([[KT.dr,KT.sD],[KT.R,KT.sD],[KT.R,T-KT.nk],[KT.rn,T-KT.hl],[KT.H,T-KT.hl],[KT.H,T],[0,T],[0,KT.d2],[KT.dr,KT.d1]]),M.brass),'050102-3',1);}   /* on: the drilled hole's end, the head */
-      /* the body (05 01 02-2) cut as its sheet draws it, from four closed solids meeting face to face (the cell builder cuts upright holes in flat faces only), joined into one below: below the drill
-         point's foot (YA) the spring's Ø 0.9 hole, 3.8 out at the bottom face and 5° in toward the axis going up, cut through as a slanted hole; from YA to YS (under the slot)
-         the drill point's 120° cone, the spring's hole carried up through it (upright, where it leaves the hole below) to come out in the cone, the bore's wall and the cone
-         outside; above YS the two jaws either side of the slot, built along the pin's axis (z), so that the cross hole (Ø 2.5 +0.05, 4 −0.05 under the top) is an upright hole
-         through each jaw from the bore to the outside, and the slot's walls (3 H11 apart) and its Ø 35 floor (6.3 +0.1 under the top at the outside) are faces: each plan
-         point (x, y) of a jaw holds z from the bore's wall (or the slot's, or the plane z 0 below the floor, where the jaws meet) to the turned outside. Fits: the bore Ø 8.1,
-         the hole Ø 6.1 (8 +0,1 and 6 +0,1 at their tops: the tube 0.075 and 0.125 clear in them), the slot 3.03 and the cross hole 2.525 (the middles of theirs: the second drawing check's 10-M13 f) */
-      const YD=BT-KB.dd,YA=YD-KB.yj,YS=BT-KB.ys,SW=KB.sw,RB=KB.RB,RO=KB.RO,RH=KB.RH,YH=BT-KB.yh,YC=BT-KB.fd+Math.sqrt(KB.fr**2-RO**2),ZC=KB.hz-(YA-B0)*Math.tan(KB.ha*D2R),
-        cone=p=>B0+(rr(p)-KB.r0)*KB.cl/KB.cw,dp=p=>YD+(rr(p)-KB.rh)*KB.pt,hc=(c,r,n=24)=>[...Array(n).keys()].map(k=>{const t=k/n*TAU;return[c[0]+r*Math.cos(t),c[1]+r*Math.sin(t)];});
-      const kb=SOL('keyBody');   /* its recipe's solid (wempe_rest.py keyBody): the spring's hole drilled slanted the whole way and the top chamfer a true cone, as the sheet draws them (the builder's, below: the hole upright through the drill point, the chamfer in four steps, 0.03 off) */
-      if(kb)KBLK.push(tag(mesh(g,kb,MC.black),'050102-2'));else{
-      const BG=[solidGeo(cells([KB.rh,KB.r0],[[0,0],[B0,YA]],[[],[{p:hc([0,KB.hz],KB.hr),q:hc([0,ZC],KB.hr),a:B0,b:YA}]]).slice(1))];
-      const bore=x=>Math.sqrt(Math.max(0,RB*RB-x*x)),zo=p=>Math.sqrt(Math.max(0,(p[1]<BT-KB.ch?RO:BT+KB.rt-p[1])**2-p[0]**2)),fl=x=>YC-Math.sqrt(KB.fr**2-x*x),
-        ych=x=>BT+KB.rt-Math.hypot(x,SW),xl=y=>Math.sqrt((BT+KB.rt-y)**2-SW*SW),XS=bore(SW),XO=Math.sqrt(RO*RO-SW*SW),XT=xl(BT),YL=[1,2,3].map(k=>BT-KB.ch+k*KB.ch/4);
-      /* the jaws' columns in x: the outside and the bore every 3° (their 6° the sectors below), the cross hole by angle (each sheds its curve evenly), where the slot's wall meets
-         the bore and the outside, where the chamfer's levels meet its edge; none wider than 0.3. The solid under the jaws takes its outline's points from these columns, so the
-         two meet point for point (a polygon of their own left slivers 2 µm wide, which drew as a dashed line) */
-      const SP=[0,XS,XO,XT,...YL.map(xl),RH,RB,RO,...[...Array(61).keys()].flatMap(k=>[RO,RB].map(r=>r*Math.cos(k*Math.PI/60)))].flatMap(v=>[v,-v]).sort((u,v)=>u-v).filter((v,i,A)=>!i||v-A[i-1]>1e-9);
-      let X=[];for(let k=1;k<24;k++)X.push(RH*Math.cos(k*Math.PI/24));
-      X=[...SP,...X.filter(v=>SP.every(s=>Math.abs(v-s)>0.004))].sort((u,v)=>u-v);
-      for(let i=X.length-2;i>=0;i--){const n=Math.ceil((X[i+1]-X[i])/0.3);if(n>1)X.splice(i+1,0,...[...Array(n-1).keys()].map(k=>X[i]+(X[i+1]-X[i])*(k+1)/n));}
-      {const an=(A,r)=>A.filter(x=>Math.abs(x)<=r+1e-12).flatMap(x=>{const t=Math.acos(clamp(x/r,-1,1));return[t,TAU-t];}).sort((u,v)=>u-v).filter((v,i,B)=>!i||v-B[i-1]>1e-12),
-          AO=an(X,RO),AB=an(X,RB),G=[...Array(241).keys()].map(k=>k*TAU/240),T6=[...Array(61).keys()].map(k=>k*TAU/60),
-          pts=(r,A,ta,tb)=>A.filter(t=>t>ta-1e-9&&t<tb+1e-9).map(t=>[r*Math.cos(t),r*Math.sin(t)]),
-          ringC=(r0,A0,r1,A1,bd,y0,y1)=>bd.slice(0,-1).map((ta,i)=>({loop:[...pts(r1,A1,ta,bd[i+1]),...pts(r0,A0,ta,bd[i+1]).reverse()],y0,y1,F:[]}));
-        /* rings: the drill point (in 6° sectors, its sectors from 78° to 102° as two cells either side of the spring's hole, which they leave open; from YA, 0.12 under the
-           cone's foot, so no sloped face has an edge in the joint's plane), the flat ring to the cone's foot, the cone's ring; arcs at the bore and the outside the jaws'
-           points, at 3.05 and 4.57 the bottom ring's (cells' 1.5°) */
-        const H=hc([0,ZC],KB.hr),c=[...ringC(KB.rh,G,RB,AB,T6,YA,dp),...ringC(RB,AB,KB.r0,G,[0,Math.PI,TAU],YA,YS),...ringC(KB.r0,G,RO,AO,T6,cone,YS)],t=T6;
-        c.splice(13,4,{loop:[...pts(RB,AB,t[13],t[15]),...[6,5,4,3,2,1,0,23,22,21,20,19,18].map(k=>H[k]),...pts(KB.rh,G,t[13],t[15]).reverse()],y0:YA,y1:dp,F:[]},
-          {loop:[...pts(RB,AB,t[15],t[17]),...pts(KB.rh,G,t[15],t[17]).reverse(),...[18,17,16,15,14,13,12,11,10,9,8,7,6].map(k=>H[k])],y0:YA,y1:dp,F:[]});
-        BG.push(solidGeo(c));}
-      {/* each column's levels (low to high): the jaws' foot YS, the slot's floor (outside the bore's shadow), the cross hole's lower and upper edge, the chamfer's foot and three
-           levels up it, and the top (the chamfer's edge, where the slot's wall leaves it, toward the outside) */
-        const lev=(xa,xb)=>{const m=Math.abs((xa+xb)/2),L=/** @type {{f:(x:number)=>number,fl?:number,lo?:number}[]} */([{f:()=>YS}]);if(m>XS)L.push({f:fl,fl:1});if(m<RH)L.push({f:x=>YH-Math.sqrt(Math.max(0,RH*RH-x*x)),lo:1},{f:x=>YH+Math.sqrt(Math.max(0,RH*RH-x*x))});
-          if(m<XO){L.push({f:()=>BT-KB.ch});for(const y of YL)if(m<xl(y))L.push({f:()=>y});L.push({f:m<XT?()=>BT:ych});}return L;};
-        const C=X.slice(0,-1).map((xa,i)=>{const xb=X[i+1];return{xa,xb,L:lev(xa,xb).map(l=>({...l,a:l.f(xa),b:l.f(xb)})).sort((u,v)=>u.a+u.b-v.a-v.b)};}),out=[],e=1e-7;
-        C.forEach((c,i)=>{const lt=i?C[i-1].L.map(l=>l.b):[],rt=i<C.length-1?C[i+1].L.map(l=>l.a):[],u=A=>A.filter((v,k)=>!k||Math.abs(v-A[k-1])>e);
-          for(let j=0;j<c.L.length-1;j++){const l0=c.L[j],l1=c.L[j+1];if(l0.lo)continue;   /* between the cross hole's edges: the hole */
-            const R=u(rt.filter(y=>y>l0.b+e&&y<l1.b-e).sort((p,q)=>p-q)),Lf=u(lt.filter(y=>y>l0.a+e&&y<l1.a-e).sort((p,q)=>q-p));
-            let lp=[[c.xa,l0.a],[c.xb,l0.b],...R.map(y=>[c.xb,y]),[c.xb,l1.b],[c.xa,l1.a],...Lf.map(y=>[c.xa,y])];lp=lp.filter((q,k)=>{const n=lp[(k+1)%lp.length];return Math.abs(q[0]-n[0])>e||Math.abs(q[1]-n[1])>e;});
-            out.push({loop:lp,y0:c.L.slice(0,j+1).some(l=>l.fl)?SW:p=>bore(p[0]),y1:zo,F:[]});}});
-        const gz=solidGeo(out);gz.rotateX(-Math.PI/2);const gp=gz.clone();gp.rotateY(Math.PI);   /* the plan's (x, y) and depth z to the key's frame: the jaw at −z, turned about the axis to +z */
-        BG.push(gz,gp);}
-      /* the four as one: the faces where they meet (y YA and the wall r 4.57 under it, y YS, and z 0 below the slot's floor, where the jaws meet) dropped, both sides; their outlines are the same points,
-         so what is left is one closed surface (kept apart, the faces met the surface's edge at its own depth and flickered through as a line) */
-      {const P=[],Nn=[],U=[],on=(a,i,k,v)=>Math.abs(a[i+k]-v)<1e-6&&Math.abs(a[i+3+k]-v)<1e-6&&Math.abs(a[i+6+k]-v)<1e-6,
-          wl=(a,i)=>[0,3,6].every(k=>Math.abs(Math.hypot(a[i+k],a[i+k+2])-KB.r0)<1e-5&&a[i+k+1]<YA+1e-6)&&!on(a,i,1,a[i+1]);   /* the joint's wall at r 4.57 (a horizontal face's sliver on that arc kept) */
-        for(const q of BG){const a=q.attributes.position.array,n=q.attributes.normal.array,u=q.attributes.uv.array;
-          for(let i=0;i<a.length;i+=9){if(on(a,i,1,YA)||on(a,i,1,YS)||on(a,i,2,0)||wl(a,i))continue;P.push(...a.slice(i,i+9));Nn.push(...n.slice(i,i+9));U.push(...u.slice(i/3*2,i/3*2+6));}}
-        const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(P,3));bg.setAttribute('normal',new THREE.Float32BufferAttribute(Nn,3));bg.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));
-        KBLK.push(tag(mesh(g,smoothRev(bg),MC.black),'050102-2'));}}
+         end 47 px across at 9.72 px/mm, 4.8; estimated 4.6) */
+      tag(mesh(g,SOL('keyTube'),M.brass),'050102-3');   /* its recipe's solid (tools/recipes/wempe_rest.py keyTube, from KT; SOL): one piece from the socket's end to the head, the drilled hole's end in it */
+      /* the body (05 01 02-2) as its sheet draws it, its recipe's solid (wempe_rest.py keyBody, from KB; SOL): the spring's Ø 0.9 hole, 3.8 out at the bottom face and 5°
+         in toward the axis going up, drilled slanted to where it comes out in the drill point's 120° cone; the bore's wall and the cone outside; above the bore's floor
+         the two jaws either side of the slot, the cross hole (Ø 2.5 +0.05, 4 −0.05 under the top) through each from the bore to the outside, the slot's walls (3 H11 apart)
+         and its Ø 35 floor (6.3 +0.1 under the top at the outside); the top's chamfer a cone. Fits: the bore Ø 8.1, the hole Ø 6.1 (8 +0,1 and 6 +0,1 at their tops: the
+         tube 0.075 and 0.125 clear in them), the slot 3.03 and the cross hole 2.525 (the middles of theirs: the second drawing check's 10-M13 f). Until 11 November 2026
+         a mesh built here from four solids: the spring's hole upright through the drill point, the chamfer in four steps */
+      const RB=KB.RB,RH=KB.RH,YH=BT-KB.yh,YC=BT-KB.fd+Math.sqrt(KB.fr**2-KB.RO**2);
+      KBLK.push(tag(mesh(g,SOL('keyBody'),MC.black),'050102-2'));
       /* the paddle with the pin's hole (Ø 2.525), its centre on the slot's floor at the bore's edge */
       const PY=BT+KP.u+Math.sqrt(KP.R**2-RB*RB)-(Math.sqrt(KB.fr**2-RB*RB)-(YC-BT)),ds=new THREE.Shape();ds.absarc(0,0,KP.R,0,TAU,false);{const h=new THREE.Path();h.absarc(0,YH-PY,RH,0,TAU,true);ds.holes.push(h);}
       const dg=extrude(ds,{depth:KP.t,bevelEnabled:false,curveSegments:72});dg.translate(0,PY,-KP.t/2);KBLK.push(tag(mesh(g,dg,MC.black),'510011-1'));

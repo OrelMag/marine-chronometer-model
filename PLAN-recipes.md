@@ -794,5 +794,13 @@ the page draws through it; the lever has none for the arbor and the grip; the gr
 - **Phase 3, the page built from the recipes.** It ends two builders drifting apart, but it's the largest step (every part's mesh replaced). Do it, or
   keep the page's builders and the recipes side by side with `recipes.py --check` keeping them in step?
 
+### Phase 3 begun: one geometry (11 November 2026)
+The owner's decisions on the page built from the recipes, after a pilot on three case parts (the key body, the key tube, the locking bracket; the Wempe README's "Parts drawn from their recipes' solids: one geometry" has the method, the encoding's table and the checks):
+- **A leaner encoding first, then land the three.** Done: `tools/recipe_solids.py` writes `wempe/js/solids.js` (95 kB in the page for the three, 351 kB in the pilot), the page draws it, their hand-built builders are deleted from `case.js` and the essay's page loads the same data.
+- **Which parts next.** Only parts whose hand-built mesh shows a fault (what `sheets.py --lines` still flags, facets, wrong holes), plain parts first. Threaded parts stay on their builders (a recipe draws a thread as its nominal cylinder). Not every plain part: all 82 plain recipes at the pilot's tessellation would have been 15.5 MB.
+- **True B-rep edges in the Edges pass.** Later, not now.
+
+To move a part: add its key to `checks.py`'s `SOLIDS`, run `recipe_solids.py --model wempe`, replace its builder in the page's script by `SOL(key)` (the recipe's `to_page` is the frame of the mesh it replaces), drop the recipe's `expect`, then `recipes.py --check --only KEY`, `sheets.py --lines` and the geometry checks.
+
 ### Batch 9d after main's 3.66.01 (1 November 2026)
 Merged main's flange (helixSolid, ribs square) and stop bar slot (1,1 deep over the whole upper end's side, 1,5 on the lower end's side of the recess, `SLR` gone). The fusee recipe's slot is now the shallow box over all of u and the deep one for u up to `SB.us`; the body's surface is 0.0019 apart at p99 (was 0.026), 0.13 at most at the groove's end N. The row-quantisation `expect` is dropped; one is added for the page's end caps at the 0° seam. The page was proved main's by `recipes_pagehash.py` (38 fusee-side lines, five versions, against a baseline taken on origin/main's own worktree) and the byte-identity tools.

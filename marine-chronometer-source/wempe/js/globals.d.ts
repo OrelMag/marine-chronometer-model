@@ -8,5 +8,5 @@ declare const checkHoles: any;
 declare const makeEsc: typeof import('../../shared/escapement.js').makeEsc;
 // js/fuseebody.js (tools/wempe_fusee_body.py): the fusee body as one closed solid, its corners and triangles base64; not in jsconfig's files (1.7 MB of data). __FUSEE_RAW: that tool's flag
 declare const WFUSEEBODY: {pos: string, idx: string};
-declare const WSOLIDS: {[key: string]: {hn: string, n: number, pos: string, nrm: string, idx: string}};
+declare const WSOLIDS: {[key: string]: {hn: string, n: number, t: number, q: number, o: number[], pos: string, nrm: string, idx: string}};
 interface Window { __FUSEE_RAW?: boolean }
