@@ -47,19 +47,6 @@
    "met": [
     {
      "op": 4,
-     "a": "dustBush",
-     "b": "balance",
-     "hit": [
-      [
-       -14.35,
-       -11.55
-      ]
-     ],
-     "long": [],
-     "why": "a timing screw's head on the balance's rim (about 21 from the staff) lies under the fusee arbor's dust bush and cork washer at the frozen state's swing (x -14, z -8.3): the balance is turned until its screws are clear, as it is free to turn"
-    },
-    {
-     "op": 4,
      "a": "corkRing",
      "b": "upperCock",
      "hit": [
@@ -70,19 +57,6 @@
      ],
      "long": [],
      "why": "the cock clears its seat 1.6 up, then the cork washer on the fusee arbor's end lies over its arm (1.6 into it in plan, x -10.3 to -8.7): it is drawn out sideways from under the washer (estimated), or the washer comes off first"
-    },
-    {
-     "op": 4,
-     "a": "corkRing",
-     "b": "balance",
-     "hit": [
-      [
-       -18.05,
-       -13.65
-      ]
-     ],
-     "long": [],
-     "why": "a timing screw's head on the balance's rim (about 21 from the staff) lies under the fusee arbor's dust bush and cork washer at the frozen state's swing (x -14, z -8.3): the balance is turned until its screws are clear, as it is free to turn"
     }
    ]
   },
@@ -365,8 +339,8 @@
   "escEndstoneLow"
  ],
  "parts": 48,
- "pairs": 405,
- "expected": 11,
+ "pairs": 403,
+ "expected": 9,
  "fails": 0,
  "left": []
 }

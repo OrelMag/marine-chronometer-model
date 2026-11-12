@@ -20,7 +20,7 @@ const ESSAY=(()=>{
     const G=[M[0]/l,M[1]/l];return HC={R,pt,A1:fit(0,90),A2:fit(110,220),l,G,OG:Math.hypot(...G),off:Math.atan2(G[1],-G[0])/D,ph:R*R/l};};
   /* ---------- numbers in the text, from the model's code ---------- */
   function fillLive(model){const E=WPHYS.ESC,P=WPHYS,K=WESC.ESC,m=E.measure(),u=E.run,PL=WD.PIL,sF=PL.sF,hF=WD.PIL_HF,hD=WD.PIL_SEAT[1],kv=P.KV.map(q=>q[1]);
-    const stoneIn=(()=>{let a=E.thRel,b=10*D;for(let i=0;i<50;i++){const c=(a+b)/2;E.bite(c)>-1e8?b=c:a=c;}return b;})();
+    const stoneIn=(()=>{let a=-10*D,b=Math.max(E.thRel,10*D);for(let i=0;i<50;i++){const c=(a+b)/2;E.bite(c)>-1e8?b=c:a=c;}return b;})();   /* where the impulse stone's corner enters the teeth's path: before the release since 11 November 2026 (05 04_1's 5°) */
     let eLo=1e9,eHi=0;for(let h=0;h<=55.9;h+=0.2){const v=P.escT(h/P.HPT);eLo=Math.min(eLo,v);eHi=Math.max(eHi,v);}
     const brg=WD.PILLARS.map(([x,z])=>Math.round(((Math.atan2(-x,-z)/D)+360)%360)),dp=E.depart(E.A);
     const HL=WESC.HSL,hc=hsCurve(),HS=P.HS,Iw=P.SET.I*(0.5/HS.T)**2;
@@ -31,7 +31,7 @@ const ESSAY=(()=>{
       kvMin:f1(Math.min(...kv)),kvMax:f1(Math.max(...kv)),lev:String(P.LEV),ratio:th(+P.RATIO.toFixed(1)),eta:f1(P.ETA,3),etaRange:f1(P.ETA_LO,3)+'–'+f1(P.ETA_HI,3),
       TQ:f1(P.TQ,1),escRange:f1(eLo,1)+'–'+f1(eHi,1),
       A:Math.round(E.A/D)+'°',AMIN:f1(E.AMIN/D,1)+'°',TF:Math.round(P.SET.TF)+' s',lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',overall:f1(m.overall)+'°',
-      rel:sgn(E.thRel/D)+'°',stoneIn:f1((stoneIn-E.thRel)/D)+'°',chase:f1((u.land-E.thRel)/D)+'°',landF:f1(-(u.land/D+K.PHI0))+'°',endF:f1(E.thE/D+K.PHI0)+'°',
+      rel:sgn(E.thRel/D)+'°',stoneIn:f1((E.thRel-stoneIn)/D)+'°',drive:f1(u.drive/D)+'°',chase:f1((u.land-E.thRel)/D)+'°',landF:f1(-(u.land/D+K.PHI0))+'°',endF:f1(E.thE/D+K.PHI0)+'°',
       strike:Math.round(100*u.strike)+' %',shN:String(WEDATA.sheets.length),sh41:String(WEDATA.sheets.filter(q=>q[4]&&q[4]<'1942').length),unlock:Math.round(100*u.fu)+' %',layC:dms(-K.PHI_C),phi0:dms(-K.PHI0),detOff:sgn(dp?dp.th/D:NaN)+'°',
       hsT:f1(HL.HT,3),hsB:f1(HL.HB,2),hsD:f1(2*HL.RC+HL.HT,1),hsP:f1(HL.PITCH,2),hsTurns:f1(HL.turns,2),hsL:f1(HL.L,1),hsPins:Math.round(Math.abs(HL.pins))+'°',
       a1r:f1(hc.A1.r,2),a1o:f1(Math.hypot(...hc.A1.c),2),a2r:f1(hc.A2.r,2),a2o:f1(Math.hypot(...hc.A2.c),2),aRes:String(Math.round(1000*Math.max(hc.A1.res,hc.A2.res))),
@@ -194,21 +194,21 @@ const ESSAY=(()=>{
   /* ---------- the escapement in time: the wheel let go from rest chasing the impulse stone (WPHYS.ESC: chase, bite), against the layout's tooth falling at once ---------- */
   fig('eDet',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?0.85:0.52),ro=q('.e-ro',P),E=WPHYS.ESC,KE=WESC.ESC;let hrs=12,cur=10;
     const[i1,i2]=qa('input[type=range]',P),HR=()=>{const m=K.model();return m?m.run():55.9;};i1.max=String(Math.floor(HR()*10)/10);
-    const stone=t=>{const b=E.bite(t*D);return b>-1e8?-(b-E.t0)/D:null;},tIn=(()=>{let a=E.thRel,b=10*D;for(let i=0;i<50;i++){const c=(a+b)/2;E.bite(c)>-1e8?b=c:a=c;}return b/D;})(),tE=E.thE/D,tL=KE.PHI_C-KE.PHI0;
+    const stone=t=>{const b=E.bite(t*D);return b>-1e8?-(b-E.t0)/D:null;},tIn=(()=>{let a=-10*D,b=Math.max(E.thRel,10*D);for(let i=0;i<50;i++){const c=(a+b)/2;E.bite(c)>-1e8?b=c:a=c;}return b/D;})(),tE=E.thE/D,tL=Math.max(KE.PHI_C-KE.PHI0,E.thRel/D);   /* the layout's tooth is on the stone the moment it is let go, the stone already inside the path (05 04_1's 5°) */
     range(i1,v=>{hrs=v;f.dirty=true;return f1(v,1)+' h';});range(i2,v=>{cur=v;f.dirty=true;return sgn(v,1)+'°';});
     return()=>{if(!f.dirty)return;f.dirty=false;const s=WPHYS.drv(Math.min(hrs,HR()-1e-3)/WPHYS.HPT),a=E.ampAt(s),wh=t=>-E.chase(t*D,a,s)/D,t0=E.thRel/D;
-      let lo=tIn,hi=tE;for(let i=0;i<50;i++){const m=(lo+hi)/2;stone(m)<=wh(m)?hi=m:lo=m;}const tS=hi;
+      let lo=Math.max(tIn,t0),hi=tE;for(let i=0;i<50;i++){const m=(lo+hi)/2;stone(m)<=wh(m)?hi=m:lo=m;}const tS=hi;
       const wheel=t=>t<t0?0:t<tS?wh(t):stone(Math.min(t,tE)),phi=t=>t+KE.PHI0;
       const tC=-KE.PHI0,G=chart(C,{x0:-6,x1:50,y0:-4,y1:24,xt:[0,10,20,30,40,50],yt:[0,6,12,18,24],xf:v=>v+'°',yf:v=>v+'°',L:40,xl:'The balance’s angle from rest, swinging through the impulse',yl:'The escape wheel’s turn since it was let go',
         series:[{f:t=>stone(t)??NaN,color:PAL.brass,from:tIn,to:tE,width:3,label:'the impulse stone',lx:tIn,dy:-18},
           {f:t=>stone(t),color:PAL.red,dash:[5,4],width:1.5,from:tL,to:tS},
           {f:wheel,color:PAL.blue,from:t0,to:tE,label:C.w<520?null:'the wheel, chasing it',lx:11,dy:16},{f:wheel,color:PAL.blue,from:tS,to:tE,label:C.w<520?'the wheel: chasing, then on the stone':'the wheel on the stone, driving it',lx:29,dy:-16,la:'right'}],
         cursor:cur,marks:[{x:t0,y:0,color:PAL.blue},{x:tS,y:stone(tS),color:PAL.blue},{x:tL,y:stone(tL),color:PAL.red}]});
-      /* the line of centres (the stone's face on it), and the layout's instant fall: up to the stone at once where 05 04_1 puts the tooth on it */
+      /* the line of centres (the stone's face on it), and the layout's instant fall: up to the stone at once where 05 04_1 lets the tooth go, the stone 5° inside the path */
       {const{x}=C,{X,Y}=G;x.strokeStyle=PAL.muted;x.lineWidth=1;x.setLineDash([1,3]);x.beginPath();x.moveTo(X(tC),Y(24));x.lineTo(X(tC),Y(-4));x.stroke();
         css(x,`11.5px ${SANS}`,PAL.muted,'left','top');halo(x,'the line of centres',X(tC)+5,Y(24)+3,PAL.muted);
         x.strokeStyle=PAL.red;x.lineWidth=1.5;x.setLineDash([5,4]);x.beginPath();x.moveTo(X(tL),Y(0));x.lineTo(X(tL),Y(stone(tL)));x.stroke();x.setLineDash([]);
-        css(x,`12px ${SANS}`,PAL.red,'left','middle');halo(x,`the layout: on the stone at once, ${dms(-KE.PHI_C)} before the line`,X(tL)+6,Y(-2),PAL.red);
+        css(x,`12px ${SANS}`,PAL.red,'left','middle');halo(x,'the layout: on the stone at once',X(tL)+6,Y(-2),PAL.red);
         css(x,`11.5px ${SANS}`,PAL.blue,'left','top');halo(x,'strikes',X(tS)+7,Y(stone(tS))+3,PAL.blue);x.textAlign='center';x.textBaseline='bottom';halo(x,'let go',X(t0),Y(0)-7,PAL.blue);}
       const wc=wheel(cur),sc=stone(cur);
       ro.innerHTML=`${f1(hrs,1)} h since winding: the drive ${f1(100*s,0)} % of the reference, the balance swinging <b>${Math.round(a/D)}°</b>. Let go at ${sgn(t0,1)}°, the wheel strikes the stone at <b>${f1(tS,1)}°</b>, `+

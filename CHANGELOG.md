@@ -4,6 +4,16 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.86.01 · 2026-11-12
+- Wempe report: every moving part's stress in 3D solved again with the discharge stone at its drawn place (the escapement's parts within a few per cent of before; the balance's lower at its smaller swing), and the fixes for a key let go outright worked again on it
+
+## 3.86.00 · 2026-11-12
+- Wempe: the discharge stone on the balance staff now stands where drawing 05 04_1 puts it (the impulse stone 5° inside the teeth's path as the tooth is released); the balance swings 155-166° over the wind, less than before, and Swing and isochronism, the banking screw, the 35-day trial, Its drawings and the report follow it
+- Wempe: both builds to navigate by (the 1940s and the 1950s) pass their checks with the stone there, their hairspring set against the escapement at the bench
+- Wempe: the drawn version's depth of lock is now judged on no tooth getting past (0.130-0.237 mm); the report gives how far the detent's stone rings and why
+- Wempe: a fault in the tool that tests the detent for tripping fixed (it had wrongly failed the 1940s build), and one in the swing's solve that the stone's new place exposed; the Hamilton is unchanged
+- Wempe 6MX: the CAD files and operation sheets of the case's outer pivot screws and its gimbal lock follow the case as corrected on 8-9 November
+
 ## 3.85.05 · 2026-11-11
 - Essay: the oil table lists every point the manual oils or greases (the winding pawls' posts, the stop-bar, the barrel arbor), and the order of work puts the winding stop where the manual does
 - Essay: two of the Model 21's escapement figures brought up to date: how far the wheel drives the impulse jewel, and the hairspring setting that cancels the escapement's error
