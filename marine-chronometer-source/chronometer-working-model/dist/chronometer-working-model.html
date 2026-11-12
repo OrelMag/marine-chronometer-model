@@ -862,12 +862,51 @@ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t;
 const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const $=s=>document.querySelector(s);
 const sc=h=>new THREE.Color(h).convertSRGBToLinear();
+/* three.js r128 and r187 side by side while the pages move from one to the other (PLAN-three-upgrade.md). T3: the page loaded the newer one (vendor/three.r187.js).
+   Colours stay as this code has always held them, an sRGB hex made linear by hand (sc), so three's own colour management (on by default since r152) is off;
+   a texture says it is sRGB by colorSpace (encoding until r152: srgbTex), the renderer writes sRGB by outputColorSpace (outputEncoding: outSRGB); the lights
+   are in r155's units, pi times the old intensity for the same light on a surface (LK: directional and hemisphere lights; the environment map is unchanged);
+   PCFSoftShadowMap is PCFShadowMap since r182 (SHADOW_SOFT) */
+/* SRGB_LATE: an sRGB texture decoded after it is filtered, as r128 did it (its shader decoded each sample; r187 has the GPU decode each texel before filtering,
+   which is the more correct and draws a dial's fine black print thinner and paler when it is drawn small: 10,549 pixels of the Dial view past 24 levels, 651 with
+   this). r187 keeps that path only for video textures (map_fragment's DECODE_VIDEO_TEXTURE, WebGLTextures' forceLinearTransfer), so srgbTex marks the texture as
+   one and gives it the update() three calls on one each frame, here nothing. It leans on three's internals: check it at each upgrade, and drop it when the look
+   may change (stage 6) */
+const SRGB_LATE=true;
+const T3=+THREE.REVISION>=152,LK=T3?Math.PI:1,SHADOW_SOFT=T3?THREE.PCFShadowMap:THREE.PCFSoftShadowMap;if(T3)THREE.ColorManagement.enabled=false;
+const srgbTex=t=>{if(T3){t.colorSpace=THREE.SRGBColorSpace;if(SRGB_LATE){t.isVideoTexture=true;t.update=()=>{};}}else t.encoding=THREE.sRGBEncoding;return t;},isSrgbTex=t=>T3?t.colorSpace===THREE.SRGBColorSpace:t.encoding===THREE.sRGBEncoding;
+const outSRGB=r=>{if(T3)r.outputColorSpace=THREE.SRGBColorSpace;else r.outputEncoding=THREE.sRGBEncoding;};
+/* a texture's encoding as r128 named it, read and written through colorSpace: for a script not yet moved to srgbTex (the Wempe's escapement.js) */
+if(T3){THREE.sRGBEncoding=3001;THREE.LinearEncoding=3000;Object.defineProperty(THREE.Texture.prototype,'encoding',{get(){return this.colorSpace===THREE.SRGBColorSpace?3001:3000;},set(v){if(v===3001)srgbTex(this);else this.colorSpace=THREE.NoColorSpace;},configurable:true});}
+/* Glass on three r187, drawn as r128 drew it (the owner, 11 November 2026: the flat crystal by alpha, no transmission on it). r128's transmission bent nothing: it let
+   the background through by alpha, 1 - transmission + the reflection's luminance (its meshphysical_frag's stub). r187's draws the surface over a copy of the scene
+   behind it, read through a smoothing filter, which pales the fine print under a crystal and draws the opaque scene once more. So on r187 a material made with
+   transmission is a GlassA: three sees transmission 0, the share let through is trA, which patchSection's shader turns into r128's alpha and opq() counts; a clone
+   keeps it (copy). physMat(p): a MeshPhysicalMaterial, a GlassA where p.transmission is set on r187 */
+const GlassA=T3?class extends THREE.MeshPhysicalMaterial{constructor(p={}){const{transmission=0,...q}=p;super(q);this.trA=transmission;}copy(s){super.copy(s);this.trA=s.trA||0;return this;}
+  onBeforeCompile(sh){if(!(this.trA>0))return;sh.uniforms.uTrA={value:this.trA};sh.fragmentShader='uniform float uTrA;\n'+sh.fragmentShader.replace('#include <opaque_fragment>','diffuseColor.a*=mix(saturate(1.0-uTrA+luminance(reflectedLight.directSpecular+reflectedLight.indirectSpecular)),1.0,metalnessFactor);\n#include <opaque_fragment>');}
+  customProgramCacheKey(){return this.trA>0?'glassA':'';}}:null;
+const physMat=p=>GlassA&&p.transmission?new GlassA(p):new THREE.MeshPhysicalMaterial(p);
+/* r187's envMapIntensity dims only a material's own envMap, no longer the scene's environment (r163): a material that dims it (the ruby's 0.25) is given the scene's
+   environment as its own. envOwn(M, t): after the materials are made, and again with the new map when a lost context comes back */
+function envOwn(M,t){if(T3)for(const m of Object.values(M))if(m&&m.isMaterial&&m.envMapIntensity!==undefined&&(m.envMapIntensity!==1||m.envMap)){m.envMap=t;m.needsUpdate=true;}}
+/* A lathe's triangles in r128's order. r187 gives each quad's second triangle as (c, d, b) where r128 gave (b, c, d): the same triangle, but the cutters here that clip a
+   solid cut after cut (facePocket's screw slots, the bores and radial holes) fan each clipped triangle from its first vertex, so the next cut met other edges and 35 of the
+   Wempe's 1,582 meshes came out as the same solids with other vertices (volumes within 1e-4 mm³; 11 November 2026). Kept as r128 had it, so every mesh-derived file stays as it is */
+if(T3){const L0=THREE.LatheGeometry;THREE.LatheGeometry=class extends L0{constructor(...a){super(...a);const ix=this.index.array;for(let i=3;i<ix.length;i+=6){const c=ix[i],d=ix[i+1],b=ix[i+2];ix[i]=b;ix[i+1]=c;ix[i+2]=d;}}};}
 /* the balances' rate against temperature beyond what the screws make linear (Table IV, app.js), s a day at t °F, 0 at 72½ °F where the model is regulated: uncut, the Model 21's,
    the curvature of the factory test card of No. 3390 (Sec. IX, p. 68; period means 90 °F -0.02, 72½ +0.06, 55 0.00 s a day), its second difference alone, the linear part being
    that chronometer's own screws: a gain in the middle, 0.07 s a day against both ends. split: the bimetallic balance's middle temperature error, illustrative, compensated near
    45 and 90 °F and gaining up to 1.5 s a day between (splitC, in °C: the essay's curve) */
 const MTE={splitC:c=>1.5*(1-((c-19.5)/12.5)**2),uncut:t=>-0.000229*(t-72.5)**2,split:t=>MTE.splitC((t-32)/1.8)-MTE.splitC((72.5-32)/1.8)};
 
+/* a rough surface's reflection is bent toward its normal before the environment is read: by roughness^2 in r128, by roughness^4 in r187 (three's chunk
+   envmap_physical_pars_fragment), which threw the studio's top lamp off the plates' flat tops: they came out 6-18 levels of 255 darker and yellower, the 6MX's
+   stripes flatter. r128's bend is put back, at ^1.7: fitted on the Movement, Side and Escapement views and the 6MX's, where r187's filter (GGX since r181, a cube
+   map with mips since r187; r128's a Gaussian) leaves the least (pixels past 16 levels, of the four views' 3.84 million: 24,111 at ^2, 9,649 at ^1.7; past 24 levels 323 and 263;
+   with r187's own bend and the top lamp 1.3 times brighter instead, the first try, 91,177 and 28,739). The lamps are r128's. Checked at each upgrade: the chunk's text must still hold the bend, or the page says so */
+if(T3){const C=THREE.ShaderChunk,a='pow4( roughness )';if(!C.envmap_physical_pars_fragment.includes(a))console.error('core.js: three\'s envmap_physical_pars_fragment has no "'+a+'": the reflection\'s bend is three\'s own');
+  C.envmap_physical_pars_fragment=C.envmap_physical_pars_fragment.replace(a,'pow( roughness, 1.7 )');}
 function envTex(r){
   const pm=new THREE.PMREMGenerator(r),s=new THREE.Scene();
   const g=new THREE.SphereGeometry(20,48,24),pos=g.attributes.position,col=[];
@@ -904,7 +943,7 @@ function stripeTex(K=1){
       dn[k]=Math.round((nx*0.5+0.5)*255);dn[k+1]=Math.round((ny*0.5+0.5)*255);dn[k+2]=Math.round((nz*0.5+0.5)*255);dn[k+3]=255;}
     const t=r0;r0=r1;r1=r2;r2=t;}
   xm.putImageData(im,0,0);xn.putImageData(inn,0,0);
-  const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)t.encoding=THREE.sRGBEncoding;return t;};
+  const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)srgbTex(t);return t;};
   const out={map:mk(cm,true),normal:mk(cn,false)};let re=null;const at=k=>re&&re.k===k?re:(re={k,...stripeTex(k)});
   out.map.redraw=k=>at(k).map.image;out.normal.redraw=k=>at(k).normal.image;return out;
 }
@@ -916,12 +955,12 @@ function woodTex(K=1,base='#5a2413'){   /* K: drawn K times as fine (redraw, for
   for(let i=0;i<260;i++){const xx=rnd()*512,w=0.6+rnd()*2.6,a=0.05+rnd()*0.14,ph=rnd()*6,amp=2+rnd()*9;
     x.strokeStyle=rnd()<0.5?`rgba(20,6,2,${a})`:`rgba(150,70,35,${a*0.8})`;x.lineWidth=w;x.beginPath();
     for(let y=0;y<=1024;y+=16){const px=xx+Math.sin(y/140+ph)*amp+Math.sin(y/37+ph*2)*amp*0.25;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
-  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k,base).image;return t;
+  const t=new THREE.CanvasTexture(c);srgbTex(t);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k,base).image;return t;
 }
 /* Engraving textures are mapped to the movement: canvas centre = movement centre, 96 mm across,
    canvas up = 6 o'clock (+z), so text reads upright when the movement is viewed from the bridge side. */
 function engraveCanvas(draw,K=1){const S=1024,c=document.createElement('canvas');c.width=c.height=S*K;const x=c.getContext('2d');x.scale(K,K);const k=S/96;   /* K: drawn K times as fine (redraw, for the export to Blender) */
-  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=q=>engraveCanvas(draw,q).image;return t;}
+  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);srgbTex(t);t.anisotropy=8;t.redraw=q=>engraveCanvas(draw,q).image;return t;}
 function engraveArc(x,S,k,txt,r,psiDeg,spreadDeg,size){x.font=`600 ${size*k}px Spectral, Georgia, serif`;const ch=[...txt],n=ch.length,phi0=-psiDeg*D2R,sp=spreadDeg*D2R;
   ch.forEach((q,i)=>{const phi=phi0+((n-1)/2-i)*sp;x.save();x.translate(S/2+r*k*Math.cos(phi),S/2+r*k*Math.sin(phi));x.rotate(phi-Math.PI/2);x.fillText(q,0,0);x.restore();});}
 /* letters of t spread (or squeezed) to width w, centred on the origin; gx narrows each letter first, as on the engraved plates */
@@ -979,10 +1018,25 @@ const NAVY={no:'7832',yr:'1941'};   /* the Navy dial's number and year, as photo
    washed every flat face pink), a red glow for the light a stone gives back from inside, under a clearcoat. reflectivity: F0 = 0.16 reflectivity²,
    so 0.69 for corundum's index 1.77 and 0.52 for glass's 1.52. Shown, not measured: the export to Blender gives them real transmission (blender.js) */
 const RUBY={clearcoat:1,clearcoatRoughness:0.02,reflectivity:0.69,envMapIntensity:0.25,emissive:sc(0xb0102a),emissiveIntensity:0.6};
+/* The new look on three r187, not on yet (PLAN-three-upgrade.md, stage 6: each piece its own release; look=187 in the address shows it, for the before and after). r187 refracts:
+   a transmissive material is drawn over a copy of the opaque scene behind it, bent by its index and thickness and coloured by what it absorbs. So:
+   glass: all of the light through (r128's 0.88 left 12% of a white diffuse surface, which r128 hid in its alpha and r187 shows as a milky veil), index 1.52, the
+     reflection of the studio's lamps at a quarter of glass's own 4% (specularIntensity 0.25: at full strength the lamp's panel veiled the dial at a slant);
+   ruby: clear red corundum, index 1.77, red by absorption over its depth (attenuationColor at attenuationDistance), no glow of its own, so a jewel shows the pivot
+     and the setting through it; the clear jewel the same uncoloured;
+   glass has no thickness here: with one, what lies under it is drawn shifted by the refraction and no longer under its own Edges lines (tried, 2 and 2.4 mm);
+   blued steel: steel under a thin film (iridescence: its oxide, index about 2.4 for magnetite, 80 nm for the blue that Wempe 3955's seconds hand shows,
+     1_Wempe_3955_Z.jpg), which gives the blue and its turn at a glancing angle from the film instead of a blue paint. Values set by eye against
+     that photograph on 11 November 2026, not measured: estimates. */
+const LOOK3=T3&&/[?&]look=187\b/.test(location.search);
+function look3(M){
+  Object.assign(M.ruby,{color:sc(0xffd9dc),transmission:1,thickness:0.5,ior:1.77,attenuationColor:sc(0xc4001c),attenuationDistance:0.16,roughness:0.05,clearcoat:0,emissiveIntensity:0,envMapIntensity:1});
+  M.blued=new THREE.MeshPhysicalMaterial({color:sc(0x9aa3b0),metalness:1,roughness:0.25,iridescence:1,iridescenceIOR:2.4,iridescenceThicknessMaximum:80});   /* tried on the seconds hand: 55-62 nm straw to violet, 72 brown-grey, 80 the photograph's blue: the order of the temper colours; a blue base under the film came out straw */
+}
 /* how opaque a material draws, its transmission counted: under 0.5 the tools take it for glass or a ghost (makeInk, the viewers' ghost tests) */
-const opq=m=>(m.opacity??1)*(1-(m.transmission||0));
+const opq=m=>(m.opacity??1)*(1-(m.trA||m.transmission||0));
 function mats(){
-  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x)),P=(c,m,r,x={})=>new THREE.MeshPhysicalMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
+  const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x)),P=(c,m,r,x={})=>physMat(Object.assign({color:sc(c),metalness:m,roughness:r},x));
   const stx=stripeTex(),st=stx.map,wt=woodTex();let wtU=null;   /* wtU: the Ulysse Nardin's wood, drawn when first chosen */
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
@@ -994,6 +1048,7 @@ function mats(){
      map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
   M.plateCrest=(()=>{st.updateMatrix();const v=new THREE.Vector3(0.5/1024,1-30.1/1024,1).applyMatrix3(st.matrix.clone().invert());return[v.x,v.y];})();
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
+  if(LOOK3)look3(M);
   /* the finish: the plates' colour, and for the Ulysse Nardin the frosting (no damascening, rougher), the bowl's and ring's brass and the box's wood (UN_FIT); see-through and
      faded copies follow on the next look() (syncMat) */
   const F0=[M.plate.roughness,M.plateSolid.roughness,M.brass.color.clone(),M.brass.roughness,M.brass2.color.clone(),M.brass2.roughness,M.wood.color.clone()];
@@ -1022,10 +1077,10 @@ const SEC_DEPTH='\n#if NUM_CLIPPING_PLANES>0&&(__VERSION__>=300||defined(GL_EXT_
 function patchSection(m,cap){
   if(!m||m.userData.secPatched)return;m.userData.secPatched=true;m.userData.secCap=cap;m.userData.side0=m.side;m.clipShadows=true;if(!m.clippingPlanes)m.clippingPlanes=[];SEC.mats.add(m);
   if(cap)m.extensions={fragDepth:true};
-  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);
-    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
+  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);if(GlassA&&m instanceof GlassA)GlassA.prototype.onBeforeCompile.call(m,sh);   /* a GlassA's alpha first (this hook stands in place of its own) */
+    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp&&!(T3&&m.transmission>0)?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace(   /* three r187 declares projectionMatrix itself in a transmissive material's fragment shader (transmission_pars_fragment): twice is an error */'#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
       'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':'')+(dp?SEC_DEPTH:''));};
-  m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0);
+  m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0)+(T3&&m.trA>0?'g':'');
   m.needsUpdate=true;
 }
 function setSection(on,plane){SEC.on.value=on?1:0;SEC.plane=plane;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
@@ -1033,7 +1088,7 @@ const GHOST=new Map();
 /* a derived copy (see-through, faded) takes its source's current texture and colour, so a dial style or plate finish chosen while it is shown carries over */
 function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);
   if(d.isMeshStandardMaterial&&s.isMeshStandardMaterial){if(d.normalMap!==s.normalMap){d.normalMap=s.normalMap;d.needsUpdate=true;}d.roughness=s.roughness;}return d;}   /* the finish's frosting (setPlateFinish) */
-function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,opq(m));if(g.transmission)g.transmission=0;g.depthWrite=false;g.userData={};patchSection(g,false);
+function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,opq(m));if(g.transmission)g.transmission=0;if(g.trA)g.trA=0;g.depthWrite=false;g.userData={};patchSection(g,false);
   if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
 /* ---------- drawing: the model drawn live as a pen-and-wash drawing, tinted or in ink ----------
    drawOf(m): m's wash. A Phong copy (per-pixel diffuse under the scene's lights and shadows, no specular) whose output is the drawing's colour: the albedo in
@@ -1054,7 +1109,7 @@ const INKREF=new WeakMap();
 function inkRef(d,tx){const c=d.color||new THREE.Color(1,1,1),t=d.map,cs=[c.r,c.g,c.b],w=[0.3,0.55,0.15],L=f=>w.reduce((a,wc,i)=>a+wc*Math.pow(Math.max(f(i),0),1/2.2),0);
   if(!t||!t.image)return L(i=>cs[i]);let e=INKREF.get(t);
   if(!e){e={k:new Map(),px:null};INKREF.set(t,e);try{const cv=document.createElement('canvas');cv.width=cv.height=48;const x=cv.getContext('2d');x.drawImage(t.image,0,0,48,48);
-    const a=x.getImageData(0,0,48,48).data,s=t.encoding===THREE.sRGBEncoding;e.px=new Float32Array(48*48*3);for(let i=0;i<48*48;i++)for(let j=0;j<3;j++){const v=a[i*4+j]/255;e.px[i*3+j]=s?Math.pow(v,2.2):v;}}catch(_){}}
+    const a=x.getImageData(0,0,48,48).data,s=isSrgbTex(t);e.px=new Float32Array(48*48*3);for(let i=0;i<48*48;i++)for(let j=0;j<3;j++){const v=a[i*4+j]/255;e.px[i*3+j]=s?Math.pow(v,2.2):v;}}catch(_){}}
   if(!e.px)return L(i=>cs[i]);const key=c.getHex()+':'+tx;if(!e.k.has(key)){const v=[];for(let i=0;i<e.px.length;i+=3)v.push(L(j=>cs[j]*(tx*e.px[i+j]+1-tx)));v.sort((p,q)=>p-q);e.k.set(key,v[v.length>>1]);}
   return e.k.get(key);}
 function drawOf(m){let d=DRAW.get(m);
@@ -1064,7 +1119,8 @@ function drawOf(m){let d=DRAW.get(m);
     if(tr)Object.assign(d,{blending:THREE.CustomBlending,blendSrc:THREE.SrcAlphaFactor,blendDst:THREE.OneMinusSrcAlphaFactor,blendSrcAlpha:THREE.ZeroFactor,blendDstAlpha:THREE.OneFactor});
     patchSection(d,cap);d.userData.side0=m.userData.side0??m.side;d.side=m.side;d.clippingPlanes=[...(m.clippingPlanes||[])];
     const ref=d.userData.ref={value:1};d.userData.tx=tx.value;
-    const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;sh.uniforms.uInkOn=INK.ink;sh.uniforms.uRef=ref;
+    const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{if(T3)sh.fragmentShader=sh.fragmentShader.replace('#include <lights_fragment_maps>','');   /* r187 lights a Phong material from the scene's environment too (r128: the lamps alone), which washed the bands out */
+      sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;sh.uniforms.uInkOn=INK.ink;sh.uniforms.uRef=ref;
       sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\nuniform float uWash;\nuniform float uInkOn;\nuniform float uRef;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr,dec)+'\n#include <dithering_fragment>');sec(sh);
       sh.fragmentShader=sh.fragmentShader.replace('vec3(1.0/2.2)),1.0);','vec3(1.0/2.2)),0.45);');};   /* a cut face (patchSection) is drawing, not paper */
     d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0)+(dec?1:0)+(secDepth(d)?1:0);DRAW.set(m,d);}
@@ -1296,7 +1352,10 @@ function mainspringGeo(T,y0,y1,ey,o=MSPRING){
 /* extrude(s,o): ExtrudeGeometry with every hole's wall facing into the hole. r128 turns the holes only when it reverses a counterclockwise outline, so with a
    clockwise outline a clockwise hole got its wall wound into the metal: culled, the plate looked a hollow shell round its holes and cut-outs, and a section
    showed that wall's face instead of the hatched cut. Its triangles are turned over; the shape is unchanged (a clockwise hole's bevel still narrows it) */
-function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,p=s.extractPoints(o.curveSegments??12),dd=v=>{if(v.length>2&&v[v.length-1].equals(v[0]))v.pop();return v;},sh=dd(p.shape),hs=p.holes.map(dd);
+function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,p=s.extractPoints(o.curveSegments??12),
+  /* the points three extrudes: r128 dropped a last point equal to the first; r187 drops every point within 1e-10 (scaled) of the one before it, round the loop (its mergeOverlappingPoints) */
+  dd=T3?v=>{let q=v[0];for(let i=1;i<=v.length;i++){const k=i%v.length,c=v[k],dx=c.x-q.x,dy=c.y-q.y,m=Math.max(Math.abs(c.x),Math.abs(c.y),Math.abs(q.x),Math.abs(q.y));if(dx*dx+dy*dy<=1e-20*m*m){v.splice(k,1);i--;continue;}q=c;}return v;}
+    :v=>{if(v.length>2&&v[v.length-1].equals(v[0]))v.pop();return v;},sh=dd(p.shape),hs=p.holes.map(dd);
   if(!U.isClockWise(sh)||!hs.length)return g;const sl=6*((o.steps??1)+(o.bevelEnabled?2*(o.bevelSegments??3):0)),side=g.groups[1];let i=side.start+sh.length*sl,f=0;   /* the side walls: the outline's, then each hole's, 6·sl vertices a point */
   if(side.start+side.count!==i+hs.reduce((a,h)=>a+h.length*sl,0)){console.error('extrude: side walls not as counted');return g;}
   for(const h of hs){const e=i+h.length*sl;if(U.isClockWise(h)){f=1;for(const a of Object.values(g.attributes))for(let v=i;v<e;v+=3)for(let c=0;c<a.itemSize;c++){const k=(v+1)*a.itemSize+c,m=(v+2)*a.itemSize+c,t=a.array[k];a.array[k]=a.array[m];a.array[m]=t;}}i=e;}
@@ -3857,7 +3916,7 @@ function buildMovement(M){
   /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */
   const dl=part('dial',35.744);
   hn(dl,'42030');mesh(dl,discGeo(DIAL_R,DIAL_T,[[...L.C,2.7925],[...L.F,1.3404],[...L.Ud,1.3404]]),M.brass2,0,MR_Y,0);
-  const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;dtex.redraw=k=>dialCanvas(undefined,k);   /* redraw: finer, for the export to Blender */
+  const dtex=new THREE.CanvasTexture(dialCanvas());srgbTex(dtex);dtex.anisotropy=8;dtex.redraw=k=>dialCanvas(undefined,k);   /* redraw: finer, for the export to Blender */
   /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
   const dface=mesh(dl,new THREE.RingGeometry(2.7925,DIAL_R,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,MR_Y+DIAL_T+0.02234,0);dface.userData.noCap=true;dface.userData.surface=true;
   /* four feet down into the ring's flange, each held by a dial screw (35756, Fig. 107) from the flange's train side into its tapped end */
@@ -3876,7 +3935,7 @@ function buildMovement(M){
   for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31*DK,1.5638,6.702,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5*DK,1.0053,8.936,'pear',0,MO),m),k,mcol(m));
     dk(mesh(R.sec,handGeo(19*DK,0.50265,-8.936,'plain'),M.blued,0,0.27925,0),k);dk(mesh(R.ud,handGeo((k==='swiss'?11.5:8.5)*DK,0.6702,2.7925,'plain'),M.blued,0,0.27925,0),k);}
   const DTEX={hamilton:dtex};hd.traverse(o=>{if(o.userData.dk&&o.userData.dk!=='hamilton')o.visible=false;});
-  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>dialCanvas(kind,k);}
+  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));srgbTex(t);t.anisotropy=8;t.redraw=k=>dialCanvas(kind,k);}
     const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===(kind==='usn'?'hamilton':kind);});};   /* the Navy's dial wears the Hamilton hands */   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',17.872);
   /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the
@@ -6733,13 +6792,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* reduced motion (a system setting): camera and state moves are instant, as with ?snap; the walkthrough doesn't start ship motion or scroll smoothly */
   const RM=matchMedia('(prefers-reduced-motion: reduce)');
   let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,PHONE?1.5:2));
-  r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
-  r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
+  outSRGB(r);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
+  r.shadowMap.enabled=true;r.shadowMap.type=SHADOW_SOFT;
   const scene=new THREE.Scene();scene.environment=envTex(r);
   /* a lost WebGL context (a phone switching apps, a GPU reset) comes back without the generated environment map that lights the metals: rebuild it */
   cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});
-  scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28));
-  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=false;   /* casts only with Shadows (Display) on: look() */
+  scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28*LK));
+  const key=new THREE.DirectionalLight(0xfff4e6,1.0*LK);key.castShadow=false;   /* casts only with Shadows (Display) on: look() */
   key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
   const cam=new THREE.PerspectiveCamera(32,1,1,6000);
