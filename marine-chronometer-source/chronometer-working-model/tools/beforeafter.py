@@ -4,11 +4,13 @@ found where the two differ and enlarged there.
     python beforeafter.py --model wempe --before ../../../../ba-before/marine-chronometer-source/wempe/index.html SPEC.json [--only a,b] [--out DIR]
 
 SPEC.json is a list of {"name", "hn": [lines], "rev" (a version, default last), "i" (which of the line's pieces, default all), "ctx": [lines
-shown with it, for context], "at": "JS" (a point the change is known to be, [x, y, z] in movement mm, and "d" the distance to see it from: a change too small to find), "wire": true (the triangles drawn over the shading: a change in how finely a surface is cut shows)}. Each piece is rendered by a camera of its own (the page's renderer, its scene, everything else hidden, the box too,
+shown with it, for context], "view": [yaw, pitch] (one stated direction, from "d" mm, in place of the search), "at": "JS" (a point the change is known to be, [x, y, z] in movement mm, and "d" the distance to see it from: a change too small to find), "wire": true (the triangles drawn over the shading: a change in how finely a surface is cut shows)}. Each piece is rendered by a camera of its own (the page's renderer, its scene, everything else hidden, the box too,
 the model frozen as isolate.py freezes it) from eight directions round it on both pages; the direction whose pixels differ most is kept, the
 largest patch of difference found and cast back onto the part, and both pages rendered again close up on that point. Each sheet,
 r_ba_NAME.png in DIR (default r_ba/), has the whole piece before | after (the patch boxed in red) over the close-up before | after.
-The page runs with ?snap&qa#merge=0 (the merged static pieces would hide what is hidden). About 10 s a piece."""
+The page runs with ?snap&qa#merge=0 (the merged static pieces would hide what is hidden). About 10 s a piece. --still poses both pages by the same
+numbers (geomdiff.py's pose: the balance at rest, the escape wheel at a whole tooth) where the escapement's own timing differs between them; --names BEFORE,AFTER the
+sheets' labels (a release's numbers)."""
 import asyncio,base64,browser,io,json,pathlib,sys
 import numpy as np
 from PIL import Image,ImageDraw
@@ -19,6 +21,9 @@ HERE=pathlib.Path(__file__).resolve().parent
 W,H=900,700
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const s=ESC.state(0.4),u=(n,w)=>mv.userData._u({E:1000+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:false});u(0,true);u(2.5,false);})()"""
+if '--still' in sys.argv:sys.argv.remove('--still');FREEZE=FREEZE.replace("s=ESC.state(0.4)","s={prog:0,th:0,lift:0,psDef:0}")
+NAMES=['main','branch']
+if '--names' in sys.argv:_i=sys.argv.index('--names');NAMES=sys.argv[_i+1].split(',');del sys.argv[_i:_i+2]
 JS=r"""(()=>{const mv=window.__mv;let sc=mv;while(sc.parent)sc=sc.parent;
   const shows=o=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;};
   const own=o=>{for(let q=o;q;q=q.parent)if(q.userData.hn)return q.userData.hn;return null;};
@@ -61,8 +66,9 @@ async def one(P,Q,it,out):
     if not pa['n']:print(it['name'],': no piece on the after page');return
     c=pa['c'];sz=max(max(pa['s']),0.5);dist=sz*3.2;best=None
     if it.get('at'):c=await Q.evaluate(it['at']);dist=it.get('d',dist)   # a place the change is known to be (a JS expression for [x, y, z], movement mm), seen from d
-    for yaw in (0.6,2.2,3.8,5.4):
-        for pitch in (1.1,-1.1,0.35,-0.35):
+    if it.get('view'):dist=it.get('d',dist)   # "view": [yaw, pitch], one stated direction (a plan: pitch 1.5) in place of the search, from "d" mm
+    for yaw,pitch in ([tuple(it['view'])] if it.get('view') else [(y,q) for y in (0.6,2.2,3.8,5.4) for q in (1.1,-1.1,0.35,-0.35)]):
+        if True:
             if best and abs(pitch)==0.35 and best[0]>2000:continue
             ua=img(await Q.evaluate("a=>__baShot(...a)",[yaw,pitch,dist,c,WF]));ub=img(await P.evaluate("a=>__baShot(...a)",[yaw,pitch,dist,c,WF])) if pb['n'] else ua*0+255
             n,bx=patch(ub,ua)
@@ -93,7 +99,7 @@ async def one(P,Q,it,out):
     zn,zbx=patch(zb,za) if zb is not None else (0,None)
     im=lambda a:Image.fromarray(a.astype(np.uint8)) if a is not None else Image.new('RGB',(W,H),'white')
     S=Image.new('RGB',(2*W,2*H+60),'white');D=ImageDraw.Draw(S)
-    for k,(a,t) in enumerate([(ub if pb['n'] else None,'BEFORE (main)'),(ua,'AFTER (branch)'),(zb,'BEFORE close up'),(za,'AFTER close up')]):
+    for k,(a,t) in enumerate([(ub if pb['n'] else None,f'BEFORE ({NAMES[0]})'),(ua,f'AFTER ({NAMES[1]})'),(zb,'BEFORE close up'),(za,'AFTER close up')]):
         x,y=(k%2)*W,30+(k//2)*(H+30);S.paste(im(a),(x,y));D.text((x+8,y-22),t,fill='black')
     if bx is not None:D.rectangle([W+bx[0],30+bx[1],W+bx[2],30+bx[3]],outline='red',width=3)
     if zbx is not None:D.rectangle([W+zbx[0],60+H+zbx[1],W+zbx[2],60+H+zbx[3]],outline='red',width=3)

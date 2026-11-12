@@ -447,7 +447,11 @@ every tool, what it checks and how long it takes. Before committing a change:
    escapement against the manual's figures), `node escgolden.js`,
    `node physics.js`, `node dynamics.js`, `node tripping.js` and
    `node gearing.js`. For the Wempe, run `node wempe_escapement.js` and the
-   other `wempe_*.js` tools. Several write a golden JSON file with `--write`;
+   other `wempe_*.js` tools; after a change to its detent or escapement,
+   `node tripping.js --model wempe --write` first (it writes
+   `tripping_wempe.json`, the detent's figures that `wempe_tolerances.js`
+   reads), then `wempe_tolerances.js`, `wempe_bench.js` and
+   `wempe_montecarlo.js` with `--write`, in that order. Several write a golden JSON file with `--write`;
    without it, they fail if that file is stale. The reports then need
    rebuilding (see Building).
 6. **Preview images.** If a model's appearance changed, re-render them with
