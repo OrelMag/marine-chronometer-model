@@ -346,7 +346,11 @@ chk(Math.abs(own-RU.own)<0.3,`the escapement's own rate within 0.3 s a day of Ai
   /* the Wempe's: the escapement with its drawn hairspring's own isochronism (HS), the chronometer as made (since 15 October 2026, when the masses' height made its balance 10 % heavier and its
      swing 7° smaller: the escapement alone +0.51 s a day for each 10°, its hairspring −0.66); the Hamilton's spring is linear, its escapement the whole */
   const slC=WEMPE?(dT+dH)/(hi.A-lo.A)*10:sl;
-  chk(Math.abs(slC)<0.5,`and small (under 0.5 s a day for each 10° of swing${WEMPE?`, the escapement ${sg(sl,3)} with its drawn hairspring's ${sg(ESC.settings.HS,3)}: ${sg(slC,3)}`:''}): what the fusee keeps even, the escapement doesn't undo`);}
+  /* the Wempe's since 11 November 2026 (the owner's choice): with the discharge stone at 05 04_1's 5° the tooth reaches the impulse stone late after rest and the escapement gains about
+     2 s a day for each 10° of swing, which the drawn hairspring hardly counters; the limit is what its sources allow, the 6MX TU's D, 2.3 s a day between days, over the wind's
+     range of swing (0.5 s a day for each 10° until then, as the Hamilton's still; a build's hairspring is set against its escapement, escapement.js's BUILD) */
+  if(WEMPE)chk(Math.abs(dT+dH)<2.3,`and inside what its sources allow: over the wind's range of swing the rate changes ${sg(dT+dH,2)} s a day (the escapement ${sg(sl,3)} for each 10° with its hairspring's ${sg(ESC.settings.HS,3)}: ${sg(slC,3)}), under the 6MX TU's 2.3 s between days (under 0.5 s a day for each 10° wanted until 11 November 2026)`);
+  else chk(Math.abs(slC)<0.5,`and small (under 0.5 s a day for each 10° of swing): what the fusee keeps even, the escapement doesn't undo`);}
 flush();
 
 say('2. The detent as a body: its inertia, bouncing on its stop');

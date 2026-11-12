@@ -78,13 +78,14 @@ const wfw=TAU/(P.HPT*3600),TOOTH=TAU/120,drvOf=T=>T/T12*P.drv(12/P.HPT),n24=24/P
 /* ampAt solves the escapement each call (about 0.3 s): tabulated over the drive and interpolated, the swing stepped as ampStep does */
 const DS=[];for(let s=0;s<=1.1001;s+=0.025)DS.push([s,E.ampAt(s)||0]);const ampT=s=>{if(s<=0)return 0;for(let i=1;i<DS.length;i++)if(s<=DS[i][0]){const[a,p]=DS[i-1],[b,q]=DS[i];return p+(q-p)*(s-a)/(b-a);}return DS[DS.length-1][1];};
 const step=(A,dt,D)=>{if(D>0){const u=ampT(D)**2;return Math.sqrt(u+(A*A-u)*Math.exp(-2*dt/P.SET.TF));}return E.freeStep(A,dt);};
-const sim=(back,tEnd=3600,dt=0.5,rate=false)=>{const ph=Math.min(R0.phOf(T12),R0.psiB)-back;let A=A24,t=0,lost=0,tG=null,tTurn=null,tStop=null;const tr=[];
-  while(t<tEnd){const D=drvOf(R0.Tq(Math.max(0,ph-wfw*t)));A=step(A,dt,D);if(A<E.AMIN||!(A>0)){tStop=t;break;}
-    if(rate){const r=D>0?E.rateAt(A,D):r24;lost+=(r-r24)/86400*dt;}if(tG===null&&A<185*D2R)tG=t;if(tTurn===null&&A<Math.PI)tTurn=t;if(Math.round(t/dt)%Math.round(10/dt)===0)tr.push([+t.toFixed(1),+(A/D2R).toFixed(2),+D.toFixed(4)]);t+=dt;}
-  return{ph,tG,tTurn,tStop,lost,trace:tr};};
+const GF=/^build/.test(process.env.MC_WREV||'')?150:147;   /* the tools' guard floor for the swing (wempe_escapement.js; 185 until 11 November 2026) */
+const sim=(back,tEnd=3600,dt=0.5,rate=false)=>{const ph=Math.min(R0.phOf(T12),R0.psiB)-back;let A=A24,t=0,lost=0,tG=null,tTurn=null,tStop=null,dStop=null;const tr=[];
+  while(t<tEnd){const D=drvOf(R0.Tq(Math.max(0,ph-wfw*t)));A=step(A,dt,D);if(A<E.AMIN||!(A>0)){tStop=t;dStop=D;break;}
+    if(rate){const r=D>0?E.rateAt(A,D):r24;lost+=(r-r24)/86400*dt;}if(tG===null&&A<GF*D2R)tG=t;if(tTurn===null&&A<Math.PI)tTurn=t;if(Math.round(t/dt)%Math.round(10/dt)===0)tr.push([+t.toFixed(1),+(A/D2R).toFixed(2),+D.toFixed(4)]);t+=dt;}
+  return{ph,tG,tTurn,tStop,dStop,lost,trace:tr};};
 const mm=s=>s==null?'over an hour':s<120?f(s)+' s':f(s/60,1)+' min',S0=sim(0),SH=sim(TOOTH/2),SW=sim(TOOTH);
 const P0=R0.Tq(Math.min(R0.phOf(P.fusT(n24)),R0.psiB)-TOOTH/2)/P.fusT(n24);
-say(`the key held (wound at 24 h, the swing ${f(A24/D2R)}°): the push at once ${f(100*P0)} % of the drive (the detent half a tooth late), the swing settling toward ${f(ampT(drvOf(P0*P.fusT(n24)))/D2R)}°; the detent catching at once / half a tooth late / a whole tooth late (3°): the swing under the guard band's 185° after ${mm(S0.tG)} / ${mm(SH.tG)} / ${mm(SW.tG)}, under a turn after ${mm(S0.tTurn)} / ${mm(SH.tTurn)} / ${mm(SW.tTurn)}, the train stopped after ${mm(S0.tStop)} / ${mm(SH.tStop)} / ${mm(SW.tStop)}`);
+say(`the key held (wound at 24 h, the swing ${f(A24/D2R)}°): the push at once ${f(100*P0)} % of the drive (the detent half a tooth late), the swing settling toward ${f(ampT(drvOf(P0*P.fusT(n24)))/D2R)}°; the detent catching at once / half a tooth late / a whole tooth late (3°): the swing under the guard band's ${GF}° after ${mm(S0.tG)} / ${mm(SH.tG)} / ${mm(SW.tG)}, the train stopped (the swing under the ${f(E.AMIN/D2R)}° it needs) after ${mm(S0.tStop)} / ${mm(SH.tStop)} / ${mm(SW.tStop)}, the push then ${f(100*(SH.dStop??NaN),0)} % of the drive at 12 h`);
 chk(SW.tStop==null||SW.tStop>=60,`it keeps the train going ${mm(SW.tStop)} even with the detent a whole tooth late: more than the 1954 instruction's 1-2 minutes ("может действовать в течение 1-2 мин", for chronometers in general; 6MX-figures.md), and far more than a wind takes`);
 const w=s=>sim(TOOTH/2,s,0.5,true).lost,w10=w(10),w30=w(30);
 say(`a wind costs ${f(w10*1e6,1)} µs held 10 s (a day's) and ${f(w30*1e6,1)} µs held 30 s (from run down): nothing a navigator could read`);

@@ -99,10 +99,10 @@ DEVS=[{'id':'gold','title':'The gold spring thinned at its bend','period':'both 
 DEVL={n:d for d in DEVS for n in d['lines']}
 # the tests on the bench (tools/wempe_bench.js, the 1950s build's) and which line's sheet each goes on; the tolerances the drawings don't give (wempe_tolerances.js)
 BENCH=json.loads((HERE/'bench_wempe_build.json').read_text(encoding='utf-8'))
-BLINE={'mainspring':['050700-6'],'fusee':['050604-2'],'depths':['050802-1','050901'],'balance':['050302-1'],'rundown':['050301-1'],'detent':['050401-1'],'escapement':['050401-4'],'maintaining':['050601-1'],'stopwork':['050603-1']}
+BLINE={'mainspring':['050700-6'],'fusee':['050604-2'],'depths':['050802-1','050901'],'balance':['050302-1'],'isochronism':['050302-1'],'rundown':['050301-1'],'detent':['050401-1'],'escapement':['050401-4'],'maintaining':['050601-1'],'stopwork':['050603-1']}
 BL={}
 for t in BENCH['tests']:
-    for n in BLINE.get(t['id'],[]):BL[n]=f"{t['title']}, {t['when']}: {t['pass']}"
+    for n in BLINE.get(t['id'],[]):BL[n]=(BL[n]+' ' if n in BL else '')+f"{t['title']}, {t['when']}: {t['pass']}"   # a line with two tests (the hairspring: vibrated, then set against the escapement) carries both
 T=json.loads((HERE/'tolerances_wempe_build.json').read_text(encoding='utf-8'));g=T['band']['guard'];f2=lambda x:f'{x:.3f}'
 TOL={'050700-6':f"The strip {T['mainspring']['t']} mm as the build takes it: {f2(T['mainspring']['t_mm'][0])}-{f2(T['mainspring']['t_mm'][1])} mm (its torque ×{T['mainspring']['s'][0]:.2f}-{T['mainspring']['s'][1]:.2f}) keeps the swing in the guard band, {g[0]}-{g[1]}°, over the whole wind: on a 262 mm lever on the fusee arbor {T['mainspring']['g262']['band'][0]:.0f}-{T['mainspring']['g262']['band'][1]:.0f} g, as 05 06_20 weighs it.",
  '050401-1':f"The detent spring (1436's 0.07, 0.09 at its ends): any thickness to {f2(T['detent']['t_mm'][1])} mm keeps the swing in the band; in time (its fall back before the next tooth) {f2(T['detent']['inTime'][0])}-{f2(T['detent']['inTime'][1])} mm as the uniform equivalent of the drawn {f2(T['detent']['t'])}. Its preload against the banking {T['detent']['preload']['g']} g, at least {T['detent']['preload']['min']} g (a knock) and under 0.85 g (past it the stone catches the escaping tooth's back).",

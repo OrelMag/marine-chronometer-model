@@ -5,7 +5,7 @@
 // the balance (its period, the rate before timing), the escape arbor with the train behind it and the detent, run through makeEsc with WESC.SET (the page runs the
 // drawings' escapement for this version: escphys.js WPHYS.rev; this works out what its own bodies would run): the swing and rate over the wind, measure()'s figures,
 // and the locking stone against the teeth (stoneClash) through the period.
-//   node wempe_1943.js            prints them; exit 1 if tools/wempe_1943.json is stale, the swing leaves wempe_escapement.js's guard (180-270°) over the wind, the escapement
+//   node wempe_1943.js            prints them; exit 1 if tools/wempe_1943.json is stale, the swing leaves wempe_escapement.js's guard (147-270°) over the wind, the escapement
 //                                 doesn't run, or the stone passes 1 µm into a tooth
 //   node wempe_1943.js --write    writes tools/wempe_1943.json (the report's figures)
 // About a minute. Run it after wempe_inertia.py --write (any version) or a change to the Wempe's escapement.
@@ -31,7 +31,7 @@ const R0=row(E0),R3=row(E3),r12=R=>R.find(q=>q.h===12).r;
 say('the swing and the escapement\'s rate over the wind (against 12 h), as last revised and the escapement of 1943:');
 for(let i=0;i<H.length;i++)say(`  ${String(H[i]).padStart(2)} h  ${f(R0[i].a,1)}°  ${f(R3[i].a,1)}°   ${f(R0[i].r-r12(R0),2)}  ${f(R3[i].r-r12(R3),2)} s a day`);
 let mn=1e9,mx=-1e9;for(let h=0;h<=56.3;h+=1){const s=P.drv(h/P.HPT),a=E3.ampAt(s)/D;mn=Math.min(mn,a);mx=Math.max(mx,a);}
-chk(mn>=180&&mx<=270,`its swing stays within 180-270° over the wind (wempe_escapement.js's guard): ${f(mn,1)}-${f(mx,1)}°`);
+chk(mn>=147&&mx<=270,`its swing stays within 147-270° over the wind (wempe_escapement.js's guard): ${f(mn,1)}-${f(mx,1)}°`);
 /* the locking stone never inside a tooth, as wempe_escapement.js runs it */
 {const cases=[...[0.15,0.3,0.5,0.75,0.9,1,1.1,1.25,1.5].map(s=>[E3.ampAt(s),s]).filter(([a])=>a>=E3.AMIN),[E3.AMIN+0.2*D,0.15],[300*D,1],[340*D,1]];let w={d:0};
   for(const[a,s]of cases){const q=stoneClash(E3,a,s);if(q.d>=w.d)w=q;}

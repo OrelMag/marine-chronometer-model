@@ -1,6 +1,6 @@
 // The Wempe's energy budget (phase 2b), as tools/physics.js for the Hamilton: from its mainspring through the fusee and chain, the going train and the escapement to the
 // balance's damping, each from the Wempe's own parts, and whether the measured drive (05 06_20) closes it. Needs only Node.js:
-//   node wempe_physics.js      (about 30 s: the Wempe's escapement solves slowly; exits 1 if the budget can't close inside the ranges below)
+//   node wempe_physics.js      (about 30 s: the Wempe's escapement solves slowly; exits 1 if the level or the spring's stress fails; whether the measured drive closes the budget at the sources' band is reported, ~~, since 11 November 2026)
 // Reads: the Wempe's page scripts through wempe_load.js (WD, WESC, WPHYS: the escapement, the measured drive, the train's parts); wempe_mainspring.json (the spring solved
 // by mainspring.py and fitted to 05 06_20 by wempe_mainspring.py); mainspring_friction_wempe.json (its coils' friction); gearing_wempe.json (gearing.js --model wempe: each
 // mesh tooth by tooth). Every number from outside the sheets is a published range or an estimate, said where it is used, and the result is given over its range.
@@ -108,7 +108,7 @@ head('6. Does it close: the Q the drive needs to hold the swing, against the Q t
   const nm=[...need(sMes[0]),...need(sMes[1])].filter(Number.isFinite),qn=[Math.min(...nm),Math.max(...nm)];
   say(`the drive at 12 h, measured and through the train's ${rg(TR.lo,TR.hi,3)}: ${rg(sMes[0],sMes[1],3)} of the reference; from the solved spring with its losses ${rg(sSol[0],sSol[1],3)}`);
   say(`to swing the sources' band, ${band[0]}-${band[1]}° (the 1954 instruction; the Hamilton manual's 247.5-270°), that drive needs Q ${f(qn[0],0)}-${f(qn[1],0)}; the parts give ${f(DQ.lo,0)}-${f(DQ.hi,0)}`);
-  chk(qn[0]<=DQ.hi&&qn[1]>=DQ.lo,`the budget closes: some balance within its parts' damping swings the band on the measured drive through the train as built (Q ${f(Math.max(qn[0],DQ.lo),0)}-${f(Math.min(qn[1],DQ.hi),0)})`);
+  note(qn[0]<=DQ.hi&&qn[1]>=DQ.lo,`the budget closes: some balance within its parts' damping swings the band on the measured drive through the train as built${qn[0]<=DQ.hi&&qn[1]>=DQ.lo?` (Q ${f(Math.max(qn[0],DQ.lo),0)}-${f(Math.min(qn[1],DQ.hi),0)})`:` (it doesn't: the band wants Q ${f(qn[0],0)} at least, the parts give ${f(DQ.hi,0)} at most. Open, reported: the owner's choice, 11 November 2026, with the discharge stone at 05 04_1's 5°, the tooth reaching the impulse stone later; a hard check until then)`}`);
   const Am=[E.ampAt(sMes[0]),E.ampAt(sMes[1])],Qm=Math.PI*S.TF/0.5;
   say(`at the model's Q ${f(Qm,0)} (TF ${S.TF} s) the measured drive through the train's range swings ${rg(Am[0],Am[1],1,1/D)}° at 12 h (the model's ${f(A/D,1)}° at its ${f(P.ETA,3)}); the band's 225° wants Q ${f(Qneed(1,225*D),0)} at the model's drive`);
   const pw=TAU*kB*A*A/2/Qm*2,pin=P.fusT(n12)*TAU/(HPT*3600);
