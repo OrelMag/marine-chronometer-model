@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.87.00 · 2026-11-12
+- Wempe: the page is now drawn by a current release of three.js (r187 in place of r128 of 2021), looking as it did; the ground for refracting jewels and blued steel to come. A frame costs about 1 ms more
+- Wempe: the lettered Laid out sheet drawn again on it
+
 ## 3.86.01 · 2026-11-12
 - Wempe report: every moving part's stress in 3D solved again with the discharge stone at its drawn place (the escapement's parts within a few per cent of before; the balance's lower at its smaller swing), and the fixes for a key let go outright worked again on it
 
