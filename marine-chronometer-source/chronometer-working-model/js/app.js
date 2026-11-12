@@ -163,13 +163,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* reduced motion (a system setting): camera and state moves are instant, as with ?snap; the walkthrough doesn't start ship motion or scroll smoothly */
   const RM=matchMedia('(prefers-reduced-motion: reduce)');
   let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,PHONE?1.5:2));
-  r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
-  r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
+  outSRGB(r);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
+  r.shadowMap.enabled=true;r.shadowMap.type=SHADOW_SOFT;
   const scene=new THREE.Scene();scene.environment=envTex(r);
   /* a lost WebGL context (a phone switching apps, a GPU reset) comes back without the generated environment map that lights the metals: rebuild it */
   cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});
-  scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28));
-  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=false;   /* casts only with Shadows (Display) on: look() */
+  scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28*LK));
+  const key=new THREE.DirectionalLight(0xfff4e6,1.0*LK);key.castShadow=false;   /* casts only with Shadows (Display) on: look() */
   key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
   const cam=new THREE.PerspectiveCamera(32,1,1,6000);

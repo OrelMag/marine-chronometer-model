@@ -17,7 +17,7 @@ function buildWempe(M){
   if(!M.gilt.userData.wempe){M.gilt.userData.g0=[M.gilt.color.clone(),M.gilt.roughness];M.gilt.color=sc(0xc88a32);M.gilt.userData.wempe=1;}
   /* steel tempered to light blue at 310° (the sheets' "310° hell-blau anlassen": the maintaining detent 050505-1, the maintaining spring 05 06 01-1), not the deep blue of 295°
      (M.blued: the fusee's clicks); Wempe 3955's and Kirov 247's maintaining detents photograph pale grey (photocompare.py, their N views). Until 18 October 2026 M.blued */
-  if(!M.blue310){M.blue310=M.blued.clone();M.blue310.color=sc(0x8d9cb8);M.blue310.roughness=0.3;}
+  if(!M.blue310){M.blue310=M.blued.clone();M.blue310.color=sc(0x8d9cb8);M.blue310.roughness=0.3;if(M.blue310.iridescence)M.blue310.iridescence=0;}   /* without three r187's film (core.js's look3): the photographs' pale grey decides, as before */
   const mv=new THREE.Group(),K=KIT.parts(mv,M);mv.userData.onRev=[];   /* the sheets' two states (setRev, below): each builder's moves for them */
   const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
   /* Variants' Finish: 'hammered' (the default, as above and frame.js's M.giltH) or 'plain', the page's gilt until 18 October 2026: the core's plain gilt on every gilt part,

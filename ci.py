@@ -173,6 +173,7 @@ STEPS=[('build',build,'quick'),
  ('wear',R(['node',TOOLS/'wear.js'],ROOT),'quick'),   # wear at every sliding contact against its tolerance (a few seconds)
  ('traindyn',R(['node',TOOLS/'traindyn.js'],ROOT),'quick'),   # the going train in time on sprung meshes (a few seconds)
  ('montecarlo',R(['node',TOOLS/'montecarlo.js'],ROOT),'quick'),   # the whole movement to a maker's tolerances (about 30 s)
+ ('vendor-three',R([PY,'vendor_three.py','--check'],ROOT),'quick'),   # vendor/three.r187.js is what cdnjs's two r187 modules give, and they are cdnjs's (their SHA-512); under a second
  ('selfcontained',R([PY,'selfcontained.py'],TOOLS),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',TSC(MC/'jsconfig.json'),'quick'),
  ('wempe-dialtrace',R([PY,'dialtrace.py'],TOOLS),'quick'),   # the Wempe dial's printing traced off Wempe 3955's photograph, against js/dialface.js (about 13 s)

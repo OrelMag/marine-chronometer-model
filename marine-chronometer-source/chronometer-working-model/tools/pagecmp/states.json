@@ -1,0 +1,145 @@
+[
+ {
+  "name": "last_mv",
+  "view": "movement",
+  "eval": "(()=>{window.__lc=[0,0];const c=__r.domElement;c.addEventListener('webglcontextlost',()=>__lc[0]++);c.addEventListener('webglcontextrestored',()=>__lc[1]++);})()"
+ },
+ {
+  "name": "shadows",
+  "eval": "document.querySelector('#shadows').click()",
+  "wait": 2500
+ },
+ {
+  "name": "shadows_dial",
+  "view": "dial"
+ },
+ {
+  "name": "noshadow_reset",
+  "eval": "document.querySelector('#shadows').click()",
+  "view": "movement",
+  "wait": 1500
+ },
+ {
+  "name": "tint",
+  "eval": "document.querySelector('#draw').click()",
+  "wait": 2500
+ },
+ {
+  "name": "ink",
+  "eval": "document.querySelector('#drawInk').click()",
+  "wait": 2500
+ },
+ {
+  "name": "ink_dial",
+  "view": "dial"
+ },
+ {
+  "name": "ink_off",
+  "eval": "document.querySelector('#drawInk').click()",
+  "view": "movement",
+  "wait": 1500
+ },
+ {
+  "name": "src",
+  "eval": "document.querySelector('#colrSrc').click()",
+  "wait": 2500
+ },
+ {
+  "name": "src_dial",
+  "view": "dial"
+ },
+ {
+  "name": "src_off",
+  "eval": "document.querySelector('#colrSrc').click()",
+  "view": "movement",
+  "wait": 1500
+ },
+ {
+  "name": "ghost",
+  "eval": "document.querySelector('#ghost').click()",
+  "wait": 2500
+ },
+ {
+  "name": "ghost_off",
+  "eval": "document.querySelector('#ghost').click()",
+  "wait": 1500
+ },
+ {
+  "name": "dark",
+  "eval": "document.querySelector('#flip').click()",
+  "wait": 2500
+ },
+ {
+  "name": "dark_dial",
+  "view": "dial"
+ },
+ {
+  "name": "dark_off",
+  "eval": "document.querySelector('#flip').click()",
+  "view": "movement",
+  "wait": 1500
+ },
+ {
+  "name": "first_mv",
+  "eval": "__mv.userData.setRev('first')",
+  "wait": 3000
+ },
+ {
+  "name": "first_esc",
+  "view": "escapement"
+ },
+ {
+  "name": "r3955_mv",
+  "eval": "__mv.userData.setRev('3955')",
+  "view": "movement",
+  "wait": 3000
+ },
+ {
+  "name": "r3955_dial",
+  "view": "dial"
+ },
+ {
+  "name": "r6mx_mv",
+  "eval": "__mv.userData.setRev('6mx')",
+  "view": "movement",
+  "wait": 3000
+ },
+ {
+  "name": "r6mx_dial",
+  "view": "dial"
+ },
+ {
+  "name": "r6mx_box",
+  "view": "box"
+ },
+ {
+  "name": "r1943_mv",
+  "eval": "__mv.userData.setRev('1943')",
+  "view": "movement",
+  "wait": 3000
+ },
+ {
+  "name": "r1943_esc",
+  "view": "escapement"
+ },
+ {
+  "name": "back_mv",
+  "eval": "__mv.userData.setRev('last')",
+  "view": "movement",
+  "wait": 3000
+ },
+ {
+  "name": "lost",
+  "eval": "(()=>{const e=__r.getContext().getExtension('WEBGL_lose_context');e.loseContext();setTimeout(()=>e.restoreContext(),800);})()",
+  "wait": 6000
+ },
+ {
+  "name": "lost_dial",
+  "view": "dial"
+ },
+ {
+  "name": "lost_esc",
+  "view": "escapement",
+  "eval": "console.warn('LOSTCOUNT lost,restored = '+__lc.join(','))"
+ }
+]

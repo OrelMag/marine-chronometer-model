@@ -1,0 +1,11 @@
+[
+ {"name": "sec_x_side", "view": "side", "eval": "document.querySelector('#secs button[data-v=\"x\"]').click()", "wait": 2500},
+ {"name": "sec_x_mv", "view": "movement", "wait": 1500},
+ {"name": "sec_x_flip", "eval": "document.querySelector('#secFlip').click()", "wait": 1500},
+ {"name": "sec_x_lines", "eval": "document.querySelector('#secFlip').click();document.querySelector('#secLines').click()", "wait": 1500},
+ {"name": "sec_z_side", "view": "side", "eval": "document.querySelector('#secLines').click();document.querySelector('#secs button[data-v=\"z\"]').click()", "wait": 2500},
+ {"name": "sec_z_mv", "view": "movement", "wait": 1500},
+ {"name": "sec_y_mv", "eval": "document.querySelector('#secs button[data-v=\"y\"]').click()", "wait": 2500},
+ {"name": "sec_y_dial", "view": "dial", "wait": 2000},
+ {"name": "sec_off", "view": "movement", "eval": "document.querySelector('#secs button[data-v=\"off\"]').click()", "wait": 1500}
+]

@@ -47,7 +47,7 @@ const WFRAME=(()=>{
        (the plates' inner faces) take the same */
     const G6=(th)=>{const G=M.gilt6=M.gilt6||{};if(G[th])return G[th];const PR=[1.000,0.992,0.956,0.918,0.862,0.812,0.761,0.713,0.685,0.657,0.630,0.622,0.628,0.617,0.607,0.605,0.614,0.623,0.635,0.663,0.725,0.839,0.937,0.984],cv=document.createElement('canvas');cv.width=96;cv.height=4;
       const x=cv.getContext('2d');for(let i=0;i<96;i++){const f=i/4,k=Math.floor(f),t=f-k,g=Math.round(255*(PR[k]*(1-t)+PR[(k+1)%24]*t));x.fillStyle=`rgb(${g},${g},${g})`;x.fillRect(i,0,1,4);}
-      const tx=new THREE.CanvasTexture(cv);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(1/3.95,1/3.95);tx.rotation=th;tx.anisotropy=8;tx.encoding=THREE.sRGBEncoding;
+      const tx=new THREE.CanvasTexture(cv);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(1/3.95,1/3.95);tx.rotation=th;tx.anisotropy=8;srgbTex(tx);
       const m=M.gilt.clone();m.map=tx;m.needsUpdate=true;return G[th]=m;};   /* M.gilt6: built once (the export's copy shares them), their colour following the gilt's (movement.js's setFinish) */
     const G6T=G6(-40*D2R),G6D=G6(40*D2R);
     /* the finishes are on the faces: a wall (a plate's edge, a cock's side, a hole's bore) takes one point of the tile, plain as the photographs' turned and filed edges */
@@ -70,7 +70,7 @@ const WFRAME=(()=>{
       for(let j=0;j<N;j++)for(let i=0;i<N;i++){const o=4*(j*N+i),g=Math.round(255*clamp(0.88*(1+0.07*H(i,j)),0,1)),gx=(H(i+1,j)-H(i-1,j))/2,gz=(H(i,j+1)-H(i,j-1))/2,k=0.01,l=Math.hypot(k*gx,k*gz,1);
         im.data[o]=im.data[o+1]=im.data[o+2]=g;im.data[o+3]=255;nm.data[o]=Math.round(255*(0.5-0.5*k*gx/l));nm.data[o+1]=Math.round(255*(0.5-0.5*k*gz/l));nm.data[o+2]=Math.round(255*(0.5+0.5/l));nm.data[o+3]=255;}
       xm.putImageData(im,0,0);xn.putImageData(nm,0,0);
-      const tx=c=>{const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/L,1/L);t.anisotropy=8;return t;},mp=tx(cm);mp.encoding=THREE.sRGBEncoding;
+      const tx=c=>{const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/L,1/L);t.anisotropy=8;return t;},mp=tx(cm);srgbTex(mp);
       const m=M.gilt.clone();m.color=sc(0xc68c34);m.userData.faceOnly=1;m.roughness=0.42;m.map=mp;m.normalMap=tx(cn);m.normalScale=new THREE.Vector2(0.3,0.3);m.needsUpdate=true;m.userData.fin={map:mp,normalMap:m.normalMap,color:m.color.clone(),rough:m.roughness};M.giltH=m;return m;})();   /* M.giltH: built once (the export's copy shares it), named, so the tools' density tables (massprops, mechanisms, inertia) and the export know it */
 
     /* ================= the top plate (Oberplatte, 05 09 01; its assembly 05 08 01) ================= */

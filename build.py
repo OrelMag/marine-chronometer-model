@@ -62,7 +62,7 @@ def check(name,html):
 # no size limit on the pages (removed at the user's word, 15 October 2026; until then a budget per page warned past 2.3 MB and 1.5 MB): sizes() only reports where the bytes go
 def sizes(name,html):
     """Print where a page's bytes go (three.js, fonts, images, the rest) and what a visitor downloads (gzip; the site sends Brotli, a little less)."""
-    n=len(html.encode());three=(ROOT/'vendor/three.min.js').stat().st_size if 'three.min.js' in html or 'REVISION' in html else 0
+    n=len(html.encode());three=(ROOT/('vendor/three.r187.js' if 'THREE_GLOBAL' in html else 'vendor/three.min.js')).stat().st_size if 'three.min.js' in html or 'REVISION' in html else 0   # THREE_GLOBAL: vendor_three.py's wrapper, in a page on r187
     fonts=sum(map(len,re.findall(r'data:font/[^;]+;base64,[A-Za-z0-9+/=]+',html)));imgs=sum(map(len,re.findall(r'data:image/[^;,]+;base64,[A-Za-z0-9+/=]+',html)))
     kb=lambda b:f'{b/1024:.0f} KB'
     print(f'  {name}: {kb(n)} = three.js {kb(three)}, fonts {kb(fonts)}, images {kb(imgs)}, the rest {kb(n-three-fonts-imgs)}; {kb(len(gzip.compress(html.encode(),9)))} compressed')
